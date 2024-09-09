@@ -1,124 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3331C01;
-	Sun,  8 Sep 2024 20:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E636FC5
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Sep 2024 00:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725827452; cv=none; b=UdUWPvuUFjlg/xUNrkVk6jIZ1GoatoRgl9BrWlr/WyFhXbCYS0x/e9p420sWbWWyuIkj2PCmdYRw3z9vwq8PwlerBkigPsHxSh3UvrpKcERyTNdveRqG84jI+xTNf77hEJ9gdvyNlRptzfuD8+76XQ5pR3xrjAE1Mcs9tHcrqAg=
+	t=1725841810; cv=none; b=pXqHtmbtO5jLdah/Q8vU45ncmLXkTVWXWJ/+L/QSbBklc2SWlbUgbSsRF4X8lzBjT1H26LgWGPIFB9Yw1FafiYxvrSBgUrJTbJeuQtplXpAB6H8Xl3mWSJLzlwiFC5Ci4taXf6TI23YvGu016HRKSPuxJo3c4NYmOqsaEqEGmzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725827452; c=relaxed/simple;
-	bh=qQFmnoNk7VNN8/ZS193YeNoFNiaW3ZCntUmMI6q2f7s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cl453rE1BBxSpraU1XGRouhPA42AiXFrJty76EiaGfwqe9QIIC0fZ9wvyRxUlLwklBmFmWgRZ+DpHZEVBZGp+fwJSzzcu+FHU5ZagZagw2o8cBHMyFcuXl53XiIgwWRUebsjjWyX9oEfRNFmFSxn7+WLonN4C2ZNm4swVJarikc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FfR6AEmm; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1725841810; c=relaxed/simple;
+	bh=WKgDTUCCgtaz7HK/6klsNdbV5jsdqfsckL/4sEAMpOE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VJ4JeClS8nMBjZ4sy5Bhy6Z0RLQLQMfKDed8QoAzyR13VFZcINcosnyq44OwToGneWZgmiyoXe6Q/DTOj4Wr2OgmnuxLsVXv3u/ESkvcUzzqnWNxlG/q68bGdi03zFeE5n9Vb5G2LNa9KU2mZwbzoSMAzBkrqtZ5ExGvhhVuft4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aR9v31CI; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FfR6AEmm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725827451; x=1757363451;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qQFmnoNk7VNN8/ZS193YeNoFNiaW3ZCntUmMI6q2f7s=;
-  b=FfR6AEmmeaOg8+v4KgB6FbyufiiGyn2pdwaAtZa7VjVRhmyBC8Y9RbiB
-   4lQK/6ypaFuMeNlT4mBKl3flAjzKi4uqSo3WmEX9bXJnSK58SfpzuFfEl
-   VICaEMn8jkMA7pyVUc7iWikRPcM+aCkjgQSaf82VJ9jAbIXbbL9Axu+iy
-   cdavyiNMT/MskjVdVeCmpCWLI2xSsS3w7xIA2LzKb+24iUTskXEZ92kp2
-   DhYV1XxHxaosRYbMJzpk/YMVrORmvNClLFaPzx6fw2Co9+2g/TYiBZ4fJ
-   9n76SeJ84HrRivPiBEP1ONZAy8lMQuADALwdwH2qADdS7zK8TxzHf8wiV
-   Q==;
-X-CSE-ConnectionGUID: VMc38jzUSxWY+eXbhnrrdQ==
-X-CSE-MsgGUID: GvXUpKcHTQyEtRdjsWXowg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11189"; a="24653474"
-X-IronPort-AV: E=Sophos;i="6.10,212,1719903600"; 
-   d="scan'208";a="24653474"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2024 13:30:50 -0700
-X-CSE-ConnectionGUID: 8fmgPsSpTkWsV7YB0Khurw==
-X-CSE-MsgGUID: dsstNfYsRpCzwcfx05B6vQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,212,1719903600"; 
-   d="scan'208";a="71424440"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2024 13:30:48 -0700
-Received: from [10.212.20.3] (kliang2-mobl1.ccr.corp.intel.com [10.212.20.3])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id E8B9220B5782;
-	Sun,  8 Sep 2024 13:30:45 -0700 (PDT)
-Message-ID: <eafb8f49-2396-4652-a74e-882b4066790e@linux.intel.com>
-Date: Sun, 8 Sep 2024 16:30:44 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aR9v31CI"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-39d41b61178so422495ab.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 08 Sep 2024 17:30:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1725841808; x=1726446608; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vzWtczCuQJEE//3oD8ytfGgUcpGMdIcjSJ+8lWxc07M=;
+        b=aR9v31CIihHOIJALbkSSzzxek/F+LvbferEc4p8LSLcOX7mnv4cN9I/E+p91rjdyWa
+         k+b7ssNQBSMZliS0WE0BpJtiIIWVDPHuKexETNgQJJT2RNNEswf8pxsrLSw8hov6Dvz+
+         xntXmanoYl8Qx3Ym3OZeMT0Jxt6KCraQwvDujw4i7qk1ziECToS6RJAuiYToUtlNPtBy
+         ldSozB86XjWPsG9SlkDGvR1mw1+zEvL76pkgyev4kNPg1hyAhPOKNkDYrA68Z+zQ/ion
+         iSPaT0EQSa2g+p4xzi2OtbEMyhfrVOG9lyjuIGt8QB+AGw4sS3x194LLz8VjqQGMC96I
+         7yyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725841808; x=1726446608;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vzWtczCuQJEE//3oD8ytfGgUcpGMdIcjSJ+8lWxc07M=;
+        b=wNV1EtwCQt8zS3+kjL/2VsL1bQ5qyYRcIshBX2N3RnUuOXDO7ojGJDcGwpjuDc1qu3
+         Yf4jfkOEd+YdE3SNU2ibNu87s+Kfv+A9WxNqe+OAL93fbJ7yZt4MmN/vsEK7vHZoNgpA
+         mxww/dcBorGjbWT8pkTGn4RtgukHQXZvinlNzbQyuJbQJfWhMzDwTtUNwGiFPxXqnl/U
+         1g9UkUF3kHstQ/5SkcihHDOGqFmZU2iJrkpomPVY6pffispti0vKY7Gu73KEy9UldvGs
+         kIzDKImYp7avOU4Vp+w9UxegwCx8rsMJFVzlE1pQ8duF11qqLBwQc1CZiMZLdeBWyj9v
+         JBVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNAfkH0ZaBfJFOokbtZwf+js2/krZAu2Et224+VU/zXh4Y6EYKwTj9JRKngHG7Yb1pWJS7fVP/YDJpqDCKT5Ua@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSWGC7AN/kX/FFNT/3B2EjpDyf7tYGWywy7TG66DMlWmxzSmTP
+	zACo2tSQCXdf202fBq3Z4uz10R5P8nTR7pcxyqWg9xaPo0FrMHP6uh+SnUKNuSV4e5LnOazS0zY
+	Zl0inF7P64UNcWjN2K/36+u33IQKgN9841HrS
+X-Google-Smtp-Source: AGHT+IHOI75SbCP2ecalhMEuqj0tZIDEkkGR2qFHnHxzn1IVb0IipPvs9HPoy2IMKDUvyhRHHypRGtSPLWf/oCMOZvo=
+X-Received: by 2002:a05:6e02:1c2e:b0:39e:68d8:2891 with SMTP id
+ e9e14a558f8ab-3a0576c3222mr3552395ab.6.1725841807625; Sun, 08 Sep 2024
+ 17:30:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] perf mem: Fix missed p-core mem events on ADL and RPL
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: namhyung@kernel.org, irogers@google.com, jolsa@kernel.org,
- adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240905170737.4070743-1-kan.liang@linux.intel.com>
- <20240905170737.4070743-2-kan.liang@linux.intel.com> <ZtoHgMqNhnDdvAIi@x1>
- <1a339858-74a3-414a-9fc1-bef47c513728@linux.intel.com> <ZtsO-v3pUVezKBgE@x1>
- <8644996b-33d6-4eee-890c-f23a3c830b77@linux.intel.com> <ZttgvduaKsVn1r4p@x1>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <ZttgvduaKsVn1r4p@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <4f01524fa4ea91c7146a41e26ceaf9dae4c127e4.1725821201.git.sam@gentoo.org>
+In-Reply-To: <4f01524fa4ea91c7146a41e26ceaf9dae4c127e4.1725821201.git.sam@gentoo.org>
+From: Ian Rogers <irogers@google.com>
+Date: Sun, 8 Sep 2024 17:29:56 -0700
+Message-ID: <CAP-5=fXz81LOZA+vTGixT26R9vNSpxnCj0=0ieg8E3G4DidGdQ@mail.gmail.com>
+Subject: Re: [PATCH] tools: drop nonsensical -O6
+To: Sam James <sam@gentoo.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Sep 8, 2024 at 11:47=E2=80=AFAM Sam James <sam@gentoo.org> wrote:
+>
+> -O6 is very much not-a-thing. Really, this should've been dropped
+> entirely in 49b3cd306e60b9d889c775cb2ebb709f80dd8ae9 instead of just
+> passing it for not-Clang.
+>
+> Just collapse it down to -O3, instead of "-O6 unless Clang, in which case
+> -O3".
+>
+> GCC interprets > -O3 as -O3. It doesn't even interpret > -O3 as -Ofast,
+> which is a good thing, given -Ofast has specific (non-)requirements for
+> code built using it. So, this does nothing except look a bit daft.
+>
+> Remove the silliness and also save a few lines in the Makefiles according=
+ly.
+>
+> Signed-off-by: Sam James <sam@gentoo.org>
 
-
-On 2024-09-06 4:06 p.m., Arnaldo Carvalho de Melo wrote:
-> On Fri, Sep 06, 2024 at 12:08:52PM -0400, Liang, Kan wrote:
->> On 2024-09-06 10:17 a.m., Arnaldo Carvalho de Melo wrote:
->>> On Thu, Sep 05, 2024 at 03:47:03PM -0400, Liang, Kan wrote:
->>>> On 2024-09-05 3:33 p.m., Arnaldo Carvalho de Melo wrote:
->>>>> But can we reconstruct the events relationship (group, :S, etc) from
->>>>> what we have in the perf.data header?
-> 
->>>> Do you mean show the group relation in the perf evlist?
-> 
->>>> $perf mem record sleep 1
->>>> [ perf record: Woken up 1 times to write data ]
->>>> [ perf record: Captured and wrote 0.027 MB perf.data (10 samples) ]
-> 
->>>> $perf evlist -g
->>>> cpu_atom/mem-loads,ldlat=30/P
->>>> cpu_atom/mem-stores/P
->>>> {cpu_core/mem-loads-aux/,cpu_core/mem-loads,ldlat=30/}
->>>> cpu_core/mem-stores/P
->>>> dummy:u
-> 
->>>> The -g option already did it, although the group modifier looks lost.
-> 
->>> Right, I can reproduce that, but I wonder if we shouldn't make this '-g'
->>> option the default?
-> 
->> I think the evlist means a list of events. Only outputting the events
->> makes sense to me.
->> With -g, the extra relationship information is provided.
-> 
-> At first 'perf evlist' showing just the events present in the perf.data
-> file seems enough, and maybe it should continue like that.
-> 
-> It is just that this relationship is so critical that not showing it by
-> default looks suboptimal :-\
-> 
-> Perhaps we should add some warning at the end mentioning the special
-> relationships present and suggest using '-g' to see it?
-> 
-
-Agree, and we already did a similar hint for tracepoint events.
-
-Here is the patch to add a hint for '-g'.
-https://lore.kernel.org/lkml/20240908202847.176280-1-kan.liang@linux.intel.com/
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Kan
+Ian
+
+> ---
+> I promise I'm not completely humourless, but given it's caused
+> actual workarounds to be added for Clang, I don't think this is worth kee=
+ping.
+>
+> Plus it sort of propagates a silly myth that -O6 does anything.
+>
+>  tools/lib/api/Makefile     | 4 ----
+>  tools/lib/subcmd/Makefile  | 4 +---
+>  tools/lib/symbol/Makefile  | 4 ----
+>  tools/perf/Makefile.config | 6 +-----
+>  4 files changed, 2 insertions(+), 16 deletions(-)
+>
+> diff --git a/tools/lib/api/Makefile b/tools/lib/api/Makefile
+> index 044860ac1ed1c..7f6396087b467 100644
+> --- a/tools/lib/api/Makefile
+> +++ b/tools/lib/api/Makefile
+> @@ -31,11 +31,7 @@ CFLAGS :=3D $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
+>  CFLAGS +=3D -ggdb3 -Wall -Wextra -std=3Dgnu99 -U_FORTIFY_SOURCE -fPIC
+>
+>  ifeq ($(DEBUG),0)
+> -ifeq ($(CC_NO_CLANG), 0)
+>    CFLAGS +=3D -O3
+> -else
+> -  CFLAGS +=3D -O6
+> -endif
+>  endif
+>
+>  ifeq ($(DEBUG),0)
+> diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+> index b87213263a5e0..6717b82fc5876 100644
+> --- a/tools/lib/subcmd/Makefile
+> +++ b/tools/lib/subcmd/Makefile
+> @@ -38,10 +38,8 @@ endif
+>
+>  ifeq ($(DEBUG),1)
+>    CFLAGS +=3D -O0
+> -else ifeq ($(CC_NO_CLANG), 0)
+> -  CFLAGS +=3D -O3
+>  else
+> -  CFLAGS +=3D -O6
+> +  CFLAGS +=3D -O3
+>  endif
+>
+>  # Treat warnings as errors unless directed not to
+> diff --git a/tools/lib/symbol/Makefile b/tools/lib/symbol/Makefile
+> index 13d43c6f92b4a..426b845edfacc 100644
+> --- a/tools/lib/symbol/Makefile
+> +++ b/tools/lib/symbol/Makefile
+> @@ -31,11 +31,7 @@ CFLAGS :=3D $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
+>  CFLAGS +=3D -ggdb3 -Wall -Wextra -std=3Dgnu11 -U_FORTIFY_SOURCE -fPIC
+>
+>  ifeq ($(DEBUG),0)
+> -ifeq ($(CC_NO_CLANG), 0)
+>    CFLAGS +=3D -O3
+> -else
+> -  CFLAGS +=3D -O6
+> -endif
+>  endif
+>
+>  ifeq ($(DEBUG),0)
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index fa679db61f622..5d6b08a896150 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -238,11 +238,7 @@ endif
+>
+>  ifeq ($(DEBUG),0)
+>  CORE_CFLAGS +=3D -DNDEBUG=3D1
+> -ifeq ($(CC_NO_CLANG), 0)
+> -  CORE_CFLAGS +=3D -O3
+> -else
+> -  CORE_CFLAGS +=3D -O6
+> -endif
+> +CORE_CFLAGS +=3D -O3
+>  else
+>    CORE_CFLAGS +=3D -g
+>    CXXFLAGS +=3D -g
+> --
+> 2.46.0
+>
