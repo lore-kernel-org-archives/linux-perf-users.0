@@ -1,254 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E31C18030;
-	Mon,  9 Sep 2024 22:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B26B1791EB;
+	Mon,  9 Sep 2024 22:23:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725920243; cv=none; b=V6NS5Nnz63getE6Mkoc6FZq0nZgBYR5YyB1u2j/zxYKT4gwStUIydti4xHyBPnhZr0Ab0BgLDt/uxLy3MTlsKZ1T4dCFjZ2/3BO6xrqChoBj65Jo7BFa1vSvNKVx1fdnew2gLVB+7OjpWtV2hUxu4gMWMhHMRCuF8InUuZRQy8s=
+	t=1725920604; cv=none; b=X99sWXt0pmyE0rDrtJ2P+Li970b4yme8J7nv6Q60T7oradTYfRYgms/ypYtFj/TY7MAHp2+GLM2PKD3fJyp+Oyj0LFMQDCRFbtAgioodl3s2GQaIqdW9rXIgqw2V+E/M221swiH3hJH1tRN1k8Y7RycLsoj3fomo/pAsjN/EYv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725920243; c=relaxed/simple;
-	bh=7xNmkX1MrzhkG29N4fJyIOYP9GKZjbL/6Nc9BXH8PbQ=;
+	s=arc-20240116; t=1725920604; c=relaxed/simple;
+	bh=twWUNIIHUAfvXwjm5KgeiHSBs7BSECIU6tKwrb4f2E8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y4AbaBkoDHnhePC0zpNjaHCfCEPasVWkFmNl3eq0mvyHF97IG2bRJkZiYj8vCJiepuGnwSPpseNqXnihOAOtryMQTBC2tJpqaxhaY+zCX7wY8JUUDBLEveUFtKLkYH3AVoji9H4Mh2khQIcDB6OTrbLwQM8jZNFH++pi3HYjPN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZor9CGG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=j1uLQJE2SsY+1J0t66imn7VFKim1HLjaBSG1K6ovisbukNxEJvxeBEmtA6u/iRA8xk/Ho4l2T7E6Jm9iOcNmBGXNb5XHNcpzp27CR/DxVX8op1DJZr5AYsZjIZpE/vsOk+sb5OigV21+J2YlEst2RGFoUKqZtCvynUIScEfipWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uHZeMgex; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZor9CGG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D53EC4CEC5;
-	Mon,  9 Sep 2024 22:17:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uHZeMgex"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D42C4CEC5;
+	Mon,  9 Sep 2024 22:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725920242;
-	bh=7xNmkX1MrzhkG29N4fJyIOYP9GKZjbL/6Nc9BXH8PbQ=;
+	s=k20201202; t=1725920603;
+	bh=twWUNIIHUAfvXwjm5KgeiHSBs7BSECIU6tKwrb4f2E8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gZor9CGGAl7jRy3t39usihS6sEn3qjidalH2YNkNAWzWfazPphNqsJy/qj67ZtFPu
-	 DZck1N8vaCuB7sV08I14IkEJYJRJS72au+4NWpiODv+ToHyhjZBFOqG4rvi3vVoQcU
-	 WUAibgtFttLhKTJemWrRCuUvJd7CGk3o3OixWqAYolnhE+d3KpJT1cTay7ERamEiB4
-	 AlLMq7xcjUrc8/xBJQgOA7daNoolJQL6UrMFZ1asfwp45BPYuSpTUh0mWvirUuLYy1
-	 T515rK3MWkYCu7jJbvTgBfuSwRXIXDs7pscwwtmqoFDGtzsI6Ea+62bTcwdPKvGd4J
-	 rRtmaIH+3Mr+w==
-Date: Mon, 9 Sep 2024 15:17:20 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Xiong Zhang <xiong.y.zhang@intel.com>,
-	Kan Liang <kan.liang@intel.com>,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Manali Shukla <manali.shukla@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Jim Mattson <jmattson@google.com>,
-	Stephane Eranian <eranian@google.com>,
-	Ian Rogers <irogers@google.com>, gce-passthrou-pmu-dev@google.com,
-	Samantha Alt <samantha.alt@intel.com>,
-	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
-	Like Xu <like.xu.linux@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v3 06/58] perf: Support get/put passthrough PMU
- interfaces
-Message-ID: <Zt9z8J4wD2VXe2sE@google.com>
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-7-mizhang@google.com>
- <f7b2c537-840d-4043-944e-59926f0fa3bb@linux.intel.com>
- <a585d90b-91f4-49de-bcba-5c2b45d339bc@linux.intel.com>
+	b=uHZeMgex3JE4CQt6fz0wQSkc643QbT+JnmVuIMh9khVwWbPlNUNXKg4pUZSPg9mD9
+	 qNFRM1tuJBeGG8UipB40YZI1slaNyZTE90Jy+nuIrD7/EUWb8hrw3biZ/d4stWHICS
+	 wAu8jUttGvQHIA4yvJS2pew1gQo6rYpShHMhezg3tkn40cu+8qXMY7ILv600FyJ0nH
+	 IoWxtyCPXFyRmtj7k+lf6ljH1IERtXzNCFFZo5Ld6uTnR96TGXSd1q4PyqxRwLGZX6
+	 oY/SbnHmCt7XWdxxwEYKoDb1Lb9Q8iO9oBg7kfTB41oTn2g3LLelPSG2J5SNwikUMO
+	 U3gmSb3RbSjVw==
+Date: Mon, 9 Sep 2024 19:23:19 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Alan Maguire <alan.maguire@oracle.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH RFC 0/2] Prep perf trace for a generic BPF+BTF pretty
+ printer
+Message-ID: <Zt91V3lSSzahENzH@x1>
+References: <20240906195020.481841-1-acme@kernel.org>
+ <b3fa69b9-4acf-4a86-9ef6-be89036c2fa9@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a585d90b-91f4-49de-bcba-5c2b45d339bc@linux.intel.com>
+In-Reply-To: <b3fa69b9-4acf-4a86-9ef6-be89036c2fa9@oracle.com>
 
-Hello,
+On Mon, Sep 09, 2024 at 04:46:15PM +0100, Alan Maguire wrote:
+> On 06/09/2024 20:50, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > Hi,
+> > 
+> > 	This is an attempt at paving the way for the remaining parts of
+> > Howard's work on this years GSoC to be merged, as we want to keep the
+> > existing pretty printers for the few structs we have, that have special
+> > characteristics (see the commit logs) while having the generic BPF + BTF
+> > collector/pretty printer, using the libbpf BPF dumper (see more ideas on
+> > the commit log on how to improve it, maybe even getting
+> > tools/perf/trace/beauty/ into tools/lib/beauty/ to get reused by
+> > libbpf).
+> >
+> 
+> hey Arnaldo
+> 
+> Absolutely, finding the common ground here would be great! I took a
+> quick look at some of the beautify scripts, and it struck me that some
+> of what's missing today - and what makes this hard - is that we don't
+> have easy access to numeric macro name -> value mappings for things like
+> arch-specific errno values (at least not without DWARF).
 
-On Fri, Sep 06, 2024 at 11:40:51AM -0400, Liang, Kan wrote:
+Even with DWARF that is not always available, IIRC it depends on
+compiler flags how much DWARF is generated.
+ 
+> In another context, we've seen pain for BPF program writers who have to
+> cut+paste macro values into their BPF code.  We've sort of solved this
+> in a few specific cases by converting some values to enumerations. They
+> then get BTF representations, and can benefit from Compile Once - Run
+> Everywhere when the macro value is used in the BPF context.
+
+Right, that is something we discussed in this GSoC cycle, to have extra
+BTF generated from the scraper scripts, not in the kernel's BTF, but
+with perf, but then that would work for ABIs, and not for internal
+kernel stuff, where, as you rightly described, CO-RE would come to save
+the day.
+
+Having some extra BTF info, not necessarily in a kernel module or things
+like that, but from a debuginfo server, in an extra rpm package,
+whatever, but accessible via a build-id lookup somehow would be a great
+improvement.
+ 
+> But it seems to me that what both these problems suggest is that it
+> would be nice to more systematically represent numeric macro values such
+> that they would be more easily available. I talked a bit about this a
+> few years back at Plumbers for macros as a whole, but I wonder if a
+> tweak to pahole that does something like
+
+We need to keep talking about this to make it a reality :-)
+ 
+> 1. check if a macro has a valid numeric representation;
+> 2. if so, convert it to a singleton anonymous BTF enumerated type that
+> will not clash with the real macro name (so is safe to use when headers
+> containing that macro are also included)
+ 
+> This would allow BPF program writers to reference macro-defined flag
+> values and get the CO-RE benefits they get from enums and presence in a
+> generated vmlinux.h. It might also help here for beautify where you
+> could establish name-value mappings for things like arch-specific errnos.
+> 
+> We've been talking about having a loadable module of vmlinux BTF extras,
+> so it seems like numeric macro representations would be helpful there
+> too. What do you think? Thanks!
+
+See above, maybe we don't really need to have it as a loadable kernel
+module.
+
+- Arnaldo
+ 
+> Alan
 > 
 > 
-> On 2024-09-06 6:59 a.m., Mi, Dapeng wrote:
-> > 
-> > On 8/1/2024 12:58 PM, Mingwei Zhang wrote:
-> >> From: Kan Liang <kan.liang@linux.intel.com>
-> >>
-> >> Currently, the guest and host share the PMU resources when a guest is
-> >> running. KVM has to create an extra virtual event to simulate the
-> >> guest's event, which brings several issues, e.g., high overhead, not
-> >> accuracy and etc.
-> >>
-> >> A new passthrough PMU method is proposed to address the issue. It requires
-> >> that the PMU resources can be fully occupied by the guest while it's
-> >> running. Two new interfaces are implemented to fulfill the requirement.
-> >> The hypervisor should invoke the interface while creating a guest which
-> >> wants the passthrough PMU capability.
-> >>
-> >> The PMU resources should only be temporarily occupied as a whole when a
-> >> guest is running. When the guest is out, the PMU resources are still
-> >> shared among different users.
-> >>
-> >> The exclude_guest event modifier is used to guarantee the exclusive
-> >> occupation of the PMU resources. When creating a guest, the hypervisor
-> >> should check whether there are !exclude_guest events in the system.
-> >> If yes, the creation should fail. Because some PMU resources have been
-> >> occupied by other users.
-> >> If no, the PMU resources can be safely accessed by the guest directly.
-> >> Perf guarantees that no new !exclude_guest events are created when a
-> >> guest is running.
-> >>
-> >> Only the passthrough PMU is affected, but not for other PMU e.g., uncore
-> >> and SW PMU. The behavior of those PMUs are not changed. The guest
-> >> enter/exit interfaces should only impact the supported PMUs.
-> >> Add a new PERF_PMU_CAP_PASSTHROUGH_VPMU flag to indicate the PMUs that
-> >> support the feature.
-> >>
-> >> Add nr_include_guest_events to track the !exclude_guest events of PMU
-> >> with PERF_PMU_CAP_PASSTHROUGH_VPMU.
-> >>
-> >> Suggested-by: Sean Christopherson <seanjc@google.com>
-> >> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> >> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
-> >> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> >> ---
-> >>  include/linux/perf_event.h | 10 ++++++
-> >>  kernel/events/core.c       | 66 ++++++++++++++++++++++++++++++++++++++
-> >>  2 files changed, 76 insertions(+)
-> >>
-> >> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> >> index a5304ae8c654..45d1ea82aa21 100644
-> >> --- a/include/linux/perf_event.h
-> >> +++ b/include/linux/perf_event.h
-> >> @@ -291,6 +291,7 @@ struct perf_event_pmu_context;
-> >>  #define PERF_PMU_CAP_NO_EXCLUDE			0x0040
-> >>  #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
-> >>  #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
-> >> +#define PERF_PMU_CAP_PASSTHROUGH_VPMU		0x0200
-> >>  
-> >>  struct perf_output_handle;
-> >>  
-> >> @@ -1728,6 +1729,8 @@ extern void perf_event_task_tick(void);
-> >>  extern int perf_event_account_interrupt(struct perf_event *event);
-> >>  extern int perf_event_period(struct perf_event *event, u64 value);
-> >>  extern u64 perf_event_pause(struct perf_event *event, bool reset);
-> >> +int perf_get_mediated_pmu(void);
-> >> +void perf_put_mediated_pmu(void);
-> >>  #else /* !CONFIG_PERF_EVENTS: */
-> >>  static inline void *
-> >>  perf_aux_output_begin(struct perf_output_handle *handle,
-> >> @@ -1814,6 +1817,13 @@ static inline u64 perf_event_pause(struct perf_event *event, bool reset)
-> >>  {
-> >>  	return 0;
-> >>  }
-> >> +
-> >> +static inline int perf_get_mediated_pmu(void)
-> >> +{
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static inline void perf_put_mediated_pmu(void)			{ }
-> >>  #endif
-> >>  
-> >>  #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
-> >> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> >> index 8f908f077935..45868d276cde 100644
-> >> --- a/kernel/events/core.c
-> >> +++ b/kernel/events/core.c
-> >> @@ -402,6 +402,20 @@ static atomic_t nr_bpf_events __read_mostly;
-> >>  static atomic_t nr_cgroup_events __read_mostly;
-> >>  static atomic_t nr_text_poke_events __read_mostly;
-> >>  static atomic_t nr_build_id_events __read_mostly;
-> >> +static atomic_t nr_include_guest_events __read_mostly;
-> >> +
-> >> +static atomic_t nr_mediated_pmu_vms;
-> >> +static DEFINE_MUTEX(perf_mediated_pmu_mutex);
-> >> +
-> >> +/* !exclude_guest event of PMU with PERF_PMU_CAP_PASSTHROUGH_VPMU */
-> >> +static inline bool is_include_guest_event(struct perf_event *event)
-> >> +{
-> >> +	if ((event->pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU) &&
-> >> +	    !event->attr.exclude_guest)
-> >> +		return true;
-> >> +
-> >> +	return false;
-> >> +}
-> >>  
-> >>  static LIST_HEAD(pmus);
-> >>  static DEFINE_MUTEX(pmus_lock);
-> >> @@ -5212,6 +5226,9 @@ static void _free_event(struct perf_event *event)
-> >>  
-> >>  	unaccount_event(event);
-> >>  
-> >> +	if (is_include_guest_event(event))
-> >> +		atomic_dec(&nr_include_guest_events);
-> >> +
-> >>  	security_perf_event_free(event);
-> >>  
-> >>  	if (event->rb) {
-> >> @@ -5769,6 +5786,36 @@ u64 perf_event_pause(struct perf_event *event, bool reset)
-> >>  }
-> >>  EXPORT_SYMBOL_GPL(perf_event_pause);
-> >>  
-> >> +/*
-> >> + * Currently invoked at VM creation to
-> >> + * - Check whether there are existing !exclude_guest events of PMU with
-> >> + *   PERF_PMU_CAP_PASSTHROUGH_VPMU
-> >> + * - Set nr_mediated_pmu_vms to prevent !exclude_guest event creation on
-> >> + *   PMUs with PERF_PMU_CAP_PASSTHROUGH_VPMU
-> >> + *
-> >> + * No impact for the PMU without PERF_PMU_CAP_PASSTHROUGH_VPMU. The perf
-> >> + * still owns all the PMU resources.
-> >> + */
-> >> +int perf_get_mediated_pmu(void)
-> >> +{
-> >> +	guard(mutex)(&perf_mediated_pmu_mutex);
-> >> +	if (atomic_inc_not_zero(&nr_mediated_pmu_vms))
-> >> +		return 0;
-> >> +
-> >> +	if (atomic_read(&nr_include_guest_events))
-> >> +		return -EBUSY;
-> >> +
-> >> +	atomic_inc(&nr_mediated_pmu_vms);
-> >> +	return 0;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(perf_get_mediated_pmu);
-> >> +
-> >> +void perf_put_mediated_pmu(void)
-> >> +{
-> >> +	atomic_dec(&nr_mediated_pmu_vms);
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
-> >> +
-> >>  /*
-> >>   * Holding the top-level event's child_mutex means that any
-> >>   * descendant process that has inherited this event will block
-> >> @@ -11907,6 +11954,17 @@ static void account_event(struct perf_event *event)
-> >>  	account_pmu_sb_event(event);
-> >>  }
-> >>  
-> >> +static int perf_account_include_guest_event(void)
-> >> +{
-> >> +	guard(mutex)(&perf_mediated_pmu_mutex);
-> >> +
-> >> +	if (atomic_read(&nr_mediated_pmu_vms))
-> >> +		return -EACCES;
-> > 
-> > Kan, Namhyung posted a patchset
-> > https://lore.kernel.org/all/20240904064131.2377873-1-namhyung@kernel.org/
-> > which would remove to set exclude_guest flag from perf tools by default.
-> > This may impact current mediated vPMU solution, but fortunately the
-> > patchset provides a fallback mechanism to add exclude_guest flag if kernel
-> > returns "EOPNOTSUPP".
-> > 
-> > So we'd better return "EOPNOTSUPP" instead of "EACCES" here. BTW, returning
-> > "EOPNOTSUPP" here looks more reasonable than "EACCES".
-> 
-> It seems the existing Apple M1 PMU has ready returned "EOPNOTSUPP" for
-> the !exclude_guest. Yes, we should use the same error code.
+> > 	I plan to work on the weekend to plugging his latest series on
+> > top of these patches so that we can get it merged in the next merge
+> > window.
 
-Yep, it'd be much easier to handle if it returns the same error code.
+No work in the weekend, but took most of today :-)
 
-Thanks,
-Namhyung
+I'm pushing what I have to the tmp.perf-tools-next branch at:
 
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
+
+> > 	Any comment/test is more than welcome,
+> > 
+> > - Arnaldo
+> > 
+> > Arnaldo Carvalho de Melo (2):
+> >   perf trace augmented_syscalls.bpf: Move the renameat augmenter to
+> >     renameat2, temporarily
+> >   perf trace: Use a common encoding for augmented arguments, with size +
+> >     error + payload
+> > 
+> >  tools/perf/trace/beauty/perf_event_open.c     |   2 +-
+> >  tools/perf/trace/beauty/sockaddr.c            |   2 +-
+> >  tools/perf/trace/beauty/timespec.c            |   2 +-
+> >  .../bpf_skel/augmented_raw_syscalls.bpf.c     | 108 +++++++++++-------
+> >  4 files changed, 68 insertions(+), 46 deletions(-)
+> > 
