@@ -1,170 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF67C18CBFC;
-	Mon,  9 Sep 2024 22:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB82B18C923;
+	Mon,  9 Sep 2024 22:38:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725920770; cv=none; b=Ku7nAguREhwsBnRTOqYMUROOfZJFApxL5Mvpl0Rj4Z9xkFfJkjAyJeAAueh+7hj0UW8tePWER0s/ZfdGEC8re06vI3fEBqkF5slJmb4UO5c5i1Cs3HPauxb0FgA3+hUNTbAGI7bZe+DULmJjS9JXOgu0SvKev3qX2HnF7wiux0k=
+	t=1725921519; cv=none; b=VzddYWCBWsYLjHEvPRx83i4V1gpJZptCzyGhe/OBdAxNlxwQmebzJWgYhrHBgXRV0nbVyc/Y3diT5rodL3dUmJMaj+0TZOZeLKIE8Gvmxnurx9v3tMRDRV8hQMB93dnyY5UJZmVaRxN7yBYj7Fk6s/qRfz60WpYiYslfEf5laHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725920770; c=relaxed/simple;
-	bh=VxoyjjS0GKipy/mS0UK0CMXRJnQ+lCzjurk744xwrFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=My5hgRZ02QeumEVxvEaDDKw9Dob+VG+4aIIOfSQGVBPuJ4wyPZ4RAMqjDuNnRxQRvitghbRDSa9fz4WMA37O/ZafdNFE+1kdjMMs/5TT2WpZ8lHoaOaKMtoJt0JLYiJsLqoFFFDHZDP68PElbaJUdfrjmgOIcA3jxlJDV6T++9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ghqjrNz1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725921519; c=relaxed/simple;
+	bh=f9MTJckK/S6UWuhW0Pc9Mk0IskeoqK/kZPK0BCiking=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nd4Rgq+hTtE4cXalxUGqKIxMwL5qKoLxEkIhz6x23/PFvb+fJ57+2AA3ggBUMDmIFMe5dJhG8tLO2yBgE/4phWmZIGiuFnLxOSUJWqAi4H5iQu1EhQdjlSIJvYzYVJN+7CUfptzezL/WoVa+guB2MCmcwN328ja3Fr+2McKxlVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OCaUtScL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ghqjrNz1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05D11C4CEC5;
-	Mon,  9 Sep 2024 22:26:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OCaUtScL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 645A6C4CEC5;
+	Mon,  9 Sep 2024 22:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725920770;
-	bh=VxoyjjS0GKipy/mS0UK0CMXRJnQ+lCzjurk744xwrFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ghqjrNz1FTuhuAgKkrP7r+yEwPaVmRsOvimF6vICvQdk/90hPL/LazoogSR8lZjb+
-	 /AQQgz+OeEtmvXhP8FeXJmd1iw+fdKjiBOVH6qzKg21U9NRsR8K9WK2ImfPYfW6Vyh
-	 WjegQUhQNNCM46yqNVpZTeuUsurbPLZoQnbVXYTVyJczpoNOik5TtY0JYS1w34N+Kd
-	 bq7Hr5hiskQnWxLnoKAPSkTKlNSA/nrGGuB4w3j5FjIEBq3q04SnKNuIkngYxcXolQ
-	 J3aPK/44D+BO+A1QT9drNYsNndDj9VQXjau/7ff095fwIkVaYgvnFVfyHHL0Mbi8Z2
-	 9eu1n0RcteJYg==
-Date: Mon, 9 Sep 2024 15:26:08 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] libperf: Add perf_evsel__id() function
-Message-ID: <Zt92ADG9_W4ujarg@google.com>
-References: <20240823-perf_evsel_get_id-v1-1-0ffa204c4164@rivosinc.com>
- <ZtkyCWXVjnn-hjUT@google.com>
- <Ztn/mRDqPSpmliWq@ghost>
+	s=k20201202; t=1725921518;
+	bh=f9MTJckK/S6UWuhW0Pc9Mk0IskeoqK/kZPK0BCiking=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OCaUtScLHrRgQVJui32sOoKl2ehQ+VnICYUqbhlnrlzK4I6a9l0p5Onr+udNe9WEf
+	 +8/3SJ+/sAbr3zP0W/0UZpKO1Z7xHId19hYk0/YBaJngrwbnvsshy/hPaUtlzx6EFH
+	 Ghy3AopJLqMIHIhbErU8cy0+1HwSwow0wqqIves6zwRtdGDBpWZDP/SmCd+lB9b7A1
+	 iCTuwhhvDSuI1F+9dbvLCtDRefYDKtTdBfG9Avrmh0jMVwjOdTeTrch/NqVBH4Goc1
+	 iEFQTe869YvnHVNTjcGqHtoJSwdOG4ps2J5YdY7BaBbVaxX0pcEDw2F/ZKYQvbB3WI
+	 pxO0vtIAp++PA==
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-39d3872e542so20914255ab.2;
+        Mon, 09 Sep 2024 15:38:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWHkkdwCZCzVdciF0JPeKJjoecX4hVn5WQwszkuJNxgkSNEreRqvXfD1AV3BaUDJRleMYhZfjkF2f3Sfmhp5U56@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVSRH9mDzqRdUDS91gHOXHePMcp7rZPpR/5qiB+ZQ6QQB3Nhv5
+	RryieQt96C7VK8+bfHOctETyIeO/mKdrHp5d5EozVrbL7+ngMzFUwt8g7O8C4d1seowfOdrNHXG
+	E/4FIOdyrhV/YvIItHOspyhhAVoY=
+X-Google-Smtp-Source: AGHT+IHwA0y7bgW+izmOWWa4PYal4009LCqKzisJVL6z4fjF98DUMEECFsg6Vjm+y4SuQyfTcUeeBEQkcakSUr+cL2w=
+X-Received: by 2002:a05:6e02:18c7:b0:375:c443:9883 with SMTP id
+ e9e14a558f8ab-3a04f0db9ffmr162288585ab.21.1725921517812; Mon, 09 Sep 2024
+ 15:38:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Ztn/mRDqPSpmliWq@ghost>
+References: <20240909190426.2229940-1-andrii@kernel.org>
+In-Reply-To: <20240909190426.2229940-1-andrii@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Mon, 9 Sep 2024 15:38:26 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW77CR5RfG8g2Oax62tb39X3iV=1_wdfAs5W97oiash9LQ@mail.gmail.com>
+Message-ID: <CAPhsuW77CR5RfG8g2Oax62tb39X3iV=1_wdfAs5W97oiash9LQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] MAINTAINERS: record lib/buildid.c as owned by
+ BPF subsystem
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net, 
+	martin.lau@kernel.org, akpm@linux-foundation.org, 
+	linux-perf-users@vger.kernel.org, jolsa@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 05, 2024 at 11:59:37AM -0700, Charlie Jenkins wrote:
-> On Wed, Sep 04, 2024 at 09:22:33PM -0700, Namhyung Kim wrote:
-> > Hello,
-> > 
-> > On Fri, Aug 23, 2024 at 11:58:38AM -0700, Charlie Jenkins wrote:
-> > > Introduce perf_evsel__id() to collect the id of an evsel. It is not
-> > > currently possible when using libperf to determine the id of an evsel.
-> > > This will allow applications to link the id returned by PERF_SAMPLE_ID
-> > > to the event being sampled.
-> > 
-> > I'm not sure what's your use case.  We have evlist__id2evsel() to
-> > convert sample-ID to evsel already.  It'd read the IDs from perf data
-> > file.
-> 
-> That function is unfortunately not exposed to be used by applications.
-> This patch is for libperf, not for the util internals of userspace perf.
-> Since I am using libperf (and not the python wrapper) I am collecting
-> data directly from the mmap buffer and not from the perf data file. The
-> mmap buffer only contains the id of the sample, and no way of
-> associating this id with the evsel that is backing the id using only
-> libperf API functions. A libperf function that provides a pointer to the
-> associated evsel could be another alternative to this. However an API
-> that returns a pointer to the evsel is not very useful as libperf
-> applications cannot read members of perf structs, as the layout of perf
-> structs are not part of the API.
+On Mon, Sep 9, 2024 at 12:04=E2=80=AFPM Andrii Nakryiko <andrii@kernel.org>=
+ wrote:
+>
+> Build ID fetching code originated from ([0]), and is still both owned
+> and heavily relied upon by BPF subsystem.
+>
+> Fix the original omission in [0] to record this fact in MAINTAINERS.
+>
+>   [0] bd7525dacd7e ("bpf: Move stack_map_get_build_id into lib")
+>
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 
-Right, thanks for sharing your use case.  The libperf lacks the API to
-map event ID to evsel.  And perf tools access the internal data struct
-in the libperf which is not good.  But making it a proper library will
-take a lot more time.
+Acked-by: Song Liu <song@kernel.org>
 
-> 
-> > 
-> > > 
-> > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > > ---
-> > >  tools/lib/perf/Documentation/libperf.txt |  2 ++
-> > >  tools/lib/perf/evsel.c                   | 10 ++++++++++
-> > >  tools/lib/perf/include/perf/evsel.h      |  1 +
-> > >  3 files changed, 13 insertions(+)
-> > > 
-> > > diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-> > > index fcfb9499ef9c..69c1d7efb659 100644
-> > > --- a/tools/lib/perf/Documentation/libperf.txt
-> > > +++ b/tools/lib/perf/Documentation/libperf.txt
-> > > @@ -94,6 +94,8 @@ SYNOPSIS
-> > >    void perf_evlist__enable(struct perf_evlist *evlist);
-> > >    void perf_evlist__disable(struct perf_evlist *evlist);
-> > >  
-> > > +  void perf_evsel__id(struct perf_evsel *evsel, u64 *id);
-> > > +
-> > >    #define perf_evlist__for_each_evsel(evlist, pos)
-> > >  
-> > >    void perf_evlist__set_maps(struct perf_evlist *evlist,
-> > > diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-> > > index c07160953224..765b17045342 100644
-> > > --- a/tools/lib/perf/evsel.c
-> > > +++ b/tools/lib/perf/evsel.c
-> > > @@ -484,6 +484,16 @@ int perf_evsel__disable(struct perf_evsel *evsel)
-> > >  	return err;
-> > >  }
-> > >  
-> > > +int perf_evsel__id(struct perf_evsel *evsel, __u64 *id)
-> > > +{
-> > > +	int i;
-> > > +	int err = 0;
-> > > +
-> > > +	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-> > > +		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ID, (unsigned long)id, i);
-> > 
-> > IIUC this would update the place pointed by 'id' for every fd then you
-> > will get the last ID only.
-> 
-> Yes I have a misunderstanding with how this is supposed to be written.
-> Can there be multiple ids associated with a given evsel? When parsing
-> the data in the mmap buffer, I want to be able to associate a sample id
-> with the event encoding. I suppose an API to get the evsel from an id,
-> and then require libperf applications to search some data structure to
-> get the associated event with the evsel is reasonable.
+Thanks for making buildid parsing more reliable!
 
-Yes an evsel can have multiple IDs as it can have multiple FDs.  The
-evsel is an abstraction to keep related events together and they are
-actually opened for each CPU and thread, hence the xyarray.  Each opened
-event (for the evsel) has its own ID.
-
-You will need an array of a same size of file descriptors to retrieve
-the ID info and also a hash table to map ID to evsel.
-
-Thanks,
-Namhyung
-
-> > 
-> > > +	return err;
-> > > +}
-> > > +
-> > >  int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter)
-> > >  {
-> > >  	int err = 0, i;
-> > > diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
-> > > index 6f92204075c2..1457e5a46b28 100644
-> > > --- a/tools/lib/perf/include/perf/evsel.h
-> > > +++ b/tools/lib/perf/include/perf/evsel.h
-> > > @@ -41,6 +41,7 @@ LIBPERF_API int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx
-> > >  LIBPERF_API int perf_evsel__enable_thread(struct perf_evsel *evsel, int thread);
-> > >  LIBPERF_API int perf_evsel__disable(struct perf_evsel *evsel);
-> > >  LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-> > > +LIBPERF_API int perf_evsel__id(struct perf_evsel *evsel, __u64 *id);
-> > >  LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
-> > >  LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
-> > >  LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
-> > > 
-> > > ---
-> > > base-commit: 47ac09b91befbb6a235ab620c32af719f8208399
-> > > change-id: 20240822-perf_evsel_get_id-f7e11f15504b
-> > > -- 
-> > > - Charlie
-> > > 
+Song
