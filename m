@@ -1,108 +1,100 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2216FC5
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Sep 2024 00:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CF94405
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Sep 2024 02:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725841850; cv=none; b=mhsKNn8RqtGD3TRw9heVv/ZXyKOn3Ar8rYejepFrWh9zMSwvhePyLyEGuB2fkd29AM+nQxOJmV5YwkutBTlpbRWzlnKObW3XdxW7FSJxDdoq7D544MkBpY7Ojhi6kjyFHphoCpIMH4wOQS5Dh7LlY6c45k0IghTyJgFbIM5JH/g=
+	t=1725848136; cv=none; b=KHy30qdd6n5qLinUmGbodSGNw4rS+3zoUCH6cUCWY3toZ1400xBcKOjuO8GbChFcMlbaE3gkTTVeCNA+g8+oeuhYuJXuFpS/VbM4fu+/9Y9j65uJ4ksUSuSdtNWj41aixCHeL9K3wSvqWYPHtY7DLhNQ4uPNLEbYeISMd0BQ5uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725841850; c=relaxed/simple;
-	bh=wPV8YEoYLGqTx9bO1llFaMyCiCsTU5XfDU4kupMd/c0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bu6q2iCIBZ0PWM1JjO1wN/a70Zz+WNh7kQ60NSaCoPLH7l85jJsvxzWB+/3+8sHplnqGnKY7Ol8RpVPXIf8Qg5xPjk1eW983nKR/0yT7P0GDmpFWwJhGSCOKJ/5hDf+yNLKua/qKepYbKe1GAbjYvTZP4JIFftO4xDLwTSXhTuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TW78uOL3; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1725848136; c=relaxed/simple;
+	bh=/LOorNelw5K6LsGZAXAl2ZaE2Att8l88gdP9meKzMgo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=a8XLIvcj6N2RrmpGfsaspUlPpzA6OsXScZTjy7HOJM6B+rezbNSCxXrVctqABMmc6NVdzKhuy55A2SVMDcWuIHEbNyQjgX8uuBOVv7XEqVeVlW476NK+HRj0QVDxugvhU9bBR2cg+womOj38YiS0BIllfhMIshaFGZG9mJ4Hlf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Rf3qmMp6; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TW78uOL3"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2056aa5cefcso266055ad.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 08 Sep 2024 17:30:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Rf3qmMp6"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20543fdb7acso26353385ad.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 08 Sep 2024 19:15:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725841848; x=1726446648; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pJjhNLbpnc53C/tv3mczouRD8+CJs7f+bOzNSZ5DZtA=;
-        b=TW78uOL3GeTLI+Hxjui4q3GiWM5unwxfp0CbM7cgFCkzqhf5JVL3rk9eQOTHCF47Y5
-         NXEzcMmUX6rfCV38Iv0lVQOeOGFY3CuH/DfT+SaSNS81+r2eTEtsx9+ArPSPduWSJwWC
-         SVFumkZzfhudHieEDWSsH4z+uL9+g4Q6JYsav6LylfpBIa/nqtyB+w+n57UG3COrypw+
-         jMCSstM5n9bHDMozwIC5suAmmaAHUU+KJ6+HO0sQ43X2eq0KtzULt3D+yr2Ap0HVfPWC
-         qi3XnU4GpfluU0Iyk7ANcPNjNhx5+AHH2/rGSY7kz4/l59klmDBMqpguFGSMU9gz27l7
-         cK8g==
+        d=bytedance.com; s=google; t=1725848134; x=1726452934; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Kycz822BWcHQgVzQmfVOMENr3RqEtpWbF7qRzT1Ov4o=;
+        b=Rf3qmMp65n3WMXtub55essnUzQoVif6CV5y7xa13Dev5TCdku+9P95WWxNM1p2arVr
+         iHNenU99sooNWPNITvwvUUck1aU/5znNT0AiSjaWdodc0YCS0LaeBsrawn5TZDSE2yNh
+         rN6XVj8PdsQ4FZ95XbcYaBKmodLG7kdYfGrPfcaTyw3I+EgoNWYrSy28ESEgv+20QyJ0
+         NvIZrYaTzZ7+twQbqpTJB1FWnoMis5Uz/HmyFwXOitUf/PB81UHk+xbR/N7FDtHmWxez
+         pSZdR4Ag7cJcKXLz6FB3+52VS3TArGb8VdCSuZUXGLUgtx1WJddQdt3J4Er74etyr2Ye
+         3Vjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725841848; x=1726446648;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pJjhNLbpnc53C/tv3mczouRD8+CJs7f+bOzNSZ5DZtA=;
-        b=mNWHSv48u8fqjcBXi0uIGzjYx+nqV0es/3ZYRToyYrYGdAbxeisRkf+kBZdJdP3ZSy
-         lUEB02in3Dut/desYlsG6prmLOgR3Gdf6veOnp4DDzgUQ8xDrQWlbrlC479Eywe2PCus
-         kwtXK3mLgIK1ZBq7pHVHYMYA0uHbggalCIAN3V+dfr12qm1/EbZJi3SA0iGuIf4YCclN
-         wqYS3PPfU7pHt3uXaB/DDkBNZyE3oIfRyZ3Y5fwA+Z5PTh3AdgldMaxfW+W239M9T7+V
-         HeEavKHe3fArogN1kORbtMOwuNlbvDklel36Hf3IdNOeYP1qTe9AMxikLYr5w/CEYox4
-         sQTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXIR/PN3HmkJT5CPY3FIJDeGFlTmNpqxYy6waJkrmShYJv6mqoBO6JdXeHQIR9XRo4/GE5oQnlXQvvfOhUwuQdv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaYGuTsZZxX6JpbSbdVKTDR0aaDjzYhjMbtmCw+Jd+bzaRZe5T
-	V5HFVWiFqW3oxb2zvAzNeTwfKJwKAaJy+Rm23zcrDmq09YMHzjkcWJ8XFnp6xwZK8UcX1vsY4ZO
-	tCidf+2rNiIfgM5jNgozJzGVII4d9W5ZFvsGqz++Dh4kTPxQxBA==
-X-Google-Smtp-Source: AGHT+IGowZzSEmTKRevgtTKEx/JN1+vLY4SrQ8bcDLX5CnwXX5QhslEZ/rC448FW8Ec5061Ba82Z65wAVG0P2JfReNo=
-X-Received: by 2002:a17:902:c401:b0:1eb:3f4f:6f02 with SMTP id
- d9443c01a7336-2070a839333mr3341795ad.12.1725841847501; Sun, 08 Sep 2024
- 17:30:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1725848134; x=1726452934;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kycz822BWcHQgVzQmfVOMENr3RqEtpWbF7qRzT1Ov4o=;
+        b=k6VGttQ1WevOExilAF7drSg3AnCNPQsiA/gMnJE/aA8WpMqT57UdwPLiBQhNkXF4H1
+         oNb5xbrkVbOI622OT+wS3LF95dvSlMTIRpdDdvWe3IziS+4veIJ6UuvpNLCIETLQJEcp
+         i1KV0fLHvGpa7U+HEFOJun2HSF3B18fMOD1Vpgx9aq+uSBqkUIEU3LbpaXYqwbZ1NrU7
+         hjGPULvzH0GYp5yqYbr7jlxCs1yw4cliAizNDyqCR/tYF0rEUS+CDEtEelDRz04MT2BD
+         ji4bOOfEYMgORGvZHYpCFjnnWU0cOqxJex5uanau6qVyWE9b1cI8oCCryCAfrbFJjv/K
+         tzTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmmO+1wu6nPhBmR19ZUzXKEe9jJbRV2uAVWHgpFg326ZWa5Tp8JTWhimrt9wafzShkCF94qeePgqk9uRZarz/C@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmlgtZadlKWXeR3JU7eIDf5XWDHV4Nri/47ZuJVblhgxROL2iA
+	duGJf6cN4ofUqNNByXX8WEljc5uVspQhCUZVAwfuCKIdFwZWAnu7YStkhk7vz0c=
+X-Google-Smtp-Source: AGHT+IEXDdNuaMBdc+/KkajIoBKOQjSXV7wV6wsKWkfirg+ejF8mkgtn4hEdz4bBVIWxseb/r+4QeA==
+X-Received: by 2002:a17:902:da92:b0:206:93e7:5845 with SMTP id d9443c01a7336-206f065bb9cmr70776625ad.59.1725848133817;
+        Sun, 08 Sep 2024 19:15:33 -0700 (PDT)
+Received: from [10.70.146.105] ([203.208.189.10])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20716f1005esm22477885ad.305.2024.09.08.19.15.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Sep 2024 19:15:33 -0700 (PDT)
+Message-ID: <32df3e10-994d-4966-9f8f-e9b736140ded@bytedance.com>
+Date: Mon, 9 Sep 2024 10:15:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240907131006.18510-1-algonell@gmail.com>
-In-Reply-To: <20240907131006.18510-1-algonell@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sun, 8 Sep 2024 17:30:36 -0700
-Message-ID: <CAP-5=fUW1z++JdFHke8X8Ou-grBRK_8rYPgd+CNjVLB9iZ5csA@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Fix a typo
-To: Andrew Kreimer <algonell@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [External] Re: [PATCH v3 0/3] perf: build: Minor fixes for build
+ failures
+To: Leo Yan <leo.yan@arm.com>, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240807032019.1828674-1-yangjihong@bytedance.com>
+ <b5688d4a-9389-4998-8031-3f002302311e@arm.com>
+Content-Language: en-US
+From: Yang Jihong <yangjihong@bytedance.com>
+In-Reply-To: <b5688d4a-9389-4998-8031-3f002302311e@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Sep 7, 2024 at 6:10=E2=80=AFAM Andrew Kreimer <algonell@gmail.com> =
-wrote:
->
-> Fix a typo in comments.
->
-> Reported-by: Matthew Wilcox <willy@infradead.org>
-> Signed-off-by: Andrew Kreimer <algonell@gmail.com>
+Hello,
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+PING.
+
+Are there any other issues with this patchset?
 
 Thanks,
-Ian
+Yang.
 
-> ---
->  tools/perf/builtin-help.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
-> index b2a368ae295a..0854d3cd9f6a 100644
-> --- a/tools/perf/builtin-help.c
-> +++ b/tools/perf/builtin-help.c
-> @@ -417,7 +417,7 @@ static void open_html(const char *path)
->  static int show_html_page(const char *perf_cmd)
->  {
->         const char *page =3D cmd_to_page(perf_cmd);
-> -       char *page_path; /* it leaks but we exec bellow */
-> +       char *page_path; /* it leaks but we exec below */
->
->         if (get_html_page_path(&page_path, page) < 0)
->                 return -1;
-> --
-> 2.46.0
->
+On 8/7/24 15:49, Leo Yan wrote:
+> On 8/7/2024 4:20 AM, Yang Jihong wrote:
+>> Changes since v2:
+>>   - patch1: change LIBDW_VERSION to follow up the style of
+>>     LIBTRACEEVENT_VERSION. (by Leo's suggestion)
+>>   - patch2: Use a new line for the -ldl dependency and with comment,
+>>     synchronize tools/perf/Makefile.config. (by Leo's suggestion)
+>>   - patch3: include header files in alphabetical order,
+>>     add reviewed-by tag from Leo. (by Leo's suggestion)
+> 
+> For this series:
+> 
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
