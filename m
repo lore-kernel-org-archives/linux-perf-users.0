@@ -1,55 +1,57 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB251940B9
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Sep 2024 14:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1545D1946BA
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Sep 2024 14:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725977076; cv=none; b=fciuawIDNIbc13a2mYJQOpoCahTTMD4fp59nTKbPRi/Ax21SXCL9O4nsr9lSXF0ZQqx4y6Ry6bPIdES8kbmTSV30QOYmYZPHKTeB3qy40jUc96ni+qnrepuaOJPtzAN/Z7BINrcIicZocpQ0bsk3feZNki2OgXJXDkUhGmesJKg=
+	t=1725977081; cv=none; b=H+0p0iURkFkfhznsngc3keKUD24HDvprc5kED2DMpYOuRzqpILHRx6ycdOgGPtJ7ZATMHnRzX8uEjTgyCYhPMsjjllHKIXklDUsVVHxBS6S5eV7jmga7uRM16+ww9gIP9P4ub8ZouS/xJWth8/Am97js1uC/nPTZh6vo7ZGShhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725977076; c=relaxed/simple;
-	bh=F+3xN50Pz9A4k2YYqRQMO8JrNu11JwVeJ1OvaPqgdzI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lwIxOuUo92irS1sLhxrD+oVUX457HnM6FxeVQZWiqVjyTb8KeZ6ostQR4Mcqr6eWaWp9wTUkR4fNlqwS4GawMpz+ZlAT3bt0RwPHOUsQPrEzmxyWmOWq+mWYugnsQhM3mlvoH7JQ4Yn8hX0KOly+phNWF1pSN9AJowrsgeZLjD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iNUpuYYi; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1725977081; c=relaxed/simple;
+	bh=OjtweS1q3V27F5fK6RgxbRa8U+kYLJ/fvAGK90ksCB4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Cc6H3H/RcWYHFygs/u3d4hyJMmU82nFl6cDr4lu92bEO6eoLRzsDTUfbSflbsYgbdoEnTk8sGYtokyRn0tv/f2deXF9cOufm8cwbqd+f6g+OGpJBgfGD9xr/D/zOgNeb7DjbUNqnh6qOYhWyx1wWPbNlby1eQ+/qjbLZTdUDkUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gEsL2pKp; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iNUpuYYi"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-428e0d18666so51316285e9.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Sep 2024 07:04:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gEsL2pKp"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-53568ffc525so1041547e87.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Sep 2024 07:04:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725977073; x=1726581873; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uOdt2q5OQQq0fnpsmusq1WiM8KGsMYcRTNlceymvj2c=;
-        b=iNUpuYYiRAUzHH6wq1JPykt9TzjbX5l8waIw/evhKYwYx40Wj/tHj4xITQ8O4QlCc6
-         Y+R3ZRV5XJvdSZoKOBASA68baAu6p1CgM1YVQqdhPwVoN0tpAcEu1CfwPbwILIQ/zDAR
-         tgnvUsgIz2xUrgX7O49bsL6/H/FrbntynjIHRoTznWzgGnlvjJFIoxL117SALmJSqlZz
-         DLYU3t/jWx+1xMtQfTj74sCrB8TAZ8GCYLItNrnhXSnVhjJqcAsTRZ4KpoA8b3ikPMq2
-         QEcrgPJB8RhrHLQLkVoxzL7vgoEWpslFFtGlzlMPL5q4bWSoN6FNS0Xa9G2K7kFnbs1t
-         w3Fg==
+        d=linaro.org; s=google; t=1725977078; x=1726581878; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YS/maFmCMzAAa4s+MCdvfSFRa4peuXy1wJykcXIHmPk=;
+        b=gEsL2pKptFzYFzlk4/YRhDLOOvxj76WgXwcVA3ciYClXow4Iu0pAet1Ne3qMa1V3gk
+         IKKfropaemR4cyesZMZEFDut3xktIQp4yVJOzEhi23kPVXdE0N7gqsJA5srNUgVNImmv
+         ROEt0vtlYwKTQ8c5Y7JelFa3G2sOdZsr5pppKi0Es+spf07Hc/uLWgWPclfW7xBoQqiO
+         jm4IbpqRE/uMOn7X8cQDeufcJ7+Lr0tyog2rWFMY71qP5TfX/VM9jrBTjexjSIwUfS63
+         RapVY2rOOWdfS1u15MQNVWrtooc5Hb8NXl6fgtqY5quRQJjEudEEL0Sah5kIZAR3hLHU
+         tOfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725977073; x=1726581873;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uOdt2q5OQQq0fnpsmusq1WiM8KGsMYcRTNlceymvj2c=;
-        b=arZHd9IKRFu5Ur9M1aWjjTTltoC5hrSluMmSVF2dRpkdvJW4oYnT5h+mGysBd4KU+o
-         saCC7m6a5T5GGC0H8LYpd3MlvUnPeKbNw7sFkVaPV9Ws6jFgkQ+jrhKFg8Z4pmS7Y1tV
-         URd4pEb6VWqXShnWfjHc7bjIWWgwgmlekVE2+Jsqf3HAsdy+qSVRpMRskWSxRdRgA4PV
-         2xmYta3SZVASnuzD0aKRy+U8Bl3vL4Ev6ugJOWIcawFDnoO2obA64ffy69tYGk868rDP
-         udwxgitNITKiCb7XEdA7S5/G1ZioUSXYJ+WzRiY/4DEtuAtzkbePqy4A8bLDO+OJoTYr
-         DaZw==
-X-Gm-Message-State: AOJu0YzI5GJCmMHGVJV4DKlWVJN2T47k3zBETwahOhB+wtZ7hNT3/mZ4
-	1/Twljl88QCNbL9aucZXEt3asw0w/FXjTh9IkThl/TimDZO4G3BNV9vZzfYM7RADertVMBcKEvc
-	Rirgfrw==
-X-Google-Smtp-Source: AGHT+IGORiGLrEeyYGhgnLQgi79SfNMK6glsR1EtuCJ21m2VIv4liW+ffPNjWEmUhtfxnf1aYaqbQQ==
-X-Received: by 2002:a05:600c:1d1b:b0:42c:bf94:f9ad with SMTP id 5b1f17b1804b1-42cbf94fd2bmr21175985e9.34.1725977071885;
-        Tue, 10 Sep 2024 07:04:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1725977078; x=1726581878;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YS/maFmCMzAAa4s+MCdvfSFRa4peuXy1wJykcXIHmPk=;
+        b=CnNQa5g0GpLmkZGGGGawqrmAfk1D5Flse57YLt7denEs/S/KdFS6CR0ASq5NMiglV/
+         PRbGDkFp8RU8PfeW0crOln0ElVShrMYd1sLxiy5u2IZqp+MYvs+a7EnZ8OW5C1HW405C
+         SOpRMg9N9J7J0pc9yKEyfzQvCK0msG+yMLItVsLRe+oP9nNWrp1jOAN/EsMeeOcSVoow
+         zXMjiibNg5a1LFNhKjdsyy+A6Y+iRDZFQTj4BViFk54ITm3LaGQRJNlmU76OKrn30v4g
+         2KZ+oqVLPbPIlEuyMDa9tcOynz/t3zn3+5YsdyYnkzcfTqd12EFICfOIgNGk7Yj2W6QE
+         LU2Q==
+X-Gm-Message-State: AOJu0Yw+25gTQX8XHsKFEzpWNFUkkxBqjPMRhzhhcebF31KpBqOIPSg4
+	A+70Gy3cMwPcI1aj41ayaIP4/g9A1i6V1c2f4IWOTIw8DC9nwtP4007A2gaSIKAWZC3boY5v+LY
+	u0d9wPA==
+X-Google-Smtp-Source: AGHT+IHoK5woUUfrtzi8S8rwG8nObPbqRVcjsqfShnp3wADgkiTW2rnKUpQlo65zvgcisMPeXektZQ==
+X-Received: by 2002:a05:6512:2523:b0:535:6795:301a with SMTP id 2adb3069b0e04-536587fce23mr9726515e87.47.1725977077413;
+        Tue, 10 Sep 2024 07:04:37 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb8b7f1sm114787075e9.48.2024.09.10.07.04.30
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb8b7f1sm114787075e9.48.2024.09.10.07.04.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2024 07:04:31 -0700 (PDT)
+        Tue, 10 Sep 2024 07:04:37 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: linux-perf-users@vger.kernel.org,
 	sesse@google.com,
@@ -69,18 +71,21 @@ Cc: James Clark <james.clark@linaro.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Changbin Du <changbin.du@huawei.com>,
 	Guilherme Amadio <amadio@gentoo.org>,
+	Changbin Du <changbin.du@huawei.com>,
 	Leo Yan <leo.yan@arm.com>,
+	Daniel Wagner <dwagner@suse.de>,
 	Manu Bretelle <chantr4@gmail.com>,
 	Quentin Monnet <qmo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH 1/2] perf build: Autodetect minimum required llvm-dev version
-Date: Tue, 10 Sep 2024 15:04:00 +0100
-Message-Id: <20240910140405.568791-1-james.clark@linaro.org>
+Subject: [PATCH 2/2] perf build: Remove unused feature test target
+Date: Tue, 10 Sep 2024 15:04:01 +0100
+Message-Id: <20240910140405.568791-2-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240910140405.568791-1-james.clark@linaro.org>
+References: <20240910140405.568791-1-james.clark@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -89,112 +94,39 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The new LLVM addr2line feature requires a minimum version of 13 to
-compile. Add a feature check for the version so that NO_LLVM=1 doesn't
-need to be explicitly added. Leave the existing llvm feature check
-intact because it's used by tools other than Perf.
+llvm-version was removed in commit 56b11a2126bf ("perf bpf: Remove
+support for embedding clang for compiling BPF events (-e foo.c)") but
+some parts were left in the Makefile so finish removing them.
 
-This fixes the following compilation error when the llvm-dev version
-doesn't match:
-
-  util/llvm-c-helpers.cpp: In function 'char* llvm_name_for_code(dso*, const char*, u64)':
-  util/llvm-c-helpers.cpp:178:21: error: 'std::remove_reference_t<llvm::DILineInfo>' {aka 'struct llvm::DILineInfo'} has no member named 'StartAddress'
-    178 |   addr, res_or_err->StartAddress ? *res_or_err->StartAddress : 0);
-
-Fixes: c3f8644c21df ("perf report: Support LLVM for addr2line()")
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/build/Makefile.feature           |  2 +-
- tools/build/feature/Makefile           |  9 +++++++++
- tools/build/feature/test-llvm-perf.cpp | 14 ++++++++++++++
- tools/perf/Makefile.config             |  6 +++---
- 4 files changed, 27 insertions(+), 4 deletions(-)
- create mode 100644 tools/build/feature/test-llvm-perf.cpp
+ tools/build/feature/Makefile | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 0717e96d6a0e..427a9389e26c 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -136,7 +136,7 @@ FEATURE_DISPLAY ?=              \
-          libunwind              \
-          libdw-dwarf-unwind     \
-          libcapstone            \
--         llvm                   \
-+         llvm-perf              \
-          zlib                   \
-          lzma                   \
-          get_cpuid              \
 diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 12796808f07a..d6a98b3854f8 100644
+index d6a98b3854f8..5938cf799dc6 100644
 --- a/tools/build/feature/Makefile
 +++ b/tools/build/feature/Makefile
-@@ -73,6 +73,7 @@ FILES=                                          \
-          test-libopencsd.bin			\
+@@ -74,7 +74,6 @@ FILES=                                          \
           test-clang.bin				\
           test-llvm.bin				\
-+         test-llvm-perf.bin   \
-          test-llvm-version.bin			\
+          test-llvm-perf.bin   \
+-         test-llvm-version.bin			\
           test-libaio.bin			\
           test-libzstd.bin			\
-@@ -388,6 +389,14 @@ $(OUTPUT)test-llvm.bin:
+          test-clang-bpf-co-re.bin		\
+@@ -397,11 +396,6 @@ $(OUTPUT)test-llvm-perf.bin:
  		$(shell $(LLVM_CONFIG) --system-libs)		\
  		> $(@:.bin=.make.output) 2>&1
  
-+$(OUTPUT)test-llvm-perf.bin:
-+	$(BUILDXX) -std=gnu++17 				\
-+		-I$(shell $(LLVM_CONFIG) --includedir) 		\
-+		-L$(shell $(LLVM_CONFIG) --libdir)		\
-+		$(shell $(LLVM_CONFIG) --libs Core BPF)		\
-+		$(shell $(LLVM_CONFIG) --system-libs)		\
-+		> $(@:.bin=.make.output) 2>&1
-+
- $(OUTPUT)test-llvm-version.bin:
+-$(OUTPUT)test-llvm-version.bin:
+-	$(BUILDXX) -std=gnu++17					\
+-		-I$(shell $(LLVM_CONFIG) --includedir)		\
+-		> $(@:.bin=.make.output) 2>&1
+-
+ $(OUTPUT)test-clang.bin:
  	$(BUILDXX) -std=gnu++17					\
- 		-I$(shell $(LLVM_CONFIG) --includedir)		\
-diff --git a/tools/build/feature/test-llvm-perf.cpp b/tools/build/feature/test-llvm-perf.cpp
-new file mode 100644
-index 000000000000..a8cbb67e335e
---- /dev/null
-+++ b/tools/build/feature/test-llvm-perf.cpp
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "llvm/Support/ManagedStatic.h"
-+#include "llvm/Support/raw_ostream.h"
-+
-+#if LLVM_VERSION_MAJOR < 13
-+# error "Perf requires llvm-devel/llvm-dev version 13 or greater"
-+#endif
-+
-+int main()
-+{
-+	llvm::errs() << "Hello World!\n";
-+	llvm::llvm_shutdown();
-+	return 0;
-+}
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 7888c932b1b4..37e3eee2986e 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -981,8 +981,8 @@ ifdef BUILD_NONDISTRO
- endif
- 
- ifndef NO_LIBLLVM
--  $(call feature_check,llvm)
--  ifeq ($(feature-llvm), 1)
-+  $(call feature_check,llvm-perf)
-+  ifeq ($(feature-llvm-perf), 1)
-     CFLAGS += -DHAVE_LIBLLVM_SUPPORT
-     CFLAGS += $(shell $(LLVM_CONFIG) --cflags)
-     CXXFLAGS += -DHAVE_LIBLLVM_SUPPORT
-@@ -992,7 +992,7 @@ ifndef NO_LIBLLVM
-     EXTLIBS += -lstdc++
-     $(call detected,CONFIG_LIBLLVM)
-   else
--    $(warning No libllvm found, slower source file resolution, please install llvm-devel/llvm-dev)
-+    $(warning No libllvm 13+ found, slower source file resolution, please install llvm-devel/llvm-dev)
-     NO_LIBLLVM := 1
-   endif
- endif
+ 		-I$(shell $(LLVM_CONFIG) --includedir) 		\
 -- 
 2.34.1
 
