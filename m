@@ -1,131 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20921922DC;
-	Tue, 10 Sep 2024 14:43:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F99189BBA;
+	Tue, 10 Sep 2024 14:49:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725979399; cv=none; b=TOVQzQ+1KPj13RxjS/9kcg4YicDhSYnX/bdaww/7JdcW2/rr4JbbT4LgD6FVAYQyV4w9QSE4nZ/+3jJbDzR5Dxr6bpCPX4uOhomBNEDOpPg9/be4rjkw1qKvIDl2MI3QaiLPUqMwXOUSJRTrk4WncTwC88thHhM0A3wK5Rwn9i0=
+	t=1725979781; cv=none; b=QMLmZx7MS9WGe8d0dD60eP2zG2EIjlVaMgDXJY8ANwgalzRvDCrTyeDu1OpjJRf5gBUuAgRG1jJtG0V9yWvL1vyOgVnSczc11tVnLC97lw0NgI7wMDMF5rqeOd0BpGkZGYXG5IJPMtIBJHzoIiIXpgmVwfd6UkgRRH+lnGbeBL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725979399; c=relaxed/simple;
-	bh=06nEJniau8A/jHLpYeHpdDSJXkabB+IN1TDH7Cwcf/A=;
+	s=arc-20240116; t=1725979781; c=relaxed/simple;
+	bh=cn5Vt4PhzbHhk1eYT0hhNWaKEelECJKhDWEuZoTksso=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lU052A98/3qXVOHFG1P5WGNlD0S/knAI/WM5692UKTrEWUQrgM9X07zu5b8oZWURPQ/MXnPbk4M7PflYeTTpeyd+Pm7Etq308pmx+6gzm2fXBA7nFUO9tNzz5pHLcXgzFoniTsp+R6plFDUL29qMD+FMti33MKr3YUrrxe5BbMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=luEyd+qY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaOiZGGtyQ+x6euf8IpBtNTIpgZzqDOP32uEcfoLzKXR3v4fMQ1CuyJg2fl5HrCkCxxA132JA2Yug+Tu1TpjGrVXnk0SCezRraUlfH64q/8gvopGv9UEs8i1tb7+bYxnjd/PiDt7UTzOJRHMZ4tBHZAqWHrqOpV9Nl8KKWIcmww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GsWm2kUh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="luEyd+qY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDE6CC4CECE;
-	Tue, 10 Sep 2024 14:43:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GsWm2kUh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67E07C4CEC3;
+	Tue, 10 Sep 2024 14:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725979399;
-	bh=06nEJniau8A/jHLpYeHpdDSJXkabB+IN1TDH7Cwcf/A=;
+	s=k20201202; t=1725979780;
+	bh=cn5Vt4PhzbHhk1eYT0hhNWaKEelECJKhDWEuZoTksso=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=luEyd+qY11c9BaTv8xtxFPYNl7H+C0HgDXaYfI1T6sM8kCn+KFmxd8vzATF735pr8
-	 qBIkuul+76JxAeg8j91liukHpop68wVp0+gp45XeuHvv7xI9O1OQevoTrDN5YMauNT
-	 9eu+fbFqNBanAgTEUQ3xa96/nLIOsUSefgwzVrU60/rg2yEle5YeM/aQO6cBxZ+ql6
-	 lqkNzzk7ov+BL8+HD6JZRvnIXNnm4Ztt5omrh6U0uqufPk+3jIGPDUbJcqPZE0geDM
-	 jF6U65DtXE1poDzfOJrzpyy14Kh+bbMFNfg4r0d5RuqwlXF/vM/+R3lAeE8v1ObuKd
-	 zMnNCVSsyCOew==
-Date: Tue, 10 Sep 2024 11:43:15 -0300
+	b=GsWm2kUh6t4J/13juA85VpnFx9aFMqQ6SUL+CJMG390TCJ6Sb3pQ0117way9X58Ye
+	 b1RviskB1gceY1Wjk8oEXsO1KROr0ZFaS48Pt6iO08jCirYS0wJ0XStqkggImatwWc
+	 iy4FxKAAg/S/gNYTCTdqu3IC6a0RoAnRa0CKwVCge8l0a67im7vljTBFE5OUyzordP
+	 JwpPYU7x0rHznaj0BvhJaJGOfLgkiQYdXsFi+BalOB1hfYtutmUAxE1zIyHQmTI33E
+	 iNs7lNYdCSCqfJIcSKhAI5xoGQpnxbzabboWE4tWf6oRd4/Ab4H3+oXR2Q9i9Zk2bj
+	 KQ/jlIps7VCyA==
+Date: Tue, 10 Sep 2024 11:49:37 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Quentin Monnet <qmo@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
-	sesse@google.com, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Changbin Du <changbin.du@huawei.com>,
-	Guilherme Amadio <amadio@gentoo.org>, Leo Yan <leo.yan@arm.com>,
-	Manu Bretelle <chantr4@gmail.com>, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 1/2] perf build: Autodetect minimum required llvm-dev
- version
-Message-ID: <ZuBbAw2jbMwH91Az@x1>
-References: <20240910140405.568791-1-james.clark@linaro.org>
- <b2e813c4-be89-457d-8c38-38849177ec93@kernel.org>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf annotate: Treat 'call' instruction as stack
+ operation
+Message-ID: <ZuBcgRi8ERab0WNG@x1>
+References: <20240909214251.3033827-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b2e813c4-be89-457d-8c38-38849177ec93@kernel.org>
+In-Reply-To: <20240909214251.3033827-1-namhyung@kernel.org>
 
-On Tue, Sep 10, 2024 at 03:27:16PM +0100, Quentin Monnet wrote:
-> 2024-09-10 15:04 UTC+0100 ~ James Clark <james.clark@linaro.org>
-> > The new LLVM addr2line feature requires a minimum version of 13 to
-> > compile. Add a feature check for the version so that NO_LLVM=1 doesn't
-> > need to be explicitly added. Leave the existing llvm feature check
-> > intact because it's used by tools other than Perf.
-> > 
-> > This fixes the following compilation error when the llvm-dev version
-> > doesn't match:
-> > 
-> >    util/llvm-c-helpers.cpp: In function 'char* llvm_name_for_code(dso*, const char*, u64)':
-> >    util/llvm-c-helpers.cpp:178:21: error: 'std::remove_reference_t<llvm::DILineInfo>' {aka 'struct llvm::DILineInfo'} has no member named 'StartAddress'
-> >      178 |   addr, res_or_err->StartAddress ? *res_or_err->StartAddress : 0);
-> > 
-> > Fixes: c3f8644c21df ("perf report: Support LLVM for addr2line()")
-> > Signed-off-by: James Clark <james.clark@linaro.org>
-> > ---
-> >   tools/build/Makefile.feature           |  2 +-
-> >   tools/build/feature/Makefile           |  9 +++++++++
-> >   tools/build/feature/test-llvm-perf.cpp | 14 ++++++++++++++
-> >   tools/perf/Makefile.config             |  6 +++---
-> >   4 files changed, 27 insertions(+), 4 deletions(-)
-> >   create mode 100644 tools/build/feature/test-llvm-perf.cpp
-> > 
-> > diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> > index 0717e96d6a0e..427a9389e26c 100644
-> > --- a/tools/build/Makefile.feature
-> > +++ b/tools/build/Makefile.feature
-> > @@ -136,7 +136,7 @@ FEATURE_DISPLAY ?=              \
-> >            libunwind              \
-> >            libdw-dwarf-unwind     \
-> >            libcapstone            \
-> > -         llvm                   \
-> > +         llvm-perf              \
- 
-> Hi! Just a quick question, why remove "llvm" from the list, here?
+On Mon, Sep 09, 2024 at 02:42:50PM -0700, Namhyung Kim wrote:
+> I found some portion of mem-store events sampled on CALL instruction
+> which has no memory access.  But it actually saves a return address
+> into stack.  It should be considered as a stack operation like RET
+> instruction.
 
-Right, having it here is still interesting, if not for perf, for some
-other tool in tools/ that uses this:
-
-⬢[acme@toolbox perf-tools-next]$ cat tools/build/feature/test-llvm.cpp
-// SPDX-License-Identifier: GPL-2.0
-#include "llvm/Support/ManagedStatic.h"
-#include "llvm/Support/raw_ostream.h"
-#define NUM_VERSION (((LLVM_VERSION_MAJOR) << 16) + (LLVM_VERSION_MINOR << 8) + LLVM_VERSION_PATCH)
-
-#if NUM_VERSION < 0x030900
-# error "LLVM version too low"
-#endif
-int main()
-{
-	llvm::errs() << "Hello World!\n";
-	llvm::llvm_shutdown();
-	return 0;
-}
-⬢[acme@toolbox perf-tools-next]$
-
-My understanding about James intention is that for perf we need at least
-llvm-dev 13, but he kept the other feature test for other projects.
-
-From Quentin, since this is in tools/build/Makefile.feature, so not perf
-specific, maybe it should be somewhere else?
-
-But keeping both in FEATURE_DISPLAY at tools/build/Makefile.feature
-may be confusing?
+Thanks, applied to perf-tools-next,
 
 - Arnaldo
+ 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/annotate.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 4990c70b1794d7a9..1a347a711dcf5c62 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -2474,6 +2474,7 @@ static bool is_stack_operation(struct arch *arch, struct disasm_line *dl)
+>  	if (arch__is(arch, "x86")) {
+>  		if (!strncmp(dl->ins.name, "push", 4) ||
+>  		    !strncmp(dl->ins.name, "pop", 3) ||
+> +		    !strncmp(dl->ins.name, "call", 4) ||
+>  		    !strncmp(dl->ins.name, "ret", 3))
+>  			return true;
+>  	}
+> -- 
+> 2.46.0.598.g6f2099f65c-goog
