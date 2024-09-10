@@ -1,245 +1,217 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5603A152E1C;
-	Tue, 10 Sep 2024 04:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F429219F3;
+	Tue, 10 Sep 2024 05:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725944394; cv=none; b=jSkqlx8hKjwa+/7I+F15a5lz/TRujeESSoZEB9rv7zGdbpCVVJ4ZJgrAvCgiGDwWpPPWm5RKMXdVUg4U6/kufo6wtSv3cBTCoXpZ2JI+EmRuZxeVRkfSVDT3gLS2zeg0ZJLs96PHI/XaeuCWF7pgJbiC1lYLCegy3LOGEGKePs4=
+	t=1725944424; cv=none; b=AMq1p83fMbNwQka23NGoRGcOWOgXNYojU0M2eXhKJZHDcrGRWIJLRWewRPLlAvQaEUf+byZT+ZX+9YQCuVE9HwzGMs4r2Ihe1fGeWg7Nye35TVIxwkwxsf7nUYqKeY0ZaytdYod57/TP2BOXDnN5m8H5TmWGO1lcGsHyKm1g9qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725944394; c=relaxed/simple;
-	bh=SaAhyUtGBIY1iZNe+4szVGnESB03mvSjl2UoqlZLAW4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dcsrjuFVKOTjhcdiA+bZlYA/RSC/o5/VlVE/i9TTMgiVi4Z8Nm7qqSRrgnkZoIIjhzI6WTK3u4Ny7qn8Hic3B8+uQ4YSOQEq9fNHlV6/qxoAnTwt7DO0MYtuqUXeih4SgsZZjbx6EDTg3YnwlaOCM94JPAqPLBY667denwBPqWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VpiKvRlN; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1725944424; c=relaxed/simple;
+	bh=HBKiSMIWRdorqFF6k44fvtV22mxFyyVsRfOnW+ecS8Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eu5DAYfCn6Sx8BLyMiPPJ+dod77Y5GbvFBjgVKvJ24DEDs26Vyr4Qy42B4XW++cYc84WszP6yx7P5egeHT2ldAMjJ96pRHo/xeIgHvB6Qv7gdumXNlaNrFIfK+Uk4GBUSjQrAZntwbKsotTAEl3AXuTv5lGjT6/VYPR2MsjJDCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JruRvj3R; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VpiKvRlN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725944392; x=1757480392;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SaAhyUtGBIY1iZNe+4szVGnESB03mvSjl2UoqlZLAW4=;
-  b=VpiKvRlN5c7AMsCbgCfW06UYOVo9JjnZ2lsx7jmfnfX+SPdsyN3mGWLG
-   bhHB9GsRzm8VCDPB2Ge64D/TKnWuw1jX0esb0vG/a4yphlxdur2kD6Oe6
-   dxB0x321m9r8N6zHz6y6gF6zGQnk1OiF0CKP3m+V1eqBE/xB5bGAbExK9
-   sL1WGHHRMw+6oO+9gArZJQBbchrwhlaJZTj6W1lgmqEhRF4IQSHBSgQJo
-   7sZpoN0z9/aJOAklgveDuLjzOqmXm2+/9mezBAO+y7EAnSfRlTIIVpyEC
-   2rfL3rbgaAsSdOUqmAd5J8dlZdLb1hffLlt/L+twLavTTB+Po7+C7XAgo
-   g==;
-X-CSE-ConnectionGUID: fOg6A79/R1i80YBOtYFN4Q==
-X-CSE-MsgGUID: mPzPGubuR+qgom18q6bmJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="13451244"
-X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
-   d="scan'208";a="13451244"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 21:59:52 -0700
-X-CSE-ConnectionGUID: iANce5W6QlGW5SCyUuAqjA==
-X-CSE-MsgGUID: YbQXgF+UQ/OY7cTgmPEO7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
-   d="scan'208";a="67150140"
-Received: from unknown (HELO [10.238.2.208]) ([10.238.2.208])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 21:59:47 -0700
-Message-ID: <8d194eea-04a5-455d-91fc-d44aabec1ef6@linux.intel.com>
-Date: Tue, 10 Sep 2024 12:59:44 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JruRvj3R"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e1cf1a4865aso4805215276.2;
+        Mon, 09 Sep 2024 22:00:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725944422; x=1726549222; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cL0xS0wayOjEvkyYZECg4JW1vW4xZXRD7am42+ruQcs=;
+        b=JruRvj3RupTDFsSAz6Mleyt8LDv744du2Y6bbVxI4/h6P+AjqcYC/TYejSS14VROoZ
+         kHFhP/mJ/xnjvvNniA4xDSPJxUTKTJAHSVUBiRT7/NQXuSgCVSopOu6sqlmFt/GVPqx6
+         yu6NW3ojpki9gORjz+Xu7xI5qxJo8kdq1A44PLwgK9A2yEo3yLxyVQ8L50SPF31Jq1GR
+         +U2ruUut6bhdTHyr+PEU6YUvp3JkZZDmNigEvnKfEyDFI5OMQcG89M17joUghLu5K+OZ
+         +QyGWYrOghDPWJ1XBcgbxkWWa0/YqF7ZzUoD0Gl/DPkbKlUqq/nXxiPT/SNWzw67N+NG
+         qjYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725944422; x=1726549222;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cL0xS0wayOjEvkyYZECg4JW1vW4xZXRD7am42+ruQcs=;
+        b=IKeCMqEMOPnwePaodJcknQEiZRFMfdWkExTA4lCycfUzsvliXswiztMUD17+O1qwd5
+         i54YS+MMIc6zdV4KmIFJsPAI74/t3WwAULvz5TOQQ5N9gQq9wlpZ/sK/vxbmgUE1ZsFp
+         jDOKQbuztPZEv8l8UjlT/ps5sxifKr1o5snLgiZAOIXqJRA1taiE2f19AMyg2VJOZ5TK
+         OCr+h1jS2aCoTNDGxLN+7fVIdwfqG7fP3Ph3LpEYK/l8uPrZq9Rawhjt9uXweNmf5gO5
+         j8DAu1sy4NX+byRYTXRS2KqADVQgZqT/dHh7lGvq9mLVPk/eyJ6rrFLyKGyY1iWgd1+V
+         ga8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVFlAPhzN2R0bEPqgZzP9UejhcwxELExftd9OzlEw3XS7Ed6aCOQ5mu6GPDbkAjtHxhnmunXowNFkAofGRVN/vxSw==@vger.kernel.org, AJvYcCWY7gttbETlcWlyWdXkCXH0BYPMOlsiQ5SZLEUwX3lvfV8GabunKZ8uKd6wHfJVdcoZQcujlffZSGk4/LM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsuVmOnhdXIGeHI8y/7mMrdYxJ//dMLYBP/b+/gVqOmF1vkjCZ
+	KI3pjQxFM6gfjPGH0xvnnVtUeLY/7JKJCum26nHmfyrw5YCQijn7U7Z/E6u+ImDu6KPBkKh6R7w
+	KkznDWOlHiii1IAMb2nmHSQFUcrY=
+X-Google-Smtp-Source: AGHT+IHaQEliCCpTQV+8HCcyD5VltnYLEkhDUKF3RHye8KXcT4VdpwB6RCMNMFTSlKYrBJrptYGHgHyrX7PfdQq7wgo=
+X-Received: by 2002:a25:2614:0:b0:e1d:42ca:f1e with SMTP id
+ 3f1490d57ef6-e1d42ca0fa9mr10806489276.15.1725944420568; Mon, 09 Sep 2024
+ 22:00:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 12/58] perf: core/x86: Register a new vector for
- KVM GUEST PMI
-To: Colton Lewis <coltonlewis@google.com>, Mingwei Zhang <mizhang@google.com>
-Cc: seanjc@google.com, pbonzini@redhat.com, xiong.y.zhang@intel.com,
- kan.liang@intel.com, zhenyuw@linux.intel.com, manali.shukla@amd.com,
- sandipan.das@amd.com, jmattson@google.com, eranian@google.com,
- irogers@google.com, namhyung@kernel.org, gce-passthrou-pmu-dev@google.com,
- samantha.alt@intel.com, zhiyuan.lv@intel.com, yanfei.xu@intel.com,
- like.xu.linux@gmail.com, peterz@infradead.org, rananta@google.com,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <gsnt7cbkeavc.fsf@coltonlewis-kvm.c.googlers.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <gsnt7cbkeavc.fsf@coltonlewis-kvm.c.googlers.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240824163322.60796-1-howardchu95@gmail.com> <20240824163322.60796-9-howardchu95@gmail.com>
+ <Zt9yiQq-n-W6I274@x1>
+In-Reply-To: <Zt9yiQq-n-W6I274@x1>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Mon, 9 Sep 2024 22:00:10 -0700
+Message-ID: <CAH0uvog6oeXxN3uaaCxLQ00otqhGA-RK0wRcwG4pdBtq9KdBhg@mail.gmail.com>
+Subject: Re: [PATCH v3 8/8] perf trace: Add general tests for augmented syscalls
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org, 
+	kan.liang@linux.intel.com, namhyung@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
-On 9/10/2024 6:11 AM, Colton Lewis wrote:
-> Hello,
+On Mon, Sep 9, 2024 at 3:11=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
 >
-> Mingwei Zhang <mizhang@google.com> writes:
+> On Sun, Aug 25, 2024 at 12:33:22AM +0800, Howard Chu wrote:
+> > In this test, augmentation for:
+> >
+> > * string
+> > * buffer
+> > * struct
+> >
+> > Is tested.
 >
->> From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
->> Create a new vector in the host IDT for kvm guest PMI handling within
->> mediated passthrough vPMU. In addition, guest PMI handler registration
->> is added into x86_set_kvm_irq_handler().
->> This is the preparation work to support mediated passthrough vPMU to
->> handle kvm guest PMIs without interference from PMI handler of the host
->> PMU.
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
->> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
->> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->> ---
->>   arch/x86/include/asm/hardirq.h                |  1 +
->>   arch/x86/include/asm/idtentry.h               |  1 +
->>   arch/x86/include/asm/irq_vectors.h            |  5 ++++-
->>   arch/x86/kernel/idt.c                         |  1 +
->>   arch/x86/kernel/irq.c                         | 21 +++++++++++++++++++
->>   .../beauty/arch/x86/include/asm/irq_vectors.h |  5 ++++-
->>   6 files changed, 32 insertions(+), 2 deletions(-)
->> diff --git a/arch/x86/include/asm/hardirq.h  
->> b/arch/x86/include/asm/hardirq.h
->> index c67fa6ad098a..42a396763c8d 100644
->> --- a/arch/x86/include/asm/hardirq.h
->> +++ b/arch/x86/include/asm/hardirq.h
->> @@ -19,6 +19,7 @@ typedef struct {
->>   	unsigned int kvm_posted_intr_ipis;
->>   	unsigned int kvm_posted_intr_wakeup_ipis;
->>   	unsigned int kvm_posted_intr_nested_ipis;
->> +	unsigned int kvm_guest_pmis;
->>   #endif
->>   	unsigned int x86_platform_ipis;	/* arch dependent */
->>   	unsigned int apic_perf_irqs;
->> diff --git a/arch/x86/include/asm/idtentry.h  
->> b/arch/x86/include/asm/idtentry.h
->> index d4f24499b256..7b1e3e542b1d 100644
->> --- a/arch/x86/include/asm/idtentry.h
->> +++ b/arch/x86/include/asm/idtentry.h
->> @@ -745,6 +745,7 @@ DECLARE_IDTENTRY_SYSVEC(IRQ_WORK_VECTOR,		 
->> sysvec_irq_work);
->>   DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_VECTOR,		sysvec_kvm_posted_intr_ipi);
->>   DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_WAKEUP_VECTOR,	 
->> sysvec_kvm_posted_intr_wakeup_ipi);
->>   DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,	 
->> sysvec_kvm_posted_intr_nested_ipi);
->> +DECLARE_IDTENTRY_SYSVEC(KVM_GUEST_PMI_VECTOR,	         
->> sysvec_kvm_guest_pmi_handler);
->>   #else
->>   # define fred_sysvec_kvm_posted_intr_ipi		NULL
->>   # define fred_sysvec_kvm_posted_intr_wakeup_ipi		NULL
->> diff --git a/arch/x86/include/asm/irq_vectors.h  
->> b/arch/x86/include/asm/irq_vectors.h
->> index 13aea8fc3d45..ada270e6f5cb 100644
->> --- a/arch/x86/include/asm/irq_vectors.h
->> +++ b/arch/x86/include/asm/irq_vectors.h
->> @@ -77,7 +77,10 @@
->>    */
->>   #define IRQ_WORK_VECTOR			0xf6
->> -/* 0xf5 - unused, was UV_BAU_MESSAGE */
->> +#if IS_ENABLED(CONFIG_KVM)
->> +#define KVM_GUEST_PMI_VECTOR		0xf5
->> +#endif
->> +
->>   #define DEFERRED_ERROR_VECTOR		0xf4
->>   /* Vector on which hypervisor callbacks will be delivered */
->> diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
->> index f445bec516a0..0bec4c7e2308 100644
->> --- a/arch/x86/kernel/idt.c
->> +++ b/arch/x86/kernel/idt.c
->> @@ -157,6 +157,7 @@ static const __initconst struct idt_data apic_idts[]  
->> = {
->>   	INTG(POSTED_INTR_VECTOR,		asm_sysvec_kvm_posted_intr_ipi),
->>   	INTG(POSTED_INTR_WAKEUP_VECTOR,		asm_sysvec_kvm_posted_intr_wakeup_ipi),
->>   	INTG(POSTED_INTR_NESTED_VECTOR,		asm_sysvec_kvm_posted_intr_nested_ipi),
->> +	INTG(KVM_GUEST_PMI_VECTOR,		asm_sysvec_kvm_guest_pmi_handler),
+> Please install ShellCheck to test it:
 >
-> There is a subtle inconsistency in that this code is guarded on
-> CONFIG_HAVE_KVM when the #define KVM_GUEST_PMI_VECTOR is guarded on
-> CONFIG_KVM. Beats me why there are two different flags that are so
-> similar, but it is possible they have different values leading to
-> compilation errors.
+>   GEN     perf-archive
+>   GEN     perf-iostat
+>   TEST    /tmp/build/perf-tools-next/tests/shell/trace_btf_general.sh.she=
+llcheck_log
+>   CC      /tmp/build/perf-tools-next/util/header.o
 >
-> I happened to hit this compilation error because make defconfig will
-> define CONFIG_HAVE_KVM but not CONFIG_KVM. CONFIG_KVM is the more strict
-> of the two because it depends on CONFIG_HAVE_KVM.
+> In tests/shell/trace_btf_general.sh line 50:
+>         echo "Unexpected signal in ${FUNCNAME[1]}"
+>                                    ^------------^ SC3028 (warning): In PO=
+SIX sh, FUNCNAME is undefined.
+>                                    ^------------^ SC3054 (warning): In PO=
+SIX sh, array references are undefined.
+
+Sorry my bad, will fix it.
+
+Thanks,
+Howard
 >
-> This code should also be guarded on CONFIG_KVM.
-
-Hi Colton,
-
- what's you kernel base? In latest code base, the CONFIG_HAVE_KVM has been
-dropped and this part of code has been guarded by CONFIG_KVM.
-
-Please see commit dcf0926e9b89 "x86: replace CONFIG_HAVE_KVM with
-IS_ENABLED(CONFIG_KVM)". Thanks.
-
-
+> For more information:
+>   https://www.shellcheck.net/wiki/SC3028 -- In POSIX sh, FUNCNAME is unde=
+fined.
+>   https://www.shellcheck.net/wiki/SC3054 -- In POSIX sh, array references=
+ are...
+> make[4]: *** [tests/Build:91: /tmp/build/perf-tools-next/tests/shell/trac=
+e_btf_general.sh.shellcheck_log] Error 1
+> make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:1=
+58: tests] Error 2
+> make[2]: *** [Makefile.perf:777: /tmp/build/perf-tools-next/perf-test-in.=
+o] Error 2
+> make[2]: *** Waiting for unfinished jobs....
+>   LD      /tmp/build/perf-tools-next/util/perf-util-in.o
+>   LD      /tmp/build/perf-tools-next/perf-util-in.o
+> make[1]: *** [Makefile.perf:292: sub-make] Error 2
+> make: *** [Makefile:119: install-bin] Error 2
+> make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+> =E2=AC=A2[acme@toolbox perf-tools-next]$
 >
->>   # endif
->>   # ifdef CONFIG_IRQ_WORK
->>   	INTG(IRQ_WORK_VECTOR,			asm_sysvec_irq_work),
->> diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
->> index 18cd418fe106..b29714e23fc4 100644
->> --- a/arch/x86/kernel/irq.c
->> +++ b/arch/x86/kernel/irq.c
->> @@ -183,6 +183,12 @@ int arch_show_interrupts(struct seq_file *p, int  
->> prec)
->>   		seq_printf(p, "%10u ",
->>   			   irq_stats(j)->kvm_posted_intr_wakeup_ipis);
->>   	seq_puts(p, "  Posted-interrupt wakeup event\n");
->> +
->> +	seq_printf(p, "%*s: ", prec, "VPMU");
->> +	for_each_online_cpu(j)
->> +		seq_printf(p, "%10u ",
->> +			   irq_stats(j)->kvm_guest_pmis);
->> +	seq_puts(p, " KVM GUEST PMI\n");
->>   #endif
->>   #ifdef CONFIG_X86_POSTED_MSI
->>   	seq_printf(p, "%*s: ", prec, "PMN");
->> @@ -311,6 +317,7 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_x86_platform_ipi)
->>   #if IS_ENABLED(CONFIG_KVM)
->>   static void dummy_handler(void) {}
->>   static void (*kvm_posted_intr_wakeup_handler)(void) = dummy_handler;
->> +static void (*kvm_guest_pmi_handler)(void) = dummy_handler;
->>   void x86_set_kvm_irq_handler(u8 vector, void (*handler)(void))
->>   {
->> @@ -321,6 +328,10 @@ void x86_set_kvm_irq_handler(u8 vector, void  
->> (*handler)(void))
->>   	    (handler == dummy_handler ||
->>   	     kvm_posted_intr_wakeup_handler == dummy_handler))
->>   		kvm_posted_intr_wakeup_handler = handler;
->> +	else if (vector == KVM_GUEST_PMI_VECTOR &&
->> +		 (handler == dummy_handler ||
->> +		  kvm_guest_pmi_handler == dummy_handler))
->> +		kvm_guest_pmi_handler = handler;
->>   	else
->>   		WARN_ON_ONCE(1);
->> @@ -356,6 +367,16 @@  
->> DEFINE_IDTENTRY_SYSVEC_SIMPLE(sysvec_kvm_posted_intr_nested_ipi)
->>   	apic_eoi();
->>   	inc_irq_stat(kvm_posted_intr_nested_ipis);
->>   }
->> +
->> +/*
->> + * Handler for KVM_GUEST_PMI_VECTOR.
->> + */
->> +DEFINE_IDTENTRY_SYSVEC(sysvec_kvm_guest_pmi_handler)
->> +{
->> +	apic_eoi();
->> +	inc_irq_stat(kvm_guest_pmis);
->> +	kvm_guest_pmi_handler();
->> +}
->>   #endif
->>   #ifdef CONFIG_X86_POSTED_MSI
->> diff --git a/tools/perf/trace/beauty/arch/x86/include/asm/irq_vectors.h  
->> b/tools/perf/trace/beauty/arch/x86/include/asm/irq_vectors.h
->> index 13aea8fc3d45..670dcee46631 100644
->> --- a/tools/perf/trace/beauty/arch/x86/include/asm/irq_vectors.h
->> +++ b/tools/perf/trace/beauty/arch/x86/include/asm/irq_vectors.h
->> @@ -77,7 +77,10 @@
->>    */
->>   #define IRQ_WORK_VECTOR			0xf6
->> -/* 0xf5 - unused, was UV_BAU_MESSAGE */
->> +#if IS_ENABLED(CONFIG_KVM)
->> +#define KVM_GUEST_PMI_VECTOR           0xf5
->> +#endif
->> +
->>   #define DEFERRED_ERROR_VECTOR		0xf4
->>   /* Vector on which hypervisor callbacks will be delivered */
+> > Please use this command:
+> >
+> > perf test "perf trace general tests"
+> >
+> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> > Suggested-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/tests/shell/trace_btf_general.sh | 67 +++++++++++++++++++++
+> >  1 file changed, 67 insertions(+)
+> >  create mode 100755 tools/perf/tests/shell/trace_btf_general.sh
+> >
+> > diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/t=
+ests/shell/trace_btf_general.sh
+> > new file mode 100755
+> > index 000000000000..0b4ea8462390
+> > --- /dev/null
+> > +++ b/tools/perf/tests/shell/trace_btf_general.sh
+> > @@ -0,0 +1,67 @@
+> > +#!/bin/sh
+> > +# perf trace general tests
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +
+> > +err=3D0
+> > +set -e
+> > +
+> > +. "$(dirname $0)"/lib/probe.sh
+> > +skip_if_no_perf_trace || exit 2
+> > +
+> > +file1=3D$(mktemp /tmp/file1_XXXXX)
+> > +file2=3D$(echo $file1 | sed 's/file1/file2/g')
+> > +
+> > +buffer=3D"this is a buffer for testing"
+> > +
+> > +trap cleanup EXIT TERM INT HUP
+> > +
+> > +trace_test_string() {
+> > +  echo "Testing perf trace's string augmentation"
+> > +  if ! perf trace -e renameat* --max-events=3D1 -- mv ${file1} ${file2=
+} 2>&1 | grep -q -E "renameat[2]*.*oldname: \"${file1}\".*newname: \"${file=
+2}\".*"
+> > +  then
+> > +    echo "String augmentation test failed"
+> > +    err=3D1
+> > +  fi
+> > +}
+> > +
+> > +trace_test_buffer() {
+> > +  echo "Testing perf trace's buffer augmentation"
+> > +  if ! perf trace -e write --max-events=3D1 -- echo "${buffer}" 2>&1 |=
+ grep -q -E ".*write.*buf: ${buffer}.*"
+> > +  then
+> > +    echo "Buffer augmentation test failed"
+> > +    err=3D1
+> > +  fi
+> > +}
+> > +
+> > +trace_test_struct_btf() {
+> > +  echo "Testing perf trace's struct augmentation"
+> > +  if ! perf trace -e clock_nanosleep --force-btf --max-events=3D1 -- s=
+leep 1 2>&1 | grep -q -E ".*clock_nanosleep\(rqtp: \{1,\}, rmtp: \{1,\}\).*=
+ =3D 0"
+> > +  then
+> > +    echo "BTF struct augmentation test failed"
+> > +    err=3D1
+> > +  fi
+> > +}
+> > +
+> > +cleanup() {
+> > +     rm -rf ${file1} ${file2}
+> > +}
+> > +
+> > +trap_cleanup() {
+> > +     echo "Unexpected signal in ${FUNCNAME[1]}"
+> > +     cleanup
+> > +     exit 1
+> > +}
+> > +
+> > +trace_test_string
+> > +
+> > +if [ $err =3D 0 ]; then
+> > +  trace_test_buffer
+> > +fi
+> > +
+> > +if [ $err =3D 0 ]; then
+> > +  trace_test_struct_btf
+> > +fi
+> > +
+> > +cleanup
+> > +
+> > +exit $err
+> > --
+> > 2.45.2
