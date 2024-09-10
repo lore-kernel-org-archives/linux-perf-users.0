@@ -1,197 +1,116 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD94192D98
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Sep 2024 17:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5D11A4F11;
+	Tue, 10 Sep 2024 18:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725990106; cv=none; b=CbPXROGPv26XRRD8ggRN73coQFGsTP6F2hRp8J3CBgMIk+yApkKQ6cUNScqow51HT4F/Uv6jH71nAgzb3VxHl//uUPkWA84LyIM/IAlscjLVEMWYeabVC/1MxAFc5zVll2XVLK3KedQsNRplnTrZdokIsDFuWy462U70qu1gxQw=
+	t=1725994324; cv=none; b=J45vJZ6ztjmM2Pzm8RxvLp520dC30m/v1zJQzRGBe4fETtdSUwuM0GmPmSgioK5TFQKQMp3eV9zw2bBL42XzAcvCBLSoKGPTXu+kCk5KjD1mgCNjKve9bW2kbJTEpfBZWuOLYN9hfZAJwRmv5dDyus7S+KJ7dNzYZJtn8ptxxBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725990106; c=relaxed/simple;
-	bh=fAUv7M3pJwZVW1Q8kVS8zK7PUHK0l1kPBi3Cq/kPzuc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=naL6YR5e7CGE+emMmeFtpeW8IM3/tgNLDKXZgcLYy2o8tZvn1qJJpohjNAjpYc5hzut1rVnDFiq53lR9MCsahaTcNsXk+zPyqDqrlXlEJvvlhNKYLoMAvJ3EO03tVTcvYOki86slFMhcU3MF0YB8WfwSzi5kHmSoKcBVreoq4Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0pD0tq1L; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1725994324; c=relaxed/simple;
+	bh=O6D95LB3RVB/aMbNQnyXI2zLpqGsUYkaY59bRHiWSIc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eAGdkIHmLZoFDrQmkhhKmZFkxKJkZfW8aQbWJmYuMP9QD8GzUGYL6n3z9R+PnvWEY5Z5jTjfPw97Z9XCCS2bLHljQRXjnBkOkJD1t0ovqmAOq/tPFQouJXxkbNPwdCzStv+3bJEA/AnJGi7bUBOevidZ87KJFqrXBpH57TIp+/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=loyvOcxe; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0pD0tq1L"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-39d3ad05f8eso283125ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Sep 2024 10:41:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loyvOcxe"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42cb1e623d1so11368325e9.0;
+        Tue, 10 Sep 2024 11:52:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725990103; x=1726594903; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PYw7Yq3bzNnAatLT1BVowVs3XyP1qscSohILgAm3AAA=;
-        b=0pD0tq1LWOx0GwwgVqCf3QQSFuT4DAAtNwxFzFiTX7E9jvkEYzcd45CLLaUX1UpMdO
-         gPcVNufuLFcbtdr0xSuCGCnY3+Tf9toS8+YpIOlkUTvQvwgcMiK1WHSYyrx8758QdMvs
-         6r2oTvlV2R1pOruTd1z3qHtIlFQS24bmTzZxZ3S3tVsMquL/BJRK0wgZeiAAEumul1c2
-         XsDnPmdgGqusGgGZpxQC0PRgYfKP24BNxRRpd8tOj2Rn77ggaZaFLrhyCa4ZKlgr48uM
-         yxypkcjDDGvQcoA0qgiVlN2pZCn3L0iZRosGeTLLN/sEhecnsa9wc8RpK+x9CpHA/W7H
-         8fNA==
+        d=gmail.com; s=20230601; t=1725994321; x=1726599121; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=db2Jvj2YpxsiieK/030/+nusw2uTTxGxsMk+B07gfPg=;
+        b=loyvOcxekylbrdfrT7espau2PIlqim1eUeiDjIsF6Sw+CU39la5ck85qN+gUtyvT+Y
+         OklteIgwwdrnWxbJPzEduEEA7Ni6SzvRI51ppUBvhR1TuLV8ixwlJfSvtlAuE92lpUIk
+         lpvlEycNLpj2KdyH5VtaI/GjK4IJz6rID20+REwj68rwkzJhkIdAPPf8HWSGNl9k2d67
+         opM0lJdi6P642paIqLgGOzwvby93ZQL6igMdOc/wDY4pehMsO5T/uRjku6pP3FhPgUFf
+         f6eJxPAczRyYLh54Z01SGwAJK9RTaWyOOL90Lzz3rZ3AhqnwKhJsOSbBJUZZ2OEUZaIi
+         AcQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725990103; x=1726594903;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PYw7Yq3bzNnAatLT1BVowVs3XyP1qscSohILgAm3AAA=;
-        b=UwZz8DpQuHY/f1zyYBXJBoID3fJkcDTOt13IgUVQBJLBYO9Wb8tOpq/KvEfbF77nHr
-         /N3QB77jth+N6QIDOawPXhJ9X8vCupghNM6cV0rzpbQ6pxj8dsHQxR6WaV7hBPR75sxe
-         LLUQwTk3pjcB7FhALtG8GUmXkAG1dC3R858o1HvvzJK9x4mtY7KpSu9r6dE+tVYqohhP
-         5E316m+4ms4CPeR6GSEuyJrP9Agj0XopC1xoeGvmCR+IrdKnnMNxJg3cInEaMHN8hNi+
-         0G0zM3OkVpgH+ahCQh2/B+CjxggoM6eXLvAKEztMSYMFW8CJL+mdprKUdGX+5ZQoey4A
-         gDSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWK/xHmf+befdSHBCVQTGx48ZrNWKfmJ2yKVXFIw5LTz0A84XRDFqwynDHctbAm/vmkkWr6wziUMomqccmT8H1Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZfJIAm1H3RJcm0JHjvDrewYAeylDMXKV77ISvq9Bzzn+7Hu6I
-	hxkR9czeiumLBPZBAqcDbs+1MxjFskx363PugZn43IdV4unzaSuOw5yftJNfanT8JJO5zc+2wta
-	/c5QYbbptCKXzwOdJxBnf96hy3PMkyGLw++Bb
-X-Google-Smtp-Source: AGHT+IE3Ojd6hPkIRzLEh2MMX2BlT4wzTXRZs5kxZ3gebnmMifTmj+qzAlTv8y7e3vUMMbMuM/eagRff0AZIoeJiHJw=
-X-Received: by 2002:a92:c549:0:b0:39f:709d:72b3 with SMTP id
- e9e14a558f8ab-3a07508b96emr100395ab.12.1725990103047; Tue, 10 Sep 2024
- 10:41:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1725994321; x=1726599121;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=db2Jvj2YpxsiieK/030/+nusw2uTTxGxsMk+B07gfPg=;
+        b=LvDEQWqt+uSNPwYpvxr6lRM+4R3JAGAfMQ8fa90YhwE0LE2MOAIJFcNOOXAkPJTRdp
+         IFgL5I7ha8JPIo4FyMu9tKlJSj9+KirWSqhgPwATdlmq80WrcY58brysBGAlUOPs/zMR
+         kYRu+Odv/FSuOnMfwGHFe+gCGE6cZVxNZADk1jQQWRxiNdKTIV5OLMRbRbWnJfaERH7n
+         YNX3NMflIcMky9VLkWn/f4EvwuhO6jRpKix8GafaXGA8VK/v27clHdAhQ4I6fZqrEACP
+         ++XqddOw/jllXllbtKK0Yc3+k3Kxucub+pqGAk8PuuTHawlTb7sLF8R/vbRHUqtGCyl+
+         uFSA==
+X-Forwarded-Encrypted: i=1; AJvYcCVkCvNiz5cv1mCVIovMyA2iz8Z9rx+8gwMd8fDIRDV0SCnPl/d894qPaEIXrheUwZ6zp3nckt5IN1B/p+ODxzze@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzi2r1hrqFy1issfP2KxgkMHS1gaxAwRaPBcfxS7OY7GyKSiVm2
+	NRD9HV1FiYPiUDH5eOX6YI6tenEtvttylF+1riG65fNkJ3ca7u2Jt3fksC18
+X-Google-Smtp-Source: AGHT+IHHUZYY7zCm6GMKW1WHxZLJQwJgUkIjC2XLDYZunzoUddLHpeLKvHZ6Km814qx2LAh7cs1awQ==
+X-Received: by 2002:a05:600c:1987:b0:428:10d7:a4b1 with SMTP id 5b1f17b1804b1-42ccd35b222mr4959005e9.25.1725994321160;
+        Tue, 10 Sep 2024 11:52:01 -0700 (PDT)
+Received: from krava (85-193-35-130.rib.o2.cz. [85.193.35.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42cc137556esm27141515e9.1.2024.09.10.11.52.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2024 11:52:00 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 10 Sep 2024 20:51:59 +0200
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	martin.lau@kernel.org, akpm@linux-foundation.org,
+	linux-perf-users@vger.kernel.org, song@kernel.org
+Subject: Re: [PATCH bpf-next] MAINTAINERS: record lib/buildid.c as owned by
+ BPF subsystem
+Message-ID: <ZuCVT8EzqZxOxZFx@krava>
+References: <20240909190426.2229940-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZuB8Q3NQej-gB6Tz@x1>
-In-Reply-To: <ZuB8Q3NQej-gB6Tz@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 10 Sep 2024 10:41:31 -0700
-Message-ID: <CAP-5=fWnuQrrBoTn6Rrn6vM_xQ2fCoc9i-AitD7abTcNi-4o1Q@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf trace: If a syscall arg is marked as 'const',
- assume it is coming _from_ userspace
-To: arnaldo.melo@gmail.com
-Cc: Alan Maguire <alan.maguire@oracle.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Howard Chu <howardchu95@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240909190426.2229940-1-andrii@kernel.org>
 
-On Tue, Sep 10, 2024 at 10:05=E2=80=AFAM <arnaldo.melo@gmail.com> wrote:
->
-> We need to decide where to copy syscall arg contents, if at the
-> syscalls:sys_entry hook, meaning is something that is coming from
-> user to kernel space, or if it is a response, i.e. if it is something
-> the _kernel_ is filling in and thus going to userspace.
->
-> Since we have 'const' used in those syscalls, and unsure about this
-> being consistent, doing:
->
->   root@number:~# echo $(grep const /sys/kernel/tracing/events/syscalls/sy=
-s_enter_*/format  | grep struct | cut -c47- | cut -d'/' -f1)
->   clock_nanosleep clock_settime epoll_pwait2 futex io_pgetevents landlock=
-_create_ruleset listmount mq_getsetattr mq_notify mq_timedreceive mq_timeds=
-end preadv2 preadv prlimit64 process_madvise process_vm_readv process_vm_re=
-adv process_vm_writev process_vm_writev pwritev2 pwritev readv rt_sigaction=
- rt_sigtimedwait semtimedop statmount timerfd_settime timer_settime vmsplic=
-e writev
->   root@number:~#
->
-> Seems to indicate that we can use that for the ones that have the
-> 'const' to mark it as coming from user space, do it.
->
-> Most notable/frequent syscall that now gets BTF pretty printed in a
-> system wide 'perf trace' session is:
->
->   root@number:~# perf trace
->      21.160 (         ): MediaSu~isor #/1028597 futex(uaddr: 0x7f49e1dfe9=
-64, op: WAIT_BITSET|PRIVATE_FLAG, utime: (struct __kernel_timespec){.tv_sec=
- =3D (__kernel_time64_t)50290,.tv_nsec =3D (long long int)810362837,}, val3=
-: MATCH_ANY) ...
->       21.166 ( 0.000 ms): RemVidChild/6995 futex(uaddr: 0x7f49fcc7fa00, o=
-p: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
->       21.169 ( 0.001 ms): RemVidChild/6995 sendmsg(fd: 25<socket:[78915]>=
-, msg: 0x7f49e9af9da0, flags: DONTWAIT) =3D 280
->       21.172 ( 0.289 ms): RemVidChild/6995 futex(uaddr: 0x7f49fcc7fa58, o=
-p: WAIT_BITSET|PRIVATE_FLAG|CLOCK_REALTIME, val3: MATCH_ANY) =3D 0
->       21.463 ( 0.000 ms): RemVidChild/6995 futex(uaddr: 0x7f49fcc7fa00, o=
-p: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
->       21.467 ( 0.001 ms): RemVidChild/6995 futex(uaddr: 0x7f49e28bb964, o=
-p: WAKE|PRIVATE_FLAG, val: 1)           =3D 1
->       21.160 ( 0.314 ms): MediaSu~isor #/1028597  ... [continued]: futex(=
-))                                            =3D 0
->       21.469 (         ): RemVidChild/6995 futex(uaddr: 0x7f49fcc7fa5c, o=
-p: WAIT_BITSET|PRIVATE_FLAG|CLOCK_REALTIME, val3: MATCH_ANY) ...
->       21.475 ( 0.000 ms): MediaSu~isor #/1028597 futex(uaddr: 0x7f49d0223=
-040, op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
->       21.478 ( 0.001 ms): MediaSu~isor #/1028597 futex(uaddr: 0x7f49e26ac=
-964, op: WAKE|PRIVATE_FLAG, val: 1)           =3D 1
->   ^Croot@number:~#
->   root@number:~# cat /sys/kernel/tracing/events/syscalls/sys_enter_futex/=
-format
->   name: sys_enter_futex
->   ID: 454
->   format:
->         field:unsigned short common_type;       offset:0;       size:2; s=
-igned:0;
->         field:unsigned char common_flags;       offset:2;       size:1; s=
-igned:0;
->         field:unsigned char common_preempt_count;       offset:3;       s=
-ize:1; signed:0;
->         field:int common_pid;   offset:4;       size:4; signed:1;
->
->         field:int __syscall_nr; offset:8;       size:4; signed:1;
->         field:u32 * uaddr;      offset:16;      size:8; signed:0;
->         field:int op;   offset:24;      size:8; signed:0;
->         field:u32 val;  offset:32;      size:8; signed:0;
->         field:const struct __kernel_timespec * utime;   offset:40;      s=
-ize:8; signed:0;
->         field:u32 * uaddr2;     offset:48;      size:8; signed:0;
->         field:u32 val3; offset:56;      size:8; signed:0;
->
->   print fmt: "uaddr: 0x%08lx, op: 0x%08lx, val: 0x%08lx, utime: 0x%08lx, =
-uaddr2: 0x%08lx, val3: 0x%08lx", ((unsigned long)(REC->uaddr)), ((unsigned =
-long)(REC->op)), ((unsigned long)(REC->val)), ((unsigned long)(REC->utime))=
-, ((unsigned long)(REC->uaddr2)), ((unsigned long)(REC->val3))
->   root@number:~#
->
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alan Maguire <alan.maguire@oracle.com>
-> Cc: Howard Chu <howardchu95@gmail.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Mon, Sep 09, 2024 at 12:04:26PM -0700, Andrii Nakryiko wrote:
+> Build ID fetching code originated from ([0]), and is still both owned
+> and heavily relied upon by BPF subsystem.
+> 
+> Fix the original omission in [0] to record this fact in MAINTAINERS.
+> 
+>   [0] bd7525dacd7e ("bpf: Move stack_map_get_build_id into lib")
+> 
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Thanks,
-Ian
+thanks,
+jirka
 
 > ---
->  tools/perf/builtin-trace.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 83eb15b72333edd9..e26baf1256d5bb56 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -2001,11 +2001,14 @@ syscall_arg_fmt__init_array(struct syscall_arg_fm=
-t *arg, struct tep_format_field
->
->                 len =3D strlen(field->name);
->
-> +               // As far as heuristics (or intention) goes this seems to=
- hold true, and makes sense!
-> +               if ((field->flags & TEP_FIELD_IS_POINTER) && strstarts(fi=
-eld->type, "const "))
-> +                       arg->from_user =3D true;
-> +
->                 if (strcmp(field->type, "const char *") =3D=3D 0 &&
->                     ((len >=3D 4 && strcmp(field->name + len - 4, "name")=
- =3D=3D 0) ||
->                      strstr(field->name, "path") !=3D NULL)) {
->                         arg->scnprintf =3D SCA_FILENAME;
-> -                       arg->from_user =3D true;
->                 } else if ((field->flags & TEP_FIELD_IS_POINTER) || strst=
-r(field->name, "addr"))
->                         arg->scnprintf =3D SCA_PTR;
->                 else if (strcmp(field->type, "pid_t") =3D=3D 0)
-> --
-> 2.46.0
->
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f328373463b0..a86834bb4c25 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4098,6 +4098,7 @@ F:	include/uapi/linux/btf*
+>  F:	include/uapi/linux/filter.h
+>  F:	kernel/bpf/
+>  F:	kernel/trace/bpf_trace.c
+> +F:	lib/buildid.c
+>  F:	lib/test_bpf.c
+>  F:	net/bpf/
+>  F:	net/core/filter.c
+> @@ -4218,6 +4219,7 @@ L:	bpf@vger.kernel.org
+>  S:	Maintained
+>  F:	kernel/bpf/stackmap.c
+>  F:	kernel/trace/bpf_trace.c
+> +F:	lib/buildid.c
+>  
+>  BROADCOM ASP 2.0 ETHERNET DRIVER
+>  M:	Justin Chen <justin.chen@broadcom.com>
+> -- 
+> 2.43.5
+> 
