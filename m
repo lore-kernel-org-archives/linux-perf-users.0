@@ -1,127 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB37A224F6
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 09:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D59C14E2FA;
+	Wed, 11 Sep 2024 10:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726048699; cv=none; b=qSaOQa0XMg2+HG/SpbCAcvCzxIR2KGVyYRwTXO5RSJg5jyZzMoWQHSFWr0lXQzWa7/7H2oMQvyCCisWnrLDgNf9j3dbBefYt7ZCWkfP7YTYjgi1H7Fi9jHZn2ORlINHlufY9sFKw02rrfcV6KAGOvYkmYS+gJ/2875Zw0IhwAEk=
+	t=1726048837; cv=none; b=VUkPEUW+LzMAh0nOLRdFTIy1e5I61bbE9Fm9KgorZoDUhYJ2kLCPpA/mGzPeIxZbIT3HbYubvzIXWL2i1LiZ++mPvDdKstxktz563pUHCKOH4uwGB2iFnZSlaBhIn2a62uvic+aoFm+D0N51/80PIn0jtjAQ4HNyxi/OlXMHN5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726048699; c=relaxed/simple;
-	bh=hlOnZAwHEKTuQDJKg7tOOEVEaheKWwqvs4rBCT6SXgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FU3RE8VmuUgdWY0P59ANQdoxfbkzZlT/0rzKwGXMJ3bpaDix+IIyL0Jg03dWDOSEkdrs/2vIdBtEUhfDXJzM5viI880QAEa/9TDXq56qo0EzKp0fZZeh3/Ud2JqEjOekwuvI6+sdM4k6mWJKnZksSa7dz09thRCp32c6mb1qnzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a8VDbeSb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a8VDbeSb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726048696;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S8mw1EsAhYCXZxYuAgu+29kuStFev+Xk0N3JpjoTBR8=;
-	b=a8VDbeSbJj2z/Da05muGvj18ops8KKkRLKCc+oxCuNLBx0iO17xabo4GsOUZ9TtlHyqfjR
-	HjBPqPTflgZEgSYeL47nnhaZkJ9JI+eLBSWbjD5qyh8bCuIFxREmcn/Jun98K98wmOUGPL
-	VioUe2ZrOn5ng8NQH2CoDRW43puoZ4A=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-78-jWNaIMw3MwuwWyvCL30Ftw-1; Wed,
- 11 Sep 2024 05:58:13 -0400
-X-MC-Unique: jWNaIMw3MwuwWyvCL30Ftw-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B002E19560B2;
-	Wed, 11 Sep 2024 09:58:10 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.229])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AD7DC19560AD;
-	Wed, 11 Sep 2024 09:58:03 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 11 Sep 2024 11:57:59 +0200 (CEST)
-Date: Wed, 11 Sep 2024 11:57:51 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sven Schnelle <svens@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] uprobes: use vm_special_mapping close() functionality
-Message-ID: <20240911095751.GA20308@redhat.com>
-References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
- <20240903073629.2442754-1-svens@linux.ibm.com>
- <20240911094401.GA19080@redhat.com>
+	s=arc-20240116; t=1726048837; c=relaxed/simple;
+	bh=1fAuAau3KeCX4d6czJwKqjuWe2UtNbEs6ol1CeoQCAw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=YKEUzV0WqQKUYjelQ0tfaahsv2eVypRdyhWCeK/f+sSx+U3FBEhnw566cl5FyGpVttnep/KizVM+A7/F+2KQBj9HGQm/dQ+d7Hg7vFaSQRQaNGW8YlUIRDXyY1ah2zgxk0Agbp19H5jyRb3fWg5WEAP6xzEPLtIFQ02X4XgRaCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4X3bfd3ZbQz69RR;
+	Wed, 11 Sep 2024 18:00:25 +0800 (CST)
+Received: from kwepemd200011.china.huawei.com (unknown [7.221.188.251])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9F92D1800D1;
+	Wed, 11 Sep 2024 18:00:31 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
+ kwepemd200011.china.huawei.com (7.221.188.251) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Wed, 11 Sep 2024 18:00:31 +0800
+Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
+ kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
+ Wed, 11 Sep 2024 18:00:31 +0800
+From: duchangbin <changbin.du@huawei.com>
+To: James Clark <james.clark@linaro.org>
+CC: duchangbin <changbin.du@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+	<jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
+ Melo" <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH] perf ftrace: Detect whether ftrace is enabled on system
+Thread-Topic: [PATCH] perf ftrace: Detect whether ftrace is enabled on system
+Thread-Index: AQHbAzKr1ZAjTKZ7QkCmqTLETkKdPLJR0hoAgACKOgA=
+Date: Wed, 11 Sep 2024 10:00:31 +0000
+Message-ID: <526bf9fecede4effa859214683201518@huawei.com>
+References: <20240910033625.3569729-1-changbin.du@huawei.com>
+ <4fa0229e-630b-4b6e-8882-3d8a5793a9dd@linaro.org>
+In-Reply-To: <4fa0229e-630b-4b6e-8882-3d8a5793a9dd@linaro.org>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <8756EA23FA9A584AABCFC1959882858F@huawei.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240911094401.GA19080@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-I guess VM_SEALED could help, but it depends on CONFIG_64BIT
-
-
-On 09/11, Oleg Nesterov wrote:
->
-> On 09/03, Sven Schnelle wrote:
-> >
-> > +static void uprobe_clear_state(const struct vm_special_mapping *sm, struct vm_area_struct *vma)
+On Wed, Sep 11, 2024 at 10:45:16AM +0100, James Clark wrote:
+>=20
+>=20
+> On 10/09/2024 04:36, Changbin Du wrote:
+> > To make error messages more accurate, this change detects whether ftrac=
+e is
+> > enabled on system by checking trace file "set_ftrace_pid".
+> >=20
+> > Before:
+> > ~ # perf ftrace
+> > failed to reset ftrace
+> >=20
+> > After:
+> > ~ # perf ftrace
+> > ftrace is not supported on this system
+> >=20
+> > Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> > ---
+> >   tools/perf/builtin-ftrace.c | 24 ++++++++++++++++++++++++
+> >   1 file changed, 24 insertions(+)
+> >=20
+> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > index eb30c8eca488..e1dc2768bc0f 100644
+> > --- a/tools/perf/builtin-ftrace.c
+> > +++ b/tools/perf/builtin-ftrace.c
+> > @@ -1112,6 +1112,24 @@ static int parse_graph_tracer_opts(const struct =
+option *opt,
+> >   	return 0;
+> >   }
+> > +static bool is_ftrace_supported(void)
 > > +{
-> > +	struct xol_area *area = container_of(vma->vm_private_data, struct xol_area, xol_mapping);
+> > +	char *file;
+> > +	bool supported =3D false;
 > > +
-> > +	mutex_lock(&delayed_uprobe_lock);
-> > +	delayed_uprobe_remove(NULL, vma->vm_mm);
-> > +	mutex_unlock(&delayed_uprobe_lock);
+> > +	file =3D get_tracing_file("set_ftrace_pid");
+> > +	if (!file) {
+> > +		pr_debug("cannot get tracing file set_ftrace_pid\n");
+> > +		return false;
+> > +	}
 > > +
-> > +	if (!area)
-> > +		return;
+> > +	if (!access(file, F_OK))
+> > +		supported =3D true;
 > > +
-> > +	put_page(area->pages[0]);
-> > +	kfree(area->bitmap);
-> > +	kfree(area);
+> > +	put_tracing_file(file);
+> > +	return supported;
 > > +}
 > > +
-> >  static struct xol_area *__create_xol_area(unsigned long vaddr)
-> >  {
-> >  	struct mm_struct *mm = current->mm;
-> > @@ -1481,6 +1500,7 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
-> >
-> >  	area->xol_mapping.name = "[uprobes]";
-> >  	area->xol_mapping.fault = NULL;
-> > +	area->xol_mapping.close = uprobe_clear_state;
-> 
-> Ah, no, we can't do this :/
-> 
-> A malicious application can munmap() its "[uprobes]" vma and free
-> area/pages/bitmap. If this application hits the uprobe breakpoint after
-> that it will use the freed memory.
-> 
-> And no, "mm->uprobes_state.xol_area = NULL" in uprobe_clear_state() won't
-> help. Say, another thread can sleep on area.wq when munmap() is called.
-> 
-> Sorry, I should have realized that immediately, but I didn't :/
-> 
-> Andrew, this is uprobes-use-vm_special_mapping-close-functionality.patch
-> in mm-stable
-> 
-> Oleg.
+> >   enum perf_ftrace_subcommand {
+> >   	PERF_FTRACE_NONE,
+> >   	PERF_FTRACE_TRACE,
+> > @@ -1254,6 +1272,12 @@ int cmd_ftrace(int argc, const char **argv)
+> >   		goto out_delete_filters;
+> >   	}
+> > +	if (!is_ftrace_supported()) {
+> > +		pr_err("ftrace is not supported on this system\n");
+> > +		ret =3D -ENOTSUP;
+> > +		goto out_delete_filters;
+> > +	}
+> > +
+>=20
+> Very minor nit, but you could probably put this earlier next to
+> check_ftrace_capable(). It didn't look like it used any of the config or
+> parsing results.
+>
+Thansk, I will rebase this on perf-tools-next branch.
 
+> Either way:
+>=20
+> Reviewed-by: James Clark <james.clark@linaro.org>
+
+--=20
+Cheers,
+Changbin Du
