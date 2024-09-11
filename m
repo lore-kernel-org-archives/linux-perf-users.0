@@ -1,80 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5701BA882;
-	Wed, 11 Sep 2024 15:48:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11E7192D86;
+	Wed, 11 Sep 2024 15:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726069725; cv=none; b=BP1fNgW35U0Wn+rtJ1PvyrEUXUe/f4LnIfFS1tASKaEUT/4JU1bZHI8RBFDiFEIgKuVOgWiAG2HCd5Nb+44zFK+R9PlS1v4TfRJZPNTd3SaemhehvHFMowi3Yh/MqtBExeXq53L4LUgrERgwoAlZwXdizrmmMbmALKYk3HWibT4=
+	t=1726069955; cv=none; b=AwXt9+0wXiiiW6jVgusmI40ZudDVfCHK0uNpjJYav6ConUjmHYZG17tmNy05ISaV/0vqKzlZ64QCXlHk2IMVdDmGBBhYvS/UqXMTa/ARlH3lYm+AO6MdCgWAbTbEAmfAWfvieVcKvy29GCdkDFAMz3cJ7cVo4I1bBzBZlGhMgHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726069725; c=relaxed/simple;
-	bh=uKOBO3/ZEvAfJ8xxHMEtIC+7uc2GWc7wTO6wZWMjJwE=;
+	s=arc-20240116; t=1726069955; c=relaxed/simple;
+	bh=rKWA3UShZ/s8ZMt2mlMUZHDP2tW4HLoJaMa0ps78jio=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q1309bUVCQbunyeBbrcodGfoK5osdLC9tvRfw0r3u3hW+DrpSe5wT1VJkUDk6BJokUigEL2SBGsoknSbCrA+XAG0G9HIqlkOXzMdqFirgqzhg3XI3BP/rDY2PKQPyUJSDx/ohBEQUnHysLM17Jt2G0mkOGMTNcUmZGx+KVIqR2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jx7ylrO7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WR0gb5IehgFR6b/WU2EDY45SDTrHEdg40IIn4yamV7QgVoyipgKQr4y+b1dAFtgCSepjxMsTuvsocDbzZJcxJjFMkYbrsFZf5gYfCsXC08Z4lR7d1hyYhTGYtqhZRhpl4CSdiUbJNvdHk45CaisMk2myXOqTptToSfubMIhDWls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oe2UFUkT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jx7ylrO7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D4CC4CEC5;
-	Wed, 11 Sep 2024 15:48:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oe2UFUkT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF749C4CEC0;
+	Wed, 11 Sep 2024 15:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726069724;
-	bh=uKOBO3/ZEvAfJ8xxHMEtIC+7uc2GWc7wTO6wZWMjJwE=;
+	s=k20201202; t=1726069955;
+	bh=rKWA3UShZ/s8ZMt2mlMUZHDP2tW4HLoJaMa0ps78jio=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jx7ylrO7GicKxEMBRKdsbV9GwJdEsgS1Yzv+NfWMmJFjAgaOT+NelR4YTO29UEW0y
-	 maGyviVKZiZ0fiPBEvrrijPPYBkI3JU4tIeGpVhCkaQ3BLxNRsvpOwrN5c3cr0FvzE
-	 5iN8P27396QSAZSJrke2llN2zG+mlywiaSyomDYnHqleowoPdKeiw3ZMEu7luGKVnA
-	 pD3vGOAMmBSrYOWAuPGsKjG+o5kD6PmT78DVNjQBJeigkzAiUvU8an9MtXWGBXz0OJ
-	 yFirHTwnJhFD5pTb5HUUy/BNRkQ4NGYuGL0H3qOuroHvVc8NaBhL+zXm/DEg9k5/Hs
-	 Lzcc9fnBIfOeg==
-Date: Wed, 11 Sep 2024 12:48:41 -0300
+	b=Oe2UFUkTIMMsv9Lx5GYRuQa/ml85xgNW4CoT9+MOsE7O0JyYoTZhGEgA3lUYd+aCO
+	 RhlLQxv+5hTVZoGSMOuKDb4yAgk3VYIndLuPn6idTHofUUmfnV9ZxKIGoZDZFf0Cty
+	 4IfiXdG3Q2a2tm6genjGkHxPm+V/tI8c3vHQr8jR05jteS/W0Um8R5J7LmGV22wxEL
+	 3Y/oSsDHJaOQc0ghCh8QWk6vs2vLV7048s73HPsvT5JJ/fmWL2adS8stre2XkGMONa
+	 HwHVkGbwHfAEDWUtviB04P7em/H7AeDvgWzpBGaxH7UPwuL1o2cEpqSFDYVD119ggO
+	 i1GwAAD42A19w==
+Date: Wed, 11 Sep 2024 12:52:32 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Sam James <sam@gentoo.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] tools: drop nonsensical -O6
-Message-ID: <ZuG72Y_7XRkedEBz@x1>
-References: <4f01524fa4ea91c7146a41e26ceaf9dae4c127e4.1725821201.git.sam@gentoo.org>
- <Zt9zoVFkFaCDwJ36@google.com>
+To: Ian Rogers <irogers@google.com>
+Cc: kan.liang@linux.intel.com, namhyung@kernel.org, jolsa@kernel.org,
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf evlist: Print hint for group
+Message-ID: <ZuG8wCjFjeW3stUI@x1>
+References: <20240908202847.176280-1-kan.liang@linux.intel.com>
+ <CAP-5=fXjH5C0H8RWULGm9UJc36mp=1rfoeBCxVVoHxe2KnGY8g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Zt9zoVFkFaCDwJ36@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXjH5C0H8RWULGm9UJc36mp=1rfoeBCxVVoHxe2KnGY8g@mail.gmail.com>
 
-On Mon, Sep 09, 2024 at 03:16:01PM -0700, Namhyung Kim wrote:
-> Hello,
+On Mon, Sep 09, 2024 at 09:54:57AM -0700, Ian Rogers wrote:
+> On Sun, Sep 8, 2024 at 1:28 PM <kan.liang@linux.intel.com> wrote:
+> >
+> > From: Kan Liang <kan.liang@linux.intel.com>
+> >
+> > An event group is a critical relationship. There is a -g option that can
+> > display the relationship. But it's hard for a user to know when should
+> > this option be applied.
+> >
+> > If there is an event group in the perf record, print a hint to suggest
+> > the user apply the -g to display the group information.
+> >
+> > With the patch,
+> >
+> >  $perf record -e "{cycles,instructions},instructions" sleep 1
+> >  [ perf record: Woken up 1 times to write data ]
+> >  [ perf record: Captured and wrote 0.024 MB perf.data (4 samples) ]
+> >
+> >  $perf evlist
+> >  cycles
+> >  instructions
+> >  instructions
+> >  # Tip: use 'perf evlist -g' to show group information
+> >
+> >  $perf evlist -g
+> >  {cycles,instructions}
+> >  instructions
+> >
+> > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Closes: https://lore.kernel.org/lkml/ZttgvduaKsVn1r4p@x1/
+> > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > 
-> On Sun, Sep 08, 2024 at 07:46:41PM +0100, Sam James wrote:
-> > -O6 is very much not-a-thing. Really, this should've been dropped
-> > entirely in 49b3cd306e60b9d889c775cb2ebb709f80dd8ae9 instead of just
-> > passing it for not-Clang.
-> > 
-> > Just collapse it down to -O3, instead of "-O6 unless Clang, in which case
-> > -O3".
-> > 
-> > GCC interprets > -O3 as -O3. It doesn't even interpret > -O3 as -Ofast,
-> > which is a good thing, given -Ofast has specific (non-)requirements for
-> > code built using it. So, this does nothing except look a bit daft.
-> > 
-> > Remove the silliness and also save a few lines in the Makefiles accordingly.
-> > 
-> > Signed-off-by: Sam James <sam@gentoo.org>
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks, applied to perf-tools-next,
+Thanks, tested:
+
+    Committer testing:
+    
+    So for a perf.data file _with_ a group:
+    
+      root@number:~# perf evlist -g
+      {cpu_core/branch-instructions/pp,cpu_core/branches/}
+      dummy:u
+      root@number:~# perf evlist
+      cpu_core/branch-instructions/pp
+      cpu_core/branches/
+      dummy:u
+      # Tip: use 'perf evlist -g' to show group information
+      root@number:~#
+    
+    Then for something _without_ a group, no hint:
+    
+      root@number:~# perf record ls
+      <SNIP>
+      [ perf record: Woken up 1 times to write data ]
+      [ perf record: Captured and wrote 0.035 MB perf.data (7 samples) ]
+      root@number:~# perf evlist
+      cpu_atom/cycles/P
+      cpu_core/cycles/P
+      dummy:u
+      root@number:~#
+    
+    No suggestion, good.
+    
+    Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+    Reviewed-by: Ian Rogers <irogers@google.com>
+    Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+    Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+
+Applied.
 
 - Arnaldo
