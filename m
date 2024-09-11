@@ -1,160 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182E51922CA
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 13:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EC919AA75
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 13:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726060504; cv=none; b=EqfYtJ+ZKEV1edG/juPaIbQhI9gzHrBFx0krXXwem+YqiPFXoGhsEUFg3Vn/QLVXWJZ8ZrAPBtNuD95QIljVXy7CeEoRPqB1BYHVjQya2RPCT7rWOhpL1J4Gk7IpjlOaGXkHLMwjAeN6sDWX/DrAnxw55l/5ILfRT3yXVj2dum8=
+	t=1726060803; cv=none; b=orZ/H6tWuvdVjdIUDeiQoHGjriiyP/zwclgLJFp/kW3Bsqh/DX5TkIBK1lijDPaT684BuanLC+n2mGIwa6GTzpY74fwHAFRMLF2IimGEG5JFFT3rfn6fB1hZE8Eloc9bMWuEIvteiWsOSWX6fN/lDDXUUDH8B6zS12zbylWu7qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726060504; c=relaxed/simple;
-	bh=XZt2G0aH559xirzR6l9JrVn5VjcuatzDQvtdbhhVi0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UWg/dq685lBrkKyn3sDfF6xmT12JWYt3IjyHXXI82cGs0klMgI+mc7b+T119hWdKTg2fNxI0BY0IrI5xJuxAgf7jP4IHWnBr/exMcya8sbO3CHjLQ69G9pqqenc19jz3wSPDwlMDLI3tAGKsJUtRdkHFv/Gy3kndv7gOQ6lGcdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F1RJCqR7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1726060803; c=relaxed/simple;
+	bh=D1EiHcY8P9weXlSZhRTUAEeg4iKK3QtrCo4b6y9PHW0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PFvWIEAVtuaqDISfApC72ecUZffWwN3utEiSSx7LUtH9jKB8A+oWDHtIVhPniygVsx8JbO2uNs/uwSh/OU+MuKVrTsH6/XlrIaUCnV5USe3n11vWEk3v6obQEyJGKtGCVshCCJmLchIZjCegT5Bi5AXbrfzmsVHnNYRfUdfSI3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YnDhUQyX; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F1RJCqR7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726060502;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0cWyaJKdBH3JeLKIKrzSApQMd3n2jcApw7CnibmGsTg=;
-	b=F1RJCqR7bguJt4S3CNlnfu2x1X8p2a25d6mgjRI37ng5FhEP3f8xGZINKT6Ocl6iPkbRgp
-	Q/RJsxqhiAgWtfjSNlXk7sP3Ms+girBG2DvjzdRvsiUPSNnucu5mo3jatxlNle70lpEwuz
-	dqD+ONt+vc5kmbfmYBcejop3tmZw+UA=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-452-A0mHO4ajN8u2MKgW2T49hg-1; Wed,
- 11 Sep 2024 09:14:59 -0400
-X-MC-Unique: A0mHO4ajN8u2MKgW2T49hg-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5DFD61955D45;
-	Wed, 11 Sep 2024 13:14:56 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.229])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5477419560A3;
-	Wed, 11 Sep 2024 13:14:49 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 11 Sep 2024 15:14:44 +0200 (CEST)
-Date: Wed, 11 Sep 2024 15:14:37 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sven Schnelle <svens@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH -mm 3/3] uprobes: turn xol_area->pages[2] into xol_area->page
-Message-ID: <20240911131437.GC3448@redhat.com>
-References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
- <20240903073629.2442754-1-svens@linux.ibm.com>
- <20240911131320.GA3448@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YnDhUQyX"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-374c6187b6eso4240162f8f.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 06:20:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1726060799; x=1726665599; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RCmH6mf58csP77BoUiBG1NiEIHJIhhD8mtjQ0XUQ2Ew=;
+        b=YnDhUQyX1nl0WR0Hexusub1+WDPsIk/Z2q12qmVQZaAfqMD96CNYbmkY7qvbxZSxvT
+         7WDACKLZaPbtHRLhIl+X4t6sGd6HF2FWufFzEveDCslvqtlAt3MDbeoITwVXgUsS18B9
+         fBSceuGk7dhUUWEGbnyW33DOlbmoOPPlCmFsbTzGgz5w5HmyJevY1A9g74390bw2//Yj
+         qTRWGUH4J5f3WbJIPeMeqt4yg6taCHR09PaeDxgC3O/gkD6qZUx+Iijlr9gxh9lBdRQi
+         HQGyAhiyiC9HWFg5r4KvqxAZGcqUlws6kiouQNSZJQ7j8shHXvjzEw4ai99NH6yvyO84
+         2RzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726060799; x=1726665599;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RCmH6mf58csP77BoUiBG1NiEIHJIhhD8mtjQ0XUQ2Ew=;
+        b=L8Jmg+46ru2E+K44dyG+noDbNyFCCJQr7EcIhXu3izYikn+1eTvzbrjn/2ychwkue0
+         1qUz6TQsTIdOGygxRP9xIFVG6t3x7EDBzsj/nyVKnVk78osj3iqF/j4vQhwAA5nb1nT8
+         ZasKAI2xyJurzZz8EWb9zWl0A2pgPO7B0wh3rkvhf+Q89nIRKf6HsIZQ6kJcAc2NS6we
+         tCAPkzm8RhmGOSmZ00ZIx1qrEx3PDtAyAJ7sTCUhjnl97KDfuwDrABLRZB3mEziQ3zTw
+         ff45QxyRjTdfeYbv+f/ZTr6U5Gx3L6MXBjfy6CgMidpZbhxeHU8rUY2ImmLLEH+0wl+n
+         q2mw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9v/i6gm+2/uKSKoQ0XoZ9/Po3NNugvKdn/O5i0QIGbQjqKQk+erYqAa/5HQltjquZGL+MxcoHsz19yQ6RmCgE@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaSCoHNPDcTHGbD2yq5Cw47XLQDNYjm+6ACR68x0hRrLvmfCAS
+	PKhFT0SKyTjq6IxEoe0ZF17BNf+EkeE7Qf+LFGfAwzfcRwzIiuKkIr/h3O2zWXgC845gLD4n/DC
+	g1kg=
+X-Google-Smtp-Source: AGHT+IFEENixLL18/yVJLAJfrYAgTnbVQ6WwdXnBfanZyIiOghGVV3B0zi9SftdyFackY5eWv55XaQ==
+X-Received: by 2002:adf:f582:0:b0:374:bb1b:d8a1 with SMTP id ffacd0b85a97d-378895c8952mr11094429f8f.13.1726060798926;
+        Wed, 11 Sep 2024 06:19:58 -0700 (PDT)
+Received: from [192.168.1.61] ([84.67.228.188])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caf436998sm140496745e9.29.2024.09.11.06.19.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Sep 2024 06:19:58 -0700 (PDT)
+Message-ID: <586cc208-faee-4b76-bd9b-180ac06a0a92@linaro.org>
+Date: Wed, 11 Sep 2024 14:20:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240911131320.GA3448@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND 2/2] perf stat: Stop repeating when ref_perf_stat()
+ returns -1
+To: Levi Yun <yeoreum.yun@arm.com>
+Cc: nd@arm.com, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, irogers@google.com,
+ asmadeus@codewreck.org
+References: <20240911121919.4167483-1-yeoreum.yun@arm.com>
+ <20240911121919.4167483-3-yeoreum.yun@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20240911121919.4167483-3-yeoreum.yun@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Now that xol_mapping has its own ->fault() method we no longer need
-xol_area->pages[1] == NULL, we need a single page.
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- kernel/events/uprobes.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index a478e028043f..94a17435cfe6 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -99,7 +99,7 @@ struct xol_area {
- 	atomic_t 			slot_count;	/* number of in-use slots */
- 	unsigned long 			*bitmap;	/* 0 = free slot */
- 
--	struct page 			*pages[2];
-+	struct page			*page;
- 	/*
- 	 * We keep the vma's vm_start rather than a pointer to the vma
- 	 * itself.  The probed process or a naughty kernel module could make
-@@ -1437,7 +1437,7 @@ static vm_fault_t xol_fault(const struct vm_special_mapping *sm,
- {
- 	struct xol_area *area = vma->vm_mm->uprobes_state.xol_area;
- 
--	vmf->page = area->pages[0];
-+	vmf->page = area->page;
- 	get_page(vmf->page);
- 	return 0;
- }
-@@ -1512,10 +1512,9 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
- 	if (!area->bitmap)
- 		goto free_area;
- 
--	area->pages[0] = alloc_page(GFP_HIGHUSER);
--	if (!area->pages[0])
-+	area->page = alloc_page(GFP_HIGHUSER);
-+	if (!area->page)
- 		goto free_bitmap;
--	area->pages[1] = NULL;
- 
- 	area->vaddr = vaddr;
- 	init_waitqueue_head(&area->wq);
-@@ -1523,12 +1522,12 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
- 	set_bit(0, area->bitmap);
- 	atomic_set(&area->slot_count, 1);
- 	insns = arch_uprobe_trampoline(&insns_size);
--	arch_uprobe_copy_ixol(area->pages[0], 0, insns, insns_size);
-+	arch_uprobe_copy_ixol(area->page, 0, insns, insns_size);
- 
- 	if (!xol_add_vma(mm, area))
- 		return area;
- 
--	__free_page(area->pages[0]);
-+	__free_page(area->page);
-  free_bitmap:
- 	kfree(area->bitmap);
-  free_area:
-@@ -1570,7 +1569,7 @@ void uprobe_clear_state(struct mm_struct *mm)
- 	if (!area)
- 		return;
- 
--	put_page(area->pages[0]);
-+	put_page(area->page);
- 	kfree(area->bitmap);
- 	kfree(area);
- }
-@@ -1637,7 +1636,7 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
- 	if (unlikely(!xol_vaddr))
- 		return 0;
- 
--	arch_uprobe_copy_ixol(area->pages[0], xol_vaddr,
-+	arch_uprobe_copy_ixol(area->page, xol_vaddr,
- 			      &uprobe->arch.ixol, sizeof(uprobe->arch.ixol));
- 
- 	return xol_vaddr;
--- 
-2.25.1.362.g51ebf55
+On 11/09/2024 13:19, Levi Yun wrote:
+> Exit when run_perf_stat() returns an error to avoid continuously
+> repeating the same error message. It's not expected that COUNTER_FATAL
+> or internal errors are recoverable so there's no point in retrying.
+> 
+> This fixes the following flood of error messages for permission issues,
+> for example when perf_event_paranoid==3:
+>    perf stat -r 1044 -- false
+> 
+>    Error:
+>    Access to performance monitoring and observability operations is limited.
+>    ...
+>    Error:
+>    Access to performance monitoring and observability operations is limited.
+>    ...
+>    (repeating for 1044 times).
+> 
+> Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
+> ---
+>   tools/perf/builtin-stat.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 954eb37ce7b8..18197ded88a7 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -2875,7 +2875,10 @@ int cmd_stat(int argc, const char **argv)
+>   			evlist__reset_prev_raw_counts(evsel_list);
+> 
+>   		status = run_perf_stat(argc, argv, run_idx);
+> -		if (forever && status != -1 && !interval) {
+> +		if (status == -1)
+> +			break;
 
+Was this "status != -1" here correct? Seems like everything in 
+run_perf_stat() returns -1 except what's in "if (STAT_RECORD)" for some 
+reason.
+
+Maybe there is something special about -1, but that feels a bit fragile 
+and relies on the whole chain to continue to do the right thing. At 
+least a comment about the relevance of -1 is required, although the 
+issue might not be introduced by this patch.
+
+James
 
