@@ -1,44 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEA35A117;
-	Wed, 11 Sep 2024 14:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8198F6C;
+	Wed, 11 Sep 2024 14:24:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726064589; cv=none; b=jkyE+qvHYFbjpYFgBeh0CMTONTVyJQDTXjUbr1dJtg1Ze7SpWdx/4EWnW4FEllGauC/+OvYw9bC34iTVVG8DWkwHR612jTPgRB9zNX4IkVhOmg0cLqCxnYnupFfWh/J6XrZ3zrtCTWTE3oRYDkC4qyf8ReP2CDuFlDLdmRlk6mo=
+	t=1726064697; cv=none; b=nNq3YEMNF/b8M/PkscG1BH4ieDQ8Isc1dwHIzISPuuPg5qjcgNqvvA0tpqnPi1Tr8otbvnGbIHR18QJghmuahqetJAj1JfTbx+A76pts4f9SParJfZ9Y5d5rGhXW9L5bHCwu5YaolKjLq5ikcXo8UTVKBTDEc2yEdYctmzDXh+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726064589; c=relaxed/simple;
-	bh=1exqtszE8qg/zfZb+SPj6gWdkiOR6leFN4ai47Xb0kk=;
+	s=arc-20240116; t=1726064697; c=relaxed/simple;
+	bh=30Gh3tNWYgZEv0YbQvnDnmMbgp24wiIcONKTHghjEL4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PxSUZO48dba/JZONwrndw2Dx7fSjZC3C+ynlUepqhn5xYRDmcWWzMnwcbmRZP+8S9+a94guD4slcW5z9Un9ipd75ETNTKwawkjXQeLrQ+SFf4rR2mHxWhqGzZNnxLCtmtmW+6xm66rDjPTlyLud4VoQjf/h7R5MmVkjTA5rNjS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KvHJwRjj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=S+ZzHOUPRJP227KhDkvoBLdOH0jjXbLbM3kn9FHqN3g5ORvIff7y9fGZXoG0NJbTAMtGCt59yRBiNziccL9a6tE9PLAvRoS96AQ5ZQjJ/D2b/v8UwMiryvOqPeHtuw7A9ClacNNedx+5FYb1q4BbPLnuNnvIvApqfbowv5EXy0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YvMolqD3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KvHJwRjj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EEEBC4CEC5;
-	Wed, 11 Sep 2024 14:23:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YvMolqD3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81B09C4CEC0;
+	Wed, 11 Sep 2024 14:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726064588;
-	bh=1exqtszE8qg/zfZb+SPj6gWdkiOR6leFN4ai47Xb0kk=;
+	s=k20201202; t=1726064697;
+	bh=30Gh3tNWYgZEv0YbQvnDnmMbgp24wiIcONKTHghjEL4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KvHJwRjjZH5cwboPM+g02ORXGnBqFqIm4SesJjZBJbVktyjXP2Mauteiw0enylzEA
-	 juMyyCcedwHTpsN/EuJZxdvHXYnbEQMf6hPk9DAxPCIdv4+z7ttmitMAhgY7GkdAWO
-	 WGhtlQb6qfq/G5BxnVxFyZ2erLIRwcQmZxwFl6Yd0e11QKty84GI29jTlZF+Cm54hb
-	 WNuCDc5R+ty1KldeNCDOJGUKqFdSvmPO9k13fXAGlV87dE9qvmN1I6r8Sv5pWmng8O
-	 c0W7dW8AcMGdxFtyzNojRX7rH2aTK3LeyOYo6ouVabBm+wXPHTWsDlM85cvPPiTDTf
-	 M8+q8DT2yDdYw==
-Date: Wed, 11 Sep 2024 11:23:05 -0300
+	b=YvMolqD358BGsUx2trKPEVcwZTHOof1XB4gKxe72CuOGRh45j9z7Pbi1vpzvOIn5y
+	 M7s6H2DqR5VwvBMtc+QeZQ1m84dIPRnACVlC8v7C6ER0O4kiO73ykjTzpCpqXAEL0D
+	 eodz4xjtwcRsERrINLbue5wbUIMkQ09arHc7U0Mk0X6rZSdtYCaG3mqmTDY22BbUv0
+	 g+egJbd4KnGZvWFs0xH9bShr7cLr+GBqCsG4b3F0hGz6r6Wpil2peuNZwafFA90Fck
+	 LqlEOBwwbSt7h43hx48vKnUa2TRB87MPROcnJbCsGU23z6ewrGfY9q4DKRv+36Wz9P
+	 k6ET2ouPuPc5A==
+Date: Wed, 11 Sep 2024 11:24:53 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org,
-	kan.liang@linux.intel.com, namhyung@kernel.org,
+To: Ian Rogers <irogers@google.com>
+Cc: Andrew Kreimer <algonell@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 6/8] perf trace: Collect augmented data using BPF
-Message-ID: <ZuGnyURMLARy7Omu@x1>
-References: <20240824163322.60796-1-howardchu95@gmail.com>
- <20240824163322.60796-7-howardchu95@gmail.com>
- <Zti6mc3Lt5jC1owY@x1>
- <CAH0uvojWQz_K5S7nLavGW6K6mU6Y7TKoZAWpcut=AgbXtr6Wng@mail.gmail.com>
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Fix a typo
+Message-ID: <ZuGoNa0Kz6GNFLLn@x1>
+References: <20240907131006.18510-1-algonell@gmail.com>
+ <CAP-5=fUW1z++JdFHke8X8Ou-grBRK_8rYPgd+CNjVLB9iZ5csA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,29 +53,18 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH0uvojWQz_K5S7nLavGW6K6mU6Y7TKoZAWpcut=AgbXtr6Wng@mail.gmail.com>
+In-Reply-To: <CAP-5=fUW1z++JdFHke8X8Ou-grBRK_8rYPgd+CNjVLB9iZ5csA@mail.gmail.com>
 
-On Wed, Sep 04, 2024 at 02:11:35PM -0700, Howard Chu wrote:
-> On Wed, Sep 4, 2024 at 12:53 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > On Sun, Aug 25, 2024 at 12:33:20AM +0800, Howard Chu wrote:
-> > ⬢[acme@toolbox perf-tools-next]$ pahole -C syscall_enter_args /tmp/build/perf-tools-next/util/bpf_skel/.tmp/augmented_raw_syscalls.bpf.o
-> > struct syscall_enter_args {
-> >         unsigned long long         common_tp_fields;     /*     0     8 */
-> >         long                       syscall_nr;           /*     8     8 */
-> >         unsigned long              args[6];              /*    16    48 */
+On Sun, Sep 08, 2024 at 05:30:36PM -0700, Ian Rogers wrote:
+> On Sat, Sep 7, 2024 at 6:10 AM Andrew Kreimer <algonell@gmail.com> wrote:
 > >
-> >         /* size: 64, cachelines: 1, members: 3 */
-> > };
+> > Fix a typo in comments.
 > >
-> > So the entry has the theoretical max limit for the augmented payload
-> > which would be 6 * sizeof(struct augmented_arg) + the common header for
-> > tracepoints (unaugmented), a lot of space, but...
+> > Reported-by: Matthew Wilcox <willy@infradead.org>
+> > Signed-off-by: Andrew Kreimer <algonell@gmail.com>
 > 
-> Yes, if I don't use this much space, and try to do a flexible payload
-> length, I won't be able to pass the BPF verifier. I will try to fix
-> this wasting problem.
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-But then we don't use it, I need to look at the implementation of BPF
-maps, to see how bad is this, but I doubt it is that much, well see.
+Thanks, applied to perf-tools-next,
 
 - Arnaldo
