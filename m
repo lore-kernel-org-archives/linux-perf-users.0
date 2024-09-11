@@ -1,127 +1,182 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FC51AE035
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 17:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CCC1885A8;
+	Wed, 11 Sep 2024 19:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726076532; cv=none; b=VzQb7SBA2o4GnTQg4R8O/fdRlL54garKgW3o/CPpu7U1tRDrEcPAVRKsXmMr7FEv296hL72KkboyQy8KJBuSlhQNOpYmmpNFdwTbCyb3jJ0P0E6sZg9Ak22qPdBDuxJ6TIYyWJV+ZwGAW9Q8duqEUTM6QUFZguA8AF8fjtZjxEk=
+	t=1726084656; cv=none; b=V7m8g2ngBJU5+EBM44J6lDXdIgzDAnGzCtBkiGL32cajMkmgKmD3d+wPL2l8SVP55dCDJfx6NsuD6S3BwCYGYwnehR6oh4B+t+xR5dBkmND2GcnUo9d5sFvHdvULNCnNI58kfZO78GnQC3lSOdMEDqwxyU2J6z8a87+aCy3Nrzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726076532; c=relaxed/simple;
-	bh=dn939sn++fwvDrb1mRwiAH6VwkMwvdG2HxDigWI+AlQ=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=ZGcU2b3MtrJTxgVTVwRKrGXddtflOCc7trjZT2y/NjFX4MKWPZNjM7aTVPizWeRtq17PouPF1mlNGEsg2tVBGIwy1x5rXyvAzoAt/ZzGJhHb67CgKUzoZRut3hr9sDBSGSr/sC/jE9murt3/6KLJxDIP7kVQNHor1o13zisDstE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aJOeYiO3; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1726084656; c=relaxed/simple;
+	bh=aJUyMsvyZZ05hM8yt6xFU9WboZ6bRU9MA8Jf4EE1a34=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BEV2EOX20RPXEeEVq+J0MG6Ehr2kKoj9c8Z/ozVIRHXR5GpP9xfDNaOWNMjJERZG5D/XlX99rmQynSpJXpMKc3QECDlgl5bx7OZckLiFS0QSerOqVEgCEp7xUVIerjXIflxQK3clczUmdmRF9DR04mEkhzldVU7PAkPG6yqick0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzsRkEIk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aJOeYiO3"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6b8d96aa5ebso3839487b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 10:42:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726076529; x=1726681329; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=706YIr0bgBd+SdWWT5lCJ2ip0tLuVrI+pXTkacc4ei0=;
-        b=aJOeYiO3GcI0JykcTKTC3C/OML1+gF9uFFooNCGF9VRphwK6eTGjQz1b4QxQq0wXWS
-         2d7Cup/I5gv0QJcTWXJljtB2ccYrrwlOYJyz6dh+bNgm36fj+/iBfp3oVIDMES2nLfxO
-         87kmbSlG+Yb74xaHd/pUfSUvcgSJF/90K+U+Bvt6DJNSB4Ia9YmUuX7YKhZ8RoOLWX/3
-         336+GDiNncXmTJyjMU1nNUrZbwDmgt3z4/PoIoIrEW+5XAp0DYgxbdUn5D3SqW6Hk3SF
-         MPH0WsEQbD5TwbuTs/MCSbuxAYuDG4OBIIEbevLox7jw7pSSKfhOPg6/+85WbHYGn1a8
-         hw9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726076529; x=1726681329;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=706YIr0bgBd+SdWWT5lCJ2ip0tLuVrI+pXTkacc4ei0=;
-        b=g8gJsFHq+7/9qUTyhTIFEggHf4LcjQ8Z04tVCJn9KfiBfgsXZYXen1/aCfjrYlSQNS
-         CJbknS9QPVEwQMfzU+btj9pSQ4jNFsxEt/d5RV6bAnAjT6fSygaobz19y9XFUPnyeWZ6
-         /XlrVbf8eisSnHcXGPSZym6DsQk7yw6rht1Jwp5FN1h3jf6YmnH0p1o2w3pliCXpp9eV
-         ltDn22xbuH1Zkk27s5kRpJfKnQb66jV/QXoNu47zxVm0NzpdLeDRLwfrqJWDaxwN7rMz
-         IgJu+T7zLaRr5Uj0nTvKp34LU3EFVnezPw1HqKaVqTj6MTH5WQiZzCPwsZ6G+RHrtTkT
-         ZsHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXsdSWxkbB6Gxp7kQH9VgyUHfAl1EzEob4vE8yPQ2c2R9l1SCnD91UFI1lNFQz7XH5oyW6B4Zhv3sJjkhghpVwL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZuph7gJYd9zVlzPhazcbeHJouRAb3bJjkqdVmqkMc3R+fGErM
-	G2gLYLhyw93a98uPuPuGqwWxaPDjczIO0CL8w/PPGF41oGMeyag6Imt9c3vcn/GSFHnbdkiP3qU
-	+n+dhD+Wdt43HriyttE1VFQ==
-X-Google-Smtp-Source: AGHT+IFvlmwQkSjQLxVucUW7uRZBOX25a6vFDWduRsiEd3MV5YuAAx1lfuAly70GDxykiYb30OJnJ7h7mzdG3bMQWg==
-X-Received: from coltonlewis-kvm.c.googlers.com ([fda3:e722:ac3:cc00:11b:3898:ac11:fa18])
- (user=coltonlewis job=sendgmr) by 2002:a05:690c:fd0:b0:6d6:bf07:d510 with
- SMTP id 00721157ae682-6dbb6b9d655mr6437b3.6.1726076528473; Wed, 11 Sep 2024
- 10:42:08 -0700 (PDT)
-Date: Wed, 11 Sep 2024 17:42:07 +0000
-In-Reply-To: <ZtmOENs5qveMH920@J2N7QTR9R3> (message from Mark Rutland on Thu,
- 5 Sep 2024 11:55:12 +0100)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzsRkEIk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E15FEC4CEC0;
+	Wed, 11 Sep 2024 19:57:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726084655;
+	bh=aJUyMsvyZZ05hM8yt6xFU9WboZ6bRU9MA8Jf4EE1a34=;
+	h=Date:From:To:Cc:Subject:From;
+	b=OzsRkEIkWz5pejC9Fs+QNydjkVQIbBm3dOTULvrwOX/UUUZ8AFAdZLzQ+86s5tepR
+	 UAg8sNh567SepvOxOp4aaTf2OCVFpc7BPd9mON4efMtkWFTLCi4Yjppz91PGmHNWmy
+	 M0nb4b5bkRIma9FxAlTHpxlrGJPdVUh0+qOsRL0MXD9wNKAQOh8jHOQSTZF7EW3KUA
+	 Q6C1joTlM2vXmUtcdpwXRMGLj/B+EApB1V6IQOO4ejjt61ufzmDT90ObAr7cyuLznl
+	 6YUhBBRLZ2+20zwTgBz2UHJjzh9t5ojinjhOhjLwpavBgXBdYpvexEpTfmkvoJFHcN
+	 dOZi89kE0Mn2A==
+Date: Wed, 11 Sep 2024 16:57:31 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf trace: Mark the 'rseq' arg in the rseq syscall as
+ coming from user space
+Message-ID: <ZuH2K1LLt1pIDkbd@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntv7z2cck0.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH 5/5] perf: Correct perf sampling with guest VMs
-From: Colton Lewis <coltonlewis@google.com>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: kvm@vger.kernel.org, oliver.upton@linux.dev, seanjc@google.com, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, will@kernel.org, 
-	linux@armlinux.org.uk, catalin.marinas@arm.com, mpe@ellerman.id.au, 
-	npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen@kernel.org, 
-	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
-	borntraeger@linux.ibm.com, svens@linux.ibm.com, tglx@linutronix.de, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Mark Rutland <mark.rutland@arm.com> writes:
+With that it uses the generic BTF based pretty printer:
 
-> On Wed, Sep 04, 2024 at 08:41:33PM +0000, Colton Lewis wrote:
->> Previously any PMU overflow interrupt that fired while a VCPU was
->> loaded was recorded as a guest event whether it truly was or not. This
->> resulted in nonsense perf recordings that did not honor
->> perf_event_attr.exclude_guest and recorded guest IPs where it should
->> have recorded host IPs.
+  root@number:~# grep -w rseq /sys/kernel/tracing/events/syscalls/sys_enter_rseq/format
+  	field:struct rseq * rseq;	offset:16;	size:8;	signed:0;
+  print fmt: "rseq: 0x%08lx, rseq_len: 0x%08lx, flags: 0x%08lx, sig: 0x%08lx", ((unsigned long)(REC->rseq)), ((unsigned long)(REC->rseq_len)), ((unsigned long)(REC->flags)), ((unsigned long)(REC->sig))
+  root@number:~#
 
->> Reorganize that plumbing to record perf events correctly even when
->> VCPUs are loaded.
+Before:
 
-> It'd be good if we could make that last bit a little more explicit,
-> e.g.
+  root@number:~# perf trace -e rseq
+       0.000 ( 0.017 ms): Isolated Web C/1195452 rseq(rseq: 0x7ff0ecfe6fe0, rseq_len: 32, sig: 1392848979)             = 0
+      74.018 ( 0.006 ms): :1195453/1195453 rseq(rseq: 0x7f2af20fffe0, rseq_len: 32, sig: 1392848979)             = 0
+    1817.220 ( 0.009 ms): Isolated Web C/1195454 rseq(rseq: 0x7f5c9ec7dfe0, rseq_len: 32, sig: 1392848979)             = 0
+    2515.526 ( 0.034 ms): :1195455/1195455 rseq(rseq: 0x7f61503fffe0, rseq_len: 32, sig: 1392848979)             = 0
+  ^Croot@number:~#
 
->    Rework the sampling logic to only record guest samples for events with
->    exclude_guest clear. This way any host-only events with exclude_guest
->    set will never see unexpected guest samples. The behaviour of events
->    with exclude_guest clear is unchanged.
+After:
 
-> [...]
+  root@number:~# perf trace -e rseq
+       0.000 ( 0.019 ms): Isolated Web C/1197258 rseq(rseq: (struct rseq){.cpu_id_start = (__u32)4,.cpu_id = (__u32)4,.mm_cid = (__u32)5,}, rseq_len: 32, sig: 1392848979) = 0
+    1663.835 ( 0.019 ms): Isolated Web C/1197259 rseq(rseq: (struct rseq){.cpu_id_start = (__u32)24,.cpu_id = (__u32)24,.mm_cid = (__u32)2,}, rseq_len: 32, sig: 1392848979) = 0
+    4750.444 ( 0.018 ms): Isolated Web C/1197260 rseq(rseq: (struct rseq){.cpu_id_start = (__u32)8,.cpu_id = (__u32)8,.mm_cid = (__u32)4,}, rseq_len: 32, sig: 1392848979) = 0
+    4994.132 ( 0.018 ms): Isolated Web C/1197261 rseq(rseq: (struct rseq){.cpu_id_start = (__u32)10,.cpu_id = (__u32)10,.mm_cid = (__u32)1,}, rseq_len: 32, sig: 1392848979) = 0
+    4997.578 ( 0.011 ms): Isolated Web C/1197263 rseq(rseq: (struct rseq){.cpu_id_start = (__u32)16,.cpu_id = (__u32)16,.mm_cid = (__u32)4,}, rseq_len: 32, sig: 1392848979) = 0
+    4997.462 ( 0.014 ms): Isolated Web C/1197262 rseq(rseq: (struct rseq){.cpu_id_start = (__u32)17,.cpu_id = (__u32)17,.mm_cid = (__u32)3,}, rseq_len: 32, sig: 1392848979) = 0
+  ^Croot@number:~#
 
-Done
+We'll probably need to come up with some way for using the BTF info to
+synthesize a test that then gets used and captures the output of the
+'perf trace' output to check if the arguments are the ones synthesized,
+randomically, for now, lets make do manually:
 
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 4384f6c49930..e1a66c9c3773 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -6915,13 +6915,26 @@ void perf_unregister_guest_info_callbacks(struct  
->> perf_guest_info_callbacks *cbs)
->>   EXPORT_SYMBOL_GPL(perf_unregister_guest_info_callbacks);
->>   #endif
+  root@number:~# cat ~acme/c/rseq.c
+  #include <sys/syscall.h>     /* Definition of SYS_* constants */
+  #include <linux/rseq.h>
+  #include <errno.h>
+  #include <string.h>
+  #include <unistd.h>
+  #include <stdint.h>
+  #include <stdio.h>
 
->> -unsigned long perf_misc_flags(unsigned long pt_regs *regs)
->> +static bool is_guest_event(struct perf_event *event)
->>   {
->> +	return !event->attr.exclude_guest && perf_guest_state();
->> +}
+  /* Provide own rseq stub because glibc doesn't */
+  __attribute__((weak))
+  int sys_rseq(struct rseq *rseq, __u32 rseq_len, int flags, __u32 sig)
+  {
+  	return syscall(SYS_rseq, rseq, rseq_len, flags, sig);
+  }
 
-> Could we name this something like "should_sample_guest()"? Calling this
-> "is_guest_event()" makes it should like it's checking a static property
-> of the event (and not other conditions like perf_guest_state()).
+  int main(int argc, char *argv[])
+  {
+  	struct rseq rseq = {
+  		.cpu_id_start = 12,
+  		.cpu_id = 34,
+  		.rseq_cs = 56,
+  		.flags = 78,
+  		.node_id = 90,
+  		.mm_cid = 12,
+  	};
+  	int err = sys_rseq(&rseq, sizeof(rseq), 98765, 0xdeadbeaf);
 
-> Otherwise this all looks reasonable to me, modulo Ingo's comments. I'll
-> happily test a v2 once those have been addressed.
+  	printf("sys_rseq({ .cpu_id_start = 12, .cpu_id = 34, .rseq_cs = 56, .flags = 78, .node_id = 90, .mm_cid = 12, }, %d, 0) = %d (%s)\n", sizeof(rseq), err, strerror(errno));
+  	return err;
+  }
+  root@number:~# perf trace -e rseq ~acme/c/rseq
+  sys_rseq({ .cpu_id_start = 12, .cpu_id = 34, .rseq_cs = 56, .flags = 78, .node_id = 90, .mm_cid = 12, }, 32, 0) = -1 (Invalid argument)
+       0.000 ( 0.003 ms): rseq/1200640 rseq(rseq: (struct rseq){}, rseq_len: 32, sig: 1392848979)            =
+       0.064 ( 0.001 ms): rseq/1200640 rseq(rseq: (struct rseq){.cpu_id_start = (__u32)12,.cpu_id = (__u32)34,.rseq_cs = (__u64)56,.flags = (__u32)78,.node_id = (__u32)90,.mm_cid = (__u32)12,}, rseq_len: 32, flags: 98765, sig: 3735928495) = -1 EINVAL (Invalid argument)
 
-Done
+Interesting, glibc seems to be using rseq here, as in addition to the
+totally fake one this test case uses, we have this one, around these
+other syscalls:
 
-> Mark.
+     0.175 ( 0.001 ms): rseq/1201095 set_tid_address(tidptr: 0x7f6def759a10)                               = 1201095 (rseq)
+     0.177 ( 0.001 ms): rseq/1201095 set_robust_list(head: 0x7f6def759a20, len: 24)                        = 0
+     0.178 ( 0.001 ms): rseq/1201095 rseq(rseq: (struct rseq){}, rseq_len: 32, sig: 1392848979)            =
+     0.231 ( 0.005 ms): rseq/1201095 mprotect(start: 0x7f6def93f000, len: 16384, prot: READ)               = 0
+     0.238 ( 0.003 ms): rseq/1201095 mprotect(start: 0x403000, len: 4096, prot: READ)                      = 0
+     0.244 ( 0.004 ms): rseq/1201095 mprotect(start: 0x7f6def99c000, len: 8192, prot: READ)
+
+Matches strace (well, not really as the strace in fedora:40 doesn't know
+about rseq, printing just integer values in hex):
+
+  set_robust_list(0x7fbc6acc7a20, 24)     = 0
+  rseq(0x7fbc6acc8060, 0x20, 0, 0x53053053) = 0
+  mprotect(0x7fbc6aead000, 16384, PROT_READ) = 0
+  mprotect(0x403000, 4096, PROT_READ)     = 0
+  mprotect(0x7fbc6af0a000, 8192, PROT_READ) = 0
+  prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+  munmap(0x7fbc6aebd000, 81563)           = 0
+  rseq(0x7fff15bb9920, 0x20, 0x181cd, 0xdeadbeaf) = -1 EINVAL (Invalid argument)
+  fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0x9), ...}) = 0
+  getrandom("\xd0\x34\x97\x17\x61\xc2\x2b\x10", 8, GRND_NONBLOCK) = 8
+  brk(NULL)                               = 0x18ff4000
+  brk(0x19015000)                         = 0x19015000
+  write(1, "sys_rseq({ .cpu_id_start = 12, ."..., 136sys_rseq({ .cpu_id_start = 12, .cpu_id = 34, .rseq_cs = 56, .flags = 78, .node_id = 90, .mm_cid = 12, }, 32, 0) = -1 (Invalid argument)
+  ) = 136
+  exit_group(-1)                          = ?
+  +++ exited with 255 +++
+  root@number:~#
+
+And also the focus for the v6.13 should be to have a better, strace
+like BTF pretty printer as one of the outputs we can get from the libbpf
+BTF dumper.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alan Maguire <alan.maguire@oracle.com>
+Cc: Howard Chu <howardchu95@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-trace.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 3b88ba50bb804408..27084ae38bc480c9 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1327,6 +1327,8 @@ static const struct syscall_fmt syscall_fmts[] = {
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* olddirfd */ },
+ 		   [2] = { .scnprintf = SCA_FDAT, /* newdirfd */ },
+ 		   [4] = { .scnprintf = SCA_RENAMEAT2_FLAGS, /* flags */ }, }, },
++	{ .name	    = "rseq",	    .errpid = true,
++	  .arg = { [0] = { .from_user = true /* rseq */, }, }, },
+ 	{ .name	    = "rt_sigaction",
+ 	  .arg = { [0] = { .scnprintf = SCA_SIGNUM, /* sig */ }, }, },
+ 	{ .name	    = "rt_sigprocmask",
+-- 
+2.46.0
+
