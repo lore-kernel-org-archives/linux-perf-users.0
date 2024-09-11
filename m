@@ -1,50 +1,25 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C6A13A265;
-	Wed, 11 Sep 2024 08:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AFAA64A8F;
+	Wed, 11 Sep 2024 08:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726041933; cv=none; b=bWjxTwk9dYXGfvN2vAHcrcu3/17HG0lY2iGijqF14yrJCjsgaNhX9ladu7uMbsmaGmDr732FZxHFbdp/d3jFCnPZ+oALyF5kRgggx9dlsB1aAs4eDbE0uhroX5C7eK+r4lAg5uncYZnwHGstSJMTXOhUNvV2f/zSSYdonUyrocM=
+	t=1726042494; cv=none; b=Oe6BoxkK+h6YDYIeNwcoiwDQVhIl959HMqbraA5JTcSG4hC5A2mMBbUosnXR7UcuSB6w+CDhvNYmQEq3kGGVJY5bCfmeq3ZXKTT6GXsSBVU2RfpbX+th42Hmc36z9fKRnmHHEl7SnCQNS7WUnFNurEM39QC3vq6Amdgb3Qbtzzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726041933; c=relaxed/simple;
-	bh=/ETTyYJZAtrlhlGoUsbijw1LRkWz+eoO3Dx3PvHOT1k=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=bdVQf6FNhHO9rkEtii6KPdQxj5mIqSbQj5nfF5lUX7OPh1I1Pmzft296Xm5iB48di/A0JNKsqRFEZuwm1u7kDqnwC3sl1jy5NWb+apJUDrpc5kCTl8xQevy2z5TZYSXR+KrX/thXXHf+og+sJo97WvE+jSgN9Wr6pWsF3RyXxyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jMAQzrIm; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jMAQzrIm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726041932; x=1757577932;
-  h=message-id:date:mime-version:from:subject:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=/ETTyYJZAtrlhlGoUsbijw1LRkWz+eoO3Dx3PvHOT1k=;
-  b=jMAQzrImp4KZuQ6+apCtgGeLGEjqxW+rC/5maY5Q1LmIJdSKjn5Qrcfc
-   FrBLpU3csqTJM8eNs9aXQZzaGr0CnPmZDUE+yq2O/wh48Oz0gHs0wy0Lk
-   mW7hjGC8u+cDqulEMtLXMsjgJetzp039Ut+BCvg9FMvZVNvo7+s2eFDu6
-   e+JM45Yr95fFV8kw6KVdqr2ci5VoHOkFle3VJYYWYv/b6S0hr5jzP33Ab
-   SI75dNRd0easnJHdeA1aBKFG9l7LlN+ni+V+GStonFYPfwrSYQ3FtS15J
-   SUPnUp4exUEEjsDABzgeR0W37p5GgdUPKmFXO4F14rU2V7vTYCF9KNiio
-   w==;
-X-CSE-ConnectionGUID: 8FxekmKIS8ywwcXJeyJ8lg==
-X-CSE-MsgGUID: 97wxra2lTcmbcfTss4oTtA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11191"; a="28565970"
-X-IronPort-AV: E=Sophos;i="6.10,219,1719903600"; 
-   d="scan'208";a="28565970"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2024 01:05:30 -0700
-X-CSE-ConnectionGUID: zBTBcCDSS7mQlT+bFuzpTg==
-X-CSE-MsgGUID: f/tysCQgQjOPqLaYPiqLGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,219,1719903600"; 
-   d="scan'208";a="67790972"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.16.81])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2024 01:05:26 -0700
-Message-ID: <68f29f30-f0f8-4cda-a99a-68f51838dcd7@intel.com>
-Date: Wed, 11 Sep 2024 11:05:20 +0300
+	s=arc-20240116; t=1726042494; c=relaxed/simple;
+	bh=lk81Xyb6sjUQMBo9+yiVeJMpHclNk7u2HMNWphdknXU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Z5Wg1gGNhsVcLG/AdMiqvudYGtHFH9SpTMF0ZkHFadfCGkSLibSxw8avNxblHUvfxvnINb/KDKz4P0MLdlJlRf4h4+L3b3y2FU7Rf9c0oxEk+TwlrBkgJ+wcMCh/Nxw0xWj8oHcn3ybj8nMzQmP9G7ZfdMPqpF3fkAbrJazZlRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B01161007;
+	Wed, 11 Sep 2024 01:15:19 -0700 (PDT)
+Received: from [10.1.27.34] (unknown [10.1.27.34])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D24D3F66E;
+	Wed, 11 Sep 2024 01:14:47 -0700 (PDT)
+Message-ID: <1e55f148-37d8-4fbe-b863-d604fdfaafaf@arm.com>
+Date: Wed, 11 Sep 2024 09:14:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,103 +27,57 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v6 8/8] perf buildid-cache: recognize vdso when adding
- files
-To: Changbin Du <changbin.du@huawei.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+Subject: Re: [PATCH 1/8] perf cs-etm: Don't flush when packet_queue fills up
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+ gankulkarni@os.amperecomputing.com, coresight@lists.linaro.org,
+ scclevenger@os.amperecomputing.com
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
  "Liang, Kan" <kan.liang@linux.intel.com>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, Hui Wang <hw.huiwang@huawei.com>
-References: <20240725021549.880167-1-changbin.du@huawei.com>
- <20240725021549.880167-9-changbin.du@huawei.com>
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>,
+ Ben Gainey <ben.gainey@arm.com>, Ruidong Tian
+ <tianruidong@linux.alibaba.com>, Benjamin Gray <bgray@linux.ibm.com>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20240905105043.160225-1-james.clark@linaro.org>
+ <20240905105043.160225-2-james.clark@linaro.org>
+ <5a0d9510-eccb-4074-964e-ae068b4ee31e@arm.com>
 Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240725021549.880167-9-changbin.du@huawei.com>
+In-Reply-To: <5a0d9510-eccb-4074-964e-ae068b4ee31e@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 25/07/24 05:15, Changbin Du wrote:
-> Identify vdso by file name matching. The vdso objects have name
-> as vdso[32,64].so[.dbg].
+
+
+On 9/10/2024 9:28 PM, Leo Yan wrote:
+> On 9/5/2024 11:50 AM, James Clark wrote:
 > 
-> $ perf buildid-cache -a /work/linux/arch/x86/entry/vdso/vdso64.so.dbg
+> [...]
 > 
-> Without this change, adding vdso using above command actually will never
-> be used.
+>> cs_etm__flush(), like cs_etm__sample() is an operation that generates a
+>> sample and then swaps the current with the previous packet. Calling
+>> flush after processing the queues results in two swaps which corrupts
+>> the next sample. Therefore it wasn't appropriate to call flush here so
+>> remove it.
 > 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-
-A couple of comments, but address those then add:
-
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  tools/perf/builtin-buildid-cache.c | 26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
+> In the cs_etm__sample(), if the period is not overflow, it is not necessarily
+> to generate instruction samples and copy back stack entries. This is why we
+> want to call cs_etm__flush() to make sure the last packet can be recorded
+> properly for instruction sample with back stacks.
 > 
-> diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
-> index b0511d16aeb6..8edea9044a65 100644
-> --- a/tools/perf/builtin-buildid-cache.c
-> +++ b/tools/perf/builtin-buildid-cache.c
-> @@ -172,6 +172,30 @@ static int build_id_cache__add_kcore(const char *filename, bool force)
->  	return 0;
->  }
->  
-> +static bool filename_is_vdso(const char *filename)
-> +{
-> +	char *fname, *bname;
-> +	static const char * const vdso_names[] = {
-> +		"vdso.so", "vdso32.so", "vdso64.so", "vdsox32.so"
-> +	};
-> +
-> +	fname = strdup(filename);
-> +	if (!fname) {
-> +		pr_err("no mememory\n");
+> We also need to take account into the case for the end of the session - in
+> this case we need to generate samples for the last packet for complete info.
+> 
+> I am wandering should we remove the cs_etm__packet_swap() from cs_etm__sample()?
 
-mememory -> memory
+Sorry for typo. I meant to remove the cs_etm__packet_swap() from cs_etm__flush().
 
-> +		return false;
-> +	}
-
-fname is never freed.
-
-> +
-> +	bname = basename(fname);
-> +	if (!bname)
-> +		return false;
-> +
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(vdso_names); i++) {
-
-'unsigned' is unnecessary
-
-> +		if (!strncmp(bname, vdso_names[i], strlen(vdso_names[i])))
-
-Use strstarts()
-
-> +			return true;
-> +	}
-> +	return false;
-> +}
-> +
->  static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
->  {
->  	char sbuild_id[SBUILD_ID_SIZE];
-> @@ -189,7 +213,7 @@ static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
->  
->  	build_id__sprintf(&bid, sbuild_id);
->  	err = build_id_cache__add_s(sbuild_id, filename, nsi,
-> -				    false, false);
-> +				    false, filename_is_vdso(filename));
->  	pr_debug("Adding %s %s: %s\n", sbuild_id, filename,
->  		 err ? "FAIL" : "Ok");
->  	return err;
-
+Thanks,
+Leo
