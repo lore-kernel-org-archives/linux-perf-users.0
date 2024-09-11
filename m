@@ -1,119 +1,234 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF17919343B
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 13:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E241E51D;
+	Wed, 11 Sep 2024 14:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726061660; cv=none; b=mFdJjDx/7lbKzcSb2HMMPlP56Z31HFmwm2rOcJZn/pmWWzU+Xm3hgxJpbehnS6ZUrK9pB0pjTSY/+eEgFFVjINxi4VovaBvQyTQZSEKgQAGEu0NjIBrerrPt3/6Y+xweJMBJ9OvF6nzNQFcGukwUFf7bfQEXxdpFi9a/cGsCQWY=
+	t=1726064398; cv=none; b=aNEnqwnAQ2KCGFbwdGLWk6ysrMx0R387QEwQQhWpBRJWUMIZLk6sQ7IlTrLmFQ3suaTTpiWxqHJBtXS0hQk+HegiaW4SNsVJS80Nt10CAObFjOKDMqiV6XRudy8l6wAmqDfJISmAZHSavQcYnpwbjOS6UKJfBCsjeMhdMGhzsO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726061660; c=relaxed/simple;
-	bh=RBB9U3nSPLz3LfWNIbVMmkPpgVDaDbv/tVjesy9aoLE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iI8cpvnP8ROLeGfOujez4ql1/Hw2k9Ysnq8C3LWXIqVmgOL0JxiPjK0d/6B3ARyC6Yx1MrtFcZnlit2ouI5hcfIdvERb0y7IBKQXHXqRaTrtd6gjTdXNtk68CvpU71znsoCj7b5IWEMkq+ARXZEsNYfcRb0I6TsIYPHmIjAQGHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PZTGVg+f; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1726064398; c=relaxed/simple;
+	bh=2UxM3Xn3vFYVR5nwLGZMyKv3xUzNoPpf9XJxaRHi7uQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ic8h1x4uBeYThCyoQV2vHVRr+p50H8R5aHBoWIk3mnL7FLLTQlwnQaq5nWhrOR8ziZuGVVv13A2a4aSJ3DEG/SwbRuelfW0tztNJU70dmW2mZp7eYT1NrNldDIZM0oR2MRBgHa06t0+APig7+KAxjaUTEWpG6KmXrfl0URLIBag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3SVU9Te; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PZTGVg+f"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42cba6cdf32so25935035e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 06:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726061657; x=1726666457; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MB0Q4T2mdFiQdLaBYLJ1gGJlfUGPo6tiAGibjtaIGi0=;
-        b=PZTGVg+fELo5TFc9qka+BLEVeanCypHnsXqlaokB3090e5p+Bk8OB415RiFHKifsrQ
-         koR/kaRtDyWa/Ey95WyqjpBG7m32E/YdMnFXkfKHQLTYPUzb7l2aBd7aZCyKojS/KBAF
-         SN5WjUe5wgQeiLhEsXn92yEgqNjPWEBAuCVoZNZVefG6AufUdSQyWpMl2HeQMRRoxq3Z
-         9ixdkOWG04yJl4X+ecuKHuqyIjAy/5Yid1Uxidaes0C3bQgJJPGUi6oJI9PIegsI9wPq
-         /8NIAA2e64JECkN5xO6EhlVvSnfCA16hKUs31xWksaODRCbXH4MA7XxL2dF1wlCSGQZk
-         zWjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726061657; x=1726666457;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MB0Q4T2mdFiQdLaBYLJ1gGJlfUGPo6tiAGibjtaIGi0=;
-        b=PAsSisvrwoo3VGANauXSwQd0Y0qYGgaCHeF3x11twLtpQAxFPqPc1EiQd35sp7WCII
-         eRXm2Tvt9G7DNAhhOI4S63mbRMkYKnIe5oNJtUTtbY29srjH2iSOGYucMCIk1eyPtT/y
-         KR3ZcDBgMBOMZYB9ZWKLIbED0vS29br8E0D8obgi6FrL73j4J1fjHc5SPMfvHA+ZyEnh
-         eddopJBH/laBoFhABZTOK9sFv9CpsEOCRW2nfZZXngtTahC/QJE3IadSNMVoIMzZ6OVD
-         8dv88Pe26+5Le6Yk/SIj+15bfvhX14gzdvhmngGVCK1PYq1S2OMhd4CUfMZ5LfbZIsYg
-         7LOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8iqJ5o+A00w+fAAKnxLTtQ9aBOMqRMUgfW5rY1p9xtZ7xtKYSbLwtWFhPMAvhjDIO9y6i50eW5W2mWbetLEMO@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe3aDV6c71pinG04X1ZxNhyIHNsgqYp6zLV039frsqVe1r8o8H
-	UL8Eh8xrwyUvIFK5kkzU+Sq6dHyrFkAxEG5uiVux0nNOE61fWp0zLvnYDsp6rfk=
-X-Google-Smtp-Source: AGHT+IF98wgFgdZoL5ZA1kv4nH8IozI2BgdEwrj0ERU2Y51rnQyfegBRzlKUpQnoFwoGO41WvSg48w==
-X-Received: by 2002:a05:600c:511f:b0:42c:ba83:3f01 with SMTP id 5b1f17b1804b1-42cba834352mr63281025e9.8.1726061656786;
-        Wed, 11 Sep 2024 06:34:16 -0700 (PDT)
-Received: from [192.168.1.61] ([84.67.228.188])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb21a4esm144532995e9.7.2024.09.11.06.34.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Sep 2024 06:34:16 -0700 (PDT)
-Message-ID: <f74e73b6-fa0a-4533-a9de-3c5dbc4399f3@linaro.org>
-Date: Wed, 11 Sep 2024 14:34:27 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3SVU9Te"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95F7CC4CEC0;
+	Wed, 11 Sep 2024 14:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726064397;
+	bh=2UxM3Xn3vFYVR5nwLGZMyKv3xUzNoPpf9XJxaRHi7uQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c3SVU9TeOX6CHCS+cDsG45PPHWlwZwElCJXD5w73wPu7v2MAZh4tLXs6+il8ii2B2
+	 Kx8GaVYqgxhVVS2nyGYsJMcBM618jZbGs66IbNbiirtG8k6vgCPm94dKxm3pP97p+I
+	 DPO7kSxcX4MPcpQHYzewT3GrnryLk8V0oYlMtEVsZbJkHlBJWl+XkRjmYO9NZNg/+N
+	 DcFJyZDfE7E4iegtTUyLAGeAC753dZF4rQm0ijNOnxzhxCgSaUQwKWjl8NC7K/AF9g
+	 q+cFyML5EeeR6Q9IMSLVhjPGa70iemUhVC3kboEsPa+PuMp4KaaWynhkamva4h3+Sr
+	 imIf2PjjYYJ0Q==
+Date: Wed, 11 Sep 2024 11:19:54 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: kan.liang@linux.intel.com
+Cc: namhyung@kernel.org, irogers@google.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf env: Find correct branch counter info on hybrid
+Message-ID: <ZuGnCqBa4HZUzrmX@x1>
+References: <20240909184201.553519-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf test: Silence perf check subcommand when not
- supported
-To: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
- hca@linux.ibm.com
-References: <20240911122850.926303-1-tmricht@linux.ibm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20240911122850.926303-1-tmricht@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240909184201.553519-1-kan.liang@linux.intel.com>
 
-
-
-On 11/09/2024 13:28, Thomas Richter wrote:
-> Perf subcommand check might not be supported and prints an
-> error message when used:
-
-Only in verbose mode though. Personally I don't like all the piping to 
-/dev/null in the tests because I have to go and remove them every time a 
-test fails, rather than just doing "-v". But as it's pretty much the 
-pattern used I suppose we should continue.
-
+On Mon, Sep 09, 2024 at 11:42:00AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
->   # perf check feature -q libtraceevent
->   perf: 'check' is not a perf-command. See 'perf --help'.
+> No event is printed in the "Branch Counter" column on hybrid machines.
 > 
->   Did you mean one of these?
->          c2c
->          sched
->   #
+> For example,
+>  $perf record -e "{cpu_core/branch-instructions/pp,cpu_core/branches/}:S"
+>  -j any,counter
+>  $perf report --total-cycles
+
+So I tried this on an Intel Hybrid system, I start the TUI, then try 'B'
+and, after applying your patch:
+
+  0.66%  67.8K  0.00%   75                    ┌─Branch counter abbr list────────────┐ibc_write+18]          libc.so.6
+  0.63%  65.4K  0.00%  106                  [p│                                     │r_active+159]          [kernel.kallsyms]
+  0.61%  63.2K  0.01%  175  [native_queued_spi│ The branch counter is not available.│in_lock_slowpath+528]  [kernel.kallsyms]
+  0.57%  58.4K  0.00%   39         [syscall_ex│Press any key...                     │ser_mode+109]          [kernel.kallsyms]
+  0.54%  55.6K  0.00%    1  [_IO_file_xsputn@@└─────────────────────────────────────┘BC_2.2.5+316]          libc.so.6
+
+The perf.data was obtained from:
+
+root@number:~# perf record -e "{cpu_core/branch-instructions/pp,cpu_core/branches/}:S" -j any,counter find /
+
+And:
+
+root@number:~# perf evlist --group 
+{cpu_core/branch-instructions/pp,cpu_core/branches/}
+dummy:u
+root@number:~# 
+
+Only mishap above we discussed already, the missing :S, and then:
+
+root@number:~# perf evlist -v
+cpu_core/branch-instructions/pp: type: 4 (cpu_core), size: 136, config: 0xc4 (branch-instructions), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|READ|PERIOD|BRANCH_STACK|IDENTIFIER, read_format: ID|GROUP|LOST, disabled: 1, freq: 1, enable_on_exec: 1, precise_ip: 2, sample_id_all: 1, exclude_guest: 1, branch_sample_type: ANY
+cpu_core/branches/: type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0x400000004, sample_type: IP|TID|TIME|READ|PERIOD|BRANCH_STACK|IDENTIFIER, read_format: ID|GROUP|LOST, sample_id_all: 1, exclude_guest: 1, branch_sample_type: ANY
+dummy:u: type: 1 (software), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|IDENTIFIER, read_format: ID|LOST, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
+root@number:~#
+
+        Version: Intel(R) Core(TM) i7-14700K
+        Voltage: 1.0 V
+        External Clock: 100 MHz
+        Max Speed: 8500 MHz
+        Current Speed: 3400 MHz
+        Status: Populated, Enabled
+        Upgrade: Socket LGA1700
+
+What am I doing wrong not to get to see that "branch counter abbr list"
+info to then check before/after your patch?
+
+- Arnaldo
+ 
+>  # Branch counter abbr list:
+>  # cpu_core/branch-instructions/pp = A
+>  # cpu_core/branches/ = B
+>  # '-' No event occurs
+>  # '+' Event occurrences may be lost due to branch counter saturated
+>  #
+>  # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles  Branch Counter
+>  # ...............  ..............  ...........  ..........  ..............
+>            44.54%          727.1K        0.00%           1   |+   |+   |
+>            36.31%          592.7K        0.00%           2   |+   |+   |
+>            17.83%          291.1K        0.00%           1   |+   |+   |
 > 
-> Drop this error message, the return code is sufficient.
+> The branch counter information (br_cntr_width and br_cntr_nr) in the
+> perf_env is retrieved from the CPU_PMU_CAPS. However, the CPU_PMU_CAPS
+> is not available on hybrid machines. Without the width information, the
+> number of occurrences of an event cannot be calculated.
 > 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> For a hybrid machine, the caps information should be retrieved from the
+> PMU_CAPS, and stored in the perf_env->pmu_caps.
+> 
+> Add a perf_env__find_br_cntr_info() to return the correct branch counter
+> information from the corresponding fields.
+> 
+> Fixes: 6f9d8d1de2c6 ("perf script: Add branch counters")
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > ---
->   tools/perf/tests/shell/lib/probe_vfs_getname.sh | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/builtin-script.c |  5 +++--
+>  tools/perf/util/annotate.c  |  5 +++--
+>  tools/perf/util/env.c       | 15 +++++++++++++++
+>  tools/perf/util/env.h       |  3 +++
+>  tools/perf/util/session.c   |  6 ++++--
+>  5 files changed, 28 insertions(+), 6 deletions(-)
 > 
-> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> index 5c33ec7a5a63..697fbe296a62 100644
-> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> @@ -32,7 +32,7 @@ skip_if_no_debuginfo() {
->   # check if perf is compiled with libtraceevent support
->   skip_no_probe_record_support() {
->   	if [ $had_vfs_getname -eq 1 ] ; then
-> -		perf check feature -q libtraceevent && return 1
-> +		perf check feature -q libtraceevent >/dev/null 2>&1 && return 1
-
-There's another of the same in tools/perf/tests/shell/test_task_analyzer.sh
-
-With that:
-
-Reviewed-by: James Clark <james.clark@linaro.org>
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index dbe792b52c5c..a644787fa9e1 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -1241,10 +1241,11 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
+>  	}
+>  
+>  	if (PRINT_FIELD(BRCNTR)) {
+> -		unsigned int width = evsel__env(evsel)->br_cntr_width;
+> -		unsigned int i = 0, j, num, mask = (1L << width) - 1;
+>  		struct evsel *pos = evsel__leader(evsel);
+> +		unsigned int i = 0, j, num, mask, width;
+>  
+> +		perf_env__find_br_cntr_info(evsel__env(evsel), NULL, &width);
+> +		mask = (1L << width) - 1;
+>  		printed += fprintf(fp, "br_cntr: ");
+>  		evlist__for_each_entry_from(evsel->evlist, pos) {
+>  			if (!(pos->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS))
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 4990c70b1794..c6ebde9d40a8 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -333,14 +333,15 @@ static int symbol__account_br_cntr(struct annotated_branch *branch,
+>  {
+>  	unsigned int br_cntr_nr = evsel__leader(evsel)->br_cntr_nr;
+>  	unsigned int base = evsel__leader(evsel)->br_cntr_idx;
+> -	unsigned int width = evsel__env(evsel)->br_cntr_width;
+>  	unsigned int off = offset * evsel->evlist->nr_br_cntr;
+> -	unsigned int i, mask = (1L << width) - 1;
+>  	u64 *branch_br_cntr = branch->br_cntr;
+> +	unsigned int i, mask, width;
+>  
+>  	if (!br_cntr || !branch_br_cntr)
+>  		return 0;
+>  
+> +	perf_env__find_br_cntr_info(evsel__env(evsel), NULL, &width);
+> +	mask = (1L << width) - 1;
+>  	for (i = 0; i < br_cntr_nr; i++) {
+>  		u64 cntr = (br_cntr >> i * width) & mask;
+>  
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index a459374d0a1a..1edbccfc3281 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -624,3 +624,18 @@ char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
+>  	free(cap_eq);
+>  	return NULL;
+>  }
+> +
+> +void perf_env__find_br_cntr_info(struct perf_env *env,
+> +				 unsigned int *nr,
+> +				 unsigned int *width)
+> +{
+> +	if (nr) {
+> +		*nr = env->cpu_pmu_caps ? env->br_cntr_nr :
+> +					  env->pmu_caps->br_cntr_nr;
+> +	}
+> +
+> +	if (width) {
+> +		*width = env->cpu_pmu_caps ? env->br_cntr_width :
+> +					     env->pmu_caps->br_cntr_width;
+> +	}
+> +}
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index 2a2c37cc40b7..51b36c36019b 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
+> @@ -192,4 +192,7 @@ char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
+>  			     const char *cap);
+>  
+>  bool perf_env__has_pmu_mapping(struct perf_env *env, const char *pmu_name);
+> +void perf_env__find_br_cntr_info(struct perf_env *env,
+> +				 unsigned int *nr,
+> +				 unsigned int *width);
+>  #endif /* __PERF_ENV_H */
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index b492300ec959..dbaf07bf6c5f 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -856,7 +856,6 @@ static void branch_stack__printf(struct perf_sample *sample,
+>  	struct branch_entry *entries = perf_sample__branch_entries(sample);
+>  	bool callstack = evsel__has_branch_callstack(evsel);
+>  	u64 *branch_stack_cntr = sample->branch_stack_cntr;
+> -	struct perf_env *env = evsel__env(evsel);
+>  	uint64_t i;
+>  
+>  	if (!callstack) {
+> @@ -900,8 +899,11 @@ static void branch_stack__printf(struct perf_sample *sample,
+>  	}
+>  
+>  	if (branch_stack_cntr) {
+> +		unsigned int br_cntr_width, br_cntr_nr;
+> +
+> +		perf_env__find_br_cntr_info(evsel__env(evsel), &br_cntr_nr, &br_cntr_width);
+>  		printf("... branch stack counters: nr:%" PRIu64 " (counter width: %u max counter nr:%u)\n",
+> -			sample->branch_stack->nr, env->br_cntr_width, env->br_cntr_nr);
+> +			sample->branch_stack->nr, br_cntr_width, br_cntr_nr);
+>  		for (i = 0; i < sample->branch_stack->nr; i++)
+>  			printf("..... %2"PRIu64": %016" PRIx64 "\n", i, branch_stack_cntr[i]);
+>  	}
+> -- 
+> 2.38.1
