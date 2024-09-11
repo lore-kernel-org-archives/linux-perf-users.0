@@ -1,177 +1,183 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBDB17F500
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 13:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2860B185E64
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 13:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726059725; cv=none; b=mBqqMCf9P85d3KkhgHuR6cT/pSSiPzcN85XKRWvR8w52seVdnfF2QOs+p2kLHualjBg7W2Ed/nSf+VBr0FDkKu5TMelKs22/WVAqN+th+467SqdVIGFeqydhnOBDZwzorJL7SDXu59C4D5FR7Fd/VJAQ45tolxuJiyWPTyKO83s=
+	t=1726060435; cv=none; b=f2FwEdEJyH6/psZGC4gN2AfN51Ap3v9GL+RLj05bDuRaZE+t6HeTyWkqSSpPiwI0YpLpn7OtRJBvLx2kIMs6j8DnTzxUOA2PtLNOsdhLeMK48QR39hJybbskBriIog5RR1ZzwrVojb0/z4oEJaqLhoEZLdMjKv3dtPO7QZ4KE00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726059725; c=relaxed/simple;
-	bh=bgYY4a11CuGiUEuP/UCn3kK8xN15UmmXH54N5WhmRx8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K1FcZIMm5zsJ9e0Krloyr9rWIyJeXHc+Ixv4/IcoCdm446QMxop+KJ6tykoi5f/PNDFh5ff6EqI+C06VKJ3nyNDHYmaVJ5ivMHR1hRjzfKOg7ecbqOA6eM9CHFFeGtZsgijJGiT+Hm2ze4lSSJ8IFtVriTbjT/S+CJrkkSyQa0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R1r2bSOn; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1726060435; c=relaxed/simple;
+	bh=lLQujuaQVsINKOcP87KS9IaW5lEIAgM6cp+Fl8ujQkI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UjmXwElNrX3APZwE+ZgyUAhxLBDsHTPsCs7IS8ph9gmTSZOvyt1JdSeSgDgtBp4aqU7oQVOiJFfYHa3pNYvLfClCwp3+3crCtHzbb4nI8FNS3fcrRZ9xHhHMhmN5YCDMs9/A5AHANMXfpSbjRSHbykrnf7BACOG063q/aF/v5eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L64pt6UM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R1r2bSOn"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-374c5bab490so560170f8f.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 06:02:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726059722; x=1726664522; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dUq++Ei2esXDAys8clIHN80mRA7dfTbWnLwq32Zv7Xs=;
-        b=R1r2bSOn2CHCo633dk2h8dXz8IbdNnxyE8OYcfgtiNAZdN8FUJ0y2WWdax+o8KQh6f
-         4IRJvwXfmJj1Ej/E3LZc17NEe1RAuo1JZx0bSSTzBoI76pFJO0m2dSc1277J9arL2/Uv
-         jVCSLYrQ/+u7QAjpW9u5pU+6/r4QXEhMKyodGt4DaUBwDjfzKNdONt1WKIyI1c01cqvl
-         qZ1dPjXsPs/gQ1U5uRB2a14decQ2QNWiy8k2cFAt3BDhCm+KShK4IYmKD3GzXiws6kmb
-         WGFsUOq2/YQ/eQpQFWePvQttebYXUUUowX27xRjPM775uUlfiQ5zDD9yvLgLy9KBe2nQ
-         kFvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726059722; x=1726664522;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dUq++Ei2esXDAys8clIHN80mRA7dfTbWnLwq32Zv7Xs=;
-        b=lhS7qOY7/ryNCr4QPtP1B7fddml7oLcfq7MzDP5bWr8cEEUKhJcfrgnAHcF0UCGLsq
-         PXD1hFR4BUy8F/KZ8jBQR0T/3feKsixxzvfr2SPwRP+45UsNIV0vZo90L7yENprkPFkT
-         WtbElC00q6x+I62AS1y236j8CUZrey+Ug83DLEfjsAdbiYicWXyKrg254Ifl0lN/TI1n
-         juTtrBodMaTEopn8vo3EGzRoFwkHtsqkjhHPIoDBwPZYjHEJMQV1VPDxJDd2hILIb6Ql
-         NsqgAZ0clMw3b9htTbIO8ADIKNN0nDPfJFaP0pPCdfNgrNM1bJMJzrNZKLZoer8WnEnu
-         DC2A==
-X-Forwarded-Encrypted: i=1; AJvYcCWb5nSa/e22R9AKoFmkJPm1y1CKelf5lWYadDT/eV6qOhSN7MUscK4PuvwkrIzUS31g4HBABrfwBj4okllGhaxl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxkZAIbrr3QPI9FoBpP4SC8NzztqmTAoT5bUfu5250sThRw1Dq
-	1M59VN2Sz3DECGWFn0ObIEyFSgnUCsVBJv/zPLM5bdhmyKo05Z+uuOant5ylfNXKONqEikn6Z/9
-	+Kro=
-X-Google-Smtp-Source: AGHT+IFvM2e3c4KEhBUlw1tk1W/xDQpirqXo2+Qhd/4++Q3qZEqhKN8wml9N0gJtVpKblcV8wkkTBw==
-X-Received: by 2002:adf:fb52:0:b0:367:938f:550 with SMTP id ffacd0b85a97d-378a8a83f57mr3527796f8f.25.1726059720928;
-        Wed, 11 Sep 2024 06:02:00 -0700 (PDT)
-Received: from [192.168.1.61] ([84.67.228.188])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378956d35b9sm11541163f8f.70.2024.09.11.06.02.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Sep 2024 06:02:00 -0700 (PDT)
-Message-ID: <4a893ab4-38d2-44bb-a42b-abb95b062e21@linaro.org>
-Date: Wed, 11 Sep 2024 14:02:11 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L64pt6UM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1726060433;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bVgk6KxCVvyf7/kqB/bzV5TeZ0PX9U997rsx8aaL5Jg=;
+	b=L64pt6UMGdeRM5RFclFvleSRnImD2ZSqwFgr3/RKrgBM9Z4wHYeU06f7g3AYY6ozscINkj
+	8LuN/SM4lORi//X5qaOB3ZNXRE49p6R/3woZLeyljw1NMcSabHvshlQOlBqLsu4UYdiH2S
+	qd7qNVK84yio22t4Bgtglz+cHefAsNU=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-217-hzJk0tqeP8eufD5z4fsd7w-1; Wed,
+ 11 Sep 2024 09:13:48 -0400
+X-MC-Unique: hzJk0tqeP8eufD5z4fsd7w-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 76DEA1956048;
+	Wed, 11 Sep 2024 13:13:45 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.229])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 26E1119560A3;
+	Wed, 11 Sep 2024 13:13:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 11 Sep 2024 15:13:34 +0200 (CEST)
+Date: Wed, 11 Sep 2024 15:13:20 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Sven Schnelle <svens@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH -mm 1/3] Revert "uprobes: use vm_special_mapping close()
+ functionality"
+Message-ID: <20240911131320.GA3448@redhat.com>
+References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
+ <20240903073629.2442754-1-svens@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND 1/2] perf stat: Close cork_fd when
- create_perf_stat_counter() failed
-To: Levi Yun <yeoreum.yun@arm.com>
-Cc: nd@arm.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, irogers@google.com,
- asmadeus@codewreck.org
-References: <20240911121919.4167483-1-yeoreum.yun@arm.com>
- <20240911121919.4167483-2-yeoreum.yun@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20240911121919.4167483-2-yeoreum.yun@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240903073629.2442754-1-svens@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+
+This reverts commit 08e28de1160a712724268fd33d77b32f1bc84d1c.
+
+A malicious application can munmap() its "[uprobes]" vma and in this case
+xol_mapping.close == uprobe_clear_state() will free the memory which can
+be used by another thread, or the same thread when it hits the uprobe bp
+afterwards.
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ include/linux/uprobes.h |  1 +
+ kernel/events/uprobes.c | 36 +++++++++++++++++++-----------------
+ kernel/fork.c           |  1 +
+ 3 files changed, 21 insertions(+), 17 deletions(-)
+
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index 493dc95d912c..b503fafb7fb3 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -126,6 +126,7 @@ extern int uprobe_pre_sstep_notifier(struct pt_regs *regs);
+ extern void uprobe_notify_resume(struct pt_regs *regs);
+ extern bool uprobe_deny_signal(void);
+ extern bool arch_uprobe_skip_sstep(struct arch_uprobe *aup, struct pt_regs *regs);
++extern void uprobe_clear_state(struct mm_struct *mm);
+ extern int  arch_uprobe_analyze_insn(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long addr);
+ extern int  arch_uprobe_pre_xol(struct arch_uprobe *aup, struct pt_regs *regs);
+ extern int  arch_uprobe_post_xol(struct arch_uprobe *aup, struct pt_regs *regs);
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index c2d6b2d64de2..73cc47708679 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1482,22 +1482,6 @@ void * __weak arch_uprobe_trampoline(unsigned long *psize)
+ 	return &insn;
+ }
+ 
+-/*
+- * uprobe_clear_state - Free the area allocated for slots.
+- */
+-static void uprobe_clear_state(const struct vm_special_mapping *sm, struct vm_area_struct *vma)
+-{
+-	struct xol_area *area = container_of(vma->vm_private_data, struct xol_area, xol_mapping);
+-
+-	mutex_lock(&delayed_uprobe_lock);
+-	delayed_uprobe_remove(NULL, vma->vm_mm);
+-	mutex_unlock(&delayed_uprobe_lock);
+-
+-	put_page(area->pages[0]);
+-	kfree(area->bitmap);
+-	kfree(area);
+-}
+-
+ static struct xol_area *__create_xol_area(unsigned long vaddr)
+ {
+ 	struct mm_struct *mm = current->mm;
+@@ -1516,7 +1500,6 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+ 
+ 	area->xol_mapping.name = "[uprobes]";
+ 	area->xol_mapping.fault = NULL;
+-	area->xol_mapping.close = uprobe_clear_state;
+ 	area->xol_mapping.pages = area->pages;
+ 	area->pages[0] = alloc_page(GFP_HIGHUSER);
+ 	if (!area->pages[0])
+@@ -1562,6 +1545,25 @@ static struct xol_area *get_xol_area(void)
+ 	return area;
+ }
+ 
++/*
++ * uprobe_clear_state - Free the area allocated for slots.
++ */
++void uprobe_clear_state(struct mm_struct *mm)
++{
++	struct xol_area *area = mm->uprobes_state.xol_area;
++
++	mutex_lock(&delayed_uprobe_lock);
++	delayed_uprobe_remove(NULL, mm);
++	mutex_unlock(&delayed_uprobe_lock);
++
++	if (!area)
++		return;
++
++	put_page(area->pages[0]);
++	kfree(area->bitmap);
++	kfree(area);
++}
++
+ void uprobe_start_dup_mmap(void)
+ {
+ 	percpu_down_read(&dup_mmap_sem);
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 61070248a7d3..3d590e51ce84 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1338,6 +1338,7 @@ static inline void __mmput(struct mm_struct *mm)
+ {
+ 	VM_BUG_ON(atomic_read(&mm->mm_users));
+ 
++	uprobe_clear_state(mm);
+ 	exit_aio(mm);
+ 	ksm_exit(mm);
+ 	khugepaged_exit(mm); /* must run before exit_mmap */
+-- 
+2.25.1.362.g51ebf55
 
 
-
-On 11/09/2024 13:19, Levi Yun wrote:
-> When create_perf_stat_counter() failed, it doesn't close workload.cork_fd
-> open in evlist__prepare_workload(). This could make too many open file
-> error while __run_perf_stat() repeats.
-> 
-> Introduce evlist__cancel_workload to close workload.cork_fd and
-> wait workload.child_pid until exit to clear child process
-> when create_perf_stat_counter() is failed with COUNTER_FATAL.
-> 
-> Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
-
-Reviewed-by: James Clark <james.clark@linaro.org>
-
-> ---
->   tools/perf/builtin-stat.c |  4 ++++
->   tools/perf/util/evlist.c  | 14 +++++++++++++-
->   tools/perf/util/evlist.h  |  1 +
->   3 files changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 661832756a24..954eb37ce7b8 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -763,6 +763,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-> 
->   			switch (stat_handle_error(counter)) {
->   			case COUNTER_FATAL:
-> +				if (forks)
-> +					evlist__cancel_workload(evsel_list);
->   				return -1;
->   			case COUNTER_RETRY:
->   				goto try_again;
-> @@ -804,6 +806,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-> 
->   				switch (stat_handle_error(counter)) {
->   				case COUNTER_FATAL:
-> +					if (forks)
-> +						evlist__cancel_workload(evsel_list);
->   					return -1;
->   				case COUNTER_RETRY:
->   					goto try_again_reset;
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 3a719edafc7a..51a221679c92 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -46,6 +46,7 @@
->   #include <sys/mman.h>
->   #include <sys/prctl.h>
->   #include <sys/timerfd.h>
-> +#include <sys/wait.h>
-> 
->   #include <linux/bitops.h>
->   #include <linux/hash.h>
-> @@ -1465,7 +1466,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
->   		 * For cancelling the workload without actually running it,
->   		 * the parent will just close workload.cork_fd, without writing
->   		 * anything, i.e. read will return zero and we just exit()
-> -		 * here.
-> +		 * here (See evlist__cancel_workload()).
->   		 */
->   		if (ret != 1) {
->   			if (ret == -1)
-> @@ -1546,6 +1547,17 @@ int evlist__start_workload(struct evlist *evlist)
->   	return 0;
->   }
-> 
-> +void evlist__cancel_workload(struct evlist *evlist)
-> +{
-> +	int status;
-> +
-> +	if (evlist->workload.cork_fd > 0) {
-> +		close(evlist->workload.cork_fd);
-> +		evlist->workload.cork_fd = -1;
-> +		waitpid(evlist->workload.pid, &status, WNOHANG);
-> +	}
-> +}
-> +
->   int evlist__parse_sample(struct evlist *evlist, union perf_event *event, struct perf_sample *sample)
->   {
->   	struct evsel *evsel = evlist__event2evsel(evlist, event);
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index cb91dc9117a2..12f929ffdf92 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -184,6 +184,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target,
->   			     const char *argv[], bool pipe_output,
->   			     void (*exec_error)(int signo, siginfo_t *info, void *ucontext));
->   int evlist__start_workload(struct evlist *evlist);
-> +void evlist__cancel_workload(struct evlist *evlist);
-> 
->   struct option;
-> 
-> --
-> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
-> 
