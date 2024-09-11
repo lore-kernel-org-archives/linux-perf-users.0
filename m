@@ -1,146 +1,105 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5649184559
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 09:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5910E157480;
+	Wed, 11 Sep 2024 09:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726047911; cv=none; b=cEfrHVRby0ByzrQUmQMk+RQbyYzu3R5qmTwGl4dYRddIunKlcqzBONT5LDhtjhFnQEXZa3OF5ex1xwFwAPH6mgEENoVT4DoSNbvjJ3J14HwRUumINODOcSHsfwi6O0ls8KNp1WH2cxF7hFx0kVBqFZjI2jkjDcM9r1B/PI3jrOY=
+	t=1726047943; cv=none; b=EZi1uRSoXMzxxy8HvMwYKJGxB3w34SlTWNjwyIdjlxKN3Usd1S9zm0Qp4xQMw67ijYDVwOZN/20DRaEpnmC06Y8hdyedZyCPSLsvznOH5jEyqHNim96G/2lg9x1hEM+RSCWdaS5yWwPVa0hj8zEqHPTZgyYzg/1BbcYaqjrXy58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726047911; c=relaxed/simple;
-	bh=HbvCf2201rlCiYWUGZXa8hrWPWUEdpCqwLCY6YaIimo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=topCwZPxUQNUYwy9RQ12/gLmWdhGSyr3vmR9y3fpiJsu9cND0vywTwAlvQEUpX0OZXFJHfHQh4eerfMnuLFCe9cH9tsw6FBqpLZjBEfZUt7cQ6C570XJYkuMOOua9e23N/5owgWLU9DcPYYqY0g0d6SY0P/AaG3ir0I2J1G5FgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F6/nHtKH; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1726047943; c=relaxed/simple;
+	bh=M9xzdKCV528AWjyhxcpr9fldRzcHF3Zr3CcpVRKx+yw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a6eqDJKntfAWt/x6cryYQgEPYfEnb63X65QuUGhqBr04e+BDNpe+jVUAxkUksR+XSvSLxuptxguMpc2KcK8r/ZFm65JdHZropw2+c4agrcL6eZpaCEiMhbnhgHxj8RNlNqDHHpi5Dnwq+kUPjCRlbOGIpYHbUd0Asm8HvylQJD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Zq/iawNy; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F6/nHtKH"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42cb8dac900so29847735e9.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 02:45:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726047907; x=1726652707; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gue4qaTI8QiVGn2E5BdIJ10PDgpNtCS7+q74iHgYmk8=;
-        b=F6/nHtKHbga8smQD4UApUi7mjyP1Bqrxed1BMUqjKCK6U1gBQn82rD0OXZWiLd88PE
-         j4eDOZcRdLsFXsQBUqHEfihATrbm31zqctyILY2tTyoBsMcyYMM81N7De62zre+pljcX
-         EKXnUa0ilzqBu9KTOo9tfx0TsrqV8vud1IZIt7LXe+CceQ4/RoaUhA82zhU8GJ1HN5YZ
-         PrXTq9cs75SDj+CohK3gwY+3Ao36nyNcNO0rZyHauvo9EZhYcGOuhTtrruMbtiQbrwje
-         Uj+fJguluZ62kBbTFhkzlD3XNTui0lPX0WNUkIRzeQly9alKR5EEcP23UPx6phkt3fcx
-         ondA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726047907; x=1726652707;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gue4qaTI8QiVGn2E5BdIJ10PDgpNtCS7+q74iHgYmk8=;
-        b=AMy+TyE21HLMGV5+as8EOFJQolENJ/mxV0IAKvCPHyMcxsghXjQFkg6dnwfGDeMaJq
-         Lf48Q2ZXd6X588BwgsX4wJ5n0Y+4XAsH/6ops0lPmKBNScSb8fXOy31LORYr8qHaCwVz
-         hPwLfzhAaUTNJ5YqLNHmXdAyoRX3c34zzLbK00AUem0Wo6SC0lrKChnfy7W2IFE9//Oy
-         j48awLEQAYJ0jdySNynj1yCO4s/GaYmxwxhBJKaehGusgduY5+yy140CUGsRp8WjFlWc
-         5EAMbVgNCazCiRVKKtJbtdbd5zX4Tm4Oeqy1hFzzh47ViVeC+LByMK9j3IsiM3i9nKbJ
-         N0ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkMjibV0Pj/xHUoU11MM0wFWtHP+VFT703IuQGkfKDC/4Ulo5eWC6mD3bh1GF0YjsiqufZckZrP71ShlVbPAlD@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkDSu/Aajijuwc9mIHxhn3Udg3eNiiKu2N+/SzxgCn8+9HwkXu
-	cv95eFB9dYxa8Yt84++rmm7XyVlkWskgTJJ7dSFONLrGk4TwPIq8FxbqEx7vdgE=
-X-Google-Smtp-Source: AGHT+IHWW2BOCOUSxSnw3LpxP0BBwi783RZeFXOJkye4XyzKNPrR3uraEVfYW7VpMiN9f3L/uEnOYQ==
-X-Received: by 2002:a05:600c:1f90:b0:425:7c95:75d0 with SMTP id 5b1f17b1804b1-42c9f9850d1mr132773265e9.18.1726047906431;
-        Wed, 11 Sep 2024 02:45:06 -0700 (PDT)
-Received: from [192.168.1.61] ([84.67.228.188])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb32b0csm136294375e9.18.2024.09.11.02.45.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Sep 2024 02:45:06 -0700 (PDT)
-Message-ID: <4fa0229e-630b-4b6e-8882-3d8a5793a9dd@linaro.org>
-Date: Wed, 11 Sep 2024 10:45:16 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zq/iawNy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=IA1WLHJ84fTYPUbImP/w8EfdJseyVFaHxMOtPtkiN0k=; b=Zq/iawNyJsiXYutpv6il/K1pgs
+	KYbYJz8RdrllwHMPBicQPdp14mXv3TA4D0z8u0pRzpoQTXzUrY5TAMkJiOJD9mJNAcXf9lgZ+rkqJ
+	BcL1t1CLbEpeDIxF5tWnR3USOlwwMCbfH9IAQFNtu/pB9UH4ayiTVUElLqm2h+HeHNoyDUz9/Lxs3
+	0R++3DYeLHbDij8KscM0iq+uNy9FjyatNxSDiWJBiCuXfsUhiYS8Kj10lYjV1z7qoNBLNxT6RDkOA
+	VfvOrwDNuk1BqsYH7Yd5XRFKy8nBM3SCR8BM9pcejKUDEvxgbWig1G5xWu+No3a6ktnWiHVbWk9MD
+	9BiAEEIg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1soJur-000000009IO-0JQf;
+	Wed, 11 Sep 2024 09:45:37 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 82FC0300642; Wed, 11 Sep 2024 11:45:36 +0200 (CEST)
+Date: Wed, 11 Sep 2024 11:45:36 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>, oe-lkp@lists.linux.dev,
+	lkp@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [peterz-queue:perf/core] [perf/x86/rapl]  90942140bb:
+ UBSAN:array-index-out-of-bounds_in_arch/x86/events/rapl.c
+Message-ID: <20240911094536.GP4723@noisy.programming.kicks-ass.net>
+References: <202409111521.c7c6d56f-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf ftrace: Detect whether ftrace is enabled on system
-To: Changbin Du <changbin.du@huawei.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-References: <20240910033625.3569729-1-changbin.du@huawei.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20240910033625.3569729-1-changbin.du@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202409111521.c7c6d56f-lkp@intel.com>
 
-
-
-On 10/09/2024 04:36, Changbin Du wrote:
-> To make error messages more accurate, this change detects whether ftrace is
-> enabled on system by checking trace file "set_ftrace_pid".
+On Wed, Sep 11, 2024 at 04:32:13PM +0800, kernel test robot wrote:
 > 
-> Before:
-> ~ # perf ftrace
-> failed to reset ftrace
 > 
-> After:
-> ~ # perf ftrace
-> ftrace is not supported on this system
+> Hello,
 > 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> ---
->   tools/perf/builtin-ftrace.c | 24 ++++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
+> kernel test robot noticed "UBSAN:array-index-out-of-bounds_in_arch/x86/events/rapl.c" on:
 > 
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index eb30c8eca488..e1dc2768bc0f 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -1112,6 +1112,24 @@ static int parse_graph_tracer_opts(const struct option *opt,
->   	return 0;
->   }
->   
-> +static bool is_ftrace_supported(void)
-> +{
-> +	char *file;
-> +	bool supported = false;
-> +
-> +	file = get_tracing_file("set_ftrace_pid");
-> +	if (!file) {
-> +		pr_debug("cannot get tracing file set_ftrace_pid\n");
-> +		return false;
-> +	}
-> +
-> +	if (!access(file, F_OK))
-> +		supported = true;
-> +
-> +	put_tracing_file(file);
-> +	return supported;
-> +}
-> +
->   enum perf_ftrace_subcommand {
->   	PERF_FTRACE_NONE,
->   	PERF_FTRACE_TRACE,
-> @@ -1254,6 +1272,12 @@ int cmd_ftrace(int argc, const char **argv)
->   		goto out_delete_filters;
->   	}
->   
-> +	if (!is_ftrace_supported()) {
-> +		pr_err("ftrace is not supported on this system\n");
-> +		ret = -ENOTSUP;
-> +		goto out_delete_filters;
-> +	}
-> +
+> commit: 90942140bb6cc7e9a41d5927c7617ee522896f7a ("perf/x86/rapl: Move the pmu allocation out of CPU hotplug")
+> https://git.kernel.org/cgit/linux/kernel/git/peterz/queue.git perf/core
+> 
+> in testcase: boot
+> 
+> compiler: clang-18
+> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> 
+> 
+> +-----------------------------------------------------------+------------+------------+
+> |                                                           | c206df6d69 | 90942140bb |
+> +-----------------------------------------------------------+------------+------------+
+> | UBSAN:array-index-out-of-bounds_in_arch/x86/events/rapl.c | 0          | 12         |
+> +-----------------------------------------------------------+------------+------------+
+> 
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202409111521.c7c6d56f-lkp@intel.com
+> 
+> 
+> [   22.115286][    T1] ------------[ cut here ]------------
+> [   22.115957][    T1] UBSAN: array-index-out-of-bounds in arch/x86/events/rapl.c:685:3
 
-Very minor nit, but you could probably put this earlier next to 
-check_ftrace_capable(). It didn't look like it used any of the config or 
-parsing results.
+That is:
 
-Either way:
+		rapl_pmus->pmus[topology_logical_die_id(cpu)] = pmu;
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+Which is scaled like:
+
+	int nr_rapl_pmu = topology_max_packages() * topology_max_dies_per_package();
+
+And that isn't new in that patch, just moved around.
+
+Kan, as it happens these two patches got zapped by Ingo because they
+conflict with that rapl patch from perf/urgent and he merged perf/urgent
+into perf/core.
+
+I was going to rebase these two patches on top, but given the above, can
+you have a look instead?
+
