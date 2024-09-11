@@ -1,121 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CA4154BFE
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 09:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5649184559
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 09:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726047894; cv=none; b=fWjRF0KlqrdiB3Rqz16N+Df1yqXMAmEUUA0KfhoIu6JUvlCAAiKElnh4WyHKW9ne4eoK4A8DfPChJwIQPC8q3vKP94FW4ZiGXV7ff48yIwSO+GWdWlLBSpbc12uLDcpqoKCoOCU2y0bgKuCPNY5cMAD4xYTiEfhmbxJ0dYbS7Co=
+	t=1726047911; cv=none; b=cEfrHVRby0ByzrQUmQMk+RQbyYzu3R5qmTwGl4dYRddIunKlcqzBONT5LDhtjhFnQEXZa3OF5ex1xwFwAPH6mgEENoVT4DoSNbvjJ3J14HwRUumINODOcSHsfwi6O0ls8KNp1WH2cxF7hFx0kVBqFZjI2jkjDcM9r1B/PI3jrOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726047894; c=relaxed/simple;
-	bh=EnR+oo27yAv5GKCX3AEPVtY60+LJCRR+y9Ua5zT0u+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PHYLztVJiQI8nWt3hP9TTBWvxBtJ15vxgAVbivmQaIZLHzbePrSEycPK/LXdbYlVP4LPU7doguVA/eqGkRmUR5oyouWU7SH7SiR/Zi5hjlo9SEiZMTe87wXbQ+X9UPSylC3OAVeTwlxr08nVNNNneSsSzDjIHKDYjyruUc4jWKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ytuhh0np; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1726047911; c=relaxed/simple;
+	bh=HbvCf2201rlCiYWUGZXa8hrWPWUEdpCqwLCY6YaIimo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=topCwZPxUQNUYwy9RQ12/gLmWdhGSyr3vmR9y3fpiJsu9cND0vywTwAlvQEUpX0OZXFJHfHQh4eerfMnuLFCe9cH9tsw6FBqpLZjBEfZUt7cQ6C570XJYkuMOOua9e23N/5owgWLU9DcPYYqY0g0d6SY0P/AaG3ir0I2J1G5FgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F6/nHtKH; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ytuhh0np"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726047891;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mSLhNCaRgYSV37c8BlqEIRRGLtzVm1X6zZhHgWY14/4=;
-	b=Ytuhh0npMKund1Mm8sP85n0996yGpko/HRv/LqRxdQVoIpi4Dg+Bl4kJCSbQ8az1V4UXwv
-	EerzQdOSpwSvLM6niUQ3QkaDVzlp1bnBuivnbXNXu3CnT7XKjZhjqOj0iVEEe9qK9JRFHu
-	6IY04ggiUb9bxpcdNxuMgq32Zxo7ixo=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-649-aPhGQU4LPUynJ91kaz0maw-1; Wed,
- 11 Sep 2024 05:44:48 -0400
-X-MC-Unique: aPhGQU4LPUynJ91kaz0maw-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E5C041955BCB;
-	Wed, 11 Sep 2024 09:44:44 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.229])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E0A9419560AB;
-	Wed, 11 Sep 2024 09:44:37 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 11 Sep 2024 11:44:33 +0200 (CEST)
-Date: Wed, 11 Sep 2024 11:44:25 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sven Schnelle <svens@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] uprobes: use vm_special_mapping close() functionality
-Message-ID: <20240911094401.GA19080@redhat.com>
-References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
- <20240903073629.2442754-1-svens@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F6/nHtKH"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42cb8dac900so29847735e9.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 02:45:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1726047907; x=1726652707; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gue4qaTI8QiVGn2E5BdIJ10PDgpNtCS7+q74iHgYmk8=;
+        b=F6/nHtKHbga8smQD4UApUi7mjyP1Bqrxed1BMUqjKCK6U1gBQn82rD0OXZWiLd88PE
+         j4eDOZcRdLsFXsQBUqHEfihATrbm31zqctyILY2tTyoBsMcyYMM81N7De62zre+pljcX
+         EKXnUa0ilzqBu9KTOo9tfx0TsrqV8vud1IZIt7LXe+CceQ4/RoaUhA82zhU8GJ1HN5YZ
+         PrXTq9cs75SDj+CohK3gwY+3Ao36nyNcNO0rZyHauvo9EZhYcGOuhTtrruMbtiQbrwje
+         Uj+fJguluZ62kBbTFhkzlD3XNTui0lPX0WNUkIRzeQly9alKR5EEcP23UPx6phkt3fcx
+         ondA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726047907; x=1726652707;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gue4qaTI8QiVGn2E5BdIJ10PDgpNtCS7+q74iHgYmk8=;
+        b=AMy+TyE21HLMGV5+as8EOFJQolENJ/mxV0IAKvCPHyMcxsghXjQFkg6dnwfGDeMaJq
+         Lf48Q2ZXd6X588BwgsX4wJ5n0Y+4XAsH/6ops0lPmKBNScSb8fXOy31LORYr8qHaCwVz
+         hPwLfzhAaUTNJ5YqLNHmXdAyoRX3c34zzLbK00AUem0Wo6SC0lrKChnfy7W2IFE9//Oy
+         j48awLEQAYJ0jdySNynj1yCO4s/GaYmxwxhBJKaehGusgduY5+yy140CUGsRp8WjFlWc
+         5EAMbVgNCazCiRVKKtJbtdbd5zX4Tm4Oeqy1hFzzh47ViVeC+LByMK9j3IsiM3i9nKbJ
+         N0ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkMjibV0Pj/xHUoU11MM0wFWtHP+VFT703IuQGkfKDC/4Ulo5eWC6mD3bh1GF0YjsiqufZckZrP71ShlVbPAlD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkDSu/Aajijuwc9mIHxhn3Udg3eNiiKu2N+/SzxgCn8+9HwkXu
+	cv95eFB9dYxa8Yt84++rmm7XyVlkWskgTJJ7dSFONLrGk4TwPIq8FxbqEx7vdgE=
+X-Google-Smtp-Source: AGHT+IHWW2BOCOUSxSnw3LpxP0BBwi783RZeFXOJkye4XyzKNPrR3uraEVfYW7VpMiN9f3L/uEnOYQ==
+X-Received: by 2002:a05:600c:1f90:b0:425:7c95:75d0 with SMTP id 5b1f17b1804b1-42c9f9850d1mr132773265e9.18.1726047906431;
+        Wed, 11 Sep 2024 02:45:06 -0700 (PDT)
+Received: from [192.168.1.61] ([84.67.228.188])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb32b0csm136294375e9.18.2024.09.11.02.45.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Sep 2024 02:45:06 -0700 (PDT)
+Message-ID: <4fa0229e-630b-4b6e-8882-3d8a5793a9dd@linaro.org>
+Date: Wed, 11 Sep 2024 10:45:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240903073629.2442754-1-svens@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf ftrace: Detect whether ftrace is enabled on system
+To: Changbin Du <changbin.du@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+References: <20240910033625.3569729-1-changbin.du@huawei.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20240910033625.3569729-1-changbin.du@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 09/03, Sven Schnelle wrote:
->
-> +static void uprobe_clear_state(const struct vm_special_mapping *sm, struct vm_area_struct *vma)
+
+
+On 10/09/2024 04:36, Changbin Du wrote:
+> To make error messages more accurate, this change detects whether ftrace is
+> enabled on system by checking trace file "set_ftrace_pid".
+> 
+> Before:
+> ~ # perf ftrace
+> failed to reset ftrace
+> 
+> After:
+> ~ # perf ftrace
+> ftrace is not supported on this system
+> 
+> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> ---
+>   tools/perf/builtin-ftrace.c | 24 ++++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index eb30c8eca488..e1dc2768bc0f 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -1112,6 +1112,24 @@ static int parse_graph_tracer_opts(const struct option *opt,
+>   	return 0;
+>   }
+>   
+> +static bool is_ftrace_supported(void)
 > +{
-> +	struct xol_area *area = container_of(vma->vm_private_data, struct xol_area, xol_mapping);
+> +	char *file;
+> +	bool supported = false;
 > +
-> +	mutex_lock(&delayed_uprobe_lock);
-> +	delayed_uprobe_remove(NULL, vma->vm_mm);
-> +	mutex_unlock(&delayed_uprobe_lock);
+> +	file = get_tracing_file("set_ftrace_pid");
+> +	if (!file) {
+> +		pr_debug("cannot get tracing file set_ftrace_pid\n");
+> +		return false;
+> +	}
 > +
-> +	if (!area)
-> +		return;
+> +	if (!access(file, F_OK))
+> +		supported = true;
 > +
-> +	put_page(area->pages[0]);
-> +	kfree(area->bitmap);
-> +	kfree(area);
+> +	put_tracing_file(file);
+> +	return supported;
 > +}
 > +
->  static struct xol_area *__create_xol_area(unsigned long vaddr)
->  {
->  	struct mm_struct *mm = current->mm;
-> @@ -1481,6 +1500,7 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
->
->  	area->xol_mapping.name = "[uprobes]";
->  	area->xol_mapping.fault = NULL;
-> +	area->xol_mapping.close = uprobe_clear_state;
+>   enum perf_ftrace_subcommand {
+>   	PERF_FTRACE_NONE,
+>   	PERF_FTRACE_TRACE,
+> @@ -1254,6 +1272,12 @@ int cmd_ftrace(int argc, const char **argv)
+>   		goto out_delete_filters;
+>   	}
+>   
+> +	if (!is_ftrace_supported()) {
+> +		pr_err("ftrace is not supported on this system\n");
+> +		ret = -ENOTSUP;
+> +		goto out_delete_filters;
+> +	}
+> +
 
-Ah, no, we can't do this :/
+Very minor nit, but you could probably put this earlier next to 
+check_ftrace_capable(). It didn't look like it used any of the config or 
+parsing results.
 
-A malicious application can munmap() its "[uprobes]" vma and free
-area/pages/bitmap. If this application hits the uprobe breakpoint after
-that it will use the freed memory.
+Either way:
 
-And no, "mm->uprobes_state.xol_area = NULL" in uprobe_clear_state() won't
-help. Say, another thread can sleep on area.wq when munmap() is called.
-
-Sorry, I should have realized that immediately, but I didn't :/
-
-Andrew, this is uprobes-use-vm_special_mapping-close-functionality.patch
-in mm-stable
-
-Oleg.
-
+Reviewed-by: James Clark <james.clark@linaro.org>
