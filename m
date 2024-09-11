@@ -1,63 +1,66 @@
 Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B11B16EB54
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 22:25:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309241B29BA
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 22:25:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726093511; cv=none; b=nIiOht4Y5pRr4+2ShO2gE2Jfse7thMQ79h/gWnHJTeecI7icmGGyF+0WHP68B9fmdsXl+9CiUXTps4/03+0tbGxFF52dbPj9HGh4gt7xLB1vFDiezaB0Er0dejNZ+GLZByRGpKeAn/uWqhpqGoE8cQt/9YhdZQrL2WL2MHcnOiI=
+	t=1726093512; cv=none; b=WUuHhw1U/b/ycHec4DgeeOLLdBkctCI1pp2lJvbvuQpXXrCEfZeC/KVR7+0b+skResiFMG0yWroMLLcH9e3YLnSLN+hVD6LfdoM2Wv2SKKm0o/lyCx1Jq91utj4nU/GWRA3Cqv9TTK3I7yrOHe/v2I6FqcK/rRf4Mh6sT9K8lGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726093511; c=relaxed/simple;
-	bh=apDpA6syedftKsJ1hl/KzMx2AnXk35NohmXXBB9ax+I=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=YVPzdFQSdQSME4KPa1hX11zPdK5pSoX4RAYTzEzlC1OtpKhTCWr4A2U6ho+WsDofePJAcOza85wzQsfm/NSVF8irfhT/TAj4cXEXeyV6PzTg4AtYPc/MF3HlE/KxLhNFbB1NeLm6YUwhu0EG6XW95erTBLKaKwBIR/i3iqbs+JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HOy1YJRu; arc=none smtp.client-ip=209.85.166.202
+	s=arc-20240116; t=1726093512; c=relaxed/simple;
+	bh=BVvwBjCzkHKlE+Z/Vr8hTBCRhDHp8hUrZYi0cVtEGEY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mOFrfVEKGNepJqlpGMnhmyargngmCjhhkFejqYvVS0Y19wGkiND+s0rjC9LQIOh4MBIDxFDtpdDQdx9/dUMuqQeqjoLCNOdNzKigz8H76agDiE9kiw8o9Fb4or2JNi1VfuwVq4yaPARG8+pxUCvYPI1QlQ2Dg8+rvtw8IbqLz4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RDT6xQKX; arc=none smtp.client-ip=209.85.166.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HOy1YJRu"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-39f53b1932aso6504675ab.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 15:25:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RDT6xQKX"
+Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3a050af2717so7248215ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 15:25:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726093509; x=1726698309; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=T+nODGyulHWxs0JnvJus4UAc0zy0GDYGIyi7bhZj7WY=;
-        b=HOy1YJRuzQW/LVF4I6oCukJ2FIc1dQVgT2CoPyp1gLaZ4q/lDZorR0SHgfAB2XhpaV
-         3U8ZTLEOGuK5Vnrq4NFzCSiOBPaKIoILIRnHurwV8hp4bu86WhDzuthOCnkqBRnEI5FU
-         LV+iJy5DwneWGhhEWN4y7iyQjc6HBRd0j7lwmChjkZwcMrApn8btIXdXnhBZIqCM7nZl
-         dhYeXmsG9mWH9cCejrLj6HmC7XY1g9HWO87xzDSELebBh+qXM3I2jV/808E0DZyCkeBW
-         mJeyG/sbH6rdvq7RsjttHqb0IOKL05krKgQQu3zbKohaLFdxs63u8/3alXdCveRxR2jH
-         qYIw==
+        d=google.com; s=20230601; t=1726093510; x=1726698310; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=98KHHfZAU1dotPbU8K3avps0YbHY8rCmN7CSHv68LAQ=;
+        b=RDT6xQKXlgU1IU55uKT3Oe6xVaZjalM81e8wCsCSoW85vvLpGJ9LfP3+lH8HKP5bCM
+         zaOapyjJaXj04+PK5got56QDBb1l9rZFNgsMXDCB2vhAjr4WkZ6xBwxK+muVANwINjH3
+         nDA1asHFRGmie+eO6hqlmFoOlO0eGEEuMYRNeufFjpUkGI6bzvJMwu9PKeXpjp3qJ0yr
+         nhjB1Pp1HkRpkedBOHT5fx1o0W/p0TBeCMkJCfJa9DI96nCfZpF82fEbdZfkApEv4uu7
+         S+75XBCIiK2UkZ805m9Bx8uM/YmzNzpnRP4LHwoWQxiN4mDfBjX2tqIJ5DzT8fk24tgk
+         kdWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726093509; x=1726698309;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=T+nODGyulHWxs0JnvJus4UAc0zy0GDYGIyi7bhZj7WY=;
-        b=CKLq3hUoj9xi+3WqhD/9JNh2EtYBuiEx3VKS9sfueTdupidLcqqNJzCV2E4mV0pXSB
-         B8mOfXEvI3UsZ3TDFimmeyfIK05tJLkUTQXAgGmwEMNmEZHbQQmOUPPNyZALyPafjNQD
-         Ib5jNJg8xxtzE7nSqdo7peSKKB0MKk9Z7cj9y2WgoeloxMpvZpxhVQ1cjP2iW0eDW/Bn
-         y5KziAJ2sAcyJpgX87QjbMYwVc8duAWE4/bgGCaroxFH0Zz6PXYEyWqykHtjESRGeQVq
-         5MI8q1Gp1cYJ70c/bb3qPsB2AwdV7ppFFekGWu1L3ql3Mt0cIPRwTc/LMucZqd9I9pVc
-         RlWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXXLCduRClxUhJqjroqwc3BRWyvLmrc4rMYmwVlj69/4Eb1x8zm76Xs9v8IKri9p7voC/z0/a6u+0gfaOVk9SUx@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEDrS+Ed7Gddrzk16E5ZoQZaMKZUbvcj17xadchefGy9JYA6mV
-	5F6EN5g7n2zui6yQhNDHsIhDugTppSCHpPanIy1NxjGCOiNmtk2GXsHy/ojizksVycbnmeUKScW
-	sX3ppqvTleriOKvpewHhoUQ==
-X-Google-Smtp-Source: AGHT+IGXXpOojFFO7Gu+zUTSei0211tStzLtWSxgCQLqddaqaDV88691OqMetcHXtFlM9KtKiGpFHXylg3PWPs5bQA==
+        d=1e100.net; s=20230601; t=1726093510; x=1726698310;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=98KHHfZAU1dotPbU8K3avps0YbHY8rCmN7CSHv68LAQ=;
+        b=DdccfX5v8RG3UwRHDyCq0h6GPmuAdJXcJJfZu1RRlHBr8cLF3avFKjYYm9lLAcxzTd
+         bNd1ZZDXiX8uszeoOpMTcuxJLeQWHkY4qNZOdcmAIZ/nTK+eJWDP94aTQu1PaRXCtZjC
+         6O8wQ2I3hmFAy1e+1ydKkuith+X2zRs+371bwQM37BV3O/uML0SQwOU81f+JfwXT5Fcx
+         B+g76aDcxjDn07lYWnjzaspMwouf2InCMoXuxqdPLhMgltyDrAOOUazHaRiyELxsEddg
+         yAWg7gm5X5MoGhYAoYMFLTNK4B/qQgTuSDPyv4smdMxueFlre1bZbERVBLCdqxR0Cp6T
+         7pJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWeSU8GVeqdQnpjrUD6C2k3RVW2hVr+bTUXUC2QKLEKB8J3y+MSekPC0DrNPf5iXLFkJqxusylaKH2+b+uhbNi/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5J6X8jRO12eUcbLnpzwdU1UFTTDxvbBo3If91BYqPmkpyQAQb
+	KlBVNFiSQfF+enBS+FpetLavdKKJtjk+0R4tHmatDe191qM7llRC2vybJr1+ms9zBIDmQ5eXzHU
+	DATdDB6wBa47lbLx4HKuBAA==
+X-Google-Smtp-Source: AGHT+IHezO/FS6DrvjzqydPLEapvMWYoVJd9AX1NthmyW6WKSgM57sEvRhPyRtAfj2mQLXNB4v5VRUm4UvpIqG0BYA==
 X-Received: from coltonlewis-kvm.c.googlers.com ([fda3:e722:ac3:cc00:11b:3898:ac11:fa18])
- (user=coltonlewis job=sendgmr) by 2002:a05:6e02:2181:b0:3a0:80ae:71b6 with
- SMTP id e9e14a558f8ab-3a084976fe0mr327905ab.6.1726093509599; Wed, 11 Sep 2024
- 15:25:09 -0700 (PDT)
-Date: Wed, 11 Sep 2024 22:24:27 +0000
+ (user=coltonlewis job=sendgmr) by 2002:a05:6e02:1c48:b0:39f:549d:e39d with
+ SMTP id e9e14a558f8ab-3a084967570mr302085ab.5.1726093510446; Wed, 11 Sep 2024
+ 15:25:10 -0700 (PDT)
+Date: Wed, 11 Sep 2024 22:24:28 +0000
+In-Reply-To: <20240911222433.3415301-1-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240911222433.3415301-1-coltonlewis@google.com>
 X-Mailer: git-send-email 2.46.0.598.g6f2099f65c-goog
-Message-ID: <20240911222433.3415301-1-coltonlewis@google.com>
-Subject: [PATCH v2 0/5] Correct perf sampling with Guest VMs
+Message-ID: <20240911222433.3415301-2-coltonlewis@google.com>
+Subject: [PATCH v2 1/5] arm: perf: Drop unused functions
 From: Colton Lewis <coltonlewis@google.com>
 To: kvm@vger.kernel.org
 Cc: Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.com>, 
@@ -80,94 +83,59 @@ Cc: Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.co
 	Colton Lewis <coltonlewis@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-v2:
-  * Better explain commit messages
-  * Fix incorrect type in patch 2
-  * Fix missing argument in call to common_misc_flags() in patch 5
-  * Rebase to 6.11-rc7 and include base commit in letter
+For arm's implementation, perf_instruction_pointer() and
+perf_misc_flags() are equivalent to the generic versions in
+include/linux/perf_event.h so arch/arm doesn't need to provide its
+own versions. Drop them here.
 
-v1:
-https://lore.kernel.org/kvm/20240904204133.1442132-1-coltonlewis@google.com/
+Signed-off-by: Colton Lewis <coltonlewis@google.com>
+---
+ arch/arm/include/asm/perf_event.h |  7 -------
+ arch/arm/kernel/perf_callchain.c  | 17 -----------------
+ 2 files changed, 24 deletions(-)
 
-This series cleans up perf recording around guest events and improves
-the accuracy of the resulting perf reports.
+diff --git a/arch/arm/include/asm/perf_event.h b/arch/arm/include/asm/perf_event.h
+index bdbc1e590891..c08f16f2e243 100644
+--- a/arch/arm/include/asm/perf_event.h
++++ b/arch/arm/include/asm/perf_event.h
+@@ -8,13 +8,6 @@
+ #ifndef __ARM_PERF_EVENT_H__
+ #define __ARM_PERF_EVENT_H__
 
-Perf was incorrectly counting any PMU overflow interrupt that occurred
-while a VCPU was loaded as a guest event even when the events were not
-truely guest events. This lead to much less accurate and useful perf
-recordings.
-
-See as an example the below reports of `perf record
-dirty_log_perf_test -m 2 -v 4` before and after the series on ARM64.
-
-Without series:
-
-Samples: 15K of event 'instructions', Event count (approx.): 31830580924
-Overhead  Command          Shared Object        Symbol
-  54.54%  dirty_log_perf_  dirty_log_perf_test  [.] run_test
-   5.39%  dirty_log_perf_  dirty_log_perf_test  [.] vcpu_worker
-   0.89%  dirty_log_perf_  [kernel.vmlinux]     [k] release_pages
-   0.70%  dirty_log_perf_  [kernel.vmlinux]     [k] free_pcppages_bulk
-   0.62%  dirty_log_perf_  dirty_log_perf_test  [.] userspace_mem_region_find
-   0.49%  dirty_log_perf_  dirty_log_perf_test  [.] sparsebit_is_set
-   0.46%  dirty_log_perf_  dirty_log_perf_test  [.] _virt_pg_map
-   0.46%  dirty_log_perf_  dirty_log_perf_test  [.] node_add
-   0.37%  dirty_log_perf_  dirty_log_perf_test  [.] node_reduce
-   0.35%  dirty_log_perf_  [kernel.vmlinux]     [k] free_unref_page_commit
-   0.33%  dirty_log_perf_  [kernel.vmlinux]     [k] __kvm_pgtable_walk
-   0.31%  dirty_log_perf_  [kernel.vmlinux]     [k] stage2_attr_walker
-   0.29%  dirty_log_perf_  [kernel.vmlinux]     [k] unmap_page_range
-   0.29%  dirty_log_perf_  dirty_log_perf_test  [.] test_assert
-   0.26%  dirty_log_perf_  [kernel.vmlinux]     [k] __mod_memcg_lruvec_state
-   0.24%  dirty_log_perf_  [kernel.vmlinux]     [k] kvm_s2_put_page
-
-With series:
-
-Samples: 15K of event 'instructions', Event count (approx.): 31830580924
-Samples: 15K of event 'instructions', Event count (approx.): 30898031385
-Overhead  Command          Shared Object        Symbol
-  54.05%  dirty_log_perf_  dirty_log_perf_test  [.] run_test
-   5.48%  dirty_log_perf_  [kernel.kallsyms]    [k] kvm_arch_vcpu_ioctl_run
-   4.70%  dirty_log_perf_  dirty_log_perf_test  [.] vcpu_worker
-   3.11%  dirty_log_perf_  [kernel.kallsyms]    [k] kvm_handle_guest_abort
-   2.24%  dirty_log_perf_  [kernel.kallsyms]    [k] up_read
-   1.98%  dirty_log_perf_  [kernel.kallsyms]    [k] __kvm_tlb_flush_vmid_ipa_nsh
-   1.97%  dirty_log_perf_  [kernel.kallsyms]    [k] __pi_clear_page
-   1.30%  dirty_log_perf_  [kernel.kallsyms]    [k] down_read
-   1.13%  dirty_log_perf_  [kernel.kallsyms]    [k] release_pages
-   1.12%  dirty_log_perf_  [kernel.kallsyms]    [k] __kvm_pgtable_walk
-   1.08%  dirty_log_perf_  [kernel.kallsyms]    [k] folio_batch_move_lru
-   1.06%  dirty_log_perf_  [kernel.kallsyms]    [k] __srcu_read_lock
-   1.03%  dirty_log_perf_  [kernel.kallsyms]    [k] get_page_from_freelist
-   1.01%  dirty_log_perf_  [kernel.kallsyms]    [k] __pte_offset_map_lock
-   0.82%  dirty_log_perf_  [kernel.kallsyms]    [k] handle_mm_fault
-   0.74%  dirty_log_perf_  [kernel.kallsyms]    [k] mas_state_walk
-
-Colton Lewis (5):
-  arm: perf: Drop unused functions
-  perf: Hoist perf_instruction_pointer() and perf_misc_flags()
-  powerpc: perf: Use perf_arch_instruction_pointer()
-  x86: perf: Refactor misc flag assignments
-  perf: Correct perf sampling with guest VMs
-
- arch/arm/include/asm/perf_event.h            |  7 ---
- arch/arm/kernel/perf_callchain.c             | 17 -------
- arch/arm64/include/asm/perf_event.h          |  4 --
- arch/arm64/kernel/perf_callchain.c           | 28 ------------
- arch/powerpc/include/asm/perf_event_server.h |  6 +--
- arch/powerpc/perf/callchain.c                |  2 +-
- arch/powerpc/perf/callchain_32.c             |  2 +-
- arch/powerpc/perf/callchain_64.c             |  2 +-
- arch/powerpc/perf/core-book3s.c              |  4 +-
- arch/s390/include/asm/perf_event.h           |  6 +--
- arch/s390/kernel/perf_event.c                |  4 +-
- arch/x86/events/core.c                       | 48 ++++++++++++--------
- arch/x86/include/asm/perf_event.h            | 12 +++--
- include/linux/perf_event.h                   | 26 +++++++++--
- kernel/events/core.c                         | 27 ++++++++++-
- 15 files changed, 96 insertions(+), 99 deletions(-)
-
-
-base-commit: da3ea35007d0af457a0afc87e84fddaebc4e0b63
+-#ifdef CONFIG_PERF_EVENTS
+-struct pt_regs;
+-extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+-extern unsigned long perf_misc_flags(struct pt_regs *regs);
+-#define perf_misc_flags(regs)	perf_misc_flags(regs)
+-#endif
+-
+ #define perf_arch_fetch_caller_regs(regs, __ip) { \
+ 	(regs)->ARM_pc = (__ip); \
+ 	frame_pointer((regs)) = (unsigned long) __builtin_frame_address(0); \
+diff --git a/arch/arm/kernel/perf_callchain.c b/arch/arm/kernel/perf_callchain.c
+index 1d230ac9d0eb..a2601b1ef318 100644
+--- a/arch/arm/kernel/perf_callchain.c
++++ b/arch/arm/kernel/perf_callchain.c
+@@ -96,20 +96,3 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+ 	arm_get_current_stackframe(regs, &fr);
+ 	walk_stackframe(&fr, callchain_trace, entry);
+ }
+-
+-unsigned long perf_instruction_pointer(struct pt_regs *regs)
+-{
+-	return instruction_pointer(regs);
+-}
+-
+-unsigned long perf_misc_flags(struct pt_regs *regs)
+-{
+-	int misc = 0;
+-
+-	if (user_mode(regs))
+-		misc |= PERF_RECORD_MISC_USER;
+-	else
+-		misc |= PERF_RECORD_MISC_KERNEL;
+-
+-	return misc;
+-}
 --
 2.46.0.598.g6f2099f65c-goog
