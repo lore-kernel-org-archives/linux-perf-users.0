@@ -1,57 +1,57 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0561BE229
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 15:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F6D1C1AA5
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 15:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726153985; cv=none; b=t/A5NrGP5x8Uj00qjN9Ii5XdP+1ANsmwJIDigOqFZH6VD2PUBnWUXlajN1dNgVq+ZWRVXl8mMbSAXUnaQuuClVphX3+qfskqXVqGuCn2LID3FwIm7DF4L4WbPxl34lZIq+bH5FOtpuxJXz+6i8oMuNQcT6zOb3xbGOy1lIGC6Ls=
+	t=1726153992; cv=none; b=ufJhHGgP7SEUKyNqhzg1VFDMsvCMKUlu2hvPXFwkRGRtGEtAMxADqxkuuJV45S3HmJZET96fFZKK+ZIK14VpCQh1QlLfERo/Q7959c8ZaS0FK3M3BITsviG9PwbKhWtUMGfOKcR/VfGMDYqASOkrWqNkz+CJkcgWODGNENWrSY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726153985; c=relaxed/simple;
-	bh=M/SxxS1EV5YiH2L2D9PMSuM/xyixk2ltobd2ktIOQbA=;
+	s=arc-20240116; t=1726153992; c=relaxed/simple;
+	bh=x8bv8lif16GzTLpb0Qa7Ebuoe1yqdxh/JFp2faINf78=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=b+zsnilUMQxV0a7asaxzEc7ZpVBO/D+yhwolvgO3G2PtgTJAu6AaIvWrdtzR8i+Dx8w6KGenGC15YkOQXdnflbTBGV9msMAgPm0wYC/n0/G0mS9k1NNtV2lOfHwVLHYYXsA5bXNDBk6CGW9l0dIDXKPOh41vM6zBT0RPEpkWk6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QXzbLTPc; arc=none smtp.client-ip=209.85.167.49
+	 MIME-Version; b=bph2bZkeOWC8cG8k12osc86GhJLEK7J1nk74KOm+0Z0CVsYnhYuGoar4RCvN8z71F2OL5mm3tcXrJuzC24AVswZpsCJpfpgXH0FOkC4iUjTsydE/mblYcgemP5DgBtJ02YyS9J5pSNXkajNJuCWwWUhxBuF/YCVpTXDnDiGpg+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=psNuG9lt; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QXzbLTPc"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5365b6bd901so1268210e87.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 08:13:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="psNuG9lt"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42cc8782869so10258755e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 08:13:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726153982; x=1726758782; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1726153988; x=1726758788; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lyScag8p5nZQgcpgovS0Br7oaCoB8CMogAdxSo53VSM=;
-        b=QXzbLTPcq2Erda9zCSq4kqzXSrQSzAYZGcWKuaAoHMcA1InmEavdfH7gnWFDZhEzGB
-         KmmDoXgUFhF1NXNRMBiofKvg1JR4cyW4/5AmAHujHCkdB5vs79ED49SkFXKMpibnSxC8
-         7bJ0AELgOx5pVeyKBv4uuus0QmGUUmGKMJ18cLko3aXiTxiupNuX4gzA+D84Y6T3t4uF
-         y/2rzMrkTtoqHdIFMeuOZbzc7u16JBnVZoQudB7o+IpjV4vUeTsa8lW2ew8562jCfjnZ
-         HoZVmVuMiCx/cDq+rZHu6WIQRo7mys1dOS5dvdBPPsNQ77Tw7qjt6P/6nb85XgKDKJN6
-         V0gw==
+        bh=MnGEReYZbV5wa8QJ65oYyeLT0QeGyCwvGtl5g2ahPgo=;
+        b=psNuG9lt/LcjzWW5r2j927onbXcIwEdTT8gYoPR3YpUPkc5z6MxWpR0hXNkJwgka1z
+         Zhg3ZeEAXyUgnWZjax/vr2Ufz4UdUcv+T8fROmCj7VwIPrqKu5WD2q16wF0Cst2mB2kd
+         3V0LXBRnhsmVr4uvfl37UCbggZVRRXSm8nWgGJ648VNfV89RupaH1OOhhPZQ4beOVYBH
+         N+wuuqt6r8AQLZW3e4gk7GGE07DEWI/OPifxdBRKPORCRPNS/+NOsP367BsNbH+i0KMy
+         t1JwJw7aT3wYBIKqT95GzZ2C7IJ06s/5CVzOM/3T+YKgkxwjNce7yB1xHrBpnTGXkE4d
+         0n5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726153982; x=1726758782;
+        d=1e100.net; s=20230601; t=1726153988; x=1726758788;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lyScag8p5nZQgcpgovS0Br7oaCoB8CMogAdxSo53VSM=;
-        b=lmH16/lAv5L2Zdfjp7a/1m43d8bWKE07QZ34zpJ3Zb8sqnHDK6zIq0Rvz+g+XnGPc0
-         7QEnYzfEFyb5z/rNW9r6ZvLlGzgbYJRcCH2WK89hHkdqLcWSx+d3pJHeK3au8LoBgHNB
-         iPxnpFkEZwBEOxGvnc+sTiXvJxN+I4A1YZ08hL3KrEM6znDs+FnTLa12farBDfqMlgNg
-         /t02umAV4zeZ1y344cy9cT70HY4muc/AORsmUuxDFmtjPF6XZ/pQZiUAtDMCL5nFR+bD
-         Gt9bHW/KJ7VGK5j8DwumniXQ5CgeN0jXNIGeHvKWsWfxEzNe9emKDCMXyWLnfiLarMrb
-         Oj0Q==
-X-Gm-Message-State: AOJu0YxyY9ZBCx3lsXsXjLjrUR6kDjc8xvp8oxCIOVyMXex1VtdqCNDx
-	g9+XrBPpuaBWJdn5T9zIznnq2b0klqZ9CZR5o+VcY9XaU1HNHA+zziaM+GZjfHZnZBVbpvHmH8e
-	HSvH6Yg==
-X-Google-Smtp-Source: AGHT+IEU6nXG+B4QFLcwDCDs/5zj2w0oRrKPhJUxJ9n5pG2+xKrqgQBx/Dpn46aYZQ7Zt78NIeVlOg==
-X-Received: by 2002:a05:6512:e94:b0:530:b871:eb9a with SMTP id 2adb3069b0e04-53678feb5ffmr1855771e87.47.1726153981495;
-        Thu, 12 Sep 2024 08:13:01 -0700 (PDT)
+        bh=MnGEReYZbV5wa8QJ65oYyeLT0QeGyCwvGtl5g2ahPgo=;
+        b=UYar8uRjM1pq04xPRa0R515xC/erXAYxoksIZtVJALRkNCaDA6pDvGIDzt6offEWj9
+         AJu/gBW0y4B0ipkup1oHS0A/cIXD5a9nFYJiAESAnUSpHxcp/CBKNTz+SZbvQY3Ll/lI
+         S0igJNo1Hm6hQrTomWNoyFxz8PBAg620Fs4u4nutpNHQ4X57RehInTBarh8THij9F9OA
+         fM0IjtwPixiKtFA3+qxTNnfbgXpi/cO15jGaGWmrIsDCIaYlk9hGSya2nuW6jWxv6HlC
+         I9O6h5+0qREDyt18IKtrxzQLrfB27cFIo3P7Sax87QRUdSf1g+iAyJWEWRcfPB17JZV+
+         WOWA==
+X-Gm-Message-State: AOJu0YwwlAsnb80C0kHEpgLpLCyS3zLeBsG4sCks1rTo8wNUWQylk+Zp
+	whnaBs8OQ1HfdzVSosxhweVrAWGujFN5z6rRCvHd7T/1OB2c27iSRiBZvBUSZ96sWrFl6dmAz0/
+	NHv3tLA==
+X-Google-Smtp-Source: AGHT+IGEre2u3si5izHKSVRnSaDHslzroiOmPSj+IMte3J2/T8vsKx8fqveYcxg7jVPpnaPL6vVMvQ==
+X-Received: by 2002:a05:600c:19c8:b0:42c:b187:bde9 with SMTP id 5b1f17b1804b1-42cdb579f3cmr26940435e9.30.1726153987871;
+        Thu, 12 Sep 2024 08:13:07 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42cb0dbcb6bsm171928845e9.30.2024.09.12.08.12.59
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42cb0dbcb6bsm171928845e9.30.2024.09.12.08.13.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2024 08:13:00 -0700 (PDT)
+        Thu, 12 Sep 2024 08:13:07 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: linux-perf-users@vger.kernel.org,
 	gankulkarni@os.amperecomputing.com,
@@ -80,9 +80,9 @@ Cc: James Clark <james.clark@linaro.org>,
 	Mathieu Poirier <mathieu.poirier@linaro.org>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 6/7] perf scripts python cs-etm: Add start and stop arguments
-Date: Thu, 12 Sep 2024 16:11:37 +0100
-Message-Id: <20240912151143.1264483-7-james.clark@linaro.org>
+Subject: [PATCH v2 7/7] perf test: cs-etm: Test Coresight disassembly script
+Date: Thu, 12 Sep 2024 16:11:38 +0100
+Message-Id: <20240912151143.1264483-8-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240912151143.1264483-1-james.clark@linaro.org>
 References: <20240912151143.1264483-1-james.clark@linaro.org>
@@ -94,78 +94,84 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Make it possible to only disassemble a range of timestamps or sample
-indexes. This will be used by the test to limit the runtime, but it's
-also useful for users.
+Run a few samples through the disassembly script and check to see that
+at least one branch instruction is printed.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- .../scripts/python/arm-cs-trace-disasm.py     | 22 +++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ .../tests/shell/test_arm_coresight_disasm.sh  | 63 +++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_arm_coresight_disasm.sh
 
-diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-index 02e957d037ea..a097995d8e7b 100755
---- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
-+++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-@@ -55,6 +55,11 @@ args.add_argument("-k", "--vmlinux",
- args.add_argument("-d", "--objdump", nargs="?", const=default_objdump(),
- 		  help="Show disassembly. Can also be used to change the objdump path"),
- args.add_argument("-v", "--verbose", action="store_true", help="Enable debugging log")
-+args.add_argument("--start-time", type=int, help="Time of sample to start from")
-+args.add_argument("--stop-time", type=int, help="Time of sample to stop at")
-+args.add_argument("--start-sample", type=int, help="Index of sample to start from")
-+args.add_argument("--stop-sample", type=int, help="Index of sample to stop at")
+diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+new file mode 100755
+index 000000000000..6d004bf29f80
+--- /dev/null
++++ b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+@@ -0,0 +1,63 @@
++#!/bin/sh
++# Check Arm CoreSight disassembly script completes without errors
++# SPDX-License-Identifier: GPL-2.0
 +
- options = args.parse_args()
- 
- # Initialize global dicts and regular expression
-@@ -63,6 +68,7 @@ cpu_data = dict()
- disasm_re = re.compile(r"^\s*([0-9a-fA-F]+):")
- disasm_func_re = re.compile(r"^\s*([0-9a-fA-F]+)\s.*:")
- cache_size = 64*1024
-+sample_idx = -1
- 
- glb_source_file_name	= None
- glb_line_number		= None
-@@ -151,10 +157,10 @@ def print_disam(dso_fname, dso_start, start_addr, stop_addr):
- 
- def print_sample(sample):
- 	print("Sample = { cpu: %04d addr: 0x%016x phys_addr: 0x%016x ip: 0x%016x " \
--	      "pid: %d tid: %d period: %d time: %d }" % \
-+	      "pid: %d tid: %d period: %d time: %d index: %d}" % \
- 	      (sample['cpu'], sample['addr'], sample['phys_addr'], \
- 	       sample['ip'], sample['pid'], sample['tid'], \
--	       sample['period'], sample['time']))
-+	       sample['period'], sample['time'], sample_idx))
- 
- def trace_begin():
- 	print('ARM CoreSight Trace Data Assembler Dump')
-@@ -216,6 +222,7 @@ def print_srccode(comm, param_dict, sample, symbol, dso):
- def process_event(param_dict):
- 	global cache_size
- 	global options
-+	global sample_idx
- 
- 	sample = param_dict["sample"]
- 	comm = param_dict["comm"]
-@@ -231,6 +238,17 @@ def process_event(param_dict):
- 	ip = sample["ip"]
- 	addr = sample["addr"]
- 
-+	sample_idx += 1
++# The disassembly script reconstructs ranges of instructions and gives these to objdump to
++# decode. objdump doesn't like ranges that go backwards, but these are a good indication
++# that decoding has gone wrong either in OpenCSD, Perf or in the range reconstruction in
++# the script. Test all 3 parts are working correctly by running the script.
 +
-+	if (options.start_time and sample["time"] < options.start_time):
-+		return
-+	if (options.stop_time and sample["time"] > options.stop_time):
-+		exit(0)
-+	if (options.start_sample and sample_idx < options.start_sample):
-+		return
-+	if (options.stop_sample and sample_idx > options.stop_sample):
-+		exit(0)
++skip_if_no_cs_etm_event() {
++	perf list | grep -q 'cs_etm//' && return 0
 +
- 	if (options.verbose == True):
- 		print("Event type: %s" % name)
- 		print_sample(sample)
++	# cs_etm event doesn't exist
++	return 2
++}
++
++skip_if_no_cs_etm_event || exit 2
++
++# Assume an error unless we reach the very end
++set -e
++glb_err=1
++
++perfdata_dir=$(mktemp -d /tmp/__perf_test.perf.data.XXXXX)
++perfdata=${perfdata_dir}/perf.data
++file=$(mktemp /tmp/temporary_file.XXXXX)
++
++cleanup_files()
++{
++	set +e
++	rm -rf ${perfdata_dir}
++	rm -f ${file}
++	trap - EXIT TERM INT
++	exit $glb_err
++}
++
++trap cleanup_files EXIT TERM INT
++
++# Ranges start and end on branches, so check for some likely branch instructions
++sep="\s\|\s"
++branch_search="\sbl${sep}b${sep}b.ne${sep}b.eq${sep}cbz\s"
++
++## Test kernel ##
++if [ -e /proc/kcore ]; then
++	echo "Testing kernel disassembly"
++	perf record -o ${perfdata} -e cs_etm//k --kcore -- touch $file > /dev/null 2>&1
++	perf script -i ${perfdata} -s python:tools/perf/scripts/python/arm-cs-trace-disasm.py -- \
++		-d --stop-sample=30 2> /dev/null > ${file}
++	grep -q -e ${branch_search} ${file}
++	echo "Found kernel branches"
++else
++	# kcore is required for correct kernel decode due to runtime code patching
++	echo "No kcore, skipping kernel test"
++fi
++
++## Test user ##
++echo "Testing userspace disassembly"
++perf record -o ${perfdata} -e cs_etm//u -- touch $file > /dev/null 2>&1
++perf script -i ${perfdata} -s python:tools/perf/scripts/python/arm-cs-trace-disasm.py -- \
++	-d --stop-sample=30 2> /dev/null > ${file}
++grep -q -e ${branch_search} ${file}
++echo "Found userspace branches"
++
++glb_err=0
 -- 
 2.34.1
 
