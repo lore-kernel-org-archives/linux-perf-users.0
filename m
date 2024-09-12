@@ -1,91 +1,111 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A641ACDE8
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 19:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E8018BB86
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 20:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726169496; cv=none; b=eK9hIh1UOdPrjhP6MluLSxlTj/Cd4fO1fDz0YJbntiOCtoW+7XfZ84FIZdqPvvs87eYpIU8Np2DXRAW+Zz6tMiDp/eQEhVmw9FrnctghbdSxkX6TBqn+2MbpbswXJld/1j7ZTDEDePIeU7HfQP07/dRpIZGJxN3yORpMQ44Lvy0=
+	t=1726173063; cv=none; b=ijG313qLF79TZaZ9BoVcAkePzMrRkwGtDnGWyjXkwt+xqHi+rPbcxGRiDK257HciQnajcgTRTZ/ywJIfgzMgVdldCNut50NeArBVvQjMhHUhdTZi5pHaqcM4k10seChzNsNhd6mkMiW+VxM/mDic2RqFKuClkjQ02G00yGAprmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726169496; c=relaxed/simple;
-	bh=Cr5zlDMGaPNV64I3wQ6jiU1g/Gs4cGVM1A+QGKe6gR0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L9J2eNZN1aNJlxNUFFj2YqiD77Rcqx/yftYjEfCM+5x9wSAevELK6bU0+rclpBYWn023WfT9CtJV4bAfHK4OT/wV0P0dkZOwJ0+YRebCbWpTxCt7TTHeCpQz7f9c2AdWIMAQtxCeLmtUfCJFG3ToQdnbabSKuB5t5frKW9SIOT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4MxGLPaP; arc=none smtp.client-ip=209.85.166.181
+	s=arc-20240116; t=1726173063; c=relaxed/simple;
+	bh=u3+xTKiDZ6CgDyqF+o7xgUFgxz+T2D6SLtwRNZRyVS8=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=gV7v83lO56FIlGwY3bIVJ93IH9e1txpVyisUscwkW7PV1CBy22cS85q8s8C8r8wQuPAfxKoKgIVAsxsvJxoBqSXfRzX7N6mOrAymSqXCCtoX4drWj/AGLCATZ/1H7iuNgmg5dinYksxVZUR3/79I0W6N9fa2P/CxeNGbHc6/Aco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IuUxudrt; arc=none smtp.client-ip=209.85.166.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4MxGLPaP"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-39d2a107aebso40355ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 12:31:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IuUxudrt"
+Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-82a32368e13so219457839f.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 13:31:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726169494; x=1726774294; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cr5zlDMGaPNV64I3wQ6jiU1g/Gs4cGVM1A+QGKe6gR0=;
-        b=4MxGLPaPTmC3AlKMOaz0FPsdGsogkhpoeZnyxWwykvUFrBpJFGW9fajYOsqIT7LU9I
-         tYIoeaIsQfX0L7/u2lcfMr+8SX6r/pqzvUh3Ag+hIETedKg1biJ1n+eLO976i7DGk4R/
-         cgm47xDwGCP3jf+5DCIHVFpPYIN8YJ0rkVB2Ha35I3zkalLNr5Ghjbz6BVbjnUo/09J1
-         eqBzxlcC7cgBLrUAHHL2qAPJQWIsSBjNBtnu2o8Epep9BhCm4yzQGajHinZQip21q8f/
-         2IepCT5T6UwhLTPCkIdbJY2RAFyocltRfv9KX4iU/yz0b9jQj3OOMKBYyHcTUppKZh1o
-         2PAQ==
+        d=google.com; s=20230601; t=1726173061; x=1726777861; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yLPhhW7Y6mbWdZPPRUIkvARITfuZTEZkDii7oKKU+Ek=;
+        b=IuUxudrtlEScnPVJtdJIZL653Kzmq2KrkAJZPlos0BCzQ/d8bWSAWJkoHNmSMMvpzX
+         baaUwY3pLIG5Q8FPiRzMLdlaTS1hNSet+8xvdak+omyblP51OedpMqboDXfBWT0v/rVB
+         8tE537sMMR+gUfLWoUy5+xEH3z5fAzERmA5v7Bnw//1jsFw9/0TOahkCJLsXQUMYBNCF
+         Z7SN5Rf/20K6pfJRiIHgQgYVJWfu587IeXQtEjx6LZFw64K0kp+5b+DQsRaFTes86bRV
+         JGLk+EEFNQwUgbXyYligdHmcQnfPazUUNlbGOws4Mz15dOUCrjTI4NOM0+BbnvSbHhZB
+         lcPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726169494; x=1726774294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cr5zlDMGaPNV64I3wQ6jiU1g/Gs4cGVM1A+QGKe6gR0=;
-        b=QXR/rnAabV1ay98cQkgB7djoNZIj5gjDojXugclaMuy1p5vSw5KQ4dgJR6ztiiE66o
-         H92zQsxkxivImkONLCryS3Isw5TziRwljhkcpwHsFFiF6p/QGtSGahVYc9/ty+JkK6xB
-         JO/4d3cfzdpoBO63/8YFk812yz9KRemPTYrv60HRF6OlLFrLsXa9jwND7D5XhD8kS0Ti
-         DzYERNNBCfvHCjbA+zQl/CJa12PDCgrUmRZB86KaDS1VItf4sep5PNz3rGUnszmvIvx8
-         x9JzPCzyic9vfRO912FkBTLdZN2PttMe/DJrAZPzASlYh/9NjHTgPgbbc9+YyGmtI3uV
-         Z+EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIWqO4hMp/4n4Uu6nDSpJyQKmLX7gOUkjjf1CtIrE/ZpubeTMfWxHUC3UnlGTpg00rxF9NXDmF6d4lLSGClSz/@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHsnmniSwzeyI9a62XBEgU1gSLbgI+Y2zeT1kOBu8BBwEtveij
-	iECH4M2SpPUXJnK8llfW/mnuWiPo7spAQCcSalvS/JYhoa/vhg03xKG7GSpxC15Vne1qMziVI1o
-	tIvhsZMcxgR4WPzn6kEMjG41/Q4GIpbXrEsZC
-X-Google-Smtp-Source: AGHT+IHvH6+bWkd/eSNntgoj9UD2X4cfQfRs08lgUinSsz7xEoyunyuN7JXR3FANHFFusAgInC4jFNzt1d2xEHsRndg=
-X-Received: by 2002:a05:6e02:1a84:b0:39a:f2f4:7ec1 with SMTP id
- e9e14a558f8ab-3a0847e81b2mr5237655ab.20.1726169494308; Thu, 12 Sep 2024
- 12:31:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1726173061; x=1726777861;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yLPhhW7Y6mbWdZPPRUIkvARITfuZTEZkDii7oKKU+Ek=;
+        b=LafecP7COT4ESvF958NbJvB1l7SZcK6jqUzJdH1RYgMQGzDCmWKVRHI0uuriHPsunB
+         64YI8Xkx2cD7GBKXUzFb1jKd+XwIKvjNCsad1kLl+XXKEbPsKoVzmAinAjIxptraQ5kL
+         bT3p0X8wpbUNq2SiRi1X7g7pisnZK5DmAHxFjfWhhf4VfLVvA/KXLcIzbRPbj4MtdF3Y
+         r4fHUw3bIThPlkHW+IzMC0E4sa7OrEav45dT0HPObjxVPDFvLn84/PUEoSs9D2GVgr3c
+         6dis4MyK7dvDhnPmuURgsjlnTgXrS3JR1eMiDL6oer+HP5aR7ZqBX27ZjKK+sYxXRBqj
+         dT7A==
+X-Forwarded-Encrypted: i=1; AJvYcCUXDa+IgeF4Tttag0asZYroaAKfbVFDHnmgU3xfUdmQlD+7Oksl1i6yem8OeXOJ/lg282uJ/H7g2WnZuxVnFzcy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk2WkjLaXjDEQiVQWll/EHokbRrXX0kiWR7C5NWF7Qo+AyIy7i
+	LXeGXJV997V9WRHEQ6ooBtWKRw6SzP7TzyBW8sh9GA4duiTZCO9HM5GsPqocVchRRfsI4+vaXMh
+	jYP+5LNieBdzfphP2YwPVBw==
+X-Google-Smtp-Source: AGHT+IEvNBP56SW+DzYGXpGSQjGH7l5m6WCB475tagf/GqT0PVTompxQRWYnVlmUdK8417EDaVC+g6P+CB3gV00+3Q==
+X-Received: from coltonlewis-kvm.c.googlers.com ([fda3:e722:ac3:cc00:11b:3898:ac11:fa18])
+ (user=coltonlewis job=sendgmr) by 2002:a05:6638:1412:b0:4c0:8165:c391 with
+ SMTP id 8926c6da1cb9f-4d36136b75dmr162015173.4.1726173061371; Thu, 12 Sep
+ 2024 13:31:01 -0700 (PDT)
+Date: Thu, 12 Sep 2024 20:31:00 +0000
+In-Reply-To: <ZuIgE2-GElzSGztH@google.com> (message from Sean Christopherson
+ on Wed, 11 Sep 2024 15:56:19 -0700)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240912182757.762369-1-irogers@google.com> <ZuM9zc71XXXZ3eRZ@x1>
-In-Reply-To: <ZuM9zc71XXXZ3eRZ@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 12 Sep 2024 12:31:23 -0700
-Message-ID: <CAP-5=fUCVa3VoByKUFDp8Q+M2ZOTdy7ccL7Ter8E8dSE368KAA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf vdso: Missed put on 32-bit dsos
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Message-ID: <gsntldzwd37f.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [PATCH v2 5/5] perf: Correct perf sampling with guest VMs
+From: Colton Lewis <coltonlewis@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, oliver.upton@linux.dev, peterz@infradead.org, 
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, will@kernel.org, 
+	linux@armlinux.org.uk, catalin.marinas@arm.com, mpe@ellerman.id.au, 
+	npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen@kernel.org, 
+	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
+	borntraeger@linux.ibm.com, svens@linux.ibm.com, tglx@linutronix.de, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-On Thu, Sep 12, 2024 at 12:15=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Thu, Sep 12, 2024 at 11:27:57AM -0700, Ian Rogers wrote:
-> > If the dso type doesn't match then NULL is returned but the dso should
-> > be put first.
->
-> I guess we can add:
->
-> Fixes: f649ed80f3cabbf1 ("perf dsos: Tidy reference counting and locking"=
-)
->
-> ?
+Sean Christopherson <seanjc@google.com> writes:
 
-Yep, that's the one that added the reference count increment.
+> On Wed, Sep 11, 2024, Colton Lewis wrote:
+>> Previously any PMU overflow interrupt that fired while a VCPU was
+>> loaded was recorded as a guest event whether it truly was or not. This
+>> resulted in nonsense perf recordings that did not honor
+>> perf_event_attr.exclude_guest and recorded guest IPs where it should
+>> have recorded host IPs.
 
-Thanks,
-Ian
+>> Rework the sampling logic to only record guest samples for events with
+>> exclude_guest clear. This way any host-only events with exclude_guest
+>> set will never see unexpected guest samples. The behaviour of events
+>> with exclude_guest clear is unchanged.
+
+> Nit, "with exclude_guest clear" is easy to misread as simply "with  
+> exclude_guest"
+> (I did so at least three times).  Maybe
+
+>    The behavior of exclude_guest=0 events is unchanged.
+
+> or
+
+>    The behavior of events without exclude_guest is unchanged.
+
+> I think it's also worth explicitly calling out that events that are  
+> configured
+> to sample both host and guest may still be prone to misattributing a PMI  
+> that
+> arrived in the host as a guest event, depending on the KVM arch and/or  
+> vendor
+> behavior.
+
+Done
