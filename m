@@ -1,132 +1,132 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65223D0C5
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 15:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA111B12FD
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 15:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726153242; cv=none; b=Gyv97sirJdvhsz+D+NarOi6iBHxeJTpvgFWK32gnXyOGhefBkRC0IPQLdUPowPuImu2W2zb6J+jcQlGlu38CS5q3qi9p9bHBPentM7/+N6EJvndFa30cHzClQfiVwiw18iYTHFDtRDpYlZfBPgscstR1Dn5mBmcAe8YfjWyFgEQ=
+	t=1726153946; cv=none; b=MJ+adNpweBLGHUSEE/tUvv5fhKgmIfyk0WJmT1oklYRPMy/q3dxdPxLPK+bekdKfrODx9V5hWy5g2sHXBnHhcAcfM/XdJGoku2OMjDr+hdes9ZoyxAcZwSE2Zn5vBRQtpq89AZU+avJfDe87AicuTCKMkwlYTf8/+3kfzZbSbXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726153242; c=relaxed/simple;
-	bh=qp4tup2O1mnu9IXtGzVcuYfiHWi5bTJU4SY95s7YP9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IPN2CCPPXMQBN7a/fVlMTZI9rGAn01Xg49R1T/wIkR6y8X8tqoQIIWHIgWL5m2949L6fgPIrCbBGHLo6ZHG+q/wiczQJoeDhVvy1LVSA1GKoS7wOpSeRq6AAu+eDaymuOTlWjzwcxDPvCL6BbcLsEGk8SnBJen+wXwnPlfxLwLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TX+Q0AIw; arc=none smtp.client-ip=209.85.221.47
+	s=arc-20240116; t=1726153946; c=relaxed/simple;
+	bh=QlEYYDXtTGIxeBuZbvdktHIfoy0JqF2apXxlZhC0hSM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ls4Qr249OMl79JsBhzycKjo6cPnwwDal78B8ydFAVM8UWgrmNjXQm7wkJyDBxSWKy0ifOq0lX6NCC10ZhgXhoGef8wiP9cAsWwZ/FABiYYaYZAW662xSIUd+q/x2BDCguRL99gUwXRDJ6O7bWf+GueqLnYE0q79wQXfhvR5XpqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qMsAr9HH; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TX+Q0AIw"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-374c1963cb6so778342f8f.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 08:00:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qMsAr9HH"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4280ca0791bso10202525e9.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 08:12:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726153239; x=1726758039; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MY8Q22WrN9A6BKqFuPJeUqXRj2azetZ70kLGvEilHa4=;
-        b=TX+Q0AIwanEl8jcNP6xC5YJ3aYCZES6dk7uNLFkdOONXayuIcNI+Cf11grO3xC/I+d
-         +DyohNQkeQmBf2BTRp0zbaa+nXgf00U7MctqqXEC5Aq5SlLZyVrdz9JQOi1/quP1Y1Hl
-         Ct6zzAolIogtr0Pt8lf16Bb1r97Ret9MVzh+ipcQqA2350zUzIbWuu3xY5SEx4Qn6zA4
-         IMn8CVXXYY5ND9ZHqG8y4cDIPe2T7Qtb3PA7BuoKbjAM4E9nRekUXtLkMp2b0nuiK/rl
-         enyQ2oLyCxt2PD/HOZS9L8DkUKkitnyuL6XyPRb32DozwhparXCnsa3sYPzTe/5T7vwN
-         q3zg==
+        d=linaro.org; s=google; t=1726153943; x=1726758743; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0vEtamCOnYuoncchNofQc9nqoQ7AlgNKS0ZFixTi9Yk=;
+        b=qMsAr9HHkSEHz7OPFeNx9YvAwJdCjCj56pIru2FmNGWFLd7zNpEWN9yIeGLv3/Z6zD
+         oX1GbriCBD2m0K7TNSkAVazNUSfasUBjS7oRPFbxqrngqexwKWHo2hz7eNwOWsXXxAap
+         o+gvTMuQ7QbnPCtRmJY7m6ZFamyoMs/U6d5OY/KCna7SymF2OFWEYAuNWOq3UDSoli6O
+         tL+vkMjeM1TSACg7M9FfqN48bfubYEWLrku44DF8KHamnDWyv9kzubzqhGjnThSjExSA
+         Lqwmzw8ZIgGOLmzgThv8vgYP3PidvQtXyCECYj1mPBI5OqJ3e0XkTdFceoVv2RlGaOoB
+         /2hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726153239; x=1726758039;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MY8Q22WrN9A6BKqFuPJeUqXRj2azetZ70kLGvEilHa4=;
-        b=iX9AsT/5fwNMZxLKC2vZu/aJ4ldm9GeVLzLZnfsx+BSmJ4RV7/MAc1zZ+vG59NI04j
-         fsMHmbXR43cXuqjlneOaGRYtEcALS7f2gG4x1Uke5LQghM2QwMqDXRPIjGu5G/IvZKbO
-         SgFdWTdP0Dst1MCVLmYg4BpPYuH9KHTNAhrHxYUpuYUTo7cTWbYnYwMbWI5U7zyrQDjc
-         livHv4gqduLTU10UZp1Sj0P9wMJF5nmT3cPlSR6CuHKXr3NSkrOmruJo9BU+LcvtZcBh
-         VeRihLXBpTs8/er6olDTyEVqkYErUNuRTnXmtTJXXFJ8t/sN6qqQmgIf0w3zRLwKrI66
-         GMfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfdZGjTI0NVGuNUP3puWS9tMLv3tPpMRVUlgLSI1T9SBOcwWN9VRz+0acZp+RumB/Topcvek1RE9ZHKIYzagD3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7HZHiPuacFaifSyDDTml6rmpbjvUztzp5PtsVEGmHPVAUkS38
-	FYGYA4yt+UFaMFH+kxp620DJrZSKpiu+s1ANc9He5u20Kb2KwY6RFRR29SZBA4A=
-X-Google-Smtp-Source: AGHT+IGt2LV5vxwZxZEoCpaKVdX6X/qt4lXoMCZRBVwOgBfiAVMXupPwaDud3LSNSNf2EyLbJ5DHgQ==
-X-Received: by 2002:adf:ce10:0:b0:374:c15a:8556 with SMTP id ffacd0b85a97d-378c2d620d4mr1879565f8f.50.1726153238625;
-        Thu, 12 Sep 2024 08:00:38 -0700 (PDT)
-Received: from [192.168.1.61] ([84.67.228.188])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378956ddbbbsm14419453f8f.93.2024.09.12.08.00.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Sep 2024 08:00:38 -0700 (PDT)
-Message-ID: <71023502-b38b-44f9-8b04-96324b3bb461@linaro.org>
-Date: Thu, 12 Sep 2024 16:00:50 +0100
+        d=1e100.net; s=20230601; t=1726153943; x=1726758743;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0vEtamCOnYuoncchNofQc9nqoQ7AlgNKS0ZFixTi9Yk=;
+        b=qKWFSjwJtSoGUQf1E3Q75UdoKwOkMFkAG1ZcyRvko1lNDrEKJrA5C2qTfcIIzP0lF2
+         1tIHJNJQ7+qb6TOJ27juOkaQcotbH8ocYvCl57kKhoJYqwwX2mDd8OQtgruM2RSw+EgQ
+         T5PqxOt+DTRIJhPUHvGWBhXUeqZdmmYp3IjpogyhtFDQ3dpnSFGLh7PiExem+kCPMEWL
+         +Bq2ufeQ2k9277w2qhvjH1zzNR5EmDJAHvepRxLlK/jNayWTUXy3zC6KmY7q7nncG+dg
+         pt4hs3JMEjlMuOQFOJzPxaKbpbn3yJ1fYJmpYVawGZA568ZLP8NnTAFYuaq8W1JU+0jb
+         h12w==
+X-Gm-Message-State: AOJu0YycT81NP3BvCZnsmhJEl82AfTQLByqTYFrYxAFygmGJTtNfyU6H
+	zAuapTthBZhmCEIPYtLFoJjHEnf44BV2D06lqTyeFPWwGSO+4jyUsTXK+Od60nA8NNPW7q6OVLk
+	Uc7ORaA==
+X-Google-Smtp-Source: AGHT+IHpusjf0xjPxFiA1GZfxsDd5yBxUzacHglUD/J7pm0cxmuicT08JsLhs59QcAxNXs2hkgj50w==
+X-Received: by 2002:a05:600c:3581:b0:42c:c8be:4217 with SMTP id 5b1f17b1804b1-42cdb53192dmr25176075e9.11.1726153942753;
+        Thu, 12 Sep 2024 08:12:22 -0700 (PDT)
+Received: from localhost.localdomain ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42cb0dbcb6bsm171928845e9.30.2024.09.12.08.12.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2024 08:12:22 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org,
+	gankulkarni@os.amperecomputing.com,
+	coresight@lists.linaro.org,
+	leo.yan@arm.com,
+	scclevenger@os.amperecomputing.com
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Ben Gainey <ben.gainey@arm.com>,
+	Ruidong Tian <tianruidong@linux.alibaba.com>,
+	Benjamin Gray <bgray@linux.ibm.com>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/7] perf: cs-etm: Coresight decode and disassembly improvements
+Date: Thu, 12 Sep 2024 16:11:31 +0100
+Message-Id: <20240912151143.1264483-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] perf build: Require at least clang 16.0.6 to build
- BPF skeletons
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alan Maguire <alan.maguire@oracle.com>, Jiri Olsa <jolsa@kernel.org>,
- Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- linux-perf-users@vger.kernel.org
-References: <ZuGL9ROeTV2uXoSp@x1>
- <caad2d84-a8ff-4304-b8ab-04642ea18323@linaro.org> <ZuL_0V5jgaaEUOY_@x1>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <ZuL_0V5jgaaEUOY_@x1>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+A set of changes that came out of the issues reported here [1].
 
+ * First 2 patches fix a decode bug in Perf and add support for new
+   consistency checks in OpenCSD
+ * The remaining ones make the disassembly script easier to test
+   and use. This also involves adding a new Python binding to
+   Perf to get a config value (perf_config_get())
 
-On 12/09/2024 15:50, Arnaldo Carvalho de Melo wrote:
-> On Thu, Sep 12, 2024 at 03:40:32PM +0100, James Clark wrote:
->> On 11/09/2024 13:24, Arnaldo Carvalho de Melo wrote:
->>> Howard reported problems using perf features that use BPF:
-> 
->>>     perf $ clang -v
->>>     Debian clang version 15.0.6
->>>     Target: x86_64-pc-linux-gnu
->>>     Thread model: posix
->>>     InstalledDir: /bin
->>>     Found candidate GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/12
->>>     Selected GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/12
->>>     Candidate multilib: .;@m64
->>>     Selected multilib: .;@m64
->>>     perf $ ./perf trace -e write --max-events=1
->>>     libbpf: prog 'sys_enter_rename': BPF program load failed: Permission denied
->>>     libbpf: prog 'sys_enter_rename': -- BEGIN PROG LOAD LOG --
->>>     0: R1=ctx() R10=fp0
->>>
->>> But it works with:
->>>
->>>     perf $ clang -v
->>>     Debian clang version 16.0.6 (15~deb12u1)
->>>     Target: x86_64-pc-linux-gnu
->>>     Thread model: posix
->>>     InstalledDir: /bin
->>>     Found candidate GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/12
->>>     Selected GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/12
->>>     Candidate multilib: .;@m64
->>>     Selected multilib: .;@m64
->>>     perf $ ./perf trace -e write --max-events=1
->>>          0.000 ( 0.009 ms): gmain/1448 write(fd: 4, buf: \1\0\0\0\0\0\0\0, count: 8)                         = 8 (kworker/0:0-eve)
->>>     perf $
->>>
->>> So lets make that the required version, if you happen to have a slightly
->>> older version where this work, please report so that we can adjust the
->>> minimum required version.
->   
->> I wasn't able to reproduce the issue with either of these versions. But I
->> suppose it could be an issue with only 15.0.6.
-> 
-> Interesting, that complicates things, probably the best way then is to
-> try to build it, if it fails, mention that 15.0.6 is known to be
-> problematic and suggest working versions?
-> 
-> - Arnaldo
->   
+[1]: https://lore.kernel.org/linux-arm-kernel/20240719092619.274730-1-gankulkarni@os.amperecomputing.com/
 
-I'll try to build it and see. But Ubuntu 22 only has clang 11 to 15 so 
-making 16 the minimum could be an issue.
+Changes since V1:
+  * Keep the flush function for discontinuities
+  * Still remove the flush when the buffer fills, but now add
+    cs_etm__end_block() for the end trace. That way we won't drop
+    the last branch stack if the instruction sample period wasn't
+    hit at the very end.
+
+James Clark (7):
+  perf cs-etm: Don't flush when packet_queue fills up
+  perf cs-etm: Use new OpenCSD consistency checks
+  perf scripting python: Add function to get a config value
+  perf scripts python cs-etm: Update to use argparse
+  perf scripts python cs-etm: Improve arguments
+  perf scripts python cs-etm: Add start and stop arguments
+  perf test: cs-etm: Test Coresight disassembly script
+
+ .../perf/Documentation/perf-script-python.txt |   2 +-
+ .../scripts/python/Perf-Trace-Util/Context.c  |  11 ++
+ .../scripts/python/arm-cs-trace-disasm.py     | 109 +++++++++++++-----
+ .../tests/shell/test_arm_coresight_disasm.sh  |  63 ++++++++++
+ tools/perf/util/config.c                      |  22 ++++
+ tools/perf/util/config.h                      |   1 +
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +-
+ tools/perf/util/cs-etm.c                      |  25 ++--
+ 8 files changed, 205 insertions(+), 35 deletions(-)
+ create mode 100755 tools/perf/tests/shell/test_arm_coresight_disasm.sh
+
+-- 
+2.34.1
+
