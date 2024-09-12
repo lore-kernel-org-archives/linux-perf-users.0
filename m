@@ -1,108 +1,179 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01101BF324
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 22:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658482D7BF;
+	Thu, 12 Sep 2024 01:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726095383; cv=none; b=KFLSTKtcOqKoPsYiMj163CiHbdyBUkx1fYlHEWijEcH47l8DhrctyrZJttcZZU1si8/YrS3bEHmn5E1JE1ef7v+y6do2oCzBAmd5yd44DMuIi/+CUZN923zeIMtZQGciLPvatG8oR2gI20RshfG4Z0PbiJR2TSf2dKwogYVjrOU=
+	t=1726104606; cv=none; b=rKSiJTD9fb5iryIvnVjqWz/RuGB4iVrRYpOThXDYe0JE+wHoBxiHPuhED8gsdqMEHIbFoUxL8qcfeK9xF748Jjv5vGF3Sqt8YKhFbui6xXDah+uvLJ0JhNqVo9RCQiHNitKO2GOmq0kZdMeYHKAUKc52EmCMOhpO8iDG2C8QFZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726095383; c=relaxed/simple;
-	bh=ipxZRueJPfM2kml61M9W8yJZ32U+VLyyM0JqXDqlqBc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=k4uirgKJOEvaoZEu0kDmMwBSVNqwp1lbJ/CUuOhcIKaWheUibKidKVL2ST9VxNv2b3I+yoQ3xji6SWsGn8yJq4Hhv1j3yzyx5trbe5MofiH4HNdu4H1lKuconZ3QkI21VC3TPeTWQ/neeZYZjNDk0OS6QOWQWwkxxmItnh4+IyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IcHEw9JU; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1726104606; c=relaxed/simple;
+	bh=YnBG6MVQuPnj+84wi6UszEipgdwYiSRRUWpmwlFpoa0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TWdJCaiqstz4omCbNBDnB7I+byuAjvsg5PY1yolvQZe5xBEG1sfzRc3mO92pFZnvK/pWhTk2iSlBF2CSolcMevA3LM/J5W1zVa2iBDPvLMRc3wWJg11hGKbDOIa69iCauBi+k1NsxCY99TwTNLp0/F1c116/FcYGnvASw5B3Vys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jXRl7uD1; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IcHEw9JU"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e02a4de4f4eso903931276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Sep 2024 15:56:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXRl7uD1"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6d5a4615a56so3962247b3.0;
+        Wed, 11 Sep 2024 18:30:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726095381; x=1726700181; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mBS3D2KdJA6HsOBF2WNnyBQbckZXPd9OPRyAx0Hk9Is=;
-        b=IcHEw9JUhC0FwVkiG9HCZEMnNg+R8OBzt9NCj2Yn961V2AbK7m2xy5tuzPpUPDAQcL
-         xHeLT5XTZHJCItV206li6cgDf7Y9K77jo4pjmaj7g61lmUR/sr4egSG7BUCvzWKG20wn
-         RMDds6WjQpalefCM0SrHvY+x1aU7VXPoQrFgiHabE0/RjwSypjA3Geukf6It4u0mOftx
-         KB2DU5wt6YISZjw1AN9iSkVfiaUH/EgArtJM9qdJft1I3jGS+cEgoVDpBRhLIXRx7k/b
-         MgU74wBI1hwfxrziGqIexIhC10fZBXUi2KOXbacgni2f419VEVbPc+DlL6lnbgt0b48V
-         O4Wg==
+        d=gmail.com; s=20230601; t=1726104604; x=1726709404; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Oc4A9PUbXEgnIX4R83UKro/vj2MRuKfr14pnn04li2E=;
+        b=jXRl7uD1w7STv5GII17vZRkbCc4QVINffhTqlwsOKQv86t+YBKtEQUNDGg6dWO/qLh
+         EtMqYlhMo2oqGlfSBvsexNTwtWCtJu3BJzSFgMqu3b4wCHnKXc4eLahnvhCHvI4Xflgw
+         Erorwm/3mKxvG1WNHBhUSpUPU86GDZ4JSJ0lUQhnkcFiXFZUGTGAw9qMD9Tk/zSxeIq8
+         6o++oAnjVPIQROyRjA8BF7w8G2tOsIQptoMpT/hrRIZ88SX4H1gMImNZVq0Ah7+QUXtV
+         1pgp3ypSKsPa5KykcShpuw2W4aYQVSsTH4DaZq61yLxLA4U4mHX35ER3yFA6HOUm96gY
+         FfJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726095381; x=1726700181;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mBS3D2KdJA6HsOBF2WNnyBQbckZXPd9OPRyAx0Hk9Is=;
-        b=nyM148fIcsI2syHn+Fiff/PAh7+/BsF9r/wqpZYG94nZvGMs+1X3dRvpI8l3gKpd8R
-         TVvHTwiq3V0Ne/Ur1wuCYOm/pgHCKKj+1er5hz3UnLddROile4j8XYlp9ZrbEoq4JQ40
-         q6s4fdxCtue/zOjrBSTtOX2bRTe3h5D6xjWi2kETDp8pn2YfBf61VAP33KEWOqkHZiHs
-         RIY6pg8maO7qe+AcH1KVV9/QnXkd+JPaYepRaC7xXBCgExnYRxKwROszpxghha0y0sOE
-         ELNBXXMMDH9ZBLEOQMbtOEpKrRIterc3LXX6iF1SOFEhNjIKqEX6gUzN17NTlEIKwKvY
-         OTnw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAUDIXjkPuhs9HVMuWHXzopnnnK9ewzDGFwPLsdjhSFZk5p/9/MggSflQRRvZdFZ2aUOos0mi4FmNYxYlXaDMS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBgCxMZCI+ePEj/SIVtdKs+Q0lSiITdrGRQvr374HkpA+oz9NA
-	Xhy8jWcOX9YU1iZojxNokdGiaARs5o3eHap69uJLoivbG5VeiDgeocgdD7JLzsLJeb/Len/2g3h
-	rWQ==
-X-Google-Smtp-Source: AGHT+IEoqmUAJ1tvpPAJVzioyGi+fn8A8xKnd0a1Zk3H0MPaPxV6IznaYWnB2Res1beHC7Hgla2hvlhylw8=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:2946:0:b0:e13:e775:5a3c with SMTP id
- 3f1490d57ef6-e1d9db9e484mr1092276.2.1726095380603; Wed, 11 Sep 2024 15:56:20
- -0700 (PDT)
-Date: Wed, 11 Sep 2024 15:56:19 -0700
-In-Reply-To: <20240911222433.3415301-6-coltonlewis@google.com>
+        d=1e100.net; s=20230601; t=1726104604; x=1726709404;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Oc4A9PUbXEgnIX4R83UKro/vj2MRuKfr14pnn04li2E=;
+        b=UL0YEvkcagCCYwH3G072UNxDK+XFlCuWhInqVhJWEbBbSdbRlSYfehohI1IbrjPeqn
+         ZULmHWPijbP42GO8biBczSKIA3+7PqEFibOMscLMSBr3L2i39+oaE/N3OLAwL3QSE4jc
+         ywLiMbSGbqTL1nw0LWfQdVH4vh/llRq+Ssk+f3osDgv9mT8pSb7shvWro288VWm/NPzj
+         q0GU3I8qqNFA67PD+f6BI+AvcipcJ6UOWgy1o6r2Xmg7mCMxEfUVBD3pkOjmwa7X/OSj
+         NUWmcY51AhAVkDHZCw/U8yQ9YiuLtLW9aP02wgA7AUzXiTwFRmtjn9fAr1ChcVSgC04k
+         QDuw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4UcAEA+yT8hVVyMhyjIOz5XXhzmngxBPGWU+EiK8PH8ovWqSsFXxF5s2suIdqyYmtnY2hp+Flo2u5Lv2J5swYag==@vger.kernel.org, AJvYcCV9T7hfeDEF7wBmRScRJ734yOrZ5kqNvTg/I6ezyTnguPNVjOFIKdm+FFrmorv4asCtb/dbUeMF4T1212g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzMClhfoh/5amVoo0OOBxX1yIw/eo+Mm+yWk+/6jxGuTK/PNtI
+	zQgQw4Klb7fXUPDUv0fi8e60ToP1QNLdt24etdvYY5kaM45t334IBByF8AKcb1OOvkV6zrWobeT
+	60Cc5yIwgrxZKv0AfnPhAu3869Ug=
+X-Google-Smtp-Source: AGHT+IE+H6DHvC/Mz6o8AEsnRfwB7c8j0ptt/UcEiR7jTWtefm/c4gfpAtbee+sa6fjJl3dc9A/cpPflbhKSqZA/0aw=
+X-Received: by 2002:a05:690c:2a46:b0:6d1:f545:4ae6 with SMTP id
+ 00721157ae682-6dbb6b13b7emr12410537b3.16.1726104604212; Wed, 11 Sep 2024
+ 18:30:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240911222433.3415301-1-coltonlewis@google.com> <20240911222433.3415301-6-coltonlewis@google.com>
-Message-ID: <ZuIgE2-GElzSGztH@google.com>
-Subject: Re: [PATCH v2 5/5] perf: Correct perf sampling with guest VMs
-From: Sean Christopherson <seanjc@google.com>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Will Deacon <will@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <ZuH8qhuZB6mr9JvR@x1>
+In-Reply-To: <ZuH8qhuZB6mr9JvR@x1>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Wed, 11 Sep 2024 18:29:53 -0700
+Message-ID: <CAH0uvog5akiwUp+28w5u7+-j_fYvQLWahJ6YvEzWjdCz3Ky9Wg@mail.gmail.com>
+Subject: Re: perf trace: substruct BTF based pretty printing
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Namhyung Kim <namhyung@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 11, 2024, Colton Lewis wrote:
-> Previously any PMU overflow interrupt that fired while a VCPU was
-> loaded was recorded as a guest event whether it truly was or not. This
-> resulted in nonsense perf recordings that did not honor
-> perf_event_attr.exclude_guest and recorded guest IPs where it should
-> have recorded host IPs.
-> 
-> Rework the sampling logic to only record guest samples for events with
-> exclude_guest clear. This way any host-only events with exclude_guest
-> set will never see unexpected guest samples. The behaviour of events
-> with exclude_guest clear is unchanged.
+Hello Arnaldo,
 
-Nit, "with exclude_guest clear" is easy to misread as simply "with exclude_guest"
-(I did so at least three times).  Maybe 
+On Wed, Sep 11, 2024 at 1:25=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Hi Howard,
+>
+>         Not really a requirement on you to do work, just a some notes to
+> add to our discussion/experiment on using BTF to pretty print syscall
+> (and tracepoints/whatever) arguments:
+>
+> root@number:~# perf trace -e setitimer -p 5444 |& head -5
+>      0.000 ( 0.017 ms): Xwayland/5444 setitimer(value: (struct __kernel_o=
+ld_itimerval){})                   =3D 0
+>      0.050 ( 0.004 ms): Xwayland/5444 setitimer(value: (struct __kernel_o=
+ld_itimerval){})                   =3D 0
+>      0.142 ( 0.005 ms): Xwayland/5444 setitimer(value: (struct __kernel_o=
+ld_itimerval){})                   =3D 0
+>      0.174 ( 0.004 ms): Xwayland/5444 setitimer(value: (struct __kernel_o=
+ld_itimerval){})                   =3D 0
+>      0.293 ( 0.004 ms): Xwayland/5444 setitimer(value: (struct __kernel_o=
+ld_itimerval){})                   =3D 0
 
-  The behavior of exclude_guest=0 events is unchanged.
+First glance, yes this is a substruct, but we should be able to
+collect those substruct data in BPF, since it is substruct, not
+substruct pointer. It seems to be the same -p problem we discussed
+here:
 
-or
+Before:
+```
+perf $ perf trace -e open -p 3792392
+         ? (         ):  ... [continued]: open())
+                       =3D -1 ENOENT (No such file or directory)
+         ? (         ):  ... [continued]: open())
+                       =3D -1 ENOENT (No such file or directory)
+```
 
-  The behavior of events without exclude_guest is unchanged.
+We can see there's no output.
 
-I think it's also worth explicitly calling out that events that are configured
-to sample both host and guest may still be prone to misattributing a PMI that
-arrived in the host as a guest event, depending on the KVM arch and/or vendor
-behavior.
+After:
+```
+perf $ perf trace -e open -p 3792392
+     0.000 ( 0.123 ms): a.out/3792392 open(filename: "DINGZHEN",
+flags: WRONLY)                             =3D -1 ENOENT (No such file
+or directory)
+  1000.398 ( 0.116 ms): a.out/3792392 open(filename: "DINGZHEN",
+flags: WRONLY)                             =3D -1 ENOENT (No such file
+or directory)
+```
+
+I will test and fix it later.
+
+Thanks,
+Howard
+
+> root@number:~# strace -e setitimer -p 5444 |& head -5
+> strace: Process 5444 attached
+> setitimer(ITIMER_REAL, {it_interval=3D{tv_sec=3D0, tv_usec=3D5000}, it_va=
+lue=3D{tv_sec=3D0, tv_usec=3D5000}}, NULL) =3D 0
+> setitimer(ITIMER_REAL, {it_interval=3D{tv_sec=3D0, tv_usec=3D0}, it_value=
+=3D{tv_sec=3D0, tv_usec=3D0}}, NULL) =3D 0
+> setitimer(ITIMER_REAL, {it_interval=3D{tv_sec=3D0, tv_usec=3D5000}, it_va=
+lue=3D{tv_sec=3D0, tv_usec=3D5000}}, NULL) =3D 0
+> setitimer(ITIMER_REAL, {it_interval=3D{tv_sec=3D0, tv_usec=3D0}, it_value=
+=3D{tv_sec=3D0, tv_usec=3D0}}, NULL) =3D 0
+> root@number:~#
+> root@number:~#
+> root@number:~# grep -w value /sys/kernel/tracing/events/syscalls/sys_ente=
+r_rseq/format
+> root@number:~# grep -w value /sys/kernel/tracing/events/syscalls/sys_ente=
+r_setitimer/format
+>         field:struct __kernel_old_itimerval * value;    offset:24;      s=
+ize:8; signed:0;
+> print fmt: "which: 0x%08lx, value: 0x%08lx, ovalue: 0x%08lx", ((unsigned =
+long)(REC->which)), ((unsigned long)(REC->value)), ((unsigned long)(REC->ov=
+alue))
+> root@number:~# pahole __kernel_old_itimerval
+> struct __kernel_old_itimerval {
+>         struct __kernel_old_timeval it_interval;         /*     0    16 *=
+/
+>         struct __kernel_old_timeval it_value;            /*    16    16 *=
+/
+>
+>         /* size: 32, cachelines: 1, members: 2 */
+>         /* last cacheline: 32 bytes */
+> };
+>
+> root@number:~# pahole -E __kernel_old_itimerval
+> struct __kernel_old_itimerval {
+>         struct __kernel_old_timeval {
+>                 /* typedef __kernel_long_t */ long int           tv_sec; =
+                /*     0     8 */
+>                 /* typedef __kernel_long_t */ long int           tv_usec;=
+                /*     8     8 */
+>         } it_interval; /*     0    16 */
+>         struct __kernel_old_timeval {
+>                 /* typedef __kernel_long_t */ long int           tv_sec; =
+                /*    16     8 */
+>                 /* typedef __kernel_long_t */ long int           tv_usec;=
+                /*    24     8 */
+>         } it_value; /*    16    16 */
+>
+>         /* size: 32, cachelines: 1, members: 2 */
+>         /* last cacheline: 32 bytes */
+> };
+>
+> root@number:~#
