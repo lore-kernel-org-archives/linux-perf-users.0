@@ -1,88 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3701D18890E
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 14:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6365F1AE053
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 14:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726151909; cv=none; b=BCOcB029KXDHRrXq2liAHot3UCze7NuJgN5ttd/P+JFUfvEjU4Yx7EwDZ8ZTP3SxI0Pqv73zuMxnLXOoYL5jgMtSFVsIJBosFxQVdS3WGDzI3yFPvye5XO6etBFweuhr1GGeLtRWBURAHhkS0Jy9EEfhBGNhth1sbmNcSSsERmU=
+	t=1726152026; cv=none; b=AJRXOmHdwHPw54uZCuRuaQ471NNIy10XiF4rEZBQVU7DldPuuI8K+LfluqGzofCUDoIzgFyEAlt4/sepsKmg5dRxb60oEIA62mZ+F6rbhOnpZpqoQwGjfWXdP3GhE4ungjgDihQQbe/h0Z3Brk6duJomvcY567lg3qrGpI8viWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726151909; c=relaxed/simple;
-	bh=4oOOY3YK0urQv04VanAjjpzoPGa/0G46xeM+TJ2AvoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lom2Y0hRE96HyeYKIUsoHoXZl1e2fuMyZQS/Ueulf41bT4bhpZ0aaZDXsuQKhQG2ftZL0AcjrlBgeoapFKC6hjxRnDtllmGigy4ekCNHcM4wcGgYv5DfIr+aP9ICMpcxpqSLIUS2WKSnDKO5m4TbWIl1xh8HvVJM4CVvx84qDJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lu0UPDU4; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1726152026; c=relaxed/simple;
+	bh=7PsnzH/zX1w9wQh7QhZfA3aCh3LfvKI92gde2iSDiFo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ugX6aYW47JKxks8lIyoMPV5UhInRsJk+QOJID95d4uoY/NdA9sHRHg/NLiimwPDGZ8vhKia7dx+1I8PAJCcLck4WsUlR6yy9AV6cmWERF64lZ0rO6jY0D+nguxjTICB8/a2T7FBkT7LgRQ8mwqwJYQLRs5mdeIK9zsJR0PgcWFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jveiMRDo; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lu0UPDU4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726151908; x=1757687908;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4oOOY3YK0urQv04VanAjjpzoPGa/0G46xeM+TJ2AvoY=;
-  b=Lu0UPDU4Lhfh+5qYm/U2YzX+irYll3/kbXoYEq88r86SOZ0bLLKSILTX
-   X/vf5W2XtCBc6eeCJDqZmVG1ShfGTVA/m2N0H0C/4RThvIyK3B1j047hz
-   NJM/5TURu6uIIio/8wnLPZ4+KcDIl2sh6OpsSuFXazWAqICk07AubRapY
-   L9KZEZ8rAphZm/o1k9+ZPUnTVyXZ1oXDob7Twmk0bpUwOV/2pZlgB2ugb
-   LY/t/eQOGZBmTiabqZq5GPVbDU3UmW8tZuVEmFcNkWBQgTWzJwIyN+HY9
-   ZjEaYD8Sj/TmoYv8Z5jX69qSmpkLvDEGkltRKekFYA5vTTlPIzeUXe72x
-   w==;
-X-CSE-ConnectionGUID: UfO3kPenTNe+f4mgJ5dcTw==
-X-CSE-MsgGUID: PFq7o7I6QSWNipDqmavc6w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11193"; a="24831685"
-X-IronPort-AV: E=Sophos;i="6.10,223,1719903600"; 
-   d="scan'208";a="24831685"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2024 07:38:23 -0700
-X-CSE-ConnectionGUID: EWWfbTp1Tf+Gi4Gt3VkIYg==
-X-CSE-MsgGUID: i5/BzXoaQ9qI4Ro7M3rZEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,223,1719903600"; 
-   d="scan'208";a="105173555"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2024 07:38:23 -0700
-Date: Thu, 12 Sep 2024 07:38:21 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, adrian.hunter@intel.com,
-	namhyung@kernel.org
-Subject: Re: [PATCH v1 01/10] perf: Avoid buffer overflow in python register
- interface
-Message-ID: <ZuL83U3PsOl44bvJ@tassilo>
-References: <20240905015300.2124798-1-ak@linux.intel.com>
- <20240905015300.2124798-2-ak@linux.intel.com>
- <ZuLhk6yGrr2HET6d@x1>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jveiMRDo"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42bbffe38e6so8671025e9.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 07:40:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1726152023; x=1726756823; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kuBQUYzd7Xk8zQ7Lv73CQH3VywELyjU4bkUJu8mOPEg=;
+        b=jveiMRDotR92zT8BmKydamIgZJ1f4f8vErV9KPxrAvJ5d5ha93JRA4ooCUqw8Qb0ff
+         G9hzE5GpB1qdAaH/V261Xmn3TlX0tVOrKd60DefjhZLj7wQtG7JPxDs/KPunnDlHhCD2
+         aqpS3PNgO1T4T1hdJO2aZHjSuOWCDp19NXm+S8JU0RBVh/PH1CkzMm3hIAhpfRnBpQ1O
+         gZ7yZLyaVjF5NoMugMuCcxph+Fo6dNxLZAqFWuAnNOTreQUyHcsCbHCVDyV/u8rQ5Ihz
+         5r+muXUxAzroqxdk0b/WvBXUPxuXahLYcVqSXcergB7zvFWV/din4kKDyS+6fBnJOM4m
+         fOvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726152023; x=1726756823;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kuBQUYzd7Xk8zQ7Lv73CQH3VywELyjU4bkUJu8mOPEg=;
+        b=i4ikbHjjxd9v8cJpZWEvFoMfQ6tP++9tlcB1k/M8PBjwk0XoCqYw12O6qwki1NLVfZ
+         E3dr7CKDSx9BgqUDnHkHLpvbgpEAkJXfOjoGIlZXjbLc8fhLlQFjOM7CqaRtvAHY1yEZ
+         xnpF0czuI3bw83WmFLB4Nh+2c74DW35A33k4zUVqdoqioeMODgWT5x30oEDS1DVYizY6
+         pGfZKI7a14MSb6LlwxD9sl5rWrmqffOuEzaQl3GkoplZMz7OicKkZvHK5cPeNVH+z2dE
+         gLDRrdHR5+UxVQZIdL9ajXhKe4Eu+lHzIjt/mV9h8Uu3YwCbRJK+pIOfowLg80KRHgv7
+         JXGg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2KHFtOMKWU1MOySh+MH1CvnJQIHn1trOiri5RYhIifLwkcNZCe6kcA7rSAe4cbsyXkYVB0qv/0zpe2lKxGQdT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcXKcld5+LpopcE7zTjiVvzzByofwwIc19gtYT7PGhBEHtb/iy
+	75AujBJ4RZCseLUwlcbWZFn5gF06K54RVJ1ZpkCeKfv8XVzxjzYdRwO5ybNINn4=
+X-Google-Smtp-Source: AGHT+IH/FtGHzSI/SrDj/IcyFNHIZ5YZ4pPBHUw8767ElxUadBbxNnErWTIC1dcQddhP2c8LSouX3A==
+X-Received: by 2002:a05:600c:4446:b0:42c:a580:71cf with SMTP id 5b1f17b1804b1-42cdb571ec0mr25230455e9.30.1726152021932;
+        Thu, 12 Sep 2024 07:40:21 -0700 (PDT)
+Received: from [192.168.1.61] ([84.67.228.188])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42cbbbf8a4csm107767085e9.47.2024.09.12.07.40.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Sep 2024 07:40:19 -0700 (PDT)
+Message-ID: <caad2d84-a8ff-4304-b8ab-04642ea18323@linaro.org>
+Date: Thu, 12 Sep 2024 15:40:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZuLhk6yGrr2HET6d@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] perf build: Require at least clang 16.0.6 to build
+ BPF skeletons
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Howard Chu <howardchu95@gmail.com>
+Cc: Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alan Maguire <alan.maguire@oracle.com>, Jiri Olsa <jolsa@kernel.org>,
+ Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-perf-users@vger.kernel.org
+References: <ZuGL9ROeTV2uXoSp@x1>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <ZuGL9ROeTV2uXoSp@x1>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 12, 2024 at 09:41:55AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Sep 04, 2024 at 06:50:09PM -0700, Andi Kleen wrote:
-> > Running a script that processes PEBS records gives buffer overflows
-> > in valgrind. The problem is that the allocation of the register
-> > string doesn't include the terminating 0 byte. Fix this. I also replaced
-> > the very magic "28" with a more reasonable larger buffer that should
-> > fit all registers. There's no need to conserve memory here.
+
+
+On 11/09/2024 13:24, Arnaldo Carvalho de Melo wrote:
+> Howard reported problems using perf features that use BPF:
 > 
-> I applied this one already.
+>    perf $ clang -v
+>    Debian clang version 15.0.6
+>    Target: x86_64-pc-linux-gnu
+>    Thread model: posix
+>    InstalledDir: /bin
+>    Found candidate GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/12
+>    Selected GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/12
+>    Candidate multilib: .;@m64
+>    Selected multilib: .;@m64
+>    perf $ ./perf trace -e write --max-events=1
+>    libbpf: prog 'sys_enter_rename': BPF program load failed: Permission denied
+>    libbpf: prog 'sys_enter_rename': -- BEGIN PROG LOAD LOG --
+>    0: R1=ctx() R10=fp0
 > 
-> But you used the wrong list address, perf-tools-users@vger, I'm fixing
-> this up now to linux-perf-users@vger so that the message reaches the
-> mailing list.
+> But it works with:
 > 
-> I waited a bit for reviewers but then realized the problem with the list
-> address when trying to use b4 to fetch it from lore :-\
+>    perf $ clang -v
+>    Debian clang version 16.0.6 (15~deb12u1)
+>    Target: x86_64-pc-linux-gnu
+>    Thread model: posix
+>    InstalledDir: /bin
+>    Found candidate GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/12
+>    Selected GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/12
+>    Candidate multilib: .;@m64
+>    Selected multilib: .;@m64
+>    perf $ ./perf trace -e write --max-events=1
+>         0.000 ( 0.009 ms): gmain/1448 write(fd: 4, buf: \1\0\0\0\0\0\0\0, count: 8)                         = 8 (kworker/0:0-eve)
+>    perf $
+> 
+> So lets make that the required version, if you happen to have a slightly
+> older version where this work, please report so that we can adjust the
+> minimum required version.
+> 
 
-I sent it twice. The second version had the right address.
+I wasn't able to reproduce the issue with either of these versions. But 
+I suppose it could be an issue with only 15.0.6.
 
-But you were in cc and got both versions, sorry.
+$ clang -v
+Ubuntu clang version 15.0.7
+Target: x86_64-pc-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/11
+Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/12
+Selected GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/12
+Candidate multilib: .;@m64
+Selected multilib: .;@m64
 
--Andi
+
+Ubuntu clang version 14.0.0-1ubuntu1.1
+Target: x86_64-pc-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/11
+Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/12
+Selected GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/12
+Candidate multilib: .;@m64
+Selected multilib: .;@m64
