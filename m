@@ -1,63 +1,66 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09801878
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 19:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8941BFDE5
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 19:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726167832; cv=none; b=EkfhAH2l4JtdRZQtoKbCHJMInlvIXplttIHR9GJMyr41w8/ttbNrn0h+uVHSoGgSJMha3J6Kq7ed6IAUA54dlTlX988yIAyzqpI8Y8gmFXgKLOvZE5qwPrPhPkdJMqn1HcQ67O/Bkv/QZD3roEYrwTiEi0cncsh5iilUwuiy95E=
+	t=1726167834; cv=none; b=m+iP8eOFts3+17f972r0Iyt7gNb/2w+zsuvOUtIVAts6qhaLb6e91vP/9MfhgGBWzuE+6dsyDmAJfLCRuMgwf5gf000dFrp6w1K+o6UnZCnzmYl6RryafQ1WEtVzHNctGvROwrDrV/Zcv9g0+Ug2j+15GxotbCTaTq+6VDaHxVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726167832; c=relaxed/simple;
-	bh=jq906hnsiq4s2n3KQOjk+80IdRcLz6pmPIU3auCg/i8=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=BBVE5AsxbJ/IH5q+lDr+NnKhpHJexLbpKkYxaF5EmjWLjcHDZ7J5OiU5lKGxklFQ4sl1LIQJVqSLDwcYXnaoASTtZfnTg9wbyOb5xawUt9rBLu9xFYkPMlTGLPdsZxpad5oueShuq+EawS2ymExvZO5D/HnnePMDYFkLJnErYEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lpByxZz9; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1726167834; c=relaxed/simple;
+	bh=T4reglaGk2agCmsig/vvfDo/NC8b4AeSgIq7WlrArvk=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=Ez7ThS+Rik5ZhDqMPIfWh04fZe5DnlhyYicb+8X0J4puozp8Q6UgmQyOjXqSSfezgmy+Q+WVztyMWuRprGzrxgAZQwXuKRqxfSUpgtcyIr9H0mc3k1cCzyCb6t1cDKdXCpMjSky/wclrq/6Eth9QhCUrX8K7Y6Eg2ZUeyf08MH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xLDjdP1w; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lpByxZz9"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-69a0536b23aso28708637b3.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 12:03:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xLDjdP1w"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e1aa529e30eso311178276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 12:03:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726167830; x=1726772630; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2sNGvL2VOu0liFGPuoqfsWHmc/NgIkXkJDvIf2DAgOg=;
-        b=lpByxZz97LvYG/1S6b8SpTUAackgtmYJnC1wybljKMzC5XCTAWsJHh8Ziimtf6iawF
-         W5K1UYRwZ+9JlVuDbAlkONRASfdy/V2rX3JviPlji2L+0W1oeWIL5YgEt53vlRossmcS
-         8Zl8N/0sDqzsiPVudJp12nFSMXZjgaDxZJTVUciXxr8Q5kYwZo9xrp9NwDQFhGziHrhv
-         DnzNbCLElu9rAxz+ve+eCLCn/OWcpW7QjnCZ7rztKVz5in4Y1yGLzOcUmAZwrm5OM5PL
-         JBqNCji6omdMYLa38f1SAbhobGekiCwBbjXnM2P9C0gYQQTscuwCIQLLJxGw9L0j5cHV
-         p0kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726167830; x=1726772630;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1726167832; x=1726772632; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2sNGvL2VOu0liFGPuoqfsWHmc/NgIkXkJDvIf2DAgOg=;
-        b=oUm69qC0gjXkhfwGahRrNUBLFtdBZdl9WrF8uu0sqv6jDYRHrTuTLKabLATeuohJS2
-         LCIPgXBXVuzKk9el7fb21yKS0oP3E/mhmb8KZlNP7I5a7ygQ3hdq0dZL6Dvm4MRMnY9s
-         ZF+KFep5DYb1nDMD+ekHZDkFG/8e1Sh1HzxCS7oRIOGfU8XlP7bX551uVUSQJcm/x1hv
-         2WJXMegRdTCM1FeMg10a2Zde8eDOFE1Tu/ytI4Y76szu5JUWYMJ4aF9RgHE7G2yiVXTf
-         T5C0dg5aKl0tIIH/FuUA1Ez4iGZn+/NhdMYyHl4f6M+qwX8DH4CAyKJZ4Jqb3677ed9a
-         8QEg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0WN578qAHH/zmLooAzfwJWZKhJ0YW9xevtX1V4DEbMJ4iwmhVOeQC0Z6X80GWOiHieTU2X4zKIX/gS7Xfq373@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzsvalZbs1J8xW/SsaucafPz0kGJ/eagudW9pvX1wE+fFJgdKw
-	4mZktGdKEjgNz/70brj8iJlWFwYrE1/0tAwbmh1LS/9RPKT5s1tzYZSkfsBAqE/yv5zmf5/dw5a
-	Nl4dXJg==
-X-Google-Smtp-Source: AGHT+IE2Py4W0sZ2T5cgNqZ17XiwhcfJ06rRdCbN0ZeLEM3LB0/2WFJy/hiLXZvpx6BVirC8q0nhe9qfZ2k8
+        bh=hQMBpXmFrHu0lZBKkOWtMtzvpev+htAWAEEd8xjV15g=;
+        b=xLDjdP1we35/IW6y1CWo00x7bSphROdFTc3OoIzsa7c/jm9umH7qQM3HO4QJ+ATgGL
+         grEQNnL3JoXO3k13bHZ88pL/Z7QLupghN8OIDlNNDxpD9AUXe5il+5r7bSe1i1ncEBJd
+         /YUfE7XWm0dxEdrfL385keCNsws4o3OPK6lxC6hXoMMAwqf149iy6bA9AtoKTmoC+0wY
+         5U2nLccrrVjLHm1SszfeSlZBwiNDW8hY7j8LyP45/kVRnxBPtanTHTH3FG4NXyyY146/
+         sReOKnriK06kWf6B2zOwj16K6scmZjjgVyGPnoREZ9s4axIQCABuYG9iEeXtl46LVqkd
+         Sz/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726167832; x=1726772632;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hQMBpXmFrHu0lZBKkOWtMtzvpev+htAWAEEd8xjV15g=;
+        b=xGhv+I3eHxZc52TGweGQuMJBeDSyq+9uZ57OHa8fgzVN7Up9QxBcCBmHQ9+n1H1nnK
+         uokdt19Z22RtR4aHuR2MmC1WM+skkA0SnkKixvIe+vvHpUpjrs6EVLG9UhQwd9fg1aRV
+         DA+kOcO77yAlqbWWUpVwpuxIs25uU5XfZrArBp8Zy9Bw0iMQ+XMMhT+cr3phVWR5+MZu
+         l5NvrGZupwWgRi4DswoIYNDmnNino+CZmeskFAfjnktcl2oLCXQnbOlWzY4mTBRlnH3W
+         48Zqm2P2Emlke1O7oLNw0Q/c5u5uQGPQvstsc5uRP+2OKDwPzwNfhmHxcDAQ3uNJGipL
+         3DMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHtP6Lxxy088BtRIPBlwve6A2ErRNIBMm54+QudhkLKP2id+CM3HQ5yQBB76dBuGgDNeL9YMOEpuhWPXGPXEB8@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKtQrhFGy7U4/7TYR6aGN9H4FFp5oKGfI56cy2dm0NnA8F6ykO
+	K5yLT9kWZqYrR+Zgw31/3Zf8sPZxksOxCwEtWZ5N7L7PYBOrdcrmLkGcLG1gqyh6gd4jkm/y/F7
+	ESiF1Mg==
+X-Google-Smtp-Source: AGHT+IGZL/HvVahdSTWcK3oVoLbA+pDzQ5l89m9u+mrgImC94FUUrwM2wgkmYZVeutyA7IjYNfBdE82i96qy
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:cf0e:7a99:e672:3862])
- (user=irogers job=sendgmr) by 2002:a05:690c:7449:b0:6db:cddc:a202 with SMTP
- id 00721157ae682-6dbcddca3d4mr15947b3.5.1726167829840; Thu, 12 Sep 2024
- 12:03:49 -0700 (PDT)
-Date: Thu, 12 Sep 2024 12:03:27 -0700
-Message-Id: <20240912190341.919229-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:dc4e:0:b0:e0b:a2a7:df77 with SMTP id
+ 3f1490d57ef6-e1daff5b91emr387276.2.1726167832049; Thu, 12 Sep 2024 12:03:52
+ -0700 (PDT)
+Date: Thu, 12 Sep 2024 12:03:28 -0700
+In-Reply-To: <20240912190341.919229-1-irogers@google.com>
+Message-Id: <20240912190341.919229-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240912190341.919229-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.662.g92d0881bb0-goog
-Subject: [PATCH v2 00/13] Tool and hwmon PMUs
+Subject: [PATCH v2 01/13] perf pmu: Simplify an asprintf error message
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -82,105 +85,37 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Rather than have fake and tool PMUs being special flags in an evsel,
-create special PMUs. This allows, for example, duration_time to also
-be tool/duration_time/. Once adding events to the tools PMU is just
-adding to an array, add events for nearly all the expr literals like
-num_cpus_online. Rather than create custom logic for finding and
-describing the tool events use json and add a notion of common json
-for the tool events.
+Use ifs rather than ?: to avoid a large compound statement.
 
-Following the convention of the tool PMU, create a hwmon PMU that
-exposes hwmon data for reading. For example, the following shows
-reading the CPU temperature and 2 fan speeds alongside the uncore
-frequency:
-```
-$ perf stat -e temp_cpu,fan1,hwmon_thinkpad/fan2/,tool/num_cpus_online/ -M UNCORE_FREQ -I 1000
-     1.001153138              52.00 'C   temp_cpu
-     1.001153138              2,588 rpm  fan1
-     1.001153138              2,482 rpm  hwmon_thinkpad/fan2/
-     1.001153138                  8      tool/num_cpus_online/
-     1.001153138      1,077,101,397      UNC_CLOCK.SOCKET                 #     1.08 UNCORE_FREQ
-     1.001153138      1,012,773,595      duration_time
-...
-```
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/pmu.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-Additional data on the hwmon events is in perf list:
-```
-$ perf list
-...
-hwmon:
-...
-  temp_core_0 OR temp2
-       [Temperature in unit coretemp named Core 0. crit=100'C,max=100'C crit_alarm=0'C. Unit:
-        hwmon_coretemp]
-...
-```
-
-v2: Address Namhyung's review feedback. Rebase dropping 4 patches
-    applied by Arnaldo, fix build breakage reported by Arnaldo.
-
-Ian Rogers (13):
-  perf pmu: Simplify an asprintf error message
-  perf pmu: Allow hardcoded terms to be applied to attributes
-  perf parse-events: Expose/rename config_term_name
-  perf tool_pmu: Factor tool events into their own PMU
-  perf tool_pmu: Rename enum perf_tool_event to tool_pmu_event
-  perf tool_pmu: Rename perf_tool_event__* to tool_pmu__*
-  perf tool_pmu: Move expr literals to tool_pmu
-  perf jevents: Add tool event json under a common architecture
-  perf tool_pmu: Switch to standard pmu functions and json descriptions
-  perf tests: Add tool PMU test
-  perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs
-  perf test: Add hwmon "PMU" test
-  perf docs: Document tool and hwmon events
-
- tools/perf/Documentation/perf-list.txt        |  15 +
- tools/perf/arch/arm64/util/pmu.c              |   5 +-
- tools/perf/arch/x86/util/intel-pt.c           |   3 +-
- tools/perf/arch/x86/util/tsc.c                |  18 +-
- tools/perf/builtin-list.c                     |  13 +-
- tools/perf/builtin-stat.c                     |   7 +-
- .../pmu-events/arch/common/common/tool.json   |  74 ++
- tools/perf/pmu-events/empty-pmu-events.c      | 208 +++--
- tools/perf/pmu-events/jevents.py              |  16 +-
- tools/perf/tests/Build                        |   2 +
- tools/perf/tests/builtin-test.c               |   2 +
- tools/perf/tests/hwmon_pmu.c                  | 243 ++++++
- tools/perf/tests/pmu.c                        |   3 +-
- tools/perf/tests/tests.h                      |   2 +
- tools/perf/tests/tool_pmu.c                   | 111 +++
- tools/perf/util/Build                         |   2 +
- tools/perf/util/evsel.c                       | 287 +-----
- tools/perf/util/evsel.h                       |  28 +-
- tools/perf/util/expr.c                        |  93 +-
- tools/perf/util/hwmon_pmu.c                   | 818 ++++++++++++++++++
- tools/perf/util/hwmon_pmu.h                   | 154 ++++
- tools/perf/util/metricgroup.c                 |  35 +-
- tools/perf/util/parse-events.c                |  62 +-
- tools/perf/util/parse-events.h                |   5 +-
- tools/perf/util/parse-events.l                |  11 -
- tools/perf/util/parse-events.y                |  16 -
- tools/perf/util/pmu.c                         | 104 ++-
- tools/perf/util/pmu.h                         |   9 +-
- tools/perf/util/pmus.c                        |  16 +
- tools/perf/util/pmus.h                        |   3 +
- tools/perf/util/print-events.c                |  36 +-
- tools/perf/util/print-events.h                |   1 -
- tools/perf/util/stat-display.c                |  14 +-
- tools/perf/util/stat-shadow.c                 |  22 +-
- tools/perf/util/tool_pmu.c                    | 508 +++++++++++
- tools/perf/util/tool_pmu.h                    |  56 ++
- tools/perf/util/tsc.h                         |   2 +-
- 37 files changed, 2376 insertions(+), 628 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/common/common/tool.json
- create mode 100644 tools/perf/tests/hwmon_pmu.c
- create mode 100644 tools/perf/tests/tool_pmu.c
- create mode 100644 tools/perf/util/hwmon_pmu.c
- create mode 100644 tools/perf/util/hwmon_pmu.h
- create mode 100644 tools/perf/util/tool_pmu.c
- create mode 100644 tools/perf/util/tool_pmu.h
-
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 61bdda01a05a..779db2ac06f0 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1466,13 +1466,12 @@ static int pmu_config_term(const struct perf_pmu *pmu,
+ 		if (err) {
+ 			char *err_str;
+ 
+-			parse_events_error__handle(err, term->err_val,
+-				asprintf(&err_str,
+-				    "value too big for format (%s), maximum is %llu",
+-				    format->name, (unsigned long long)max_val) < 0
+-				    ? strdup("value too big for format")
+-				    : err_str,
+-				    NULL);
++			if (asprintf(&err_str,
++				     "value too big for format (%s), maximum is %llu",
++				     format->name, (unsigned long long)max_val) < 0) {
++				err_str = strdup("value too big for format");
++			}
++			parse_events_error__handle(err, term->err_val, err_str, /*help=*/NULL);
+ 			return -EINVAL;
+ 		}
+ 		/*
 -- 
 2.46.0.662.g92d0881bb0-goog
 
