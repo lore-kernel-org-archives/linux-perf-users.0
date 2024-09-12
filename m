@@ -1,45 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1EE029CF6;
-	Thu, 12 Sep 2024 12:14:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B87E1A303C
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 12:41:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726143270; cv=none; b=RklRFwYcW/Kxdd9USibMBihsoe1Cf0zR/zhXPJGLz5n4096Vp9BWAX5EEkVfeWlnrZIa9bjO2MJekac2tnjOe7YrMzSTv7ImIQZOzCa8o3LHUhcr+urp1lz+yK7AqyFON1HVZzr4AmV3farWLL8SRy/aHtAHqtyr2LuzbGVQUyA=
+	t=1726144920; cv=none; b=bbyc+Ehnt8w8K8LjM5ccMforWIwBJICqGVJT68NB35CYZ/01D8n1UVspPRtTIyWHGoMu505OZYHsdPhSThYJhronRRcb2/eb687EX7ZWSBntFNWYRni5GvPMMrLLGwrhXSjOOB6SG0KKfNBpFWPp1eYzYXD1vMHpYiYIAQX8U0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726143270; c=relaxed/simple;
-	bh=LDj2BB55PD5Fd6BGi69vq4kA8GqCGYuml3ehTb4uRjs=;
+	s=arc-20240116; t=1726144920; c=relaxed/simple;
+	bh=2tQ9EbsjgluWrv2hPOhzsdoBAvP8wO8eIJ7FHjdiNuo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B4c6RWcI13RWkazmEi3npC9n5p8iXoQbU0s9Czu19paVC4U2IlQf05zuozyq0XhuTyBwk2B4lEUSH9USZdpAvXMtG6qI9iWtttbksZim5BDl7++1o89ievBcESqoS0P8GM2o2cD3gK/SH2QaYQHvp1MQLMjfJXLXowsfhv+C46s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKrsQ3dG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uFcf3+XYKgTjriYmCp4sw6YjvTeYQZB7mRe1miI1AtVAV6FGQ7g7j3p1YUofEbjdeQqO0QS3PKiBXhdGfz4v7Bgs97IhUh/t7Ul5akbaHqqd2f6RjVkQewQfqA+pGAWpFcKNzfSFjhsaosnWh8d9zVHnFDHCCI0R0KZdUdJw8nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZzDxoi5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKrsQ3dG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3EE3C4CEC4;
-	Thu, 12 Sep 2024 12:14:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZzDxoi5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2325C4CEC3;
+	Thu, 12 Sep 2024 12:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726143270;
-	bh=LDj2BB55PD5Fd6BGi69vq4kA8GqCGYuml3ehTb4uRjs=;
+	s=k20201202; t=1726144919;
+	bh=2tQ9EbsjgluWrv2hPOhzsdoBAvP8wO8eIJ7FHjdiNuo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DKrsQ3dGHSRyiTPrgsdPrNPmodaASDBZv1AAGOimmjSpiYPKc5Bsk3WhrsPhtSxWN
-	 zK1W0NmS4DrYmC6cW4/8BumcPumPGZBuAZpkIsdn0UIF0ojw5dOfJi/FGk74XWMB6Z
-	 /AP3ZGP3m6PMpXw30hww681wBZ/TAqJ9aqjzlcP7IKhzpleqkISe5mK5jlGjNSCm/f
-	 o3ft+DXhOg5JQ99MEKfJybAdXM6DozvENtSHRRGRB3Uv6tbloOosOhZo22B26F4pCa
-	 JaQUkemGRAfMKLa8MiX+w1/u9JrNJLgCCgw88k88lvAY2eCh5xDjTAA3F2fvJdtPl9
-	 CilbJuOAD+MlA==
-Date: Thu, 12 Sep 2024 09:14:26 -0300
+	b=EZzDxoi5y4TuwOv/HoLEFi56O0Ge1bg7Up5dFJzZpRjTbxZStvXu9NMNAUwEDKorz
+	 NkZqc/DslooWOx2ajwX5u2CsDp74BdW83sNqWWdemasTFBdwZaQy4DqNJU42fSAfOA
+	 PnFFs0Qh0SmRDSYDzoTw/OnVMpA6znyKwy44qUnmwbfqCgf7ZHzwwzyf3uySBghzW3
+	 T/9wSoV9XhFgQGuOuEQMbtX8FfmCJH+nlYQnhZEEfVXHOeyvC5/RBm+BS2mi1ScXhY
+	 PlW6Lmhh1CGr7uTOm4zY3zBj4aYgTjO1P+Oloc0MZT+9Gk4toLuknbu/uqY5QzaJuO
+	 jJRKwD9Zz8KnQ==
+Date: Thu, 12 Sep 2024 09:41:55 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Changbin Du <changbin.du@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf buildid-cache: recognize vdso when adding files
-Message-ID: <ZuLbImKneZj2afcm@x1>
-References: <20240912120303.2294175-1-changbin.du@huawei.com>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, adrian.hunter@intel.com,
+	namhyung@kernel.org
+Subject: Re: [PATCH v1 01/10] perf: Avoid buffer overflow in python register
+ interface
+Message-ID: <ZuLhk6yGrr2HET6d@x1>
+References: <20240905015300.2124798-1-ak@linux.intel.com>
+ <20240905015300.2124798-2-ak@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,93 +44,174 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240912120303.2294175-1-changbin.du@huawei.com>
+In-Reply-To: <20240905015300.2124798-2-ak@linux.intel.com>
 
-On Thu, Sep 12, 2024 at 08:03:03PM +0800, Changbin Du wrote:
-> Identify vdso by file name matching. The vdso objects have name
-> as vdso[32,64].so[.dbg].
-> 
-> $ perf buildid-cache -a /work/linux/arch/x86/entry/vdso/vdso64.so.dbg
-> 
-> Without this change, added vdso using above command actually will never
-> be used.
-> 
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-> Tested-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+On Wed, Sep 04, 2024 at 06:50:09PM -0700, Andi Kleen wrote:
+> Running a script that processes PEBS records gives buffer overflows
+> in valgrind. The problem is that the allocation of the register
+> string doesn't include the terminating 0 byte. Fix this. I also replaced
+> the very magic "28" with a more reasonable larger buffer that should
+> fit all registers. There's no need to conserve memory here.
 
+I applied this one already.
 
-Thanks, applied to perf-tools-next,
+But you used the wrong list address, perf-tools-users@vger, I'm fixing
+this up now to linux-perf-users@vger so that the message reaches the
+mailing list.
+
+I waited a bit for reviewers but then realized the problem with the list
+address when trying to use b4 to fetch it from lore :-\
 
 - Arnaldo
  
-> ---
-> This patch is separated from the series "perf: Support searching local
-> debugging vdso or specify vdso path in cmdline".
+> ==2106591== Memcheck, a memory error detector
+> ==2106591== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+> ==2106591== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+> ==2106591== Command: ../perf script -i tcall.data gcov.py tcall.gcov
+> ==2106591==
+> ==2106591== Invalid write of size 1
+> ==2106591==    at 0x713354: regs_map (trace-event-python.c:748)
+> ==2106591==    by 0x7134EB: set_regs_in_dict (trace-event-python.c:784)
+> ==2106591==    by 0x713E58: get_perf_sample_dict (trace-event-python.c:940)
+> ==2106591==    by 0x716327: python_process_general_event (trace-event-python.c:1499)
+> ==2106591==    by 0x7164E1: python_process_event (trace-event-python.c:1531)
+> ==2106591==    by 0x44F9AF: process_sample_event (builtin-script.c:2549)
+> ==2106591==    by 0x6294DC: evlist__deliver_sample (session.c:1534)
+> ==2106591==    by 0x6296D0: machines__deliver_event (session.c:1573)
+> ==2106591==    by 0x629C39: perf_session__deliver_event (session.c:1655)
+> ==2106591==    by 0x625830: ordered_events__deliver_event (session.c:193)
+> ==2106591==    by 0x630B23: do_flush (ordered-events.c:245)
+> ==2106591==    by 0x630E7A: __ordered_events__flush (ordered-events.c:324)
+> ==2106591==  Address 0x7186fe0 is 0 bytes after a block of size 0 alloc'd
+> ==2106591==    at 0x484280F: malloc (vg_replace_malloc.c:442)
+> ==2106591==    by 0x7134AD: set_regs_in_dict (trace-event-python.c:780)
+> ==2106591==    by 0x713E58: get_perf_sample_dict (trace-event-python.c:940)
+> ==2106591==    by 0x716327: python_process_general_event (trace-event-python.c:1499)
+> ==2106591==    by 0x7164E1: python_process_event (trace-event-python.c:1531)
+> ==2106591==    by 0x44F9AF: process_sample_event (builtin-script.c:2549)
+> ==2106591==    by 0x6294DC: evlist__deliver_sample (session.c:1534)
+> ==2106591==    by 0x6296D0: machines__deliver_event (session.c:1573)
+> ==2106591==    by 0x629C39: perf_session__deliver_event (session.c:1655)
+> ==2106591==    by 0x625830: ordered_events__deliver_event (session.c:193)
+> ==2106591==    by 0x630B23: do_flush (ordered-events.c:245)
+> ==2106591==    by 0x630E7A: __ordered_events__flush (ordered-events.c:324)
+> ==2106591==
+> ==2106591== Invalid read of size 1
+> ==2106591==    at 0x484B6C6: strlen (vg_replace_strmem.c:502)
+> ==2106591==    by 0x555D494: PyUnicode_FromString (unicodeobject.c:1899)
+> ==2106591==    by 0x7134F7: set_regs_in_dict (trace-event-python.c:786)
+> ==2106591==    by 0x713E58: get_perf_sample_dict (trace-event-python.c:940)
+> ==2106591==    by 0x716327: python_process_general_event (trace-event-python.c:1499)
+> ==2106591==    by 0x7164E1: python_process_event (trace-event-python.c:1531)
+> ==2106591==    by 0x44F9AF: process_sample_event (builtin-script.c:2549)
+> ==2106591==    by 0x6294DC: evlist__deliver_sample (session.c:1534)
+> ==2106591==    by 0x6296D0: machines__deliver_event (session.c:1573)
+> ==2106591==    by 0x629C39: perf_session__deliver_event (session.c:1655)
+> ==2106591==    by 0x625830: ordered_events__deliver_event (session.c:193)
+> ==2106591==    by 0x630B23: do_flush (ordered-events.c:245)
+> ==2106591==  Address 0x7186fe0 is 0 bytes after a block of size 0 alloc'd
+> ==2106591==    at 0x484280F: malloc (vg_replace_malloc.c:442)
+> ==2106591==    by 0x7134AD: set_regs_in_dict (trace-event-python.c:780)
+> ==2106591==    by 0x713E58: get_perf_sample_dict (trace-event-python.c:940)
+> ==2106591==    by 0x716327: python_process_general_event (trace-event-python.c:1499)
+> ==2106591==    by 0x7164E1: python_process_event (trace-event-python.c:1531)
+> ==2106591==    by 0x44F9AF: process_sample_event (builtin-script.c:2549)
+> ==2106591==    by 0x6294DC: evlist__deliver_sample (session.c:1534)
+> ==2106591==    by 0x6296D0: machines__deliver_event (session.c:1573)
+> ==2106591==    by 0x629C39: perf_session__deliver_event (session.c:1655)
+> ==2106591==    by 0x625830: ordered_events__deliver_event (session.c:193)
+> ==2106591==    by 0x630B23: do_flush (ordered-events.c:245)
+> ==2106591==    by 0x630E7A: __ordered_events__flush (ordered-events.c:324)
+> ==2106591==
+> ==2106591== Invalid write of size 1
+> ==2106591==    at 0x713354: regs_map (trace-event-python.c:748)
+> ==2106591==    by 0x713539: set_regs_in_dict (trace-event-python.c:789)
+> ==2106591==    by 0x713E58: get_perf_sample_dict (trace-event-python.c:940)
+> ==2106591==    by 0x716327: python_process_general_event (trace-event-python.c:1499)
+> ==2106591==    by 0x7164E1: python_process_event (trace-event-python.c:1531)
+> ==2106591==    by 0x44F9AF: process_sample_event (builtin-script.c:2549)
+> ==2106591==    by 0x6294DC: evlist__deliver_sample (session.c:1534)
+> ==2106591==    by 0x6296D0: machines__deliver_event (session.c:1573)
+> ==2106591==    by 0x629C39: perf_session__deliver_event (session.c:1655)
+> ==2106591==    by 0x625830: ordered_events__deliver_event (session.c:193)
+> ==2106591==    by 0x630B23: do_flush (ordered-events.c:245)
+> ==2106591==    by 0x630E7A: __ordered_events__flush (ordered-events.c:324)
+> ==2106591==  Address 0x7186fe0 is 0 bytes after a block of size 0 alloc'd
+> ==2106591==    at 0x484280F: malloc (vg_replace_malloc.c:442)
+> ==2106591==    by 0x7134AD: set_regs_in_dict (trace-event-python.c:780)
+> ==2106591==    by 0x713E58: get_perf_sample_dict (trace-event-python.c:940)
+> ==2106591==    by 0x716327: python_process_general_event (trace-event-python.c:1499)
+> ==2106591==    by 0x7164E1: python_process_event (trace-event-python.c:1531)
+> ==2106591==    by 0x44F9AF: process_sample_event (builtin-script.c:2549)
+> ==2106591==    by 0x6294DC: evlist__deliver_sample (session.c:1534)
+> ==2106591==    by 0x6296D0: machines__deliver_event (session.c:1573)
+> ==2106591==    by 0x629C39: perf_session__deliver_event (session.c:1655)
+> ==2106591==    by 0x625830: ordered_events__deliver_event (session.c:193)
+> ==2106591==    by 0x630B23: do_flush (ordered-events.c:245)
+> ==2106591==    by 0x630E7A: __ordered_events__flush (ordered-events.c:324)
+> ==2106591==
+> ==2106591== Invalid read of size 1
+> ==2106591==    at 0x484B6C6: strlen (vg_replace_strmem.c:502)
+> ==2106591==    by 0x555D494: PyUnicode_FromString (unicodeobject.c:1899)
+> ==2106591==    by 0x713545: set_regs_in_dict (trace-event-python.c:791)
+> ==2106591==    by 0x713E58: get_perf_sample_dict (trace-event-python.c:940)
+> ==2106591==    by 0x716327: python_process_general_event (trace-event-python.c:1499)
+> ==2106591==    by 0x7164E1: python_process_event (trace-event-python.c:1531)
+> ==2106591==    by 0x44F9AF: process_sample_event (builtin-script.c:2549)
+> ==2106591==    by 0x6294DC: evlist__deliver_sample (session.c:1534)
+> ==2106591==    by 0x6296D0: machines__deliver_event (session.c:1573)
+> ==2106591==    by 0x629C39: perf_session__deliver_event (session.c:1655)
+> ==2106591==    by 0x625830: ordered_events__deliver_event (session.c:193)
+> ==2106591==    by 0x630B23: do_flush (ordered-events.c:245)
+> ==2106591==  Address 0x7186fe0 is 0 bytes after a block of size 0 alloc'd
+> ==2106591==    at 0x484280F: malloc (vg_replace_malloc.c:442)
+> ==2106591==    by 0x7134AD: set_regs_in_dict (trace-event-python.c:780)
+> ==2106591==    by 0x713E58: get_perf_sample_dict (trace-event-python.c:940)
+> ==2106591==    by 0x716327: python_process_general_event (trace-event-python.c:1499)
+> ==2106591==    by 0x7164E1: python_process_event (trace-event-python.c:1531)
+> ==2106591==    by 0x44F9AF: process_sample_event (builtin-script.c:2549)
+> ==2106591==    by 0x6294DC: evlist__deliver_sample (session.c:1534)
+> ==2106591==    by 0x6296D0: machines__deliver_event (session.c:1573)
+> ==2106591==    by 0x629C39: perf_session__deliver_event (session.c:1655)
+> ==2106591==    by 0x625830: ordered_events__deliver_event (session.c:193)
+> ==2106591==    by 0x630B23: do_flush (ordered-events.c:245)
+> ==2106591==    by 0x630E7A: __ordered_events__flush (ordered-events.c:324)
+> ==2106591==
+> 73056 total, 29 ignored
 > 
-> v2: also update build_id_cache__update_file().
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
 > ---
->  tools/perf/builtin-buildid-cache.c | 34 ++++++++++++++++++++++++++++--
->  1 file changed, 32 insertions(+), 2 deletions(-)
+>  .../perf/util/scripting-engines/trace-event-python.c  | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
-> index b0511d16aeb6..69f43460d007 100644
-> --- a/tools/perf/builtin-buildid-cache.c
-> +++ b/tools/perf/builtin-buildid-cache.c
-> @@ -172,6 +172,36 @@ static int build_id_cache__add_kcore(const char *filename, bool force)
->  	return 0;
+> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+> index 6971dd6c231f..d7183134b669 100644
+> --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+> @@ -762,6 +762,8 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, ch
+>  	}
 >  }
 >  
-> +static bool filename_is_vdso(const char *filename)
-> +{
-> +	bool is_vdso = false;
-> +	char *fname, *bname;
-> +	static const char * const vdso_names[] = {
-> +		"vdso.so", "vdso32.so", "vdso64.so", "vdsox32.so"
-> +	};
+> +#define MAX_REG_SIZE 128
 > +
-> +	fname = strdup(filename);
-> +	if (!fname) {
-> +		pr_err("no memory\n");
-> +		return false;
-> +	}
-> +
-> +	bname = basename(fname);
-> +	if (!bname)
-> +		goto out;
-> +
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(vdso_names); i++) {
-> +		if (strstarts(bname, vdso_names[i])) {
-> +			is_vdso = true;
-> +			break;
-> +		}
-> +	}
-> +
-> +out:
-> +	free(fname);
-> +	return is_vdso;
-> +}
-> +
->  static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
->  {
->  	char sbuild_id[SBUILD_ID_SIZE];
-> @@ -189,7 +219,7 @@ static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
+>  static int set_regs_in_dict(PyObject *dict,
+>  			     struct perf_sample *sample,
+>  			     struct evsel *evsel)
+> @@ -769,14 +771,7 @@ static int set_regs_in_dict(PyObject *dict,
+>  	struct perf_event_attr *attr = &evsel->core.attr;
+>  	const char *arch = perf_env__arch(evsel__env(evsel));
 >  
->  	build_id__sprintf(&bid, sbuild_id);
->  	err = build_id_cache__add_s(sbuild_id, filename, nsi,
-> -				    false, false);
-> +				    false, filename_is_vdso(filename));
->  	pr_debug("Adding %s %s: %s\n", sbuild_id, filename,
->  		 err ? "FAIL" : "Ok");
->  	return err;
-> @@ -323,7 +353,7 @@ static int build_id_cache__update_file(const char *filename, struct nsinfo *nsi)
->  
->  	if (!err)
->  		err = build_id_cache__add_s(sbuild_id, filename, nsi, false,
-> -					    false);
-> +					    filename_is_vdso(filename));
->  
->  	pr_debug("Updating %s %s: %s\n", sbuild_id, filename,
->  		 err ? "FAIL" : "Ok");
+> -	/*
+> -	 * Here value 28 is a constant size which can be used to print
+> -	 * one register value and its corresponds to:
+> -	 * 16 chars is to specify 64 bit register in hexadecimal.
+> -	 * 2 chars is for appending "0x" to the hexadecimal value and
+> -	 * 10 chars is for register name.
+> -	 */
+> -	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
+> +	int size = (__sw_hweight64(attr->sample_regs_intr) * MAX_REG_SIZE) + 1;
+>  	char *bf = malloc(size);
+>  	if (!bf)
+>  		return -1;
 > -- 
-> 2.34.1
+> 2.45.2
