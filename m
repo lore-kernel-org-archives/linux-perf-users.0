@@ -1,392 +1,115 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27BE18E043
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 10:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D137E1A08C4;
+	Thu, 12 Sep 2024 11:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726136770; cv=none; b=Tuu5SqjRXXrS9bGiTPZyCVrQFVVnss+OM/56VK3xe60qI2Y9uG9KwE0tiuT75MGpj78XOlLaOhRQTHhXbekNvrv2NOqoB/OQDSXjlx8w50FR8M9jQKQdWXdCYzHKYIVqgznIlK9sTrZUDFMsdQ4UnK9Ow2xwf8YteOtJGuhuB0E=
+	t=1726139423; cv=none; b=R0im5MJXJwvCAoZC/nHaz1g762AqqH/AfpUFio0zVMylYZUvKoVTiDZGtUWp82/00U2e8jaY4alBX7ugvIwFFZQmn66CREYibiFwBNotqtwGXwf4aBLLpkK12LBU0vV1zHa7AewW3M9g4W+wT4ZDT4dr1vpV/Wip8D1rehmxPg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726136770; c=relaxed/simple;
-	bh=EkYUdYzAU0m69VvcUSVKZhN8ngUbvnFEmCjcLBEXDZY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dr17u0jHbCUAK6AVCbvck7lx+hTllcOzHwaRLcH/Oii55TCRzYeax8tuCS2FWBcDlEt5WioHAV2hITglOAyKz6N6Lb49op6RlOl5rJF7veF+mRYdhA6GChw98xYRwSp1kM4DKBQ9FTNxQsm/P0RCobWqRfEj1xvYdbmI2RTI94U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+	s=arc-20240116; t=1726139423; c=relaxed/simple;
+	bh=L3MUCMKtkTguWF9pBToUYcRy9e1ieedTm1iuky8Pw6Y=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nirHP20INJsrAkkmJ1RHmtq22TeCakb+V26qhn++ZpbxykCnYCTZug3Co6+fy1GneO3LZdznC+JrrMlw6OYLa/VJSzcuOVkF1plq88ACEcnWyYKFp+WJTxSpmZbbBA9zIIXKguVTQ6Dx8ONyqPiWIzPjX6QsgKMZWw7uTykvBGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X4D5W0pZrz67ZCr;
-	Thu, 12 Sep 2024 18:22:23 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8A704140A78;
-	Thu, 12 Sep 2024 18:26:01 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 12 Sep
- 2024 12:26:00 +0200
-Date: Thu, 12 Sep 2024 11:25:59 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Yicong Yang <yangyicong@huawei.com>
-CC: <yangyicong@hisilicon.com>, <acme@kernel.org>, <namhyung@kernel.org>,
-	<irogers@google.com>, <john.g.garry@oracle.com>, <will@kernel.org>,
-	<james.clark@linaro.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<mark.rutland@arm.com>, <linux-perf-users@vger.kernel.org>,
-	<prime.zeng@hisilicon.com>, <hejunhao3@huawei.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH] perf vender events arm64: Use "Topdown" as topdown
- metric group name
-Message-ID: <20240912112559.00001485@Huawei.com>
-In-Reply-To: <39921dd0-8827-31c2-6032-37a149af6b77@huawei.com>
-References: <20240730020145.30227-1-yangyicong@huawei.com>
-	<e75258ec-ea7c-0bc8-0cb1-b233564d9340@huawei.com>
-	<20240911122755.00000e15@huawei.com>
-	<39921dd0-8827-31c2-6032-37a149af6b77@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4X4F8W64g6z20lDc;
+	Thu, 12 Sep 2024 19:10:03 +0800 (CST)
+Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id E2B3214013B;
+	Thu, 12 Sep 2024 19:10:10 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
+ kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Thu, 12 Sep 2024 19:10:10 +0800
+Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
+ kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
+ Thu, 12 Sep 2024 19:10:10 +0800
+From: duchangbin <changbin.du@huawei.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
+ Melo" <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Nathan
+ Chancellor <nathan@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+	<jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, "Liang, Kan"
+	<kan.liang@linux.intel.com>, "Nick Desaulniers" <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>, "Wanghui (OS Kernel Lab,
+ Beijing)" <hw.huiwang@huawei.com>
+Subject: Re: [PATCH v6 8/8] perf buildid-cache: recognize vdso when adding
+ files
+Thread-Topic: [PATCH v6 8/8] perf buildid-cache: recognize vdso when adding
+ files
+Thread-Index: AQHa3jimIYtCUWpsdU+ECcILatWtFrJSACMAgAJL8QA=
+Date: Thu, 12 Sep 2024 11:10:10 +0000
+Message-ID: <953cc060c1a24e36abf797918824d13e@huawei.com>
+References: <20240725021549.880167-1-changbin.du@huawei.com>
+ <20240725021549.880167-9-changbin.du@huawei.com>
+ <68f29f30-f0f8-4cda-a99a-68f51838dcd7@intel.com>
+In-Reply-To: <68f29f30-f0f8-4cda-a99a-68f51838dcd7@intel.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <674352206418F4468498DA60930A32B9@huawei.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 12 Sep 2024 09:59:43 +0800
-Yicong Yang <yangyicong@huawei.com> wrote:
-
-> On 2024/9/11 19:28, Jonathan Cameron wrote:
-> > On Mon, 9 Sep 2024 21:06:03 +0800
-> > Yicong Yang <yangyicong@huawei.com> wrote:
-> >   
-> >> another ping...
-> >>
-> >> This patch should be very straightforward, due to the changes to use "Topdown" after [1].
-> >>
-> >> [1] 1647cd5b8802 ("perf stat: Implement --topdown using json metrics")  
-> > 
-> > Hi Yicong,
-> > 
-> > That reference definitely helps make this obvious given it clearly states
-> > the pattern match is TopdownL.  
-> 
-> ok, I thounght the code link in the commit should be enough. Will refer to the commit
-> as well.
-
-Sure. Fine as is.  I was just observing it made it easy to review
-despite not knowing the code that well.
-
-Jonathan
-
-> 
-> Thanks.
-> 
-> > 
-> > As such this LGTM (but I'm not a perf tool expert by any means!)
-> > FWIW.
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >   
-> >>
-> >> Thanks.
-> >>
-> >> On 2024/7/30 10:01, Yicong Yang wrote:  
-> >>> From: Yicong Yang <yangyicong@hisilicon.com>
-> >>>
-> >>> HiSilicon HIP08 does support Topdown metrics but perf tool complains
-> >>> when trying to count Topdown metrics:
-> >>> [root@localhost tracing]# perf stat --topdown
-> >>> Topdown requested but the topdown metric groups aren't present.
-> >>> (See perf list the metric groups have names like TopdownL1)
-> >>>
-> >>> It's because tool's using "Topdown" as the metric group name[1] rather
-> >>> than "TopDown", so follow the convention.
-> >>>
-> >>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/builtin-stat.c?h=v6.11-rc1#n1994
-> >>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> >>> ---
-> >>>  .../arch/arm64/hisilicon/hip08/metrics.json   | 74 +++++++++----------
-> >>>  1 file changed, 37 insertions(+), 37 deletions(-)
-> >>>
-> >>> diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
-> >>> index 6463531b9941..b6a0d2de8534 100644
-> >>> --- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
-> >>> +++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
-> >>> @@ -3,235 +3,235 @@
-> >>>          "MetricExpr": "FETCH_BUBBLE / (4 * CPU_CYCLES)",
-> >>>          "PublicDescription": "Frontend bound L1 topdown metric",
-> >>>          "BriefDescription": "Frontend bound L1 topdown metric",
-> >>> -        "DefaultMetricgroupName": "TopDownL1",
-> >>> -        "MetricGroup": "Default;TopDownL1",
-> >>> +        "DefaultMetricgroupName": "TopdownL1",
-> >>> +        "MetricGroup": "Default;TopdownL1",
-> >>>          "MetricName": "frontend_bound"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(INST_SPEC - INST_RETIRED) / (4 * CPU_CYCLES)",
-> >>>          "PublicDescription": "Bad Speculation L1 topdown metric",
-> >>>          "BriefDescription": "Bad Speculation L1 topdown metric",
-> >>> -        "DefaultMetricgroupName": "TopDownL1",
-> >>> -        "MetricGroup": "Default;TopDownL1",
-> >>> +        "DefaultMetricgroupName": "TopdownL1",
-> >>> +        "MetricGroup": "Default;TopdownL1",
-> >>>          "MetricName": "bad_speculation"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "INST_RETIRED / (CPU_CYCLES * 4)",
-> >>>          "PublicDescription": "Retiring L1 topdown metric",
-> >>>          "BriefDescription": "Retiring L1 topdown metric",
-> >>> -        "DefaultMetricgroupName": "TopDownL1",
-> >>> -        "MetricGroup": "Default;TopDownL1",
-> >>> +        "DefaultMetricgroupName": "TopdownL1",
-> >>> +        "MetricGroup": "Default;TopdownL1",
-> >>>          "MetricName": "retiring"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "1 - (frontend_bound + bad_speculation + retiring)",
-> >>>          "PublicDescription": "Backend Bound L1 topdown metric",
-> >>>          "BriefDescription": "Backend Bound L1 topdown metric",
-> >>> -        "DefaultMetricgroupName": "TopDownL1",
-> >>> -        "MetricGroup": "Default;TopDownL1",
-> >>> +        "DefaultMetricgroupName": "TopdownL1",
-> >>> +        "MetricGroup": "Default;TopdownL1",
-> >>>          "MetricName": "backend_bound"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "armv8_pmuv3_0@event\\=0x201d@ / CPU_CYCLES",
-> >>>          "PublicDescription": "Fetch latency bound L2 topdown metric",
-> >>>          "BriefDescription": "Fetch latency bound L2 topdown metric",
-> >>> -        "MetricGroup": "TopDownL2",
-> >>> +        "MetricGroup": "TopdownL2",
-> >>>          "MetricName": "fetch_latency_bound"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "frontend_bound - fetch_latency_bound",
-> >>>          "PublicDescription": "Fetch bandwidth bound L2 topdown metric",
-> >>>          "BriefDescription": "Fetch bandwidth bound L2 topdown metric",
-> >>> -        "MetricGroup": "TopDownL2",
-> >>> +        "MetricGroup": "TopdownL2",
-> >>>          "MetricName": "fetch_bandwidth_bound"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(bad_speculation * BR_MIS_PRED) / (BR_MIS_PRED + armv8_pmuv3_0@event\\=0x2013@)",
-> >>>          "PublicDescription": "Branch mispredicts L2 topdown metric",
-> >>>          "BriefDescription": "Branch mispredicts L2 topdown metric",
-> >>> -        "MetricGroup": "TopDownL2",
-> >>> +        "MetricGroup": "TopdownL2",
-> >>>          "MetricName": "branch_mispredicts"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "bad_speculation - branch_mispredicts",
-> >>>          "PublicDescription": "Machine clears L2 topdown metric",
-> >>>          "BriefDescription": "Machine clears L2 topdown metric",
-> >>> -        "MetricGroup": "TopDownL2",
-> >>> +        "MetricGroup": "TopdownL2",
-> >>>          "MetricName": "machine_clears"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(EXE_STALL_CYCLE - (MEM_STALL_ANYLOAD + armv8_pmuv3_0@event\\=0x7005@)) / CPU_CYCLES",
-> >>>          "PublicDescription": "Core bound L2 topdown metric",
-> >>>          "BriefDescription": "Core bound L2 topdown metric",
-> >>> -        "MetricGroup": "TopDownL2",
-> >>> +        "MetricGroup": "TopdownL2",
-> >>>          "MetricName": "core_bound"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(MEM_STALL_ANYLOAD + armv8_pmuv3_0@event\\=0x7005@) / CPU_CYCLES",
-> >>>          "PublicDescription": "Memory bound L2 topdown metric",
-> >>>          "BriefDescription": "Memory bound L2 topdown metric",
-> >>> -        "MetricGroup": "TopDownL2",
-> >>> +        "MetricGroup": "TopdownL2",
-> >>>          "MetricName": "memory_bound"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(((L2I_TLB - L2I_TLB_REFILL) * 15) + (L2I_TLB_REFILL * 100)) / CPU_CYCLES",
-> >>>          "PublicDescription": "Idle by itlb miss L3 topdown metric",
-> >>>          "BriefDescription": "Idle by itlb miss L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "idle_by_itlb_miss"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(((L2I_CACHE - L2I_CACHE_REFILL) * 15) + (L2I_CACHE_REFILL * 100)) / CPU_CYCLES",
-> >>>          "PublicDescription": "Idle by icache miss L3 topdown metric",
-> >>>          "BriefDescription": "Idle by icache miss L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "idle_by_icache_miss"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(BR_MIS_PRED * 5) / CPU_CYCLES",
-> >>>          "PublicDescription": "BP misp flush L3 topdown metric",
-> >>>          "BriefDescription": "BP misp flush L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "bp_misp_flush"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(armv8_pmuv3_0@event\\=0x2013@ * 5) / CPU_CYCLES",
-> >>>          "PublicDescription": "OOO flush L3 topdown metric",
-> >>>          "BriefDescription": "OOO flush L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "ooo_flush"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(armv8_pmuv3_0@event\\=0x1001@ * 5) / CPU_CYCLES",
-> >>>          "PublicDescription": "Static predictor flush L3 topdown metric",
-> >>>          "BriefDescription": "Static predictor flush L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "sp_flush"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "armv8_pmuv3_0@event\\=0x1010@ / BR_MIS_PRED",
-> >>>          "PublicDescription": "Indirect branch L3 topdown metric",
-> >>>          "BriefDescription": "Indirect branch L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "indirect_branch"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(armv8_pmuv3_0@event\\=0x1013@ + armv8_pmuv3_0@event\\=0x1016@) / BR_MIS_PRED",
-> >>>          "PublicDescription": "Push branch L3 topdown metric",
-> >>>          "BriefDescription": "Push branch L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "push_branch"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "armv8_pmuv3_0@event\\=0x100d@ / BR_MIS_PRED",
-> >>>          "PublicDescription": "Pop branch L3 topdown metric",
-> >>>          "BriefDescription": "Pop branch L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "pop_branch"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(BR_MIS_PRED - armv8_pmuv3_0@event\\=0x1010@ - armv8_pmuv3_0@event\\=0x1013@ - armv8_pmuv3_0@event\\=0x1016@ - armv8_pmuv3_0@event\\=0x100d@) / BR_MIS_PRED",
-> >>>          "PublicDescription": "Other branch L3 topdown metric",
-> >>>          "BriefDescription": "Other branch L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "other_branch"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "armv8_pmuv3_0@event\\=0x2012@ / armv8_pmuv3_0@event\\=0x2013@",
-> >>>          "PublicDescription": "Nuke flush L3 topdown metric",
-> >>>          "BriefDescription": "Nuke flush L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "nuke_flush"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "1 - nuke_flush",
-> >>>          "PublicDescription": "Other flush L3 topdown metric",
-> >>>          "BriefDescription": "Other flush L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "other_flush"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "armv8_pmuv3_0@event\\=0x2010@ / CPU_CYCLES",
-> >>>          "PublicDescription": "Sync stall L3 topdown metric",
-> >>>          "BriefDescription": "Sync stall L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "sync_stall"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "armv8_pmuv3_0@event\\=0x2004@ / CPU_CYCLES",
-> >>>          "PublicDescription": "Rob stall L3 topdown metric",
-> >>>          "BriefDescription": "Rob stall L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "rob_stall"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(armv8_pmuv3_0@event\\=0x2006@ + armv8_pmuv3_0@event\\=0x2007@ + armv8_pmuv3_0@event\\=0x2008@) / CPU_CYCLES",
-> >>>          "PublicDescription": "Ptag stall L3 topdown metric",
-> >>>          "BriefDescription": "Ptag stall L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "ptag_stall"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "armv8_pmuv3_0@event\\=0x201e@ / CPU_CYCLES",
-> >>>          "PublicDescription": "SaveOpQ stall L3 topdown metric",
-> >>>          "BriefDescription": "SaveOpQ stall L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "saveopq_stall"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "armv8_pmuv3_0@event\\=0x2005@ / CPU_CYCLES",
-> >>>          "PublicDescription": "PC buffer stall L3 topdown metric",
-> >>>          "BriefDescription": "PC buffer stall L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "pc_buffer_stall"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "armv8_pmuv3_0@event\\=0x7002@ / CPU_CYCLES",
-> >>>          "PublicDescription": "Divider L3 topdown metric",
-> >>>          "BriefDescription": "Divider L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "divider"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "armv8_pmuv3_0@event\\=0x7003@ / CPU_CYCLES",
-> >>>          "PublicDescription": "FSU stall L3 topdown metric",
-> >>>          "BriefDescription": "FSU stall L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "fsu_stall"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "core_bound - divider - fsu_stall",
-> >>>          "PublicDescription": "EXE ports util L3 topdown metric",
-> >>>          "BriefDescription": "EXE ports util L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "exe_ports_util"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(MEM_STALL_ANYLOAD - MEM_STALL_L1MISS) / CPU_CYCLES",
-> >>>          "PublicDescription": "L1 bound L3 topdown metric",
-> >>>          "BriefDescription": "L1 bound L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "l1_bound"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "(MEM_STALL_L1MISS - MEM_STALL_L2MISS) / CPU_CYCLES",
-> >>>          "PublicDescription": "L2 bound L3 topdown metric",
-> >>>          "BriefDescription": "L2 bound L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "l2_bound"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "MEM_STALL_L2MISS / CPU_CYCLES",
-> >>>          "PublicDescription": "Mem bound L3 topdown metric",
-> >>>          "BriefDescription": "Mem bound L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "mem_bound"
-> >>>      },
-> >>>      {
-> >>>          "MetricExpr": "armv8_pmuv3_0@event\\=0x7005@ / CPU_CYCLES",
-> >>>          "PublicDescription": "Store bound L3 topdown metric",
-> >>>          "BriefDescription": "Store bound L3 topdown metric",
-> >>> -        "MetricGroup": "TopDownL3",
-> >>> +        "MetricGroup": "TopdownL3",
-> >>>          "MetricName": "store_bound"
-> >>>      }
-> >>>  ]
-> >>>     
-> > 
-> > .
-> >   
-
+T24gV2VkLCBTZXAgMTEsIDIwMjQgYXQgMTE6MDU6MjBBTSArMDMwMCwgQWRyaWFuIEh1bnRlciB3
+cm90ZToNCj4gT24gMjUvMDcvMjQgMDU6MTUsIENoYW5nYmluIER1IHdyb3RlOg0KPiA+IElkZW50
+aWZ5IHZkc28gYnkgZmlsZSBuYW1lIG1hdGNoaW5nLiBUaGUgdmRzbyBvYmplY3RzIGhhdmUgbmFt
+ZQ0KPiA+IGFzIHZkc29bMzIsNjRdLnNvWy5kYmddLg0KPiA+IA0KPiA+ICQgcGVyZiBidWlsZGlk
+LWNhY2hlIC1hIC93b3JrL2xpbnV4L2FyY2gveDg2L2VudHJ5L3Zkc28vdmRzbzY0LnNvLmRiZw0K
+PiA+IA0KPiA+IFdpdGhvdXQgdGhpcyBjaGFuZ2UsIGFkZGluZyB2ZHNvIHVzaW5nIGFib3ZlIGNv
+bW1hbmQgYWN0dWFsbHkgd2lsbCBuZXZlcg0KPiA+IGJlIHVzZWQuDQo+ID4gDQo+ID4gU2lnbmVk
+LW9mZi1ieTogQ2hhbmdiaW4gRHUgPGNoYW5nYmluLmR1QGh1YXdlaS5jb20+DQo+IA0KPiBBIGNv
+dXBsZSBvZiBjb21tZW50cywgYnV0IGFkZHJlc3MgdGhvc2UgdGhlbiBhZGQ6DQo+IA0KPiBSZXZp
+ZXdlZC1ieTogQWRyaWFuIEh1bnRlciA8YWRyaWFuLmh1bnRlckBpbnRlbC5jb20+DQo+IA0KPiA+
+IC0tLQ0KPiA+ICB0b29scy9wZXJmL2J1aWx0aW4tYnVpbGRpZC1jYWNoZS5jIHwgMjYgKysrKysr
+KysrKysrKysrKysrKysrKysrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI1IGluc2VydGlvbnMo
+KyksIDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi9idWls
+dGluLWJ1aWxkaWQtY2FjaGUuYyBiL3Rvb2xzL3BlcmYvYnVpbHRpbi1idWlsZGlkLWNhY2hlLmMN
+Cj4gPiBpbmRleCBiMDUxMWQxNmFlYjYuLjhlZGVhOTA0NGE2NSAxMDA2NDQNCj4gPiAtLS0gYS90
+b29scy9wZXJmL2J1aWx0aW4tYnVpbGRpZC1jYWNoZS5jDQo+ID4gKysrIGIvdG9vbHMvcGVyZi9i
+dWlsdGluLWJ1aWxkaWQtY2FjaGUuYw0KPiA+IEBAIC0xNzIsNiArMTcyLDMwIEBAIHN0YXRpYyBp
+bnQgYnVpbGRfaWRfY2FjaGVfX2FkZF9rY29yZShjb25zdCBjaGFyICpmaWxlbmFtZSwgYm9vbCBm
+b3JjZSkNCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9DQo+ID4gIA0KPiA+ICtzdGF0aWMgYm9vbCBm
+aWxlbmFtZV9pc192ZHNvKGNvbnN0IGNoYXIgKmZpbGVuYW1lKQ0KPiA+ICt7DQo+ID4gKwljaGFy
+ICpmbmFtZSwgKmJuYW1lOw0KPiA+ICsJc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCB2ZHNvX25h
+bWVzW10gPSB7DQo+ID4gKwkJInZkc28uc28iLCAidmRzbzMyLnNvIiwgInZkc282NC5zbyIsICJ2
+ZHNveDMyLnNvIg0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwlmbmFtZSA9IHN0cmR1cChmaWxlbmFt
+ZSk7DQo+ID4gKwlpZiAoIWZuYW1lKSB7DQo+ID4gKwkJcHJfZXJyKCJubyBtZW1lbW9yeVxuIik7
+DQo+IA0KPiBtZW1lbW9yeSAtPiBtZW1vcnkNCj4NCmZpeGVkLg0KDQo+ID4gKwkJcmV0dXJuIGZh
+bHNlOw0KPiA+ICsJfQ0KPiANCj4gZm5hbWUgaXMgbmV2ZXIgZnJlZWQuDQo+IA0KZml4ZWQuDQoN
+Cj4gPiArDQo+ID4gKwlibmFtZSA9IGJhc2VuYW1lKGZuYW1lKTsNCj4gPiArCWlmICghYm5hbWUp
+DQo+ID4gKwkJcmV0dXJuIGZhbHNlOw0KPiA+ICsNCj4gPiArCWZvciAodW5zaWduZWQgaW50IGkg
+PSAwOyBpIDwgQVJSQVlfU0laRSh2ZHNvX25hbWVzKTsgaSsrKSB7DQo+IA0KPiAndW5zaWduZWQn
+IGlzIHVubmVjZXNzYXJ5DQo+IA0KVGhpcyBpcyByZXF1aXJlZCB0byBzdXByZXNzIHRoaXMgZXJy
+b3IuDQplcnJvcjogY29tcGFyaXNvbiBvZiBpbnRlZ2VyIGV4cHJlc3Npb25zIG9mIGRpZmZlcmVu
+dCBzaWduZWRuZXNzOiDigJhpbnTigJkgYW5kIOKAmGxvbmcgdW5zaWduZWQgaW504oCZDQoNCj4g
+PiArCQlpZiAoIXN0cm5jbXAoYm5hbWUsIHZkc29fbmFtZXNbaV0sIHN0cmxlbih2ZHNvX25hbWVz
+W2ldKSkpDQo+IA0KPiBVc2Ugc3Ryc3RhcnRzKCkNCj4gDQpva2F5Lg0KDQo+ID4gKwkJCXJldHVy
+biB0cnVlOw0KPiA+ICsJfQ0KPiA+ICsJcmV0dXJuIGZhbHNlOw0KPiA+ICt9DQo+ID4gKw0KPiA+
+ICBzdGF0aWMgaW50IGJ1aWxkX2lkX2NhY2hlX19hZGRfZmlsZShjb25zdCBjaGFyICpmaWxlbmFt
+ZSwgc3RydWN0IG5zaW5mbyAqbnNpKQ0KPiA+ICB7DQo+ID4gIAljaGFyIHNidWlsZF9pZFtTQlVJ
+TERfSURfU0laRV07DQo+ID4gQEAgLTE4OSw3ICsyMTMsNyBAQCBzdGF0aWMgaW50IGJ1aWxkX2lk
+X2NhY2hlX19hZGRfZmlsZShjb25zdCBjaGFyICpmaWxlbmFtZSwgc3RydWN0IG5zaW5mbyAqbnNp
+KQ0KPiA+ICANCj4gPiAgCWJ1aWxkX2lkX19zcHJpbnRmKCZiaWQsIHNidWlsZF9pZCk7DQo+ID4g
+IAllcnIgPSBidWlsZF9pZF9jYWNoZV9fYWRkX3Moc2J1aWxkX2lkLCBmaWxlbmFtZSwgbnNpLA0K
+PiA+IC0JCQkJICAgIGZhbHNlLCBmYWxzZSk7DQo+ID4gKwkJCQkgICAgZmFsc2UsIGZpbGVuYW1l
+X2lzX3Zkc28oZmlsZW5hbWUpKTsNCj4gPiAgCXByX2RlYnVnKCJBZGRpbmcgJXMgJXM6ICVzXG4i
+LCBzYnVpbGRfaWQsIGZpbGVuYW1lLA0KPiA+ICAJCSBlcnIgPyAiRkFJTCIgOiAiT2siKTsNCj4g
+PiAgCXJldHVybiBlcnI7DQo+IA0KPiANCg0KLS0gDQpDaGVlcnMsDQpDaGFuZ2JpbiBEdQ0K
