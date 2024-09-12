@@ -1,80 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99BA1B373C
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Sep 2024 14:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3C93A1DB;
+	Thu, 12 Sep 2024 14:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726152796; cv=none; b=IqhsG6G5Me7HPM944Zpx44ev32t/qyTZtht5Is8AduNWNlx0IZzL8CnOPLt4h9bymUG6T+CLt5m5pYpjEoa3bB1PlSwnhvwcVy4NmCdosD9y+my3/OLzIMzq6InMOsmIzYezg4bAOu8nC21XJHFHD/X/jevZBIlHbU0+DNgOdFk=
+	t=1726153101; cv=none; b=guRp2X1cYAoDYkx+QXHboII9CrS66QjTdcnfKHUwSUJVCjcsnLYotB+Avno394qYRA0UhP7dZHALcG0L8XvQd8d9pAbXb2io43SvpRKZw6PdJoKi2xs2D4+dYL/AXXZI1xXs3PRzYMwpa7Q/ZiS1ELzqLgw8lMg17UxZGgm9nHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726152796; c=relaxed/simple;
-	bh=p4xexmsKTe2G/tMmBJkR0GrHj9NToKdM4scDhSzOI8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n2xZoJpTDH0XM0e4KGqZ/0Kr3GfwNorl4zAkTYDI9l21hWVvA4Q+V4uKkfkEuaZi1xrZBSlHh7YPIDqA8tmgziyT6RbQ0+Fla/yW8Ha+p781mBwm48mHlnTDBMz8o/qT0vEIV8ULy9TxUP/EZtg5EHxagXNKhYLRERrgz/Dyjjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXQ+YwNC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726153101; c=relaxed/simple;
+	bh=0ZCvjbIDuXmVeY7i4CqypHwY7qxc4+dWoIzB5HcQtB8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=pbWqXUezMvsR3JE4PplN3hnJUfCaqhzpRCMxJ/b1zQQwrnZr+kcTc/EGzgIxyJ/P7X0OQXRXYxBhX2vuT6XNRBntHJf6sHuqyiw11CL5882DrIPNX5iZ1n8krH+R0uSzoli0mHZSdStxYZuNwk3uu1+3bLvB65uN0YTwUQJzbdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LPct3WBg; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXQ+YwNC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D861BC4CEC3;
-	Thu, 12 Sep 2024 14:53:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726152796;
-	bh=p4xexmsKTe2G/tMmBJkR0GrHj9NToKdM4scDhSzOI8o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dXQ+YwNCI3ZZHiHPOGX+g3Rx80I5uk0SBfSQeFbulGjQgE6baOiIoBtL92N1RIJHX
-	 crVkkOC+z0tKvYgi++REi4J7enJQbhm7CxAWV6r5oF/KnoTw09aL66nMQcugjVlTxA
-	 1zW7DrBsDlRUxYHUqbMY2+Edy9vW4iBafjjeRjXrzYG2HzbqMdI8YokT2mTFdQEvr0
-	 Gne8aja4r9d1qQt3hwlTD58Z7dktzzg6U5tvVOAfO/HcPfzdqQdlWtyTRaMai7VtZe
-	 KJ9Rnmi+qqcRK2b5G97MyRp2C7tiUT1uOPXVRlhy78R9FM/7aIally8lmz7h5/hOcy
-	 YyLUrMvVmZUoA==
-Date: Thu, 12 Sep 2024 11:53:12 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Andi Kleen <ak@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, adrian.hunter@intel.com,
-	namhyung@kernel.org
-Subject: Re: [PATCH v1 01/10] perf: Avoid buffer overflow in python register
- interface
-Message-ID: <ZuMAWC80LzQ0vsm_@x1>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LPct3WBg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726153100; x=1757689100;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=0ZCvjbIDuXmVeY7i4CqypHwY7qxc4+dWoIzB5HcQtB8=;
+  b=LPct3WBgrkzUGshRHvxwpTv8S7m0cRqH3PRzKRNBuMSmJPRB1gVo1S3g
+   SjBKXRs7Q1e5tfkufF5JIXjmw69zWg+EOQugKfeE/fbrelIZJcUgLPiuP
+   jUaHHyte75ZxxDcYFxM0ataN/sGS1NaMwSm5ToGYCQVhYvivABzUIuI/k
+   KRQnI9yR7UNZy1Ye5xiJweDhvmM07/QdZ9x4ybk8BdqG3axaSgaRZmwDm
+   M6TGR0oVmYccL8xpjA6QTBvhgUWL96BBqT+hiPgUl5IveyrZTp/2oP9YA
+   Aifl1rQNBvSUGOmVOCbmSaqnr854Fn7EcshGP6pEE0wiuHXRmZG8D3H3z
+   A==;
+X-CSE-ConnectionGUID: cEVewmN1RReBRJJ4JHJI0Q==
+X-CSE-MsgGUID: PbN2s72URtKzNgtFge4XoQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11193"; a="35680065"
+X-IronPort-AV: E=Sophos;i="6.10,223,1719903600"; 
+   d="scan'208";a="35680065"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2024 07:58:19 -0700
+X-CSE-ConnectionGUID: T2m0SJ30RkqhYbBaJoYBNg==
+X-CSE-MsgGUID: wsHaKjRvTBqkM++4izdQoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,223,1719903600"; 
+   d="scan'208";a="68513357"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.38.190])
+  by orviesa008.jf.intel.com with ESMTP; 12 Sep 2024 07:58:20 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+	id 39B703023B2; Thu, 12 Sep 2024 07:58:19 -0700 (PDT)
+From: Andi Kleen <ak@linux.intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: "Steinar H. Gunderson" <sesse@google.com>,
+  linux-perf-users@vger.kernel.org,  Adrian Hunter
+ <adrian.hunter@intel.com>,  Ian Rogers <irogers@google.com>,  Namhyung Kim
+ <namhyung@kernel.org>,  Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 02/10] perf: Support discriminator in addr2line
+In-Reply-To: <ZuLj5o6FwBJsk_1x@x1> (Arnaldo Carvalho de Melo's message of
+	"Thu, 12 Sep 2024 09:51:50 -0300")
 References: <20240905015300.2124798-1-ak@linux.intel.com>
- <20240905015300.2124798-2-ak@linux.intel.com>
- <ZuLhk6yGrr2HET6d@x1>
- <ZuL83U3PsOl44bvJ@tassilo>
+	<20240905015300.2124798-3-ak@linux.intel.com> <ZuLj5o6FwBJsk_1x@x1>
+Date: Thu, 12 Sep 2024 07:58:19 -0700
+Message-ID: <87plp8hqb8.fsf@linux.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZuL83U3PsOl44bvJ@tassilo>
+Content-Type: text/plain
 
-On Thu, Sep 12, 2024 at 07:38:21AM -0700, Andi Kleen wrote:
-> On Thu, Sep 12, 2024 at 09:41:55AM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Wed, Sep 04, 2024 at 06:50:09PM -0700, Andi Kleen wrote:
-> > > Running a script that processes PEBS records gives buffer overflows
-> > > in valgrind. The problem is that the allocation of the register
-> > > string doesn't include the terminating 0 byte. Fix this. I also replaced
-> > > the very magic "28" with a more reasonable larger buffer that should
-> > > fit all registers. There's no need to conserve memory here.
-> > 
-> > I applied this one already.
-> > 
-> > But you used the wrong list address, perf-tools-users@vger, I'm fixing
-> > this up now to linux-perf-users@vger so that the message reaches the
-> > mailing list.
-> > 
-> > I waited a bit for reviewers but then realized the problem with the list
-> > address when trying to use b4 to fetch it from lore :-\
-> 
-> I sent it twice. The second version had the right address.
- 
-I have tried to continue reviewing/processing the patch series from the
-one without linux-perf-users@ on the CC :-\
+Arnaldo Carvalho de Melo <acme@kernel.org> writes:
+>
+> I noticed that this is under:
+>
+> #elif defined(HAVE_LIBBFD_SUPPORT)
+>
+> That isn't built by default due to licensing issues, i.e. we only build
+> it if BUILD_NONDISTRO=1 is selected on the make command line, see:
+>
+> tools/perf/Makefile.config +943
 
-> But you were in cc and got both versions, sorry.
+Yes I know. I ran into this when my perf report runs were suddenly incredibly
+slow until I figured out how to set this flag.
 
-Lets try to continue from here, I made some comments,
+It's sad how theoretical lawyerneering breaks perfectly fine code.
 
-Thanks a lot for your work,
+At least I'm fine with whatever legal risk this causes.
 
-- Arnaldo
+
+>
+> And we have the patch below now, can we try to use it instead so that at
+> some point we can remove the libbpf support?
+
+I also support the external addr2line.
+
+But yes need to support the LLVM version too. I'll look into that.
+
+As a side note. I always disliked the LLVM dependencies, these
+libraries/packages are gigantic and traditionally unstable in
+interface. It would be better to use a sane small library as a
+replacement like https://github.com/ianlancetaylor/libbacktrace
+
+-Andi
+
