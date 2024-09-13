@@ -1,188 +1,141 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D064F15381F;
-	Fri, 13 Sep 2024 08:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A3E1D6C7D
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Sep 2024 08:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726216549; cv=none; b=T3gUj4EybpAJfMOhMMRZJPBEjsjW5VBvUYmmIcxgPsgOQk4u1rnzHmi+YgasjZSsheqDjzThOsSZgAj/MVs/Mdhf9JZ2goRK93PxpF9dakCEz3ezB2cSGewOVtc/sOOKjZ9P7eJu0A1Jdn7zvH+B2LcNH0xdv0vbbAxDAIjF4MI=
+	t=1726216604; cv=none; b=CmnOyvnOz3YFku6PCzdg4rYFpqK07Yj0CdBvMDtrZ5WhrXG1XFny0SNN/IihpoEqSF5rcV51MCaE2FI0bn8PXEPzX+L2UjRvo3jRyi9I4eKpKKwMxSLvfvpOyO4jc1DU3PiTyfgpp+/S85Zzo6DSVG2UKtKD1cUvDHGI5p1jbsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726216549; c=relaxed/simple;
-	bh=nIVhhC7EKEXHr6XKVslBFMKfaG1cUvknvHTh4HqKeXc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=hQMAEYMfVM+bfKsyyLD8DUwtxq1UQjiV454cXIkcwnQgl4nudFkNk9DpntDpD1E8lT7SDhj/KPZtDCXc14b1EkMfiylzljK6x5/cw8pbax5dsht79/R9wR4ulHF/kINnUgkypcgI4gkHzZd7ALMzc0Fx3A0UE9eJiLxXXUfbGdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tlbE/jtu; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1726216604; c=relaxed/simple;
+	bh=zAMShyBfk0di8PVtRRMQX+UtUolVAfO18RJ9JXP23AI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QLmXMmypZIQxNUX6a5dzfMqBeFXofxPrhSFm9ZBRWHaI95KCRpXU5FFrvdHv+iQJ0ZNcsV0kDhG0N2BMXrssbYTLwQQvcTI6GtVYkmlTvSFgVVTqBhIYOS3FSyi/5zaVMEjXfBS0RaePXV73RDNvcd7qJyMZCCMxSCRi8nuZ1lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NPnThKTt; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tlbE/jtu"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48D2t2J5027446;
-	Fri, 13 Sep 2024 08:35:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:subject:to:cc:references:from:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
-	StZG6R15DIf2nBirSiFNGX9i4sLjTFFP8nh2d5l3Q54=; b=tlbE/jtuJy3jDSu9
-	OdANTgMZeezdFERzqX+gLijW3+Rl9ztDybUMyXI7e8bbGwcs0Wk6IQS5ZY1mvK05
-	P4rSdnkHF/+5PdyK64fTHis7ZrjuyTTz8TgufRe2W9NcCTpS/nMHcNbJkmdi36i6
-	DBXJckS7K5SuRFoLh3B8cY3pVi61zycnY7DAglbogUymVxys2D4w1eU4XG4GiaJx
-	f70D3P/1vaC1S/Lhm9gblc9UEiCI+EXqdE62sElNqp5N3JQ8p9b3o7P24C82yraK
-	9b3Xf01TSDcKGEaci01GyXoKicLrwFLd6QblFj1yWnJ1V7UCagPe+RNi/qkrRbJD
-	SVR37w==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41gejb0sav-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Sep 2024 08:35:35 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48D6Adux010729;
-	Fri, 13 Sep 2024 08:35:34 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41kmb70m9g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Sep 2024 08:35:33 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48D8ZU4L14680342
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Sep 2024 08:35:30 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F1A1E20040;
-	Fri, 13 Sep 2024 08:35:29 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 887B820043;
-	Fri, 13 Sep 2024 08:35:27 +0000 (GMT)
-Received: from [9.43.112.138] (unknown [9.43.112.138])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 13 Sep 2024 08:35:27 +0000 (GMT)
-Message-ID: <9c18c4d4-ee60-4543-8bbb-ddc729c0a0f5@linux.ibm.com>
-Date: Fri, 13 Sep 2024 14:05:26 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] powerpc/vpa_pmu: Add interface to expose vpa counters
- via perf
-To: Christophe Leroy <christophe.leroy@csgroup.eu>, mpe@ellerman.id.au
-Cc: atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        disgoel@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        hbathini@linux.ibm.com, adubey@linux.ibm.com
-References: <20240828102141.1052332-1-kjain@linux.ibm.com>
- <56b53876-0838-416f-adce-b1ffbd0916fc@csgroup.eu>
-Content-Language: en-US
-From: kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <56b53876-0838-416f-adce-b1ffbd0916fc@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: pdNkXY-ly2RFLAqx9Xjvw2FlUpe2Y68A
-X-Proofpoint-GUID: pdNkXY-ly2RFLAqx9Xjvw2FlUpe2Y68A
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NPnThKTt"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-374bd059b12so425878f8f.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Sep 2024 01:36:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1726216600; x=1726821400; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=M4pnwolBQoa9ieXVMZZHl9gf+CGD4ivypyvaluO9F24=;
+        b=NPnThKTtuyd+IBbUka9ae+GMZ2WnIPAwoUJJOuaZeBi4/m0k1E3zeVlzQbNskDkZPq
+         d8y2sOHITb6Wet/oZiejhhHFG1WCja7dBH3so6uiZgQdyRfb1DriBhMkmZZMSMXxtQae
+         0jZXaSMmYiXWmHitn6mLcEpl6D5WzVZaeuOcfvKDM/id4vVcndr/Mh64TVjZRMokFVdL
+         rIfXYlwmCrhZ+t+FyXXK8t4k5XE+oQRitR1tp5wJEm6GoNvQEr5P6vV6oO5NUsVTVo01
+         BNQMFiDjYi5kx8uInvlvxyQTJW4EKh26X61gk4cvUxdkJJzE+RXQJ7goHgagihUUPCDr
+         3X7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726216600; x=1726821400;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M4pnwolBQoa9ieXVMZZHl9gf+CGD4ivypyvaluO9F24=;
+        b=hmEoSKkjDV8lMngioGRT2OKlUQBCHNs3m5AuOLr9VEawVBuat04ORxvkH0fzBCbf6d
+         ZLm/Z7O00AjHzXNJt8XMA60w8Fu+nXyJg86qpd/Vjd7C1VtvHR0o7iRns/k3w0OQTsbZ
+         IPX1NJqyKBnnQOujS9doKovIUE69jRjuHIHc24eqWYBl4xNiOsRELm4ih392TzL8/p31
+         BhzAwGUp0vLsb0xctV/SDv94oeomoB6j1jQr2BKrz+i05sOxZr882ZwCw0U4pDXB48Wg
+         +ddavN7PbV2My79fkcdbf5C0gzEe07NPn7ijbR208YmWo5JjTCheow9JxnZouPOh0eHI
+         vgBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5Jw/BbNkjrGyh5QdBp8S51eIQ2M3xYcWYmvJFgG4QQ4YYIfz0r5+1/qdzZ4FskYBlxGj7efAILYTb2JXUDkEF@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuOxWRRBUT/ZBQYPE0zV+o346a8ClCbLpiC8uAZW97MQ+BONwN
+	jsaovzt8Y3py2sYOrYqsUXONRG07AksBY9Xt9PCGfewwVDhcBYyrIcFr0MP1U2g=
+X-Google-Smtp-Source: AGHT+IHx+OMzS4wGVJnmmQnNusmr45zTxb9hpuk4RDO/rxJ2QU/ShBAVN25ERI2yQhQcZdcHa5uSFg==
+X-Received: by 2002:a05:6000:1841:b0:378:7f65:e13a with SMTP id ffacd0b85a97d-378d61d4fc8mr1097306f8f.2.1726216600193;
+        Fri, 13 Sep 2024 01:36:40 -0700 (PDT)
+Received: from [192.168.1.61] ([84.67.228.188])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378956de3d4sm16159955f8f.108.2024.09.13.01.36.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Sep 2024 01:36:39 -0700 (PDT)
+Message-ID: <39eafc82-dfa8-4e22-9d8a-071ed09460d3@linaro.org>
+Date: Fri, 13 Sep 2024 09:36:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-13_04,2024-09-13_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- phishscore=0 mlxlogscore=999 spamscore=0 impostorscore=0 adultscore=0
- bulkscore=0 suspectscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
- definitions=main-2409130058
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] perf stat: Stop repeating when ref_perf_stat()
+ returns -1
+To: Levi Yun <yeoreum.yun@arm.com>
+Cc: nd@arm.com, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, asmadeus@codewreck.org
+References: <20240913020209.520104-1-yeoreum.yun@arm.com>
+ <20240913020209.520104-3-yeoreum.yun@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20240913020209.520104-3-yeoreum.yun@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-On 9/13/24 12:00, Christophe Leroy wrote:
+On 13/09/2024 03:02, Levi Yun wrote:
+> Exit when run_perf_stat() returns an error to avoid continuously
+> repeating the same error message. It's not expected that COUNTER_FATAL
+> or internal errors are recoverable so there's no point in retrying.
 > 
+> This fixes the following flood of error messages for permission issues,
+> for example when perf_event_paranoid==3:
+>    perf stat -r 1044 -- false
 > 
-> Le 28/08/2024 à 12:21, Kajol Jain a écrit :
->> The pseries Shared Processor Logical Partition(SPLPAR) machines
->> can retrieve a log of dispatch and preempt events from the
->> hypervisor using data from Disptach Trace Log(DTL) buffer.
->> With this information, user can retrieve when and why each dispatch &
->> preempt has occurred. Added an interface to expose the Virtual Processor
->> Area(VPA) DTL counters via perf.
->>
->> The following events are available and exposed in sysfs:
->>
->>   vpa_dtl/dtl_cede/ - Trace voluntary (OS initiated) virtual processor
->> waits
->>   vpa_dtl/dtl_preempt/ - Trace time slice preempts
->>   vpa_dtl/dtl_fault/ - Trace virtual partition memory page faults.
->>   vpa_dtl/dtl_all/ - Trace all (dtl_cede/dtl_preempt/dtl_fault)
->>
->> Added interface defines supported event list, config fields for the
->> event attributes and their corresponding bit values which are exported
->> via sysfs. User could use the standard perf tool to access perf events
->> exposed via vpa-dtl pmu.
->>
->> The VPA DTL PMU counters do not interrupt on overflow or generate any
->> PMI interrupts. Therefore, the kernel needs to poll the counters, added
->> hrtimer code to do that. The timer interval can be provided by user via
->> sample_period field in nano seconds.
->>
->> Result on power10 SPLPAR system with 656 cpu threads.
->> In the below perf record command with vpa_dtl pmu, -c option is used
->> to provide sample_period whch corresponding to 1000000000ns i.e; 1sec
->> and the workload time is also 1 second, hence we are getting 656 samples:
->>
->> [command] perf record -a -R -e vpa_dtl/dtl_all/ -c 1000000000 sleep 1
->> [ perf record: Woken up 1 times to write data ]
->> [ perf record: Captured and wrote 0.828 MB perf.data (656 samples) ]
->>
->> There is one hrtimer added per vpa-dtl pmu thread. Code added to handle
->> addition of dtl buffer data in the raw sample. Since DTL does not provide
->> IP address for a sample and it just have traces on reason of
->> dispatch/preempt, we directly saving DTL buffer data to perf.data file as
->> raw sample. For each hrtimer restart call, interface will dump all the
->> new dtl entries added to dtl buffer as a raw sample.
->>
->> To ensure there are no other conflicting dtl users (example: debugfs dtl
->> or /proc/powerpc/vcpudispatch_stats), interface added code to use
->> "down_write_trylock" call to take the dtl_access_lock. The
->> dtl_access_lock
->> is defined in dtl.h file. Also added global reference count variable
->> called
->> "dtl_global_refc", to ensure dtl data can be captured per-cpu. Code also
->> added global lock called "dtl_global_lock" to avoid race condition.
->>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> ---
->> Notes:
->>
->> - Made code changes on top of recent fix sent by Michael Ellerman.
->>    Link to the patch:
->> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20240819122401.513203-1-mpe@ellerman.id.au/
->>
->>   arch/powerpc/perf/Makefile  |   2 +-
->>   arch/powerpc/perf/vpa-pmu.c | 469 ++++++++++++++++++++++++++++++++++++
->>   include/linux/cpuhotplug.h  |   1 +
->>   3 files changed, 471 insertions(+), 1 deletion(-)
->>   create mode 100644 arch/powerpc/perf/vpa-pmu.c
+>    Error:
+>    Access to performance monitoring and observability operations is limited.
+>    ...
+>    Error:
+>    Access to performance monitoring and observability operations is limited.
+>    ...
+>    (repeating for 1044 times).
 > 
+> Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
+> ---
+> Changes in v2:
+>    - Add some comments.
+> ---
+>   tools/perf/builtin-stat.c | 10 +++++++++-
+>   1 file changed, 9 insertions(+), 1 deletion(-)
 > 
-> Seems like it doesn't build on PPC64:
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 954eb37ce7b8..0153925f2382 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -2875,7 +2875,15 @@ int cmd_stat(int argc, const char **argv)
+>   			evlist__reset_prev_raw_counts(evsel_list);
 > 
-> arch/powerpc/perf/vpa-pmu.c#L212
-> passing argument 1 of 'up_write' from incompatible pointer type
-> [-Wincompatible-pointer-types]
-> 
-> arch/powerpc/perf/vpa-pmu.c#L261
-> passing argument 1 of 'down_write_trylock' from incompatible pointer
-> type [-Wincompatible-pointer-types]
-> 
-> arch/powerpc/perf/vpa-pmu.c#L402
-> passing argument 1 of 'up_write' from incompatible pointer type
-> [-Wincompatible-pointer-types]
+>   		status = run_perf_stat(argc, argv, run_idx);
+> -		if (forever && status != -1 && !interval) {
+> +		/*
+> +		 * * Meet COUNTER_FATAL situation (i.e) can't open event counter.
+> +		 * * In this case, there is a high chance of failure in the next attempt
+> +		 * * as well with the same reason. so, stop it.
+> +		 * */
 
-Hi Christophe,
-   Thanks for checking the patch. These changes are on top of fix patch
-sent by Michael Ellerman
-https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20240819122401.513203-1-mpe@ellerman.id.au/
+There's something wrong with the formatting here.
 
-Since he changed the dtl_access_lock to be a rw_semaphore.
+But I don't think the comment answers my question about the other return 
+codes. It just states what the code does.
 
-Are you trying with Michael patch changes?
+There are many more return -1's than just for COUNTER_FATAL, so it's not 
+just that situation anyway. And in addition to that, there is -ENOMEM 
+and others that aren't -1 which aren't explained that they are 
+deliberately explicit retry or ignores.
 
-Thanks,
-Kajol Jain
-
+> +		if (status == -1)
+> +			break;
+> +
+> +		if (forever && !interval) {
+>   			print_counters(NULL, argc, argv);
+>   			perf_stat__reset_stats();
+>   		}
+> --
+> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+> 
