@@ -1,444 +1,154 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C55671D9334;
-	Fri, 13 Sep 2024 08:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5FE1D6DAA
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Sep 2024 08:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726217129; cv=none; b=J6gbVMdLXFUS40L9N1CbLhotJXrzVfkgJ7gNN9WFW2EMkqoLDsH90Xe4K0SBVBl/WWo2+a23j+EdFs6TOSbQ5j908h8M02n+3A3tGqEgOeJuhOk5A76N1R+F5V/5n90Q3jBMjpKS8DjgUra+sToNGER+LIq45x21cPuc2yldzkk=
+	t=1726217137; cv=none; b=VsXPpniUvpIkya9A6R4bnaiH8d/hza9t5zf9NfzoXdQVHVTwnil8oEpq3gLy4avNmL642Ks2B5Lwox5qhAGaoKceoiwbFtaaTI12itccA7VbYLTtDTLRTfHbM4Vb9Lt3ORt0VUoAwMxsE0U2WbFW7IaolZNq1BtmUjjNmGWg6RI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726217129; c=relaxed/simple;
-	bh=vkTn66u7El/MFAyAOzG7OX65lSHvS+6KdkwigBsG9Jg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Kh2YIpxi6OnQvmLC25y+WBMSfQvgTkSFrOWNhpsh2HfSHa+OIScziT7TrEmMlQC1gVu5I5DHSmBfaqiiBzu8+Vaj3EhJdqhW1UsNvrZpMFAU2297FXV0CfYFFLBKEHvJbHB1XbPVUJD4NKK0kqfwHrXE6cnAz0dFHCTiC/fZXv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1BA913D5;
-	Fri, 13 Sep 2024 01:45:56 -0700 (PDT)
-Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.16.84])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EC3C23F73B;
-	Fri, 13 Sep 2024 01:45:20 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-mm@kvack.org
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	x86@kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-fsdevel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH 7/7] mm: Use pgdp_get() for accessing PGD entries
-Date: Fri, 13 Sep 2024 14:14:33 +0530
-Message-Id: <20240913084433.1016256-8-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240913084433.1016256-1-anshuman.khandual@arm.com>
-References: <20240913084433.1016256-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1726217137; c=relaxed/simple;
+	bh=3yZ/LOdhIe5CHf1AWmQKkYe5Wjc3+MuuaW5UmU8FqKM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=l4JVtqfnZPmEPopGlUSKra+HLXAd0Fu9ypCROibwF+jXxZdM/XXWQZMcd7q3frpf/AWW4Vo7rdZWxO/2CvSniH1knvsbWFR8wqUkzOp77wtTgBZq69DYQjvvof4gfBz62cUOBDDJPX/nNYmtjf5esM8x3bjUrOZw32l86Qc8TPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kPds3xcD; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kPds3xcD"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42cbc38a997so11483615e9.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Sep 2024 01:45:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1726217133; x=1726821933; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0yQtJG58JXUoEFDgK33aK3NTSveYSA8trxI5g+ylw1M=;
+        b=kPds3xcD4TtzxncThi8a/ZY9wb31RhLV0PwigsklAKqP156E24tItrghVdr4sH5mKD
+         8DVoifmOjqfh/s6zfDny2juvHkg/GjEMiKLfOYLMm+FOeOVpY6BbolKkrutJXzGnlmFx
+         pL2lNnO7TSt23lWPaqHAMgxRkD5pSw6dC9GUmsc7lm3fmbuZhT9zPJSA8knCqlCnNs0D
+         HpMhGD69rYBfQ8vMGGnQH3v7b+h3BSkl+wbrpDIiUFDdbFh2dGxVwdxB8ThQueXkLKqm
+         4Nv4KuKp7cmrWvOlm+xMTd4Jt6T9yxGuBGc8ywCLy+aLg75kFxS8O+cEESC222TGj6iJ
+         jaqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726217133; x=1726821933;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0yQtJG58JXUoEFDgK33aK3NTSveYSA8trxI5g+ylw1M=;
+        b=IVLNSGxru7MNFq0ucXk0b3bUBOP7pE5QDzWh8s96KJ6BRvHuGus0wkgCbk2oFxI18K
+         BTETLlfwMRCu6J7ohsXDyP45e+u1HLGZjojsFkMWGhHK2xD+GUKQ2KiXTGYDRhO7DA4N
+         z/dHYzqhbV2t3gpLo1EBKdoWBEWQynZFCwuFLA4hdyFnmPCVkS4Ha1msyaHNTmoKUI+b
+         BTw6+4vfTt0zw9dh0TKMzDAjySz52RdyPnhaBmQGK+bVaS9xdZzTKqIFTyzKvxcxJ90h
+         01/tD3TuGqcSwDaUl22hWhl4ijLBIa1ISCJYrCa2q8k0+qlhMMt8J7wZI9XQsYhW0kjS
+         Y4xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVouaJ/A53XdxYKNme01EoG53En2WAZTCPriFI8ppD5k7b+smJ6QThtt1Lx3VUZU/NZq/D1RxM0ZJi3TN6FRb0u@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8p2HZPR/ZBpEX/T9Nevkz+0KgFUmFeJTbb/T9rH1DW2/Q+RbE
+	/cLQoHI9gdlPqfTDCEaVbMnHr81EAGicVjGU2y9ldaHiebZYNb658OSAnkuWXhA=
+X-Google-Smtp-Source: AGHT+IF0j6qGvoyaP+7nUI1CxqqzuRNVbEf9qU1/AjyLXbd9/zthodEAAXNUXlKvklMGrB9M4YpGFg==
+X-Received: by 2002:a05:600c:3555:b0:426:5e32:4857 with SMTP id 5b1f17b1804b1-42cdbf44f4fmr34910335e9.0.1726217132676;
+        Fri, 13 Sep 2024 01:45:32 -0700 (PDT)
+Received: from [192.168.1.61] ([84.67.228.188])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378956de00fsm16216331f8f.99.2024.09.13.01.45.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Sep 2024 01:45:31 -0700 (PDT)
+Message-ID: <4181eab7-9d86-4043-bff8-1be898946b12@linaro.org>
+Date: Fri, 13 Sep 2024 09:45:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] perf stat: Stop repeating when ref_perf_stat()
+ returns -1
+From: James Clark <james.clark@linaro.org>
+To: Levi Yun <yeoreum.yun@arm.com>
+Cc: nd@arm.com, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, asmadeus@codewreck.org
+References: <20240913020209.520104-1-yeoreum.yun@arm.com>
+ <20240913020209.520104-3-yeoreum.yun@arm.com>
+ <39eafc82-dfa8-4e22-9d8a-071ed09460d3@linaro.org>
+Content-Language: en-US
+In-Reply-To: <39eafc82-dfa8-4e22-9d8a-071ed09460d3@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Convert PGD accesses via pgdp_get() helper that defaults as READ_ONCE() but
-also provides the platform an opportunity to override when required.
 
-Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Muchun Song <muchun.song@linux.dev>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Miaohe Lin <linmiaohe@huawei.com>
-Cc: Dennis Zhou <dennis@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-cc: Christoph Lameter <cl@linux.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-perf-users@vger.kernel.org
-Cc: kasan-dev@googlegroups.com
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- drivers/misc/sgi-gru/grufault.c |  2 +-
- fs/userfaultfd.c                |  2 +-
- include/linux/mm.h              |  2 +-
- include/linux/pgtable.h         |  6 +++---
- kernel/events/core.c            |  2 +-
- mm/gup.c                        |  8 ++++----
- mm/hugetlb.c                    |  2 +-
- mm/kasan/init.c                 |  8 ++++----
- mm/kasan/shadow.c               |  2 +-
- mm/memory-failure.c             |  2 +-
- mm/memory.c                     | 10 +++++-----
- mm/page_vma_mapped.c            |  2 +-
- mm/percpu.c                     |  2 +-
- mm/pgalloc-track.h              |  2 +-
- mm/pgtable-generic.c            |  2 +-
- mm/rmap.c                       |  2 +-
- mm/sparse-vmemmap.c             |  2 +-
- mm/vmalloc.c                    | 10 +++++-----
- 18 files changed, 34 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
-index cdca93398b44..2a8a154d8531 100644
---- a/drivers/misc/sgi-gru/grufault.c
-+++ b/drivers/misc/sgi-gru/grufault.c
-@@ -212,7 +212,7 @@ static int atomic_pte_lookup(struct vm_area_struct *vma, unsigned long vaddr,
- 	pte_t pte;
- 
- 	pgdp = pgd_offset(vma->vm_mm, vaddr);
--	if (unlikely(pgd_none(*pgdp)))
-+	if (unlikely(pgd_none(pgdp_get(pgdp))))
- 		goto err;
- 
- 	p4dp = p4d_offset(pgdp, vaddr);
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 4044e15cdfd9..6d33c7a9eb01 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -304,7 +304,7 @@ static inline bool userfaultfd_must_wait(struct userfaultfd_ctx *ctx,
- 	assert_fault_locked(vmf);
- 
- 	pgd = pgd_offset(mm, address);
--	if (!pgd_present(*pgd))
-+	if (!pgd_present(pgdp_get(pgd)))
- 		goto out;
- 	p4d = p4d_offset(pgd, address);
- 	if (!p4d_present(p4dp_get(p4d)))
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 1bb1599b5779..1978a4b1fcf5 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2819,7 +2819,7 @@ int __pte_alloc_kernel(pmd_t *pmd);
- static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
- 		unsigned long address)
- {
--	return (unlikely(pgd_none(*pgd)) && __p4d_alloc(mm, pgd, address)) ?
-+	return (unlikely(pgd_none(pgdp_get(pgd))) && __p4d_alloc(mm, pgd, address)) ?
- 		NULL : p4d_offset(pgd, address);
- }
- 
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index b3e40f06c8c4..19f6557b4bf5 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1084,7 +1084,7 @@ static inline int pgd_same(pgd_t pgd_a, pgd_t pgd_b)
- 
- #define set_pgd_safe(pgdp, pgd) \
- ({ \
--	WARN_ON_ONCE(pgd_present(*pgdp) && !pgd_same(*pgdp, pgd)); \
-+	WARN_ON_ONCE(pgd_present(pgdp_get(pgdp)) && !pgd_same(pgdp_get(pgdp), pgd)); \
- 	set_pgd(pgdp, pgd); \
- })
- 
-@@ -1237,9 +1237,9 @@ void pmd_clear_bad(pmd_t *);
- 
- static inline int pgd_none_or_clear_bad(pgd_t *pgd)
- {
--	if (pgd_none(*pgd))
-+	if (pgd_none(pgdp_get(pgd)))
- 		return 1;
--	if (unlikely(pgd_bad(*pgd))) {
-+	if (unlikely(pgd_bad(pgdp_get(pgd)))) {
- 		pgd_clear_bad(pgd);
- 		return 1;
- 	}
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4e56a276ed25..1e3142211cce 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7603,7 +7603,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
- 	pte_t *ptep, pte;
- 
- 	pgdp = pgd_offset(mm, addr);
--	pgd = READ_ONCE(*pgdp);
-+	pgd = pgdp_get(pgdp);
- 	if (pgd_none(pgd))
- 		return 0;
- 
-diff --git a/mm/gup.c b/mm/gup.c
-index 3a97d0263052..f43daab23979 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1060,7 +1060,7 @@ static struct page *follow_page_mask(struct vm_area_struct *vma,
- 	ctx->page_mask = 0;
- 	pgd = pgd_offset(mm, address);
- 
--	if (pgd_none(*pgd) || unlikely(pgd_bad(*pgd)))
-+	if (pgd_none(pgdp_get(pgd)) || unlikely(pgd_bad(pgdp_get(pgd))))
- 		page = no_page_table(vma, flags, address);
- 	else
- 		page = follow_p4d_mask(vma, address, pgd, flags, ctx);
-@@ -1111,7 +1111,7 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
- 		pgd = pgd_offset_k(address);
- 	else
- 		pgd = pgd_offset_gate(mm, address);
--	if (pgd_none(*pgd))
-+	if (pgd_none(pgdp_get(pgd)))
- 		return -EFAULT;
- 	p4d = p4d_offset(pgd, address);
- 	if (p4d_none(p4dp_get(p4d)))
-@@ -3158,7 +3158,7 @@ static int gup_fast_pgd_leaf(pgd_t orig, pgd_t *pgdp, unsigned long addr,
- 	if (!folio)
- 		return 0;
- 
--	if (unlikely(pgd_val(orig) != pgd_val(*pgdp))) {
-+	if (unlikely(pgd_val(orig) != pgd_val(pgdp_get(pgdp)))) {
- 		gup_put_folio(folio, refs, flags);
- 		return 0;
- 	}
-@@ -3267,7 +3267,7 @@ static void gup_fast_pgd_range(unsigned long addr, unsigned long end,
- 
- 	pgdp = pgd_offset(current->mm, addr);
- 	do {
--		pgd_t pgd = READ_ONCE(*pgdp);
-+		pgd_t pgd = pgdp_get(pgdp);
- 
- 		next = pgd_addr_end(addr, end);
- 		if (pgd_none(pgd))
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 4fdb91c8cc2b..294d74b03d83 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -7451,7 +7451,7 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
- 	pmd_t *pmd;
- 
- 	pgd = pgd_offset(mm, addr);
--	if (!pgd_present(*pgd))
-+	if (!pgd_present(pgdp_get(pgd)))
- 		return NULL;
- 	p4d = p4d_offset(pgd, addr);
- 	if (!p4d_present(p4dp_get(p4d)))
-diff --git a/mm/kasan/init.c b/mm/kasan/init.c
-index 02af738fee5e..c2b307716551 100644
---- a/mm/kasan/init.c
-+++ b/mm/kasan/init.c
-@@ -271,7 +271,7 @@ int __ref kasan_populate_early_shadow(const void *shadow_start,
- 			continue;
- 		}
- 
--		if (pgd_none(*pgd)) {
-+		if (pgd_none(pgdp_get(pgd))) {
- 			p4d_t *p;
- 
- 			if (slab_is_available()) {
-@@ -345,7 +345,7 @@ static void kasan_free_p4d(p4d_t *p4d_start, pgd_t *pgd)
- 			return;
- 	}
- 
--	p4d_free(&init_mm, (p4d_t *)page_to_virt(pgd_page(*pgd)));
-+	p4d_free(&init_mm, (p4d_t *)page_to_virt(pgd_page(pgdp_get(pgd))));
- 	pgd_clear(pgd);
- }
- 
-@@ -468,10 +468,10 @@ void kasan_remove_zero_shadow(void *start, unsigned long size)
- 		next = pgd_addr_end(addr, end);
- 
- 		pgd = pgd_offset_k(addr);
--		if (!pgd_present(*pgd))
-+		if (!pgd_present(pgdp_get(pgd)))
- 			continue;
- 
--		if (kasan_p4d_table(*pgd)) {
-+		if (kasan_p4d_table(pgdp_get(pgd))) {
- 			if (IS_ALIGNED(addr, PGDIR_SIZE) &&
- 			    IS_ALIGNED(next, PGDIR_SIZE)) {
- 				pgd_clear(pgd);
-diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
-index 52150cc5ae5f..7f3c46237816 100644
---- a/mm/kasan/shadow.c
-+++ b/mm/kasan/shadow.c
-@@ -191,7 +191,7 @@ static bool shadow_mapped(unsigned long addr)
- 	pmd_t *pmd;
- 	pte_t *pte;
- 
--	if (pgd_none(*pgd))
-+	if (pgd_none(pgdp_get(pgd)))
- 		return false;
- 	p4d = p4d_offset(pgd, addr);
- 	if (p4d_none(p4dp_get(p4d)))
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 3d900cc039b3..c9397eab52bd 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -411,7 +411,7 @@ static unsigned long dev_pagemap_mapping_shift(struct vm_area_struct *vma,
- 
- 	VM_BUG_ON_VMA(address == -EFAULT, vma);
- 	pgd = pgd_offset(vma->vm_mm, address);
--	if (!pgd_present(*pgd))
-+	if (!pgd_present(pgdp_get(pgd)))
- 		return 0;
- 	p4d = p4d_offset(pgd, address);
- 	if (!p4d_present(p4dp_get(p4d)))
-diff --git a/mm/memory.c b/mm/memory.c
-index 7e6bb051d187..7765d30e669f 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2936,11 +2936,11 @@ static int __apply_to_page_range(struct mm_struct *mm, unsigned long addr,
- 	pgd = pgd_offset(mm, addr);
- 	do {
- 		next = pgd_addr_end(addr, end);
--		if (pgd_none(*pgd) && !create)
-+		if (pgd_none(pgdp_get(pgd)) && !create)
- 			continue;
--		if (WARN_ON_ONCE(pgd_leaf(*pgd)))
-+		if (WARN_ON_ONCE(pgd_leaf(pgdp_get(pgd))))
- 			return -EINVAL;
--		if (!pgd_none(*pgd) && WARN_ON_ONCE(pgd_bad(*pgd))) {
-+		if (!pgd_none(pgdp_get(pgd)) && WARN_ON_ONCE(pgd_bad(pgdp_get(pgd)))) {
- 			if (!create)
- 				continue;
- 			pgd_clear_bad(pgd);
-@@ -6035,7 +6035,7 @@ int __p4d_alloc(struct mm_struct *mm, pgd_t *pgd, unsigned long address)
- 		return -ENOMEM;
- 
- 	spin_lock(&mm->page_table_lock);
--	if (pgd_present(*pgd)) {	/* Another has populated it */
-+	if (pgd_present(pgdp_get(pgd))) {	/* Another has populated it */
- 		p4d_free(mm, new);
- 	} else {
- 		smp_wmb(); /* See comment in pmd_install() */
-@@ -6139,7 +6139,7 @@ int follow_pte(struct vm_area_struct *vma, unsigned long address,
- 		goto out;
- 
- 	pgd = pgd_offset(mm, address);
--	if (pgd_none(*pgd) || unlikely(pgd_bad(*pgd)))
-+	if (pgd_none(pgdp_get(pgd)) || unlikely(pgd_bad(pgdp_get(pgd))))
- 		goto out;
- 
- 	p4d = p4d_offset(pgd, address);
-diff --git a/mm/page_vma_mapped.c b/mm/page_vma_mapped.c
-index a33f92db2666..fb8b610f7378 100644
---- a/mm/page_vma_mapped.c
-+++ b/mm/page_vma_mapped.c
-@@ -212,7 +212,7 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
- restart:
- 	do {
- 		pgd = pgd_offset(mm, pvmw->address);
--		if (!pgd_present(*pgd)) {
-+		if (!pgd_present(pgdp_get(pgd))) {
- 			step_forward(pvmw, PGDIR_SIZE);
- 			continue;
- 		}
-diff --git a/mm/percpu.c b/mm/percpu.c
-index 58660e8eb892..70e68ab002e9 100644
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -3184,7 +3184,7 @@ void __init __weak pcpu_populate_pte(unsigned long addr)
- 	pud_t *pud;
- 	pmd_t *pmd;
- 
--	if (pgd_none(*pgd)) {
-+	if (pgd_none(pgdp_get(pgd))) {
- 		p4d = memblock_alloc(P4D_TABLE_SIZE, P4D_TABLE_SIZE);
- 		if (!p4d)
- 			goto err_alloc;
-diff --git a/mm/pgalloc-track.h b/mm/pgalloc-track.h
-index 3db8ccbcb141..644f632c7cba 100644
---- a/mm/pgalloc-track.h
-+++ b/mm/pgalloc-track.h
-@@ -7,7 +7,7 @@ static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
- 				     unsigned long address,
- 				     pgtbl_mod_mask *mod_mask)
- {
--	if (unlikely(pgd_none(*pgd))) {
-+	if (unlikely(pgd_none(pgdp_get(pgd)))) {
- 		if (__p4d_alloc(mm, pgd, address))
- 			return NULL;
- 		*mod_mask |= PGTBL_PGD_MODIFIED;
-diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
-index 7e0a4974b0fc..b97eea347a36 100644
---- a/mm/pgtable-generic.c
-+++ b/mm/pgtable-generic.c
-@@ -24,7 +24,7 @@
- 
- void pgd_clear_bad(pgd_t *pgd)
- {
--	pgd_ERROR(*pgd);
-+	pgd_ERROR(pgdp_get(pgd));
- 	pgd_clear(pgd);
- }
- 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 829d0cf5e384..7e2e977efaba 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -809,7 +809,7 @@ pmd_t *mm_find_pmd(struct mm_struct *mm, unsigned long address)
- 	pmd_t *pmd = NULL;
- 
- 	pgd = pgd_offset(mm, address);
--	if (!pgd_present(*pgd))
-+	if (!pgd_present(pgdp_get(pgd)))
- 		goto out;
- 
- 	p4d = p4d_offset(pgd, address);
-diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-index 2bd1c95f107a..ffc78329a130 100644
---- a/mm/sparse-vmemmap.c
-+++ b/mm/sparse-vmemmap.c
-@@ -233,7 +233,7 @@ p4d_t * __meminit vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node)
- pgd_t * __meminit vmemmap_pgd_populate(unsigned long addr, int node)
- {
- 	pgd_t *pgd = pgd_offset_k(addr);
--	if (pgd_none(*pgd)) {
-+	if (pgd_none(pgdp_get(pgd))) {
- 		void *p = vmemmap_alloc_block_zero(PAGE_SIZE, node);
- 		if (!p)
- 			return NULL;
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index c67b067f4686..de7a6dd0ab21 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -450,7 +450,7 @@ void __vunmap_range_noflush(unsigned long start, unsigned long end)
- 	pgd = pgd_offset_k(addr);
- 	do {
- 		next = pgd_addr_end(addr, end);
--		if (pgd_bad(*pgd))
-+		if (pgd_bad(pgdp_get(pgd)))
- 			mask |= PGTBL_PGD_MODIFIED;
- 		if (pgd_none_or_clear_bad(pgd))
- 			continue;
-@@ -582,7 +582,7 @@ static int vmap_small_pages_range_noflush(unsigned long addr, unsigned long end,
- 	pgd = pgd_offset_k(addr);
- 	do {
- 		next = pgd_addr_end(addr, end);
--		if (pgd_bad(*pgd))
-+		if (pgd_bad(pgdp_get(pgd)))
- 			mask |= PGTBL_PGD_MODIFIED;
- 		err = vmap_pages_p4d_range(pgd, addr, next, prot, pages, &nr, &mask);
- 		if (err)
-@@ -752,11 +752,11 @@ struct page *vmalloc_to_page(const void *vmalloc_addr)
- 	 */
- 	VIRTUAL_BUG_ON(!is_vmalloc_or_module_addr(vmalloc_addr));
- 
--	if (pgd_none(*pgd))
-+	if (pgd_none(pgdp_get(pgd)))
- 		return NULL;
--	if (WARN_ON_ONCE(pgd_leaf(*pgd)))
-+	if (WARN_ON_ONCE(pgd_leaf(pgdp_get(pgd))))
- 		return NULL; /* XXX: no allowance for huge pgd */
--	if (WARN_ON_ONCE(pgd_bad(*pgd)))
-+	if (WARN_ON_ONCE(pgd_bad(pgdp_get(pgd))))
- 		return NULL;
- 
- 	p4d = p4d_offset(pgd, addr);
--- 
-2.25.1
+On 13/09/2024 09:36, James Clark wrote:
+> 
+> 
+> On 13/09/2024 03:02, Levi Yun wrote:
+>> Exit when run_perf_stat() returns an error to avoid continuously
+>> repeating the same error message. It's not expected that COUNTER_FATAL
+>> or internal errors are recoverable so there's no point in retrying.
+>>
+>> This fixes the following flood of error messages for permission issues,
+>> for example when perf_event_paranoid==3:
+>>    perf stat -r 1044 -- false
+>>
+>>    Error:
+>>    Access to performance monitoring and observability operations is 
+>> limited.
+>>    ...
+>>    Error:
+>>    Access to performance monitoring and observability operations is 
+>> limited.
+>>    ...
+>>    (repeating for 1044 times).
+>>
+>> Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
+>> ---
+>> Changes in v2:
+>>    - Add some comments.
+>> ---
+>>   tools/perf/builtin-stat.c | 10 +++++++++-
+>>   1 file changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>> index 954eb37ce7b8..0153925f2382 100644
+>> --- a/tools/perf/builtin-stat.c
+>> +++ b/tools/perf/builtin-stat.c
+>> @@ -2875,7 +2875,15 @@ int cmd_stat(int argc, const char **argv)
+>>               evlist__reset_prev_raw_counts(evsel_list);
+>>
+>>           status = run_perf_stat(argc, argv, run_idx);
+>> -        if (forever && status != -1 && !interval) {
+>> +        /*
+>> +         * * Meet COUNTER_FATAL situation (i.e) can't open event 
+>> counter.
+>> +         * * In this case, there is a high chance of failure in the 
+>> next attempt
+>> +         * * as well with the same reason. so, stop it.
+>> +         * */
+> 
+> There's something wrong with the formatting here.
+> 
+> But I don't think the comment answers my question about the other return 
+> codes. It just states what the code does.
+> 
+> There are many more return -1's than just for COUNTER_FATAL, so it's not 
+> just that situation anyway. And in addition to that, there is -ENOMEM 
+> and others that aren't -1 which aren't explained that they are 
+> deliberately explicit retry or ignores.
+> 
+
+If I'm understanding what I think it means, what about something like this:
+
+/*
+  * Returns -1 for fatal errors which signifies to not continue
+  * when in repeat mode.
+  *
+  * Returns < -1 error codes when stat record is used. These
+  * result in the stat information being displayed, but writing
+  * to the file fails and is non fatal.
+  */
+static int __run_perf_stat(int argc, const char **argv, int run_idx)
+{
+
 
