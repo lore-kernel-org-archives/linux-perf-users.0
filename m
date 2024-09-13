@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDF501E1300;
-	Fri, 13 Sep 2024 13:59:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05EE11E1322;
+	Fri, 13 Sep 2024 13:59:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726235955; cv=none; b=aZwiZiaf5MbGb2AhPOQ9AXSfkjFjhKMihrmDmeg5symtzmazRwYR9LioNVrSqCh6LOvyQM4GVivvA4QGgcmhzGOmwZRm6oXyTYgucaCmdOV0Pe20s1id9bMnUuIazF+GB+AbuZcAOGwQ8KZd3mvQOtMDwDpXwYa4QLeichYqeMs=
+	t=1726235957; cv=none; b=NW2AKmR4TLp6KQabGvcuS4VtsoT4q3baRe83+2rJ1GRCiHpcxzlH3cEWI5lIzzrTiW+5n/udjAGFdN2mXx0gzoxjo+sJzCYX3KKgDNRm2J3wuF++p3+AMk/it5u3IKpM5F1xNuQPl4lVM8bRm6g//C2GQdA5T1ImdOaAjwqH5Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726235955; c=relaxed/simple;
-	bh=StySgqm+xqC2HEujeylioEPzB1Hl4xfOze+9HN6gNpk=;
+	s=arc-20240116; t=1726235957; c=relaxed/simple;
+	bh=TqGv/vktL2snc2i6wZRpqz0m2qfRkLuGeBy7bQbX/ew=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KkuFzZmiRv0eFvXNzeZoCNdH+Xc4bB8rFi8+rGzuYW07MbuA0RG48V3mNLJ1P4lo9iMmGtSfupRubUUaPyxN4zna44ZfgOxrrVtLbKRDvETb72uRmcKEmleK8r45iDjHngEgbKOSmzPiLBuFLz++BUhHCnMzEfDN+UuChI77y1Q=
+	 MIME-Version; b=DWzC6necJh6jS0e706rVqj1yqBB03WrSL9hTacR2Xa5LyGerV2iqdX3phnn4pKKshtDrGJUzJLsE/31zzr8edry2Fh7Grskwz4jE/8aiZI7c2Ft7xjLMmA9XGSZSdypkbFgtwd7MpZ/ZUA3DmfBjZnQammoku6KN9rSWkfn2lQU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99A85339;
-	Fri, 13 Sep 2024 06:59:42 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB9B713D5;
+	Fri, 13 Sep 2024 06:59:44 -0700 (PDT)
 Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 394563F73B;
-	Fri, 13 Sep 2024 06:59:11 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7AD4B3F73B;
+	Fri, 13 Sep 2024 06:59:13 -0700 (PDT)
 From: Levi Yun <yeoreum.yun@arm.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -33,9 +33,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	nd@arm.com,
 	Levi Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v4 1/2] perf stat: Close cork_fd when create_perf_stat_counter() failed
-Date: Fri, 13 Sep 2024 14:59:06 +0100
-Message-Id: <20240913135907.648734-2-yeoreum.yun@arm.com>
+Subject: [PATCH v4 2/2] perf stat: Stop repeating when ref_perf_stat() returns -1
+Date: Fri, 13 Sep 2024 14:59:07 +0100
+Message-Id: <20240913135907.648734-3-yeoreum.yun@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240913135907.648734-1-yeoreum.yun@arm.com>
 References: <20240913135907.648734-1-yeoreum.yun@arm.com>
@@ -47,95 +47,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When create_perf_stat_counter() failed, it doesn't close workload.cork_fd
-open in evlist__prepare_workload(). This could make too many open file
-error while __run_perf_stat() repeats.
+Exit when run_perf_stat() returns an error to avoid continuously
+repeating the same error message. It's not expected that COUNTER_FATAL
+or internal errors are recoverable so there's no point in retrying.
 
-Introduce evlist__cancel_workload to close workload.cork_fd and
-wait workload.child_pid until exit to clear child process
-when create_perf_stat_counter() is failed with COUNTER_FATAL.
+This fixes the following flood of error messages for permission issues,
+for example when perf_event_paranoid==3:
+  perf stat -r 1044 -- false
+
+  Error:
+  Access to performance monitoring and observability operations is limited.
+  ...
+  Error:
+  Access to performance monitoring and observability operations is limited.
+  ...
+  (repeating for 1044 times).
 
 Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
 Reviewed-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/builtin-stat.c |  4 ++++
- tools/perf/util/evlist.c  | 14 +++++++++++++-
- tools/perf/util/evlist.h  |  1 +
- 3 files changed, 18 insertions(+), 1 deletion(-)
+ tools/perf/builtin-stat.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 661832756a24..954eb37ce7b8 100644
+index 954eb37ce7b8..8b7fc1e3c390 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -763,6 +763,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 
- 			switch (stat_handle_error(counter)) {
- 			case COUNTER_FATAL:
-+				if (forks)
-+					evlist__cancel_workload(evsel_list);
- 				return -1;
- 			case COUNTER_RETRY:
- 				goto try_again;
-@@ -804,6 +806,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 
- 				switch (stat_handle_error(counter)) {
- 				case COUNTER_FATAL:
-+					if (forks)
-+						evlist__cancel_workload(evsel_list);
- 					return -1;
- 				case COUNTER_RETRY:
- 					goto try_again_reset;
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 3a719edafc7a..51a221679c92 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -46,6 +46,7 @@
- #include <sys/mman.h>
- #include <sys/prctl.h>
- #include <sys/timerfd.h>
-+#include <sys/wait.h>
- 
- #include <linux/bitops.h>
- #include <linux/hash.h>
-@@ -1465,7 +1466,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
- 		 * For cancelling the workload without actually running it,
- 		 * the parent will just close workload.cork_fd, without writing
- 		 * anything, i.e. read will return zero and we just exit()
--		 * here.
-+		 * here (See evlist__cancel_workload()).
- 		 */
- 		if (ret != 1) {
- 			if (ret == -1)
-@@ -1546,6 +1547,17 @@ int evlist__start_workload(struct evlist *evlist)
- 	return 0;
+@@ -948,6 +948,14 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	return WEXITSTATUS(status);
  }
  
-+void evlist__cancel_workload(struct evlist *evlist)
-+{
-+	int status;
-+
-+	if (evlist->workload.cork_fd > 0) {
-+		close(evlist->workload.cork_fd);
-+		evlist->workload.cork_fd = -1;
-+		waitpid(evlist->workload.pid, &status, WNOHANG);
-+	}
-+}
-+
- int evlist__parse_sample(struct evlist *evlist, union perf_event *event, struct perf_sample *sample)
++/*
++ * Returns -1 for fatal errors which signifies to not continue
++ * when in repeat mode.
++ *
++ * Returns < -1 error codes when stat record is used. These
++ * result in the stat information being displayed, but writing
++ * to the file fails and is non fatal.
++ */
+ static int run_perf_stat(int argc, const char **argv, int run_idx)
  {
- 	struct evsel *evsel = evlist__event2evsel(evlist, event);
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index cb91dc9117a2..12f929ffdf92 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -184,6 +184,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target,
- 			     const char *argv[], bool pipe_output,
- 			     void (*exec_error)(int signo, siginfo_t *info, void *ucontext));
- int evlist__start_workload(struct evlist *evlist);
-+void evlist__cancel_workload(struct evlist *evlist);
+ 	int ret;
+@@ -2875,7 +2883,10 @@ int cmd_stat(int argc, const char **argv)
+ 			evlist__reset_prev_raw_counts(evsel_list);
  
- struct option;
- 
+ 		status = run_perf_stat(argc, argv, run_idx);
+-		if (forever && status != -1 && !interval) {
++		if (status == -1)
++			break;
++
++		if (forever && !interval) {
+ 			print_counters(NULL, argc, argv);
+ 			perf_stat__reset_stats();
+ 		}
 -- 
 LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
