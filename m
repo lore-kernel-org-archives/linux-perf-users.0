@@ -1,136 +1,102 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279044A07;
-	Fri, 13 Sep 2024 06:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFD11D52B;
+	Fri, 13 Sep 2024 08:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726209047; cv=none; b=Z9EeV6NEWfL8J18JBWE6/rZlgag+X/95uwV3CGj4QNWX7WmEuNbf5qB0Sd6q+UHi0LxJmOp+Iy3aKZrL17+/Ms4p34MtJln0bCgcjT8LdoOqB/hVk+LyxKswUDv08NR53ayY6FPv9Mb7tLYXfNc87Be70u8HuKaUgX/UpVI18SM=
+	t=1726214447; cv=none; b=QsAcllLhMIFv45Y64DQ+G+LkHioVE/tGePdU2S4gZHvquh+OyDp0Upa2jm1QqfQe9krQqnE7UrO+aK32UyA4KpfU5mDxsKugXH3IrWiLNyPfkP7U3dPAldkOokwAkJYghTQuH/Mjnbf0GN7vL+R9djILW4OBJOtYmGhtGVlyzos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726209047; c=relaxed/simple;
-	bh=wqhkE51D6fBFTxHsF7tyblzU++jlhsqpAQT2Nky7JCA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sWzNiN/s7hi4ce9gmiF02L5a9hSWFupu5f1s8RGuBHbeDl83M874RoRPjoZhy5dOYod93099G28+2W3a4Ajyg0pYCF2RpPXdxZEkD5UyT/dhgkSThrcqWnu+CzS+0ydmnQW+NT3JaMp4X0N7B7sHHr7he4jo/2HKbzsd04MeNuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4X4kvl1mYcz9sxD;
-	Fri, 13 Sep 2024 08:30:43 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id KPoVoPcVMXmd; Fri, 13 Sep 2024 08:30:43 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4X4kvl0pksz9sxB;
-	Fri, 13 Sep 2024 08:30:43 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 093388B77A;
-	Fri, 13 Sep 2024 08:30:43 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id r0dE7jHRRDpY; Fri, 13 Sep 2024 08:30:42 +0200 (CEST)
-Received: from [192.168.233.70] (unknown [192.168.233.70])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 511308B766;
-	Fri, 13 Sep 2024 08:30:42 +0200 (CEST)
-Message-ID: <56b53876-0838-416f-adce-b1ffbd0916fc@csgroup.eu>
-Date: Fri, 13 Sep 2024 08:30:41 +0200
+	s=arc-20240116; t=1726214447; c=relaxed/simple;
+	bh=PccrXOCdLtQfjCGDGyt5d/LJHCcVYMyN25csi+oWEyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=IoIepKbFqPZzppRKZOfJJYwKu0L3MmWfS7dNrutI6/Io4rIPGLfbg1vtr8tNsEY1riA6z297iUNcbZLSptNOX6NKo04EyeUwKiNfz4/2a6Us4QUO70zmjmZVp2a9aBzHjsGwJnhvtG8rYEbV8jnZBqS3t8ihShk47KJP0jcMN2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WaLSgZj8; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WaLSgZj8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A92A2C4CEC0;
+	Fri, 13 Sep 2024 08:00:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726214446;
+	bh=PccrXOCdLtQfjCGDGyt5d/LJHCcVYMyN25csi+oWEyA=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=WaLSgZj8CBmGD723az40e0xa7KvBGxTYoosRFCnDtIhawvyLeQ0yJm1iukMujV54W
+	 P/HLlUoGiPXwpbmFqj0Bybpab6vLDfLT2DgoS8649kARt47GXPxzMb8PDnMMazLGtg
+	 pDqJx/nFO+tyWCMq4HYW16FkQIoJeMUeEHhMIYz1uLBf3ZWyNg+v1kst9CIxA8Tcmw
+	 OFasbKW0jU9GU9ev3z1nW6w6rQ5/Pq5Jh0wk9dsv2khqv8aiUANh5Ofzwh9Mzek/gU
+	 RoKjn7TmF8mmqQC/19+j9tYJMUJvhUE4UTk+3de9g89ao5HP9mBFHjZ9Yg/v4F75z2
+	 6UfyAzNiumr9A==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 16E22CE0EDF; Fri, 13 Sep 2024 01:00:44 -0700 (PDT)
+Date: Fri, 13 Sep 2024 01:00:44 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com
+Subject: [BUG BISECTED] Missing RCU reader in perf_event_setup_cpumask()
+Message-ID: <2b66dff8-b827-494b-b151-1ad8d56f13e6@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] powerpc/vpa_pmu: Add interface to expose vpa counters
- via perf
-To: Kajol Jain <kjain@linux.ibm.com>, mpe@ellerman.id.au
-Cc: atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
- disgoel@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
- hbathini@linux.ibm.com, adubey@linux.ibm.com
-References: <20240828102141.1052332-1-kjain@linux.ibm.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20240828102141.1052332-1-kjain@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hello!
 
+On next-20240912 running rcutorture scenario TREE05, I see this
+deterministically:
 
-Le 28/08/2024 à 12:21, Kajol Jain a écrit :
-> The pseries Shared Processor Logical Partition(SPLPAR) machines
-> can retrieve a log of dispatch and preempt events from the
-> hypervisor using data from Disptach Trace Log(DTL) buffer.
-> With this information, user can retrieve when and why each dispatch &
-> preempt has occurred. Added an interface to expose the Virtual Processor
-> Area(VPA) DTL counters via perf.
-> 
-> The following events are available and exposed in sysfs:
-> 
->   vpa_dtl/dtl_cede/ - Trace voluntary (OS initiated) virtual processor waits
->   vpa_dtl/dtl_preempt/ - Trace time slice preempts
->   vpa_dtl/dtl_fault/ - Trace virtual partition memory page faults.
->   vpa_dtl/dtl_all/ - Trace all (dtl_cede/dtl_preempt/dtl_fault)
-> 
-> Added interface defines supported event list, config fields for the
-> event attributes and their corresponding bit values which are exported
-> via sysfs. User could use the standard perf tool to access perf events
-> exposed via vpa-dtl pmu.
-> 
-> The VPA DTL PMU counters do not interrupt on overflow or generate any
-> PMI interrupts. Therefore, the kernel needs to poll the counters, added
-> hrtimer code to do that. The timer interval can be provided by user via
-> sample_period field in nano seconds.
-> 
-> Result on power10 SPLPAR system with 656 cpu threads.
-> In the below perf record command with vpa_dtl pmu, -c option is used
-> to provide sample_period whch corresponding to 1000000000ns i.e; 1sec
-> and the workload time is also 1 second, hence we are getting 656 samples:
-> 
-> [command] perf record -a -R -e vpa_dtl/dtl_all/ -c 1000000000 sleep 1
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.828 MB perf.data (656 samples) ]
-> 
-> There is one hrtimer added per vpa-dtl pmu thread. Code added to handle
-> addition of dtl buffer data in the raw sample. Since DTL does not provide
-> IP address for a sample and it just have traces on reason of
-> dispatch/preempt, we directly saving DTL buffer data to perf.data file as
-> raw sample. For each hrtimer restart call, interface will dump all the
-> new dtl entries added to dtl buffer as a raw sample.
-> 
-> To ensure there are no other conflicting dtl users (example: debugfs dtl
-> or /proc/powerpc/vcpudispatch_stats), interface added code to use
-> "down_write_trylock" call to take the dtl_access_lock. The dtl_access_lock
-> is defined in dtl.h file. Also added global reference count variable called
-> "dtl_global_refc", to ensure dtl data can be captured per-cpu. Code also
-> added global lock called "dtl_global_lock" to avoid race condition.
-> 
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> ---
-> Notes:
-> 
-> - Made code changes on top of recent fix sent by Michael Ellerman.
->    Link to the patch: https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20240819122401.513203-1-mpe@ellerman.id.au/
-> 
->   arch/powerpc/perf/Makefile  |   2 +-
->   arch/powerpc/perf/vpa-pmu.c | 469 ++++++++++++++++++++++++++++++++++++
->   include/linux/cpuhotplug.h  |   1 +
->   3 files changed, 471 insertions(+), 1 deletion(-)
->   create mode 100644 arch/powerpc/perf/vpa-pmu.c
+[   32.603233] =============================
+[   32.604594] WARNING: suspicious RCU usage
+[   32.605928] 6.11.0-rc5-00040-g4ba4f1afb6a9 #55238 Not tainted
+[   32.607812] -----------------------------
+[   32.609140] kernel/events/core.c:13946 RCU-list traversed in non-reader section!!
+[   32.611595]
+[   32.611595] other info that might help us debug this:
+[   32.611595]
+[   32.614247]
+[   32.614247] rcu_scheduler_active = 2, debug_locks = 1
+[   32.616392] 3 locks held by cpuhp/4/35:
+[   32.617687]  #0: ffffffffb666a650 (cpu_hotplug_lock){++++}-{0:0}, at: cpuhp_thread_fun+0x4e/0x200
+[   32.620563]  #1: ffffffffb666cd20 (cpuhp_state-down){+.+.}-{0:0}, at: cpuhp_thread_fun+0x4e/0x200
+[   32.623412]  #2: ffffffffb677c288 (pmus_lock){+.+.}-{3:3}, at: perf_event_exit_cpu_context+0x32/0x2f0
+[   32.626399]
+[   32.626399] stack backtrace:
+[   32.627848] CPU: 4 UID: 0 PID: 35 Comm: cpuhp/4 Not tainted 6.11.0-rc5-00040-g4ba4f1afb6a9 #55238
+[   32.628832] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+[   32.628832] Call Trace:
+[   32.628832]  <TASK>
+[   32.628832]  dump_stack_lvl+0x83/0xa0
+[   32.628832]  lockdep_rcu_suspicious+0x143/0x1a0
+[   32.628832]  perf_event_exit_cpu_context+0x2e5/0x2f0
+[   32.628832]  ? __pfx_perf_event_exit_cpu+0x10/0x10
+[   32.628832]  perf_event_exit_cpu+0x9/0x10
+[   32.628832]  cpuhp_invoke_callback+0x130/0x2a0
+[   32.628832]  ? lock_release+0xc7/0x290
+[   32.628832]  ? cpuhp_thread_fun+0x4e/0x200
+[   32.628832]  cpuhp_thread_fun+0x183/0x200
+[   32.628832]  smpboot_thread_fn+0xd8/0x1d0
+[   32.628832]  ? __pfx_smpboot_thread_fn+0x10/0x10
+[   32.628832]  kthread+0xd4/0x100
+[   32.628832]  ? __pfx_kthread+0x10/0x10
+[   32.628832]  ret_from_fork+0x2f/0x50
+[   32.628832]  ? __pfx_kthread+0x10/0x10
+[   32.628832]  ret_from_fork_asm+0x1a/0x30
+[   32.628832]  </TASK>
 
+I bisected this to:
 
-Seems like it doesn't build on PPC64:
+4ba4f1afb6a9 ("perf: Generic hotplug support for a PMU with a scope")
 
-arch/powerpc/perf/vpa-pmu.c#L212
-passing argument 1 of 'up_write' from incompatible pointer type 
-[-Wincompatible-pointer-types]
+This adds a perf_event_setup_cpumask() function that uses
+list_for_each_entry_rcu() without an obvious RCU read-side critical
+section, so the fix might be as simple as adding rcu_read_lock() and
+rcu_read_unlock().  In the proper places, of course.  ;-)
 
-arch/powerpc/perf/vpa-pmu.c#L261
-passing argument 1 of 'down_write_trylock' from incompatible pointer 
-type [-Wincompatible-pointer-types]
-
-arch/powerpc/perf/vpa-pmu.c#L402
-passing argument 1 of 'up_write' from incompatible pointer type 
-[-Wincompatible-pointer-types]
+						Thanx, Paul
