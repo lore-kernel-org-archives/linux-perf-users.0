@@ -1,118 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0851BA292;
-	Fri, 13 Sep 2024 05:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279044A07;
+	Fri, 13 Sep 2024 06:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726204891; cv=none; b=dJXH/czE4qRL1IwAtQoc5DrAP+Ve0nNfoJG3z0QD8AcZqcvgjiJ5JUOXs16d7sqM/V7FCwuYW4ScJGB9HFFgRujgj/V0XT9bHuZgFLee83w+NJqaYN+ZI5sPKnd5io+1WBut/IrHeKrIX4xnIwdjnPofwb1MakA0uOKUzWjvtw0=
+	t=1726209047; cv=none; b=Z9EeV6NEWfL8J18JBWE6/rZlgag+X/95uwV3CGj4QNWX7WmEuNbf5qB0Sd6q+UHi0LxJmOp+Iy3aKZrL17+/Ms4p34MtJln0bCgcjT8LdoOqB/hVk+LyxKswUDv08NR53ayY6FPv9Mb7tLYXfNc87Be70u8HuKaUgX/UpVI18SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726204891; c=relaxed/simple;
-	bh=ny5tsc2816HdyNr0QPIRAAn/tx+IdHcJgx2i9LCmDBI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OB7dWWj0WadsQrnoYAFmNXmERQXIh9MOX+YX3ceb6MqrpgnJUlN41a9AcXmnTj1+31f9RYEccPnBVh6OobzUDEe/qEmqGHEpedZMeU8KTOspMG+1jPH6ZdLZQr9Wm0f9CpHOUlUYajL5MCDnhYlSBtvgBud/MB/qj3wBvjwfi78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RnFMqbIg; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RnFMqbIg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726204889; x=1757740889;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ny5tsc2816HdyNr0QPIRAAn/tx+IdHcJgx2i9LCmDBI=;
-  b=RnFMqbIgqLrAaYyvB2wts0xbn4u62/z5edeYJ7pEgkgJFRKJjIlWUTHQ
-   nD8gK6uNyJ/phe0uwSPkM3gBvGndC5oLzbxBQyuycM11A0h61hbJWimIT
-   vlxHpm50EWt62QlvtE+YwxAE+uCScQBP+hqVIg69E3b4WgQeou3nWrbd8
-   hG8yNWdbbFTOchW0kwYpEGAUR6RqHJwqe3pOmVAXpToe2SiOdFQ95vTr1
-   QUp9SltzS7K1vRZ5BHm1P22zPhLLbcPo4CnfL2qXhDNHr1pF/b6fsWhhy
-   baIMS+BnNCkwZgASyFy7KVW5a38y/nsyNQKVT4U4L2NGrWQt2s9YPf0Q8
-   A==;
-X-CSE-ConnectionGUID: 0VhMEptZQwyPoirmIPhYRg==
-X-CSE-MsgGUID: NbRCJxekR6uZcqkQj8KJhQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11193"; a="24967804"
-X-IronPort-AV: E=Sophos;i="6.10,225,1719903600"; 
-   d="scan'208";a="24967804"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2024 22:21:28 -0700
-X-CSE-ConnectionGUID: QGYorN4IRdGBxti6yYYZJQ==
-X-CSE-MsgGUID: imzeAYHDTHODh8WURfGkHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,225,1719903600"; 
-   d="scan'208";a="67900648"
-Received: from emr.sh.intel.com ([10.112.229.56])
-  by fmviesa009.fm.intel.com with ESMTP; 12 Sep 2024 22:21:25 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yongwei Ma <yongwei.ma@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v5 6/6] perf tests: Add more topdown events regroup tests
-Date: Fri, 13 Sep 2024 08:47:12 +0000
-Message-Id: <20240913084712.13861-7-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240913084712.13861-1-dapeng1.mi@linux.intel.com>
-References: <20240913084712.13861-1-dapeng1.mi@linux.intel.com>
+	s=arc-20240116; t=1726209047; c=relaxed/simple;
+	bh=wqhkE51D6fBFTxHsF7tyblzU++jlhsqpAQT2Nky7JCA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sWzNiN/s7hi4ce9gmiF02L5a9hSWFupu5f1s8RGuBHbeDl83M874RoRPjoZhy5dOYod93099G28+2W3a4Ajyg0pYCF2RpPXdxZEkD5UyT/dhgkSThrcqWnu+CzS+0ydmnQW+NT3JaMp4X0N7B7sHHr7he4jo/2HKbzsd04MeNuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4X4kvl1mYcz9sxD;
+	Fri, 13 Sep 2024 08:30:43 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id KPoVoPcVMXmd; Fri, 13 Sep 2024 08:30:43 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4X4kvl0pksz9sxB;
+	Fri, 13 Sep 2024 08:30:43 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 093388B77A;
+	Fri, 13 Sep 2024 08:30:43 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id r0dE7jHRRDpY; Fri, 13 Sep 2024 08:30:42 +0200 (CEST)
+Received: from [192.168.233.70] (unknown [192.168.233.70])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 511308B766;
+	Fri, 13 Sep 2024 08:30:42 +0200 (CEST)
+Message-ID: <56b53876-0838-416f-adce-b1ffbd0916fc@csgroup.eu>
+Date: Fri, 13 Sep 2024 08:30:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] powerpc/vpa_pmu: Add interface to expose vpa counters
+ via perf
+To: Kajol Jain <kjain@linux.ibm.com>, mpe@ellerman.id.au
+Cc: atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+ disgoel@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+ hbathini@linux.ibm.com, adubey@linux.ibm.com
+References: <20240828102141.1052332-1-kjain@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20240828102141.1052332-1-kjain@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add more test cases to cover all supported topdown events regroup cases.
 
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- tools/perf/tests/shell/stat.sh | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-index 092a7a2abcf8..85897898a1f4 100755
---- a/tools/perf/tests/shell/stat.sh
-+++ b/tools/perf/tests/shell/stat.sh
-@@ -73,9 +73,27 @@ test_topdown_groups() {
-     err=1
-     return
-   fi
--  if perf stat -e '{topdown-retiring,slots}' true 2>&1 | grep -E -q "<not supported>"
-+  if perf stat -e 'instructions,topdown-retiring,slots' true 2>&1 | grep -E -q "<not supported>"
-   then
--    echo "Topdown event group test [Failed slots not reordered first]"
-+    echo "Topdown event group test [Failed slots not reordered first in no-group case]"
-+    err=1
-+    return
-+  fi
-+  if perf stat -e '{instructions,topdown-retiring,slots}' true 2>&1 | grep -E -q "<not supported>"
-+  then
-+    echo "Topdown event group test [Failed slots not reordered first in single group case]"
-+    err=1
-+    return
-+  fi
-+  if perf stat -e '{instructions,slots},topdown-retiring' true 2>&1 | grep -E -q "<not supported>"
-+  then
-+    echo "Topdown event group test [Failed topdown metrics event not move into slots group]"
-+    err=1
-+    return
-+  fi
-+  if perf stat -e '{instructions,slots},{topdown-retiring}' true 2>&1 | grep -E -q "<not supported>"
-+  then
-+    echo "Topdown event group test [Failed topdown metrics group not merge into slots group]"
-     err=1
-     return
-   fi
--- 
-2.40.1
+Le 28/08/2024 à 12:21, Kajol Jain a écrit :
+> The pseries Shared Processor Logical Partition(SPLPAR) machines
+> can retrieve a log of dispatch and preempt events from the
+> hypervisor using data from Disptach Trace Log(DTL) buffer.
+> With this information, user can retrieve when and why each dispatch &
+> preempt has occurred. Added an interface to expose the Virtual Processor
+> Area(VPA) DTL counters via perf.
+> 
+> The following events are available and exposed in sysfs:
+> 
+>   vpa_dtl/dtl_cede/ - Trace voluntary (OS initiated) virtual processor waits
+>   vpa_dtl/dtl_preempt/ - Trace time slice preempts
+>   vpa_dtl/dtl_fault/ - Trace virtual partition memory page faults.
+>   vpa_dtl/dtl_all/ - Trace all (dtl_cede/dtl_preempt/dtl_fault)
+> 
+> Added interface defines supported event list, config fields for the
+> event attributes and their corresponding bit values which are exported
+> via sysfs. User could use the standard perf tool to access perf events
+> exposed via vpa-dtl pmu.
+> 
+> The VPA DTL PMU counters do not interrupt on overflow or generate any
+> PMI interrupts. Therefore, the kernel needs to poll the counters, added
+> hrtimer code to do that. The timer interval can be provided by user via
+> sample_period field in nano seconds.
+> 
+> Result on power10 SPLPAR system with 656 cpu threads.
+> In the below perf record command with vpa_dtl pmu, -c option is used
+> to provide sample_period whch corresponding to 1000000000ns i.e; 1sec
+> and the workload time is also 1 second, hence we are getting 656 samples:
+> 
+> [command] perf record -a -R -e vpa_dtl/dtl_all/ -c 1000000000 sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.828 MB perf.data (656 samples) ]
+> 
+> There is one hrtimer added per vpa-dtl pmu thread. Code added to handle
+> addition of dtl buffer data in the raw sample. Since DTL does not provide
+> IP address for a sample and it just have traces on reason of
+> dispatch/preempt, we directly saving DTL buffer data to perf.data file as
+> raw sample. For each hrtimer restart call, interface will dump all the
+> new dtl entries added to dtl buffer as a raw sample.
+> 
+> To ensure there are no other conflicting dtl users (example: debugfs dtl
+> or /proc/powerpc/vcpudispatch_stats), interface added code to use
+> "down_write_trylock" call to take the dtl_access_lock. The dtl_access_lock
+> is defined in dtl.h file. Also added global reference count variable called
+> "dtl_global_refc", to ensure dtl data can be captured per-cpu. Code also
+> added global lock called "dtl_global_lock" to avoid race condition.
+> 
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+> Notes:
+> 
+> - Made code changes on top of recent fix sent by Michael Ellerman.
+>    Link to the patch: https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20240819122401.513203-1-mpe@ellerman.id.au/
+> 
+>   arch/powerpc/perf/Makefile  |   2 +-
+>   arch/powerpc/perf/vpa-pmu.c | 469 ++++++++++++++++++++++++++++++++++++
+>   include/linux/cpuhotplug.h  |   1 +
+>   3 files changed, 471 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/powerpc/perf/vpa-pmu.c
 
+
+Seems like it doesn't build on PPC64:
+
+arch/powerpc/perf/vpa-pmu.c#L212
+passing argument 1 of 'up_write' from incompatible pointer type 
+[-Wincompatible-pointer-types]
+
+arch/powerpc/perf/vpa-pmu.c#L261
+passing argument 1 of 'down_write_trylock' from incompatible pointer 
+type [-Wincompatible-pointer-types]
+
+arch/powerpc/perf/vpa-pmu.c#L402
+passing argument 1 of 'up_write' from incompatible pointer type 
+[-Wincompatible-pointer-types]
