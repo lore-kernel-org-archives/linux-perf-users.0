@@ -1,234 +1,169 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B5F14EC73;
-	Fri, 13 Sep 2024 21:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB036F2EB;
+	Fri, 13 Sep 2024 23:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726262799; cv=none; b=nLkcokld399+cfcqVM8r/Y6x5fDpfp1Yc7H7P4MZ5g438VtEWciCWwXTLwNi831CHO/9LGo2J5sbyrOyIPrn/RK/1gC6Mt3lhbOMK4UQmTPxR9KBOtfnTFfx4/fLVR1LbNvyEsb7dMtsAfNGlHELdliJbxAFPx09EZRBNDBqCsI=
+	t=1726268575; cv=none; b=GZ6MYZh+Ocmk4gVMgtkl2EAgmTax0UZOX3iQy3fOwvzrhVTKQ9XVz7Oa6WJFFCGO+1v1W+5+PQQBVghlet9fYbzFdkoTfGdcDemplkNjAdki6Z8DDv+MEoLYmA/UpFSD+kHze5I78BffTlTaCmnBYKZ4OvLrBI3EF2NhrxhdQOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726262799; c=relaxed/simple;
-	bh=uq1fFp1dyul0YEnDpEY3zyiKQ89fFRtHbay+aPbNGxs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U0lT1cynlHJkPyvkGKUMJmjPz5nZihIARDQ9WMq1uf7PJ53rekDhONsbAw1RJX2eXhJdhSIPXOLIgtvmywT/1op0DdFFP8SqGOuwVVCpTH5l2LDhNm1HaP5jrXvRoDm+br2pJvXAC0PQkRZDKyqYoF8C2PlyZTblz25M4P3sr48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=CwqmJYKt; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
+	s=arc-20240116; t=1726268575; c=relaxed/simple;
+	bh=I6c+y4kdGecoNeWVA0WJgrf/65LEkrijcHk4acvyETM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B+MbC65MqNkXRfEE5r4mj87M7BBtPQSCJh/iAnuwxb+9EC/9Bp8xwToCtrLQJRWsHlvPfAl68hasYVHoo7HC+1ttqegR0wntWuEkhKm3CWTirJTbRoPYNndVjXH4AAhIsNwv4ZJOozPO/HNOc9tTk+0N19EENTOZi4gE9XOLvOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PEB1Yj+q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="CwqmJYKt"
-Received: from spock.localnet (unknown [212.20.115.26])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id 45C3D635B044;
-	Fri, 13 Sep 2024 23:19:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1726262353;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QEpUsGTEKp/21YhjVnQYIlBG3qJE8+pJXR8PiPJjyt4=;
-	b=CwqmJYKtnHjf2wXCEPxur25DC1zt6umUahU766d0Ghj1BhDRZV+mMHYSbwzSbyAKAaC+8t
-	I5BuemIIZF1cUcCpeu9cDe5spx4MYuejsLleFGZ7BSin+XXPeeN1cYvI7j7VYsCjv/cIo0
-	AVF9G0EQ6yj5C+Z3PUYCfhtR9JkIUog=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, tglx@linutronix.de,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- rui.zhang@intel.com, Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-Cc: eranian@google.com, gautham.shenoy@amd.com, ravi.bangoria@amd.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-Subject:
- Re: [PATCH v5 0/9] Add per-core RAPL energy counter support for AMD CPUs
-Date: Fri, 13 Sep 2024 23:18:58 +0200
-Message-ID: <12511146.O9o76ZdvQC@natalenko.name>
-In-Reply-To: <20240913152149.6317-1-Dhananjay.Ugwekar@amd.com>
-References: <20240913152149.6317-1-Dhananjay.Ugwekar@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PEB1Yj+q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D31C4CEC0;
+	Fri, 13 Sep 2024 23:02:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726268574;
+	bh=I6c+y4kdGecoNeWVA0WJgrf/65LEkrijcHk4acvyETM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PEB1Yj+qJ/bw7TzY2NhzZ6uMnxloJswmHNnqwLVhEIqScFv2AfbaMNxDAZGiPtKle
+	 PJEY/wItF6sPdcc7/Ue4FBcWCnqzdsH6nZQV4WOQ4caL+noIKvZr8N7uXZJWq5zz3L
+	 i3rqs3Avf7/WmZ5dDtzqis+VgZfLEZQBL07yUlwMzOtsfVwuPWBPicA2YOtCNiqbK/
+	 h7t3E8rtpXMMSTY0Mvu7ffKTBGLoqgW2k2mytgk5FEsGuJ7IJsRQtTjj2emtfMT+tu
+	 BfaX/t0YXYRSjk6f2FG5GJuJrDuzbyC/8SxuV90l5yuUES5JMkRN3/eocxk0JBrVFG
+	 SsXJs9C4I8jkw==
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: x86@kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org,
+	Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>
+Subject: [PATCH v2 00/11] unwind, perf: sframe user space unwinding, deferred perf callchains
+Date: Sat, 14 Sep 2024 01:02:02 +0200
+Message-ID: <cover.1726268190.git.jpoimboe@kernel.org>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5814330.DvuYhMxLoT";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 
---nextPart5814330.DvuYhMxLoT
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Date: Fri, 13 Sep 2024 23:18:58 +0200
-Message-ID: <12511146.O9o76ZdvQC@natalenko.name>
-In-Reply-To: <20240913152149.6317-1-Dhananjay.Ugwekar@amd.com>
-References: <20240913152149.6317-1-Dhananjay.Ugwekar@amd.com>
-MIME-Version: 1.0
+This is a new version of sframe user space unwinding + perf deferred
+callchains.  Better late than never.
 
-Hello.
+Unfortunately I didn't get a chance to do any testing with this one yet
+as I'm rushing it out the door before GNU Cauldron starts.
+Conference-driven development ;-)
 
-On p=C3=A1tek 13. z=C3=A1=C5=99=C3=AD 2024 17:21:40, SEL=C4=8C Dhananjay Ug=
-wekar wrote:
-> Currently the energy-cores event in the power PMU aggregates energy
-> consumption data at a package level. On the other hand the core energy
-> RAPL counter in AMD CPUs has a core scope (which means the energy=20
-> consumption is recorded separately for each core). Earlier efforts to add
-> the core event in the power PMU had failed [1], due to the difference in=
-=20
-> the scope of these two events. Hence, there is a need for a new core scope
-> PMU.
->=20
-> This patchset adds a new "power_per_core" PMU alongside the existing
-> "power" PMU, which will be responsible for collecting the new
-> "energy-per-core" event.
->=20
-> Tested the package level and core level PMU counters with workloads
-> pinned to different CPUs.
->=20
-> Results with workload pinned to CPU 1 in Core 1 on an AMD Zen4 Genoa=20
-> machine:
->=20
-> $ perf stat -a --per-core -e power_per_core/energy-per-core/ -- sleep 1
->=20
->  Performance counter stats for 'system wide':
->=20
-> S0-D0-C0         1          0.02 Joules power_per_core/energy-per-core/
-> S0-D0-C1         1          5.72 Joules power_per_core/energy-per-core/
-> S0-D0-C2         1          0.02 Joules power_per_core/energy-per-core/
-> S0-D0-C3         1          0.02 Joules power_per_core/energy-per-core/
-> S0-D0-C4         1          0.02 Joules power_per_core/energy-per-core/
-> S0-D0-C5         1          0.02 Joules power_per_core/energy-per-core/
-> S0-D0-C6         1          0.02 Joules power_per_core/energy-per-core/
-> S0-D0-C7         1          0.02 Joules power_per_core/energy-per-core/
-> S0-D0-C8         1          0.02 Joules power_per_core/energy-per-core/
-> S0-D0-C9         1          0.02 Joules power_per_core/energy-per-core/
-> S0-D0-C10        1          0.02 Joules power_per_core/energy-per-core/
->=20
-> v4 Link: https://lore.kernel.org/all/20240711102436.4432-1-Dhananjay.Ugwe=
-kar@amd.com/
->=20
-> v5 changes:
-> * Rebase on top of Kan Liang's "PMU scope" patchset [2]
-> * rapl_cntr_mask moved to rapl_pmus struct in patch 8
-> * Patch 1 from v4 is merged separately, so removed from this series
-> * Add an extra argument "scope" in patch 5 to the init functions
-> * Add an new patch 2, which removes the cpu_to_rapl_pmu() function
->=20
-> Base: tip/perf/core(currently has just 1-5 patches from [2]) + patch 6 fr=
-om [2] +=20
->       diff [3] + patch 7 from [2] + revert [4] + apply [5]=20
->=20
-> [1]: https://lore.kernel.org/lkml/3e766f0e-37d4-0f82-3868-31b14228868d@li=
-nux.intel.com/
-> [2]: https://lore.kernel.org/all/20240802151643.1691631-1-kan.liang@linux=
-=2Eintel.com/
-> [3]: https://lore.kernel.org/all/8c09633c-5bf2-48a2-91a6-a0af9b9f2e8c@lin=
-ux.intel.com/
-> [4]: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?=
-h=3Dperf/core&id=3D8d72eba1cf8cecd76a2b4c1dd7673c2dc775f514
-> [5]: https://lore.kernel.org/all/20240910085504.204814-1-Dhananjay.Ugweka=
-r@amd.com/
->=20
-> Dhananjay Ugwekar (8):
->   perf/x86/rapl: Remove the cpu_to_rapl_pmu() function
->   perf/x86/rapl: Rename rapl_pmu variables
->   perf/x86/rapl: Make rapl_model struct global
->   perf/x86/rapl: Add arguments to the cleanup and init functions
->   perf/x86/rapl: Modify the generic variable names to *_pkg*
->   perf/x86/rapl: Remove the global variable rapl_msrs
->   perf/x86/rapl: Move the cntr_mask to rapl_pmus struct
->   perf/x86/rapl: Add per-core energy counter support for AMD CPUs
->=20
-> K Prateek Nayak (1):
->   x86/topology: Introduce topology_logical_core_id()
->=20
->  Documentation/arch/x86/topology.rst   |   4 +
->  arch/x86/events/rapl.c                | 406 ++++++++++++++++----------
->  arch/x86/include/asm/processor.h      |   1 +
->  arch/x86/include/asm/topology.h       |   1 +
->  arch/x86/kernel/cpu/debugfs.c         |   1 +
->  arch/x86/kernel/cpu/topology_common.c |   1 +
->  6 files changed, 266 insertions(+), 148 deletions(-)
+Plus I don't have the perf tool piece working yet so I don't have a way
+of doing end-to-end testing at the moment anyway.
 
-With v6.11-rc7 + all the mentioned preparatory patches and this series:
+In other words, please don't merge this yet.
 
-$ taskset -c 9 dd if=3D/dev/zero of=3D/dev/null &
+Namhyung, if you're still available to write a perf tool patch which
+integrates with this, that would be great.  Otherwise I could give it a
+try.
 
-$ sudo perf stat -a --per-core -e power_per_core/energy-per-core/ sleep 5
+Steven, let me know if this would interface ok with your anticipated
+tracing usage.
 
- Performance counter stats for 'system wide':
+v2:
+- rebase on v6.11-rc7
+- reorganize the patches to add sframe first
+- change to sframe v2
+- add new perf event type: PERF_RECORD_CALLCHAIN_DEFERRED
+- add new perf attribute: defer_callchain
 
-S0-D0-C0              1               3,79 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C1              1               5,65 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C2              1               1,26 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C3              1               3,18 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C4              1               2,06 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C5              1               3,51 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C6              1               0,77 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C7              1               0,55 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C8              1               1,65 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C9              1              47,85 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C10             1               2,49 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C11             1              11,85 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C12             1               1,75 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C13             1               0,74 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C14             1               2,58 Joules power_per_core/energy-per=
-=2Dcore/
-S0-D0-C15             1               4,67 Joules power_per_core/energy-per=
-=2Dcore/
+v1: https://lore.kernel.org/cover.1699487758.git.jpoimboe@kernel.org
 
-       5,003391425 seconds time elapsed
+Some distros have started compiling frame pointers into all their
+packages to enable the kernel to do system-wide profiling of user space.
+Unfortunately that creates a runtime performance penalty across the
+entire system.  Using DWARF (or .eh_frame) instead isn't feasible
+because of complexity and slowness.
 
-on the following CPU:
+For in-kernel unwinding we solved this problem with the creation of the
+ORC unwinder for x86_64.  Similarly, for user space the GNU assembler
+has created the SFrame ("Simple Frame") v2 format starting with binutils
+2.41.
 
-AMD Ryzen 9 5950X 16-Core Processor
+These patches add support for unwinding user space from the kernel using
+SFrame with perf.  It should be easy to add user unwinding support for
+other components like ftrace.
 
-If this behaves as expected, please add:
+There were two main challenges:
 
-Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+1) Finding .sframe sections in shared/dlopened libraries
 
-Thank you.
+   The kernel has no visibility to the contents of shared libraries.
+   This was solved by adding a PR_ADD_SFRAME option to prctl() which
+   allows the runtime linker to manually provide the in-memory address
+   of an .sframe section to the kernel.
 
-=2D-=20
-Oleksandr Natalenko (post-factum)
---nextPart5814330.DvuYhMxLoT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+2) Dealing with page faults
 
------BEGIN PGP SIGNATURE-----
+   Keeping all binaries' sframe data pinned would likely waste a lot of
+   memory.  Instead, read it from user space on demand.  That can't be
+   done from perf NMI context due to page faults, so defer the unwind to
+   the next user exit.  Since the NMI handler doesn't do exit work,
+   self-IPI and then schedule task work to be run on exit from the IPI.
 
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmbkrEIACgkQil/iNcg8
-M0tZMhAAlvJWp4AIPX79UnmqnETyOtW7FHZFOjNE9YOHX9KchlLb7V3iNP2S/TAv
-oIjQoTpRciVosdnuWeiBSw0k41kp8QlSI+Pd2OK94RNDH8eS+mUaUzBvjS6fRFXP
-NenzZHMg554tJiLcptKqfcBvsVf7Jf0KNsQWlaaL/lG4G9d5Yr3UROd1owPlTmC8
-zoQB0ZKNYJf7P2AHmjXAaKme1jGYLenO7SgxXBcmPVqEKVBxtZnBmwciJrtQdJsY
-k8gV3d0pSO1mvgJglWA1WpAZOV9mMktV9FAzene8gc547RQYUkNFahQJYFIgHMTN
-7X4V9D6syY9Xw7QTNCY3hgOM2gtzV2pSkYjNXAf1Tn29v/7ukzEze2NX/XgOlB3G
-HipdhYFu4DCKOMPhBvY14xxe5kRbonYd5pEleHGv+FeV0tLZkoOikVAgZbKUEa0p
-X+UOvvcU1W0+Sp7aI/ngi+CNHMaPk0gAqlLxjKaqb3ao99IuzcjQIzk/OF8h4LYi
-OqWdq0Y6AOj+6vFc6KQF32roSPlH4WVrUqxbUX7nfOwgL36xAiHuo/V/rcSc2YVo
-+3U6sYDto0Q2Tx2q6DSDiHxKfgfjUqFYH7N0EibtDgUi0s/urJnKFif3fHOEkyUH
-6Nr12Ehip8FB25rNrMwZwShQISZcVZRX7lm1J3yq+Rka7c1Vd6Y=
-=8uuH
------END PGP SIGNATURE-----
+Special thanks to Indu for the original concept, and to Steven and Peter
+for helping a lot with the design.  And to Steven for letting me do it ;-)
 
---nextPart5814330.DvuYhMxLoT--
+Josh Poimboeuf (11):
+  unwind: Introduce generic user space unwinding interface
+  unwind/x86: Add HAVE_USER_UNWIND
+  unwind: Introduce SFrame user space unwinding
+  unwind/x86/64: Add HAVE_USER_UNWIND_SFRAME
+  perf/x86: Use user_unwind interface
+  perf: Remove get_perf_callchain() 'init_nr' argument
+  perf: Remove get_perf_callchain() 'crosstask' argument
+  perf: Simplify get_perf_callchain() user logic
+  perf: Introduce deferred user callchains
+  perf/x86: Add HAVE_PERF_CALLCHAIN_DEFERRED
+  perf/x86: Enable SFrame unwinding for deferred user callchains
 
+ arch/Kconfig                       |   9 +
+ arch/x86/Kconfig                   |   3 +
+ arch/x86/events/core.c             |  76 +++---
+ arch/x86/include/asm/user_unwind.h |  11 +
+ fs/binfmt_elf.c                    |  47 +++-
+ include/linux/mm_types.h           |   3 +
+ include/linux/perf_event.h         |  11 +-
+ include/linux/sframe.h             |  46 ++++
+ include/linux/user_unwind.h        |  32 +++
+ include/uapi/linux/elf.h           |   1 +
+ include/uapi/linux/perf_event.h    |  21 +-
+ include/uapi/linux/prctl.h         |   3 +
+ kernel/Makefile                    |   1 +
+ kernel/bpf/stackmap.c              |   8 +-
+ kernel/events/callchain.c          |  48 ++--
+ kernel/events/core.c               |  82 +++++-
+ kernel/fork.c                      |  10 +
+ kernel/sys.c                       |  11 +
+ kernel/unwind/Makefile             |   2 +
+ kernel/unwind/sframe.c             | 420 +++++++++++++++++++++++++++++
+ kernel/unwind/sframe.h             | 215 +++++++++++++++
+ kernel/unwind/user.c               |  95 +++++++
+ mm/init-mm.c                       |   4 +-
+ 23 files changed, 1086 insertions(+), 73 deletions(-)
+ create mode 100644 arch/x86/include/asm/user_unwind.h
+ create mode 100644 include/linux/sframe.h
+ create mode 100644 include/linux/user_unwind.h
+ create mode 100644 kernel/unwind/Makefile
+ create mode 100644 kernel/unwind/sframe.c
+ create mode 100644 kernel/unwind/sframe.h
+ create mode 100644 kernel/unwind/user.c
 
+-- 
+2.46.0
 
