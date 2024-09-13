@@ -1,124 +1,160 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10432C80;
-	Fri, 13 Sep 2024 10:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E93D1D88B3;
+	Fri, 13 Sep 2024 11:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726224491; cv=none; b=RXYW5Xvdm2pRP3B/7DKr42UijAMvq9u3W6L9cdPp5B3bJ5Ns9semmHkEnS1zm3ins6/waGz324FYeG/gSMDRbfjOl2bxrYAVt8VbKQD3MSuTd15FhCdtxfmaDp04ukcpjI+mtgPwsydN9DkgiCLFw4uOC7p4EUSTLZPwMd5Sd7o=
+	t=1726226284; cv=none; b=Cy2i+Lq3U9fgb5PQ8/wM6tW5THC5fTNDzPzlQGllxvSrsVbIFLSMLUXmEsHUNRg/b7jIpJg2FM9I56jJYmNoDWy78fQC4a2r5b4hc0WrZ2adp6xDCYno3f8xOBR+6qlYbtr0PcEpQJQjTsZ/LlBY4J1sjcScCjlFQljwa8SAV2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726224491; c=relaxed/simple;
-	bh=uyXk2wl0oIMrGI35p0JiaNvUYXkyuKxh0QgHHyUWTBk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I6hcRClC5umgFD4SM9EcWR5HO0gUvEVaxIam1y0bMMszlxAWlyYHJrWsXSc9I6Gt8c7mvtLtpM93VdH8TwT8Omt0pDVzZzmPa8VY10FfggcewzAcoCqlDhivJug5MNdDZO2TKRFGtaZfQv/buZr73Az+uV6YbB1rUQiHk0OoZzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IBfUeyqm; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IBfUeyqm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=qExJ1eSAIG6uS9RKXYfNI+ldhnokTO3+3L9xVG0mHwI=; b=IBfUeyqmy7otonnkWjM0yC42zG
-	O+d/EyOr/n9+iQrz1ApQcHk7rYpMhuVQVMAuP172YBQeLRGanJ57RVd1YVrvw6eZI+nh5cwGwtgA9
-	IZXPwdan9yA3FAIWIE+jr/2Ewq+G0qElVnx2PPQFEtybcwEPpELj+i3p8SvR0VQeYgg0jtHfA2JbK
-	R2KEB+aJlxtm7HQ2d1mz7EXkGtfNpb4Ikbt4rbFqW0ZGKsWpH4X9UUnvmA432pohKS3u6+LeDAb4a
-	V1jffnxaeYHS4ERxXMDPJxQQvvxchUAtF5C/fsuQ8wdtRWbEOjCB53IVKkZsmjFGxFaRP3tWLYgxn
-	XRfVhttw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1sp3qD-0000000GT5k-11dF;
-	Fri, 13 Sep 2024 10:47:53 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 310163003E1; Fri, 13 Sep 2024 12:47:52 +0200 (CEST)
-Date: Fri, 13 Sep 2024 12:47:52 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	kan.liang@linux.intel.com, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com
-Subject: Re: [BUG BISECTED] Missing RCU reader in perf_event_setup_cpumask()
-Message-ID: <20240913104752.GU4723@noisy.programming.kicks-ass.net>
-References: <2b66dff8-b827-494b-b151-1ad8d56f13e6@paulmck-laptop>
+	s=arc-20240116; t=1726226284; c=relaxed/simple;
+	bh=hNF10EU/tNZ8IqoAtsml7wSe8q7heDmGQxZa2y5rL80=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BVW5ZEg4f5iQhfJABL528dyhcO/pni9q+i52Q+u2p+YvIcsU929Js5Qc264c+0cZ8Q19whE0znsjD0oCPsjLlxd1IV5weRXyI3pS7yI0SARNtI2YjaW5GAZ6pc/QK2Smh50o6KNZyEMOCZcLW9G/lfjTHTEgelYMsGW9EwSZGA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A703613D5;
+	Fri, 13 Sep 2024 04:18:30 -0700 (PDT)
+Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 594EE3F64C;
+	Fri, 13 Sep 2024 04:17:58 -0700 (PDT)
+Message-ID: <b376ad7e-020e-40a2-b26d-f70184753a50@arm.com>
+Date: Fri, 13 Sep 2024 12:17:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b66dff8-b827-494b-b151-1ad8d56f13e6@paulmck-laptop>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/7] perf cs-etm: Don't flush when packet_queue fills
+ up
+To: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+ gankulkarni@os.amperecomputing.com, coresight@lists.linaro.org,
+ scclevenger@os.amperecomputing.com
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>,
+ Ben Gainey <ben.gainey@arm.com>, Ruidong Tian
+ <tianruidong@linux.alibaba.com>, Benjamin Gray <bgray@linux.ibm.com>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20240912151143.1264483-1-james.clark@linaro.org>
+ <20240912151143.1264483-2-james.clark@linaro.org>
+Content-Language: en-US
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <20240912151143.1264483-2-james.clark@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 13, 2024 at 01:00:44AM -0700, Paul E. McKenney wrote:
-> Hello!
+On 9/12/24 16:11, James Clark wrote:> 
+> cs_etm__flush(), like cs_etm__sample() is an operation that generates a
+> sample and then swaps the current with the previous packet. Calling
+> flush after processing the queues results in two swaps which corrupts
+> the next sample. Therefore it wasn't appropriate to call flush here so
+> remove it.
 > 
-> On next-20240912 running rcutorture scenario TREE05, I see this
-> deterministically:
+> Flushing is still done on a discontinuity to explicitly clear the last
+> branch buffer, but when the packet_queue fills up before reaching a
+> timestamp, that's not a discontinuity and the call to
+> cs_etm__process_traceid_queue() already generated samples and drained
+> the buffers correctly.
 > 
-> [   32.603233] =============================
-> [   32.604594] WARNING: suspicious RCU usage
-> [   32.605928] 6.11.0-rc5-00040-g4ba4f1afb6a9 #55238 Not tainted
-> [   32.607812] -----------------------------
-> [   32.609140] kernel/events/core.c:13946 RCU-list traversed in non-reader section!!
-> [   32.611595]
-> [   32.611595] other info that might help us debug this:
-> [   32.611595]
-> [   32.614247]
-> [   32.614247] rcu_scheduler_active = 2, debug_locks = 1
-> [   32.616392] 3 locks held by cpuhp/4/35:
-> [   32.617687]  #0: ffffffffb666a650 (cpu_hotplug_lock){++++}-{0:0}, at: cpuhp_thread_fun+0x4e/0x200
-> [   32.620563]  #1: ffffffffb666cd20 (cpuhp_state-down){+.+.}-{0:0}, at: cpuhp_thread_fun+0x4e/0x200
-> [   32.623412]  #2: ffffffffb677c288 (pmus_lock){+.+.}-{3:3}, at: perf_event_exit_cpu_context+0x32/0x2f0
-> [   32.626399]
-> [   32.626399] stack backtrace:
-> [   32.627848] CPU: 4 UID: 0 PID: 35 Comm: cpuhp/4 Not tainted 6.11.0-rc5-00040-g4ba4f1afb6a9 #55238
-> [   32.628832] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
-> [   32.628832] Call Trace:
-> [   32.628832]  <TASK>
-> [   32.628832]  dump_stack_lvl+0x83/0xa0
-> [   32.628832]  lockdep_rcu_suspicious+0x143/0x1a0
-> [   32.628832]  perf_event_exit_cpu_context+0x2e5/0x2f0
-> [   32.628832]  ? __pfx_perf_event_exit_cpu+0x10/0x10
-> [   32.628832]  perf_event_exit_cpu+0x9/0x10
-> [   32.628832]  cpuhp_invoke_callback+0x130/0x2a0
-> [   32.628832]  ? lock_release+0xc7/0x290
-> [   32.628832]  ? cpuhp_thread_fun+0x4e/0x200
-> [   32.628832]  cpuhp_thread_fun+0x183/0x200
-> [   32.628832]  smpboot_thread_fn+0xd8/0x1d0
-> [   32.628832]  ? __pfx_smpboot_thread_fn+0x10/0x10
-> [   32.628832]  kthread+0xd4/0x100
-> [   32.628832]  ? __pfx_kthread+0x10/0x10
-> [   32.628832]  ret_from_fork+0x2f/0x50
-> [   32.628832]  ? __pfx_kthread+0x10/0x10
-> [   32.628832]  ret_from_fork_asm+0x1a/0x30
-> [   32.628832]  </TASK>
+> This is visible by looking for a branch that has the same target as the
+> previous branch and the following source is before the address of the
+> last target, which is impossible as execution would have had to have
+> gone backwards:
 > 
-> I bisected this to:
+>    ffff800080849d40 _find_next_and_bit+0x78 => ffff80008011cadc update_sg_lb_stats+0x94
+>     (packet_queue fills here before a timestamp, resulting in a flush and
+>      branch target ffff80008011cadc is duplicated.)
+>    ffff80008011cb1c update_sg_lb_stats+0xd4 => ffff80008011cadc update_sg_lb_stats+0x94
+>    ffff8000801117c4 cpu_util+0x24 => ffff8000801117d4 cpu_util+0x34
 > 
-> 4ba4f1afb6a9 ("perf: Generic hotplug support for a PMU with a scope")
+> After removing the flush the correct branch target is used for the
+> second sample, and ffff8000801117c4 is no longer before the previous
+> address:
 > 
-> This adds a perf_event_setup_cpumask() function that uses
-> list_for_each_entry_rcu() without an obvious RCU read-side critical
-> section, so the fix might be as simple as adding rcu_read_lock() and
-> rcu_read_unlock().  In the proper places, of course.  ;-)
+>    ffff800080849d40 _find_next_and_bit+0x78 => ffff80008011cadc update_sg_lb_stats+0x94
+>    ffff80008011cb1c update_sg_lb_stats+0xd4 => ffff8000801117a0 cpu_util+0x0
+>    ffff8000801117c4 cpu_util+0x24 => ffff8000801117d4 cpu_util+0x34
+> 
+> Make sure that a final branch stack is output at the end of the trace
+> by calling cs_etm__end_block(). This is already done for both the
+> timeless decode paths.
 
-IIRC that condition should be:
+It is right to call cs_etm__flush() for only discontinuity packet and use
+cs_etm__end_block() for flushing the end of data block. Thanks for
+distinguishing these two different things.
 
-  lockdep_is_held(&pmus_srcu) || lockdep_is_held(&pmus_lock)
+> Fixes: 21fe8dc1191a ("perf cs-etm: Add support for CPU-wide trace scenarios")
+> Reported-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+> Closes: https://lore.kernel.org/all/20240719092619.274730-1-gankulkarni@os.amperecomputing.com/
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-And at this pooint we actually do hold pmus_lock.
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 
-But that all begs the question why we're using RCU iteration here to
-begin with, as this code seems to be only called from this context.
-
-Kan, is the simple fix to do:
-
--	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
-+	list_for_each_entry(pmu, &pmus, entry) {
-
-?
-  
+> ---
+>   tools/perf/util/cs-etm.c | 25 ++++++++++++++++++-------
+>   1 file changed, 18 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 90f32f327b9b..242788ac9625 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -2490,12 +2490,6 @@ static void cs_etm__clear_all_traceid_queues(struct cs_etm_queue *etmq)
+> 
+>                  /* Ignore return value */
+>                  cs_etm__process_traceid_queue(etmq, tidq);
+> -
+> -               /*
+> -                * Generate an instruction sample with the remaining
+> -                * branchstack entries.
+> -                */
+> -               cs_etm__flush(etmq, tidq);
+>          }
+>   }
+> 
+> @@ -2638,7 +2632,7 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
+> 
+>          while (1) {
+>                  if (!etm->heap.heap_cnt)
+> -                       goto out;
+> +                       break;
+> 
+>                  /* Take the entry at the top of the min heap */
+>                  cs_queue_nr = etm->heap.heap_array[0].queue_nr;
+> @@ -2721,6 +2715,23 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
+>                  ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, cs_timestamp);
+>          }
+> 
+> +       for (i = 0; i < etm->queues.nr_queues; i++) {
+> +               struct int_node *inode;
+> +
+> +               etmq = etm->queues.queue_array[i].priv;
+> +               if (!etmq)
+> +                       continue;
+> +
+> +               intlist__for_each_entry(inode, etmq->traceid_queues_list) {
+> +                       int idx = (int)(intptr_t)inode->priv;
+> +
+> +                       /* Flush any remaining branch stack entries */
+> +                       tidq = etmq->traceid_queues[idx];
+> +                       ret = cs_etm__end_block(etmq, tidq);
+> +                       if (ret)
+> +                               return ret;
+> +               }
+> +       }
+>   out:
+>          return ret;
+>   }
+> --
+> 2.34.1
+> 
