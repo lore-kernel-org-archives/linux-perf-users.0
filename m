@@ -1,141 +1,120 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A3E1D6C7D
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Sep 2024 08:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 501751BF324;
+	Fri, 13 Sep 2024 08:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726216604; cv=none; b=CmnOyvnOz3YFku6PCzdg4rYFpqK07Yj0CdBvMDtrZ5WhrXG1XFny0SNN/IihpoEqSF5rcV51MCaE2FI0bn8PXEPzX+L2UjRvo3jRyi9I4eKpKKwMxSLvfvpOyO4jc1DU3PiTyfgpp+/S85Zzo6DSVG2UKtKD1cUvDHGI5p1jbsY=
+	t=1726217088; cv=none; b=Si0x/cOAQ/i4tehhZErCEuHs0LFQG+tz6YxQcv05EBIepHTWGZ8xTxIrxLZ4Yxu1sJf7x1t4lpRXt1iD3362c4wofhYECvFLz16AG31eWBbV9RU9okdE2bkS5BOIn0UuEk99SwYIDGjxSCotcWMSXLTMRkJlyQ/XD4MxlFY+r6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726216604; c=relaxed/simple;
-	bh=zAMShyBfk0di8PVtRRMQX+UtUolVAfO18RJ9JXP23AI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QLmXMmypZIQxNUX6a5dzfMqBeFXofxPrhSFm9ZBRWHaI95KCRpXU5FFrvdHv+iQJ0ZNcsV0kDhG0N2BMXrssbYTLwQQvcTI6GtVYkmlTvSFgVVTqBhIYOS3FSyi/5zaVMEjXfBS0RaePXV73RDNvcd7qJyMZCCMxSCRi8nuZ1lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NPnThKTt; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NPnThKTt"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-374bd059b12so425878f8f.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Sep 2024 01:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726216600; x=1726821400; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=M4pnwolBQoa9ieXVMZZHl9gf+CGD4ivypyvaluO9F24=;
-        b=NPnThKTtuyd+IBbUka9ae+GMZ2WnIPAwoUJJOuaZeBi4/m0k1E3zeVlzQbNskDkZPq
-         d8y2sOHITb6Wet/oZiejhhHFG1WCja7dBH3so6uiZgQdyRfb1DriBhMkmZZMSMXxtQae
-         0jZXaSMmYiXWmHitn6mLcEpl6D5WzVZaeuOcfvKDM/id4vVcndr/Mh64TVjZRMokFVdL
-         rIfXYlwmCrhZ+t+FyXXK8t4k5XE+oQRitR1tp5wJEm6GoNvQEr5P6vV6oO5NUsVTVo01
-         BNQMFiDjYi5kx8uInvlvxyQTJW4EKh26X61gk4cvUxdkJJzE+RXQJ7goHgagihUUPCDr
-         3X7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726216600; x=1726821400;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M4pnwolBQoa9ieXVMZZHl9gf+CGD4ivypyvaluO9F24=;
-        b=hmEoSKkjDV8lMngioGRT2OKlUQBCHNs3m5AuOLr9VEawVBuat04ORxvkH0fzBCbf6d
-         ZLm/Z7O00AjHzXNJt8XMA60w8Fu+nXyJg86qpd/Vjd7C1VtvHR0o7iRns/k3w0OQTsbZ
-         IPX1NJqyKBnnQOujS9doKovIUE69jRjuHIHc24eqWYBl4xNiOsRELm4ih392TzL8/p31
-         BhzAwGUp0vLsb0xctV/SDv94oeomoB6j1jQr2BKrz+i05sOxZr882ZwCw0U4pDXB48Wg
-         +ddavN7PbV2My79fkcdbf5C0gzEe07NPn7ijbR208YmWo5JjTCheow9JxnZouPOh0eHI
-         vgBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5Jw/BbNkjrGyh5QdBp8S51eIQ2M3xYcWYmvJFgG4QQ4YYIfz0r5+1/qdzZ4FskYBlxGj7efAILYTb2JXUDkEF@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuOxWRRBUT/ZBQYPE0zV+o346a8ClCbLpiC8uAZW97MQ+BONwN
-	jsaovzt8Y3py2sYOrYqsUXONRG07AksBY9Xt9PCGfewwVDhcBYyrIcFr0MP1U2g=
-X-Google-Smtp-Source: AGHT+IHx+OMzS4wGVJnmmQnNusmr45zTxb9hpuk4RDO/rxJ2QU/ShBAVN25ERI2yQhQcZdcHa5uSFg==
-X-Received: by 2002:a05:6000:1841:b0:378:7f65:e13a with SMTP id ffacd0b85a97d-378d61d4fc8mr1097306f8f.2.1726216600193;
-        Fri, 13 Sep 2024 01:36:40 -0700 (PDT)
-Received: from [192.168.1.61] ([84.67.228.188])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378956de3d4sm16159955f8f.108.2024.09.13.01.36.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Sep 2024 01:36:39 -0700 (PDT)
-Message-ID: <39eafc82-dfa8-4e22-9d8a-071ed09460d3@linaro.org>
-Date: Fri, 13 Sep 2024 09:36:54 +0100
+	s=arc-20240116; t=1726217088; c=relaxed/simple;
+	bh=QFa203OC2WhTCdihVHC5Wc82zSwZEYBkVei0/jDI/m0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=av1Pvi7fUyLgf9pW4MaU/lG+qgBcm0tCodPZQ/AE5oKPgMzbAx8HV0MMteQbWdPW0SI1Scmj7WsSdkaEV5Ys6INMlIwFz6ilGVa21TjlPZifY9AuSGT9hXIGxbt/AKuC+WDOYka2LrhiYzhU5W9iuc48DolUnrJE1lEh8KtBNTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B45C813D5;
+	Fri, 13 Sep 2024 01:45:13 -0700 (PDT)
+Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.16.84])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7F3B23F73B;
+	Fri, 13 Sep 2024 01:44:40 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-mm@kvack.org
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	x86@kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-fsdevel@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 0/7] mm: Use pxdp_get() for accessing page table entries
+Date: Fri, 13 Sep 2024 14:14:26 +0530
+Message-Id: <20240913084433.1016256-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] perf stat: Stop repeating when ref_perf_stat()
- returns -1
-To: Levi Yun <yeoreum.yun@arm.com>
-Cc: nd@arm.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, asmadeus@codewreck.org
-References: <20240913020209.520104-1-yeoreum.yun@arm.com>
- <20240913020209.520104-3-yeoreum.yun@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20240913020209.520104-3-yeoreum.yun@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+This series converts all generic page table entries direct derefences via
+pxdp_get() based helpers extending the changes brought in via the commit
+c33c794828f2 ("mm: ptep_get() conversion"). First it does some platform
+specific changes for m68k and x86 architecture.
 
+This series has been build tested on multiple architecture such as x86,
+arm64, powerpc, powerpc64le, riscv, and m68k etc.
 
-On 13/09/2024 03:02, Levi Yun wrote:
-> Exit when run_perf_stat() returns an error to avoid continuously
-> repeating the same error message. It's not expected that COUNTER_FATAL
-> or internal errors are recoverable so there's no point in retrying.
-> 
-> This fixes the following flood of error messages for permission issues,
-> for example when perf_event_paranoid==3:
->    perf stat -r 1044 -- false
-> 
->    Error:
->    Access to performance monitoring and observability operations is limited.
->    ...
->    Error:
->    Access to performance monitoring and observability operations is limited.
->    ...
->    (repeating for 1044 times).
-> 
-> Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
-> ---
-> Changes in v2:
->    - Add some comments.
-> ---
->   tools/perf/builtin-stat.c | 10 +++++++++-
->   1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 954eb37ce7b8..0153925f2382 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -2875,7 +2875,15 @@ int cmd_stat(int argc, const char **argv)
->   			evlist__reset_prev_raw_counts(evsel_list);
-> 
->   		status = run_perf_stat(argc, argv, run_idx);
-> -		if (forever && status != -1 && !interval) {
-> +		/*
-> +		 * * Meet COUNTER_FATAL situation (i.e) can't open event counter.
-> +		 * * In this case, there is a high chance of failure in the next attempt
-> +		 * * as well with the same reason. so, stop it.
-> +		 * */
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: x86@kernel.org
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: linux-mm@kvack.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: kasan-dev@googlegroups.com
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org
+Cc: kasan-dev@googlegroups.com
 
-There's something wrong with the formatting here.
+Anshuman Khandual (7):
+  m68k/mm: Change pmd_val()
+  x86/mm: Drop page table entry address output from pxd_ERROR()
+  mm: Use ptep_get() for accessing PTE entries
+  mm: Use pmdp_get() for accessing PMD entries
+  mm: Use pudp_get() for accessing PUD entries
+  mm: Use p4dp_get() for accessing P4D entries
+  mm: Use pgdp_get() for accessing PGD entries
 
-But I don't think the comment answers my question about the other return 
-codes. It just states what the code does.
+ arch/m68k/include/asm/page.h          |  2 +-
+ arch/x86/include/asm/pgtable-3level.h | 12 ++---
+ arch/x86/include/asm/pgtable_64.h     | 20 +++----
+ drivers/misc/sgi-gru/grufault.c       | 10 ++--
+ fs/proc/task_mmu.c                    | 26 ++++-----
+ fs/userfaultfd.c                      |  6 +--
+ include/linux/huge_mm.h               |  5 +-
+ include/linux/mm.h                    |  6 +--
+ include/linux/pgtable.h               | 38 +++++++-------
+ kernel/events/core.c                  |  6 +--
+ mm/gup.c                              | 40 +++++++-------
+ mm/hmm.c                              |  2 +-
+ mm/huge_memory.c                      | 76 +++++++++++++--------------
+ mm/hugetlb.c                          | 10 ++--
+ mm/hugetlb_vmemmap.c                  |  4 +-
+ mm/kasan/init.c                       | 38 +++++++-------
+ mm/kasan/shadow.c                     | 12 ++---
+ mm/khugepaged.c                       |  4 +-
+ mm/madvise.c                          |  6 +--
+ mm/mapping_dirty_helpers.c            |  2 +-
+ mm/memory-failure.c                   | 14 ++---
+ mm/memory.c                           | 59 +++++++++++----------
+ mm/mempolicy.c                        |  4 +-
+ mm/migrate.c                          |  4 +-
+ mm/migrate_device.c                   | 10 ++--
+ mm/mlock.c                            |  6 +--
+ mm/mprotect.c                         |  2 +-
+ mm/mremap.c                           |  4 +-
+ mm/page_table_check.c                 |  4 +-
+ mm/page_vma_mapped.c                  |  6 +--
+ mm/pagewalk.c                         | 10 ++--
+ mm/percpu.c                           |  8 +--
+ mm/pgalloc-track.h                    |  6 +--
+ mm/pgtable-generic.c                  | 24 ++++-----
+ mm/ptdump.c                           |  8 +--
+ mm/rmap.c                             |  8 +--
+ mm/sparse-vmemmap.c                   | 10 ++--
+ mm/vmalloc.c                          | 46 ++++++++--------
+ mm/vmscan.c                           |  6 +--
+ 39 files changed, 283 insertions(+), 281 deletions(-)
 
-There are many more return -1's than just for COUNTER_FATAL, so it's not 
-just that situation anyway. And in addition to that, there is -ENOMEM 
-and others that aren't -1 which aren't explained that they are 
-deliberately explicit retry or ignores.
+-- 
+2.25.1
 
-> +		if (status == -1)
-> +			break;
-> +
-> +		if (forever && !interval) {
->   			print_counters(NULL, argc, argv);
->   			perf_stat__reset_stats();
->   		}
-> --
-> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
-> 
