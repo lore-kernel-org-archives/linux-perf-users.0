@@ -1,131 +1,109 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CDD1BDA85
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Sep 2024 13:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDF643144;
+	Fri, 13 Sep 2024 13:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726235355; cv=none; b=e3xCrm+1HXulYtQQhSzhpUivTGDMUlJcE9A5Vr5ldIZOtV394dq4MPKRHGy7diO+rE1SNUC3i5hwiRWPk7iWcTqx1iT3q+pI1qIgSNsd/PvPuR0shGrtV2qagvvNVjc7Zj1RlM0CUi+UJnMrMqRcV4u7RnvHVZEFS6yPSOkMX9I=
+	t=1726235638; cv=none; b=Rk+nzVjJ/srTWJP8INIxnwSMFGax+ra3tD0qWnn1lNmyuMLuSDBM/EBI+SdEFEsqK0HVNShFdjuelnGju3JMij1gbGEHkFG2ycCXz9jLMJFauENHClYWpEdieUj8k3MsBTqKAW7EtMrm7TIzaLPvJ/RPtXAnV81HT9gvWjTziW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726235355; c=relaxed/simple;
-	bh=7JMOY50sAL1FBFBstjag6aZboPGwPJyHsAb4jiAZkZo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YjfCsICjdGk8prF/bWbIrlbr4H/fLr56XZshsiWbclpwhLg9B1sic2aSXsP1KQegv+GeMRcc4aYmP0SUswXOcYid7ELxE5kVrb2/tfY3J09e073Ydt1MIb+V7XWMwPgw/48Pvh8GdaLOxyhqrodzEdxEuERXVw5nhNWX+mlXVRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ulOrN9Cn; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1726235638; c=relaxed/simple;
+	bh=rVevnvXuQWrdT9twLT7q7mUZss+Iqc2O3+KUpgpGlUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AKpSaDs6xQgncB8gcSchyjrrjsVT1uBylOzovvHEkacT6zGqWFYnQNxIOGdXAvbM5w8NvG01tmzQOfuuMCvcdw0XWkQPB/bEK4soLK3lyuynsKYU8lJXUvHDEeXX3zd1fMrfFvxPCs/17S1BqjwMhnOVXFpCKZpWNy6iqNe9pIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uEe89d3e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ulOrN9Cn"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42cb0f28bfbso20119465e9.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Sep 2024 06:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726235352; x=1726840152; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VX8L0wE8NO95OVzJ0ST2l5vUkGHAoSVmZ6/3SaE5kFo=;
-        b=ulOrN9CnId2/SnGqWwtMdOZGf6mldfmuHWXSGx++/OmEc/1Vwin1Jvg5FqE9JPCanD
-         GAxJ5pGRPjP1JYXRlODsk5SLaYE4afTp9lXpWpYvM3Uhw3m4AXKAbVdygxdMvmuxV0Ab
-         w+cGez30nU2li+8eoDHybC2tUYhjnQKwLmIr+RUD5PDnKTxKOGF4tgzawpao3LZRDEM3
-         qMYum8IKKvpZlqcF/RqjOitalHSdTs0QVjWM/kFEgWyk204u18hul0IgpfValpTzTkI6
-         UfNMC807elzTVbT4+Bghej4LTkjL9yZaLeZS1Sy5xU2fnlbirWWt4Rrp03MRTUnKBDPT
-         V3aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726235352; x=1726840152;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VX8L0wE8NO95OVzJ0ST2l5vUkGHAoSVmZ6/3SaE5kFo=;
-        b=qwowQbY2g+wGnvTWBvedAKww6u+F2Ng1shhky90u1jNB69nYAgZv6OHq/hQlzj9fIW
-         WXaxlAGf24mfLNRTNwoi2ABajFYyejJbhF+G0WhirIrPwrgUwiY2WvlqVge9cag5AOql
-         QqYC1cmyEPGxVmWmvTwOqZE8ZwjQJQ0BsFiJ1/42aBJECoahqje1Mp61HLHzdG/R5ve3
-         0OF0fw+7WD5IEXVz3Xkq/UFAzCkUZh3OZ0JwEFN8JHuCTWvmwCcIPSg7BAqEA0/O3LwO
-         kIP1oIEin/zmOlm6/R/HXPXfowSR7bpkqBxFQQuO6tbAhSr9q2JpnT/C0sUlpnqCHWE0
-         b0dQ==
-X-Gm-Message-State: AOJu0Yw6EmqrO+yEoJXowIhS1Xu2evUmgiXouIlv2m1nQuXMyMbMhEfv
-	o4VwDhvbr/7B3aHT6S/vUMkZF+QrkqKMeoPsyqzcaQUsfSDjNf7KAoqRmr3WRXI=
-X-Google-Smtp-Source: AGHT+IGCU3GflcAt3JPkUP8a6qTIV9vzRAlTlW+gej7YT0JQazoHvetjZZccwX3hpCfpCaxguNO2AA==
-X-Received: by 2002:a05:600c:4fc3:b0:42c:bcc8:5877 with SMTP id 5b1f17b1804b1-42cdb522f2cmr58941455e9.13.1726235350948;
-        Fri, 13 Sep 2024 06:49:10 -0700 (PDT)
-Received: from [192.168.1.61] ([84.67.228.188])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42d9b055069sm27633255e9.6.2024.09.13.06.49.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Sep 2024 06:49:10 -0700 (PDT)
-Message-ID: <d6df6edd-688d-403d-8006-491e302fd042@linaro.org>
-Date: Fri, 13 Sep 2024 14:49:24 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uEe89d3e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16049C4CEC0;
+	Fri, 13 Sep 2024 13:53:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726235638;
+	bh=rVevnvXuQWrdT9twLT7q7mUZss+Iqc2O3+KUpgpGlUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uEe89d3eEaVXJi2XZjae5kuiBApmuYRrWnYHqeA1vN/X+IFB1ompbPefKlyZtTnsg
+	 UFYjQ7/9OhK8+CldH1wEsTt2qx4PJxVMWYAqtfQMilWVn8+242eRc8B6g39DvFNoZg
+	 coc80fKCd0c5VnN3j35zz99udzDXMKH4ILSrkyBRvckZbT6W8iKsrtgLyXgJYTO9B/
+	 JtjuGe01uQso7OgyxEY46H1LAdCbEP3pVgebi8jO/vnTGNGrjcSKO3hhEbksUFJxXE
+	 6flMoKm8tUjn9JzjUaGD7rvUYwpGS2FPB+f9pN29uu14Qf7EPEN0JcoT/ZRL6FBtbb
+	 YXAciEquWNzGg==
+Date: Fri, 13 Sep 2024 06:53:51 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org
+Subject: Re: [PATCH RFC 04/10] perf: Introduce deferred user callchains
+Message-ID: <20240913135351.tyjuekjzvb5xtawn@treble>
+References: <cover.1699487758.git.jpoimboe@kernel.org>
+ <d5def69b0c88bcbe2a85d0e1fd6cfca62b472ed4.1699487758.git.jpoimboe@kernel.org>
+ <CAM9d7chZcqR8WCEYtjpP4KzUOeNdJ=kSvae0UrjsO8OgsepjDw@mail.gmail.com>
+ <20231111184908.ym4l6cwzwnkl7e6m@treble>
+ <CAM9d7chgoiwc3ZfQ8SzO7gV0oQOKMK3bJAdxa63Pzgcqo4i7tQ@mail.gmail.com>
+ <ZVTuK5VRQfY1JOEY@google.com>
+ <20231120140334.GW8262@noisy.programming.kicks-ass.net>
+ <20240913130834.hq4gj27fcklakkzb@treble>
+ <20240913133629.GV4723@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] perf stat: Stop repeating when ref_perf_stat()
- returns -1
-To: Levi Yun <yeoreum.yun@arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- nd@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- asmadeus@codewreck.org
-References: <20240913101456.633819-1-yeoreum.yun@arm.com>
- <20240913101456.633819-3-yeoreum.yun@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20240913101456.633819-3-yeoreum.yun@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240913133629.GV4723@noisy.programming.kicks-ass.net>
 
-
-
-On 13/09/2024 11:14, Levi Yun wrote:
-> Exit when run_perf_stat() returns an error to avoid continuously
-> repeating the same error message. It's not expected that COUNTER_FATAL
-> or internal errors are recoverable so there's no point in retrying.
+On Fri, Sep 13, 2024 at 03:36:29PM +0200, Peter Zijlstra wrote:
+> On Fri, Sep 13, 2024 at 06:08:34AM -0700, Josh Poimboeuf wrote:
+> > On Mon, Nov 20, 2023 at 03:03:34PM +0100, Peter Zijlstra wrote:
+> > > On Wed, Nov 15, 2023 at 08:13:31AM -0800, Namhyung Kim wrote:
+> > > 
+> > > > ---8<---
+> > > > diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> > > > index 39c6a250dd1b..a3765ff59798 100644
+> > > > --- a/include/uapi/linux/perf_event.h
+> > > > +++ b/include/uapi/linux/perf_event.h
+> > > > @@ -456,7 +456,8 @@ struct perf_event_attr {
+> > > >  				inherit_thread :  1, /* children only inherit if cloned with CLONE_THREAD */
+> > > >  				remove_on_exec :  1, /* event is removed from task on exec */
+> > > >  				sigtrap        :  1, /* send synchronous SIGTRAP on event */
+> > > > -				__reserved_1   : 26;
+> > > > +				defer_callchain:  1, /* generate DEFERRED_CALLCHAINS records for userspace */
+> > > > +				__reserved_1   : 25;
+> > > >  
+> > > >  	union {
+> > > >  		__u32		wakeup_events;	  /* wakeup every n events */
+> > > > @@ -1207,6 +1208,20 @@ enum perf_event_type {
+> > > >  	 */
+> > > >  	PERF_RECORD_AUX_OUTPUT_HW_ID		= 21,
+> > > >  
+> > > > +	/*
+> > > > +	 * Deferred user stack callchains (for SFrame).  Previous samples would
+> > > 
+> > > Possibly also useful for ShadowStack based unwinders. And by virtue of
+> > > it possibly saving work when multiple consecutive samples hit
+> > > the same kernel section, for everything.
+> > 
+> > [ necroing old thread as I'm finally working on a v2 ]
+> > 
+> > Peter, can you elaborate?  What did you mean by "same kernel section"?
+> > 
+> > Like if there's a duplicate kernel callchain?  Or something else?
 > 
-> This fixes the following flood of error messages for permission issues,
-> for example when perf_event_paranoid==3:
->    perf stat -r 1044 -- false
-> 
->    Error:
->    Access to performance monitoring and observability operations is limited.
->    ...
->    Error:
->    Access to performance monitoring and observability operations is limited.
->    ...
->    (repeating for 1044 times).
-> 
-> Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
-> ---
->   tools/perf/builtin-stat.c | 14 +++++++++++++-
->   1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 954eb37ce7b8..d25528ea7e40 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -2875,7 +2875,19 @@ int cmd_stat(int argc, const char **argv)
->   			evlist__reset_prev_raw_counts(evsel_list);
->   
->   		status = run_perf_stat(argc, argv, run_idx);
-> -		if (forever && status != -1 && !interval) {
-> +
-> +		/*
-> +		 * Returns -1 for fatal errors which signifies to not continue
-> +		 * when in repeat mode.
-> +		 *
-> +		 * Returns < -1 error codes when stat record is used. These
-> +		 * result in the stat information being displayed, but writing
-> +		 * to the file fails and is non fatal.
-> +		 */
+> Yeah, multiple samples hitting the same syscall invocation will, by
+> necessity, have the same user callchain.
 
-I meant this to be a function doc above the run_perf_stat() function. 
-Usually what a function returns would be documented there, in case there 
-end up being multiple callers.
+Ah, I thought you were talking about kernel callchains for some reason.
+n/m...
 
-With that change:
-
-Reviewed-by: James Clark <james.clark@linaro.org>
-
-Also I think something happened with the cover letter as well, it's 
-marked as V2.
+-- 
+Josh
