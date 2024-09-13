@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0371B1D6DB4;
-	Fri, 13 Sep 2024 08:44:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D9C11D6DB4;
+	Fri, 13 Sep 2024 08:44:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726217091; cv=none; b=YxzrQytHawuIG6C/VDkvE8IvmaNTeEdc8s0SYFLKsQMPsD5kmTY2L3O+8zQvOPUsGWH5JbUkxcbgmGvXpt6ZLpwwea2alA3H7+mQTgComzz/ElLMAH/zY5q9Kz7tqn8sPklZXyjpEhab9sKRZCKPl2uU5KAavhvCWeLu9LK1YGA=
+	t=1726217096; cv=none; b=qfRgOxt1xbvBcAEg2s37ZHgDS1wSuIto325A9atNeB7ZwTqT5wZ6nRU6hv+5m5N5LUFIjI+Kuk7ywuxg2WmuxpAQ+cljbMRSwbw3EDDXHTHqIJHeZwIpk0PAgOhQN5ZMpdgkZbXXYSOG6S9OJVSDogIp1jBzLicRN90EzhSAbyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726217091; c=relaxed/simple;
-	bh=TmX1uXjQKugIb41wPU+Bk96PgJuVp8IskJbQ37pXCbE=;
+	s=arc-20240116; t=1726217096; c=relaxed/simple;
+	bh=R70eryLf1TUoD8re4x1PRoP7RMn72AEMvdnymyac7CQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=W4oKzt9S343ouX/wmSsN8xWJldi8NBPOvL8LY5c2vRszINEaCijC1HpA5aoMR5pyV0iCqVYG3i/hi21s3QDDzKFyC4SgL8ySJYM3i7SqnB9S4Ri408olyjWlrysmZ/RyMShqlSPWCKYd/79Q7XDrMjhnO6l5Ehtc8LDOKYmqPFY=
+	 MIME-Version; b=WnzO5JrdpyZyBDa0co2nz+Q05U3VhBwo1ahuau8p6HpeVRLXVmkMepwzD874vlQfX7hFrWPfBmF2aUL0VRew7iP/LvLc9vB/tRtOPluWVxAKwtKowCj+rRGL3YgYcWJx4HOtErC2m9NipK+KUb1t2XSB7z/vKdO/Z8Z00mIvuhc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98C101477;
-	Fri, 13 Sep 2024 01:45:18 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F22991477;
+	Fri, 13 Sep 2024 01:45:23 -0700 (PDT)
 Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.16.84])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D42DA3F73B;
-	Fri, 13 Sep 2024 01:44:44 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BA6A33F73B;
+	Fri, 13 Sep 2024 01:44:49 -0700 (PDT)
 From: Anshuman Khandual <anshuman.khandual@arm.com>
 To: linux-mm@kvack.org
 Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
@@ -32,11 +32,13 @@ Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
 	kasan-dev@googlegroups.com,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH 1/7] m68k/mm: Change pmd_val()
-Date: Fri, 13 Sep 2024 14:14:27 +0530
-Message-Id: <20240913084433.1016256-2-anshuman.khandual@arm.com>
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH 2/7] x86/mm: Drop page table entry address output from pxd_ERROR()
+Date: Fri, 13 Sep 2024 14:14:28 +0530
+Message-Id: <20240913084433.1016256-3-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240913084433.1016256-1-anshuman.khandual@arm.com>
 References: <20240913084433.1016256-1-anshuman.khandual@arm.com>
@@ -48,32 +50,85 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This changes platform's pmd_val() to access the pmd_t element directly like
-other architectures rather than current pointer address based dereferencing
-that prevents transition into pmdp_get().
+This drops page table entry address output from all pxd_ERROR() definitions
+which now matches with other architectures. This also prevents build issues
+while transitioning into pxdp_get() based page table entry accesses.
 
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Guo Ren <guoren@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-m68k@lists.linux-m68k.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- arch/m68k/include/asm/page.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/pgtable-3level.h | 12 ++++++------
+ arch/x86/include/asm/pgtable_64.h     | 20 ++++++++++----------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/arch/m68k/include/asm/page.h b/arch/m68k/include/asm/page.h
-index 8cfb84b49975..be3f2c2a656c 100644
---- a/arch/m68k/include/asm/page.h
-+++ b/arch/m68k/include/asm/page.h
-@@ -19,7 +19,7 @@
+diff --git a/arch/x86/include/asm/pgtable-3level.h b/arch/x86/include/asm/pgtable-3level.h
+index dabafba957ea..e1fa4dd87753 100644
+--- a/arch/x86/include/asm/pgtable-3level.h
++++ b/arch/x86/include/asm/pgtable-3level.h
+@@ -10,14 +10,14 @@
   */
- #if !defined(CONFIG_MMU) || CONFIG_PGTABLE_LEVELS == 3
- typedef struct { unsigned long pmd; } pmd_t;
--#define pmd_val(x)	((&x)->pmd)
-+#define pmd_val(x)	((x).pmd)
- #define __pmd(x)	((pmd_t) { (x) } )
+ 
+ #define pte_ERROR(e)							\
+-	pr_err("%s:%d: bad pte %p(%08lx%08lx)\n",			\
+-	       __FILE__, __LINE__, &(e), (e).pte_high, (e).pte_low)
++	pr_err("%s:%d: bad pte (%08lx%08lx)\n",			\
++	       __FILE__, __LINE__, (e).pte_high, (e).pte_low)
+ #define pmd_ERROR(e)							\
+-	pr_err("%s:%d: bad pmd %p(%016Lx)\n",				\
+-	       __FILE__, __LINE__, &(e), pmd_val(e))
++	pr_err("%s:%d: bad pmd (%016Lx)\n",				\
++	       __FILE__, __LINE__, pmd_val(e))
+ #define pgd_ERROR(e)							\
+-	pr_err("%s:%d: bad pgd %p(%016Lx)\n",				\
+-	       __FILE__, __LINE__, &(e), pgd_val(e))
++	pr_err("%s:%d: bad pgd (%016Lx)\n",				\
++	       __FILE__, __LINE__, pgd_val(e))
+ 
+ #define pxx_xchg64(_pxx, _ptr, _val) ({					\
+ 	_pxx##val_t *_p = (_pxx##val_t *)_ptr;				\
+diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
+index 3c4407271d08..4e462c825cab 100644
+--- a/arch/x86/include/asm/pgtable_64.h
++++ b/arch/x86/include/asm/pgtable_64.h
+@@ -32,24 +32,24 @@ extern void paging_init(void);
+ static inline void sync_initial_page_table(void) { }
+ 
+ #define pte_ERROR(e)					\
+-	pr_err("%s:%d: bad pte %p(%016lx)\n",		\
+-	       __FILE__, __LINE__, &(e), pte_val(e))
++	pr_err("%s:%d: bad pte (%016lx)\n",		\
++	       __FILE__, __LINE__, pte_val(e))
+ #define pmd_ERROR(e)					\
+-	pr_err("%s:%d: bad pmd %p(%016lx)\n",		\
+-	       __FILE__, __LINE__, &(e), pmd_val(e))
++	pr_err("%s:%d: bad pmd (%016lx)\n",		\
++	       __FILE__, __LINE__, pmd_val(e))
+ #define pud_ERROR(e)					\
+-	pr_err("%s:%d: bad pud %p(%016lx)\n",		\
+-	       __FILE__, __LINE__, &(e), pud_val(e))
++	pr_err("%s:%d: bad pud (%016lx)\n",		\
++	       __FILE__, __LINE__, pud_val(e))
+ 
+ #if CONFIG_PGTABLE_LEVELS >= 5
+ #define p4d_ERROR(e)					\
+-	pr_err("%s:%d: bad p4d %p(%016lx)\n",		\
+-	       __FILE__, __LINE__, &(e), p4d_val(e))
++	pr_err("%s:%d: bad p4d (%016lx)\n",		\
++	       __FILE__, __LINE__, p4d_val(e))
  #endif
+ 
+ #define pgd_ERROR(e)					\
+-	pr_err("%s:%d: bad pgd %p(%016lx)\n",		\
+-	       __FILE__, __LINE__, &(e), pgd_val(e))
++	pr_err("%s:%d: bad pgd (%016lx)\n",		\
++	       __FILE__, __LINE__, pgd_val(e))
+ 
+ struct mm_struct;
  
 -- 
 2.25.1
