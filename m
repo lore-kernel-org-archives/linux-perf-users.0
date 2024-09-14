@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E6D154BE0;
-	Sat, 14 Sep 2024 11:24:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13E677115;
+	Sat, 14 Sep 2024 12:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726313048; cv=none; b=HsFZNBdn6Jo0SDpPboV+toLnAYuA48aQJVTy5bNBfjxcKPIeoS0OPBC9KzxKLFuwR20jDCcnktwQjeqYTRB9vcYflbmztyRHG+esCIYcrENX8fpBH3Xf/IcpmBOBLgctc6sgParIz3d/6GxuVs8ZTi7blhWHyDEzcsSqluopajs=
+	t=1726315976; cv=none; b=oTXT2cOdgFoWyN6jLWMkwk7heDo46yEsq1uHpTEbHSB2gqzxE72a9tPWEOZ1/+DMmb7Ej04/+BE5W6UGVLh2yIXT4hParQvFlDkYPZ8EuA4HXKp7IPpADZZ5aR82vb7z6+7BmsLRLjuel9GGd9TWn5eYT0uSHBqI60nSfdL1O8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726313048; c=relaxed/simple;
-	bh=2WsiO8GTrDtNy4ePDeyJaB/CNfI7bB9SpVdj4brKP5o=;
+	s=arc-20240116; t=1726315976; c=relaxed/simple;
+	bh=Pl9ObVTke+fwVEyKkC+JOM9WLEuzpl957b9y4okZyX0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T7EO/Xrg5HPigZ+aQXNtqZ9uaN6sWwlx7P76KksBNfhfTm3n9Y8l32Y4OC6wE+SgpOetl/QYjZlr/qtYCvoJFXvZgmvox13Ip1JdJqut8W8b6Mtjg1tXF5IaS1GgjngdLPzDX1XRJ7HqIh9AfX5B2+rJ8vzMSfNdHkZgB5tqzAI=
+	 MIME-Version:Content-Type; b=VqzghH+voL65QFrXpxgrQJEkpTMjk2IQJhJnWt4HYWwLQ+ayjACXdBcqHoh/WIvp4e1AMU9G2vXSpEvyStklh56SyaMzM/QftrazBgX6xVxtQDg7zjrhCv6R/b4sr+n+H8keINoWPKrCAduhvCGZEX0iUW06MyczMyv4SVOrBsk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97FA4C4CEC0;
-	Sat, 14 Sep 2024 11:24:03 +0000 (UTC)
-Date: Sat, 14 Sep 2024 07:23:58 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4A67C4CEC0;
+	Sat, 14 Sep 2024 12:12:50 +0000 (UTC)
+Date: Sat, 14 Sep 2024 08:12:46 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Josh Poimboeuf <jpoimboe@kernel.org>
 Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
@@ -25,12 +25,13 @@ Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
  Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian
  Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, Mark
  Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, Jordan Rome
- <jordalgo@meta.com>, Sam James <sam@gentoo.org>
-Subject: Re: [PATCH v2 03/11] unwind: Introduce SFrame user space unwinding
-Message-ID: <20240914072358.4afad691@rorschach.local.home>
-In-Reply-To: <ca2e603ae3dcfa3e836162ed8c301fd4d9fd4058.1726268190.git.jpoimboe@kernel.org>
+ <jordalgo@meta.com>, Sam James <sam@gentoo.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v2 00/11] unwind, perf: sframe user space unwinding,
+ deferred perf callchains
+Message-ID: <20240914081246.1e07090c@rorschach.local.home>
+In-Reply-To: <cover.1726268190.git.jpoimboe@kernel.org>
 References: <cover.1726268190.git.jpoimboe@kernel.org>
-	<ca2e603ae3dcfa3e836162ed8c301fd4d9fd4058.1726268190.git.jpoimboe@kernel.org>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -41,332 +42,129 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 14 Sep 2024 01:02:05 +0200
+On Sat, 14 Sep 2024 01:02:02 +0200
 Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 
-> diff --git a/include/linux/sframe.h b/include/linux/sframe.h
-> new file mode 100644
-> index 000000000000..3a44f76929e2
-> --- /dev/null
-> +++ b/include/linux/sframe.h
-> @@ -0,0 +1,46 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_SFRAME_H
-> +#define _LINUX_SFRAME_H
-> +
-> +#include <linux/mm_types.h>
-> +
-> +struct sframe_file {
-> +	unsigned long sframe_addr, text_start, text_end;
+> This is a new version of sframe user space unwinding + perf deferred
+> callchains.  Better late than never.
+> 
+> Unfortunately I didn't get a chance to do any testing with this one yet
+> as I'm rushing it out the door before GNU Cauldron starts.
+> Conference-driven development ;-)
 
-Please make each entry a separate line:
+Thanks for posting this!
 
-	unsigned long		sframe_addr;
-	unsigned long		text_start;
-	unsigned long		text_end;
+BTW, next time, can you also Cc linux-trace-kernel@vger.kerne.org.
 
-It may be fine for declaring variables like this in a function, but it
-should not be done in a structure.
+> 
+> Plus I don't have the perf tool piece working yet so I don't have a way
+> of doing end-to-end testing at the moment anyway.
+> 
+> In other words, please don't merge this yet.
+> 
+> Namhyung, if you're still available to write a perf tool patch which
+> integrates with this, that would be great.  Otherwise I could give it a
+> try.
+> 
+> Steven, let me know if this would interface ok with your anticipated
+> tracing usage.
 
-> +};
-> +
-> +struct user_unwind_frame;
-> +
-> +#ifdef CONFIG_HAVE_USER_UNWIND_SFRAME
-> +
-> +#define INIT_MM_SFRAME .sframe_mt = MTREE_INIT(sframe_mt, 0)
-> +
-> +extern void sframe_free_mm(struct mm_struct *mm);
-> +
-> +extern int __sframe_add_section(struct sframe_file *file);
-> +extern int sframe_add_section(unsigned long sframe_addr, unsigned long text_start, unsigned long text_end);
-> +extern int sframe_remove_section(unsigned long sframe_addr);
-> +extern int sframe_find(unsigned long ip, struct user_unwind_frame *frame);
-> +
-> +static inline bool current_has_sframe(void)
-> +{
-> +	struct mm_struct *mm = current->mm;
-> +
-> +	return mm && !mtree_empty(&mm->sframe_mt);
-> +}
-> +
-> +#else /* !CONFIG_HAVE_USER_UNWIND_SFRAME */
-> +
-> +#define INIT_MM_SFRAME
-> +
-> +static inline void sframe_free_mm(struct mm_struct *mm) {}
-> +
-> +static inline int __sframe_add_section(struct sframe_file *file) { return -EINVAL; }
-> +static inline int sframe_add_section(unsigned long sframe_addr, unsigned long text_start, unsigned long text_end) { return -EINVAL; }
-> +static inline int sframe_remove_section(unsigned long sframe_addr) { return -EINVAL; }
-> +static inline int sframe_find(unsigned long ip, struct user_unwind_frame *frame) { return -EINVAL; }
-> +
-> +static inline bool current_has_sframe(void) { return false; }
-> +
-> +#endif /* CONFIG_HAVE_USER_UNWIND_SFRAME */
-> +
-> +#endif /* _LINUX_SFRAME_H */
-> diff --git a/include/linux/user_unwind.h b/include/linux/user_unwind.h
-> index 0a19ac6c92b2..8003f9d35405 100644
-> --- a/include/linux/user_unwind.h
-> +++ b/include/linux/user_unwind.h
-> @@ -7,6 +7,7 @@
->  enum user_unwind_type {
->  	USER_UNWIND_TYPE_AUTO,
->  	USER_UNWIND_TYPE_FP,
-> +	USER_UNWIND_TYPE_SFRAME,
->  };
->  
->  struct user_unwind_frame {
-> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-> index b54b313bcf07..b2aca31e1a49 100644
-> --- a/include/uapi/linux/elf.h
-> +++ b/include/uapi/linux/elf.h
-> @@ -39,6 +39,7 @@ typedef __s64	Elf64_Sxword;
->  #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
->  #define PT_GNU_RELRO	(PT_LOOS + 0x474e552)
->  #define PT_GNU_PROPERTY	(PT_LOOS + 0x474e553)
-> +#define PT_GNU_SFRAME	(PT_LOOS + 0x474e554)
->  
->  
->  /* ARM MTE memory tag segment type */
-> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-> index 35791791a879..69511077c910 100644
-> --- a/include/uapi/linux/prctl.h
-> +++ b/include/uapi/linux/prctl.h
-> @@ -328,4 +328,7 @@ struct prctl_mm_map {
->  # define PR_PPC_DEXCR_CTRL_CLEAR_ONEXEC	0x10 /* Clear the aspect on exec */
->  # define PR_PPC_DEXCR_CTRL_MASK		0x1f
->  
-> +#define PR_ADD_SFRAME			74
-> +#define PR_REMOVE_SFRAME		75
-> +
->  #endif /* _LINUX_PRCTL_H */
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index cc760491f201..a216f091edfb 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -104,6 +104,7 @@
->  #include <linux/rseq.h>
->  #include <uapi/linux/pidfd.h>
->  #include <linux/pidfs.h>
-> +#include <linux/sframe.h>
->  
->  #include <asm/pgalloc.h>
->  #include <linux/uaccess.h>
-> @@ -923,6 +924,7 @@ void __mmdrop(struct mm_struct *mm)
->  	mm_pasid_drop(mm);
->  	mm_destroy_cid(mm);
->  	percpu_counter_destroy_many(mm->rss_stat, NR_MM_COUNTERS);
-> +	sframe_free_mm(mm);
->  
->  	free_mm(mm);
->  }
-> @@ -1249,6 +1251,13 @@ static void mm_init_uprobes_state(struct mm_struct *mm)
->  #endif
->  }
->  
-> +static void mm_init_sframe(struct mm_struct *mm)
-> +{
-> +#ifdef CONFIG_HAVE_USER_UNWIND_SFRAME
-> +	mt_init(&mm->sframe_mt);
-> +#endif
-> +}
-> +
->  static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
->  	struct user_namespace *user_ns)
->  {
-> @@ -1280,6 +1289,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
->  	mm->pmd_huge_pte = NULL;
->  #endif
->  	mm_init_uprobes_state(mm);
-> +	mm_init_sframe(mm);
->  	hugetlb_count_init(mm);
->  
->  	if (current->mm) {
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index 3a2df1bd9f64..e4d2b64f4ae4 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -64,6 +64,7 @@
->  #include <linux/rcupdate.h>
->  #include <linux/uidgid.h>
->  #include <linux/cred.h>
-> +#include <linux/sframe.h>
->  
->  #include <linux/nospec.h>
->  
-> @@ -2782,6 +2783,16 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
->  	case PR_RISCV_SET_ICACHE_FLUSH_CTX:
->  		error = RISCV_SET_ICACHE_FLUSH_CTX(arg2, arg3);
->  		break;
-> +	case PR_ADD_SFRAME:
-> +		if (arg5)
-> +			return -EINVAL;
-> +		error = sframe_add_section(arg2, arg3, arg4);
-> +		break;
-> +	case PR_REMOVE_SFRAME:
-> +		if (arg3 || arg4 || arg5)
-> +			return -EINVAL;
-> +		error = sframe_remove_section(arg2);
-> +		break;
->  	default:
->  		error = -EINVAL;
->  		break;
-> diff --git a/kernel/unwind/Makefile b/kernel/unwind/Makefile
-> index eb466d6a3295..6f202c5840cf 100644
-> --- a/kernel/unwind/Makefile
-> +++ b/kernel/unwind/Makefile
-> @@ -1 +1,2 @@
->  obj-$(CONFIG_HAVE_USER_UNWIND) += user.o
-> +obj-$(CONFIG_HAVE_USER_UNWIND_SFRAME) += sframe.o
-> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-> new file mode 100644
-> index 000000000000..3e4d29e737a1
-> --- /dev/null
-> +++ b/kernel/unwind/sframe.c
-> @@ -0,0 +1,420 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/sched.h>
-> +#include <linux/slab.h>
-> +#include <linux/srcu.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/mm.h>
-> +#include <linux/sframe.h>
-> +#include <linux/user_unwind.h>
-> +
-> +#include "sframe.h"
-> +
-> +#define SFRAME_FILENAME_LEN 32
-> +
-> +struct sframe_section {
-> +	struct rcu_head rcu;
-> +
-> +	unsigned long sframe_addr;
-> +	unsigned long text_addr;
-> +
-> +	unsigned long fdes_addr;
-> +	unsigned long fres_addr;
-> +	unsigned int  fdes_nr;
-> +	signed char ra_off, fp_off;
-> +};
-> +
-> +DEFINE_STATIC_SRCU(sframe_srcu);
-> +
-> +#define __SFRAME_GET_USER(out, user_ptr, type)				\
-> +({									\
-> +	type __tmp;							\
-> +	if (get_user(__tmp, (type *)user_ptr))				\
-> +		return -EFAULT;						\
-> +	user_ptr += sizeof(__tmp);					\
-> +	out = __tmp;							\
-> +})
-> +
-> +#define SFRAME_GET_USER_SIGNED(out, user_ptr, size)			\
-> +({									\
-> +	switch (size) {							\
-> +	case 1:								\
-> +		__SFRAME_GET_USER(out, user_ptr, s8);			\
-> +		break;							\
-> +	case 2:								\
-> +		__SFRAME_GET_USER(out, user_ptr, s16);			\
-> +		break;							\
-> +	case 4:								\
-> +		__SFRAME_GET_USER(out, user_ptr, s32);			\
-> +		break;							\
-> +	default:							\
-> +		return -EINVAL;						\
-> +	}								\
-> +})
-> +
-> +#define SFRAME_GET_USER_UNSIGNED(out, user_ptr, size)			\
-> +({									\
-> +	switch (size) {							\
-> +	case 1:								\
-> +		__SFRAME_GET_USER(out, user_ptr, u8);			\
-> +		break;							\
-> +	case 2:								\
-> +		__SFRAME_GET_USER(out, user_ptr, u16);			\
-> +		break;							\
-> +	case 4:								\
-> +		__SFRAME_GET_USER(out, user_ptr, u32);			\
-> +		break;							\
-> +	default:							\
-> +		return -EINVAL;						\
-> +	}								\
-> +})
-> +
-> +static unsigned char fre_type_to_size(unsigned char fre_type)
-> +{
-> +	if (fre_type > 2)
-> +		return 0;
-> +	return 1 << fre_type;
-> +}
-> +
-> +static unsigned char offset_size_enum_to_size(unsigned char off_size)
-> +{
-> +	if (off_size > 2)
-> +		return 0;
-> +	return 1 << off_size;
-> +}
-> +
-> +static int find_fde(struct sframe_section *sec, unsigned long ip,
-> +		    struct sframe_fde *fde)
-> +{
-> +	s32 func_off, ip_off;
-> +	struct sframe_fde __user *first, *last, *mid, *found;
+This is a very good starting point for me. A couple of notes.
 
-Need to initialize found = NULL;
+I think the unwinder should have an interface itself that provides the
+deferred unwinding, instead of having all the tracers to implement
+their own.
 
-> +
-> +	ip_off = ip - sec->sframe_addr;
-> +
-> +	first = (void *)sec->fdes_addr;
-> +	last = first + sec->fdes_nr;
-> +	while (first <= last) {
+The user space unwinder (regardless of sframe or not) should provide a
+way to say "I want a user space stack trace for here, but don't do it
+yet. Just give me a cookie and then call my callback function with the
+stack and cookie before going back to user space".
 
-So we trust user space to have this table sorted?
+That is, we should have an interface like:
 
-> +		mid = first + ((last - first) / 2);
-> +		if (get_user(func_off, (s32 *)mid))
-> +			return -EFAULT;
-> +		if (ip_off >= func_off) {
-> +			found = mid;
+typedef void (unwinder_callback_t)(struct user_space_stack *, u64 cookie);
 
-If it's not sorted, this can return the wrong value.
+struct unwinder_client {
+	struct list_head	list;
+	unwinder_callback_t	callback;
+};
 
-We should have some check that has something like:
 
-	s32 low_func_off = 0, high_func_off = 0;
+struct unwinder_client my_unwinder = {
+	.callback = mycallback;
+};
 
-			if (low_func_off && low_func_off > func_off)
-				return -EINVAL;	
-			low_func_off = func_off;
+	register_unwinder(&my_unwinder);
 
-> +			first = mid + 1;
-> +		} else
-			{ /* Note, this needs a bracket anyway, because
-			     rules are, if one if block has a bracket,
-			     the other needs one too */
 
-			if (high_func_off && high_func_off < func_off)
-				return -EINVAL;
 
-			high_func_off = func_off;
+Then a tracer could do this in NMI context:
 
-> +			last = mid - 1;
-		}
+	/* Get the current cookie of the current task */
+	cookie = unwinder_get_cookie();
 
-> +	}
-> +
-> +	if (!found)
-> +		return -EINVAL;
-> +
-> +	if (copy_from_user(fde, found, sizeof(*fde)))
-> +		return -EFAULT;
-> +
-> +	return 0;
-> +}
+	/* Tell the unwinder to call the callbacks */
+	unwinder_trigger();
+
+	/* then the tracer can save off that cookie, do a kernel stack trace
+	 * and save the cookie with that stack trace.
+	 */
+
+
+On return to user space, it will go the ptrace slow path and call all
+registered callbacks with the cookie, regardless if it asked for it or
+not.
+
+	/* Save the stack somewhere, could even allocate memory to do so */
+	list_for_each_entry(callback, &unwinder_callback, list) {
+		callback->callback(userstack, cookie);
+	}
+	update_next_cookie();
+
+The cookie is a unique number for every entry into the kernel by all
+tasks. Then it is up to the tracer's callback to know if it should save
+the trace or ignore it. That is, if perf and ftrace are expecting
+callbacks, but only perf triggered the callback, it should record the
+cookie, and save the stack if it matches a cookie it wants. ftrace's
+callback would ignore the trace, because it did not ask for a callback.
+That is, the tracer will need to save off the cookie to know if its
+callback needs to do something or not.
+
+The cookie can be generated by this:
+
+static u64 next_cookie;
+
+u64 unwinder_get_cookie(void)
+{
+	u64 next;
+
+	if (current->unwinder_cookie)
+		return current->unwinder_cookie;
+
+	next = next_cookie;
+	while (!try_cmpxchg64(&next_cookie, &next, next + 1))
+		;
+
+	next++;
+
+	/* Check for races with NMI */
+	if (!cmpxchg(&current->unwinder_cookie, 0, next))
+		next = current->unwinder_cookie;
+
+	return next;
+}
+
+When the task goes back to user space and does all the callbacks, it
+would reset the task cookie.
+
+	current->unwinder_cookie = 0;
+
+Now the loop of callbacks should also catch if unwinder_trigger() was
+called again (NMI), and may need to recall all the back traces again
+with the new cookie.
+
+That will need some thought about handling that race.
+
+This is just an idea to start discussion.
 
 -- Steve
