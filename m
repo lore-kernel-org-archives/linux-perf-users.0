@@ -1,117 +1,372 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C5720328;
-	Sat, 14 Sep 2024 06:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E6D154BE0;
+	Sat, 14 Sep 2024 11:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726297101; cv=none; b=dtoL9gQI42DXCVbq8cTPf6xfHgnzSRH4OmnUbnKnJvdzWCqPIQvx0YvKyYwJayaUhFUkHAm+zsc/E8F5lfKkVWvWUU9/XuxmgjrwGdgfohGUrciK6r8h+XDxOqzNhui/9poB4mufxPDkmTmilVfJ/iumfBegJi10MscZbrUgaOA=
+	t=1726313048; cv=none; b=HsFZNBdn6Jo0SDpPboV+toLnAYuA48aQJVTy5bNBfjxcKPIeoS0OPBC9KzxKLFuwR20jDCcnktwQjeqYTRB9vcYflbmztyRHG+esCIYcrENX8fpBH3Xf/IcpmBOBLgctc6sgParIz3d/6GxuVs8ZTi7blhWHyDEzcsSqluopajs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726297101; c=relaxed/simple;
-	bh=76/NlTo2FJWz02hzNbiFQBHEOZ3d7GE73yzvs/WKS6c=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=AXZQUB+A08Kmnw3T4+mXKsganGG49mr5am2JWOubIXMBtxHS9CMAG1C9ctjWHo7nzF6sWexpnzlFADvAhmr9s61CsYl0qhrV4AzENrqIdhv+EcQ1bWpWUgS9Dk2g9mBcfugMQQVYooo6eg+9YBXeOLngBbD81pg7YQqrBJZFIHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4X5MSb38KXz4f3kvf;
-	Sat, 14 Sep 2024 14:57:51 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id CB3701A018D;
-	Sat, 14 Sep 2024 14:58:07 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with SMTP id Syh0CgBXi2D8M+Vms30aBQ--.9992S2;
-	Sat, 14 Sep 2024 14:58:05 +0800 (CST)
-Message-ID: <1f1a9b07-0818-4e82-9690-0b3ae3d33433@huaweicloud.com>
-Date: Sat, 14 Sep 2024 14:58:04 +0800
+	s=arc-20240116; t=1726313048; c=relaxed/simple;
+	bh=2WsiO8GTrDtNy4ePDeyJaB/CNfI7bB9SpVdj4brKP5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T7EO/Xrg5HPigZ+aQXNtqZ9uaN6sWwlx7P76KksBNfhfTm3n9Y8l32Y4OC6wE+SgpOetl/QYjZlr/qtYCvoJFXvZgmvox13Ip1JdJqut8W8b6Mtjg1tXF5IaS1GgjngdLPzDX1XRJ7HqIh9AfX5B2+rJ8vzMSfNdHkZgB5tqzAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97FA4C4CEC0;
+	Sat, 14 Sep 2024 11:24:03 +0000 (UTC)
+Date: Sat, 14 Sep 2024 07:23:58 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>, Mark
+ Rutland <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian
+ Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, Mark
+ Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, Jordan Rome
+ <jordalgo@meta.com>, Sam James <sam@gentoo.org>
+Subject: Re: [PATCH v2 03/11] unwind: Introduce SFrame user space unwinding
+Message-ID: <20240914072358.4afad691@rorschach.local.home>
+In-Reply-To: <ca2e603ae3dcfa3e836162ed8c301fd4d9fd4058.1726268190.git.jpoimboe@kernel.org>
+References: <cover.1726268190.git.jpoimboe@kernel.org>
+	<ca2e603ae3dcfa3e836162ed8c301fd4d9fd4058.1726268190.git.jpoimboe@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v2 0/2] perf stat: Support inherit events for bperf
-From: Tengda Wu <wutengda@huaweicloud.com>
-To: Song Liu <song@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-References: <20240905115918.772234-1-wutengda@huaweicloud.com>
-Content-Language: en-US
-In-Reply-To: <20240905115918.772234-1-wutengda@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgBXi2D8M+Vms30aBQ--.9992S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJrWDtrWrtry3Kr4xKrW5GFg_yoW8XryDpF
-	43C39Igw1rKF1akwnxAwsruF1Yqr93CFy5Gr1kKrWxJF4kZr1DWrZ7KFW5tF98XryxCFy0
-	vw4qgw45WFZ8A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
-	v3UUUUU
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Hi Song and Numhyung,
+On Sat, 14 Sep 2024 01:02:05 +0200
+Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 
-Gentle ping.
+> diff --git a/include/linux/sframe.h b/include/linux/sframe.h
+> new file mode 100644
+> index 000000000000..3a44f76929e2
+> --- /dev/null
+> +++ b/include/linux/sframe.h
+> @@ -0,0 +1,46 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_SFRAME_H
+> +#define _LINUX_SFRAME_H
+> +
+> +#include <linux/mm_types.h>
+> +
+> +struct sframe_file {
+> +	unsigned long sframe_addr, text_start, text_end;
 
-This patch set provides event inheritance support for bperf during fork(). Currently, based on numhyung's feedback, the v2 version has been modified. Could you please take a look?
+Please make each entry a separate line:
 
-Any comment or suggestion is appreciated.
+	unsigned long		sframe_addr;
+	unsigned long		text_start;
+	unsigned long		text_end;
 
-Thanks!
-Tengda
+It may be fine for declaring variables like this in a function, but it
+should not be done in a structure.
 
-On 2024/9/5 19:59, Tengda Wu wrote:
-> Hi,
-> 
-> bperf (perf-stat --bpf-counter) has not supported inherit events
-> during fork() since it was first introduced.
-> 
-> This patch series tries to add this support by:
->  1) adding two new bpf programs to monitor task lifecycle;
->  2) recording new tasks in the filter map dynamically;
->  3) reusing `accum_key` of parent task for new tasks.
-> 
-> Thanks,
-> Tengda
-> 
-> 
-> Changelog:
-> ---------
-> v2: (Address comments from Namhyung)
->  * Remove the unused init_filter_entries in follower bpf, declare
->    a global filter_entry_count in bpf_counter instead
->  * Attach on_newtask and on_exittask progs only if the filter type
->    is either PID or TGID
-> 
-> v1: https://lore.kernel.org/all/20240904123103.732507-1-wutengda@huaweicloud.com/
-> 
-> 
-> Tengda Wu (2):
->   perf stat: Support inherit events during fork() for bperf
->   perf test: Use sqrtloop workload to test bperf event
-> 
->  tools/perf/tests/shell/stat_bpf_counters.sh   |  2 +-
->  tools/perf/util/bpf_counter.c                 | 32 +++++++--
->  tools/perf/util/bpf_skel/bperf_follower.bpf.c | 70 +++++++++++++++++--
->  tools/perf/util/bpf_skel/bperf_u.h            |  5 ++
->  4 files changed, 95 insertions(+), 14 deletions(-)
-> 
+> +};
+> +
+> +struct user_unwind_frame;
+> +
+> +#ifdef CONFIG_HAVE_USER_UNWIND_SFRAME
+> +
+> +#define INIT_MM_SFRAME .sframe_mt = MTREE_INIT(sframe_mt, 0)
+> +
+> +extern void sframe_free_mm(struct mm_struct *mm);
+> +
+> +extern int __sframe_add_section(struct sframe_file *file);
+> +extern int sframe_add_section(unsigned long sframe_addr, unsigned long text_start, unsigned long text_end);
+> +extern int sframe_remove_section(unsigned long sframe_addr);
+> +extern int sframe_find(unsigned long ip, struct user_unwind_frame *frame);
+> +
+> +static inline bool current_has_sframe(void)
+> +{
+> +	struct mm_struct *mm = current->mm;
+> +
+> +	return mm && !mtree_empty(&mm->sframe_mt);
+> +}
+> +
+> +#else /* !CONFIG_HAVE_USER_UNWIND_SFRAME */
+> +
+> +#define INIT_MM_SFRAME
+> +
+> +static inline void sframe_free_mm(struct mm_struct *mm) {}
+> +
+> +static inline int __sframe_add_section(struct sframe_file *file) { return -EINVAL; }
+> +static inline int sframe_add_section(unsigned long sframe_addr, unsigned long text_start, unsigned long text_end) { return -EINVAL; }
+> +static inline int sframe_remove_section(unsigned long sframe_addr) { return -EINVAL; }
+> +static inline int sframe_find(unsigned long ip, struct user_unwind_frame *frame) { return -EINVAL; }
+> +
+> +static inline bool current_has_sframe(void) { return false; }
+> +
+> +#endif /* CONFIG_HAVE_USER_UNWIND_SFRAME */
+> +
+> +#endif /* _LINUX_SFRAME_H */
+> diff --git a/include/linux/user_unwind.h b/include/linux/user_unwind.h
+> index 0a19ac6c92b2..8003f9d35405 100644
+> --- a/include/linux/user_unwind.h
+> +++ b/include/linux/user_unwind.h
+> @@ -7,6 +7,7 @@
+>  enum user_unwind_type {
+>  	USER_UNWIND_TYPE_AUTO,
+>  	USER_UNWIND_TYPE_FP,
+> +	USER_UNWIND_TYPE_SFRAME,
+>  };
+>  
+>  struct user_unwind_frame {
+> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+> index b54b313bcf07..b2aca31e1a49 100644
+> --- a/include/uapi/linux/elf.h
+> +++ b/include/uapi/linux/elf.h
+> @@ -39,6 +39,7 @@ typedef __s64	Elf64_Sxword;
+>  #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
+>  #define PT_GNU_RELRO	(PT_LOOS + 0x474e552)
+>  #define PT_GNU_PROPERTY	(PT_LOOS + 0x474e553)
+> +#define PT_GNU_SFRAME	(PT_LOOS + 0x474e554)
+>  
+>  
+>  /* ARM MTE memory tag segment type */
+> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> index 35791791a879..69511077c910 100644
+> --- a/include/uapi/linux/prctl.h
+> +++ b/include/uapi/linux/prctl.h
+> @@ -328,4 +328,7 @@ struct prctl_mm_map {
+>  # define PR_PPC_DEXCR_CTRL_CLEAR_ONEXEC	0x10 /* Clear the aspect on exec */
+>  # define PR_PPC_DEXCR_CTRL_MASK		0x1f
+>  
+> +#define PR_ADD_SFRAME			74
+> +#define PR_REMOVE_SFRAME		75
+> +
+>  #endif /* _LINUX_PRCTL_H */
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index cc760491f201..a216f091edfb 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -104,6 +104,7 @@
+>  #include <linux/rseq.h>
+>  #include <uapi/linux/pidfd.h>
+>  #include <linux/pidfs.h>
+> +#include <linux/sframe.h>
+>  
+>  #include <asm/pgalloc.h>
+>  #include <linux/uaccess.h>
+> @@ -923,6 +924,7 @@ void __mmdrop(struct mm_struct *mm)
+>  	mm_pasid_drop(mm);
+>  	mm_destroy_cid(mm);
+>  	percpu_counter_destroy_many(mm->rss_stat, NR_MM_COUNTERS);
+> +	sframe_free_mm(mm);
+>  
+>  	free_mm(mm);
+>  }
+> @@ -1249,6 +1251,13 @@ static void mm_init_uprobes_state(struct mm_struct *mm)
+>  #endif
+>  }
+>  
+> +static void mm_init_sframe(struct mm_struct *mm)
+> +{
+> +#ifdef CONFIG_HAVE_USER_UNWIND_SFRAME
+> +	mt_init(&mm->sframe_mt);
+> +#endif
+> +}
+> +
+>  static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
+>  	struct user_namespace *user_ns)
+>  {
+> @@ -1280,6 +1289,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
+>  	mm->pmd_huge_pte = NULL;
+>  #endif
+>  	mm_init_uprobes_state(mm);
+> +	mm_init_sframe(mm);
+>  	hugetlb_count_init(mm);
+>  
+>  	if (current->mm) {
+> diff --git a/kernel/sys.c b/kernel/sys.c
+> index 3a2df1bd9f64..e4d2b64f4ae4 100644
+> --- a/kernel/sys.c
+> +++ b/kernel/sys.c
+> @@ -64,6 +64,7 @@
+>  #include <linux/rcupdate.h>
+>  #include <linux/uidgid.h>
+>  #include <linux/cred.h>
+> +#include <linux/sframe.h>
+>  
+>  #include <linux/nospec.h>
+>  
+> @@ -2782,6 +2783,16 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+>  	case PR_RISCV_SET_ICACHE_FLUSH_CTX:
+>  		error = RISCV_SET_ICACHE_FLUSH_CTX(arg2, arg3);
+>  		break;
+> +	case PR_ADD_SFRAME:
+> +		if (arg5)
+> +			return -EINVAL;
+> +		error = sframe_add_section(arg2, arg3, arg4);
+> +		break;
+> +	case PR_REMOVE_SFRAME:
+> +		if (arg3 || arg4 || arg5)
+> +			return -EINVAL;
+> +		error = sframe_remove_section(arg2);
+> +		break;
+>  	default:
+>  		error = -EINVAL;
+>  		break;
+> diff --git a/kernel/unwind/Makefile b/kernel/unwind/Makefile
+> index eb466d6a3295..6f202c5840cf 100644
+> --- a/kernel/unwind/Makefile
+> +++ b/kernel/unwind/Makefile
+> @@ -1 +1,2 @@
+>  obj-$(CONFIG_HAVE_USER_UNWIND) += user.o
+> +obj-$(CONFIG_HAVE_USER_UNWIND_SFRAME) += sframe.o
+> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+> new file mode 100644
+> index 000000000000..3e4d29e737a1
+> --- /dev/null
+> +++ b/kernel/unwind/sframe.c
+> @@ -0,0 +1,420 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/sched.h>
+> +#include <linux/slab.h>
+> +#include <linux/srcu.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/mm.h>
+> +#include <linux/sframe.h>
+> +#include <linux/user_unwind.h>
+> +
+> +#include "sframe.h"
+> +
+> +#define SFRAME_FILENAME_LEN 32
+> +
+> +struct sframe_section {
+> +	struct rcu_head rcu;
+> +
+> +	unsigned long sframe_addr;
+> +	unsigned long text_addr;
+> +
+> +	unsigned long fdes_addr;
+> +	unsigned long fres_addr;
+> +	unsigned int  fdes_nr;
+> +	signed char ra_off, fp_off;
+> +};
+> +
+> +DEFINE_STATIC_SRCU(sframe_srcu);
+> +
+> +#define __SFRAME_GET_USER(out, user_ptr, type)				\
+> +({									\
+> +	type __tmp;							\
+> +	if (get_user(__tmp, (type *)user_ptr))				\
+> +		return -EFAULT;						\
+> +	user_ptr += sizeof(__tmp);					\
+> +	out = __tmp;							\
+> +})
+> +
+> +#define SFRAME_GET_USER_SIGNED(out, user_ptr, size)			\
+> +({									\
+> +	switch (size) {							\
+> +	case 1:								\
+> +		__SFRAME_GET_USER(out, user_ptr, s8);			\
+> +		break;							\
+> +	case 2:								\
+> +		__SFRAME_GET_USER(out, user_ptr, s16);			\
+> +		break;							\
+> +	case 4:								\
+> +		__SFRAME_GET_USER(out, user_ptr, s32);			\
+> +		break;							\
+> +	default:							\
+> +		return -EINVAL;						\
+> +	}								\
+> +})
+> +
+> +#define SFRAME_GET_USER_UNSIGNED(out, user_ptr, size)			\
+> +({									\
+> +	switch (size) {							\
+> +	case 1:								\
+> +		__SFRAME_GET_USER(out, user_ptr, u8);			\
+> +		break;							\
+> +	case 2:								\
+> +		__SFRAME_GET_USER(out, user_ptr, u16);			\
+> +		break;							\
+> +	case 4:								\
+> +		__SFRAME_GET_USER(out, user_ptr, u32);			\
+> +		break;							\
+> +	default:							\
+> +		return -EINVAL;						\
+> +	}								\
+> +})
+> +
+> +static unsigned char fre_type_to_size(unsigned char fre_type)
+> +{
+> +	if (fre_type > 2)
+> +		return 0;
+> +	return 1 << fre_type;
+> +}
+> +
+> +static unsigned char offset_size_enum_to_size(unsigned char off_size)
+> +{
+> +	if (off_size > 2)
+> +		return 0;
+> +	return 1 << off_size;
+> +}
+> +
+> +static int find_fde(struct sframe_section *sec, unsigned long ip,
+> +		    struct sframe_fde *fde)
+> +{
+> +	s32 func_off, ip_off;
+> +	struct sframe_fde __user *first, *last, *mid, *found;
 
+Need to initialize found = NULL;
+
+> +
+> +	ip_off = ip - sec->sframe_addr;
+> +
+> +	first = (void *)sec->fdes_addr;
+> +	last = first + sec->fdes_nr;
+> +	while (first <= last) {
+
+So we trust user space to have this table sorted?
+
+> +		mid = first + ((last - first) / 2);
+> +		if (get_user(func_off, (s32 *)mid))
+> +			return -EFAULT;
+> +		if (ip_off >= func_off) {
+> +			found = mid;
+
+If it's not sorted, this can return the wrong value.
+
+We should have some check that has something like:
+
+	s32 low_func_off = 0, high_func_off = 0;
+
+			if (low_func_off && low_func_off > func_off)
+				return -EINVAL;	
+			low_func_off = func_off;
+
+> +			first = mid + 1;
+> +		} else
+			{ /* Note, this needs a bracket anyway, because
+			     rules are, if one if block has a bracket,
+			     the other needs one too */
+
+			if (high_func_off && high_func_off < func_off)
+				return -EINVAL;
+
+			high_func_off = func_off;
+
+> +			last = mid - 1;
+		}
+
+> +	}
+> +
+> +	if (!found)
+> +		return -EINVAL;
+> +
+> +	if (copy_from_user(fde, found, sizeof(*fde)))
+> +		return -EFAULT;
+> +
+> +	return 0;
+> +}
+
+-- Steve
