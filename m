@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CACB3140E30;
-	Sat, 14 Sep 2024 22:09:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC262146A9B;
+	Sat, 14 Sep 2024 22:09:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726351765; cv=none; b=nQ7APDiRKgWkIHh6vbFFKxx4Fx1agY66tqs8eIeraE8WGF+qLDvbiLTVy7TM4Opc3dM7lD4CH2V1Od/J69rix5Ww+D2iS+C25fooDy5Cq9CF4e92QWUayHT3NheqQmuFABlWnK2QpUnhE+hBXGx3daduu6baILvDTyTpudVolD8=
+	t=1726351767; cv=none; b=fHPX1dGbvEgMFrSKCrbs/p6s/KGd3/7hqlrN07oi90ivyHJtxE2rl1qCLnLWbc7C5fel1MLYDvCRM598t/pcWuxmhBF8LF7kbVyqcbPcUAjdzgn/B0+XjFIiUHC72TyWpkL4G6iUHzL52u1JHSv1SLyce4gl46x92axM3HTYdyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726351765; c=relaxed/simple;
-	bh=ID7nTDyiLnCDwptc8smnIPar3ZoHhkBuewVEg52cVw4=;
+	s=arc-20240116; t=1726351767; c=relaxed/simple;
+	bh=6KW/ks3Sij+Oxz9y6KMgUgwjwMzWVcL3pmI/9kH35I4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DfU6wg7JrIShvbnhAKXv8+FCfZkuI09sEYYU9N+YdSgQp0r1TjRuRDY8KShmJ81e7AVBEFisM5IJmSExIrMW7cXcARMs46d66a2kqR1AZQubuSzkBaPnOej8aNC6ibsbYPciJOBa0/2AmePCyQBQX4Nmar/M7N6RZ9P7GquEbgg=
+	 MIME-Version; b=CpGnj9XGWw+xgCzPiid9AQKh+K4jBGS/V9uZYwKMyorxEZbO9lrMhCgOrP2Nmv1g3X5hJWypUF9IQpn3L8jWWIK18fxIN0wvART8y+DbsQqwa96ngIaaZFk2VUVsxRrYrkY5SBC245U0NM1JG4Sfjyv7JwNHBzAJhE7oNMQfSrE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E0631691;
-	Sat, 14 Sep 2024 15:09:52 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5D3511FB;
+	Sat, 14 Sep 2024 15:09:54 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6B93B3F66E;
-	Sat, 14 Sep 2024 15:09:21 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 739853F66E;
+	Sat, 14 Sep 2024 15:09:23 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	James Clark <james.clark@linaro.org>,
@@ -34,9 +34,9 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v2 1/7] perf arm-spe: Rename arm_spe__synth_data_source_generic()
-Date: Sat, 14 Sep 2024 23:08:55 +0100
-Message-Id: <20240914220901.756177-2-leo.yan@arm.com>
+Subject: [PATCH v2 2/7] perf arm-spe: Rename the common data source encoding
+Date: Sat, 14 Sep 2024 23:08:56 +0100
+Message-Id: <20240914220901.756177-3-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240914220901.756177-1-leo.yan@arm.com>
 References: <20240914220901.756177-1-leo.yan@arm.com>
@@ -48,42 +48,147 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The arm_spe__synth_data_source_generic() function is invoked when the
-tool detects that CPUs do not support data source packets and falls back
-to synthesizing only the memory level.
+The Neoverse CPUs follow the common data source encoding, and other
+CPU variants can share the same format.
 
-Rename it to arm_spe__synth_memory_level() for better reflecting its
-purpose.
+Rename the CPU list and data source definitions as common data source
+names. This change prepares for appending more CPU variants.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/arm-spe.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../util/arm-spe-decoder/arm-spe-decoder.h    | 18 ++++++------
+ tools/perf/util/arm-spe.c                     | 28 +++++++++----------
+ 2 files changed, 23 insertions(+), 23 deletions(-)
 
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+index 1443c28545a9..358c611eeddb 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+@@ -56,15 +56,15 @@ enum arm_spe_op_type {
+ 	ARM_SPE_OP_BR_INDIRECT	= 1 << 17,
+ };
+ 
+-enum arm_spe_neoverse_data_source {
+-	ARM_SPE_NV_L1D		 = 0x0,
+-	ARM_SPE_NV_L2		 = 0x8,
+-	ARM_SPE_NV_PEER_CORE	 = 0x9,
+-	ARM_SPE_NV_LOCAL_CLUSTER = 0xa,
+-	ARM_SPE_NV_SYS_CACHE	 = 0xb,
+-	ARM_SPE_NV_PEER_CLUSTER	 = 0xc,
+-	ARM_SPE_NV_REMOTE	 = 0xd,
+-	ARM_SPE_NV_DRAM		 = 0xe,
++enum arm_spe_common_data_source {
++	ARM_SPE_COMMON_DS_L1D		= 0x0,
++	ARM_SPE_COMMON_DS_L2		= 0x8,
++	ARM_SPE_COMMON_DS_PEER_CORE	= 0x9,
++	ARM_SPE_COMMON_DS_LOCAL_CLUSTER = 0xa,
++	ARM_SPE_COMMON_DS_SYS_CACHE	= 0xb,
++	ARM_SPE_COMMON_DS_PEER_CLUSTER	= 0xc,
++	ARM_SPE_COMMON_DS_REMOTE	= 0xd,
++	ARM_SPE_COMMON_DS_DRAM		= 0xe,
+ };
+ 
+ struct arm_spe_record {
 diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 4212a8aa0d2c..64a47bd35cfb 100644
+index 64a47bd35cfb..7cde6584b02d 100644
 --- a/tools/perf/util/arm-spe.c
 +++ b/tools/perf/util/arm-spe.c
-@@ -496,8 +496,8 @@ static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *rec
- 	}
+@@ -413,15 +413,15 @@ static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
+ 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
  }
  
--static void arm_spe__synth_data_source_generic(const struct arm_spe_record *record,
--					       union perf_mem_data_src *data_src)
-+static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
-+					union perf_mem_data_src *data_src)
- {
- 	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
- 		data_src->mem_lvl = PERF_MEM_LVL_L3;
-@@ -534,7 +534,7 @@ static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 m
- 	if (is_neoverse)
- 		arm_spe__synth_data_source_neoverse(record, &data_src);
- 	else
--		arm_spe__synth_data_source_generic(record, &data_src);
-+		arm_spe__synth_memory_level(record, &data_src);
+-static const struct midr_range neoverse_spe[] = {
++static const struct midr_range common_ds_encoding_cpus[] = {
+ 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
+ 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
+ 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
+ 	{},
+ };
  
- 	if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
- 		data_src.mem_dtlb = PERF_MEM_TLB_WK;
+-static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *record,
+-						union perf_mem_data_src *data_src)
++static void arm_spe__synth_data_source_common(const struct arm_spe_record *record,
++					      union perf_mem_data_src *data_src)
+ {
+ 	/*
+ 	 * Even though four levels of cache hierarchy are possible, no known
+@@ -443,17 +443,17 @@ static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *rec
+ 	}
+ 
+ 	switch (record->source) {
+-	case ARM_SPE_NV_L1D:
++	case ARM_SPE_COMMON_DS_L1D:
+ 		data_src->mem_lvl = PERF_MEM_LVL_L1 | PERF_MEM_LVL_HIT;
+ 		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
+ 		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
+ 		break;
+-	case ARM_SPE_NV_L2:
++	case ARM_SPE_COMMON_DS_L2:
+ 		data_src->mem_lvl = PERF_MEM_LVL_L2 | PERF_MEM_LVL_HIT;
+ 		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
+ 		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
+ 		break;
+-	case ARM_SPE_NV_PEER_CORE:
++	case ARM_SPE_COMMON_DS_PEER_CORE:
+ 		data_src->mem_lvl = PERF_MEM_LVL_L2 | PERF_MEM_LVL_HIT;
+ 		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
+ 		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+@@ -462,8 +462,8 @@ static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *rec
+ 	 * We don't know if this is L1, L2 but we do know it was a cache-2-cache
+ 	 * transfer, so set SNOOPX_PEER
+ 	 */
+-	case ARM_SPE_NV_LOCAL_CLUSTER:
+-	case ARM_SPE_NV_PEER_CLUSTER:
++	case ARM_SPE_COMMON_DS_LOCAL_CLUSTER:
++	case ARM_SPE_COMMON_DS_PEER_CLUSTER:
+ 		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+ 		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+ 		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+@@ -471,7 +471,7 @@ static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *rec
+ 	/*
+ 	 * System cache is assumed to be L3
+ 	 */
+-	case ARM_SPE_NV_SYS_CACHE:
++	case ARM_SPE_COMMON_DS_SYS_CACHE:
+ 		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+ 		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+ 		data_src->mem_snoop = PERF_MEM_SNOOP_HIT;
+@@ -480,13 +480,13 @@ static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *rec
+ 	 * We don't know what level it hit in, except it came from the other
+ 	 * socket
+ 	 */
+-	case ARM_SPE_NV_REMOTE:
++	case ARM_SPE_COMMON_DS_REMOTE:
+ 		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1;
+ 		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
+ 		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
+ 		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+ 		break;
+-	case ARM_SPE_NV_DRAM:
++	case ARM_SPE_COMMON_DS_DRAM:
+ 		data_src->mem_lvl = PERF_MEM_LVL_LOC_RAM | PERF_MEM_LVL_HIT;
+ 		data_src->mem_lvl_num = PERF_MEM_LVLNUM_RAM;
+ 		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
+@@ -522,7 +522,7 @@ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+ static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
+ {
+ 	union perf_mem_data_src	data_src = { .mem_op = PERF_MEM_OP_NA };
+-	bool is_neoverse = is_midr_in_range_list(midr, neoverse_spe);
++	bool is_common = is_midr_in_range_list(midr, common_ds_encoding_cpus);
+ 
+ 	if (record->op & ARM_SPE_OP_LD)
+ 		data_src.mem_op = PERF_MEM_OP_LOAD;
+@@ -531,8 +531,8 @@ static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 m
+ 	else
+ 		return 0;
+ 
+-	if (is_neoverse)
+-		arm_spe__synth_data_source_neoverse(record, &data_src);
++	if (is_common)
++		arm_spe__synth_data_source_common(record, &data_src);
+ 	else
+ 		arm_spe__synth_memory_level(record, &data_src);
+ 
 -- 
 2.34.1
 
