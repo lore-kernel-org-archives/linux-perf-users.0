@@ -1,57 +1,57 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946FF155A59
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 12:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4A614B094
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 12:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726490290; cv=none; b=DArFj9xII7L1RJqSJt7pWAr0NG3T2SxLa6EBB1pPEYthiUD+kWGwSqJdkH4HQwsHY+Xz/CREqpUfxc/KqrO3UMOcJ5YYFbsU1TX+nGlXf69iw9tedGYikzI+vNfX4mDTeOwbkvt/rsPbxRdwFH1VkW5ZSZKY8D5iWw/dhjuIkCg=
+	t=1726490492; cv=none; b=cRIzw6/qAHjHx0hJtbmjHbhAtQahPFXuacjqNBbufyvk4cIlkAzjCPbpC8eI28gf+4VB5hnsRXZKkfl7JQz223zDltpy0tNMYwujVtJs2q1TciEuA4ED1LAWiKqW4lAF/8iJx1VjGOJlU63s5hqNmypmc1CXFKk+6dnWbFJvyAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726490290; c=relaxed/simple;
-	bh=7EhG9EbVTGqEsiK8x+VNzz9p7fj5lCIpORxLSBcfrP4=;
+	s=arc-20240116; t=1726490492; c=relaxed/simple;
+	bh=S/ftoAScjgiV360t76a5mqODWdMIpi91lRWa69OOHFA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lzoGhppa+KXor3ruzhXsorB8JNV17/HaUu8/x85aed8WNDI03iXAu6w5Q3BhANSn4B7JPZ2TpDvqghnv3dxdxYRM+5ZK7tHH9PQ9uC+gk4zj+tAhxqCXG09bf6gh+0GEa3xaIwwX1603M9coq6EOrOguwLZaPSC2YLwreTyRwyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Jqmv/nfq; arc=none smtp.client-ip=209.85.208.51
+	 Content-Type:Content-Disposition:In-Reply-To; b=XclFSD4cixkVieoWFJCcinesni37LCVvmXXGM4nTj+s2hIxVlAr3iGtnXMyzSrrVj+QiY+DvoplLp71z9R9FDeJ/M8DWRo7bYsxyGYg/oKbOj0l0BNPFAH6T6uCZjGkJF2FgiU1qyYK5V0U6OVObd285nEMrFMYcEx1Vy+FU8u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=D4F2pKtm; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Jqmv/nfq"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5c2561e8041so3683401a12.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 05:38:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="D4F2pKtm"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a8d2b24b7a8so991746766b.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 05:41:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1726490287; x=1727095087; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1726490489; x=1727095289; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KNBeOEHGq7Pser7VzvbTspy/A3zYw7bZRrBFbZEGNjk=;
-        b=Jqmv/nfqpoO2L99oG2ltOBigQGM4qVA/mZLBR5mir4GfsVpT1NXcdXPfR517WwhlMS
-         0zdoO2HUJU6MPwnk+eLaUW2YxD8PxPN8mKjEqf0DoU1mwP5wYHtGRLE67AI+FlDPuQws
-         p6BuvD4CzCfG6IO/F+Ul8QdysdDIzmEBzh88JXJTsuCkZbyEfvtHYyFa9C9HZCM/TzNx
-         2CfzOqsik9zVHNDVhXtie+F8RZTeAXuCgV9OzhTAiUPKOPpU/q4FMRe74FXApG8qVuvG
-         9nrwhNlxU1B1VYIzD01NPjymKACYwEdEa0T45FdgCqNyRAjPUAb3vE0vuhjchAbfXiGY
-         ZsZw==
+        bh=GV6Qavvmkl6w+Qrw4EyS70WlfiOWC0YssBlS9J9YVb0=;
+        b=D4F2pKtmRr0OBn+bsJZ7NyDP4FvrCqK/FsMHHghFLR+54wWshzwU717T73dywf2tO4
+         satPc/TsujT9YG8iV30ImCAVQikRB+x0ozX/mNrqEjhOeNzeENXuMJyjRxDyPNbuSxJ5
+         Xdd3ynGLYRRulXpuhxAS7zd8yNBx1u+ZEoDf9l3mbwT+1fmxrs3N+zgW0N5tYWR0cUfr
+         xpdIkE39XiOKt4rMQGRQxX0XJRpnrwVUnRCp2XHy0G4GUahD8zvYD9agCjs8hCZM6/SB
+         tTZ4bZ2kQPvlYLQcSFf2zUQJ9ou9BfCFAybA4BUs6vbSTJB7MWVojwAvbDCXNR4aEHqX
+         Oafg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726490287; x=1727095087;
+        d=1e100.net; s=20230601; t=1726490489; x=1727095289;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KNBeOEHGq7Pser7VzvbTspy/A3zYw7bZRrBFbZEGNjk=;
-        b=bpZpzi0mM67klak8iQWFA47pjUg9PaGNg2lS07ErcLt9PzIhMdtadHCh/dTkMxqNZA
-         yoLF1+0gkoJHEwot3hTOpgMDg1MiX7lj/k/VB7IQPYg8cg9eGNhJiOP9Fdid6+WvWjbn
-         krc1aZziZYmgFcPKIl5pS8VtMYhecACHzYZS/s9arc3ng7+QGeT9xqi/T7Vs5nlKfJah
-         VaZgAyKANuix6oFnufpYktbbk1OaC4859n2+CBtxB1aQR2a9E/t17lYbHydlM+X5D14O
-         M8Z6pXpps4mBgoxSC6HSqdX8hqOhGLzAeWkE3Gh8EIwdqTq3aoSTPL1GKbKavplTBe+G
-         NtIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqcEwi5ff3HiCzIWjiLFcoAelg7GAIR8lBsUevSqBNOTz0CaHuNTN5vdRPvVKHQ77nFQSYEbOlngp5cV0tN6C6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEGA7QBQjeOMM5aM76HSC8xLuIA0JEocZLSjWCgDv37YfOhbe5
-	bivpFSgGt9eXqf4QjNwidKfX3VtcEkgNrp78eYA5p+p0Db+PaAoosfNQYXPfEk8=
-X-Google-Smtp-Source: AGHT+IGOZcpAXmdIVEV2vYM9IhWJaJecvzLcXzXO10w2tECmYppWvm9paxVvWFyfXx7MUbTlLrDpRQ==
-X-Received: by 2002:a17:906:f5a9:b0:a8d:51a7:d5ec with SMTP id a640c23a62f3a-a9047b4af68mr1200972366b.13.1726490286251;
-        Mon, 16 Sep 2024 05:38:06 -0700 (PDT)
+        bh=GV6Qavvmkl6w+Qrw4EyS70WlfiOWC0YssBlS9J9YVb0=;
+        b=UOel0CJkU7g+7y3j0ttbxbo572tW3qT/KgfSaUlNKhbFRiMnVmZq+85+NEgk305U5Y
+         Vb7m8rfntYft4nygDqxtjclIA7lQjJxABf2jgX9z60d76cOiolALTm93xDymMwZrX+1E
+         AijpgPUUs5gcC6ndyOEefm23peD1XF8uc9TankK5KQw582xClMBUzRZnSPvrvOqLdKzO
+         nVA198IDcBcWksWCti4568kj8Us1i1Zv8E5KXK5BiRvmevu83dd5NnvCs2pIKfdWucqU
+         xuOdgrGjsBfysfop0ekKic73TY/F6DdMHmOXLR590EVBkAap0LqPFhaktlUxSa5M9R9B
+         EnTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzdEsHn0K89lh28KfwBrUV8QsyDyD3+bY/wl7kG6QDWHINQ/VbOsdebgKJN6KYfMYTaaTgebXp802JhSkzbQaI@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBOtQkmGI69T0NpEv90ushHYzubuZ9OLwjfLEo2K7ADkggCj5b
+	LSQBqnY+qKTJ2QvNT2cd6rrt0GINFqR5XGvDpxzXujAgUS1SVG8CjohRSlr0SS8=
+X-Google-Smtp-Source: AGHT+IFnPigrzANCemZ9VtsGTqNDvB1a9yTdTADsvcOLtZZYeHwglJ1hZd6gPRX2GFqfyECMP2QLKQ==
+X-Received: by 2002:a17:907:944b:b0:a8a:87d5:2f49 with SMTP id a640c23a62f3a-a8ffae3a20cmr2140430366b.28.1726490488745;
+        Mon, 16 Sep 2024 05:41:28 -0700 (PDT)
 Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90612b3a0fsm308834866b.117.2024.09.16.05.38.05
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90610966ccsm308905866b.45.2024.09.16.05.41.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2024 05:38:05 -0700 (PDT)
-Date: Mon, 16 Sep 2024 14:38:04 +0200
+        Mon, 16 Sep 2024 05:41:28 -0700 (PDT)
+Date: Mon, 16 Sep 2024 14:41:27 +0200
 From: Andrew Jones <ajones@ventanamicro.com>
 To: zhouquan@iscas.ac.cn
 Cc: anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
@@ -59,10 +59,11 @@ Cc: anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com,
 	alexander.shishkin@linux.intel.com, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
 	linux-riscv@lists.infradead.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] riscv: perf: add guest vs host distinction
-Message-ID: <20240916-6f21ff3d12224f366ccaac6e@orel>
+Subject: Re: [PATCH v3 2/2] riscv: KVM: add basic support for host vs guest
+ profiling
+Message-ID: <20240916-1d1835e5f16d58c674fdef5b@orel>
 References: <cover.1726126795.git.zhouquan@iscas.ac.cn>
- <c62057d587f075a64442df1038fe27b52b89c997.1726126795.git.zhouquan@iscas.ac.cn>
+ <86e8f4eeb30dfc8700089cd88616e6cfb5a142ff.1726126795.git.zhouquan@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,20 +72,23 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c62057d587f075a64442df1038fe27b52b89c997.1726126795.git.zhouquan@iscas.ac.cn>
+In-Reply-To: <86e8f4eeb30dfc8700089cd88616e6cfb5a142ff.1726126795.git.zhouquan@iscas.ac.cn>
 
-On Thu, Sep 12, 2024 at 04:00:29PM GMT, zhouquan@iscas.ac.cn wrote:
+On Thu, Sep 12, 2024 at 04:00:38PM GMT, zhouquan@iscas.ac.cn wrote:
 > From: Quan Zhou <zhouquan@iscas.ac.cn>
 > 
-> Introduce basic guest support in perf, enabling it to distinguish
-> between PMU interrupts in the host or guest, and collect
-> fundamental information.
+> For the information collected on the host side, we need to
+> identify which data originates from the guest and record
+> these events separately, this can be achieved by having
+> KVM register perf callbacks.
 > 
 > Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
 > ---
->  arch/riscv/include/asm/perf_event.h |  7 ++++++
->  arch/riscv/kernel/perf_callchain.c  | 38 +++++++++++++++++++++++++++++
->  2 files changed, 45 insertions(+)
+>  arch/riscv/include/asm/kvm_host.h | 10 ++++++++++
+>  arch/riscv/kvm/Kconfig            |  1 +
+>  arch/riscv/kvm/main.c             | 12 ++++++++++--
+>  arch/riscv/kvm/vcpu.c             |  7 +++++++
+>  4 files changed, 28 insertions(+), 2 deletions(-)
 >
 
 Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
