@@ -1,136 +1,181 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D70155392;
-	Mon, 16 Sep 2024 12:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DA51547F5
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 13:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726491458; cv=none; b=WrrctQtJRMmKQPdqPFaunBGqjh9dxQpq7cLG/l2inNjojCvVz/ZGo+qJuRwX8s46l1QT4Tip5z4jFVaKYB6hnCrS0DA9j7wYXC7XKdVIO/2+ebfO4g8I8rHm7Dk4ILN8aJKBYnHrwxePdK2hyjMxOuEYd/EoTsDVUrqoVbJieUE=
+	t=1726493131; cv=none; b=VNhtsiquSW7W1BWvF1jMJTxfOhw4Qm/+KU2DSI6f/1m/zxvw4obkNNn72XMGCWkXAGWhifqLkBL221IZlDheRlG37NDuEQs5iRk6bUZDOZJoP5ucIF1UU4a+AhOa8BWkx97RHkt141AIBxga7UrgPaYoQ7wUmqO6/0oniLNVBVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726491458; c=relaxed/simple;
-	bh=gA89W1nynIjGy12J0nmJFgKEu5Encxd4oSRyP4WUHl0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fr6gGYuesW/gfC78nvpOaNOo9DummoKyrRNdMDBcJiu9bY4xu0mSLV4lbv9FjXZFg7cTWedQPY9RTReL6n8adXVIPhPs70rHWHJYfA/DfcV2QBaTzGbV94btlYLpD29hfAopF6ghIhCnNJkW6Sl11Dv6PSY50n42WBgboNAnfZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aswC42Xo; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1726493131; c=relaxed/simple;
+	bh=ZanOQ7fxVG2v5lnmIvjWTUPTsKGJpUbNU8ioyEFy5/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XTzA2wnAC/xwoVQGxlJ2JBLHzB6j5GfQyUp1SXhLIudMNo6hnUsTkUiFRdqBTWWMX1Qw9I4sZHKzUwkbJnQIpnPDBpxdFcoBhU1fIErd1HAQ0C2aNP0m+Qy+AB8YvR4UG2Ta+J4xYt+WB1iZPzZ+1TvRFC2qRmW20ps8zoqMbEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MUxhvWx/; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aswC42Xo"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48GCb2jg005694;
-	Mon, 16 Sep 2024 12:57:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=pp1; bh=jQ+8TPexO5T8e+V0qFd6/RpZSe
-	tZ9RkxOs8TOyfZ4xY=; b=aswC42XofSlRSLt6KVKa1e7g0dbLz91h7KEPySESl0
-	6W+O5MpbxzSJwjjCYUHGUEE/ONjnpvmuAOVon2DZlMLjimLY7rkpCN6fdubju9F2
-	gYsfRzy9582+yh4D+jnlkotF1zt1XpK7RcR7Q9azo5SUtfX7is7Zcq34guUWT7Lg
-	CQpV+L1d5zDXd3kjAwWugnSbjqnlgnO1TbT8TcbITl0r55mUnqejbbOiq11QgYbn
-	SNRpKu0dduIyn7tDpWWCksc8Pey67gJShJT9oNHuvjDuRjqxZQjt9rS4XhxVm64C
-	5HK1SHj6axPV6cAzrqQUUZ6VDC2xqLcdNvZMiBY0bJvw==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41n3vnhs3u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Sep 2024 12:57:31 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48GCBAQj024627;
-	Mon, 16 Sep 2024 12:57:30 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 41nq1mq756-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Sep 2024 12:57:30 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48GCvRfQ36372822
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 16 Sep 2024 12:57:27 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1C36F20043;
-	Mon, 16 Sep 2024 12:57:27 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D2E9B20040;
-	Mon, 16 Sep 2024 12:57:26 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 16 Sep 2024 12:57:26 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/test: perf test 86 fails on s390 repo linux-next
-Date: Mon, 16 Sep 2024 14:57:18 +0200
-Message-ID: <20240916125718.3024270-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MUxhvWx/"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42cbc38a997so28536395e9.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 06:25:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1726493127; x=1727097927; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=amijeL/TCbPsHkmGl+LwlZVIAn7Sx+a74wDY8RvXPq8=;
+        b=MUxhvWx/vhZGYi3H+TknMJZlToPnPNz+hh1dK+AD5kbg4WJFcHoKO0k0tBRlgy75QK
+         UWcuVo0RV+mW8/15+jHdwE7o0w3b0uWiLTKdNQLZP2T5kmT8aPgczWQ6OoEZpa++ZFIj
+         BV6sruVCUo63k3IFWEXI2wsPkQKLcVXWtb0dKFPZNy9ebMU0MTMX7g/8JZbbnzt5PCv4
+         ZVXkWUfMnpgBez5DfHpnM4PGl/uKwI3TynnGilop/Loss8VOnYBPBuJhQXFi0lBXWz8v
+         0iFBWSRa/c3tFhod0Qg6zgM1FUqIhRpnZHIwZ7mP7tuR/ZiDGIudhqbcfN08IiRytI7x
+         RocA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726493127; x=1727097927;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=amijeL/TCbPsHkmGl+LwlZVIAn7Sx+a74wDY8RvXPq8=;
+        b=H8iHUVLCeyjaKQhp28hDFguq+xJ6yv9d1eaM+bX91QTBPVptt6D+cjRqFYZMW1nZhs
+         1A8BHj7HhmXMakaileMuLbgNE66l3w/IkbCPFzJInjpv9Gn5YklQvqUqIxXtOthF2TeA
+         qCk7635mUCqykX0yKxSXx36WDEuRE24e9w0y0WtBHhgKQSL8MRhVlOous9m8Cv/SPAVl
+         HU4i4DFC+EdsvRjID7v9CDcY/GCtZtDbGHKD78+tjCLcIeY5CQWAh3nvE7MnZ0mCHP/u
+         +sRPQzV7b5G1D+bFvEyQ99b0d5OGIZkx72hGakgMbE9tVb8UoF6Nue60LDGpn+oQS8PN
+         ccnA==
+X-Forwarded-Encrypted: i=1; AJvYcCVimJtibofkF5AGIN3S3kEMJstIpOaHQ+I5slTD0PzKGJh/4SpFadE6V7MBaYX6uDV5lSfXRqY0sTW6yNjc0jdo@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFHun3IhaDKMSu2yr81S+4+Ovq+DbO8+ixFLaibthEuixAtcHN
+	32C1NGBTKeuB8itOukNwcBxaZbT6//MdxLKQCowB9uBY67nv7AflSa/4xdVKtss=
+X-Google-Smtp-Source: AGHT+IF5WAZRXrYe5Pw+AJJxBDVICVTt/E7UBZ3F1B2MctTYbKsQaRqIAZGCV0D8+zd824FShZfWlw==
+X-Received: by 2002:a05:600c:1c25:b0:42c:ae1d:ea4b with SMTP id 5b1f17b1804b1-42cbde1a51emr128680565e9.13.1726493126628;
+        Mon, 16 Sep 2024 06:25:26 -0700 (PDT)
+Received: from [192.168.1.61] ([84.67.228.188])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42da22bd30esm77377355e9.10.2024.09.16.06.25.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Sep 2024 06:25:26 -0700 (PDT)
+Message-ID: <f3f143f2-408c-4632-991a-ff0de53349d8@linaro.org>
+Date: Mon, 16 Sep 2024 14:25:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/7] perf test: cs-etm: Test Coresight disassembly
+ script
+To: Leo Yan <leo.yan@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>,
+ Ben Gainey <ben.gainey@arm.com>, Ruidong Tian
+ <tianruidong@linux.alibaba.com>, Benjamin Gray <bgray@linux.ibm.com>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ gankulkarni@os.amperecomputing.com, coresight@lists.linaro.org,
+ scclevenger@os.amperecomputing.com
+References: <20240912151143.1264483-1-james.clark@linaro.org>
+ <20240912151143.1264483-8-james.clark@linaro.org>
+ <42bfbda0-3b4a-496f-a96a-8f16d3e108f7@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <42bfbda0-3b4a-496f-a96a-8f16d3e108f7@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: T2Ld0KKiq2QoP3MDIZmQNJgTZCj_WLth
-X-Proofpoint-GUID: T2Ld0KKiq2QoP3MDIZmQNJgTZCj_WLth
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-16_09,2024-09-13_02,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 clxscore=1015 malwarescore=0 bulkscore=0
- impostorscore=0 spamscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
- definitions=main-2409160081
 
-Command perf test 86 fails on s390 using linux-next repository:
- # perf test -F 86
- ping 868299 [007] 28248.013596: probe_libc:inet_pton_1: (3ff95948020)
- 3ff95948020 inet_pton+0x0 (inlined)
- 3ff9595e6e7 text_to_binary_address+0x1007 (inlined)
- 3ff9595e6e7 gaih_inet+0x1007 (inlined)
- FAIL: expected backtrace entry \
-	 "main\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$"
-	 got "3ff9595e6e7 gaih_inet+0x1007 (inlined)"
- 86: probe libc's inet_pton & backtrace it with ping  : FAILED!
- #
 
-The root cause is a new stack layout, some functions have been added
-as seen below. Add text_to_binary_address and friends to the
-list of expected functions.
 
- # perf script | tac | grep -m1 '^ping' -B9 | tac
- ping  866856 [007] 25979.494921: probe_libc:inet_pton: (3ff8ec48020)
-	     3ff8ec48020 inet_pton+0x0 (inlined)
-	     3ff8ec5e6e7 text_to_binary_address+0x1007 (inlined)
-	     3ff8ec5e6e7 gaih_inet+0x1007 (inlined)
-	     3ff8ec5e6e7 getaddrinfo+0x1007 (/usr/lib64/libc.so.6)
-	     2aa3fe04bf5 main+0xff5 (/usr/bin/ping)
-	     3ff8eb34a5b __libc_start_call_main+0x8b (/usr/lib64/libc.so.6)
-	     3ff8eb34b5d __libc_start_main@GLIBC_2.2+0xad (inlined)
-	     2aa3fe06a1f [unknown] (/usr/bin/ping)
+On 13/09/2024 14:35, Leo Yan wrote:
+> 
+> 
+> On 9/12/24 16:11, James Clark wrote:
+>>
+>> Run a few samples through the disassembly script and check to see that
+>> at least one branch instruction is printed.
+>>
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+>> ---
+>>   .../tests/shell/test_arm_coresight_disasm.sh  | 63 +++++++++++++++++++
+>>   1 file changed, 63 insertions(+)
+>>   create mode 100755 tools/perf/tests/shell/test_arm_coresight_disasm.sh
+>>
+>> diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh 
+>> b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+>> new file mode 100755
+>> index 000000000000..6d004bf29f80
+>> --- /dev/null
+>> +++ b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+>> @@ -0,0 +1,63 @@
+>> +#!/bin/sh
+>> +# Check Arm CoreSight disassembly script completes without errors
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +
+>> +# The disassembly script reconstructs ranges of instructions and 
+>> gives these to objdump to
+>> +# decode. objdump doesn't like ranges that go backwards, but these 
+>> are a good indication
+>> +# that decoding has gone wrong either in OpenCSD, Perf or in the 
+>> range reconstruction in
+>> +# the script. Test all 3 parts are working correctly by running the 
+>> script.
+>> +
+>> +skip_if_no_cs_etm_event() {
+>> +       perf list | grep -q 'cs_etm//' && return 0
+>> +
+>> +       # cs_etm event doesn't exist
+>> +       return 2
+>> +}
+>> +
+>> +skip_if_no_cs_etm_event || exit 2
+>> +
+>> +# Assume an error unless we reach the very end
+>> +set -e
+>> +glb_err=1
+>> +
+>> +perfdata_dir=$(mktemp -d /tmp/__perf_test.perf.data.XXXXX)
+>> +perfdata=${perfdata_dir}/perf.data
+>> +file=$(mktemp /tmp/temporary_file.XXXXX)
+>> +
+>> +cleanup_files()
+>> +{
+>> +       set +e
+>> +       rm -rf ${perfdata_dir}
+>> +       rm -f ${file}
+>> +       trap - EXIT TERM INT
+>> +       exit $glb_err
+>> +}
+>> +
+>> +trap cleanup_files EXIT TERM INT
+>> +
+>> +# Ranges start and end on branches, so check for some likely branch 
+>> instructions
+>> +sep="\s\|\s"
+>> +branch_search="\sbl${sep}b${sep}b.ne${sep}b.eq${sep}cbz\s"
+>> +
+>> +## Test kernel ##
+>> +if [ -e /proc/kcore ]; then
+>> +       echo "Testing kernel disassembly"
+>> +       perf record -o ${perfdata} -e cs_etm//k --kcore -- touch $file 
+>> > /dev/null 2>&1
+>> +       perf script -i ${perfdata} -s 
+>> python:tools/perf/scripts/python/arm-cs-trace-disasm.py -- \
+>> +               -d --stop-sample=30 2> /dev/null > ${file}
+> 
+> This is fine for self test. But for a CI test in a distro, will it fail to
+> find script with prefix 'tools/perf/...'?
+> 
+> Thanks,
+> Leo
+> 
 
- #
+Nice catch, it should be this:
 
-Output after:
- # perf test -F 86
- 86: probe libc's inet_pton & backtrace it with ping  : Ok
- #
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index f38c8ead0b03..bc6e2fe1d999 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -40,6 +40,8 @@ trace_libc_inet_pton_backtrace() {
- 	case "$(uname -m)" in
- 	s390x)
- 		eventattr='call-graph=dwarf,max-stack=4'
-+		echo "text_to_binary_address\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
-+		echo "gaih_inet\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
- 		echo "(__GI_)?getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
- 		echo "main\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
- 		;;
--- 
-2.46.0
-
+   # Relative path works whether it's installed or running from repo
+   script_path=$(dirname "$0")/../../scripts/python/arm-cs-trace\
+     -disasm.py
