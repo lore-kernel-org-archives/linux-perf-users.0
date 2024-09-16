@@ -1,94 +1,136 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4A614B094
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 12:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D70155392;
+	Mon, 16 Sep 2024 12:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726490492; cv=none; b=cRIzw6/qAHjHx0hJtbmjHbhAtQahPFXuacjqNBbufyvk4cIlkAzjCPbpC8eI28gf+4VB5hnsRXZKkfl7JQz223zDltpy0tNMYwujVtJs2q1TciEuA4ED1LAWiKqW4lAF/8iJx1VjGOJlU63s5hqNmypmc1CXFKk+6dnWbFJvyAE=
+	t=1726491458; cv=none; b=WrrctQtJRMmKQPdqPFaunBGqjh9dxQpq7cLG/l2inNjojCvVz/ZGo+qJuRwX8s46l1QT4Tip5z4jFVaKYB6hnCrS0DA9j7wYXC7XKdVIO/2+ebfO4g8I8rHm7Dk4ILN8aJKBYnHrwxePdK2hyjMxOuEYd/EoTsDVUrqoVbJieUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726490492; c=relaxed/simple;
-	bh=S/ftoAScjgiV360t76a5mqODWdMIpi91lRWa69OOHFA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XclFSD4cixkVieoWFJCcinesni37LCVvmXXGM4nTj+s2hIxVlAr3iGtnXMyzSrrVj+QiY+DvoplLp71z9R9FDeJ/M8DWRo7bYsxyGYg/oKbOj0l0BNPFAH6T6uCZjGkJF2FgiU1qyYK5V0U6OVObd285nEMrFMYcEx1Vy+FU8u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=D4F2pKtm; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1726491458; c=relaxed/simple;
+	bh=gA89W1nynIjGy12J0nmJFgKEu5Encxd4oSRyP4WUHl0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fr6gGYuesW/gfC78nvpOaNOo9DummoKyrRNdMDBcJiu9bY4xu0mSLV4lbv9FjXZFg7cTWedQPY9RTReL6n8adXVIPhPs70rHWHJYfA/DfcV2QBaTzGbV94btlYLpD29hfAopF6ghIhCnNJkW6Sl11Dv6PSY50n42WBgboNAnfZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aswC42Xo; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="D4F2pKtm"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a8d2b24b7a8so991746766b.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 05:41:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1726490489; x=1727095289; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GV6Qavvmkl6w+Qrw4EyS70WlfiOWC0YssBlS9J9YVb0=;
-        b=D4F2pKtmRr0OBn+bsJZ7NyDP4FvrCqK/FsMHHghFLR+54wWshzwU717T73dywf2tO4
-         satPc/TsujT9YG8iV30ImCAVQikRB+x0ozX/mNrqEjhOeNzeENXuMJyjRxDyPNbuSxJ5
-         Xdd3ynGLYRRulXpuhxAS7zd8yNBx1u+ZEoDf9l3mbwT+1fmxrs3N+zgW0N5tYWR0cUfr
-         xpdIkE39XiOKt4rMQGRQxX0XJRpnrwVUnRCp2XHy0G4GUahD8zvYD9agCjs8hCZM6/SB
-         tTZ4bZ2kQPvlYLQcSFf2zUQJ9ou9BfCFAybA4BUs6vbSTJB7MWVojwAvbDCXNR4aEHqX
-         Oafg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726490489; x=1727095289;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GV6Qavvmkl6w+Qrw4EyS70WlfiOWC0YssBlS9J9YVb0=;
-        b=UOel0CJkU7g+7y3j0ttbxbo572tW3qT/KgfSaUlNKhbFRiMnVmZq+85+NEgk305U5Y
-         Vb7m8rfntYft4nygDqxtjclIA7lQjJxABf2jgX9z60d76cOiolALTm93xDymMwZrX+1E
-         AijpgPUUs5gcC6ndyOEefm23peD1XF8uc9TankK5KQw582xClMBUzRZnSPvrvOqLdKzO
-         nVA198IDcBcWksWCti4568kj8Us1i1Zv8E5KXK5BiRvmevu83dd5NnvCs2pIKfdWucqU
-         xuOdgrGjsBfysfop0ekKic73TY/F6DdMHmOXLR590EVBkAap0LqPFhaktlUxSa5M9R9B
-         EnTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzdEsHn0K89lh28KfwBrUV8QsyDyD3+bY/wl7kG6QDWHINQ/VbOsdebgKJN6KYfMYTaaTgebXp802JhSkzbQaI@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBOtQkmGI69T0NpEv90ushHYzubuZ9OLwjfLEo2K7ADkggCj5b
-	LSQBqnY+qKTJ2QvNT2cd6rrt0GINFqR5XGvDpxzXujAgUS1SVG8CjohRSlr0SS8=
-X-Google-Smtp-Source: AGHT+IFnPigrzANCemZ9VtsGTqNDvB1a9yTdTADsvcOLtZZYeHwglJ1hZd6gPRX2GFqfyECMP2QLKQ==
-X-Received: by 2002:a17:907:944b:b0:a8a:87d5:2f49 with SMTP id a640c23a62f3a-a8ffae3a20cmr2140430366b.28.1726490488745;
-        Mon, 16 Sep 2024 05:41:28 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90610966ccsm308905866b.45.2024.09.16.05.41.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2024 05:41:28 -0700 (PDT)
-Date: Mon, 16 Sep 2024 14:41:27 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: zhouquan@iscas.ac.cn
-Cc: anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] riscv: KVM: add basic support for host vs guest
- profiling
-Message-ID: <20240916-1d1835e5f16d58c674fdef5b@orel>
-References: <cover.1726126795.git.zhouquan@iscas.ac.cn>
- <86e8f4eeb30dfc8700089cd88616e6cfb5a142ff.1726126795.git.zhouquan@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aswC42Xo"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48GCb2jg005694;
+	Mon, 16 Sep 2024 12:57:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=jQ+8TPexO5T8e+V0qFd6/RpZSe
+	tZ9RkxOs8TOyfZ4xY=; b=aswC42XofSlRSLt6KVKa1e7g0dbLz91h7KEPySESl0
+	6W+O5MpbxzSJwjjCYUHGUEE/ONjnpvmuAOVon2DZlMLjimLY7rkpCN6fdubju9F2
+	gYsfRzy9582+yh4D+jnlkotF1zt1XpK7RcR7Q9azo5SUtfX7is7Zcq34guUWT7Lg
+	CQpV+L1d5zDXd3kjAwWugnSbjqnlgnO1TbT8TcbITl0r55mUnqejbbOiq11QgYbn
+	SNRpKu0dduIyn7tDpWWCksc8Pey67gJShJT9oNHuvjDuRjqxZQjt9rS4XhxVm64C
+	5HK1SHj6axPV6cAzrqQUUZ6VDC2xqLcdNvZMiBY0bJvw==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41n3vnhs3u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Sep 2024 12:57:31 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48GCBAQj024627;
+	Mon, 16 Sep 2024 12:57:30 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 41nq1mq756-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Sep 2024 12:57:30 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48GCvRfQ36372822
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 16 Sep 2024 12:57:27 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1C36F20043;
+	Mon, 16 Sep 2024 12:57:27 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D2E9B20040;
+	Mon, 16 Sep 2024 12:57:26 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 16 Sep 2024 12:57:26 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/test: perf test 86 fails on s390 repo linux-next
+Date: Mon, 16 Sep 2024 14:57:18 +0200
+Message-ID: <20240916125718.3024270-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86e8f4eeb30dfc8700089cd88616e6cfb5a142ff.1726126795.git.zhouquan@iscas.ac.cn>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: T2Ld0KKiq2QoP3MDIZmQNJgTZCj_WLth
+X-Proofpoint-GUID: T2Ld0KKiq2QoP3MDIZmQNJgTZCj_WLth
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-16_09,2024-09-13_02,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 clxscore=1015 malwarescore=0 bulkscore=0
+ impostorscore=0 spamscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
+ definitions=main-2409160081
 
-On Thu, Sep 12, 2024 at 04:00:38PM GMT, zhouquan@iscas.ac.cn wrote:
-> From: Quan Zhou <zhouquan@iscas.ac.cn>
-> 
-> For the information collected on the host side, we need to
-> identify which data originates from the guest and record
-> these events separately, this can be achieved by having
-> KVM register perf callbacks.
-> 
-> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
-> ---
->  arch/riscv/include/asm/kvm_host.h | 10 ++++++++++
->  arch/riscv/kvm/Kconfig            |  1 +
->  arch/riscv/kvm/main.c             | 12 ++++++++++--
->  arch/riscv/kvm/vcpu.c             |  7 +++++++
->  4 files changed, 28 insertions(+), 2 deletions(-)
->
+Command perf test 86 fails on s390 using linux-next repository:
+ # perf test -F 86
+ ping 868299 [007] 28248.013596: probe_libc:inet_pton_1: (3ff95948020)
+ 3ff95948020 inet_pton+0x0 (inlined)
+ 3ff9595e6e7 text_to_binary_address+0x1007 (inlined)
+ 3ff9595e6e7 gaih_inet+0x1007 (inlined)
+ FAIL: expected backtrace entry \
+	 "main\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$"
+	 got "3ff9595e6e7 gaih_inet+0x1007 (inlined)"
+ 86: probe libc's inet_pton & backtrace it with ping  : FAILED!
+ #
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+The root cause is a new stack layout, some functions have been added
+as seen below. Add text_to_binary_address and friends to the
+list of expected functions.
+
+ # perf script | tac | grep -m1 '^ping' -B9 | tac
+ ping  866856 [007] 25979.494921: probe_libc:inet_pton: (3ff8ec48020)
+	     3ff8ec48020 inet_pton+0x0 (inlined)
+	     3ff8ec5e6e7 text_to_binary_address+0x1007 (inlined)
+	     3ff8ec5e6e7 gaih_inet+0x1007 (inlined)
+	     3ff8ec5e6e7 getaddrinfo+0x1007 (/usr/lib64/libc.so.6)
+	     2aa3fe04bf5 main+0xff5 (/usr/bin/ping)
+	     3ff8eb34a5b __libc_start_call_main+0x8b (/usr/lib64/libc.so.6)
+	     3ff8eb34b5d __libc_start_main@GLIBC_2.2+0xad (inlined)
+	     2aa3fe06a1f [unknown] (/usr/bin/ping)
+
+ #
+
+Output after:
+ # perf test -F 86
+ 86: probe libc's inet_pton & backtrace it with ping  : Ok
+ #
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index f38c8ead0b03..bc6e2fe1d999 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -40,6 +40,8 @@ trace_libc_inet_pton_backtrace() {
+ 	case "$(uname -m)" in
+ 	s390x)
+ 		eventattr='call-graph=dwarf,max-stack=4'
++		echo "text_to_binary_address\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
++		echo "gaih_inet\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
+ 		echo "(__GI_)?getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
+ 		echo "main\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+ 		;;
+-- 
+2.46.0
+
