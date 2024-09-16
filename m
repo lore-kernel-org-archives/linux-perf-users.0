@@ -1,56 +1,68 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BB2155730;
-	Mon, 16 Sep 2024 11:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946FF155A59
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 12:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726487183; cv=none; b=JlNQ+10oM7iE3EssjMUsVq6F9XhK7VRyJImNKW1E6oU/ESiAfVN1/Rb06V2DdEkx5sKj+4hgFOV7LVpEsn65gWWawUVLxlRy+gu3n+oWDc1es8/7WImINjUZRbsRD41nEKbKyrFYpU5+Hb0P54TLDmq2iHys/4gRW2GKHq0x3jA=
+	t=1726490290; cv=none; b=DArFj9xII7L1RJqSJt7pWAr0NG3T2SxLa6EBB1pPEYthiUD+kWGwSqJdkH4HQwsHY+Xz/CREqpUfxc/KqrO3UMOcJ5YYFbsU1TX+nGlXf69iw9tedGYikzI+vNfX4mDTeOwbkvt/rsPbxRdwFH1VkW5ZSZKY8D5iWw/dhjuIkCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726487183; c=relaxed/simple;
-	bh=sbwdwScUl1nDLrZ9f694UQMrrF3aVUrjfPSsNDjH6Mo=;
+	s=arc-20240116; t=1726490290; c=relaxed/simple;
+	bh=7EhG9EbVTGqEsiK8x+VNzz9p7fj5lCIpORxLSBcfrP4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QNcpMuV3I+CdNiAPuHrsxsnzMiV7hfzGIoRTaH/bmxCXnhuViELGgj1jHjthdOgzIq98QhvJaVwEEXoWP1z6mgvDbd13L6j9jY025ByzNPGnMWMzj37l4SxTne7id7thAON07bcpvA3k6REyOycl34tSSy9hzZByFzRMzBb4Hvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ma5yb2gK; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=lzoGhppa+KXor3ruzhXsorB8JNV17/HaUu8/x85aed8WNDI03iXAu6w5Q3BhANSn4B7JPZ2TpDvqghnv3dxdxYRM+5ZK7tHH9PQ9uC+gk4zj+tAhxqCXG09bf6gh+0GEa3xaIwwX1603M9coq6EOrOguwLZaPSC2YLwreTyRwyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Jqmv/nfq; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ma5yb2gK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=klhQKcXhmr+bixiRVjZjeBgikGPAXkhkBwFZl+Bvows=; b=ma5yb2gKWPFI+bVTDTUgLK3evw
-	jUvBOfFup1b+Xq/Trv8zE3/RVN0a+M/NSahcIFNCf9+PLuOnuRQH5zdUGsWlDlmR5K/UYHz/FU770
-	kF0H4FZ/504T+KC5JNcHeiKi4goFY4Le7UeCGcG9VKxMJNrYc8Q+hi9VmxcWC0QSud4PdqNxqn87F
-	G5fV33bsE1sywTmQCpBaT4KmW2peYWwfBPLTUWGWAmLp18zYybQNW8AYM3z0CVK39Xfz2UwTPILtC
-	zYrc0b8Y8uP6uJNHtdRd9mIGZ5BcmdtJcraA9ysCfqbPBfgvjpSMeJHLQKQ9kLpf2fCv8ZHtGNyOi
-	sLjZtpMw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1sqABC-00000000Ni0-1z1g;
-	Mon, 16 Sep 2024 11:46:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B87FE30049D; Mon, 16 Sep 2024 13:46:05 +0200 (CEST)
-Date: Mon, 16 Sep 2024 13:46:05 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>
-Subject: Re: [PATCH v2 02/11] unwind/x86: Add HAVE_USER_UNWIND
-Message-ID: <20240916114605.GA4723@noisy.programming.kicks-ass.net>
-References: <cover.1726268190.git.jpoimboe@kernel.org>
- <82ef19a767cb75e76a985ecc0d47a39400b4fdf5.1726268190.git.jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Jqmv/nfq"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5c2561e8041so3683401a12.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 05:38:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1726490287; x=1727095087; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KNBeOEHGq7Pser7VzvbTspy/A3zYw7bZRrBFbZEGNjk=;
+        b=Jqmv/nfqpoO2L99oG2ltOBigQGM4qVA/mZLBR5mir4GfsVpT1NXcdXPfR517WwhlMS
+         0zdoO2HUJU6MPwnk+eLaUW2YxD8PxPN8mKjEqf0DoU1mwP5wYHtGRLE67AI+FlDPuQws
+         p6BuvD4CzCfG6IO/F+Ul8QdysdDIzmEBzh88JXJTsuCkZbyEfvtHYyFa9C9HZCM/TzNx
+         2CfzOqsik9zVHNDVhXtie+F8RZTeAXuCgV9OzhTAiUPKOPpU/q4FMRe74FXApG8qVuvG
+         9nrwhNlxU1B1VYIzD01NPjymKACYwEdEa0T45FdgCqNyRAjPUAb3vE0vuhjchAbfXiGY
+         ZsZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726490287; x=1727095087;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KNBeOEHGq7Pser7VzvbTspy/A3zYw7bZRrBFbZEGNjk=;
+        b=bpZpzi0mM67klak8iQWFA47pjUg9PaGNg2lS07ErcLt9PzIhMdtadHCh/dTkMxqNZA
+         yoLF1+0gkoJHEwot3hTOpgMDg1MiX7lj/k/VB7IQPYg8cg9eGNhJiOP9Fdid6+WvWjbn
+         krc1aZziZYmgFcPKIl5pS8VtMYhecACHzYZS/s9arc3ng7+QGeT9xqi/T7Vs5nlKfJah
+         VaZgAyKANuix6oFnufpYktbbk1OaC4859n2+CBtxB1aQR2a9E/t17lYbHydlM+X5D14O
+         M8Z6pXpps4mBgoxSC6HSqdX8hqOhGLzAeWkE3Gh8EIwdqTq3aoSTPL1GKbKavplTBe+G
+         NtIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqcEwi5ff3HiCzIWjiLFcoAelg7GAIR8lBsUevSqBNOTz0CaHuNTN5vdRPvVKHQ77nFQSYEbOlngp5cV0tN6C6@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEGA7QBQjeOMM5aM76HSC8xLuIA0JEocZLSjWCgDv37YfOhbe5
+	bivpFSgGt9eXqf4QjNwidKfX3VtcEkgNrp78eYA5p+p0Db+PaAoosfNQYXPfEk8=
+X-Google-Smtp-Source: AGHT+IGOZcpAXmdIVEV2vYM9IhWJaJecvzLcXzXO10w2tECmYppWvm9paxVvWFyfXx7MUbTlLrDpRQ==
+X-Received: by 2002:a17:906:f5a9:b0:a8d:51a7:d5ec with SMTP id a640c23a62f3a-a9047b4af68mr1200972366b.13.1726490286251;
+        Mon, 16 Sep 2024 05:38:06 -0700 (PDT)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90612b3a0fsm308834866b.117.2024.09.16.05.38.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2024 05:38:05 -0700 (PDT)
+Date: Mon, 16 Sep 2024 14:38:04 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: zhouquan@iscas.ac.cn
+Cc: anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] riscv: perf: add guest vs host distinction
+Message-ID: <20240916-6f21ff3d12224f366ccaac6e@orel>
+References: <cover.1726126795.git.zhouquan@iscas.ac.cn>
+ <c62057d587f075a64442df1038fe27b52b89c997.1726126795.git.zhouquan@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,46 +71,20 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <82ef19a767cb75e76a985ecc0d47a39400b4fdf5.1726268190.git.jpoimboe@kernel.org>
+In-Reply-To: <c62057d587f075a64442df1038fe27b52b89c997.1726126795.git.zhouquan@iscas.ac.cn>
 
-On Sat, Sep 14, 2024 at 01:02:04AM +0200, Josh Poimboeuf wrote:
-> Use ARCH_INIT_USER_FP_FRAME to describe how frame pointers are unwound
-> on x86, and enable HAVE_USER_UNWIND accordinlgy so the user unwind
-> interfaces can be used.
+On Thu, Sep 12, 2024 at 04:00:29PM GMT, zhouquan@iscas.ac.cn wrote:
+> From: Quan Zhou <zhouquan@iscas.ac.cn>
 > 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> Introduce basic guest support in perf, enabling it to distinguish
+> between PMU interrupts in the host or guest, and collect
+> fundamental information.
+> 
+> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
 > ---
->  arch/x86/Kconfig                   |  1 +
->  arch/x86/include/asm/user_unwind.h | 11 +++++++++++
->  2 files changed, 12 insertions(+)
->  create mode 100644 arch/x86/include/asm/user_unwind.h
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 007bab9f2a0e..266edff59058 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -286,6 +286,7 @@ config X86
->  	select HAVE_UACCESS_VALIDATION		if HAVE_OBJTOOL
->  	select HAVE_UNSTABLE_SCHED_CLOCK
->  	select HAVE_USER_RETURN_NOTIFIER
-> +	select HAVE_USER_UNWIND
->  	select HAVE_GENERIC_VDSO
->  	select VDSO_GETRANDOM			if X86_64
->  	select HOTPLUG_PARALLEL			if SMP && X86_64
-> diff --git a/arch/x86/include/asm/user_unwind.h b/arch/x86/include/asm/user_unwind.h
-> new file mode 100644
-> index 000000000000..8c509c65cfb5
-> --- /dev/null
-> +++ b/arch/x86/include/asm/user_unwind.h
-> @@ -0,0 +1,11 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_X86_USER_UNWIND_H
-> +#define _ASM_X86_USER_UNWIND_H
-> +
-> +#define ARCH_INIT_USER_FP_FRAME							\
-> +	.ra_off		= (s32)sizeof(long) * -1,				\
-> +	.cfa_off	= (s32)sizeof(long) * 2,				\
-> +	.fp_off		= (s32)sizeof(long) * -2,				\
-> +	.use_fp		= true,
+>  arch/riscv/include/asm/perf_event.h |  7 ++++++
+>  arch/riscv/kernel/perf_callchain.c  | 38 +++++++++++++++++++++++++++++
+>  2 files changed, 45 insertions(+)
+>
 
-What about compat crap?
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
