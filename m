@@ -1,98 +1,86 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E038DDAD;
-	Mon, 16 Sep 2024 01:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A61EA12E71;
+	Mon, 16 Sep 2024 02:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726451634; cv=none; b=HdoPj4oh/AkNCT47pSYu/TpkYITkE0atmUfuKFMx288qIvn/XL756mOy4q2j+dDM4Vb6kuKu96jwvzstwHWlxHvl+JuirlfPyHPiDV7x8WJqM9Oiq5wx4V1TFpoNKfXiq4Y+1nhY1U4XcBdy8CkEz4LLQtd3t2F+1CRrPCYEbBU=
+	t=1726455273; cv=none; b=cgT+on6wiEsbvmgsqryeF8GXarCWICaiLWLlqdAs297zGvZgHlJJ9FxbzTNDqsy+ghXsVFwD/KkhCK2F37IX2IU+e3FnY+WEZaV5JJl1VDw/xEPaoKhi/cR4MlcAXVqY9fXutiRXt721j45VzIAPVDFQ4B6mQGHzVXBAno34uS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726451634; c=relaxed/simple;
-	bh=iq25zN/1fAllIBHLNn/L+clDUrU36h3yvFzfKev23wM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lHhT7RH3XDzQGbuOifaNq45NqQQWt6rGUsS253bbhFycx4PKxdCs5kQd+k/VJE4x9WqIMWUuy8pmaPFEL58gmAAaDFhm965nZtxox4UdomtF/UK8NnM1vfWMxU2xWI3/omicIJW72syEGSGe9cO2enAwMolXXlOVqp/qm3gma0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4X6ScP2KBqz4f3jHx;
-	Mon, 16 Sep 2024 09:53:25 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id C56331A0359;
-	Mon, 16 Sep 2024 09:53:41 +0800 (CST)
-Received: from huawei.com (unknown [10.67.174.45])
-	by APP4 (Coremail) with SMTP id gCh0CgCXy8eZj+dmP_LGBQ--.63146S4;
-	Mon, 16 Sep 2024 09:53:41 +0800 (CST)
-From: Tengda Wu <wutengda@huaweicloud.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: song@kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH -next v3 2/2] perf test: Use sqrtloop workload to test bperf event
-Date: Mon, 16 Sep 2024 01:43:18 +0000
-Message-Id: <20240916014318.267709-3-wutengda@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240916014318.267709-1-wutengda@huaweicloud.com>
-References: <20240916014318.267709-1-wutengda@huaweicloud.com>
+	s=arc-20240116; t=1726455273; c=relaxed/simple;
+	bh=4SY9/3+US2zm+crDDfzr5lKhaNSjQwLU5DcGcU1LpiA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GFPXl3/ZhYPLtIeVK6FRS+0QjFB4jwUZ4X0+nUyvejZtoCfYVP6CoblrJ1X1kbwpdBZJmKPBshhVHvuHUuVUoevps0cK2EgkO0z+VD8B+G819Rh6YpJtRmYr0BeqmMYEwUeZCftRm0WwuVm4QFyUPawJwQd+9A3stWrV7Bm2d9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85C611476;
+	Sun, 15 Sep 2024 19:54:54 -0700 (PDT)
+Received: from [10.162.16.84] (a077893.blr.arm.com [10.162.16.84])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5DAB73F64C;
+	Sun, 15 Sep 2024 19:54:20 -0700 (PDT)
+Message-ID: <9d3286bd-7ad4-4472-aa26-2fb7d166fceb@arm.com>
+Date: Mon, 16 Sep 2024 08:24:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCXy8eZj+dmP_LGBQ--.63146S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jr47AFyktw13CrW8Zw18Xwb_yoW3AFg_GF
-	WxXrn7tw4fA3srtrn5Kan5Ar1xXrWfZFykGr1rWF13C390kFy5GFyDZr98A34rWws3t393
-	Wwn7tr1Sya17KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbDAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r15M2
-	8IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK
-	021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r
-	4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx
-	0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWU
-	JVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AKxV
-	WUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UCZXrU
-	UUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/7] x86/mm: Drop page table entry address output from
+ pxd_ERROR()
+To: Dave Hansen <dave.hansen@intel.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ x86@kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-fsdevel@vger.kernel.org, kasan-dev@googlegroups.com,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
+References: <20240913084433.1016256-1-anshuman.khandual@arm.com>
+ <20240913084433.1016256-3-anshuman.khandual@arm.com>
+ <8e8a94d4-39fe-4c34-9f5d-5b347ca8fe9a@intel.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <8e8a94d4-39fe-4c34-9f5d-5b347ca8fe9a@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Replace `brstack` workload with `sqrtloop` workload, because `sqrtloop`
-workload contains fork(), which is suitable for testing the bperf event
-inheritance feature.
 
-Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
----
- tools/perf/tests/shell/stat_bpf_counters.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
-index f250b7d6f773..831f02add75e 100755
---- a/tools/perf/tests/shell/stat_bpf_counters.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters.sh
-@@ -4,7 +4,7 @@
- 
- set -e
- 
--workload="perf test -w brstack"
-+workload="perf test -w sqrtloop"
- 
- # check whether $2 is within +/- 20% of $1
- compare_number()
--- 
-2.34.1
+On 9/13/24 22:51, Dave Hansen wrote:
+> On 9/13/24 01:44, Anshuman Khandual wrote:
+>> This drops page table entry address output from all pxd_ERROR() definitions
+>> which now matches with other architectures. This also prevents build issues
+>> while transitioning into pxdp_get() based page table entry accesses.
+> 
+> Could you be a _little_ more specific than "build issues"?  Is it that
+> you want to do:
+> 
+>  void pmd_clear_bad(pmd_t *pmd)
+>  {
+> -        pmd_ERROR(*pmd);
+> +        pmd_ERROR(pmdp_get(pmd));
+>          pmd_clear(pmd);
+>  }
+> 
+> But the pmd_ERROR() macro would expand that to:
+> 
+> 	&pmdp_get(pmd)
+> 
+> which is nonsense?
 
+Yes, that's the one which fails the build with the following warning.
+
+error: lvalue required as unary '&' operand
+
+Will update the commit message with these details about the build problem.
+
+> 
+> Having the PTEs' kernel addresses _is_ handy, but I guess they're
+> scrambled on most end users' systems now and anybody that's actively
+> debugging can just use a kprobe or something to dump the pmd_clear_bad()
+> argument directly.
+
+Right.
