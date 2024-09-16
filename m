@@ -1,57 +1,57 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A361591F1
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 13:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BF115AAC6
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 13:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726495112; cv=none; b=jNqEnMcoaZtOJMxDcLEYPAk4h0NBqqHbj87QULOFahWBI5OpkfKGyF9I4f0v2WjzZDLCHOv7MZZkQDFd3/r4QZuk3FZW3aXdsAMlzy+MyoJn9DoKsvg1z5hfiyxPyISUCVapi97nSuEoC8mHQn2CBFhi5e+6GyhIXwDkYJRVdDY=
+	t=1726495119; cv=none; b=LqLHdKqjOLoP4vaQJJ//HL36PGGNznHnKgNhKvhuieHaZCTK3iEWT/9Hh4O1X20nnIME6uXN7cCSjPH4cLTYu9VU+pp91rsyzizdWM/aJ5mqzNccAZ7MAfaGpij45DlFiFcNyaqoMcosP9a37v80x9LHeyJ91nHhj/h6QiI+hC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726495112; c=relaxed/simple;
-	bh=3cu2k6gc2jH2QRlu3LXOLx+bvkQ+zgDEXORBnmpwwJc=;
+	s=arc-20240116; t=1726495119; c=relaxed/simple;
+	bh=dTvkJQEBjfJBUyrVZVrGWbpyuBvUrffdGllEAiZzKVM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VHZ5r2DquWZE7zadQ2lzNB8rf2AJTWvXnmeFNxswyenDYKiBDqNozikhsXH3g/YR6zfr0jlIJpGNZSXvkG5Mus5lLWqcDBuiH0a785RvJt4/krhXOLmPOBBy4vpiVmJODu5wz6rlyTP+APrdByEcicZ9COvBd1GBo+GHS/6qhwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DjAl9MKK; arc=none smtp.client-ip=209.85.221.52
+	 MIME-Version; b=MBO/h0Zd0ps0BZzAeSAo8sFNS8il0Uz/VrUKMztecMlLbEcbdbtGsaVfPOsG9sSDq6aYRGJNe46LvDZ24DCa6XRdZh/sqb/fGdQ6Mg0jE7+X4560vB5FN3M7ugB68sUgKSP7gD9xQ36ZnNtRnyMW6vroQ5hT8YKlLgHC9spc4HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FROTD1lj; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DjAl9MKK"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-374c1e5fe79so3370324f8f.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 06:58:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FROTD1lj"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42cba0dc922so34575445e9.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Sep 2024 06:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726495109; x=1727099909; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1726495116; x=1727099916; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r6I1ojreNPMnAqnnyAmn/bcHu89TPQPwVi7gpVoP/po=;
-        b=DjAl9MKKA7VI4fhjfFLwW6yztxM5O4IIYnm/UzZJ3is4T6kVz+9Xcgdncx7WvZzoeQ
-         nRk3JaRmIZRO6D6XhiZektTzbF7dBsDWc0/ej4yrk0DiGHo6/ViPa4zR0xYf0L/atFMb
-         6M3R5+WP7RznOfH7U6yFAvvf+LvwWNFyQ/7MHHSvwH0V8l8Rs6zVcC8M1yE69LGBbN9k
-         GU5Wq57Nn+NXUWD6wgBOMKBkNZQ5TWMQEbqPJJJV89ssIOZWMSKJPpSqmZG/y6neNzYd
-         1zUNwODc7dRTL3RQFRfRRQcrasvMieIFC6fMyZOHPMyjvfx/97XJP2BKkVxhjxh0BAQy
-         AF5g==
+        bh=J/Q4dm5nWNN2kHtmEV1dKoCfXKla/YrO0a8mdji6DIM=;
+        b=FROTD1ljg4dmaZKS39RnKpYRjH0Zem8GJlBm0U4mcI6woySF9xnX9/sad6nY4nVTad
+         zi3zwfGUWkQvZsNUOim1h0rr+a7Wr7RXgcUeahxGBbOO2S5N6Hrl4OandsrxIG7WFabv
+         skpPfwrb0EWym1D5a+t7PbGhpTjevu4iXLEh0RJtZ3poyb9bP1fYdqtwgho/nN0svrkE
+         SEY7flvQ/wfn3v92PBwN58TgZiAqLZN5sRMA1RCERG3TBEHtUG2dznoyH5LCXV4yEGnA
+         /PGtHZ/QT2c/tUdiUNiTflPsfiNy2y5ru5L9FJAy63IjCb6XXgOKHiZoqStzr+ga/NSV
+         mb7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726495109; x=1727099909;
+        d=1e100.net; s=20230601; t=1726495116; x=1727099916;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r6I1ojreNPMnAqnnyAmn/bcHu89TPQPwVi7gpVoP/po=;
-        b=HDLnJ5KglKm4I75faqVUuVq7WM+di6ghhPCc49La5JLMZG0/uUsh7/9IrUsawukN93
-         VQRaqWei0521Q3js7XrSmVRcQzNpl+GWNLtziNV6TPaKExfg8Rx1RJRnTzES6pdadi4Y
-         psmoxoyg15NsqfUiVtjyoacQfVxHikIwFiuleOSVHXrU7Vu57kauCU+m3e3/ASiZkdJm
-         lvk3HFr/1wEaWNHHP6v5lwmv+S+Hwlm53Xx2Q6Owp+wK3F7ZmS8lpNcQvhZ9/NRDk7Zp
-         e9taPZ4IYXYMmvQdqCuXzYUFAk6UXnEooiGygNHdZi4GWtmssnrdK0oPDwsB2Gssai5o
-         hbzA==
-X-Gm-Message-State: AOJu0YywBbKb2mUinTc+8aSoe5O2EJ4yLaLNeXSmBekF+AqXWA1VdZoY
-	tqiA3VcVwe8mc2AAY7Gfr0bF4TK0RTe/0mMfe7PWdpBTN0848Iof2NuXg5zP/Ra3MHgLEf8MWc3
-	x0a4+0g==
-X-Google-Smtp-Source: AGHT+IFsrj9c9D2EcipbKadvrs/i4J9td9eJ+dOatQVeHhmva8RKXjoSO6yE9qOqsI6nilv8hZ9Unw==
-X-Received: by 2002:adf:ae51:0:b0:374:d157:c019 with SMTP id ffacd0b85a97d-378c2cfeb36mr8698434f8f.12.1726495109000;
-        Mon, 16 Sep 2024 06:58:29 -0700 (PDT)
+        bh=J/Q4dm5nWNN2kHtmEV1dKoCfXKla/YrO0a8mdji6DIM=;
+        b=dPfmggCDmtPs83KlkSDTduFIlcxdThuMmoUbggj3f6yc5om5T/jOv7gOilDaaTt8tG
+         2B7eIFNIAdWo7/Y1iNWpwQumFFZLLRu0JFqH3llv56dlVcgogGeaxc5scByONq+Ejmd9
+         /u2yT8o6Avn9rvSqzhafKgrVINSqOkiTQ0HTDJ8uuWzSHd+Mf8Q8xfJX88I+8YVemXvP
+         Ab4IIBudni1Nt1KsD2EMezE3zleCWxlV3H3ZpOl+v4zBsu/WXZp8vP7vUq2mk/F0vOpU
+         jChW0DAYJdxIYnnHBXmV3MfKW+wOwlMyzRSjTQqAFEVb4/BOtYXYomlPiD/YFpLElQAz
+         hSTQ==
+X-Gm-Message-State: AOJu0YzXRBbMEslqDKHxd4EWmRz3T/uvfoP9xCuPS2FTBLB2W1+Zl8os
+	5mvkE/devkMuLKgEntP8Hg4ER0GvhobcQ5tOleRXSYvEM/jgI0PKsQ0NUMUErTTttAwl3SNo3lz
+	2Bdlt2A==
+X-Google-Smtp-Source: AGHT+IFPjvdUr8a7pxtzlAcmP5XIdfDCWxcSeusMeAXrmeyVykL1AMAIIFJJfQRTYkSyTcytvjxS6w==
+X-Received: by 2002:a05:600c:474c:b0:42b:ac80:52ea with SMTP id 5b1f17b1804b1-42cdb5097fcmr124703765e9.6.1726495115549;
+        Mon, 16 Sep 2024 06:58:35 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e73f62dasm7285098f8f.49.2024.09.16.06.58.27
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e73f62dasm7285098f8f.49.2024.09.16.06.58.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2024 06:58:28 -0700 (PDT)
+        Mon, 16 Sep 2024 06:58:35 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: linux-perf-users@vger.kernel.org,
 	gankulkarni@os.amperecomputing.com,
@@ -80,9 +80,9 @@ Cc: James Clark <james.clark@linaro.org>,
 	Mathieu Poirier <mathieu.poirier@linaro.org>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 2/7] perf cs-etm: Use new OpenCSD consistency checks
-Date: Mon, 16 Sep 2024 14:57:33 +0100
-Message-Id: <20240916135743.1490403-3-james.clark@linaro.org>
+Subject: [PATCH v3 3/7] perf scripting python: Add function to get a config value
+Date: Mon, 16 Sep 2024 14:57:34 +0100
+Message-Id: <20240916135743.1490403-4-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240916135743.1490403-1-james.clark@linaro.org>
 References: <20240916135743.1490403-1-james.clark@linaro.org>
@@ -94,41 +94,116 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Previously when the incorrect binary was used for decode, Perf would
-silently continue to generate incorrect samples. With OpenCSD 1.5.4 we
-can enable consistency checks that do a best effort to detect a mismatch
-in the image. When one is detected a warning is printed and sample
-generation stops until the trace resynchronizes with a good part of the
-image.
+This can be used to get config values like which objdump Perf uses for
+disassembly.
 
-Reported-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Closes: https://lore.kernel.org/all/20240719092619.274730-1-gankulkarni@os.amperecomputing.com/
 Reviewed-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ .../perf/Documentation/perf-script-python.txt |  2 +-
+ .../scripts/python/Perf-Trace-Util/Context.c  | 11 ++++++++++
+ tools/perf/util/config.c                      | 22 +++++++++++++++++++
+ tools/perf/util/config.h                      |  1 +
+ 4 files changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-index b78ef0262135..b85a8837bddc 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-@@ -685,9 +685,14 @@ cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
- 	}
+diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
+index 13e37e9385ee..27a1cac6fe76 100644
+--- a/tools/perf/Documentation/perf-script-python.txt
++++ b/tools/perf/Documentation/perf-script-python.txt
+@@ -624,7 +624,7 @@ as perf_trace_context.perf_script_context .
+  perf_set_itrace_options(context, itrace_options) - set --itrace options if they have not been set already
+  perf_sample_srcline(context) - returns source_file_name, line_number
+  perf_sample_srccode(context) - returns source_file_name, line_number, source_line
+-
++ perf_config_get(config_name) - returns the value of the named config item, or None if unset
  
- 	if (d_params->operation == CS_ETM_OPERATION_DECODE) {
-+		int decode_flags = OCSD_CREATE_FLG_FULL_DECODER;
-+#ifdef OCSD_OPFLG_N_UNCOND_DIR_BR_CHK
-+		decode_flags |= OCSD_OPFLG_N_UNCOND_DIR_BR_CHK | OCSD_OPFLG_CHK_RANGE_CONTINUE |
-+				ETM4_OPFLG_PKTDEC_AA64_OPCODE_CHK;
-+#endif
- 		if (ocsd_dt_create_decoder(decoder->dcd_tree,
- 					   decoder->decoder_name,
--					   OCSD_CREATE_FLG_FULL_DECODER,
-+					   decode_flags,
- 					   trace_config, &csid))
- 			return -1;
+ Util.py Module
+ ~~~~~~~~~~~~~~
+diff --git a/tools/perf/scripts/python/Perf-Trace-Util/Context.c b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
+index 3954bd1587ce..01f54d6724a5 100644
+--- a/tools/perf/scripts/python/Perf-Trace-Util/Context.c
++++ b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
+@@ -12,6 +12,7 @@
+ #define PY_SSIZE_T_CLEAN
  
+ #include <Python.h>
++#include "../../../util/config.h"
+ #include "../../../util/trace-event.h"
+ #include "../../../util/event.h"
+ #include "../../../util/symbol.h"
+@@ -182,6 +183,15 @@ static PyObject *perf_sample_srccode(PyObject *obj, PyObject *args)
+ 	return perf_sample_src(obj, args, true);
+ }
+ 
++static PyObject *__perf_config_get(PyObject *obj, PyObject *args)
++{
++	const char *config_name;
++
++	if (!PyArg_ParseTuple(args, "s", &config_name))
++		return NULL;
++	return Py_BuildValue("s", perf_config_get(config_name));
++}
++
+ static PyMethodDef ContextMethods[] = {
+ #ifdef HAVE_LIBTRACEEVENT
+ 	{ "common_pc", perf_trace_context_common_pc, METH_VARARGS,
+@@ -199,6 +209,7 @@ static PyMethodDef ContextMethods[] = {
+ 	  METH_VARARGS,	"Get source file name and line number."},
+ 	{ "perf_sample_srccode", perf_sample_srccode,
+ 	  METH_VARARGS,	"Get source file name, line number and line."},
++	{ "perf_config_get", __perf_config_get, METH_VARARGS, "Get perf config entry"},
+ 	{ NULL, NULL, 0, NULL}
+ };
+ 
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 7a650de0db83..68f9407ca74b 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -912,6 +912,7 @@ void set_buildid_dir(const char *dir)
+ struct perf_config_scan_data {
+ 	const char *name;
+ 	const char *fmt;
++	const char *value;
+ 	va_list args;
+ 	int ret;
+ };
+@@ -939,3 +940,24 @@ int perf_config_scan(const char *name, const char *fmt, ...)
+ 
+ 	return d.ret;
+ }
++
++static int perf_config_get_cb(const char *var, const char *value, void *data)
++{
++	struct perf_config_scan_data *d = data;
++
++	if (!strcmp(var, d->name))
++		d->value = value;
++
++	return 0;
++}
++
++const char *perf_config_get(const char *name)
++{
++	struct perf_config_scan_data d = {
++		.name = name,
++		.value = NULL,
++	};
++
++	perf_config(perf_config_get_cb, &d);
++	return d.value;
++}
+diff --git a/tools/perf/util/config.h b/tools/perf/util/config.h
+index 2e5e808928a5..9971313d61c1 100644
+--- a/tools/perf/util/config.h
++++ b/tools/perf/util/config.h
+@@ -30,6 +30,7 @@ typedef int (*config_fn_t)(const char *, const char *, void *);
+ int perf_default_config(const char *, const char *, void *);
+ int perf_config(config_fn_t fn, void *);
+ int perf_config_scan(const char *name, const char *fmt, ...) __scanf(2, 3);
++const char *perf_config_get(const char *name);
+ int perf_config_set(struct perf_config_set *set,
+ 		    config_fn_t fn, void *data);
+ int perf_config_int(int *dest, const char *, const char *);
 -- 
 2.34.1
 
