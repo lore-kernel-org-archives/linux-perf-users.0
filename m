@@ -1,189 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC5B1534E9;
-	Tue, 17 Sep 2024 22:07:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0732D192B65;
+	Tue, 17 Sep 2024 22:28:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726610873; cv=none; b=Z6afiaqibG/WoDGnTQo2eDfBNvcG9i5MFJqLrxTDC0s8x+SNaP9kriFMfqGIND8M00UucBO4dWKOyQA5DCSmqTRGF7f3HaibRZc4JwuBhb+odTS938SdrLI6nPs9gvamdk3g3RIXi1GWAySCkqCvtuiabyaJIeyjDJ9HaeIgT+0=
+	t=1726612107; cv=none; b=S8tYbDHVMpRMFJZIhIBgmUQbp1Ez9ZJGYOMOr3FYG46IySsAIBDOYvwG2puvmtp3vNYZFO2cNVJqQ6dqheRtl1y+T7XM/YMOTE3t+G7FUKRQ/FXH5ZCs2QjwEDL/9iq+bMejwj0YvFYvF1GAThCEDednjyMJ2Jf+3Ge187p0ciI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726610873; c=relaxed/simple;
-	bh=DcuKuvbMdwbeLQDLbDaV5ujKJiI0JjD8+iTRjt9kt2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=liuXOS6wa68cFpI1iGKkIDoogabqjJGuRdIKsslS/RA784bbA9pwQZcWB1OnLUtaSj2zHawEfmdQJ5UEaGVINhLBc/4+3m4UgoP1ODsy9YlJhQ1v9XDqpkYzbNQsLq5A2NXLfJelK9An3SLjjC1f2JJyrprW5MUvEXJN/e2uTWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pT1ySX8F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726612107; c=relaxed/simple;
+	bh=ukObCMspFSCFE55xSfnhSqn0sZVwDJhzCm5JUIv+TK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AwMHwipOGfr+otzE2CYUwaA0Ma0sYs8+Vf0ZAzOyT+Kay3U+BPOjoknWVV8HXRlORcvyfkqe+srNdbGNFD8jt00hYHGuxaUCv+0QhY6nCOqn3rR0/NeARp/Qh5Id81YGf8nIkZmFTZOSrxU9Gk2Z04qjhRUddAiI8voGfwEeKC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oRLlo5lG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pT1ySX8F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A2A8C4CEC5;
-	Tue, 17 Sep 2024 22:07:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRLlo5lG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E91D5C4CECD;
+	Tue, 17 Sep 2024 22:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726610872;
-	bh=DcuKuvbMdwbeLQDLbDaV5ujKJiI0JjD8+iTRjt9kt2c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pT1ySX8F5p8k0PsjfYtxmq7rSQsEWhS8DU/I23ERlYPjbr+wE3roviRikmBOW88tO
-	 Mb8NBS1+vfZmCVVkqZXTxGkIjHYULvjfCjb3bokrQTghHnM6GSrPCyDW/NU9ZTO/HI
-	 qiMp+HIAXMxu5DyUnSy3aJj9sntefIhhYG83Ei84mwBOHzWwcMiZPAqW4y1ipTD1if
-	 J4FrSALJ93uPZod2/J1uPuI3dse6bVejxEFHYMRTEtgema8nhBMxPNTXAsKfmIKT2x
-	 efiD0EVGz7opE5F9tsbmh5d3akOlEEjQfQPGTkqtR2OspCD8ewrsHut8eiZ2WWViZj
-	 sdvFgF3JL7cEw==
-Date: Tue, 17 Sep 2024 15:07:43 -0700
+	s=k20201202; t=1726612106;
+	bh=ukObCMspFSCFE55xSfnhSqn0sZVwDJhzCm5JUIv+TK8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oRLlo5lGbC5AbGkgYAW4uo1S+3wuOY1cvHmY6lqZ2hwVREmKzh0zZXWW8litnuuP8
+	 ikFcs1ahw3CazAkkvvmXrvag2boikZ2xrschEg5md53C0F3EOGQoLErUyUVN4Xf4CT
+	 btDSwcsfPc3g5W1EZ+hUVLnThRNRRiQFYG8pEBty/To7ZnzdOUcr3x9vW6FCi29FkI
+	 2VoMLt/HxuXr068ngW36+1t5lUqz3y40LILkWKBtPUKJPOc1tWR9giMw284jgMaxIf
+	 ZPSfXMByKvRA7qwI8pfWyCVBVoadUOHYpQaGxJ2YMkZqiK/L1+sv8cjbb2yc0a2JYS
+	 IvYOpmcs096+Q==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>
-Subject: Re: [PATCH v2 09/11] perf: Introduce deferred user callchains
-Message-ID: <Zun9r1TAAG1slUSA@google.com>
-References: <cover.1726268190.git.jpoimboe@kernel.org>
- <5bc834b68fe14daaa1782b925ab54fc414245334.1726268190.git.jpoimboe@kernel.org>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	linux-toolchains@vger.kernel.org
+Subject: [RFC/PATCHSET 0/5] perf tools: Support deferred user callchains (v2)
+Date: Tue, 17 Sep 2024 15:28:15 -0700
+Message-ID: <20240917222820.197594-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.46.0.792.g87dc391469-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5bc834b68fe14daaa1782b925ab54fc414245334.1726268190.git.jpoimboe@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Sep 14, 2024 at 01:02:11AM +0200, Josh Poimboeuf wrote:
-> Instead of attempting to unwind user space from the NMI handler, defer
-> it to run in task context by sending a self-IPI and then scheduling the
-> unwind to run in the IRQ's exit task work before returning to user space.
-> 
-> This allows the user stack page to be paged in if needed, avoids
-> duplicate unwinds for kernel-bound workloads, and prepares for SFrame
-> unwinding (so .sframe sections can be paged in on demand).
-> 
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> ---
-[SNIP]  
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 19fd7bd38ecf..5fc7c5156287 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -6854,11 +6860,70 @@ static void perf_pending_irq(struct irq_work *entry)
->  		perf_swevent_put_recursion_context(rctx);
->  }
->  
-> +struct perf_callchain_deferred_event {
-> +	struct perf_event_header	header;
-> +	struct perf_callchain_entry	callchain;
-> +};
-> +
-> +#define PERF_CALLCHAIN_DEFERRED_EVENT_SIZE				\
-> +	sizeof(struct perf_callchain_deferred_event) +			\
-> +	(sizeof(__u64) * 1) + /* PERF_CONTEXT_USER */			\
-> +	(sizeof(__u64) * PERF_MAX_STACK_DEPTH)
-> +
-> +static void perf_event_callchain_deferred(struct perf_event *event)
-> +{
-> +	struct pt_regs *regs = task_pt_regs(current);
-> +	struct perf_callchain_entry *callchain;
-> +	struct perf_output_handle handle;
-> +	struct perf_sample_data data;
-> +	unsigned char buf[PERF_CALLCHAIN_DEFERRED_EVENT_SIZE];
-> +	struct perf_callchain_entry_ctx ctx;
-> +	struct perf_callchain_deferred_event *deferred_event;
-> +
-> +	deferred_event = (void *)&buf;
-> +
-> +	callchain = &deferred_event->callchain;
-> +	callchain->nr = 0;
-> +
-> +	ctx.entry		= callchain;
-> +	ctx.max_stack		= MIN(event->attr.sample_max_stack,
-> +				      PERF_MAX_STACK_DEPTH);
-> +	ctx.nr			= 0;
-> +	ctx.contexts		= 0;
-> +	ctx.contexts_maxed	= false;
-> +
-> +	perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
-> +	perf_callchain_user_deferred(&ctx, regs);
-> +
-> +	deferred_event->header.type = PERF_RECORD_CALLCHAIN_DEFERRED;
-> +	deferred_event->header.misc = 0;
+Hello,
 
-I think we can use PERF_RECORD_MISC_USER here as it's about user
-callchains.
+This is a counterpart for Josh's kernel change v2 [1] to support deferred
+user callchains.  The change is transparent and users should not notice
+anything with the deferred callchains.
 
-> +	deferred_event->header.size = sizeof(*deferred_event) +
-> +				      (callchain->nr * sizeof(u64));
-> +
-> +	perf_event_header__init_id(&deferred_event->header, &data, event);
-> +
-> +	if (perf_output_begin(&handle, &data, event,
-> +			      deferred_event->header.size))
-> +		return;
-> +
-> +	perf_output_copy(&handle, deferred_event, deferred_event->header.size);
+  $ perf record -g sleep 1
 
-You should not copy the whole event size because it also contains the
-id_sample parts in the below.  Maybe something like this instead?
+I added --[no-]merge-callchains option to control output of perf script.
+You can verify it has the deferred callchains like this:
 
-	perf_output_put(&handle, *deferred_event);
-	__output_copy(&handle, callchain->ip, callchain->nr * sizeof(u64));
+  $ perf script --no-merge-callchains
+  perf     801 [000]    18.031793:          1 cycles:P:
+          ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.kallsyms])
+          ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
+          ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
+          ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
+          ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
+          ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsyms])
+          ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
+          ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsyms])
+          ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
+          ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
+          ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
+          ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
+          ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
+
+  perf     801 [000]    18.031814: DEFERRED CALLCHAIN
+                  7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-gnu/libc.so.6)
+
+  ...
+
+When the callchain is merged (it's the default) it'd look like below:
+
+  $ perf script
+  perf     801 [000]    18.031793:          1 cycles:P:
+          ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.kallsyms])
+          ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
+          ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
+          ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
+          ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
+          ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsyms])
+          ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
+          ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsyms])
+          ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
+          ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
+          ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
+          ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
+          ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
+                  7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-gnu/libc.so.6)
+
+  ...
+
+Notice that the last line and it has the __GI___ioctl in the same
+callchain.  It should work with other tools like perf report.
+
+The code is available at 'perf/defer-callchain-v2' branch in
+https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 Thanks,
 Namhyung
 
+[1] https://lore.kernel.org/lkml/cover.1726268190.git.jpoimboe@kernel.org
 
-> +	perf_event__output_id_sample(event, &handle, &data);
-> +	perf_output_end(&handle);
-> +}
-> +
->  static void perf_pending_task(struct callback_head *head)
->  {
->  	struct perf_event *event = container_of(head, struct perf_event, pending_task);
->  	int rctx;
->  
-> +	if (!is_software_event(event)) {
-> +		if (event->pending_callchain) {
-> +			perf_event_callchain_deferred(event);
-> +			event->pending_callchain = 0;
-> +		}
-> +		return;
-> +	}
-> +
->  	/*
->  	 * All accesses to the event must belong to the same implicit RCU read-side
->  	 * critical section as the ->pending_work reset. See comment in
-> @@ -7688,6 +7753,8 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
->  	bool user   = !event->attr.exclude_callchain_user;
->  	const u32 max_stack = event->attr.sample_max_stack;
->  	struct perf_callchain_entry *callchain;
-> +	bool defer_user = IS_ENABLED(CONFIG_HAVE_PERF_CALLCHAIN_DEFERRED) &&
-> +			  event->attr.defer_callchain;
->  
->  	/* Disallow cross-task user callchains. */
->  	user &= !event->ctx->task || event->ctx->task == current;
-> @@ -7695,7 +7762,14 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
->  	if (!kernel && !user)
->  		return &__empty_callchain;
->  
-> -	callchain = get_perf_callchain(regs, kernel, user, max_stack, true);
-> +	callchain = get_perf_callchain(regs, kernel, user, max_stack, true,
-> +				       defer_user);
-> +
-> +	if (user && defer_user && !event->pending_callchain) {
-> +		event->pending_callchain = 1;
-> +		irq_work_queue(&event->pending_irq);
-> +	}
-> +
->  	return callchain ?: &__empty_callchain;
->  }
->  
-> -- 
-> 2.46.0
-> 
+
+Namhyung Kim (5):
+  perf tools: Sync UAPI perf_event.h header
+  perf tools: Minimal DEFERRED_CALLCHAIN support
+  perf record: Enable defer_callchain for user callchains
+  perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
+  perf tools: Merge deferred user callchains
+
+ tools/include/uapi/linux/perf_event.h     | 21 +++++-
+ tools/lib/perf/include/perf/event.h       |  7 ++
+ tools/perf/Documentation/perf-script.txt  |  5 ++
+ tools/perf/builtin-script.c               | 92 +++++++++++++++++++++++
+ tools/perf/util/callchain.c               | 24 ++++++
+ tools/perf/util/callchain.h               |  3 +
+ tools/perf/util/event.c                   |  1 +
+ tools/perf/util/evlist.c                  |  1 +
+ tools/perf/util/evlist.h                  |  1 +
+ tools/perf/util/evsel.c                   | 32 +++++++-
+ tools/perf/util/evsel.h                   |  1 +
+ tools/perf/util/machine.c                 |  1 +
+ tools/perf/util/perf_event_attr_fprintf.c |  1 +
+ tools/perf/util/sample.h                  |  3 +-
+ tools/perf/util/session.c                 | 78 +++++++++++++++++++
+ tools/perf/util/tool.c                    |  2 +
+ tools/perf/util/tool.h                    |  4 +-
+ 17 files changed, 273 insertions(+), 4 deletions(-)
+
+-- 
+2.46.0.792.g87dc391469-goog
+
