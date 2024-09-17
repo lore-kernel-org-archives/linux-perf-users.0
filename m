@@ -1,59 +1,67 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E930165F08
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Sep 2024 10:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4F0219ED;
+	Tue, 17 Sep 2024 10:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726569330; cv=none; b=HNFbPZjG7xVAKGvX/Y9qHSy48QJWxiWoSZhaCRxrbXuKLt/OvQbdKHOmLQ9E3lytZZ+mj0xhmysHjHh9r3uWwtHN+TJnsaVA0u4/T9wmFWgY2tsiIsDZrNf6qZyf49tUV9CgBwQ1Ess2nJLO+ZtD4QLARcBHV/Z9tX/WrUlPYjY=
+	t=1726570703; cv=none; b=kA5uR6xNXvhy/aB/24aSBUgvgHnHQ6R6497bfE/X24zGYZ3mDfvxs2NkD46ajUXS8H0Pf/AMfagTwXn1sZIk+mWuZ1giwOs91YLDSjGu1XV6WjwrnpUJuJp6hHVfZXBZTg1ACs1JFAparpzfEuidCvf8ImZuynKHkLGcjb66Tvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726569330; c=relaxed/simple;
-	bh=OLLhui7Jzx1RAtm7SPJ/skbZFwqbpC+tssfd5yQyu4Y=;
+	s=arc-20240116; t=1726570703; c=relaxed/simple;
+	bh=IzMuiBOejD8SXsFTpNVG/91tA8LVUWgFaCjUbYdAO04=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pygy0+Wtmcy9A295pvBNpOKznOtRmCsa/J9D6rWQW41Bd0kLGbwnJdGKtRh2LgsMScl62iEmIGHxRDiqlOdoZLQwMZolby4td1OeMXwH+nXpRloX313VpS33f7bH8zlg3TFUjuDSbaU+2H48zuZ8V9v1dAmxlKL0E0VqpT0ZJjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T8OXs0j8; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=eF48q6VxteR4holmgWjc2Vlzyq/RdTxMvtXhBWinafn2WiIEQ06xskQ1hwbFqaeGRF5NYzIF6I67yJXp4C47x6LLacj3ZsxmJGVsop+vA/Xce78d6Yb8I79Cw5Dgb0Mo+6fZgAJ1TVMx5mMtofcfFPRM38dOmwNsoqb2a7BmziI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UjW0AdMG; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T8OXs0j8"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42cb1e623d1so53524685e9.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Sep 2024 03:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726569327; x=1727174127; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XAMPodNnJ2ZsXz40AQFpJhiS0Su6b6Jl7GEjAbtsmnw=;
-        b=T8OXs0j8mhT0ebYPwAGmaqJucLUO3XalxUL/WdhFZb0QFvc+fS57kObLKtCoQ94fEr
-         sfWcIhLr2WWunNKi7eu0MN/szUgFKkgQ2hkPurUDRBM/Q5LkQD6vqYEspv4TutCdt6J2
-         ilHz7ThyC5xFwJYCZammBy3xOz2dlycJ6X9Q/B2/fEdigDF7VxP4nbYQ6hXLwe9nZoA5
-         NuNXhMqcfy7FxdRcJdWykQDNwFA88lnxbdwn0R3VQbq6+Wn7gn/Yw5wz0gXCGtpeYlII
-         +Q9ZplXKpq1hcDqckZudPcePxLK2XGyAaHmEVAlXr81xY0a0yN6/mrurZAeGt2Vrkqrv
-         4qMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726569327; x=1727174127;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XAMPodNnJ2ZsXz40AQFpJhiS0Su6b6Jl7GEjAbtsmnw=;
-        b=MRPCwy9B7j1z+7JcIyDF/lWgEqWqfFo7nKn0cHCR/I5Mr53MRyD7/5nFniF9B4VZDQ
-         H2XzTt5rxXlfOz/86qU1dqXtyp/MTASkLikFhb+G+0gonW1M0jtK5xaWKKVPe4xLiXug
-         +r839OKIi7kQfv9VV0ScDGGBqzFy57GrKTYrw9+NvRATd8ZwFGKMXF1enFNrMhseUIak
-         acrq1O/lg9YTqJEznH4qvl5ymzw3TBgmEWN3hI0Nck3PjSwIEUgG/gsqlGdiHtFKIpmS
-         xXaGvphc6kDL8rFw7GZfVkVQl6GOqt6GlqUcFakAqnNaI11Pj/r2qcadpcVH9Cs58oep
-         5WUg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8v6e9Kkq9UUGgpgtHlgNfgahO4Wl8hU6hdlABNyVCFfsPxFHpxVZmyiurQV/nfM+22mgirXeSp93p1NEyBSDo@vger.kernel.org
-X-Gm-Message-State: AOJu0YycI3wqMVWblt+k9Yn0Oz8szURa0N99BjmEHYDF/LtkE8dlM+4O
-	b9O9suL6TbE87N8i38INBbi1IlsmSVh6ZPsZSj/Vovmy0Y5YIyKgxdHFGTubEe4=
-X-Google-Smtp-Source: AGHT+IHm2U6xGx8sJ45qJ+gaD5HpJzgUWnBj/vF3uyDj48BPvEIizm46jt2g7TAhkcwfXFaD/x2Spw==
-X-Received: by 2002:a05:600c:45cf:b0:42c:a802:540a with SMTP id 5b1f17b1804b1-42cdb511f33mr152169365e9.7.1726569326660;
-        Tue, 17 Sep 2024 03:35:26 -0700 (PDT)
-Received: from [192.168.1.61] ([84.67.228.188])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e6bc2c7c2sm9952775e9.0.2024.09.17.03.35.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2024 03:35:26 -0700 (PDT)
-Message-ID: <f022afad-793d-4a3d-acad-13fd27dd5e62@linaro.org>
-Date: Tue, 17 Sep 2024 11:35:46 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UjW0AdMG"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48HA4l1f031051;
+	Tue, 17 Sep 2024 10:57:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:reply-to
+	:from:in-reply-to:content-type:content-transfer-encoding; s=pp1;
+	 bh=0dFKfQlU63J4x9Kv0Trg8wyXx2LL9Si9gsosnZgyWyM=; b=UjW0AdMGQGmN
+	cM1ND9pbD+V2+N2WECErqPNiFxuqdS5PbkAhPmYa1BWgv9Mjgx6RGpHiQtFUaRVN
+	+X91mEz+bOph20TPzRmuis6nx9UxEQ+vTBIVumZXzsUXsu9yr7mcGWBxzdsRQt7v
+	E914pKhVLnVYUMULFPwwnJ8YbFa1pVgkLIocR8WJIxKDEPDdw8NxJiv/kUDMAfTK
+	z8Kycw+6VoeW3uJM+pjdYtIvLczgn4FxX17XvRYI2FWHCO1ZVoKUe5yW2Mkzeyhs
+	vBMgjN1dyrWkGoZ2tMtf/fCtm250kDUs3anqG2zeUXVOfoG+uWZCohA3S5hc+6gL
+	PGmL0MLdXg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41n3vnq3cn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Sep 2024 10:57:49 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 48HAvjnh005102;
+	Tue, 17 Sep 2024 10:57:48 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41n3vnq3cg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Sep 2024 10:57:48 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48HAcNoS001823;
+	Tue, 17 Sep 2024 10:57:47 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 41nqh3md42-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Sep 2024 10:57:47 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48HAvk1b22479570
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 17 Sep 2024 10:57:46 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 65AE058052;
+	Tue, 17 Sep 2024 10:57:46 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C5B0C58056;
+	Tue, 17 Sep 2024 10:57:37 +0000 (GMT)
+Received: from [9.204.206.228] (unknown [9.204.206.228])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 17 Sep 2024 10:57:37 +0000 (GMT)
+Message-ID: <af4000b6-02c7-4160-8207-57f34239bd49@linux.ibm.com>
+Date: Tue, 17 Sep 2024 16:27:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,26 +70,40 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 0/5] perf sched: Introduce stats tool
-To: Ravi Bangoria <ravi.bangoria@amd.com>, swapnil.sapkal@amd.com
-Cc: yu.c.chen@intel.com, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, rostedt@goodmis.org,
- vincent.guittot@linaro.org, bristot@redhat.com, adrian.hunter@intel.com,
- james.clark@arm.com, kan.liang@linux.intel.com, gautham.shenoy@amd.com,
- kprateek.nayak@amd.com, juri.lelli@redhat.com, yangjihong@bytedance.com,
- void@manifault.com, tj@kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, santosh.shukla@amd.com,
- ananth.narayan@amd.com, sandipan.das@amd.com, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, irogers@google.com
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: irogers@google.com, namhyung@kernel.org, acme@kernel.org,
+        peterz@infradead.org, swapnil.sapkal@amd.com, yu.c.chen@intel.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, rostedt@goodmis.org, vincent.guittot@linaro.org,
+        bristot@redhat.com, adrian.hunter@intel.com, james.clark@arm.com,
+        kan.liang@linux.intel.com, gautham.shenoy@amd.com,
+        kprateek.nayak@amd.com, juri.lelli@redhat.com,
+        yangjihong@bytedance.com, void@manifault.com, tj@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        santosh.shukla@amd.com, ananth.narayan@amd.com, sandipan.das@amd.com,
+        mingo@redhat.com, Madadi Vineeth Reddy <vineethr@linux.ibm.com>
 References: <20240916164722.1838-1-ravi.bangoria@amd.com>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
+Reply-To: 20240916164722.1838-1-ravi.bangoria@amd.com
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
 In-Reply-To: <20240916164722.1838-1-ravi.bangoria@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: W9Xwj_4eqYQ3okMpBkE-XElKP-zJsmJQ
+X-Proofpoint-GUID: 80uqf8cxpmRt6lT6KPzkgGTyepYm4-gR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-17_02,2024-09-16_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 clxscore=1011 malwarescore=0 bulkscore=0
+ impostorscore=0 spamscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
+ definitions=main-2409170076
 
+Hi Ravi,
 
-
-On 16/09/2024 17:47, Ravi Bangoria wrote:
+On 16/09/24 22:17, Ravi Bangoria wrote:
 > MOTIVATION
 > ----------
 > 
@@ -99,6 +121,15 @@ On 16/09/2024 17:47, Ravi Bangoria wrote:
 > there is almost zero interference on workload run. Also, it takes very
 > minimal time to parse /proc/schedstat, convert it into perf samples and
 > save those samples into perf.data file. Result perf.data file is much
+
+per.data file is empty after the record.
+
+Error:
+The perf.data data has no samples!
+
+Thanks and Regards
+Madadi Vineeth Reddy
+
 > smaller. So, overall `perf sched stats record` is much more light weight
 > compare to `perf sched record`.
 > 
@@ -109,125 +140,4 @@ On 16/09/2024 17:47, Ravi Bangoria wrote:
 > Please note that, this is not a replacement of perf sched record/report.
 > The intended users of the new tool are scheduler developers, not regular
 > users.
-> 
-> USAGE
-> -----
-> 
->    # perf sched stats record
->    # perf sched stats report
-> 
-> Note: Although `perf sched stats` tool supports workload profiling syntax
-> (i.e. -- <workload> ), the recorded profile is still systemwide since the
-> /proc/schedstat is a systemwide file.
-> 
-> HOW TO INTERPRET THE REPORT
-> ---------------------------
-> 
-> The `perf sched stats report` starts with total time profiling was active
-> in terms of jiffies:
-> 
->    ----------------------------------------------------------------------------------------------------
->    Time elapsed (in jiffies)                                   :       24537
->    ----------------------------------------------------------------------------------------------------
-> 
-> Next is CPU scheduling statistics. These are simple diffs of
-> /proc/schedstat CPU lines along with description. The report also
-> prints % relative to base stat.
-> 
-> In the example below, schedule() left the CPU0 idle 98.19% of the time.
-> 16.54% of total try_to_wake_up() was to wakeup local CPU. And, the total
-> waittime by tasks on CPU0 is 0.49% of the total runtime by tasks on the
-> same CPU.
-> 
->    ----------------------------------------------------------------------------------------------------
->    CPU 0
->    ----------------------------------------------------------------------------------------------------
->    sched_yield() count                                         :           0
->    Legacy counter can be ignored                               :           0
->    schedule() called                                           :       17138
->    schedule() left the processor idle                          :       16827 ( 98.19% )
->    try_to_wake_up() was called                                 :         508
->    try_to_wake_up() was called to wake up the local cpu        :          84 ( 16.54% )
->    total runtime by tasks on this processor (in jiffies)       :  2408959243
->    total waittime by tasks on this processor (in jiffies)      :    11731825 ( 0.49% )
->    total timeslices run on this cpu                            :         311
->    ----------------------------------------------------------------------------------------------------
-> 
-> Next is load balancing statistics. For each of the sched domains
-> (eg: `SMT`, `MC`, `DIE`...), the scheduler computes statistics under
-> the following three categories:
-> 
->    1) Idle Load Balance: Load balancing performed on behalf of a long
->                          idling CPU by some other CPU.
->    2) Busy Load Balance: Load balancing performed when the CPU was busy.
->    3) New Idle Balance : Load balancing performed when a CPU just became
->                          idle.
-> 
-> Under each of these three categories, sched stats report provides
-> different load balancing statistics. Along with direct stats, the
-> report also contains derived metrics prefixed with *. Example:
-> 
->    ----------------------------------------------------------------------------------------------------
->    CPU 0 DOMAIN SMT CPUS <0, 64>
->    ----------------------------------------- <Category idle> ------------------------------------------
->    load_balance() count on cpu idle                                 :          50   $      490.74 $
->    load_balance() found balanced on cpu idle                        :          42   $      584.21 $
->    load_balance() move task failed on cpu idle                      :           8   $     3067.12 $
->    imbalance sum on cpu idle                                        :           8
->    pull_task() count on cpu idle                                    :           0
->    pull_task() when target task was cache-hot on cpu idle           :           0
->    load_balance() failed to find busier queue on cpu idle           :           0   $        0.00 $
->    load_balance() failed to find busier group on cpu idle           :          42   $      584.21 $
->    *load_balance() success count on cpu idle                        :           0
->    *avg task pulled per successful lb attempt (cpu idle)            :        0.00
->    ----------------------------------------- <Category busy> ------------------------------------------
->    load_balance() count on cpu busy                                 :           2   $    12268.50 $
->    load_balance() found balanced on cpu busy                        :           2   $    12268.50 $
->    load_balance() move task failed on cpu busy                      :           0   $        0.00 $
->    imbalance sum on cpu busy                                        :           0
->    pull_task() count on cpu busy                                    :           0
->    pull_task() when target task was cache-hot on cpu busy           :           0
->    load_balance() failed to find busier queue on cpu busy           :           0   $        0.00 $
->    load_balance() failed to find busier group on cpu busy           :           1   $    24537.00 $
->    *load_balance() success count on cpu busy                        :           0
->    *avg task pulled per successful lb attempt (cpu busy)            :        0.00
->    ---------------------------------------- <Category newidle> ----------------------------------------
->    load_balance() count on cpu newly idle                           :         427   $       57.46 $
->    load_balance() found balanced on cpu newly idle                  :         382   $       64.23 $
->    load_balance() move task failed on cpu newly idle                :          45   $      545.27 $
->    imbalance sum on cpu newly idle                                  :          48
->    pull_task() count on cpu newly idle                              :           0
->    pull_task() when target task was cache-hot on cpu newly idle     :           0
->    load_balance() failed to find busier queue on cpu newly idle     :           0   $        0.00 $
->    load_balance() failed to find busier group on cpu newly idle     :         382   $       64.23 $
->    *load_balance() success count on cpu newly idle                  :           0
->    *avg task pulled per successful lb attempt (cpu newly idle)      :        0.00
->    ----------------------------------------------------------------------------------------------------
-> 
-> Consider following line:
-> 
->    load_balance() found balanced on cpu newly idle                  :         382    $      64.23 $
-> 
-> While profiling was active, the load-balancer found 382 times the load
-> needs to be balanced on a newly idle CPU 0. Following value encapsulated
-> inside $ is average jiffies between two events (24537 / 382 = 64.23).
 
-This explanation of the $ fields is quite buried. Is there a way of 
-making it clearer with a column header in the report? I think even if it 
-was documented in the man pages it might not be that useful.
-
-There are also other jiffies fields that don't use $. Maybe if it was 
-like this it could be semi self documenting:
-
-----------------------------------------------------------------------
-     Time elapsed (in jiffies)               :        $  24537        $ 
-  ----------------------------------------------------------------------
-
-------------------<Category newidle> ---------------------------------
-   load_balance() count on cpu newly idle    :   427  $     57.46 avg $
-----------------------------------------------------------------------
-
-
-Other than that:
-
-Tested-by: James Clark <james.clark@linaro.org>
