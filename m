@@ -1,67 +1,50 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4F0219ED;
-	Tue, 17 Sep 2024 10:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FF6E57D;
+	Tue, 17 Sep 2024 11:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726570703; cv=none; b=kA5uR6xNXvhy/aB/24aSBUgvgHnHQ6R6497bfE/X24zGYZ3mDfvxs2NkD46ajUXS8H0Pf/AMfagTwXn1sZIk+mWuZ1giwOs91YLDSjGu1XV6WjwrnpUJuJp6hHVfZXBZTg1ACs1JFAparpzfEuidCvf8ImZuynKHkLGcjb66Tvw=
+	t=1726571957; cv=none; b=o2K+r8xwMxypU+3YlnmbYh6BmO+u2OrEgcAsbAEaOp05tLJbVi2hhvNd50aGOO249m4ro6F9DxiDKY4NvOkOnL8xm+vxwRsi4Kl3iNONvLQsl/Y3N5cMtdyO74puXckeWMs1k7cO3rSpadxyKUltSa/KFnIpU1e/ICGegz0KlbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726570703; c=relaxed/simple;
-	bh=IzMuiBOejD8SXsFTpNVG/91tA8LVUWgFaCjUbYdAO04=;
+	s=arc-20240116; t=1726571957; c=relaxed/simple;
+	bh=9c0r+SK6yFndixT3JCN6TZFvWJo6HS+B9/y/Mhtg7+A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eF48q6VxteR4holmgWjc2Vlzyq/RdTxMvtXhBWinafn2WiIEQ06xskQ1hwbFqaeGRF5NYzIF6I67yJXp4C47x6LLacj3ZsxmJGVsop+vA/Xce78d6Yb8I79Cw5Dgb0Mo+6fZgAJ1TVMx5mMtofcfFPRM38dOmwNsoqb2a7BmziI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UjW0AdMG; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=qK+k9K77CXalJ0XLLwWk5FsCwp3geSCA76TlvWmdjvLOAjicTrluxwNSAwXp8RCR3n5b1dxEydzJdPyXz6GrEBSpUDE70owDzoffnWuo+xJJ+S0J1hC9XFdG8p15KM5NQV/R8/KPFlayz81YYTwVJWcCw0y7LG4+IqdMwq3ol3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=boFiAMJ9; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UjW0AdMG"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48HA4l1f031051;
-	Tue, 17 Sep 2024 10:57:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:reply-to
-	:from:in-reply-to:content-type:content-transfer-encoding; s=pp1;
-	 bh=0dFKfQlU63J4x9Kv0Trg8wyXx2LL9Si9gsosnZgyWyM=; b=UjW0AdMGQGmN
-	cM1ND9pbD+V2+N2WECErqPNiFxuqdS5PbkAhPmYa1BWgv9Mjgx6RGpHiQtFUaRVN
-	+X91mEz+bOph20TPzRmuis6nx9UxEQ+vTBIVumZXzsUXsu9yr7mcGWBxzdsRQt7v
-	E914pKhVLnVYUMULFPwwnJ8YbFa1pVgkLIocR8WJIxKDEPDdw8NxJiv/kUDMAfTK
-	z8Kycw+6VoeW3uJM+pjdYtIvLczgn4FxX17XvRYI2FWHCO1ZVoKUe5yW2Mkzeyhs
-	vBMgjN1dyrWkGoZ2tMtf/fCtm250kDUs3anqG2zeUXVOfoG+uWZCohA3S5hc+6gL
-	PGmL0MLdXg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41n3vnq3cn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Sep 2024 10:57:49 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 48HAvjnh005102;
-	Tue, 17 Sep 2024 10:57:48 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41n3vnq3cg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Sep 2024 10:57:48 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48HAcNoS001823;
-	Tue, 17 Sep 2024 10:57:47 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 41nqh3md42-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Sep 2024 10:57:47 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48HAvk1b22479570
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 17 Sep 2024 10:57:46 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 65AE058052;
-	Tue, 17 Sep 2024 10:57:46 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C5B0C58056;
-	Tue, 17 Sep 2024 10:57:37 +0000 (GMT)
-Received: from [9.204.206.228] (unknown [9.204.206.228])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 17 Sep 2024 10:57:37 +0000 (GMT)
-Message-ID: <af4000b6-02c7-4160-8207-57f34239bd49@linux.ibm.com>
-Date: Tue, 17 Sep 2024 16:27:36 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="boFiAMJ9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726571955; x=1758107955;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9c0r+SK6yFndixT3JCN6TZFvWJo6HS+B9/y/Mhtg7+A=;
+  b=boFiAMJ9fSNzjm6XCA4hVGM0ig+UxQ6gWtlsGy8eQ0TqyEwX3Ke6r71C
+   p2J+eQWNXdMATu5GNIrq6ZX25l3r/wNpmKqpsSuJSM/Yfa98FTqvUZhg6
+   vejhnm2rJc0w4/VUDnOIK/rYBJ34/OYaUBBLfReuHLs3hWMT0x/U92sdk
+   cwcNWB2oYcuf+v41kvDnf+zfrKFP5JCtVnOi8h313hM/VbJKr7qLpMxS7
+   Hfc8Wbj7Q9UXMBxKCcS54Vf1XYPeGlT9tPypVG79X4dyXTCsABl+e45lF
+   lrkn5jpTvg8yx1jGbnDlk9ORoWxO5+yL8eAxzHUXxoezj/o9vUyuyB2CJ
+   A==;
+X-CSE-ConnectionGUID: ZSmWUIqoTEiA6+NZMWYvvg==
+X-CSE-MsgGUID: bfQ3kSy8S4iUA2DfiBOxSA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11197"; a="50833168"
+X-IronPort-AV: E=Sophos;i="6.10,235,1719903600"; 
+   d="scan'208";a="50833168"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2024 04:19:14 -0700
+X-CSE-ConnectionGUID: xNdd4YEhRlS1ILkNUGMgsA==
+X-CSE-MsgGUID: 01TQws4NTHq+/epabNaElw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,235,1719903600"; 
+   d="scan'208";a="73982179"
+Received: from fpallare-mobl3.ger.corp.intel.com (HELO [10.245.245.10]) ([10.245.245.10])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2024 04:19:10 -0700
+Message-ID: <be3a44a3-7f33-4d6b-8348-ed6b8c3e7b49@intel.com>
+Date: Tue, 17 Sep 2024 04:19:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,75 +52,74 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] perf sched: Introduce stats tool
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: irogers@google.com, namhyung@kernel.org, acme@kernel.org,
-        peterz@infradead.org, swapnil.sapkal@amd.com, yu.c.chen@intel.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, rostedt@goodmis.org, vincent.guittot@linaro.org,
-        bristot@redhat.com, adrian.hunter@intel.com, james.clark@arm.com,
-        kan.liang@linux.intel.com, gautham.shenoy@amd.com,
-        kprateek.nayak@amd.com, juri.lelli@redhat.com,
-        yangjihong@bytedance.com, void@manifault.com, tj@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        santosh.shukla@amd.com, ananth.narayan@amd.com, sandipan.das@amd.com,
-        mingo@redhat.com, Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-References: <20240916164722.1838-1-ravi.bangoria@amd.com>
+Subject: Re: [PATCH V2 2/7] x86/mm: Drop page table entry address output from
+ pxd_ERROR()
+To: David Hildenbrand <david@redhat.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-fsdevel@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>
+References: <20240917073117.1531207-1-anshuman.khandual@arm.com>
+ <20240917073117.1531207-3-anshuman.khandual@arm.com>
+ <c4fe25e3-9b03-483f-8322-3a17d1a6644a@redhat.com>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-Reply-To: 20240916164722.1838-1-ravi.bangoria@amd.com
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-In-Reply-To: <20240916164722.1838-1-ravi.bangoria@amd.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <c4fe25e3-9b03-483f-8322-3a17d1a6644a@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: W9Xwj_4eqYQ3okMpBkE-XElKP-zJsmJQ
-X-Proofpoint-GUID: 80uqf8cxpmRt6lT6KPzkgGTyepYm4-gR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-17_02,2024-09-16_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 clxscore=1011 malwarescore=0 bulkscore=0
- impostorscore=0 spamscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
- definitions=main-2409170076
 
-Hi Ravi,
+On 9/17/24 03:22, David Hildenbrand wrote:
+> Not a big fan of all these "bad PTE" thingies ...
 
-On 16/09/24 22:17, Ravi Bangoria wrote:
-> MOTIVATION
-> ----------
-> 
-> Existing `perf sched` is quite exhaustive and provides lot of insights
-> into scheduler behavior but it quickly becomes impractical to use for
-> long running or scheduler intensive workload. For ex, `perf sched record`
-> has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
-> on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
-> generates huge 56G perf.data for which perf takes ~137 mins to prepare
-> and write it to disk [1].
-> 
-> Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
-> and generates samples on a tracepoint hit, `perf sched stats record` takes
-> snapshot of the /proc/schedstat file before and after the workload, i.e.
-> there is almost zero interference on workload run. Also, it takes very
-> minimal time to parse /proc/schedstat, convert it into perf samples and
-> save those samples into perf.data file. Result perf.data file is much
+In general?
 
-per.data file is empty after the record.
-
-Error:
-The perf.data data has no samples!
-
-Thanks and Regards
-Madadi Vineeth Reddy
-
-> smaller. So, overall `perf sched stats record` is much more light weight
-> compare to `perf sched record`.
-> 
-> We, internally at AMD, have been using this (a variant of this, known as
-> "sched-scoreboard"[2]) and found it to be very useful to analyse impact
-> of any scheduler code changes[3][4].
-> 
-> Please note that, this is not a replacement of perf sched record/report.
-> The intended users of the new tool are scheduler developers, not regular
-> users.
-
+Or not a big fan of the fact that every architecture has their own
+(mostly) copied-and-pasted set?
