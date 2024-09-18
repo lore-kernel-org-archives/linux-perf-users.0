@@ -1,213 +1,505 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DEB1C9EBF;
-	Wed, 18 Sep 2024 20:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD5E1C9DFF;
+	Wed, 18 Sep 2024 20:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726691222; cv=none; b=Wyb8eju1k+vCXqZbPU363UWr+JErNlXl1K8+UPqBlUqoRbzhtGBjEThs7KRUOKwJagsfc/XVjvpKoXiRkPPRSqqTG1zVJ6KrXuh3I1ZScD+FoxHsHOH+ym9ZNML7PFKsZd5yYtLv/NYzuIEcJLTio7CUQIV82HQ3Vmmg2ZOglyw=
+	t=1726691458; cv=none; b=ffqlPfgqKH/aKNeKRg4xpV/JoVyR6fgmJlQm4+XGkjl7AdpkEOePwkYZaZEgqtlupwRmcpmyIOPn4QPg/eso2oZUYQ9j2GsLN+/e9b3gSkgmoMRv04V8DICZDSSzuMBnwrKugb1BiRdO6Cs05Kxqk1pVaM/EQNEvnxOot3ZhXHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726691222; c=relaxed/simple;
-	bh=WuhzO6bynCgX48WtRDDzGwgzs3tibIgTcvcbFL7ZzSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uACHUY5ie+/DrW0vFOf6V6tpGJLUzTazasMG7wclhfNstDMhXXpG9uqXNX85VY8y81Mds6DthAYBORfT2HS22UwToStPm4EgLni54L/H4hYOQXJTS5ovhj3FnRRyyCPWgsYuRqeW92lBxMJhpUjm7X3phGJfS0n4w6+kfOxMfhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cN+NvBAk; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1726691458; c=relaxed/simple;
+	bh=v8crAcUcgAosNzF9JtGxdHujIVkHQ2sPvfBZI7YKIEI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L3v5igz+rwJs4/v8POXCxrQY72SYVZ1fI/egGm63e62HAMG5dZEwS3EmLOyGLOsyGQ0FVRK5X4B83z+68lYGBee0kyDikgyGzmHqAq02znS4Dz2Wrfup0bdFQVJtP/vLkxCL7T2skw8u2w11RAvSRnLZnoF64Tp1UVOuE3dptSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nOFxpgC/; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cN+NvBAk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nOFxpgC/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726691221; x=1758227221;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=WuhzO6bynCgX48WtRDDzGwgzs3tibIgTcvcbFL7ZzSA=;
-  b=cN+NvBAk6DDpo9JGjAgh6LBM6Mb+FbDNnuFTNm4sKnjRMHYCexOBA6RR
-   gKTA6UABU4BHZqGBHs6ENwAFnzZVlUpG6cSCZ1wq6Hb5JDNxv+pWSCqth
-   TJcOijf8T7kln6n83sB8iLGdjtFPEjkS2nHCFsTLrcCJUuPiPWtZP2bac
-   1cUxwXnOA96P6wkFhNdoDQEY8HHQ4IYgPzq4XdKwELunpngPFTsWEH2xm
-   nSasaDCrxEYa70kKlHGZYGuuvT+Wax3eW8IpKCxejIlNaNgbzwn+p4HDm
-   D1W+YTOMsL2+1FBKVKQ8QPvHxi1jnZYi9b6+e6CRQ/osMIv+PJgTMZz/3
-   Q==;
-X-CSE-ConnectionGUID: o2O1IQh4SU++KIZixGn6kQ==
-X-CSE-MsgGUID: 0ybjGOmpQA2G3DnHxngFzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11199"; a="36295239"
+  t=1726691456; x=1758227456;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=v8crAcUcgAosNzF9JtGxdHujIVkHQ2sPvfBZI7YKIEI=;
+  b=nOFxpgC/jgbzYFsWzmRaZsAK9M/1PV5oKFUwY+0gmpNAM0JzNSy6jqoX
+   V5GBpdjrN6Q1t6x1xC1lG/cAzDBMU3KbhZlbzLhvQkZ7mkz7iDHGABWNW
+   BO88xqGZQbX0nexNRCecH7MBGyO9X0Gq7EEXOf4dXt44M/OUtMHs/uwfX
+   x6rad9t2LKFdKznSBFxvZuyb7QMfyCZwS0WP0KRC1JKnSV2p4K4b0aswk
+   8CHF2uZ4/Zs9J0ItSaifYevPhZT1xmbb91W2csYkMogXW4LqXnoVMh1F2
+   2VWZwLLfTNri0Rtrr1JEC8fq0zwox8Lo2EkQCO8LRDAO0o9su8Unw93zJ
+   A==;
+X-CSE-ConnectionGUID: im6dFYMrRWSHW0naS1OMVA==
+X-CSE-MsgGUID: Rittb3gxQpGIDSh7CJqJlg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11199"; a="36211522"
 X-IronPort-AV: E=Sophos;i="6.10,239,1719903600"; 
-   d="scan'208";a="36295239"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2024 13:27:00 -0700
-X-CSE-ConnectionGUID: kM9FXNm3SZW4+V7VrRsrow==
-X-CSE-MsgGUID: tW191H7GQleOTdVK8VJkJA==
+   d="scan'208";a="36211522"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2024 13:30:55 -0700
+X-CSE-ConnectionGUID: G03l2KzpRg6lUZ1ybq6Pkw==
+X-CSE-MsgGUID: KgXze0/ERmmsxsK33VvTNA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,239,1719903600"; 
-   d="scan'208";a="69937228"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2024 13:26:59 -0700
-Received: from [10.212.22.202] (kliang2-mobl1.ccr.corp.intel.com [10.212.22.202])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id BF13820CFEE3;
-	Wed, 18 Sep 2024 13:26:57 -0700 (PDT)
-Message-ID: <f554bf58-a1df-4ef8-9045-2d1396f30ef3@linux.intel.com>
-Date: Wed, 18 Sep 2024 16:26:56 -0400
+   d="scan'208";a="107154632"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 18 Sep 2024 13:30:48 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sr1K1-000Cc6-1d;
+	Wed, 18 Sep 2024 20:30:45 +0000
+Date: Thu, 19 Sep 2024 04:30:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	David Hildenbrand <david@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+	linux-m68k@lists.linux-m68k.org, linux-fsdevel@vger.kernel.org,
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH V2 7/7] mm: Use pgdp_get() for accessing PGD entries
+Message-ID: <202409190310.ViHBRe12-lkp@intel.com>
+References: <20240917073117.1531207-8-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC/PATCHSET 0/5] perf tools: Support deferred user callchains
- (v2)
-To: Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Indu Bhagat <indu.bhagat@oracle.com>, linux-toolchains@vger.kernel.org
-References: <20240917222820.197594-1-namhyung@kernel.org>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240917222820.197594-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240917073117.1531207-8-anshuman.khandual@arm.com>
+
+Hi Anshuman,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on char-misc/char-misc-testing]
+[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus brauner-vfs/vfs.all dennis-percpu/for-next linus/master v6.11]
+[cannot apply to akpm-mm/mm-everything next-20240918]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khandual/m68k-mm-Change-pmd_val/20240917-153331
+base:   char-misc/char-misc-testing
+patch link:    https://lore.kernel.org/r/20240917073117.1531207-8-anshuman.khandual%40arm.com
+patch subject: [PATCH V2 7/7] mm: Use pgdp_get() for accessing PGD entries
+config: arm-footbridge_defconfig (https://download.01.org/0day-ci/archive/20240919/202409190310.ViHBRe12-lkp@intel.com/config)
+compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 8663a75fa2f31299ab8d1d90288d9df92aadee88)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240919/202409190310.ViHBRe12-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409190310.ViHBRe12-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:30:
+>> include/linux/pgtable.h:1245:18: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    1245 |         pgd_t old_pgd = pgdp_get(pgd);
+         |                         ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/pgtable.h:1243:48: note: 'pgd' declared here
+    1243 | static inline int pgd_none_or_clear_bad(pgd_t *pgd)
+         |                                                ^
+>> include/linux/pgtable.h:1245:18: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    1245 |         pgd_t old_pgd = pgdp_get(pgd);
+         |                         ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/pgtable.h:1243:48: note: 'pgd' declared here
+    1243 | static inline int pgd_none_or_clear_bad(pgd_t *pgd)
+         |                                                ^
+>> include/linux/pgtable.h:1245:18: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    1245 |         pgd_t old_pgd = pgdp_get(pgd);
+         |                         ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/pgtable.h:1243:48: note: 'pgd' declared here
+    1243 | static inline int pgd_none_or_clear_bad(pgd_t *pgd)
+         |                                                ^
+>> include/linux/pgtable.h:1245:18: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    1245 |         pgd_t old_pgd = pgdp_get(pgd);
+         |                         ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/pgtable.h:1243:48: note: 'pgd' declared here
+    1243 | static inline int pgd_none_or_clear_bad(pgd_t *pgd)
+         |                                                ^
+>> include/linux/pgtable.h:1245:18: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    1245 |         pgd_t old_pgd = pgdp_get(pgd);
+         |                         ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/pgtable.h:1243:48: note: 'pgd' declared here
+    1243 | static inline int pgd_none_or_clear_bad(pgd_t *pgd)
+         |                                                ^
+>> include/linux/pgtable.h:1245:18: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    1245 |         pgd_t old_pgd = pgdp_get(pgd);
+         |                         ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/pgtable.h:1243:48: note: 'pgd' declared here
+    1243 | static inline int pgd_none_or_clear_bad(pgd_t *pgd)
+         |                                                ^
+>> include/linux/pgtable.h:1245:18: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    1245 |         pgd_t old_pgd = pgdp_get(pgd);
+         |                         ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/pgtable.h:1243:48: note: 'pgd' declared here
+    1243 | static inline int pgd_none_or_clear_bad(pgd_t *pgd)
+         |                                                ^
+>> include/linux/pgtable.h:1245:18: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    1245 |         pgd_t old_pgd = pgdp_get(pgd);
+         |                         ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/pgtable.h:1243:48: note: 'pgd' declared here
+    1243 | static inline int pgd_none_or_clear_bad(pgd_t *pgd)
+         |                                                ^
+>> include/linux/pgtable.h:1245:8: error: array initializer must be an initializer list or wide string literal
+    1245 |         pgd_t old_pgd = pgdp_get(pgd);
+         |               ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:98:11: warning: array index 3 is past the end of the array (that has type 'unsigned long[2]') [-Warray-bounds]
+      98 |                 return (set->sig[3] | set->sig[2] |
+         |                         ^        ~
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:98:25: warning: array index 2 is past the end of the array (that has type 'unsigned long[2]') [-Warray-bounds]
+      98 |                 return (set->sig[3] | set->sig[2] |
+         |                                       ^        ~
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:114:11: warning: array index 3 is past the end of the array (that has type 'const unsigned long[2]') [-Warray-bounds]
+     114 |                 return  (set1->sig[3] == set2->sig[3]) &&
+         |                          ^         ~
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:114:27: warning: array index 3 is past the end of the array (that has type 'const unsigned long[2]') [-Warray-bounds]
+     114 |                 return  (set1->sig[3] == set2->sig[3]) &&
+         |                                          ^         ~
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:115:5: warning: array index 2 is past the end of the array (that has type 'const unsigned long[2]') [-Warray-bounds]
+     115 |                         (set1->sig[2] == set2->sig[2]) &&
+         |                          ^         ~
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:115:21: warning: array index 2 is past the end of the array (that has type 'const unsigned long[2]') [-Warray-bounds]
+     115 |                         (set1->sig[2] == set2->sig[2]) &&
+         |                                          ^         ~
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:157:1: warning: array index 3 is past the end of the array (that has type 'const unsigned long[2]') [-Warray-bounds]
+     157 | _SIG_SET_BINOP(sigorsets, _sig_or)
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/signal.h:138:8: note: expanded from macro '_SIG_SET_BINOP'
+     138 |                 a3 = a->sig[3]; a2 = a->sig[2];                         \
+         |                      ^      ~
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+--
+     163 | _SIG_SET_BINOP(sigandnsets, _sig_andn)
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/signal.h:140:3: note: expanded from macro '_SIG_SET_BINOP'
+     140 |                 r->sig[3] = op(a3, b3);                                 \
+         |                 ^      ~
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:163:1: warning: array index 2 is past the end of the array (that has type 'unsigned long[2]') [-Warray-bounds]
+     163 | _SIG_SET_BINOP(sigandnsets, _sig_andn)
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/signal.h:141:3: note: expanded from macro '_SIG_SET_BINOP'
+     141 |                 r->sig[2] = op(a2, b2);                                 \
+         |                 ^      ~
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:187:1: warning: array index 3 is past the end of the array (that has type 'unsigned long[2]') [-Warray-bounds]
+     187 | _SIG_SET_OP(signotset, _sig_not)
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/signal.h:174:27: note: expanded from macro '_SIG_SET_OP'
+     174 |         case 4: set->sig[3] = op(set->sig[3]);                          \
+         |                                  ^        ~
+   include/linux/signal.h:186:24: note: expanded from macro '_sig_not'
+     186 | #define _sig_not(x)     (~(x))
+         |                            ^
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:187:1: warning: array index 3 is past the end of the array (that has type 'unsigned long[2]') [-Warray-bounds]
+     187 | _SIG_SET_OP(signotset, _sig_not)
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/signal.h:174:10: note: expanded from macro '_SIG_SET_OP'
+     174 |         case 4: set->sig[3] = op(set->sig[3]);                          \
+         |                 ^        ~
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:187:1: warning: array index 2 is past the end of the array (that has type 'unsigned long[2]') [-Warray-bounds]
+     187 | _SIG_SET_OP(signotset, _sig_not)
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/signal.h:175:20: note: expanded from macro '_SIG_SET_OP'
+     175 |                 set->sig[2] = op(set->sig[2]);                          \
+         |                                  ^        ~
+   include/linux/signal.h:186:24: note: expanded from macro '_sig_not'
+     186 | #define _sig_not(x)     (~(x))
+         |                            ^
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:1131:
+   In file included from include/linux/huge_mm.h:8:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:187:1: warning: array index 2 is past the end of the array (that has type 'unsigned long[2]') [-Warray-bounds]
+     187 | _SIG_SET_OP(signotset, _sig_not)
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/signal.h:175:3: note: expanded from macro '_SIG_SET_OP'
+     175 |                 set->sig[2] = op(set->sig[2]);                          \
+         |                 ^        ~
+   arch/arm/include/asm/signal.h:17:2: note: array 'sig' declared here
+      17 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+   In file included from include/linux/mm.h:2232:
+   include/linux/vmstat.h:517:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     517 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   In file included from arch/arm/kernel/asm-offsets.c:12:
+>> include/linux/mm.h:2822:28: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    2822 |         return (unlikely(pgd_none(pgdp_get(pgd))) && __p4d_alloc(mm, pgd, address)) ?
+         |                                   ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/mm.h:2819:61: note: 'pgd' declared here
+    2819 | static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
+         |                                                             ^
+>> include/linux/mm.h:2822:28: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    2822 |         return (unlikely(pgd_none(pgdp_get(pgd))) && __p4d_alloc(mm, pgd, address)) ?
+         |                                   ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/mm.h:2819:61: note: 'pgd' declared here
+    2819 | static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
+         |                                                             ^
+>> include/linux/mm.h:2822:28: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    2822 |         return (unlikely(pgd_none(pgdp_get(pgd))) && __p4d_alloc(mm, pgd, address)) ?
+         |                                   ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/mm.h:2819:61: note: 'pgd' declared here
+    2819 | static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
+         |                                                             ^
+>> include/linux/mm.h:2822:28: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    2822 |         return (unlikely(pgd_none(pgdp_get(pgd))) && __p4d_alloc(mm, pgd, address)) ?
+         |                                   ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/mm.h:2819:61: note: 'pgd' declared here
+    2819 | static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
+         |                                                             ^
+>> include/linux/mm.h:2822:28: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    2822 |         return (unlikely(pgd_none(pgdp_get(pgd))) && __p4d_alloc(mm, pgd, address)) ?
+         |                                   ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/mm.h:2819:61: note: 'pgd' declared here
+    2819 | static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
+         |                                                             ^
+>> include/linux/mm.h:2822:28: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    2822 |         return (unlikely(pgd_none(pgdp_get(pgd))) && __p4d_alloc(mm, pgd, address)) ?
+         |                                   ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/mm.h:2819:61: note: 'pgd' declared here
+    2819 | static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
+         |                                                             ^
+>> include/linux/mm.h:2822:28: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    2822 |         return (unlikely(pgd_none(pgdp_get(pgd))) && __p4d_alloc(mm, pgd, address)) ?
+         |                                   ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/mm.h:2819:61: note: 'pgd' declared here
+    2819 | static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
+         |                                                             ^
+>> include/linux/mm.h:2822:28: error: use of undeclared identifier 'pgdp'; did you mean 'pgd'?
+    2822 |         return (unlikely(pgd_none(pgdp_get(pgd))) && __p4d_alloc(mm, pgd, address)) ?
+         |                                   ^
+   arch/arm/include/asm/pgtable.h:154:36: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                            ^
+   include/linux/mm.h:2819:61: note: 'pgd' declared here
+    2819 | static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
+         |                                                             ^
+>> include/linux/mm.h:2822:28: error: passing 'const volatile pmdval_t *' (aka 'const volatile unsigned int *') to parameter of type 'pmdval_t *' (aka 'unsigned int *') discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+    2822 |         return (unlikely(pgd_none(pgdp_get(pgd))) && __p4d_alloc(mm, pgd, address)) ?
+         |                 ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+   arch/arm/include/asm/pgtable.h:154:25: note: expanded from macro 'pgdp_get'
+     154 | #define pgdp_get(pgpd)          READ_ONCE(*pgdp)
+         |                                 ^
+   include/asm-generic/rwonce.h:47:28: note: expanded from macro 'READ_ONCE'
+      47 | #define READ_ONCE(x)                                                    \
+         |                                                                         ^
+   include/linux/compiler.h:77:42: note: expanded from macro 'unlikely'
+      77 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+         |                                             ^
+   include/asm-generic/pgtable-nop4d.h:21:34: note: passing argument to parameter 'pgd' here
+      21 | static inline int pgd_none(pgd_t pgd)           { return 0; }
+         |                                  ^
+   29 warnings and 18 errors generated.
+   make[3]: *** [scripts/Makefile.build:117: arch/arm/kernel/asm-offsets.s] Error 1
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1194: prepare0] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:224: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:224: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
 
 
+vim +1245 include/linux/pgtable.h
 
-On 2024-09-17 6:28 p.m., Namhyung Kim wrote:
-> Hello,
-> 
-> This is a counterpart for Josh's kernel change v2 [1] to support deferred
-> user callchains.  The change is transparent and users should not notice
-> anything with the deferred callchains.
-> 
->   $ perf record -g sleep 1
-> 
-> I added --[no-]merge-callchains option to control output of perf script.
-> You can verify it has the deferred callchains like this:
-> 
->   $ perf script --no-merge-callchains
->   perf     801 [000]    18.031793:          1 cycles:P:
->           ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.kallsyms])
->           ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
->           ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
->           ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
->           ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
->           ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsyms])
->           ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
->           ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsyms])
->           ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
->           ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
->           ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
->           ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
->           ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
-> 
->   perf     801 [000]    18.031814: DEFERRED CALLCHAIN
->                   7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-gnu/libc.so.6)
-> 
->   ...
-> 
-> When the callchain is merged (it's the default) it'd look like below:
-> 
->   $ perf script
->   perf     801 [000]    18.031793:          1 cycles:P:
->           ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.kallsyms])
->           ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
->           ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
->           ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
->           ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
->           ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsyms])
->           ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
->           ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsyms])
->           ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
->           ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
->           ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
->           ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
->           ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
->                   7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-gnu/libc.so.6)
-> 
->   ...
-> 
-> Notice that the last line and it has the __GI___ioctl in the same
-> callchain.  It should work with other tools like perf report.
+  1242	
+  1243	static inline int pgd_none_or_clear_bad(pgd_t *pgd)
+  1244	{
+> 1245		pgd_t old_pgd = pgdp_get(pgd);
+  1246	
+  1247		if (pgd_none(old_pgd))
+  1248			return 1;
+  1249		if (unlikely(pgd_bad(old_pgd))) {
+  1250			pgd_clear_bad(pgd);
+  1251			return 1;
+  1252		}
+  1253		return 0;
+  1254	}
+  1255	
 
-
-It seems it only works with perf report -D, when I test it on a
-non-hybrid machine.
-$perf record -e branches -g -c 3000000 ~/tchain_edit
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.397 MB perf.data ]
-$ perf report -D | tail -n 17
-
-Aggregated stats:
-               TOTAL events:       8235
-                MMAP events:         78  ( 0.9%)
-                COMM events:          2  ( 0.0%)
-                EXIT events:          1  ( 0.0%)
-              SAMPLE events:       4060  (49.3%)
-               MMAP2 events:          2  ( 0.0%)
-             KSYMBOL events:         12  ( 0.1%)
-           BPF_EVENT events:         12  ( 0.1%)
-  CALLCHAIN_DEFERRED events:       4060  (49.3%)
-      FINISHED_ROUND events:          3  ( 0.0%)
-            ID_INDEX events:          1  ( 0.0%)
-          THREAD_MAP events:          1  ( 0.0%)
-             CPU_MAP events:          1  ( 0.0%)
-           TIME_CONV events:          1  ( 0.0%)
-       FINISHED_INIT events:          1  ( 0.0%)
-$ perf report
-Error:
-The perf.data data has no samples!
-# To display the perf.data header info, please use
---header/--header-only options.
-#
-
-
-On a hybrid machine, perf record errors out.
-
-$perf record -g true
-[ perf record: Woken up 1 times to write data ]
-0x58a8 [0x38]: failed to process type: 22 [Bad address]
-[ perf record: Captured and wrote 0.022 MB perf.data ]
-
-Thanks,
-Kan
-> 
-> The code is available at 'perf/defer-callchain-v2' branch in
-> https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> 
-> Thanks,
-> Namhyung
-> 
-> [1] https://lore.kernel.org/lkml/cover.1726268190.git.jpoimboe@kernel.org
-> 
-> 
-> Namhyung Kim (5):
->   perf tools: Sync UAPI perf_event.h header
->   perf tools: Minimal DEFERRED_CALLCHAIN support
->   perf record: Enable defer_callchain for user callchains
->   perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
->   perf tools: Merge deferred user callchains
-> 
->  tools/include/uapi/linux/perf_event.h     | 21 +++++-
->  tools/lib/perf/include/perf/event.h       |  7 ++
->  tools/perf/Documentation/perf-script.txt  |  5 ++
->  tools/perf/builtin-script.c               | 92 +++++++++++++++++++++++
->  tools/perf/util/callchain.c               | 24 ++++++
->  tools/perf/util/callchain.h               |  3 +
->  tools/perf/util/event.c                   |  1 +
->  tools/perf/util/evlist.c                  |  1 +
->  tools/perf/util/evlist.h                  |  1 +
->  tools/perf/util/evsel.c                   | 32 +++++++-
->  tools/perf/util/evsel.h                   |  1 +
->  tools/perf/util/machine.c                 |  1 +
->  tools/perf/util/perf_event_attr_fprintf.c |  1 +
->  tools/perf/util/sample.h                  |  3 +-
->  tools/perf/util/session.c                 | 78 +++++++++++++++++++
->  tools/perf/util/tool.c                    |  2 +
->  tools/perf/util/tool.h                    |  4 +-
->  17 files changed, 273 insertions(+), 4 deletions(-)
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
