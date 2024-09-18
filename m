@@ -1,36 +1,25 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096C113792B;
-	Wed, 18 Sep 2024 05:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF0AF1487C8;
+	Wed, 18 Sep 2024 06:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726636509; cv=none; b=toYAI3Q/adUMmPkybemUsHUFaomrWq/N4dqpwQfMiUvOP4OUb8JtTDGv1UDV4chK8xA+O/ETSbW54U/DF8KS5ayiCyH5W/EqIsJyKjb17fq6S1q2p2nUEiy+7Rokw69kkt0PKT5LZyfeknI5riubyUnf87GB+hwbTRJGqBLyd/0=
+	t=1726641180; cv=none; b=CS0lIHHzpYulCOlCCncdVjfw4IUDcjOCgJ+U0VRreInBzkcOIfz027nsxUQH5MrfVnVUk5MQRi3e0IT4MCPx8MVfdSDixbdAb0s9ZXViJbaanB1O7bf6LlOVifalb2VOIG23hZlWzgQBKM//SHKctrLnULumidemuwIxk2rps6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726636509; c=relaxed/simple;
-	bh=awBMI1Dk7zdadkzIRUyRmARSK8r8NR+KUbSGpfJNcIg=;
+	s=arc-20240116; t=1726641180; c=relaxed/simple;
+	bh=TryCCA1ZWWAttn4FkLibmn0nSAOSRu1FKRZqsZOjeT0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AZ+cacbTWXf9W0FQU6aiMsjRN/a1d4cQrMsIg8sdDQcvYMeB9HzpQnnG4cIC2si5+LYNwcqPkrDdEiVukDlXLVpRiLzoIUpn9e5yqHzPllnpBFKW9bKLKtXd5afPEKQavDXtrIXr+ew707qp4Upm8tWqv1pdn6f5lu2Svp/y+UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=Jzu4Gel7; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Jzu4Gel7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1726636498;
-	bh=awBMI1Dk7zdadkzIRUyRmARSK8r8NR+KUbSGpfJNcIg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Jzu4Gel7FH7csyCRZgWVUdadv5Zez1/9ITJjgN8lv0eYz16McVW0OmPNcFKppDFtD
-	 rgJb51tpnRrClksGsHxXcL/na33zylIbjbSPBDOPY1+yNDdN6gbcMJ0CRROxCEJu9g
-	 XXBrVW8KXPAASB1OBGplAboNisNVDzvonmhzsG3aBFgQTgEqC4mpJsRs3UjVO/HzPX
-	 oqguW7labm2OMKybpE/RJ8LJQ7gdlbH8TM+SPAKAexURsinQjdC3BfB5vHasQqef4H
-	 2aYr7RWYJCPKOv1xbuqaRBgUcXEH5KJJajIasBtao4Le7N3un4ZI1bFuJJWy1wZ/yc
-	 HQhvNzIBItBKg==
-Received: from [192.168.42.112] (213142097191.public.telering.at [213.142.97.191])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4X7mzw6pjGz1L4b;
-	Wed, 18 Sep 2024 01:14:52 -0400 (EDT)
-Message-ID: <8e329554-0042-4265-8247-180f4e87dfe3@efficios.com>
-Date: Wed, 18 Sep 2024 07:14:04 +0200
+	 In-Reply-To:Content-Type; b=tCZmEaAQoDpwNmeXoAd9h4HXerOaRB43JpHm64FEgOdGPSBqVaocAhyd2S0vfS4X6YGv/7hjhhrMkQc7Yi5Zec8F7U31lxrxkL1nMY9I8gZzWEwI6jnC3Fa2snuBTUzS8cwCyqaakVVgv96UZ01nbKmPm5lCjLFq4FAEkBydnhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36FB4FEC;
+	Tue, 17 Sep 2024 23:33:21 -0700 (PDT)
+Received: from [10.162.16.84] (a077893.blr.arm.com [10.162.16.84])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E5633F64C;
+	Tue, 17 Sep 2024 23:32:48 -0700 (PDT)
+Message-ID: <8cafe140-35cf-4e9d-8218-dfbfc156ca69@arm.com>
+Date: Wed, 18 Sep 2024 12:02:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,90 +27,85 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/11] unwind, perf: sframe user space unwinding,
- deferred perf callchains
-To: Namhyung Kim <namhyung@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
- Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
- Mark Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org,
- Jordan Rome <jordalgo@meta.com>, Sam James <sam@gentoo.org>
-References: <cover.1726268190.git.jpoimboe@kernel.org>
- <20240914081246.1e07090c@rorschach.local.home>
- <20240915111111.taq3sb5xzqamhb7f@treble>
- <20240916140856.GB4723@noisy.programming.kicks-ass.net>
- <20240916153953.7fq5fmch5uqg7tjj@treble>
- <20240916181545.GD4723@noisy.programming.kicks-ass.net>
- <20240916184645.142face1@rorschach.local.home> <Zun7nKFzWz2J2rSz@google.com>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH V2 3/7] mm: Use ptep_get() for accessing PTE entries
+To: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-fsdevel@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240917073117.1531207-1-anshuman.khandual@arm.com>
+ <20240917073117.1531207-4-anshuman.khandual@arm.com>
+ <f9a7ebb4-3d7c-403e-b818-29a6a3b12adc@redhat.com>
 Content-Language: en-US
-In-Reply-To: <Zun7nKFzWz2J2rSz@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <f9a7ebb4-3d7c-403e-b818-29a6a3b12adc@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2024-09-17 23:58, Namhyung Kim wrote:
-> Hello,
-> 
-> On Mon, Sep 16, 2024 at 06:46:45PM -0400, Steven Rostedt wrote:
->> On Mon, 16 Sep 2024 20:15:45 +0200
->> Peter Zijlstra <peterz@infradead.org> wrote:
+
+
+On 9/17/24 15:58, David Hildenbrand wrote:
+> On 17.09.24 09:31, Anshuman Khandual wrote:
+>> Convert PTE accesses via ptep_get() helper that defaults as READ_ONCE() but
+>> also provides the platform an opportunity to override when required. This
+>> stores read page table entry value in a local variable which can be used in
+>> multiple instances there after. This helps in avoiding multiple memory load
+>> operations as well possible race conditions.
 >>
->>> On Mon, Sep 16, 2024 at 05:39:53PM +0200, Josh Poimboeuf wrote:
->>>
->>>> The cookie is incremented once per entry from userspace, when needed.
->>>>
->>>> It's a unique id used by the tracers which is emitted with both kernel
->>>> and user stacktrace samples so the userspace tool can stitch them back
->>>> together.  Even if you have multiple tracers triggering at the same time
->>>> they can all share a single user trace.
->>>
->>> But perf don't need this at all, right? It knows that the next deferred
->>> trace for that tid will be the one.
 > 
-> Well.. technically you can sample without tid.  But I'm not sure how
-> much it'd be useful if you collect callchains without tid.
+> Please make it clearer in the subject+description that this really only involves set_pte_safe().
+
+I will update the commit message with some thing like this.
+
+mm: Use ptep_get() in set_pte_safe()
+
+This converts PTE accesses in set_pte_safe() via ptep_get() helper which
+defaults as READ_ONCE() but also provides the platform an opportunity to
+override when required. This stores read page table entry value in a local
+variable which can be used in multiple instances there after. This helps
+in avoiding multiple memory load operations as well as some possible race
+conditions.
+
 > 
+> 
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>> Cc: "Mike Rapoport (IBM)" <rppt@kernel.org>
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>   include/linux/pgtable.h | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
 >>
->> Is that because perf uses per task buffers? Will perf know this if it
->> uses a global buffer? What does perf do with "-a"?
+>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>> index 2a6a3cccfc36..547eeae8c43f 100644
+>> --- a/include/linux/pgtable.h
+>> +++ b/include/linux/pgtable.h
+>> @@ -1060,7 +1060,8 @@ static inline int pgd_same(pgd_t pgd_a, pgd_t pgd_b)
+>>    */
+>>   #define set_pte_safe(ptep, pte) \
+>>   ({ \
+>> -    WARN_ON_ONCE(pte_present(*ptep) && !pte_same(*ptep, pte)); \
+>> +    pte_t __old = ptep_get(ptep); \
+>> +    WARN_ON_ONCE(pte_present(__old) && !pte_same(__old, pte)); \
+>>       set_pte(ptep, pte); \
+>>   })
+>>   
 > 
-> Then it'd use per-cpu ring buffers.  But each sample would have pid/tid
-> pair and time so perf tools can match it with a deferred callchian.
+> I don't think this is necessary. PTE present cannot flip concurrently, that's the whole reason of the "safe" part after all.
 
-That semantic correlation based on trace information should work fine if
-you do not miss important events in the trace. What the unique id cookie
-provides is robustness against confusion that can arise when events are
-discarded.
+Which is not necessary ? Converting de-references to ptep_get() OR caching
+the page table read value in a local variable ? ptep_get() conversion also
+serves the purpose providing an opportunity for platform to override.
 
-Discarded events happen when the event throughput is too high for the
-ring buffer to handle. The following type of confusion can then arise:
-
-- If you miss a stack trace event and then a stack-sample-request
-event, then the post-processing tools can incorrectly infer causality
-between a prior stack-sample-request and a following stack trace for
-the same tid.
-
-- If you miss even more information about the end/beginning of lifetime
-of two threads, post-processing can be confused and associate a prior
-stack-sample-request from tid=N with a later stack trace for tid=N where
-N was re-used due to an exit/clone sequence.
-
-Saving the unique id cookie along with the stack-sample-request and with
-the stack trace allows more robust causality relationship between the
-two. Showing reliable causality information may not be super important
-for profiling use-cases, but it is important for event tracers.
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+> 
+> Can we just move these weird set_pte/pmd_safe() stuff to x86 init code and be done with it? Then it's also clear *where* it is getting used and for which reason.
+> 
+set_pte/pmd_safe() can be moved to x86 platform - as that is currently the
+sole user for these helpers. But because set_pgd_safe() gets used in riscv
+platform, just wondering would it be worth moving only the pte/pmd helpers
+but not the pgd one ?
