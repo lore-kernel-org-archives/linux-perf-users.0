@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDB81CB528
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Sep 2024 22:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0374A1CBEA7
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Sep 2024 22:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726700067; cv=none; b=K8t+5/KMKjiJynbcH3UCFpS2v01key0AvNJv3eCErT24gScXbLmN1VES9Pd+fpQUot8gOaED7B1CRcysaIU9PV7i3uLDF2oR3wN36IPGG0X+0iqvwPeQnLOR1204+npEFnB1QA6S+FOlm5DMPGKJKpP8I9yeGWzdOn6KRuJfOG0=
+	t=1726700071; cv=none; b=UFngZ/q4miuAn7piBfIYDy9qbj1IbZLhst91NvcJOdOGIGwGhy4HTU1Hqlsv30hAXfBKK4XV1KX9fULdD0mMONdyiz9DD+sdiri0C1t0R13uxMTZPiIUUPgWpEvIgi6RxmmtWvtxIGD0HSirfE4C6DXPrU0tItyEkpBrgFt/0IQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726700067; c=relaxed/simple;
-	bh=fZJ/1Ul0XZFMSr7/LQNmEffHxa26ETQSPKmczWm9/o4=;
+	s=arc-20240116; t=1726700071; c=relaxed/simple;
+	bh=xnyUkugBLFjm8eo1+OAmXlSTl6AOrpWiEEEJQVuMy1g=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=DoJdCjR6Xp/8/UqyNARhDQ73O1xIvQv0WwHmhBc84eq7cBjW90yNzoJ7GWULNWZK1jEnsca5SsefImP1jxymkUviTUyQ8ySIAfbGacldC0UIZTAfRWtKrdXRmeBUMaWbXKnRz6CXMkbQFt01SJhjVkSQyyB5v3ViB1kAB9slI18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OUNA7/gJ; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=it6QRKyFBeSxdzYHK5hwwsGo+mXNPzICgIMacO1n9SBMxnFpzY0muPr56dsPgh24A3mCWejMWdvGcpAbMStfiIOhFgwaz8KL1Echbsf8CDbab/a4M+Ch0hF+Tzhhwq8sJDO3ILmfsxGPDePScWIdrW/z60NB1b6KgNI7SFzX11Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oq6P01Hd; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OUNA7/gJ"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e0b8fa94718so535052276.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Sep 2024 15:54:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oq6P01Hd"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6d73c1c8356so5615457b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Sep 2024 15:54:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726700064; x=1727304864; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1726700068; x=1727304868; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cYgNh0Jo2YBE9mIUglHsSOEzJQx9Sc6H8A/LAmLosbk=;
-        b=OUNA7/gJSj/8RCraSP0pJAn66gOaVOBFfUD+gXEWcQMob/mzIWKNjOZocqN2nAdmBg
-         3lOsAYPeUt6Lh49z9ZHLikVMTvtTsFBt9C8Flf1azDqvo1WnVpv5KxrOSzVZIhf6TxHA
-         ZuQMvUH5ZQALbXGImDWHm/ww+nkh68dEeyHMaWY2qid7KZvzC7zHR2qXw/ASMbCjxHNR
-         fXsNR6b30E+WcT+uX6ciuQgjdf0FNH3mzHglKKJmaIPhIUrxOt+tO02YXUd+xzRJPMfb
-         bWvJs2A/1UTRGlKT/zjhDSptkmFcJ6tvVA3v4djOM8lwB6EDyIhEte1jJ2Kun8sZxX+j
-         1xXA==
+        bh=7D8jXB6B056rVyMaAWUNp36V2RCCrGLmJuSoHlr5mog=;
+        b=oq6P01Hdr2KlqBJDaKUWqHu7MKJVrTmp6GkHtPe5dASvF/UvuROOnxmGaxTvJ22X5z
+         24/rBRPnxzV0+C1c19obMycZeIIrck+JXLrqxxeJ1Ivkrayq6+DmN3VSXvdp074Yvgbs
+         8CRkt6NXw08aPHkp4psf523NL6Yj1uGaMvcra4GnNAslJfOR0hzwOKDh4FUYtIm8nVqT
+         ldUBOLaVoaEGKTukoZrCmRssU/Y+Jl12ufAqNVXZ6wSuVidPn0foA/txli0+yInSyU15
+         4dBFQourkwbszBTXDuLnePP6WE8MHeChF/Cnq1g171kBVSrbulaTHhxB87p8kSWtjHTA
+         agdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726700064; x=1727304864;
+        d=1e100.net; s=20230601; t=1726700068; x=1727304868;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cYgNh0Jo2YBE9mIUglHsSOEzJQx9Sc6H8A/LAmLosbk=;
-        b=wSnxHDNvaCQ82KrOzpszyrxKHJxhD8cDJMRKUdEqhL4K937cJX78U0nSPtaSQSEo+O
-         2bbIkCatYthT7bnQXdw01dUYgMWKLEXv5dBDz3Kl6NaVYMy2/fOD9a6naX116f0VHGwK
-         DqxV2HkhUWAzs0hu2YG50WWT86nYcMSH7dm63muahNXHPcJMqPzAA7u3aMgMofVLVl6k
-         7v9hkcTolR2KbW4V3/o2kivV0A6s/jtQkBR7itulHP5ahWzJbhcsImlSJyziqxXdy9Mh
-         EfkfhqXaa40sREn5ezd2PuBQv00yRGYf51cckT3rG7uPb7CYtZtRKNSk3rFZphDRqw9R
-         H44Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX44KelOflcnH5ZSMMt2YxX+pvwUZjmYB+X/yBHvRfl7oyaxA7/mT/E/I4ZjAAgtFqqI4O1l5168mHA4Gw1EDOD@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvhkEEBsCwf0z6jDWJC6E+672ui0x+gJ3OhUVT4/zQCY0zkbTg
-	V146/KN+98eaRUA/bWtnSAHhkRzi044nro7vP/6agy+zzeE/0hTjMfQwOrCQW14qZg/xVuRNiR9
-	KvHIwRA==
-X-Google-Smtp-Source: AGHT+IGf3LMx8G+akQOj9Nd6MF4W30cfFh/k+UpoVHrWopK2Du4hWP7ZIVHBf+GInVO1kkFPPy8V5P/jVaiu
+        bh=7D8jXB6B056rVyMaAWUNp36V2RCCrGLmJuSoHlr5mog=;
+        b=IJFEkOJqqnArvmB37gs3olfUeNWqGq1hTabBO7ALxjv3XWVYyBItrp7UZkYLyz9t3p
+         UW4/z0j+u7NwQfug7MN4PghHzA6Bly4GlA9baPnQQTjyPci73JS4ETnxLVsb+55lZYCf
+         8FgfrQe52pn3lzK05JMDeA5O0Tbo/M9PC6a5cb9z3pJzZLB1gSL5n38kPZfJ4HZr0OXv
+         UaMkTYnWRIIvqYl7dtQI3bnYQ1xS67S4NQqlIhAH7bNLjFUIYeVK3QHvMXgiQPjAQXNF
+         n/5QIyHof/FM9BiFKxoTunLT1n5UraVcBbB1ZHyi+s0RjQkw51tYDyCT2ptsWahb5dO9
+         lUMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXP4YdHiH1MfRQgKQD4DP2mTCaIIBrEPjiv+eLON5KPWInmvjquEwbNy56b4x9aPtTJWKG1+RnP/CPYf3HsbtYy@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlcaZC8yizgyOIZvwfJEWQFpQmHpStMjTDuydEXvToEicQzXta
+	YHoNePi4sQrvkR420Lfu9ZCgtZ3zHnnxKkRQI/GiQ1bxo0/am7kFIJrlCPgidd8qjAKqkmFQ2fs
+	ap/44EQ==
+X-Google-Smtp-Source: AGHT+IErz5AxPJwUfRhBCeeSOOvqygeP/B4LBPQPtxguF6Clqm/Q6xAKQf8ov1EdVINpWWQJuRPlH4tbsNgx
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:cb6b:1e62:cfd8:bd50])
- (user=irogers job=sendgmr) by 2002:a25:b18b:0:b0:e1a:aa41:5170 with SMTP id
- 3f1490d57ef6-e1db00f346emr70805276.8.1726700064290; Wed, 18 Sep 2024 15:54:24
- -0700 (PDT)
-Date: Thu, 19 Sep 2024 00:54:17 +0200
+ (user=irogers job=sendgmr) by 2002:a05:690c:610b:b0:6dc:7288:a90a with SMTP
+ id 00721157ae682-6dc7288aacbmr8757487b3.3.1726700066655; Wed, 18 Sep 2024
+ 15:54:26 -0700 (PDT)
+Date: Thu, 19 Sep 2024 00:54:18 +0200
 In-Reply-To: <20240918225418.166717-1-irogers@google.com>
-Message-Id: <20240918225418.166717-2-irogers@google.com>
+Message-Id: <20240918225418.166717-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240918225418.166717-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.662.g92d0881bb0-goog
-Subject: [PATCH v1 1/2] perf python: Remove python 2 scripting support
+Subject: [PATCH v1 2/2] perf python: Constify variables and parameters
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,400 +73,241 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Python2 was deprecated 4 years ago, remove support and workarounds.
+Opportunistically constify variables and parameters when possible.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../scripts/python/Perf-Trace-Util/Context.c  | 18 -----
- tools/perf/util/python.c                      | 73 +++----------------
- .../scripting-engines/trace-event-python.c    | 63 +---------------
- 3 files changed, 15 insertions(+), 139 deletions(-)
+ tools/perf/util/python.c | 55 +++++++++++++++++++++-------------------
+ 1 file changed, 29 insertions(+), 26 deletions(-)
 
-diff --git a/tools/perf/scripts/python/Perf-Trace-Util/Context.c b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-index 3954bd1587ce..6d1c6be1d918 100644
---- a/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-+++ b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-@@ -23,16 +23,6 @@
- #include "../../../util/srcline.h"
- #include "../../../util/srccode.h"
- 
--#if PY_MAJOR_VERSION < 3
--#define _PyCapsule_GetPointer(arg1, arg2) \
--  PyCObject_AsVoidPtr(arg1)
--#define _PyBytes_FromStringAndSize(arg1, arg2) \
--  PyString_FromStringAndSize((arg1), (arg2))
--#define _PyUnicode_AsUTF8(arg) \
--  PyString_AsString(arg)
--
--PyMODINIT_FUNC initperf_trace_context(void);
--#else
- #define _PyCapsule_GetPointer(arg1, arg2) \
-   PyCapsule_GetPointer((arg1), (arg2))
- #define _PyBytes_FromStringAndSize(arg1, arg2) \
-@@ -41,7 +31,6 @@ PyMODINIT_FUNC initperf_trace_context(void);
-   PyUnicode_AsUTF8(arg)
- 
- PyMODINIT_FUNC PyInit_perf_trace_context(void);
--#endif
- 
- static struct scripting_context *get_args(PyObject *args, const char *name, PyObject **arg2)
- {
-@@ -202,12 +191,6 @@ static PyMethodDef ContextMethods[] = {
- 	{ NULL, NULL, 0, NULL}
- };
- 
--#if PY_MAJOR_VERSION < 3
--PyMODINIT_FUNC initperf_trace_context(void)
--{
--	(void) Py_InitModule("perf_trace_context", ContextMethods);
--}
--#else
- PyMODINIT_FUNC PyInit_perf_trace_context(void)
- {
- 	static struct PyModuleDef moduledef = {
-@@ -229,4 +212,3 @@ PyMODINIT_FUNC PyInit_perf_trace_context(void)
- 
- 	return mod;
- }
--#endif
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 31a223eaf8e6..02279ab4967c 100644
+index 02279ab4967c..13dad27169a0 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -25,40 +25,14 @@
- #include <internal/lib.h>
- #include "../builtin.h"
+@@ -62,7 +62,7 @@ struct pyrf_event {
+ 	sample_member_def(sample_period, period, T_ULONGLONG, "event period"),		 \
+ 	sample_member_def(sample_cpu, cpu, T_UINT, "event cpu"),
  
--#if PY_MAJOR_VERSION < 3
--#define _PyUnicode_FromString(arg) \
--  PyString_FromString(arg)
--#define _PyUnicode_AsString(arg) \
--  PyString_AsString(arg)
--#define _PyUnicode_FromFormat(...) \
--  PyString_FromFormat(__VA_ARGS__)
--#define _PyLong_FromLong(arg) \
--  PyInt_FromLong(arg)
--
--#else
--
- #define _PyUnicode_FromString(arg) \
-   PyUnicode_FromString(arg)
- #define _PyUnicode_FromFormat(...) \
-   PyUnicode_FromFormat(__VA_ARGS__)
- #define _PyLong_FromLong(arg) \
-   PyLong_FromLong(arg)
--#endif
+-static char pyrf_mmap_event__doc[] = PyDoc_STR("perf mmap event object.");
++static const char pyrf_mmap_event__doc[] = PyDoc_STR("perf mmap event object.");
  
--#ifndef Py_TYPE
--#define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
--#endif
--
--/* Define PyVarObject_HEAD_INIT for python 2.5 */
--#ifndef PyVarObject_HEAD_INIT
--# define PyVarObject_HEAD_INIT(type, size) PyObject_HEAD_INIT(type) size,
--#endif
--
--#if PY_MAJOR_VERSION < 3
--PyMODINIT_FUNC initperf(void);
--#else
- PyMODINIT_FUNC PyInit_perf(void);
--#endif
+ static PyMemberDef pyrf_mmap_event__members[] = {
+ 	sample_members
+@@ -77,7 +77,7 @@ static PyMemberDef pyrf_mmap_event__members[] = {
+ 	{ .name = NULL, },
+ };
  
- #define member_def(type, member, ptype, help) \
- 	{ #member, ptype, \
-@@ -116,7 +90,7 @@ static PyObject *pyrf_mmap_event__repr(struct pyrf_event *pevent)
- 		     pevent->event.mmap.pgoff, pevent->event.mmap.filename) < 0) {
- 		ret = PyErr_NoMemory();
- 	} else {
--		ret = _PyUnicode_FromString(s);
-+		ret = PyUnicode_FromString(s);
- 		free(s);
- 	}
- 	return ret;
-@@ -147,7 +121,7 @@ static PyMemberDef pyrf_task_event__members[] = {
- 
- static PyObject *pyrf_task_event__repr(struct pyrf_event *pevent)
+-static PyObject *pyrf_mmap_event__repr(struct pyrf_event *pevent)
++static PyObject *pyrf_mmap_event__repr(const struct pyrf_event *pevent)
  {
--	return _PyUnicode_FromFormat("{ type: %s, pid: %u, ppid: %u, tid: %u, "
-+	return PyUnicode_FromFormat("{ type: %s, pid: %u, ppid: %u, tid: %u, "
+ 	PyObject *ret;
+ 	char *s;
+@@ -106,7 +106,7 @@ static PyTypeObject pyrf_mmap_event__type = {
+ 	.tp_repr	= (reprfunc)pyrf_mmap_event__repr,
+ };
+ 
+-static char pyrf_task_event__doc[] = PyDoc_STR("perf task (fork/exit) event object.");
++static const char pyrf_task_event__doc[] = PyDoc_STR("perf task (fork/exit) event object.");
+ 
+ static PyMemberDef pyrf_task_event__members[] = {
+ 	sample_members
+@@ -119,7 +119,7 @@ static PyMemberDef pyrf_task_event__members[] = {
+ 	{ .name = NULL, },
+ };
+ 
+-static PyObject *pyrf_task_event__repr(struct pyrf_event *pevent)
++static PyObject *pyrf_task_event__repr(const struct pyrf_event *pevent)
+ {
+ 	return PyUnicode_FromFormat("{ type: %s, pid: %u, ppid: %u, tid: %u, "
  				   "ptid: %u, time: %" PRI_lu64 "}",
- 				   pevent->event.header.type == PERF_RECORD_FORK ? "fork" : "exit",
- 				   pevent->event.fork.pid,
-@@ -180,7 +154,7 @@ static PyMemberDef pyrf_comm_event__members[] = {
+@@ -141,7 +141,7 @@ static PyTypeObject pyrf_task_event__type = {
+ 	.tp_repr	= (reprfunc)pyrf_task_event__repr,
+ };
  
- static PyObject *pyrf_comm_event__repr(struct pyrf_event *pevent)
+-static char pyrf_comm_event__doc[] = PyDoc_STR("perf comm event object.");
++static const char pyrf_comm_event__doc[] = PyDoc_STR("perf comm event object.");
+ 
+ static PyMemberDef pyrf_comm_event__members[] = {
+ 	sample_members
+@@ -152,7 +152,7 @@ static PyMemberDef pyrf_comm_event__members[] = {
+ 	{ .name = NULL, },
+ };
+ 
+-static PyObject *pyrf_comm_event__repr(struct pyrf_event *pevent)
++static PyObject *pyrf_comm_event__repr(const struct pyrf_event *pevent)
  {
--	return _PyUnicode_FromFormat("{ type: comm, pid: %u, tid: %u, comm: %s }",
-+	return PyUnicode_FromFormat("{ type: comm, pid: %u, tid: %u, comm: %s }",
+ 	return PyUnicode_FromFormat("{ type: comm, pid: %u, tid: %u, comm: %s }",
  				   pevent->event.comm.pid,
- 				   pevent->event.comm.tid,
- 				   pevent->event.comm.comm);
-@@ -211,7 +185,7 @@ static PyObject *pyrf_throttle_event__repr(struct pyrf_event *pevent)
- {
- 	struct perf_record_throttle *te = (struct perf_record_throttle *)(&pevent->event.header + 1);
+@@ -170,7 +170,7 @@ static PyTypeObject pyrf_comm_event__type = {
+ 	.tp_repr	= (reprfunc)pyrf_comm_event__repr,
+ };
  
--	return _PyUnicode_FromFormat("{ type: %sthrottle, time: %" PRI_lu64 ", id: %" PRI_lu64
-+	return PyUnicode_FromFormat("{ type: %sthrottle, time: %" PRI_lu64 ", id: %" PRI_lu64
+-static char pyrf_throttle_event__doc[] = PyDoc_STR("perf throttle event object.");
++static const char pyrf_throttle_event__doc[] = PyDoc_STR("perf throttle event object.");
+ 
+ static PyMemberDef pyrf_throttle_event__members[] = {
+ 	sample_members
+@@ -181,9 +181,10 @@ static PyMemberDef pyrf_throttle_event__members[] = {
+ 	{ .name = NULL, },
+ };
+ 
+-static PyObject *pyrf_throttle_event__repr(struct pyrf_event *pevent)
++static PyObject *pyrf_throttle_event__repr(const struct pyrf_event *pevent)
+ {
+-	struct perf_record_throttle *te = (struct perf_record_throttle *)(&pevent->event.header + 1);
++	const struct perf_record_throttle *te = (const struct perf_record_throttle *)
++		(&pevent->event.header + 1);
+ 
+ 	return PyUnicode_FromFormat("{ type: %sthrottle, time: %" PRI_lu64 ", id: %" PRI_lu64
  				   ", stream_id: %" PRI_lu64 " }",
- 				   pevent->event.header.type == PERF_RECORD_THROTTLE ? "" : "un",
- 				   te->time, te->id, te->stream_id);
-@@ -246,7 +220,7 @@ static PyObject *pyrf_lost_event__repr(struct pyrf_event *pevent)
- 		     pevent->event.lost.id, pevent->event.lost.lost) < 0) {
- 		ret = PyErr_NoMemory();
- 	} else {
--		ret = _PyUnicode_FromString(s);
-+		ret = PyUnicode_FromString(s);
- 		free(s);
- 	}
- 	return ret;
-@@ -273,7 +247,7 @@ static PyMemberDef pyrf_read_event__members[] = {
+@@ -201,7 +202,7 @@ static PyTypeObject pyrf_throttle_event__type = {
+ 	.tp_repr	= (reprfunc)pyrf_throttle_event__repr,
+ };
  
- static PyObject *pyrf_read_event__repr(struct pyrf_event *pevent)
+-static char pyrf_lost_event__doc[] = PyDoc_STR("perf lost event object.");
++static const char pyrf_lost_event__doc[] = PyDoc_STR("perf lost event object.");
+ 
+ static PyMemberDef pyrf_lost_event__members[] = {
+ 	sample_members
+@@ -210,7 +211,7 @@ static PyMemberDef pyrf_lost_event__members[] = {
+ 	{ .name = NULL, },
+ };
+ 
+-static PyObject *pyrf_lost_event__repr(struct pyrf_event *pevent)
++static PyObject *pyrf_lost_event__repr(const struct pyrf_event *pevent)
  {
--	return _PyUnicode_FromFormat("{ type: read, pid: %u, tid: %u }",
-+	return PyUnicode_FromFormat("{ type: read, pid: %u, tid: %u }",
+ 	PyObject *ret;
+ 	char *s;
+@@ -236,7 +237,7 @@ static PyTypeObject pyrf_lost_event__type = {
+ 	.tp_repr	= (reprfunc)pyrf_lost_event__repr,
+ };
+ 
+-static char pyrf_read_event__doc[] = PyDoc_STR("perf read event object.");
++static const char pyrf_read_event__doc[] = PyDoc_STR("perf read event object.");
+ 
+ static PyMemberDef pyrf_read_event__members[] = {
+ 	sample_members
+@@ -245,7 +246,7 @@ static PyMemberDef pyrf_read_event__members[] = {
+ 	{ .name = NULL, },
+ };
+ 
+-static PyObject *pyrf_read_event__repr(struct pyrf_event *pevent)
++static PyObject *pyrf_read_event__repr(const struct pyrf_event *pevent)
+ {
+ 	return PyUnicode_FromFormat("{ type: read, pid: %u, tid: %u }",
  				   pevent->event.read.pid,
- 				   pevent->event.read.tid);
- 	/*
-@@ -308,7 +282,7 @@ static PyObject *pyrf_sample_event__repr(struct pyrf_event *pevent)
- 	if (asprintf(&s, "{ type: sample }") < 0) {
- 		ret = PyErr_NoMemory();
- 	} else {
--		ret = _PyUnicode_FromString(s);
-+		ret = PyUnicode_FromString(s);
- 		free(s);
- 	}
- 	return ret;
-@@ -342,7 +316,7 @@ tracepoint_field(struct pyrf_event *pe, struct tep_format_field *field)
- 		}
- 		if (field->flags & TEP_FIELD_IS_STRING &&
- 		    is_printable_array(data + offset, len)) {
--			ret = _PyUnicode_FromString((char *)data + offset);
-+			ret = PyUnicode_FromString((char *)data + offset);
- 		} else {
- 			ret = PyByteArray_FromStringAndSize((const char *) data + offset, len);
- 			field->flags &= ~TEP_FIELD_IS_STRING;
-@@ -431,7 +405,7 @@ static PyObject *pyrf_context_switch_event__repr(struct pyrf_event *pevent)
- 		     !!(pevent->event.header.misc & PERF_RECORD_MISC_SWITCH_OUT)) < 0) {
- 		ret = PyErr_NoMemory();
- 	} else {
--		ret = _PyUnicode_FromString(s);
-+		ret = PyUnicode_FromString(s);
- 		free(s);
- 	}
- 	return ret;
-@@ -917,17 +891,8 @@ static PyObject *pyrf_evlist__get_pollfd(struct pyrf_evlist *pevlist,
+@@ -266,7 +267,7 @@ static PyTypeObject pyrf_read_event__type = {
+ 	.tp_repr	= (reprfunc)pyrf_read_event__repr,
+ };
  
- 	for (i = 0; i < evlist->core.pollfd.nr; ++i) {
- 		PyObject *file;
--#if PY_MAJOR_VERSION < 3
--		FILE *fp = fdopen(evlist->core.pollfd.entries[i].fd, "r");
--
--		if (fp == NULL)
--			goto free_list;
--
--		file = PyFile_FromFile(fp, "perf", "r", NULL);
--#else
- 		file = PyFile_FromFd(evlist->core.pollfd.entries[i].fd, "perf", "r", -1,
- 				     NULL, NULL, NULL, 0);
--#endif
- 		if (file == NULL)
- 			goto free_list;
+-static char pyrf_sample_event__doc[] = PyDoc_STR("perf sample event object.");
++static const char pyrf_sample_event__doc[] = PyDoc_STR("perf sample event object.");
  
-@@ -1233,9 +1198,9 @@ static PyObject *pyrf__tracepoint(struct pyrf_evsel *pevsel,
+ static PyMemberDef pyrf_sample_event__members[] = {
+ 	sample_members
+@@ -274,7 +275,7 @@ static PyMemberDef pyrf_sample_event__members[] = {
+ 	{ .name = NULL, },
+ };
  
- 	tp_format = trace_event__tp_format(sys, name);
- 	if (IS_ERR(tp_format))
--		return _PyLong_FromLong(-1);
-+		return PyLong_FromLong(-1);
- 
--	return _PyLong_FromLong(tp_format->id);
-+	return PyLong_FromLong(tp_format->id);
- #endif // HAVE_LIBTRACEEVENT
+-static PyObject *pyrf_sample_event__repr(struct pyrf_event *pevent)
++static PyObject *pyrf_sample_event__repr(const struct pyrf_event *pevent)
+ {
+ 	PyObject *ret;
+ 	char *s;
+@@ -289,13 +290,13 @@ static PyObject *pyrf_sample_event__repr(struct pyrf_event *pevent)
  }
  
-@@ -1249,18 +1214,11 @@ static PyMethodDef perf__methods[] = {
+ #ifdef HAVE_LIBTRACEEVENT
+-static bool is_tracepoint(struct pyrf_event *pevent)
++static bool is_tracepoint(const struct pyrf_event *pevent)
+ {
+ 	return pevent->evsel->core.attr.type == PERF_TYPE_TRACEPOINT;
+ }
+ 
+ static PyObject*
+-tracepoint_field(struct pyrf_event *pe, struct tep_format_field *field)
++tracepoint_field(const struct pyrf_event *pe, struct tep_format_field *field)
+ {
+ 	struct tep_handle *pevent = field->event->tep;
+ 	void *data = pe->sample.raw_data;
+@@ -384,7 +385,7 @@ static PyTypeObject pyrf_sample_event__type = {
+ 	.tp_getattro	= (getattrofunc) pyrf_sample_event__getattro,
+ };
+ 
+-static char pyrf_context_switch_event__doc[] = PyDoc_STR("perf context_switch event object.");
++static const char pyrf_context_switch_event__doc[] = PyDoc_STR("perf context_switch event object.");
+ 
+ static PyMemberDef pyrf_context_switch_event__members[] = {
+ 	sample_members
+@@ -394,7 +395,7 @@ static PyMemberDef pyrf_context_switch_event__members[] = {
+ 	{ .name = NULL, },
+ };
+ 
+-static PyObject *pyrf_context_switch_event__repr(struct pyrf_event *pevent)
++static PyObject *pyrf_context_switch_event__repr(const struct pyrf_event *pevent)
+ {
+ 	PyObject *ret;
+ 	char *s;
+@@ -474,7 +475,7 @@ static PyTypeObject *pyrf_event__type[] = {
+ 	[PERF_RECORD_SWITCH_CPU_WIDE]  = &pyrf_context_switch_event__type,
+ };
+ 
+-static PyObject *pyrf_event__new(union perf_event *event)
++static PyObject *pyrf_event__new(const union perf_event *event)
+ {
+ 	struct pyrf_event *pevent;
+ 	PyTypeObject *ptype;
+@@ -542,7 +543,7 @@ static PySequenceMethods pyrf_cpu_map__sequence_methods = {
+ 	.sq_item   = pyrf_cpu_map__item,
+ };
+ 
+-static char pyrf_cpu_map__doc[] = PyDoc_STR("cpu map object.");
++static const char pyrf_cpu_map__doc[] = PyDoc_STR("cpu map object.");
+ 
+ static PyTypeObject pyrf_cpu_map__type = {
+ 	PyVarObject_HEAD_INIT(NULL, 0)
+@@ -611,7 +612,7 @@ static PySequenceMethods pyrf_thread_map__sequence_methods = {
+ 	.sq_item   = pyrf_thread_map__item,
+ };
+ 
+-static char pyrf_thread_map__doc[] = PyDoc_STR("thread map object.");
++static const char pyrf_thread_map__doc[] = PyDoc_STR("thread map object.");
+ 
+ static PyTypeObject pyrf_thread_map__type = {
+ 	PyVarObject_HEAD_INIT(NULL, 0)
+@@ -795,7 +796,7 @@ static PyMethodDef pyrf_evsel__methods[] = {
  	{ .ml_name = NULL, }
  };
  
--#if PY_MAJOR_VERSION < 3
--PyMODINIT_FUNC initperf(void)
--#else
- PyMODINIT_FUNC PyInit_perf(void)
--#endif
- {
- 	PyObject *obj;
- 	int i;
- 	PyObject *dict;
--#if PY_MAJOR_VERSION < 3
--	PyObject *module = Py_InitModule("perf", perf__methods);
--#else
- 	static struct PyModuleDef moduledef = {
- 		PyModuleDef_HEAD_INIT,
- 		"perf",			/* m_name */
-@@ -1273,7 +1231,6 @@ PyMODINIT_FUNC PyInit_perf(void)
- 		NULL,			/* m_free */
- 	};
- 	PyObject *module = PyModule_Create(&moduledef);
--#endif
+-static char pyrf_evsel__doc[] = PyDoc_STR("perf event selector list object.");
++static const char pyrf_evsel__doc[] = PyDoc_STR("perf event selector list object.");
  
- 	if (module == NULL ||
- 	    pyrf_event__setup_types() < 0 ||
-@@ -1281,11 +1238,7 @@ PyMODINIT_FUNC PyInit_perf(void)
- 	    pyrf_evsel__setup_types() < 0 ||
- 	    pyrf_thread_map__setup_types() < 0 ||
- 	    pyrf_cpu_map__setup_types() < 0)
--#if PY_MAJOR_VERSION < 3
--		return;
--#else
- 		return module;
--#endif
+ static PyTypeObject pyrf_evsel__type = {
+ 	PyVarObject_HEAD_INIT(NULL, 0)
+@@ -1078,7 +1079,7 @@ static PySequenceMethods pyrf_evlist__sequence_methods = {
+ 	.sq_item   = pyrf_evlist__item,
+ };
  
- 	/* The page_size is placed in util object. */
- 	page_size = sysconf(_SC_PAGE_SIZE);
-@@ -1334,7 +1287,7 @@ PyMODINIT_FUNC PyInit_perf(void)
- 		goto error;
+-static char pyrf_evlist__doc[] = PyDoc_STR("perf event selector list object.");
++static const char pyrf_evlist__doc[] = PyDoc_STR("perf event selector list object.");
  
- 	for (i = 0; perf__constants[i].name != NULL; i++) {
--		obj = _PyLong_FromLong(perf__constants[i].value);
-+		obj = PyLong_FromLong(perf__constants[i].value);
- 		if (obj == NULL)
- 			goto error;
- 		PyDict_SetItemString(dict, perf__constants[i].name, obj);
-@@ -1344,9 +1297,7 @@ PyMODINIT_FUNC PyInit_perf(void)
- error:
- 	if (PyErr_Occurred())
- 		PyErr_SetString(PyExc_ImportError, "perf: Init failed!");
--#if PY_MAJOR_VERSION >= 3
- 	return module;
--#endif
- }
+ static PyTypeObject pyrf_evlist__type = {
+ 	PyVarObject_HEAD_INIT(NULL, 0)
+@@ -1100,10 +1101,12 @@ static int pyrf_evlist__setup_types(void)
  
+ #define PERF_CONST(name) { #name, PERF_##name }
  
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index d7183134b669..f1d461d47d73 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -58,22 +58,6 @@
- #include "mem-events.h"
- #include "util/perf_regs.h"
- 
--#if PY_MAJOR_VERSION < 3
--#define _PyUnicode_FromString(arg) \
--  PyString_FromString(arg)
--#define _PyUnicode_FromStringAndSize(arg1, arg2) \
--  PyString_FromStringAndSize((arg1), (arg2))
--#define _PyBytes_FromStringAndSize(arg1, arg2) \
--  PyString_FromStringAndSize((arg1), (arg2))
--#define _PyLong_FromLong(arg) \
--  PyInt_FromLong(arg)
--#define _PyLong_AsLong(arg) \
--  PyInt_AsLong(arg)
--#define _PyCapsule_New(arg1, arg2, arg3) \
--  PyCObject_FromVoidPtr((arg1), (arg2))
--
--PyMODINIT_FUNC initperf_trace_context(void);
--#else
- #define _PyUnicode_FromString(arg) \
-   PyUnicode_FromString(arg)
- #define _PyUnicode_FromStringAndSize(arg1, arg2) \
-@@ -88,7 +72,6 @@ PyMODINIT_FUNC initperf_trace_context(void);
-   PyCapsule_New((arg1), (arg2), (arg3))
- 
- PyMODINIT_FUNC PyInit_perf_trace_context(void);
--#endif
- 
- #ifdef HAVE_LIBTRACEEVENT
- #define TRACE_EVENT_TYPE_MAX				\
-@@ -181,17 +164,7 @@ static int get_argument_count(PyObject *handler)
- {
- 	int arg_count = 0;
- 
--	/*
--	 * The attribute for the code object is func_code in Python 2,
--	 * whereas it is __code__ in Python 3.0+.
--	 */
--	PyObject *code_obj = PyObject_GetAttrString(handler,
--		"func_code");
--	if (PyErr_Occurred()) {
--		PyErr_Clear();
--		code_obj = PyObject_GetAttrString(handler,
--			"__code__");
--	}
-+	PyObject *code_obj = code_obj = PyObject_GetAttrString(handler, "__code__");
- 	PyErr_Clear();
- 	if (code_obj) {
- 		PyObject *arg_count_obj = PyObject_GetAttrString(code_obj,
-@@ -1899,12 +1872,6 @@ static void set_table_handlers(struct tables *tables)
- 	tables->synth_handler = get_handler("synth_data");
- }
- 
--#if PY_MAJOR_VERSION < 3
--static void _free_command_line(const char **command_line, int num)
--{
--	free(command_line);
--}
--#else
- static void _free_command_line(wchar_t **command_line, int num)
- {
- 	int i;
-@@ -1912,7 +1879,6 @@ static void _free_command_line(wchar_t **command_line, int num)
- 		PyMem_RawFree(command_line[i]);
- 	free(command_line);
- }
--#endif
- 
- 
- /*
-@@ -1922,30 +1888,12 @@ static int python_start_script(const char *script, int argc, const char **argv,
- 			       struct perf_session *session)
- {
- 	struct tables *tables = &tables_global;
--#if PY_MAJOR_VERSION < 3
--	const char **command_line;
--#else
- 	wchar_t **command_line;
--#endif
--	/*
--	 * Use a non-const name variable to cope with python 2.6's
--	 * PyImport_AppendInittab prototype
--	 */
--	char buf[PATH_MAX], name[19] = "perf_trace_context";
-+	char buf[PATH_MAX];
- 	int i, err = 0;
- 	FILE *fp;
- 
- 	scripting_context->session = session;
--#if PY_MAJOR_VERSION < 3
--	command_line = malloc((argc + 1) * sizeof(const char *));
--	if (!command_line)
--		return -1;
--
--	command_line[0] = script;
--	for (i = 1; i < argc + 1; i++)
--		command_line[i] = argv[i - 1];
--	PyImport_AppendInittab(name, initperf_trace_context);
--#else
- 	command_line = malloc((argc + 1) * sizeof(wchar_t *));
- 	if (!command_line)
- 		return -1;
-@@ -1953,15 +1901,10 @@ static int python_start_script(const char *script, int argc, const char **argv,
- 	command_line[0] = Py_DecodeLocale(script, NULL);
- 	for (i = 1; i < argc + 1; i++)
- 		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
--	PyImport_AppendInittab(name, PyInit_perf_trace_context);
--#endif
-+	PyImport_AppendInittab("perf_trace_context", PyInit_perf_trace_context);
- 	Py_Initialize();
- 
--#if PY_MAJOR_VERSION < 3
--	PySys_SetArgv(argc + 1, (char **)command_line);
--#else
- 	PySys_SetArgv(argc + 1, command_line);
--#endif
- 
- 	fp = fopen(script, "r");
- 	if (!fp) {
+-static struct {
++struct perf_constant {
+ 	const char *name;
+ 	int	    value;
+-} perf__constants[] = {
++};
++
++static const struct perf_constant perf__constants[] = {
+ 	PERF_CONST(TYPE_HARDWARE),
+ 	PERF_CONST(TYPE_SOFTWARE),
+ 	PERF_CONST(TYPE_TRACEPOINT),
 -- 
 2.46.0.662.g92d0881bb0-goog
 
