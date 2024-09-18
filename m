@@ -1,103 +1,104 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2E4178CF6;
-	Wed, 18 Sep 2024 22:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3647179970
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Sep 2024 22:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726698390; cv=none; b=JB595Rn44QGsDzvFrSzuqEKJJsgtqVWKfJ4EgIYvdACvXoKz9KjwyGRjnMT1IncF3Iq11Wbyhh+UPcuD85j4CQQ+MO8PzXDhFrwXxCxxkkMuq5Zk/0oLjCxKvWQQipUWI/PWUciYqY8ofHHhzlbU5934bF7EqY5M5ChQt2VOeik=
+	t=1726698682; cv=none; b=LssHjCmV0uekKAHsMWygaxvDZrCXCvI2Euqz88NDdHeDmjesHI82iCjJ7LOK4b254g7uicPaqb5wF3iWjisqqomw4BajloKU3+18Rzhs0MTh8Nuf1P0IKs8PBEfw7/9jwM0kEnhdXJHPvQ+lnCPQ9ek8AtXQC3NJwM6yyEqIl5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726698390; c=relaxed/simple;
-	bh=OhYI+MNoOFaYPiFXE26XcNL5YfvUyP5sjGy/ntvdgV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=loR+vjLXddQYfFqwkN2gfRLjyVUAL/Uoz0OqXBv2ntOw1siNww28Y92nN4N4nTHqt0pwDhV575/heqtm0azSH8i1OH1VTXTm4kWkWCkcnsWXSv8s4YU4Dbp24kgbbjWFqKdCqNK6522uZug0xFRGBIprSxkeamjQaq1PE3JPD8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=N2xjtGrD; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1726698682; c=relaxed/simple;
+	bh=IUjiHDKQHx81MlKCsICvRhcoKva7+fvwpy12714dQgk=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=iDeXEp4d8CBKj8cyZNtxmJrMYwApy9dUi0i41jKEJ4DEv/vMOZEbb35N7TGd6FAxplG4tKEHoYhsBE8ohlDZKaxdA9lYxUQB2lSQkN29hg/MxGmOKT4WSlXkA//rnt2YhptRUa7OcGB6AGynCdHNryfgIUNrmvKz1J6GIFhGMUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LR3nFthj; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N2xjtGrD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1726698385;
-	bh=NfEv9d3LU+LUqcR27zMivHL1FEOXtWuNMUA2OR0jp08=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=N2xjtGrD2fuzZJf2Z6fmQdUfiCeUfvwHY+P4vB19ZyAhcvg3NnB7Gc6j4+Q3PS/BC
-	 nZWuXbYT2l1KQbp0pINqOBcml8wq3yGJGQC3qYJCtliAgjTwX1XUMVFMMH1J6H8sSI
-	 fHL6teFf0iGu42csvi/qGsbjSqpcr76uTgCWFbUmo2WCmxwSp+FuXxXoo5XmE2/xc1
-	 bXvDPUzvQkcrf8Vdc19A1TqqaEMfZomOMrTc3gOuk+DGBHhDF9aLibbu588e8/1Hio
-	 XYAAdijRVRnNuFYCNBpjgickFas1Ncpa4SRyjcxeF7LnzWmyTw8jKxeKsbSffVbZI2
-	 CaNBwUPtryCJQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4X8Ct90FGjz4xVV;
-	Thu, 19 Sep 2024 08:26:25 +1000 (AEST)
-Date: Thu, 19 Sep 2024 08:26:24 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland
- <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>,
- linux-perf-users@vger.kernel.org
-Subject: Re: [GIT PULL] Performance events changes for v6.12
-Message-ID: <20240919082624.05ca5fd6@canb.auug.org.au>
-In-Reply-To: <ZurLc9qEjBH9MkvK@gmail.com>
-References: <ZurLc9qEjBH9MkvK@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LR3nFthj"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e1dc0585fbfso443685276.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Sep 2024 15:31:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1726698680; x=1727303480; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2o26eYKFIy4j4OcCh4X158KxqMBJxnfBtjyjzMK/+FM=;
+        b=LR3nFthjl8fu5Xw29fT2V+XBTr2jq2d7rtMrk2o6sSXX2MCIfI5j4Cc6RV+1MLEEp+
+         /RqfuMgnH5jQE5jCiSgNJ+aHm6bDrgDwYnzktpUzfyGAdhZ7TQ/HvtIVYEWOddIxsC2m
+         vQFpMzNk1qda/UcgTthLnGyfXo9hGvqK2QxPxbdkbVY33TKuygzQM76tA8tdg+M/Ry9k
+         NkKMpQ2y4njH9epjmk75De16ojYOR/eDe1LTaNnGa0Rdtkoqfm6960+w4g6CJ2xd167W
+         uBmtIbLyousNutNwJxsImnSvi3ZzSJOAZM5EUHo8+k/CbvXqfTjREJrVkTIoqyHjFgmq
+         P3iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726698680; x=1727303480;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2o26eYKFIy4j4OcCh4X158KxqMBJxnfBtjyjzMK/+FM=;
+        b=WELoTlJhypRhq+EQkPyCnYd1VgZtISClrwkR5Ek5lZ0NCwQ26S3ptYt32h/VTgemsL
+         d1RlmQtzAEWSad6+Llpg+dzfP36OnZBqSp6igs9VTwcFTsB33XwGExHq3x4LEPb2r2i5
+         fIK5jf65FM8sv7KvmMAfOjuQyc0VyiNBMCVRpAEIP+agXsSyX1agMr08baShxO6f+ofW
+         nQcOslON7ULzaPkWV6752qLjNgQPHq7sH2JG76MD5NRPi4027kiXSfSxauU5BsVpMYUs
+         cD1pVHWAbOreKASpkOkBrU/DEf5z3fpdH5zDFxSc3bHOHZ8PSXjK4pHddNSwlQl706lA
+         ziAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWzEtb58ax7S0N9e5qWTJ5GOZMYSXhaBxT2lQqCGD66MNv4hdVjJQ9zFU5cAGKliyhN7LhHltaMlVas6OXBcNd@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTR1IZNo7sAKPoO1Zbs0c3TEKBVUoam8xwCqnvZJG851RJBDOS
+	gnteeLQT872yHXpUFWpVStfvYtLLQbhlMuU7Z/V6N2JAST2BpIAAorhs6bXwiPAlPYECEQsd6IA
+	ox1dO4Q==
+X-Google-Smtp-Source: AGHT+IG/eNQi1SAlUx74EwwOpKn+0X40DoLJQtlS2A4o1ZGW3YtPJNHIr+ZyNtZtVuHFpKP9In8U3+jEHQRq
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:cb6b:1e62:cfd8:bd50])
+ (user=irogers job=sendgmr) by 2002:a25:dfd7:0:b0:e1a:70ed:6ec9 with SMTP id
+ 3f1490d57ef6-e1d9db8c019mr78265276.2.1726698679956; Wed, 18 Sep 2024 15:31:19
+ -0700 (PDT)
+Date: Thu, 19 Sep 2024 00:31:16 +0200
+Message-Id: <20240918223116.127386-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/smY3BmHj5Ku=0u/jB1puZt+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.662.g92d0881bb0-goog
+Subject: [PATCH v1] perf evsel: Reduce a variables scope
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/smY3BmHj5Ku=0u/jB1puZt+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In __evsel__config_callchain avoid computing arch until code path that
+uses it.
 
-Hi all,
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/evsel.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On Wed, 18 Sep 2024 14:45:39 +0200 Ingo Molnar <mingo@kernel.org> wrote:
->
-> Please pull the latest perf/core Git tree from:
->=20
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-20=
-24-09-18
->=20
->    # HEAD: 5e645f31139183ac9a282238da18ca6bbc1c6f4a Merge branch 'perf/ur=
-gent' into perf/core, to pick up fixes
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index dbf9c8cee3c5..f7e829e96599 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -862,7 +862,6 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+ {
+ 	bool function = evsel__is_function_event(evsel);
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+-	const char *arch = perf_env__arch(evsel__env(evsel));
+ 
+ 	evsel__set_sample_bit(evsel, CALLCHAIN);
+ 
+@@ -893,6 +892,8 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+ 
+ 	if (param->record_mode == CALLCHAIN_DWARF) {
+ 		if (!function) {
++			const char *arch = perf_env__arch(evsel__env(evsel));
++
+ 			evsel__set_sample_bit(evsel, REGS_USER);
+ 			evsel__set_sample_bit(evsel, STACK_USER);
+ 			if (opts->sample_user_regs &&
+-- 
+2.46.0.662.g92d0881bb0-goog
 
->       perf: Generic hotplug support for a PMU with a scope
-
-This commit introduces a (reported) build warning in some configurations:
-
-https://lore.kernel.org/all/20240911153854.240bbc1f@canb.auug.org.au
-
-That turns into a build failure for some configurations :-(
-
-A suggested fix was posted a few days ago.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/smY3BmHj5Ku=0u/jB1puZt+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmbrU5AACgkQAVBC80lX
-0GzKJAf9GT3d8pjycXjf+9AP3bwANR/y/tjabxwDQJHWoRuKoWnodYiQxwu6iVdf
-QEgI+KCH+NfwXVNIP4/zVaBsXL2BFCyoOrr9ZWzLOOrLBnoCWvMzC2+f0TW3YG3I
-MVAH507r0Ygb/VtxaieIgCluXuGg0nTlFrjHo3Ul/COAp2WY1GcYB1eTppfTWdWu
-wfIIKGZ7ByHJp5GUw7nlBmmkSMfN1OFeJfO6BBfzfMUJmt0bTIojhw+tYRiObAXX
-7ISaSbVzdJyZ/6sdDfN8pzzfJsTxLzl3ON9gDBunk2MD8gAo1ZHApeEjB+8xbHsm
-7xWIDaXo23MrJ//sR66smsO5/vc92A==
-=rAW0
------END PGP SIGNATURE-----
-
---Sig_/smY3BmHj5Ku=0u/jB1puZt+--
