@@ -1,361 +1,199 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2057.outbound.protection.outlook.com [40.107.223.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC44F18952A;
-	Wed, 18 Sep 2024 13:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726665609; cv=fail; b=OfNKXpTrZgi/4miFtRiKPTQzVYS26iouGVdZ73rQzG4cQC5FQpAJSDfayliV7sRbuge2KpD/0Y+9e/Bm/TmztizMaV8XdvpmxolUNAlbEg5MbWBB3Js9dCkV62pQbdOaeOycH/Hec6FbU2dJBiEIIHtMbxcS5rvMy2zLR4TvBGs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726665609; c=relaxed/simple;
-	bh=N8rZM/+D8c00SIvYUWSEIgqoGdrKbq8x0msIT+OAAKI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PgKuUwdgYjKtpVENz0a08k0kTfvlt7FdjfbP/wk4ug+LRBbhzjdDU7dSJyR6F+398OFUDOepUCFLFh3kNRZ/0CNCjTebXJSgOs7eyygwf3AY4Sge8SyPicCd0wG7m+BeJLdJZxPQEdfOCU8Wf0TPYdrfdPYAk0zYu53h+Higk2c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=upIniZBC; arc=fail smtp.client-ip=40.107.223.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B85118A95D
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Sep 2024 13:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726666790; cv=none; b=ayvCXkH55LFmEV8SHUwDJOM7BuvKamsh992MIG7b/lXmH1iIEG4v5iBacxKI4Gk0MniQ6xYeNSExBrAkC1QN4w8u68zFy6w9NKBu1IwzNMpQ80n+7dMtKs6iP8PdiI1zHBmqClXyHEvC7ND/2v/NQikda3qplsGSTrsr2/EwTqs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726666790; c=relaxed/simple;
+	bh=kxdRSG+oUl8jddKbzewCzouug6gCB0tzZXTQwZui7t8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cXq94gEAaIlmmNgYBbhsCX0nemwO+j83vC6e3QJsmKnsSarmCj2NUocDidUvz6HusY8pC4LIhkJrzKbDAM0C66w+ZY1Whj5H5NyJmSfy7kaw+CaapaeEMJePkdiUBaLWANs0zPK9VUAqugPI9kEH9R3hTESZmTK++RWunZ3EjBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J2WOVMHh; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="upIniZBC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dWBPuLBIj4K7t/Pfp0meoqCZjAegnDW/jy+fAf0fSFxnVMOGdKWFvUv3AoEc8OV8Ewj6kMaElcB9+/s2A4PrOjbCioYtcgEB7YF1AXooS2Z4bdbUVvh4QHtiK69vTKw5k/5KJYCCUIVkcutEe6RgcNTYjwN8NO9HYaD434iKXFxYBULaF1WPE9BS00CHUq/l4oPfimWIkKJu8fzZoOUcaiZZJzgh4p5psbnMUrqiKHAzxei9oJty8ibn4wONdLFLAsDMYJGJFuf4xyLhDDLYZNZHZ3VVehHT1Q1HzzGrlegZ9i2iByIKZI1IWWqQrfk7Nr2hc0OG3/QzT4hIY2pXeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rr+dHzYORG2Ce3SKuWLDE6MEiqAO54E/eHq8o2fnJNA=;
- b=PvHk2knBAfa2c/bkGX8yOiwQjdS3VywR2enSDdbkN4lPMZqVRgXw5RnCpxi4/1Ste+V6LHHJLnQEN0sTtCT1fdP2u8wqVKz3h7oevRGiCS10jzWAbRpPycKC5RS80+6G+jDmt0FVLvWVbfr7lTQOOMeT05m4BbCumLHirHxDju8xNns3ptUswG+FCUR7xO3usID2ES4sLNrcwc2d3aNhWKnTnB/jrYSQ7pq+6dNlK9zk6JWfYBQxuivMI6pDiKX7WQtX4vthdxFKblMMuECBYlCKCbdtKpS0X+Qi4788/Jf2pZlys1mV/CcjwXqO4iPfhiD7uZKx4j0Cr62TrKcRKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rr+dHzYORG2Ce3SKuWLDE6MEiqAO54E/eHq8o2fnJNA=;
- b=upIniZBCsFPbFL4x69J89Go1sKSflHQiMSu6jzbcDzmkKsqs6tOGXogtl2jxMtoiW97+xaXZD5gj+wMBg2jHRupwTvnw6Kw499+qjmtszJFVneyt0ZqN6gIYRkFAow6g4XQL0q/bEcXxJ+72VBPRepGHmGN/Myzw5bW7U0zplIk=
-Received: from DS7PR03CA0124.namprd03.prod.outlook.com (2603:10b6:5:3b4::9) by
- IA0PR12MB7529.namprd12.prod.outlook.com (2603:10b6:208:431::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.16; Wed, 18 Sep
- 2024 13:20:03 +0000
-Received: from DS3PEPF000099D4.namprd04.prod.outlook.com
- (2603:10b6:5:3b4:cafe::ae) by DS7PR03CA0124.outlook.office365.com
- (2603:10b6:5:3b4::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.30 via Frontend
- Transport; Wed, 18 Sep 2024 13:20:03 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099D4.mail.protection.outlook.com (10.167.17.5) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7918.13 via Frontend Transport; Wed, 18 Sep 2024 13:20:03 +0000
-Received: from [172.31.178.209] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 18 Sep
- 2024 08:19:54 -0500
-Message-ID: <124e9602-77c6-4e85-907c-907dfdc42087@amd.com>
-Date: Wed, 18 Sep 2024 18:49:52 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J2WOVMHh"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a09adec1c6so258805ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Sep 2024 06:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1726666787; x=1727271587; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Spg0BjAJ5sUlHZkRnAdoV6vTNQRfPoA92Dsq1YO0UxQ=;
+        b=J2WOVMHhRHW3kZkgWVBoa0o3+i81iSDHNuNuSFv8UVFrPsotWXP7HH9KSxZZDlGPiS
+         OxLhOwp+Xo6I6kNAfo51Y01eouBu5SuYJCu9e+gl6UgwvZrNDtWQ+4SeVyFzFit8UBqU
+         8M020YTnIMK6wElJyaNCn8c+RR9uyj6LyPxFsnG2zwpp82batlAiGxyVbDjUsInaSWIC
+         rQkz5FrvGtZmx1KzxH/sVf1oK1WK87NAExEpGoiR91V26BTtrqqITTwvutsc2ns5E3Sf
+         eDaRDyg8eOZLcC3jxgxYLZXWlS/RhR4JvRtyvQuVJ/JYmpBHEDb8S3pC108vOUQfUuQU
+         gCGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726666787; x=1727271587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Spg0BjAJ5sUlHZkRnAdoV6vTNQRfPoA92Dsq1YO0UxQ=;
+        b=iaYYFLxDgRbAnskkrmzMkn9aysuEXdEZQ671szL60SPklCA6xMUZjJ5heH5yvS8Asz
+         UGW8d4BJoPz8AB07o/YmUBxKi3vkcuXP28JPcyDjYopW/SYIld41Mzzk1weuEBlXccJg
+         9f583A1ldwVuuS745TdLWmmAL0BWKeaD5crT3DrGjfdfv3DGpykOtkNJaUTtsDE2PuVA
+         CmHOIMUQD6N+hrRI3r9tVa4oxeQikSLsWHW3IirK1lFiJMC7z868hvNYZDk3DbucqpiH
+         4CYTMoVgpRc6NSXxbQ/oI8YQRfRxeiaOyD/ByzyWb1N2c7d1PbTbk2lZTsdJVF0/BSJZ
+         w1XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvGUP+M8OVL6kQob+8sS5VriBZPPuB8HwdXDONnYMWC6mpeKe7rRPX47lgGY2q/oM4f8oz2ijPx0XQlpav5E74@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy++dJ+hdMcAQvU5DgMutSpYwGdybtvLAHIggm/w7ssn6v4o76h
+	s3UOOOmvRtOCwS67iH6VUYon/ubmTcutqFjYz+XymekoS8Bt+DmVzihtb1qoRnyP71FEoo+8tPv
+	9iZoOpEfXDeI3A88d8SfGEl+HusURZmSn6oQU
+X-Google-Smtp-Source: AGHT+IHJqb+sNwcPI7MRI0gxmM+OBJcOj2pSBwpWCULTSSKiUDDIInFWfc+jeTglVVWPq60vUiAJmbNwJs448MmirzY=
+X-Received: by 2002:a05:6e02:1d9b:b0:39e:6b18:da32 with SMTP id
+ e9e14a558f8ab-3a0b8a7a518mr4027905ab.14.1726666787400; Wed, 18 Sep 2024
+ 06:39:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] perf sched: Introduce stats tool
-Content-Language: en-GB
-To: James Clark <james.clark@linaro.org>, Ravi Bangoria
-	<ravi.bangoria@amd.com>
-CC: <yu.c.chen@intel.com>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<rostedt@goodmis.org>, <vincent.guittot@linaro.org>, <bristot@redhat.com>,
-	<adrian.hunter@intel.com>, <james.clark@arm.com>,
-	<kan.liang@linux.intel.com>, <gautham.shenoy@amd.com>,
-	<kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
-	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<santosh.shukla@amd.com>, <ananth.narayan@amd.com>, <sandipan.das@amd.com>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <irogers@google.com>
-References: <20240916164722.1838-1-ravi.bangoria@amd.com>
- <f022afad-793d-4a3d-acad-13fd27dd5e62@linaro.org>
-From: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
-In-Reply-To: <f022afad-793d-4a3d-acad-13fd27dd5e62@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D4:EE_|IA0PR12MB7529:EE_
-X-MS-Office365-Filtering-Correlation-Id: ae30c6e3-8b86-4046-3b1d-08dcd7e49b15
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VDJjTlRIT3ZPeTUwRFFYamN4QVhZY0V3YnB2ZVVlbE5RVUlmakJvWXh2emZC?=
- =?utf-8?B?Zm5kZzdYenFtZWhReFRiSzVjdklwRWZNblZhYmVYdjQ4aVFFa1A0ZTVFQkFI?=
- =?utf-8?B?QkFZSWhPVXFlbU1DRWJaaFFSbXJ1K01ZcGtjNFFZZHI4ZU1OVnMvZlBWWHdn?=
- =?utf-8?B?QTNOSVhYZVJkbk43aVMva2s3MmdPZ1N3bkNxVzRRTzJmWFhkSFB5cnpuTTVu?=
- =?utf-8?B?RUdLR3Y2bVhsN3VjSGJ2RzRrSWpJc1pNUzRmSDMxYjFGS1hNN09PbWNPS1Ax?=
- =?utf-8?B?bVVBN3BqT2w4WDRSSnBUUXRJVW9pcEpEK3U0QWlyUEU1M1htam0vYlpoQUpL?=
- =?utf-8?B?T3JQSXBKcFJUOTNwcGdPMGlZM2FNdG1uK0lHZEtGMFM3Q1A5a3JQdERXb2RO?=
- =?utf-8?B?N2M1Uk45L3NtY2ZZWmlaaFEraFVuNFFTdEhLK2YrMDJFQUdIU3BIZmFIMXRD?=
- =?utf-8?B?a0VDZjZHalJ2czg1eUYwRU5SOTZWQmI3QzQwRDlSS1FkN3RnU0tTZlVjbXA5?=
- =?utf-8?B?K0lxdjVHTSs3S2U4UUFKN0UzbFlNWXhqZGxWdTNDVGNvUzF6UEVCSys3WGZZ?=
- =?utf-8?B?ZE9zd1FNZTh6MituZklzbVVlZjVlSnlQTHZqdmlOYmRyV05GZUMxaGpxQUpS?=
- =?utf-8?B?WDJoRkVITWk3L3lhN1Q5UjdUTmgvYVRsMmpOOWlhU2dwbUR4VzQ1blQ3RFgz?=
- =?utf-8?B?Z0dxQWFuSDBBR0p0QzdzcW44SzA3TERpV215L1hPeEJLbzVLVzNWOXB3aFB6?=
- =?utf-8?B?Rmw0N1BkeXpieHFldGplTzhKSlRjN2lrZnV0SVpsZ2YwVmpoR3QwaVlHUkdX?=
- =?utf-8?B?YUtuS1hYOXpRV0dFWERxYS9pQnVZZHNKMkpQdWVvb0lCWmhlbk9jYWozN05l?=
- =?utf-8?B?elZLZUJaRTFxUjAwMFVmazIvZ1pCNmN2UTV0QmM3WWJYWTdyZUpvZjA4aGxs?=
- =?utf-8?B?QjdQR1duTTNrdlBlN29MRmFHSGEvNUVQTDJIRHdYT1JkRytFOEthYXA5Yllu?=
- =?utf-8?B?NlVVUHhobmQ4TjJHUHJiVUlpZ28rakRubGkwT3FUSWtDcnVBUWkyeTV6SDAx?=
- =?utf-8?B?ME1JSlYyUW1BSXJsUzJsdFp4cUN0K2dDTFhCcWNvaGtmWndNM1RNNXgvUnZw?=
- =?utf-8?B?ZHNORnlFckFvb3o1cEJVdE5rNkZXRHZnbkpNK2Z3Nno4VTU1QUlLajQzSlox?=
- =?utf-8?B?U2xnZlJpckFiNGdDR2FoTDJVNzFpbi9MMm01ck43OUhZQkh5by8zbklKT3I5?=
- =?utf-8?B?Q0F2bHJ5SzlXcnJKeUtjWEg1TEFRcVQxZ1VqWHZFbU4vUHU1dVNJMU1QTzND?=
- =?utf-8?B?T3Y0VlpSRnJjYzhaZlBwVTAyL0U2dmR0b0theDR1N2JHQkNwSzJFY3QwWTg0?=
- =?utf-8?B?OU9WR1RKZS9UbTh1Rk5xVWxya3ZyTzVhMnhyajRSeEZ0TUk0bTJOZnRmTFBO?=
- =?utf-8?B?VkZUNjFkd2h5b1kyTmhZNjErWTRKQmZBM0JiWWZucThyWTU2TTBDMkVsMkcw?=
- =?utf-8?B?Qkt1VjFpMnYyM0lVQ00xYU81RXR5RlVzWXlTcnozVEw1QjIyTjhmUjlUdXdK?=
- =?utf-8?B?RWZNMXRuS1BVOEtmSUhDREZGTE1TdWV0bDhZWTkrVTdLakZvVnhMaFdvTEtY?=
- =?utf-8?B?U2JVQm52clVYUjFGRHliektTV2VKMmJZNWJFMjE0Y242V25GS21YQy9zejR3?=
- =?utf-8?B?elBpeHRkNzJWVmxVSU5FMXQ3cWhWejJ1bVZCNFRiL1hZK3hPQkhCdklQMHFL?=
- =?utf-8?B?bkpWdkNQcjN1N0tySVRyeWtlRkpOLytjLzRIYzVjcG95UXhONVVzQmcwK2Ji?=
- =?utf-8?B?ZGx3R3U1ZDFna0J1b3hXN0txTG9sdER2L2xBN011RkRVNW02OWpxeWRwSDVa?=
- =?utf-8?B?U2x2UzVabzBQbDhDK2daRDZGb3hzeHNvWDNTUysvMDNaYjExK3BhWkM2SzZr?=
- =?utf-8?Q?v6uEVdkijRZ0lXGRXbpe2Nd63jtpKS7d?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2024 13:20:03.3205
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae30c6e3-8b86-4046-3b1d-08dcd7e49b15
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D4.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7529
+References: <20240917222820.197594-1-namhyung@kernel.org> <CAP-5=fVV9wzp7L71VJxaqzuURFtr1LAg0Qmk5uqmzs3By1Exow@mail.gmail.com>
+ <ZuqfmXairuIo_Px4@google.com>
+In-Reply-To: <ZuqfmXairuIo_Px4@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 18 Sep 2024 15:39:31 +0200
+Message-ID: <CAP-5=fUT-60ff-hPS9Anizq9XxiqAOJXYyQqeVoHBYzMvd0L=g@mail.gmail.com>
+Subject: Re: [RFC/PATCHSET 0/5] perf tools: Support deferred user callchains (v2)
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	linux-toolchains@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi James,
+On Wed, Sep 18, 2024 at 11:38=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> Hi Ian,
+>
+> On Wed, Sep 18, 2024 at 08:38:22AM +0200, Ian Rogers wrote:
+> > On Wed, Sep 18, 2024 at 12:28=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> > >
+> > > Hello,
+> > >
+> > > This is a counterpart for Josh's kernel change v2 [1] to support defe=
+rred
+> > > user callchains.  The change is transparent and users should not noti=
+ce
+> > > anything with the deferred callchains.
+> > >
+> > >   $ perf record -g sleep 1
+> > >
+> > > I added --[no-]merge-callchains option to control output of perf scri=
+pt.
+> > > You can verify it has the deferred callchains like this:
+> > >
+> > >   $ perf script --no-merge-callchains
+> > >   perf     801 [000]    18.031793:          1 cycles:P:
+> > >           ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kerne=
+l.kallsyms])
+> > >           ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
+> > >           ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
+> > >           ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
+> > >           ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms=
+])
+> > >           ffffffff91c1edac smp_call_function_single+0xec ([kernel.kal=
+lsyms])
+> > >           ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsym=
+s])
+> > >           ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.ka=
+llsyms])
+> > >           ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
+> > >           ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
+> > >           ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
+> > >           ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
+> > >           ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
+> > >
+> > >   perf     801 [000]    18.031814: DEFERRED CALLCHAIN
+> > >                   7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-lin=
+ux-gnu/libc.so.6)
+> > >
+> > >   ...
+> > >
+> > > When the callchain is merged (it's the default) it'd look like below:
+> > >
+> > >   $ perf script
+> > >   perf     801 [000]    18.031793:          1 cycles:P:
+> > >           ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kerne=
+l.kallsyms])
+> > >           ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
+> > >           ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
+> > >           ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
+> > >           ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms=
+])
+> > >           ffffffff91c1edac smp_call_function_single+0xec ([kernel.kal=
+lsyms])
+> > >           ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsym=
+s])
+> > >           ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.ka=
+llsyms])
+> > >           ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
+> > >           ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
+> > >           ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
+> > >           ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
+> > >           ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
+> > >                   7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-lin=
+ux-gnu/libc.so.6)
+> > >
+> > >   ...
+> > >
+> > > Notice that the last line and it has the __GI___ioctl in the same
+> > > callchain.  It should work with other tools like perf report.
+> >
+> > Hi Namhyung, I think this is interesting work!
+> >
+> > The issue feels similar to leader sampling and some of the unpicking
+> > of that we've been dealing with. With leader sampling it was added and
+> > then the dispatch of events modified so that tools wouldn't see leader
+> > samples, instead new events would be synthesized based on the leader
+> > sample data. However, the leader sample event wasn't changed and so
+> > now we have multiple repeated events and perf inject wouldn't just
+> > pass through a perf data file.
+> >
+> > What I'm expecting based on this description is that a deferred call
+> > chain will be merged with a regular one, however, perf inject isn't
+> > updated to drop the deferred callchain so now we have the deferred
+> > callchain event twice.
+> >
+> > My feeling is that making the dispatch of events to tools "smart" is a
+> > false economy. Tools can add handlers for these events easily enough.
+> > What's harder is undoing the smartness when it does things that lead
+> > to duplicated events and the like. I'm not a fan of how leader
+> > sampling was implemented and I still think it odd that with perf
+> > script we see invented events when trying to just dump the contents of
+> > a perf.data file.
+>
+> That's why I added perf_tool.merge_deferred_callchains flag to control
+> the behavior.  I haven't implemented it to perf inject because it covers
+> a couple of different use cases.  I believe the default behavior is to
+> not invoke the callback for deferred callchains during perf inject and
+> each sample will get the full callchains.  But you can add a new
+> callback and set perf_tool.merge_deferred_callchains to false.
 
-On 9/17/2024 4:05 PM, James Clark wrote:
-> 
-> 
-> On 16/09/2024 17:47, Ravi Bangoria wrote:
->> MOTIVATION
->> ----------
->>
->> Existing `perf sched` is quite exhaustive and provides lot of insights
->> into scheduler behavior but it quickly becomes impractical to use for
->> long running or scheduler intensive workload. For ex, `perf sched record`
->> has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
->> on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
->> generates huge 56G perf.data for which perf takes ~137 mins to prepare
->> and write it to disk [1].
->>
->> Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
->> and generates samples on a tracepoint hit, `perf sched stats record` 
->> takes
->> snapshot of the /proc/schedstat file before and after the workload, i.e.
->> there is almost zero interference on workload run. Also, it takes very
->> minimal time to parse /proc/schedstat, convert it into perf samples and
->> save those samples into perf.data file. Result perf.data file is much
->> smaller. So, overall `perf sched stats record` is much more light weight
->> compare to `perf sched record`.
->>
->> We, internally at AMD, have been using this (a variant of this, known as
->> "sched-scoreboard"[2]) and found it to be very useful to analyse impact
->> of any scheduler code changes[3][4].
->>
->> Please note that, this is not a replacement of perf sched record/report.
->> The intended users of the new tool are scheduler developers, not regular
->> users.
->>
->> USAGE
->> -----
->>
->>    # perf sched stats record
->>    # perf sched stats report
->>
->> Note: Although `perf sched stats` tool supports workload profiling syntax
->> (i.e. -- <workload> ), the recorded profile is still systemwide since the
->> /proc/schedstat is a systemwide file.
->>
->> HOW TO INTERPRET THE REPORT
->> ---------------------------
->>
->> The `perf sched stats report` starts with total time profiling was active
->> in terms of jiffies:
->>
->>    
->> ----------------------------------------------------------------------------------------------------
->>    Time elapsed (in jiffies)                                   :       
->> 24537
->>    
->> ----------------------------------------------------------------------------------------------------
->>
->> Next is CPU scheduling statistics. These are simple diffs of
->> /proc/schedstat CPU lines along with description. The report also
->> prints % relative to base stat.
->>
->> In the example below, schedule() left the CPU0 idle 98.19% of the time.
->> 16.54% of total try_to_wake_up() was to wakeup local CPU. And, the total
->> waittime by tasks on CPU0 is 0.49% of the total runtime by tasks on the
->> same CPU.
->>
->>    
->> ----------------------------------------------------------------------------------------------------
->>    CPU 0
->>    
->> ----------------------------------------------------------------------------------------------------
->>    sched_yield() count                                         
->> :           0
->>    Legacy counter can be ignored                               
->> :           0
->>    schedule() called                                           :       
->> 17138
->>    schedule() left the processor idle                          :       
->> 16827 ( 98.19% )
->>    try_to_wake_up() was called                                 
->> :         508
->>    try_to_wake_up() was called to wake up the local cpu        
->> :          84 ( 16.54% )
->>    total runtime by tasks on this processor (in jiffies)       :  
->> 2408959243
->>    total waittime by tasks on this processor (in jiffies)      :    
->> 11731825 ( 0.49% )
->>    total timeslices run on this cpu                            
->> :         311
->>    
->> ----------------------------------------------------------------------------------------------------
->>
->> Next is load balancing statistics. For each of the sched domains
->> (eg: `SMT`, `MC`, `DIE`...), the scheduler computes statistics under
->> the following three categories:
->>
->>    1) Idle Load Balance: Load balancing performed on behalf of a long
->>                          idling CPU by some other CPU.
->>    2) Busy Load Balance: Load balancing performed when the CPU was busy.
->>    3) New Idle Balance : Load balancing performed when a CPU just became
->>                          idle.
->>
->> Under each of these three categories, sched stats report provides
->> different load balancing statistics. Along with direct stats, the
->> report also contains derived metrics prefixed with *. Example:
->>
->>    
->> ----------------------------------------------------------------------------------------------------
->>    CPU 0 DOMAIN SMT CPUS <0, 64>
->>    ----------------------------------------- <Category idle> 
->> ------------------------------------------
->>    load_balance() count on cpu idle                                 
->> :          50   $      490.74 $
->>    load_balance() found balanced on cpu idle                        
->> :          42   $      584.21 $
->>    load_balance() move task failed on cpu idle                      
->> :           8   $     3067.12 $
->>    imbalance sum on cpu idle                                        
->> :           8
->>    pull_task() count on cpu idle                                    
->> :           0
->>    pull_task() when target task was cache-hot on cpu idle           
->> :           0
->>    load_balance() failed to find busier queue on cpu idle           
->> :           0   $        0.00 $
->>    load_balance() failed to find busier group on cpu idle           
->> :          42   $      584.21 $
->>    *load_balance() success count on cpu idle                        
->> :           0
->>    *avg task pulled per successful lb attempt (cpu idle)            
->> :        0.00
->>    ----------------------------------------- <Category busy> 
->> ------------------------------------------
->>    load_balance() count on cpu busy                                 
->> :           2   $    12268.50 $
->>    load_balance() found balanced on cpu busy                        
->> :           2   $    12268.50 $
->>    load_balance() move task failed on cpu busy                      
->> :           0   $        0.00 $
->>    imbalance sum on cpu busy                                        
->> :           0
->>    pull_task() count on cpu busy                                    
->> :           0
->>    pull_task() when target task was cache-hot on cpu busy           
->> :           0
->>    load_balance() failed to find busier queue on cpu busy           
->> :           0   $        0.00 $
->>    load_balance() failed to find busier group on cpu busy           
->> :           1   $    24537.00 $
->>    *load_balance() success count on cpu busy                        
->> :           0
->>    *avg task pulled per successful lb attempt (cpu busy)            
->> :        0.00
->>    ---------------------------------------- <Category newidle> 
->> ----------------------------------------
->>    load_balance() count on cpu newly idle                           
->> :         427   $       57.46 $
->>    load_balance() found balanced on cpu newly idle                  
->> :         382   $       64.23 $
->>    load_balance() move task failed on cpu newly idle                
->> :          45   $      545.27 $
->>    imbalance sum on cpu newly idle                                  
->> :          48
->>    pull_task() count on cpu newly idle                              
->> :           0
->>    pull_task() when target task was cache-hot on cpu newly idle     
->> :           0
->>    load_balance() failed to find busier queue on cpu newly idle     
->> :           0   $        0.00 $
->>    load_balance() failed to find busier group on cpu newly idle     
->> :         382   $       64.23 $
->>    *load_balance() success count on cpu newly idle                  
->> :           0
->>    *avg task pulled per successful lb attempt (cpu newly idle)      
->> :        0.00
->>    
->> ----------------------------------------------------------------------------------------------------
->>
->> Consider following line:
->>
->>    load_balance() found balanced on cpu newly idle                  
->> :         382    $      64.23 $
->>
->> While profiling was active, the load-balancer found 382 times the load
->> needs to be balanced on a newly idle CPU 0. Following value encapsulated
->> inside $ is average jiffies between two events (24537 / 382 = 64.23).
-> 
-> This explanation of the $ fields is quite buried. Is there a way of 
-> making it clearer with a column header in the report? I think even if it 
-> was documented in the man pages it might not be that useful.
-> 
-Thank you for the suggestion. I will add a header in the report to 
-explain what each column values are representing.
+I wonder if there is a different strategy for handling this. Normally
+with a visitor pattern you fail when you call an unimplemented
+visitor, this is then a signal the (in our case) tool needs to handle
+the new case. This avoids naively doing things like making perf inject
+duplicate events. The equivalent in the perf code would be to
+initialize the callbacks in the tool constructor to be to stubs that
+abort, then explicitly initialize and use things like callchain
+merging as appropriate. The whole booleans next to the callbacks feels
+like a kludge and likely to hide bugs. It is also marginally less
+efficient.
 
-> There are also other jiffies fields that don't use $. Maybe if it was 
-> like this it could be semi self documenting:
-> 
-> ----------------------------------------------------------------------
->      Time elapsed (in jiffies)               :        $  24537        $ 
->   ----------------------------------------------------------------------
-> 
-> ------------------<Category newidle> ---------------------------------
->    load_balance() count on cpu newly idle    :   427  $     57.46 avg $
-> ----------------------------------------------------------------------
-> 
-> 
-> Other than that:
-> 
-> Tested-by: James Clark <james.clark@linaro.org>
-
-Ack.
-
---
-Thanks and Regards,
-Swapnil
+Thanks,
+Ian
