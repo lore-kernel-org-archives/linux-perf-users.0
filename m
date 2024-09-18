@@ -1,157 +1,213 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC72E1C9848;
-	Wed, 18 Sep 2024 19:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DEB1C9EBF;
+	Wed, 18 Sep 2024 20:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726686528; cv=none; b=RUabuT9MalgilKzR6+XVQFblbRdWHGbg724xfXYCUSSdto4VI5DMrbDrSsMDw8vxtIRsyCf6BkyXTzb9X1i/b+v06jqPIlyo4yr8VviIZKUBNuxWmdt/dKMZqVED1EV10PMpJmHlK0NAf2otXwUfJUp74mH4sDCFA6Jh3dJWbU8=
+	t=1726691222; cv=none; b=Wyb8eju1k+vCXqZbPU363UWr+JErNlXl1K8+UPqBlUqoRbzhtGBjEThs7KRUOKwJagsfc/XVjvpKoXiRkPPRSqqTG1zVJ6KrXuh3I1ZScD+FoxHsHOH+ym9ZNML7PFKsZd5yYtLv/NYzuIEcJLTio7CUQIV82HQ3Vmmg2ZOglyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726686528; c=relaxed/simple;
-	bh=jiSr/3bRQvO46NDAj1FS7wvhNJZPRxUey4jB9tQEUxI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qdfT+6jtD0hqfocUQOxj68DBV1Qb5zguBN3tisUkp6HyiSGR3KxXTp1fT3Wfu08M8zevccFUgCKF15w75gCSiPHcjxa1okQgvti0XbFLlS9rX+t7SIsrGtU+08xiuQ9b8k0fpdiBYrKyk0iiYJTcGI56XQli3zAqL5g4iJp4qew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PdAgvYU0; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1726691222; c=relaxed/simple;
+	bh=WuhzO6bynCgX48WtRDDzGwgzs3tibIgTcvcbFL7ZzSA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uACHUY5ie+/DrW0vFOf6V6tpGJLUzTazasMG7wclhfNstDMhXXpG9uqXNX85VY8y81Mds6DthAYBORfT2HS22UwToStPm4EgLni54L/H4hYOQXJTS5ovhj3FnRRyyCPWgsYuRqeW92lBxMJhpUjm7X3phGJfS0n4w6+kfOxMfhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cN+NvBAk; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PdAgvYU0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cN+NvBAk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726686527; x=1758222527;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jiSr/3bRQvO46NDAj1FS7wvhNJZPRxUey4jB9tQEUxI=;
-  b=PdAgvYU0o3OQGDX68JqjyfnQm/Xpqhb1NCg9cWZ7CXk9A60EkzHgDYbl
-   mwbg/frT7rUViUG9pGe07p/xnFMi9qgzgbucXa5SxBd4sNuWr1yP//MmI
-   f1DB70vx9GH0sWGRVS4YIJuoH5+L/xd0nr54sD/hpOrnaDGKo8+Lp38WA
-   4nAelBsDsJjiPLZzNeI8+ZhfIBzqck7aI9aTQ9KFCNR/idpV3vmpt1xCx
-   Ki0y2MyHmldfU1Qp0GMmDeMG6e16si8CtGYSfToE37Sq1t+FHlrk8mOyy
-   rJEY7hoE6q0ybxG6o7crZExu1mTzQyvR+fzjriNYXISTSv3aEo7i7gOda
-   w==;
-X-CSE-ConnectionGUID: NYGkuzGOQi2TAq8HTRxHeQ==
-X-CSE-MsgGUID: hDOMIjuFRVSyPjxkULzy7g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11199"; a="36194252"
+  t=1726691221; x=1758227221;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WuhzO6bynCgX48WtRDDzGwgzs3tibIgTcvcbFL7ZzSA=;
+  b=cN+NvBAk6DDpo9JGjAgh6LBM6Mb+FbDNnuFTNm4sKnjRMHYCexOBA6RR
+   gKTA6UABU4BHZqGBHs6ENwAFnzZVlUpG6cSCZ1wq6Hb5JDNxv+pWSCqth
+   TJcOijf8T7kln6n83sB8iLGdjtFPEjkS2nHCFsTLrcCJUuPiPWtZP2bac
+   1cUxwXnOA96P6wkFhNdoDQEY8HHQ4IYgPzq4XdKwELunpngPFTsWEH2xm
+   nSasaDCrxEYa70kKlHGZYGuuvT+Wax3eW8IpKCxejIlNaNgbzwn+p4HDm
+   D1W+YTOMsL2+1FBKVKQ8QPvHxi1jnZYi9b6+e6CRQ/osMIv+PJgTMZz/3
+   Q==;
+X-CSE-ConnectionGUID: o2O1IQh4SU++KIZixGn6kQ==
+X-CSE-MsgGUID: 0ybjGOmpQA2G3DnHxngFzw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11199"; a="36295239"
 X-IronPort-AV: E=Sophos;i="6.10,239,1719903600"; 
-   d="scan'208";a="36194252"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2024 12:08:44 -0700
-X-CSE-ConnectionGUID: E2/7ThRkRaOBRTJVwSLyGw==
-X-CSE-MsgGUID: OO27+qXXTP69v+TQeImesw==
+   d="scan'208";a="36295239"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2024 13:27:00 -0700
+X-CSE-ConnectionGUID: kM9FXNm3SZW4+V7VrRsrow==
+X-CSE-MsgGUID: tW191H7GQleOTdVK8VJkJA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,239,1719903600"; 
-   d="scan'208";a="92975592"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 18 Sep 2024 12:08:39 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sr02W-000CXe-0w;
-	Wed, 18 Sep 2024 19:08:36 +0000
-Date: Thu, 19 Sep 2024 03:07:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	David Hildenbrand <david@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-	linux-m68k@lists.linux-m68k.org, linux-fsdevel@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux-foundation.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH V2 4/7] mm: Use pmdp_get() for accessing PMD entries
-Message-ID: <202409190244.JcrD4CwD-lkp@intel.com>
-References: <20240917073117.1531207-5-anshuman.khandual@arm.com>
+   d="scan'208";a="69937228"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2024 13:26:59 -0700
+Received: from [10.212.22.202] (kliang2-mobl1.ccr.corp.intel.com [10.212.22.202])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id BF13820CFEE3;
+	Wed, 18 Sep 2024 13:26:57 -0700 (PDT)
+Message-ID: <f554bf58-a1df-4ef8-9045-2d1396f30ef3@linux.intel.com>
+Date: Wed, 18 Sep 2024 16:26:56 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240917073117.1531207-5-anshuman.khandual@arm.com>
-
-Hi Anshuman,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on char-misc/char-misc-testing]
-[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus brauner-vfs/vfs.all dennis-percpu/for-next linus/master v6.11]
-[cannot apply to akpm-mm/mm-everything next-20240918]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khandual/m68k-mm-Change-pmd_val/20240917-153331
-base:   char-misc/char-misc-testing
-patch link:    https://lore.kernel.org/r/20240917073117.1531207-5-anshuman.khandual%40arm.com
-patch subject: [PATCH V2 4/7] mm: Use pmdp_get() for accessing PMD entries
-config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20240919/202409190244.JcrD4CwD-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240919/202409190244.JcrD4CwD-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409190244.JcrD4CwD-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/asm-generic/bug.h:22,
-                    from arch/openrisc/include/asm/bug.h:5,
-                    from include/linux/bug.h:5,
-                    from include/linux/mmdebug.h:5,
-                    from include/linux/mm.h:6,
-                    from include/linux/pagemap.h:8,
-                    from mm/pgtable-generic.c:10:
-   mm/pgtable-generic.c: In function 'pmd_clear_bad':
->> arch/openrisc/include/asm/pgtable.h:369:36: error: lvalue required as unary '&' operand
-     369 |                __FILE__, __LINE__, &(e), pgd_val(e))
-         |                                    ^
-   include/linux/printk.h:437:33: note: in definition of macro 'printk_index_wrap'
-     437 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
-         |                                 ^~~~~~~~~~~
-   arch/openrisc/include/asm/pgtable.h:368:9: note: in expansion of macro 'printk'
-     368 |         printk(KERN_ERR "%s:%d: bad pgd %p(%08lx).\n", \
-         |         ^~~~~~
-   include/asm-generic/pgtable-nop4d.h:25:50: note: in expansion of macro 'pgd_ERROR'
-      25 | #define p4d_ERROR(p4d)                          (pgd_ERROR((p4d).pgd))
-         |                                                  ^~~~~~~~~
-   include/asm-generic/pgtable-nopud.h:32:50: note: in expansion of macro 'p4d_ERROR'
-      32 | #define pud_ERROR(pud)                          (p4d_ERROR((pud).p4d))
-         |                                                  ^~~~~~~~~
-   include/asm-generic/pgtable-nopmd.h:36:50: note: in expansion of macro 'pud_ERROR'
-      36 | #define pmd_ERROR(pmd)                          (pud_ERROR((pmd).pud))
-         |                                                  ^~~~~~~~~
-   mm/pgtable-generic.c:54:9: note: in expansion of macro 'pmd_ERROR'
-      54 |         pmd_ERROR(pmdp_get(pmd));
-         |         ^~~~~~~~~
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC/PATCHSET 0/5] perf tools: Support deferred user callchains
+ (v2)
+To: Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Indu Bhagat <indu.bhagat@oracle.com>, linux-toolchains@vger.kernel.org
+References: <20240917222820.197594-1-namhyung@kernel.org>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240917222820.197594-1-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-vim +369 arch/openrisc/include/asm/pgtable.h
 
-61e85e367535a7 Jonas Bonn 2011-06-04  363  
-61e85e367535a7 Jonas Bonn 2011-06-04  364  #define pte_ERROR(e) \
-61e85e367535a7 Jonas Bonn 2011-06-04  365  	printk(KERN_ERR "%s:%d: bad pte %p(%08lx).\n", \
-61e85e367535a7 Jonas Bonn 2011-06-04  366  	       __FILE__, __LINE__, &(e), pte_val(e))
-61e85e367535a7 Jonas Bonn 2011-06-04  367  #define pgd_ERROR(e) \
-61e85e367535a7 Jonas Bonn 2011-06-04  368  	printk(KERN_ERR "%s:%d: bad pgd %p(%08lx).\n", \
-61e85e367535a7 Jonas Bonn 2011-06-04 @369  	       __FILE__, __LINE__, &(e), pgd_val(e))
-61e85e367535a7 Jonas Bonn 2011-06-04  370  
+On 2024-09-17 6:28 p.m., Namhyung Kim wrote:
+> Hello,
+> 
+> This is a counterpart for Josh's kernel change v2 [1] to support deferred
+> user callchains.  The change is transparent and users should not notice
+> anything with the deferred callchains.
+> 
+>   $ perf record -g sleep 1
+> 
+> I added --[no-]merge-callchains option to control output of perf script.
+> You can verify it has the deferred callchains like this:
+> 
+>   $ perf script --no-merge-callchains
+>   perf     801 [000]    18.031793:          1 cycles:P:
+>           ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.kallsyms])
+>           ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
+>           ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
+>           ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
+>           ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
+>           ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsyms])
+>           ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
+>           ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsyms])
+>           ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
+>           ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
+>           ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
+>           ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
+>           ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
+> 
+>   perf     801 [000]    18.031814: DEFERRED CALLCHAIN
+>                   7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-gnu/libc.so.6)
+> 
+>   ...
+> 
+> When the callchain is merged (it's the default) it'd look like below:
+> 
+>   $ perf script
+>   perf     801 [000]    18.031793:          1 cycles:P:
+>           ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.kallsyms])
+>           ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
+>           ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
+>           ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
+>           ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
+>           ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsyms])
+>           ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
+>           ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsyms])
+>           ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
+>           ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
+>           ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
+>           ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
+>           ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
+>                   7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-gnu/libc.so.6)
+> 
+>   ...
+> 
+> Notice that the last line and it has the __GI___ioctl in the same
+> callchain.  It should work with other tools like perf report.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+It seems it only works with perf report -D, when I test it on a
+non-hybrid machine.
+$perf record -e branches -g -c 3000000 ~/tchain_edit
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.397 MB perf.data ]
+$ perf report -D | tail -n 17
+
+Aggregated stats:
+               TOTAL events:       8235
+                MMAP events:         78  ( 0.9%)
+                COMM events:          2  ( 0.0%)
+                EXIT events:          1  ( 0.0%)
+              SAMPLE events:       4060  (49.3%)
+               MMAP2 events:          2  ( 0.0%)
+             KSYMBOL events:         12  ( 0.1%)
+           BPF_EVENT events:         12  ( 0.1%)
+  CALLCHAIN_DEFERRED events:       4060  (49.3%)
+      FINISHED_ROUND events:          3  ( 0.0%)
+            ID_INDEX events:          1  ( 0.0%)
+          THREAD_MAP events:          1  ( 0.0%)
+             CPU_MAP events:          1  ( 0.0%)
+           TIME_CONV events:          1  ( 0.0%)
+       FINISHED_INIT events:          1  ( 0.0%)
+$ perf report
+Error:
+The perf.data data has no samples!
+# To display the perf.data header info, please use
+--header/--header-only options.
+#
+
+
+On a hybrid machine, perf record errors out.
+
+$perf record -g true
+[ perf record: Woken up 1 times to write data ]
+0x58a8 [0x38]: failed to process type: 22 [Bad address]
+[ perf record: Captured and wrote 0.022 MB perf.data ]
+
+Thanks,
+Kan
+> 
+> The code is available at 'perf/defer-callchain-v2' branch in
+> https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> 
+> Thanks,
+> Namhyung
+> 
+> [1] https://lore.kernel.org/lkml/cover.1726268190.git.jpoimboe@kernel.org
+> 
+> 
+> Namhyung Kim (5):
+>   perf tools: Sync UAPI perf_event.h header
+>   perf tools: Minimal DEFERRED_CALLCHAIN support
+>   perf record: Enable defer_callchain for user callchains
+>   perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
+>   perf tools: Merge deferred user callchains
+> 
+>  tools/include/uapi/linux/perf_event.h     | 21 +++++-
+>  tools/lib/perf/include/perf/event.h       |  7 ++
+>  tools/perf/Documentation/perf-script.txt  |  5 ++
+>  tools/perf/builtin-script.c               | 92 +++++++++++++++++++++++
+>  tools/perf/util/callchain.c               | 24 ++++++
+>  tools/perf/util/callchain.h               |  3 +
+>  tools/perf/util/event.c                   |  1 +
+>  tools/perf/util/evlist.c                  |  1 +
+>  tools/perf/util/evlist.h                  |  1 +
+>  tools/perf/util/evsel.c                   | 32 +++++++-
+>  tools/perf/util/evsel.h                   |  1 +
+>  tools/perf/util/machine.c                 |  1 +
+>  tools/perf/util/perf_event_attr_fprintf.c |  1 +
+>  tools/perf/util/sample.h                  |  3 +-
+>  tools/perf/util/session.c                 | 78 +++++++++++++++++++
+>  tools/perf/util/tool.c                    |  2 +
+>  tools/perf/util/tool.h                    |  4 +-
+>  17 files changed, 273 insertions(+), 4 deletions(-)
+> 
