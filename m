@@ -1,111 +1,206 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF0AF1487C8;
-	Wed, 18 Sep 2024 06:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B623166F29
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Sep 2024 06:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726641180; cv=none; b=CS0lIHHzpYulCOlCCncdVjfw4IUDcjOCgJ+U0VRreInBzkcOIfz027nsxUQH5MrfVnVUk5MQRi3e0IT4MCPx8MVfdSDixbdAb0s9ZXViJbaanB1O7bf6LlOVifalb2VOIG23hZlWzgQBKM//SHKctrLnULumidemuwIxk2rps6M=
+	t=1726641519; cv=none; b=hFa57T8kDfRE+zCd8FSfkXoePtbt/z8UWyg7swiGKdC+F3g4khh1kHteDOWWSnbk7dL72k+Mcg/Wpc8hKCzEhS/kiGBpZWe8T2hHnU6sAWN3/9Ckqf0jen0Q+6cS/27A+l+VRKHqfGNklaZMOXZ/3bLjP/q7yYH9b/Flnm8JrCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726641180; c=relaxed/simple;
-	bh=TryCCA1ZWWAttn4FkLibmn0nSAOSRu1FKRZqsZOjeT0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tCZmEaAQoDpwNmeXoAd9h4HXerOaRB43JpHm64FEgOdGPSBqVaocAhyd2S0vfS4X6YGv/7hjhhrMkQc7Yi5Zec8F7U31lxrxkL1nMY9I8gZzWEwI6jnC3Fa2snuBTUzS8cwCyqaakVVgv96UZ01nbKmPm5lCjLFq4FAEkBydnhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36FB4FEC;
-	Tue, 17 Sep 2024 23:33:21 -0700 (PDT)
-Received: from [10.162.16.84] (a077893.blr.arm.com [10.162.16.84])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E5633F64C;
-	Tue, 17 Sep 2024 23:32:48 -0700 (PDT)
-Message-ID: <8cafe140-35cf-4e9d-8218-dfbfc156ca69@arm.com>
-Date: Wed, 18 Sep 2024 12:02:45 +0530
+	s=arc-20240116; t=1726641519; c=relaxed/simple;
+	bh=YaDJ4xfoBXINHqTsarVwnm+r8lB7RjaDZjS+N/z7e7A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fvUSPBMwj0r4V0YlvX+ipEZa4omiF76CyJg957gxH1KKP0slpjkxOyVTx7jXkXfoGYer3l5jfQboxKsfE49og1UXKIW2l2awsS2EIFAxYyGqueDujjlnfY8ExEKjw98ehhYml9sYVhGYq39Uvk8ZUscR7IBGZDEDAzHmSr52dyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D675cMAS; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D675cMAS"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3a09e9a5f8cso136735ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Sep 2024 23:38:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1726641515; x=1727246315; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dJiTd4/FU5F7zmVIghyo4lA++ZZc6Lm3yzIVWFkh7Js=;
+        b=D675cMASNgAKz26GRUSKHniDUgAyjUORN/N0G5RYJPQcnV24QIfy1l6zxY8FkIPfxp
+         RvhzjS91x+EW1kBg1DEqArlImuNxvh+xEI9WmSlHkb7daoFaOk9Q16ygCNCHTUAaCwbL
+         /HqlmtSOMeJmXlz/ITwq1/jw0e+zy4VHn9z76teaDWaOrpZR8A5Hd2COu1wbjFNxFZ9N
+         36/yUAfYE3f7l054bmxKC0IdSI62H/ThbFCkyrHWgSIbZjeEAkhXfxtnAKRNPa+P/7Yp
+         91sGEYpH7Pg7C1A4IIStiP3kchaewcMf3tRWEdPELs/1NICBtXOAnOiK52iFrdRlQGpi
+         g0Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726641515; x=1727246315;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dJiTd4/FU5F7zmVIghyo4lA++ZZc6Lm3yzIVWFkh7Js=;
+        b=Q9nRT+Hzysf9fDghaz+kElpQ0/BKaC/XUGe+uW0CjM9TDXvj4CQlvO3MPvmlNv97FN
+         PeXVUjGasT9xMbCst8x0InUwi56h639X+H2ffDZNXe7MMHgqI7ibw2qBSs/ErQ/u2kWy
+         SP1plOEoqYPvE8QJ+j/hw6hsr8ezAw9lJgXFJ8LhQMibNNdREesWPwCgIcTy18OjXHHs
+         htlzeYmUd4Q8gRBHsPggvIscovwFGj5vkUUd5tFHuDG/SdnUbE92vAZPXB36miM4+h68
+         hroLBPFu7awKPOimUzEq3DSNHI/0WOnasUt8r3oCrxVNbvTNueRFMh4yilEePVeYE6u+
+         IS+A==
+X-Forwarded-Encrypted: i=1; AJvYcCU63ZPdVtRCvdP25RwjiTuw5Kqc8WFO3u0c8mA5NspJeL1OXJtBKyIDgI55iJIPfMZeWdSKhf8FzLQNRCaq/hay@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgnleP3qpVpfXigDSMmS2ahVag3/5A1J1n+fe3Bohs//SF3NyQ
+	Oenaai40sldZZbmnXDLv/sqlYZAr60hU58MMwA7ej/4nVuAQhDEIQDWCFMeUIlWAoyhZh1uHY2D
+	qNxFyeAdlGbSFaCKqzyY7DGsTkvA8riZJMwPM
+X-Google-Smtp-Source: AGHT+IGoj+5PzB4icph7RhG3UMOr6ql1rZQwZT2T/ETh0X8uz/CU+7GUgtm1sEFw4YBQdLWnNO4Giv41j7x4BrHMvr8=
+X-Received: by 2002:a05:6e02:1786:b0:3a0:9ffd:2b7a with SMTP id
+ e9e14a558f8ab-3a0b9874e5bmr1646435ab.9.1726641515383; Tue, 17 Sep 2024
+ 23:38:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 3/7] mm: Use ptep_get() for accessing PTE entries
-To: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Ryan Roberts <ryan.roberts@arm.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
- linux-m68k@lists.linux-m68k.org, linux-fsdevel@vger.kernel.org,
- kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240917073117.1531207-1-anshuman.khandual@arm.com>
- <20240917073117.1531207-4-anshuman.khandual@arm.com>
- <f9a7ebb4-3d7c-403e-b818-29a6a3b12adc@redhat.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <f9a7ebb4-3d7c-403e-b818-29a6a3b12adc@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240917222820.197594-1-namhyung@kernel.org>
+In-Reply-To: <20240917222820.197594-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 18 Sep 2024 08:38:22 +0200
+Message-ID: <CAP-5=fVV9wzp7L71VJxaqzuURFtr1LAg0Qmk5uqmzs3By1Exow@mail.gmail.com>
+Subject: Re: [RFC/PATCHSET 0/5] perf tools: Support deferred user callchains (v2)
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	linux-toolchains@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Sep 18, 2024 at 12:28=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> Hello,
+>
+> This is a counterpart for Josh's kernel change v2 [1] to support deferred
+> user callchains.  The change is transparent and users should not notice
+> anything with the deferred callchains.
+>
+>   $ perf record -g sleep 1
+>
+> I added --[no-]merge-callchains option to control output of perf script.
+> You can verify it has the deferred callchains like this:
+>
+>   $ perf script --no-merge-callchains
+>   perf     801 [000]    18.031793:          1 cycles:P:
+>           ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.ka=
+llsyms])
+>           ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
+>           ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
+>           ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
+>           ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
+>           ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsym=
+s])
+>           ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
+>           ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsy=
+ms])
+>           ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
+>           ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
+>           ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
+>           ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
+>           ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
+>
+>   perf     801 [000]    18.031814: DEFERRED CALLCHAIN
+>                   7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-g=
+nu/libc.so.6)
+>
+>   ...
+>
+> When the callchain is merged (it's the default) it'd look like below:
+>
+>   $ perf script
+>   perf     801 [000]    18.031793:          1 cycles:P:
+>           ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.ka=
+llsyms])
+>           ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
+>           ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
+>           ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
+>           ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
+>           ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsym=
+s])
+>           ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
+>           ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsy=
+ms])
+>           ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
+>           ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
+>           ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
+>           ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
+>           ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
+>                   7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-g=
+nu/libc.so.6)
+>
+>   ...
+>
+> Notice that the last line and it has the __GI___ioctl in the same
+> callchain.  It should work with other tools like perf report.
 
+Hi Namhyung, I think this is interesting work!
 
-On 9/17/24 15:58, David Hildenbrand wrote:
-> On 17.09.24 09:31, Anshuman Khandual wrote:
->> Convert PTE accesses via ptep_get() helper that defaults as READ_ONCE() but
->> also provides the platform an opportunity to override when required. This
->> stores read page table entry value in a local variable which can be used in
->> multiple instances there after. This helps in avoiding multiple memory load
->> operations as well possible race conditions.
->>
-> 
-> Please make it clearer in the subject+description that this really only involves set_pte_safe().
+The issue feels similar to leader sampling and some of the unpicking
+of that we've been dealing with. With leader sampling it was added and
+then the dispatch of events modified so that tools wouldn't see leader
+samples, instead new events would be synthesized based on the leader
+sample data. However, the leader sample event wasn't changed and so
+now we have multiple repeated events and perf inject wouldn't just
+pass through a perf data file.
 
-I will update the commit message with some thing like this.
+What I'm expecting based on this description is that a deferred call
+chain will be merged with a regular one, however, perf inject isn't
+updated to drop the deferred callchain so now we have the deferred
+callchain event twice.
 
-mm: Use ptep_get() in set_pte_safe()
+My feeling is that making the dispatch of events to tools "smart" is a
+false economy. Tools can add handlers for these events easily enough.
+What's harder is undoing the smartness when it does things that lead
+to duplicated events and the like. I'm not a fan of how leader
+sampling was implemented and I still think it odd that with perf
+script we see invented events when trying to just dump the contents of
+a perf.data file.
 
-This converts PTE accesses in set_pte_safe() via ptep_get() helper which
-defaults as READ_ONCE() but also provides the platform an opportunity to
-override when required. This stores read page table entry value in a local
-variable which can be used in multiple instances there after. This helps
-in avoiding multiple memory load operations as well as some possible race
-conditions.
+Thanks,
+Ian
 
-> 
-> 
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: Ryan Roberts <ryan.roberts@arm.com>
->> Cc: "Mike Rapoport (IBM)" <rppt@kernel.org>
->> Cc: linux-mm@kvack.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>   include/linux/pgtable.h | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
->> index 2a6a3cccfc36..547eeae8c43f 100644
->> --- a/include/linux/pgtable.h
->> +++ b/include/linux/pgtable.h
->> @@ -1060,7 +1060,8 @@ static inline int pgd_same(pgd_t pgd_a, pgd_t pgd_b)
->>    */
->>   #define set_pte_safe(ptep, pte) \
->>   ({ \
->> -    WARN_ON_ONCE(pte_present(*ptep) && !pte_same(*ptep, pte)); \
->> +    pte_t __old = ptep_get(ptep); \
->> +    WARN_ON_ONCE(pte_present(__old) && !pte_same(__old, pte)); \
->>       set_pte(ptep, pte); \
->>   })
->>   
-> 
-> I don't think this is necessary. PTE present cannot flip concurrently, that's the whole reason of the "safe" part after all.
-
-Which is not necessary ? Converting de-references to ptep_get() OR caching
-the page table read value in a local variable ? ptep_get() conversion also
-serves the purpose providing an opportunity for platform to override.
-
-> 
-> Can we just move these weird set_pte/pmd_safe() stuff to x86 init code and be done with it? Then it's also clear *where* it is getting used and for which reason.
-> 
-set_pte/pmd_safe() can be moved to x86 platform - as that is currently the
-sole user for these helpers. But because set_pgd_safe() gets used in riscv
-platform, just wondering would it be worth moving only the pte/pmd helpers
-but not the pgd one ?
+> The code is available at 'perf/defer-callchain-v2' branch in
+> https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+>
+> Thanks,
+> Namhyung
+>
+> [1] https://lore.kernel.org/lkml/cover.1726268190.git.jpoimboe@kernel.org
+>
+>
+> Namhyung Kim (5):
+>   perf tools: Sync UAPI perf_event.h header
+>   perf tools: Minimal DEFERRED_CALLCHAIN support
+>   perf record: Enable defer_callchain for user callchains
+>   perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
+>   perf tools: Merge deferred user callchains
+>
+>  tools/include/uapi/linux/perf_event.h     | 21 +++++-
+>  tools/lib/perf/include/perf/event.h       |  7 ++
+>  tools/perf/Documentation/perf-script.txt  |  5 ++
+>  tools/perf/builtin-script.c               | 92 +++++++++++++++++++++++
+>  tools/perf/util/callchain.c               | 24 ++++++
+>  tools/perf/util/callchain.h               |  3 +
+>  tools/perf/util/event.c                   |  1 +
+>  tools/perf/util/evlist.c                  |  1 +
+>  tools/perf/util/evlist.h                  |  1 +
+>  tools/perf/util/evsel.c                   | 32 +++++++-
+>  tools/perf/util/evsel.h                   |  1 +
+>  tools/perf/util/machine.c                 |  1 +
+>  tools/perf/util/perf_event_attr_fprintf.c |  1 +
+>  tools/perf/util/sample.h                  |  3 +-
+>  tools/perf/util/session.c                 | 78 +++++++++++++++++++
+>  tools/perf/util/tool.c                    |  2 +
+>  tools/perf/util/tool.h                    |  4 +-
+>  17 files changed, 273 insertions(+), 4 deletions(-)
+>
+> --
+> 2.46.0.792.g87dc391469-goog
+>
