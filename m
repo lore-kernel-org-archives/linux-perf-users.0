@@ -1,103 +1,104 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADFC28EF;
-	Wed, 18 Sep 2024 11:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AF3176FB8;
+	Wed, 18 Sep 2024 12:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726659335; cv=none; b=ByzT1F2+ThihnavPZI0qXvbPWZ+3QTge3HBgbEECgbKAvCdHDyQhvZPNyXVcV4aJNx/SLCv+UR9ncP7y9oC1LjxLC4Y0jnpjH+EhEBhAo3O/2iv4GFvvEAnOyMb8NZZWrPnQkHiqzt4qt6VWZXgbExl2w6X6Zpi/BMK2EprTqx8=
+	t=1726662346; cv=none; b=vBLR5XD+G70Mq5pV4w+6ZJ/42oK3cwBpAOeeFMxLE9Rew4f174AwI3b196SDzTIm4l1z6cfzerKNnv1kE3WS21MDNKJMYtPhbNIWnivRudGxFSAbze18TsQtfXvtA8xKLh5L9CFHMd2thdAwlSgSwxvmzOm1e3Sq60GcPwQBdzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726659335; c=relaxed/simple;
-	bh=ovxya7lXdEGnE0A+EuzKwD5pxlYykPJgGWx2fudUCUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Hs/2dFLEJ0GPAzhO3OufT5+I3CyMt1cgXbFdkL4LZLvFqyKuDZcY7n9YpUuLI2N6XlBEEhoONZQXVRL3xIbCZ7iDarUdSCv4QOccl2TTmDIV9sVjq41eCSmEf8P7g3rCRxhZ/HXxqR3JoyV++ykjaof8YU7SvVvEmzKBiKKAvjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nKd0aTU8; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1726662346; c=relaxed/simple;
+	bh=f0P4n/JcY4cnbnO0t/v39t25A6vObIXGBoFXI6yVxvw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dwdFK2VNbBcWhZKyspFO5hhQAitR53/OKKDitdzZnOzgXcYe5BSNtlJ8XNcBIqjA7y4EzOgXHVAALGmjy3RZ3A1PaYGN+ccRV01s+3RLKiJXOw9Gsn1kV2qR/dH3LlAn+GDV6okCBJhYcjvxSiOacHP43G6sBsvjf8z7ObMjEVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NpKYRb2D; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKd0aTU8"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-374c5bab490so428106f8f.1;
-        Wed, 18 Sep 2024 04:35:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726659332; x=1727264132; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=Krs8Km71K3DpWJhmegxLANswkZJOZp+boIvmDijJFk8=;
-        b=nKd0aTU8kXYHbN/TuRrxfaaId5nOcC9NGQV7KJUYqT4s28st5rmfuz9QNmFFhm8HAs
-         mX0T0Eu0yRNUTCPvD9Hrz0RekC2cb3p+tTEi/MdPMctddB4Y2YC8OBWnHnznW58gdIIq
-         leJ3SMDM5NxNNNLqHjcoX7BaUDSTe/e+lrV/woDWSpzIAJcgRVbNaO1hsJfEEFqaZ244
-         6elrk+y0B+01rZmh8gY0NknCt6p1FxfUwMI6e3GpdPvUv0TgOIm/1BOpwggztQJkD7rv
-         T/oSyEaW+JiF98+yxWYK3IJzlnqu7Tgs1IblsFb2fI2KrlNeSzyPs1T/hmXNn+J15agq
-         N2tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726659332; x=1727264132;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Krs8Km71K3DpWJhmegxLANswkZJOZp+boIvmDijJFk8=;
-        b=w1nGRM9xBWrXSvNmiQOOlyIJQnwl/GdbvFpIKBl1Drf6z0lryP2wxt4SHBgwHmovEV
-         6tLJC7OWL5mjFBuLn14o/KXCINbAKB7e3XOStWRU9gYFb1/PUX2Q/511iWCbNnn1rnx8
-         9L5ozUXGqPg6xID+R1MYGARYyjsywvwvFJfmTpY9sxoXWb/wu890H73Mbis9v6HgkBzt
-         nNKcmc5ZFoQ3BNTqIgVOc+VLikERlqrbuclnVld0J/vwbbTa87xnbOE/9lMURVyHjldX
-         MSq/2qbxhcWBW3XgX+3yF0f1lYSD99fQk0XLeCJZgz0zN2Vvc1Et7yvxxcskhYaeyEYa
-         MuOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVT4fz+90WMjWRij6/IjfVX59GuCmqVhyhwEjDX8CyJSmKVLw7FhNhhKEy6xcY3Xj+UmY0jxP7chDfdThbtV3mF@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhlVmsqJA3iwB6LjAwMSqsVNxTsFmqQfLw/hnKczi1iy3X2sun
-	QmjfJyr5HZS89w3QWHDudVrCMO2dOks4QtpV7W5nUfPL3WZG6PlS
-X-Google-Smtp-Source: AGHT+IGdkfsM44HHj8mo1ejS+zbYGHgt+eRp8px3a+f3p69efwS4LCzFULnyNYMMDsJ7wyfgvZdiLw==
-X-Received: by 2002:a5d:5d81:0:b0:374:bb1a:eebb with SMTP id ffacd0b85a97d-378c5e5d6a3mr10472989f8f.25.1726659331614;
-        Wed, 18 Sep 2024 04:35:31 -0700 (PDT)
-Received: from gmail.com (1F2EF419.nat.pool.telekom.hu. [31.46.244.25])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e73e80afsm12028647f8f.38.2024.09.18.04.35.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2024 04:35:31 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Wed, 18 Sep 2024 13:35:29 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Jiri Olsa <jolsa@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [GIT PULL] Performance events fixes left over from v6.11
-Message-ID: <Zuq7AXjknK8ooci6@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NpKYRb2D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726662346; x=1758198346;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=f0P4n/JcY4cnbnO0t/v39t25A6vObIXGBoFXI6yVxvw=;
+  b=NpKYRb2DfDqTlORO/Vzxf6z/Rj9UybSccYaC3zwMBjUPV8vuw113QlF2
+   xiG150npvJPcN1fPHPFKmj1KHQLWFlCzDgMUV69eooYOv5sNqW5bE1rPG
+   G3atTnN4JKfmvXtGGWzSiVlLfa6jnFfiAjkgb4gF7cIi0yWGRYHmywQHw
+   100gkt19QE85dEIj9zstrZMiUEqHDKtFkczNlx+5CFuA3ravhVwgaNFYv
+   9ai+FVfELHcwKlzusM9PyAN5rZ8r75tL2FcexAP/yQSA/e2oJ40NkL0mH
+   cp9/dP3D/axXC97DcvIMz10dLh8uOMIOz1SGoMJ5JCGtzzzIt6g5Znupn
+   g==;
+X-CSE-ConnectionGUID: fIn0MrMvS1GyTl0BJbW8dQ==
+X-CSE-MsgGUID: hHy31EAJQJKo3/zSqsTwKQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11199"; a="43089790"
+X-IronPort-AV: E=Sophos;i="6.10,238,1719903600"; 
+   d="scan'208";a="43089790"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2024 05:25:45 -0700
+X-CSE-ConnectionGUID: QAFKuqHKQbKOw0Z5dM+1AQ==
+X-CSE-MsgGUID: IFquy0hURG2dQnmbvR7JBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,238,1719903600"; 
+   d="scan'208";a="74105620"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.38.190])
+  by fmviesa004.fm.intel.com with ESMTP; 18 Sep 2024 05:25:43 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+	id CC4AF30125A; Wed, 18 Sep 2024 05:25:43 -0700 (PDT)
+From: Andi Kleen <ak@linux.intel.com>
+To: Liao Chang <liaochang1@huawei.com>
+Cc: <mhiramat@kernel.org>,  <oleg@redhat.com>,  <andrii@kernel.org>,
+  <peterz@infradead.org>,  <mingo@redhat.com>,  <acme@kernel.org>,
+  <namhyung@kernel.org>,  <mark.rutland@arm.com>,
+  <alexander.shishkin@linux.intel.com>,  <jolsa@kernel.org>,
+  <irogers@google.com>,  <adrian.hunter@intel.com>,
+  <kan.liang@linux.intel.com>,  <linux-kernel@vger.kernel.org>,
+  <linux-trace-kernel@vger.kernel.org>,
+  <linux-perf-users@vger.kernel.org>,  <bpf@vger.kernel.org>
+Subject: Re: [PATCH] uprobes: Improve the usage of xol slots for better
+ scalability
+In-Reply-To: <20240918012752.2045713-1-liaochang1@huawei.com> (Liao Chang's
+	message of "Wed, 18 Sep 2024 01:27:52 +0000")
+References: <20240918012752.2045713-1-liaochang1@huawei.com>
+Date: Wed, 18 Sep 2024 05:25:43 -0700
+Message-ID: <87jzf9b12w.fsf@linux.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 
-Linus,
+Liao Chang <liaochang1@huawei.com> writes:
+> +
+> +/*
+> + * xol_recycle_insn_slot - recycle a slot from the garbage collection list.
+> + */
+> +static int xol_recycle_insn_slot(struct xol_area *area)
+> +{
+> +	struct uprobe_task *utask;
+> +	int slot = UINSNS_PER_PAGE;
+> +
+> +	rcu_read_lock();
+> +	list_for_each_entry_rcu(utask, &area->gc_list, gc) {
+> +		/*
+> +		 * The utask associated slot is in-use or recycling when
+> +		 * utask associated slot_ref is not one.
+> +		 */
+> +		if (test_and_put_task_slot(utask)) {
+> +			slot = utask->insn_slot;
+> +			utask->insn_slot = UINSNS_PER_PAGE;
+> +			clear_bit(slot, area->bitmap);
+> +			atomic_dec(&area->slot_count);
+> +			get_task_slot(utask);
 
-Please pull the latest perf/urgent Git tree from:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2024-09-18
-
-   # HEAD: ef493f4b122d6b14a6de111d1acac1eab1d673b0 perf/x86/intel: Allow to setup LBR for counting event for BPF
-
-Perf events fixes left over from the v6.11 cycle:
-
- - Fix energy-pkg event enumeration on certain AMD CPUs
- - Set up the LBR branch stack for BPF counting events too
-
- Thanks,
-
-	Ingo
-
------------------->
-Dhananjay Ugwekar (1):
-      perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
-
-Kan Liang (1):
-      perf/x86/intel: Allow to setup LBR for counting event for BPF
+Doesn't this need some annotation to make ThreadSanitizer happy?
+Would be good to have some commentary why doing so
+many write operations with merely a rcu_read_lock as protection is safe.
+It might be safer to put some write type operations under a real lock. 
+Also it is unclear how the RCU grace period for utasks is enforced.
 
 
- arch/x86/events/intel/core.c |  8 ++++++--
- arch/x86/events/rapl.c       | 47 +++++++++++++++++++++++++++++++++++++++-----
- 2 files changed, 48 insertions(+), 7 deletions(-)
+-Andi
