@@ -1,92 +1,132 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4212168BD;
-	Thu, 19 Sep 2024 10:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2751B18893D;
+	Thu, 19 Sep 2024 12:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726742589; cv=none; b=CGmE7Y5iSLD3lFIaOSZAeuUaA+LQdTbKM/ctowepWDLr2YX5F+ClkpGTOKxb2kMsS0x7v4i5GKGLe+CRWgxFSf9Ih92nXVBxZGrsZkUN7oyi+oZJ6fJrtcoGaUT3T9Brp1TpYHppZT6mkx7kaWbhp4xPjc0KnfA8c1vqKIe1ab0=
+	t=1726748454; cv=none; b=kIj/pMLTI1cUE4GMYVz7i6/fbwKk1zNuMW34PU/DPlo1DD64o+PNMRRKlj/U2rc5TeUgDz4lXmGPH5oeHQtWquX9JSqnhjynmkaplECT2KBcDcd/v6OZCv/Ne/tQtKx/VDojOdCPvBKH9Q/Hd0LTx7dhTY926RI6lSjuPzAkM0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726742589; c=relaxed/simple;
-	bh=6axibghGWXnK0cm5vXDImFDbKRCElFsoUa7lpol6vJ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z2CSEZaP+1ST4UXzzuczXNhSCw87/2sr1sIZzpbwZ7/2aGVRy36qpRLAnl5GLQA9b5Z8Z2Sg8wpSl2sJUFLbg/XhtDks3lDjEG92vs/mtgsQ0cl2a6WdP0fUbNDoeaWh5herSo3sJqKaIu7LQ0UpNmRx60NFHj1NzZ/+E2TfocM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Oee0lfBa; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Oee0lfBa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1726742582;
-	bh=6axibghGWXnK0cm5vXDImFDbKRCElFsoUa7lpol6vJ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Oee0lfBaZwbiKRb+fb9McJIF5rAXlgqsNoGO1JMGVHKCI4qffUdGYUDT4RDWe8wBP
-	 C22mm+1R3S9DT7n07qlj8ksBiXiNnb3Oklyreaqof3gLh6LybNqJQfrUzzOTJ88o4Z
-	 SuPJRpoqDmVNKHd13+T3pcO6puntRF5vajv2k4jRU+1gLSKpAOZdeTcxk6Quk88Gq2
-	 edUMEk0qBbbFxSSep2WkkNn8GR0urGP3ThNfb0lgZ9p9GfgrjjyC6eHPfx0QjBkNTs
-	 J/bJGgByToxQyetGzZGdaC76ato2lbS4gJZLMsrA4U87trllYHIMRkdDy2fxl7t763
-	 0RZz8PW7y2jrw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4X8XD43PKYz4wbr;
-	Thu, 19 Sep 2024 20:43:00 +1000 (AEST)
-Date: Thu, 19 Sep 2024 20:42:59 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
-Subject: Re: [GIT PULL] Performance events changes for v6.12
-Message-ID: <20240919204259.3d19a6b9@canb.auug.org.au>
-In-Reply-To: <Zuv0kA-um9ZT-Tjd@gmail.com>
-References: <ZurLc9qEjBH9MkvK@gmail.com>
-	<20240919082624.05ca5fd6@canb.auug.org.au>
-	<Zuv0kA-um9ZT-Tjd@gmail.com>
+	s=arc-20240116; t=1726748454; c=relaxed/simple;
+	bh=oTYc/p2t/iTSK5+cXS3Sc0LDuFrjEIBTQIdwaJDT9C4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HeQ7Xj1sKNDad7xQZh7R4OJFBCvhflj4xPFz9GgkvWbjYGi6a0VsDo//VJC0Kz1MbpRZqvzOS0wLeWbt+XvygMIvKmbIN6zfvvUHtesppCZm3ep+CveeeX8h4ZfqegPCsfrne+gTnKsNYnITCGv114I69n0tbi3lGunvnrNdG9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4X8ZLT5NVFzpVsg;
+	Thu, 19 Sep 2024 20:18:41 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8EC1218010F;
+	Thu, 19 Sep 2024 20:20:45 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Thu, 19 Sep 2024 20:20:44 +0800
+Message-ID: <7a6ba3f3-dffa-cdac-73c7-074505ea4b44@huawei.com>
+Date: Thu, 19 Sep 2024 20:20:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.6AQDKVlYLiDpuNqFc13f1X";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH] uprobes: Improve the usage of xol slots for better
+ scalability
+To: Andi Kleen <ak@linux.intel.com>
+CC: <mhiramat@kernel.org>, <oleg@redhat.com>, <andrii@kernel.org>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
+References: <20240918012752.2045713-1-liaochang1@huawei.com>
+ <87jzf9b12w.fsf@linux.intel.com>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <87jzf9b12w.fsf@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
---Sig_/.6AQDKVlYLiDpuNqFc13f1X
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Ingo,
 
-On Thu, 19 Sep 2024 11:53:20 +0200 Ingo Molnar <mingo@kernel.org> wrote:
->
-> Thanks: I've queued up the fix for this ARM warning in perf/urgent and wi=
-ll=20
-> get it to Linus later today.
+在 2024/9/18 20:25, Andi Kleen 写道:
+> Liao Chang <liaochang1@huawei.com> writes:
+>> +
+>> +/*
+>> + * xol_recycle_insn_slot - recycle a slot from the garbage collection list.
+>> + */
+>> +static int xol_recycle_insn_slot(struct xol_area *area)
+>> +{
+>> +	struct uprobe_task *utask;
+>> +	int slot = UINSNS_PER_PAGE;
+>> +
+>> +	rcu_read_lock();
+>> +	list_for_each_entry_rcu(utask, &area->gc_list, gc) {
+>> +		/*
+>> +		 * The utask associated slot is in-use or recycling when
+>> +		 * utask associated slot_ref is not one.
+>> +		 */
+>> +		if (test_and_put_task_slot(utask)) {
+>> +			slot = utask->insn_slot;
+>> +			utask->insn_slot = UINSNS_PER_PAGE;
+>> +			clear_bit(slot, area->bitmap);
+>> +			atomic_dec(&area->slot_count);
+>> +			get_task_slot(utask);
+> 
+> Doesn't this need some annotation to make ThreadSanitizer happy?
 
-Excellent, thanks.
+Hi, Andi
 
---=20
-Cheers,
-Stephen Rothwell
+Sorry, I know nothing about the ThreadSanitizer and related annotation,
+could you provide some information about it, thanks.
 
---Sig_/.6AQDKVlYLiDpuNqFc13f1X
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> Would be good to have some commentary why doing so
+> many write operations with merely a rcu_read_lock as protection is safe.
+> It might be safer to put some write type operations under a real lock. 
+> Also it is unclear how the RCU grace period for utasks is enforced.
 
------BEGIN PGP SIGNATURE-----
+You are right, but I think using atomic refcount routine might be a more
+suitable apprach for this scenario. The slot_ret field of utask instance
+is used to track the status of insn_slot. slot_ret supports three values.
+A value of 2 means the utask associated insn_slot is currently in use by
+uprobe. A value of 1 means the slot is no being used by uprobe. A value
+of 0 means the slot has been reclaimed. So in some term, the atomic refcount
+routine test_and_pout_task_slot() also avoid the racing when writing to
+the utask instance, providing additional status information about insn_slot.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmbsADMACgkQAVBC80lX
-0GwPowf/brfJY12Xscub4zL+fzY9hwiTvUhAY8mC+OX55U5eCq3Q3Pfpug1QsYCG
-mS6nuP+YbmuFTS+n4U9x0z9aRvOGRjmE7v1w4fqqMdk0cEsxbm+0HUnSiCHnHtGk
-sq/beRORrnYzI6IxVaADqhYzW1LDHmveh1bGHkQSdfGZQ0YXx8zMKFaQhrkiqE/n
-tsmLiaMwkVAbvuyEZnJoIEhmkRKzgYP8s7sC851pYyOik4uOJrluA0Jy2nDlG8Oq
-deZyp5FKDz2YNJ/HOv7g8jDJC9f0Y8uUoZXeuJWZHukIuy2JalrKQ0k47dJ7YNQI
-i8xCqLORnZWrMDrumngrEA9I4nyB6A==
-=cXph
------END PGP SIGNATURE-----
+BTW, You reminded me that since it might recycle the slot after deleting the
+utask from the garbage collection list, so it's necessary to use
+test_and_put_task_slot() to avoid the racing on the stale utask. the correct
+code might be something like this:
 
---Sig_/.6AQDKVlYLiDpuNqFc13f1X--
+@@ -1771,16 +1783,16 @@ static void xol_free_insn_slot(struct task_struct *tsk)
+
+        spin_lock_irqsave(&area->list_lock, flags);
+        list_del_rcu(&tsk->utask->gc);
++       /* Ensure the slot is not in use or reclaimed on other CPU */
++       if (test_and_put_task_slot(tsk->utask)) {
++               clear_bit(tsk->utask->insn_slot, area->bitmap);
++               atomic_dec(&area->slot_count);
++               tsk->utask->insn_slot = UINSNS_PER_PAGE;
++               get_task_slot(tsk->utask);
++       }
+        spin_unlock_irqrestore(&area->list_lock, flags);
+        synchronize_rcu();
+
+If I've made any mistakes about RCU usage, please don't hesitate to corret me.
+Thank you in advance.
+
+> 
+> 
+> -Andi
+> 
+
+-- 
+BR
+Liao, Chang
