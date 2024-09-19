@@ -1,98 +1,92 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B2B194088
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Sep 2024 10:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4212168BD;
+	Thu, 19 Sep 2024 10:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726741068; cv=none; b=fYzMLU74m+99VOGeyAkIRAv3ezr8+tj9ZB1ir6UyJM9KfW7IB2Ymy3ZKhGvdhcBIf8wySQPaDVcckRH4gHRFplxNm8E0n7p+Smf+ftmXKDUsakK6UcWKSALBEeBZpJvQRunbTFmDwTu7I+jqeutVsCLDL2m9g3p8en1oKV1B1kc=
+	t=1726742589; cv=none; b=CGmE7Y5iSLD3lFIaOSZAeuUaA+LQdTbKM/ctowepWDLr2YX5F+ClkpGTOKxb2kMsS0x7v4i5GKGLe+CRWgxFSf9Ih92nXVBxZGrsZkUN7oyi+oZJ6fJrtcoGaUT3T9Brp1TpYHppZT6mkx7kaWbhp4xPjc0KnfA8c1vqKIe1ab0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726741068; c=relaxed/simple;
-	bh=JRE51gP5UxLcgAGuT2g5r97Z6STrbAowK6q6kqli0ZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F541x9B4/tsgYQy9e8MMwsz61uJQH1DC4QpYOHM5ewtz0AZejP2qUiPq4XOXOYLEXaRBKwXJzeroBt9rV/Lwe9P0ZbgtlRtdj5ZNhrunZT6+19RVGgvoS9xSAPwvaOT02fJx/74H3n0L0nWpXKh/fIoTOkHqZ2N5+zX5/Ej/56g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=D6x6BKht; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1726742589; c=relaxed/simple;
+	bh=6axibghGWXnK0cm5vXDImFDbKRCElFsoUa7lpol6vJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z2CSEZaP+1ST4UXzzuczXNhSCw87/2sr1sIZzpbwZ7/2aGVRy36qpRLAnl5GLQA9b5Z8Z2Sg8wpSl2sJUFLbg/XhtDks3lDjEG92vs/mtgsQ0cl2a6WdP0fUbNDoeaWh5herSo3sJqKaIu7LQ0UpNmRx60NFHj1NzZ/+E2TfocM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Oee0lfBa; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="D6x6BKht"
-Date: Thu, 19 Sep 2024 03:17:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1726741064;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I1mckTS2FV38bbZ879rd+/BowKPTlDKekDspILq4S7U=;
-	b=D6x6BKhtU1AsDKi/4KqvcONlUrTfddheLB6mjS/liWOZikXBBbl320OPz8mgGIKM4WllXD
-	+wY9aYHdLlkmHh4egDXFCzDa+mmurZ3C2W/5Yn9b7oeoiOBTG25PlxVj4C73Kx3idnOFp+
-	Vxq68Xs1nMkSJWGZkP3uhgfHcFJ6DPg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] Correct perf sampling with Guest VMs
-Message-ID: <Zuv6QveQAHZ9H0HP@linux.dev>
-References: <20240912205133.4171576-1-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Oee0lfBa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1726742582;
+	bh=6axibghGWXnK0cm5vXDImFDbKRCElFsoUa7lpol6vJ8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Oee0lfBaZwbiKRb+fb9McJIF5rAXlgqsNoGO1JMGVHKCI4qffUdGYUDT4RDWe8wBP
+	 C22mm+1R3S9DT7n07qlj8ksBiXiNnb3Oklyreaqof3gLh6LybNqJQfrUzzOTJ88o4Z
+	 SuPJRpoqDmVNKHd13+T3pcO6puntRF5vajv2k4jRU+1gLSKpAOZdeTcxk6Quk88Gq2
+	 edUMEk0qBbbFxSSep2WkkNn8GR0urGP3ThNfb0lgZ9p9GfgrjjyC6eHPfx0QjBkNTs
+	 J/bJGgByToxQyetGzZGdaC76ato2lbS4gJZLMsrA4U87trllYHIMRkdDy2fxl7t763
+	 0RZz8PW7y2jrw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4X8XD43PKYz4wbr;
+	Thu, 19 Sep 2024 20:43:00 +1000 (AEST)
+Date: Thu, 19 Sep 2024 20:42:59 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>,
+ Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
+Subject: Re: [GIT PULL] Performance events changes for v6.12
+Message-ID: <20240919204259.3d19a6b9@canb.auug.org.au>
+In-Reply-To: <Zuv0kA-um9ZT-Tjd@gmail.com>
+References: <ZurLc9qEjBH9MkvK@gmail.com>
+	<20240919082624.05ca5fd6@canb.auug.org.au>
+	<Zuv0kA-um9ZT-Tjd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240912205133.4171576-1-coltonlewis@google.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; boundary="Sig_/.6AQDKVlYLiDpuNqFc13f1X";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Thu, Sep 12, 2024 at 08:51:28PM +0000, Colton Lewis wrote:
-> v3:
->   * Clarify final commit message further
->   * Remove an unused variable in perf_arch_misc_flags()
-> 
-> v2:
-> https://lore.kernel.org/kvm/20240911222433.3415301-1-coltonlewis@google.com/
-> 
-> v1:
-> https://lore.kernel.org/kvm/20240904204133.1442132-1-coltonlewis@google.com/
-> 
-> This series cleans up perf recording around guest events and improves
-> the accuracy of the resulting perf reports.
+--Sig_/.6AQDKVlYLiDpuNqFc13f1X
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Please fix the intermediate build issue, and also test that each patch
-in the series compiles. With that corrected, for the series:
+Hi Ingo,
 
-Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
+On Thu, 19 Sep 2024 11:53:20 +0200 Ingo Molnar <mingo@kernel.org> wrote:
+>
+> Thanks: I've queued up the fix for this ARM warning in perf/urgent and wi=
+ll=20
+> get it to Linus later today.
 
-A nice follow-up on the arm64 side would be to further constrain
-kvm_arch_pmi_in_guest() to return true iff we exited the guest due to an
-IRQ.
+Excellent, thanks.
 
--- 
-Thanks,
-Oliver
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/.6AQDKVlYLiDpuNqFc13f1X
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmbsADMACgkQAVBC80lX
+0GwPowf/brfJY12Xscub4zL+fzY9hwiTvUhAY8mC+OX55U5eCq3Q3Pfpug1QsYCG
+mS6nuP+YbmuFTS+n4U9x0z9aRvOGRjmE7v1w4fqqMdk0cEsxbm+0HUnSiCHnHtGk
+sq/beRORrnYzI6IxVaADqhYzW1LDHmveh1bGHkQSdfGZQ0YXx8zMKFaQhrkiqE/n
+tsmLiaMwkVAbvuyEZnJoIEhmkRKzgYP8s7sC851pYyOik4uOJrluA0Jy2nDlG8Oq
+deZyp5FKDz2YNJ/HOv7g8jDJC9f0Y8uUoZXeuJWZHukIuy2JalrKQ0k47dJ7YNQI
+i8xCqLORnZWrMDrumngrEA9I4nyB6A==
+=cXph
+-----END PGP SIGNATURE-----
+
+--Sig_/.6AQDKVlYLiDpuNqFc13f1X--
