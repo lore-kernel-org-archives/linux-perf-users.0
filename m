@@ -1,93 +1,138 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E1C1991D4
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Sep 2024 08:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D962F19ABAC;
+	Thu, 19 Sep 2024 09:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726735845; cv=none; b=PeE5Z4I73QblwP8sAtC09RaUvgFV0IIL6idR/SGkq0ZZedPoIiQO1dlJ5kxaknbvpYEmh4TxkptmtJiFscy2flDNNCmz4r+0tBQuS9M1SKTVuboF6GCI+3Kf0d+4bEEfL7dQoTdfP3yuzD8uDbBpN47o4ZcrU3YwgNyTp0rqOWw=
+	t=1726737124; cv=none; b=LgLmlWIy42DJ5sit182sj+P0WqRpjewBxYsEg4IP/7xVCfHCU3m6S7yn9W9n+RvbSyIk9kpJP3Zg3ZhjTOCkidIUdkpXLnnVdXAd7Mb4x+lbx+t9wEWH1rA7oIoEFpSRZuZ6CSDATN9jCn1ItcRZctiGV0bu8gUh2k+1/DDgwy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726735845; c=relaxed/simple;
-	bh=QmvEcvLwMdZ67Q+orO7a1EFbutgSspJs9seQ1l5q7bM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RQjeNPgsjaOw73a3YmR4hGrVHHzWHdKBYXsD75515pq0Y2+PGb7FssE6mAyzuGnDVAaPBpBteLKXTE1hEUrTJog1j3jV8qzZRpNak+YVockzx/Nzxik33YpgUNPgnpDdjauyUv5U+fyjYdJZXka2fbWSRSbg6CzxKZS+PfV3Nus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=G8XM8bpa; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1726737124; c=relaxed/simple;
+	bh=GRaM6wOTqW6/lUjG+bM3shCBbIIJiMeQtQqlr5Drc4s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WmRBHRY27XRbqMzYDdAYXombqU+c8EsqBe8Qug6utnWNZhW+A5hdInAoJWANi7c4tzI3NkR8rRp+1/pWyeG/Sih6ECz9w+rce/GhaMoQTUWaobV1SqyW0OtR3NOY4WDCI2Jpbo2Qdu4/qiZ4IL9wAe54MIDvCljOPRYYKCYn2V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=KxWAU0sA; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="G8XM8bpa"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a7a843bef98so63393866b.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Sep 2024 01:50:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1726735842; x=1727340642; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3bX8owsMFpeSMLK0J1ihsNP0TAugOLIv4seUNiUYOnI=;
-        b=G8XM8bpaKTulB6Jo0zeswpnbkZM2JT/N6H8OtUN2xjRakzV8CCcwW2F2Sd3dkvI8EI
-         z2P8/fQKVRaY5GhfuRd7R3M/WB1vGB/gtDIcEglmrMO2RmU+NVTv+reJHloG90EGn+u4
-         iBMwkvjBgJxibwIb7IaOscpA9gb2IFXrIIUvk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726735842; x=1727340642;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3bX8owsMFpeSMLK0J1ihsNP0TAugOLIv4seUNiUYOnI=;
-        b=awpgwbWhftKwHjQwc1nYv5PDTJpTaeCUMGO9qNVf8X1nmi1zjLdsRR8+v5Ad4Bln+5
-         blyPsaJze6NkLESeNm6Vnh34yJW1lAecijNhwauF06VrOwWMnsLxiLlqb2lUzIGOEwo2
-         Qh+i9RgNGil5nBOz8affbwAlbih8CdW64yVdC+to0jf7zBndv961MMZdtmyZcDANeAxG
-         6Oqd7nW/Yy84aLaXl7S12go/+QmnQmoBzyci4M9CnLSqpQR9eeFrloJswHz8s+6iDfLF
-         Nu+vJV/Vn4bWC4wMIu98s5HDRw6ko2YUU07pTZKFrXHobrp864mOkQzrPRdXceQze3R8
-         SgEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXoj9rJbzrWouCLc+Ds7nQoZCmmaYNw4L7fe3eFcmI6/eV47vRrlFeLBMIrOp7vyMX6hz8rQp+DazQbacwI2zUh@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFpOyVSyayrzzFKremFTzO76lTGBYpqPxPOq0GdiI+eonS/Bqi
-	tcNyULMaGSILeGm61IT1ZUSI37BEqQeZBQF3k13k45UEBc2nZ60re8W2LaeVUKOxAUyl90tfMa6
-	c312IXQ==
-X-Google-Smtp-Source: AGHT+IHfsAgNElyNpSBzKxC9Wh+srMDLPrDedoP1RSFiZClqwMxFFHXc4Le4jCxJ4QAK9HVbMzsMCQ==
-X-Received: by 2002:a17:907:9802:b0:a8d:2c3e:7ece with SMTP id a640c23a62f3a-a9047d1ac86mr2092684566b.31.1726735841975;
-        Thu, 19 Sep 2024 01:50:41 -0700 (PDT)
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com. [209.85.218.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90bce77c68sm139390866b.66.2024.09.19.01.50.40
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Sep 2024 01:50:40 -0700 (PDT)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a8d64b27c45so91022666b.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Sep 2024 01:50:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWgpIfr25igg8BdlW/8hyduZGKgjIbkHcF65pCU/grrXgXMNnW99f37RpGKsSTBxil3yFkyItOsfYiZldlzZrms@vger.kernel.org
-X-Received: by 2002:a17:907:948f:b0:a8b:6ee7:ba17 with SMTP id
- a640c23a62f3a-a904814d805mr2274425266b.55.1726735840258; Thu, 19 Sep 2024
- 01:50:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KxWAU0sA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=XSYMeRXWsqrG7F+YI4a+nTQDZpFZ8nCNoB9zSp4g67c=; b=KxWAU0sAe0pRV5nAR7txSNGzJO
+	XItJFBQrVuo5+4RSvbrFlqhDYvmkcSNIXEF68oEPTYwT+q2A1ztZDqeCU7pgQ5zkeuBwY9fqcBchi
+	4tvviAn87X1iy16W61vx5GnGCbZRricPB3EC7Ak7ApdDDKI/kEIyNBWxUtRDWMmFwgziStsxXWAxP
+	xnQJ5ixS87mwS0FPpD6dgfSy2lwrJdqsOXeSEhaUnKkK+5R2prDQOPpvO6fPHZovTNcqWgnlTPRQs
+	7ljx1NENkRmTCWVNLz+cyLfxQ+KwhrA2wFu4yR38fJzRWYlqoMw/lW9y+mYenxEqWEJk1iom421Zq
+	bTaPfakA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59440)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1srDBz-0000GJ-37;
+	Thu, 19 Sep 2024 10:11:15 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1srDBn-0001Rd-0M;
+	Thu, 19 Sep 2024 10:11:03 +0100
+Date: Thu, 19 Sep 2024 10:11:02 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: kernel test robot <lkp@intel.com>, linux-mm@kvack.org,
+	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+	linux-m68k@lists.linux-m68k.org, linux-fsdevel@vger.kernel.org,
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH V2 7/7] mm: Use pgdp_get() for accessing PGD entries
+Message-ID: <ZuvqpvJ6ht4LCuB+@shell.armlinux.org.uk>
+References: <20240917073117.1531207-8-anshuman.khandual@arm.com>
+ <202409190310.ViHBRe12-lkp@intel.com>
+ <8f43251a-5418-4c54-a9b0-29a6e9edd879@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZurLc9qEjBH9MkvK@gmail.com> <CAADWXX-xNBRC8yAUmCdPxe3W==Dxa_Xi6P_ceYDAEAeKYiqC4Q@mail.gmail.com>
- <ZuvhwjNgDmpmReUl@gmail.com> <CAADWXX-Mu=h7hh1KmiWMPoDoVSTb=oQ5Huat+2=hsm59g4R6YA@mail.gmail.com>
- <ZuvlTLMflCigipCr@gmail.com>
-In-Reply-To: <ZuvlTLMflCigipCr@gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 19 Sep 2024 10:50:23 +0200
-X-Gmail-Original-Message-ID: <CAHk-=wj5VpYL8O8H+t8vwOKjnbkxA1KMu_5c495Za4BeCybS0Q@mail.gmail.com>
-Message-ID: <CAHk-=wj5VpYL8O8H+t8vwOKjnbkxA1KMu_5c495Za4BeCybS0Q@mail.gmail.com>
-Subject: Re: [GIT PULL] Performance events changes for v6.12
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f43251a-5418-4c54-a9b0-29a6e9edd879@arm.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Thu, 19 Sept 2024 at 10:48, Ingo Molnar <mingo@kernel.org> wrote:
->
-> I fixed my setup, tested that it's working fine:
->
->       Received: from nyc.source.kernel.org (nyc.source.kernel.org. [147.75.193.91])
->
-> ... and then I sent you the email from a Mutt session I started yesterday. :-/
->
-> This mail should be fine. I hope.
+On Thu, Sep 19, 2024 at 01:25:08PM +0530, Anshuman Khandual wrote:
+> arm (32) platform currently overrides pgdp_get() helper in the platform but
+> defines that like the exact same version as the generic one, albeit with a
+> typo which can be fixed with something like this.
 
-Heh. Yes. This looks A-Ok over here. Thanks,
+pgdp_get() was added to arm in eba2591d99d1 ("mm: Introduce
+pudp/p4dp/pgdp_get() functions") with the typo you've spotted. It seems
+it was added with no users, otherwise the error would have been spotted
+earlier. I'm not a fan of adding dead code to the kernel for this
+reason.
 
-              Linus
+> Regardless there is another problem here. On arm platform there are multiple
+> pgd_t definitions available depending on various configs but some are arrays
+> instead of a single data element, although platform pgdp_get() helper remains
+> the same for all.
+> 
+> arch/arm/include/asm/page-nommu.h:typedef unsigned long pgd_t[2];
+> arch/arm/include/asm/pgtable-2level-types.h:typedef struct { pmdval_t pgd[2]; } pgd_t;
+> arch/arm/include/asm/pgtable-2level-types.h:typedef pmdval_t pgd_t[2];
+> arch/arm/include/asm/pgtable-3level-types.h:typedef struct { pgdval_t pgd; } pgd_t;
+> arch/arm/include/asm/pgtable-3level-types.h:typedef pgdval_t pgd_t;
+> 
+> I guess it might need different pgdp_get() variants depending applicable pgd_t
+> definition. Will continue looking into this further but meanwhile copied Russel
+> King in case he might be able to give some direction.
+
+That's Russel*L*, thanks.
+
+32-bit arm uses, in some circumstances, an array because each level 1
+page table entry is actually two descriptors. It needs to be this way
+because each level 2 table pointed to by each level 1 entry has 256
+entries, meaning it only occupies 1024 bytes in a 4096 byte page.
+
+In order to cut down on the wastage, treat the level 1 page table as
+groups of two entries, which point to two consecutive 1024 byte tables
+in the level 2 page.
+
+The level 2 entry isn't suitable for the kernel's use cases (there are
+no bits to represent accessed/dirty and other important stuff that the
+Linux MM wants) so we maintain the hardware page tables and a separate
+set that Linux uses in the same page. Again, the software tables are
+consecutive, so from Linux's perspective, the level 2 page tables
+have 512 entries in them and occupy one full page.
+
+This is documented in arch/arm/include/asm/pgtable-2level.h
+
+However, what this means is that from the software perspective, the
+level 1 page table descriptors are an array of two entries, both of
+which need to be setup when creating a level 2 page table, but only
+the first one should ever be dereferenced when walking the tables,
+otherwise the code that walks the second level of page table entries
+will walk off the end of the software table into the actual hardware
+descriptors.
+
+I've no idea what the idea is behind introducing pgd_get() and what
+it's semantics are, so I can't comment further.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
