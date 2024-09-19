@@ -1,55 +1,55 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8C238DDB
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Sep 2024 19:08:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AD0481B4
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Sep 2024 19:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726772889; cv=none; b=emDZFVBLcvQOtvyLYCAt5nh00Xo53gMWfBPVBlEe4SplfR0+RvPnvLkwYN2O7VU/TRAGiNVzhZurJFSq6lN/WgnVykBc3hRLfkYtjFuIxZcv/EmpVtA46J+GTtpNhBicBvBQm8GDksSY5b4tezRLkDnl47EZ50zXfgFVBNzKO/8=
+	t=1726772891; cv=none; b=Hfw+zH3XAlel+vVOGwy8N+5fw+E+Yz1aO454PrFkvJDOHQsq/s2XHUALKcTPUfg0VeOdJk2sv2x1XUmd2JvLxFsP+scqgYBodrJHwymsBV/QPGETvEllxKh3zm6RGBPpty2iKg5vaRpE5vMeFdFrd9lV6qWEDitg0j1bQAte9js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726772889; c=relaxed/simple;
-	bh=nOGTMAQagWkUZdTqcYtpFuhJmVUFEuPWvMTzi18KweY=;
+	s=arc-20240116; t=1726772891; c=relaxed/simple;
+	bh=Brbx6usZhtXw07DVlXsA/D7+GJR0JaS+a0u4m3RwFBk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nJHkIUrXvfQF+jMrr6QV22kFn/TYJgWxS5QHqofelEAH209auLyBjVrSSqENgmjnOHNM+CGHS7pcEMXshnkarh8/1xr7lYhfFL/fDNk3XpjKiyX3Q21thNuSrIoAX2KNvyUfAoWBz3oQKy05cEu5TWWqb1e2xJNuVqhana53MHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yK9UEe3+; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=OMwkYpkRaeAgT0ZmW/ZIZuiqrsEGAK6cs/IP1j2IOcZupG6/nEhyctK4W9cBfeRmeGcoV1nru000JD2oTSI4z9B95it3onyba8SkOnG1vuDtWEG7OImkdSBgvsMlW+wFoG58KZ0TrjjYIROyoViWZOMPz30RxiYzXTg8tSmCa5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XBCvmmPK; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yK9UEe3+"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6ddb9b15af3so25706807b3.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Sep 2024 12:08:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XBCvmmPK"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ddcb18b13cso21304487b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Sep 2024 12:08:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726772887; x=1727377687; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1726772888; x=1727377688; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i5Qt5np/Ap8e8S56AX/TaOyn++MQC/aFN8Qv/OewSh4=;
-        b=yK9UEe3+k0/jouY6yj2w04TFy3zIIsZWPoLEOhgELfrnvKv6m0GvZmNriqgMYkld0q
-         iSY35sMIcocsyugvMQvif1KWsj4ZO9ZDR5fH5FY/wVUlmilbhRf5Tpm2C7peIOdDVUMM
-         fKTzXDqOSTMoyuVE+NxWJM4dT3GZGvuoy2AeQ0LYUaXcrapTcFiJCCLfdVqkw6HfaODI
-         msD0P4vLr/ifB8BHAijX9nNZFJZJiPQtEdkYnL035wSmZtYL3DUVNX2TrcyEqpTc+hER
-         BOt/0Iw7+XssR3BxfwtMLGisu4H34kUlVYSLAtioVsjvzfBSfN1NdqVu1pN4JYsad8iX
-         c7VQ==
+        bh=os3Yqql37R8r3BEesV69Cp0Wu//D+lGOxICBFWLJF5s=;
+        b=XBCvmmPKPtx96AYedI5sfHrKELxQNsU1bwIwmCp+iaODx5X0XDQqHkRI5SkjT0kymJ
+         9FdbcJaHkblP6RTFF/EyYO4ATbp+24TKBBKdrkg4go9izmwEl+yLnY9n5+HYOBqVkcW7
+         kMyKD4iY9IOeGdeI8E0+fNv6SJDtOV0kC4dbMxwVn7RoFVNIDGMOduhlDS3hPmqQbeW7
+         B4lw1faqqIYfsZvGTSJO4rqE2SxO9WuWfIw4aCfRQmkEICpJF7MPbrtXv+/Dr+RqmWCv
+         KX79ARan2nSE6QqNS6DzCYFjcbQ0WsZH17sWNu6yAf0IwNv6RMwfw2dXhYqHxB7O8iOh
+         FX1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726772887; x=1727377687;
+        d=1e100.net; s=20230601; t=1726772888; x=1727377688;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i5Qt5np/Ap8e8S56AX/TaOyn++MQC/aFN8Qv/OewSh4=;
-        b=OAbr8rLtXq+LVgEbWR/G1L8UVabQ00vAjW3bTcJnjeDmY74Kn/nI7xcyIrifV/attC
-         H1rFs0icM6maNEuAbRqkC6uWK1HLu7bEfFejofCu8PUny5uttTiVemnL+PoAhej17cpO
-         YV9cqEfqUeqioCPU2BxPEMLvvuxFCEa8VclNOkJWjmGPwpd1oWpI9qXZNwC3LvL8OQ+P
-         wYMmeUb20jOqn6LVxwN118XXKVwuUftdXL1tOTjIR1SUkwY9fFz/fc0in8+rvPoJ2pD3
-         Y/wZSjHkg+mvTjE43tN/29Zmo1+UesQV3aAXcgEk31AxP4l2IgbtSsllFfPrJGqeSxB/
-         kKZg==
-X-Forwarded-Encrypted: i=1; AJvYcCXy/Rgx4wRatHElcvCNlxt2A+tmnFjEpQsODojyI7E5c0WMp4hi/EE619lpjBTdStQrC8LaGljimfq78MTWt4Ib@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcwQ1VJqz10jj4CO9ceCl3rYli6nzLlg3rqNSZfumw7jlZHzcn
-	eJ8TqZGl7EgyeugEC1Mvv46bAqzz8vbIaRjZb/HnGktPpQ6/7lNynTwJcFXqpZUgSSARTYIKG35
-	DyG5e7kJ8/vGV+3NW5Rwb/w==
-X-Google-Smtp-Source: AGHT+IG+gWtFXvOjppbknvofQy7F475eldlmwCdDkPmmKXe3fWWYdIxyDCZn7gT+ZyDPYmZ3bf2GZI0Klu7wUcLEaA==
+        bh=os3Yqql37R8r3BEesV69Cp0Wu//D+lGOxICBFWLJF5s=;
+        b=QZLz8rEzSfwRDsD9iHnqJVg0JNEVd085AGjIezOdRbEtRGnMW6Nu7sNZ0u5UDKcyld
+         cpm02i5bPfLGvHCwc1mXgT/YGbt5TyQcFiSADBkfvS9b3erFmmHOpID0lGUxe+IsbHDe
+         I1JcO0wstFO8cGh9Qo1hgXYYoA/ObfifQ+00//QCXu0/BnFPceuFVMU2ykkFJXiMgIOe
+         AB/dTvEywY3b+rqAVkCrRLtdCv3xgnl1E1SKJGIZK9xHAQ9fcszCDLXKo3vmxIdOEcCI
+         8FEr54SjinFF3UcizhAnGAQUNCsEA64AqSmZqnhPaDaKgDUbPt9aTijfZKEAHxD2WOXm
+         PEaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYA2kMYki0gXMi+R9WebOH5PBdK6r07zEkElUbkKK3IlMmoC9dhZODPiNI50Xv0D/lhK4AyQFCyU+q1McdEdz8@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZKeoQLnJh9NreRLOnT4CrKKFqzN+hV+bsAvQlEa3pFWc0pKmx
+	nQ93yB7MGUw5MTt46L+zZHL3K8a6lLg6GYaHRLBdJ0Rdjjhlye8XmThhQCHLQ6mEvCYVmYufqXt
+	o0I42k1gpEJ0fyQ+mRIFezA==
+X-Google-Smtp-Source: AGHT+IEWKocKtUeJyLcIg/Q0/lFfDEFCwNKFuqL4bh0kqfDWnkDMObP8hKFL4orR1R805yrNr96S1GsShGwKfOHrhQ==
 X-Received: from coltonlewis-kvm.c.googlers.com ([fda3:e722:ac3:cc00:11b:3898:ac11:fa18])
- (user=coltonlewis job=sendgmr) by 2002:a81:a88a:0:b0:68d:52a1:bed with SMTP
- id 00721157ae682-6dfeec11e0amr8827b3.1.1726772886738; Thu, 19 Sep 2024
- 12:08:06 -0700 (PDT)
-Date: Thu, 19 Sep 2024 19:07:48 +0000
+ (user=coltonlewis job=sendgmr) by 2002:a25:b20e:0:b0:e20:298c:541 with SMTP
+ id 3f1490d57ef6-e2250cd4633mr337276.9.1726772888086; Thu, 19 Sep 2024
+ 12:08:08 -0700 (PDT)
+Date: Thu, 19 Sep 2024 19:07:49 +0000
 In-Reply-To: <20240919190750.4163977-1-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240919190750.4163977-1-coltonlewis@google.com>
 X-Mailer: git-send-email 2.46.0.792.g87dc391469-goog
-Message-ID: <20240919190750.4163977-4-coltonlewis@google.com>
-Subject: [PATCH v4 3/5] powerpc: perf: Use perf_arch_instruction_pointer()
+Message-ID: <20240919190750.4163977-5-coltonlewis@google.com>
+Subject: [PATCH v4 4/5] x86: perf: Refactor misc flag assignments
 From: Colton Lewis <coltonlewis@google.com>
 To: kvm@vger.kernel.org
 Cc: Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.com>, 
@@ -83,55 +83,83 @@ Cc: Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.co
 	Colton Lewis <coltonlewis@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Make sure powerpc uses the arch-specific function now that those have
-been reorganized.
+Break the assignment logic for misc flags into their own respective
+functions to reduce the complexity of the nested logic.
 
 Signed-off-by: Colton Lewis <coltonlewis@google.com>
 ---
- arch/powerpc/perf/callchain.c    | 2 +-
- arch/powerpc/perf/callchain_32.c | 2 +-
- arch/powerpc/perf/callchain_64.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/events/core.c            | 31 +++++++++++++++++++++++--------
+ arch/x86/include/asm/perf_event.h |  2 ++
+ 2 files changed, 25 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index 6b4434dd0ff3..26aa26482c9a 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -51,7 +51,7 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 760ad067527c..d51e5d24802b 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2948,16 +2948,34 @@ unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
+ 	return regs->ip + code_segment_base(regs);
+ }
  
- 	lr = regs->link;
- 	sp = regs->gpr[1];
--	perf_callchain_store(entry, perf_instruction_pointer(regs));
-+	perf_callchain_store(entry, perf_arch_instruction_pointer(regs));
++static unsigned long common_misc_flags(struct pt_regs *regs)
++{
++	if (regs->flags & PERF_EFLAGS_EXACT)
++		return PERF_RECORD_MISC_EXACT_IP;
++
++	return 0;
++}
++
++unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs)
++{
++	unsigned long guest_state = perf_guest_state();
++	unsigned long flags = common_misc_flags(regs);
++
++	if (guest_state & PERF_GUEST_USER)
++		flags |= PERF_RECORD_MISC_GUEST_USER;
++	else if (guest_state & PERF_GUEST_ACTIVE)
++		flags |= PERF_RECORD_MISC_GUEST_KERNEL;
++
++	return flags;
++}
++
+ unsigned long perf_arch_misc_flags(struct pt_regs *regs)
+ {
+ 	unsigned int guest_state = perf_guest_state();
+-	int misc = 0;
++	unsigned long misc = common_misc_flags(regs);
  
- 	if (!validate_sp(sp, current))
- 		return;
-diff --git a/arch/powerpc/perf/callchain_32.c b/arch/powerpc/perf/callchain_32.c
-index ea8cfe3806dc..ddcc2d8aa64a 100644
---- a/arch/powerpc/perf/callchain_32.c
-+++ b/arch/powerpc/perf/callchain_32.c
-@@ -139,7 +139,7 @@ void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
- 	long level = 0;
- 	unsigned int __user *fp, *uregs;
+ 	if (guest_state) {
+-		if (guest_state & PERF_GUEST_USER)
+-			misc |= PERF_RECORD_MISC_GUEST_USER;
+-		else
+-			misc |= PERF_RECORD_MISC_GUEST_KERNEL;
++		misc |= perf_arch_guest_misc_flags(regs);
+ 	} else {
+ 		if (user_mode(regs))
+ 			misc |= PERF_RECORD_MISC_USER;
+@@ -2965,9 +2983,6 @@ unsigned long perf_arch_misc_flags(struct pt_regs *regs)
+ 			misc |= PERF_RECORD_MISC_KERNEL;
+ 	}
  
--	next_ip = perf_instruction_pointer(regs);
-+	next_ip = perf_arch_instruction_pointer(regs);
- 	lr = regs->link;
- 	sp = regs->gpr[1];
- 	perf_callchain_store(entry, next_ip);
-diff --git a/arch/powerpc/perf/callchain_64.c b/arch/powerpc/perf/callchain_64.c
-index 488e8a21a11e..115d1c105e8a 100644
---- a/arch/powerpc/perf/callchain_64.c
-+++ b/arch/powerpc/perf/callchain_64.c
-@@ -74,7 +74,7 @@ void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
- 	struct signal_frame_64 __user *sigframe;
- 	unsigned long __user *fp, *uregs;
+-	if (regs->flags & PERF_EFLAGS_EXACT)
+-		misc |= PERF_RECORD_MISC_EXACT_IP;
+-
+ 	return misc;
+ }
  
--	next_ip = perf_instruction_pointer(regs);
-+	next_ip = perf_arch_instruction_pointer(regs);
- 	lr = regs->link;
- 	sp = regs->gpr[1];
- 	perf_callchain_store(entry, next_ip);
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index feb87bf3d2e9..d95f902acc52 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -538,7 +538,9 @@ struct x86_perf_regs {
+ 
+ extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
+ extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
++extern unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs);
+ #define perf_arch_misc_flags(regs)	perf_arch_misc_flags(regs)
++#define perf_arch_guest_misc_flags(regs)	perf_arch_guest_misc_flags(regs)
+ 
+ #include <asm/stacktrace.h>
+ 
 -- 
 2.46.0.792.g87dc391469-goog
 
