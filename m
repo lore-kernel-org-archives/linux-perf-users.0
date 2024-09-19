@@ -1,56 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2E741746;
-	Thu, 19 Sep 2024 13:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F183219DF65
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Sep 2024 13:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726750860; cv=none; b=Ad4q02sbCfgBoxwXYYBzqDgidFKWYw9TpSN7//S7WAZHL7f/hZxYGbKhKXotSvA51awWU01EeO9nmJiG0gw7gl1KnPn044ceXqJ90s7n4WHwlp7DjJQbVfhvubh7i3Z6oqIpjD+ldn+cvrd4R4Ssz4KjBE1Br/SOYP2dGmQgGEE=
+	t=1726751689; cv=none; b=GFHXAP0F7wCk2xJpMasFf2jI72jH+XBq4UI5EBLMs3xvM0C2H0m/QdBuW4fF9xKQZYZIM6cjQqFFAR9aRMWiKCw6/LOjzRVZb2p3p2+E9tGlEnHqQTiPX6hM9ROGNKs6Ug/6hn5nHELKZfo8ULkBUxjZM4fSw+lKOplsEEn54To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726750860; c=relaxed/simple;
-	bh=+KPAsjX34xbAwq1NL0SgPf0Wc1ZNqJh0/Z/0io7fmSE=;
+	s=arc-20240116; t=1726751689; c=relaxed/simple;
+	bh=78ScNlw8k7e9bDXlItw0e29r1aI6eoZHNytjwFRgl8U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=os5UrdtTJZsx/dnfOmb2cncr/i8FMx91dpQ61NB81lnyyXn9YgYfzmfoB7EtFZPjH6xydkOjyJwIT+OZadqIRZ+EIZ2wnFTUcmcFCXMsZPIICpHFnnKDCQWBomr8q8oHCnK9qXPFdD/K5rJBXHBfbCK922VKZoINGevjp2x2Tjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iFioIop1; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=ggRp8oySI3bYXrTduSD9QfnqDPw/BPRJG2cfGUKX8SeNUAcI8ikpghiCrG7+iMM558Jli6skgqdP7pw5m0pVtBC7ntD8bF+ITfVJDS6o7InM+bK9dIZdRc4WXgfxJmfqOpc3IuQaAJfd6RfSA2B8zb5PpeLyeEoof2QxNQIzByI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ORqC01Wz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iFioIop1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726750858; x=1758286858;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+KPAsjX34xbAwq1NL0SgPf0Wc1ZNqJh0/Z/0io7fmSE=;
-  b=iFioIop1B++V0/Udb0hBJwyLv74xJgUnqjp8vTplVF2ZCed+avpNXKvd
-   R2KVZuKLfuy0f0ScWjLikxf1jsYuNU7ytLTCv71awD0nIIH4V7WXXic77
-   tI1Zw4lgyOtShTqdYOwymU+n/BXk3vYPDydKdlvm80ASbu9Jz+MdcU6NY
-   Ia1qdUeG0pRryJJEWcQhZxznWcN4rv+0tV2Q1D7xnWdzOTpXMpT15RwVM
-   +nqO6F/sYZ2evT1yWzVYqQPLYrsLSXVSjI89qImvYJ23Esm2AOcc994jV
-   PemboUkhIa+FC+Xw1cRf/h28vUVxSCQc4isfn6gRJFVerSmQP8yKwTKW+
-   A==;
-X-CSE-ConnectionGUID: j6+ltzppTX2vlsAL9229XQ==
-X-CSE-MsgGUID: 7CaU7igLSZerZD0WgZJTqQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11199"; a="25231229"
-X-IronPort-AV: E=Sophos;i="6.10,241,1719903600"; 
-   d="scan'208";a="25231229"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2024 06:00:58 -0700
-X-CSE-ConnectionGUID: 6nR+txzsQe+hsFkJlZ70eg==
-X-CSE-MsgGUID: P8erXjGnQ1GWRsEFukyRNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,241,1719903600"; 
-   d="scan'208";a="69953033"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2024 06:00:57 -0700
-Received: from [10.212.121.54] (kliang2-mobl1.ccr.corp.intel.com [10.212.121.54])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id AF77720CFEE5;
-	Thu, 19 Sep 2024 06:00:54 -0700 (PDT)
-Message-ID: <1db598cd-328e-4b4d-a147-7030eb697ece@linux.intel.com>
-Date: Thu, 19 Sep 2024 09:00:53 -0400
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ORqC01Wz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1726751685;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=en0se8TuogCVHCZhFsP1/C7rQA8Hhj7T48cho7s3OBM=;
+	b=ORqC01WzZn/o1XnTcC0V3if+i1EPdW967UJzstxnmWIzqDpu7tXsWuWm3zj4PIXxkSyXfz
+	3HluhI7pOvnMOVFfeeAsf/ITOBHcJ519LZNmB0cwTzAVqob5Lz9kNoy2DoCdgvOZ2MKZKH
+	/89viPVf/noq970gva6vR0fSuAm4Jo8=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-119-1nfLacwoPXugcdaNbYrwTQ-1; Thu, 19 Sep 2024 09:14:43 -0400
+X-MC-Unique: 1nfLacwoPXugcdaNbYrwTQ-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-374c960ee7aso560846f8f.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Sep 2024 06:14:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726751682; x=1727356482;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=en0se8TuogCVHCZhFsP1/C7rQA8Hhj7T48cho7s3OBM=;
+        b=R5wMtXtFZedgcTg2NJ6kZNUlanPxA19BgQ66hTZ6YRizWUnyMqUGTJplFHUEuJg+gr
+         LL11CAsRYb4fwP0Rzp9KBpD/wvrxFvTxmtZ+gGyy0bDijSOaKm2RamMyn9gKfR0k7puT
+         US8NU1GFp9qgWKpDWP0zczSbaQYLUyNuQqM14DaKHVg9dXgQSF7AGApBEWgB/xwo6703
+         HjhrEYbvJJdF6zATJwTSgGfZrGqu5Y6y8p/F2RiPcp0zleoih0HGCL7+XMCBlZ9rWsRE
+         /XU0mSigFn3dXqYtyVFfQSuhY1kZYhBdHHZ0RjmwZ0eTqSkaAJlHFSLbBVzMumkMf9x4
+         OrMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQ9fDuLhqETg6rFWIWiJqOTzjG4h5yJV/XpL9kc6bwc7c2XmNo79LesaWE72JZbeeKTTrBmyw3WcQ32LRimHcj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5LBbZ0gCjOLkD0t7N5KeAYEbtJniYpcvu5B83xVZ1MBvSESQI
+	JEL80bY55H0XnJB94llXmx2PstbbqkrykdD9WREG5djB2Wd9fLZjxEV4sI41OU37w/y/N3GCls6
+	YcyxvVZocSucy60uUP/nw5+VwvGE8WXtvpLjzp1MHwVhTAUnCePTv2LhC7wELcKOne8A=
+X-Received: by 2002:a05:6000:184f:b0:374:c8eb:9b18 with SMTP id ffacd0b85a97d-378d61e2ad1mr20478961f8f.24.1726751682292;
+        Thu, 19 Sep 2024 06:14:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHgU1jTdAgDmruL//mJV/lYNXUFI72ifO8kzDIG0aic/SEE3jvuvfL3ZL53F3R7KnkvRG3XmA==
+X-Received: by 2002:a05:6000:184f:b0:374:c8eb:9b18 with SMTP id ffacd0b85a97d-378d61e2ad1mr20478930f8f.24.1726751681863;
+        Thu, 19 Sep 2024 06:14:41 -0700 (PDT)
+Received: from [10.43.17.27] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e7800243sm15055260f8f.86.2024.09.19.06.14.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Sep 2024 06:14:41 -0700 (PDT)
+Message-ID: <064825c4-7c5d-425c-b3be-dd20a593aca1@redhat.com>
+Date: Thu, 19 Sep 2024 15:14:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,184 +67,195 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 14/58] perf: Add switch_interrupt() interface
-To: Manali Shukla <manali.shukla@amd.com>, Mingwei Zhang
- <mizhang@google.com>, Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Sandipan Das <sandipan.das@amd.com>
-Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-15-mizhang@google.com>
- <9bf5ba7d-d65e-4f2c-96fb-1a1ca0193732@amd.com>
+Subject: Re: [PATCH v2 00/11] perftool-testsuite 2nd batch
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <9bf5ba7d-d65e-4f2c-96fb-1a1ca0193732@amd.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-perf-users@vger.kernel.org,
+ acme@redhat.com, namhyung@kernel.org, mpetlan@redhat.com,
+ irogers@google.com, atrajeev@linux.vnet.ibm.com
+References: <Zs-LEEutfp0hkjh5@x1> <ZtHk6Tj7KioLRd10@x1>
+ <6b8245be-7fbf-41e9-8622-f8990ae7a880@redhat.com> <ZtXMRffIGVmjptcf@x1>
+ <ZtXOrJdxvrI7Kk6n@x1> <b87e2c58-8696-48bc-92ca-93964917bf9a@redhat.com>
+ <ZtYIElLzMIzEVH9t@x1> <20240906001104.9314082caaf0268f09cc45b2@kernel.org>
+ <ZtoAuoFNF8neYA-4@x1> <ZtoDUPuP-fEbC6sg@x1> <ZuLnhbC4eAmKzVO5@x1>
+From: Veronika Molnarova <vmolnaro@redhat.com>
+In-Reply-To: <ZuLnhbC4eAmKzVO5@x1>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 2024-09-19 2:02 a.m., Manali Shukla wrote:
-> On 8/1/2024 10:28 AM, Mingwei Zhang wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> There will be a dedicated interrupt vector for guests on some platforms,
->> e.g., Intel. Add an interface to switch the interrupt vector while
->> entering/exiting a guest.
->>
->> When PMI switch into a new guest vector, guest_lvtpc value need to be
->> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
->> bit should be cleared also, then PMI can be generated continuously
->> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
->> and switch_interrupt().
->>
->> At switch_interrupt(), the target pmu with PASSTHROUGH cap should
->> be found. Since only one passthrough pmu is supported, we keep the
->> implementation simply by tracking the pmu as a global variable.
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->>
->> [Simplify the commit with removal of srcu lock/unlock since only one pmu is
->> supported.]
->>
->> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->> ---
->>  include/linux/perf_event.h |  9 +++++++--
->>  kernel/events/core.c       | 36 ++++++++++++++++++++++++++++++++++--
->>  2 files changed, 41 insertions(+), 4 deletions(-)
->>
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index 75773f9890cc..aeb08f78f539 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -541,6 +541,11 @@ struct pmu {
->>  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
->>  	 */
->>  	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
->> +
->> +	/*
->> +	 * Switch the interrupt vectors, e.g., guest enter/exit.
->> +	 */
->> +	void (*switch_interrupt)	(bool enter, u32 guest_lvtpc); /* optional */
->>  };
->>  
->>  enum perf_addr_filter_action_t {
->> @@ -1738,7 +1743,7 @@ extern int perf_event_period(struct perf_event *event, u64 value);
->>  extern u64 perf_event_pause(struct perf_event *event, bool reset);
->>  int perf_get_mediated_pmu(void);
->>  void perf_put_mediated_pmu(void);
->> -void perf_guest_enter(void);
->> +void perf_guest_enter(u32 guest_lvtpc);
->>  void perf_guest_exit(void);
->>  #else /* !CONFIG_PERF_EVENTS: */
->>  static inline void *
->> @@ -1833,7 +1838,7 @@ static inline int perf_get_mediated_pmu(void)
->>  }
->>  
->>  static inline void perf_put_mediated_pmu(void)			{ }
->> -static inline void perf_guest_enter(void)			{ }
->> +static inline void perf_guest_enter(u32 guest_lvtpc)		{ }
->>  static inline void perf_guest_exit(void)			{ }
->>  #endif
->>  
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 57ff737b922b..047ca5748ee2 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -422,6 +422,7 @@ static inline bool is_include_guest_event(struct perf_event *event)
->>  
->>  static LIST_HEAD(pmus);
->>  static DEFINE_MUTEX(pmus_lock);
->> +static struct pmu *passthru_pmu;
->>  static struct srcu_struct pmus_srcu;
->>  static cpumask_var_t perf_online_mask;
->>  static struct kmem_cache *perf_event_cache;
->> @@ -5941,8 +5942,21 @@ void perf_put_mediated_pmu(void)
->>  }
->>  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
->>  
->> +static void perf_switch_interrupt(bool enter, u32 guest_lvtpc)
->> +{
->> +	/* Mediated passthrough PMU should have PASSTHROUGH_VPMU cap. */
->> +	if (!passthru_pmu)
->> +		return;
->> +
->> +	if (passthru_pmu->switch_interrupt &&
->> +	    try_module_get(passthru_pmu->module)) {
->> +		passthru_pmu->switch_interrupt(enter, guest_lvtpc);
->> +		module_put(passthru_pmu->module);
->> +	}
->> +}
->> +
->>  /* When entering a guest, schedule out all exclude_guest events. */
->> -void perf_guest_enter(void)
->> +void perf_guest_enter(u32 guest_lvtpc)
->>  {
->>  	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
->>  
->> @@ -5962,6 +5976,8 @@ void perf_guest_enter(void)
->>  		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
->>  	}
->>  
->> +	perf_switch_interrupt(true, guest_lvtpc);
->> +
->>  	__this_cpu_write(perf_in_guest, true);
->>  
->>  unlock:
->> @@ -5980,6 +5996,8 @@ void perf_guest_exit(void)
->>  	if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest)))
->>  		goto unlock;
->>  
->> +	perf_switch_interrupt(false, 0);
->> +
->>  	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
->>  	ctx_sched_in(&cpuctx->ctx, EVENT_GUEST);
->>  	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
->> @@ -11842,7 +11860,21 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->>  	if (!pmu->event_idx)
->>  		pmu->event_idx = perf_event_idx_default;
->>  
->> -	list_add_rcu(&pmu->entry, &pmus);
->> +	/*
->> +	 * Initialize passthru_pmu with the core pmu that has
->> +	 * PERF_PMU_CAP_PASSTHROUGH_VPMU capability.
->> +	 */
->> +	if (pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU) {
->> +		if (!passthru_pmu)
->> +			passthru_pmu = pmu;
->> +
->> +		if (WARN_ONCE(passthru_pmu != pmu, "Only one passthrough PMU is supported\n")) {
->> +			ret = -EINVAL;
->> +			goto free_dev;
->> +		}
->> +	}
+On 9/12/24 15:07, Arnaldo Carvalho de Melo wrote:
+> On Thu, Sep 05, 2024 at 04:15:28PM -0300, Arnaldo Carvalho de Melo wrote:
+>> On Thu, Sep 05, 2024 at 04:04:29PM -0300, Arnaldo Carvalho de Melo wrote:
+>>> So, I proposed that if we get that error message (A function DIE doesn't
+>>> have decl_line. Maybe broken DWARF?) we should skip it, but Veronika did
+>>> the right thing and asked if that wasn't really papering over some
+>>> problem and pointed to a patch that addressed a problem that lead to
+>>> that exact same message being produced, but that didn't help with our
+>>> current case, with another blacklisted function, warn_thunk_thunk.
 > 
+>>> You mentioned that this is an asm function, so no DWARF, let alone
+>>> correct DWARF, so the message is kinda ok, but we can't use that message
+>>> as it could paper over real problems like the one fixed by the patch
+>>> that Veronika pointed out.
 > 
-> Our intention is to virtualize IBS PMUs (Op and Fetch) using the same framework. However, 
-> if IBS PMUs are also using the PERF_PMU_CAP_PASSTHROUGH_VPMU capability, IBS PMU registration
-> fails at this point because the Core PMU is already registered with PERF_PMU_CAP_PASSTHROUGH_VPMU.
->
+>>> How to figure out if a function has valid DWARF? Maybe for the moment we
+>>> should have _another_ blacklist, one for functions in the blacklist that
+>>> have no valid DWARF? A blacklist's blacklist?
+>  
+>> We have the needed info to provide a more informative warning:
+> 
+> So, perhaps we should, in the test, when we get that "broken dwarf"
+> output, look at the debuginfo file for the kernel to see if the function
+> is one in a DW_UT_compile (CU) that has 
+> 
+>      <da27a>   DW_AT_language    : 32769 (MIPS assembler)
+> 
+> And then just have a -vv output stating that that function is being
+> skipped because it is DWARF from assembler?
+> 
+> Veronika, would you be willing to try to do that?
 
-The original implementation doesn't limit the number of PMUs with
-PERF_PMU_CAP_PASSTHROUGH_VPMU. But at that time, we could not find a
-case of more than one PMU with the flag. After several debates, the
-patch was simplified only to support one PMU with the flag.
-It should not be hard to change it back.
+Okay, I can try to parse the debuginfo to check the DWARF.
 
 Thanks,
-Kan
+Veronika
+> 
+> Thanks,
+> 
+> - Arnaldo
+>  
+>>  <1><da258>: Abbrev Number: 0
+>>   Compilation Unit @ offset 0xda259:
+>>    Length:        0x3f (32-bit)
+>>    Version:       5
+>>    Unit Type:     DW_UT_compile (1)
+>>    Abbrev Offset: 0x74c8
+>>    Pointer Size:  8
+>>  <0><da265>: Abbrev Number: 1 (DW_TAG_compile_unit)
+>>     <da266>   DW_AT_stmt_list   : 0x12cbd
+>>     <da26a>   DW_AT_ranges      : 0x2d6e
+>>     <da26e>   DW_AT_name        : (indirect string, offset: 0x1ec2f): /home/acme/git/linux/arch/x86/entry/entry.S
+>>     <da272>   DW_AT_comp_dir    : (indirect string, offset: 0x1be93): /home/acme/git/build/v6.11-rc5+
+>>     <da276>   DW_AT_producer    : (indirect string, offset: 0x1beb3): GNU AS 2.41
+>>     <da27a>   DW_AT_language    : 32769 (MIPS assembler)
+>>  <1><da27c>: Abbrev Number: 2 (DW_TAG_subprogram)
+>>     <da27d>   DW_AT_name        : (indirect string, offset: 0x1ec5b): entry_ibpb
+>>     <da281>   DW_AT_external    : 1
+>>     <da281>   DW_AT_type        : <0xda29a>
+>>     <da282>   DW_AT_low_pc      : 0xffffffff82062790
+>>     <da28a>   DW_AT_high_pc     : 23
+>>  <1><da28b>: Abbrev Number: 2 (DW_TAG_subprogram)
+>>     <da28c>   DW_AT_name        : (indirect string, offset: 0x1ec66): warn_thunk_thunk
+>>     <da290>   DW_AT_external    : 1
+>>     <da290>   DW_AT_type        : <0xda29a>
+>>     <da291>   DW_AT_low_pc      : 0xffffffff81008060
+>>     <da299>   DW_AT_high_pc     : 45
+>>  <1><da29a>: Abbrev Number: 3 (DW_TAG_unspecified_type)
+>>
+>> root@number:~# readelf -wi `pahole --running_kernel_vmlinux` | grep warn_thunk_thunk
+>>     <da28c>   DW_AT_name        : (indirect string, offset: 0x1ec66): warn_thunk_thunk
+>> root@number:~# pahole --running_kernel_vmlinux
+>> /lib/modules/6.11.0-rc5+/build/vmlinux
+>> root@number:~# perf buildid-list -k
+>> 4dd7f9c4507b82a5bf90671d524e5bb308104ffa
+>> root@number:~# file /lib/modules/6.11.0-rc5+/build/vmlinux
+>> /lib/modules/6.11.0-rc5+/build/vmlinux: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=4dd7f9c4507b82a5bf90671d524e5bb308104ffa, with debug_info, not stripped
+>> root@number:~# perf buildid-list -i /lib/modules/6.11.0-rc5+/build/vmlinux
+>> 4dd7f9c4507b82a5bf90671d524e5bb308104ffa
+>> root@number:~#
+>>
+>> - Arnaldo
+>>
+>>>
+>>> - Arnaldo
+>>>  
+>>>>>>>>   Error: Failed to add events.
+>>>>>>>> root@x1:~#
+>>>>>>>> root@x1:~# cat /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted_list.log 
+>>>>>>>> root@x1:~# cat /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted.log 
+>>>>>>>> root@x1:~#
+>>>>>>>>
+>>>>>>>> So is it just a matter of adding this output to the expected outputs?
+>>>>>>>> In test_adding_blacklisted.sh?
+>>>>>>>
+>>>>>>> Did the patch below, now it passes, Ack?
+>>>>>>>
+>>>>>>> root@x1:~# export PERFTEST_KEEP_LOGS=y
+>>>>>>> root@x1:~# perf test 88
+>>>>>>>  88: perftool-testsuite_probe                                        : Ok
+>>>>>>> root@x1:~#
+>>>>>>>
+>>>>>>> Or am I missing the point? :-)
+>>>
+>>>>>> Yeah, that would fix the test case, the question is whether we should
+>>>
+>>>>> I was lazy, but yeah, that thought crossed my mind, good thing you did
+>>>>> the due diligence and found that patch! Looking at it now.
+>>>
+>>>>>> accept it as a possible output. Found some old patch that should have
+>>>>>> fixed the mentioned issue: 
+>>>>>> https://lore.kernel.org/all/20230628082337.1857302-3-georgmueller@gmx.net/
+>>>
+>>>>> I updated Masami's e-mail to a more recent one, Masami-san, wdyt? Can I
+>>>>> have your opinion on the patch pointed out by Veronika?
+>>>  
+>>>> Thanks for update my email. Yeah, it looks good to me.
+>>>  
+>>>> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>>>
+>>> Unfortunately that cset is already there:
+>>>
+>>> commit c66e1c68c13b872505f25ab641c44b77313ee7fe
+>>> Author: Georg Müller <georgmueller@gmx.net>
+>>> Date:   Wed Jun 28 10:45:51 2023 +0200
+>>>
+>>>     perf probe: Read DWARF files from the correct CU
+>>>     
+>>>     After switching from dwarf_decl_file() to die_get_decl_file(), it is not
+>>>     possible to add probes for certain functions:
+>>>     
+>>>       $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
+>>>       A function DIE doesn't have decl_line. Maybe broken DWARF?
+>>>       A function DIE doesn't have decl_line. Maybe broken DWARF?
+>>>       Probe point 'match_unit_removed' not found.
+>>>          Error: Failed to add events.
+>>
+>>  
+>>>
+>>> ⬢[acme@toolbox perf-tools-next]$ git tag --contains c66e1c68c13b872505f25ab641c44b77313ee7fe | grep ^v6.1
+>>> v6.10
+>>> v6.10-rc1
+>>> v6.10-rc2
+>>> v6.10-rc3
+>>> v6.10-rc4
+>>> v6.10-rc5
+>>> v6.10-rc6
+>>> v6.10-rc7
+>>> v6.11-rc1
+>>> v6.11-rc2
+>>> v6.11-rc3
+>>> v6.11-rc4
+>>> v6.11-rc5
+>>> v6.11-rc6
+>>> ⬢[acme@toolbox perf-tools-next]$
+>>>
+>>> But..
+>>>
+>>> root@number:~# perf test -vvvvv testsuite_probe |& head
+>>> capget syscall failed (No such file or directory - 2) fall back on root check
+>>>  88: perftool-testsuite_probe:
+>>> --- start ---
+>>> test child forked, pid 511749
+>>> Line did not match any pattern: "A function DIE doesn't have decl_line. Maybe broken DWARF?"
+>>> Line did not match any pattern: "A function DIE doesn't have decl_line. Maybe broken DWARF?"
+>>> -- [ FAIL ] -- perf_probe :: test_adding_blacklisted :: adding blacklisted function warn_thunk_thunk (output regexp parsing)
+>>> -- [ PASS ] -- perf_probe :: test_adding_blacklisted :: listing blacklisted probe (should NOT be listed)
+>>> ## [ FAIL ] ## perf_probe :: test_adding_blacklisted SUMMARY :: 1 failures found
+>>> -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission :: 
+>>> root@number:~# perf -v
+>>> perf version 6.11.rc6.g69e90b02e611
+>>> root@number:~#
+> 
 
->> +
->> +	list_add_tail_rcu(&pmu->entry, &pmus);
->>  	atomic_set(&pmu->exclusive_cnt, 0);
->>  	ret = 0;
->>  unlock:
-> 
-> 
