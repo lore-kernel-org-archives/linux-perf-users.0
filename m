@@ -1,132 +1,241 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2751B18893D;
-	Thu, 19 Sep 2024 12:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2E741746;
+	Thu, 19 Sep 2024 13:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726748454; cv=none; b=kIj/pMLTI1cUE4GMYVz7i6/fbwKk1zNuMW34PU/DPlo1DD64o+PNMRRKlj/U2rc5TeUgDz4lXmGPH5oeHQtWquX9JSqnhjynmkaplECT2KBcDcd/v6OZCv/Ne/tQtKx/VDojOdCPvBKH9Q/Hd0LTx7dhTY926RI6lSjuPzAkM0w=
+	t=1726750860; cv=none; b=Ad4q02sbCfgBoxwXYYBzqDgidFKWYw9TpSN7//S7WAZHL7f/hZxYGbKhKXotSvA51awWU01EeO9nmJiG0gw7gl1KnPn044ceXqJ90s7n4WHwlp7DjJQbVfhvubh7i3Z6oqIpjD+ldn+cvrd4R4Ssz4KjBE1Br/SOYP2dGmQgGEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726748454; c=relaxed/simple;
-	bh=oTYc/p2t/iTSK5+cXS3Sc0LDuFrjEIBTQIdwaJDT9C4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HeQ7Xj1sKNDad7xQZh7R4OJFBCvhflj4xPFz9GgkvWbjYGi6a0VsDo//VJC0Kz1MbpRZqvzOS0wLeWbt+XvygMIvKmbIN6zfvvUHtesppCZm3ep+CveeeX8h4ZfqegPCsfrne+gTnKsNYnITCGv114I69n0tbi3lGunvnrNdG9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4X8ZLT5NVFzpVsg;
-	Thu, 19 Sep 2024 20:18:41 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8EC1218010F;
-	Thu, 19 Sep 2024 20:20:45 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 19 Sep 2024 20:20:44 +0800
-Message-ID: <7a6ba3f3-dffa-cdac-73c7-074505ea4b44@huawei.com>
-Date: Thu, 19 Sep 2024 20:20:43 +0800
+	s=arc-20240116; t=1726750860; c=relaxed/simple;
+	bh=+KPAsjX34xbAwq1NL0SgPf0Wc1ZNqJh0/Z/0io7fmSE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=os5UrdtTJZsx/dnfOmb2cncr/i8FMx91dpQ61NB81lnyyXn9YgYfzmfoB7EtFZPjH6xydkOjyJwIT+OZadqIRZ+EIZ2wnFTUcmcFCXMsZPIICpHFnnKDCQWBomr8q8oHCnK9qXPFdD/K5rJBXHBfbCK922VKZoINGevjp2x2Tjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iFioIop1; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iFioIop1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726750858; x=1758286858;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+KPAsjX34xbAwq1NL0SgPf0Wc1ZNqJh0/Z/0io7fmSE=;
+  b=iFioIop1B++V0/Udb0hBJwyLv74xJgUnqjp8vTplVF2ZCed+avpNXKvd
+   R2KVZuKLfuy0f0ScWjLikxf1jsYuNU7ytLTCv71awD0nIIH4V7WXXic77
+   tI1Zw4lgyOtShTqdYOwymU+n/BXk3vYPDydKdlvm80ASbu9Jz+MdcU6NY
+   Ia1qdUeG0pRryJJEWcQhZxznWcN4rv+0tV2Q1D7xnWdzOTpXMpT15RwVM
+   +nqO6F/sYZ2evT1yWzVYqQPLYrsLSXVSjI89qImvYJ23Esm2AOcc994jV
+   PemboUkhIa+FC+Xw1cRf/h28vUVxSCQc4isfn6gRJFVerSmQP8yKwTKW+
+   A==;
+X-CSE-ConnectionGUID: j6+ltzppTX2vlsAL9229XQ==
+X-CSE-MsgGUID: 7CaU7igLSZerZD0WgZJTqQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11199"; a="25231229"
+X-IronPort-AV: E=Sophos;i="6.10,241,1719903600"; 
+   d="scan'208";a="25231229"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2024 06:00:58 -0700
+X-CSE-ConnectionGUID: 6nR+txzsQe+hsFkJlZ70eg==
+X-CSE-MsgGUID: P8erXjGnQ1GWRsEFukyRNA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,241,1719903600"; 
+   d="scan'208";a="69953033"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2024 06:00:57 -0700
+Received: from [10.212.121.54] (kliang2-mobl1.ccr.corp.intel.com [10.212.121.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id AF77720CFEE5;
+	Thu, 19 Sep 2024 06:00:54 -0700 (PDT)
+Message-ID: <1db598cd-328e-4b4d-a147-7030eb697ece@linux.intel.com>
+Date: Thu, 19 Sep 2024 09:00:53 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] uprobes: Improve the usage of xol slots for better
- scalability
-To: Andi Kleen <ak@linux.intel.com>
-CC: <mhiramat@kernel.org>, <oleg@redhat.com>, <andrii@kernel.org>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
-References: <20240918012752.2045713-1-liaochang1@huawei.com>
- <87jzf9b12w.fsf@linux.intel.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <87jzf9b12w.fsf@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 14/58] perf: Add switch_interrupt() interface
+To: Manali Shukla <manali.shukla@amd.com>, Mingwei Zhang
+ <mizhang@google.com>, Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Sandipan Das <sandipan.das@amd.com>
+Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240801045907.4010984-1-mizhang@google.com>
+ <20240801045907.4010984-15-mizhang@google.com>
+ <9bf5ba7d-d65e-4f2c-96fb-1a1ca0193732@amd.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <9bf5ba7d-d65e-4f2c-96fb-1a1ca0193732@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
-在 2024/9/18 20:25, Andi Kleen 写道:
-> Liao Chang <liaochang1@huawei.com> writes:
+On 2024-09-19 2:02 a.m., Manali Shukla wrote:
+> On 8/1/2024 10:28 AM, Mingwei Zhang wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> There will be a dedicated interrupt vector for guests on some platforms,
+>> e.g., Intel. Add an interface to switch the interrupt vector while
+>> entering/exiting a guest.
+>>
+>> When PMI switch into a new guest vector, guest_lvtpc value need to be
+>> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
+>> bit should be cleared also, then PMI can be generated continuously
+>> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
+>> and switch_interrupt().
+>>
+>> At switch_interrupt(), the target pmu with PASSTHROUGH cap should
+>> be found. Since only one passthrough pmu is supported, we keep the
+>> implementation simply by tracking the pmu as a global variable.
+>>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> [Simplify the commit with removal of srcu lock/unlock since only one pmu is
+>> supported.]
+>>
+>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+>> ---
+>>  include/linux/perf_event.h |  9 +++++++--
+>>  kernel/events/core.c       | 36 ++++++++++++++++++++++++++++++++++--
+>>  2 files changed, 41 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index 75773f9890cc..aeb08f78f539 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -541,6 +541,11 @@ struct pmu {
+>>  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
+>>  	 */
+>>  	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
 >> +
->> +/*
->> + * xol_recycle_insn_slot - recycle a slot from the garbage collection list.
->> + */
->> +static int xol_recycle_insn_slot(struct xol_area *area)
+>> +	/*
+>> +	 * Switch the interrupt vectors, e.g., guest enter/exit.
+>> +	 */
+>> +	void (*switch_interrupt)	(bool enter, u32 guest_lvtpc); /* optional */
+>>  };
+>>  
+>>  enum perf_addr_filter_action_t {
+>> @@ -1738,7 +1743,7 @@ extern int perf_event_period(struct perf_event *event, u64 value);
+>>  extern u64 perf_event_pause(struct perf_event *event, bool reset);
+>>  int perf_get_mediated_pmu(void);
+>>  void perf_put_mediated_pmu(void);
+>> -void perf_guest_enter(void);
+>> +void perf_guest_enter(u32 guest_lvtpc);
+>>  void perf_guest_exit(void);
+>>  #else /* !CONFIG_PERF_EVENTS: */
+>>  static inline void *
+>> @@ -1833,7 +1838,7 @@ static inline int perf_get_mediated_pmu(void)
+>>  }
+>>  
+>>  static inline void perf_put_mediated_pmu(void)			{ }
+>> -static inline void perf_guest_enter(void)			{ }
+>> +static inline void perf_guest_enter(u32 guest_lvtpc)		{ }
+>>  static inline void perf_guest_exit(void)			{ }
+>>  #endif
+>>  
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 57ff737b922b..047ca5748ee2 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -422,6 +422,7 @@ static inline bool is_include_guest_event(struct perf_event *event)
+>>  
+>>  static LIST_HEAD(pmus);
+>>  static DEFINE_MUTEX(pmus_lock);
+>> +static struct pmu *passthru_pmu;
+>>  static struct srcu_struct pmus_srcu;
+>>  static cpumask_var_t perf_online_mask;
+>>  static struct kmem_cache *perf_event_cache;
+>> @@ -5941,8 +5942,21 @@ void perf_put_mediated_pmu(void)
+>>  }
+>>  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
+>>  
+>> +static void perf_switch_interrupt(bool enter, u32 guest_lvtpc)
 >> +{
->> +	struct uprobe_task *utask;
->> +	int slot = UINSNS_PER_PAGE;
+>> +	/* Mediated passthrough PMU should have PASSTHROUGH_VPMU cap. */
+>> +	if (!passthru_pmu)
+>> +		return;
 >> +
->> +	rcu_read_lock();
->> +	list_for_each_entry_rcu(utask, &area->gc_list, gc) {
->> +		/*
->> +		 * The utask associated slot is in-use or recycling when
->> +		 * utask associated slot_ref is not one.
->> +		 */
->> +		if (test_and_put_task_slot(utask)) {
->> +			slot = utask->insn_slot;
->> +			utask->insn_slot = UINSNS_PER_PAGE;
->> +			clear_bit(slot, area->bitmap);
->> +			atomic_dec(&area->slot_count);
->> +			get_task_slot(utask);
-> 
-> Doesn't this need some annotation to make ThreadSanitizer happy?
-
-Hi, Andi
-
-Sorry, I know nothing about the ThreadSanitizer and related annotation,
-could you provide some information about it, thanks.
-
-> Would be good to have some commentary why doing so
-> many write operations with merely a rcu_read_lock as protection is safe.
-> It might be safer to put some write type operations under a real lock. 
-> Also it is unclear how the RCU grace period for utasks is enforced.
-
-You are right, but I think using atomic refcount routine might be a more
-suitable apprach for this scenario. The slot_ret field of utask instance
-is used to track the status of insn_slot. slot_ret supports three values.
-A value of 2 means the utask associated insn_slot is currently in use by
-uprobe. A value of 1 means the slot is no being used by uprobe. A value
-of 0 means the slot has been reclaimed. So in some term, the atomic refcount
-routine test_and_pout_task_slot() also avoid the racing when writing to
-the utask instance, providing additional status information about insn_slot.
-
-BTW, You reminded me that since it might recycle the slot after deleting the
-utask from the garbage collection list, so it's necessary to use
-test_and_put_task_slot() to avoid the racing on the stale utask. the correct
-code might be something like this:
-
-@@ -1771,16 +1783,16 @@ static void xol_free_insn_slot(struct task_struct *tsk)
-
-        spin_lock_irqsave(&area->list_lock, flags);
-        list_del_rcu(&tsk->utask->gc);
-+       /* Ensure the slot is not in use or reclaimed on other CPU */
-+       if (test_and_put_task_slot(tsk->utask)) {
-+               clear_bit(tsk->utask->insn_slot, area->bitmap);
-+               atomic_dec(&area->slot_count);
-+               tsk->utask->insn_slot = UINSNS_PER_PAGE;
-+               get_task_slot(tsk->utask);
-+       }
-        spin_unlock_irqrestore(&area->list_lock, flags);
-        synchronize_rcu();
-
-If I've made any mistakes about RCU usage, please don't hesitate to corret me.
-Thank you in advance.
-
+>> +	if (passthru_pmu->switch_interrupt &&
+>> +	    try_module_get(passthru_pmu->module)) {
+>> +		passthru_pmu->switch_interrupt(enter, guest_lvtpc);
+>> +		module_put(passthru_pmu->module);
+>> +	}
+>> +}
+>> +
+>>  /* When entering a guest, schedule out all exclude_guest events. */
+>> -void perf_guest_enter(void)
+>> +void perf_guest_enter(u32 guest_lvtpc)
+>>  {
+>>  	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+>>  
+>> @@ -5962,6 +5976,8 @@ void perf_guest_enter(void)
+>>  		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+>>  	}
+>>  
+>> +	perf_switch_interrupt(true, guest_lvtpc);
+>> +
+>>  	__this_cpu_write(perf_in_guest, true);
+>>  
+>>  unlock:
+>> @@ -5980,6 +5996,8 @@ void perf_guest_exit(void)
+>>  	if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest)))
+>>  		goto unlock;
+>>  
+>> +	perf_switch_interrupt(false, 0);
+>> +
+>>  	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+>>  	ctx_sched_in(&cpuctx->ctx, EVENT_GUEST);
+>>  	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+>> @@ -11842,7 +11860,21 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
+>>  	if (!pmu->event_idx)
+>>  		pmu->event_idx = perf_event_idx_default;
+>>  
+>> -	list_add_rcu(&pmu->entry, &pmus);
+>> +	/*
+>> +	 * Initialize passthru_pmu with the core pmu that has
+>> +	 * PERF_PMU_CAP_PASSTHROUGH_VPMU capability.
+>> +	 */
+>> +	if (pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU) {
+>> +		if (!passthru_pmu)
+>> +			passthru_pmu = pmu;
+>> +
+>> +		if (WARN_ONCE(passthru_pmu != pmu, "Only one passthrough PMU is supported\n")) {
+>> +			ret = -EINVAL;
+>> +			goto free_dev;
+>> +		}
+>> +	}
 > 
 > 
-> -Andi
-> 
+> Our intention is to virtualize IBS PMUs (Op and Fetch) using the same framework. However, 
+> if IBS PMUs are also using the PERF_PMU_CAP_PASSTHROUGH_VPMU capability, IBS PMU registration
+> fails at this point because the Core PMU is already registered with PERF_PMU_CAP_PASSTHROUGH_VPMU.
+>
 
--- 
-BR
-Liao, Chang
+The original implementation doesn't limit the number of PMUs with
+PERF_PMU_CAP_PASSTHROUGH_VPMU. But at that time, we could not find a
+case of more than one PMU with the flag. After several debates, the
+patch was simplified only to support one PMU with the flag.
+It should not be hard to change it back.
+
+Thanks,
+Kan
+
+>> +
+>> +	list_add_tail_rcu(&pmu->entry, &pmus);
+>>  	atomic_set(&pmu->exclusive_cnt, 0);
+>>  	ret = 0;
+>>  unlock:
+> 
+> 
