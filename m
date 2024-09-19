@@ -1,55 +1,57 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F094312E48
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Sep 2024 01:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5985820B04
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Sep 2024 01:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726709736; cv=none; b=C4iGXTwhilFErTfcqJamT1iY5hoa4VDCb33Ps3jeEHjZTIBGGbzTkR9evhDYqLo0sMS0UIeJVkHCEv+xdnLhRjm359lBmzW+3+Z7RRGHRTaNqx0phshXSBFcNacb+ByO3fYOLeDfBAeO2ThW3BM8+izQj1tKqbgWk8DDQVXjNdo=
+	t=1726709742; cv=none; b=WGh3/3LcfUQ6dybSZ9xUPyjy/ycYyEzeZhGhP6ZiRRXSqYYnOB3cTqvUjshkzLhzhCd5Z7Cs2qusfauNykDbRHFHQah7lJBfJ2RuVHlqXbMpvINwmnF25n/8UTBCSNwQQpv+4yPiKPetkSnkpunWw7+cUirbHVoRdtksxe5jAtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726709736; c=relaxed/simple;
-	bh=+BfpS3KEqyEFGD4EVRK0cm8e+bH48T32ouVTTydTMQY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eK3wKFxXGVZQldfEuWntk3BVl1AvPNS/Gfdxrb8WI+MW/rtfQtgmSc1uwT3BxaFYfXA8i/ODFNxrcXR4tYs6+yjRKPvHoIY31Y4Q4rkrAyr17Vn2wjxeknTYpVL5pxBODOnn6bm4zI/p/soWpG/5nnkxHqheD7kUP4lm7P4Bilg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=FX06LFe5; arc=none smtp.client-ip=209.85.210.172
+	s=arc-20240116; t=1726709742; c=relaxed/simple;
+	bh=F8b1g0Z92Ug19zyp6jdn3B4tPcHN849288VrkCnUjIA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Pa9OqdwO0aYVgoMJ/gKrQEib4wHMliE+TVv12A6JSY7eyRQI+YnLmqcPmkiKWOipdVAXPhNgbElRZsyaTk2iNVrfpIJAcfs3XfX7l3GkEDbWMKY9z5S2hv92BmUO2yXJLW1sNOXpuPK3+20FyfLWTaWSGbQqb4klUnAENiwt0UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=S2lA03LY; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="FX06LFe5"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-71957eb256bso286780b3a.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Sep 2024 18:35:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="S2lA03LY"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-718e285544fso215388b3a.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Sep 2024 18:35:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1726709734; x=1727314534; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r1e3S9pWTm/lEVJSPmr9Y58STRzRcLqR0sL+KSgVD4Q=;
-        b=FX06LFe57QP1po872zLLPVt84oVA1axhqFaN0ukg53GnVvdDGZMLhZSt0CseIZKnMR
-         4sq2QjClBqXGadJl4l7tcrWCZg7iLByQxlEcY4bI73lhPukOzl7+SQQBzQLZdin77Q9K
-         1hm53XDsj+qrxVpRTaBXYbqQvvIJQKR0FORuUjyubaB1O3gGJ3nP4qgdoC3AHEGsB+Et
-         Bz4R6Or+PLshab2aNvuXchRw6Ecsug1aDhFk9Mkq4DUZ5+Zrm4c8tKr5kJsi+gcC4THZ
-         WkV1YEyK9RXXlnhBPSqNebWog/g8Hq6AE9TtXviW692zg+c1ZUoCSkWbITe0CRsnXVDY
-         1w7Q==
+        d=bytedance.com; s=google; t=1726709740; x=1727314540; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6PRoelqNRnL/2mNFBQIluG5bm8U+edM43UW4Amub3LA=;
+        b=S2lA03LYEWc4BDSAzAnAmd7kYqJ3LPl81V4f9eQLl3bSVJgD5PGPy+zF5UQX4MOK8I
+         RJx3z44fN0LC338zpq6MA4YzEZIT4QW/tWa/cG0iIZvHuBj4zW/OwtMjwvkMYZpH7poh
+         SI5huoJgL0+UYBBW1HKSnbXnuo9BqugoApR9FGcs4TfcqDv6pX8+7+Bldr4l44eIHyEx
+         63bYjEcdN77AuEvIbNu7AO4q4GVU8fd72YJ/09mWOTuZj6BPpMW6DNLWmukmDeoCi65s
+         +c2upaj6spkCTad522CIqbESygcELibXEZC6vp4S0qGfglo9RcVSqPxrVv98Pm+jz0Pr
+         JNGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726709734; x=1727314534;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r1e3S9pWTm/lEVJSPmr9Y58STRzRcLqR0sL+KSgVD4Q=;
-        b=Ku5gH0E+Qgv9n8ASdJ2Xux9IAFSc8ZdbV8PzzQdA4Qz2rcRKG+wsvRw9M2RB41R2yx
-         vsxEuSuq09QRymS+3RKUhMDTn7kYDxo3+JiCvaqtiit9NT7qoy5v8iWTKqk37wXHVNj1
-         O34CQevPTx05mg20LJCD5roaENLh/Ki59bemyARae2nRIsgTwYQ31jauReq2VFYdiTpF
-         5RiEwlrP9JdREUC6SUmc2K0CeldPXA1El7USSxxbiNHTg14ndVapKssV8qdWTQukGeGP
-         RXdhCOY+dZVHQ0x9LQrdzEby1BXDNDPahvxEcZZmZsS9LwlB5L2WVJSfxBuPEt33zLfk
-         bSLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuX/Rbj97urJQIytjn3+R5ZLCPg4W8YkRlug+7KQ/dvYy3Ec6Qv7SUj0HkdmdbKhGJRo7KVhjeDbxiGBES9edB@vger.kernel.org
-X-Gm-Message-State: AOJu0YyknRhpEPNduq73k6kzO9pQTh0m/sMz2EwPFie4VvunXNaW11e2
-	T3yfqpDZtklFi0qTrsOPOQNAEiz6EFvYyMNe/NS1eMODb2Elkp3Lti2L2X1PG0k=
-X-Google-Smtp-Source: AGHT+IHQSQLaTaoG8epxHCgtggUQaJH8zELCvKB6tmSjd6xX6jo/pz1O8xhjQg3WkdHnuLbwgbf0Eg==
-X-Received: by 2002:a05:6a21:164a:b0:1cf:3461:2970 with SMTP id adf61e73a8af0-1d112eaaf50mr32036486637.41.1726709734103;
-        Wed, 18 Sep 2024 18:35:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1726709740; x=1727314540;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6PRoelqNRnL/2mNFBQIluG5bm8U+edM43UW4Amub3LA=;
+        b=njfQHNrVGc7RXcF7OVycqezwKBDFH4Ctqnkq/mszgMLOhxJMyT4GrRo3jVKqZPIaR6
+         jKE5n3W6FYVLBZxttnw7wSijFRKI9U+Jo0N7IdiXAWkNv+gK5vnBKJS5lWZVzktqBzed
+         JRszho55nvZIzCugZ862HqdtKs9FCh5YbY1zaD2d5ykYZ99tj39q6vV1SFVEWs1Siblb
+         mC+mUnORqpcGin8eiyFbkt20JLRoOPSsVUNSxOse0BVj6Z8VzVXAqxN0f5sqMNI9iO6J
+         7We7u5+FXnKTj6qr5athN4kmK+NBgZiZhO+3zvok94es99RNftKRCo1VKFGpZTcmUThL
+         UkBg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3FJfwdkLr87dOGj+OvrOOLGfQS5Eo8UeBP4pJ05sB4bSVjGM0vYc2WhTKJygn8B+1DKeSJ01O/zAECjL6N2Sd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+cI6k5nIeDVH/Ka/0gfXY7eaoRqnbBFO8YYXzbDKjz5lh8zpI
+	FLFTXMNkdHcO5JWeC/AZf0Iemj4KzzqY71O+iHGIrhWCIQSjSAPhAJRBmNiko5o=
+X-Google-Smtp-Source: AGHT+IHbp4ok7dwua8+rGMyIXaJ4OmQHsgI/Zg3VmaOM5LiSUWeDv79Fh3Tgx0+xDLeSw5mSA3VQvQ==
+X-Received: by 2002:a05:6a00:1799:b0:714:1bd8:35f7 with SMTP id d2e1a72fcca58-71936a60297mr27646676b3a.15.1726709740529;
+        Wed, 18 Sep 2024 18:35:40 -0700 (PDT)
 Received: from ubuntu20.04 ([203.208.189.11])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71944bc9ed9sm7282482b3a.209.2024.09.18.18.35.28
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71944bc9ed9sm7282482b3a.209.2024.09.18.18.35.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2024 18:35:33 -0700 (PDT)
+        Wed, 18 Sep 2024 18:35:39 -0700 (PDT)
 From: Yang Jihong <yangjihong@bytedance.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -66,10 +68,12 @@ To: peterz@infradead.org,
 	linux-kernel@vger.kernel.org,
 	leo.yan@arm.com
 Cc: yangjihong@bytedance.com
-Subject: [PATCH RESEND v3 0/3] perf: build: Minor fixes for build failures
-Date: Thu, 19 Sep 2024 09:35:10 +0800
-Message-Id: <20240919013513.118527-1-yangjihong@bytedance.com>
+Subject: [PATCH RESEND v3 1/3] perf: build: Fix static compilation error when libdw is not installed
+Date: Thu, 19 Sep 2024 09:35:11 +0800
+Message-Id: <20240919013513.118527-2-yangjihong@bytedance.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240919013513.118527-1-yangjihong@bytedance.com>
+References: <20240919013513.118527-1-yangjihong@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -78,34 +82,116 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes since v3:
- - Add reviewed-by tag from Leo. (see Link[1])
- - Resend the patchset with no code changes.
+If libdw is not installed in build environment, the output of
+'pkg-config --modversion libdw' is empty, causing LIBDW_VERSION_2
+to be empty and the shell test will have the following error:
 
-Link[1]: https://lore.kernel.org/all/b5688d4a-9389-4998-8031-3f002302311e@arm.com/
+  /bin/sh: 1: test: -lt: unexpected operator
 
-Changes since v2:
- - patch1: change LIBDW_VERSION to follow up the style of
-   LIBTRACEEVENT_VERSION. (by Leo's suggestion)
- - patch2: Use a new line for the -ldl dependency and with comment,
-   synchronize tools/perf/Makefile.config. (by Leo's suggestion)
- - patch3: include header files in alphabetical order,
-   add reviewed-by tag from Leo. (by Leo's suggestion)
+Before:
 
-Changes since v1:
- - patch3: Remove UTF-8 characters from build failure logs
+  $ pkg-config --modversion libdw
+  Package libdw was not found in the pkg-config search path.
+  Perhaps you should add the directory containing `libdw.pc'
+  to the PKG_CONFIG_PATH environment variable
+  No package 'libdw' found
+  $ make LDFLAGS=-static -j16
+    BUILD:   Doing 'make -j20' parallel build
+  <SNIP>
+  Package libdw was not found in the pkg-config search path.
+  Perhaps you should add the directory containing `libdw.pc'
+  to the PKG_CONFIG_PATH environment variable
+  No package 'libdw' found
+  /bin/sh: 1: test: -lt: unexpected operator
 
-Yang Jihong (3):
-  perf: build: Fix static compilation error when libdw is not installed
-  perf: build: Fix build feature-dwarf_getlocations fail for old libdw
-  perf dwarf-aux: Fix build fail when HAVE_DWARF_GETLOCATIONS_SUPPORT
-    undefined
+After:
 
- tools/build/feature/Makefile | 5 ++++-
- tools/perf/Makefile.config   | 7 +++++--
- tools/perf/util/dwarf-aux.h  | 1 +
- 3 files changed, 10 insertions(+), 3 deletions(-)
+  1. libdw is not installed:
 
+  $ pkg-config --modversion libdw
+  Package libdw was not found in the pkg-config search path.
+  Perhaps you should add the directory containing `libdw.pc'
+  to the PKG_CONFIG_PATH environment variable
+  No package 'libdw' found
+  $ make LDFLAGS=-static -j16
+    BUILD:   Doing 'make -j20' parallel build
+  <SNIP>
+  Package libdw was not found in the pkg-config search path.
+  Perhaps you should add the directory containing `libdw.pc'
+  to the PKG_CONFIG_PATH environment variable
+  No package 'libdw' found
+  Makefile.config:473: No libdw DWARF unwind found, Please install elfutils-devel/libdw-dev >= 0.158 and/or set LIBDW_DIR
+
+  2. libdw version is lower than 0.177
+
+  $ pkg-config --modversion libdw
+  0.176
+  $ make LDFLAGS=-static -j16
+    BUILD:   Doing 'make -j20' parallel build
+  <SNIP>
+
+  Auto-detecting system features:
+  ...                                   dwarf: [ on  ]
+  <SNIP>
+    INSTALL libsubcmd_headers
+    INSTALL libapi_headers
+    INSTALL libperf_headers
+    INSTALL libsymbol_headers
+    INSTALL libbpf_headers
+    LINK    perf
+
+  3. libdw version is higher than 0.177
+
+  $ pkg-config --modversion libdw
+  0.186
+  $ make LDFLAGS=-static -j16
+    BUILD:   Doing 'make -j20' parallel build
+  <SNIP>
+
+  Auto-detecting system features:
+  ...                                   dwarf: [ on  ]
+  <SNIP>
+    CC      util/bpf-utils.o
+    CC      util/pfm.o
+    LD      util/perf-util-in.o
+    LD      perf-util-in.o
+    AR      libperf-util.a
+    LINK    perf
+
+Fixes: 536661da6ea1 ("perf: build: Only link libebl.a for old libdw")
+Reviewed-by: Leo Yan <leo.yan@arm.com>
+Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
+---
+ tools/build/feature/Makefile | 2 +-
+ tools/perf/Makefile.config   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 5938cf799dc6..6f1c961f0ede 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -172,7 +172,7 @@ DWARFLIBS := -ldw
+ ifeq ($(findstring -static,${LDFLAGS}),-static)
+   DWARFLIBS += -lelf -lz -llzma -lbz2 -lzstd
+ 
+-  LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw)
++  LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw).0.0
+   LIBDW_VERSION_1 := $(word 1, $(subst ., ,$(LIBDW_VERSION)))
+   LIBDW_VERSION_2 := $(word 2, $(subst ., ,$(LIBDW_VERSION)))
+ 
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 4dcf7a0fd235..0049fd41cf57 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -149,7 +149,7 @@ DWARFLIBS := -ldw
+ ifeq ($(findstring -static,${LDFLAGS}),-static)
+   DWARFLIBS += -lelf -ldl -lz -llzma -lbz2 -lzstd
+ 
+-  LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw)
++  LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw).0.0
+   LIBDW_VERSION_1 := $(word 1, $(subst ., ,$(LIBDW_VERSION)))
+   LIBDW_VERSION_2 := $(word 2, $(subst ., ,$(LIBDW_VERSION)))
+ 
 -- 
 2.25.1
 
