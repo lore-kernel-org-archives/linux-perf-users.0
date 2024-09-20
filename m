@@ -1,323 +1,335 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2055.outbound.protection.outlook.com [40.107.220.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406ED16B3B7;
-	Thu, 19 Sep 2024 21:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726782681; cv=none; b=jtrZfBYKh+uOjLGAqeKuFtScJwC4jz+rvcTVuhBlfwizELWB6Nc9XNNtmkbC5Bby9nh9suBKzTqzffHJ4skt0Q75Hk8x7AcKYHw0YK9dsxVdEjU19veTikUlTY8pGFfezl9P6JK6/Rg7b7xxzLefjgAIj2TaB/6ap5NCkzc0sOI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726782681; c=relaxed/simple;
-	bh=rHCSz90r5D1fX+SeHXTz5R+EPa2N6LsxuyaozkGa/8M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ioIlDGn6SqCUmWCStbc2pyluKY2utrVdM2YOigH5P/cbV6KA43IZPrit888p0/yXVlv5Yk7xcCnOi8HZGSCDF0X1rjQ9rZoZBKh+pLJJAanr0OAgSeDw6bcKs+d1WmybOVSP1zQ+eAF+dV+7nRMwk1ZPAEuSNrmwOOlHnw17Uhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=permerror (bad message/signature format); arc=none smtp.client-ip=198.175.65.9
-Authentication-Results:smtp.subspace.kernel.org; dkim=permerror (bad message/signature format)
-X-CSE-ConnectionGUID: XE1TYbJnThO7ZAlLP9mk2g==
-X-CSE-MsgGUID: MWlOLKjATQe0NHL2HBpC6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11200"; a="48305708"
-X-IronPort-AV: E=Sophos;i="6.10,243,1719903600"; 
-   d="scan'208";a="48305708"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2024 14:51:19 -0700
-X-CSE-ConnectionGUID: 63IdjRF4Rpuv/ZkmBww4tg==
-X-CSE-MsgGUID: B/SxFBEoTuSlEV5kl0f6CQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,243,1719903600"; 
-   d="scan'208";a="74866721"
-Received: from b04f130c8410.jf.intel.com ([10.165.154.100])
-  by orviesa003.jf.intel.com with ESMTP; 19 Sep 2024 14:51:19 -0700
-From: Stefan Ene
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: vinicius.gomes@intel.com,
-	stefan.ene@intel.com,
-	stef_an_ene@outlook.com
-Subject: [RFC v1 3/3] C and Rust support for perf script
-Date: Thu, 19 Sep 2024 14:51:04 -0700
-Message-ID: <20240919215107.2263552-5-stefan.ene@intel.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240919215107.2263552-2-stefan.ene@intel.com>
-References: <20240919215107.2263552-2-stefan.ene@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772B52746B;
+	Fri, 20 Sep 2024 05:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726808994; cv=fail; b=TC8lkQCT46Vbv7M0Vh5JKT3GGvgdGyg5QCSJMlHev0wemxoT2Plj9A0jgorv1d4BFBNuQe/L8Np5FpKyruOb7AMWcj35CpIl54TsmJlzwkSC5/xss6qKjan4B0tF0SSTKQfVIj7cBEbvsZVmUVZTE+ll83Wj9UIxeoN8iO5VfQk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726808994; c=relaxed/simple;
+	bh=ARfx9bUrergpvHb9w0y0mH1sw/Mbu5Gb/OlRrmq6wdc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Eejv234zFFNKD6IfPJ+BJIpK/6gOLcOPF+kvMq5zRhs2r7ZaZrvHRK/fdXzik1aB9xTDMRv7UBRbOsitWOrWoROuILYyOjg78gs6ZhE/mrszE2LWAdNvX8YQFI/jG/wbiSjBW3wpnbmKSJPRc4nuErHG2EMMBi65AsukIQEV70Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PbYFC4iC; arc=fail smtp.client-ip=40.107.220.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PbYFC4iC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SWtvxf5SePIqSbPkl2pUudrfKunDdPwLW6syGNxMhejLylinAl20RxZtcoNPBt7xnbZNCVvSMGGDheG1nT4nkFFHZch/6asXBcl50/3KulH6LOMBkV+hHHg1vxp+Q/BS8tkMOVkvBWf/OjPrhijnClwJfombIN7+AZnafFoKw4uFXN7krHcDw+r1aCqnpFOTswhJbRdYkixmULuPscJG0fnkPaxrU8XxzI/htDkovHZyyYafvL47/J6fqRA6XOfWyhtvmWry2pzK7iLOp5h9X2CdckrKoIhcuMjTAa9n8H8gnoFxdmsGz8WPUlrdw3FZiRZcmhpiTbKrdoKCac1d3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=POfGYyZOvwPZEYlkkITDB3o0AD3PK8+eyY5l1QQNzOM=;
+ b=Fsp+nqm5j5MR/NDTKJHbER86+rc7xEeSiEfQvYC4DqFSd4yL94pz6EqjQrGyAE3uiKP7vZg+g9wWO5zokmY634DJOVrLyNHliHBvvEW3eNa1imd4RJwwokK+lAsziMBjDFp5w2IakJ8aP7qbQv3uhx2oSe0xzzTdO9TvCH+yNn6er/W3L3Nao6PIXMFjmXH9U8MWjHF6Lsh0tsZn/XzSLZjghEOeZVc36wun2pwVqDTCbLrTWIYlqQ2F8hDzzBfW63ew98MdO1qD5Y5OuvB7Zs28XDEet4Irup7vFsulDqLdSKx/QR2zKxqRVpdr1+38UGmNmXNTc9FGzEg6pBA/OQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=POfGYyZOvwPZEYlkkITDB3o0AD3PK8+eyY5l1QQNzOM=;
+ b=PbYFC4iCJd0U23V4Y1MigphGpMWdxdy0QsUbAgaCZGIPFiMAkz0ZFJEQ9ikLr00QQPeSh8Er7otjR+n3suMDWQxpu6ZJd8O6t+/cGxRCtGWw0xCGJlgmAS6HHzdE/S+HAl3+z1Xt07omP8WdhbZ3cfzO9Nx+W+ACGinvEYLJGFw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB6214.namprd12.prod.outlook.com (2603:10b6:8:96::13) by
+ CYYPR12MB8731.namprd12.prod.outlook.com (2603:10b6:930:ba::21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7982.22; Fri, 20 Sep 2024 05:09:49 +0000
+Received: from DS7PR12MB6214.namprd12.prod.outlook.com
+ ([fe80::17e6:16c7:6bc1:26fb]) by DS7PR12MB6214.namprd12.prod.outlook.com
+ ([fe80::17e6:16c7:6bc1:26fb%5]) with mapi id 15.20.7982.016; Fri, 20 Sep 2024
+ 05:09:48 +0000
+Message-ID: <3dd7e187-9fbe-4748-9be5-638c8816116e@amd.com>
+Date: Fri, 20 Sep 2024 10:39:36 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 14/58] perf: Add switch_interrupt() interface
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Mingwei Zhang <mizhang@google.com>, Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Sandipan Das <sandipan.das@amd.com>
+Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Manali Shukla <manali.shukla@amd.com>
+References: <20240801045907.4010984-1-mizhang@google.com>
+ <20240801045907.4010984-15-mizhang@google.com>
+ <9bf5ba7d-d65e-4f2c-96fb-1a1ca0193732@amd.com>
+ <1db598cd-328e-4b4d-a147-7030eb697ece@linux.intel.com>
+Content-Language: en-US
+From: Manali Shukla <manali.shukla@amd.com>
+In-Reply-To: <1db598cd-328e-4b4d-a147-7030eb697ece@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0103.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:27::18) To DS7PR12MB6214.namprd12.prod.outlook.com
+ (2603:10b6:8:96::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6214:EE_|CYYPR12MB8731:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f6a3773-7a80-48a9-2c91-08dcd9327332
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MU1kK0tQVjU3RU53TzJ0N0gwYU1NR25YdlYvajVDMFRlLzVYWk82TW9FaVFw?=
+ =?utf-8?B?WFRIUnBXOXpybytZWlNHaDZxQ1YwcytZSjljWW1wZEw3d1JNVGV0NGo3Qkwy?=
+ =?utf-8?B?K2U2MXZPVjgvd3dsV1BlajNaVHgvaDlLU2gzUmx3TEl4M2EwTVUvT3JGakJw?=
+ =?utf-8?B?V3Y2bzVnWGVtVk1nK3BWQXc4c3gwQmVlazB5RkVsUEFXaUkvQllQL1VQUzh1?=
+ =?utf-8?B?TEpETU9tK2lVcFZxZWdNd1RVTHpmVWxJSGMzU2RmTTVVMUxqWUhpRWFvaGJE?=
+ =?utf-8?B?ODBlTE95ODFvMm10dS9mM0VTK29DcVhHWnZZeVJ3WW9kbjlTUVJtNDRDRkk1?=
+ =?utf-8?B?cmF4akQ2L0JWQm1pN2NxMjdUTHE1aTd6NUNQME44K2tRdE1sWTNISWRQaFpM?=
+ =?utf-8?B?SVZFaDBJZldrNnNaeDVvWmFhVHdwQklrcVhRVmUxY0NaR2VIa1FxV09qQWxP?=
+ =?utf-8?B?TGxWd1RHc3BWM0UranJPanJJWFJKc2daYzNUSVloK2NPVFoySXM2VGF3NHc1?=
+ =?utf-8?B?TElpbko4LytOWGFOMDVnV1FFQnVXd1YxZ2xucER1ejR5TDRvbjlXWnZwMFhB?=
+ =?utf-8?B?b2JDbzcxWkpvVXNMY1QwWHkyMENTK3VQU1JuRUdxdUhEcUVENHhWbnVod3hL?=
+ =?utf-8?B?YWVSUWdoTldwbmN1eWtFVmswemUwc2JKUzRBanoxRStpTVd5ZlVSQlRUVXRj?=
+ =?utf-8?B?ZEQ2TWd4WmhycmJ3d05mby9VMzIweEYzUVlib1BMR2xBRGVMbzlLZ0oxanhB?=
+ =?utf-8?B?UWM1Z08yZlpaMGFWTGk3ektGOUlUZFNCSXloNnZNMHlacGlsMFF5VXc5cm1V?=
+ =?utf-8?B?ZXE0UHRPbUNXd21qZUxPaE9IbWYzVlNhSWNTUlVUbzZTb3kzSk01azV6N0ZS?=
+ =?utf-8?B?aWM0ZXpnYnZxcjk4L0NHRkNKUktURzVSellaTXRKaDhxUDk4NVpLaEVMWEVo?=
+ =?utf-8?B?VWZiRCtzYTk1bUpEazZVTmtaeUZGTWNBMWZOMURwVzNaKytJWlpzQkwrcjBB?=
+ =?utf-8?B?dlp4dW5pd2F6b2dsKzAxeFMvY0MwTU1pYm1SMnNvL1gwQU9iWXR6ZHVERmlO?=
+ =?utf-8?B?RURjV3RuZDc3TktjRWtHbzhhSjVsQmNWK3NWWDlobmN6cnRTUzBPUDg1QStp?=
+ =?utf-8?B?WThPZmpobnpkeDcvM0lNdk53K0ZEMnllMjZaaldoejA0ejM3aDNVVVMxL0Yw?=
+ =?utf-8?B?dXdrWTFtWE40bUlUSENFOWErVUdVODhVTmkxeDNsK3NBU2poVU9ldFU4OFFZ?=
+ =?utf-8?B?anlBd2lLNGgxYlJBbEFqTkNLb3FGbkJaOTBOamJSemlQVXlUZFRlZkxaeVA5?=
+ =?utf-8?B?MC9GNHBhRkRRMDExSEozRGVnY2QrblhlTWV2dmNZOHljOHVzVDU4bFczYmxp?=
+ =?utf-8?B?T2pkaExDSnBwdnM4ZGFwTGIwblpSNmZVUStXS3lBUWJFcFpDZ1pBWnBmbTgy?=
+ =?utf-8?B?Zm5qUkUrWG8wbm1yOHhibEMxaU9nM3FodWxNKytKZzhmZXUzZUtWWjdmUHVU?=
+ =?utf-8?B?eTBNckd2Mk83SmsrZXVOdmptRkdTRDZuQzFXNXRHQ0dKZzBGTGRBYTlObXhv?=
+ =?utf-8?B?TXgydnFoL3dVdFVYbmgxVW83bHNZdjdsUnFvbGRkdVhybVBNTE1RTVVCcnhy?=
+ =?utf-8?B?VXJsd2VtWENLekdPdm9tdHNUKzhMMWZsdU1iK1NTMTRvT0xiN252YkFUaWVE?=
+ =?utf-8?B?akFYUUczMkI4QTUzYmlhbWYrQmtiVE1TZU9zTlhGTlB5dURPMGczc0ZhSHdS?=
+ =?utf-8?B?MlFXWStPTWs3OWsvcVpKb0hLbUd2SGt6Wm1Qb2ZJU3NDb1pCcEVSd0c0MFlI?=
+ =?utf-8?B?eWNiK29iRE1BdWtQR3NRTWpUcTBUcjlFdE4yVVVJcjI1STNKN3dVQitSYzZB?=
+ =?utf-8?Q?OKxg7J9dO55Zw?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6214.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZzVXei81bjIwZ0FnNE9MaXFpRFVyTytqZ1UvdjJBRFhJdkhLdnhvdjhnL0xR?=
+ =?utf-8?B?TnF1T2xZSWk4YzgvSVFWSGc2YlNFVENrcmNITWlRSXBoRWc2dXdzV0U1Ym1C?=
+ =?utf-8?B?OGlha1NnbTZybmFwOWNzWGFFMXlzZ3RWUjkwSjZxU0s2VEg1aFpKMnZvU0tt?=
+ =?utf-8?B?T2xnc2kyNlAyL08wY0ZiR1JoNWI3U1hrYzAxeEpYOEtBVStGYXZSWCtaZ2Mx?=
+ =?utf-8?B?WVZnYjJ5UjcwZWNjTHVIanRWWHM0T0FoenlRYzlpWWlKSEMraUtoOWdTUGdB?=
+ =?utf-8?B?amlRVTk0Sk5zVFBRemt0KzlTY0VOa1FqQU9ncDRYQysrNE9rVURCK0N3TGNP?=
+ =?utf-8?B?Rk9mc2FCYlNSZWhKTUNlQW5GbzR2UUd5RUhhSnJTS1BZY2lTcThnTVJGcTNU?=
+ =?utf-8?B?ZkxIbTV6MVNLOFdSNk1uRXRTajVpd2tRd2o3eGhpb2p3UWordWF6U2srekdV?=
+ =?utf-8?B?WlRzdTBFMnlCRG45ZGx4YmJLSFdTaFpsVEdSdVJoaUhUUDVVQXIvUTNWZWgw?=
+ =?utf-8?B?VWlVRnI2MzNCblVlWitoSTJ5dmtqdjdOaFU5bGU1c0p4OVNYQ0VQVEVxRWU3?=
+ =?utf-8?B?ZDVobC9kY3pvb241Y2NuanlsTzN1N0kzbVMxZm1yOE1JR1ZITHJNR3BMTFlT?=
+ =?utf-8?B?eEJjOVl4WG1KeVFjS2IwamVtR0NCTkNudGt2ckY2NHlpZVdTbnA2VlUyMDhh?=
+ =?utf-8?B?SUhTcDVFbll6UHJvSzlXWVBmZmVDL0tsMm5vMG5VZFZBejVqWFpZMG9vbzdl?=
+ =?utf-8?B?OHc4L2YycUdlekt3NEtOSnI1T2VlaWQxTHFac25jeGxRcVROSjRvM2xtUkdM?=
+ =?utf-8?B?OWp4K1l3TndXcjI4ZjBzQkRHTmJRVWpVRG9nRThMVlRndGdvd3IwY2lJa1g1?=
+ =?utf-8?B?SVEyOEsxS09xci9YTE5ES3pvbmdMZUNIWVExeEtRczlWUjJKaFovRE9pUkZz?=
+ =?utf-8?B?U2plQTN6OVlXdGxEcXhsVEd0QnAwUVdOdG1CK252Qy8rS3NyN1NBRUEwSzJO?=
+ =?utf-8?B?NE1paUU0enl0RHRtdFV5aWwwRjVrRjdCNGkxVDc2Y3EyeGNjZ2tvMTJQZEJu?=
+ =?utf-8?B?TERLMmJ3UmN3dEFHU1ZreThjZ0hkL2s4VTdzbStEMkUwQWdvRnl4dU9nMmtV?=
+ =?utf-8?B?d3dVMkVPcDVxczlhRnFKUHl5NUtOeTNpMm0yT2luTmEzQ3Vuak5ESEQrMGN3?=
+ =?utf-8?B?ckduN3RzdXc1S3lWU3BPam1TUEJyNE9TWTZtbGt4WHNYakhqOCs1bUVYYjcz?=
+ =?utf-8?B?amdLOHpzaVhrTjVMQkp0UzY1NGIra3gvODBReFpxK0xpeGxwbDRtenpEWHBw?=
+ =?utf-8?B?RGRTZVV2QWgwZmczSHNXYXdpZ0dJVlZ1VXJreUVnNGJ6SHhlczZ2L1pYTENB?=
+ =?utf-8?B?MXJUWXRVcm02RW1PZzIzTlQwbFdjdWx3UktGcE9aZ0xsTkRvSEtNcG1NcTU0?=
+ =?utf-8?B?bGx2N3ZWYlNrUVd3NFhwNXRIYTZ4dk1PVTFZZEtJTDRHRUR1K25UVEV0bEtR?=
+ =?utf-8?B?UGlBaGtrTDluNWZtMklJOUVBZkRwOWwrQytMMklPN1hXSzFwSGIzY2dKV3hQ?=
+ =?utf-8?B?ZHI4TXdYUkN5MGw4SG93STQ1NENmNllZdHFPNkxERWJ6T3grdEUyYkV6TGN3?=
+ =?utf-8?B?a2RHQ3F0VUl3cldOdUFXTUIyS2ZYTlR5TUVrM1FiUzJKRllJZjVJVHEyQXEv?=
+ =?utf-8?B?cC9YOGtDUU40cjZTVVpteFJPa3NkZEZNdG10SGFjOWF6a0MvYmw0TElWczFS?=
+ =?utf-8?B?d1RwR0oyNFAySktWdXc2WWx0eWhKbDhINzVyZU1mODFBY04vYVFHNGVKSnhH?=
+ =?utf-8?B?cmFsUTNIbHcvRE1Cbk9GeUhkUlV5cVA3MVcycndrUlovZThBQ3VrcHg4SkVL?=
+ =?utf-8?B?dWxjZ2EvSWxBRUdvVEJYSy9wRFpZNC9BRjdBWDJKZVd0WUNmUXJGKzAwV295?=
+ =?utf-8?B?UG1WZC9HSm1yUnAwSllQendJenc3clZwbTJOSjJaajVVNkljQUZrLzVETXZo?=
+ =?utf-8?B?ZWhpMlNsNmFsY1pmVllnK2FJNnpDUExOVUlIRCt2M0xhUGJkNjlmSlVJRHRn?=
+ =?utf-8?B?L2ZxNGlQanBRZjFPK2VvNW43cXppYlpvakY0dmJQR3RjWm9VcC9uNkRBRzdu?=
+ =?utf-8?Q?H4LkK906ax4fNG2ZTT7PlTSpH?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f6a3773-7a80-48a9-2c91-08dcd9327332
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6214.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2024 05:09:48.7475
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: D0tRriJ5Iy8u+/5AHGfWJtTlH6XCg0i210InHiEIhyX3xowtFzP7DlRQ8ok8OyxtZ8rSdv8UtTB6Rn7k/IJEjQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8731
 
-From: Stefan Ene <stefan.ene@intel.com>
+On 9/19/2024 6:30 PM, Liang, Kan wrote:
+> 
+> 
+> On 2024-09-19 2:02 a.m., Manali Shukla wrote:
+>> On 8/1/2024 10:28 AM, Mingwei Zhang wrote:
+>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>
+>>> There will be a dedicated interrupt vector for guests on some platforms,
+>>> e.g., Intel. Add an interface to switch the interrupt vector while
+>>> entering/exiting a guest.
+>>>
+>>> When PMI switch into a new guest vector, guest_lvtpc value need to be
+>>> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
+>>> bit should be cleared also, then PMI can be generated continuously
+>>> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
+>>> and switch_interrupt().
+>>>
+>>> At switch_interrupt(), the target pmu with PASSTHROUGH cap should
+>>> be found. Since only one passthrough pmu is supported, we keep the
+>>> implementation simply by tracking the pmu as a global variable.
+>>>
+>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>>
+>>> [Simplify the commit with removal of srcu lock/unlock since only one pmu is
+>>> supported.]
+>>>
+>>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+>>> ---
+>>>  include/linux/perf_event.h |  9 +++++++--
+>>>  kernel/events/core.c       | 36 ++++++++++++++++++++++++++++++++++--
+>>>  2 files changed, 41 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>>> index 75773f9890cc..aeb08f78f539 100644
+>>> --- a/include/linux/perf_event.h
+>>> +++ b/include/linux/perf_event.h
+>>> @@ -541,6 +541,11 @@ struct pmu {
+>>>  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
+>>>  	 */
+>>>  	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
+>>> +
+>>> +	/*
+>>> +	 * Switch the interrupt vectors, e.g., guest enter/exit.
+>>> +	 */
+>>> +	void (*switch_interrupt)	(bool enter, u32 guest_lvtpc); /* optional */
+>>>  };
+>>>  
+>>>  enum perf_addr_filter_action_t {
+>>> @@ -1738,7 +1743,7 @@ extern int perf_event_period(struct perf_event *event, u64 value);
+>>>  extern u64 perf_event_pause(struct perf_event *event, bool reset);
+>>>  int perf_get_mediated_pmu(void);
+>>>  void perf_put_mediated_pmu(void);
+>>> -void perf_guest_enter(void);
+>>> +void perf_guest_enter(u32 guest_lvtpc);
+>>>  void perf_guest_exit(void);
+>>>  #else /* !CONFIG_PERF_EVENTS: */
+>>>  static inline void *
+>>> @@ -1833,7 +1838,7 @@ static inline int perf_get_mediated_pmu(void)
+>>>  }
+>>>  
+>>>  static inline void perf_put_mediated_pmu(void)			{ }
+>>> -static inline void perf_guest_enter(void)			{ }
+>>> +static inline void perf_guest_enter(u32 guest_lvtpc)		{ }
+>>>  static inline void perf_guest_exit(void)			{ }
+>>>  #endif
+>>>  
+>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>>> index 57ff737b922b..047ca5748ee2 100644
+>>> --- a/kernel/events/core.c
+>>> +++ b/kernel/events/core.c
+>>> @@ -422,6 +422,7 @@ static inline bool is_include_guest_event(struct perf_event *event)
+>>>  
+>>>  static LIST_HEAD(pmus);
+>>>  static DEFINE_MUTEX(pmus_lock);
+>>> +static struct pmu *passthru_pmu;
+>>>  static struct srcu_struct pmus_srcu;
+>>>  static cpumask_var_t perf_online_mask;
+>>>  static struct kmem_cache *perf_event_cache;
+>>> @@ -5941,8 +5942,21 @@ void perf_put_mediated_pmu(void)
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
+>>>  
+>>> +static void perf_switch_interrupt(bool enter, u32 guest_lvtpc)
+>>> +{
+>>> +	/* Mediated passthrough PMU should have PASSTHROUGH_VPMU cap. */
+>>> +	if (!passthru_pmu)
+>>> +		return;
+>>> +
+>>> +	if (passthru_pmu->switch_interrupt &&
+>>> +	    try_module_get(passthru_pmu->module)) {
+>>> +		passthru_pmu->switch_interrupt(enter, guest_lvtpc);
+>>> +		module_put(passthru_pmu->module);
+>>> +	}
+>>> +}
+>>> +
+>>>  /* When entering a guest, schedule out all exclude_guest events. */
+>>> -void perf_guest_enter(void)
+>>> +void perf_guest_enter(u32 guest_lvtpc)
+>>>  {
+>>>  	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+>>>  
+>>> @@ -5962,6 +5976,8 @@ void perf_guest_enter(void)
+>>>  		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+>>>  	}
+>>>  
+>>> +	perf_switch_interrupt(true, guest_lvtpc);
+>>> +
+>>>  	__this_cpu_write(perf_in_guest, true);
+>>>  
+>>>  unlock:
+>>> @@ -5980,6 +5996,8 @@ void perf_guest_exit(void)
+>>>  	if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest)))
+>>>  		goto unlock;
+>>>  
+>>> +	perf_switch_interrupt(false, 0);
+>>> +
+>>>  	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+>>>  	ctx_sched_in(&cpuctx->ctx, EVENT_GUEST);
+>>>  	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+>>> @@ -11842,7 +11860,21 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
+>>>  	if (!pmu->event_idx)
+>>>  		pmu->event_idx = perf_event_idx_default;
+>>>  
+>>> -	list_add_rcu(&pmu->entry, &pmus);
+>>> +	/*
+>>> +	 * Initialize passthru_pmu with the core pmu that has
+>>> +	 * PERF_PMU_CAP_PASSTHROUGH_VPMU capability.
+>>> +	 */
+>>> +	if (pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU) {
+>>> +		if (!passthru_pmu)
+>>> +			passthru_pmu = pmu;
+>>> +
+>>> +		if (WARN_ONCE(passthru_pmu != pmu, "Only one passthrough PMU is supported\n")) {
+>>> +			ret = -EINVAL;
+>>> +			goto free_dev;
+>>> +		}
+>>> +	}
+>>
+>>
+>> Our intention is to virtualize IBS PMUs (Op and Fetch) using the same framework. However, 
+>> if IBS PMUs are also using the PERF_PMU_CAP_PASSTHROUGH_VPMU capability, IBS PMU registration
+>> fails at this point because the Core PMU is already registered with PERF_PMU_CAP_PASSTHROUGH_VPMU.
+>>
+> 
+> The original implementation doesn't limit the number of PMUs with
+> PERF_PMU_CAP_PASSTHROUGH_VPMU. But at that time, we could not find a
+> case of more than one PMU with the flag. After several debates, the
+> patch was simplified only to support one PMU with the flag.
+> It should not be hard to change it back.
+> 
+> Thanks,
+> Kan
+> 
 
-[PATCH 3/3] added the Rust sample script
+Yes, we have a use case to use mediated passthrough vPMU framework for IBS virtualization.
+So, we will need it.
 
----
- tools/perf/new_script_templates/README   |  61 +++++++++++--
- tools/perf/new_script_templates/lib.rs   | 108 +++++++++++++++++++++++
- tools/perf/new_script_templates/script.c |   6 ++
- tools/perf/util/new_script_rs_lib.h      |  35 ++++++++
- 4 files changed, 204 insertions(+), 6 deletions(-)
- create mode 100644 tools/perf/new_script_templates/lib.rs
- create mode 100644 tools/perf/util/new_script_rs_lib.h
+- Manali
 
-diff --git a/tools/perf/new_script_templates/README b/tools/perf/new_script_templates/README
-index c2a55a65d444..f16a9759d37e 100644
---- a/tools/perf/new_script_templates/README
-+++ b/tools/perf/new_script_templates/README
-@@ -2,15 +2,64 @@ Linux kernel additions for C and Rust script support inside the perf-script tool
- 
- Steps to use new feature:
- 
--    First, use the provided update_perf_tools.sh script to make sure your perf toolset is up to date with the latest implementation:
--        $ bash update_perf_tools.sh
-+    First, use run the following lines to make sure your perf toolset is up to date with the latest implementation:
-+        $ cd ./tools/perf/
-+        $ make
-+        $ sudo cp perf /usr/bin
-+        $ perf --version
-+    Now, you can make use of our new features!
-+
- 
-     a) For C scripts:
--        1. Use the default C template test.c to write your own custom perf event processing
-+        1. Use the default C template in tools/perf/new_script_templates/script.c to write your own custom perf event processing
- 
-         2. Compile the C script into a dynamic library using the following two commands:
--            $ gcc -c -I ~/include -fpic new_script_templates/script.c
--            $ gcc -shared -o test.so new_script_templates/script.o
-+            $ gcc -c -I ~/include -fpic script.c
-+            $ gcc -shared -o script.so script.o
- 
-         3. Call the new perf script option to use the newly created .so file using the command:
--            $ sudo perf script --new_script new_script_templates/script.so
-\ No newline at end of file
-+            $ sudo perf script --new_script script.so
-+
-+
-+     b) For Rust scripts:
-+          1. Create a new Rust project using Cargo:
-+               $ cargo new rslib_script --lib
-+               $ cd rslib_script
-+          
-+          2. In the Cargo.toml file, specify the crate type as a dynamic library as follows:
-+               [lib]
-+               crate-type = ["cdylib"]
-+          
-+          3. Use the default Rust template in tools/perf/new_script_templates/lib.rs to write your own custom perf event processing, and store it into src/lib.rs inside of the Rust project folder.
-+
-+          4. Compile the Rust project using Cargo:
-+               $ cargo build --release
-+          
-+          5. Call the new perf script option to use the newly created /target/release/librslib.so within the Rust project using the followig command:
-+               $  sudo perf script --new_script rslib/target/release/librslib.so
-+
-+Enjoy using the new scripting languages for an added bonus of usability and performance over the existent Python and Perl options in the upstream kernel code. 
-+
-+
-+<!-- ============================= -->
-+
-+This section contains some initial benchmark results on the Intel Lab machine using the perf script tools on a 4026869-byte perf.data file.
-+
-+Process ----- Time
-+
-+> Perf tool vanilla:
-+perf script raw: 1.425s
-+perf script names: 0.915s
-+perf script Python: 1.334s
-+perf script Perl: 2.210s
-+
-+
-+> Pre-optimizations:
-+new_script raw C: 0.284s
-+new_script raw Rust: 0.607s
-+
-+> Post-optimizations:
-+new_script raw C batch=1MB: 0.306s 
-+new_script raw C batch=2MB: 0.301s 
-+new_script raw C batch=4MB: 0.296s 
-+new_script raw Rust batch=1MB: 0.262s
-\ No newline at end of file
-diff --git a/tools/perf/new_script_templates/lib.rs b/tools/perf/new_script_templates/lib.rs
-new file mode 100644
-index 000000000000..1249d9e9099b
---- /dev/null
-+++ b/tools/perf/new_script_templates/lib.rs
-@@ -0,0 +1,108 @@
-+// Stefan Ene's code, under Intel - Linux Kernel Team
-+/*
-+ * code for new perf script custom C script template
-+ *
-+ */
-+
-+ use std::os::raw::{c_char, c_int, c_void};
-+ use std::slice;
-+ use std::fmt::Write;
-+ 
-+ // =================== Needed stuff, DO NOT CHANGE ===================
-+ 
-+ #[repr(C)]
-+ struct NewScript {
-+     file: *mut c_char,
-+     handle: *mut c_void,
-+ 
-+     begin: extern "C" fn(*mut c_void, *mut c_void),
-+     end: extern "C" fn(*mut c_void, *mut c_void),
-+ 
-+     process_file_header: extern "C" fn(*mut c_void, *mut c_void) -> c_int,
-+     process_event_header: extern "C" fn(*mut c_void, *mut c_void) -> c_int,
-+     process_event_raw_data: extern "C" fn(*mut c_void, c_int, *mut c_void) -> c_int,
-+ }
-+ 
-+ #[repr(C)]
-+ struct ProcessedFileHeader {
-+     size: u64,
-+     data_size: u64,
-+     data_offset: u64,
-+ }
-+ 
-+ #[repr(C)]
-+ struct ProcessedEventHeader {
-+     event_type: u32,
-+     misc: u16,
-+     size: u16,
-+ }
-+ 
-+ //  =================== Editable funtions begin ===================
-+ 
-+ #[no_mangle]
-+ pub extern "C" fn print_begin(_data: *mut c_void, _ctx: *mut c_void) {
-+     println!(">> in trace_begin with Rust");
-+ }
-+ 
-+ #[no_mangle]
-+ pub extern "C" fn process_file_header(data: *mut c_void, _ctx: *mut c_void) -> c_int {
-+     if data.is_null() {
-+         println!("> Error dynamically processing file header");
-+         return -1;
-+     }
-+ 
-+     let fh = unsafe { &*(data as *const ProcessedFileHeader) };
-+ 
-+     println!("\nFile header: size={:x}, data.size={}, data.offset={}", fh.size, fh.data_size, fh.data_offset);
-+ 
-+     0
-+ }
-+ 
-+ #[no_mangle]
-+ pub extern "C" fn process_event_header(data: *mut c_void, _ctx: *mut c_void) -> c_int {
-+     if data.is_null() {
-+         println!("> Error dynamically processing event header");
-+         return -1;
-+     }
-+ 
-+     let evh = unsafe { &*(data as *const ProcessedEventHeader) };
-+ 
-+     println!("\nRS Event header: size={}, type={}, misc={}", evh.size, evh.event_type, evh.misc);
-+ 
-+     0
-+ }
-+ 
-+ #[no_mangle]
-+ pub extern "C" fn process_event_raw_data(data: *mut c_void, size: c_int, _ctx: *mut c_void) -> c_int {
-+     let byte_data = unsafe { slice::from_raw_parts(data as *const u8, size as usize) };
-+     let mut output = String::new();
-+ 
-+     for (i, &byte) in byte_data.iter().enumerate() {
-+         if i % 16 == 0 {
-+             output.push('\n');
-+         }
-+         write!(&mut output, "{:02x} ", byte).unwrap();
-+     }
-+ 
-+     println!("{}", output);
-+     0
-+ }
-+ 
-+ #[no_mangle]
-+ pub extern "C" fn print_end(_data: *mut c_void, _ctx: *mut c_void) {
-+     println!("\n>> in trace_end");
-+ }
-+ 
-+ // =================== Needed stuff begin, DO NOT CHANGE ===================
-+ 
-+ #[no_mangle]
-+ pub extern "C" fn initialize_new_script(s: *mut NewScript) {
-+     if !s.is_null() {
-+         let script = unsafe { &mut *s };
-+         script.begin = print_begin;
-+         script.end = print_end;
-+         script.process_file_header = process_file_header;
-+         script.process_event_header = process_event_header;
-+         script.process_event_raw_data = process_event_raw_data;
-+     }
-+ }
-\ No newline at end of file
-diff --git a/tools/perf/new_script_templates/script.c b/tools/perf/new_script_templates/script.c
-index e4942ba689db..787f67424d5e 100644
---- a/tools/perf/new_script_templates/script.c
-+++ b/tools/perf/new_script_templates/script.c
-@@ -1,3 +1,9 @@
-+// Stefan Ene's code, under Intel - Linux Kernel Team
-+/*
-+ * code for new perf script custom C script template
-+ *
-+ */
-+
- #include <stdlib.h>
- #include <stdio.h>
- 
-diff --git a/tools/perf/util/new_script_rs_lib.h b/tools/perf/util/new_script_rs_lib.h
-new file mode 100644
-index 000000000000..4a8d6f71b122
---- /dev/null
-+++ b/tools/perf/util/new_script_rs_lib.h
-@@ -0,0 +1,35 @@
-+// Stefan Ene's code, under Intel - Linux Kernel Team
-+/*
-+ * new_script_lib_rs.h: header file for new_script Rust FFI
-+ *
-+ */
-+
-+#ifndef NEW_SCRIPT_LIB_RS_H
-+#define NEW_SCRIPT_LIB_RS_H
-+
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
-+
-+#include <stdint.h>
-+
-+// Match the struct definitions with the Rust code
-+struct NewScript {
-+    char		*file;
-+    void        *handle;
-+
-+    void (*begin)(void *data, void *ctx);
-+	void (*end)(void *data, void *ctx);
-+
-+    int (*process_file_header)(void *data, void *ctx);
-+    int (*process_event_header)(void *data, void *ctx);
-+    int (*process_event_raw_data)(void *data, const int size, void *ctx);
-+};
-+
-+void initialize_new_script(struct NewScript* s);
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
-+#endif // NEW_SCRIPT_LIB_RS_H
-\ No newline at end of file
--- 
-2.46.0
+>>> +
+>>> +	list_add_tail_rcu(&pmu->entry, &pmus);
+>>>  	atomic_set(&pmu->exclusive_cnt, 0);
+>>>  	ret = 0;
+>>>  unlock:
+>>
+>>
 
