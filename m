@@ -1,90 +1,181 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE0341A84;
-	Fri, 20 Sep 2024 17:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2707A185928
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Sep 2024 17:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726851853; cv=none; b=KBBgU70H71mgycJXXY1lPvy2m1hfVeAJCgwUJUDyecD6Ecag9HGmhQzb2iuMcIAZVkewD65PWEVoG4ndN995quGv7ZeuNCbPfUKusjglhQCjDLtoID7GEGe6Q/T55Mkor+gl/wds1OsPtvXeG+jiu+iiQAcqzYfxASnqQ0HhOIg=
+	t=1726854468; cv=none; b=K1gemc0CnViAcLZeBZ9tD+5Oj2jYQav0zahh/omlXbhaOZH8Zx+Pg6k9GHJpaRna2HqF9RXxWxCrTwQDVgg6crlkhrQPZ2zj7gejPw9HBeOzgYfGPPUAOxV2GUrPIV+88ecJ+8COJ2/M3PfX5BDHO8KBMngZzhsbBXPNgjeVOsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726851853; c=relaxed/simple;
-	bh=qeVkc+0i9qhmNcvr3RlYChsmn+IbD0wG5NG+qixhCDE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cGo3pFzcvfXeTjBS4ai1HulcW5PjojX6rCNJtC8AZa7X6Kj7NVbKxczVWv3JaRVEwb324HoLBLlftBA02ZM/xvJxyg3riVWn/STzsHFGNrK5akTlMeoEZrgKAkIRX4NnE8pNfZsAHUNQGyRa1bkuAOceqJfHhwz6dOczspIjVgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=BNRTI66A; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1726854468; c=relaxed/simple;
+	bh=y/0LqhkUFKLFvvmv5O0BARy04KbRdOL/9eO4QczoFTA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=WwYwbHdkRUjFBs8s11FXz/m3g6eDJIKqhuh+72Cz6T6pDAlqP5ltVsCECBCbKX3O3WV5FUOI6H0VWyqKk0x4bXJlN3yslzGRW18t3Si8QSVNv9C3J0R980bw3EUijQ0kqVuMW9fX6LYJ4tzKRN8dlXqRw+U48jrz6QDkS6iAumc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tbLBnRAJ; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="BNRTI66A"
-Received: from monopod.intra.ispras.ru (unknown [10.10.3.121])
-	by mail.ispras.ru (Postfix) with ESMTPS id 7D08340F1DC4;
-	Fri, 20 Sep 2024 17:04:00 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 7D08340F1DC4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1726851840;
-	bh=rCFLEdkLioLotNqJ2qXe4wnVu+Hcij9Rndm8NmPmqhs=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=BNRTI66ACpIpBMW8zfkJf2pHAGteDxtIFP0WrXa313ihBKrob4cjCJZ+N/Rf5unI2
-	 NGXSGXdU+o4qXq6zjthWbioouDJfsuXBNaqkEWfUHnO6t237IbfucUSAZ1xTOQMnV2
-	 21pMSgXMFpd93w65GRbWpPc5waOBkJl4hbIBudKY=
-Date: Fri, 20 Sep 2024 20:04:00 +0300 (MSK)
-From: Alexander Monakov <amonakov@ispras.ru>
-To: Namhyung Kim <namhyung@kernel.org>
-cc: Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf symbol: Set binary_type of dso when loading
-In-Reply-To: <20240426215139.1271039-1-namhyung@kernel.org>
-Message-ID: <b9a82437-cd4a-5331-47da-b0d1640169d7@ispras.ru>
-References: <20240426215139.1271039-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tbLBnRAJ"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ddcb18b13cso39155537b3.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Sep 2024 10:47:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1726854464; x=1727459264; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MVX2p+TpOgKO2VD1T0Sjf0Y9xYKj+teBBRpgO6spktE=;
+        b=tbLBnRAJHPshGsbInwfUuXZfYYAOckppiLO/EqIeZ2kgDZYohCA5Hp6jb+bq2r4N+1
+         gGYgrq51fin4OhPJzTWjG/idVxnfssuR7giV5rKdEYLjekhyWk//AW24oZbJ1637y5g1
+         QOTBRtJw/7/qufGXC8pGDCWNQXehLvtmEVRCK4rAvMYIPoG39xWVbNxmbKCJRyT48haR
+         5xpcT8ThtqdIBBkNaWqKP+BU7xH9lzjcWekmm2O3Dcr1l5VwwvsgDvPdTdr584+qbjXQ
+         5g0/Eg+YdjMrid44pIMxlOhiE5SyLPTV/0mDabTolAMlpyxkRFpvX8Qb844TlWt8LJPO
+         vZqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726854464; x=1727459264;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MVX2p+TpOgKO2VD1T0Sjf0Y9xYKj+teBBRpgO6spktE=;
+        b=W1Q/hCFYSjykhdrXIo8a4xYBgiuu3Igk4bLLVXfLbS2WpGVsc6R3B4wZ1OHuwOK8sU
+         qgsowDgu8lbfABr8Wb2rnu8WY+pNKLnmXgAbKCjU8ZzMyTfngOgjEvitetsIP6dvSYbx
+         NhnmAkHgU8G8LY7JVVmppyXE6MfVsb0l0hdxd9KErCofr6j563F290s5/8WVaNK7kv7t
+         V2UweEG7ecT9vddKfGVv/f1iBY66Zf6obrrs7/GIc/v+5fVmex+oeva3MkpyhgXp1xBD
+         il45xVIIytqDbdz7lZAVOfCPHEAtKV3fYPbV17L+RbjRhMq7Y5dDbqQ293DvzQOkVhB5
+         9UJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWnwUIku4WZkbB4bwuyOWFg14yz0m49wG7m6gM1qnjTpG8xSxcrwE72UAhxBwh82qiznLcjxH2JGsOxgStuA57+@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywbvb04RWO+wiZxQfse86JVR4Y8T9Aua/b+dgYDKTWdzcDj5ipn
+	9OAOrrdcMImurAZTQqx01ssMPJidzKHvsq8kw8moEuPcI9dAFT54n1RVJ/Hg8TosStsHsxGOEXy
+	C1Z1rJ/tJsoEPXxRgMhcJaQ==
+X-Google-Smtp-Source: AGHT+IGdaBc0VukQd5fL8Bpn3emPCz2aUl7uHxwZYGGbbf8J5W3JOUJuoVEqVbJQELPzn/Ev3AqsKyGRg/+CmYTS0w==
+X-Received: from coltonlewis-kvm.c.googlers.com ([fda3:e722:ac3:cc00:11b:3898:ac11:fa18])
+ (user=coltonlewis job=sendgmr) by 2002:a25:abd0:0:b0:e1a:44fa:f09 with SMTP
+ id 3f1490d57ef6-e2250c2162amr2899276.2.1726854464128; Fri, 20 Sep 2024
+ 10:47:44 -0700 (PDT)
+Date: Fri, 20 Sep 2024 17:47:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.792.g87dc391469-goog
+Message-ID: <20240920174740.781614-1-coltonlewis@google.com>
+Subject: [PATCH v5 0/5] Correct perf sampling with Guest VMs
+From: Colton Lewis <coltonlewis@google.com>
+To: kvm@vger.kernel.org
+Cc: Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Will Deacon <will@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	Colton Lewis <coltonlewis@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+v5:
+* Correct the same compilation failure on s390
+  This time I made sure to download all the cross-toolchains of all
+  architectures touched and compiled once for each arch.
 
-On Fri, 26 Apr 2024, Namhyung Kim wrote:
+v4:
+https://lore.kernel.org/kvm/20240919190750.4163977-1-coltonlewis@google.com/
 
-> For the kernel dso, it sets the binary type of dso when loading the
-> symbol table.  But it seems not to do that for user DSOs.  Actually
-> it sets the symtab type only.  It's not clear why we want to maintain
-> the two separately but it uses the binary type info before getting
-> the disassembly.
-> 
-> Let's use the symtab type as binary type too if it's not set.  I think
-> it's ok to set the binary type when it founds a symsrc whether or not
-> it has actual symbols.
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+v3:
+https://lore.kernel.org/kvm/20240912205133.4171576-1-coltonlewis@google.com/
 
-Any chance this can be applied and propagated to stable? Annotating
-functions outside of the main executable is broken otherwise (regressed
-since 873a83731f1c ("perf annotate: Skip DSOs not found")).
+v2:
+https://lore.kernel.org/kvm/20240911222433.3415301-1-coltonlewis@google.com/
 
-Tested-by: Alexander Monakov <amonakov@ispras.ru>
+v1:
+https://lore.kernel.org/kvm/20240904204133.1442132-1-coltonlewis@google.com/
 
-> ---
->  tools/perf/util/symbol.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 7772a4d3e66c..63936269ec15 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1927,6 +1927,9 @@ int dso__load(struct dso *dso, struct map *map)
->  		if (next_slot) {
->  			ss_pos++;
->  
-> +			if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND)
-> +				dso__set_binary_type(dso, symtab_type);
-> +
->  			if (syms_ss && runtime_ss)
->  				break;
->  		} else {
-> 
+This series cleans up perf recording around guest events and improves
+the accuracy of the resulting perf reports.
+
+Perf was incorrectly counting any PMU overflow interrupt that occurred
+while a VCPU was loaded as a guest event even when the events were not
+truely guest events. This lead to much less accurate and useful perf
+recordings.
+
+See as an example the below reports of `perf record
+dirty_log_perf_test -m 2 -v 4` before and after the series on ARM64.
+
+Without series:
+
+Samples: 15K of event 'instructions', Event count (approx.): 31830580924
+Overhead  Command          Shared Object        Symbol
+  54.54%  dirty_log_perf_  dirty_log_perf_test  [.] run_test
+   5.39%  dirty_log_perf_  dirty_log_perf_test  [.] vcpu_worker
+   0.89%  dirty_log_perf_  [kernel.vmlinux]     [k] release_pages
+   0.70%  dirty_log_perf_  [kernel.vmlinux]     [k] free_pcppages_bulk
+   0.62%  dirty_log_perf_  dirty_log_perf_test  [.] userspace_mem_region_find
+   0.49%  dirty_log_perf_  dirty_log_perf_test  [.] sparsebit_is_set
+   0.46%  dirty_log_perf_  dirty_log_perf_test  [.] _virt_pg_map
+   0.46%  dirty_log_perf_  dirty_log_perf_test  [.] node_add
+   0.37%  dirty_log_perf_  dirty_log_perf_test  [.] node_reduce
+   0.35%  dirty_log_perf_  [kernel.vmlinux]     [k] free_unref_page_commit
+   0.33%  dirty_log_perf_  [kernel.vmlinux]     [k] __kvm_pgtable_walk
+   0.31%  dirty_log_perf_  [kernel.vmlinux]     [k] stage2_attr_walker
+   0.29%  dirty_log_perf_  [kernel.vmlinux]     [k] unmap_page_range
+   0.29%  dirty_log_perf_  dirty_log_perf_test  [.] test_assert
+   0.26%  dirty_log_perf_  [kernel.vmlinux]     [k] __mod_memcg_lruvec_state
+   0.24%  dirty_log_perf_  [kernel.vmlinux]     [k] kvm_s2_put_page
+
+With series:
+
+Samples: 15K of event 'instructions', Event count (approx.): 31830580924
+Samples: 15K of event 'instructions', Event count (approx.): 30898031385
+Overhead  Command          Shared Object        Symbol
+  54.05%  dirty_log_perf_  dirty_log_perf_test  [.] run_test
+   5.48%  dirty_log_perf_  [kernel.kallsyms]    [k] kvm_arch_vcpu_ioctl_run
+   4.70%  dirty_log_perf_  dirty_log_perf_test  [.] vcpu_worker
+   3.11%  dirty_log_perf_  [kernel.kallsyms]    [k] kvm_handle_guest_abort
+   2.24%  dirty_log_perf_  [kernel.kallsyms]    [k] up_read
+   1.98%  dirty_log_perf_  [kernel.kallsyms]    [k] __kvm_tlb_flush_vmid_ipa_nsh
+   1.97%  dirty_log_perf_  [kernel.kallsyms]    [k] __pi_clear_page
+   1.30%  dirty_log_perf_  [kernel.kallsyms]    [k] down_read
+   1.13%  dirty_log_perf_  [kernel.kallsyms]    [k] release_pages
+   1.12%  dirty_log_perf_  [kernel.kallsyms]    [k] __kvm_pgtable_walk
+   1.08%  dirty_log_perf_  [kernel.kallsyms]    [k] folio_batch_move_lru
+   1.06%  dirty_log_perf_  [kernel.kallsyms]    [k] __srcu_read_lock
+   1.03%  dirty_log_perf_  [kernel.kallsyms]    [k] get_page_from_freelist
+   1.01%  dirty_log_perf_  [kernel.kallsyms]    [k] __pte_offset_map_lock
+   0.82%  dirty_log_perf_  [kernel.kallsyms]    [k] handle_mm_fault
+   0.74%  dirty_log_perf_  [kernel.kallsyms]    [k] mas_state_walk
+
+Colton Lewis (5):
+  arm: perf: Drop unused functions
+  perf: Hoist perf_instruction_pointer() and perf_misc_flags()
+  powerpc: perf: Use perf_arch_instruction_pointer()
+  x86: perf: Refactor misc flag assignments
+  perf: Correct perf sampling with guest VMs
+
+ arch/arm/include/asm/perf_event.h            |  7 ---
+ arch/arm/kernel/perf_callchain.c             | 17 -------
+ arch/arm64/include/asm/perf_event.h          |  4 --
+ arch/arm64/kernel/perf_callchain.c           | 28 ------------
+ arch/powerpc/include/asm/perf_event_server.h |  6 +--
+ arch/powerpc/perf/callchain.c                |  2 +-
+ arch/powerpc/perf/callchain_32.c             |  2 +-
+ arch/powerpc/perf/callchain_64.c             |  2 +-
+ arch/powerpc/perf/core-book3s.c              |  4 +-
+ arch/s390/include/asm/perf_event.h           |  6 +--
+ arch/s390/kernel/perf_event.c                |  4 +-
+ arch/x86/events/core.c                       | 47 +++++++++++---------
+ arch/x86/include/asm/perf_event.h            | 12 ++---
+ include/linux/perf_event.h                   | 26 +++++++++--
+ kernel/events/core.c                         | 27 ++++++++++-
+ 15 files changed, 95 insertions(+), 99 deletions(-)
+
+
+base-commit: da3ea35007d0af457a0afc87e84fddaebc4e0b63
+--
+2.46.0.792.g87dc391469-goog
