@@ -1,142 +1,168 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FD7197558;
-	Mon, 23 Sep 2024 10:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0482119CC0F;
+	Mon, 23 Sep 2024 15:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727087407; cv=none; b=jtrRlUETHwZjwYChPHknm7hy4zvf6zETTA9pV4tv8vMCDc0+K8D+eZb0XoBt0zW9CTlFcfkultRcmcNstzGxlOnQg8NSu6aSAuTz2R7Ur4Bh1IZSNJaCSIoCCSmZoBGot3S8T3hfgfEDaKskY6i42dilOHrD5mxKV6fJb4kiRSQ=
+	t=1727104887; cv=none; b=XzXfIrvEHnO1aonMK2tAuhSAodDnDNikobDHU7HWNfoMaPxU5jv0LDvmd0G3IrV0T1QOS0x4MM4BPn+4ecIG4FLhf3g52Tnib/l4L3uBd3Z5Lq60MrmFbVcM+/cFnRKB2Hf0SPud9JpXSTixHJ8DOR9TjmbcSFMjMcrHO7cS75o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727087407; c=relaxed/simple;
-	bh=KtGx5U5GzL7Z/yR+uBlw5VS/+lB7HSxpBr3S7vnjqXw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NE3WizXt/OaFRlh+WgSwpVTPser64IO/fRBzIlF/JnfBYvEXX1i2Gp5WehxOpnLEDWEP7f/OxosH79Be+ao2kedV+BPlNcWcHA2bJ+s8nWOPUFr3EUlzlIoemK7gVHw2XrBiHd2FLDxvuMpxnuSxWIVPQs4QbtPJJIlL8O6vCaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4XBzkG1xpTz1SC8B;
-	Mon, 23 Sep 2024 18:29:10 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 97EC21A016C;
-	Mon, 23 Sep 2024 18:29:55 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 23 Sep 2024 18:29:54 +0800
-Message-ID: <0939300c-a825-5b46-d86f-72ce89b2b95f@huawei.com>
-Date: Mon, 23 Sep 2024 18:29:54 +0800
+	s=arc-20240116; t=1727104887; c=relaxed/simple;
+	bh=bMSKhr+4rYP/5MGeIk1qblZn7/5eBVdbQ9Yv1NT8p2s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mbo8K/7lCpAuQsAkuMXmnCQMnP9xtR3kIIpMVtEFtMW4BqZ2VDi4D0H8pJtQFlKAY5RPZ4oF0Z9uS2OavOgn4ZFjJLMhTTzpT+nO2igjlJdb16BJ0H3OTRju/0oVF4cdzrZT18ICxTm+Q0wgA/MhDi4tVy595z/xGwRTTQOo0KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80143FEC;
+	Mon, 23 Sep 2024 08:21:53 -0700 (PDT)
+Received: from [10.57.84.103] (unknown [10.57.84.103])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4B793F64C;
+	Mon, 23 Sep 2024 08:21:20 -0700 (PDT)
+Message-ID: <ebf8d9c6-867d-4e50-9e98-5d7f854278d8@arm.com>
+Date: Mon, 23 Sep 2024 16:21:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] uprobes: Improve the usage of xol slots for better
- scalability
-To: Andi Kleen <ak@linux.intel.com>
-CC: <mhiramat@kernel.org>, <oleg@redhat.com>, <andrii@kernel.org>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
-References: <20240918012752.2045713-1-liaochang1@huawei.com>
- <87jzf9b12w.fsf@linux.intel.com>
- <7a6ba3f3-dffa-cdac-73c7-074505ea4b44@huawei.com> <ZuwoUmqXrztp-Mzh@tassilo>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <ZuwoUmqXrztp-Mzh@tassilo>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 7/7] mm: Use pgdp_get() for accessing PGD entries
+Content-Language: en-GB
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+ kernel test robot <lkp@intel.com>, linux-mm@kvack.org, llvm@lists.linux.dev,
+ oe-kbuild-all@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-fsdevel@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dimitri Sivanich
+ <dimitri.sivanich@hpe.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Muchun Song <muchun.song@linux.dev>, Andrey Ryabinin
+ <ryabinin.a.a@gmail.com>, Miaohe Lin <linmiaohe@huawei.com>,
+ Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+ Christoph Lameter <cl@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>
+References: <20240917073117.1531207-8-anshuman.khandual@arm.com>
+ <202409190310.ViHBRe12-lkp@intel.com>
+ <8f43251a-5418-4c54-a9b0-29a6e9edd879@arm.com>
+ <ZuvqpvJ6ht4LCuB+@shell.armlinux.org.uk>
+ <82fa108e-5b15-435a-8b61-6253766c7d88@arm.com>
+ <ZuxZ/QeSdqTHtfmw@shell.armlinux.org.uk>
+ <5bd51798-cb47-4a7b-be40-554b5a821fe7@arm.com>
+ <ZuyIwdnbYcm3ZkkB@shell.armlinux.org.uk>
+ <9e68ffad-8a7e-40d7-a6f3-fa989a834068@arm.com>
+ <Zu1EwTItDrnkTVTB@shell.armlinux.org.uk>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <Zu1EwTItDrnkTVTB@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-在 2024/9/19 21:34, Andi Kleen 写道:
->> Sorry, I know nothing about the ThreadSanitizer and related annotation,
->> could you provide some information about it, thanks.
+>> Let's just rewind a bit. This thread exists because the kernel test robot failed
+>> to compile pgd_none_or_clear_bad() (a core-mm function) for the arm architecture
+>> after Anshuman changed the direct pgd dereference to pgdp_get(). The reason
+>> compilation failed is because arm defines its own pgdp_get() override, but it is
+>> broken (there is a typo).
 > 
-> Documentation/dev-tools/kcsan.rst
-
-Thanks.
-
+> Let's not rewind, because had you fully read and digested my reply, you
+> would have seen why this isn't a problem... but let me spell it out.
 > 
->>> Would be good to have some commentary why doing so
->>> many write operations with merely a rcu_read_lock as protection is safe.
->>> It might be safer to put some write type operations under a real lock. 
->>> Also it is unclear how the RCU grace period for utasks is enforced.
 >>
->> You are right, but I think using atomic refcount routine might be a more
->> suitable apprach for this scenario. The slot_ret field of utask instance
-> 
-> Does it really all need to be lockless? Perhaps you can only make the 
-> common case lockless, but then only when the list overflows take a lock 
-> and avoid a lot of races. That might be good enough for performance.
-
-Agreed, List overflow would happen if new threads were constantly spawned
-and hit the breakpoint. I'm not sure how often this occurs in real application.
-Even if some applications follow this pattern, I suspect the bottleneck
-might shift to another point, like dynamically allocating new utask instances.
-At least, for the scalability selftest benchmark, list overflow shouldn't
-be a common case.
-
-> 
-> If you really want a complex lockless scheme you need very clear documentation
-> in comments and commit logs at least.
-> 
-> Also there should be a test case that stresses the various cases.
-> 
-> I would just use a lock 
-
-Thanks for the suggestions, I will experiment with a read-write lock, meanwhile,
-adding the documentation and testing for the lockless scheme.
-
->> is used to track the status of insn_slot. slot_ret supports three values.
->> A value of 2 means the utask associated insn_slot is currently in use by
->> uprobe. A value of 1 means the slot is no being used by uprobe. A value
->> of 0 means the slot has been reclaimed. So in some term, the atomic refcount
->> routine test_and_pout_task_slot() also avoid the racing when writing to
->> the utask instance, providing additional status information about insn_slot.
+>> Code before Anshuman's change:
 >>
->> BTW, You reminded me that since it might recycle the slot after deleting the
->> utask from the garbage collection list, so it's necessary to use
->> test_and_put_task_slot() to avoid the racing on the stale utask. the correct
->> code might be something like this:
+>> static inline int pgd_none_or_clear_bad(pgd_t *pgd)
+>> {
+>> 	if (pgd_none(*pgd))
+>> 		return 1;
+>> 	if (unlikely(pgd_bad(*pgd))) {
+>> 		pgd_clear_bad(pgd);
+>> 		return 1;
+>> 	}
+>> 	return 0;
+>> }
+> 
+> This isn't a problem as the code stands. While there is a dereference
+> in C, that dereference is a simple struct copy, something that we use
+> everywhere in the kernel. However, that is as far as it goes, because
+> neither pgd_none() and pgd_bad() make use of their argument, and thus
+> the compiler will optimise it away, resulting in no actual access to
+> the page tables - _as_ _intended_.
+
+Right. Are you saying you depend upon those loads being optimized away for
+correctness or performance reasons?
+
+> 
+> If these are going to be converted to pgd_get(), then we need pgd_get()
+> to _also_ be optimised away, 
+
+OK, agreed.
+
+So perhaps the best approach is to modify the existing default pxdp_get()
+implementations to just do a C dereference. That will ensure that there are no
+intended consequences, unlike moving to READ_ONCE() by default. Then riscv
+(which I think is the only arch to actually use pxdp_get() currently?) will need
+its own pxdp_get() overrides, which use READ_ONCE(). arm64 would also define its
+own overrides in terms of READ_ONCE() to ensure single copy atomicity in the
+presence of HW updates.
+
+How does that sound to you?
+
+> and if e.g. this is the only place that
+> pgd_get() is going to be used, the suggestion I made in my previous
+> email is entirely reasonable, since we know that the result of pgd_get()
+> will not actually be used.
+
+I guess you could do that as an arm-specific override, but I don't think it adds
+anything over using my proposed reworked default? Your call.
+
+> 
+>> As an aside, the kernel also dereferences p4d, pud, pmd and pte pointers in
+>> various circumstances.
+> 
+> I already covered these in my previous reply.
+> 
+>> And other changes in this series are also replacing those
+>> direct dereferences with calls to similar helpers. The fact that these are all
+>> folded (by a custom arm implementation if I've understood the below correctly)
+>> just means that each dereference is returning what you would call the pmd from
+>> the HW perspective, I think?
+> 
+> It'll "return" the first of each pair of level-1 page table entries,
+> which is pgd[0] or *p4d, *pud, *pmd - but all of these except *pmd
+> need to be optimised away, so throwing lots of READ_ONCE() around
+> this code without considering this is certainly the wrong approach.
+
+Yep, got it.
+
+> 
+>>>> The core-mm today
+>>>> dereferences pgd pointers (and p4d, pud, pmd pointers) directly in its code. See
+>>>> follow_pfnmap_start(),
+>>>
+>>> Doesn't seem to exist at least not in 6.11.
 >>
->> @@ -1771,16 +1783,16 @@ static void xol_free_insn_slot(struct task_struct *tsk)
->>
->>         spin_lock_irqsave(&area->list_lock, flags);
->>         list_del_rcu(&tsk->utask->gc);
->> +       /* Ensure the slot is not in use or reclaimed on other CPU */
->> +       if (test_and_put_task_slot(tsk->utask)) {
->> +               clear_bit(tsk->utask->insn_slot, area->bitmap);
->> +               atomic_dec(&area->slot_count);
->> +               tsk->utask->insn_slot = UINSNS_PER_PAGE;
->> +               get_task_slot(tsk->utask);
->> +       }
+>> Appologies, I'm on mm-unstable and that isn't upstream yet. See follow_pte() in
+>> v6.11 or __apply_to_page_range(), or pgd_none_or_clear_bad() as per above.
 > 
-> I would have expected you would add a if (racing) bail out, assume the
-> other CPU will do the work type check but that doesn't seem to be what
-> the code is doing.
-
-Sorry, I may not probably get the point clear here, and it would be very
-nice if more details are provided for the concern. Do you mean it's necessary
-to make the if-body excution exclusive among the CPUs? If that's the case,
-I guess the test_and_put_task_slot() is the equvialent to the race condition
-check. test_and_put_task_slot() uses a compare and exchange operation on the
-slot_ref of utask instance. Regardless of the work type being performed by
-other CPU, it will always bail out unless the slot_ref has a value of one,
-indicating the utask is free to access from local CPU.
-
+> Looking at follow_pte(), it's not a problem.
 > 
-> -Andi
+> I think we wouldn't be having this conversation before:
 > 
+> commit a32618d28dbe6e9bf8ec508ccbc3561a7d7d32f0
+> Author: Russell King <rmk+kernel@arm.linux.org.uk>
+> Date:   Tue Nov 22 17:30:28 2011 +0000
+> 
+>     ARM: pgtable: switch to use pgtable-nopud.h
+> 
+> where:
+> -#define pgd_none(pgd)          (0)
+> -#define pgd_bad(pgd)           (0)
+> 
+> existed before this commit - and thus the dereference in things like:
+> 
+> 	pgd_none(*pgd)
+> 
+> wouldn't even be visible to beyond the preprocessor step.
 > 
 
--- 
-BR
-Liao, Chang
