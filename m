@@ -1,67 +1,59 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2F62F2D;
-	Mon, 23 Sep 2024 08:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2651957FD
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Sep 2024 08:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727080594; cv=none; b=dD5QNhUvtPOHbPNbtPiFnNYg/x8GAr6d/opia0D6tK+C/Fu3lUsOY3V+fz662WxZOn/rgzrsRG4JyaMq8nQFJbmqi5W/e3EoETyxGcKEIu3h8iFxCYyQZUWM8Yrh2T3/aSkU4KAibuprzu7H7MbvWgn8iyAq+NasGe4WznsVZ7M=
+	t=1727081243; cv=none; b=AZRSDRVYaOx8XNJko7yI23od4y94IrFXMy/uRn/XAR35R3E5iSWk1wzXsZKxSgsoUWQkVOzIDjI0vzSmUFRB5bNJIHLxUg2aLu6IGEjAVnotWM+oHwf/ai+H2rob+Q1/YKgt+L0arZZHWGcYeZPvEhNjI/XHOcZnhdK5/3DyNh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727080594; c=relaxed/simple;
-	bh=hj9T9KLMta5F4b5LCjAFk0JQd/VrxCvyqamqiLDVjn4=;
+	s=arc-20240116; t=1727081243; c=relaxed/simple;
+	bh=gn5HztYpt6xs5NuwjQT8YgkLiLEYLRCC7gFx73E8Yuw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BgGlVb7aF1z/RUMmqUSVLrAH4HDbIB4KGUAI1a07tWPsWCe1n0fO5xIGsteehuwoMxePxuQTzqERoX7uVlSPSwc32at63/oTlsEWs9e/vJRm5ULNf3o0t4emIXlsPozW8e00+mu51Z0vcB4qEdFCW0cJj38y2uJE9GQ/5RIuKaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XresYnVN; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=mqlnzKznMolo13uWByZFPH2/bUjJr60nXRRG0jDWEgGssBT8qpErg+l1wxeqN8GqFEnECUM/9z8psQwRiG3geRZrLrR7jmg7/1TAXGb2St25whIwUemBHx6Dh4cg3zlFCrD2wgYnaFAYacrRqFkerUKef+5VtLzdkLc8h+nB2hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L0R7Y7Uh; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XresYnVN"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48MLtR3D028184;
-	Mon, 23 Sep 2024 08:35:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=Z
-	ebgRWJ/R8+CfS0Y5IXDHC2bQ2zqs76xP45fSGYgpho=; b=XresYnVNvfjS8q25n
-	exIowGTcyNfPFLSf3njKFhkmtThO79Rn/l7bbDHY5upOMZ+GXc0ZNJTpfRNx3UhG
-	44r5rosQUrKJQZ1hak5YCIEaeI7KPk0HLlS/sw+TPodoA37waRXazoYyY/xPXCqq
-	AxB8S1T/7i6fdkKUH4BHHpRz+FX7etse1GGweODWy7XZ3yNn8bpysFkmJOAYLooy
-	Wc93e4uRc3SZhEmMVqGL0HO5CGVAnkQgo8ca9EVWcYW7xQlbHCJf0syievl22SaG
-	RbwQiMqlzD3Lpi9rGRz9qxTMBS7sONGm/gXX9+JNJb82jsDxIBwXYRU7WQ7dGJvQ
-	UXnwg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41snvathjk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Sep 2024 08:35:11 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 48N8ZAoU000989;
-	Mon, 23 Sep 2024 08:35:10 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41snvathj9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Sep 2024 08:35:10 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48N7YNhe008712;
-	Mon, 23 Sep 2024 08:35:09 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41t8v0wjv3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Sep 2024 08:35:09 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48N8Z5tI34800204
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Sep 2024 08:35:05 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E8E0220040;
-	Mon, 23 Sep 2024 08:35:04 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 72FBD20043;
-	Mon, 23 Sep 2024 08:35:03 +0000 (GMT)
-Received: from [9.171.48.71] (unknown [9.171.48.71])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 23 Sep 2024 08:35:03 +0000 (GMT)
-Message-ID: <24b8e9b5-32b9-4989-b932-67c20b55377c@linux.ibm.com>
-Date: Mon, 23 Sep 2024 10:35:02 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L0R7Y7Uh"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-53654e2ed93so4540265e87.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Sep 2024 01:47:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1727081240; x=1727686040; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hLQTF5xjybPIoAvk2AufN1W0OK2/B6R1sbg3NDoXPnM=;
+        b=L0R7Y7UhkckySCIQcnh8g6WSVr237LaPdrJyfMCS1V7qHuTiPCWRhhO7HhPjzU6bzW
+         6PM+9MlqHpuIrOPA0iD0CQfHr0Agis/5eYevBgf4QO9xnQ3WGrMWEoPrWBLVMwWKegAY
+         2mMi0y5GqgW+TlQHevyoefOSlbbMZkXX1uZ5BDdFb2ya9lw/UZ2k308UUSjw92MmnNIi
+         shiVr19zlRMOuuBVitvfLo8oQI6IkPIv1sZvPoet0iQNelK7esjENvY27ntr+GpSWe/q
+         2l79iyFZOeRtXAoSfbUGK7VWibvyLVQdykBeXD/zf5WCTTPDtnAu6YufcGSIUofF7Js2
+         Jopg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727081240; x=1727686040;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hLQTF5xjybPIoAvk2AufN1W0OK2/B6R1sbg3NDoXPnM=;
+        b=QgSBmaArS9JvPgjMK2ESrlH5t5iDcu6tisuIjYwpDCzy1/j4ZkJu7tEypbdLOPEB/p
+         krwsl6ZauaRagWec7T58oMfMfZDqIhz+agDbg+/MAVTYkDOCx8aUzz2vjZn/9RsOlNBd
+         CqmN4RdfRHRz+TcTjQnX5ZI++ddL/lGwso88uSrLPXlUsqRDkT4Q1yXX2NhqQ7aQj/Lk
+         ikSE0HawIK0yNsMzbDmRiAS2f8g9DwlkWlTzlg2mBO1szQbHOKUwLcbdeXeqXRFiuvX2
+         n2NWAA3aeR51qIFNsguRLq2zNBlKDdLEF+Znq6j75b7q4eRreESIclNLAipxlr8qFaUD
+         HDPA==
+X-Forwarded-Encrypted: i=1; AJvYcCXnqHrkdLiHjyhm8MLuTEzo6IsIMkX/4JvbPEPPxECzamb8VNSYqLh9hv3NqfhMkc/I02vKxiDJRnQI1oEElN7R@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp+HePywYvcqUz16lDfWH+3zieaF3kl9AiOQtKpKm+QGPOEiZE
+	WdUH6+qP7NZSjqCAeZJu/P4kOa5zoEfP2+kyMKCk1qi0bRMeOggHBd3QA+IxHlI=
+X-Google-Smtp-Source: AGHT+IHEnqVwcg44UyMZCBAIpmq3OlmZDUa4QjYohKX8wYEmC1sFSZM9i7R4d3Cw5p1Z5AYHuZp3/A==
+X-Received: by 2002:a05:6512:3f04:b0:52c:e1cd:39b7 with SMTP id 2adb3069b0e04-536acf6a527mr5153766e87.5.1727081239592;
+        Mon, 23 Sep 2024 01:47:19 -0700 (PDT)
+Received: from [192.168.1.3] ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9061328b2esm1182128066b.194.2024.09.23.01.47.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2024 01:47:19 -0700 (PDT)
+Message-ID: <c26e646d-5ebf-473e-91e2-db28fc01e35d@linaro.org>
+Date: Mon, 23 Sep 2024 09:47:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,299 +61,125 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] perf: Hoist perf_instruction_pointer() and
- perf_misc_flags()
-To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-        Sean Christopherson <seanjc@google.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-References: <20240920174740.781614-1-coltonlewis@google.com>
- <20240920174740.781614-3-coltonlewis@google.com>
+Subject: Re: [PATCH 04/10] perf stat: Add --exclude-guest option
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Mark Rutland <mark.rutland@arm.com>,
+ James Clark <james.clark@arm.com>, Kajol Jain <kjain@linux.ibm.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Atish Patra <atishp@atishpatra.org>,
+ Palmer Dabbelt <palmer@rivosinc.com>, Mingwei Zhang <mizhang@google.com>
+References: <20240905202426.2690105-1-namhyung@kernel.org>
+ <20240905202426.2690105-5-namhyung@kernel.org>
+ <b1002dc7-78bf-40ed-83af-12a50622fb76@linux.intel.com>
 Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20240920174740.781614-3-coltonlewis@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: i312l3CDmy59jmZF1hS3jjvQU0cJGfMh
-X-Proofpoint-GUID: 7QKql6PTDhcYSEWqd73Ox4EIpbAler4w
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-23_05,2024-09-19_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 phishscore=0 clxscore=1011 spamscore=0 mlxscore=0
- adultscore=0 impostorscore=0 bulkscore=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409230062
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <b1002dc7-78bf-40ed-83af-12a50622fb76@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 9/20/24 19:47, Colton Lewis wrote:
-> For clarity, rename the arch-specific definitions of these functions
-> to perf_arch_* to denote they are arch-specifc. Define the
-> generic-named functions in one place where they can call the
-> arch-specific ones as needed.
+
+
+On 06/09/2024 3:33 pm, Liang, Kan wrote:
 > 
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> ---
->  arch/arm64/include/asm/perf_event.h          |  6 +++---
->  arch/arm64/kernel/perf_callchain.c           |  4 ++--
->  arch/powerpc/include/asm/perf_event_server.h |  6 +++---
->  arch/powerpc/perf/core-book3s.c              |  4 ++--
->  arch/s390/include/asm/perf_event.h           |  6 +++---
->  arch/s390/kernel/perf_event.c                |  4 ++--
->  arch/x86/events/core.c                       |  4 ++--
->  arch/x86/include/asm/perf_event.h            | 10 +++++-----
->  include/linux/perf_event.h                   |  9 ++++++---
->  kernel/events/core.c                         | 10 ++++++++++
->  10 files changed, 38 insertions(+), 25 deletions(-)
 > 
-> diff --git a/arch/arm64/include/asm/perf_event.h b/arch/arm64/include/asm/perf_event.h
-> index eb7071c9eb34..31a5584ed423 100644
-> --- a/arch/arm64/include/asm/perf_event.h
-> +++ b/arch/arm64/include/asm/perf_event.h
-> @@ -11,9 +11,9 @@
->  
->  #ifdef CONFIG_PERF_EVENTS
->  struct pt_regs;
-> -extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
-> -extern unsigned long perf_misc_flags(struct pt_regs *regs);
-> -#define perf_misc_flags(regs)	perf_misc_flags(regs)
-> +extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
-> +extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
-> +#define perf_arch_misc_flags(regs)	perf_misc_flags(regs)
->  #define perf_arch_bpf_user_pt_regs(regs) &regs->user_regs
->  #endif
->  
-> diff --git a/arch/arm64/kernel/perf_callchain.c b/arch/arm64/kernel/perf_callchain.c
-> index e8ed5673f481..01a9d08fc009 100644
-> --- a/arch/arm64/kernel/perf_callchain.c
-> +++ b/arch/arm64/kernel/perf_callchain.c
-> @@ -39,7 +39,7 @@ void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
->  	arch_stack_walk(callchain_trace, entry, current, regs);
->  }
->  
-> -unsigned long perf_instruction_pointer(struct pt_regs *regs)
-> +unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
->  {
->  	if (perf_guest_state())
->  		return perf_guest_get_ip();
-> @@ -47,7 +47,7 @@ unsigned long perf_instruction_pointer(struct pt_regs *regs)
->  	return instruction_pointer(regs);
->  }
->  
-> -unsigned long perf_misc_flags(struct pt_regs *regs)
-> +unsigned long perf_arch_misc_flags(struct pt_regs *regs)
->  {
->  	unsigned int guest_state = perf_guest_state();
->  	int misc = 0;
-> diff --git a/arch/powerpc/include/asm/perf_event_server.h b/arch/powerpc/include/asm/perf_event_server.h
-> index 5995614e9062..af0f46e2373b 100644
-> --- a/arch/powerpc/include/asm/perf_event_server.h
-> +++ b/arch/powerpc/include/asm/perf_event_server.h
-> @@ -102,8 +102,8 @@ struct power_pmu {
->  int __init register_power_pmu(struct power_pmu *pmu);
->  
->  struct pt_regs;
-> -extern unsigned long perf_misc_flags(struct pt_regs *regs);
-> -extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
-> +extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
-> +extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
->  extern unsigned long int read_bhrb(int n);
->  
->  /*
-> @@ -111,7 +111,7 @@ extern unsigned long int read_bhrb(int n);
->   * if we have hardware PMU support.
->   */
->  #ifdef CONFIG_PPC_PERF_CTRS
-> -#define perf_misc_flags(regs)	perf_misc_flags(regs)
-> +#define perf_arch_misc_flags(regs)	perf_arch_misc_flags(regs)
->  #endif
->  
->  /*
-> diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-> index 42867469752d..dc01aa604cc1 100644
-> --- a/arch/powerpc/perf/core-book3s.c
-> +++ b/arch/powerpc/perf/core-book3s.c
-> @@ -2332,7 +2332,7 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
->   * Called from generic code to get the misc flags (i.e. processor mode)
->   * for an event_id.
->   */
-> -unsigned long perf_misc_flags(struct pt_regs *regs)
-> +unsigned long perf_arch_misc_flags(struct pt_regs *regs)
->  {
->  	u32 flags = perf_get_misc_flags(regs);
->  
-> @@ -2346,7 +2346,7 @@ unsigned long perf_misc_flags(struct pt_regs *regs)
->   * Called from generic code to get the instruction pointer
->   * for an event_id.
->   */
-> -unsigned long perf_instruction_pointer(struct pt_regs *regs)
-> +unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
->  {
->  	unsigned long siar = mfspr(SPRN_SIAR);
->  
-> diff --git a/arch/s390/include/asm/perf_event.h b/arch/s390/include/asm/perf_event.h
-> index 9917e2717b2b..f6c7b611a212 100644
-> --- a/arch/s390/include/asm/perf_event.h
-> +++ b/arch/s390/include/asm/perf_event.h
-> @@ -37,9 +37,9 @@ extern ssize_t cpumf_events_sysfs_show(struct device *dev,
->  
->  /* Perf callbacks */
->  struct pt_regs;
-> -extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
-> -extern unsigned long perf_misc_flags(struct pt_regs *regs);
-> -#define perf_misc_flags(regs) perf_misc_flags(regs)
-> +extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
-> +extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
-> +#define perf_arch_misc_flags(regs) perf_arch_misc_flags(regs)
->  #define perf_arch_bpf_user_pt_regs(regs) &regs->user_regs
->  
->  /* Perf pt_regs extension for sample-data-entry indicators */
-> diff --git a/arch/s390/kernel/perf_event.c b/arch/s390/kernel/perf_event.c
-> index 5fff629b1a89..f9000ab49f4a 100644
-> --- a/arch/s390/kernel/perf_event.c
-> +++ b/arch/s390/kernel/perf_event.c
-> @@ -57,7 +57,7 @@ static unsigned long instruction_pointer_guest(struct pt_regs *regs)
->  	return sie_block(regs)->gpsw.addr;
->  }
->  
-> -unsigned long perf_instruction_pointer(struct pt_regs *regs)
-> +unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
->  {
->  	return is_in_guest(regs) ? instruction_pointer_guest(regs)
->  				 : instruction_pointer(regs);
-> @@ -84,7 +84,7 @@ static unsigned long perf_misc_flags_sf(struct pt_regs *regs)
->  	return flags;
->  }
->  
-> -unsigned long perf_misc_flags(struct pt_regs *regs)
-> +unsigned long perf_arch_misc_flags(struct pt_regs *regs)
->  {
->  	/* Check if the cpum_sf PMU has created the pt_regs structure.
->  	 * In this case, perf misc flags can be easily extracted.  Otherwise,
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index be01823b1bb4..760ad067527c 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2940,7 +2940,7 @@ static unsigned long code_segment_base(struct pt_regs *regs)
->  	return 0;
->  }
->  
-> -unsigned long perf_instruction_pointer(struct pt_regs *regs)
-> +unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
->  {
->  	if (perf_guest_state())
->  		return perf_guest_get_ip();
-> @@ -2948,7 +2948,7 @@ unsigned long perf_instruction_pointer(struct pt_regs *regs)
->  	return regs->ip + code_segment_base(regs);
->  }
->  
-> -unsigned long perf_misc_flags(struct pt_regs *regs)
-> +unsigned long perf_arch_misc_flags(struct pt_regs *regs)
->  {
->  	unsigned int guest_state = perf_guest_state();
->  	int misc = 0;
-> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-> index 91b73571412f..feb87bf3d2e9 100644
-> --- a/arch/x86/include/asm/perf_event.h
-> +++ b/arch/x86/include/asm/perf_event.h
-> @@ -536,15 +536,15 @@ struct x86_perf_regs {
->  	u64		*xmm_regs;
->  };
->  
-> -extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
-> -extern unsigned long perf_misc_flags(struct pt_regs *regs);
-> -#define perf_misc_flags(regs)	perf_misc_flags(regs)
-> +extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
-> +extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
-> +#define perf_arch_misc_flags(regs)	perf_arch_misc_flags(regs)
->  
->  #include <asm/stacktrace.h>
->  
->  /*
-> - * We abuse bit 3 from flags to pass exact information, see perf_misc_flags
-> - * and the comment with PERF_EFLAGS_EXACT.
-> + * We abuse bit 3 from flags to pass exact information, see
-> + * perf_arch_misc_flags() and the comment with PERF_EFLAGS_EXACT.
->   */
->  #define perf_arch_fetch_caller_regs(regs, __ip)		{	\
->  	(regs)->ip = (__ip);					\
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 1a8942277dda..d061e327ad54 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -1633,10 +1633,13 @@ extern void perf_tp_event(u16 event_type, u64 count, void *record,
->  			  struct task_struct *task);
->  extern void perf_bp_event(struct perf_event *event, void *data);
->  
-> -#ifndef perf_misc_flags
-> -# define perf_misc_flags(regs) \
-> +extern unsigned long perf_misc_flags(struct pt_regs *regs);
-> +extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
-> +
-> +#ifndef perf_arch_misc_flags
-> +# define perf_arch_misc_flags(regs) \
->  		(user_mode(regs) ? PERF_RECORD_MISC_USER : PERF_RECORD_MISC_KERNEL)
-> -# define perf_instruction_pointer(regs)	instruction_pointer(regs)
-> +# define perf_arch_instruction_pointer(regs)	instruction_pointer(regs)
->  #endif
->  #ifndef perf_arch_bpf_user_pt_regs
->  # define perf_arch_bpf_user_pt_regs(regs) regs
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 8a6c6bbcd658..eeabbf791a8c 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -6921,6 +6921,16 @@ void perf_unregister_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)
->  EXPORT_SYMBOL_GPL(perf_unregister_guest_info_callbacks);
->  #endif
->  
-> +unsigned long perf_misc_flags(struct pt_regs *regs)
-> +{
-> +	return perf_arch_misc_flags(regs);
-> +}
-> +
-> +unsigned long perf_instruction_pointer(struct pt_regs *regs)
-> +{
-> +	return perf_arch_instruction_pointer(regs);
-> +}
-> +
->  static void
->  perf_output_sample_regs(struct perf_output_handle *handle,
->  			struct pt_regs *regs, u64 mask)
+> On 2024-09-05 4:24 p.m., Namhyung Kim wrote:
+>> This option is to support the old behavior of setting exclude_guest by
+>> default.  Now it doesn't set the bit so users want the old behavior can
+>> use this option.
+>>
+>>    $ perf stat true
+>>
+>>     Performance counter stats for 'true':
+>>
+>>                  0.86 msec task-clock:u                     #    0.443 CPUs utilized
+>>                     0      context-switches:u               #    0.000 /sec
+>>                     0      cpu-migrations:u                 #    0.000 /sec
+>>                    49      page-faults:u                    #   56.889 K/sec
+>>                   ...
+>>
+>>    $ perf stat --exclude-guest true
+>>
+>>     Performance counter stats for 'true':
+>>
+>>                  0.79 msec task-clock:Hu                    #    0.490 CPUs utilized
+>>                     0      context-switches:Hu              #    0.000 /sec
+>>                     0      cpu-migrations:Hu                #    0.000 /sec
+>>                    49      page-faults:Hu                   #   62.078 K/sec
+>>                   ...
+>>
+>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>> ---
+>>   tools/perf/Documentation/perf-stat.txt | 7 +++++++
+>>   tools/perf/builtin-stat.c              | 2 ++
+>>   2 files changed, 9 insertions(+)
+>>
+>> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+>> index 2bc06367248691dd..d28d8370a856598f 100644
+>> --- a/tools/perf/Documentation/perf-stat.txt
+>> +++ b/tools/perf/Documentation/perf-stat.txt
+>> @@ -382,6 +382,13 @@ color the metric's computed value.
+>>   Don't print output, warnings or messages. This is useful with perf stat
+>>   record below to only write data to the perf.data file.
+>>   
+>> +--exclude-guest::
+>> +Don't count event in the guest mode.  It was the old behavior but the
+>> +default is changed to count guest events also.  Use this option if you
+>> +want the old behavior (host only).  Note that this option needs to be
+>> +before other events in case you added -e/--event option in the command
+>> +line.
+> 
+> I'm not sure if we really need this option. I think it may bring more
+> trouble than what we get.
+> 
+> The name of the "--exclude-guest" sounds like a replacement of the event
+> modifier "H". But in fact, it's not. It should only affect the default.
+> It doesn't set the "H" for any events.
+> 
+> Except for the perf kvm user, I don't think there are many users which
+> care the exclude_guest. The behavior of the perf kvm is not changed. So
+> the option seems not that important. If we really want an option to
+> restore the old behavior, it's better to choose a better name and update
+> the description.
+> 
+> Thanks,
+> Kan
 
-For the s390 changes:
-Acked-by: Thomas Richter <tmricht@linux.ibm.com>
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+Do we not want to keep exclude_guest for record, but remove it for stat?
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+Because in record the addresses of guest samples don't make sense 
+without extra work, but for stat you might want to see an overview of 
+the whole system.
 
-Geschäftsführung: David Faller
+For Coresight tracing and SPE we would want to keep exclude_guest, 
+otherwise you generate a load of extra trace that you can't make use of. 
+Say you were doing PGO on your host you wouldn't be recompiling anything 
+the guests were running.
 
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+If we do change the defaults isn't ':H' already enough to go back to the 
+old behavior? I'm wondering why we need an argument when all the other 
+exclude rules are done with the letter modifiers?
+
+James
+
+>> +
+>>   STAT RECORD
+>>   -----------
+>>   Stores stat data into perf data file.
+>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>> index d8315dae930184ba..4d47675af5cc3094 100644
+>> --- a/tools/perf/builtin-stat.c
+>> +++ b/tools/perf/builtin-stat.c
+>> @@ -2491,6 +2491,8 @@ int cmd_stat(int argc, const char **argv)
+>>   		OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
+>>   				"Configure all used events to run in user space.",
+>>   				PARSE_OPT_EXCLUSIVE),
+>> +		OPT_BOOLEAN(0, "exclude-guest", &exclude_HG_default,
+>> +			"Don't count events in the guest mode"),
+>>   		OPT_BOOLEAN(0, "percore-show-thread", &stat_config.percore_show_thread,
+>>   			"Use with 'percore' event qualifier to show the event "
+>>   			"counts of one hardware thread by sum up total hardware "
 
