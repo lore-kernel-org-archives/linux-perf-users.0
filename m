@@ -1,78 +1,102 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2057.outbound.protection.outlook.com [40.107.220.57])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58971AB6E2;
-	Tue, 24 Sep 2024 16:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8076312F375;
+	Tue, 24 Sep 2024 17:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727196972; cv=fail; b=A7oBzKSBobORjp15Jq3wRJontfjr7kckjjyWLM27XCMRTyZfEz9w8GZButrFF+Hbek+XBJzItn87aj3fhVASndExUNXP9x8aggy6sWWNirM4FBmwQcpAl9n1cw/zbK2ywwZp7j+UfLeCZjp97z+Q0OgGJj9xJfibY41RkhNB0V8=
+	t=1727198076; cv=fail; b=RjTuCE8/X1NovtPmKnoL5un1dHf492HQco2ReaSICC++dTQv7MVOxkxTwhTHifVHTxMn4AxGMkcoz1wkxJXaDa1doMEpdKJ4ZUHjkL75BRj9wlc6zdrk56tqDiXC6vE1YJw0NQtDMMd06lIpKZGMKRQ9I4o7Il8VS52phQGgYbo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727196972; c=relaxed/simple;
-	bh=p9nN6apFh1xWIlgXwLqa7mhEKl+QLsOi5WQQ6AdCo8Y=;
+	s=arc-20240116; t=1727198076; c=relaxed/simple;
+	bh=IOIdQHpgeFP3lS+WfFTGJEHqR/AJS/O9KfF7/sfHaFg=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Lvew/WXsbbXLgmSNJy+4gCu0/AL0gAU2AEWXD3t3ZVfgGQ9Y6uTPqoZbd3TXw6xWVV+3qwqgA1G0fBgBRCBZjv3VDufjg1a4/negzoK4kn7HMLXPOyj2tQXEcNPcRggPvIsisFy3IjmEpJ/QHlSooRkvNk6lj7a+VQ1oRJ8vS0E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KAwtSzrY; arc=fail smtp.client-ip=40.107.220.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	 Content-Type:MIME-Version; b=MOK0HIk9fLMskwaDzYC5KEUrKvylWV2j5AHbHFaVxUlmoeKu1k2MDOVYPpmGYQNxHV/nfbFetgz19azx5WcxVstwLAAHkuH0Nkq9TJq93zEIsM1qJPdBdJEaz69BbtgZ3AZibYf/pIjfduN13f6q6a/dedyY42MoPdsWh2KL4Po=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=J7GpopvE; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Z44xefm2; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KAwtSzrY"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="J7GpopvE";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Z44xefm2"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48OGtlag031078;
+	Tue, 24 Sep 2024 17:13:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=
+	corp-2023-11-20; bh=F8wykl1Z8GqOPkzJkw9fvpIuNfybdOqoPp7csQO5FZI=; b=
+	J7GpopvENN9+YDe4zp/H/sr2zQPUFrZk6lTJekfdd0bJRcVkok27wasgCGOEptAV
+	7hK4MUQAVIz/xqM2wFdeoJ5V1uYHjigTSUM47YxvhApWIsnhhWVKAy+qpHDTwr16
+	62feSzeeoGP2ILmaSsMl6VhJvDJXL8uOOjkV/qSSOCptIv7p1V8hhx0cfajO65zI
+	A3T7DbwmLDCbbKo6Bb5pCWilMh7DQliCKu8vtIoIthyYlFCNreYtywUF+bTqKZ0F
+	ijWdTTFItyYCArIUf71G+JqQQ1l5JaEb7mVBDpkS76uNwgz7EuqKStGAc95IeqjF
+	6dfqtJJvPGo1YBvlusT3PQ==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41smx35nrg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Sep 2024 17:13:46 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 48OH81RH025128;
+	Tue, 24 Sep 2024 17:13:46 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2043.outbound.protection.outlook.com [104.47.55.43])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 41smk9jmg0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Sep 2024 17:13:46 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UdxF/RjPPUmT91bvAxLpqhrKXi/m7um1X24dWmj6TiV7YQ8FZYN2vP5H5sC1vprp3TA94PHx7nIAL6fHiKT9XkXDwnHUGxCgen8JmqMlQWXE5NUUigaJA8K3B2Bjmag+rmyfAj2yEHoaR4CDHSoQnfY7mBlPqTuJq/SZMGw5eXt/sixazdhpsPNYdwGqRB2HdJF//v3UcH1eJrwRYF875Csr3VJI7JKQeot4klbYXssfmXd6HXgOpks4DAOGD0TxURyW80b4lDgsHTmlmuqlXM+iymOMU4svAtFG/F7sGyG6aFflHSbzcx6yVLhSlP/BBp1gq5HZ3DAKEfOWeM9TeQ==
+ b=FJM8upO2PaRT8g3hDwwFev+X+jDeEDFynafjamFSP3cldE8PrJuja/NGJz6QmZp4F6Z+UzMoQdsbY3Alr8whqhP/ubP3haYtdb+f+BYSN3WCmorAPzRzXUCsuMRnj07gK/p01p+Ku11dEyLJ61vIAEyGFSUqTAZsivx2RrbPEDgGijQOlPVeQ5DJoc8NIEpTMGPAljPl1gNA3pyhUBDmXagfTd3hwXFSAXPkUCaZ57KCODJ7+CE4oAPi6O1FvkEjoZ276Tq0fY+bAuj20O5zZ7zijtadRXr56h/+bw+ScSAWaxEvZBJFhD+zjQTcL8Rh0HUbj1MKh9Jr/qS4q98MyQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VYDa1DZfVlDJjpzCa5PnnVB4Phckm425devls+QYMjE=;
- b=fOqfk7ySYXENxMHdG8MxqaAt+z6ey/SLLwmoTymKlMmoBMqRdB+02S121VjimoKNDHAoLm9v1vAO5RRdEgc9kXgUFK1d+TFYvbLO7LyGle1whLJlpJ94GNTHxQQVtOpC1GI2KddOWnNIuApCbUuH2T1Ond1BmLvCOKWhqEOjepWSSjUG7s6va/PufdO1nOiBA0CFnbAvWDeo0w+Vz6W+4zmzJ3zoed8QUAwEqDYIP2yoaBL+pRzsu5GE6IiJQMbAjliicqRAqMs2/27L8qLGM6Iubn+4SOd3sBmb/rBC4ptKwa9Ot63Kl8uruJdKqQIW+/IgeUiyXlOmBYLZFlNtag==
+ bh=F8wykl1Z8GqOPkzJkw9fvpIuNfybdOqoPp7csQO5FZI=;
+ b=H4FHSEjS0Yv+U9/j/RJppYnXrvfD80OSDoLq+fdRvXJuBcBcJn4AGrkdxqIMmRcH3UOH2nLyVmxgen600lQGccJfwvrD3Jw0QtLj40Iv0x+6WkryZTZGUX+FqSzdLhYGh10J39lQxQzvdmwiMFD2Yo3/K2vJtJmdOf8ulM5+9qw7z558oS5cjWnufc14GngmXnl5k22Uaxldxv3Pjp1pFDiBRH6QMTT1tvUJCuJoYr1wfZuJtDk3/p8cKaj8QtpQLL1t6uWba5Nscy+eT9mxa1EXkb8QuTz4xhEfpH3XITJ6SDujBCGPXDewYZEZOQ+pxTCiNsAXLsTdvlCt78A4HQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VYDa1DZfVlDJjpzCa5PnnVB4Phckm425devls+QYMjE=;
- b=KAwtSzrYi6Z1pxywR7padN3nDQnzxBfi0lq8AAavts3TPnpW+sSeM3DmlvIg69WOv9bVMp/BJTZGYyeHpZDHe7nDI818u1i4n16Zb4bfa27EyPgyzEKSZhf9McVTpgduTmHeO99bZdDR942hmJbvUzDkmlepUXC83On2KZ5itYk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6214.namprd12.prod.outlook.com (2603:10b6:8:96::13) by
- DS0PR12MB8788.namprd12.prod.outlook.com (2603:10b6:8:14f::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7982.26; Tue, 24 Sep 2024 16:56:07 +0000
-Received: from DS7PR12MB6214.namprd12.prod.outlook.com
- ([fe80::17e6:16c7:6bc1:26fb]) by DS7PR12MB6214.namprd12.prod.outlook.com
- ([fe80::17e6:16c7:6bc1:26fb%5]) with mapi id 15.20.7982.022; Tue, 24 Sep 2024
- 16:56:07 +0000
-Message-ID: <07efd7f9-8adb-4648-aa3a-a4a3341bd9c8@amd.com>
-Date: Tue, 24 Sep 2024 22:25:54 +0530
+ bh=F8wykl1Z8GqOPkzJkw9fvpIuNfybdOqoPp7csQO5FZI=;
+ b=Z44xefm2B5bFOJglarv9GanXlYi1COtUXwv2EhJ1k/h/V+fnic9IwjmUaRCtsiS0Mdikkxl+VF9gEvI04+e1jvASAhHiZcZJ9xkYT3doQe/NuwGOijjJEacRcytnCNqQ/HGRLsFfRsTlB10Y4AbvT5BYwZewVEFTZ/ojRPTRzFQ=
+Received: from PH0PR10MB5895.namprd10.prod.outlook.com (2603:10b6:510:14c::22)
+ by SJ0PR10MB4560.namprd10.prod.outlook.com (2603:10b6:a03:2d3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8005.12; Tue, 24 Sep
+ 2024 17:13:43 +0000
+Received: from PH0PR10MB5895.namprd10.prod.outlook.com
+ ([fe80::521f:4913:ea29:ef83]) by PH0PR10MB5895.namprd10.prod.outlook.com
+ ([fe80::521f:4913:ea29:ef83%4]) with mapi id 15.20.8005.010; Tue, 24 Sep 2024
+ 17:13:43 +0000
+Message-ID: <5a8e73b5-7bb8-4669-a255-808abd2d2132@oracle.com>
+Date: Tue, 24 Sep 2024 13:13:36 -0400
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 14/58] perf: Add switch_interrupt() interface
-To: Mingwei Zhang <mizhang@google.com>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Sandipan Das <sandipan.das@amd.com>,
- Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, "Shukla, Santosh"
- <Santosh.Shukla@amd.com>, Manali Shukla <manali.shukla@amd.com>,
- nikunj@amd.com
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-15-mizhang@google.com>
- <9bf5ba7d-d65e-4f2c-96fb-1a1ca0193732@amd.com>
- <1db598cd-328e-4b4d-a147-7030eb697ece@linux.intel.com>
- <3dd7e187-9fbe-4748-9be5-638c8816116e@amd.com>
- <CAL715W+a9p_44CVdXZ6HCS42oUgfam=qYT_XoeN6zxfS16YY8w@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86/amd: check event before enable to avoid GPF
 Content-Language: en-US
-From: Manali Shukla <manali.shukla@amd.com>
-In-Reply-To: <CAL715W+a9p_44CVdXZ6HCS42oUgfam=qYT_XoeN6zxfS16YY8w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: harshit.m.mogalapalli@oracle.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>
+References: <1716990659-2427-1-git-send-email-george.kennedy@oracle.com>
+ <75f6aba1-8ed6-4ef8-8811-de40ae40be90@amd.com>
+ <1e14ca4b-6e3e-4d57-acec-bc3ee2bed6ed@oracle.com>
+ <0494aedf-9759-4427-a7f3-39a91bd5771d@oracle.com>
+ <3ec1cb26-c889-45ab-b8cc-92f933a2b5d1@amd.com>
+ <7b27a039-ddb9-4beb-a1b4-ba2b74a3043e@oracle.com>
+ <17bfa7c1-43b7-4b25-a8cf-eb6d3797df5a@amd.com>
+ <36e86320-1a43-45d4-b25e-a5d60857f4b2@oracle.com>
+ <78db946d-db24-408e-92fc-b7ff79c80728@amd.com>
+ <e193949b-d969-42e7-a0f3-fbea6e4dfe12@oracle.com>
+ <7a34a58b-9366-46a4-92ca-e36e378311f5@amd.com>
+From: George Kennedy <george.kennedy@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <7a34a58b-9366-46a4-92ca-e36e378311f5@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0246.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:21a::16) To DS7PR12MB6214.namprd12.prod.outlook.com
- (2603:10b6:8:96::13)
+X-ClientProxiedBy: BYAPR05CA0013.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::26) To PH0PR10MB5895.namprd10.prod.outlook.com
+ (2603:10b6:510:14c::22)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,305 +104,167 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6214:EE_|DS0PR12MB8788:EE_
-X-MS-Office365-Filtering-Correlation-Id: ace9847b-6e92-4fbe-e360-08dcdcb9c82f
+X-MS-TrafficTypeDiagnostic: PH0PR10MB5895:EE_|SJ0PR10MB4560:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0cf4e25-535f-43a3-a364-08dcdcbc3db8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eFE3QkY0NUpJUHNDZDVxRjJieXNtTHdFL3ZSV3hZaDJBR3lJcU5TZTNPZjFG?=
- =?utf-8?B?dlBURG5ybXExRkNnRUg1VlpxRWFPYk5ocW51eGozL1pkUFQ1VDJ3eFkySkNI?=
- =?utf-8?B?MjVoR08wNHVBeWIva0Fsemw3U2hoQVl6ZS9vbDNMaFpZalVlV2U5UGc0dDY5?=
- =?utf-8?B?ZG5yZTVqUXpjZDlqaWQvYzNHTksvazRaOGZNMHpQTW5GdkFKbURQdXV6cERS?=
- =?utf-8?B?ZnNLSUNDck5HNTBFaGNpcWRqa2F5VTcrRjRLNE82cGFBemlCanNsS2VWMVc2?=
- =?utf-8?B?ZkhTOHMwWi9sb1pwYkZXMWhnUGNhNW1oSVVwMnV1SVNsajR0bGo2cXBqWlRn?=
- =?utf-8?B?VzZ0dVR2cW5BZXlGenlneDl2bFptME04Lys5R2xhRnd2Z2FaRm54TUlSR05F?=
- =?utf-8?B?T2tjTytmbzY0a01NbmFIbUkrOHZadi9iN1FRL1YzalBObGJNcnZuNzJlc1Uv?=
- =?utf-8?B?NUFUWWwrVXhMTnFqZ3I5ME53ZVBIVzdHc3BOQ0YwOWRpTmkzWUJiUGxubzM0?=
- =?utf-8?B?MEcvYTZQMFM4SDd1a2ZmNHcxRmpUQWlZWWF1VmJBVWFWdE1MZ1BXL0wzV2JC?=
- =?utf-8?B?WGR2VVdvQ2xQWXJIZjZNelpNdU5pc20vZjRYYUVYcDI4bmhlQ0lweG8wSVpo?=
- =?utf-8?B?dS9HcHVMNzVyaXNVb3BpanJZYmIyVFY5ZjBvek9TeVNKcU0rdi9UNVMrOERm?=
- =?utf-8?B?a2hJUExMUnJieitUckZJMjFRbkovenFLY1lsOW85RTI0NjVWK1ZNRFhwQzh5?=
- =?utf-8?B?ajJDK0l2SWk1M01tamhzNEtqMENOM05XS2MxeTJCN045VWJqc3lCTlRua21w?=
- =?utf-8?B?bVlhcEt5Q1dMR0NsT1ZaNzVndmwxeGZvTCtiK1gydjdCYzczOXA1VlZWblk4?=
- =?utf-8?B?OXBQZGFIOVpid1RMMHFxUkhkc2ZTTEFJdDRvSXVmeDdVV2FDTDMvaHpZb2pl?=
- =?utf-8?B?WDVZcVRQSkR1Vm8ybC82dmI3TGsxczlxREhCYVgyQ3lpMHgxSXlqekdVWnI4?=
- =?utf-8?B?TXVFVW1JT2RXT1VjcEphdEdrWW5PYVg0K1BSQWluU2NKalA5TEZMcUI5cXRW?=
- =?utf-8?B?VGJ0cFdnT0lzOFdsaFZPajBmSUVOM3d2RGJLNkhINDFWa3FQN01uM21JQnVH?=
- =?utf-8?B?SW1QenBQbzRxdEhqNG1DTFBNdWZBRFdBcDdYOG5jNXVDQ24vaGFGWU9OMkJP?=
- =?utf-8?B?dSs5N01ZUUJjSHUvREwvVDFIYTBsdFUxdFpEY1ZiMTIzcWl5NXJ1YW5SaklH?=
- =?utf-8?B?VStSWlJadk4xYzNNd1R5bks3NVFSWXEwMFVmWUVMeWtBL0M1eHBRWU0rM25u?=
- =?utf-8?B?c3hTczlpQ3M0UTZ4ZkxWbUh4R0E2ZHp1b3BHNlREa2lsbFFKYjhvQ3dmazRC?=
- =?utf-8?B?OTlFMHNpa3huaWo0VnNTakZUb2FuOHNmVUtUMFJ2OVFNb3hOV2NkbmM4Uld3?=
- =?utf-8?B?SFNYdzhvWTRUOXI2c3JobzN6YkFUL0ZEam0zN04xM3RJek4vQkNXWlBNMWVY?=
- =?utf-8?B?YW8zbHczK0JSdnJ4dk92dzFJeE54VzU3S3pMc1FZUC83elBuVWpyMnU1R2Jy?=
- =?utf-8?B?cFVlYytQMml0cVdRdjJXb1Q5VnhWSm9zcXdOdkdjMW94N0J2ODMvT2k4THcw?=
- =?utf-8?B?Q0R3QXE4WmNoN2Q1dTBqR3AvVFlaTGtLK2xzUDRHWkJ1MXRlSVZLNjBZUDNL?=
- =?utf-8?B?ck1FVnJteHBTeUJKM2xJTXp0VmdnaWdLRk1oR2YrQ0xmcGJxYkdRV2NRPT0=?=
+	=?utf-8?B?RHllRkZWRmNKWUJKTExOcXlwbE14V3VSV3kyYlNsYmhpN0xCMnBxLzZrMWlP?=
+ =?utf-8?B?SjRDNkxCQm0rMHdGYVpQZFpTclRyV0tYMnBFVzQraEhzajlNS25CT3kxQWo3?=
+ =?utf-8?B?Uys2Yjc2ankwYjBERC9mamJmVitpTkE5TjZCalRLck9aWHdwemx0dXI1cVVx?=
+ =?utf-8?B?cVVtRmJBMktlRnFHbEV3NXpxKy9xU0RvaCszbWI5cy9HQU1rUEZoaWZGR2RZ?=
+ =?utf-8?B?QUIySmd1cDJvMXdBazE1Mkd4V1djSy9pL2x4Qy81VW54dnNPWVJmN1RmV2tW?=
+ =?utf-8?B?WXVLNDdDN3QwR2VZT2VSOGZ4QVJ4TmRjUjI5SFVtSGZaZXgvMDRJZFdIeU50?=
+ =?utf-8?B?WmJ6cFdnYUNCYWxNZzAvRlY5ZVU5NitjRW51R1lOUTRYKzZGVTJoMllETnBY?=
+ =?utf-8?B?TmNQcU1OWWxBbXdHRUpoa3ZMaFU4SHE3Nmt4Q1g5KzcrWGRVQThpR0diOFdE?=
+ =?utf-8?B?aGxkMjdRZ0lMZGs1QmVJbzAwWTh6bWVLYUg3UnB5Vk1meEw3Wi9WR2FQSW4x?=
+ =?utf-8?B?K1R1Q21GVEJFUkRlcGlJQkNibVI4NUxDTWozOEdJYnZ0RXVuNGFLbnk5LzRp?=
+ =?utf-8?B?TWo3U2VFbGFPV1QzTzUrc1cyTktXeko3WmYxR1R5Zm1JVXRRZGdaVWNPMFBN?=
+ =?utf-8?B?R3F5Sml3QVNSWUZlMGo3UHNzM0xTOXVrcjgvbUtYVmR6SGk1YkF0ZjNHMXB5?=
+ =?utf-8?B?N0dma2xMRjBIRWI1WXgvLzIrSzRhRVVtdlFDeWRRRldCdmxhZXlsN3dDL3VY?=
+ =?utf-8?B?c296QkRQM0xqUDB0SzJpSVl3eVN6WERncWloeG1OdlU0OHdqemoyYnV5ODR2?=
+ =?utf-8?B?NE0rN3BjRVNHRUtnYkh5cjJaR3BTVVpLUGUyK1NvWS9za1hsMTdvWWpnRXhK?=
+ =?utf-8?B?Njh6V2JoVHVqWDhFVzdkY21lZTc4V1JTcFkvdVhmcit2S0V4R04wdmkwTWxj?=
+ =?utf-8?B?Wk1JeFBHYTI0aWJKenJyeGZoeGw1NnJ2aE5kN2V4b0N2bFNmM0dtQkg0QW1q?=
+ =?utf-8?B?M01CUVBUWm1ya1c4eGZFdzJMdm9JWUdwTW9BcGdta2Ezcm1nUTY1VG8zQUtY?=
+ =?utf-8?B?SlJ4WFBsTnJ6bGVESklhNmk3MjJabDduanRWVnlnRSs1c3ZNeVFyWG52RkZ4?=
+ =?utf-8?B?WUhONXIxN2xZeGZ4L2laMGt4Sjd2dG13UHA0R1Izbis5UVhCaksyRDkrbkVZ?=
+ =?utf-8?B?dDZ4YXhvUVFFYWlwTWg2SVdSQy9mNmxLM24yZFVXYzFZTmVMYVBBRkJ5M0Q0?=
+ =?utf-8?B?Y1BiTFZQWjVud2ErMjZ5dy9GS20zZVpXTlFyMmRSdFFpQ3EzWWc3SlE1MmZF?=
+ =?utf-8?B?WkxjY0crSHF6UEZvYmgydTlJUWJ1OTRKMHZFWmg3NnVIeTJSbjM1U1NBSHIz?=
+ =?utf-8?B?RlkxVXp1bHU4MFBTSGhpUjVTUkhSQjRESWFjMU0zOEZBZ3A1RVB6L25pcHZW?=
+ =?utf-8?B?ODRreExXWUdLeFlSQXJvYWpwZGZzUTBuVGZPMkxYeVgwS04reUM1YkFqRysx?=
+ =?utf-8?B?WG9wYU1lN2VSbjJXSUNuNlhDTkpzWk9pV0NuTWE0cUdQOU5vWjh4VUp3N1JP?=
+ =?utf-8?B?Z0xiRnRWdVVzZWFMVXAxSXlhRXZ6cUdiemJQa0lzanRLSURiTVQ0THhDM0x1?=
+ =?utf-8?Q?mQUAW1+Xh3jVULvOsovefyn/SLmjnVwl2g0oFURQddV4=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6214.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5895.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cEEzQlIvUVlwNzlBNXlVazY0NWVEWmJiUXVlK0FqRVJUMFNQaUNETExHZVdD?=
- =?utf-8?B?dEJ0MTZBREhxYlZUdnRMZSthbFhOUnVkckwrOThVNTZMaFpqTXFrT0NvSzRN?=
- =?utf-8?B?SkZDY1VFRW1LdWc2cFYzQ1EySU5sMERrenNYalhrd2EvVmhyQjBuTGJZZC90?=
- =?utf-8?B?ejhuc1F1RDRob2lOdFNVRkEvenBTQU0vek9FVzBaUjM1UVRhVUllNHNFZjRI?=
- =?utf-8?B?V1MySGxXYSttNEFkL3FTQ0dPbVdUZFpJSkZFTU1TVEtaVXRXWFpmdUVnUSta?=
- =?utf-8?B?NUVER3lrYjQ0VG1kaEkyYW5BVGtCeGc3OGNHSEZWZHdDZXdlRnZ4aTd0bng5?=
- =?utf-8?B?YmlhMzJXZHB6R0ZNSU1PNkJHRkhla0pzQWZGWnF6cFRGM0l4Ly9mcWpsMWhR?=
- =?utf-8?B?Y1lCNHh4eUpLNVZqZTl5eEdwdCt5b2I1SGlKcitlbHJlaXJ6dDY1UmtwTXR5?=
- =?utf-8?B?MHptOUszaFoxbVRCclArVmxKVFJLTTVOcGNqNXFUMWtVcTEvSHZobk1tNU9l?=
- =?utf-8?B?ejZOTitXVG5XNEZOc1J3MTR2TlA4a2s3NldYWlhOWHFodkkyYytCTG9HN2tx?=
- =?utf-8?B?SjYyUnl6QmxSbitoUk40aG9YRzV1WVlnUlpyTzQ3SGwyVy9HL0R3eFhQd1Jn?=
- =?utf-8?B?MEREdDhMODVBWVVnOFhxSEpiRUFEcU9oQ3pRK2drSE9MTkkvSC84ZHFXYjlE?=
- =?utf-8?B?eTR1TmRYa1d4cTRmeEZ6dndZa25uQ3JaZHRlSmxqNmd6Q3pKZkVOdGU3cTlY?=
- =?utf-8?B?TWdzREhWblNYbDlYVGV4WXVjNnF6ZnA2RkJKNi9LWTlLdzRxLzF3UllHRzl4?=
- =?utf-8?B?dlhSdm9XL1JxUnVMSU51SHFhajI4QnF1OFFlc3hpOGhPOGVPWkx5YzYvM08v?=
- =?utf-8?B?eFlzRlhyVDRwY3QyQWdlbUd6SnJVcFR0S0FnOEtMWm5tcXhMWFRLRUM3a1JM?=
- =?utf-8?B?MGFvbmFWVFNXTm5mYUwwNi9mTElwUEVNSDVBMzBaNkcrTHFKODFUdVBJMEZ5?=
- =?utf-8?B?bi9weXFGM2w2TG5kaEZlY2tUeGJNa2tlM3VNelA4Z2tlUElKSDE3MFcxZnJE?=
- =?utf-8?B?NlNkbTBIRkRhdDZnTkxtRDJUYkQyay9ZOURrSWZscXZNOVBSZldKNWo0UktQ?=
- =?utf-8?B?dVFzTXJDYXVMbVdxcFdvZGJlZzRSQkl1WWFaTDkwZklaTGwxWmJReFpBMk9D?=
- =?utf-8?B?RVlXeEpNZktWbTJqeVVMeElud0xDTGhTWEFxS2x3WFVJbGhJdE9kSTllUkVn?=
- =?utf-8?B?WTloVmc5b09PcS84ZU5Ed215bEY2VHNHak9qMEtLRGhnNDdkU21ZT2hpczlF?=
- =?utf-8?B?Mm80eEdZdmNlVFFvN1pzV0ZaZ1B0bll3OTdGNmw2bWlDVWVhOENScmdWOFQ4?=
- =?utf-8?B?MDlpZzliQVVaQ2ZFWUgxT204QlMxY2hVOGJMN1VpWVVhQkFqc2JVMjQ4QnFP?=
- =?utf-8?B?Z1hvRXE1K1ZHZlZSYjlxcHFjSlQrb0x0dlVISFJxaGUzNFhnNk1rSDFnK1JK?=
- =?utf-8?B?OEM0L3A0YnN5Z3JlR29HQitxRXZWbGlDUUhnVDUxRGl5L2ltc3dSNzRZNkdS?=
- =?utf-8?B?ZmVEQ2R0Tm83VjdZOVRPNFk4blRvMXQ1Uk5WUFVnbndONG14NklsU1FxN3dD?=
- =?utf-8?B?VmV0TnNiMzB4cVM5ZDdrSktzdE5pRS9rRUVZQXpLUVVzQnc2enB5dm1NM1k0?=
- =?utf-8?B?bFJ4OHdxWVVXMloyazBQK1FObG5OSDFObmZKM2hmL2RIblQ0c0cxMGdCVEQ4?=
- =?utf-8?B?cC8xcG91RWluMUhDdmxCdkRzUVZULy9oNEUzRm0rcE5iUHRvN3ZnQTRtdkRr?=
- =?utf-8?B?Slk0SGdpRTNpTXZyR0kzd3JaWm55UFpLT1BZUzhXQUNZZjAxbXFBaXM4UjVS?=
- =?utf-8?B?bDJHcU9mMFhuUjNmRXgwYUQ4ZCtoN1UvSjFxdnBJY2x3TE9DUTZySnNBTVJZ?=
- =?utf-8?B?dlVWS3NmbHU3Tm9ERjFNVUpSK08zQk5Od1V1cnZrc1ZoQUhQOUxOWDVsaUJj?=
- =?utf-8?B?bk1ySHZUSjUwOWI1T2Uzc0VrbFZyai9ZSlNESEtXMDJFbytZV3BiOWZTL1lh?=
- =?utf-8?B?ck54QkNzVFgrU1Z2RzU4cDYreFVML3E2Q1dGdlAzOWtsVUk3T09MZUdLRjBa?=
- =?utf-8?Q?JgMXGbxSy+dJ759n5NuKppXof?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ace9847b-6e92-4fbe-e360-08dcdcb9c82f
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6214.namprd12.prod.outlook.com
+	=?utf-8?B?RkJoVmpLQ3FmdytPa1dSNFAvZkl5WVhZVkNWL21heUFBTXR1YnZhNDlqMGFI?=
+ =?utf-8?B?WVRUVVVLMzZ6ZWpIaW4wb2krTjU3QXdPbFNMQlI2SHo4L0xGQ3JORmhmOWpH?=
+ =?utf-8?B?SzNkMXJZUXVoclZlTlkweml6OW10K0hpTnZXeTM4b1NEVWpHaW0wdG5xQ1ZX?=
+ =?utf-8?B?NXBGeHJRUEFqVm9XQlpUeFhKTTFYV1p5MXZ0dmg4NGhwWGdIN3YzelMrNE50?=
+ =?utf-8?B?ZTV6THFwWDNTdGhsdVBqUDIxRlErOVJ5TDdHbWY3ajZsZk5vQUVlUGN4aUdW?=
+ =?utf-8?B?Umptc1lBM29jdFREb3BuY1Q5YTQrTVdvYjM1aUFLQ0ZMd0NSL2xwQUxhUHpi?=
+ =?utf-8?B?ekJhYVBCbDV1c1IvcHFoa2ZMWFRFUXVEN2RJYmt2bmxTQTdiSVpqcmhoQVln?=
+ =?utf-8?B?bGZQblVwVGNacFhucldtUzVHUmhtS2NHTSt5Tk10RVNDMVpBKys2QW9ZQ1hT?=
+ =?utf-8?B?L1RaQ3FNblREOXVxM3BxeWZ2U1ZPdmVvcnpuUWd4djdhSVhWOEpUTnZRTlVu?=
+ =?utf-8?B?NXpteEJzUGRKeGZ0MjVmZVRGOWdudFMxSkRxVExVWjl5VU4rb2V6NjY1YTdD?=
+ =?utf-8?B?UDBmUUZIaG0xVFY0ZThmdWsxNk1JdzhJaXFLR3lBZGJBVnluM0FXb2tLa1d3?=
+ =?utf-8?B?b3NCaWgvbGR3UFBaV3JPOU5QbGJNU005Qm9xT1N5bld2MWlYbXplaWoxanZF?=
+ =?utf-8?B?eWNPcXpONUY5MU1Gc0dreWlGWm5EVXhsWTdENWI3aVphclF2WGR1SlA1bkZm?=
+ =?utf-8?B?U3Y2QXd0UDBsRHNzNzZjcjZYcklIVzJMUFdvT1NBakgvSVY3NHBzbHMxaGxL?=
+ =?utf-8?B?L25zSVl3dTBOaGdvMEVIbTJHbHorWDNuOWNiWlQrMEhsZnE4ajd0dW9ydWlO?=
+ =?utf-8?B?L0VZMGtaZ3hWazVVMVZiWTZRU2luNTEyZlVodnlmYWtvNDdxTXRWQURmV0hF?=
+ =?utf-8?B?S2pMcDVEbmxlWnNEYzFJeW5ES0drV3pnVzBQeGxaK2VCdzVua3dYSWNxWWU4?=
+ =?utf-8?B?N2hSQy95ZjU1QU4rS0JJRkJMaCtCaElvMFhOZGI1MjRqdHYrQVRyT2lPMHdn?=
+ =?utf-8?B?OWFxMGc1TFlwdng1TnZPNTl3NmUzQ1RZQTNqQnJFKzhqclJNNksyYWFtSlNV?=
+ =?utf-8?B?WUk1NG1OQ3lib05talVZVTlYZlp1NnM5VldvOTlONmVreStDWFdxQ2tLb0F2?=
+ =?utf-8?B?dklXZzc5RERxdnFaUUNYb2xGaFd4azV0bjhKRWwrWWVDSE8zZ3haZldYZU5D?=
+ =?utf-8?B?QlBFb2ZsaE5td2YrV0JiZDNVeEhaSlc0QjVPbzVCN052cnNpNU42VklZZVRm?=
+ =?utf-8?B?c2RFMFZLM09EbStOeE5NU3JaalhIZVZZdkhEMkRocFpyd0VTM2pMcVVwemRH?=
+ =?utf-8?B?OGJCaWtUVThxZGNqTG1YZXpFYndITm5oWDJxcU1WS1hYTTJHNzNYVnorY0tI?=
+ =?utf-8?B?cGNpYzVlRElHbnZtbHN5ZGZ6U2ZvTEQvMEQ5eXFzQ1E5eExwa1l2QzNXT1lB?=
+ =?utf-8?B?ZjdObUFYSTFhZHkxQ0hEVmhPOVc1QWVIQUtoQ2NoeGtIRVl4Um4vY2g2OFY1?=
+ =?utf-8?B?cEFKa0drRW5LWGtWNGZOVVJITVp1b3VmeDlQNzYxSzJ2WFdNU25aL2FoODkw?=
+ =?utf-8?B?V3RtdG8rZithNVpMQnRQaUVBK254K3BtTFR5R3JLbmwyYU9DVEltai9BeFE1?=
+ =?utf-8?B?MnR2TEVTWlArMFBsNjJncVFscjlRU2VTeXRHems5b3RkaGJMajZTbXRucVlZ?=
+ =?utf-8?B?RDhDQWVjTXp2bE1hNXFsMWs2bU5nellBRit5QWJZM2c0NkQ2NTBxek1UbTAz?=
+ =?utf-8?B?RzlvZGlRMTdKNzYrenJaYUFnSHpuTG5EcHJYT0JGL0FlMWloR3p6aEhDdnpN?=
+ =?utf-8?B?YUdWd09KakJibnR2UEdiT3dBT25nSWR3VktZQkZTRWswSEJydXNqV3lpUmVN?=
+ =?utf-8?B?WGM5c0xmMk1aTmdZUU0vSURsM0hJSXg1Witob1dKTjRnT3BnQXd3Y3drd05M?=
+ =?utf-8?B?K3RrNFZxS1RocEJLMy9XeTJWVGxhOXRua0xmcDNONDR2MkQ2N0JyWjFQVHI1?=
+ =?utf-8?B?dHFZckw2ZjVWOXBrOHJyaElDY0hNWmZRb1NCTTBKUkFQeGErcXQ0RGtjUTBi?=
+ =?utf-8?B?bUYzNlB2ZjB3b3Vtemgvc0ZCZVBEL0I2dmQ0WDdNOGdTRW1KY290Y1RrNG5o?=
+ =?utf-8?B?OGc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	u9ZHwvKbDnqJHgbLXd9KOmMHVz2FxqH6028mI8Cy0XG2Pb2Vbj4VMIHtRJz9CrZMTzUO5J3yYBC6n5zk/ERFgwrRykvbxZCTvKOWlA2Fm48m66T77fYd+bmtFnc5/ccKwpLf7h+V/wF4ONCTXgpXxfMEgND9KhbxvCDFS5CiCVgq7Z1W74wX0E6nJBgl3R6sjFn/BHk/XGMMYbUyx7ExFYqN7I6b2TwTDKJPxvR0nyKvbsheB/Vzb/UphgF3gyIpHKE+qbHMAcytjXCnVOvhQR/UR5lfU59tKz4mGtfWW9v+rIeFnECUiS8lg0ThxmsZJ2PdxE25oYafTAqceqsVpmwmNM8XOc4F8Zc5GjmtuOWiprBHUQFMEAwR6BF8lFZvPnBRsX0YRW/uAsP6LnhRCcwryj0uqnDlaAGApsMyupJ4Hbmo7YiCwkNObiIycM0fyD+uIvntS0faJnjdrlcytZhIf8Ej0ZFNj39nGQSGLQ4TdNR96ZTekKe9LQAoZV2FdRySqhieKTj8kY4lDNTlIx3sUbocCdw1nbFoXVgbXWZcV9KKMc2iEwzU9Hh+os7zjZpcrdhHTItmsUvko5JBUTB8I9mWWzjHyFj7/TaC4Xg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0cf4e25-535f-43a3-a364-08dcdcbc3db8
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5895.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2024 16:56:06.9580
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2024 17:13:42.9204
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DT/Y4QF6/j0fEs8Ydk+qNtKHJhvuZO/X2thh1r9DBmHtwf9bwNDOiEQKw74HMI6ti5t19kLQveb/0Af1jlOj0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8788
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9q/zXKuCxw5GZ4R3HlFK4BpDZJduPN0SQ6XmXv9SiRU1HamjvxLUVWRhzGPkwGV7ZmvKC7LmIpK72xeWJ7lxwkt7zW1CUtqXsptuKhuRp8Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4560
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-24_02,2024-09-24_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 adultscore=0 mlxscore=0 bulkscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2408220000 definitions=main-2409240123
+X-Proofpoint-ORIG-GUID: LaxK-1I7lF8vS4cL2kbjtBqfwAJ3x9gY
+X-Proofpoint-GUID: LaxK-1I7lF8vS4cL2kbjtBqfwAJ3x9gY
 
-On 9/24/2024 12:19 AM, Mingwei Zhang wrote:
-> On Fri, Sep 20, 2024 at 7:09 AM Manali Shukla <manali.shukla@amd.com> wrote:
+
+
+On 7/2/2024 12:03 AM, Ravi Bangoria wrote:
+> On 24-Jun-24 9:48 PM, George Kennedy wrote:
 >>
->> On 9/19/2024 6:30 PM, Liang, Kan wrote:
->>>
->>>
->>> On 2024-09-19 2:02 a.m., Manali Shukla wrote:
->>>> On 8/1/2024 10:28 AM, Mingwei Zhang wrote:
->>>>> From: Kan Liang <kan.liang@linux.intel.com>
->>>>>
->>>>> There will be a dedicated interrupt vector for guests on some platforms,
->>>>> e.g., Intel. Add an interface to switch the interrupt vector while
->>>>> entering/exiting a guest.
->>>>>
->>>>> When PMI switch into a new guest vector, guest_lvtpc value need to be
->>>>> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
->>>>> bit should be cleared also, then PMI can be generated continuously
->>>>> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
->>>>> and switch_interrupt().
->>>>>
->>>>> At switch_interrupt(), the target pmu with PASSTHROUGH cap should
->>>>> be found. Since only one passthrough pmu is supported, we keep the
->>>>> implementation simply by tracking the pmu as a global variable.
->>>>>
->>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->>>>>
->>>>> [Simplify the commit with removal of srcu lock/unlock since only one pmu is
->>>>> supported.]
->>>>>
->>>>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->>>>> ---
->>>>>  include/linux/perf_event.h |  9 +++++++--
->>>>>  kernel/events/core.c       | 36 ++++++++++++++++++++++++++++++++++--
->>>>>  2 files changed, 41 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->>>>> index 75773f9890cc..aeb08f78f539 100644
->>>>> --- a/include/linux/perf_event.h
->>>>> +++ b/include/linux/perf_event.h
->>>>> @@ -541,6 +541,11 @@ struct pmu {
->>>>>      * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
->>>>>      */
->>>>>     int (*check_period)             (struct perf_event *event, u64 value); /* optional */
->>>>> +
->>>>> +   /*
->>>>> +    * Switch the interrupt vectors, e.g., guest enter/exit.
->>>>> +    */
->>>>> +   void (*switch_interrupt)        (bool enter, u32 guest_lvtpc); /* optional */
->>>>>  };
->>>>>
->>>>>  enum perf_addr_filter_action_t {
->>>>> @@ -1738,7 +1743,7 @@ extern int perf_event_period(struct perf_event *event, u64 value);
->>>>>  extern u64 perf_event_pause(struct perf_event *event, bool reset);
->>>>>  int perf_get_mediated_pmu(void);
->>>>>  void perf_put_mediated_pmu(void);
->>>>> -void perf_guest_enter(void);
->>>>> +void perf_guest_enter(u32 guest_lvtpc);
->>>>>  void perf_guest_exit(void);
->>>>>  #else /* !CONFIG_PERF_EVENTS: */
->>>>>  static inline void *
->>>>> @@ -1833,7 +1838,7 @@ static inline int perf_get_mediated_pmu(void)
->>>>>  }
->>>>>
->>>>>  static inline void perf_put_mediated_pmu(void)                     { }
->>>>> -static inline void perf_guest_enter(void)                  { }
->>>>> +static inline void perf_guest_enter(u32 guest_lvtpc)               { }
->>>>>  static inline void perf_guest_exit(void)                   { }
->>>>>  #endif
->>>>>
->>>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>>>> index 57ff737b922b..047ca5748ee2 100644
->>>>> --- a/kernel/events/core.c
->>>>> +++ b/kernel/events/core.c
->>>>> @@ -422,6 +422,7 @@ static inline bool is_include_guest_event(struct perf_event *event)
->>>>>
->>>>>  static LIST_HEAD(pmus);
->>>>>  static DEFINE_MUTEX(pmus_lock);
->>>>> +static struct pmu *passthru_pmu;
->>>>>  static struct srcu_struct pmus_srcu;
->>>>>  static cpumask_var_t perf_online_mask;
->>>>>  static struct kmem_cache *perf_event_cache;
->>>>> @@ -5941,8 +5942,21 @@ void perf_put_mediated_pmu(void)
->>>>>  }
->>>>>  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
->>>>>
->>>>> +static void perf_switch_interrupt(bool enter, u32 guest_lvtpc)
->>>>> +{
->>>>> +   /* Mediated passthrough PMU should have PASSTHROUGH_VPMU cap. */
->>>>> +   if (!passthru_pmu)
->>>>> +           return;
->>>>> +
->>>>> +   if (passthru_pmu->switch_interrupt &&
->>>>> +       try_module_get(passthru_pmu->module)) {
->>>>> +           passthru_pmu->switch_interrupt(enter, guest_lvtpc);
->>>>> +           module_put(passthru_pmu->module);
->>>>> +   }
->>>>> +}
->>>>> +
->>>>>  /* When entering a guest, schedule out all exclude_guest events. */
->>>>> -void perf_guest_enter(void)
->>>>> +void perf_guest_enter(u32 guest_lvtpc)
->>>>>  {
->>>>>     struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
->>>>>
->>>>> @@ -5962,6 +5976,8 @@ void perf_guest_enter(void)
->>>>>             perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
->>>>>     }
->>>>>
->>>>> +   perf_switch_interrupt(true, guest_lvtpc);
->>>>> +
->>>>>     __this_cpu_write(perf_in_guest, true);
->>>>>
->>>>>  unlock:
->>>>> @@ -5980,6 +5996,8 @@ void perf_guest_exit(void)
->>>>>     if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest)))
->>>>>             goto unlock;
->>>>>
->>>>> +   perf_switch_interrupt(false, 0);
->>>>> +
->>>>>     perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
->>>>>     ctx_sched_in(&cpuctx->ctx, EVENT_GUEST);
->>>>>     perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
->>>>> @@ -11842,7 +11860,21 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->>>>>     if (!pmu->event_idx)
->>>>>             pmu->event_idx = perf_event_idx_default;
->>>>>
->>>>> -   list_add_rcu(&pmu->entry, &pmus);
->>>>> +   /*
->>>>> +    * Initialize passthru_pmu with the core pmu that has
->>>>> +    * PERF_PMU_CAP_PASSTHROUGH_VPMU capability.
->>>>> +    */
->>>>> +   if (pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU) {
->>>>> +           if (!passthru_pmu)
->>>>> +                   passthru_pmu = pmu;
->>>>> +
->>>>> +           if (WARN_ONCE(passthru_pmu != pmu, "Only one passthrough PMU is supported\n")) {
->>>>> +                   ret = -EINVAL;
->>>>> +                   goto free_dev;
->>>>> +           }
->>>>> +   }
+>> On 6/10/2024 6:51 AM, Ravi Bangoria wrote:
+>>> On 6/8/2024 12:43 AM, George Kennedy wrote:
+>>>> Hi Ravi,
 >>>>
->>>>
->>>> Our intention is to virtualize IBS PMUs (Op and Fetch) using the same framework. However,
->>>> if IBS PMUs are also using the PERF_PMU_CAP_PASSTHROUGH_VPMU capability, IBS PMU registration
->>>> fails at this point because the Core PMU is already registered with PERF_PMU_CAP_PASSTHROUGH_VPMU.
->>>>
->>>
->>> The original implementation doesn't limit the number of PMUs with
->>> PERF_PMU_CAP_PASSTHROUGH_VPMU. But at that time, we could not find a
->>> case of more than one PMU with the flag. After several debates, the
->>> patch was simplified only to support one PMU with the flag.
->>> It should not be hard to change it back.
-> 
-> The original implementation is by design having a terrible performance
-> overhead, ie., every PMU context switch at runtime requires a SRCU
-> lock pair and pmu list traversal. To reduce the overhead, we put
-> "passthrough" pmus in the front of the list and quickly exit the pmu
-> traversal when we just pass the last "passthrough" pmu.
-> 
-> I honestly do not like the idea because it is simply a hacky solution
-> with high maintenance cost, but I am not the right person to make the
-> call. So, if perf (kernel) subsystem maintainers are happy, I can
-> withdraw from this one.
-> 
-> My second point is: if you look at the details, the only reason why we
-> traverse the pmu list is to check if a pmu has implemented the
-> "switch_interrupt()" API. If so, invoke it, which will change the PMI
-> vector from NMI to a maskable interrupt for KVM. In AMD case, I bet
-> even if there are multiple passthrough pmus, only one requires
-> switching the interrupt vector. Let me know if this is wrong.
-> 
-> Thanks.
-> -Mingwei
-> 
-
-Yeah, That is correct. Currently, switching of the interrupt vector is
-needed only by one passthrough PMU for AMD. It is not required for IBS
-virtualization and PMC virtualization because VNMI is used to deliver
-interrupt in both cases.
-
-With the mediated passthrough VPMU enabled, all exclude_guest events
-for PMUs with PERF_PMU_CAP_PASSTHROUGH_VPMU capability are scheduled out 
-when entering a guest and scheduled back in upon exit. We need this
-functionality for IBS virtualization and PMC virtualization.
-
-However, the current design allows only one passthrough PMU, which
-prevents the IBS driver from loading with the
-PERF_PMU_CAP_PASSTHROUGH_VPMU capability.
-
-As a result, we are unable to utilize functionality of scheduling out
-and scheduling in exclude_guest events within  the mediated
-passthrough VPMU framework for IBS virtualization.
-
-- Manali
-
-
->>>
->>> Thanks,
->>> Kan
->>>
+>>>> On 6/4/2024 9:40 AM, Ravi Bangoria wrote:
+>>>>>> On 6/4/2024 9:16 AM, Ravi Bangoria wrote:
+>>>>>>>>>>> Events can be deleted and the entry can be NULL.
+>>>>>>>>>> Can you please also explain "how".
+>>>>>>>>> It looks like x86_pmu_stop() is clearing the bit in active_mask and setting the events entry to NULL (and doing it in the correct order) for the same events index that amd_pmu_enable_all() is trying to enable.
+>>>>>>>>>>> Check event for NULL in amd_pmu_enable_all() before enable to avoid a GPF.
+>>>>>>>>>>> This appears to be an AMD only issue.
+>>>>>>>>>>>
+>>>>>>>>>>> Syzkaller reported a GPF in amd_pmu_enable_all.
+>>>>>>>>>> Can you please provide a bug report link? Also, any reproducer?
+>>>>>>>>> The Syzkaller reproducer can be found in this link:
+>>>>>>>>> https://lore.kernel.org/netdev/CAMt6jhyec7-TSFpr3F+_ikjpu39WV3jnCBBGwpzpBrPx55w20g@mail.gmail.com/T/#u
+>>>>>>>>>>> @@ -760,7 +760,8 @@ static void amd_pmu_enable_all(int added)
+>>>>>>>>>>>               if (!test_bit(idx, cpuc->active_mask))
+>>>>>>>>>>>                   continue;
+>>>>>>>>>>>       -        amd_pmu_enable_event(cpuc->events[idx]);
+>>>>>>>>>>> +        if (cpuc->events[idx])
+>>>>>>>>>>> +            amd_pmu_enable_event(cpuc->events[idx]);
+>>>>>>>>>> What if cpuc->events[idx] becomes NULL after if (cpuc->events[idx]) but
+>>>>>>>>>> before amd_pmu_enable_event(cpuc->events[idx])?
+>>>>>>>>> Good question, but the crash has not reproduced with the proposed fix in hours of testing. It usually reproduces within minutes without the fix.
+>>>>>>>> Also, a similar fix is done in __intel_pmu_enable_all() in arch/x86/events/intel/core.c except that a WARN_ON_ONCE is done as well.
+>>>>>>>> See: https://elixir.bootlin.com/linux/v6.10-rc1/source/arch/x86/events/intel/core.c#L2256
+>>>>>>> There are subtle differences between Intel and AMD pmu implementation.
+>>>>>>> __intel_pmu_enable_all() enables all event with single WRMSR whereas
+>>>>>>> amd_pmu_enable_all() loops over each PMC and enables it individually.
+>>>>>>>
+>>>>>>> The WARN_ON_ONCE() is important because it will warn about potential
+>>>>>>> sw bug somewhere else.
+>>>>>> We could add a similar WARN_ON_ONCE() to the proposed patch.
+>>>>> Sure, that would help in future. But for current splat, can you please
+>>>>> try to rootcause the underlying race condition?
+>>>> Were you able to reproduce the crash on the AMD machine?
+>>> I'm able to reproduce within the KVM guest. Will try to investigate further.
+>> Hi Ravi,
 >>
->> Yes, we have a use case to use mediated passthrough vPMU framework for IBS virtualization.
->> So, we will need it.
->>
->> - Manali
->>
->>>>> +
->>>>> +   list_add_tail_rcu(&pmu->entry, &pmus);
->>>>>     atomic_set(&pmu->exclusive_cnt, 0);
->>>>>     ret = 0;
->>>>>  unlock:
->>>>
->>>>
->>
+>> Any new status?
+> I was able to reproduce it with passthrough pmu[1] as well on a Zen4 machine
+> where Host has PerfMonV2 support (GlobalCtrl etc) but guest do not. I've
+> debugged it at some extent and seeing some race conditions, but not working
+> on this with top priority since this requires root/CAP_PERFMON privileges to
+> cause a crash. I'll resume investigation once I get some time. Sorry about
+> the delay.
+
+Hi Ravi,
+
+Anything new on this issue?
+
+Thank you,
+George
+>
+> [1] https://lore.kernel.org/all/20240506053020.3911940-1-mizhang@google.com
+>
+> Thanks,
+> Ravi
 
