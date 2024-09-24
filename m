@@ -1,98 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606DF2907;
-	Mon, 23 Sep 2024 23:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577A615C0
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 00:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727135538; cv=none; b=ty7L+0u7fbj5ZKn2Oe4DBsHWSvlGP184dYQMa8vsUysTU5ijxrgGBhAZdLZA6UBGa/MmfjKBR0zYPfhj87Fe+sUPyyjmOsLaQBTYzqUk6J+J6T6mID3SlATNMCl0/Rmc1qkre46S0gPg2zNT7jLUyLbfMp2Hw+TM9WcUoGbRy1I=
+	t=1727138249; cv=none; b=IVzk5UvqCIkRA5dfT/lcS/3BrmSF4h2tGzupzQtjh1GbkldGAG67Oq3WH78jp2QmjDtccf/jSoPjlgIZ81SqBuuHOre5j82gx8vBwAoOdvMQHksgRdzuPjCGPdJ3M/Wmo09uz9zCGXzNx1nynvxhRfy7QpEAd/IpoGOC97sBjO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727135538; c=relaxed/simple;
-	bh=liU3xrMhCJ00+SP18e8Pf+o8QqUPpogn+daULb1u5gg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UtbD3KucfanxvOpTfq1F/i0XKEid1XIgveKrNfGnX5OcURo+WE1Oj2C9d8eXZgjYQamlOZohxf4TvJznTvR5lmZ93xcr1NBH4ZaTolzGSunxsPkILtRaiDuytIulK4xM9O+Eqpst9LvJvUfo0FJ9fBnT/grkuHRi+fFdFL0kGdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cwHgw9OY; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1727138249; c=relaxed/simple;
+	bh=nWzK2sWZ6Z8nHMEPrWRkFV6YjF5AHdbQe+FRvNSlQfY=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=IShIq5fxrl0D0Ys0a0rV7UOy+nfA5YhHOvTYYmwFJySn4NDFnGXVXGiNjOMXvs2h4GjFbSsicfqLDAB3wT9px+Z6Sd5pWLYbLke5TWrfAj5LBknwma2d4P3F8v/OJsYHzguCxx7VHe9yezO9mU424GSY9Zgm6bZ0WK8V7c7W2lA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DmtPbgqw; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cwHgw9OY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727135537; x=1758671537;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=liU3xrMhCJ00+SP18e8Pf+o8QqUPpogn+daULb1u5gg=;
-  b=cwHgw9OYgjB6tl2JKRDBD6M6kVvrvFvsVJ919+rzSz6CjO62DUvb1NXe
-   Ck8eM6jkMS8htUsnyra8EI7EJnaENzHGmJl5ota8BVeC53s9lZ/t4lFm+
-   QUAUJYhyNKVHtpbWH2JSIO/krqZ76eAcjC9B426cIgs0H6lp1XcFHB3vb
-   iXM+CvMQ3dbearrEnR7dPKZKoPS98G6vhStcaA3OHyMZobym0TEOMDEPd
-   PYPAEG6+Ou6TJ9p+qfQwAu/ltyRWOknD4blMCEK6425q+UcXYR5KUUZNJ
-   BlQbAvunUJBGd+rzfkVCdrC03xhn1544Hgmpc+XMfqe1P01YLUBLg2iqR
-   w==;
-X-CSE-ConnectionGUID: nw+T26XTTKShSQneEeBCjA==
-X-CSE-MsgGUID: RjQOmo4DQUuZ4Mp/KRqxGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11204"; a="37472806"
-X-IronPort-AV: E=Sophos;i="6.10,252,1719903600"; 
-   d="scan'208";a="37472806"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 16:52:16 -0700
-X-CSE-ConnectionGUID: ebY8c56xTvWzZ2bYe8EGqA==
-X-CSE-MsgGUID: buCkN+fmRTOabrQlEgwvMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,252,1719903600"; 
-   d="scan'208";a="75755546"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 16:52:15 -0700
-Date: Mon, 23 Sep 2024 16:52:14 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: mhiramat@kernel.org, oleg@redhat.com, andrii@kernel.org,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Improve the usage of xol slots for better
- scalability
-Message-ID: <ZvH_LiUeOtAwommF@tassilo>
-References: <20240918012752.2045713-1-liaochang1@huawei.com>
- <87jzf9b12w.fsf@linux.intel.com>
- <7a6ba3f3-dffa-cdac-73c7-074505ea4b44@huawei.com>
- <ZuwoUmqXrztp-Mzh@tassilo>
- <0939300c-a825-5b46-d86f-72ce89b2b95f@huawei.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DmtPbgqw"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e225c289c90so5648873276.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Sep 2024 17:37:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1727138246; x=1727743046; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=upRWoGqTyroyxo5Zs70wrDT7qOnjToEaTm0XO6j/m9M=;
+        b=DmtPbgqwm9rSXOfRLw/UmEdYild691eeXFD7zbN+btqHmejmEx8ZRTx7enkXomwzAI
+         IDp7GuWAlozeh664KyQ9ExksbdxNF9phvTT9ukpDA8f3EPQeq/I++DpXMG6AqWjl1aq3
+         LlGJy4wZxFA9s9DBWqhMhSiOHaIxbdWaEUctdYHOCAVwVFSXs0xXIhSzo2bSDbKw87l0
+         CQipUvz/vdrbT5AK4eSwpBBKtcuVdSA50vqdIhqwZpk9/DxXAI5B/pnP6zJanagtSKct
+         iMtjYhPocqgLGzLl4q8SthSladoJaPTyrFbab+SlcELfKZvT79Iy5YjFHEOnzNEBbRZC
+         mLSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727138246; x=1727743046;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=upRWoGqTyroyxo5Zs70wrDT7qOnjToEaTm0XO6j/m9M=;
+        b=HdsdI4YPnTVKa8Ixz+7JCrKUKpFwiQ1xeG7qYDvORRcnyms5jXflE1kYjp7GZIc7xX
+         P4sWFEwT3KCnzJ5Fo2+h2rjqe1qOU+Q+64GUSGafpV4Wl2O/aVr7MDWfaej/jx0OB+Mp
+         MHKLJ+qZn+iFLPJFrWjgqe6Nal0M8OAnqQ+/RQjcnN4yrhIztB2cUmx641ThAoPPosie
+         KfQBFk/Gy65IQkltJ8xkztyuvH2Ggb0nRTsLxMqTLHMLh2AWYOzcpHni7EKMMyldmGsb
+         4truiySbCjrDxyeMJXtIPBW3+L6eoIwVsVblinueyC/1uOqzidYcHdT3E4Jt/QCc9iNw
+         tpSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTr/TQJ3p8JNFnslTBl7Q17teMTngBLjbX7DSS36kNuznzgyG14psAh1ZTNAXSm6p5XMc+gVhOUBCUsbAI7UMM@vger.kernel.org
+X-Gm-Message-State: AOJu0YybNu2R+pFrzOVcpAuCm9U8Bsk6kTR4t0QL2PBYTlbAowB+H2YA
+	x6gL3fyQNATO9n7F7eFz5lbiSU2ZlwKxbX9oGVn2c1K5v4iL5VJElBSedmRQYZJCM3w5lJnnjc0
+	8BF4t8g==
+X-Google-Smtp-Source: AGHT+IGSP3mTlfIixD7hCnVJrlETi6KEyVW+ABwML5thN0IfChfL6UiHcL1MQts56QEVsxOGq7XYw+d+ejuy
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:61a6:b27c:a1cd:e6a0])
+ (user=irogers job=sendgmr) by 2002:a25:d38b:0:b0:e11:584f:c2ca with SMTP id
+ 3f1490d57ef6-e2252f94f85mr36895276.6.1727138246208; Mon, 23 Sep 2024 17:37:26
+ -0700 (PDT)
+Date: Mon, 23 Sep 2024 17:37:17 -0700
+Message-Id: <20240924003720.617258-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0939300c-a825-5b46-d86f-72ce89b2b95f@huawei.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.792.g87dc391469-goog
+Subject: [PATCH v1 0/3] 2 memory fixes and a build fix
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, Hemant Kumar <hemant@linux.vnet.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yang Jihong <yangjihong@bytedance.com>, leo.yan@arm.com
+Content-Type: text/plain; charset="UTF-8"
 
-> Thanks for the suggestions, I will experiment with a read-write lock, meanwhile,
-> adding the documentation and testing for the lockless scheme.
+I was looking into some lsan regressions and a latent issue with
+libdw, creating these fixes.
 
-Read-write locks are usually not worth it for short critical sections,
-in fact they can be slower due to cache line effects.
+A thought, we should probably simplify the libdw logic but rather than
+do it here I'll do it as a separate series on top of these. The issues
+I see are:
 
-> Sorry, I may not probably get the point clear here, and it would be very
-> nice if more details are provided for the concern. Do you mean it's necessary
-> to make the if-body excution exclusive among the CPUs? If that's the case,
-> I guess the test_and_put_task_slot() is the equvialent to the race condition
-> check. test_and_put_task_slot() uses a compare and exchange operation on the
-> slot_ref of utask instance. Regardless of the work type being performed by
-> other CPU, it will always bail out unless the slot_ref has a value of one,
-> indicating the utask is free to access from local CPU.
+1) dwfl_thread_getframes is used to test for the presence of
+   libdw-dwarf-unwind. The blame date on this function is
+   2013-05-30. As the function is 10 years old I think having libdw
+   implies having dwfl_thread_getframes and so we can just merge the
+   two pieces of logic instead of having different feature tests and
+   ifdefs.
 
-What I meant is that the typical pattern for handling races in destruction
-is to detect someone else is racing and then let it do the destruction
-work or reacquire the resource (so just bail out).
+2) similarly, dwarf_getlocations has a blame date of 2013-08-23 so
+   let's just make libdw tests test for this and make having libdw
+   imply dwarf_getlocations support.
 
-But that's not what you're doing here, in fact you're adding a
-completely new code path that has different semantics? I haven't checked
-all the code, but it looks dubious.
+3) similarly, dwarf_getcfi has a blame date of 2009-06-24 so let's
+   just make libdw tests test for this and make having libdw imply
+   dwarf_getcfi support.
 
--Andi
+4) in Makefie.config feature-dwarf is a synonym for libdw support. I
+   think using the name libdw is more intention revealing as dwarf can
+   mean multiple things. Let's change HAVE_DWARF_SUPPORT to
+   HAVE_LIBDW_SUPPORT and all similar dwarf vs libdw names.
+
+5) We have "#if _ELFUTILS_PREREQ(0, 142)" testing for elfutils version
+   0.142. Elfutils 0.142 was released around 2009-06-13 (via git blame
+   on the NEWS file). Let's remove the #if and ensure elfutils feature
+   tests for at least 0.142. If someone were using an incredibly old
+   version then they'd lose some elfutils support, but given the 15
+   year old age of the library I find it unlikely anyone is doing
+   this. They can also just move to a newer version.
+
+From the mailing list I notice also overlap with the last patch and
+this series:
+https://lore.kernel.org/lkml/20240919013513.118527-1-yangjihong@bytedance.com/
+Simplifying the libdw support will address some of those issues too.
+
+Ian Rogers (3):
+  perf disasm: Fix capstone memory leak
+  perf probe: Fix libdw memory leak
+  perf build: Fix !HAVE_DWARF_GETLOCATIONS_SUPPORT
+
+ tools/perf/Makefile.config     |  6 ++++++
+ tools/perf/util/disasm.c       | 11 +++++++----
+ tools/perf/util/dwarf-aux.h    |  1 +
+ tools/perf/util/probe-finder.c |  5 +++++
+ 4 files changed, 19 insertions(+), 4 deletions(-)
+
+-- 
+2.46.0.792.g87dc391469-goog
+
