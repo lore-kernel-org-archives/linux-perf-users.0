@@ -1,59 +1,59 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD10146D59
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 09:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEED154C03
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 09:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727169436; cv=none; b=Pl5/1nrgOgaWvWRhAvOdNaluqFUb4hjSjfGDIf2OrtGsCq3e+Wz9nBjbCgdXqwaqosunBRl/aD761FXfQ5UGFECczUX+WyinnKlvKXwxZBV1WMazL2YBmAxRHsv95Udh0HvZRBSKhdZtWH4q4VB9Of8VfHHsEv1fIVVltm3Gans=
+	t=1727169504; cv=none; b=F6Lt9DVhHoHWLNvaxaCVwvTEP5qHloFMnF2sgTUGbwAEg5oYOZ9mPB1oP8YqLbrbZr75aoNeD/PycDD+rKabFedupQUG9RBkiKF0cfdtjcCW/zYUp7UgzSB/id9bqziszOivmxgXRemXxxyIzRwKkbjta6JLeqh5Dj4B/KJCHlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727169436; c=relaxed/simple;
-	bh=x/O9coMrcpRq3V9Li1EhROiSGoTOGxZ/zkr3pypYcEQ=;
+	s=arc-20240116; t=1727169504; c=relaxed/simple;
+	bh=eQAClSjxybBfQuWFY9v9ZtzZlS3Vjk2Oap0J7f8u4T8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=f3yPbWdFjaOfnKZxjeXw5hQN3ow18xceujSuPTlt+JXeN5S95Ev3jNx5Pqk7X/Qov9nuB9DCXi7WmbhwdTuLqNKfIuKH8XOwwCirKExZLR/WSKuBLkaDbW5Tha70nP+pfTFidieVOmd5JdYKlm4v4HfduxMOICdPAWHQhZfjBqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TcoZ2pgb; arc=none smtp.client-ip=209.85.208.41
+	 In-Reply-To:Content-Type; b=ZPudfrQ8sFxVvkwq1D5ZOfZ2zWavorJyLP50HI0HRpNCiDfsbsPJkyP/EfsmVdwqbvAzc61V2XqXmv7LvwWrbvw1dVQvVWQGIRqZdT319/wOd93hZXDrDvWNCqon+etQKRALDe3yqt6WVkjS/bgIeibd6GLOrlVy0RWMPXKLhI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AEVumfp/; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TcoZ2pgb"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5c40942358eso8748169a12.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 02:17:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AEVumfp/"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a8a7cdfdd80so749379966b.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 02:18:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727169432; x=1727774232; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1727169500; x=1727774300; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:cc:content-language
          :references:to:subject:user-agent:mime-version:date:message-id:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=zWxpwSxgLzbVRpzh8BPtUo4Pwl6suLBEsCM/MSlHNRQ=;
-        b=TcoZ2pgbWs96D8jUUZml5nXT1hnnNSearPWzA/JOCymQRU1aubE0Glhpa9rqb0jau1
-         PHRU2k+HOJqdNYLY3baQrXgAhongfW/F/GcL2ADbSmoZCagMuqqe/lTZgleU2HlJXh3G
-         GlxxhkZ+TB3GDLS1UIm2iF3GHCT6YapTjCoaXEk1ehAaCuhLzU6xw3HzZVcEe0mK5uFG
-         4+DZA/S07/OGoOr1bqNCZIo1I45kQQ1VSipITJwDwEOoXfILz/BqoaGE4tuAquJZ/2dD
-         aA+inwPVq7CjAj9LbXtMQcWEzFNu2qcEjbJYfrZQSTtCR4SMxhAjAMw5sPPLITHn7eMP
-         9jGg==
+        bh=8EoVKFjbfi+a6s+4sCHipQc1F1mmCzYoxrqTTZyTQIE=;
+        b=AEVumfp/+Tw2s9SkpIgftvbGwi/HkROpCSMEnOs+mWtEloLqT4IC2sRZUKw/tNxYwp
+         nXhKN/im+c/pASctPxUa5NuCMUeV7yiEGpehLQSECGM9K5H2fpZZqpyqVgdMBWMaqg52
+         gcRqgmA3p8PSjU86ppM5wjYQPVFb+rBX4Ml+WwhqiUfaCWjZfC9EHd+NtfLueUWahlKg
+         DkEEkWdST/Dhy6hFe8EugUSm5/AfGz9wYf6Bj0JrmnQx0t8aB7XuDj7G8YtjRDIEhSr7
+         Mv6GY5pkx3JRmw+FF+MK3ZD3gx3wwaDJ/7ZKZRnxVZ0GaTzhCldCtb44uFEsHtq8o5yo
+         E6ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727169432; x=1727774232;
+        d=1e100.net; s=20230601; t=1727169500; x=1727774300;
         h=content-transfer-encoding:in-reply-to:from:cc:content-language
          :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zWxpwSxgLzbVRpzh8BPtUo4Pwl6suLBEsCM/MSlHNRQ=;
-        b=lA7JtK9Zkfx2VcXLphFsiDIxCB8rXXlyYUrxzEe/KQtT6v9p6mam5t5TwkqmB2KX/W
-         0sQe6w0qQiI/exQVxoS1UzHtbYJtlg4GspE+AijAnqd92aoZPUH4SL9+4Q0GAg+MuB+J
-         2JUlzasuvF0McHfSKKEJjQJmK9q//YFwd1wLXRpnuXCD579SqBVE/NEbDdXfG1oTArcj
-         Ux9JarhzPCewwYHbqF+LJ+RsNINqtIIMdVrAmPxrBp2VeqgPaqoavVw8I1HvksiN073G
-         qDcYnSTLsQ0f381/32ct86AzGISlCcKT/SYyIJ7IOqlGtfkCOUNV9GeE75h2dr0Zq6S0
-         WREg==
-X-Forwarded-Encrypted: i=1; AJvYcCWH1xjzQH26+WVbXPNw7MBiyizQMHZLlA/4V7EFzBQfSSHlVHkcomH4PA9tzglTCb3fl9W45iMRokGAqYJrxaU6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmYdqPDZx3qlZWE1FpwbkP1d0rrrRmyfmBjnDd31BrW1F+cNSD
-	gL8K7YEvifYU3DAqIH9yTf46KN1YPQum5QpjuD2pzXxmBG6URSVPAuYSFwnr0Jw=
-X-Google-Smtp-Source: AGHT+IEgqx6xzdAv+9H+cDifB7rWWZP4tPimo1MjDQXtQOXXDqbgo77FI2vmPWj19KpXCJg0Y91Vgg==
-X-Received: by 2002:a50:85cc:0:b0:5c4:1c89:6e36 with SMTP id 4fb4d7f45d1cf-5c5cdfff686mr2178053a12.19.1727169431657;
-        Tue, 24 Sep 2024 02:17:11 -0700 (PDT)
+        bh=8EoVKFjbfi+a6s+4sCHipQc1F1mmCzYoxrqTTZyTQIE=;
+        b=Wp8VuNf6jRrdgaPdyh3O9RTRPJTE0K25YJ2LuzMeVMILc7wydqNla2OQvsOEjjCqQ0
+         gNqntReDgbf12oVUDJkoT4ffGenWWRmzlcpsVrmwwIOYiu7E+6BIggF9ydYNCDVmJkUm
+         apuaBoFOcWwpgGCx+LQXCF74uCVyT59lYBSwgx23Zp06LercUYWFdWxpyxfCGYSBxypD
+         cCHWlqNcQYwL5Ry2WjAgNTYpqLqZ0KJ3KTGomMBKqSLEJevdevZaRdHBIvdwKsY8YOuj
+         yChnQp5o3M42A0eJyI44fllAuUGAAvjylEayPl0PJOQnQCdvZHVIqQc1xESAQ6XBbGYv
+         CQEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxbQwu/c9ML/E1S7nY15jkKWDrnu0KACRc32VmaWlG/bVRdIB3mGoptD5fXRAcX8/xzoMojpmFRzbhHEM231Vt@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYDJ5SezxQLCZy52hRM+omL6KnnlxD8DeQzPpcTIAhcDs4NghM
+	QOpuzMininJ/UKbLgMiOWV2MFFrgEc3hmAFRIkkRODn+t9kfylPDxXbKyjke7VI=
+X-Google-Smtp-Source: AGHT+IGmEcpPpfKzhmTgkyAdGE/6dGxpQCEGdVziFmMCwGgv9RsAwgt586o+b4C6nRDeFTp3Ml0psA==
+X-Received: by 2002:a17:907:f706:b0:a8d:4e24:5314 with SMTP id a640c23a62f3a-a90d4ffe7dbmr1302595366b.24.1727169500413;
+        Tue, 24 Sep 2024 02:18:20 -0700 (PDT)
 Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c5cf495db3sm545122a12.21.2024.09.24.02.17.10
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a93930d1126sm59929766b.114.2024.09.24.02.18.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Sep 2024 02:17:11 -0700 (PDT)
-Message-ID: <de38a809-1968-4d6d-b1ed-1f47e8762ee2@linaro.org>
-Date: Tue, 24 Sep 2024 10:17:08 +0100
+        Tue, 24 Sep 2024 02:18:19 -0700 (PDT)
+Message-ID: <fe2b22aa-ad48-4279-89c0-2d846d1d405a@linaro.org>
+Date: Tue, 24 Sep 2024 10:18:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,10 +61,9 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/3] perf probe: Fix libdw memory leak
+Subject: Re: [PATCH v1 0/3] 2 memory fixes and a build fix
 To: Ian Rogers <irogers@google.com>
 References: <20240924003720.617258-1-irogers@google.com>
- <20240924003720.617258-3-irogers@google.com>
 Content-Language: en-US
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -81,39 +80,64 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  linux-kernel@vger.kernel.org, Yang Jihong <yangjihong@bytedance.com>,
  leo.yan@arm.com
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20240924003720.617258-3-irogers@google.com>
+In-Reply-To: <20240924003720.617258-1-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 24/09/2024 1:37 am, Ian Rogers wrote:
-> Add missing dwarf_cfi_end to free memory associated with probe_finder
-> cfi_eh or cfi_dbg. This addresses leak sanitizer issues seen in:
-> tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+> I was looking into some lsan regressions and a latent issue with
+> libdw, creating these fixes.
 > 
-> Fixes: 270bde1e76f4 ("perf probe: Search both .eh_frame and .debug_frame sections for probe location")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/util/probe-finder.c | 5 +++++
->   1 file changed, 5 insertions(+)
+> A thought, we should probably simplify the libdw logic but rather than
+> do it here I'll do it as a separate series on top of these. The issues
+> I see are:
 > 
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index 630e16c54ed5..78f34fa0c391 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -1379,6 +1379,11 @@ int debuginfo__find_trace_events(struct debuginfo *dbg,
->   	if (ret >= 0 && tf.pf.skip_empty_arg)
->   		ret = fill_empty_trace_arg(pev, tf.tevs, tf.ntevs);
->   
-> +#if _ELFUTILS_PREREQ(0, 142)
-> +	dwarf_cfi_end(tf.pf.cfi_eh);
-> +	dwarf_cfi_end(tf.pf.cfi_dbg);
-> +#endif
-> +
+> 1) dwfl_thread_getframes is used to test for the presence of
+>     libdw-dwarf-unwind. The blame date on this function is
+>     2013-05-30. As the function is 10 years old I think having libdw
+>     implies having dwfl_thread_getframes and so we can just merge the
+>     two pieces of logic instead of having different feature tests and
+>     ifdefs.
+> 
+> 2) similarly, dwarf_getlocations has a blame date of 2013-08-23 so
+>     let's just make libdw tests test for this and make having libdw
+>     imply dwarf_getlocations support.
+> 
+> 3) similarly, dwarf_getcfi has a blame date of 2009-06-24 so let's
+>     just make libdw tests test for this and make having libdw imply
+>     dwarf_getcfi support.
+> 
+> 4) in Makefie.config feature-dwarf is a synonym for libdw support. I
+>     think using the name libdw is more intention revealing as dwarf can
+>     mean multiple things. Let's change HAVE_DWARF_SUPPORT to
+>     HAVE_LIBDW_SUPPORT and all similar dwarf vs libdw names.
+> 
+> 5) We have "#if _ELFUTILS_PREREQ(0, 142)" testing for elfutils version
+>     0.142. Elfutils 0.142 was released around 2009-06-13 (via git blame
+>     on the NEWS file). Let's remove the #if and ensure elfutils feature
+>     tests for at least 0.142. If someone were using an incredibly old
+>     version then they'd lose some elfutils support, but given the 15
+>     year old age of the library I find it unlikely anyone is doing
+>     this. They can also just move to a newer version.
+> 
+>  From the mailing list I notice also overlap with the last patch and
+> this series:
+> https://lore.kernel.org/lkml/20240919013513.118527-1-yangjihong@bytedance.com/
+> Simplifying the libdw support will address some of those issues too.
+> 
+> Ian Rogers (3):
+>    perf disasm: Fix capstone memory leak
+>    perf probe: Fix libdw memory leak
+>    perf build: Fix !HAVE_DWARF_GETLOCATIONS_SUPPORT
+> 
+>   tools/perf/Makefile.config     |  6 ++++++
+>   tools/perf/util/disasm.c       | 11 +++++++----
+>   tools/perf/util/dwarf-aux.h    |  1 +
+>   tools/perf/util/probe-finder.c |  5 +++++
+>   4 files changed, 19 insertions(+), 4 deletions(-)
+> 
 
-I noticed that c06547d converted an _ELFUTILS_PREREQ(0, 142) into 
-HAVE_DWARF_CFI_SUPPORT. But there is still a mixture of both in the code 
-(unrelated to this patch). The commit message doesn't say why it is 
-better, just that it could be changed, so I'm not sure which one is right.
+Reviewed-by: James Clark <james.clark@linaro.org>
 
