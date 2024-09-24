@@ -1,510 +1,155 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45F71ACE0B;
-	Tue, 24 Sep 2024 18:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7581AC458;
+	Tue, 24 Sep 2024 19:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727203517; cv=none; b=mMQrmk0zXv0vZZhFiMLihZWKMBy9ms9o2Y4j5AS+l0CFcXDYCJbnqXGly5k4YQ5PBtJd8dG35FdaJbRVHKCqylIThati474KlI9eISG+IVXNkuzvSr2B8hF7AsjW0biQvH1k1mOOkLrXSwbtFa9nLWwxU/6Mqp1ZLb3eaNaNB8w=
+	t=1727206152; cv=none; b=VZ5L6wfzEFqhGtDOvzQ3gdONtcbKqwUa+XRWqBzGsBntMH4PhgYa6INUORiQGsbkXldf7cV8z4Shlbw+kgeEK/xoycViYa85Hvkn/fGJR3aovLWWttl0ZliYAJZUR5xeczfE+8p+iLwWLcejvDIelhjxrP5mTWrzQM2cFv+3XjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727203517; c=relaxed/simple;
-	bh=yVVcEq5jNDRVwwKosXT5XE+kHCm1Gy3R4NYAK8AwqmA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oKcdUyla+aFLgOoYlw2+7xxFtPnsRD/dJZ8Iog8LxcqybYvGajSnhwbqX+aMnb3mfloDFUiuQGZaLIxPkyo7ubNDOCkCvgAFKK2H2k1AZFoU71CrcZveJkqElGsClGB9rhAygkRHXnEt1FwbW1xpWsSp/oZrClh6ELWuvQjbTDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FeWFeboq; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727206152; c=relaxed/simple;
+	bh=/1y5DAKEaa73LT3bRfv9WDo15j9LQIYDIMNv4BdG5lk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gucqNxMuxw77GAaQfcOoBmJdeZkmNum19XpGz4yqbTdfC4DOqCfhweO81gm5WTHjT0DE2Jiv5JWc0WuRWwqyyemOBf5HJ8TFSFqT/XRpgEbVf78GGIq/o9yj2F7EGPVWSOlVwssGCvyqWoeeG9TCec1hEl8tAPeU0VAwJ1IkVLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L5Gmi2tA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FeWFeboq"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e24a2bc0827so560283276.2;
-        Tue, 24 Sep 2024 11:45:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727203513; x=1727808313; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QA9etBOkOs1e0rwgW6A2oPowbtY0kINdTmj6PMv7sA8=;
-        b=FeWFeboqjLEga3zghWw7ME9SonZuLl90iuszVmy1rlujYxJqpjho43lkjNe+XAaCpZ
-         Qd5guo+hlInS1peRA+aMTgGt5WSo0x2q7XiiB7OOmBDm7smmhK96eSgw4L1ljNxkoEt+
-         I5E70uNYXob5J305qNp04up0xV4ZB/6OV0bWzsb4n2etALJAJnZnrO0tUExF5QfcE1cJ
-         8DdyMODjUj7d1uRLxH8miMRuDIBBW0TtuEZcqjSpmjr47IjSyDQScAJLpYn/KnR8E+uv
-         abORkOXDQ3mlBQkrpgmtBrRvlkfvoXU7nkXSUDMiDpvrgwL3LvT9YaZh5XWP4gkWeHky
-         73Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727203513; x=1727808313;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QA9etBOkOs1e0rwgW6A2oPowbtY0kINdTmj6PMv7sA8=;
-        b=bFmWC/+39riAk+FCPbByMo5AT77hd269G0B2a4QJQV26n2KJAWy0pvZmG78neDW7ey
-         niDb9zmGNNypZ+Bq/TzIg6tbGtiOJUsPhoskhR9BraKn3qTHssWyZb7k3xsTP6T8YvSh
-         JXLNXNHzpPlJh7EHcJwkiGhRNwrsTWc3Hw3nAwgZjkCBj10zgLp0fts5Lvi9pHOeFfLK
-         w+ZOWYfVgQIpBrbdbK7jd1I5wHW4+IgT3U1NI29e1dKkVl3x9Qx+yg2TCZsYb7mls129
-         dj8gRCDE7KsAvNYkNysD9qGKnT7FztqZSv+kEpAgr8yz8xvDJXKOgZVjg4u5QoHmXXBO
-         rSgA==
-X-Forwarded-Encrypted: i=1; AJvYcCW7XjUVzCRRfqjwqDFwyNJbchcuNtCU/oLdORhaxZVXqG+kdvxdepYwRgwvpob9eO3HqM0s57YoR2r3TK0=@vger.kernel.org, AJvYcCWaWKzr9T21AC8UEeVB5usWnGjc3eqlKGNMvyEl6PLYKjiKo03MW76WTlgjB3z2SzL7EmyvpFI8SmTQdbq9YebX4g==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2ZMawSaRhEYFAYhKpdJAot/SCehL1Ihw8H88T/oAH1Dehpa7M
-	2kf2wANeZRYXhVrP720H1hlvK0o2rY43IA302GTPgVY8GJabB0I4vHNk2uvQVUmUZTGaAgL8is/
-	qD2G+sdVsJEASxxRa6d7EGcymQqovmMJbv0A=
-X-Google-Smtp-Source: AGHT+IG3kphknqtUD3UcJHqYz4INorCSyF7BrwLNR2Xf3bYIcU1qU6iSaLcIGZ5j74vzMzbvoLndwTY0PBXbEey0Ruk=
-X-Received: by 2002:a05:6902:cc7:b0:e20:2d27:ba86 with SMTP id
- 3f1490d57ef6-e24d7fdfa36mr147955276.18.1727203513287; Tue, 24 Sep 2024
- 11:45:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L5Gmi2tA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A947C4CED0;
+	Tue, 24 Sep 2024 19:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727206152;
+	bh=/1y5DAKEaa73LT3bRfv9WDo15j9LQIYDIMNv4BdG5lk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L5Gmi2tAphnpBnUa07dzx3wsjhqWvkSfXuKS017Tx8h/S4N6UOCQeFSkwXydEKm6h
+	 Y0c7q3wnc9Ilo0k1lsfMiKeUepLj0usrOgtSoZzc/C6oaMnwJpadsVE38dnSvAgWta
+	 kr1GKfDr8Bp1CJejVHplyzYLFbLmZJDV3JNc1D7AaK835BSZekEeiLz79BdTnEdWT6
+	 T1qewE2ChaaC1oQIl1dx7yolhXTDQznD9nctc7RNmWu6ZaEra5/aV5GDv9QlT2F2dd
+	 8hasK7FowJgE80Dwsx4BAXoFaj0FzqaCgF/U2ylzrGjfbEP0OgJZB05WMNzcC096M5
+	 tOoHTIlqGb1Vw==
+Date: Tue, 24 Sep 2024 12:29:10 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Levi Yun <yeoreum.yun@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, james.clark@linaro.org,
+	asmadeus@codewreck.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nd@arm.com
+Subject: Re: [PATCH v4 1/2] perf stat: Close cork_fd when
+ create_perf_stat_counter() failed
+Message-ID: <ZvMTBryjl5xTYr8W@google.com>
+References: <20240913135907.648734-1-yeoreum.yun@arm.com>
+ <20240913135907.648734-2-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZuGL9ROeTV2uXoSp@x1> <caad2d84-a8ff-4304-b8ab-04642ea18323@linaro.org>
- <ZuL_0V5jgaaEUOY_@x1> <49fe18ff-827a-429b-9d74-9d8ed02ac409@linaro.org>
- <CA+JHD936J-q0-7LANQ3aW2G-PEmFP8PnXQ-TF-AMs9MtrCqfew@mail.gmail.com>
- <CAH0uvojUEXiT2mk1pknLS1nc-gA3Py+AjmEW22ETiCCyOLLr8Q@mail.gmail.com>
- <CAH0uvogXyYP1LqF3fbjZGHHDL6BFZ2ZKu5JAASnK_brgnymf0w@mail.gmail.com>
- <CAH0uvohEozKixjDM9_jJ5FFxYK7agsqVO-BrAsm=4hCTDQAx2A@mail.gmail.com> <9bbfe425-1f2b-4846-a5a3-a31618742e9a@oracle.com>
-In-Reply-To: <9bbfe425-1f2b-4846-a5a3-a31618742e9a@oracle.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Tue, 24 Sep 2024 11:45:02 -0700
-Message-ID: <CAH0uvojJ1rME4hb6NfrA4NPj2XmGMDLOLP3wEbHh8B5-qWGvFQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf build: Require at least clang 16.0.6 to build
- BPF skeletons
-To: Alan Maguire <alan.maguire@oracle.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, James Clark <james.clark@linaro.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240913135907.648734-2-yeoreum.yun@arm.com>
 
-Hello Alan,
+Hello,
 
-On Tue, Sep 24, 2024 at 2:30=E2=80=AFAM Alan Maguire <alan.maguire@oracle.c=
-om> wrote:
->
-> On 24/09/2024 03:00, Howard Chu wrote:
-> > Hello,
-> >
-> > I got some good news:
-> >
-> > Not being able to pass the BPF verifier is solely (or bi-solely)
-> > caused by these two functions:
-> >
-> > SEC("tp/syscalls/sys_enter_rename")
-> > int sys_enter_rename(struct syscall_enter_args *args)
-> >
-> > SEC("tp/syscalls/sys_enter_renameat2")
-> > int sys_enter_renameat2(struct syscall_enter_args *args)
-> >
-> > The problem with it is double-string augmentation, but I haven't
-> > figured out how to solve it. Can you please take a look please,
-> > Arnaldo? Now I just commented these two BPF functions and perf trace
-> > runs no problem, built by clang that's older than clang 16, for
-> > example clang 15.0.7.
-> >
->
-> hi Howard,
->
-> I could be wrong - and I don't know this code at all - but I _think_ the
-> problem is here:
->
->         oldpath_len =3D augmented_arg__read_str(&augmented_args->arg,
-> oldpath_arg, sizeof(augmented_args->arg.value));
->         augmented_args->arg.size =3D PERF_ALIGN(oldpath_len + 1, sizeof(u=
-64));
->         len +=3D augmented_args->arg.size;
->
->         struct augmented_arg *arg2 =3D (void *)&augmented_args->arg.value
-> + augmented_args->arg.size;
->
->         newpath_len =3D augmented_arg__read_str(arg2, newpath_arg,
-> sizeof(augmented_args->arg.value));
->
->
-> Notice that these strings share the augmented_args->arg.value for
-> storage, but in the second case (reading arg2) we have added
-> augmented_args->arg.size to the offset where we store the second string.
-> However at the same time we have also told augmented_arg__read_str()
-> that it has
->
-> sizeof(augmented_args->arg.value)
->
->
-> ...to work with as arg_len, where in reality we should have specified
->
-> sizeof(augmented_args->arg.value) - augmented_args->arg.size
->
-> ...and ensured that after doing that subtraction, there is still space
-> to work with (i.e. the above is > 0).
->
-> I _think_ the verifier is likely complaining that we can write past the
-> end of augmented_args->arg.value , does that sound right?
->
-> Fixing the arg_len parameter for cases where we record more than one
-> augmented string by reducing arg_len available should solve this if so.
-> Hope this helps,
+On Fri, Sep 13, 2024 at 02:59:06PM +0100, Levi Yun wrote:
+> When create_perf_stat_counter() failed, it doesn't close workload.cork_fd
+> open in evlist__prepare_workload(). This could make too many open file
+> error while __run_perf_stat() repeats.
+> 
+> Introduce evlist__cancel_workload to close workload.cork_fd and
+> wait workload.child_pid until exit to clear child process
+> when create_perf_stat_counter() is failed with COUNTER_FATAL.
+> 
+> Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
+> Reviewed-by: James Clark <james.clark@linaro.org>
+> ---
+>  tools/perf/builtin-stat.c |  4 ++++
+>  tools/perf/util/evlist.c  | 14 +++++++++++++-
+>  tools/perf/util/evlist.h  |  1 +
+>  3 files changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 661832756a24..954eb37ce7b8 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -763,6 +763,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>  
+>  			switch (stat_handle_error(counter)) {
+>  			case COUNTER_FATAL:
+> +				if (forks)
+> +					evlist__cancel_workload(evsel_list);
+>  				return -1;
+>  			case COUNTER_RETRY:
+>  				goto try_again;
+> @@ -804,6 +806,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>  
+>  				switch (stat_handle_error(counter)) {
+>  				case COUNTER_FATAL:
+> +					if (forks)
+> +						evlist__cancel_workload(evsel_list);
+>  					return -1;
 
-
-Thanks for the help, but unfortunately it didn't work... But that's a
-valid analysis, I had the same idea as you, but I haven't been able to
-solve it. I'll give it more tries.
+I don't think you covered all the places it can return before starting
+the workload.  You'd better have an error handling code at the end with
+a label and then goto there.
 
 Thanks,
-Howard
+Namhyung
 
->
-> Alan
->
-> > perf $ clang -v
-> > Ubuntu clang version 15.0.7
-> > Target: x86_64-pc-linux-gnu
-> > Thread model: posix
-> > InstalledDir: /bin
-> > Found candidate GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/13
-> > Selected GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/13
-> > Candidate multilib: .;@m64
-> > Selected multilib: .;@m64
-> > perf $ ./perf trace -e write --max-events=3D1
-> >      0.000 ( 0.008 ms): gmain/2173 write(fd: 4, buf: \1\0\0\0\0\0\0\0,
-> > count: 8)                         =3D
-> >
-> > But plot twist, it won't build on clang-14
-> >
-> > perf $ clang -v
-> > Ubuntu clang version 14.0.6
-> > Target: x86_64-pc-linux-gnu
-> > Thread model: posix
-> > InstalledDir: /bin
-> > Found candidate GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/13
-> > Selected GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/13
-> > Candidate multilib: .;@m64
-> > Selected multilib: .;@m64
-> > perf $ ./perf trace -e write --max-events=3D1
-> > libbpf: prog 'sys_enter': BPF program load failed: Invalid argument
-> > libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
-> > 0: R1=3Dctx() R10=3Dfp0
-> > ; int sys_enter(struct syscall_enter_args *args) @
-> > augmented_raw_syscalls.bpf.c:509
-> > 0: (bf) r7 =3D r1                       ; R1=3Dctx() R7_w=3Dctx()
-> >
-> > This time the problem is my code in BTF general collector:
-> >
-> > ; payload_offset +=3D written; @ augmented_raw_syscalls.bpf.c:497
-> >
-> > I'll resolve this.
-> >
-> > Thanks,
-> > Howard
-> >
-> > On Wed, Sep 18, 2024 at 8:13=E2=80=AFPM Howard Chu <howardchu95@gmail.c=
-om> wrote:
-> >>
-> >> Hello,
-> >>
-> >> I'm able to reproduce it on Ubuntu 24.
-> >>
-> >> perf $ cat /etc/os-release
-> >> PRETTY_NAME=3D"Ubuntu 24.04.1 LTS"
-> >> NAME=3D"Ubuntu"
-> >> VERSION_ID=3D"24.04"
-> >> VERSION=3D"24.04.1 LTS (Noble Numbat)"
-> >> VERSION_CODENAME=3Dnoble
-> >> ID=3Dubuntu
-> >> ID_LIKE=3Ddebian
-> >> HOME_URL=3D"https://www.ubuntu.com/"
-> >> SUPPORT_URL=3D"https://help.ubuntu.com/"
-> >> BUG_REPORT_URL=3D"https://bugs.launchpad.net/ubuntu/"
-> >> PRIVACY_POLICY_URL=3D"https://www.ubuntu.com/legal/terms-and-policies/=
-privacy-policy"
-> >> UBUNTU_CODENAME=3Dnoble
-> >> LOGO=3Dubuntu-logo
-> >>
-> >> perf $ uname -r
-> >> 6.11.0-061100-generic
-> >>
-> >> perf $ git log
-> >> commit 4c1af9bf97eb56d069421c3233ce61608458d5c8 (HEAD)
-> >> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >> Date:   Tue Sep 10 13:54:23 2024 -0300
-> >>
-> >>     perf trace: If a syscall arg is marked as 'const', assume it is
-> >> coming _from_ userspace
-> >>
-> >>
-> >> perf $ clang -v
-> >> Ubuntu clang version 15.0.7
-> >> Target: x86_64-pc-linux-gnu
-> >> Thread model: posix
-> >> InstalledDir: /bin
-> >> Found candidate GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/13
-> >> Selected GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/13
-> >> Candidate multilib: .;@m64
-> >> Selected multilib: .;@m64
-> >>
-> >> perf $ ./perf trace -e write --max-events=3D1
-> >> libbpf: prog 'sys_enter_rename': BPF program load failed: Permission d=
-enied
-> >> libbpf: prog 'sys_enter_rename': -- BEGIN PROG LOAD LOG --
-> >> 0: R1=3Dctx() R10=3Dfp0
-> >> ; int sys_enter_rename(struct syscall_enter_args *args) @
-> >> augmented_raw_syscalls.bpf.c:275
-> >>
-> >>
-> >> With clang-16:
-> >>
-> >> perf $ clang -v
-> >> Ubuntu clang version 16.0.6 (23ubuntu4)
-> >> Target: x86_64-pc-linux-gnu
-> >> Thread model: posix
-> >> InstalledDir: /bin
-> >> Found candidate GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/13
-> >> Selected GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/13
-> >> Candidate multilib: .;@m64
-> >> Selected multilib: .;@m64
-> >>
-> >> perf $ ./perf trace -e write --max-events=3D1
-> >>      0.000 ( 0.021 ms): sudo/4741 write(fd: 8, buf:
-> >> \27[?25l\27[37m\27[48;5;96m\27[H[trace] , count: 205) =3D
-> >>
-> >>> I'll try to build it and see. But Ubuntu 22 only has clang 11 to 15 s=
-o
-> >>> making 16 the minimum could be an issue.
-> >>
-> >> Yes, I think disabling any distro that doesn't come with clang 16
-> >> (released in 2023) is not a good idea. I'll try to tame the BPF
-> >> verifier.
-> >>
-> >> Thanks,
-> >> Howard
-> >>
-> >> On Tue, Sep 17, 2024 at 10:37=E2=80=AFAM Howard Chu <howardchu95@gmail=
-.com> wrote:
-> >>>
-> >>> Hello James and Arnaldo,
-> >>>
-> >>> On Fri, Sep 13, 2024 at 3:42=E2=80=AFAM Arnaldo Carvalho de Melo
-> >>> <arnaldo.melo@gmail.com> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On Fri, Sep 13, 2024, 7:20=E2=80=AFAM James Clark <james.clark@linar=
-o.org> wrote:
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>>> On 12/09/2024 15:50, Arnaldo Carvalho de Melo wrote:
-> >>>>>> On Thu, Sep 12, 2024 at 03:40:32PM +0100, James Clark wrote:
-> >>>>>>> On 11/09/2024 13:24, Arnaldo Carvalho de Melo wrote:
-> >>>>>>>> Howard reported problems using perf features that use BPF:
-> >>>>>>
-> >>>>>>>>     perf $ clang -v
-> >>>>>>>>     Debian clang version 15.0.6
-> >>>>>>>>     Target: x86_64-pc-linux-gnu
-> >>>>>>>>     Thread model: posix
-> >>>>>>>>     InstalledDir: /bin
-> >>>>>>>>     Found candidate GCC installation: /bin/../lib/gcc/x86_64-lin=
-ux-gnu/12
-> >>>>>>>>     Selected GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/=
-12
-> >>>>>>>>     Candidate multilib: .;@m64
-> >>>>>>>>     Selected multilib: .;@m64
-> >>>>>>>>     perf $ ./perf trace -e write --max-events=3D1
-> >>>>>>>>     libbpf: prog 'sys_enter_rename': BPF program load failed: Pe=
-rmission denied
-> >>>>>>>>     libbpf: prog 'sys_enter_rename': -- BEGIN PROG LOAD LOG --
-> >>>>>>>>     0: R1=3Dctx() R10=3Dfp0
-> >>>>>>>>
-> >>>>>>>> But it works with:
-> >>>>>>>>
-> >>>>>>>>     perf $ clang -v
-> >>>>>>>>     Debian clang version 16.0.6 (15~deb12u1)
-> >>>>>>>>     Target: x86_64-pc-linux-gnu
-> >>>>>>>>     Thread model: posix
-> >>>>>>>>     InstalledDir: /bin
-> >>>>>>>>     Found candidate GCC installation: /bin/../lib/gcc/x86_64-lin=
-ux-gnu/12
-> >>>>>>>>     Selected GCC installation: /bin/../lib/gcc/x86_64-linux-gnu/=
-12
-> >>>>>>>>     Candidate multilib: .;@m64
-> >>>>>>>>     Selected multilib: .;@m64
-> >>>>>>>>     perf $ ./perf trace -e write --max-events=3D1
-> >>>>>>>>          0.000 ( 0.009 ms): gmain/1448 write(fd: 4, buf: \1\0\0\=
-0\0\0\0\0, count: 8)                         =3D 8 (kworker/0:0-eve)
-> >>>>>>>>     perf $
-> >>>>>>>>
-> >>>>>>>> So lets make that the required version, if you happen to have a =
-slightly
-> >>>>>>>> older version where this work, please report so that we can adju=
-st the
-> >>>>>>>> minimum required version.
-> >>>>>>
-> >>>>>>> I wasn't able to reproduce the issue with either of these version=
-s. But I
-> >>>>>>> suppose it could be an issue with only 15.0.6.
-> >>>>>>
-> >>>>>> Interesting, that complicates things, probably the best way then i=
-s to
-> >>>>>> try to build it, if it fails, mention that 15.0.6 is known to be
-> >>>>>> problematic and suggest working versions?
-> >>>>>>
-> >>>>>> - Arnaldo
-> >>>>>
-> >>>>> I still wasn't able to reproduce it with 15.0.6. And I double check=
-ed
-> >>>>> with V=3D1 that the build was using the right clang. I suppose it c=
-ould be
-> >>>>> a build configuration issue, or maybe with a different kernel versi=
-on?
-> >>>>
-> >>>>
-> >>>> Howard? If not reproducible we can revert it.
-> >>>>
-> >>>> - Arnaldo
-> >>>>
-> >>>>
-> >>>>>
-> >>>>> $  uname --kernel-release
-> >>>>> 6.8.0-76060800daily20240311-generic
-> >>>>>
-> >>>>> $ ../../llvm-project/build/bin/clang -v
-> >>>>> clang version 15.0.6 (https://github.com/llvm/llvm-project.git
-> >>>>> 088f33605d8a61ff519c580a71b1dd57d16a03f8)
-> >>>>> Target: x86_64-unknown-linux-gnu
-> >>>>> Thread model: posix
-> >>>>> InstalledDir: /home/james/workspace/linux/linux/../../llvm-project/=
-build/bin
-> >>>>> Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/11
-> >>>>> Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/12
-> >>>>> Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/12
-> >>>>> Candidate multilib: .;@m64
-> >>>>> Selected multilib: .;@m64
-> >>>>>
-> >>>>> $ git log
-> >>>>> commit 003265bb6f028d7bcd7cbd92d6ba2b4e26382796
-> >>>>> (perf-tools-next/perf-tools-next)
-> >>>>>
-> >>>>> $ make O=3D../build/local/ CLANG=3D../../llvm-project/build/bin/cla=
-ng -C \
-> >>>>>    tools/perf
-> >>>>>
-> >>>>> $ perf trace -e write --max-events=3D1
-> >>>>>
-> >>>>>       0.000 ( 0.026 ms): gnome-shell/5454 write(fd: 5, buf:
-> >>>>>         0x7fffa102d9b0, count: 8)                           =3D 8
-> >>>
-> >>> Thanks for the effort! But this output seems to be unaugmented? I
-> >>> think you are testing the perf/perf-tools-next branch that's slightly
-> >>> older (perf mem: Fix the wrong reference in parse_record_events()
-> >>> 003265bb6f028d7bcd7cbd92d6ba2b4e26382796), and I think that doesn't
-> >>> have the new perf trace feature yet...
-> >>>
-> >>> That's why the perf trace output looks like:
-> >>>
-> >>>>> $ perf trace -e write --max-events=3D1
-> >>>>>
-> >>>>>       0.000 ( 0.026 ms): gnome-shell/5454 write(fd: 5, buf:
-> >>>>>         0x7fffa102d9b0, count: 8)
-> >>>
-> >>> With the new buffer augmentation it should look like this:
-> >>>
-> >>> perf $ ./perf trace -e write --max-events=3D1
-> >>>      0.000 ( 0.011 ms): gmain/1408 write(fd: 4, buf: \1\0\0\0\0\0\0\0=
-,
-> >>> count: 8)                         =3D
-> >>>
-> >>> The new perf trace can be found on
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/
-> >>> perf-tools-next
-> >>>
-> >>> perf $ git log
-> >>> commit 1de5b5dcb8353f36581c963df2d359a5f151a0be (HEAD ->
-> >>> struct-aug-arnaldo-2, perf/perf-tools-next)
-> >>>
-> >>> Also, if you want to test the clang, you may want to checkout to the
-> >>> commit before the clang-16 guard (otherwise you can't test different
-> >>> clang version).
-> >>>
-> >>> perf $ git log --oneline
-> >>> 1de5b5dcb835 (HEAD -> struct-aug-arnaldo-2, perf/perf-tools-next) per=
-f
-> >>> trace: Mark the 'head' arg in the set_robust_list syscall as coming
-> >>> from user space
-> >>> 0c1019e3463b perf trace: Mark the 'rseq' arg in the rseq syscall as
-> >>> coming from user space
-> >>> edf3ce0ed38e perf env: Find correct branch counter info on hybrid
-> >>> 9953807c9e01 perf evlist: Print hint for group
-> >>> eb9b9a6f5ab3 tools: Drop nonsensical -O6
-> >>> 89c0a55e550e perf pmu: To info add event_type_desc
-> >>> f08cc258431d perf evsel: Add accessor for tool_event
-> >>> 925320737ae2 perf pmus: Fake PMU clean up
-> >>> d3d5c1a00fcd perf list: Avoid potential out of bounds memory read
-> >>> 4ae354d73a8e perf help: Fix a typo ("bellow")
-> >>> 74298dd8acb8 perf ftrace: Detect whether ftrace is enabled on system
-> >>> 83420d5f5863 perf test shell probe_vfs_getname: Remove extraneous '=
-=3D'
-> >>> from probe line number regex
-> >>> 9327f0ecad48 perf build: Require at least clang 16.0.6 to build BPF
-> >>> skeletons. **********[[[[[[[[[[[[!!!!(This is the clang
-> >>> guard)]]]]]]]]]]*****
-> >>> 4c1af9bf97eb perf trace: If a syscall arg is marked as 'const', assum=
-e
-> >>> it is coming _from_ userspace
-> >>> e37b315c17df perf parse-events: Remove duplicated include in parse-ev=
-ents.c
-> >>>
-> >>> My machine is debian 12, and I cannot build perf trace with the new
-> >>> augmentation feature on clang-13, clang-14, and clang-15.
-> >>>
-> >>> perf $ uname -r
-> >>> 6.11.0-061100rc7-generic
-> >>>
-> >>> perf $ git log
-> >>> commit 4c1af9bf97eb56d069421c3233ce61608458d5c8 (HEAD)
-> >>>
-> >>> perf $ make CLANG=3D/bin/clang-13 && ./perf trace -e write --max-even=
-ts=3D1
-> >>> ...
-> >>> libbpf: prog 'sys_enter': BPF program load failed: Invalid argument
-> >>> libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
-> >>> 0: R1=3Dctx() R10=3Dfp0
-> >>> ; int sys_enter(struct syscall_enter_args *args) @
-> >>> augmented_raw_syscalls.bpf.c:509
-> >>> 0: (bf) r7 =3D r1                       ; R1=3Dctx() R7_w=3Dctx()
-> >>>
-> >>>
-> >>> perf $ make CLANG=3D/bin/clang-14 && ./perf trace -e write --max-even=
-ts=3D1
-> >>> ...
-> >>> libbpf: prog 'sys_enter': BPF program load failed: Invalid argument
-> >>> libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
-> >>> 0: R1=3Dctx() R10=3Dfp0
-> >>> ; int sys_enter(struct syscall_enter_args *args) @
-> >>> augmented_raw_syscalls.bpf.c:509
-> >>>
-> >>>
-> >>> perf $ make CLANG=3D/bin/clang-15 && ./perf trace -e write --max-even=
-ts=3D1
-> >>> libbpf: prog 'sys_enter': BPF program load failed: Invalid argument
-> >>> libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
-> >>> 0: R1=3Dctx() R10=3Dfp0
-> >>>
-> >>>
-> >>> perf $ make CLANG=3D/bin/clang-16 && ./perf trace -e write --max-even=
-ts=3D1
-> >>>      0.000 ( 0.010 ms): gmain/1408 write(fd: 4, buf: \1\0\0\0\0\0\0\0=
-,
-> >>> count: 8)                         =3D
-> >>>
-> >>>
-> >>> Anyway thank you so much, I'll try to reproduce it on Ubuntu, like yo=
-u
-> >>> mentioned.
-> >>>
-> >>> Thanks,
-> >>> Howard
-> >>>
-> >>>
-> >>>>>
->
+
+>  				case COUNTER_RETRY:
+>  					goto try_again_reset;
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index 3a719edafc7a..51a221679c92 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -46,6 +46,7 @@
+>  #include <sys/mman.h>
+>  #include <sys/prctl.h>
+>  #include <sys/timerfd.h>
+> +#include <sys/wait.h>
+>  
+>  #include <linux/bitops.h>
+>  #include <linux/hash.h>
+> @@ -1465,7 +1466,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
+>  		 * For cancelling the workload without actually running it,
+>  		 * the parent will just close workload.cork_fd, without writing
+>  		 * anything, i.e. read will return zero and we just exit()
+> -		 * here.
+> +		 * here (See evlist__cancel_workload()).
+>  		 */
+>  		if (ret != 1) {
+>  			if (ret == -1)
+> @@ -1546,6 +1547,17 @@ int evlist__start_workload(struct evlist *evlist)
+>  	return 0;
+>  }
+>  
+> +void evlist__cancel_workload(struct evlist *evlist)
+> +{
+> +	int status;
+> +
+> +	if (evlist->workload.cork_fd > 0) {
+> +		close(evlist->workload.cork_fd);
+> +		evlist->workload.cork_fd = -1;
+> +		waitpid(evlist->workload.pid, &status, WNOHANG);
+> +	}
+> +}
+> +
+>  int evlist__parse_sample(struct evlist *evlist, union perf_event *event, struct perf_sample *sample)
+>  {
+>  	struct evsel *evsel = evlist__event2evsel(evlist, event);
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index cb91dc9117a2..12f929ffdf92 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -184,6 +184,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target,
+>  			     const char *argv[], bool pipe_output,
+>  			     void (*exec_error)(int signo, siginfo_t *info, void *ucontext));
+>  int evlist__start_workload(struct evlist *evlist);
+> +void evlist__cancel_workload(struct evlist *evlist);
+>  
+>  struct option;
+>  
+> -- 
+> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+> 
