@@ -1,269 +1,164 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A961AD40E
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 16:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2061ED531
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 16:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727193913; cv=none; b=N2jvLbr5rqMndXLYcY6mGvGGX5UEdvQnCsn8uypPfKDDPlMr7OCPnb+reoxEa7IAVzz/ahyfnDOzVqvs77hJnlmnM4xw24IfPhLTmWn74R5z1LgBaR+SuzYkojJQrQ//I4tmsLfPFgCBrwKtLh3tH3Yjblhmn7o3h9YA2ytqSsg=
+	t=1727194318; cv=none; b=Tqs0ppLSdJBJcmg0tpGKkr65xH0yWujej2eJU86uBql6u9D83Qc59aqkjg0rrwngt8Kn2yzBVPYhgB7yOl292cwNf/xG1w/ux6IX9Y7bcEAQ3QiNbc4IgKC0+gc7QmEiZTka8i0ixm26B1KSg7cLXQoVWl2bIOI03psgaQqnwv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727193913; c=relaxed/simple;
-	bh=lSqkj/40NVRa02AhEWAVQazltw1LzWSoAiy67w/c2jA=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=VhqAFuL33Cf9ATzU+nr8wm0i4WTy5iQa5B7awfy6gAWR/CNh4uMcq01ROJRdxLIWK0CND2pwpDNmcKDS+6MnxTnxlibzXOANLRHplb+eYS3KF7sGKAJU+7ScCKEsSRaGM8xdMSuhnUY3h0s6833awVUn2RrKXQA8nGFR2Sh3sAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u0bRjuco; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1727194318; c=relaxed/simple;
+	bh=yL3SPCS7ha4gVZmF/jL6dtueVPQCVEjaP3dTRzBpBV0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ual2wv/udnw64lmzR1ndLIxS1MXay2UuJTVtj4GA6lrW0KZC/B3Y7UYlAWjN6PbQINC/oY+mwUx7EWHplnprxdcJjOWIVlROBn9riBfrej3N/jilnDMWzWanSvZ22kbdRSwU4YEVQaj0E8RfAKrN/tld2T5MqHqIlIafcK1h8jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ujvtm6JT; arc=none smtp.client-ip=209.85.166.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u0bRjuco"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6d4bd76f5a8so88687257b3.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 09:05:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ujvtm6JT"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a0cb892c6aso374855ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 09:11:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727193910; x=1727798710; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+mrzvyO3a3OSC4Wwsy52IiF981940PgOYxjk5hjhaV8=;
-        b=u0bRjucoLCvJcEXu1EoyoCVbkgK8rQMiwNzvPceyckTfmB+Tw2VQqz1ezQosI4DVCY
-         hZPkDDB5e3MIBHsES+p3sTMUIhtqX62npRaOK01EriwYrofNjl5KsQRMy2BQcZhX0mQ6
-         tHv/EAAAhLNp+RBXqZ+WMQlPsQeOijU2kkqodmopB9Pk6lK2Fot42/Gc+hLTVDeIcxmG
-         mUk8ylufIGja3WyZRv01aQdG63oPprFpD9OMZhBnDXBkS2s4izboBVAHnPAXejxpAFip
-         A7c8ntg1ro1Jmy0iyp56Vyi295FbHcINNLogVzl3aWA4deGwun31Eovd76NLsk/eni8w
-         ajvw==
+        d=google.com; s=20230601; t=1727194316; x=1727799116; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aK+8nqvRO7dO5/4/shw4l0Rx/ZNh1LhM3L6aL1WqmLo=;
+        b=Ujvtm6JTf1Iib2dbQCezEhpWH6pBQv1u6NQG4jzqvv7WRgt2hQbST3lZuZHFxI60sK
+         Q/54CV09ZFg46lOfTK8jBIeLnPlZcKrzR1J9iYbHNA9WL5OBsei39iZr3vYXJPIb0pfh
+         x4HJWSjzprHFZIVyAFdnxPd+8cuRM+OEuiPCC/6jsWGDUWGS1zu8029P3Z2ZTv1MJ+F1
+         yfmlUkrCFe5R2nWt/LDl5SQJ4ElkAWFmUoNZr9dYLCG64355LFu+FNE/xJ8Ao5xetveL
+         l6T7InHFkbzLBxQbMR/D7w/HiQBck3s39Ipla+/FRoEHY7L/gpwERlmMqt1ZhsJ3ZWL4
+         Rq3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727193910; x=1727798710;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+mrzvyO3a3OSC4Wwsy52IiF981940PgOYxjk5hjhaV8=;
-        b=NgoGIULfg6Rz9dUNFIpz7muvhXUZB2UE7b363PL0Ns0XecM4reuYRqehv0vXx2NN6A
-         x0mwkIFcp9uBO9bwGaXKDc8ELZwv2G4sj+cKfOiGpst5p3V+9qG2HeB8v4ORUyO3Iba3
-         +IX6wGW8nPTO0z4ylrN0oaVs2NMOiEK/veoARRO/i1B181rw7G41KyUPHBngyNGlp89k
-         eLmPHWoTJ2cyoQph8kVuJjN3t+GVlTsyjBMdWrPq/ItiCoUn4vmGnpt4GUe2my/mKzP/
-         hSydM+iRA2ZgytNqBlRy458DFeZ9jPz9lnN9Gl232x4HKd1/kiuj/4QkCuWzdTDNltxy
-         4hiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUtjyTlfyVCyIUu2Y779vNI0Y+T25Q46BjWcx0SaX3dc78HctSTY2RQc8hHw4AprYGI6w7IFgeO0YaPTsavNb21@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw22pbOTXn1cVrJExy5Ss1duBX48E10yloeMSqB0Ro5hmcfCSQq
-	6XIrLF7TKtaMdkt/onX4A7XEsSphw+Na/Zjs63M+SkWl8sbjk4dXAjQVzj7gB3ojdXef7Ou+PM7
-	BgfJbKw==
-X-Google-Smtp-Source: AGHT+IHzudw4yuY6TVn3wkxP1TTkeRMZzkKGg3vBtDWeJ6Dx9OTkmU3CMNLrYRuGIpcBhRHcaPQxdK7MSPqw
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:61a6:b27c:a1cd:e6a0])
- (user=irogers job=sendgmr) by 2002:a05:690c:2003:b0:64b:5cc7:bcb7 with SMTP
- id 00721157ae682-6dff270d4e8mr713347b3.1.1727193909918; Tue, 24 Sep 2024
- 09:05:09 -0700 (PDT)
-Date: Tue, 24 Sep 2024 09:04:18 -0700
-In-Reply-To: <20240924160418.1391100-1-irogers@google.com>
-Message-Id: <20240924160418.1391100-12-irogers@google.com>
+        d=1e100.net; s=20230601; t=1727194316; x=1727799116;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aK+8nqvRO7dO5/4/shw4l0Rx/ZNh1LhM3L6aL1WqmLo=;
+        b=g7GVId8XdlbcOcab46hAZ442bOlr8hM+IPYmAWdg+Y+Zd5o0aWXmU+MR0xffdR11xr
+         oqTjXb742Q+heZru9onwUTh3fnSDGqrf+IDOuIvHSmXEa0IVDXX+ZOnYjTNm5SHr2qGc
+         bXVOukcnR7jAceazcppg9VXsQD/wXZouWfi5Kiv6HoR9g2UZvB4IfcJfNz3AbbEYL2jF
+         kzLnyXJSHyOQihcX/6KHF5U+d1iCtvUJEqDpdvlIvxNBXyDfK7zA/mvuOnOt8UPkuVaE
+         T0mhjBA9CAIpjh7hZpgkIxKVhC3V4IjwdQWTyCRwRE+laf4twPZFdDbxyJjQIvBKVkzS
+         4GZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXye9u9qUJxSe61cveGHgGckAs/MHl8yUpw/3JVRQjEfMOuIXqq/HO5vSCwGiolye5oOgvNLXRVcA3SkL3xcNcn@vger.kernel.org
+X-Gm-Message-State: AOJu0YznAa7nTBzcjcb8vNVSGxxFIaOhPH9UcISrxzY6IOYVzGTOM3fw
+	d511ksbU6ucPBTzG7hZvUaYqs5FVwawZwqOp1cvlZs41dKrAyCvEn4sPaworZR4HzDgxqK+wCNj
+	XNo8WXI4Iw/MsAUqSiHo/+wUJDPoDn5xNZuQA
+X-Google-Smtp-Source: AGHT+IEDgO319xABlz3mm6Gouan+c85GCidD435zCa45qz34uLpw1tJ1xfxblbnmMiqV9LbkkULcbf/jlji4psKbtjg=
+X-Received: by 2002:a05:6e02:170b:b0:376:3026:9dfc with SMTP id
+ e9e14a558f8ab-3a1a3f9fb73mr4541725ab.24.1727194315929; Tue, 24 Sep 2024
+ 09:11:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240924160418.1391100-1-irogers@google.com>
-X-Mailer: git-send-email 2.46.0.792.g87dc391469-goog
-Subject: [PATCH v1 11/11] perf build: Rename PERF_HAVE_DWARF_REGS to PERF_HAVE_LIBDW_REGS
+MIME-Version: 1.0
+References: <20240830-perf_syscalltbl_fix-v1-1-e2ff61ee5e8e@rivosinc.com> <ZvLaGy7jRa9Q/5fQ@ghost>
+In-Reply-To: <ZvLaGy7jRa9Q/5fQ@ghost>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+Date: Tue, 24 Sep 2024 09:11:41 -0700
+Message-ID: <CAP-5=fVWFUA4LpchM1MZdMhDvSFhTUtqdVR-s59WtAcpj1fO=g@mail.gmail.com>
+Subject: Re: [PATCH] perf syscalltbl: Add syscalltbl__id_at_idx() with no
+ syscall table support
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>, 
-	Guilherme Amadio <amadio@gentoo.org>, Changbin Du <changbin.du@huawei.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Bibo Mao <maobibo@loongson.cn>, Kajol Jain <kjain@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Shenlin Liang <liangshenlin@eswincomputing.com>, 
-	Atish Patra <atishp@rivosinc.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Chen Pei <cp0613@linux.alibaba.com>, Dima Kogan <dima@secretsauce.net>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Yang Jihong <yangjihong@bytedance.com>
+	Adrian Hunter <adrian.hunter@intel.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Howard Chu <howardchu95@gmail.com>, David Abdurachmanov <davidlt@rivosinc.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The name dwarf can imply libunwind support, whereas
-PERF_HAVE_DWARF_REGS is only enabled with libdw support. Rename to
-make it clearer there is a libdw connection.
+On Tue, Sep 24, 2024 at 8:26=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.c=
+om> wrote:
+>
+> On Fri, Aug 30, 2024 at 09:30:50PM -0700, Charlie Jenkins wrote:
+> > When HAVE_SYSCALL_TABLE_SUPPORT is not defined, neither is
+> > syscalltbl__id_at_idx(). However, this function is expected to be
+> > defined when HAVE_BPF_SKEL is defined.
+> >
+> > Return -1 from syscalltbl__id_at_idx() to match the other functions whe=
+n
+> > HAVE_SYSCALL_TABLE_SUPPORT is not defined.
+> >
+> > Without this, compiling perf on riscv when libtraceevents, libelf, and
+> > clang are available will cause the functions trying to call
+> > syscalltbl__id_at_idx() to be compiled. This results in the following
+> > error:
+> >
+> > /usr/bin/ld: perf-in.o: in function `.L0 ':
+> > builtin-trace.c:(.text+0x60b14): undefined reference to `syscalltbl__id=
+_at_idx'
+> > /usr/bin/ld: builtin-trace.c:(.text+0x60c6c): undefined reference to `s=
+yscalltbl__id_at_idx'
+> > /usr/bin/ld: perf-in.o: in function `.L2564':
+> > builtin-trace.c:(.text+0x60cb6): undefined reference to `syscalltbl__id=
+_at_idx'
+> > collect2: error: ld returned 1 exit status
+> > make[2]: *** [Makefile.perf:793: perf] Error 1
+> > make[1]: *** [Makefile.perf:290: sub-make] Error 2
+> > make: *** [Makefile:70: all] Error 2
+> > make: Leaving directory '/src/linux-6.11-rc5/tools/perf'
+> >
+> > This patch resolves this issue for all architectures which do not defin=
+e
+> > HAVE_SYSCALL_TABLE_SUPPORT.
+> >
+> > $ ./perf trace -e syscalls:sys_enter_mmap --max-events=3D1 ls
+> > 0.000 ls/287 syscalls:sys_enter_mmap(__syscall_nr: 222, len: 9939, prot=
+: READ, flags: PRIVATE, fd: 3)
+> >
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > Reported-by: David Abdurachmanov <davidlt@rivosinc.com>
+> > Suggested-by: David Abdurachmanov <davidlt@rivosinc.com>
+> > Fixes: 7a2fb5619cc1 ("perf trace: Fix iteration of syscall ids in sysca=
+lltbl->entries")
+> > ---
+> >  tools/perf/util/syscalltbl.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.=
+c
+> > index 0dd26b991b3f..12654460428f 100644
+> > --- a/tools/perf/util/syscalltbl.c
+> > +++ b/tools/perf/util/syscalltbl.c
+> > @@ -188,4 +188,9 @@ int syscalltbl__strglobmatch_first(struct syscalltb=
+l *tbl, const char *syscall_g
+> >  {
+> >       return syscalltbl__strglobmatch_next(tbl, syscall_glob, idx);
+> >  }
+> > +
+> > +int syscalltbl__id_at_idx(struct syscalltbl *tbl __always_unused, int =
+idx __always_unused)
+> > +{
+> > +     return -1;
+> > +}
+> >  #endif /* HAVE_SYSCALL_TABLE_SUPPORT */
+> >
+> > ---
+> > base-commit: 985bf40edf4343dcb04c33f58b40b4a85c1776d4
+> > change-id: 20240830-perf_syscalltbl_fix-4f586221795e
+> > --
+> > - Charlie
+> >
+>
+> Can this please be picked up? Compilation on riscv (along with any of
+> the other architectures that don't have syscall table support) is
+> broken. The long term solution is to add support for the syscall table
+> on riscv. I will send out a patch for that, but in the meantime it would
+> be great to have this in the tree.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config         | 4 ++--
- tools/perf/arch/arm/Makefile       | 2 +-
- tools/perf/arch/arm64/Makefile     | 2 +-
- tools/perf/arch/csky/Makefile      | 2 +-
- tools/perf/arch/loongarch/Makefile | 2 +-
- tools/perf/arch/mips/Makefile      | 2 +-
- tools/perf/arch/powerpc/Makefile   | 2 +-
- tools/perf/arch/riscv/Makefile     | 2 +-
- tools/perf/arch/s390/Makefile      | 2 +-
- tools/perf/arch/sh/Makefile        | 2 +-
- tools/perf/arch/sparc/Makefile     | 2 +-
- tools/perf/arch/x86/Makefile       | 2 +-
- tools/perf/arch/xtensa/Makefile    | 2 +-
- 13 files changed, 14 insertions(+), 14 deletions(-)
+I thought something had been done:
+https://lore.kernel.org/lkml/739001a4-4df1-4dec-a141-926c78c5c07e@kernel.or=
+g/
+Not sure what's happened.
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index b14430ab2898..ea9b2b315064 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -552,7 +552,7 @@ ifndef NO_LIBELF
-   endif
- 
-   ifndef NO_LIBDW
--    ifeq ($(origin PERF_HAVE_DWARF_REGS), undefined)
-+    ifeq ($(origin PERF_HAVE_LIBDW_REGS), undefined)
-       $(warning DWARF register mappings have not been defined for architecture $(SRCARCH), DWARF support disabled)
-       NO_LIBDW := 1
-     else
-@@ -560,7 +560,7 @@ ifndef NO_LIBELF
-       LDFLAGS += $(LIBDW_LDFLAGS)
-       EXTLIBS += ${DWARFLIBS}
-       $(call detected,CONFIG_LIBDW)
--    endif # PERF_HAVE_DWARF_REGS
-+    endif # PERF_HAVE_LIBDW_REGS
-   endif # NO_LIBDW
- 
-   ifndef NO_LIBBPF
-diff --git a/tools/perf/arch/arm/Makefile b/tools/perf/arch/arm/Makefile
-index 9b164d379548..5c712fa2347b 100644
---- a/tools/perf/arch/arm/Makefile
-+++ b/tools/perf/arch/arm/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
-+PERF_HAVE_LIBDW_REGS := 1
- endif
- PERF_HAVE_JITDUMP := 1
-diff --git a/tools/perf/arch/arm64/Makefile b/tools/perf/arch/arm64/Makefile
-index 8a5ffbfe809f..66456aef91bc 100644
---- a/tools/perf/arch/arm64/Makefile
-+++ b/tools/perf/arch/arm64/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
-+PERF_HAVE_LIBDW_REGS := 1
- endif
- PERF_HAVE_JITDUMP := 1
- PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
-diff --git a/tools/perf/arch/csky/Makefile b/tools/perf/arch/csky/Makefile
-index 119b06a64bed..f9e270940919 100644
---- a/tools/perf/arch/csky/Makefile
-+++ b/tools/perf/arch/csky/Makefile
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
-+PERF_HAVE_LIBDW_REGS := 1
- endif
-diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
-index 1cc5eb01f32b..fb0c55bf59f8 100644
---- a/tools/perf/arch/loongarch/Makefile
-+++ b/tools/perf/arch/loongarch/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
-+PERF_HAVE_LIBDW_REGS := 1
- endif
- PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
- PERF_HAVE_JITDUMP := 1
-diff --git a/tools/perf/arch/mips/Makefile b/tools/perf/arch/mips/Makefile
-index 733f7b76f52d..5892bc310127 100644
---- a/tools/perf/arch/mips/Makefile
-+++ b/tools/perf/arch/mips/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
-+PERF_HAVE_LIBDW_REGS := 1
- endif
- 
- # Syscall table generation for perf
-diff --git a/tools/perf/arch/powerpc/Makefile b/tools/perf/arch/powerpc/Makefile
-index 7672d555f6cd..86911b7505ca 100644
---- a/tools/perf/arch/powerpc/Makefile
-+++ b/tools/perf/arch/powerpc/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
-+PERF_HAVE_LIBDW_REGS := 1
- endif
- 
- HAVE_KVM_STAT_SUPPORT := 1
-diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
-index 4664a78a1afd..d97fd00e43f2 100644
---- a/tools/perf/arch/riscv/Makefile
-+++ b/tools/perf/arch/riscv/Makefile
-@@ -1,5 +1,5 @@
- ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
-+PERF_HAVE_LIBDW_REGS := 1
- endif
- PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
- PERF_HAVE_JITDUMP := 1
-diff --git a/tools/perf/arch/s390/Makefile b/tools/perf/arch/s390/Makefile
-index 3f66e2ede3f7..4b83e66c2dfb 100644
---- a/tools/perf/arch/s390/Makefile
-+++ b/tools/perf/arch/s390/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
-+PERF_HAVE_LIBDW_REGS := 1
- endif
- HAVE_KVM_STAT_SUPPORT := 1
- PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
-diff --git a/tools/perf/arch/sh/Makefile b/tools/perf/arch/sh/Makefile
-index 119b06a64bed..f9e270940919 100644
---- a/tools/perf/arch/sh/Makefile
-+++ b/tools/perf/arch/sh/Makefile
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
-+PERF_HAVE_LIBDW_REGS := 1
- endif
-diff --git a/tools/perf/arch/sparc/Makefile b/tools/perf/arch/sparc/Makefile
-index 7741184894c8..39108adc18f1 100644
---- a/tools/perf/arch/sparc/Makefile
-+++ b/tools/perf/arch/sparc/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
-+PERF_HAVE_LIBDW_REGS := 1
- endif
- 
- PERF_HAVE_JITDUMP := 1
-diff --git a/tools/perf/arch/x86/Makefile b/tools/perf/arch/x86/Makefile
-index 9aa58acb5564..901d74e85470 100644
---- a/tools/perf/arch/x86/Makefile
-+++ b/tools/perf/arch/x86/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
-+PERF_HAVE_LIBDW_REGS := 1
- endif
- HAVE_KVM_STAT_SUPPORT := 1
- PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
-diff --git a/tools/perf/arch/xtensa/Makefile b/tools/perf/arch/xtensa/Makefile
-index 119b06a64bed..f9e270940919 100644
---- a/tools/perf/arch/xtensa/Makefile
-+++ b/tools/perf/arch/xtensa/Makefile
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
-+PERF_HAVE_LIBDW_REGS := 1
- endif
--- 
-2.46.0.792.g87dc391469-goog
-
+Thanks,
+Ian
