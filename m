@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD2CBA41
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 00:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDC913FFC
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 00:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727138253; cv=none; b=oWCUtU4vWJAaGU9ELT5Cv1vJaitISHHILjR9yySt6LDsZ9IlaKu295Wa3UCEDNRxOGCnP0xd2Wj3z0OfyI0s9pB/Ih5uAhyZsQ4AGvNjFP7Y/oZ513Ly2XLUXaHvWEODO48OGpBnXUO/gNBhOJhV+uwg88arvbm6hJLroDoLjVI=
+	t=1727138257; cv=none; b=ZbttFKoDIHuoArblGMxQtpGbKypzdR/QQKqFVxmvl5X7UdZa5WmgaRDl/83xbWPcTZQg2nDWaJlDk1Q8w+pcH19Pei9bhfya8Ixg2oPKl3QesRz3BBgZqUZMHFvd7UbXbT+Bk537uNFp8EyAGyc55+KgWZdzHI2SdKnSPrwzCLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727138253; c=relaxed/simple;
-	bh=Qo1Qps6/oRTPke3sLUp94xRSSuy8lIc7nno8/awTXfI=;
+	s=arc-20240116; t=1727138257; c=relaxed/simple;
+	bh=doNQHCLr3DHVKlHSPOr/SFJZMwwugvotkFRUhq87sZE=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=BC0j9/Q5kuCzjcPsO+lDznuBdRunKSoVn4XPllngHjGg3vmvd7cST+QBAb42aRQE2cd8qEU6jdTdIXF8Pj9r/E808DwCCKVJybXzmI0liCu+0FJ1jN1Jb/rj2kKvP1qcXtd9WEhLvpVqUuewhZNnXrlUacAxgCGYDn4ruJM2eyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UlE81wgz; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=uVGcG7Z5w8QprZdjPx0n1bxCpeAvo4UDBBWK6U88UpXPBCfe8+NCjvB7N46rhXPsQIcXQYwjh1f71iczlK0j0iw/DDOdqetnkQz4GdYrp6A4yoDDme/Z9yTcbjhebYkA64cHq6q+XOaPCplnPKIs6VzGSmCFijBpIL9Uuyg9ngI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kVGAZsc2; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UlE81wgz"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e225c289c90so5648959276.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Sep 2024 17:37:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kVGAZsc2"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e20937a68bso9060987b3.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Sep 2024 17:37:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727138251; x=1727743051; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1727138255; x=1727743055; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=T/x8P3+kVeCiLfvUzo1Nwxxj4w2s36O0oobO+3bH8RI=;
-        b=UlE81wgz363HFPR2YEmwLxjoEsHOCGEdAwTakQeW6SRURnM6WmDuE9v9kRdLShBo/g
-         JrWXhVndNWqvjeEDQ1jReP0W9nxNBqwtnP2Vuf417yNp3fbjhBIhEjPZUdOw/nC5s/pL
-         f/Ww7VuxWUgQoov/lzYaGZOlIIsT0MZz1pPkiwnnE4KrBo1g32PARgLBi/DSe/dh6waW
-         RIRHuQZ/d3NYJAKsWdc8RMaVw2FY23W5MpYL4BnzTcKFaD+4Wb9voDM+Sr9FbPIwW4b6
-         uWnJuf4YkaGNRENu40ZFoqFSJew85kFztZll25Gm6933NsIS1h9W1MPar5rdVzTigexb
-         vuzA==
+        bh=Sp6sXAla2GY+SvoZ3Iq1EGisUuOQIFS1R5Cs1D9l3B4=;
+        b=kVGAZsc2VmvOYoAisODb6kybrHW2FOqIa3IxQIiikA8MW9tCqtnARMjX81B2YM1R4M
+         aVI4p4rcXWDYkePZKLrQhBS0Z4+XJF3eyUSSuEvn3XPCsCruSgrvh5GZq1cTKtN4n9Ng
+         KJpMKjIycLjeAk1gLSgUVjcF61kTQdF0SE3aPWLUHcY/qltGyqDAGPwQQFuQa/neq8VM
+         fsujyHiCX3bwQyU56C7msyLDaxgg1cZjfRC/x+5t7xrbzDiv3Aa9LxA+LFt4hlLfoe7f
+         oM9we/iLy1WKhe+soPIC9UzPEfZ0AEORoAAGQHmAeYKh/yTykC4JEVbFbqUzvDVVUtpI
+         j94w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727138251; x=1727743051;
+        d=1e100.net; s=20230601; t=1727138255; x=1727743055;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T/x8P3+kVeCiLfvUzo1Nwxxj4w2s36O0oobO+3bH8RI=;
-        b=VZ15M6jMVeT/SQcHmdFGK3zBcDqihJEdDiQcIgcpbAmtAKKvCJJiK0EtYCh/4C7385
-         QvF010xCZXxb0PiywqCyr6B/24Hv87bzVWZnU2oIE5sDrjpDrEXmoheEbTXE8EJZkcMw
-         4wtYJNG8fYq2alYBjUUOcitmuKKOHButsXaCgOZSoUhvxd8JoCq1NxT8Xm7q2+hapgxN
-         y2OK0iPixgi8PpoWzXnlRlL0YTtabJGkTHwvhhqTIyFILwDjbjVgaTwr1y8SQmVUbxbe
-         8chw8JXw7TRUjsV8k90GZfULlGDaP5zpE5riqNvicvpSPY3KczoMZ+1YlD5ogJj/pxRb
-         Y0qw==
-X-Forwarded-Encrypted: i=1; AJvYcCUiIHVX0MTaBn68mZlK5DX6sfnMcwq5CoKxNDOhMGbcspeVmL4GvHx3PAlnwk4JcK0/I8cDHKSMAe0md+iaKtxV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwwllRMSbq6kD90bFp1x2jr3XMe2sPHcNnuWjobWnm16L5YABc
-	yC2ehsrCchDgBcG7eRx7cJHS44X8qbCxgcZfa9da2W9/nCuwk9i6rJXonN6uMqOOOHWBj0TEWbW
-	WRz8Jvw==
-X-Google-Smtp-Source: AGHT+IH/rgjYbdOMDt4KrSS3kKCFiGWPaYMRdvdlvzOkH+OY0cQ7tzxBAPYC6JadwO1FlEe3HgelNh9m6Ab7
+        bh=Sp6sXAla2GY+SvoZ3Iq1EGisUuOQIFS1R5Cs1D9l3B4=;
+        b=Jr7rNpdGfb6gMbLqzYJG08NQQyf6PhLNPXBEZELKQcEORMoKHWfeT55W4uQ9gsPzsy
+         /ZkWkhkjxq0ojicfxKJJkx/G7VN7ahrTZiRy9tZYeJXUxfOz1ow6T1C1pUBIig8OuAgV
+         JFJVTIgRHzSUUKoEuZ7NIPAm9vstouWYmuMz51NIBNziqiAcCE9IAHOWvi2w8d0xtIG+
+         CFfKMPFbileqFk48Vl7fs1Rlsub/B5I2BkM+tk7rwpVmXBasi4itGuEPY9Gr6Qaerimc
+         pUUiRPl5r8rHyWIJYDjvV3N6QV06QpaGOiq3D/dT8xo291WYPlP0GtScxGZlNwu1OVXZ
+         AADg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8osZ76fgtpTuzNxDvALOFGaUEl0Fa2pSekXLPrZXMh+peXRSNfe+1cBnMOM9WmAd70us1DQ/XTRUlY22rGEhk@vger.kernel.org
+X-Gm-Message-State: AOJu0YykX6e2xYmiL6HcWWHtlkPwSDRzlS62jOiuZvPwVKhQ3RzJbQaf
+	USU2vqW709ZwtteSQ1CJo7uylzoDwWA4QIphPf+Z81QRmF6UcDIyTfjnhkGrjd4qaPqKML2RgC0
+	TdJOt9Q==
+X-Google-Smtp-Source: AGHT+IHIlOB5DfOGX/DAeRX3x66qG2gS9/yfEV3xex2xyR9vwzEtaBMU+fNEY7mUC8w+NH0cHkWubm9y9fxl
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:61a6:b27c:a1cd:e6a0])
- (user=irogers job=sendgmr) by 2002:a25:83cd:0:b0:e1a:7693:a8ac with SMTP id
- 3f1490d57ef6-e2252fb2d4dmr33250276.8.1727138251223; Mon, 23 Sep 2024 17:37:31
- -0700 (PDT)
-Date: Mon, 23 Sep 2024 17:37:19 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:450c:b0:6b2:6cd4:7f9a with SMTP
+ id 00721157ae682-6dfef143839mr2392867b3.8.1727138254662; Mon, 23 Sep 2024
+ 17:37:34 -0700 (PDT)
+Date: Mon, 23 Sep 2024 17:37:20 -0700
 In-Reply-To: <20240924003720.617258-1-irogers@google.com>
-Message-Id: <20240924003720.617258-3-irogers@google.com>
+Message-Id: <20240924003720.617258-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240924003720.617258-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.792.g87dc391469-goog
-Subject: [PATCH v1 2/3] perf probe: Fix libdw memory leak
+Subject: [PATCH v1 3/3] perf build: Fix !HAVE_DWARF_GETLOCATIONS_SUPPORT
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,32 +76,49 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Yang Jihong <yangjihong@bytedance.com>, leo.yan@arm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Add missing dwarf_cfi_end to free memory associated with probe_finder
-cfi_eh or cfi_dbg. This addresses leak sanitizer issues seen in:
-tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+Testing with a LIBDW_DIR showed some issues. In dwarf-aux.h if
+HAVE_DWARF_GETLOCATIONS_SUPPORT isn't defined then the code uses an
+undefined errno value, so add errno.h.
+In Makefile.config the dwarf feature tests need the LIBDW_DIR setting
+in the CFLAGS/LDFLAGS.
 
-Fixes: 270bde1e76f4 ("perf probe: Search both .eh_frame and .debug_frame sections for probe location")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/probe-finder.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/perf/Makefile.config  | 6 ++++++
+ tools/perf/util/dwarf-aux.h | 1 +
+ 2 files changed, 7 insertions(+)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 630e16c54ed5..78f34fa0c391 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1379,6 +1379,11 @@ int debuginfo__find_trace_events(struct debuginfo *dbg,
- 	if (ret >= 0 && tf.pf.skip_empty_arg)
- 		ret = fill_empty_trace_arg(pev, tf.tevs, tf.ntevs);
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 4dcf7a0fd235..5e26d3a91b36 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -159,8 +159,14 @@ ifeq ($(findstring -static,${LDFLAGS}),-static)
+     DWARFLIBS += -lebl
+   endif
+ endif
++FEATURE_CHECK_CFLAGS-dwarf := $(LIBDW_CFLAGS)
++FEATURE_CHECK_LDFLAGS-dwarf := $(LIBDW_LDFLAGS) $(DWARFLIBS)
+ FEATURE_CHECK_CFLAGS-libdw-dwarf-unwind := $(LIBDW_CFLAGS)
+ FEATURE_CHECK_LDFLAGS-libdw-dwarf-unwind := $(LIBDW_LDFLAGS) $(DWARFLIBS)
++FEATURE_CHECK_CFLAGS-dwarf_getlocations := $(LIBDW_CFLAGS)
++FEATURE_CHECK_LDFLAGS-dwarf_getlocations := $(LIBDW_LDFLAGS) $(DWARFLIBS)
++FEATURE_CHECK_CFLAGS-dwarf_getcfi := $(LIBDW_CFLAGS)
++FEATURE_CHECK_LDFLAGS-dwarf_getcfi := $(LIBDW_LDFLAGS) $(DWARFLIBS)
  
-+#if _ELFUTILS_PREREQ(0, 142)
-+	dwarf_cfi_end(tf.pf.cfi_eh);
-+	dwarf_cfi_end(tf.pf.cfi_dbg);
-+#endif
-+
- 	if (ret < 0 || tf.ntevs == 0) {
- 		for (i = 0; i < tf.ntevs; i++)
- 			clear_probe_trace_event(&tf.tevs[i]);
+ # for linking with debug library, run like:
+ # make DEBUG=1 LIBBABELTRACE_DIR=/opt/libbabeltrace/
+diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+index 336a3a183a78..925a9bb9fb15 100644
+--- a/tools/perf/util/dwarf-aux.h
++++ b/tools/perf/util/dwarf-aux.h
+@@ -177,6 +177,7 @@ void die_collect_vars(Dwarf_Die *sc_die, struct die_var_type **var_types);
+ void die_collect_global_vars(Dwarf_Die *cu_die, struct die_var_type **var_types);
+ 
+ #else /*  HAVE_DWARF_GETLOCATIONS_SUPPORT */
++#include <errno.h>
+ 
+ static inline int die_get_var_range(Dwarf_Die *sp_die __maybe_unused,
+ 				    Dwarf_Die *vr_die __maybe_unused,
 -- 
 2.46.0.792.g87dc391469-goog
 
