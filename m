@@ -1,54 +1,54 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262FF18F2D4
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 15:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B289718FDCD
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 15:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727276547; cv=none; b=KAOn1sMSW2Sy/u9aiYH7HbAaa8RBueYYo5UrZhnbDhacccqZVdwRzdI9O7KafXGMtaPM/Q64faSKDjkcFl8oDNiiFJCWDLudblTmKQ+DhtCNoPVbO1G61e6CMTLQGTova9wSpSYne/sECWmiG77DnpGT05xvaNpLcU9Q+dx6ciY=
+	t=1727276548; cv=none; b=LKXVwq4PL0LAI34BmJdhFrR9Rtpv2gm6C6fo7LPTN3y3AuYhYLQUiA1vg2IPv6fD2OfFHLn8/QzywR3Ch18fFWcioOod3IFhgS1i+uHtlvmydhx2rS+QSso4zF5CGWQAUSczeN1Kanrm9jjbpwKsdk994ZQDG/DE5AnwdpEXiT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727276547; c=relaxed/simple;
-	bh=P2FcDMrWaViJAVOVZOgFhqVr7ndECoGt9aNdX1NbL6A=;
+	s=arc-20240116; t=1727276548; c=relaxed/simple;
+	bh=vuy2srbwlGWCNhjJ429H+XQTUepQW5BfwFX52st1yXg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dZjcDuvRXTQ+DomN1FxceuK6cRgBQ9rwTKBOkQPXPAZevjCGzFRsRWTRm8YPaT9PVY1+bH94i4topC1Kth5rHSrRviyFcTKE6GslN6BGXxTPCb4/KHTDJi66HaDVJJSwuMpQ/zTG9+gPLie/iqQQ3Vpgz6MO3rWoS2jcrFroKWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lQtn/1YJ; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=J+A9kjD+lRv381W8pFV1yUKfho4AZkUY0EQ5+USCdyTCFpA6WtlX2OkMEmEYz867rnTxGNFH3WbiXfaos9RxZNpTclknB0//auGlOIAvFnpdQG+N5tYsTDABUou6MzA4Tca1oF49Vi5WjgVoq7Hpw2fCMkgXVbW2EQkrKL3bNK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P1KxEfU7; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lQtn/1YJ"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e1d46cee0b0so10267429276.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 08:02:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P1KxEfU7"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e211e439a3so27384797b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 08:02:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727276543; x=1727881343; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1727276546; x=1727881346; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vu/ZbROFphQGBAR+273iXbk1tlXuWo8crbz4dEomRj0=;
-        b=lQtn/1YJn8ofwp00YPqh/7ezdca6i/dHyOqwIKn9NYR/t34JCf/JnPUsE/CTB64V03
-         XZQA9DoCVY0P4KsZmS6kF6A3RLqm2zeGzo6VDPM6iwiemCFUih2Dg0OCxkYSE/SMg1Us
-         cW7HeP21m6KnShkftmJzo9cbUKesSxLQSeKXdqNy6YyZxhbp0xOCN+it/zMTpFMhQ21A
-         5K4QzdOBDM237nQcdJz6PAF+hW1p8zl8uML/NoXt6W8agRnzoo/bdG273F4gG0tLvBj4
-         KUtgPm9oCEZZYT+PQrU4BKNIjVqOkVLcWKePKSU60RBD5kDm8Gt0DAAzS+wIlRIB6Dta
-         8nfw==
+        bh=TEh1/zkt2ebfm60sAnflL74oR8UqJJcIMQFWRvgC+dE=;
+        b=P1KxEfU7NFI1FLa68htOn3FIemF2YoJ6ZngfHUhsKoFBRiXxiwVBOTYecj3iV5fXut
+         Kp5pAy4MyYpTuIwIh1ul53pcejuye0feuUW/N2sSiiV23IoHpesKme5QnUN3QIRK9Scm
+         jOJSpxVOtjp+R4vV2H1BXWolNHvOaltnkFQZO4b8HH+yxzEJYon4nNKIV9abmiJ3Qr6z
+         MB45/dPAX38qoLlqeKxr2UzmTg6b3zQjOj2t0/4aKMhnPp9H0u99nESwyciFmWtxtP7X
+         WlwMG8GRS226I1RCGZJjImxo/4LOik3jTeV5QqHXPPvoYIyhU83s5SKOqD4zhyJaMGyV
+         AqrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727276543; x=1727881343;
+        d=1e100.net; s=20230601; t=1727276546; x=1727881346;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vu/ZbROFphQGBAR+273iXbk1tlXuWo8crbz4dEomRj0=;
-        b=oLFhuKRLoRHprpXeNI+LlGHXqaV0VYpOkZacuE+Bwt5umZt5Wd1XoydI7n3CLu4Smu
-         FuUonSP9I3Y89HHSN1d5uO1om2mW0j1HvNfFS16wBNl+9ghevVQ2udHhBhUUNBdFaECi
-         bG9rNfuHsAUEqxDaJjIma2vhJTQScxotmge1VkAO/sDi27lYPJiyFARbsABp2i9/imVP
-         Wd3OMVRS9bycUPq7eAy9vCZPI7/144LV0VIYeqdrg9Po+xO7qZBtBMUR50J3bwwYQ0GX
-         h4P4LifzbkxhnF4hTHEUazFJ72xSGvZsYM+Q4HFKf4+NJdKb/4ctDQFs67uklsRuB7in
-         13qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYRVbbj5vA6Dpl9EkmAs/dUXYo0KsKhqb3UEAqpuILVmgJopNiC7+OOyJB3Fiu24ybPvPfpac5Msxd5mVvc45d@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxydfpb61KBP2ztx18nOqN51bIbL0LMmdKXk7kcWmBdZzpNkyeD
-	fxck03DbyNfTrLwsuzn995J32N5oCTpkVrLFZkcokCI33XKhJTpBNY5MLSfhT+tk0pV2og==
-X-Google-Smtp-Source: AGHT+IEyaWBDeaj2o4LzPpSYVvpQbis55gp/KI/SuWbxXUep7wBTAaa7DqSfUrTGsylfjBz2VoxVb7Nf
+        bh=TEh1/zkt2ebfm60sAnflL74oR8UqJJcIMQFWRvgC+dE=;
+        b=FYtmSFL0c21RXjCPJ7ViwtXpUc90DUDUCyul0dVNUPH8QtAZFdQIkVCMZkGagsf95g
+         W70CDxYfccLeNNPeA7Bqa288Zy/BTqIZGTu+jYoH1X3pU/h+5wXIiHxO7QlFXXCHZw0W
+         h70UQ6YwXao/vInHvdELhxtLDz1TzACiOaFIxunwdyjfJ5VpWISaTTrvX//zkek7JYnw
+         fZ8btonzgsq4N1y99x39NYbfsZ6pGR60LdU2W+BU2ssmPPTEA2uwNEsAEH0aZVyjY6Z0
+         AGN0SMy4CAboNxgvoUoklyZ7YypKEnFCTxeeTEUzeGe7ZeiVKACMlO0gWy9EfTRahdR0
+         uBZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUK23fdJl6PRw9aDMiPeiNR3+4kZbmtj0DKgzM7U+l8v7fzgJh1kFKe3sTEsxiT6ga9i0Lcn+Ghpud1AwaHRJrk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6Lgbdc/0wFgdW0HM6K1cFSdrgVpNAp/zrP/tcHVTTd3jT2uKO
+	0A6unsushqDJQtHteisROSaeMC5XqDl64pOyoH+CbyRnxhPgxsVSczVzUh1im31iNh/oxQ==
+X-Google-Smtp-Source: AGHT+IGW5+6XYu5evov+Dvb+HROZj8E6YTyxVVP1a7XWDg5djajQJxqHbA/Whb8+5/ewCu11GBBmm/SO
 X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:7b:198d:ac11:8138])
- (user=ardb job=sendgmr) by 2002:a05:6902:1782:b0:e0b:958a:3344 with SMTP id
- 3f1490d57ef6-e24da39b0c3mr17936276.10.1727276543053; Wed, 25 Sep 2024
- 08:02:23 -0700 (PDT)
-Date: Wed, 25 Sep 2024 17:01:13 +0200
+ (user=ardb job=sendgmr) by 2002:a05:690c:438d:b0:6b1:8b74:978a with SMTP id
+ 00721157ae682-6e21d9d4ae9mr51697b3.4.1727276545723; Wed, 25 Sep 2024 08:02:25
+ -0700 (PDT)
+Date: Wed, 25 Sep 2024 17:01:14 +0200
 In-Reply-To: <20240925150059.3955569-30-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,14 +58,14 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240925150059.3955569-30-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1397; i=ardb@kernel.org;
- h=from:subject; bh=OCB6ogDK8zWwsvV7jOJ7CFiQBF2ggvTbOxK6mQJaX9A=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIe2L6r76WO61FcfVRPyObM7vdxPl3nB63j7e+T6H1Wu+r
- TX46mXYUcrCIMbBICumyCIw+++7nacnStU6z5KFmcPKBDKEgYtTACYyaR4jwzOv6S8kr9nwfXyX
- 9iPzW9q5kzeEqzTXKbA29B6+VB8ddZORYZns0cK9u93/3DfuTd/m9X/T7v+32d81/dIy2BMjHfO RgwMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=934; i=ardb@kernel.org;
+ h=from:subject; bh=DJZDFnSYvzXqQFYRPN/gizuDfobz3ccWU866DGFdU/U=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIe2L6v7XV9cI3q9cJcJR8+Vf2+Fz2Wk/Dh/Y/X1ToOXyt
+ a351cxsHaUsDGIcDLJiiiwCs/++23l6olSt8yxZmDmsTCBDGLg4BWAiXdsZGZaErou6cPCEcv22
+ Prcpp+bqHWznepHA8X6Z9Zn/83etFNBlZOg9+zlgLqMlq/AX9n2rM647K2+Mmvyn9GzNS4f81qf fJ/EAAA==
 X-Mailer: git-send-email 2.46.0.792.g87dc391469-goog
-Message-ID: <20240925150059.3955569-43-ardb+git@google.com>
-Subject: [RFC PATCH 13/28] x86/kvm: Use RIP-relative addressing
+Message-ID: <20240925150059.3955569-44-ardb+git@google.com>
+Subject: [RFC PATCH 14/28] x86/rethook: Use RIP-relative reference for return address
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Ard Biesheuvel <ardb@kernel.org>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
@@ -90,36 +90,29 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Avoid absolute references in code, which require fixing up at boot time,
-and replace them with RIP-relative ones. In this particular case, due to
-the register pressure, they cannot be avoided entirely, so one absolute
-reference is retained but the resulting reference via the GOT is
-compatible with running the linker in PIE mode.
+Instead of pushing an immediate absolute address, which is incompatible
+with PIE codegen or linking, use a LEA instruction to take the address
+into a register.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/kernel/kvm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/kernel/rethook.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 263f8aed4e2c..8eac209a31aa 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -800,9 +800,11 @@ extern bool __raw_callee_save___kvm_vcpu_is_preempted(long);
-  * Hand-optimize version for x86-64 to avoid 8 64-bit register saving and
-  * restoring to/from the stack.
-  */
--#define PV_VCPU_PREEMPTED_ASM						     \
-- "movq   __per_cpu_offset(,%rdi,8), %rax\n\t"				     \
-- "cmpb   $0, " __stringify(KVM_STEAL_TIME_preempted) "+steal_time(%rax)\n\t" \
-+#define PV_VCPU_PREEMPTED_ASM						\
-+ "leaq   __per_cpu_offset(%rip), %rax				\n\t"	\
-+ "movq   (%rax,%rdi,8), %rax					\n\t"	\
-+ "addq   steal_time@GOTPCREL(%rip), %rax			\n\t"	\
-+ "cmpb   $0, " __stringify(KVM_STEAL_TIME_preempted) "(%rax)	\n\t"	\
-  "setne  %al\n\t"
- 
- DEFINE_ASM_FUNC(__raw_callee_save___kvm_vcpu_is_preempted,
+diff --git a/arch/x86/kernel/rethook.c b/arch/x86/kernel/rethook.c
+index 8a1c0111ae79..3b3c17ba3cd5 100644
+--- a/arch/x86/kernel/rethook.c
++++ b/arch/x86/kernel/rethook.c
+@@ -27,7 +27,8 @@ asm(
+ #ifdef CONFIG_X86_64
+ 	ANNOTATE_NOENDBR	/* This is only jumped from ret instruction */
+ 	/* Push a fake return address to tell the unwinder it's a rethook. */
+-	"	pushq $arch_rethook_trampoline\n"
++	"	leaq arch_rethook_trampoline(%rip), %rdi\n"
++	"	pushq %rdi\n"
+ 	UNWIND_HINT_FUNC
+ 	"       pushq $" __stringify(__KERNEL_DS) "\n"
+ 	/* Save the 'sp - 16', this will be fixed later. */
 -- 
 2.46.0.792.g87dc391469-goog
 
