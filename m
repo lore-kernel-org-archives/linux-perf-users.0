@@ -1,57 +1,57 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7114B165F1C
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 14:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDE71714CC
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 14:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727273721; cv=none; b=f8OHRgc/OHg75loV3cNDvNms4ak4YHyDg7IC7IN0oYSjZqW+Z5jxID6Ndz9ojC63FpEBi2/HneR4fQDC+KEHE7zqOJoet9N3724zKkHvET7kqX1XdYj+pkr4lNI07IV/PnTh3CFRaPwrgjj55gPiHx9l4+fAZhVgIk6cUjfPfTk=
+	t=1727273735; cv=none; b=Ie4D1WCxuhwVGxkqN+YVO1IohF7XiTQZJqgI2sBaC0mOdYYBHcy4e0I+t6dyQg+NEL9IDTnJrectNPRu8jzRh+7TwBWyOJOz7eySuM4bkmke3eQ9083p9seEwOsqBSTC3YsZnbg+6v0SzNfE9r+1Hq2J2pM+5mVhlvRwJKk7PM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727273721; c=relaxed/simple;
-	bh=7bH55AtzDDvrgdScJ0/zLYbggvv/3DW4lwZHwa0zpqs=;
+	s=arc-20240116; t=1727273735; c=relaxed/simple;
+	bh=CZjug4qzzjkcwqgXO8YtS5X6ejJ3H+6DA66IyZYZ/ME=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kY/3mQ01kCxbJyY6MD53oi/Kw+YMrcCeN/rHFlqFbiC+ufVotMJpk+leankps3NvvB/AY9OQ+vIwhoNde+k5ydyO2thOKeFOlj23x8UXraHkHThiksjxZTtf6YmCoPxJHH3sdJd6qRBEXIYGq4iaei2a32ZBK9CswIGFiJHDzuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FWrbUyJ2; arc=none smtp.client-ip=209.85.208.54
+	 MIME-Version; b=UWRlrzF1hF+XU068VPUyqYsm/UnBB95b+GAMHYPwPOTcoENUkRVO8E46io0pBJHMyaFBfMb4F7PyRikId48/r8OOxEhNSBTccpP+Mb2CyS/jMlQMFGtW5fBUvHbKFkeXVbtXcYMBT+s6B/g5SeExr/KuscRqda0Xax7mfuVS0b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fjyRTaq0; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FWrbUyJ2"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5c42e7adbe0so7880933a12.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 07:15:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fjyRTaq0"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-536a2759f0eso3750875e87.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 07:15:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727273718; x=1727878518; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1727273731; x=1727878531; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f05PQzvOEJplO/uvLn+IJgwf9BEDklxbAmP9za94pBU=;
-        b=FWrbUyJ22JcTdz0R0pL3VgVZHL5gpnCvN1AXfolHo+b9wB5Mp20aCBsjRVRBMux8U1
-         5JtNCyq7m7TxWi9dksG+TfueaL5GgS2+EYDsfAMBzz8kqBVppLeT/6I8QUrUxqC+EJFd
-         661Jfi5rHGff54/+Il2DEkcvsGVZYnOfJBvDiUFE0zKkORxOBXAWf2Dm6bFluZcl4gnK
-         9lfHV9dpYO8wYkj8J1uu6zWnfBfoudqZosjR7EtqbdTMqu17FGqR5Em0+qY70wiO6MVV
-         u2/GNA+H+3VvknZeELkTr9Ol2kf05ULIB/tNVqUetG+SkV7Z5/et3hZ1VzXmso9+7dY4
-         Aj+Q==
+        bh=20vjXBMSvILK4XIhd9J/lLgwlLG9hMcO1A1HFzrb3DA=;
+        b=fjyRTaq0LFzL9udAOkRCbB8sUCpm9F3YIe35pP/KhynXmE7ddeztq5/8au/NEyS789
+         OMpWZekqVqMjSG8D1jp57FuiZA32FHNOi7ujWcFgw+a/GABWCsQwA255tYl2xxEIWPu8
+         5ghumO13hQL2+Pe4HezlPhTjbhIRjH5AngVLIinaC+0QbbAQnipLIDjU3gnYDGWNcJtB
+         9/uLpwGLmFspi0rql2Ny6b1KqHUQZ1Z5DVFBNMJJgQ80N/CvpjuaUpGl8AgB+ODYxl4j
+         CK7m61YH7bh1+9njYVW4h3PgmatpYH4UlKg4VeYbgsFAnIopA+rAdNIvO6e1Fe/O9+tn
+         G4Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727273718; x=1727878518;
+        d=1e100.net; s=20230601; t=1727273731; x=1727878531;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f05PQzvOEJplO/uvLn+IJgwf9BEDklxbAmP9za94pBU=;
-        b=Hbk0ikGXbD+s6YEdkXumVNlLjBSWAw3JxJF7X4lEIEdXdrx4or9Zt47+hSkWh+DriR
-         LIZudc9Obs7ORLJYT5HUjUO7gd2JumsBFrIS/j9czVKaHTq11VI+uEusHy8npeXa55Z8
-         WR9RKAjXysIB12poNOa0yU02drLJ/GkGHzxqfd5nuj44NE+TJ6HiLQEaMwq4E24Zoitu
-         DyW0B8wn76S/gSHES+yQ40r4zMbL8jzSU/CyVKBnmCKNUDW8YwKdGo6ptVsLZkhBtn6G
-         jbQ/U0+MQtexzNVWfMji7WTNowJgGpB0CzTLVtHazEglG5wErYPvRhO/xWA/25j5889J
-         4iIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXpf8avI/TxSpdDkgS9a0x1aBgUJVcb158Zcaxj5gQ1FuPLkgbh4EizLRDNjQwheRDtn/rQjt7d864aw4uhahf8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7jyvaH0PT8/ioi+Ki+WyhqNPqeFNU3sxX4qzB4NQZzkrlA8zg
-	OB+uWkvep0wZthtXfdczdWkNyZVj4DH2kpPWU3inuSQpDg0mMryvrvE87WI6lFY=
-X-Google-Smtp-Source: AGHT+IGn5t5q9btzAWZqrfmL7nzz9qyc99A9GauTqbDs9OFSvZg19ppadeYkW00VIHhQFHCN+xDIFw==
-X-Received: by 2002:a05:6402:d0b:b0:5c4:14fe:971e with SMTP id 4fb4d7f45d1cf-5c72073e23bmr2347614a12.23.1727273717534;
-        Wed, 25 Sep 2024 07:15:17 -0700 (PDT)
+        bh=20vjXBMSvILK4XIhd9J/lLgwlLG9hMcO1A1HFzrb3DA=;
+        b=bA0JKuuJH6M8g5E1aNyqK2NnD8+L/7DBQMMM11RCjHesN05fzfEelNKyTNUaqln9la
+         Ot/z7H3ajkfeydhE8/tKFAn8ilOK5a8X6MZk8PX3B8e/IDNeafqIGEd8d9Vu2EfSsCfb
+         xELvNjAigbeH8Fvxf7ZTdeZVTnxouKyoYiQ7bYLkdvXxtdY3xM49NUL59hcjjplLZvi0
+         ByrnTej3y58z6mQmJm2xYDV7rj8qcrqCW4E/3rg+CXVUN/P2q3tCTX3oaOwWpriM9P2Q
+         GFs3FQM/Jm5w0ivMvLqpbBMnr4yYBSU0W0UheosDsXZrIuwpM1sGa1e1YYnwtmZFR4VL
+         /05w==
+X-Forwarded-Encrypted: i=1; AJvYcCXBhsxM0pds1Q3qoJ9JoDKAdlrPECMpT24AgDIwAJqOpkWPIWSbreea9v1e0fN5EG5JCPG2+9Ak5uEXHKaCgfPA@vger.kernel.org
+X-Gm-Message-State: AOJu0YzACWvd61cLUQZ2g+GhotyzPTL+maKSo6sDDEKpwIlAYzaYNJQr
+	1t861f9xLjjebzLkBURfkZS/ETtQI/3eKhywCoqTZ4WwWw8PeraHptXJY6+izLc=
+X-Google-Smtp-Source: AGHT+IFX11aAx90T6JtlI8kp+EhCMIkldkiSJ21zk188cmmPI+fgddWDUAw2qeJvnIphJxa4/TRzWA==
+X-Received: by 2002:a05:6512:39c7:b0:533:42ae:c985 with SMTP id 2adb3069b0e04-5387753181dmr2079003e87.25.1727273731153;
+        Wed, 25 Sep 2024 07:15:31 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c5cf4968f4sm1888005a12.27.2024.09.25.07.15.15
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c5cf4968f4sm1888005a12.27.2024.09.25.07.15.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2024 07:15:16 -0700 (PDT)
+        Wed, 25 Sep 2024 07:15:30 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: irogers@google.com,
 	linux-perf-users@vger.kernel.org,
@@ -72,20 +72,20 @@ Cc: James Clark <james.clark@linaro.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Weilin Wang <weilin.wang@intel.com>,
 	Dominique Martinet <asmadeus@codewreck.org>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	Yang Jihong <yangjihong@bytedance.com>,
 	Colin Ian King <colin.i.king@gmail.com>,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Yang Jihong <yangjihong@bytedance.com>,
 	Howard Chu <howardchu95@gmail.com>,
 	Ze Gao <zegao2021@gmail.com>,
-	Yunseong Kim <yskelg@gmail.com>,
 	Sun Haiyong <sunhaiyong@loongson.cn>,
 	Jing Zhang <renyu.zj@linux.alibaba.com>,
 	Yicong Yang <yangyicong@hisilicon.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v8 2/7] perf stat: Uniquify event name improvements
-Date: Wed, 25 Sep 2024 15:13:40 +0100
-Message-Id: <20240925141357.1033087-3-james.clark@linaro.org>
+Subject: [PATCH v8 3/7] perf stat: Remove evlist__add_default_attrs use strings
+Date: Wed, 25 Sep 2024 15:13:41 +0100
+Message-Id: <20240925141357.1033087-4-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240925141357.1033087-1-james.clark@linaro.org>
 References: <20240925141357.1033087-1-james.clark@linaro.org>
@@ -99,200 +99,662 @@ Content-Transfer-Encoding: 8bit
 
 From: Ian Rogers <irogers@google.com>
 
-Without aggregation on Intel:
-```
-$ perf stat -e instructions,cycles ...
-```
-Will use "cycles" for the name of the legacy cycles event but as
-"instructions" has a sysfs name it will and a "[cpu]" PMU suffix. This
-often breaks things as the space between the event and the PMU name
-look like an extra column. The existing uniquify logic was also
-uniquifying in cases when all events are core and not with uncore
-events, it was not correctly handling modifiers, etc.
+add_default_atttributes would add evsels by having pre-created
+perf_event_attr, however, this needed fixing for hybrid as the
+extended PMU type was necessary for each core PMU. The logic for this
+was in an arch specific x86 function and wasn't present for ARM,
+meaning that default events weren't being opened on all PMUs on
+ARM. Change the creation of the default events to use parse_events and
+strings as that will open the events on all PMUs.
 
-Change the logic so that an initial pass that can disable
-uniquification is run. For individual counters, disable uniquification
-in more cases such as for consistency with legacy events or for
-libpfm4 events. Don't use the "[pmu]" style suffix in uniquification,
-always use "pmu/.../". Change how modifiers/terms are handled in the
-uniquification so that they look like parse-able events.
+Rather than try to detect events on PMUs before parsing, parse the
+event but skip its output in stat-display.
 
-This fixes "102: perf stat metrics (shadow stat) test:" that has been
-failing due to "instructions [cpu]" breaking its column/awk logic when
-values aren't aggregated. This started happening when instructions
-could match a sysfs rather than a legacy event, so the fixes tag
-reflects this.
+The previous order of hardware events was: cycles,
+stalled-cycles-frontend, stalled-cycles-backend, instructions. As
+instructions is a more fundamental concept the order is changed to:
+instructions, cycles, stalled-cycles-frontend, stalled-cycles-backend.
 
-Fixes: 617824a7f0f7 ("perf parse-events: Prefer sysfs/JSON hardware events over legacy")
+Closes: https://lore.kernel.org/lkml/CAP-5=fVABSBZnsmtRn1uF-k-G1GWM-L5SgiinhPTfHbQsKXb_g@mail.gmail.com/
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
-[ Fix Intel TPEBS counting mode test ]
+[Don't display unsupported default events]
 Acked-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- .../perf/tests/shell/test_stat_intel_tpebs.sh |  11 +-
- tools/perf/util/stat-display.c                | 101 ++++++++++++++----
- 2 files changed, 85 insertions(+), 27 deletions(-)
+ tools/perf/arch/x86/util/evlist.c |  74 +-------
+ tools/perf/builtin-stat.c         | 291 ++++++++++++------------------
+ tools/perf/util/evlist.c          |  43 -----
+ tools/perf/util/evlist.h          |  12 --
+ tools/perf/util/stat-display.c    |   8 +
+ tools/perf/util/stat-shadow.c     |   4 +-
+ 6 files changed, 125 insertions(+), 307 deletions(-)
 
-diff --git a/tools/perf/tests/shell/test_stat_intel_tpebs.sh b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
-index c60b29add980..9a11f42d153c 100755
---- a/tools/perf/tests/shell/test_stat_intel_tpebs.sh
-+++ b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
-@@ -8,12 +8,15 @@ grep -q GenuineIntel /proc/cpuinfo || { echo Skipping non-Intel; exit 2; }
- # Use this event for testing because it should exist in all platforms
- event=cache-misses:R
+diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+index cebdd483149e..3a4bf13b1759 100644
+--- a/tools/perf/arch/x86/util/evlist.c
++++ b/tools/perf/arch/x86/util/evlist.c
+@@ -1,78 +1,10 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <stdio.h>
+-#include "util/pmu.h"
+-#include "util/pmus.h"
+-#include "util/evlist.h"
+-#include "util/parse-events.h"
+-#include "util/event.h"
++#include <string.h>
++#include "../../../util/evlist.h"
++#include "../../../util/evsel.h"
+ #include "topdown.h"
+ #include "evsel.h"
  
-+# Hybrid platforms output like "cpu_atom/cache-misses/R", rather than as above
-+alt_name=/cache-misses/R
-+
- # Without this cmd option, default value or zero is returned
--echo "Testing without --record-tpebs"
--result=$(perf stat -e "$event" true 2>&1)
--[[ "$result" =~ $event ]] || exit 1
-+#echo "Testing without --record-tpebs"
-+#result=$(perf stat -e "$event" true 2>&1)
-+#[[ "$result" =~ $event || "$result" =~ $alt_name ]] || exit 1
- 
- # In platforms that do not support TPEBS, it should execute without error.
- echo "Testing with --record-tpebs"
- result=$(perf stat -e "$event" --record-tpebs -a sleep 0.01 2>&1)
--[[ "$result" =~ "perf record" && "$result" =~ $event ]] || exit 1
-+[[ "$result" =~ "perf record" && "$result" =~ $event || "$result" =~ $alt_name ]] || exit 1
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index ea96e4ebad8c..cbff43ff8d0f 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -871,38 +871,66 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
- 
- static void uniquify_event_name(struct evsel *counter)
- {
--	char *new_name;
--	char *config;
--	int ret = 0;
-+	const char *name, *pmu_name;
-+	char *new_name, *config;
-+	int ret;
- 
--	if (counter->uniquified_name || counter->use_config_name ||
--	    !counter->pmu_name || !strncmp(evsel__name(counter), counter->pmu_name,
--					   strlen(counter->pmu_name)))
-+	/* The evsel was already uniquified. */
-+	if (counter->uniquified_name)
- 		return;
- 
--	config = strchr(counter->name, '/');
-+	/* Avoid checking to uniquify twice. */
-+	counter->uniquified_name = true;
-+
-+	/* The evsel has a "name=" config term or is from libpfm. */
-+	if (counter->use_config_name || counter->is_libpfm_event)
-+		return;
-+
-+	/* Legacy no PMU event, don't uniquify. */
-+	if  (!counter->pmu ||
-+	     (counter->pmu->type < PERF_TYPE_MAX && counter->pmu->type != PERF_TYPE_RAW))
-+		return;
-+
-+	/* A sysfs or json event replacing a legacy event, don't uniquify. */
-+	if (counter->pmu->is_core && counter->alternate_hw_config != PERF_COUNT_HW_MAX)
-+		return;
-+
-+	name = evsel__name(counter);
-+	pmu_name = counter->pmu->name;
-+	/* Already prefixed by the PMU name. */
-+	if (!strncmp(name, pmu_name, strlen(pmu_name)))
-+		return;
-+
-+	config = strchr(name, '/');
- 	if (config) {
--		if (asprintf(&new_name,
--			     "%s%s", counter->pmu_name, config) > 0) {
--			free(counter->name);
--			counter->name = new_name;
+-static int ___evlist__add_default_attrs(struct evlist *evlist,
+-					struct perf_event_attr *attrs,
+-					size_t nr_attrs)
+-{
+-	LIST_HEAD(head);
+-	size_t i = 0;
+-
+-	for (i = 0; i < nr_attrs; i++)
+-		event_attr_init(attrs + i);
+-
+-	if (perf_pmus__num_core_pmus() == 1)
+-		return evlist__add_attrs(evlist, attrs, nr_attrs);
+-
+-	for (i = 0; i < nr_attrs; i++) {
+-		struct perf_pmu *pmu = NULL;
+-
+-		if (attrs[i].type == PERF_TYPE_SOFTWARE) {
+-			struct evsel *evsel = evsel__new(attrs + i);
+-
+-			if (evsel == NULL)
+-				goto out_delete_partial_list;
+-			list_add_tail(&evsel->core.node, &head);
+-			continue;
 -		}
--	} else {
--		if (evsel__is_hybrid(counter)) {
--			ret = asprintf(&new_name, "%s/%s/",
--				       counter->pmu_name, counter->name);
-+		int len = config - name;
-+
-+		if (config[1] == '/') {
-+			/* case: event// */
-+			ret = asprintf(&new_name, "%s/%.*s/%s", pmu_name, len, name, config + 2);
- 		} else {
--			ret = asprintf(&new_name, "%s [%s]",
--				       counter->name, counter->pmu_name);
-+			/* case: event/.../ */
-+			ret = asprintf(&new_name, "%s/%.*s,%s", pmu_name, len, name, config + 1);
- 		}
-+	} else {
-+		config = strchr(name, ':');
-+		if (config) {
-+			/* case: event:.. */
-+			int len = config - name;
+-
+-		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
+-			struct perf_cpu_map *cpus;
+-			struct evsel *evsel;
+-
+-			evsel = evsel__new(attrs + i);
+-			if (evsel == NULL)
+-				goto out_delete_partial_list;
+-			evsel->core.attr.config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
+-			cpus = perf_cpu_map__get(pmu->cpus);
+-			evsel->core.cpus = cpus;
+-			evsel->core.own_cpus = perf_cpu_map__get(cpus);
+-			evsel->pmu_name = strdup(pmu->name);
+-			list_add_tail(&evsel->core.node, &head);
+-		}
+-	}
+-
+-	evlist__splice_list_tail(evlist, &head);
+-
+-	return 0;
+-
+-out_delete_partial_list:
+-	{
+-		struct evsel *evsel, *n;
+-
+-		__evlist__for_each_entry_safe(&head, n, evsel)
+-			evsel__delete(evsel);
+-	}
+-	return -1;
+-}
+-
+-int arch_evlist__add_default_attrs(struct evlist *evlist,
+-				   struct perf_event_attr *attrs,
+-				   size_t nr_attrs)
+-{
+-	if (!nr_attrs)
+-		return 0;
+-
+-	return ___evlist__add_default_attrs(evlist, attrs, nr_attrs);
+-}
+-
+ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+ {
+ 	if (topdown_sys_has_perf_metrics() &&
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 689a3d43c258..ceec0a96d5f0 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1814,130 +1814,25 @@ static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
+ }
  
--		if (ret) {
--			free(counter->name);
--			counter->name = new_name;
-+			ret = asprintf(&new_name, "%s/%.*s/%s", pmu_name, len, name, config + 1);
-+		} else {
-+			/* case: event */
-+			ret = asprintf(&new_name, "%s/%s/", pmu_name, name);
+ /*
+- * Add default attributes, if there were no attributes specified or
++ * Add default events, if there were no attributes specified or
+  * if -d/--detailed, -d -d or -d -d -d is used:
+  */
+-static int add_default_attributes(void)
++static int add_default_events(void)
+ {
+-	struct perf_event_attr default_attrs0[] = {
+-
+-  { .type = PERF_TYPE_SOFTWARE, .config = PERF_COUNT_SW_TASK_CLOCK		},
+-  { .type = PERF_TYPE_SOFTWARE, .config = PERF_COUNT_SW_CONTEXT_SWITCHES	},
+-  { .type = PERF_TYPE_SOFTWARE, .config = PERF_COUNT_SW_CPU_MIGRATIONS		},
+-  { .type = PERF_TYPE_SOFTWARE, .config = PERF_COUNT_SW_PAGE_FAULTS		},
+-
+-  { .type = PERF_TYPE_HARDWARE, .config = PERF_COUNT_HW_CPU_CYCLES		},
+-};
+-	struct perf_event_attr frontend_attrs[] = {
+-  { .type = PERF_TYPE_HARDWARE, .config = PERF_COUNT_HW_STALLED_CYCLES_FRONTEND	},
+-};
+-	struct perf_event_attr backend_attrs[] = {
+-  { .type = PERF_TYPE_HARDWARE, .config = PERF_COUNT_HW_STALLED_CYCLES_BACKEND	},
+-};
+-	struct perf_event_attr default_attrs1[] = {
+-  { .type = PERF_TYPE_HARDWARE, .config = PERF_COUNT_HW_INSTRUCTIONS		},
+-  { .type = PERF_TYPE_HARDWARE, .config = PERF_COUNT_HW_BRANCH_INSTRUCTIONS	},
+-  { .type = PERF_TYPE_HARDWARE, .config = PERF_COUNT_HW_BRANCH_MISSES		},
+-
+-};
+-
+-/*
+- * Detailed stats (-d), covering the L1 and last level data caches:
+- */
+-	struct perf_event_attr detailed_attrs[] = {
+-
+-  { .type = PERF_TYPE_HW_CACHE,
+-    .config =
+-	 PERF_COUNT_HW_CACHE_L1D		<<  0  |
+-	(PERF_COUNT_HW_CACHE_OP_READ		<<  8) |
+-	(PERF_COUNT_HW_CACHE_RESULT_ACCESS	<< 16)				},
+-
+-  { .type = PERF_TYPE_HW_CACHE,
+-    .config =
+-	 PERF_COUNT_HW_CACHE_L1D		<<  0  |
+-	(PERF_COUNT_HW_CACHE_OP_READ		<<  8) |
+-	(PERF_COUNT_HW_CACHE_RESULT_MISS	<< 16)				},
+-
+-  { .type = PERF_TYPE_HW_CACHE,
+-    .config =
+-	 PERF_COUNT_HW_CACHE_LL			<<  0  |
+-	(PERF_COUNT_HW_CACHE_OP_READ		<<  8) |
+-	(PERF_COUNT_HW_CACHE_RESULT_ACCESS	<< 16)				},
+-
+-  { .type = PERF_TYPE_HW_CACHE,
+-    .config =
+-	 PERF_COUNT_HW_CACHE_LL			<<  0  |
+-	(PERF_COUNT_HW_CACHE_OP_READ		<<  8) |
+-	(PERF_COUNT_HW_CACHE_RESULT_MISS	<< 16)				},
+-};
+-
+-/*
+- * Very detailed stats (-d -d), covering the instruction cache and the TLB caches:
+- */
+-	struct perf_event_attr very_detailed_attrs[] = {
+-
+-  { .type = PERF_TYPE_HW_CACHE,
+-    .config =
+-	 PERF_COUNT_HW_CACHE_L1I		<<  0  |
+-	(PERF_COUNT_HW_CACHE_OP_READ		<<  8) |
+-	(PERF_COUNT_HW_CACHE_RESULT_ACCESS	<< 16)				},
+-
+-  { .type = PERF_TYPE_HW_CACHE,
+-    .config =
+-	 PERF_COUNT_HW_CACHE_L1I		<<  0  |
+-	(PERF_COUNT_HW_CACHE_OP_READ		<<  8) |
+-	(PERF_COUNT_HW_CACHE_RESULT_MISS	<< 16)				},
+-
+-  { .type = PERF_TYPE_HW_CACHE,
+-    .config =
+-	 PERF_COUNT_HW_CACHE_DTLB		<<  0  |
+-	(PERF_COUNT_HW_CACHE_OP_READ		<<  8) |
+-	(PERF_COUNT_HW_CACHE_RESULT_ACCESS	<< 16)				},
+-
+-  { .type = PERF_TYPE_HW_CACHE,
+-    .config =
+-	 PERF_COUNT_HW_CACHE_DTLB		<<  0  |
+-	(PERF_COUNT_HW_CACHE_OP_READ		<<  8) |
+-	(PERF_COUNT_HW_CACHE_RESULT_MISS	<< 16)				},
+-
+-  { .type = PERF_TYPE_HW_CACHE,
+-    .config =
+-	 PERF_COUNT_HW_CACHE_ITLB		<<  0  |
+-	(PERF_COUNT_HW_CACHE_OP_READ		<<  8) |
+-	(PERF_COUNT_HW_CACHE_RESULT_ACCESS	<< 16)				},
+-
+-  { .type = PERF_TYPE_HW_CACHE,
+-    .config =
+-	 PERF_COUNT_HW_CACHE_ITLB		<<  0  |
+-	(PERF_COUNT_HW_CACHE_OP_READ		<<  8) |
+-	(PERF_COUNT_HW_CACHE_RESULT_MISS	<< 16)				},
+-
+-};
++	const char *pmu = parse_events_option_args.pmu_filter ?: "all";
++	struct parse_events_error err;
++	struct evlist *evlist = evlist__new();
++	struct evsel *evsel;
++	int ret = 0;
+ 
+-/*
+- * Very, very detailed stats (-d -d -d), adding prefetch events:
+- */
+-	struct perf_event_attr very_very_detailed_attrs[] = {
+-
+-  { .type = PERF_TYPE_HW_CACHE,
+-    .config =
+-	 PERF_COUNT_HW_CACHE_L1D		<<  0  |
+-	(PERF_COUNT_HW_CACHE_OP_PREFETCH	<<  8) |
+-	(PERF_COUNT_HW_CACHE_RESULT_ACCESS	<< 16)				},
+-
+-  { .type = PERF_TYPE_HW_CACHE,
+-    .config =
+-	 PERF_COUNT_HW_CACHE_L1D		<<  0  |
+-	(PERF_COUNT_HW_CACHE_OP_PREFETCH	<<  8) |
+-	(PERF_COUNT_HW_CACHE_RESULT_MISS	<< 16)				},
+-};
++	if (!evlist)
++		return -ENOMEM;
+ 
+-	struct perf_event_attr default_null_attrs[] = {};
+-	const char *pmu = parse_events_option_args.pmu_filter ?: "all";
++	parse_events_error__init(&err);
+ 
+ 	/* Set attrs if no event is selected and !null_run: */
+ 	if (stat_config.null_run)
+-		return 0;
++		goto out;
+ 
+ 	if (transaction_run) {
+ 		/* Handle -T as -M transaction. Once platform specific metrics
+@@ -1947,9 +1842,10 @@ static int add_default_attributes(void)
+ 		 */
+ 		if (!metricgroup__has_metric(pmu, "transaction")) {
+ 			pr_err("Missing transaction metrics\n");
+-			return -1;
++			ret = -1;
++			goto out;
+ 		}
+-		return metricgroup__parse_groups(evsel_list, pmu, "transaction",
++		ret = metricgroup__parse_groups(evlist, pmu, "transaction",
+ 						stat_config.metric_no_group,
+ 						stat_config.metric_no_merge,
+ 						stat_config.metric_no_threshold,
+@@ -1957,6 +1853,7 @@ static int add_default_attributes(void)
+ 						stat_config.system_wide,
+ 						stat_config.hardware_aware_grouping,
+ 						&stat_config.metric_events);
++		goto out;
+ 	}
+ 
+ 	if (smi_cost) {
+@@ -1964,26 +1861,29 @@ static int add_default_attributes(void)
+ 
+ 		if (sysfs__read_int(FREEZE_ON_SMI_PATH, &smi) < 0) {
+ 			pr_err("freeze_on_smi is not supported.\n");
+-			return -1;
++			ret = -1;
++			goto out;
+ 		}
+ 
+ 		if (!smi) {
+ 			if (sysfs__write_int(FREEZE_ON_SMI_PATH, 1) < 0) {
+-				fprintf(stderr, "Failed to set freeze_on_smi.\n");
+-				return -1;
++				pr_err("Failed to set freeze_on_smi.\n");
++				ret = -1;
++				goto out;
+ 			}
+ 			smi_reset = true;
+ 		}
+ 
+ 		if (!metricgroup__has_metric(pmu, "smi")) {
+ 			pr_err("Missing smi metrics\n");
+-			return -1;
++			ret = -1;
++			goto out;
+ 		}
+ 
+ 		if (!force_metric_only)
+ 			stat_config.metric_only = true;
+ 
+-		return metricgroup__parse_groups(evsel_list, pmu, "smi",
++		ret = metricgroup__parse_groups(evlist, pmu, "smi",
+ 						stat_config.metric_no_group,
+ 						stat_config.metric_no_merge,
+ 						stat_config.metric_no_threshold,
+@@ -1991,6 +1891,7 @@ static int add_default_attributes(void)
+ 						stat_config.system_wide,
+ 						stat_config.hardware_aware_grouping,
+ 						&stat_config.metric_events);
++		goto out;
+ 	}
+ 
+ 	if (topdown_run) {
+@@ -2003,21 +1904,23 @@ static int add_default_attributes(void)
+ 		if (!max_level) {
+ 			pr_err("Topdown requested but the topdown metric groups aren't present.\n"
+ 				"(See perf list the metric groups have names like TopdownL1)\n");
+-			return -1;
++			ret = -1;
++			goto out;
+ 		}
+ 		if (stat_config.topdown_level > max_level) {
+ 			pr_err("Invalid top-down metrics level. The max level is %u.\n", max_level);
+-			return -1;
+-		} else if (!stat_config.topdown_level)
++			ret = -1;
++			goto out;
++		} else if (!stat_config.topdown_level) {
+ 			stat_config.topdown_level = 1;
+-
++		}
+ 		if (!stat_config.interval && !stat_config.metric_only) {
+ 			fprintf(stat_config.output,
+ 				"Topdown accuracy may decrease when measuring long periods.\n"
+ 				"Please print the result regularly, e.g. -I1000\n");
+ 		}
+ 		str[8] = stat_config.topdown_level + '0';
+-		if (metricgroup__parse_groups(evsel_list,
++		if (metricgroup__parse_groups(evlist,
+ 						pmu, str,
+ 						/*metric_no_group=*/false,
+ 						/*metric_no_merge=*/false,
+@@ -2025,41 +1928,49 @@ static int add_default_attributes(void)
+ 						stat_config.user_requested_cpu_list,
+ 						stat_config.system_wide,
+ 						stat_config.hardware_aware_grouping,
+-						&stat_config.metric_events) < 0)
+-			return -1;
++						&stat_config.metric_events) < 0) {
++			ret = -1;
++			goto out;
++		}
+ 	}
+ 
+ 	if (!stat_config.topdown_level)
+ 		stat_config.topdown_level = 1;
+ 
+-	if (!evsel_list->core.nr_entries) {
++	if (!evlist->core.nr_entries && !evsel_list->core.nr_entries) {
+ 		/* No events so add defaults. */
+ 		if (target__has_cpu(&target))
+-			default_attrs0[0].config = PERF_COUNT_SW_CPU_CLOCK;
++			ret = parse_events(evlist, "cpu-clock", &err);
++		else
++			ret = parse_events(evlist, "task-clock", &err);
++		if (ret)
++			goto out;
++
++		ret = parse_events(evlist,
++				"context-switches,"
++				"cpu-migrations,"
++				"page-faults,"
++				"instructions,"
++				"cycles,"
++				"stalled-cycles-frontend,"
++				"stalled-cycles-backend,"
++				"branches,"
++				"branch-misses",
++				&err);
++		if (ret)
++			goto out;
+ 
+-		if (evlist__add_default_attrs(evsel_list, default_attrs0) < 0)
+-			return -1;
+-		if (perf_pmus__have_event("cpu", "stalled-cycles-frontend")) {
+-			if (evlist__add_default_attrs(evsel_list, frontend_attrs) < 0)
+-				return -1;
+-		}
+-		if (perf_pmus__have_event("cpu", "stalled-cycles-backend")) {
+-			if (evlist__add_default_attrs(evsel_list, backend_attrs) < 0)
+-				return -1;
+-		}
+-		if (evlist__add_default_attrs(evsel_list, default_attrs1) < 0)
+-			return -1;
+ 		/*
+ 		 * Add TopdownL1 metrics if they exist. To minimize
+ 		 * multiplexing, don't request threshold computation.
+ 		 */
+ 		if (metricgroup__has_metric(pmu, "Default")) {
+ 			struct evlist *metric_evlist = evlist__new();
+-			struct evsel *metric_evsel;
+-
+-			if (!metric_evlist)
+-				return -1;
+ 
++			if (!metric_evlist) {
++				ret = -ENOMEM;
++				goto out;
++			}
+ 			if (metricgroup__parse_groups(metric_evlist, pmu, "Default",
+ 							/*metric_no_group=*/false,
+ 							/*metric_no_merge=*/false,
+@@ -2067,43 +1978,65 @@ static int add_default_attributes(void)
+ 							stat_config.user_requested_cpu_list,
+ 							stat_config.system_wide,
+ 							stat_config.hardware_aware_grouping,
+-							&stat_config.metric_events) < 0)
+-				return -1;
+-
+-			evlist__for_each_entry(metric_evlist, metric_evsel) {
+-				metric_evsel->skippable = true;
+-				metric_evsel->default_metricgroup = true;
++							&stat_config.metric_events) < 0) {
++				ret = -1;
++				goto out;
+ 			}
+-			evlist__splice_list_tail(evsel_list, &metric_evlist->core.entries);
++
++			evlist__for_each_entry(metric_evlist, evsel)
++				evsel->default_metricgroup = true;
++
++			evlist__splice_list_tail(evlist, &metric_evlist->core.entries);
+ 			evlist__delete(metric_evlist);
+ 		}
+-
+-		/* Platform specific attrs */
+-		if (evlist__add_default_attrs(evsel_list, default_null_attrs) < 0)
+-			return -1;
+ 	}
+ 
+ 	/* Detailed events get appended to the event list: */
+ 
+-	if (detailed_run <  1)
+-		return 0;
+-
+-	/* Append detailed run extra attributes: */
+-	if (evlist__add_default_attrs(evsel_list, detailed_attrs) < 0)
+-		return -1;
+-
+-	if (detailed_run < 2)
+-		return 0;
+-
+-	/* Append very detailed run extra attributes: */
+-	if (evlist__add_default_attrs(evsel_list, very_detailed_attrs) < 0)
+-		return -1;
+-
+-	if (detailed_run < 3)
+-		return 0;
+-
+-	/* Append very, very detailed run extra attributes: */
+-	return evlist__add_default_attrs(evsel_list, very_very_detailed_attrs);
++	if (!ret && detailed_run >=  1) {
++		/*
++		 * Detailed stats (-d), covering the L1 and last level data
++		 * caches:
++		 */
++		ret = parse_events(evlist,
++				"L1-dcache-loads,"
++				"L1-dcache-load-misses,"
++				"LLC-loads,"
++				"LLC-load-misses",
++				&err);
++	}
++	if (!ret && detailed_run >=  2) {
++		/*
++		 * Very detailed stats (-d -d), covering the instruction cache
++		 * and the TLB caches:
++		 */
++		ret = parse_events(evlist,
++				"L1-icache-loads,"
++				"L1-icache-load-misses,"
++				"dTLB-loads,"
++				"dTLB-load-misses,"
++				"iTLB-loads,"
++				"iTLB-load-misses",
++				&err);
++	}
++	if (!ret && detailed_run >=  3) {
++		/*
++		 * Very, very detailed stats (-d -d -d), adding prefetch events:
++		 */
++		ret = parse_events(evlist,
++				"L1-dcache-prefetches,"
++				"L1-dcache-prefetch-misses",
++				&err);
++	}
++out:
++	if (!ret) {
++		evlist__for_each_entry(evlist, evsel)
++			evsel->skippable = true;
++	}
++	parse_events_error__exit(&err);
++	evlist__splice_list_tail(evsel_list, &evlist->core.entries);
++	evlist__delete(evlist);
++	return ret;
+ }
+ 
+ static const char * const stat_record_usage[] = {
+@@ -2760,7 +2693,7 @@ int cmd_stat(int argc, const char **argv)
  		}
  	}
+ 
+-	if (add_default_attributes())
++	if (add_default_events())
+ 		goto out;
+ 
+ 	if (stat_config.cgroup_list) {
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index f14b7e6ff1dc..bace277fa77d 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -319,49 +319,6 @@ struct evsel *evlist__add_sched_switch(struct evlist *evlist, bool system_wide)
+ }
+ #endif
+ 
+-int evlist__add_attrs(struct evlist *evlist, struct perf_event_attr *attrs, size_t nr_attrs)
+-{
+-	struct evsel *evsel, *n;
+-	LIST_HEAD(head);
+-	size_t i;
 -
--	counter->uniquified_name = true;
-+	if (ret > 0) {
-+		free(counter->name);
-+		counter->name = new_name;
-+	} else {
-+		/* ENOMEM from asprintf. */
-+		counter->uniquified_name = false;
-+	}
+-	for (i = 0; i < nr_attrs; i++) {
+-		evsel = evsel__new_idx(attrs + i, evlist->core.nr_entries + i);
+-		if (evsel == NULL)
+-			goto out_delete_partial_list;
+-		list_add_tail(&evsel->core.node, &head);
+-	}
+-
+-	evlist__splice_list_tail(evlist, &head);
+-
+-	return 0;
+-
+-out_delete_partial_list:
+-	__evlist__for_each_entry_safe(&head, n, evsel)
+-		evsel__delete(evsel);
+-	return -1;
+-}
+-
+-int __evlist__add_default_attrs(struct evlist *evlist, struct perf_event_attr *attrs, size_t nr_attrs)
+-{
+-	size_t i;
+-
+-	for (i = 0; i < nr_attrs; i++)
+-		event_attr_init(attrs + i);
+-
+-	return evlist__add_attrs(evlist, attrs, nr_attrs);
+-}
+-
+-__weak int arch_evlist__add_default_attrs(struct evlist *evlist,
+-					  struct perf_event_attr *attrs,
+-					  size_t nr_attrs)
+-{
+-	if (!nr_attrs)
+-		return 0;
+-
+-	return __evlist__add_default_attrs(evlist, attrs, nr_attrs);
+-}
+-
+ struct evsel *evlist__find_tracepoint_by_id(struct evlist *evlist, int id)
+ {
+ 	struct evsel *evsel;
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index bcc1c6984bb5..371dc740ff7a 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -102,18 +102,6 @@ void evlist__delete(struct evlist *evlist);
+ void evlist__add(struct evlist *evlist, struct evsel *entry);
+ void evlist__remove(struct evlist *evlist, struct evsel *evsel);
+ 
+-int evlist__add_attrs(struct evlist *evlist, struct perf_event_attr *attrs, size_t nr_attrs);
+-
+-int __evlist__add_default_attrs(struct evlist *evlist,
+-				     struct perf_event_attr *attrs, size_t nr_attrs);
+-
+-int arch_evlist__add_default_attrs(struct evlist *evlist,
+-				   struct perf_event_attr *attrs,
+-				   size_t nr_attrs);
+-
+-#define evlist__add_default_attrs(evlist, array) \
+-	arch_evlist__add_default_attrs(evlist, array, ARRAY_SIZE(array))
+-
+ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs);
+ 
+ int evlist__add_dummy(struct evlist *evlist);
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index cbff43ff8d0f..5402998881c4 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -7,6 +7,7 @@
+ #include <perf/cpumap.h>
+ #include "color.h"
+ #include "counts.h"
++#include "debug.h"
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "stat.h"
+@@ -967,6 +968,13 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
+ 	struct perf_cpu cpu;
+ 	int idx;
+ 
++	/*
++	 * Skip unsupported default events when not verbose. (default events
++	 * are all marked 'skippable').
++	 */
++	if (verbose == 0 && counter->skippable && !counter->supported)
++		return true;
++
+ 	/*
+ 	 * Skip value 0 when enabling --per-thread globally,
+ 	 * otherwise it will have too many 0 output.
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 99376c12dd8e..dd709a731574 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -76,7 +76,7 @@ void perf_stat__reset_shadow_stats(void)
+ 	memset(&ru_stats, 0, sizeof(ru_stats));
  }
  
- static bool hybrid_uniquify(struct evsel *evsel, struct perf_stat_config *config)
-@@ -1559,6 +1587,31 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
- 		print_metric_end(config, os);
- }
+-static enum stat_type evsel__stat_type(const struct evsel *evsel)
++static enum stat_type evsel__stat_type(struct evsel *evsel)
+ {
+ 	/* Fake perf_hw_cache_op_id values for use with evsel__match. */
+ 	u64 PERF_COUNT_hw_cache_l1d_miss = PERF_COUNT_HW_CACHE_L1D |
+@@ -152,7 +152,7 @@ static const char *get_ratio_color(const double ratios[3], double val)
  
-+static void disable_uniquify(struct evlist *evlist)
-+{
-+	struct evsel *counter;
-+	struct perf_pmu *last_pmu = NULL;
-+	bool first = true;
-+
-+	evlist__for_each_entry(evlist, counter) {
-+		/* If PMUs vary then uniquify can be useful. */
-+		if (!first && counter->pmu != last_pmu)
-+			return;
-+		first = false;
-+		if (counter->pmu) {
-+			/* Allow uniquify for uncore PMUs. */
-+			if (!counter->pmu->is_core)
-+				return;
-+			/* Keep hybrid event names uniquified for clarity. */
-+			if (perf_pmus__num_core_pmus() > 1)
-+				return;
-+		}
-+	}
-+	evlist__for_each_entry_continue(evlist, counter) {
-+		counter->uniquified_name = true;
-+	}
-+}
-+
- void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *config,
- 			    struct target *_target, struct timespec *ts,
- 			    int argc, const char **argv)
-@@ -1572,6 +1625,8 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
- 		.first = true,
- 	};
+ static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type type)
+ {
+-	const struct evsel *cur;
++	struct evsel *cur;
+ 	int evsel_ctx = evsel_context(evsel);
  
-+	disable_uniquify(evlist);
-+
- 	if (config->iostat_run)
- 		evlist->selected = evlist__first(evlist);
- 
+ 	evlist__for_each_entry(evsel->evlist, cur) {
 -- 
 2.34.1
 
