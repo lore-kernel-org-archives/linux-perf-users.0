@@ -1,157 +1,248 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B61132103;
-	Wed, 25 Sep 2024 07:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC417E574
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 08:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727247982; cv=none; b=gk83XDXm8bCinF5rDqqx4q9JwuZnZMsWUums8zDB8sg1KbUtw2hfmRTiBI3YaCbYdv6Nsv1BcUL72sbJUg4/xof22sxFOTJQFF1+XMKU0iWaGvODEe6kVWr/cJTuskTlMjWAPt83JmdQxzB82rt2LeXm+25I/8moMCt38fpLI4Y=
+	t=1727253380; cv=none; b=aYixk+RkSm/sJtWr3eYHhGbAa7OYiufBfKc0d8CAfsYxClZS4smlFJTPyT1U1/GhDDkflwfc+V0PuE3VJNfsLXbR3myN3D5nTif8JscpInN8/PKobY1lYaebgvMHFsIS3MfbObA9K+Xn3nqS6GlRhEc1fDozNosmxyH2b58/7QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727247982; c=relaxed/simple;
-	bh=r/UpZHRugg7E4XJtS4snutbnJJxhERlRPA+IfA/58w0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aRtN6zutcgiZELk3HDiBor677886qoK/B1rlTiQsaTIWWX5CrFgOMlrsmy421XjXiFZRo4vE0y9DMPsDBYKE0Sc31bFrlqDQXCTYesgpAtbbOEj16wosimmAbFqvSwx+wxcMA7uIJiAiTPFFnL5B6C79BK7QfFhVVjQd1Xf007U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nErFxEMy; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727253380; c=relaxed/simple;
+	bh=oitXK+OEA9BE37g2KeTUWl9Ho1Qq0dOTe5le8iXubTE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cwp5CQQOMxviNPZtYJ6Zp2aKaqCIOqAwG8JkcaNJQCUEh8qwvDLrs/aWZnFL7392DNN6giLVSTOxuFiCl8jIN/tMgQgyTpMl+Im4CPT8sIiUN+S5ZIVZ9tNZtV+xWqqYW959AwqtZVkndFiqQAF5QRxGIkFQGI6MBfcLsNEt2d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j4KiXF85; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nErFxEMy"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e0875f1e9edso5347194276.1;
-        Wed, 25 Sep 2024 00:06:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j4KiXF85"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5c42f406e29so9221340a12.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 01:36:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727247980; x=1727852780; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZFGHk5zglVrz/FssJKzFrZhryMd+Oo5FMWLKTN8i03Q=;
-        b=nErFxEMy7Qhe0xukytMcx3m4pNMxB74yjCO7TvUqXqCfDW1joj8XENXc2YAyayHA4K
-         hhTqcwhTo6JCzSjYMWxepB7XiTnU2QwZfJ6VImWuFjk6i+G70rwdz+Ri43ls+FrTGQEn
-         uVheZndQ4CPfGlxOMwBtM7nIhva0BPUKNaXWaZajLO5lth3z2brI0yfoyff0I8deXMgL
-         Tgtg31F3llr3h+P76kZ3F9UpxZbJN5WFY5UUNi0m6wbo4p1WncF5wmOTKQstB2FlUVTR
-         nKpNX0msB6VpzC5oE1aZui6rz/CNWpo/zJPz0lsxiELYxQsc611U/wsU0+EjFOYKWmyw
-         xg2g==
+        d=linaro.org; s=google; t=1727253377; x=1727858177; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ksp6a+vBmT9tTbuHR2BiPBA+vRFwOJtyTtU/9OAbDfY=;
+        b=j4KiXF85GTT33DY1Lym5+059Bcvb2bQMDJtqVw9lQiCFrE+aAGNOED1ywPnPNfQrjU
+         fV8L8v3To4K48YCnrTjN53BPO6mtjcoqpZe6Ovewr5H2UQ62PTTKXu3SoXuDl2DdDCVH
+         xnYFC0NNvvLva0Rm+paY8NxDzXNNimi0f31GaH3QVLf/E6iWXDv/gCARMQurvKeT4I4B
+         yF39hvcz2ADQefWE4zMQBYEZTirBYK0+0QixlnqxmEPUjrrNW8LdM7fn9cDVKQkEZpYx
+         UXxrB5jrNsVc/y1D+RiCfmFQ+xa7ot1vPdPUybVWIXThdcnRk//XurvRgYAle5QNCgMq
+         cuog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727247980; x=1727852780;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZFGHk5zglVrz/FssJKzFrZhryMd+Oo5FMWLKTN8i03Q=;
-        b=t6/CXVh5qp5S5hM8wO60IHo6rU61VZEveRfMGQmtw9Wgc2g9ROlMZnqRbrTFr+a4Go
-         DcRttXrUhrIyie2+sxpjVcx3VgzJLf35cyC+v9Fl0S5h++92Gzh+Iqd7c/cXfTj2VVa/
-         Rk37D3T/Wwa1Y0opubChlTuW+LNOA7PWFhTHEECqLM0PAnytWbA+/az/ZTGCg5grnkNg
-         gEYgzSnfZm0QKPNhHNfk/Sdr28poAdkskbfMehHhyc/1zErMy1Fog8SO6X3cPcvimw3F
-         EEMtuBdQBEiEvIUK9VQEymMzDoe1/kq9Sx3LU82Cv6QKma/Q3eEIZyIXsdbGXsPT458J
-         7L3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUqybbJ21kOaNYJlo/CDBHzKzb/Fy+zSMne+KqBPPG4fi05ChqniRizkR4xEGD1tRDZ+V/5CkYLb583nPBbLql8qg==@vger.kernel.org, AJvYcCXRMndBSM+XNGYYSUBxl+2opK0+aGvAeyEfRcKlzs4tll1icR79WpVLHHdRq7Xlgx7IpIQgjXJhfBGUJRw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNMPGYsevibQJzXyRmd90po4xh+iB5IGNwOAplnRvYxiSamvZS
-	GNwRQFFe8lrc4P+I7ZnkGBK2xgIuB33IjMnD71MBzVpkFhzeUeXo/k4eLtK8dG+TZlQljOa87jX
-	qqwcC1JLvbeaexqw2ieN1mhO91o4=
-X-Google-Smtp-Source: AGHT+IFeMfY421OnlUNrXl1zpzXVmA1iKNUOTtXF6ryLxY6T+v2AvNFDqCW6wcCl+vW2nTTgR8+OdrQfdWI6G28c+TY=
-X-Received: by 2002:a25:694d:0:b0:e25:7573:cef with SMTP id
- 3f1490d57ef6-e2575731445mr178642276.51.1727247979823; Wed, 25 Sep 2024
- 00:06:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1727253377; x=1727858177;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ksp6a+vBmT9tTbuHR2BiPBA+vRFwOJtyTtU/9OAbDfY=;
+        b=xPiuGtpamJ8hub70HEhm5Ci0KiAu7pOOvHypP2YqHD+3Vc10yoL5TOTzlcOSOOjMS8
+         HIW0mBAqVi15cNWtxNq2FHkT0/fcJvIrNmPkkYMSM6l6WfqOTWNI46dWs7z0ww04+6/e
+         qVs0GQWbRLqV9QY7kwW1lzwHpM7/ANa0u95o4Vmh1CMrUJFiZB5t4aUXd4k5iZ7NYMti
+         jHVpM2sR4NZ11bwDuGpdNCzpS5S7hHFkplpHNwFXKywk/tk7vLIuaYExub9DKSF7Xp23
+         W1wQjhuoMBRAyrcbouubtPhidPHPd1lWZo56gPz4qSsu0FzDxFHkWEKLCQuj4whyapjg
+         8aIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXw8JtKJxFIqX/aWzqHRx0oBY4X/C6HrD+lTsCHILE8Be6I/TdL10T9FvNyAR/05dS16jr8373Z8WN2XEGpRB5X@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy32dEwfX6JKcRspStB1urR8QNTsnYCk8PzwYFcv/dS/3cmCXPK
+	aR5r5eesLPA2+U5FcPYRGoxpGVx0aBj3Lj+iC4cbqsOb2VWjBz5oiJHPo1Ry0k0=
+X-Google-Smtp-Source: AGHT+IE7u/39911j1c3sz50SAnSlko3wr3KlRCn4HiDW+ocZgc3Eog0SsprY2n653epsmYu7G78Wbw==
+X-Received: by 2002:a05:6402:3207:b0:5bf:2577:32b8 with SMTP id 4fb4d7f45d1cf-5c72061b565mr1672076a12.9.1727253376929;
+        Wed, 25 Sep 2024 01:36:16 -0700 (PDT)
+Received: from [192.168.1.3] ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c5cf49728asm1632068a12.33.2024.09.25.01.36.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Sep 2024 01:36:16 -0700 (PDT)
+Message-ID: <f436dc23-bcaf-493b-93a9-699b63a18d46@linaro.org>
+Date: Wed, 25 Sep 2024 09:36:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240807153843.3231451-1-howardchu95@gmail.com>
- <20240807153843.3231451-2-howardchu95@gmail.com> <ZrQBbMiIt1NCvxbY@google.com>
- <CAH0uvojQORE2WJziQ4Ru8vsZzr6OLsnn3HOVRkWHW4VFzpKkEg@mail.gmail.com> <CAP-5=fUtcWzGV3n6igzs+eq8dEw2WYsnp8hNeKSUF+6yhZQMcw@mail.gmail.com>
-In-Reply-To: <CAP-5=fUtcWzGV3n6igzs+eq8dEw2WYsnp8hNeKSUF+6yhZQMcw@mail.gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Wed, 25 Sep 2024 00:07:11 -0700
-Message-ID: <CAH0uvogkdEfp_X4Tzc+WGeeuByTDBG9eaHyfeWZ2MbHoMZd6cg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/9] perf evsel: Set BPF output to system-wide
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, acme@kernel.org, adrian.hunter@intel.com, 
-	jolsa@kernel.org, kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/10] perf stat: Add --exclude-guest option
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Mark Rutland <mark.rutland@arm.com>,
+ James Clark <james.clark@arm.com>, Kajol Jain <kjain@linux.ibm.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Atish Patra <atishp@atishpatra.org>,
+ Palmer Dabbelt <palmer@rivosinc.com>, Mingwei Zhang <mizhang@google.com>
+References: <20240905202426.2690105-1-namhyung@kernel.org>
+ <20240905202426.2690105-5-namhyung@kernel.org>
+ <b1002dc7-78bf-40ed-83af-12a50622fb76@linux.intel.com>
+ <c26e646d-5ebf-473e-91e2-db28fc01e35d@linaro.org>
+ <ZvMfVe1VXwhCIOB9@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <ZvMfVe1VXwhCIOB9@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On Tue, Sep 24, 2024 at 7:53=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Wed, Aug 7, 2024 at 8:58=E2=80=AFPM Howard Chu <howardchu95@gmail.com>=
- wrote:
-> >
-> > Hello,
-> >
-> > The event does open, but bpf_perf_event_output() in BPF will return
-> > -95(-EOPNOTSUPP), so no output. I think this EOPNOTSUPP is not in
-> > bpf_trace.c's __bpf_perf_event_output(), but in perf_event's
-> > perf_event_output() called by BPF.
-> >
-> >           <idle>-0       [001] d..4. 154921.079230: bpf_trace_printk: e=
-rr -95
-> >
-> > This is also a bug in perf trace -p <PID>.
-> >
-> > Thanks,
-> > Howard
-> >
-> > On Thu, Aug 8, 2024 at 7:21=E2=80=AFAM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > >
-> > > On Wed, Aug 07, 2024 at 11:38:35PM +0800, Howard Chu wrote:
-> > > > pid =3D -1 for bpf-output event.
-> > > >
-> > > > This makes perf record -p <PID> --off-cpu work. Otherwise bpf-outpu=
-t
-> > > > cannot be collected.
-> > >
-> > > I don't understand why it's necessary.  Why isn't it collected?
-> > > Is it the kernel to reject the BPF output event to open?
-> > >
-> > > Thanks,
-> > > Namhyung
-> > >
-> > > >
-> > > > Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> > > > ---
-> > > >  tools/perf/util/evsel.c | 4 ++++
-> > > >  1 file changed, 4 insertions(+)
-> > > >
-> > > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > > index bc603193c477..b961467133cf 100644
-> > > > --- a/tools/perf/util/evsel.c
-> > > > +++ b/tools/perf/util/evsel.c
-> > > > @@ -2282,6 +2282,10 @@ static int evsel__open_cpu(struct evsel *evs=
-el, struct perf_cpu_map *cpus,
-> > > >
-> > > >                       test_attr__ready();
-> > > >
-> > > > +                     /* BPF output event can only be system-wide *=
-/
-> > > > +                     if (evsel__is_bpf_output(evsel))
-> > > > +                             pid =3D -1;
->
-> This matches with libbpf:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
-tree/tools/lib/bpf/libbpf.c#n11967
 
-Thanks for pointing it out, that's a very good reference. Namhyung
-actually came up with a very good solution and based on his idea I
-posted this patch series:
-https://lore.kernel.org/linux-perf-users/20240827092013.1596-1-howardchu95@=
-gmail.com/
+On 24/09/2024 9:21 pm, Namhyung Kim wrote:
+> Hello,
+> 
+> On Mon, Sep 23, 2024 at 09:47:17AM +0100, James Clark wrote:
+>>
+>>
+>> On 06/09/2024 3:33 pm, Liang, Kan wrote:
+>>>
+>>>
+>>> On 2024-09-05 4:24 p.m., Namhyung Kim wrote:
+>>>> This option is to support the old behavior of setting exclude_guest by
+>>>> default.  Now it doesn't set the bit so users want the old behavior can
+>>>> use this option.
+>>>>
+>>>>     $ perf stat true
+>>>>
+>>>>      Performance counter stats for 'true':
+>>>>
+>>>>                   0.86 msec task-clock:u                     #    0.443 CPUs utilized
+>>>>                      0      context-switches:u               #    0.000 /sec
+>>>>                      0      cpu-migrations:u                 #    0.000 /sec
+>>>>                     49      page-faults:u                    #   56.889 K/sec
+>>>>                    ...
+>>>>
+>>>>     $ perf stat --exclude-guest true
+>>>>
+>>>>      Performance counter stats for 'true':
+>>>>
+>>>>                   0.79 msec task-clock:Hu                    #    0.490 CPUs utilized
+>>>>                      0      context-switches:Hu              #    0.000 /sec
+>>>>                      0      cpu-migrations:Hu                #    0.000 /sec
+>>>>                     49      page-faults:Hu                   #   62.078 K/sec
+>>>>                    ...
+>>>>
+>>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>>>> ---
+>>>>    tools/perf/Documentation/perf-stat.txt | 7 +++++++
+>>>>    tools/perf/builtin-stat.c              | 2 ++
+>>>>    2 files changed, 9 insertions(+)
+>>>>
+>>>> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+>>>> index 2bc06367248691dd..d28d8370a856598f 100644
+>>>> --- a/tools/perf/Documentation/perf-stat.txt
+>>>> +++ b/tools/perf/Documentation/perf-stat.txt
+>>>> @@ -382,6 +382,13 @@ color the metric's computed value.
+>>>>    Don't print output, warnings or messages. This is useful with perf stat
+>>>>    record below to only write data to the perf.data file.
+>>>> +--exclude-guest::
+>>>> +Don't count event in the guest mode.  It was the old behavior but the
+>>>> +default is changed to count guest events also.  Use this option if you
+>>>> +want the old behavior (host only).  Note that this option needs to be
+>>>> +before other events in case you added -e/--event option in the command
+>>>> +line.
+>>>
+>>> I'm not sure if we really need this option. I think it may bring more
+>>> trouble than what we get.
+>>>
+>>> The name of the "--exclude-guest" sounds like a replacement of the event
+>>> modifier "H". But in fact, it's not. It should only affect the default.
+>>> It doesn't set the "H" for any events.
+> 
+> Well I think it's tricky but it'd set "H" modifier events after the
+> option.  But I have to agree that it can bring more troubles.
+> 
+>>>
+>>> Except for the perf kvm user, I don't think there are many users which
+>>> care the exclude_guest. The behavior of the perf kvm is not changed. So
+>>> the option seems not that important. If we really want an option to
+>>> restore the old behavior, it's better to choose a better name and update
+>>> the description.
+> 
+> Personally I don't want to this option but just worried if there's a
+> case where exclude_guest is preferred.
+> 
+>>
+>> Do we not want to keep exclude_guest for record, but remove it for stat?
+> 
+> What I really want is to synchronize record and stat behavior in terms
+> of the default exclusion mode.  If everyone is fine, I'd like to remove
+> exclude_guest from the default and set it only if needed (through the
+> fallback) like we do for exclude_kernel.
+> 
+>>
+>> Because in record the addresses of guest samples don't make sense without
+>> extra work, but for stat you might want to see an overview of the whole
+>> system.
+> 
+> I think it depends on the use case and (power) users should know about
+> their environment and requirement.  The concern is what's the reasonable
+> default, but I think it should be the same both in perf record and stat
+> at least.
+> 
+>>
+>> For Coresight tracing and SPE we would want to keep exclude_guest, otherwise
+>> you generate a load of extra trace that you can't make use of. Say you were
+>> doing PGO on your host you wouldn't be recompiling anything the guests were
+>> running.
+> 
+> For the specific use case, I think we can guide users to add "H"
+> modifier (I guess it's not the default event for perf record).
+> Maybe we can consider per-PMU default attributes.
+> 
 
-Thanks,
-Howard
->
+Yeah I was thinking about adding it as a default when the Coresight and 
+SPE events are configured, but I think it's too much to expect for 
+people to know all the edge cases about what the per PMU defaults will 
+be. Having one default for all PMUs makes more sense to me.
+
+I suppose asking Coresight users to add :H when they need it might be a 
+less bad thing than this change to clean up the fragmentation in the 
+defaults.
+
+I expect most of the time if :H is not added things continue to work, 
+just that more data will be recorded. One real concern is that in some 
+configurations there is a limited buffer size and once it's filled you 
+don't get any more data. If that buffer is filled by guest trace then 
+maybe some Auto FDO flow could break. But it's kind of an edge case of 
+an edge case and adding :H isn't really the end of the world.
+
+>>
+>> If we do change the defaults isn't ':H' already enough to go back to the old
+>> behavior? I'm wondering why we need an argument when all the other exclude
+>> rules are done with the letter modifiers?
+> 
+> I'm not sure I follow this.  But maybe we don't need this option at all.
+> We can add ":H" for every event but I'm too lazy to add them to all the
+> default events in perf data. :)
+> 
 > Thanks,
-> Ian
->
-> > > > +
-> > > >                       /* Debug message used by test scripts */
-> > > >                       pr_debug2_peo("sys_perf_event_open: pid %d  c=
-pu %d  group_fd %d  flags %#lx",
-> > > >                               pid, perf_cpu_map__cpu(cpus, idx).cpu=
-, group_fd, evsel->open_flags);
-> > > > --
-> > > > 2.45.2
-> > > >
+> Namhyung
+>   
+
+Oh I see yes, the argument is a shortcut to adding H on all events 
+and/or the default ones. I wasn't sure if was added because it couldn't 
+be done with :H, but I see it's an alternative instead. So adding it 
+makes sense.
+
+>>>> +
+>>>>    STAT RECORD
+>>>>    -----------
+>>>>    Stores stat data into perf data file.
+>>>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>>>> index d8315dae930184ba..4d47675af5cc3094 100644
+>>>> --- a/tools/perf/builtin-stat.c
+>>>> +++ b/tools/perf/builtin-stat.c
+>>>> @@ -2491,6 +2491,8 @@ int cmd_stat(int argc, const char **argv)
+>>>>    		OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
+>>>>    				"Configure all used events to run in user space.",
+>>>>    				PARSE_OPT_EXCLUSIVE),
+>>>> +		OPT_BOOLEAN(0, "exclude-guest", &exclude_HG_default,
+>>>> +			"Don't count events in the guest mode"),
+
+Maybe this would be a good hint if it really is equivalent:
+
+  +	"Don't count events in the guest mode. (Add :H to all events)"),
+
+>>>>    		OPT_BOOLEAN(0, "percore-show-thread", &stat_config.percore_show_thread,
+>>>>    			"Use with 'percore' event qualifier to show the event "
+>>>>    			"counts of one hardware thread by sum up total hardware "
+>>
+
