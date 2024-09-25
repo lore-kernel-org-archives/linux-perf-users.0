@@ -1,48 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735D9185E7A;
-	Wed, 25 Sep 2024 11:39:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74711199FB0;
+	Wed, 25 Sep 2024 11:50:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727264359; cv=none; b=mkT26mqNuqTWlti21A9aEVdgIJOWRzRUG0RRhxyD/tVmPXo2pecGw4ZRJ2xRHB4rorpStALOSLdrsLgA5VlDarEvIpCjo053kYjBPVHf7AU152M54MxfJ0alz8lWgjQt+3tjNxe0eb4xC+E8nHQ2Zr3T3bDUDcL0lSzMX+0bQqY=
+	t=1727265025; cv=none; b=tjuow89QaMS1jCCModc8LhqiJG3flzQpJ4CZBeTl4ykuizNcttfIRdLYThd3dIIJqbXlPzsY9YXEnXK8TQ77IJYnFLfRlwTdxFIrS5VaAbFTpztalFoBXHFbRQdj9n4rT/Lf+DzVo9umEtLT1WQ9o0weZ3tKpINPm+SZdYsKQQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727264359; c=relaxed/simple;
-	bh=ZDe+AUP0VErESrBTIM6I1mO2ETwgy4R+rUuBvHSFfGQ=;
+	s=arc-20240116; t=1727265025; c=relaxed/simple;
+	bh=VbcyGCc7unU7tQPQ4hu6+gAFeQ6uc7j5JaVtJt2TSu4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZfLkKlwJmKcoH5iTj6wvVgFBYXvUmvfOEciQl2iIQl1X87KfigBg5i78XY6MLlXRGbTLAodjjq6CMuxnNVfVzqO+yULGZhsAiDSVVZvF+62JvyMLuKha9EKBvg2iO/8bGLETxpNG7Jom8MNtm+ypugLDpeE61JKsK7ksW0VBlnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VL5Ss4AN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Q6kUggzG+OPBlHp7ln+rwjf3ZV6DVQzCmXNq980mtIvn2EXm6bJ4L/1/B5oODo82dC9AOdZwQfdLC4yX665cK7EVFpy4ybcA4PHX1BEV3ynoGQJepg26lF/TdqTzbiKcwAhQDHaLGTmCiDGQ6woowuKgmsbdWh6xFmOz5I91kmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mLw2nvJP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VL5Ss4AN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C31B7C4CEC7;
-	Wed, 25 Sep 2024 11:39:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLw2nvJP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F554C4CECE;
+	Wed, 25 Sep 2024 11:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727264359;
-	bh=ZDe+AUP0VErESrBTIM6I1mO2ETwgy4R+rUuBvHSFfGQ=;
+	s=k20201202; t=1727265025;
+	bh=VbcyGCc7unU7tQPQ4hu6+gAFeQ6uc7j5JaVtJt2TSu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VL5Ss4AN8EpCCIuyytEojgK4iEyhJBJqGkz7qXO7l8g/l8rQ9CA3lkfzcCkV/Fsu8
-	 Tj8eMyPFz53h1Sxr9hsvQZsZFz+m++SozvrYJau2C8t1ZEC18yJsubWf7RjaWiEcNI
-	 50P/6OC/OLxivvNPi7v0pd+b+2IAtf8FTg8TZLQ+ZEXYQffJl5Bq0Oq7aoPYgdf5uT
-	 oE+gqc1XN+rv88jGzdmmUSoYreSdyqyboq25zB9r2YpPKNgCOABXfkqrp2v8aQl+5v
-	 oR4HjbptxtDT2IvVgmovfif4ABiSJEoPCDYDcrkiLL66rBDYq08vpweDz/GqqmSBmx
-	 kwreOEBChfLAA==
+	b=mLw2nvJPZXVeLdqN1sbcMvMy1H3IX/vLtoLD163G/ox+87UrtN2oEuRk5EKAjq6zw
+	 g5EkA8G0kllCNPYVsRG/rlU4C8wO5pnOUvGyC0x3BMfa5bB5PGnRZ1C3l5tInO5fvk
+	 Qn00o4GoD+sCj/TwfoeKKHgo7rByi00g5S0llO9cBH+evfKVe8GUQR9BWJP6srrjRJ
+	 BGHxX8EYFutcnDnO/DYWWMjUrB+9N6h6u0li15ygxeZHhYIZmcOeartp7WaDcUG9O7
+	 MwlcmdxI2stC7NEQ2BLXVwzCJwFY0VQaHgQB6Rs5fpQoPVcfa0D/d17P7DTmBgEys6
+	 2Yfi8t5cd8J0w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: James Clark <james.clark@linaro.org>,
-	Al Grant <al.grant@arm.com>,
-	Will Deacon <will@kernel.org>,
+Cc: Andrii Nakryiko <andrii@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Sasha Levin <sashal@kernel.org>,
-	mark.rutland@arm.com,
-	peterz@infradead.org,
 	mingo@redhat.com,
 	acme@kernel.org,
 	namhyung@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.11 066/244] drivers/perf: arm_spe: Use perf_allow_kernel() for permissions
-Date: Wed, 25 Sep 2024 07:24:47 -0400
-Message-ID: <20240925113641.1297102-66-sashal@kernel.org>
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	mhiramat@kernel.org,
+	oleg@redhat.com,
+	linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.11 197/244] perf,x86: avoid missing caller address in stack traces captured in uprobe
+Date: Wed, 25 Sep 2024 07:26:58 -0400
+Message-ID: <20240925113641.1297102-197-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240925113641.1297102-1-sashal@kernel.org>
 References: <20240925113641.1297102-1-sashal@kernel.org>
@@ -57,113 +60,194 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.11
 Content-Transfer-Encoding: 8bit
 
-From: James Clark <james.clark@linaro.org>
+From: Andrii Nakryiko <andrii@kernel.org>
 
-[ Upstream commit 5e9629d0ae977d6f6916d7e519724804e95f0b07 ]
+[ Upstream commit cfa7f3d2c526c224a6271cc78a4a27a0de06f4f0 ]
 
-Use perf_allow_kernel() for 'pa_enable' (physical addresses),
-'pct_enable' (physical timestamps) and context IDs. This means that
-perf_event_paranoid is now taken into account and LSM hooks can be used,
-which is more consistent with other perf_event_open calls. For example
-PERF_SAMPLE_PHYS_ADDR uses perf_allow_kernel() rather than just
-perfmon_capable().
+When tracing user functions with uprobe functionality, it's common to
+install the probe (e.g., a BPF program) at the first instruction of the
+function. This is often going to be `push %rbp` instruction in function
+preamble, which means that within that function frame pointer hasn't
+been established yet. This leads to consistently missing an actual
+caller of the traced function, because perf_callchain_user() only
+records current IP (capturing traced function) and then following frame
+pointer chain (which would be caller's frame, containing the address of
+caller's caller).
 
-This also indirectly fixes the following error message which is
-misleading because perf_event_paranoid is not taken into account by
-perfmon_capable():
+So when we have target_1 -> target_2 -> target_3 call chain and we are
+tracing an entry to target_3, captured stack trace will report
+target_1 -> target_3 call chain, which is wrong and confusing.
 
-  $ perf record -e arm_spe/pa_enable/
+This patch proposes a x86-64-specific heuristic to detect `push %rbp`
+(`push %ebp` on 32-bit architecture) instruction being traced. Given
+entire kernel implementation of user space stack trace capturing works
+under assumption that user space code was compiled with frame pointer
+register (%rbp/%ebp) preservation, it seems pretty reasonable to use
+this instruction as a strong indicator that this is the entry to the
+function. In that case, return address is still pointed to by %rsp/%esp,
+so we fetch it and add to stack trace before proceeding to unwind the
+rest using frame pointer-based logic.
 
-  Error:
-  Access to performance monitoring and observability operations is
-  limited. Consider adjusting /proc/sys/kernel/perf_event_paranoid
-  setting ...
+We also check for `endbr64` (for 64-bit modes) as another common pattern
+for function entry, as suggested by Josh Poimboeuf. Even if we get this
+wrong sometimes for uprobes attached not at the function entry, it's OK
+because stack trace will still be overall meaningful, just with one
+extra bogus entry. If we don't detect this, we end up with guaranteed to
+be missing caller function entry in the stack trace, which is worse
+overall.
 
-Suggested-by: Al Grant <al.grant@arm.com>
-Signed-off-by: James Clark <james.clark@linaro.org>
-Link: https://lore.kernel.org/r/20240827145113.1224604-1-james.clark@linaro.org
-Link: https://lore.kernel.org/all/20240807120039.GD37996@noisy.programming.kicks-ass.net/
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20240729175223.23914-1-andrii@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm_spe_pmu.c | 9 ++++-----
- include/linux/perf_event.h | 8 +-------
- kernel/events/core.c       | 9 +++++++++
- 3 files changed, 14 insertions(+), 12 deletions(-)
+ arch/x86/events/core.c  | 63 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/uprobes.h |  2 ++
+ kernel/events/uprobes.c |  2 ++
+ 3 files changed, 67 insertions(+)
 
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 9100d82bfabc0..3569050f9cf37 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -41,7 +41,7 @@
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index be01823b1bb45..65ab6460aed4d 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -41,6 +41,8 @@
+ #include <asm/desc.h>
+ #include <asm/ldt.h>
+ #include <asm/unwind.h>
++#include <asm/uprobes.h>
++#include <asm/ibt.h>
  
- /*
-  * Cache if the event is allowed to trace Context information.
-- * This allows us to perform the check, i.e, perfmon_capable(),
-+ * This allows us to perform the check, i.e, perf_allow_kernel(),
-  * in the context of the event owner, once, during the event_init().
-  */
- #define SPE_PMU_HW_FLAGS_CX			0x00001
-@@ -50,7 +50,7 @@ static_assert((PERF_EVENT_FLAG_ARCH & SPE_PMU_HW_FLAGS_CX) == SPE_PMU_HW_FLAGS_C
+ #include "perf_event.h"
  
- static void set_spe_event_has_cx(struct perf_event *event)
- {
--	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && perfmon_capable())
-+	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && !perf_allow_kernel(&event->attr))
- 		event->hw.flags |= SPE_PMU_HW_FLAGS_CX;
+@@ -2816,6 +2818,46 @@ static unsigned long get_segment_base(unsigned int segment)
+ 	return get_desc_base(desc);
  }
  
-@@ -745,9 +745,8 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
- 
- 	set_spe_event_has_cx(event);
- 	reg = arm_spe_event_to_pmscr(event);
--	if (!perfmon_capable() &&
--	    (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT)))
--		return -EACCES;
-+	if (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT))
-+		return perf_allow_kernel(&event->attr);
- 
- 	return 0;
- }
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 1a8942277ddad..e336306b8c08e 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1602,13 +1602,7 @@ static inline int perf_is_paranoid(void)
- 	return sysctl_perf_event_paranoid > -1;
- }
- 
--static inline int perf_allow_kernel(struct perf_event_attr *attr)
--{
--	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
--		return -EACCES;
--
--	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
--}
-+int perf_allow_kernel(struct perf_event_attr *attr);
- 
- static inline int perf_allow_cpu(struct perf_event_attr *attr)
- {
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 8a6c6bbcd658a..b21c8f24a9876 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13358,6 +13358,15 @@ const struct perf_event_attr *perf_event_attrs(struct perf_event *event)
- 	return &event->attr;
- }
- 
-+int perf_allow_kernel(struct perf_event_attr *attr)
++#ifdef CONFIG_UPROBES
++/*
++ * Heuristic-based check if uprobe is installed at the function entry.
++ *
++ * Under assumption of user code being compiled with frame pointers,
++ * `push %rbp/%ebp` is a good indicator that we indeed are.
++ *
++ * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
++ * If we get this wrong, captured stack trace might have one extra bogus
++ * entry, but the rest of stack trace will still be meaningful.
++ */
++static bool is_uprobe_at_func_entry(struct pt_regs *regs)
 +{
-+	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
-+		return -EACCES;
++	struct arch_uprobe *auprobe;
 +
-+	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
++	if (!current->utask)
++		return false;
++
++	auprobe = current->utask->auprobe;
++	if (!auprobe)
++		return false;
++
++	/* push %rbp/%ebp */
++	if (auprobe->insn[0] == 0x55)
++		return true;
++
++	/* endbr64 (64-bit only) */
++	if (user_64bit_mode(regs) && is_endbr(*(u32 *)auprobe->insn))
++		return true;
++
++	return false;
 +}
-+EXPORT_SYMBOL_GPL(perf_allow_kernel);
 +
- /*
-  * Inherit an event from parent task to child task.
-  *
++#else
++static bool is_uprobe_at_func_entry(struct pt_regs *regs)
++{
++	return false;
++}
++#endif /* CONFIG_UPROBES */
++
+ #ifdef CONFIG_IA32_EMULATION
+ 
+ #include <linux/compat.h>
+@@ -2827,6 +2869,7 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
+ 	unsigned long ss_base, cs_base;
+ 	struct stack_frame_ia32 frame;
+ 	const struct stack_frame_ia32 __user *fp;
++	u32 ret_addr;
+ 
+ 	if (user_64bit_mode(regs))
+ 		return 0;
+@@ -2836,6 +2879,12 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
+ 
+ 	fp = compat_ptr(ss_base + regs->bp);
+ 	pagefault_disable();
++
++	/* see perf_callchain_user() below for why we do this */
++	if (is_uprobe_at_func_entry(regs) &&
++	    !get_user(ret_addr, (const u32 __user *)regs->sp))
++		perf_callchain_store(entry, ret_addr);
++
+ 	while (entry->nr < entry->max_stack) {
+ 		if (!valid_user_frame(fp, sizeof(frame)))
+ 			break;
+@@ -2864,6 +2913,7 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
+ {
+ 	struct stack_frame frame;
+ 	const struct stack_frame __user *fp;
++	unsigned long ret_addr;
+ 
+ 	if (perf_guest_state()) {
+ 		/* TODO: We don't support guest os callchain now */
+@@ -2887,6 +2937,19 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
+ 		return;
+ 
+ 	pagefault_disable();
++
++	/*
++	 * If we are called from uprobe handler, and we are indeed at the very
++	 * entry to user function (which is normally a `push %rbp` instruction,
++	 * under assumption of application being compiled with frame pointers),
++	 * we should read return address from *regs->sp before proceeding
++	 * to follow frame pointers, otherwise we'll skip immediate caller
++	 * as %rbp is not yet setup.
++	 */
++	if (is_uprobe_at_func_entry(regs) &&
++	    !get_user(ret_addr, (const unsigned long __user *)regs->sp))
++		perf_callchain_store(entry, ret_addr);
++
+ 	while (entry->nr < entry->max_stack) {
+ 		if (!valid_user_frame(fp, sizeof(frame)))
+ 			break;
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index b503fafb7fb3e..a270a5892ab4f 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -76,6 +76,8 @@ struct uprobe_task {
+ 	struct uprobe			*active_uprobe;
+ 	unsigned long			xol_vaddr;
+ 
++	struct arch_uprobe              *auprobe;
++
+ 	struct return_instance		*return_instances;
+ 	unsigned int			depth;
+ };
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 50d7949be2b17..333c44f2ce55d 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2081,6 +2081,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+ 	bool need_prep = false; /* prepare return uprobe, when needed */
+ 
+ 	down_read(&uprobe->register_rwsem);
++	current->utask->auprobe = &uprobe->arch;
+ 	for (uc = uprobe->consumers; uc; uc = uc->next) {
+ 		int rc = 0;
+ 
+@@ -2095,6 +2096,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+ 
+ 		remove &= rc;
+ 	}
++	current->utask->auprobe = NULL;
+ 
+ 	if (need_prep && !remove)
+ 		prepare_uretprobe(uprobe, regs); /* put bp at return */
 -- 
 2.43.0
 
