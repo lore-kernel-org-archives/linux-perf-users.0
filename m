@@ -1,59 +1,41 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A886F2F2
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 09:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A3614AD19;
+	Wed, 25 Sep 2024 10:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727258077; cv=none; b=m0pfTG2DpgwqcKuOvwOl4o9bVKNSuDz9AWo/XsaGyqM0DrCe7xXc6SCgkiv2VolgQjUFg2aa9dv/bCJfrp5O/Gkvk6giCoePnceps0CBZlTqsp39Md9liCSfOSzUuuJxqnXB5dYRMsylM5Ti1mt4OBBM0SszG5Uh3Mr/EnoP6CQ=
+	t=1727258738; cv=none; b=GV+wh+lXihvi/Qi+kR/xd0v/Jkf3IMMXddkBsJGci5n+uecigo29P1hGEO+b/TkNZgAqNyeMMWQ7IIECv2+rASpgyorZNxVv4QaleQUcYUUH0yf5wf30GE9AtfZ8qbfbpmAO1YX+RUz/eYFuCD8pedqPPEZQh6RE3lcOA9bshCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727258077; c=relaxed/simple;
-	bh=lO5nvWA3IV0Iv8VVBnsGuJGmzlaMsvskh9lAUV9JJqw=;
+	s=arc-20240116; t=1727258738; c=relaxed/simple;
+	bh=qGQI1uV9gNC0+wFAUvqgZd/1D5PbfUTEFlfPnBq4z74=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g/A/vLXG4GjfdQguzIP8kwCHtRFYQ26Dp8oIIONc7Y3wCDHGU7C5nEwwnLQEHcciAuEDVWc+LycL99S6tUphwVcnHaq3W5R6hHYj7VRgRhMTzqpWw8V0yvfZ3YJZ9Zlb5YwIVE2c5erkAtKpTPg1PeIwqwAcqVXlt2WLKt9xgPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XPqx4QiU; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XPqx4QiU"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a7aa086b077so830999566b.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 02:54:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727258073; x=1727862873; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+c3kM0IzFVsVh0k7OsrfG/XVq2zxRFxQYpJLz6JaIes=;
-        b=XPqx4QiUNoGqBzBlN639xgovgk0oBHDpWFd0fW1Kz7/mkpBWgUZkEmFDtBWbcATFws
-         H5YSZKp0TbAmfHhFo6YwQgtKQ99Pi+94KEvnahK5llOsClraxza5xFZehXa8b1zt2o/0
-         apgOjTOVkY100F/bAcVDJJMYV4ieGEVL0ybkG3n70IiCU09hIVLuJTgbkRvh6nOpFpvU
-         lZM3WHFiapz01ecAu0I8E1QnFJx7VNABNbcNYoI94+YjaYtvGpyuOVGTxMjM/AFAwVl/
-         0xS8p+wwVQ858l6cswcF6Yj0f+ssFMdCmMCG/vFcCuEc0Pbig0RLYRhPFH4vZzIVl9VT
-         v00A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727258073; x=1727862873;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+c3kM0IzFVsVh0k7OsrfG/XVq2zxRFxQYpJLz6JaIes=;
-        b=qDxDjfTfG7UHKKWtkar8off4Psaeqe8nQ0EJKypu6UehTFKuVl2o3UzpY7EfkcCjII
-         z8Cvj4buzVUT8o4u+6uHyLbhJz84j6ANnkqKiyW1FGWkWxV2KmhlKf3o5TGyPMRy7uIS
-         uHSgTixTsDymtt5eg7BZy4OltmMCsMfEy4cRpAWpav9m3xI3SRgK9m1idty4gJKL9sP0
-         FFdJhYuqwoe4c/E0nfmVbzhyfn4VDnqQtaSOsdr0o2zYjDZ5Y8Fd2mTYZTnlUX9hAbiU
-         rNvfaPUj0pbjY8pnn/Cli28svz5BGPdLbOw27LjrCzG+EaRZdgFDkh9eqn3mF1jS5VVA
-         Jfnw==
-X-Forwarded-Encrypted: i=1; AJvYcCX4RWxieyreZr6ScgrUNe+wkpWmVOfPhSCnCb+frpseg4gqSVGPsEjHOfZ9LGinfNA4vJQmfzfWvAzOv56TuKON@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZlNkY2erD+GqNG3WCgiNiDQLDsAHUfP4cbl2jAKwykLf4QiQ6
-	WJuD0iHgayiZi6w1YHUjPqfPt6jm2WWOjI2A2hlyJI9peeUFc2DRsnfIHGCevQQ=
-X-Google-Smtp-Source: AGHT+IEpyaV+gaoylh/xL1CQdQ+o/9Q+Ttvzern9IGMVbjV8Si52qsVKFPQlQJ9rNm3XCOoM9X+n0g==
-X-Received: by 2002:a17:907:9444:b0:a8d:29b7:ecf3 with SMTP id a640c23a62f3a-a93a0325da2mr238677666b.13.1727258073446;
-        Wed, 25 Sep 2024 02:54:33 -0700 (PDT)
-Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a93930cad8dsm190396466b.101.2024.09.25.02.54.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Sep 2024 02:54:32 -0700 (PDT)
-Message-ID: <5160d57a-3520-4d99-ae10-5cc539fba813@linaro.org>
-Date: Wed, 25 Sep 2024 10:54:31 +0100
+	 In-Reply-To:Content-Type; b=K3CqNewdwzYmZOrjtjj0eMBG/5PwdrY1ehWrMcLkM3YEhl7VDkIjspmNbyNjSSbuyvDk2Vda22Gfj6siCZUu6Kbpdkyx/EB9t1IphrEiRJPWijw6n51uTj4LXpm1EbUD+d9Oga4nfCtVFWq/Dk5TdDvJn1Dsb+fZrvg65+KyOu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4XDC664Lgnz9sSK;
+	Wed, 25 Sep 2024 12:05:34 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id tdRuDw19ZA5l; Wed, 25 Sep 2024 12:05:34 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4XDC663XQwz9sRr;
+	Wed, 25 Sep 2024 12:05:34 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 66F1B8B76E;
+	Wed, 25 Sep 2024 12:05:34 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id PJHxtpbIOOEt; Wed, 25 Sep 2024 12:05:34 +0200 (CEST)
+Received: from [192.168.232.90] (PO27091.IDSI0.si.c-s.fr [192.168.232.90])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id CBE218B763;
+	Wed, 25 Sep 2024 12:05:33 +0200 (CEST)
+Message-ID: <f40ea8bf-0862-41a7-af19-70bfbd838568@csgroup.eu>
+Date: Wed, 25 Sep 2024 12:05:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,65 +43,68 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf: cs-etm: Fix the assert() to handle captured and
- unprocessed cpu trace
-To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20240924233930.5193-1-ilkka@os.amperecomputing.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20240924233930.5193-1-ilkka@os.amperecomputing.com>
+Subject: Re: [PATCH V2 0/7] mm: Use pxdp_get() for accessing page table
+ entries
+To: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ x86@kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-fsdevel@vger.kernel.org, kasan-dev@googlegroups.com,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20240917073117.1531207-1-anshuman.khandual@arm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20240917073117.1531207-1-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 25/09/2024 12:39 am, Ilkka Koskinen wrote:
-> If one builds perf with DEBUG=1, captures data on multiple CPUs and
-> finally runs 'perf report -C <cpu>' for only one of the cpus, assert()
-> aborts the program. This happens because there are empty queues with
-> format set. This patch changes the condition to abort only if a queue
-> is not empty and if the format is unset.
+Le 17/09/2024 à 09:31, Anshuman Khandual a écrit :
+> This series converts all generic page table entries direct derefences via
+> pxdp_get() based helpers extending the changes brought in via the commit
+> c33c794828f2 ("mm: ptep_get() conversion"). First it does some platform
+> specific changes for m68k and x86 architecture.
 > 
->    $ make -C tools/perf DEBUG=1 CORESIGHT=1 CSLIBS=/usr/lib CSINCLUDES=/usr/include install
->    $ perf record -o kcore --kcore -e cs_etm/timestamp/k -s -C 0-1 dd if=/dev/zero of=/dev/null bs=1M count=1
->    $ perf report --input kcore/data --vmlinux=/home/ikoskine/projects/linux/vmlinux -C 1
->    Aborted (core dumped)
-> 
-> Fixes: 57880a7966be ("perf: cs-etm: Allocate queues for all CPUs")
-> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-> ---
->   tools/perf/util/cs-etm.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 90f32f327b9b..40f047baef81 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -3323,7 +3323,7 @@ static int cs_etm__create_decoders(struct cs_etm_auxtrace *etm)
->   		 * Don't create decoders for empty queues, mainly because
->   		 * etmq->format is unknown for empty queues.
->   		 */
-> -		assert(empty == (etmq->format == UNSET));
-> +		assert(empty || etmq->format != UNSET);
->   		if (empty)
->   			continue;
->   
+> This series has been build tested on multiple architecture such as x86,
+> arm64, powerpc, powerpc64le, riscv, and m68k etc.
 
-Oops I didn't realize you could filter on CPU in report mode. Thanks for 
-the fix. Adding a test to the end of test_arm_coresight.sh might be 
-quite useful. Either way:
+Seems like this series imply sub-optimal code with unnecessary reads.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+Lets take a simple exemple : function mm_find_pmd() in mm/rmap.c
 
+On a PPC32 platform (2 level pagetables):
+
+Before the patch:
+
+00001b54 <mm_find_pmd>:
+     1b54:	80 63 00 18 	lwz     r3,24(r3)
+     1b58:	54 84 65 3a 	rlwinm  r4,r4,12,20,29
+     1b5c:	7c 63 22 14 	add     r3,r3,r4
+     1b60:	4e 80 00 20 	blr
+
+Here, the function reads mm->pgd, then calculates and returns a pointer 
+to the PMD entry corresponding to the address.
+
+After the patch:
+
+00001b54 <mm_find_pmd>:
+     1b54:	81 23 00 18 	lwz     r9,24(r3)
+     1b58:	54 84 65 3a 	rlwinm  r4,r4,12,20,29
+     1b5c:	7d 49 20 2e 	lwzx    r10,r9,r4	<= useless read
+     1b60:	7c 69 22 14 	add     r3,r9,r4
+     1b64:	7d 49 20 2e 	lwzx    r10,r9,r4	<= useless read
+     1b68:	7d 29 20 2e 	lwzx    r9,r9,r4	<= useless read
+     1b6c:	4e 80 00 20 	blr
+
+Here, the function also reads mm->pgd and still calculates and returns a 
+pointer to the PMD entry corresponding to the address. But in addition 
+to that it reads three times that entry while doing nothing at all with 
+the value read.
+
+On PPC32, PMD/PUD/P4D are single entry tables folded into the 
+corresponding PGD entry, it is therefore pointless to read the 
+intermediate entries.
+
+Christophe
