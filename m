@@ -1,47 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BF5208E6F;
-	Wed, 25 Sep 2024 12:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1602194A8;
+	Wed, 25 Sep 2024 12:13:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727266086; cv=none; b=qSAGbGjs8q1srMJEcsGqLXK9mRKdjruZMdqyz9oNipPvFqFyG3aI3h80EJy0hq3CAkS0AAxrNP3ZRM1BGxdly7duKZO9Z5D+3oO1Rp+l65GV+Kw8y4QYjzyDFcfnC1N4cGWKUWtfVSIOOUKrwJH/ABzdLMdaJ+0T1BeoV+ynICo=
+	t=1727266408; cv=none; b=P+AGpUidHSyDiSVCHJTO1QNfakA3eAYhn1XL5YqMyb04s9+aUCKFAdcAo1Gt/hB7Iyoq7Dutim+1UkAFcgurg4IEs//i7t8sxyD92/f18sAca6hT1UhwwQyGPp80rDO/MybRQJLkDHUPW7ilnu8EZtH5hbUv7j2ud/4PY+49B5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727266086; c=relaxed/simple;
-	bh=qViNjhDnwURNqBMyggd43t6rbIrnVfxZrwhGkjgTn6Y=;
+	s=arc-20240116; t=1727266408; c=relaxed/simple;
+	bh=LrCOcNgGPitG5crkhX9bq4DBpSXYwgiiKFJA3JrJJCI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j3S/IU37dKTSznDnxQ/pZWJsz+dYP5K3izz4RIffRvygHme4w/FaP2Jt+7D9DUa2FdG5HevPgoZ5aKAL8hKYfjsrarO+lu/o/KvUx074Rzlj1Dp6/EfL5wacPGV2MxXGt/OV6rz1TSrmogXll4MKjEhLWe85l+RUOp/Eaio2xoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOmCb/iA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VxqjYMKc2xO76/zEdAVba4uWqj6U3vU3vNVkMWBuuKfxSm0KaAzCy1e2OA5o1YWLvjnvW7xreqwUca+UQpZ25Q1O0zgY25ojyPg0apDseBGqxXv7QLNfxNji3M02OMxgJzQNKbk+2UUj/5o86AiK1SjUFioIg9G5P1yLv4aiToM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=fail (0-bit key) header.d=kernel.org header.i=@kernel.org header.b=ugK2Rszc reason="key not found in DNS"; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOmCb/iA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05731C4CECD;
-	Wed, 25 Sep 2024 12:08:04 +0000 (UTC)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=kernel.org header.i=@kernel.org header.b="ugK2Rszc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F591C4CEC3;
+	Wed, 25 Sep 2024 12:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727266086;
-	bh=qViNjhDnwURNqBMyggd43t6rbIrnVfxZrwhGkjgTn6Y=;
+	s=k20201202; t=1727266408;
+	bh=LrCOcNgGPitG5crkhX9bq4DBpSXYwgiiKFJA3JrJJCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UOmCb/iAKJdoHyEh7fTd1d9t+xDu0W8xzdKFGF6lPuFTVuX7TF4mjmt/jtGnt4Foy
-	 tnSFgEd4A2MTnxagNaG3PljXNghOknSCOxrNSlNBdf+Cg79nhdXDFpDquk/YR1LuNh
-	 H64oYIwL/J3DUs11Vk5spN6qe0fay1wac6nwyU30zz9RDhW0uYqK1JcMWAotU7sooy
-	 3sU5H+oECZbd7P4ihXZejO2LYdLF8FZ+G5rcFtpi0NODDdpmere1nPsMFliL2qIIYX
-	 xy6D01BIM428VMLfYwCsk2XLpvEyv34WMafzjlKOcN+8eS/q5Nb1tD4ZBYBuKXuNiB
-	 itg+T/bH8E0AA==
+	b=ugK2RszcsEfHwDOFcf/qV8Z7Od8qZTgf31yNsjjVyvPt5QsZT2XZ5w94YfJQByuu7
+	 ofLJXXLPUJXrOxfagE42W7i9w+3Hs5UiLsoyd+GV4Eo3OCBDFx2rESRwUX02b8Cxes
+	 p6blDDD8YrOYcH47tciN7squloF1DEuUYEGqOOHsjJ444ABibf24fE2++/KiCYqUjM
+	 XRqWTvEeuYTCkky3Yn+aXfjmD/mvH/gFnMXQxe7ghiydVWdUkYFHjqupLKQcFF8m23
+	 4Yd4z5gj+Lc+KM3JCiJBXx06UC74vqZHcndiGjGIZgx7icK3n/hU0U9eSgeBWVUOdV
+	 FuZs0vcrcQCfw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: James Clark <james.clark@linaro.org>,
+	Al Grant <al.grant@arm.com>,
+	Will Deacon <will@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
+	mark.rutland@arm.com,
+	peterz@infradead.org,
 	mingo@redhat.com,
 	acme@kernel.org,
+	namhyung@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.10 167/197] perf: Fix event_function_call() locking
-Date: Wed, 25 Sep 2024 07:53:06 -0400
-Message-ID: <20240925115823.1303019-167-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 049/139] drivers/perf: arm_spe: Use perf_allow_kernel() for permissions
+Date: Wed, 25 Sep 2024 08:07:49 -0400
+Message-ID: <20240925121137.1307574-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240925115823.1303019-1-sashal@kernel.org>
-References: <20240925115823.1303019-1-sashal@kernel.org>
+In-Reply-To: <20240925121137.1307574-1-sashal@kernel.org>
+References: <20240925121137.1307574-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,64 +54,116 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.10.11
+X-stable-base: Linux 6.6.52
 Content-Transfer-Encoding: 8bit
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: James Clark <james.clark@linaro.org>
 
-[ Upstream commit 558abc7e3f895049faa46b08656be4c60dc6e9fd ]
+[ Upstream commit 5e9629d0ae977d6f6916d7e519724804e95f0b07 ]
 
-All the event_function/@func call context already uses perf_ctx_lock()
-except for the !ctx->is_active case. Make it all consistent.
+Use perf_allow_kernel() for 'pa_enable' (physical addresses),
+'pct_enable' (physical timestamps) and context IDs. This means that
+perf_event_paranoid is now taken into account and LSM hooks can be used,
+which is more consistent with other perf_event_open calls. For example
+PERF_SAMPLE_PHYS_ADDR uses perf_allow_kernel() rather than just
+perfmon_capable().
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240807115550.138301094@infradead.org
+This also indirectly fixes the following error message which is
+misleading because perf_event_paranoid is not taken into account by
+perfmon_capable():
+
+  $ perf record -e arm_spe/pa_enable/
+
+  Error:
+  Access to performance monitoring and observability operations is
+  limited. Consider adjusting /proc/sys/kernel/perf_event_paranoid
+  setting ...
+
+Suggested-by: Al Grant <al.grant@arm.com>
+Signed-off-by: James Clark <james.clark@linaro.org>
+Link: https://lore.kernel.org/r/20240827145113.1224604-1-james.clark@linaro.org
+Link: https://lore.kernel.org/all/20240807120039.GD37996@noisy.programming.kicks-ass.net/
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/perf/arm_spe_pmu.c | 9 ++++-----
+ include/linux/perf_event.h | 8 +-------
+ kernel/events/core.c       | 9 +++++++++
+ 3 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 081d9692ce747..e18a07de9920a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -263,6 +263,7 @@ static int event_function(void *info)
- static void event_function_call(struct perf_event *event, event_f func, void *data)
- {
- 	struct perf_event_context *ctx = event->ctx;
-+	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
- 	struct task_struct *task = READ_ONCE(ctx->task); /* verified in event_function */
- 	struct event_function_struct efs = {
- 		.event = event,
-@@ -291,22 +292,22 @@ static void event_function_call(struct perf_event *event, event_f func, void *da
- 	if (!task_function_call(task, event_function, &efs))
- 		return;
- 
--	raw_spin_lock_irq(&ctx->lock);
-+	perf_ctx_lock(cpuctx, ctx);
- 	/*
- 	 * Reload the task pointer, it might have been changed by
- 	 * a concurrent perf_event_context_sched_out().
- 	 */
- 	task = ctx->task;
- 	if (task == TASK_TOMBSTONE) {
--		raw_spin_unlock_irq(&ctx->lock);
-+		perf_ctx_unlock(cpuctx, ctx);
- 		return;
- 	}
- 	if (ctx->is_active) {
--		raw_spin_unlock_irq(&ctx->lock);
-+		perf_ctx_unlock(cpuctx, ctx);
- 		goto again;
- 	}
- 	func(event, NULL, ctx, data);
--	raw_spin_unlock_irq(&ctx->lock);
-+	perf_ctx_unlock(cpuctx, ctx);
- }
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index d2b0cbf0e0c41..2bec2e3af0bd6 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -41,7 +41,7 @@
  
  /*
+  * Cache if the event is allowed to trace Context information.
+- * This allows us to perform the check, i.e, perfmon_capable(),
++ * This allows us to perform the check, i.e, perf_allow_kernel(),
+  * in the context of the event owner, once, during the event_init().
+  */
+ #define SPE_PMU_HW_FLAGS_CX			0x00001
+@@ -50,7 +50,7 @@ static_assert((PERF_EVENT_FLAG_ARCH & SPE_PMU_HW_FLAGS_CX) == SPE_PMU_HW_FLAGS_C
+ 
+ static void set_spe_event_has_cx(struct perf_event *event)
+ {
+-	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && perfmon_capable())
++	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && !perf_allow_kernel(&event->attr))
+ 		event->hw.flags |= SPE_PMU_HW_FLAGS_CX;
+ }
+ 
+@@ -767,9 +767,8 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
+ 
+ 	set_spe_event_has_cx(event);
+ 	reg = arm_spe_event_to_pmscr(event);
+-	if (!perfmon_capable() &&
+-	    (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT)))
+-		return -EACCES;
++	if (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT))
++		return perf_allow_kernel(&event->attr);
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 95d4118ee4a91..7a5563ffe61b5 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1599,13 +1599,7 @@ static inline int perf_is_paranoid(void)
+ 	return sysctl_perf_event_paranoid > -1;
+ }
+ 
+-static inline int perf_allow_kernel(struct perf_event_attr *attr)
+-{
+-	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
+-		return -EACCES;
+-
+-	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+-}
++int perf_allow_kernel(struct perf_event_attr *attr);
+ 
+ static inline int perf_allow_cpu(struct perf_event_attr *attr)
+ {
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4d0abdace4e7c..d40809bdf4b30 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -13330,6 +13330,15 @@ const struct perf_event_attr *perf_event_attrs(struct perf_event *event)
+ 	return &event->attr;
+ }
+ 
++int perf_allow_kernel(struct perf_event_attr *attr)
++{
++	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
++		return -EACCES;
++
++	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
++}
++EXPORT_SYMBOL_GPL(perf_allow_kernel);
++
+ /*
+  * Inherit an event from parent task to child task.
+  *
 -- 
 2.43.0
 
