@@ -1,55 +1,55 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7048513AA2E
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 02:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ECA132124
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 03:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727232827; cv=none; b=aQNh38nbypVCKfXEwGQ5t3XKKzAlG7zbQle2W6fjmqlLCzw9GfQw8le3ywgQ8qR0zbwzj/tWYOEN8CCvhM0gPnZjzyICHA5zEufr93jthpeEwzfVe1cnPeiEM8OeocpEsqjeXv8+ILmqcymsqfiiQccMKDUs7d0+07xw5W7F7Cs=
+	t=1727233474; cv=none; b=grB7rOLiURZKzf+hwP5lhYt4mJ/YtyLV7M2IdvnRHLHVoaqZpOg7886EVFEeSEFSCvk4HC6GVSJ3YnmFUb824F5xVKKYNcDw67m7+PMxtAQT3Kb3APh6aDqEP66esZDu8BNJ6Y6/dy0oaS3Txao9OBIF7eRVJ5J2pdIunJAQqu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727232827; c=relaxed/simple;
-	bh=BVtIXoNPDtV9b5W6sPXiJg1yRfY97j9WW4x1rZIkUl8=;
+	s=arc-20240116; t=1727233474; c=relaxed/simple;
+	bh=d9fjwCqZhOrVOY7JwIobl/3xoYisnCv4ybKxHOAGAzA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lUU/NGcU28biPtHHdA0i+T2BGoQrdDmsSxK1//3f6BH211uM2jq312W5M+AHMS5SGdFTzotrSTQGzfbqxb1eulgb9nP+2hIDGKFPgZrV8K6AdQIh4qJHiddviPQKmv0SgHA0PV4YzcKxLyuG6bFajG5irC74FtkkcspGdFR2IZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wr2d1QD7; arc=none smtp.client-ip=209.85.166.177
+	 To:Cc:Content-Type; b=fxB05PjjnSuxACC7cQNPVnqiidkrV3pJGgXWtSbM09haxQ0mrgMC/5EmuT6zBzuPm61beyFyAiWrN3vH0cYNplifBrAIwCV/vkQAvpWd28zUzIWNLOB/mcAU1QIdQCXW65bH7tXD2J9UnD0om0OL5dAHzEtMjhhBzHxxdYgqwGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cerTAM+Q; arc=none smtp.client-ip=209.85.160.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wr2d1QD7"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3a1a4f2cc29so67255ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 19:53:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cerTAM+Q"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4581cec6079so141561cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Sep 2024 20:04:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727232825; x=1727837625; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1727233471; x=1727838271; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RE1g72vjBXIZmoO6mhWph28xLfHkuapm11FZBuAO5AI=;
-        b=wr2d1QD7W0vmvSi4JsetTY54FC8Am17nOmojdrt6bw0slC9gr1Xx7V83aNXRsIuUnS
-         ewM27wmvkau/TN+E1XsQ93IGqQ5SMRIErSEVBE693+eH5NHJJDcxJwAzfboLPzxRLomO
-         3CD/imx+5Hq4Zm73RHTIbOO/Vv6Jvk40PpzGDIL1UpKMffaCd3PlFBf1MDqa2SwwWomp
-         iCi+cYmmtJE7GxB/IWaFM4uWTOpZSNGZDnO8USvjG+FubWKFI4r4qJCwpz9nC4b8Ycx+
-         LNS5e256t+u2f/pksfO5GCq4O7CWEp3HDPLTR7T0y8lfTooq3i+465Bsdf2C0op3HhcG
-         DeIg==
+        bh=FuiPm0Dt4Y3JNQRfEKYN1QbKtyTN0war4ihX6UvCc8c=;
+        b=cerTAM+QVSpG6YGyi81VtxCwBdMko/i3+qJKXmecI+vhAAxb/0sl0VymCRM1g4Ze6S
+         MaD1UssLfOVnChLbs3Lpus9J6dxF1U7hoQPMrqf0Sc5j5nMn4rGLALKWO2/fn5H8zzcu
+         hmHGRaOKJDNySCYkdkmiiO8WGV9SBBunHdgIDuGDayIQBmo0mzyJIll8N4+gjSRARdMV
+         G1wvK3DNIK0DSOjk5OiqKx3IPMb/APWu+6GaBMpS6kOOKzCGHL+xtoTI3Gq79qMdx2gz
+         sVoghXH1mMMdnBwtme3g9Qi03cjybLN44nsFBOjfQmteYgEdRXwfbEtynikra0G39Sdw
+         zUow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727232825; x=1727837625;
+        d=1e100.net; s=20230601; t=1727233471; x=1727838271;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RE1g72vjBXIZmoO6mhWph28xLfHkuapm11FZBuAO5AI=;
-        b=dX5G2OXbftPEGaKSQZqAKFOvNyjwe3uJZR/d7QmTfmqnbTksTB+8uhPTxOjxhfXaHn
-         CumaWgqV6oWEX7A/iTEKPpK6UNs3VYXAL1q52feuDM6R34zjpfStlLZlj/5wq8AT4VeO
-         aiBNjjbMs2BrPRwvavDN7JPeAURzJNT6b1XaBhZ37CJXuBsa54i242rNLjMkWZXkWT+t
-         xq+5W+srHL3A4zLWzm3MnmulY0v6vXMKLCEetWacH7CGtM1X0E7yDM+fYmDEZsEeaX2Q
-         Lnnubh0UOCW5EEmeFtCM7R6C+YwWNabaImSmsan1xhH8iwT3EllGQb60udHz/05TIMqP
-         JmOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFMiXpnPzPHRThuGMkGbGD3LJNlRQVV/roXF/DRqaTb5hmMsl3mo8ifu9gfAjeerEqCw0iECCR9RYG6lP7AnLx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7ZerJejZJq7uie0iTbRuD+VGE8kbuVSNuwoCF2sklVaPn+wtq
-	eDj2LJ87NFDmfDj2MRBVun2oATfR97MYqgBsfSiWpyCsmzt5HC6rcR0Ctvq7EWtsM5/620P6TMr
-	YyI+e5u3fAqgGrK8DTa1WkBAgM8bIykmn7Du/
-X-Google-Smtp-Source: AGHT+IGJNRvXMheaYYSlz8koI7fjyKUqOJDPrsq5nBwd12Ueg6+wlFPg6nMTlf7E8hVRQG0iV0eh1Ij+pDV1gkK7Odk=
-X-Received: by 2002:a92:ca4a:0:b0:375:bb49:930d with SMTP id
- e9e14a558f8ab-3a2703b9839mr1313935ab.23.1727232824968; Tue, 24 Sep 2024
- 19:53:44 -0700 (PDT)
+        bh=FuiPm0Dt4Y3JNQRfEKYN1QbKtyTN0war4ihX6UvCc8c=;
+        b=Ps/h8pPTFy6z+0xIY9YAmTcR4zeGaDBTlwtMFKkNhN7GERkHwIXps0nTflqU2NiubI
+         V0louPaz9Qr8yduV2CLwCLgIbCAHUlOtByzSLtU+/SEr2UIZHrV+Zs78QX08UkqtWhBq
+         UhIAyFmBl+zK/05R8NtOViPZrbaiPQl4Cp39CjfKMdOWV4p/2YED52fMCSQdsQHycfAP
+         0LrmoIK09sc/zXHtIJy0MCXosxwmrQfggUxA+UGs5zjclQXHoAbSko1oDJY5EOgVz6ra
+         QBxWr0Pk2dd7stMcdcNlGwKpqiTEHZHDa1emQC1JmMTBeyQgQchX2ZlCV9/9mwxxdzVO
+         NBtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfOgzcrvm68EQVhUkOFYmLPhHqhTbhqup6h+7wL3fuHHFVFdPTBta2CEL9oDD8OhzDw+vE+y0HDftMQIaLd8U4@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGeaVqslqXrvVU5uPPQDCSDe0YUlach6+IUYWoT9B/SSAAGQ1r
+	DhO5FfdEOjs/PSUaEirJc044j3LGPyHuJ3/LevjF80uO+EFaBh9YYlXQ+9yK0x7Y9hwemFwDV3c
+	cdBVJtIHNyDQy7EvHQ3h5Y2Mq5nM0O7XKmqIb
+X-Google-Smtp-Source: AGHT+IEAqJVsj13voNzYZp3vvG3S8gQM1xlB/GFTp50/4EQjQuzhfxD5Njf8MPLz4LNvHS2GlB4Ds1H4RFBjit8ZFxU=
+X-Received: by 2002:ac8:5781:0:b0:453:62ee:3fe with SMTP id
+ d75a77b69052e-45b5f8324d3mr1002231cf.17.1727233470851; Tue, 24 Sep 2024
+ 20:04:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,85 +57,147 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240807153843.3231451-1-howardchu95@gmail.com>
- <20240807153843.3231451-2-howardchu95@gmail.com> <ZrQBbMiIt1NCvxbY@google.com>
- <CAH0uvojQORE2WJziQ4Ru8vsZzr6OLsnn3HOVRkWHW4VFzpKkEg@mail.gmail.com>
-In-Reply-To: <CAH0uvojQORE2WJziQ4Ru8vsZzr6OLsnn3HOVRkWHW4VFzpKkEg@mail.gmail.com>
+In-Reply-To: <20240807153843.3231451-1-howardchu95@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 24 Sep 2024 19:53:31 -0700
-Message-ID: <CAP-5=fUtcWzGV3n6igzs+eq8dEw2WYsnp8hNeKSUF+6yhZQMcw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/9] perf evsel: Set BPF output to system-wide
+Date: Tue, 24 Sep 2024 20:04:19 -0700
+Message-ID: <CAP-5=fVy4HijSq=M6QvFtHpyjw=R7XB8CsbMmFMqzJrmG9t6vg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/9] perf record --off-cpu: Dump off-cpu samples directly
 To: Howard Chu <howardchu95@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, acme@kernel.org, adrian.hunter@intel.com, 
+Cc: namhyung@kernel.org, acme@kernel.org, adrian.hunter@intel.com, 
 	jolsa@kernel.org, kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 7, 2024 at 8:58=E2=80=AFPM Howard Chu <howardchu95@gmail.com> w=
+On Wed, Aug 7, 2024 at 8:38=E2=80=AFAM Howard Chu <howardchu95@gmail.com> w=
 rote:
 >
-> Hello,
->
-> The event does open, but bpf_perf_event_output() in BPF will return
-> -95(-EOPNOTSUPP), so no output. I think this EOPNOTSUPP is not in
-> bpf_trace.c's __bpf_perf_event_output(), but in perf_event's
-> perf_event_output() called by BPF.
->
->           <idle>-0       [001] d..4. 154921.079230: bpf_trace_printk: err=
- -95
->
-> This is also a bug in perf trace -p <PID>.
->
-> Thanks,
-> Howard
->
-> On Thu, Aug 8, 2024 at 7:21=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
-> >
-> > On Wed, Aug 07, 2024 at 11:38:35PM +0800, Howard Chu wrote:
-> > > pid =3D -1 for bpf-output event.
-> > >
-> > > This makes perf record -p <PID> --off-cpu work. Otherwise bpf-output
-> > > cannot be collected.
-> >
-> > I don't understand why it's necessary.  Why isn't it collected?
-> > Is it the kernel to reject the BPF output event to open?
-> >
-> > Thanks,
-> > Namhyung
-> >
-> > >
-> > > Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> > > ---
-> > >  tools/perf/util/evsel.c | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > >
-> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > index bc603193c477..b961467133cf 100644
-> > > --- a/tools/perf/util/evsel.c
-> > > +++ b/tools/perf/util/evsel.c
-> > > @@ -2282,6 +2282,10 @@ static int evsel__open_cpu(struct evsel *evsel=
-, struct perf_cpu_map *cpus,
-> > >
-> > >                       test_attr__ready();
-> > >
-> > > +                     /* BPF output event can only be system-wide */
-> > > +                     if (evsel__is_bpf_output(evsel))
-> > > +                             pid =3D -1;
+> Changes in v4:
+>  - Minimize the size of data output by perf_event_output()
+>  - Keep only one off-cpu event
+>  - Change off-cpu threshold's unit to microseconds
+>  - Set a default off-cpu threshold
+>  - Print the correct error message for the field 'embed' in perf data hea=
+der
 
-This matches with libbpf:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/lib/bpf/libbpf.c#n11967
+Hi Howard,
+
+I think this all looks good. There is an outstanding comment for patch
+2/9 where a definition in a later patch needs moving to patch 2/9.
+There is also a comment in 3/9 where you say you will turn a "=3D" back
+to an "&=3D". These seem like small things to fix, could you rebase and
+post the series? Are there other outstanding issues I'm missing? I'd
+quite like to see this land.
 
 Thanks,
 Ian
 
-> > > +
-> > >                       /* Debug message used by test scripts */
-> > >                       pr_debug2_peo("sys_perf_event_open: pid %d  cpu=
- %d  group_fd %d  flags %#lx",
-> > >                               pid, perf_cpu_map__cpu(cpus, idx).cpu, =
-group_fd, evsel->open_flags);
-> > > --
-> > > 2.45.2
-> > >
+> Changes in v3:
+>  - Add off-cpu-thresh argument
+>  - Process direct off-cpu samples in post
+>
+> Changes in v2:
+>  - Remove unnecessary comments.
+>  - Rename function off_cpu_change_type to off_cpu_prepare_parse
+>
+> v1:
+>
+> As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=3D207323
+>
+> Currently, off-cpu samples are dumped when perf record is exiting. This
+> results in off-cpu samples being after the regular samples. This patch
+> series makes possible dumping off-cpu samples on-the-fly, directly into
+> perf ring buffer. And it dispatches those samples to the correct format
+> for perf.data consumers.
+>
+> Before:
+> ```
+>      migration/0      21 [000] 27981.041319: 2944637851    cycles:P:  fff=
+fffff90d2e8aa record_times+0xa ([kernel.kallsyms])
+>             perf  770116 [001] 27981.041375:          1    cycles:P:  fff=
+fffff90ee4960 event_function+0xf0 ([kernel.kallsyms])
+>             perf  770116 [001] 27981.041377:          1    cycles:P:  fff=
+fffff90c184b1 intel_bts_enable_local+0x31 ([kernel.kallsyms])
+>             perf  770116 [001] 27981.041379:      51611    cycles:P:  fff=
+fffff91a160b0 native_sched_clock+0x30 ([kernel.kallsyms])
+>      migration/1      26 [001] 27981.041400: 4227682775    cycles:P:  fff=
+fffff90d06a74 wakeup_preempt+0x44 ([kernel.kallsyms])
+>      migration/2      32 [002] 27981.041477: 4159401534    cycles:P:  fff=
+fffff90d11993 update_load_avg+0x63 ([kernel.kallsyms])
+>
+> sshd  708098 [000] 18446744069.414584:     286392 offcpu-time:
+>             79a864f1c8bb ppoll+0x4b (/usr/lib/libc.so.6)
+>             585690935cca [unknown] (/usr/bin/sshd)
+> ```
+>
+> After:
+> ```
+>             perf  774767 [003] 28178.033444:        497           cycles:=
+P:  ffffffff91a160c3 native_sched_clock+0x43 ([kernel.kallsyms])
+>             perf  774767 [003] 28178.033445:     399440           cycles:=
+P:  ffffffff91c01f8d nmi_restore+0x25 ([kernel.kallsyms])
+>          swapper       0 [001] 28178.036639:  376650973           cycles:=
+P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+>          swapper       0 [003] 28178.182921:  348779378           cycles:=
+P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+>     blueman-tray    1355 [000] 28178.627906:  100184571 offcpu-time:
+>             7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
+>             7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
+>             7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-=
+2.0.so.0.8000.2)
+>             7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.=
+0.8000.2)
+>             7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
+>             7fff24e862d8 [unknown] ([unknown])
+>
+>
+>     blueman-tray    1355 [000] 28178.728137:  100187539 offcpu-time:
+>             7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
+>             7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
+>             7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-=
+2.0.so.0.8000.2)
+>             7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.=
+0.8000.2)
+>             7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
+>             7fff24e862d8 [unknown] ([unknown])
+>
+>
+>          swapper       0 [000] 28178.463253:  195945410           cycles:=
+P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+>      dbus-broker     412 [002] 28178.464855:  376737008           cycles:=
+P:  ffffffff91c000a0 entry_SYSCALL_64+0x20 ([kernel.kallsyms])
+> ```
+>
+>
+> Howard Chu (9):
+>   perf evsel: Set BPF output to system-wide
+>   perf record --off-cpu: Add --off-cpu-thresh
+>   perf record --off-cpu: Parse offcpu-time event
+>   perf record off-cpu: Dump direct off-cpu samples in BPF
+>   perf record --off-cpu: Dump total off-cpu time at the end.
+>   perf evsel: Delete unnecessary =3D 0
+>   perf record --off-cpu: Parse BPF output embedded data
+>   perf header: Add field 'embed'
+>   perf test: Add direct off-cpu dumping test
+>
+>  tools/perf/builtin-record.c             |  26 ++++
+>  tools/perf/builtin-script.c             |   5 +-
+>  tools/perf/tests/builtin-test.c         |   1 +
+>  tools/perf/tests/shell/record_offcpu.sh |  27 ++++
+>  tools/perf/tests/tests.h                |   1 +
+>  tools/perf/tests/workloads/Build        |   1 +
+>  tools/perf/tests/workloads/offcpu.c     |  16 +++
+>  tools/perf/util/bpf_off_cpu.c           | 176 +++++++++++++++---------
+>  tools/perf/util/bpf_skel/off_cpu.bpf.c  | 135 ++++++++++++++++++
+>  tools/perf/util/evsel.c                 |  49 ++++---
+>  tools/perf/util/evsel.h                 |  13 ++
+>  tools/perf/util/header.c                |  12 ++
+>  tools/perf/util/off_cpu.h               |  10 +-
+>  tools/perf/util/record.h                |   1 +
+>  tools/perf/util/session.c               |  16 ++-
+>  15 files changed, 401 insertions(+), 88 deletions(-)
+>  create mode 100644 tools/perf/tests/workloads/offcpu.c
+>
+> --
+> 2.45.2
+>
