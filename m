@@ -1,93 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F603D55D;
-	Wed, 25 Sep 2024 13:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DD626F305;
+	Wed, 25 Sep 2024 13:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727270283; cv=none; b=JqMTnigPdlJw8Wr+v8a0PyuQib4cYVJLVweGU5a8oyvWaw02/RfO5FvN+KY40yQufUSgnva2Ij3i1pEnwVQMDQp23XJ5YOOx52kf6YFMgGUvx1K9a1PZ/wlNDTt0dvnt7zRC4ebiv7rp1o1H3C4GAdVINNPUhxTxTKTFKcvnBXM=
+	t=1727270431; cv=none; b=OpZSyFhZ1CdFy++2MFsKg2haZS7EpJW7ZNmCYsjTwV25vJH6IjY2F/eOW1BIEdG9SfTZVupH6ab+V44ZK+AiXYuwEXHs9lAun1EpXAcFbt9QvMc+zqhOAy1Ob6pW8+O9X7WQXyGPO/jQRI8AQgnQNg2vjVfC1HN1AlHrV3ejJMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727270283; c=relaxed/simple;
-	bh=l+FqVhW5+s0/xeUp3xEocj0sK23twX8gotI6OY452/s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r/ATRArxrO5gWzrdnfxVJli6ZEc8FhCIZ0OGSVbITIM44+ZChOET5pP63lynFZBZ7KNd0pCO1Vr9YJp/Br8ShZFk05sy8ZPVbjVYhqwX7hIdFLDXplT2vend3NNH0XIQr92ttWznxSODmwQwXxQqwyzEjsXH8uTbZeFab+n1Nec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A1wlngNn; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A1wlngNn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727270282; x=1758806282;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=l+FqVhW5+s0/xeUp3xEocj0sK23twX8gotI6OY452/s=;
-  b=A1wlngNnYDM07D3Mkzzw2pPFwCfMu9NeoYy7LXYJAodYhaVVfuTcYTiW
-   K9F2IbIKcauKpQMp6FsGVdyfZBLveY8IN4UIcuLcHaDFwRPzE8TCUWL3B
-   3lbOMy4UbafMNSPmo/ieLEXaAFQwJ9y5VqUeaLqgdvdf0xfQSvSCJh5tP
-   T3vNKJ8uSIux6PSxYDTxf4DKWbz5yL4zVdcnlpPIQBslcLWQzqPplf0fZ
-   SUnhOyYOhOwfGeAATsMq1cm/KS1OUYYw8xR5jzQ9mUp7zvBzBfDnnFWSl
-   7e8LHCBR2UYGGG8jVgprU2wz3Utx7sn/TSlN1k7AmhnImZoIF9CpqtPfA
-   w==;
-X-CSE-ConnectionGUID: 8O+pCjBDQpyCoeUU6k+8vg==
-X-CSE-MsgGUID: 0wkrFWBJTHGmAouy4Xp6Vg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11206"; a="26457484"
-X-IronPort-AV: E=Sophos;i="6.10,257,1719903600"; 
-   d="scan'208";a="26457484"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2024 06:18:01 -0700
-X-CSE-ConnectionGUID: nxyKvAZiRyyWGNd/UQM1IA==
-X-CSE-MsgGUID: HbCZ6ISmTVu+ClNTOceiRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,257,1719903600"; 
-   d="scan'208";a="71364347"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2024 06:18:01 -0700
-Date: Wed, 25 Sep 2024 06:17:59 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Yeo Reum Yun <YeoReum.Yun@arm.com>
-Cc: "peterz@infradead.org" <peterz@infradead.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"acme@kernel.org" <acme@kernel.org>,
-	"namhyung@kernel.org" <namhyung@kernel.org>,
-	Mark Rutland <Mark.Rutland@arm.com>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"irogers@google.com" <irogers@google.com>,
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"james.clark@linaro.org" <james.clark@linaro.org>,
-	"howardchu95@gmail.com" <howardchu95@gmail.com>, nd <nd@arm.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 1/2] perf stat: Close cork_fd when
- create_perf_stat_counter() failed
-Message-ID: <ZvQNh36COIpoOptw@tassilo>
-References: <20240925110802.2620613-1-yeoreum.yun@arm.com>
- <20240925110802.2620613-2-yeoreum.yun@arm.com>
- <87msjw2al8.fsf@linux.intel.com>
- <GV1PR08MB10521644365A907A4301AABE9FB692@GV1PR08MB10521.eurprd08.prod.outlook.com>
+	s=arc-20240116; t=1727270431; c=relaxed/simple;
+	bh=yz2csuK2v8xHJsf/k6UwCYcezp5+d6uX82IxmF6QiOU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hy2Q7WdggC46oVP0BXHeAuMibJDxk2ufdVNjfGqZUFumLxUnSojJtMh8kBbr6SukyK4cUCHQ8D/p5hp735nKFoKbg0aWwQXsIQgAbN9QciOyPz+vAErS3JplWtrfI06iFv8lzNFHoM+Mvw2SZooLtYlSytxrUiomm4fS5v4QNLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B1ED150C;
+	Wed, 25 Sep 2024 06:20:56 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 01FF13F64C;
+	Wed, 25 Sep 2024 06:20:24 -0700 (PDT)
+From: Levi Yun <yeoreum.yun@arm.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	howardchu95@gmail.com
+Cc: nd@arm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Levi Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v6 0/2] Minor fixes error handling of perf stat
+Date: Wed, 25 Sep 2024 14:20:20 +0100
+Message-Id: <20240925132022.2650180-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <GV1PR08MB10521644365A907A4301AABE9FB692@GV1PR08MB10521.eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 25, 2024 at 12:40:44PM +0000, Yeo Reum Yun wrote:
-> Hi Andi,
-> 
-> > Technically 0 is a valid file descriptor. Check for >= 0
-> 
-> Right. However, when I see the event, evlist__start_workload(),
-> it checks cork_fd with
-> 
->     if (evlist->workload.cork_fd > 0) {
-> 
-> Would you like to change this with this patchset too?
+This patchset fixes two issues that were seen when running
+  "perf stat -r" with perf_event_paranoid=3
 
-Yes please.
+   1. failed with Too many open files.
+     $ perf stat -r 1044 -- false
+     ...
+     failed to create 'go' pipe: Too many open files
+     failed to prepare workload: Too many open files
+     ...
 
--Andi
+   2. repating error message
+     $ perf stat -r 1044 -- false
+     Error:
+     Access to performance monitoring and observability operations is limited.
+     ...
+     (repating with same error message 1044 times).
+v6:
+  - check cork_fd with >= 0
+
+v5:
+  - add error handling label.
+
+v4:
+  - Move comments to run_perf_stat().
+
+v3:
+  - Fix comments.
+
+v2:
+  - Add some comments.
+
+Levi Yun (2):
+  perf stat: Close cork_fd when create_perf_stat_counter() failed
+  perf stat: Stop repeating when ref_perf_stat() returns -1
+
+ tools/perf/builtin-stat.c | 11 ++++++++++-
+ tools/perf/util/evlist.c  | 14 +++++++++++++-
+ tools/perf/util/evlist.h  |  1 +
+ 3 files changed, 24 insertions(+), 2 deletions(-)
+
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+
