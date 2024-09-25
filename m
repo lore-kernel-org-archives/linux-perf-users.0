@@ -1,252 +1,169 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9052816DEDF;
-	Wed, 25 Sep 2024 11:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735D9185E7A;
+	Wed, 25 Sep 2024 11:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727262504; cv=none; b=Y9tBI34dQZM6f3URignYRfua7lGKYjk/X1UDAOkG4riVmBxv4R3d+uy73mJCqfhQkWAqVgC1V3N5IZskA2zLgflGUudyhnfjN2/VTj3HUcbDrB9JeOd6oJ2/7uVuzgWaLJFZlnLmWWx8XI2IqCFyOVQd1qfQcu7uWCIBFnJjT5I=
+	t=1727264359; cv=none; b=mkT26mqNuqTWlti21A9aEVdgIJOWRzRUG0RRhxyD/tVmPXo2pecGw4ZRJ2xRHB4rorpStALOSLdrsLgA5VlDarEvIpCjo053kYjBPVHf7AU152M54MxfJ0alz8lWgjQt+3tjNxe0eb4xC+E8nHQ2Zr3T3bDUDcL0lSzMX+0bQqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727262504; c=relaxed/simple;
-	bh=/doo7ybACzSXDeYhHEYpI2ifb6nQO2/33UqQpWVZrLo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hW+1MYHv3KupI3wEunw3YiuPpXcfvZJ2lD3iX0U5ovWZ8GEijSMhEr/HyuHqB0zoODTXNNe+qW7aynxsJzydyL0ozpVVey6sXrZ3MXCSpleMuoupWaM/zgWzUTPkw1zKMFEMUWSNf9l0Ruv5ZGLU81GvPXpG0N2EJLBYJU+mI6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 938E4150C;
-	Wed, 25 Sep 2024 04:08:45 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 50A553F6A8;
-	Wed, 25 Sep 2024 04:08:14 -0700 (PDT)
-From: Levi Yun <yeoreum.yun@arm.com>
-To: peterz@infradead.org,
+	s=arc-20240116; t=1727264359; c=relaxed/simple;
+	bh=ZDe+AUP0VErESrBTIM6I1mO2ETwgy4R+rUuBvHSFfGQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZfLkKlwJmKcoH5iTj6wvVgFBYXvUmvfOEciQl2iIQl1X87KfigBg5i78XY6MLlXRGbTLAodjjq6CMuxnNVfVzqO+yULGZhsAiDSVVZvF+62JvyMLuKha9EKBvg2iO/8bGLETxpNG7Jom8MNtm+ypugLDpeE61JKsK7ksW0VBlnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VL5Ss4AN; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VL5Ss4AN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C31B7C4CEC7;
+	Wed, 25 Sep 2024 11:39:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727264359;
+	bh=ZDe+AUP0VErESrBTIM6I1mO2ETwgy4R+rUuBvHSFfGQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VL5Ss4AN8EpCCIuyytEojgK4iEyhJBJqGkz7qXO7l8g/l8rQ9CA3lkfzcCkV/Fsu8
+	 Tj8eMyPFz53h1Sxr9hsvQZsZFz+m++SozvrYJau2C8t1ZEC18yJsubWf7RjaWiEcNI
+	 50P/6OC/OLxivvNPi7v0pd+b+2IAtf8FTg8TZLQ+ZEXYQffJl5Bq0Oq7aoPYgdf5uT
+	 oE+gqc1XN+rv88jGzdmmUSoYreSdyqyboq25zB9r2YpPKNgCOABXfkqrp2v8aQl+5v
+	 oR4HjbptxtDT2IvVgmovfif4ABiSJEoPCDYDcrkiLL66rBDYq08vpweDz/GqqmSBmx
+	 kwreOEBChfLAA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: James Clark <james.clark@linaro.org>,
+	Al Grant <al.grant@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mark.rutland@arm.com,
+	peterz@infradead.org,
 	mingo@redhat.com,
 	acme@kernel.org,
 	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	howardchu95@gmail.com
-Cc: nd@arm.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Levi Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v5 1/2] perf stat: Close cork_fd when create_perf_stat_counter() failed
-Date: Wed, 25 Sep 2024 12:08:01 +0100
-Message-Id: <20240925110802.2620613-2-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240925110802.2620613-1-yeoreum.yun@arm.com>
-References: <20240925110802.2620613-1-yeoreum.yun@arm.com>
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.11 066/244] drivers/perf: arm_spe: Use perf_allow_kernel() for permissions
+Date: Wed, 25 Sep 2024 07:24:47 -0400
+Message-ID: <20240925113641.1297102-66-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240925113641.1297102-1-sashal@kernel.org>
+References: <20240925113641.1297102-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.11
 Content-Transfer-Encoding: 8bit
 
-When create_perf_stat_counter() failed, it doesn't close workload.cork_fd
-open in evlist__prepare_workload(). This could make too many open file
-error while __run_perf_stat() repeats.
+From: James Clark <james.clark@linaro.org>
 
-Introduce evlist__cancel_workload to close workload.cork_fd and
-wait workload.child_pid until exit to clear child process
-when create_perf_stat_counter() is failed.
+[ Upstream commit 5e9629d0ae977d6f6916d7e519724804e95f0b07 ]
 
-Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
-Reviewed-by: James Clark <james.clark@linaro.org>
+Use perf_allow_kernel() for 'pa_enable' (physical addresses),
+'pct_enable' (physical timestamps) and context IDs. This means that
+perf_event_paranoid is now taken into account and LSM hooks can be used,
+which is more consistent with other perf_event_open calls. For example
+PERF_SAMPLE_PHYS_ADDR uses perf_allow_kernel() rather than just
+perfmon_capable().
+
+This also indirectly fixes the following error message which is
+misleading because perf_event_paranoid is not taken into account by
+perfmon_capable():
+
+  $ perf record -e arm_spe/pa_enable/
+
+  Error:
+  Access to performance monitoring and observability operations is
+  limited. Consider adjusting /proc/sys/kernel/perf_event_paranoid
+  setting ...
+
+Suggested-by: Al Grant <al.grant@arm.com>
+Signed-off-by: James Clark <james.clark@linaro.org>
+Link: https://lore.kernel.org/r/20240827145113.1224604-1-james.clark@linaro.org
+Link: https://lore.kernel.org/all/20240807120039.GD37996@noisy.programming.kicks-ass.net/
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-stat.c | 50 +++++++++++++++++++++++++++------------
- tools/perf/util/evlist.c  | 15 +++++++++++-
- tools/perf/util/evlist.h  |  1 +
- 3 files changed, 50 insertions(+), 16 deletions(-)
+ drivers/perf/arm_spe_pmu.c | 9 ++++-----
+ include/linux/perf_event.h | 8 +-------
+ kernel/events/core.c       | 9 +++++++++
+ 3 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 689a3d43c258..2c46bdbd9914 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -716,15 +716,19 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	}
-
- 	if (!cpu_map__is_dummy(evsel_list->core.user_requested_cpus)) {
--		if (affinity__setup(&saved_affinity) < 0)
--			return -1;
-+		if (affinity__setup(&saved_affinity) < 0) {
-+			err = -1;
-+			goto err_out;
-+		}
- 		affinity = &saved_affinity;
- 	}
-
- 	evlist__for_each_entry(evsel_list, counter) {
- 		counter->reset_group = false;
--		if (bpf_counter__load(counter, &target))
--			return -1;
-+		if (bpf_counter__load(counter, &target)) {
-+			err = -1;
-+			goto err_out;
-+		}
- 		if (!(evsel__is_bperf(counter)))
- 			all_counters_use_bpf = false;
- 	}
-@@ -767,7 +771,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-
- 			switch (stat_handle_error(counter)) {
- 			case COUNTER_FATAL:
--				return -1;
-+				err = -1;
-+				goto err_out;
- 			case COUNTER_RETRY:
- 				goto try_again;
- 			case COUNTER_SKIP:
-@@ -808,7 +813,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-
- 				switch (stat_handle_error(counter)) {
- 				case COUNTER_FATAL:
--					return -1;
-+					err = -1;
-+					goto err_out;
- 				case COUNTER_RETRY:
- 					goto try_again_reset;
- 				case COUNTER_SKIP:
-@@ -833,8 +839,10 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 			stat_config.unit_width = l;
-
- 		if (evsel__should_store_id(counter) &&
--		    evsel__store_ids(counter, evsel_list))
--			return -1;
-+		    evsel__store_ids(counter, evsel_list)) {
-+			err = -1;
-+			goto err_out;
-+		}
- 	}
-
- 	if (evlist__apply_filters(evsel_list, &counter, &target)) {
-@@ -855,20 +863,23 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 		}
-
- 		if (err < 0)
--			return err;
-+			goto err_out;
-
- 		err = perf_event__synthesize_stat_events(&stat_config, NULL, evsel_list,
- 							 process_synthesized_event, is_pipe);
- 		if (err < 0)
--			return err;
-+			goto err_out;
-+
- 	}
-
- 	if (target.initial_delay) {
- 		pr_info(EVLIST_DISABLED_MSG);
- 	} else {
- 		err = enable_counters();
--		if (err)
--			return -1;
-+		if (err) {
-+			err = -1;
-+			goto err_out;
-+		}
- 	}
-
- 	/* Exec the command, if any */
-@@ -878,8 +889,10 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	if (target.initial_delay > 0) {
- 		usleep(target.initial_delay * USEC_PER_MSEC);
- 		err = enable_counters();
--		if (err)
--			return -1;
-+		if (err) {
-+			err = -1;
-+			goto err_out;
-+		}
-
- 		pr_info(EVLIST_ENABLED_MSG);
- 	}
-@@ -899,7 +912,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 		if (workload_exec_errno) {
- 			const char *emsg = str_error_r(workload_exec_errno, msg, sizeof(msg));
- 			pr_err("Workload failed: %s\n", emsg);
--			return -1;
-+			err = -1;
-+			goto err_out;
- 		}
-
- 		if (WIFSIGNALED(status))
-@@ -946,6 +960,12 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 		evlist__close(evsel_list);
-
- 	return WEXITSTATUS(status);
-+
-+err_out:
-+	if (forks)
-+		evlist__cancel_workload(evsel_list);
-+
-+	return err;
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index 9100d82bfabc0..3569050f9cf37 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -41,7 +41,7 @@
+ 
+ /*
+  * Cache if the event is allowed to trace Context information.
+- * This allows us to perform the check, i.e, perfmon_capable(),
++ * This allows us to perform the check, i.e, perf_allow_kernel(),
+  * in the context of the event owner, once, during the event_init().
+  */
+ #define SPE_PMU_HW_FLAGS_CX			0x00001
+@@ -50,7 +50,7 @@ static_assert((PERF_EVENT_FLAG_ARCH & SPE_PMU_HW_FLAGS_CX) == SPE_PMU_HW_FLAGS_C
+ 
+ static void set_spe_event_has_cx(struct perf_event *event)
+ {
+-	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && perfmon_capable())
++	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && !perf_allow_kernel(&event->attr))
+ 		event->hw.flags |= SPE_PMU_HW_FLAGS_CX;
  }
-
- static int run_perf_stat(int argc, const char **argv, int run_idx)
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index f14b7e6ff1dc..a37112174535 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -48,6 +48,7 @@
- #include <sys/mman.h>
- #include <sys/prctl.h>
- #include <sys/timerfd.h>
-+#include <sys/wait.h>
-
- #include <linux/bitops.h>
- #include <linux/hash.h>
-@@ -1536,7 +1537,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
- 		 * For cancelling the workload without actually running it,
- 		 * the parent will just close workload.cork_fd, without writing
- 		 * anything, i.e. read will return zero and we just exit()
--		 * here.
-+		 * here (See evlist__cancel_workload()).
- 		 */
- 		if (ret != 1) {
- 			if (ret == -1)
-@@ -1611,12 +1612,24 @@ int evlist__start_workload(struct evlist *evlist)
- 			perror("unable to write to pipe");
-
- 		close(evlist->workload.cork_fd);
-+		evlist->workload.cork_fd = -1;
- 		return ret;
- 	}
-
+ 
+@@ -745,9 +745,8 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
+ 
+ 	set_spe_event_has_cx(event);
+ 	reg = arm_spe_event_to_pmscr(event);
+-	if (!perfmon_capable() &&
+-	    (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT)))
+-		return -EACCES;
++	if (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT))
++		return perf_allow_kernel(&event->attr);
+ 
  	return 0;
  }
-
-+void evlist__cancel_workload(struct evlist *evlist)
-+{
-+	int status;
-+
-+	if (evlist->workload.cork_fd > 0) {
-+		close(evlist->workload.cork_fd);
-+		evlist->workload.cork_fd = -1;
-+		waitpid(evlist->workload.pid, &status, WNOHANG);
-+	}
-+}
-+
- int evlist__parse_sample(struct evlist *evlist, union perf_event *event, struct perf_sample *sample)
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 1a8942277ddad..e336306b8c08e 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1602,13 +1602,7 @@ static inline int perf_is_paranoid(void)
+ 	return sysctl_perf_event_paranoid > -1;
+ }
+ 
+-static inline int perf_allow_kernel(struct perf_event_attr *attr)
+-{
+-	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
+-		return -EACCES;
+-
+-	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+-}
++int perf_allow_kernel(struct perf_event_attr *attr);
+ 
+ static inline int perf_allow_cpu(struct perf_event_attr *attr)
  {
- 	struct evsel *evsel = evlist__event2evsel(evlist, event);
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index bcc1c6984bb5..888fda751e1a 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -186,6 +186,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target,
- 			     const char *argv[], bool pipe_output,
- 			     void (*exec_error)(int signo, siginfo_t *info, void *ucontext));
- int evlist__start_workload(struct evlist *evlist);
-+void evlist__cancel_workload(struct evlist *evlist);
-
- struct option;
-
---
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 8a6c6bbcd658a..b21c8f24a9876 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -13358,6 +13358,15 @@ const struct perf_event_attr *perf_event_attrs(struct perf_event *event)
+ 	return &event->attr;
+ }
+ 
++int perf_allow_kernel(struct perf_event_attr *attr)
++{
++	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
++		return -EACCES;
++
++	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
++}
++EXPORT_SYMBOL_GPL(perf_allow_kernel);
++
+ /*
+  * Inherit an event from parent task to child task.
+  *
+-- 
+2.43.0
 
