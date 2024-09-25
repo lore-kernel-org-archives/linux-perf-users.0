@@ -1,150 +1,142 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627331BC59
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 17:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D6C13B287;
+	Wed, 25 Sep 2024 17:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727285420; cv=none; b=BONSb2VQDt7hV6EXq+vuEJIb/r80KOEHj1Zs+3dUvfemMEiEQfUfAv08xcuvpLM1GwvJbQE1a7A9IrmXl4snoTSOlK8kNasuC3Vmg1rf/oRdzOTwJYTOEuFae7KedfT+RCY6xjuVePbEuEREoERQnpy2d1aoIsroeES40dP94K8=
+	t=1727286195; cv=none; b=Tf/2mauNsd/MV244xJL1sfYz1OYA4x3maSQNHoNkaM8pbGCdxgtL4xAPrFReqh6+QIDe9d4WueCfFLhV31UP01Z+RYiSrt21vngQNnBr61IGcAvu7+m6efwIFloJo5pT4nnkO/PzrObw/HntNZzxA2dbWaiRRKg+WQrPIDdNe2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727285420; c=relaxed/simple;
-	bh=6lMrxe8sCTgBy01/mf9iIpgXaSX/UU8ZeE/q0YQhcj4=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=BWXcb+WV4YMFyUSJgqgDPBya0HAKejC1VLbcet2NOkzOhxi/ePjVnUnsq65iVYDY/ge4oWa/42yA0WRA7K+gpqVG5hl8pnB7Mt/o799gC5SIXrQ/z+TYEE9/3q4eecg/fovmxXHo+DKXoDzsuUllnY5oR+JldTuvt8j6AiZoLII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PrSwGy9S; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1727286195; c=relaxed/simple;
+	bh=F9RWq/rXxSYntRpuJCLCsbi4j1kIhMfwU6j+9oqCDbQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ncNRihlKL8WJ3bYrXGEn1b89jEGMdBcDJMaF4Seeyg4CpF2JyAQx7SsHreZpAFrjAbZcHFKsaAAsrXItMZ5FuIRAHPgTyW5nxI39GNougXjiyPVEwYjNCxF6J3orxv5BfWaFb0o157+GvyqA3bzcWNvG5DekLUPjXmTHGzWaxVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSCNkXh6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PrSwGy9S"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e201a37e5a4so164765276.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Sep 2024 10:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727285417; x=1727890217; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=o7mmItE13oyNMD526yrDEYQPSrEQwCMg1pQdM7EvhJM=;
-        b=PrSwGy9SQzZJ91muSfew88JRed98LJr50YV/sIQG40NdjkUzZ4391Xok56sJLlLNyt
-         S8cNn4ekjIIvQ0O7LZnxQepjHbp0s6peccS/vo93ywgIosWPb2eRKyNi/XjKL8TTXHTV
-         NySj5hwukjN/zyJdPqvgRiH+xPjfeHo2hwRXnRTqIF7gouWskR+m8wBHb+oUsbSg1JzK
-         qOI0cAK8zNhyxjENDrTqVcQmrhefGA5+H9KdNaLuTqbc9GCRL6V+YSaNzE2CQnBtBpad
-         XmcnviCfq2Hb2/z+lQ1koT7eiV/xuU0EkRl7Z2r7MUMFyuvq8umUcbbagVeIFHN5adGF
-         x3LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727285417; x=1727890217;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=o7mmItE13oyNMD526yrDEYQPSrEQwCMg1pQdM7EvhJM=;
-        b=kXwMAKWklY67L75eK1ZaFoJR91MbiCFL4468Pfg3ZIwu7GjqOOJTtS5SmaElfVwSZ1
-         Y9T0eLfKjGl0JQGp4ax7I7709UQoe6yHIEJfTnmhHM7Y01qbLXRPISt+E0hIxlBCyt38
-         f4NiDoaDf8HfnYBmKQV0HZBMRynuv09c3Pf8NA05QsqD3TWrw74HKoygPMKlwz9Rh0co
-         SELH5hLbe31grdyDe68R5JFe1F+E7I2jcjAi2GJEu/kfBJ25j8dBXof/yhzROmozpyqf
-         piJ7GMp6Xi5Jz2OEduQ9NRFQgf99Igtvbsn7m4Cc3WEMfrj3P3gr23d1w42HBHvvazVB
-         PuHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUyPAYG68uDBYeHRQ6dDnHEuHsh0uHzSWQq5Hm4A8bZ9RKFYe/CSFMlriSyBTYxx/MN2V3HR0roPbSX3FBtT/wl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0PwXCRXEzElbQOywJVLw4WbtRDfdKEuJUv+66B3V/ed9R6lKF
-	sN6c1GbEU5HQVEBkQGDJkcs/Y0t+Hrim4OHgdH8SZ/6MeLuY7zTNmstBtUW2uc9W2Zxy91qXe0E
-	f+S9LTg==
-X-Google-Smtp-Source: AGHT+IFzc5fJx3iARQ8up/ouMLSTHLgHfuFoYepAgqOopOfeUM/50KEXWyClxZLUzhVg2ZRNel7VH9IHzDjz
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:965e:4297:88a9:5902])
- (user=irogers job=sendgmr) by 2002:a05:6902:292:b0:e25:2491:d005 with SMTP id
- 3f1490d57ef6-e252491d211mr2442276.8.1727285417021; Wed, 25 Sep 2024 10:30:17
- -0700 (PDT)
-Date: Wed, 25 Sep 2024 10:30:13 -0700
-Message-Id: <20240925173013.12789-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSCNkXh6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D95DFC4CEC9;
+	Wed, 25 Sep 2024 17:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727286194;
+	bh=F9RWq/rXxSYntRpuJCLCsbi4j1kIhMfwU6j+9oqCDbQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XSCNkXh6Nl50YIGnJnoFX/5doL7AaTWE4fzrWVW0hSaX6cA89l8hRUPk0oOxn0/0a
+	 7wc981hmfdlzSpnQY9sbk8hjpbuMbi04gUV4NOBjSxdcCRv0l+9U93iqbaEjA7uRhU
+	 mKtjlR2QJTTICDfJYJBjgq/4Of69bkzakvzTKnEkZPXKAUWDroeMGQqp7mYfMFud4z
+	 uQ0NYsGBrrIejc9vp+uWBUcVTSKskJLtavBZiLaEDucMz7IKhONgqP809zorLVgWwD
+	 pZlBp4L5B0EYbSgxxe/GU/Rb8Xjee15oLOBozXq0EZiQYQCQOu5KSgugF3iAd1kCu0
+	 d9ygt3KDerlZg==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2f75c6ed397so918571fa.2;
+        Wed, 25 Sep 2024 10:43:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU0NZguSYRaESNaMLCxRnrnJBujIGWqp5RSwdEDBVFl1iZ6uxtaZDi3oGZDsBXrkwU5CuUl8Ho9pDnMVj/t@vger.kernel.org, AJvYcCU4rkrjglJdW6N/3Tn4CviyNkRnvcgek2M9ZvK3wixQjwZgiWeZL6mMOi/iVe3ajP0TVYRCDZem4P4Afvgx@vger.kernel.org, AJvYcCUB4gs1GDhVtdjY3yokCK6y2Mgfy+PrxOEWttNewzfDgaameMoAAhb8MbZJau4jU22bNWg=@vger.kernel.org, AJvYcCUXqqGfM9kEoabAXq2UFW69UprDDHfZ9t6Xx1hWC+z4fHTxOk118xgYFV07Lk0yzAwUCm/4mRovB04245+rVso=@vger.kernel.org, AJvYcCUZWD5pNGaRoLvjvqs4+YguaYVh1mp5YtOhJAbfOmk1OVUMWKRFPG2kJwUgqlq3huNb0a/WyHY3sz7h@vger.kernel.org, AJvYcCV2JhnMQ1eMwtgl9w5nyULw9XiHzHBf+b5ynFnpEqItN2vODXdrAn7SZsGOmIjab6+770+RNBaLbv0=@vger.kernel.org, AJvYcCVPAf3T4PLp45gATMgqSOItD7FjcPMvRMkqFrkXjgFs0qZBRalArhgeYFNksP02KvxhVX6t2ObpfyFhag==@vger.kernel.org, AJvYcCVgvSe7X2bfsHYoKn4QERQRqami54TlaGT3X+HKpxzfiNzbdVKALpHoMr436/g2uGxlA+00wRPoCEqv@vger.kernel.org, AJvYcCWmfYSzVKmxZYYq7DzySb+Ar/wVAXL23NPMPIyRThI0KJwXh7txuEr7akcDCitfXLRgqM6490aoXpSAveult5Zp1g==@vger.kernel.org, AJvYcCWtTb3O21Ie4t0MKjEk3TQq4Ulnn7rzsckBX1+eLPIT/G9+I4zRUx6U7IFC5JwQuoVSr7NONcSMrEE9q60z@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU54WlhGCv2KZbv0ekJIVdl33DEHGM70dlZvYCaxwjNa0P5XbN
+	n4cDTL8XpI0Q7MVlaXf5LPM7qW1kWersdyft8s7ViN+Pa9Jc5/mKzoBKgqzSxZ581vJOFpRfxqh
+	0TrMWsb4TBnv1zxSWMzN9OtxcoV4=
+X-Google-Smtp-Source: AGHT+IE+in2ujKNOqfeviyH74B95luqIkWPFYLgeNJlVInDDisJWQsgCamgzHX+iXC0QURdLGLDiXb1g2DagGfPNhfo=
+X-Received: by 2002:a05:651c:1504:b0:2f6:5f7b:e5e0 with SMTP id
+ 38308e7fff4ca-2f915ff58a0mr23471981fa.21.1727286193113; Wed, 25 Sep 2024
+ 10:43:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.46.0.792.g87dc391469-goog
-Subject: [PATCH v1] perf test: Ignore security failures in all PMU test
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Colin Ian King <colin.i.king@gmail.com>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20240925150059.3955569-30-ardb+git@google.com>
+ <20240925150059.3955569-35-ardb+git@google.com> <CAP-5=fXw1rcgWgMeDSVqiDYh2XYApyaJpNvukvJ7vMs7ZPMr6g@mail.gmail.com>
+In-Reply-To: <CAP-5=fXw1rcgWgMeDSVqiDYh2XYApyaJpNvukvJ7vMs7ZPMr6g@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 25 Sep 2024 19:43:01 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEmssrOhu20aLW4v88YVdkCfbeRg6arkgUoDNHm-4vbMA@mail.gmail.com>
+Message-ID: <CAMj1kXEmssrOhu20aLW4v88YVdkCfbeRg6arkgUoDNHm-4vbMA@mail.gmail.com>
+Subject: Re: [RFC PATCH 05/28] x86: Define the stack protector guard symbol explicitly
+To: Ian Rogers <irogers@google.com>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Uros Bizjak <ubizjak@gmail.com>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Christoph Lameter <cl@linux.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Juergen Gross <jgross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Keith Packard <keithp@keithp.com>, 
+	Justin Stitt <justinstitt@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, kvm@vger.kernel.org, 
+	xen-devel@lists.xenproject.org, linux-efi@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-sparse@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Refactor code to have some more error diagnosis on traps, etc. and to
-do less work on each line. Add an ignore situation for security failures.
+On Wed, 25 Sept 2024 at 17:54, Ian Rogers <irogers@google.com> wrote:
+>
+> On Wed, Sep 25, 2024 at 8:02=E2=80=AFAM Ard Biesheuvel <ardb+git@google.c=
+om> wrote:
+> >
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > Specify the guard symbol for the stack cookie explicitly, rather than
+> > positioning it exactly 40 bytes into the per-CPU area. Doing so removes
+> > the need for the per-CPU region to be absolute rather than relative to
+> > the placement of the per-CPU template region in the kernel image, and
+> > this allows the special handling for absolute per-CPU symbols to be
+> > removed entirely.
+> >
+> > This is a worthwhile cleanup in itself, but it is also a prerequisite
+> > for PIE codegen and PIE linking, which can replace our bespoke and
+> > rather clunky runtime relocation handling.
+> >
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > ---
+> >  arch/x86/Makefile                     |  4 ++++
+> >  arch/x86/include/asm/init.h           |  2 +-
+> >  arch/x86/include/asm/processor.h      | 11 +++--------
+> >  arch/x86/include/asm/stackprotector.h |  4 ----
+> >  tools/perf/util/annotate.c            |  4 ++--
+> >  5 files changed, 10 insertions(+), 15 deletions(-)
+> >
+...
+> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> > index 37ce43c4eb8f..7ecfedf5edb9 100644
+> > --- a/tools/perf/util/annotate.c
+> > +++ b/tools/perf/util/annotate.c
+> > @@ -2485,10 +2485,10 @@ static bool is_stack_operation(struct arch *arc=
+h, struct disasm_line *dl)
+> >
+> >  static bool is_stack_canary(struct arch *arch, struct annotated_op_loc=
+ *loc)
+> >  {
+> > -       /* On x86_64, %gs:40 is used for stack canary */
+> > +       /* On x86_64, %gs:0 is used for stack canary */
+> >         if (arch__is(arch, "x86")) {
+> >                 if (loc->segment =3D=3D INSN_SEG_X86_GS && loc->imm &&
+> > -                   loc->offset =3D=3D 40)
+> > +                   loc->offset =3D=3D 0)
+>
+> As a new perf tool  can run on old kernels we may need to have this be
+> something like:
+> (loc->offset =3D=3D 40 /* pre v6.xx kernels */ || loc->offset =3D=3D 0 /*
+> v6.xx and later */ )
+>
+> We could make this dependent on the kernel by processing the os_release s=
+tring:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
+tree/tools/perf/util/env.h#n55
+> but that could well be more trouble than it is worth.
+>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/stat_all_pmu.sh | 52 ++++++++++++++++++++------
- 1 file changed, 40 insertions(+), 12 deletions(-)
+Yeah. I also wonder what the purpose of this feature is. At the end of
+this series, the stack cookie will no longer be at a fixed offset of
+%GS anyway, and so perf will not be able to identify it in the same
+manner. So it is probably better to just leave this in place, as the
+%gs:0 case will not exist in the field (assuming that the series lands
+all at once).
 
-diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
-index d2a3506e0d19..42456d89c5da 100755
---- a/tools/perf/tests/shell/stat_all_pmu.sh
-+++ b/tools/perf/tests/shell/stat_all_pmu.sh
-@@ -1,23 +1,51 @@
--#!/bin/sh
-+#!/bin/bash
- # perf all PMU test
- # SPDX-License-Identifier: GPL-2.0
- 
- set -e
-+err=0
-+result=""
-+
-+trap_cleanup() {
-+  echo "Unexpected signal in ${FUNCNAME[1]}"
-+  echo "$result"
-+  exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
- 
- # Test all PMU events; however exclude parameterized ones (name contains '?')
--for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
-+for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g')
-+do
-   echo "Testing $p"
-   result=$(perf stat -e "$p" true 2>&1)
--  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
--    # We failed to see the event and it is supported. Possibly the workload was
--    # too small so retry with something longer.
--    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
--    if ! echo "$result" | grep -q "$p" ; then
--      echo "Event '$p' not printed in:"
--      echo "$result"
--      exit 1
--    fi
-+  if echo "$result" | grep -q "$p"
-+  then
-+    # Event seen in output.
-+    continue
-+  fi
-+  if echo "$result" | grep -q "<not supported>"
-+  then
-+    # Event not supported, so ignore.
-+    continue
-+  fi
-+  if echo "$result" | grep -q "Access to performance monitoring and observability operations is limited."
-+  then
-+    # Access is limited, so ignore.
-+    continue
-+  fi
-+
-+  # We failed to see the event and it is supported. Possibly the workload was
-+  # too small so retry with something longer.
-+  result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
-+  if echo "$result" | grep -q "$p"
-+  then
-+    # Event seen in output.
-+    continue
-   fi
-+  echo "Error: event '$p' not printed in:"
-+  echo "$result"
-+  err=1
- done
- 
--exit 0
-+trap - EXIT TERM INT
-+exit $err
--- 
-2.46.0.792.g87dc391469-goog
-
+Any idea why this deviates from other architectures? Is x86_64 the
+only arch that needs to identify stack canary accesses in perf? We
+could rename the symbol to something identifiable, and do it across
+all architectures, if this really serves a need (and assuming that
+perf has insight into the symbol table).
