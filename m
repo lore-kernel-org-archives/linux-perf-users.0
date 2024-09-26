@@ -1,103 +1,211 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B90513777E;
-	Thu, 26 Sep 2024 18:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128A31D5AD0;
+	Thu, 26 Sep 2024 19:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727376051; cv=none; b=dQaOqIWOFk0H4Vw4P91Nz+yow/b5PGg8yKuaeovBiWRm7RSJl7G2+MQcyT4jLc3iy+viPTQ1aVon8XS7f/XaIDDUaoc6r5012bgHvvFF0uJjpJaS9v+1aYK9Wj+QyZdHd/lr/b6nmxybAS2kvJ2sKsHk+u9wLmAuTiQWGf5aZN8=
+	t=1727378894; cv=none; b=IAOUxZjFfJgK3uIO6kH9PEWGDAOslRlb/kJ4ToXHfejULsgcH6B5qLUk7Uu91hndJDl8FYLUgpvHZbyRF/k7ScB5h0V91q6LDym9WZ+gNKOds2LSzJ/NwYWRm5lcnR45oXeJ8rLEJkrh1FTLymH2v/z51RDCBf41dhUxBuIh/uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727376051; c=relaxed/simple;
-	bh=epz6jRXFedkq8RZkzym6M6z9oDDMZfQ2lvyT+uetk40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aficHS6r7gzCka2NqfIHrtHvsPrV7E1Gjp/ty6DKCFnM9RDtmKNpMx7t4kvO9IJaB47CYK7e0jfQzu1mApdD6JRPr1m75ZJDHP6o5YXcmpfK1OudxB7XhtLeaqUOr3+ucz9hykmn0l4RqZx++oQYRRav7ePuX0AhCeLsbrbHWis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2B5F14BF;
-	Thu, 26 Sep 2024 11:41:17 -0700 (PDT)
-Received: from [10.57.20.191] (unknown [10.57.20.191])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E38A3F6A8;
-	Thu, 26 Sep 2024 11:40:46 -0700 (PDT)
-Message-ID: <221f3995-34e4-42a9-a18d-faaa7cf542d1@arm.com>
-Date: Thu, 26 Sep 2024 19:40:31 +0100
+	s=arc-20240116; t=1727378894; c=relaxed/simple;
+	bh=N8BavcGn2zxjNEV0Y6P+p7CjpbR4j1G560dlPX38ImI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gE9TRz/BEpjomUfxB0/lTFelTW3TotCNyxKGfcn4BRdNZKZ7RBpPqGcLowUIFuayfs8qfOLqosLS1T+hBMsJQK5ONOV5ws8K5mbdCQu1zpu1Wpv2c+rXi1JF03sGdmOvqFwTsW/4ty3ZG2B7krnJXcdyGOvwsEDPM5qoT8yrRK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LtCE+Z49; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LtCE+Z49"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD24C4CEC6;
+	Thu, 26 Sep 2024 19:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727378893;
+	bh=N8BavcGn2zxjNEV0Y6P+p7CjpbR4j1G560dlPX38ImI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LtCE+Z49xEw784+6deCejBazcKlZ8BbrAx2laZFqNgkuHzES3O+vnR16pSJTEh/y4
+	 ezBo3LEBvjD40NcGljd3jq4ANFb3f4rh8LjGJ5hISWbP4Pv/t663PvaIe1bTp49uPQ
+	 aaztbYvNlshzp2UTYKBOEIE0GCGCLZjO2SqSfv9okn5sOu7snxM1BSXu1Uwm9EPkFR
+	 54NQ7suQlCrySlTtO9hVPQqclaCRWj9MPZ0e619VFCQiEjFVzaM4tkLjxe1N3TKn7l
+	 S5rSa4zpFenLJs42f4mD/Chs5KZnJsN7bSMCEem/klHT6l7cfm9joa9epMC9zFF6Us
+	 TqUGDaCG3trsQ==
+Date: Thu, 26 Sep 2024 12:28:09 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Guo Ren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>,
+	Guilherme Amadio <amadio@gentoo.org>,
+	Changbin Du <changbin.du@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>,
+	Kajol Jain <kjain@linux.ibm.com>, Anup Patel <anup@brainfault.org>,
+	Shenlin Liang <liangshenlin@eswincomputing.com>,
+	Atish Patra <atishp@rivosinc.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Chen Pei <cp0613@linux.alibaba.com>,
+	Dima Kogan <dima@secretsauce.net>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Yang Jihong <yangjihong@bytedance.com>
+Subject: Re: [PATCH v1 01/11] perf build: Rename NO_DWARF to NO_LIBDW
+Message-ID: <ZvW1yYrmHEDUIOkr@google.com>
+References: <20240924160418.1391100-1-irogers@google.com>
+ <20240924160418.1391100-2-irogers@google.com>
+ <ZvSqNqNKKysw_309@google.com>
+ <CAP-5=fUf40_4LbsYOavy45L=153bAVuwK_km8UKNQ3imSQ-_2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf mem: Fix printing PERF_MEM_LVLNUM_{L2_MHB|MSC}
-To: Thomas Falcon <thomas.falcon@intel.com>, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240926144040.77897-1-thomas.falcon@intel.com>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <20240926144040.77897-1-thomas.falcon@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUf40_4LbsYOavy45L=153bAVuwK_km8UKNQ3imSQ-_2w@mail.gmail.com>
 
-On 9/26/2024 3:40 PM, Thomas Falcon wrote:
+On Thu, Sep 26, 2024 at 08:02:45AM -0700, Ian Rogers wrote:
+> On Wed, Sep 25, 2024 at 5:26 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Tue, Sep 24, 2024 at 09:04:08AM -0700, Ian Rogers wrote:
+> > > NO_DWARF could mean more than NO_LIBDW support, in particular no
+> > > libunwind support. Rename to be more intention revealing.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/Makefile.config         | 16 ++++++++--------
+> > >  tools/perf/Makefile.perf           |  2 +-
+> > >  tools/perf/arch/arm/Makefile       |  2 +-
+> > >  tools/perf/arch/arm64/Makefile     |  2 +-
+> > >  tools/perf/arch/csky/Makefile      |  2 +-
+> > >  tools/perf/arch/loongarch/Makefile |  2 +-
+> > >  tools/perf/arch/mips/Makefile      |  2 +-
+> > >  tools/perf/arch/powerpc/Makefile   |  2 +-
+> > >  tools/perf/arch/riscv/Makefile     |  2 +-
+> > >  tools/perf/arch/s390/Makefile      |  2 +-
+> > >  tools/perf/arch/sh/Makefile        |  2 +-
+> > >  tools/perf/arch/sparc/Makefile     |  2 +-
+> > >  tools/perf/arch/x86/Makefile       |  2 +-
+> > >  tools/perf/arch/xtensa/Makefile    |  2 +-
+> > >  tools/perf/builtin-probe.c         |  2 +-
+> > >  15 files changed, 22 insertions(+), 22 deletions(-)
+> > >
+> > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > > index 5e26d3a91b36..55a39211496d 100644
+> > > --- a/tools/perf/Makefile.config
+> > > +++ b/tools/perf/Makefile.config
+> > > @@ -429,7 +429,7 @@ ifeq ($(feature-file-handle), 1)
+> > >  endif
+> > >
+> > >  ifdef NO_LIBELF
+> > > -  NO_DWARF := 1
+> > > +  NO_LIBDW := 1
+> > >    NO_LIBUNWIND := 1
+> > >    NO_LIBDW_DWARF_UNWIND := 1
+> > >    NO_LIBBPF := 1
+> > > @@ -471,9 +471,9 @@ else
+> > >        endif
+> > >      endif
+> > >      ifneq ($(feature-dwarf), 1)
+> > > -      ifndef NO_DWARF
+> > > +      ifndef NO_LIBDW
+> > >          $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.138, disables dwarf support. Please install new elfutils-devel/libdw-dev)
+> > > -        NO_DWARF := 1
+> > > +        NO_LIBDW := 1
+> > >        endif
+> > >      else
+> > >        ifneq ($(feature-dwarf_getlocations), 1)
+> > > @@ -496,7 +496,7 @@ ifeq ($(feature-libaio), 1)
+> > >    endif
+> > >  endif
+> > >
+> > > -ifdef NO_DWARF
+> > > +ifdef NO_LIBDW
+> > >    NO_LIBDW_DWARF_UNWIND := 1
+> > >  endif
+> > >
+> > > @@ -574,17 +574,17 @@ ifndef NO_LIBELF
+> > >      endif
+> > >    endif
+> > >
+> > > -  ifndef NO_DWARF
+> > > +  ifndef NO_LIBDW
+> > >      ifeq ($(origin PERF_HAVE_DWARF_REGS), undefined)
+> > >        $(warning DWARF register mappings have not been defined for architecture $(SRCARCH), DWARF support disabled)
+> > > -      NO_DWARF := 1
+> > > +      NO_LIBDW := 1
+> > >      else
+> > >        CFLAGS += -DHAVE_DWARF_SUPPORT $(LIBDW_CFLAGS)
+> > >        LDFLAGS += $(LIBDW_LDFLAGS)
+> > >        EXTLIBS += ${DWARFLIBS}
+> > >        $(call detected,CONFIG_DWARF)
+> > >      endif # PERF_HAVE_DWARF_REGS
+> > > -  endif # NO_DWARF
+> > > +  endif # NO_LIBDW
+> > >
+> > >    ifndef NO_LIBBPF
+> > >      ifeq ($(feature-bpf), 1)
+> > > @@ -633,7 +633,7 @@ ifdef PERF_HAVE_JITDUMP
+> > >  endif
+> > >
+> > >  ifeq ($(SRCARCH),powerpc)
+> > > -  ifndef NO_DWARF
+> > > +  ifndef NO_LIBDW
+> > >      CFLAGS += -DHAVE_SKIP_CALLCHAIN_IDX
+> > >    endif
+> > >  endif
+> > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > > index 9dd2e8d3f3c9..a144bfaf8aeb 100644
+> > > --- a/tools/perf/Makefile.perf
+> > > +++ b/tools/perf/Makefile.perf
+> > > @@ -40,7 +40,7 @@ include ../scripts/utilities.mak
+> > >  #
+> > >  # Define EXTRA_PERFLIBS to pass extra libraries to PERFLIBS.
+> > >  #
+> > > -# Define NO_DWARF if you do not want debug-info analysis feature at all.
+> > > +# Define NO_LIBDW if you do not want debug-info analysis feature at all.
+> >
+> > Can we keep NO_DWARF for compatibility and set NO_LIBDW=1 internally?
+> > I think it's fine to change it here to advertise NO_LIBDW over NO_DWARF
+> > but still want to support NO_DWARF as well.
 > 
-> With commit 8ec9497d3ef34 ("tools/include: Sync uapi/linux/perf.h
-> with the kernel sources"), 'perf mem report' gives an incorrect memory
-> access string.
-> ...
-> 0.02%   1       3644    L5 hit  [.] 0x0000000000009b0e  mlc     [.] 0x00007fce43f59480
-> ...
-> 
-> This occurs because, if no entry exists in mem_lvlnum, perf_mem__lvl_scnprintf
-> will default to 'L%d, lvl', which in this case for PERF_MEM_LVLNUM_L2_MHB is 0x05.
-> Add entries for PERF_MEM_LVLNUM_L2_MHB and PERF_MEM_LVLNUM_MSC to mem_lvlnum,
-> so that the correct strings are printed.
-> ...
-> 0.02%   1       3644    L2 MHB hit      [.] 0x0000000000009b0e  mlc     [.] 0x00007fce43f59480
-> ...
-> 
-> Fixes: 8ec9497d3ef34 ("tools/include: Sync uapi/linux/perf.h with the kernel sources")
-> Suggested-by: Kan Liang <kan.liang@linux.intel.com>
-> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> This would be actively confusing. NO_DWARF should really imply
+> NO_LIBUNWIND, it is like removing the ability for "perf record
+> --call-graph dwarf" to work - dwarf meaning libdw or libunwind in the
+> tool. Having NO_DWARF control NO_LIBDW, I'm not sure what I'm being
+> asked to do. The point of this clean up is to make the names mean what
+> they should mean and not something potentially confusingly broader,
+> but you're asking for the confusingly broader case to mean just libdw.
+> I don't follow and I don't see how it serves the purpose of the
+> cleanup.
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+I have no idea how many people use NO_DWARF actually.  We can probably
+ignore such users and convert it to NO_LIBDW.
 
-> ---
-> v2: Leo Yan suggested adding PERF_MEM_LVLNUM_L{1-4} to mem_lvlnum
->     and printing a clearer message in the case of an unknown level
->     to more easily catch similar issues in the future
-> ---
->  tools/perf/util/mem-events.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index 051feb93ed8d..bf5090f5220b 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -366,6 +366,12 @@ static const char * const mem_lvl[] = {
->  };
-> 
->  static const char * const mem_lvlnum[] = {
-> +       [PERF_MEM_LVLNUM_L1] = "L1",
-> +       [PERF_MEM_LVLNUM_L2] = "L2",
-> +       [PERF_MEM_LVLNUM_L3] = "L3",
-> +       [PERF_MEM_LVLNUM_L4] = "L4",
-> +       [PERF_MEM_LVLNUM_L2_MHB] = "L2 MHB",
-> +       [PERF_MEM_LVLNUM_MSC] = "Memory-side Cache",
->         [PERF_MEM_LVLNUM_UNC] = "Uncached",
->         [PERF_MEM_LVLNUM_CXL] = "CXL",
->         [PERF_MEM_LVLNUM_IO] = "I/O",
-> @@ -448,7 +454,7 @@ int perf_mem__lvl_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
->                 if (mem_lvlnum[lvl])
->                         l += scnprintf(out + l, sz - l, mem_lvlnum[lvl]);
->                 else
-> -                       l += scnprintf(out + l, sz - l, "L%d", lvl);
-> +                       l += scnprintf(out + l, sz - l, "Unknown level %d", lvl);
-> 
->                 l += scnprintf(out + l, sz - l, " %s", hit_miss);
->                 return l;
-> --
-> 2.46.0
-> 
+What I actually thought was
+
+  ifeq ($(NO_DWARF),1)
+    NO_LIBDW := 1
+    NO_LIBUNWIND := 1
+  endif
+
+but it'd break the compatibility too. :(
+
+Thanks,
+Namhyung
+
