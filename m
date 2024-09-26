@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FC71D5AB1;
-	Thu, 26 Sep 2024 00:26:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8701D5AB1;
+	Thu, 26 Sep 2024 00:28:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727310393; cv=none; b=ZP9VDaMn473CLhuZvf6apQxoj9ckSI4HMY/rqt2l8u+PAwgixDPhqyn+94CRwGPIoqJ30NmMz6sY1f5D265wggc0x6iILXqVP3v2djxj639pUTwLZX6Iq+AlSuXPQfkh0a0yWnUs88uyrjZ/QhVuBV+DWLFUPfCPVEI9zpnBJ9I=
+	t=1727310484; cv=none; b=oM/uuHORPEemYFP51GBLPK2Hk7V8eqgddhR6jP7LwAXm6qU4WkXU0MVy55gROD8nUnJ1ueiePs4mUrtK9k9pAf1nYeTMClfBn0/R7QFVugYhEwBBG0Ytwtg4cSmMJpgLDaOTb7zVC0PHrE+fI3eGE4DqW4prTbSWC17qS5WkUA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727310393; c=relaxed/simple;
-	bh=f3tS1U6dBvSCMNObFPyBViscoCK1jULQw/fp/P//qew=;
+	s=arc-20240116; t=1727310484; c=relaxed/simple;
+	bh=j14ayWwLFtHF/aWKVOCiE/N3Ict2rWnvmV4Gdh/L4l0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s8iRxsr7RurZMc7uhGB+aTnEQKos2d8idMMJsI/sUiMY0v63d69TwtuFryJwRbiBcZlbygDm7r2Hf0cqM1J/HR/sXxVlNqalf6gR3qTDwWOWL+mRo+fm/BG24iV4P0oNhDTmRaVA7COHmtgdb10awYeNOIN+bPNZqMahNWjh3g4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFI/lJDl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Za9bFZGkwRXusJKZ05gcsgfiBepMs8c6MHGkK9Sxg/Wf6YkceBZsFeBQHac2WN/Q51x0fA8IRpUDTxj9lBlEMR0HIYoWHBC32P6+dqSRVCOJG6VCPpU24Wlrpeslhd1RKhIV5aUGWBtSLBBrsaPqaEVBAn8AC2u+0uoRZRwpm/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o4IJFEk/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFI/lJDl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC4D9C4CEC3;
-	Thu, 26 Sep 2024 00:26:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o4IJFEk/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34424C4CEC3;
+	Thu, 26 Sep 2024 00:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727310393;
-	bh=f3tS1U6dBvSCMNObFPyBViscoCK1jULQw/fp/P//qew=;
+	s=k20201202; t=1727310483;
+	bh=j14ayWwLFtHF/aWKVOCiE/N3Ict2rWnvmV4Gdh/L4l0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZFI/lJDlvQUF4gMACagO3d2jiEsdPQDgayPBW3NSlx8uevjxaJMPa40v3QczSww4M
-	 7Jt73HhBInXjyJPO+7Q84q3SlRXwk+EWnBaJwfPVKBjQyB9TXNmi7M/uX83pmfmsRe
-	 1OEu3k4gy8io5SCGn/OVwBShoLBsaGwp4VHt8hs0btYaTMaZahWu++sXakpdrwPE8n
-	 QD1nY7kHiFfIgS6pXk1Dc3gR7jvdWlgNtaNmVJBzPYIXv4Vq2r0cG8S3VaOAh5bAxY
-	 +HtGYRzI6HT+93D5p46zzeCPxLTCQBzKR7+C7wzItDgrThdBp1ndTqq7hkfIW1ctwc
-	 LcUsG4v+XryVg==
-Date: Wed, 25 Sep 2024 17:26:30 -0700
+	b=o4IJFEk/loW5P/hD/BoVn6u532I3dG+OsQ659UwyKs/lqiodYCuzMdAH9V799nq2B
+	 pt6TgCyxynF9QIuofJrbDH5mJFG7gh3SfbrTnvJasjYV7cKpbvZ8ivSzX+39SbqjPf
+	 lyTlomJgh0z/LQjpR7Wi7HIrl6gufEkRgyaw4eE7Cm8fh3qrkdWcoNKMTR0aGHsDQe
+	 Wo4hrkzk7QBd9zhwDVsDXSisdIOwMnFDCinOVM+lvPiq5LtNoHC39FxZ6XanNjmS4t
+	 a3PNW9SBui8s8Ro7Q5nWKrKvsS/WyeIxETVzwWYFnqlmNPXE8Kgk0k5BRccbf2M6As
+	 NhiUaRPNFL3eA==
+Date: Wed, 25 Sep 2024 17:28:00 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -62,10 +62,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
 	Yang Jihong <yangjihong@bytedance.com>
-Subject: Re: [PATCH v1 01/11] perf build: Rename NO_DWARF to NO_LIBDW
-Message-ID: <ZvSqNqNKKysw_309@google.com>
+Subject: Re: [PATCH v1 03/11] perf build: Rename test-dwarf to test-libdw
+Message-ID: <ZvSqkGVhD1ETzkDH@google.com>
 References: <20240924160418.1391100-1-irogers@google.com>
- <20240924160418.1391100-2-irogers@google.com>
+ <20240924160418.1391100-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -74,261 +74,165 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240924160418.1391100-2-irogers@google.com>
+In-Reply-To: <20240924160418.1391100-4-irogers@google.com>
 
-On Tue, Sep 24, 2024 at 09:04:08AM -0700, Ian Rogers wrote:
-> NO_DWARF could mean more than NO_LIBDW support, in particular no
-> libunwind support. Rename to be more intention revealing.
+On Tue, Sep 24, 2024 at 09:04:10AM -0700, Ian Rogers wrote:
+> Be more intention revealing that the dwarf test is actually testing
+> for libdw support.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/Makefile.config         | 16 ++++++++--------
->  tools/perf/Makefile.perf           |  2 +-
->  tools/perf/arch/arm/Makefile       |  2 +-
->  tools/perf/arch/arm64/Makefile     |  2 +-
->  tools/perf/arch/csky/Makefile      |  2 +-
->  tools/perf/arch/loongarch/Makefile |  2 +-
->  tools/perf/arch/mips/Makefile      |  2 +-
->  tools/perf/arch/powerpc/Makefile   |  2 +-
->  tools/perf/arch/riscv/Makefile     |  2 +-
->  tools/perf/arch/s390/Makefile      |  2 +-
->  tools/perf/arch/sh/Makefile        |  2 +-
->  tools/perf/arch/sparc/Makefile     |  2 +-
->  tools/perf/arch/x86/Makefile       |  2 +-
->  tools/perf/arch/xtensa/Makefile    |  2 +-
->  tools/perf/builtin-probe.c         |  2 +-
->  15 files changed, 22 insertions(+), 22 deletions(-)
+>  tools/build/Makefile.feature                     |  6 +++---
+>  tools/build/feature/Makefile                     | 16 ++++++++--------
+>  tools/build/feature/test-all.c                   |  6 +++---
+>  .../build/feature/{test-dwarf.c => test-libdw.c} |  0
+>  tools/perf/Makefile.config                       |  6 +++---
+>  5 files changed, 17 insertions(+), 17 deletions(-)
+>  rename tools/build/feature/{test-dwarf.c => test-libdw.c} (100%)
 > 
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index ffd117135094..6025810cc346 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -30,7 +30,7 @@ endef
+>  #
+>  FEATURE_TESTS_BASIC :=                  \
+>          backtrace                       \
+> -        dwarf                           \
+> +        libdw                           \
+>          dwarf_getlocations              \
+>          dwarf_getcfi                    \
+>          eventfd                         \
+> @@ -120,7 +120,7 @@ ifeq ($(FEATURE_TESTS),all)
+>  endif
+>  
+>  FEATURE_DISPLAY ?=              \
+> -         dwarf                  \
+> +         libdw                  \
+>           dwarf_getlocations     \
+>           glibc                  \
+>           libbfd                 \
+> @@ -233,7 +233,7 @@ endef
+>  
+>  #
+>  # generates feature value assignment for name, like:
+> -#   $(call feature_assign,dwarf) == feature-dwarf=1
+> +#   $(call feature_assign,libdw) == feature-libdw=1
+>  #
+>  feature_assign = feature-$(1)=$(feature-$(1))
+>  
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 5938cf799dc6..bece326ac93b 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -5,7 +5,7 @@ FILES=                                          \
+>           test-all.bin                           \
+>           test-backtrace.bin                     \
+>           test-bionic.bin                        \
+> -         test-dwarf.bin                         \
+> +         test-libdw.bin                         \
+>           test-dwarf_getlocations.bin            \
+>           test-dwarf_getcfi.bin                  \
+>           test-eventfd.bin                       \
+> @@ -168,9 +168,9 @@ $(OUTPUT)test-libopencsd.bin:
+>  	$(BUILD) # -lopencsd_c_api -lopencsd provided by
+>  		 # $(FEATURE_CHECK_LDFLAGS-libopencsd)
+>  
+> -DWARFLIBS := -ldw
+> +DWLIBS := -ldw
+>  ifeq ($(findstring -static,${LDFLAGS}),-static)
+> -  DWARFLIBS += -lelf -lz -llzma -lbz2 -lzstd
+> +  DWLIBS += -lelf -lz -llzma -lbz2 -lzstd
+>  
+>    LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw)
+>    LIBDW_VERSION_1 := $(word 1, $(subst ., ,$(LIBDW_VERSION)))
+> @@ -179,18 +179,18 @@ ifeq ($(findstring -static,${LDFLAGS}),-static)
+>    # Elfutils merged libebl.a into libdw.a starting from version 0.177,
+>    # Link libebl.a only if libdw is older than this version.
+>    ifeq ($(shell test $(LIBDW_VERSION_2) -lt 177; echo $$?),0)
+> -    DWARFLIBS += -lebl
+> +    DWLIBS += -lebl
+>    endif
+>  endif
+>  
+> -$(OUTPUT)test-dwarf.bin:
+> -	$(BUILD) $(DWARFLIBS)
+> +$(OUTPUT)test-libdw.bin:
+> +	$(BUILD) $(DWLIBS)
+>  
+>  $(OUTPUT)test-dwarf_getlocations.bin:
+> -	$(BUILD) $(DWARFLIBS)
+> +	$(BUILD) $(DWLIBS)
+>  
+>  $(OUTPUT)test-dwarf_getcfi.bin:
+> -	$(BUILD) $(DWARFLIBS)
+> +	$(BUILD) $(DWLIBS)
+>  
+>  $(OUTPUT)test-libelf-getphdrnum.bin:
+>  	$(BUILD) -lelf
+> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+> index 6f4bf386a3b5..d60e072b6eca 100644
+> --- a/tools/build/feature/test-all.c
+> +++ b/tools/build/feature/test-all.c
+> @@ -38,8 +38,8 @@
+>  # include "test-glibc.c"
+>  #undef main
+>  
+> -#define main main_test_dwarf
+> -# include "test-dwarf.c"
+> +#define main main_test_libdw
+> +# include "test-libdw.c"
+>  #undef main
+>  
+>  #define main main_test_dwarf_getlocations
+> @@ -187,7 +187,7 @@ int main(int argc, char *argv[])
+>  	main_test_get_current_dir_name();
+>  	main_test_gettid();
+>  	main_test_glibc();
+> -	main_test_dwarf();
+> +	main_test_libdw();
+>  	main_test_dwarf_getlocations();
+>  	main_test_eventfd();
+>  	main_test_libelf_getphdrnum();
+> diff --git a/tools/build/feature/test-dwarf.c b/tools/build/feature/test-libdw.c
+> similarity index 100%
+> rename from tools/build/feature/test-dwarf.c
+> rename to tools/build/feature/test-libdw.c
 > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 5e26d3a91b36..55a39211496d 100644
+> index 182e14e39cd5..c8e157cc0c5e 100644
 > --- a/tools/perf/Makefile.config
 > +++ b/tools/perf/Makefile.config
-> @@ -429,7 +429,7 @@ ifeq ($(feature-file-handle), 1)
->  endif
->  
->  ifdef NO_LIBELF
-> -  NO_DWARF := 1
-> +  NO_LIBDW := 1
->    NO_LIBUNWIND := 1
->    NO_LIBDW_DWARF_UNWIND := 1
->    NO_LIBBPF := 1
-> @@ -471,9 +471,9 @@ else
->        endif
->      endif
->      ifneq ($(feature-dwarf), 1)
-> -      ifndef NO_DWARF
-> +      ifndef NO_LIBDW
->          $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.138, disables dwarf support. Please install new elfutils-devel/libdw-dev)
-> -        NO_DWARF := 1
-> +        NO_LIBDW := 1
->        endif
->      else
->        ifneq ($(feature-dwarf_getlocations), 1)
-> @@ -496,7 +496,7 @@ ifeq ($(feature-libaio), 1)
+> @@ -159,8 +159,8 @@ ifeq ($(findstring -static,${LDFLAGS}),-static)
+>      DWARFLIBS += -lebl
 >    endif
 >  endif
->  
-> -ifdef NO_DWARF
-> +ifdef NO_LIBDW
->    NO_LIBDW_DWARF_UNWIND := 1
->  endif
->  
-> @@ -574,17 +574,17 @@ ifndef NO_LIBELF
->      endif
->    endif
->  
-> -  ifndef NO_DWARF
-> +  ifndef NO_LIBDW
->      ifeq ($(origin PERF_HAVE_DWARF_REGS), undefined)
->        $(warning DWARF register mappings have not been defined for architecture $(SRCARCH), DWARF support disabled)
-> -      NO_DWARF := 1
-> +      NO_LIBDW := 1
->      else
->        CFLAGS += -DHAVE_DWARF_SUPPORT $(LIBDW_CFLAGS)
->        LDFLAGS += $(LIBDW_LDFLAGS)
->        EXTLIBS += ${DWARFLIBS}
->        $(call detected,CONFIG_DWARF)
->      endif # PERF_HAVE_DWARF_REGS
-> -  endif # NO_DWARF
-> +  endif # NO_LIBDW
->  
->    ifndef NO_LIBBPF
->      ifeq ($(feature-bpf), 1)
-> @@ -633,7 +633,7 @@ ifdef PERF_HAVE_JITDUMP
->  endif
->  
->  ifeq ($(SRCARCH),powerpc)
-> -  ifndef NO_DWARF
-> +  ifndef NO_LIBDW
->      CFLAGS += -DHAVE_SKIP_CALLCHAIN_IDX
->    endif
->  endif
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 9dd2e8d3f3c9..a144bfaf8aeb 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -40,7 +40,7 @@ include ../scripts/utilities.mak
->  #
->  # Define EXTRA_PERFLIBS to pass extra libraries to PERFLIBS.
->  #
-> -# Define NO_DWARF if you do not want debug-info analysis feature at all.
-> +# Define NO_LIBDW if you do not want debug-info analysis feature at all.
+> -FEATURE_CHECK_CFLAGS-dwarf := $(LIBDW_CFLAGS)
+> -FEATURE_CHECK_LDFLAGS-dwarf := $(LIBDW_LDFLAGS) $(DWARFLIBS)
+> +FEATURE_CHECK_CFLAGS-libdw := $(LIBDW_CFLAGS)
+> +FEATURE_CHECK_LDFLAGS-libdw := $(LIBDW_LDFLAGS) $(DWARFLIBS)
 
-Can we keep NO_DWARF for compatibility and set NO_LIBDW=1 internally?
-I think it's fine to change it here to advertise NO_LIBDW over NO_DWARF
-but still want to support NO_DWARF as well.
+s/DWARFLIBS/DWLIBS/ ?
 
-Also it seem we don't have an entry in the tests/make for no-dwarf
-build.  Can you please add one too?
+
+>  FEATURE_CHECK_CFLAGS-libdw-dwarf-unwind := $(LIBDW_CFLAGS)
+>  FEATURE_CHECK_LDFLAGS-libdw-dwarf-unwind := $(LIBDW_LDFLAGS) $(DWARFLIBS)
+
+Ditto.
 
 Thanks,
 Namhyung
 
 
->  #
->  # Define WERROR=0 to disable treating any warnings as errors.
->  #
-> diff --git a/tools/perf/arch/arm/Makefile b/tools/perf/arch/arm/Makefile
-> index 1d88fdab13bf..9b164d379548 100644
-> --- a/tools/perf/arch/arm/Makefile
-> +++ b/tools/perf/arch/arm/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -ifndef NO_DWARF
-> +ifndef NO_LIBDW
->  PERF_HAVE_DWARF_REGS := 1
->  endif
->  PERF_HAVE_JITDUMP := 1
-> diff --git a/tools/perf/arch/arm64/Makefile b/tools/perf/arch/arm64/Makefile
-> index 5735ed4479bb..8a5ffbfe809f 100644
-> --- a/tools/perf/arch/arm64/Makefile
-> +++ b/tools/perf/arch/arm64/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -ifndef NO_DWARF
-> +ifndef NO_LIBDW
->  PERF_HAVE_DWARF_REGS := 1
->  endif
->  PERF_HAVE_JITDUMP := 1
-> diff --git a/tools/perf/arch/csky/Makefile b/tools/perf/arch/csky/Makefile
-> index 88c08eed9c7b..119b06a64bed 100644
-> --- a/tools/perf/arch/csky/Makefile
-> +++ b/tools/perf/arch/csky/Makefile
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -ifndef NO_DWARF
-> +ifndef NO_LIBDW
->  PERF_HAVE_DWARF_REGS := 1
->  endif
-> diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
-> index c89d6bb6b184..1cc5eb01f32b 100644
-> --- a/tools/perf/arch/loongarch/Makefile
-> +++ b/tools/perf/arch/loongarch/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -ifndef NO_DWARF
-> +ifndef NO_LIBDW
->  PERF_HAVE_DWARF_REGS := 1
->  endif
->  PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
-> diff --git a/tools/perf/arch/mips/Makefile b/tools/perf/arch/mips/Makefile
-> index cd0b011b3be5..733f7b76f52d 100644
-> --- a/tools/perf/arch/mips/Makefile
-> +++ b/tools/perf/arch/mips/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -ifndef NO_DWARF
-> +ifndef NO_LIBDW
->  PERF_HAVE_DWARF_REGS := 1
->  endif
->  
-> diff --git a/tools/perf/arch/powerpc/Makefile b/tools/perf/arch/powerpc/Makefile
-> index bf6d323574f6..7672d555f6cd 100644
-> --- a/tools/perf/arch/powerpc/Makefile
-> +++ b/tools/perf/arch/powerpc/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -ifndef NO_DWARF
-> +ifndef NO_LIBDW
->  PERF_HAVE_DWARF_REGS := 1
->  endif
->  
-> diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
-> index 90c3c476a242..4664a78a1afd 100644
-> --- a/tools/perf/arch/riscv/Makefile
-> +++ b/tools/perf/arch/riscv/Makefile
-> @@ -1,4 +1,4 @@
-> -ifndef NO_DWARF
-> +ifndef NO_LIBDW
->  PERF_HAVE_DWARF_REGS := 1
->  endif
->  PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
-> diff --git a/tools/perf/arch/s390/Makefile b/tools/perf/arch/s390/Makefile
-> index 56994e63b43a..3f66e2ede3f7 100644
-> --- a/tools/perf/arch/s390/Makefile
-> +++ b/tools/perf/arch/s390/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -ifndef NO_DWARF
-> +ifndef NO_LIBDW
->  PERF_HAVE_DWARF_REGS := 1
->  endif
->  HAVE_KVM_STAT_SUPPORT := 1
-> diff --git a/tools/perf/arch/sh/Makefile b/tools/perf/arch/sh/Makefile
-> index 88c08eed9c7b..119b06a64bed 100644
-> --- a/tools/perf/arch/sh/Makefile
-> +++ b/tools/perf/arch/sh/Makefile
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -ifndef NO_DWARF
-> +ifndef NO_LIBDW
->  PERF_HAVE_DWARF_REGS := 1
->  endif
-> diff --git a/tools/perf/arch/sparc/Makefile b/tools/perf/arch/sparc/Makefile
-> index 4031db72ba71..7741184894c8 100644
-> --- a/tools/perf/arch/sparc/Makefile
-> +++ b/tools/perf/arch/sparc/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -ifndef NO_DWARF
-> +ifndef NO_LIBDW
->  PERF_HAVE_DWARF_REGS := 1
->  endif
->  
-> diff --git a/tools/perf/arch/x86/Makefile b/tools/perf/arch/x86/Makefile
-> index 67b4969a6738..9aa58acb5564 100644
-> --- a/tools/perf/arch/x86/Makefile
-> +++ b/tools/perf/arch/x86/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -ifndef NO_DWARF
-> +ifndef NO_LIBDW
->  PERF_HAVE_DWARF_REGS := 1
->  endif
->  HAVE_KVM_STAT_SUPPORT := 1
-> diff --git a/tools/perf/arch/xtensa/Makefile b/tools/perf/arch/xtensa/Makefile
-> index 88c08eed9c7b..119b06a64bed 100644
-> --- a/tools/perf/arch/xtensa/Makefile
-> +++ b/tools/perf/arch/xtensa/Makefile
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -ifndef NO_DWARF
-> +ifndef NO_LIBDW
->  PERF_HAVE_DWARF_REGS := 1
->  endif
-> diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-> index 003a3bcebfdf..91672bb3047c 100644
-> --- a/tools/perf/builtin-probe.c
-> +++ b/tools/perf/builtin-probe.c
-> @@ -616,7 +616,7 @@ __cmd_probe(int argc, const char **argv)
->  	set_option_flag(options, 'L', "line", PARSE_OPT_EXCLUSIVE);
->  	set_option_flag(options, 'V', "vars", PARSE_OPT_EXCLUSIVE);
->  #else
-> -# define set_nobuild(s, l, c) set_option_nobuild(options, s, l, "NO_DWARF=1", c)
-> +# define set_nobuild(s, l, c) set_option_nobuild(options, s, l, "NO_LIBDW=1", c)
->  	set_nobuild('L', "line", false);
->  	set_nobuild('V', "vars", false);
->  	set_nobuild('\0', "externs", false);
+>  FEATURE_CHECK_CFLAGS-dwarf_getlocations := $(LIBDW_CFLAGS)
+> @@ -470,7 +470,7 @@ else
+>          $(warning No libdw DWARF unwind found, Please install elfutils-devel/libdw-dev >= 0.158 and/or set LIBDW_DIR)
+>        endif
+>      endif
+> -    ifneq ($(feature-dwarf), 1)
+> +    ifneq ($(feature-libdw), 1)
+>        ifndef NO_LIBDW
+>          $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.138, disables dwarf support. Please install new elfutils-devel/libdw-dev)
+>          NO_LIBDW := 1
 > -- 
 > 2.46.0.792.g87dc391469-goog
 > 
