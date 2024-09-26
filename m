@@ -1,68 +1,68 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1224D8C8
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 15:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762B314B959
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 15:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727363317; cv=none; b=Tu1OxDNSBcvBoH82EYWyjGRoxhONwxEwutBOFciiTh/dUDQ7UJ8YrxlLRJ9Perv7SC8iVcuOzHaEFJZ//YzZvs22+dwXt6sFVTgx2O7ItU1PQ6D5hmdc//1fEygoIarQfGRf7/xbuiBJWzCBszRysRXUiemo1ru8Q+dV0bdrg5U=
+	t=1727363419; cv=none; b=TvKKDYxWzKdgsZi+qqWJgbecgGRxQ1+h4lQ4W662vq6QmXzN7444sOVxYKQ72bJLYIS91z6PH2lj2sPnL6wX/2aN5SFwbCdRDRyJfLI3hKjPVC3DLPW0jlHGCeHoSXaSF1mCQH9qVjfbbamiUn5z/EeKu6ng6/E2MH7vTz868d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727363317; c=relaxed/simple;
-	bh=JyoyHxKQD9Kwr5fcs+xm/CmkChCRExnaujr9I+wRTUc=;
+	s=arc-20240116; t=1727363419; c=relaxed/simple;
+	bh=hVE5ZilPLPNfrXuAXy2c+9nnJM7MfQr580xYHLvoS5k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f+TNNKZrMBGdPh6uFqkfiFrJT5eNRwPdI46Y+qOa0r7EZDPsCoHSgDgMFx4hD0TfaI/IGBaKbvC6HcFPmFWVEIAsJF76AiLI86pUxv7pZakBmJk+WCX19KzDUmmBVod/FOD77CJKPo3yhmpEra/B++wbfnA90ZHFHv6xcsOOPnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vMUGnHfj; arc=none smtp.client-ip=209.85.166.171
+	 To:Cc:Content-Type; b=Cu0IBmxCXC5PXaelHUMDKINNXRdsDbUe2DZ8llsEyo3qJ9Uc8wmUoAcy8a8VnBWnipCwP0/un1VtE54qGKeeV5xlEo7y23yGNKDM/U+VTaU34mk5SQMvYiVtqUuFtKiSBq1nYI9x/wqOUDyowdSgIzVNlVrpfhi0v1L9oXD8co4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Loa6j8EH; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vMUGnHfj"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a1a662a633so293045ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 08:08:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Loa6j8EH"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2056aa5cefcso244665ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 08:10:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727363315; x=1727968115; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1727363417; x=1727968217; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Sqw39FJ5N7iyzE7OldGM0QX15IjljmEHm7ZyQhjns8Q=;
-        b=vMUGnHfjxrwmcmrTIgm2FOPDCTxjMtfuohR/TnruAKyrtv8Yyn6pq9cu2WbxvNpiDi
-         z0qJcBjMjJHkgwgcyQv7ZfeANyofQ0P+R+OwvoRz1YGsr//q82GLHIVN6yXhO14UNN2B
-         ++/plu8WCFQik5lZRlrHBupHF9e6B00H2o8ujvUP4ljAGoLmQS6Q83FPH7zlG6Dp6hTy
-         GX5v7CeBTApiH0yD46hRGCjKGKK/ILFx3VrcE8tiwAJ/kihcUKZEVzXYU1EytviWeQpe
-         nWsPW3i+/YdPLayjcj1j6Rtxza/HTEA1gnsunfBZ4hkkN4cXm6UAVsjfSZgzGsha+qkw
-         AvVA==
+        bh=Qd5wd2EDy91T2PV08KE1FbhF8/gu2jxlRWd3WkzT05w=;
+        b=Loa6j8EHZu4P4kGTCvSe4W9ZdLLykufzI2am6uezCHNPZjwBDmVvSfnH6sSGKw9DFU
+         VYm/+SOFG+rVr/AfzZGP2+4RiKIvMKD6QM9Ih4CmVzSpoOGBLRLFCo9w6XDVf3sJljlb
+         4lCD9Bo1TRR8HWL8/NaoIc1lOQ4jCJ+rbinlyyjHAO2BzN8jMDpF4ZQHGkioZuWzLAAo
+         j6plwBWxwVZroOh+YZpcJ/Bq1gOewcz6pJxDeOXELcoiSACmG+1ypXW97g3SU3P4TymP
+         xT/MXkWNl+mmKkkNga90+jzTN2cSvuPU9Wr4+/E0Jv1bkEzCdqSXghUUDzO3GO+Iug4Q
+         Xqgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727363315; x=1727968115;
+        d=1e100.net; s=20230601; t=1727363417; x=1727968217;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Sqw39FJ5N7iyzE7OldGM0QX15IjljmEHm7ZyQhjns8Q=;
-        b=OEOrraxMFcq9QyaIYnXWJNdsDinYycSZJxD5v+ybRpFOF7HwgV8Dxoia0DOuDNHNzi
-         e3AGFTHraofFYKk1+vrXbKQcl9+QeL9+PiOvM372lqfNEsswvzUVjEpknC7u0OKMlgRb
-         u+Jdr6/wWM263IXNxYBue6w3XCd3vDpEPo4kfDXg/5ASTL8YYCeSMuxT8d+vtpFs3+eq
-         BeSJYvlQByPStUeFOryRVM/7OqQeeDA3g/rMl3DxDfaXqQ0o7Gfmpj57I0qznUvjmpFV
-         E/YxW9f27o4jxWmbJjlkQ//gByvkz6dJvNOwRZI8hqpoRZ5J29v2QAzQAYkjh572nbtP
-         45yg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTKVv2aTw3um3qxePwK2vSEY3KxqsnWyOMGOlpibbt2ozkTJJzamfAHQ871rGo5OYZxKgexUJvjQTjcs1bQyW+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOK1WAhVH7DxuocatYWDSAdv7O3NKf2ahAnT6KRDS9zPMNJrd+
-	AawQ7r3ImJqj+xV+BQ1pqqGnzRhowUlkmcmZsRNCVeTmGwI1kmj9hYnYnh/BO4sm5/C+sCB7pXZ
-	k3TSwCI0VlCXlo7gSXDQuXC69R8cGPICtmYuV
-X-Google-Smtp-Source: AGHT+IF9qWP9inTYXeDlp/TQlxeWo7WHjsgYEXiJOQnoVVcu9AxstnMs++Fq3OP8K7LV8MxYBc4EhVYOhRFAIdUYH3U=
-X-Received: by 2002:a05:6e02:b28:b0:3a0:926a:8d35 with SMTP id
- e9e14a558f8ab-3a31b665b0amr3914595ab.17.1727363314902; Thu, 26 Sep 2024
- 08:08:34 -0700 (PDT)
+        bh=Qd5wd2EDy91T2PV08KE1FbhF8/gu2jxlRWd3WkzT05w=;
+        b=r+1bLkac+Zr6a97/6/+6Z0yA3/fP8owmAMMYfFWZOMMTQzK+Uu6KqsiM+961kYF1TI
+         vFT44VGCUUSwi40tQOGEbsrlOkOiJN5SQCpXHTihFnPD03BzmJyrktjspdT4PdwsGrve
+         GQdU83Z1wC1IM3BRgAhrxBO+3BI99eozVFgBlAx8cERDUbIiITJCSZOWzG0UztQbxIOt
+         25Jt15YCK845rwFv7U2jkgcorjlEOEFjGZh2x+i+veUlbJ/2D/HyY8zL8iIJN3QOtPld
+         YO/TZ9mxuhfge/ZrTYFtU7GMGbar7x1awlwyZltWa3j39w5+Ka0Ti+zuWk6lPeSTdHWe
+         2sww==
+X-Forwarded-Encrypted: i=1; AJvYcCWZKskXdlzJSgz2NLdtJDryx5w+Ra1nKfqKQWZ3swqLoNEekNzaOfv8/Or+vJwpyZjHj7Xhy5kI+LguStMxL9iC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7YhQAJqRwhmZZNOQn7MxmxwpjRiyPWlQyaNXmwXHppy20g7N3
+	Gv/NYtUA/PLx7orU+F0jEP6wmtpOepN1+jp5VkPOAgXaS6Nz+zsf5ytY8FkIoTvqiQSoPTpF8KT
+	DJMHMbpK4iqc8WGdlUlwDg9+Exfr6IkTGOElY
+X-Google-Smtp-Source: AGHT+IHqRahqJwKWGmO6jTznzohb0TucVdaEV7XZBmzejNts+U7KeuAbCH3+rT6TkZcAAe+lnGE5M4p+H4ijVdt+KEA=
+X-Received: by 2002:a17:902:fa8e:b0:1fc:719c:5d9 with SMTP id
+ d9443c01a7336-20b203cad58mr2787815ad.25.1727363416347; Thu, 26 Sep 2024
+ 08:10:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240924160418.1391100-1-irogers@google.com> <20240924160418.1391100-8-irogers@google.com>
- <ZvSrAv_6NUOVWJdD@google.com>
-In-Reply-To: <ZvSrAv_6NUOVWJdD@google.com>
+References: <20240924160418.1391100-1-irogers@google.com> <20240924160418.1391100-10-irogers@google.com>
+ <ZvSsB8bT3CTLT4B0@google.com>
+In-Reply-To: <ZvSsB8bT3CTLT4B0@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 26 Sep 2024 08:08:22 -0700
-Message-ID: <CAP-5=fWvCoDx66xJhZ+bB0jC4tYOjqZh=jCf+APNg+hGvfyMbA@mail.gmail.com>
-Subject: Re: [PATCH v1 07/11] perf probe: Move elfutils support check to libdw check
+Date: Thu, 26 Sep 2024 08:10:04 -0700
+Message-ID: <CAP-5=fWe-CAgNb7ULNJc0e+Kr0zxSJZNUuF1iTrB7J=ANcUwUw@mail.gmail.com>
+Subject: Re: [PATCH v1 09/11] perf build: Rename HAVE_DWARF_SUPPORT to HAVE_LIBDW_SUPPORT
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -87,48 +87,54 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 25, 2024 at 5:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On Wed, Sep 25, 2024 at 5:34=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> On Tue, Sep 24, 2024 at 09:04:14AM -0700, Ian Rogers wrote:
-> > The test _ELFUTILS_PREREQ(0, 142) is false for elfutils before
-> > 2009-06-13, but that is 15 years ago and very unlikely. Add a test to
-> > test-libdw.c and assume the libdw version is at least 0.142 to
-> > simplify the build logic.
+> On Tue, Sep 24, 2024 at 09:04:16AM -0700, Ian Rogers wrote:
+> > In Makefile.config for unwinding the name dwarf implies either
+> > libunwind or libdw. Make it clearer that HAVE_DWARF_SUPPORT is really
+> > just defined when libdw is present by renaming to HAVE_LIBDW_SUPPORT.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/build/feature/test-libdw.c | 10 +++++++++-
-> >  tools/perf/util/probe-finder.c   |  2 --
-> >  tools/perf/util/probe-finder.h   |  2 --
-> >  3 files changed, 9 insertions(+), 5 deletions(-)
+> >  tools/perf/Documentation/perf-check.txt         |  6 +++---
+> >  tools/perf/Makefile.config                      |  2 +-
+> >  tools/perf/arch/powerpc/annotate/instructions.c |  4 ++--
+> >  tools/perf/arch/x86/annotate/instructions.c     |  2 +-
+> >  tools/perf/builtin-annotate.c                   |  2 +-
+> >  tools/perf/builtin-check.c                      |  6 +++---
+> >  tools/perf/builtin-probe.c                      | 12 ++++++------
+> >  tools/perf/builtin-report.c                     |  4 ++--
+> >  tools/perf/util/annotate-data.h                 |  8 ++++----
+> >  tools/perf/util/debuginfo.h                     |  6 +++---
+> >  tools/perf/util/disasm.c                        |  4 ++--
+> >  tools/perf/util/disasm.h                        |  4 ++--
+> >  tools/perf/util/genelf.c                        |  4 ++--
+> >  tools/perf/util/genelf.h                        |  2 +-
+> >  tools/perf/util/include/dwarf-regs.h            |  6 +++---
+> >  tools/perf/util/probe-event.c                   |  4 ++--
+> >  tools/perf/util/probe-finder.h                  |  4 ++--
+> >  17 files changed, 40 insertions(+), 40 deletions(-)
 > >
-> > diff --git a/tools/build/feature/test-libdw.c b/tools/build/feature/tes=
-t-libdw.c
-> > index 71c6f8e3b0ee..2fb59479ab77 100644
-> > --- a/tools/build/feature/test-libdw.c
-> > +++ b/tools/build/feature/test-libdw.c
-> > @@ -41,8 +41,16 @@ int test_libdw_getcfi(void)
-> >       return dwarf_getcfi(dwarf) =3D=3D NULL;
-> >  }
-> >
-> > +int test_elfutils(void)
-> > +{
-> > +     Dwarf_CFI *cfi =3D NULL;
-> > +
-> > +     dwarf_cfi_end(cfi);
-> > +     return 0;
-> > +}
+> > diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Docum=
+entation/perf-check.txt
+> > index 45101a8e4154..31741499e786 100644
+> > --- a/tools/perf/Documentation/perf-check.txt
+> > +++ b/tools/perf/Documentation/perf-check.txt
+> > @@ -47,15 +47,15 @@ feature::
+> >                  bpf                     /  HAVE_LIBBPF_SUPPORT
+> >                  bpf_skeletons           /  HAVE_BPF_SKEL
+> >                  debuginfod              /  HAVE_DEBUGINFOD_SUPPORT
+> > -                dwarf                   /  HAVE_DWARF_SUPPORT
+> > -                dwarf_getlocations      /  HAVE_DWARF_SUPPORT
+> > +                dwarf                   /  HAVE_LIBDW_SUPPORT
+> > +                dwarf_getlocations      /  HAVE_LIBDW_SUPPORT
 >
-> I think it's the same as test_libdw_getcfi() and let's get rid of it.
+> I'm not sure if we really want to display dwarf_getlocatiosn as it's too
+> implementation detail IMHO.  Maybe just 'dwarf' or 'libdw' is enough.
 
-The point of doing the change this way, and I think what's being
-ignored, is that I am trying to simply replace an #if with a clearly
-equivalent feature test - clearly equivalent as the #if guards use of
-dwarf_cfi_end in the code. Merging test_elfutils with
-test_libdw_getcfi is another cognitive step and I think it is fine as
-follow up cleanup. Combining that step with the change here fails the
-minimal meaningful change and tbh I think this is just bike shedding.
+I think that's follow up work. I think we should rename dwarf to libdw
+given the confusion using dwarf here can create.
 
 Thanks,
 Ian
@@ -136,52 +142,15 @@ Ian
 > Thanks,
 > Namhyung
 >
-> > +
-> >  int main(void)
-> >  {
-> >       return test_libdw() + test_libdw_unwind() + test_libdw_getlocatio=
-ns() +
-> > -            test_libdw_getcfi();
-> > +            test_libdw_getcfi() + test_elfutils();
-> >  }
-> > diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-fin=
-der.c
-> > index 78f34fa0c391..7434b38596b9 100644
-> > --- a/tools/perf/util/probe-finder.c
-> > +++ b/tools/perf/util/probe-finder.c
-> > @@ -1379,10 +1379,8 @@ int debuginfo__find_trace_events(struct debuginf=
-o *dbg,
-> >       if (ret >=3D 0 && tf.pf.skip_empty_arg)
-> >               ret =3D fill_empty_trace_arg(pev, tf.tevs, tf.ntevs);
-> >
-> > -#if _ELFUTILS_PREREQ(0, 142)
-> >       dwarf_cfi_end(tf.pf.cfi_eh);
-> >       dwarf_cfi_end(tf.pf.cfi_dbg);
-> > -#endif
-> >
-> >       if (ret < 0 || tf.ntevs =3D=3D 0) {
-> >               for (i =3D 0; i < tf.ntevs; i++)
-> > diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-fin=
-der.h
-> > index 3add5ff516e1..f0149d72310c 100644
-> > --- a/tools/perf/util/probe-finder.h
-> > +++ b/tools/perf/util/probe-finder.h
-> > @@ -63,12 +63,10 @@ struct probe_finder {
-> >       struct intlist          *lcache;        /* Line cache for lazy ma=
-tch */
-> >
-> >       /* For variable searching */
-> > -#if _ELFUTILS_PREREQ(0, 142)
-> >       /* Call Frame Information from .eh_frame */
-> >       Dwarf_CFI               *cfi_eh;
-> >       /* Call Frame Information from .debug_frame */
-> >       Dwarf_CFI               *cfi_dbg;
-> > -#endif
-> >       Dwarf_Op                *fb_ops;        /* Frame base attribute *=
-/
-> >       unsigned int            machine;        /* Target machine arch */
-> >       struct perf_probe_arg   *pvar;          /* Current target variabl=
-e */
-> > --
-> > 2.46.0.792.g87dc391469-goog
-> >
+>
+> >                  dwarf-unwind            /  HAVE_DWARF_UNWIND_SUPPORT
+> >                  auxtrace                /  HAVE_AUXTRACE_SUPPORT
+> >                  libaudit                /  HAVE_LIBAUDIT_SUPPORT
+> >                  libbfd                  /  HAVE_LIBBFD_SUPPORT
+> >                  libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
+> >                  libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
+> > -                libdw-dwarf-unwind      /  HAVE_DWARF_SUPPORT
+> > +                libdw-dwarf-unwind      /  HAVE_LIBDW_SUPPORT
+> >                  libelf                  /  HAVE_LIBELF_SUPPORT
+> >                  libnuma                 /  HAVE_LIBNUMA_SUPPORT
+> >                  libopencsd              /  HAVE_CSTRACE_SUPPORT
