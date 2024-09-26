@@ -1,72 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80B313C3F2;
-	Thu, 26 Sep 2024 03:27:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFD8170A0B;
+	Thu, 26 Sep 2024 03:43:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727321254; cv=none; b=PWOcFkcGyKaRWl231kZcO0Mugq5yhCzTSAJRHauNUwqQ+IWbNPMLEMR91rH0dXC6A6UrKSxAMatU3H1zkQBmvqHuXIouuV7NoH2XK+1sijDgWAktUnTTqxo6UTUe6QQHpsDPPUSDn6ukoiZojDacpDFvDeSse8Nukaj1/65Ksas=
+	t=1727322233; cv=none; b=YMjQOpueDD9OHNzJ7wct4ZIXn47YHp+6KuRGWKDSHKwRb537k03k44uoXSBnOhzoo5IZx+gTDFRzxw27KlmRIwyYggV+o2cvPr8kKEYspnTrqMTItVewsrgEH1tb5ajNXQDxHr9RMH/DoACdsNXa52Kwox1rjT+iE9+zoM7eaOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727321254; c=relaxed/simple;
-	bh=oYaNX/FBJAEEOOqWGjXdBRhzbszI/dMHUcFatabIzL8=;
+	s=arc-20240116; t=1727322233; c=relaxed/simple;
+	bh=YdpuSZx/xJqb9wHYzeVQI0farEuF4nbcZ4eWalvjt+I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YtW2O1TUxQSqwhBTobD2zTOGaAzulSqEFuzw2k904CT8Z78z0cJmNy78YDWyr08GJFrwFoeNFq39xb7arOo9eOPJkn5JskLmMvth7ficmc8BwqXSd6EWopimhKcg1ABQxvOmQ1eW7bjhSTwRYcX0TQ0l2Z+Rj5eoVHCGPjpqBnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S35oOoZS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ksht5eJO6fdFro7X9m5XyG0pwyapevdf87CwTentAG3Ni/pfiekNfgPIU3ucx9WtFOfl7OFdFrNdnp93TqeyhFb4ohS22hjrcY3gFmKcEQtvAHq4oQITuf7xWTzElDRPXQg5QD1WVX6F6H7Ep+38vK9QvoVa+tBhoYpqi0O6V+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=thfJ5wd4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S35oOoZS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39BF3C4CEC5;
-	Thu, 26 Sep 2024 03:27:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="thfJ5wd4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33FF3C4CEC5;
+	Thu, 26 Sep 2024 03:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727321254;
-	bh=oYaNX/FBJAEEOOqWGjXdBRhzbszI/dMHUcFatabIzL8=;
+	s=k20201202; t=1727322232;
+	bh=YdpuSZx/xJqb9wHYzeVQI0farEuF4nbcZ4eWalvjt+I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S35oOoZSbcGM00IPKEn3yA3vb1QIHabWUboV0Pw3vrkR/mSATrlNGx3SDMV/oZGFs
-	 OjltpK4RqzYw317RFe3oSOG/3MIrKXuKB93R1I9QCglylP8e1go7qhC0dcfM7WNDUR
-	 deiXu4wJi4moBX/pDAFUozK4GuQi2aO6zM4kbu7XSgyuMezPUvW2oyxnOkRUWMFhJA
-	 vCHOZsHzzZA0JTcAn1uBrdbrvV0EplhWJ08d2SrQtC19oKeNXJaZtyZfwB9bMEWoqY
-	 xa1YCuQBcan7sY6wXgrRhdcwi3pdNmh/79/TfMcUk3Mc9sSq9zfyvyBtUZdwX0rZ1c
-	 EUy4JIO5GOtPw==
-Date: Wed, 25 Sep 2024 20:27:31 -0700
+	b=thfJ5wd48eCquzU2CnWNJ48oVTt+Sa93xcbR+FuL5a9kXgKMnMBn6eyWDqASzSRz7
+	 tNknjivlFc83fef089UJIStnHen9VsdwaOEQEthikH7HIXRc2LKhbdTy952/7/xtkw
+	 quwqDM6oJQiVJPOtaOOBRixcVdzq+gHZUR8oY9/JXdzKVHGu1GZ0kzrWtQCyacn8W7
+	 4ryrVEwqz3GgxoWOd7/g2qwKXMP1fQUKu6v+B5N/d+cH+nF5btCxNPDSfWZP8e+WeA
+	 mpOTDUR+1CIRmPyTluujmfD4QZr0ktlpQHiBciafXw9OgH9vq4AY0BO+x1Qv4dKG+w
+	 ClqfZQMxQlPfQ==
+Date: Wed, 25 Sep 2024 20:43:50 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
+To: Tengda Wu <wutengda@huaweicloud.com>, song@kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Guo Ren <guoren@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>,
-	Guilherme Amadio <amadio@gentoo.org>,
-	Changbin Du <changbin.du@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>,
-	Kajol Jain <kjain@linux.ibm.com>, Anup Patel <anup@brainfault.org>,
-	Shenlin Liang <liangshenlin@eswincomputing.com>,
-	Atish Patra <atishp@rivosinc.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Chen Pei <cp0613@linux.alibaba.com>,
-	Dima Kogan <dima@secretsauce.net>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Yang Jihong <yangjihong@bytedance.com>
-Subject: Re: [PATCH v1 11/11] perf build: Rename PERF_HAVE_DWARF_REGS to
- PERF_HAVE_LIBDW_REGS
-Message-ID: <ZvTUo_nbr_gKaJrs@google.com>
-References: <20240924160418.1391100-1-irogers@google.com>
- <20240924160418.1391100-12-irogers@google.com>
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH -next v3 0/2] perf stat: Support inherit events for bperf
+Message-ID: <ZvTYduigMBtlmNbK@google.com>
+References: <20240916014318.267709-1-wutengda@huaweicloud.com>
+ <729eef63-6aed-44db-b18a-eb4bf96aeaab@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -75,16 +49,67 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240924160418.1391100-12-irogers@google.com>
+In-Reply-To: <729eef63-6aed-44db-b18a-eb4bf96aeaab@huaweicloud.com>
 
-On Tue, Sep 24, 2024 at 09:04:18AM -0700, Ian Rogers wrote:
-> The name dwarf can imply libunwind support, whereas
-> PERF_HAVE_DWARF_REGS is only enabled with libdw support. Rename to
-> make it clearer there is a libdw connection.
+Hello,
 
-While it only covers libdw, I think the idea of this macro is whether
-the arch has register mappings defined in DWARF standard.  So I think
-it's better to keep the name for this case.
+On Wed, Sep 25, 2024 at 10:16:16PM +0800, Tengda Wu wrote:
+> Hello,
+> 
+> Sorry for pinging again. Is there any other suggestion with this patch set?
+> If there is, please let me know.
+
+Sorry I was traveling last week.  I think it's good now.
+
+Song, can I get your ack?
 
 Thanks,
 Namhyung
+
+> 
+> On 2024/9/16 9:43, Tengda Wu wrote:
+> > Hi,
+> > 
+> > Here is the 3th version of the series to support inherit events for bperf.
+> > This version add pid or tgid selection based on filter type in new_task
+> > prog to avoid memory waste and potential count loss.
+> > 
+> > 
+> > bperf (perf-stat --bpf-counter) has not supported inherit events
+> > during fork() since it was first introduced.
+> > 
+> > This patch series tries to add this support by:
+> >  1) adding two new bpf programs to monitor task lifecycle;
+> >  2) recording new tasks in the filter map dynamically;
+> >  3) reusing `accum_key` of parent task for new tasks.
+> > 
+> > Thanks,
+> > Tengda
+> > 
+> > 
+> > Changelog:
+> > ---------
+> > v3: (Address comments from Namhyung, thanks)
+> >  * Use pid or tgid based on filter type in new_task prog
+> >  * Add comments to explain pid usage for TGID type in exit_task prog
+> > 
+> > v2: https://lore.kernel.org/all/20240905115918.772234-1-wutengda@huaweicloud.com/
+> >  * Remove the unused init_filter_entries in follower bpf, declare
+> >    a global filter_entry_count in bpf_counter instead
+> >  * Attach on_newtask and on_exittask progs only if the filter type
+> >    is either PID or TGID
+> > 
+> > v1: https://lore.kernel.org/all/20240904123103.732507-1-wutengda@huaweicloud.com/
+> > 
+> > 
+> > Tengda Wu (2):
+> >   perf stat: Support inherit events during fork() for bperf
+> >   perf test: Use sqrtloop workload to test bperf event
+> > 
+> >  tools/perf/tests/shell/stat_bpf_counters.sh   |  2 +-
+> >  tools/perf/util/bpf_counter.c                 | 32 +++++--
+> >  tools/perf/util/bpf_skel/bperf_follower.bpf.c | 87 +++++++++++++++++--
+> >  tools/perf/util/bpf_skel/bperf_u.h            |  5 ++
+> >  4 files changed, 112 insertions(+), 14 deletions(-)
+> > 
+> 
