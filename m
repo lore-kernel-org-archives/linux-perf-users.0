@@ -1,57 +1,57 @@
 Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D2C166F11
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 17:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA02175568
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 17:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727372482; cv=none; b=OlK8fDbogj15NDfm2QBBg9aN/V3VGoXUyHhjGka+1HNuanFxZnjr5da6IdUYj5UELqNri3JvCkJVLNtKSbt/2HNMt32wQjijzkBT+s3jC826xTBFwqnKw2pjp1Hc2fqJL6dPNirKvBDMiud22dFOAPCn18yfKiD+VScqJc1kBuo=
+	t=1727372484; cv=none; b=DeUqui9tl7Bk2MjTdqLGd/a2IhVusMYzPYoMappZQke7bqG5DSSyLNfyXg34ELcmN/vp42GTNfQytutWtUmXQevp/8ZIOxpmPfbanxo7G5ZCn9XKB3Iovg7cWdqz7Zj4aji3zT2T8fuddEhplvrmNFxMl4D8dt4d6jZ5K1AGl5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727372482; c=relaxed/simple;
-	bh=+1OOOQq/7T2AxXkQtO1l2r+mYOpA+0yX1aQLS5Yn528=;
+	s=arc-20240116; t=1727372484; c=relaxed/simple;
+	bh=+VRBgRT69d+Qz350t15WqpSydFsMjPehsFkjDdpJVoM=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=MFaj6Y11st59fWq/GBypnqv78E4OWr4Ir6rSTO/Vzuh7bsAsKArkfxt4gMQJ1aMQ+HY4/HXISWm7zbPDtxcnZO6jyGeHeTV4n8VzKuoKwMnJJtQwUZpfzBhmzZjHkyQ2t3tK4QI6X3VZ+BIweh9jqeRdOqxykSS2jzk6TSYXTyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YXsUTOkH; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=RN2MAdQ43h7MQyVJJr8yxfXnpm5tMf/NFTb9NNdo7Y7jnW6ktM6a1h+249+7Q/xz5PyQMuO+5+KFxp2G5el1fVnHii6+MFV/RouNJ7jctj2AmkH3LjOuDFuyx+l2G6RIP9Vn7R8B4e1yOq+KOGU1y9qtwEXymFjLdVn+ssdxrXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eQGvxX4Z; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YXsUTOkH"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e230808455so14529257b3.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 10:41:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eQGvxX4Z"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e1fbe2a9a2so22994837b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 10:41:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727372480; x=1727977280; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1727372482; x=1727977282; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8y8hrMO9b7uKPcL5T7E492/AY92K2G63R8Dxaci+iWE=;
-        b=YXsUTOkHjHropBl/xBlCvUmmeybg5yu92WDMY+ztjK36GHIusCzyvaIFw5brgeXGMd
-         h/6rvxBLn+fH0SExsO2KnvfpP1dOres/Nu2Er1f4EKCObwMZNqjsI23EFP9U/N0fDsO/
-         1MrA8woj9pqtRxJAXSkcJXe/YesoT4XbIDxgn5csvpRQnUiYTmea4rdpeMkQKxt/O7+w
-         hxgANCzhEo3LDQbbHfRzm1fEpCwinCqzsCk6ixCDf2Hxf09atVHrsjZUrteo88OEksgq
-         SOszh6XQA3pwjTx4FTxsjGp2OL0Zqd8D4iJZms9qXILjqtbgBgGk+0elA0pYXrj/akm5
-         UXvQ==
+        bh=a4AgLiud2lBb7srFRQdT6f87/XQGMLXdDZk6CThtgIs=;
+        b=eQGvxX4ZswJOW0HYfzdgTxNzyVV7bfonFJtfo3D+Y66OrxRWc0HenAsZIjtCQhKAJS
+         qR4a04hjgLDdhwi66ZwUmy2LdylG6O1YRZyC6AEHkY7+EVSx1M5LgCY6gERrQGVYVm6B
+         g23VPtMYupw+hazFDGCTcA+ssdqZagW+8NZDhzKkjxy5KU6LUAvD3TZe56OokTwz0CDM
+         Ql3zUPvz9LUN6S0JfElAcNL/L6BA9P3m6liOjkv19VZ8HHb4p+RRKnmQxfXRfyckZtrs
+         JZXwh6N7DFHk4v42uKe1FZYRJs5q8x9FB7OdcbbT7kyMFjfZQdAt2jR6vBB/X/DqzOuH
+         Dvjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727372480; x=1727977280;
+        d=1e100.net; s=20230601; t=1727372482; x=1727977282;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8y8hrMO9b7uKPcL5T7E492/AY92K2G63R8Dxaci+iWE=;
-        b=pT+COWkvIyZedw/tSjKy2leeusZ/7ZxzLfhWrR7pYp4to0P05u5eBm1EYSFbmeeod8
-         mRsM2HuVJiYYBfrX6TdPkjVAvAAaWoRIlDi7CmNawrWf8sm8TDaWT8RlBB6EJH2o2ClS
-         QQ/50mVWrA8fButR+xhkYm4k1xaiUVgxHyHtqnItTAVId0iRxQNBhzr7LvVUIH8g5y1u
-         5mzsxjrr4//7y3P0Q+cpCwxjgNHOnWuJAR2XzVcTRcZPiomA7Wz+8BvsUWMUX4fZDkeU
-         JLDGmiy2S4j4TGOMscvnT2VQNtgV/lu0btOeIlU0FkSF7oauZv7Xc9KKE4ThtK+0hnYa
-         Wi5g==
-X-Forwarded-Encrypted: i=1; AJvYcCV5PNRFfNntwvXStWPF6ZZq6jzLC9w4G+AnvNgXo6HI7esuoV99arwwQUUg64Sy63Kw8fFeMxXbgQdnwpd1UQ9m@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaLY49Lbz1FkJ6B3IY6QCrGpgGWKKfyg4XHOLs4CqEIq/B0DnI
-	Co+6q/PAMBAPvsuDcxc1eQxFlH3qOWYqD8zPA+FbENGfbDS0j752oIQxzFny7rN55UTvL2kIB6B
-	LqmSKBQ==
-X-Google-Smtp-Source: AGHT+IGj4rNAuC+79Es9WcTdDXE8dVT6ABG7ejCxksxTMzXGbhSwXc15CkX5WtriS1hrzfAsDa80WM6/M2HC
+        bh=a4AgLiud2lBb7srFRQdT6f87/XQGMLXdDZk6CThtgIs=;
+        b=F0XeLINKDiG/OPxr/GI2icxZ2TW15k5PhGlyIE7xuR8bM0skng59VzyTeRsYSCi5Yt
+         kK3K0fxk2JojKN05LWrJ8bP8HDpphU79Hn2r6n3HANrixfp+9KqXNKb0laZR/ANp3BFI
+         IB81yWrgDKV5yUOC2DoxhxZErAp4TJIwyGfm8UxaJz1x+lgojFvIqOVmoOSi6AEOYxMX
+         0yQHAQZDvGFNWc/HpgDxYLSMSKJC/EmQMZ67r8TVnYuKr/8xd/yp8obMu7S7sQfQqP94
+         qcxe/sNb0hIHvxWCDLJfLLYecMexcMEr/JSbNxElOO1KQ1Sl/HFx7D1zba99JoqGtEhO
+         3cTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxPNMISnQLBdsla7HNk8jf6X1HncoMTkWeHKqUlLrDXIhGRN2u+K6JqHzv5mwFpoNBJAFn5nho6E5174bpNz6y@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGAgJ8XHBRtCv5wW3s8X4GekP1rV1NGDuZdgRJOKTuf4ywyN+o
+	8xcrA0fzcOcYJhFszciT28dH5Y0YifVRBskYWcx80BZaatllcdcOEqtlQLRuoZ2qxaldwi2Vnk/
+	qLW1how==
+X-Google-Smtp-Source: AGHT+IG930UTidYZ09u+dCrEZNNAl3ej8MLumYzhnhb5NYAHUFjZIBVWzzo6+Oguj2jFcBdDN8glkejbjLcL
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8872:3585:18ed:a056])
- (user=irogers job=sendgmr) by 2002:a05:690c:d8c:b0:6b1:8b74:978a with SMTP id
- 00721157ae682-6e2475a7f4emr45537b3.4.1727372479896; Thu, 26 Sep 2024 10:41:19
+ (user=irogers job=sendgmr) by 2002:a25:aa4f:0:b0:e0e:4841:3a7e with SMTP id
+ 3f1490d57ef6-e2604b792damr154276.7.1727372482276; Thu, 26 Sep 2024 10:41:22
  -0700 (PDT)
-Date: Thu, 26 Sep 2024 10:40:54 -0700
+Date: Thu, 26 Sep 2024 10:40:55 -0700
 In-Reply-To: <20240926174101.406874-1-irogers@google.com>
-Message-Id: <20240926174101.406874-6-irogers@google.com>
+Message-Id: <20240926174101.406874-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240926174101.406874-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
-Subject: [PATCH v4 05/12] perf jevents: Add software prefetch (swpf) metric
+Subject: [PATCH v4 06/12] perf jevents: Add hardware prefetch (hwpf) metric
  group for AMD
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -74,128 +74,94 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add metrics that give the utility of software prefetches on zen2, zen3
+Add metrics that give the utility of hardware prefetches on zen2, zen3
 and zen4.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/amd_metrics.py | 96 ++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
+ tools/perf/pmu-events/amd_metrics.py | 62 ++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
 diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-index 90545d4862a6..05a16e748d2e 100755
+index 05a16e748d2e..2d1fc8411d61 100755
 --- a/tools/perf/pmu-events/amd_metrics.py
 +++ b/tools/perf/pmu-events/amd_metrics.py
-@@ -120,6 +120,101 @@ def AmdBr():
+@@ -120,6 +120,67 @@ def AmdBr():
                       description="breakdown of retired branch instructions")
  
  
-+def AmdSwpf() -> Optional[MetricGroup]:
-+  """Returns a MetricGroup representing AMD software prefetch metrics."""
++def AmdHwpf():
++  """Returns a MetricGroup representing AMD hardware prefetch metrics."""
 +  global _zen_model
 +  if _zen_model <= 1:
 +      return None
 +
-+  swp_ld = Event("ls_dispatch.ld_dispatch")
-+  swp_t0 = Event("ls_pref_instr_disp.prefetch")
-+  swp_w = Event("ls_pref_instr_disp.prefetch_w") # Missing on Zen1
-+  swp_nt = Event("ls_pref_instr_disp.prefetch_nta")
-+  swp_mab = Event("ls_inef_sw_pref.mab_mch_cnt")
-+  swp_l2 = Event("ls_sw_pf_dc_fills.local_l2",
-+                 "ls_sw_pf_dc_fills.lcl_l2",
-+                 "ls_sw_pf_dc_fill.ls_mabresp_lcl_l2")
-+  swp_lc = Event("ls_sw_pf_dc_fills.local_ccx",
-+                 "ls_sw_pf_dc_fills.int_cache",
-+                 "ls_sw_pf_dc_fill.ls_mabresp_lcl_cache")
-+  swp_lm = Event("ls_sw_pf_dc_fills.dram_io_near",
-+                 "ls_sw_pf_dc_fills.mem_io_local",
-+                 "ls_sw_pf_dc_fill.ls_mabresp_lcl_dram")
-+  swp_rc = Event("ls_sw_pf_dc_fills.far_cache",
-+                 "ls_sw_pf_dc_fills.ext_cache_remote",
-+                 "ls_sw_pf_dc_fill.ls_mabresp_rmt_cache")
-+  swp_rm = Event("ls_sw_pf_dc_fills.dram_io_far",
-+                 "ls_sw_pf_dc_fills.mem_io_remote",
-+                 "ls_sw_pf_dc_fill.ls_mabresp_rmt_dram")
++  hwp_ld = Event("ls_dispatch.ld_dispatch")
++  hwp_l2 = Event("ls_hw_pf_dc_fills.local_l2",
++                 "ls_hw_pf_dc_fills.lcl_l2",
++                 "ls_hw_pf_dc_fill.ls_mabresp_lcl_l2")
++  hwp_lc = Event("ls_hw_pf_dc_fills.local_ccx",
++                 "ls_hw_pf_dc_fills.int_cache",
++                 "ls_hw_pf_dc_fill.ls_mabresp_lcl_cache")
++  hwp_lm = Event("ls_hw_pf_dc_fills.dram_io_near",
++                 "ls_hw_pf_dc_fills.mem_io_local",
++                 "ls_hw_pf_dc_fill.ls_mabresp_lcl_dram")
++  hwp_rc = Event("ls_hw_pf_dc_fills.far_cache",
++                 "ls_hw_pf_dc_fills.ext_cache_remote",
++                 "ls_hw_pf_dc_fill.ls_mabresp_rmt_cache")
++  hwp_rm = Event("ls_hw_pf_dc_fills.dram_io_far",
++                 "ls_hw_pf_dc_fills.mem_io_remote",
++                 "ls_hw_pf_dc_fill.ls_mabresp_rmt_dram")
 +
-+  # All the swpf that were satisfied beyond L1D are good.
-+  all_pf = swp_t0 + swp_w + swp_nt
-+  good_pf = swp_l2 + swp_lc + swp_lm + swp_rc + swp_rm
-+  bad_pf = max(all_pf - good_pf, 0)
-+
-+  loc_pf = swp_l2 + swp_lc + swp_lm
-+  rem_pf = swp_rc + swp_rm
-+
-+  req_pend = max(0, bad_pf - swp_mab)
++  loc_pf = hwp_l2 + hwp_lc + hwp_lm
++  rem_pf = hwp_rc + hwp_rm
++  all_pf = loc_pf + rem_pf
 +
 +  r1 = d_ratio(ins, all_pf)
-+  r2 = d_ratio(swp_ld, all_pf)
-+  r3 = d_ratio(swp_t0, interval_sec)
-+  r4 = d_ratio(swp_w, interval_sec)
-+  r5 = d_ratio(swp_nt, interval_sec)
-+  overview = MetricGroup("swpf_overview", [
-+      Metric("swpf_ov_insn_bt_swpf", "Insn between SWPF", r1, "insns"),
-+      Metric("swpf_ov_loads_bt_swpf", "Loads between SWPF", r2, "loads"),
-+      Metric("swpf_ov_rate_prefetch_t0_t1_t2", "Rate prefetch TO_T1_T2", r3,
-+             "insns/sec"),
-+      Metric("swpf_ov_rate_prefetch_w", "Rate prefetch W", r4, "insns/sec"),
-+      Metric("swpf_ov_rate_preftech_nta", "Rate prefetch NTA", r5, "insns/sec"),
-+  ])
++  r2 = d_ratio(hwp_ld, all_pf)
++  r3 = d_ratio(all_pf, interval_sec)
 +
-+  r1 = d_ratio(swp_mab, all_pf)
-+  r2 = d_ratio(req_pend, all_pf)
-+  usefulness_bad = MetricGroup("swpf_usefulness_bad", [
-+      Metric("swpf_use_bad_hit_l1", "Usefulness bad hit L1", r1, "100%"),
-+      Metric("swpf_use_bad_req_pend", "Usefulness bad req pending", r2, "100%"),
++  overview = MetricGroup("hwpf_overview", [
++      Metric("hwpf_ov_insn_bt_hwpf", "Insn between HWPF", r1, "insns"),
++      Metric("hwpf_ov_loads_bt_hwpf", "Loads between HWPF", r2, "loads"),
++      Metric("hwpf_ov_rate", "HWPF per second", r3, "hwpf/s"),
 +  ])
-+
-+  r1 = d_ratio(good_pf, all_pf)
-+  usefulness_good = MetricGroup("swpf_usefulness_good", [
-+      Metric("swpf_use_good_other_src", "Usefulness good other src", r1,
-+             "100%"),
-+  ])
-+
-+  usefulness = MetricGroup("swpf_usefulness", [
-+      usefulness_bad,
-+      usefulness_good,
-+  ])
-+
-+  r1 = d_ratio(swp_l2, good_pf)
-+  r2 = d_ratio(swp_lc, good_pf)
-+  r3 = d_ratio(swp_lm, good_pf)
-+  data_src_local = MetricGroup("swpf_data_src_local", [
-+      Metric("swpf_data_src_local_l2", "Data source local l2", r1, "100%"),
-+      Metric("swpf_data_src_local_ccx_l3_loc_ccx",
++  r1 = d_ratio(hwp_l2, all_pf)
++  r2 = d_ratio(hwp_lc, all_pf)
++  r3 = d_ratio(hwp_lm, all_pf)
++  data_src_local = MetricGroup("hwpf_data_src_local", [
++      Metric("hwpf_data_src_local_l2", "Data source local l2", r1, "100%"),
++      Metric("hwpf_data_src_local_ccx_l3_loc_ccx",
 +             "Data source local ccx l3 loc ccx", r2, "100%"),
-+      Metric("swpf_data_src_local_memory_or_io",
++      Metric("hwpf_data_src_local_memory_or_io",
 +             "Data source local memory or IO", r3, "100%"),
 +  ])
 +
-+  r1 = d_ratio(swp_rc, good_pf)
-+  r2 = d_ratio(swp_rm, good_pf)
-+  data_src_remote = MetricGroup("swpf_data_src_remote", [
-+      Metric("swpf_data_src_remote_cache", "Data source remote cache", r1,
++  r1 = d_ratio(hwp_rc, all_pf)
++  r2 = d_ratio(hwp_rm, all_pf)
++  data_src_remote = MetricGroup("hwpf_data_src_remote", [
++      Metric("hwpf_data_src_remote_cache", "Data source remote cache", r1,
 +             "100%"),
-+      Metric("swpf_data_src_remote_memory_or_io",
++      Metric("hwpf_data_src_remote_memory_or_io",
 +             "Data source remote memory or IO", r2, "100%"),
 +  ])
 +
-+  data_src = MetricGroup("swpf_data_src", [data_src_local, data_src_remote])
++  data_src = MetricGroup("hwpf_data_src", [data_src_local, data_src_remote])
++  return MetricGroup("hwpf", [overview, data_src],
++                     description="Hardware prefetch breakdown (CCX L3 = L3 of current thread, Loc CCX = CCX cache on some socket)")
 +
-+  return MetricGroup("swpf", [overview, usefulness, data_src],
-+                     description="Software prefetch breakdown (CCX L3 = L3 of current thread, Loc CCX = CCX cache on some socket)")
 +
-+
- def AmdUpc() -> Metric:
-   ops = Event("ex_ret_ops", "ex_ret_cops")
-   upc = d_ratio(ops, smt_cycles)
-@@ -183,6 +278,7 @@ def main() -> None:
+ def AmdSwpf() -> Optional[MetricGroup]:
+   """Returns a MetricGroup representing AMD software prefetch metrics."""
+   global _zen_model
+@@ -278,6 +339,7 @@ def main() -> None:
  
    all_metrics = MetricGroup("", [
        AmdBr(),
-+      AmdSwpf(),
++      AmdHwpf(),
+       AmdSwpf(),
        AmdUpc(),
        Idle(),
-       Rapl(),
 -- 
 2.46.1.824.gd892dcdcdd-goog
 
