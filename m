@@ -1,187 +1,100 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FCB31BC58;
-	Thu, 26 Sep 2024 20:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CC418870F;
+	Thu, 26 Sep 2024 21:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727381589; cv=none; b=Vd8dEems5cz7p8IwzSX25jM6/QVUaHtV5ZGCfbARMq0l5XvDOUA0ToHZAtuVh1KwMjLixCqYMajRN+aKwXAetm17sbbt37K9YtK2OuarZycD2EVbbjkE4QDVMemDQvH3ULoNpF4S+iDjyl9wADLpsIoBY0AUsa11Eqvsny9JUEo=
+	t=1727386525; cv=none; b=goQJBRrRmkqgtyjkuhqlNcfmLj145m638QfMynP66R43xq6hJqSxjzhA8mNlnbjBMWTuMILU4IVk3/QPtjSrXfnqFiq2HMebgSRVsQUs3mGhHBrNS4jgvbvo/xy4oBf2W2O2Td1+LceQFE4HnFVUeN2lwoBYmSqXToaT/Dy9xvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727381589; c=relaxed/simple;
-	bh=DfUkjGWOlcvpaVhHWXCIGOf0Wy4ZOw6Knk8goDl7nUE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ByjmH0hJwQvoPo6BYgqrq4YAOV9t+Vv7IxzR8ZErZJUVIpf5mDBvmQwxPiCKXACtt02oeYax9ljQCS7+SaKou/9si2bRYDJCz4TYLTvJGXOmCUTxW/Mo/25ImX4pr14A65S63XkigLxlMt8RhNCFjCaOts49x8VsxY3TDiSsRi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB45314BF;
-	Thu, 26 Sep 2024 13:13:35 -0700 (PDT)
-Received: from [10.57.20.191] (unknown [10.57.20.191])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 599EB3F587;
-	Thu, 26 Sep 2024 13:13:03 -0700 (PDT)
-Message-ID: <e9c77ce7-0bfb-41cf-9034-2d96359a30a8@arm.com>
-Date: Thu, 26 Sep 2024 21:12:57 +0100
+	s=arc-20240116; t=1727386525; c=relaxed/simple;
+	bh=1/AF0ye1aEDqbRIMOiqu2UP5rEYyIqLBgduhnkT/Gq8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HBJfh/5Z7VEQxAgZ34fM/Fcum9KV9uRA4YIPjdwVhv1SKHj5FlBKtaFrY9UklpOXb6tj9a24Ppj0UNskaOvLs1phEpW4M0T3GA05X3E3GzoES+ZHys+EPON/W5TX4FRw1SnZ4EYkHV1ZwW9wX5nfulw3klh0rZgUbhtG3nAQFJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ntYvYQ3V; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntYvYQ3V"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e0b467da03so91493a91.2;
+        Thu, 26 Sep 2024 14:35:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727386523; x=1727991323; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YN3ZIl0AHdW2Pc3ccHhFRbQ1ihSm5IEdT9WChsNSY6k=;
+        b=ntYvYQ3VzjrPQRjO0RTjOTbXP7/4NP5rjwPgNkr9vH/XeTJuyjkJQ6j8P1Q5+uxnST
+         F3wPdxptRRuXH4IYlyP+1oLBMPEpsloYKCpFimcgj0k4lN/GD1KdZTGRrH/xAwUoC1V3
+         rJPs6Qhurc32eEX7Nw6W0yg9ypx4H8Kn2SL2FF0rDnTsbAewQk6cqpJ0OzCNZ9fG7s2K
+         jkChH3VAIV2ScpQ7p6vD/ekIMTj99jeg/1W8R/4uC1LACZ3XKgZEkEjh99yXfdBqpnAL
+         uIKAImU9QAzLmdcHL1trZc/BPKjgl7Z0W/ek20wLJnfUeFDbJ/kOre9Cpwh2jgN/OLHt
+         egVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727386523; x=1727991323;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YN3ZIl0AHdW2Pc3ccHhFRbQ1ihSm5IEdT9WChsNSY6k=;
+        b=nnmJKkgcACozVDSpFBzUMkQb5Y3qgChkkOHFmpcaO+WyoEmG2yQ/DJaaT+0E6OKhbL
+         4edl7pBfS0KSuCN4J17TXsxaCijX0wFOl1McewxcYnkjHlppDaDtIlmk7BeLqo9spMzd
+         GvQfWJWmckzL3ysFqmQAywMzd6OfMCvStz6XrMLPgqsx9qF7zAWvuUCxyMl7I4LO5asF
+         tY2iqMCX1KyOtyQXSAx70zzQ3QgQ3QFPJnt3mvVfTYp7DTTgIKuR5JjAdUGM1vIhG5rn
+         wAdcVhSIglqIO2ATJ+gekoA6j5ux3+Xp6qrTXWyeWX5Hr9kk6/60rCGS1ehKqpiZANFI
+         G0JA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDJ8RvVdvqtHN3lX1txbKSEmzjS+sQLqz6QZbKSBcpkEsBUAeUwf4nTqbN03vw4GXyiD9iQZArXil9IuPBiXw=@vger.kernel.org, AJvYcCUh1EnD+hD2C3vzqWv60QHnERNsPDZPvtTXZIO5sRiraXir9igXESaPEYdxkZd9i9XAYroDQMEZrC9cLvE6@vger.kernel.org, AJvYcCUidN0lHrF9iOqSPJ8IctwwAfwAs07OQfJTDdO/ZULHyFNBpvg0hyVrQCV6KMoggxOswxI=@vger.kernel.org, AJvYcCV5D5TsQSXjcHuycgk/6XXYltPQlUyoOj0RhDcW5nuV2PC/tj/Q2JUE4o2CUQJvBvD97N7k7sFVZCk9WEHGDPyghQ==@vger.kernel.org, AJvYcCVOLC6+65mOqcNjHRp1+tV/XssjpTX8h+9F4YBiY8/h9aWXzBKFdg2eK7772upIEAdFSiQJEmnzVgkk6g==@vger.kernel.org, AJvYcCVsqpEA1X34JgSSy+zWUs7+fSAIlED2wx+FoF0zXBxfBa0ReVabMdfI1p7J84be8lizTJ6y/uqbQToD@vger.kernel.org, AJvYcCVyOHlVKllui6A90Q42IfKbLrvLtdZnjC+4kVdVZSOG4aRB5tquRkPsdIouUdZ5cjLcKniIJa85fW8=@vger.kernel.org, AJvYcCWIeHXSn79E1pba2uaZgabrN6egSq3hKQJvvQyqA0ncZ3poR1endScJFmYMlQD9tOmBDQRNsnt7bGe0@vger.kernel.org, AJvYcCXTmNdlSb1QBFTlgk2/mbOW9A2NT3p8kXvs3x58YZP4/N+DnfQhUq/gJiG6xW7mj8KHqe8jHlQq55VTo3hn@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCTZ3zsxEiGOsdmhyvylg0pTMM/FgSGOmCyMfxDfM9CSVwTjhW
+	AAPO1FdxgZ+AUbsMCKMSJLJBPk64IXPEa9Zxwq805/7NayLOfWOsl5gSodJeflPB/OilgtRCS/O
+	Gj38jwHBTYzU7aYb/AVVUkzDXAIw=
+X-Google-Smtp-Source: AGHT+IFP+qclc+DwNk0VcbiLZGtyseD1sfEmeyqBVla3e/ZDfuly9waYm3g7wRqfrKuy03nGqriwsOXLp8FvWSa4ibk=
+X-Received: by 2002:a17:90b:3698:b0:2db:60b:eee with SMTP id
+ 98e67ed59e1d1-2e0b8ed348emr498104a91.9.1727386523117; Thu, 26 Sep 2024
+ 14:35:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] perf jevents: Add cycles breakdown metric for
- arm64/AMD/Intel
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Jing Zhang <renyu.zj@linux.alibaba.com>,
- Thomas Richter <tmricht@linux.ibm.com>, James Clark <james.clark@arm.com>,
- Leo Yan <leo.yan@linux.dev>
-References: <20240926175709.410022-1-irogers@google.com>
- <20240926175709.410022-3-irogers@google.com>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <20240926175709.410022-3-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240925150059.3955569-30-ardb+git@google.com> <20240925150059.3955569-32-ardb+git@google.com>
+In-Reply-To: <20240925150059.3955569-32-ardb+git@google.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 26 Sep 2024 23:35:10 +0200
+Message-ID: <CANiq72=z6A=50QO3V0S3Kgx6XQT93GxbB_LN6PFAQCmNgy370A@mail.gmail.com>
+Subject: Re: [RFC PATCH 02/28] Documentation: Bump minimum GCC version to 8.1
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Uros Bizjak <ubizjak@gmail.com>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Christoph Lameter <cl@linux.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Juergen Gross <jgross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Keith Packard <keithp@keithp.com>, 
+	Justin Stitt <justinstitt@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-doc@vger.kernel.org, 
+	linux-pm@vger.kernel.org, kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	linux-efi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-sparse@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 9/26/2024 6:57 PM, Ian Rogers wrote:
-> 
-> Breakdown cycles to user, kernel and guest. Add a common_metrics.py
-> file for such metrics.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/pmu-events/Build             |  2 +-
->  tools/perf/pmu-events/amd_metrics.py    |  3 +++
->  tools/perf/pmu-events/arm64_metrics.py  |  2 ++
->  tools/perf/pmu-events/common_metrics.py | 18 ++++++++++++++++++
->  tools/perf/pmu-events/intel_metrics.py  |  2 ++
->  5 files changed, 26 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/pmu-events/common_metrics.py
-> 
-> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-> index f3bc6c093360..91b6837e32c9 100644
-> --- a/tools/perf/pmu-events/Build
-> +++ b/tools/perf/pmu-events/Build
-> @@ -37,7 +37,7 @@ $(OUTPUT)pmu-events/arch/%: pmu-events/arch/%
->         $(call rule_mkdir)
->         $(Q)$(call echo-cmd,gen)cp $< $@
-> 
-> -GEN_METRIC_DEPS := pmu-events/metric.py
-> +GEN_METRIC_DEPS := pmu-events/metric.py pmu-events/common_metrics.py
-> 
->  # Generate AMD Json
->  ZENS = $(shell ls -d pmu-events/arch/x86/amdzen*)
-> diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-> index 422b119553ff..ccc8ebf13e08 100755
-> --- a/tools/perf/pmu-events/amd_metrics.py
-> +++ b/tools/perf/pmu-events/amd_metrics.py
-> @@ -4,6 +4,7 @@ from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
->                      JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
->                      Metric, MetricGroup, Select)
->  import argparse
-> +from common_metrics import Cycles
->  import json
->  import math
->  import os
-> @@ -571,6 +572,7 @@ def AmdUpc() -> Metric:
->    return Metric("upc", "Micro-ops retired per core cycle (higher is better)",
->                  upc, "uops/cycle")
-> 
-> +
->  def Idle() -> Metric:
->    cyc = Event("msr/mperf/")
->    tsc = Event("msr/tsc/")
-> @@ -652,6 +654,7 @@ def main() -> None:
->        AmdHwpf(),
->        AmdSwpf(),
->        AmdUpc(),
-> +      Cycles(),
->        Idle(),
->        Rapl(),
->        UncoreL3(),
-> diff --git a/tools/perf/pmu-events/arm64_metrics.py b/tools/perf/pmu-events/arm64_metrics.py
-> index bfac570600d9..5285a22ff0c8 100755
-> --- a/tools/perf/pmu-events/arm64_metrics.py
-> +++ b/tools/perf/pmu-events/arm64_metrics.py
-> @@ -3,6 +3,7 @@
->  from metric import (d_ratio, Event, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
->                      LoadEvents, Metric, MetricGroup)
->  import argparse
-> +from common_metrics import Cycles
->  import json
->  import os
->  from typing import Optional
-> @@ -171,6 +172,7 @@ def main() -> None:
-> 
->    all_metrics = MetricGroup("",[
->        Arm64Topdown(),
-> +      Cycles(),
->    ])
-> 
->    if _args.metricgroups:
-> diff --git a/tools/perf/pmu-events/common_metrics.py b/tools/perf/pmu-events/common_metrics.py
-> new file mode 100644
-> index 000000000000..74c58f9ab020
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/common_metrics.py
-> @@ -0,0 +1,18 @@
-> +# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-> +from metric import (d_ratio, Event, Metric, MetricGroup)
-> +
-> +def Cycles() -> MetricGroup:
-> +  cyc_k = Event("cycles:kHh")
+On Wed, Sep 25, 2024 at 5:10=E2=80=AFPM Ard Biesheuvel <ardb+git@google.com=
+> wrote:
+>
+>  Documentation/admin-guide/README.rst | 2 +-
+>  Documentation/process/changes.rst    | 2 +-
 
-I am confused that these modifiers should be OR operation or AND operation.
+This should update scripts/min-tool-version.sh too. With that:
 
-Seems to me, 'k' / 'H' modifiers are AND operation for tracing host and
-kernel. But for 'h', it is OR operation with rest modifiers, as we want to
-trace for both host kernel and hypervisor.
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
 
-Sorry I might ask a duplicate question which has been discussed before.
+As Arnd says, the cleanups can be done afterwards.
 
-The patch itself looks good to me.
-
-Thanks for working on this.
-Leo
-
-> +  cyc_g = Event("cycles:G")
-> +  cyc_u = Event("cycles:uH")
-> +  cyc = cyc_k + cyc_g + cyc_u
-> +
-> +  return MetricGroup("cycles", [
-> +      Metric("cycles_total", "Total number of cycles", cyc, "cycles"),
-> +      Metric("cycles_user", "User cycles as a percentage of all cycles",
-> +             d_ratio(cyc_u, cyc), "100%"),
-> +      Metric("cycles_kernel", "Kernel cycles as a percentage of all cycles",
-> +             d_ratio(cyc_k, cyc), "100%"),
-> +      Metric("cycles_guest", "Hypervisor guest cycles as a percentage of all cycles",
-> +             d_ratio(cyc_g, cyc), "100%"),
-> +  ], description = "cycles breakdown per privilege level (users, kernel, guest)")
-> diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-> index a3a317d13841..4b7668e25e54 100755
-> --- a/tools/perf/pmu-events/intel_metrics.py
-> +++ b/tools/perf/pmu-events/intel_metrics.py
-> @@ -5,6 +5,7 @@ from metric import (d_ratio, has_event, max, source_count, CheckPmu, Event,
->                      Literal, LoadEvents, Metric, MetricConstraint, MetricGroup,
->                      MetricRef, Select)
->  import argparse
-> +from common_metrics import Cycles
->  import json
->  import math
->  import os
-> @@ -1050,6 +1051,7 @@ def main() -> None:
->    LoadEvents(directory)
-> 
->    all_metrics = MetricGroup("", [
-> +      Cycles(),
->        Idle(),
->        Rapl(),
->        Smi(),
-> --
-> 2.46.1.824.gd892dcdcdd-goog
-> 
-> 
+Cheers,
+Miguel
