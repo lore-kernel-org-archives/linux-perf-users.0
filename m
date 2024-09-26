@@ -1,63 +1,66 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABA3156665
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 17:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C9F157490
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 17:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727373046; cv=none; b=rywo8kxNkG/UnLsppQFaS8n0WUaS7KTJ+BCmdtyLCw9rcYT1jgOrAkuB7SZC6XY0Ep2l8yEs5kSelrEptQKlYHEKH6kSXkzz5P8BQjHr6AwsGX61sWviEjwgkmOzlX6M+sJ0szVLv5gkkLQrwvyxiatwmXZpUCyXo63EhMBPSWA=
+	t=1727373049; cv=none; b=MyqeECyye+nvcx0kV7LPdxUpyIDPHM4MmABMVw6I7Od8TrsCRDrQuMnJjhaiLoBT1bQ2Dvab4wV8Am4ysdIOClljz6vxieBWbGvMgZhWgwdNqDyPilWAJM4pojmBkLvVoIJMtDed4dCOtOsdwO8ClmExwM7UFXtXzTIe5CvWsl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727373046; c=relaxed/simple;
-	bh=ov/TAlvdMAcCcocKl4WI6KQsu/GEvEkh2XbLm61JsHI=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=UzhjZn+RRYqESDBKdPSNsrVpGzmocrQRbtkau4ZHnRmJyBIN/2hK5DiFAoThIeeFqzBGjb+jAelBIDnqjtHO9K6gElqsNpBB58vbJDmQiK18kR477mqODS0jgl0gsD4SzprC0wBENb3WVG3gg+ylXbrugTmQYrTQGHio2Yrw7V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FcrfJlq/; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1727373049; c=relaxed/simple;
+	bh=yvWeBnYlH5KHJguhy5lABIEriYvuqSdXJ0LPNpZjZm0=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=BqL0nnUmgj8E2748xJut7T+nwM8hzAN4R+1KkrgoQ6lspUSU6S4GNV2w9rbwMTEWSZMa2yVI0fMwP85iscTLaLKiqnUdnOwPIHLvJxjMQ9eSiumIrc7gnYfy/X07jnC1k9JGLg/UZP5BFXRO/ChPyJyXRS04yrpnNISBsDHLbQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hdVC9bpU; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FcrfJlq/"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e21dcc7044so24660517b3.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 10:50:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hdVC9bpU"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e02a4de4f4eso2218858276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 10:50:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727373043; x=1727977843; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JvSamZqIAhjdfYEY8+najrPm2eihOyHwiLOs5JRJ4Gc=;
-        b=FcrfJlq/oW4a0eRILyvNfgdgRb89uaKLHvffE+oiDx/1u42hRw8go+IWrQK4LGn0Au
-         n+LX25FwAhKsYApanmE6pylTox/LgV+C6zHC9jNbcB60tGFqZlKVOhzfCA+yxlG1hHsA
-         Ay1+vuOqPBa2zBIfT4Wr6DXedYsNR7iNsh9sBqZJ0zXfWXiFqNvZKYx2IXrw9I/SFYVw
-         D50yfDL2C1wxudDJ0Ci7hxAJzkfEG7+yop3Z2mAmkXa9BVSND4uo5brBJz5jEC0U2zA6
-         9gLUixOraknHckVNcxvhVuQtYpvJZSC46tQXdz4fbP7aBeTKjpAze2cGsVHIsO7uuFWb
-         oVyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727373043; x=1727977843;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1727373045; x=1727977845; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=JvSamZqIAhjdfYEY8+najrPm2eihOyHwiLOs5JRJ4Gc=;
-        b=vBSL22RRdzAl8TttUMxwN/MSwlmxdWq+1lt3GwOf2AwiqlEP31KGyxht68SQGrJoMi
-         bg6q7/FbI6t0DZnzF/TIo7KYmRkdTiAtPD4m3hyIfYlL1lpgqU21/GzJdcpw+LwcVf4V
-         qrx2ckzO89dlnkBzzSrUftYe86eMaylWg4PUVulAGP2EPwH1GUyQBgoxq+fVmC5ALR53
-         qIfpJQRxNunLhnkxrJi2QL5gHjYidzclYJQcr07bI28ntJ9/P7DZaSUVx0JeDGFoPSmV
-         lng8eayoo4nvO2t3RAja/NWBfzW4E5P/mVyz1DEFsIJpx1YCeqzqwAqUp8hDUmJ1XcV9
-         FJdA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNrFo6t0gP/54rUkKWtezUA37D6FJAs7qybCF6Y/IpxBcwl8WLOxxLXp5wv3OI/XRlBbAkBUN4rfb9knuKgtWv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPvlxKUkrYxwj+7l2SAkVT/zmN6MrOUL+dCCE13ZlG8o/pW45g
-	tcteFYHsIbuQUzLvhBzV4xY/1T473UINhmSsJsHbFluMlEZ/qGof3no4APUQULAwMivSBFxKAxj
-	mOqUpiw==
-X-Google-Smtp-Source: AGHT+IE94gNIgVpsH2JG372X3pJtADKswnMsg7TvS0BThvzWmkQiPK4fbz8enpa0vH5yOF+Hp9JB+rFTzvYS
+        bh=hibi5LL08muBMKadiUp2UP2j1gIebwFeSAhkpXeIPd0=;
+        b=hdVC9bpUvPUfLaQrkEY7mkyhknRcSl53Z2bsYTsK3jODq2Z2RivArl0+EoRnwwcKPL
+         AGO7qim+dTHY/AyJeK65e2xvkoCMJZOOlMOTVwMEncvGPJxylEVnK/CSaAxGY7qaUqTn
+         ujn8FTsBduPBRvZx8Aq2/JLZIOFKRx5p2B+nhU/PK+uMQP3oZX4vYV/oNsFpZYthed0k
+         csLZ53u5CEW6CE9/N6HpwVnpfud+s5gwCsInOm/wtQM9lAOnJfgUdoQ9VoeObXRywmLi
+         RNpWIsfgEkxrTE5gHr5/N3zlMqVvUItQnOAvj4rrFAnPbBRzl9R5sXcsoNInTezHtpIN
+         vNLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727373045; x=1727977845;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hibi5LL08muBMKadiUp2UP2j1gIebwFeSAhkpXeIPd0=;
+        b=kHA68G0bOJQuAbbmlFA9VKnaI3SBsrBnB1nYepm/ZvMfJqy4feYY9xwnC6EuQ6lQg2
+         VYx60Z0yAp4e54E4O8JiSaDg8cg0Kq+dgjCxk1acvDPghd/XWew2uBvCatBLxkRsCIus
+         mBNesA9sKV1/Gz8K5xMV1ag4PTUe1kh0WY1jBp9UVWkCJ7hDl6zsqRCgMA5LpI69iVno
+         lyB6PBIcxQaAe6ImWRbgU8Nnj61GR/PoicvUwEZSG/01Ss1zGP0ugNotbwmLhJUqiixt
+         oy5hIpAk/gQrkHk0Vmr7JimVeDwfI6BaP7ZcR+RZFzF39m46b+No4BzZM+FlRVwQ6gWt
+         qVaw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+o4jAgB2rWwOFHjRxBuh6l8kKPt91seT9YnUeqkn9Vbf9ELN5si8h6IPSqJgbuWUiqCWiHDQcXrNjb87Psa0b@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5Zp643eXa3d0c5hy/neBP+l/qGMM8PnD+r39hKpMqPr+A4KeG
+	jZLuUmnjtA7A4Cp5edX5YDwMueCaWWKQKqkmfSBULVI4Kv+fth3hP0EhekD/iJ/kovRvlZc9iTc
+	DjQwA1w==
+X-Google-Smtp-Source: AGHT+IGjtALdnf6ddGtFaEXP98ir997IggxkQYyuuX+1kTF4EPazuXun9mwMq1dzOgF5lYkIa0aTZ/WZxsII
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8872:3585:18ed:a056])
- (user=irogers job=sendgmr) by 2002:a25:26cc:0:b0:e1d:7ce:4844 with SMTP id
- 3f1490d57ef6-e2604b3bbd2mr342276.4.1727373043021; Thu, 26 Sep 2024 10:50:43
+ (user=irogers job=sendgmr) by 2002:a25:904:0:b0:e11:6a73:b0d with SMTP id
+ 3f1490d57ef6-e2604b7c3f5mr185276.6.1727373045453; Thu, 26 Sep 2024 10:50:45
  -0700 (PDT)
-Date: Thu, 26 Sep 2024 10:50:13 -0700
-Message-Id: <20240926175035.408668-1-irogers@google.com>
+Date: Thu, 26 Sep 2024 10:50:14 -0700
+In-Reply-To: <20240926175035.408668-1-irogers@google.com>
+Message-Id: <20240926175035.408668-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240926175035.408668-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
-Subject: [PATCH v4 00/22] Python generated Intel metrics
+Subject: [PATCH v4 01/22] perf jevents: Add RAPL metrics for all Intel models
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -70,53 +73,82 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Weilin Wang <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Generate twenty sets of additional metrics for Intel. Rapl and Idle
-metrics aren't specific to Intel but are placed here for ease and
-convenience. Smi and tsx metrics are added so they can be dropped from
-the per model json files. There are four uncore sets of metrics and
-eleven core metrics. Add a CheckPmu function to metric to simplify
-detecting the presence of hybrid PMUs in events. Metrics with
-experimental events are flagged as experimental in their description.
+Add a 'cpu_power' metric group that computes the power consumption
+from RAPL events if they are present.
 
-The patches should be applied on top of:
-https://lore.kernel.org/lkml/20240926174101.406874-1-irogers@google.com/
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/intel_metrics.py | 45 ++++++++++++++++++++++++--
+ 1 file changed, 42 insertions(+), 3 deletions(-)
 
-v4. Experimental metric descriptions. Add mesh bandwidth metric. Rebase.
-v3. Swap tsx and CheckPMU patches that were in the wrong order. Some
-    minor code cleanup changes. Drop reference to merged fix for
-    umasks/occ_sel in PCU events and for cstate metrics.
-v2. Drop the cycles breakdown in favor of having it as a common
-    metric, spelling and other improvements suggested by Kan Liang
-    <kan.liang@linux.intel.com>.
-
-Ian Rogers (22):
-  perf jevents: Add RAPL metrics for all Intel models
-  perf jevents: Add idle metric for Intel models
-  perf jevents: Add smi metric group for Intel models
-  perf jevents: Add CheckPmu to see if a PMU is in loaded json events
-  perf jevents: Mark metrics with experimental events as experimental
-  perf jevents: Add tsx metric group for Intel models
-  perf jevents: Add br metric group for branch statistics on Intel
-  perf jevents: Add software prefetch (swpf) metric group for Intel
-  perf jevents: Add ports metric group giving utilization on Intel
-  perf jevents: Add L2 metrics for Intel
-  perf jevents: Add load store breakdown metrics ldst for Intel
-  perf jevents: Add ILP metrics for Intel
-  perf jevents: Add context switch metrics for Intel
-  perf jevents: Add FPU metrics for Intel
-  perf jevents: Add Miss Level Parallelism (MLP) metric for Intel
-  perf jevents: Add mem_bw metric for Intel
-  perf jevents: Add local/remote "mem" breakdown metrics for Intel
-  perf jevents: Add dir breakdown metrics for Intel
-  perf jevents: Add C-State metrics from the PCU PMU for Intel
-  perf jevents: Add local/remote miss latency metrics for Intel
-  perf jevents: Add upi_bw metric for Intel
-  perf jevents: Add mesh bandwidth saturation metric for Intel
-
- tools/perf/pmu-events/intel_metrics.py | 1046 +++++++++++++++++++++++-
- tools/perf/pmu-events/metric.py        |   52 ++
- 2 files changed, 1095 insertions(+), 3 deletions(-)
-
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index 04a19d05c6c1..58e23eb48312 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -1,13 +1,49 @@
+ #!/usr/bin/env python3
+ # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+-from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, LoadEvents,
+-                    MetricGroup)
++from metric import (d_ratio, has_event, Event, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
++                    LoadEvents, Metric, MetricGroup, Select)
+ import argparse
+ import json
++import math
+ import os
+ 
+ # Global command line arguments.
+ _args = None
++interval_sec = Event("duration_time")
++
++def Rapl() -> MetricGroup:
++  """Processor power consumption estimate.
++
++  Use events from the running average power limit (RAPL) driver.
++  """
++  # Watts = joules/second
++  pkg = Event("power/energy\-pkg/")
++  cond_pkg = Select(pkg, has_event(pkg), math.nan)
++  cores = Event("power/energy\-cores/")
++  cond_cores = Select(cores, has_event(cores), math.nan)
++  ram = Event("power/energy\-ram/")
++  cond_ram = Select(ram, has_event(ram), math.nan)
++  gpu = Event("power/energy\-gpu/")
++  cond_gpu = Select(gpu, has_event(gpu), math.nan)
++  psys = Event("power/energy\-psys/")
++  cond_psys = Select(psys, has_event(psys), math.nan)
++  scale = 2.3283064365386962890625e-10
++  metrics = [
++      Metric("cpu_power_pkg", "",
++             d_ratio(cond_pkg * scale, interval_sec), "Watts"),
++      Metric("cpu_power_cores", "",
++             d_ratio(cond_cores * scale, interval_sec), "Watts"),
++      Metric("cpu_power_ram", "",
++             d_ratio(cond_ram * scale, interval_sec), "Watts"),
++      Metric("cpu_power_gpu", "",
++             d_ratio(cond_gpu * scale, interval_sec), "Watts"),
++      Metric("cpu_power_psys", "",
++             d_ratio(cond_psys * scale, interval_sec), "Watts"),
++  ]
++
++  return MetricGroup("cpu_power", metrics,
++                     description="Running Average Power Limit (RAPL) power consumption estimates")
++
+ 
+ def main() -> None:
+   global _args
+@@ -31,7 +67,10 @@ def main() -> None:
+   directory = f"{_args.events_path}/x86/{_args.model}/"
+   LoadEvents(directory)
+ 
+-  all_metrics = MetricGroup("",[])
++  all_metrics = MetricGroup("", [
++      Rapl(),
++  ])
++
+ 
+   if _args.metricgroups:
+     print(JsonEncodeMetricGroupDescriptions(all_metrics))
 -- 
 2.46.1.824.gd892dcdcdd-goog
 
