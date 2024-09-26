@@ -1,177 +1,105 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9A417799F
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 12:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556AC134B6
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 12:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727353618; cv=none; b=Op0TYcWSCv6roWs/DOXoOpWUNvnJqwKCfnEZyE89Qd7C7DLdVFwD+iNHZgcb8/kJcPfSp43CX9Yd1wCI5RcH1HMNjTKcTDw3M6vEssWhS4Gvh+tufrHSWGkHE+/xqrjNEsQ6HAwpse0vZpW9vYyj4hvrLznD/s5ivxQEt5I1Wgs=
+	t=1727354853; cv=none; b=uN5pGToZEhlpUuXrSAQBZ5RvnTrzybrxlKIRUAXjW2I6WuGsOU8OARJWxtPloSzCjJfFq1r2ZiokUmr6Xmb8Ee3p5tv0Q4cxKGyWDF5umLvaamGcPg0nKPKUL6UL3ic+sX6zLY2Do8O1eIvuOKbJqVa/Sjn/fOpoUx6DSsU3bpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727353618; c=relaxed/simple;
-	bh=W1K4LUZoM1dpkDf1rPVbHtgMVLSGFsIkoB4l+0nrXWg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rJZgIqjzDU5efqAg1/KFkFR0WRPQ5LOPfnHHIro+tibkN/xpm8+iO/pNUUCIOJ7UCHE/034zvG6oWSyqUAFpJ62QjV9GnnudnKsYsHxJl8dI8gClSY/5OdXXOhJ3iyJ4trpKsnIlo/BKvrHQqOGLyksTim3S0JWbNBPW5kYfi8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gfIc4cc6; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1727354853; c=relaxed/simple;
+	bh=fyJKuZVK0pU5Fqrwlw0rK18hA89S7OCk8Zi/KbuJDu0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=trmjqBrWRoaVHfo0c8Mm3hxJzLB5YceZ1ePTlM5PtluXlN55xh7eyj3GP1seDeRO5WtixcBDNzy8BNPoWKkcLOvky3oKCMVe8tfbKTorunTirTC/RW0OR+MeBoN/k4d8nFOGCO+xn5PH+eB35kZUXaliKHsLMZzi4RPh74yDWpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hforSMyS; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gfIc4cc6"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a8a897bd4f1so128554966b.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 05:26:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hforSMyS"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3a1a4f2cc29so179675ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 05:47:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727353615; x=1727958415; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8eB/LC0WCkLRHYHqq55Ehj0gnBL7BMz7IH9VuKZNge8=;
-        b=gfIc4cc6DjZ34/raLrCgVzIfwqxM6Garlcqf8iQWdmRP7ff8PZ/r+SRoHy6Q7odqtq
-         AiiC6cYY33Ij3nKmeaPloudMJPBYkPBHsySoA6Md8zbAut8ycZNhkof6nJBKVf8NuwOk
-         MZNTOlwYkdhE9dWwNwd2gVRjdC15qipBM0PE5Yj3C7kNsWHQ7TWW/aLUdItd4JRu5IoX
-         1L77maFsgUTWBSKEfHVThIpRcb57eMGRoXEUOfOwT2V0w1FrMZkM8N1oqydaaUQQQg8q
-         31AUzIxY6f3ML1ohnzh5Zlneb8Q5IUWvOWrz7Cns/SXtYmsjZ9n6Y5KFbDwZNnIWPlWE
-         oiIw==
+        d=google.com; s=20230601; t=1727354851; x=1727959651; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B0YaFbmNZZQ27EGzEPqm3xDYI+YQcc7orYNQOKUIa6A=;
+        b=hforSMySCYG+QYOm7PwSRP7tpcLKiHTDPQS4QvpSBLtvy3dmWm2vRp4rXCuohYTRNV
+         HKM8/ANPvUmRtIPw/5oInl2oK2vejyu9uuwjaQKxXuibx3pWb5LUCpmCTEZ/ivl3eFmk
+         YptOESiXEEJPqmj3TrMExRZTPLKcGWb8CpFCKLU9FhhOY7zZIAhpdJkhsVgwFtFl4Lhr
+         cuyi07JAxRd4iqYYlWxoFw1qqPmdpM9MnPA+4EatwsFJmhRuEsYhNT6tLSozwZSpWsUG
+         lNO5lqzXRW9dBzP023pUWu4k19ECB9+d/Y8K0+uXWCe2ODnLfSY6nx9r1W7yiEYl6Wjk
+         VcZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727353615; x=1727958415;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8eB/LC0WCkLRHYHqq55Ehj0gnBL7BMz7IH9VuKZNge8=;
-        b=E0zrDwyV1n70ierkg5q2JGSvYojX9ahoFvwh0l/TNfLJZfOrvIsJEfZ/84kbkf2HuP
-         fq+wZmD93y6lKXFSBB9VgEaOWtZRLhnt/74Vn/wnBBrcZmGeUWCdYNgn9ODjxmm4JS5q
-         bvAfFPyeFqNXFxuTptw2HZ3Q2mT3G4GDv3Rm/OOZn1fKDplJ9XMxg7mQSYNGPJEatjn5
-         GYwf9oU/izOgiDy3Vy4iuQJ+9gDzdgrHubbj0ZTBKZES1jbHYHx5mEY6c6sepeqI3MDC
-         W9P2nuIG6w0kB6D4MelXdjk30Wz1noD++PtZZ0zyNGn4s0NRjkygyAk3Jy5BbU+gpJJe
-         JjIg==
-X-Gm-Message-State: AOJu0YzLhpIRqVWNpAEHS+hv3kT71FgorYGi0eluSE53mje6RcjVweiI
-	zoCFYBqk4qBFzTuY2pqgBAhNVJ6EliPjqQSkbq8X2dhC4Hfe+Fcp273PFKCbWRE=
-X-Google-Smtp-Source: AGHT+IEby6swK1qKmKOhNp9ApnteMBewDC39/Ox0Bk0vbizMEUBN8yjxVubq07e6qVNDHlKPjcMkOw==
-X-Received: by 2002:a17:907:3f99:b0:a86:7fc3:8620 with SMTP id a640c23a62f3a-a93a03fefdfmr593049066b.31.1727353615307;
-        Thu, 26 Sep 2024 05:26:55 -0700 (PDT)
-Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9392f541e4sm345619666b.66.2024.09.26.05.26.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2024 05:26:54 -0700 (PDT)
-Message-ID: <55f95839-5403-44e3-968c-ba0cc93bfb73@linaro.org>
-Date: Thu, 26 Sep 2024 13:26:53 +0100
+        d=1e100.net; s=20230601; t=1727354851; x=1727959651;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B0YaFbmNZZQ27EGzEPqm3xDYI+YQcc7orYNQOKUIa6A=;
+        b=QwRCLGwipxWsd3XSQrOdFnuhDBheHlYVhL6cnWz5vw6F1qZYcbmp8OXt68qiRlbNd3
+         vimq7nXzh0mFAxHRvbZfG3yJhzth4USBHQ6KGGa7Dr9+U2fNDRtu5wqta96qCDfBniYD
+         3ehy5nUnSnSnFOHTLvg/uZNr6t+dG3ekDKYiNOgAtlQUwMo7MI6qFz1R5VPg714qvRe0
+         qv0fRluCWpemr4jq8B6ZPQwqV+Snu7axZ+8u49AU4oDdrm6yPvVemrPBwUGBM5OkSIq1
+         wEECreMU8WFkUZRZ05XUFPX2T0z7YVmPPTMaJ02YME6NJtfYRA0LQzIvscUVdL0lytuP
+         e4Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCXqMpBnQYlTzI47H5YMCfEnL1rP5uqhNwtqBPvfQxNC62MHgLXU25LfOc7yqedIkgWb6tBJy/EFmOrVVRK85lYl@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbYYY1eGxkvPZjzk+BaUU9Z7njik2ZFN7sBe+uwdqHjW2mF5+6
+	TMKgh/umAry+Pj2Ll596o6WA4a3LCre2uqQgheWF/hSqEkM4VG9a9jSCmEAQex3lozwHQj0SMzx
+	sLzqpTzf4njiN/m/s0wius8szYGoInwKpr74y
+X-Google-Smtp-Source: AGHT+IFMqRnqwjKxa87XgLmW7djRVdBS3k0K+n7Ne06XPBn+bzv5sGNN+Zof85NBIEtS+boDmLekH2h0LRsTzu1U784=
+X-Received: by 2002:a05:6e02:1c08:b0:3a0:b597:3e30 with SMTP id
+ e9e14a558f8ab-3a295eb02ebmr4428815ab.8.1727354851210; Thu, 26 Sep 2024
+ 05:47:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/7] Event parsing fixes
-To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, kan.liang@linux.intel.com,
- ak@linux.intel.com, John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
- Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Weilin Wang <weilin.wang@intel.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Colin Ian King <colin.i.king@gmail.com>, Yang Li
- <yang.lee@linux.alibaba.com>, Yang Jihong <yangjihong@bytedance.com>,
- Howard Chu <howardchu95@gmail.com>, Ze Gao <zegao2021@gmail.com>,
- Yanteng Si <siyanteng@loongson.cn>, Jing Zhang <renyu.zj@linux.alibaba.com>,
- Sun Haiyong <sunhaiyong@loongson.cn>, Yicong Yang
- <yangyicong@hisilicon.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240925141357.1033087-1-james.clark@linaro.org>
- <ZvTlUXJs2jVDDL0B@google.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <ZvTlUXJs2jVDDL0B@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240924160418.1391100-1-irogers@google.com> <20240924160418.1391100-12-irogers@google.com>
+ <ZvTUo_nbr_gKaJrs@google.com>
+In-Reply-To: <ZvTUo_nbr_gKaJrs@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 26 Sep 2024 05:47:16 -0700
+Message-ID: <CAP-5=fVQVEgSK55Y_38KXyp3CJ1ssPOcqkA2JKwMDVYJe8iztA@mail.gmail.com>
+Subject: Re: [PATCH v1 11/11] perf build: Rename PERF_HAVE_DWARF_REGS to PERF_HAVE_LIBDW_REGS
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>, 
+	Guilherme Amadio <amadio@gentoo.org>, Changbin Du <changbin.du@huawei.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	Bibo Mao <maobibo@loongson.cn>, Kajol Jain <kjain@linux.ibm.com>, 
+	Anup Patel <anup@brainfault.org>, Shenlin Liang <liangshenlin@eswincomputing.com>, 
+	Atish Patra <atishp@rivosinc.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Chen Pei <cp0613@linux.alibaba.com>, Dima Kogan <dima@secretsauce.net>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, "David S. Miller" <davem@davemloft.net>, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Yang Jihong <yangjihong@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Sep 25, 2024 at 8:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Tue, Sep 24, 2024 at 09:04:18AM -0700, Ian Rogers wrote:
+> > The name dwarf can imply libunwind support, whereas
+> > PERF_HAVE_DWARF_REGS is only enabled with libdw support. Rename to
+> > make it clearer there is a libdw connection.
+>
+> While it only covers libdw, I think the idea of this macro is whether
+> the arch has register mappings defined in DWARF standard.  So I think
+> it's better to keep the name for this case.
 
+How can the dwarf standard exist for an arch but not define registers?
 
-On 26/09/2024 5:38 am, Namhyung Kim wrote:
-> On Wed, Sep 25, 2024 at 03:13:38PM +0100, James Clark wrote:
->> I rebased this one and made some other fixes so that I could test it,
->> so I thought I'd repost it here in case it's helpful. I also added a
->> new test.
->>
->> But for the testing it all looks ok.
->>
->> There is one small difference where it now hides _all_ default
->> <not supported> events, when previously it would only hide some
->> selected subset of events like "stalled-cycles-frontend". I think
->> this is now more consistent across platforms because, for example,
->> Apple M only has cycles and instructions, and the rest of the
->> default events would always show as <not supported> there.
->>
->> Tested on Raptor Lake, Kaby Lake, Juno, N1, Ampere (with the DSU
->> cycles PMU) and I also faked an Apple M on Juno.
-> 
-> Hmm.. I got a segfault with 'perf stat true' on my Zen2 box.
-> 
->    $ gdb -q -args ./perf stat true
->    Reading symbols from ./perf...
->    (gdb) r
->    Starting program: /home/namhyung/tmp/perf stat true
->    [Thread debugging using libthread_db enabled]
->    Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
->    
->    Program received signal SIGSEGV, Segmentation fault.
->    0x00005555557e04b5 in perf_pmu__is_fake (pmu=0x0) at util/pmu.c:1173
->    1173		return pmu->type == PERF_PMU_TYPE_FAKE;
->    (gdb) bt
->    #0  0x00005555557e04b5 in perf_pmu__is_fake (pmu=0x0) at util/pmu.c:1173
->    #1  0x00005555558c1b8b in evsel__sys_has_perf_metrics (evsel=0x5555560cc4b0) at arch/x86/util/evsel.c:50
->    #2  0x00005555558c1c33 in arch_evsel__must_be_in_group (evsel=0x5555560cc4b0) at arch/x86/util/evsel.c:64
->    #3  0x00005555557773a4 in parse_events__sort_events_and_fix_groups (list=0x7fffffff9ad0) at util/parse-events.c:2098
->    #4  0x0000555555777793 in __parse_events (evlist=0x5555560aa880,
->        str=0x5555558d6498 "context-switches,cpu-migrations,page-faults,instructions,cycles,stalled-cycles-frontend,stalled-cycles-backend,branches,branch-misses", pmu_filter=0x0, err=0x7fffffff9bd0, fake_pmu=false, warn_if_reordered=true, fake_tp=false) at util/parse-events.c:2186
->    #5  0x00005555555c787f in parse_events (evlist=0x5555560aa880,
->        str=0x5555558d6498 "context-switches,cpu-migrations,page-faults,instructions,cycles,stalled-cycles-frontend,stalled-cycles-backend,branches,branch-misses", err=0x7fffffff9bd0) at util/parse-events.h:41
->    #6  0x00005555555cce39 in add_default_events () at builtin-stat.c:1977
->    #7  0x00005555555cf928 in cmd_stat (argc=1, argv=0x7fffffffd840) at builtin-stat.c:2724
->    #8  0x000055555564cb81 in run_builtin (p=0x555556024548 <commands+360>, argc=2, argv=0x7fffffffd840) at perf.c:351
->    #9  0x000055555564ce28 in handle_internal_command (argc=2, argv=0x7fffffffd840) at perf.c:404
->    #10 0x000055555564cf81 in run_argv (argcp=0x7fffffffd63c, argv=0x7fffffffd630) at perf.c:448
->    #11 0x000055555564d2cf in main (argc=2, argv=0x7fffffffd840) at perf.c:562
-> 
-> Thanks,
-> Namhyung
-> 
-
-Oh yeah that's from the rebase. Looks like pmu is never NULL here on Arm 
-and hybrid x86 so I didn't see it, but I do see it on non-hybrid x86. It 
-just needs a NULL check:
-
-   bool evsel__sys_has_perf_metrics(const struct evsel *evsel)
-   {
-   ...
-   	pmu = evsel->pmu;
-	if (pmu && perf_pmu__is_fake(pmu))
-		pmu = NULL;
-
-I also noticed a new issue though, the change to make all default stat 
-events skippable=true hides permission errors, so now instead of the 
-hint to look at perf_event_paranoid you just get nothing, so I need to 
-fix that:
-
-   $ cat /proc/sys/kernel/perf_event_paranoid
-   4
-
-   $ perf stat true
-
-     Performance counter stats for 'true':
-
-
-        0.000431617 seconds time elapsed
-
-        0.000445000 seconds user
-        0.000000000 seconds sys
-
-I'm thinking it either needs to never skip EPERM or some other errors, 
-or maybe make cycles always non skippable. Probably the first option is 
-better.
-
-James
-
+Thanks,
+Ian
