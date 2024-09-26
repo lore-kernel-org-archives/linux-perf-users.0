@@ -1,124 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B432D1C6B2;
-	Thu, 26 Sep 2024 14:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D91B136351;
+	Thu, 26 Sep 2024 14:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727359570; cv=none; b=oc4fWNnyHybCTNmuk48GjFKjghwQfvzzSzQFjGSEKHW2/jgAWOvLYsPl90+K6a6yi31MsOn6hhBpruR1rMfT9lLzQvU98c1aq7d2lpNw7VEJrBm5msTBFT8wwpJObTgs/kqowsHyAAQbOxcpkABECsVPhpplaF9RxKYNIoN3AL8=
+	t=1727361648; cv=none; b=kZWypkSZcpAZo5wwtADkBKFxfHaCj8Q7P+fVRZOCGo9bM9eDNCGG+DP6kkkpfY3e+sC2LBtTifuPLLhTZFHaJLxrvl2SA79hyTq684WNjBjRG7NFbuYkZM3SgT89JvI/WpIwuk9Hf4mKVwmDln4MqlB5Xr3+hq3c4ZQkPrY9QHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727359570; c=relaxed/simple;
-	bh=0GQOr+LIbUulabpQaa69HJI0LcUX9XLKPsx3EwY06XI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jpFRjf8mabx3OazR7mXncm0IyUqR6IaVXVOYjou73C1iCtAQbUyYs0r049IoqmVTj4VaTs4GUEm4FHe2GbO0WQ2VD3wVh5dMA6Ebqb/LE7HXnB/OB3+t0DGv6yLMbmvZMSy77KKM2wVAM68FWAduE4D64ErPrvbEnOpgt10Qj/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IbnP3/KR; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1727361648; c=relaxed/simple;
+	bh=pknfYkT8okNZTzbNPB88s3NvEtJEVv1Ulvk5zmWu/Yg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WPeXFGHB9XChuHfM/IAxCiQovAk2CQ96UHu5WctnGvBbYIN3hAudxe3ouRXJw8MnGpSFjXuQJ1dbK0O+1RGATbi/I0pwQ5oXxxOdRaoOxSDG+UoYRuffF7Uv8/TB23bESwRHmsXjt/z8EqL+/ZMr97bYdq+a+F2SVQB3Yz1MopA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RvFdbkse; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IbnP3/KR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RvFdbkse"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727359570; x=1758895570;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=0GQOr+LIbUulabpQaa69HJI0LcUX9XLKPsx3EwY06XI=;
-  b=IbnP3/KRg7la3SCA6bAzTkJoQXztjKZ4PiUf0XchH8J1gXZ3L3LMIEV5
-   +JC+IYfZxLWr3aCo9yjucBrRPaN9Q1flAgBHZh33sSOSsC3UnsiVkDFWc
-   wDxazLhUTv2KRjsj+dFqsjB/BKlbwwXCC1boAPYxwFlkyLOb1U0WH/Hxy
-   WUYx3/a+nv3//SttPafP2tT5+Q5ohkfHL6NeGXvxVzlsSxC4zyYY4QUC9
-   6PE8CIRTHOFUHNZwdM34a1AXaRWujly172Oh3pWm+XxNOx0fcF4fquBht
-   rQ+8maVzD+2T7crZUSbHZ+4m3teQHEnUXS5+lN/0NQ4Pczn7qECuhjD4v
-   A==;
-X-CSE-ConnectionGUID: CLE4TiOBSN6EdwDwGdboqg==
-X-CSE-MsgGUID: vaH6swcMTYye0Fvqt4Ml8Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11207"; a="26593976"
+  t=1727361647; x=1758897647;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pknfYkT8okNZTzbNPB88s3NvEtJEVv1Ulvk5zmWu/Yg=;
+  b=RvFdbkse9JUCOMjWPuKTKfiaEGGJBkTdLk4BfLuSYbJ8Odf5FMugBAz5
+   PX/m/cswYb8HeNRID3VpYLaomWW41qrciToxdlh+gBx2x1Bpx37+g4rjz
+   ToIF3grNGDRW+SZVmgNaQdWiZZEi10mIf6TWkBU79fr9yq/PRsRXC1oR7
+   7V9/2393xT1RR9meg6LQMBU/QK5wp0+LT9vgEpTNTpDAT6KKSA8BLxoRJ
+   Inq0hb2/Ui5tXUzYQ/HXk8PnP11lHpMmVh1S1N1+uFvZhSywuqaSJnYE5
+   +OISAbeSaM/O2+sTUuBJAMr0MEFvuhEwi3BfKWsYG9UDI+u8wP2aaTlci
+   w==;
+X-CSE-ConnectionGUID: jGRJVx+uQ8KpteXOTRLuFg==
+X-CSE-MsgGUID: klyPx00wQASuwCZKysoXxQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11207"; a="37820200"
 X-IronPort-AV: E=Sophos;i="6.11,155,1725346800"; 
-   d="scan'208";a="26593976"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2024 07:05:49 -0700
-X-CSE-ConnectionGUID: W9ZCflfUTy+O/y2gjZS+QQ==
-X-CSE-MsgGUID: UfRvfteSRPSAaor/1UiUOw==
+   d="scan'208";a="37820200"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2024 07:40:44 -0700
+X-CSE-ConnectionGUID: 2mMNJqo/RI6kaK9eNMw8KA==
+X-CSE-MsgGUID: 1s87KLgASbCSyYlPfWO8sw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,155,1725346800"; 
-   d="scan'208";a="76939292"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.245.89.141])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2024 07:05:42 -0700
-Message-ID: <b2671dab-9efa-4a56-bbe4-9b9140708120@intel.com>
-Date: Thu, 26 Sep 2024 17:05:36 +0300
+   d="scan'208";a="72975051"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.222.28])
+  by orviesa008.jf.intel.com with ESMTP; 26 Sep 2024 07:40:42 -0700
+From: Thomas Falcon <thomas.falcon@intel.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	leo.yan@arm.com,
+	Thomas Falcon <thomas.falcon@intel.com>
+Subject: [PATCH v2] perf mem: Fix printing PERF_MEM_LVLNUM_{L2_MHB|MSC}
+Date: Thu, 26 Sep 2024 09:40:40 -0500
+Message-ID: <20240926144040.77897-1-thomas.falcon@intel.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] KVM: x86: Fix Intel PT Host/Guest mode when host
- tracing also
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Zhenyu Wang <zhenyuw@linux.intel.com>, kvm@vger.kernel.org,
- Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
- Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, H Peter Anvin <hpa@zytor.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, mizhang@google.com
-References: <20240906130026.10705-1-adrian.hunter@intel.com>
-Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240906130026.10705-1-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/09/24 16:00, Adrian Hunter wrote:
-> Hi
-> 
-> There is a long-standing problem whereby running Intel PT on host and guest
-> in Host/Guest mode, causes VM-Entry failure.
-> 
-> The motivation for this patch set is to provide a fix for stable kernels
-> prior to the advent of the "Mediated Passthrough vPMU" patch set:
-> 
-> 	https://lore.kernel.org/kvm/20240801045907.4010984-1-mizhang@google.com/
-> 
-> which would render a large part of the fix unnecessary but likely not be
-> suitable for backport to stable due to its size and complexity.
-> 
-> Ideally, this patch set would be applied before "Mediated Passthrough vPMU"
-> 
-> Note that the fix does not conflict with "Mediated Passthrough vPMU", it
-> is just that "Mediated Passthrough vPMU" will make the code to stop and
-> restart Intel PT unnecessary.
+With commit 8ec9497d3ef34 ("tools/include: Sync uapi/linux/perf.h
+with the kernel sources"), 'perf mem report' gives an incorrect memory
+access string.
+...
+0.02%	1	3644	L5 hit	[.] 0x0000000000009b0e	mlc	[.] 0x00007fce43f59480
+...
 
-Any comments?
+This occurs because, if no entry exists in mem_lvlnum, perf_mem__lvl_scnprintf
+will default to 'L%d, lvl', which in this case for PERF_MEM_LVLNUM_L2_MHB is 0x05.
+Add entries for PERF_MEM_LVLNUM_L2_MHB and PERF_MEM_LVLNUM_MSC to mem_lvlnum,
+so that the correct strings are printed.
+...
+0.02%	1	3644	L2 MHB hit	[.] 0x0000000000009b0e	mlc	[.] 0x00007fce43f59480
+...
 
-> 
-> 
-> Adrian Hunter (3):
->       KVM: x86: Fix Intel PT IA32_RTIT_CTL MSR validation
->       KVM: x86: Fix Intel PT Host/Guest mode when host tracing also
->       KVM: selftests: Add guest Intel PT test
-> 
->  arch/x86/events/intel/pt.c                         | 131 ++++++-
->  arch/x86/events/intel/pt.h                         |  10 +
->  arch/x86/include/asm/intel_pt.h                    |   4 +
->  arch/x86/kvm/vmx/vmx.c                             |  26 +-
->  arch/x86/kvm/vmx/vmx.h                             |   1 -
->  tools/testing/selftests/kvm/Makefile               |   1 +
->  .../selftests/kvm/include/x86_64/processor.h       |   1 +
->  tools/testing/selftests/kvm/x86_64/intel_pt.c      | 381 +++++++++++++++++++++
->  8 files changed, 532 insertions(+), 23 deletions(-)
->  create mode 100644 tools/testing/selftests/kvm/x86_64/intel_pt.c
-> 
-> base-commit: d45aab436cf06544abeeffc607110f559a3af3b4
-> 
-> 
-> Regards
-> Adrian
+Fixes: 8ec9497d3ef34 ("tools/include: Sync uapi/linux/perf.h with the kernel sources")
+Suggested-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+---
+v2: Leo Yan suggested adding PERF_MEM_LVLNUM_L{1-4} to mem_lvlnum
+    and printing a clearer message in the case of an unknown level
+    to more easily catch similar issues in the future
+---
+ tools/perf/util/mem-events.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 051feb93ed8d..bf5090f5220b 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -366,6 +366,12 @@ static const char * const mem_lvl[] = {
+ };
+ 
+ static const char * const mem_lvlnum[] = {
++	[PERF_MEM_LVLNUM_L1] = "L1",
++	[PERF_MEM_LVLNUM_L2] = "L2",
++	[PERF_MEM_LVLNUM_L3] = "L3",
++	[PERF_MEM_LVLNUM_L4] = "L4",
++	[PERF_MEM_LVLNUM_L2_MHB] = "L2 MHB",
++	[PERF_MEM_LVLNUM_MSC] = "Memory-side Cache",
+ 	[PERF_MEM_LVLNUM_UNC] = "Uncached",
+ 	[PERF_MEM_LVLNUM_CXL] = "CXL",
+ 	[PERF_MEM_LVLNUM_IO] = "I/O",
+@@ -448,7 +454,7 @@ int perf_mem__lvl_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ 		if (mem_lvlnum[lvl])
+ 			l += scnprintf(out + l, sz - l, mem_lvlnum[lvl]);
+ 		else
+-			l += scnprintf(out + l, sz - l, "L%d", lvl);
++			l += scnprintf(out + l, sz - l, "Unknown level %d", lvl);
+ 
+ 		l += scnprintf(out + l, sz - l, " %s", hit_miss);
+ 		return l;
+-- 
+2.46.0
 
