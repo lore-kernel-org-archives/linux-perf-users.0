@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DF116D4E6;
-	Thu, 26 Sep 2024 00:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80B313C3F2;
+	Thu, 26 Sep 2024 03:27:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727310860; cv=none; b=AccgAU20CiiPnbW9GBiagsDTayfwNCedJAyQ7S4bYfoU34GH2mEscn/d1sBP+iSA9OZk0bM3C/9omjcq9YcGpn+FIXqONlVToVwxFgbptqTgl5B+kL8UUjdZPRAhTWX+BUJ1Nl+8FlUJljh1R6rNd9PWH+zaxHLS6Meaju3Inp0=
+	t=1727321254; cv=none; b=PWOcFkcGyKaRWl231kZcO0Mugq5yhCzTSAJRHauNUwqQ+IWbNPMLEMR91rH0dXC6A6UrKSxAMatU3H1zkQBmvqHuXIouuV7NoH2XK+1sijDgWAktUnTTqxo6UTUe6QQHpsDPPUSDn6ukoiZojDacpDFvDeSse8Nukaj1/65Ksas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727310860; c=relaxed/simple;
-	bh=um2xMlvib2CN05auEw1jp/lh1xunvTfllOnZydnRhQU=;
+	s=arc-20240116; t=1727321254; c=relaxed/simple;
+	bh=oYaNX/FBJAEEOOqWGjXdBRhzbszI/dMHUcFatabIzL8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aph6wM8Qj/NIeGFI2v7hqyvFidxZ2INBkoMxggp+JsIjyaLEqeQITd/Tn0x+MDY8zDD2JwTR8YklfLQsKNtDcht+6VQXuimmAzvL6fa/5HGYXAXcr+yfWCvFel/5dGmCX2bIyM9okb+kakk0EAvZJlMHMJPa29Be8NW9uc2M5zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7tbpnj5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YtW2O1TUxQSqwhBTobD2zTOGaAzulSqEFuzw2k904CT8Z78z0cJmNy78YDWyr08GJFrwFoeNFq39xb7arOo9eOPJkn5JskLmMvth7ficmc8BwqXSd6EWopimhKcg1ABQxvOmQ1eW7bjhSTwRYcX0TQ0l2Z+Rj5eoVHCGPjpqBnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S35oOoZS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7tbpnj5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F38FDC4CEC3;
-	Thu, 26 Sep 2024 00:34:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S35oOoZS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39BF3C4CEC5;
+	Thu, 26 Sep 2024 03:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727310858;
-	bh=um2xMlvib2CN05auEw1jp/lh1xunvTfllOnZydnRhQU=;
+	s=k20201202; t=1727321254;
+	bh=oYaNX/FBJAEEOOqWGjXdBRhzbszI/dMHUcFatabIzL8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F7tbpnj5WOzdHcTEW25rt+QlegitMWjk1hY34B0t7CZLhdK+vySW0gRvov8IG1Hxl
-	 2sjlJ1rjmsB3ZTeFXaXTwLwC6N2HxW95gIOlt3CxqABPSiCfnFCKy7dGtAdZCEwQUN
-	 G/IQseAAb/viBtAa9tcQ+yN/SiZXsf+rPilT7nYgzH/ze+GPkKhPVMHwQyjU051Whv
-	 qe8sRLLWxQOzubtrggvSyArunGu1pfPTn5DQdPcUOdyUn3pK2qhc0ef7K3ttsK/PFQ
-	 28vmvw9I+Adx05wmjVNQsp/LV4HkFtlHh8gXeNpCi+Ldl9TC0cyieDq/pt5SE7L6W1
-	 48MwswGdiny1w==
-Date: Wed, 25 Sep 2024 17:34:15 -0700
+	b=S35oOoZSbcGM00IPKEn3yA3vb1QIHabWUboV0Pw3vrkR/mSATrlNGx3SDMV/oZGFs
+	 OjltpK4RqzYw317RFe3oSOG/3MIrKXuKB93R1I9QCglylP8e1go7qhC0dcfM7WNDUR
+	 deiXu4wJi4moBX/pDAFUozK4GuQi2aO6zM4kbu7XSgyuMezPUvW2oyxnOkRUWMFhJA
+	 vCHOZsHzzZA0JTcAn1uBrdbrvV0EplhWJ08d2SrQtC19oKeNXJaZtyZfwB9bMEWoqY
+	 xa1YCuQBcan7sY6wXgrRhdcwi3pdNmh/79/TfMcUk3Mc9sSq9zfyvyBtUZdwX0rZ1c
+	 EUy4JIO5GOtPw==
+Date: Wed, 25 Sep 2024 20:27:31 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -62,11 +62,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
 	Yang Jihong <yangjihong@bytedance.com>
-Subject: Re: [PATCH v1 09/11] perf build: Rename HAVE_DWARF_SUPPORT to
- HAVE_LIBDW_SUPPORT
-Message-ID: <ZvSsB8bT3CTLT4B0@google.com>
+Subject: Re: [PATCH v1 11/11] perf build: Rename PERF_HAVE_DWARF_REGS to
+ PERF_HAVE_LIBDW_REGS
+Message-ID: <ZvTUo_nbr_gKaJrs@google.com>
 References: <20240924160418.1391100-1-irogers@google.com>
- <20240924160418.1391100-10-irogers@google.com>
+ <20240924160418.1391100-12-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -75,62 +75,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240924160418.1391100-10-irogers@google.com>
+In-Reply-To: <20240924160418.1391100-12-irogers@google.com>
 
-On Tue, Sep 24, 2024 at 09:04:16AM -0700, Ian Rogers wrote:
-> In Makefile.config for unwinding the name dwarf implies either
-> libunwind or libdw. Make it clearer that HAVE_DWARF_SUPPORT is really
-> just defined when libdw is present by renaming to HAVE_LIBDW_SUPPORT.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Documentation/perf-check.txt         |  6 +++---
->  tools/perf/Makefile.config                      |  2 +-
->  tools/perf/arch/powerpc/annotate/instructions.c |  4 ++--
->  tools/perf/arch/x86/annotate/instructions.c     |  2 +-
->  tools/perf/builtin-annotate.c                   |  2 +-
->  tools/perf/builtin-check.c                      |  6 +++---
->  tools/perf/builtin-probe.c                      | 12 ++++++------
->  tools/perf/builtin-report.c                     |  4 ++--
->  tools/perf/util/annotate-data.h                 |  8 ++++----
->  tools/perf/util/debuginfo.h                     |  6 +++---
->  tools/perf/util/disasm.c                        |  4 ++--
->  tools/perf/util/disasm.h                        |  4 ++--
->  tools/perf/util/genelf.c                        |  4 ++--
->  tools/perf/util/genelf.h                        |  2 +-
->  tools/perf/util/include/dwarf-regs.h            |  6 +++---
->  tools/perf/util/probe-event.c                   |  4 ++--
->  tools/perf/util/probe-finder.h                  |  4 ++--
->  17 files changed, 40 insertions(+), 40 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-> index 45101a8e4154..31741499e786 100644
-> --- a/tools/perf/Documentation/perf-check.txt
-> +++ b/tools/perf/Documentation/perf-check.txt
-> @@ -47,15 +47,15 @@ feature::
->                  bpf                     /  HAVE_LIBBPF_SUPPORT
->                  bpf_skeletons           /  HAVE_BPF_SKEL
->                  debuginfod              /  HAVE_DEBUGINFOD_SUPPORT
-> -                dwarf                   /  HAVE_DWARF_SUPPORT
-> -                dwarf_getlocations      /  HAVE_DWARF_SUPPORT
-> +                dwarf                   /  HAVE_LIBDW_SUPPORT
-> +                dwarf_getlocations      /  HAVE_LIBDW_SUPPORT
+On Tue, Sep 24, 2024 at 09:04:18AM -0700, Ian Rogers wrote:
+> The name dwarf can imply libunwind support, whereas
+> PERF_HAVE_DWARF_REGS is only enabled with libdw support. Rename to
+> make it clearer there is a libdw connection.
 
-I'm not sure if we really want to display dwarf_getlocatiosn as it's too
-implementation detail IMHO.  Maybe just 'dwarf' or 'libdw' is enough.
+While it only covers libdw, I think the idea of this macro is whether
+the arch has register mappings defined in DWARF standard.  So I think
+it's better to keep the name for this case.
 
 Thanks,
 Namhyung
-
-
->                  dwarf-unwind            /  HAVE_DWARF_UNWIND_SUPPORT
->                  auxtrace                /  HAVE_AUXTRACE_SUPPORT
->                  libaudit                /  HAVE_LIBAUDIT_SUPPORT
->                  libbfd                  /  HAVE_LIBBFD_SUPPORT
->                  libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
->                  libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
-> -                libdw-dwarf-unwind      /  HAVE_DWARF_SUPPORT
-> +                libdw-dwarf-unwind      /  HAVE_LIBDW_SUPPORT
->                  libelf                  /  HAVE_LIBELF_SUPPORT
->                  libnuma                 /  HAVE_LIBNUMA_SUPPORT
->                  libopencsd              /  HAVE_CSTRACE_SUPPORT
