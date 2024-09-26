@@ -1,100 +1,99 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CC418870F;
-	Thu, 26 Sep 2024 21:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E6E19D897
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 22:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727386525; cv=none; b=goQJBRrRmkqgtyjkuhqlNcfmLj145m638QfMynP66R43xq6hJqSxjzhA8mNlnbjBMWTuMILU4IVk3/QPtjSrXfnqFiq2HMebgSRVsQUs3mGhHBrNS4jgvbvo/xy4oBf2W2O2Td1+LceQFE4HnFVUeN2lwoBYmSqXToaT/Dy9xvI=
+	t=1727389990; cv=none; b=hktfyO950u8MpMle7WF6+a5kXvyikVCcQcRtnx1mdTdVXL2F7vZaE7+0JcdI9r2Fnkdf4o+t/qwnsWMs+XluV04Ii6ZsSMzb4bef8nCSWJAQP8X/qSDQiv7sZodC6RtoU47N0pN+d7QWSvaAgA2KAyvhPzzJDn5K1R/mq2Kw0ZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727386525; c=relaxed/simple;
-	bh=1/AF0ye1aEDqbRIMOiqu2UP5rEYyIqLBgduhnkT/Gq8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HBJfh/5Z7VEQxAgZ34fM/Fcum9KV9uRA4YIPjdwVhv1SKHj5FlBKtaFrY9UklpOXb6tj9a24Ppj0UNskaOvLs1phEpW4M0T3GA05X3E3GzoES+ZHys+EPON/W5TX4FRw1SnZ4EYkHV1ZwW9wX5nfulw3klh0rZgUbhtG3nAQFJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ntYvYQ3V; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727389990; c=relaxed/simple;
+	bh=s4zyF4OfVD3z8cn9ovlUe94sCo7G/RLgythbHZDr+MA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hvhZvX9Csf3atj2JErgVqcgrcj8j5oL9CTDRI6dluCTyzwE6LDM/rwhbfOdvC6MFyaJdGy5iURpj9i8VY10MWpKqw9FJtH1CNNFsM2RfAkQgk4q7ykxeDsTL4Yljr5NQ7qJIgIoJRRw7CKLw9OG9dJAeu1DnwsSrv4VS5Z1MA6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RX9DLw0J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntYvYQ3V"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e0b467da03so91493a91.2;
-        Thu, 26 Sep 2024 14:35:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727386523; x=1727991323; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YN3ZIl0AHdW2Pc3ccHhFRbQ1ihSm5IEdT9WChsNSY6k=;
-        b=ntYvYQ3VzjrPQRjO0RTjOTbXP7/4NP5rjwPgNkr9vH/XeTJuyjkJQ6j8P1Q5+uxnST
-         F3wPdxptRRuXH4IYlyP+1oLBMPEpsloYKCpFimcgj0k4lN/GD1KdZTGRrH/xAwUoC1V3
-         rJPs6Qhurc32eEX7Nw6W0yg9ypx4H8Kn2SL2FF0rDnTsbAewQk6cqpJ0OzCNZ9fG7s2K
-         jkChH3VAIV2ScpQ7p6vD/ekIMTj99jeg/1W8R/4uC1LACZ3XKgZEkEjh99yXfdBqpnAL
-         uIKAImU9QAzLmdcHL1trZc/BPKjgl7Z0W/ek20wLJnfUeFDbJ/kOre9Cpwh2jgN/OLHt
-         egVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727386523; x=1727991323;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YN3ZIl0AHdW2Pc3ccHhFRbQ1ihSm5IEdT9WChsNSY6k=;
-        b=nnmJKkgcACozVDSpFBzUMkQb5Y3qgChkkOHFmpcaO+WyoEmG2yQ/DJaaT+0E6OKhbL
-         4edl7pBfS0KSuCN4J17TXsxaCijX0wFOl1McewxcYnkjHlppDaDtIlmk7BeLqo9spMzd
-         GvQfWJWmckzL3ysFqmQAywMzd6OfMCvStz6XrMLPgqsx9qF7zAWvuUCxyMl7I4LO5asF
-         tY2iqMCX1KyOtyQXSAx70zzQ3QgQ3QFPJnt3mvVfTYp7DTTgIKuR5JjAdUGM1vIhG5rn
-         wAdcVhSIglqIO2ATJ+gekoA6j5ux3+Xp6qrTXWyeWX5Hr9kk6/60rCGS1ehKqpiZANFI
-         G0JA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDJ8RvVdvqtHN3lX1txbKSEmzjS+sQLqz6QZbKSBcpkEsBUAeUwf4nTqbN03vw4GXyiD9iQZArXil9IuPBiXw=@vger.kernel.org, AJvYcCUh1EnD+hD2C3vzqWv60QHnERNsPDZPvtTXZIO5sRiraXir9igXESaPEYdxkZd9i9XAYroDQMEZrC9cLvE6@vger.kernel.org, AJvYcCUidN0lHrF9iOqSPJ8IctwwAfwAs07OQfJTDdO/ZULHyFNBpvg0hyVrQCV6KMoggxOswxI=@vger.kernel.org, AJvYcCV5D5TsQSXjcHuycgk/6XXYltPQlUyoOj0RhDcW5nuV2PC/tj/Q2JUE4o2CUQJvBvD97N7k7sFVZCk9WEHGDPyghQ==@vger.kernel.org, AJvYcCVOLC6+65mOqcNjHRp1+tV/XssjpTX8h+9F4YBiY8/h9aWXzBKFdg2eK7772upIEAdFSiQJEmnzVgkk6g==@vger.kernel.org, AJvYcCVsqpEA1X34JgSSy+zWUs7+fSAIlED2wx+FoF0zXBxfBa0ReVabMdfI1p7J84be8lizTJ6y/uqbQToD@vger.kernel.org, AJvYcCVyOHlVKllui6A90Q42IfKbLrvLtdZnjC+4kVdVZSOG4aRB5tquRkPsdIouUdZ5cjLcKniIJa85fW8=@vger.kernel.org, AJvYcCWIeHXSn79E1pba2uaZgabrN6egSq3hKQJvvQyqA0ncZ3poR1endScJFmYMlQD9tOmBDQRNsnt7bGe0@vger.kernel.org, AJvYcCXTmNdlSb1QBFTlgk2/mbOW9A2NT3p8kXvs3x58YZP4/N+DnfQhUq/gJiG6xW7mj8KHqe8jHlQq55VTo3hn@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCTZ3zsxEiGOsdmhyvylg0pTMM/FgSGOmCyMfxDfM9CSVwTjhW
-	AAPO1FdxgZ+AUbsMCKMSJLJBPk64IXPEa9Zxwq805/7NayLOfWOsl5gSodJeflPB/OilgtRCS/O
-	Gj38jwHBTYzU7aYb/AVVUkzDXAIw=
-X-Google-Smtp-Source: AGHT+IFP+qclc+DwNk0VcbiLZGtyseD1sfEmeyqBVla3e/ZDfuly9waYm3g7wRqfrKuy03nGqriwsOXLp8FvWSa4ibk=
-X-Received: by 2002:a17:90b:3698:b0:2db:60b:eee with SMTP id
- 98e67ed59e1d1-2e0b8ed348emr498104a91.9.1727386523117; Thu, 26 Sep 2024
- 14:35:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RX9DLw0J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF1FBC4CEC5;
+	Thu, 26 Sep 2024 22:33:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727389990;
+	bh=s4zyF4OfVD3z8cn9ovlUe94sCo7G/RLgythbHZDr+MA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RX9DLw0J1JPkQrVZwBp7bjB49agfSxq/jDQLmyFM8O9o2sYd2fMkSMp9Py1fPRN/J
+	 vfm16s0zwrNe7vb7NftQI0CQ4OxnpckVGxhtt8iCNbOSU7mLV3gxkGCQ2nSZMvM80x
+	 S407TNXPK4VdM73DQYNSSLqhVdoLzQ959KziO8UiapZEgwiMd6KoI2erOVj0JKOqQG
+	 9Y6oww/yOb5tq2ZAex+80+IUkuSC7E/dYocmaIGE/z/makkH3eJqEFtqkcFwzHz80D
+	 t0eWxmgyRnW1addAH+ENakDZxoExR5gjE1vp4Qx8YeG31iR/n7navZgWYhMDDJjnmS
+	 hiRBwGg4fe4Fw==
+Date: Thu, 26 Sep 2024 15:33:08 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Veronika Molnarova <vmolnaro@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-perf-users@vger.kernel.org, acme@redhat.com,
+	mpetlan@redhat.com, irogers@google.com, atrajeev@linux.vnet.ibm.com
+Subject: Re: [PATCH v2 00/11] perftool-testsuite 2nd batch
+Message-ID: <ZvXhJLkJcR99Y2sF@google.com>
+References: <6b8245be-7fbf-41e9-8622-f8990ae7a880@redhat.com>
+ <ZtXMRffIGVmjptcf@x1>
+ <ZtXOrJdxvrI7Kk6n@x1>
+ <b87e2c58-8696-48bc-92ca-93964917bf9a@redhat.com>
+ <ZtYIElLzMIzEVH9t@x1>
+ <20240906001104.9314082caaf0268f09cc45b2@kernel.org>
+ <ZtoAuoFNF8neYA-4@x1>
+ <ZtoDUPuP-fEbC6sg@x1>
+ <ZuLnhbC4eAmKzVO5@x1>
+ <064825c4-7c5d-425c-b3be-dd20a593aca1@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240925150059.3955569-30-ardb+git@google.com> <20240925150059.3955569-32-ardb+git@google.com>
-In-Reply-To: <20240925150059.3955569-32-ardb+git@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 26 Sep 2024 23:35:10 +0200
-Message-ID: <CANiq72=z6A=50QO3V0S3Kgx6XQT93GxbB_LN6PFAQCmNgy370A@mail.gmail.com>
-Subject: Re: [RFC PATCH 02/28] Documentation: Bump minimum GCC version to 8.1
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Uros Bizjak <ubizjak@gmail.com>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Christoph Lameter <cl@linux.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Juergen Gross <jgross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Keith Packard <keithp@keithp.com>, 
-	Justin Stitt <justinstitt@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-doc@vger.kernel.org, 
-	linux-pm@vger.kernel.org, kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-efi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-sparse@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <064825c4-7c5d-425c-b3be-dd20a593aca1@redhat.com>
 
-On Wed, Sep 25, 2024 at 5:10=E2=80=AFPM Ard Biesheuvel <ardb+git@google.com=
-> wrote:
->
->  Documentation/admin-guide/README.rst | 2 +-
->  Documentation/process/changes.rst    | 2 +-
+On Thu, Sep 19, 2024 at 03:14:40PM +0200, Veronika Molnarova wrote:
+> 
+> 
+> On 9/12/24 15:07, Arnaldo Carvalho de Melo wrote:
+> > On Thu, Sep 05, 2024 at 04:15:28PM -0300, Arnaldo Carvalho de Melo wrote:
+> >> On Thu, Sep 05, 2024 at 04:04:29PM -0300, Arnaldo Carvalho de Melo wrote:
+> >>> So, I proposed that if we get that error message (A function DIE doesn't
+> >>> have decl_line. Maybe broken DWARF?) we should skip it, but Veronika did
+> >>> the right thing and asked if that wasn't really papering over some
+> >>> problem and pointed to a patch that addressed a problem that lead to
+> >>> that exact same message being produced, but that didn't help with our
+> >>> current case, with another blacklisted function, warn_thunk_thunk.
+> > 
+> >>> You mentioned that this is an asm function, so no DWARF, let alone
+> >>> correct DWARF, so the message is kinda ok, but we can't use that message
+> >>> as it could paper over real problems like the one fixed by the patch
+> >>> that Veronika pointed out.
+> > 
+> >>> How to figure out if a function has valid DWARF? Maybe for the moment we
+> >>> should have _another_ blacklist, one for functions in the blacklist that
+> >>> have no valid DWARF? A blacklist's blacklist?
+> >  
+> >> We have the needed info to provide a more informative warning:
+> > 
+> > So, perhaps we should, in the test, when we get that "broken dwarf"
+> > output, look at the debuginfo file for the kernel to see if the function
+> > is one in a DW_UT_compile (CU) that has 
+> > 
+> >      <da27a>   DW_AT_language    : 32769 (MIPS assembler)
+> > 
+> > And then just have a -vv output stating that that function is being
+> > skipped because it is DWARF from assembler?
+> > 
+> > Veronika, would you be willing to try to do that?
+> 
+> Okay, I can try to parse the debuginfo to check the DWARF.
+ 
+I'll wait for v3 then.
 
-This should update scripts/min-tool-version.sh too. With that:
+Thanks,
+Namhyung
 
-Acked-by: Miguel Ojeda <ojeda@kernel.org>
-
-As Arnd says, the cleanups can be done afterwards.
-
-Cheers,
-Miguel
