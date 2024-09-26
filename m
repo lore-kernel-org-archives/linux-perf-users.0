@@ -1,102 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F4517BEB8;
-	Thu, 26 Sep 2024 19:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6422415D5B9
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 19:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727379599; cv=none; b=EDbYufsmVSLfhNlmPcDpXvwn2Tnk1z6V4X+SPdQEPKaqqaS+bUc/ayzRlj72tII9O2cTO7ty9r9imlJo5bXtNCD/Tml5KQsOvvvuBSzQRdP0F5fDeKyRVuczrRHWUN2nyEBIyZHA7HN1cxgzARW8TVsLznG79U4pmEUqAL299U4=
+	t=1727380064; cv=none; b=Vupz6nCcii4cpzcadwfaHcJVQgzK6TJyPlhEr9IlQnYqmYjqLSahcQ/J6+uG0+FF6TDvEmVzSwlYQvQ6U/9XuusawsbBCWaqA27Q0KDgRZu5O5DSKQCHAHdccqCKOMmUW6lNmvydztqr8Dk3AKUMHdkIaQr3Oqm7G7vYCkSZ7jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727379599; c=relaxed/simple;
-	bh=54DM0uD8l3Df/Hh+XemJcRaOIqs/Q50HJKM4eD2PMk0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hSbqc0acXiZB/OQwdMYtgsWpbStwNomh88KMNpfRgq6z9AHqZ3oF3Ij59xzPzW5c+a4GoZPAJKZWfmR+59Cul1lXDO6OXkIafjW6r8gju/XvXiBA7CCw7KdODEuD9lazxX7k8ViDnrdGJUWgOR1BCaQ9iP5rptFtD96tVb3zk00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3A4OSPO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727380064; c=relaxed/simple;
+	bh=OpdobiaGJFsmzqwmWBmY8ufHrVW3++B4wWy6CDvPzaw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PGtBHuIl3pIYhUjSvT76GDZBMoFXTgosuMka0L60Ikon7sFiElrjDRvqvQqPxMG2iqaVfrswJOOc5xvL4NFMX4UuhWCu5CFlz6T61QfArHLchHbilnQVUraYFCqxh6JpE0Bgjel7WbNLppoCbgLq7TdjZ5QKuX6OpwEKqgozNpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yh/IrXzu; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3A4OSPO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D153C4CEC6;
-	Thu, 26 Sep 2024 19:39:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727379599;
-	bh=54DM0uD8l3Df/Hh+XemJcRaOIqs/Q50HJKM4eD2PMk0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g3A4OSPOKeMeF+859PedMzL7zRVGuXUThPHqt2+WTSpmVYwE9a1A4s93cKRAGK2WI
-	 DbHoNo5cRcZRduuH02I6xZPQxAUKd/19xxrsyUVscFTI6WPqV60YjSGBLPjgMEiiqi
-	 qSjNHYq4UhQ9j6czR4I8YwpM8bW4XYI3WEse5L3nHdAkxy/UqU7HnltFTT7C1ip5VW
-	 mY0ulboLcY9Zm8Pxz3v2S7im9XN8foOPQLcHy7cuicI7ie4cSGTxr6jt7pLCbTeICF
-	 qPa6CmBvE0JWc4zYVmGLUKSM3/jpN9rPyMN2fIJeeMZo1vmAHyei2YWt3RL1N+qX2N
-	 UMr6kSTebJk5w==
-Date: Thu, 26 Sep 2024 12:39:53 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Guo Ren <guoren@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>,
-	Guilherme Amadio <amadio@gentoo.org>,
-	Changbin Du <changbin.du@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>,
-	Kajol Jain <kjain@linux.ibm.com>, Anup Patel <anup@brainfault.org>,
-	Shenlin Liang <liangshenlin@eswincomputing.com>,
-	Atish Patra <atishp@rivosinc.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Chen Pei <cp0613@linux.alibaba.com>,
-	Dima Kogan <dima@secretsauce.net>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Yang Jihong <yangjihong@bytedance.com>
-Subject: Re: [PATCH v1 11/11] perf build: Rename PERF_HAVE_DWARF_REGS to
- PERF_HAVE_LIBDW_REGS
-Message-ID: <ZvW4iZpTinJKWIFD@google.com>
-References: <20240924160418.1391100-1-irogers@google.com>
- <20240924160418.1391100-12-irogers@google.com>
- <ZvTUo_nbr_gKaJrs@google.com>
- <CAP-5=fVQVEgSK55Y_38KXyp3CJ1ssPOcqkA2JKwMDVYJe8iztA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yh/IrXzu"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4581cec6079so66081cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 12:47:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1727380060; x=1727984860; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/l2ZmMYvrEcnOZf47Vq9a28fJ0BtZT2mBNCMtDWME2s=;
+        b=Yh/IrXzuHcyJO9pbzCPuQEA5L1Fwf9vKoWM+fOvF2UE8q/0gCIK3stEzdCbV2KK7kc
+         bhq69wcAP3eVQUpVaF4KJUomGMydvv9zbMOmAEyqa2aXoJbNlYW5fCdvvHedxf2lHa+8
+         fGTjM5xMbfCuBSZN8Hhbix29aCGc4DzHqVaeeIxKzm7CZ6cp1QkfceZZjImOwjFv8H8g
+         uD9Eo3B9x9b+mYPTE1ak1CVeaMYfs36M9iEwbSbYH1QdypjuXCrnVVmTthx4ohWyxeq7
+         dnd+4uVJZkgCAcJZN71+2VhEJd+NCjYRBbykRN5KbuhS3ZU8oKv6ATataPGeLFUoG+aV
+         ULmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727380060; x=1727984860;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/l2ZmMYvrEcnOZf47Vq9a28fJ0BtZT2mBNCMtDWME2s=;
+        b=fsxZWluf+qkHm0iJLwG+CjL3R8cYobnEMmbUHiEAP6T2VNsPM/ir3KMBqGkYis57KB
+         VdrfOoOhnr1ekjm/folba37IxN6i0cxPHJMRvRvOpYHwv/qbbmz4C64Xnwk68znT8hwi
+         4xjxcAtST+ibTpmPYnMOzRqQ9ax+h3xMjEU+sDtH+MbhL2fxWM0UjPjMWTTm52Zl/W3H
+         z7eRjUmnnkPMfYfpp5b3Nn9Hzr4xPgpKgbfebqm5wcrhu7qnzk9cT1+MGJtNuy79Athq
+         9F0pOoLTsUjyiyqREioFN8bvWMgM3MUp+e7E9gRmVwzY4mfFnAUP8vSfyeE29Yl7huxk
+         8X5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXlYxiYReBjTcqa9x6kSuT8d0igpLfecVjK/mFiOrjlj046Dsp4byLI0Bt82Qbbu2S0dHNENBluibWxahhKjffz@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv4EMjJsfy7AfWw+rAY4drhyHExb4JoyvQWVnf5a3xh8rHiTLS
+	q8+fbxE41zrIJAbmnmgmAKoXLwO98Xe96FZNAPItP6SO8b/IZ9wTllf8bGSKXB3Q7rxY6EmMe1M
+	u7onGqZgbLx1rK0cO4hX55iO1IEtNnF5BW0jz
+X-Google-Smtp-Source: AGHT+IELdLdzrIUeQYOm8qqxy378MyWwf4r+N0EorvnRAGn6DI4pHLTLiIdWSk3uPqWIwIiVcpPhXMLr9+7aIqfcmo8=
+X-Received: by 2002:a05:622a:a313:b0:453:5961:b880 with SMTP id
+ d75a77b69052e-45ca018d829mr575351cf.10.1727380060084; Thu, 26 Sep 2024
+ 12:47:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVQVEgSK55Y_38KXyp3CJ1ssPOcqkA2JKwMDVYJe8iztA@mail.gmail.com>
+References: <20240912190341.919229-1-irogers@google.com> <ZuNwJ07GyMVIT0Qi@google.com>
+ <CAP-5=fW3MrfOJf=yQgxG-UkKJnoVavda5_4oMh5e4RdkLCJxgw@mail.gmail.com>
+In-Reply-To: <CAP-5=fW3MrfOJf=yQgxG-UkKJnoVavda5_4oMh5e4RdkLCJxgw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 26 Sep 2024 12:47:26 -0700
+Message-ID: <CAP-5=fX3jXPiFhY+Neo8imz7V=86WDtjM42Gcq5phe6LoCLMkA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/13] Tool and hwmon PMUs
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
+	Xu Yang <xu.yang_2@nxp.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Benjamin Gray <bgray@linux.ibm.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
+	Howard Chu <howardchu95@gmail.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Yang Jihong <yangjihong@bytedance.com>, Colin Ian King <colin.i.king@gmail.com>, 
+	Veronika Molnarova <vmolnaro@redhat.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Changbin Du <changbin.du@huawei.com>, 
+	Ze Gao <zegao2021@gmail.com>, Andi Kleen <ak@linux.intel.com>, 
+	=?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>, 
+	Sun Haiyong <sunhaiyong@loongson.cn>, Junhao He <hejunhao3@huawei.com>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Yicong Yang <yangyicong@hisilicon.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 26, 2024 at 05:47:16AM -0700, Ian Rogers wrote:
-> On Wed, Sep 25, 2024 at 8:27 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Fri, Sep 13, 2024 at 7:34=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Thu, Sep 12, 2024 at 3:50=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
 > >
-> > On Tue, Sep 24, 2024 at 09:04:18AM -0700, Ian Rogers wrote:
-> > > The name dwarf can imply libunwind support, whereas
-> > > PERF_HAVE_DWARF_REGS is only enabled with libdw support. Rename to
-> > > make it clearer there is a libdw connection.
+> > On Thu, Sep 12, 2024 at 12:03:27PM -0700, Ian Rogers wrote:
+> > > Rather than have fake and tool PMUs being special flags in an evsel,
+> > > create special PMUs. This allows, for example, duration_time to also
+> > > be tool/duration_time/. Once adding events to the tools PMU is just
+> > > adding to an array, add events for nearly all the expr literals like
+> > > num_cpus_online. Rather than create custom logic for finding and
+> > > describing the tool events use json and add a notion of common json
+> > > for the tool events.
+> > >
+> > > Following the convention of the tool PMU, create a hwmon PMU that
+> > > exposes hwmon data for reading. For example, the following shows
+> > > reading the CPU temperature and 2 fan speeds alongside the uncore
+> > > frequency:
+> > > ```
+> > > $ perf stat -e temp_cpu,fan1,hwmon_thinkpad/fan2/,tool/num_cpus_onlin=
+e/ -M UNCORE_FREQ -I 1000
+> > >      1.001153138              52.00 'C   temp_cpu
+> > >      1.001153138              2,588 rpm  fan1
+> > >      1.001153138              2,482 rpm  hwmon_thinkpad/fan2/
+> > >      1.001153138                  8      tool/num_cpus_online/
+> > >      1.001153138      1,077,101,397      UNC_CLOCK.SOCKET            =
+     #     1.08 UNCORE_FREQ
+> > >      1.001153138      1,012,773,595      duration_time
+> > > ...
+> > > ```
+> > >
+> > > Additional data on the hwmon events is in perf list:
+> > > ```
+> > > $ perf list
+> > > ...
+> > > hwmon:
+> > > ...
+> > >   temp_core_0 OR temp2
+> > >        [Temperature in unit coretemp named Core 0. crit=3D100'C,max=
+=3D100'C crit_alarm=3D0'C. Unit:
+> > >         hwmon_coretemp]
+> > > ...
+> > > ```
+> > >
+> > > v2: Address Namhyung's review feedback. Rebase dropping 4 patches
+> > >     applied by Arnaldo, fix build breakage reported by Arnaldo.
+> > >
+> > > Ian Rogers (13):
+> > >   perf pmu: Simplify an asprintf error message
+> > >   perf pmu: Allow hardcoded terms to be applied to attributes
+> > >   perf parse-events: Expose/rename config_term_name
+> > >   perf tool_pmu: Factor tool events into their own PMU
+> > >   perf tool_pmu: Rename enum perf_tool_event to tool_pmu_event
+> > >   perf tool_pmu: Rename perf_tool_event__* to tool_pmu__*
+> > >   perf tool_pmu: Move expr literals to tool_pmu
+> > >   perf jevents: Add tool event json under a common architecture
+> > >   perf tool_pmu: Switch to standard pmu functions and json descriptio=
+ns
+> > >   perf tests: Add tool PMU test
+> > >   perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs
+> > >   perf test: Add hwmon "PMU" test
+> > >   perf docs: Document tool and hwmon events
 > >
-> > While it only covers libdw, I think the idea of this macro is whether
-> > the arch has register mappings defined in DWARF standard.  So I think
-> > it's better to keep the name for this case.
-> 
-> How can the dwarf standard exist for an arch but not define registers?
+> > For patch 1-10,
+> >
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-I meant it's about the arch code in the perf tools to have the mapping,
-not the DWARF standard itself.
+I thought the plan was for 1 to 10 to be in v6.12 and the remaining 3
+to be in perf-tools-next/v6.13. I'm not seeing any of the series in
+perf-tools so should everything be going in perf-tools-next?
 
 Thanks,
-Namhyung
-
+Ian
