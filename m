@@ -1,156 +1,197 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762B314B959
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 15:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440EC14BFBF
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 15:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727363419; cv=none; b=TvKKDYxWzKdgsZi+qqWJgbecgGRxQ1+h4lQ4W662vq6QmXzN7444sOVxYKQ72bJLYIS91z6PH2lj2sPnL6wX/2aN5SFwbCdRDRyJfLI3hKjPVC3DLPW0jlHGCeHoSXaSF1mCQH9qVjfbbamiUn5z/EeKu6ng6/E2MH7vTz868d0=
+	t=1727364284; cv=none; b=URLMNATITMU9iAFNd2fDUf4UsssXtXuQzW/d4URRusUWpGGzSlj7S9API1I6mpcJALdr/tJx6Q8xmKWRZqHRt786UOk1PBkoeEcSxBm1mtgNjewSkwwpE+oRPs7BPC+ulXvmqr108iMNtJ8uWtrMw+HVsicJZpyjWagcjAtLwbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727363419; c=relaxed/simple;
-	bh=hVE5ZilPLPNfrXuAXy2c+9nnJM7MfQr580xYHLvoS5k=;
+	s=arc-20240116; t=1727364284; c=relaxed/simple;
+	bh=tWOE5PVxgweBsGOCcwxlLqKgtdcWyCzelH3BfOBeCWE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cu0IBmxCXC5PXaelHUMDKINNXRdsDbUe2DZ8llsEyo3qJ9Uc8wmUoAcy8a8VnBWnipCwP0/un1VtE54qGKeeV5xlEo7y23yGNKDM/U+VTaU34mk5SQMvYiVtqUuFtKiSBq1nYI9x/wqOUDyowdSgIzVNlVrpfhi0v1L9oXD8co4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Loa6j8EH; arc=none smtp.client-ip=209.85.214.175
+	 To:Cc:Content-Type; b=EG462SXdlcprQs+EdztDYM39YThNcosCPnQT9UbCESCLKS8meS0AcC27gsYZSa9bSpuakIcI1XEBh2tcYT4zUJjJgkdQOh1A0K26KWgA334EqT5eh3B6AMl6ZmYOdVylUaQ7+fCaztuhVGfLhCX9nl7pwtxrkWcmPZTXAFULVjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R4tAJN9B; arc=none smtp.client-ip=209.85.166.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Loa6j8EH"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2056aa5cefcso244665ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 08:10:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R4tAJN9B"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3a1a662a633so297255ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 08:24:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727363417; x=1727968217; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1727364282; x=1727969082; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Qd5wd2EDy91T2PV08KE1FbhF8/gu2jxlRWd3WkzT05w=;
-        b=Loa6j8EHZu4P4kGTCvSe4W9ZdLLykufzI2am6uezCHNPZjwBDmVvSfnH6sSGKw9DFU
-         VYm/+SOFG+rVr/AfzZGP2+4RiKIvMKD6QM9Ih4CmVzSpoOGBLRLFCo9w6XDVf3sJljlb
-         4lCD9Bo1TRR8HWL8/NaoIc1lOQ4jCJ+rbinlyyjHAO2BzN8jMDpF4ZQHGkioZuWzLAAo
-         j6plwBWxwVZroOh+YZpcJ/Bq1gOewcz6pJxDeOXELcoiSACmG+1ypXW97g3SU3P4TymP
-         xT/MXkWNl+mmKkkNga90+jzTN2cSvuPU9Wr4+/E0Jv1bkEzCdqSXghUUDzO3GO+Iug4Q
-         Xqgw==
+        bh=Cuozky+jSgphlfbjVUk1IVqqC1GBqHG5gttlN+XqLXo=;
+        b=R4tAJN9BMAIeHIEOwbmJtGyD4d+3Ds7r+l8AiT1Fmn70/GjHAsqJ6511vH7l35jo9/
+         QM2hV7IHtfFFf6HJM6h817nEResWqVL7ujRBqpyY6pknxqldvZqUtY5wtA7UBLPkzj1s
+         FIPnBP0xVcQSsrvwpEoVbr4CZMI9kUT6LM4Lrp8gjAwWiKabjYHHuecs4iC/wvi03CDb
+         X6ZprcuNlzhg0CVQg+SVZIYu5JVXEsTR+dtzbVC9G62HQI6A+bzV/L2TOgjYm+szVgbB
+         GXz4Y73ZVmdFuMGTuzRNvwQ4AKo44G0yIr6K5vE8PQYjyIVfCtVYNargRU4pRYihBlMK
+         a5nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727363417; x=1727968217;
+        d=1e100.net; s=20230601; t=1727364282; x=1727969082;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Qd5wd2EDy91T2PV08KE1FbhF8/gu2jxlRWd3WkzT05w=;
-        b=r+1bLkac+Zr6a97/6/+6Z0yA3/fP8owmAMMYfFWZOMMTQzK+Uu6KqsiM+961kYF1TI
-         vFT44VGCUUSwi40tQOGEbsrlOkOiJN5SQCpXHTihFnPD03BzmJyrktjspdT4PdwsGrve
-         GQdU83Z1wC1IM3BRgAhrxBO+3BI99eozVFgBlAx8cERDUbIiITJCSZOWzG0UztQbxIOt
-         25Jt15YCK845rwFv7U2jkgcorjlEOEFjGZh2x+i+veUlbJ/2D/HyY8zL8iIJN3QOtPld
-         YO/TZ9mxuhfge/ZrTYFtU7GMGbar7x1awlwyZltWa3j39w5+Ka0Ti+zuWk6lPeSTdHWe
-         2sww==
-X-Forwarded-Encrypted: i=1; AJvYcCWZKskXdlzJSgz2NLdtJDryx5w+Ra1nKfqKQWZ3swqLoNEekNzaOfv8/Or+vJwpyZjHj7Xhy5kI+LguStMxL9iC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7YhQAJqRwhmZZNOQn7MxmxwpjRiyPWlQyaNXmwXHppy20g7N3
-	Gv/NYtUA/PLx7orU+F0jEP6wmtpOepN1+jp5VkPOAgXaS6Nz+zsf5ytY8FkIoTvqiQSoPTpF8KT
-	DJMHMbpK4iqc8WGdlUlwDg9+Exfr6IkTGOElY
-X-Google-Smtp-Source: AGHT+IHqRahqJwKWGmO6jTznzohb0TucVdaEV7XZBmzejNts+U7KeuAbCH3+rT6TkZcAAe+lnGE5M4p+H4ijVdt+KEA=
-X-Received: by 2002:a17:902:fa8e:b0:1fc:719c:5d9 with SMTP id
- d9443c01a7336-20b203cad58mr2787815ad.25.1727363416347; Thu, 26 Sep 2024
- 08:10:16 -0700 (PDT)
+        bh=Cuozky+jSgphlfbjVUk1IVqqC1GBqHG5gttlN+XqLXo=;
+        b=QqSTd1BPPxNfS/xNhMCdTiwEUDrSWZSRj/i9v8MLwQB6yD7WaH/5uA5YrSItjwDTzM
+         jPAn2V/PJa9II/cccB5L+YF9WQMjmo11LNOL8nETNPApD0GBEafB/PyOd6q0YkW13TtU
+         WAKBjhXkUDY49iXsMaZNUig0hGbhYeIHj4yEpsLa7VKDDu1vekpDNmaiphL9d8BZMKrE
+         ztS3KzY9vxix3NLweYQAoWPRmpT/THr3N3XH1Tt2Of9xxS7qFIYE68e2q+wkUIGC8rix
+         cw5oKs8nfQKiwB+QhAcgQ1RKWOgkHlpwtUum5A0oHyMO4ftV7K3nMaVbr+QXGgjVMFe8
+         eXXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCjIeqj2JrutJ+QDhCxM4T7Em5ckNOTwtE8QtW4QDp44e4hs+36+v5jmAk+d0Ltzt1gplWBvexUa8Go98zwuwJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDUxFZqzGA9SCpCS7HiSE7zXTKDAoqElbmQ/d9fWy64HUKTXW6
+	JqrMKKGQpQC1A/g9Cyr6OvpjmAVJo7QegxdkhwiER++nkYcdcb0/vsl/0H8MU5jNlbIFi12xg4E
+	T1PHB3qjnPJTG0DnWAvCWWIkuXJffGgfLGKff
+X-Google-Smtp-Source: AGHT+IF+pkiQR5ZICxIzgaVR1r/qBi/cTigcDOdzamXJJzmngzf3LDyfiHsC0+kY+zgGFhP9nOwK2tLWIVBxqCTefIA=
+X-Received: by 2002:a05:6e02:b28:b0:3a0:926a:8d35 with SMTP id
+ e9e14a558f8ab-3a31b665b0amr3984075ab.17.1727364282140; Thu, 26 Sep 2024
+ 08:24:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240924160418.1391100-1-irogers@google.com> <20240924160418.1391100-10-irogers@google.com>
- <ZvSsB8bT3CTLT4B0@google.com>
-In-Reply-To: <ZvSsB8bT3CTLT4B0@google.com>
+References: <20240925173013.12789-1-irogers@google.com> <ZvTojjciV9pFbGJi@google.com>
+In-Reply-To: <ZvTojjciV9pFbGJi@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 26 Sep 2024 08:10:04 -0700
-Message-ID: <CAP-5=fWe-CAgNb7ULNJc0e+Kr0zxSJZNUuF1iTrB7J=ANcUwUw@mail.gmail.com>
-Subject: Re: [PATCH v1 09/11] perf build: Rename HAVE_DWARF_SUPPORT to HAVE_LIBDW_SUPPORT
+Date: Thu, 26 Sep 2024 08:24:30 -0700
+Message-ID: <CAP-5=fXJ-Nd-8EUPD+JXy=chZX_7nFYMxRR5L_ovn83+Tt1f_g@mail.gmail.com>
+Subject: Re: [PATCH v1] perf test: Ignore security failures in all PMU test
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>, 
-	Guilherme Amadio <amadio@gentoo.org>, Changbin Du <changbin.du@huawei.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Bibo Mao <maobibo@loongson.cn>, Kajol Jain <kjain@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Shenlin Liang <liangshenlin@eswincomputing.com>, 
-	Atish Patra <atishp@rivosinc.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Chen Pei <cp0613@linux.alibaba.com>, Dima Kogan <dima@secretsauce.net>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Yang Jihong <yangjihong@bytedance.com>
+	Colin Ian King <colin.i.king@gmail.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 25, 2024 at 5:34=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On Wed, Sep 25, 2024 at 9:52=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> On Tue, Sep 24, 2024 at 09:04:16AM -0700, Ian Rogers wrote:
-> > In Makefile.config for unwinding the name dwarf implies either
-> > libunwind or libdw. Make it clearer that HAVE_DWARF_SUPPORT is really
-> > just defined when libdw is present by renaming to HAVE_LIBDW_SUPPORT.
+> On Wed, Sep 25, 2024 at 10:30:13AM -0700, Ian Rogers wrote:
+> > Refactor code to have some more error diagnosis on traps, etc. and to
+> > do less work on each line. Add an ignore situation for security failure=
+s.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/Documentation/perf-check.txt         |  6 +++---
-> >  tools/perf/Makefile.config                      |  2 +-
-> >  tools/perf/arch/powerpc/annotate/instructions.c |  4 ++--
-> >  tools/perf/arch/x86/annotate/instructions.c     |  2 +-
-> >  tools/perf/builtin-annotate.c                   |  2 +-
-> >  tools/perf/builtin-check.c                      |  6 +++---
-> >  tools/perf/builtin-probe.c                      | 12 ++++++------
-> >  tools/perf/builtin-report.c                     |  4 ++--
-> >  tools/perf/util/annotate-data.h                 |  8 ++++----
-> >  tools/perf/util/debuginfo.h                     |  6 +++---
-> >  tools/perf/util/disasm.c                        |  4 ++--
-> >  tools/perf/util/disasm.h                        |  4 ++--
-> >  tools/perf/util/genelf.c                        |  4 ++--
-> >  tools/perf/util/genelf.h                        |  2 +-
-> >  tools/perf/util/include/dwarf-regs.h            |  6 +++---
-> >  tools/perf/util/probe-event.c                   |  4 ++--
-> >  tools/perf/util/probe-finder.h                  |  4 ++--
-> >  17 files changed, 40 insertions(+), 40 deletions(-)
+> >  tools/perf/tests/shell/stat_all_pmu.sh | 52 ++++++++++++++++++++------
+> >  1 file changed, 40 insertions(+), 12 deletions(-)
 > >
-> > diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Docum=
-entation/perf-check.txt
-> > index 45101a8e4154..31741499e786 100644
-> > --- a/tools/perf/Documentation/perf-check.txt
-> > +++ b/tools/perf/Documentation/perf-check.txt
-> > @@ -47,15 +47,15 @@ feature::
-> >                  bpf                     /  HAVE_LIBBPF_SUPPORT
-> >                  bpf_skeletons           /  HAVE_BPF_SKEL
-> >                  debuginfod              /  HAVE_DEBUGINFOD_SUPPORT
-> > -                dwarf                   /  HAVE_DWARF_SUPPORT
-> > -                dwarf_getlocations      /  HAVE_DWARF_SUPPORT
-> > +                dwarf                   /  HAVE_LIBDW_SUPPORT
-> > +                dwarf_getlocations      /  HAVE_LIBDW_SUPPORT
+> > diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/=
+shell/stat_all_pmu.sh
+> > index d2a3506e0d19..42456d89c5da 100755
+> > --- a/tools/perf/tests/shell/stat_all_pmu.sh
+> > +++ b/tools/perf/tests/shell/stat_all_pmu.sh
+> > @@ -1,23 +1,51 @@
+> > -#!/bin/sh
+> > +#!/bin/bash
+> >  # perf all PMU test
+> >  # SPDX-License-Identifier: GPL-2.0
+> >
+> >  set -e
+> > +err=3D0
+> > +result=3D""
+> > +
+> > +trap_cleanup() {
+> > +  echo "Unexpected signal in ${FUNCNAME[1]}"
+> > +  echo "$result"
+> > +  exit 1
+> > +}
+> > +trap trap_cleanup EXIT TERM INT
+> >
+> >  # Test all PMU events; however exclude parameterized ones (name contai=
+ns '?')
+> > -for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]=
+\+[[:space:]]//g'); do
+> > +for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]=
+\+[[:space:]]//g')
+> > +do
+> >    echo "Testing $p"
+> >    result=3D$(perf stat -e "$p" true 2>&1)
+> > -  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<n=
+ot supported>" ; then
+> > -    # We failed to see the event and it is supported. Possibly the wor=
+kload was
+> > -    # too small so retry with something longer.
+> > -    result=3D$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+> > -    if ! echo "$result" | grep -q "$p" ; then
+> > -      echo "Event '$p' not printed in:"
+> > -      echo "$result"
+> > -      exit 1
+> > -    fi
+> > +  if echo "$result" | grep -q "$p"
+> > +  then
+> > +    # Event seen in output.
+> > +    continue
+> > +  fi
+> > +  if echo "$result" | grep -q "<not supported>"
+> > +  then
+> > +    # Event not supported, so ignore.
+> > +    continue
 >
-> I'm not sure if we really want to display dwarf_getlocatiosn as it's too
-> implementation detail IMHO.  Maybe just 'dwarf' or 'libdw' is enough.
+> I'm curious about this case.  It'll show up even if it's not supported
+> right?  Then the first condition would match and it doesn't reach here.
+>
+>   $ perf stat -e LLC-loads true
+>
+>    Performance counter stats for 'true':
+>
+>      <not supported>      LLC-loads
+>
+>          0.001213558 seconds time elapsed
+>
+>          0.001373000 seconds user
+>          0.000000000 seconds sys
 
-I think that's follow up work. I think we should rename dwarf to libdw
-given the confusion using dwarf here can create.
+We carry this change at Google for an issue on older series kernels. I
+was resending the patch as a courtesy in the migration of development
+work to:
+https://github.com/googleprodkernel/linux-perf
+I'm okay with this being a Google only change.
 
 Thanks,
 Ian
 
+> > +  fi
+> > +  if echo "$result" | grep -q "Access to performance monitoring and ob=
+servability operations is limited."
+> > +  then
+> > +    # Access is limited, so ignore.
+> > +    continue
+> > +  fi
+> > +
+> > +  # We failed to see the event and it is supported. Possibly the workl=
+oad was
+> > +  # too small so retry with something longer.
+>
+> Ok, maybe we want to check "<not counted>" events specifically.
+>
 > Thanks,
 > Namhyung
 >
 >
-> >                  dwarf-unwind            /  HAVE_DWARF_UNWIND_SUPPORT
-> >                  auxtrace                /  HAVE_AUXTRACE_SUPPORT
-> >                  libaudit                /  HAVE_LIBAUDIT_SUPPORT
-> >                  libbfd                  /  HAVE_LIBBFD_SUPPORT
-> >                  libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
-> >                  libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
-> > -                libdw-dwarf-unwind      /  HAVE_DWARF_SUPPORT
-> > +                libdw-dwarf-unwind      /  HAVE_LIBDW_SUPPORT
-> >                  libelf                  /  HAVE_LIBELF_SUPPORT
-> >                  libnuma                 /  HAVE_LIBNUMA_SUPPORT
-> >                  libopencsd              /  HAVE_CSTRACE_SUPPORT
+> > +  result=3D$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+> > +  if echo "$result" | grep -q "$p"
+> > +  then
+> > +    # Event seen in output.
+> > +    continue
+> >    fi
+> > +  echo "Error: event '$p' not printed in:"
+> > +  echo "$result"
+> > +  err=3D1
+> >  done
+> >
+> > -exit 0
+> > +trap - EXIT TERM INT
+> > +exit $err
+> > --
+> > 2.46.0.792.g87dc391469-goog
+> >
