@@ -1,402 +1,177 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0B51422D4;
-	Thu, 26 Sep 2024 07:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9A417799F
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 12:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727337108; cv=none; b=MQmYSLFfX/9YFfbvrW/brK8Zu55gSE34lh3ozvEFr004lyRmrHtB9GAiEj0qhurA9G8Ky7/AmLDSnR2AUkLOvlCyejhVL3jRBF21+w+QaoJcr35oDs02A63WXFWkN5JgK8w6wvVbq2SPcHy37SUtfdivMMwlIKQEISMP9go/vbw=
+	t=1727353618; cv=none; b=Op0TYcWSCv6roWs/DOXoOpWUNvnJqwKCfnEZyE89Qd7C7DLdVFwD+iNHZgcb8/kJcPfSp43CX9Yd1wCI5RcH1HMNjTKcTDw3M6vEssWhS4Gvh+tufrHSWGkHE+/xqrjNEsQ6HAwpse0vZpW9vYyj4hvrLznD/s5ivxQEt5I1Wgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727337108; c=relaxed/simple;
-	bh=Marp1ysz5EDzMedroRcw1Zxg1Ygg2QsEVvVeJfhOWtc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DKI3UHP+0eFrZBijGq+wdS+pTkqFskN69iFYoKKiOcyXkS2Bv54GJ4He/v5g6HC9c2kgyJk7FXIzVoEZKpa3zfh8MlhjRrnej30CNuQxeDQJ+lLLVVq1nJJbQRBajmTo7xoNwEp8uGWHDE/PrH1Jk2SL53G03WBg9a9CbWqgc34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4XDm405nzFzySKc;
-	Thu, 26 Sep 2024 15:50:40 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-	by mail.maildlp.com (Postfix) with ESMTPS id CB439140393;
-	Thu, 26 Sep 2024 15:51:42 +0800 (CST)
-Received: from huawei.com (10.175.124.71) by kwepemm600003.china.huawei.com
- (7.193.23.202) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 26 Sep
- 2024 15:51:41 +0800
-From: Nanyong Sun <sunnanyong@huawei.com>
-To: <akpm@linux-foundation.org>, <mhiramat@kernel.org>, <oleg@redhat.com>,
-	<peterz@infradead.org>
-CC: <willy@infradead.org>, <wangkefeng.wang@huawei.com>,
-	<sunnanyong@huawei.com>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>
-Subject: [PATCH v3] mm: move mm flags to mm_types.h
-Date: Thu, 26 Sep 2024 15:49:22 +0800
-Message-ID: <20240926074922.2721274-1-sunnanyong@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1727353618; c=relaxed/simple;
+	bh=W1K4LUZoM1dpkDf1rPVbHtgMVLSGFsIkoB4l+0nrXWg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rJZgIqjzDU5efqAg1/KFkFR0WRPQ5LOPfnHHIro+tibkN/xpm8+iO/pNUUCIOJ7UCHE/034zvG6oWSyqUAFpJ62QjV9GnnudnKsYsHxJl8dI8gClSY/5OdXXOhJ3iyJ4trpKsnIlo/BKvrHQqOGLyksTim3S0JWbNBPW5kYfi8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gfIc4cc6; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gfIc4cc6"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a8a897bd4f1so128554966b.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2024 05:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1727353615; x=1727958415; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8eB/LC0WCkLRHYHqq55Ehj0gnBL7BMz7IH9VuKZNge8=;
+        b=gfIc4cc6DjZ34/raLrCgVzIfwqxM6Garlcqf8iQWdmRP7ff8PZ/r+SRoHy6Q7odqtq
+         AiiC6cYY33Ij3nKmeaPloudMJPBYkPBHsySoA6Md8zbAut8ycZNhkof6nJBKVf8NuwOk
+         MZNTOlwYkdhE9dWwNwd2gVRjdC15qipBM0PE5Yj3C7kNsWHQ7TWW/aLUdItd4JRu5IoX
+         1L77maFsgUTWBSKEfHVThIpRcb57eMGRoXEUOfOwT2V0w1FrMZkM8N1oqydaaUQQQg8q
+         31AUzIxY6f3ML1ohnzh5Zlneb8Q5IUWvOWrz7Cns/SXtYmsjZ9n6Y5KFbDwZNnIWPlWE
+         oiIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727353615; x=1727958415;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8eB/LC0WCkLRHYHqq55Ehj0gnBL7BMz7IH9VuKZNge8=;
+        b=E0zrDwyV1n70ierkg5q2JGSvYojX9ahoFvwh0l/TNfLJZfOrvIsJEfZ/84kbkf2HuP
+         fq+wZmD93y6lKXFSBB9VgEaOWtZRLhnt/74Vn/wnBBrcZmGeUWCdYNgn9ODjxmm4JS5q
+         bvAfFPyeFqNXFxuTptw2HZ3Q2mT3G4GDv3Rm/OOZn1fKDplJ9XMxg7mQSYNGPJEatjn5
+         GYwf9oU/izOgiDy3Vy4iuQJ+9gDzdgrHubbj0ZTBKZES1jbHYHx5mEY6c6sepeqI3MDC
+         W9P2nuIG6w0kB6D4MelXdjk30Wz1noD++PtZZ0zyNGn4s0NRjkygyAk3Jy5BbU+gpJJe
+         JjIg==
+X-Gm-Message-State: AOJu0YzLhpIRqVWNpAEHS+hv3kT71FgorYGi0eluSE53mje6RcjVweiI
+	zoCFYBqk4qBFzTuY2pqgBAhNVJ6EliPjqQSkbq8X2dhC4Hfe+Fcp273PFKCbWRE=
+X-Google-Smtp-Source: AGHT+IEby6swK1qKmKOhNp9ApnteMBewDC39/Ox0Bk0vbizMEUBN8yjxVubq07e6qVNDHlKPjcMkOw==
+X-Received: by 2002:a17:907:3f99:b0:a86:7fc3:8620 with SMTP id a640c23a62f3a-a93a03fefdfmr593049066b.31.1727353615307;
+        Thu, 26 Sep 2024 05:26:55 -0700 (PDT)
+Received: from [192.168.1.3] ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9392f541e4sm345619666b.66.2024.09.26.05.26.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Sep 2024 05:26:54 -0700 (PDT)
+Message-ID: <55f95839-5403-44e3-968c-ba0cc93bfb73@linaro.org>
+Date: Thu, 26 Sep 2024 13:26:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/7] Event parsing fixes
+To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, kan.liang@linux.intel.com,
+ ak@linux.intel.com, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Weilin Wang <weilin.wang@intel.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Colin Ian King <colin.i.king@gmail.com>, Yang Li
+ <yang.lee@linux.alibaba.com>, Yang Jihong <yangjihong@bytedance.com>,
+ Howard Chu <howardchu95@gmail.com>, Ze Gao <zegao2021@gmail.com>,
+ Yanteng Si <siyanteng@loongson.cn>, Jing Zhang <renyu.zj@linux.alibaba.com>,
+ Sun Haiyong <sunhaiyong@loongson.cn>, Yicong Yang
+ <yangyicong@hisilicon.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240925141357.1033087-1-james.clark@linaro.org>
+ <ZvTlUXJs2jVDDL0B@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <ZvTlUXJs2jVDDL0B@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The types of mm flags are now far beyond the core dump related features.
-This patch moves mm flags from linux/sched/coredump.h to linux/mm_types.h.
-The linux/sched/coredump.h has include the mm_types.h, so the C files
-related to coredump does not need to change head file inclusion.
-In addition, the inclusion of sched/coredump.h now can be deleted from
-the C files that irrelevant to core dump.
 
-Signed-off-by: Nanyong Sun <sunnanyong@huawei.com>
----
-v3:
-  Use more reasonable comment for bit0 & bit1 of mm flag.
-v2:
-  fix comment for bit0 & bit1 of mm flag after move them to mm_types.h
- include/linux/huge_mm.h        |  1 -
- include/linux/khugepaged.h     |  2 -
- include/linux/ksm.h            |  1 -
- include/linux/mm_types.h       | 84 ++++++++++++++++++++++++++++++++++
- include/linux/oom.h            |  1 -
- include/linux/sched/coredump.h | 82 ---------------------------------
- kernel/events/uprobes.c        |  1 -
- kernel/fork.c                  |  1 -
- mm/huge_memory.c               |  1 -
- mm/khugepaged.c                |  1 -
- mm/ksm.c                       |  1 -
- mm/memory.c                    |  1 -
- mm/oom_kill.c                  |  1 -
- 13 files changed, 84 insertions(+), 94 deletions(-)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 67d0ab3c3bba..5eb4b0376c7d 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -2,7 +2,6 @@
- #ifndef _LINUX_HUGE_MM_H
- #define _LINUX_HUGE_MM_H
- 
--#include <linux/sched/coredump.h>
- #include <linux/mm_types.h>
- 
- #include <linux/fs.h> /* only for vma_is_dax() */
-diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
-index 30baae91b225..1f46046080f5 100644
---- a/include/linux/khugepaged.h
-+++ b/include/linux/khugepaged.h
-@@ -2,8 +2,6 @@
- #ifndef _LINUX_KHUGEPAGED_H
- #define _LINUX_KHUGEPAGED_H
- 
--#include <linux/sched/coredump.h> /* MMF_VM_HUGEPAGE */
--
- extern unsigned int khugepaged_max_ptes_none __read_mostly;
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- extern struct attribute_group khugepaged_attr_group;
-diff --git a/include/linux/ksm.h b/include/linux/ksm.h
-index 11690dacd986..d4675416f0c2 100644
---- a/include/linux/ksm.h
-+++ b/include/linux/ksm.h
-@@ -13,7 +13,6 @@
- #include <linux/pagemap.h>
- #include <linux/rmap.h>
- #include <linux/sched.h>
--#include <linux/sched/coredump.h>
- 
- #ifdef CONFIG_KSM
- int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 6e3bdf8e38bc..ff8627acbaa7 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -1499,4 +1499,88 @@ enum {
- 	/* See also internal only FOLL flags in mm/internal.h */
- };
- 
-+/* mm flags */
-+
-+/*
-+ * The first two bits represent core dump modes for set-user-ID,
-+ * the modes are SUID_DUMP_* defined in linux/sched/coredump.h
-+ */
-+#define MMF_DUMPABLE_BITS 2
-+#define MMF_DUMPABLE_MASK ((1 << MMF_DUMPABLE_BITS) - 1)
-+/* coredump filter bits */
-+#define MMF_DUMP_ANON_PRIVATE	2
-+#define MMF_DUMP_ANON_SHARED	3
-+#define MMF_DUMP_MAPPED_PRIVATE	4
-+#define MMF_DUMP_MAPPED_SHARED	5
-+#define MMF_DUMP_ELF_HEADERS	6
-+#define MMF_DUMP_HUGETLB_PRIVATE 7
-+#define MMF_DUMP_HUGETLB_SHARED  8
-+#define MMF_DUMP_DAX_PRIVATE	9
-+#define MMF_DUMP_DAX_SHARED	10
-+
-+#define MMF_DUMP_FILTER_SHIFT	MMF_DUMPABLE_BITS
-+#define MMF_DUMP_FILTER_BITS	9
-+#define MMF_DUMP_FILTER_MASK \
-+	(((1 << MMF_DUMP_FILTER_BITS) - 1) << MMF_DUMP_FILTER_SHIFT)
-+#define MMF_DUMP_FILTER_DEFAULT \
-+	((1 << MMF_DUMP_ANON_PRIVATE) |	(1 << MMF_DUMP_ANON_SHARED) |\
-+	 (1 << MMF_DUMP_HUGETLB_PRIVATE) | MMF_DUMP_MASK_DEFAULT_ELF)
-+
-+#ifdef CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS
-+# define MMF_DUMP_MASK_DEFAULT_ELF	(1 << MMF_DUMP_ELF_HEADERS)
-+#else
-+# define MMF_DUMP_MASK_DEFAULT_ELF	0
-+#endif
-+					/* leave room for more dump flags */
-+#define MMF_VM_MERGEABLE	16	/* KSM may merge identical pages */
-+#define MMF_VM_HUGEPAGE		17	/* set when mm is available for khugepaged */
-+
-+/*
-+ * This one-shot flag is dropped due to necessity of changing exe once again
-+ * on NFS restore
-+ */
-+//#define MMF_EXE_FILE_CHANGED	18	/* see prctl_set_mm_exe_file() */
-+
-+#define MMF_HAS_UPROBES		19	/* has uprobes */
-+#define MMF_RECALC_UPROBES	20	/* MMF_HAS_UPROBES can be wrong */
-+#define MMF_OOM_SKIP		21	/* mm is of no interest for the OOM killer */
-+#define MMF_UNSTABLE		22	/* mm is unstable for copy_from_user */
-+#define MMF_HUGE_ZERO_PAGE	23      /* mm has ever used the global huge zero page */
-+#define MMF_DISABLE_THP		24	/* disable THP for all VMAs */
-+#define MMF_DISABLE_THP_MASK	(1 << MMF_DISABLE_THP)
-+#define MMF_OOM_REAP_QUEUED	25	/* mm was queued for oom_reaper */
-+#define MMF_MULTIPROCESS	26	/* mm is shared between processes */
-+/*
-+ * MMF_HAS_PINNED: Whether this mm has pinned any pages.  This can be either
-+ * replaced in the future by mm.pinned_vm when it becomes stable, or grow into
-+ * a counter on its own. We're aggresive on this bit for now: even if the
-+ * pinned pages were unpinned later on, we'll still keep this bit set for the
-+ * lifecycle of this mm, just for simplicity.
-+ */
-+#define MMF_HAS_PINNED		27	/* FOLL_PIN has run, never cleared */
-+
-+#define MMF_HAS_MDWE		28
-+#define MMF_HAS_MDWE_MASK	(1 << MMF_HAS_MDWE)
-+
-+
-+#define MMF_HAS_MDWE_NO_INHERIT	29
-+
-+#define MMF_VM_MERGE_ANY	30
-+#define MMF_VM_MERGE_ANY_MASK	(1 << MMF_VM_MERGE_ANY)
-+
-+#define MMF_TOPDOWN		31	/* mm searches top down by default */
-+#define MMF_TOPDOWN_MASK	(1 << MMF_TOPDOWN)
-+
-+#define MMF_INIT_MASK		(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
-+				 MMF_DISABLE_THP_MASK | MMF_HAS_MDWE_MASK |\
-+				 MMF_VM_MERGE_ANY_MASK | MMF_TOPDOWN_MASK)
-+
-+static inline unsigned long mmf_init_flags(unsigned long flags)
-+{
-+	if (flags & (1UL << MMF_HAS_MDWE_NO_INHERIT))
-+		flags &= ~((1UL << MMF_HAS_MDWE) |
-+			   (1UL << MMF_HAS_MDWE_NO_INHERIT));
-+	return flags & MMF_INIT_MASK;
-+}
-+
- #endif /* _LINUX_MM_TYPES_H */
-diff --git a/include/linux/oom.h b/include/linux/oom.h
-index 7d0c9c48a0c5..1e0fc6931ce9 100644
---- a/include/linux/oom.h
-+++ b/include/linux/oom.h
-@@ -7,7 +7,6 @@
- #include <linux/types.h>
- #include <linux/nodemask.h>
- #include <uapi/linux/oom.h>
--#include <linux/sched/coredump.h> /* MMF_* */
- #include <linux/mm.h> /* VM_FAULT* */
- 
- struct zonelist;
-diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredump.h
-index e62ff805cfc9..6eb65ceed213 100644
---- a/include/linux/sched/coredump.h
-+++ b/include/linux/sched/coredump.h
-@@ -8,12 +8,6 @@
- #define SUID_DUMP_USER		1	/* Dump as user of process */
- #define SUID_DUMP_ROOT		2	/* Dump as root */
- 
--/* mm flags */
--
--/* for SUID_DUMP_* above */
--#define MMF_DUMPABLE_BITS 2
--#define MMF_DUMPABLE_MASK ((1 << MMF_DUMPABLE_BITS) - 1)
--
- extern void set_dumpable(struct mm_struct *mm, int value);
- /*
-  * This returns the actual value of the suid_dumpable flag. For things
-@@ -31,80 +25,4 @@ static inline int get_dumpable(struct mm_struct *mm)
- 	return __get_dumpable(mm->flags);
- }
- 
--/* coredump filter bits */
--#define MMF_DUMP_ANON_PRIVATE	2
--#define MMF_DUMP_ANON_SHARED	3
--#define MMF_DUMP_MAPPED_PRIVATE	4
--#define MMF_DUMP_MAPPED_SHARED	5
--#define MMF_DUMP_ELF_HEADERS	6
--#define MMF_DUMP_HUGETLB_PRIVATE 7
--#define MMF_DUMP_HUGETLB_SHARED  8
--#define MMF_DUMP_DAX_PRIVATE	9
--#define MMF_DUMP_DAX_SHARED	10
--
--#define MMF_DUMP_FILTER_SHIFT	MMF_DUMPABLE_BITS
--#define MMF_DUMP_FILTER_BITS	9
--#define MMF_DUMP_FILTER_MASK \
--	(((1 << MMF_DUMP_FILTER_BITS) - 1) << MMF_DUMP_FILTER_SHIFT)
--#define MMF_DUMP_FILTER_DEFAULT \
--	((1 << MMF_DUMP_ANON_PRIVATE) |	(1 << MMF_DUMP_ANON_SHARED) |\
--	 (1 << MMF_DUMP_HUGETLB_PRIVATE) | MMF_DUMP_MASK_DEFAULT_ELF)
--
--#ifdef CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS
--# define MMF_DUMP_MASK_DEFAULT_ELF	(1 << MMF_DUMP_ELF_HEADERS)
--#else
--# define MMF_DUMP_MASK_DEFAULT_ELF	0
--#endif
--					/* leave room for more dump flags */
--#define MMF_VM_MERGEABLE	16	/* KSM may merge identical pages */
--#define MMF_VM_HUGEPAGE		17	/* set when mm is available for
--					   khugepaged */
--/*
-- * This one-shot flag is dropped due to necessity of changing exe once again
-- * on NFS restore
-- */
--//#define MMF_EXE_FILE_CHANGED	18	/* see prctl_set_mm_exe_file() */
--
--#define MMF_HAS_UPROBES		19	/* has uprobes */
--#define MMF_RECALC_UPROBES	20	/* MMF_HAS_UPROBES can be wrong */
--#define MMF_OOM_SKIP		21	/* mm is of no interest for the OOM killer */
--#define MMF_UNSTABLE		22	/* mm is unstable for copy_from_user */
--#define MMF_HUGE_ZERO_PAGE	23      /* mm has ever used the global huge zero page */
--#define MMF_DISABLE_THP		24	/* disable THP for all VMAs */
--#define MMF_DISABLE_THP_MASK	(1 << MMF_DISABLE_THP)
--#define MMF_OOM_REAP_QUEUED	25	/* mm was queued for oom_reaper */
--#define MMF_MULTIPROCESS	26	/* mm is shared between processes */
--/*
-- * MMF_HAS_PINNED: Whether this mm has pinned any pages.  This can be either
-- * replaced in the future by mm.pinned_vm when it becomes stable, or grow into
-- * a counter on its own. We're aggresive on this bit for now: even if the
-- * pinned pages were unpinned later on, we'll still keep this bit set for the
-- * lifecycle of this mm, just for simplicity.
-- */
--#define MMF_HAS_PINNED		27	/* FOLL_PIN has run, never cleared */
--
--#define MMF_HAS_MDWE		28
--#define MMF_HAS_MDWE_MASK	(1 << MMF_HAS_MDWE)
--
--
--#define MMF_HAS_MDWE_NO_INHERIT	29
--
--#define MMF_VM_MERGE_ANY	30
--#define MMF_VM_MERGE_ANY_MASK	(1 << MMF_VM_MERGE_ANY)
--
--#define MMF_TOPDOWN		31	/* mm searches top down by default */
--#define MMF_TOPDOWN_MASK	(1 << MMF_TOPDOWN)
--
--#define MMF_INIT_MASK		(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
--				 MMF_DISABLE_THP_MASK | MMF_HAS_MDWE_MASK |\
--				 MMF_VM_MERGE_ANY_MASK | MMF_TOPDOWN_MASK)
--
--static inline unsigned long mmf_init_flags(unsigned long flags)
--{
--	if (flags & (1UL << MMF_HAS_MDWE_NO_INHERIT))
--		flags &= ~((1UL << MMF_HAS_MDWE) |
--			   (1UL << MMF_HAS_MDWE_NO_INHERIT));
--	return flags & MMF_INIT_MASK;
--}
--
- #endif /* _LINUX_SCHED_COREDUMP_H */
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 2ec796e2f055..3d49d59079b9 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -15,7 +15,6 @@
- #include <linux/slab.h>
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/export.h>
- #include <linux/rmap.h>		/* anon_vma_prepare */
- #include <linux/mmu_notifier.h>
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 60c0b4868fd4..549d7aa3bea6 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -16,7 +16,6 @@
- #include <linux/slab.h>
- #include <linux/sched/autogroup.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/sched/user.h>
- #include <linux/sched/numa_balancing.h>
- #include <linux/sched/stat.h>
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 0580ac9e47b9..13bf59b84075 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -8,7 +8,6 @@
- #include <linux/mm.h>
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/sched/numa_balancing.h>
- #include <linux/highmem.h>
- #include <linux/hugetlb.h>
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index f9c39898eaff..f8d59a4b5ecd 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -4,7 +4,6 @@
- #include <linux/mm.h>
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/mmu_notifier.h>
- #include <linux/rmap.h>
- #include <linux/swap.h>
-diff --git a/mm/ksm.c b/mm/ksm.c
-index a2e2a521df0a..dec536d6d91a 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -20,7 +20,6 @@
- #include <linux/mman.h>
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/sched/cputime.h>
- #include <linux/rwsem.h>
- #include <linux/pagemap.h>
-diff --git a/mm/memory.c b/mm/memory.c
-index 2366578015ad..d990fb1d6233 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -44,7 +44,6 @@
- #include <linux/mm.h>
- #include <linux/mm_inline.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/sched/numa_balancing.h>
- #include <linux/sched/task.h>
- #include <linux/hugetlb.h>
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index 4d7a0004df2c..1c485beb0b93 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -24,7 +24,6 @@
- #include <linux/gfp.h>
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/sched/task.h>
- #include <linux/sched/debug.h>
- #include <linux/swap.h>
--- 
-2.33.0
+On 26/09/2024 5:38 am, Namhyung Kim wrote:
+> On Wed, Sep 25, 2024 at 03:13:38PM +0100, James Clark wrote:
+>> I rebased this one and made some other fixes so that I could test it,
+>> so I thought I'd repost it here in case it's helpful. I also added a
+>> new test.
+>>
+>> But for the testing it all looks ok.
+>>
+>> There is one small difference where it now hides _all_ default
+>> <not supported> events, when previously it would only hide some
+>> selected subset of events like "stalled-cycles-frontend". I think
+>> this is now more consistent across platforms because, for example,
+>> Apple M only has cycles and instructions, and the rest of the
+>> default events would always show as <not supported> there.
+>>
+>> Tested on Raptor Lake, Kaby Lake, Juno, N1, Ampere (with the DSU
+>> cycles PMU) and I also faked an Apple M on Juno.
+> 
+> Hmm.. I got a segfault with 'perf stat true' on my Zen2 box.
+> 
+>    $ gdb -q -args ./perf stat true
+>    Reading symbols from ./perf...
+>    (gdb) r
+>    Starting program: /home/namhyung/tmp/perf stat true
+>    [Thread debugging using libthread_db enabled]
+>    Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+>    
+>    Program received signal SIGSEGV, Segmentation fault.
+>    0x00005555557e04b5 in perf_pmu__is_fake (pmu=0x0) at util/pmu.c:1173
+>    1173		return pmu->type == PERF_PMU_TYPE_FAKE;
+>    (gdb) bt
+>    #0  0x00005555557e04b5 in perf_pmu__is_fake (pmu=0x0) at util/pmu.c:1173
+>    #1  0x00005555558c1b8b in evsel__sys_has_perf_metrics (evsel=0x5555560cc4b0) at arch/x86/util/evsel.c:50
+>    #2  0x00005555558c1c33 in arch_evsel__must_be_in_group (evsel=0x5555560cc4b0) at arch/x86/util/evsel.c:64
+>    #3  0x00005555557773a4 in parse_events__sort_events_and_fix_groups (list=0x7fffffff9ad0) at util/parse-events.c:2098
+>    #4  0x0000555555777793 in __parse_events (evlist=0x5555560aa880,
+>        str=0x5555558d6498 "context-switches,cpu-migrations,page-faults,instructions,cycles,stalled-cycles-frontend,stalled-cycles-backend,branches,branch-misses", pmu_filter=0x0, err=0x7fffffff9bd0, fake_pmu=false, warn_if_reordered=true, fake_tp=false) at util/parse-events.c:2186
+>    #5  0x00005555555c787f in parse_events (evlist=0x5555560aa880,
+>        str=0x5555558d6498 "context-switches,cpu-migrations,page-faults,instructions,cycles,stalled-cycles-frontend,stalled-cycles-backend,branches,branch-misses", err=0x7fffffff9bd0) at util/parse-events.h:41
+>    #6  0x00005555555cce39 in add_default_events () at builtin-stat.c:1977
+>    #7  0x00005555555cf928 in cmd_stat (argc=1, argv=0x7fffffffd840) at builtin-stat.c:2724
+>    #8  0x000055555564cb81 in run_builtin (p=0x555556024548 <commands+360>, argc=2, argv=0x7fffffffd840) at perf.c:351
+>    #9  0x000055555564ce28 in handle_internal_command (argc=2, argv=0x7fffffffd840) at perf.c:404
+>    #10 0x000055555564cf81 in run_argv (argcp=0x7fffffffd63c, argv=0x7fffffffd630) at perf.c:448
+>    #11 0x000055555564d2cf in main (argc=2, argv=0x7fffffffd840) at perf.c:562
+> 
+> Thanks,
+> Namhyung
+> 
+
+Oh yeah that's from the rebase. Looks like pmu is never NULL here on Arm 
+and hybrid x86 so I didn't see it, but I do see it on non-hybrid x86. It 
+just needs a NULL check:
+
+   bool evsel__sys_has_perf_metrics(const struct evsel *evsel)
+   {
+   ...
+   	pmu = evsel->pmu;
+	if (pmu && perf_pmu__is_fake(pmu))
+		pmu = NULL;
+
+I also noticed a new issue though, the change to make all default stat 
+events skippable=true hides permission errors, so now instead of the 
+hint to look at perf_event_paranoid you just get nothing, so I need to 
+fix that:
+
+   $ cat /proc/sys/kernel/perf_event_paranoid
+   4
+
+   $ perf stat true
+
+     Performance counter stats for 'true':
+
+
+        0.000431617 seconds time elapsed
+
+        0.000445000 seconds user
+        0.000000000 seconds sys
+
+I'm thinking it either needs to never skip EPERM or some other errors, 
+or maybe make cycles always non skippable. Probably the first option is 
+better.
+
+James
 
