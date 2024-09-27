@@ -1,52 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C4B166F23;
-	Fri, 27 Sep 2024 17:00:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F58414A60D;
+	Fri, 27 Sep 2024 17:01:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727456447; cv=none; b=dMKJsT0zPQIzwMPyr609zHj5VI6jc/aSdTI2Wz+VRwHWpNF5SyBUiujjZ5I1kijsJk1wiBlp7f2/vEjQerqoB/BdWCGhqPoUcBqSXthPAaLyqegM3MARVYrLZ3cCjkxmAe8tzMHp+KxlBlIg1Mhld4WLULKOFJqDlIztWoWOfgg=
+	t=1727456471; cv=none; b=WH3XNzVPigIO2CgU3/dgtFWNvTudwuq7m7Aia4sTwqjkDrzs9pW1PRkXqOvj33o7/N0wV2LBlG7hPhvZbSsa+eEw4OruUvf6P9fcHQX8SWxiTElzB+Bp9f0AeAH244VWedmKGqZSrPPfEEvq1yuRz6LNZ49v14tzQlGkM2fQA3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727456447; c=relaxed/simple;
-	bh=HnRVvdl2aAbwT0oFFIOZ7w76FvQosjDiVk1tz/KPo58=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eH373MblhN+UD30xpNjKlF7gy8iprTnk+EaabWeePY+nRVyJ9ZjVN/IHL9FoV0SzAuwlO+wVow5rY9Zc0a+uaJ+AXwLDylN1PCRnwrt60f/0dENJcBulIxZ9RHjByNcs/FSZuXM557XG088rs5P3elBCwmgWFEe2zX/jp91KAbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PRIRBYBR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727456471; c=relaxed/simple;
+	bh=nfGmlZyKWXhUfyL6Uiib+V6OTJ4RlkJGw/X7+drkjlM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gmiz4Q627ohokaoWku7LbmL+fAHY5ckb1K5MAwbNq5lNfoiRZCc/8hcGHIywcNVtqpQayfz1vYMQ1q2ISL6NHfGBCEgffg8JHMDH4HAXjRNNj2hUkDK7vhIhRYjECb03a67shGGu0MBc3jRmVD+Gp5iX0FqvViJwRuONcchVwQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTw96Rs1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PRIRBYBR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE16CC4CEC4;
-	Fri, 27 Sep 2024 17:00:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTw96Rs1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9902C4CEC4;
+	Fri, 27 Sep 2024 17:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727456447;
-	bh=HnRVvdl2aAbwT0oFFIOZ7w76FvQosjDiVk1tz/KPo58=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=PRIRBYBRHl9/xZPJ+5vkeFKD9l+iyl4k7W4jwems6/UIEoHFZkMYQwY4EzyvoXNZ+
-	 80mp/9ERToeRe31yLFFm/1LOkxHg0cR9E8kGaMy5Yiu8V2D8w4GxQsaHI8Xn2olOQS
-	 lPPgZSOrjGGVbieIlRBZDXr68czZGF3/IrHnc16T6m2bQEC6uC0etcrt7jbLvB3bqQ
-	 w9voRFcrfJQr/rbWjImKrHKj2o17L5zFiH8+u9nms8byMgMY5S55ISmRXo9Dn2FAa4
-	 sZJq2kMoRHW9Nj8nj6RBJZGAEd2MWt8nQO459g/Z+CBThjPll44JyZRSD662gGovBT
-	 r9ME/aC4k8FFA==
+	s=k20201202; t=1727456470;
+	bh=nfGmlZyKWXhUfyL6Uiib+V6OTJ4RlkJGw/X7+drkjlM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XTw96Rs1ZIJojJO96JoYyIDBVRCIgtfWDpblW7u8j1g8e/5zYBwyg74qGrgHMhA5R
+	 RUy3EzZXOUZg5d3koSTpP++joVB7E/Bl23WXNH2XtLWMw+RR0dRA1biOTLGBKF0oqb
+	 AKSamoePIKPjx2hXUcvhBhifs8InCJz+tXn2/btjcbVq+LI0sAG7W8OeVkG80Svujt
+	 iCIWrNi11sDOB9l8qE3YpgaKTnzyJw8jzttguMimTbkQkR4cTlmuAQbhf0a0umTogC
+	 77m8oGWkUFiYs2OL3ySzXCqbxlJrts4p3qDD4NEpTKFJHJljB7Bf+yEUrJLgaf4d2t
+	 QsJJMtfLprr1Q==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	acme@redhat.com,
-	linux-perf-users <linux-perf-users@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Subject: Re: [PATCH] perf sched replay: Remove unused parts of the code
-Date: Fri, 27 Sep 2024 10:00:44 -0700
-Message-ID: <172745643154.248797.14825087652419796856.b4-ty@kernel.org>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	Thomas Falcon <thomas.falcon@intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	leo.yan@arm.com
+Subject: Re: [PATCH v2] perf mem: Fix printing PERF_MEM_LVLNUM_{L2_MHB|MSC}
+Date: Fri, 27 Sep 2024 10:01:08 -0700
+Message-ID: <172745645324.248940.2142953233468778675.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
-In-Reply-To: <20240917090100.42783-1-vineethr@linux.ibm.com>
-References: <20240917090100.42783-1-vineethr@linux.ibm.com>
+In-Reply-To: <20240926144040.77897-1-thomas.falcon@intel.com>
+References: <20240926144040.77897-1-thomas.falcon@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,14 +55,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 17 Sep 2024 14:31:00 +0530, Madadi Vineeth Reddy wrote:
+On Thu, 26 Sep 2024 09:40:40 -0500, Thomas Falcon wrote:
 
-> The sleep_sem semaphore and the specific_wait field (member of sched_atom)
-> are initialized but not used anywhere in the code, so this patch removes
-> them.
-> 
-> The SCHED_EVENT_MIGRATION case in perf_sched__process_event() is currently
-> not used and is also removed.
+> With commit 8ec9497d3ef34 ("tools/include: Sync uapi/linux/perf.h
+> with the kernel sources"), 'perf mem report' gives an incorrect memory
+> access string.
+> ...
+> 0.02%	1	3644	L5 hit	[.] 0x0000000000009b0e	mlc	[.] 0x00007fce43f59480
+> ...
 > 
 > [...]
 
