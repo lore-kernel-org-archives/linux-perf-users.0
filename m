@@ -1,197 +1,168 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5DA7165EE8
-	for <linux-perf-users@vger.kernel.org>; Sat, 28 Sep 2024 19:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAB3469D;
+	Sun, 29 Sep 2024 00:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727553369; cv=none; b=OehqOhnHcmCQ0z4aMuF+I/A33hHcK/D27B3eP7b9ItJm+8tTsEBP9vsNnGs7zdXX5GCB1+64qfw2PNlIfJpNafKR9LrdnPPsKQBoM2QFVKGLw4F/MxFYbaXrbwkBwbXxdvmHh50MRfsaSc36/dMs2+7VYqu80zBAeBgcEDNyRn8=
+	t=1727571292; cv=none; b=M/PNxDf/bgVbr3WEe6N6tv29l5KNXGBUUa47k49USwqrc4s4D4wWLeW9CFY75CQhmvdnhu0/o5z8PovfTtNV5gY6EgquHLsa9Pw2ftyh44TiyCoz5wHiJ5foBPKHY5OEVN2v5LacJAWgl4dcdYUyCgWcg08HeJdp58YpIKTHhMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727553369; c=relaxed/simple;
-	bh=0v56+alXwgwoB+t2kiaFN9SldI6XNwRfbj4JkiUG5uw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YVPLfkUfSkGgfvh4Md1U5Wrh/8eQJ2Wrz3BmxdcaGD34RE5rJaewcOTyrVoe5npd235yM0i98H2/ZW8P46+vH4rkUFpmRkwIEZjg2seNBt54RgCn7NxP4Eyux+LKgA/bR3u6ZMQQxK3SZgsJto0XxonOVpETtZ0UiToEoucRQDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C575D12FC;
-	Sat, 28 Sep 2024 12:56:36 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 636943F64C;
-	Sat, 28 Sep 2024 12:56:05 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Besar Wicaksono <bwicaksono@nvidia.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v3 5/5] perf arm-spe: Dump metadata with version 2
-Date: Sat, 28 Sep 2024 20:55:47 +0100
-Message-Id: <20240928195547.59780-6-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240928195547.59780-1-leo.yan@arm.com>
-References: <20240928195547.59780-1-leo.yan@arm.com>
+	s=arc-20240116; t=1727571292; c=relaxed/simple;
+	bh=2B/0qFrZ4MvrYvu29+Wu+zlHj4pQsCk+raaWBiQzTm4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dtpSrbaVowVBE9AdiZ0TtJl+4eHKDyUFidTcLKOjLATs6JTCM3W/AC0NQ8BXg1ROHVcOhb6hHRVKM7+miSxAN52JBet76d6wHgpittPx4M6qAi6flxUeuwze/ffs4t6JlmNdHkZsloFAnr3MIVvk5KiX3MJ5Gsz/p/UQ/YiI+yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4XGQhJ2vq7z4f3jdn;
+	Sun, 29 Sep 2024 08:54:24 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id C88A21A0B1F;
+	Sun, 29 Sep 2024 08:54:40 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP4 (Coremail) with SMTP id gCh0CgC3N8ROpfhmE0uNCg--.34615S2;
+	Sun, 29 Sep 2024 08:54:39 +0800 (CST)
+Message-ID: <1222cf96-0382-4396-bb2d-475615070ccf@huaweicloud.com>
+Date: Sun, 29 Sep 2024 08:54:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next 1/2] perf stat: Increase perf_attr_map entries
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, song@kernel.org,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20240925135523.367957-1-wutengda@huaweicloud.com>
+ <20240925135523.367957-2-wutengda@huaweicloud.com>
+ <ZvTgHKl4eZvpyVml@google.com>
+ <41d1d728-dbf4-4b0d-9855-19cd06e2a594@huaweicloud.com>
+ <ZvbnePGVmbWF0fAF@google.com>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <ZvbnePGVmbWF0fAF@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgC3N8ROpfhmE0uNCg--.34615S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxZw4DZFW3uFW8Aw4kXr1xGrg_yoW5tr1rpF
+	W8CF9FyF45Xr1UGw1Yv3ZIvF9Ygw45Wr45Wr13t3y0yF1qgr13KFWIqr4Y9FyxtrZ2yryY
+	qw4jqrW7ua90vaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
+	v3UUUUU
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-This commit dumps metadata with version 2. It dumps metadata for header
-and per CPU data respectively in the arm_spe_print_info() function to
-support metadata version 2 format.
 
-After:
 
-  0 0 0x3c0 [0x1b0]: PERF_RECORD_AUXTRACE_INFO type: 4
-    Header version     :2
-    Header size        :4
-    Shared PMU type    :13
-    CPU number         :8
-      Magic            :0x1010101010101010
-      CPU #            :0
-      Num of params    :3
-      MIDR             :0x410fd801
-      PMU Type         :-1
-      Min Interval     :0
-      Magic            :0x1010101010101010
-      CPU #            :1
-      Num of params    :3
-      MIDR             :0x410fd801
-      PMU Type         :-1
-      Min Interval     :0
-      Magic            :0x1010101010101010
-      CPU #            :2
-      Num of params    :3
-      MIDR             :0x410fd870
-      PMU Type         :13
-      Min Interval     :1024
-      Magic            :0x1010101010101010
-      CPU #            :3
-      Num of params    :3
-      MIDR             :0x410fd870
-      PMU Type         :13
-      Min Interval     :1024
-      Magic            :0x1010101010101010
-      CPU #            :4
-      Num of params    :3
-      MIDR             :0x410fd870
-      PMU Type         :13
-      Min Interval     :1024
-      Magic            :0x1010101010101010
-      CPU #            :5
-      Num of params    :3
-      MIDR             :0x410fd870
-      PMU Type         :13
-      Min Interval     :1024
-      Magic            :0x1010101010101010
-      CPU #            :6
-      Num of params    :3
-      MIDR             :0x410fd850
-      PMU Type         :-1
-      Min Interval     :0
-      Magic            :0x1010101010101010
-      CPU #            :7
-      Num of params    :3
-      MIDR             :0x410fd850
-      PMU Type         :-1
-      Min Interval     :0
+On 2024/9/28 1:12, Namhyung Kim wrote:
+> On Fri, Sep 27, 2024 at 10:35:54AM +0800, Tengda Wu wrote:
+>>
+>>
+>> On 2024/9/26 12:16, Namhyung Kim wrote:
+>>> On Wed, Sep 25, 2024 at 01:55:22PM +0000, Tengda Wu wrote:
+>>>> bperf restricts the size of perf_attr_map's entries to 16, which
+>>>> cannot hold all events in many scenarios. A typical example is
+>>>> when the user specifies `-a -ddd` ([0]). And in other cases such as
+>>>> top-down analysis, which often requires a set of more than 16 PMUs
+>>>> to be collected simultaneously.
+>>>>
+>>>> Fix this by increase perf_attr_map entries to 100, and an event
+>>>> number check has been introduced when bperf__load() to ensure that
+>>>> users receive a more friendly prompt when the event limit is reached.
+>>>>
+>>>>   [0] https://lore.kernel.org/all/20230104064402.1551516-3-namhyung@kernel.org/
+>>>
+>>> Apparently this patch was never applied.  I don't know how much you need
+>>> but having too many events at the same time won't be very useful because
+>>> multiplexing could reduce the accuracy.
+>>>
+>>
+>> Could you please explain why patch [0] was not merged at that time? I couldn't
+>> find this information from the previous emails.
+> 
+> I guess it's just fell through the crack. :)
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/util/arm-spe.c | 54 +++++++++++++++++++++++++++++++++++----
- 1 file changed, 49 insertions(+), 5 deletions(-)
+Hope it won't happen again. 😆
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 52cee7401ff4..8a2da725670f 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -1133,16 +1133,60 @@ static bool arm_spe_evsel_is_auxtrace(struct perf_session *session,
- 	return evsel->core.attr.type == spe->pmu_type;
- }
- 
--static const char * const arm_spe_info_fmts[] = {
--	[ARM_SPE_PMU_TYPE]		= "  PMU Type           %"PRId64"\n",
-+static const char * const metadata_hdr_v1_fmts[] = {
-+	[ARM_SPE_PMU_TYPE]		= "  PMU Type           :%"PRId64"\n",
-+	[ARM_SPE_PER_CPU_MMAPS]		= "  Per CPU mmaps      :%"PRId64"\n",
- };
- 
--static void arm_spe_print_info(__u64 *arr)
-+static const char * const metadata_hdr_fmts[] = {
-+	[ARM_SPE_HEADER_VERSION]	= "  Header version     :%"PRId64"\n",
-+	[ARM_SPE_HEADER_SIZE]		= "  Header size        :%"PRId64"\n",
-+	[ARM_SPE_SHARED_PMU_TYPE]	= "  Shared PMU type    :%"PRId64"\n",
-+	[ARM_SPE_CPUS_NUM]		= "  CPU number         :%"PRId64"\n",
-+};
-+
-+static const char * const metadata_per_cpu_fmts[] = {
-+	[ARM_SPE_MAGIC]			= "    Magic            :0x%"PRIx64"\n",
-+	[ARM_SPE_CPU]			= "    CPU #            :%"PRId64"\n",
-+	[ARM_SPE_CPU_NR_PARAMS]		= "    Num of params    :%"PRId64"\n",
-+	[ARM_SPE_CPU_MIDR]		= "    MIDR             :0x%"PRIx64"\n",
-+	[ARM_SPE_CPU_PMU_TYPE]		= "    PMU Type         :%"PRId64"\n",
-+	[ARM_SPE_CAP_MIN_IVAL]		= "    Min Interval     :%"PRId64"\n",
-+};
-+
-+static void arm_spe_print_info(struct arm_spe *spe, __u64 *arr)
- {
-+	unsigned int i, cpu, hdr_size, cpu_num, cpu_size;
-+	const char * const *hdr_fmts;
-+
- 	if (!dump_trace)
- 		return;
- 
--	fprintf(stdout, arm_spe_info_fmts[ARM_SPE_PMU_TYPE], arr[ARM_SPE_PMU_TYPE]);
-+	if (spe->metadata_ver == 1) {
-+		cpu_num = 0;
-+		hdr_size = ARM_SPE_AUXTRACE_V1_PRIV_MAX;
-+		hdr_fmts = metadata_hdr_v1_fmts;
-+	} else {
-+		cpu_num = arr[ARM_SPE_CPUS_NUM];
-+		hdr_size = arr[ARM_SPE_HEADER_SIZE];
-+		hdr_fmts = metadata_hdr_fmts;
-+	}
-+
-+	for (i = 0; i < hdr_size; i++)
-+		fprintf(stdout, hdr_fmts[i], arr[i]);
-+
-+	arr += hdr_size;
-+	for (cpu = 0; cpu < cpu_num; cpu++) {
-+		/*
-+		 * The parameters from ARM_SPE_MAGIC to ARM_SPE_CPU_NR_PARAMS
-+		 * are fixed. The sequential parameter size is decided by the
-+		 * field 'ARM_SPE_CPU_NR_PARAMS'.
-+		 */
-+		cpu_size = (ARM_SPE_CPU_NR_PARAMS + 1) + arr[ARM_SPE_CPU_NR_PARAMS];
-+		for (i = 0; i < cpu_size; i++)
-+			fprintf(stdout, metadata_per_cpu_fmts[i], arr[i]);
-+		arr += cpu_size;
-+	}
- }
- 
- static void arm_spe_set_event_name(struct evlist *evlist, u64 id,
-@@ -1405,7 +1449,7 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 	spe->auxtrace.evsel_is_auxtrace = arm_spe_evsel_is_auxtrace;
- 	session->auxtrace = &spe->auxtrace;
- 
--	arm_spe_print_info(&auxtrace_info->priv[0]);
-+	arm_spe_print_info(spe, &auxtrace_info->priv[0]);
- 
- 	if (dump_trace)
- 		return 0;
--- 
-2.34.1
+> 
+>>
+>> In my scenario, we collect more than 40+ events to support necessary metric
+>> calculations, which multiplexing is inevitable. Although multiplexing may
+>> reduce accuracy, for the purpose of supporting metric calculations, these
+>> accuracy losses can be acceptable. Perf also has the same issue with multiplexing.
+>> Removing the event limit for bperf can provide users with additional options.
+>>
+>> In addition to accuracy, we also care about overhead. I compared the overhead
+>> of bperf and perf by testing ./lat_ctx in lmbench [1], and found that the
+>> overhead of bperf stat is about 4% less than perf. This is why we choose to
+>> use bperf in some extreme scenarios.
+> 
+> Ok, thanks for explanation.  I think it's ok to increase the limit.
+> 
+> Thanks,
+> Namhyung
+> 
+>>
+>>   [1] https://github.com/intel/lmbench
+>>
+>> Thanks,
+>> Tengda
+>>
+>>>
+>>>>
+>>>> Fixes: 7fac83aaf2ee ("perf stat: Introduce 'bperf' to share hardware PMCs with BPF")
+>>>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+>>>> ---
+>>>>  tools/perf/util/bpf_counter.c | 8 +++++++-
+>>>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+>>>> index 7a8af60e0f51..3346129c20cf 100644
+>>>> --- a/tools/perf/util/bpf_counter.c
+>>>> +++ b/tools/perf/util/bpf_counter.c
+>>>> @@ -28,7 +28,7 @@
+>>>>  #include "bpf_skel/bperf_leader.skel.h"
+>>>>  #include "bpf_skel/bperf_follower.skel.h"
+>>>>  
+>>>> -#define ATTR_MAP_SIZE 16
+>>>> +#define ATTR_MAP_SIZE 100
+>>>>  
+>>>>  static inline void *u64_to_ptr(__u64 ptr)
+>>>>  {
+>>>> @@ -451,6 +451,12 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+>>>>  	enum bperf_filter_type filter_type;
+>>>>  	__u32 filter_entry_cnt, i;
+>>>>  
+>>>> +	if (evsel->evlist->core.nr_entries > ATTR_MAP_SIZE) {
+>>>> +		pr_err("Too many events, please limit to %d or less\n",
+>>>> +			ATTR_MAP_SIZE);
+>>>> +		return -1;
+>>>> +	}
+>>>> +
+>>>>  	if (bperf_check_target(evsel, target, &filter_type, &filter_entry_cnt))
+>>>>  		return -1;
+>>>>  
+>>>> -- 
+>>>> 2.34.1
+>>>>
+>>
 
