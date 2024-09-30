@@ -1,50 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CE61A2645;
-	Mon, 30 Sep 2024 21:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECD31AF4E8;
+	Mon, 30 Sep 2024 21:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727730473; cv=none; b=DRAI95Yr/9x1QLxl2Gg5pc5nZ4KTXdRgJcmiXJfSZiO9HHlFz1qe1rJyqoJebAvcppLiGefKm0zlcyv7C6RDpKWWPP0NvnrK80NvGcAurEOJM0cOvwXzlw4ZW34ePboEoZLdaJubtMNo8coi0B65YFIwu4S+SfwKnWdr0tix4XM=
+	t=1727731609; cv=none; b=QxTk5N4jM+YOiB8kQDbP6VISNg2Iz6SiQdlczD+1Pstr2fZdnx8XZB08XYnL0gu3PM//avQbq6blQwLB2uYzB+eQo7Z8PlhIYBTe8VNCfRMfcmwaEcju3KBRJjwaP5JR1t7azJg1RMbuwjjQUNjHZEewmBSVaqq6k9coK/6edGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727730473; c=relaxed/simple;
-	bh=zZeMuXBLeHDf5XqrUgWrWOJr0y1aMxOQuR7+3GzMwbE=;
+	s=arc-20240116; t=1727731609; c=relaxed/simple;
+	bh=PDFMQnY7zW0c/c24/w5bzXFlbGk7N8QPC1yUMeTcXK0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FMkTkqcrInep62rHQTW6VxHGRyNniTHFujJ9ZtBbtMwdpjDy8rPS5kHlKJ0UEm4yscm/oGYBLw1ezt38iV2VaDN1HZ6Pcghs3JZJlai8aT5KA1PwfluJF4EjEchzwpntWYP5EIbaL1CwxKBWBm6YjZzjFC2isaNzCjBNpr67ZYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2EEOkYm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=X11Za1J+JRXLjyq53+WCcTqWlodiJuMHS/a1ZXi6391/GiaOUS3ClJpBUWucjXdtjc7eix5gWAOQkB62TpDI47r7y+3h9vcYVLuKPKnHWeBu3VGeuUAY2ggOYosbvsh5W4S5nM2C61mNaUJFQ5DM/FygqVa3nEJYhwCZ5JmRVbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HH+5T4FM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2EEOkYm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76B57C4CECD;
-	Mon, 30 Sep 2024 21:07:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HH+5T4FM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A607FC4CECD;
+	Mon, 30 Sep 2024 21:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727730473;
-	bh=zZeMuXBLeHDf5XqrUgWrWOJr0y1aMxOQuR7+3GzMwbE=;
+	s=k20201202; t=1727731609;
+	bh=PDFMQnY7zW0c/c24/w5bzXFlbGk7N8QPC1yUMeTcXK0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c2EEOkYmncI75goVlm0hl/uPCM040t6HYey+pUFxslwIBl1CReOSY48R5mnqZJ7xr
-	 XQeJZakrvmibPCpi/jXkSh6xboYECIcVla2aA0gUhCoYXt60xJOf1urrTGnXCCd2f3
-	 kJbZQaxA8H9L2zpUQBWo2l3v0KHhKH9yobQsFpnmmvXBXOo27eqo2F2JaO8eJMovq3
-	 J8wjfYacU7cNtE+pv+SfFF4cIjydoUMY6p5pwHtzR6gqWNwP/aXK5AYDj06iuCHgrM
-	 PYyKUZXwqD019VcSll3yziLSb6Npq/kZo61sf9XtzcN4QfSIy4j1hXnIv4GArwww0p
-	 yl772TLlGczXA==
-Date: Mon, 30 Sep 2024 14:07:51 -0700
+	b=HH+5T4FMiWNvRpiExQ/EH4EtuDDvXEng4OV+WLdPd5SA3Ho08NFJ0fpu88Dx9pIDH
+	 wS6Ycu+PX0buUMjdN0pqufrFTqkZDKiHMDHpIGCXfaqToOgVjcpu7hw+r2UPNeDzsj
+	 Ae/PTmZSN49dXRKeJjZxtaG7x6z+kaZ+KyduYF2B5kfhgXpECg7UVR7C0EGyiNyh4p
+	 Vl+MDHyyl9h6YP2wrcgkSKgfk1NHvyREUjeK/T9xmK51H4PfCet0S56aKBQoXiH+XM
+	 IijSkYHJTmIAAVd4B6peCK/qIBrkTuT7JG9X1dRQqeR9Q6TlH+2AKohZZDYofCW+AI
+	 JTkURcRgcGusQ==
+Date: Mon, 30 Sep 2024 14:26:47 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: Frank.li@nxp.com, will@kernel.org, mark.rutland@arm.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, john.g.garry@oracle.com, james.clark@linaro.org,
-	mike.leach@linaro.org, leo.yan@linux.dev, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf vendor events arm64: Add i.MX91 DDR Performance
- Monitor metrics
-Message-ID: <ZvsTJ47yHFUjo1uw@google.com>
-References: <20240924061251.3387850-1-xu.yang_2@nxp.com>
- <20240924061251.3387850-3-xu.yang_2@nxp.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Xu Yang <xu.yang_2@nxp.com>,
+	Zixian Cai <fzczx123@gmail.com>, Paran Lee <p4ranlee@gmail.com>,
+	Ben Gainey <ben.gainey@arm.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf python: Remove python 2 scripting support
+Message-ID: <ZvsXl2g6kYDi6F9o@google.com>
+References: <20240918225418.166717-1-irogers@google.com>
+ <20240918225418.166717-2-irogers@google.com>
+ <Zut-iM3v9rJHehxJ@tassilo>
+ <CAP-5=fWS-xOPurApZpMA=Zzukt5PQDYjF_7otCPTAL33PYmXAQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,78 +54,42 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240924061251.3387850-3-xu.yang_2@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWS-xOPurApZpMA=Zzukt5PQDYjF_7otCPTAL33PYmXAQ@mail.gmail.com>
 
-Hello,
+On Thu, Sep 19, 2024 at 06:45:23AM +0200, Ian Rogers wrote:
+> On Thu, Sep 19, 2024 at 3:29 AM Andi Kleen <ak@linux.intel.com> wrote:
+> >
+> > On Thu, Sep 19, 2024 at 12:54:17AM +0200, Ian Rogers wrote:
+> > > Python2 was deprecated 4 years ago, remove support and workarounds.
+> >
+> > Nacked-by: Andi Kleen
+> >
+> > I don't see any advantages of breaking perfectly fine existing setups
+> > for no benefits.
 
-On Tue, Sep 24, 2024 at 02:12:51PM +0800, Xu Yang wrote:
-> Add JSON metrics for i.MX91 DDR Performance Monitor.
+Well, I think the benefit is in the maintenance.  The EOL of Python 2
+was 2020/1/1 [1] and we are targeting this release (v6.13) in 2025.  So
+I think it's reasonable to consider removing Python 2 support now.
+
 > 
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> ---
->  .../arch/arm64/freescale/imx91/sys/ddrc.json  |  9 +++++++
->  .../arm64/freescale/imx91/sys/metrics.json    | 26 +++++++++++++++++++
->  2 files changed, 35 insertions(+)
->  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx91/sys/ddrc.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx91/sys/metrics.json
+> The reason is that since moving to linking libraries rather than
+> building code we now have the ability to call functions like
+> parse_events - previously parse_events was stubbed out because there
+> was no way to build lex/yacc code. Calling parse_events is more
+> sensible than existing logic that does things like open a legacy
+> cycles event only on 1 PMU type. That is, the existing code doesn't
+> support hybrid. Practically there is no way to test python2 support
+> builds and works without having python2. We shouldn't be in the
+> business of installing python2 in 2024, my organization has removed
+> all support for over 3 years.
 
-How do you want to route this?  As it's mixed with kernel changes, I
-would generally request to split but it's a change just to add new
-files so it should be ok to go with other tree.  In that case,
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+I think the problem nowdays is the container images for old distro.  I'm
+not sure how long we need to support them but it should be cut out at
+some point.
 
 Thanks,
 Namhyung
 
-> 
-> diff --git a/tools/perf/pmu-events/arch/arm64/freescale/imx91/sys/ddrc.json b/tools/perf/pmu-events/arch/arm64/freescale/imx91/sys/ddrc.json
-> new file mode 100644
-> index 000000000000..74ac12660a29
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/freescale/imx91/sys/ddrc.json
-> @@ -0,0 +1,9 @@
-> +[
-> +   {
-> +           "BriefDescription": "ddr cycles event",
-> +           "EventCode": "0x00",
-> +           "EventName": "imx91_ddr.cycles",
-> +           "Unit": "imx9_ddr",
-> +           "Compat": "imx91"
-> +   }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/freescale/imx91/sys/metrics.json b/tools/perf/pmu-events/arch/arm64/freescale/imx91/sys/metrics.json
-> new file mode 100644
-> index 000000000000..f0c5911eb2d0
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/freescale/imx91/sys/metrics.json
-> @@ -0,0 +1,26 @@
-> +[
-> +   {
-> +	    "BriefDescription": "bandwidth usage for lpddr4 evk board",
-> +	    "MetricName": "imx91_bandwidth_usage.lpddr4",
-> +	    "MetricExpr": "(((( imx9_ddr0@ddrc_pm_0@ ) * 2 * 8 ) + (( imx9_ddr0@ddrc_pm_3@ + imx9_ddr0@ddrc_pm_5@ + imx9_ddr0@ddrc_pm_7@ + imx9_ddr0@ddrc_pm_9@ - imx9_ddr0@ddrc_pm_2@ - imx9_ddr0@ddrc_pm_4@ - imx9_ddr0@ddrc_pm_6@ - imx9_ddr0@ddrc_pm_8@ ) * 32 )) / duration_time) / (2400 * 1000000 * 2)",
-> +	    "ScaleUnit": "1e2%",
-> +	    "Unit": "imx9_ddr",
-> +	    "Compat": "imx91"
-> +   },
-> +   {
-> +	    "BriefDescription": "bytes all masters read from ddr",
-> +	    "MetricName": "imx91_ddr_read.all",
-> +	    "MetricExpr": "( imx9_ddr0@ddrc_pm_0@ ) * 2 * 8",
-> +	    "ScaleUnit": "9.765625e-4KB",
-> +	    "Unit": "imx9_ddr",
-> +	    "Compat": "imx91"
-> +   },
-> +   {
-> +	    "BriefDescription": "bytes all masters write to ddr",
-> +	    "MetricName": "imx91_ddr_write.all",
-> +	    "MetricExpr": "( imx9_ddr0@ddrc_pm_3@ + imx9_ddr0@ddrc_pm_5@ + imx9_ddr0@ddrc_pm_7@ + imx9_ddr0@ddrc_pm_9@ - imx9_ddr0@ddrc_pm_2@ - imx9_ddr0@ddrc_pm_4@ - imx9_ddr0@ddrc_pm_6@ - imx9_ddr0@ddrc_pm_8@ ) * 32",
-> +	    "ScaleUnit": "9.765625e-4KB",
-> +	    "Unit": "imx9_ddr",
-> +	    "Compat": "imx91"
-> +   }
-> +]
-> -- 
-> 2.34.1
-> 
+
+[1] https://www.python.org/doc/sunset-python-2/
