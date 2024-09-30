@@ -1,169 +1,175 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C914E6E2AE;
-	Mon, 30 Sep 2024 12:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743BC23D2;
+	Mon, 30 Sep 2024 14:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727699450; cv=none; b=nE2WA8O6+a4OzN7X8GlPazRpVmqTUdk/imt4BhU+muqwlIhvv3vW84haiMkUHCyCU4YQHJvxfdEDZVKnlnJTI334x+tCSJcALZybpKd2wzqsNO1UwYKzs5HS2+uikIfn5qR6sDmaQ01/+t4k5XLbmxXdeaqETHECuRIl/FX/WOM=
+	t=1727707635; cv=none; b=Xvj3sSyb1aSP0Txss4d6BcgNeePit4Ei9MoQENvIYR1XmxCpQHm8q6oorSJ72XNoZ3LYkGXj4/dgMyudeOeSqEJoFsl7l+6W6jsZA6VAqyul8N1RnAm2qkZS0Nsn14mGElwdP9GwKPUopqny8tv0Tu6YH5/rnEKVeT/XTMo9xfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727699450; c=relaxed/simple;
-	bh=lrwzHDxyr0IEWnziBhIgR6eOugPrQ9ZiwGcAgzChxLM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UUnrAX6OQjZQ1hnWuZ4yCgKyJGT8FqiVxU1ShfBXf1VAvb2E9RXWSNtWKn7dYLPsPRZhCmWVWSCQsCW7WoladpI0Up/q/xGie7ZjHGdaT9iWHu9QJ/uVhVRScExWVcLdkR02rL9wbVSMOpbAbTan9HDI2dQPhRZ7Mdu7lfPmFn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Mf/ya+3M; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1727707635; c=relaxed/simple;
+	bh=Hry1X0VeuC1bEaNhwbkQROaJm0jnDNpE3hNkVrNT3vM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=MqN4mL+CJQojwp2DraA5fDCwWh/9s38TvlYbIbgZy9Azrv8qSrwPYefJ0qvQzwvz1U9rjJv+p0vw4uJRnFetxI9yzxXP8ZsBWVbPV16bR/XaNThZPnqL4+cilT/mxHhSaftjBWu7F05wq4k+8l0W95YHdWKDf5OIcND+MhfDJWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K1zj5l4T; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Mf/ya+3M"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48UB5XqC032105;
-	Mon, 30 Sep 2024 12:30:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=j
-	PxGfsnpZeiFOfgHcppvK306lmyAbucIpGLnwRY0JMY=; b=Mf/ya+3MZBPD9XHkr
-	HcTMY4On+q4fZw8f4SVVTfhue83GZrJHlVaNuMsFo2TD9qp1+7ORwJ3tU9r6N2yv
-	kEypfRJ9UvisD5K5KtPiy+wc6um153TlsxSoIonCm9rm2M3/gAIWLGkmOuyoKBGu
-	anWdD7rth5s15JqerkDw6+1kmv6yNkoSvlYoOO0dtdwHPKdz8coTP1KWz8/wb/Kh
-	Z2GZw7+VLoEK52OvwNHt/g2UpkiUO07f1INz5bLk22/lpMILHiwGn26tpGo994Hn
-	lTyMHmKg0uI3/ik/iTEvs33DS8Zf7zDexg97ooacW1HUI74kgHeGXJaZsg488k8G
-	GccjQ==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41x9f81at6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Sep 2024 12:30:44 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48UAEPsu020407;
-	Mon, 30 Sep 2024 12:30:43 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 41xv4rxp8m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Sep 2024 12:30:43 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48UCUdT836962576
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 30 Sep 2024 12:30:39 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CD9B42004B;
-	Mon, 30 Sep 2024 12:30:39 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7498120040;
-	Mon, 30 Sep 2024 12:30:39 +0000 (GMT)
-Received: from [9.171.21.158] (unknown [9.171.21.158])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 30 Sep 2024 12:30:39 +0000 (GMT)
-Message-ID: <3b65e3cc-2a9f-4427-a327-7e920ec4d969@linux.ibm.com>
-Date: Mon, 30 Sep 2024 14:30:39 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K1zj5l4T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727707633; x=1759243633;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Hry1X0VeuC1bEaNhwbkQROaJm0jnDNpE3hNkVrNT3vM=;
+  b=K1zj5l4TYCuibheQwoJHL27HF+QzZUH9bdgwhT7+DsLgBX23bYaa8TDD
+   iF/d815vnHNwQu5KrL3Xjgqjps+rp/0TdQmu9TDmRXq0Pl92DGCYiuPLH
+   bcWUZ1zVLoa2lH3qNoNeezwqbbR212LfIWiaW/IPVB3f2H0nrnnWy+k+v
+   1MY/SROwHU4jawqXoYHVSSFkow15mKExZp4cXFWr3ghSu4RgIzX/V+l59
+   bP4pmkMIKPwKSx6DUVgMXCkPz6E36+GvFZQUd6IcT7k89j0xCE23n3gF9
+   LMEUOi53i7LElI6zhW4cbcuSlVjPexkFiJb+E8HoYbbAFq4o0iHnpYz1s
+   g==;
+X-CSE-ConnectionGUID: R5cszCdfT1C2GBhbzrxVLg==
+X-CSE-MsgGUID: zdlioCqIQZantuuEm0jGdA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11211"; a="49324892"
+X-IronPort-AV: E=Sophos;i="6.11,165,1725346800"; 
+   d="scan'208";a="49324892"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2024 07:47:13 -0700
+X-CSE-ConnectionGUID: uXd4xCleT7yf678RuJNi5w==
+X-CSE-MsgGUID: ktDdk+KrSk+3CGy/2H8jwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,165,1725346800"; 
+   d="scan'208";a="78073452"
+Received: from smkirkla-mobl.amr.corp.intel.com (HELO desk) ([10.125.147.240])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2024 07:47:12 -0700
+Date: Mon, 30 Sep 2024 07:47:12 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH v4 00/10] Add CPU-type to topology
+Message-ID: <20240930-add-cpu-type-v4-0-104892b7ab5f@linux.intel.com>
+X-B4-Tracking: v=1; b=H4sIAGa5+mYC/53NMQ+CMBAF4L9COlvSXgstThoXRwc3wwDtIU0UC
+ CDREP67DYsGmRzfu7zvRtJh67Aj22AkLQ6uc3Xlg9wExJRZdUXqrM8EGEgWc0Uza6lpHrR/NUi
+ ljVAqLAznivhJ02LhnjN3Iaf9+XAkqa9L1/V1+5qfDHw+rnsDp4zmWieJNoyjinc3Vz2eoat6v
+ IWmvs/cAF8ELAnwRJGAyi1qkVm2TogPoXm0IIQnQEgeg4iAReqH2AR/T9Npmt4ZwoBsdgEAAA= =
+X-Mailer: b4 0.14.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/test: perf test 86 fails on s390 repo linux-next
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com
-References: <20240916125718.3024270-1-tmricht@linux.ibm.com>
- <ZvXjYOWoEIhakz-f@google.com>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <ZvXjYOWoEIhakz-f@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: pS9wgU-MXH07a_UIc1O1TpP99g-Va-NT
-X-Proofpoint-ORIG-GUID: pS9wgU-MXH07a_UIc1O1TpP99g-Va-NT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-09-30_10,2024-09-27_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 clxscore=1015 adultscore=0 mlxscore=0 impostorscore=0
- bulkscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409300087
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 9/27/24 00:42, Namhyung Kim wrote:
-> Hello,
-> 
-> On Mon, Sep 16, 2024 at 02:57:18PM +0200, Thomas Richter wrote:
->> Command perf test 86 fails on s390 using linux-next repository:
->>  # perf test -F 86
->>  ping 868299 [007] 28248.013596: probe_libc:inet_pton_1: (3ff95948020)
->>  3ff95948020 inet_pton+0x0 (inlined)
->>  3ff9595e6e7 text_to_binary_address+0x1007 (inlined)
->>  3ff9595e6e7 gaih_inet+0x1007 (inlined)
->>  FAIL: expected backtrace entry \
->> 	 "main\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$"
->> 	 got "3ff9595e6e7 gaih_inet+0x1007 (inlined)"
->>  86: probe libc's inet_pton & backtrace it with ping  : FAILED!
->>  #
->>
->> The root cause is a new stack layout, some functions have been added
->> as seen below. Add text_to_binary_address and friends to the
->> list of expected functions.
->>
->>  # perf script | tac | grep -m1 '^ping' -B9 | tac
->>  ping  866856 [007] 25979.494921: probe_libc:inet_pton: (3ff8ec48020)
->> 	     3ff8ec48020 inet_pton+0x0 (inlined)
->> 	     3ff8ec5e6e7 text_to_binary_address+0x1007 (inlined)
->> 	     3ff8ec5e6e7 gaih_inet+0x1007 (inlined)
->> 	     3ff8ec5e6e7 getaddrinfo+0x1007 (/usr/lib64/libc.so.6)
->> 	     2aa3fe04bf5 main+0xff5 (/usr/bin/ping)
->> 	     3ff8eb34a5b __libc_start_call_main+0x8b (/usr/lib64/libc.so.6)
->> 	     3ff8eb34b5d __libc_start_main@GLIBC_2.2+0xad (inlined)
->> 	     2aa3fe06a1f [unknown] (/usr/bin/ping)
-> 
-> Is it because of a kernel change?  What about old kernels then?
-> 
->>
->>  #
->>
->> Output after:
->>  # perf test -F 86
->>  86: probe libc's inet_pton & backtrace it with ping  : Ok
->>  #
->>
->> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
->> ---
->>  tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
->> index f38c8ead0b03..bc6e2fe1d999 100755
->> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
->> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
->> @@ -40,6 +40,8 @@ trace_libc_inet_pton_backtrace() {
->>  	case "$(uname -m)" in
->>  	s390x)
->>  		eventattr='call-graph=dwarf,max-stack=4'
->> +		echo "text_to_binary_address\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
->> +		echo "gaih_inet\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
-> 
-> Is it possible to make it this part conditional and only have it for the
-> new kernels?
-> 
-> Thanks,
-> Namhyung
-> 
-> 
->>
+v4:
+- Series doesn't apply to upstream cleanly anymore, rebased to v6.12-rc1,
+  resolved the merge conflict in files:
+	arch/x86/include/asm/cpu_device_id.h
+	arch/x86/kernel/cpu/common.c
+- Remove redundant "hw_" in intel_hw_native_model_id().
 
-I think this is more related to glibc and has nothing to do with the kernel version.
-It happened after I did a dnf update.
+v3: https://lore.kernel.org/r/20240815-add-cpu-type-v3-0-234162352057@linux.intel.com
+- Add a patch to prepend "0x" to hex values in cpu_debug_show() (Borislav).
+- Add support to to also get Intel Native Model ID (Dapeng).
+- Keep similar models together in the affected processor list (Josh).
+- Add a comparison of .init.data in commit message for cpu_vuln_blacklist
+  before and after decluttering patch for affected processor list (Josh).
+- Drop the debugfs file reference in the commit message (Borislav).
+- s/cpu_type/hw_cpu_type/ (Borislav).
+- Add a union for hw_cpu_type for easy retrieval of intel_core_type and
+  intel_native_model_id.
+- Updated commit messages, collected tags.
+- Rebased to v6.11-rc3.
 
+Note, I will be off work till Tuesday, will reply to any comments then.
+
+v2: https://lore.kernel.org/r/20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com
+- Move CPU-type to the end of the CPU topology structure (Andrew).
+- Use c->cpuid_level instead of cpuid_eax(0) (Andrew).
+- Move CPU-type enum out of ifdef CONFIG_NUMA (kernel test robot).
+- Rename cpu_type to hw_cpu_type (Borislav).
+- Explain replacing get_this_hybrid_cpu_type() with topology_hw_cpu_type()
+  in the commit message (Dave).
+- Fix the alignment in cpu_vuln_whitelist (Andrew).
+- Add the obj compare note in the commit message (Dave/Tony).
+- s/X86_CPU_TYPE_INTEL_ATOM/ATOM/ in cpu_vuln_whitelist (Dave).
+
+v1: https://lore.kernel.org/r/20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com
+
+Hi,
+
+This series adds support for CPU-type (CPUID.1A.EAX[31-24] on Intel) to
+differentiate between hybrid variants P+E, P-only, E-only that share the
+same Family/Model/Stepping. One of the use case for CPU-type is the
+affected CPU table for CPU vulnerabilities, which can now use the CPU-type
+to filter the unaffected variants.
+
+* Patch 1 fixes a minor formatting issue in cpu_debug_show().
+
+* Patch 2 adds hardware cpu-type to CPU topology structure and introduces
+  topology_hw_cpu_type().
+
+* Patch 3-5 replaces usages of get_this_hybrid_cpu_type() with
+  topology_hw_cpu_type().
+
+* Patch 6-8 Updates CPU-matching infrastructure to use CPU-type.
+
+* Patch 9 cleans up the affected CPU list.
+
+* Patch 10 uses the CPU-type to exclude P-only parts from the RFDS affected
+  list.
+
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+---
+Pawan Gupta (10):
+      x86/cpu: Prepend 0x to the hex values in cpu_debug_show()
+      x86/cpu/topology: Add CPU type to struct cpuinfo_topology
+      cpufreq: intel_pstate: Use topology_hw_cpu_type()
+      perf/x86/intel: Use topology_hw_cpu_type()
+      x86/cpu: Remove get_this_hybrid_cpu_type()
+      x86/cpu: Name CPU matching macro more generically (and shorten)
+      x86/cpu: Add cpu_type to struct x86_cpu_id
+      x86/cpu: Update x86_match_cpu() to also use cpu-type
+      x86/bugs: Declutter vulnerable CPU list
+      x86/rfds: Exclude P-only parts from the RFDS affected list
+
+ .../admin-guide/hw-vuln/reg-file-data-sampling.rst |   8 --
+ arch/x86/events/intel/core.c                       |   3 +-
+ arch/x86/include/asm/cpu.h                         |   4 +-
+ arch/x86/include/asm/cpu_device_id.h               | 113 ++++++----------
+ arch/x86/include/asm/processor.h                   |  11 ++
+ arch/x86/include/asm/topology.h                    |   8 ++
+ arch/x86/kernel/cpu/common.c                       | 148 +++++++++++----------
+ arch/x86/kernel/cpu/debugfs.c                      |   5 +-
+ arch/x86/kernel/cpu/intel.c                        |  15 +--
+ arch/x86/kernel/cpu/match.c                        |  22 +++
+ arch/x86/kernel/cpu/topology_common.c              |  11 ++
+ drivers/cpufreq/intel_pstate.c                     |  14 +-
+ include/linux/mod_devicetable.h                    |   2 +
+ 13 files changed, 186 insertions(+), 178 deletions(-)
+---
+base-commit: 9852d85ec9d492ebef56dc5f229416c925758edc
+change-id: 20240617-add-cpu-type-4d5e47efc117
+
+Best regards,
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+Thanks,
+Pawan
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
