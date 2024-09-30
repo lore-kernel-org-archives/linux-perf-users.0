@@ -1,65 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A008715F3F9
-	for <linux-perf-users@vger.kernel.org>; Mon, 30 Sep 2024 09:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C914E6E2AE;
+	Mon, 30 Sep 2024 12:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727687273; cv=none; b=L4qAEy+2qbKErHd7ZzfT4Np64ovcxVmLByk/vCNiRPEtsJokaL9MwgD4sZtc/8iIFTKsChKgwKgNvHTG7pqs/5pQH9GNXE7z59RSFnL4AN4bMxzXS5F08FRXwnU1gJtH8zGKI513KiiyQpW8HzRGqKvUiMJxYLyOi4TCsJrqFPs=
+	t=1727699450; cv=none; b=nE2WA8O6+a4OzN7X8GlPazRpVmqTUdk/imt4BhU+muqwlIhvv3vW84haiMkUHCyCU4YQHJvxfdEDZVKnlnJTI334x+tCSJcALZybpKd2wzqsNO1UwYKzs5HS2+uikIfn5qR6sDmaQ01/+t4k5XLbmxXdeaqETHECuRIl/FX/WOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727687273; c=relaxed/simple;
-	bh=+Om91mkQUsNePuR3MhqSUag1znVDLM7nwu1GCsMReWk=;
+	s=arc-20240116; t=1727699450; c=relaxed/simple;
+	bh=lrwzHDxyr0IEWnziBhIgR6eOugPrQ9ZiwGcAgzChxLM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jHWepkZoa8tNczpXj9kI9NJToMxIaPKPt7MLQB+SsePmFDsdDoWGZeJFUdoWoXvB5t7smdK7phdp7jddXromkEglPXgW5iqdumZOLEgmc12f4V4qsZzvSqxhqYizXjNAhiH+NZ0mwYBee8LcjwJRKSeb8zLYLr06FOFBcRtKiXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MEjiBvFy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=UUnrAX6OQjZQ1hnWuZ4yCgKyJGT8FqiVxU1ShfBXf1VAvb2E9RXWSNtWKn7dYLPsPRZhCmWVWSCQsCW7WoladpI0Up/q/xGie7ZjHGdaT9iWHu9QJ/uVhVRScExWVcLdkR02rL9wbVSMOpbAbTan9HDI2dQPhRZ7Mdu7lfPmFn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Mf/ya+3M; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MEjiBvFy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727687270;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XwrGQuFIUhjPl+HUFddpblMJN3nQSRNzEU4gxyZ8rRE=;
-	b=MEjiBvFyxDdpEkzwrbrUMddhdey1Zc543QLl9NzDdMrDmA7h0TbYKzanYT4ED8oD54ot9K
-	KIkf5kkQBNRh/qnml64PmQw0qwpwnirhVUNLK5W76gG2YVSY3lSugmd200O+oo8+0QR68P
-	AiiJAPTrd9aqGum5Io+LCsJ6VhTphP8=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-359-Y4m-KAkkPlypFgP8TkSvkA-1; Mon, 30 Sep 2024 05:07:48 -0400
-X-MC-Unique: Y4m-KAkkPlypFgP8TkSvkA-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-37ccd40aad4so1883661f8f.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Sep 2024 02:07:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727687267; x=1728292067;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XwrGQuFIUhjPl+HUFddpblMJN3nQSRNzEU4gxyZ8rRE=;
-        b=WXiTlb3fvD3jiIjyy/gL85Y6Bj5LfjPtJxFExynYtJ+Ix/4kTXj2VtzR0GMImDyiEu
-         9awmNzYnshd7NWvUNvWFkOoIN8UsF7zKIH+w7e45sgh6pMpf12ceQgQc6agYUTC6+WN5
-         me0jPFAx+sGJnmoW+RZGMR5SULi5HZDXcf/yx/cy4ihBAAbov0warTYJGLeex7QkyWQ1
-         A/IyxAZyZ8PXFpyWXdKn2sqrBk6U7316WMxW1ZNo8rYHpgYLT1EohU2T5+wBmSbABIDX
-         MThuyBk853c6KdTTG88sS/NSpwhaHxB8yrrVLqFujVOx7yio2w+1xH2DDeWjdqSQYllP
-         DlbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKyA3nfrRhuiFhSuTrD1ONjLiZVwtbTPwAymHLOIuoswAZWD8EhyaPZbUgFWcBk3QHe23O9dzgOGFDEWpqu8ji@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM5MhVvtBcFcYJrL7FxZ6+Lug9/PXVq+0m+XeHg5/Q97MiSPX5
-	zf4pR2FsRqzVKQAQOisiFCbOUe73p+/In6S7dauUUsXHXiryKwx0llByFhdnhGDdxKJyBRU+jVF
-	Q1in+dGfi7Xvzxn8zQYPbB9hsmdFc1Uo900HiljSBS8CCLYcT1SnRDzt4rNOzgaecgiE=
-X-Received: by 2002:adf:e589:0:b0:37c:d183:abd6 with SMTP id ffacd0b85a97d-37cd5a9a255mr5408863f8f.32.1727687267502;
-        Mon, 30 Sep 2024 02:07:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IERsQinhFyBpAWA0rg/qe1osA80CSM0+d6f/PTAVjQTuhSFAVVqUoaMsmadejv3vQRaM9LXYQ==
-X-Received: by 2002:adf:e589:0:b0:37c:d183:abd6 with SMTP id ffacd0b85a97d-37cd5a9a255mr5408848f8f.32.1727687267116;
-        Mon, 30 Sep 2024 02:07:47 -0700 (PDT)
-Received: from [10.202.147.124] (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cd575dfd2sm8482188f8f.117.2024.09.30.02.07.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2024 02:07:46 -0700 (PDT)
-Message-ID: <2ac467a9-065f-4da2-858c-04e72ce70b55@redhat.com>
-Date: Mon, 30 Sep 2024 11:07:45 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Mf/ya+3M"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48UB5XqC032105;
+	Mon, 30 Sep 2024 12:30:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=j
+	PxGfsnpZeiFOfgHcppvK306lmyAbucIpGLnwRY0JMY=; b=Mf/ya+3MZBPD9XHkr
+	HcTMY4On+q4fZw8f4SVVTfhue83GZrJHlVaNuMsFo2TD9qp1+7ORwJ3tU9r6N2yv
+	kEypfRJ9UvisD5K5KtPiy+wc6um153TlsxSoIonCm9rm2M3/gAIWLGkmOuyoKBGu
+	anWdD7rth5s15JqerkDw6+1kmv6yNkoSvlYoOO0dtdwHPKdz8coTP1KWz8/wb/Kh
+	Z2GZw7+VLoEK52OvwNHt/g2UpkiUO07f1INz5bLk22/lpMILHiwGn26tpGo994Hn
+	lTyMHmKg0uI3/ik/iTEvs33DS8Zf7zDexg97ooacW1HUI74kgHeGXJaZsg488k8G
+	GccjQ==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41x9f81at6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Sep 2024 12:30:44 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48UAEPsu020407;
+	Mon, 30 Sep 2024 12:30:43 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 41xv4rxp8m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Sep 2024 12:30:43 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48UCUdT836962576
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Sep 2024 12:30:39 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CD9B42004B;
+	Mon, 30 Sep 2024 12:30:39 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7498120040;
+	Mon, 30 Sep 2024 12:30:39 +0000 (GMT)
+Received: from [9.171.21.158] (unknown [9.171.21.158])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 30 Sep 2024 12:30:39 +0000 (GMT)
+Message-ID: <3b65e3cc-2a9f-4427-a327-7e920ec4d969@linux.ibm.com>
+Date: Mon, 30 Sep 2024 14:30:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,128 +62,108 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf trace: Keep exited threads for summary
-To: Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org,
- irogers@google.com
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- adrian.hunter@intel.com, kan.liang@linux.intel.com
-References: <20240927151926.399474-1-mpetlan@redhat.com>
+Subject: Re: [PATCH] perf/test: perf test 86 fails on s390 repo linux-next
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
+        sumanthk@linux.ibm.com, hca@linux.ibm.com
+References: <20240916125718.3024270-1-tmricht@linux.ibm.com>
+ <ZvXjYOWoEIhakz-f@google.com>
 Content-Language: en-US
-From: Veronika Molnarova <vmolnaro@redhat.com>
-In-Reply-To: <20240927151926.399474-1-mpetlan@redhat.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <ZvXjYOWoEIhakz-f@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: pS9wgU-MXH07a_UIc1O1TpP99g-Va-NT
+X-Proofpoint-ORIG-GUID: pS9wgU-MXH07a_UIc1O1TpP99g-Va-NT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-09-30_10,2024-09-27_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 clxscore=1015 adultscore=0 mlxscore=0 impostorscore=0
+ bulkscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2409300087
 
-
-
-On 9/27/24 17:19, Michael Petlan wrote:
-> Since 9ffa6c7512ca ("perf machine thread: Remove exited threads by
-> default") perf cleans exited threads up, but as said, sometimes they
-> are necessary to be kept. The mentioned commit does not cover all the
-> cases, we also need the information to construct the summary table in
-> perf-trace.
+On 9/27/24 00:42, Namhyung Kim wrote:
+> Hello,
 > 
-> Before:
->     # perf trace -s true
+> On Mon, Sep 16, 2024 at 02:57:18PM +0200, Thomas Richter wrote:
+>> Command perf test 86 fails on s390 using linux-next repository:
+>>  # perf test -F 86
+>>  ping 868299 [007] 28248.013596: probe_libc:inet_pton_1: (3ff95948020)
+>>  3ff95948020 inet_pton+0x0 (inlined)
+>>  3ff9595e6e7 text_to_binary_address+0x1007 (inlined)
+>>  3ff9595e6e7 gaih_inet+0x1007 (inlined)
+>>  FAIL: expected backtrace entry \
+>> 	 "main\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$"
+>> 	 got "3ff9595e6e7 gaih_inet+0x1007 (inlined)"
+>>  86: probe libc's inet_pton & backtrace it with ping  : FAILED!
+>>  #
+>>
+>> The root cause is a new stack layout, some functions have been added
+>> as seen below. Add text_to_binary_address and friends to the
+>> list of expected functions.
+>>
+>>  # perf script | tac | grep -m1 '^ping' -B9 | tac
+>>  ping  866856 [007] 25979.494921: probe_libc:inet_pton: (3ff8ec48020)
+>> 	     3ff8ec48020 inet_pton+0x0 (inlined)
+>> 	     3ff8ec5e6e7 text_to_binary_address+0x1007 (inlined)
+>> 	     3ff8ec5e6e7 gaih_inet+0x1007 (inlined)
+>> 	     3ff8ec5e6e7 getaddrinfo+0x1007 (/usr/lib64/libc.so.6)
+>> 	     2aa3fe04bf5 main+0xff5 (/usr/bin/ping)
+>> 	     3ff8eb34a5b __libc_start_call_main+0x8b (/usr/lib64/libc.so.6)
+>> 	     3ff8eb34b5d __libc_start_main@GLIBC_2.2+0xad (inlined)
+>> 	     2aa3fe06a1f [unknown] (/usr/bin/ping)
 > 
->      Summary of events:
+> Is it because of a kernel change?  What about old kernels then?
 > 
-> After:
->     # perf trace -s -- true
+>>
+>>  #
+>>
+>> Output after:
+>>  # perf test -F 86
+>>  86: probe libc's inet_pton & backtrace it with ping  : Ok
+>>  #
+>>
+>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>> ---
+>>  tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+>> index f38c8ead0b03..bc6e2fe1d999 100755
+>> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+>> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+>> @@ -40,6 +40,8 @@ trace_libc_inet_pton_backtrace() {
+>>  	case "$(uname -m)" in
+>>  	s390x)
+>>  		eventattr='call-graph=dwarf,max-stack=4'
+>> +		echo "text_to_binary_address\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
+>> +		echo "gaih_inet\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
 > 
->      Summary of events:
+> Is it possible to make it this part conditional and only have it for the
+> new kernels?
 > 
->      true (383382), 64 events, 91.4%
+> Thanks,
+> Namhyung
 > 
->        syscall            calls  errors  total       min       avg       max       stddev
->                                          (msec)    (msec)    (msec)    (msec)        (%)
->        --------------- --------  ------ -------- --------- --------- ---------     ------
->        mmap                   8      0     0.150     0.013     0.019     0.031     11.90%
->        mprotect               3      0     0.045     0.014     0.015     0.017      6.47%
->        openat                 2      0     0.014     0.006     0.007     0.007      9.73%
->        munmap                 1      0     0.009     0.009     0.009     0.009      0.00%
->        access                 1      1     0.009     0.009     0.009     0.009      0.00%
->        pread64                4      0     0.006     0.001     0.001     0.002      4.53%
->        fstat                  2      0     0.005     0.001     0.002     0.003     37.59%
->        arch_prctl             2      1     0.003     0.001     0.002     0.002     25.91%
->        read                   1      0     0.003     0.003     0.003     0.003      0.00%
->        close                  2      0     0.003     0.001     0.001     0.001      3.86%
->        brk                    1      0     0.002     0.002     0.002     0.002      0.00%
->        rseq                   1      0     0.001     0.001     0.001     0.001      0.00%
->        prlimit64              1      0     0.001     0.001     0.001     0.001      0.00%
->        set_robust_list        1      0     0.001     0.001     0.001     0.001      0.00%
->        set_tid_address        1      0     0.001     0.001     0.001     0.001      0.00%
->        execve                 1      0     0.000     0.000     0.000     0.000      0.00%
 > 
-> Fixes: 9ffa6c7512ca ("perf machine thread: Remove exited threads by default")
-> 
-> Reported-by: Veronika Molnarova <vmolnaro@redhat.com>
-> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+>>
 
-The -S and -s option works after this patch, but --errno-summary ends with
-segfault for some reason.
+I think this is more related to glibc and has nothing to do with the kernel version.
+It happened after I did a dnf update.
 
-Before:
-	# perf trace --errno-summary -- true
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
 
- 	Summary of events:
+Geschäftsführung: David Faller
 
-After:
-	# perf trace --errno-summary -- true
-
-	 Summary of events:
-	
-	 true (11386), 60 events, 90.9%
-	
-   	   syscall            calls  errors  total       min       avg       max       stddev
-        	                             (msec)    (msec)    (msec)    (msec)        (%)
- 	   --------------- --------  ------ -------- --------- --------- ---------     ------
-   	   mmap                   8      0     0.044     0.003     0.006     0.010     15.17%
-   	   mprotect               3      0     0.014     0.004     0.005     0.005      4.56%
-   	   openat                 2      0     0.009     0.004     0.004     0.005      5.14%
-   	   munmap                 1      0     0.007     0.007     0.007     0.007      0.00%
-  	   access                 1      1     0.004     0.004     0.004     0.004      0.00%
-	perf: Segmentation fault
-	Obtained 12 stack frames.
-	./perf() [0x5ae123]
-	./perf() [0x5ae1cb]
-	/lib64/libc.so.6(+0x3dbb0) [0x7f633845fbb0]
-	./perf() [0x56e2fb]
-	./perf() [0x4850b3]
-	./perf() [0x48ee89]
-	./perf() [0x493042]
-	./perf() [0x49334b]
-	./perf() [0x40ee8c]
-	/lib64/libc.so.6(+0x27b8a) [0x7f6338449b8a]
-	/lib64/libc.so.6(__libc_start_main+0x8b) [0x7f6338449c4b]
-	./perf() [0x40f4b5]
-	Segmentation fault
-
-Will try to check what is causing this issue.
-
-Thanks,
-Veronika
-
-> ---
->  tools/perf/builtin-trace.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index f6e847529073..1a12ed71c809 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -5449,6 +5449,10 @@ int cmd_trace(int argc, const char **argv)
->  	if (trace.summary_only)
->  		trace.summary = trace.summary_only;
->  
-> +	/* Keep exited threads, otherwise information might be lost for summary */
-> +	if (trace.summary || trace.summary_only)
-> +		symbol_conf.keep_exited_threads = true;
-> +
->  	if (output_name != NULL) {
->  		err = trace__open_output(&trace, output_name);
->  		if (err < 0) {
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
