@@ -1,132 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0B2190052;
-	Mon, 30 Sep 2024 15:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE6319AA57;
+	Mon, 30 Sep 2024 19:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727709182; cv=none; b=lRJ9PaUpuI95upRKFdso7ufFURkthKxRhiKaWh5LhMkslk+iX6p2JpTCqWCZeopFIkBxjD569ebM0dbQbPeN3FPT7aAwc1jjocprk3tj9YX1AullqLCClMANcp/9rOvtX1ppl8PeA/7g8pLFhpoCtR37/iY0SwU2hPYlrbAXmfg=
+	t=1727726370; cv=none; b=sS3Na0xY0b0UU/GAuBA7YDFQ5yygyM057hXuUHS2vdEhteOiH5qPAQ+NQI/A3BI+So60XKJrpN1zw3rhpldBnf8v10OI5HHT0wJvWzrlru1WVmWDvomzh7BfaceKS5hZd9LnsZf0McWvou8m9g4sb5jmQj78/VwiCe/E/C8F3Eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727709182; c=relaxed/simple;
-	bh=Gu9U570LThSHkBw3of56CwxoVVHTj0zRzhYMpcjYl/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NT3IQzX30jiOFsi02+8YYIEolEeNf0Xk4tWd95Q+ffhTM2E3LoJm3+OhJLrSEAHLH9mTzf34mtDp7fcOopiT1ElGFVi8/0Fyfzy5pU/qS3vyZjn83LU3EoXJ6l335uq8SKKDAFeCi89++SWEyPunJcTj3UkhLMNw9wj6t89peKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BF3Bs3JA; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1727726370; c=relaxed/simple;
+	bh=5NmmrEnK8EnrwqH2ZUDZJZXTyYw4hqS9UFPj1sY55Pw=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=tLi48+eEbJz1WvkJ/C7DH/cFuI9H4oH+0JA1rabicI/dEp7HoSIHv1+fmpFpUNTy/Fzs3dcfhRvPyldFTXbc812RRaJ2Ir1e8RzD4kPCrIh2llfKkR6y3w1ybLrEXXi8PdjKL1dRTIXtyPak0azzML6Fgn9E/GvP4BrECIaOTRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=KLdnS7Kf; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BF3Bs3JA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727709181; x=1759245181;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Gu9U570LThSHkBw3of56CwxoVVHTj0zRzhYMpcjYl/s=;
-  b=BF3Bs3JA+2p7tLCAHFYcZB2PNN1YNJHw9eWvYoP54TGzgpIZK1skEmZ4
-   uNCL1Mnfk2Ia3jIIKyC/GPDo5T/W1yFGueLVFHM1I/UHJjUYOHhIP7cqs
-   +h2qwsj0MJ9vi8n8htlLwIHZiFfFmd0zvteOCnYvovAzreZIy3HJ77JA0
-   Ww3NkUCN7jrWG4t07gHZsEYf4GMum6mU2+98HCcFLrFHYMYs5l2s5UU6h
-   uzUW3LRNw6rdu1iA5sbbx/b8euyyIWCKUmf13+kO4WaGB+YjSQZtsngSm
-   u+sllVFrVzyNedhkh2ihXAxvG5EgWl5tYDaPjgh3XrUhVY/TxbqeZ3IPP
-   w==;
-X-CSE-ConnectionGUID: pVXNhGYsTduyVUUngdpgTg==
-X-CSE-MsgGUID: WW7XuL7kTv6TGP2A29be/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11211"; a="37367525"
-X-IronPort-AV: E=Sophos;i="6.11,166,1725346800"; 
-   d="scan'208";a="37367525"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2024 08:13:00 -0700
-X-CSE-ConnectionGUID: cvBVKq4sQ362ZUJzaXuaig==
-X-CSE-MsgGUID: a1LHmtyXQlm/tWE10MrM6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,166,1725346800"; 
-   d="scan'208";a="104145336"
-Received: from msangele-mobl.amr.corp.intel.com (HELO [10.124.223.122]) ([10.124.223.122])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2024 08:12:58 -0700
-Message-ID: <0d054389-c60e-4b7f-bff2-e95f50c239f3@intel.com>
-Date: Mon, 30 Sep 2024 08:12:57 -0700
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KLdnS7Kf"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48UJu9D1024103;
+	Mon, 30 Sep 2024 19:58:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id; s=corp-2023-11-20; bh=yQxDUX
+	TCMj1G4qCKFF7q4BFUmsa0iyHbrnl2P10jhq4=; b=KLdnS7KfiVG7YblgMlCFGM
+	bf3P4s0yf61W2hGsHgAgthWc2OXcg59TWahrxycM54rdafJ3CEQSOSta7NE8pWns
+	CSXk/W1vvJsuqDvutV3yei4JehivSdgg9C5W/VspkyLksAKUL92lVTN1khIquT9q
+	PgcCfdqJgjZnFiGiP4O4MZZpaqiOi00SnoWcTMhmbAQHPG1BjzOTyADKlyY8mMeI
+	5u3Sj8EydOIo51yp2xpp0YDjT/JfDzrj4vX8zCPkUBzjjrJ76SM//nc+SimXuNws
+	/aP6cf7tFxPjue1tKUIhGM9lWu2Y9UWOHa+TR0USAB6KRs6pk36yTZXvACVEc7hg
+	==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41x8k34q13-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Sep 2024 19:58:45 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 48UJkuIo028453;
+	Mon, 30 Sep 2024 19:58:44 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 41x886sa9e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Sep 2024 19:58:44 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 48UJu2cs033321;
+	Mon, 30 Sep 2024 19:58:44 GMT
+Received: from gkennedy-linux.us.oracle.com (gkennedy-linux.us.oracle.com [10.152.170.45])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 41x886sa6q-1;
+	Mon, 30 Sep 2024 19:58:43 +0000
+From: George Kennedy <george.kennedy@oracle.com>
+To: ravi.bangoria@amd.com
+Cc: george.kennedy@oracle.com, harshit.m.mogalapalli@oracle.com,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dongli.zhang@oracle.com
+Subject: [PATCH] [PATCH v2] perf/x86/amd: check event before enable to avoid GPF
+Date: Mon, 30 Sep 2024 14:52:27 -0500
+Message-Id: <1727725947-18058-1-git-send-email-george.kennedy@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-09-30_19,2024-09-30_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 malwarescore=0
+ mlxlogscore=901 phishscore=0 suspectscore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2408220000
+ definitions=main-2409300144
+X-Proofpoint-GUID: focYdnfSSzFjVpzzfX-Rnspnb2JJ5py3
+X-Proofpoint-ORIG-GUID: focYdnfSSzFjVpzzfX-Rnspnb2JJ5py3
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/10] Add CPU-type to topology
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Andrew Cooper <andrew.cooper3@citrix.com>,
- Brice Goglin <brice.goglin@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Perry Yuan <Perry.Yuan@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-References: <20240930-add-cpu-type-v4-0-104892b7ab5f@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240930-add-cpu-type-v4-0-104892b7ab5f@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 9/30/24 07:47, Pawan Gupta wrote:
-> This series adds support for CPU-type (CPUID.1A.EAX[31-24] on Intel) to
-> differentiate between hybrid variants P+E, P-only, E-only that share the
-> same Family/Model/Stepping. One of the use case for CPU-type is the
-> affected CPU table for CPU vulnerabilities, which can now use the CPU-type
-> to filter the unaffected variants.
+On AMD machines cpuc->events[idx] can become NULL in a subtle race
+condition with NMI->throttle->x86_pmu_stop().
 
-The series looks fine to me now.  The diffstat is _almost_ even, despite
-the series adding functionality.
+Check event for NULL in amd_pmu_enable_all() before enable to avoid a GPF.
+This appears to be an AMD only issue.
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+Syzkaller reported a GPF in amd_pmu_enable_all.
+
+INFO: NMI handler (perf_event_nmi_handler) took too long to run: 13.143
+    msecs
+Oops: general protection fault, probably for non-canonical address
+    0xdffffc0000000034: 0000  PREEMPT SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x00000000000001a0-0x00000000000001a7]
+CPU: 0 UID: 0 PID: 328415 Comm: repro_36674776 Not tainted 6.12.0-rc1-syzk
+RIP: 0010:x86_pmu_enable_event (arch/x86/events/perf_event.h:1195
+    arch/x86/events/core.c:1430)
+RSP: 0018:ffff888118009d60 EFLAGS: 00010012
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000034 RSI: 0000000000000000 RDI: 00000000000001a0
+RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000002
+R13: ffff88811802a440 R14: ffff88811802a240 R15: ffff8881132d8601
+FS:  00007f097dfaa700(0000) GS:ffff888118000000(0000) GS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000200001c0 CR3: 0000000103d56000 CR4: 00000000000006f0
+Call Trace:
+ <IRQ>
+amd_pmu_enable_all (arch/x86/events/amd/core.c:760 (discriminator 2))
+x86_pmu_enable (arch/x86/events/core.c:1360)
+event_sched_out (kernel/events/core.c:1191 kernel/events/core.c:1186
+    kernel/events/core.c:2346)
+__perf_remove_from_context (kernel/events/core.c:2435)
+event_function (kernel/events/core.c:259)
+remote_function (kernel/events/core.c:92 (discriminator 1)
+    kernel/events/core.c:72 (discriminator 1))
+__flush_smp_call_function_queue (./arch/x86/include/asm/jump_label.h:27
+    ./include/linux/jump_label.h:207 ./include/trace/events/csd.h:64
+    kernel/smp.c:135 kernel/smp.c:540)
+__sysvec_call_function_single (./arch/x86/include/asm/jump_label.h:27
+    ./include/linux/jump_label.h:207
+    ./arch/x86/include/asm/trace/irq_vectors.h:99 arch/x86/kernel/smp.c:272)
+sysvec_call_function_single (arch/x86/kernel/smp.c:266 (discriminator 47)
+    arch/x86/kernel/smp.c:266 (discriminator 47))
+ </IRQ>
+
+Reported-by: syzkaller <syzkaller@googlegroups.com>
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+---
+Ravi requested patch resend with the following:
+  /*
+   * FIXME: cpuc->events[idx] can become NULL in a subtle race
+   * condition with NMI->throttle->x86_pmu_stop().
+   */
+
+ arch/x86/events/amd/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 920e3a640cad..3a8b8db878f6 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -762,7 +762,8 @@ static void amd_pmu_enable_all(int added)
+ 		if (!test_bit(idx, cpuc->active_mask))
+ 			continue;
+ 
+-		amd_pmu_enable_event(cpuc->events[idx]);
++		if (cpuc->events[idx])
++			amd_pmu_enable_event(cpuc->events[idx]);
+ 	}
+ }
+ 
+-- 
+2.39.3
+
