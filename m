@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF85419C56F;
-	Tue,  1 Oct 2024 21:19:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253EE19ABC3;
+	Tue,  1 Oct 2024 21:32:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727817555; cv=none; b=c1XcL0jTEMP/S0bcOmjzjSVo07U1TzvMJvnQzR3WNMpcBoApAWVYenYP2DpZ4yVGgWP23r4aScJ96K39kfP8ppOej+kFbRsGR16ZQbYtprfa617rkLi1gin438cqUvPDbXNsJNdjEOL3h+D5tN5Qpo/8n1yT5s2dl8ky9A6xKHg=
+	t=1727818355; cv=none; b=FZs9qYyYmyp8lGmdbkH+nf0yEyXiZlWePrlfygLH/n68NUgAFDJ6Qug/3GXWI/ehXRhPpLUeRnZVZ9QJjOl/21DyzfOOr+06+hC+kM9qxWX1qkwaZXN3V5O/aClTbWFHi6CvNJlo9IihSrAN+ExyKmMmsb6dKC9E1p8eRJqlKsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727817555; c=relaxed/simple;
-	bh=244LgueFRtPdrYTYFFh1neNOJHKmMrFxLaO4qT37TdI=;
+	s=arc-20240116; t=1727818355; c=relaxed/simple;
+	bh=xc+6Yrc0mFSiTg575g6Zo4OcSmJrOJHuuLsO/V5dxKA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U4v8dkd5QkqW7lnLGWbGmavfdP4XyLkhtyHSn4tgMxVJBMVYtKpUcKGFQh2cbJRQC2ntVcE96EI5myyh8wu6sMURd977yfaA6gVJef+gjScbLQr8ET9HkIQ7l0jrtCPgY8Ir+sVYeXbulH7ne/lw4cjF7HXGxGY4MSczIVJAm5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VuFbAORd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=g/v987InvpcBj8dGcfOo3B3K04/qFi2PJT0QgPnz5p38sDLbGY3y27YOsS3I4OO6iIz35MXNsPJJH5AKzOKU0LyNgQEyD2DPahcdHJtGL8QDyaT7drnLb/K+jEoYyUPEmDkQXXFIl8CA5g+uRM280wsPe2lg0q6S77oHIVc/sZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDrNieZy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VuFbAORd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBC2AC4CEC6;
-	Tue,  1 Oct 2024 21:19:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDrNieZy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 346D3C4CEC6;
+	Tue,  1 Oct 2024 21:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727817555;
-	bh=244LgueFRtPdrYTYFFh1neNOJHKmMrFxLaO4qT37TdI=;
+	s=k20201202; t=1727818354;
+	bh=xc+6Yrc0mFSiTg575g6Zo4OcSmJrOJHuuLsO/V5dxKA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VuFbAORdc5igqvJcV+l36uysAL/HAooTfAqXKCLQ7Ezo44aOp2sYKrY1MzcCa8eK9
-	 Mc3b1o3VqCMWCKSmHaZqQUTHGzVOFN5be1fXFXzZJC0D7PgxUBda5jn7fKkPsibmf8
-	 lOwW3NS/DHOuN02skoAv59Xayrbp6qn1/swV14MITq5REkSADBsP7+pM9XUGyCZ35j
-	 uILqPTsuTspsxu2V3MK7hGPClF4ZbxiZqMVbaVuAnNdAYIExKJIAUmFqRXjMtIu9+B
-	 +1WK9rnT7LwmUrU+y/buwX3G/d5VkkPRg75xyeAmek9Vf6OIV905oErk1JEYUc71OO
-	 Db5VaH8tE5AXg==
-Date: Tue, 1 Oct 2024 14:19:13 -0700
+	b=IDrNieZyF9cw4shb4R6E527lIRthcGW/dK7jX/CRuWOSvekUfyVqKAdNrvX9nkYkh
+	 L4hsz336vETwUZt/OsOLWd8sRU+JnzIKqVjnLcbBpCxFnVFtzxwLkz+X46d8qj2LoT
+	 srsnxVKRgPPI6LwujGsrUZzkvBnizphCOl95lR7gwQN3SxPxJjL3TFLLj12P6EyvXa
+	 LNM2Zorr9q+EFkO4UZ6XyO7Vc/yJvJ9hsf86HiJ0sdmRER/OfTXxDlSQy5pkAR1qY5
+	 lxiEdjlV4K1tUC4hLR1r2wrwS9dVnrYG61iJPiimqVkUcqsA2q/tOi1G8c7jaOm7RK
+	 Dkd7CCIYdq5Fg==
+Date: Tue, 1 Oct 2024 14:32:32 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
+To: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
@@ -42,11 +42,11 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Atish Patra <atishp@atishpatra.org>,
 	Palmer Dabbelt <palmer@rivosinc.com>,
 	Mingwei Zhang <mizhang@google.com>
-Subject: Re: [PATCHSET 0/8] perf tools: Do not set attr.exclude_guest by
- default (v4)
-Message-ID: <ZvxnUfgEiHY-Zmr4@google.com>
+Subject: Re: [PATCH 5/8] perf tools: Detect missing kernel features properly
+Message-ID: <ZvxqcEIVELw9Uets@google.com>
 References: <20241001002027.1272889-1-namhyung@kernel.org>
- <4ce19789-eea1-4e5e-9269-13bd78d846c2@linux.intel.com>
+ <20241001002027.1272889-6-namhyung@kernel.org>
+ <CAP-5=fVrptOSOK+sBo0rHR1QWQ0i1WigMaFRy=So-HATKr=R9A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,76 +55,145 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4ce19789-eea1-4e5e-9269-13bd78d846c2@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVrptOSOK+sBo0rHR1QWQ0i1WigMaFRy=So-HATKr=R9A@mail.gmail.com>
 
-On Tue, Oct 01, 2024 at 01:46:36PM -0400, Liang, Kan wrote:
+On Tue, Oct 01, 2024 at 10:53:02AM -0700, Ian Rogers wrote:
+> On Mon, Sep 30, 2024 at 5:20 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > The evsel__detect_missing_features() is to check if the attributes of
+> > the evsel is supported or not.  But it checks the attribute based on the
+> > given evsel, it might miss something if the attr doesn't have the bit or
+> > give incorrect results if the event is special.
+> >
+> > Also it maintains the order of the feature that was added to the kernel
+> > which means it can assume older features should be supported once it
+> > detects the current feature is working.  To minimized the confusion and
+> > to accurately check the kernel features, I think it's better to use a
+> > software event and go through all the features at once.
+> >
+> > Also make the function static since it's only used in evsel.c.
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/evsel.c | 345 +++++++++++++++++++++++++++++-----------
+> >  tools/perf/util/evsel.h |   1 -
+> >  2 files changed, 249 insertions(+), 97 deletions(-)
+> >
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index f202d28147d62a44..32e30c293d0c6198 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -20,6 +20,7 @@
+> >  #include <linux/zalloc.h>
+> >  #include <sys/ioctl.h>
+> >  #include <sys/resource.h>
+> > +#include <sys/syscall.h>
+> >  #include <sys/types.h>
+> >  #include <dirent.h>
+> >  #include <stdlib.h>
+> > @@ -2150,120 +2151,272 @@ int evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
+> >         return err;
+> >  }
+> >
+> > -bool evsel__detect_missing_features(struct evsel *evsel)
+> > +static bool has_attr_feature(struct perf_event_attr *attr, unsigned long flags)
+> >  {
+> > +       int fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
+> > +                        /*group_fd=*/-1, flags);
+> > +       close(fd);
+> > +
+> > +       if (fd < 0) {
+> > +               attr->exclude_kernel = 1;
+> > +
+> > +               fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
+> > +                            /*group_fd=*/-1, flags);
+> > +               close(fd);
+> > +       }
+> > +
+> > +       if (fd < 0) {
+> > +               attr->exclude_hv = 1;
+> > +
+> > +               fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
+> > +                            /*group_fd=*/-1, flags);
+> > +               close(fd);
+> > +       }
+> > +
+> > +       if (fd < 0) {
+> > +               attr->exclude_guest = 1;
+> > +
+> > +               fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
+> > +                            /*group_fd=*/-1, flags);
+> > +               close(fd);
+> > +       }
+> > +
+> > +       attr->exclude_kernel = 0;
+> > +       attr->exclude_guest = 0;
+> > +       attr->exclude_hv = 0;
+> > +
+> > +       return fd >= 0;
+> > +}
+> > +
+> > +static void evsel__detect_missing_brstack_features(struct evsel *evsel)
 > 
-> 
-> On 2024-09-30 8:20 p.m., Namhyung Kim wrote:
-> > Hello,
-> > 
-> > I found perf tools set exclude_guest bit inconsistently.  It used to
-> > set the bit but now the default event for perf record doesn't.  So I'm
-> > wondering why we want the bit in the first place.
-> > 
-> > Actually it's not good for PMUs don't support any exclusion like AMD
-> > IBS because it disables new features after the exclude_guest due to
-> > the missing feature detection logic.
-> > 
-> > v4 changes)
-> > 
-> >  * handle EOPNOTSUPP error in compatible way  (Kan)
-> >  * drop --exclude-guest option in perf stat
-> >  * not to separate exclude_hv fallback
-> >  * rename to exclude_GH_default  (Kan)
-> >  * drop the RFC from the subject
-> > 
-> > v3) https://lore.kernel.org/lkml/20240905202426.2690105-1-namhyung@kernel.org/
-> > 
-> >  * move exclude_guest fallback to the front
-> >  * fix precise_max handling on AMD
-> >  * simplify the default event for perf record
-> > 
-> > v2) https://lore.kernel.org/lkml/20240904064131.2377873-1-namhyung@kernel.org/
-> > 
-> >  * update the missing feature detection logic
-> >  * separate exclude_hv fallback
-> >  * add new fallback for exclude_guest
-> > 
-> > v1) https://lore.kernel.org/lkml/20240902014621.2002343-1-namhyung@kernel.org/
-> > 
-> > AFAIK it doesn't matter for the most cases but perf kvm.  If users
-> > need to set the bit, they can still use :H modifier.  For vPMU pass-
-> > through or Apple M1, it'd add the exclude_guest during the fallback
-> > logic.
-> > 
-> > Also the kernel feature detection logic should be separated from the
-> > exclude bit tests since it depends on the PMU implementation rather
-> > than the core kernel features.  So I changed it to use a software
-> > event for the detection and factor out some hw-specific checks.
-> > 
-> > The code is available at 'perf/exclude-v4' branch in
-> > git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> > 
-> > Thanks,
-> > Namhyung
-> > 
-> > 
-> > Namhyung Kim (8):
-> >   perf tools: Add fallback for exclude_guest
-> >   perf tools: Don't set attr.exclude_guest by default
-> >   perf tools: Simplify evsel__add_modifier()
-> >   perf tools: Do not set exclude_guest for precise_ip
-> >   perf tools: Detect missing kernel features properly
-> >   perf tools: Move x86__is_amd_cpu() to util/env.c
-> >   perf tools: Check fallback error and order
-> >   perf record: Just use "cycles:P" as the default event
-> > 
-> 
-> The patch set looks good to me.
-> 
-> Acked-by: Kan Liang <kan.liang@linux.intel.com>
+> In the future could other PMU specific unsupported features be added
+> not just brstack? Perhaps evsel__detect_missing_pmu_features would
+> better capture that.
 
-Thanks for your review!
+Yep, sounds reasonable.  I think we can add that if we have another
+thing to check.
+
+> 
+> > +{
+> > +       static bool detection_done = false;
+> > +       struct perf_event_attr attr = {
+> > +               .type = evsel->core.attr.type,
+> > +               .config = evsel->core.attr.config,
+> > +               .disabled = 1,
+> > +               .sample_type = PERF_SAMPLE_BRANCH_STACK,
+> > +               .sample_period = 1000,
+> > +       };
+> > +       int old_errno;
+> > +
+> > +       if (detection_done)
+> > +               return;
+> > +
+> > +       old_errno = errno;
+> > +
+> >         /*
+> >          * Must probe features in the order they were added to the
+> > -        * perf_event_attr interface.
+> > +        * perf_event_attr interface.  These are PMU specific limitation
+> > +        * so we can detect with the given hardware event and stop on the
+> > +        * first one succeeded.
+> >          */
+> > -       if (!perf_missing_features.branch_counters &&
+> > -           (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS)) {
+> > -               perf_missing_features.branch_counters = true;
+> > -               pr_debug2("switching off branch counters support\n");
+> > -               return true;
+> > -       } else if (!perf_missing_features.read_lost &&
+> > -           (evsel->core.attr.read_format & PERF_FORMAT_LOST)) {
+> > -               perf_missing_features.read_lost = true;
+> > -               pr_debug2("switching off PERF_FORMAT_LOST support\n");
+> > +
+> > +       /* Please add new feature detection here. */
+> > +
+> > +       attr.branch_sample_type = PERF_SAMPLE_BRANCH_COUNTERS;
+> > +       if (has_attr_feature(&attr, /*flags=*/0))
+> > +               goto found;
+> > +       perf_missing_features.branch_counters = true;
+> 
+> It feels like these global variables should be part of the PMU state.
+> There is already perf_pmu.missing_features.
+
+You're right.  But I think this is kinda global feature unless we have
+different PMUs that provide different branch sampling capability.  It's
+just the feature test requires a specific PMU and event.  But it'd be
+better putting this into struct perf_pmu later.
+
+Kan, can you confirm if Intel hybrid systems have the same branch stack
+sampling capabilities on both cores?
+
+Thanks,
 Namhyung
-
