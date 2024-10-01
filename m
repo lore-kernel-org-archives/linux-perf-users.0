@@ -1,129 +1,257 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7C71C9B7C
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Oct 2024 13:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B911C6F45
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Oct 2024 13:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727790700; cv=none; b=LqyS43O9Vlk+7GCbf+0YpaiYrRx4P2cGuinKnMVdQ70e37s3+DiB3JtRkOsdgO7AJitI/XRQ3x/O2QMIW+tQznTysFQLoE5Q1Bc50bO0fyArLXEw1w205ayBUQy19fCifStS0CpZku8azV+CP0S6OPRWJQy0A0GsJ8cgjx1gfDU=
+	t=1727790820; cv=none; b=dZyhFCYbMlc3vy71Jw0FHQXnlE870BXgBjTQKGbuuLVXhz5qFvhWAv2hpSj7ENJIgqXAkiw4l/PX73y83u9U+q6V7iAjqCYsvxJ0hpFyY7nFeRoX1SVLFBTOhuldY5KoXg6XZn7lfNzYh5hDlST7Wz70DwZEuvaHhL662C8SR7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727790700; c=relaxed/simple;
-	bh=DKMT61YzqQ1gvISKlWmlLIYiprIGfEGiqyn8K0KQMmY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cCvUyWnP+6x6TflIQ/XEmWWhhbFrke0Js0ZcYEDx5XKiTemS2jGJL7BAmdxIBm6a8jZuDaVEHaAoR2RxBbco9B/12/2IDWfT0wt0JUz8lNen6e6Q1GqI+foJXym7XrBwdLgGiH4LIv7FLyg2hr59WsUhaVkPDy9NfzI1yOlyreE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bbeWAO54; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1727790820; c=relaxed/simple;
+	bh=bHgH14tt31qsqFvh/zbZewblc8rFaP9IGjgnQtKbOdY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=nHqb3u41f0sx22OUD3d36rPTQXsc9lzQ7Z5AJqAYNjcVQyyj/3SeFrDvJBpufzOMI8wRc5xeueRb1Y2vMFK9qQ+sP0qIUzQjXbL4eab+Ni3iZwLPXeinmFefwDToy1Mh2NGG+g/+rDiZe37LBxQefG9IUGS28xQ8oRBqudtE/g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dVvrqeiv; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bbeWAO54"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a1a4f2cc29so188645ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Oct 2024 06:51:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dVvrqeiv"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5c8af23a4fcso294496a12.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Oct 2024 06:53:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727790697; x=1728395497; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=48wUOkFe53TjLWfnqR6mtcm302S1oICUhkJf6xdI3GE=;
-        b=bbeWAO54ycOWxO4QS37HsMCVVP+9lAT3kT/fCSUbiN1Cc7nslyZzuWlg8RrEVfCYWz
-         AAe60SxpsbgxeHDcjcZ0Uuy8qh1yRQOVCr+Ma9yu7dhs3hEOWsiSDSbd5OMBEhaaRp4z
-         ednp51iRYY+FkAr92AGVBmQceDoLbBqt1wdfv7IpIGXkmNV85/elKxhScNP4vKoBLUBc
-         YgUYjOMXwAf5IymTqKrw4lBUJAZejMbRLi1pXYABQGVC9ngC5Wr/AhTC+n+nYIW1XLS8
-         fOeQkYFdI4EtPmW5y5HRlrGwZq6QyJRelyxvUX9NFWIVTfid2VRIfRvjnTN5Nvba8s25
-         4LTA==
+        d=linaro.org; s=google; t=1727790816; x=1728395616; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:cc:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Wn3DsWREdtnEOKLXXSzOMEDspeKI8CLijSVF0lV0dHw=;
+        b=dVvrqeivMe2e3XTIemIH6agY3zwlHqhQ103XcOmWdhaUmxuhMpYiXs7Dct6UWHtyrr
+         fgnmA8tZBPx4jcAkaZv8T6GehbZenDL12nmsxrCS8VRRgcCkQOSbK6fiERwJitlLEtc1
+         c0WenqSMgjFs0oWkBA9LjqJHHAfueDGKOV0KuxxLYsQbvd2R/s6Xbm2SesqN+kqlXMsu
+         wBIhvYLZFY4X3CNyl0xKsNdVLE6NPBM1Y1y6WSeAB0SLKRCjb+H0O47so7yO4CCVKF7e
+         WYZ0H8DnJZ8tNhwGqslVY3LuzAjs8wtpTTR8B0ktIN0yYC8eTO0lQnWds88/hJlrfb0E
+         592w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727790697; x=1728395497;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=48wUOkFe53TjLWfnqR6mtcm302S1oICUhkJf6xdI3GE=;
-        b=V8R2Q4ufnUnaCp6ze5D7c5kJHwHlgjeuHdPdCbxL5WdgL6p7qZf5kVO/ddhQt67NdJ
-         CnfegH/M8QOkkdJ2cxn/r+qA5M+9KiBnLxV+045nURJpMUukKvAzdjRIStTO2YTNJlGj
-         q6ApPD49oLCf5gfdGYtBq7OVXHXAzERuls9DpuycOTAIWpiMBEHgyCtHUatQdBVeKwx/
-         yVL6ew7HnMQlPi109H8Zlo/RwDe+aNOnrYVYAKMDsqD/YHXQSv77SHBkIJZ8K8MxAfyw
-         NhlRZUiMnY2XdxPOFFIlxi1SLrcwOCaBlbTLm60JqK9ruYHurqzTKHINlrzsY6k+Vl/7
-         /t7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVFeWKO4CQ04KMQh49j83QL2OnGImVXCH72SIMFY6vc9QkkMdJjumPHMYWh1ICp0Mr+5uPvYKgOXKdYyrhHyBUB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFh3Tj/r6eZNokXMmsrOOAhruQ7FveoIJRx46nEylnTT1dsKC4
-	UVuez0bsKuXAQ885fMVdbnJEiO2ZW6/oC4ogFaodYxlQWBtljcaIzX7+We3aS9VjyMAwbzIiVpK
-	Lun4iws5a9OYDzhg0SFmxAtiLnNvPpuOWw2eW
-X-Google-Smtp-Source: AGHT+IFcHk3nqjivw+SJYZ1aoJmxEgVk8y9/J6HHuCIHNMPZ7sipZFKYUdJWncidCw3XXnrEA8ibHKSYEC3fjQvG8T0=
-X-Received: by 2002:a05:6e02:1a62:b0:3a0:b0dc:ac0d with SMTP id
- e9e14a558f8ab-3a36083bf05mr3161285ab.27.1727790696651; Tue, 01 Oct 2024
- 06:51:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1727790816; x=1728395616;
+        h=content-transfer-encoding:in-reply-to:cc:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wn3DsWREdtnEOKLXXSzOMEDspeKI8CLijSVF0lV0dHw=;
+        b=Ak7D0MN4aNk8vfkW8x94ePFS/AZi8F6iJ8iUq+gKiOJU+rtQTelA+5A1nScqZYPgwv
+         IxVyFQoryIQGEfpHjUkbI/qfk9adxjjxFxulUX5sPghSHcQihBW4XvyNW3qQGUMOElpj
+         rLvsNP+as4aRnNjtkqExjx7x4ST8SZjpUSTzLRHcA3fifrDekN+IWXWmc54nt0yHpqht
+         dxrjUfakkHJDmgndV6mCfEKNJrmP9CErHShnKXBB2AqzsbUopC6drJkDUvaE0hdRqgKh
+         abnYacpeHyWdVlDRd0/FYFhpX8wCDdmLr4C789BRAb3pvZbxbV3h9/GWjKuZ4veCF0em
+         eOVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvCpK1ddu4laHF8UCFELvAVQnaUPicphQg7OA6zgxUIfGpBrW9Gipz+l7/bjhNd0/9lXgzlQAtdOJljRoddiyq@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGHJdCBDYuLI8JM/Nd3+NeQXeklwYvpcYLzrtp3OOOgpty2323
+	QfbYjQxCxEMZEk212OpkEFUkHepW/gh0L9KPTg/Hf8N8nWw95n74Ysl1Y+aCKKg=
+X-Google-Smtp-Source: AGHT+IGJ4gEVrFJHyR3Yr3exSTVS+L+q41Iy6m8FZ2dSxqFIVekAfLXejxAgfZjkFb0qfdXsWwxl6Q==
+X-Received: by 2002:a50:8d88:0:b0:5c2:6c2d:3fb3 with SMTP id 4fb4d7f45d1cf-5c88261004bmr12674494a12.36.1727790816233;
+        Tue, 01 Oct 2024 06:53:36 -0700 (PDT)
+Received: from [192.168.1.3] ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c882405c9csm6480301a12.8.2024.10.01.06.53.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Oct 2024 06:53:35 -0700 (PDT)
+Message-ID: <552951c4-7a8e-44df-af23-8eb112c17709@linaro.org>
+Date: Tue, 1 Oct 2024 14:53:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241001123625.1063153-1-james.clark@linaro.org> <Zvv9eBDrquBHBHhF@x1>
-In-Reply-To: <Zvv9eBDrquBHBHhF@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 1 Oct 2024 06:51:24 -0700
-Message-ID: <CAP-5=fX3X22NS35YQwcMgv03Cw9acjDC_AC-Yocm-zMJXpBg4g@mail.gmail.com>
-Subject: Re: [PATCH] perf dwarf-aux: Fix build with !HAVE_DWARF_GETLOCATIONS_SUPPORT
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	namhyung@kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/5] perf arm-spe: Support metadata version 2
+To: Leo Yan <leo.yan@arm.com>
+References: <20240928195547.59780-1-leo.yan@arm.com>
+ <20240928195547.59780-5-leo.yan@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Besar Wicaksono <bwicaksono@nvidia.com>,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20240928195547.59780-5-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 1, 2024 at 6:47=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> On Tue, Oct 01, 2024 at 01:36:25PM +0100, James Clark wrote:
-> > The linked fixes commit added an #include "dwarf-aux.h" to disasm.h
-> > which gets picked up in a lot of places. Without
-> > HAVE_DWARF_GETLOCATIONS_SUPPORT the stubs return an errno, so include
-> > errno.h to fix the following build error:
-> >
-> >   In file included from util/disasm.h:8,
-> >                  from util/annotate.h:16,
-> >                  from builtin-top.c:23:
-> >   util/dwarf-aux.h: In function 'die_get_var_range':
-> >   util/dwarf-aux.h:183:10: error: 'ENOTSUP' undeclared (first use in th=
-is function)
-> >     183 |  return -ENOTSUP;
-> >         |          ^~~~~~~
-> >
-> > Fixes: 782959ac248a ("perf annotate: Add "update_insn_state" callback f=
-unction to handle arch specific instruction tracking")
-> > Signed-off-by: James Clark <james.clark@linaro.org>
 
-There are a few variants of this same patch flying around:
-https://lore.kernel.org/lkml/20240919013513.118527-4-yangjihong@bytedance.c=
-om/
-https://lore.kernel.org/lkml/20240924003720.617258-4-irogers@google.com/
-Just a heads up that we only need to apply 1.
 
-Thanks,
-Ian
+On 28/09/2024 8:55 pm, Leo Yan wrote:
+> This commit is to support metadata version 2 and at the meantime it is
+> backward compatible for version 1's format.
+> 
+> The metadata version 1 doesn't include the ARM_SPE_HEADER_VERSION field.
+> As version 1 is fixed with two u64 fields, by checking the metadata
+> size, it distinguishes the metadata is version 1 or version 2 (and any
+> new versions if later will have). For version 2, it reads out CPU number
+> and retrieves the metadata info for every CPU.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>   tools/perf/util/arm-spe.c | 95 +++++++++++++++++++++++++++++++++++++--
+>   1 file changed, 92 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index 70989b1bae47..52cee7401ff4 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -78,6 +78,10 @@ struct arm_spe {
+>   
+>   	unsigned long			num_events;
+>   	u8				use_ctx_pkt_for_pid;
+> +
+> +	u64				**metadata;
+> +	u64				metadata_ver;
+> +	u64				metadata_nr_cpu;
+>   };
+>   
+>   struct arm_spe_queue {
+> @@ -1016,6 +1020,73 @@ static int arm_spe_flush(struct perf_session *session __maybe_unused,
+>   	return 0;
+>   }
+>   
+> +static u64 *arm_spe__alloc_per_cpu_metadata(u64 *buf, int per_cpu_size)
+> +{
+> +	u64 *metadata;
+> +
+> +	metadata = zalloc(per_cpu_size);
+> +	if (!metadata)
+> +		return NULL;
+> +
+> +	memcpy(metadata, buf, per_cpu_size);
+> +	return metadata;
+> +}
+> +
+> +static void arm_spe__free_metadata(u64 **metadata, int nr_cpu)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < nr_cpu; i++)
+> +		zfree(&metadata[i]);
+> +	free(metadata);
+> +}
+> +
+> +static u64 **arm_spe__alloc_metadata(struct perf_record_auxtrace_info *info,
+> +				     u64 *ver, int *nr_cpu)
+> +{
+> +	u64 *ptr = (u64 *)info->priv;
+> +	u64 metadata_size;
+> +	u64 **metadata = NULL;
+> +	int hdr_sz, per_cpu_sz, i;
+> +
+> +	metadata_size = info->header.size -
+> +		sizeof(struct perf_record_auxtrace_info);
+> +
+> +	/* Metadata version 1 */
+> +	if (metadata_size == ARM_SPE_AUXTRACE_V1_PRIV_SIZE) {
+> +		*ver = 1;
+> +		*nr_cpu = 0;
+> +		/* No per CPU metadata */
+> +		return NULL;
+> +	}
+> +
+> +	*ver = ptr[ARM_SPE_HEADER_VERSION];
+> +	hdr_sz = ptr[ARM_SPE_HEADER_SIZE];
+> +	*nr_cpu = ptr[ARM_SPE_CPUS_NUM];
+> +
+> +	metadata = calloc(*nr_cpu, sizeof(*metadata));
+> +	if (!metadata)
+> +		return NULL;
+> +
+> +	/* Locate the start address of per CPU metadata */
+> +	ptr += hdr_sz;
+> +	per_cpu_sz = (metadata_size - (hdr_sz * sizeof(u64))) / (*nr_cpu);
+> +
+> +	for (i = 0; i < *nr_cpu; i++) {
+> +		metadata[i] = arm_spe__alloc_per_cpu_metadata(ptr, per_cpu_sz);
+> +		if (!metadata[i])
+> +			goto err_per_cpu_metadata;
+> +
+> +		ptr += per_cpu_sz / sizeof(u64);
+> +	}
+> +
+> +	return metadata;
+> +
+> +err_per_cpu_metadata:
+> +	arm_spe__free_metadata(metadata, *nr_cpu);
+> +	return NULL;
+> +}
+> +
+>   static void arm_spe_free_queue(void *priv)
+>   {
+>   	struct arm_spe_queue *speq = priv;
+> @@ -1050,6 +1121,7 @@ static void arm_spe_free(struct perf_session *session)
+>   	auxtrace_heap__free(&spe->heap);
+>   	arm_spe_free_events(session);
+>   	session->auxtrace = NULL;
+> +	arm_spe__free_metadata(spe->metadata, spe->metadata_nr_cpu);
+>   	free(spe);
+>   }
+>   
+> @@ -1267,15 +1339,24 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+>   	const char *cpuid = perf_env__cpuid(session->evlist->env);
+>   	u64 midr = strtol(cpuid, NULL, 16);
+>   	struct arm_spe *spe;
+> -	int err;
+> +	u64 **metadata = NULL;
+> +	u64 metadata_ver;
+> +	int nr_cpu, err;
+>   
+>   	if (auxtrace_info->header.size < sizeof(struct perf_record_auxtrace_info) +
+>   					min_sz)
+>   		return -EINVAL;
+>   
+> +	metadata = arm_spe__alloc_metadata(auxtrace_info, &metadata_ver,
+> +					   &nr_cpu);
+> +	if (!metadata && metadata_ver != 1) {
+> +		pr_err("Failed to parse Arm SPE metadata.\n");
+> +		return -EINVAL;
+> +	}
+> +
+>   	spe = zalloc(sizeof(struct arm_spe));
+>   	if (!spe)
+> -		return -ENOMEM;
+> +		goto err_free_metadata;
+>   
 
-> > ---
-> >  tools/perf/util/dwarf-aux.h | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-> > index 336a3a183a78..bd7505812569 100644
-> > --- a/tools/perf/util/dwarf-aux.h
-> > +++ b/tools/perf/util/dwarf-aux.h
-> > @@ -9,6 +9,7 @@
-> >  #include <elfutils/libdw.h>
-> >  #include <elfutils/libdwfl.h>
-> >  #include <elfutils/version.h>
-> > +#include <errno.h>
->
-> Simple enough, thanks, applied to perf-tools/perf-tools.
->
-> - Arnaldo
->
-> >  struct strbuf;
-> >
-> > --
-> > 2.34.1
-> >
+Hi Leo,
+
+There's a build error here:
+
+util/arm-spe.c:1402:6: error: variable 'err' is used uninitialized 
+whenever 'if' condition is true [-Werror,-Wsometimes-uninitialized]
+         if (!spe)
+             ^~~~
+
+
+>   	err = auxtrace_queues__init(&spe->queues);
+>   	if (err)
+> @@ -1284,8 +1365,14 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+>   	spe->session = session;
+>   	spe->machine = &session->machines.host; /* No kvm support */
+>   	spe->auxtrace_type = auxtrace_info->type;
+> -	spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
+> +	if (metadata_ver == 1)
+> +		spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
+> +	else
+> +		spe->pmu_type = auxtrace_info->priv[ARM_SPE_SHARED_PMU_TYPE];
+
+I thought V2 saved the type per-CPU, so I wasn't that clear on the 
+SHARED_PMU_TYPE vs ARM_SPE_PMU_TYPE use here. Maybe it's just a naming 
+issue? If it's a placeholder value to generate events can it be the same 
+name as the V1 enum, that way it's clearer that it's the same thing.
+
+Like: ARM_SPE_PMU_TYPE_V2
+
+
+Other than that, for the whole set:
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
