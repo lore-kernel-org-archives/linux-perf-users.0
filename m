@@ -1,43 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C9C1CC16B;
-	Tue,  1 Oct 2024 18:38:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F361E1C9B7E;
+	Tue,  1 Oct 2024 19:07:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727807885; cv=none; b=PEHT7f4U246RTQJapCd+fyyfZ9Et4B3PAf0c3DWGY48nDhsJbTVZD8JxNoHwG6MoSXJeRoiXAFPbE3Lm6vQeY2+ep93nEguzp1ptVBnphWTDSdNcAQW/PnLnVKNXD2yFGqPlE7389I27tsdXpBj4u8uI4dowhwXnatQ6xk8pjHE=
+	t=1727809622; cv=none; b=uMoC9EWgKdtOJ+wqiNAGnW1qFV+WAmHCcdxecOL8ZlwDMSYlcSCxuUgF07nXN+kXVf+MTCZ4XeMtxScF4tBOE5JzV4gUIsBe9ATHmEdWH+IxLtswOlb+BEy2udt1mGkvG/nTm8sWgN89o5rBbH+iitMd3jEWgcb6btm7RbiHr+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727807885; c=relaxed/simple;
-	bh=GLAn/ZtWj2XvCyHbIePKftJAaszPcF3l8iV9kilIl0Q=;
+	s=arc-20240116; t=1727809622; c=relaxed/simple;
+	bh=yjNLzGHwXYeXGDZK7SOq5iph3nIKqLB/EJ0tT3+l+Io=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YR7c3/WYdEsdgEJu5VUai1TZQmhIYzbcN68FSuTVTJ6irM5plxYjYWvc7LMiUxY9VGz2JUmWOoLFCy03xJ7LBxKJhp2yFWCRCNkHTCX4yjV4mJBO32i2+VWLN+KYk3b0R2UWhPTnmSV0MkwWLj+3qKoTnEUK1LpspSHFWKEMPeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpM66NYY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=A2A0oROe19MTpXoMdkTGrB37UMqpSJ1+XX8KWQIPnP26g328dv05Vn4+gPsieUJcRtKWOY4LLgUE4wcuxAP2voWR8OU6GrdhYbTZKaGJvWY1viBBRgcYaEwY0dFPXkEvrnorj5LVTM/cNmGzWmWS/FNIosr3G98pq2Nn928amJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qlvgwP2l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpM66NYY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9650C4CEC6;
-	Tue,  1 Oct 2024 18:38:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qlvgwP2l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1095C4CEC6;
+	Tue,  1 Oct 2024 19:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727807884;
-	bh=GLAn/ZtWj2XvCyHbIePKftJAaszPcF3l8iV9kilIl0Q=;
+	s=k20201202; t=1727809621;
+	bh=yjNLzGHwXYeXGDZK7SOq5iph3nIKqLB/EJ0tT3+l+Io=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JpM66NYYhStxNDep7lbyEiSQjmxpxd1+CVTLf7aJS47rW1x2euCwnZN9drFR7nwU5
-	 ddhI7h85wFghnO7ljFYig9LXbnQUVKvztQLbRyYZi2IsbxxE0ba5lwSkDGHLVyyt+x
-	 AHLfxkbARlTwjEsUvSsXP6jIW6+ruLtsJd1SqM8/pOOw5/toov4Coy2TdKvliI9nLe
-	 tSgBvwSnip8J3B4DCBiOuCNQhKX6YBZPuv3l6ny9oe5O+DuyYYcQm25cbspZIorWy3
-	 hGK9zBQVHsVPuUSOjF5pYw+biMqDbSUIca2hq4uuRZjwhXg9+K+kNmrsMnd2TfWppT
-	 lClaaNeaLG4mA==
-Date: Tue, 1 Oct 2024 15:38:01 -0300
+	b=qlvgwP2l+hgxora6zSRHNT5G47RptA5HB8MiRHakprax4pIu4aKHJAV/Kp78bwtAV
+	 1XE77L+hQcQwG0BNr1xWg4DqMfW7nvibDKCtswedjOWVPsIQTp8arEcYifAlkhtchU
+	 v19SoAii0Ktd2eosPbhfFM04YFG2+rSzBsaoGX/Sp8m3AhC9ixBDhH8w3DX7qTqx12
+	 V/ptYvVEy/woTZmz838CED8l6uCpCWCX+QmM2HPTfQlwqStf0isY4TqcJK9YVUORxv
+	 H4FI0hY0yTnQhnbfSBAJpTxwihmztoZm4UVHUhCjlbHhkrPhEhuJe0drFKg0yYj2ML
+	 xRvboiq+PLrgw==
+Date: Tue, 1 Oct 2024 16:06:57 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Yang Jihong <yangjihong@bytedance.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, james.clark@arm.com,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: James Clark <james.clark@linaro.org>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	leo.yan@arm.com
-Subject: Re: [PATCH RESEND v3 0/3] perf: build: Minor fixes for build failures
-Message-ID: <ZvxBiXAgHuOleOWk@x1>
-References: <20240919013513.118527-1-yangjihong@bytedance.com>
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH] perf: cs-etm: Fix the assert() to handle captured and
+ unprocessed cpu trace
+Message-ID: <ZvxIUSz1O92BGOiP@x1>
+References: <20240924233930.5193-1-ilkka@os.amperecomputing.com>
+ <5160d57a-3520-4d99-ae10-5cc539fba813@linaro.org>
+ <ZvSXFx4N2vXReqZs@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,41 +56,53 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240919013513.118527-1-yangjihong@bytedance.com>
+In-Reply-To: <ZvSXFx4N2vXReqZs@google.com>
 
-On Thu, Sep 19, 2024 at 09:35:10AM +0800, Yang Jihong wrote:
-> Changes since v3:
->  - Add reviewed-by tag from Leo. (see Link[1])
->  - Resend the patchset with no code changes.
+On Wed, Sep 25, 2024 at 04:04:55PM -0700, Namhyung Kim wrote:
+> On Wed, Sep 25, 2024 at 10:54:31AM +0100, James Clark wrote:
+> > 
+> > 
+> > On 25/09/2024 12:39 am, Ilkka Koskinen wrote:
+> > > If one builds perf with DEBUG=1, captures data on multiple CPUs and
+> > > finally runs 'perf report -C <cpu>' for only one of the cpus, assert()
+> > > aborts the program. This happens because there are empty queues with
+> > > format set. This patch changes the condition to abort only if a queue
+> > > is not empty and if the format is unset.
+> > > 
+> > >    $ make -C tools/perf DEBUG=1 CORESIGHT=1 CSLIBS=/usr/lib CSINCLUDES=/usr/include install
+> > >    $ perf record -o kcore --kcore -e cs_etm/timestamp/k -s -C 0-1 dd if=/dev/zero of=/dev/null bs=1M count=1
+> > >    $ perf report --input kcore/data --vmlinux=/home/ikoskine/projects/linux/vmlinux -C 1
+> > >    Aborted (core dumped)
+> > > 
+> > > Fixes: 57880a7966be ("perf: cs-etm: Allocate queues for all CPUs")
+> > > Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+> > > ---
+> > >   tools/perf/util/cs-etm.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > > index 90f32f327b9b..40f047baef81 100644
+> > > --- a/tools/perf/util/cs-etm.c
+> > > +++ b/tools/perf/util/cs-etm.c
+> > > @@ -3323,7 +3323,7 @@ static int cs_etm__create_decoders(struct cs_etm_auxtrace *etm)
+> > >   		 * Don't create decoders for empty queues, mainly because
+> > >   		 * etmq->format is unknown for empty queues.
+> > >   		 */
+> > > -		assert(empty == (etmq->format == UNSET));
+> > > +		assert(empty || etmq->format != UNSET);
+> > >   		if (empty)
+> > >   			continue;
+> > 
+> > Oops I didn't realize you could filter on CPU in report mode. Thanks for the
+> > fix. Adding a test to the end of test_arm_coresight.sh might be quite
+> > useful. Either way:
+> > 
+> > Reviewed-by: James Clark <james.clark@linaro.org>
+>  
+> Thanks, it should go to the perf-tool.  Arnaldo, please pick up.
 
-Thanks, applied the first two, the last one I had already picked a patch
-from James with what seems a more appropriate Fixes tag.
+Right, picking it now.
+
+Thanks,
 
 - Arnaldo
- 
-> Link[1]: https://lore.kernel.org/all/b5688d4a-9389-4998-8031-3f002302311e@arm.com/
-> 
-> Changes since v2:
->  - patch1: change LIBDW_VERSION to follow up the style of
->    LIBTRACEEVENT_VERSION. (by Leo's suggestion)
->  - patch2: Use a new line for the -ldl dependency and with comment,
->    synchronize tools/perf/Makefile.config. (by Leo's suggestion)
->  - patch3: include header files in alphabetical order,
->    add reviewed-by tag from Leo. (by Leo's suggestion)
-> 
-> Changes since v1:
->  - patch3: Remove UTF-8 characters from build failure logs
-> 
-> Yang Jihong (3):
->   perf: build: Fix static compilation error when libdw is not installed
->   perf: build: Fix build feature-dwarf_getlocations fail for old libdw
->   perf dwarf-aux: Fix build fail when HAVE_DWARF_GETLOCATIONS_SUPPORT
->     undefined
-> 
->  tools/build/feature/Makefile | 5 ++++-
->  tools/perf/Makefile.config   | 7 +++++--
->  tools/perf/util/dwarf-aux.h  | 1 +
->  3 files changed, 10 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 2.25.1
