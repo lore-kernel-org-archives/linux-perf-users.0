@@ -1,321 +1,405 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2043.outbound.protection.outlook.com [40.107.249.43])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C12E19922D;
-	Tue,  1 Oct 2024 08:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.43
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727772569; cv=fail; b=h6uFXKw2sj6iKggTiSHNoApJWTd4cplL49fyGEVOdv1TV0Tv+8rUP0Ilhv2e+Uh9koJGN7utGKe5D5aV6TU8EXvBaXZ3C/vvPQgFDyr0MvCzLSnQDxkE1wklyGUaiev1v62Hfz4226o5MXt5E2WgAmqSJ7q7HCNkfvpG+rY+R1I=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727772569; c=relaxed/simple;
-	bh=2ugUiomhGmbzxDg0mHHQorXym12muT6VictP3hBNfas=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BRjW8KWjCIgDDuJAHyahaydHCeHXGfK+XnGZI0OhSNtHL0UJM6NT3WYYFsCTz8iAlPGegV98jixddvlg2P97QjZm00d2e+ENw4zLSe5r/647l1NAmJRKkR83A1XkaU4qEBFKGdJRoy/Tsx7zQVXvP+Pbk3IRfMZpxjdL6eWszV4=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=lkEGe/v/; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=lkEGe/v/; arc=fail smtp.client-ip=40.107.249.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A643119CC16;
+	Tue,  1 Oct 2024 11:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727780809; cv=none; b=thEmZTxb/I/7C7D8R8lA5mF+9yYVF0CTziNWCgmo9GnNudLANxxKT4nSSrIGPgUUJFEP3KLTtytWd3sC0e9y3a+pkwLajnD8LFxqji5P4AH1+Ub8Sd5Vx5XvaOfhYdNlti/SYY6sRZ2BrdqujRjUMz9p8cYNLx0rzerBtqAETMA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727780809; c=relaxed/simple;
+	bh=y0LC9qrev1iuZ2pEn73s2elj7X+KFCltyH+gVRvKh0o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YFo4LqypcVr66szvxq79tJ/cfhV8tnvqu4PxEOcNnDf0CuyI5Zu9E692UtYrwJzsWGbb65TprfnENto0hvN7A4aluCXkGgusEFnvcOzjIp8Lp4qRPCv5z1DR4oC0y+bCmzLU7j9S40TnjkutuHu056O+euD9Q7PbPDpQO03D/KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cNRmrcYB; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="lkEGe/v/";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="lkEGe/v/"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=oiv4iQ3x2Q5noTaHgwBDLWBgpEtEzMGelgNgUd9Br4nBKCVal83jcULduQRXpXDDkFrrGHuDmSLg+6SkvXeyneyI4MmjLG/7Ia+4JmMHTffn+34awcKva8D1i6HR3DYhiXBgpEL8q9yrw9/cvtK106bpzeNVBpi3LNyOsuEnWVuUjZXWZbRICtpjPyaIH64nO3GJi1dKtgGe5x3vXr+j3F0P8ddBdSJXmiQsvQXISIVzpwc0clP6inyZEvBssfrhc1YvOWPQbtWp/7v6DJYZZcGdOgl510zXMNOBoMe1Nxl3Kg6Hm2j6uCSL4sbZHmWo2JqhLieS/UKLL9rUo9cHIg==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Vl7bPm6tLdLU3W6dthUUs13iVh8yZVAOAcYHhd+1FQ0=;
- b=OW2sD6vrSC0L3ZdE30PLitt1lOrREi56IXG9+Nu2JVE/R9O8Kv0Uvq6Z1gibivYcV9RFP0F9Sh9Nvpn3bW1GKLQ0UAccj4Kgr1aAi1OGzstZEdDUmYxYt0E/yqgNEaEEWRWniGDFlvu8ZCyAg1QFjsSHutZQEk4CyuTTMhy+DMstW+fUmrqIboHqt0CwXGzIErDko81jYa63zh9SlCCAlQ5tBU07nOXoiScQm4bEw7sWgqAyMVbg15vdczoKXXRmHaqk/YBlxDAOTMfQfvtXXcia8vFrF9pLGqaPHFjez66Z6KI2J1VTrz15IGWn+5RRjvRwFHW9hJs21ExKsJLUSA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vl7bPm6tLdLU3W6dthUUs13iVh8yZVAOAcYHhd+1FQ0=;
- b=lkEGe/v//MEg75z+XoxxUwxpQYkeCO6ZNFe3sbrI2TFFvvyRFnqfF8+FQRKXaoOkTzoMGkvUX+SqmP6nLHhBNWpaX94YBQ1DywQuKoG87PeNKJMB+rbb8XT8c1btEwZ+zf5Oj3lBJUAk8Nf0HjihcITdxlH44awHJfUyFVnKfxw=
-Received: from AS4P191CA0030.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:5d9::16)
- by AS2PR08MB9343.eurprd08.prod.outlook.com (2603:10a6:20b:598::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.15; Tue, 1 Oct
- 2024 08:49:20 +0000
-Received: from AMS0EPF000001B1.eurprd05.prod.outlook.com
- (2603:10a6:20b:5d9:cafe::cf) by AS4P191CA0030.outlook.office365.com
- (2603:10a6:20b:5d9::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.15 via Frontend
- Transport; Tue, 1 Oct 2024 08:49:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
- pr=C
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AMS0EPF000001B1.mail.protection.outlook.com (10.167.16.165) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.7918.13
- via Frontend Transport; Tue, 1 Oct 2024 08:49:20 +0000
-Received: ("Tessian outbound ba07ec841eae:v471"); Tue, 01 Oct 2024 08:49:20 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: bcd24b5d3666864c
-X-TessianGatewayMetadata: T6+jGJaHbz7AwugEUWDtuDLdXXEhXgO5u9XVJAK2k/4izHe5kai4ylH6o+lKq/yDDKlTTfYa8YdVnheg99ZTpioiaHLldNuOOjEv2lthRPqqOCch7oHOvOU3l12FdyMXBBBMKQf5V8aBxRkk0d9GLNAPemhKWMiSww2wQzt6egehSTo4UP/yZAZy0tgwajS4DIU9Ulmcfcyi4BPS+Rrigw==
-X-CR-MTA-TID: 64aa7808
-Received: from L69bc66d111b6.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 8F9C911D-373E-453E-9512-89998DAF9717.1;
-	Tue, 01 Oct 2024 08:48:53 +0000
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id L69bc66d111b6.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 01 Oct 2024 08:48:53 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EyNetAoc1XFVttjRz5SAC5yamMv0NigEYvRUCsNuctXd0BXE+eUSL7eXJJig3P6HFeQv1tolZiXjZjna0N2edJCuWthRmuJ3S5R0I07q17aDsVuMhW3SXPF8tK94GOO0uY7rDchvDRaAvXMspy5QNrdMINtylGwafnqjdj4iFyOC9rAFJljPAinjJdsvJxqWEkz3GVbsvpm0XcL1MgaBIW84LYjfoOwr7TNjIOWG9BCRJkEPw6smTX4MbgsXj+TocA6i/ewazapsIHvpknh1VP51VZB0atNEmG2bHvnIW618fy4Nc2CM5tNyF6JtpJHZC2vg4RvdKVENL8CaO5wBUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Vl7bPm6tLdLU3W6dthUUs13iVh8yZVAOAcYHhd+1FQ0=;
- b=TjeD+twA45lrkaI+wIJSZBEqS0M13l5U/t/tVJz0KtOSf2xsj/nR7QgRV6Ktq054aA1+Y9wELcCMXL11FAbDKLgYQpxLRjY5TnP2YPOWm7V6Vv5QfXlFJnBbXqIlgmFTKiGz5xAxRxUbnuGipC+o6oQE5aT8UXjWUEX4S2B7NhBjWq+KwBRQqsJEjEGjiLAQ8oUc5ogrLwbn4fHnZMkizrKTDaZTIDRJCClaLZuBu2YIu+BUkH4oMdTCJ61U4Rscqx7qGfiRbIJEV2Ppt8gS5/YzsrACsLnHdn2Wu10RW4TAkTeaPPeQesz+GHIauzR2vhdAH6fuxkKt5gAdFBfM9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vl7bPm6tLdLU3W6dthUUs13iVh8yZVAOAcYHhd+1FQ0=;
- b=lkEGe/v//MEg75z+XoxxUwxpQYkeCO6ZNFe3sbrI2TFFvvyRFnqfF8+FQRKXaoOkTzoMGkvUX+SqmP6nLHhBNWpaX94YBQ1DywQuKoG87PeNKJMB+rbb8XT8c1btEwZ+zf5Oj3lBJUAk8Nf0HjihcITdxlH44awHJfUyFVnKfxw=
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20) by VI0PR08MB10446.eurprd08.prod.outlook.com
- (2603:10a6:800:206::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.15; Tue, 1 Oct
- 2024 08:48:46 +0000
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739%4]) with mapi id 15.20.8026.009; Tue, 1 Oct 2024
- 08:48:45 +0000
-From: Yeo Reum Yun <YeoReum.Yun@arm.com>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-CC: "mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
-	"a.p.zijlstra@chello.nl" <a.p.zijlstra@chello.nl>, "mingo@elte.hu"
-	<mingo@elte.hu>, Mark Rutland <Mark.Rutland@arm.com>,
-	"james.clark@linaro.org" <james.clark@linaro.org>, nd <nd@arm.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, Frederic Weisbecker
-	<fweisbec@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2] trace/trace_event_perf: remove duplicate samples on
- the first tracepoint event
-Thread-Topic: [PATCH v2] trace/trace_event_perf: remove duplicate samples on
- the first tracepoint event
-Thread-Index: AQHbBYKXoi2hw6C5d0ic7zmh6yP4AbJqGokAgAeXifk=
-Date: Tue, 1 Oct 2024 08:48:45 +0000
-Message-ID:
- <GV1PR08MB10521EC72BDB730710F3973D4FB772@GV1PR08MB10521.eurprd08.prod.outlook.com>
-References: <20240913021347.595330-1-yeoreum.yun@arm.com>
- <20240926085118.0a823138@rorschach.local.home>
-In-Reply-To: <20240926085118.0a823138@rorschach.local.home>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-x-ms-traffictypediagnostic:
-	GV1PR08MB10521:EE_|VI0PR08MB10446:EE_|AMS0EPF000001B1:EE_|AS2PR08MB9343:EE_
-X-MS-Office365-Filtering-Correlation-Id: 68355686-3adc-45d9-52f7-08dce1f5f104
-x-checkrecipientrouted: true
-nodisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018;
-X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?dz+oexPbhUU3b1oZMjlQ+saSFKRrVEVBKjb/i24SZFKT6xVGEdEeiHW7hx44?=
- =?us-ascii?Q?QvedQkgyKX2eUhgS8pKTlQPaqC7EwFFbrUE8oLFsVzEsIxt+pfRfz0sr0mAz?=
- =?us-ascii?Q?WFn0Z1KvC97s5WYwX134y38X1n291MotJF5xcyOy14ny51f7H95Tp/RjOIRK?=
- =?us-ascii?Q?xpH/AMNnuOD/Uasr7OsWXY6khThmOi7IDhc2kZWvGrSiw6CNyr+nlUYKlaBD?=
- =?us-ascii?Q?tdBVxxHEebtBn8pI0hXNAOonLhfknpraFiAbCLjZ1AwltKd63zDbDHb3amAu?=
- =?us-ascii?Q?lFM4vKs4RhEN7b4tSOZvohvfJ04hzdnta3ZncJxfgBFlM10ws8dvwfe71PHz?=
- =?us-ascii?Q?spZJaVRe4dov2V9vBMZpIjxL2bq7r0sjSK098XKNyogg1d4/hGR2oIS/fUu4?=
- =?us-ascii?Q?Io5mbceXw2T4NptFq5XjcwGNJicsvFbEwl46xKjiKUW38IJh5N7nAr+BLdqm?=
- =?us-ascii?Q?bAUsUJzuE+4sbDAcaruLsSvxT/wdP8uRskHpw4raKbmPDFGJldNct3rbcrUT?=
- =?us-ascii?Q?9RToTo1O895lfdgv6YUggN4dDDp7egVCbCIdZyd0V5fqU2fC8hAn6B4G97qs?=
- =?us-ascii?Q?j+fFcyEFaHD/qAg2YKgf6rCBeowE7PFVrEIPX2qVCZU6L4JMkPmiWReej196?=
- =?us-ascii?Q?HE/o6lE7v2Vg0fPOOv9pqZtiRLklHVSb5qnM2Siaz1K1UFRbt/UMX381C+us?=
- =?us-ascii?Q?UQ14uHFZlsIJ0Ysm3Mf8kISjB4FnRpUcqr47jW9wddOU/DZIQkfSzojOF10L?=
- =?us-ascii?Q?nI/HQK48kYLj/xjENn+CKmuN5cXJY0f/0KB2V5SBIWaEb1tTexa2edav9KTi?=
- =?us-ascii?Q?yauaJIM8R84zHf8cIfchI0Go8wu7vavI5KiZkJnYmwYNE+uEyYlrxtUpDE1y?=
- =?us-ascii?Q?Hz2Js84To+ACUJRW33Y0UegAC2rHIAdjRAaKvouN1RYmJ8+gOpqpnMpj2m/3?=
- =?us-ascii?Q?Y/wKc5tB1yjxUtSD4jCWh4XNVh+8OU/wp1Oonnlvj8+czWcbpaVkHFyjBH/j?=
- =?us-ascii?Q?DUMHj0q2Iq/NYitXznCjL+LapBlcQ6OnWVN0DbMVZSZUaY50sKV0Wc0apWN4?=
- =?us-ascii?Q?vg0LgyxE6k+fslGi6jXP3p9eGY022sp5y+ODPAAEmSuYs841fAqCqZVlR2Pp?=
- =?us-ascii?Q?9j5NfPhdwlo2pRz75z1U/WyXgfyRxsIk5aKMtOJIq8w5Ytnjg6j17A0yR9zK?=
- =?us-ascii?Q?3zcG+4hF/V9w3j8YPU8bdv1mID3VptabZqeHMAOLfBpacv09QhwGLyu/eGyP?=
- =?us-ascii?Q?cATI2IzJTqs2V5OQvkpsYrU9Kw1oxaFih0jN054YdwHyxxCxykBwzrrUVOJW?=
- =?us-ascii?Q?chbVNRDnvEzGB+Z9vOvcjEZD/S149P9xB7DUt3EMj4VA1Frq0H6WBP+a2sz5?=
- =?us-ascii?Q?/m4uHoAxaw6/TUgwcpLRVOoniySN5Ry2mSc86jl6j4ECH8/UYw=3D=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cNRmrcYB"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4918Eo4s008331;
+	Tue, 1 Oct 2024 11:06:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=hjKa/PHQnNBPOr8sGYF4rSv+gH
+	qBBc5OBXt7uZNVFh0=; b=cNRmrcYBY1jnMQyhuNNHim00MSSyFggwiYQUrTKSz9
+	/vfcl7hI3Rh850/DFDbYWAnExG9/477+y/xViDjiEX28fmKsdinaQTkqabUr8tpJ
+	B9Nad7ew1RkxtXL+FQzPROblxb5Mog06jrXn0spW+bArHQTk6MfIyipMpm0GWEwu
+	iFS6l5T1/MauWAOjsgJTHd/kJDDz/Bt+vSa9Rjn7wKTNOOMVcgQKutAnY4Vz7Ucv
+	RJzAsDNVs7PNyJoml1yMjA1rnzFaEPivaf/8dlVbL95YAVNE6QR39c1mKWdanthn
+	B0vXl49X0weWPBQox2KxgsfmYiZkXPYDEtaiA4moNA1w==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 420cknh3r4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Oct 2024 11:06:34 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 491B46mX008740;
+	Tue, 1 Oct 2024 11:06:33 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 420cknh3qy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Oct 2024 11:06:33 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49196PGI017902;
+	Tue, 1 Oct 2024 11:06:32 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41xw4muw8w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Oct 2024 11:06:32 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 491B6U2X30409372
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 1 Oct 2024 11:06:30 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 72B3F20065;
+	Tue,  1 Oct 2024 11:06:30 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 56F1520043;
+	Tue,  1 Oct 2024 11:06:25 +0000 (GMT)
+Received: from li-fdfde5cc-27d0-11b2-a85c-e224154bf6d4.ibm.com.com (unknown [9.43.47.51])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  1 Oct 2024 11:06:25 +0000 (GMT)
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Subject: [PATCH v2] perf sched timehist: Add pre-migration wait time option
+Date: Tue,  1 Oct 2024 16:36:20 +0530
+Message-ID: <20241001110620.60602-1-vineethr@linux.ibm.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR08MB10446
-Original-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-SkipListedInternetSender:
- ip=[2603:10a6:150:163::20];domain=GV1PR08MB10521.eurprd08.prod.outlook.com
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AMS0EPF000001B1.eurprd05.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	b733eda6-75ae-4d1c-d5f1-08dce1f5dc12
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|35042699022|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?VzW8LaBDh1tIWt0QQhJG6GYzeCXD1xQPuOdqr6E1zRCdYF+11Sn+CDiiQGRS?=
- =?us-ascii?Q?zC3EjrjhxmoJ6OJPzZw87vlC0NC+QgadHUA9MLhCnlT6y6yW0hfM+XXeI0NX?=
- =?us-ascii?Q?F2ra6xfslBoq3RH+s7fKvwwOMdLUHGrDsV6weaYH+LAOrLQ1y+9WkSU8AkXz?=
- =?us-ascii?Q?4k/ALlW0+ThzhkNCAfgBMiyDCGfPvqO2yylFUwROAwTs6aSAyGes0n47axiR?=
- =?us-ascii?Q?8lugHzwB1K87xi6Q9sEIlNxT4+ghPlEWb/q/WjcoKUrT6nUrAiBvJd+/viEY?=
- =?us-ascii?Q?rBWiqAjMiOAYSs9hDFDORxA6JazRgQI2j9fiP22W1SUmta8yw8YdyDKWze0I?=
- =?us-ascii?Q?ehlTtXK+HYOyCeipU5BWzfjf1DA7Xl9PnFmQmfu4//Aey08VDwGieGYPEYX/?=
- =?us-ascii?Q?9DNZ0af5CDTuacvR3w82bsdoyaZt03bGr0bK7K/orW5ieOQf06NUMfN4og4M?=
- =?us-ascii?Q?BefDWP6M3xX8gxvSKxf4Cz0ZTnixjVyLeoB5GliC8uSw6+sFqq8b81TcSeOK?=
- =?us-ascii?Q?4m3XO5vCcMgC02TK+w8eeMxYbcQ6qhSqsni2YS4QzcSOBhUFrNwbPYd4ULaO?=
- =?us-ascii?Q?Bl0jhKUp2RKU9uFSiA8Jg6h6DnrmCkWVsKximZbl22Ee4f368CtXFIH85fGy?=
- =?us-ascii?Q?n4dHV5vl9YIR4jRnJBFL3SbhgmSKQJR9MhgjTOmLxJA0Ao90Poy8xLmkORPM?=
- =?us-ascii?Q?3NP+erQ+p+Iz7x9qFIWKg0DlA1MNHtkEbTFQkGVC9ZaKD9cr5sZ5wHP8loFF?=
- =?us-ascii?Q?rAFPNXDhOJNg2+R+o4S4UcYcPkau20vZcU/21afJjUGqcZZovdFjw7alscB1?=
- =?us-ascii?Q?vNLrEcMTpjvE3KMCCHV+DaNqZypWiydfMcI6h8GKzMKW7U27lkrIFOqTHbav?=
- =?us-ascii?Q?IZRmAOZDe0qico3Rv7jWiC4fRlW2OVdCUdtYGjcBV5Tjfi3DQiAGdw4MQgd5?=
- =?us-ascii?Q?uq9wBAjsYzJCWE1+Ah4/rXPGKRjvAYdcke+H0CgCi27fkeMOocAGFCtjRhVT?=
- =?us-ascii?Q?1Fla35gYXqbRDJdw7dUVgf4jDb71oqvJYuCXyyzdCl/0M419VIACa1kwbzSC?=
- =?us-ascii?Q?hOywhEblZ/0wVFPN8a4zRTMBJDyEwK71QL9Q1FBGc8B+ks1Z8oFC/udkzb+5?=
- =?us-ascii?Q?pMQF3RfDtmaD6YULhJ2uffb4atlaqB6DypurP6Ozs4DxeJinL2WQcRcD4DCI?=
- =?us-ascii?Q?pDoOT3W6uU1nPqA38aY4AJZEg6sh3Ehy/xIOZj8T+UYQAvXIXmYUS2xu8qY5?=
- =?us-ascii?Q?kx1HtQ7FQZ9J2a+C6x7Ye47QGNjFDC8cMMFkXz8u3butoLk3xcsJk031vsp2?=
- =?us-ascii?Q?CBr4JR0hnRYTtbFhqiklgWaJNQE8k1D/EqvFmidhJW0Q3KB22UtGC/vWk3ws?=
- =?us-ascii?Q?J6aEU6Il1zYjBZkaYX4wo1Fyhce1UBG4zn6ZFaAPo5ugJDTgw/JjfUV2Vy6M?=
- =?us-ascii?Q?Zr7MJfNpEZaYhwiOHoWIS983MuQEEx3h?=
-X-Forefront-Antispam-Report:
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(35042699022)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2024 08:49:20.4409
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68355686-3adc-45d9-52f7-08dce1f5f104
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF000001B1.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR08MB9343
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: X8QfgzpBmMlGyRXEeJ3cnTpcmEYzn6i_
+X-Proofpoint-ORIG-GUID: vBNx2tV-EAnpUOJWkNOgH2xAq3gF4Q4W
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-01_07,2024-09-30_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ mlxscore=0 priorityscore=1501 clxscore=1015 spamscore=0 lowpriorityscore=0
+ adultscore=0 impostorscore=0 phishscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
+ definitions=main-2410010072
 
-Gentle ping in case of forgotten.
+pre-migration wait time is the time that a task unnecessarily spends
+on the runqueue of a CPU but doesn't get switched-in there. In terms
+of tracepoints, it is the time between sched:sched_wakeup and
+sched:sched_migrate_task.
 
-________________________________________
-From: Steven Rostedt <rostedt@goodmis.org>
-Sent: 26 September 2024 13:51
-To: Yeo Reum Yun
-Cc: mhiramat@kernel.org; mathieu.desnoyers@efficios.com; a.p.zijlstra@chell=
-o.nl; mingo@elte.hu; Mark Rutland; james.clark@linaro.org; nd; linux-kernel=
-@vger.kernel.org; linux-trace-kernel@vger.kernel.org; Peter Zijlstra; Frede=
-ric Weisbecker; Arnaldo Carvalho de Melo; Namhyung Kim
-Subject: Re: [PATCH v2] trace/trace_event_perf: remove duplicate samples on=
- the first tracepoint event
+Let's say a task woke up on CPU2, then it got migrated to CPU4 and
+then it's switched-in to CPU4. So, here pre-migration wait time is
+time that it was waiting on runqueue of CPU2 after it is woken up.
 
-Can one of the perf folks give me an Ack, and I'll take this through my tre=
-e.
+The general pattern for pre-migration to occur is:
+sched:sched_wakeup
+sched:sched_migrate_task
+sched:sched_switch
+So, this option expects sched_wakeup also to be recorded and fails
+if attempted to use the option without sched:sched_wakeup tracepoint.
 
--- Steve
+pre-migrations are generally not useful and it increases migrations.
+This metric would be helpful in testing patches mainly related to wakeup
+and load-balancer code paths as better wakeup logic would choose an
+optimal CPU where task would be switched-in and thereby reducing pre-
+migrations.
 
+The sample output(s) when -P or --pre-migrations is used:
+=================
+           time    cpu  task name                       wait time  sch delay   run time  pre-mig time
+                        [tid/pid]                          (msec)     (msec)     (msec)     (msec)
+--------------- ------  ------------------------------  ---------  ---------  ---------  ---------
+  103032.721020 [0000]  perf[47206]                         0.000      0.000      0.000      0.000
+  103032.721034 [0000]  migration/0[18]                     0.000      0.003      0.013      0.000
+  103032.736716 [0001]  schbench[47229/47207]              10.664      9.231      0.039      9.170
+  103032.736719 [0005]  <idle>                              0.000      0.000     15.405      0.000
+  103032.736726 [0003]  schbench[47216/47207]              11.251      9.193      0.022      9.126
+  103032.736727 [0001]  schbench[47228/47207]              10.752      9.264      0.010      9.169
+  103032.736731 [0007]  <idle>                              0.000      0.000     15.314      0.000
+  103032.736739 [0008]  <idle>                              0.000      0.000     15.249      0.000
+  103032.736742 [0003]  schbench[47257/47207]               9.498      9.184      0.015      9.100
 
-On Fri, 13 Sep 2024 03:13:47 +0100
-Levi Yun <yeoreum.yun@arm.com> wrote:
+   51370.894024 [0012]  schbench[38775/38770]              21.047     21.047      8.950      0.000
+   51370.894024 [0008]  schbench[38781/38770]              39.597     39.448      9.984     39.437
+   51370.894025 [0009]  stress-ng-cpu[38743]                7.971      7.971      9.997      0.000
 
-> When a tracepoint event is created with attr.freq =3D 1,
-> 'hwc->period_left' is not initialized correctly. As a result,
-> in the perf_swevent_overflow() function, when the first time the event oc=
-curs,
-> it calculates the event overflow and the perf_swevent_set_period() return=
-s 3,
-> this leads to the event are recorded for three duplicate times.
->
-> Step to reproduce:
->     1. Enable the tracepoint event & starting tracing
->          $ echo 1 > /sys/kernel/tracing/events/module/module_free
->          $ echo 1 > /sys/kernel/tracing/tracing_on
->
->     2. Record with perf
->          $ perf record -a --strict-freq -F 1 -e "module:module_free"
->
->     3. Trigger module_free event.
->          $ modprobe -i sunrpc
->          $ modprobe -r sunrpc
->
-> Result:
->      - Trace pipe result:
->          $ cat trace_pipe
->          modprobe-174509  [003] .....  6504.868896: module_free: sunrpc
->
->      - perf sample:
->          modprobe  174509 [003]  6504.868980: module:module_free: sunrpc
->          modprobe  174509 [003]  6504.868980: module:module_free: sunrpc
->          modprobe  174509 [003]  6504.868980: module:module_free: sunrpc
->
-> By setting period_left via perf_swevent_set_period() as other sw_event di=
-d,
-> This problem could be solved.
->
-> After patch:
->      - Trace pipe result:
->          $ cat trace_pipe
->          modprobe 1153096 [068] 613468.867774: module:module_free: xfs
->
->      - perf sample
->          modprobe 1153096 [068] 613468.867794: module:module_free: xfs
->
-> Fixes: bd2b5b12849a ("perf_counter: More aggressive frequency adjustment"=
-)
-> Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
-> ---
-> Changes in v2:
->   - Fix build error.
-> ---
->  kernel/trace/trace_event_perf.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_p=
-erf.c
-> index 05e791241812..3ff9caa4a71b 100644
-> --- a/kernel/trace/trace_event_perf.c
-> +++ b/kernel/trace/trace_event_perf.c
-> @@ -352,10 +352,16 @@ void perf_uprobe_destroy(struct perf_event *p_event=
-)
->  int perf_trace_add(struct perf_event *p_event, int flags)
->  {
->       struct trace_event_call *tp_event =3D p_event->tp_event;
-> +     struct hw_perf_event *hwc =3D &p_event->hw;
->
->       if (!(flags & PERF_EF_START))
->               p_event->hw.state =3D PERF_HES_STOPPED;
->
-> +     if (is_sampling_event(p_event)) {
-> +             hwc->last_period =3D hwc->sample_period;
-> +             perf_swevent_set_period(p_event);
-> +     }
-> +
->       /*
->        * If TRACE_REG_PERF_ADD returns false; no custom action was perfor=
-med
->        * and we need to take the default action of enqueueing our event o=
-n
-> --
-> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+Changes since v1:
+ - Use timehist_sched_wakeup_event() to get the sched_wakeup time. (Namhyung Kim)
+ - Rebase against perf-tools-next commit b38c49d8296b ("perf/test: Speed up test
+   case perf annotate basic tests")
+
+Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+---
+ tools/perf/Documentation/perf-sched.txt |   8 ++
+ tools/perf/builtin-sched.c              | 112 ++++++++++++++++--------
+ 2 files changed, 82 insertions(+), 38 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+index 3db64954a267..7935499b88b0 100644
+--- a/tools/perf/Documentation/perf-sched.txt
++++ b/tools/perf/Documentation/perf-sched.txt
+@@ -221,6 +221,14 @@ OPTIONS for 'perf sched timehist'
+ 	priorities are specified with -: 120-129. A combination of both can also be
+ 	provided: 0,120-129.
+ 
++-P::
++--pre-migrations::
++	Show pre-migration wait time. pre-migration wait time is the time spent
++	by a task waiting on a runqueue but not getting the chance to run there
++	and is migrated to a different runqueue where it is finally run. This
++	time between migrate_task and sched_wakeup is the pre-migration wait
++	time. This option is valid only if sched_wakeup tracepoint is recorded.
++
+ OPTIONS for 'perf sched replay'
+ ------------------------------
+ 
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index fdf979aaf275..02fe0ec41141 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -225,6 +225,7 @@ struct perf_sched {
+ 	bool		show_wakeups;
+ 	bool		show_next;
+ 	bool		show_migrations;
++	bool		pre_migrations;
+ 	bool		show_state;
+ 	bool		show_prio;
+ 	u64		skipped_samples;
+@@ -244,7 +245,10 @@ struct thread_runtime {
+ 	u64 dt_iowait;      /* time between CPU access by iowait (off cpu) */
+ 	u64 dt_preempt;     /* time between CPU access by preempt (off cpu) */
+ 	u64 dt_delay;       /* time between wakeup and sched-in */
++	u64 dt_pre_mig;     /* time between migration and wakeup */
+ 	u64 ready_to_run;   /* time of wakeup */
++	u64 woken;	    /* time when sched_wakeup tracepoint is hit */
++	u64 migrated;	    /* time when a thread is migrated */
+ 
+ 	struct stats run_stats;
+ 	u64 total_run_time;
+@@ -252,6 +256,7 @@ struct thread_runtime {
+ 	u64 total_iowait_time;
+ 	u64 total_preempt_time;
+ 	u64 total_delay_time;
++	u64 total_pre_mig_time;
+ 
+ 	char last_state;
+ 
+@@ -2073,14 +2078,15 @@ static void timehist_header(struct perf_sched *sched)
+ 		printf(" ");
+ 	}
+ 
+-	if (sched->show_prio) {
+-		printf(" %-*s  %-*s  %9s  %9s  %9s",
+-		       comm_width, "task name", MAX_PRIO_STR_LEN, "prio",
+-		       "wait time", "sch delay", "run time");
+-	} else {
+-		printf(" %-*s  %9s  %9s  %9s", comm_width,
+-		       "task name", "wait time", "sch delay", "run time");
+-	}
++	printf(" %-*s", comm_width, "task name");
++
++	if (sched->show_prio)
++		printf("  %-*s", MAX_PRIO_STR_LEN, "prio");
++
++	printf("  %9s  %9s  %9s", "wait time", "sch delay", "run time");
++
++	if (sched->pre_migrations)
++		printf("  %9s", "pre-mig time");
+ 
+ 	if (sched->show_state)
+ 		printf("  %s", "state");
+@@ -2095,17 +2101,15 @@ static void timehist_header(struct perf_sched *sched)
+ 	if (sched->show_cpu_visual)
+ 		printf(" %*s ", ncpus, "");
+ 
+-	if (sched->show_prio) {
+-		printf(" %-*s  %-*s  %9s  %9s  %9s",
+-		       comm_width, "[tid/pid]", MAX_PRIO_STR_LEN, "",
+-		       "(msec)", "(msec)", "(msec)");
+-	} else {
+-		printf(" %-*s  %9s  %9s  %9s", comm_width,
+-		       "[tid/pid]", "(msec)", "(msec)", "(msec)");
+-	}
++	printf(" %-*s", comm_width, "[tid/pid]");
+ 
+-	if (sched->show_state)
+-		printf("  %5s", "");
++	if (sched->show_prio)
++		printf("  %-*s", MAX_PRIO_STR_LEN, "");
++
++	printf("  %9s  %9s  %9s", "(msec)", "(msec)", "(msec)");
++
++	if (sched->pre_migrations)
++		printf("  %9s", "(msec)");
+ 
+ 	printf("\n");
+ 
+@@ -2117,15 +2121,15 @@ static void timehist_header(struct perf_sched *sched)
+ 	if (sched->show_cpu_visual)
+ 		printf(" %.*s ", ncpus, graph_dotted_line);
+ 
+-	if (sched->show_prio) {
+-		printf(" %.*s  %.*s  %.9s  %.9s  %.9s",
+-		       comm_width, graph_dotted_line, MAX_PRIO_STR_LEN, graph_dotted_line,
+-		       graph_dotted_line, graph_dotted_line, graph_dotted_line);
+-	} else {
+-		printf(" %.*s  %.9s  %.9s  %.9s", comm_width,
+-		       graph_dotted_line, graph_dotted_line, graph_dotted_line,
+-		       graph_dotted_line);
+-	}
++	printf(" %.*s", comm_width, graph_dotted_line);
++
++	if (sched->show_prio)
++		printf("  %.*s", MAX_PRIO_STR_LEN, graph_dotted_line);
++
++	printf("  %.9s  %.9s  %.9s", graph_dotted_line, graph_dotted_line, graph_dotted_line);
++
++	if (sched->pre_migrations)
++		printf("  %.9s", graph_dotted_line);
+ 
+ 	if (sched->show_state)
+ 		printf("  %.5s", graph_dotted_line);
+@@ -2180,6 +2184,8 @@ static void timehist_print_sample(struct perf_sched *sched,
+ 
+ 	print_sched_time(tr->dt_delay, 6);
+ 	print_sched_time(tr->dt_run, 6);
++	if (sched->pre_migrations)
++		print_sched_time(tr->dt_pre_mig, 6);
+ 
+ 	if (sched->show_state)
+ 		printf(" %5c ", thread__tid(thread) == 0 ? 'I' : state);
+@@ -2239,6 +2245,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
+ 	r->dt_iowait  = 0;
+ 	r->dt_preempt = 0;
+ 	r->dt_run     = 0;
++	r->dt_pre_mig = 0;
+ 
+ 	if (tprev) {
+ 		r->dt_run = t - tprev;
+@@ -2247,6 +2254,11 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
+ 				pr_debug("time travel: wakeup time for task > previous sched_switch event\n");
+ 			else
+ 				r->dt_delay = tprev - r->ready_to_run;
++
++			if (r->woken && r->migrated) {
++				if ((r->migrated > r->woken) && (r->migrated < tprev))
++					r->dt_pre_mig = r->migrated - r->woken;
++			}
+ 		}
+ 
+ 		if (r->last_time > tprev)
+@@ -2270,6 +2282,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
+ 	r->total_sleep_time   += r->dt_sleep;
+ 	r->total_iowait_time  += r->dt_iowait;
+ 	r->total_preempt_time += r->dt_preempt;
++	r->total_pre_mig_time += r->dt_pre_mig;
+ }
+ 
+ static bool is_idle_sample(struct perf_sample *sample,
+@@ -2598,13 +2611,19 @@ static int timehist_sched_wakeup_event(const struct perf_tool *tool,
+ 	if (tr == NULL)
+ 		return -1;
+ 
+-	if (tr->ready_to_run == 0)
+-		tr->ready_to_run = sample->time;
++	if (!strcmp(evsel__name(evsel), "sched:sched_waking")) {
++		if (tr->ready_to_run == 0)
++			tr->ready_to_run = sample->time;
+ 
+-	/* show wakeups if requested */
+-	if (sched->show_wakeups &&
+-	    !perf_time__skip_sample(&sched->ptime, sample->time))
+-		timehist_print_wakeup_event(sched, evsel, sample, machine, thread);
++		/* show wakeups if requested */
++		if (sched->show_wakeups &&
++		    !perf_time__skip_sample(&sched->ptime, sample->time))
++			timehist_print_wakeup_event(sched, evsel, sample, machine, thread);
++	} else {
++		/* keep track of wakeup time for pre-migration */
++		if (tr->woken == 0)
++			tr->woken = sample->time;
++	}
+ 
+ 	return 0;
+ }
+@@ -2684,8 +2703,14 @@ static int timehist_migrate_task_event(const struct perf_tool *tool,
+ 
+ 	tr->migrations++;
+ 
++	if (tr->migrated == 0)
++		tr->migrated = sample->time;
++
+ 	/* show migrations if requested */
+-	timehist_print_migration_event(sched, evsel, sample, machine, thread);
++	if (sched->show_migrations) {
++		timehist_print_migration_event(sched, evsel, sample,
++							machine, thread);
++	}
+ 
+ 	return 0;
+ }
+@@ -2836,11 +2861,14 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
+ 		/* last state is used to determine where to account wait time */
+ 		tr->last_state = state;
+ 
+-		/* sched out event for task so reset ready to run time */
++		/* sched out event for task so reset ready to run time, woken and migrated time */
+ 		if (state == 'R')
+ 			tr->ready_to_run = t;
+ 		else
+ 			tr->ready_to_run = 0;
++
++		tr->woken = 0;
++		tr->migrated = 0;
+ 	}
+ 
+ 	evsel__save_time(evsel, sample->time, sample->cpu);
+@@ -3267,7 +3295,8 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 	setup_pager();
+ 
+ 	/* prefer sched_waking if it is captured */
+-	if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
++	if (!sched->pre_migrations &&
++		evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
+ 		handlers[1].handler = timehist_sched_wakeup_ignore;
+ 
+ 	/* setup per-evsel handlers */
+@@ -3280,8 +3309,14 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 		goto out;
+ 	}
+ 
+-	if (sched->show_migrations &&
+-	    perf_session__set_tracepoints_handlers(session, migrate_handlers))
++	if (sched->pre_migrations && !evlist__find_tracepoint_by_name(session->evlist,
++									"sched:sched_wakeup")) {
++		pr_err("No sched_wakeup events found. sched_wakeup tracepoint is mandatory for -P option\n");
++		goto out;
++	}
++
++	if ((sched->show_migrations || sched->pre_migrations) &&
++		perf_session__set_tracepoints_handlers(session, migrate_handlers))
+ 		goto out;
+ 
+ 	/* pre-allocate struct for per-CPU idle stats */
+@@ -3823,6 +3858,7 @@ int cmd_sched(int argc, const char **argv)
+ 	OPT_BOOLEAN(0, "show-prio", &sched.show_prio, "Show task priority"),
+ 	OPT_STRING(0, "prio", &sched.prio_str, "prio",
+ 		   "analyze events only for given task priority(ies)"),
++	OPT_BOOLEAN('P', "pre-migrations", &sched.pre_migrations, "Show pre-migration wait time"),
+ 	OPT_PARENT(sched_options)
+ 	};
+ 
+-- 
+2.43.2
 
