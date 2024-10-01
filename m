@@ -1,1118 +1,197 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4041C5782
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Oct 2024 16:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617E41CBEB4
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Oct 2024 17:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727801698; cv=none; b=PfEzValEhEKw0c6aHxFBYfRTDL6cgforlHhNQXqgOICqDg3CKXbT3fk5v4SxQnIzFZ1g8BluX+F83bfhiHE7ik32IJfqkpFLKtwqUKLYV8V2w1Nd9+1UoTgEbGtmHXftV25bzGLNNByKccbZzBAYIXrWiovt4rUoL/xSUKSzAdI=
+	t=1727803197; cv=none; b=Nv3KR6cy5pku/CeD0lfBxYTX/6O/6cGyBeb1kkRWPmLKLKsqHZoEoZhpiHTC16+CId/KsXkMqUQibrav1n98yTVB92sP3hlLjFRj1QxsFOhMPdyj58a8ZWHVJ2TJG2uFWc8vf3QP/IRHhONYOcjyFC8wOcYmmu1tWOxbOhz1KQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727801698; c=relaxed/simple;
-	bh=0Nw6VPyTtLNyNBQ87HrQgtrNAakIIM0qyhS+ca802ZE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nKknflTW/w7B7WUbUei/VKQdan/8ZDYrxjgf8VUDaGqpQfrI/lkj8tyCyiFMUchWoqZFFF++WYY9nbSO4DUr+rrVtNdpvIZBBbe6RJejPp/sAAsSMwcCtHfHEHKIjE+HQX0V/lWDOWlFAnM6XaEid5oLMsX22JY2NfHbwclDpg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E5GigfA3; arc=none smtp.client-ip=209.85.160.171
+	s=arc-20240116; t=1727803197; c=relaxed/simple;
+	bh=NxnoZ6/tzzbtpHrkvR2DVgKfOvOcRCt1P8/v5tpRuw4=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=CvqO6+flCg+vCEkb8PUWV8SP9pi+UUtCmlm5tZvqKpD8VsdPMdREC1tfr9Bp/8eq4qjA16tKRBguUAtjizY6K44tzQ0Hl3PK0P8Wl5WlWWw4hbHk7DftQONTUu2bZc571sCz6tVoCDHTRU+wrAYpRjT7mwsYP9JeQgXdN8OOOc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cg9UGy0I; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E5GigfA3"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4582a5b495cso6081cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Oct 2024 09:54:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cg9UGy0I"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e25e3d7f514so8015550276.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Oct 2024 10:19:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727801695; x=1728406495; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tRyTiiQ8bRdDWqlF388QTEZHlChlU339cNRzgYg+eOQ=;
-        b=E5GigfA3lCS25ZSornppENMjdRgbAH/mIqm8P799kVnpyo+mjppWI5sNSqQp9Mz1I2
-         x662NLWNTW5DmUXi4iAdk0N1WV72AxW6OaHcTO9//bHYYEWmwSxlbVtCK+FHvudSZfac
-         S22IenQMqrlKfrzok4F729GHQWRxZh3X/c+KvCjHluRiWK+Mb3aIEgDN6spiD93WuwR4
-         1NxP7tzI4n56408tYCgPtftb5Hbm/zT2/efBrShupGtap76em37JZkIZaAGepTwMBTrP
-         dG6/b73kLVpYotz+NTNVb3a4Ci0qbHuC0wD/azO563iuEXEhrM77XjZ9UQjgCRmQjdhb
-         bkqQ==
+        d=google.com; s=20230601; t=1727803194; x=1728407994; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=m3Ziz/2RSKrrTFkDhDmouG4rotcQQY/mI+IqSuPhRUw=;
+        b=cg9UGy0ITQ/Bzed8msBRtmDptSl+lB6hMvPMc/BcHXlK1BPKEp6uaQfMPPRamD5tXy
+         xsp3w38WE/VA8CMk3QAw+flWrt8jaPGvrOqH1J3XI9172VQXAibnAE2EV3wJrGuwQ5PA
+         4tHWREPfvTViCS0zAZWYUkbwP2UdB7rcToUDcIzIWSaWxB5SsPwahFIBXDOzKjZENnyD
+         h3EJxJ7jHmsGqBidrJxqxTUEjrIQW0UwB9S/3CCLo9U5J8LCtwRNDpjIUFRZSZvWyI1C
+         aTWqzGYcCx2WyLnlnZHQHb64ggCecb3i8+yOydW2mQ+i7u3D/fbUoWhPeUp81eR6GCtF
+         GNoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727801695; x=1728406495;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tRyTiiQ8bRdDWqlF388QTEZHlChlU339cNRzgYg+eOQ=;
-        b=Q3lE71xFgDFuCIJS4NJFJYZ27QqpmgJ4paJF9GDtTqy8lf7UM3fu7WLtb6vtyvNg5S
-         rMGDDuNyyrhf8nmlVCTlssjd9rnOb2Q24mt7zYoBkd8pigskdJzntM4trZGu8pMjMYET
-         j9FfYlCzxzbWQQcq9t2L88gVYNil/y65uUe4R5qcRzBRvSwEy9oZ1JlCt5b9BI5qpZzE
-         sPDNOnic9BiykAMsGSCgBY0c9nL6sr/+7aHOdVXqFLV+Otm/TLTgl1g+/5mjWEDFGscy
-         umZ7c3si8CSvmBQl0CzGITV5slGZxumAR56g6LW1bA/me+MQD26oXvfhiKsmZNK7Wb7F
-         nGYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUtIMP7eX5g9VBKx4KeA7jmFcTs85QbBPBsQglgKbnVD5mLEPGrhQmX0za5HKFpesJsp7+1LEElSW+pjM7VHKfj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1gytab5RnR+XwZnTUZoior6m5VUeQF8zLgEKGMBcoM3YtQgGD
-	03McO64+tkeSUu2VYJgCxUM3zsui+76qDo4gZHelB8Khp17bM0n8W5F7m3R0Wld/Rlrm++p5/mF
-	DWOGfNRHq5d4LvL8L1GEMUfRelVi9VaeChuae
-X-Google-Smtp-Source: AGHT+IEEfQNcDV3rJE7zBYlhUqPS33JgGgYNCgEdW+X0HTXaZaAPjCV7Z4XJybAgTicNXnuhbpyVfoAe5NvwlfRCUfA=
-X-Received: by 2002:a05:622a:5f09:b0:456:7513:44ba with SMTP id
- d75a77b69052e-45d7488f047mr4648591cf.4.1727801694514; Tue, 01 Oct 2024
- 09:54:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1727803194; x=1728407994;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m3Ziz/2RSKrrTFkDhDmouG4rotcQQY/mI+IqSuPhRUw=;
+        b=up2CCV9VSIUxgXvz5671LBDpqKqoX7etUboCiF3pmAUXDQisEXq9MTUvVvDlCb3MYu
+         K0aagZuFXA04Pl6ShKFuEqP+DqW7i8M/obbvDxDHFwwjxr659w3Pv8EEOnKt3uK1gyTR
+         zBgqs+QA6bnKj8om9erjGf9ZU85bhwKzfbW6WfJmB5LCfrXC/jF+otjydn6wZy9a2Eao
+         1xScRuxS6Ak7Pyr3fUpwETlxrdFEYsD6f7GUfj5U5oS6BI/vst9FFG2C25JeTVA9zHEA
+         Hf/PzClwp2kLm1Ibv4/eJCNFpWAD6C2Zu8bUtmrG2yGj+P6iaSFb9UICaociXFc1I5HF
+         P6TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVcvTeNWk+fzLutalfC2Y4bKjoPc5olP4Q/2lngxtSw1QtLTymiXtK1c7WaUpU/IvvMohLOVEJYe0GZJm3gwcrA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj6TPXz9nFlXThc7TpGpa5JOAuLPloK3J5LTDjsUfXXoK9ihqB
+	HizTSNwEE5HJRdymrMDaWEMRdbVQM7hLXkeNnZQBYGXKLTzrA/eBRkSgQTY04aD/oTqAnXHq6sz
+	DM8+XeQ==
+X-Google-Smtp-Source: AGHT+IHYOoRamD+RbhC4PKf9bHZ3wgWnoJWplCym1eBmcwC6TCmUSmJIgI1ymrQTzVVvBznnZpF9c0jt+4F9
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:f420:67c7:1eea:bb12])
+ (user=irogers job=sendgmr) by 2002:a25:d804:0:b0:e0b:f69b:da30 with SMTP id
+ 3f1490d57ef6-e263842ea85mr1888276.9.1727803194291; Tue, 01 Oct 2024 10:19:54
+ -0700 (PDT)
+Date: Tue,  1 Oct 2024 10:19:47 -0700
+Message-Id: <20241001171950.233723-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240311081611.7835-1-vmolnaro@redhat.com> <alpine.LRH.2.20.2403201314570.4040@Diego>
- <ZroNTkdA8XDFaDks@x1> <a9bf1065-462e-4ea0-920b-8358b54a33de@redhat.com>
-In-Reply-To: <a9bf1065-462e-4ea0-920b-8358b54a33de@redhat.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
+Subject: [PATCH v1 0/3] Make a "Setup struct perf_event_attr" a shell test
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 1 Oct 2024 09:54:41 -0700
-Message-ID: <CAP-5=fVixgw8yuPHygbugzMaZc4gr5GJ+jb-prmqSLNmtnbb0g@mail.gmail.com>
-Subject: Re: [PATCH] perf test attr: Add back missing topdown events
-To: Veronika Molnarova <vmolnaro@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Michael Petlan <mpetlan@redhat.com>, 
-	linux-perf-users@vger.kernel.org, acme@redhat.com, 
-	Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Veronika Molnarova <vmolnaro@redhat.com>, Leo Yan <leo.yan@linux.dev>, 
+	Howard Chu <howardchu95@gmail.com>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 1, 2024 at 1:48=E2=80=AFAM Veronika Molnarova <vmolnaro@redhat.=
-com> wrote:
->
->
->
-> On 8/12/24 15:25, Arnaldo Carvalho de Melo wrote:
-> > On Wed, Mar 20, 2024 at 01:16:48PM +0100, Michael Petlan wrote:
-> >> Hello Ian,
-> >> we've resent this patch, as the previous discussion about this
-> >> was unfinished somehow, if I remember correctly. Is this fix
-> >> acceptable?
-> >> Thank you!
-> >> Michael
-> >
-> > Ian,
-> >
-> >       I think this fell thru the cracks, do you have something to add?
-> >
-> > - Arnaldo
-> >
-> Hi Ian,
->
-> do you have anything to add to this patch so that the issue
-> could be resolved?
->
-> Thanks,
-> Veronika
+The path detection for "Setup struct perf_event_attr" test is brittle
+and leads to the test frequently not running. Running shell tests is
+reasonably robust, so make the test a shell test. Move the test files
+to reflect this.
 
-Sorry for the delay. I always find these tests tricky to run so I'm
-going to send a follow up series to resolve that.
+Ian Rogers (3):
+  perf test: Add a shell wrapper for "Setup struct perf_event_attr"
+  perf test: Remove C test wrapper for attr.py
+  perf test: Move attr files into shell directory where they are used
 
-Tested-by: Ian Rogers <irogers@google.com>
+ tools/perf/Makefile.perf                      |   5 +-
+ tools/perf/perf.c                             |   2 -
+ tools/perf/tests/Build                        |   1 -
+ tools/perf/tests/attr.c                       | 218 ------------------
+ tools/perf/tests/builtin-test.c               |   1 -
+ tools/perf/tests/shell/attr.sh                |  22 ++
+ tools/perf/tests/{ => shell}/attr/README      |   0
+ tools/perf/tests/{ => shell}/attr/base-record |   0
+ .../tests/{ => shell}/attr/base-record-spe    |   0
+ tools/perf/tests/{ => shell}/attr/base-stat   |   0
+ .../tests/{ => shell}/attr/system-wide-dummy  |   0
+ .../tests/{ => shell}/attr/test-record-C0     |   0
+ .../tests/{ => shell}/attr/test-record-basic  |   0
+ .../{ => shell}/attr/test-record-branch-any   |   0
+ .../attr/test-record-branch-filter-any        |   0
+ .../attr/test-record-branch-filter-any_call   |   0
+ .../attr/test-record-branch-filter-any_ret    |   0
+ .../attr/test-record-branch-filter-hv         |   0
+ .../attr/test-record-branch-filter-ind_call   |   0
+ .../attr/test-record-branch-filter-k          |   0
+ .../attr/test-record-branch-filter-u          |   0
+ .../tests/{ => shell}/attr/test-record-count  |   0
+ .../tests/{ => shell}/attr/test-record-data   |   0
+ .../{ => shell}/attr/test-record-dummy-C0     |   0
+ .../tests/{ => shell}/attr/test-record-freq   |   0
+ .../attr/test-record-graph-default            |   0
+ .../attr/test-record-graph-default-aarch64    |   0
+ .../{ => shell}/attr/test-record-graph-dwarf  |   0
+ .../{ => shell}/attr/test-record-graph-fp     |   0
+ .../attr/test-record-graph-fp-aarch64         |   0
+ .../attr/test-record-group-sampling           |   0
+ .../tests/{ => shell}/attr/test-record-group1 |   0
+ .../tests/{ => shell}/attr/test-record-group2 |   0
+ .../{ => shell}/attr/test-record-no-buffering |   0
+ .../{ => shell}/attr/test-record-no-inherit   |   0
+ .../{ => shell}/attr/test-record-no-samples   |   0
+ .../tests/{ => shell}/attr/test-record-period |   0
+ .../{ => shell}/attr/test-record-pfm-period   |   0
+ .../tests/{ => shell}/attr/test-record-raw    |   0
+ .../{ => shell}/attr/test-record-spe-period   |   0
+ .../attr/test-record-spe-period-term          |   0
+ .../attr/test-record-spe-physical-address     |   0
+ .../attr/test-record-user-regs-no-sve-aarch64 |   0
+ .../test-record-user-regs-old-sve-aarch64     |   0
+ .../attr/test-record-user-regs-sve-aarch64    |   0
+ .../perf/tests/{ => shell}/attr/test-stat-C0  |   0
+ .../tests/{ => shell}/attr/test-stat-basic    |   0
+ .../tests/{ => shell}/attr/test-stat-default  |   0
+ .../{ => shell}/attr/test-stat-detailed-1     |   0
+ .../{ => shell}/attr/test-stat-detailed-2     |   0
+ .../{ => shell}/attr/test-stat-detailed-3     |   0
+ .../tests/{ => shell}/attr/test-stat-group1   |   0
+ .../{ => shell}/attr/test-stat-no-inherit     |   0
+ tools/perf/tests/{ => shell/lib}/attr.py      |   0
+ tools/perf/tests/tests.h                      |   1 -
+ tools/perf/util/evsel.c                       | 122 +++++++++-
+ tools/perf/util/util.h                        |   7 -
+ 57 files changed, 142 insertions(+), 237 deletions(-)
+ delete mode 100644 tools/perf/tests/attr.c
+ create mode 100755 tools/perf/tests/shell/attr.sh
+ rename tools/perf/tests/{ => shell}/attr/README (100%)
+ rename tools/perf/tests/{ => shell}/attr/base-record (100%)
+ rename tools/perf/tests/{ => shell}/attr/base-record-spe (100%)
+ rename tools/perf/tests/{ => shell}/attr/base-stat (100%)
+ rename tools/perf/tests/{ => shell}/attr/system-wide-dummy (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-C0 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-basic (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-branch-any (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-any (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-any_call (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-any_ret (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-hv (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-ind_call (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-k (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-u (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-count (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-data (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-dummy-C0 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-freq (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-graph-default (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-graph-default-aarch64 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-graph-dwarf (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-graph-fp (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-graph-fp-aarch64 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-group-sampling (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-group1 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-group2 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-no-buffering (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-no-inherit (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-no-samples (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-period (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-pfm-period (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-raw (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-spe-period (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-spe-period-term (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-spe-physical-address (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-user-regs-no-sve-aarch64 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-user-regs-old-sve-aarch64 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-record-user-regs-sve-aarch64 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-stat-C0 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-stat-basic (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-stat-default (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-stat-detailed-1 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-stat-detailed-2 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-stat-detailed-3 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-stat-group1 (100%)
+ rename tools/perf/tests/{ => shell}/attr/test-stat-no-inherit (100%)
+ rename tools/perf/tests/{ => shell/lib}/attr.py (100%)
 
-Thanks,
-Ian
+-- 
+2.46.1.824.gd892dcdcdd-goog
 
-> >> On Mon, 11 Mar 2024, vmolnaro@redhat.com wrote:
-> >>> From: Veronika Molnarova <vmolnaro@redhat.com>
-> >>>
-> >>> With the patch 0b6c5371c03c "Add missing topdown metrics events" eigh=
-t
-> >>> topdown metric events with numbers ranging from 0x8000 to 0x8700 were
-> >>> added to the test since they were added as 'perf stat' default events=
-.
-> >>> Later the patch 951efb9976ce "Update no event/metric expectations" ke=
-pt
-> >>> only 4 of those events(0x8000-0x8300).
-> >>>
-> >>> Currently, the topdown events with numbers 0x8400 to 0x8700 are missi=
-ng
-> >>> from the list of expected events resulting in a failure. Add back the
-> >>> missing topdown events.
-> >>>
-> >>> Fixes: 951efb9976ce ("perf test attr: Update no event/metric expectat=
-ions")
-> >>> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-> >>> ---
-> >>>  tools/perf/tests/attr/test-stat-default    |  90 ++++++++++----
-> >>>  tools/perf/tests/attr/test-stat-detailed-1 | 106 +++++++++++-----
-> >>>  tools/perf/tests/attr/test-stat-detailed-2 | 130 ++++++++++++-------
-> >>>  tools/perf/tests/attr/test-stat-detailed-3 | 138 ++++++++++++++-----=
---
-> >>>  4 files changed, 320 insertions(+), 144 deletions(-)
-> >>>
-> >>> diff --git a/tools/perf/tests/attr/test-stat-default b/tools/perf/tes=
-ts/attr/test-stat-default
-> >>> index a1e2da0a9a6d..e47fb4944679 100644
-> >>> --- a/tools/perf/tests/attr/test-stat-default
-> >>> +++ b/tools/perf/tests/attr/test-stat-default
-> >>> @@ -88,98 +88,142 @@ enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / topdown-fe-bound (0x8200)
-> >>> +# PERF_TYPE_RAW / topdown-bad-spec (0x8100)
-> >>>  [event13:base-stat]
-> >>>  fd=3D13
-> >>>  group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D33280
-> >>> +config=3D33024
-> >>>  disabled=3D0
-> >>>  enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / topdown-be-bound (0x8300)
-> >>> +# PERF_TYPE_RAW / topdown-fe-bound (0x8200)
-> >>>  [event14:base-stat]
-> >>>  fd=3D14
-> >>>  group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D33536
-> >>> +config=3D33280
-> >>>  disabled=3D0
-> >>>  enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / topdown-bad-spec (0x8100)
-> >>> +# PERF_TYPE_RAW / topdown-be-bound (0x8300)
-> >>>  [event15:base-stat]
-> >>>  fd=3D15
-> >>>  group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D33024
-> >>> +config=3D33536
-> >>>  disabled=3D0
-> >>>  enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
-> >>> +# PERF_TYPE_RAW / topdown-heavy-ops (0x8400)
-> >>>  [event16:base-stat]
-> >>>  fd=3D16
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D4109
-> >>> +config=3D33792
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/
-> >>> +# PERF_TYPE_RAW / topdown-br-mispredict (0x8500)
-> >>>  [event17:base-stat]
-> >>>  fd=3D17
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D17039629
-> >>> +config=3D34048
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / CPU_CLK_UNHALTED.THREAD
-> >>> +# PERF_TYPE_RAW / topdown-fetch-lat (0x8600)
-> >>>  [event18:base-stat]
-> >>>  fd=3D18
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D60
-> >>> +config=3D34304
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / INT_MISC.RECOVERY_CYCLES_ANY
-> >>> +# PERF_TYPE_RAW / topdown-mem-bound (0x8700)
-> >>>  [event19:base-stat]
-> >>>  fd=3D19
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D2097421
-> >>> +config=3D34560
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / CPU_CLK_UNHALTED.REF_XCLK
-> >>> +# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
-> >>>  [event20:base-stat]
-> >>>  fd=3D20
-> >>>  type=3D4
-> >>> -config=3D316
-> >>> +config=3D4109
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / IDQ_UOPS_NOT_DELIVERED.CORE
-> >>> +# PERF_TYPE_RAW / cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/
-> >>>  [event21:base-stat]
-> >>>  fd=3D21
-> >>>  type=3D4
-> >>> -config=3D412
-> >>> +config=3D17039629
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
-> >>> +# PERF_TYPE_RAW / CPU_CLK_UNHALTED.THREAD
-> >>>  [event22:base-stat]
-> >>>  fd=3D22
-> >>>  type=3D4
-> >>> -config=3D572
-> >>> +config=3D60
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / UOPS_RETIRED.RETIRE_SLOTS
-> >>> +# PERF_TYPE_RAW / INT_MISC.RECOVERY_CYCLES_ANY
-> >>>  [event23:base-stat]
-> >>>  fd=3D23
-> >>>  type=3D4
-> >>> -config=3D706
-> >>> +config=3D2097421
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / UOPS_ISSUED.ANY
-> >>> +# PERF_TYPE_RAW / CPU_CLK_UNHALTED.REF_XCLK
-> >>>  [event24:base-stat]
-> >>>  fd=3D24
-> >>>  type=3D4
-> >>> +config=3D316
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / IDQ_UOPS_NOT_DELIVERED.CORE
-> >>> +[event25:base-stat]
-> >>> +fd=3D25
-> >>> +type=3D4
-> >>> +config=3D412
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
-> >>> +[event26:base-stat]
-> >>> +fd=3D26
-> >>> +type=3D4
-> >>> +config=3D572
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / UOPS_RETIRED.RETIRE_SLOTS
-> >>> +[event27:base-stat]
-> >>> +fd=3D27
-> >>> +type=3D4
-> >>> +config=3D706
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / UOPS_ISSUED.ANY
-> >>> +[event28:base-stat]
-> >>> +fd=3D28
-> >>> +type=3D4
-> >>>  config=3D270
-> >>>  optional=3D1
-> >>> diff --git a/tools/perf/tests/attr/test-stat-detailed-1 b/tools/perf/=
-tests/attr/test-stat-detailed-1
-> >>> index 1c52cb05c900..3d500d3e0c5c 100644
-> >>> --- a/tools/perf/tests/attr/test-stat-detailed-1
-> >>> +++ b/tools/perf/tests/attr/test-stat-detailed-1
-> >>> @@ -90,99 +90,143 @@ enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / topdown-fe-bound (0x8200)
-> >>> +# PERF_TYPE_RAW / topdown-bad-spec (0x8100)
-> >>>  [event13:base-stat]
-> >>>  fd=3D13
-> >>>  group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D33280
-> >>> +config=3D33024
-> >>>  disabled=3D0
-> >>>  enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / topdown-be-bound (0x8300)
-> >>> +# PERF_TYPE_RAW / topdown-fe-bound (0x8200)
-> >>>  [event14:base-stat]
-> >>>  fd=3D14
-> >>>  group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D33536
-> >>> +config=3D33280
-> >>>  disabled=3D0
-> >>>  enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / topdown-bad-spec (0x8100)
-> >>> +# PERF_TYPE_RAW / topdown-be-bound (0x8300)
-> >>>  [event15:base-stat]
-> >>>  fd=3D15
-> >>>  group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D33024
-> >>> +config=3D33536
-> >>>  disabled=3D0
-> >>>  enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
-> >>> +# PERF_TYPE_RAW / topdown-heavy-ops (0x8400)
-> >>>  [event16:base-stat]
-> >>>  fd=3D16
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D4109
-> >>> +config=3D33792
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/
-> >>> +# PERF_TYPE_RAW / topdown-br-mispredict (0x8500)
-> >>>  [event17:base-stat]
-> >>>  fd=3D17
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D17039629
-> >>> +config=3D34048
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / CPU_CLK_UNHALTED.THREAD
-> >>> +# PERF_TYPE_RAW / topdown-fetch-lat (0x8600)
-> >>>  [event18:base-stat]
-> >>>  fd=3D18
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D60
-> >>> +config=3D34304
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / INT_MISC.RECOVERY_CYCLES_ANY
-> >>> +# PERF_TYPE_RAW / topdown-mem-bound (0x8700)
-> >>>  [event19:base-stat]
-> >>>  fd=3D19
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D2097421
-> >>> +config=3D34560
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / CPU_CLK_UNHALTED.REF_XCLK
-> >>> +# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
-> >>>  [event20:base-stat]
-> >>>  fd=3D20
-> >>>  type=3D4
-> >>> -config=3D316
-> >>> +config=3D4109
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / IDQ_UOPS_NOT_DELIVERED.CORE
-> >>> +# PERF_TYPE_RAW / cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/
-> >>>  [event21:base-stat]
-> >>>  fd=3D21
-> >>>  type=3D4
-> >>> -config=3D412
-> >>> +config=3D17039629
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
-> >>> +# PERF_TYPE_RAW / CPU_CLK_UNHALTED.THREAD
-> >>>  [event22:base-stat]
-> >>>  fd=3D22
-> >>>  type=3D4
-> >>> -config=3D572
-> >>> +config=3D60
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / UOPS_RETIRED.RETIRE_SLOTS
-> >>> +# PERF_TYPE_RAW / INT_MISC.RECOVERY_CYCLES_ANY
-> >>>  [event23:base-stat]
-> >>>  fd=3D23
-> >>>  type=3D4
-> >>> -config=3D706
-> >>> +config=3D2097421
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / UOPS_ISSUED.ANY
-> >>> +# PERF_TYPE_RAW / CPU_CLK_UNHALTED.REF_XCLK
-> >>>  [event24:base-stat]
-> >>>  fd=3D24
-> >>>  type=3D4
-> >>> +config=3D316
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / IDQ_UOPS_NOT_DELIVERED.CORE
-> >>> +[event25:base-stat]
-> >>> +fd=3D25
-> >>> +type=3D4
-> >>> +config=3D412
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
-> >>> +[event26:base-stat]
-> >>> +fd=3D26
-> >>> +type=3D4
-> >>> +config=3D572
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / UOPS_RETIRED.RETIRE_SLOTS
-> >>> +[event27:base-stat]
-> >>> +fd=3D27
-> >>> +type=3D4
-> >>> +config=3D706
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / UOPS_ISSUED.ANY
-> >>> +[event28:base-stat]
-> >>> +fd=3D28
-> >>> +type=3D4
-> >>>  config=3D270
-> >>>  optional=3D1
-> >>>
-> >>> @@ -190,8 +234,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event25:base-stat]
-> >>> -fd=3D25
-> >>> +[event29:base-stat]
-> >>> +fd=3D29
-> >>>  type=3D3
-> >>>  config=3D0
-> >>>  optional=3D1
-> >>> @@ -200,8 +244,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event26:base-stat]
-> >>> -fd=3D26
-> >>> +[event30:base-stat]
-> >>> +fd=3D30
-> >>>  type=3D3
-> >>>  config=3D65536
-> >>>  optional=3D1
-> >>> @@ -210,8 +254,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_LL                 <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event27:base-stat]
-> >>> -fd=3D27
-> >>> +[event31:base-stat]
-> >>> +fd=3D31
-> >>>  type=3D3
-> >>>  config=3D2
-> >>>  optional=3D1
-> >>> @@ -220,8 +264,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_LL                 <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event28:base-stat]
-> >>> -fd=3D28
-> >>> +[event32:base-stat]
-> >>> +fd=3D32
-> >>>  type=3D3
-> >>>  config=3D65538
-> >>>  optional=3D1
-> >>> diff --git a/tools/perf/tests/attr/test-stat-detailed-2 b/tools/perf/=
-tests/attr/test-stat-detailed-2
-> >>> index 7e961d24a885..01777a63752f 100644
-> >>> --- a/tools/perf/tests/attr/test-stat-detailed-2
-> >>> +++ b/tools/perf/tests/attr/test-stat-detailed-2
-> >>> @@ -90,99 +90,143 @@ enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / topdown-fe-bound (0x8200)
-> >>> +# PERF_TYPE_RAW / topdown-bad-spec (0x8100)
-> >>>  [event13:base-stat]
-> >>>  fd=3D13
-> >>>  group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D33280
-> >>> +config=3D33024
-> >>>  disabled=3D0
-> >>>  enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / topdown-be-bound (0x8300)
-> >>> +# PERF_TYPE_RAW / topdown-fe-bound (0x8200)
-> >>>  [event14:base-stat]
-> >>>  fd=3D14
-> >>>  group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D33536
-> >>> +config=3D33280
-> >>>  disabled=3D0
-> >>>  enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / topdown-bad-spec (0x8100)
-> >>> +# PERF_TYPE_RAW / topdown-be-bound (0x8300)
-> >>>  [event15:base-stat]
-> >>>  fd=3D15
-> >>>  group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D33024
-> >>> +config=3D33536
-> >>>  disabled=3D0
-> >>>  enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
-> >>> +# PERF_TYPE_RAW / topdown-heavy-ops (0x8400)
-> >>>  [event16:base-stat]
-> >>>  fd=3D16
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D4109
-> >>> +config=3D33792
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/
-> >>> +# PERF_TYPE_RAW / topdown-br-mispredict (0x8500)
-> >>>  [event17:base-stat]
-> >>>  fd=3D17
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D17039629
-> >>> +config=3D34048
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / CPU_CLK_UNHALTED.THREAD
-> >>> +# PERF_TYPE_RAW / topdown-fetch-lat (0x8600)
-> >>>  [event18:base-stat]
-> >>>  fd=3D18
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D60
-> >>> +config=3D34304
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / INT_MISC.RECOVERY_CYCLES_ANY
-> >>> +# PERF_TYPE_RAW / topdown-mem-bound (0x8700)
-> >>>  [event19:base-stat]
-> >>>  fd=3D19
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D2097421
-> >>> +config=3D34560
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / CPU_CLK_UNHALTED.REF_XCLK
-> >>> +# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
-> >>>  [event20:base-stat]
-> >>>  fd=3D20
-> >>>  type=3D4
-> >>> -config=3D316
-> >>> +config=3D4109
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / IDQ_UOPS_NOT_DELIVERED.CORE
-> >>> +# PERF_TYPE_RAW / cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/
-> >>>  [event21:base-stat]
-> >>>  fd=3D21
-> >>>  type=3D4
-> >>> -config=3D412
-> >>> +config=3D17039629
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
-> >>> +# PERF_TYPE_RAW / CPU_CLK_UNHALTED.THREAD
-> >>>  [event22:base-stat]
-> >>>  fd=3D22
-> >>>  type=3D4
-> >>> -config=3D572
-> >>> +config=3D60
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / UOPS_RETIRED.RETIRE_SLOTS
-> >>> +# PERF_TYPE_RAW / INT_MISC.RECOVERY_CYCLES_ANY
-> >>>  [event23:base-stat]
-> >>>  fd=3D23
-> >>>  type=3D4
-> >>> -config=3D706
-> >>> +config=3D2097421
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / UOPS_ISSUED.ANY
-> >>> +# PERF_TYPE_RAW / CPU_CLK_UNHALTED.REF_XCLK
-> >>>  [event24:base-stat]
-> >>>  fd=3D24
-> >>>  type=3D4
-> >>> +config=3D316
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / IDQ_UOPS_NOT_DELIVERED.CORE
-> >>> +[event25:base-stat]
-> >>> +fd=3D25
-> >>> +type=3D4
-> >>> +config=3D412
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
-> >>> +[event26:base-stat]
-> >>> +fd=3D26
-> >>> +type=3D4
-> >>> +config=3D572
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / UOPS_RETIRED.RETIRE_SLOTS
-> >>> +[event27:base-stat]
-> >>> +fd=3D27
-> >>> +type=3D4
-> >>> +config=3D706
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / UOPS_ISSUED.ANY
-> >>> +[event28:base-stat]
-> >>> +fd=3D28
-> >>> +type=3D4
-> >>>  config=3D270
-> >>>  optional=3D1
-> >>>
-> >>> @@ -190,8 +234,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event25:base-stat]
-> >>> -fd=3D25
-> >>> +[event29:base-stat]
-> >>> +fd=3D29
-> >>>  type=3D3
-> >>>  config=3D0
-> >>>  optional=3D1
-> >>> @@ -200,8 +244,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event26:base-stat]
-> >>> -fd=3D26
-> >>> +[event30:base-stat]
-> >>> +fd=3D30
-> >>>  type=3D3
-> >>>  config=3D65536
-> >>>  optional=3D1
-> >>> @@ -210,8 +254,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_LL                 <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event27:base-stat]
-> >>> -fd=3D27
-> >>> +[event31:base-stat]
-> >>> +fd=3D31
-> >>>  type=3D3
-> >>>  config=3D2
-> >>>  optional=3D1
-> >>> @@ -220,8 +264,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_LL                 <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event28:base-stat]
-> >>> -fd=3D28
-> >>> +[event32:base-stat]
-> >>> +fd=3D32
-> >>>  type=3D3
-> >>>  config=3D65538
-> >>>  optional=3D1
-> >>> @@ -230,8 +274,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_L1I                <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event29:base-stat]
-> >>> -fd=3D29
-> >>> +[event33:base-stat]
-> >>> +fd=3D33
-> >>>  type=3D3
-> >>>  config=3D1
-> >>>  optional=3D1
-> >>> @@ -240,8 +284,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_L1I                <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event30:base-stat]
-> >>> -fd=3D30
-> >>> +[event34:base-stat]
-> >>> +fd=3D34
-> >>>  type=3D3
-> >>>  config=3D65537
-> >>>  optional=3D1
-> >>> @@ -250,8 +294,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_DTLB               <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event31:base-stat]
-> >>> -fd=3D31
-> >>> +[event35:base-stat]
-> >>> +fd=3D35
-> >>>  type=3D3
-> >>>  config=3D3
-> >>>  optional=3D1
-> >>> @@ -260,8 +304,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_DTLB               <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event32:base-stat]
-> >>> -fd=3D32
-> >>> +[event36:base-stat]
-> >>> +fd=3D36
-> >>>  type=3D3
-> >>>  config=3D65539
-> >>>  optional=3D1
-> >>> @@ -270,8 +314,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_ITLB               <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event33:base-stat]
-> >>> -fd=3D33
-> >>> +[event37:base-stat]
-> >>> +fd=3D37
-> >>>  type=3D3
-> >>>  config=3D4
-> >>>  optional=3D1
-> >>> @@ -280,8 +324,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_ITLB               <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event34:base-stat]
-> >>> -fd=3D34
-> >>> +[event38:base-stat]
-> >>> +fd=3D38
-> >>>  type=3D3
-> >>>  config=3D65540
-> >>>  optional=3D1
-> >>> diff --git a/tools/perf/tests/attr/test-stat-detailed-3 b/tools/perf/=
-tests/attr/test-stat-detailed-3
-> >>> index e50535f45977..8400abd7e1e4 100644
-> >>> --- a/tools/perf/tests/attr/test-stat-detailed-3
-> >>> +++ b/tools/perf/tests/attr/test-stat-detailed-3
-> >>> @@ -90,99 +90,143 @@ enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / topdown-fe-bound (0x8200)
-> >>> +# PERF_TYPE_RAW / topdown-bad-spec (0x8100)
-> >>>  [event13:base-stat]
-> >>>  fd=3D13
-> >>>  group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D33280
-> >>> +config=3D33024
-> >>>  disabled=3D0
-> >>>  enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / topdown-be-bound (0x8300)
-> >>> +# PERF_TYPE_RAW / topdown-fe-bound (0x8200)
-> >>>  [event14:base-stat]
-> >>>  fd=3D14
-> >>>  group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D33536
-> >>> +config=3D33280
-> >>>  disabled=3D0
-> >>>  enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / topdown-bad-spec (0x8100)
-> >>> +# PERF_TYPE_RAW / topdown-be-bound (0x8300)
-> >>>  [event15:base-stat]
-> >>>  fd=3D15
-> >>>  group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D33024
-> >>> +config=3D33536
-> >>>  disabled=3D0
-> >>>  enable_on_exec=3D0
-> >>>  read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
-> >>> +# PERF_TYPE_RAW / topdown-heavy-ops (0x8400)
-> >>>  [event16:base-stat]
-> >>>  fd=3D16
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D4109
-> >>> +config=3D33792
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/
-> >>> +# PERF_TYPE_RAW / topdown-br-mispredict (0x8500)
-> >>>  [event17:base-stat]
-> >>>  fd=3D17
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D17039629
-> >>> +config=3D34048
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / CPU_CLK_UNHALTED.THREAD
-> >>> +# PERF_TYPE_RAW / topdown-fetch-lat (0x8600)
-> >>>  [event18:base-stat]
-> >>>  fd=3D18
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D60
-> >>> +config=3D34304
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / INT_MISC.RECOVERY_CYCLES_ANY
-> >>> +# PERF_TYPE_RAW / topdown-mem-bound (0x8700)
-> >>>  [event19:base-stat]
-> >>>  fd=3D19
-> >>> +group_fd=3D11
-> >>>  type=3D4
-> >>> -config=3D2097421
-> >>> +config=3D34560
-> >>> +disabled=3D0
-> >>> +enable_on_exec=3D0
-> >>> +read_format=3D15
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / CPU_CLK_UNHALTED.REF_XCLK
-> >>> +# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
-> >>>  [event20:base-stat]
-> >>>  fd=3D20
-> >>>  type=3D4
-> >>> -config=3D316
-> >>> +config=3D4109
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / IDQ_UOPS_NOT_DELIVERED.CORE
-> >>> +# PERF_TYPE_RAW / cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/
-> >>>  [event21:base-stat]
-> >>>  fd=3D21
-> >>>  type=3D4
-> >>> -config=3D412
-> >>> +config=3D17039629
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
-> >>> +# PERF_TYPE_RAW / CPU_CLK_UNHALTED.THREAD
-> >>>  [event22:base-stat]
-> >>>  fd=3D22
-> >>>  type=3D4
-> >>> -config=3D572
-> >>> +config=3D60
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / UOPS_RETIRED.RETIRE_SLOTS
-> >>> +# PERF_TYPE_RAW / INT_MISC.RECOVERY_CYCLES_ANY
-> >>>  [event23:base-stat]
-> >>>  fd=3D23
-> >>>  type=3D4
-> >>> -config=3D706
-> >>> +config=3D2097421
-> >>>  optional=3D1
-> >>>
-> >>> -# PERF_TYPE_RAW / UOPS_ISSUED.ANY
-> >>> +# PERF_TYPE_RAW / CPU_CLK_UNHALTED.REF_XCLK
-> >>>  [event24:base-stat]
-> >>>  fd=3D24
-> >>>  type=3D4
-> >>> +config=3D316
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / IDQ_UOPS_NOT_DELIVERED.CORE
-> >>> +[event25:base-stat]
-> >>> +fd=3D25
-> >>> +type=3D4
-> >>> +config=3D412
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
-> >>> +[event26:base-stat]
-> >>> +fd=3D26
-> >>> +type=3D4
-> >>> +config=3D572
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / UOPS_RETIRED.RETIRE_SLOTS
-> >>> +[event27:base-stat]
-> >>> +fd=3D27
-> >>> +type=3D4
-> >>> +config=3D706
-> >>> +optional=3D1
-> >>> +
-> >>> +# PERF_TYPE_RAW / UOPS_ISSUED.ANY
-> >>> +[event28:base-stat]
-> >>> +fd=3D28
-> >>> +type=3D4
-> >>>  config=3D270
-> >>>  optional=3D1
-> >>>
-> >>> @@ -190,8 +234,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event25:base-stat]
-> >>> -fd=3D25
-> >>> +[event29:base-stat]
-> >>> +fd=3D29
-> >>>  type=3D3
-> >>>  config=3D0
-> >>>  optional=3D1
-> >>> @@ -200,8 +244,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event26:base-stat]
-> >>> -fd=3D26
-> >>> +[event30:base-stat]
-> >>> +fd=3D30
-> >>>  type=3D3
-> >>>  config=3D65536
-> >>>  optional=3D1
-> >>> @@ -210,8 +254,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_LL                 <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event27:base-stat]
-> >>> -fd=3D27
-> >>> +[event31:base-stat]
-> >>> +fd=3D31
-> >>>  type=3D3
-> >>>  config=3D2
-> >>>  optional=3D1
-> >>> @@ -220,8 +264,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_LL                 <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event28:base-stat]
-> >>> -fd=3D28
-> >>> +[event32:base-stat]
-> >>> +fd=3D32
-> >>>  type=3D3
-> >>>  config=3D65538
-> >>>  optional=3D1
-> >>> @@ -230,8 +274,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_L1I                <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event29:base-stat]
-> >>> -fd=3D29
-> >>> +[event33:base-stat]
-> >>> +fd=3D33
-> >>>  type=3D3
-> >>>  config=3D1
-> >>>  optional=3D1
-> >>> @@ -240,8 +284,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_L1I                <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event30:base-stat]
-> >>> -fd=3D30
-> >>> +[event34:base-stat]
-> >>> +fd=3D34
-> >>>  type=3D3
-> >>>  config=3D65537
-> >>>  optional=3D1
-> >>> @@ -250,8 +294,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_DTLB               <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event31:base-stat]
-> >>> -fd=3D31
-> >>> +[event35:base-stat]
-> >>> +fd=3D35
-> >>>  type=3D3
-> >>>  config=3D3
-> >>>  optional=3D1
-> >>> @@ -260,8 +304,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_DTLB               <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event32:base-stat]
-> >>> -fd=3D32
-> >>> +[event36:base-stat]
-> >>> +fd=3D36
-> >>>  type=3D3
-> >>>  config=3D65539
-> >>>  optional=3D1
-> >>> @@ -270,8 +314,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_ITLB               <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event33:base-stat]
-> >>> -fd=3D33
-> >>> +[event37:base-stat]
-> >>> +fd=3D37
-> >>>  type=3D3
-> >>>  config=3D4
-> >>>  optional=3D1
-> >>> @@ -280,8 +324,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_ITLB               <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event34:base-stat]
-> >>> -fd=3D34
-> >>> +[event38:base-stat]
-> >>> +fd=3D38
-> >>>  type=3D3
-> >>>  config=3D65540
-> >>>  optional=3D1
-> >>> @@ -290,8 +334,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_PREFETCH        <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
-> >>> -[event35:base-stat]
-> >>> -fd=3D35
-> >>> +[event39:base-stat]
-> >>> +fd=3D39
-> >>>  type=3D3
-> >>>  config=3D512
-> >>>  optional=3D1
-> >>> @@ -300,8 +344,8 @@ optional=3D1
-> >>>  #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
-> >>>  # (PERF_COUNT_HW_CACHE_OP_PREFETCH        <<  8) |
-> >>>  # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
-> >>> -[event36:base-stat]
-> >>> -fd=3D36
-> >>> +[event40:base-stat]
-> >>> +fd=3D40
-> >>>  type=3D3
-> >>>  config=3D66048
-> >>>  optional=3D1
-> >>> --
-> >>> 2.43.0
-> >>>
-> >>>
-> >>
-> >
->
