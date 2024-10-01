@@ -1,455 +1,127 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC981BBBD6;
-	Tue,  1 Oct 2024 06:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8905C27468;
+	Tue,  1 Oct 2024 06:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727762651; cv=none; b=XmF7YfKVUTCdLqmpt09wAzAQOav1aEgyeBtvt5qvMiM9zSzxvZw5DpR7sdFO878btKSCtTHGE1tPG7opTPK6oxDRd1Pseg6ksWVF6qm5yQqm4I1L86CUrPJsJpncMUMu0mb6VcNDvGe1d67wMAPNqUM5WSfZlYZZ8wyddOrPUV0=
+	t=1727765786; cv=none; b=WwI9bai10R1XdL5LvCdb60Ruj9EB4kX1IGGN+h9nI5NZ9qPbYpIkMeyT5OTlNhgLB+lgqIZpgiIEI0WnXPUoCP9QKPi8W28/awQxt9RFTUXWQc3Uys3Q+YAeHh9ufhWGPMP/5ka6xxDme+P+dyWtvbW0YkkoKpNk9j85/RXHcq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727762651; c=relaxed/simple;
-	bh=dkgDnCRbFnPZwqTYcf6bADDehQ64yHjle5VO/m+LrAY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u2fTVeNX4iMJ+SYx8ZzOeKj8qaZSUavIQI2yTd/iyOqw/IO5FE8NoV93FXuOhoHpkr88VS/wSOehgs2pRsvCKF1rkULpInuyo9BUQrQ9J2WYWDMVHodlg68dHvkFVj4JIdci4P77mTqJZYHEsf7bDcGs63z7WhE8GY1X/7fjdxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pw2iSSnW; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1727765786; c=relaxed/simple;
+	bh=D6cq+9W5AquN6Xivssj0gJ1Jk4JQ0mfYEn2CA9+npXI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CxADuRegO1vz5uNQcUlg99joUnxiXrQXHSTRxJYot8Pq1tCJjYCwa80x7P2k0gSL8iyvT71njphVgQkQUFvITGEgs2P6ZWUjgyIwZPPyDMOwVBXwoCR7wRBBsr2qb39kovT9ncNHFtza4nqLDn4umvNMnEPrpBLKwFThMo5Yxtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XwBYHQaz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pw2iSSnW"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48UKR7hg021749;
-	Tue, 1 Oct 2024 06:03:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=f
-	MSgl6EiouNEj1qT9vZmlvnyNtAu8Vn285GxHelAV6c=; b=pw2iSSnWOZ955f6s3
-	rt9/dPLNyGegMUnzMTcQcIRpU8pxZoV6cNP0He+ZQauZ2XtmxRg+uey6/zwU2HpG
-	QYG5TVRQhPwEe9YeS/LV04VSyJPUMdcuKajG9kBw4z5TNOGtHdBd3iLHd/QVF1R3
-	dxpnlnArv2FwUix1HkZxOY9R6Amwj8l1VDV0aX4ZsnTbjARMeX77f5dvaQPw0fgF
-	tdVV+w6Z7WF2b5+LxqzdW6bXIx5R8V0qMI77Jk+OybJ/L25hpX/xJ+OZASc7+XRw
-	7p3OjnBg9PpA8qwLBVMuLDAJr8UGZstLK4WEPGle8ty8Db/t7Q8iph3asUkxCScl
-	2M96Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41x87kndeb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Oct 2024 06:03:42 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49163fej017020;
-	Tue, 1 Oct 2024 06:03:41 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41x87knde7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Oct 2024 06:03:41 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4915orw6017866;
-	Tue, 1 Oct 2024 06:03:40 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41xw4mtj2t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Oct 2024 06:03:40 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49163eMT22020764
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 1 Oct 2024 06:03:40 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4B9FE58059;
-	Tue,  1 Oct 2024 06:03:40 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A261E58055;
-	Tue,  1 Oct 2024 06:03:31 +0000 (GMT)
-Received: from [9.43.73.171] (unknown [9.43.73.171])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  1 Oct 2024 06:03:31 +0000 (GMT)
-Message-ID: <37ee8dd8-2204-4eca-b938-38c5b2fb10d1@linux.ibm.com>
-Date: Tue, 1 Oct 2024 11:33:29 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XwBYHQaz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6F4C4CED6;
+	Tue,  1 Oct 2024 06:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727765786;
+	bh=D6cq+9W5AquN6Xivssj0gJ1Jk4JQ0mfYEn2CA9+npXI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XwBYHQazazbTC4OwId3vnrFAgc6CpLItRV3CT+Z8Gu23wph58CKcedFo7OLdarXFj
+	 CfBr/fhizt+I319h5X05aQeNiGEwLpOlTkxFwdMvZp5tn26hL9grIrgluiUanZgVrj
+	 0ryllcIGgHjRky7zD5Cq7OsKZqK4RkRI4/CJstCL2fYk+KBEVoQob6cme8zRgaORsv
+	 8IC6faZd2aGl4jfIjpTmpGu86/o4/aahDo/ckVnRLhdwe1cSJTcyxtGmwBVe5kWta6
+	 zAbfWFj5Dzv5UH3KDkLJ7Igmws7XQ8kbnjqJSF3yJWaphRu3BKFYLpSFA19jzUWCHz
+	 4bi5hwVR6eikg==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2f75c56f16aso60880411fa.0;
+        Mon, 30 Sep 2024 23:56:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUb5hyErHg8L+nlaYnCMwManPT29OgGG75N5SMSKloatCgBuklXXMSx2eV4yimmif3wUk8ctXjcp+vHOMVG@vger.kernel.org, AJvYcCUiBBqDH1Rk5CQ8vLslCmC/Xi7qfEu1NX1BRQKP+EkyP2E2Nxqt67MaUQJC2NBcMlkyWJ7BNb4szZUvsAtmjdo=@vger.kernel.org, AJvYcCUm6kZGpEHb76YAe/a1ZfTGVchBQlyX4EUgpNQJijcgQRPxvVg0m69emcfJL0xlA1ObScZoM0+UmgWo9PMd@vger.kernel.org, AJvYcCVR23sffSw7+s8WHHsh/QRWZqSUnBSfBzFlHy3NdQaSePyRp27+SUuWpX3dUSA+s7btKv4KtlpfYmsc@vger.kernel.org, AJvYcCVk7EvOcGbNafkzEELiaW0XX4/dAMKhzeaP9myUqJqYPUW+CaA72tq2XrwVjJcbalYY0KIWAQ2Ox6I9qrCtHBjbWQ==@vger.kernel.org, AJvYcCVkqg2FaRqXxkztdXl6Qg2ZLbyRAxc2++5Icc2R0fpNfIdY7w/OUH2F5t1fyxYuXRrjA9F6fJvJhWjB@vger.kernel.org, AJvYcCWJUthhIvNr4CBi7JTh00/Xf1hcUNTTMWspSCRlOgkq8BnBYIUFIahac9hC/CIWpK4L8K4=@vger.kernel.org, AJvYcCWMyKtbai3/+CMUxxUAWRaUoxT63Z6NiQHeXfwlK375Wkv/AXfBxKIUq9xOBgn0rLyBsG1TO3IKXQUHNQ==@vger.kernel.org, AJvYcCWazTJ/MRGwc1ZpLlQfAWrTj54guFFdiwwwZU2AwyRDc04z+N9tCqfvuKOXEKqEthvzJvjNPjXmmw8=@vger.kernel.org, AJvYcCWk4JcjjEkIQZslMHYb9A45qkunEL5rjByj2wasO2nknJYRCQbyly1eTO7stb84m02o0HvxOYqZAK3wIjIp@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqCf21TVLxRAj0tdVi4muVfet14Czx+Po9K0dRbSUE3e13C7ZA
+	FwfRn3JNAuGYoPW7FQfz3unhiD5XPLAeSVO+cjc6yjjLmGndQpraItuRkPFrv5+hLyJ1eBVfCej
+	WbVPyB8lHYF9xlgLA6eI+GQreT8I=
+X-Google-Smtp-Source: AGHT+IGjtx2HGlRUUxfHLsgxZrMc5HOLfFzS5jvtirjyIPXJpZcKEYpq6gBAXQaDQEq6eyp0Tbbah6SY1D/EzYnBAjs=
+X-Received: by 2002:a05:6512:3b8d:b0:52b:bf8e:ffea with SMTP id
+ 2adb3069b0e04-5389fc6429dmr8367147e87.40.1727765784329; Mon, 30 Sep 2024
+ 23:56:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf sched timehist: Add pre-migration wait time option
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Athira Rajeev
- <atrajeev@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-References: <20240917091537.46684-1-vineethr@linux.ibm.com>
- <ZvXom7j_LdYYyVUz@google.com>
-Content-Language: en-US
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-In-Reply-To: <ZvXom7j_LdYYyVUz@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: sxv6tJr_8ExF4R1rvkFgJqRf9QRYsnGd
-X-Proofpoint-ORIG-GUID: ybCOPZ87MthkC8vfkuokuYEkjGQ2Iuw-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-01_02,2024-09-30_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 lowpriorityscore=0 clxscore=1011 phishscore=0 spamscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=999 adultscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2410010039
+References: <20240925150059.3955569-30-ardb+git@google.com>
+ <20240925150059.3955569-34-ardb+git@google.com> <20241001053318.elfwwiyluw6rlynz@treble>
+In-Reply-To: <20241001053318.elfwwiyluw6rlynz@treble>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 1 Oct 2024 08:56:12 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFyd7zDqnFzHTZmcR+ktxRVdOnuF-VOW+E0PYPNaQGXzQ@mail.gmail.com>
+Message-ID: <CAMj1kXFyd7zDqnFzHTZmcR+ktxRVdOnuF-VOW+E0PYPNaQGXzQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/28] x86/boot: Permit GOTPCREL relocations for
+ x86_64 builds
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Uros Bizjak <ubizjak@gmail.com>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Christoph Lameter <cl@linux.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Juergen Gross <jgross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Keith Packard <keithp@keithp.com>, 
+	Justin Stitt <justinstitt@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, kvm@vger.kernel.org, 
+	xen-devel@lists.xenproject.org, linux-efi@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-sparse@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Namhyung,
+On Tue, 1 Oct 2024 at 07:33, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+>
+> On Wed, Sep 25, 2024 at 05:01:04PM +0200, Ard Biesheuvel wrote:
+> > +             if (r_type == R_X86_64_GOTPCREL) {
+> > +                     Elf_Shdr *s = &secs[sec->shdr.sh_info].shdr;
+> > +                     unsigned file_off = offset - s->sh_addr + s->sh_offset;
+> > +
+> > +                     /*
+> > +                      * GOTPCREL relocations refer to instructions that load
+> > +                      * a 64-bit address via a 32-bit relative reference to
+> > +                      * the GOT.  In this case, it is the GOT entry that
+> > +                      * needs to be fixed up, not the immediate offset in
+> > +                      * the opcode. Note that the linker will have applied an
+> > +                      * addend of -4 to compensate for the delta between the
+> > +                      * relocation offset and the value of RIP when the
+> > +                      * instruction executes, and this needs to be backed out
+> > +                      * again. (Addends other than -4 are permitted in
+> > +                      * principle, but make no sense in practice so they are
+> > +                      * not supported.)
+> > +                         */
+> > +                     if (rel->r_addend != -4) {
+> > +                             die("invalid addend (%ld) for %s relocation: %s\n",
+> > +                                 rel->r_addend, rel_type(r_type), symname);
+> > +                             break;
+> > +                     }
+>
+> For x86 PC-relative addressing, the addend is <reloc offset> -
+> <subsequent insn offset>.  So a PC-relative addend can be something
+> other than -4 when the relocation applies to the middle of an
+> instruction, e.g.:
+>
+>    5b381:       66 81 3d 00 00 00 00 01 06      cmpw   $0x601,0x0(%rip)        # 5b38a <generic_validate_add_page+0x4a> 5b384: R_X86_64_PC32    boot_cpu_data-0x6
+>
+>    5f283:       81 3d 00 00 00 00 ff ff ff 00   cmpl   $0xffffff,0x0(%rip)        # 5f28d <x86_acpi_suspend_lowlevel+0x9d>      5f285: R_X86_64_PC32    smpboot_control-0x8
+>
+>    72f67:       c6 05 00 00 00 00 01    movb   $0x1,0x0(%rip)        # 72f6e <sched_itmt_update_handler+0x6e>   72f69: R_X86_64_PC32    x86_topology_update-0x5
+>
+> Presumably that could also happen with R_X86_64_GOTPCREL?
+>
 
-On 27/09/24 04:34, Namhyung Kim wrote:
-> Hello,
-> 
-> On Tue, Sep 17, 2024 at 02:45:37PM +0530, Madadi Vineeth Reddy wrote:
->> pre-migration wait time is the time that a task unnecessarily spends
->> on the runqueue of a CPU but doesn't get switched-in there. In terms
->> of tracepoints, it is the time between sched:sched_wakeup and
->> sched:sched_migrate_task.
-> 
-> Sounds useful.
-> 
->>
->> Let's say a task woke up on CPU2, then it got migrated to CPU4 and
->> then it's switched-in to CPU4. So, here pre-migration wait time is
->> time that it was waiting on runqueue of CPU2 after it is woken up.
->>
->> The general pattern for pre-migration to occur is:
->> sched:sched_wakeup
->> sched:sched_migrate_task
->> sched:sched_switch
->> So, this option expects sched_wakeup also to be recorded and fails
->> if attempted to use the option without sched:sched_wakeup tracepoint.
-> 
-> I'm curious if you check sched_migrate_task as well.
+In theory, yes.
 
-Yes, I do check it in timehist_migrate_task_event().
+But for the class of GOTPCREL relaxable instructions listed in the
+psABI, the addend is always -4, and these are the only ones we might
+expect from the compiler when using -fpic with 'hidden' visibility
+and/or -mdirect-extern-access. Note that the memory operand
+foo@GOTPCREL(%rip) produces the *address* of foo, and so it is always
+the source operand, appearing at the end of the encoding.
 
-> 
->>
->> pre-migrations are generally not useful and it increases migrations.
->> This metric would be helpful in testing patches mainly related to wakeup
->> and load-balancer code paths as better wakeup logic would choose an
->> optimal CPU where task would be switched-in and thereby reducing pre-
->> migrations.
->>
->> The sample output(s) when -P or --pre-migrations is used:
->> =================
->>            time    cpu  task name                       wait time  sch delay   run time  pre-mig time
->>                         [tid/pid]                          (msec)     (msec)     (msec)     (msec)
->> --------------- ------  ------------------------------  ---------  ---------  ---------  ---------
->>   103032.721020 [0000]  perf[47206]                         0.000      0.000      0.000      0.000
->>   103032.721034 [0000]  migration/0[18]                     0.000      0.003      0.013      0.000
->>   103032.736716 [0001]  schbench[47229/47207]              10.664      9.231      0.039      9.170
->>   103032.736719 [0005]  <idle>                              0.000      0.000     15.405      0.000
->>   103032.736726 [0003]  schbench[47216/47207]              11.251      9.193      0.022      9.126
->>   103032.736727 [0001]  schbench[47228/47207]              10.752      9.264      0.010      9.169
->>   103032.736731 [0007]  <idle>                              0.000      0.000     15.314      0.000
->>   103032.736739 [0008]  <idle>                              0.000      0.000     15.249      0.000
->>   103032.736742 [0003]  schbench[47257/47207]               9.498      9.184      0.015      9.100
->>
->>    51370.894024 [0012]  schbench[38775/38770]              21.047     21.047      8.950      0.000
->>    51370.894024 [0008]  schbench[38781/38770]              39.597     39.448      9.984     39.437
->>    51370.894025 [0009]  stress-ng-cpu[38743]                7.971      7.971      9.997      0.000
->>
->> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
->> ---
->>  tools/perf/Documentation/perf-sched.txt |   8 ++
->>  tools/perf/builtin-sched.c              | 110 +++++++++++++++++-------
->>  2 files changed, 85 insertions(+), 33 deletions(-)
->>
->> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
->> index 3db64954a267..7935499b88b0 100644
->> --- a/tools/perf/Documentation/perf-sched.txt
->> +++ b/tools/perf/Documentation/perf-sched.txt
->> @@ -221,6 +221,14 @@ OPTIONS for 'perf sched timehist'
->>  	priorities are specified with -: 120-129. A combination of both can also be
->>  	provided: 0,120-129.
->>  
->> +-P::
->> +--pre-migrations::
->> +	Show pre-migration wait time. pre-migration wait time is the time spent
->> +	by a task waiting on a runqueue but not getting the chance to run there
->> +	and is migrated to a different runqueue where it is finally run. This
->> +	time between migrate_task and sched_wakeup is the pre-migration wait
->> +	time. This option is valid only if sched_wakeup tracepoint is recorded.
->> +
->>  OPTIONS for 'perf sched replay'
->>  ------------------------------
->>  
->> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
->> index 5981cc51abc8..252e71d83d82 100644
->> --- a/tools/perf/builtin-sched.c
->> +++ b/tools/perf/builtin-sched.c
->> @@ -228,6 +228,7 @@ struct perf_sched {
->>  	bool		show_wakeups;
->>  	bool		show_next;
->>  	bool		show_migrations;
->> +	bool		pre_migrations;
->>  	bool		show_state;
->>  	bool		show_prio;
->>  	u64		skipped_samples;
->> @@ -247,7 +248,10 @@ struct thread_runtime {
->>  	u64 dt_iowait;      /* time between CPU access by iowait (off cpu) */
->>  	u64 dt_preempt;     /* time between CPU access by preempt (off cpu) */
->>  	u64 dt_delay;       /* time between wakeup and sched-in */
->> +	u64 dt_pre_mig;     /* time between migration and wakeup */
->>  	u64 ready_to_run;   /* time of wakeup */
->> +	u64 woken;	    /* time when sched_wakeup tracepoint is hit */
->> +	u64 migrated;	    /* time when a thread is migrated */
->>  
->>  	struct stats run_stats;
->>  	u64 total_run_time;
->> @@ -255,6 +259,7 @@ struct thread_runtime {
->>  	u64 total_iowait_time;
->>  	u64 total_preempt_time;
->>  	u64 total_delay_time;
->> +	u64 total_pre_mig_time;
->>  
->>  	char last_state;
->>  
->> @@ -2083,14 +2088,15 @@ static void timehist_header(struct perf_sched *sched)
->>  		printf(" ");
->>  	}
->>  
->> -	if (sched->show_prio) {
->> -		printf(" %-*s  %-*s  %9s  %9s  %9s",
->> -		       comm_width, "task name", MAX_PRIO_STR_LEN, "prio",
->> -		       "wait time", "sch delay", "run time");
->> -	} else {
->> -		printf(" %-*s  %9s  %9s  %9s", comm_width,
->> -		       "task name", "wait time", "sch delay", "run time");
->> -	}
->> +	printf(" %-*s", comm_width, "task name");
->> +
->> +	if (sched->show_prio)
->> +		printf("  %-*s", MAX_PRIO_STR_LEN, "prio");
->> +
->> +	printf("  %9s  %9s  %9s", "wait time", "sch delay", "run time");
->> +
->> +	if (sched->pre_migrations)
->> +		printf("  %9s", "pre-mig time");
->>  
->>  	if (sched->show_state)
->>  		printf("  %s", "state");
->> @@ -2105,17 +2111,15 @@ static void timehist_header(struct perf_sched *sched)
->>  	if (sched->show_cpu_visual)
->>  		printf(" %*s ", ncpus, "");
->>  
->> -	if (sched->show_prio) {
->> -		printf(" %-*s  %-*s  %9s  %9s  %9s",
->> -		       comm_width, "[tid/pid]", MAX_PRIO_STR_LEN, "",
->> -		       "(msec)", "(msec)", "(msec)");
->> -	} else {
->> -		printf(" %-*s  %9s  %9s  %9s", comm_width,
->> -		       "[tid/pid]", "(msec)", "(msec)", "(msec)");
->> -	}
->> +	printf(" %-*s", comm_width, "[tid/pid]");
->>  
->> -	if (sched->show_state)
->> -		printf("  %5s", "");
->> +	if (sched->show_prio)
->> +		printf("  %-*s", MAX_PRIO_STR_LEN, "");
->> +
->> +	printf("  %9s  %9s  %9s", "(msec)", "(msec)", "(msec)");
->> +
->> +	if (sched->pre_migrations)
->> +		printf("  %9s", "(msec)");
->>  
->>  	printf("\n");
->>  
->> @@ -2127,15 +2131,15 @@ static void timehist_header(struct perf_sched *sched)
->>  	if (sched->show_cpu_visual)
->>  		printf(" %.*s ", ncpus, graph_dotted_line);
->>  
->> -	if (sched->show_prio) {
->> -		printf(" %.*s  %.*s  %.9s  %.9s  %.9s",
->> -		       comm_width, graph_dotted_line, MAX_PRIO_STR_LEN, graph_dotted_line,
->> -		       graph_dotted_line, graph_dotted_line, graph_dotted_line);
->> -	} else {
->> -		printf(" %.*s  %.9s  %.9s  %.9s", comm_width,
->> -		       graph_dotted_line, graph_dotted_line, graph_dotted_line,
->> -		       graph_dotted_line);
->> -	}
->> +	printf(" %.*s", comm_width, graph_dotted_line);
->> +
->> +	if (sched->show_prio)
->> +		printf("  %.*s", MAX_PRIO_STR_LEN, graph_dotted_line);
->> +
->> +	printf("  %.9s  %.9s  %.9s", graph_dotted_line, graph_dotted_line, graph_dotted_line);
->> +
->> +	if (sched->pre_migrations)
->> +		printf("  %.9s", graph_dotted_line);
->>  
->>  	if (sched->show_state)
->>  		printf("  %.5s", graph_dotted_line);
->> @@ -2190,6 +2194,8 @@ static void timehist_print_sample(struct perf_sched *sched,
->>  
->>  	print_sched_time(tr->dt_delay, 6);
->>  	print_sched_time(tr->dt_run, 6);
->> +	if (sched->pre_migrations)
->> +		print_sched_time(tr->dt_pre_mig, 6);
->>  
->>  	if (sched->show_state)
->>  		printf(" %5c ", thread__tid(thread) == 0 ? 'I' : state);
->> @@ -2249,6 +2255,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
->>  	r->dt_iowait  = 0;
->>  	r->dt_preempt = 0;
->>  	r->dt_run     = 0;
->> +	r->dt_pre_mig = 0;
->>  
->>  	if (tprev) {
->>  		r->dt_run = t - tprev;
->> @@ -2257,6 +2264,11 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
->>  				pr_debug("time travel: wakeup time for task > previous sched_switch event\n");
->>  			else
->>  				r->dt_delay = tprev - r->ready_to_run;
->> +
->> +			if (r->woken && r->migrated) {
->> +				if ((r->migrated > r->woken) && (r->migrated < tprev))
->> +					r->dt_pre_mig = r->migrated - r->woken;
->> +			}
->>  		}
->>  
->>  		if (r->last_time > tprev)
->> @@ -2280,6 +2292,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
->>  	r->total_sleep_time   += r->dt_sleep;
->>  	r->total_iowait_time  += r->dt_iowait;
->>  	r->total_preempt_time += r->dt_preempt;
->> +	r->total_pre_mig_time += r->dt_pre_mig;
->>  }
->>  
->>  static bool is_idle_sample(struct perf_sample *sample,
->> @@ -2579,12 +2592,27 @@ static void timehist_print_wakeup_event(struct perf_sched *sched,
->>  	printf("\n");
->>  }
->>  
->> -static int timehist_sched_wakeup_ignore(const struct perf_tool *tool __maybe_unused,
->> +static int timehist_sched_wakeup_consider(const struct perf_tool *tool __maybe_unused,
-> 
-> No this function is to not duplicate work when you have both
-> sched_wakeup and sched_waking tracepoints.
-> 
->>  					union perf_event *event __maybe_unused,
->>  					struct evsel *evsel __maybe_unused,
->>  					struct perf_sample *sample __maybe_unused,
->>  					struct machine *machine __maybe_unused)
->>  {
->> +	struct thread *thread;
->> +	struct thread_runtime *tr = NULL;
->> +	const u32 pid = evsel__intval(evsel, sample, "pid");
->> +
->> +	thread = machine__findnew_thread(machine, 0, pid);
->> +	if (thread == NULL)
->> +		return -1;
->> +
->> +	tr = thread__get_runtime(thread);
->> +	if (tr == NULL)
->> +		return -1;
->> +
->> +	if (tr->woken == 0)
->> +		tr->woken = sample->time;
-> 
-> I think you can add this to timehist_sched_wakeup_event().
+Alternatively, we might simply subtract the addend from 'offset'
+before applying the displacement from the opcode.
 
-Got it. I will do that. May be I will do it by skipping
-
-if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
-		handlers[1].handler = timehist_sched_wakeup_ignore;
-
-when using pre-migration option.
-
-> 
->> +
->>  	return 0;
->>  }
->>  
->> @@ -2694,8 +2722,14 @@ static int timehist_migrate_task_event(const struct perf_tool *tool,
->>  
->>  	tr->migrations++;
->>  
->> +	if (tr->migrated == 0)
->> +		tr->migrated = sample->time;
->> +
->>  	/* show migrations if requested */
->> -	timehist_print_migration_event(sched, evsel, sample, machine, thread);
->> +	if (sched->show_migrations) {
->> +		timehist_print_migration_event(sched, evsel, sample,
->> +							machine, thread);
->> +	}
->>  
->>  	return 0;
->>  }
->> @@ -2846,11 +2880,14 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
->>  		/* last state is used to determine where to account wait time */
->>  		tr->last_state = state;
->>  
->> -		/* sched out event for task so reset ready to run time */
->> +		/* sched out event for task so reset ready to run time, woken and migrated time */
->>  		if (state == 'R')
->>  			tr->ready_to_run = t;
->>  		else
->>  			tr->ready_to_run = 0;
->> +
->> +		tr->woken = 0;
->> +		tr->migrated = 0;
->>  	}
->>  
->>  	evsel__save_time(evsel, sample->time, sample->cpu);
->> @@ -3278,7 +3315,7 @@ static int perf_sched__timehist(struct perf_sched *sched)
->>  
->>  	/* prefer sched_waking if it is captured */
->>  	if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
->> -		handlers[1].handler = timehist_sched_wakeup_ignore;
->> +		handlers[1].handler = timehist_sched_wakeup_consider;
->>  
->>  	/* setup per-evsel handlers */
->>  	if (perf_session__set_tracepoints_handlers(session, handlers))
->> @@ -3290,8 +3327,14 @@ static int perf_sched__timehist(struct perf_sched *sched)
->>  		goto out;
->>  	}
->>  
->> -	if (sched->show_migrations &&
->> -	    perf_session__set_tracepoints_handlers(session, migrate_handlers))
->> +	if (sched->pre_migrations && !evlist__find_tracepoint_by_name(session->evlist,
->> +									"sched:sched_wakeup")) {
->> +		pr_err("No sched_wakeup events found. sched_wakeup tracepoint is mandatory for -P option\n");
->> +		goto out;
->> +	}
->> +
->> +	if ((sched->show_migrations || sched->pre_migrations) &&
->> +		(perf_session__set_tracepoints_handlers(session, migrate_handlers)))
-> 
-> No need for parenthesis.
-
-Got it. Thanks for your time. Will send v2 with the changes.
-
-Thanks,
-Madadi Vineeth Reddy
-
-> 
-> Thanks,
-> Namhyung
-> 
-> 
->>  		goto out;
->>  
->>  	/* pre-allocate struct for per-CPU idle stats */
->> @@ -3833,6 +3876,7 @@ int cmd_sched(int argc, const char **argv)
->>  	OPT_BOOLEAN(0, "show-prio", &sched.show_prio, "Show task priority"),
->>  	OPT_STRING(0, "prio", &sched.prio_str, "prio",
->>  		   "analyze events only for given task priority(ies)"),
->> +	OPT_BOOLEAN('P', "pre-migrations", &sched.pre_migrations, "Show pre-migration wait time"),
->>  	OPT_PARENT(sched_options)
->>  	};
->>  
->> -- 
->> 2.43.1
->>
-
+Note that this code gets removed again in the last patch, after
+switching to PIE linking.
