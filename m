@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9CEBA2E;
-	Tue,  1 Oct 2024 00:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611EC28FF;
+	Tue,  1 Oct 2024 00:20:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727742029; cv=none; b=M4AEdeLIzFPjSPAiC8p5gYnFfEaBGQH4gp6OAcrGfGEs6IdJbyld8rM/rcAge6u/3touTIIHQU0QX1GmE8LQQY0wjGVy4Lk+S0kXiW8Oj1UOJT7G1E0o6R4L0tWaCgUbv02PjCfzixzyTLVFAw50uISEzViED/2FS1136dPpNhM=
+	t=1727742030; cv=none; b=a/gfBaGhNhkc8NIseHWzNcYOV7vnCB9EFelGiKd62s7wZQgmcIrhuo5FYmJM1xib3f7u5CJg8DmmgNRxUB9HYpVKqgRi1eq7HTu3OPzu3n81WR9Xtsi+giMWx4chkwWEKC2ITHCQnnh/E8SiglJ8pnmpjU/07zazGGSkvskU0ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727742029; c=relaxed/simple;
-	bh=sn+sJmUR9kNVPMvS6f/VhxpSWF2d9kStnRUNJ0cts8k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eLOb/26ay8zGbb3zpyxTLLXToQAABRqVwu9x5pPsWMRGc6yjy6cMX58Fsj6N5X9gfSg21SAz32ose6pAeWM9AKGFVJGGc9qrIaSeOaHxjv0rom9pmHMRheaWVo93Tkn8gLKRaND8jLfPwLNHd329krctPl1mPMdMQI/dOw8Bk9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bV9tVRFZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727742030; c=relaxed/simple;
+	bh=SCiLTiO0cp8e6Kfe5pAOVI5Gp/s3ui2/Ngx6XNpetHw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HxXpDPU2IQ/xHiK/+gzscHsrX0En/tsVsbTmy6K47GJ87J2G5ydfoEGNfCKkvovU/PerPrInhCw7RJOP1o8sGahccPlsig3qoxRBoX5vhsc+Xkk/2PdG87PZHXicW56WupxYwZtOAEBUkgjgt12mZciRoGcr1h8nLKA1SvvtibI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GL/ITFIG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bV9tVRFZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89EDBC4CEC7;
-	Tue,  1 Oct 2024 00:20:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GL/ITFIG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F5DAC4CED1;
+	Tue,  1 Oct 2024 00:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1727742029;
-	bh=sn+sJmUR9kNVPMvS6f/VhxpSWF2d9kStnRUNJ0cts8k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bV9tVRFZh5ZFdVk50Qs6g56yLY9nbp1IOmyO81xLioKMWN+j203YrDshvKkFF9Btg
-	 STROPrt1gFYQqcnzp5QkJsezq48Twlj7IqB67I5UTxp1A4NkTllRmsUH9qIz56/J50
-	 4idUomRGwzmWAFX6VInd5k84wXwUyvm5xt6TcKKsfLjtud7u7ZCxp6a994DlzhIPTC
-	 8lCEpEEGUMFJOcGg4v5B3g6y54qstQS6QLqWiJhiyZnV5auir4pG8LD91oKc0RTbOL
-	 5PKCsKGTny1EMP1LmhnEZ7xg6hw1blaaORPCJD5FfRM9xa8eXo+4aI88+jHdkunoLE
-	 hi7MQv3batJ+g==
+	bh=SCiLTiO0cp8e6Kfe5pAOVI5Gp/s3ui2/Ngx6XNpetHw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GL/ITFIGKEEtS/vA1OKYEn2ivPHkLfsUsztWdOo+kYZDUObsmVazQeWF/dP92ulpq
+	 4niEVmfYJ0b4KaELgTd1Fprh6BQO4Y9cTzoe3MpY37tiEcfqzRag6vB2XT/TIk19/W
+	 t6DABt+V7j9kblxhPflchpUYcIl6LUKzzyxYAruncWWTmOZRyQI6Lg8gwuTwTQVNj6
+	 6TBdXkK40KHdkp5h33mRNVUk5nzInzL/qBTqW7Wnt8CO+Dr4GfdJc+f1NDjbtn+nPK
+	 u8rkCVIV7WnX+pGJikkjnC2Kuu4inGuLu8+vrva6Q7nseIucqB3UG/i+abT8yPNfBH
+	 Nv3guNupkCRYA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -42,11 +43,14 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Thomas Richter <tmricht@linux.ibm.com>,
 	Atish Patra <atishp@atishpatra.org>,
 	Palmer Dabbelt <palmer@rivosinc.com>,
-	Mingwei Zhang <mizhang@google.com>
-Subject: [PATCHSET 0/8] perf tools: Do not set attr.exclude_guest by default (v4)
-Date: Mon, 30 Sep 2024 17:20:19 -0700
-Message-ID: <20241001002027.1272889-1-namhyung@kernel.org>
+	Mingwei Zhang <mizhang@google.com>,
+	James Clark <james.clark@linaro.org>
+Subject: [PATCH 1/8] perf tools: Add fallback for exclude_guest
+Date: Mon, 30 Sep 2024 17:20:20 -0700
+Message-ID: <20241001002027.1272889-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
+In-Reply-To: <20241001002027.1272889-1-namhyung@kernel.org>
+References: <20241001002027.1272889-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,87 +59,98 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+Commit 7b100989b4f6bce70 ("perf evlist: Remove __evlist__add_default")
+changed to parse "cycles:P" event instead of creating a new cycles
+event for perf record.  But it also changed the way how modifiers are
+handled so it doesn't set the exclude_guest bit by default.
 
-I found perf tools set exclude_guest bit inconsistently.  It used to
-set the bit but now the default event for perf record doesn't.  So I'm
-wondering why we want the bit in the first place.
+It seems Apple M1 PMU requires exclude_guest set and returns EOPNOTSUPP
+if not.  Let's add a fallback so that it can work with default events.
 
-Actually it's not good for PMUs don't support any exclusion like AMD
-IBS because it disables new features after the exclude_guest due to
-the missing feature detection logic.
+Fixes: 7b100989b4f6bce70 ("perf evlist: Remove __evlist__add_default")
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: James Clark <james.clark@linaro.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-stat.c | 18 +++++++++++++++---
+ tools/perf/util/evsel.c   | 21 +++++++++++++++++++++
+ 2 files changed, 36 insertions(+), 3 deletions(-)
 
-v4 changes)
-
- * handle EOPNOTSUPP error in compatible way  (Kan)
- * drop --exclude-guest option in perf stat
- * not to separate exclude_hv fallback
- * rename to exclude_GH_default  (Kan)
- * drop the RFC from the subject
-
-v3) https://lore.kernel.org/lkml/20240905202426.2690105-1-namhyung@kernel.org/
-
- * move exclude_guest fallback to the front
- * fix precise_max handling on AMD
- * simplify the default event for perf record
-
-v2) https://lore.kernel.org/lkml/20240904064131.2377873-1-namhyung@kernel.org/
-
- * update the missing feature detection logic
- * separate exclude_hv fallback
- * add new fallback for exclude_guest
-
-v1) https://lore.kernel.org/lkml/20240902014621.2002343-1-namhyung@kernel.org/
-
-AFAIK it doesn't matter for the most cases but perf kvm.  If users
-need to set the bit, they can still use :H modifier.  For vPMU pass-
-through or Apple M1, it'd add the exclude_guest during the fallback
-logic.
-
-Also the kernel feature detection logic should be separated from the
-exclude bit tests since it depends on the PMU implementation rather
-than the core kernel features.  So I changed it to use a software
-event for the detection and factor out some hw-specific checks.
-
-The code is available at 'perf/exclude-v4' branch in
-git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (8):
-  perf tools: Add fallback for exclude_guest
-  perf tools: Don't set attr.exclude_guest by default
-  perf tools: Simplify evsel__add_modifier()
-  perf tools: Do not set exclude_guest for precise_ip
-  perf tools: Detect missing kernel features properly
-  perf tools: Move x86__is_amd_cpu() to util/env.c
-  perf tools: Check fallback error and order
-  perf record: Just use "cycles:P" as the default event
-
- tools/perf/arch/x86/util/Build              |   1 -
- tools/perf/arch/x86/util/env.c              |  19 -
- tools/perf/arch/x86/util/env.h              |   7 -
- tools/perf/arch/x86/util/pmu.c              |   2 +-
- tools/perf/builtin-kvm.c                    |   1 +
- tools/perf/builtin-record.c                 |   4 +-
- tools/perf/builtin-stat.c                   |  18 +-
- tools/perf/dlfilters/dlfilter-test-api-v0.c |   2 +-
- tools/perf/dlfilters/dlfilter-test-api-v2.c |   2 +-
- tools/perf/tests/attr/test-record-dummy-C0  |   2 +-
- tools/perf/tests/parse-events.c             |  30 +-
- tools/perf/util/env.c                       |  24 ++
- tools/perf/util/env.h                       |   4 +
- tools/perf/util/evsel.c                     | 394 ++++++++++++++------
- tools/perf/util/evsel.h                     |   1 -
- tools/perf/util/parse-events.c              |   6 +-
- tools/perf/util/util.c                      |  10 +-
- tools/perf/util/util.h                      |   3 +
- 18 files changed, 364 insertions(+), 166 deletions(-)
- delete mode 100644 tools/perf/arch/x86/util/env.c
- delete mode 100644 tools/perf/arch/x86/util/env.h
-
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 1521b6df26065ccf..fd9ea15f6b1c0809 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -639,8 +639,7 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+ 	 * (behavior changed with commit b0a873e).
+ 	 */
+ 	if (errno == EINVAL || errno == ENOSYS ||
+-	    errno == ENOENT || errno == EOPNOTSUPP ||
+-	    errno == ENXIO) {
++	    errno == ENOENT || errno == ENXIO) {
+ 		if (verbose > 0)
+ 			ui__warning("%s event is not supported by the kernel.\n",
+ 				    evsel__name(counter));
+@@ -658,7 +657,7 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+ 		if (verbose > 0)
+ 			ui__warning("%s\n", msg);
+ 		return COUNTER_RETRY;
+-	} else if (target__has_per_thread(&target) &&
++	} else if (target__has_per_thread(&target) && errno != EOPNOTSUPP &&
+ 		   evsel_list->core.threads &&
+ 		   evsel_list->core.threads->err_thread != -1) {
+ 		/*
+@@ -679,6 +678,19 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+ 		return COUNTER_SKIP;
+ 	}
+ 
++	if (errno == EOPNOTSUPP) {
++		if (verbose > 0) {
++			ui__warning("%s event is not supported by the kernel.\n",
++				    evsel__name(counter));
++		}
++		counter->supported = false;
++		counter->errored = true;
++
++		if ((evsel__leader(counter) != counter) ||
++		    !(counter->core.leader->nr_members > 1))
++			return COUNTER_SKIP;
++	}
++
+ 	evsel__open_strerror(counter, &target, errno, msg, sizeof(msg));
+ 	ui__error("%s\n", msg);
+ 
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index da0bada62140d9b0..0ddd77c139e89a2e 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3259,6 +3259,27 @@ bool evsel__fallback(struct evsel *evsel, struct target *target, int err,
+ 		evsel->core.attr.exclude_kernel = 1;
+ 		evsel->core.attr.exclude_hv     = 1;
+ 
++		return true;
++	} else if (err == EOPNOTSUPP && !evsel->core.attr.exclude_guest &&
++		   !evsel->exclude_GH) {
++		const char *name = evsel__name(evsel);
++		char *new_name;
++		const char *sep = ":";
++
++		/* Is there already the separator in the name. */
++		if (strchr(name, '/') ||
++		    (strchr(name, ':') && !evsel->is_libpfm_event))
++			sep = "";
++
++		if (asprintf(&new_name, "%s%sH", name, sep) < 0)
++			return false;
++
++		free(evsel->name);
++		evsel->name = new_name;
++		/* Apple M1 requires exclude_guest */
++		scnprintf(msg, msgsize, "trying to fall back to excluding guest samples");
++		evsel->core.attr.exclude_guest = 1;
++
+ 		return true;
+ 	}
+ 
 -- 
 2.46.1.824.gd892dcdcdd-goog
 
