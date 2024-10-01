@@ -1,201 +1,127 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DAA31CEE9E
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Oct 2024 22:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB271BDAAA
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Oct 2024 22:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727821325; cv=none; b=GNorXXhXQPrJ87vhJ8rCy92Kyc5Eis+0TkrUF7DqPmmUrxWBafrzGsQsywQuoRgZIAu90N/qM25WnmmDv1q3oUg6ENVMqulc7h+FV3nUVjnuZp3TmlDUOnCJE3OdxtIgU/c69X5Ln1VZ2CZZljGH8NOidrKPNpsNZA9HZn58l+g=
+	t=1727821938; cv=none; b=NqO4xSm++QaBPN4Oe1Bin27Dv66k7Mpba+ercqyb3aDFDUeImMohaRQjL530pRz+PxXqYA0YJzU5H6FCXEYcaeRhQGzzSyY4Gr6TLZyPkaPJmJlhGD8lhiZSkB5g3kOpsg1lU07dODi8fEskQKaX5UYk6GVM/DMMOP/NVrlvv5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727821325; c=relaxed/simple;
-	bh=vNXb4IGihwAqX1o9IBiql9solp3cIqTIiKSsOYlP3Bs=;
+	s=arc-20240116; t=1727821938; c=relaxed/simple;
+	bh=lXLPPvcaC531aZaS1yfZf+lCtcWytgonSWc9XS7zbd4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aijIK8WMT2hzMsKeqWJMgLKI0BkPuL113U+FQh1gKRO8dHZ85MC3Qhe18Zc41xyD//3mosE3IuoB64NgXeWq3HktNPX6JWrQHaV9vMuDYq+e90zkDDhsbT5IS68d70Fq/YiBVdRjVekoKN5Qkeg6RvCb5S/vhE0lz+J7ZzVgddg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vQXs5u3x; arc=none smtp.client-ip=209.85.166.180
+	 To:Cc:Content-Type; b=V+d4uB7CUV5FusJzJa9TU4HfIX8vuKHmfgO4jlZm2sCBRPyTb+e2Y9xJRjgWgG10wYRzZJ2vHsl/Rt9ukS70ZD4vFwIKZMc+xDH9gu47RrcpetZOaeTHmQKy4godfSSplC4BXlZPysYiFrrP4lt2rO6FguMMxMmto2SzXZowqa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ns9Uc6RV; arc=none smtp.client-ip=209.85.166.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vQXs5u3x"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a0cb892c6aso95375ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Oct 2024 15:22:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ns9Uc6RV"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3a1a4f2cc29so34915ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Oct 2024 15:32:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727821323; x=1728426123; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1727821936; x=1728426736; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B4+ASh2bBpgSyrs7dACBG8LCNRrYO9g9+SPjFNOkkdc=;
-        b=vQXs5u3xicbf8ZizvgCu8+Tb00peuf12ofpeqWSojBmx7YOCfI59VNMKxP6PqZnuG+
-         TsRAY5Pg34WxxsYb568Z/EonMFH6a5ID5WnCDb7aK5a4I2T13dn89Nb3GXcGYs7kHnmd
-         fEsZFno34fU2wMV4A4AU8hiWHjjMM3+WWKtcVsliK6I2kYZQFRF4a5WvcDwCXpgaDNCn
-         EBrcdv7Z1VG6xvHhAa39Sxae+BK91qTJZ9RfJ3Xe23G7/62hCEz0TBrbWT1Ogn75+sdV
-         eAduye5avSwJgF0FVA0JHdTf0UfIgiSyTvSt3eDAfQmWBLvWEIxczRSQA9lXcLGsjDQ+
-         dM1g==
+        bh=q/WmEnb9j6uzSOoeBPcQQTHlHX9n1d3QXM/aVEUVcsI=;
+        b=Ns9Uc6RVCWjRdOX6Lnan3Kn9qU8GuevibDwe6RhVGn6XaS+lnxkrhAyarMU+FeVc2h
+         A/VyA/DP3knIfrMdnuMn4pmwBpooKMkh1kd0P7yFBg8l1+ogjpgEJ2+C3eZpeOfn1vf9
+         zWPbl3Lw/g8kZKFLe6HUPgSEWcYN5pR6S43BF3OH/6j/2vNVRIPerbEGbH25zpC+lH0v
+         3px77JQEplgChPeLw9hAsq3x8zGov+nG2i0GvE90NQiIKEbOYJDYziVFmSimpOm1Cy8f
+         M+RXRilyH7AtDaKGMh79ZkbqecemfqsrIfmGpAi634twacwteVTbHvWGUlApf+Y+Zov/
+         2AZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727821323; x=1728426123;
+        d=1e100.net; s=20230601; t=1727821936; x=1728426736;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B4+ASh2bBpgSyrs7dACBG8LCNRrYO9g9+SPjFNOkkdc=;
-        b=FpdsVl71sTdT8s0tXpR3i6XwBTBKEGwN0cLYSRixQaJzPlSodgnI4/wa9Xp1AY6Ec4
-         Z15iRjHm6q7cJKvFYDlf0UQ+PHhDQ9lulKe19H6DSF4Ui+gOZx6IHVYLFQ1PMi7iHUtv
-         IRJawB+2IDgux2kcysopikGFOn/XsoDbUYHtO4aR9beTPl1L5YwbDl580auI6F1k4Sqm
-         YLaQ18wVLybGGFtRWEt9EAC5l3PB+0aEu2LcMd8KFm3oaSQCu7z5buZMfyJRi3lLtVOm
-         NlJsewRSQgFyyOoEuK8QJeG9mIT2jePkdQEw5hf3HmdFNLFz6/HWYMD0e7zrUlyN+x+1
-         jzcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVy3WpC/7izu8tDTgrluSD81Q0cZRKG+wiAP44l6A4uXOlVQmHKXgHP8+Nv0AAOrkyF82d4HqQ2OMO0KXOnUlAL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/2bL0SMv89RvSb03xNN0RC0ZmcDmPMIEPnuk9NrnLF1Hhr8F+
-	GbIu2yZp3u7tB94weNjCWCQSRmZMi4sbtmxOe+DfcJBODT/k599B0L/yCXYjKpzAwpG6ViEB0Sv
-	2IalZ0fLkIv9oMby0NBvmtEnhloZQDr/pndV7
-X-Google-Smtp-Source: AGHT+IEf0rABUKm/2lk21+DLqaLsqpDxzRqvExZUALvc93fqXjXm4NxNKqk5aw4zH0xPwAEZoe1/UzTBlG+B4nD1Z2A=
-X-Received: by 2002:a05:6e02:20eb:b0:3a0:8cb6:3ad1 with SMTP id
- e9e14a558f8ab-3a3660c2106mr1278555ab.20.1727821323111; Tue, 01 Oct 2024
- 15:22:03 -0700 (PDT)
+        bh=q/WmEnb9j6uzSOoeBPcQQTHlHX9n1d3QXM/aVEUVcsI=;
+        b=R7KQysbeCER+ukaoUN0NHm4X6DYs7XfwQoQVeuesHvBDQ/zdm5zUFUNKStmf63O5wn
+         5QRn21IBZyJoNIXecORwPPx+5D/XNamB7lqQcXAyw9/ts7qfYpAxzokUqH19tYInx6FF
+         pGjseh8W3t/7ZqBioVC0jYbSSvAOPVzv//heOfWNaLmYymgDCPwZRObGehoWY571kco6
+         H+qO683eumr0sIszsSa1ze946MqOQJFa3JAhENWJ9Q1z+kvVkwVQvu8M7r6Rxy6v17if
+         W1yAdnD7+bKDdnPWtI1UW0a7QnQiaBGUUHxiWlLHNutGJVwBfL37lYLuzwm/YyBfCJt7
+         mJVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpw85RT2wgVDeGYBXxmJd7sb13d0V85sDpPWG6+7bmxVRxrkRYyx+xFXwB0dEO4+aoXw/+5ruYmVBeFgrK/diN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGZHAZIMIOCzUOzQZiTkuQNoiJhc6ihnPZ+n9ErR43Hm9b8njL
+	uBTSKBpAesLP5zfTQe1TW/comuExAggG9f0EpnOOzybBmpwZneUJ8xaVyoV08CPhpdR2vJYxEZ9
+	FjerE5lDQluI5up7VsosywLitZBA2zGNCED5F
+X-Google-Smtp-Source: AGHT+IHP7jVqfzgHpF7iOYK3BNtuvEp4ZZSe1Skt6kFebwR5FWd6uli4ySfWrzWaFaPAGujsH9j/xL5j1k5Dfpcl4Kk=
+X-Received: by 2002:a05:6e02:12c3:b0:3a0:b597:3e30 with SMTP id
+ e9e14a558f8ab-3a365f72b05mr1641715ab.8.1727821935730; Tue, 01 Oct 2024
+ 15:32:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241001002027.1272889-1-namhyung@kernel.org> <20241001002027.1272889-8-namhyung@kernel.org>
- <CAP-5=fVBhLfb3Md1b6NZqmOh4q4_S5=g8hA7p6UzuPJG2GfPiQ@mail.gmail.com> <ZvxrQsHML0A1kF1P@google.com>
-In-Reply-To: <ZvxrQsHML0A1kF1P@google.com>
+References: <20240913084712.13861-1-dapeng1.mi@linux.intel.com> <172781650408.2469191.8205759350946908012.b4-ty@kernel.org>
+In-Reply-To: <172781650408.2469191.8205759350946908012.b4-ty@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 1 Oct 2024 15:21:50 -0700
-Message-ID: <CAP-5=fUAqmvA+pzE15Lmk4Aakj6tOzrqYFhYb43UX9B3E3Odmg@mail.gmail.com>
-Subject: Re: [PATCH 7/8] perf tools: Check fallback error and order
+Date: Tue, 1 Oct 2024 15:32:04 -0700
+Message-ID: <CAP-5=fUekHedP74PZU-F_poETt505AVSwVNYWcYNE=1D9P00AQ@mail.gmail.com>
+Subject: Re: [Patch v5 0/6] Bug fixes on topdown events reordering
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Mark Rutland <mark.rutland@arm.com>, 
-	James Clark <james.clark@arm.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Atish Patra <atishp@atishpatra.org>, 
-	Palmer Dabbelt <palmer@rivosinc.com>, Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 1, 2024 at 2:36=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+On Tue, Oct 1, 2024 at 2:02=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
 rote:
 >
-> On Tue, Oct 01, 2024 at 11:00:20AM -0700, Ian Rogers wrote:
-> > On Mon, Sep 30, 2024 at 5:20=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > The perf_event_open might fail due to various reasons, so blindly
-> > > reducing precise_ip level might not be the best way to deal with it.
-> > >
-> > > It seems the kernel return -EOPNOTSUPP when PMU doesn't support the
-> > > given precise level.  Let's try again with the correct error code.
-> > >
-> > > This caused a problem on AMD, as it stops on precise_ip of 2 for IBS =
-but
-> > > user events with exclude_kernel=3D1 cannot make progress.  Let's add =
-the
-> > > evsel__handle_error_quirks() to this case specially.  I plan to work =
-on
-> > > the kernel side to improve this situation but it'd still need some
-> > > special handling for IBS.
-> > >
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/util/evsel.c | 27 +++++++++++++++++++++------
-> > >  1 file changed, 21 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > index 32e30c293d0c6198..ef8356260eea54cd 100644
-> > > --- a/tools/perf/util/evsel.c
-> > > +++ b/tools/perf/util/evsel.c
-> > > @@ -2419,6 +2419,20 @@ static bool evsel__detect_missing_features(str=
-uct evsel *evsel)
-> > >         return false;
-> > >  }
-> > >
-> > > +static bool evsel__handle_error_quirks(struct evsel *evsel, int erro=
-r)
-> > > +{
-> > > +       /* AMD IBS doesn't support exclude_kernel, forward it to core=
- PMU */
-> >
-> > Should the quirk handling be specific to evsels with the IBS PMU given
-> > the comment above? ie this is a PMU specific workaround rather than an
-> > AMD specific workaround, however, the PMU only exists on AMD :-)
-> >
-> > > +       if (error =3D=3D -EINVAL && evsel->precise_max && evsel->core=
-.attr.precise_ip &&
-> > > +           evsel->core.attr.exclude_kernel && x86__is_amd_cpu()) {
-> >
-> > So here rather than x86__is_amd_cpu it would be
-> > !strcmp(evsel->pmu->name, "ibs_...") . But it may be cleaner to move
-> > the logic into pmu.c.
+> On Fri, 13 Sep 2024 08:47:06 +0000, Dapeng Mi wrote:
 >
-> I guess the problem is that AMD driver does implicit forwarding to IBS
-> if the legacy hardware events have precise_ip.  So it might have just
-> core pmu (or no pmu) in the evsel.
+> > Changes:
+> > v5 -> v6:
+> >   * no function change.
+> >   * rebase patchset to latest code of perf-tool-next tree.
+> >   * Add Kan's reviewed-by tag.
+> >
+> > History:
+> >   v4: https://lore.kernel.org/all/20240816122938.32228-1-dapeng1.mi@lin=
+ux.intel.com/
+> >   v3: https://lore.kernel.org/all/20240712170339.185824-1-dapeng1.mi@li=
+nux.intel.com/
+> >   v2: https://lore.kernel.org/all/20240708144204.839486-1-dapeng1.mi@li=
+nux.intel.com/
+> >   v1: https://lore.kernel.org/all/20240702224037.343958-1-dapeng1.mi@li=
+nux.intel.com/
+> >
+> > [...]
+>
+> Applied to perf-tools-next, thanks!
 
-I think the no PMU case should probably have a PMU possibly similar to
-the tool PMU in:
-https://lore.kernel.org/all/20240912190341.919229-1-irogers@google.com/
-But that's not in place yet. You can always use
-perf_pmus__scan_core(NULL) or
-perf_pmus__find_by_type(evsel->core.attr.type or PERF_TYPE_RAW).
-evsel->pmu->is_core && x86__is_amd_cpu() would identify an AMD core
-PMU whereas the code above could fire for IBS or other PMUs.
+I disagreed with an early patch set and the issue wasn't resolved. Specific=
+ally:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/co=
+mmit/?h=3Dperf-tools-next&id=3D3b5edc0421e2598a0ae7f0adcd592017f37e3cdf
+```
+  /* Followed by topdown events. */
+  if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
+  return -1;
+- if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
++ /*
++ * Move topdown events forward only when topdown events
++ * are not in same group with previous event.
++ */
++ if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs) &&
++     lhs->core.leader !=3D rhs->core.leader)
+  return 1;
+```
+Is a broken comparator as the lhs then rhs behavior varies from the
+rhs then lhs behavior. The qsort implementation can randomly order the
+events.
+Please drop/revert.
 
 Thanks,
 Ian
 
-> >
-> > > +               evsel->core.attr.precise_ip =3D 0;
-> > > +               pr_debug2_peo("removing precise_ip on AMD\n");
-> > > +               display_attr(&evsel->core.attr);
-> > > +               return true;
-> > > +       }
-> > > +
-> > > +       return false;
-> > > +}
-> > > +
-> > >  static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map =
-*cpus,
-> > >                 struct perf_thread_map *threads,
-> > >                 int start_cpu_map_idx, int end_cpu_map_idx)
-> > > @@ -2580,9 +2594,6 @@ static int evsel__open_cpu(struct evsel *evsel,=
- struct perf_cpu_map *cpus,
-> > >         return 0;
-> > >
-> > >  try_fallback:
-> > > -       if (evsel__precise_ip_fallback(evsel))
-> > > -               goto retry_open;
-> > > -
-> > >         if (evsel__ignore_missing_thread(evsel, perf_cpu_map__nr(cpus=
-),
-> > >                                          idx, threads, thread, err)) =
-{
-> > >                 /* We just removed 1 thread, so lower the upper nthre=
-ads limit. */
-> > > @@ -2599,11 +2610,15 @@ static int evsel__open_cpu(struct evsel *evse=
-l, struct perf_cpu_map *cpus,
-> > >         if (err =3D=3D -EMFILE && rlimit__increase_nofile(&set_rlimit=
-))
-> > >                 goto retry_open;
-> > >
-> > > -       if (err !=3D -EINVAL || idx > 0 || thread > 0)
-> > > -               goto out_close;
-> > > +       if (err =3D=3D -EOPNOTSUPP && evsel__precise_ip_fallback(evse=
-l))
-> > > +               goto retry_open;
-> > >
-> > > -       if (evsel__detect_missing_features(evsel))
-> > > +       if (err =3D=3D -EINVAL && evsel__detect_missing_features(evse=
-l))
-> > >                 goto fallback_missing_features;
-> > > +
-> > > +       if (evsel__handle_error_quirks(evsel, err))
-> > > +               goto retry_open;
-> > > +
-> > >  out_close:
-> > >         if (err)
-> > >                 threads->err_thread =3D thread;
-> > > --
-> > > 2.46.1.824.gd892dcdcdd-goog
-> > >
+> Best regards,
+> Namhyung
