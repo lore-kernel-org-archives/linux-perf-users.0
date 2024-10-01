@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18931BBBC6
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Oct 2024 05:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BF71BBBF1
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Oct 2024 05:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727760218; cv=none; b=nGVuz0xdiwyAZKpIMXR5bq3JH0mPk48cqsF3OvVXXC3Wp7pDdlnFvsvWvF1cuBsRTpMlSp1slI/9RZvviQE39jGQ7rz/LFfcZxx5mozU+3Yjt2HzsGUtltPI9As4qloK+LB2yuCTycdEsARDwTyo4Fc9wzngMpppMTQdp+p8qMI=
+	t=1727760219; cv=none; b=mOYYiJMM69tNbQde0oqQwv90+uFFMXuAAmO3bJu0tSkGRvHOgcA1khu2NKwzmFKqU+iNU2NZWiJmLUdSndg/lQeS2zl7xli85j0iFaSDEpJHOjiptQpqKVFWA+byQ1gdjY0vpVeVc2zb7FWXmKzOYcsCd/V1e+A7eQ5xpW8auMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727760218; c=relaxed/simple;
-	bh=ZUl/ydmmbgHj875SzIndORvnGh+y4tgIfETJAN0I7XI=;
+	s=arc-20240116; t=1727760219; c=relaxed/simple;
+	bh=3sJTix9+hVyh80kzwiZoBEnIVXZyPC2rJ0LryrXs4fY=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Lc1yUylsl7dvRDH32LxXALZHKEgIeZrzs+anc/MtlhX73xuPfXPfHBK/9uTM0DRT/tP0IzwzCdctUKHAgHfwahvOqL+LJcUciHjyYCi3p6SH09f4jfx/mgfQp5qGEHjvsFTqhl2Kjp7fVuPxnv36YIDAmnsuJkxXkq3qXo6RK18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ulbduHJ/; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=Xv+FemG7wrt74zb1vkNv+ezRUiXelC8kOymI1dN2PMm9+tuyIjBymWjpGFxTRWEb52KLxToX/+2McDJytzhapDXUhVEX8+7kcbXHS4xZRI0i+4ZdGQk6pzTdgNDzd7MAZhbza/P945irnCRdX+BLt96sl2CCGfzZTporBqkdQlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SMnMk1sm; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ulbduHJ/"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e251ba2243so45336187b3.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Sep 2024 22:23:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SMnMk1sm"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e25d62bfe12so7615793276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Sep 2024 22:23:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727760215; x=1728365015; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1727760217; x=1728365017; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pDg21Rij+IIeZQVgaa8iBgfJqI0jYu+y1eH5S/MzuI4=;
-        b=ulbduHJ/YD3gYenUUioMqMmR4cekFVaQV1Uf6FCxQkke5xPWADyWfI4ut6MpciTb5f
-         EU8SFCfqGFPL6FE2YW+D7OPtw8UL4+cNloNkffZdnS659RE78dCLukcZswSYuDEVkr5I
-         5BEXO26RPUu+2KcqRpmJ7NicQS7f/udwCbggW/hNK+0SR3x4MHXgiIrmv2WXyYbWsQsy
-         GhQcA+QoTF40Il9GduV29QReZ6MeKKUw68miDByEVo64szcw+AXyZ99l5C0EfyZsB3oP
-         aHsB0TgDz0wX0vUtH/1XjPQjIaCwhG7uZHeYSo/ito7AjOHcFXqQAX86X62KuMC/EZss
-         oS+g==
+        bh=EQMGtk6GwbaXhFywRtPjz9CEeNpxRP/qdOj8Kk4AmBM=;
+        b=SMnMk1smLogyOYM242/SVzs2VobsyNZJTEKFsFqkG8gFtf2SnfiGSBSAozec8RYtre
+         5YfvnsBUDpHfohldhl0l+tFBsyKYeDpVqnc38zoNrkgp2a83Re3pRmp/OMrHK/YRalTW
+         WbsaiICN+ZrGfEiREx2zdMlw1WwmWlSShyab/xbVET2HcXhhPbGF4vhlZ9x5QnrIgHVv
+         d29Sy3H+djfQvwU3dUyHiLIy6kUkkN5xuRIKLq04LecoIFkJu+/+xs1gyzjAo5O8o8+f
+         lF7Wgu4NHytUTlRfH76hAmOSLdaiczcmgRDeOSXu2J9TlVf3EbsVNpneSr299rfqtzyP
+         3IzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727760215; x=1728365015;
+        d=1e100.net; s=20230601; t=1727760217; x=1728365017;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pDg21Rij+IIeZQVgaa8iBgfJqI0jYu+y1eH5S/MzuI4=;
-        b=mVzyFYHaveWLb9xRyYQYd/c8DMzSDSHMhvyglmZ+2zb6KmsCJ/WhBkCp7Q+9OJJRKB
-         oSGU0z4LoyvO3EaEDaR66tIkmAFvdUsUf5ibLAlRLDi9kqn9sZhyfCRzvaw3PsAgvMR3
-         Wy4pd0zmL6lS+3X6sixLXek7L3/R3Q6qbkUtYGitWK2jlfr8LLLJmxcsoxyS1INX2BCm
-         1dau8eoJbbLppScOwETT0aMdFA6uwuWE/Oq9ANyo608JAUgxpJrL6PxpnFnpEdIKJqyM
-         X2uj0VR6csVcxJ++woMXfY33FwVhFhn2MdOXhEjdD1sBI2VuMau0WHWpqpB3xb/UcI5i
-         QByw==
-X-Forwarded-Encrypted: i=1; AJvYcCWqvWLebG0b08+OY4TegdjPt7UFvVER+RpWPV3DtzBoFXqwMlWQbO39U2ITzGknpcCZ7PjHr/XitPMZOlQRP9rw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrPVuOUFBMzPG2/5x67hIw/ktPJq6DhL9IyJhzITDLI5Lln08V
-	5UQvxd6xRC74HPZV2Ex0vBd/jzNknuv6DBqLWWxLm8iLI6JHqEuWXToOkpO5z01nSFts+B0vGQF
-	R0ES+Ag==
-X-Google-Smtp-Source: AGHT+IEePI86EHzO2lKFHMUhhhibUrr1ifCWaWS9m6yGJmNtyzlTdWvIyNugozYcmICy9rbCctLESW+kX90s
+        bh=EQMGtk6GwbaXhFywRtPjz9CEeNpxRP/qdOj8Kk4AmBM=;
+        b=fT665g4XHn1XLwEV3nHw6v7DezSZQnLG0FRjFFZvjGo/re76DPcwPnQDh5TOdCbhYy
+         ritQIvIhoxMX8kML5jAs175BrWukaHZdBdcN0ApImF7dmvteXXIPT8B8IrIKQt4Hw/7E
+         vig+Qjbg1J4VMcLapASFJBq9smMZm6kEY76XOtL9ZZGW2Q+/Egg5RRbB337PXB6ezuhq
+         1evNFelRbDHcIPwHdPGcEEV9S4S4N2HvODS+7YuSEIXHkW53B0WzWiYq8YaM4/IcnXj2
+         /tiBueX4jttE3w/9upibK/j1danLZPQivH/R62esN9+91ZuF/TB0mQC/PwAetkExriTJ
+         hnLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGcsyDZdFmuz8pdppaDWQgfhjRbQ35RF3rFbzERYrHNnfLGkIfaLLZt5pWcIWc97Qut0y12AOepENYPN1IMYzU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yye6cekD5SSxnE07/gd5hMPxO+4ariKRTsTRigdWB9PIFmA5m/R
+	OD/1+GJewejUicabj+bg86T5E5Jgf+Fu3/OnowD1UCGD6f/++vhyrZYveI5+UVDIbZLL9tpqWEc
+	oHzc6qQ==
+X-Google-Smtp-Source: AGHT+IEtJ5iHDU4WG7YqVYSBmkd2+4f6hQoz49uFn7BXq4j2kS3RcFmOmtpe5Dixo6yM80mfjOYYyRnT+UeT
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:f420:67c7:1eea:bb12])
- (user=irogers job=sendgmr) by 2002:a05:690c:23c2:b0:6db:d365:19c0 with SMTP
- id 00721157ae682-6e290eb5dd2mr581447b3.5.1727760214866; Mon, 30 Sep 2024
- 22:23:34 -0700 (PDT)
-Date: Mon, 30 Sep 2024 22:23:24 -0700
+ (user=irogers job=sendgmr) by 2002:a5b:f0e:0:b0:e11:5f87:1e3c with SMTP id
+ 3f1490d57ef6-e2604c8b9d5mr55878276.11.1727760217150; Mon, 30 Sep 2024
+ 22:23:37 -0700 (PDT)
+Date: Mon, 30 Sep 2024 22:23:25 -0700
 In-Reply-To: <20241001052327.7052-1-irogers@google.com>
-Message-Id: <20241001052327.7052-2-irogers@google.com>
+Message-Id: <20241001052327.7052-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241001052327.7052-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
-Subject: [PATCH v2 1/4] perf stat: Fix affinity memory leaks on error path
+Subject: [PATCH v2 2/4] perf test: Fix memory leaks on event-times error paths
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,33 +71,53 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Missed cleanup when an error occurs.
+These error paths occur without sufficient permissions. Fix the memory
+leaks to make leak sanitizer happier.
 
-Fixes: 49de179577e7 ("perf stat: No need to setup affinities when starting a workload")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/tests/event-times.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 1521b6df2606..3e6b9f216e80 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -827,6 +827,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 		}
+diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-times.c
+index e155f0e0e04d..deefe5003bfc 100644
+--- a/tools/perf/tests/event-times.c
++++ b/tools/perf/tests/event-times.c
+@@ -126,6 +126,7 @@ static int attach__cpu_disabled(struct evlist *evlist)
+ 	evsel->core.attr.disabled = 1;
+ 
+ 	err = evsel__open_per_cpu(evsel, cpus, -1);
++	perf_cpu_map__put(cpus);
+ 	if (err) {
+ 		if (err == -EACCES)
+ 			return TEST_SKIP;
+@@ -134,7 +135,6 @@ static int attach__cpu_disabled(struct evlist *evlist)
+ 		return err;
  	}
- 	affinity__cleanup(affinity);
-+	affinity = NULL;
  
- 	evlist__for_each_entry(evsel_list, counter) {
- 		if (!counter->supported) {
-@@ -965,6 +966,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	if (forks)
- 		evlist__cancel_workload(evsel_list);
- 
-+	affinity__cleanup(affinity);
- 	return err;
+-	perf_cpu_map__put(cpus);
+ 	return evsel__enable(evsel);
  }
+ 
+@@ -153,10 +153,10 @@ static int attach__cpu_enabled(struct evlist *evlist)
+ 	}
+ 
+ 	err = evsel__open_per_cpu(evsel, cpus, -1);
++	perf_cpu_map__put(cpus);
+ 	if (err == -EACCES)
+ 		return TEST_SKIP;
+ 
+-	perf_cpu_map__put(cpus);
+ 	return err ? TEST_FAIL : TEST_OK;
+ }
+ 
+@@ -188,6 +188,7 @@ static int test_times(int (attach)(struct evlist *),
+ 	err = attach(evlist);
+ 	if (err == TEST_SKIP) {
+ 		pr_debug("  SKIP  : not enough rights\n");
++		evlist__delete(evlist);
+ 		return err;
+ 	}
  
 -- 
 2.46.1.824.gd892dcdcdd-goog
