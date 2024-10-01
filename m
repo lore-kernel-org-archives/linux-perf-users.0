@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253EE19ABC3;
-	Tue,  1 Oct 2024 21:32:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A0D19ABC3;
+	Tue,  1 Oct 2024 21:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727818355; cv=none; b=FZs9qYyYmyp8lGmdbkH+nf0yEyXiZlWePrlfygLH/n68NUgAFDJ6Qug/3GXWI/ehXRhPpLUeRnZVZ9QJjOl/21DyzfOOr+06+hC+kM9qxWX1qkwaZXN3V5O/aClTbWFHi6CvNJlo9IihSrAN+ExyKmMmsb6dKC9E1p8eRJqlKsI=
+	t=1727818564; cv=none; b=JPE3VF/cbeZkmRSoqG/jdBYHUmFoBcAQDyEbhVgizmjgZvh3SQp3v9DK0m+n9B0UxOkJ8pM1Moilq+00UIqqf+gCh3h/fFJPgMxWuygc05XA83FRwzAPdD438zVBMEiZTLlXSQRbrJZwlt2RiLrVlLeE4TwbKkzdvxbHcm62E3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727818355; c=relaxed/simple;
-	bh=xc+6Yrc0mFSiTg575g6Zo4OcSmJrOJHuuLsO/V5dxKA=;
+	s=arc-20240116; t=1727818564; c=relaxed/simple;
+	bh=RINnI8ZLTc2D0Ht2bvA8UL8+qn8W6PPVXCeR9E6ylY0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g/v987InvpcBj8dGcfOo3B3K04/qFi2PJT0QgPnz5p38sDLbGY3y27YOsS3I4OO6iIz35MXNsPJJH5AKzOKU0LyNgQEyD2DPahcdHJtGL8QDyaT7drnLb/K+jEoYyUPEmDkQXXFIl8CA5g+uRM280wsPe2lg0q6S77oHIVc/sZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDrNieZy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EzNQIm+1sIEHvoJ3viuhB21FsvRhc26DcuG+l3lzhgidwhuMCABs/A8gYWvQxRmm9FnbaGDJ7mLHPDVbXsbedihPZxFYTJ5rhEWuHsBumQPrKY7YUr/8xcpbDp9H1j35D8szKq63Ak7WrrWSiSksk/7i1d/ClJdzobFl1fe9fvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j3TQVGL1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDrNieZy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 346D3C4CEC6;
-	Tue,  1 Oct 2024 21:32:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j3TQVGL1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D102C4CECD;
+	Tue,  1 Oct 2024 21:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727818354;
-	bh=xc+6Yrc0mFSiTg575g6Zo4OcSmJrOJHuuLsO/V5dxKA=;
+	s=k20201202; t=1727818564;
+	bh=RINnI8ZLTc2D0Ht2bvA8UL8+qn8W6PPVXCeR9E6ylY0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IDrNieZyF9cw4shb4R6E527lIRthcGW/dK7jX/CRuWOSvekUfyVqKAdNrvX9nkYkh
-	 L4hsz336vETwUZt/OsOLWd8sRU+JnzIKqVjnLcbBpCxFnVFtzxwLkz+X46d8qj2LoT
-	 srsnxVKRgPPI6LwujGsrUZzkvBnizphCOl95lR7gwQN3SxPxJjL3TFLLj12P6EyvXa
-	 LNM2Zorr9q+EFkO4UZ6XyO7Vc/yJvJ9hsf86HiJ0sdmRER/OfTXxDlSQy5pkAR1qY5
-	 lxiEdjlV4K1tUC4hLR1r2wrwS9dVnrYG61iJPiimqVkUcqsA2q/tOi1G8c7jaOm7RK
-	 Dkd7CCIYdq5Fg==
-Date: Tue, 1 Oct 2024 14:32:32 -0700
+	b=j3TQVGL1qRcO1jBrgG/HhL/9Tch4JA74ZtGkzExkcp+WtRgtNTsIajnAGAtu+7yKY
+	 chMgfHPhx3wMz343g8EQzeOSD4otoefPevPHajbUquUyBT8H7J/BHXUxJsenyor8t7
+	 fhGbb1iCm0qXx2v650nsIc1KKFlMdAP0oYWWIJqg3gOHZpR/XVPHhD+g1DK/y4rNcX
+	 MdcR4qy3LP+1K/Tr9w9O+/UCqWJmJ9hMkaGj3ZMSiQI12LNNeOLIXJo24kST1zRsP9
+	 bhbCutpuIPHDZ2cTlxkjVn22fTP+9EtJQtW2YqgZozswLZxzsPLVux+HJWiqjLWu6G
+	 UnnP/yI/on8NQ==
+Date: Tue, 1 Oct 2024 14:36:02 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>
+To: Ian Rogers <irogers@google.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
@@ -42,11 +42,11 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Atish Patra <atishp@atishpatra.org>,
 	Palmer Dabbelt <palmer@rivosinc.com>,
 	Mingwei Zhang <mizhang@google.com>
-Subject: Re: [PATCH 5/8] perf tools: Detect missing kernel features properly
-Message-ID: <ZvxqcEIVELw9Uets@google.com>
+Subject: Re: [PATCH 7/8] perf tools: Check fallback error and order
+Message-ID: <ZvxrQsHML0A1kF1P@google.com>
 References: <20241001002027.1272889-1-namhyung@kernel.org>
- <20241001002027.1272889-6-namhyung@kernel.org>
- <CAP-5=fVrptOSOK+sBo0rHR1QWQ0i1WigMaFRy=So-HATKr=R9A@mail.gmail.com>
+ <20241001002027.1272889-8-namhyung@kernel.org>
+ <CAP-5=fVBhLfb3Md1b6NZqmOh4q4_S5=g8hA7p6UzuPJG2GfPiQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,144 +56,100 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVrptOSOK+sBo0rHR1QWQ0i1WigMaFRy=So-HATKr=R9A@mail.gmail.com>
+In-Reply-To: <CAP-5=fVBhLfb3Md1b6NZqmOh4q4_S5=g8hA7p6UzuPJG2GfPiQ@mail.gmail.com>
 
-On Tue, Oct 01, 2024 at 10:53:02AM -0700, Ian Rogers wrote:
+On Tue, Oct 01, 2024 at 11:00:20AM -0700, Ian Rogers wrote:
 > On Mon, Sep 30, 2024 at 5:20 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > The evsel__detect_missing_features() is to check if the attributes of
-> > the evsel is supported or not.  But it checks the attribute based on the
-> > given evsel, it might miss something if the attr doesn't have the bit or
-> > give incorrect results if the event is special.
+> > The perf_event_open might fail due to various reasons, so blindly
+> > reducing precise_ip level might not be the best way to deal with it.
 > >
-> > Also it maintains the order of the feature that was added to the kernel
-> > which means it can assume older features should be supported once it
-> > detects the current feature is working.  To minimized the confusion and
-> > to accurately check the kernel features, I think it's better to use a
-> > software event and go through all the features at once.
+> > It seems the kernel return -EOPNOTSUPP when PMU doesn't support the
+> > given precise level.  Let's try again with the correct error code.
 > >
-> > Also make the function static since it's only used in evsel.c.
+> > This caused a problem on AMD, as it stops on precise_ip of 2 for IBS but
+> > user events with exclude_kernel=1 cannot make progress.  Let's add the
+> > evsel__handle_error_quirks() to this case specially.  I plan to work on
+> > the kernel side to improve this situation but it'd still need some
+> > special handling for IBS.
 > >
 > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > > ---
-> >  tools/perf/util/evsel.c | 345 +++++++++++++++++++++++++++++-----------
-> >  tools/perf/util/evsel.h |   1 -
-> >  2 files changed, 249 insertions(+), 97 deletions(-)
+> >  tools/perf/util/evsel.c | 27 +++++++++++++++++++++------
+> >  1 file changed, 21 insertions(+), 6 deletions(-)
 > >
 > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index f202d28147d62a44..32e30c293d0c6198 100644
+> > index 32e30c293d0c6198..ef8356260eea54cd 100644
 > > --- a/tools/perf/util/evsel.c
 > > +++ b/tools/perf/util/evsel.c
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/zalloc.h>
-> >  #include <sys/ioctl.h>
-> >  #include <sys/resource.h>
-> > +#include <sys/syscall.h>
-> >  #include <sys/types.h>
-> >  #include <dirent.h>
-> >  #include <stdlib.h>
-> > @@ -2150,120 +2151,272 @@ int evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
-> >         return err;
+> > @@ -2419,6 +2419,20 @@ static bool evsel__detect_missing_features(struct evsel *evsel)
+> >         return false;
 > >  }
 > >
-> > -bool evsel__detect_missing_features(struct evsel *evsel)
-> > +static bool has_attr_feature(struct perf_event_attr *attr, unsigned long flags)
-> >  {
-> > +       int fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
-> > +                        /*group_fd=*/-1, flags);
-> > +       close(fd);
-> > +
-> > +       if (fd < 0) {
-> > +               attr->exclude_kernel = 1;
-> > +
-> > +               fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
-> > +                            /*group_fd=*/-1, flags);
-> > +               close(fd);
-> > +       }
-> > +
-> > +       if (fd < 0) {
-> > +               attr->exclude_hv = 1;
-> > +
-> > +               fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
-> > +                            /*group_fd=*/-1, flags);
-> > +               close(fd);
-> > +       }
-> > +
-> > +       if (fd < 0) {
-> > +               attr->exclude_guest = 1;
-> > +
-> > +               fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
-> > +                            /*group_fd=*/-1, flags);
-> > +               close(fd);
-> > +       }
-> > +
-> > +       attr->exclude_kernel = 0;
-> > +       attr->exclude_guest = 0;
-> > +       attr->exclude_hv = 0;
-> > +
-> > +       return fd >= 0;
-> > +}
-> > +
-> > +static void evsel__detect_missing_brstack_features(struct evsel *evsel)
-> 
-> In the future could other PMU specific unsupported features be added
-> not just brstack? Perhaps evsel__detect_missing_pmu_features would
-> better capture that.
-
-Yep, sounds reasonable.  I think we can add that if we have another
-thing to check.
-
-> 
+> > +static bool evsel__handle_error_quirks(struct evsel *evsel, int error)
 > > +{
-> > +       static bool detection_done = false;
-> > +       struct perf_event_attr attr = {
-> > +               .type = evsel->core.attr.type,
-> > +               .config = evsel->core.attr.config,
-> > +               .disabled = 1,
-> > +               .sample_type = PERF_SAMPLE_BRANCH_STACK,
-> > +               .sample_period = 1000,
-> > +       };
-> > +       int old_errno;
-> > +
-> > +       if (detection_done)
-> > +               return;
-> > +
-> > +       old_errno = errno;
-> > +
-> >         /*
-> >          * Must probe features in the order they were added to the
-> > -        * perf_event_attr interface.
-> > +        * perf_event_attr interface.  These are PMU specific limitation
-> > +        * so we can detect with the given hardware event and stop on the
-> > +        * first one succeeded.
-> >          */
-> > -       if (!perf_missing_features.branch_counters &&
-> > -           (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS)) {
-> > -               perf_missing_features.branch_counters = true;
-> > -               pr_debug2("switching off branch counters support\n");
-> > -               return true;
-> > -       } else if (!perf_missing_features.read_lost &&
-> > -           (evsel->core.attr.read_format & PERF_FORMAT_LOST)) {
-> > -               perf_missing_features.read_lost = true;
-> > -               pr_debug2("switching off PERF_FORMAT_LOST support\n");
-> > +
-> > +       /* Please add new feature detection here. */
-> > +
-> > +       attr.branch_sample_type = PERF_SAMPLE_BRANCH_COUNTERS;
-> > +       if (has_attr_feature(&attr, /*flags=*/0))
-> > +               goto found;
-> > +       perf_missing_features.branch_counters = true;
+> > +       /* AMD IBS doesn't support exclude_kernel, forward it to core PMU */
 > 
-> It feels like these global variables should be part of the PMU state.
-> There is already perf_pmu.missing_features.
+> Should the quirk handling be specific to evsels with the IBS PMU given
+> the comment above? ie this is a PMU specific workaround rather than an
+> AMD specific workaround, however, the PMU only exists on AMD :-)
+> 
+> > +       if (error == -EINVAL && evsel->precise_max && evsel->core.attr.precise_ip &&
+> > +           evsel->core.attr.exclude_kernel && x86__is_amd_cpu()) {
+> 
+> So here rather than x86__is_amd_cpu it would be
+> !strcmp(evsel->pmu->name, "ibs_...") . But it may be cleaner to move
+> the logic into pmu.c.
 
-You're right.  But I think this is kinda global feature unless we have
-different PMUs that provide different branch sampling capability.  It's
-just the feature test requires a specific PMU and event.  But it'd be
-better putting this into struct perf_pmu later.
-
-Kan, can you confirm if Intel hybrid systems have the same branch stack
-sampling capabilities on both cores?
-
+I guess the problem is that AMD driver does implicit forwarding to IBS
+if the legacy hardware events have precise_ip.  So it might have just
+core pmu (or no pmu) in the evsel.
+ 
 Thanks,
 Namhyung
+
+> 
+> > +               evsel->core.attr.precise_ip = 0;
+> > +               pr_debug2_peo("removing precise_ip on AMD\n");
+> > +               display_attr(&evsel->core.attr);
+> > +               return true;
+> > +       }
+> > +
+> > +       return false;
+> > +}
+> > +
+> >  static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+> >                 struct perf_thread_map *threads,
+> >                 int start_cpu_map_idx, int end_cpu_map_idx)
+> > @@ -2580,9 +2594,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+> >         return 0;
+> >
+> >  try_fallback:
+> > -       if (evsel__precise_ip_fallback(evsel))
+> > -               goto retry_open;
+> > -
+> >         if (evsel__ignore_missing_thread(evsel, perf_cpu_map__nr(cpus),
+> >                                          idx, threads, thread, err)) {
+> >                 /* We just removed 1 thread, so lower the upper nthreads limit. */
+> > @@ -2599,11 +2610,15 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+> >         if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
+> >                 goto retry_open;
+> >
+> > -       if (err != -EINVAL || idx > 0 || thread > 0)
+> > -               goto out_close;
+> > +       if (err == -EOPNOTSUPP && evsel__precise_ip_fallback(evsel))
+> > +               goto retry_open;
+> >
+> > -       if (evsel__detect_missing_features(evsel))
+> > +       if (err == -EINVAL && evsel__detect_missing_features(evsel))
+> >                 goto fallback_missing_features;
+> > +
+> > +       if (evsel__handle_error_quirks(evsel, err))
+> > +               goto retry_open;
+> > +
+> >  out_close:
+> >         if (err)
+> >                 threads->err_thread = thread;
+> > --
+> > 2.46.1.824.gd892dcdcdd-goog
+> >
