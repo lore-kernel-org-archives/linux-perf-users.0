@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BF71BBBF1
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Oct 2024 05:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DC71BC07E
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Oct 2024 05:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727760219; cv=none; b=mOYYiJMM69tNbQde0oqQwv90+uFFMXuAAmO3bJu0tSkGRvHOgcA1khu2NKwzmFKqU+iNU2NZWiJmLUdSndg/lQeS2zl7xli85j0iFaSDEpJHOjiptQpqKVFWA+byQ1gdjY0vpVeVc2zb7FWXmKzOYcsCd/V1e+A7eQ5xpW8auMw=
+	t=1727760222; cv=none; b=dSmM1NMrYgocbQTAH3FrXAd8rwGG8tO9IL1nW0dJZL8OSFyvMBcH0P0J4rt3GJGRbcqyJCEGbKxHbXZNVlGqsnpm4PUxCwLN8llrsHDtVh4HjVysy0oP6Q6ZI1s/PKw07wbvNFBlRUywenHDlj4ZqY8ZdI9+VwrS3YGrj2O/XsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727760219; c=relaxed/simple;
-	bh=3sJTix9+hVyh80kzwiZoBEnIVXZyPC2rJ0LryrXs4fY=;
+	s=arc-20240116; t=1727760222; c=relaxed/simple;
+	bh=Ok+FhDXN/bUiz9+kds8fM6XMayPQjAdr+t4YJVsFhlo=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Xv+FemG7wrt74zb1vkNv+ezRUiXelC8kOymI1dN2PMm9+tuyIjBymWjpGFxTRWEb52KLxToX/+2McDJytzhapDXUhVEX8+7kcbXHS4xZRI0i+4ZdGQk6pzTdgNDzd7MAZhbza/P945irnCRdX+BLt96sl2CCGfzZTporBqkdQlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SMnMk1sm; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=Gzkc+Aq3m/nIjdfuvpgQcEuMwlW4K4sXiv7l24eqM6uiCGW4q2Nt/kxQeQHSoj8NbNAYNiM9oMCYeGRRriuweavdoHw630saV77EOfu2SlriABJpGqH3VAMK73pbDi9UVKFbhJN+LZHB1PS9S71scSOIp5HZ49ywfePIkNdDBAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NyXNjkRF; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SMnMk1sm"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e25d62bfe12so7615793276.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Sep 2024 22:23:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NyXNjkRF"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e25a6fddb0so35741237b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Sep 2024 22:23:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727760217; x=1728365017; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1727760220; x=1728365020; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=EQMGtk6GwbaXhFywRtPjz9CEeNpxRP/qdOj8Kk4AmBM=;
-        b=SMnMk1smLogyOYM242/SVzs2VobsyNZJTEKFsFqkG8gFtf2SnfiGSBSAozec8RYtre
-         5YfvnsBUDpHfohldhl0l+tFBsyKYeDpVqnc38zoNrkgp2a83Re3pRmp/OMrHK/YRalTW
-         WbsaiICN+ZrGfEiREx2zdMlw1WwmWlSShyab/xbVET2HcXhhPbGF4vhlZ9x5QnrIgHVv
-         d29Sy3H+djfQvwU3dUyHiLIy6kUkkN5xuRIKLq04LecoIFkJu+/+xs1gyzjAo5O8o8+f
-         lF7Wgu4NHytUTlRfH76hAmOSLdaiczcmgRDeOSXu2J9TlVf3EbsVNpneSr299rfqtzyP
-         3IzQ==
+        bh=ta5YpSmga+h02rO1c/RFOYlnk/Em15j2RCfsC0qW0X4=;
+        b=NyXNjkRFn40amU8m5lpohCQynDaXqE3wAP96/xxMPiYwHptLu6i+8P/rIKHhMjD74B
+         oPlqs9j3uZFo8/Eb8M6pu22zmPpOjiHZbo8uItV0YSmwC71zoYvt5ayuAJQJm4BaEIgy
+         C20laGkYM827qqiidGv+yi7m/kWa/5w3QZiiarkSBY1rW8QtDlu5WzGDPshO6AplKsf+
+         1dYEKnqDcz77dw+5LjgKQFk2w46QxwZ8/TkPpQW66HTeKON+kYhSLBjXIDBVDGegZ24E
+         mOCxtDlCPYXph/rEfRbNa3wp6Le0wV2rY/YfFXf5EPYnU+pj8Ylyxtxmw7ZR56CaI0Dc
+         D3cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727760217; x=1728365017;
+        d=1e100.net; s=20230601; t=1727760220; x=1728365020;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EQMGtk6GwbaXhFywRtPjz9CEeNpxRP/qdOj8Kk4AmBM=;
-        b=fT665g4XHn1XLwEV3nHw6v7DezSZQnLG0FRjFFZvjGo/re76DPcwPnQDh5TOdCbhYy
-         ritQIvIhoxMX8kML5jAs175BrWukaHZdBdcN0ApImF7dmvteXXIPT8B8IrIKQt4Hw/7E
-         vig+Qjbg1J4VMcLapASFJBq9smMZm6kEY76XOtL9ZZGW2Q+/Egg5RRbB337PXB6ezuhq
-         1evNFelRbDHcIPwHdPGcEEV9S4S4N2HvODS+7YuSEIXHkW53B0WzWiYq8YaM4/IcnXj2
-         /tiBueX4jttE3w/9upibK/j1danLZPQivH/R62esN9+91ZuF/TB0mQC/PwAetkExriTJ
-         hnLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGcsyDZdFmuz8pdppaDWQgfhjRbQ35RF3rFbzERYrHNnfLGkIfaLLZt5pWcIWc97Qut0y12AOepENYPN1IMYzU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yye6cekD5SSxnE07/gd5hMPxO+4ariKRTsTRigdWB9PIFmA5m/R
-	OD/1+GJewejUicabj+bg86T5E5Jgf+Fu3/OnowD1UCGD6f/++vhyrZYveI5+UVDIbZLL9tpqWEc
-	oHzc6qQ==
-X-Google-Smtp-Source: AGHT+IEtJ5iHDU4WG7YqVYSBmkd2+4f6hQoz49uFn7BXq4j2kS3RcFmOmtpe5Dixo6yM80mfjOYYyRnT+UeT
+        bh=ta5YpSmga+h02rO1c/RFOYlnk/Em15j2RCfsC0qW0X4=;
+        b=sg7h1bDvegYuz0JAjZBKbvrmPg6nKBWZWWRJ4ipp3iV0KHsn1sLO6j2pxQwq36WJ8t
+         nbGBF/l+vwKPkZTMFX0+ObFAsklPzbF7kbAUX6mCeySa+qNYvktvuvNyTRPY5i/uc+W7
+         HHnXm0zZjWt92a8/pO+0l0PpVFD4Dtn/IhwuBMoE8naMDctkDgPCG4KVDJO8LCV+Jpuo
+         LlF5w26e4SxAiHzsTMPdGThDWwSA3K1WJqoXZ6UCSupTmncz1y9qGsp6D682SonlJbo+
+         r/sgNTPx1Mzvmizv3E/qVTpjZIIhmbZJNatiCbkCKlBQ88GrOEfmVlC2MnCCn9OxndfV
+         gTOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfmkkv0939fmcyFbbhenTjcXEf0eX75ltnA9A5u4qQLiDc7JgxauwBvdA84SsslwQEa7LNhGHFceLjkrg7Z+n2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTPR5MB0u3B8ahgtmuXM9jqBxDTBGwk92+ldFImJ5h6hUR/EYm
+	8jKsuUqikMLlSOsGUT9nMPH9eUk83MEuTAzeOZ6oRyHa0iNF73MgkiIwpOEAhipSbY8djGyn1K7
+	jj2GzEA==
+X-Google-Smtp-Source: AGHT+IE9nO+iqokkfm82bAK4mbVT5Uil7PWvBrDlRgIQGKqFunhB43WFpJO35+IDQx+/3jg5ffcPAKWvZ3vt
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:f420:67c7:1eea:bb12])
- (user=irogers job=sendgmr) by 2002:a5b:f0e:0:b0:e11:5f87:1e3c with SMTP id
- 3f1490d57ef6-e2604c8b9d5mr55878276.11.1727760217150; Mon, 30 Sep 2024
- 22:23:37 -0700 (PDT)
-Date: Mon, 30 Sep 2024 22:23:25 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:2c11:b0:6dd:dcf5:28ad with SMTP
+ id 00721157ae682-6e247399192mr840327b3.0.1727760219780; Mon, 30 Sep 2024
+ 22:23:39 -0700 (PDT)
+Date: Mon, 30 Sep 2024 22:23:26 -0700
 In-Reply-To: <20241001052327.7052-1-irogers@google.com>
-Message-Id: <20241001052327.7052-3-irogers@google.com>
+Message-Id: <20241001052327.7052-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241001052327.7052-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
-Subject: [PATCH v2 2/4] perf test: Fix memory leaks on event-times error paths
+Subject: [PATCH v2 3/4] perf test: Skip not fail tp fields test when
+ insufficient permissions
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,54 +72,102 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-These error paths occur without sufficient permissions. Fix the memory
-leaks to make leak sanitizer happier.
+Clean up return value to be TEST_* rather than unspecific integer. Add
+test case skip reason. Skip test if EACCES comes back from
+evsel__newtp.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/event-times.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/tests/evsel-tp-sched.c | 40 +++++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-times.c
-index e155f0e0e04d..deefe5003bfc 100644
---- a/tools/perf/tests/event-times.c
-+++ b/tools/perf/tests/event-times.c
-@@ -126,6 +126,7 @@ static int attach__cpu_disabled(struct evlist *evlist)
- 	evsel->core.attr.disabled = 1;
+diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
+index cf4da3d748c2..3da6a76eac38 100644
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -36,33 +36,33 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
+ 					   int subtest __maybe_unused)
+ {
+ 	struct evsel *evsel = evsel__newtp("sched", "sched_switch");
+-	int ret = 0;
++	int ret = TEST_OK;
  
- 	err = evsel__open_per_cpu(evsel, cpus, -1);
-+	perf_cpu_map__put(cpus);
- 	if (err) {
- 		if (err == -EACCES)
- 			return TEST_SKIP;
-@@ -134,7 +135,6 @@ static int attach__cpu_disabled(struct evlist *evlist)
- 		return err;
+ 	if (IS_ERR(evsel)) {
+ 		pr_debug("evsel__newtp failed with %ld\n", PTR_ERR(evsel));
+-		return -1;
++		return PTR_ERR(evsel) == -EACCES ? TEST_SKIP : TEST_FAIL;
  	}
  
--	perf_cpu_map__put(cpus);
- 	return evsel__enable(evsel);
+ 	if (evsel__test_field(evsel, "prev_comm", 16, false))
+-		ret = -1;
++		ret = TEST_FAIL;
+ 
+ 	if (evsel__test_field(evsel, "prev_pid", 4, true))
+-		ret = -1;
++		ret = TEST_FAIL;
+ 
+ 	if (evsel__test_field(evsel, "prev_prio", 4, true))
+-		ret = -1;
++		ret = TEST_FAIL;
+ 
+ 	if (evsel__test_field(evsel, "prev_state", sizeof(long), true))
+-		ret = -1;
++		ret = TEST_FAIL;
+ 
+ 	if (evsel__test_field(evsel, "next_comm", 16, false))
+-		ret = -1;
++		ret = TEST_FAIL;
+ 
+ 	if (evsel__test_field(evsel, "next_pid", 4, true))
+-		ret = -1;
++		ret = TEST_FAIL;
+ 
+ 	if (evsel__test_field(evsel, "next_prio", 4, true))
+-		ret = -1;
++		ret = TEST_FAIL;
+ 
+ 	evsel__delete(evsel);
+ 
+@@ -70,23 +70,33 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
+ 
+ 	if (IS_ERR(evsel)) {
+ 		pr_debug("evsel__newtp failed with %ld\n", PTR_ERR(evsel));
+-		return -1;
++		return TEST_FAIL;
+ 	}
+ 
+ 	if (evsel__test_field(evsel, "comm", 16, false))
+-		ret = -1;
++		ret = TEST_FAIL;
+ 
+ 	if (evsel__test_field(evsel, "pid", 4, true))
+-		ret = -1;
++		ret = TEST_FAIL;
+ 
+ 	if (evsel__test_field(evsel, "prio", 4, true))
+-		ret = -1;
++		ret = TEST_FAIL;
+ 
+ 	if (evsel__test_field(evsel, "target_cpu", 4, true))
+-		ret = -1;
++		ret = TEST_FAIL;
+ 
+ 	evsel__delete(evsel);
+ 	return ret;
  }
  
-@@ -153,10 +153,10 @@ static int attach__cpu_enabled(struct evlist *evlist)
- 	}
- 
- 	err = evsel__open_per_cpu(evsel, cpus, -1);
-+	perf_cpu_map__put(cpus);
- 	if (err == -EACCES)
- 		return TEST_SKIP;
- 
--	perf_cpu_map__put(cpus);
- 	return err ? TEST_FAIL : TEST_OK;
- }
- 
-@@ -188,6 +188,7 @@ static int test_times(int (attach)(struct evlist *),
- 	err = attach(evlist);
- 	if (err == TEST_SKIP) {
- 		pr_debug("  SKIP  : not enough rights\n");
-+		evlist__delete(evlist);
- 		return err;
- 	}
- 
+-DEFINE_SUITE("Parse sched tracepoints fields", perf_evsel__tp_sched_test);
++static struct test_case tests__perf_evsel__tp_sched_test[] = {
++	TEST_CASE_REASON("Parse sched tracepoints fields",
++			 perf_evsel__tp_sched_test,
++			 "permissions"),
++	{	.name = NULL, }
++};
++
++struct test_suite suite__perf_evsel__tp_sched_test = {
++	.desc = "Parse sched tracepoints fields",
++	.test_cases = tests__perf_evsel__tp_sched_test,
++};
 -- 
 2.46.1.824.gd892dcdcdd-goog
 
