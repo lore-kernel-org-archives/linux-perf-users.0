@@ -1,136 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5033A2F22;
-	Wed,  2 Oct 2024 21:54:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D0911185;
+	Wed,  2 Oct 2024 22:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727906042; cv=none; b=XxoxQ7uQWtti7Df/YwsmFOZT3s7VIxIYxqqfOcto+pBk/IQPpwN/iwyGLkZK0LllNwouNnzulDg9EHJLBpemPocqbw8yNkeU86t0EJ2q3Hjv7/DdfVlMC9P26QE2sg4UShl9iEw5ZIfGKfE80TeJJ+NIJEIh4p/DUbs1abjM/XA=
+	t=1727906583; cv=none; b=Ue9/yRxuwWCIBiam3nH0Q1R8ig0w5+YFyc9RR7ya//2Dt5AyPlbNamryzPI5la3/mAkMvbLvXoesyZ9FThxnYlNq4zGZSyTNaadlQQT0IKmn4AkpKPHaEO8Z4fwSBMQhTqGVEWN8ZQHTfknOHwK2E6Y/zgsNXf446hz2pKSKvqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727906042; c=relaxed/simple;
-	bh=5q+i0gp1vPXmBcyAl+Nx7gfwKW63dEO5S8qHd6zwaCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cm9AdKSkx5HnFVsqjf/7WaKamRho5d9odPNOrrR6RRfg4KSPhf+l/9oaJai6i6g3G+26cqbv0kD16t0CsQC7CTdsvebKp94s42uc4QNO2ZuaB4cReOAsaj6MU30wow9IPMz5Srlh/SgP97e0rAUHpi7ccobBS0cIdg05t3GJdZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZCTMAL8q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727906583; c=relaxed/simple;
+	bh=Wxw0ENf1CfcIVNQGovTlDmiqp0xuZCkS2Gh23h2WqL4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ol6ZoRwuVFyA69XoNExwmDLMsyFQQQdIpFFwx/HTkqAtWBNgO+fKv/NoINeg6rmGiqfd2UWJxfpMCACpA8YjGGoRxmS0K0P35stVqaU86x8j2NbTjhUmcFyDJVBzJF5ueNnDGjLiwojJxDH+V5368M6QQDgdDQrQp03BMzVlQrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EoN9H1OT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZCTMAL8q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3452AC4CEC2;
-	Wed,  2 Oct 2024 21:54:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EoN9H1OT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72F5EC4CEC2;
+	Wed,  2 Oct 2024 22:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727906041;
-	bh=5q+i0gp1vPXmBcyAl+Nx7gfwKW63dEO5S8qHd6zwaCo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZCTMAL8q6Vaae1ZjYWpoIvyEOOU0PxKiiuPNcCm2yC27elym337EQX0BDzMGEdD5V
-	 lBhXaJ4VEsp3LI6d+O5lPoielSMg6I0rp7KMAY3+WRYA+ytFNhSxFxuCUGSeRCGteq
-	 VPmkvUgyvcugdkZgbzuXaXZkHbylRunNOiVt56awsvz3JFg45Ld2fLwaNEjCBaZ2lR
-	 Emg1Ex7Hqz4dCydt/Q8HinTwiz5VmW5zj6UajA+oSIavMd64IqTsetSxFE00jAcR7h
-	 cASAX0vjPfMAnbWY1uR8jiyKu2E122HcKR88OC/pSnBZp9edUD+X99qTMRhmsscRY6
-	 t9BGJ8VsOOtQQ==
-Date: Wed, 2 Oct 2024 14:53:59 -0700
+	s=k20201202; t=1727906583;
+	bh=Wxw0ENf1CfcIVNQGovTlDmiqp0xuZCkS2Gh23h2WqL4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=EoN9H1OTOps8twgaQ1F8x/1kVmUGs1Lovq8d4TEs4luAGUeZvcHg2C2+fugqV16KD
+	 S5+mQuvBmRG+gKKgKReddje4XOHTlJqd6amKKYoHst0ZsGgqKWdi+ZfSF933EtEnH4
+	 c/Fc8DuqBTE4zLx44biCf2NIrAVYnic01gmvYSCr9663SIxJCUmLPX9Vn78eNNO2Xe
+	 cKrN6j+FswKHKm246BS3ksO80dGv9CRTN7aqt0vkOSlVEU0i1BnDnk5vzVkp+qGlEy
+	 guEZ0BIDNGWFE8uBvBa5BON7IUgAuwpXMCcXYLKZzL1XXFpIXu3wJg6f8cGRgD/d4g
+	 1N/+cGEmHpVXA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Hemant Kumar <hemant@linux.vnet.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yang Jihong <yangjihong@bytedance.com>, leo.yan@arm.com
-Subject: Re: [PATCH v1 2/3] perf probe: Fix libdw memory leak
-Message-ID: <Zv3A98bZdlmJ8GaW@google.com>
-References: <20240924003720.617258-1-irogers@google.com>
- <20240924003720.617258-3-irogers@google.com>
- <CAM9d7cjDeGF6rO8+DJQdG+tELO2ueqqvkFU-rCFETQm9KJ4JmA@mail.gmail.com>
- <CAP-5=fWgounnfvSQtOiqZQdpkg00yvT3E-rGNFUKKb8ZksPhjg@mail.gmail.com>
+	John Garry <john.g.garry@oracle.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Benjamin Gray <bgray@linux.ibm.com>,
+	Xu Yang <xu.yang_2@nxp.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ian Rogers <irogers@google.com>
+Cc: kernel test robot <oliver.sang@intel.com>
+Subject: Re: [PATCH v2] perf jevents: Don't stop at the first matched pmu when searching a events table
+Date: Wed,  2 Oct 2024 15:00:50 -0700
+Message-ID: <172790631826.3078253.2849875866864219051.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
+In-Reply-To: <20241001021431.814811-1-irogers@google.com>
+References: <20241001021431.814811-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWgounnfvSQtOiqZQdpkg00yvT3E-rGNFUKKb8ZksPhjg@mail.gmail.com>
 
-On Wed, Oct 02, 2024 at 12:08:30PM -0700, Ian Rogers wrote:
-> On Wed, Oct 2, 2024 at 10:44 AM Namhyung Kim <namhyung@gmail.com> wrote:
-> >
-> > On Mon, Sep 23, 2024 at 5:37 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > Add missing dwarf_cfi_end to free memory associated with probe_finder
-> > > cfi_eh or cfi_dbg. This addresses leak sanitizer issues seen in:
-> > > tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-> > >
-> > > Fixes: 270bde1e76f4 ("perf probe: Search both .eh_frame and .debug_frame sections for probe location")
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/util/probe-finder.c | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> > > index 630e16c54ed5..78f34fa0c391 100644
-> > > --- a/tools/perf/util/probe-finder.c
-> > > +++ b/tools/perf/util/probe-finder.c
-> > > @@ -1379,6 +1379,11 @@ int debuginfo__find_trace_events(struct debuginfo *dbg,
-> > >         if (ret >= 0 && tf.pf.skip_empty_arg)
-> > >                 ret = fill_empty_trace_arg(pev, tf.tevs, tf.ntevs);
-> > >
-> > > +#if _ELFUTILS_PREREQ(0, 142)
-> > > +       dwarf_cfi_end(tf.pf.cfi_eh);
-> > > +       dwarf_cfi_end(tf.pf.cfi_dbg);
-> > > +#endif
-> >
-> > This is causing another problem.  Now vfs_getname tests are
-> > failing because perf probe aborts.
+On Mon, 30 Sep 2024 19:14:31 -0700, Ian Rogers wrote:
+
+> The "perf all PMU test" fails on a Coffee Lake machine.
 > 
-> I wasn't able to reproduce but largely as the test skips. The variable
-> is out of scope after the function so I'm struggling to see what the
-> issue is.
+> The failure is caused by the below change in the commit e2641db83f18
+> ("perf vendor events: Add/update skylake events/metrics").
+> 
+> +    {
+> +        "BriefDescription": "This 48-bit fixed counter counts the UCLK cycles",
+> +        "Counter": "FIXED",
+> +        "EventCode": "0xff",
+> +        "EventName": "UNC_CLOCK.SOCKET",
+> +        "PerPkg": "1",
+> +        "PublicDescription": "This 48-bit fixed counter counts the UCLK cycles.",
+> +        "Unit": "cbox_0"
+>      }
+> 
+> [...]
 
-I'm seeing this.
+Applied to perf-tools-next, thanks!
 
-  $ sudo ./perf test -v vfs
-   91: Add vfs_getname probe to get syscall args filenames:
-  --- start ---
-  test child forked, pid 3013362
-  free(): invalid pointer
-  linux/tools/perf/tests/shell/lib/probe_vfs_getname.sh: line 13: 3013380 Aborted                 perf probe -q "vfs_getname=getname_flags:${line} pathname=result->name:string"
-  free(): invalid pointer
-  linux/tools/perf/tests/shell/lib/probe_vfs_getname.sh: line 13: 3013381 Aborted                 perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
-  ---- end(-1) ----
-   91: Add vfs_getname probe to get syscall args filenames             : FAILED!
-   93: Use vfs_getname probe to get syscall args filenames:
-  --- start ---
-  test child forked, pid 3013479
-  free(): invalid pointer
-  linux/tools/perf/tests/shell/lib/probe_vfs_getname.sh: line 13: 3013502 Aborted                 perf probe -q "vfs_getname=getname_flags:${line} pathname=result->name:string"
-  free(): invalid pointer
-  linux/tools/perf/tests/shell/lib/probe_vfs_getname.sh: line 13: 3013514 Aborted                 perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
-  ---- end(-1) ----
-   93: Use vfs_getname probe to get syscall args filenames             : FAILED!
-  127: Check open filename arg using perf trace + vfs_getname:
-  --- start ---
-  test child forked, pid 3013528
-  free(): invalid pointer
-  linux/tools/perf/tests/shell/lib/probe_vfs_getname.sh: line 13: 3013547 Aborted                 perf probe -q "vfs_getname=getname_flags:${line} pathname=result->name:string"
-  free(): invalid pointer
-  linux/tools/perf/tests/shell/lib/probe_vfs_getname.sh: line 13: 3013548 Aborted                 perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
-  ---- end(-1) ----
-  127: Check open filename arg using perf trace + vfs_getname          : FAILED!
-  
-Dropping the series from tmp.perf-tools-next for now.
-
-Thanks,
+Best regards,
 Namhyung
-
