@@ -1,94 +1,179 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ADC9475
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Oct 2024 14:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E94A1D1747;
+	Wed,  2 Oct 2024 15:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727881060; cv=none; b=JGmJUUte5gZgjdCjlCwL9b0z0Ld0t+zWF7oyfvxaYn6nA3xWq2qwjdJLwB35ZTwsW/kb6TAyFJ5h/hAz+0EmPW83pdc9PATUxJKoJSKs6wUHza23zdQfWrO9uQoTX+yj/xwEaVKHhnNt53nIvedQJTNW2ywDEvVwVQ2JlwU4mVA=
+	t=1727882769; cv=none; b=pxdDcpYNhQzaFrbfWWTdoAy5T2lzBk36UAcJylwYNZnzgz7oIZa7yGEWrRWsjEwQzjF52DDfE+54Ep3V2sLxCV8QzOStNvcLerPGyXrJQpH4arJcbCIpoevP+hCUt5ZXKrPR91XS8nhrlsR1O3NqvuUjcZs+ky9x/HauWjGL0E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727881060; c=relaxed/simple;
-	bh=+/j64RBLEw6+Or8eEMouhwBjarsFfFHF9R1Cr4oJslY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OVPgwYD2Qc1Qvl+31tKZlVtQzHUgG6H0swZbVXRy0xmATmS5KNqvRpIKLm8YWNzHOkABFogXEKMLaRKucxlIj2l79Q2X9gR9q4HQT3XW0YEadXpqi0NfLRvnJqCg1Zd0SP4IXdk2L9YxZWPzjdT58eyun0OTjU1OxANYNq+MQh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c8zBDn9o; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1727882769; c=relaxed/simple;
+	bh=h4ubFnE46xeI8wN9+4BYkWAbARBnOtNFKXLTjQ3iYxs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N/0WAUaW4NJwGkxGX5009XaAeckcRtfkKx7gfzvlM4Gkocb9cmCxHF2L5lWCj2rn8N47J8Ez/zcF4zlL7sQk5DftsnBlzSLAPnXoBKB3bV6fVlicf+0qdaeNWh/SNlS5TqYjVvRDSPp01RUfzGD+aUF3fkVbuDTOpd9YXrdSw1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFl7hH8b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c8zBDn9o"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-37ccebd7f0dso3555461f8f.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Oct 2024 07:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727881057; x=1728485857; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cwkiQ4yapqQ9CqZDugC6AKZZOdPHtvbZvSqmBgmxNqA=;
-        b=c8zBDn9oDmgyZDUTRA7IePCociM1pD22GVrANKhUn5gPqMNS2TPgM8OvXmKWEz2NDZ
-         l8Z7bWc++3iToNuv4te/wV/7cHCeXj7kkjoEBCV8wGimpHDaxvo1Y+ReaXOe+Vy7QtwC
-         hkH/zcXGN/ZSvSOxuKFZECh+8lIwUzj7NQ/eBd5v0peiytwpsaov4IJTeFG93vKzLXVy
-         eyu+jbuG9jnubwRyq/+ecodhOcB8ZOPp42FXn/No+IPBBY5sfYHtghutms69J/oGZ8/L
-         KZOej5NTf0Kvr2XATXKLkZR4TelbNE8f1RUJnqrun/zEkyL5Vq/q1qQpm60nmwvxsICW
-         G55g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727881057; x=1728485857;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cwkiQ4yapqQ9CqZDugC6AKZZOdPHtvbZvSqmBgmxNqA=;
-        b=bDLwc5kKQbZJw7hztVQEp173d++1iQswcaJALiCoivzySfnJgLkdxFPw6QBhrbV4Wq
-         YMZaN7ARV3ITVkyNuywFX0WvuAYTLJ8DEFS1PInvCTnVFaNRBgndhV5WhsPlF64mbviN
-         sSdW/nuZfqmM7UbDNLDLCTLiJcbRHkU1Q17JkiJ5FKTWO3jPwWw3RyWM9A1UX3kDSBqk
-         GZuC6Ew7tjmwBP9gB8a0AKBJQC+wRf3mzEO8E2da00vAZhiB7wNj6is0z3+h9EA93jKS
-         iWVOh8x9GlJXug44adzLExsrTNvpwxMtuorj328mPMykCXZqtitF09Z6ru2BIrVCh29k
-         sFKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxWJlr59svucuTGMYX1J/0RcBaaeyPd2VrSOXm7u0H4+avk5IJyo/14i+xE97K3TThmCqSvgdD07UbS7db6rJl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyrj8/dcqV62Jh7k+esAYVl65DrlAg7DHacxVVprEs+bQ3N9KXo
-	V5tU59sNUxUTIDQ1ypATEHvedTSyNa4AYN4YyUYl7SOY8TsoR3hwcplq0GfIRH0=
-X-Google-Smtp-Source: AGHT+IHkinX9b1tbPuoVf75VzaWdAshBVSRiuaUZtpSynmrgIqSyujX3u8RSkqgDcjp9KfIzz7reUw==
-X-Received: by 2002:adf:f34b:0:b0:374:bd93:9bd4 with SMTP id ffacd0b85a97d-37cfba12317mr1956137f8f.56.1727881057423;
-        Wed, 02 Oct 2024 07:57:37 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cd5742a23sm14110039f8f.105.2024.10.02.07.57.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2024 07:57:36 -0700 (PDT)
-Date: Wed, 2 Oct 2024 17:57:32 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [bug report] perf: Fix event leak upon exec and file release
-Message-ID: <2391f501-6d4d-44f8-ae81-c9bbef9a35ee@stanley.mountain>
-References: <5cc313bc-c44d-4f6c-80ee-5a9fe9356f43@stanley.mountain>
- <ZtYyXG4fYbUdoBpk@pavilion.home>
- <20240930090439.3IgzQVzB@linutronix.de>
- <Zv1P7UzPWvFjOupc@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFl7hH8b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E446C4CEDA;
+	Wed,  2 Oct 2024 15:26:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727882768;
+	bh=h4ubFnE46xeI8wN9+4BYkWAbARBnOtNFKXLTjQ3iYxs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KFl7hH8baEyBXLc9YdutCabBIIsebd7h0c09OkpKue3HyYk0dPbzyKEPIAYZw8EA0
+	 OSqK38e9b/ZQqENWs+TnswX2GzFQqN2nL0SRR4IVxtTfVUlSFGfffBS7Jg4BMNQIz8
+	 HMkEBAAndduR9nNbwqZIze+PTqfQzCMnCy8hpJdW/BS84scv9IwY4mniaBcqBDDZua
+	 ZBd9lUJThYLwrBMX2si1+483PfVcboCG4r+GJNcdiKhotGYBsctAy1Sareu7r1J5jh
+	 Wd6eNnpiy5IQorN76AsuNn8HDWHvuwIblRMKj84P4HPuwkx+3e6SIsEVpTzuDrCbzg
+	 6kBiHvv5uu5wg==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2fad15b3eeeso33591821fa.2;
+        Wed, 02 Oct 2024 08:26:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU922GEKNn6LZhgnjGS2QUeFmjo+wnFmMpy6eLQ9G1fz3j8xjPAdP4x+bgpZT5yNeZM2iOTOyrEr9RVWLOG+10PUA==@vger.kernel.org, AJvYcCU9kYaw7wsEzF4tsjQJLxFZNX25xxykStLPwqRBfhbVTHZNmKJWrxmuoRjTCmpm/SYJBL410TQPDCI=@vger.kernel.org, AJvYcCUB2rkMUyu2bNGeO8wBtIsMLvKa7lZydMJbMW4Bxxwrpvbko+jXVLVm2TFB0QhNmbJHDKztlSMs/CZ30cgq@vger.kernel.org, AJvYcCUZR7aY4XoONkPxt8Jcbz94wfoixa6beFi/SKdvhW7JfaTkMo+dA8QeVnzzRB5vcawoSZcsEB7cPdnK@vger.kernel.org, AJvYcCUsoQRScStowdXVQtBdYa3HvUL9e5/dG45q/I83H+AQW+ho8c2SudVrPnoxlEqbjKOzkRKnKqbYV+2wvw==@vger.kernel.org, AJvYcCUu9InXWCk13ff5Oj0NQcOKHn/6NTaWalcta+coZJmsqYAmPcPyeYAGEbtRQ29JyUuzbHLhyV7UKeL3FHlz@vger.kernel.org, AJvYcCVKr38Oz3ZFNutXiDquBZrOwm5m+8wRi5xnsOrR3kLvhzLszjawCfumBbNc4Hkj69L2ZIDl7sJh7y3w@vger.kernel.org, AJvYcCVaaUroALnYz6xKiYm88LhCZuu19l96wAufzFzsmH8wIIBp7TwOoNoO9e8g4ik/Djm/1/3TnAZWfUre3Xnp@vger.kernel.org, AJvYcCWMHAODt0YnDCyNxv3MmFkzwUecMJydYA4sVjLanfncSGmSDC4moqSDxZeT7+1o3gYbqfvm5u4FvRGKla64Vfk=@vger.kernel.org, AJvYcCWtQclJEh22PR9XC9EWOF4gjdoQ+uWRmSHmaZk6bVROo408of0WP2MKFvMJme9Xz6p/6zw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTwyEdmFi8ER46JM4uTfUuPkVftZSGfO7CrZlzB1Ow2LT9BTD/
+	fAjRiNVRf70MN79/xoOJN3u9o0V2lTeXhQaRKLB3vAKfNVN5zkxRRzHU94c0OhveBmDUZK8frAK
+	GxV187uqGsHmJFwQqHvVvZJw05Xg=
+X-Google-Smtp-Source: AGHT+IFjphesp/WsGS3U0PINOY0QAoUmw2aq4caedP0chVHCCyNa6a0rrCXQNZVU8wv2cCgEaQKnFwQhCH9Io7gBKbI=
+X-Received: by 2002:a05:651c:1502:b0:2fa:d84a:bd83 with SMTP id
+ 38308e7fff4ca-2fae106e266mr23266981fa.24.1727882766692; Wed, 02 Oct 2024
+ 08:26:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zv1P7UzPWvFjOupc@localhost.localdomain>
+References: <20240925150059.3955569-30-ardb+git@google.com>
+ <20240925150059.3955569-55-ardb+git@google.com> <99446363-152f-43a8-8b74-26f0d883a364@zytor.com>
+In-Reply-To: <99446363-152f-43a8-8b74-26f0d883a364@zytor.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 2 Oct 2024 17:25:54 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG7ZELM8D7Ft3H+dD5BHqENjY9eQ9kzsq2FzTgP5+2W3A@mail.gmail.com>
+Message-ID: <CAMj1kXG7ZELM8D7Ft3H+dD5BHqENjY9eQ9kzsq2FzTgP5+2W3A@mail.gmail.com>
+Subject: Re: [RFC PATCH 25/28] x86: Use PIE codegen for the core kernel
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Uros Bizjak <ubizjak@gmail.com>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Juergen Gross <jgross@suse.com>, 
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Keith Packard <keithp@keithp.com>, 
+	Justin Stitt <justinstitt@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-doc@vger.kernel.org, 
+	linux-pm@vger.kernel.org, kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	linux-efi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-sparse@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Oct 02, 2024 at 03:51:41PM +0200, Frederic Weisbecker wrote:
-> So this should be fine (famous last words). There is a might_sleep() call in
-> irq_work_sync() that should tell us about it.
+Hi Peter,
 
-Thanks for looking at this, Frederic.
+Thanks for taking a look.
 
-I don't know that the might_sleep() helps us very much...  In my experience very
-few people know about or enable CONFIG_DEBUG_ATOMIC_SLEEP.  It used to be much
-more common to enable this back in the day.  Twenty years ago Linux kernels
-would deadlock more often than they do now.  Lockdep and static checkers have
-helped a lot.  People back then only had one processor so sleeping in atomic
-would lead lead to deadlocks more often than it does now where the kernel can
-reschedule the sleeping task on a different CPU.
+On Tue, 1 Oct 2024 at 23:13, H. Peter Anvin <hpa@zytor.com> wrote:
+>
+> On 9/25/24 08:01, Ard Biesheuvel wrote:
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > As an intermediate step towards enabling PIE linking for the 64-bit x86
+> > kernel, enable PIE codegen for all objects that are linked into the
+> > kernel proper.
+> >
+> > This substantially reduces the number of relocations that need to be
+> > processed when booting a relocatable KASLR kernel.
+> >
+>
+> This really seems like going completely backwards to me.
+>
+> You are imposing a more restrictive code model on the kernel, optimizing
+> for boot time in a way that will exert a permanent cost on the running
+> kernel.
+>
 
-With the realtime kernel, I kind of expect sleeping in atomic to become a common
-bug for a while so probably people should start enabling it again.
+Fair point about the boot time. This is not the only concern, though,
+and arguably the least important one.
 
-regards,
-dan carpenter
+As I responded to Andi before, it is also about using a code model and
+relocation model that matches the reality of how the code is executed:
+- the early C code runs from the 1:1 mapping, and needs special hacks
+to accommodate this
+- KASLR runs the kernel from a different virtual address than the one
+we told the linker about
+
+> There is a *huge* difference between the kernel and user space here:
+>
+> KERNEL MEMORY IS PERMANENTLY ALLOCATED, AND IS NEVER SHARED.
+>
+
+No need to shout.
+
+> Dirtying user pages requires them to be unshared and dirty, which is
+> undesirable. Kernel pages are *always* unshared and dirty.
+>
+
+I guess you are referring to the use of a GOT? That is a valid
+concern, but it does not apply here. With hidden visibility and
+compiler command line options like -mdirect-access-extern, all emitted
+symbol references are direct. Disallowing text relocations could be
+trivially enabled with this series if desired, and actually helps
+avoid the tricky bugs we keep fixing in the early startup code that
+executes from the 1:1 mapping (the C code in .head.text)
+
+So it mostly comes down to minor differences in addressing modes, e.g.,
+
+  movq $sym, %reg
+
+actually uses more bytes than
+
+  leaq sym(%rip), %reg
+
+whereas
+
+  movq sym, %reg
+
+and
+
+  movq sym(%rip), %reg
+
+are the same length.
+
+OTOH, indexing a statically allocated global array like
+
+  movl array(,%reg1,4), %reg2
+
+will be converted into
+
+  leaq array(%rip), %reg2
+  movl (%reg2,%reg1,4), %reg2
+
+and is therefore less efficient in terms of code footprint. But in
+general, the x86_64 ISA and psABI are quite flexible in this regard,
+and extrapolating from past experiences with PIC code on i386 is not
+really justified here.
+
+As Andi also pointed out, what ultimately matters is the performance,
+as well as code size where it impacts performance, through the I-cache
+footprint. I'll do some testing before reposting, and maybe not bother
+if the impact is negative.
+
+> > It also brings us much closer to the ordinary PIE relocation model used
+> > for most of user space, which is therefore much better supported and
+> > less likely to create problems as we increase the range of compilers and
+> > linkers that need to be supported.
+>
+> We have been resisting *for ages* making the kernel worse to accomodate
+> broken compilers. We don't "need" to support more compilers -- we need
+> the compilers to support us. We have working compilers; any new compiler
+> that wants to play should be expected to work correctly.
+>
+
+We are in a much better place now than we were before in that regard,
+which is actually how this effort came about: instead of lying to the
+compiler, and maintaining our own pile of scripts and relocation
+tools, we can just do what other arches are doing in Linux, and let
+the toolchain do it for us.
