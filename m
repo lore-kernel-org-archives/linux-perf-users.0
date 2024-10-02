@@ -1,135 +1,200 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34701D223E
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Oct 2024 14:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AA81A08A4;
+	Wed,  2 Oct 2024 14:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727879484; cv=none; b=RhlalAVRDx8YHbCiP8Fyfue4HQcxezMCyBaMsKNFR/C44f+TOKAYsoTi6RbTG41ZJA7ZDedpf0LyGW+sNuCo9hMf1HKmj0xKXccKO4w8FB6sQhy82eUSeIngEYSuTINK4yuRgLd4zMHw0gBdYN+yd0tozce4Wkm7Xe3rJynCHtk=
+	t=1727880623; cv=none; b=rzVdDVvSGBagF8LLP7dOevYmI5UncUR0MXcTabh4q2eLEeelxLr1vBf32FOa5giP6RqBOL5RJKmDEBDF3jc1H8FZBnZ659iCS2S+tAU61PzVuk7LX5xGMEoSFYk7NSxLJ3WLQrOiymwk+Iv+ROH4GuVmXJUh5LcF0ah+cMsl14s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727879484; c=relaxed/simple;
-	bh=CSWmUrFZWc9onuvV22L4XOor6A90L8OZlFpH2b3CYi0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UWf50IEKkAhqO47ZlpSXnYjqJIjkDB7inLNeZCY+vLqVjbQ+DR4FtXmNOlKjBD8lQjvqvDiiyWXbziN/amhgBu4cbfz+VppHQ0i1jF070n05nfhBBfJ/dfL84Jix+ilIvepJgGe63C+hIQfZEIgVllr1HP1NKIgqfm4j/UcZnC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3bkb/49Z; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1727880623; c=relaxed/simple;
+	bh=zWipN2FdOAuMmqVTdtkR6KdfQ4YcU28DCbl31IVjKUQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HgDCrFLlS7ew1Jjpu8wgh32VLeRyjynmW6g6z4YEppsZhtWyXe9wPnfgo+0CrcNyYM1Xtg2o7dlRlnAVi8IrBTvLKke0zoPzEkKTp5Ml2bTsAH+jZvAl3GGgJ5IUoTuwSfVq7T3ay+vVa0surCIEIFnHMJ3k7rg88HBR+HqL9LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=A8QaVwdX; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3bkb/49Z"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-20b3d1a77bbso193555ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Oct 2024 07:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727879482; x=1728484282; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LM7+Zf/idW06POnNvCS7OHrrkGODD4Nf0LqSVTaa/Ok=;
-        b=3bkb/49Zhd6HoAthZjrGHqAskoCFUJntRCd/w2Q0V/E4gNhJ1LavCKep5ZZe4NC1cq
-         N7t1voVCKFXubl6FE85zwqLwfZktoMNUtrjHVmOz1pf1v7yV79TaWOKnqFCrTiqsEn5n
-         kbe3dr5NXR2qmfbhfijjihxAOPVlQZT7p8O88ODiQIZyRejiSoYPMmRpfANKE7nWpVJk
-         s/3NsWOCoQWAsW13ng4vVl/R4JGMn0AnbgpMo4gyujvDn7v0kd4ociHA4ikKPq0xmSxT
-         Ybf/4S2DYZEquEX/zeGo9q0joW/T+AmJveJ1fsgxrUC2CKmRTMx6F/WGmKvIsF8IzYYr
-         JKEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727879482; x=1728484282;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LM7+Zf/idW06POnNvCS7OHrrkGODD4Nf0LqSVTaa/Ok=;
-        b=oYxZhMu1UEPoS0QTB5vqJidQ0yF4V2BmD8tXwnpHTDUK0OZUh1LF1AI7M039QDkU2s
-         UuiqPXpNjTNLM/LlmgHRe2IH6sm1vDNMRuHokcDTBvpKHWO4SRhPR5duYG0bC0FN73N3
-         sSole2i9oj9pBfQlY8fKOx4qPacWuXlkEwY4W6HT1xiGzjjSxoBHuRhi1TJYag1WS060
-         W7fd4p6KsNbR5lWx7Epuc5x9QJFtEU0vDuXEl9yfpcmqF8o9gFelcxkEDHEbD7/gv2qB
-         h4NXWWHwM6nlidZ0HF585l1ZIPIzt3qfGsSywvBkd09pW/vURe9RnRgxhyC6uddJ0r3z
-         7r9A==
-X-Forwarded-Encrypted: i=1; AJvYcCXrhE89nD2ctdATzhXyGSCHZ8H8z4wNN5D/i3c/oiLgNQVrM0AfqSxr55n0A55Y5iThzUm8k1P6R/7lF6tzkzSq@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywyxdrspx0GzSYJwSZRWjAgAPsBqJnq5PBpzMVs8r2XN+XJ5f9l
-	PcfYsLeJ2ha0Yj5gfrQmR1OM9KqnBQmUXbOsgh1XtV0DiN7aH0guleXfA1SPvw3k5uQj98JSQl2
-	qjGMnPFCWf0R9GVuXDhu/8gJQS7qeOkhVu57p
-X-Google-Smtp-Source: AGHT+IEB6OZhK4KCuGoyBRzaby/YL6OjwEP+CHwoiUbLF/vZ/4e3KZ5l8jt05d/apzsvYPirD8e/y7zVG01Vpk7Xrv0=
-X-Received: by 2002:a17:902:d50b:b0:206:9b0f:48f3 with SMTP id
- d9443c01a7336-20bca3931a4mr2005825ad.19.1727879481647; Wed, 02 Oct 2024
- 07:31:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="A8QaVwdX"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 492En6Ox006174;
+	Wed, 2 Oct 2024 14:50:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=E
+	r1j3PsHdomLJw64Nf1k8GRRAcTeVSQpDOodTyCDeDs=; b=A8QaVwdXM4MGFQ3eQ
+	5mhCeB9aEancXBttGuV8JgPblKM9/Sd8LSEU3HLVojEG3/B30zuCldlOF8KOoHo6
+	9xFR/d3dpe7sQIj9fe7yI2IFVNeg/wUrEQB9jOROHzhxg5BjUf7kcQGRrU+k02Ig
+	VJhoiymMRSwnTg0iGz68WSN/cH6uRWw+uu5mLe4/1C2AlXDfapN7+RH4rmYJkUcq
+	5mj8bMXbt1wI/cBFVfGlPAeAICbyLR/PvVRDs9iWVW+tMno42h5kD76koAmCOBMZ
+	lxi0F9HNy1Gqn7YjTc6a/BMIA7HCbBUvTSbEoRhXP1y6c4izOqy/LNO5/sXMKbIO
+	Vw1MQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 421898004a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Oct 2024 14:50:07 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 492Eo6mL009784;
+	Wed, 2 Oct 2024 14:50:06 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4218980047-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Oct 2024 14:50:06 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 492DHx64007957;
+	Wed, 2 Oct 2024 14:50:05 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41xvgy31jn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Oct 2024 14:50:05 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 492Eo4Ms12452370
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Oct 2024 14:50:04 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C7C3858059;
+	Wed,  2 Oct 2024 14:50:04 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4C92158058;
+	Wed,  2 Oct 2024 14:49:50 +0000 (GMT)
+Received: from [9.43.52.239] (unknown [9.43.52.239])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  2 Oct 2024 14:49:49 +0000 (GMT)
+Message-ID: <eb218ff7-b3cc-4c51-999f-59641c92c139@linux.ibm.com>
+Date: Wed, 2 Oct 2024 20:19:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240913084712.13861-1-dapeng1.mi@linux.intel.com>
- <172781650408.2469191.8205759350946908012.b4-ty@kernel.org> <CAP-5=fUekHedP74PZU-F_poETt505AVSwVNYWcYNE=1D9P00AQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fUekHedP74PZU-F_poETt505AVSwVNYWcYNE=1D9P00AQ@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 2 Oct 2024 07:31:10 -0700
-Message-ID: <CAP-5=fX=5Ctgqr2pDodUrJpNfEcztBcRkCCTjhDEy+UeH9z1aA@mail.gmail.com>
-Subject: Re: [Patch v5 0/6] Bug fixes on topdown events reordering
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf sched timehist: Add pre-migration wait time
+ option
+Content-Language: en-US
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>, 
-	Dapeng Mi <dapeng1.mi@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Athira Rajeev
+ <atrajeev@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <20241001110620.60602-1-vineethr@linux.ibm.com>
+ <ZvyW2dXQxhxsJNWt@google.com>
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <ZvyW2dXQxhxsJNWt@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: risGA3cm8TlWgISFATMcTiOGO7AD0cw7
+X-Proofpoint-ORIG-GUID: oDhBElHLW9sA433zIoUWjE5FH0iMRNlb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-02_14,2024-09-30_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ adultscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999 impostorscore=0
+ phishscore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2410020106
 
-On Tue, Oct 1, 2024 at 3:32=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> On Tue, Oct 1, 2024 at 2:02=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
-> >
-> > On Fri, 13 Sep 2024 08:47:06 +0000, Dapeng Mi wrote:
-> >
-> > > Changes:
-> > > v5 -> v6:
-> > >   * no function change.
-> > >   * rebase patchset to latest code of perf-tool-next tree.
-> > >   * Add Kan's reviewed-by tag.
-> > >
-> > > History:
-> > >   v4: https://lore.kernel.org/all/20240816122938.32228-1-dapeng1.mi@l=
-inux.intel.com/
-> > >   v3: https://lore.kernel.org/all/20240712170339.185824-1-dapeng1.mi@=
-linux.intel.com/
-> > >   v2: https://lore.kernel.org/all/20240708144204.839486-1-dapeng1.mi@=
-linux.intel.com/
-> > >   v1: https://lore.kernel.org/all/20240702224037.343958-1-dapeng1.mi@=
-linux.intel.com/
-> > >
-> > > [...]
-> >
-> > Applied to perf-tools-next, thanks!
->
-> I disagreed with an early patch set and the issue wasn't resolved. Specif=
-ically:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
-commit/?h=3Dperf-tools-next&id=3D3b5edc0421e2598a0ae7f0adcd592017f37e3cdf
-> ```
->   /* Followed by topdown events. */
->   if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
->   return -1;
-> - if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
-> + /*
-> + * Move topdown events forward only when topdown events
-> + * are not in same group with previous event.
-> + */
-> + if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs) &&
-> +     lhs->core.leader !=3D rhs->core.leader)
->   return 1;
-> ```
-> Is a broken comparator as the lhs then rhs behavior varies from the
-> rhs then lhs behavior. The qsort implementation can randomly order the
-> events.
-> Please drop/revert.
+Hi Namhyung,
 
-Tihs is still in the tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/co=
-mmit/?h=3Dperf-tools-next&id=3D3b5edc0421e2598a0ae7f0adcd592017f37e3cdf
-It should be invariant that for all comparators that:
-a < b =3D=3D b > a
-This code breaks this property and so event sorting is broken.
+On 02/10/24 06:12, Namhyung Kim wrote:
+> On Tue, Oct 01, 2024 at 04:36:20PM +0530, Madadi Vineeth Reddy wrote:
+>> pre-migration wait time is the time that a task unnecessarily spends
+>> on the runqueue of a CPU but doesn't get switched-in there. In terms
+>> of tracepoints, it is the time between sched:sched_wakeup and
+>> sched:sched_migrate_task.
+
+[snip]
+
+>>  static bool is_idle_sample(struct perf_sample *sample,
+>> @@ -2598,13 +2611,19 @@ static int timehist_sched_wakeup_event(const struct perf_tool *tool,
+>>  	if (tr == NULL)
+>>  		return -1;
+>>  
+>> -	if (tr->ready_to_run == 0)
+>> -		tr->ready_to_run = sample->time;
+>> +	if (!strcmp(evsel__name(evsel), "sched:sched_waking")) {
+> 
+> I guess it won't work when there's no sched_waking event.  Can you
+> simply handle pre-migration in sched_waking?
+> 
+
+I believe it should still work even without the sched_waking event because
+I've updated the condition to ensure that timehist_sched_wakeup_ignore is
+not selected when the pre-migration option is enabled.
+
+> Thanks,
+> Namhyung
+> 
+> 
+>> +		if (tr->ready_to_run == 0)
+>> +			tr->ready_to_run = sample->time;
+
+[snip]
+
+>>  	/* prefer sched_waking if it is captured */
+>> -	if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
+>> +	if (!sched->pre_migrations &&
+>> +		evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
+>>  		handlers[1].handler = timehist_sched_wakeup_ignore;
+
+In this case, it checks if pre-migration is enabled. If so, the handler will still
+use timehist_sched_wakeup_event for the sched:sched_wakeup event.
+
+The reason I initially chose the sched:sched_wakeup tracepoint instead of
+sched:sched_waking is that there could be instances where the CPU chosen
+during sched_waking may not match the actual CPU where the task ends up running,
+as shown in the example below:
+
+      wdavdaemon   14789 [006] 31357.614692: sched:sched_waking: comm=wdavdaemon pid=14778 prio=120 target_cpu=005
+	[snip]
+         swapper       0 [002] 31357.614695: sched:sched_wakeup: wdavdaemon:14778 [120] CPU:002
+
+However, since we are already accounting for the sched_migrate_task event occurring
+between sched_waking and sched_switch and don't need to check target_cpu, switching
+to sched_waking should work just as well, with only a very minor time difference.
+
+I'll go ahead and send a v3 with sched_waking. Thanks again for the feedback.
 
 Thanks,
-Ian
+Madadi Vineeth Reddy
+
+>>  
+>>  	/* setup per-evsel handlers */
+>> @@ -3280,8 +3309,14 @@ static int perf_sched__timehist(struct perf_sched *sched)
+>>  		goto out;
+>>  	}
+>>  
+>> -	if (sched->show_migrations &&
+>> -	    perf_session__set_tracepoints_handlers(session, migrate_handlers))
+>> +	if (sched->pre_migrations && !evlist__find_tracepoint_by_name(session->evlist,
+>> +									"sched:sched_wakeup")) {
+>> +		pr_err("No sched_wakeup events found. sched_wakeup tracepoint is mandatory for -P option\n");
+>> +		goto out;
+>> +	}
+>> +
+>> +	if ((sched->show_migrations || sched->pre_migrations) &&
+>> +		perf_session__set_tracepoints_handlers(session, migrate_handlers))
+>>  		goto out;
+>>  
+>>  	/* pre-allocate struct for per-CPU idle stats */
+>> @@ -3823,6 +3858,7 @@ int cmd_sched(int argc, const char **argv)
+>>  	OPT_BOOLEAN(0, "show-prio", &sched.show_prio, "Show task priority"),
+>>  	OPT_STRING(0, "prio", &sched.prio_str, "prio",
+>>  		   "analyze events only for given task priority(ies)"),
+>> +	OPT_BOOLEAN('P', "pre-migrations", &sched.pre_migrations, "Show pre-migration wait time"),
+>>  	OPT_PARENT(sched_options)
+>>  	};
+>>  
+>> -- 
+>> 2.43.2
+>>
+
