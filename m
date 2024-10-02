@@ -1,49 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4A912C49C;
-	Wed,  2 Oct 2024 22:04:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74FD12C49C;
+	Wed,  2 Oct 2024 22:05:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727906668; cv=none; b=eHNxIHEYV3LW9r8/ceULhKtmsmuNKRhvHxm5qt0jaG7mJzGngp7LEOeWob6UmpvvrEFDt2/+ktpts6ndUA6QN43Rq6HssxquEFgHCdI7voMOoY2hAlU7GTakp31/4XHiXPED6JfnmoOQ4DP+GCdzmlSMwkojyQgG7uAZrwRyVbE=
+	t=1727906753; cv=none; b=coJY3duPWlUU1xg3TPfJJlc23kgWocUGIu/5c1KUGCaUkcMLxkSTRJ5D055dhLo+UtsTISzZS55SdZsuMcuYQ8e+udEk3yAU75qvb6NWvvYXmQV8Mbis1gCIP3AUJPO+fMWse+ZHSNQYR7gGTIkCk1QPpKlsarrX0XokJbT6i4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727906668; c=relaxed/simple;
-	bh=IrBMGAHT4Z+7mus4x5s9OncHC+8kvCOC2lukYTg9Sgs=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h3a6y5rQbDu6K/rWqIfvBJma+5fE2KIlHcYZmLR48yjmeGHTM0dtQj99VG8G4yH8aWPY9T0VgVtv46LQa7eIQ/N7xAu0cqbITIUEF1yDeqKzjE5xuy0ZNZA8YmQksTzSMbXQn7jw8XDbWjy5ncY2wsfgLRzsTHR9f7po7hWzSs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s5KiCbSd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727906753; c=relaxed/simple;
+	bh=KtWNp0mofQ6zZxMFdeIYZ3oOA/UVCqsia0AwwOyC2IE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A2wDGrkIAM7xdh/i5UM64OKRABeL1jYNHtPGPRAmrWIGR5lMjr9cNodZl5L8ILlNZhLmTicKHAGnoNCTCmgO/0kVkkpPt3b17cc0gEclqdhQH3rmCp08G84IxlucoxhuLC4KPTyx+O4gDb81AFw4Z1h28s0slHLlExw/3hJqkWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j4TvpEPr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s5KiCbSd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F20DC4CEC2;
-	Wed,  2 Oct 2024 22:04:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j4TvpEPr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4044C4CEC2;
+	Wed,  2 Oct 2024 22:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727906667;
-	bh=IrBMGAHT4Z+7mus4x5s9OncHC+8kvCOC2lukYTg9Sgs=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=s5KiCbSdykzw04PK605I5ZfX9Xo2hyzvwY6G7p3zkPvKuEiu3rsKt4HuFhhUDwlkV
-	 4bR3bUp2KlzTuMDIJGMdl0LkMWlhXcyZaT+GUc2UCXo69fIP2F6PXPbq9UdT7HAkmf
-	 0fUCVD5cA8U2vPJGJsv5s51cH9BURss4iTjYEuackzZaIR/WpKcSqvg2kknmxPUwkw
-	 YsaNfe/Ihy3lHEMLvR6QEnX3ZI7loGDtSyc6SeV4+G+ghaD17nI0bC7EYRjiAfgdls
-	 aticWeD6/SbJejfWQV5SbW5D010fe8J7iDwQjdbnZTD2a49rX87NlX64yGFdsHptOk
-	 YqXl3urrC/QDQ==
+	s=k20201202; t=1727906753;
+	bh=KtWNp0mofQ6zZxMFdeIYZ3oOA/UVCqsia0AwwOyC2IE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=j4TvpEPrLqdCDYzg/w95CNPUt8kFpgxTjIdAjUPg52sHl98ON0DrpT6mhN1Rj8eeo
+	 kfgs9X+07p+eqMRUo4v/WwrCHPXaV/LD5itUsnW6CfNG1iPbz2HCIEGIt4GsCLcpPh
+	 B2IrJ/k4KGOVmYyCqP0VAU/wPIylO9UXtXGAd0t2F+L40VRtoPIKV5n4I7qI5Q10BM
+	 u63vZ44mXf15g7qlAMSyMLziztbaBhrCXpNsc2zdqaTn5H12JDwEP3w5k/IK75B3Lc
+	 O2RQqvODPqRL9bk7pzm4cuEQMbx7kZ/4Ltp3tVX3xvMhVqFEPzFUaopJMNPbspr39z
+	 BeccsIgtVrpEw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	Ben Gainey <ben.gainey@arm.com>
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v2 0/4] 2 leak fixes and lower 2 test fails to skips
-Date: Wed,  2 Oct 2024 15:04:09 -0700
-Message-ID: <172790659695.3079262.3083849324016759104.b4-ty@kernel.org>
+	James Clark <james.clark@linaro.org>
+Subject: Re: [PATCH v12 0/2] tools/perf: Support PERF_SAMPLE_READ with inherit
+Date: Wed,  2 Oct 2024 15:05:43 -0700
+Message-ID: <172790673140.3079602.4159401527363897387.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
-In-Reply-To: <20241001052327.7052-1-irogers@google.com>
-References: <20241001052327.7052-1-irogers@google.com>
+In-Reply-To: <20241001121505.1009685-1-ben.gainey@arm.com>
+References: <20241001121505.1009685-1-ben.gainey@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,15 +54,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Mon, 30 Sep 2024 22:23:23 -0700, Ian Rogers wrote:
+On Tue, 01 Oct 2024 13:15:03 +0100, Ben Gainey wrote:
 
-> Fix some memory leaks that show up testing as !root. Lower some test
-> failures to skips for the !root case with a skip reason of
-> permissions.
+> This revision of this change splits out the tools/perf changes requested
+> by Namhyung Kim for my previous work to enable PERF_SAMPLE READ with inherit (see
+> https://lore.kernel.org/linux-perf-users/20240730084417.7693-1-ben.gainey@arm.com/ )
+> as the kernel side changes have been picked up by Peter Zijlstra.
 > 
-> v2: Rebase that also cleans up on the bpf_counter__load error path, as
->     pointed out by Namhyung.
-> v1: https://lore.kernel.org/lkml/20240924202916.1560687-1-irogers@google.com/
+> Changes since v11:
+>  - Rebased onto perf-tools-next (b38c49d8296b9eee)
 > 
 > [...]
 
