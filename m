@@ -1,43 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AC4621
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Oct 2024 00:25:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A0C15D1;
+	Wed,  2 Oct 2024 00:42:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727828757; cv=none; b=ibeBYwWxf8jZi1iFxEDehXjG2j6KlQwTs6xDvgpZ8sMMbQ9arxFPMD+OEN3leg6/8Foe3+1qF3H7WiJp840EG1MIL+YUPM1Iccblp6QT/0e8D+YvaPpfUAahpbDe65qcTRuTTDMrOrIaQFHyFmWahhLCyR+H8M01e5P2dv4vmfQ=
+	t=1727829723; cv=none; b=gPvQn0LLBgPBRttgTRao9QfoIDOd/rnPxxmpv94m5EVaxXz4IxEjVl2ocATqOjRgFa6Vr9de/J5HWMV8NnfJTcNhxJyn1BwdqZnq2KY6lCigS0381npMRQ0lADGVKPB+KpnsYbi9qD5rD4y6JvYsl7bagQkK+b2D8VUUJumIoSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727828757; c=relaxed/simple;
-	bh=Mu6ajiKzlsNh/seb8tOPHrrUkbAGDEZobosSU5c9Wks=;
+	s=arc-20240116; t=1727829723; c=relaxed/simple;
+	bh=+RVp6pHlr1w5dJ/N9mEdVSdi3GGzwhQj3H2kMDRoh4A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DSf2GAI0oFLXYUzFtsBhC+vGW8cGGNDgRc7zlcb8LAKZpy77YujWxTAOWhgj/TBp60CyUEey0n5wOeL2njoUYAmd7o9j1kQFWbKpvD2JdEDHEiE6qlC31YN46DwSUNM4vccl8D6HaS9lGDWkCX8PX5bBPdrYT8HhvHJg+PJU9PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BSyFU+mL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=j7ggY92wiBPqQJsV3tydsEK2n3AP4gdXSv452Z7RXlOXQNQV6KKWcZARTUHr+XcUL+dQLZQE3/AM0tTCh/PBxHhNBavKUAeYg7PkwakpOLkqg6b+HfLz1sMbJ6LNARROkd5rK5amlHkd7cpbYQbRtYkAvvsGa8PZJD9IjZLuNZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cf3rOZN0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BSyFU+mL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 015E9C4CECD;
-	Wed,  2 Oct 2024 00:25:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cf3rOZN0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6049C4CEC6;
+	Wed,  2 Oct 2024 00:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727828757;
-	bh=Mu6ajiKzlsNh/seb8tOPHrrUkbAGDEZobosSU5c9Wks=;
+	s=k20201202; t=1727829723;
+	bh=+RVp6pHlr1w5dJ/N9mEdVSdi3GGzwhQj3H2kMDRoh4A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BSyFU+mL+F2Mdg3U0scslgOKaIEOb49mqHF5sZkwE5YjWdNcGxXPx6Bvxzs437q9J
-	 HqhoDZXw/5ZAg1nUmdA5PifwwchHiG8+BmKsuY+viqmYkJd28cqbgEI74LIfV0+YjD
-	 /ER9zZU+5QWiMP96FCvnBxGw2YqO0DgTBq+O/zIJKtHT6DL3KfvgNTo/d+f6D9J48D
-	 3phxCSeim1UQjUfzKWJZ/WDgEgEVzFPpPOVZ3BJgZVFRC8byvfgL9kqS3NfhYPWz+W
-	 z0hS1/iy5hxaL6vxiktfmXVdZnkJDXvZMryNpd7Nw+6amDOB3if52vvq4c0+/TYU4Q
-	 Cv5L4T0wXfByw==
-Date: Tue, 1 Oct 2024 17:25:55 -0700
+	b=Cf3rOZN0aasVv0TxNLdZ/6ovpK/bMs6tOPeXOAtEqk7xlH4GKEDfrEMkJ8EMz39iS
+	 5v/ebGfZP1gei0SJ40qFHInsMOi3KVXNGqkxml99Bh/ymky1x8p+UUue142xsDE6OA
+	 +cZToR5sF6nZUp02fGBfcO4PoiZ18dcLbzE9T4CXliGxE4MDrr7YK4XDhI0HxL/iIX
+	 QpvgiatSBso1xJnT5X+JmS5K/+nggXI14p68vzuXqaggfc7hn4zZFTuWnFUD83zTAH
+	 rsgNZhtvS80JkHGxfUnXOW39QtMBtA8lWl1lR9MDqf2V7sTcc9gIuZng/DZd1v8q60
+	 2p4B/rKMT2TPg==
+Date: Tue, 1 Oct 2024 17:42:01 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Veronika Molnarova <vmolnaro@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
-	kjain@linux.ibm.com, mpetlan@redhat.com, rstoyano@redhat.com,
-	mark.rutland@arm.com, jolsa@kernel.org,
-	alexander.shishkin@linux.intel.com, adrian.hunter@intel.com
-Subject: Re: [PATCH v4] perf test stat_all_pmu.sh: Parse return value of perf
- stat
-Message-ID: <ZvyTE4x9-BxCVx5J@google.com>
-References: <20240814170146.20678-1-vmolnaro@redhat.com>
- <dd62147b-e9b5-4281-b547-fef46082e4f2@redhat.com>
+To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
+	linux-perf-users <linux-perf-users@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] perf sched timehist: Add pre-migration wait time
+ option
+Message-ID: <ZvyW2dXQxhxsJNWt@google.com>
+References: <20241001110620.60602-1-vineethr@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,116 +52,324 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <dd62147b-e9b5-4281-b547-fef46082e4f2@redhat.com>
+In-Reply-To: <20241001110620.60602-1-vineethr@linux.ibm.com>
 
-On Tue, Oct 01, 2024 at 10:35:33AM +0200, Veronika Molnarova wrote:
+On Tue, Oct 01, 2024 at 04:36:20PM +0530, Madadi Vineeth Reddy wrote:
+> pre-migration wait time is the time that a task unnecessarily spends
+> on the runqueue of a CPU but doesn't get switched-in there. In terms
+> of tracepoints, it is the time between sched:sched_wakeup and
+> sched:sched_migrate_task.
 > 
+> Let's say a task woke up on CPU2, then it got migrated to CPU4 and
+> then it's switched-in to CPU4. So, here pre-migration wait time is
+> time that it was waiting on runqueue of CPU2 after it is woken up.
 > 
-> On 8/14/24 19:01, vmolnaro@redhat.com wrote:
-> > From: Veronika Molnarova <vmolnaro@redhat.com>
-> > 
-> > With the upstream MR !3916 of commit ad86d7ee43b22aa2 ('powerpc/hv-gpci:
-> > Fix the H_GET_PERF_COUNTER_INFO hcall return value checks') the perf
-> > stat for hv_gpci events without required permission set returns an
-> > error value of -1 to differentiate the output from the unsupported
-> > events. The stat_all_pmu test was designed in a way, that if any
-> > command exits with a non-zero value the test exits with an error
-> > value without any information provided due to the 'set -e' option.
-> > 
-> > The issue propagated upstream as the list of the files that affected perf
-> > did not cover the changed files and was updated after the issue was
-> > discovered. It was caught by CKI testing where it was triaged to stop
-> > blocking further MRs, as most of the powerpc machines have some of
-> > the hv_gpci events without the required permissions.
-> > 
-> > Remove the 'set -e' option from the test and rework the test case to log
-> > the status of the event for better maintainability. Instead of exiting
-> > immediately after 'perf stat' ends with a non-zero value, check the
-> > return value and output of the 'perf stat' command with the appropriate action.
-> > 
-> > Link to the MR !3916 of commit ad86d7ee43b22aa2:
-> > https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/3916
-> > 
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Michael Petlan <mpetlan@redhat.com>
-> > Cc: Radostin Stoyanov <rstoyano@redhat.com>
-> > Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-> > ---
-> > v2: Fix commit hash
-> > v3: Add 'device busy' for parallel testing
-> > v4: Change commit message
+> The general pattern for pre-migration to occur is:
+> sched:sched_wakeup
+> sched:sched_migrate_task
+> sched:sched_switch
+> So, this option expects sched_wakeup also to be recorded and fails
+> if attempted to use the option without sched:sched_wakeup tracepoint.
 > 
-> Is this version of the commit viable?
+> pre-migrations are generally not useful and it increases migrations.
+> This metric would be helpful in testing patches mainly related to wakeup
+> and load-balancer code paths as better wakeup logic would choose an
+> optimal CPU where task would be switched-in and thereby reducing pre-
+> migrations.
+> 
+> The sample output(s) when -P or --pre-migrations is used:
+> =================
+>            time    cpu  task name                       wait time  sch delay   run time  pre-mig time
+>                         [tid/pid]                          (msec)     (msec)     (msec)     (msec)
+> --------------- ------  ------------------------------  ---------  ---------  ---------  ---------
+>   103032.721020 [0000]  perf[47206]                         0.000      0.000      0.000      0.000
+>   103032.721034 [0000]  migration/0[18]                     0.000      0.003      0.013      0.000
+>   103032.736716 [0001]  schbench[47229/47207]              10.664      9.231      0.039      9.170
+>   103032.736719 [0005]  <idle>                              0.000      0.000     15.405      0.000
+>   103032.736726 [0003]  schbench[47216/47207]              11.251      9.193      0.022      9.126
+>   103032.736727 [0001]  schbench[47228/47207]              10.752      9.264      0.010      9.169
+>   103032.736731 [0007]  <idle>                              0.000      0.000     15.314      0.000
+>   103032.736739 [0008]  <idle>                              0.000      0.000     15.249      0.000
+>   103032.736742 [0003]  schbench[47257/47207]               9.498      9.184      0.015      9.100
+> 
+>    51370.894024 [0012]  schbench[38775/38770]              21.047     21.047      8.950      0.000
+>    51370.894024 [0008]  schbench[38781/38770]              39.597     39.448      9.984     39.437
+>    51370.894025 [0009]  stress-ng-cpu[38743]                7.971      7.971      9.997      0.000
+> 
+> Changes since v1:
+>  - Use timehist_sched_wakeup_event() to get the sched_wakeup time. (Namhyung Kim)
+>  - Rebase against perf-tools-next commit b38c49d8296b ("perf/test: Speed up test
+>    case perf annotate basic tests")
+> 
+> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+> ---
+>  tools/perf/Documentation/perf-sched.txt |   8 ++
+>  tools/perf/builtin-sched.c              | 112 ++++++++++++++++--------
+>  2 files changed, 82 insertions(+), 38 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+> index 3db64954a267..7935499b88b0 100644
+> --- a/tools/perf/Documentation/perf-sched.txt
+> +++ b/tools/perf/Documentation/perf-sched.txt
+> @@ -221,6 +221,14 @@ OPTIONS for 'perf sched timehist'
+>  	priorities are specified with -: 120-129. A combination of both can also be
+>  	provided: 0,120-129.
+>  
+> +-P::
+> +--pre-migrations::
+> +	Show pre-migration wait time. pre-migration wait time is the time spent
+> +	by a task waiting on a runqueue but not getting the chance to run there
+> +	and is migrated to a different runqueue where it is finally run. This
+> +	time between migrate_task and sched_wakeup is the pre-migration wait
+> +	time. This option is valid only if sched_wakeup tracepoint is recorded.
+> +
+>  OPTIONS for 'perf sched replay'
+>  ------------------------------
+>  
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index fdf979aaf275..02fe0ec41141 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -225,6 +225,7 @@ struct perf_sched {
+>  	bool		show_wakeups;
+>  	bool		show_next;
+>  	bool		show_migrations;
+> +	bool		pre_migrations;
+>  	bool		show_state;
+>  	bool		show_prio;
+>  	u64		skipped_samples;
+> @@ -244,7 +245,10 @@ struct thread_runtime {
+>  	u64 dt_iowait;      /* time between CPU access by iowait (off cpu) */
+>  	u64 dt_preempt;     /* time between CPU access by preempt (off cpu) */
+>  	u64 dt_delay;       /* time between wakeup and sched-in */
+> +	u64 dt_pre_mig;     /* time between migration and wakeup */
+>  	u64 ready_to_run;   /* time of wakeup */
+> +	u64 woken;	    /* time when sched_wakeup tracepoint is hit */
+> +	u64 migrated;	    /* time when a thread is migrated */
+>  
+>  	struct stats run_stats;
+>  	u64 total_run_time;
+> @@ -252,6 +256,7 @@ struct thread_runtime {
+>  	u64 total_iowait_time;
+>  	u64 total_preempt_time;
+>  	u64 total_delay_time;
+> +	u64 total_pre_mig_time;
+>  
+>  	char last_state;
+>  
+> @@ -2073,14 +2078,15 @@ static void timehist_header(struct perf_sched *sched)
+>  		printf(" ");
+>  	}
+>  
+> -	if (sched->show_prio) {
+> -		printf(" %-*s  %-*s  %9s  %9s  %9s",
+> -		       comm_width, "task name", MAX_PRIO_STR_LEN, "prio",
+> -		       "wait time", "sch delay", "run time");
+> -	} else {
+> -		printf(" %-*s  %9s  %9s  %9s", comm_width,
+> -		       "task name", "wait time", "sch delay", "run time");
+> -	}
+> +	printf(" %-*s", comm_width, "task name");
+> +
+> +	if (sched->show_prio)
+> +		printf("  %-*s", MAX_PRIO_STR_LEN, "prio");
+> +
+> +	printf("  %9s  %9s  %9s", "wait time", "sch delay", "run time");
+> +
+> +	if (sched->pre_migrations)
+> +		printf("  %9s", "pre-mig time");
+>  
+>  	if (sched->show_state)
+>  		printf("  %s", "state");
+> @@ -2095,17 +2101,15 @@ static void timehist_header(struct perf_sched *sched)
+>  	if (sched->show_cpu_visual)
+>  		printf(" %*s ", ncpus, "");
+>  
+> -	if (sched->show_prio) {
+> -		printf(" %-*s  %-*s  %9s  %9s  %9s",
+> -		       comm_width, "[tid/pid]", MAX_PRIO_STR_LEN, "",
+> -		       "(msec)", "(msec)", "(msec)");
+> -	} else {
+> -		printf(" %-*s  %9s  %9s  %9s", comm_width,
+> -		       "[tid/pid]", "(msec)", "(msec)", "(msec)");
+> -	}
+> +	printf(" %-*s", comm_width, "[tid/pid]");
+>  
+> -	if (sched->show_state)
+> -		printf("  %5s", "");
+> +	if (sched->show_prio)
+> +		printf("  %-*s", MAX_PRIO_STR_LEN, "");
+> +
+> +	printf("  %9s  %9s  %9s", "(msec)", "(msec)", "(msec)");
+> +
+> +	if (sched->pre_migrations)
+> +		printf("  %9s", "(msec)");
+>  
+>  	printf("\n");
+>  
+> @@ -2117,15 +2121,15 @@ static void timehist_header(struct perf_sched *sched)
+>  	if (sched->show_cpu_visual)
+>  		printf(" %.*s ", ncpus, graph_dotted_line);
+>  
+> -	if (sched->show_prio) {
+> -		printf(" %.*s  %.*s  %.9s  %.9s  %.9s",
+> -		       comm_width, graph_dotted_line, MAX_PRIO_STR_LEN, graph_dotted_line,
+> -		       graph_dotted_line, graph_dotted_line, graph_dotted_line);
+> -	} else {
+> -		printf(" %.*s  %.9s  %.9s  %.9s", comm_width,
+> -		       graph_dotted_line, graph_dotted_line, graph_dotted_line,
+> -		       graph_dotted_line);
+> -	}
+> +	printf(" %.*s", comm_width, graph_dotted_line);
+> +
+> +	if (sched->show_prio)
+> +		printf("  %.*s", MAX_PRIO_STR_LEN, graph_dotted_line);
+> +
+> +	printf("  %.9s  %.9s  %.9s", graph_dotted_line, graph_dotted_line, graph_dotted_line);
+> +
+> +	if (sched->pre_migrations)
+> +		printf("  %.9s", graph_dotted_line);
+>  
+>  	if (sched->show_state)
+>  		printf("  %.5s", graph_dotted_line);
+> @@ -2180,6 +2184,8 @@ static void timehist_print_sample(struct perf_sched *sched,
+>  
+>  	print_sched_time(tr->dt_delay, 6);
+>  	print_sched_time(tr->dt_run, 6);
+> +	if (sched->pre_migrations)
+> +		print_sched_time(tr->dt_pre_mig, 6);
+>  
+>  	if (sched->show_state)
+>  		printf(" %5c ", thread__tid(thread) == 0 ? 'I' : state);
+> @@ -2239,6 +2245,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
+>  	r->dt_iowait  = 0;
+>  	r->dt_preempt = 0;
+>  	r->dt_run     = 0;
+> +	r->dt_pre_mig = 0;
+>  
+>  	if (tprev) {
+>  		r->dt_run = t - tprev;
+> @@ -2247,6 +2254,11 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
+>  				pr_debug("time travel: wakeup time for task > previous sched_switch event\n");
+>  			else
+>  				r->dt_delay = tprev - r->ready_to_run;
+> +
+> +			if (r->woken && r->migrated) {
+> +				if ((r->migrated > r->woken) && (r->migrated < tprev))
+> +					r->dt_pre_mig = r->migrated - r->woken;
+> +			}
+>  		}
+>  
+>  		if (r->last_time > tprev)
+> @@ -2270,6 +2282,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
+>  	r->total_sleep_time   += r->dt_sleep;
+>  	r->total_iowait_time  += r->dt_iowait;
+>  	r->total_preempt_time += r->dt_preempt;
+> +	r->total_pre_mig_time += r->dt_pre_mig;
+>  }
+>  
+>  static bool is_idle_sample(struct perf_sample *sample,
+> @@ -2598,13 +2611,19 @@ static int timehist_sched_wakeup_event(const struct perf_tool *tool,
+>  	if (tr == NULL)
+>  		return -1;
+>  
+> -	if (tr->ready_to_run == 0)
+> -		tr->ready_to_run = sample->time;
+> +	if (!strcmp(evsel__name(evsel), "sched:sched_waking")) {
 
-Sorry but we have a conflicting change in this area.  Can you please
-rebase?
-
-> > ---
-> >  tools/perf/tests/shell/stat_all_pmu.sh | 41 ++++++++++++++++++--------
-> >  1 file changed, 29 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
-> > index c77955419173..a75beddda4db 100755
-> > --- a/tools/perf/tests/shell/stat_all_pmu.sh
-> > +++ b/tools/perf/tests/shell/stat_all_pmu.sh
-> > @@ -2,21 +2,38 @@
-> >  # perf all PMU test
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  
-> > -set -e
-> >  
-> >  # Test all PMU events; however exclude parameterized ones (name contains '?')
-> >  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
-> > -  echo "Testing $p"
-> > -  result=$(perf stat -e "$p" true 2>&1)
-> > -  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
-> > -    # We failed to see the event and it is supported. Possibly the workload was
-> > -    # too small so retry with something longer.
-> > -    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
-
-I think you removed this part.  Please check.
+I guess it won't work when there's no sched_waking event.  Can you
+simply handle pre-migration in sched_waking?
 
 Thanks,
 Namhyung
 
 
-> > -    if ! echo "$result" | grep -q "$p" ; then
-> > -      echo "Event '$p' not printed in:"
-> > -      echo "$result"
-> > -      exit 1
-> > +  echo -n "Testing event '$p' -- "
-> > +  stat_output=$(perf stat -e "$p" true 2>&1)
-> > +  stat_result=$?
-> > +  if echo "$stat_output" | grep -q "$p"; then
-> > +    # return value 0 if counters get printed either if the event is supported or not
-> > +    if [ $stat_result -eq 0 ] && ! echo "$stat_output" | grep -q "<not supported>"; then
-> > +        echo "supported"
-> > +    elif [ $stat_result -eq 0 ]; then
-> > +        echo "not supported"
-> > +    # return value 255 when the required permission for the event is not set
-> > +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "No permission"; then
-> > +        echo "no permission to enable"
-> > +    # return value 255 in case of resource busy during parallel testing of events
-> > +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "Device or resource busy"; then
-> > +        echo "resource busy"
-> > +    # return value 129 when trying to run 'perf stat' with a non-existent event
-> > +    elif [ $stat_result -eq 129 ] && echo "$stat_output" | grep -q "Bad event name"; then
-> > +        echo "Fail: Bad event name"
-> > +        echo "$stat_output"
-> > +        exit 1
-> > +    else
-> > +        echo "Fail: Unknown return value $stat_result"
-> > +        echo "$stat_output"
-> > +        exit 1
-> >      fi
-> > +  else
-> > +      echo "Fail: Event '$p' not printed in:"
-> > +      echo "$stat_output"
-> > +      exit 1
-> >    fi
-> >  done
-> >  
+> +		if (tr->ready_to_run == 0)
+> +			tr->ready_to_run = sample->time;
+>  
+> -	/* show wakeups if requested */
+> -	if (sched->show_wakeups &&
+> -	    !perf_time__skip_sample(&sched->ptime, sample->time))
+> -		timehist_print_wakeup_event(sched, evsel, sample, machine, thread);
+> +		/* show wakeups if requested */
+> +		if (sched->show_wakeups &&
+> +		    !perf_time__skip_sample(&sched->ptime, sample->time))
+> +			timehist_print_wakeup_event(sched, evsel, sample, machine, thread);
+> +	} else {
+> +		/* keep track of wakeup time for pre-migration */
+> +		if (tr->woken == 0)
+> +			tr->woken = sample->time;
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -2684,8 +2703,14 @@ static int timehist_migrate_task_event(const struct perf_tool *tool,
+>  
+>  	tr->migrations++;
+>  
+> +	if (tr->migrated == 0)
+> +		tr->migrated = sample->time;
+> +
+>  	/* show migrations if requested */
+> -	timehist_print_migration_event(sched, evsel, sample, machine, thread);
+> +	if (sched->show_migrations) {
+> +		timehist_print_migration_event(sched, evsel, sample,
+> +							machine, thread);
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -2836,11 +2861,14 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
+>  		/* last state is used to determine where to account wait time */
+>  		tr->last_state = state;
+>  
+> -		/* sched out event for task so reset ready to run time */
+> +		/* sched out event for task so reset ready to run time, woken and migrated time */
+>  		if (state == 'R')
+>  			tr->ready_to_run = t;
+>  		else
+>  			tr->ready_to_run = 0;
+> +
+> +		tr->woken = 0;
+> +		tr->migrated = 0;
+>  	}
+>  
+>  	evsel__save_time(evsel, sample->time, sample->cpu);
+> @@ -3267,7 +3295,8 @@ static int perf_sched__timehist(struct perf_sched *sched)
+>  	setup_pager();
+>  
+>  	/* prefer sched_waking if it is captured */
+> -	if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
+> +	if (!sched->pre_migrations &&
+> +		evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
+>  		handlers[1].handler = timehist_sched_wakeup_ignore;
+>  
+>  	/* setup per-evsel handlers */
+> @@ -3280,8 +3309,14 @@ static int perf_sched__timehist(struct perf_sched *sched)
+>  		goto out;
+>  	}
+>  
+> -	if (sched->show_migrations &&
+> -	    perf_session__set_tracepoints_handlers(session, migrate_handlers))
+> +	if (sched->pre_migrations && !evlist__find_tracepoint_by_name(session->evlist,
+> +									"sched:sched_wakeup")) {
+> +		pr_err("No sched_wakeup events found. sched_wakeup tracepoint is mandatory for -P option\n");
+> +		goto out;
+> +	}
+> +
+> +	if ((sched->show_migrations || sched->pre_migrations) &&
+> +		perf_session__set_tracepoints_handlers(session, migrate_handlers))
+>  		goto out;
+>  
+>  	/* pre-allocate struct for per-CPU idle stats */
+> @@ -3823,6 +3858,7 @@ int cmd_sched(int argc, const char **argv)
+>  	OPT_BOOLEAN(0, "show-prio", &sched.show_prio, "Show task priority"),
+>  	OPT_STRING(0, "prio", &sched.prio_str, "prio",
+>  		   "analyze events only for given task priority(ies)"),
+> +	OPT_BOOLEAN('P', "pre-migrations", &sched.pre_migrations, "Show pre-migration wait time"),
+>  	OPT_PARENT(sched_options)
+>  	};
+>  
+> -- 
+> 2.43.2
 > 
