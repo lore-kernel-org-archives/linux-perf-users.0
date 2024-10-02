@@ -1,177 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73AD8212F14;
-	Wed,  2 Oct 2024 18:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F749433A9
+	for <linux-perf-users@vger.kernel.org>; Wed,  2 Oct 2024 19:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727893797; cv=none; b=iCuTiP0dhvS3cS65voE4Tx5Ial0OHqJalZXE6Ra46hgCSnUnUAmwnI63qo8qeFZ6NQ5AXmlgp/mID298GRgu4F3AuAfZzE5IsGtpQcxnzTDcn4oUoAmyCRPw1XGiAngcz0akzXpqlB4QdrrfIggGW7Y1nBzAQArlK2SmjXbpBTM=
+	t=1727896126; cv=none; b=I7xN7RO+znnWJNBo2lXYfhXH6nX3/hpu2lLKRB+WGIvx7vg4l+c+qg+aGxQmtXcb6sFtgXIwD4/WPY5xQineaUyi8IOVQtuGwFa7iJX6koWCoPzdpfuWfxqQjgRrzwPdmVItxzVoJoBUk3aXNrEcZTfBv8h5O1fOaIfzr1c5icI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727893797; c=relaxed/simple;
-	bh=oW3A1uipfKdQwVUcodhMm8jzv9QSE358f8lnmmMeKdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JvxWU0AnECl0Z/ARREiWyVnY/IZJur1wKGx4lrFfAoeqRIOiew7x+RXOjPe6BNM2BkhgVSFJWdV1FP+CnQ+5xgQkhPFBMD4jSotwLq0aijOV/FI27N/nUlAeIB240xPL7TXNR+NzMbcFlaMeTsnR03zfx9cGkdhjmSdRPPWoX1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYqy/MbC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727896126; c=relaxed/simple;
+	bh=SHFh9QfE3vgBGpp/tJnVYiBlZT4O0u5vSCYlWOFgh0o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=djqATXtBHn2QU8VbBO0qtNkOTLofBEWnSidUGYHQt6sU44K6QI0sRFvAXHLMC8o6O73aMVAzJDXLNjCIcwsn4+IW5KGVtCiKZc68Rfa55oVv7uEXxuyq63Sc/kfLrkbCMcWuyLH0JtFfmQsCXdrYvz2jG0N9b6RJRsOGw7d3yXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wuqd5Xrf; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYqy/MbC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EFABC4CECD;
-	Wed,  2 Oct 2024 18:29:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727893797;
-	bh=oW3A1uipfKdQwVUcodhMm8jzv9QSE358f8lnmmMeKdM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iYqy/MbCPRfwpGP1dfVrrw2vTieGSu/TyWZ1W3fobkJMKcPFGG0q7nOwl+H3LxPfm
-	 yY3K84ALR6qWyDq5MphEZ/tdHnswDj1Ib1oeO+G7Q48apZNsVLjoLs3DzyvP4HNnnq
-	 rBQbpLcwYYXg1wfBun/tkKIXb96AjRHqeqXnNigZizoQtibc5/u2epfX2oHwXK6ZwS
-	 bRehon91wVIAeK11NeR/lZoySmb1uBHV7WdiF0YBLkI2zgea2yPPAZyrEeItJUD9hC
-	 rMT2F4NtCx/Tzr0Gs/nD4OPdm0k2SVAsdauzidE+bG89mywhl1aSowwVnqGo/DCHL0
-	 Mfb1g+TtYbRQQ==
-Date: Wed, 2 Oct 2024 11:29:54 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	James Clark <james.clark@arm.com>, Kajol Jain <kjain@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: Re: [PATCHSET 0/8] perf tools: Do not set attr.exclude_guest by
- default (v4)
-Message-ID: <Zv2RIr8I04f8dEP2@google.com>
-References: <20241001002027.1272889-1-namhyung@kernel.org>
- <b894eed7-15e0-4ec4-a9d6-07fe86326396@linaro.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wuqd5Xrf"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a1a4f2cc29so23925ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Oct 2024 12:08:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1727896124; x=1728500924; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3UoGbZ+09ZCt3tvdSvaR+iY1YkvoCfJxElQ2jgIBo00=;
+        b=wuqd5XrfpXezcZdxSn4fE5d10S4b4VKCVRxJ4swcqusJDRUCeWQgco/AB44RzvxVx6
+         +N4cwcEourXFmBdROLx7z4b+kFWmTQxCnma7pkTpA6nJ/V1QoEpWtgToegeB+aUG2hgD
+         GgP0dM+6Gx4yeoamHN6lEoH4tNOwAob0AoxDGDTJtJ5vslOcfMmsIysnFGv3hdzgtz5U
+         9+YTNXVh1s17VEIK7MRKk2bR8D6jhtmyFWGCcoD6CimeOD2DQOFC/SUFxCsn/CU00quG
+         U24AAWt81PrpIm9CKqdFe6uXfGwJn3BPF4hA3WvFENR4+GHaqC4D5Duxe3Wg/5pzY4RM
+         fuTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727896124; x=1728500924;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3UoGbZ+09ZCt3tvdSvaR+iY1YkvoCfJxElQ2jgIBo00=;
+        b=AsKFsgu9JRt0PiOXJw7lp0OySYk5y2l1dujhu1q/lpL9+FXsfNpPqBxu0bjZ/9pQga
+         hKBkPhItj6rorthlMUxuLFWbaM3HlyvuBHNJ31utB/QU+UytcOHumvGFHWps2gvp6qDp
+         rHdYHDVgZW9zvq+j1qNCFRYOkmHJtABv08wOxQ7oiNuB4OTUfxjIIUTGvtQrpNlVwQJw
+         imH9DHPVgr8Wlao6jDzv/4GA3Y7JT3+JhO23Bkz5Vg4lYU3UwH01lZ5sAzBc4ng8BWXE
+         7Q1Z+hIPxqMEOz2TBneeEwVovwYZj/wf//uGvdsMUTXN5vULtEJ3r6S09KAbu8kaSgyN
+         E4Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBW0E/rA0aAnLqqx17cZJRWZn/jihIdiofGb2Qj8GQsu8irEMtzrZWJRWXbLsihbvscEC/839x78ruNsuRF1ka@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywkn+DAlkwhTgnrp7wxHNhnSee9jHu/kHFqnwpubaced4B49afo
+	Vnnt73VkTghB1cux5q3mOiu0VOTeaerhbF0XDOiYWncWSkM15PBVL9DU399mZi/fED0217H1J0K
+	qPsUCrd5+59nQO1xmxS37bAeG8axCZ+AwMNg2
+X-Google-Smtp-Source: AGHT+IFU9NblRdEX0BaXE3U4WZrlmCXDu888JX3jzETGPENFixK9suXbfcxGpqOQeO0J/TJ9TmY1+LgjhIDYZ0IcLLE=
+X-Received: by 2002:a05:6e02:1a6d:b0:3a0:9e83:21ea with SMTP id
+ e9e14a558f8ab-3a36ee882cfmr397195ab.17.1727896124326; Wed, 02 Oct 2024
+ 12:08:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b894eed7-15e0-4ec4-a9d6-07fe86326396@linaro.org>
+References: <20240924003720.617258-1-irogers@google.com> <20240924003720.617258-3-irogers@google.com>
+ <CAM9d7cjDeGF6rO8+DJQdG+tELO2ueqqvkFU-rCFETQm9KJ4JmA@mail.gmail.com>
+In-Reply-To: <CAM9d7cjDeGF6rO8+DJQdG+tELO2ueqqvkFU-rCFETQm9KJ4JmA@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 2 Oct 2024 12:08:30 -0700
+Message-ID: <CAP-5=fWgounnfvSQtOiqZQdpkg00yvT3E-rGNFUKKb8ZksPhjg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] perf probe: Fix libdw memory leak
+To: Namhyung Kim <namhyung@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, Hemant Kumar <hemant@linux.vnet.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yang Jihong <yangjihong@bytedance.com>, leo.yan@arm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 02, 2024 at 10:49:36AM +0100, James Clark wrote:
-> 
-> 
-> On 01/10/2024 1:20 am, Namhyung Kim wrote:
-> > Hello,
-> > 
-> > I found perf tools set exclude_guest bit inconsistently.  It used to
-> > set the bit but now the default event for perf record doesn't.  So I'm
-> > wondering why we want the bit in the first place.
-> > 
-> > Actually it's not good for PMUs don't support any exclusion like AMD
-> > IBS because it disables new features after the exclude_guest due to
-> > the missing feature detection logic.
-> > 
-> > v4 changes)
-> > 
-> >   * handle EOPNOTSUPP error in compatible way  (Kan)
-> >   * drop --exclude-guest option in perf stat
-> >   * not to separate exclude_hv fallback
-> >   * rename to exclude_GH_default  (Kan)
-> >   * drop the RFC from the subject
-> > 
-> > v3) https://lore.kernel.org/lkml/20240905202426.2690105-1-namhyung@kernel.org/
-> > 
-> >   * move exclude_guest fallback to the front
-> >   * fix precise_max handling on AMD
-> >   * simplify the default event for perf record
-> > 
-> > v2) https://lore.kernel.org/lkml/20240904064131.2377873-1-namhyung@kernel.org/
-> > 
-> >   * update the missing feature detection logic
-> >   * separate exclude_hv fallback
-> >   * add new fallback for exclude_guest
-> > 
-> > v1) https://lore.kernel.org/lkml/20240902014621.2002343-1-namhyung@kernel.org/
-> > 
-> > AFAIK it doesn't matter for the most cases but perf kvm.  If users
-> > need to set the bit, they can still use :H modifier.  For vPMU pass-
-> > through or Apple M1, it'd add the exclude_guest during the fallback
-> > logic.
-> > 
-> > Also the kernel feature detection logic should be separated from the
-> > exclude bit tests since it depends on the PMU implementation rather
-> > than the core kernel features.  So I changed it to use a software
-> > event for the detection and factor out some hw-specific checks.
-> > 
-> > The code is available at 'perf/exclude-v4' branch in
-> > git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> > 
-> > Thanks,
-> > Namhyung
-> > 
-> > 
-> 
-> Looks like you need to allow for :H in the perf stat test on M1 now:
-> 
-> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-> index 5a2ca2bcf94d..77cb95859649 100755
-> --- a/tools/perf/tests/shell/stat.sh
-> +++ b/tools/perf/tests/shell/stat.sh
-> @@ -161,7 +161,7 @@ test_hybrid() {
->    fi
-> 
->    # Run default Perf stat
-> -  cycles_events=$(perf stat -- true 2>&1 | grep -E "/cycles/|  cycles " |
-> wc -l)
-> +  cycles_events=$(perf stat -- true 2>&1 | grep -E "/cycles/|  cycles |  cycles:H  " | wc -l)
+On Wed, Oct 2, 2024 at 10:44=E2=80=AFAM Namhyung Kim <namhyung@gmail.com> w=
+rote:
+>
+> On Mon, Sep 23, 2024 at 5:37=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > Add missing dwarf_cfi_end to free memory associated with probe_finder
+> > cfi_eh or cfi_dbg. This addresses leak sanitizer issues seen in:
+> > tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+> >
+> > Fixes: 270bde1e76f4 ("perf probe: Search both .eh_frame and .debug_fram=
+e sections for probe location")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/probe-finder.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-fin=
+der.c
+> > index 630e16c54ed5..78f34fa0c391 100644
+> > --- a/tools/perf/util/probe-finder.c
+> > +++ b/tools/perf/util/probe-finder.c
+> > @@ -1379,6 +1379,11 @@ int debuginfo__find_trace_events(struct debuginf=
+o *dbg,
+> >         if (ret >=3D 0 && tf.pf.skip_empty_arg)
+> >                 ret =3D fill_empty_trace_arg(pev, tf.tevs, tf.ntevs);
+> >
+> > +#if _ELFUTILS_PREREQ(0, 142)
+> > +       dwarf_cfi_end(tf.pf.cfi_eh);
+> > +       dwarf_cfi_end(tf.pf.cfi_dbg);
+> > +#endif
+>
+> This is causing another problem.  Now vfs_getname tests are
+> failing because perf probe aborts.
 
-Ok, what about "u"?  Probably it can be
+I wasn't able to reproduce but largely as the test skips. The variable
+is out of scope after the function so I'm struggling to see what the
+issue is.
 
-  cycles_events=$(perf stat -- true 2>&1 | grep -E "/cycles/(uH)*|  cycles(:[uH])* " | wc -l)
-
-> 
->    if [ "$pmus" -ne "$cycles_events" ]
->    then
-> 
-> Other than that:
-> 
-> Reviewed-by: James Clark <james.clark@linaro.org>
-
-Thanks for the review!
-Namhyung
-
-> 
-> > Namhyung Kim (8):
-> >    perf tools: Add fallback for exclude_guest
-> >    perf tools: Don't set attr.exclude_guest by default
-> >    perf tools: Simplify evsel__add_modifier()
-> >    perf tools: Do not set exclude_guest for precise_ip
-> >    perf tools: Detect missing kernel features properly
-> >    perf tools: Move x86__is_amd_cpu() to util/env.c
-> >    perf tools: Check fallback error and order
-> >    perf record: Just use "cycles:P" as the default event
-> > 
-> >   tools/perf/arch/x86/util/Build              |   1 -
-> >   tools/perf/arch/x86/util/env.c              |  19 -
-> >   tools/perf/arch/x86/util/env.h              |   7 -
-> >   tools/perf/arch/x86/util/pmu.c              |   2 +-
-> >   tools/perf/builtin-kvm.c                    |   1 +
-> >   tools/perf/builtin-record.c                 |   4 +-
-> >   tools/perf/builtin-stat.c                   |  18 +-
-> >   tools/perf/dlfilters/dlfilter-test-api-v0.c |   2 +-
-> >   tools/perf/dlfilters/dlfilter-test-api-v2.c |   2 +-
-> >   tools/perf/tests/attr/test-record-dummy-C0  |   2 +-
-> >   tools/perf/tests/parse-events.c             |  30 +-
-> >   tools/perf/util/env.c                       |  24 ++
-> >   tools/perf/util/env.h                       |   4 +
-> >   tools/perf/util/evsel.c                     | 394 ++++++++++++++------
-> >   tools/perf/util/evsel.h                     |   1 -
-> >   tools/perf/util/parse-events.c              |   6 +-
-> >   tools/perf/util/util.c                      |  10 +-
-> >   tools/perf/util/util.h                      |   3 +
-> >   18 files changed, 364 insertions(+), 166 deletions(-)
-> >   delete mode 100644 tools/perf/arch/x86/util/env.c
-> >   delete mode 100644 tools/perf/arch/x86/util/env.h
-> > 
-> 
+Thanks,
+Ian
