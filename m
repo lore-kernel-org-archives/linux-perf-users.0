@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74937621
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Oct 2024 00:19:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AC4621
+	for <linux-perf-users@vger.kernel.org>; Wed,  2 Oct 2024 00:25:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727828347; cv=none; b=tDcqy8TXGKqn2+76fd+ZAkALOAf0J8WICqJiEcs9au+iAZGuz1v9MH3ZdLpJoZMLkvJyh7RQ9+WyMg1v81jvEQq/zqT3Hy2RHQmAka27BeqCrjbsRE47NWHqmPeLq3HjGF1BZnwZJKmU8kv7LHJ2OgyYOP4YejkghQVC4FhcKds=
+	t=1727828757; cv=none; b=ibeBYwWxf8jZi1iFxEDehXjG2j6KlQwTs6xDvgpZ8sMMbQ9arxFPMD+OEN3leg6/8Foe3+1qF3H7WiJp840EG1MIL+YUPM1Iccblp6QT/0e8D+YvaPpfUAahpbDe65qcTRuTTDMrOrIaQFHyFmWahhLCyR+H8M01e5P2dv4vmfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727828347; c=relaxed/simple;
-	bh=xL+ES1Jvc+LFZo5iGPYzJJ2BWXmPRjUNRFD/q1/R0ss=;
+	s=arc-20240116; t=1727828757; c=relaxed/simple;
+	bh=Mu6ajiKzlsNh/seb8tOPHrrUkbAGDEZobosSU5c9Wks=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cRbyMS9dZQFWQ2HHAz9+UQwP3X/APIkwK8GkcSRtHu+04KwAgaIOT8YJXsxHvnIaXCFsxKaP6XsLhAan/qUlxudOE/1ZsiCIlHsAfsKjHZvfE7UreIGfY4WYKW9edA8y+MUNbkS4jgOXGoTOfFylqJH4Q3nGuAyvfP43nIytJpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ml3M+bqM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DSf2GAI0oFLXYUzFtsBhC+vGW8cGGNDgRc7zlcb8LAKZpy77YujWxTAOWhgj/TBp60CyUEey0n5wOeL2njoUYAmd7o9j1kQFWbKpvD2JdEDHEiE6qlC31YN46DwSUNM4vccl8D6HaS9lGDWkCX8PX5bBPdrYT8HhvHJg+PJU9PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BSyFU+mL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ml3M+bqM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76AB4C4CEC6;
-	Wed,  2 Oct 2024 00:19:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BSyFU+mL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 015E9C4CECD;
+	Wed,  2 Oct 2024 00:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727828346;
-	bh=xL+ES1Jvc+LFZo5iGPYzJJ2BWXmPRjUNRFD/q1/R0ss=;
+	s=k20201202; t=1727828757;
+	bh=Mu6ajiKzlsNh/seb8tOPHrrUkbAGDEZobosSU5c9Wks=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ml3M+bqM0DgQ+mIgcHjesy2n6wGE8aa3uFlyhhoSpwEYWlY27637wIPSCy37BQ8gR
-	 KhmGbiM+n2+eF3FCYwm12kpEsoMH3TGBrgd3ovSYMriFdh5qZrzA/7BgO2T8ZIeeNa
-	 1oo81qeewY5NWrTlR8PehWFfadbllhL2BymMXG7z8AEKxKRZh2NYKcQhSgBo7KFtkS
-	 APLtLQBece+0XD3h+dvc0oj5BFznvbMu2GtoNbmfVus2pGd2pHeNIF1rCYodfdCI63
-	 ecvWIJoDfdSZDoESqNRB5OOkOZdoTMIdv59FUVvnF0Yi1a1QZWemZ3BSr8mKZFIMKx
-	 fYE9PzvPLAi3g==
-Date: Tue, 1 Oct 2024 17:19:05 -0700
+	b=BSyFU+mL+F2Mdg3U0scslgOKaIEOb49mqHF5sZkwE5YjWdNcGxXPx6Bvxzs437q9J
+	 HqhoDZXw/5ZAg1nUmdA5PifwwchHiG8+BmKsuY+viqmYkJd28cqbgEI74LIfV0+YjD
+	 /ER9zZU+5QWiMP96FCvnBxGw2YqO0DgTBq+O/zIJKtHT6DL3KfvgNTo/d+f6D9J48D
+	 3phxCSeim1UQjUfzKWJZ/WDgEgEVzFPpPOVZ3BJgZVFRC8byvfgL9kqS3NfhYPWz+W
+	 z0hS1/iy5hxaL6vxiktfmXVdZnkJDXvZMryNpd7Nw+6amDOB3if52vvq4c0+/TYU4Q
+	 Cv5L4T0wXfByw==
+Date: Tue, 1 Oct 2024 17:25:55 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Veronika Molnarova <vmolnaro@redhat.com>
 Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
-	mpetlan@redhat.com, rstoyano@redhat.com, mark.rutland@arm.com,
-	kan.liang@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+	kjain@linux.ibm.com, mpetlan@redhat.com, rstoyano@redhat.com,
+	mark.rutland@arm.com, jolsa@kernel.org,
 	alexander.shishkin@linux.intel.com, adrian.hunter@intel.com
-Subject: Re: [PATCH] perf test: Restore sample rate for perf_event_attr
-Message-ID: <ZvyRefEz4lj4evm5@google.com>
-References: <20240828134655.29267-1-vmolnaro@redhat.com>
- <8664c3ee-01ff-4c96-bce7-54b22dc1a5e0@redhat.com>
+Subject: Re: [PATCH v4] perf test stat_all_pmu.sh: Parse return value of perf
+ stat
+Message-ID: <ZvyTE4x9-BxCVx5J@google.com>
+References: <20240814170146.20678-1-vmolnaro@redhat.com>
+ <dd62147b-e9b5-4281-b547-fef46082e4f2@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,126 +46,116 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <8664c3ee-01ff-4c96-bce7-54b22dc1a5e0@redhat.com>
+In-Reply-To: <dd62147b-e9b5-4281-b547-fef46082e4f2@redhat.com>
 
-Hello,
-
-On Tue, Oct 01, 2024 at 10:31:38AM +0200, Veronika Molnarova wrote:
-> Ping
+On Tue, Oct 01, 2024 at 10:35:33AM +0200, Veronika Molnarova wrote:
 > 
-> On 8/28/24 15:46, vmolnaro@redhat.com wrote:
+> 
+> On 8/14/24 19:01, vmolnaro@redhat.com wrote:
 > > From: Veronika Molnarova <vmolnaro@redhat.com>
 > > 
-> > Test "Setup struct perf_event_attr" consists of multiple test cases that
-> > can affect the max sample rate value for perf events. Some test cases
-> > check this value as it should not be lowered under the set minimum for
-> > the given test. Currently, it is possible for the test cases to affect
-> > each other as the previous tests can lower the sample rate, leading to
-> > a possible failure of some of the future test cases as the value is not
-> > restored at any point.
+> > With the upstream MR !3916 of commit ad86d7ee43b22aa2 ('powerpc/hv-gpci:
+> > Fix the H_GET_PERF_COUNTER_INFO hcall return value checks') the perf
+> > stat for hv_gpci events without required permission set returns an
+> > error value of -1 to differentiate the output from the unsupported
+> > events. The stat_all_pmu test was designed in a way, that if any
+> > command exits with a non-zero value the test exits with an error
+> > value without any information provided due to the 'set -e' option.
 > > 
-> >  10: Setup struct perf_event_attr:
-> > --- start ---
-> > test child forked, pid 104220
-> > Using CPUID 0x00000000413fd0c1
-> > running './tests/attr/test-record-C0'
-> > Current sample rate: 10000
-> > running './tests/attr/test-record-basic'
-> > Current sample rate: 900
-> > running './tests/attr/test-record-branch-any'
-> > Current sample rate: 600
-> > running './tests/attr/test-record-dummy-C0'
-> > Current sample rate: 600
-> > expected sample_period=4000, got 600
-> > FAILED './tests/attr/test-record-dummy-C0' - match failure
-
-Please indent the shell output or source code by at least 2 spaces so
-that git can distinguish it from other messages.  Typical problems are
-having '#' at the beginning of a line.
-
-In this case, '---' in the test output makes it think the rest is a
-comment and ignored the messages.
-
-Can you please resend with the change?
-
-Thanks,
-Namhyung
-
+> > The issue propagated upstream as the list of the files that affected perf
+> > did not cover the changed files and was updated after the issue was
+> > discovered. It was caught by CKI testing where it was triaged to stop
+> > blocking further MRs, as most of the powerpc machines have some of
+> > the hv_gpci events without the required permissions.
 > > 
-> > Restore the max sample rate value for perf events to a reasonable value
-> > before each test case if its value was lowered too much to ensure the
-> > same conditions for each test case.
+> > Remove the 'set -e' option from the test and rework the test case to log
+> > the status of the event for better maintainability. Instead of exiting
+> > immediately after 'perf stat' ends with a non-zero value, check the
+> > return value and output of the 'perf stat' command with the appropriate action.
 > > 
-> >  10: Setup struct perf_event_attr:
-> > --- start ---
-> > test child forked, pid 107222
-> > Using CPUID 0x00000000413fd0c1
-> > running './tests/attr/test-record-C0'
-> > Current sample rate: 10000
-> > running './tests/attr/test-record-basic'
-> > Current sample rate: 800
-> > running './tests/attr/test-record-branch-any'
-> > Current sample rate: 700
-> > unsupp  './tests/attr/test-record-branch-any'
-> > running './tests/attr/test-record-branch-filter-any'
-> > Current sample rate: 10000
-> > running './tests/attr/test-record-count'
-> > Current sample rate: 10000
-> > running './tests/attr/test-record-data'
-> > Current sample rate: 600
-> > running './tests/attr/test-record-dummy-C0'
-> > Current sample rate: 800
-> > running './tests/attr/test-record-freq'
-> > Current sample rate: 10000
-> > ...
+> > Link to the MR !3916 of commit ad86d7ee43b22aa2:
+> > https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/3916
 > > 
 > > Cc: Adrian Hunter <adrian.hunter@intel.com>
 > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Ian Rogers <irogers@google.com>
 > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Kan Liang <kan.liang@linux.intel.com>
 > > Cc: Mark Rutland <mark.rutland@arm.com>
 > > Cc: Michael Petlan <mpetlan@redhat.com>
 > > Cc: Radostin Stoyanov <rstoyano@redhat.com>
 > > Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
 > > ---
-> >  tools/perf/tests/attr.py | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
+> > v2: Fix commit hash
+> > v3: Add 'device busy' for parallel testing
+> > v4: Change commit message
+> 
+> Is this version of the commit viable?
+
+Sorry but we have a conflicting change in this area.  Can you please
+rebase?
+
+> > ---
+> >  tools/perf/tests/shell/stat_all_pmu.sh | 41 ++++++++++++++++++--------
+> >  1 file changed, 29 insertions(+), 12 deletions(-)
 > > 
-> > diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
-> > index e890c261ad26..3db9a7d78715 100644
-> > --- a/tools/perf/tests/attr.py
-> > +++ b/tools/perf/tests/attr.py
-> > @@ -246,6 +246,23 @@ class Test(object):
-> >                  return False
-> >          return True
+> > diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
+> > index c77955419173..a75beddda4db 100755
+> > --- a/tools/perf/tests/shell/stat_all_pmu.sh
+> > +++ b/tools/perf/tests/shell/stat_all_pmu.sh
+> > @@ -2,21 +2,38 @@
+> >  # perf all PMU test
+> >  # SPDX-License-Identifier: GPL-2.0
 > >  
-> > +    def restore_sample_rate(self, value=10000):
-> > +        try:
-> > +            # Check value of sample_rate
-> > +            with open("/proc/sys/kernel/perf_event_max_sample_rate", "r") as fIn:
-> > +                curr_value = fIn.readline()
-> > +            # If too low restore to reasonable value
-> > +            if not curr_value or int(curr_value) < int(value):
-> > +                with open("/proc/sys/kernel/perf_event_max_sample_rate", "w") as fOut:
-> > +                    fOut.write(str(value))
-> > +
-> > +        except IOError as e:
-> > +            log.warning("couldn't restore sample_rate value: I/O error %s" % e)
-> > +        except ValueError as e:
-> > +            log.warning("couldn't restore sample_rate value: Value error %s" % e)
-> > +        except TypeError as e:
-> > +            log.warning("couldn't restore sample_rate value: Type error %s" % e)
-> > +
-> >      def load_events(self, path, events):
-> >          parser_event = configparser.ConfigParser()
-> >          parser_event.read(path)
-> > @@ -283,6 +300,7 @@ class Test(object):
-> >          if self.skip_test_kernel_until():
-> >              raise Notest(self, "new kernel skip")
+> > -set -e
 > >  
-> > +        self.restore_sample_rate()
-> >          cmd = "PERF_TEST_ATTR=%s %s %s -o %s/perf.data %s" % (tempdir,
-> >                self.perf, self.command, tempdir, self.args)
-> >          ret = os.WEXITSTATUS(os.system(cmd))
+> >  # Test all PMU events; however exclude parameterized ones (name contains '?')
+> >  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
+> > -  echo "Testing $p"
+> > -  result=$(perf stat -e "$p" true 2>&1)
+> > -  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
+> > -    # We failed to see the event and it is supported. Possibly the workload was
+> > -    # too small so retry with something longer.
+> > -    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+
+I think you removed this part.  Please check.
+
+Thanks,
+Namhyung
+
+
+> > -    if ! echo "$result" | grep -q "$p" ; then
+> > -      echo "Event '$p' not printed in:"
+> > -      echo "$result"
+> > -      exit 1
+> > +  echo -n "Testing event '$p' -- "
+> > +  stat_output=$(perf stat -e "$p" true 2>&1)
+> > +  stat_result=$?
+> > +  if echo "$stat_output" | grep -q "$p"; then
+> > +    # return value 0 if counters get printed either if the event is supported or not
+> > +    if [ $stat_result -eq 0 ] && ! echo "$stat_output" | grep -q "<not supported>"; then
+> > +        echo "supported"
+> > +    elif [ $stat_result -eq 0 ]; then
+> > +        echo "not supported"
+> > +    # return value 255 when the required permission for the event is not set
+> > +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "No permission"; then
+> > +        echo "no permission to enable"
+> > +    # return value 255 in case of resource busy during parallel testing of events
+> > +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "Device or resource busy"; then
+> > +        echo "resource busy"
+> > +    # return value 129 when trying to run 'perf stat' with a non-existent event
+> > +    elif [ $stat_result -eq 129 ] && echo "$stat_output" | grep -q "Bad event name"; then
+> > +        echo "Fail: Bad event name"
+> > +        echo "$stat_output"
+> > +        exit 1
+> > +    else
+> > +        echo "Fail: Unknown return value $stat_result"
+> > +        echo "$stat_output"
+> > +        exit 1
+> >      fi
+> > +  else
+> > +      echo "Fail: Event '$p' not printed in:"
+> > +      echo "$stat_output"
+> > +      exit 1
+> >    fi
+> >  done
+> >  
 > 
