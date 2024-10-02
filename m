@@ -1,48 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D108212F08;
-	Wed,  2 Oct 2024 18:23:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73AD8212F14;
+	Wed,  2 Oct 2024 18:29:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727893384; cv=none; b=h5CPPrpEqrplFdHTWT+AULuYuPNi9XmkQPFbuOYH7iC+arprYXZXtTeM6xSaB9M5Dhw2/ztNrT02LD9LTrYR0CsQ6c2M6mbOlcRb7uUpZ0f08j7COJ4SkdjvO4CeGTfxt6dngaJSvOrfAWdAuOA8VeZ4DV1W6Gm8iKU1rc7bB/c=
+	t=1727893797; cv=none; b=iCuTiP0dhvS3cS65voE4Tx5Ial0OHqJalZXE6Ra46hgCSnUnUAmwnI63qo8qeFZ6NQ5AXmlgp/mID298GRgu4F3AuAfZzE5IsGtpQcxnzTDcn4oUoAmyCRPw1XGiAngcz0akzXpqlB4QdrrfIggGW7Y1nBzAQArlK2SmjXbpBTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727893384; c=relaxed/simple;
-	bh=3UH1ssGS+wlG4XHDhzqO3P+CkzUcfba6BeYYyCCfZqc=;
+	s=arc-20240116; t=1727893797; c=relaxed/simple;
+	bh=oW3A1uipfKdQwVUcodhMm8jzv9QSE358f8lnmmMeKdM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ujmYtwVST6WkQN3o+YXU9zJBlZpAa8ZkOuGfB+hLnGO1U/ctQplIfSsw4sbOB5CzTvXzIvX4FfBPW/PYDywaXZxX4NO9jdSaSB2wTPn/cz68Ek0nxCU7V8y/bzRYPkLIQHYBIIltv4UtajTVH7WurLNo8238VBIGng7TlbaWN7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fXIcj9y7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JvxWU0AnECl0Z/ARREiWyVnY/IZJur1wKGx4lrFfAoeqRIOiew7x+RXOjPe6BNM2BkhgVSFJWdV1FP+CnQ+5xgQkhPFBMD4jSotwLq0aijOV/FI27N/nUlAeIB240xPL7TXNR+NzMbcFlaMeTsnR03zfx9cGkdhjmSdRPPWoX1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYqy/MbC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fXIcj9y7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B4C3C4CECD;
-	Wed,  2 Oct 2024 18:23:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYqy/MbC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EFABC4CECD;
+	Wed,  2 Oct 2024 18:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727893383;
-	bh=3UH1ssGS+wlG4XHDhzqO3P+CkzUcfba6BeYYyCCfZqc=;
+	s=k20201202; t=1727893797;
+	bh=oW3A1uipfKdQwVUcodhMm8jzv9QSE358f8lnmmMeKdM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fXIcj9y7XyycgqKxUQf+We7qdZOZiGr8BvX8w0SDToLxLGqQEyauiZWTKAniu5vmu
-	 0itaiXuiz7hqJEubJGfpfv4XTioXTogOqMnVwDw76VrhWjUVbDvOeDULBsLTFUOOAY
-	 gVvuRvy4LHEh2Qg2GypTIfz/x5jxMJDp05GW2vo85iVdFeq/qp/0O5u4xLK2bRuzIT
-	 72r6/tFDtkmKe4OYSGRdOFVxKch7BxF1du9CUwRciRA9EVQNSoDemFjOFlPp0Ia45u
-	 fgc6Ad9z1ZFESthug6RcjP1VrMRGRLyVNqkfgzK6Hiy4lUhLwd2g78QbMyTm8ijoFV
-	 51C/Eir34j+2Q==
-Date: Wed, 2 Oct 2024 11:23:01 -0700
+	b=iYqy/MbCPRfwpGP1dfVrrw2vTieGSu/TyWZ1W3fobkJMKcPFGG0q7nOwl+H3LxPfm
+	 yY3K84ALR6qWyDq5MphEZ/tdHnswDj1Ib1oeO+G7Q48apZNsVLjoLs3DzyvP4HNnnq
+	 rBQbpLcwYYXg1wfBun/tkKIXb96AjRHqeqXnNigZizoQtibc5/u2epfX2oHwXK6ZwS
+	 bRehon91wVIAeK11NeR/lZoySmb1uBHV7WdiF0YBLkI2zgea2yPPAZyrEeItJUD9hC
+	 rMT2F4NtCx/Tzr0Gs/nD4OPdm0k2SVAsdauzidE+bG89mywhl1aSowwVnqGo/DCHL0
+	 Mfb1g+TtYbRQQ==
+Date: Wed, 2 Oct 2024 11:29:54 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Kuan-Wei Chiu <visitorckw@gmail.com>, Ingo Molnar <mingo@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+To: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 2/2] perf tools: Cope with differences for
- lib/list_sort.c copy from the kernel
-Message-ID: <Zv2PhTIo9tcVRLUr@google.com>
-References: <20240930202136.16904-1-acme@kernel.org>
- <20240930202136.16904-3-acme@kernel.org>
- <ZvtWwJ87xzViwZqI@google.com>
- <Zv2I7TYx_WqCgE5F@x1>
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	James Clark <james.clark@arm.com>, Kajol Jain <kjain@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: Re: [PATCHSET 0/8] perf tools: Do not set attr.exclude_guest by
+ default (v4)
+Message-ID: <Zv2RIr8I04f8dEP2@google.com>
+References: <20241001002027.1272889-1-namhyung@kernel.org>
+ <b894eed7-15e0-4ec4-a9d6-07fe86326396@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,145 +56,122 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Zv2I7TYx_WqCgE5F@x1>
+In-Reply-To: <b894eed7-15e0-4ec4-a9d6-07fe86326396@linaro.org>
 
-On Wed, Oct 02, 2024 at 02:54:53PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, Sep 30, 2024 at 06:56:16PM -0700, Namhyung Kim wrote:
-> > On Mon, Sep 30, 2024 at 05:21:36PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > 
-> > > With 6d74e1e371d43a7b ("tools/lib/list_sort: remove redundant code for
-> > > cond_resched handling") we need to use the newly added hunk based
-> > > exceptions when comparing the copy we carry in tools/lib/ to the
-> > > original file, do it by adding the hunks that we know will be the
-> > > expected diff.
-> > > 
-> > > If at some point the original file is updated in other parts, then we
-> > > should flag and check the file for update.
-> > > 
-> > > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > Cc: Ian Rogers <irogers@google.com>
-> > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > > Cc: Kuan-Wei Chiu <visitorckw@gmail.com>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Wed, Oct 02, 2024 at 10:49:36AM +0100, James Clark wrote:
+> 
+> 
+> On 01/10/2024 1:20 am, Namhyung Kim wrote:
+> > Hello,
 > > 
-> > I'm seeing this but I think it's ok since we're adding a patch file as a
-> > content.
+> > I found perf tools set exclude_guest bit inconsistently.  It used to
+> > set the bit but now the default event for perf record doesn't.  So I'm
+> > wondering why we want the bit in the first place.
 > > 
-> >   Applying: perf tools: Cope with differences for lib/list_sort.c copy from the kernel
-> >   .git/rebase-apply/patch:21: space before tab in indent.
-> >    			struct list_head *a, struct list_head *b)
-> >   .git/rebase-apply/patch:23: space before tab in indent.
-> >    	struct list_head *tail = head;
-> >   .git/rebase-apply/patch:25: trailing whitespace.
-> >    
-> >   .git/rebase-apply/patch:26: space before tab in indent.
-> >    	for (;;) {
-> >   .git/rebase-apply/patch:27: space before tab in indent.
-> >    		/* if equal, take 'a' -- important for sort stability */
-> >   warning: squelched 6 whitespace errors
-> >   warning: 11 lines add whitespace errors.
+> > Actually it's not good for PMUs don't support any exclusion like AMD
+> > IBS because it disables new features after the exclude_guest due to
+> > the missing feature detection logic.
 > > 
-> > And build doesn't show the message for lib/list_sort.c anymore. :)
+> > v4 changes)
 > > 
-> > I think it's nice to update for later changes, just put the diff in a
+> >   * handle EOPNOTSUPP error in compatible way  (Kan)
+> >   * drop --exclude-guest option in perf stat
+> >   * not to separate exclude_hv fallback
+> >   * rename to exclude_GH_default  (Kan)
+> >   * drop the RFC from the subject
+> > 
+> > v3) https://lore.kernel.org/lkml/20240905202426.2690105-1-namhyung@kernel.org/
+> > 
+> >   * move exclude_guest fallback to the front
+> >   * fix precise_max handling on AMD
+> >   * simplify the default event for perf record
+> > 
+> > v2) https://lore.kernel.org/lkml/20240904064131.2377873-1-namhyung@kernel.org/
+> > 
+> >   * update the missing feature detection logic
+> >   * separate exclude_hv fallback
+> >   * add new fallback for exclude_guest
+> > 
+> > v1) https://lore.kernel.org/lkml/20240902014621.2002343-1-namhyung@kernel.org/
+> > 
+> > AFAIK it doesn't matter for the most cases but perf kvm.  If users
+> > need to set the bit, they can still use :H modifier.  For vPMU pass-
+> > through or Apple M1, it'd add the exclude_guest during the fallback
+> > logic.
+> > 
+> > Also the kernel feature detection logic should be separated from the
+> > exclude bit tests since it depends on the PMU implementation rather
+> > than the core kernel features.  So I changed it to use a software
+> > event for the detection and factor out some hw-specific checks.
+> > 
+> > The code is available at 'perf/exclude-v4' branch in
+> > git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> > 
+> > Thanks,
+> > Namhyung
+> > 
+> > 
 > 
-> What kind of update you thinks its nice for later changes?
+> Looks like you need to allow for :H in the perf stat test on M1 now:
+> 
+> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+> index 5a2ca2bcf94d..77cb95859649 100755
+> --- a/tools/perf/tests/shell/stat.sh
+> +++ b/tools/perf/tests/shell/stat.sh
+> @@ -161,7 +161,7 @@ test_hybrid() {
+>    fi
+> 
+>    # Run default Perf stat
+> -  cycles_events=$(perf stat -- true 2>&1 | grep -E "/cycles/|  cycles " |
+> wc -l)
+> +  cycles_events=$(perf stat -- true 2>&1 | grep -E "/cycles/|  cycles |  cycles:H  " | wc -l)
 
-I meant it's good. :)  It'd be convenient if we have some changes that
-need to be handled separately like this in the future.
+Ok, what about "u"?  Probably it can be
+
+  cycles_events=$(perf stat -- true 2>&1 | grep -E "/cycles/(uH)*|  cycles(:[uH])* " | wc -l)
 
 > 
-> > file with the same name under check-header_ignore_hunks directory.
+>    if [ "$pmus" -ne "$cycles_events" ]
+>    then
 > 
-> Isn't it like that already? Was the intention:
+> Other than that:
 > 
-> .../check-header_ignore_hunks/lib/list_sort.c | 31 +++++++++++++++++++
-> 
-> It is the same name as tools/lib/list_sort.c and lib/list_sort.c
-> 
-> Or did you mean something else?
+> Reviewed-by: James Clark <james.clark@linaro.org>
 
-No, I just said about possible future work and glad to have this.
-
-> 
-> > Good job!
-> 
-> Assuming all is right, thanks! 8-)
-
-Thanks,
+Thanks for the review!
 Namhyung
 
+> 
+> > Namhyung Kim (8):
+> >    perf tools: Add fallback for exclude_guest
+> >    perf tools: Don't set attr.exclude_guest by default
+> >    perf tools: Simplify evsel__add_modifier()
+> >    perf tools: Do not set exclude_guest for precise_ip
+> >    perf tools: Detect missing kernel features properly
+> >    perf tools: Move x86__is_amd_cpu() to util/env.c
+> >    perf tools: Check fallback error and order
+> >    perf record: Just use "cycles:P" as the default event
 > > 
-> > > ---
-> > >  .../check-header_ignore_hunks/lib/list_sort.c | 31 +++++++++++++++++++
-> > >  tools/perf/check-headers.sh                   |  5 ++-
-> > >  2 files changed, 35 insertions(+), 1 deletion(-)
-> > >  create mode 100644 tools/perf/check-header_ignore_hunks/lib/list_sort.c
-> > > 
-> > > diff --git a/tools/perf/check-header_ignore_hunks/lib/list_sort.c b/tools/perf/check-header_ignore_hunks/lib/list_sort.c
-> > > new file mode 100644
-> > > index 0000000000000000..32d98cb34f80a987
-> > > --- /dev/null
-> > > +++ b/tools/perf/check-header_ignore_hunks/lib/list_sort.c
-> > > @@ -0,0 +1,31 @@
-> > > +@@ -1,5 +1,6 @@
-> > > + // SPDX-License-Identifier: GPL-2.0
-> > > + #include <linux/kernel.h>
-> > > ++#include <linux/bug.h>
-> > > + #include <linux/compiler.h>
-> > > + #include <linux/export.h>
-> > > + #include <linux/string.h>
-> > > +@@ -52,6 +53,7 @@
-> > > + 			struct list_head *a, struct list_head *b)
-> > > + {
-> > > + 	struct list_head *tail = head;
-> > > ++	u8 count = 0;
-> > > + 
-> > > + 	for (;;) {
-> > > + 		/* if equal, take 'a' -- important for sort stability */
-> > > +@@ -77,6 +79,15 @@
-> > > + 	/* Finish linking remainder of list b on to tail */
-> > > + 	tail->next = b;
-> > > + 	do {
-> > > ++		/*
-> > > ++		 * If the merge is highly unbalanced (e.g. the input is
-> > > ++		 * already sorted), this loop may run many iterations.
-> > > ++		 * Continue callbacks to the client even though no
-> > > ++		 * element comparison is needed, so the client's cmp()
-> > > ++		 * routine can invoke cond_resched() periodically.
-> > > ++		 */
-> > > ++		if (unlikely(!++count))
-> > > ++			cmp(priv, b, b);
-> > > + 		b->prev = tail;
-> > > + 		tail = b;
-> > > + 		b = b->next;
-> > > diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-> > > index 55aba47e5aec9292..f1080d4096663ba1 100755
-> > > --- a/tools/perf/check-headers.sh
-> > > +++ b/tools/perf/check-headers.sh
-> > > @@ -193,7 +193,6 @@ check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
-> > >  check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
-> > >  check include/linux/ctype.h	      '-I "isdigit("'
-> > >  check lib/ctype.c		      '-I "^EXPORT_SYMBOL" -I "^#include <linux/export.h>" -B'
-> > > -check lib/list_sort.c		      '-I "^#include <linux/bug.h>"'
-> > >  
-> > >  # diff non-symmetric files
-> > >  check_2 tools/perf/arch/x86/entry/syscalls/syscall_32.tbl arch/x86/entry/syscalls/syscall_32.tbl
-> > > @@ -211,6 +210,10 @@ done
-> > >  check_2 tools/perf/util/hashmap.h tools/lib/bpf/hashmap.h
-> > >  check_2 tools/perf/util/hashmap.c tools/lib/bpf/hashmap.c
-> > >  
-> > > +# Files with larger differences
-> > > +
-> > > +check_ignore_some_hunks lib/list_sort.c
-> > > +
-> > >  cd tools/perf || exit
-> > >  
-> > >  if [ ${#FAILURES[@]} -gt 0 ]
-> > > -- 
-> > > 2.46.0
-> > > 
+> >   tools/perf/arch/x86/util/Build              |   1 -
+> >   tools/perf/arch/x86/util/env.c              |  19 -
+> >   tools/perf/arch/x86/util/env.h              |   7 -
+> >   tools/perf/arch/x86/util/pmu.c              |   2 +-
+> >   tools/perf/builtin-kvm.c                    |   1 +
+> >   tools/perf/builtin-record.c                 |   4 +-
+> >   tools/perf/builtin-stat.c                   |  18 +-
+> >   tools/perf/dlfilters/dlfilter-test-api-v0.c |   2 +-
+> >   tools/perf/dlfilters/dlfilter-test-api-v2.c |   2 +-
+> >   tools/perf/tests/attr/test-record-dummy-C0  |   2 +-
+> >   tools/perf/tests/parse-events.c             |  30 +-
+> >   tools/perf/util/env.c                       |  24 ++
+> >   tools/perf/util/env.h                       |   4 +
+> >   tools/perf/util/evsel.c                     | 394 ++++++++++++++------
+> >   tools/perf/util/evsel.h                     |   1 -
+> >   tools/perf/util/parse-events.c              |   6 +-
+> >   tools/perf/util/util.c                      |  10 +-
+> >   tools/perf/util/util.h                      |   3 +
+> >   18 files changed, 364 insertions(+), 166 deletions(-)
+> >   delete mode 100644 tools/perf/arch/x86/util/env.c
+> >   delete mode 100644 tools/perf/arch/x86/util/env.h
+> > 
+> 
