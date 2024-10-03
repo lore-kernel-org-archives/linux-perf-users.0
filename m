@@ -1,343 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34918F40;
-	Thu,  3 Oct 2024 00:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACE3BE46
+	for <linux-perf-users@vger.kernel.org>; Thu,  3 Oct 2024 00:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727915724; cv=none; b=u1KpyNjaJybTA+Dya3Yhnt6mQx+FsbffaETZVW59+gcxonWxPE1/ipilTTMTOu/m9k9kP3QK3ZKWawOK1R8XvifRG0j3MD6OVOFyhp39VjRutjSLwTK5Bvy655SQCRG/0AtoWoZ2SOCAYIlgvx3XCviwt57d+8mFruWXnIj+tZo=
+	t=1727917040; cv=none; b=OK5FEknKrfE+yEXA9PbV+yy+wzdz0II9mNziXHJ6wuKPyPD8kaLgDoICo2bapDNJa80dFIGEYcmaxV0JcJfNHvNkIev1AP8CJMsP9XgS2rU66FxpHBqv3VygK8T+2dla2U6I0SqahyLbU8ZwWZICpwNLKwRJ+S/6e/KhEVxkTc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727915724; c=relaxed/simple;
-	bh=Lu5TUbvtaoA5IZx4ztAD1WTDekopQwfWxqQgsOskw20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Umo9SFayaRV5TbkORMOUsbFBd5M1llEdvcTSCtE9SPRb9ztTC2Q9NsmVyubNgCMjk475CZ3bLxwQnKDXl/uAoiSWtDuWKyVugc2g6JePPZ6HuM+/QKj/ADHfpgOAt3EgIj3aL2ABgq+JAmKKxoT+ZyQsIU2BnbLnEvdFhm63GRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTHh/0Pu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727917040; c=relaxed/simple;
+	bh=s3iRuWwOgs+Srvkadird9HGJaS6D5KVuQ+qqizag/4I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l2piMQoUgY7RhTE+U5zhjg1mjxV7rW+Oqjp3R5JQ0pT+DQCzONv+jzADk65jmunhXXp37acl+Wx4MmTcOjducSRC+IXPM0UgnlPL7JSwXCL+o9f4Kzc+Z5c0Od6gIWMgMv5oKhomMcWD5uK6vfYAtWzWEtQlnzz1wG6dsUi035I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jt5qNLG1; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTHh/0Pu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1E30C4CEC2;
-	Thu,  3 Oct 2024 00:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727915724;
-	bh=Lu5TUbvtaoA5IZx4ztAD1WTDekopQwfWxqQgsOskw20=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QTHh/0Pusa/NIM/Moa51I6MqLwWPXJ7uwseoHOXDqQkNTauEACrcUoA4yga0VyBwj
-	 O7sBXnlbiDX0dE+KcLjf9J6gcEBttpZHDp3OoefDuC8u/ypI9z3xQ/rPC7IoU3wR/6
-	 htZnrmWLSbjiY7w+qvIkoqW8bOMm6q6yb0TEKuT0dUmwfj8dxdiTEnYQ/ehVU334ud
-	 FrZGyQZtDvvmDGoYBIfG6V5AxUuW4zynE7Lr6gU5eQ3KSpt83sn1LuVW9zQ2rNURX8
-	 yRTu6vlhSU0HFaZrtNXfpKIrtWh4ns+mDdVNpGI4xYUwrw6lehkbreU/ifh8VGXsyI
-	 HZ0//9g2C6ySw==
-Date: Wed, 2 Oct 2024 17:35:22 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
-	linux-perf-users <linux-perf-users@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] perf sched timehist: Add pre-migration wait time
- option
-Message-ID: <Zv3myhcbdEPLCAIC@google.com>
-References: <20241002163917.33781-1-vineethr@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jt5qNLG1"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4581cec6079so127471cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Oct 2024 17:57:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1727917037; x=1728521837; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ANXmoLN1XfUZ7NwwxdIIk7pwwoVnVYkzkVOhLe1c/iw=;
+        b=Jt5qNLG1ayY2BBd2mjKEX3MDn68LncHbe6p59RjnCIoO4cRFN4x/WRy/ytZNaNltwK
+         csnoIRytzLd7wfZSzsACIpxmmHgqrNFn7fZSBU3JdWT68BbXfvxycgwo8X/+1sa82Asz
+         wQXtSxn5dSxV8WWdKEE+TaphmtN9i1Kp3c3iSdN1RQN+Tcl6/HzoLq6mSip6E5wNWWyd
+         coYoAKpktqzypgAvLICXmJqRO8auMRlJKSv4NGJkGS0m+G4Q8pCH9Rq6WqTlCfXNfwOl
+         aTRxA1r6+BKUKzXV7n3C1CwyW/IONS8R3Ux08WEKnwBTEm+NnhRKWUi+jjwRIZXsZaN+
+         hQXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727917037; x=1728521837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ANXmoLN1XfUZ7NwwxdIIk7pwwoVnVYkzkVOhLe1c/iw=;
+        b=fFonpHhTUVbrYbFdOaf3zXsqa44dSexjVCu6yOD0bw73WAjvInNBljcsaYbiC5ObSW
+         4XumjdGGd9IJSyYwQzz6QWgd+H6/YsKv8ek5iEljsnjcq70sboqIvppTVQKm759Dug1I
+         VLZmcJy0ifppVQA0qKYE46xsjAJ06dCWXnxR8x38GT4jxWQrd4dLC5IZhvBr/SGgsXQR
+         GKP/nmoGfyJ7QQHI5FfgVC+3eeFquSONpIlC9qJwvccz79RvllsmhGRuPeZxuVNlp+sT
+         b/sqI2nfLylzmZuH46zz8Ji70M3gYxHc/WY3cLowfUSjectwho3LgEm/8l9fFyBd0NfE
+         HKEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXjgvSUu7XQ1k+lTpvUHd82Ep7d7GxWCSGT3Oxnm+ct0SMsLqspJMCe+m55DE3yMvBH9HeMMVa4U2MLiRV8P372@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxeol4sGZysxtRoCJe5TaXGae5sYzPLx1kkPbfwvAaf91GLcv55
+	h3a4UTUtNr84Ynp74ZQ9qWmyenELhQ3lQZCNBzN78O7pO3TEYm0kDf6lXSz3Bk93dcZgl25mvtt
+	pcFQS6b5NiXJeAZc2Aue64tUvn+S5CI+e4coV
+X-Google-Smtp-Source: AGHT+IGX3u/6eYc5RZL3XEYxz5kTciKsC+sGmiql7sxjQSsmsxEvmLJoyqZ1xq3VKZMHX02okJ3u+zN+RIEd9qCAuLE=
+X-Received: by 2002:a05:622a:7892:b0:456:7740:c874 with SMTP id
+ d75a77b69052e-45d8f871157mr891271cf.1.1727917037409; Wed, 02 Oct 2024
+ 17:57:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241002163917.33781-1-vineethr@linux.ibm.com>
+References: <20240913084712.13861-1-dapeng1.mi@linux.intel.com>
+ <172781650408.2469191.8205759350946908012.b4-ty@kernel.org>
+ <CAP-5=fUekHedP74PZU-F_poETt505AVSwVNYWcYNE=1D9P00AQ@mail.gmail.com> <Zv3ek7aBkQo0Z9To@google.com>
+In-Reply-To: <Zv3ek7aBkQo0Z9To@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 2 Oct 2024 17:57:04 -0700
+Message-ID: <CAP-5=fUjLhGw4SmMTH_H2=1OwRDrY04RL6+C=DdQ=VSgXk8JZg@mail.gmail.com>
+Subject: Re: [Patch v5 0/6] Bug fixes on topdown events reordering
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 02, 2024 at 10:09:17PM +0530, Madadi Vineeth Reddy wrote:
-> pre-migration wait time is the time that a task unnecessarily spends
-> on the runqueue of a CPU but doesn't get switched-in there. In terms
-> of tracepoints, it is the time between sched:sched_wakeup and
-> sched:sched_migrate_task.
-> 
-> Let's say a task woke up on CPU2, then it got migrated to CPU4 and
-> then it's switched-in to CPU4. So, here pre-migration wait time is
-> time that it was waiting on runqueue of CPU2 after it is woken up.
-> 
-> The general pattern for pre-migration to occur is:
-> sched:sched_wakeup
-> sched:sched_migrate_task
-> sched:sched_switch
-> 
-> The sched:sched_waking event is used to capture the wakeup time,
-> as it aligns with the existing code and only introduces a negligible
-> time difference.
-> 
-> pre-migrations are generally not useful and it increases migrations.
-> This metric would be helpful in testing patches mainly related to wakeup
-> and load-balancer code paths as better wakeup logic would choose an
-> optimal CPU where task would be switched-in and thereby reducing pre-
-> migrations.
-> 
-> The sample output(s) when -P or --pre-migrations is used:
-> =================
->            time    cpu  task name                       wait time  sch delay   run time  pre-mig time
->                         [tid/pid]                          (msec)     (msec)     (msec)     (msec)
-> --------------- ------  ------------------------------  ---------  ---------  ---------  ---------
->    38456.720806 [0001]  schbench[28634/28574]               4.917      4.768      1.004      0.000
->    38456.720810 [0001]  rcu_preempt[18]                     3.919      0.003      0.004      0.000
->    38456.721800 [0006]  schbench[28779/28574]              23.465     23.465      1.999      0.000
->    38456.722800 [0002]  schbench[28773/28574]              60.371     60.237      3.955     60.197
->    38456.722806 [0001]  schbench[28634/28574]               0.004      0.004      1.996      0.000
->    38456.722811 [0001]  rcu_preempt[18]                     1.996      0.005      0.005      0.000
->    38456.723800 [0000]  schbench[28833/28574]               4.000      4.000      3.999      0.000
->    38456.723800 [0004]  schbench[28762/28574]              42.951     42.839      3.999     39.867
->    38456.723802 [0007]  schbench[28812/28574]              43.947     43.817      3.999     40.866
->    38456.723804 [0001]  schbench[28587/28574]               7.935      7.822      0.993      0.000
-> 
-> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-> 
-> ---
-> Changes in v3:
-> - Use the sched:sched_waking event to calculate the wakeup time. (Namhyung Kim)
-> - Rebase against perf-tools-next commit 80f192724e31 ("perf tests: Add more
->   topdown events regroup tests")
-> 
-> Changes in v2:
-> - Use timehist_sched_wakeup_event() to get the sched_wakeup time. (Namhyung Kim)
-> - Rebase against perf-tools-next commit b38c49d8296b ("perf/test: Speed up test
->   case perf annotate basic tests")
-> 
-> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-> ---
->  tools/perf/Documentation/perf-sched.txt |  8 +++
->  tools/perf/builtin-sched.c              | 83 ++++++++++++++++---------
->  2 files changed, 60 insertions(+), 31 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-> index 3db64954a267..6dbbddb6464d 100644
-> --- a/tools/perf/Documentation/perf-sched.txt
-> +++ b/tools/perf/Documentation/perf-sched.txt
-> @@ -221,6 +221,14 @@ OPTIONS for 'perf sched timehist'
->  	priorities are specified with -: 120-129. A combination of both can also be
->  	provided: 0,120-129.
->  
-> +-P::
-> +--pre-migrations::
-> +	Show pre-migration wait time. pre-migration wait time is the time spent
-> +	by a task waiting on a runqueue but not getting the chance to run there
-> +	and is migrated to a different runqueue where it is finally run. This
-> +	time between sched_wakeup and migrate_task is the pre-migration wait
-> +	time.
-> +
->  OPTIONS for 'perf sched replay'
->  ------------------------------
->  
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index fdf979aaf275..e6540803ced6 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -225,6 +225,7 @@ struct perf_sched {
->  	bool		show_wakeups;
->  	bool		show_next;
->  	bool		show_migrations;
-> +	bool		pre_migrations;
->  	bool		show_state;
->  	bool		show_prio;
->  	u64		skipped_samples;
-> @@ -244,7 +245,9 @@ struct thread_runtime {
->  	u64 dt_iowait;      /* time between CPU access by iowait (off cpu) */
->  	u64 dt_preempt;     /* time between CPU access by preempt (off cpu) */
->  	u64 dt_delay;       /* time between wakeup and sched-in */
-> +	u64 dt_pre_mig;     /* time between migration and wakeup */
->  	u64 ready_to_run;   /* time of wakeup */
-> +	u64 migrated;	    /* time when a thread is migrated */
->  
->  	struct stats run_stats;
->  	u64 total_run_time;
-> @@ -252,6 +255,7 @@ struct thread_runtime {
->  	u64 total_iowait_time;
->  	u64 total_preempt_time;
->  	u64 total_delay_time;
-> +	u64 total_pre_mig_time;
->  
->  	char last_state;
->  
-> @@ -2073,14 +2077,15 @@ static void timehist_header(struct perf_sched *sched)
->  		printf(" ");
->  	}
->  
-> -	if (sched->show_prio) {
-> -		printf(" %-*s  %-*s  %9s  %9s  %9s",
-> -		       comm_width, "task name", MAX_PRIO_STR_LEN, "prio",
-> -		       "wait time", "sch delay", "run time");
-> -	} else {
-> -		printf(" %-*s  %9s  %9s  %9s", comm_width,
-> -		       "task name", "wait time", "sch delay", "run time");
-> -	}
-> +	printf(" %-*s", comm_width, "task name");
-> +
-> +	if (sched->show_prio)
-> +		printf("  %-*s", MAX_PRIO_STR_LEN, "prio");
-> +
-> +	printf("  %9s  %9s  %9s", "wait time", "sch delay", "run time");
-> +
-> +	if (sched->pre_migrations)
-> +		printf("  %9s", "pre-mig time");
->  
->  	if (sched->show_state)
->  		printf("  %s", "state");
-> @@ -2095,17 +2100,15 @@ static void timehist_header(struct perf_sched *sched)
->  	if (sched->show_cpu_visual)
->  		printf(" %*s ", ncpus, "");
->  
-> -	if (sched->show_prio) {
-> -		printf(" %-*s  %-*s  %9s  %9s  %9s",
-> -		       comm_width, "[tid/pid]", MAX_PRIO_STR_LEN, "",
-> -		       "(msec)", "(msec)", "(msec)");
-> -	} else {
-> -		printf(" %-*s  %9s  %9s  %9s", comm_width,
-> -		       "[tid/pid]", "(msec)", "(msec)", "(msec)");
-> -	}
-> +	printf(" %-*s", comm_width, "[tid/pid]");
->  
-> -	if (sched->show_state)
-> -		printf("  %5s", "");
-> +	if (sched->show_prio)
-> +		printf("  %-*s", MAX_PRIO_STR_LEN, "");
-> +
-> +	printf("  %9s  %9s  %9s", "(msec)", "(msec)", "(msec)");
-> +
-> +	if (sched->pre_migrations)
-> +		printf("  %9s", "(msec)");
->  
->  	printf("\n");
->  
-> @@ -2117,15 +2120,15 @@ static void timehist_header(struct perf_sched *sched)
->  	if (sched->show_cpu_visual)
->  		printf(" %.*s ", ncpus, graph_dotted_line);
->  
-> -	if (sched->show_prio) {
-> -		printf(" %.*s  %.*s  %.9s  %.9s  %.9s",
-> -		       comm_width, graph_dotted_line, MAX_PRIO_STR_LEN, graph_dotted_line,
-> -		       graph_dotted_line, graph_dotted_line, graph_dotted_line);
-> -	} else {
-> -		printf(" %.*s  %.9s  %.9s  %.9s", comm_width,
-> -		       graph_dotted_line, graph_dotted_line, graph_dotted_line,
-> -		       graph_dotted_line);
-> -	}
-> +	printf(" %.*s", comm_width, graph_dotted_line);
-> +
-> +	if (sched->show_prio)
-> +		printf("  %.*s", MAX_PRIO_STR_LEN, graph_dotted_line);
-> +
-> +	printf("  %.9s  %.9s  %.9s", graph_dotted_line, graph_dotted_line, graph_dotted_line);
-> +
-> +	if (sched->pre_migrations)
-> +		printf("  %.9s", graph_dotted_line);
->  
->  	if (sched->show_state)
->  		printf("  %.5s", graph_dotted_line);
-> @@ -2180,6 +2183,8 @@ static void timehist_print_sample(struct perf_sched *sched,
->  
->  	print_sched_time(tr->dt_delay, 6);
->  	print_sched_time(tr->dt_run, 6);
-> +	if (sched->pre_migrations)
-> +		print_sched_time(tr->dt_pre_mig, 6);
->  
->  	if (sched->show_state)
->  		printf(" %5c ", thread__tid(thread) == 0 ? 'I' : state);
-> @@ -2239,6 +2244,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
+On Wed, Oct 2, 2024 at 5:00=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Tue, Oct 01, 2024 at 03:32:04PM -0700, Ian Rogers wrote:
+> > On Tue, Oct 1, 2024 at 2:02=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > >
+> > > On Fri, 13 Sep 2024 08:47:06 +0000, Dapeng Mi wrote:
+> > >
+> > > > Changes:
+> > > > v5 -> v6:
+> > > >   * no function change.
+> > > >   * rebase patchset to latest code of perf-tool-next tree.
+> > > >   * Add Kan's reviewed-by tag.
+> > > >
+> > > > History:
+> > > >   v4: https://lore.kernel.org/all/20240816122938.32228-1-dapeng1.mi=
+@linux.intel.com/
+> > > >   v3: https://lore.kernel.org/all/20240712170339.185824-1-dapeng1.m=
+i@linux.intel.com/
+> > > >   v2: https://lore.kernel.org/all/20240708144204.839486-1-dapeng1.m=
+i@linux.intel.com/
+> > > >   v1: https://lore.kernel.org/all/20240702224037.343958-1-dapeng1.m=
+i@linux.intel.com/
+> > > >
+> > > > [...]
+> > >
+> > > Applied to perf-tools-next, thanks!
+> >
+> > I disagreed with an early patch set and the issue wasn't resolved. Spec=
+ifically:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/commit/?h=3Dperf-tools-next&id=3D3b5edc0421e2598a0ae7f0adcd592017f37e3cdf
+> > ```
+> >   /* Followed by topdown events. */
+> >   if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
+> >   return -1;
+> > - if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
+> > + /*
+> > + * Move topdown events forward only when topdown events
+> > + * are not in same group with previous event.
+> > + */
+> > + if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs) &&
+> > +     lhs->core.leader !=3D rhs->core.leader)
+> >   return 1;
+> > ```
+> > Is a broken comparator as the lhs then rhs behavior varies from the
+> > rhs then lhs behavior. The qsort implementation can randomly order the
+> > events.
+> > Please drop/revert.
+>
+> Can you please provide an example when it's broken?  I'm not sure how it
+> can produce new errors, but it seems to fix a specific problem.  Do you
+> have a new test failure after this change?
 
-It'd be nice if you update the comment on timehist_update_runtime_stats.
+It may work with a particular sort routine in a particular library
+today, the issue is that if the sort routine were say changed from:
 
+if (cmp(a, b) < 0)
 
->  	r->dt_iowait  = 0;
->  	r->dt_preempt = 0;
->  	r->dt_run     = 0;
-> +	r->dt_pre_mig = 0;
->  
->  	if (tprev) {
->  		r->dt_run = t - tprev;
-> @@ -2247,6 +2253,11 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
->  				pr_debug("time travel: wakeup time for task > previous sched_switch event\n");
->  			else
->  				r->dt_delay = tprev - r->ready_to_run;
-> +
-> +			if (r->ready_to_run && r->migrated) {
+to:
 
-At this point r->read_to_run is not zero.  And the r->migrated should
-not be zero when the below condition is met.  So I think you can remove
-this condition.
+if (cmp(b, a) > 0)
+
+the sort would vary with this change even though such a change in the
+sorting code is a no-op. It is fundamental algorithms that this code
+is broken, I'm not going to spend the time finding a list of
+instructions and a sort routine to demonstrate this.
 
 Thanks,
-Namhyung
-
-
-> +				if ((r->migrated > r->ready_to_run) && (r->migrated < tprev))
-> +					r->dt_pre_mig = r->migrated - r->ready_to_run;
-> +			}
->  		}
->  
->  		if (r->last_time > tprev)
-> @@ -2270,6 +2281,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
->  	r->total_sleep_time   += r->dt_sleep;
->  	r->total_iowait_time  += r->dt_iowait;
->  	r->total_preempt_time += r->dt_preempt;
-> +	r->total_pre_mig_time += r->dt_pre_mig;
->  }
->  
->  static bool is_idle_sample(struct perf_sample *sample,
-> @@ -2684,8 +2696,14 @@ static int timehist_migrate_task_event(const struct perf_tool *tool,
->  
->  	tr->migrations++;
->  
-> +	if (tr->migrated == 0)
-> +		tr->migrated = sample->time;
-> +
->  	/* show migrations if requested */
-> -	timehist_print_migration_event(sched, evsel, sample, machine, thread);
-> +	if (sched->show_migrations) {
-> +		timehist_print_migration_event(sched, evsel, sample,
-> +							machine, thread);
-> +	}
->  
->  	return 0;
->  }
-> @@ -2836,11 +2854,13 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
->  		/* last state is used to determine where to account wait time */
->  		tr->last_state = state;
->  
-> -		/* sched out event for task so reset ready to run time */
-> +		/* sched out event for task so reset ready to run time and migrated time */
->  		if (state == 'R')
->  			tr->ready_to_run = t;
->  		else
->  			tr->ready_to_run = 0;
-> +
-> +		tr->migrated = 0;
->  	}
->  
->  	evsel__save_time(evsel, sample->time, sample->cpu);
-> @@ -3280,8 +3300,8 @@ static int perf_sched__timehist(struct perf_sched *sched)
->  		goto out;
->  	}
->  
-> -	if (sched->show_migrations &&
-> -	    perf_session__set_tracepoints_handlers(session, migrate_handlers))
-> +	if ((sched->show_migrations || sched->pre_migrations) &&
-> +		perf_session__set_tracepoints_handlers(session, migrate_handlers))
->  		goto out;
->  
->  	/* pre-allocate struct for per-CPU idle stats */
-> @@ -3823,6 +3843,7 @@ int cmd_sched(int argc, const char **argv)
->  	OPT_BOOLEAN(0, "show-prio", &sched.show_prio, "Show task priority"),
->  	OPT_STRING(0, "prio", &sched.prio_str, "prio",
->  		   "analyze events only for given task priority(ies)"),
-> +	OPT_BOOLEAN('P', "pre-migrations", &sched.pre_migrations, "Show pre-migration wait time"),
->  	OPT_PARENT(sched_options)
->  	};
->  
-> -- 
-> 2.43.2
-> 
+Ian
