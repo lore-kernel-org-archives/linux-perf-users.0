@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37B751AC458;
-	Thu,  3 Oct 2024 18:53:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DE651AD9F8;
+	Thu,  3 Oct 2024 18:53:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727981623; cv=none; b=DZGTbyyj0u+GCW28uW5x7V7LX+990O+t3bm53zGCDg4JiojzsnzB05WJhaY14Cv27JC/r1e2mVLhIWzDlitQZqfowwzvn1QxueowoGuC4T55AFQlQrvv0q7DzMrWnNLwFxNc9WS4RheUap3bJpbzIfigPMUoCZamsomT9+StdWo=
+	t=1727981625; cv=none; b=Fp1WquBldQYxsXYZbXQ/QdN6hW+6XmB9ptNdGgMh//kSbBwSVHfLfN5S4sOAoMOE1qcIoYfgS2SwHjbIvV89RYd9zesPZ7k6Qnpi/0S7CbISECnhw57wcHZ8EHWTREpryBKfx+JPGlnKs33owqHG+8UDoZo+LzoTInuhucz/gdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727981623; c=relaxed/simple;
-	bh=cnYH9+j/2xzSAgWt5LIGXESMWUTDhvWf1z7KxVbTeAU=;
+	s=arc-20240116; t=1727981625; c=relaxed/simple;
+	bh=ogF78HKBDHqnrPfvhawMtYytPGdQOMbfO6Mm2m/Ln3M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HsvGZfjEEr2WI6Z3JjvlTc5Hrp+mxsMmNcAbobdEf3xlwlX60+BcKF2eChDWJq2BVs7bs7Y2n1rDrKw8mXBJJ161Oj+fq0hUxKZgflidE92+duqDvPyUFl75ip14vqujETh3J92YzilK2DN9dhv7L5vPjB0y1OQKCPz8DY8HcRE=
+	 MIME-Version; b=g/2xHzao9BEiojYwXcLVKD38NaZRUyKtPlv8vHyUq9NvwrYmj5pqfG5OK3Q0TzouAiDmr5+iR6Og6aP4oQZgaHh78v85vXyQj8UtVyGYwFhLTtQZcADEwy/UDH1Mmu3Op2DXMKpfxY6TeelyEXq/4QvJ7pNDKwXo0kgBSIUPgrE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48AFD14BF;
-	Thu,  3 Oct 2024 11:54:11 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85AE3339;
+	Thu,  3 Oct 2024 11:54:13 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B75103F640;
-	Thu,  3 Oct 2024 11:53:39 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F3F5F3F640;
+	Thu,  3 Oct 2024 11:53:41 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -36,9 +36,9 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v3 3/7] perf arm-spe: Introduce arm_spe__is_homogeneous()
-Date: Thu,  3 Oct 2024 19:53:18 +0100
-Message-Id: <20241003185322.192357-4-leo.yan@arm.com>
+Subject: [PATCH v3 4/7] perf arm-spe: Use metadata to decide the data source feature
+Date: Thu,  3 Oct 2024 19:53:19 +0100
+Message-Id: <20241003185322.192357-5-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241003185322.192357-1-leo.yan@arm.com>
 References: <20241003185322.192357-1-leo.yan@arm.com>
@@ -50,65 +50,113 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce the arm_spe__is_homogeneous() function, it uses to check if
-Arm SPE is homogeneous cross all CPUs.
+Use the info in the metadata to decide if the data source feature is
+supported. The CPU MIDR must be in the CPU list for the common data
+source encoding.
+
+For the metadata version 1, it doesn't include info for MIDR. In this
+case, due to absent info for making decision, print out warning to
+remind users to upgrade tool and returns false.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/arm-spe.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ tools/perf/util/arm-spe.c | 67 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 64 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index b0e9eb6057c3..587943b6bdb8 100644
+index 587943b6bdb8..9221b2f66bbe 100644
 --- a/tools/perf/util/arm-spe.c
 +++ b/tools/perf/util/arm-spe.c
-@@ -82,6 +82,7 @@ struct arm_spe {
- 	u64				**metadata;
- 	u64				metadata_ver;
- 	u64				metadata_nr_cpu;
-+	bool				is_homogeneous;
- };
- 
- struct arm_spe_queue {
-@@ -1374,6 +1375,30 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+@@ -278,6 +278,20 @@ static int arm_spe_set_tid(struct arm_spe_queue *speq, pid_t tid)
  	return 0;
  }
  
-+static bool arm_spe__is_homogeneous(u64 **metadata, int nr_cpu)
++static u64 *arm_spe__get_metadata_by_cpu(struct arm_spe *spe, u64 cpu)
 +{
-+	u64 midr;
-+	int i;
++	u64 i;
 +
-+	if (!nr_cpu)
-+		return false;
++	if (!spe->metadata)
++		return NULL;
 +
-+	for (i = 0; i < nr_cpu; i++) {
-+		if (!metadata[i])
-+			return false;
++	for (i = 0; i < spe->metadata_nr_cpu; i++)
++		if (spe->metadata[i][ARM_SPE_CPU] == cpu)
++			return spe->metadata[i];
 +
-+		if (i == 0) {
-+			midr = metadata[i][ARM_SPE_CPU_MIDR];
-+			continue;
-+		}
-+
-+		if (midr != metadata[i][ARM_SPE_CPU_MIDR])
-+			return false;
-+	}
-+
-+	return true;
++	return NULL;
 +}
 +
- int arm_spe_process_auxtrace_info(union perf_event *event,
- 				  struct perf_session *session)
+ static struct simd_flags arm_spe__synth_simd_flags(const struct arm_spe_record *record)
  {
-@@ -1419,6 +1444,7 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 	spe->metadata = metadata;
- 	spe->metadata_ver = metadata_ver;
- 	spe->metadata_nr_cpu = nr_cpu;
-+	spe->is_homogeneous = arm_spe__is_homogeneous(metadata, nr_cpu);
+ 	struct simd_flags simd_flags = {};
+@@ -520,10 +534,57 @@ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+ 		data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
+ }
  
- 	spe->timeless_decoding = arm_spe__is_timeless_decoding(spe);
+-static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
++static bool arm_spe__is_common_ds_encoding(struct arm_spe_queue *speq)
++{
++	struct arm_spe *spe = speq->spe;
++	bool is_in_cpu_list;
++	u64 *metadata = NULL;
++	u64 midr = 0;
++
++	/*
++	 * Metadata version 1 doesn't contain any info for MIDR.
++	 * Simply return false in this case.
++	 */
++	if (spe->metadata_ver == 1) {
++		pr_warning_once("The data file contains metadata version 1, "
++				"which is absent the info for data source. "
++				"Please upgrade the tool to record data.\n");
++		return false;
++	}
++
++	/* CPU ID is -1 for per-thread mode */
++	if (speq->cpu < 0) {
++		/*
++		 * On the heterogeneous system, due to CPU ID is -1,
++		 * cannot confirm the data source packet is supported.
++		 */
++		if (!spe->is_homogeneous)
++			return false;
++
++		/* In homogeneous system, simply use CPU0's metadata */
++		if (spe->metadata)
++			metadata = spe->metadata[0];
++	} else {
++		metadata = arm_spe__get_metadata_by_cpu(spe, speq->cpu);
++	}
++
++	if (!metadata)
++		return false;
++
++	midr = metadata[ARM_SPE_CPU_MIDR];
++
++	is_in_cpu_list = is_midr_in_range_list(midr, common_ds_encoding_cpus);
++	if (is_in_cpu_list)
++		return true;
++	else
++		return false;
++}
++
++static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
++				      const struct arm_spe_record *record)
+ {
+ 	union perf_mem_data_src	data_src = { .mem_op = PERF_MEM_OP_NA };
+-	bool is_common = is_midr_in_range_list(midr, common_ds_encoding_cpus);
++	bool is_common = arm_spe__is_common_ds_encoding(speq);
  
+ 	if (record->op & ARM_SPE_OP_LD)
+ 		data_src.mem_op = PERF_MEM_OP_LOAD;
+@@ -556,7 +617,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+ 	u64 data_src;
+ 	int err;
+ 
+-	data_src = arm_spe__synth_data_source(record, spe->midr);
++	data_src = arm_spe__synth_data_source(speq, record);
+ 
+ 	if (spe->sample_flc) {
+ 		if (record->type & ARM_SPE_L1D_MISS) {
 -- 
 2.34.1
 
