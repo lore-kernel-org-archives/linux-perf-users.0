@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DE651AD9F8;
-	Thu,  3 Oct 2024 18:53:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C268E1B85D0;
+	Thu,  3 Oct 2024 18:53:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727981625; cv=none; b=Fp1WquBldQYxsXYZbXQ/QdN6hW+6XmB9ptNdGgMh//kSbBwSVHfLfN5S4sOAoMOE1qcIoYfgS2SwHjbIvV89RYd9zesPZ7k6Qnpi/0S7CbISECnhw57wcHZ8EHWTREpryBKfx+JPGlnKs33owqHG+8UDoZo+LzoTInuhucz/gdo=
+	t=1727981628; cv=none; b=UF1lD4wbsv0Fn5UqKAnLf8xOE/ccN0O/H6P956M2Ti/ixUFwN9dwadg71y1tduAf3Ox+5beiFhDkbqAwRthUvF4teX7XxNrt3ZJNaeuwqSAFnj6N8LiVIAg5rRGI22Xjruzz5doNQ/wm8pGYyt9GJeF3ivUqpmeK3uQaflW54pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727981625; c=relaxed/simple;
-	bh=ogF78HKBDHqnrPfvhawMtYytPGdQOMbfO6Mm2m/Ln3M=;
+	s=arc-20240116; t=1727981628; c=relaxed/simple;
+	bh=uKnz5kd7YKacNv+wpKZkgJqTFb4cESY+HRNpg921fPw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=g/2xHzao9BEiojYwXcLVKD38NaZRUyKtPlv8vHyUq9NvwrYmj5pqfG5OK3Q0TzouAiDmr5+iR6Og6aP4oQZgaHh78v85vXyQj8UtVyGYwFhLTtQZcADEwy/UDH1Mmu3Op2DXMKpfxY6TeelyEXq/4QvJ7pNDKwXo0kgBSIUPgrE=
+	 MIME-Version; b=WYsUQeYiWYaztS5at9El4aW6sbPm56622Lu4VR5EVAXZYopk/LOlUq3I0nNGSlt4wEPL9gy97HbSwKNd1tqj5FZHHYzf9+acOIyPAlrwznV0khUIokM95Hz9dIRk2l12mvaxKd3BbzjcMVhbELpkSghMXewtPTFK9FrJrjxiPrA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85AE3339;
-	Thu,  3 Oct 2024 11:54:13 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C581B339;
+	Thu,  3 Oct 2024 11:54:15 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F3F5F3F640;
-	Thu,  3 Oct 2024 11:53:41 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3DC273F640;
+	Thu,  3 Oct 2024 11:53:44 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -36,9 +36,9 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v3 4/7] perf arm-spe: Use metadata to decide the data source feature
-Date: Thu,  3 Oct 2024 19:53:19 +0100
-Message-Id: <20241003185322.192357-5-leo.yan@arm.com>
+Subject: [PATCH v3 5/7] perf arm-spe: Remove the unused 'midr' field
+Date: Thu,  3 Oct 2024 19:53:20 +0100
+Message-Id: <20241003185322.192357-6-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241003185322.192357-1-leo.yan@arm.com>
 References: <20241003185322.192357-1-leo.yan@arm.com>
@@ -50,113 +50,43 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use the info in the metadata to decide if the data source feature is
-supported. The CPU MIDR must be in the CPU list for the common data
-source encoding.
-
-For the metadata version 1, it doesn't include info for MIDR. In this
-case, due to absent info for making decision, print out warning to
-remind users to upgrade tool and returns false.
+The 'midr' field is replaced by the MIDR values stored in metadata (per
+CPU wise). Remove the 'midr' field as it is no longer used.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/arm-spe.c | 67 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 64 insertions(+), 3 deletions(-)
+ tools/perf/util/arm-spe.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 587943b6bdb8..9221b2f66bbe 100644
+index 9221b2f66bbe..485f60c32309 100644
 --- a/tools/perf/util/arm-spe.c
 +++ b/tools/perf/util/arm-spe.c
-@@ -278,6 +278,20 @@ static int arm_spe_set_tid(struct arm_spe_queue *speq, pid_t tid)
- 	return 0;
- }
+@@ -46,7 +46,6 @@ struct arm_spe {
+ 	struct perf_session		*session;
+ 	struct machine			*machine;
+ 	u32				pmu_type;
+-	u64				midr;
  
-+static u64 *arm_spe__get_metadata_by_cpu(struct arm_spe *spe, u64 cpu)
-+{
-+	u64 i;
-+
-+	if (!spe->metadata)
-+		return NULL;
-+
-+	for (i = 0; i < spe->metadata_nr_cpu; i++)
-+		if (spe->metadata[i][ARM_SPE_CPU] == cpu)
-+			return spe->metadata[i];
-+
-+	return NULL;
-+}
-+
- static struct simd_flags arm_spe__synth_simd_flags(const struct arm_spe_record *record)
- {
- 	struct simd_flags simd_flags = {};
-@@ -520,10 +534,57 @@ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
- 		data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
- }
+ 	struct perf_tsc_conversion	tc;
  
--static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
-+static bool arm_spe__is_common_ds_encoding(struct arm_spe_queue *speq)
-+{
-+	struct arm_spe *spe = speq->spe;
-+	bool is_in_cpu_list;
-+	u64 *metadata = NULL;
-+	u64 midr = 0;
-+
-+	/*
-+	 * Metadata version 1 doesn't contain any info for MIDR.
-+	 * Simply return false in this case.
-+	 */
-+	if (spe->metadata_ver == 1) {
-+		pr_warning_once("The data file contains metadata version 1, "
-+				"which is absent the info for data source. "
-+				"Please upgrade the tool to record data.\n");
-+		return false;
-+	}
-+
-+	/* CPU ID is -1 for per-thread mode */
-+	if (speq->cpu < 0) {
-+		/*
-+		 * On the heterogeneous system, due to CPU ID is -1,
-+		 * cannot confirm the data source packet is supported.
-+		 */
-+		if (!spe->is_homogeneous)
-+			return false;
-+
-+		/* In homogeneous system, simply use CPU0's metadata */
-+		if (spe->metadata)
-+			metadata = spe->metadata[0];
-+	} else {
-+		metadata = arm_spe__get_metadata_by_cpu(spe, speq->cpu);
-+	}
-+
-+	if (!metadata)
-+		return false;
-+
-+	midr = metadata[ARM_SPE_CPU_MIDR];
-+
-+	is_in_cpu_list = is_midr_in_range_list(midr, common_ds_encoding_cpus);
-+	if (is_in_cpu_list)
-+		return true;
-+	else
-+		return false;
-+}
-+
-+static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
-+				      const struct arm_spe_record *record)
- {
- 	union perf_mem_data_src	data_src = { .mem_op = PERF_MEM_OP_NA };
--	bool is_common = is_midr_in_range_list(midr, common_ds_encoding_cpus);
-+	bool is_common = arm_spe__is_common_ds_encoding(speq);
- 
- 	if (record->op & ARM_SPE_OP_LD)
- 		data_src.mem_op = PERF_MEM_OP_LOAD;
-@@ -556,7 +617,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
- 	u64 data_src;
- 	int err;
- 
--	data_src = arm_spe__synth_data_source(record, spe->midr);
-+	data_src = arm_spe__synth_data_source(speq, record);
- 
- 	if (spe->sample_flc) {
- 		if (record->type & ARM_SPE_L1D_MISS) {
+@@ -1466,8 +1465,6 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
+ 	size_t min_sz = ARM_SPE_AUXTRACE_V1_PRIV_SIZE;
+ 	struct perf_record_time_conv *tc = &session->time_conv;
+-	const char *cpuid = perf_env__cpuid(session->evlist->env);
+-	u64 midr = strtol(cpuid, NULL, 16);
+ 	struct arm_spe *spe;
+ 	u64 **metadata = NULL;
+ 	u64 metadata_ver;
+@@ -1501,7 +1498,6 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 		spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
+ 	else
+ 		spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE_V2];
+-	spe->midr = midr;
+ 	spe->metadata = metadata;
+ 	spe->metadata_ver = metadata_ver;
+ 	spe->metadata_nr_cpu = nr_cpu;
 -- 
 2.34.1
 
