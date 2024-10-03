@@ -1,221 +1,137 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308091BDE6;
-	Thu,  3 Oct 2024 03:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE4D136338
+	for <linux-perf-users@vger.kernel.org>; Thu,  3 Oct 2024 10:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727924891; cv=none; b=Kklqfo4jbsR76mwuNPcpkm3pJa4syVc/N3GVY4bLwv+lb3qxBZPWa8KgsPA9Z8+6p2JxFapFeIA1IVmLri6XOiYFEWhVZRed2FJ87idq1wVvK80j1Ok6v+G6dkctuIjzKBhfT9kzzhzPVMh/3qCdSsP6CtlkE6RZozNs4wJ6BOc=
+	t=1727951777; cv=none; b=Pe0aPjZWgCZLZgwoCKuUDUpgZwFhJDO+gzY6TfaBYUFZ6B24sclXRfmWNruK/Q9XyiUXgyHpq/uevviMNVw2g+/Y/u8QKJEo0Ucasj3ylRmFo2h79PFJPhjCA2cWpuzjnmMS7dEfkGouPMygnRCK3BECNJmoryV0jZSl6E5YUUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727924891; c=relaxed/simple;
-	bh=MM+xL5agRbSolLV7RH1f6fmQr7nqjPon3KmoeG90Jwc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tLYe147pGEBATgOc1rhGy//PSGtZ/Fx6WZktUj6wUiUsVGLj1P78hq8IZdTPY9zHltn6J8fTzYnaOI/M82J2EUz4pfBvcE6QErmR/VPlJhpVwGqZ+pMN7OVKND5fB4G1CsVNEGIYzrhnTs0RsPE3tfqd7Z94KK/ZI8wO+ujH0Nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HV3R36R+; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1727951777; c=relaxed/simple;
+	bh=CWGHC/DfJClxUtmZyEWE+nWnsa83ftpL5qdp1ps+qSM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=TpOtUh24jpwOx1E93CpcNRpww71rwjnpxPjESLS7YUAgNWu54KGFrCCQmh3EmwPP2SZdn5asksCk1eABJEqVEo7Yt5ZOihSCnuzCoOFK5/5XaXzuwYGhK66zHkvUFl1pBCV3YTLR9Eui11/Zay+bcH/qO87jMp0MEqI0c0e3n0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PBo0LxXH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HV3R36R+"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4932mt2H002304;
-	Thu, 3 Oct 2024 03:07:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=A
-	+LdJrbAv1A0e9aVY4KiACPfT1lVFnIxsatGiE+jN/0=; b=HV3R36R+5P6ApSXMr
-	jEw+MvAE1H7/pHtbbEdbbwi5hRvZV++tuAopdYxNWQziKn2ECVCFYdOurUWGY8Kj
-	kV6SKYxDmJ0y36xe2Q8Ru8ikBMkyuhT2Y5ey+lAizlGbeBP5i7zIWs7dqG3eGufi
-	cBUQPKadHo7f47JO0cicJec2q25YHbtjPTpLoDyiUiwz7HcCyY78wmVqO4ZZp8hM
-	h+oWWGtrFx6F/uLF8KmZX6zqzMzGFxC3UMgNtIEKGxUTceo6MwEp7D6ipy75LArY
-	TCG11l7DERqLb+51kCMck/WAD5a6QBa7F+OhUxTpsM5G7RI+GtzwbOihrw1/dWJJ
-	MqPjQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 421jt7g1fp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Oct 2024 03:07:56 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49337uMG008065;
-	Thu, 3 Oct 2024 03:07:56 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 421jt7g1fj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Oct 2024 03:07:56 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 492Mt3SL007923;
-	Thu, 3 Oct 2024 03:07:55 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41xvgy5v09-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Oct 2024 03:07:55 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49337sOW43123034
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 3 Oct 2024 03:07:54 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 931E458045;
-	Thu,  3 Oct 2024 03:07:54 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 891BD58054;
-	Thu,  3 Oct 2024 03:07:45 +0000 (GMT)
-Received: from [9.43.26.191] (unknown [9.43.26.191])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  3 Oct 2024 03:07:45 +0000 (GMT)
-Message-ID: <60142574-dd07-4aa1-812a-554d58a15dc5@linux.ibm.com>
-Date: Thu, 3 Oct 2024 08:37:37 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PBo0LxXH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727951775;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ygM3fAsA+iIJH87/TNwh24k5+nFhoLzwty4wVdwA9ps=;
+	b=PBo0LxXHceHMQXIO+9VlFnxVV9bDW7jtmoppKmaHeqG/VeXh80BJcuPvtrqi9LSGC9wHqd
+	DabotgRI7EjQc9pWioMIxYU9uZ9FV8P2KFWZKe+wA3UCx1utLX1sFcfAbcq1GhHc1yH8hz
+	1AJtVW7CkevYtDN4SUvuPMiE4Fg9ZZ4=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-693-6wLeKtMYO9qQ5gJZQa7_qw-1; Thu,
+ 03 Oct 2024 06:36:12 -0400
+X-MC-Unique: 6wLeKtMYO9qQ5gJZQa7_qw-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7198119560AE;
+	Thu,  3 Oct 2024 10:36:09 +0000 (UTC)
+Received: from Carbon (unknown [10.39.208.39])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4DDF830000DF;
+	Thu,  3 Oct 2024 10:36:05 +0000 (UTC)
+Date: Thu, 3 Oct 2024 12:36:01 +0200 (CEST)
+From: Michael Petlan <mpetlan@redhat.com>
+To: Namhyung Kim <namhyung@kernel.org>
+cc: Veronika Molnarova <vmolnaro@redhat.com>, linux-perf-users@vger.kernel.org, 
+    irogers@google.com, peterz@infradead.org, mingo@redhat.com, 
+    acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+    jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com
+Subject: Re: [PATCH] perf trace: Keep exited threads for summary
+In-Reply-To: <Zv3I1OIxrfIDtaH1@google.com>
+Message-ID: <7c1fba2-5c4c-b997-2c8d-3af7d437c93b@redhat.com>
+References: <20240927151926.399474-1-mpetlan@redhat.com> <2ac467a9-065f-4da2-858c-04e72ce70b55@redhat.com> <Zv3I1OIxrfIDtaH1@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf sched timehist: Add pre-migration wait time
- option
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Athira Rajeev
- <atrajeev@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-References: <20241002163917.33781-1-vineethr@linux.ibm.com>
- <Zv3myhcbdEPLCAIC@google.com>
-Content-Language: en-US
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-In-Reply-To: <Zv3myhcbdEPLCAIC@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: wR5iUtWvK4YvaYVVJVVj-8k1M_MYVoPf
-X-Proofpoint-GUID: usNZufR-BNNdR93BB1YnnyTSgIqqYe6T
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-03_02,2024-09-30_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 priorityscore=1501 impostorscore=0 phishscore=0
- adultscore=0 suspectscore=0 clxscore=1015 spamscore=0 mlxlogscore=999
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2410030019
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hi Namhyung,
-
-On 03/10/24 06:05, Namhyung Kim wrote:
-> On Wed, Oct 02, 2024 at 10:09:17PM +0530, Madadi Vineeth Reddy wrote:
->> pre-migration wait time is the time that a task unnecessarily spends
->> on the runqueue of a CPU but doesn't get switched-in there. In terms
->> of tracepoints, it is the time between sched:sched_wakeup and
->> sched:sched_migrate_task.
->>
-
-[snip]
-
->> @@ -2239,6 +2244,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
+On Wed, 2 Oct 2024, Namhyung Kim wrote:
+> On Mon, Sep 30, 2024 at 11:07:45AM +0200, Veronika Molnarova wrote:
+> > On 9/27/24 17:19, Michael Petlan wrote:
+[...]
+> > 
+> > Before:
+> > 	# perf trace --errno-summary -- true
+> > 
+> > 
+> >  	Summary of events:
+> > 
+> > After:
+> > 	# perf trace --errno-summary -- true
+> > 
+> > 	 Summary of events:
+> > 	
+> > 	 true (11386), 60 events, 90.9%
+> > 	
+> >    	   syscall            calls  errors  total       min       avg       max       stddev
+> >         	                             (msec)    (msec)    (msec)    (msec)        (%)
+> >  	   --------------- --------  ------ -------- --------- --------- ---------     ------
+> >    	   mmap                   8      0     0.044     0.003     0.006     0.010     15.17%
+> >    	   mprotect               3      0     0.014     0.004     0.005     0.005      4.56%
+> >    	   openat                 2      0     0.009     0.004     0.004     0.005      5.14%
+> >    	   munmap                 1      0     0.007     0.007     0.007     0.007      0.00%
+> >   	   access                 1      1     0.004     0.004     0.004     0.004      0.00%
+> > 	perf: Segmentation fault
+> > 	Obtained 12 stack frames.
+> > 	./perf() [0x5ae123]
+> > 	./perf() [0x5ae1cb]
+> > 	/lib64/libc.so.6(+0x3dbb0) [0x7f633845fbb0]
+> > 	./perf() [0x56e2fb]
+> > 	./perf() [0x4850b3]
+> > 	./perf() [0x48ee89]
+> > 	./perf() [0x493042]
+> > 	./perf() [0x49334b]
+> > 	./perf() [0x40ee8c]
+> > 	/lib64/libc.so.6(+0x27b8a) [0x7f6338449b8a]
+> > 	/lib64/libc.so.6(__libc_start_main+0x8b) [0x7f6338449c4b]
+> > 	./perf() [0x40f4b5]
+> > 	Segmentation fault
+> > 
+> > Will try to check what is causing this issue.
 > 
-> It'd be nice if you update the comment on timehist_update_runtime_stats.
+> It seems like a different bug and shoul not be affected by this change.
 > 
+>   Program received signal SIGSEGV, Segmentation fault.
+>   0x000055555574cf67 in perf_env__arch_strerrno (env=0x0, err=110) at util/env.c:475
+>   475		if (env->arch_strerrno == NULL)
+>   (gdb) bt
+>   #0  0x000055555574cf67 in perf_env__arch_strerrno (env=0x0, err=110) at util/env.c:475
+>   #1  0x000055555563fc0b in thread__dump_stats (ttrace=0x55555661a220, trace=0x7fffffffaaf0, fp=0x7fffee3f24e0 <_IO_2_1_stderr_>) at builtin-trace.c:4674
+>   #2  0x000055555563fef8 in trace__fprintf_thread (fp=0x7fffee3f24e0 <_IO_2_1_stderr_>, thread=0x5555560f75d0, trace=0x7fffffffaaf0) at builtin-trace.c:4709
+>   #3  0x0000555555640112 in trace__fprintf_thread_summary (trace=0x7fffffffaaf0, fp=0x7fffee3f24e0 <_IO_2_1_stderr_>) at builtin-trace.c:4748
+>   #4  0x000055555563eba7 in trace__run (trace=0x7fffffffaaf0, argc=2, argv=0x7fffffffe390) at builtin-trace.c:4457
+>   #5  0x0000555555642a61 in cmd_trace (argc=2, argv=0x7fffffffe390) at builtin-trace.c:5484
+>   #6  0x0000555555648a37 in run_builtin (p=0x5555560185e8 <commands+648>, argc=5, argv=0x7fffffffe390) at perf.c:351
+>   #7  0x0000555555648cde in handle_internal_command (argc=5, argv=0x7fffffffe390) at perf.c:404
+>   #8  0x0000555555648e37 in run_argv (argcp=0x7fffffffe18c, argv=0x7fffffffe180) at perf.c:448
+>   #9  0x0000555555649185 in main (argc=5, argv=0x7fffffffe390) at perf.c:562
 > 
->>  	r->dt_iowait  = 0;
->>  	r->dt_preempt = 0;
->>  	r->dt_run     = 0;
->> +	r->dt_pre_mig = 0;
->>  
->>  	if (tprev) {
->>  		r->dt_run = t - tprev;
->> @@ -2247,6 +2253,11 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
->>  				pr_debug("time travel: wakeup time for task > previous sched_switch event\n");
->>  			else
->>  				r->dt_delay = tprev - r->ready_to_run;
->> +
->> +			if (r->ready_to_run && r->migrated) {
+> It needs to pass a non-NULL 'env' when --errno-summary is given.
 > 
-> At this point r->read_to_run is not zero.  And the r->migrated should
-> not be zero when the below condition is met.  So I think you can remove
-> this condition.
-
-You're right, my mistake. r->ready_to_run is already checked, and if
-r->migrated is zero, it will naturally fail the condition below.
-
-I've removed the redundant check and sent a v4. Thanks for the feedback!
-
-Thanks,
-Madadi Vineeth Reddy
-
+> Anyway, I'll pick this up.
 > 
+Yes, it is probably a different issue, just exposed by the patch.
+
+We'll have a look at it later.
+
 > Thanks,
 > Namhyung
 > 
-> 
->> +				if ((r->migrated > r->ready_to_run) && (r->migrated < tprev))
->> +					r->dt_pre_mig = r->migrated - r->ready_to_run;
->> +			}
->>  		}
->>  
->>  		if (r->last_time > tprev)
->> @@ -2270,6 +2281,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
->>  	r->total_sleep_time   += r->dt_sleep;
->>  	r->total_iowait_time  += r->dt_iowait;
->>  	r->total_preempt_time += r->dt_preempt;
->> +	r->total_pre_mig_time += r->dt_pre_mig;
->>  }
->>  
->>  static bool is_idle_sample(struct perf_sample *sample,
->> @@ -2684,8 +2696,14 @@ static int timehist_migrate_task_event(const struct perf_tool *tool,
->>  
->>  	tr->migrations++;
->>  
->> +	if (tr->migrated == 0)
->> +		tr->migrated = sample->time;
->> +
->>  	/* show migrations if requested */
->> -	timehist_print_migration_event(sched, evsel, sample, machine, thread);
->> +	if (sched->show_migrations) {
->> +		timehist_print_migration_event(sched, evsel, sample,
->> +							machine, thread);
->> +	}
->>  
->>  	return 0;
->>  }
->> @@ -2836,11 +2854,13 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
->>  		/* last state is used to determine where to account wait time */
->>  		tr->last_state = state;
->>  
->> -		/* sched out event for task so reset ready to run time */
->> +		/* sched out event for task so reset ready to run time and migrated time */
->>  		if (state == 'R')
->>  			tr->ready_to_run = t;
->>  		else
->>  			tr->ready_to_run = 0;
->> +
->> +		tr->migrated = 0;
->>  	}
->>  
->>  	evsel__save_time(evsel, sample->time, sample->cpu);
->> @@ -3280,8 +3300,8 @@ static int perf_sched__timehist(struct perf_sched *sched)
->>  		goto out;
->>  	}
->>  
->> -	if (sched->show_migrations &&
->> -	    perf_session__set_tracepoints_handlers(session, migrate_handlers))
->> +	if ((sched->show_migrations || sched->pre_migrations) &&
->> +		perf_session__set_tracepoints_handlers(session, migrate_handlers))
->>  		goto out;
->>  
->>  	/* pre-allocate struct for per-CPU idle stats */
->> @@ -3823,6 +3843,7 @@ int cmd_sched(int argc, const char **argv)
->>  	OPT_BOOLEAN(0, "show-prio", &sched.show_prio, "Show task priority"),
->>  	OPT_STRING(0, "prio", &sched.prio_str, "prio",
->>  		   "analyze events only for given task priority(ies)"),
->> +	OPT_BOOLEAN('P', "pre-migrations", &sched.pre_migrations, "Show pre-migration wait time"),
->>  	OPT_PARENT(sched_options)
->>  	};
->>  
->> -- 
->> 2.43.2
->>
+Thanks,
+Michael
 
