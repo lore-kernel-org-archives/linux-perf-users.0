@@ -1,283 +1,306 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375731D9A66
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Oct 2024 15:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 719051D9A7A;
+	Fri,  4 Oct 2024 15:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728054938; cv=none; b=Tz3vrI6tVLFJaGOBEdpjGPVgjJWcXwnMiY0eZr58b2tQIkesTSZedMyrW9Cr35oQB2fQ6ggutXNmbTnU7AlGAJ1O2rBD26T0CVB7ISRFq92oDSMRntLxYF1ltY7MRisdLF/y7cxa33pD8BtpR4fM+OsAx/mYrsPs9r/ilD1qFUg=
+	t=1728054973; cv=none; b=K1m/EZXkbQ0lQLlpTFiXPKt9adhVMNTDDqg82igQgiDd3hgyo2ZfaWkpmbO5vSlVsQUBWkTMLGsc/FAyLmaLOuNewZ/fSZHTLWEeGoE8u+0meJ3Bs8et/10RYa70f4UBnDJjKsElmCYtU1Wtko1W+5ps+PqzYKbryZ9Q4umMVs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728054938; c=relaxed/simple;
-	bh=U5+mgVqDpZ8EdepkuKFsz1RkFX3keCfmZq1BWOhgP/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hOS9mvd90hBak3931pWHuywiMn6Hn5tddbZOcbtc8AJOACjdUHablVUcBOOpgnFDKL3Op/MiYgd7yJ9Y6Fo+d8/HRMWTGjt0aR+DULrr2bEze424SCmi2cQltR2j/q/WtEV3LAauHvA9Dgn2gjEGljPyVrjT9oEqvJFbBkoNSXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NcAgcvbY; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NcAgcvbY"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20b061b7299so168485ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 04 Oct 2024 08:15:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728054936; x=1728659736; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HTtJQt69CttjR+DAPQPht1xa0MHigYqxKO3CJZrv8ac=;
-        b=NcAgcvbYbP7pTChZCz/ssuAJI4+aH7eo7mKdatuM+TzwZxGA3WkkExOO4hs+hMssqm
-         z1kG8Rf2fZYYTnKB7c6lsQPDUkcnk3G7pi2enRhAokkZCVfSvQtpoPXfJpsIDuIHXh61
-         9W3xicv77MPe4Ye/P3SE5Ry1UGTFEcKH31pCQwcznNLtdYajke0NrMVsC8uSp6AfC/Ec
-         5OK5sJ9vkLbDgz51YPpp/LH8eJHW2SAgBG3HK/tK49/7vo4fvAw5YfuFqQI85z884m0M
-         D+jBoyuqTMS8uLO5HvXMd9M6IlKL6Ql3vh1LC8bMBhTt/yiIDI49PT0AoeHiQymeloi4
-         NfnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728054936; x=1728659736;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HTtJQt69CttjR+DAPQPht1xa0MHigYqxKO3CJZrv8ac=;
-        b=GSJwqYy17pJEDohwHaIOI7RTwmKT1TcntoYkE4GqKoAp6xT+UfnEqdEtxg0WukrUtA
-         mmok3TQNxGNPOEsQwRLT7jMuCj/SItXaXY+omxY3N5EWKSSv98n3KDaLr9xxusvdGS/U
-         +9F0mZlv2A414uTkM7YRAB8Y6zJVdVORhvazqLYzOKcj8zrKuKabJtG4GIEdYNFdUQLk
-         vPVjjBFYycsRHrAdmBoSDEQJ1qUoGljx8Wr5oio0qA235LqYOopUdfww575hKrmZiRgB
-         eCFpypSlDIXI5D+9ZlI/iG4Ok5gf/YhunVEZLZUyr5ufx/7U25L64xJINtYYQ775uObY
-         4UIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSVxERXcpcsJJWpSxNTBWFbOcx0VGwAGNotepTy51fuc68oXolp9fgNz0My3QeEVGdOIQQjJftrTzvcfo7xC1j@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt6xQ6x4czaQYtnA8P8/zjhjQp5NFK9UqGae0PLQVD9MG/2dSg
-	EznsStr9RBdVrKXruAA2XOh1vsMSikG9Wo+AYFXM2tTnDOxjO4BEGfIELWVaUREaMgIsg+ov3Fi
-	xl+V7ZOlP1CyZMH6h5qYuLFUmeEXqPSg1qiG4
-X-Google-Smtp-Source: AGHT+IGt/lDjGygSMb510tyPWCXLfazyR3LkE8L6AAjTAM4ZiSvNgB+wWBZW/iFdeNwNElp+8YxvC072BxQ51RLuYzQ=
-X-Received: by 2002:a17:902:fb87:b0:202:3a49:ace7 with SMTP id
- d9443c01a7336-20bffb31c15mr2548135ad.20.1728054936036; Fri, 04 Oct 2024
- 08:15:36 -0700 (PDT)
+	s=arc-20240116; t=1728054973; c=relaxed/simple;
+	bh=xgVS63IMEsrI1kpD4MAiEd/2HWXjnyMJbunsR/r1FAc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qvKS8MgZdEYEPBNHPAu39wcJxQkQRzFcP1GAB3kP3SqzrRroVBqX1MP6nV42kaXvA93AWoR1LZMpAd0sk3iEOJJYarDmqspFqlTIcPffot7BqZUVEdaphPhzXDq2q+MHBdOCWke4rElWW4vgs65vYWGAAGD+qumRC89gYU+ctsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69B74339;
+	Fri,  4 Oct 2024 08:16:40 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1C383F640;
+	Fri,  4 Oct 2024 08:16:06 -0700 (PDT)
+Date: Fri, 4 Oct 2024 16:16:04 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
+	Sean Christopherson <seanjc@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v5 2/5] perf: Hoist perf_instruction_pointer() and
+ perf_misc_flags()
+Message-ID: <ZwAGtORoV3C3FDgk@J2N7QTR9R3.cambridge.arm.com>
+References: <20240920174740.781614-1-coltonlewis@google.com>
+ <20240920174740.781614-3-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240929113521.9b7e8fd67af154520e2c9d8e@kernel.org>
- <CAP-5=fV8vZoieMrRxCrF5EkUBP0HWd=ZLHXEHTq1X_mni0wMsA@mail.gmail.com>
- <ZvyBQ6xgGE4gZdoo@google.com> <CAP-5=fX7=EuZgnaG2-cXDU9eVqLyncdMTQF7=Nso__D1H0vMmw@mail.gmail.com>
- <20241002082859.8821e441024fe873a4301afc@kernel.org> <CAP-5=fWcOpF4+mgnkHOG=ntGMafJ7JSks_4j1JWVvgccApn+Ng@mail.gmail.com>
- <20241002225614.774bdd0742a826557f142d0e@kernel.org> <CAP-5=fWoiD=7XbB3FbE++1RSo3BZKeOOyNg81t4GQ7Ve6ejpSg@mail.gmail.com>
- <Zv8fIh4jaY7QbeDZ@google.com> <CAP-5=fVvzNMDPUpAvK0itjG0ZptrSg-_BN3t6UwB4XAvSsDt8w@mail.gmail.com>
- <Zv95OTflePPTMi7I@google.com> <20241004234544.76317dc8c7027bcd4b70fda3@kernel.org>
-In-Reply-To: <20241004234544.76317dc8c7027bcd4b70fda3@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 4 Oct 2024 08:15:22 -0700
-Message-ID: <CAP-5=fUr9X4TKd8RA9SEJfsaAvvBJxh5UzKToJoOS_M=0mEpCQ@mail.gmail.com>
-Subject: Re: [PATCH v1 11/11] perf build: Rename PERF_HAVE_DWARF_REGS to PERF_HAVE_LIBDW_REGS
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>, 
-	Guilherme Amadio <amadio@gentoo.org>, Changbin Du <changbin.du@huawei.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Aditya Gupta <adityag@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>, 
-	Kajol Jain <kjain@linux.ibm.com>, Anup Patel <anup@brainfault.org>, 
-	Shenlin Liang <liangshenlin@eswincomputing.com>, Atish Patra <atishp@rivosinc.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Chen Pei <cp0613@linux.alibaba.com>, 
-	Dima Kogan <dima@secretsauce.net>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
-	"David S. Miller" <davem@davemloft.net>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Yang Jihong <yangjihong@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240920174740.781614-3-coltonlewis@google.com>
 
-On Fri, Oct 4, 2024 at 7:45=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.or=
-g> wrote:
->
-> On Thu, 3 Oct 2024 22:12:25 -0700
-> Namhyung Kim <namhyung@kernel.org> wrote:
->
-> > On Thu, Oct 03, 2024 at 05:58:13PM -0700, Ian Rogers wrote:
-> > > On Thu, Oct 3, 2024 at 3:48=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > > > I agree renaming libdw-specific parts.  But the register is for DWA=
-RF,
-> > > > not libdw even if it's currently used by libdw only.   So I don't w=
-ant
-> > > > to rename it.
-> > >
-> > > So your objection is that we have files called:
-> > > tools/perf/arch/*/util/dwarf-regs.c
-> > > and PERF_HAVE_DRWARF_REGS is an indication that this file exists. Thi=
-s
-> > > file declares a single get_arch_regnum function. The building of the
-> > > file after this series is:
-> > > perf-util-$(CONFIG_LIBDW)     +=3D dwarf-regs.o
-> >
-> > Well.. I think we can even make it
-> >
-> > perf-util-y +=3D dwarf-regs.o
-> >
-> > since it doesn't have any dependency on libdw.  But it'd be inefficent
-> > to ship the dead code and data.  Anyway we may remove the condition to
-> > define the PERF_HAVE_DWARF_REGS like below.
-> >
-> > diff --git a/tools/perf/arch/x86/Makefile b/tools/perf/arch/x86/Makefil=
-e
-> > index 67b4969a673836eb..f1eb1ee1ea25ca53 100644
-> > --- a/tools/perf/arch/x86/Makefile
-> > +++ b/tools/perf/arch/x86/Makefile
-> > @@ -1,7 +1,5 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> > -ifndef NO_DWARF
-> >  PERF_HAVE_DWARF_REGS :=3D 1
-> > -endif
-> >  HAVE_KVM_STAT_SUPPORT :=3D 1
-> >  PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET :=3D 1
-> >  PERF_HAVE_JITDUMP :=3D 1
-> >
-> > >
-> > > My objection is that PERF_HAVE_DWARF_REGS is controlling the #define
-> > > HAVE_LIBDW_SUPPORT, so dwarf (that can mean libunwind, libdw, etc.) i=
-s
-> > > guarding having libdw which is backward and part of what this series
-> > > has been trying to clean up.
-> >
-> > Why not?  If the arch doesn't define DWARF registers, it can refuse
-> > libdw support because it won't work well.
->
-> It actually does not DWARF registers, but just "dwarf-regs.c" file
-> since arch should define DWARF registers if the compiler generates
-> the DWARF.
-> Here the flag means only "we implemented dwarf-regs.c file for this
-> arch." So if it is called as "libdw-helper.c" then we can rename the
-> flag as PERF_HAVE_ARCH_LIBDW_HELPER simply.
->
-> > > If we rename tools/perf/arch/*/util/dwarf-regs.c to
-> > > tools/perf/arch/*/util/libdw-helpers.c the PERF_HAVE_DWARF_REGS can b=
-e
-> > > renamed to PERF_HAVE_LIBDW_HELPERS to align. Then
-> > > PERF_HAVE_LIBDW_HELPERS guarding the #define PERF_HAVE_LIBDW makes
-> > > sense to me and I think we achieve the filename alignment you are
-> > > looking for.
-> >
-> > I don't think it's a good idea.  The logic is not specific to libdw.
->
-> Yes, the logic (DWARF register mapping to the ISA register name) is
-> not libdw. But I think we can also implement it in "libdw-helper.c".
-> (In fact, this implementation does not depend only on Dwarf, but
->  rather on the convenience of ftrace.)
->
-> > >
-> > > Yes get_arch_regnum could make sense out of libdw and needn't just be
-> > > a helper for it, but let's worry about that when there's a need.
-> > > What's confusing at the moment is does libdw provide dwarf support,
-> > > which I'd say is expected, or does dwarf provide libdw support?
-> >
-> > As I said, it's about refusing libdw.
->
-> I think Ian pointed this part, even if libdw is available, dwarf-regs.c
-> controls its usage, but libunwind is not.
->
-> >
-> >   ifndef NO_LIBDW
-> >     ifeq ($(origin PERF_HAVE_DWARF_REGS), undefined)
-> >       $(warning DWARF register mappings have not been defined for archi=
-tecture $(SRCARCH), DWARF support disabled)
->
-> I think *this message* is the root cause of this discussion. It should be
-> changed to
->
-> "DWARF register mappings have not been defined for architecture $(SRCARCH=
-), libdw support disabled."
->
-> or (if changed to libdw-helper)
->
-> "libdw-helper.c is not implemented for architecture $(SRCARCH), libdw sup=
-port disabled."
+On Fri, Sep 20, 2024 at 05:47:37PM +0000, Colton Lewis wrote:
+> For clarity, rename the arch-specific definitions of these functions
+> to perf_arch_* to denote they are arch-specifc. Define the
+> generic-named functions in one place where they can call the
+> arch-specific ones as needed.
+> 
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+> ---
+>  arch/arm64/include/asm/perf_event.h          |  6 +++---
+>  arch/arm64/kernel/perf_callchain.c           |  4 ++--
+>  arch/powerpc/include/asm/perf_event_server.h |  6 +++---
+>  arch/powerpc/perf/core-book3s.c              |  4 ++--
+>  arch/s390/include/asm/perf_event.h           |  6 +++---
+>  arch/s390/kernel/perf_event.c                |  4 ++--
+>  arch/x86/events/core.c                       |  4 ++--
+>  arch/x86/include/asm/perf_event.h            | 10 +++++-----
+>  include/linux/perf_event.h                   |  9 ++++++---
+>  kernel/events/core.c                         | 10 ++++++++++
+>  10 files changed, 38 insertions(+), 25 deletions(-)
 
-So looking at the code I think the whole thing looks wrong. The
-get_arch_regnum function is used by get_dwarf_regnum which is used in
-2 places in annotate.c:
-```
-static int extract_reg_offset(struct arch *arch, const char *str,
-                             struct annotated_op_loc *op_loc)
-...
-int annotate_get_insn_location(struct arch *arch, struct disasm_line *dl,
-                              struct annotated_insn_loc *loc)
-```
-So these functions are passing in an architecture. In get_dwarf_regnum:
-```
-/* Return DWARF register number from architecture register name */
-int get_dwarf_regnum(const char *name, unsigned int machine)
-{
-       char *regname =3D strdup(name);
-       int reg =3D -1;
-       char *p;
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-       if (regname =3D=3D NULL)
-               return -EINVAL;
+Mark.
 
-       /* For convenience, remove trailing characters */
-       p =3D strpbrk(regname, " ,)");
-       if (p)
-               *p =3D '\0';
-
-       switch (machine) {
-       case EM_NONE:   /* Generic arch - use host arch */
-               reg =3D get_arch_regnum(regname);
-               break;
-       default:
-               pr_err("ELF MACHINE %x is not supported.\n", machine);
-       }
-       free(regname);
-       return reg;
-}
-```
-But why, if the machine is EM_X86_64 and I'm on an x86-64, can't I
-call get_arch_regnum? The code should be something like:
-```
-if (machine =3D=3D EM_NONE) {
-#ifdef __x86_64__
-  machine =3D EM_X86_64;
-#elf...
-```
-Once we have an architecture specific machine then instead of
-get_arch_regnum it should call get_x86_64_regnum or
-get_aarch64_regnum.
-```
-switch(machine) }
-case EM_X86_64:
-         reg =3D get_x86_64_regnum(regname);
-         break;
-...
-```
-Is this better? Yes, it means that the annotate logic can work if,
-say, annotating/disassembling an ARM binary on an x86-64.
-
-So we need to pull all the tools/perf/arch/<arch>/util/dwarf-regs.c
-files into tools/perf/util/dwarf-regs-<arch>.c files. We need to
-rename the get_arch_regnum to reflect the <arch> in the file name. The
-Makefile logic can include all of this unconditionally and
-PERF_HAVE_DWARF_REGS can just be removed. In the process the ability
-to annotate binaries from one architecture on another is improved. It
-needn't be the case that we have dwarf regs for the architecture perf
-is being run on as we may be annotating an x86-64 binary where there
-is support.
-
-What's strange is that get_dwarf_regstr in the common code already
-does things pretty much this way. This whole Makefile, arch, weak
-function, PERF_HAVE... logic just looks like a mistake that is making
-the tool worse than it needs to be. I think this is frequently the
-case with code in arch/, a lot of the functionality there can be moved
-into pmu.c and doing things conditional on the pmu, which is
-inherently architecture dependent. This can fix unusual cases of say
-running the perf tool on user land qemu, where we may have an ARM perf
-binary but see the PMUs of an x86.
-
-I can work to put this into a v2 so please scream if my reasoning
-doesn't make sense.
-
-Thanks,
-Ian
+> 
+> diff --git a/arch/arm64/include/asm/perf_event.h b/arch/arm64/include/asm/perf_event.h
+> index eb7071c9eb34..31a5584ed423 100644
+> --- a/arch/arm64/include/asm/perf_event.h
+> +++ b/arch/arm64/include/asm/perf_event.h
+> @@ -11,9 +11,9 @@
+>  
+>  #ifdef CONFIG_PERF_EVENTS
+>  struct pt_regs;
+> -extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+> -extern unsigned long perf_misc_flags(struct pt_regs *regs);
+> -#define perf_misc_flags(regs)	perf_misc_flags(regs)
+> +extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
+> +extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
+> +#define perf_arch_misc_flags(regs)	perf_misc_flags(regs)
+>  #define perf_arch_bpf_user_pt_regs(regs) &regs->user_regs
+>  #endif
+>  
+> diff --git a/arch/arm64/kernel/perf_callchain.c b/arch/arm64/kernel/perf_callchain.c
+> index e8ed5673f481..01a9d08fc009 100644
+> --- a/arch/arm64/kernel/perf_callchain.c
+> +++ b/arch/arm64/kernel/perf_callchain.c
+> @@ -39,7 +39,7 @@ void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
+>  	arch_stack_walk(callchain_trace, entry, current, regs);
+>  }
+>  
+> -unsigned long perf_instruction_pointer(struct pt_regs *regs)
+> +unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
+>  {
+>  	if (perf_guest_state())
+>  		return perf_guest_get_ip();
+> @@ -47,7 +47,7 @@ unsigned long perf_instruction_pointer(struct pt_regs *regs)
+>  	return instruction_pointer(regs);
+>  }
+>  
+> -unsigned long perf_misc_flags(struct pt_regs *regs)
+> +unsigned long perf_arch_misc_flags(struct pt_regs *regs)
+>  {
+>  	unsigned int guest_state = perf_guest_state();
+>  	int misc = 0;
+> diff --git a/arch/powerpc/include/asm/perf_event_server.h b/arch/powerpc/include/asm/perf_event_server.h
+> index 5995614e9062..af0f46e2373b 100644
+> --- a/arch/powerpc/include/asm/perf_event_server.h
+> +++ b/arch/powerpc/include/asm/perf_event_server.h
+> @@ -102,8 +102,8 @@ struct power_pmu {
+>  int __init register_power_pmu(struct power_pmu *pmu);
+>  
+>  struct pt_regs;
+> -extern unsigned long perf_misc_flags(struct pt_regs *regs);
+> -extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+> +extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
+> +extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
+>  extern unsigned long int read_bhrb(int n);
+>  
+>  /*
+> @@ -111,7 +111,7 @@ extern unsigned long int read_bhrb(int n);
+>   * if we have hardware PMU support.
+>   */
+>  #ifdef CONFIG_PPC_PERF_CTRS
+> -#define perf_misc_flags(regs)	perf_misc_flags(regs)
+> +#define perf_arch_misc_flags(regs)	perf_arch_misc_flags(regs)
+>  #endif
+>  
+>  /*
+> diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
+> index 42867469752d..dc01aa604cc1 100644
+> --- a/arch/powerpc/perf/core-book3s.c
+> +++ b/arch/powerpc/perf/core-book3s.c
+> @@ -2332,7 +2332,7 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
+>   * Called from generic code to get the misc flags (i.e. processor mode)
+>   * for an event_id.
+>   */
+> -unsigned long perf_misc_flags(struct pt_regs *regs)
+> +unsigned long perf_arch_misc_flags(struct pt_regs *regs)
+>  {
+>  	u32 flags = perf_get_misc_flags(regs);
+>  
+> @@ -2346,7 +2346,7 @@ unsigned long perf_misc_flags(struct pt_regs *regs)
+>   * Called from generic code to get the instruction pointer
+>   * for an event_id.
+>   */
+> -unsigned long perf_instruction_pointer(struct pt_regs *regs)
+> +unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
+>  {
+>  	unsigned long siar = mfspr(SPRN_SIAR);
+>  
+> diff --git a/arch/s390/include/asm/perf_event.h b/arch/s390/include/asm/perf_event.h
+> index 9917e2717b2b..f6c7b611a212 100644
+> --- a/arch/s390/include/asm/perf_event.h
+> +++ b/arch/s390/include/asm/perf_event.h
+> @@ -37,9 +37,9 @@ extern ssize_t cpumf_events_sysfs_show(struct device *dev,
+>  
+>  /* Perf callbacks */
+>  struct pt_regs;
+> -extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+> -extern unsigned long perf_misc_flags(struct pt_regs *regs);
+> -#define perf_misc_flags(regs) perf_misc_flags(regs)
+> +extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
+> +extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
+> +#define perf_arch_misc_flags(regs) perf_arch_misc_flags(regs)
+>  #define perf_arch_bpf_user_pt_regs(regs) &regs->user_regs
+>  
+>  /* Perf pt_regs extension for sample-data-entry indicators */
+> diff --git a/arch/s390/kernel/perf_event.c b/arch/s390/kernel/perf_event.c
+> index 5fff629b1a89..f9000ab49f4a 100644
+> --- a/arch/s390/kernel/perf_event.c
+> +++ b/arch/s390/kernel/perf_event.c
+> @@ -57,7 +57,7 @@ static unsigned long instruction_pointer_guest(struct pt_regs *regs)
+>  	return sie_block(regs)->gpsw.addr;
+>  }
+>  
+> -unsigned long perf_instruction_pointer(struct pt_regs *regs)
+> +unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
+>  {
+>  	return is_in_guest(regs) ? instruction_pointer_guest(regs)
+>  				 : instruction_pointer(regs);
+> @@ -84,7 +84,7 @@ static unsigned long perf_misc_flags_sf(struct pt_regs *regs)
+>  	return flags;
+>  }
+>  
+> -unsigned long perf_misc_flags(struct pt_regs *regs)
+> +unsigned long perf_arch_misc_flags(struct pt_regs *regs)
+>  {
+>  	/* Check if the cpum_sf PMU has created the pt_regs structure.
+>  	 * In this case, perf misc flags can be easily extracted.  Otherwise,
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index be01823b1bb4..760ad067527c 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2940,7 +2940,7 @@ static unsigned long code_segment_base(struct pt_regs *regs)
+>  	return 0;
+>  }
+>  
+> -unsigned long perf_instruction_pointer(struct pt_regs *regs)
+> +unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
+>  {
+>  	if (perf_guest_state())
+>  		return perf_guest_get_ip();
+> @@ -2948,7 +2948,7 @@ unsigned long perf_instruction_pointer(struct pt_regs *regs)
+>  	return regs->ip + code_segment_base(regs);
+>  }
+>  
+> -unsigned long perf_misc_flags(struct pt_regs *regs)
+> +unsigned long perf_arch_misc_flags(struct pt_regs *regs)
+>  {
+>  	unsigned int guest_state = perf_guest_state();
+>  	int misc = 0;
+> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+> index 91b73571412f..feb87bf3d2e9 100644
+> --- a/arch/x86/include/asm/perf_event.h
+> +++ b/arch/x86/include/asm/perf_event.h
+> @@ -536,15 +536,15 @@ struct x86_perf_regs {
+>  	u64		*xmm_regs;
+>  };
+>  
+> -extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+> -extern unsigned long perf_misc_flags(struct pt_regs *regs);
+> -#define perf_misc_flags(regs)	perf_misc_flags(regs)
+> +extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
+> +extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
+> +#define perf_arch_misc_flags(regs)	perf_arch_misc_flags(regs)
+>  
+>  #include <asm/stacktrace.h>
+>  
+>  /*
+> - * We abuse bit 3 from flags to pass exact information, see perf_misc_flags
+> - * and the comment with PERF_EFLAGS_EXACT.
+> + * We abuse bit 3 from flags to pass exact information, see
+> + * perf_arch_misc_flags() and the comment with PERF_EFLAGS_EXACT.
+>   */
+>  #define perf_arch_fetch_caller_regs(regs, __ip)		{	\
+>  	(regs)->ip = (__ip);					\
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 1a8942277dda..d061e327ad54 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1633,10 +1633,13 @@ extern void perf_tp_event(u16 event_type, u64 count, void *record,
+>  			  struct task_struct *task);
+>  extern void perf_bp_event(struct perf_event *event, void *data);
+>  
+> -#ifndef perf_misc_flags
+> -# define perf_misc_flags(regs) \
+> +extern unsigned long perf_misc_flags(struct pt_regs *regs);
+> +extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+> +
+> +#ifndef perf_arch_misc_flags
+> +# define perf_arch_misc_flags(regs) \
+>  		(user_mode(regs) ? PERF_RECORD_MISC_USER : PERF_RECORD_MISC_KERNEL)
+> -# define perf_instruction_pointer(regs)	instruction_pointer(regs)
+> +# define perf_arch_instruction_pointer(regs)	instruction_pointer(regs)
+>  #endif
+>  #ifndef perf_arch_bpf_user_pt_regs
+>  # define perf_arch_bpf_user_pt_regs(regs) regs
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 8a6c6bbcd658..eeabbf791a8c 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -6921,6 +6921,16 @@ void perf_unregister_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)
+>  EXPORT_SYMBOL_GPL(perf_unregister_guest_info_callbacks);
+>  #endif
+>  
+> +unsigned long perf_misc_flags(struct pt_regs *regs)
+> +{
+> +	return perf_arch_misc_flags(regs);
+> +}
+> +
+> +unsigned long perf_instruction_pointer(struct pt_regs *regs)
+> +{
+> +	return perf_arch_instruction_pointer(regs);
+> +}
+> +
+>  static void
+>  perf_output_sample_regs(struct perf_output_handle *handle,
+>  			struct pt_regs *regs, u64 mask)
+> -- 
+> 2.46.0.792.g87dc391469-goog
+> 
