@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A52B15572E
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Oct 2024 23:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DAF1586C9
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Oct 2024 23:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728085290; cv=none; b=LBjrMpxfom5jb1D/5hvCZiTZKC9AGd2GDdJbn0Rp137yCgTVNsZTldJq2f84DhjqNnTKAi/KGFES2g2yovnwwKmKDvnTq/b4CHAQ/JQmq4c9oTjcx3TXoCtIL/AqaGj9FD4EKEztZhclLiDP79YtsFTCnXdDWC20mQ4eT20877E=
+	t=1728085293; cv=none; b=CYg7OAUm0k/xJLwuR9D0AILulywRwFl+DOrvp2doEbE5HFOnZyzS+N02krVTAHdy7tDoekVoeSPsSXdZcIVHQw0tWwDGwH50Dmf1OOK+4cgpmhonne4bLINXDxQKWEZq+XuaBNvYKzRIyzjQPTOaihl0IQt+y0Mrxksy8YcAqXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728085290; c=relaxed/simple;
-	bh=LvLeqWxdA2TeKOaDt4auOtFHYmifqW5hHzjxgLb+wnk=;
+	s=arc-20240116; t=1728085293; c=relaxed/simple;
+	bh=582DRnB5Pp2nT0TmmUs1PKu6Q4ckzT+k5c03nxLaKLU=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=fvLVFLGcaLmA+YL4yUJW2VY8bMOxRwVtS4GZfJ1ojFo/s/avAUzQ8dKDQb+NzFyWoul2VQInBqcBBEKgcdKXPlayfbwf9S9cw/hB1dIv0X5Yi0ZpE+yqCWODBNUVsg0E348jqs4wMVkoyBZM9qnWKc5dBFI/DzotOi5MNC+sks0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D8cCcljZ; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=F/75sD+5SgJduzQmCQaY1W5fltTO41lmBJV8iOra3cvhwprQtst9Ds8QB1T6JFcKrhLKR3JfqhylXEH0cBFWe+MCr/MXiK22JUgPaV6VdmCYWcmfmdsdK0U0f0E4EPJE0qi20R6uwGqc8YY2IwQE5hfy1/PjkzwWrY1SEjy8y04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KsUjdMx7; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D8cCcljZ"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e26ba37314so41994697b3.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 04 Oct 2024 16:41:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KsUjdMx7"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e02b5792baaso3994743276.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Oct 2024 16:41:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728085288; x=1728690088; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1728085290; x=1728690090; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=A6CcUNAGP79XtjWuaAPJ4OrijNFqcGuc6YFaoXPXPNs=;
-        b=D8cCcljZtKRLLHmas+tud6Ndo+kDepmj+wMKt05ZgcUA2BLD/R5ks/Y5tHkplX9sEU
-         viIJ4X/KNCnNe0/c5b3oFbe0RwAL/k5AOZjg82uuKFOM+8l8Jl1EE7GBeLBWeawViqV7
-         R/YQWPIiiGAQ5nCaF6iXLO/fjSyJt3T35fO9ybrGooFtMK2Ew/J1DzcK+IlZMzjSfQxG
-         z4F/nyczaaFkhStKgs3Wcy/ForEKv2NObqbygXqRthxnbUelXWBSuFOaoPz2UpR1iFWf
-         MiyKuWbe4+yf28PB/3Ep2DY7Aq9anVzXSJ5l5Rz0stkyVDNIwyxUuJOp/6pk7/HiVkjT
-         6wYw==
+        bh=FKmYAtBHo12nlkSZDOvO0LdX2ud+8CKD/pmfUApXbfo=;
+        b=KsUjdMx7fWtf4NOksTLfaumdkjdkiS2dIxKe6zQmKfMbSyc0EnLR4Q/h7ZBB5oQijs
+         zeVVnluVzDRv8Pa8Yby6jy9tNs1+5+35UisgJQ9dbAnpeVteoQdqjL14RnvQqa5vx1lt
+         TFW8FbZwXIFLWRJHbJIZ2dGIiZ5f8W5JHMcYlRmBO9v3bcRcVJqmIea32GceEanCLSas
+         PPSPQszjuRjJ1qwv0F3lzmPYFgC9SzeBcxceGbnN9l/QrfRfyt0ym2NJpexElfd4Yv1T
+         7ceZsOBv36ryjdd8esy8iDdTxOwox3cvhOiwNs19k8Ax6RHzSDuepMxmMk4Abr/DWzTd
+         jsnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728085288; x=1728690088;
+        d=1e100.net; s=20230601; t=1728085290; x=1728690090;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A6CcUNAGP79XtjWuaAPJ4OrijNFqcGuc6YFaoXPXPNs=;
-        b=IpRf/4d02SFIJ1fc/LXFVsrKSs8heZLNkyPwIDmHehx4/NE+mnWjJfVukGfDD5ASPN
-         C31B+9bxxUE2QVs8enZZvin+MXbFrU2YZR3O3LUIhhz6awe/AeGP/5HZcVQHKSyEC0Yo
-         XPJMykig/3zJ/ImKCbS9i+b2lRv0+rGTw/d3K0JodlJyAEma2BHFD5MpYZyqf68egJJJ
-         K5tP5vVtu6mTjhm7x/EDSs2+y8OzmsMTMkzuoQsnhj0v4We1CtzAXf6qkPNclStkn7d4
-         aOqvEOFn/S2iiQ6NwIRAQqHedOfyrXVvwbhOU4VFKZ+nFV4SInOmB4dwO9Awiz7SDBuh
-         Bx6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWHsHTiGHnvPYwcYzsbymodzoSdbZwX8J3xJRvzAbYtUwTbhDuTGfjKRUEdUC0nrNCxGLHgT1WFFFb8IalevX2G@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSJiaxmgGS5pm70Ei90AB9aA95aOKJObRJzYt/RDkgrcib5fWa
-	2SYUF8JLd3Bovh0cjIfE0NaQCaqZXK8Fpy1rf2O1IaxdFZ/fo4HruY0Xvp9I9JIBwHmcmSs+Xvj
-	dMz8FgA==
-X-Google-Smtp-Source: AGHT+IFqw6htDoHPrP52f8AD6FsGc60YnuQl8LA6+s9ft64QucdGHglRTtYEDtHIDvGu9pa6YkRbuCsaTeHC
+        bh=FKmYAtBHo12nlkSZDOvO0LdX2ud+8CKD/pmfUApXbfo=;
+        b=F4wzwOzdff0JhOJaRb6z64VDNfVOKTuU9uz19ikdVk1gygWr0R08DFPKxTZ7l+yF4S
+         LDAL/UyRHbjtk1fOS46SACVuAja1yL3Q5rD23rCIvH3chSz5oLJTpUzo9DesllLbnqwR
+         gYjA5c302Ux5ig+5aylQTOP45fraBFxPKbt57P9HGGYSpVM3TVPkmPGroB0Ff/XUOIBc
+         TYrPq1r3zfiX/ZuhJv1Qdq8fU7AtUsZMu/KKPqCqTnPtTC1LwKYCkbM+hpcF2l3vW6+i
+         B0Xjd+5OSshdorfFEqe7NdNUin32e1z2MvfgKiYH9dEL0TkaSBjGzAQ0Q2kRx0mp9zEN
+         iupg==
+X-Forwarded-Encrypted: i=1; AJvYcCX9SqDBeoVXPXOwZvEPiqKpJ59KV1/08ighcnqZUQO7qpJVP7qxJSUlwflfi2e8EdX83RBTHuS8RXnznyZa5Ul8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXRdUKwBA5+7f8AJ55J5Nc6YELHHWE6Ci2ybnQtt7cgFTlNcdt
+	/a1KLfY5G3b85wXCtOvJ1xqt54JTLMskPW8Rb6o0/x+QR+mvYgmTHXs9iXrrEYGI7f6OXMkeeL2
+	/AdchSw==
+X-Google-Smtp-Source: AGHT+IFIP1vxomIUR1izckKXkT0KBqdFIx8rKTHDFttFm5UhBt8Cz3r+IBAR/Uuku6pVTLADgrA8Md0dEdz5
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8d23:e3c7:679f:19df])
- (user=irogers job=sendgmr) by 2002:a05:690c:6686:b0:6db:da20:fa12 with SMTP
- id 00721157ae682-6e2c6e90bb5mr215817b3.0.1728085287901; Fri, 04 Oct 2024
- 16:41:27 -0700 (PDT)
-Date: Fri,  4 Oct 2024 16:41:14 -0700
+ (user=irogers job=sendgmr) by 2002:a25:ce88:0:b0:e25:d596:4847 with SMTP id
+ 3f1490d57ef6-e28939190b5mr10441276.6.1728085290158; Fri, 04 Oct 2024 16:41:30
+ -0700 (PDT)
+Date: Fri,  4 Oct 2024 16:41:15 -0700
 In-Reply-To: <20241004234120.1495209-1-irogers@google.com>
-Message-Id: <20241004234120.1495209-3-irogers@google.com>
+Message-Id: <20241004234120.1495209-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241004234120.1495209-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.rc0.187.ge670bccf7e-goog
-Subject: [PATCH v1 2/8] perf stat: Fix/add parameter names for print_metric
+Subject: [PATCH v1 3/8] perf stat: Display "none" for NaN with metric only json
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,153 +76,46 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The print_metric parameter names were rearranged, fix and add comments
-in the stat-shadow callers to ensure they are correct.
+Return earlier for an empty unit case. If snprintf of the fmt doesn't
+produce digits between vals and ends, as happens with NaN, make the
+value "none" as happens in print_metric_end.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-shadow.c | 55 ++++++++++++++++++++---------------
- tools/perf/util/stat.h        |  6 ++--
- 2 files changed, 36 insertions(+), 25 deletions(-)
+ tools/perf/util/stat-display.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 3ce756b8ede5..1e6ba6bf244a 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -195,17 +195,21 @@ static void print_ratio(struct perf_stat_config *config,
- 			const struct evsel *evsel, int aggr_idx,
- 			double numerator, struct perf_stat_output_ctx *out,
- 			enum stat_type denominator_type,
--			const double color_ratios[3], const char *unit)
-+			const double color_ratios[3], const char *_unit)
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 5402998881c4..e392ee5efb45 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -609,19 +609,22 @@ static void print_metric_only_json(struct perf_stat_config *config __maybe_unuse
  {
- 	double denominator = find_stat(evsel, aggr_idx, denominator_type);
-+	double ratio = 0;
-+	const char *color = NULL;
-+	const char *fmt = NULL;
-+	const char *unit = NULL;
+ 	struct outstate *os = ctx;
+ 	FILE *out = os->fh;
+-	char buf[64], *vals, *ends;
++	char buf[64], *ends;
+ 	char tbuf[1024];
++	const char *vals;
  
- 	if (numerator && denominator) {
--		double ratio = numerator / denominator * 100.0;
--		const char *color = get_ratio_color(color_ratios, ratio);
--
--		out->print_metric(config, out->ctx, color, "%7.2f%%", unit, ratio);
--	} else
--		out->print_metric(config, out->ctx, NULL, NULL, unit, 0);
-+		ratio = numerator / denominator * 100.0;
-+		color = get_ratio_color(color_ratios, ratio);
-+		fmt = "%7.2f%%";
-+		unit = _unit;
-+	}
-+	out->print_metric(config, out->ctx, color, fmt, unit, ratio);
+ 	if (!valid_only_metric(unit))
+ 		return;
+ 	unit = fixunit(tbuf, os->evsel, unit);
++	if (!unit[0])
++		return;
+ 	snprintf(buf, sizeof(buf), fmt ?: "", val);
+-	ends = vals = skip_spaces(buf);
++	vals = ends = skip_spaces(buf);
+ 	while (isdigit(*ends) || *ends == '.')
+ 		ends++;
+ 	*ends = 0;
+-	if (!unit[0] || !vals[0])
+-		return;
++	if (!vals[0])
++		vals = "none";
+ 	fprintf(out, "%s\"%s\" : \"%s\"", os->first ? "" : ", ", unit, vals);
+ 	os->first = false;
  }
- 
- static void print_stalled_cycles_front(struct perf_stat_config *config,
-@@ -319,14 +323,15 @@ static void print_instructions(struct perf_stat_config *config,
- 				find_stat(evsel, aggr_idx, STAT_STALLED_CYCLES_BACK));
- 
- 	if (cycles) {
--		print_metric(config, ctxp, NULL, "%7.2f ", "insn per cycle",
--			instructions / cycles);
--	} else
--		print_metric(config, ctxp, NULL, NULL, "insn per cycle", 0);
-+		print_metric(config, ctxp, /*color=*/NULL, "%7.2f ", "insn per cycle",
-+			     instructions / cycles);
-+	} else {
-+		print_metric(config, ctxp, /*color=*/NULL, /*fmt=*/NULL, "insn per cycle", 0);
-+	}
- 
- 	if (max_stalled && instructions) {
- 		out->new_line(config, ctxp);
--		print_metric(config, ctxp, NULL, "%7.2f ", "stalled cycles per insn",
-+		print_metric(config, ctxp, /*color=*/NULL, "%7.2f ", "stalled cycles per insn",
- 			max_stalled / instructions);
- 	}
- }
-@@ -341,9 +346,10 @@ static void print_cycles(struct perf_stat_config *config,
- 	if (cycles && nsecs) {
- 		double ratio = cycles / nsecs;
- 
--		out->print_metric(config, out->ctx, NULL, "%8.3f", "GHz", ratio);
--	} else
--		out->print_metric(config, out->ctx, NULL, NULL, "GHz", 0);
-+		out->print_metric(config, out->ctx, /*color=*/NULL, "%8.3f", "GHz", ratio);
-+	} else {
-+		out->print_metric(config, out->ctx, /*color=*/NULL, /*fmt=*/NULL, "GHz", 0);
-+	}
- }
- 
- static void print_nsecs(struct perf_stat_config *config,
-@@ -356,10 +362,11 @@ static void print_nsecs(struct perf_stat_config *config,
- 	double wall_time = avg_stats(&walltime_nsecs_stats);
- 
- 	if (wall_time) {
--		print_metric(config, ctxp, NULL, "%8.3f", "CPUs utilized",
-+		print_metric(config, ctxp, /*color=*/NULL, "%8.3f", "CPUs utilized",
- 			nsecs / (wall_time * evsel->scale));
--	} else
--		print_metric(config, ctxp, NULL, NULL, "CPUs utilized", 0);
-+	} else {
-+		print_metric(config, ctxp, /*color=*/NULL, /*fmt=*/NULL, "CPUs utilized", 0);
-+	}
- }
- 
- static int prepare_metric(const struct metric_expr *mexp,
-@@ -532,12 +539,12 @@ static void generic_metric(struct perf_stat_config *config,
- 					ratio);
- 			}
- 		} else {
--			print_metric(config, ctxp, color, /*unit=*/NULL,
-+			print_metric(config, ctxp, color, /*fmt=*/NULL,
- 				     out->force_header ?
- 				     (metric_name ?: evsel->name) : "", 0);
- 		}
- 	} else {
--		print_metric(config, ctxp, color, /*unit=*/NULL,
-+		print_metric(config, ctxp, color, /*fmt=*/NULL,
- 			     out->force_header ?
- 			     (metric_name ?: evsel->name) : "", 0);
- 	}
-@@ -708,9 +715,11 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 
- 				if (unit != ' ')
- 					snprintf(unit_buf, sizeof(unit_buf), "%c/sec", unit);
--				print_metric(config, ctxp, NULL, "%8.3f", unit_buf, ratio);
--			} else
-+				print_metric(config, ctxp, /*color=*/NULL, "%8.3f",
-+					     unit_buf, ratio);
-+			} else {
- 				num = 0;
-+			}
- 		}
- 	}
- 
-@@ -718,7 +727,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 						  &num, NULL, out, metric_events);
- 
- 	if (num == 0)
--		print_metric(config, ctxp, NULL, NULL, NULL, 0);
-+		print_metric(config, ctxp, /*color=*/NULL, /*fmt=*/NULL, /*unit=*/NULL, 0);
- }
- 
- /**
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index fd7a187551bd..a5f3d7d00101 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -155,8 +155,10 @@ extern struct stats walltime_nsecs_stats;
- extern struct rusage_stats ru_stats;
- 
- typedef void (*print_metric_t)(struct perf_stat_config *config,
--			       void *ctx, const char *color, const char *unit,
--			       const char *fmt, double val);
-+			       void *ctx, const char *color,
-+			       const char *fmt,
-+			       const char *unit,
-+			       double val);
- typedef void (*new_line_t)(struct perf_stat_config *config, void *ctx);
- 
- /* Used to print the display name of the Default metricgroup for now. */
 -- 
 2.47.0.rc0.187.ge670bccf7e-goog
 
