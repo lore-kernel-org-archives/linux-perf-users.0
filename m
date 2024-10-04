@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0937D1D89FC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D4C1D89FC
 	for <linux-perf-users@vger.kernel.org>; Fri,  4 Oct 2024 19:29:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728070154; cv=none; b=FMD2dWrT8bWqv3wLvdE7mtaGwv73WIOkWi86riwnfck7UUJMbqF0dzniBQ8+Vv+p7BH+lpMexpdrvECu3gotwjVpiZ9x5qhv5hND74+Axzfvaghw1/e/AU/IjqMzCkqBCWeZe8cC9+fyfUzmyGBGDsHLQ3mUxKf9b/5V4MswQFw=
+	t=1728070154; cv=none; b=nr9C7JhizYHtvjm+8A9S3v9p1qkyRaCW3+uWCiofnIW9bFcmKwJ5kTkTLMO4jD+eDticWdJr06n/OuzPaVwoZJt0bu0uW+oMeBSG8OecAoqsujjTbGE0wH4Ov9h4E3yMHyFE+i6HIZvgJI39U5lnJB6Vd5HS8tjQrDRMctjC0W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1728070154; c=relaxed/simple;
-	bh=xjgGsWtqILpIRg5wq9/4p2CWsxX2nJK4VWmKB4OXYQs=;
+	bh=AJGmvRmbOo9BitssiIVa/eJcmpkII1Qh680KJKFw8cY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=R0fOnPqnU42ZbkYzbeuKjtZCwB03+PPFJZkY8YZbi2JD7lNZ2Sh4EpYvMf6jkQciNrtUyeDxB9B/d4yUBQctqMlYsJmxiTJUMXfxstmex0gCjT8e6pe5C3YNuugRvftZ+z5iW0+Sh5xwivuFyGuxSUAFijjsSZ1Ckl/IJHafCME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pi9F37x4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=HIxNgjYRJmmPuv+wuwv7smAWISlJ+Z5Uz1CTs6USx0pUs/Bc7WqoD6IRcBGa2F5/3Brmdpiiy4uEBLuIk2rQGy1Vm5Q5iye9ZvlSnaBRjd+brTKVFr/IshEQbqx87WvuBSEMFnKPG9T/Omv6LfwUChh5BQQJAER5PcIllznjhTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yq4TWwOv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pi9F37x4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86479C4CEC6;
-	Fri,  4 Oct 2024 19:29:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yq4TWwOv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10B6DC4CECE;
+	Fri,  4 Oct 2024 19:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728070153;
-	bh=xjgGsWtqILpIRg5wq9/4p2CWsxX2nJK4VWmKB4OXYQs=;
+	s=k20201202; t=1728070154;
+	bh=AJGmvRmbOo9BitssiIVa/eJcmpkII1Qh680KJKFw8cY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=pi9F37x454LONAkQbFSO1l94aDXdBpFfIcydpKrQFch5SeaQjdOjfbbAjMMH+4ATk
-	 6cf2gpMWNJ0bYg4asGjbggS/VBdET4D4L6KRJ8l7T+u2mssJ3VwHTyNXikAiciTR3b
-	 mkI0cGCLh3egXsUKVo5caHy0UOKyff4RvhGSuyMXC50ZN9jGvCjc51irxzyi91NdXs
-	 v3PPia9pGG3R/QqL3yPYKaVMAJAMXSbg3KePaQX51o27nu8sRd+OU6IE7gW1Wa86qN
-	 meznj4FtF8BDqolHQSrjxWREzfNm/ic2/whXpHo24k7kIQTsIGhsycxUtJEyrxwoxh
-	 hK/cAiGmwWb4Q==
+	b=Yq4TWwOvyFtwHdyxxbQ0EGx47ku88RRN36Yzp3m+o09NrshOHPAKYkK5re48PAus/
+	 Fpd25j20H6Yvpr3FRbqoGjjsPJ8QA5K8GRc9Pxw1vcwse67M6xV+22XRTO9XYQa+LG
+	 77CtCBVnVTY/p4goDuSo95nwKG+PBOgNMLRHU7aM4Wzf2TygwRSvhzrUkg8FIoBJ3C
+	 uTm6I1Ajc73baO1fefmy3ckIbEkxvmRhuYGI0+Zw36A2X5a020fJsF4dz71cSlhA1u
+	 bAC4Emz0piY+bl91xOZBT4ThKsyCvMJpGFuBzfOQ88DyzQjd/wbpApSxciBRGJhFJ3
+	 g5XWDnXSd0r4w==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-perf-users@vger.kernel.org, vmolnaro@redhat.com, 
- irogers@google.com, Michael Petlan <mpetlan@redhat.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
- adrian.hunter@intel.com, kan.liang@linux.intel.com
-In-Reply-To: <20240927151926.399474-1-mpetlan@redhat.com>
-References: <20240927151926.399474-1-mpetlan@redhat.com>
-Subject: Re: [PATCH] perf trace: Keep exited threads for summary
-Message-Id: <172807015351.55364.9210322840431011833.b4-ty@kernel.org>
-Date: Fri, 04 Oct 2024 12:29:13 -0700
+To: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com, 
+ vmolnaro@redhat.com
+Cc: mpetlan@redhat.com, adrian.hunter@intel.com, 
+ alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+ kan.liang@linux.intel.com, mark.rutland@arm.com
+In-Reply-To: <20241003125136.15918-1-vmolnaro@redhat.com>
+References: <ZvyRefEz4lj4evm5@google.com>
+ <20241003125136.15918-1-vmolnaro@redhat.com>
+Subject: Re: [PATCH v2] perf test: Restore sample rate for perf_event_attr
+Message-Id: <172807015402.55364.12529583038234440690.b4-ty@kernel.org>
+Date: Fri, 04 Oct 2024 12:29:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,16 +48,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14-dev-d4707
 
-On Fri, 27 Sep 2024 17:19:26 +0200, Michael Petlan wrote:
+On Thu, 03 Oct 2024 14:51:36 +0200, vmolnaro@redhat.com wrote:
 
-> Since 9ffa6c7512ca ("perf machine thread: Remove exited threads by
-> default") perf cleans exited threads up, but as said, sometimes they
-> are necessary to be kept. The mentioned commit does not cover all the
-> cases, we also need the information to construct the summary table in
-> perf-trace.
-> 
-> Before:
->     # perf trace -s true
+> Test "Setup struct perf_event_attr" consists of multiple test cases that
+> can affect the max sample rate value for perf events. Some test cases
+> check this value as it should not be lowered under the set minimum for
+> the given test. Currently, it is possible for the test cases to affect
+> each other as the previous tests can lower the sample rate, leading to
+> a possible failure of some of the future test cases as the value is not
+> restored at any point.
 > 
 > [...]
 
