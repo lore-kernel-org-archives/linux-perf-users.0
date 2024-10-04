@@ -1,315 +1,406 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775B41E3787;
-	Fri,  4 Oct 2024 17:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110D41E376B;
+	Fri,  4 Oct 2024 17:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728061332; cv=none; b=q1zl10bnWXjgbuDrjatv9MS1ITrEVryKnUN/zfdUT3WNT/AcMi17/ZlTjZA2nkYOvqzLOb1jAmR3Q+rgW4NOzDQyYIpkBl7d7sWhf52jqXPeX7MJ4MhtfFau+PDsD9YNMMRT3rf1XX3Z+jKveh9W9CzpryrgX3b/eKZxvVL3ozU=
+	t=1728061729; cv=none; b=mNPC57Iiuixv/LCt75uPoMs6NqgN8NpP9Wkqu06c0fv6rt/shFseq7WTdndNUOq4InT//LglZiR757OJ6QqKiMxLej+86hfhlSB+UdGHKvdxMGoou5QvYU8lbnUj33sc67QnKeDcWKFtaOy5lFLYiVJ2EuHAkRU7obU3k8IFMNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728061332; c=relaxed/simple;
-	bh=qDpMplMgxytGjNYaLrwu1Ta+OkMlq1ik67+NV4u5L98=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VnzQdDO8NfqvRxGcue0ngCtBAoAOt65VRelULqn7c0DoORv8Nwkh1V0THQEg3R9Hsh+J8LUB7BMRobDbY0ASV8LnRNS0g4hgDWnWTkK6sLnntkYetd/XxdBZynUZ2fA6BpUHcgenI4hEe7F4k9OPnmsRYQpZ0RqjMyIyVMp9/2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ATsCVGSA; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1728061729; c=relaxed/simple;
+	bh=m/WfcRSARh3IT+BcR3pbRUaPiBnV3Uffd3h98k2+vNE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t7Fu/F2BygVJz8JgPpdqGqtANb8l4AYnzjbqcZiYPssE3Mw7A92609FViC07C9abNVhjNxu6RVLde5R1rGwn51/TXHc2FSrrX0D/3o8YpjWWnA2yYjHSimKvcNGR5BGrO+GpfBgW+jTtgkW0DD9XeoYkgJWP11iSnMOTzs6tFm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jNGvvsoR; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ATsCVGSA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728061330; x=1759597330;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=qDpMplMgxytGjNYaLrwu1Ta+OkMlq1ik67+NV4u5L98=;
-  b=ATsCVGSAAUWT3jOZCLfvGO7cuxnIw4+OectpbOuUVeIdQ1RiqCNFqums
-   fT2LCv1O6I1e0G9L6PV6PkZT3Nl34z2SMuJtdOSHcBlNMVcCMTRYADE3w
-   s96a6E8TAcLhvpupPqpRahyE8Ujw8f6sFAfo05vt4KYfs7M+5aUas0Bw8
-   g6pn+xBmwzhIx+OuLjZZyAtPxTqp82MR+zrfuTtv7F2bI9VpzD/NJmvWt
-   aoDG6hhPrG+Gx2fj1qqFAttBpQpSFIMVDly0IEmDVQKobjaFZdPIYlQYi
-   82fsCShZGm81cLZSdZCCtcIv+RlE+KaJRUc3xrs6Ck3TRD8/w78SXW6J2
-   g==;
-X-CSE-ConnectionGUID: ekyl2gnsQCqQU+OviaxbmA==
-X-CSE-MsgGUID: CCxUJUPmQNeP5Zm3n4a3sg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11215"; a="38684809"
-X-IronPort-AV: E=Sophos;i="6.11,178,1725346800"; 
-   d="scan'208";a="38684809"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 10:02:10 -0700
-X-CSE-ConnectionGUID: OiBFHAZeRWKuRfDw2NqBDA==
-X-CSE-MsgGUID: eCujfT4nS961gNw3nQeuhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,178,1725346800"; 
-   d="scan'208";a="75577640"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.245.166.93])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 10:02:02 -0700
-Message-ID: <2404a427-a1fb-44fb-99f1-a6dc25d4c21e@intel.com>
-Date: Fri, 4 Oct 2024 20:01:56 +0300
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jNGvvsoR"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 494GsR6J009756;
+	Fri, 4 Oct 2024 17:08:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=9NTkuxtDoestTR5rTAf74x/Efa
+	0DiUhMc0UNqcDR5Hs=; b=jNGvvsoRINZjeYYzs/4rtLAHygG/BU+xWmnhgZbGt7
+	lvkeal/CFiGp/mcvehSuUK2uLEbyeDDBUrqWZrG7LuNFVqMNt/jVr8R216NlP2K1
+	WkjRNstVrYxcOhREBm9P/p58fzQ2G/OMMTgz964lw4A0ymN1lKRHVFGkmYRn5+jv
+	I0Dpod+77CKnDKbG9TboSQQ4Zcq4XGtj99P7AmJjZkOEkGbXtMWIFfO4PMPHbZUZ
+	pyBO0I6mveeWKKSc0vOmmM4/2nSpvzgaCDUkb0/xiXbh220Sx8Jgg1JmXxTUIezZ
+	0GG8+i1JflUDVqsaPlkdPIIcsE9dSnXbQY5ICFASxLFw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 422m9v81rm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Oct 2024 17:08:09 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 494H88S8003341;
+	Fri, 4 Oct 2024 17:08:08 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 422m9v81rh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Oct 2024 17:08:08 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 494E2BRp009310;
+	Fri, 4 Oct 2024 17:08:07 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 42207kn5am-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Oct 2024 17:08:07 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 494H868m54591828
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 4 Oct 2024 17:08:06 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0942620043;
+	Fri,  4 Oct 2024 17:08:06 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2615920040;
+	Fri,  4 Oct 2024 17:08:00 +0000 (GMT)
+Received: from li-fdfde5cc-27d0-11b2-a85c-e224154bf6d4.ibm.com.com (unknown [9.43.97.138])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  4 Oct 2024 17:07:59 +0000 (GMT)
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Subject: [PATCH v6] perf sched timehist: Add pre-migration wait time option
+Date: Fri,  4 Oct 2024 22:37:56 +0530
+Message-ID: <20241004170756.18064-1-vineethr@linux.ibm.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V11 00/10] perf/core: Add ability for an event to "pause"
- or "resume" AUX area tracing
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Hendrik Brueckner <brueckner@linux.ibm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
- <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20240806155514.17900-1-adrian.hunter@intel.com>
-Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240806155514.17900-1-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: NoOxYxbrUVVZe37h9ZCZqZF4x9aOHiHc
+X-Proofpoint-GUID: kk9aZEmnHygENqPgquvmqlHoQx5PhkmH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-04_14,2024-10-04_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 mlxscore=0 mlxlogscore=999 clxscore=1015
+ bulkscore=0 adultscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410040118
 
-On 6/08/24 18:55, Adrian Hunter wrote:
-> Hi
-> 
-> Note for V11:
-> 	Moving aux_paused into a union within struct hw_perf_event caused
-> 	a regression because aux_paused was being written unconditionally
-> 	even though it is valid only for AUX (e.g. Intel PT) PMUs.
-> 	That is fixed in V11.
+pre-migration wait time is the time that a task unnecessarily spends
+on the runqueue of a CPU but doesn't get switched-in there. In terms
+of tracepoints, it is the time between sched:sched_wakeup and
+sched:sched_migrate_task.
 
-Any comments?
+Let's say a task woke up on CPU2, then it got migrated to CPU4 and
+then it's switched-in to CPU4. So, here pre-migration wait time is
+time that it was waiting on runqueue of CPU2 after it is woken up.
 
-> 
-> Hardware traces, such as instruction traces, can produce a vast amount of
-> trace data, so being able to reduce tracing to more specific circumstances
-> can be useful.
-> 
-> The ability to pause or resume tracing when another event happens, can do
-> that.
-> 
-> These patches add such a facilty and show how it would work for Intel
-> Processor Trace.
-> 
-> Maintainers of other AUX area tracing implementations are requested to
-> consider if this is something they might employ and then whether or not
-> the ABI would work for them.  Note, thank you to James Clark (ARM) for
-> evaluating the API for Coresight.  Suzuki K Poulose (ARM) also responded
-> positively to the RFC.
-> 
-> Changes to perf tools are now (since V4) fleshed out.
-> 
-> Please note, Intel® Architecture Instruction Set Extensions and Future
-> Features Programming Reference March 2024 319433-052, currently:
-> 
-> 	https://cdrdv2.intel.com/v1/dl/getContent/671368
-> 
-> introduces hardware pause / resume for Intel PT in a feature named
-> Intel PT Trigger Tracing.
-> 
-> For that more fields in perf_event_attr will be necessary.  The main
-> differences are:
-> 	- it can be applied not just to overflows, but optionally to
-> 	every event
-> 	- a packet is emitted into the trace, optionally with IP
-> 	information
-> 	- no PMI
-> 	- works with PMC and DR (breakpoint) events only
-> 
-> Here are the proposed additions to perf_event_attr, please comment:
-> 
-> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-> index 0c557f0a17b3..05dcc43f11bb 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -369,6 +369,22 @@ enum perf_event_read_format {
->  	PERF_FORMAT_MAX = 1U << 5,		/* non-ABI */
->  };
->  
-> +enum {
-> +	PERF_AUX_ACTION_START_PAUSED		=   1U << 0,
-> +	PERF_AUX_ACTION_PAUSE			=   1U << 1,
-> +	PERF_AUX_ACTION_RESUME			=   1U << 2,
-> +	PERF_AUX_ACTION_EMIT			=   1U << 3,
-> +	PERF_AUX_ACTION_NR			= 0x1f << 4,
-> +	PERF_AUX_ACTION_NO_IP			=   1U << 9,
-> +	PERF_AUX_ACTION_PAUSE_ON_EVT		=   1U << 10,
-> +	PERF_AUX_ACTION_RESUME_ON_EVT		=   1U << 11,
-> +	PERF_AUX_ACTION_EMIT_ON_EVT		=   1U << 12,
-> +	PERF_AUX_ACTION_NR_ON_EVT		= 0x1f << 13,
-> +	PERF_AUX_ACTION_NO_IP_ON_EVT		=   1U << 18,
-> +	PERF_AUX_ACTION_MASK			= ~PERF_AUX_ACTION_START_PAUSED,
-> +	PERF_AUX_PAUSE_RESUME_MASK		= PERF_AUX_ACTION_PAUSE | PERF_AUX_ACTION_RESUME,
-> +};
-> +
->  #define PERF_ATTR_SIZE_VER0	64	/* sizeof first published struct */
->  #define PERF_ATTR_SIZE_VER1	72	/* add: config2 */
->  #define PERF_ATTR_SIZE_VER2	80	/* add: branch_sample_type */
-> @@ -515,10 +531,19 @@ struct perf_event_attr {
->  	union {
->  		__u32	aux_action;
->  		struct {
-> -			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
-> -				aux_pause        :  1, /* on overflow, pause AUX area tracing */
-> -				aux_resume       :  1, /* on overflow, resume AUX area tracing */
-> -				__reserved_3     : 29;
-> +			__u32	aux_start_paused  :  1, /* start AUX area tracing paused */
-> +				aux_pause         :  1, /* on overflow, pause AUX area tracing */
-> +				aux_resume        :  1, /* on overflow, resume AUX area tracing */
-> +				aux_emit          :  1, /* generate AUX records instead of events */
-> +				aux_nr            :  5, /* AUX area tracing reference number */
-> +				aux_no_ip         :  1, /* suppress IP in AUX records */
-> +				/* Following apply to event occurrence not overflows */
-> +				aux_pause_on_evt  :  1, /* on event, pause AUX area tracing */
-> +				aux_resume_on_evt :  1, /* on event, resume AUX area tracing */
-> +				aux_emit_on_evt   :  1, /* generate AUX records instead of events */
-> +				aux_nr_on_evt     :  5, /* AUX area tracing reference number */
-> +				aux_no_ip_on_evt  :  1, /* suppress IP in AUX records */
-> +				__reserved_3      : 13;
->  		};
->  	};
-> 
-> 
-> Changes in V11:
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Make assignment to event->hw.aux_paused conditional on
-> 	(pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE).
-> 
->       perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
-> 	Remove definition of has_aux_action() because it has
-> 	already been added as an inline function.
-> 
->       perf/x86/intel/pt: Fix sampling synchronization
->       perf tools: Enable evsel__is_aux_event() to work for ARM/ARM64
->       perf tools: Enable evsel__is_aux_event() to work for S390_CPUMSF
-> 	Dropped because they have already been applied
-> 
-> Changes in V10:
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Move aux_paused into a union within struct hw_perf_event.
-> 	Additional comment wrt PERF_EF_PAUSE/PERF_EF_RESUME.
-> 	Factor out has_aux_action() as an inline function.
-> 	Use scoped_guard for irqsave.
-> 	Move calls of perf_event_aux_pause() from __perf_event_output()
-> 	to __perf_event_overflow().
-> 
-> Changes in V9:
->       perf/x86/intel/pt: Fix sampling synchronization
-> 	New patch
-> 
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Move aux_paused to struct hw_perf_event
-> 
->       perf/x86/intel/pt: Add support for pause / resume
-> 	Add more comments and barriers for resume_allowed and
-> 	pause_allowed
-> 	Always use WRITE_ONCE with resume_allowed
-> 
-> 
-> Changes in V8:
-> 
->       perf tools: Parse aux-action
-> 	Fix clang warning:
-> 	     util/auxtrace.c:821:7: error: missing field 'aux_action' initializer [-Werror,-Wmissing-field-initializers]
-> 	     821 |         {NULL},
-> 	         |              ^
-> 
-> Changes in V7:
-> 
-> 	Add Andi's Reviewed-by for patches 2-12
-> 	Re-base
-> 
-> Changes in V6:
-> 
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Removed READ/WRITE_ONCE from __perf_event_aux_pause()
-> 	Expanded comment about guarding against NMI
-> 
-> Changes in V5:
-> 
->     perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Added James' Ack
-> 
->     perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
-> 	New patch
-> 
->     perf tools
-> 	Added Ian's Ack
-> 
-> Changes in V4:
-> 
->     perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Rename aux_output_cfg -> aux_action
-> 	Reorder aux_action bits from:
-> 		aux_pause, aux_resume, aux_start_paused
-> 	to:
-> 		aux_start_paused, aux_pause, aux_resume
-> 	Fix aux_action bits __u64 -> __u32
-> 
->     coresight: Have a stab at support for pause / resume
-> 	Dropped
-> 
->     perf tools
-> 	All new patches
-> 
-> Changes in RFC V3:
-> 
->     coresight: Have a stab at support for pause / resume
-> 	'mode' -> 'flags' so it at least compiles
-> 
-> Changes in RFC V2:
-> 
-> 	Use ->stop() / ->start() instead of ->pause_resume()
-> 	Move aux_start_paused bit into aux_output_cfg
-> 	Tighten up when Intel PT pause / resume is allowed
-> 	Add an example of how it might work for CoreSight
-> 
-> 
-> Adrian Hunter (10):
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
->       perf/x86/intel/pt: Add support for pause / resume
->       perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
->       perf tools: Add aux_start_paused, aux_pause and aux_resume
->       perf tools: Add aux-action config term
->       perf tools: Parse aux-action
->       perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
->       perf intel-pt: Improve man page format
->       perf intel-pt: Add documentation for pause / resume
->       perf intel-pt: Add a test for pause / resume
-> 
->  arch/x86/events/intel/core.c               |   4 +-
->  arch/x86/events/intel/pt.c                 |  69 +++-
->  arch/x86/events/intel/pt.h                 |   4 +
->  include/linux/perf_event.h                 |  28 ++
->  include/uapi/linux/perf_event.h            |  11 +-
->  kernel/events/core.c                       |  72 +++-
->  kernel/events/internal.h                   |   1 +
->  tools/include/uapi/linux/perf_event.h      |  11 +-
->  tools/perf/Documentation/perf-intel-pt.txt | 596 ++++++++++++++++++-----------
->  tools/perf/Documentation/perf-record.txt   |   4 +
->  tools/perf/builtin-record.c                |   4 +-
->  tools/perf/tests/shell/test_intel_pt.sh    |  28 ++
->  tools/perf/util/auxtrace.c                 |  67 +++-
->  tools/perf/util/auxtrace.h                 |   6 +-
->  tools/perf/util/evsel.c                    |  13 +-
->  tools/perf/util/evsel.h                    |   1 +
->  tools/perf/util/evsel_config.h             |   1 +
->  tools/perf/util/parse-events.c             |  10 +
->  tools/perf/util/parse-events.h             |   1 +
->  tools/perf/util/parse-events.l             |   1 +
->  tools/perf/util/perf_event_attr_fprintf.c  |   3 +
->  tools/perf/util/pmu.c                      |   1 +
->  22 files changed, 698 insertions(+), 238 deletions(-)
-> 
-> 
-> Regards
-> Adrian
+The general pattern for pre-migration to occur is:
+sched:sched_wakeup
+sched:sched_migrate_task
+sched:sched_switch
+
+The sched:sched_waking event is used to capture the wakeup time,
+as it aligns with the existing code and only introduces a negligible
+time difference.
+
+pre-migrations are generally not useful and it increases migrations.
+This metric would be helpful in testing patches mainly related to wakeup
+and load-balancer code paths as better wakeup logic would choose an
+optimal CPU where task would be switched-in and thereby reducing pre-
+migrations.
+
+The sample output(s) when -P or --pre-migrations is used:
+=================
+           time    cpu  task name                       wait time  sch delay   run time  pre-mig time
+                        [tid/pid]                          (msec)     (msec)     (msec)     (msec)
+--------------- ------  ------------------------------  ---------  ---------  ---------  ---------
+   38456.720806 [0001]  schbench[28634/28574]               4.917      4.768      1.004      0.000
+   38456.720810 [0001]  rcu_preempt[18]                     3.919      0.003      0.004      0.000
+   38456.721800 [0006]  schbench[28779/28574]              23.465     23.465      1.999      0.000
+   38456.722800 [0002]  schbench[28773/28574]              60.371     60.237      3.955     60.197
+   38456.722806 [0001]  schbench[28634/28574]               0.004      0.004      1.996      0.000
+   38456.722811 [0001]  rcu_preempt[18]                     1.996      0.005      0.005      0.000
+   38456.723800 [0000]  schbench[28833/28574]               4.000      4.000      3.999      0.000
+   38456.723800 [0004]  schbench[28762/28574]              42.951     42.839      3.999     39.867
+   38456.723802 [0007]  schbench[28812/28574]              43.947     43.817      3.999     40.866
+   38456.723804 [0001]  schbench[28587/28574]               7.935      7.822      0.993      0.000
+
+Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+
+---
+Changes in v6:
+- Handle the case of multiple migrations before the task is
+  scheduled in. (Tim Chen)
+
+Changes in v5:
+- Update the ASCII diagram to include dt_pre_mig. (Namhyung Kim)
+
+Changes in v4:
+- Remove the redundant check for r->ready_to_run and r->migrated. (Namhyung Kim)
+- Rebase against perf-tools-next commit 5873de90315a ("perf/test: perf test
+  86 fails on s390")
+
+Changes in v3:
+- Use the sched:sched_waking event to calculate the wakeup time. (Namhyung Kim)
+- Rebase against perf-tools-next commit 80f192724e31 ("perf tests: Add more
+  topdown events regroup tests")
+
+Changes in v2:
+- Use timehist_sched_wakeup_event() to get the sched_wakeup time. (Namhyung Kim)
+- Rebase against perf-tools-next commit b38c49d8296b ("perf/test: Speed up test
+  case perf annotate basic tests")
+
+ tools/perf/Documentation/perf-sched.txt |  8 ++
+ tools/perf/builtin-sched.c              | 98 +++++++++++++++----------
+ 2 files changed, 67 insertions(+), 39 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+index 3db64954a267..6dbbddb6464d 100644
+--- a/tools/perf/Documentation/perf-sched.txt
++++ b/tools/perf/Documentation/perf-sched.txt
+@@ -221,6 +221,14 @@ OPTIONS for 'perf sched timehist'
+ 	priorities are specified with -: 120-129. A combination of both can also be
+ 	provided: 0,120-129.
+ 
++-P::
++--pre-migrations::
++	Show pre-migration wait time. pre-migration wait time is the time spent
++	by a task waiting on a runqueue but not getting the chance to run there
++	and is migrated to a different runqueue where it is finally run. This
++	time between sched_wakeup and migrate_task is the pre-migration wait
++	time.
++
+ OPTIONS for 'perf sched replay'
+ ------------------------------
+ 
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index fdf979aaf275..c053074b98b4 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -225,6 +225,7 @@ struct perf_sched {
+ 	bool		show_wakeups;
+ 	bool		show_next;
+ 	bool		show_migrations;
++	bool		pre_migrations;
+ 	bool		show_state;
+ 	bool		show_prio;
+ 	u64		skipped_samples;
+@@ -244,7 +245,9 @@ struct thread_runtime {
+ 	u64 dt_iowait;      /* time between CPU access by iowait (off cpu) */
+ 	u64 dt_preempt;     /* time between CPU access by preempt (off cpu) */
+ 	u64 dt_delay;       /* time between wakeup and sched-in */
++	u64 dt_pre_mig;     /* time between migration and wakeup */
+ 	u64 ready_to_run;   /* time of wakeup */
++	u64 migrated;	    /* time when a thread is migrated */
+ 
+ 	struct stats run_stats;
+ 	u64 total_run_time;
+@@ -252,6 +255,7 @@ struct thread_runtime {
+ 	u64 total_iowait_time;
+ 	u64 total_preempt_time;
+ 	u64 total_delay_time;
++	u64 total_pre_mig_time;
+ 
+ 	char last_state;
+ 
+@@ -2073,14 +2077,15 @@ static void timehist_header(struct perf_sched *sched)
+ 		printf(" ");
+ 	}
+ 
+-	if (sched->show_prio) {
+-		printf(" %-*s  %-*s  %9s  %9s  %9s",
+-		       comm_width, "task name", MAX_PRIO_STR_LEN, "prio",
+-		       "wait time", "sch delay", "run time");
+-	} else {
+-		printf(" %-*s  %9s  %9s  %9s", comm_width,
+-		       "task name", "wait time", "sch delay", "run time");
+-	}
++	printf(" %-*s", comm_width, "task name");
++
++	if (sched->show_prio)
++		printf("  %-*s", MAX_PRIO_STR_LEN, "prio");
++
++	printf("  %9s  %9s  %9s", "wait time", "sch delay", "run time");
++
++	if (sched->pre_migrations)
++		printf("  %9s", "pre-mig time");
+ 
+ 	if (sched->show_state)
+ 		printf("  %s", "state");
+@@ -2095,17 +2100,15 @@ static void timehist_header(struct perf_sched *sched)
+ 	if (sched->show_cpu_visual)
+ 		printf(" %*s ", ncpus, "");
+ 
+-	if (sched->show_prio) {
+-		printf(" %-*s  %-*s  %9s  %9s  %9s",
+-		       comm_width, "[tid/pid]", MAX_PRIO_STR_LEN, "",
+-		       "(msec)", "(msec)", "(msec)");
+-	} else {
+-		printf(" %-*s  %9s  %9s  %9s", comm_width,
+-		       "[tid/pid]", "(msec)", "(msec)", "(msec)");
+-	}
++	printf(" %-*s", comm_width, "[tid/pid]");
+ 
+-	if (sched->show_state)
+-		printf("  %5s", "");
++	if (sched->show_prio)
++		printf("  %-*s", MAX_PRIO_STR_LEN, "");
++
++	printf("  %9s  %9s  %9s", "(msec)", "(msec)", "(msec)");
++
++	if (sched->pre_migrations)
++		printf("  %9s", "(msec)");
+ 
+ 	printf("\n");
+ 
+@@ -2117,15 +2120,15 @@ static void timehist_header(struct perf_sched *sched)
+ 	if (sched->show_cpu_visual)
+ 		printf(" %.*s ", ncpus, graph_dotted_line);
+ 
+-	if (sched->show_prio) {
+-		printf(" %.*s  %.*s  %.9s  %.9s  %.9s",
+-		       comm_width, graph_dotted_line, MAX_PRIO_STR_LEN, graph_dotted_line,
+-		       graph_dotted_line, graph_dotted_line, graph_dotted_line);
+-	} else {
+-		printf(" %.*s  %.9s  %.9s  %.9s", comm_width,
+-		       graph_dotted_line, graph_dotted_line, graph_dotted_line,
+-		       graph_dotted_line);
+-	}
++	printf(" %.*s", comm_width, graph_dotted_line);
++
++	if (sched->show_prio)
++		printf("  %.*s", MAX_PRIO_STR_LEN, graph_dotted_line);
++
++	printf("  %.9s  %.9s  %.9s", graph_dotted_line, graph_dotted_line, graph_dotted_line);
++
++	if (sched->pre_migrations)
++		printf("  %.9s", graph_dotted_line);
+ 
+ 	if (sched->show_state)
+ 		printf("  %.5s", graph_dotted_line);
+@@ -2180,6 +2183,8 @@ static void timehist_print_sample(struct perf_sched *sched,
+ 
+ 	print_sched_time(tr->dt_delay, 6);
+ 	print_sched_time(tr->dt_run, 6);
++	if (sched->pre_migrations)
++		print_sched_time(tr->dt_pre_mig, 6);
+ 
+ 	if (sched->show_state)
+ 		printf(" %5c ", thread__tid(thread) == 0 ? 'I' : state);
+@@ -2217,18 +2222,21 @@ static void timehist_print_sample(struct perf_sched *sched,
+  *    last_time = time of last sched change event for current task
+  *                (i.e, time process was last scheduled out)
+  * ready_to_run = time of wakeup for current task
++ *     migrated = time of task migration to another CPU
+  *
+- * -----|------------|------------|------------|------
+- *    last         ready        tprev          t
++ * -----|-------------|-------------|-------------|-------------|-----
++ *    last         ready         migrated       tprev           t
+  *    time         to run
+  *
+- *      |-------- dt_wait --------|
+- *                   |- dt_delay -|-- dt_run --|
++ *      |---------------- dt_wait ----------------|
++ *                   |--------- dt_delay ---------|-- dt_run --|
++ *                   |- dt_pre_mig -|
+  *
+- *   dt_run = run time of current task
+- *  dt_wait = time between last schedule out event for task and tprev
+- *            represents time spent off the cpu
+- * dt_delay = time between wakeup and schedule-in of task
++ *     dt_run = run time of current task
++ *    dt_wait = time between last schedule out event for task and tprev
++ *              represents time spent off the cpu
++ *   dt_delay = time between wakeup and schedule-in of task
++ * dt_pre_mig = time between wakeup and migration to another CPU
+  */
+ 
+ static void timehist_update_runtime_stats(struct thread_runtime *r,
+@@ -2239,6 +2247,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
+ 	r->dt_iowait  = 0;
+ 	r->dt_preempt = 0;
+ 	r->dt_run     = 0;
++	r->dt_pre_mig = 0;
+ 
+ 	if (tprev) {
+ 		r->dt_run = t - tprev;
+@@ -2247,6 +2256,9 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
+ 				pr_debug("time travel: wakeup time for task > previous sched_switch event\n");
+ 			else
+ 				r->dt_delay = tprev - r->ready_to_run;
++
++			if ((r->migrated > r->ready_to_run) && (r->migrated < tprev))
++				r->dt_pre_mig = r->migrated - r->ready_to_run;
+ 		}
+ 
+ 		if (r->last_time > tprev)
+@@ -2270,6 +2282,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
+ 	r->total_sleep_time   += r->dt_sleep;
+ 	r->total_iowait_time  += r->dt_iowait;
+ 	r->total_preempt_time += r->dt_preempt;
++	r->total_pre_mig_time += r->dt_pre_mig;
+ }
+ 
+ static bool is_idle_sample(struct perf_sample *sample,
+@@ -2683,9 +2696,13 @@ static int timehist_migrate_task_event(const struct perf_tool *tool,
+ 		return -1;
+ 
+ 	tr->migrations++;
++	tr->migrated = sample->time;
+ 
+ 	/* show migrations if requested */
+-	timehist_print_migration_event(sched, evsel, sample, machine, thread);
++	if (sched->show_migrations) {
++		timehist_print_migration_event(sched, evsel, sample,
++							machine, thread);
++	}
+ 
+ 	return 0;
+ }
+@@ -2836,11 +2853,13 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
+ 		/* last state is used to determine where to account wait time */
+ 		tr->last_state = state;
+ 
+-		/* sched out event for task so reset ready to run time */
++		/* sched out event for task so reset ready to run time and migrated time */
+ 		if (state == 'R')
+ 			tr->ready_to_run = t;
+ 		else
+ 			tr->ready_to_run = 0;
++
++		tr->migrated = 0;
+ 	}
+ 
+ 	evsel__save_time(evsel, sample->time, sample->cpu);
+@@ -3280,8 +3299,8 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 		goto out;
+ 	}
+ 
+-	if (sched->show_migrations &&
+-	    perf_session__set_tracepoints_handlers(session, migrate_handlers))
++	if ((sched->show_migrations || sched->pre_migrations) &&
++		perf_session__set_tracepoints_handlers(session, migrate_handlers))
+ 		goto out;
+ 
+ 	/* pre-allocate struct for per-CPU idle stats */
+@@ -3823,6 +3842,7 @@ int cmd_sched(int argc, const char **argv)
+ 	OPT_BOOLEAN(0, "show-prio", &sched.show_prio, "Show task priority"),
+ 	OPT_STRING(0, "prio", &sched.prio_str, "prio",
+ 		   "analyze events only for given task priority(ies)"),
++	OPT_BOOLEAN('P', "pre-migrations", &sched.pre_migrations, "Show pre-migration wait time"),
+ 	OPT_PARENT(sched_options)
+ 	};
+ 
+-- 
+2.43.2
 
