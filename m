@@ -1,190 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B371921C187;
-	Fri,  4 Oct 2024 14:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B33E1741DC;
+	Fri,  4 Oct 2024 15:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728053155; cv=none; b=OC6TRA8nVrxlSb9oYMiqLWUjH1DmNfJ6T3VVikYC2hcdzoKyW6ZUx9I7hFUMR+oPy2B9ZPQJsyT1tqqnGRLwo4/Zwp8XR+iiEc/s80HXsqy6xPPglbpcvrE8nqfomHhxJO8oI9ZbIXEqCG2wrc95ggUyP7i1OG7Tlksjs4ZQRZI=
+	t=1728054900; cv=none; b=FQe0B+xQZsECc+p2urxAxOLndHg3x2sq5axglqUigDwa7FBd34CG63JyBpOG1AgNEUahyzfgBfzYfvaDGTAt2/+IxIsV1ev4E8cfHdwFSu3Gh5kl1mbU7aEnHlhPyQw3yA9rB4KVIuF/e2xQ9nNzrWpuzQ9AdYVnKoxqS2euKHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728053155; c=relaxed/simple;
-	bh=Bq/bcqNVzcNrlJ5fpYFIOx2C4lca7RpAEH7LWWRyrKc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=XHQe74xaJ7A3OJcichFbo0rXac8Cwzb1UpyD6UPmGR9Z4NJB+lEZKvRaYCYoRFUoKjyGEBZskYAcx7ZqdrQiqGF3AJodNQ+8gkgT1iWx5GWTJTfDSXIt0W+6WEbZZYsj2QgJOZqTvhuR2w679HNp4wd0kB/t2Qo0lxBbgpM6wjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfJ6rB9P; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfJ6rB9P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC1BFC4CEC6;
-	Fri,  4 Oct 2024 14:45:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728053155;
-	bh=Bq/bcqNVzcNrlJ5fpYFIOx2C4lca7RpAEH7LWWRyrKc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WfJ6rB9P6Ayn4oRMcw6+zDim5Vn7N0rgujQjIWwqlIBMcz3rL86X8MRgncUhdTqtS
-	 wQoukU7Ae9dmk8tmvi5BpwqSNZAbBa2oCtbpgxqXJVB0gwjYNj+8p1zDABjN2gep8Q
-	 BCapDWaZYfUpGmwd3TI49RvlD6s1AZNa2nDUEGG7pL/qzNNczlhQiaYb4LikkQeCiJ
-	 85eAddS9/8/xRvEKFZPIVBT4SBpIdfD+0EWFS3HV7+0bhQMie8P9b+fGL1qYUCjAUy
-	 597NmxAq3wbx2pkR3I/hQ7MPXt30QCT92xyuLJ30aoXGEwZL9XJEXyW45xdVInpnXH
-	 QA2oT1hBynVWg==
-Date: Fri, 4 Oct 2024 23:45:44 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Adrian
- Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, James
- Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan
- <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>, Guilherme Amadio
- <amadio@gentoo.org>, Changbin Du <changbin.du@huawei.com>,
- "Steinar H. Gunderson" <sesse@google.com>, Aditya Gupta
- <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Masahiro Yamada <masahiroy@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>, Kajol Jain
- <kjain@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Shenlin Liang
- <liangshenlin@eswincomputing.com>, Atish Patra <atishp@rivosinc.com>,
- Oliver Upton <oliver.upton@linux.dev>, Chen Pei <cp0613@linux.alibaba.com>,
- Dima Kogan <dima@secretsauce.net>, Alexander Lobakin
- <aleksander.lobakin@intel.com>, "David S. Miller" <davem@davemloft.net>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Yang Jihong
- <yangjihong@bytedance.com>
-Subject: Re: [PATCH v1 11/11] perf build: Rename PERF_HAVE_DWARF_REGS to
- PERF_HAVE_LIBDW_REGS
-Message-Id: <20241004234544.76317dc8c7027bcd4b70fda3@kernel.org>
-In-Reply-To: <Zv95OTflePPTMi7I@google.com>
-References: <20240929113521.9b7e8fd67af154520e2c9d8e@kernel.org>
-	<CAP-5=fV8vZoieMrRxCrF5EkUBP0HWd=ZLHXEHTq1X_mni0wMsA@mail.gmail.com>
-	<ZvyBQ6xgGE4gZdoo@google.com>
-	<CAP-5=fX7=EuZgnaG2-cXDU9eVqLyncdMTQF7=Nso__D1H0vMmw@mail.gmail.com>
-	<20241002082859.8821e441024fe873a4301afc@kernel.org>
-	<CAP-5=fWcOpF4+mgnkHOG=ntGMafJ7JSks_4j1JWVvgccApn+Ng@mail.gmail.com>
-	<20241002225614.774bdd0742a826557f142d0e@kernel.org>
-	<CAP-5=fWoiD=7XbB3FbE++1RSo3BZKeOOyNg81t4GQ7Ve6ejpSg@mail.gmail.com>
-	<Zv8fIh4jaY7QbeDZ@google.com>
-	<CAP-5=fVvzNMDPUpAvK0itjG0ZptrSg-_BN3t6UwB4XAvSsDt8w@mail.gmail.com>
-	<Zv95OTflePPTMi7I@google.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1728054900; c=relaxed/simple;
+	bh=XuU41cUY651vrvEuIIokCiSfp8fKXEBCuJCdw/qwKDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UH9XORg7JuVMWxuORrn2q8/8py6DWxLBvPbmDz9bxloSrkI7Mst9Yd8JzsiBFhVLVMgH+WiEOAWWE8CmTWmXOlnYzlnN0Y3h7MvPIXhZJApsklA4j6zd0IDYW9xr5Kd5Q+JECh/OLRoSPkr6vro+75GF+FscBCQRrNvoR0DZ420=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3131339;
+	Fri,  4 Oct 2024 08:15:26 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 493D13F640;
+	Fri,  4 Oct 2024 08:14:52 -0700 (PDT)
+Date: Fri, 4 Oct 2024 16:14:47 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
+	Sean Christopherson <seanjc@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] arm: perf: Drop unused functions
+Message-ID: <ZwAGZ5YB-eYemlYR@J2N7QTR9R3.cambridge.arm.com>
+References: <20240920174740.781614-1-coltonlewis@google.com>
+ <20240920174740.781614-2-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240920174740.781614-2-coltonlewis@google.com>
 
-On Thu, 3 Oct 2024 22:12:25 -0700
-Namhyung Kim <namhyung@kernel.org> wrote:
-
-> On Thu, Oct 03, 2024 at 05:58:13PM -0700, Ian Rogers wrote:
-> > On Thu, Oct 3, 2024 at 3:48 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > I agree renaming libdw-specific parts.  But the register is for DWARF,
-> > > not libdw even if it's currently used by libdw only.   So I don't want
-> > > to rename it.
-> > 
-> > So your objection is that we have files called:
-> > tools/perf/arch/*/util/dwarf-regs.c
-> > and PERF_HAVE_DRWARF_REGS is an indication that this file exists. This
-> > file declares a single get_arch_regnum function. The building of the
-> > file after this series is:
-> > perf-util-$(CONFIG_LIBDW)     += dwarf-regs.o
+On Fri, Sep 20, 2024 at 05:47:36PM +0000, Colton Lewis wrote:
+> For arm's implementation, perf_instruction_pointer() and
+> perf_misc_flags() are equivalent to the generic versions in
+> include/linux/perf_event.h so arch/arm doesn't need to provide its
+> own versions. Drop them here.
 > 
-> Well.. I think we can even make it
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> ---
+>  arch/arm/include/asm/perf_event.h |  7 -------
+>  arch/arm/kernel/perf_callchain.c  | 17 -----------------
+>  2 files changed, 24 deletions(-)
 > 
-> perf-util-y += dwarf-regs.o
+> diff --git a/arch/arm/include/asm/perf_event.h b/arch/arm/include/asm/perf_event.h
+> index bdbc1e590891..c08f16f2e243 100644
+> --- a/arch/arm/include/asm/perf_event.h
+> +++ b/arch/arm/include/asm/perf_event.h
+> @@ -8,13 +8,6 @@
+>  #ifndef __ARM_PERF_EVENT_H__
+>  #define __ARM_PERF_EVENT_H__
+>  
+> -#ifdef CONFIG_PERF_EVENTS
+> -struct pt_regs;
+> -extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+> -extern unsigned long perf_misc_flags(struct pt_regs *regs);
+> -#define perf_misc_flags(regs)	perf_misc_flags(regs)
+> -#endif
+> -
+>  #define perf_arch_fetch_caller_regs(regs, __ip) { \
+>  	(regs)->ARM_pc = (__ip); \
+>  	frame_pointer((regs)) = (unsigned long) __builtin_frame_address(0); \
+> diff --git a/arch/arm/kernel/perf_callchain.c b/arch/arm/kernel/perf_callchain.c
+> index 1d230ac9d0eb..a2601b1ef318 100644
+> --- a/arch/arm/kernel/perf_callchain.c
+> +++ b/arch/arm/kernel/perf_callchain.c
+> @@ -96,20 +96,3 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+>  	arm_get_current_stackframe(regs, &fr);
+>  	walk_stackframe(&fr, callchain_trace, entry);
+>  }
+> -
+> -unsigned long perf_instruction_pointer(struct pt_regs *regs)
+> -{
+> -	return instruction_pointer(regs);
+> -}
+> -
+> -unsigned long perf_misc_flags(struct pt_regs *regs)
+> -{
+> -	int misc = 0;
+> -
+> -	if (user_mode(regs))
+> -		misc |= PERF_RECORD_MISC_USER;
+> -	else
+> -		misc |= PERF_RECORD_MISC_KERNEL;
+> -
+> -	return misc;
+> -}
+> -- 
+> 2.46.0.792.g87dc391469-goog
 > 
-> since it doesn't have any dependency on libdw.  But it'd be inefficent
-> to ship the dead code and data.  Anyway we may remove the condition to
-> define the PERF_HAVE_DWARF_REGS like below.
-> 
-> diff --git a/tools/perf/arch/x86/Makefile b/tools/perf/arch/x86/Makefile
-> index 67b4969a673836eb..f1eb1ee1ea25ca53 100644
-> --- a/tools/perf/arch/x86/Makefile
-> +++ b/tools/perf/arch/x86/Makefile
-> @@ -1,7 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -ifndef NO_DWARF
->  PERF_HAVE_DWARF_REGS := 1
-> -endif
->  HAVE_KVM_STAT_SUPPORT := 1
->  PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
->  PERF_HAVE_JITDUMP := 1
-> 
-> > 
-> > My objection is that PERF_HAVE_DWARF_REGS is controlling the #define
-> > HAVE_LIBDW_SUPPORT, so dwarf (that can mean libunwind, libdw, etc.) is
-> > guarding having libdw which is backward and part of what this series
-> > has been trying to clean up.
-> 
-> Why not?  If the arch doesn't define DWARF registers, it can refuse
-> libdw support because it won't work well.
-
-It actually does not DWARF registers, but just "dwarf-regs.c" file
-since arch should define DWARF registers if the compiler generates
-the DWARF.
-Here the flag means only "we implemented dwarf-regs.c file for this
-arch." So if it is called as "libdw-helper.c" then we can rename the
-flag as PERF_HAVE_ARCH_LIBDW_HELPER simply.
-
-> > If we rename tools/perf/arch/*/util/dwarf-regs.c to
-> > tools/perf/arch/*/util/libdw-helpers.c the PERF_HAVE_DWARF_REGS can be
-> > renamed to PERF_HAVE_LIBDW_HELPERS to align. Then
-> > PERF_HAVE_LIBDW_HELPERS guarding the #define PERF_HAVE_LIBDW makes
-> > sense to me and I think we achieve the filename alignment you are
-> > looking for.
-> 
-> I don't think it's a good idea.  The logic is not specific to libdw.
-
-Yes, the logic (DWARF register mapping to the ISA register name) is
-not libdw. But I think we can also implement it in "libdw-helper.c".
-(In fact, this implementation does not depend only on Dwarf, but 
- rather on the convenience of ftrace.)
-
-> > 
-> > Yes get_arch_regnum could make sense out of libdw and needn't just be
-> > a helper for it, but let's worry about that when there's a need.
-> > What's confusing at the moment is does libdw provide dwarf support,
-> > which I'd say is expected, or does dwarf provide libdw support?
-> 
-> As I said, it's about refusing libdw.
-
-I think Ian pointed this part, even if libdw is available, dwarf-regs.c
-controls its usage, but libunwind is not.
-
-> 
->   ifndef NO_LIBDW
->     ifeq ($(origin PERF_HAVE_DWARF_REGS), undefined)
->       $(warning DWARF register mappings have not been defined for architecture $(SRCARCH), DWARF support disabled)
-
-I think *this message* is the root cause of this discussion. It should be
-changed to 
-
-"DWARF register mappings have not been defined for architecture $(SRCARCH), libdw support disabled."
-
-or (if changed to libdw-helper)
-
-"libdw-helper.c is not implemented for architecture $(SRCARCH), libdw support disabled."
-
-Thank you,
-
->       NO_LIBDW := 1
->     else
->       CFLAGS += -DHAVE_DWARF_SUPPORT $(LIBDW_CFLAGS)
->       LDFLAGS += $(LIBDW_LDFLAGS)
->       EXTLIBS += ${DWARFLIBS}
->       $(call detected,CONFIG_DWARF)
->     endif # PERF_HAVE_DWARF_REGS
->   endif # NO_LIBDW
-> 
-> Thanks,
-> Namhyung
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
