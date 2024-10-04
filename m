@@ -1,81 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B6F28F3;
-	Fri,  4 Oct 2024 05:12:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF5550A63;
+	Fri,  4 Oct 2024 05:19:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728018750; cv=none; b=FDN27YVeFPgQ2Qe81Hh0EnFbW1yrKa/uqUe058K15XXi3qRmOi6M0MIMaA0oyRGo8ndHgynVkgK2/3qHGJvD3uEnJKTuGAuk5aI1zDKtBSvdRYB1r1R/GGkUiNbxCrMSBtz0pcGQcepBLQzm8PSHFqEkZWHp4cKew0WTnZHTxsU=
+	t=1728019146; cv=none; b=B0sEXVj1G66ycyOxS4Hs9R1jAI7xCM/kFoTCKcM0QVErcHg+IbsNZbFT1jyM1Lm6kVjO574KIf8VesddOGGNG9do9f66O79jgnLi60P3sNSwOENRUoYoOQJgMx7rFOB9JSQpEX/bIlKuZp4ef5evNfLv/J7uzjFWrhBh9rVhIIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728018750; c=relaxed/simple;
-	bh=lKC4CT6hi77mEOE4mS3V8G1ntrJn4suIUj1QOU4NVZA=;
+	s=arc-20240116; t=1728019146; c=relaxed/simple;
+	bh=Db1HjIH8D2fmPRkW2Gh5vDc82cuF0lN4dWb5pN02xDc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NrWtSjvBtFv6ZsOSeBz4M5LwkPsq7niG84cwNaTAugMpY89vKJ0J957QpiUDAkICBeIMl0uK3L3gtJNYmI0HTIVY/65VgmhaWNyR4VKgCKvBxu19FssWcTwpSovnxCBJTkIRGr6K1gayH4Qcu511S0NWiDnJrKs9QvNM0AkOafU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h5ce8n0U; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=R/3YznPJ2BBxVbn+b4SsOPeN+cpi6XBEdmQxtR2dlenU9SHNEw1/l5VxxUIXt/pcOTlEyFz637gf+P5OJ9Afu6/kVW+8UoLvdoXV72CwoFKdKHGIcnphEuOO4JKKJaRIUXEqRVrrgO9ivq4JV32Qhz11Z0IA4ublDc1MNL84C7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GFwrcEkw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h5ce8n0U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0CCBC4CEC6;
-	Fri,  4 Oct 2024 05:12:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GFwrcEkw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1AA0C4CEC6;
+	Fri,  4 Oct 2024 05:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728018749;
-	bh=lKC4CT6hi77mEOE4mS3V8G1ntrJn4suIUj1QOU4NVZA=;
+	s=k20201202; t=1728019146;
+	bh=Db1HjIH8D2fmPRkW2Gh5vDc82cuF0lN4dWb5pN02xDc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h5ce8n0Uqka8z8oMc67Uz3ZzQyQQ5THvUSD0+ZruFonTxfmcEwzDuDTYVR/ZzNdIo
-	 m/o8dI4vnIqq/Jk2Lm1EB04OZObt6afI4oPpOjzQ9dZIhhCZxirurCPTexiQIki9Mr
-	 XMR8XbcF1TShUZB4KyzAlCgvqRIOKlaEVw4ta369ynVLukZ8r4YRkG0wFXbAy3jju8
-	 oXI9N9/VwAZVpoNbovjHngtU5o8hCkHIWK/DF3n9IzwOjHW2xl65bZ4U2YCc+etgqp
-	 ouKomM4rhsgfr0mQa26WoijObBqbjlZXADzeV1GkTJdmtQIUot9AmJs90sJXdLdHVb
-	 y8SnBTjfV8kmw==
-Date: Thu, 3 Oct 2024 22:12:25 -0700
+	b=GFwrcEkwKy9ydjMrtp7L9+0StTnvutEWjNh1v7GTOM8ViPad2nlync9sLKs510k0P
+	 aeZ/yhVJAkUqOC7kCs3poMKl3I2sccDy1iaQ7IDqo2JvrIiuWM4XclYsR8ue3dV9xy
+	 O/zgBW0IJ8cOpuGDJv7fNV9KFz+wNmnsm7bJPGANrGRawfVcUicteiuXFwIMqrXeSa
+	 UMJdECJQnKTIIJQ49AlJn95+udCFX2VEpEf6hry1AAdIJR8QwyP9jfZPOvkvgJlyXO
+	 JFJIH6BlYkqahaZIOorO657um727heonJfJfPFyPp3c2g4VIpXf2/OirSMvsbNzuNi
+	 DRyDxoXvLVt/w==
+Date: Thu, 3 Oct 2024 22:19:04 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Guo Ren <guoren@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>,
-	Guilherme Amadio <amadio@gentoo.org>,
-	Changbin Du <changbin.du@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>,
-	Kajol Jain <kjain@linux.ibm.com>, Anup Patel <anup@brainfault.org>,
-	Shenlin Liang <liangshenlin@eswincomputing.com>,
-	Atish Patra <atishp@rivosinc.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Chen Pei <cp0613@linux.alibaba.com>,
-	Dima Kogan <dima@secretsauce.net>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Yang Jihong <yangjihong@bytedance.com>
-Subject: Re: [PATCH v1 11/11] perf build: Rename PERF_HAVE_DWARF_REGS to
- PERF_HAVE_LIBDW_REGS
-Message-ID: <Zv95OTflePPTMi7I@google.com>
-References: <20240929113521.9b7e8fd67af154520e2c9d8e@kernel.org>
- <CAP-5=fV8vZoieMrRxCrF5EkUBP0HWd=ZLHXEHTq1X_mni0wMsA@mail.gmail.com>
- <ZvyBQ6xgGE4gZdoo@google.com>
- <CAP-5=fX7=EuZgnaG2-cXDU9eVqLyncdMTQF7=Nso__D1H0vMmw@mail.gmail.com>
- <20241002082859.8821e441024fe873a4301afc@kernel.org>
- <CAP-5=fWcOpF4+mgnkHOG=ntGMafJ7JSks_4j1JWVvgccApn+Ng@mail.gmail.com>
- <20241002225614.774bdd0742a826557f142d0e@kernel.org>
- <CAP-5=fWoiD=7XbB3FbE++1RSo3BZKeOOyNg81t4GQ7Ve6ejpSg@mail.gmail.com>
- <Zv8fIh4jaY7QbeDZ@google.com>
- <CAP-5=fVvzNMDPUpAvK0itjG0ZptrSg-_BN3t6UwB4XAvSsDt8w@mail.gmail.com>
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
+Subject: Re: [Patch v5 0/6] Bug fixes on topdown events reordering
+Message-ID: <Zv96yMTdLa6tst26@google.com>
+References: <Zv3ek7aBkQo0Z9To@google.com>
+ <CAP-5=fUjLhGw4SmMTH_H2=1OwRDrY04RL6+C=DdQ=VSgXk8JZg@mail.gmail.com>
+ <b0695ef6-8a59-4550-8a33-9afb25c93f48@linux.intel.com>
+ <CAP-5=fXutWptEKZKNvLXvXXpuDoMje6PiOxMuF872xoMjtumGQ@mail.gmail.com>
+ <Zv7KHGQx0y3rAGWx@google.com>
+ <690ddcd6-276a-4b7b-bd21-fb4ef2349990@linux.intel.com>
+ <CAP-5=fU7_RqcG+YO4C=FP_cy__eSd=ieJ_pOe4J-s2zh=sybsw@mail.gmail.com>
+ <Zv8XIZAwfoTtzOl4@google.com>
+ <8df24fe8-4d90-4105-acf0-e4f2667c42c9@linux.intel.com>
+ <CAP-5=fUVNa_JKz7WweWsQjobhFCoknbPuPGzPGFGcaDJ8wxLQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -85,81 +59,51 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVvzNMDPUpAvK0itjG0ZptrSg-_BN3t6UwB4XAvSsDt8w@mail.gmail.com>
+In-Reply-To: <CAP-5=fUVNa_JKz7WweWsQjobhFCoknbPuPGzPGFGcaDJ8wxLQw@mail.gmail.com>
 
-On Thu, Oct 03, 2024 at 05:58:13PM -0700, Ian Rogers wrote:
-> On Thu, Oct 3, 2024 at 3:48 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > I agree renaming libdw-specific parts.  But the register is for DWARF,
-> > not libdw even if it's currently used by libdw only.   So I don't want
-> > to rename it.
+On Thu, Oct 03, 2024 at 04:36:25PM -0700, Ian Rogers wrote:
+> On Thu, Oct 3, 2024 at 4:29 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+> >
+> >
+> >
+> > On 2024-10-03 6:13 p.m., Namhyung Kim wrote:
+> > >> Dapeng's comment should cover replace the comment /* Followed by
+> > >> topdown events. */ but there are other things amiss. I'm thinking of
+> > >> something like: "slots,cycles,{instructions,topdown-be-bound}" the
+> > >> topdown-be-bound should get sorted and grouped with slots, but cycles
+> > >> and instructions have no reason to be reordered, so do we end up with
+> > >> slots, instructions and topdown-be-bound being grouped with cycles
+> > >> sitting ungrouped in the middle of the evlist? I believe there are
+> > >> assumptions that grouped evsels are adjacent in the evlist, not least
+> > >> in:
+> > >> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.c?h=perf-tools-next#n2106
+> > >> Does cycles instructions end up being broken out of a group in this
+> > >> case? Which feels like the case the code was trying to avoid.
+> > > I got this:
+> > >
+> > >   $ sudo ./perf record -a -e "slots,cycles,{instructions,topdown-be-bound}" true
+> > >   Error:
+> > >   The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-be-bound).
+> > >   "dmesg | grep -i perf" may provide additional information.
+> >
+> > To be honest, I think the "slots,cycles,{instructions,topdown-be-bound}"
+> > is a meaningless case. Why a user wants to group instructions and
+> > topdown events, but leave the slots out of the group?
+> > There could be hundreds of different combinations caused by the perf
+> > metrics mess. I don't think the re-ordering code should/can fix all of them.
 > 
-> So your objection is that we have files called:
-> tools/perf/arch/*/util/dwarf-regs.c
-> and PERF_HAVE_DRWARF_REGS is an indication that this file exists. This
-> file declares a single get_arch_regnum function. The building of the
-> file after this series is:
-> perf-util-$(CONFIG_LIBDW)     += dwarf-regs.o
+> I'm happy with better code and things don't need to be perfect. Can we
+> fix the comments though? It'd be nice to also include that some things
+> are going to be broken. I can imagine groups with topdown events but
 
-Well.. I think we can even make it
-
-perf-util-y += dwarf-regs.o
-
-since it doesn't have any dependency on libdw.  But it'd be inefficent
-to ship the dead code and data.  Anyway we may remove the condition to
-define the PERF_HAVE_DWARF_REGS like below.
-
-diff --git a/tools/perf/arch/x86/Makefile b/tools/perf/arch/x86/Makefile
-index 67b4969a673836eb..f1eb1ee1ea25ca53 100644
---- a/tools/perf/arch/x86/Makefile
-+++ b/tools/perf/arch/x86/Makefile
-@@ -1,7 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--ifndef NO_DWARF
- PERF_HAVE_DWARF_REGS := 1
--endif
- HAVE_KVM_STAT_SUPPORT := 1
- PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
- PERF_HAVE_JITDUMP := 1
-
-> 
-> My objection is that PERF_HAVE_DWARF_REGS is controlling the #define
-> HAVE_LIBDW_SUPPORT, so dwarf (that can mean libunwind, libdw, etc.) is
-> guarding having libdw which is backward and part of what this series
-> has been trying to clean up.
-
-Why not?  If the arch doesn't define DWARF registers, it can refuse
-libdw support because it won't work well.
-
-> 
-> If we rename tools/perf/arch/*/util/dwarf-regs.c to
-> tools/perf/arch/*/util/libdw-helpers.c the PERF_HAVE_DWARF_REGS can be
-> renamed to PERF_HAVE_LIBDW_HELPERS to align. Then
-> PERF_HAVE_LIBDW_HELPERS guarding the #define PERF_HAVE_LIBDW makes
-> sense to me and I think we achieve the filename alignment you are
-> looking for.
-
-I don't think it's a good idea.  The logic is not specific to libdw.
-
-> 
-> Yes get_arch_regnum could make sense out of libdw and needn't just be
-> a helper for it, but let's worry about that when there's a need.
-> What's confusing at the moment is does libdw provide dwarf support,
-> which I'd say is expected, or does dwarf provide libdw support?
-
-As I said, it's about refusing libdw.
-
-  ifndef NO_LIBDW
-    ifeq ($(origin PERF_HAVE_DWARF_REGS), undefined)
-      $(warning DWARF register mappings have not been defined for architecture $(SRCARCH), DWARF support disabled)
-      NO_LIBDW := 1
-    else
-      CFLAGS += -DHAVE_DWARF_SUPPORT $(LIBDW_CFLAGS)
-      LDFLAGS += $(LIBDW_LDFLAGS)
-      EXTLIBS += ${DWARFLIBS}
-      $(call detected,CONFIG_DWARF)
-    endif # PERF_HAVE_DWARF_REGS
-  endif # NO_LIBDW
+Can you please propose something?
 
 Thanks,
 Namhyung
 
+
+> without slots, for example we group events in metrics and in
+> tma_retiring we add "0 * tma_info_thread_slots" to the metric so that
+> we get a slots event. If the multiply were optimized away as redundant
+> then we'd have a topdown group without slots, we could pick up slots
+> and other events from other metrics.
