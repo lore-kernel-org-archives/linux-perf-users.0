@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D4C1D89FC
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Oct 2024 19:29:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9011DE2C1;
+	Fri,  4 Oct 2024 19:29:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728070154; cv=none; b=nr9C7JhizYHtvjm+8A9S3v9p1qkyRaCW3+uWCiofnIW9bFcmKwJ5kTkTLMO4jD+eDticWdJr06n/OuzPaVwoZJt0bu0uW+oMeBSG8OecAoqsujjTbGE0wH4Ov9h4E3yMHyFE+i6HIZvgJI39U5lnJB6Vd5HS8tjQrDRMctjC0W4=
+	t=1728070155; cv=none; b=Ep6jb7W68KL2P+dnLzDkLbXwfSqrk6CJsvezq0bcXEsgm0iUl3OyGnPcgLkrRx31H9fWH1V103i95rGgzPCZKeohffNDaVAN7waNze2+UhQnzjCoZWUwbuiVWyfOtxJfxT24odTtBgYtO3n1rZIBr6HbxunmE8SSnYC7nQ1oFTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728070154; c=relaxed/simple;
-	bh=AJGmvRmbOo9BitssiIVa/eJcmpkII1Qh680KJKFw8cY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=HIxNgjYRJmmPuv+wuwv7smAWISlJ+Z5Uz1CTs6USx0pUs/Bc7WqoD6IRcBGa2F5/3Brmdpiiy4uEBLuIk2rQGy1Vm5Q5iye9ZvlSnaBRjd+brTKVFr/IshEQbqx87WvuBSEMFnKPG9T/Omv6LfwUChh5BQQJAER5PcIllznjhTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yq4TWwOv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728070155; c=relaxed/simple;
+	bh=JkPmcqnYmI9E2oEefcK9E5Vl7RkRYpDpmqsXOhsLhD8=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=BJ1jnKFVBO2PbPjuRhXaxMJnmJ6RG3Gb/tnNiT6t8jW7EESB/a+YaQlbNrDD9gJVeTnjeDnvrCD+tozP9uNJCtjNQngW6ErgF6WMgOdNfyMzT9G7yL/l1FpCG/0ZYecS7eYWBYF9MI2Kxj+hS8tAR1nqKf6Pi8fW+sfDbdsYB5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/Mgkv4i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yq4TWwOv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10B6DC4CECE;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/Mgkv4i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A9AC4CEC6;
 	Fri,  4 Oct 2024 19:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728070154;
-	bh=AJGmvRmbOo9BitssiIVa/eJcmpkII1Qh680KJKFw8cY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Yq4TWwOvyFtwHdyxxbQ0EGx47ku88RRN36Yzp3m+o09NrshOHPAKYkK5re48PAus/
-	 Fpd25j20H6Yvpr3FRbqoGjjsPJ8QA5K8GRc9Pxw1vcwse67M6xV+22XRTO9XYQa+LG
-	 77CtCBVnVTY/p4goDuSo95nwKG+PBOgNMLRHU7aM4Wzf2TygwRSvhzrUkg8FIoBJ3C
-	 uTm6I1Ajc73baO1fefmy3ckIbEkxvmRhuYGI0+Zw36A2X5a020fJsF4dz71cSlhA1u
-	 bAC4Emz0piY+bl91xOZBT4ThKsyCvMJpGFuBzfOQ88DyzQjd/wbpApSxciBRGJhFJ3
-	 g5XWDnXSd0r4w==
+	s=k20201202; t=1728070155;
+	bh=JkPmcqnYmI9E2oEefcK9E5Vl7RkRYpDpmqsXOhsLhD8=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=j/Mgkv4ijvBfv5JYZ38NFc0ww/BGJV2V+Ll7szlIrtbSzInveku2b0JQOTfOCGHb1
+	 FWNQWlM3XsXviPay+VEzzX8MN+1UymTbCbmzFG2pY2pJlqrNrWtxX53lk7NdJUzzx8
+	 NQmDlo3dwcrL113HJBrGdc5a9pmysEuW0m3pV4fPGjjf0huwrXrnZdgHHiShHwwkTB
+	 mf7UW91GCAlS/AdwHpWo0LUumDH2zLJ2jxgs1pJlhx+kYnNPjHB/KuBuYCRyraZZ3N
+	 +TxsVcioKytmjVijbJK/qffs7Hd6yQurODZOa7Ho+4oON/c5amknndsQwK6e1h4rYs
+	 JSftSJ2AlcMvQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com, 
- vmolnaro@redhat.com
-Cc: mpetlan@redhat.com, adrian.hunter@intel.com, 
- alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
- kan.liang@linux.intel.com, mark.rutland@arm.com
-In-Reply-To: <20241003125136.15918-1-vmolnaro@redhat.com>
-References: <ZvyRefEz4lj4evm5@google.com>
- <20241003125136.15918-1-vmolnaro@redhat.com>
-Subject: Re: [PATCH v2] perf test: Restore sample rate for perf_event_attr
-Message-Id: <172807015402.55364.12529583038234440690.b4-ty@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ "Liang, Kan" <kan.liang@linux.intel.com>, 
+ Ravi Bangoria <ravi.bangoria@amd.com>, Weilin Wang <weilin.wang@intel.com>, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Yoshihiro Furudera <fj5100bi@fujitsu.com>
+In-Reply-To: <20241003002404.2592094-1-fj5100bi@fujitsu.com>
+References: <20241003002404.2592094-1-fj5100bi@fujitsu.com>
+Subject: Re: [PATCH] perf list: update option desc in man page
+Message-Id: <172807015451.55364.15671532984152524675.b4-ty@kernel.org>
 Date: Fri, 04 Oct 2024 12:29:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -48,15 +52,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14-dev-d4707
 
-On Thu, 03 Oct 2024 14:51:36 +0200, vmolnaro@redhat.com wrote:
+On Thu, 03 Oct 2024 00:24:04 +0000, Yoshihiro Furudera wrote:
 
-> Test "Setup struct perf_event_attr" consists of multiple test cases that
-> can affect the max sample rate value for perf events. Some test cases
-> check this value as it should not be lowered under the set minimum for
-> the given test. Currently, it is possible for the test cases to affect
-> each other as the previous tests can lower the sample rate, leading to
-> a possible failure of some of the future test cases as the value is not
-> restored at any point.
+> There is a difference between the SYNOPSIS section of the help message
+> and the man page (tools/perf/Documentation/perf-list.txt) for the perf
+> list command. After checking, we found that the help message reflected
+> the latest specifications. Therefore, revised the SYNOPSIS section of
+> the man page to match the help message.
+> 
 > 
 > [...]
 
