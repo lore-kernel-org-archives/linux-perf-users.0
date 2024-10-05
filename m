@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B621607AC
-	for <linux-perf-users@vger.kernel.org>; Sat,  5 Oct 2024 19:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48CC165EEF
+	for <linux-perf-users@vger.kernel.org>; Sat,  5 Oct 2024 19:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728158163; cv=none; b=RCdX3oXk/PJMk2/kpbIJgEgWNq51DRefwl5wGTt/J2lxBnxG4EjnIJiOoeEgN9NT8TDKARzbJBV38H620MfCee9zKjquZ6UllhFleXrLLONWO1Czd6h5g9KTFEati+Xg1jdLcOCed1RMPSttSUty/fZquTfOqaz2DDpvD2E4xaQ=
+	t=1728158165; cv=none; b=sZlSS+k2s3HoVNBArAvQE0++HoHFkxjoYqAUoh4XamMbJH4ir8L9YMFZBkaESYBlLJEf3zJ9cVP2wFykFtfYADrj6k4DLUgWR6acBhFg/wMJb7dDbJyph4HnWdiDWp0nuXbR8D1QEStnP8elW1RfHuk2c77kwYHVKzhwF7uspgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728158163; c=relaxed/simple;
-	bh=Nd6RHayxE7oTIZe/nTOAsaRSjloYkVrh9oX/tOULgio=;
+	s=arc-20240116; t=1728158165; c=relaxed/simple;
+	bh=FpDVYgI9IrJgwdqYzij6DFpKW/36XS8ZvFd3RBLOWt0=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=SAboxHXIFkRUgsWEHGMvNxxU4iKmXU6v7VOUsiacbuE8LAmUlCkBZodtrTs2gA7XO6dJWhy+Gj7n/kSKfu+XxqAa4OU/qOVuxnjCgHsL1tL3RT5jpApiN1snyLucTEQ4Ny970f3U28ul6O/pTpr+LIKx/H2nPy2CbC+0DFC3blU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L+TZhidI; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=SO3+/T4jQ9pp37F2lI3FIrbI8JoG2nx9KfN3NNp29f4V6Y01p9RhfSqcUIVQH+ped218Zp+iRIqGb7kxvbpYCSN/uPM/59yg27jkNfSCI1qp3pcJDu8d831NfgOAc0/+E/A2t9qx8g5XE4XvGN4GCXhR/lfYvE6bACQN2MmjX6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GAU8lAiV; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L+TZhidI"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e262e764f46so5588918276.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 05 Oct 2024 12:56:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GAU8lAiV"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e2e5e376fcso4437657b3.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 05 Oct 2024 12:56:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728158161; x=1728762961; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1728158163; x=1728762963; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=51NaLIW8tkOJtUxwqHcUszT78OCapOaZVU3wITST3Jk=;
-        b=L+TZhidI+7fp5JoVCb2OtHADuQmMsDZEwYQCbr/Dnm/DHaXZyhAMncg3aRkbAxhfcf
-         TqnQe/ycWd5aSxJAwLjfke8kEL5q8CLMLhT+Ejwt/5wQ8aiE6Ow9Xb5f2Uf7XfNvkDcQ
-         AnTfUyudKerR9UGGaH4zwYZev2wzPb2TIGww1xDCeb7OXLyXp4N4oMLcPWuRjazwp3Zi
-         VocjJ3SOoO0nnR1nwhdaTkNzWVtSBhijB/B10V2RP5eEyc0ofllBnxvIOkEDCmKSJsVu
-         eKMzd9+kqYxkw9GBn/g7o9dAK9agWfbtNuWTKtjbirUMR/nWAtbeTIQHXKbmCFhyW+Ru
-         1nhw==
+        bh=/LMYv3+WdvZc4gaJkJ+8/1ILPLPMhWUj3Y+GZomvDIY=;
+        b=GAU8lAiVCq/qhldYnDTpnz6nMF9utYzHURAfYfxwagQOvGHlZQyYfecg9CJ/7x6t9c
+         Qd4fk8pMFILSULSWCitjOowBmamvmlhW8upC3oyyylwN8rpuKSxBqxVfE7scNEYcjT28
+         dNYFFHxynkxokbbhP+ooc2Qhf5+0nl4oGfw7JPvPQiL4gpAq3PrXuxqicpBR1optuLv2
+         +GbhrtXsEeuY9uqn9VoKSjO9wN85Ljsrj321TI4GeEGNs5rc1DbfLlmhg9LXVLlBxLwc
+         ZiryYXZ3bd3Ac5/aQvkrQORHHAoNAtK/eHhoAfJ6z8IsK8MQ1Gi7GrHpE9WzKj1woWvQ
+         9nhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728158161; x=1728762961;
+        d=1e100.net; s=20230601; t=1728158163; x=1728762963;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=51NaLIW8tkOJtUxwqHcUszT78OCapOaZVU3wITST3Jk=;
-        b=iS7rQWW5bUHEpkOY8t5Gy/AduIsM9Q1j6//1Yy9Kgj/TiPKo3Tw88U8A4leRFV4VmP
-         BSgo5/nmfHBG/4rHFX0d5snhuxYph6iaqkQzFlbmY0hvdtzYSeNSP3oPwDwehjn1tfDA
-         1B753rJRKZVKjfeQmlXJy95E/IA3lMDuxmjcNiS63HS2aOrg474ST2xcDxhXdJ023OvX
-         vRR37ItOFqhI2TokVLk28Q0t2M3BOSyqXmsahJCUeHTHhott0u3AYiIXshm6NlOOZNaQ
-         thYAX9bihoRdbaZCR/6MEPsR0Qtdq22xjig8uA+8ZBrmXQzbuqMaUsuBZRPyOScPGO88
-         UV1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVl9NOBzA/ZRPzuRb6L+u/7aD5wuRSx8FEN0MIpY+bVT87DSw8Zj7J/6HKi88gAUgu5Ac315fQH8g3tXRtSyjE3@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRwidTcer8YTBH6jp8yypUGNwnbcalrTktQ6EEtxbi/m7M9ZNK
-	wwCZ6OpZh7+DlZO4Fda5OMPUmwwt9gvwBxX20UzU68c4YfmNfA+Nc29DKGQfVP915Q9qgPFdicn
-	MmmVpOA==
-X-Google-Smtp-Source: AGHT+IFpB52T3N6GTujE7GYOdQ2rq5N60dCtmqvE7W4eZxrgo/OkvusaceR/GdwO/vSP+j8IGglTUnlNtHZl
+        bh=/LMYv3+WdvZc4gaJkJ+8/1ILPLPMhWUj3Y+GZomvDIY=;
+        b=rnSqyOIDuTBbaQEMK39Hs8OCKtoY8XCUyitDm9IWRkRMgCAW1diOscvpBoCq/Y6Lpu
+         Wtc8++d+NS+7ZFBt1FZEkzpxcTqdG0Zx4U8qB909aUPilo7btH8cwzHsMZrXHa8TgsQN
+         Uo4xJpRgevx/pXAhyyKrJg4KXJwCNVecjTQH52l8xzLZMIoheMAVE5Q+Qx5Y/+s0cS+8
+         J5RYU4qo5garThnksFzS7islrsXPOEmS3COtcgI+qWznalO/MFPiyO8M1ugRHbdHUQh5
+         YoxIO0UfjJQc9aWerqFIUsT5ODei/gfyB2TKvyWHnxZnIkD8QZz0byM9whJbbl+rSuTl
+         AR3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVXcWTPOfY6aLS4n9RFc7OT5ajS0fGqAAA8naLLnxjZPTDxAbMpthWGLmiOxz8qIDcTOAqJMeij8y8Y5u+9w+qA@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ8kFtSJUDjbUM3mqDYUqZXKPgvJYptpYK+xJAQReSwpGeVMVC
+	bXe616DBlueT82yskBoHtJ41aCUDK2U1FgWACXszhZhzhq2qDKE7Z4zCX/sqme41wPBAi7jxUpH
+	+5rV67g==
+X-Google-Smtp-Source: AGHT+IGQHKIO34wQCQbrD8UvzGXo3ZMOZtjT5rfqvG6YFvrAHuL8IEFzPTbx87DWPLMqG36F8DvjEKtUPK2U
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4c2:5b4d:8797:7249])
- (user=irogers job=sendgmr) by 2002:a25:ce0b:0:b0:e25:c8fc:b78c with SMTP id
- 3f1490d57ef6-e289393997bmr4258276.9.1728158160211; Sat, 05 Oct 2024 12:56:00
- -0700 (PDT)
-Date: Sat,  5 Oct 2024 12:55:11 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:2b8e:b0:6dd:d138:d823 with SMTP
+ id 00721157ae682-6e2c72adbdamr920707b3.8.1728158162987; Sat, 05 Oct 2024
+ 12:56:02 -0700 (PDT)
+Date: Sat,  5 Oct 2024 12:55:12 -0700
 In-Reply-To: <20241005195541.380070-1-irogers@google.com>
-Message-Id: <20241005195541.380070-2-irogers@google.com>
+Message-Id: <20241005195541.380070-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241005195541.380070-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.rc0.187.ge670bccf7e-goog
-Subject: [PATCH v2 01/31] perf build: Fix !HAVE_DWARF_GETLOCATIONS_SUPPORT
+Subject: [PATCH v2 02/31] perf build: Rename NO_DWARF to NO_LIBDW
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -88,49 +88,246 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Testing with a LIBDW_DIR showed some issues. In dwarf-aux.h if
-HAVE_DWARF_GETLOCATIONS_SUPPORT isn't defined then the code uses an
-undefined errno value, so add errno.h.
-In Makefile.config the dwarf feature tests need the LIBDW_DIR setting
-in the CFLAGS/LDFLAGS.
+NO_DWARF could mean more than NO_LIBDW support, in particular no
+libunwind support. Rename to be more intention revealing.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Makefile.config  | 6 ++++++
- tools/perf/util/dwarf-aux.h | 1 +
- 2 files changed, 7 insertions(+)
+ tools/perf/Makefile.config         | 16 ++++++++--------
+ tools/perf/Makefile.perf           |  2 +-
+ tools/perf/arch/arm/Makefile       |  2 +-
+ tools/perf/arch/arm64/Makefile     |  2 +-
+ tools/perf/arch/csky/Makefile      |  2 +-
+ tools/perf/arch/loongarch/Makefile |  2 +-
+ tools/perf/arch/mips/Makefile      |  2 +-
+ tools/perf/arch/powerpc/Makefile   |  2 +-
+ tools/perf/arch/riscv/Makefile     |  2 +-
+ tools/perf/arch/s390/Makefile      |  2 +-
+ tools/perf/arch/sh/Makefile        |  2 +-
+ tools/perf/arch/sparc/Makefile     |  2 +-
+ tools/perf/arch/x86/Makefile       |  2 +-
+ tools/perf/arch/xtensa/Makefile    |  2 +-
+ tools/perf/builtin-probe.c         |  2 +-
+ 15 files changed, 22 insertions(+), 22 deletions(-)
 
 diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 4dcf7a0fd235..5e26d3a91b36 100644
+index 5e26d3a91b36..55a39211496d 100644
 --- a/tools/perf/Makefile.config
 +++ b/tools/perf/Makefile.config
-@@ -159,8 +159,14 @@ ifeq ($(findstring -static,${LDFLAGS}),-static)
-     DWARFLIBS += -lebl
+@@ -429,7 +429,7 @@ ifeq ($(feature-file-handle), 1)
+ endif
+ 
+ ifdef NO_LIBELF
+-  NO_DWARF := 1
++  NO_LIBDW := 1
+   NO_LIBUNWIND := 1
+   NO_LIBDW_DWARF_UNWIND := 1
+   NO_LIBBPF := 1
+@@ -471,9 +471,9 @@ else
+       endif
+     endif
+     ifneq ($(feature-dwarf), 1)
+-      ifndef NO_DWARF
++      ifndef NO_LIBDW
+         $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.138, disables dwarf support. Please install new elfutils-devel/libdw-dev)
+-        NO_DWARF := 1
++        NO_LIBDW := 1
+       endif
+     else
+       ifneq ($(feature-dwarf_getlocations), 1)
+@@ -496,7 +496,7 @@ ifeq ($(feature-libaio), 1)
    endif
  endif
-+FEATURE_CHECK_CFLAGS-dwarf := $(LIBDW_CFLAGS)
-+FEATURE_CHECK_LDFLAGS-dwarf := $(LIBDW_LDFLAGS) $(DWARFLIBS)
- FEATURE_CHECK_CFLAGS-libdw-dwarf-unwind := $(LIBDW_CFLAGS)
- FEATURE_CHECK_LDFLAGS-libdw-dwarf-unwind := $(LIBDW_LDFLAGS) $(DWARFLIBS)
-+FEATURE_CHECK_CFLAGS-dwarf_getlocations := $(LIBDW_CFLAGS)
-+FEATURE_CHECK_LDFLAGS-dwarf_getlocations := $(LIBDW_LDFLAGS) $(DWARFLIBS)
-+FEATURE_CHECK_CFLAGS-dwarf_getcfi := $(LIBDW_CFLAGS)
-+FEATURE_CHECK_LDFLAGS-dwarf_getcfi := $(LIBDW_LDFLAGS) $(DWARFLIBS)
  
- # for linking with debug library, run like:
- # make DEBUG=1 LIBBABELTRACE_DIR=/opt/libbabeltrace/
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index 336a3a183a78..925a9bb9fb15 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -177,6 +177,7 @@ void die_collect_vars(Dwarf_Die *sc_die, struct die_var_type **var_types);
- void die_collect_global_vars(Dwarf_Die *cu_die, struct die_var_type **var_types);
+-ifdef NO_DWARF
++ifdef NO_LIBDW
+   NO_LIBDW_DWARF_UNWIND := 1
+ endif
  
- #else /*  HAVE_DWARF_GETLOCATIONS_SUPPORT */
-+#include <errno.h>
+@@ -574,17 +574,17 @@ ifndef NO_LIBELF
+     endif
+   endif
  
- static inline int die_get_var_range(Dwarf_Die *sp_die __maybe_unused,
- 				    Dwarf_Die *vr_die __maybe_unused,
+-  ifndef NO_DWARF
++  ifndef NO_LIBDW
+     ifeq ($(origin PERF_HAVE_DWARF_REGS), undefined)
+       $(warning DWARF register mappings have not been defined for architecture $(SRCARCH), DWARF support disabled)
+-      NO_DWARF := 1
++      NO_LIBDW := 1
+     else
+       CFLAGS += -DHAVE_DWARF_SUPPORT $(LIBDW_CFLAGS)
+       LDFLAGS += $(LIBDW_LDFLAGS)
+       EXTLIBS += ${DWARFLIBS}
+       $(call detected,CONFIG_DWARF)
+     endif # PERF_HAVE_DWARF_REGS
+-  endif # NO_DWARF
++  endif # NO_LIBDW
+ 
+   ifndef NO_LIBBPF
+     ifeq ($(feature-bpf), 1)
+@@ -633,7 +633,7 @@ ifdef PERF_HAVE_JITDUMP
+ endif
+ 
+ ifeq ($(SRCARCH),powerpc)
+-  ifndef NO_DWARF
++  ifndef NO_LIBDW
+     CFLAGS += -DHAVE_SKIP_CALLCHAIN_IDX
+   endif
+ endif
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 9dd2e8d3f3c9..a144bfaf8aeb 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -40,7 +40,7 @@ include ../scripts/utilities.mak
+ #
+ # Define EXTRA_PERFLIBS to pass extra libraries to PERFLIBS.
+ #
+-# Define NO_DWARF if you do not want debug-info analysis feature at all.
++# Define NO_LIBDW if you do not want debug-info analysis feature at all.
+ #
+ # Define WERROR=0 to disable treating any warnings as errors.
+ #
+diff --git a/tools/perf/arch/arm/Makefile b/tools/perf/arch/arm/Makefile
+index 1d88fdab13bf..9b164d379548 100644
+--- a/tools/perf/arch/arm/Makefile
++++ b/tools/perf/arch/arm/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ifndef NO_DWARF
++ifndef NO_LIBDW
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+ PERF_HAVE_JITDUMP := 1
+diff --git a/tools/perf/arch/arm64/Makefile b/tools/perf/arch/arm64/Makefile
+index 5735ed4479bb..8a5ffbfe809f 100644
+--- a/tools/perf/arch/arm64/Makefile
++++ b/tools/perf/arch/arm64/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ifndef NO_DWARF
++ifndef NO_LIBDW
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+ PERF_HAVE_JITDUMP := 1
+diff --git a/tools/perf/arch/csky/Makefile b/tools/perf/arch/csky/Makefile
+index 88c08eed9c7b..119b06a64bed 100644
+--- a/tools/perf/arch/csky/Makefile
++++ b/tools/perf/arch/csky/Makefile
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ifndef NO_DWARF
++ifndef NO_LIBDW
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
+index c89d6bb6b184..1cc5eb01f32b 100644
+--- a/tools/perf/arch/loongarch/Makefile
++++ b/tools/perf/arch/loongarch/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ifndef NO_DWARF
++ifndef NO_LIBDW
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+ PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
+diff --git a/tools/perf/arch/mips/Makefile b/tools/perf/arch/mips/Makefile
+index cd0b011b3be5..733f7b76f52d 100644
+--- a/tools/perf/arch/mips/Makefile
++++ b/tools/perf/arch/mips/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ifndef NO_DWARF
++ifndef NO_LIBDW
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+ 
+diff --git a/tools/perf/arch/powerpc/Makefile b/tools/perf/arch/powerpc/Makefile
+index bf6d323574f6..7672d555f6cd 100644
+--- a/tools/perf/arch/powerpc/Makefile
++++ b/tools/perf/arch/powerpc/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ifndef NO_DWARF
++ifndef NO_LIBDW
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+ 
+diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
+index 90c3c476a242..4664a78a1afd 100644
+--- a/tools/perf/arch/riscv/Makefile
++++ b/tools/perf/arch/riscv/Makefile
+@@ -1,4 +1,4 @@
+-ifndef NO_DWARF
++ifndef NO_LIBDW
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+ PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
+diff --git a/tools/perf/arch/s390/Makefile b/tools/perf/arch/s390/Makefile
+index 56994e63b43a..3f66e2ede3f7 100644
+--- a/tools/perf/arch/s390/Makefile
++++ b/tools/perf/arch/s390/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ifndef NO_DWARF
++ifndef NO_LIBDW
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+ HAVE_KVM_STAT_SUPPORT := 1
+diff --git a/tools/perf/arch/sh/Makefile b/tools/perf/arch/sh/Makefile
+index 88c08eed9c7b..119b06a64bed 100644
+--- a/tools/perf/arch/sh/Makefile
++++ b/tools/perf/arch/sh/Makefile
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ifndef NO_DWARF
++ifndef NO_LIBDW
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+diff --git a/tools/perf/arch/sparc/Makefile b/tools/perf/arch/sparc/Makefile
+index 4031db72ba71..7741184894c8 100644
+--- a/tools/perf/arch/sparc/Makefile
++++ b/tools/perf/arch/sparc/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ifndef NO_DWARF
++ifndef NO_LIBDW
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+ 
+diff --git a/tools/perf/arch/x86/Makefile b/tools/perf/arch/x86/Makefile
+index 67b4969a6738..9aa58acb5564 100644
+--- a/tools/perf/arch/x86/Makefile
++++ b/tools/perf/arch/x86/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ifndef NO_DWARF
++ifndef NO_LIBDW
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+ HAVE_KVM_STAT_SUPPORT := 1
+diff --git a/tools/perf/arch/xtensa/Makefile b/tools/perf/arch/xtensa/Makefile
+index 88c08eed9c7b..119b06a64bed 100644
+--- a/tools/perf/arch/xtensa/Makefile
++++ b/tools/perf/arch/xtensa/Makefile
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ifndef NO_DWARF
++ifndef NO_LIBDW
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 003a3bcebfdf..91672bb3047c 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -616,7 +616,7 @@ __cmd_probe(int argc, const char **argv)
+ 	set_option_flag(options, 'L', "line", PARSE_OPT_EXCLUSIVE);
+ 	set_option_flag(options, 'V', "vars", PARSE_OPT_EXCLUSIVE);
+ #else
+-# define set_nobuild(s, l, c) set_option_nobuild(options, s, l, "NO_DWARF=1", c)
++# define set_nobuild(s, l, c) set_option_nobuild(options, s, l, "NO_LIBDW=1", c)
+ 	set_nobuild('L', "line", false);
+ 	set_nobuild('V', "vars", false);
+ 	set_nobuild('\0', "externs", false);
 -- 
 2.47.0.rc0.187.ge670bccf7e-goog
 
