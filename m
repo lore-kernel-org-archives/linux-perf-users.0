@@ -1,281 +1,142 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E5C18DF89
-	for <linux-perf-users@vger.kernel.org>; Sat,  5 Oct 2024 19:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1E11F61C;
+	Sat,  5 Oct 2024 23:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728158231; cv=none; b=EZhbAeOVKC0HEjJRYwpXM1/t6BZ2F+LZJIAv0gTxz6Fd8gcPdsMkjATCmgHTwCZlPY9rQ0M9LbhtpREJ0uioJ04F1Ie73dRSoJYVBjn2qyoTMhjuU1hjrsUuWF9xqtRyYIsoHw+4QZByMnxASa3d1qrSbaTYsO1ldfMzX5jnOEI=
+	t=1728171493; cv=none; b=MkhGRwL5kySByy9jseb/PRjoGzZEjYHZqSM9MBOnAp2ecQFsCnF50/W2SnQcDzILLdEC0fegXM6EZoF6XSu10aSdrzth/NiwFYR+J/yTnJvMVU6eu44tkgvgYybA2cgRWV/b69iVSRblOPf/wg9wQPSF9e8jnKSG1jwq5oE1PhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728158231; c=relaxed/simple;
-	bh=b9mVgJ5//pRN+nonTTq/3RFTKjlofM16tMVTv2b7oy4=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=bp4N15e+4UuftuZm0InOsxaqCW96uaoSVBvdOlz3nzxBPjy0nryZKxsaQj92m5WgrSy4XiNaP6el6xHWBftJDSeouZ5Y4GKD+Ruf3SUNT9VE4bjnRNz4NbhyFueRdHc+Svt2/swYOwPIQK/6SE6eHj2pNwXj9Zx3uSLJUv+wyHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vS+FxHI+; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1728171493; c=relaxed/simple;
+	bh=Ub3jK6SsxvGHuG2/fm1/AWnleUfV4tsAHwDVlmCsMmY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fsp5e8A7E/+CgIw2ZhxqRBNo6yYefh/KcUqW/IQt39vspBwwIddvQRNhjttpjKqVJtTpfJ/9vKh02hU/e/0Lfm340B124eoPK3F5z0Sm997jsfTUc5h2DciUsJNPnZ0Pwa+Y5MIVa0o6ve6TZmWck19e03LFoYECI+3oag3a9MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=BghJEQ18; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vS+FxHI+"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e25cba4c68eso4832361276.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 05 Oct 2024 12:57:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728158228; x=1728763028; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nCot8RtXgODmKw1CZDuIEw0rJqcYXwewbxiKwbR/4js=;
-        b=vS+FxHI+cjzwuiXV/hkFDb4WdSsJCK2mh/cB6PttWmbSV4m9mmZ9LmKKhkyH1fiGMR
-         /WnqQDIGsjSQKnuMkn9b5BM5YFuglLaMutMRfyX8xfQQ5tr6YZp2fm6rkWPm3f2cABAi
-         G3vX0ZW8y/9X6rxY0WlyFxchJ1IaNUmvXBaGKpVuNeD82sW2ZjTeHVxstjG48v/o0t84
-         qvRAdNWQcsH3H+K/SGPO8k6JPp+91KV4JBF8+a+j5qKiI4CUEPrg9MFJcSVvSJ6MSFQ0
-         2zYrK3E3wLfRhWwNrfWak1r0+r/OBgQQ8TlB8WVHnnN9F2Mqh0Wad564t4R719HXkfPT
-         Ua1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728158228; x=1728763028;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nCot8RtXgODmKw1CZDuIEw0rJqcYXwewbxiKwbR/4js=;
-        b=KeSRrwVTPbKT/wKrsTYsoY3nvm4h+mQC5Zxl2es+91q7g7mptV6pkdtJmJFcw2Iu1c
-         5Tre0DAay8Z2C156RaWVjqnxHsXdKFPIPR9cUisO8relWn3aJO+YnrfdTmfg3/rQCfb9
-         wWQAIYn6s7Yi9zGdTAx9cWI8PyixKcKghXxQgMZLEhufO8QveWCk41f0wFj+oY9Kx3Oz
-         LtsXshhNKEB1N/4RgBS/Fswp5jiSr9Hu/pL7DW2oTGQScrdVjYIEmFTNPv7Qdmf4ozZj
-         jTPzFV/xGQLudopA7+iMfW81jwYnhzYB/SMaTAaZFUnqbalLCzC5ff+g7Uly63bp2dF1
-         JqxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWoyNN73jkyc0Xi3SP/orXXSZhkAp7AWrbaMRt7UghYDQnZ890DdPK/ZX3r18MoO37AquAA2pp2zCLKcRJvuNQw@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDfcw2CWH9zeKedLQTuRCSyEwI6EqILiwG3rv19yd+mj/HuQJV
-	8wrYg0bF+06uaoTdXFM/tc8ltM3ne3p4uxuZlJoMkK+MiEDtGMKUIKoUM85hXYr52xNp8GczrG9
-	3xeBFnw==
-X-Google-Smtp-Source: AGHT+IG4VTvKqB1IWifVabjZBEQn/lThARIXb4Kk+k0+M4seYXfuOdgdzRDz+Pov1wdznx/1s442fbvFWx2c
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4c2:5b4d:8797:7249])
- (user=irogers job=sendgmr) by 2002:a25:c7d2:0:b0:e20:298c:541 with SMTP id
- 3f1490d57ef6-e2893945553mr4851276.9.1728158227843; Sat, 05 Oct 2024 12:57:07
- -0700 (PDT)
-Date: Sat,  5 Oct 2024 12:55:41 -0700
-In-Reply-To: <20241005195541.380070-1-irogers@google.com>
-Message-Id: <20241005195541.380070-32-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BghJEQ18"
+Received: from [172.27.0.16] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 495NapwS1593555
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sat, 5 Oct 2024 16:36:52 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 495NapwS1593555
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024091601; t=1728171417;
+	bh=m2bDCv+JjGunSzRwzd1ZUTedJ+jUnwm4JpAQk4uZ2LU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BghJEQ18w7kVZdQoBcXCZs0SU3bcgDNp6CXGpXr7UatIaOcHRnO7Ki4rpVZIgv9pe
+	 Nz/Yk9sWAKxmvlzBMFe+EzcwMpOVx8UY7o5nMcwClHG2k8LpXw0UQzSqj2Ekiu9nFP
+	 wt8vdbGEEzYAHkF9s6cSQNFQmtVxTKG2NMzwvRANGuDKm19FSlXxR5j1m1jSvaYdtx
+	 sgCWbTe/DYdl96GonJp4olM5FfNyVaxnYW3tvOSS7nL1Z6OVpcsDWxBZnYXqBOzYxJ
+	 3JEuMDZsQny031HV9xMehx7Re34CsvirpbQ/mcBdKSCBdY6WlekkljNm2jzhEgdjiU
+	 mKVdT3IwdQMNA==
+Message-ID: <3bbb85ae-8ba5-4777-999f-d20705c386e7@zytor.com>
+Date: Sat, 5 Oct 2024 16:36:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241005195541.380070-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.rc0.187.ge670bccf7e-goog
-Subject: [PATCH v2 31/31] perf build: Remove PERF_HAVE_DWARF_REGS
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Guilherme Amadio <amadio@gentoo.org>, Changbin Du <changbin.du@huawei.com>, 
-	Daniel Bristot de Oliveira <bristot@kernel.org>, Daniel Wagner <dwagner@suse.de>, 
-	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Kajol Jain <kjain@linux.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@rivosinc.com>, 
-	Shenlin Liang <liangshenlin@eswincomputing.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	"Steinar H. Gunderson" <sesse@google.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Chen Pei <cp0613@linux.alibaba.com>, Dima Kogan <dima@secretsauce.net>, 
-	Yury Norov <yury.norov@gmail.com>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 25/28] x86: Use PIE codegen for the core kernel
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Dennis Zhou <dennis@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>,
+        Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <masahiroy@kernel.org>,
+        Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+        Keith Packard <keithp@keithp.com>,
+        Justin Stitt <justinstitt@google.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, linux-doc@vger.kernel.org,
+        linux-pm@vger.kernel.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-efi@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-sparse@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        rust-for-linux@vger.kernel.org, llvm@lists.linux.dev
+References: <20240925150059.3955569-30-ardb+git@google.com>
+ <20240925150059.3955569-55-ardb+git@google.com>
+ <99446363-152f-43a8-8b74-26f0d883a364@zytor.com>
+ <CAMj1kXG7ZELM8D7Ft3H+dD5BHqENjY9eQ9kzsq2FzTgP5+2W3A@mail.gmail.com>
+ <CAHk-=wj0HG2M1JgoN-zdCwFSW=N7j5iMB0RR90aftTS3oqwKTg@mail.gmail.com>
+ <CAMj1kXEU5RU0i11zqD0433_LMMyNQH2gCoSkU7GeXmaRXGF1Yw@mail.gmail.com>
+ <5c7490bb-aa74-427b-849e-c28c343b7409@zytor.com>
+ <CAFULd4Yj9LfTnWFu=c1M7Eh44+XFk0ibwL57r5H7wZjvKZ8yaA@mail.gmail.com>
+Content-Language: en-US
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <CAFULd4Yj9LfTnWFu=c1M7Eh44+XFk0ibwL57r5H7wZjvKZ8yaA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-PERF_HAVE_DWARF_REGS was true when an architecture had a dwarf-regs.c
-file. There are no more architecture dwarf-regs.c files, selection is
-done using constants from the ELF file rather than conditional
-compilation. When removing PERF_HAVE_DWARF_REGS was the only variable
-in the Makefile, remove the Makefile.
+On 10/5/24 01:31, Uros Bizjak wrote:
+>>
+>> movq $sym to leaq sym(%rip) which you said ought to be smaller (and in
+>> reality appears to be the same size, 7 bytes) seems like a no-brainer
+>> and can be treated as a code quality issue -- in other words, file bug
+>> reports against gcc and clang.
+> 
+> It is the kernel assembly source that should be converted to
+> rip-relative form, gcc (and probably clang) have nothing with it.
+> 
 
-Add missing SPDX for RISC-V Makefile.
+Sadly, that is not correct; neither gcc nor clang uses lea:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config         | 13 ++++---------
- tools/perf/arch/arm/Makefile       |  3 ---
- tools/perf/arch/arm64/Makefile     |  3 ---
- tools/perf/arch/csky/Makefile      |  4 ----
- tools/perf/arch/loongarch/Makefile |  3 ---
- tools/perf/arch/mips/Makefile      |  4 ----
- tools/perf/arch/powerpc/Makefile   |  4 ----
- tools/perf/arch/riscv/Makefile     |  4 +---
- tools/perf/arch/s390/Makefile      |  3 ---
- tools/perf/arch/sh/Makefile        |  4 ----
- tools/perf/arch/sparc/Makefile     |  4 ----
- tools/perf/arch/x86/Makefile       |  3 ---
- tools/perf/arch/xtensa/Makefile    |  4 ----
- 13 files changed, 5 insertions(+), 51 deletions(-)
- delete mode 100644 tools/perf/arch/csky/Makefile
- delete mode 100644 tools/perf/arch/sh/Makefile
- delete mode 100644 tools/perf/arch/xtensa/Makefile
+	-hpa
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 00340c6ce3a9..b5a7e952ad0a 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -548,15 +548,10 @@ ifndef NO_LIBELF
-   endif
- 
-   ifndef NO_LIBDW
--    ifeq ($(origin PERF_HAVE_DWARF_REGS), undefined)
--      $(warning DWARF register mappings have not been defined for architecture $(SRCARCH), DWARF support disabled)
--      NO_LIBDW := 1
--    else
--      CFLAGS += -DHAVE_LIBDW_SUPPORT $(LIBDW_CFLAGS)
--      LDFLAGS += $(LIBDW_LDFLAGS)
--      EXTLIBS += ${DWARFLIBS}
--      $(call detected,CONFIG_LIBDW)
--    endif # PERF_HAVE_DWARF_REGS
-+    CFLAGS += -DHAVE_LIBDW_SUPPORT $(LIBDW_CFLAGS)
-+    LDFLAGS += $(LIBDW_LDFLAGS)
-+    EXTLIBS += ${DWARFLIBS}
-+    $(call detected,CONFIG_LIBDW)
-   endif # NO_LIBDW
- 
-   ifndef NO_LIBBPF
-diff --git a/tools/perf/arch/arm/Makefile b/tools/perf/arch/arm/Makefile
-index 9b164d379548..8b59ce8efb89 100644
---- a/tools/perf/arch/arm/Makefile
-+++ b/tools/perf/arch/arm/Makefile
-@@ -1,5 +1,2 @@
- # SPDX-License-Identifier: GPL-2.0-only
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
- PERF_HAVE_JITDUMP := 1
-diff --git a/tools/perf/arch/arm64/Makefile b/tools/perf/arch/arm64/Makefile
-index ca2e35961287..91570d5d428e 100644
---- a/tools/perf/arch/arm64/Makefile
-+++ b/tools/perf/arch/arm64/Makefile
-@@ -1,7 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
- PERF_HAVE_JITDUMP := 1
- HAVE_KVM_STAT_SUPPORT := 1
- 
-diff --git a/tools/perf/arch/csky/Makefile b/tools/perf/arch/csky/Makefile
-deleted file mode 100644
-index 119b06a64bed..000000000000
---- a/tools/perf/arch/csky/Makefile
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
-diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
-index 79b432744296..52544d59245b 100644
---- a/tools/perf/arch/loongarch/Makefile
-+++ b/tools/perf/arch/loongarch/Makefile
-@@ -1,7 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
- PERF_HAVE_JITDUMP := 1
- HAVE_KVM_STAT_SUPPORT := 1
- 
-diff --git a/tools/perf/arch/mips/Makefile b/tools/perf/arch/mips/Makefile
-index 733f7b76f52d..827168f1077a 100644
---- a/tools/perf/arch/mips/Makefile
-+++ b/tools/perf/arch/mips/Makefile
-@@ -1,8 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
--
- # Syscall table generation for perf
- out    := $(OUTPUT)arch/mips/include/generated/asm
- header := $(out)/syscalls_n64.c
-diff --git a/tools/perf/arch/powerpc/Makefile b/tools/perf/arch/powerpc/Makefile
-index ae05727835d8..dc8f4fb8e324 100644
---- a/tools/perf/arch/powerpc/Makefile
-+++ b/tools/perf/arch/powerpc/Makefile
-@@ -1,8 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
--
- HAVE_KVM_STAT_SUPPORT := 1
- PERF_HAVE_JITDUMP := 1
- 
-diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
-index f01ab2171fd0..087e099fb453 100644
---- a/tools/perf/arch/riscv/Makefile
-+++ b/tools/perf/arch/riscv/Makefile
-@@ -1,5 +1,3 @@
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
-+# SPDX-License-Identifier: GPL-2.0
- PERF_HAVE_JITDUMP := 1
- HAVE_KVM_STAT_SUPPORT := 1
-diff --git a/tools/perf/arch/s390/Makefile b/tools/perf/arch/s390/Makefile
-index 58e79f5b67a4..c431c21b11ef 100644
---- a/tools/perf/arch/s390/Makefile
-+++ b/tools/perf/arch/s390/Makefile
-@@ -1,7 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
- HAVE_KVM_STAT_SUPPORT := 1
- PERF_HAVE_JITDUMP := 1
- 
-diff --git a/tools/perf/arch/sh/Makefile b/tools/perf/arch/sh/Makefile
-deleted file mode 100644
-index 119b06a64bed..000000000000
---- a/tools/perf/arch/sh/Makefile
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
-diff --git a/tools/perf/arch/sparc/Makefile b/tools/perf/arch/sparc/Makefile
-index 7741184894c8..8b59ce8efb89 100644
---- a/tools/perf/arch/sparc/Makefile
-+++ b/tools/perf/arch/sparc/Makefile
-@@ -1,6 +1,2 @@
- # SPDX-License-Identifier: GPL-2.0-only
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
--
- PERF_HAVE_JITDUMP := 1
-diff --git a/tools/perf/arch/x86/Makefile b/tools/perf/arch/x86/Makefile
-index 51cf267f4d85..a6b6e0a9308a 100644
---- a/tools/perf/arch/x86/Makefile
-+++ b/tools/perf/arch/x86/Makefile
-@@ -1,7 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
- HAVE_KVM_STAT_SUPPORT := 1
- PERF_HAVE_JITDUMP := 1
- 
-diff --git a/tools/perf/arch/xtensa/Makefile b/tools/perf/arch/xtensa/Makefile
-deleted file mode 100644
-index 119b06a64bed..000000000000
---- a/tools/perf/arch/xtensa/Makefile
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
--- 
-2.47.0.rc0.187.ge670bccf7e-goog
+
+gcc version 14.2.1 20240912 (Red Hat 14.2.1-3) (GCC)
+
+hpa@tazenda:/tmp$ cat foo.c
+int foobar;
+
+int *where_is_foobar(void)
+{
+         return &foobar;
+}
+
+hpa@tazenda:/tmp$ gcc -mcmodel=kernel -O2 -c -o foo.o foo.c
+hpa@tazenda:/tmp$ objdump -dr foo.o
+
+foo.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <where_is_foobar>:
+    0:   48 c7 c0 00 00 00 00    mov    $0x0,%rax
+                         3: R_X86_64_32S foobar
+    7:   c3                      ret
+
+clang version 18.1.8 (Fedora 18.1.8-1.fc40)
+
+hpa@tazenda:/tmp$ clang -mcmodel=kernel -O2 -c -o foo.o foo.c
+hpa@tazenda:/tmp$ objdump -dr foo.o
+
+foo.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <where_is_foobar>:
+    0:   48 c7 c0 00 00 00 00    mov    $0x0,%rax
+                         3: R_X86_64_32S foobar
+    7:   c3                      ret
 
