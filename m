@@ -1,119 +1,227 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58932231C8F;
-	Sat,  5 Oct 2024 08:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A04145B1B
+	for <linux-perf-users@vger.kernel.org>; Sat,  5 Oct 2024 11:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728117110; cv=none; b=AHUKk98nqHkDqcniESqKC000HHEppf3SXLdE34Lhyt/LZU38h2UHaBQ4paoHZRt8Cbxet5zH7MRwQ+/6WhKvlX87LAco5/0uDfA8R0/JF1yIMJiuJD7/t3TeLjKUHJ49/r0Q42xmJvrp9qPYhrOvvAwdfSaDskCwjpBkcjQY+P8=
+	t=1728126373; cv=none; b=LvcXqSA+qNJZn38vGbeVoVDmHskFSwrOODM31YRJR8Ls9ZXlH+dC2uExct/uR3cVoLwTNPzYxlxVcwE8IDcxcHfa/GOODiMU+lBx+O37duSa/C15L+ds9ITvC8YwwxEsMQkxHCvraJQ1cvVV1IotkV1C0ym+EncvKZvJNfOu8XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728117110; c=relaxed/simple;
-	bh=70cU5jNP52zmkSWZHO+lBdHOcE1V/JTH2eNm2kkh0zg=;
+	s=arc-20240116; t=1728126373; c=relaxed/simple;
+	bh=uXiTfY3y+BJR8a90QLbfSdRdnPQTLfltrJeRGRuWPkY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PzZ4FuRn+JzFUNpYK4eeftCryJu7St05ef86z20wxvzoTydIzblrRlWu7UBIg/MBZ4/r1RCanAsOsQc4hqP0GWn+ZbUDIJ8XqsFysviuYPFNmI55Ve9Ui4f/LwkwTFaOJslTCTOKur8wg2ukeGfdEBgmC64kZ1buMOUmFjAgIdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQu1KS/F; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Lq+5p1E+zGBqN9g4tEqUp7E7R2Ve+5JReIcrLO0B7ByKX51P06xqUtzF1dErKNtTgTt9trETq549IJ7Du2F95nxj27jDcHX/LdrTAOG+GKRvrGF7WV2bW4gi6Evqe5hyJGWh7Nt+X1Ze63HVtH1LIx5pA5yWcQKzYCvM//vfU+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=hMIKoFSu; arc=none smtp.client-ip=209.85.166.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQu1KS/F"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2fac63abf63so29110871fa.1;
-        Sat, 05 Oct 2024 01:31:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="hMIKoFSu"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-8323b555ae2so133374139f.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 05 Oct 2024 04:06:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728117106; x=1728721906; darn=vger.kernel.org;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1728126371; x=1728731171; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=70cU5jNP52zmkSWZHO+lBdHOcE1V/JTH2eNm2kkh0zg=;
-        b=OQu1KS/FWp+vzB8M90wWzv2DwL28c54821ES4HbZa+/kKuP7aC4tPzCuACELJth2qQ
-         pc9TZ2ISdUc6Q3VGwRml0HF61sHqy00yXzh/B7M2IYtDQuGOx1FTY9tXqGMCjG+Uh1YI
-         CH3l6iMAReMliUXAh/KUG1C9XYkm5rF9WqkNCAPtjOQVYHZNAGUauycZEaAo4d/sUvs9
-         8Ja3w2AraLXHPkaWD0taM65FMiEx++s1FLs/fIjQAloxQA4Xc/uWuxjbem80Duk1xzYe
-         jg4nn9ac/6E4uKdgBLnCooPggnnO0dcKcg03qHT9C/RWGNVAI7CsSpDC6hVc+Emg3af5
-         ZAkQ==
+        bh=Y2sNCOQO6fYkDcP0biMmkbIV7L7GOfZWzCv2us5J0fI=;
+        b=hMIKoFSux4k9csTLNGajomIcU7Gy/fI5vgzlNEs2irgOjO9LdweyymF+EmwDTdUmIh
+         jW38ZcOz/q92CN4zSwsMrYeZkQgNL92rXhwxfz0q7/VK6GulI+4/UriIwKTi/R2d9+9Q
+         sU1iKOZL0iVdHy6CkaTWOwjlhZ9h1sJqqrJjt5qOPdHWtHDIt5vCrC3I8MsWrhejIe7d
+         kHA+PTtxII0oRJdPhprI/hDE5+vtnwUA3lJL9M4x0HqqvYFj2ApLjDLsYENPNc/GJSKp
+         Xg1Xemly77q/+dXNbSHg07E2cNg88unZySj7MWNYkYqjI2cJMNYvjoK6H3NnpgqSzSkx
+         dZkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728117106; x=1728721906;
+        d=1e100.net; s=20230601; t=1728126371; x=1728731171;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=70cU5jNP52zmkSWZHO+lBdHOcE1V/JTH2eNm2kkh0zg=;
-        b=BU8HxWJkL0J0MvXjRkBZlUS+kEYYoccrQm/bQBdvqHzhlYDa0a6bJjifAVO1zSrMB0
-         0tP2oTQp2sr0GN9oCneHl2sQOx+0hANGRBQWMOvZk9ZIQHsUjeIFsInPLFFvAWZzTMBc
-         VYPKcH71a7DlwQeN2hJ5QM/r9SClkvXEN0tBGBotKXEQ1701RVKxfekgea2rBRuny09F
-         z92N0WGYw56iYGtYmPmWcYNbLmpI3IAMWwPqioZ+CsOdNV2NeIdVKswvcFiu7ldu3C6J
-         CN41cP9yNOhnGMiMeGoLYPJQ+Ew4LIvaTXTCyAV8cidBszwsE3Wo1m2w1FmCSVhyAz0E
-         D7VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPitWEeOD/aD62yn7DZZSU7JaVuaUVQq63I5CtmFD+j1DMntN2JyOFJ5aRDQN2PpB31dHqzLqeRozpf1bN@vger.kernel.org, AJvYcCUUu5XYKZkbzD5ywYHVCuo/Oew/4JpdnctTarrOSg34Op3ZjuHbg04SmfqDfGoSTXFh1p09IU3GLx4HRCC3PCnNaw==@vger.kernel.org, AJvYcCUgZvCOfGNX4TJSytk7wDmxGhD+1RQxiPpvhElemmASV3+V1qIVuinUiQjMHnZAavfVd8G5r1NLSbRX@vger.kernel.org, AJvYcCV5wmWz2VgZgJEQcX3F+wkZMCnZF+RHkLhJgNuAOgIGb5mbzChbkA9hyJvvI+8uubsEYlmFYMx5GC+nyNJq@vger.kernel.org, AJvYcCVD6Sla1wkCBvjYeoYBeokskNlnZai5vX4pjC8PLoFq+8JVkKxUhtPhkBdOiAauXSYQ9fxTqCEz7Gds@vger.kernel.org, AJvYcCVVksKusLXvQcncn6esUy7zSDSKvfSj4K6GQcSEkitc+S20k+5xLeyxtgMvzku/+zQVqLHwmAOWpqo=@vger.kernel.org, AJvYcCW3iH3oRT9iEo7Ws8ml7G4upB5KNWRBt0lXaRAmtbM4vq4z/bSGdvjh+/xJijE+qTU1LRs=@vger.kernel.org, AJvYcCW7AaJe08TpCmIEfn4tXdnQQYzQcDSiKnZ6lZaG/LJuQCLREvQEnMf12WWLT1TGZ6qUCx1pDwNO8NueKO5yopk=@vger.kernel.org, AJvYcCWWelSF+HpJ8dD8RyCnk7ab1i9zhoCd5FuYnEKeZnQFdZkrZFIgBfN+XmSVRY72IXbJCPnxqB9ndzfSng==@vger.kernel.org, AJvYcCXssYm+wkam8a1z6IjlfmkPd85FzcygzwPgGkLqzEOE0CU1XAd/Knko2Fdzd/aGj2WDSSGFqGyR9T4g3BB0@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEN7mgZAeB2itvJi8KUsdLt48HLvHeVuRj1Vy3oZYcJlb8QqXO
-	J53RBjYQ1FbS5u9EWG26BNQ81bxsl1FjR4yrVfTRzIxm3gjWS/TzE76MOzV85kl+nDZrJtiW6i7
-	ysifs0ldfc9CJwDHmo6KecaiQ5II=
-X-Google-Smtp-Source: AGHT+IGi0j/icjLt8RhHlOdJvbjdouTPFKKMu/CT/oe6l0e9sNaP3mHWfqnG22Q9j4GVb6Cdm+e2KfCpXo/Kl8KNmek=
-X-Received: by 2002:a05:651c:1547:b0:2fa:d978:a6c4 with SMTP id
- 38308e7fff4ca-2faf3d73888mr22769461fa.30.1728117106123; Sat, 05 Oct 2024
- 01:31:46 -0700 (PDT)
+        bh=Y2sNCOQO6fYkDcP0biMmkbIV7L7GOfZWzCv2us5J0fI=;
+        b=os1ByYoyqZV3s5YqZmVLH4JLdzlxf+A6hsMh/QvIhFOcWIJOJWj10CEYixhsh3ODM5
+         iG20xdM9nSo3txde3uZF+aMPKOipt8EQ//jJGRvFTfVJjG4+4ZLokmFCRIxwKks0FjEI
+         jEYzUxAPI/iOSIMC5IfyJYsa6N5bIVlXcQ2z8t9iErBvZSKtLhnCmZN5+5BmLa1wvnV6
+         MJczT6eSPVr9k37bkFoixYOBglKAdCXC/Q3DxthxRJQZa0LzkoVK/2c9nv/SpeoAEv5r
+         nIRtXp8fA+57guphOGRfvUcpvF0PHabO75UOFdCGaQH7zUcI2snKg7skWHzhdQC/79fr
+         aVHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlewFgmq9Wor+cL0q1Q09kbV2sLV73UPowvHBtY7sXu1tcVfNA7XSJ0QJri2pU1tOhPC2R6gX7n8omzgFXH6m2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb7+i+piK2TMcWlBnjy4CRQIi3QJOVHsSHOkFOkobPVfDdMocd
+	L2yjZPQDa4I5G9ntEk4EDt1DOrBlmQdKXIna5I/aSbU8939gvr0mgiLQH1YqIJfzBcf3OK75e9F
+	JmlD0ElltfVGp2Ea/r3waYol6mzRmsQd3kZjh8A==
+X-Google-Smtp-Source: AGHT+IFIIioNr2vvhjdbCgrc3o7eBnHz0oNs3B1WaQBAfHIbbho0MDeqlCPz0d0DawzwWuXN/8QwenpSoNrh09r4Aac=
+X-Received: by 2002:a05:6e02:148c:b0:39f:5e18:239d with SMTP id
+ e9e14a558f8ab-3a375a9ac5emr49651255ab.15.1728126370968; Sat, 05 Oct 2024
+ 04:06:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240925150059.3955569-30-ardb+git@google.com>
- <20240925150059.3955569-55-ardb+git@google.com> <99446363-152f-43a8-8b74-26f0d883a364@zytor.com>
- <CAMj1kXG7ZELM8D7Ft3H+dD5BHqENjY9eQ9kzsq2FzTgP5+2W3A@mail.gmail.com>
- <CAHk-=wj0HG2M1JgoN-zdCwFSW=N7j5iMB0RR90aftTS3oqwKTg@mail.gmail.com>
- <CAMj1kXEU5RU0i11zqD0433_LMMyNQH2gCoSkU7GeXmaRXGF1Yw@mail.gmail.com> <5c7490bb-aa74-427b-849e-c28c343b7409@zytor.com>
-In-Reply-To: <5c7490bb-aa74-427b-849e-c28c343b7409@zytor.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Sat, 5 Oct 2024 10:31:37 +0200
-Message-ID: <CAFULd4Yj9LfTnWFu=c1M7Eh44+XFk0ibwL57r5H7wZjvKZ8yaA@mail.gmail.com>
-Subject: Re: [RFC PATCH 25/28] x86: Use PIE codegen for the core kernel
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Dennis Zhou <dennis@kernel.org>, 
-	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Juergen Gross <jgross@suse.com>, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Keith Packard <keithp@keithp.com>, 
-	Justin Stitt <justinstitt@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-doc@vger.kernel.org, 
-	linux-pm@vger.kernel.org, kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-efi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-sparse@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	llvm@lists.linux.dev
+References: <cover.1726126795.git.zhouquan@iscas.ac.cn>
+In-Reply-To: <cover.1726126795.git.zhouquan@iscas.ac.cn>
+From: Anup Patel <anup@brainfault.org>
+Date: Sat, 5 Oct 2024 16:36:00 +0530
+Message-ID: <CAAhSdy0tEpgmC1VgMn_Km5SxwanOii5LzL-5oTJWbN+1vLjWug@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] riscv: Add perf support to collect KVM guest
+ statistics from host side
+To: zhouquan@iscas.ac.cn
+Cc: ajones@ventanamicro.com, atishp@atishpatra.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 4, 2024 at 11:06=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> wrot=
-e:
+On Thu, Sep 12, 2024 at 1:30=E2=80=AFPM <zhouquan@iscas.ac.cn> wrote:
 >
-> On 10/3/24 04:13, Ard Biesheuvel wrote:
-> >
-> >> That said, doing changes like changing "mov $sym" to "lea sym(%rip)" I
-> >> feel are a complete no-brainer and should be done regardless of any
-> >> other code generation issues.
-> >
-> > Yes, this is the primary reason I ended up looking into this in the
-> > first place. Earlier this year, we ended up having to introduce
-> > RIP_REL_REF() to emit those RIP-relative references explicitly, in
-> > order to prevent the C code that is called via the early 1:1 mapping
-> > from exploding. The amount of C code called in that manner has been
-> > growing steadily over time with the introduction of 5-level paging and
-> > SEV-SNP and TDX support, which need to play all kinds of tricks before
-> > the normal kernel mappings are created.
-> >
+> From: Quan Zhou <zhouquan@iscas.ac.cn>
 >
-> movq $sym to leaq sym(%rip) which you said ought to be smaller (and in
-> reality appears to be the same size, 7 bytes) seems like a no-brainer
-> and can be treated as a code quality issue -- in other words, file bug
-> reports against gcc and clang.
+> Add basic guest support to RISC-V perf, enabling it to distinguish
+> whether PMU interrupts occur in the host or the guest, and then
+> collect some basic guest information from the host side
+> (guest os callchain is not supported for now).
+>
+> Based on the x86/arm implementation, tested with kvm-riscv.
+> test env:
+> - host: qemu-9.0.0
+> - guest: qemu-9.0.0 --enable-kvm (only start one guest and run top)
+>
+> -----------------------------------------
+> 1) perf kvm top
+> ./perf kvm --host --guest \
+>   --guestkallsyms=3D/root/repo/shared/kallsyms \
+>   --guestmodules=3D/root/repo/shared/modules top
+>
+> PerfTop:      41 irqs/sec  kernel:97.6% us: 0.0% guest kernel: 0.0% guest=
+ us: 0.0% exact:  0.0% [250Hz cycles:P],  (all, 4 CPUs)
+> -------------------------------------------------------------------------=
+------
+>
+>     64.57%  [kernel]        [k] default_idle_call
+>      3.12%  [kernel]        [k] _raw_spin_unlock_irqrestore
+>      3.03%  [guest.kernel]  [g] mem_serial_out
+>      2.61%  [kernel]        [k] handle_softirqs
+>      2.32%  [kernel]        [k] do_trap_ecall_u
+>      1.71%  [kernel]        [k] _raw_spin_unlock_irq
+>      1.26%  [guest.kernel]  [g] do_raw_spin_lock
+>      1.25%  [kernel]        [k] finish_task_switch.isra.0
+>      1.16%  [kernel]        [k] do_idle
+>      0.77%  libc.so.6       [.] ioctl
+>      0.76%  [kernel]        [k] queue_work_on
+>      0.69%  [kernel]        [k] __local_bh_enable_ip
+>      0.67%  [guest.kernel]  [g] __noinstr_text_start
+>      0.64%  [guest.kernel]  [g] mem_serial_in
+>      0.41%  libc.so.6       [.] pthread_sigmask
+>      0.39%  [kernel]        [k] mem_cgroup_uncharge_skmem
+>      0.39%  [kernel]        [k] __might_resched
+>      0.39%  [guest.kernel]  [g] _nohz_idle_balance.isra.0
+>      0.37%  [kernel]        [k] sched_balance_update_blocked_averages
+>      0.34%  [kernel]        [k] sched_balance_rq
+>
+> 2) perf kvm record
+> ./perf kvm --host --guest \
+>   --guestkallsyms=3D/root/repo/shared/kallsyms \
+>   --guestmodules=3D/root/repo/shared/modules record -a sleep 60
+>
+> [ perf record: Woken up 3 times to write data ]
+> [ perf record: Captured and wrote 1.292 MB perf.data.kvm (17990 samples) =
+]
+>
+> 3) perf kvm report (the data shown here is not complete)
+> ./perf kvm --host --guest \
+>   --guestkallsyms=3D/root/repo/shared/kallsyms \
+>   --guestmodules=3D/root/repo/shared/modules report -i perf.data.kvm
+>
+> # Total Lost Samples: 0
+> #
+> # Samples: 17K of event 'cycles:P'
+> # Event count (approx.): 269968947184
+> #
+> # Overhead  Command          Shared Object            Symbol
+> # ........  ...............  .......................  ...................=
+...........................
+> #
+>     61.86%  swapper          [kernel.kallsyms]        [k] default_idle_ca=
+ll
+>      2.93%  :6463            [guest.kernel.kallsyms]  [g] do_raw_spin_loc=
+k
+>      2.82%  :6462            [guest.kernel.kallsyms]  [g] mem_serial_out
+>      2.11%  sshd             [kernel.kallsyms]        [k] _raw_spin_unloc=
+k_irqrestore
+>      1.78%  :6462            [guest.kernel.kallsyms]  [g] do_raw_spin_loc=
+k
+>      1.37%  swapper          [kernel.kallsyms]        [k] handle_softirqs
+>      1.36%  swapper          [kernel.kallsyms]        [k] do_idle
+>      1.21%  sshd             [kernel.kallsyms]        [k] do_trap_ecall_u
+>      1.21%  sshd             [kernel.kallsyms]        [k] _raw_spin_unloc=
+k_irq
+>      1.11%  qemu-system-ris  [kernel.kallsyms]        [k] do_trap_ecall_u
+>      0.93%  qemu-system-ris  libc.so.6                [.] ioctl
+>      0.89%  sshd             [kernel.kallsyms]        [k] __local_bh_enab=
+le_ip
+>      0.77%  qemu-system-ris  [kernel.kallsyms]        [k] _raw_spin_unloc=
+k_irqrestore
+>      0.68%  qemu-system-ris  [kernel.kallsyms]        [k] queue_work_on
+>      0.65%  sshd             [kernel.kallsyms]        [k] handle_softirqs
+>      0.44%  :6462            [guest.kernel.kallsyms]  [g] mem_serial_in
+>      0.42%  sshd             libc.so.6                [.] pthread_sigmask
+>      0.34%  :6462            [guest.kernel.kallsyms]  [g] serial8250_tx_c=
+hars
+>      0.30%  swapper          [kernel.kallsyms]        [k] finish_task_swi=
+tch.isra.0
+>      0.29%  swapper          [kernel.kallsyms]        [k] sched_balance_r=
+q
+>      0.29%  sshd             [kernel.kallsyms]        [k] __might_resched
+>      0.26%  swapper          [kernel.kallsyms]        [k] tick_nohz_idle_=
+exit
+>      0.26%  swapper          [kernel.kallsyms]        [k] sched_balance_u=
+pdate_blocked_averages
+>      0.26%  swapper          [kernel.kallsyms]        [k] _nohz_idle_bala=
+nce.isra.0
+>      0.24%  qemu-system-ris  [kernel.kallsyms]        [k] finish_task_swi=
+tch.isra.0
+>      0.23%  :6462            [guest.kernel.kallsyms]  [g] __noinstr_text_=
+start
+>
+> ---
+> Change since v2:
+> - Rebased on v6.11-rc7
+> - Keep the misc type consistent with other architectures
+>   as `unsigned long` (Andrew)
+> - Add the same comment for `kvm_arch_pmi_in_guest`
+>   as in arm64. (Andrew)
+>
+> Change since v1:
+> - Rebased on v6.11-rc3
+> - Fix incorrect misc type (Andrew)
+>
+> ---
+> v1 link:
+> https://lore.kernel.org/all/cover.1721271251.git.zhouquan@iscas.ac.cn/
+> v2 link:
+> https://lore.kernel.org/all/cover.1723518282.git.zhouquan@iscas.ac.cn/
+>
+> Quan Zhou (2):
+>   riscv: perf: add guest vs host distinction
+>   riscv: KVM: add basic support for host vs guest profiling
 
-It is the kernel assembly source that should be converted to
-rip-relative form, gcc (and probably clang) have nothing with it.
+Please rebase this series upon Linux-6.12-rcX and send another version.
 
-Uros.
+Regards,
+Anup
+
+>
+>  arch/riscv/include/asm/kvm_host.h   | 10 ++++++++
+>  arch/riscv/include/asm/perf_event.h |  7 ++++++
+>  arch/riscv/kernel/perf_callchain.c  | 38 +++++++++++++++++++++++++++++
+>  arch/riscv/kvm/Kconfig              |  1 +
+>  arch/riscv/kvm/main.c               | 12 +++++++--
+>  arch/riscv/kvm/vcpu.c               |  7 ++++++
+>  6 files changed, 73 insertions(+), 2 deletions(-)
+>
+>
+> base-commit: da3ea35007d0af457a0afc87e84fddaebc4e0b63
+> --
+> 2.34.1
+>
