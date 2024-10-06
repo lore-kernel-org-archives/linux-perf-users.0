@@ -1,170 +1,140 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE161A932;
-	Sun,  6 Oct 2024 01:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D8338F83;
+	Sun,  6 Oct 2024 07:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728177744; cv=none; b=ISlkmNX0BryRu0u3ahRqNzZw0oYSxgDkuIi2Rz2LpIkrYX6PyVILpGYXAlq7MwSOP7GZDw5YOLqPm67IYMkekHGHNJygSuWE9k+cq07Nu26eYA55GxpXl/gz4re6q0Z41GAZp+J8evXyPpVXLndDn0RQjIFoP2o/xI9szG4+fm0=
+	t=1728201592; cv=none; b=tkXU8vjrM4WNrxM0ahDTQ63bdw2QSv2e0C39wZYSEE3JKVtQwUrIl99xPliRs25+QRzA1HBuZAaVzoGHxp/Jdj+MquuPgMZCA53CKiUDfDuPoJYsvi77MWfHC17ZjuPraXzwFNHBrpXHAZV2RrYAEgn9iMwlo2pynGIU+F7rnUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728177744; c=relaxed/simple;
-	bh=gQMm9AkLwf2L6HRLj1OwQP+An2MMteBTn0/2c25qQLE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m/FJ+G4eWvpkJOpDbei0eHk9oJJxDtTLSJyTDxz2gnfK/IhNwH8UK19it6bV47KZ9+onxrUrGPLTlV1UiNhazuocIGTs2c0Nc/JRMbO+ENjuQ3JvJ/tVzFxgl665koSrHDsR+lrbviRTj1qwvmStqudU0RLNLCDpGVEYi2CtDa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=CsWIlDQq; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1728201592; c=relaxed/simple;
+	bh=0WxMKip1+Fw9+cCQhm/3A9AY/qyKiRCE5qbNsKoaojU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PchLrEJs7UwXdIolqE4g1UoikMZCSOPmiOD5vCEopVo2aqF9ZdzDuud3jzQRcki1Cz1PMH12R10UYYgffACGGl4iePNGNtbunfP9xtbwHCf+C+lchmB+NQ5lfpxocv3PQwxEhFysRNiUbvxcS9aj4lA8vHtmb5T9jqjlWnBABWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OJevdzPE; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="CsWIlDQq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=Pqh8codxrX22SToFGaI1BL/8kRezKW4jx+SJzOiKeVw=; b=CsWIlDQqKcpXAGHS
-	9Ph4jTyh0b281KXLZ0AQ/5Zec2s3kGWFYw4XUce1EyJm0U68V6UeLOcwpPNYOi9TzQ2KwEscXvsT5
-	VklS37S8D9OIUOdrS1nHiL/Ew64lk7gZFs5gezIMOXj0geAlcGEqpyx9MvzV0cJRnkb2bjMJDzB0K
-	HgZZb0WSLQrUz8rVfKB1mUfx8cj4yT4AiG54yTEnJ1HvkRridJh1qT7j9GG4y7oXmMn3heEfFZSPZ
-	oMi9DRNUdXLaeXWytJpSGnVgKotIu449ev8TRbUg4YBDiXbYadvqgSEaPtGV7y/j/2EBGR1lPMkw3
-	VFEQPvv8QoVSmwNHdw==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1sxFyH-009Dy6-1P;
-	Sun, 06 Oct 2024 01:22:05 +0000
-From: linux@treblig.org
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] perf callchain: Remove unused callchain_branch_counts
-Date: Sun,  6 Oct 2024 02:22:04 +0100
-Message-ID: <20241006012204.373803-1-linux@treblig.org>
-X-Mailer: git-send-email 2.46.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJevdzPE"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2fad5024b8dso38792191fa.1;
+        Sun, 06 Oct 2024 00:59:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728201588; x=1728806388; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TPKYyYBqIk2nde1TDg/wyIZWJzsFsCGXcjUuTc5pqeY=;
+        b=OJevdzPEtGlNlxbHIDgOO+1lNvL7ODuxhcAxB1FR7dX8YHK6z4eNRBZuVtjntMPpnD
+         zeTxEJ6oYRmDVvD0vZ90hfWSC0rPgSkJui/x84HxYgD9oKHcVpLznQAAO+fbOvQhlTVX
+         LTo8HffgFj2Hyh8B+C22+xJ1yO32TB4FPdjn6DnrfqwOO+lgfPJJqkSg77LdflEqEtmI
+         RVAr17AhYV8DNdyJPOaquP3AxPYH6sU0A7rvikInuOFyeRPMCbqn0qVD+3f2w56T9Svt
+         PXiUVEoU/bMJ8J1XojXTdGvAxt/SmSI/yMH5Mgn2fZISA0lrkIgFdR43FPnVAQ55lnEu
+         TMZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728201588; x=1728806388;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TPKYyYBqIk2nde1TDg/wyIZWJzsFsCGXcjUuTc5pqeY=;
+        b=Pqdu4rfCDHMCHJ/B07tFwaFXfLLFNbzvRG3ipYmhmLxAhxB7HdDDcU1ITuCPnqT8OD
+         UPJdVxhIk2m45MJOd60Aj0dGDhZJoliDw/vJy4GFNvbnyp4RRn3gJ5VyjYpxR9uNE//M
+         8tiMWxv3hSy4hSycE6JvuAzmpow7cGu8DkTpzkmQ9yKVGVMaWCHan+7E7S1yEaeOshAY
+         ku+zo0HqHGImW1DuZyi5HW9Zyj9f2Zi0amDT9kQWVgY+4S5Ad5bBkoJYE/36YmQFSp3Y
+         uuP2u0U1SLYJJCjAI0BzGWfZ2KOYD6Hgc+2W6Y/esP+WDnbMT9O4w6GyMdUTyefE7cFR
+         EGAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7xqcXYxC2kvadaDPkaP+FtIzetjmuUeOcD+uUHu84NJq8TnWxooN0WWCwxE9UEsdXt0KIhS+KSk5V@vger.kernel.org, AJvYcCUioEptRTQfe8n3fJ/Xi+7tMUlr4YtVPJU2P+CNWRY8M9J+Cli8f9Zckrfc342eq8TuUp0=@vger.kernel.org, AJvYcCUoMMg2v90GiOqpAyC/LuKsuOPweO2xETW4lhVNu8Olfr6eIyzTXyKt2Qxrqlv86AFKdXr1G39/qDK0BPA7s8E=@vger.kernel.org, AJvYcCVHE5n3goGY8QhRrcvl5IU52VRJ3qFf9Hffk8KiSshUT2CkSKWUybb6TSB8R4Ph4mG7Bl7d4ZI3/ZjWv2f3KTqbWQ==@vger.kernel.org, AJvYcCVQ09D00PIajCVmEb0Uxe7sRrr7n3seaefxHtP8sma1kpu0VaQgnRN7HIO4DNqpOv266dHJOnBTh+hm@vger.kernel.org, AJvYcCWLL7w6urDI4YGkTFSNuS0D8tnjtjZ82hJtx0BSRQt37CWGC8deghoKTRPRK3oqQzQohEJ7lGUQTzlgZBmr@vger.kernel.org, AJvYcCWeBLWhnr4EXzzxNv18ZQcfsEUoTqt+dPM2gmDXGwraRgkFycQLDwqZtVY1vz5IICkMWpAd7t5HJxWSm3lJ@vger.kernel.org, AJvYcCWzK/HfO7nX8ByarrXUrPXrMOON+GbCcX2LuBprEl8VxL6izsjq4TyIdjXpxrU8uOxkJEEup2VMVEg=@vger.kernel.org, AJvYcCXWgDTTjpnMNx9MbhWN1TDGR4gQXL+JVu71s/rQ2zxK5zmsGV0dUu3bNqQF4B8CtmretsiQGCYoh0RnLPe8@vger.kernel.org, AJvYcCXoZXxrEGbdwAP7G+wWoarb66twgfaO4gZDQPFOe18iPYxDr0W4VyryTJwlvRa/T6Rd4WGDn2TJwwf6HQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6yI66QOvVaBMSUte3pUHWM3ywtSwwB1XI4f7DwzA2Q7pexwme
+	Y8CfANz1lZ/p625PleZDMYj6Wt0xzp8PODT2KCeEqwyajE+44WFS0K3Ho7bXAwz/NmRfQz5r3TP
+	jjUbS7Yh+sniRt0ay9LOGJdU6Qjo=
+X-Google-Smtp-Source: AGHT+IE2zUoTNKRDJOdgkWI5Cw6UcFhRdeh7rJkjxE6MXyTsb+8X3cwADhQlSBEhykzT0ML1M4fcluEMHpcmKEmwoVU=
+X-Received: by 2002:a05:651c:1549:b0:2fa:c873:45ce with SMTP id
+ 38308e7fff4ca-2faf3c64dcemr33189261fa.30.1728201588155; Sun, 06 Oct 2024
+ 00:59:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240925150059.3955569-30-ardb+git@google.com>
+ <20240925150059.3955569-55-ardb+git@google.com> <99446363-152f-43a8-8b74-26f0d883a364@zytor.com>
+ <CAMj1kXG7ZELM8D7Ft3H+dD5BHqENjY9eQ9kzsq2FzTgP5+2W3A@mail.gmail.com>
+ <CAHk-=wj0HG2M1JgoN-zdCwFSW=N7j5iMB0RR90aftTS3oqwKTg@mail.gmail.com>
+ <CAMj1kXEU5RU0i11zqD0433_LMMyNQH2gCoSkU7GeXmaRXGF1Yw@mail.gmail.com>
+ <5c7490bb-aa74-427b-849e-c28c343b7409@zytor.com> <CAFULd4Yj9LfTnWFu=c1M7Eh44+XFk0ibwL57r5H7wZjvKZ8yaA@mail.gmail.com>
+ <3bbb85ae-8ba5-4777-999f-d20705c386e7@zytor.com>
+In-Reply-To: <3bbb85ae-8ba5-4777-999f-d20705c386e7@zytor.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Sun, 6 Oct 2024 09:59:40 +0200
+Message-ID: <CAFULd4b==a7H0zdGVfABntL0efrS-F3eeHGu-63oyz1eh1DwXQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 25/28] x86: Use PIE codegen for the core kernel
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Dennis Zhou <dennis@kernel.org>, 
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Juergen Gross <jgross@suse.com>, 
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Keith Packard <keithp@keithp.com>, 
+	Justin Stitt <justinstitt@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-doc@vger.kernel.org, 
+	linux-pm@vger.kernel.org, kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	linux-efi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-sparse@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Sun, Oct 6, 2024 at 1:37=E2=80=AFAM H. Peter Anvin <hpa@zytor.com> wrote=
+:
+>
+> On 10/5/24 01:31, Uros Bizjak wrote:
+> >>
+> >> movq $sym to leaq sym(%rip) which you said ought to be smaller (and in
+> >> reality appears to be the same size, 7 bytes) seems like a no-brainer
+> >> and can be treated as a code quality issue -- in other words, file bug
+> >> reports against gcc and clang.
+> >
+> > It is the kernel assembly source that should be converted to
+> > rip-relative form, gcc (and probably clang) have nothing with it.
+> >
+>
+> Sadly, that is not correct; neither gcc nor clang uses lea:
+>
+>         -hpa
+>
+>
+> gcc version 14.2.1 20240912 (Red Hat 14.2.1-3) (GCC)
+>
+> hpa@tazenda:/tmp$ cat foo.c
+> int foobar;
+>
+> int *where_is_foobar(void)
+> {
+>          return &foobar;
+> }
+>
+> hpa@tazenda:/tmp$ gcc -mcmodel=3Dkernel -O2 -c -o foo.o foo.c
 
-callchain_branch_counts() was added in 2016 by commit
-3dd029ef9401 ("perf report: Calculate and return the branch flag counting")
-but unused.
+Indeed, but my reply was in the context of -fpie, which guarantees RIP
+relative access. IOW, the compiler will always generate sym(%rip) with
+-fpie, but (obviously) can't change assembly code in the kernel when
+the PIE is requested.
 
-Remove it and it's helpers.
+Otherwise, MOV $immediate, %reg is faster when PIE is not required,
+which is the case with -mcmodel=3Dkernel. IIRC, LEA with %rip had some
+performance issues, which may not be the case anymore with newer
+processors.
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- tools/perf/util/callchain.c | 71 -------------------------------------
- tools/perf/util/callchain.h |  4 ---
- 2 files changed, 75 deletions(-)
+Due to the non-negligible impact of PIE, perhaps some kind of
+CONFIG_PIE config definition should be introduced, so the assembly
+code would be able to choose optimal asm sequence when PIE and non-PIE
+is requested?
 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 0c7564747a14..11435b72afbe 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1266,77 +1266,6 @@ int callchain_node__fprintf_value(struct callchain_node *node,
- 	return 0;
- }
- 
--static void callchain_counts_value(struct callchain_node *node,
--				   u64 *branch_count, u64 *predicted_count,
--				   u64 *abort_count, u64 *cycles_count)
--{
--	struct callchain_list *clist;
--
--	list_for_each_entry(clist, &node->val, list) {
--		if (branch_count)
--			*branch_count += clist->branch_count;
--
--		if (predicted_count)
--			*predicted_count += clist->predicted_count;
--
--		if (abort_count)
--			*abort_count += clist->abort_count;
--
--		if (cycles_count)
--			*cycles_count += clist->cycles_count;
--	}
--}
--
--static int callchain_node_branch_counts_cumul(struct callchain_node *node,
--					      u64 *branch_count,
--					      u64 *predicted_count,
--					      u64 *abort_count,
--					      u64 *cycles_count)
--{
--	struct callchain_node *child;
--	struct rb_node *n;
--
--	n = rb_first(&node->rb_root_in);
--	while (n) {
--		child = rb_entry(n, struct callchain_node, rb_node_in);
--		n = rb_next(n);
--
--		callchain_node_branch_counts_cumul(child, branch_count,
--						   predicted_count,
--						   abort_count,
--						   cycles_count);
--
--		callchain_counts_value(child, branch_count,
--				       predicted_count, abort_count,
--				       cycles_count);
--	}
--
--	return 0;
--}
--
--int callchain_branch_counts(struct callchain_root *root,
--			    u64 *branch_count, u64 *predicted_count,
--			    u64 *abort_count, u64 *cycles_count)
--{
--	if (branch_count)
--		*branch_count = 0;
--
--	if (predicted_count)
--		*predicted_count = 0;
--
--	if (abort_count)
--		*abort_count = 0;
--
--	if (cycles_count)
--		*cycles_count = 0;
--
--	return callchain_node_branch_counts_cumul(&root->node,
--						  branch_count,
--						  predicted_count,
--						  abort_count,
--						  cycles_count);
--}
--
- static int count_pri64_printf(int idx, const char *str, u64 value, char *bf, int bfsize)
- {
- 	return scnprintf(bf, bfsize, "%s%s:%" PRId64 "", (idx) ? " " : " (", str, value);
-diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index 86ed9e4d04f9..d7741fa9e9de 100644
---- a/tools/perf/util/callchain.h
-+++ b/tools/perf/util/callchain.h
-@@ -298,10 +298,6 @@ void free_callchain(struct callchain_root *root);
- void decay_callchain(struct callchain_root *root);
- int callchain_node__make_parent_list(struct callchain_node *node);
- 
--int callchain_branch_counts(struct callchain_root *root,
--			    u64 *branch_count, u64 *predicted_count,
--			    u64 *abort_count, u64 *cycles_count);
--
- void callchain_param_setup(u64 sample_type, const char *arch);
- 
- bool callchain_cnode_matched(struct callchain_node *base_cnode,
--- 
-2.46.2
-
+Uros.
