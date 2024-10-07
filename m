@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE24188703;
-	Mon,  7 Oct 2024 08:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2BB38F97;
+	Mon,  7 Oct 2024 08:35:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728289194; cv=none; b=lfS0OEjVSR3E08V8IDJpm9NkFwnQCbJ4krrOy4F/RVso1H05tDeGu2QwdGQBy0rvQdqSuh/yYv9ZDLMtcP8Tphao0eP3zvzYfM0WTPUi/7qPmH3LTColLAC6uJ74+o9364+3cM81mNk5jo6mvKQ6DEVb7UQWCpv+h2FfKVaLfUM=
+	t=1728290105; cv=none; b=QMP2XcatYcgW+sISh8nQgA1AIIS5xI/eS6dvHEZuaxB336s4M3QQQTNgHmoqOXBFRz7cNYzv7+amLKOPeYMD9m2QFk9V5F3L18FJlrO3gw/e+w3WpYV6NU/CVKAgoAQ91g4dZ7xD4reenyZSn8E4jB7y4KaFhTB8BxYdUduoSYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728289194; c=relaxed/simple;
-	bh=p7fnPdg9GXFJITuQrseQDNuIaX+4R+NIr2XuOdnxTOg=;
+	s=arc-20240116; t=1728290105; c=relaxed/simple;
+	bh=btmSv8f1vrIOAD0Hc5VYRph80OAmBMiwkMpLFOZtl2c=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=q0twgBG8Xhd5W905Fz4W+nwrhBaYyirCB7Z0LEQZG6ayAJNzgNDsWD7N43fTF11FyYte77Q5QPPEugPtZnD9c/Hk3gwGFcjvTjBRvVOa5DkHENRh6aFTzXnQefzwm07iozSSfwkNRUsqS64V343adgpOUEBGpqAEp2OJsP3BDhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=on0X8S+1; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=PXyAEy5JfewvMGfBPXbSLHD2RV+hmDFITyFgrOw6lhwQUFInvDCwzkyY8N6UTCjfcU/VOAgJazXjDfcoFW0QnD519HMbDMYYDmAcp8AeLjhBeoA/f5gQW26vXHc1hsncdvuJBSXpUWLdLVsJL/zm9hnM4SuJUWsR4u7xtvxihd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nfyj0Mep; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="on0X8S+1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C0EBC4CEC6;
-	Mon,  7 Oct 2024 08:19:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nfyj0Mep"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4C92C4CEC6;
+	Mon,  7 Oct 2024 08:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728289193;
-	bh=p7fnPdg9GXFJITuQrseQDNuIaX+4R+NIr2XuOdnxTOg=;
+	s=k20201202; t=1728290104;
+	bh=btmSv8f1vrIOAD0Hc5VYRph80OAmBMiwkMpLFOZtl2c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=on0X8S+1tuhId3VGYt/LSW/vWZbtRu4Y0aAQW8QemIGTVE/BdqBPjbVf5qr/sVgrV
-	 qEdd2OyD6z9TcgrMmY+8Oh7g2d+1vNz1XqHjtvgqVMrJRT93O3sfn4SRuiX7MeZIyN
-	 oB4RDp1mbFMnnskliJcMyp9o6WSW/8hvbpVcvMg31JDfURhR0DNt9+x/2tK/+KbI48
-	 1blKwBDXXHuRTLpJc03VfTGnPuqY6j34ToTWoxjjhHN1tP5wKC95lPFzGiYf6Yydjm
-	 zr+iik+uEgMQJDBUkplHIdEc4ElZ8TzU9C7pGLb16/zTWSZbzxehCxXdDKA2+A1d91
-	 DEzwPUTTfYNqw==
-Date: Mon, 7 Oct 2024 17:19:42 +0900
+	b=nfyj0Mep+EDOymL8OWUWcw8TAXyUSNz85kVSi7xeizSCl5LUmheZKiVImZYuXeTAx
+	 bpoXEm6yBkDZ+wnqIxBBntK7qVgNhXaKJaXxfWgQ4XGk+ldcUK14ftL7+EoBI1G/XP
+	 mguGM0EQ9tEyx50ICIfQkZ7WTtoazHzXXHhuOSWKPuqy/hfkxVkDW6A7TiXGW/JeVJ
+	 w6zutx3xU6eBWSLnShqu1XVu/MnvlnLvhRNs5cJXsI13UP27t7Uu3UrmwNivrNMWee
+	 CeQmjzeU2n5M8jujWfUPRpsuDrL1fIcseUxbur0Ar9bcPwgalQ3WYSVkLNrDB8utl0
+	 FP2IhF9SuTgBg==
+Date: Mon, 7 Oct 2024 17:34:53 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -54,11 +54,12 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
  linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 19/31] perf arm64: Remove dwarf-regs.c
-Message-Id: <20241007171942.e96d5c520e065bbe4cf8ae5f@kernel.org>
-In-Reply-To: <20241005195541.380070-20-irogers@google.com>
+Subject: Re: [PATCH v2 18/31] perf dwarf-regs: Move x86 dwarf-regs out of
+ arch
+Message-Id: <20241007173453.288ec1580855c29af0863d89@kernel.org>
+In-Reply-To: <20241005195541.380070-19-irogers@google.com>
 References: <20241005195541.380070-1-irogers@google.com>
-	<20241005195541.380070-20-irogers@google.com>
+	<20241005195541.380070-19-irogers@google.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -69,166 +70,192 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat,  5 Oct 2024 12:55:29 -0700
+On Sat,  5 Oct 2024 12:55:28 -0700
 Ian Rogers <irogers@google.com> wrote:
 
-> The file just provides the function get_arch_regstr, however, if in
-> the only caller get_dwarf_regstr EM_HOST is used for the EM_NONE case
-> the function can never be called. So remove as dead code. Tidy up the
-> EM_NONE cases for arm64 in dwarf-regs.c.
+> Move arch/x86/util/dwarf-regs.c to util/dwarf-regs-x86.c and compile
+> in unconditionally. To avoid get_arch_regnum being duplicated, rename
+> to get_x86_regnum and add to get_dwarf_regnum switch.
+> 
+> For get_arch_regstr, this was unused on x86 unless the machine type
+> was EM_NONE. Map that case to EM_HOST and remove get_arch_regstr from
+> dwarf-regs-x86.c.
+> 
 
-OK, this seems just a redundant information in 
-tools/perf/arch/arm64/include/dwarf-regs-table.h (there is alredy
-register number -> name mapping table.)
+Hmm, I'm not sure this change. I feel like to keep the arch dependent
+part under arch/ directory. But if this is just for reverse mapping of
+regname -> regnum, since we already have regnum -> regname maps in the
+header file, we can reimplement get_dwarf_regnum() as a generic function.
+And that is what you does in this series, correct?
 
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+If so, can you make a generic get_dwarf_regnum() at first, and remove
+the architecture dependent part which is not needed anymore.
+That should be more simpler to review.
 
 Thank you,
+ 
 
-> 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/arch/arm64/util/Build        |  1 -
->  tools/perf/arch/arm64/util/dwarf-regs.c | 80 -------------------------
->  tools/perf/util/dwarf-regs.c            |  4 +-
->  tools/perf/util/include/dwarf-regs.h    |  2 +-
->  4 files changed, 3 insertions(+), 84 deletions(-)
->  delete mode 100644 tools/perf/arch/arm64/util/dwarf-regs.c
+>  tools/perf/arch/x86/util/Build                |  3 ---
+>  tools/perf/util/Build                         |  1 +
+>  .../dwarf-regs.c => util/dwarf-regs-x86.c}    | 24 +------------------
+>  tools/perf/util/dwarf-regs.c                  | 17 +++++++++++++
+>  tools/perf/util/include/dwarf-regs.h          |  8 +++++++
+>  5 files changed, 27 insertions(+), 26 deletions(-)
+>  rename tools/perf/{arch/x86/util/dwarf-regs.c => util/dwarf-regs-x86.c} (77%)
 > 
-> diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-> index 4387a6d6a6c3..a74521b79eaa 100644
-> --- a/tools/perf/arch/arm64/util/Build
-> +++ b/tools/perf/arch/arm64/util/Build
-> @@ -4,7 +4,6 @@ perf-util-y += perf_regs.o
->  perf-util-y += tsc.o
->  perf-util-y += pmu.o
->  perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
-> -perf-util-$(CONFIG_LIBDW)     += dwarf-regs.o
->  perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+> diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
+> index 9705cda4f240..70af491a6dd7 100644
+> --- a/tools/perf/arch/x86/util/Build
+> +++ b/tools/perf/arch/x86/util/Build
+> @@ -12,9 +12,6 @@ perf-util-y += evsel.o
+>  perf-util-y += iostat.o
+>  perf-util-y += env.o
+>  
+> -perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+> -perf-util-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
+> -
+>  perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
 >  perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
 >  
-> diff --git a/tools/perf/arch/arm64/util/dwarf-regs.c b/tools/perf/arch/arm64/util/dwarf-regs.c
-> deleted file mode 100644
-> index 343a62fa4199..000000000000
-> --- a/tools/perf/arch/arm64/util/dwarf-regs.c
-> +++ /dev/null
-> @@ -1,80 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0-only
-> -/*
-> - * Mapping of DWARF debug register numbers into register names.
-> - *
-> - * Copyright (C) 2010 Will Deacon, ARM Ltd.
-> - */
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 1d08608b7e1b..c2221ef431f3 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -202,6 +202,7 @@ endif
+>  perf-util-$(CONFIG_LIBDW) += probe-finder.o
+>  perf-util-$(CONFIG_LIBDW) += dwarf-aux.o
+>  perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+> +perf-util-$(CONFIG_LIBDW) += dwarf-regs-x86.o
+>  perf-util-$(CONFIG_LIBDW) += debuginfo.o
+>  perf-util-$(CONFIG_LIBDW) += annotate-data.o
+>  
+> diff --git a/tools/perf/arch/x86/util/dwarf-regs.c b/tools/perf/util/dwarf-regs-x86.c
+> similarity index 77%
+> rename from tools/perf/arch/x86/util/dwarf-regs.c
+> rename to tools/perf/util/dwarf-regs-x86.c
+> index 530905118cd4..7a55c65e8da6 100644
+> --- a/tools/perf/arch/x86/util/dwarf-regs.c
+> +++ b/tools/perf/util/dwarf-regs-x86.c
+> @@ -11,28 +11,6 @@
+>  #include <linux/kernel.h> /* for ARRAY_SIZE */
+>  #include <dwarf-regs.h>
+>  
+> -#define DEFINE_DWARF_REGSTR_TABLE 1
+> -#include "dwarf-regs-table.h"
 > -
-> -#include <errno.h>
-> -#include <stddef.h>
-> -#include <string.h>
-> -#include <dwarf-regs.h>
-> -#include <linux/stringify.h>
-> -
-> -struct regs_dwarfnum {
-> -	const char *name;
-> -	unsigned int dwarfnum;
-> -};
-> -
-> -#define REG_DWARFNUM_NAME(r, num) {.name = r, .dwarfnum = num}
-> -#define GPR_DWARFNUM_NAME(num) \
-> -	{.name = __stringify(%x##num), .dwarfnum = num}
-> -#define REG_DWARFNUM_END {.name = NULL, .dwarfnum = 0}
-> -
-> -/*
-> - * Reference:
-> - * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0057b/IHI0057B_aadwarf64.pdf
-> - */
-> -static const struct regs_dwarfnum regdwarfnum_table[] = {
-> -	GPR_DWARFNUM_NAME(0),
-> -	GPR_DWARFNUM_NAME(1),
-> -	GPR_DWARFNUM_NAME(2),
-> -	GPR_DWARFNUM_NAME(3),
-> -	GPR_DWARFNUM_NAME(4),
-> -	GPR_DWARFNUM_NAME(5),
-> -	GPR_DWARFNUM_NAME(6),
-> -	GPR_DWARFNUM_NAME(7),
-> -	GPR_DWARFNUM_NAME(8),
-> -	GPR_DWARFNUM_NAME(9),
-> -	GPR_DWARFNUM_NAME(10),
-> -	GPR_DWARFNUM_NAME(11),
-> -	GPR_DWARFNUM_NAME(12),
-> -	GPR_DWARFNUM_NAME(13),
-> -	GPR_DWARFNUM_NAME(14),
-> -	GPR_DWARFNUM_NAME(15),
-> -	GPR_DWARFNUM_NAME(16),
-> -	GPR_DWARFNUM_NAME(17),
-> -	GPR_DWARFNUM_NAME(18),
-> -	GPR_DWARFNUM_NAME(19),
-> -	GPR_DWARFNUM_NAME(20),
-> -	GPR_DWARFNUM_NAME(21),
-> -	GPR_DWARFNUM_NAME(22),
-> -	GPR_DWARFNUM_NAME(23),
-> -	GPR_DWARFNUM_NAME(24),
-> -	GPR_DWARFNUM_NAME(25),
-> -	GPR_DWARFNUM_NAME(26),
-> -	GPR_DWARFNUM_NAME(27),
-> -	GPR_DWARFNUM_NAME(28),
-> -	GPR_DWARFNUM_NAME(29),
-> -	REG_DWARFNUM_NAME("%lr", 30),
-> -	REG_DWARFNUM_NAME("%sp", 31),
-> -	REG_DWARFNUM_END,
-> -};
-> -
-> -/**
-> - * get_arch_regstr() - lookup register name from it's DWARF register number
-> - * @n:	the DWARF register number
-> - *
-> - * get_arch_regstr() returns the name of the register in struct
-> - * regdwarfnum_table from it's DWARF register number. If the register is not
-> - * found in the table, this returns NULL;
-> - */
+> -/* Return architecture dependent register string (for kprobe-tracer) */
 > -const char *get_arch_regstr(unsigned int n)
 > -{
-> -	const struct regs_dwarfnum *roff;
+> -#if defined(__i386__)
+> -	size_t len = ARRAY_SIZE(x86_32_regstr_tbl);
+> -#else
+> -	size_t len = ARRAY_SIZE(x86_64_regstr_tbl);
+> -#endif
 > -
-> -	for (roff = regdwarfnum_table; roff->name != NULL; roff++)
-> -		if (roff->dwarfnum == n)
-> -			return roff->name;
-> -	return NULL;
+> -	if (n >= len)
+> -		return NULL;
+> -
+> -#if defined(__i386__)
+> -	return x86_32_regstr_tbl[n];
+> -#else
+> -	return x86_64_regstr_tbl[n];
+> -#endif
 > -}
+> -
+>  struct dwarf_regs_idx {
+>  	const char *name;
+>  	int idx;
+> @@ -58,7 +36,7 @@ static const struct dwarf_regs_idx x86_regidx_table[] = {
+>  	{ "rip", DWARF_REG_PC },
+>  };
+>  
+> -int get_arch_regnum(const char *name)
+> +int get_x86_regnum(const char *name)
+>  {
+>  	unsigned int i;
+>  
 > diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
-> index eac99a246737..18e916c8e993 100644
+> index 86b3ef638fbb..eac99a246737 100644
 > --- a/tools/perf/util/dwarf-regs.c
 > +++ b/tools/perf/util/dwarf-regs.c
-> @@ -32,14 +32,14 @@
+> @@ -32,9 +32,17 @@
 >  const char *get_dwarf_regstr(unsigned int n, unsigned int machine,
 >  			     unsigned int flags __maybe_unused)
 >  {
-> -#if EM_HOST == EM_X86_64 || EM_HOST == EM_386
-> +#if EM_HOST == EM_X86_64 || EM_HOST == EM_386 || EM_HOST == EM_AARCH64
->  	if (machine == EM_NONE) {
->  		/* Generic arch - use host arch */
->  		machine = EM_HOST;
->  	}
->  #endif
+> +#if EM_HOST == EM_X86_64 || EM_HOST == EM_386
+> +	if (machine == EM_NONE) {
+> +		/* Generic arch - use host arch */
+> +		machine = EM_HOST;
+> +	}
+> +#endif
 >  	switch (machine) {
-> -#if EM_HOST != EM_X86_64 && EM_HOST != EM_386
-> +#if EM_HOST != EM_X86_64 && EM_HOST != EM_386 && EM_HOST != EM_AARCH64
+> +#if EM_HOST != EM_X86_64 && EM_HOST != EM_386
 >  	case EM_NONE:	/* Generic arch - use host arch */
 >  		return get_arch_regstr(n);
->  #endif
+> +#endif
+>  	case EM_386:
+>  		return __get_dwarf_regstr(x86_32_regstr_tbl, n);
+>  	case EM_X86_64:
+> @@ -65,10 +73,12 @@ const char *get_dwarf_regstr(unsigned int n, unsigned int machine,
+>  	return NULL;
+>  }
+>  
+> +#if EM_HOST != EM_X86_64 && EM_HOST != EM_386
+>  __weak int get_arch_regnum(const char *name __maybe_unused)
+>  {
+>  	return -ENOTSUP;
+>  }
+> +#endif
+>  
+>  /* Return DWARF register number from architecture register name */
+>  int get_dwarf_regnum(const char *name, unsigned int machine, unsigned int flags __maybe_unused)
+> @@ -90,9 +100,16 @@ int get_dwarf_regnum(const char *name, unsigned int machine, unsigned int flags
+>  		machine = EM_HOST;
+>  	}
+>  	switch (machine) {
+> +#if EM_HOST != EM_X86_64 && EM_HOST != EM_386
+>  	case EM_HOST:
+>  		reg = get_arch_regnum(regname);
+>  		break;
+> +#endif
+> +	case EM_X86_64:
+> +		fallthrough;
+> +	case EM_386:
+> +		reg = get_x86_regnum(regname);
+> +		break;
+>  	default:
+>  		pr_err("ELF MACHINE %x is not supported.\n", machine);
+>  	}
 > diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
-> index 062623aefd5a..e640657f69c8 100644
+> index 925525405e2d..062623aefd5a 100644
 > --- a/tools/perf/util/include/dwarf-regs.h
 > +++ b/tools/perf/util/include/dwarf-regs.h
-> @@ -79,7 +79,7 @@
+> @@ -79,7 +79,10 @@
 >  #define DWARF_REG_FB  0xd3affb /* random number */
 >  
 >  #ifdef HAVE_LIBDW_SUPPORT
-> -#if !defined(__x86_64__) && !defined(__i386__)
-> +#if !defined(__x86_64__) && !defined(__i386__) && !defined(__aarch64__)
+> +#if !defined(__x86_64__) && !defined(__i386__)
 >  const char *get_arch_regstr(unsigned int n);
->  #endif
+> +#endif
+> +
+>  /**
+>   * get_dwarf_regstr() - Returns ftrace register string from DWARF regnum.
+>   * @n: DWARF register number.
+> @@ -88,7 +91,12 @@ const char *get_arch_regstr(unsigned int n);
+>   */
+>  const char *get_dwarf_regstr(unsigned int n, unsigned int machine, unsigned int flags);
 >  
+> +int get_x86_regnum(const char *name);
+> +
+> +#if !defined(__x86_64__) && !defined(__i386__)
+>  int get_arch_regnum(const char *name);
+> +#endif
+> +
+>  /*
+>   * get_dwarf_regnum - Returns DWARF regnum from register name
+>   * name: architecture register name
 > -- 
 > 2.47.0.rc0.187.ge670bccf7e-goog
 > 
