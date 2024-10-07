@@ -1,264 +1,494 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EFF1D86C7
-	for <linux-perf-users@vger.kernel.org>; Mon,  7 Oct 2024 15:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1FD1D86D5;
+	Mon,  7 Oct 2024 15:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728313543; cv=none; b=YiPNsm/TnZlnjgho0h7L/3gP/ZmynisBLMlWb9huQBljGk2Dux4EK8MLGDjwEvd9yMA0AI+dGJT0FtyvXEw9HMb0yEHdNxn8+iZJtJkBPWZVmKtRFKDTabVldmwt1zaDFp3e8DWK1LOmbCTD3+8qbyPvvt1Wa13TBx7TsQjHfw0=
+	t=1728313944; cv=none; b=DcUbmF2x05Tc1UaFSD+XcaS2YviYFUFJHK/bESgfKVpIhUI1i/21QmZIi5WI9rnG31BZxshNEbL1+zE4pfE25NJVkqD9KOyvRPOEzSKS1vpheYPeUBkYabBVy4a3bhpGcDAYoPtO1fERTcJLobuBsptMZ0XHqjzV6uqUhuuCaco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728313543; c=relaxed/simple;
-	bh=YZA/FsPTJ/0SXCAHzVooq80Clnf9L8yh6nb1QxzQybw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dJG4w1FRpSLQNDAVZTj2oNYYQniKO66w6Uf8J1VAh0RtW6nA0ySevRvMjeLbBtziH+hPJBm6HII02t4yPfxbQlb3ClcsGn7q5cs1++daiHSqlpGKmrJgJMDRmrDI7DD/GIpJkx0mI9iNE8lMkVKy1xT9/rHuKNm6L2k7VIxNUHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BpvzS+6d; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1728313944; c=relaxed/simple;
+	bh=B6fA8GmvooZrPml4opBiwYvSC4vNfeViT79CvNrIeZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oKmDaqfOY5bc+FRdKHKhfqcBJ0/6eM3OBRbH4Zdv8uCzGDiCgCVgPV1xdnxwlnRZ0XSMO0WxyZRi+W4ZHatfl94YHGlKbThwh9ZJtZRlIcFVSWZEcHcGk+Nvv0ld3Gp/ulZ2Q5H4/xuHLuwXlB1ygNjY/VMdcJp6ZFLv+zRJdOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F+61gw87; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BpvzS+6d"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3a36ad4980bso683125ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 07 Oct 2024 08:05:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728313541; x=1728918341; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N4Ifz9XWfcAsuRFxDqc9o17TugXceR60fizX3mKXtiA=;
-        b=BpvzS+6dpFl9Yyf059q2wMuwpYVmKX7H/1D4ZMn9gyggM8ykZdlifzYtnlwpEWwKQY
-         Dv0NY3CQM2YbHil7KQ65RmglEUWjnrP9rJAizOOER2+xylo4A7kKMR60PtadGifkzGWd
-         xoWFfVoTaD7bUrRAU7+Ug6SYclyvtnXVgYoA9k4Ve9Y2nVovN0F/QjN2roHKMfSKfeyj
-         lXffeU3P067TGebOtuQGRQi5INndPGsNzNuyfnZN6yYpPflePvAsp35FtXfKY2rF01B3
-         wcne6wyUvY8ACR4+JAkFsEyH+qcpI6pJsfJ3cekS8vPIqE5bCw5wsyJnwiyNI/XfVyjv
-         L84g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728313541; x=1728918341;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N4Ifz9XWfcAsuRFxDqc9o17TugXceR60fizX3mKXtiA=;
-        b=WLgdvuekhzGw0pM1XJXZdOygRTAzSYChDewgywqh7osWWiRAhgkqpu1gwX63Qk/KkZ
-         D5Eg31qOJ508Qng/nYz/m1V0fIqr8gf6fM5798Nc18de4qOufExCoAjOy5dlX39x4/Fr
-         hWdfLeYf+A+cn+XcU2IMC7fLJeW+WLsRcK2jzNCUC5TkqvLHL9+gi4KIAdz8YFw7XpCG
-         b6t6RfkOYHIAJLDc/StGl35iBNiQslvLt/Hh7EhY7glsgzQgq3iQ8JqLR6vapP2/0OXu
-         oGjXDs5veNC8+OU9LanT+GWUwi+gZqcgJCEjMHYs32cvyDXUAteDdTSA7D6JzMWtia2l
-         RwXw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8BLmJaImuz6z/r4bBK0tF062FIc8WDCiYqxJOSAp1MO+O4E/5wHaSfDWjug6o+XPv4nA4SacMyUeByW6Xlh9r@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjB4tYLriOVfCcVWP8nQC5IGjw7mWJH1tFOAUW5aVI57PubTch
-	Ffx0CL95lqF9o5qGo74pq3fHaX3rywe3rRh/jEyWaGaACrhI8ybafkqMq34RUgC9PJdSusPIv0H
-	x/DiC2OeXs8mMRnyPT/uvMXXD7Lgl7/N/ulNg
-X-Google-Smtp-Source: AGHT+IGnVEtAO00vCITXCPwm0s3FUKY4msYOxpuQ04Ol0pYaHnJTKEoTr54hveiZ6TGX6FxH3wcrfJ/ceNrrrrwICog=
-X-Received: by 2002:a05:6e02:b29:b0:3a0:a2c9:5c0b with SMTP id
- e9e14a558f8ab-3a37b879639mr7306245ab.18.1728313540246; Mon, 07 Oct 2024
- 08:05:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F+61gw87"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728313943; x=1759849943;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=B6fA8GmvooZrPml4opBiwYvSC4vNfeViT79CvNrIeZI=;
+  b=F+61gw87RwS+OgGu7SE4hlSdUWerNrdTPyM/5SoL0PZIpowIuMJ8mAlo
+   eCS2EELN9K+E0Cgu9ztVkSWmeyKwZdS19bd/tfTOfSfQYcYRFmqC01My7
+   ZkJSaZWYkRawFVGPVewhEhiE3a5D51+E4xRFAHuFPKPwJvWrtMtc55gJ7
+   kVRsnLeGvEQWIJRt4XAkx1MgpwtU2ZlMOPlBMcMZagBS7I/YxbnlvLofZ
+   avqp0MrOHwJIJJ1rTCwF8EYcAOWcaOqv0gQWsmEjJyl5M8Lk1tQHUEvsy
+   v6xkbRb3/rsFPGjZk9uTxxNnwkoFzVJJnDYb9g9kTDi907f0Mb00cOVIx
+   g==;
+X-CSE-ConnectionGUID: 543JZuecTxmVO6ftCxvvsA==
+X-CSE-MsgGUID: jjGSrprvTZO64OzDHZ2bxA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11218"; a="27408832"
+X-IronPort-AV: E=Sophos;i="6.11,184,1725346800"; 
+   d="scan'208";a="27408832"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2024 08:12:22 -0700
+X-CSE-ConnectionGUID: opPQXGVVTR6GgpPDiH+fwQ==
+X-CSE-MsgGUID: 6zSCTWIDSwef3ycMisIYmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,184,1725346800"; 
+   d="scan'208";a="75618081"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.245.89.141])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2024 08:12:14 -0700
+Message-ID: <233d7712-b475-4342-9efc-362618e1f3b3@intel.com>
+Date: Mon, 7 Oct 2024 18:12:09 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241005195541.380070-1-irogers@google.com> <20241005195541.380070-18-irogers@google.com>
- <20241007170927.f30fced63c5e777628bea311@kernel.org>
-In-Reply-To: <20241007170927.f30fced63c5e777628bea311@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 7 Oct 2024 08:05:23 -0700
-Message-ID: <CAP-5=fVmD-M-ZOinkWZ7AOtfRHqo89gFtDeeatwufq0TcBiZUA@mail.gmail.com>
-Subject: Re: [PATCH v2 17/31] perf dwarf-regs: Pass ELF flags to get_dwarf_regstr
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>, Guilherme Amadio <amadio@gentoo.org>, 
-	Changbin Du <changbin.du@huawei.com>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
-	Daniel Wagner <dwagner@suse.de>, Aditya Gupta <adityag@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Kajol Jain <kjain@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@rivosinc.com>, Shenlin Liang <liangshenlin@eswincomputing.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, "Steinar H. Gunderson" <sesse@google.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Chen Pei <cp0613@linux.alibaba.com>, 
-	Dima Kogan <dima@secretsauce.net>, Yury Norov <yury.norov@gmail.com>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V11 01/10] perf/core: Add aux_pause, aux_resume,
+ aux_start_paused
+To: Leo Yan <leo.yan@linux.dev>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
+ <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20240806155514.17900-1-adrian.hunter@intel.com>
+ <20240806155514.17900-2-adrian.hunter@intel.com>
+ <20241006103947.GA30834@debian-dev>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20241006103947.GA30834@debian-dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 7, 2024 at 1:09=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.or=
-g> wrote:
->
-> On Sat,  5 Oct 2024 12:55:27 -0700
-> Ian Rogers <irogers@google.com> wrote:
->
-> > Pass a flags value as architectures like csky need the flags to
-> > determine the ABI variant.
-> >
->
-> Same here. I need some examples of this chaneg.
+On 6/10/24 13:39, Leo Yan wrote:
+> Hi Adrian,
+> 
+> Sorry I review this series in very late time and I might bring up
+> duplicate questions (though I hope not).
 
-The code here was already using the ELF machine, so dwarf-regs.c
-functions would already support cross building. There is the addition
-of ELF flags as on csky the registers change depending on the ABI
-version in the ELF flags.
+No problem - you are very welcome :-)
 
-Thanks,
-Ian
+> 
+> On Tue, Aug 06, 2024 at 06:55:05PM +0300, Adrian Hunter wrote:
+>> Hardware traces, such as instruction traces, can produce a vast amount of
+>> trace data, so being able to reduce tracing to more specific circumstances
+>> can be useful.
+>>
+>> The ability to pause or resume tracing when another event happens, can do
+>> that.
+>>
+>> Add ability for an event to "pause" or "resume" AUX area tracing.
+>>
+>> Add aux_pause bit to perf_event_attr to indicate that, if the event
+>> happens, the associated AUX area tracing should be paused. Ditto
+>> aux_resume. Do not allow aux_pause and aux_resume to be set together.
+>>
+>> Add aux_start_paused bit to perf_event_attr to indicate to an AUX area
+>> event that it should start in a "paused" state.
+>>
+>> Add aux_paused to struct hw_perf_event for AUX area events to keep track of
+>> the "paused" state. aux_paused is initialized to aux_start_paused.
+>>
+>> Add PERF_EF_PAUSE and PERF_EF_RESUME modes for ->stop() and ->start()
+>> callbacks. Call as needed, during __perf_event_output(). Add
+>> aux_in_pause_resume to struct perf_buffer to prevent races with the NMI
+>> handler. Pause/resume in NMI context will miss out if it coincides with
+>> another pause/resume.
+>>
+>> To use aux_pause or aux_resume, an event must be in a group with the AUX
+>> area event as the group leader.
+>>
+>> Example (requires Intel PT and tools patches also):
+>>
+>>  $ perf record --kcore -e intel_pt/aux-action=start-paused/k,syscalls:sys_enter_newuname/aux-action=resume/,syscalls:sys_exit_newuname/aux-action=pause/ uname
+>>  Linux
+>>  [ perf record: Woken up 1 times to write data ]
+>>  [ perf record: Captured and wrote 0.043 MB perf.data ]
+>>  $ perf script --call-trace
+>>  uname   30805 [000] 24001.058782799: name: 0x7ffc9c1865b0
+>>  uname   30805 [000] 24001.058784424:  psb offs: 0
+>>  uname   30805 [000] 24001.058784424:  cbr: 39 freq: 3904 MHz (139%)
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])        debug_smp_processor_id
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])        __x64_sys_newuname
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])            down_read
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                __cond_resched
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                preempt_count_add
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                    in_lock_functions
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                preempt_count_sub
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])            up_read
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                preempt_count_add
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                    in_lock_functions
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                preempt_count_sub
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])            _copy_to_user
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])        syscall_exit_to_user_mode
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])            syscall_exit_work
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                perf_syscall_exit
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                    debug_smp_processor_id
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                    perf_trace_buf_alloc
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        perf_swevent_get_recursion_context
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            debug_smp_processor_id
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        debug_smp_processor_id
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                    perf_tp_event
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        perf_trace_buf_update
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            tracing_gen_ctx_irq_test
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        perf_swevent_event
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            __perf_event_account_interrupt
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                __this_cpu_preempt_check
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            perf_event_output_forward
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                perf_event_aux_pause
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                    ring_buffer_get
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                        __rcu_read_lock
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                        __rcu_read_unlock
+>>  uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                    pt_event_stop
+>>  uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                        debug_smp_processor_id
+>>  uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                        debug_smp_processor_id
+>>  uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                        native_write_msr
+>>  uname   30805 [000] 24001.058785463: ([kernel.kallsyms])                                        native_write_msr
+>>  uname   30805 [000] 24001.058785639: 0x0
+>>
+>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+>> Acked-by: James Clark <james.clark@arm.com>
+>> ---
+>>
+>>
+>> Changes in V11:
+>> 	Make assignment to event->hw.aux_paused conditional on
+>> 	(pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE).
+>>
+>> Changes in V10:
+>> 	Move aux_paused into a union within struct hw_perf_event.
+>> 	Additional comment wrt PERF_EF_PAUSE/PERF_EF_RESUME.
+>> 	Factor out has_aux_action() as an inline function.
+>> 	Use scoped_guard for irqsave.
+>> 	Move calls of perf_event_aux_pause() from __perf_event_output()
+>> 	to __perf_event_overflow().
+>>
+>> Changes in V9:
+>> 	Move aux_paused to struct hw_perf_event
+>>
+>> Changes in V6:
+>> 	Removed READ/WRITE_ONCE from __perf_event_aux_pause()
+>> 	Expanded comment about guarding against NMI
+>>
+>> Changes in V5:
+>> 	Added James' Ack
+>>
+>> Changes in V4:
+>> 	Rename aux_output_cfg -> aux_action
+>> 	Reorder aux_action bits from:
+>> 		aux_pause, aux_resume, aux_start_paused
+>> 	to:
+>> 		aux_start_paused, aux_pause, aux_resume
+>> 	Fix aux_action bits __u64 -> __u32
+>>
+>>
+>>  include/linux/perf_event.h      | 28 +++++++++++++
+>>  include/uapi/linux/perf_event.h | 11 ++++-
+>>  kernel/events/core.c            | 72 +++++++++++++++++++++++++++++++--
+>>  kernel/events/internal.h        |  1 +
+>>  4 files changed, 108 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index 6bb0c21d6335..8e508f77f42c 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -170,6 +170,12 @@ struct hw_perf_event {
+>>  		};
+>>  		struct { /* aux / Intel-PT */
+>>  			u64		aux_config;
+>> +			/*
+>> +			 * For AUX area events, aux_paused cannot be a state
+>> +			 * flag because it can be updated asynchronously to
+>> +			 * state.
+>> +			 */
+> 
+> I would like to name the events calling AUX pausing and resuming as
+> trigger events.
+> 
+> I am confused for this comment. If I understand correctly, it means
+> the field 'aux_paused' will not be updated by AUX event itself.
+> Alternatively, this field will be operated by the triggering events.
 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/dwarf-regs.c         |  3 ++-
-> >  tools/perf/util/include/dwarf-regs.h | 11 ++++++-----
-> >  tools/perf/util/probe-finder.c       | 13 +++++++------
-> >  tools/perf/util/probe-finder.h       |  3 ++-
-> >  4 files changed, 17 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.=
-c
-> > index 1321387f6948..86b3ef638fbb 100644
-> > --- a/tools/perf/util/dwarf-regs.c
-> > +++ b/tools/perf/util/dwarf-regs.c
-> > @@ -29,7 +29,8 @@
-> >  #define __get_dwarf_regstr(tbl, n) (((n) < ARRAY_SIZE(tbl)) ? (tbl)[(n=
-)] : NULL)
-> >
-> >  /* Return architecture dependent register string (for kprobe-tracer) *=
-/
-> > -const char *get_dwarf_regstr(unsigned int n, unsigned int machine)
-> > +const char *get_dwarf_regstr(unsigned int n, unsigned int machine,
-> > +                          unsigned int flags __maybe_unused)
-> >  {
-> >       switch (machine) {
-> >       case EM_NONE:   /* Generic arch - use host arch */
-> > diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/inc=
-lude/dwarf-regs.h
-> > index ee0a734564c7..925525405e2d 100644
-> > --- a/tools/perf/util/include/dwarf-regs.h
-> > +++ b/tools/perf/util/include/dwarf-regs.h
-> > @@ -80,12 +80,13 @@
-> >
-> >  #ifdef HAVE_LIBDW_SUPPORT
-> >  const char *get_arch_regstr(unsigned int n);
-> > -/*
-> > - * get_dwarf_regstr - Returns ftrace register string from DWARF regnum
-> > - * n: DWARF register number
-> > - * machine: ELF machine signature (EM_*)
-> > +/**
-> > + * get_dwarf_regstr() - Returns ftrace register string from DWARF regn=
-um.
-> > + * @n: DWARF register number.
-> > + * @machine: ELF machine signature (EM_*).
-> > + * @flags: ELF flags for things like ABI differences.
-> >   */
-> > -const char *get_dwarf_regstr(unsigned int n, unsigned int machine);
-> > +const char *get_dwarf_regstr(unsigned int n, unsigned int machine, uns=
-igned int flags);
-> >
-> >  int get_arch_regnum(const char *name);
-> >  /*
-> > diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-fin=
-der.c
-> > index 8019d232f515..29eaa9beca86 100644
-> > --- a/tools/perf/util/probe-finder.c
-> > +++ b/tools/perf/util/probe-finder.c
-> > @@ -56,7 +56,7 @@ static struct probe_trace_arg_ref *alloc_trace_arg_re=
-f(long offs)
-> >   */
-> >  static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr add=
-r,
-> >                                    Dwarf_Op *fb_ops, Dwarf_Die *sp_die,
-> > -                                  unsigned int machine,
-> > +                                  const struct probe_finder *pf,
-> >                                    struct probe_trace_arg *tvar)
-> >  {
-> >       Dwarf_Attribute attr;
-> > @@ -166,7 +166,7 @@ static int convert_variable_location(Dwarf_Die *vr_=
-die, Dwarf_Addr addr,
-> >       if (!tvar)
-> >               return ret2;
-> >
-> > -     regs =3D get_dwarf_regstr(regn, machine);
-> > +     regs =3D get_dwarf_regstr(regn, pf->e_machine, pf->e_flags);
-> >       if (!regs) {
-> >               /* This should be a bug in DWARF or this tool */
-> >               pr_warning("Mapping for the register number %u "
-> > @@ -451,7 +451,7 @@ static int convert_variable(Dwarf_Die *vr_die, stru=
-ct probe_finder *pf)
-> >                dwarf_diename(vr_die));
-> >
-> >       ret =3D convert_variable_location(vr_die, pf->addr, pf->fb_ops,
-> > -                                     &pf->sp_die, pf->machine, pf->tva=
-r);
-> > +                                     &pf->sp_die, pf, pf->tvar);
-> >       if (ret =3D=3D -ENOENT && pf->skip_empty_arg)
-> >               /* This can be found in other place. skip it */
-> >               return 0;
-> > @@ -1134,7 +1134,8 @@ static int debuginfo__find_probes(struct debuginf=
-o *dbg,
-> >       if (gelf_getehdr(elf, &ehdr) =3D=3D NULL)
-> >               return -EINVAL;
-> >
-> > -     pf->machine =3D ehdr.e_machine;
-> > +     pf->e_machine =3D ehdr.e_machine;
-> > +     pf->e_flags =3D ehdr.e_flags;
-> >
-> >       do {
-> >               GElf_Shdr shdr;
-> > @@ -1171,7 +1172,7 @@ static int copy_variables_cb(Dwarf_Die *die_mem, =
-void *data)
-> >           (tag =3D=3D DW_TAG_variable && vf->vars)) {
-> >               if (convert_variable_location(die_mem, vf->pf->addr,
-> >                                             vf->pf->fb_ops, &pf->sp_die=
-,
-> > -                                           pf->machine, NULL) =3D=3D 0=
-) {
-> > +                                           pf, /*tvar=3D*/NULL) =3D=3D=
- 0) {
-> >                       vf->args[vf->nargs].var =3D (char *)dwarf_diename=
-(die_mem);
-> >                       if (vf->args[vf->nargs].var =3D=3D NULL) {
-> >                               vf->ret =3D -ENOMEM;
-> > @@ -1403,7 +1404,7 @@ static int collect_variables_cb(Dwarf_Die *die_me=
-m, void *data)
-> >           tag =3D=3D DW_TAG_variable) {
-> >               ret =3D convert_variable_location(die_mem, af->pf.addr,
-> >                                               af->pf.fb_ops, &af->pf.sp=
-_die,
-> > -                                             af->pf.machine, NULL);
-> > +                                             &af->pf, /*tvar=3D*/NULL)=
-;
-> >               if (ret =3D=3D 0 || ret =3D=3D -ERANGE) {
-> >                       int ret2;
-> >                       bool externs =3D !af->child;
-> > diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-fin=
-der.h
-> > index b9a5afca4cc1..71e21cb4492a 100644
-> > --- a/tools/perf/util/probe-finder.h
-> > +++ b/tools/perf/util/probe-finder.h
-> > @@ -68,7 +68,8 @@ struct probe_finder {
-> >       /* Call Frame Information from .debug_frame */
-> >       Dwarf_CFI               *cfi_dbg;
-> >       Dwarf_Op                *fb_ops;        /* Frame base attribute *=
-/
-> > -     unsigned int            machine;        /* Target machine arch */
-> > +     unsigned int            e_machine;      /* ELF target machine arc=
-h */
-> > +     unsigned int            e_flags;        /* ELF target machine fla=
-gs */
-> >       struct perf_probe_arg   *pvar;          /* Current target variabl=
-e */
-> >       struct probe_trace_arg  *tvar;          /* Current result variabl=
-e */
-> >       bool                    skip_empty_arg; /* Skip non-exist args */
-> > --
-> > 2.47.0.rc0.187.ge670bccf7e-goog
-> >
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Yes, by the triggering events.
+
+> 
+>> +			unsigned int	aux_paused;
+> 
+> Combining with the __perf_event_aux_pause() function, should not the
+> field 'aux_paused' be defined as atomic type? Especially if we
+> consider the SMP concurrency between the triggering events.
+
+Triggering events are in the same group which cannot be scheduled
+on more than 1 CPU at the same time.
+
+> 
+>>  		};
+>>  		struct { /* software */
+>>  			struct hrtimer	hrtimer;
+>> @@ -294,6 +300,7 @@ struct perf_event_pmu_context;
+>>  #define PERF_PMU_CAP_NO_EXCLUDE			0x0040
+>>  #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
+>>  #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
+>> +#define PERF_PMU_CAP_AUX_PAUSE			0x0200
+>>  
+>>  struct perf_output_handle;
+>>  
+>> @@ -366,6 +373,8 @@ struct pmu {
+>>  #define PERF_EF_START	0x01		/* start the counter when adding    */
+>>  #define PERF_EF_RELOAD	0x02		/* reload the counter when starting */
+>>  #define PERF_EF_UPDATE	0x04		/* update the counter when stopping */
+>> +#define PERF_EF_PAUSE	0x08		/* AUX area event, pause tracing */
+>> +#define PERF_EF_RESUME	0x10		/* AUX area event, resume tracing */
+>>  
+>>  	/*
+>>  	 * Adds/Removes a counter to/from the PMU, can be done inside a
+>> @@ -405,6 +414,18 @@ struct pmu {
+>>  	 *
+>>  	 * ->start() with PERF_EF_RELOAD will reprogram the counter
+>>  	 *  value, must be preceded by a ->stop() with PERF_EF_UPDATE.
+>> +	 *
+>> +	 * ->stop() with PERF_EF_PAUSE will stop as simply as possible. Will not
+>> +	 * overlap another ->stop() with PERF_EF_PAUSE nor ->start() with
+>> +	 * PERF_EF_RESUME.
+>> +	 *
+>> +	 * ->start() with PERF_EF_RESUME will start as simply as possible but
+>> +	 * only if the counter is not otherwise stopped. Will not overlap
+>> +	 * another ->start() with PERF_EF_RESUME nor ->stop() with
+>> +	 * PERF_EF_PAUSE.
+>> +	 *
+>> +	 * Notably, PERF_EF_PAUSE/PERF_EF_RESUME *can* be concurrent with other
+>> +	 * ->stop()/->start() invocations, just not itself.
+>>  	 */
+>>  	void (*start)			(struct perf_event *event, int flags);
+>>  	void (*stop)			(struct perf_event *event, int flags);
+>> @@ -1660,6 +1681,13 @@ static inline bool has_aux(struct perf_event *event)
+>>  	return event->pmu->setup_aux;
+>>  }
+>>  
+>> +static inline bool has_aux_action(struct perf_event *event)
+>> +{
+>> +	return event->attr.aux_sample_size ||
+>> +	       event->attr.aux_pause ||
+>> +	       event->attr.aux_resume;
+>> +}
+>> +
+>>  static inline bool is_write_backward(struct perf_event *event)
+>>  {
+>>  	return !!event->attr.write_backward;
+>> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+>> index 4842c36fdf80..0524d541d4e3 100644
+>> --- a/include/uapi/linux/perf_event.h
+>> +++ b/include/uapi/linux/perf_event.h
+>> @@ -511,7 +511,16 @@ struct perf_event_attr {
+>>  	__u16	sample_max_stack;
+>>  	__u16	__reserved_2;
+>>  	__u32	aux_sample_size;
+>> -	__u32	__reserved_3;
+>> +
+>> +	union {
+>> +		__u32	aux_action;
+>> +		struct {
+>> +			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
+>> +				aux_pause        :  1, /* on overflow, pause AUX area tracing */
+>> +				aux_resume       :  1, /* on overflow, resume AUX area tracing */
+>> +				__reserved_3     : 29;
+>> +		};
+>> +	};
+>>  
+>>  	/*
+>>  	 * User provided data if sigtrap=1, passed back to user via
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index aa3450bdc227..e8989db0de18 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -2097,7 +2097,7 @@ static void perf_put_aux_event(struct perf_event *event)
+>>  
+>>  static bool perf_need_aux_event(struct perf_event *event)
+>>  {
+>> -	return !!event->attr.aux_output || !!event->attr.aux_sample_size;
+>> +	return event->attr.aux_output || has_aux_action(event);
+>>  }
+>>  
+>>  static int perf_get_aux_event(struct perf_event *event,
+>> @@ -2122,6 +2122,10 @@ static int perf_get_aux_event(struct perf_event *event,
+>>  	    !perf_aux_output_match(event, group_leader))
+>>  		return 0;
+>>  
+>> +	if ((event->attr.aux_pause || event->attr.aux_resume) &&
+>> +	    !(group_leader->pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE))
+>> +		return 0;
+>> +
+>>  	if (event->attr.aux_sample_size && !group_leader->pmu->snapshot_aux)
+>>  		return 0;
+>>  
+>> @@ -7904,6 +7908,49 @@ void perf_prepare_header(struct perf_event_header *header,
+>>  	WARN_ON_ONCE(header->size & 7);
+>>  }
+>>  
+>> +static void __perf_event_aux_pause(struct perf_event *event, bool pause)
+>> +{
+>> +	if (pause) {
+>> +		if (!event->hw.aux_paused) {
+>> +			event->hw.aux_paused = 1;
+>> +			event->pmu->stop(event, PERF_EF_PAUSE);
+> 
+> As mentioned above, we need to assure the atomiticy for "aux_paused".
+
+Cannot be accessed by more than 1 CPU at a time.
+
+> 
+>> +		}
+>> +	} else {
+>> +		if (event->hw.aux_paused) {
+>> +			event->hw.aux_paused = 0;
+>> +			event->pmu->start(event, PERF_EF_RESUME);
+>> +		}
+>> +	}
+>> +}
+>> +
+>> +static void perf_event_aux_pause(struct perf_event *event, bool pause)
+>> +{
+>> +	struct perf_buffer *rb;
+>> +
+>> +	if (WARN_ON_ONCE(!event))
+>> +		return;
+>> +
+>> +	rb = ring_buffer_get(event);
+>> +	if (!rb)
+>> +		return;
+> 
+> Here why we acquire 'rb' pointer'? Seems to me, we should only
+> operation on a specific AUX event. Thus in this case, we should store
+> the 'aux_in_pause_resume' field into the structure perf_event.
+
+It is following the same paradigm used by AUX Area sampling.
+Refer perf_aux_sample_output() calls perf_pmu_snapshot_aux().
+
+> 
+>> +
+>> +	scoped_guard (irqsave) {
+>> +		/*
+>> +		 * Guard against self-recursion here. Another event could trip
+>> +		 * this same from NMI context.
+>> +		 */
+>> +		if (READ_ONCE(rb->aux_in_pause_resume))
+>> +			break;
+> 
+> I understand the race condition between normal flow and NMI flow.
+> 
+> If directly bail out if "aux_in_pause_resume" is true, will it cause
+> unpaired issue. E.g. one event invokes AUX_PAUSE, and then another
+> event in the NMI context calls AUX_RESUME, because the NMI context
+> runs to here and detect the field "aux_in_pause_resume" is true, then
+> it directly bail out and has no chance to resume the AUX event.
+
+aux_pause and aux_resume can be on unrelated events that race anyway,
+so it up to the user to choose events that make sense.  For example
+2 events that are paired anyway like tracepoints at the start and end
+of a syscall, or an event that indicates that something has gone
+unexpectedly wrong like a breakpoint in an error path.
+
+> 
+> If this is the case, it is better to use read_poll_timeout_atomic() ?
+> 
+> Thanks,
+> Leo
+> 
+>> +
+>> +		WRITE_ONCE(rb->aux_in_pause_resume, 1);
+>> +		barrier();
+>> +		__perf_event_aux_pause(event, pause);
+>> +		barrier();
+>> +		WRITE_ONCE(rb->aux_in_pause_resume, 0);
+>> +	}
+>> +	ring_buffer_put(rb);
+>> +}
+>> +
+>>  static __always_inline int
+>>  __perf_event_output(struct perf_event *event,
+>>  		    struct perf_sample_data *data,
+>> @@ -9706,6 +9753,11 @@ static int __perf_event_overflow(struct perf_event *event,
+>>  
+>>  	ret = __perf_event_account_interrupt(event, throttle);
+>>  
+>> +	if (event->attr.aux_pause)
+>> +		perf_event_aux_pause(event->aux_event, true);
+>> +	if (event->attr.aux_resume)
+>> +		perf_event_aux_pause(event->aux_event, false);
+>> +
+>>  	if (event->prog && !bpf_overflow_handler(event, data, regs))
+>>  		return ret;
+>>  
+>> @@ -12083,11 +12135,25 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>>  	}
+>>  
+>>  	if (event->attr.aux_output &&
+>> -	    !(pmu->capabilities & PERF_PMU_CAP_AUX_OUTPUT)) {
+>> +	    (!(pmu->capabilities & PERF_PMU_CAP_AUX_OUTPUT) ||
+>> +	     event->attr.aux_pause || event->attr.aux_resume)) {
+>>  		err = -EOPNOTSUPP;
+>>  		goto err_pmu;
+>>  	}
+>>  
+>> +	if (event->attr.aux_pause && event->attr.aux_resume) {
+>> +		err = -EINVAL;
+>> +		goto err_pmu;
+>> +	}
+>> +
+>> +	if (event->attr.aux_start_paused) {
+>> +		if (!(pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE)) {
+>> +			err = -EOPNOTSUPP;
+>> +			goto err_pmu;
+>> +		}
+>> +		event->hw.aux_paused = 1;
+>> +	}
+>> +
+>>  	if (cgroup_fd != -1) {
+>>  		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
+>>  		if (err)
+>> @@ -12883,7 +12949,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+>>  	 * Grouping is not supported for kernel events, neither is 'AUX',
+>>  	 * make sure the caller's intentions are adjusted.
+>>  	 */
+>> -	if (attr->aux_output)
+>> +	if (attr->aux_output || attr->aux_action)
+>>  		return ERR_PTR(-EINVAL);
+>>  
+>>  	event = perf_event_alloc(attr, cpu, task, NULL, NULL,
+>> diff --git a/kernel/events/internal.h b/kernel/events/internal.h
+>> index 451514442a1b..001b1cbf6f0e 100644
+>> --- a/kernel/events/internal.h
+>> +++ b/kernel/events/internal.h
+>> @@ -51,6 +51,7 @@ struct perf_buffer {
+>>  	void				(*free_aux)(void *);
+>>  	refcount_t			aux_refcount;
+>>  	int				aux_in_sampling;
+>> +	int				aux_in_pause_resume;
+>>  	void				**aux_pages;
+>>  	void				*aux_priv;
+>>  
+>> -- 
+>> 2.34.1
+>>
+>>
+
