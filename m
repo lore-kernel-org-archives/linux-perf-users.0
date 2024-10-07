@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20ECE187332;
-	Mon,  7 Oct 2024 08:09:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE24188703;
+	Mon,  7 Oct 2024 08:19:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728288579; cv=none; b=AmTY+gL+mjCsRfdM/tD4VzztQfLx+zGwPFbsw3sZTPEOwBKzYGHNLgWmcE0yFr3+3iYRmPs3q4FI9mzvGHJuH4RPLi421CSKdZdpMFJG7EM+SLvMCzoJ/XOBEd4Sx6xuEHt6f/GKMp35MMVn3k7znNiy7oxEtCAyUkzOy+tzobc=
+	t=1728289194; cv=none; b=lfS0OEjVSR3E08V8IDJpm9NkFwnQCbJ4krrOy4F/RVso1H05tDeGu2QwdGQBy0rvQdqSuh/yYv9ZDLMtcP8Tphao0eP3zvzYfM0WTPUi/7qPmH3LTColLAC6uJ74+o9364+3cM81mNk5jo6mvKQ6DEVb7UQWCpv+h2FfKVaLfUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728288579; c=relaxed/simple;
-	bh=8A4LNrSPbtLsdiUlwiAFIP/WRiJe0bPp+tezN0/84Fs=;
+	s=arc-20240116; t=1728289194; c=relaxed/simple;
+	bh=p7fnPdg9GXFJITuQrseQDNuIaX+4R+NIr2XuOdnxTOg=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=G7rVX23KyJJDIg63HfG1h6wT+S9PHq5xZoOEgQqgl6SH00SiT7WG24+y597lsPug9Q9dU53pcifnYP5HVqBJVbfNc7C2RLL60r6uBL2KClh/Hdy8cIZWHG5p5bPL+ZseP1a/O+xe/fq2Uelw43BtNuV0obIGsnkFuRJRAddtD/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eTqG09+1; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=q0twgBG8Xhd5W905Fz4W+nwrhBaYyirCB7Z0LEQZG6ayAJNzgNDsWD7N43fTF11FyYte77Q5QPPEugPtZnD9c/Hk3gwGFcjvTjBRvVOa5DkHENRh6aFTzXnQefzwm07iozSSfwkNRUsqS64V343adgpOUEBGpqAEp2OJsP3BDhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=on0X8S+1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eTqG09+1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E616C4CEC7;
-	Mon,  7 Oct 2024 08:09:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="on0X8S+1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C0EBC4CEC6;
+	Mon,  7 Oct 2024 08:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728288578;
-	bh=8A4LNrSPbtLsdiUlwiAFIP/WRiJe0bPp+tezN0/84Fs=;
+	s=k20201202; t=1728289193;
+	bh=p7fnPdg9GXFJITuQrseQDNuIaX+4R+NIr2XuOdnxTOg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eTqG09+1vQrt6TC4tc3DKzCnxiRkugw0Py7gdfFYbu2No0a8LSgbxTkTGiFFjrj+F
-	 0FXMQ87ww+bnK/AOZyU4kXp9m6eGAuHUS0Oc5cqDAreWQr3ALXOga9+E35wYNWMj8b
-	 8aOLIGM96nTVJTldZ7c+o0cvodyEYCajg2ssSH+mOqvJ92uvM/Fd9VYo+DrV2cEANl
-	 lJ7tPa/k263as/JRhNAQgJzOoHr+4bI7Y0Oxfftk2tu402RdVVhLx+LWgI6q9GFejZ
-	 W3MeHq2/fy9hv0ov2cuMvDd3DHyVFXEjN1aevA2bgjNjSA+BPP+jdvSrGH1jX+LkUQ
-	 SUrdGSuCVJc4g==
-Date: Mon, 7 Oct 2024 17:09:27 +0900
+	b=on0X8S+1tuhId3VGYt/LSW/vWZbtRu4Y0aAQW8QemIGTVE/BdqBPjbVf5qr/sVgrV
+	 qEdd2OyD6z9TcgrMmY+8Oh7g2d+1vNz1XqHjtvgqVMrJRT93O3sfn4SRuiX7MeZIyN
+	 oB4RDp1mbFMnnskliJcMyp9o6WSW/8hvbpVcvMg31JDfURhR0DNt9+x/2tK/+KbI48
+	 1blKwBDXXHuRTLpJc03VfTGnPuqY6j34ToTWoxjjhHN1tP5wKC95lPFzGiYf6Yydjm
+	 zr+iik+uEgMQJDBUkplHIdEc4ElZ8TzU9C7pGLb16/zTWSZbzxehCxXdDKA2+A1d91
+	 DEzwPUTTfYNqw==
+Date: Mon, 7 Oct 2024 17:19:42 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -54,12 +54,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
  linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 17/31] perf dwarf-regs: Pass ELF flags to
- get_dwarf_regstr
-Message-Id: <20241007170927.f30fced63c5e777628bea311@kernel.org>
-In-Reply-To: <20241005195541.380070-18-irogers@google.com>
+Subject: Re: [PATCH v2 19/31] perf arm64: Remove dwarf-regs.c
+Message-Id: <20241007171942.e96d5c520e065bbe4cf8ae5f@kernel.org>
+In-Reply-To: <20241005195541.380070-20-irogers@google.com>
 References: <20241005195541.380070-1-irogers@google.com>
-	<20241005195541.380070-18-irogers@google.com>
+	<20241005195541.380070-20-irogers@google.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -70,135 +69,166 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat,  5 Oct 2024 12:55:27 -0700
+On Sat,  5 Oct 2024 12:55:29 -0700
 Ian Rogers <irogers@google.com> wrote:
 
-> Pass a flags value as architectures like csky need the flags to
-> determine the ABI variant.
-> 
+> The file just provides the function get_arch_regstr, however, if in
+> the only caller get_dwarf_regstr EM_HOST is used for the EM_NONE case
+> the function can never be called. So remove as dead code. Tidy up the
+> EM_NONE cases for arm64 in dwarf-regs.c.
 
-Same here. I need some examples of this chaneg.
+OK, this seems just a redundant information in 
+tools/perf/arch/arm64/include/dwarf-regs-table.h (there is alredy
+register number -> name mapping table.)
+
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 Thank you,
 
+> 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/dwarf-regs.c         |  3 ++-
->  tools/perf/util/include/dwarf-regs.h | 11 ++++++-----
->  tools/perf/util/probe-finder.c       | 13 +++++++------
->  tools/perf/util/probe-finder.h       |  3 ++-
->  4 files changed, 17 insertions(+), 13 deletions(-)
+>  tools/perf/arch/arm64/util/Build        |  1 -
+>  tools/perf/arch/arm64/util/dwarf-regs.c | 80 -------------------------
+>  tools/perf/util/dwarf-regs.c            |  4 +-
+>  tools/perf/util/include/dwarf-regs.h    |  2 +-
+>  4 files changed, 3 insertions(+), 84 deletions(-)
+>  delete mode 100644 tools/perf/arch/arm64/util/dwarf-regs.c
 > 
+> diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+> index 4387a6d6a6c3..a74521b79eaa 100644
+> --- a/tools/perf/arch/arm64/util/Build
+> +++ b/tools/perf/arch/arm64/util/Build
+> @@ -4,7 +4,6 @@ perf-util-y += perf_regs.o
+>  perf-util-y += tsc.o
+>  perf-util-y += pmu.o
+>  perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+> -perf-util-$(CONFIG_LIBDW)     += dwarf-regs.o
+>  perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+>  perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+>  
+> diff --git a/tools/perf/arch/arm64/util/dwarf-regs.c b/tools/perf/arch/arm64/util/dwarf-regs.c
+> deleted file mode 100644
+> index 343a62fa4199..000000000000
+> --- a/tools/perf/arch/arm64/util/dwarf-regs.c
+> +++ /dev/null
+> @@ -1,80 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-only
+> -/*
+> - * Mapping of DWARF debug register numbers into register names.
+> - *
+> - * Copyright (C) 2010 Will Deacon, ARM Ltd.
+> - */
+> -
+> -#include <errno.h>
+> -#include <stddef.h>
+> -#include <string.h>
+> -#include <dwarf-regs.h>
+> -#include <linux/stringify.h>
+> -
+> -struct regs_dwarfnum {
+> -	const char *name;
+> -	unsigned int dwarfnum;
+> -};
+> -
+> -#define REG_DWARFNUM_NAME(r, num) {.name = r, .dwarfnum = num}
+> -#define GPR_DWARFNUM_NAME(num) \
+> -	{.name = __stringify(%x##num), .dwarfnum = num}
+> -#define REG_DWARFNUM_END {.name = NULL, .dwarfnum = 0}
+> -
+> -/*
+> - * Reference:
+> - * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0057b/IHI0057B_aadwarf64.pdf
+> - */
+> -static const struct regs_dwarfnum regdwarfnum_table[] = {
+> -	GPR_DWARFNUM_NAME(0),
+> -	GPR_DWARFNUM_NAME(1),
+> -	GPR_DWARFNUM_NAME(2),
+> -	GPR_DWARFNUM_NAME(3),
+> -	GPR_DWARFNUM_NAME(4),
+> -	GPR_DWARFNUM_NAME(5),
+> -	GPR_DWARFNUM_NAME(6),
+> -	GPR_DWARFNUM_NAME(7),
+> -	GPR_DWARFNUM_NAME(8),
+> -	GPR_DWARFNUM_NAME(9),
+> -	GPR_DWARFNUM_NAME(10),
+> -	GPR_DWARFNUM_NAME(11),
+> -	GPR_DWARFNUM_NAME(12),
+> -	GPR_DWARFNUM_NAME(13),
+> -	GPR_DWARFNUM_NAME(14),
+> -	GPR_DWARFNUM_NAME(15),
+> -	GPR_DWARFNUM_NAME(16),
+> -	GPR_DWARFNUM_NAME(17),
+> -	GPR_DWARFNUM_NAME(18),
+> -	GPR_DWARFNUM_NAME(19),
+> -	GPR_DWARFNUM_NAME(20),
+> -	GPR_DWARFNUM_NAME(21),
+> -	GPR_DWARFNUM_NAME(22),
+> -	GPR_DWARFNUM_NAME(23),
+> -	GPR_DWARFNUM_NAME(24),
+> -	GPR_DWARFNUM_NAME(25),
+> -	GPR_DWARFNUM_NAME(26),
+> -	GPR_DWARFNUM_NAME(27),
+> -	GPR_DWARFNUM_NAME(28),
+> -	GPR_DWARFNUM_NAME(29),
+> -	REG_DWARFNUM_NAME("%lr", 30),
+> -	REG_DWARFNUM_NAME("%sp", 31),
+> -	REG_DWARFNUM_END,
+> -};
+> -
+> -/**
+> - * get_arch_regstr() - lookup register name from it's DWARF register number
+> - * @n:	the DWARF register number
+> - *
+> - * get_arch_regstr() returns the name of the register in struct
+> - * regdwarfnum_table from it's DWARF register number. If the register is not
+> - * found in the table, this returns NULL;
+> - */
+> -const char *get_arch_regstr(unsigned int n)
+> -{
+> -	const struct regs_dwarfnum *roff;
+> -
+> -	for (roff = regdwarfnum_table; roff->name != NULL; roff++)
+> -		if (roff->dwarfnum == n)
+> -			return roff->name;
+> -	return NULL;
+> -}
 > diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
-> index 1321387f6948..86b3ef638fbb 100644
+> index eac99a246737..18e916c8e993 100644
 > --- a/tools/perf/util/dwarf-regs.c
 > +++ b/tools/perf/util/dwarf-regs.c
-> @@ -29,7 +29,8 @@
->  #define __get_dwarf_regstr(tbl, n) (((n) < ARRAY_SIZE(tbl)) ? (tbl)[(n)] : NULL)
->  
->  /* Return architecture dependent register string (for kprobe-tracer) */
-> -const char *get_dwarf_regstr(unsigned int n, unsigned int machine)
-> +const char *get_dwarf_regstr(unsigned int n, unsigned int machine,
-> +			     unsigned int flags __maybe_unused)
+> @@ -32,14 +32,14 @@
+>  const char *get_dwarf_regstr(unsigned int n, unsigned int machine,
+>  			     unsigned int flags __maybe_unused)
 >  {
+> -#if EM_HOST == EM_X86_64 || EM_HOST == EM_386
+> +#if EM_HOST == EM_X86_64 || EM_HOST == EM_386 || EM_HOST == EM_AARCH64
+>  	if (machine == EM_NONE) {
+>  		/* Generic arch - use host arch */
+>  		machine = EM_HOST;
+>  	}
+>  #endif
 >  	switch (machine) {
+> -#if EM_HOST != EM_X86_64 && EM_HOST != EM_386
+> +#if EM_HOST != EM_X86_64 && EM_HOST != EM_386 && EM_HOST != EM_AARCH64
 >  	case EM_NONE:	/* Generic arch - use host arch */
+>  		return get_arch_regstr(n);
+>  #endif
 > diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
-> index ee0a734564c7..925525405e2d 100644
+> index 062623aefd5a..e640657f69c8 100644
 > --- a/tools/perf/util/include/dwarf-regs.h
 > +++ b/tools/perf/util/include/dwarf-regs.h
-> @@ -80,12 +80,13 @@
+> @@ -79,7 +79,7 @@
+>  #define DWARF_REG_FB  0xd3affb /* random number */
 >  
 >  #ifdef HAVE_LIBDW_SUPPORT
+> -#if !defined(__x86_64__) && !defined(__i386__)
+> +#if !defined(__x86_64__) && !defined(__i386__) && !defined(__aarch64__)
 >  const char *get_arch_regstr(unsigned int n);
-> -/*
-> - * get_dwarf_regstr - Returns ftrace register string from DWARF regnum
-> - * n: DWARF register number
-> - * machine: ELF machine signature (EM_*)
-> +/**
-> + * get_dwarf_regstr() - Returns ftrace register string from DWARF regnum.
-> + * @n: DWARF register number.
-> + * @machine: ELF machine signature (EM_*).
-> + * @flags: ELF flags for things like ABI differences.
->   */
-> -const char *get_dwarf_regstr(unsigned int n, unsigned int machine);
-> +const char *get_dwarf_regstr(unsigned int n, unsigned int machine, unsigned int flags);
+>  #endif
 >  
->  int get_arch_regnum(const char *name);
->  /*
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index 8019d232f515..29eaa9beca86 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -56,7 +56,7 @@ static struct probe_trace_arg_ref *alloc_trace_arg_ref(long offs)
->   */
->  static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
->  				     Dwarf_Op *fb_ops, Dwarf_Die *sp_die,
-> -				     unsigned int machine,
-> +				     const struct probe_finder *pf,
->  				     struct probe_trace_arg *tvar)
->  {
->  	Dwarf_Attribute attr;
-> @@ -166,7 +166,7 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
->  	if (!tvar)
->  		return ret2;
->  
-> -	regs = get_dwarf_regstr(regn, machine);
-> +	regs = get_dwarf_regstr(regn, pf->e_machine, pf->e_flags);
->  	if (!regs) {
->  		/* This should be a bug in DWARF or this tool */
->  		pr_warning("Mapping for the register number %u "
-> @@ -451,7 +451,7 @@ static int convert_variable(Dwarf_Die *vr_die, struct probe_finder *pf)
->  		 dwarf_diename(vr_die));
->  
->  	ret = convert_variable_location(vr_die, pf->addr, pf->fb_ops,
-> -					&pf->sp_die, pf->machine, pf->tvar);
-> +					&pf->sp_die, pf, pf->tvar);
->  	if (ret == -ENOENT && pf->skip_empty_arg)
->  		/* This can be found in other place. skip it */
->  		return 0;
-> @@ -1134,7 +1134,8 @@ static int debuginfo__find_probes(struct debuginfo *dbg,
->  	if (gelf_getehdr(elf, &ehdr) == NULL)
->  		return -EINVAL;
->  
-> -	pf->machine = ehdr.e_machine;
-> +	pf->e_machine = ehdr.e_machine;
-> +	pf->e_flags = ehdr.e_flags;
->  
->  	do {
->  		GElf_Shdr shdr;
-> @@ -1171,7 +1172,7 @@ static int copy_variables_cb(Dwarf_Die *die_mem, void *data)
->  	    (tag == DW_TAG_variable && vf->vars)) {
->  		if (convert_variable_location(die_mem, vf->pf->addr,
->  					      vf->pf->fb_ops, &pf->sp_die,
-> -					      pf->machine, NULL) == 0) {
-> +					      pf, /*tvar=*/NULL) == 0) {
->  			vf->args[vf->nargs].var = (char *)dwarf_diename(die_mem);
->  			if (vf->args[vf->nargs].var == NULL) {
->  				vf->ret = -ENOMEM;
-> @@ -1403,7 +1404,7 @@ static int collect_variables_cb(Dwarf_Die *die_mem, void *data)
->  	    tag == DW_TAG_variable) {
->  		ret = convert_variable_location(die_mem, af->pf.addr,
->  						af->pf.fb_ops, &af->pf.sp_die,
-> -						af->pf.machine, NULL);
-> +						&af->pf, /*tvar=*/NULL);
->  		if (ret == 0 || ret == -ERANGE) {
->  			int ret2;
->  			bool externs = !af->child;
-> diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-finder.h
-> index b9a5afca4cc1..71e21cb4492a 100644
-> --- a/tools/perf/util/probe-finder.h
-> +++ b/tools/perf/util/probe-finder.h
-> @@ -68,7 +68,8 @@ struct probe_finder {
->  	/* Call Frame Information from .debug_frame */
->  	Dwarf_CFI		*cfi_dbg;
->  	Dwarf_Op		*fb_ops;	/* Frame base attribute */
-> -	unsigned int		machine;	/* Target machine arch */
-> +	unsigned int		e_machine;	/* ELF target machine arch */
-> +	unsigned int		e_flags;	/* ELF target machine flags */
->  	struct perf_probe_arg	*pvar;		/* Current target variable */
->  	struct probe_trace_arg	*tvar;		/* Current result variable */
->  	bool			skip_empty_arg;	/* Skip non-exist args */
 > -- 
 > 2.47.0.rc0.187.ge670bccf7e-goog
 > 
