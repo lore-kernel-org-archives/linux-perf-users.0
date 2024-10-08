@@ -1,149 +1,146 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637FA1DFD1;
-	Tue,  8 Oct 2024 13:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5A3197A65;
+	Tue,  8 Oct 2024 13:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728392895; cv=none; b=Tt/+Fr5VGISQSN8a0RBGAzv+uekzKLksWQjuGKSTtaCdtul+V/MFqcBDen6NLCZHFwLzjdzWWGZ5XaTkfzs8r4M0FcjIX2t21OWy9DBCSsrzZ9MdXTm/Uja2lPv2W7hlMIkGgQrNe6KJuagdr+R5nnP5eHcJ7oQjG8ZZgnYPs/w=
+	t=1728395764; cv=none; b=ZvD7UDIXuxvICZIUmVdQdk2qvO+zz7YrSPAHicCgllEWHXfuRKcafyxnAiLYWLu+GrVWLb9awzLGdivUqc90817nQ0drdsEHcUVC0JmpMTmfw2sId+OllF/wV3nctbgJruryrNiZZwRbwytCmyFZI2WKAfvAwtZ84UY7UxZUJTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728392895; c=relaxed/simple;
-	bh=1s8jDLz4xsPK7rdXBwFDX7m1XmwgNdlX1mlSZLpHbZ4=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=c9R+EQ7oQSkhrBC8GSP/ojLCdG/ObiwZ0GgcZ7kA+d+dLKU6jd67OHl6T9rrLamTBkgIAwhERjRMYPaygRr7zd7scZvJsts2jjiscHSDM1DirgV77ZwzpyW+0pb0RWA2PsHUWfk44qQR5EyhIhpMAwY0hKLD0A6TYv1wb48seOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=kXfEDZ1h; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1728395764; c=relaxed/simple;
+	bh=l3v5zbOAu2VpNitLU1rz2xcsriFrmQpDRQUKMsWmwdw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ELd1X57BlpMPI4cJ0sUE+dxz25UqX6T9UWxbNihLWAIAoK5f8M/EQrKzquBDtU7N9bEEABVzDDSI1q41PZZ3igH0awJAeWGy6saiCaw6F6nGAhRq+2sLEDyqbh2xcFPy8Qlr012zKzb2f81r/3wLGbWTjkr/BGRGE1x+R2/E1ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJcBIttx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kXfEDZ1h"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 498CtsVf006392;
-	Tue, 8 Oct 2024 13:07:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:date:from:message-id:subject:to; s=corp-2023-11-20; bh=rjSoOMSa
-	uMzXhjoJcHAzY8r8uKcpbwQWm8/vJhmG4qM=; b=kXfEDZ1hPJL8/YY0Mbce0Q0H
-	kthEycWPzKjHz4CYwdYDMkBEfw6K97XR6smfnUAJxpbW4wfHsY1wZvDaeYXsEbYx
-	Pf140liBmBcqoksnfdhbbrIfi9fUhkwQ/EV4V0EN8DRevF5p3xDhOm6bUig0mKHy
-	tLzH8deTsDW9LdrjIPitX7gLyW+SofUJ+vuEUjQgFKWTiSEhGpID/S+lra7sop8f
-	4MlRpZZlhILspBA1DqSDZHDnvrOol2/yboR0lpowWSaMKK87TXUjL+tu2grfCD8M
-	IpmhnNHMS/JzorgCi3NUTjZZilCvYsRttZ1UWHoVk8BgkLSmzeEWI02gKTgK2Q==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 422yyv5rt1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 08 Oct 2024 13:07:04 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 498C6r8B001243;
-	Tue, 8 Oct 2024 13:07:03 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 422uw75ryp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 08 Oct 2024 13:07:03 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 498D720i035615;
-	Tue, 8 Oct 2024 13:07:02 GMT
-Received: from gkennedy-linux.us.oracle.com (gkennedy-linux.us.oracle.com [10.152.170.45])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 422uw75rwg-1;
-	Tue, 08 Oct 2024 13:07:02 +0000
-From: George Kennedy <george.kennedy@oracle.com>
-To: ravi.bangoria@amd.com
-Cc: george.kennedy@oracle.com, harshit.m.mogalapalli@oracle.com,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dongli.zhang@oracle.com,
-        stable@vger.kernel.org
-Subject: [PATCH] [PATCH v3] perf/x86/amd: check event before enable to avoid GPF
-Date: Tue,  8 Oct 2024 08:00:53 -0500
-Message-Id: <1728392453-18658-1-git-send-email-george.kennedy@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-08_11,2024-10-08_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=889 mlxscore=0 suspectscore=0 adultscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2409260000 definitions=main-2410080083
-X-Proofpoint-GUID: Csx44xj9ZCE0QeYwfVVPYRjwsxjGHVxN
-X-Proofpoint-ORIG-GUID: Csx44xj9ZCE0QeYwfVVPYRjwsxjGHVxN
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJcBIttx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B40FC4CEC7;
+	Tue,  8 Oct 2024 13:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728395763;
+	bh=l3v5zbOAu2VpNitLU1rz2xcsriFrmQpDRQUKMsWmwdw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kJcBIttxXZGEloWu2Jm18sb9Beb6pG4lVWi+d8BX80/hMKZlIoTN6OBsW1F9rck/R
+	 4iczFFKtY3ZGxLkrVCfM+RkBeCn28BbUBmq0/h/bO8jDyTPNfR/vN+m5sDbSgP0uLu
+	 2g/GkPGatZ+brJJATPTlM6SyLAD1jmS+gvtE+SCK535LHRMSFZtrn+BrLk0cIKgmYT
+	 aPXqmMFMstTO6DvTn0JPUIDFO7lAWsm7AvTbKtOVYFwkT7F5UkC+8R+kyEQaLMpyqr
+	 VWqZdf0oiam28q+CwzYT9+LE5qNifptn6KTz1mHXKJcWjYfHeTTVJ2YfSiNNRS0NJ9
+	 YrYWl1Mf/BpKA==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Monakov <amonakov@ispras.ru>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	James Clark <james.clark@linaro.org>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v6.12
+Date: Tue,  8 Oct 2024 10:55:49 -0300
+Message-ID: <20241008135549.988547-1-acme@kernel.org>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On AMD machines cpuc->events[idx] can become NULL in a subtle race
-condition with NMI->throttle->x86_pmu_stop().
+Hi Linus,
 
-Check event for NULL in amd_pmu_enable_all() before enable to avoid a GPF.
-This appears to be an AMD only issue.
+	Please consider pulling,
 
-Syzkaller reported a GPF in amd_pmu_enable_all.
+Best regards,
 
-INFO: NMI handler (perf_event_nmi_handler) took too long to run: 13.143
-    msecs
-Oops: general protection fault, probably for non-canonical address
-    0xdffffc0000000034: 0000  PREEMPT SMP KASAN NOPTI
-KASAN: null-ptr-deref in range [0x00000000000001a0-0x00000000000001a7]
-CPU: 0 UID: 0 PID: 328415 Comm: repro_36674776 Not tainted 6.12.0-rc1-syzk
-RIP: 0010:x86_pmu_enable_event (arch/x86/events/perf_event.h:1195
-    arch/x86/events/core.c:1430)
-RSP: 0018:ffff888118009d60 EFLAGS: 00010012
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000034 RSI: 0000000000000000 RDI: 00000000000001a0
-RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000002
-R13: ffff88811802a440 R14: ffff88811802a240 R15: ffff8881132d8601
-FS:  00007f097dfaa700(0000) GS:ffff888118000000(0000) GS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000200001c0 CR3: 0000000103d56000 CR4: 00000000000006f0
-Call Trace:
- <IRQ>
-amd_pmu_enable_all (arch/x86/events/amd/core.c:760 (discriminator 2))
-x86_pmu_enable (arch/x86/events/core.c:1360)
-event_sched_out (kernel/events/core.c:1191 kernel/events/core.c:1186
-    kernel/events/core.c:2346)
-__perf_remove_from_context (kernel/events/core.c:2435)
-event_function (kernel/events/core.c:259)
-remote_function (kernel/events/core.c:92 (discriminator 1)
-    kernel/events/core.c:72 (discriminator 1))
-__flush_smp_call_function_queue (./arch/x86/include/asm/jump_label.h:27
-    ./include/linux/jump_label.h:207 ./include/trace/events/csd.h:64
-    kernel/smp.c:135 kernel/smp.c:540)
-__sysvec_call_function_single (./arch/x86/include/asm/jump_label.h:27
-    ./include/linux/jump_label.h:207
-    ./arch/x86/include/asm/trace/irq_vectors.h:99 arch/x86/kernel/smp.c:272)
-sysvec_call_function_single (arch/x86/kernel/smp.c:266 (discriminator 47)
-    arch/x86/kernel/smp.c:266 (discriminator 47))
- </IRQ>
+- Arnaldo
 
-Reported-by: syzkaller <syzkaller@googlegroups.com>
-Signed-off-by: George Kennedy <george.kennedy@oracle.com>
----
- Suggested comment now with the code.
+The following changes since commit eee280841e1c8188fe9af5536c193d07d184e874:
 
- arch/x86/events/amd/core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+  Merge tag 'mm-hotfixes-stable-2024-09-27-09-45' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm (2024-09-27 10:27:22 -0700)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 920e3a640cad..6615ace15f5d 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -762,7 +762,12 @@ static void amd_pmu_enable_all(int added)
- 		if (!test_bit(idx, cpuc->active_mask))
- 			continue;
- 
--		amd_pmu_enable_event(cpuc->events[idx]);
-+		/*
-+		 * FIXME: cpuc->events[idx] can become NULL in a subtle race
-+		 * condition with NMI->throttle->x86_pmu_stop().
-+		 */
-+		if (cpuc->events[idx])
-+			amd_pmu_enable_event(cpuc->events[idx]);
- 	}
- }
- 
--- 
-2.39.3
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.12-1-2024-10-08
+
+for you to fetch changes up to e934a35e3cc1fe0bfb1bc771e64f3ba6e70c40e2:
+
+  perf cs-etm: Fix the assert() to handle captured and unprocessed cpu trace (2024-10-02 18:21:49 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v6.12:
+
+- Fix an assert() to handle captured and unprocessed ARM CoreSight CPU traces.
+
+- Fix static build compilation error when libdw isn't installed or is too old.
+
+- Add missing include when building with !HAVE_DWARF_GETLOCATIONS_SUPPORT.
+
+- Add missing refcount put on 32-bit DSOs.
+
+- Fix disassembly of user space binaries by setting the binary_type of DSO when
+  loading.
+
+- Update headers with the kernel sources, including asound.h, sched.h, fcntl,
+  msr-index.h, irq_vectors.h, socket.h, list_sort.c and arm64's cputype.h.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (11):
+      Merge remote-tracking branch 'torvalds/master' into perf-tools
+      tools include UAPI: Sync sound/asound.h copy with the kernel sources
+      tools include UAPI: Sync linux/sched.h copy with the kernel sources
+      tools include UAPI: Sync linux/fcntl.h copy with the kernel sources
+      tools arch x86: Sync the msr-index.h copy with the kernel sources
+      perf trace beauty: Update the arch/x86/include/asm/irq_vectors.h copy with the kernel sources
+      tools headers UAPI: Sync the linux/in.h with the kernel sources
+      perf beauty: Update copy of linux/socket.h with the kernel sources
+      tools check_headers.sh: Add check variant that excludes some hunks
+      perf tools: Cope with differences for lib/list_sort.c copy from the kernel
+      tools headers arm64: Sync arm64's cputype.h with the kernel sources
+
+Ian Rogers (1):
+      perf vdso: Missed put on 32-bit dsos
+
+Ilkka Koskinen (1):
+      perf cs-etm: Fix the assert() to handle captured and unprocessed cpu trace
+
+James Clark (1):
+      perf dwarf-aux: Fix build with !HAVE_DWARF_GETLOCATIONS_SUPPORT
+
+Namhyung Kim (1):
+      perf symbol: Set binary_type of dso when loading
+
+Yang Jihong (2):
+      perf build: Fix static compilation error when libdw is not installed
+      perf build: Fix build feature-dwarf_getlocations fail for old libdw
+
+ tools/arch/arm64/include/asm/cputype.h             |  2 +
+ tools/arch/x86/include/asm/msr-index.h             |  2 +
+ tools/build/feature/Makefile                       |  5 +-
+ tools/include/uapi/linux/in.h                      |  2 +-
+ tools/perf/Makefile.config                         |  7 +-
+ .../perf/check-header_ignore_hunks/lib/list_sort.c | 31 ++++++++
+ tools/perf/check-headers.sh                        | 29 +++++++-
+ .../beauty/arch/x86/include/asm/irq_vectors.h      |  4 +-
+ tools/perf/trace/beauty/fs_at_flags.sh             |  5 ++
+ tools/perf/trace/beauty/include/linux/socket.h     |  1 +
+ tools/perf/trace/beauty/include/uapi/linux/fcntl.h | 84 +++++++++++++++-------
+ tools/perf/trace/beauty/include/uapi/linux/sched.h |  1 +
+ .../perf/trace/beauty/include/uapi/sound/asound.h  | 17 ++++-
+ tools/perf/trace/beauty/msg_flags.c                |  4 ++
+ tools/perf/util/cs-etm.c                           |  2 +-
+ tools/perf/util/dwarf-aux.h                        |  1 +
+ tools/perf/util/symbol.c                           |  3 +
+ tools/perf/util/vdso.c                             |  4 +-
+ 18 files changed, 170 insertions(+), 34 deletions(-)
+ create mode 100644 tools/perf/check-header_ignore_hunks/lib/list_sort.c
