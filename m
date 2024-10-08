@@ -1,158 +1,149 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D269914EC59;
-	Tue,  8 Oct 2024 09:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637FA1DFD1;
+	Tue,  8 Oct 2024 13:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728378576; cv=none; b=uSGDLyrx0+2vpgYzy+oGbV2hyooDYGbsbNRS8SvuN1AnS0CAPVh5vQbtyCYwcbNee5sZzxv9xZ1gYpGukxJKVvNn+hk27xfeQNwl3VBkCM3KBGM8LnxLJFAqzKMu3/JYGFrLd9B4ivQoEiGEm2teezvmG+8z23F5JssbqeY/1K0=
+	t=1728392895; cv=none; b=Tt/+Fr5VGISQSN8a0RBGAzv+uekzKLksWQjuGKSTtaCdtul+V/MFqcBDen6NLCZHFwLzjdzWWGZ5XaTkfzs8r4M0FcjIX2t21OWy9DBCSsrzZ9MdXTm/Uja2lPv2W7hlMIkGgQrNe6KJuagdr+R5nnP5eHcJ7oQjG8ZZgnYPs/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728378576; c=relaxed/simple;
-	bh=8eSYA3B42v5Ls4D5u4Lf3j8COvDVqs+efDq1C+qp4P0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=swIZjT5pRqmVjLsmuhI2YI3RFORGmecaRdrpnBfMgR5XF9UwUre9gJYC8OrZ9qf4HPt1C1Q9n4PDrGSxSmXffRznMqZhzMccq2kPlX0l86BWonOxy7606ieCs6Waw0d7WWjguET8W+G+0tLppMMcvtLfRMzmujZrY5XxjW4Shg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5c903f5bd0eso1760469a12.3;
-        Tue, 08 Oct 2024 02:09:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728378573; x=1728983373;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ucmgl+p0QwjkvQYocSh8vz5kQz8FW6hRf+NRD2soyng=;
-        b=dclzCc1+QNoRr8/3I4boI0ewnaf/rVaPJvC1wiCaAj9IhlKaX+f/my96iEmAThspzj
-         yH2KcZ9FUYlZciD+xG2Lp364nZ7gUK73CFGVT2WphTYvNQVMMRK4ptOxMp+zqJGCaXOB
-         +wiBPQUYTUovYZqECS2+1Je7NLANbGyxn4tQz1wLzWwvlE7gychKLUndHW3ksXjc0XI7
-         sWvvq8LRtiQE0qDWTvUbiXLUtZBnkR3xN1EfSa1JW7J8Rcovhm/pZHxuhl90OMkO/ZWc
-         TeKCh/L40sJW3LUXLYisUpCLGsFgzsyP9dEtWCFiLi1gl0gDhUn8Y52bulC1RnC3BW2o
-         GMiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6tUTc77t8Tis89rKPefeGdHAb9gFY5LmwmRfF9W/qC/xpuwyEI8aawJLeyBQpBL68n5ViT9E0k8sZ7zk=@vger.kernel.org, AJvYcCXC5HjwmHlLrswGRfpzeDQ5dwrOTSCYb/iNFHrtYB6k12HU0HpYJFh8IwHoTR3wuZhwKz3OwxJuj5wK6oKMhDC9fg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwF+RFBr/wVcywYtJAaykVaVoI2HP+V/cP8vnY5KeoFOS3oDEaN
-	msiued/Z/NOuGusYnDkuJcY2zj/oMnAjyylcv3dAbty5tZaxZlgO
-X-Google-Smtp-Source: AGHT+IHwP2p+C5uPBxi9StpZoG0YWOP/WOctPoHoPE353G5LdvR/UiUEPBirfAyxySSNVq7MfoDOlA==
-X-Received: by 2002:a17:906:f59e:b0:a99:3ed2:7230 with SMTP id a640c23a62f3a-a993ed27825mr999895466b.60.1728378572918;
-        Tue, 08 Oct 2024 02:09:32 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a992e788e9asm483377066b.142.2024.10.08.02.09.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2024 02:09:32 -0700 (PDT)
-Message-ID: <ffc2eb09-ac78-4594-a376-3fff9918c2a7@kernel.org>
-Date: Tue, 8 Oct 2024 11:09:31 +0200
+	s=arc-20240116; t=1728392895; c=relaxed/simple;
+	bh=1s8jDLz4xsPK7rdXBwFDX7m1XmwgNdlX1mlSZLpHbZ4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=c9R+EQ7oQSkhrBC8GSP/ojLCdG/ObiwZ0GgcZ7kA+d+dLKU6jd67OHl6T9rrLamTBkgIAwhERjRMYPaygRr7zd7scZvJsts2jjiscHSDM1DirgV77ZwzpyW+0pb0RWA2PsHUWfk44qQR5EyhIhpMAwY0hKLD0A6TYv1wb48seOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=kXfEDZ1h; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kXfEDZ1h"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 498CtsVf006392;
+	Tue, 8 Oct 2024 13:07:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:date:from:message-id:subject:to; s=corp-2023-11-20; bh=rjSoOMSa
+	uMzXhjoJcHAzY8r8uKcpbwQWm8/vJhmG4qM=; b=kXfEDZ1hPJL8/YY0Mbce0Q0H
+	kthEycWPzKjHz4CYwdYDMkBEfw6K97XR6smfnUAJxpbW4wfHsY1wZvDaeYXsEbYx
+	Pf140liBmBcqoksnfdhbbrIfi9fUhkwQ/EV4V0EN8DRevF5p3xDhOm6bUig0mKHy
+	tLzH8deTsDW9LdrjIPitX7gLyW+SofUJ+vuEUjQgFKWTiSEhGpID/S+lra7sop8f
+	4MlRpZZlhILspBA1DqSDZHDnvrOol2/yboR0lpowWSaMKK87TXUjL+tu2grfCD8M
+	IpmhnNHMS/JzorgCi3NUTjZZilCvYsRttZ1UWHoVk8BgkLSmzeEWI02gKTgK2Q==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 422yyv5rt1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 08 Oct 2024 13:07:04 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 498C6r8B001243;
+	Tue, 8 Oct 2024 13:07:03 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 422uw75ryp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 08 Oct 2024 13:07:03 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 498D720i035615;
+	Tue, 8 Oct 2024 13:07:02 GMT
+Received: from gkennedy-linux.us.oracle.com (gkennedy-linux.us.oracle.com [10.152.170.45])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 422uw75rwg-1;
+	Tue, 08 Oct 2024 13:07:02 +0000
+From: George Kennedy <george.kennedy@oracle.com>
+To: ravi.bangoria@amd.com
+Cc: george.kennedy@oracle.com, harshit.m.mogalapalli@oracle.com,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dongli.zhang@oracle.com,
+        stable@vger.kernel.org
+Subject: [PATCH] [PATCH v3] perf/x86/amd: check event before enable to avoid GPF
+Date: Tue,  8 Oct 2024 08:00:53 -0500
+Message-Id: <1728392453-18658-1-git-send-email-george.kennedy@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-08_11,2024-10-08_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ mlxlogscore=889 mlxscore=0 suspectscore=0 adultscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2409260000 definitions=main-2410080083
+X-Proofpoint-GUID: Csx44xj9ZCE0QeYwfVVPYRjwsxjGHVxN
+X-Proofpoint-ORIG-GUID: Csx44xj9ZCE0QeYwfVVPYRjwsxjGHVxN
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH/RFT] Re: [PATCH v5 1/8] perf trace: Fix iteration of
- syscall ids in syscalltbl->entries
-From: Jiri Slaby <jirislaby@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@intel.com>,
- Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
-References: <20240705132059.853205-1-howardchu95@gmail.com>
- <20240705132059.853205-2-howardchu95@gmail.com>
- <6fe63fa3-6c63-4b75-ac09-884d26f6fb95@kernel.org> <ZtJWEVn8-w07Wm0q@x1>
- <0f841525-e02a-4e11-b5f8-1acc61979ccf@kernel.org> <ZtYJ0z8f-1jwYSbV@x1>
- <c279ad02-2543-4a95-9404-9304e1e704da@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <c279ad02-2543-4a95-9404-9304e1e704da@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 27. 09. 24, 7:09, Jiri Slaby wrote:
-> On 02. 09. 24, 20:54, Arnaldo Carvalho de Melo wrote:
->> On Mon, Sep 02, 2024 at 07:25:17AM +0200, Jiri Slaby wrote:
->>> On 31. 08. 24, 1:30, Arnaldo Carvalho de Melo wrote:
->>>>   From 174899051e54ecdab06c07652a3d04ad000ab301 Mon Sep 17 00:00:00 
->>>> 2001
->>>> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->>>> Date: Fri, 30 Aug 2024 19:53:47 -0300
->>>> Subject: [PATCH 1/1] perf tools: Build x86 32-bit syscall table from
->>>>    arch/x86/entry/syscalls/syscall_32.tbl
->>>>
->>>> To remove one more use of the audit libs and address a problem reported
->>>> with a recent change where a function isn't available when using the
->>>> audit libs method, that should really go away, this being one step in
->>>> that direction.
->>>>
->>>> The script used to generate the 64-bit syscall table was already
->>>> parametrized to generate for both 64-bit and 32-bit, so just use it and
->>>> wire the generated table to the syscalltbl.c routines.
->>>>
->>>> Reported-by: Jiri Slaby <jirislaby@kernel.org>
->>>> Suggested-by: Ian Rogers <irogers@google.com>
->>>> Cc: Adrian Hunter <adrian.hunter@intel.com>
->>>> Cc: Howard Chu <howardchu95@gmail.com>
->>>> Cc: Jiri Olsa <jolsa@kernel.org>
->>>> Cc: Kan Liang <kan.liang@linux.intel.com>
->>>> Cc: Namhyung Kim <namhyung@kernel.org>
->>>> Link: 
->>>> https://lore.kernel.org/lkml/6fe63fa3-6c63-4b75-ac09-884d26f6fb95@kernel.org
->>>> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->>>
->>> Tested-by: Jiri Slaby <jirislaby@kernel.org>
->>
->> Thanks a lot! Added to the cset.
-> 
-> Oh, 32bit arm still affected:
-> /usr/lib/gcc/armv7hl-suse-linux-gnueabi/14/../../../../armv7hl-suse-linux-gnueabi/bin/ld: perf-in.o: in function `trace__init_syscalls_bpf_prog_array_maps':
-> tools/perf/builtin-trace.c:3461:(.text+0x899a0): undefined reference to 
-> `syscalltbl__id_at_idx'
+On AMD machines cpuc->events[idx] can become NULL in a subtle race
+condition with NMI->throttle->x86_pmu_stop().
 
-Ping -- any input/fix for this?
+Check event for NULL in amd_pmu_enable_all() before enable to avoid a GPF.
+This appears to be an AMD only issue.
 
-thanks,
+Syzkaller reported a GPF in amd_pmu_enable_all.
+
+INFO: NMI handler (perf_event_nmi_handler) took too long to run: 13.143
+    msecs
+Oops: general protection fault, probably for non-canonical address
+    0xdffffc0000000034: 0000  PREEMPT SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x00000000000001a0-0x00000000000001a7]
+CPU: 0 UID: 0 PID: 328415 Comm: repro_36674776 Not tainted 6.12.0-rc1-syzk
+RIP: 0010:x86_pmu_enable_event (arch/x86/events/perf_event.h:1195
+    arch/x86/events/core.c:1430)
+RSP: 0018:ffff888118009d60 EFLAGS: 00010012
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000034 RSI: 0000000000000000 RDI: 00000000000001a0
+RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000002
+R13: ffff88811802a440 R14: ffff88811802a240 R15: ffff8881132d8601
+FS:  00007f097dfaa700(0000) GS:ffff888118000000(0000) GS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000200001c0 CR3: 0000000103d56000 CR4: 00000000000006f0
+Call Trace:
+ <IRQ>
+amd_pmu_enable_all (arch/x86/events/amd/core.c:760 (discriminator 2))
+x86_pmu_enable (arch/x86/events/core.c:1360)
+event_sched_out (kernel/events/core.c:1191 kernel/events/core.c:1186
+    kernel/events/core.c:2346)
+__perf_remove_from_context (kernel/events/core.c:2435)
+event_function (kernel/events/core.c:259)
+remote_function (kernel/events/core.c:92 (discriminator 1)
+    kernel/events/core.c:72 (discriminator 1))
+__flush_smp_call_function_queue (./arch/x86/include/asm/jump_label.h:27
+    ./include/linux/jump_label.h:207 ./include/trace/events/csd.h:64
+    kernel/smp.c:135 kernel/smp.c:540)
+__sysvec_call_function_single (./arch/x86/include/asm/jump_label.h:27
+    ./include/linux/jump_label.h:207
+    ./arch/x86/include/asm/trace/irq_vectors.h:99 arch/x86/kernel/smp.c:272)
+sysvec_call_function_single (arch/x86/kernel/smp.c:266 (discriminator 47)
+    arch/x86/kernel/smp.c:266 (discriminator 47))
+ </IRQ>
+
+Reported-by: syzkaller <syzkaller@googlegroups.com>
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+---
+ Suggested comment now with the code.
+
+ arch/x86/events/amd/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 920e3a640cad..6615ace15f5d 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -762,7 +762,12 @@ static void amd_pmu_enable_all(int added)
+ 		if (!test_bit(idx, cpuc->active_mask))
+ 			continue;
+ 
+-		amd_pmu_enable_event(cpuc->events[idx]);
++		/*
++		 * FIXME: cpuc->events[idx] can become NULL in a subtle race
++		 * condition with NMI->throttle->x86_pmu_stop().
++		 */
++		if (cpuc->events[idx])
++			amd_pmu_enable_event(cpuc->events[idx]);
+ 	}
+ }
+ 
 -- 
-js
-suse labs
+2.39.3
 
