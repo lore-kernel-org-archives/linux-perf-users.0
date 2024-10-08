@@ -1,166 +1,103 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33BA1DFE17;
-	Tue,  8 Oct 2024 14:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB4C1E0B99;
+	Tue,  8 Oct 2024 15:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728398179; cv=none; b=nWL4YamAYOBUMnVel+vkt2OycmsrM6gfmDlH2MbpFl2FLspuMV3NuJE2XJdkQ7LtK5GSI7sjcBMsOtRY7gvHqtU/sjKqiBg5Wa4yVKd+HnzoP3qvqklI3ixi0GqDU70YSG9JLtSPUlWxetsufsAFYWbnMEfhRPqmLnOXOLScy1A=
+	t=1728400970; cv=none; b=lb1GWXV0S0CySPqvtvLveb9D+zsoFA5eTjpKBz8PZTGLbe0rNkAPcbJBEOr3/I/mC0cZvJD1Dxphsoob9Rdm/UrAJwU5zHKsVmzusfAYe6ZrCtv2h2GAkdkn9hnwFX9vLJe0bhxIPEoPsgGHkc2X6HP1CUAbHsSSDELLAh8VSD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728398179; c=relaxed/simple;
-	bh=gxxx5O9eecv163qWQ61f/5In0s1MkC0h2hYsYBgpd4o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S/zO1Y80mmqXqTMlScSxEJVGhXux7CI3+0h3l1ITSR0pAxNutZWEtYPlD1L1ILqXY4Obv1k3kDD/b0fs47HVIWiJ+KR5gxwzJvwngpKZV88XMLkADWzqKt4dbEa4UHxZDAO+MsCJysGykz8ZvJ6j3ZtlKUC9Gu0oF4qBFkqm5KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nmUog/XW; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728400970; c=relaxed/simple;
+	bh=sj/QpjLT22BMMSoGQ9E1G1amxY8zWPdm8RiKAdqhXqs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YVJlLkDnFIMb26KNRAn+jST/PC0RM8wCXXpAi+qNyUzWRVSdurezuWUvH2619urY1kW2lrlIHI7At3x/a8iWULyLxMUMwqxm2SshQNpizjRkPsQaGtzm3vDchiNJhCVWlIC7fmJVbjBXOZfmYpy3MzcCPxappfcpHjBt47zdXw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MbM9Y+up; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmUog/XW"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5398df2c871so6110679e87.1;
-        Tue, 08 Oct 2024 07:36:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728398176; x=1729002976; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RAzASSCUQ2aUVsiLqBLU+OR2T2BBF/GKBA/6/Hrht2Y=;
-        b=nmUog/XWxHE98vP1aRBWOdqqiTdra1AWS575jFpoHyM53Y6e7zQN/FcquPeBMs14bf
-         aPuy8kgYFX4JqI1OEv6cuEYAJkv41Tv58BA3MLW378DfwBfALhXp0zSiXBDrK6w7hoW3
-         SG9RMRTkD8IVJ42W+dtP+a6tAMQEg1rJYKi/saiMrSfX5FJsZrQrmOEKrYBQV59PGzpI
-         IgXkUWLLJ3LOEIu4wlQNrUJEkpUiZ7oLKlMCMO5E3EhblLMHa1t47qP28WXxD19DHR4I
-         rTKc3hWJ5y8llNFRd5BhofZh2BWz/9wUnCLGFOznXC6rfN+BioUMPiQDaJZ7Ke4/hRW4
-         NwVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728398176; x=1729002976;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RAzASSCUQ2aUVsiLqBLU+OR2T2BBF/GKBA/6/Hrht2Y=;
-        b=cYrnuD6RbOItIqsgKi4Co2aWslD+EwsN3jUQhNiAtOp6qvExTX6N9+ftVK+/AZGwiH
-         JxTsDcZhuTt+TMDo2KtZsyRGE6t6Bto6S4ayh9f47KEolDx1AVBt2hYdXjWNsFGdVY8G
-         +6HtqRc7CWHDRV6iq1c0e+aLo/dS3rthVgz3OLWpP0xe3ME93FK+H67o0MNpAIqiQ2mP
-         3EY3L+6H9cWtEnM4/hw3HSRIBRgXupPWhFZhnEBgzymHGSDH5MxhWC8ByX3HiUEKa0/4
-         BPEu3CoBjRl3COPCGOinc3kVND830H7LjlrvpDM/jCSBPiG1GXFF9v6aduIhwNK6R6mR
-         jjvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJtH3awfDZ/nC626VnAxYOHkTfVIoH3kIfaoPqDVOK+deP8D57oWriGhIVI7f1VE1Nc88=@vger.kernel.org, AJvYcCUbgGK+kyLacPBfXwZh6DEUgiTVHXLqk+aXtuYMPOhFH+/s+wGhu0dOB7i0wxyaju3rnxRqg/5J97wWBAJ+OeU=@vger.kernel.org, AJvYcCV2rCp5g1JppC/inIrPY76DYPlOaZ2xdBwksr4sgPt/Jd/MlJKupA6Ss8yv/s7PmIv0dqsyysSJTTA=@vger.kernel.org, AJvYcCV9IJ38l6X5LroDzXttFFINdkD3yzgOGnA1lfHoX1xiWG07l8nircOfoo/CsvDyIKP8qCEoSAbLz9hRx0Fi@vger.kernel.org, AJvYcCVWn6u/U1hLaeP8nOPLa/UO6ryUAre4UzB1KTNdeCyAeBTsUrbB955DjqJ/0egzzQSkzPZFeRObE6bh@vger.kernel.org, AJvYcCVZr08z2eEiFB9qZZQPQKg8EQQs1YfSFER4TatCiaj9fipOsjvktYDR35dyW9iYDSkA8vsM9JAdwBB0i5AJ@vger.kernel.org, AJvYcCVzdyFAcpZ+cokUng73bgS8Mm6UjHR1k2FuWrlvxUoysZiXou+QER3OJJFz/rCqDionXvoGGH39/cyMTa34HNMNVA==@vger.kernel.org, AJvYcCW2ura4tB0AkWNuocgWJ/GET8txWB1PrLflKqFDMyIXRUY+r7qInkWU7DBBDWFKZ3mASs4deA9mHlQuCU4b@vger.kernel.org, AJvYcCXOwPz5SHzaAEeTdRy4S8wp0rdekZ+too4VPiu6TVIcNiu1UZgMWkMEqQIw9/6EEkH6qPERZIuOt1AOmQ==@vger.kernel.org, AJvYcCXRdDe3dubXYb9lSLHeHJulIH3EjKyZ63P0AScc+aR+KbyToGrF5T8LxAHKUceMsS0bCo0zyrlwIn5B@vger.kernel.org
-X-Gm-Message-State: AOJu0YzliAqJ64I6yuE+5ZCA/YTG3cGnD2sjQRftKzH5Y0Ebmv6K1Sl/
-	C4xahBG5gp7Vs51HXDV0eE5S8WzB4cq5Df6LvATxzE6KbikHc3Na75TCB4u8MbFmIeHdl+CRyiR
-	6oNV9T++a/Dw7Kxvp+mbzH/8JrA==
-X-Google-Smtp-Source: AGHT+IFk7uSGpMKxSJMgul6omDcmQyMQl5Zy1l8C5NVTbpCgjnnjxrxdxyhpPaT355keXYtQRCu422aiN8olYIcP4XU=
-X-Received: by 2002:a05:6512:3085:b0:539:8a9a:4e56 with SMTP id
- 2adb3069b0e04-539ab8c6fb8mr8574397e87.53.1728398175714; Tue, 08 Oct 2024
- 07:36:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MbM9Y+up"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728400969; x=1759936969;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=sj/QpjLT22BMMSoGQ9E1G1amxY8zWPdm8RiKAdqhXqs=;
+  b=MbM9Y+up7xBuE7kFdTakvbQG51/CdNeZ0iYYyZfHIsHbWCdeuZaniAE4
+   yh6936DiDhecDWwQcFUeeCRuUk/xQ9T3OwO4MlxrRqLpmOiKoRu9w87C5
+   vzwQ6raGUNHWwWBVeiqg8nYMEa0o88XY1wXR/NjnLejpEVlzTxQCKyCL8
+   jbOjs0Hr7itkFvOC3E1UExJFbnoA1/edS9UEpZWxSxlvkUCFgYx1VGaAj
+   UXMdgyOnWzX2QhtFC9DMKQJChjDjg0SbrShBEkmil2vEXg+IxDObqkq0S
+   9z4xjFDw6kfh+227WqaquqFXu3T1eTjU+hEFZa+4GJqSrIieZ8RP26mA2
+   g==;
+X-CSE-ConnectionGUID: ITLP0AUTQEGo0pA1+GXFkg==
+X-CSE-MsgGUID: Khq3bSe8SpOlO+eKRefqOg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11219"; a="31502335"
+X-IronPort-AV: E=Sophos;i="6.11,187,1725346800"; 
+   d="scan'208";a="31502335"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2024 08:22:44 -0700
+X-CSE-ConnectionGUID: 4tH/6GISQamZDsoLllWpFg==
+X-CSE-MsgGUID: R33U4JiFQUSRoGYPvWkTag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,187,1725346800"; 
+   d="scan'208";a="75876316"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.245.96.163])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2024 08:22:40 -0700
+Message-ID: <6bde6bde-f83f-427a-9107-8f867703c9b5@intel.com>
+Date: Tue, 8 Oct 2024 18:22:33 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240925150059.3955569-30-ardb+git@google.com>
- <20240925150059.3955569-35-ardb+git@google.com> <CAFULd4ZNwfPZO-yDjrtT2ANV509HeeYgR80b9AFachaVW5zqrg@mail.gmail.com>
- <CAMzpN2j4uj=mhdi7QHaA7y_NLtaHuRpnit38quK6RjvxdUYQew@mail.gmail.com> <CAMj1kXF3_Hj9j2f_cBtwTFWvEmB0UoEs_cGkRiWc4AErDx0ftQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXF3_Hj9j2f_cBtwTFWvEmB0UoEs_cGkRiWc4AErDx0ftQ@mail.gmail.com>
-From: Brian Gerst <brgerst@gmail.com>
-Date: Tue, 8 Oct 2024 10:36:03 -0400
-Message-ID: <CAMzpN2jWRV8-JzM2FjSvSz+VoDrNVeEJPgF7N5ksLaADHpnHsA@mail.gmail.com>
-Subject: Re: [RFC PATCH 05/28] x86: Define the stack protector guard symbol explicitly
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Uros Bizjak <ubizjak@gmail.com>, Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Christoph Lameter <cl@linux.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Juergen Gross <jgross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Keith Packard <keithp@keithp.com>, 
-	Justin Stitt <justinstitt@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-doc@vger.kernel.org, 
-	linux-pm@vger.kernel.org, kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-efi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-sparse@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf test x86: Fix typo in intel-pt-test
+To: Thomas Falcon <thomas.falcon@intel.com>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241007194758.78659-1-thomas.falcon@intel.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20241007194758.78659-1-thomas.falcon@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 4, 2024 at 9:15=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> wro=
-te:
->
-> On Sat, 28 Sept 2024 at 15:41, Brian Gerst <brgerst@gmail.com> wrote:
-> >
-> > On Wed, Sep 25, 2024 at 2:33=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com>=
- wrote:
-> > >
-> > > On Wed, Sep 25, 2024 at 5:02=E2=80=AFPM Ard Biesheuvel <ardb+git@goog=
-le.com> wrote:
-> > > >
-> > > > From: Ard Biesheuvel <ardb@kernel.org>
-> > > >
-> > > > Specify the guard symbol for the stack cookie explicitly, rather th=
-an
-> > > > positioning it exactly 40 bytes into the per-CPU area. Doing so rem=
-oves
-> > > > the need for the per-CPU region to be absolute rather than relative=
- to
-> > > > the placement of the per-CPU template region in the kernel image, a=
-nd
-> > > > this allows the special handling for absolute per-CPU symbols to be
-> > > > removed entirely.
-> > > >
-> > > > This is a worthwhile cleanup in itself, but it is also a prerequisi=
-te
-> > > > for PIE codegen and PIE linking, which can replace our bespoke and
-> > > > rather clunky runtime relocation handling.
-> > >
-> > > I would like to point out a series that converted the stack protector
-> > > guard symbol to a normal percpu variable [1], so there was no need to
-> > > assume anything about the location of the guard symbol.
-> > >
-> > > [1] "[PATCH v4 00/16] x86-64: Stack protector and percpu improvements=
-"
-> > > https://lore.kernel.org/lkml/20240322165233.71698-1-brgerst@gmail.com=
-/
-> > >
-> > > Uros.
-> >
-> > I plan on resubmitting that series sometime after the 6.12 merge
-> > window closes.  As I recall from the last version, it was decided to
-> > wait until after the next LTS release to raise the minimum GCC version
-> > to 8.1 and avoid the need to be compatible with the old stack
-> > protector layout.
-> >
->
-> Hi Brian,
->
-> I'd be more than happy to compare notes on that - I wasn't aware of
-> your intentions here, or I would have reached out before sending this
-> RFC.
->
-> There are two things that you would need to address for Clang support
-> to work correctly:
-> - the workaround I cc'ed you on the other day [0],
-> - a workaround for the module loader so it tolerates the GOTPCRELX
-> relocations that Clang emits [1]
->
->
->
-> [0] https://lore.kernel.org/all/20241002092534.3163838-2-ardb+git@google.=
-com/
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/commit=
-/?id=3Da18121aabbdd
+On 7/10/24 22:47, Thomas Falcon wrote:
+> Change function name "is_hydrid" to "is_hybrid".
+> 
+> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
 
-The first patch should be applied independently as a bug fix, since it
-already affects the 32-bit build with clang.
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-I don't have an environment with an older clang compiler to test the
-second patch, but I'll assume it will be necessary.  I did run into an
-issue with the GOTPCRELX relocations before [1], but I thought it was
-just an objtool issue and didn't do more testing to know if modules
-were broken or not.
+> ---
+>  tools/perf/arch/x86/tests/intel-pt-test.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/arch/x86/tests/intel-pt-test.c b/tools/perf/arch/x86/tests/intel-pt-test.c
+> index 09d61fa736e3..b217ed67cd4e 100644
+> --- a/tools/perf/arch/x86/tests/intel-pt-test.c
+> +++ b/tools/perf/arch/x86/tests/intel-pt-test.c
+> @@ -375,7 +375,7 @@ static int get_pt_caps(int cpu, struct pt_caps *caps)
+>  	return 0;
+>  }
+>  
+> -static bool is_hydrid(void)
+> +static bool is_hybrid(void)
+>  {
+>  	unsigned int eax, ebx, ecx, edx = 0;
+>  	bool result;
+> @@ -441,7 +441,7 @@ int test__intel_pt_hybrid_compat(struct test_suite *test, int subtest)
+>  	int ret = TEST_OK;
+>  	int cpu;
+>  
+> -	if (!is_hydrid()) {
+> +	if (!is_hybrid()) {
+>  		test->test_cases[subtest].skip_reason = "not hybrid";
+>  		return TEST_SKIP;
+>  	}
 
-Brian Gerst
-
-[1] https://lore.kernel.org/all/20231026160100.195099-6-brgerst@gmail.com/
