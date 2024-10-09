@@ -1,158 +1,110 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1485653AC
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Oct 2024 00:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD501487CD;
+	Wed,  9 Oct 2024 05:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728434945; cv=none; b=MOuFVud03ZwVtb+977OXAf4wDdpRp205AgAHPACl8m4I/8R0OYTSi3oqWlKCKi42GFQAsHkgzGHAZ3Z4+w+q1DsViInLYFQ33Y2Pjp0F4I3PHZ95m0pjMnIwnlmQE6N4RSJNW2+VSkvifCVk4TmCJwD2ZBcO6peuFLLZi24+RmM=
+	t=1728451220; cv=none; b=upgw/jbtX2s9pDdyJS3KS4CLp6CazypvwU615UZF/JCNAWGwz6X2qva+6p+T8TNUJ6FYr5FyOKuC2cMvB8DCUCMoSrM0CrDTxpLBDUJ2Qz5JleR8RsT65UJ8sOUab4hRndR9HyZ4DUmqql4qwUa68MK5nUo3GPWCsi56ddXw07E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728434945; c=relaxed/simple;
-	bh=Cpx7rXkTSx8ps5kFdq5cHdGaqq6HdXgYYm9h5SAMX88=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l/wBf05omBx7QHrLhm2SHQBclVdahdJmNZIKalffsmCH8RCIt6rIeNpbmPzE3HqByTa4Xej/GMOEO7uMxnptNoMZ7Rqe73HMJlN1mwq1uObasoBr0BlfHb/QTnFMyUqmE0ZTm7h0d+eGTbQutfOS+6h6msllEv/lXXfswJAuQig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bx3FeZnd; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1728451220; c=relaxed/simple;
+	bh=VxkKoSpTbpvGNKlMYZPv7Q6sgZUtEUe7QAwtUYKL8o8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N/YNp4gnnXWSkS2l8/wwEsW+XvYv5WuxXLd2p/wHv8Z88MNL5Ci2hln1vIBX1vshoiXSVEGFcqnm2KOblv1HnUrjt5eyQ+RVjt2dodxa66opbP5T9UoBvi13cSJWzbW4s6qIgcSdPqsNCbzNj0VFhAm0Gu2hQDUUFFLUimY9yNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KE7xGdQT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bx3FeZnd"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-20c5b628b7cso79165ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Oct 2024 17:49:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728434943; x=1729039743; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DWn47q1YdrUk3zjrW3LLzHqPpTNHpFHGg0Pnci7sCN0=;
-        b=bx3FeZnd6FbVD84wfCluFoJXzxhh/c7r4Dy8QyLsdESc9/ZOXZGMgpxNRZ8Kn6SFPG
-         sz3x8nNxad6WLhv7BbLfIqopJf55/qRAa8AWpRuIzw8Ib/01FleJAr5A2v5QxlXkZ+/0
-         O4ElJ2tzrHjBO1dE3cvGd99JJYPsoh852UAva65cQtbb1xT4oExGWZ3IvtResCxHJWpS
-         PhG6zHdG3yc0ndUJeolpy6DZBBPgwE4UO0italYSBdK3WH4fg2wqH38mqYqEXjmVwIZ9
-         sbbDDmSTPaRL1Uzwo+WxX1o73xmkZjVtUfC2mBpRFSfo6fmBmKiSOXjOWP9a0YXYFNJN
-         L1aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728434943; x=1729039743;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DWn47q1YdrUk3zjrW3LLzHqPpTNHpFHGg0Pnci7sCN0=;
-        b=mpHwhRvw83Qn4gn5Rb3yq4pGebTAJNCrC+bfj/s9fhfoJEoDzKI1z0JtgONfTRQHk2
-         7O4J+YDn8csR6DWgKWxdaNn6Za+sf4R5jSpuXF5AWXXMTMTiyY6Q4cpfKl2Khrn28a1Y
-         aVI4b78caNg10fWKmEmDk5FvBA/kSTNhOSL4nJVkxE79tzm9RInRGpkQcyxcIXdxZI8k
-         Fepv2syxwVEtCgiONj6CbXp7UduzWN3YNAqMG8McbtPG1Bw0TImkP/+VjVrZNrNNeBOZ
-         4jaz/48siAFlRypH1NC9IL+00O9nV4Sfc2fdIoCqb9Y0Nhtb4axLUG3Sy9mk1CB07do3
-         Tqsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXDjknkJzq8Ui8OCKQM0rrd5Qq4Jroz65VQR1b/xPQkkr+QQHaWmpw2Q2k1CmGcQf6Km0OJvWgGfeFo1LVDd8p5@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKx8mMrgzzTft8dBWgAEteY6qz95oyBvD+cVChDsm49Shlptv6
-	6YwdkJIPI2pzTw3DP1KGJc9/liAUagKN6HOam1duOgVRaknsc6sMega+PBK/4HsPWBWjj+RAubd
-	nQNC5WmvS1tG1UuATARLuC67CtMUajsYsYnq9
-X-Google-Smtp-Source: AGHT+IGfkP1c7PwtfYyG1Mr3DQyh9f2R69qD+cgCgsoIan/75MTWGHIzdiSEzFhxx0fR3MEzmxETjFf/tHN9LfiuL0g=
-X-Received: by 2002:a17:902:e552:b0:1f7:34e4:ebc1 with SMTP id
- d9443c01a7336-20c64b74322mr713885ad.5.1728434942876; Tue, 08 Oct 2024
- 17:49:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KE7xGdQT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFC86C4CEC5;
+	Wed,  9 Oct 2024 05:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728451218;
+	bh=VxkKoSpTbpvGNKlMYZPv7Q6sgZUtEUe7QAwtUYKL8o8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KE7xGdQThy8JWe8Y2HOUeRN7zjewaMYrR6Kl7SP71VnTfzxv2XAKyoiZM1lwrunpY
+	 xl41vkUDjjmMjAcjAOgBNYVuvofzbxI0gDRjsBRLDP9t0jmiOBw3g8777ZgSqCUhYg
+	 pv83DLTBbdrqf/hwi9i77+QtATpKsFNPmHzxdjeBJP43spwGidUyDQ98at5367SzgA
+	 vGRM5eBsAdkGJF6VBAam3a3SROSmEx7qhBeWegtZw7vB8JUgy4/yJprLXY+Yyji335
+	 Wb1eUZx2r6wNv5gi2vTJGaJmdJXXmJ1aWFDsmn6xxo3a+x5Y+NMYIRUPEO4+I55GrX
+	 CnGcSes16ZqXQ==
+Date: Tue, 8 Oct 2024 22:20:16 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, song@kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH -next 0/2] perf stat: a set of small fixes for bperf
+Message-ID: <ZwYSkJqKRmB5NXrx@google.com>
+References: <20240925135523.367957-1-wutengda@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241009003938.254936-1-linux@treblig.org>
-In-Reply-To: <20241009003938.254936-1-linux@treblig.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 8 Oct 2024 17:48:49 -0700
-Message-ID: <CAP-5=fVNcMq7xjPHFE-f=LddSDz4G2cWxUGDjSuFtafVAtY6bg@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Remove unused color_fwrite_lines
-To: linux@treblig.org
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240925135523.367957-1-wutengda@huaweicloud.com>
 
-On Tue, Oct 8, 2024 at 5:39=E2=80=AFPM <linux@treblig.org> wrote:
->
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->
-> color_fwrite_lines() was added by 2009's commit
-> 8fc0321f1ad0 ("perf_counter tools: Add color terminal output support")
->
-> but has never been used.
->
-> Remove it.
->
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Hello,
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+On Wed, Sep 25, 2024 at 01:55:21PM +0000, Tengda Wu wrote:
+> Hi,
+> 
+> This is a set of small fixes for bperf (perf-stat --bpf-counters).
+> 
+> It aims to fix the following two issues:
+>   1) bperf limited the number of events to a maximum of 16, which
+>      caused failures in some scenarios and lacked friendly prompts. 
+>   2) bperf failed to correctly handle whether events were supported,
+>      resulting in the incorrect display when the event count was 0.
+> 
+> The reason for fixing these issues is that bperf is very useful in
+> some cost-sensitive scenarios, such as top-down analysis scenarios.
+> Increasing the attr map size can allow these scenarios to collect
+> more events at the same time, making it possible to gather enough
+> information to perform complex metric calculations in top-down.
+
+So I tried this patchset and found a couple of issues.
+
+1. Running bperf failed due to perf_event_attr map locking issue.
+   It seems that the message is misleading since it didn't to get the
+   lock actually.  I think it failed the map is not compatible anymore
+   and the error message should say about that.
+
+2. It seems bperf keeps the map pinned in the file system.  I'm not sure
+   if we have an option to unpin the map automatically.  I had to find
+   the path and delete it manually.
+
+3. Currently bperf doesn't support event groups.  On Intel machines,
+   topdown metrics are enabled by default and it makes the perf stat
+   failing when --bpf-counters option is used (after the step 2).
+
+    $ sudo ./perf stat -a --bpf-counters true
+    bpf managed perf events do not yet support groups.
+
+   Maybe we need to drop the topdown metrics when bperf fails.
 
 Thanks,
-Ian
+Namhyung
 
-> ---
->  tools/perf/util/color.c | 28 ----------------------------
->  tools/perf/util/color.h |  1 -
->  2 files changed, 29 deletions(-)
->
-> diff --git a/tools/perf/util/color.c b/tools/perf/util/color.c
-> index bffbdd216a6a..e51f0a676a22 100644
-> --- a/tools/perf/util/color.c
-> +++ b/tools/perf/util/color.c
-> @@ -93,34 +93,6 @@ int color_fprintf(FILE *fp, const char *color, const c=
-har *fmt, ...)
->         return r;
->  }
->
-> -/*
-> - * This function splits the buffer by newlines and colors the lines indi=
-vidually.
-> - *
-> - * Returns 0 on success.
-> - */
-> -int color_fwrite_lines(FILE *fp, const char *color,
-> -               size_t count, const char *buf)
-> -{
-> -       if (!*color)
-> -               return fwrite(buf, count, 1, fp) !=3D 1;
-> -
-> -       while (count) {
-> -               char *p =3D memchr(buf, '\n', count);
-> -
-> -               if (p !=3D buf && (fputs(color, fp) < 0 ||
-> -                               fwrite(buf, p ? (size_t)(p - buf) : count=
-, 1, fp) !=3D 1 ||
-> -                               fputs(PERF_COLOR_RESET, fp) < 0))
-> -                       return -1;
-> -               if (!p)
-> -                       return 0;
-> -               if (fputc('\n', fp) < 0)
-> -                       return -1;
-> -               count -=3D p + 1 - buf;
-> -               buf =3D p + 1;
-> -       }
-> -       return 0;
-> -}
-> -
->  const char *get_percent_color(double percent)
->  {
->         const char *color =3D PERF_COLOR_NORMAL;
-> diff --git a/tools/perf/util/color.h b/tools/perf/util/color.h
-> index 01f7bed21c9b..aecf56dae73f 100644
-> --- a/tools/perf/util/color.h
-> +++ b/tools/perf/util/color.h
-> @@ -39,7 +39,6 @@ int color_vsnprintf(char *bf, size_t size, const char *=
-color,
->  int color_vfprintf(FILE *fp, const char *color, const char *fmt, va_list=
- args);
->  int color_fprintf(FILE *fp, const char *color, const char *fmt, ...);
->  int color_snprintf(char *bf, size_t size, const char *color, const char =
-*fmt, ...);
-> -int color_fwrite_lines(FILE *fp, const char *color, size_t count, const =
-char *buf);
->  int value_color_snprintf(char *bf, size_t size, const char *fmt, double =
-value);
->  int percent_color_snprintf(char *bf, size_t size, const char *fmt, ...);
->  int percent_color_len_snprintf(char *bf, size_t size, const char *fmt, .=
-..);
-> --
-> 2.46.2
->
+> 
+> Thanks,
+> Tengda
+> 
+> Tengda Wu (2):
+>   perf stat: Increase perf_attr_map entries
+>   perf stat: Fix incorrect display of bperf when event count is 0
+> 
+>  tools/lib/perf/include/perf/bpf_perf.h |  1 +
+>  tools/perf/util/bpf_counter.c          | 26 +++++++++++++++++---------
+>  2 files changed, 18 insertions(+), 9 deletions(-)
+> 
+> -- 
+> 2.34.1
+> 
