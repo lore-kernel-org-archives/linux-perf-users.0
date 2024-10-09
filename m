@@ -1,181 +1,213 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1397E765
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Oct 2024 16:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB421A0B06;
+	Wed,  9 Oct 2024 16:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728489766; cv=none; b=XRMZw+MvCJSza9lTOTA2HRbsRJ8VbIAsSuaHbTLpRN5b049PCo0VjERJtljT/n4f4spRNCN33s8M09C0X8xja9mCHoqDfxSjQE/F1vaTnBuizx1zXdVB1/nxPC+5pvWOKXibxDgD+CXuIRo1yY4D6PxVIluUxJGlxyBPPW0G3oU=
+	t=1728492673; cv=none; b=OpGIxs0bL9VVdiywhN55It8WIzj4eGQcBsQ/0Pczf+26AWCPOa+2TSqwitmREEHbIb9O5bcRvsaDQYxtMg5wc0D+/UvIR31NXlOWL6737IkVet1yc4BKWic5Dds+XRLSoTmH7lRPgmdVFEACTics5Cy3slW68xFOfAhDNnSqoi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728489766; c=relaxed/simple;
-	bh=H2fjKECbmvUHh/XYANeYWUUzfalul3ryifCtXo97f0Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LOBUkLQCmdTTPIicXyKB+vUkCJ90nOihI4MEnymlB6yhBDsek1xADprQz7JVqFLfbdW7/bU+qBtHd25WfgZ/MSeuZr6kYkUwIn87QbkTDFkJVNb5dOkC32xP0AIEXkl2ebizUxBDJOyBDNA8ND0PDoNax5LVCX9IhqVWhTGVurk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wWb4TGpU; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1728492673; c=relaxed/simple;
+	bh=zXYuptHwSD5KhLZqOC39kgWtaJhrUCH3f46QqezNL3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vi3oqM3Kb9k1fL+ijV437arAEhMJxhEhg3SanOiW0AwBLX43sfOVxuRXybNzmRQSB+BYJceHZanxMmins6XRRfTZ+c4rvkULPQO7/gednSSa0GQzytGqOFj8PEZrWLPtG85ZktJh/ESHvU6lVAZyVmHjlQmKttZBgSJCGvh2Mq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=BIinL4TE; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wWb4TGpU"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a0cb892c6aso337575ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Oct 2024 09:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728489764; x=1729094564; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vQgQpcQj6lq4p4G3KBQUq7yvBT0GmBIXkTYaFzOz2+Y=;
-        b=wWb4TGpU6/a8GEkcM7wm7sKVVpO114Dc8PpM80nlj2RgQly0uClULucHuZcx4N3DnV
-         AWqqEwmOmQDeeaLI5iAmt6yNRWU6i6WbMrjls34pe2fDpbjNijmSlQ64zLlapl4cDsIn
-         8gsK7sfjZ0VQkvBFshII8WX+Ii+qiLm/OT2Z6khcq2oJU7Wp7IWmlW0vQvABKjwl2x4l
-         NeJf23UDdU53nU0gzHlO50KalPu5l+7FZtbVQXCbJTcS0td8N4na75PS+Z6vD/1XmCso
-         xY8zOQZJ9JEwEgHLxrJ97A7qmpF1/bmgGD0DhvOzW/09vKT2lW6iV5PnBovvTkYeBvN5
-         QSSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728489764; x=1729094564;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vQgQpcQj6lq4p4G3KBQUq7yvBT0GmBIXkTYaFzOz2+Y=;
-        b=K/9+bxM81ukFCF5TCQX+pCAdXdyqOk2SzFtBhqebHAdjQees2sD/HyhUAoxLbU6iqQ
-         CS/hySax/StufbXg05cWbYD8Hm5bv5o2dPZqswU0PiAYuWahJUGgg1h4bbvieOlfEau+
-         +UNLlH4VpXmbFU8wDLzt5rfQqR1ZmbWsBYgS05Pm6p8K2PSx8ltmeZDcIB07rtnNikMF
-         aAVRPcaP5LtjJG8mCw+kHkjs2mpI/z0j2me57ancAkEQc/wRuLkoAsMhjrqe1XYnM2RZ
-         8plcY2aaa5IO+PRvkUKOS9TGPOm38iXyvCyu3TGzwEbAjTAuS0dbg7eUTw+1tljVFZ0c
-         KH0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXf+ZI/J3SGNiY4yhAJnDt+e4rmy0Ed+gz0MOWPJCIZbzGSfNyT54gdTtBxeKWCybPlfWcD03VTH6yoZo3QDFfY@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFVsSPSNQVYLEjeC8CIYGUNkQ7SazS41eNmo1Wj3iRRX/nJSLY
-	Go7fLa9nvlwimKWDe60YBTcsjgjW9Tv7eGAx23csrxrGr6kKHB2p/Ry67WE9eBB5BrJ3PjV/Y1k
-	eybuGkBJhtNDKFg+QCcmAFugl/hSCvmve1iEV
-X-Google-Smtp-Source: AGHT+IHuDrgRLs8WG6JehCy5Gk2XCY5JTbMR7IPLILrii8luyou3gTgDTJzEc2H7DyksBPPdTpdsAJ4O89ly4r5cqOg=
-X-Received: by 2002:a05:6e02:214d:b0:39f:4828:7d7d with SMTP id
- e9e14a558f8ab-3a39808804emr3258245ab.15.1728489763309; Wed, 09 Oct 2024
- 09:02:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="BIinL4TE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=BToRIdU1VKAhz1U80/RKPLfu4q88jdl68InrtA5svGI=; b=BIinL4TEv4ovHhg0
+	rO5+WrEJs/yPm6SDTNRuTHctMCTychpgYzt4mn13GbVeD203fjieHIC/YiB+sgo3p28CgmGwUKVD1
+	t5UkNZajKRklZrTpGQftzBdV7G3QfSK+TGRO1soOl9xIUt0h+nWq9LeUbEuIGPMB5Tc4fi3j8tJwF
+	J966NNbpb3GnfAWE32fQTnzRrAuxw0wyXJVHPXGD4zWrr5MC/3SRReNvchv38QwjLQomTGluln0Mg
+	LHM3GxiH+SSirUUBH8L/Dc/IK1jT4VpxtawquDVtaY15pPsHIyjX5saFfHgEx0BwXUg0YED47oaBd
+	v4JYjFgVgEvNgM9rpg==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1syZtl-00A29p-21;
+	Wed, 09 Oct 2024 16:50:53 +0000
+Date: Wed, 9 Oct 2024 16:50:53 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org,
+	mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andi Kleen <ak@linux.intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>
+Subject: Re: [PATCH] perf callchain: Remove unused callchain_branch_counts
+Message-ID: <Zwa0bfGAaBGTdD33@gallifrey>
+References: <20241006012204.373803-1-linux@treblig.org>
+ <ZwYVCTsf8p3v22HQ@google.com>
+ <ba80cbe4-877a-4b5f-a5d6-de16fc1d2d4d@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240926175035.408668-1-irogers@google.com> <bbbd024c-d2df-47ea-9587-f68e5bc45962@linux.intel.com>
-In-Reply-To: <bbbd024c-d2df-47ea-9587-f68e5bc45962@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 9 Oct 2024 09:02:28 -0700
-Message-ID: <CAP-5=fVX5wypmAAhR8LsE4nSWp5BmN_qhGf9+WCh2bebNcGYTg@mail.gmail.com>
-Subject: Re: [PATCH v4 00/22] Python generated Intel metrics
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
-	Samantha Alt <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <ba80cbe4-877a-4b5f-a5d6-de16fc1d2d4d@linux.intel.com>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 16:47:58 up 154 days,  4:02,  1 user,  load average: 0.07, 0.06,
+ 0.01
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Fri, Sep 27, 2024 at 11:34=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
-com> wrote:
->
->
->
-> On 2024-09-26 1:50 p.m., Ian Rogers wrote:
-> > Generate twenty sets of additional metrics for Intel. Rapl and Idle
-> > metrics aren't specific to Intel but are placed here for ease and
-> > convenience. Smi and tsx metrics are added so they can be dropped from
-> > the per model json files.
->
-> Are Smi and tsx metrics the only two metrics who's duplicate metrics in
-> the json files will be dropped?
+* Liang, Kan (kan.liang@linux.intel.com) wrote:
+> 
+> 
+> On 2024-10-09 1:30 a.m., Namhyung Kim wrote:
+> > On Sun, Oct 06, 2024 at 02:22:04AM +0100, linux@treblig.org wrote:
+> >> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> >>
+> >> callchain_branch_counts() was added in 2016 by commit
+> >> 3dd029ef9401 ("perf report: Calculate and return the branch flag counting")
+> >> but unused.
+> 
+> It seems the original patchset was not well organized. This function is
+> actually used by the last patch of the series.
+> https://lore.kernel.org/lkml/1477876794-30749-7-git-send-email-yao.jin@linux.intel.com/
+> 
+> But for some reason, the last patch was not merged. I think Andi gave
+> the Acked-by for the whole series. It might be just accidentally missed.
 
-Yes. These metrics with their runtime detection and use of sysfs event
-names I feel more naturally fit here rather than in the Intel perfmon
-github converter script.
+OK, that'll be the 4th time this deadcode series has found missing calls
+to functions!
 
-> It sounds like there will be many duplicate metrics in perf list, right?
+> I think the missed feature is still useful.
+> We will redo the test and re-post it.
 
-That's not the goal. There may be memory bandwidth computed in
-different ways, like TMA and using uncore, but that seems okay as the
-metrics are using different counters so may say different things. I
-think there is an action to always watch the metrics and ensure
-duplicates don't occur, but some duplication can be beneficial.
+OK, great.
 
-> Also, is it an attempt to define some architectural metrics for perf?
+Dave
 
-There are many advantages of using python to generate the metric json,
-a few are:
-1) we verify the metrics use events from the event json,
-2) the error prone escaping of commas and slashes is handled by the python,
-3) metric expressions can be spread over multiple lines and have comments.
-It is also an advantage that we can avoid copy-pasting one metric from
-one architectural metric json to another. This helps propagate fixes.
-
-So, it's not so much a goal to have architectural metrics but its nice
-that we avoid copy-paste. Somewhere where I've tried to set up common
-events across all architectures is with making tool have its own PMU.
-Rather than have the tool PMU describe events using custom code it
-just reuses the existing PMU json support:
-https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/too=
-ls/perf/pmu-events/arch/common/common/tool.json
-
-> How do you decide which metrics should be added here?
-
-The goal is to try to make open source metrics that Google has
-internally. I've set up a git repo for this here:
-https://github.com/googleprodkernel/linux-perf
-Often the source of the metric is Intel's documentation on things like
-uncore events, it's just such metrics aren't part of the perfmon
-process and so we're adding them here. Were all these metrics on the
-Intel github it'd be reasonable to remove them from here. If Intel
-would like to work on or contribute some metrics here, that's also
-fine. I think the main thing is to be giving users useful metrics.
-
-Thanks,
-Ian
-
-> > There are four uncore sets of metrics and
-> > eleven core metrics. Add a CheckPmu function to metric to simplify
-> > detecting the presence of hybrid PMUs in events. Metrics with
-> > experimental events are flagged as experimental in their description.
-> >
-> > The patches should be applied on top of:
-> > https://lore.kernel.org/lkml/20240926174101.406874-1-irogers@google.com=
-/
-> >
-> > v4. Experimental metric descriptions. Add mesh bandwidth metric. Rebase=
-.
-> > v3. Swap tsx and CheckPMU patches that were in the wrong order. Some
-> >     minor code cleanup changes. Drop reference to merged fix for
-> >     umasks/occ_sel in PCU events and for cstate metrics.
-> > v2. Drop the cycles breakdown in favor of having it as a common
-> >     metric, spelling and other improvements suggested by Kan Liang
-> >     <kan.liang@linux.intel.com>.
-> >
-> > Ian Rogers (22):
-> >   perf jevents: Add RAPL metrics for all Intel models
-> >   perf jevents: Add idle metric for Intel models
-> >   perf jevents: Add smi metric group for Intel models
-> >   perf jevents: Add CheckPmu to see if a PMU is in loaded json events
-> >   perf jevents: Mark metrics with experimental events as experimental
-> >   perf jevents: Add tsx metric group for Intel models
-> >   perf jevents: Add br metric group for branch statistics on Intel
-> >   perf jevents: Add software prefetch (swpf) metric group for Intel
-> >   perf jevents: Add ports metric group giving utilization on Intel
-> >   perf jevents: Add L2 metrics for Intel
-> >   perf jevents: Add load store breakdown metrics ldst for Intel
-> >   perf jevents: Add ILP metrics for Intel
-> >   perf jevents: Add context switch metrics for Intel
-> >   perf jevents: Add FPU metrics for Intel
-> >   perf jevents: Add Miss Level Parallelism (MLP) metric for Intel
-> >   perf jevents: Add mem_bw metric for Intel
-> >   perf jevents: Add local/remote "mem" breakdown metrics for Intel
-> >   perf jevents: Add dir breakdown metrics for Intel
-> >   perf jevents: Add C-State metrics from the PCU PMU for Intel
-> >   perf jevents: Add local/remote miss latency metrics for Intel
-> >   perf jevents: Add upi_bw metric for Intel
-> >   perf jevents: Add mesh bandwidth saturation metric for Intel
-> >
-> >  tools/perf/pmu-events/intel_metrics.py | 1046 +++++++++++++++++++++++-
-> >  tools/perf/pmu-events/metric.py        |   52 ++
-> >  2 files changed, 1095 insertions(+), 3 deletions(-)
-> >
+> Thanks,
+> Kan
+> 
+> >>
+> >> Remove it and it's helpers.
+> > 
+> > Kan, are you ok with this?
+> > 
+> > Thanks,
+> > Namhyung
+> > 
+> >>
+> >> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> >> ---
+> >>  tools/perf/util/callchain.c | 71 -------------------------------------
+> >>  tools/perf/util/callchain.h |  4 ---
+> >>  2 files changed, 75 deletions(-)
+> >>
+> >> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> >> index 0c7564747a14..11435b72afbe 100644
+> >> --- a/tools/perf/util/callchain.c
+> >> +++ b/tools/perf/util/callchain.c
+> >> @@ -1266,77 +1266,6 @@ int callchain_node__fprintf_value(struct callchain_node *node,
+> >>  	return 0;
+> >>  }
+> >>  
+> >> -static void callchain_counts_value(struct callchain_node *node,
+> >> -				   u64 *branch_count, u64 *predicted_count,
+> >> -				   u64 *abort_count, u64 *cycles_count)
+> >> -{
+> >> -	struct callchain_list *clist;
+> >> -
+> >> -	list_for_each_entry(clist, &node->val, list) {
+> >> -		if (branch_count)
+> >> -			*branch_count += clist->branch_count;
+> >> -
+> >> -		if (predicted_count)
+> >> -			*predicted_count += clist->predicted_count;
+> >> -
+> >> -		if (abort_count)
+> >> -			*abort_count += clist->abort_count;
+> >> -
+> >> -		if (cycles_count)
+> >> -			*cycles_count += clist->cycles_count;
+> >> -	}
+> >> -}
+> >> -
+> >> -static int callchain_node_branch_counts_cumul(struct callchain_node *node,
+> >> -					      u64 *branch_count,
+> >> -					      u64 *predicted_count,
+> >> -					      u64 *abort_count,
+> >> -					      u64 *cycles_count)
+> >> -{
+> >> -	struct callchain_node *child;
+> >> -	struct rb_node *n;
+> >> -
+> >> -	n = rb_first(&node->rb_root_in);
+> >> -	while (n) {
+> >> -		child = rb_entry(n, struct callchain_node, rb_node_in);
+> >> -		n = rb_next(n);
+> >> -
+> >> -		callchain_node_branch_counts_cumul(child, branch_count,
+> >> -						   predicted_count,
+> >> -						   abort_count,
+> >> -						   cycles_count);
+> >> -
+> >> -		callchain_counts_value(child, branch_count,
+> >> -				       predicted_count, abort_count,
+> >> -				       cycles_count);
+> >> -	}
+> >> -
+> >> -	return 0;
+> >> -}
+> >> -
+> >> -int callchain_branch_counts(struct callchain_root *root,
+> >> -			    u64 *branch_count, u64 *predicted_count,
+> >> -			    u64 *abort_count, u64 *cycles_count)
+> >> -{
+> >> -	if (branch_count)
+> >> -		*branch_count = 0;
+> >> -
+> >> -	if (predicted_count)
+> >> -		*predicted_count = 0;
+> >> -
+> >> -	if (abort_count)
+> >> -		*abort_count = 0;
+> >> -
+> >> -	if (cycles_count)
+> >> -		*cycles_count = 0;
+> >> -
+> >> -	return callchain_node_branch_counts_cumul(&root->node,
+> >> -						  branch_count,
+> >> -						  predicted_count,
+> >> -						  abort_count,
+> >> -						  cycles_count);
+> >> -}
+> >> -
+> >>  static int count_pri64_printf(int idx, const char *str, u64 value, char *bf, int bfsize)
+> >>  {
+> >>  	return scnprintf(bf, bfsize, "%s%s:%" PRId64 "", (idx) ? " " : " (", str, value);
+> >> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+> >> index 86ed9e4d04f9..d7741fa9e9de 100644
+> >> --- a/tools/perf/util/callchain.h
+> >> +++ b/tools/perf/util/callchain.h
+> >> @@ -298,10 +298,6 @@ void free_callchain(struct callchain_root *root);
+> >>  void decay_callchain(struct callchain_root *root);
+> >>  int callchain_node__make_parent_list(struct callchain_node *node);
+> >>  
+> >> -int callchain_branch_counts(struct callchain_root *root,
+> >> -			    u64 *branch_count, u64 *predicted_count,
+> >> -			    u64 *abort_count, u64 *cycles_count);
+> >> -
+> >>  void callchain_param_setup(u64 sample_type, const char *arch);
+> >>  
+> >>  bool callchain_cnode_matched(struct callchain_node *base_cnode,
+> >> -- 
+> >> 2.46.2
+> >>
+> > 
+> 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
