@@ -1,128 +1,282 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798C62AF1D;
-	Wed,  9 Oct 2024 05:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8171E157A5C
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Oct 2024 06:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728453444; cv=none; b=FhwwrSua/yEg2FjiCwKpGjr6nT5u5eESqmg01769Rey5PsoO+i2B5h+URhNS1ygBpm2eU9wkPx7xGRKmhUVaxuWvuKQ+7zmn9SBEMQkUytXjU+PU1N0qxzAGqyYa7WL/Xpg/Z4iCW8VLUVMUHDMKGvQBh2qQduB0Do/f2sTzAyo=
+	t=1728453617; cv=none; b=p5mO0Pi/3pD0UtErregSuMIBkvQapRXYj7goNQmxbSCx05LSzmWPh5NdMzeQolfK8dkHtl3s/WMdJNn3rpe5iw97s8GV/OfdwJHIKF0ZD6OPI6qzDlQEaGocUdg4zlFO9Gci6ftd+eZaEzTKLEaq/2iUnCk/ucHaLQaEbdkTEmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728453444; c=relaxed/simple;
-	bh=O47oLuUo0QpBQXj9j/uC1ds8BU2RT5AQtzut8uxV5mE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qWFYKb6KmoOzncetOz7w+Qpf7DJeiPkaTZygXMv5OWEAUkuMNVbXFG7RWtIpOWmPwxqXstZr5ImnS/hvb0+bKWFsyK3J/KVgmZOt0UqydpApexfrstPnHS+SWJhUStuLePjs7mZDw6A0YSamrirMwlpTQ9UXGr6bFIpfgSMWt/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IzH2OzNB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728453617; c=relaxed/simple;
+	bh=asfLAxTRlC3cvobna5DTLB9nS5fce0f+CgO4/yo72Mk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uqMnkdzXLkcPxc3vyqdf6dwP9eoMpkDnLXV7fQzzIEavwfIndyF4Blmv6G3YkvmEktHJQlAAIuVKLugsEj2jGvA3ttJSbMSF0fcJwsKhErZD741rfp4Zow3r+Im8eQvO6ncuACciJsaFcdAFG40Nr6rn9qE8iYzR3w73stwZIoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o8WMYyfc; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IzH2OzNB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D8AC4CEC5;
-	Wed,  9 Oct 2024 05:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728453444;
-	bh=O47oLuUo0QpBQXj9j/uC1ds8BU2RT5AQtzut8uxV5mE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IzH2OzNBukfBQH9Xj6C5hX3Npe9QXUokzYwTBOiqGl3h1ySm/hJrcACU21aMzSEOt
-	 y/ReqpKAnKby2JnSuvzBbUMJunFcGkSKllfrBARheTesSvqBlleB0urvgKEaeX4AI9
-	 q8R/OjvwQ+/3z3UdXku1q94bY5pro03Nq2KkPmngbaFrfz1WgBJM4vHDxAjVGuOP0m
-	 AoPdUa+QRT3W+MP2yN6TtGaUOYIG8TNgO+U2Tqg4Xh4xFI1lCGrobwJrDCyu2BP9cP
-	 5POMWcARoq8FA8HJKsA2dvR8vG2MEcTtf8BoJdWjYNgnNLyfCqpJk++V7A/Cz+S5E2
-	 RbUfnlRvpKRpA==
-Date: Tue, 8 Oct 2024 22:57:22 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@intel.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH/RFT] Re: [PATCH v5 1/8] perf trace: Fix iteration of
- syscall ids in syscalltbl->entries
-Message-ID: <ZwYbQswnGHSstClc@google.com>
-References: <20240705132059.853205-1-howardchu95@gmail.com>
- <20240705132059.853205-2-howardchu95@gmail.com>
- <6fe63fa3-6c63-4b75-ac09-884d26f6fb95@kernel.org>
- <ZtJWEVn8-w07Wm0q@x1>
- <0f841525-e02a-4e11-b5f8-1acc61979ccf@kernel.org>
- <ZtYJ0z8f-1jwYSbV@x1>
- <c279ad02-2543-4a95-9404-9304e1e704da@kernel.org>
- <ffc2eb09-ac78-4594-a376-3fff9918c2a7@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o8WMYyfc"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3a0cb892c6aso186885ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Oct 2024 23:00:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728453613; x=1729058413; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hpHjahOhe44ljzpZmc/RFBRO2RSewAslIJugtIjKYKw=;
+        b=o8WMYyfc1g34x7U+kp3zJ8LeTQzoPgfh7NKCWnR4QcN52giX4CIFqhhjJpreo90Ghx
+         uSx9k7rl/p4UZ+yn6+3gxeI84inadduf5d/l5AaAsT4xNYcVTsbmiFnM4B+iNaLn4dh1
+         rfzcyQoopqIBXJ0Lk+1HIjEdgnjeVrnVcKx7DLeLgDhp+Ffd/fnnfmfIrIz/rdi5l5W1
+         6oAzMztwQ20LCIXy10PUTk2RdvJ+dAL4rz/mJoMxQ5XfPTkCFnFhbGgo0d42htfaTIYs
+         emzhOYHRTgJ0JoulnjcPKmOwZDLnFzSnhREOt3acrLpAVzSlGj4nme+WJmcvZkrpKti2
+         Lx7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728453613; x=1729058413;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hpHjahOhe44ljzpZmc/RFBRO2RSewAslIJugtIjKYKw=;
+        b=iMaqhICqAEepvaF0iUCmS0xD7o1HuYOlYfS/VLp7nO5uJv1Vfj6fN8w6K1YZuaS73R
+         2nohy2t4uEVrwyFJYUmz0N0gE3xnISKFecYngMyZKcQ2Mvs9D6bjr9o9b9rA3FE8AKCD
+         QrhwFA91ptjA0WTpM5S293KmKx55OtrtEOcoToJ+tFkO2l9K5R3ttC0MSafALFhJGWBe
+         CkK7tMDXanwU5ayCo57aBGB3dKYpL9KS8TtMGpVg7ZARP/FrJua0v/CLdbl+uvcU38x0
+         Pr/iu5Tuu0zFZG1GXX/PHrku3rnw9SrPMyvhIPcFGheGHhIK7OsCArBuzVuKYDcJAuXR
+         4FCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUUKYviWZMMdsQRNYukUXgSyqZRI2ZF6n56xkMQIlowqWxGNqvFXzCpx6YIU+QfWCZ7TUezL/YftBYSdVDsH2A1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2m74XzT1M1FcUQFJgJ6A+odg1wfjx3UW7NkMghzZJC2cHbG1y
+	Xw1jLOHDSPBm3a5KdeF9SMn4ehsQs9qDM4XFqCYMb1l77/el11gP95n+lboZUVeaJouYrJnjytp
+	9beKdexlLOdmCgMN+n19IYSuuoYsxyJkg0N7H
+X-Google-Smtp-Source: AGHT+IEjzEJWcyZzTrRX8fXUseSsnm7TAu51kVqymrvMQvouqmphMtczHwwVgD1+IDekxcUn/FY8R1K8SrVF43QTzT4=
+X-Received: by 2002:a05:6e02:1c44:b0:3a0:8dbf:8298 with SMTP id
+ e9e14a558f8ab-3a396f5ddc7mr2921975ab.0.1728453612498; Tue, 08 Oct 2024
+ 23:00:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ffc2eb09-ac78-4594-a376-3fff9918c2a7@kernel.org>
+References: <20241001171950.233723-1-irogers@google.com> <CAP-5=fWExR7ae=dgiAG8BCtDN0XDwnzy9=SBbE0cy5S1Luw-4A@mail.gmail.com>
+ <ZwYW54gKOfnUboeZ@google.com>
+In-Reply-To: <ZwYW54gKOfnUboeZ@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 8 Oct 2024 22:59:59 -0700
+Message-ID: <CAP-5=fUY8d4DN+ekpj5B58kvoksrPcWpZU=iZhs+=bFfpakK3Q@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Make a "Setup struct perf_event_attr" a shell test
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Veronika Molnarova <vmolnaro@redhat.com>, Leo Yan <leo.yan@linux.dev>, 
+	Howard Chu <howardchu95@gmail.com>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, Oct 8, 2024 at 10:38=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Tue, Oct 08, 2024 at 11:55:29AM -0700, Ian Rogers wrote:
+> > On Tue, Oct 1, 2024 at 10:19=E2=80=AFAM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > The path detection for "Setup struct perf_event_attr" test is brittle
+> > > and leads to the test frequently not running. Running shell tests is
+> > > reasonably robust, so make the test a shell test. Move the test files
+> > > to reflect this.
+> >
+> > Ping.
+> >
+> > I think this is worthwhile cleanup for the attributes test. It should
+> > avoid problems like:
+> > https://lore.kernel.org/lkml/ZroNTkdA8XDFaDks@x1/
+>
+> Sorry, it's not clear to me what was the problem.  Can you please say it
+> again briefly?
 
-On Tue, Oct 08, 2024 at 11:09:31AM +0200, Jiri Slaby wrote:
-> On 27. 09. 24, 7:09, Jiri Slaby wrote:
-> > On 02. 09. 24, 20:54, Arnaldo Carvalho de Melo wrote:
-> > > On Mon, Sep 02, 2024 at 07:25:17AM +0200, Jiri Slaby wrote:
-> > > > On 31. 08. 24, 1:30, Arnaldo Carvalho de Melo wrote:
-> > > > >   From 174899051e54ecdab06c07652a3d04ad000ab301 Mon Sep 17
-> > > > > 00:00:00 2001
-> > > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > > > Date: Fri, 30 Aug 2024 19:53:47 -0300
-> > > > > Subject: [PATCH 1/1] perf tools: Build x86 32-bit syscall table from
-> > > > >    arch/x86/entry/syscalls/syscall_32.tbl
-> > > > > 
-> > > > > To remove one more use of the audit libs and address a problem reported
-> > > > > with a recent change where a function isn't available when using the
-> > > > > audit libs method, that should really go away, this being one step in
-> > > > > that direction.
-> > > > > 
-> > > > > The script used to generate the 64-bit syscall table was already
-> > > > > parametrized to generate for both 64-bit and 32-bit, so just use it and
-> > > > > wire the generated table to the syscalltbl.c routines.
-> > > > > 
-> > > > > Reported-by: Jiri Slaby <jirislaby@kernel.org>
-> > > > > Suggested-by: Ian Rogers <irogers@google.com>
-> > > > > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > > > > Cc: Howard Chu <howardchu95@gmail.com>
-> > > > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > > > > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > > > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > > > Link: https://lore.kernel.org/lkml/6fe63fa3-6c63-4b75-ac09-884d26f6fb95@kernel.org
-> > > > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > > 
-> > > > Tested-by: Jiri Slaby <jirislaby@kernel.org>
-> > > 
-> > > Thanks a lot! Added to the cset.
-> > 
-> > Oh, 32bit arm still affected:
-> > /usr/lib/gcc/armv7hl-suse-linux-gnueabi/14/../../../../armv7hl-suse-linux-gnueabi/bin/ld: perf-in.o: in function `trace__init_syscalls_bpf_prog_array_maps':
-> > tools/perf/builtin-trace.c:3461:(.text+0x899a0): undefined reference to
-> > `syscalltbl__id_at_idx'
-> 
-> Ping -- any input/fix for this?
- 
-As a quick fix, we may add a dummy syscall table for other archs like
-below.  Can you please test this?
+If you build perf like:
+make -C tools/perf O=3D/tmp/perf
+
+Then run the built perf test for the "Setup struct perf_event_attr" it
+skips (causing the tests to bitrot and fixes to be sent by Veronika):
+```
+$ sudo /tmp/perf/perf test -vv perf_event_attr
+capget syscall failed (No such file or directory - 2) fall back on root che=
+ck
+17: Setup struct perf_event_attr:
+17: Setup struct perf_event_attr:
+--- start ---
+test child forked, pid 806601
+Using CPUID GenuineIntel-6-8D-1
+---- end(-2) ----
+17: Setup struct perf_event_attr                                    : Skip
+```
+
+The issue is around the path set up, the test has a few path
+expectations but they are brittle as shown above. While we could
+endeavour to set up the path in C code, it makes sense to migrate the
+test to a shell test due to the tests smaller size, ease of
+environment variable manipulation, existing perf test support for
+better path setup, etc. Ie let's not reinvent the shell test
+infrastructure that handles python tests for the sake of one C test.
+After this change:
+```
+$ sudo /tmp/perf/perf test attribute
+76: Perf attribute expectations test                                : Ok
+```
 
 Thanks,
-Namhyung
+Ian
 
----8<---
-diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
-index 7c15dec6900d8aaa..b7465a879d8bf416 100644
---- a/tools/perf/util/syscalltbl.c
-+++ b/tools/perf/util/syscalltbl.c
-@@ -46,6 +46,11 @@ static const char *const *syscalltbl_native = syscalltbl_mips_n64;
- #include <asm/syscalls.c>
- const int syscalltbl_native_max_id = SYSCALLTBL_LOONGARCH_MAX_ID;
- static const char *const *syscalltbl_native = syscalltbl_loongarch;
-+#else
-+const int syscalltbl_native_max_id = 1;
-+static const char *const syscalltbl_native[] = {
-+       [0] = "unknown",
-+};
- #endif
- 
- struct syscall {
-
+> >
+> > > Ian Rogers (3):
+> > >   perf test: Add a shell wrapper for "Setup struct perf_event_attr"
+> > >   perf test: Remove C test wrapper for attr.py
+> > >   perf test: Move attr files into shell directory where they are used
+> > >
+> > >  tools/perf/Makefile.perf                      |   5 +-
+> > >  tools/perf/perf.c                             |   2 -
+> > >  tools/perf/tests/Build                        |   1 -
+> > >  tools/perf/tests/attr.c                       | 218 ----------------=
+--
+> > >  tools/perf/tests/builtin-test.c               |   1 -
+> > >  tools/perf/tests/shell/attr.sh                |  22 ++
+> > >  tools/perf/tests/{ =3D> shell}/attr/README      |   0
+> > >  tools/perf/tests/{ =3D> shell}/attr/base-record |   0
+> > >  .../tests/{ =3D> shell}/attr/base-record-spe    |   0
+> > >  tools/perf/tests/{ =3D> shell}/attr/base-stat   |   0
+> > >  .../tests/{ =3D> shell}/attr/system-wide-dummy  |   0
+> > >  .../tests/{ =3D> shell}/attr/test-record-C0     |   0
+> > >  .../tests/{ =3D> shell}/attr/test-record-basic  |   0
+> > >  .../{ =3D> shell}/attr/test-record-branch-any   |   0
+> > >  .../attr/test-record-branch-filter-any        |   0
+> > >  .../attr/test-record-branch-filter-any_call   |   0
+> > >  .../attr/test-record-branch-filter-any_ret    |   0
+> > >  .../attr/test-record-branch-filter-hv         |   0
+> > >  .../attr/test-record-branch-filter-ind_call   |   0
+> > >  .../attr/test-record-branch-filter-k          |   0
+> > >  .../attr/test-record-branch-filter-u          |   0
+> > >  .../tests/{ =3D> shell}/attr/test-record-count  |   0
+> > >  .../tests/{ =3D> shell}/attr/test-record-data   |   0
+> > >  .../{ =3D> shell}/attr/test-record-dummy-C0     |   0
+> > >  .../tests/{ =3D> shell}/attr/test-record-freq   |   0
+> > >  .../attr/test-record-graph-default            |   0
+> > >  .../attr/test-record-graph-default-aarch64    |   0
+> > >  .../{ =3D> shell}/attr/test-record-graph-dwarf  |   0
+> > >  .../{ =3D> shell}/attr/test-record-graph-fp     |   0
+> > >  .../attr/test-record-graph-fp-aarch64         |   0
+> > >  .../attr/test-record-group-sampling           |   0
+> > >  .../tests/{ =3D> shell}/attr/test-record-group1 |   0
+> > >  .../tests/{ =3D> shell}/attr/test-record-group2 |   0
+> > >  .../{ =3D> shell}/attr/test-record-no-buffering |   0
+> > >  .../{ =3D> shell}/attr/test-record-no-inherit   |   0
+> > >  .../{ =3D> shell}/attr/test-record-no-samples   |   0
+> > >  .../tests/{ =3D> shell}/attr/test-record-period |   0
+> > >  .../{ =3D> shell}/attr/test-record-pfm-period   |   0
+> > >  .../tests/{ =3D> shell}/attr/test-record-raw    |   0
+> > >  .../{ =3D> shell}/attr/test-record-spe-period   |   0
+> > >  .../attr/test-record-spe-period-term          |   0
+> > >  .../attr/test-record-spe-physical-address     |   0
+> > >  .../attr/test-record-user-regs-no-sve-aarch64 |   0
+> > >  .../test-record-user-regs-old-sve-aarch64     |   0
+> > >  .../attr/test-record-user-regs-sve-aarch64    |   0
+> > >  .../perf/tests/{ =3D> shell}/attr/test-stat-C0  |   0
+> > >  .../tests/{ =3D> shell}/attr/test-stat-basic    |   0
+> > >  .../tests/{ =3D> shell}/attr/test-stat-default  |   0
+> > >  .../{ =3D> shell}/attr/test-stat-detailed-1     |   0
+> > >  .../{ =3D> shell}/attr/test-stat-detailed-2     |   0
+> > >  .../{ =3D> shell}/attr/test-stat-detailed-3     |   0
+> > >  .../tests/{ =3D> shell}/attr/test-stat-group1   |   0
+> > >  .../{ =3D> shell}/attr/test-stat-no-inherit     |   0
+> > >  tools/perf/tests/{ =3D> shell/lib}/attr.py      |   0
+> > >  tools/perf/tests/tests.h                      |   1 -
+> > >  tools/perf/util/evsel.c                       | 122 +++++++++-
+> > >  tools/perf/util/util.h                        |   7 -
+> > >  57 files changed, 142 insertions(+), 237 deletions(-)
+> > >  delete mode 100644 tools/perf/tests/attr.c
+> > >  create mode 100755 tools/perf/tests/shell/attr.sh
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/README (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/base-record (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/base-record-spe (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/base-stat (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/system-wide-dummy (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-C0 (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-basic (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-branch-any (1=
+00%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-branch-filter=
+-any (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-branch-filter=
+-any_call (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-branch-filter=
+-any_ret (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-branch-filter=
+-hv (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-branch-filter=
+-ind_call (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-branch-filter=
+-k (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-branch-filter=
+-u (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-count (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-data (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-dummy-C0 (100=
+%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-freq (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-graph-default=
+ (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-graph-default=
+-aarch64 (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-graph-dwarf (=
+100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-graph-fp (100=
+%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-graph-fp-aarc=
+h64 (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-group-samplin=
+g (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-group1 (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-group2 (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-no-buffering =
+(100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-no-inherit (1=
+00%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-no-samples (1=
+00%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-period (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-pfm-period (1=
+00%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-raw (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-spe-period (1=
+00%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-spe-period-te=
+rm (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-spe-physical-=
+address (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-user-regs-no-=
+sve-aarch64 (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-user-regs-old=
+-sve-aarch64 (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-record-user-regs-sve=
+-aarch64 (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-stat-C0 (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-stat-basic (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-stat-default (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-stat-detailed-1 (100=
+%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-stat-detailed-2 (100=
+%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-stat-detailed-3 (100=
+%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-stat-group1 (100%)
+> > >  rename tools/perf/tests/{ =3D> shell}/attr/test-stat-no-inherit (100=
+%)
+> > >  rename tools/perf/tests/{ =3D> shell/lib}/attr.py (100%)
+> > >
+> > > --
+> > > 2.46.1.824.gd892dcdcdd-goog
+> > >
