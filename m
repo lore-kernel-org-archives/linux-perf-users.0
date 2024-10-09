@@ -1,143 +1,125 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D010E18C335
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Oct 2024 23:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E203C39;
+	Wed,  9 Oct 2024 00:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728430833; cv=none; b=Dbe3U9pensCfl2bYFcVHZ6WKT32bywrPtfZTucL7EL0ZngVGHgBxxdTT7m5zqYBiBshBugD1jD+rCMjEfBPUZ4avRDDsQCfNud/8UdVgfSdMxxsL6RsS1HyU5ySR0uvSp8oTXcCHlTNCNGTzjL32jQnP1c+LajDEPZ6QMCuHFCw=
+	t=1728434393; cv=none; b=NhGQRBalBDTTgKrxo2bSTFSFLicgKEHc/0DmruSNXJDxvl18sQt6n6jNNMKVp0zWUaWyJqJDSFtHdDGcvoZDuzdh6RlPdunk5gXhh8kjh+3wv9MbElrHt8s3OWrwyYHmOP0eO9x8Bm3I7Y+G08v8OAylGCmgPgPnjeXnhLyr5vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728430833; c=relaxed/simple;
-	bh=3Id3YShJvU/qzMpJxiLmIb/mHvhpyX85OyEo+GK4LaU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SUEyRCDf1suoqrTNU5LQ1U2bG2DJZGtiPzek4XsQG0+IS4lIgYHvyNU/0r+dxxql8R1kwyJ8Cca7+KotSonkjo2e+TbyGsbNNM8bq+f8A1gBMylglrj4NCLG3XZ3qP4vVeJ1OqtZhA8BFzWCSQE1GrniV5vZSz7C0sYLA2exKfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nqoE63Rh; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1728434393; c=relaxed/simple;
+	bh=njSVivvo/nAwZPNIqLrCFDbOZl+NfQmzA8hWJS5xmio=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qLeyGscjM8cWcsgArccJnp1UB0QtBmMU9EvW2RdCAcevRjGB6zHFDVktYeffF/iAHP541QLs5mhebJY5Dt5GOv66enxkwxgXAoGBRG3H6rgoUc2LSby3EwhyYhy7Od40sXy9qa4M8qJdwf5IArmtIfSLG6S191IxJc5pAaF1f98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=HoHRKTNh; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nqoE63Rh"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a36ad4980bso91195ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Oct 2024 16:40:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728430831; x=1729035631; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9TzFohBlNzqxKjuZ5GdWfeG9SOi18QREh/ikp0rKgog=;
-        b=nqoE63RhdGRrUt0d8oBr7pDZCtOy0gj3Jf0BTMaF6s0Z0L0UDtoy7wznSV0oGhT5Po
-         MQ/CxnUzbH3xe9KilL2mCRQ3Y3vm8y4rLN9MS/A3qUSRUsZDw4rgIrtTI+cwWP2rVJFV
-         QbJUDQxwmMThbXVP8VXlbSE+WLEcAKFVRkXMu+sNokLV4RYUDsnMVl8VikZlOeqfk4KF
-         4lpTl586UWmeQ19gaqZ3RtRKqXNxIvFfO8anll8qT3yBr0bDhs1ZxLQX5Jmcokvqw8+R
-         Xj/kUONOn9WadKKBHE33+sPr3vJjQFHBqxKLy3dZuwijiNIw65ADzFHguUIMAlVWyjsc
-         qd+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728430831; x=1729035631;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9TzFohBlNzqxKjuZ5GdWfeG9SOi18QREh/ikp0rKgog=;
-        b=GxQmwHWv7pjPuUQ72yhUSuzNQCb/q752KINkAbQcTaM/eQ/StWnRCt6eddQQTL0EEN
-         stdCLfvFC3T2NzmspNiNWK0afpdeE/kDR1UM6nKh7KRwMzkltSRiE/K7hylEEHZ2Uz22
-         rlxFC+K9DA6xAbGNZAe3VJOx4rhQ3NIrNunWzVCQgbHKa49BKNBk+C/W1DSMlzzJGwOD
-         Zl6Dc3+k8YnV25pypjwO7rrQpEt7f5p/99FwEl53qmeSKx3uN0cQa7Q0PzGL76vo2f7U
-         LU0RUty3gy+3DnC6dRonUPAmItQThVo6k2f7PTIohwfyw2Uh1cRpTw92mgxy7hngujtm
-         m6WA==
-X-Forwarded-Encrypted: i=1; AJvYcCW45mUNuXnmF4EL/Swbu/hC+7lrIpA8mbDuWC0YIPKG3hqWhxz8/xYZvawwI+wa1JvcfSgmq702UkKzkJSIFXer@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5KCndx/ZBKuwF70bhHPPwiFZriYwI5ef0/V7S8irml9UkYaJs
-	G9lDkoxE7JGPlsjbH3JkzPgknknefhplvbH/qaTd08XGfkgal1BZda01IwWwYZogw/8/M/CgKLA
-	phG6udLcJDqEfnEuWAouVxTnDmGKTZAVclPkm
-X-Google-Smtp-Source: AGHT+IE5fjoBzAtkHCZGRdBV0PsFyCvAbFAQk3kbxTIueT1WdZS6X5ubk/wldHFcczaiHaFDoWXDSNx3t7l8U0XSvt4=
-X-Received: by 2002:a05:6e02:144b:b0:3a0:a75d:8659 with SMTP id
- e9e14a558f8ab-3a3980913f8mr745665ab.29.1728430830851; Tue, 08 Oct 2024
- 16:40:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="HoHRKTNh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=p4vNPXy7z2xM3i64+7rk4jsSR0YVoSda6kzvMXga2j4=; b=HoHRKTNhGa0I0/OD
+	35OblhAXSLtAz0UQMjByq/4BQpr2BOE6o567qPqdR5yNTdSYxSgbZNmFSzbLy80XbWLl0miDK1Kx/
+	V9TO67Mympgj4JzUIKFWVAeCe4NvUyc7RpDnSaqETnlB6cnfxMjocJeJ+oAHfzqBKqXfLsOCYlHqH
+	IN/Y504HuZX05u+OGqvcU6d/uWAsNIj5JJfsoRVVdTA0lKjbGT3w3m2sTCuYr3NTekgx5o0XO7uK7
+	teLEB+ULaKrciRJDVN1zbaJoj5VOqyTR5bclIm+1N2tBXIeS8xm4zc2TaPl0mB+fd3DaoGWtkmrkd
+	0wGjABFv8STprbS2yA==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1syKjr-009q7Y-1q;
+	Wed, 09 Oct 2024 00:39:39 +0000
+From: linux@treblig.org
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] perf tools: Remove unused color_fwrite_lines
+Date: Wed,  9 Oct 2024 01:39:38 +0100
+Message-ID: <20241009003938.254936-1-linux@treblig.org>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241004234120.1495209-1-irogers@google.com> <ZwW2m5D2cnIabE_z@google.com>
-In-Reply-To: <ZwW2m5D2cnIabE_z@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 8 Oct 2024 16:40:19 -0700
-Message-ID: <CAP-5=fV80pNi=jh48uq+99pSHV9aeE1X7LvDi=bY9sGQ0JVwkg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/8] CSV/JSON metric thresholds, fix printf modifiers
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Tim Chen <tim.c.chen@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Sumanth Korikkar <sumanthk@linux.ibm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 8, 2024 at 3:47=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> Hi Ian,
->
-> On Fri, Oct 04, 2024 at 04:41:12PM -0700, Ian Rogers wrote:
-> > Metric thresholds are being computed for CSV and JSON output but not
-> > displayed. Rename the color that encodes the threshold as enum values
-> > and use to generate string constants in a CSV column or json
-> > dictionary value.
->
-> IIUC it'd show "good" or "bad" when the metric defines a threshold and
-> show "good", "less good", "nearly bad" or "bad" for the legacy shadow
-> stats?  Anyway it's nice to show if the value is good or not.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Correct. I'm open to suggestions for the names. The alternative to
-showing the metric thresholds would be to drop them for CSV and JSON
-output, which would reduce the number of events. With this approach
-the thresholds can still be dropped with --metric-no-threshold.
+color_fwrite_lines() was added by 2009's commit
+8fc0321f1ad0 ("perf_counter tools: Add color terminal output support")
 
-Thanks,
-Ian
+but has never been used.
 
-> >
-> > Add printf attribute to functions in color.h that could support
-> > it. Fix bad printf format strings that this detected.
-> >
-> > Ian Rogers (8):
-> >   perf color: Add printf format checking and resolve issues
-> >   perf stat: Fix/add parameter names for print_metric
-> >   perf stat: Display "none" for NaN with metric only json
-> >   perf stat: Drop metric-unit if unit is NULL
-> >   perf stat: Change color to threshold in print_metric
-> >   perf stat: Display metric threshold value in CSV output
-> >   perf stat: Add metric-threshold to json output
-> >   perf stat: Disable metric thresholds for CSV/JSON metric-only mode
->
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
->
-> Thanks,
-> Namhyung
->
-> >
-> >  tools/perf/Documentation/perf-stat.txt        |   1 +
-> >  tools/perf/arch/x86/util/iostat.c             |   2 +-
-> >  tools/perf/builtin-sched.c                    |   2 +-
-> >  tools/perf/builtin-script.c                   |   6 +-
-> >  tools/perf/builtin-stat.c                     |   8 ++
-> >  tools/perf/builtin-trace.c                    |   2 +-
-> >  .../tests/shell/lib/perf_json_output_lint.py  |   5 +-
-> >  tools/perf/tests/shell/stat+csv_output.sh     |  24 ++--
-> >  tools/perf/util/arm-spe.c                     |   2 +-
-> >  tools/perf/util/color.h                       |   9 +-
-> >  tools/perf/util/intel-bts.c                   |   2 +-
-> >  tools/perf/util/intel-pt.c                    |   2 +-
-> >  tools/perf/util/s390-cpumsf.c                 |   2 +-
-> >  tools/perf/util/s390-sample-raw.c             |   6 +-
-> >  tools/perf/util/stat-display.c                |  85 +++++++++---
-> >  tools/perf/util/stat-shadow.c                 | 128 ++++++++++--------
-> >  tools/perf/util/stat.h                        |  16 ++-
-> >  17 files changed, 191 insertions(+), 111 deletions(-)
-> >
-> > --
-> > 2.47.0.rc0.187.ge670bccf7e-goog
-> >
+Remove it.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ tools/perf/util/color.c | 28 ----------------------------
+ tools/perf/util/color.h |  1 -
+ 2 files changed, 29 deletions(-)
+
+diff --git a/tools/perf/util/color.c b/tools/perf/util/color.c
+index bffbdd216a6a..e51f0a676a22 100644
+--- a/tools/perf/util/color.c
++++ b/tools/perf/util/color.c
+@@ -93,34 +93,6 @@ int color_fprintf(FILE *fp, const char *color, const char *fmt, ...)
+ 	return r;
+ }
+ 
+-/*
+- * This function splits the buffer by newlines and colors the lines individually.
+- *
+- * Returns 0 on success.
+- */
+-int color_fwrite_lines(FILE *fp, const char *color,
+-		size_t count, const char *buf)
+-{
+-	if (!*color)
+-		return fwrite(buf, count, 1, fp) != 1;
+-
+-	while (count) {
+-		char *p = memchr(buf, '\n', count);
+-
+-		if (p != buf && (fputs(color, fp) < 0 ||
+-				fwrite(buf, p ? (size_t)(p - buf) : count, 1, fp) != 1 ||
+-				fputs(PERF_COLOR_RESET, fp) < 0))
+-			return -1;
+-		if (!p)
+-			return 0;
+-		if (fputc('\n', fp) < 0)
+-			return -1;
+-		count -= p + 1 - buf;
+-		buf = p + 1;
+-	}
+-	return 0;
+-}
+-
+ const char *get_percent_color(double percent)
+ {
+ 	const char *color = PERF_COLOR_NORMAL;
+diff --git a/tools/perf/util/color.h b/tools/perf/util/color.h
+index 01f7bed21c9b..aecf56dae73f 100644
+--- a/tools/perf/util/color.h
++++ b/tools/perf/util/color.h
+@@ -39,7 +39,6 @@ int color_vsnprintf(char *bf, size_t size, const char *color,
+ int color_vfprintf(FILE *fp, const char *color, const char *fmt, va_list args);
+ int color_fprintf(FILE *fp, const char *color, const char *fmt, ...);
+ int color_snprintf(char *bf, size_t size, const char *color, const char *fmt, ...);
+-int color_fwrite_lines(FILE *fp, const char *color, size_t count, const char *buf);
+ int value_color_snprintf(char *bf, size_t size, const char *fmt, double value);
+ int percent_color_snprintf(char *bf, size_t size, const char *fmt, ...);
+ int percent_color_len_snprintf(char *bf, size_t size, const char *fmt, ...);
+-- 
+2.46.2
+
