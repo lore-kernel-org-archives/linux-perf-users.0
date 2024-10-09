@@ -1,213 +1,142 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB421A0B06;
-	Wed,  9 Oct 2024 16:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC5013F43A;
+	Wed,  9 Oct 2024 17:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728492673; cv=none; b=OpGIxs0bL9VVdiywhN55It8WIzj4eGQcBsQ/0Pczf+26AWCPOa+2TSqwitmREEHbIb9O5bcRvsaDQYxtMg5wc0D+/UvIR31NXlOWL6737IkVet1yc4BKWic5Dds+XRLSoTmH7lRPgmdVFEACTics5Cy3slW68xFOfAhDNnSqoi4=
+	t=1728494336; cv=none; b=PRK9wFAnGVPeubBwwQ+EFkgfDYYLogl4ZJpsO4oEkIclM6NczmzzxR+nj6zr/H4ICbkRIA4/Mw3amnEA/Z/s0q5YW8sbZLuY0LJelSmx+7gnT8Qk2Gbp9RxdFFC+bSZulUsHdS9K55xUqzgOxN65Ze6wINz2vwwNe8dquSFVnqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728492673; c=relaxed/simple;
-	bh=zXYuptHwSD5KhLZqOC39kgWtaJhrUCH3f46QqezNL3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vi3oqM3Kb9k1fL+ijV437arAEhMJxhEhg3SanOiW0AwBLX43sfOVxuRXybNzmRQSB+BYJceHZanxMmins6XRRfTZ+c4rvkULPQO7/gednSSa0GQzytGqOFj8PEZrWLPtG85ZktJh/ESHvU6lVAZyVmHjlQmKttZBgSJCGvh2Mq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=BIinL4TE; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1728494336; c=relaxed/simple;
+	bh=kIETc19XyvfPXak3jYGzq8Y6vHynD/hT0YCmQOmgqDk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tL8hWVtwefnqtb4NXnVAVTr9EF6BEi0wcM3SHsskTpk/Q91gBW52orzaJ1FLREaXjwSvnWpdA1nGQws8YM+RX7Pq0Lf7a7gjTg3SC79Uf4G6ppp7soo8osvxYS6YK/Qt+YucGhHmkbk8sBKDQ9oFmwQVOEMZcDShmYooNlXQbok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+4JQTBY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="BIinL4TE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=BToRIdU1VKAhz1U80/RKPLfu4q88jdl68InrtA5svGI=; b=BIinL4TEv4ovHhg0
-	rO5+WrEJs/yPm6SDTNRuTHctMCTychpgYzt4mn13GbVeD203fjieHIC/YiB+sgo3p28CgmGwUKVD1
-	t5UkNZajKRklZrTpGQftzBdV7G3QfSK+TGRO1soOl9xIUt0h+nWq9LeUbEuIGPMB5Tc4fi3j8tJwF
-	J966NNbpb3GnfAWE32fQTnzRrAuxw0wyXJVHPXGD4zWrr5MC/3SRReNvchv38QwjLQomTGluln0Mg
-	LHM3GxiH+SSirUUBH8L/Dc/IK1jT4VpxtawquDVtaY15pPsHIyjX5saFfHgEx0BwXUg0YED47oaBd
-	v4JYjFgVgEvNgM9rpg==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1syZtl-00A29p-21;
-	Wed, 09 Oct 2024 16:50:53 +0000
-Date: Wed, 9 Oct 2024 16:50:53 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andi Kleen <ak@linux.intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>
-Subject: Re: [PATCH] perf callchain: Remove unused callchain_branch_counts
-Message-ID: <Zwa0bfGAaBGTdD33@gallifrey>
-References: <20241006012204.373803-1-linux@treblig.org>
- <ZwYVCTsf8p3v22HQ@google.com>
- <ba80cbe4-877a-4b5f-a5d6-de16fc1d2d4d@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+4JQTBY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 626B3C4CEC3;
+	Wed,  9 Oct 2024 17:18:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728494336;
+	bh=kIETc19XyvfPXak3jYGzq8Y6vHynD/hT0YCmQOmgqDk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=X+4JQTBYh/MZYKPrUB2onNKZJfK1pzUXul4h8Acf7ITMvKBXNLq4cag+SGf/sITBK
+	 IY5rV02QZ71t6cItRlnfE8ddNH3r1XhWMdAV/st0r44XkRHB1QmQP2G2DhDkhEp52L
+	 DjzQcM5BRnc268elJR28X6r9DFvEVdrvC+5DweLT0Q0EhYqvJ4npW5myvdXucvlH1B
+	 Z/5ueOO43kvCX46YvndlslYVPlYoDHjPePUs6s6gY6rZxpuKwXnBi9ULhij0FGMJ/4
+	 IAvqMaHvzNmrRbGKqSyrR9u0xjFjwUGrnlMX+NDEX2dBRMyodK83t6zOJY6E/8Rayi
+	 dh1avwk97UaTw==
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3a377534e00so363775ab.3;
+        Wed, 09 Oct 2024 10:18:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUYQJVoGhCa3DMzD0cXSXEw1HZf5jPM1FE9zx6PWljv4L/rXxf3N+aHlxzczV0gBPqQ32rNIR9VHhnLvOj/@vger.kernel.org, AJvYcCUskU2KL17cVEVdmZQdhtw2DYyexThdZ1f3YNFESL119CEDt8GMbFBZAi/FYi1g43UltjBaIBRaG9Gy8DcdzJfgiQ==@vger.kernel.org, AJvYcCV/hzDnJA0oI3f3jWtcZWEKy1LMWICoWsTlI6I05xOC/Fdr0csgdc5uPBbM0ftdjKJ6Y3o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOrwxXy2PlrdLR2shQUGPi2Vq3nCshCv52inHBluwZsodq3XA1
+	eXHEpAsg8UBq9Iqj/iTEIIJ7iMNGqm0udtjTF3CGfW6P8pYPa/w7K8cx6WdECwPCk9nqlj3oN6m
+	npFPFPkDxdB4+nUJtGko8ZEXoJGE=
+X-Google-Smtp-Source: AGHT+IHYKr3MtibCuhIfqINOiTac2JFiK0PnnYE1ex6z3e1u0veE0fV/hQ/P6tHKnKexhifdFdAhk3wCzVAOyKmCuOE=
+X-Received: by 2002:a92:ca0a:0:b0:3a1:a163:ba58 with SMTP id
+ e9e14a558f8ab-3a397d1d064mr37851245ab.26.1728494335811; Wed, 09 Oct 2024
+ 10:18:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <ba80cbe4-877a-4b5f-a5d6-de16fc1d2d4d@linux.intel.com>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 16:47:58 up 154 days,  4:02,  1 user,  load average: 0.07, 0.06,
- 0.01
-User-Agent: Mutt/2.2.12 (2023-09-09)
+References: <20240916014318.267709-1-wutengda@huaweicloud.com> <20240916014318.267709-2-wutengda@huaweicloud.com>
+In-Reply-To: <20240916014318.267709-2-wutengda@huaweicloud.com>
+From: Song Liu <song@kernel.org>
+Date: Wed, 9 Oct 2024 10:18:44 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6wrwcMYLufVfu-R9OzPBfspJD0w-pZUr68UBRSZExc=A@mail.gmail.com>
+Message-ID: <CAPhsuW6wrwcMYLufVfu-R9OzPBfspJD0w-pZUr68UBRSZExc=A@mail.gmail.com>
+Subject: Re: [PATCH -next v3 1/2] perf stat: Support inherit events during
+ fork() for bperf
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-* Liang, Kan (kan.liang@linux.intel.com) wrote:
-> 
-> 
-> On 2024-10-09 1:30 a.m., Namhyung Kim wrote:
-> > On Sun, Oct 06, 2024 at 02:22:04AM +0100, linux@treblig.org wrote:
-> >> From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> >>
-> >> callchain_branch_counts() was added in 2016 by commit
-> >> 3dd029ef9401 ("perf report: Calculate and return the branch flag counting")
-> >> but unused.
-> 
-> It seems the original patchset was not well organized. This function is
-> actually used by the last patch of the series.
-> https://lore.kernel.org/lkml/1477876794-30749-7-git-send-email-yao.jin@linux.intel.com/
-> 
-> But for some reason, the last patch was not merged. I think Andi gave
-> the Acked-by for the whole series. It might be just accidentally missed.
+On Sun, Sep 15, 2024 at 6:53=E2=80=AFPM Tengda Wu <wutengda@huaweicloud.com=
+> wrote:
+>
+> bperf has a nice ability to share PMUs, but it still does not support
+> inherit events during fork(), resulting in some deviations in its stat
+> results compared with perf.
+>
+> perf stat result:
+> $ ./perf stat -e cycles,instructions -- ./perf test -w sqrtloop
+>
+>    Performance counter stats for './perf test -w sqrtloop':
+>
+>        2,316,038,116      cycles
+>        2,859,350,725      instructions
+>
+>          1.009603637 seconds time elapsed
+>
+>          1.004196000 seconds user
+>          0.003950000 seconds sys
+>
+> bperf stat result:
+> $ ./perf stat --bpf-counters -e cycles,instructions -- \
+>       ./perf test -w sqrtloop
+>
+>    Performance counter stats for './perf test -w sqrtloop':
+>
+>           18,762,093      cycles
+>           23,487,766      instructions
+>
+>          1.008913769 seconds time elapsed
+>
+>          1.003248000 seconds user
+>          0.004069000 seconds sys
+>
+> In order to support event inheritance, two new bpf programs are added
+> to monitor the fork and exit of tasks respectively. When a task is
+> created, add it to the filter map to enable counting, and reuse the
+> `accum_key` of its parent task to count together with the parent task.
+> When a task exits, remove it from the filter map to disable counting.
+>
+> After support:
+> $ ./perf stat --bpf-counters -e cycles,instructions -- \
+>       ./perf test -w sqrtloop
+>
+>  Performance counter stats for './perf test -w sqrtloop':
+>
+>      2,316,252,189      cycles
+>      2,859,946,547      instructions
+>
+>        1.009422314 seconds time elapsed
+>
+>        1.003597000 seconds user
+>        0.004270000 seconds sys
+>
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 
-OK, that'll be the 4th time this deadcode series has found missing calls
-to functions!
+The solution looks good to me. Question on the UI: do we always
+want the inherit behavior from PID and TGID monitoring? If not,
+maybe we should add a flag for it. (I think we do need the flag).
 
-> I think the missed feature is still useful.
-> We will redo the test and re-post it.
+One nitpick below.
 
-OK, great.
+Thanks,
+Song
 
-Dave
+[...]
+>
+> +struct bperf_filter_value {
+> +       __u32 accum_key;
+> +       __u8 exited;
+> +};
+nit:
+Can we use a special value of accum_key to replace exited=3D=3D1
+case?
 
-> Thanks,
-> Kan
-> 
-> >>
-> >> Remove it and it's helpers.
-> > 
-> > Kan, are you ok with this?
-> > 
-> > Thanks,
-> > Namhyung
-> > 
-> >>
-> >> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> >> ---
-> >>  tools/perf/util/callchain.c | 71 -------------------------------------
-> >>  tools/perf/util/callchain.h |  4 ---
-> >>  2 files changed, 75 deletions(-)
-> >>
-> >> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> >> index 0c7564747a14..11435b72afbe 100644
-> >> --- a/tools/perf/util/callchain.c
-> >> +++ b/tools/perf/util/callchain.c
-> >> @@ -1266,77 +1266,6 @@ int callchain_node__fprintf_value(struct callchain_node *node,
-> >>  	return 0;
-> >>  }
-> >>  
-> >> -static void callchain_counts_value(struct callchain_node *node,
-> >> -				   u64 *branch_count, u64 *predicted_count,
-> >> -				   u64 *abort_count, u64 *cycles_count)
-> >> -{
-> >> -	struct callchain_list *clist;
-> >> -
-> >> -	list_for_each_entry(clist, &node->val, list) {
-> >> -		if (branch_count)
-> >> -			*branch_count += clist->branch_count;
-> >> -
-> >> -		if (predicted_count)
-> >> -			*predicted_count += clist->predicted_count;
-> >> -
-> >> -		if (abort_count)
-> >> -			*abort_count += clist->abort_count;
-> >> -
-> >> -		if (cycles_count)
-> >> -			*cycles_count += clist->cycles_count;
-> >> -	}
-> >> -}
-> >> -
-> >> -static int callchain_node_branch_counts_cumul(struct callchain_node *node,
-> >> -					      u64 *branch_count,
-> >> -					      u64 *predicted_count,
-> >> -					      u64 *abort_count,
-> >> -					      u64 *cycles_count)
-> >> -{
-> >> -	struct callchain_node *child;
-> >> -	struct rb_node *n;
-> >> -
-> >> -	n = rb_first(&node->rb_root_in);
-> >> -	while (n) {
-> >> -		child = rb_entry(n, struct callchain_node, rb_node_in);
-> >> -		n = rb_next(n);
-> >> -
-> >> -		callchain_node_branch_counts_cumul(child, branch_count,
-> >> -						   predicted_count,
-> >> -						   abort_count,
-> >> -						   cycles_count);
-> >> -
-> >> -		callchain_counts_value(child, branch_count,
-> >> -				       predicted_count, abort_count,
-> >> -				       cycles_count);
-> >> -	}
-> >> -
-> >> -	return 0;
-> >> -}
-> >> -
-> >> -int callchain_branch_counts(struct callchain_root *root,
-> >> -			    u64 *branch_count, u64 *predicted_count,
-> >> -			    u64 *abort_count, u64 *cycles_count)
-> >> -{
-> >> -	if (branch_count)
-> >> -		*branch_count = 0;
-> >> -
-> >> -	if (predicted_count)
-> >> -		*predicted_count = 0;
-> >> -
-> >> -	if (abort_count)
-> >> -		*abort_count = 0;
-> >> -
-> >> -	if (cycles_count)
-> >> -		*cycles_count = 0;
-> >> -
-> >> -	return callchain_node_branch_counts_cumul(&root->node,
-> >> -						  branch_count,
-> >> -						  predicted_count,
-> >> -						  abort_count,
-> >> -						  cycles_count);
-> >> -}
-> >> -
-> >>  static int count_pri64_printf(int idx, const char *str, u64 value, char *bf, int bfsize)
-> >>  {
-> >>  	return scnprintf(bf, bfsize, "%s%s:%" PRId64 "", (idx) ? " " : " (", str, value);
-> >> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-> >> index 86ed9e4d04f9..d7741fa9e9de 100644
-> >> --- a/tools/perf/util/callchain.h
-> >> +++ b/tools/perf/util/callchain.h
-> >> @@ -298,10 +298,6 @@ void free_callchain(struct callchain_root *root);
-> >>  void decay_callchain(struct callchain_root *root);
-> >>  int callchain_node__make_parent_list(struct callchain_node *node);
-> >>  
-> >> -int callchain_branch_counts(struct callchain_root *root,
-> >> -			    u64 *branch_count, u64 *predicted_count,
-> >> -			    u64 *abort_count, u64 *cycles_count);
-> >> -
-> >>  void callchain_param_setup(u64 sample_type, const char *arch);
-> >>  
-> >>  bool callchain_cnode_matched(struct callchain_node *base_cnode,
-> >> -- 
-> >> 2.46.2
-> >>
-> > 
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+> +
+>  #endif /* __BPERF_STAT_U_H */
+> --
+> 2.34.1
+>
