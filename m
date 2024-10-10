@@ -1,193 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D8E91EA73
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Oct 2024 21:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6149C29A2
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Oct 2024 00:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728508433; cv=none; b=NDNHaTGEcrmV9/i+FUFXeyTsanpfpZvkGGjKFvpV2ga1cdyfS8HhsXfs3cIe5kBf1d8yu2mJ8aoKKi4oMPATCmbKajPFAYJRA/fQMhpA0GLVB46OTF+rgGZ1OBsxzgXp1wo6MQq0wGHWlGEMZqEUBSKHUhwUL0P0eSC7xBMLV9E=
+	t=1728518850; cv=none; b=Zfm/a7ppOFHsCgiy7SdDYaqQmDb1/7D0xnR7d2qxBoxIojcWWFB1T3MlcZT3sn9J2+UJkE2zrDh997pHSvO124N0x1ngT2bko3ojs3Wgq9LxW56rW701vilheGQSg3Nde56vqsyjvhhu0ZaOwcgCK5TPGC9wIowjwoBFkxjzaBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728508433; c=relaxed/simple;
-	bh=I97oXrR2A+o/p0R2T6cLh15jONBj/8LUwZoLk0HQxRc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KqLq5aziU4pGlq7MWyS+Cpkbkf6Anrx4fYgfXiv8RqRi8dOunwOGRLvHXnUPO77VSVwOjSoCKFkOdFKeg4IUQzlf3y+hl+1BUuSOImDYFjImggHzzZwHWxgQcir6LOXmsCD79vz8KZ1TKdOHaN673+XAflNN9KLBfPzz80nkwFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAAE9DA7;
-	Wed,  9 Oct 2024 14:14:18 -0700 (PDT)
-Received: from [10.57.22.175] (unknown [10.57.22.175])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F0F13F64C;
-	Wed,  9 Oct 2024 14:13:47 -0700 (PDT)
-Message-ID: <e3542d05-9bc3-45f7-98af-73be9db27359@arm.com>
-Date: Wed, 9 Oct 2024 22:13:42 +0100
+	s=arc-20240116; t=1728518850; c=relaxed/simple;
+	bh=873TCTNElKQX0bZntabxvE87Xk82g/cv1CuRKgs9g7A=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=gpeW8Qv0dZXSWapHBrD9mkOrWXwJBWm/X5Ql3ymcJUjynVZauastlbj6LoU0iPgy91QejQ2479VdffmLV6dIWna2n6InXp/xdw+jMhTr2MgeqwmEsD8PoRvQjtS1GUyKgHbyNsylkdniu2tnAaroP/HEiX3pdi/dGXkqKekq494=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u6IdLcU2; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u6IdLcU2"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e0b8fa94718so557279276.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Oct 2024 17:07:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728518848; x=1729123648; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wxLrGOjIUYrXf1Xm3RquDNZNVmQNpQ36swJ9i1PVT94=;
+        b=u6IdLcU2hdjgN7+Oqe0z977Qlk27hVrT4cX+8S5FxMQZEVuIOGScZmQA0Y6i6y21tT
+         MNePSAFbmEeB5l1qCzAZtZ2P7jnf5yzmrAraht6IMYAzTjfScB1rt2+VxKDuLh7UfBO0
+         WfeZM+tnO1/lX4Nmdgs8tcCuq4Fdoxz9foJ6pCwIqGJuK/+rKXJRBHBDU20BVbmCYB/S
+         TUq4Ms1LKAQWbDyAT3GuNDCzk0n9vc/DcRS6g4hDOvWM2a3wW3asKYSw1LYnyFx45tzs
+         SISUg5pFSaM5j+ewq6VzsFIPkOMZADaHZh27qfdyNMxTL8dRQeqQnRThAG+mgLHulB3p
+         wrcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728518848; x=1729123648;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wxLrGOjIUYrXf1Xm3RquDNZNVmQNpQ36swJ9i1PVT94=;
+        b=AMCtVccSCxWRHsbzLToJNqXS+etCHQOjtQd85RrSm0MnYRFC3DdH9GVbDPxQ9R2mJp
+         bZpmYifX62LbjuFeAF+H7nol6uLcSGb9bmgcY1NLsQPXc2/jkTEe/h1m9MBNgblUjh0T
+         +G+q9gXJbLW2pJelaWnaur3C3Adh5l4qww3MGL/oHJGVkYOQNFwezJV/CKOGU9qyt6+K
+         O0SVnQzijIE5pGRr5tQ95qNSrvcg3xswWCcaAzl4sDKJVthIxNV8vMGhBtKOJ3NXTd1I
+         4ZhX3TRa+gLiHtsHccgGnXx+MYGlfsPJKd8IJXEtzlwblHBvd1LGz44CBZmSc6bfjvby
+         eYOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmpBBLPqZlbDvsaaM/5aaxNeDVCZA+aL1NMTF03qV0MkV6g2QegwfqoJr/Hx3b8/WWTryr6911GUpIeisZaTSx@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7DhB3txJ2JAjej6HXfp2S3ytxcI9TADhydQlLSaXGuo5vULx9
+	BR6QfE+Krgy3kLE8uWyevOD8UNu1+1k2qrSXL12vO8PLNl4LBxKg40+lN5W6kBDNmSzp3h2vbp0
+	NI2e/WQ==
+X-Google-Smtp-Source: AGHT+IFay/ECMcmFAcUljtg9lOQdarFfE1jnU6vii9GYoXo19lPJtQcJUKrBTdhSQDmFgfSly7DwKWWJ7dIF
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6c8b:1170:a0ca:9d72])
+ (user=irogers job=sendgmr) by 2002:a25:ab6d:0:b0:e28:f8e6:f4c6 with SMTP id
+ 3f1490d57ef6-e28fe465652mr32303276.2.1728518848391; Wed, 09 Oct 2024 17:07:28
+ -0700 (PDT)
+Date: Wed,  9 Oct 2024 17:07:13 -0700
+Message-Id: <20241010000719.1172854-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V8 1/4] Add dso__is_pie call to identify ELF PIE
-To: Steve Clevenger <scclevenger@os.amperecomputing.com>,
- james.clark@linaro.org, mike.leach@linaro.org
-Cc: suzuki.poulose@arm.com, ilkka@os.amperecomputing.com,
- coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <cover.1725667397.git.scclevenger@os.amperecomputing.com>
- <18bb5281c3648a67bff61ce44966d3dfd7c09b4f.1725667397.git.scclevenger@os.amperecomputing.com>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <18bb5281c3648a67bff61ce44966d3dfd7c09b4f.1725667397.git.scclevenger@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
+Subject: [PATCH v2 0/6] CSV/JSON metric thresholds, fix printf modifiers
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Tim Chen <tim.c.chen@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Sumanth Korikkar <sumanthk@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 9/9/2024 10:30 PM, Steve Clevenger wrote:
-> 
-> Add dso__is_pie global to read the .dynamic section DT_FLAGS_1 entry for
-> the DF_1_PIE flag. This identifies position executable code.
-> 
-> Signed-off-by: Steve Clevenger <scclevenger@os.amperecomputing.com>
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
-> ---
->  tools/perf/util/symbol-elf.c | 61 ++++++++++++++++++++++++++++++++++++
->  tools/perf/util/symbol.h     |  1 +
->  2 files changed, 62 insertions(+)
-> 
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index e398abfd13a0..babe47976922 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -662,6 +662,67 @@ static int dso__synthesize_plt_got_symbols(struct dso *dso, Elf *elf,
->         return err;
->  }
-> 
-> +/*
-> + * Check dynamic section DT_FLAGS_1 for a Position Independent
-> + * Executable (PIE).
-> + */
-> +bool dso__is_pie(struct dso *dso)
-> +{
-> +       Elf *elf = NULL;
-> +       Elf_Scn *scn = NULL;
-> +       GElf_Ehdr ehdr;
-> +       GElf_Shdr shdr;
-> +       bool is_pie = false;
-> +       char dso_path[PATH_MAX];
-> +       int fd = -1;
-> +
-> +       if (!dso || (elf_version(EV_CURRENT) == EV_NONE))
-> +               goto exit;      // false
-> +
-> +       dso__build_id_filename(dso, dso_path, sizeof(dso_path), false);
-> +
-> +       fd = open(dso_path, O_RDONLY);
-> +
-> +       if (fd < 0) {
-> +               pr_debug("%s: cannot read cached %s.\n", __func__, dso_path);
-> +               goto exit;      // false
-> +       }
-> +
-> +       elf = elf_begin(fd, ELF_C_READ, NULL);
-> +       gelf_getehdr(elf, &ehdr);
-> +
-> +       if (ehdr.e_type == ET_DYN) {
-> +               Elf_Data *data;
-> +               GElf_Dyn *entry;
-> +               int n_entries = shdr.sh_size / sizeof(GElf_Dyn);
+Metric thresholds are being computed for CSV and JSON output but not
+displayed. Rename the color that encodes the threshold as enum values
+and use to generate string constants in a CSV column or json
+dictionary value.
 
-I took time to play this series on Arm64 machine and found issue in above
-sentence. As the 'shdr' strucutre is read out from elf_section_by_name()
-below, but it calculates the entries before reading out the section header.
-Therefore, I observed that program will not be detected as PIE executable due
-to 'n_entries' is 0.
+Add printf attribute to functions in color.h that could support
+it. Fix bad printf format strings that this detected.
 
-With fixing this bug, then I observed the regression caused by patch 02.
+v2. Don't display metric-value for json output if there is no unit.
 
-Below are steps:
+Ian Rogers (6):
+  perf color: Add printf format checking and resolve issues
+  perf stat: Fix/add parameter names for print_metric
+  perf stat: Display "none" for NaN with metric only json
+  perf stat: Drop metric-unit if unit is NULL
+  perf stat: Change color to threshold in print_metric
+  perf stat: Display metric threshold value in CSV output
 
-- Build test program with below command:
+ tools/perf/Documentation/perf-stat.txt    |   1 +
+ tools/perf/arch/x86/util/iostat.c         |   2 +-
+ tools/perf/builtin-sched.c                |   2 +-
+ tools/perf/builtin-script.c               |   6 +-
+ tools/perf/builtin-trace.c                |   2 +-
+ tools/perf/tests/shell/stat+csv_output.sh |  24 ++--
+ tools/perf/util/arm-spe.c                 |   2 +-
+ tools/perf/util/color.h                   |   9 +-
+ tools/perf/util/intel-bts.c               |   2 +-
+ tools/perf/util/intel-pt.c                |   2 +-
+ tools/perf/util/s390-cpumsf.c             |   2 +-
+ tools/perf/util/s390-sample-raw.c         |   6 +-
+ tools/perf/util/stat-display.c            |  80 ++++++++++----
+ tools/perf/util/stat-shadow.c             | 128 ++++++++++++----------
+ tools/perf/util/stat.h                    |  16 ++-
+ 15 files changed, 174 insertions(+), 110 deletions(-)
 
-  # gcc -pie -Wl,-z,relro,-z,now -o test test.c
-  # readelf readelf -a test | grep FLAGS
-  0x000000000000001e (FLAGS)              BIND_NOW
-  0x000000006ffffffb (FLAGS_1)            Flags: NOW PIE
+-- 
+2.47.0.rc1.288.g06298d1525-goog
 
-  The test program is a simple infinite loop. I run this program in a docker
-  container with Fedora 40.
-
-- Record trace data:
-
-  # perf record -e cycles -p 149531
-  # perf script
-
-            test  149531 483168.078485:       4986 cycles:      aaaacde401b4
-[unknown] (/home/test)
-            test  149531 483168.078564:     134207 cycles:      aaaacde401b4
-[unknown] (/home/test)
-            test  149531 483168.079305:    1257097 cycles:      aaaacde401b4
-[unknown] (/home/test)
-
-  You can see it fails to parse symbol and print out [unknown].
-
-  After I reverted patch 02 in this series, then:
-
-  # perf script
-            test  149531 483168.078485:       4986 cycles:      aaaacde401b4
-main+0xc (/home/test)
-            test  149531 483168.078564:     134207 cycles:      aaaacde401b4
-main+0xc (/home/test)
-            test  149531 483168.079305:    1257097 cycles:      aaaacde401b4
-main+0xc (/home/test)
-
-Not sure if I miss anything for PIE executable, seems to me, we should drop
-the first two patches and just pass pg_off to python script?
-
-Thanks,
-Leo
-
-> +
-> +               scn = elf_section_by_name(elf, &ehdr, &shdr, ".dynamic", NULL);
-> +               if (!scn)
-> +                       goto exit_close;        // false
-> +
-> +               data = (Elf_Data *) elf_getdata(scn, NULL);
-> +               if (!data || !data->d_buf)
-> +                       goto exit_close;        // false
-> +
-> +               // check DT_FLAGS_1
-> +               for (int i = 0; i < n_entries; i++) {
-> +                       entry = ((GElf_Dyn *) data->d_buf) + i;
-> +                       if (entry->d_tag == DT_FLAGS_1) {
-> +                               if ((entry->d_un.d_val & DF_1_PIE) != 0) {
-> +                                       is_pie = true;
-> +                                       break;
-> +                               }
-> +                       }
-> +               } // end for
-> +       }
-> +
-> +exit_close:
-> +       elf_end(elf);
-> +       close(fd);
-> +exit:
-> +       return is_pie;
-> +}
-> +
->  /*
->   * We need to check if we have a .dynsym, so that we can handle the
->   * .plt, synthesizing its symbols, that aren't on the symtabs (be it
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> index 3fb5d146d9b1..33ea2596ce31 100644
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-> @@ -127,6 +127,7 @@ void dso__insert_symbol(struct dso *dso,
->                         struct symbol *sym);
->  void dso__delete_symbol(struct dso *dso,
->                         struct symbol *sym);
-> +bool dso__is_pie(struct dso *dso);
-> 
->  struct symbol *dso__find_symbol(struct dso *dso, u64 addr);
->  struct symbol *dso__find_symbol_nocache(struct dso *dso, u64 addr);
-> --
-> 2.44.0
-> 
