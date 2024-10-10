@@ -1,54 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5183C28F1;
-	Thu, 10 Oct 2024 00:21:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DAC28F1;
+	Thu, 10 Oct 2024 00:22:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728519696; cv=none; b=pGXJq9ViniVVNIPfxA4e5K0GSxLx16bo+SQbJdtx96usAXL6pIYwpyWltFE0zv/LV/5Y1/QvXgvaoWihsguW7+mXJ7JFHIrdoho8xbsuG/+hcrQBwdWJ0UircCcaDRbtLmBauHbjcjPUKVID45AS5Xh0nHpT8e5dfP/rZ6MRtJI=
+	t=1728519773; cv=none; b=GcG/JqaIugvBUio445tOvr6CVUsgbxgyWjdzG6DCJGuQgeW7OGRqk/EJAQX2m6iBLOnWCrPeew4B/34aZG7djS5vpB+CRfY0WJD/PpqWg9omOjN+wHCI7IbZGC+Mprozzh+7zwgwJ0nMz98UGAs1kVHXqydrkJTVgJNyCQKFg5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728519696; c=relaxed/simple;
-	bh=B7hqZAaS2mOo9sVTu9vPgawB2ROJ3lP9/bA1L4lGT/c=;
+	s=arc-20240116; t=1728519773; c=relaxed/simple;
+	bh=QeHDIQcPBZ6hCPQRGNqJUDnSPF4LDoi4wKN3VkkkBZM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zyh/uPcf874mYURbW6QBRHrEvL2eUSIhZXS+na9F7Z3wJ4S4L/YODFr0ITLtdf1NgVV2SDaRqm6x/Xy75XvRJRNa6i+Us049i9W8CRtIVvWaez63TbYAFxyZ4Udwjymu7g4lPgNH3E05GqH1ElfYhj9PjmdAaaQkS0UrMUJuCPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nM2Wlcn4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nUKXGYExOvrEbwIcuxDjUiV6PmYe7UOdnUJOg5MSFHQwolQjiQNUrZlbyDAwp2pu14OYJMyEMCgYl013EFjla0AeIfoHI0g/2OIA2TE0GwAuPFvLC6R+VlhYcx0SpNNZpgN0nUVvoPabsPMTURmElVFU1pnNECwvafSsabM6Dgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLKuk00n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nM2Wlcn4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB2A8C4CEC3;
-	Thu, 10 Oct 2024 00:21:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLKuk00n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1123C4CEC3;
+	Thu, 10 Oct 2024 00:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728519695;
-	bh=B7hqZAaS2mOo9sVTu9vPgawB2ROJ3lP9/bA1L4lGT/c=;
+	s=k20201202; t=1728519773;
+	bh=QeHDIQcPBZ6hCPQRGNqJUDnSPF4LDoi4wKN3VkkkBZM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nM2Wlcn4xzfse8dAoKFug5dvbfO1zYtz6Fn6fmY7zCmRpg1UxQvN6i/0+U8QolGux
-	 ba5ntYdisUgqfxN7lVYR8npzOjpUiY0YEUCXGucBGkLki8HSeubrwcOhjO75+ZDPI5
-	 utJAlirwmgW/j8kp43PuH2rNTXkvRSJ7E1wr914Lp5VjfjmGLPNHXp6UjbPekVr8QC
-	 btcBb5DteiDaHfiovEJYg0POireUdK9h/onxxS60LxKGQlz2Y03HZEm3PO2Lss4Wpc
-	 VUWHJc/uO91fGjYPD7LHgd2nUplksd13XsiIOEGIN27gRCu6YGnkUWpsS1AwK9RBZW
-	 RsG9//WpluFZg==
-Date: Wed, 9 Oct 2024 17:21:33 -0700
+	b=rLKuk00nF/ieu6IVmNwwqzC2Bs3X/xEaaDEpSK4sNmi8PAoTv0NriRI5oPN3I7FoK
+	 najpdKyVucp4PlA7YxLUls6yjYGRxrjIzLRGPhEoGZh/t3Q6mjhzY4PFcqHd8Wjn+3
+	 g+LGzRoLUsrNPa2KngVifoVFtAmBXKljcs/YF9hMXh58C1ES8RvAhPF/hauqydvcS2
+	 VI8DIZMRTzKrnHr5iers1k/nku+Tmv2m46fRkiSz2vmLE/xMflwFhzflKxsblk6TIv
+	 4+w7876uLdZ88BeDrzpJzZoQm+PFdOfjWMXYt3b68M62NJia1ZKxTaavgPhf9of2iL
+	 KISW9025Lw2yg==
+Date: Wed, 9 Oct 2024 17:22:51 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: Frank.li@nxp.com, will@kernel.org, mark.rutland@arm.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, john.g.garry@oracle.com, james.clark@linaro.org,
-	mike.leach@linaro.org, leo.yan@linux.dev, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf vendor events arm64: Add i.MX91 DDR Performance
- Monitor metrics
-Message-ID: <ZwceDV3xNXijFF_8@google.com>
-References: <20240924061251.3387850-1-xu.yang_2@nxp.com>
- <20240924061251.3387850-3-xu.yang_2@nxp.com>
- <ZvsTJ47yHFUjo1uw@google.com>
- <20241008054935.zi2kqcaj4fwf2bda@hippo>
- <ZwYncyUlAtTAeOjo@google.com>
- <20241009093750.6mbq3zkmupahrzmm@hippo>
+To: Song Liu <song@kernel.org>
+Cc: Tengda Wu <wutengda@huaweicloud.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH -next v3 0/2] perf stat: Support inherit events for bperf
+Message-ID: <ZwceWxIoRw8r7ZIe@google.com>
+References: <20240916014318.267709-1-wutengda@huaweicloud.com>
+ <729eef63-6aed-44db-b18a-eb4bf96aeaab@huaweicloud.com>
+ <ZvTYduigMBtlmNbK@google.com>
+ <ZwYS4FEP5yMOCXEv@google.com>
+ <CAPhsuW5nDNicW5Pbavt60Q9W0rcgzLPRnfP7794T-SL0PkugAA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,43 +54,39 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241009093750.6mbq3zkmupahrzmm@hippo>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW5nDNicW5Pbavt60Q9W0rcgzLPRnfP7794T-SL0PkugAA@mail.gmail.com>
 
-On Wed, Oct 09, 2024 at 05:38:25PM +0800, Xu Yang wrote:
-> On Tue, Oct 08, 2024 at 11:49:23PM -0700, Namhyung Kim wrote:
-> > On Tue, Oct 08, 2024 at 01:49:35PM +0800, Xu Yang wrote:
-> > > Hi Namhyung,
-> > > 
-> > > On Mon, Sep 30, 2024 at 02:07:51PM -0700, Namhyung Kim wrote:
-> > > > Hello,
-> > > > 
-> > > > On Tue, Sep 24, 2024 at 02:12:51PM +0800, Xu Yang wrote:
-> > > > > Add JSON metrics for i.MX91 DDR Performance Monitor.
-> > > > > 
-> > > > > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> > > > > ---
-> > > > >  .../arch/arm64/freescale/imx91/sys/ddrc.json  |  9 +++++++
-> > > > >  .../arm64/freescale/imx91/sys/metrics.json    | 26 +++++++++++++++++++
-> > > > >  2 files changed, 35 insertions(+)
-> > > > >  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx91/sys/ddrc.json
-> > > > >  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx91/sys/metrics.json
-> > > > 
-> > > > How do you want to route this?  As it's mixed with kernel changes, I
-> > > > would generally request to split but it's a change just to add new
-> > > > files so it should be ok to go with other tree.  In that case,
-> > > 
-> > > Sorry for late.
-> > > 
-> > > How about you pick up this one to perf-tools tree and Will Deacon pick up
-> > > the first 2 patches to his tree? I didn't see Will apply perf-tools patch
-> > > before.
-> > 
-> > Did Will pick up the kernel patches already?
+Hi Song,
+
+On Wed, Oct 09, 2024 at 10:21:05AM -0700, Song Liu wrote:
+> Hi Namhyung,
 > 
-> Not yet. I could ping you once it's done, is it ok?
+> On Tue, Oct 8, 2024 at 10:21 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Wed, Sep 25, 2024 at 08:43:50PM -0700, Namhyung Kim wrote:
+> > > Hello,
+> > >
+> > > On Wed, Sep 25, 2024 at 10:16:16PM +0800, Tengda Wu wrote:
+> > > > Hello,
+> > > >
+> > > > Sorry for pinging again. Is there any other suggestion with this patch set?
+> > > > If there is, please let me know.
+> > >
+> > > Sorry I was traveling last week.  I think it's good now.
+> > >
+> > > Song, can I get your ack?
+> >
+> > He seems to be very busy.  I'll pick this up and run some tests.
+> 
+> Sorry for the late reply. I somehow missed the earlier email.
 
-Sure!
+No worries.
 
-Thanks,
+> 
+> I have a question and a nitpick for 1/2. Otherwise, this looks good
+> to me.
+
+Thanks for your reivew!
 Namhyung
 
