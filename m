@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DFF2AD33;
-	Thu, 10 Oct 2024 00:56:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF98B663;
+	Thu, 10 Oct 2024 00:59:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728521787; cv=none; b=iLOWrUoYNUGnzhnHyv0CUTr+AqI7T6NaJ8TBvg2iELntlwsUz7sG5kHxwvhe61RzxfY/s2EDsijrq3bPr1DHCBEbLYWm+oQNWcyUtda8uVhXXOEmiOh4lEshHp+0r705/bHp7tnBRaAghHtNutbkXzmLdZSy0EOnoH1JbY7gnog=
+	t=1728521980; cv=none; b=hQkyI4PIM1XQkHm/PZ/sCprZE6pazOKyXWeSvjMLTxFBqhC8pNv0Li165Gmgk3K8+TYSEMgpeJphTAsD7lOQBGHQDZRCEELMkWCuG7rhAsMkK9CbiruR5wVqyyrtkBuWBjI9bLWqGRF5zeiV6SxI+qVup11oQihi7VsAFnzeoDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728521787; c=relaxed/simple;
-	bh=eIXQdu5G0lTx04A4tDOo6481P4obHE3p359ClK5Pxyw=;
+	s=arc-20240116; t=1728521980; c=relaxed/simple;
+	bh=5HiOaXway9j6RVOALfB8fIBHanllp481Y52QUV0BwtA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XsY0dzy5x0hpjHxRJPTWkcBcAGy4RYgo4a2LzPIErEuQCao0HLv2CmLbIhZV3i4Rg+C73VUVON+gJG1snFZePfF/eXZo9B0pu1/pFdf5eE1ypgDvIyFnV2yM1wyyLDnumIVNJfy4XgZZJN5sa2n0DugneV8b2KRsQSQmPmI0SVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TckMWn+0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JTGIqrJXAI63W+pfiJQ8eSQ9NjaSqdYcLSziCJZ7YqV4hW5TuHpOR0bbu5SLyUZ6dt3KMCut2yv0j/b9GyElFdVgrcLwj0HbvcezR/HSb9tBdp5cPg5muIQG8BUdHn4AQuBYpW95FvZQ/mHaIDnMkPkp6tw6ORVY2t5Tjl+IvDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ejarvUAe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TckMWn+0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73802C4CEC3;
-	Thu, 10 Oct 2024 00:56:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ejarvUAe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DDE6C4CEC3;
+	Thu, 10 Oct 2024 00:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728521787;
-	bh=eIXQdu5G0lTx04A4tDOo6481P4obHE3p359ClK5Pxyw=;
+	s=k20201202; t=1728521979;
+	bh=5HiOaXway9j6RVOALfB8fIBHanllp481Y52QUV0BwtA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TckMWn+0/MfBHWt+5zIaSgdf52IEhxiCoPl9FYJNxrldZ88LiNQN5rdEEFmDVLdXZ
-	 a3JOc9iaVSEDxnuWkTHZUrhz5eA/3ycWo3dVHhF2vSGFcNufbME9KyTSfCAOVpzv7r
-	 wSu2e7L4OhKxoA2jHz8f9GwcuYt1sDq/TrFN5vOZrObhpl74uZYmy8dldFa40vyIZ2
-	 Rk06k06bANUyer0t8IMVete8iVB99fYb5oXMHg5BM1o9Ap67wFw+nLchVypewlZa3t
-	 ZpchJmY9VLAfOgBREL7LnR4VaftCNDIXuGNDNGPR7+TGvJOLiERZnMp7GVLhftSmBe
-	 02c6aBsmiuQTw==
-Date: Wed, 9 Oct 2024 17:56:25 -0700
+	b=ejarvUAeXnQLS3FvsEfTDcnXnigYg+tD/8DoaQ5nTIe7tfwitRB7CC08TEGs4a4vc
+	 8+Kbi7tkzxoCLdE6SMx0H4uGVCtz0Ezz7zmJzafFrVtbAjOaN447CFOgW5Ar9q8Orv
+	 4FGUx0B0if0ARNUK1m0TYs+EmbPwe8e9KP8Sirp7xr675uCddM38LwZsLiL1GsSRWg
+	 v0AlteLl6S1R05UBlmf7uGKhDFrMsfLYIisCaBT5nqM8vE9v1eF4f/K1yemAzMsZK0
+	 5q3lCWMpSj7gEwnWZx3tfzzStrRAvHjv0fPE/y5gPXQAlf6Ceuuu/jefYdR2Y6ktND
+	 5n6Pp5p60ME0Q==
+Date: Wed, 9 Oct 2024 17:59:37 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -36,20 +36,20 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
 	James Clark <james.clark@linaro.org>,
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-	zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Tim Chen <tim.c.chen@linux.intel.com>,
 	Thomas Richter <tmricht@linux.ibm.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>,
-	Leo Yan <leo.yan@linux.dev>, Howard Chu <howardchu95@gmail.com>,
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] Make a "Setup struct perf_event_attr" a shell test
-Message-ID: <ZwcmOeI2NDQw96mR@google.com>
-References: <20241001171950.233723-1-irogers@google.com>
- <CAP-5=fWExR7ae=dgiAG8BCtDN0XDwnzy9=SBbE0cy5S1Luw-4A@mail.gmail.com>
- <ZwYW54gKOfnUboeZ@google.com>
- <CAP-5=fUY8d4DN+ekpj5B58kvoksrPcWpZU=iZhs+=bFfpakK3Q@mail.gmail.com>
+	Sumanth Korikkar <sumanthk@linux.ibm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/8] CSV/JSON metric thresholds, fix printf modifiers
+Message-ID: <Zwcm-SHp6BcVCfPb@google.com>
+References: <20241004234120.1495209-1-irogers@google.com>
+ <ZwW2m5D2cnIabE_z@google.com>
+ <CAP-5=fV80pNi=jh48uq+99pSHV9aeE1X7LvDi=bY9sGQ0JVwkg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,177 +59,73 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUY8d4DN+ekpj5B58kvoksrPcWpZU=iZhs+=bFfpakK3Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fV80pNi=jh48uq+99pSHV9aeE1X7LvDi=bY9sGQ0JVwkg@mail.gmail.com>
 
-On Tue, Oct 08, 2024 at 10:59:59PM -0700, Ian Rogers wrote:
-> On Tue, Oct 8, 2024 at 10:38 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Tue, Oct 08, 2024 at 04:40:19PM -0700, Ian Rogers wrote:
+> On Tue, Oct 8, 2024 at 3:47 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > On Tue, Oct 08, 2024 at 11:55:29AM -0700, Ian Rogers wrote:
-> > > On Tue, Oct 1, 2024 at 10:19 AM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > The path detection for "Setup struct perf_event_attr" test is brittle
-> > > > and leads to the test frequently not running. Running shell tests is
-> > > > reasonably robust, so make the test a shell test. Move the test files
-> > > > to reflect this.
-> > >
-> > > Ping.
-> > >
-> > > I think this is worthwhile cleanup for the attributes test. It should
-> > > avoid problems like:
-> > > https://lore.kernel.org/lkml/ZroNTkdA8XDFaDks@x1/
+> > Hi Ian,
 > >
-> > Sorry, it's not clear to me what was the problem.  Can you please say it
-> > again briefly?
+> > On Fri, Oct 04, 2024 at 04:41:12PM -0700, Ian Rogers wrote:
+> > > Metric thresholds are being computed for CSV and JSON output but not
+> > > displayed. Rename the color that encodes the threshold as enum values
+> > > and use to generate string constants in a CSV column or json
+> > > dictionary value.
+> >
+> > IIUC it'd show "good" or "bad" when the metric defines a threshold and
+> > show "good", "less good", "nearly bad" or "bad" for the legacy shadow
+> > stats?  Anyway it's nice to show if the value is good or not.
 > 
-> If you build perf like:
-> make -C tools/perf O=/tmp/perf
-> 
-> Then run the built perf test for the "Setup struct perf_event_attr" it
-> skips (causing the tests to bitrot and fixes to be sent by Veronika):
-> ```
-> $ sudo /tmp/perf/perf test -vv perf_event_attr
-> capget syscall failed (No such file or directory - 2) fall back on root check
-> 17: Setup struct perf_event_attr:
-> 17: Setup struct perf_event_attr:
-> --- start ---
-> test child forked, pid 806601
-> Using CPUID GenuineIntel-6-8D-1
-> ---- end(-2) ----
-> 17: Setup struct perf_event_attr                                    : Skip
-> ```
-> 
-> The issue is around the path set up, the test has a few path
-> expectations but they are brittle as shown above. While we could
-> endeavour to set up the path in C code, it makes sense to migrate the
-> test to a shell test due to the tests smaller size, ease of
-> environment variable manipulation, existing perf test support for
-> better path setup, etc. Ie let's not reinvent the shell test
-> infrastructure that handles python tests for the sake of one C test.
-> After this change:
-> ```
-> $ sudo /tmp/perf/perf test attribute
-> 76: Perf attribute expectations test                                : Ok
-> ```
+> Correct. I'm open to suggestions for the names. The alternative to
+> showing the metric thresholds would be to drop them for CSV and JSON
+> output, which would reduce the number of events. With this approach
+> the thresholds can still be dropped with --metric-no-threshold.
 
-Ok, thanks for the explanation!
+Ok, I don't have better idea for the naming.
+
+Thanks,
 Namhyung
 
 > 
 > > >
-> > > > Ian Rogers (3):
-> > > >   perf test: Add a shell wrapper for "Setup struct perf_event_attr"
-> > > >   perf test: Remove C test wrapper for attr.py
-> > > >   perf test: Move attr files into shell directory where they are used
-> > > >
-> > > >  tools/perf/Makefile.perf                      |   5 +-
-> > > >  tools/perf/perf.c                             |   2 -
-> > > >  tools/perf/tests/Build                        |   1 -
-> > > >  tools/perf/tests/attr.c                       | 218 ------------------
-> > > >  tools/perf/tests/builtin-test.c               |   1 -
-> > > >  tools/perf/tests/shell/attr.sh                |  22 ++
-> > > >  tools/perf/tests/{ => shell}/attr/README      |   0
-> > > >  tools/perf/tests/{ => shell}/attr/base-record |   0
-> > > >  .../tests/{ => shell}/attr/base-record-spe    |   0
-> > > >  tools/perf/tests/{ => shell}/attr/base-stat   |   0
-> > > >  .../tests/{ => shell}/attr/system-wide-dummy  |   0
-> > > >  .../tests/{ => shell}/attr/test-record-C0     |   0
-> > > >  .../tests/{ => shell}/attr/test-record-basic  |   0
-> > > >  .../{ => shell}/attr/test-record-branch-any   |   0
-> > > >  .../attr/test-record-branch-filter-any        |   0
-> > > >  .../attr/test-record-branch-filter-any_call   |   0
-> > > >  .../attr/test-record-branch-filter-any_ret    |   0
-> > > >  .../attr/test-record-branch-filter-hv         |   0
-> > > >  .../attr/test-record-branch-filter-ind_call   |   0
-> > > >  .../attr/test-record-branch-filter-k          |   0
-> > > >  .../attr/test-record-branch-filter-u          |   0
-> > > >  .../tests/{ => shell}/attr/test-record-count  |   0
-> > > >  .../tests/{ => shell}/attr/test-record-data   |   0
-> > > >  .../{ => shell}/attr/test-record-dummy-C0     |   0
-> > > >  .../tests/{ => shell}/attr/test-record-freq   |   0
-> > > >  .../attr/test-record-graph-default            |   0
-> > > >  .../attr/test-record-graph-default-aarch64    |   0
-> > > >  .../{ => shell}/attr/test-record-graph-dwarf  |   0
-> > > >  .../{ => shell}/attr/test-record-graph-fp     |   0
-> > > >  .../attr/test-record-graph-fp-aarch64         |   0
-> > > >  .../attr/test-record-group-sampling           |   0
-> > > >  .../tests/{ => shell}/attr/test-record-group1 |   0
-> > > >  .../tests/{ => shell}/attr/test-record-group2 |   0
-> > > >  .../{ => shell}/attr/test-record-no-buffering |   0
-> > > >  .../{ => shell}/attr/test-record-no-inherit   |   0
-> > > >  .../{ => shell}/attr/test-record-no-samples   |   0
-> > > >  .../tests/{ => shell}/attr/test-record-period |   0
-> > > >  .../{ => shell}/attr/test-record-pfm-period   |   0
-> > > >  .../tests/{ => shell}/attr/test-record-raw    |   0
-> > > >  .../{ => shell}/attr/test-record-spe-period   |   0
-> > > >  .../attr/test-record-spe-period-term          |   0
-> > > >  .../attr/test-record-spe-physical-address     |   0
-> > > >  .../attr/test-record-user-regs-no-sve-aarch64 |   0
-> > > >  .../test-record-user-regs-old-sve-aarch64     |   0
-> > > >  .../attr/test-record-user-regs-sve-aarch64    |   0
-> > > >  .../perf/tests/{ => shell}/attr/test-stat-C0  |   0
-> > > >  .../tests/{ => shell}/attr/test-stat-basic    |   0
-> > > >  .../tests/{ => shell}/attr/test-stat-default  |   0
-> > > >  .../{ => shell}/attr/test-stat-detailed-1     |   0
-> > > >  .../{ => shell}/attr/test-stat-detailed-2     |   0
-> > > >  .../{ => shell}/attr/test-stat-detailed-3     |   0
-> > > >  .../tests/{ => shell}/attr/test-stat-group1   |   0
-> > > >  .../{ => shell}/attr/test-stat-no-inherit     |   0
-> > > >  tools/perf/tests/{ => shell/lib}/attr.py      |   0
-> > > >  tools/perf/tests/tests.h                      |   1 -
-> > > >  tools/perf/util/evsel.c                       | 122 +++++++++-
-> > > >  tools/perf/util/util.h                        |   7 -
-> > > >  57 files changed, 142 insertions(+), 237 deletions(-)
-> > > >  delete mode 100644 tools/perf/tests/attr.c
-> > > >  create mode 100755 tools/perf/tests/shell/attr.sh
-> > > >  rename tools/perf/tests/{ => shell}/attr/README (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/base-record (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/base-record-spe (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/base-stat (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/system-wide-dummy (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-C0 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-basic (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-branch-any (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-any (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-any_call (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-any_ret (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-hv (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-ind_call (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-k (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-u (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-count (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-data (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-dummy-C0 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-freq (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-graph-default (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-graph-default-aarch64 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-graph-dwarf (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-graph-fp (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-graph-fp-aarch64 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-group-sampling (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-group1 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-group2 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-no-buffering (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-no-inherit (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-no-samples (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-period (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-pfm-period (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-raw (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-spe-period (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-spe-period-term (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-spe-physical-address (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-user-regs-no-sve-aarch64 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-user-regs-old-sve-aarch64 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-record-user-regs-sve-aarch64 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-stat-C0 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-stat-basic (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-stat-default (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-stat-detailed-1 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-stat-detailed-2 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-stat-detailed-3 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-stat-group1 (100%)
-> > > >  rename tools/perf/tests/{ => shell}/attr/test-stat-no-inherit (100%)
-> > > >  rename tools/perf/tests/{ => shell/lib}/attr.py (100%)
-> > > >
-> > > > --
-> > > > 2.46.1.824.gd892dcdcdd-goog
-> > > >
+> > > Add printf attribute to functions in color.h that could support
+> > > it. Fix bad printf format strings that this detected.
+> > >
+> > > Ian Rogers (8):
+> > >   perf color: Add printf format checking and resolve issues
+> > >   perf stat: Fix/add parameter names for print_metric
+> > >   perf stat: Display "none" for NaN with metric only json
+> > >   perf stat: Drop metric-unit if unit is NULL
+> > >   perf stat: Change color to threshold in print_metric
+> > >   perf stat: Display metric threshold value in CSV output
+> > >   perf stat: Add metric-threshold to json output
+> > >   perf stat: Disable metric thresholds for CSV/JSON metric-only mode
+> >
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> >
+> > Thanks,
+> > Namhyung
+> >
+> > >
+> > >  tools/perf/Documentation/perf-stat.txt        |   1 +
+> > >  tools/perf/arch/x86/util/iostat.c             |   2 +-
+> > >  tools/perf/builtin-sched.c                    |   2 +-
+> > >  tools/perf/builtin-script.c                   |   6 +-
+> > >  tools/perf/builtin-stat.c                     |   8 ++
+> > >  tools/perf/builtin-trace.c                    |   2 +-
+> > >  .../tests/shell/lib/perf_json_output_lint.py  |   5 +-
+> > >  tools/perf/tests/shell/stat+csv_output.sh     |  24 ++--
+> > >  tools/perf/util/arm-spe.c                     |   2 +-
+> > >  tools/perf/util/color.h                       |   9 +-
+> > >  tools/perf/util/intel-bts.c                   |   2 +-
+> > >  tools/perf/util/intel-pt.c                    |   2 +-
+> > >  tools/perf/util/s390-cpumsf.c                 |   2 +-
+> > >  tools/perf/util/s390-sample-raw.c             |   6 +-
+> > >  tools/perf/util/stat-display.c                |  85 +++++++++---
+> > >  tools/perf/util/stat-shadow.c                 | 128 ++++++++++--------
+> > >  tools/perf/util/stat.h                        |  16 ++-
+> > >  17 files changed, 191 insertions(+), 111 deletions(-)
+> > >
+> > > --
+> > > 2.47.0.rc0.187.ge670bccf7e-goog
+> > >
