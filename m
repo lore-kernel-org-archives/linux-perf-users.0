@@ -1,46 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FAA1CDA23;
-	Thu, 10 Oct 2024 16:11:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4751C9B8C;
+	Thu, 10 Oct 2024 16:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728576661; cv=none; b=dvDechEOUeWXAYs2Xk32rYiRl4BCENeyoiFUQYK+OphSaYsoMMwStvJG7N9rRwLxWVmhCZ4H0RSXO4h0tQmDWGgckIyWH5i2vVIfO20ldx7xAF5BXlf5wsGVidnjyeU1JHHqHrDrYrU0MDmy9T1KY3xbmNHuLDHf9UP+JosMZ6M=
+	t=1728576934; cv=none; b=Z8BaE+cJpcB13Yb0pd6Zy+x+lzz6oYTzrFuAaMlvKN6ucIR8vHuIg0ml7OpOUWE4kXS+kHEOhecGHG96nJtry1/XOfG916hueWCvw0mRcUibKEC2SkHgWwa1Ggpm/sSndaOa2QDbXd+9RpVSznRYS5K2hJ1Zih+PkQkHMMTSOJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728576661; c=relaxed/simple;
-	bh=mO1M5lVTa79bIuXQiFTo7ewhsi/XZ+4dYMG4cO7vlzU=;
+	s=arc-20240116; t=1728576934; c=relaxed/simple;
+	bh=zrNx/YeB8J2J0TssxNZYPtIbOPuOqKNmsER4e59KXvQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n274qQt2fRuGFItuiLfImaO/A5Y6tvC0eHrQqy4zrN9dVtwdaPRZtG4rDeXtALdf9/mpeI05c+sduhh/+/UjXXOE1cAadTTFHid3++5IY/Sk4EkVhlaI4N/ax9OIOECyBNUamNZJOX4VIzUlMlEv4faRoCcK+IICRFk8DICkBoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Df7q5HwW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KO5lW9tIM5vjcR8y/v3IXkIXtWwYBCRGDVzTzifb5M98I5rfZykLGBhwGTlHAkNaWvIU+5pwm70QjioylAUtIEYxIG0cPhLgdMSmrSaqA/5fewwIk3Ki5vVRMILtAwTxhOAkEAxixzQcwYJqBeUMMpmmepIcawH6vH3VPUFb7ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGMRR69X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Df7q5HwW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED3BBC4CEC5;
-	Thu, 10 Oct 2024 16:10:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGMRR69X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF102C4CEC5;
+	Thu, 10 Oct 2024 16:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728576660;
-	bh=mO1M5lVTa79bIuXQiFTo7ewhsi/XZ+4dYMG4cO7vlzU=;
+	s=k20201202; t=1728576934;
+	bh=zrNx/YeB8J2J0TssxNZYPtIbOPuOqKNmsER4e59KXvQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Df7q5HwWj/ddG1mQzfquoASd/P0ba6/mLr/A9DsPRwiQkm9mzBLIVW5gcDFXuABps
-	 jBe4/N6UmIPD3v1EeDhAejGxfFIm9Odrdnu8/Rw9X01AJ5tVu1Ow9wyvvKHNCq5UkP
-	 RAh2EKxkReQWRYoGgiL1YnY/oytaaDJoiImzmoej2JIiAtoiPqVQETD2KrF++cd3u4
-	 JKIoQyQIS2hqIyP0nOaknfOtDOn8Y9g+yxqLqxizWMWKzavnXcGibtwjsxdTcl+aEy
-	 enBdSDQuZ38nkzkJgqnhkq/q4Tc657nKFd1Ho+P5EItZVdnH5LdTL8BKkLCLvcbQKF
-	 8QZYy5MnYyc3Q==
-Date: Thu, 10 Oct 2024 09:10:57 -0700
+	b=qGMRR69XF40rX13zQMVEO0upjxZU6sEChNiQ05ApqpqrgDsSgjC2fzcKUjhVNPYOL
+	 djdHZ2HAb2m72QFJwabP4PQYLdJppUmplGgOTigaxzbyRK165tAPw762+KkLhTbBza
+	 735GEAweS69mfJfCWcLsGRt3hj2Nv1HSZK9df/jx3RPu75ewm7nBu4acVuQEwOiuNj
+	 nivPNngdASB//3U3Ec/AsO0I7P3fwPORVJuYGfzh+wa0Irsi4/d/EmrCmIzFRys8cU
+	 D85KO33HFA1pCVTpaBpJwRzUEHyrG8UKPWZqAfjXa0TQ7aD6uWyiumzr6QiRlbEbuN
+	 zFZ3501s4FE3g==
+Date: Thu, 10 Oct 2024 09:15:31 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Leo Yan <leo.yan@arm.com>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/5] perf cpumap: Correct for perf_cpu_map__merge()
-Message-ID: <Zwf8kTiphIRniYw9@google.com>
-References: <20240925195325.426533-1-leo.yan@arm.com>
- <0a0bebe6-b104-4a84-9415-68fdee086a5f@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH 1/1] perf build: Require at least clang 16.0.6 to build
+ BPF skeletons
+Message-ID: <Zwf9o6YwL-Q1Q7WK@google.com>
+References: <CAH0uvojUEXiT2mk1pknLS1nc-gA3Py+AjmEW22ETiCCyOLLr8Q@mail.gmail.com>
+ <CAH0uvogXyYP1LqF3fbjZGHHDL6BFZ2ZKu5JAASnK_brgnymf0w@mail.gmail.com>
+ <CAH0uvohEozKixjDM9_jJ5FFxYK7agsqVO-BrAsm=4hCTDQAx2A@mail.gmail.com>
+ <9bbfe425-1f2b-4846-a5a3-a31618742e9a@oracle.com>
+ <CAH0uvojJ1rME4hb6NfrA4NPj2XmGMDLOLP3wEbHh8B5-qWGvFQ@mail.gmail.com>
+ <CAH0uvohW7_st0i=ek8rc_SucuQEQUgs+fWt12cc3jqiYfxAjmw@mail.gmail.com>
+ <ZwcnVKn3wVSSMcaL@google.com>
+ <CA+JHD93JgJL_4GJFcFUNu-FpNfFOoyDRJ7QuvO82M8G1EwM5pQ@mail.gmail.com>
+ <bcf50648-3c7e-4513-8717-0d14492c53b9@linaro.org>
+ <5f3f55a8-a378-4e16-8e5b-6fff329e75fd@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,31 +59,58 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0a0bebe6-b104-4a84-9415-68fdee086a5f@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5f3f55a8-a378-4e16-8e5b-6fff329e75fd@linaro.org>
 
-On Thu, Oct 10, 2024 at 04:01:21PM +0100, Leo Yan wrote:
-> On 9/25/24 20:53, Leo Yan wrote:
-> > perf_cpu_map__merge() has two arguments, 'orig' and 'other', as
-> > described in its original comment:
-> > 
-> > "orig either gets freed and replaced with a new map, or reused
-> > with no reference count change (similar to "realloc")
-> > other has its reference count increased."
-> > 
-> > This causes confusion due to the different reference counting on the CPU
-> > map objects, which complicates its usage and makes maintenance
-> > difficult. We also discussed this in the email [1].
-> > 
-> > This patch series makes that a new CPU map is allocated for the
-> > merging result, or the reference count is increased if an existing CPU
-> > map is reused. This means that once perf_cpu_map__merge() is invoked,
-> > the caller gains ownership of the resulting map and must release it
-> > with perf_cpu_map__put().
+On Thu, Oct 10, 2024 at 10:11:35AM +0100, James Clark wrote:
 > 
-> Gentle ping ...
-
-Ian and Adrian, can you please review this patchset?
-
-Thanks,
+> 
+> On 10/10/2024 10:00 am, James Clark wrote:
+> > 
+> > 
+> > On 10/10/2024 2:20 am, Arnaldo Carvalho de Melo wrote:
+> > > On Wed, Oct 9, 2024, 10:01 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > 
+> > > > On Tue, Oct 08, 2024 at 12:27:24AM -0700, Howard Chu wrote:
+> > > > > Hi Alan, Arnaldo and James,
+> > > > > 
+> > > > > This problem was solved in [PATCH 0/2] perf trace: Fix support for the
+> > > > > new BPF feature in clang 12 (Link:
+> > > > > 
+> > > > https://lore.kernel.org/linux-perf-users/20241007051414.2995674-1-
+> > > > howardchu95@gmail.com/T/#t
+> > > > ),
+> > > > > sorry I forgot to cc you two.
+> > > > > 
+> > > > > Alan's thought was correct. Thank you so much! :)
+> > > > 
+> > > > It'd be great if any of you can test this change.  Now I only have
+> > > > machines with clang 16.
+> > > > 
+> > > 
+> > > I'll test this tomorrow.
+> > > 
+> > > - Arnaldo
+> > > 
+> > > > 
+> > > > Thanks,
+> > > > Namhyung
+> > > > 
+> > > > 
+> > > 
+> > 
+> > Tested with clang 15:
+> > 
+> > $ sudo perf trace -e write --max-events=100 -- echo hello
+> > 
+> >    0.000 ( 0.014 ms): echo/834165 write(fd: 1, buf: hello\10, count: 6)
+> >                                             =
+> > 
+> > Tested-by: James Clark <james.clark@linaro.org>
+> > 
+> 
+> Should have left this tag on the actual patch. Will re-post it there.
+ 
+Right, thanks for taking care of this!
 Namhyung
 
