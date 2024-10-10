@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA6D18CC0B
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Oct 2024 01:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F7519006F
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Oct 2024 01:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728523314; cv=none; b=ZcOLDFvfYZ9JPDQw4oREiSQxnttVhsTWrW3wrsgrUa9qLbq1OEc9lHM8MbkRFYbot80vrL2XfPv+qerJJ5sjKMLQ7i9W8bgoA5RZb1rOfjYp1X8OCnuElAtRcfAEARtukn+CLL1LZ3jAuIfNB3Asu1KpWoLg2YlpneLS9hSAqYk=
+	t=1728523316; cv=none; b=gok94+jjSQS5C4qSU94MyQSgfhgSqrKaCWkjnvaspLPaaH4V5S2/MaUCxyvtwzV8BKL+m2Z6Y39WQd8YNzYbAMVPiMa3aQK+29Wwdtc+JC70QKxV+xdWqgInz3UMm2W5j7f8omol4ab47guGALPv3lzFkubK+9LPiXTVqYDe01A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728523314; c=relaxed/simple;
-	bh=i2P8XZ8C8+KW3cQpvcq8swJ4pl42rq2Dmo38yCruSj4=;
+	s=arc-20240116; t=1728523316; c=relaxed/simple;
+	bh=y9oDWwclikRMV44veYy4NteJ9B9046N9/nsDDXlj3AY=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=BFus9VleCSk5WmvRKpGH/gnOTnot8Y0uJRP0uovZoRFBJXFKIuBychVQyw05cNKOtlE9Ena6NSOxap/6d4yLZlHGTAPbCYMp8hgv+Dxr7Ow+R7LqZwTRJf5C1JQNmmXPrURNTaKX1nVa4EUawYrA461S5r4TNJIqaYsUXsqB6+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2MqcNIIv; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=iJdFvy4eKwRypqOiT0xaNHVRKZIrDWeXQz53ZREpcYcW7u1RnQpcb24l8FkCr/LvOhUkPQG5TGjT1IBetG0LGo0A5XO/sTYDMdZ6wwjfl61Z+ncP+hFhnQZIA44bWDKjgitiTodg1v+1t8lmEYSiKOyLs6ax12DWkE+gtndzFjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uk3mws3k; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2MqcNIIv"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e29b4f8837so6979937b3.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Oct 2024 18:21:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uk3mws3k"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e2d287f944so10816427b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Oct 2024 18:21:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728523311; x=1729128111; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1728523314; x=1729128114; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=SY35F8wtXf7s51KAxRJvlRRZZ0EtgMGdYbZDGjNC5K4=;
-        b=2MqcNIIvcaOaQY4s01zoYGqfyN2PCWclfuRgcVDYk+tEVZSbV+5PgSw8ukd+v5LKrI
-         NIVwZUKs9JQz+R/dZpi9JvPdWI32mW1+27LgCK7rRpr1BhvkxVfc62Su3Y66gL1yn6b5
-         OIz84H5QZj6GtDtXYMSeYCL74q7mm02xonDPodE+oDJyL/BV+FA+1q3qU2SQt/So/ipw
-         bjbYDw3zetdptbi132+0G9cfEgGEQCBRQbyNz1v83C7/nVk3qMwHZAwMkmhjLtj61d8N
-         GFIyZgvPTvnsgNORKIdKwOnxTjqfsa634fMBReNkUzUeP0ALJzJlA/PF4lu00nfl7Z6I
-         +XqQ==
+        bh=n7UO+Jwq3ZdJxz6tultIv+LNJVzpQeU7Lfk7TZbknkQ=;
+        b=Uk3mws3kJ6xntS0O/DN++jqMvV6P5B02JOlGsWi3rXfoEpk4MN2m3ArOsNYdUJRVnN
+         yQv6KzlTJk5aK2x7FmChIcWWfWsTjKzPTEjm76C+HlKdN7ZAzqZsJG2BMMMU4wZisVx7
+         hM6Oi5IL2fSGQ3bX8BmXS20wf3g2vmMW2YUFwy4omQSVCpLaLsvJ3SFVND47kibTB41n
+         EtP11WgP1hqoLbu7GI0rVZP8pF+YqK6bDi+V6yOSrrk3OgXhaB24VxDgYW3FNFw5p9UN
+         7L/OQOUKEImeXN+JuYvI9IvAXtpaIODpEkq0DVCRTWoGp5ju7r0pGReyT1VeYkUrfp7L
+         T0Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728523311; x=1729128111;
+        d=1e100.net; s=20230601; t=1728523314; x=1729128114;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SY35F8wtXf7s51KAxRJvlRRZZ0EtgMGdYbZDGjNC5K4=;
-        b=aKmfaqOVshkLCO1oXrRlN92SjcNw7LGShhrOe1VLnA9v5iBxS0tyj1zn2BlHyPnsfx
-         0/q4VhP+rMYkILobg18DZSyiTA+gDuuLKXMC+G7nvu2Uz+BHARrxYoCdoXmjiL2F5Pln
-         gSltx4aVQEcIko5K9ZXRqo6z1VN5o3RkrLVwUDyvxY6nehH7RPEhwTNB4ruMrpciDYNi
-         K559eYbt4OJ2ue9gFFIrZzlv1XD4fHFclekVG+ReEk8xyYRQTeS5IyRxS86szmYceBaF
-         +MaPtIbahbYbM3muaRbgWDblwqNmAqbLNGU4zTLf6qJVeLRHzhuRpXocO1e98ONG299v
-         gp1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXaGTdrCbfHcNq8Ya8wLVRb0I7LjRYTPDQg7Dmj7W4pNNKrCQSPFpos5Cq06+KQqfLDw6Lz8evpwgzKZfJSiKsQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywwpewf+c6gKsyHGWe5RfE5Sh7AMmL4q9nOFQDIg8W9EDxJnwJ6
-	8TUDJnDYr5sx/jmFllsMGkY/bXwZhHuSJVd3u6ldoYgVr95oWpw0G3FvKgaAoBver0l0XyBvwtl
-	UtKu6Hg==
-X-Google-Smtp-Source: AGHT+IEo+AhmVuRPXxAJrGcC75p7O4MsBrjj0rLuyL4dmA0Lwz++Jrcl9Ca9RTVSl405V6qIiOQYsSFnikKX
+        bh=n7UO+Jwq3ZdJxz6tultIv+LNJVzpQeU7Lfk7TZbknkQ=;
+        b=cZwHsWOyfWY0wH/OPJ9LZOdTRGofoVabks2hw7iFjyxGnTpF/DgKqzfEk0t7vz17+Z
+         FUHRvI3vJKqA8KB8xaI6eLuqq6k5KM3NT761sGagjhRdhW6lJuaiymaClsz884Sa4dNU
+         aj0ayycpOL6NwHc91ngg9+7wtqrHbbpQybcMJEn42QNEb5BPrJSwpr0cdMRQpHVlMD/q
+         r2F2wgCCSiwSceNthY8GOhv8wjqlhpDf6zkVDAmKjKY9ffj7KCIN4jDq/PIZTJJzR1NW
+         mPDfhrHopNEHqU2o7m2YH/Dc3NH/+nTGTuqnf+rcoFn2BC9dA1PeQClfKAnzABkmdncP
+         Q18Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX7dlN2ZNyUB7MeSS7GkRiX9KWNvAj8IsGNm9V62a+cfobLjfxbeDs3UX8d1my72I1nKo1a8HAGU5qF9cCHDWod@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd32hPFm8B4d0ygNpDoE+rOYPbiCyI5+kgCxOYFN1pRR52ufxG
+	IArLxO18KtRVOkWSO52k0lT/DKEm5w/m9zF4uTtO/y1jZZEKBXzNZt434t9uvK29hrEb9mdTf2j
+	HoOh+LQ==
+X-Google-Smtp-Source: AGHT+IH94d/FgOnQJGUCJA7UrSbuAGJUXY9x6cU/dfPnHY26ynRvGlw4Kx879HTPfkURmk14BaQfQXrnHOdX
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6c8b:1170:a0ca:9d72])
- (user=irogers job=sendgmr) by 2002:a05:690c:20a0:b0:6da:3596:21b8 with SMTP
- id 00721157ae682-6e32f32d904mr310327b3.4.1728523311622; Wed, 09 Oct 2024
- 18:21:51 -0700 (PDT)
-Date: Wed,  9 Oct 2024 18:21:32 -0700
+ (user=irogers job=sendgmr) by 2002:a5b:948:0:b0:e0b:958a:3344 with SMTP id
+ 3f1490d57ef6-e28fe44cd86mr79440276.10.1728523313861; Wed, 09 Oct 2024
+ 18:21:53 -0700 (PDT)
+Date: Wed,  9 Oct 2024 18:21:33 -0700
 In-Reply-To: <20241010012135.1272535-1-irogers@google.com>
-Message-Id: <20241010012135.1272535-7-irogers@google.com>
+Message-Id: <20241010012135.1272535-8-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241010012135.1272535-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
-Subject: [PATCH v2 6/8] perf stat: Display metric threshold value in CSV output
+Subject: [PATCH v2 7/8] perf stat: Add metric-threshold to json output
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,148 +76,90 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add a column with a metric threshold value. For example, the bad/good
-in the last column below:
+When the threshold isn't unknown add a value to the json like:
+"metric-threshold" : "good"
+
+A more complete example:
 ```
-$ perf stat -a -M topdownl1 -x, -I 1000
-1.000103288,4677067630,,TOPDOWN.SLOTS,16029302700,100.00,31.1,%  tma_backend_bound,bad
-1.000103288,,,,,,51.0,%  tma_frontend_bound,bad
-1.000103288,,,,,,7.6,%  tma_bad_speculation,good
-1.000103288,,,,,,10.2,%  tma_retiring,good
-1.000103288,476781750,,topdown-retiring,16029302700,100.00,,
-1.000103288,2389693619,,topdown-fe-bound,16029302700,100.00,,
-1.000103288,1431602465,,topdown-be-bound,16029302700,100.00,,
-1.000103288,378991388,,topdown-bad-spec,16029302700,100.00,,
-1.000103288,4934535,,INT_MISC.CLEARS_COUNT,16029339890,100.00,,
-1.000103288,56474476,,IDQ.MS_UOPS,16029292873,100.00,,
-1.000103288,3188888,,INT_MISC.UOP_DROPPING,16029239908,100.00,,
-1.000103288,484429099,,UOPS_RETIRED.SLOTS,16029176080,100.00,,
-1.000103288,49066178,,UOPS_DECODED.DEC0,16029100912,100.00,,
-1.000103288,26472844,,cpu/UOPS_DECODED.DEC0,cmask=1/,16029009707,100.00,,
-1.000103288,709313662,,UOPS_ISSUED.ANY,16028914990,100.00,,
-1.000103288,346833383,,IDQ.MITE_UOPS,16028820330,100.00,,
+$ perf stat -a -j -I 1000
+{"interval" : 1.001089747, "counter-value" : "16045.281449", "unit" : "msec", "event" : "cpu-clock", "event-runtime" : 16045355135, "pcnt-running" : 100.00, "metric-value" : "16.045281", "metric-unit" : "CPUs utilized"}
+{"interval" : 1.001089747, "counter-value" : "10003.000000", "unit" : "", "event" : "context-switches", "event-runtime" : 16045314844, "pcnt-running" : 100.00, "metric-value" : "623.423156", "metric-unit" : "/sec"}
+{"interval" : 1.001089747, "counter-value" : "328.000000", "unit" : "", "event" : "cpu-migrations", "event-runtime" : 16045321403, "pcnt-running" : 100.00, "metric-value" : "20.442147", "metric-unit" : "/sec"}
+{"interval" : 1.001089747, "counter-value" : "20114.000000", "unit" : "", "event" : "page-faults", "event-runtime" : 16045355927, "pcnt-running" : 100.00, "metric-value" : "1.253577", "metric-unit" : "K/sec"}
+{"interval" : 1.001089747, "counter-value" : "4066679471.000000", "unit" : "", "event" : "instructions", "event-runtime" : 16045369123, "pcnt-running" : 100.00, "metric-value" : "1.628330", "metric-unit" : "insn per cycle"}
+{"interval" : 1.001089747, "counter-value" : "2497454658.000000", "unit" : "", "event" : "cycles", "event-runtime" : 16045374810, "pcnt-running" : 100.00, "metric-value" : "0.155650", "metric-unit" : "GHz"}
+{"interval" : 1.001089747, "counter-value" : "914974294.000000", "unit" : "", "event" : "branches", "event-runtime" : 16045379877, "pcnt-running" : 100.00, "metric-value" : "57.024509", "metric-unit" : "M/sec"}
+{"interval" : 1.001089747, "counter-value" : "9237201.000000", "unit" : "", "event" : "branch-misses", "event-runtime" : 16045375017, "pcnt-running" : 100.00, "metric-value" : "1.009559", "metric-unit" : "of all branches", "metric-threshold" : "good"}
+{"interval" : 1.001089747, "event-runtime" : 16045397172, "pcnt-running" : 100.00, "metricgroup" : "TopdownL1"}
+{"interval" : 1.001089747, "metric-value" : "22.036686", "metric-unit" : "%  tma_backend_bound", "metric-threshold" : "bad"}
+{"interval" : 1.001089747, "metric-value" : "7.610161", "metric-unit" : "%  tma_bad_speculation", "metric-threshold" : "good"}
+{"interval" : 1.001089747, "metric-value" : "36.729687", "metric-unit" : "%  tma_frontend_bound", "metric-threshold" : "bad"}
+{"interval" : 1.001089747, "metric-value" : "33.623465", "metric-unit" : "%  tma_retiring"}
+...
 ```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/perf-stat.txt    |  1 +
- tools/perf/tests/shell/stat+csv_output.sh | 24 ++++++++++----------
- tools/perf/util/stat-display.c            | 27 +++++++++++++++++++----
- 3 files changed, 36 insertions(+), 16 deletions(-)
+ tools/perf/tests/shell/lib/perf_json_output_lint.py | 5 ++++-
+ tools/perf/util/stat-display.c                      | 9 +++++++--
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 2bc063672486..9bfa1a085e98 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -622,6 +622,7 @@ The fields are in this order:
- 	- optional variance if multiple values are collected with -r
- 	- optional metric value
- 	- optional unit of metric
-+	- optional how the value relates to a metric threshold
- 
- Additional metrics may be printed with all earlier fields being empty.
- 
-diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
-index fc2d8cc6e5e0..a3bc3c99b534 100755
---- a/tools/perf/tests/shell/stat+csv_output.sh
-+++ b/tools/perf/tests/shell/stat+csv_output.sh
-@@ -31,19 +31,19 @@ function commachecker()
- 	local exp=0
- 
- 	case "$1"
--	in "--no-args")		exp=6
--	;; "--system-wide")	exp=6
--	;; "--event")		exp=6
--	;; "--interval")	exp=7
-+	in "--no-args")		exp=7
-+	;; "--system-wide")	exp=7
-+	;; "--event")		exp=7
-+	;; "--interval")	exp=8
- 	;; "--per-thread")	exp=7
--	;; "--system-wide-no-aggr")	exp=7
--				[ "$(uname -m)" = "s390x" ] && exp='^[6-7]$'
--	;; "--per-core")	exp=8
--	;; "--per-socket")	exp=8
--	;; "--per-node")	exp=8
--	;; "--per-die")		exp=8
--	;; "--per-cluster")	exp=8
--	;; "--per-cache")	exp=8
-+	;; "--system-wide-no-aggr")	exp=8
-+				[ "$(uname -m)" = "s390x" ] && exp='^[7-8]$'
-+	;; "--per-core")	exp=9
-+	;; "--per-socket")	exp=9
-+	;; "--per-node")	exp=9
-+	;; "--per-die")		exp=9
-+	;; "--per-cluster")	exp=9
-+	;; "--per-cache")	exp=9
- 	esac
- 
- 	while read line
+diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+index abc1fd737782..8ddb85586131 100644
+--- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
++++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+@@ -57,6 +57,7 @@ def check_json_output(expected_items):
+       'interval': lambda x: isfloat(x),
+       'metric-unit': lambda x: True,
+       'metric-value': lambda x: isfloat(x),
++      'metric-threshold': lambda x: x in ['unknown', 'good', 'less good', 'nearly bad', 'bad'],
+       'metricgroup': lambda x: True,
+       'node': lambda x: True,
+       'pcnt-running': lambda x: isfloat(x),
+@@ -68,13 +69,15 @@ def check_json_output(expected_items):
+   for item in json.loads(input):
+     if expected_items != -1:
+       count = len(item)
+-      if count != expected_items and count >= 1 and count <= 6 and 'metric-value' in item:
++      if count != expected_items and count >= 1 and count <= 7 and 'metric-value' in item:
+         # Events that generate >1 metric may have isolated metric
+         # values and possibly other prefixes like interval, core,
+         # aggregate-number, or event-runtime/pcnt-running from multiplexing.
+         pass
+       elif count != expected_items and count >= 1 and count <= 5 and 'metricgroup' in item:
+         pass
++      elif count == expected_items + 1 and 'metric-threshold' in item:
++          pass
+       elif count != expected_items:
+         raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
+                            f' in \'{item}\'')
 diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 7d42f22cd5f8..5b5923730a7b 100644
+index 5b5923730a7b..f699e39abcd8 100644
 --- a/tools/perf/util/stat-display.c
 +++ b/tools/perf/util/stat-display.c
-@@ -85,6 +85,19 @@ const char *metric_threshold_classify__color(enum metric_threshold_classify thre
- 	return colors[thresh];
- }
+@@ -496,15 +496,20 @@ static void print_metric_csv(struct perf_stat_config *config,
  
-+static const char *metric_threshold_classify__str(enum metric_threshold_classify thresh)
-+{
-+	const char * const strs[] = {
-+		"unknown",
-+		"bad",
-+		"nearly bad",
-+		"less good",
-+		"good",
-+	};
-+	static_assert(ARRAY_SIZE(strs) - 1  == METRIC_THRESHOLD_GOOD, "missing enum value");
-+	return strs[thresh];
-+}
-+
- static void print_running_std(struct perf_stat_config *config, u64 run, u64 ena)
- {
- 	if (run != ena)
-@@ -454,14 +467,15 @@ static void new_line_csv(struct perf_stat_config *config, void *ctx)
- 		fputs(config->csv_sep, os->fh);
- }
- 
--static void print_metric_csv(struct perf_stat_config *config __maybe_unused,
-+static void print_metric_csv(struct perf_stat_config *config,
+ static void print_metric_json(struct perf_stat_config *config __maybe_unused,
  			     void *ctx,
 -			     enum metric_threshold_classify thresh __maybe_unused,
 +			     enum metric_threshold_classify thresh,
- 			     const char *fmt, const char *unit, double val)
+ 			     const char *fmt __maybe_unused,
+ 			     const char *unit, double val)
  {
  	struct outstate *os = ctx;
  	FILE *out = os->fh;
- 	char buf[64], *vals, *ends;
-+	const char *thresh_str = "";
  
- 	if (unit == NULL || fmt == NULL) {
- 		fprintf(out, "%s%s", config->csv_sep, config->csv_sep);
-@@ -472,7 +486,12 @@ static void print_metric_csv(struct perf_stat_config *config __maybe_unused,
- 	while (isdigit(*ends) || *ends == '.')
- 		ends++;
- 	*ends = 0;
--	fprintf(out, "%s%s%s%s", config->csv_sep, vals, config->csv_sep, skip_spaces(unit));
-+	if (thresh != METRIC_THRESHOLD_UNKNOWN || !rblist__empty(&config->metric_events))
-+		thresh_str = metric_threshold_classify__str(thresh);
-+	fprintf(out, "%s%s%s%s%s%s",
-+		config->csv_sep, vals,
-+		config->csv_sep, skip_spaces(unit),
-+		config->csv_sep, thresh_str);
+-	if (unit)
++	if (unit) {
+ 		fprintf(out, "\"metric-value\" : \"%f\", \"metric-unit\" : \"%s\"", val, unit);
++		if (thresh != METRIC_THRESHOLD_UNKNOWN) {
++			fprintf(out, ", \"metric-threshold\" : \"%s\"",
++				metric_threshold_classify__str(thresh));
++		}
++	}
+ 	if (!config->metric_only)
+ 		fprintf(out, "}");
  }
- 
- static void print_metric_json(struct perf_stat_config *config __maybe_unused,
-@@ -527,7 +546,7 @@ static void print_metricgroup_header_csv(struct perf_stat_config *config,
- 
- 	for (i = 0; i < os->nfields; i++)
- 		fputs(config->csv_sep, os->fh);
--	fprintf(config->output, "%s", metricgroup_name);
-+	fprintf(config->output, "%s%s", metricgroup_name, config->csv_sep);
- 	new_line_csv(config, ctx);
- }
- 
 -- 
 2.47.0.rc1.288.g06298d1525-goog
 
