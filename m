@@ -1,55 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF98B663;
-	Thu, 10 Oct 2024 00:59:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B83DF9D6;
+	Thu, 10 Oct 2024 01:01:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728521980; cv=none; b=hQkyI4PIM1XQkHm/PZ/sCprZE6pazOKyXWeSvjMLTxFBqhC8pNv0Li165Gmgk3K8+TYSEMgpeJphTAsD7lOQBGHQDZRCEELMkWCuG7rhAsMkK9CbiruR5wVqyyrtkBuWBjI9bLWqGRF5zeiV6SxI+qVup11oQihi7VsAFnzeoDk=
+	t=1728522070; cv=none; b=dUSSCGBSSm7GTNa0Stu13UFibgCPEC4qAs3i+Nxh5bJ/FDMIGeG7fmmEF+wcQ2IThvuB3djwXiFBHRr2orWuQhfiHX8MNK8OEel9+sPM3ByfZLmD59GycEUtdrIZiC1e6qBeC+MS9seEoKH6l0J0/JlkI7lGUuNjE/I+hlFD7YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728521980; c=relaxed/simple;
-	bh=5HiOaXway9j6RVOALfB8fIBHanllp481Y52QUV0BwtA=;
+	s=arc-20240116; t=1728522070; c=relaxed/simple;
+	bh=DpeB5UWr5Bb8oES9qXDvqB1/Pw3hbXWVNjFtf+W36Ow=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JTGIqrJXAI63W+pfiJQ8eSQ9NjaSqdYcLSziCJZ7YqV4hW5TuHpOR0bbu5SLyUZ6dt3KMCut2yv0j/b9GyElFdVgrcLwj0HbvcezR/HSb9tBdp5cPg5muIQG8BUdHn4AQuBYpW95FvZQ/mHaIDnMkPkp6tw6ORVY2t5Tjl+IvDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ejarvUAe; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fqlJoUfuxG7GVGp4CFNEOndrDU/vVK9MMV8JlMoEkiAWYWC4Eq9EtFW1pqVqvqb4KTwn39EFSyFvMnLiCisXnEncWP0FcMYoArZ09aQaXDoPjQnR0gr9FFQgcgIxxG5lpBHBy7HjDLfUoJOxeKZCGH2hhM5U/RkTlaGpOYmfHFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s8ORzYCT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ejarvUAe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DDE6C4CEC3;
-	Thu, 10 Oct 2024 00:59:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s8ORzYCT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A53CC4CEC3;
+	Thu, 10 Oct 2024 01:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728521979;
-	bh=5HiOaXway9j6RVOALfB8fIBHanllp481Y52QUV0BwtA=;
+	s=k20201202; t=1728522069;
+	bh=DpeB5UWr5Bb8oES9qXDvqB1/Pw3hbXWVNjFtf+W36Ow=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ejarvUAeXnQLS3FvsEfTDcnXnigYg+tD/8DoaQ5nTIe7tfwitRB7CC08TEGs4a4vc
-	 8+Kbi7tkzxoCLdE6SMx0H4uGVCtz0Ezz7zmJzafFrVtbAjOaN447CFOgW5Ar9q8Orv
-	 4FGUx0B0if0ARNUK1m0TYs+EmbPwe8e9KP8Sirp7xr675uCddM38LwZsLiL1GsSRWg
-	 v0AlteLl6S1R05UBlmf7uGKhDFrMsfLYIisCaBT5nqM8vE9v1eF4f/K1yemAzMsZK0
-	 5q3lCWMpSj7gEwnWZx3tfzzStrRAvHjv0fPE/y5gPXQAlf6Ceuuu/jefYdR2Y6ktND
-	 5n6Pp5p60ME0Q==
-Date: Wed, 9 Oct 2024 17:59:37 -0700
+	b=s8ORzYCTeYXPJAEUkV/ulCHp01iGvhr9UK67dKySFI+txfdyWr395q8DTkG/u1M5+
+	 2hjwsknNZMbcehlq2JmjJlQsEVASp93fzS6VN9IVcUeZy0vmnfm1nb4sfmvgeze9J5
+	 9UX9hLkWB7+BxJznALD0kQ0z5DHJlnwHfcZL/4Nmuy0ssGtr3jH6TEZ6hmlebb/yHV
+	 OWjjNDpNjtHfFu+2Q0nNKFxSvJlnGU0QpJUm4Esm+uyxXpsZmJNeLd5K394jo6h6J6
+	 cp/Z2EPI6tjPK/AJo6Q9IAGuy6qPK87JL7lARUyTIB3L4mBzgnNNpQ5EKjcvro8pc8
+	 f8hulp7/CU9KA==
+Date: Wed, 9 Oct 2024 18:01:08 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Alan Maguire <alan.maguire@oracle.com>,
+	Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
 	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Tim Chen <tim.c.chen@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Sumanth Korikkar <sumanthk@linux.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/8] CSV/JSON metric thresholds, fix printf modifiers
-Message-ID: <Zwcm-SHp6BcVCfPb@google.com>
-References: <20241004234120.1495209-1-irogers@google.com>
- <ZwW2m5D2cnIabE_z@google.com>
- <CAP-5=fV80pNi=jh48uq+99pSHV9aeE1X7LvDi=bY9sGQ0JVwkg@mail.gmail.com>
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH 1/1] perf build: Require at least clang 16.0.6 to build
+ BPF skeletons
+Message-ID: <ZwcnVKn3wVSSMcaL@google.com>
+References: <caad2d84-a8ff-4304-b8ab-04642ea18323@linaro.org>
+ <ZuL_0V5jgaaEUOY_@x1>
+ <49fe18ff-827a-429b-9d74-9d8ed02ac409@linaro.org>
+ <CA+JHD936J-q0-7LANQ3aW2G-PEmFP8PnXQ-TF-AMs9MtrCqfew@mail.gmail.com>
+ <CAH0uvojUEXiT2mk1pknLS1nc-gA3Py+AjmEW22ETiCCyOLLr8Q@mail.gmail.com>
+ <CAH0uvogXyYP1LqF3fbjZGHHDL6BFZ2ZKu5JAASnK_brgnymf0w@mail.gmail.com>
+ <CAH0uvohEozKixjDM9_jJ5FFxYK7agsqVO-BrAsm=4hCTDQAx2A@mail.gmail.com>
+ <9bbfe425-1f2b-4846-a5a3-a31618742e9a@oracle.com>
+ <CAH0uvojJ1rME4hb6NfrA4NPj2XmGMDLOLP3wEbHh8B5-qWGvFQ@mail.gmail.com>
+ <CAH0uvohW7_st0i=ek8rc_SucuQEQUgs+fWt12cc3jqiYfxAjmw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,74 +59,21 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fV80pNi=jh48uq+99pSHV9aeE1X7LvDi=bY9sGQ0JVwkg@mail.gmail.com>
+In-Reply-To: <CAH0uvohW7_st0i=ek8rc_SucuQEQUgs+fWt12cc3jqiYfxAjmw@mail.gmail.com>
 
-On Tue, Oct 08, 2024 at 04:40:19PM -0700, Ian Rogers wrote:
-> On Tue, Oct 8, 2024 at 3:47 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi Ian,
-> >
-> > On Fri, Oct 04, 2024 at 04:41:12PM -0700, Ian Rogers wrote:
-> > > Metric thresholds are being computed for CSV and JSON output but not
-> > > displayed. Rename the color that encodes the threshold as enum values
-> > > and use to generate string constants in a CSV column or json
-> > > dictionary value.
-> >
-> > IIUC it'd show "good" or "bad" when the metric defines a threshold and
-> > show "good", "less good", "nearly bad" or "bad" for the legacy shadow
-> > stats?  Anyway it's nice to show if the value is good or not.
+On Tue, Oct 08, 2024 at 12:27:24AM -0700, Howard Chu wrote:
+> Hi Alan, Arnaldo and James,
 > 
-> Correct. I'm open to suggestions for the names. The alternative to
-> showing the metric thresholds would be to drop them for CSV and JSON
-> output, which would reduce the number of events. With this approach
-> the thresholds can still be dropped with --metric-no-threshold.
+> This problem was solved in [PATCH 0/2] perf trace: Fix support for the
+> new BPF feature in clang 12 (Link:
+> https://lore.kernel.org/linux-perf-users/20241007051414.2995674-1-howardchu95@gmail.com/T/#t),
+> sorry I forgot to cc you two.
+> 
+> Alan's thought was correct. Thank you so much! :)
 
-Ok, I don't have better idea for the naming.
+It'd be great if any of you can test this change.  Now I only have
+machines with clang 16.
 
 Thanks,
 Namhyung
 
-> 
-> > >
-> > > Add printf attribute to functions in color.h that could support
-> > > it. Fix bad printf format strings that this detected.
-> > >
-> > > Ian Rogers (8):
-> > >   perf color: Add printf format checking and resolve issues
-> > >   perf stat: Fix/add parameter names for print_metric
-> > >   perf stat: Display "none" for NaN with metric only json
-> > >   perf stat: Drop metric-unit if unit is NULL
-> > >   perf stat: Change color to threshold in print_metric
-> > >   perf stat: Display metric threshold value in CSV output
-> > >   perf stat: Add metric-threshold to json output
-> > >   perf stat: Disable metric thresholds for CSV/JSON metric-only mode
-> >
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> >
-> > Thanks,
-> > Namhyung
-> >
-> > >
-> > >  tools/perf/Documentation/perf-stat.txt        |   1 +
-> > >  tools/perf/arch/x86/util/iostat.c             |   2 +-
-> > >  tools/perf/builtin-sched.c                    |   2 +-
-> > >  tools/perf/builtin-script.c                   |   6 +-
-> > >  tools/perf/builtin-stat.c                     |   8 ++
-> > >  tools/perf/builtin-trace.c                    |   2 +-
-> > >  .../tests/shell/lib/perf_json_output_lint.py  |   5 +-
-> > >  tools/perf/tests/shell/stat+csv_output.sh     |  24 ++--
-> > >  tools/perf/util/arm-spe.c                     |   2 +-
-> > >  tools/perf/util/color.h                       |   9 +-
-> > >  tools/perf/util/intel-bts.c                   |   2 +-
-> > >  tools/perf/util/intel-pt.c                    |   2 +-
-> > >  tools/perf/util/s390-cpumsf.c                 |   2 +-
-> > >  tools/perf/util/s390-sample-raw.c             |   6 +-
-> > >  tools/perf/util/stat-display.c                |  85 +++++++++---
-> > >  tools/perf/util/stat-shadow.c                 | 128 ++++++++++--------
-> > >  tools/perf/util/stat.h                        |  16 ++-
-> > >  17 files changed, 191 insertions(+), 111 deletions(-)
-> > >
-> > > --
-> > > 2.47.0.rc0.187.ge670bccf7e-goog
-> > >
