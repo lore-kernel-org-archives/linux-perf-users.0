@@ -1,65 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EA31BD008
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Oct 2024 13:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794181C8FD6
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Oct 2024 13:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728567064; cv=none; b=TZHbMwbJWDLJS4hg32vth1KgSQLBVxaD7CYWOAFGsEK8ZnzW/d6z/P0rIhosF0WjhLxIh8wuiwOyrIAEgKpzDH+iYl8nnrJyJMOUhIrBfCCVt7QrdfNAXat/ls2dqjnl/fczJZo71X6Qvo0ZuhM5+uIw3lwuE3sdZM1amXFRAEs=
+	t=1728568424; cv=none; b=QudvYwCtWclnPzKUOii25KrTYhjtNpN5M/rgAw+wO1TSgY8S6eUUugxBfs/UlyOUQpdAA01xFcxN5+EcYNgVwJ8OLdnsdJJonqRJiPr0UQwjWUvN812ICkzll90s3P8io8F8n8hjtIvYINXecZiDFZFaFBrQOoKO6NI0FBKlHwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728567064; c=relaxed/simple;
-	bh=RAeT9dWaVvX50JO8iGikj6tcJ7e+xOQyH6qeBjsxXvY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nr9qxCczt1Pc6OfmPxWzfjD3gAurKGwVtQWidnlPXV9SP4ZeH6cYNWKlBGURnJ14Vl+MxgwbaY8mUNx85k68WHLU+sEcQFzmiOrTjnsBERpfXLy6Y3IGlS9OjTrFt6vLNBBdyINkiX14k7U9+cEY3ZgKpEmWAjeKGz64IhhO62w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GDD7U2Xg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1728568424; c=relaxed/simple;
+	bh=xQBn55PN23aO9670OjnpZ+dbvgmFwudgJXE9e0tDqI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=daOjPrmC51hUTd9H0kv1tcayBLFpWd5bkXPhDPjkPNDNk5ZIuB+Sl3dx55pKk9v5qLlPlDAutIK+OLZIG1YnF1Yf2dR+kBa8NZDbgBxKepfvfj3O6lNtTm1L6o2Vxtj84mFt/SxHOeWijFKP4cGgcU1/OKoT/vV4wfzU31vvDwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zr2T0mgk; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GDD7U2Xg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728567061;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eTKtgjp1F3aWNeuAifuNRtvQEuoZmhxWojg4DlEXQTA=;
-	b=GDD7U2XgWTjOrGJjtTtMXpjI0bB5YkyHPbNUQh0zZtBp85PNXHbtPs7pYKRDdWRWFhB+Dq
-	+qN9o8Sczbp17BS4UPo16mgga2sZhn+I3Vw1G7dxfsDVreV+IRqQkUtyT3Lu+MkDGPvRTl
-	kw9/21qnVhF9a5KxTzQeaEghjwaiLDY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-148-rpcygN8XPo6tsWwgc4PswA-1; Thu, 10 Oct 2024 09:31:00 -0400
-X-MC-Unique: rpcygN8XPo6tsWwgc4PswA-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-42cb635b108so5928665e9.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Oct 2024 06:31:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zr2T0mgk"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-430ee5c9570so10410725e9.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Oct 2024 06:53:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1728568421; x=1729173221; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZZWASQJRTemAf/zxW7UcNYsAfxwrSESa7YfVw9wIktk=;
+        b=zr2T0mgkzfiJ6nH61rXD0w9XvkV5KOZ/P5ElHS7BsXRb+t6P6YUmmT24TAR6SuD0YM
+         tRM4tf/pddwJH/MsEzJj8UPQNO+tYQpnyVkJcu8fxrPQNLE/V16F0u0KMOLTNL+LYPV/
+         K1gqYLQIEEGa5PeYXU/4vQ4gQpHW7M53GpqXZbU5KqUTjSwwiYO5OlIcEIItlHjAaJCR
+         p/Je49HO4KnWwm7j70Vke0/SnKN0oFXofZUcxHMQey9z3p6pYX4Qo5OkSXfM2JktuHKk
+         KUO0uBY+yAZHndYcfSHzAMvQRymJNRG3IF/Tyjk+qHJceEIpK1X+TOdYckLwzmBNjmEX
+         SgUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728567059; x=1729171859;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1728568421; x=1729173221;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eTKtgjp1F3aWNeuAifuNRtvQEuoZmhxWojg4DlEXQTA=;
-        b=bDbd9KobxaQOuyy+AbA8488HQWtHhaoPTFX08gZPOx8WJr0wWXfWggQzYingzZWIYl
-         5l1FfENYDp2ovCYn8fkHlTyfwGBwwe8NOcLUmpmhpa6RieSHfwSJC4f6mj/BXKoLAABf
-         4I8N0xEzIlk0qnpkwqnlsvzieD5Uz4hMhBX+Azyi1XyBwi5pxvmAO7Bh9xcJmNT3nVkh
-         WYEJVUJXCjLn0Jx+gdv6Sh2HfjhphMYTUVwceOuaON788lmITcTbcNIbPIgLCGKpvVNO
-         clBoF/6WHg9RxyD+wtWEERiSp5Gu1gPzSVV9B5Yy03kaJ8gami2Ivmr2dS2Ddcu0kteD
-         9Mng==
-X-Forwarded-Encrypted: i=1; AJvYcCUxsG9VGFMTORKTu4K66hixzvakkxmyuD6/qMlC+X+KAv0ZRV4fMcDQOBKl3mv0GmljWoe2iobG8cldSnumJYZ0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyq8JWiRB7136Tw7zoagUudgUyhjgZ20p045Ww68OUtKmsE7j7/
-	as/kJigD4w1MhF2J2X9CPbY+tpgQH5tgizFhR6nAmTAUU07pMHtyZGWtkbbdGap+Rq1opjk5nFK
-	lCc0tmJq5h3TdmLacAszYqGDXqwj6Wc9plI51UIXyDBNJzcIk57lraUJCIvmGZn6mBF0=
-X-Received: by 2002:a05:600c:35d0:b0:42f:8515:e47d with SMTP id 5b1f17b1804b1-430ccf0de00mr56339395e9.11.1728567059524;
-        Thu, 10 Oct 2024 06:30:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF6oPgRswZ5lz3CiF7L4v0dfSvKhzugBSUZ0yuYpCt9k18Tu/ZJ8Tt1A1uiDFRBHqxas6HaIg==
-X-Received: by 2002:a05:600c:35d0:b0:42f:8515:e47d with SMTP id 5b1f17b1804b1-430ccf0de00mr56339095e9.11.1728567059076;
-        Thu, 10 Oct 2024 06:30:59 -0700 (PDT)
-Received: from [10.202.147.124] (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b2780c1sm1598224f8f.0.2024.10.10.06.30.58
+        bh=ZZWASQJRTemAf/zxW7UcNYsAfxwrSESa7YfVw9wIktk=;
+        b=JbHBI28zPK8u9VgZ3Bt0F7nr8XJOpkiLY3cZv8Zzxxa3svTHn0y8DQgo75OtsGT+zt
+         f3142msVtaQcGsKiVJpOVYQbAq7zrRgBPHaUPYY4oK6Z9Eyv3gTJ0fEff+zYG2nr4vta
+         c9FmEJkP2ZLQrvQ1Ze8yCixTsY+RS6s/uOae08MZWeRdn5llKHcnXiMC9OT3IMrJ5vCy
+         fPQIQekCxQAExfNCF8goslTTorN+KpNZScxOukHnkGC585YJiIYIGnqK8Zuu2I06fHnP
+         PS9863YveAi9VtMYJataRlOZh9qVVDXPBzV7i5+38xu4bvWaz9OjMVwLyQg+iVhQsypG
+         r4eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXXGaWKJkbODAxzqqftxduFFsniB7g5OrqshfHj80V0kbkN8g8izuH8SQN0glFgZ0f5A+3p0JuHBf0oIfS6Z6KT@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeV7PmCTyGOs8Z5uFV7p3Dqi3nOi/gJnsbcrhQu+QZ5CJ1h/1V
+	NkqyaMJmnnbqJ6jXglDYAQpkG2enqw5tMQFnEpZmvXIjDe4Lpl+txIhTAZ++h/R26kZXV591cB3
+	Egzs=
+X-Google-Smtp-Source: AGHT+IEeAJA5sdaCjGTwxs4gLczR4r2Ovs8C0vOUYnCLqOz3bZD5qg7zVil2Ky5cHBPgaIUQEIppKw==
+X-Received: by 2002:a05:600c:1f0d:b0:430:85be:32cb with SMTP id 5b1f17b1804b1-430ccf4f5camr57977055e9.18.1728568420734;
+        Thu, 10 Oct 2024 06:53:40 -0700 (PDT)
+Received: from [192.168.1.3] ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b6a8227sm1626662f8f.17.2024.10.10.06.53.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2024 06:30:58 -0700 (PDT)
-Message-ID: <af8c186d-72ba-4fcb-8737-84b665017cdd@redhat.com>
-Date: Thu, 10 Oct 2024 15:30:57 +0200
+        Thu, 10 Oct 2024 06:53:40 -0700 (PDT)
+Message-ID: <555fbea8-7103-4de1-bcd5-accc9c649e62@linaro.org>
+Date: Thu, 10 Oct 2024 14:53:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,72 +62,101 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf test: Fix probe testsuite with a new error message
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Michael Petlan <mpetlan@redhat.com>
-References: <20241010051620.1066407-1-namhyung@kernel.org>
- <ZwfNL2sLL8cDy2au@x1> <ZwfNmDNzQAXf0ZQV@x1>
+Subject: Re: [PATCH v3 4/7] perf arm-spe: Use metadata to decide the data
+ source feature
+To: Leo Yan <leo.yan@arm.com>
+References: <20241003185322.192357-1-leo.yan@arm.com>
+ <20241003185322.192357-5-leo.yan@arm.com>
 Content-Language: en-US
-From: Veronika Molnarova <vmolnaro@redhat.com>
-In-Reply-To: <ZwfNmDNzQAXf0ZQV@x1>
-Content-Type: text/plain; charset=UTF-8
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Besar Wicaksono <bwicaksono@nvidia.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Mike Leach <mike.leach@linaro.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20241003185322.192357-5-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 10/10/24 14:50, Arnaldo Carvalho de Melo wrote:
-> On Thu, Oct 10, 2024 at 09:48:52AM -0300, Arnaldo Carvalho de Melo wrote:
->> On Wed, Oct 09, 2024 at 10:16:20PM -0700, Namhyung Kim wrote:
->>> On my system, it's constantly failing because of new error message from
->>> perf probe.  It should update the regex pattern to match the message -
->>> "A function DIE doesn't have decl_line. Maybe broken DWARF?".
->>>
->>>   $ sudo head -n 2 /sys/kernel/debug/kprobes/blacklist | cut -f2
->>>   warn_thunk_thunk
->>>   asm_exc_divide_error
->>>
->>>   $ sudo perf probe warn_thunk_thunk
->>>   A function DIE doesn't have decl_line. Maybe broken DWARF?
->>>   A function DIE doesn't have decl_line. Maybe broken DWARF?
->>>   Probe point 'warn_thunk_thunk' not found.
->>>     Error: Failed to add events.
->>>
->>>   $ sudo perf probe asm_exc_overflow
->>>   Failed to find scope of probe point.
->>>     Error: Failed to add events.
->>
->> We discussed this in the past, I came up with a similar patch, Veronika
->> rightly pointed out that this may point to a real problem, Masami said
->> that since these are for DWARF from assembly those are known issues, I
->> suggested Veronika checked if the CU where the function came from was
->> generated from Assembly (there are DWARF tags that have that info), IIRC
->> she said she would try to do it.
->>
->> I'll try to find out the threads and see what happened.
+On 03/10/2024 7:53 pm, Leo Yan wrote:
+> Use the info in the metadata to decide if the data source feature is
+> supported. The CPU MIDR must be in the CPU list for the common data
+> source encoding.
 > 
-> https://lore.kernel.org/all/ZvXhJLkJcR99Y2sF@google.com/T/#u
+> For the metadata version 1, it doesn't include info for MIDR. In this
+> case, due to absent info for making decision, print out warning to
+> remind users to upgrade tool and returns false.
 > 
-> Veronika, was there a v3?
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>   tools/perf/util/arm-spe.c | 67 +++++++++++++++++++++++++++++++++++++--
+>   1 file changed, 64 insertions(+), 3 deletions(-)
 > 
-> Thanks,
-Well the patch was already applied upstream so we are talking about a fix
-not v3, right? As Arnaldo mentioned, I got together a fix patch that checks
-the CU for the Assembly for blacklisted probe. Michael also suggested the 
-possibility to check multiple blacklisted probes if we are not able to check
-for the Assembly, so I also added that.
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index 587943b6bdb8..9221b2f66bbe 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -278,6 +278,20 @@ static int arm_spe_set_tid(struct arm_spe_queue *speq, pid_t tid)
+>   	return 0;
+>   }
+>   
+> +static u64 *arm_spe__get_metadata_by_cpu(struct arm_spe *spe, u64 cpu)
+> +{
+> +	u64 i;
+> +
+> +	if (!spe->metadata)
+> +		return NULL;
+> +
+> +	for (i = 0; i < spe->metadata_nr_cpu; i++)
+> +		if (spe->metadata[i][ARM_SPE_CPU] == cpu)
+> +			return spe->metadata[i];
+> +
+> +	return NULL;
+> +}
+> +
+>   static struct simd_flags arm_spe__synth_simd_flags(const struct arm_spe_record *record)
+>   {
+>   	struct simd_flags simd_flags = {};
+> @@ -520,10 +534,57 @@ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+>   		data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
+>   }
+>   
+> -static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
+> +static bool arm_spe__is_common_ds_encoding(struct arm_spe_queue *speq)
+> +{
+> +	struct arm_spe *spe = speq->spe;
+> +	bool is_in_cpu_list;
+> +	u64 *metadata = NULL;
+> +	u64 midr = 0;
+> +
+> +	/*
+> +	 * Metadata version 1 doesn't contain any info for MIDR.
+> +	 * Simply return false in this case.
+> +	 */
+> +	if (spe->metadata_ver == 1) {
+> +		pr_warning_once("The data file contains metadata version 1, "
+> +				"which is absent the info for data source. "
+> +				"Please upgrade the tool to record data.\n");
+> +		return false;
+> +	}
+> +
+> +	/* CPU ID is -1 for per-thread mode */
+> +	if (speq->cpu < 0) {
+> +		/*
+> +		 * On the heterogeneous system, due to CPU ID is -1,
+> +		 * cannot confirm the data source packet is supported.
+> +		 */
+> +		if (!spe->is_homogeneous)
+> +			return false;
 
-I will send the fix patch soon as part of the perftool upstreaming patchset
-to prevent conflicts happening. Hopefully, this can be at the start of the
-next week if all of the checks pass.
-
-Thanks,
-Veronika
-> 
-> - Arnaldo
-> 
+Technically you could look at timestamps and context switches to find 
+the CPU for non-homogeneous per-thread mode. But it's such an edge case 
+I'm not sure it's even worth leaving a TODO for.
 
