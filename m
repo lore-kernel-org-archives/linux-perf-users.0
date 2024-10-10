@@ -1,154 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51391E04BC;
-	Thu, 10 Oct 2024 14:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06EA1CB301;
+	Thu, 10 Oct 2024 14:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728570883; cv=none; b=JwOh9wb1C9jfPWbY4MSt/3v8VxCHPf2+tc1pS28Og3Sj8XJb4V8SO2u4/Tk4Ae1ucw+MBF/WgiknPfb6HJCDif6ggAO0LkATmOinmCVWc+4jK7edjcOxMpPuLCm1zZ7h7j7e6NmAFi13/wtkZRysD80yJm7i0NaNrRRjEecyHWI=
+	t=1728571704; cv=none; b=oIXE9HiX0pWE1r7EVeGAUVTNn4tVg5aFDuCHqCNfPHgXODf5TSOzoo/kZABfZjUWkApXMy88xNiiYonI/zA2NfpNslmhfJrklmefyCLaJK2uKQKgkYCWHP3xcYVkRaDuwu8wrUNNFOS3rg/yRp1Zp01EyTPU8STV008AKiA9NpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728570883; c=relaxed/simple;
-	bh=F6eTrN/gp7G7YKPqRXWeb3wd7Rb9UIpk0XhBK01kcM0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fOC8bA0Tzhx2VhYsXiqHXWbdHJzzeY4UCWFk44OYz8EvsM26B5sn3e9k4UG1O+lx+fVS39y9F+ASa6sKhvtq1UF1GVUYzzAJS6r0HNz1b08QpDt53Zm9m6CZJYlZOXhWd/kY64mi6HwncgAbvwtNbYQii/VnMf9u9uEzTGxnObk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dGkuQY5P; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1728571704; c=relaxed/simple;
+	bh=zihjJSEgqk+803gp0qkrmkT2DT2099l3r+BnmjzK/z8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=FYKUUvid1pvultWmZEg12HfSDW1SFrFLJh6i7AqPvVZY8uyYNAS8R0DeLTxdWSDJ0QchBaLU4OErYOiNTh/l9DD+q6JF+JavHJ3PlTg32/lY77KF9eqUCAsGSWWnc+aw5cwX/hj2qTFMPRzg+jhvH/KEyHYWdA3kNvrjXa3ang4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p93GkPmB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dGkuQY5P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728570882; x=1760106882;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=F6eTrN/gp7G7YKPqRXWeb3wd7Rb9UIpk0XhBK01kcM0=;
-  b=dGkuQY5PwUUk/BxgcPqPfUTGIs2aQDGpw6M9YhgHiVVy3sbWAGTEoO9L
-   NQxD89i4F1U11HKJKbQ2FeXdWqkjAF3Vy/F+IDuEAS8QBF9ZAHIFQ0Kg5
-   FsNYmwFZwfdMWZRutjuaY7x6Tz8PGMM/bU2e5OHfN/SISIo6K/clFx9Zh
-   CKi97AnAKzxd8FMiXYG9kyfo77GgdiowEhOUN4tAtn3Slfmisou6qTjqm
-   o3ySKoURMJCeOl29gjEhnWJ0NnVmDZsNnimPdplJ4Temz+y2j+RrTk8lR
-   jG4eUs1yyLelkqCY6XxVCd3mFr3YrvFjDx9/9jnMOsYTJ35DBlKS78YIf
-   g==;
-X-CSE-ConnectionGUID: gG8xxpQCRPerZJxxq4X7Uw==
-X-CSE-MsgGUID: RnZmGuWzSfeCzOCh4y+0yA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11220"; a="28064511"
-X-IronPort-AV: E=Sophos;i="6.11,193,1725346800"; 
-   d="scan'208";a="28064511"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 07:34:26 -0700
-X-CSE-ConnectionGUID: yzdwpQ+mRpCGVaDT5/ya9A==
-X-CSE-MsgGUID: Rjkp3UFjS5+APjV1DDlCbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,193,1725346800"; 
-   d="scan'208";a="81189666"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.246.16.81])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 07:34:16 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Will Deacon <will@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	H Peter Anvin <hpa@zytor.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	kvm@vger.kernel.org,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH V12 14/14] perf intel-pt: Add a test for pause / resume
-Date: Thu, 10 Oct 2024 17:31:51 +0300
-Message-ID: <20241010143152.19071-15-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241010143152.19071-1-adrian.hunter@intel.com>
-References: <20241010143152.19071-1-adrian.hunter@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p93GkPmB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2FABC4CEC5;
+	Thu, 10 Oct 2024 14:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728571704;
+	bh=zihjJSEgqk+803gp0qkrmkT2DT2099l3r+BnmjzK/z8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=p93GkPmB0lxl8MtDh/ktV50083tvRB8hL0IcuFvZOQzmPpwQ4knf8aNcHAbP2+IFe
+	 YUAJje7LUFTOdti6ZOADgYj8ROrE+O3Qv4Vk91kRrz3yMHDnzT0iihP10OU6KDoygc
+	 Fb008JGYpZrlikPDqyD+c2qROY1mTv5OCtaiJu751xo5hZkMIQ6EB4Mx5hQ0+FaSnr
+	 kc79Daa6XFdW/93eSrtyXQpikrXgMtnqxKTD2M8o+BXWcLBwlx2Sc3rTHc7hDV2a+9
+	 EOeuS1f8l+7cXOdtY2jpsviXGLf1T8Kdn2EkNDuA/JHvJXZWL2D30Hny6PRrHc3rkA
+	 CHi+/niiayyzg==
+Date: Thu, 10 Oct 2024 23:48:18 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Dima Kogan
+ <dima@secretsauce.net>, james.clark@linaro.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/3] perf probe: Support long symbol
+Message-Id: <20241010234818.ab279974ef597f02b61ab850@kernel.org>
+In-Reply-To: <ZwcqFA4IKbLZ7Cev@google.com>
+References: <20241007141116.882450-1-leo.yan@arm.com>
+	<ZwcqFA4IKbLZ7Cev@google.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add a simple sub-test to the "Miscellaneous Intel PT testing" test to
-check pause / resume.
+On Wed, 9 Oct 2024 18:12:52 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/tests/shell/test_intel_pt.sh | 28 +++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+> Hello Leo,
+> 
+> On Mon, Oct 07, 2024 at 03:11:13PM +0100, Leo Yan wrote:
+> > Currently, a probe supports event name maximum to a 64-byte length. The
+> > event name comes from the probed symbol name, otherwise, user can
+> > specify an event name.
+> > 
+> > In the case when user tries to inject a probe for a long symbol, e.g.
+> > mangled symbol name in a C++ program, the kernel buffer cannot
+> > accommodate it if the symbol name is longer than 64 bytes.
+> > 
+> > On the other hand, this series relies on the perf tool to resolve the
+> > issue. When the tool detects user doesn't specify event name and the
+> > probed symbol is longer than 64 bytes, it will generate a hashed event
+> > name with 64-byte length to avoid failure.
+> 
+> Please CC Masami for probe related changes in the future.
 
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index 723ec501f99a..e359db0d0ff2 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -644,6 +644,33 @@ test_pipe()
- 	return 0
- }
- 
-+test_pause_resume()
-+{
-+	echo "--- Test with pause / resume ---"
-+	if ! perf_record_no_decode -o "${perfdatafile}" -e intel_pt/aux-action=start-paused/u uname ; then
-+		echo "SKIP: pause / resume is not supported"
-+		return 2
-+	fi
-+	if ! perf_record_no_bpf -o "${perfdatafile}" \
-+			-e intel_pt/aux-action=start-paused/u \
-+			-e instructions/period=50000,aux-action=resume,name=Resume/u \
-+			-e instructions/period=100000,aux-action=pause,name=Pause/u uname  ; then
-+		echo "perf record with pause / resume failed"
-+		return 1
-+	fi
-+	if ! perf script -i "${perfdatafile}" --itrace=b -Fperiod,event | \
-+			awk 'BEGIN {paused=1;branches=0}
-+			     /Resume/ {paused=0}
-+			     /branches/ {if (paused) exit 1;branches=1}
-+			     /Pause/ {paused=1}
-+			     END {if (!branches) exit 1}' ; then
-+		echo "perf record with pause / resume failed"
-+		return 1
-+	fi
-+	echo OK
-+	return 0
-+}
-+
- count_result()
- {
- 	if [ "$1" -eq 2 ] ; then
-@@ -672,6 +699,7 @@ test_power_event			|| ret=$? ; count_result $ret ; ret=0
- test_no_tnt				|| ret=$? ; count_result $ret ; ret=0
- test_event_trace			|| ret=$? ; count_result $ret ; ret=0
- test_pipe				|| ret=$? ; count_result $ret ; ret=0
-+test_pause_resume			|| ret=$? ; count_result $ret ; ret=0
- 
- cleanup
- 
+Thanks Namhyung,
+
+Let me find the patches.
+
+> 
+> Thanks,
+> Namhyung
+> 
+> > 
+> > 
+> > Leo Yan (3):
+> >   perf: Dynamically allocate buffer for event string
+> >   perf probe: Check group string length
+> >   perf probe: Generate hash event for long symbol
+> > 
+> >  tools/perf/util/probe-event.c | 71 ++++++++++++++++++++++++++++++++---
+> >  1 file changed, 65 insertions(+), 6 deletions(-)
+> > 
+> > -- 
+> > 2.34.1
+> > 
+
+
 -- 
-2.43.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
