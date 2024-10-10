@@ -1,223 +1,141 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED6027446
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Oct 2024 00:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7A610E3
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Oct 2024 00:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728518865; cv=none; b=knJ9HbPiCTbbHpO35BQE3h4EU0I4gspSm98RUpsxM0R7iv5hyEWnf4vgmZxw+0Q5tXRJx3VbgdpSJnWK64SNEhlREtoEBec8tTNwKfpnHAnbawfd28UE0L9mkPYEDC6xEsaNghp75aDEnMRxCCYwb1cOIpn6hq1+GVdD74owuQo=
+	t=1728519658; cv=none; b=iCdWy/gaEh8jqVhpIoO3QLQZndEAx+i9hUNR9sKgIzVsp+qcLr5DbqYupAOB9F0KoidaKT7Ck6BJ2RDaj7wuRY8LOzUfAhzrARm0w9GSWI94duGiPb767TGuuVGp0O1VAXeQLqVkidUFjJMMvUlLKxSyAHLNIpqLvjMePRp7w9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728518865; c=relaxed/simple;
-	bh=i2P8XZ8C8+KW3cQpvcq8swJ4pl42rq2Dmo38yCruSj4=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=k7ZHiba5my/qpjr+Yf4/6CLViZR3ExittFrtfxxJRLoTkhK4VbOYDitjlmSw8PyhqOGbCmZtViFPe5GjVEtpOklU0uxBVvnKh/bP4QKm2gexCRghzLsv0IjaLfAGJobT9iAtAjx0Rs+tBuUYSlLxkj4nlwRaKqhE3CGdJr2TYmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0gCECvKj; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1728519658; c=relaxed/simple;
+	bh=l2Deo3o2w1tBXjqDxnBRlgacYtlr0u3W1yFT+EJ/aNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OGbAnS81tqkKbYFswHw0gQhY1SvjJFPc4W8cI8DQcNmzFveTLbU+tLNnnAa1bDCxG0XJtZ8iVn1L1Zo1sgEAAb/jjne8TmdDDKVAqvmOhIWK1pQtThK/xeyozCLn+JcBphWqtqxAHvN0lCBf1wjy6t3oC/uwDDtRXsHX0XYeOtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=StskLDfZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0gCECvKj"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e2baf2ff64so9168507b3.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Oct 2024 17:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728518863; x=1729123663; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SY35F8wtXf7s51KAxRJvlRRZZ0EtgMGdYbZDGjNC5K4=;
-        b=0gCECvKjQA798MPxmgMLBYFPUWyMfyMTLAFXYuY9jCicIVxga9ewD21icdtQbTHt87
-         1HTFrEr6bs4ZHi3quLMx5NUTQNXWRUXHigAhi4BzLN6yoAH8WNpT+S50Zwg8iqmfyoNu
-         Iw4Msqm1mX4E0Uzu7d+5RQtjYIVoUKDlKSFU26kFdlaVREFaL0d/V00DKsj81nIFbf2m
-         WPyjP2mCL+hmYeDtn+5v4dQiOCDHUJ2beonS0myaAvFg9z0/Al6stXRs9XIZ2fQjyWmh
-         GXrL7SmglVimX5WOz5iITJKJO5xHjIXYaTPKRHDPl7q5PwX5aB62FDHgkWXbcGa/k0sW
-         hIng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728518863; x=1729123663;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SY35F8wtXf7s51KAxRJvlRRZZ0EtgMGdYbZDGjNC5K4=;
-        b=cLHS8eV/olxnlPPSVBcPdDePdfAtXg+XOuGRMtYERuPHB5QMr9kp9GKQzJmQBABcdM
-         OKY/dpscapVXxXqMKcF2Tmh2ZFKBn2tJGFXc+2KgldzMyztpheG+UssTZ6RbE5lRkf1+
-         WyGmg2XxaD2PD41n2J/y5zdAZkEGhz2tl9UKLPSFrBCSXDk064fssXiDfOaOGYCx6mrI
-         qSTHQJyKDj7teelJJWSoQoiqJZM5RgvAco5IvkcTWZ2dh3nY8WpWge+ex/VFwX1hOr/h
-         kgwTveeQ4j+5q9IkJsld6VbS2Ehddf2ZnxIJnfnChlBJyfc5BVHwFco+cXV9oNg36ogL
-         P70Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWy5FuVmW5OyUVDk6gCxFm+KU0KAceURFCMDkaVf53mjH1UyKMu1+fBqVxUef2KNqptIvbB75Yauj7lIdpXDIyu@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaI3j7FDFKpimLZGFDpWA8M5b2e423//vq58In42BCEOp8lLPU
-	ElBbUByT8QNgL4IvoPQqJhk7DK0HlZjmOwKztmE2x2/PA8d0zvYPyAc5HETfQa2WQBu831vTgLw
-	hOqSCcg==
-X-Google-Smtp-Source: AGHT+IFksJYqRDwuiHPDNzEXTVB/7fQgehW4IKPAtuP7oY/vQ66Jy1dBIhD1TaumqaV00XiICDFmrKFB8hba
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6c8b:1170:a0ca:9d72])
- (user=irogers job=sendgmr) by 2002:a05:690c:4a87:b0:6e2:70e:e82e with SMTP id
- 00721157ae682-6e3224227fcmr167907b3.6.1728518862623; Wed, 09 Oct 2024
- 17:07:42 -0700 (PDT)
-Date: Wed,  9 Oct 2024 17:07:19 -0700
-In-Reply-To: <20241010000719.1172854-1-irogers@google.com>
-Message-Id: <20241010000719.1172854-7-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="StskLDfZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D5DC4CEC3;
+	Thu, 10 Oct 2024 00:20:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728519657;
+	bh=l2Deo3o2w1tBXjqDxnBRlgacYtlr0u3W1yFT+EJ/aNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=StskLDfZQWVnT1wCFe+I+G++Zrag51P1qAiUZ0VMDelXfTA7bOXywCR5Qkt0XCEjP
+	 q0/1RaSUrFBxy/TuguBuuPzP77cMLCklCwG2Jt26/dVXOdFvNChYWrCKx0HWAdWkeF
+	 f92voG9f/jXKIss07EtfcL0easXZtSdCT5m+M5Ulc+QRu/AL38/FV2+itQUgRQQGhk
+	 mlcihUcC4WDRYancNhO0TUsfikJ3HISvDGZUQhH7yIivyjLrnec6Z0kwHynCy8vBTy
+	 xPBZ4aEP/6DjkhuFSXGVfBP3pSKZQ9XZHGRCpP7yPA1BBaXWtRbmw/aQv679fJzzvt
+	 YSK9Fa4Fb4k4g==
+Date: Wed, 9 Oct 2024 17:20:55 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	james.clark@linaro.org, mike.leach@linaro.org,
+	suzuki.poulose@arm.com, ilkka@os.amperecomputing.com,
+	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V8 0/4] arm-cs-trace-disasm.py/perf must accommodate
+ non-zero DSO text offset
+Message-ID: <Zwcd52bq3AqetafI@google.com>
+References: <cover.1725667397.git.scclevenger@os.amperecomputing.com>
+ <cover.1725667397.git.scclevenger@os.amperecomputing.com>
+ <ZwTIbRbAX2EX31X8@google.com>
+ <c2b1d122-83e5-4392-9009-2d22e59aa14a@os.amperecomputing.com>
+ <ZwWdhvud5f7tRxkW@google.com>
+ <b484a69a-534f-4274-a000-94edf4d2521d@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241010000719.1172854-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
-Subject: [PATCH v2 6/6] perf stat: Display metric threshold value in CSV output
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Tim Chen <tim.c.chen@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Sumanth Korikkar <sumanthk@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b484a69a-534f-4274-a000-94edf4d2521d@arm.com>
 
-Add a column with a metric threshold value. For example, the bad/good
-in the last column below:
-```
-$ perf stat -a -M topdownl1 -x, -I 1000
-1.000103288,4677067630,,TOPDOWN.SLOTS,16029302700,100.00,31.1,%  tma_backend_bound,bad
-1.000103288,,,,,,51.0,%  tma_frontend_bound,bad
-1.000103288,,,,,,7.6,%  tma_bad_speculation,good
-1.000103288,,,,,,10.2,%  tma_retiring,good
-1.000103288,476781750,,topdown-retiring,16029302700,100.00,,
-1.000103288,2389693619,,topdown-fe-bound,16029302700,100.00,,
-1.000103288,1431602465,,topdown-be-bound,16029302700,100.00,,
-1.000103288,378991388,,topdown-bad-spec,16029302700,100.00,,
-1.000103288,4934535,,INT_MISC.CLEARS_COUNT,16029339890,100.00,,
-1.000103288,56474476,,IDQ.MS_UOPS,16029292873,100.00,,
-1.000103288,3188888,,INT_MISC.UOP_DROPPING,16029239908,100.00,,
-1.000103288,484429099,,UOPS_RETIRED.SLOTS,16029176080,100.00,,
-1.000103288,49066178,,UOPS_DECODED.DEC0,16029100912,100.00,,
-1.000103288,26472844,,cpu/UOPS_DECODED.DEC0,cmask=1/,16029009707,100.00,,
-1.000103288,709313662,,UOPS_ISSUED.ANY,16028914990,100.00,,
-1.000103288,346833383,,IDQ.MITE_UOPS,16028820330,100.00,,
-```
+On Wed, Oct 09, 2024 at 04:24:29PM +0100, Leo Yan wrote:
+> Hi Namhyung,
+> 
+> On 10/8/2024 10:00 PM, Namhyung Kim wrote:
+> 
+> [...]
+> 
+> > On Tue, Oct 08, 2024 at 11:24:45AM -0700, Steve Clevenger wrote:
+> >>
+> >> Hello Namhyung,
+> >>
+> >> Sorry your question is so late. I don't include the ELF headers here,
+> >> but the problem can be seen with a perf.data packet dump of user
+> >> instruction trace capture. The problem is with the non-zero pgoff. The
+> >> arm-cs-trace-disasm.py script was never passed pgoff information to
+> >> adjust the start/end disassemble range passed to objdump. This patch
+> >> distributes the fix between perf and the arm-cs-trace-disasm.py script.
+> >>
+> >> Here's a brief excerpt from an e-mail I sent to James Clark describing
+> >> the patch before I submitted it.
+> > 
+> > Oh, is it applied to the coresight tree already?
+> 
+> No.
+> 
+> > I don't think I got> any notification for that.  Please make sure to notify
+> perf maintainers
+> > (and hopefullly to get Ack's) when you touch non-coresight part of the
+> > code.
+> > 
+> > Also I think we need to clarify how to route coresight tool patches.  I
+> > thought they are going through the perf-tools tree.  But it doesn't seem
+> > to be the case?
+> 
+> AFAIK, in most cases, Arm patches for the perf will be picked up via
+> perf-tools tree, including this patch series.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/perf-stat.txt    |  1 +
- tools/perf/tests/shell/stat+csv_output.sh | 24 ++++++++++----------
- tools/perf/util/stat-display.c            | 27 +++++++++++++++++++----
- 3 files changed, 36 insertions(+), 16 deletions(-)
+Ok, I was confused and thought it was applied there.
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 2bc063672486..9bfa1a085e98 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -622,6 +622,7 @@ The fields are in this order:
- 	- optional variance if multiple values are collected with -r
- 	- optional metric value
- 	- optional unit of metric
-+	- optional how the value relates to a metric threshold
- 
- Additional metrics may be printed with all earlier fields being empty.
- 
-diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
-index fc2d8cc6e5e0..a3bc3c99b534 100755
---- a/tools/perf/tests/shell/stat+csv_output.sh
-+++ b/tools/perf/tests/shell/stat+csv_output.sh
-@@ -31,19 +31,19 @@ function commachecker()
- 	local exp=0
- 
- 	case "$1"
--	in "--no-args")		exp=6
--	;; "--system-wide")	exp=6
--	;; "--event")		exp=6
--	;; "--interval")	exp=7
-+	in "--no-args")		exp=7
-+	;; "--system-wide")	exp=7
-+	;; "--event")		exp=7
-+	;; "--interval")	exp=8
- 	;; "--per-thread")	exp=7
--	;; "--system-wide-no-aggr")	exp=7
--				[ "$(uname -m)" = "s390x" ] && exp='^[6-7]$'
--	;; "--per-core")	exp=8
--	;; "--per-socket")	exp=8
--	;; "--per-node")	exp=8
--	;; "--per-die")		exp=8
--	;; "--per-cluster")	exp=8
--	;; "--per-cache")	exp=8
-+	;; "--system-wide-no-aggr")	exp=8
-+				[ "$(uname -m)" = "s390x" ] && exp='^[7-8]$'
-+	;; "--per-core")	exp=9
-+	;; "--per-socket")	exp=9
-+	;; "--per-node")	exp=9
-+	;; "--per-die")		exp=9
-+	;; "--per-cluster")	exp=9
-+	;; "--per-cache")	exp=9
- 	esac
- 
- 	while read line
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 7d42f22cd5f8..5b5923730a7b 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -85,6 +85,19 @@ const char *metric_threshold_classify__color(enum metric_threshold_classify thre
- 	return colors[thresh];
- }
- 
-+static const char *metric_threshold_classify__str(enum metric_threshold_classify thresh)
-+{
-+	const char * const strs[] = {
-+		"unknown",
-+		"bad",
-+		"nearly bad",
-+		"less good",
-+		"good",
-+	};
-+	static_assert(ARRAY_SIZE(strs) - 1  == METRIC_THRESHOLD_GOOD, "missing enum value");
-+	return strs[thresh];
-+}
-+
- static void print_running_std(struct perf_stat_config *config, u64 run, u64 ena)
- {
- 	if (run != ena)
-@@ -454,14 +467,15 @@ static void new_line_csv(struct perf_stat_config *config, void *ctx)
- 		fputs(config->csv_sep, os->fh);
- }
- 
--static void print_metric_csv(struct perf_stat_config *config __maybe_unused,
-+static void print_metric_csv(struct perf_stat_config *config,
- 			     void *ctx,
--			     enum metric_threshold_classify thresh __maybe_unused,
-+			     enum metric_threshold_classify thresh,
- 			     const char *fmt, const char *unit, double val)
- {
- 	struct outstate *os = ctx;
- 	FILE *out = os->fh;
- 	char buf[64], *vals, *ends;
-+	const char *thresh_str = "";
- 
- 	if (unit == NULL || fmt == NULL) {
- 		fprintf(out, "%s%s", config->csv_sep, config->csv_sep);
-@@ -472,7 +486,12 @@ static void print_metric_csv(struct perf_stat_config *config __maybe_unused,
- 	while (isdigit(*ends) || *ends == '.')
- 		ends++;
- 	*ends = 0;
--	fprintf(out, "%s%s%s%s", config->csv_sep, vals, config->csv_sep, skip_spaces(unit));
-+	if (thresh != METRIC_THRESHOLD_UNKNOWN || !rblist__empty(&config->metric_events))
-+		thresh_str = metric_threshold_classify__str(thresh);
-+	fprintf(out, "%s%s%s%s%s%s",
-+		config->csv_sep, vals,
-+		config->csv_sep, skip_spaces(unit),
-+		config->csv_sep, thresh_str);
- }
- 
- static void print_metric_json(struct perf_stat_config *config __maybe_unused,
-@@ -527,7 +546,7 @@ static void print_metricgroup_header_csv(struct perf_stat_config *config,
- 
- 	for (i = 0; i < os->nfields; i++)
- 		fputs(config->csv_sep, os->fh);
--	fprintf(config->output, "%s", metricgroup_name);
-+	fprintf(config->output, "%s%s", metricgroup_name, config->csv_sep);
- 	new_line_csv(config, ctx);
- }
- 
--- 
-2.47.0.rc1.288.g06298d1525-goog
+Thanks,
+Namhyung
 
+> 
+> [...]
+> >> Fedora 39:
+> >>
+> >> 4294967295 18446744073709551615 0x8ac8 [0x78]: PERF_RECORD_MMAP2
+> >> 18229/18229: [0xffffa5512000(0x1d000) @ 0x10000 103:04 161 4093340249]:
+> >> r-xp /usr/lib/ld-linux-aarch64.so.1
+> >>
+> >> 4294967295 18446744073709551615 0x8b40 [0x60]: PERF_RECORD_MMAP2
+> >> 18229/18229: [0xffffa554f000(0x1000) @ 0 00:00 0 0]: r-xp [vdso]
+> >> 4294967295 18446744073709551615 0x8ba0 [0x68]: PERF_RECORD_MMAP2
+> >> 18229/18229: [0xaaaade7e0000(0xb000) @ 0x10000 103:04 536876423
+> >> 421616320]: r-xp /usr/bin/dd
+> >> 4294967295 18446744073709551615 0x8c08 [0x70]: PERF_RECORD_MMAP2
+> >> 18229/18229: [0xffffa5360000(0x11f000) @ 0x30000 103:04 536873199
+> >> 2415801053]: r-xp /usr/lib64/libc.so.6
+> >>
+> >> The arm-cs-trace-disasm.py script never gets to see the text offset into
+> >> the dso binaries, so has no opportunity to adjust the start/end address
+> >> range passed to objdump. This wasn’t a problem on Fedora 37 and below
+> >> since there’s no start/end adjustment for a zero text offset. On Fedora
+> >> 38/39 distros, the instruction trace shows unconditional branch
+> >> instructions which do not branch to the target address, the clearest
+> >> indication of trouble.
+> > 
+> > Ok, thanks for sharing this.  I'm ok with exposing pgoff to the python
+> > script itself.  But I'd like to make sure if it works correctly with
+> > PIEs that have non-zero page offsets in other places (probably ok).
+> 
+> Fair point. The 'pgoff' is exposed from the kernel's VMA info, it is a runtime
+> value after the DSO loading. After set the MAPPING_TYPE__IDENTITY type for PIE
+> DSO, the 'pgoff' will be ignored in both the perf tool (see map__map_ip()) and
+> the script.
+> 
+> Sorry that I missed this part when reviewed the change. I understood Steve
+> have verified the script result. Seems to me, the critical question is kernel
+> has an offset for PIE DSO but why ignore it in the tool.
+> 
+> @Steve, if you have more info, could you explain a bit what is the reason for
+> ignoring pgoff for PIE DSO?
+> 
+> Thanks,
+> Leo
