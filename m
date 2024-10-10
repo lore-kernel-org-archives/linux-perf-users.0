@@ -1,126 +1,262 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0EC71CBE84
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Oct 2024 13:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016181E47A4;
+	Thu, 10 Oct 2024 14:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728568444; cv=none; b=u1BrI400BlZDOZ5cgKDkHTo6m61dfjagw6oKoRJxF+gKe1KLnw63wcO4hMwPoDTz2ZwELbFHMeObNHrimJOoGOV+J0UDl2fIdcCd6QF2B28xvi9YGs4mh3qj9fCeaQRCxb7m8IMtp1HPwrBSr3IFhJtKCAoG1Fj0IdOEceZMlPA=
+	t=1728570662; cv=none; b=AxOAX5BW7zPneZ3bgB6Gf8uAUtHLmU2ezKJ7/LBEW+bvULAz7Xi5Ot5WRE245c7MvGeTmqEQHV6LKPRtU8pObjHZDkb/JTqqY9JcdXh0DFsJj7vm3ItHZ/m/W478K8uFlaca719rU9rWs8L0Opm6TK1PNVQ6MFiwGW1ACyfVDEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728568444; c=relaxed/simple;
-	bh=dTGt2bI0gyh+oBaFQS/4t8rtm86wQQ3TxyuWTkzVfZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=Ao6uTniJG3gp6UZB4FkiZS84A2/l9pM/ckvVo7WwaypbQ2MsQE1UKC8DMDcvD7GiefZaXjUQR80nv4d2ZspyFUl5+qIjZxLDEI/TmzOiCls3nkGme9kPGQUl5t1qfP/ycsEAPDjNas51F65eYO+oR35UTYvihp0A+gDwt2kMUVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ulp3W3BW; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1728570662; c=relaxed/simple;
+	bh=CHR1YvnRIVQ9zwoqDgg0NlCcj6m7qLng6sfAVMUDx/4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aPhEJcZ3lklpOltPZkWaacGi5mdgIvw48eXVsZplsDgsX51JZjpjdGavf1/Wzha02N2xgtvhIGbWB8IuuQz+HY4vanKJuVsBapCad99BXmSXc96JKDYZDzuZfpEy7CPAiZstw6vOUpV4J36teZOianRZI2UfC0M9Tp9ESRXnWDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OxX1nUxN; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ulp3W3BW"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-431126967d6so8403645e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Oct 2024 06:54:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728568441; x=1729173241; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=FQ+lXA1ihTUNLFfhxZGOzBQbePHSGXZjeXL0lolEF3I=;
-        b=Ulp3W3BWvejVKJHOQCiKTGV2HerPmcOjujJN/05yBf7xxMhN7U5QkexjwNW3N7YIWJ
-         X/lKaJRM6Yas22BTbqUJbY9D32ok1Cmfk2iEy8Wuc7gnvIElNBgWFPEJ5WmQkmF39oQL
-         2iU3kgOEKRrpuHKwARbhYlymZh7mMrBRMcvZSgoMHVXYyt5bh8XEEUfkZL4j9Jx51aba
-         agHOsbG+CYyDRZsGFIkABLyuo0ILf2B64DL1bOWiXcRCLa/8OpGoIO43HI9haNdVqnq7
-         9IYCMYwmVbr4VUdxRrj/8gxQBUEQDnQsCt3t/VqF9hO2/WZbgN/GCTvcnuW3ckWnMaXO
-         CcHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728568441; x=1729173241;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FQ+lXA1ihTUNLFfhxZGOzBQbePHSGXZjeXL0lolEF3I=;
-        b=Z6is2RsHOdN41XeR/lcjo5MMeAGJ9Cdxz4pIDns62Fl7bD/TxWP8cLTXSYiIMPag6v
-         2fhIdQzmByldD+HR4k+tW1jgByj+ZH0N+8hYWCIlv+1YDhjhFnz5w3GDVlCk1cV8+HgD
-         QE3qEs6iFEqzMXMn9HBJUZgr0HHTdU+cl1T69CVjxXGpqQK0DDcUgC7jHCwHTGbVnKFM
-         zuyaf1m64Z9yZ3HnBYi1WxIGynfiFFyZ16YOKqZYUsyvCfHU2YB3Iciouv4BET0KiNSv
-         M3ORRPfsrocX2PwSpi4MpXWklsUJv5jVbfpeN8KHCHyRDtwpIjdaFIjFOlCMyGBooroC
-         Aq4A==
-X-Forwarded-Encrypted: i=1; AJvYcCX+YJTGTcx6tirv/Stv0rJDE/SsXhxz454uxpj8fVYoAqb8JBtW9hwF2M1lhUKE2qayi4kLi0jDhe91D1AoC2ML@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv3aroujy9Pk+OP2Je4aCIdwdUULZxuPuZ0Bdj8Ah3YRt+OP3J
-	zjMQ0R+dJXCSEYFTBhA7n+swT3ICbLFoyQNw8WXTUpex5AsScFIAEzM5odUIey0=
-X-Google-Smtp-Source: AGHT+IEdRXm02gGLxzgcUClMQgQcHA1G5Jkg12qeADvg1mlzE0X3heEKupNW6VgMBZK9gKBRD6jzJg==
-X-Received: by 2002:a05:600c:444c:b0:42c:b037:5f9d with SMTP id 5b1f17b1804b1-430ccef633fmr58186915e9.3.1728568441321;
-        Thu, 10 Oct 2024 06:54:01 -0700 (PDT)
-Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b6bd03fsm1622763f8f.34.2024.10.10.06.54.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2024 06:54:01 -0700 (PDT)
-Message-ID: <58043fbb-81e7-4cf6-bde3-0464df9f6050@linaro.org>
-Date: Thu, 10 Oct 2024 14:54:00 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OxX1nUxN"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49AEQQfD014407;
+	Thu, 10 Oct 2024 14:30:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=ELhIwBss1wUBoSEOh3sKkWbymW
+	oHN1i/6eY1qAowKSg=; b=OxX1nUxNLdtvv2vkN7/NbKBDUIyzulOURE1SipME9/
+	9UTkNb/1cGBALM6ail7YnpcbJw+vbW+QuhQC6ZeFS/6VVkapl4ndDoShoUAl5vVY
+	gsmFyQGhs3Nu6QCSjViMLU2LwzdBWalxF/9VmMlEq1b/9fkkKwY+H2CtnZWPEywh
+	dmcTLrJju03EE37EcmZN6NGt2Tzh6TUxwUjpMp3atvt6AsnAravQhC3ErQ19h6db
+	5L7CeW8evD/EuvBmw5NmFQhjzUq8nh0Qk0ZWkVnf5s/EEW31DLCwS7pyD0IAG6do
+	64N7kBO/Wcg02NEq9GLX7MAzMYVFLulZlVVT58lWPvLg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 426gpf00qt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Oct 2024 14:30:53 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49AEU4dk023356;
+	Thu, 10 Oct 2024 14:30:52 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 426gpf00qp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Oct 2024 14:30:52 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49AC9Pc9013804;
+	Thu, 10 Oct 2024 14:30:51 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 423fssge47-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Oct 2024 14:30:51 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49AEUmVN53477776
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Oct 2024 14:30:48 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1ACF520040;
+	Thu, 10 Oct 2024 14:30:48 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4607820043;
+	Thu, 10 Oct 2024 14:30:42 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.61.254.159])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 10 Oct 2024 14:30:41 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org, hbathini@linux.ibm.com
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH 1/2] tools/perf/pmu-events/powerpc: Add support for compat events in json
+Date: Thu, 10 Oct 2024 20:00:34 +0530
+Message-Id: <20241010143035.50907-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/7] perf arm-spe: Refactor data source encoding
-To: Leo Yan <leo.yan@arm.com>
-References: <20241003185322.192357-1-leo.yan@arm.com>
-Content-Language: en-US
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Besar Wicaksono <bwicaksono@nvidia.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Mike Leach <mike.leach@linaro.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241003185322.192357-1-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: fVsIo_IFsl_r7dxGYJcjjOsea1lzl9nU
+X-Proofpoint-ORIG-GUID: DMoAqsDtwJaETUKFknCbg2jmFuUYJkUU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-10_11,2024-10-10_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=999
+ impostorscore=0 clxscore=1011 suspectscore=0 spamscore=0 adultscore=0
+ bulkscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410100096
 
+perf list picks the events supported for specific platform
+from pmu-events/arch/powerpc/<platform>. Example power10 events
+are in pmu-events/arch/powerpc/power10, power9 events are part
+of pmu-events/arch/powerpc/power9. The decision of which
+platform to pick is determined based on PVR value in powerpc.
+The PVR value is matched from pmu-events/arch/powerpc/mapfile.csv
 
+Example:
 
-On 03/10/2024 7:53 pm, Leo Yan wrote:
-> As more Arm CPU variants (not only Neoverse CPUs) support data source
-> encoding, they share the same format for the data source packet.
-> 
-> To extend supporting these CPU variants for Arm SPE data source, this
-> series refactors the code. It converts the Neoverse specific naming to
-> the common naming, and then based on the MIDR stored in the metadata to
-> decide if the CPU follows up the common encoding format.
-> 
-> At the last, it extends CPU list for Neoverse-V2 and Cortex CPUs.
-> 
-> This patch series is dependent on the metadata version 2 series [1] for
-> retrieving CPU MIDR. It has been verified for per CPU mode and per
-> thread mode on Cortex-A725 CPUs.
-> 
-> [1] https://lore.kernel.org/linux-perf-users/20241003184302.190806-1-leo.yan@arm.com/T/#t
-> 
-> Changes from v2:
-> - Rebased on the latest metadata version 2 series [1].
-> 
-> Changes from v1:
-> - Dropped LDS bit checking in data source parsing.
-> 
-> 
-> Besar Wicaksono (1):
->    perf arm-spe: Add Neoverse-V2 to common data source encoding list
-> 
-> Leo Yan (6):
->    perf arm-spe: Rename arm_spe__synth_data_source_generic()
->    perf arm-spe: Rename the common data source encoding
->    perf arm-spe: Introduce arm_spe__is_homogeneous()
->    perf arm-spe: Use metadata to decide the data source feature
->    perf arm-spe: Remove the unused 'midr' field
->    perf arm-spe: Add Cortex CPUs to common data source encoding list
-> 
->   .../util/arm-spe-decoder/arm-spe-decoder.h    |  18 +--
->   tools/perf/util/arm-spe.c                     | 135 +++++++++++++++---
->   2 files changed, 121 insertions(+), 32 deletions(-)
-> 
+Format:
+        PVR,Version,JSON/file/pathname,Type
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+0x004[bcd][[:xdigit:]]{4},1,power8,core
+0x0066[[:xdigit:]]{4},1,power8,core
+0x004e[[:xdigit:]]{4},1,power9,core
+0x0080[[:xdigit:]]{4},1,power10,core
+0x0082[[:xdigit:]]{4},1,power10,core
+
+The code gets the PVR from system using get_cpuid_str function
+in arch/powerpc/util/headers.c ( from SPRN_PVR ) and compares
+with value from mapfile.csv
+
+In case of compat mode, say when partition is booted in a power9
+mode when the system is a power10, add an entry to pick the
+ISA architected events from "pmu-events/arch/powerpc/compat".
+Add json file generic-events.json which will contain these
+events which is supported in compat mode.
+
+Suggested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+
+ .../arch/powerpc/compat/generic-events.json   | 117 ++++++++++++++++++
+ .../perf/pmu-events/arch/powerpc/mapfile.csv  |   1 +
+ 2 files changed, 118 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/powerpc/compat/generic-events.json
+
+diff --git a/tools/perf/pmu-events/arch/powerpc/compat/generic-events.json b/tools/perf/pmu-events/arch/powerpc/compat/generic-events.json
+new file mode 100644
+index 000000000000..6f5e8efcb098
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/powerpc/compat/generic-events.json
+@@ -0,0 +1,117 @@
++[
++  {
++    "EventCode": "0x600F4",
++    "EventName": "PM_CYC",
++    "BriefDescription": "Processor cycles."
++  },
++  {
++    "EventCode": "0x100F2",
++    "EventName": "PM_CYC_INST_CMPL",
++    "BriefDescription": "1 or more ppc insts finished"
++  },
++  {
++    "EventCode": "0x100f4",
++    "EventName": "PM_FLOP_CMPL",
++    "BriefDescription": "Floating Point Operations Finished."
++  },
++  {
++    "EventCode": "0x100F6",
++    "EventName": "PM_L1_ITLB_MISS",
++    "BriefDescription": "Number of I-ERAT reloads."
++  },
++  {
++    "EventCode": "0x100F8",
++    "EventName": "PM_NO_INST_AVAIL",
++    "BriefDescription": "Number of cycles the ICT has no itags assigned to this thread."
++  },
++  {
++    "EventCode": "0x100fc",
++    "EventName": "PM_LD_CMPL",
++    "BriefDescription": "Load instruction completed."
++  },
++  {
++    "EventCode": "0x200F0",
++    "EventName": "PM_ST_CMPL",
++    "BriefDescription": "Stores completed from S2Q (2nd-level store queue)."
++  },
++  {
++    "EventCode": "0x200F2",
++    "EventName": "PM_INST_DISP",
++    "BriefDescription": "PowerPC instruction dispatched."
++  },
++  {
++    "EventCode": "0x200F4",
++    "EventName": "PM_RUN_CYC",
++    "BriefDescription": "Processor cycles gated by the run latch."
++  },
++  {
++    "EventCode": "0x200F6",
++    "EventName": "PM_L1_DTLB_RELOAD",
++    "BriefDescription": "DERAT Reloaded due to a DERAT miss."
++  },
++  {
++    "EventCode": "0x200FA",
++    "EventName": "PM_BR_TAKEN_CMPL",
++    "BriefDescription": "Branch Taken instruction completed."
++  },
++  {
++    "EventCode": "0x200FC",
++    "EventName": "PM_L1_ICACHE_MISS",
++    "BriefDescription": "Demand instruction cache miss."
++  },
++  {
++    "EventCode": "0x200FE",
++    "EventName": "PM_L1_RELOAD_FROM_MEM",
++    "BriefDescription": "L1 Dcache reload from memory"
++  },
++  {
++    "EventCode": "0x300F0",
++    "EventName": "PM_ST_MISS_L1",
++    "BriefDescription": "Store Missed L1"
++  },
++  {
++    "EventCode": "0x300FC",
++    "EventName": "PM_DTLB_MISS",
++    "BriefDescription": "Data PTEG reload"
++  },
++  {
++    "EventCode": "0x300FE",
++    "EventName": "PM_DATA_FROM_L3MISS",
++    "BriefDescription": "Demand LD - L3 Miss (not L2 hit and not L3 hit)"
++  },
++  {
++    "EventCode": "0x400F0",
++    "EventName": "PM_LD_MISS_L1",
++    "BriefDescription": "L1 Dcache load miss"
++  },
++  {
++    "EventCode": "0x400F2",
++    "EventName": "PM_CYC_INST_DISP",
++    "BriefDescription": "Cycle when instruction(s) dispatched."
++  },
++  {
++    "EventCode": "0x400F6",
++    "EventName": "PM_BR_MPRED_CMPL",
++    "BriefDescription": "A mispredicted branch completed. Includes direction and target."
++  },
++  {
++    "EventCode": "0x400FA",
++    "EventName": "PM_RUN_INST_CMPL",
++    "BriefDescription": "PowerPC instruction completed while the run latch is set."
++  },
++  {
++    "EventCode": "0x400FC",
++    "EventName": "PM_ITLB_MISS",
++    "BriefDescription": "Instruction TLB reload (after a miss), all page sizes. Includes only demand misses."
++  },
++  {
++    "EventCode": "0x400fe",
++    "EventName": "PM_LD_NOT_CACHED",
++    "BriefDescription": "Load data not cached."
++  },
++  {
++    "EventCode": "0x500fa",
++    "EventName": "PM_INST_CMPL",
++    "BriefDescription": "Instructions."
++  }
++]
+diff --git a/tools/perf/pmu-events/arch/powerpc/mapfile.csv b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+index 4d5e9138d4cc..cbd3cb443784 100644
+--- a/tools/perf/pmu-events/arch/powerpc/mapfile.csv
++++ b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+@@ -16,3 +16,4 @@
+ 0x004e[[:xdigit:]]{4},1,power9,core
+ 0x0080[[:xdigit:]]{4},1,power10,core
+ 0x0082[[:xdigit:]]{4},1,power10,core
++0x00ffffff,1,compat,core
+-- 
+2.27.0
 
