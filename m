@@ -1,56 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4751C9B8C;
-	Thu, 10 Oct 2024 16:15:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394B51CEAD1;
+	Thu, 10 Oct 2024 16:19:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728576934; cv=none; b=Z8BaE+cJpcB13Yb0pd6Zy+x+lzz6oYTzrFuAaMlvKN6ucIR8vHuIg0ml7OpOUWE4kXS+kHEOhecGHG96nJtry1/XOfG916hueWCvw0mRcUibKEC2SkHgWwa1Ggpm/sSndaOa2QDbXd+9RpVSznRYS5K2hJ1Zih+PkQkHMMTSOJ8=
+	t=1728577154; cv=none; b=lTuiDVsc5pMj0Zr2gVVmTkUSX8g6tDKuSVx5R0ZOtnlXPjIeZclUhZr0bHPfkVwOJlS+Fg3DDIc/aHtkMjnghgSO3Emlf+epCmlOopBP2tKvtZjby7QlKnKi9u4dIa4hKzveAd5vINC2vrjTyBZ6n3FTzaLkg7PhI2X45xCmQP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728576934; c=relaxed/simple;
-	bh=zrNx/YeB8J2J0TssxNZYPtIbOPuOqKNmsER4e59KXvQ=;
+	s=arc-20240116; t=1728577154; c=relaxed/simple;
+	bh=INOkDDFlgJ6TC0aQKZL0IPFP1XX9/IB7FfK5TqUkrgM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KO5lW9tIM5vjcR8y/v3IXkIXtWwYBCRGDVzTzifb5M98I5rfZykLGBhwGTlHAkNaWvIU+5pwm70QjioylAUtIEYxIG0cPhLgdMSmrSaqA/5fewwIk3Ki5vVRMILtAwTxhOAkEAxixzQcwYJqBeUMMpmmepIcawH6vH3VPUFb7ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGMRR69X; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=t2OCLPKiRVtQu/2rzCJcy80u7VWV+tIjMoonjicbwuhaq3OfwiKCtjd27SvstinjRIystMejJxQW/NB5XW1OFfUP5ld0xVIva6iThPkHfvolXjprprSgkz9RnYJnehjqS03yaZTy2Gy1yL0Ols4zkvTEgCi0A/N0/mOfaVr+Rok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZ3MIr5G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGMRR69X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF102C4CEC5;
-	Thu, 10 Oct 2024 16:15:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZ3MIr5G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD65C4CECF;
+	Thu, 10 Oct 2024 16:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728576934;
-	bh=zrNx/YeB8J2J0TssxNZYPtIbOPuOqKNmsER4e59KXvQ=;
+	s=k20201202; t=1728577154;
+	bh=INOkDDFlgJ6TC0aQKZL0IPFP1XX9/IB7FfK5TqUkrgM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qGMRR69XF40rX13zQMVEO0upjxZU6sEChNiQ05ApqpqrgDsSgjC2fzcKUjhVNPYOL
-	 djdHZ2HAb2m72QFJwabP4PQYLdJppUmplGgOTigaxzbyRK165tAPw762+KkLhTbBza
-	 735GEAweS69mfJfCWcLsGRt3hj2Nv1HSZK9df/jx3RPu75ewm7nBu4acVuQEwOiuNj
-	 nivPNngdASB//3U3Ec/AsO0I7P3fwPORVJuYGfzh+wa0Irsi4/d/EmrCmIzFRys8cU
-	 D85KO33HFA1pCVTpaBpJwRzUEHyrG8UKPWZqAfjXa0TQ7aD6uWyiumzr6QiRlbEbuN
-	 zFZ3501s4FE3g==
-Date: Thu, 10 Oct 2024 09:15:31 -0700
+	b=lZ3MIr5Ggg8MsJMyUOVhqIPIjkeJrIqPCBmVUrnnUHC7bq9WznUcREmCAlgDl0Zp7
+	 XrmBhbVzbC+8aQGMs4yPfYh7y3pKsPSBkAP1fzmdOJF3AGBMiMuDglRqtFzfLm2UJ8
+	 e9VxMQDFX9eHjx5Shn0J7mxfPeC30mryjl6rLpMBMilqVo6t+tociG87gzFQiAdn48
+	 X1ut+DDcDH5HiW0sCV3SNF3z0RpqQybuHLxkMI02+flIsxA+vN2rQs8ZUNubjZ9qyE
+	 MEofC+YfS3T5wYis28Ylyr5aZVSf2GxUKvC7mEM09W74pIRsX4hUlHF/Yt6XgbMHrQ
+	 sc7sNwfDwxXSg==
+Date: Thu, 10 Oct 2024 09:19:12 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Howard Chu <howardchu95@gmail.com>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH 1/1] perf build: Require at least clang 16.0.6 to build
- BPF skeletons
-Message-ID: <Zwf9o6YwL-Q1Q7WK@google.com>
-References: <CAH0uvojUEXiT2mk1pknLS1nc-gA3Py+AjmEW22ETiCCyOLLr8Q@mail.gmail.com>
- <CAH0uvogXyYP1LqF3fbjZGHHDL6BFZ2ZKu5JAASnK_brgnymf0w@mail.gmail.com>
- <CAH0uvohEozKixjDM9_jJ5FFxYK7agsqVO-BrAsm=4hCTDQAx2A@mail.gmail.com>
- <9bbfe425-1f2b-4846-a5a3-a31618742e9a@oracle.com>
- <CAH0uvojJ1rME4hb6NfrA4NPj2XmGMDLOLP3wEbHh8B5-qWGvFQ@mail.gmail.com>
- <CAH0uvohW7_st0i=ek8rc_SucuQEQUgs+fWt12cc3jqiYfxAjmw@mail.gmail.com>
- <ZwcnVKn3wVSSMcaL@google.com>
- <CA+JHD93JgJL_4GJFcFUNu-FpNfFOoyDRJ7QuvO82M8G1EwM5pQ@mail.gmail.com>
- <bcf50648-3c7e-4513-8717-0d14492c53b9@linaro.org>
- <5f3f55a8-a378-4e16-8e5b-6fff329e75fd@linaro.org>
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH/RFT] Re: [PATCH v5 1/8] perf trace: Fix iteration of
+ syscall ids in syscalltbl->entries
+Message-ID: <Zwf-gHW-cEGB3iyw@google.com>
+References: <20240705132059.853205-1-howardchu95@gmail.com>
+ <20240705132059.853205-2-howardchu95@gmail.com>
+ <6fe63fa3-6c63-4b75-ac09-884d26f6fb95@kernel.org>
+ <ZtJWEVn8-w07Wm0q@x1>
+ <0f841525-e02a-4e11-b5f8-1acc61979ccf@kernel.org>
+ <ZtYJ0z8f-1jwYSbV@x1>
+ <c279ad02-2543-4a95-9404-9304e1e704da@kernel.org>
+ <ffc2eb09-ac78-4594-a376-3fff9918c2a7@kernel.org>
+ <ZwYbQswnGHSstClc@google.com>
+ <271cde84-26f5-4e51-8cf4-2aa45a220025@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,58 +57,33 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5f3f55a8-a378-4e16-8e5b-6fff329e75fd@linaro.org>
+In-Reply-To: <271cde84-26f5-4e51-8cf4-2aa45a220025@kernel.org>
 
-On Thu, Oct 10, 2024 at 10:11:35AM +0100, James Clark wrote:
+On Thu, Oct 10, 2024 at 10:11:47AM +0200, Jiri Slaby wrote:
+> On 09. 10. 24, 7:57, Namhyung Kim wrote:
+> > diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+> > index 7c15dec6900d8aaa..b7465a879d8bf416 100644
+> > --- a/tools/perf/util/syscalltbl.c
+> > +++ b/tools/perf/util/syscalltbl.c
+> > @@ -46,6 +46,11 @@ static const char *const *syscalltbl_native = syscalltbl_mips_n64;
+> >   #include <asm/syscalls.c>
+> >   const int syscalltbl_native_max_id = SYSCALLTBL_LOONGARCH_MAX_ID;
+> >   static const char *const *syscalltbl_native = syscalltbl_loongarch;
+> > +#else
+> > +const int syscalltbl_native_max_id = 1;
+> > +static const char *const syscalltbl_native[] = {
+> > +       [0] = "unknown",
+> > +};
 > 
+> Hi,
 > 
-> On 10/10/2024 10:00 am, James Clark wrote:
-> > 
-> > 
-> > On 10/10/2024 2:20 am, Arnaldo Carvalho de Melo wrote:
-> > > On Wed, Oct 9, 2024, 10:01 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > 
-> > > > On Tue, Oct 08, 2024 at 12:27:24AM -0700, Howard Chu wrote:
-> > > > > Hi Alan, Arnaldo and James,
-> > > > > 
-> > > > > This problem was solved in [PATCH 0/2] perf trace: Fix support for the
-> > > > > new BPF feature in clang 12 (Link:
-> > > > > 
-> > > > https://lore.kernel.org/linux-perf-users/20241007051414.2995674-1-
-> > > > howardchu95@gmail.com/T/#t
-> > > > ),
-> > > > > sorry I forgot to cc you two.
-> > > > > 
-> > > > > Alan's thought was correct. Thank you so much! :)
-> > > > 
-> > > > It'd be great if any of you can test this change.  Now I only have
-> > > > machines with clang 16.
-> > > > 
-> > > 
-> > > I'll test this tomorrow.
-> > > 
-> > > - Arnaldo
-> > > 
-> > > > 
-> > > > Thanks,
-> > > > Namhyung
-> > > > 
-> > > > 
-> > > 
-> > 
-> > Tested with clang 15:
-> > 
-> > $ sudo perf trace -e write --max-events=100 -- echo hello
-> > 
-> >    0.000 ( 0.014 ms): echo/834165 write(fd: 1, buf: hello\10, count: 6)
-> >                                             =
-> > 
-> > Tested-by: James Clark <james.clark@linaro.org>
-> > 
+> provided the error was:
+> undefined reference to `syscalltbl__id_at_idx'
 > 
-> Should have left this tag on the actual patch. Will re-post it there.
+> this cannot help on its own, obviously.
  
-Right, thanks for taking care of this!
+Oops, I was looking at a different one for some reason.
+
+Thanks,
 Namhyung
 
