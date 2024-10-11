@@ -1,57 +1,57 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141521D31AE
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 22:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491DC1E1301
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 22:04:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728684254; cv=none; b=S8rDXWCjLBfPC5++3wmDjsDbuWM3kthyzhPzI51aNXFMd7YtuPknR8181h3F8P3crQsu7+vm+uCHm7JnQqImqOEHAEnUMY2v7pjNabR7bavRiwvIcv8+/mUlcuKYX+NwIaVf1j1L6dtKsF0xoDpMejLIV053nmGKITxMgK3IagY=
+	t=1728684256; cv=none; b=IC3hbVzEJKXNRx345TvAHYlbNQLGyGGDuvV3h6rewd6J19odv9xgOI4EkrfB5soxs75zaNkLNbHBZQNsBzT4nFQ6y3OB+AmFhg/G0J8itgaUCRfH6DAtxkP4TASm+m6XknrDC1xkQxDpkHMTG/ip4uG2MIK3vFKWH21KPmLSK8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728684254; c=relaxed/simple;
-	bh=ayFLEkZZxvRFtfh6rbDKgn18fu4jJI/W7wgdr0IoZZA=;
+	s=arc-20240116; t=1728684256; c=relaxed/simple;
+	bh=U1UusGBDoXz2VQik++HD585jShgBarpm5ySs1yN9FYM=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=ftUFLAXIdquHqt3LfWe4enUQD2zY6ouz6am/GURT7ZAXcMPaPuX50ZUBNLwTNL+hkeYzajbVSXWXm0aU0ej/+2F9JVROuCzm9Au3Z1wcSnwZWp6JsZg7PqTOkWDOKMpAnT6gdpDRq7NvMbqBGrjobVNbvTd8tfBubVv9HQObRLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EhONqIVL; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=aj2pq96QiRH2YPZMCgej6gibpIaB5yo/d+u3tSGQZT7K+E1lNWdBghYusB92DAGwsOxqiIE1tIZknOWmCKVWPxj7vFe3+Op0Vm0ZU5NdVPGJoX1ZUL3PXiLFyVMwlMA7I4IBzfaZtVQCUCyz5HscoF7HijCKH/3WEaa5y3SPelA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IluXIpsN; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EhONqIVL"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6d9e31e66eeso49305647b3.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 15:04:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IluXIpsN"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e32b43e053so36115827b3.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 15:04:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728684252; x=1729289052; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1728684254; x=1729289054; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=lNrioubmXeLjE0G20Z4Gp3VHKZoRwxqkvbcLs4LSREQ=;
-        b=EhONqIVLt+wav07/C3dbXenSbGmuaCdlXrHKR/be8tEXk//9oBtdBfrE84Ak0DgAZ0
-         37bcXHwqWE4WWK3F/3duEmOKmbzpd2EFbt3OoJTagJ81axm6CJuqZ07n45f3OjFX9dC0
-         oseFVsA/uAZ/obsCD1CdpVc3bFVoODhBsGxlduIL0wTqu7zQMV7/5dm/jqYUSb+bT8R4
-         KJzGXjox5tyU9Y6r0SsN7EwFVJh9lksT+Bv8/Kt516hH8iymBnEOjFZwNZ97ChvHeHsv
-         gs9l2qmU6KYmMSzp6Fz9J96nRjlCMCGiYNyLDLy3Z/V5rFBw+AoUSv3qPhd1Peu8h9uu
-         hSOA==
+        bh=13Gb0Qczu+RyP7NVli2dbJnILTUtWcNY3mpZFWZWiz0=;
+        b=IluXIpsNeoZChxzimRLGOo2rvjb9/u1dxATObwn6M+RWX3+L4+ENQo1HFurxRZi6gR
+         uYjH+PCRmq0N5/X9hwH6wMtzQOT6GXm+N4AhKW9PDlwmdCpzJQUBLG0b2zD3ywBTTDcY
+         tMuFw2lXFNAjUFB/zJpb6tkmhJI+eoN7SCJ5Qbrn8Zfcr5w9WrvArlMqqZGuYoJXedQq
+         5xt8Q31pqiJfkx381JQsj+WU4z6k6vNj7PRGaTJd525xNLEXD49QEfM03YrElMcknXUJ
+         8U625p6NoldD48QYaKYVfmRxTy8lZqBMujgKxjKMoxJGe4jhFZRSorpZKYSeYrEkerpS
+         YUnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728684252; x=1729289052;
+        d=1e100.net; s=20230601; t=1728684254; x=1729289054;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lNrioubmXeLjE0G20Z4Gp3VHKZoRwxqkvbcLs4LSREQ=;
-        b=eyyh6FCuiMw7htoIY8WZ4CXY6+V972xgV22y9TX3rl0LEzTptVMIUQYKijdzUmGWWm
-         r133sx+PIpkj0thsX0YHHjMXBBvyButzmPTpY3DlC/31K+Tn/JINZqHXlEl0veZawsBp
-         Za60uKzFVrTcaRx7EimOUnYvgKShz98JmQyk1yd0GMLqf+MtQEC2uYME+/zzEtefdgKx
-         WXVPKRB1wGVxFY1FJHnjJ6+GsC4oZcJ4LK4RMIVDYEplPSIviqlwCQC69wo1GlLqo3B3
-         P79aqKMQCWmcyv1ZNckOQMV/KS0a584SjYn/QxQEq1qVpxnKAlMGvvvxCc4oKWvL0lGb
-         fcfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjrwxJaFsmqCBp7es9waFBV++uMy7SlYhgtftpSeKmiOT6Pj376RAMlV7CqCH8H9x7+ClOHVq6rdMeGD+ruZJB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+aN4iRK7OtHIEH8p6uTIE70/cBqP6QgA5RgGEmgu5CnpYYR2S
-	zyXpLFX6OD3+TjDLY1mSsf/PcLCIUnSSYSvE9rh8l6/J4BHz5oCb4nD6opue/BTw3ufcCFdNbs9
-	XKPgXLQ==
-X-Google-Smtp-Source: AGHT+IH0cp7lEpJ+EU1fmq4BdA4UVq+vSksmc8806woiaMmF0NZBEKmS+zYZPslDPH3bhtxl8VmxpOa34DTG
+        bh=13Gb0Qczu+RyP7NVli2dbJnILTUtWcNY3mpZFWZWiz0=;
+        b=I0SfGGSSb5/VBWh2c2CkaDVEYUBIH172fCk6rgLSmWVfzvnlVCDzQHUkZ/0ojF00fE
+         rcG2ctxqUitlfPom5CLbVEUAUGQe0CUFS1t2GFaGLo1No1cONQ1hhjAcbZsTAEm5f5DS
+         P8bI1GUJ2jrPNAuw2qoOmqdlIZ83Ga05Mj6UvX4bNAEeNlXnXiq1luXTFEVYlyEwq7ZC
+         ggkSprBvsdabjvUEksOUjBxhM6YDHfEUU90KEBNEeKUoAfwBw3BGcrGpvoU8k7uO1Ng8
+         iZWwYQHW3VEujnU3mXwruhcRDSnLRj8Ykiaz9hZqRRdjhxFN1NbiKRXixVFOZWC3w3vb
+         XdPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVMUCIsE6lTBfleXPZpS9T+0jlQLIPfM9dHl3FYgPUl3u7jfjT/ORVlS+RKXiVFZhJh8qr+ofmwOQfnNWMsW+li@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLnvK7qNCVtoZiYseug3TPFRtaq9ViXAQvWSua96TVBA/WViqs
+	u+giMi7Ox8Lis+BMw09ij4fxssk2nLrrgI4LZG89Fa+75CJ01qNFIEDKPO6tCR92+gVMK0mxkhu
+	gzG/91A==
+X-Google-Smtp-Source: AGHT+IE11H1f4e98EhsItbxbwHzB0EO6S8fZPPSaM5oenhtdfB16Jd4EVSiiCREhHL4t6gwxg6GG+jPU2FUi
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8144:56f:2e1e:4db])
- (user=irogers job=sendgmr) by 2002:a05:690c:906:b0:6e3:189a:ad65 with SMTP id
- 00721157ae682-6e347c71baamr1540377b3.5.1728684251913; Fri, 11 Oct 2024
- 15:04:11 -0700 (PDT)
-Date: Fri, 11 Oct 2024 15:03:49 -0700
+ (user=irogers job=sendgmr) by 2002:a25:fc13:0:b0:e24:a28e:9399 with SMTP id
+ 3f1490d57ef6-e2919d828f7mr2137276.4.1728684253996; Fri, 11 Oct 2024 15:04:13
+ -0700 (PDT)
+Date: Fri, 11 Oct 2024 15:03:50 -0700
 In-Reply-To: <20241011220354.756798-1-irogers@google.com>
-Message-Id: <20241011220354.756798-4-irogers@google.com>
+Message-Id: <20241011220354.756798-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241011220354.756798-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
-Subject: [PATCH v2 3/8] perf test: Reduce scope of parallel variable
+Subject: [PATCH v2 4/8] perf test: Avoid list test blocking on writing to stdout
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,42 +76,32 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The variable duplicates sequential but is only used for command line
-argument processing. Reduce scope to make the behavior clearer.
+Python's json.tool will output the input json to stdout. Redirect to
+/dev/null to avoid blocking on stdout writes.
 
 Tested-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/perf/tests/shell/list.sh | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index bf03fb42420b..88ffc0feb51e 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -41,9 +41,6 @@
- static bool dont_fork;
- /* Don't fork the tests in parallel and wait for their completion. */
- static bool sequential = true;
--/* Do it in parallel, lacks infrastructure to avoid running tests that clash for resources,
-- * So leave it as the developers choice to enable while working on the needed infra */
--static bool parallel;
- const char *dso_to_test;
- const char *test_objdump_path = "objdump";
+diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/list.sh
+index 8a868ae64560..76a9846cff22 100755
+--- a/tools/perf/tests/shell/list.sh
++++ b/tools/perf/tests/shell/list.sh
+@@ -24,8 +24,11 @@ trap trap_cleanup EXIT TERM INT
  
-@@ -565,6 +562,12 @@ int cmd_test(int argc, const char **argv)
- 	};
- 	const char *skip = NULL;
- 	const char *workload = NULL;
-+	/*
-+	 * Run tests in parallel, lacks infrastructure to avoid running tests
-+	 * that clash for resources, So leave it as the developers choice to
-+	 * enable while working on the needed infra.
-+	 */
-+	bool parallel = false;
- 	const struct option test_options[] = {
- 	OPT_STRING('s', "skip", &skip, "tests", "tests to skip"),
- 	OPT_INCR('v', "verbose", &verbose,
+ test_list_json() {
+   echo "Json output test"
++  # Generate perf list json output into list_output file.
+   perf list -j -o "${list_output}"
+-  $PYTHON -m json.tool "${list_output}"
++  # Validate the json using python, redirect the json copy to /dev/null as
++  # otherwise the test may block writing to stdout.
++  $PYTHON -m json.tool "${list_output}" /dev/null
+   echo "Json output test [Success]"
+ }
+ 
 -- 
 2.47.0.rc1.288.g06298d1525-goog
 
