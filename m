@@ -1,202 +1,154 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11020137.outbound.protection.outlook.com [52.101.61.137])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E191885AD
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 17:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.137
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728667061; cv=fail; b=QY8t8YTobwk+uCsn0i3hv4EIAnzfUueEfe8LGs1fDOgqAn6f4UftQQleurRrgYkYYeTf3PdB13m7NCbB9FnvdrEudCAco0srZM2y1JqqkEY79NoSm4IHb3njIsv6w366VWTPY2bnkiieqPDpTNGjzziSpWWdjUZcQld4OXX/ynY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728667061; c=relaxed/simple;
-	bh=9uTmrhQjv8lhiwd7WbWh3n6yhxanKAXSz2uMemV18j4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=C/4OheW71pPBvkI070FyCQVQHHh+CaDgySg31uDKo18M9e0P3aUS0ne0mEd1uOloBFRWLAbsWIjFJosGJkNdPQUbkvMElcApeQaYPrZ7JqSAccAMKWkjtd+1JyNRSKnhg2cG+tE0e6g3SILlKZsP2j4nof25JFRRupT2BWtqNp4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=RUx11BTh; arc=fail smtp.client-ip=52.101.61.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8F05381E;
+	Fri, 11 Oct 2024 17:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728668679; cv=none; b=Bvl2F2PTGRnILyPo7q9wj5bsR2RY70wJ7TDRposk2JaHuG+morF11qGOlTmcPTtAF7iJXdOOLIsvBHtBiaGUDb05CSDNA0O4WvZq72iHsr3f+/9Bv7Bs5J40oBqP2XaE21p1QjYXwwT4SNoLbBPaAtYzaHa0YF7HGK8H8egKNZc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728668679; c=relaxed/simple;
+	bh=N1OHEM3RxX22n8nFZ39iKOpOgE736ymMlpcnwq6APd4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=W3xtMyAjBG7gt0HwLS+jgD3jeYBhr3y8JqUg3Szl8KiaPSplNcdXpz6qZw2tmbCiY4kRouejy+xs0DLnBORwM0zvaTA2zAZF+auvFvK7QY/BLlCjcCxKEPWtjb+HPnPqLXEV29HC6K/0P+g4igFm5vnNFq7WqVNPwp/Skolz0Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nQgwZeN2; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="RUx11BTh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uQB5y3vSAt0K3+PbC8nZ2MipLzLo/QSQJPLekKQ1uMAfs2Ofo+b/KNBMiHTQqercXAcolkuXVKY9UKGub0NQJGMncfBkJvRisfatYcujh6WE9hGcy+a3VJtJt3zGuG+rc1cRhHOykJWcxqJTM6jdL7z8wqMWJXe8lDVtnnwbqnIdTEUgHncTDSSaxeRBIBZs6eG3EOmMjtIxKkUo5mwGBWWB/LnsMiuXq58eug2KVmN5F7POLeOrGplshPkBCGXq4vGbWjgtEoicyZ2kYdHW/+9sqWCX+oeu2jB8JCnnj4Jj2+e/HCLBzjiaUcDwtAloG/Ack+8+ZvZ+v2Gg0wkpTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7DEw92mpbvvAFSQRclhbLrT8kKBotlHTwXEZrx9zQO8=;
- b=o8R5ATeJe6XMc+YG8EZfvElldw8mg52ZdlxXUqZP7Dllz2YI7am7HHAuDBvyz8yL3LH9cYx7IMitWt1/dYfm94MWCw3fzQlKxgsyAcUnVtAUNk1d7X7IkjZM/vIpO5VWNTCmr1OuZ8RATeHTkIYO7NtPOdQUdnvDqM0DEEWH/d+1PQBI9mFc6QfExIFagu3QjMXDabGoS8Zwqkr9PKZywUcVlCTwB746UJPygTndZ+VdDjcYo4oq8AQXnlDpcP1glxiBAKMuJR0l2rScfiCf6RrZQhfrH55WGpgTfcxW8yqX77y0eF5NsXoCOi8D7LNSQwr/wSsnh4GxcLV5IPZdpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7DEw92mpbvvAFSQRclhbLrT8kKBotlHTwXEZrx9zQO8=;
- b=RUx11BTh5CQs8O/nyaFMBOTEwKSG/gX9NPi5W3JPWs6VFppl8RzV2tKQKwkit0qScdf91e63+vW4qB88ZWHTbqcHth76xfgfsdLdB0qYZCnn2yWDDEPJnNLfCyYNmKkEK68EvCEr+pnwfbrsVKoG5gLf+nlounvV0tpODP7SqGQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from PH7PR01MB8146.prod.exchangelabs.com (2603:10b6:510:2bd::18) by
- IA0PR01MB8306.prod.exchangelabs.com (2603:10b6:208:480::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7982.34; Fri, 11 Oct 2024 17:17:34 +0000
-Received: from PH7PR01MB8146.prod.exchangelabs.com
- ([fe80::2972:642:93d1:e9d4]) by PH7PR01MB8146.prod.exchangelabs.com
- ([fe80::2972:642:93d1:e9d4%5]) with mapi id 15.20.7982.031; Fri, 11 Oct 2024
- 17:17:30 +0000
-From: Steve Clevenger <scclevenger@os.amperecomputing.com>
-To: leo.yan@arm.com,
-	james.clark@linaro.org,
-	mike.leach@linaro.org
-Cc: suzuki.poulose@arm.com,
-	ilkka@os.amperecomputing.com,
-	coresight@lists.linaro.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH V9 0/2] arm-cs-trace-disasm.py/perf must accommodate non-zero DSO text offset
-Date: Fri, 11 Oct 2024 11:17:10 -0600
-Message-Id: <cover.1728599785.git.scclevenger@os.amperecomputing.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1728599785.git.scclevenger@os.amperecomputing.com>
-References: <cover.1728599785.git.scclevenger@os.amperecomputing.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CH0PR03CA0311.namprd03.prod.outlook.com
- (2603:10b6:610:118::13) To PH7PR01MB8146.prod.exchangelabs.com
- (2603:10b6:510:2bd::18)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nQgwZeN2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728668678; x=1760204678;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=N1OHEM3RxX22n8nFZ39iKOpOgE736ymMlpcnwq6APd4=;
+  b=nQgwZeN2409UTEa37jZ8pgFAlyvKcLtcdhGq4ON1lO8Pde3IstsvpiBe
+   c4pJOqumxFp5Bwv8O77xEKLHhJEkUFN+cpIv14G5lpfujiQOJJmtmTfUU
+   vGdNczDLDwljV5JASMR8wFaLDEtU7TCbYSdxuvlXSPl9b7nzbL1keNSoL
+   W2f4mWmOqRHTerZibIaVFtAybNGoCD9ouUVb/orfxYV24HZ3rErZApeZM
+   PaW1lq2OxKHWyMipNmR7Pf+nzXbzO8OgPPXOub27nFEf7Jwn2rB0QQ8XF
+   jP7FB+K1PId/wl/4j4UZXm6DHm9jV4jOajN80bnovW481vik7Q+u/c23R
+   w==;
+X-CSE-ConnectionGUID: Vr3+rJB0TV2UEEgWF/Q7Gg==
+X-CSE-MsgGUID: j91WizMzSRCkyklHbAk7sQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="53484808"
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="53484808"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 10:44:37 -0700
+X-CSE-ConnectionGUID: PZ0nGUhFSMSVDp5VOS6Hjg==
+X-CSE-MsgGUID: BdzFP1/TTO2mjsNMiikvVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="77176048"
+Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.111.159]) ([10.125.111.159])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 10:44:36 -0700
+Message-ID: <0069d2dd01235b8e301837b041c4db58b296fbab.camel@linux.intel.com>
+Subject: Re: [PATCH v6] perf sched timehist: Add pre-migration wait time
+ option
+From: Tim Chen <tim.c.chen@linux.intel.com>
+To: Namhyung Kim <namhyung@kernel.org>, Madadi Vineeth Reddy
+	 <vineethr@linux.ibm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers
+ <irogers@google.com>,  Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Peter
+ Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark
+ Rutland <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Adrian
+ Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>,
+ acme@redhat.com,  linux-perf-users <linux-perf-users@vger.kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>
+Date: Fri, 11 Oct 2024 10:44:35 -0700
+In-Reply-To: <Zwf_ep16969kIE2y@google.com>
+References: <20241004170756.18064-1-vineethr@linux.ibm.com>
+	 <Zwf_ep16969kIE2y@google.com>
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR01MB8146:EE_|IA0PR01MB8306:EE_
-X-MS-Office365-Filtering-Correlation-Id: c461d289-a722-455c-6f42-08dcea1896a4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?qN0B6hA/I9qOvi/b/gKZLId2v9BFv0CMyBeZqLuiX7sn2SGQYd+mphDHaLCz?=
- =?us-ascii?Q?yQjSDnLX236am5RnTSFyw/EcAIBm5JpKnuhCMYYwORavGVWPCpTtMWs7FtJ+?=
- =?us-ascii?Q?wtYOiA+3N8LmCEkw2UAnrw7ccV2/xMg9hxipZ12iyQ+3XPwT6H1HLrEDpTZq?=
- =?us-ascii?Q?NfQRqVE3gNcrce3iZK8CoiF5ygdmTEeLsGmPzSwsYq9zPcVLiP8TkHkhMziA?=
- =?us-ascii?Q?zWFeLkvr5vFS0MyRW4L9j3cIsxzS27Fw7JqwB7LwVuiO7YJgJeg9Q4dmmYa8?=
- =?us-ascii?Q?x46JFfz+n0oFGW+cjTmuczB77DwBm2oGusvXZqBf1UguOubHozDYIVV0Sw30?=
- =?us-ascii?Q?jDTq1PXC+batstXWTDOjcCRMHuNYN3c3cGlewLdm1uFeNMLxS5lhCzZ5GCwF?=
- =?us-ascii?Q?4MuV378jTfyaO6Ure1HEo+9YbznHSs7sa0Zq44nPtKhZX+A0g6upTTNiB7mb?=
- =?us-ascii?Q?/xy2hd2299hb1VK42Ju6dqfWmLtnEHbeRYYIU9w+8weq3G6mcBwW0kmAWMQi?=
- =?us-ascii?Q?pBMWAlLz8fBYv1zQTVYo1R4S1xzmw4JxneJWnzYU2oC7eTgn+iVRV+9Ixpg0?=
- =?us-ascii?Q?vp9mUQf+w9DNi9hypCVqBEk99NpblkKkZrPBsg3rZHkl3etevRjimxUZKhsb?=
- =?us-ascii?Q?UsO7+LjR4v6tr7HbK1TYWihS7hy6Wz3oU0VXCNYs6v1V2MJcUtIhfs1TIBgI?=
- =?us-ascii?Q?EgU69gqkYXYHydbwDiSdr+0rXlagIy4S2YZwNYimqeAqDcI2fii2Nce4M7r3?=
- =?us-ascii?Q?tJSllfY6Kt6oklvoDY7ETrHNjWW0ijOwwlaNQJYTSidI56xsdkRhXLZtKnpo?=
- =?us-ascii?Q?KtgfYqGcKh7GKRzS8JIUyBTcSGURUTiYPHO6wkyRjnrLOnL/X42KxtdEcKoD?=
- =?us-ascii?Q?fB/HqZjGqlMl8aGLDVA6h/Hby17tRz7R+B9u0JhbnGJNmdGXnpU+klICvWwj?=
- =?us-ascii?Q?s7NI9KxoZWTzUItt3kRWT8d3dqJUh199Any2kisN+eOjhX7+AewNTwv0iLfn?=
- =?us-ascii?Q?AY7ArPP/bm7d6I9ek5JGY6SxB4d1DFEuKSKcxVovsSPIc2A7syKIfy8lRAKQ?=
- =?us-ascii?Q?sFojce/27zbHO5a/da3kYwJDaLkqSrZy5m5e/76VfQmpRXlGGYuTlEHI8DKq?=
- =?us-ascii?Q?eIeY222saIqb5mX4wKKV4JmGxOkC8/n6kRJ7rrxa1DtbWG6HyxSwU08VqSu3?=
- =?us-ascii?Q?MqUGUOxzEAxy+LO7LWJ5CmurJ4awLMLtIz3luCXEPHB676iLab2akS/38VLF?=
- =?us-ascii?Q?7YuCHfGLrvk50dhNRut+7F2GDoUMmXruSIfY3lYMDtTe4796PsqTHNLkxwAK?=
- =?us-ascii?Q?wOw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR01MB8146.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?UluqeZoGAqSEUucc3i6YLufr7Up91vbE4Q7NTuTUArZSP23fRz+1wXKBjEpO?=
- =?us-ascii?Q?yf1y84uZ6HJ4mrSYWlfu93AhVpNJN+kCf8p74QT3/UW+rkO3y8A8ZS4MSEXp?=
- =?us-ascii?Q?7dcY5YwxM9KjRf0ONRMFhDdUGt7e411Fb3lrK4OnJvNpiEMH0jllJIya7HMl?=
- =?us-ascii?Q?ZCLwMAK9IIT7kRCXKjOxF6P+JPGKeUJvylKsfMYa7N4D/XZ8Q1WU1TtBxsnv?=
- =?us-ascii?Q?MQY444WCYijVhXM9+INzp9NJT8tUbX9TMYn+C54dZhkcGzPqZdQQl+zh4FkY?=
- =?us-ascii?Q?z9EgAP9tEva/It3wHpgOUhWRHVE2cvPhQwNTlJtDbobUgTPBSd9DZc2dSB7v?=
- =?us-ascii?Q?W2XLTThWKUxfrgqNozaBW+mna1O0c6i0f6AokpiV7XyUAPJ/t5CVQP6MUi8a?=
- =?us-ascii?Q?fhvdv2CpqFZ3l35/rvD/eCIEUarhbya+MQGhpNeTscLM9CE2EMdMqOzLP7Xw?=
- =?us-ascii?Q?LNwA8uEdypot7YOpQNdw3nJD/THa99fdx1/3z31IHIeLM4Mt+lXvZ+16jA1Q?=
- =?us-ascii?Q?i4Afuk7mVl/K9LmDwnTGg+csKh8Zgnqg5/XgGvhHQX5KTZEs4Fai7AbwX8mq?=
- =?us-ascii?Q?RoO8X+aH4cSvZeKYBqMp8ic8XDBDkIpk8jqQ8yxUSBwSeVXT8bUtC9SwU9HL?=
- =?us-ascii?Q?Dvlqr3fAxMstJn0J/UhQG1lAso48ACNfXr+OKDfwv97NHKeHrv6AO3hbjKmB?=
- =?us-ascii?Q?slcJHT8MyzmlE93AocQw+JmBE8ykrIRBIgvZcZ1XY01cUmKgBxtymxeOU8NX?=
- =?us-ascii?Q?6aZ7kvkWTYIKswipADeSj3m1JWQ/CJU9PZ8fZ/hJnbXpFjMt9Cd5l4Kwf5qo?=
- =?us-ascii?Q?IiS7lQkyEgkHZL6vEn1zHv9qxNAHHXx3GSIBmxqaZhIQVSVkIaSkNRMOPxQa?=
- =?us-ascii?Q?P/33+uYraRe4TP8LJf8rkFj3pso2xJ11fqlwsYU/+CTrRntOvwRiaUsK1qg/?=
- =?us-ascii?Q?EYo0RVbz6N8jJ9BkSsrkW4yMJ6xaFSV5zlrM4RU+LuZvvWkHAGJ8BoHv2IKG?=
- =?us-ascii?Q?a4gqv7Vokp/GfvJ/u0sOvOFTNyZdmOZD/CaQyMaoQiNq1PxBUPEkjXAWYhR2?=
- =?us-ascii?Q?Guj/beEwduxtBLD6sCCF56kmjAZqq0NR03eylfNSXDMERT76dAKJBIf7jCxn?=
- =?us-ascii?Q?AlszTH4XJBMQLoeKDaq8t5gwsCVbSTetmwMnjJ7FwpD2+LkvBRiNfi6XeyUE?=
- =?us-ascii?Q?lxNrT1m1LO2GEU3VD7vgDTLn9jqEL1LJjVO7PBwi1ZKPAfoIBi8odTrDyJmo?=
- =?us-ascii?Q?P3YPXBxMCIEau5liHtshzZHMINyzFKTQNIVLTfsW8Zgp3/v6h3igWNMQYR5I?=
- =?us-ascii?Q?v7VjimfLHZKJLDUc8uaO9q8fFf55HONl51c4wTBY30osf4L541ocs/1nGOAk?=
- =?us-ascii?Q?PTfy+5rrA3k18p+/4a5++6YQljO9/YKxM5OoF+9tNUi3EnI2kFzV8+WYGJfc?=
- =?us-ascii?Q?Yq24dej8wnfJ9kZJVnTm/DSYGjamA50lv5nSN3uQtq/wuEw6hFXDB/FmBR1O?=
- =?us-ascii?Q?lo6+ylXAuelxgQr2Ro7tKCcsq83KCjPQwQJEdHLLUDVO/fsRFK8zTSSGX6q2?=
- =?us-ascii?Q?NsJpFt4XInO4Xz1HSjMT9sZ7mhDHk0zCmZpSiEASSN9as89Wk11jjHPFE7Qr?=
- =?us-ascii?Q?BwJr1COBQIEJn2yW2ZyZ++0IYtnxVPTvYATQY34JD3V1?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c461d289-a722-455c-6f42-08dcea1896a4
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR01MB8146.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2024 17:17:30.8572
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ApCz399VyOhUrmCO7unbSm3FP4+zNXmvp57tFI1xVd1yURt6+uR1dzeANPQntN8DPWp11C6/o+bDeNZIVtSOIdZuWoT7lU3YzKFZnIRVE7TSKbY4UKBMUU+vRCquV/oh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR01MB8306
 
-Changes in V9:
-  - Removed V8 patch files 1/4 and 2/4.
-  - Modified set_sym_in_dict (trace-event-python.c) to add map_pgoff
-    in dictionary as-is without regard to MAPPING_IDENTITY. This patch
-    file is now patch 2/2.
+On Thu, 2024-10-10 at 09:23 -0700, Namhyung Kim wrote:
+> Hello Tim,
+>=20
+> On Fri, Oct 04, 2024 at 10:37:56PM +0530, Madadi Vineeth Reddy wrote:
+> > pre-migration wait time is the time that a task unnecessarily spends
+> > on the runqueue of a CPU but doesn't get switched-in there. In terms
+> > of tracepoints, it is the time between sched:sched_wakeup and
+> > sched:sched_migrate_task.
+> >=20
+> > Let's say a task woke up on CPU2, then it got migrated to CPU4 and
+> > then it's switched-in to CPU4. So, here pre-migration wait time is
+> > time that it was waiting on runqueue of CPU2 after it is woken up.
+> >=20
+> > The general pattern for pre-migration to occur is:
+> > sched:sched_wakeup
+> > sched:sched_migrate_task
+> > sched:sched_switch
+> >=20
+> > The sched:sched_waking event is used to capture the wakeup time,
+> > as it aligns with the existing code and only introduces a negligible
+> > time difference.
+> >=20
+> > pre-migrations are generally not useful and it increases migrations.
+> > This metric would be helpful in testing patches mainly related to wakeu=
+p
+> > and load-balancer code paths as better wakeup logic would choose an
+> > optimal CPU where task would be switched-in and thereby reducing pre-
+> > migrations.
+> >=20
+> > The sample output(s) when -P or --pre-migrations is used:
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >            time    cpu  task name                       wait time  sch =
+delay   run time  pre-mig time
+> >                         [tid/pid]                          (msec)     (=
+msec)     (msec)     (msec)
+> > --------------- ------  ------------------------------  ---------  ----=
+-----  ---------  ---------
+> >    38456.720806 [0001]  schbench[28634/28574]               4.917      =
+4.768      1.004      0.000
+> >    38456.720810 [0001]  rcu_preempt[18]                     3.919      =
+0.003      0.004      0.000
+> >    38456.721800 [0006]  schbench[28779/28574]              23.465     2=
+3.465      1.999      0.000
+> >    38456.722800 [0002]  schbench[28773/28574]              60.371     6=
+0.237      3.955     60.197
+> >    38456.722806 [0001]  schbench[28634/28574]               0.004      =
+0.004      1.996      0.000
+> >    38456.722811 [0001]  rcu_preempt[18]                     1.996      =
+0.005      0.005      0.000
+> >    38456.723800 [0000]  schbench[28833/28574]               4.000      =
+4.000      3.999      0.000
+> >    38456.723800 [0004]  schbench[28762/28574]              42.951     4=
+2.839      3.999     39.867
+> >    38456.723802 [0007]  schbench[28812/28574]              43.947     4=
+3.817      3.999     40.866
+> >    38456.723804 [0001]  schbench[28587/28574]               7.935      =
+7.822      0.993      0.000
+> >=20
+> > Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+> >=20
+> > ---
+> > Changes in v6:
+> > - Handle the case of multiple migrations before the task is
+> >   scheduled in. (Tim Chen)
+>=20
+> Are you ok with this now?
 
-Changes in V8:
-  - in arm-cs-trace-disasm.py, ensure map_pgoff is not converted to
-    string.
-  - Remove map_pgoff integer conversion in dso not found print
-    message.
+Yes, you can add my reviewed-by.
 
-Changes in V7:
-  - In arm-cs-trace-disasm.py, fix print message core dump resulting
-    from mixed type arithmetic.
-  - Modify CS_ETM_TRACE_ON filter to filter zero start_addr. The
-    CS_ETM_TRACE_ON message is changed to print only in verbose mode.
-  - Removed verbose mode only notification for start_addr/stop_addr
-    outside of dso address range.
-
-Changes in V6:
-  - In arm-cs-trace-disasm.py, zero map_pgoff for kernel files. Add
-    map_pgoff to start/end address for dso not found message.
-  - Added "Reviewed-by" trailer for patches 1-3 previously reviewed
-    by Leo Yan in V4 and V5.
-
-Changes in V5:
-  - In symbol-elf.c, branch to exit_close label if open file.
-  - In trace_event_python.c, correct indentation. set_sym_in_dict
-    call parameter "map_pgoff" renamed as "addr_map_pgoff" to
-    match local naming.
-
-Changes in V4:
-  - In trace-event-python.c, fixed perf-tools-next merge problem.
-
-Changes in V3:
-  - Rebased to linux-perf-tools branch.
-  - Squash symbol-elf.c and symbol.h into same commit.
-  - In map.c, merge dso__is_pie() call into existing if statement.
-  - In arm-cs-trace-disasm.py, remove debug artifacts.
-
-Changes in V2:
-  - In dso__is_pie() (symbol-elf.c), Decrease indentation, add null pointer
-    checks per Leo Yan review.
-  - Updated mailing list distribution.
-
-Steve Clevenger (2):
-  Add map_pgoff to python dictionary
-  Adjust objdump start/end address per map_pgoff parameter
-
- tools/perf/scripts/python/arm-cs-trace-disasm.py | 16 +++++++++++-----
- .../util/scripting-engines/trace-event-python.c  |  9 ++++++---
- 2 files changed, 17 insertions(+), 8 deletions(-)
-
--- 
-2.44.0
+>=20
+> Thanks,
+> Namhyung
+>=20
+>=20
 
