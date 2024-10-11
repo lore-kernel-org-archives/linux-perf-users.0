@@ -1,140 +1,119 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3374F213EE7
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 10:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D663E804;
+	Fri, 11 Oct 2024 11:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728642580; cv=none; b=aEprakaWsbZPojIyiWYwLiVhVWq6PECICqggdiBRwT0bXx248Q54MOfhCLHWOjNgZ+8CacEY+ARsQxmAA6E+rwvdk3034ahZwg5XMxyOodLrWkkPr+Bq5HJ//kJJO764/n2jvLwWcdbrkx//KMfCl+SZCxIFMkc8Ahgm5kTxo+k=
+	t=1728645541; cv=none; b=IW0utCpgIHgOhhj2yZyzQhN5aHnC8PNv7FO7iFSx9/8MLu0ZZHAik/tbDIQLgveZLzCQAoE6P2fjRdvPwf6gKnxLKpf40uLGujyFiF/Wtycze48UdAK0LQOnnzwNVFGo1SbqCA6wyv9No9qe74D59WQisYvD1FpFoO6aw6r/Gb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728642580; c=relaxed/simple;
-	bh=yteEQxz10J66CT+PCYl/YxRfhJ1gJiQkkZttYLNo/hA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Wt6gAOMSjDTaQxBfyq2OLXmXa1sDTgCDX9qEn2AtU6ZplEfAfdKBu87dcmCBlpDiBrxWdQpfLKa30RDDskuvKMTqp9fFByCPVifWvnwApYiLMV7L75yv5UBMrDcCuHIoth6f7QI1DqV9NrUsM1ctQUEBtjZC3lx3S1yRFMEugVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UChjrc2Q; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1728645541; c=relaxed/simple;
+	bh=l/ebEG8kD/gjaGhc9sDTvLQS00rUq5c+N3DFQlZBEzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KCg8eCCOt1AsUgUq+Av/HR3hfOYOmOKYFTwYMTGfMyHEVu4IEnvwLLdXxFcGii2BFMsFajv1kx6zQrvMm6y84Gl57HBPeIqC7ZPXE0nBFNZrQKR0PsjdB3C/5rXN5h0TYWmsybWstQlY3ASYGgGY1/Je/vCe7eVowXfTkuEnqeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vok1ydJj; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UChjrc2Q"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43111cff9d3so13987345e9.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 03:29:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728642576; x=1729247376; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=INWnCWa9p4DCzhAz8SZlPKQTEkrxultFZcTD61R/9K0=;
-        b=UChjrc2Q+Zuv1vGELKZbK6I/FFRy4OgE3N22QjGhXTlrI5N3ZDYT5J4XDLtt+SyPA4
-         0rtUxcDSeHWlxbKETBWakM21Erl+aQCJ62uWfeTQl2XFEy+D51GlGjDX6oIlhAgfKCuc
-         75PD+CMbvqFKmWyrPvTgeDjk94URxVSiKcJ65ugwsujJ3LhbHy79TGTQV3OSDduoAdVE
-         HWNNJn0elkWMWsQYJj4obreWuClgD8EFeT/ijIzuZjFB+p8f+R5yy13Wba7vGHcRG1wk
-         55HyACEG9gmtTCgVZKzVHPz4lRsMBeWzO9hz7u9e5Lt3zcv2VOLcN1/GdC/VkSjeU7Hi
-         5uXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728642576; x=1729247376;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=INWnCWa9p4DCzhAz8SZlPKQTEkrxultFZcTD61R/9K0=;
-        b=j+CS7azkPdF2M/JZ65d+UMtb51eTUJabPkb2OL5n0O49glVS+G6dpuYhTgw1FqujMV
-         zlLHClSTyIopTUE5iHY3EIvJHLkzEwsxgCf83+KwG4j6AgpAx6XMtmaKod+wklsahnVF
-         u3RBD/o+aY/NApy68bVIhoiIDqJXp6WPrO/xjm0scDBtTACpcClen6UduIPbLlPlBbJr
-         f2ijKtoc4jJ+3NKyfrrAGhlUXOt/Zzh/KwsK9TuvELs0LLb/Dw134kMp/H1LcHszkAGr
-         0AL8Ffj8XPS8zaRWrrRzWRTqFzmknND4it2qndbvnNt11bJXZTFW9IZDiNCUvTGXEZLb
-         68Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCVf520RsDwsTDvCT8F01yiDyRuYJcCCTZJCRCBQ66huc9+M3FHILZvQLbo6KzUKX9l/CkMrNVNZWWg/3j/ZtgPt@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGJQ+VfcHqkNg2s/e5JSCNQraJxh4iZNAUVcS8NM+ykHnJhGXx
-	7oc3QsW0X6vlITq8IiQLn7OvjE3FJnQl308DZyqFdcCr/ocoOvDE4fmt5TEGZlk=
-X-Google-Smtp-Source: AGHT+IEktUGrC4462Wglj/ucGdSO53AKyn6o1LcTuCzB8CQWo/AYuc/0Y8rlRb4dI7Feat4F2kzQmA==
-X-Received: by 2002:a05:600c:3ba0:b0:42f:310f:de9 with SMTP id 5b1f17b1804b1-4311deebe1dmr13276075e9.15.1728642576549;
-        Fri, 11 Oct 2024 03:29:36 -0700 (PDT)
-Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-430d70b42d8sm72027095e9.31.2024.10.11.03.29.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Oct 2024 03:29:36 -0700 (PDT)
-Message-ID: <affbe9b6-4d27-47d7-8767-9531f92b3d32@linaro.org>
-Date: Fri, 11 Oct 2024 11:29:34 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vok1ydJj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=JmzYZueYdB1IqVFlxSAinoEZfpgluWHovncGAWktWlU=; b=vok1ydJjbOKAUOWv5qDBpnZuN/
+	n+fSJPCvif/g62RipbMzFvKVO1Sm1BtHEwYwExJqsHpzXzUlAjhzDlCL6iHuAoap1UVrefrlzSm4u
+	GPa3to4Qrwb8iUApEGN3suRquVGlHz5+SQzevP2oB08acHpw+N9EX+lpibwLJVK474W6KLvNwOLYA
+	8sb6Zvfs8SKs5RnLb5+g5Z/n3MGr7Ze3JMZC4GnmNfHre/xr6J2M3G0h1XKjwidhXQetXPsC2aTFi
+	8LfVeCYqZdXRxFvjh4tGy3mbjWKSRWkPYEwWQkgaZlsoXZgPgOHgvhv2LVKpnIKPwTTueMBureBRy
+	Lb9foEyg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1szDfV-0000000AbXI-2lYb;
+	Fri, 11 Oct 2024 11:18:51 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C8330300642; Fri, 11 Oct 2024 13:18:49 +0200 (CEST)
+Date: Fri, 11 Oct 2024 13:18:49 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Xiong Zhang <xiong.y.zhang@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kan Liang <kan.liang@intel.com>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Manali Shukla <manali.shukla@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Jim Mattson <jmattson@google.com>,
+	Stephane Eranian <eranian@google.com>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	gce-passthrou-pmu-dev@google.com,
+	Samantha Alt <samantha.alt@intel.com>,
+	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+	Like Xu <like.xu.linux@gmail.com>,
+	Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH v3 07/58] perf: Skip pmu_ctx based on event_type
+Message-ID: <20241011111849.GM14587@noisy.programming.kicks-ass.net>
+References: <20240801045907.4010984-1-mizhang@google.com>
+ <20240801045907.4010984-8-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 5/8] perf test: Tag parallel failing shell tests with
- "(exclusive)"
-From: James Clark <james.clark@linaro.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>,
- Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
- Michael Petlan <mpetlan@redhat.com>, Veronika Molnarova
- <vmolnaro@redhat.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Thomas Richter <tmricht@linux.ibm.com>, Ilya Leoshkevich
- <iii@linux.ibm.com>, Colin Ian King <colin.i.king@gmail.com>,
- Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20241011073559.431302-1-irogers@google.com>
- <20241011073559.431302-6-irogers@google.com>
- <c32f8c46-3895-49e0-a837-98859345039b@linaro.org>
-Content-Language: en-US
-In-Reply-To: <c32f8c46-3895-49e0-a837-98859345039b@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240801045907.4010984-8-mizhang@google.com>
 
+On Thu, Aug 01, 2024 at 04:58:16AM +0000, Mingwei Zhang wrote:
+> @@ -3299,9 +3309,6 @@ ctx_sched_out(struct perf_event_context *ctx, enum event_type_t event_type)
+>  	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+>  	struct perf_event_pmu_context *pmu_ctx;
+>  	int is_active = ctx->is_active;
+> -	bool cgroup = event_type & EVENT_CGROUP;
+> -
+> -	event_type &= ~EVENT_CGROUP;
+>  
+>  	lockdep_assert_held(&ctx->lock);
+>  
+> @@ -3336,7 +3343,7 @@ ctx_sched_out(struct perf_event_context *ctx, enum event_type_t event_type)
+>  		barrier();
+>  	}
+>  
+> -	ctx->is_active &= ~event_type;
+> +	ctx->is_active &= ~(event_type & ~EVENT_FLAGS);
+>  	if (!(ctx->is_active & EVENT_ALL))
+>  		ctx->is_active = 0;
+>  
 
+> @@ -3912,9 +3919,6 @@ ctx_sched_in(struct perf_event_context *ctx, enum event_type_t event_type)
+>  {
+>  	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+>  	int is_active = ctx->is_active;
+> -	bool cgroup = event_type & EVENT_CGROUP;
+> -
+> -	event_type &= ~EVENT_CGROUP;
+>  
+>  	lockdep_assert_held(&ctx->lock);
+>  
+> @@ -3932,7 +3936,7 @@ ctx_sched_in(struct perf_event_context *ctx, enum event_type_t event_type)
+>  		barrier();
+>  	}
+>  
+> -	ctx->is_active |= (event_type | EVENT_TIME);
+> +	ctx->is_active |= ((event_type & ~EVENT_FLAGS) | EVENT_TIME);
+>  	if (ctx->task) {
+>  		if (!is_active)
+>  			cpuctx->task_ctx = ctx;
 
-On 11/10/2024 11:01 am, James Clark wrote:
-> 
-> 
-> On 11/10/2024 8:35 am, Ian Rogers wrote:
->> Some shell tests compete for resources and so can't run with other
->> tests, tag such tests.  The "(exclusive)" stems from shared/exclusive
->> to describe how the tests run as if holding a lock.
->>
->> Signed-off-by: Ian Rogers <irogers@google.com>
->> ---
->>   tools/perf/tests/shell/perftool-testsuite_report.sh | 2 +-
->>   tools/perf/tests/shell/record.sh                    | 2 +-
->>   tools/perf/tests/shell/record_lbr.sh                | 2 +-
->>   tools/perf/tests/shell/record_offcpu.sh             | 2 +-
->>   tools/perf/tests/shell/stat_all_pmu.sh              | 2 +-
->>   tools/perf/tests/shell/test_intel_pt.sh             | 2 +-
->>   tools/perf/tests/shell/test_stat_intel_tpebs.sh     | 2 +-
->>   7 files changed, 7 insertions(+), 7 deletions(-)
->>
-> 
-> The following ones would also need to be marked as exclusive, not sure 
-> if you can include those here or you want me to send a patch:
-> 
->   tools/perf/tests/shell/coresight/asm_pure_loop.sh
->   tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
->   tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
->   tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
->   tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
->   tools/perf/tests/shell/test_arm_coresight.sh
->   tools/perf/tests/shell/test_arm_coresight_disasm.sh
->   tools/perf/tests/shell/test_arm_spe.sh
-> 
-> In theory all tests using probes would also need to be exclusive because 
-> they install and delete probes globally. In practice I don't think I saw 
-> any failures, whether that's just luck or because of some skips I'm not 
-> sure.
-> 
-> And this one fails consistently in parallel mode on Arm:
-> 
->    22: Number of exit events of a simple workload
->      : FAILED!
-> 
-> But it's a C test so I assume there isn't an exclusive mechanism to skip 
-> it? It doesn't look like it should be affected though, so maybe we could 
-> leave it failing as a real bug.
->
+Would it make sense to do something like:
 
-Oh I see it says in the cover letter it can be set for C tests. But can 
-that be done through all the existing TEST_CASE() etc macros?
+	enum event_type_t active_type = event_type & ~EVENT_FLAGS;
 
+	ctx->is_active &= ~active_type;
+and
+	ctx->is_active |= (active_type | EVENT_TIME);
+
+Or something along those lines; those expressions become a little
+unwieldy otherwise.
