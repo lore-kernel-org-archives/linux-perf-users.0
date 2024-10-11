@@ -1,141 +1,96 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3231F9415;
-	Fri, 11 Oct 2024 11:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0F0213EC2
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 12:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728646921; cv=none; b=dB9Ddk/COU5+cloecJLvbnuLpw/gbroD6DCx0zR29FufurVHWAVKvIn005nNohKA6vBUrhJ8/HL3d0Wk8+0SEB7DXwTncyaikdMXy5E1VoSZVphXG4SRDNBFJfl1jQW7FM/fMhykqkAnX2vOf2jVhRVwGgOhVqRGI2rCSHUhCCE=
+	t=1728648078; cv=none; b=Sgz0kkbUkdsdFGViaPCX5sLbu6WNMfncxO3gg0tdZHJztUCqa2N5LJEGX1nwY8x2wZq0OqO2ziOjrzomgkjBeSANxN6v9FBqfSNlr5EAA9MOynQzGxnpceqEJZT/kUiT/2r5Unp9d4Z545PVqwj28yTsE3B56tBXrOrR4PWny+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728646921; c=relaxed/simple;
-	bh=f5/gKUV+onCFlwc+BTuEU324blfwu0E0ySgrxtQzrnk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EVook4D5It4jRNJ+WL2Dq1XanPVssBtVoc/MYPNbNtJfqzACWsI7DBJqpZ/tHeUue0q4GP5jpAtK/jVLQxH0KpUmm+XRkb0rH84Tb1yg2TvFNg9/WtiLSi6pfst8plwmnp+/cSAHeCGcpHyjiRTwkpmt25GcP9z/4k3rBUKfKiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LgQctK44; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1728648078; c=relaxed/simple;
+	bh=LT1IaCp5+fhZVHfVV7IJ+78xYx8h/eAPb/ijFeWEWc8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DPsz2FcQ49ktRpcK2AyAkIYmPTftcqntVmRcorUt/PqSjhAy2SiJYjWjrPyqF7nkRA7JCgaYMHn/UMaTSWenvh4YQmEglHiZ/24tZuaV7454zBFVS2+26AZ0T/WCQkslkAsEOQSUUIvrlU4NxjmuSvi+njiyAFgTntpZ0Qj8hd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com; spf=none smtp.mailfrom=readmodwrite.com; dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b=L0xMS7Hu; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=readmodwrite.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LgQctK44"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=s0nie3up7O9BX6Pp/Xow1TsRav7XmKEP6A0jErw7/ro=; b=LgQctK44yeUsn1zwiKssE5kD4s
-	BiS8Pou2pBtwWhwceWltYXJGedWypGE7EtQ6TI0AW4TzE0pYQWvLXqIFwqErYV3Eg7GSwv+Y0Ne9W
-	5NsIaBmIYobZsDiZMf2jKuLCB4Ziwa4wOGsmQklh1Vc1HvKIzKqrLNM/1VQmC+tBNJYQvtGTSj+RH
-	cWPgst7qqmfARCSoHteMY1z7QyYSExQ/8YimlX7v8fo9EO4oDzPPZP8vRsccrRvIhOjJqFdHNuHDt
-	DMxUMaEcSM65lpUqQRLFV9ripUN8Ui2nmjcFmjEvjp1HeOhJIlQG7qf3aIZHeF/p7mVaYvX65t6Ip
-	QGTcaolQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1szE1m-0000000Ae0b-3VxG;
-	Fri, 11 Oct 2024 11:41:51 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CC2B2300642; Fri, 11 Oct 2024 13:41:50 +0200 (CEST)
-Date: Fri, 11 Oct 2024 13:41:50 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Mingwei Zhang <mizhang@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Xiong Zhang <xiong.y.zhang@intel.com>,
-	Kan Liang <kan.liang@intel.com>,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Manali Shukla <manali.shukla@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Jim Mattson <jmattson@google.com>,
-	Stephane Eranian <eranian@google.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	gce-passthrou-pmu-dev@google.com,
-	Samantha Alt <samantha.alt@intel.com>,
-	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
-	Like Xu <like.xu.linux@gmail.com>,
-	Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v3 09/58] perf: Add a EVENT_GUEST flag
-Message-ID: <20241011114150.GO14587@noisy.programming.kicks-ass.net>
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-10-mizhang@google.com>
- <095522b1-faad-4544-9282-4dda8be03695@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b="L0xMS7Hu"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5c8af23a4fcso2525647a12.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 05:01:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=readmodwrite-com.20230601.gappssmtp.com; s=20230601; t=1728648075; x=1729252875; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OpKEy9eKEr828a+5Sj4OEUU4agb/G4dm93dgL6VdZuw=;
+        b=L0xMS7Hu8NwMr0kCjaWaygXhxozm9B59UBplkQd0duhe+1STGNetE5VXigNs9GM2hk
+         FPvBByYHhure9xA0JxyUad4SM6QYElzA23+UzF2wlfra9sFmYvidS55q8lHwhNuu4QZl
+         r39o6A9vGjq3YTiM054nZi19F83P8jNWA78/hYusQLLSXkfWnYJjJSKHrzqmx2pu+ySk
+         kK//8XxBPA20zmLCxJ9v9mnMu2t6b3W9UprZfvBQa+FRrAIVi5t8Q4WxPF6DvXiB4W2P
+         rv+lrbZLG/ZMqa+FHXD1eBH9VJqWEIOQq0G8RAWRhsKmkFySIYEXCI+r8g6BDnI8DbgH
+         IlyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728648075; x=1729252875;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OpKEy9eKEr828a+5Sj4OEUU4agb/G4dm93dgL6VdZuw=;
+        b=VfP7UoK4uE0FTt6h7JwT9RJ8y+105nK8uGxIjlASD6BmrbOAVPsVL4Pa6euGU9DebC
+         vVlYeb4FIXWRKpl/uzTLLhnVHWIq/ZCFA3dWaQI/d7PTcB8ulduN0quymTD6nCvEKCZG
+         P1MPVFH9sZVTZbDlYfgGj5TX7qXrifgmSVQ70sKbukkzxt0L4Z1LOEpr1NxBoENI+vmA
+         ejZMkD0y5QCfmkFK0zeWeCCALnaIGdaeWkEsQAV9Z5+RKuxAzM/H0i8PFH0AwYWs9js2
+         eb5y6tqvfITEFtCcUKKNrNNYaZ1enr09Bh4tX6G5+FuG8VEDXN7FEYPCC7ke6HlNc+Ay
+         wR9A==
+X-Forwarded-Encrypted: i=1; AJvYcCXUcn060mcOy8b7A/cJD2yTreMocJEjWaRHyd+pBXnRCinLbg8I2/pXudSqRBxCR7mkFfGDJkzovUskl14OIXuy@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTIOYtjZhNOta8RFHVDLab0m5Agt30xj48fe/8azcGil/h6OUB
+	38wCNZfGenHZia56/h9hRGQW/YM3X5uWopnNjZBG7BbmwTWE+2fGAqf0CRLHYoVcvp3F9a3FMmk
+	3RmHx0WMdwMftXaAq8rYG5lG8eeUElkoo9+WHaw==
+X-Google-Smtp-Source: AGHT+IFIfxq9+xDx7PZBV2IwVM3jqEqcPFmqwd/ztphHxEMC9D5lQLpx2XzRzy5zRcisVSixrYav/q4IK5ZlN2o4DbQ=
+X-Received: by 2002:a05:6402:84c:b0:5c9:4664:e699 with SMTP id
+ 4fb4d7f45d1cf-5c948d5117fmr1490793a12.23.1728648074858; Fri, 11 Oct 2024
+ 05:01:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <095522b1-faad-4544-9282-4dda8be03695@linux.intel.com>
+References: <20241011055700.4142694-1-howardchu95@gmail.com>
+In-Reply-To: <20241011055700.4142694-1-howardchu95@gmail.com>
+From: Matt Fleming <matt@readmodwrite.com>
+Date: Fri, 11 Oct 2024 13:01:03 +0100
+Message-ID: <CAENh_STz6DxQ483c4pwX=Gwfwy_iKSQno+zHmXXQ3N0pOpxcqw@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Delete unused Intel CQM test
+To: Howard Chu <howardchu95@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 21, 2024 at 01:27:17PM +0800, Mi, Dapeng wrote:
-> On 8/1/2024 12:58 PM, Mingwei Zhang wrote:
+On Fri, Oct 11, 2024 at 6:57=E2=80=AFAM Howard Chu <howardchu95@gmail.com> =
+wrote:
+>
+> As Ian Rogers <irogers@google.com> pointed out, intel-cqm.c is neither
+> used nor built. It was deleted in the following commit:
+>
+> commit b24413180f56 ("License cleanup: add SPDX GPL-2.0 license identifie=
+r to files with no license")
+>
+> However, it resurfaced soon after in the following commit:
+>
+> commit 5c9295bfe6f5 ("perf tests: Remove Intel CQM perf test")
+>
+> It should be deleted once and for all.
+>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> ---
+>  tools/perf/arch/x86/tests/intel-cqm.c | 128 --------------------------
+>  1 file changed, 128 deletions(-)
+>  delete mode 100644 tools/perf/arch/x86/tests/intel-cqm.c
 
-> > +static inline u64 __perf_event_time_ctx_now(struct perf_event *event,
-> > +					    struct perf_time_ctx *time,
-> > +					    struct perf_time_ctx *timeguest,
-> > +					    u64 now)
-> > +{
-> > +	/*
-> > +	 * The exclude_guest event time should be calculated from
-> > +	 * the ctx time -  the guest time.
-> > +	 * The ctx time is now + READ_ONCE(time->offset).
-> > +	 * The guest time is now + READ_ONCE(timeguest->offset).
-> > +	 * So the exclude_guest time is
-> > +	 * READ_ONCE(time->offset) - READ_ONCE(timeguest->offset).
-> > +	 */
-> > +	if (event->attr.exclude_guest && __this_cpu_read(perf_in_guest))
-> 
-> Hi Kan,
-> 
-> we see the following the warning when run perf record command after
-> enabling "CONFIG_DEBUG_PREEMPT" config item.
-> 
-> [  166.779208] BUG: using __this_cpu_read() in preemptible [00000000] code:
-> perf/9494
-> [  166.779234] caller is __this_cpu_preempt_check+0x13/0x20
-> [  166.779241] CPU: 56 UID: 0 PID: 9494 Comm: perf Not tainted
-> 6.11.0-rc4-perf-next-mediated-vpmu-v3+ #80
-> [  166.779245] Hardware name: Quanta Cloud Technology Inc. QuantaGrid
-> D54Q-2U/S6Q-MB-MPS, BIOS 3A11.uh 12/02/2022
-> [  166.779248] Call Trace:
-> [  166.779250]  <TASK>
-> [  166.779252]  dump_stack_lvl+0x76/0xa0
-> [  166.779260]  dump_stack+0x10/0x20
-> [  166.779267]  check_preemption_disabled+0xd7/0xf0
-> [  166.779273]  __this_cpu_preempt_check+0x13/0x20
-> [  166.779279]  calc_timer_values+0x193/0x200
-> [  166.779287]  perf_event_update_userpage+0x4b/0x170
-> [  166.779294]  ? ring_buffer_attach+0x14c/0x200
-> [  166.779301]  perf_mmap+0x533/0x5d0
-> [  166.779309]  mmap_region+0x243/0xaa0
-> [  166.779322]  do_mmap+0x35b/0x640
-> [  166.779333]  vm_mmap_pgoff+0xf0/0x1c0
-> [  166.779345]  ksys_mmap_pgoff+0x17a/0x250
-> [  166.779354]  __x64_sys_mmap+0x33/0x70
-> [  166.779362]  x64_sys_call+0x1fa4/0x25f0
-> [  166.779369]  do_syscall_64+0x70/0x130
-> 
-> The season that kernel complains this is __perf_event_time_ctx_now() calls
-> __this_cpu_read() in preemption enabled context.
-> 
-> To eliminate the warning, we may need to use this_cpu_read() to replace
-> __this_cpu_read().
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index ccd61fd06e8d..1eb628f8b3a0 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -1581,7 +1581,7 @@ static inline u64 __perf_event_time_ctx_now(struct
-> perf_event *event,
->          * So the exclude_guest time is
->          * READ_ONCE(time->offset) - READ_ONCE(timeguest->offset).
->          */
-> -       if (event->attr.exclude_guest && __this_cpu_read(perf_in_guest))
-> +       if (event->attr.exclude_guest && this_cpu_read(perf_in_guest))
->                 return READ_ONCE(time->offset) - READ_ONCE(timeguest->offset);
->         else
->                 return now + READ_ONCE(time->offset);
-
-The saner fix is moving the preempt_disable() in
-perf_event_update_userpage() up a few lines, no?
+Reviewed-by: Matt Fleming <mfleming@cloudflare.com>
