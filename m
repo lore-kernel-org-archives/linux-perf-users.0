@@ -1,59 +1,25 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D0B209F26
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 08:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCAAC1F4FA8;
+	Fri, 11 Oct 2024 08:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728634706; cv=none; b=f70VAlLQkEDWPRQEkMsWGWKiuUSIM8RwVzwLYrJ9nQ2nJwGF89AWzDX3wnAlpg/MrUXoJ/I05v+UgdiwUUUcviVGmt4P57nK52jLcqLM8rf9qpE7Q0rqylSehY90ax79sqcKkyLa9MTY9kX0REhgeTMhQY7yYRGbM6oykZZ9AnA=
+	t=1728636107; cv=none; b=TRt3UnI0wdpFc62+CJDEjxGreUWcrAJVW8RyrM1y+THPmIoPJA04meEXYeEfhdBiOUxyPhaGB69FBLdoM2zOayhLNnEP17j24wCiXNp5liRWeljQO9RbizDiLPocNDeF4oqqjhkCmC1SxgTzUPtAeUKc1+exi7nUYxnD9zmWKKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728634706; c=relaxed/simple;
-	bh=kVXvOP6KE5Ty5zeNsdMXbk5ClC+3am8pith54wBKNhQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CelqnCNM99HBHb7XQun8i/MpGm7TXmHHvYTY7cCdDLpQI2FMrv87FPvzEChIJieNQqGm6m1wyi5picwCSerG9DCX8IgjY9fUibK54bBIuFEwgDpqFF6tGrQ8CcarVRYZmRncOp7b61OUxdudC30HeW9D9T8onmVA0BOY22ALeOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XjzhxzOD; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XjzhxzOD"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-37d4821e6b4so943684f8f.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 01:18:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728634703; x=1729239503; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jA4fDVxLqQvympbVslTUjjSQQTz3iQG+LwynSIf0/nw=;
-        b=XjzhxzODKcHC4uubA+7YAG/o1ISD4OAHYhK9ErwVoAOsQFAKEh5q1/DmhykMEV2MBE
-         8gHpjstNjVXL6RJt+845C8ohcAAtsUYJ1tvSslyJoalPxN6bmwwB7OiTNMDbhTmnk45B
-         UTyB4TIhdFRwVbWzoy7ZZMVTkW5JN4sHUVw33b408cGrWUHg6YiSFtOjU2rF9TbRxzre
-         l9v5l8Yo7/9M6l0sXYlNz3k49tSeta/YvKMgKA0mib9DiLL+NEyne0rZQbnKbu8aJXrr
-         9J8x5sx6u/WnreNZUpC1ohfWqtsrrnR+iLtamCk4d25aLnqh1Itvez/swcdA3MRqbYm3
-         Lxjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728634703; x=1729239503;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jA4fDVxLqQvympbVslTUjjSQQTz3iQG+LwynSIf0/nw=;
-        b=PSaDuiwdmsadRxUzDjK/d3Tmg/LNZkV9G4xDHemNNmtRJgY/0unZV6ThXuh+nB9e0W
-         rmmPcPzgntZ4WHN75qNOHFdl4lD9STxQXUtNP2zmtoIeVZSPo69KH4BUw8fMJmWhuD8/
-         x/lEzbhiqzGvcZqOm8MpgJbemVJbdHCEHRlsahIuMgGA+EHf9o06qu6e1NVp3OawEP3C
-         iwKnfLk9kqpsOYgg3l9etQDCBZZpm5wfR5zZQmH83B5vsvpzlwL51+Hinh6LtFi6HMcf
-         iFSaGxKO0zu5MMxAEo71vzlBw/VSDxMSxRfMJKrLtTOfXsaTV3ZkQCIWMJ4Rf/2HI9tI
-         zsyw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7PtWTzy3FqIgguPqmRyQTcqvTVh/ywwgPQgp8XyeDfj9hjrvrcZeyt7dJno/k6ByDLmHVqm4P1QHU6rsoye6s@vger.kernel.org
-X-Gm-Message-State: AOJu0YykzQzsl0J5jzt4DssWRVlpxrFOTBSylIgspukdGNZc257cgnZH
-	XDVdNMF7Xokl4lMBcZweRzYJICh23oSKqh8wjCXIarhfWTRHIbx4uoV4ZCkyAlE=
-X-Google-Smtp-Source: AGHT+IEdG5q+nO38cL0UXFQO6d8JyQ5LOlG/e8vsvQc/6A5s1cVs+62bm1DyNBgEaJonfZneVu92Qg==
-X-Received: by 2002:adf:f502:0:b0:374:c621:3d67 with SMTP id ffacd0b85a97d-37d551ed527mr1199604f8f.24.1728634703105;
-        Fri, 11 Oct 2024 01:18:23 -0700 (PDT)
-Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b6a8802sm3346706f8f.21.2024.10.11.01.18.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Oct 2024 01:18:22 -0700 (PDT)
-Message-ID: <ae55ea37-0e0d-4fe1-9b1c-6a31dd20ea30@linaro.org>
-Date: Fri, 11 Oct 2024 09:18:21 +0100
+	s=arc-20240116; t=1728636107; c=relaxed/simple;
+	bh=TsaX9sLl/cgUZRltwcJab4+UieqnsGy4utuPV8gZMuk=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=c8t0ttC1zv6IHqKVFGAPdNvWFPk8oYGtcmghbaYEdCzzp28ZycOCq/u220U6UfbPYB8OizQBQ1Y03OhbDhFd9EIu49gye75CwiYqQl5dTQvmel/i8TUeqxO8hSzo8xB8SXk97r9+Lf+yk3+wDfjxswr2hHJQhhMed8ma2Qu7Wys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFD77497;
+	Fri, 11 Oct 2024 01:42:07 -0700 (PDT)
+Received: from [10.1.32.10] (PF4Q20KV.arm.com [10.1.32.10])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 937593F64C;
+	Fri, 11 Oct 2024 01:41:35 -0700 (PDT)
+Message-ID: <a7d63300-27a2-4121-9327-40426a66afe3@arm.com>
+Date: Fri, 11 Oct 2024 09:41:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,63 +27,154 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] perf trace: Fix support for the new BPF feature in
- clang 12
-To: Howard Chu <howardchu95@gmail.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- alan.maguire@oracle.com, Peter Zijlstra <peterz@infradead.org>
-References: <20241011021403.4089793-1-howardchu95@gmail.com>
+From: Leo Yan <leo.yan@arm.com>
+Subject: Re: [PATCH v1 3/3] perf probe: Generate hash event for long symbol
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Dima Kogan <dima@secretsauce.net>,
+ james.clark@linaro.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20241007141116.882450-1-leo.yan@arm.com>
+ <20241007141116.882450-4-leo.yan@arm.com>
+ <20241011003408.f9bacf4e5899e88a94c3d7cd@kernel.org>
+ <fab219bc-fabd-42b7-b42f-d92851b1d2f3@arm.com>
+ <20241011120733.5660c80f8f93e9659fa5a254@kernel.org>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241011021403.4089793-1-howardchu95@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20241011120733.5660c80f8f93e9659fa5a254@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 10/11/2024 4:07 AM, Masami Hiramatsu (Google) wrote:
 
+[...]
 
-On 11/10/2024 3:14 am, Howard Chu wrote:
-> Changes in v2:
-> - Resolved a clang-16 build error pointed out by Namhyung Kim
->    <namhyung@kernel.org>
+>>> OK, personally, I recommend you to specify event name instead of generating
+>>> long event name in this case. But I understand sometimes this kind of feature
+>>> is good for someone.
+>>
+>> Sometimes, users try to add probe for long symbol and returns error, but there
+>>   have no clue for proceeding.
 > 
-> The new augmentation feature in perf trace, along with the protocol
-> change (from payload to payload->value), breaks the clang 12 build.
-> 
-> perf trace actually builds for any clang version newer than clang 16.
-> However, as pointed out by Namhyung Kim <namhyung@kernel.org> and Ian
-> Rogers <irogers@google.com>, clang 16, which was released in 2023, is
-> still too new for most users. Additionally, as James Clark
-> <james.clark@linaro.org> noted, some commonly used distributions do not
-> yet support clang 16. Therefore, breaking BPF features between clang 12
-> and clang 15 is not a good approach.
-> 
-> This patch series rewrites the BPF program in a way that allows it to
-> pass the BPF verifier, even when the BPF bytecode is generated by older
-> versions of clang.
-> 
-> However, I have only tested it till clang 14, as older versions are not
-> supported by my distribution.
-> 
-> Howard Chu (2):
->    perf build: Change the clang check back to 12.0.1
->    perf trace: Rewrite BPF code to pass the verifier
-> 
->   tools/perf/Makefile.config                    |   4 +-
->   .../bpf_skel/augmented_raw_syscalls.bpf.c     | 122 ++++++++++--------
->   2 files changed, 69 insertions(+), 57 deletions(-)
-> 
+> OK, no warning messsage is not good.
+> It should warn them to recommend adding it with their own event name too.
 
+Okay, will do this in next spin.
 
-Tested with clang 15:
+>> Either we automatically generate a hashed name, or a guidance in the failure
+>> log for setting event name would be helpful. If you have concern for hashed
+>> name, maybe we can refine the log to give info for setting event name?
+> 
+> Yeah, I think this long event name is not useful for user to type.
 
-$ sudo perf trace -e write --max-events=100 -- echo hello
+Agreed.
 
-    0.000 ( 0.014 ms): echo/976249 write(fd: 1, buf: hello\10, count: 6)
-                                             =
+>>> BTW, I would like to confirm. Can't we demangle the symbol name and parse it?
+>>
+>> I did test for C++ demangle symbols with the command:
+>>
+>>    perf probe -x /mnt/test_cpp_mangle -F --demangle
+>>
+>> The command doesn't work as I cannot see it output correctly for demangled
+>> symbols. But I don't look into details why this does not work at my side.
+> 
+> Oops, that is another issue to be solved.
 
-Tested-by: James Clark <james.clark@linaro.org>
+After install libiberty, then I can see the tool can show demangled symbols.
+However, I found another issue for probing demangle symbol, please see details
+in below patch and let me know if makes sense.
+
+---8<---
+
+From 3b09a6f89c7e383c6b1d2b7e6bd80c6bfa658d5b Mon Sep 17 00:00:00 2001
+From: Leo Yan <leo.yan@arm.com>
+Date: Fri, 11 Oct 2024 07:58:08 +0000
+Subject: [PATCH] perf probe: Correct demangled symbols in C++ program
+
+An issue can be observed when probe C++ demangled symbol with steps:
+
+  # nm test_cpp_mangle | grep print_data
+    0000000000000c94 t _GLOBAL__sub_I__Z10print_datai
+    0000000000000afc T _Z10print_datai
+    0000000000000b38 T _Z10print_dataR5Point
+
+  # ./perf probe -x /home/niayan01/test_cpp_mangle -F --demangle
+    ...
+    print_data(Point&)
+    print_data(int)
+    ...
+
+  # ./perf --debug verbose=3 probe -x test_cpp_mangle --add "test=print_data(int)"
+    probe-definition(0): test=print_data(int)
+    symbol:print_data(int) file:(null) line:0 offset:0 return:0 lazy:(null)
+    0 arguments
+    Open Debuginfo file: /home/niayan01/test_cpp_mangle
+    Try to find probe point from debuginfo.
+    Symbol print_data(int) address found : afc
+    Matched function: print_data [2ccf]
+    Probe point found: print_data+0
+    Found 1 probe_trace_events.
+    Opening /sys/kernel/tracing//uprobe_events write=1
+    Opening /sys/kernel/tracing//README write=0
+    Writing event: p:probe_test_cpp_mangle/test /home/niayan01/test_cpp_mangle:0xb38
+    ...
+
+When tried to probe symbol "print_data(int)", the log show:
+
+    Symbol print_data(int) address found : afc
+
+The found address is 0xafc - which is right if we connect with the
+output result from nm. Afterwards when write event, the command uses
+offset 0xb38 in the last log, which is a wrong address.
+
+The dwarf_diename() gets a common function name, in above case, it
+returns string "print_data". As a result, the tool parses the offset
+based on the common name. This leads to probe at the wrong symbol
+"print_data(Point&)".
+
+To fix the issue, use the die_get_linkage_name() function to retrieve
+the distinct linkage name - this is the mangled name for the C++ case.
+Based on this unique name, the tool can get a correct offset for
+probing. Based on DWARF doc, it is possible the linkage name is missed
+in the DIE, it rolls back to use dwarf_diename().
+
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ tools/perf/util/probe-finder.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 630e16c54ed5..28a14005fc1f 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1583,8 +1583,21 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
+
+        /* Find a corresponding function (name, baseline and baseaddr) */
+        if (die_find_realfunc(&cudie, (Dwarf_Addr)addr, &spdie)) {
+-               /* Get function entry information */
+-               func = basefunc = dwarf_diename(&spdie);
++               /*
++                * Get function entry information.
++                *
++                * As described in the document DWARF Debugging Information
++                * Format Version 5, section 2.22 Linkage Names, "mangled names,
++                * are used in various ways, ... to distinguish multiple
++                * entities that have the same name".
++                *
++                * Firstly try to get distinct linkage name, if fail then
++                * rollback to get associated name in DIE.
++                */
++               func = basefunc = die_get_linkage_name(&spdie);
++               if (!func)
++                        func = basefunc = dwarf_diename(&spdie);
++
+                if (!func ||
+                    die_entrypc(&spdie, &baseaddr) != 0 ||
+                    dwarf_decl_line(&spdie, &baseline) != 0) {
+--
+2.25.1
 
 
