@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D876E20B1F5
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 07:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEF120B21A
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 07:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728632185; cv=none; b=NO8AOXDghma8C5qZLuKCDYUOdR9UP7uu8BH8JRBF8N+07zXTShwsL+ZvudrQNyDLIfehrzkjHRzhf5zZipzTddy2HZI5wI7yQawQrv2ngkkqGvzYXyCqUZHHXFUvv60h43BnMj+Kj0ikYSW0U0UcjtKkCXdKH6NK9jwsZ2woExA=
+	t=1728632187; cv=none; b=o+dgxs9jCHT7Y+ftV6GBCicnWTmI55me9xxekWkndGMeGfpSkK9agC/TlddFoYm6zAJO7YXjahT4s/YElAbUe+EgGIX87FcXpKJxaa4yGjIWkfbZoSx2Ajg3RZriMJEb9pVs/elw982SxcTN7imGaZZg2LGHwfCdtOWn9V7OtNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728632185; c=relaxed/simple;
-	bh=JuqmInDNCF0j1qi7X8VY+IRMQTve1+ETPqQ3Y60nnhA=;
+	s=arc-20240116; t=1728632187; c=relaxed/simple;
+	bh=qRJ7uobiuXa4lx58ydid8NsiY9eSUc6Dd5fam5Iq7JM=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=FWuNGvBlZLFs4kwfo0n4X1ng/0jcMXD/mCDHl96b90cR6HBQQF6aZhQneLPE4E/2iiUtq3RChBLhl2OPXe1vTwmmVIVoytI66BYH/SkX8SpB73aVomAjtI8CVJlCW+nEwq/A1/rDCD+JXUHXPAUcSB5wOca/L5A+HvpsenvCMaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XECGUSDc; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=k8LQ3/7O/6aQ4t/oZHqW2nb+Gmy9jpkaMNEZ73ZkNIMA1PyH3Bw5QNUwOkE51skdSgZxjznoAV91wQ1LAdVfhcKYK3X3fakJgNc2/HkjDRqwPHr1GLsyPcjwKgoPC/rzg65upr8EJ0NwDuUu0BIvNfiQ1dglv8y+3KWbdJ8w6Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x/1WHHhc; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XECGUSDc"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e2b049b64aso27391657b3.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 00:36:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x/1WHHhc"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e290b8b69f8so3060704276.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 00:36:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728632183; x=1729236983; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1728632185; x=1729236985; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=h1RDoAb7ubYjo7SH/MUMAZWwf1Fgw9lZgxpoFFh96f4=;
-        b=XECGUSDcKH6N8BU/D68R30ZD8DXcqX6UVk1jaioffmgJUn+/YwVry+XOhwqyBCw9Qy
-         T9lkglx8s3v37tQw2LmjbsIGWlIbOgYyrAXpMZhoEmPDXS2TQiiBItvqvWAk7+GeuQQm
-         eH3WYfZdESAdyVuSPX7lg214IEOfKXuG1BfkYGoQb7+S78lmmAlvMhILzpeyGTZXeQWG
-         IAElI+Jq9upgqZCda/psCuaozUr8n17IZFRjbbqQ23duA9QG3zCFXHTCVWB3vbHkWkal
-         DIKBVu5FrXaikicbTz1787SjGNArOuZEkSFeZ5YoYZxkRfHozBirHGSdzLmsnA0ZVdDa
-         N8HQ==
+        bh=sGy2stET4dPYcbIauhcjx1YKA3rAeDl4bGF/9JCbzDA=;
+        b=x/1WHHhcX5uhIxoTpgJ6UZwPYJRUF+JSEIHaOdJWNzLDZJe6aHEZe/3u+iSYX8MOlB
+         Nrk+Bfyq+S/t+w5ZOTXMXYCpMbHvoUN3BoqSGR4KR3wcO6KLTSt86R+Rc/nzuSnFJG78
+         ARnI42Sxg/65Q77Vb0iQOzCbiYXAzJ7odOkuvDh0sJa9boNgE3YU6rRWaIplJAHO8niU
+         nQ7W2z67TzFq5jNUm8Ntgdk+WAmCeEyauyjtia2NXK4bhEsYV4xPU9yADNrGtj/uuxSu
+         t7swkd2owG05q61MaFjqCy8YL2niNI8XDJOfnCUZ3lriD7U0jMXKQq90yo6nMFjwKEn4
+         ++3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728632183; x=1729236983;
+        d=1e100.net; s=20230601; t=1728632185; x=1729236985;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h1RDoAb7ubYjo7SH/MUMAZWwf1Fgw9lZgxpoFFh96f4=;
-        b=I9YAdVQQq1ia+cJAYgEnMqNjJzTkz9sy9HvJkWtaUlrkibEKLUy5glWN7QfSfJhDlk
-         K6a0ZiiO9wTfLY8KCkUncyeu4/7QxB9pCfxen7ONpFSgD3RbThv30WUKqhLUcCFr3B0y
-         TwO6XONCIRETZtR6Y+uWpzMLLIh7I7nUIYhnHzW+oPy816QxYDqD2tJOD/1B/ifOIEZK
-         cRJ3l0nk/bSpJRr0hln5UKAbwdpzvZNnUsqGWNqZUo8WkdoGsq715sa0gzkJ18zpEbLK
-         +dgkyrVJTkeUMU7QJn1H4ZO6xJsRGVP9IkP9w1lh0XsJ6XPdRLN7eU63y1bZVves37pK
-         PiXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVU7jlD8woMA4OsKqaK3SQg6ML5gcKN3e9LAYhRWtcffWM3EQz4oKzcIn3Q66mxPIcvOYrYTkMn2IhunayriHtl@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywb3ENIWHqBmvME3cEtuJaiuGWwxb40Elgv8nccE+wcPaNvirtj
-	NwzXmTHUSA8unrksUaj0OOs/wZKWK9VrWVsNnaNnfsNjaCo9smFEChC8RZ2RJ1E7rcVYOFmQs92
-	zyb2+Zg==
-X-Google-Smtp-Source: AGHT+IEU5guu/3Lk+woHIE6L9NJ5fVlRdYN3CeRTj1h03zL1dcCIN4gq5f88dhPrvr+ImWXEtantlftK84yf
+        bh=sGy2stET4dPYcbIauhcjx1YKA3rAeDl4bGF/9JCbzDA=;
+        b=ea8Y37mNfFWiLlGIVp5rZy720JUV8+u7lFkRxG+h/QV/N/Wgd5EceXspoBcOFKdm2K
+         UI1v9ea+cqNsVrtgOeMDnNRlSJC6CLZ/6np72REPalFGTDGdJXahEIObevRUX8wghukc
+         XRCLBNnHrOIsE1R8qy2ZQk1tsig79b56jFESURk/Iu0WduXKr8qWOZFKSLjZGobYtCyu
+         qO3WcpbINsNC8n2bITZi+uwzW4rY+7IDhTrPDkxCulLa/kPFpzEjsaGbi4J2Yzhfb+yH
+         v4d18KmTyuNlXhEwtKqsuidtVndyqpzblPlLc60yz6vlU0NNTtWPQsiCWJblp2QvM+T5
+         x8Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUwH33fsiTfcPh9T+Tj9us8GcB+nEs8HjJ2mlhg9abMe9TTldEQMrHWP98eGijDl3beKEpIc6jcJNZUNTXvVKgt@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDB1RXU4ITZ+Oi6h24mve75BknlvxO/IIlfiSH4PKpLbsmH5Vg
+	uPGZRRZJLkx7PJ5kWIZ7ZPGBR99o3qw+x2sNUAb1+DXw2AEyDvtVyjSX0uGfKizlZGHHV9ztwv1
+	v9KptcQ==
+X-Google-Smtp-Source: AGHT+IFCnDFL9xKF8OEn5GZiOdl2eowmU59Qvp9zHwHa5EKbZlB7BPAnM/Hp0z+j/P9xYahKR4m00uHjtQKt
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8144:56f:2e1e:4db])
- (user=irogers job=sendgmr) by 2002:a05:690c:6d8f:b0:6e3:21cf:a67f with SMTP
- id 00721157ae682-6e347c76847mr857467b3.7.1728632182799; Fri, 11 Oct 2024
- 00:36:22 -0700 (PDT)
-Date: Fri, 11 Oct 2024 00:35:55 -0700
+ (user=irogers job=sendgmr) by 2002:a25:c593:0:b0:e28:ede2:d060 with SMTP id
+ 3f1490d57ef6-e2919dd2c51mr1323276.4.1728632185018; Fri, 11 Oct 2024 00:36:25
+ -0700 (PDT)
+Date: Fri, 11 Oct 2024 00:35:56 -0700
 In-Reply-To: <20241011073559.431302-1-irogers@google.com>
-Message-Id: <20241011073559.431302-5-irogers@google.com>
+Message-Id: <20241011073559.431302-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241011073559.431302-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
-Subject: [PATCH v1 4/8] perf test: Avoid list test blocking on writing to stdout
+Subject: [PATCH v1 5/8] perf test: Tag parallel failing shell tests with "(exclusive)"
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,31 +76,98 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Python's json.tool will output the input json to stdout. Redirect to
-/dev/null to avoid blocking on stdout writes.
+Some shell tests compete for resources and so can't run with other
+tests, tag such tests.  The "(exclusive)" stems from shared/exclusive
+to describe how the tests run as if holding a lock.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/list.sh | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/perftool-testsuite_report.sh | 2 +-
+ tools/perf/tests/shell/record.sh                    | 2 +-
+ tools/perf/tests/shell/record_lbr.sh                | 2 +-
+ tools/perf/tests/shell/record_offcpu.sh             | 2 +-
+ tools/perf/tests/shell/stat_all_pmu.sh              | 2 +-
+ tools/perf/tests/shell/test_intel_pt.sh             | 2 +-
+ tools/perf/tests/shell/test_stat_intel_tpebs.sh     | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/list.sh
-index 8a868ae64560..76a9846cff22 100755
---- a/tools/perf/tests/shell/list.sh
-+++ b/tools/perf/tests/shell/list.sh
-@@ -24,8 +24,11 @@ trap trap_cleanup EXIT TERM INT
+diff --git a/tools/perf/tests/shell/perftool-testsuite_report.sh b/tools/perf/tests/shell/perftool-testsuite_report.sh
+index 973012ce92a7..a8cf75b4e77e 100755
+--- a/tools/perf/tests/shell/perftool-testsuite_report.sh
++++ b/tools/perf/tests/shell/perftool-testsuite_report.sh
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-# perftool-testsuite_report
++# perftool-testsuite_report (exclusive)
+ # SPDX-License-Identifier: GPL-2.0
  
- test_list_json() {
-   echo "Json output test"
-+  # Generate perf list json output into list_output file.
-   perf list -j -o "${list_output}"
--  $PYTHON -m json.tool "${list_output}"
-+  # Validate the json using python, redirect the json copy to /dev/null as
-+  # otherwise the test may block writing to stdout.
-+  $PYTHON -m json.tool "${list_output}" /dev/null
-   echo "Json output test [Success]"
- }
+ test -d "$(dirname "$0")/base_report" || exit 2
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 8d6366d96883..f7d8c5b243a4 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-# perf record tests
++# perf record tests (exclusive)
+ # SPDX-License-Identifier: GPL-2.0
  
+ set -e
+diff --git a/tools/perf/tests/shell/record_lbr.sh b/tools/perf/tests/shell/record_lbr.sh
+index 32314641217e..8d750ee631f8 100755
+--- a/tools/perf/tests/shell/record_lbr.sh
++++ b/tools/perf/tests/shell/record_lbr.sh
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-# perf record LBR tests
++# perf record LBR tests (exclusive)
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ set -e
+diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/shell/record_offcpu.sh
+index 67c925f3a15a..678947fe69ee 100755
+--- a/tools/perf/tests/shell/record_offcpu.sh
++++ b/tools/perf/tests/shell/record_offcpu.sh
+@@ -1,5 +1,5 @@
+ #!/bin/sh
+-# perf record offcpu profiling tests
++# perf record offcpu profiling tests (exclusive)
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ set -e
+diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
+index 42456d89c5da..8b148b300be1 100755
+--- a/tools/perf/tests/shell/stat_all_pmu.sh
++++ b/tools/perf/tests/shell/stat_all_pmu.sh
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-# perf all PMU test
++# perf all PMU test (exclusive)
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ set -e
+diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+index 723ec501f99a..660991d17607 100755
+--- a/tools/perf/tests/shell/test_intel_pt.sh
++++ b/tools/perf/tests/shell/test_intel_pt.sh
+@@ -1,5 +1,5 @@
+ #!/bin/sh
+-# Miscellaneous Intel PT testing
++# Miscellaneous Intel PT testing (exclusive)
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ set -e
+diff --git a/tools/perf/tests/shell/test_stat_intel_tpebs.sh b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+index 9a11f42d153c..f95fc64bf0a7 100755
+--- a/tools/perf/tests/shell/test_stat_intel_tpebs.sh
++++ b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-# test Intel TPEBS counting mode
++# test Intel TPEBS counting mode (exclusive)
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ set -e
 -- 
 2.47.0.rc1.288.g06298d1525-goog
 
