@@ -1,114 +1,198 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F0A1D0F68;
-	Fri, 11 Oct 2024 19:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AED1CF295;
+	Fri, 11 Oct 2024 19:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728675259; cv=none; b=ITlTV3U1oto4q4qCx526GEL5QMBF6XzVlI+rwA6tjCQrbFToEz5/ghvGrgibvY/6vkwOGsRVRtKqcd7f0RL93AFfmEKfzSg/cf1HFMuLODDGfdqtEkf/OSj9L+2rH3TNi/aW5t9QQ0IdrcECVM7Z/lFAF12XeChv9vo4v/R3iVo=
+	t=1728676190; cv=none; b=dzgEZ4Qw2xvDclfUztXfWVzeizGknEISeXZGkOW0gPcHUYFRNNrq2F2Cvd+NgYpNE7hnW9tuHCfNTAYT/6/ZE0wn3xkbYXdGuFRgTp/fijK+TIi6BjtAxHyUJV8+OaecntOXFYtlXsPVeh4X4JPXrQNNj5KunZcmHoNuZ/+Lcbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728675259; c=relaxed/simple;
-	bh=2Bxp5SBO/hNaAA6txUfEYpCg2c3t/Jlez5bVGWr70vc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BvuDmYL3LrMo66CWXxqatVrcpVW0BN/zGflvIbHr08Jxz8iGWCsEnKWdZbg4xRp7Zm4lNx2yNrIValc6SygXFRP1AXFOG8/ItLv+1MBSPk7CMlqyDqZBUXjY79qDfTv8n0seLjN06Wbk7EruAk7EEUt8yaoAVq38xVdm9y5PeKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DvzTZeps; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728676190; c=relaxed/simple;
+	bh=maR0DPaRvlnXjxhuqIkFgSC3w2zg4X1CGE52ukaQHvo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GGKEXECAaKxW/jbn4Il0rqZQtcWDgjA4mOltmTT5Zs/8jvVe+vjaiPbzAYo0coh0y2JbdTaL5XiFiBwVYhVdzDLcvyvcUpEjMjtNVlUeutTOYSC/FXDVkcxEVZcIyU2QQWk7i+a4esaG15aebQ+VPOcavY8F6kkrl6jgwO+G8iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eilKhl4J; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvzTZeps"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20c693b68f5so24859605ad.1;
-        Fri, 11 Oct 2024 12:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728675257; x=1729280057; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2Bxp5SBO/hNaAA6txUfEYpCg2c3t/Jlez5bVGWr70vc=;
-        b=DvzTZepsNdLc7fIdGUYPJan5CoA1ooCRHkYmComRvdJUuknKc49wmVqMTZJdo2KD1g
-         IJclV31tBF4a1Dt2fxetF2PXxhjhd+jT9qwY9gLmcighaJcm/sazpcc7rQA28eAban7+
-         U0wfJIjXzne/dy207x1X36gi2zee8TPmt/3cgosrUMojs7n+ejusa5ivPEimaN5P0qpS
-         aFCJibeen+28/5T49cgWOCEvI3+70T2vVZa/hKpNbgs1tgc83wHiJ7l7C21h+fkM0Tcr
-         XHGJcpf4PjjQutCmVhJ7yr3mz4QTDF9orBhnEYvX0YLnJZr433cdItl4F25BqaD6zWQQ
-         Unkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728675257; x=1729280057;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2Bxp5SBO/hNaAA6txUfEYpCg2c3t/Jlez5bVGWr70vc=;
-        b=FcZKmyNABqCY0uDOQx6MH6gwBTttbw8y7fW7Jxdf1ekodfZwrCzC/prpzHBaJaPDOf
-         S1TMSOPFLjmzAH9vYnYhWDol3sVaG+X7F1yk8It6rlkAymBp69dhUMgqqnq9w1Kwxkkc
-         UKOLb8L45cFjb8v5GEihhwmsbXWvolkv32rWUcGGlN5ytVfsUhBxyQmxb6LXH38VKV3q
-         wFI3mS9Orl5UeAEMspH2ZfLMklqmNROoc3CSxg+bZ/AxFNbU1uuv+tMptOTusM3qKCKA
-         ZLtI7oMsGSlqsQt+oA/62pljashFZ3MbxWvp8X5POz8WhriOfIgNgOxssit4yzIE0+O2
-         LvKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUkYA+kwTsA4hHJupilJIkWNnBxacW9Nt2D+Fo4Ur/i3gQPwruxQjh6vWvbfb3Q75SlwgOJmzEPZw9pbWWqTc/FMotd@vger.kernel.org, AJvYcCVC8KifKmHtDAzSRhxE4PMGxAbZRzMIfVEqK8FzG7kRsKTetF9MVpvn7Bax9CokwozB8NQiLE3+3A3rAZpu@vger.kernel.org, AJvYcCWeXtn3KiC1lHNGShcB8cOWr+cRxEgVdtiN2kuXVgFhHw4JJakcjpj/7Fiya+Den+F2MKo=@vger.kernel.org, AJvYcCWijPYK6eYejEYWK+X7oajN+sbYx16Ev/pySlBimail2jFIAUcu4T9zleSlYf+fVjjZN3muxTjBjkztrgUgGD4Dqw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp0rmceCMk0jOIF7/gI/yBjADGifaVfPxhplkWWc1kKIfKmDXk
-	31zYY09JzgSUcmFwz2J4FmIqILJgrUAd2kJjsA3XQgtSCqpfax3+l8iQle2yPLDNc4Xwom/bF6m
-	KW1qf9xAKitjFhKcVSJ+t7/r3ssY=
-X-Google-Smtp-Source: AGHT+IE2ZM5M+/QVnQkT/2SITUnPd+KQkWFrXXxbnQiWQFjfVwQ66uPXYqYvfsYfOwELDaMn5VH6AKPQvNeVlz9XfYk=
-X-Received: by 2002:a17:90a:c708:b0:2e2:b64e:f501 with SMTP id
- 98e67ed59e1d1-2e2f0d7f1fbmr4355634a91.30.1728675257506; Fri, 11 Oct 2024
- 12:34:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eilKhl4J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728676189; x=1760212189;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=maR0DPaRvlnXjxhuqIkFgSC3w2zg4X1CGE52ukaQHvo=;
+  b=eilKhl4J5+5wizWpeTD8g7uX17ndCUsiNzBg/DyZ6qzg6Sivn9UOfnIk
+   7eA8fA/hTyqHNEis36kD/SzNVNo0JdVJ1TXZmsqeR2M9yBflRjZDpQ2pQ
+   AvQpypA4kTQwRCPvNu+FcVsOiieDOXwDwca+yfB4yI3sQAnVjSSPJuOCb
+   9QfBzDGSoZyXzy9O6uO34dor9tPkiXDyCEPPSE9zyDE1tEs6Ws0xPv2iz
+   aIeM7PLj+gxruPkxhr5iCOIyXg3zkPBx0Pdm+AFzGMhScjhMsTM5iVQfo
+   VoT0iIvd2EyuFoC2nH+sCGDsOK9ZpiPKRnzFQoQ63m4MkxKWSqeXslGyp
+   w==;
+X-CSE-ConnectionGUID: mHrqfStHRHuiW/C3ojclKA==
+X-CSE-MsgGUID: fo6l783RSvyNdkr5SeJMmw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="45597296"
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="45597296"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 12:49:48 -0700
+X-CSE-ConnectionGUID: 4p4+m52MRHy1scdDO7XxHw==
+X-CSE-MsgGUID: AaRQBLpcQBCvmZvNBFvMYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="100314221"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 12:49:48 -0700
+Received: from [10.212.74.37] (kliang2-mobl1.ccr.corp.intel.com [10.212.74.37])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 4FC1F20B5782;
+	Fri, 11 Oct 2024 12:49:45 -0700 (PDT)
+Message-ID: <a3326ee7-5ff0-4745-9e33-3ed5eec94c24@linux.intel.com>
+Date: Fri, 11 Oct 2024 15:49:44 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240815014629.2685155-1-liaochang1@huawei.com>
- <cfa88a34-617b-9a24-a648-55262a4e8a4c@huawei.com> <20240915151803.GD27726@redhat.com>
- <c5765c03-a584-3527-8ca4-54b646f49433@huawei.com>
-In-Reply-To: <c5765c03-a584-3527-8ca4-54b646f49433@huawei.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 11 Oct 2024 12:34:05 -0700
-Message-ID: <CAEf4BzbWLf3K4C7GT58nXZ0FJfnoeCdLeRvKtwA76oM9Jdm7jg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] uprobes: Improve scalability by reducing the
- contention on siglock
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
-	Andrii Nakryiko <andrii@kernel.org>, Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 09/58] perf: Add a EVENT_GUEST flag
+To: Peter Zijlstra <peterz@infradead.org>, Mingwei Zhang <mizhang@google.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
+ <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+ Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ Like Xu <like.xu.linux@gmail.com>,
+ Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240801045907.4010984-1-mizhang@google.com>
+ <20240801045907.4010984-10-mizhang@google.com>
+ <20241011184237.GQ17263@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20241011184237.GQ17263@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 17, 2024 at 7:05=E2=80=AFPM Liao, Chang <liaochang1@huawei.com>=
- wrote:
->
-> Hi, Peter and Masami
->
-> I look forward to your inputs on these series. Andrii has proven they are
-> hepful for uprobe scalability.
->
-> Thanks.
->
-> =E5=9C=A8 2024/9/15 23:18, Oleg Nesterov =E5=86=99=E9=81=93:
-> > Hi Liao,
-> >
-> > On 09/14, Liao, Chang wrote:
-> >>
-> >> Hi, Oleg
-> >>
-> >> Kindly ping.
-> >>
-> >> This series have been pending for a month. Is thre any issue I overloo=
-k?
-> >
-> > Well, I have already acked both patches.
-> >
-> > Please resend them to Peter/Masami, with my acks included.
-> >
 
-Hey Liao,
 
-I didn't see v4 from you for this patch set with Oleg's acks. Did you
-get a chance to rebase, add acks, and send the latest version?
+On 2024-10-11 2:42 p.m., Peter Zijlstra wrote:
+> 
+> Can you rework this one along these lines?
 
-> > Oleg.
-> >
-> >
->
-> --
-> BR
-> Liao, Chang
+Sure.
+
+I probably also add macros to replace the magic number 0 and 1. For example,
+
+#define T_TOTAL		0
+#define T_GUEST		1
+
+Thanks,
+Kan
+> 
+> ---
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -975,6 +975,7 @@ struct perf_event_context {
+>  	 * Context clock, runs when context enabled.
+>  	 */
+>  	struct perf_time_ctx		time;
+> +	struct perf_time_ctx		timeguest;
+>  
+>  	/*
+>  	 * These fields let us detect when two contexts have both
+> @@ -1066,6 +1067,7 @@ struct bpf_perf_event_data_kern {
+>   */
+>  struct perf_cgroup_info {
+>  	struct perf_time_ctx		time;
+> +	struct perf_time_ctx		timeguest;
+>  	int				active;
+>  };
+>  
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -782,12 +782,44 @@ static inline int is_cgroup_event(struct
+>  	return event->cgrp != NULL;
+>  }
+>  
+> +static_assert(offsetof(struct perf_event, timeguest) -
+> +	      offsetof(struct perf_event, time) == 
+> +	      sizeof(struct perf_time_ctx));
+> +
+> +static_assert(offsetof(struct perf_cgroup_info, timeguest) -
+> +	      offsetof(struct perf_cgroup_info, time) ==
+> +	      sizeof(struct perf_time_ctx));
+> +
+> +static inline u64 __perf_event_time_ctx(struct perf_event *event,
+> +					struct perf_time_ctx *times)
+> +{
+> +	u64 time = times[0].time;
+> +	if (event->attr.exclude_guest)
+> +		time -= times[1].time;
+> +	return time;
+> +}
+> +
+> +static inline u64 __perf_event_time_ctx_now(struct perf_event *event,
+> +					    struct perf_time_ctx *times,
+> +					    u64 now)
+> +{
+> +	if (event->attr.exclude_guest) {
+> +		/*
+> +		 * (now + times[0].offset) - (now + times[1].offset) :=
+> +		 * times[0].offset - times[1].offset
+> +		 */
+> +		return READ_ONCE(times[0].offset) - READ_ONCE(times[1].offset);
+> +	}
+> +
+> +	return now + READ_ONCE(times[0].offset);
+> +}
+> +
+>  static inline u64 perf_cgroup_event_time(struct perf_event *event)
+>  {
+>  	struct perf_cgroup_info *t;
+>  
+>  	t = per_cpu_ptr(event->cgrp->info, event->cpu);
+> -	return t->time.time;
+> +	return __perf_event_time_ctx(event, &t->time);
+>  }
+>  
+>  static inline u64 perf_cgroup_event_time_now(struct perf_event *event, u64 now)
+> @@ -796,12 +828,12 @@ static inline u64 perf_cgroup_event_time
+>  
+>  	t = per_cpu_ptr(event->cgrp->info, event->cpu);
+>  	if (!__load_acquire(&t->active))
+> -		return t->time.time;
+> +		return __perf_event_time_ctx(event, &t->time);
+>  	now += READ_ONCE(t->time.offset);
+> -	return now;
+> +	return __perf_event_time_ctx_now(event, &t->time, now);
+>  }
+>  
+> -static inline void update_perf_time_ctx(struct perf_time_ctx *time, u64 now, bool adv)
+> +static inline void __update_perf_time_ctx(struct perf_time_ctx *time, u64 now, bool adv)
+>  {
+>  	if (adv)
+>  		time->time += now - time->stamp;
+> @@ -819,6 +851,13 @@ static inline void update_perf_time_ctx(
+>  	WRITE_ONCE(time->offset, time->time - time->stamp);
+>  }
+>  
+> +static inline void update_perf_time_ctx(struct perf_time_ctx *time, u64 now, bool adv)
+> +{
+> +	__update_perf_time_ctx(time + 0, now, adv);
+> +	if (__this_cpu_read(perf_in_guest))
+> +		__update_perf_time_ctx(time + 1, now, adv)
+> +}
+> +
+>  static inline void update_cgrp_time_from_cpuctx(struct perf_cpu_context *cpuctx, bool final)
+>  {
+>  	struct perf_cgroup *cgrp = cpuctx->cgrp;
+> 
+
