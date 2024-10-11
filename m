@@ -1,227 +1,168 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E455B804;
-	Fri, 11 Oct 2024 18:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CD81C5796;
+	Fri, 11 Oct 2024 18:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728669670; cv=none; b=RyiPKZ/bUmYHqB+Io26Xpl/QHg/90HWLrZOP4OgmZ0MR4ht2uxQkcacfZSewtvzfA4shiRr7fgsbKuTF5hYxkcp5t2qRPYxB7Nf706JEf2gYcwQWdh+TzIvtvt+g49eHkPHITNsLMlmETCZy4faADOf7zBmO6GTppwMvZCuOcXA=
+	t=1728672172; cv=none; b=IC3x/kBCQlwqG9JJUJyVCta0LfGjnN9drjLdkw3qCd7ZFWPrfpgQJTEDX7tvY0ATPM+MALvL/urcvf+smvGV/PAEiIrl7gKTvWzmju3fQltBlKcDYHbJGR0peR+TnL/xyDwHtgOJeESsvrXdCTElYkl+YPzYUjf+/C4ku/8f1/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728669670; c=relaxed/simple;
-	bh=8mynNEaZ0hT0/RcT9aLr8SxrUuLtirPGnkOXC5pPXZ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MMYUxt+Qfazc1LiUQEnwgCzUBBIp+xw//QEcliOre7K1zcM6e8foop7Bea8+wj5RgIrhq1GqLvpgORFrP7UM5UkYxk6kczJhiQn9iMw2rweibFGmPHKuJZ1y6xWi95U7B+GsmcZ6TIuQKT3Ffy7JwRlnzFm91KV8s7SbmMJZqcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mtUgfsCv; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728672172; c=relaxed/simple;
+	bh=Jjfo4K2iIDHp/psPQdMiHq33DkPwCSvs1wshiMqXN3U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l09tQbJk6EfQEngzAifIAKNHszsIuo/7Hf88MtyG5L4at0uYWDlMZK3gp0vpDGPtP4Apn90E6v8LD3aFKCAzmSqGSFP4oRKQ50fiMxyrjzm7+KQedD5Or5z82ZX4ZnC8s7342HXbOATsh+jCcbD4c0xpCW9sWoi+N8p6MlY1Yds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aE8/GKZM; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mtUgfsCv"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7e9f998e1e4so1925641a12.1;
-        Fri, 11 Oct 2024 11:01:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728669668; x=1729274468; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uiirbpxLNm5AT7dufmX+S9DrEak7ySZgLvcNmiXZ6fA=;
-        b=mtUgfsCv+UaHunvixEC4t2mPzW8aR4GlNdx8dPEk2oVJX46f2+O+XogiYhij/IGmHk
-         tCZ6oLve79pZsUxBOXq9qYCPgAraSCf/EY37rNG2U+bXI+xXhrUt1xSBOwwUVXB/Uh0t
-         DnStDYK/iXjecpCutn+/RORdi5TrUSIv3BG0OTxj/lCBbh/TRclgR0WElRHpW6VTOmAC
-         1EYGPkevJzEleo8yMpN4m3e8Dvv08tvIVmM7MlPwS9OsKMqkxTqK+i60/dExepFKgHPN
-         Li8FHPVjJW9oQzn78s/Vx6FtfnAt4Y2hbm68UyQEhGPFKHRzeVzykExz05a28AAXeahW
-         1eEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728669668; x=1729274468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uiirbpxLNm5AT7dufmX+S9DrEak7ySZgLvcNmiXZ6fA=;
-        b=PbHdmmNzSrjHqQT8zSkGRim7Hhmnt+oR8dn/6oHytxvY4nsXE+m6onSXhK9/si8bKZ
-         FD5wsLrp/baqRDExaZmDvoXc2SjO7JTUzhFESvHpoVV/GVh6BazSvvi4XH+2fJGfBH0R
-         iJs63z8zhKomzB/dtIW2VFhuYUlZGFYEF048RBZeO1S8CtPX+eIffvdhrCbmnvC/7UkI
-         ranKUyXuSLUAIYYEv9dYQwL8vr1dgf83Li34CPbnz03yGA1rbGcCO57kPjtS3x1HvkaR
-         3eCYyCJltbZXn1f9s05QTfo9J6OawTdrde9WWZThr61dOcq1Kkh8RhGiqwEfm7JApq1W
-         6FgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXFqldNenHnMwx2ZiWMHKfUzAYOyzCwwKz1Q9PXL4CFZWyuioLsSQ+oMKY//B5GADlisTmyo0w46x8v7OIlmx4lg==@vger.kernel.org, AJvYcCUYmhrQT6Gomp5uAapW9oonxYZc7DUpM7i/yg66bsWXSy1FgJ0K3Tp6qVujtBOuVg4pE+uMqrBG4JgqLKYG@vger.kernel.org, AJvYcCW8kFHEoRpMhnNyxFJHH38Y8x9N4q8+ROpBhSAbUhIDSEgUA5Hdp5ABA6vTsfThOcHsf9o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJa7o7HEaXDI2BN655YdafdWYDX3dmkmHSI5Ld8+CTpm+zkdzM
-	i4lzyJNpq+QlYUXJt6BkQu/ak7b6LxNo8cusywXyx1/xMdHeZ+cVpPwy+19kETzQDz0BHfmc109
-	DiKNJsiSCi6aBbbJLEcqoq0AzTj4=
-X-Google-Smtp-Source: AGHT+IFGHxaG21IMv7iEP3SE8KaKMBe64K46Ft7YZJkhgIaY+f0QaOj4Dx2iMXApt5FONI7nU1z2OdE0XhG0MaaJkkk=
-X-Received: by 2002:a17:90a:688b:b0:2e2:eb2d:2352 with SMTP id
- 98e67ed59e1d1-2e2f0dc3494mr4221733a91.37.1728669668007; Fri, 11 Oct 2024
- 11:01:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aE8/GKZM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=1EUwMSDRYhUSzl5iQdDKKDN1jiIu4L3m+r5PDqdzHw4=; b=aE8/GKZMmUicongI8lZiENJoVW
+	W30aNP2A+TBOZEk3V9cqCL9sXbbdxrRAjh8xXSQnoDasz89bQ/qL834Je2/wnTlRIzJGHeduFnL/D
+	Xa2ys6wTfAIFyWPFOXedOYTgxUCci9vsXwA/k/K7kEoXViUN0CoH025GYWb+fi0SBPPhncIF06bh5
+	0Hi8EftVrqF29Qyx+ufaAIpnCqkQ2B/okUxtsYZA6Bef9N5UdMBK2RM2tS4t4hIL7QknkVnQ6c18u
+	nP9TABsn8B3+FM70D19Ci2+qXApGyoHMvRXWmi67UOISqAc1TIhwI40qcUwnjCK7kIo4f2utQ7/L8
+	UmEbVNtA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1szKaz-0000000BZXN-0Sy1;
+	Fri, 11 Oct 2024 18:42:37 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 31C0F3001D4; Fri, 11 Oct 2024 20:42:37 +0200 (CEST)
+Date: Fri, 11 Oct 2024 20:42:37 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Xiong Zhang <xiong.y.zhang@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kan Liang <kan.liang@intel.com>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Manali Shukla <manali.shukla@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Jim Mattson <jmattson@google.com>,
+	Stephane Eranian <eranian@google.com>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	gce-passthrou-pmu-dev@google.com,
+	Samantha Alt <samantha.alt@intel.com>,
+	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+	Like Xu <like.xu.linux@gmail.com>,
+	Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH v3 09/58] perf: Add a EVENT_GUEST flag
+Message-ID: <20241011184237.GQ17263@noisy.programming.kicks-ass.net>
+References: <20240801045907.4010984-1-mizhang@google.com>
+ <20240801045907.4010984-10-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241009202009.884884-1-namhyung@kernel.org> <CAEf4BzYQenNtKPmWV=P3EsnqBsjNuAeXpC5ypL1k2z-H60i0=w@mail.gmail.com>
- <ZwlV_jyx3OjfQxwS@google.com>
-In-Reply-To: <ZwlV_jyx3OjfQxwS@google.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 11 Oct 2024 11:00:56 -0700
-Message-ID: <CAEf4BzYCOpwnTVGKs8rHE4CdcQHDU0ButEKHnJE5cqcWpdZwWw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf tools: Fix possible compiler warnings in hashmap
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240801045907.4010984-10-mizhang@google.com>
 
-On Fri, Oct 11, 2024 at 9:44=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Thu, Oct 10, 2024 at 06:48:26PM -0700, Andrii Nakryiko wrote:
-> > On Wed, Oct 9, 2024 at 1:20=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > >
-> > > The hashmap__for_each_entry[_safe] is accessing 'map' as if it's a
-> > > pointer.  But it does without parentheses so passing a static hash ma=
-p
-> > > with an ampersand (like &slab_hash below) caused compiler warnings du=
-e
-> > > to unmatched types.
-> > >
-> > >   In file included from util/bpf_lock_contention.c:5:
-> > >   util/bpf_lock_contention.c: In function =E2=80=98exit_slab_cache_it=
-er=E2=80=99:
-> > >   linux/tools/perf/util/hashmap.h:169:32: error: invalid type argumen=
-t of =E2=80=98->=E2=80=99 (have =E2=80=98struct hashmap=E2=80=99)
-> > >     169 |         for (bkt =3D 0; bkt < map->cap; bkt++)             =
-                   \
-> > >         |                                ^~
-> > >   util/bpf_lock_contention.c:105:9: note: in expansion of macro =E2=
-=80=98hashmap__for_each_entry=E2=80=99
-> > >     105 |         hashmap__for_each_entry(&slab_hash, cur, bkt)
-> > >         |         ^~~~~~~~~~~~~~~~~~~~~~~
-> > >   /home/namhyung/project/linux/tools/perf/util/hashmap.h:170:31: erro=
-r: invalid type argument of =E2=80=98->=E2=80=99 (have =E2=80=98struct hash=
-map=E2=80=99)
-> > >     170 |                 for (cur =3D map->buckets[bkt]; cur; cur =
-=3D cur->next)
-> > >         |                               ^~
-> > >   util/bpf_lock_contention.c:105:9: note: in expansion of macro =E2=
-=80=98hashmap__for_each_entry=E2=80=99
-> > >     105 |         hashmap__for_each_entry(&slab_hash, cur, bkt)
-> > >         |         ^~~~~~~~~~~~~~~~~~~~~~~
-> > >
-> > > Cc: bpf@vger.kernel.org
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > > I've discovered this while prototyping the slab symbolization for per=
-f
-> > > lock contention.  So this code is not available yet but I'd like to f=
-ix
-> > > the problem first.
-> > >
-> > > Also noticed bpf has the same code and the same problem.  I'll send a
-> > > separate patch for them.
-> > >
-> >
-> > Yep, please do. Fixes look good, thanks.
->
-> Sure will do, can I get your Acked-by for this patch?
->
 
-Sure:
+Can you rework this one along these lines?
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-
-> Thanks,
-> Namhyung
->
-> >
-> > >  tools/perf/util/hashmap.h | 20 ++++++++++----------
-> > >  1 file changed, 10 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/hashmap.h b/tools/perf/util/hashmap.h
-> > > index c12f8320e6682d50..0c4f155e8eb745d9 100644
-> > > --- a/tools/perf/util/hashmap.h
-> > > +++ b/tools/perf/util/hashmap.h
-> > > @@ -166,8 +166,8 @@ bool hashmap_find(const struct hashmap *map, long=
- key, long *value);
-> > >   * @bkt: integer used as a bucket loop cursor
-> > >   */
-> > >  #define hashmap__for_each_entry(map, cur, bkt)                      =
-       \
-> > > -       for (bkt =3D 0; bkt < map->cap; bkt++)                       =
-         \
-> > > -               for (cur =3D map->buckets[bkt]; cur; cur =3D cur->nex=
-t)
-> > > +       for (bkt =3D 0; bkt < (map)->cap; bkt++)                     =
-         \
-> > > +               for (cur =3D (map)->buckets[bkt]; cur; cur =3D cur->n=
-ext)
-> > >
-> > >  /*
-> > >   * hashmap__for_each_entry_safe - iterate over all entries in hashma=
-p, safe
-> > > @@ -178,8 +178,8 @@ bool hashmap_find(const struct hashmap *map, long=
- key, long *value);
-> > >   * @bkt: integer used as a bucket loop cursor
-> > >   */
-> > >  #define hashmap__for_each_entry_safe(map, cur, tmp, bkt)            =
-       \
-> > > -       for (bkt =3D 0; bkt < map->cap; bkt++)                       =
-         \
-> > > -               for (cur =3D map->buckets[bkt];                      =
-         \
-> > > +       for (bkt =3D 0; bkt < (map)->cap; bkt++)                     =
-         \
-> > > +               for (cur =3D (map)->buckets[bkt];                    =
-         \
-> > >                      cur && ({tmp =3D cur->next; true; });           =
-         \
-> > >                      cur =3D tmp)
-> > >
-> > > @@ -190,19 +190,19 @@ bool hashmap_find(const struct hashmap *map, lo=
-ng key, long *value);
-> > >   * @key: key to iterate entries for
-> > >   */
-> > >  #define hashmap__for_each_key_entry(map, cur, _key)                 =
-       \
-> > > -       for (cur =3D map->buckets                                    =
-         \
-> > > -                    ? map->buckets[hash_bits(map->hash_fn((_key), ma=
-p->ctx), map->cap_bits)] \
-> > > +       for (cur =3D (map)->buckets                                  =
-         \
-> > > +                    ? (map)->buckets[hash_bits((map)->hash_fn((_key)=
-, (map)->ctx), (map)->cap_bits)] \
-> > >                      : NULL;                                         =
-       \
-> > >              cur;                                                    =
-       \
-> > >              cur =3D cur->next)                                      =
-         \
-> > > -               if (map->equal_fn(cur->key, (_key), map->ctx))
-> > > +               if ((map)->equal_fn(cur->key, (_key), (map)->ctx))
-> > >
-> > >  #define hashmap__for_each_key_entry_safe(map, cur, tmp, _key)       =
-       \
-> > > -       for (cur =3D map->buckets                                    =
-         \
-> > > -                    ? map->buckets[hash_bits(map->hash_fn((_key), ma=
-p->ctx), map->cap_bits)] \
-> > > +       for (cur =3D (map)->buckets                                  =
-         \
-> > > +                    ? (map)->buckets[hash_bits((map)->hash_fn((_key)=
-, (map)->ctx), (map)->cap_bits)] \
-> > >                      : NULL;                                         =
-       \
-> > >              cur && ({ tmp =3D cur->next; true; });                  =
-         \
-> > >              cur =3D tmp)                                            =
-         \
-> > > -               if (map->equal_fn(cur->key, (_key), map->ctx))
-> > > +               if ((map)->equal_fn(cur->key, (_key), (map)->ctx))
-> > >
-> > >  #endif /* __LIBBPF_HASHMAP_H */
-> > > --
-> > > 2.47.0.rc0.187.ge670bccf7e-goog
-> > >
-> > >
+---
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -975,6 +975,7 @@ struct perf_event_context {
+ 	 * Context clock, runs when context enabled.
+ 	 */
+ 	struct perf_time_ctx		time;
++	struct perf_time_ctx		timeguest;
+ 
+ 	/*
+ 	 * These fields let us detect when two contexts have both
+@@ -1066,6 +1067,7 @@ struct bpf_perf_event_data_kern {
+  */
+ struct perf_cgroup_info {
+ 	struct perf_time_ctx		time;
++	struct perf_time_ctx		timeguest;
+ 	int				active;
+ };
+ 
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -782,12 +782,44 @@ static inline int is_cgroup_event(struct
+ 	return event->cgrp != NULL;
+ }
+ 
++static_assert(offsetof(struct perf_event, timeguest) -
++	      offsetof(struct perf_event, time) == 
++	      sizeof(struct perf_time_ctx));
++
++static_assert(offsetof(struct perf_cgroup_info, timeguest) -
++	      offsetof(struct perf_cgroup_info, time) ==
++	      sizeof(struct perf_time_ctx));
++
++static inline u64 __perf_event_time_ctx(struct perf_event *event,
++					struct perf_time_ctx *times)
++{
++	u64 time = times[0].time;
++	if (event->attr.exclude_guest)
++		time -= times[1].time;
++	return time;
++}
++
++static inline u64 __perf_event_time_ctx_now(struct perf_event *event,
++					    struct perf_time_ctx *times,
++					    u64 now)
++{
++	if (event->attr.exclude_guest) {
++		/*
++		 * (now + times[0].offset) - (now + times[1].offset) :=
++		 * times[0].offset - times[1].offset
++		 */
++		return READ_ONCE(times[0].offset) - READ_ONCE(times[1].offset);
++	}
++
++	return now + READ_ONCE(times[0].offset);
++}
++
+ static inline u64 perf_cgroup_event_time(struct perf_event *event)
+ {
+ 	struct perf_cgroup_info *t;
+ 
+ 	t = per_cpu_ptr(event->cgrp->info, event->cpu);
+-	return t->time.time;
++	return __perf_event_time_ctx(event, &t->time);
+ }
+ 
+ static inline u64 perf_cgroup_event_time_now(struct perf_event *event, u64 now)
+@@ -796,12 +828,12 @@ static inline u64 perf_cgroup_event_time
+ 
+ 	t = per_cpu_ptr(event->cgrp->info, event->cpu);
+ 	if (!__load_acquire(&t->active))
+-		return t->time.time;
++		return __perf_event_time_ctx(event, &t->time);
+ 	now += READ_ONCE(t->time.offset);
+-	return now;
++	return __perf_event_time_ctx_now(event, &t->time, now);
+ }
+ 
+-static inline void update_perf_time_ctx(struct perf_time_ctx *time, u64 now, bool adv)
++static inline void __update_perf_time_ctx(struct perf_time_ctx *time, u64 now, bool adv)
+ {
+ 	if (adv)
+ 		time->time += now - time->stamp;
+@@ -819,6 +851,13 @@ static inline void update_perf_time_ctx(
+ 	WRITE_ONCE(time->offset, time->time - time->stamp);
+ }
+ 
++static inline void update_perf_time_ctx(struct perf_time_ctx *time, u64 now, bool adv)
++{
++	__update_perf_time_ctx(time + 0, now, adv);
++	if (__this_cpu_read(perf_in_guest))
++		__update_perf_time_ctx(time + 1, now, adv)
++}
++
+ static inline void update_cgrp_time_from_cpuctx(struct perf_cpu_context *cpuctx, bool final)
+ {
+ 	struct perf_cgroup *cgrp = cpuctx->cgrp;
