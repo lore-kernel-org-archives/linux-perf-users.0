@@ -1,174 +1,156 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1647405FB
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 14:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8161990C4
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 16:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728658497; cv=none; b=IeqqwWSbWmc8P6k3gmsf1sIHNMd5MJBWPHBD89r3MvI8Y53hlLRqDYGoIL4KAKV8540n+G+hiGbobRe9N/L0jbPsfLSgEF6KehNtTLGwLCUhE0BLBmdFdC+BwDks0uo8gX6Zuiyf6fneMB36WLmmG/uUCNQdF0Yl+bqwDo/SE0c=
+	t=1728663999; cv=none; b=lHeUBiyZw0YCdHbzLoZuLUQTCqT7IQAxNlrrcLwqTknDxK10Rse58Xd0UR0HTeEy2LYUbNmjEWioMfeuCeWK4kqM/dl7g7X30MItzwaVYDlFV5LK+nc7uqKajFKQonVfdzvXCZKtlCLo7S5DbgQUIQEK+/JhjqlO0o/79F3FzWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728658497; c=relaxed/simple;
-	bh=ayOP6kmT0Uhxqgho5scUs/ofCyaD3oPtnl1pskkLz5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HcxjBoLSN2tnxeHlCAQPgVPVQiADsKkihGXyrmW/Jy71xchCnZvTcXv5CXWb13HmrdUXfKvdW1G1h2MJGJyUs6mYC4eunglIh37gs/e3ZZJhRKUDmyZsvXe1xzQ+8OEkb7nZo1aXjdk/WhK5JDrQiO1VfJ2vMpiSxHfTeWnSGRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ed9tz3b2; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1728663999; c=relaxed/simple;
+	bh=JJfLcSJT6SUfxQIYKsr7yBThKwI/qs9OrJLzfzkQ++E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NjJ6f5OGZaEr8pGuxlqVN58Z+zRtu+RZTTX/iiLTVUiaRO6KYERz+lXRbdRW2/BECt0T7irFOKYThNWEfLqPav8JDSXPI5EaIaH5lfXNsAZwiA673VCOCXva8Izuployn1AMmFBkFUvtUswM7AGk/pO3kBOfuDdimZMh0lrZuFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JnyqjGjI; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ed9tz3b2"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5398e4ae9efso2865409e87.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 07:54:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JnyqjGjI"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-20c87b0332cso203995ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 09:26:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728658494; x=1729263294; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UqJdH6KvlGOaJs6LPdOjTJk5FO4Bru3b1GwmXSj7OG0=;
-        b=ed9tz3b2N1MfcdCGQcfVoznA64jeL8e3DVCWAatIi7fbH7XuC6x+90RWiyHdX7fwkR
-         IpgQ2a5rDA9AQesDEiaWo3iaCLPbYxU2YSmyE0qVlzm0zLP+RFsxovosiNCTRsqSsIEk
-         DL5N6blfm5CbkL1dlZF38+VNXGWxL9CFuKPiG1G8cBTo5b8U2LO2TLa6JkChyU7+pzb2
-         zNSEDTWKX7idKL7ew/jbXuJMTltOLX8YAJ/I8fF5EzNHYxY3FpLcUMIQtAf2OjHN/7oo
-         JEQ5p7s66QvJ8Sh1OC9iIRjBuDs7zJ7T9ZIodf2C+8oTCwFVnsJe0JM2OsJdRwsZHkXc
-         h0dA==
+        d=google.com; s=20230601; t=1728663997; x=1729268797; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rgBi2CgoUh+yA9kfntiaJkcuQrlnuJ/H6QCxY+XAqP4=;
+        b=JnyqjGjIJjxGLG6QIzwwVKp02T0FC0W1wHjDtvjOJPTep6yU3dvz3ihkskmgCH7Sly
+         BlDvAzug4DjRRQ0ey8yjAlKG2hLtCdclv7yuMDpL22lxXOhp8kCL6wTDjq5OjRxipj16
+         v88AmlPXz2hZMiepxGrj1nSRHzhc7Rd7f9sQDN7klG1awRKV11kC/ry28u2VtS+fpqSI
+         eju5lyYIGLHRkBflOMtO8ou2427UP4H+8Zo5u59Iod7HgZSGgSN9tuBwQxsC9MuqwPTL
+         NYBBK0NMwu51jCbpnC3FS7+7ssAy45a1xK4pfP4/SqGRfjIZ5lBVXxubh5TnQDALRv+a
+         hk5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728658494; x=1729263294;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UqJdH6KvlGOaJs6LPdOjTJk5FO4Bru3b1GwmXSj7OG0=;
-        b=ECsME+n2TtWvQnptStOLBO8hLe2copvwiKgdJ0TI29+d934NexeUYcApn6LbZR0mGY
-         2eOAyz0X8SLdeo9chtMvZEowOa9TC3wsJ4cAdFO/mrJqC5NFQccESrYb7+xWMb0CQgUH
-         2/8H0FEEclKhx1a3xeWJmKpUMetn26xzab5c2Q55wJs80u6n50V72l86LyE3ULvIX+1l
-         wbYMS+fWaKBk0eaGAMbxU2bg2Og1fCK+CQ0lof1LbwMMOUdrxR8w9G2nlQ+47Witb23D
-         BO3W5XdvQxu5zK4MXk+GBxK4Dohvqd+6qlBuvExdD5x5ZnDuY7SEiXIj/SzJIRHa+AMd
-         ZrVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWU8HFT8ulL8NQ3+OzasHmSr0prRvCBcQq1NyqKMb07q2Hjhatea+iS2kyfNeVkZABj8W7qlFwsUL/DX9OgiZLt@vger.kernel.org
-X-Gm-Message-State: AOJu0YxC9g156vQ8CXwNiB4w3jhowT67W+nrhV7GXWVEAL4gVsP2KPLf
-	eG5YyG10riRXflPrknTZpU8eEl8dGVNU1ixvrUnwdyx25WEFw4Em6vyhmYp1xUQ=
-X-Google-Smtp-Source: AGHT+IGEqpHxLhsvoJ3aD2Hs3uY1bxru/hFDC2inGgVcpwnr5oCn1DIcDbUUVYp2qv7/GuTpsG+sdg==
-X-Received: by 2002:a05:6512:3a8d:b0:52e:7542:f469 with SMTP id 2adb3069b0e04-539da22cdf6mr1789366e87.0.1728658493944;
-        Fri, 11 Oct 2024 07:54:53 -0700 (PDT)
-Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431182ff6d3sm44130005e9.12.2024.10.11.07.54.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Oct 2024 07:54:53 -0700 (PDT)
-Message-ID: <9513f8d7-7f42-4c1e-bdc9-d2078d46ba1f@linaro.org>
-Date: Fri, 11 Oct 2024 15:54:52 +0100
+        d=1e100.net; s=20230601; t=1728663997; x=1729268797;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rgBi2CgoUh+yA9kfntiaJkcuQrlnuJ/H6QCxY+XAqP4=;
+        b=aW5WJESHwlMVbU43jY/sIpn+fwJnWweZ+CyXex508WPwKJJz9KbLmFDM1o26D+v+Wh
+         1fVNQy2/LcNvpJ7mxTJmYD9ymdMgBPSiP3PTd0VxlWCuZ38dAaxtY4oJLiUsakQrIGpM
+         8lFBI2sIsm2abxaY1YSZRhu1SLn1NAe5IqRI6pr7EJ3pRHPkNxJUCpoNnACk17S4HNmz
+         OmZGdhjwMYCBJOsl3sb6Mv7+nDPAZXRbFrqtRLMX/rc6JACQyW9/ipFofkicVj9NfpPP
+         X3CKJ4v7SpTjtDnOK4PORyQBl1U0f/86+V4SyFIM6gzKJm2sKha0AlG3eahUqBowcHeF
+         VQ6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUd7pE/VtinYbPAkqo9YODki8aIovg4fGKjGdmVdKKBifLBcSuz6V7Y487I9aKJavAiiiTKmmpuU11zuWiMsgqM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnLNlV5eB70uvl8fPGtNexj/g+cgHejEw0nC08OmVpcgKXWy8k
+	VXUSG7niv8TFBV7L7+Xlz04l1P59P0OOualIZaI4eX+6mlu8bbmtk75XVs/Dv6G/iKuObN65822
+	skW5pFakmi/aZ26hEkGXrHk2X4HN/ThocmcOG
+X-Google-Smtp-Source: AGHT+IHqtIXHbgDwBWNWcYCygzM0IEEDf/gvIXxqhjoKQACQ+ujuHX041JX4SWBZXmd30WXWWV5AC5KXwn/M4cQNoc0=
+X-Received: by 2002:a17:903:27cd:b0:20c:a97d:cc83 with SMTP id
+ d9443c01a7336-20ca97dd06amr1662835ad.16.1728663996483; Fri, 11 Oct 2024
+ 09:26:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] perf test: Introduce '-w --list' to list the
- available workloads
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@redhat.com>
-References: <20241011143906.1285675-1-acme@kernel.org>
- <20241011143906.1285675-3-acme@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241011143906.1285675-3-acme@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20241011073559.431302-1-irogers@google.com> <231a275e-00db-499b-92a4-259dab8f9d80@linaro.org>
+In-Reply-To: <231a275e-00db-499b-92a4-259dab8f9d80@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 11 Oct 2024 09:26:19 -0700
+Message-ID: <CAP-5=fULBYVqrgcQ1hHgou29HATOtXfZxR84r-Q2WTccT7SOBg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/8] Run tests in parallel showing number of tests running
+To: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Howard Chu <howardchu95@gmail.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
+	Michael Petlan <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Ilya Leoshkevich <iii@linux.ibm.com>, Colin Ian King <colin.i.king@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Oct 11, 2024 at 3:03=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+>
+>
+> On 11/10/2024 8:35 am, Ian Rogers wrote:
+> > Avoid waitpid so that stdout/stderr aren't destroyed prior to wanting
+> > to read them for display. When running on a color terminal, display
+> > the number of running tests (1 if sequential). To avoid previous
+> > flicker, only delete and refresh the display line when it changes. An
+> > earlier version of this code is here:
+> > https://lore.kernel.org/lkml/20240701044236.475098-1-irogers@google.com=
+/
+> >
+> > Add a signal handler for perf tests so that unexpected signals are
+> > displayed and test clean up is possible.
+> >
+> > In perf test add an "exclusive" flag that causes a test to be run with
+> > no other test. Set this flag manually for C tests and via a
+> > "(exclusive)" in the test description for shell tests. Add the flag to
+> > shell tests that may fail when run with other tests.
+> >
+> > Change the perf test loop to run in two passes. For parallel
+> > execution, the first pass runs all tests that can be run in parallel
+> > then the 2nd runs remaining tests sequentially. This causes the
+> > "exclusive" tests to be run last and with test numbers moderately out
+> > of alignment.
+> >
+> > Change the default to be to run tests in parallel. Running tests in
+> > parallel brings the execution time down to less than half.
+> >
+> > Ian Rogers (8):
+> >    tools subcmd: Add non-waitpid check_if_command_finished()
+> >    perf test: Display number of remaining tests
+> >    perf test: Reduce scope of parallel variable
+> >    perf test: Avoid list test blocking on writing to stdout
+> >    perf test: Tag parallel failing shell tests with "(exclusive)"
+> >    perf test: Add a signal handler around running a test
+> >    perf test: Run parallel tests in two passes
+> >    perf test: Make parallel testing the default
+> >
+> >   tools/lib/subcmd/run-command.c                |  33 +++
+> >   tools/perf/tests/builtin-test.c               | 267 ++++++++++++-----=
+-
+> >   tools/perf/tests/shell/list.sh                |   5 +-
+> >   .../tests/shell/perftool-testsuite_report.sh  |   2 +-
+> >   tools/perf/tests/shell/record.sh              |   2 +-
+> >   tools/perf/tests/shell/record_lbr.sh          |   2 +-
+> >   tools/perf/tests/shell/record_offcpu.sh       |   2 +-
+> >   tools/perf/tests/shell/stat_all_pmu.sh        |   2 +-
+> >   tools/perf/tests/shell/test_intel_pt.sh       |   2 +-
+> >   .../perf/tests/shell/test_stat_intel_tpebs.sh |   2 +-
+> >   tools/perf/tests/tests-scripts.c              |   5 +
+> >   tools/perf/tests/tests.h                      |   1 +
+> >   tools/perf/util/color.h                       |   1 +
+> >   13 files changed, 226 insertions(+), 100 deletions(-)
+> >
+>
+> Not really a big deal but remaining doesn't work when a subset of tests
+> are run:
+>
+>   $ perf test 111 110
+>   110: Check Arm64 callgraphs are complete in fp mode      : Ok
+>   111: Check Arm CoreSight trace data recording and synthesized samples:
+>     Running (150 remaining)
 
+Thanks, I'd been so focussed on other issues that I'd missed testing
+like this. v2 will fix the "remaining" but I've renamed it "active" as
+the count doesn't reflect the remaining tests as exclusive tests will
+be missing and they will show 1 test remaining which isn't accurate.
 
-On 11/10/2024 3:39 pm, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Using it:
-> 
->    $ perf test -w noplop
->    No workload found: noplop
->    $
->    $ perf test -w
->     Error: switch `w' requires a value
->     Usage: perf test [<options>] [{list <test-name-fragment>|[<test-name-fragments>|<test-numbers>]}]
-> 
->        -w, --workload <work>
->                              workload to run for testing, use '-w --list' to list the available ones.
->    $
->    $ perf test -w --list
->    noploop
->    thloop
->    leafloop
->    sqrtloop
->    brstack
->    datasym
->    landlock
->    $
-> 
-> Would be good at some point to have a description in 'struct test_workload'.
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->   tools/perf/tests/builtin-test.c | 18 +++++++++++++++++-
->   1 file changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index 2201f7ed432ce9f2..f0d10d2dd0d40019 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -505,10 +505,26 @@ static int perf_test__list(int argc, const char **argv)
->   	return 0;
->   }
->   
-> +static int workloads__fprintf_list(FILE *fp)
-> +{
-> +	struct test_workload *twl;
-> +	int printed = 0;
-> +
-> +	workloads__for_each(twl)
-> +		printed += fprintf(fp, "%s\n", twl->name);
-> +
-> +	return printed;
-> +}
-> +
->   static int run_workload(const char *work, int argc, const char **argv)
->   {
->   	struct test_workload *twl;
->   
-> +	if (!strcmp(work, "--list")) {
-> +		workloads__fprintf_list(stdout);
-> +		return 0;
-> +	}
-> +
+> Other than that:
+>
+> Tested-by: James Clark <james.clark@linaro.org>
 
-Very minor nit, but I think searching the workload name for an argument 
-instead of having a 'proper' toplevel argument seems a bit weird, but I 
-can see why you did it that way.
-
-But maybe something like this might be a bit more readable especially 
-when searching in the usual places for an argument. And in the future 
-might survive auto doc attempts of known arguments:
-
-   $ perf test --list-workloads
-
-And add it with OPT_BOOLEAN() etc.
-
->   	workloads__for_each(twl) {
->   		if (!strcmp(twl->name, work))
->   			return twl->func(argc, argv);
-> @@ -544,7 +560,7 @@ int cmd_test(int argc, const char **argv)
->   	OPT_BOOLEAN('p', "parallel", &parallel, "Run the tests in parallel"),
->   	OPT_BOOLEAN('S', "sequential", &sequential,
->   		    "Run the tests one after another rather than in parallel"),
-> -	OPT_STRING('w', "workload", &workload, "work", "workload to run for testing"),
-> +	OPT_STRING('w', "workload", &workload, "work", "workload to run for testing, use '-w --list' to list the available ones."),
->   	OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
->   	OPT_STRING(0, "objdump", &test_objdump_path, "path",
->   		   "objdump binary to use for disassembly and annotations"),
-
+Thanks,
+Ian
