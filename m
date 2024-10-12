@@ -1,72 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077761CEE86
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Oct 2024 22:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCDE1CA84;
+	Sat, 12 Oct 2024 02:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728686351; cv=none; b=MA+ZN9VY2xuruv1LPTZe4sOWwMMUtPSgxEt3WJOyM9RUk8aOMrSmrMZRwrFPT/cVuIt8bmFLF5JeqN6JZTo/lkofQwKjnGFww0fFqxYO5g0aYRoftBriKJF6xUWGAcYMwOOPyObfxlhjsqIrsdd1wAGje4u2Ir50OlMoT60ICHk=
+	t=1728701001; cv=none; b=uj2MhXQ7Oh08ejJxme0ycQWoyDIgiweWUjMJFAtw6kK7hyXLSvRjhNZ3Pq3TKJARmUMXALFkCyj5tQxQlhKntLGlhQcc1X5EbGXZsO8hvroaGLN8NCZ1qwkqvJgAvX4EtXGYffqx1ud8PXmYKvUbIQjGj920ntAahfUzUO75ga0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728686351; c=relaxed/simple;
-	bh=eGXnfMjgVVO+tmSq1LvsdPOd4a4f/adlFS0cuK2fu5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U0PlklNNmcemhhjGciHSgWHfB7zzPLQzZVOpUtDj6Qlfeu61o1bbHbEoqthwOwB3oEub9OgPEIZLNYn+MaznoZSJi7IUEVwYyLzqVrVZ0xluM61Tgtu0LDfcK2U+rvRETkVhPZLUJJ5YtBQJTb+3Z6LzmOST0N5upq/9UvlOb+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=T8OOWQNy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="T8OOWQNy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63C07C4CEC3;
-	Fri, 11 Oct 2024 22:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1728686350;
-	bh=eGXnfMjgVVO+tmSq1LvsdPOd4a4f/adlFS0cuK2fu5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T8OOWQNyxlWtxi2yUfOdEyUMJOqDXywmgg19kmD0AJ8Qamt74Hi+n0UeD6qszJ3I/
-	 SlGmY7hUUL63PcDxgO7N9b8mRHA5shHdLkaravUeBjOJgVafw7obDE2Zpg+jYj+EOj
-	 savw8z7jYq0we9JOvefnb+yQIfCbpnUOM/AuDrZg=
-Date: Fri, 11 Oct 2024 18:39:09 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Yunseong Kim <yskelg@gmail.com>, linux-perf-users@vger.kernel.org
-Subject: Re: Migrating from perf.wiki.kernel.org to RTD
-Message-ID: <20241011-uncovered-original-vole-cda87d@meerkat>
-References: <20241011-quiet-chowchow-of-temperance-d0e205@meerkat>
- <CAP-5=fUz5CFEL8D1L+UATsNqs4MBb6rNeYtZ26+pFC4NgRYt6w@mail.gmail.com>
+	s=arc-20240116; t=1728701001; c=relaxed/simple;
+	bh=wACWfPaklFKPN8cXUAX3GlUaouTnIs874H/o2+vKfrU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T83oqJn2+bw1+RpaIlb+wsgvb1f4BQhA/aTnKAduaH/ei+Su/7+9sRpD1gXSQXrapTOQObNpPTPx9ZjR+ehF4dZxsCdNcQLg2EfTybyaFokjHSL2pd6b/EKFae6HUx03mSA376I4OzwbZDByFH/GrURIudzM0DZEn1A0USd1AkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4XQSTX5JXbz4f3lCf;
+	Sat, 12 Oct 2024 10:42:56 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 70A001A06DA;
+	Sat, 12 Oct 2024 10:43:14 +0800 (CST)
+Received: from huawei.com (unknown [10.67.174.45])
+	by APP2 (Coremail) with SMTP id Syh0CgC3Nlw14glnqkFfDw--.43203S2;
+	Sat, 12 Oct 2024 10:43:12 +0800 (CST)
+From: Tengda Wu <wutengda@huaweicloud.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	song@kernel.org,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH -next v4 0/2] perf stat: Support inherit events for bperf
+Date: Sat, 12 Oct 2024 02:32:23 +0000
+Message-Id: <20241012023225.151084-1-wutengda@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fUz5CFEL8D1L+UATsNqs4MBb6rNeYtZ26+pFC4NgRYt6w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgC3Nlw14glnqkFfDw--.43203S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7KF1DJryUtr1kAr4fZF1UKFg_yoW8Zr4UpF
+	4akry3Kw1F9F13twnxAanrWFyavr1fuFy5Gwn7trWfGF4DZr1UZrWxKFWYqF15XryxGry0
+	vw1qgr1DuFZ5AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r1q6r43MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0EwIxGrwCFx2IqxV
+	CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+	6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+	WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+	6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
+	1UYxBIdaVFxhVjvjDU0xZFpf9x07jeLvtUUUUU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Fri, Oct 11, 2024 at 02:37:24PM GMT, Ian Rogers wrote:
-> Hi Konstantin,
-> 
-> Yunseong created:
-> https://perfwiki.github.io/main/
+Hi,
 
-Oh, I wasn't aware of this effort. Would have saved me a good few hours. :)
+Here is the 4th version of the series to support inherit events for bperf.
+This version adds an `inherit` flag to bperf to control inherit behavior.
+Considering future scalability, wrap the `inherit` flag with a new struct
+`bpf_stat_opts` before passing it to bpf_counter__load().
 
-> which looks superior to:
-> https://git.kernel.org/pub/scm/docs/docsko/perf.git/
-> as it is using markdown. Compare:
-> https://git.kernel.org/pub/scm/docs/docsko/perf.git/tree/source/top_down_analysis.rst
-> with:
-> https://github.com/perfwiki/main/blob/main/docs/top-down-analysis.md
 
-Well, this is just the github renderer. Github will happily render rst files
-as well as markdown files. The reason I chose rst is because:
+bperf (perf-stat --bpf-counter) has not supported inherit events during
+fork() since it was first introduced.
 
-1. it's a better defined standard than markdown, which has as many flavours as
-   there are forges, pretty much
-2. the kernel already uses rst, so it's an easier switch for most kernel devs
+This patch series tries to add this support by:
+ 1) adding two new bpf programs to monitor task lifecycle;
+ 2) recording new tasks in the filter map dynamically;
+ 3) reusing `accum_key` of parent task for new tasks.
 
-> Perhaps the solution here is to make perf.wiki.kernel.org a redirect
-> to https://perfwiki.github.io/main/
+Thanks,
+Tengda
 
-I'm happy to go either way, I just need the wiki to be gone. If this decision
-is final, let me know and I will set the redirects.
 
--K
+Changelog:
+---------
+v4: (Address comments from Song and Namhyung, thanks)
+ * Add an `inherit` flag to bperf to control inherit behavior
+
+v3: https://lore.kernel.org/all/20240916014318.267709-1-wutengda@huaweicloud.com/
+ * Use pid or tgid based on filter type in new_task prog
+ * Add comments to explain pid usage for TGID type in exit_task prog
+
+v2: https://lore.kernel.org/all/20240905115918.772234-1-wutengda@huaweicloud.com/
+ * Remove the unused init_filter_entries in follower bpf, declare
+   a global filter_entry_count in bpf_counter instead
+ * Attach on_newtask and on_exittask progs only if the filter type
+   is either PID or TGID
+
+v1: https://lore.kernel.org/all/20240904123103.732507-1-wutengda@huaweicloud.com/
+
+
+Tengda Wu (2):
+  perf stat: Support inherit events during fork() for bperf
+  perf test: Use sqrtloop workload to test bperf event
+
+ tools/perf/builtin-stat.c                     |  4 +-
+ tools/perf/tests/shell/stat_bpf_counters.sh   |  2 +-
+ tools/perf/util/bpf_counter.c                 | 57 +++++++++---
+ tools/perf/util/bpf_counter.h                 | 13 ++-
+ tools/perf/util/bpf_counter_cgroup.c          |  3 +-
+ tools/perf/util/bpf_skel/bperf_follower.bpf.c | 87 +++++++++++++++++--
+ tools/perf/util/bpf_skel/bperf_u.h            |  5 ++
+ 7 files changed, 146 insertions(+), 25 deletions(-)
+
+-- 
+2.34.1
+
