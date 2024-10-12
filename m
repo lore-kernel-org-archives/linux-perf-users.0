@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440EE3EA83;
-	Sat, 12 Oct 2024 15:44:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07D556F2E0;
+	Sat, 12 Oct 2024 15:44:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728747883; cv=none; b=C0eNr6SRDLWLDT+MOIaERfF6yaV9AZ5VcX8UQIDRwWrf3Ud8vOjmICyfAiTcx9uCVrZtJiyLKgaenMKDP5p42WbIsREijqpjH8Az5l2kzVVN+rIh5md8GOI5w4URgXJSOeXxzCRI7M0hY3STimBg0rwYvT1DJT7AmG8I8JhOTsc=
+	t=1728747885; cv=none; b=thDQyL2v3ZmN2RnASGH7wS0yoXh0hWoG+MM5caaYKWDxYrlZ55okwBO6/qHy51shM6yhT2CjEPHEDXgGynGDMsDmtC3LvRFD7ePhm41Q27VFEYHpjLn/a4U0GUsN8fOngVqriLp24/yLnHxhgoh/LitOCOFLGvVOlc21Kwl1df4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728747883; c=relaxed/simple;
-	bh=mOPPJQdHmP4kUdz8+1BXg5f6hCzDQ0wUTMcLWt7uazA=;
+	s=arc-20240116; t=1728747885; c=relaxed/simple;
+	bh=uv1AweUXlmSPy9svOaCmEUKMG+vGN4Omv0xBK6O4UNE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hVMb6syAtZHo97eRYU0TY2diTrwTu12V+raxOIvsHj3bLXIdqETjI7ndBvajY9aKLgxfKd8EtDbtBDjOOMZn1m6kuA8zvIpD0QDo/UjipD4lOeb8jqMhHkewD3KhyWpsJwA0nuOIUYoii1lTrHiBBRzyItAKvENz6rX8cG+e6qo=
+	 MIME-Version; b=owiFThr4RAaWjbGFcPsZwuEpkQob7D4QEzDR6ZkUXfwRgve7Nf35km2T44hMpmVLj3bTdYJrjvaHSsrz0ngF29zSIEVbifrUTzDEyt2A26HGe4ne5iO7drYv1Jb392TdKYHjEHcoi4D48zvfxJMKm3QCfMiWNf0kLe7g/XhWHcU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 435CCDA7;
-	Sat, 12 Oct 2024 08:45:11 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F39E11063;
+	Sat, 12 Oct 2024 08:45:12 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2780D3F58B;
-	Sat, 12 Oct 2024 08:44:40 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DFFE93F58B;
+	Sat, 12 Oct 2024 08:44:41 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -31,9 +31,9 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v2 2/3] perf probe: Check group string length
-Date: Sat, 12 Oct 2024 16:44:27 +0100
-Message-Id: <20241012154428.888373-3-leo.yan@arm.com>
+Subject: [PATCH v2 3/3] perf probe: Improve log for long event name failure
+Date: Sat, 12 Oct 2024 16:44:28 +0100
+Message-Id: <20241012154428.888373-4-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241012154428.888373-1-leo.yan@arm.com>
 References: <20241012154428.888373-1-leo.yan@arm.com>
@@ -45,34 +45,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In the kernel, the probe group string length is limited up to
-MAX_EVENT_NAME_LEN (including the NULL terminator).
+If a symbol name is longer than the maximum event length (64 bytes), the
+perf tool reports error:
 
-Check for this limitation and report an error if it is exceeded.
+  # perf probe -x test_cpp_mangle --add "this_is_a_very_very_long_print_data_abcdefghijklmnopqrstuvwxyz(int)"
+    snprintf() failed: -7; the event name nbase='this_is_a_very_very_long_print_data_abcdefghijklmnopqrstuvwxyz(int)' is too long
+    Error: Failed to add events.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+An information is missed in the log that the symbol name and the event
+name can be set separately. Especially, this is recommended for adding
+probe for a long symbol.
+
+This commit refines the log for reminding event syntax.
+
+After:
+
+  # perf probe -x test_cpp_mangle --add "this_is_a_very_very_long_print_data_abcdefghijklmnopqrstuvwxyz(int)"
+    snprintf() failed: -7; the event name is too long (>= 64 bytes)
+      Try to set event with syntax "[GROUP:]EVENT=this_is_a_very_very_long_print_data_abcdefghijklmnopqrstuvwxyz(int)"
+      Error: Failed to add events.
+
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/probe-event.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/util/probe-event.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 061a0412dec2..224ec6818803 100644
+index 224ec6818803..441daf4fb321 100644
 --- a/tools/perf/util/probe-event.c
 +++ b/tools/perf/util/probe-event.c
-@@ -2868,6 +2868,12 @@ static int probe_trace_event__set_name(struct probe_trace_event *tev,
- 	else
- 		group = PERFPROBE_GROUP;
- 
-+	if (strlen(group) >= MAX_EVENT_NAME_LEN) {
-+		pr_err("Probe group string='%s' is too long (>= %d bytes)\n",
-+			group, MAX_EVENT_NAME_LEN);
-+		return -ENOMEM;
-+	}
-+
- 	/* Get an unused new event name */
- 	ret = get_new_event_name(buf, sizeof(buf), event, namelist,
- 				 tev->point.retprobe, allow_suffix);
+@@ -2760,7 +2760,9 @@ static int get_new_event_name(char *buf, size_t len, const char *base,
+ 	/* Try no suffix number */
+ 	ret = e_snprintf(buf, len, "%s%s", nbase, ret_event ? "__return" : "");
+ 	if (ret < 0) {
+-		pr_warning("snprintf() failed: %d; the event name nbase='%s' is too long\n", ret, nbase);
++		pr_warning("snprintf() failed: %d; the event name is too long (>= %d bytes)\n"
++			   "  Try to set event with syntax \"[GROUP:]EVENT=%s\"\n",
++			   ret, MAX_EVENT_NAME_LEN, nbase);
+ 		goto out;
+ 	}
+ 	if (!strlist__has_entry(namelist, buf))
 -- 
 2.25.1
 
