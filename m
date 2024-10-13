@@ -1,137 +1,122 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A419C3D6A
-	for <linux-perf-users@vger.kernel.org>; Sun, 13 Oct 2024 17:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF5F811E2;
+	Sun, 13 Oct 2024 18:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728841091; cv=none; b=FOiuqrsRPhckT6BEObf5IdfoaeVk5u9ibNIZ6ZHnepSCAbYJ7DKo9+F07nWN3w6kk/OnWR3A71lrQJuyAaT4TiXLjB1UgarA1XZuF3IKImXGdQ25na+Y6kbEfv9yIby1TP3EVfgDRdcdmIiVZ2BgDUkFRtyzwZtstrsm6kCz578=
+	t=1728845249; cv=none; b=LSyDINtw/sTedizWqTtwPvY6A62yMfB++EIJFie7mhKVlgj0QNVi13NfKuePMJpyVOOzTXG/nh4L5Sup+4gTU6bE5zVqachxlejpKqaBp1x9RYZBuAb96L3TLorTCX7acswZ2Z5pDUMwv9QZ0FIyabM8IoiBeIaYDiVY8R6XV7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728841091; c=relaxed/simple;
-	bh=p6aPBVPmTQ5Wcut0sFjH4Hfsv2xanwRoP4a8eVZSva8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=CeVTFDx+bljsP5Nm7jj2NLv6VommNTz/X9EoUZGX8C8saaBaRma+5bRu7kGxBWKxvjEdFNhSZi/DnjlI9Uylvo6SSB8YUHQ7015U1kYqDlynYxY9Vj8F1aBnn3p2bOp66j1sBvAsLxBCUbT3pMuyFFGnmNBUJElvSDecw4LEsg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=h5wB9/6I; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1728845249; c=relaxed/simple;
+	bh=Kb7aX7slRhx0WODloa6fxT3r3WjHydojQpLCssKONZg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gftd6e4GWlElHjajg68MmDWtfOB0EnUo898DMVl/Cf1H5gYssQZjEQJ0tYq2VvdL+0PNFZPC+CWxEHm1T4LkzquS9E76hGXnWIwUsVmGNky1O5drrl6iCCvRpdmEsnMFu9OObItmn66nQ14N2zrTIu2RMS2tDLzKjeEuqTE0vVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CIm2cNnN; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="h5wB9/6I"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49DHHYgn021609;
-	Sun, 13 Oct 2024 17:37:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding; s=pp1; bh=rTgipmFu3TZdXAFpN2sCqfvMrp
-	ztU8Ehx1A5qw47iuA=; b=h5wB9/6Ivh6wUwpDU2v4r94o9qpeHHRwDyvrr0J9r/
-	87H37KUQg8PcFeK325nCyxAkS4qN3abqZfCqWLmhvBD35drekw1mL38MYXHrz3x/
-	no1lUcgmQnPiFxjP3CJrCjm0/iXyGeg5/ucVTOINA2F4xauGdzmP+jkF9ATK3tw5
-	fV8wnuNWL4z1yuxtRB1XJlAxNj92zoLb+mBduiPMwUN3zoG6edRjQM4d26cpGodW
-	Oo+4NjZKbG/NS07mBfqOTykXZ/UwMk06TbK+4K12/nRT49wpLrnW96zLT3FcXsJV
-	k1UZw3cmZau9TtCCBz2c+g2UnczoOEY2ONAQ6Qd6JTrg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 428jfcg279-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 13 Oct 2024 17:37:57 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49DHbvGU028041;
-	Sun, 13 Oct 2024 17:37:57 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 428jfcg278-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 13 Oct 2024 17:37:57 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49DGFFiS027499;
-	Sun, 13 Oct 2024 17:37:56 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4283txavvx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 13 Oct 2024 17:37:56 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49DHbqIS56951206
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 13 Oct 2024 17:37:52 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B56AD20049;
-	Sun, 13 Oct 2024 17:37:52 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 67A0120040;
-	Sun, 13 Oct 2024 17:37:46 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.61.240.55])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 13 Oct 2024 17:37:46 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        akanksha@linux.ibm.com, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
-Subject: [PATCH] tools/perf/tests: Fix compilation error with strncpy in tests/tool_pmu
-Date: Sun, 13 Oct 2024 23:07:42 +0530
-Message-Id: <20241013173742.71882-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CIm2cNnN"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20c77459558so27458705ad.0;
+        Sun, 13 Oct 2024 11:47:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728845246; x=1729450046; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AcT+988WrW3AMkjQ8YktZMykd7mkHA4KLE0Ju/bOgnY=;
+        b=CIm2cNnNXddGZlcoXclWlCIM1vyeAT3aNgCyMZ7LAcb3mS+rFoYIoPwejJVoqM9tRB
+         DRjd274QyX9WRdXB6vOFLtC3l7zhzjcwjSNnd41+3OrNBPvpbwDDkv2ZD4vY0I+rodCI
+         FO9l0WRIYjzXR0o+FSKEHjG2ElFhCfVC6dSfsesiIcQi4CvN/lgFGZTTTd/6kW9kbhJX
+         o3VNENiADngGCtXxCWRKP1QxLZ5URjr9oBYEtNEpF3jfvD2iFSGv61+zLFBajHforS45
+         DnnsewKzJgn1ZzjrkFqObb7G622vcXhSXJ/a8Pbb4qOmaMowvXZ96pI+r+pueqvtJi7d
+         FKTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728845246; x=1729450046;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AcT+988WrW3AMkjQ8YktZMykd7mkHA4KLE0Ju/bOgnY=;
+        b=pglezg0pPH+kzDcCzR0UC/AxNZ2XZtm7+RUnc3sHEJzm+eh1qKSY6pr1xxnP3bLGd8
+         IZpe8N2J/f/ggoJgxu4JezG47AbbFUsLFDTBb+Mv0/v/wdwLzGEp//5A8qtWLNMGU4w+
+         HTqQEFimM6w1DC/8Wf7xRRsbQL0MBKCWyWXJ032fhKdpE6l5leL5MWoImRY6i4I0PwR2
+         5satvnknO1LjSfROVAkkjSS+2k8Yk336ADX6rTsOnyMrOJ+1d30QdDfUtgWVkTWCpSjs
+         TxxvXZYNO8aRZ8MPFz4Gp5TpKq+6X/5FBcHU5RfUllm+32YIOq0rqYenchG0WaXrWLiK
+         cZzA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/rZvW1K+fYQ7fOC56FVMiB7KmaLN30OhtyziMLE8UL3cr6ut0KDECfOnDMSXQU6ZZAslVjuHgS1Ww@vger.kernel.org, AJvYcCV41PF7jlek5o35vsCAqJ3qXSCZIow/zrq4C205U3/3grdQOy6KYLTJqa4tfuDzCO2nL1HGatK1jKIvoRfHBCo=@vger.kernel.org, AJvYcCVNACbcoRSsDjh2u08OrtRd80UiNe4DumZMeIJ1wqi6TljH1r5ALKrps+WM3SEuPteNIIXjuRf/iMMMsB3k9J/6ww==@vger.kernel.org, AJvYcCW8dAUyYA9jmi2uEy9hZBwq8w0iNyzVq6vABkPMCIOG0hWdiaAF5r4+QuyU2fNe0SH/zqxgThdA6pUbBpA=@vger.kernel.org, AJvYcCWsopT6BEQxiT2idrv9mcC5khkXnBTpARWfLYPkhCW+xhqnQMcIbMb1feqM8qrWmgM9OmHauMpXFPpt7Ko8@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywza5hZ28UAn4sW6YifLQ1AtoeUPy32wPVdveweViW/qkIErNVn
+	w7YiMFc4W8g9gSNYHRYgusO7MWNe70bv0v4erWyavTWvl8IQ0bzq
+X-Google-Smtp-Source: AGHT+IEe7vhlIAeDY/l9HRi57nmdwBnO4mPv9Nua8spEcdISEd1nxQi0dLK2zEHQj5HT3Dg6I+5azw==
+X-Received: by 2002:a17:902:ecc3:b0:20c:f3be:2f8b with SMTP id d9443c01a7336-20cf3be31f0mr10163475ad.30.1728845246588;
+        Sun, 13 Oct 2024 11:47:26 -0700 (PDT)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8c348f41sm52681965ad.289.2024.10.13.11.47.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Oct 2024 11:47:26 -0700 (PDT)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: colyli@suse.de,
+	kent.overstreet@linux.dev,
+	msakai@redhat.com,
+	corbet@lwn.net,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	akpm@linux-foundation.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	jserv@ccns.ncku.edu.tw,
+	linux-kernel@vger.kernel.org,
+	linux-bcache@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Kuan-Wei Chiu <visitorckw@gmail.com>
+Subject: [PATCH 0/3] Enhance min heap API with non-inline functions and optimizations
+Date: Mon, 14 Oct 2024 02:47:00 +0800
+Message-Id: <20241013184703.659652-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: YCqQkdpLnZFftOOybjLwWDxi3gTAhA9A
-X-Proofpoint-ORIG-GUID: 1_aLzai0-Te3wfhgSoaFkCcEP93f9-nj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-13_11,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 impostorscore=0 spamscore=0
- priorityscore=1501 adultscore=0 mlxscore=0 suspectscore=0 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410130130
 
-perf fails to compile on systems with GCC version11
-as below:
+Add non-inline versions of the min heap API functions in lib/min_heap.c
+and updates all users outside of kernel/events/core.c to use these
+non-inline versions. Additionally, it micro-optimizes the efficiency of
+the min heap by pre-scaling the counter, following the same approach as
+in lib/sort.c. Documentation for the min heap API has also been added
+to the core-api section.
 
-In file included from /usr/include/string.h:519,
-                 from /home/athir/perf-tools-next/tools/include/linux/bitmap.h:5,
-                 from /home/athir/perf-tools-next/tools/perf/util/pmu.h:5,
-                 from /home/athir/perf-tools-next/tools/perf/util/evsel.h:14,
-                 from /home/athir/perf-tools-next/tools/perf/util/evlist.h:14,
-                 from tests/tool_pmu.c:3:
-In function ‘strncpy’,
-    inlined from ‘do_test’ at tests/tool_pmu.c:25:3:
-/usr/include/bits/string_fortified.h:95:10: error: ‘__builtin_strncpy’ specified bound 128 equals destination size [-Werror=stringop-truncation]
-   95 |   return __builtin___strncpy_chk (__dest, __src, __len,
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   96 |                                   __glibc_objsize (__dest));
-      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~
+Regards,
+Kuan-Wei
 
-The compile error is from strncpy refernce in do_test:
-	strncpy(str, tool_pmu__event_to_str(ev), sizeof(str));
+Kuan-Wei Chiu (3):
+  lib/min_heap: Introduce non-inline versions of min heap API functions
+  lib min_heap: Optimize min heap by prescaling counters for better
+    performance
+  Documentation/core-api: Add min heap API introduction
 
-This behaviour is not observed with GCC version 8, but observed
-with GCC version 11 . This is message from gcc for detecting
-truncation while using strncpu. Use snprintf instead of strncpy
-here to be safe.
+ Documentation/core-api/index.rst    |   1 +
+ Documentation/core-api/min_heap.rst | 291 ++++++++++++++++++++++++++++
+ drivers/md/bcache/Kconfig           |   1 +
+ drivers/md/dm-vdo/Kconfig           |   1 +
+ fs/bcachefs/Kconfig                 |   1 +
+ include/linux/min_heap.h            | 202 ++++++++++++-------
+ kernel/events/core.c                |   6 +-
+ lib/Kconfig                         |   3 +
+ lib/Kconfig.debug                   |   1 +
+ lib/Makefile                        |   1 +
+ lib/min_heap.c                      |  70 +++++++
+ 11 files changed, 508 insertions(+), 70 deletions(-)
+ create mode 100644 Documentation/core-api/min_heap.rst
+ create mode 100644 lib/min_heap.c
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/tests/tool_pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/tool_pmu.c b/tools/perf/tests/tool_pmu.c
-index 94d0dd8fd3cb..297cc8c55579 100644
---- a/tools/perf/tests/tool_pmu.c
-+++ b/tools/perf/tests/tool_pmu.c
-@@ -22,7 +22,7 @@ static int do_test(enum tool_pmu_event ev, bool with_pmu)
- 	if (with_pmu)
- 		snprintf(str, sizeof(str), "tool/%s/", tool_pmu__event_to_str(ev));
- 	else
--		strncpy(str, tool_pmu__event_to_str(ev), sizeof(str));
-+		snprintf(str, sizeof(str), "%s", tool_pmu__event_to_str(ev));
- 
- 	parse_events_error__init(&err);
- 	ret = parse_events(evlist, str, &err);
 -- 
-2.43.5
+2.34.1
 
