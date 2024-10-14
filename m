@@ -1,75 +1,124 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31A63F9CC
-	for <linux-perf-users@vger.kernel.org>; Mon, 14 Oct 2024 02:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CBF3E499;
+	Mon, 14 Oct 2024 02:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728871734; cv=none; b=t+tJ1k19Jdc0upPxjj7SoQEXo8hfIzvOwHwSFi1gfxHUa5VmLe+x0YwR0WUpvfWtjM+wS5nEzF5N60BBDcghb6NdwqRmgRjjuLgy7dwpJvv1Y8jtHwIXoq4UWTNJwY103nm/o2pIF0X2Cg5zK71jZSE1isMs+bsMe8YOfUSEXUI=
+	t=1728872689; cv=none; b=qaBE6aYiSNLay6722ZxlpDgvQZ6IcOoV+bXOoHLFItCkrASFh98pKx0lFd1M2zWQxaulAzxojpy3EhgouX1b2rqNJN72Gg9LFOEekmNU/J8p1luLSf9DIxMOwjekM5Q0COTPb1cC+7hRc8IYH0G5PYcqZhNRR8d49jLw1RUTnn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728871734; c=relaxed/simple;
-	bh=sKoT9ubx2MR3FyeYH9iNNnEYGr/zsGQemIq59egXHpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=omXDI4qT5qj81eSro8zAM8tH4cHXU3qi9FA4qorGWqZe5UvnM7yysXK8NUCP8iDPZsN2dEC31dpSUCRZgaQ7Iu8VPliVREGSr6RySoz8/+TSMgYpq4fo5u4PWu/gyspLUtfCDKWsUTjCW4z37w1DstwMmZWI1I1WN7yyhz9NZBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=piCSKsWT; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1728872689; c=relaxed/simple;
+	bh=g/DAxs5dzK8K8pQYu35Djg8/2ZKXMriYr9hwS4xw9Vs=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HsMjipkMJo581PYpQIFrSz5H7Sz/m0CNqHIpWmxrVmSXNrxCferby20f0TVQcuAaQBDw1S3K/OJca6GoVEf/DorHto5u4ugmxmnYruXasUU7z3PG8OhhXZcHjTjQJzxLhHuB6o4dGf6VaDx4cRWD1I1o2lw9+ppGWxD1DPDlMBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7I0mxWQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="piCSKsWT"
-Date: Sun, 13 Oct 2024 22:08:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1728871726;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wY+ijKXuZt2ojjF9sY4li+YhA/f7UOPAEofiJwS3jCc=;
-	b=piCSKsWTpyYrc56O9Fty31hKyS/UmcAPuHEaFC3yEGAp3Oqj4IHVsd5UhxwApkguAg9jfK
-	mQuwf8cyO0fG3pxjo1ycCwmwZfpoHqO8sBqNH1PvjOdzHU2cobTW/0SSIpHUAVQoWlblsS
-	6HsAREY2u24k+CImBZYk/XmZzIN3OVc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: colyli@suse.de, msakai@redhat.com, corbet@lwn.net, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	akpm@linux-foundation.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, jserv@ccns.ncku.edu.tw, linux-kernel@vger.kernel.org, 
-	linux-bcache@vger.kernel.org, dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 0/3] Enhance min heap API with non-inline functions and
- optimizations
-Message-ID: <lee342z2tyrmmxuqnqb2mg4i4qem6n3ei6ifnuusivxilouqbe@nsbaqry3lchl>
-References: <20241013184703.659652-1-visitorckw@gmail.com>
- <uisaqjn2ttzhohe3a5qrdw4x6m7rhuoxxuhfoz5szufynuz5fz@4wicz52jydwz>
- <ZwxXSje3n6lMTbjj@visitorckw-System-Product-Name>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7I0mxWQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09E2FC4CEC5;
+	Mon, 14 Oct 2024 02:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728872689;
+	bh=g/DAxs5dzK8K8pQYu35Djg8/2ZKXMriYr9hwS4xw9Vs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=F7I0mxWQPO1NP6XxnSt/xCKZYnNeFPA6xxE4/tB3rximKv7jSHckBLO32HWgeDW1I
+	 me3LSdMNsvwQldl+e4aweJnsQPwM65Z3tlnwb8cNmTdll0dSuHKF/Qby8AHHVlnKE1
+	 mDVgavh/qmpFCL62tgOgVX7rN9F5gXWK55+lFBIUGf47xM55HfinL2wykDA+Z55v5q
+	 f81Z5B5FHT1n8TZHGRwMVple0PI+JW00fDHZ4fwU69U/PMmH4fJlXzR8aPj5KxO0eW
+	 l8giR7PCctCRmlN15j9UJXapFfXpBZ3jyobL2W38tLmm3IlG/0jK3GrT+NC/Fva9HK
+	 By/oti/sMYpAg==
+Date: Mon, 14 Oct 2024 11:24:43 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] perf probe: Improve log for long event name
+ failure
+Message-Id: <20241014112443.97b129e774d9f313dc32568e@kernel.org>
+In-Reply-To: <20241012204725.928794-4-leo.yan@arm.com>
+References: <20241012204725.928794-1-leo.yan@arm.com>
+	<20241012204725.928794-4-leo.yan@arm.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZwxXSje3n6lMTbjj@visitorckw-System-Product-Name>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 14, 2024 at 07:27:06AM GMT, Kuan-Wei Chiu wrote:
-> On Sun, Oct 13, 2024 at 07:05:38PM -0400, Kent Overstreet wrote:
-> > On Mon, Oct 14, 2024 at 02:47:00AM GMT, Kuan-Wei Chiu wrote:
-> > > Add non-inline versions of the min heap API functions in lib/min_heap.c
-> > > and updates all users outside of kernel/events/core.c to use these
-> > > non-inline versions. Additionally, it micro-optimizes the efficiency of
-> > > the min heap by pre-scaling the counter, following the same approach as
-> > > in lib/sort.c. Documentation for the min heap API has also been added
-> > > to the core-api section.
-> > 
-> > Nice, has it been tested - do you need a CI account?
-> > 
-> > I'd like to start seeing links to CI results in patch postings (and I
-> > need to tweak the CI to add git fetch links, as well).
-> >
-> It would be nice to have a CI account to test my patches. Is there any
-> guide available on how to use it?
+On Sat, 12 Oct 2024 21:47:25 +0100
+Leo Yan <leo.yan@arm.com> wrote:
 
-I give you a config file to edit, it watches your git branch(es), you
-watch dashboard
+> If a symbol name is longer than the maximum event length (64 bytes), the
+> perf tool reports error:
+> 
+>   # perf probe -x test_cpp_mangle --add "this_is_a_very_very_long_print_data_abcdefghijklmnopqrstuvwxyz(int)"
+>     snprintf() failed: -7; the event name nbase='this_is_a_very_very_long_print_data_abcdefghijklmnopqrstuvwxyz(int)' is too long
+>     Error: Failed to add events.
+> 
+> An information is missed in the log that the symbol name and the event
+> name can be set separately. Especially, this is recommended for adding
+> probe for a long symbol.
+> 
+> This commit refines the log for reminding event syntax.
+> 
+> After:
+> 
+>   # perf probe -x test_cpp_mangle --add "this_is_a_very_very_long_print_data_abcdefghijklmnopqrstuvwxyz(int)"
+>     snprintf() failed: -7; the event name 'this_is_a_very_very_long_print_data_abcdefghijklmnopqrstuvwxyz(int)' is too long
+>       Hint: Set a shorter event with syntax "EVENT=PROBEDEF"
+>             EVENT: Event name (max length: 64 bytes).
+>       Error: Failed to add events.
+> 
+
+Nice!
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/perf/util/probe-event.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> index 224ec6818803..2a2fc5e78c5c 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -2760,7 +2760,10 @@ static int get_new_event_name(char *buf, size_t len, const char *base,
+>  	/* Try no suffix number */
+>  	ret = e_snprintf(buf, len, "%s%s", nbase, ret_event ? "__return" : "");
+>  	if (ret < 0) {
+> -		pr_warning("snprintf() failed: %d; the event name nbase='%s' is too long\n", ret, nbase);
+> +		pr_warning("snprintf() failed: %d; the event name '%s' is too long\n"
+> +			   "  Hint: Set a shorter event with syntax \"EVENT=PROBEDEF\"\n"
+> +			   "        EVENT: Event name (max length: %d bytes).\n",
+> +			   ret, nbase, MAX_EVENT_NAME_LEN);
+>  		goto out;
+>  	}
+>  	if (!strlist__has_entry(namelist, buf))
+> @@ -2780,7 +2783,10 @@ static int get_new_event_name(char *buf, size_t len, const char *base,
+>  	for (i = 1; i < MAX_EVENT_INDEX; i++) {
+>  		ret = e_snprintf(buf, len, "%s_%d", nbase, i);
+>  		if (ret < 0) {
+> -			pr_debug("snprintf() failed: %d\n", ret);
+> +			pr_warning("Add suffix failed: %d; the event name '%s' is too long\n"
+> +				   "  Hint: Set a shorter event with syntax \"EVENT=PROBEDEF\"\n"
+> +				   "        EVENT: Event name (max length: %d bytes).\n",
+> +				   ret, nbase, MAX_EVENT_NAME_LEN);
+>  			goto out;
+>  		}
+>  		if (!strlist__has_entry(namelist, buf))
+> -- 
+> 2.25.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
