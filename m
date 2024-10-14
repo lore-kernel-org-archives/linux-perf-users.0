@@ -1,181 +1,150 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44981AC426
-	for <linux-perf-users@vger.kernel.org>; Mon, 14 Oct 2024 15:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDFE1AB6D4;
+	Mon, 14 Oct 2024 15:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728920378; cv=none; b=YlXQvZdXC2X4karPTC0Z+/3lkXKKRZJQx/tlb6SVHfmHSrGNE/4h+CKCIHRcoeDH6oNkPougJfoPBbMxJbBQIjfMuEiizwA69gBwWzKCnsQmOMDDB25+gndRl4gc14ARDqIpyOwSp8uasjNgMYvEf0DCnaUKwRJsV2zd5pkpC2E=
+	t=1728920427; cv=none; b=koend8H0TweTwKF8+rMAwf7ORhxkK/heDilHT+YJcq/ZIOVyS0jZz5lA9Q9C/njZ4Xx0QJvljH7PE//xOeyCZIc9rluZmq1qiYo313eLQwK5Wocf4Ffkm4OrCHlukVW1dbl426rYjOJmErG7b1fyfqqOwpFBqgUNqEols729zdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728920378; c=relaxed/simple;
-	bh=vXONqpVSuS2KfWsZEVmc4ikait+Dv5EN6o2bZsCEjT4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=aq6+Wy+TBecZ/ogmz5tyKJ/Y3AVyaOw7qtwNT8B/jnvnXZ0QydTT1PunCOaFXQGnb5fR9Ra7+Rjiye+BkygJS+aVMr7Y1pYe1WDuBqHToIkekcBg3n4dEIBvFHZEWRHeh99a6mAVJXDUzoOeeoM8VKHlGWMC/nUIGfmWxVg1AQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AnuhTzIA; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1728920427; c=relaxed/simple;
+	bh=34dUQUcFKDFdIHwZqfFx3rcVXBMaQlLmOketdaPEtS8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J+JsFzv4CzdgERjc897CoZxATir3B4LBUzsxYEggwOW5OoBVJOuCZUl9jy+XdfFuGMJqAnN8VWQ/1Ik8e2zmC5OByyAS9BJDhsp5efdR7TJEFOCA/0mrjC5XKt4hVX4UDTVoLWaoKcz99EfPg5Z0fb+sLu+nvWc3kg5Tj+fsErQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QOcTz+cJ; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AnuhTzIA"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49EFJOmK032411;
-	Mon, 14 Oct 2024 15:39:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding; s=pp1; bh=nopFvKMBtV8dIo5tbLzKM/+vo8
-	NRhskTLxcRh8utwhU=; b=AnuhTzIA/7dbKHNiHm0hjw3wdI5xDlqqwLWBwt3Aa2
-	MdKTO9+FqBY4l4jPgNqkCQ8bnorlgTbuEnpztbCsqPakpWfM/z+xadPVM+5T5eiw
-	QZd8knQzDjfDuxK0BBSuO+4tcx8RQvvAMpOVqjWSuo464Lfs0Bu9yxenF9/GIKLM
-	of3RMAN2+v1G+LXNSsvbc0e1JhlbuQ67GaTHLqVjN44BEAkyR7k81/kKLC1+qTmZ
-	ri14VMJH0AuQENfPhr2G1H2ycNJUaHSF0mR/Ifz6e8KeYlL0H+JiRCMAqKq+H9Z7
-	xJyCdY93PVQicDb0loJk+nh6vt6GnBDgNdixF8Lva5tA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4295ub8355-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Oct 2024 15:39:26 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49EFdPup018326;
-	Mon, 14 Oct 2024 15:39:25 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4295ub8352-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Oct 2024 15:39:25 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49EErfGX002452;
-	Mon, 14 Oct 2024 15:39:25 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4284emfagf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Oct 2024 15:39:25 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49EFdLrS52101426
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Oct 2024 15:39:21 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4234320049;
-	Mon, 14 Oct 2024 15:39:21 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CC6C720040;
-	Mon, 14 Oct 2024 15:39:15 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.61.242.183])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 14 Oct 2024 15:39:15 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        akanksha@linux.ibm.com, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
-Subject: [PATCH] tools/perf/tests/base_probe: Fix check for the count of existing probes in test_adding_kernel
-Date: Mon, 14 Oct 2024 21:09:10 +0530
-Message-Id: <20241014153910.85536-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QOcTz+cJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728920425; x=1760456425;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=34dUQUcFKDFdIHwZqfFx3rcVXBMaQlLmOketdaPEtS8=;
+  b=QOcTz+cJo9oFZ9PgwLWBWAPAs0GDupDAU6RbTRQ1NMxhFbN3xrD1tRtm
+   OeWH8Gk7+6qugxEBSSCtKa6opykVMrmkEw29PRqrdPys9upDxYMeKgVmz
+   7oDWHD2lkYDj6ZVYLrS3jWk3JEBTrULgoPRsmAUG8ypywVAB7uzqsKXNL
+   jnwsffsZaK4TZWjjrYVLus3cqlhA2s82e3t+lC4GK6udM6mCuGWZe4lLx
+   rMF5II+9g2UCjj4LplvxsN17w/twxbjBHG5n8d8pqF7m991jmaUrd7mbU
+   Wyo38WWiPTlhbi8Z2jhJgG4eOtreaGfweFNHtXGIQ2U3BdgPN9WUzoM0q
+   g==;
+X-CSE-ConnectionGUID: TnB83QAETwS5XtZIbpvIqQ==
+X-CSE-MsgGUID: iBOAB6vCRn6gPHFKibahIA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28161071"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="28161071"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 08:40:25 -0700
+X-CSE-ConnectionGUID: TpJEMHKES0y5rG8ZSo5phA==
+X-CSE-MsgGUID: g9ubOfTEShKmyqi7UV3KxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,203,1725346800"; 
+   d="scan'208";a="77541546"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 08:40:25 -0700
+Received: from [10.212.61.73] (kliang2-mobl1.ccr.corp.intel.com [10.212.61.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 51CE520B5782;
+	Mon, 14 Oct 2024 08:40:22 -0700 (PDT)
+Message-ID: <3da8094d-0763-4b66-9ac1-71cd333b7747@linux.intel.com>
+Date: Mon, 14 Oct 2024 11:40:21 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 14/58] perf: Add switch_interrupt() interface
+To: Peter Zijlstra <peterz@infradead.org>, Mingwei Zhang <mizhang@google.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
+ <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+ Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ Like Xu <like.xu.linux@gmail.com>,
+ Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240801045907.4010984-1-mizhang@google.com>
+ <20240801045907.4010984-15-mizhang@google.com>
+ <20241014115641.GE16066@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20241014115641.GE16066@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: yYvOghp3YKTk2R1UeTm2MF2Ifut39zFv
-X-Proofpoint-GUID: _Xx-b53Yk06BLv2THatpX2scuhjLdZHl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-14_10,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 phishscore=0 mlxscore=0 malwarescore=0
- priorityscore=1501 impostorscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- clxscore=1015 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2409260000 definitions=main-2410140113
+Content-Transfer-Encoding: 7bit
 
-perftool-testsuite_probe fails in test_adding_kernel as below:
-	Regexp not found: "probe:inode_permission_11"
-	-- [ FAIL ] -- perf_probe :: test_adding_kernel :: force-adding probes ::
-	second probe adding (with force) (output regexp parsing)
-	event syntax error: 'probe:inode_permission_11'
-	  \___ unknown tracepoint
 
-	Error:  File /sys/kernel/tracing//events/probe/inode_permission_11
-	not found.
-	Hint:   Perhaps this kernel misses some CONFIG_ setting to
-	enable this feature?.
 
-The test does the following:
-1) Adds a probe point first using :
-    $CMD_PERF probe --add $TEST_PROBE
-2) Then tries to add same probe again without —force
-and expects it to fail. Next tries to add same probe again
-with —force. In this case, perf probe succeeds and adds
-the probe with a suffix number. Example:
+On 2024-10-14 7:56 a.m., Peter Zijlstra wrote:
+> On Thu, Aug 01, 2024 at 04:58:23AM +0000, Mingwei Zhang wrote:
+> 
+>> @@ -5941,8 +5942,21 @@ void perf_put_mediated_pmu(void)
+>>  }
+>>  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
+>>  
+>> +static void perf_switch_interrupt(bool enter, u32 guest_lvtpc)
+>> +{
+>> +	/* Mediated passthrough PMU should have PASSTHROUGH_VPMU cap. */
+>> +	if (!passthru_pmu)
+>> +		return;
+>> +
+>> +	if (passthru_pmu->switch_interrupt &&
+>> +	    try_module_get(passthru_pmu->module)) {
+>> +		passthru_pmu->switch_interrupt(enter, guest_lvtpc);
+>> +		module_put(passthru_pmu->module);
+>> +	}
+>> +}
+> 
+> Should we move the whole module reference to perf_pmu_(,un}register() ?
 
- ./perf probe --add inode_permission
- Added new event:
-  probe:inode_permission (on inode_permission)
+A PMU module can be load/unload anytime. How should we know if the PMU
+module is available when the reference check is moved to
+perf_pmu_(,un}register()?
 
- ./perf probe --add inode_permission --force
- Added new event:
-  probe:inode_permission_1 (on inode_permission)
+> 
+>> @@ -11842,7 +11860,21 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
+>>  	if (!pmu->event_idx)
+>>  		pmu->event_idx = perf_event_idx_default;
+>>  
+>> -	list_add_rcu(&pmu->entry, &pmus);
+>> +	/*
+>> +	 * Initialize passthru_pmu with the core pmu that has
+>> +	 * PERF_PMU_CAP_PASSTHROUGH_VPMU capability.
+>> +	 */
+>> +	if (pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU) {
+>> +		if (!passthru_pmu)
+>> +			passthru_pmu = pmu;
+>> +
+>> +		if (WARN_ONCE(passthru_pmu != pmu, "Only one passthrough PMU is supported\n")) {
+>> +			ret = -EINVAL;
+>> +			goto free_dev;
+> 
+> Why impose this limit? Changelog also fails to explain this.
 
-  ./perf probe --add inode_permission --force
- Added new event:
-  probe:inode_permission_2 (on inode_permission)
+Because the passthru_pmu is global variable. If there are two or more
+PMUs with the PERF_PMU_CAP_PASSTHROUGH_VPMU, the former one will be
+implicitly overwritten if without the check.
 
-Each time, suffix is added to existing probe name.
-To get the suffix number, test cases uses :
-NO_OF_PROBES=`$CMD_PERF probe -l | wc -l`
-
-This will work if there is no other probe existing
-in the system. If there are any other probes other than
-kernel probes or inode_permission, ( example: any probe),
-"perf probe -l" will include count for other probes too.
-
-Example, in the system where this failed, already some
-probes were default added. So count became 10
-  ./perf probe -l | wc -l
-  10
-
-So to be specific for "inode_permission", restrict the
-probe count check to that probe point alone using :
-NO_OF_PROBES=`$CMD_PERF probe -l $TEST_PROBE| wc -l`
-
-Similarly while removing the probe using "probe --del *",
-( removing all probes ), check uses:
-
- ../common/check_all_lines_matched.pl "Removed event: probe:$TEST_PROBE"
-
-But if there are other probes in the system, the log will
-contain reference to other existing probe too. Hence change
-usage of check_all_lines_matched.pl to check_all_patterns_found.pl
-This will make sure expecting string comes in the result
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/tests/shell/base_probe/test_adding_kernel.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-index d541ffd44a93..f8b5f096d0d7 100755
---- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-+++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-@@ -169,7 +169,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "force-adding probes :: second pr
- (( TEST_RESULT += $? ))
- 
- # adding existing probe with '--force' should pass
--NO_OF_PROBES=`$CMD_PERF probe -l | wc -l`
-+NO_OF_PROBES=`$CMD_PERF probe -l $TEST_PROBE| wc -l`
- $CMD_PERF probe --force --add $TEST_PROBE 2> $LOGS_DIR/adding_kernel_forceadd_03.err
- PERF_EXIT_CODE=$?
- 
-@@ -205,7 +205,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using doubled probe"
- $CMD_PERF probe --del \* 2> $LOGS_DIR/adding_kernel_removing_wildcard.err
- PERF_EXIT_CODE=$?
- 
--../common/check_all_lines_matched.pl "Removed event: probe:$TEST_PROBE" "Removed event: probe:${TEST_PROBE}_1" < $LOGS_DIR/adding_kernel_removing_wildcard.err
-+../common/check_all_patterns_found.pl "Removed event: probe:$TEST_PROBE" "Removed event: probe:${TEST_PROBE}_1" < $LOGS_DIR/adding_kernel_removing_wildcard.err
- CHECK_EXIT_CODE=$?
- 
- print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "removing multiple probes"
--- 
-2.43.5
+Thanks
+Kan
+> 
+>> +		}
+>> +	}
+>> +
+>> +	list_add_tail_rcu(&pmu->entry, &pmus);
+>>  	atomic_set(&pmu->exclusive_cnt, 0);
+>>  	ret = 0;
+>>  unlock:
+>> -- 
+>> 2.46.0.rc1.232.g9752f9e123-goog
+>>
+> 
 
