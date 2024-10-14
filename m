@@ -1,46 +1,46 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408FD1E4A6;
-	Mon, 14 Oct 2024 13:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1381B19E806;
+	Mon, 14 Oct 2024 13:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728911060; cv=none; b=IkUcV6k23lhGTMQQqDoYTMyHXGFl0q9pggsC9Bi8GhEENR7JObThUZXntLq9GQFar3wdcVkghZZRfgJTiNSfesjGxpSdwetHPOfkZtQaoqDpaKq09wyC/abloytsto76SBoZ6036aSWD/6dYddIppSlfLCzVVrYj7pJ0E4A5dOI=
+	t=1728911167; cv=none; b=H+/lz/kIqoxpysJv+Wu132TdscDYJQlZfQ56PAnnD6BRtqLaf0yAvrlXc0lHnzL4clc+dJVxGnyoJQsIAgMR4691qQzcEnjXTSGfvwGZG5qd8Uik3yxResPJlJj2vLekkXnbBr7d8WW5GAlTeOa7I+EfJJjEK9jE0gXoXAe2s9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728911060; c=relaxed/simple;
-	bh=4LUtRPHvCLMGOz37DfN/f8nm6V+cm2oLNCUn8+PdB2Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MRjdZQenmdWUgqwwPS1XExYGvnW1IlxPSIqKTtcF3iEvW1wmAEjt5qXLrfiOWpfpDgGdZxXLgJG6mSzu46+YAXf310ZZYcpwK0dB7W++alxAFbP6k443v+dx88f9gSqynWoLrEmh6/y3ZYSHoCwyM1LNDtJPYFXUqJiSixQt6fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.43
+	s=arc-20240116; t=1728911167; c=relaxed/simple;
+	bh=5yIE1AXTBtccQw+b33agkVNO7ZB538iyS504JjLMXcY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=lK2+yjqi5+S8i2PfzfsymyrYPTfoBxef+5cCQaLiX1+A0PRT/X0XbZq8Xh3+1Qz0+kCfq/ACfx4wi3GBEQ1PRladYRpBjLm4e2NoopO0uiD7IkE+By9MVSFSlX+8AbVDaq1KTvWzr6GbZsbrNyOA9xma4sGwH8WBXNMYVr6OYNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-37d70df0b1aso976180f8f.3;
-        Mon, 14 Oct 2024 06:04:18 -0700 (PDT)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-37d473c4bb6so3343124f8f.3;
+        Mon, 14 Oct 2024 06:06:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728911057; x=1729515857;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fM5zbefmYpt87+xPDOFb1/J/J13VI0RiUb1GnkqaVn4=;
-        b=JtYrn8QhtNAPKbk8nkzGh46Akg9U4wqoZeuO6UlEwKQSxVN+R//u/IdhReT8AQuF5k
-         T/4rV58LIxT14lk/3/SkpG/mtaUo+QcvIKeEDg3BCjAZ/cpOJWwrAD8xmCpbTMotUjpH
-         ot+lDy4hR6Ub2mU1IChMWkLLbhhY7YA72R9Y2UhXb1S+t22OnH2T8NkHVABSGnTwbbOA
-         Kvb9hknmAirIOLuBbSTiYzzLYz95mlCnSZHXDDnMnGIDcLdwkqwlM6aZNuRks/Oc/E2i
-         Fw98A1WmLHEGGrQoB1cgeQYXnatD7fMfjzvNJiw8kvdxZm1SfwOCMTdZELCEQKh5KaEQ
-         6adA==
-X-Forwarded-Encrypted: i=1; AJvYcCVuWsaUYsOi01r9DYSA0tGRLFOQogEQmh5xYpBvt6ueW9T1mtQsCr4rH8kANZAs8vx3sYMueT6Mi6dSPU0=@vger.kernel.org, AJvYcCWJuCvg4BH84l0lc8wf8FS3QqN1twO9Fz9YLpbjkRY6uKWdBQNq+x2hwoMJqH1CFKWdOI/gZh+YkOG27yX+7MzMtA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1uhFZQJCugBv0w//BVh0WzAFueKjSbmhikeGd7FTvqnPhOys0
-	5oNhLZegqzH7xD5Xu/YN8LHn5qFTgGqi0jDj3O7eqofMQOvUJ1Uq
-X-Google-Smtp-Source: AGHT+IHoRpQdTU9z/Mbg3r6jnDWocpOhJuuIsNtmg/IlOGdsgzufk797Z0En4NzIQ24DtynP22/cQA==
-X-Received: by 2002:a5d:5f56:0:b0:37d:5047:76d8 with SMTP id ffacd0b85a97d-37d5532847bmr9727215f8f.59.1728911054163;
-        Mon, 14 Oct 2024 06:04:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1728911164; x=1729515964;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=arN2EaeGbfyQzTtje2PaOTjOburdceclvq3hXPjtlHw=;
+        b=kzVLSJOlH7byGvjrHI06MVCebsBp2Rb1bs2pGH+Xm1gVL4UCuLLFB5rImdeCwcA00U
+         P27ai4q2z1tldkxWP5Z3x1hwaNmyCBGFn6T8+jiweaA7idf4kR1Dz3BPZ9pYoCOwt85A
+         X9t2W5nBL0JWJoJRVTVSaV5pkcr49Zg83sTUrjcfSWquxZeMW6GpElbxNxVJE8KbWViE
+         8rP4NgUr2zDbgHbDAjelP11Eiz6HuA8HrANzhYMZn21lO510jxro4Ee5oUE5dVkC4gn/
+         3+SNlxDrBWYbwgPiTSGnnmzjpO4D+ApDb7/FY8VkYjPlTHQkEaQDJJZDpG5y4IwS7qMr
+         yo8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVMu1fS/UZN8iVGLaq2fXfGZ7B1LrOq5UXXsfIvdIqW5P3c4PB+cADfNP6/+cpcSCFDnF1KHd5SgVhpWdzBohLbYw==@vger.kernel.org, AJvYcCW+YmqGx9WmKKsn23beoZLJzsaPGAn3qDMq7PtS5A9+YaiDFvtuVxcgzgZZ6aoAjgaRPpVwcwDfc74EoK0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXaZ6K03OrjHkDE7BUc6NUGf0RZikf9PbGMMe2+q9MFc1Oz8IJ
+	VoMVHT0PzxE7I5Mv+mDP7+h1zJKfXXIOxzMVHVU0Pwky08zRViF5
+X-Google-Smtp-Source: AGHT+IFslGH1lFnLmbVAguvq3NPJ2Hq/naL7JW5Qulsjtxs4o1vYcbMFGHXyrS8up5WDYkXYYuvR7w==
+X-Received: by 2002:adf:f483:0:b0:37c:d2e3:1298 with SMTP id ffacd0b85a97d-37d601eea06mr6796782f8f.55.1728911164250;
+        Mon, 14 Oct 2024 06:06:04 -0700 (PDT)
 Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b79f868sm11268721f8f.82.2024.10.14.06.04.12
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b6a8911sm11289688f8f.14.2024.10.14.06.06.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Oct 2024 06:04:13 -0700 (PDT)
-Message-ID: <5c2151fc-d7ed-4677-9456-4589f67d5f51@kernel.org>
-Date: Mon, 14 Oct 2024 15:04:12 +0200
+        Mon, 14 Oct 2024 06:06:03 -0700 (PDT)
+Message-ID: <1b96ef59-3b25-4c16-b3ee-cb4c7432afc0@kernel.org>
+Date: Mon, 14 Oct 2024 15:06:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,6 +50,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH/RFT] Re: [PATCH v5 1/8] perf trace: Fix iteration of
  syscall ids in syscalltbl->entries
+From: Jiri Slaby <jirislaby@kernel.org>
 To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Howard Chu <howardchu95@gmail.com>,
@@ -67,8 +68,8 @@ References: <0f841525-e02a-4e11-b5f8-1acc61979ccf@kernel.org>
  <ZwgAzde-jVyo4cSu@google.com> <ZwgBenahw7EImQLk@google.com>
  <ZwhA1SL706f60ynd@x1> <2a91f9d0-8950-4936-9776-7ba59ab1d42a@kernel.org>
  <CA+JHD937angqu=48-kPC7LvtMMQPgUGp+2x5b+JKVNoFa3+9HQ@mail.gmail.com>
+ <5c2151fc-d7ed-4677-9456-4589f67d5f51@kernel.org>
 Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
 Autocrypt: addr=jirislaby@kernel.org; keydata=
  xsFNBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
  rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
@@ -111,29 +112,36 @@ Autocrypt: addr=jirislaby@kernel.org; keydata=
  f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
  DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
  S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
-In-Reply-To: <CA+JHD937angqu=48-kPC7LvtMMQPgUGp+2x5b+JKVNoFa3+9HQ@mail.gmail.com>
+In-Reply-To: <5c2151fc-d7ed-4677-9456-4589f67d5f51@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 14. 10. 24, 14:43, Arnaldo Carvalho de Melo wrote:
-> And works? :-)
+On 14. 10. 24, 15:04, Jiri Slaby wrote:
+> On 14. 10. 24, 14:43, Arnaldo Carvalho de Melo wrote:
+>> And works? :-)
+> 
+> I cannot tell :P.
+> 
+>> I need to get access to a 32-bit arm distro that I can use with qemu 
+>> or with one of the libre computer arm64 boards I have, can you point 
+>> me to one? :-)
+> 
+> The former might be openSUSE. I have just booted:
+> https://download.opensuse.org/ports/armv7hl/tumbleweed/appliances/openSUSE-Tumbleweed-ARM-JeOS-efi.armv7l.raw.xz
+> 
+> with (when unpacked and aavmf-aarch32-vars.bin copied to /tmp/arm.bin):
+> qemu-system-arm -cpu cortex-a15 -M virt -hda 
+> /tmp/openSUSE-Tumbleweed-ARM-JeOS-efi.armv7l.raw -nographic -drive 
+> if=pflash,format=raw,unit=0,readonly=on,file=/usr/share/qemu/aavmf-aarch32-code.bin -drive if=pflash,format=raw,unit=1,file=/tmp/arm.bin -m 2000
 
-I cannot tell :P.
+FWIW
 
-> I need to get access to a 32-bit arm distro that I can use with qemu or 
-> with one of the libre computer arm64 boards I have, can you point me to 
-> one? :-)
+login: root
+pass: linux
 
-The former might be openSUSE. I have just booted:
-https://download.opensuse.org/ports/armv7hl/tumbleweed/appliances/openSUSE-Tumbleweed-ARM-JeOS-efi.armv7l.raw.xz
+in all openSUSE images.
 
-with (when unpacked and aavmf-aarch32-vars.bin copied to /tmp/arm.bin):
-qemu-system-arm -cpu cortex-a15 -M virt -hda 
-/tmp/openSUSE-Tumbleweed-ARM-JeOS-efi.armv7l.raw -nographic -drive 
-if=pflash,format=raw,unit=0,readonly=on,file=/usr/share/qemu/aavmf-aarch32-code.bin 
--drive if=pflash,format=raw,unit=1,file=/tmp/arm.bin -m 2000
-
-thanks,
+> thanks,-- 
 -- 
 js
 suse labs
