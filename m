@@ -1,139 +1,128 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC7C15697B
-	for <linux-perf-users@vger.kernel.org>; Mon, 14 Oct 2024 09:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4635B158A19;
+	Mon, 14 Oct 2024 09:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728898863; cv=none; b=eiWtkLqzL0bE0YTrG1MMcJ2M516CzVrnv57Ud5pOAY48fhJwC67dUQ8CI0FtgbLm0eKeqT9LNbrOPJbLB7F66Z702QkDZytyUW8s9Ayl1H0PPbFFPcNLiQO4AUofKGYb5IeXXPsrH2p3HjO/Hd1BC0KCKT/NLCjnGvEk32oSl50=
+	t=1728898891; cv=none; b=cCtL+dFa7J8SE+cPJZJgKRxn2qRti2traYhCW52JZkoFmOqY1F5ek/7zoOa56f651HnwZVNOJNJ75+h4fT5F3nQW3xS9DiNSKMfXHOhF829rHRIffaYbxu1s+mn41i4DbrmRNf1vfqWGNltD7wYc84KQALJH4OYDY6Cg+sSz+rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728898863; c=relaxed/simple;
-	bh=7iBaXX3hsoGbDfO3EgnPA3gsM6qXWt169yOiJnYahDw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xjy/8d3h02RylLtBFoT5yZA4ZvuNrzP2ABQj6PA6VGJm1kqUc3VlnBZbh8Ch+9dEjhx/RsYZM7qfgJNcGyH3vTiOQo9J+zwm0xWHu/O7Rckz4O/9gN9apv4tUMqFFZVyK9xSj6lKPuFmP1Gw9xyUv2pYEbEi+IfLkwHThG1tmyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dqvPFORE; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1728898891; c=relaxed/simple;
+	bh=fUoNTEfvSq0GSvgYvtoYghMRMAOyjzVsb6fYfyavliI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=odTm1qvxzVAC9x1ieSBdAGMPriUunMmOfdFAY2EdrGysWtJoNfeZFES5ttYil0pi1dlvbA1X1qjhTAzjL3hnXT6AKE7njqmlZe3Z//2IRValmonBpAJ9HX26Qj2ozItqmkDfQFKcUJg3VhVNaxjECLOEdBUwQhUopZ9ivVUPEZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I+JbMNz9; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dqvPFORE"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20c805a0753so32910385ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Oct 2024 02:41:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+JbMNz9"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3e3dfc24a80so2155348b6e.2;
+        Mon, 14 Oct 2024 02:41:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728898861; x=1729503661; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FsjHjApHcN49dporjlCFgxa8mU/tCA7QE7zQPAQRHmI=;
-        b=dqvPFOREiIK/wf+AkwkOwyu4aq/9EH1yELCNvTWlyYCUU9VNW6tI2rLGGTh5vHtWw4
-         IeWXZjUB2D7Lyef8CsAnhRA0lkqDKGhZ860myR00lMnp1t7Qqkmv6Ej5yynwWOxo/iGY
-         xaqiQb1sGDdiYA8JYZrgrEUvtpLgg/GbGs6wjdJRHRyk8Brsp6Oamhz4CnaMQwQ8cCXu
-         dUp17NlPii0f/5arx3+dpymbKdZE7HEzlY/CTYCBhn6QJoKkE9MxRv9MFyj6LSfLxSDh
-         LNcm4xG74+e4lwuYXakaB8O2Z9D9Qcd6FtCxeE4RMYkHb2hZ+VHYFXVpWuwl321HMIoV
-         PjQg==
+        d=gmail.com; s=20230601; t=1728898889; x=1729503689; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cnopLGGRHN4ho4J7qxXEPkj6nPnNlpB0jO6Hxh7Gbh0=;
+        b=I+JbMNz9wb0nmWcf+a8R4LHG+LzIWKzLfdwUN7mQZudtnn3NnP59PIivLYdFQKrwP3
+         Nf1j0QZzZo2hzEgdR5Yj4lx1WYwcskjPT7KmgXeat4FoHumwZmBRQyzGLxD9gtX1Iq8A
+         xOoEDq1nD/eVOlqw5R8PsgXTqe7mzoXWQcBlyha/eZW6izj/rJONTZofKI+feXVjQzcP
+         AFzxT+Gbn3Sw9CbJ1tt0pXeKAQBXFpqIb/mgoLpFa6nOPrpbYnGEgM/bRSxKwP56bgAu
+         VCHN5lL7aHcI7JaReUGyN3rbiZSiLXT/cQpWsRZsKd/L6o5e4uzbXZtN9XWw4aE9Ggn0
+         UFwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728898861; x=1729503661;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FsjHjApHcN49dporjlCFgxa8mU/tCA7QE7zQPAQRHmI=;
-        b=kBUyIfCbqJIE3NQ1f8VMNp5wJOkXWhZLZzvKDX1equ19idz8XX7+60eePclyrMYP0E
-         Kd649r0WQ7zBCM2+easItY2zzOUs3Kno3aKmVI6kRppkc2oV4fYdxtDsDh6gomIpjtll
-         uM3s33faAieFkYCNKvJQP1VTTj5rVW4up/KoJjtxuwimPS2T6ZI8/zOcXmUj9uSLU70L
-         +tb4S6ihMyEgloFh78iS+0HJwYi8Bi7aNUEILDg/uQSLSg0uyiKzTZayV3R+zuDSz8Xs
-         soFteTVdWy8arlf709M9jvjfI6oUfPRmM3zKk77tlbN8W8MbkB1ZmNCGf4HojfFxVuCM
-         eXjw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAxEQX2jH8ktS0M+yPL0ZP1Nf6nKm8DIitEn3c2UcLBJ7HDDUeywsJ1MURJgA1yRquaaqx+zFmIWPYtp1LlrJO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7veaLNjMI6oDoZnoexk7DK6ltnPH3gEsCSzHabsUShBzUgGvu
-	iyv6mq4ZGVCAb8WfJkWnuM9O2bIHZi59WlypW2Muw5x4FiorGl+wCIxxt9k84JiTg8f6RqKb53f
-	PqW3HkisbyyGnY8z3FuSVtpCcz2JNI4D8xkEQ
-X-Google-Smtp-Source: AGHT+IF4L5Hd3fangx/44ARAUSu080w1slVh6TANg3o3P7Lj3N2sFofhu5NjvupF9SW2g/VvW2ZpNqr84DuYhdqHV+M=
-X-Received: by 2002:a17:90b:3bc6:b0:2e0:8740:26d0 with SMTP id
- 98e67ed59e1d1-2e2f09ee044mr13110157a91.2.1728898860787; Mon, 14 Oct 2024
- 02:41:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1728898889; x=1729503689;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cnopLGGRHN4ho4J7qxXEPkj6nPnNlpB0jO6Hxh7Gbh0=;
+        b=Fuf4vCcVx4/+6PUAkBgACrvIdcH4A7ylrhlX91/jfZTPaX36blsec0dJqBGzxzGHen
+         B+AXX3p2QO6ATvvVBi4OXp+aYmFe10Zf5m4H6bNnu3tUndyqrVeWaHvlmYkQ4by2R0IA
+         0cm/upxPcHmQl6yGdGdR9k2baKR8OtOL+kk4UL9KXDxnCOPjYkRZ5f10JLsZ1lv6pel4
+         TCiwWLzrQ4Tq8Q5/4SUv4VZXGsMqqwQ4WV0hTozOVliVbPFwh4sGFIddWDePDqSz4s3T
+         69lFLJeXmGAD8dZzcfIzpkAOzoh2u7YCTJUcY2qx6Cs6B32iWaej23oD6n9iPmatmciB
+         oqrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsnB94kVprwVIjvl/TibvJIhpYCb0pKUNMHm0m8DF8kvMXeGf4/wQBVCK/SQQ96+s8zAW59AzVdfFc+GbpC7w=@vger.kernel.org, AJvYcCVO0yFRmeER7B61+IOPI0TI3SQBfsqGCFrZpzWUD32ZOudjlKiixEK68I0980aF9Y1TJXeq1yj7fZX7@vger.kernel.org, AJvYcCWEMwgRSoS7GTEeXvHS9n7fG2aYsJrJTRNmG5aldbCusfpafHOnwvhXNW6a5FDaBhhMsffWlbnhoqzh4xke@vger.kernel.org, AJvYcCX7v4xxOfAUdWgad8cy/UV74h1ft2awxq6n99WbKT1ALh93Nzr5eUHxGCG4J2v9ySBhQqVCUdcBrqB48Iw=@vger.kernel.org, AJvYcCXib6Kq3OtNpupoa6dR1fqgcSLgJAzIsz8WKW7itw3/qXms3VdyvhcPToN0aGceVEG4LSkv+UBwG41Ej3o9f7uUsg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqufEhK+Zp7T6iTriAWk+cr5jGMSDLGu5/z4yAJmRxYoga82uT
+	Gx2i0QlTudFrQH65gRMHP7A8L/MhbyglP59ed6BXq8wb0OTTE4AR
+X-Google-Smtp-Source: AGHT+IHoeSOi/8gRIEfx92XexDiMptLlqh1jZyP8IvkieREy/d/trmJ2S/NsZy8dTSlUefXAs7OIeA==
+X-Received: by 2002:a05:6808:3c89:b0:3e3:a1ae:6a1a with SMTP id 5614622812f47-3e5c90b5eaemr8267101b6e.4.1728898889039;
+        Mon, 14 Oct 2024 02:41:29 -0700 (PDT)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ea69c2d9ecsm3389311a12.34.2024.10.14.02.41.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2024 02:41:28 -0700 (PDT)
+Date: Mon, 14 Oct 2024 17:41:23 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
+	corbet@lwn.net, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, akpm@linux-foundation.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, jserv@ccns.ncku.edu.tw,
+	linux-kernel@vger.kernel.org, linux-bcache@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/3] lib/min_heap: Introduce non-inline versions of min
+ heap API functions
+Message-ID: <ZwznQzdZsg82KNT4@visitorckw-System-Product-Name>
+References: <20241013184703.659652-1-visitorckw@gmail.com>
+ <20241013184703.659652-2-visitorckw@gmail.com>
+ <20241014081358.GS17263@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <670cb595.050a0220.4cbc0.0043.GAE@google.com> <CACT4Y+ZQzOQZqGZ17KsPmsTNTtZx1k8iQDdpggdEhBqoWBo3qg@mail.gmail.com>
-In-Reply-To: <CACT4Y+ZQzOQZqGZ17KsPmsTNTtZx1k8iQDdpggdEhBqoWBo3qg@mail.gmail.com>
-From: Marco Elver <elver@google.com>
-Date: Mon, 14 Oct 2024 11:40:23 +0200
-Message-ID: <CANpmjNP=7q2aX2O5_HVLvW9PnqAM79FpN-Oer-TbG_rAz5B5kA@mail.gmail.com>
-Subject: Re: [syzbot] [perf?] KCSAN: data-race in _free_event /
- perf_pending_task (2)
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: syzbot <syzbot+e75157f5b04f8ff40e17@syzkaller.appspotmail.com>, acme@kernel.org, 
-	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
-	irogers@google.com, jolsa@kernel.org, kan.liang@linux.intel.com, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241014081358.GS17263@noisy.programming.kicks-ass.net>
 
-On Mon, 14 Oct 2024 at 10:30, Dmitry Vyukov <dvyukov@google.com> wrote:
+On Mon, Oct 14, 2024 at 10:13:58AM +0200, Peter Zijlstra wrote:
+> On Mon, Oct 14, 2024 at 02:47:01AM +0800, Kuan-Wei Chiu wrote:
+> > All current min heap API functions are marked with '__always_inline'.
+> > However, as the number of users increases, inlining these functions
+> > everywhere leads to a significant increase in kernel size.
+> > 
+> > In performance-critical paths, such as when perf events are enabled and
+> > min heap functions are called on every context switch, it is important
+> > to retain the inline versions for optimal performance. To balance this,
+> > the original inline functions are kept, and additional non-inline
+> > versions of the functions have been added in lib/min_heap.c.
+> 
+> The reason it is all __always_inline is because then the whole
+> min_heap_callbacks thing can be constant propagated and the func->less()
+> etc calls become direct calls.
+> 
+> Doing out of line for this stuff, makes them indirect calls, and
+> indirect calls are super retarded expensive ever since spectre. But also
+> things like kCFI add significant cost to indirect calls.
+> 
+> Something that would be a trivial subtract instruction becomes this
+> giant mess of an indirect function call.
 >
-> On Mon, 14 Oct 2024 at 08:09, syzbot
-> <syzbot+e75157f5b04f8ff40e17@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following issue on:
-> >
-> > HEAD commit:    87d6aab2389e Merge tag 'for_linus' of git://git.kernel.org..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10104f9f980000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=a2f7ae2f221e9eae
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=e75157f5b04f8ff40e17
-> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> >
-> > Unfortunately, I don't have any reproducer for this issue yet.
-> >
-> > Downloadable assets:
-> > disk image: https://storage.googleapis.com/syzbot-assets/cce40536bdc3/disk-87d6aab2.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/479edc06c8d8/vmlinux-87d6aab2.xz
-> > kernel image: https://storage.googleapis.com/syzbot-assets/9d377c65ffca/bzImage-87d6aab2.xz
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+e75157f5b04f8ff40e17@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KCSAN: data-race in _free_event / perf_pending_task
-> >
-> > write to 0xffff8881155361e8 of 4 bytes by task 9574 on cpu 1:
-> >  perf_pending_task+0xe8/0x220 kernel/events/core.c:6976
-> >  task_work_run+0x13a/0x1a0 kernel/task_work.c:228
-> >  resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
-> >  exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
-> >  exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
-> >  __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
-> >  syscall_exit_to_user_mode+0xbe/0x130 kernel/entry/common.c:218
-> >  do_syscall_64+0xd6/0x1c0 arch/x86/entry/common.c:89
-> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> >
-> > read to 0xffff8881155361e8 of 4 bytes by task 9573 on cpu 0:
-> >  perf_pending_task_sync kernel/events/core.c:5302 [inline]
->
-> +Marco, IIRC we assumed event->pending_work should only be accessed by
-> the owner task.
-> Here it's concurrently modified/changed. The other task calls
-> task_work_cancel on current based on the valus of this field, this
-> looks bad.
+Yes, I also learned from reading the lib/sort.c git log that indirect
+function calls can become especially expensive when
+CONFIG_MITIGATION_RETPOLINE is enabled.
 
-On freeing an event it can be any other task, AFAIK. There's this comment:
+I'm not an expert in bcache, bcachefs, or dm-vdo, but when Andrew
+previously suggested moving these functions to lib/min_heap, Kent
+expressed his support. This led me to believe that in bcache and
+bcachefs (which are the primary users of min_heap), these indirect
+function calls are considered acceptable. However, that's just my
+assumption — I'll wait for Kent to chime in on this.
 
-> * All accesses related to the event are within the same RCU section in
-> * perf_pending_task(). The RCU grace period before the event is freed
-> * will make sure all those accesses are complete by then.
+> Given the whole min_heap thing is basically a ton of less() and swp()
+> calls, I really don't think this trade off makes any kind of sense.
 
-So there is no risk of UAF.
+As for your point about min_heap being full of less() and swp() calls,
+we could handle swp() the same way it's done in lib/sort.c by providing
+a built-in swap function, which would help avoid indirect function
+calls in places other than fs/bcachefs/ec.c. However, for less(), it
+seems there might not be a way around it.
 
-All that may happen is that on concurrent free of an event with a
-pending SIGTRAP, it's possible the SIGTRAP may or may not be
-delivered. But I think that's perfectly reasonable if the event is in
-the process of being closed.
-
-Did I miss something?
-
-Thanks,
--- Marco
+Regards,
+Kuan-Wei
