@@ -1,38 +1,38 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0215F231C8A;
-	Mon, 14 Oct 2024 17:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367F11B85C0;
+	Mon, 14 Oct 2024 17:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728928181; cv=none; b=mpMxpA3PaFmOlgkENSkBvd2CTDUCrk8rNycd5ZwQmn9+Ecf3TGLPo9OnCzc0i6JY6zbCkD3wPoDcSrsudn3gTYgJ2rsRYU/ZV0cqc4QMLQxA1/S1hnh0CIOeGbGyhKqiTO9i5wvBEg0XcTpiwnJF1Pusu9/8i5RofnYkvNwuPEU=
+	t=1728928279; cv=none; b=JalKIx5sM9pMEj+Pp7YpwB+3/8zO82Ht+bsKROpgbg020B90T+A+pZKUT+6c1dzo/gJ1s99rzHJyIREQx0TLqM0Q06GcM79Mhm8u0NihXlykbuETdEUOQb7fMMBXsUajRLGUkylqMYNotmQ3zek71GKZkGz72+nhbKu/MiYc5Hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728928181; c=relaxed/simple;
-	bh=tIWb28lPNpgVE6+quF3B+zMcV1b3JJiOigP0L5kg0Sc=;
+	s=arc-20240116; t=1728928279; c=relaxed/simple;
+	bh=R0KQ0Ll3kqDPc1WDZpPba2V71+JJYw6UBE4LyIDLqqY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rd9SQvus4IxTGItrAgGWEnzpv+wBhE1rxoJ1uUKeCFaQpqB8L3s9Pt8cwlVVxQFoN6eJxP5SXxZ5bhi3YoVIjmDQ+ASI/fs3quRZ4rH7saTstfPvyRyWcw/Qe2oQOpVdMclDR/pX8MCqmrGwJqRaRVzWtwOiNS4GOu1shQlKHD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aHNcDFZ1; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=i9ba61br6UJjw42yZfwgCsy3QzPF/fzmjAM1IOg34XAZYFbDjN3e9jrXpoQV5+WaN6rawCLXFQ17eBRhrQ1z55lt4aoKtVJD/mRsVZ+nXg/bpbpy3/OcXmG91rKHsazfJaJJqMt7DoZN5tmldFNzIohtRshXXPa+Hc1xGCrUTEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OLSJd7lo; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aHNcDFZ1"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OLSJd7lo"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=vMS8ywr8a0TU/9isRX8aw6baNcb0N+HzLlHTLMTIWuI=; b=aHNcDFZ1rT/3vM8HWPJ9BcqNFL
-	Uk7pYbMlWlw4Rv0QxSddUrXYevVaXRyorJlqS51okS510PvCzyS5/GNq0FFv7fl6wN6cK2erxtniZ
-	Uq88p9CZs8L7Rul/lJOCRt+yaI+efq43B+fIQDmMA7yVN0IYunvP3uJ9aFFIiX+vsUll2HlE/ZHUu
-	3RkXkVa/NYbv0mMAbeyM+oA5d7oiFGTXyhiJQHVk7g23W5hJ2ef2X9KPtgTqzNBHdzfG0TleaArkO
-	jXDHtzGCfYo64RqWWnq+S+O9VJ2t7OrvXA5IlXkMrNlg7eHmMXvTROrx17El1fIppnfa9zOjuPCJs
-	a+74z9gA==;
+	bh=qEuhsEPyoNPD4STMxrNg6EcgQIJDgYWvsm8zFMyMqog=; b=OLSJd7loA+8oK4oI9gVIwf6T1K
+	geqlc8OlolDytI/X+ncD0EGIYDaav09STDhpoSdFN4HRvdSyzw791TPwFdGaCTuGBqe1QcG2Juj3x
+	5/x9EAYkZ1zAguZinfRVdU62WptU0zrAnZRdn6Dyp+Fp7IKa3kVkODlWyN997SFevsG+xu+Z2mfrf
+	mDeWrm38vB/8LcFEZuV7WZGZw8FNzH1hgzzpzoERD/Q2gi+6CXqdaCXICxePPzpM3RiiEp2WPJUXy
+	RVIF+ScCMPNhzpvlnIebtTbELKD3+HALzoVNOzQZ8/YgbOQs5aqWHbxQ1571F9hn1l8o/wgZksEfr
+	IG/tLxvA==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t0PCD-00000002MFz-35du;
-	Mon, 14 Oct 2024 17:49:30 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t0PDr-00000006OYI-3E05;
+	Mon, 14 Oct 2024 17:51:11 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 89DD53004AF; Mon, 14 Oct 2024 19:49:29 +0200 (CEST)
-Date: Mon, 14 Oct 2024 19:49:29 +0200
+	id 655F53004AF; Mon, 14 Oct 2024 19:51:11 +0200 (CEST)
+Date: Mon, 14 Oct 2024 19:51:11 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: "Liang, Kan" <kan.liang@linux.intel.com>
 Cc: Mingwei Zhang <mizhang@google.com>,
@@ -54,11 +54,11 @@ Cc: Mingwei Zhang <mizhang@google.com>,
 	Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
 Subject: Re: [RFC PATCH v3 14/58] perf: Add switch_interrupt() interface
-Message-ID: <20241014174929.GL16066@noisy.programming.kicks-ass.net>
+Message-ID: <20241014175111.GM16066@noisy.programming.kicks-ass.net>
 References: <20240801045907.4010984-1-mizhang@google.com>
  <20240801045907.4010984-15-mizhang@google.com>
- <20241014120354.GG16066@noisy.programming.kicks-ass.net>
- <3cc05609-4fbd-4fb8-87bf-34ea1092ab2b@linux.intel.com>
+ <20241014115641.GE16066@noisy.programming.kicks-ass.net>
+ <3da8094d-0763-4b66-9ac1-71cd333b7747@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,63 +67,39 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3cc05609-4fbd-4fb8-87bf-34ea1092ab2b@linux.intel.com>
+In-Reply-To: <3da8094d-0763-4b66-9ac1-71cd333b7747@linux.intel.com>
 
-On Mon, Oct 14, 2024 at 11:51:06AM -0400, Liang, Kan wrote:
-> On 2024-10-14 8:03 a.m., Peter Zijlstra wrote:
+On Mon, Oct 14, 2024 at 11:40:21AM -0400, Liang, Kan wrote:
+> 
+> 
+> On 2024-10-14 7:56 a.m., Peter Zijlstra wrote:
 > > On Thu, Aug 01, 2024 at 04:58:23AM +0000, Mingwei Zhang wrote:
-> >> From: Kan Liang <kan.liang@linux.intel.com>
-> >>
-> >> There will be a dedicated interrupt vector for guests on some platforms,
-> >> e.g., Intel. Add an interface to switch the interrupt vector while
-> >> entering/exiting a guest.
-> >>
-> >> When PMI switch into a new guest vector, guest_lvtpc value need to be
-> >> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
-> >> bit should be cleared also, then PMI can be generated continuously
-> >> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
-> >> and switch_interrupt().
-> >>
-> >> At switch_interrupt(), the target pmu with PASSTHROUGH cap should
-> >> be found. Since only one passthrough pmu is supported, we keep the
-> >> implementation simply by tracking the pmu as a global variable.
-> >>
-> >> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> >>
-> >> [Simplify the commit with removal of srcu lock/unlock since only one pmu is
-> >> supported.]
-> >>
-> >> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> >> ---
-> >>  include/linux/perf_event.h |  9 +++++++--
-> >>  kernel/events/core.c       | 36 ++++++++++++++++++++++++++++++++++--
-> >>  2 files changed, 41 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> >> index 75773f9890cc..aeb08f78f539 100644
-> >> --- a/include/linux/perf_event.h
-> >> +++ b/include/linux/perf_event.h
-> >> @@ -541,6 +541,11 @@ struct pmu {
-> >>  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
-> >>  	 */
-> >>  	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
-> >> +
-> >> +	/*
-> >> +	 * Switch the interrupt vectors, e.g., guest enter/exit.
-> >> +	 */
-> >> +	void (*switch_interrupt)	(bool enter, u32 guest_lvtpc); /* optional */
-> >>  };
 > > 
-> > I'm thinking the guets_lvtpc argument shouldn't be part of the
-> > interface. That should be PMU implementation data and accessed by the
-> > method implementation.
+> >> @@ -5941,8 +5942,21 @@ void perf_put_mediated_pmu(void)
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
+> >>  
+> >> +static void perf_switch_interrupt(bool enter, u32 guest_lvtpc)
+> >> +{
+> >> +	/* Mediated passthrough PMU should have PASSTHROUGH_VPMU cap. */
+> >> +	if (!passthru_pmu)
+> >> +		return;
+> >> +
+> >> +	if (passthru_pmu->switch_interrupt &&
+> >> +	    try_module_get(passthru_pmu->module)) {
+> >> +		passthru_pmu->switch_interrupt(enter, guest_lvtpc);
+> >> +		module_put(passthru_pmu->module);
+> >> +	}
+> >> +}
+> > 
+> > Should we move the whole module reference to perf_pmu_(,un}register() ?
 > 
-> I think the name of the perf_switch_interrupt() is too specific.
-> Here should be to switch the guest context. The interrupt should be just
-> part of the context. Maybe a interface as below
-> 
-> void (*switch_guest_ctx)	(bool enter, void *data); /* optional */
+> A PMU module can be load/unload anytime. How should we know if the PMU
+> module is available when the reference check is moved to
+> perf_pmu_(,un}register()?
 
-I don't think you even need the data thing. For example, the x86/intel
-implementation can just look at a x86_pmu data field to find the magic
-value.
+Feh, dunno. I never really use modules. I just think the above is naf --
+doubly so because you're saying the SRCU smp_mb() are expensive; but
+this module reference crap is more expensive than that.
+
+(IOW, the SRCU smp_mb() cannot have been the problem)
