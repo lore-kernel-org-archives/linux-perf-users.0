@@ -1,89 +1,169 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D9714B080;
-	Mon, 14 Oct 2024 08:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0979B155C8A
+	for <linux-perf-users@vger.kernel.org>; Mon, 14 Oct 2024 08:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728894058; cv=none; b=Wnet+Vifl33M3YA4ovyIzjb4Av9uu1k+qhx16SRDVgmmHBIYuu3flWVpMy/p5I1A71eOUxD5DUxfJz9Csz0RdNe6X+5tXfWd0bLzB6lcIcZJS8XrEzOmWlQ9DLqpt+2/qEndu3gvMF1/D7HI4UymJcR/oJgAa670mZYFqyaBx48=
+	t=1728894650; cv=none; b=PJmz2ZOcmDtP/tkozQiL2aqcbypVENAqUacBPPFI/hmi09x9NiCXdP/MVAHjPkLUZAp0bP6IaExeaVUjKicb5nmYIudkziqXTwGcbNt7d/t6/QE/fuPs3k5oeAzzt7ceMm0jC4JLUJd6r5a5cHZV1vBHllAYIEAqJUkA4REG8io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728894058; c=relaxed/simple;
-	bh=1ZdCMUdAKTlVOB5LXlRMmwEGSDqxdD6AiP3O4Jg/Pg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hbz3R3QAa+Jn6nuDxXQQqWVxvLBmulJu9qgPDXitoFIHGwwevku0Et0sk6ulV8MBLhevMaw0I1JKKhanLO/uqhputCQpOYD/RadQLS3qv3XWEEjLC1WI0Yv6RWvu0drF81OnpAETVQvnWb5UpFftbPetXOAWKk/9Wj9qu3mOXuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lh0Qqn+w; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1728894650; c=relaxed/simple;
+	bh=oCZCPO1nwlZwVo7GHBA6GNZcZvm0cf8KNmQFmVoJ5/o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nclU72aVffBXW7fy47j50CA63k1L2pbLRZ4pynF6qQPnLyTQpchr+o4Si130t4xhvmB4xMBy0kZplfSfKlWGmMZG9D1bZthuyRU1Qg0nfuf8NujSZdDfcDIuPxuXXp5E5eb3+pOsE2qtxg8jDTFMpYHSgz66Z3xgp92KMThZVOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rQM+ygcA; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lh0Qqn+w"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dnetulA4MehDQO7QsNr210bmbXUoCBaiLRb2Ng9icDg=; b=lh0Qqn+w2Glieb3GwFDAXo9LGX
-	n17CdO9OJuIWg5TAK+EelfhEHbVtMsT4zyVEfRJMVQQkDw0RqFn+cDu4rg/m98xC/HjsitnKcpHNo
-	REAf2NL3ZdkTk4ytFuqldUsoNNHf+NJFcHPdpJ2ucAeUMKDzBgEAXLMs0K0vlg6XgChgTWbZkOu4K
-	GmOvwEXjt8qDukGAx0FFEHzNEXqFUZ7jtFkJvA35uhgSeHmA88ONAVteiQsEO/Br1+LAOu7RvRV70
-	pZbIbP+tuCyXtxU6dvLFAitNmbdohJTuxw9ojndplhAU0+dI/XVmOr/ezL5pTlLqiJtHz7AEkYRsC
-	4LyNHsIw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t0GJm-00000006HDR-2Udf;
-	Mon, 14 Oct 2024 08:20:42 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BDE00300777; Mon, 14 Oct 2024 10:20:41 +0200 (CEST)
-Date: Mon, 14 Oct 2024 10:20:41 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
-	corbet@lwn.net, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, akpm@linux-foundation.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, jserv@ccns.ncku.edu.tw,
-	linux-kernel@vger.kernel.org, linux-bcache@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 1/3] lib/min_heap: Introduce non-inline versions of min
- heap API functions
-Message-ID: <20241014082041.GN33184@noisy.programming.kicks-ass.net>
-References: <20241013184703.659652-1-visitorckw@gmail.com>
- <20241013184703.659652-2-visitorckw@gmail.com>
- <20241014081358.GS17263@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rQM+ygcA"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2fac3f1287bso35229381fa.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Oct 2024 01:30:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728894647; x=1729499447; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Zp8WLi7DGJx+e84KGtKjrVedsMWIQpQqNPQAsDX7M8=;
+        b=rQM+ygcAoFTkVmQGBCYaffZCaZm8cc2AyjoZIV7jvvfYkvg6wIjB9F2oqzotTgwEv+
+         ZY/dJBeZbd/bcIhD2PZEMtNI2Wr1ipeQ3B+6O7mx7Z3uPhLYyNy0gR5I6eMetXTqhEPw
+         6y1Q6GD1+bCF9ZpmDPf1ynvGeO/e6pgBAx2/kGl4huXXJqYCS+35nPdM+Rje3tIsAISe
+         ocwqapI3ay88nEZup6kv6xwXfvD4MgPh6dGTHx5q8wqaDhnpo6IMsSBrs6RlAr8oQJvN
+         ILnMiJ74oPId4JBewLty3GGBrXPCtIrcCJtT0FlsHlhTwxEnbv/CVyWsmM645dQutLKZ
+         6Xrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728894647; x=1729499447;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3Zp8WLi7DGJx+e84KGtKjrVedsMWIQpQqNPQAsDX7M8=;
+        b=mSVwCa5kKaluFlRf59oRmIj5bT19wHdrvW4K7IjFVY7n3nX/Mdvy6U1v/73terIHm5
+         BvveAT/hH+uyN3HenqIjRtp49RkoijxWgcdWQ9Oo+KI/1jG1mYy9pSfdBghKEu+vNuGD
+         xuN8amCuU2lJhP1LJMvBf/cHq5coSV1Bi9POOwSfe8H8sQDZZJzwfgkXoM0P22THC7gn
+         jPXh5ABK+c8NNUtZbjGktjEa1u1JRtsOk2X9D67jknLNLhT3Gwr9F9+v3MpfHyWTNtT8
+         wjXR+3OegzaTAv1RAd07rxPI4Zbs5gV5BYjX+KUhopHX3TrtjMJiCgZDrNlXEjOCILMV
+         J3vw==
+X-Forwarded-Encrypted: i=1; AJvYcCUidY6HXIHLRnHztvlm9qROfVyBRJu/pEMRHZEx8hFNr229S/t3epAl05z08MyqZ5vpxT0OhfoJ/7x9DrQybK/I@vger.kernel.org
+X-Gm-Message-State: AOJu0YzO2reQs1rgDlOnbkybjIGVXdUvsxBlqGMSyUQXYWcquSCoQmbh
+	tK23nkt0yZcaxGemJTJ2vrou/UmazqzxAJj4z0xdgqbl3VHdv7Xb0WQKNMX/yuWojn1ZXOz7DI2
+	4fMqR+TEQAZ6RT7pyEyxMXRaKarp1dpUD1Rwi
+X-Google-Smtp-Source: AGHT+IHavC14X/E0AoU7HQMbC/VV9BE7wlcw5cUAbgYL5XITdprDX9nD24jZVy3VIu7QW5852bqN6ZxBjm54AB5gttw=
+X-Received: by 2002:a2e:702:0:b0:2fa:d67a:ada7 with SMTP id
+ 38308e7fff4ca-2fb3f1b764amr23927741fa.23.1728894646902; Mon, 14 Oct 2024
+ 01:30:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241014081358.GS17263@noisy.programming.kicks-ass.net>
+References: <670cb595.050a0220.4cbc0.0043.GAE@google.com>
+In-Reply-To: <670cb595.050a0220.4cbc0.0043.GAE@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Mon, 14 Oct 2024 10:30:35 +0200
+Message-ID: <CACT4Y+ZQzOQZqGZ17KsPmsTNTtZx1k8iQDdpggdEhBqoWBo3qg@mail.gmail.com>
+Subject: Re: [syzbot] [perf?] KCSAN: data-race in _free_event /
+ perf_pending_task (2)
+To: syzbot <syzbot+e75157f5b04f8ff40e17@syzkaller.appspotmail.com>, 
+	Marco Elver <elver@google.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Oct 14, 2024 at 10:13:58AM +0200, Peter Zijlstra wrote:
-> On Mon, Oct 14, 2024 at 02:47:01AM +0800, Kuan-Wei Chiu wrote:
-> > All current min heap API functions are marked with '__always_inline'.
-> > However, as the number of users increases, inlining these functions
-> > everywhere leads to a significant increase in kernel size.
-> > 
-> > In performance-critical paths, such as when perf events are enabled and
-> > min heap functions are called on every context switch, it is important
-> > to retain the inline versions for optimal performance. To balance this,
-> > the original inline functions are kept, and additional non-inline
-> > versions of the functions have been added in lib/min_heap.c.
-> 
-> The reason it is all __always_inline is because then the whole
-> min_heap_callbacks thing can be constant propagated and the func->less()
-> etc calls become direct calls.
+On Mon, 14 Oct 2024 at 08:09, syzbot
+<syzbot+e75157f5b04f8ff40e17@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    87d6aab2389e Merge tag 'for_linus' of git://git.kernel.org..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10104f9f980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=a2f7ae2f221e9eae
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e75157f5b04f8ff40e17
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+>
+> Unfortunately, I don't have any reproducer for this issue yet.
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/cce40536bdc3/disk-87d6aab2.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/479edc06c8d8/vmlinux-87d6aab2.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/9d377c65ffca/bzImage-87d6aab2.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+e75157f5b04f8ff40e17@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KCSAN: data-race in _free_event / perf_pending_task
+>
+> write to 0xffff8881155361e8 of 4 bytes by task 9574 on cpu 1:
+>  perf_pending_task+0xe8/0x220 kernel/events/core.c:6976
+>  task_work_run+0x13a/0x1a0 kernel/task_work.c:228
+>  resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+>  exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+>  exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+>  __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+>  syscall_exit_to_user_mode+0xbe/0x130 kernel/entry/common.c:218
+>  do_syscall_64+0xd6/0x1c0 arch/x86/entry/common.c:89
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>
+> read to 0xffff8881155361e8 of 4 bytes by task 9573 on cpu 0:
+>  perf_pending_task_sync kernel/events/core.c:5302 [inline]
 
-Or better, they can get inlined too.
++Marco, IIRC we assumed event->pending_work should only be accessed by
+the owner task.
+Here it's concurrently modified/changed. The other task calls
+task_work_cancel on current based on the valus of this field, this
+looks bad.
 
-> Doing out of line for this stuff, makes them indirect calls, and
-> indirect calls are super retarded expensive ever since spectre. But also
-> things like kCFI add significant cost to indirect calls.
-> 
-> Something that would be a trivial subtract instruction becomes this
-> giant mess of an indirect function call.
-> 
-> Given the whole min_heap thing is basically a ton of less() and swp()
-> calls, I really don't think this trade off makes any kind of sense.
+>  _free_event+0x3d/0xa10 kernel/events/core.c:5326
+>  put_event kernel/events/core.c:5454 [inline]
+>  perf_event_release_kernel+0x61a/0x670 kernel/events/core.c:5579
+>  perf_release+0x1f/0x30 kernel/events/core.c:5589
+>  __fput+0x17a/0x6d0 fs/file_table.c:431
+>  ____fput+0x1c/0x30 fs/file_table.c:459
+>  task_work_run+0x13a/0x1a0 kernel/task_work.c:228
+>  resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+>  exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+>  exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+>  __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+>  syscall_exit_to_user_mode+0xbe/0x130 kernel/entry/common.c:218
+>  do_syscall_64+0xd6/0x1c0 arch/x86/entry/common.c:89
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>
+> value changed: 0x7ad100bf -> 0x00000000
+>
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 0 UID: 0 PID: 9573 Comm: syz.3.2265 Tainted: G        W          6.12.0-rc2-syzkaller-00006-g87d6aab2389e #0
+> Tainted: [W]=WARN
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+> ==================================================================
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/670cb595.050a0220.4cbc0.0043.GAE%40google.com.
