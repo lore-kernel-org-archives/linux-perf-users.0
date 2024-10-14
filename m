@@ -1,56 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A10231CA4;
-	Mon, 14 Oct 2024 15:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D171AB6F8;
+	Mon, 14 Oct 2024 15:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728921074; cv=none; b=eJ170kR/NXMmeV14pC+ESmqtY4qQRG0j9u2QHO+aTHWtXwuzMksuzB3Ak9lZIPP47E5GFbpuwq/jAvRNx8L2YGK9xUnBeRKkJiBRQZN81GPrys4m0t75qcijXtCPpSkF78hMJQMr3rGr5l5c+vG9PSrC70iGOrApK3CPVj89aB0=
+	t=1728921431; cv=none; b=N0vMS0gx9SYUXvzZ/XKrnJDLwrGaANEbO3/5HpQkWux7+VbtC92u1wds409Mi1syz14ten45jhGur24Nv2seB8fWt1UlEU5JhvJsvZ4wtDeY8q4x/Iv5cfhQ6BYnc8KYjKVXKZPj6M0x+YBUgvCfJ9tlW3Lvn2No97j1CYhbeo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728921074; c=relaxed/simple;
-	bh=HhPrxWs1dM37KDlTXC1Ni3YUM5RwkVU2HNXUsmfxu5E=;
+	s=arc-20240116; t=1728921431; c=relaxed/simple;
+	bh=G9fPElAJxrDGQC/kZ+EYJCbvxe/7Ndmr/D5FzKdq6t0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JjP4Tl59viwlFrTT8OjOs1bsJlsXv810QCEwkpeaOuug69/4f4dUbnKMuRYlTRFv0EqCAz6O26kVcQmFzdl9hjdnfJkX+PFGWN97ggtFTCIF/FyrqaCvqAtjVah2/086CbpqrR5LExCbw/dsJb4eV/NnkfW2QIsvfIn//0zUIoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=agurejxZ; arc=none smtp.client-ip=192.198.163.10
+	 In-Reply-To:Content-Type; b=feuajTuM5sT1L94SKUhU7thPDbelqbVAiZ9Qoonw53N13/xyZgwcAShqc3nUo0zyshsuBxJkpI9PXVGvynfbPfbzmWSZzYHgCH67awNZPN0bE8RPaDom33m+hp9wuwNhkwxiL4Cvrbt1R4NaeDot5N6gC3vmkcolkzG/BMPcups=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KgmArYgi; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="agurejxZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KgmArYgi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728921073; x=1760457073;
+  t=1728921430; x=1760457430;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=HhPrxWs1dM37KDlTXC1Ni3YUM5RwkVU2HNXUsmfxu5E=;
-  b=agurejxZuzmUi5t8x1cSGmMfec45Q8nqYBXPrMpuIV24donmvrOW2tg5
-   IIwLbZ2VyvAF8xuvtafXRngL18IUXbIK/02kEHefg/3Bzhh4bQaSqWn1S
-   cSvHR+BizfCy39uwVnbQbiDKYI0gsV4JVJP+WbtZ3xZ5FBePq49OTnCgA
-   r+7wB3Qww4elEBEpOKRTLq3nFEWD3NvXMeiWvK95ELuPVjlanPkOgkZyA
-   uwsT4ufnDxnQ31JEKLnbj4PsKjln2yVst3pu6xnhoGapwKLX7jF63dcra
-   79QXkHOP2HIrVZ4dwEGrhaIHGgOqj+zQlOHk9Z+i6KSeTLNVEofms9ncU
+  bh=G9fPElAJxrDGQC/kZ+EYJCbvxe/7Ndmr/D5FzKdq6t0=;
+  b=KgmArYgiadY3doCMqikcJjm1i2vXm2HSpE0n0p1fVQflyqDkZ5AcR5Q3
+   RHOCyFjMgTiZHj6xqGNEiPVp/EDcmH/9ySIRgbt8suFEjJwmH/G1l5yk2
+   JMSgG+/is8InB4Weap3eZYAcK2LZEdp1jBY/leQJO6o7EDm58f0vHqF3L
+   LRd7HhvHZOsLLfOAqb3A0QEGjy4XRZpWRYhh+Mc4IKMB4hcqj7rQhtUWm
+   pD3iBY5z6lLyFNHK97kFcZZAq2Y1zq4cmi166QrJuq+Ml18470Tb7Kp0/
+   OUCYNPWRd2am8MkAzBkQK6sSvXHsxX2yqW3+0WqrcQc8oX9TshNTUg5PV
    g==;
-X-CSE-ConnectionGUID: UW/3P7d+QfWAg/xzyPgf8w==
-X-CSE-MsgGUID: +JrwazQuR7mKVN3qu5Tivw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11224"; a="39654866"
+X-CSE-ConnectionGUID: KCWd8SoPSBCv0wJ7sCM3pw==
+X-CSE-MsgGUID: 6K54xQp4R4qkCgjq1AH0YA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11224"; a="38855025"
 X-IronPort-AV: E=Sophos;i="6.11,203,1725346800"; 
-   d="scan'208";a="39654866"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 08:51:12 -0700
-X-CSE-ConnectionGUID: +S79P0jnToaF+FpQ6U3LTw==
-X-CSE-MsgGUID: bCQJkcYlT5+XLGw44IexsQ==
+   d="scan'208";a="38855025"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 08:57:09 -0700
+X-CSE-ConnectionGUID: qWC8gt/QSU6/DtkuD8K4RQ==
+X-CSE-MsgGUID: QG2L3XvgQSifHOToiM3t1g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,203,1725346800"; 
-   d="scan'208";a="82651019"
+   d="scan'208";a="82172874"
 Received: from linux.intel.com ([10.54.29.200])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 08:51:11 -0700
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 08:57:08 -0700
 Received: from [10.212.61.73] (kliang2-mobl1.ccr.corp.intel.com [10.212.61.73])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 5751D20B5782;
-	Mon, 14 Oct 2024 08:51:08 -0700 (PDT)
-Message-ID: <3cc05609-4fbd-4fb8-87bf-34ea1092ab2b@linux.intel.com>
-Date: Mon, 14 Oct 2024 11:51:06 -0400
+	by linux.intel.com (Postfix) with ESMTPS id 192B420CFEDE;
+	Mon, 14 Oct 2024 08:57:04 -0700 (PDT)
+Message-ID: <a69d870b-5fc2-49c6-a7d3-fed6b5b3add1@linux.intel.com>
+Date: Mon, 14 Oct 2024 11:57:03 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -74,68 +74,45 @@ Cc: Sean Christopherson <seanjc@google.com>,
  linux-perf-users@vger.kernel.org
 References: <20240801045907.4010984-1-mizhang@google.com>
  <20240801045907.4010984-15-mizhang@google.com>
- <20241014120354.GG16066@noisy.programming.kicks-ass.net>
+ <20241014135242.GH16066@noisy.programming.kicks-ass.net>
 Content-Language: en-US
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20241014120354.GG16066@noisy.programming.kicks-ass.net>
+In-Reply-To: <20241014135242.GH16066@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2024-10-14 8:03 a.m., Peter Zijlstra wrote:
+On 2024-10-14 9:52 a.m., Peter Zijlstra wrote:
 > On Thu, Aug 01, 2024 at 04:58:23AM +0000, Mingwei Zhang wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> There will be a dedicated interrupt vector for guests on some platforms,
->> e.g., Intel. Add an interface to switch the interrupt vector while
->> entering/exiting a guest.
->>
->> When PMI switch into a new guest vector, guest_lvtpc value need to be
->> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
->> bit should be cleared also, then PMI can be generated continuously
->> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
->> and switch_interrupt().
->>
->> At switch_interrupt(), the target pmu with PASSTHROUGH cap should
->> be found. Since only one passthrough pmu is supported, we keep the
->> implementation simply by tracking the pmu as a global variable.
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->>
->> [Simplify the commit with removal of srcu lock/unlock since only one pmu is
->> supported.]
->>
->> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->> ---
->>  include/linux/perf_event.h |  9 +++++++--
->>  kernel/events/core.c       | 36 ++++++++++++++++++++++++++++++++++--
->>  2 files changed, 41 insertions(+), 4 deletions(-)
->>
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index 75773f9890cc..aeb08f78f539 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -541,6 +541,11 @@ struct pmu {
->>  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
->>  	 */
->>  	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
+>> @@ -5962,6 +5976,8 @@ void perf_guest_enter(void)
+>>  		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+>>  	}
+>>  
+>> +	perf_switch_interrupt(true, guest_lvtpc);
 >> +
->> +	/*
->> +	 * Switch the interrupt vectors, e.g., guest enter/exit.
->> +	 */
->> +	void (*switch_interrupt)	(bool enter, u32 guest_lvtpc); /* optional */
->>  };
+>>  	__this_cpu_write(perf_in_guest, true);
+>>  
+>>  unlock:
+>> @@ -5980,6 +5996,8 @@ void perf_guest_exit(void)
+>>  	if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest)))
+>>  		goto unlock;
+>>  
+>> +	perf_switch_interrupt(false, 0);
+>> +
+>>  	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+>>  	ctx_sched_in(&cpuctx->ctx, EVENT_GUEST);
+>>  	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
 > 
-> I'm thinking the guets_lvtpc argument shouldn't be part of the
-> interface. That should be PMU implementation data and accessed by the
-> method implementation.
+> This seems to suggest the method is named wrong, it should probably be
+> guest_enter() or somsuch.
+>
 
-I think the name of the perf_switch_interrupt() is too specific.
-Here should be to switch the guest context. The interrupt should be just
-part of the context. Maybe a interface as below
+The ctx_sched_in() is to schedule in the host context after the
+guest_exit(). The EVENT_GUEST is to indicate the guest ctx switch.
 
-void (*switch_guest_ctx)	(bool enter, void *data); /* optional */
+The name may brings some confusion. Maybe I can add a wrap function
+perf_host_enter() to include the above codes.
 
 Thanks,
 Kan
