@@ -1,106 +1,139 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43AE81AAE23;
-	Mon, 14 Oct 2024 11:00:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48AAF12C475;
+	Mon, 14 Oct 2024 11:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728903618; cv=none; b=QpoW2JZzYhWeP8o9FQtCCw3Cm8CzVfZ/zynlIhe3NB3p7kilD8LW5oDdCohZtYbdtDVycNfq7iRKO994/UK0cANFludtHdSCpkn+rGSuvnXNcvd7Fbrbq0RPzUOnw0xaif0pPSVb+slAmYwRVFLc7Pe3X4s8DKPzu4DIvQMr4cg=
+	t=1728904238; cv=none; b=HwgCwW3IR28urISkJtUhFb1Ey/1T8hrEVEWLuXd7Ez8fQAXOdd/OKQlY2Aoi0mzMHcAZ58KvSX+a/DU3UgDPjz3ViyehvNJvIWtl7Ke1XrRdLrlhO5Z9L2V2bRiT0P0o+K6fkmsL6eFtstQXcrnO4vftsfBx/OOJxRN0P25iOyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728903618; c=relaxed/simple;
-	bh=ckI1+T2GFgSWcVYnvAcaN2k41SpN9b7TGriYQVjzmWI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i9BM+aPJgJLWkBWmbx23IgDHdKZj/bRCqaYC/L/R5mVTF1WAj5+IRcD6LV7IRqB0D1Q5O9a4f16PIUJPswIQ77CntslSrzWMmdplzeeJ1U8RRuPGSkyvDQEjp2MuH9w8CpqPaUxcBrEiLzID+OZneHlhF1aMHgPEbVcMv8R64/k=
+	s=arc-20240116; t=1728904238; c=relaxed/simple;
+	bh=PojU6kypepWIWq7RgQl7oNjMigZv2wfzBGIf4mzcW6U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lJfb62EovKJNDacKEKnZ0dtWazJvhlnRZ5QrRM9eieuYjgtx8JV1b5gyF1F4ZrA/VeL+v6bWiYrJ0BeX5n5anEOO5y9qvMYqIYUcGC9Vg2TxoJMKJeru9PjqvGjs5Q1HUUBF7TzoG4NzY3Rqeeplrotfw6aWV4Y8I9S8ed3ThOY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89DBA168F;
-	Mon, 14 Oct 2024 04:00:46 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B5403F51B;
-	Mon, 14 Oct 2024 04:00:14 -0700 (PDT)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Greg Marsden <greg.marsden@oracle.com>,
-	Ivan Ivanov <ivan.ivanov@suse.com>,
-	Kalesh Singh <kaleshsingh@google.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Miroslav Benes <mbenes@suse.cz>,
-	Will Deacon <will@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org
-Subject: [RFC PATCH v1 16/57] perf: Remove PAGE_SIZE compile-time constant assumption
-Date: Mon, 14 Oct 2024 11:58:23 +0100
-Message-ID: <20241014105912.3207374-16-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241014105912.3207374-1-ryan.roberts@arm.com>
-References: <20241014105514.3206191-1-ryan.roberts@arm.com>
- <20241014105912.3207374-1-ryan.roberts@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49AFC1007;
+	Mon, 14 Oct 2024 04:11:06 -0700 (PDT)
+Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E88E13F51B;
+	Mon, 14 Oct 2024 04:10:31 -0700 (PDT)
+Message-ID: <b3b77c4a-67fe-4052-92db-fd2aabfa2ba3@arm.com>
+Date: Mon, 14 Oct 2024 12:10:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V13 11/14] perf tools: Add missing_features for
+ aux_start_paused, aux_pause, aux_resume
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
+ <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ H Peter Anvin <hpa@zytor.com>, Kan Liang <kan.liang@linux.intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, mizhang@google.com,
+ kvm@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20241014105124.24473-1-adrian.hunter@intel.com>
+ <20241014105124.24473-12-adrian.hunter@intel.com>
+Content-Language: en-US
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <20241014105124.24473-12-adrian.hunter@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-To prepare for supporting boot-time page size selection, refactor code
-to remove assumptions about PAGE_SIZE being compile-time constant. Code
-intended to be equivalent when compile-time page size is active.
 
-Refactor a BUILD_BUG_ON() so that we test against the limit; _format is
-invariant to page size so testing it is no bigger than the minimum
-supported size is sufficient.
 
-Wrap global variables that are initialized with PAGE_SIZE derived values
-using DEFINE_GLOBAL_PAGE_SIZE_VAR() so their initialization can be
-deferred for boot-time page size builds.
+On 10/14/24 11:51, Adrian Hunter wrote:
+> 
+> 
+> Display "feature is not supported" error message if aux_start_paused,
+> aux_pause or aux_resume result in a perf_event_open() error.
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Acked-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Andi Kleen <ak@linux.intel.com>
 
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
----
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 
-***NOTE***
-Any confused maintainers may want to read the cover note here for context:
-https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
-
- include/linux/perf_event.h | 2 +-
- kernel/events/core.c       | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 1a8942277ddad..b7972155f93eb 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1872,7 +1872,7 @@ _name##_show(struct device *dev,					\
- 			       struct device_attribute *attr,		\
- 			       char *page)				\
- {									\
--	BUILD_BUG_ON(sizeof(_format) >= PAGE_SIZE);			\
-+	BUILD_BUG_ON(sizeof(_format) >= PAGE_SIZE_MIN);			\
- 	return sprintf(page, _format "\n");				\
- }									\
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 8a6c6bbcd658a..81149663ab7d8 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -419,7 +419,7 @@ static struct kmem_cache *perf_event_cache;
- int sysctl_perf_event_paranoid __read_mostly = 2;
- 
- /* Minimum for 512 kiB + 1 user control page */
--int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024); /* 'free' kiB per user */
-+__DEFINE_GLOBAL_PAGE_SIZE_VAR(int, sysctl_perf_event_mlock, __read_mostly, 512 + (PAGE_SIZE / 1024)); /* 'free' kiB per user */
- 
- /*
-  * max perf event sample rate
--- 
-2.43.0
-
+> ---
+> 
+> 
+> Changes in V13:
+>          Add error message also in EOPNOTSUPP case (Leo)
+> 
+> 
+>   tools/perf/util/evsel.c | 12 ++++++++++++
+>   tools/perf/util/evsel.h |  1 +
+>   2 files changed, 13 insertions(+)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 9621c8c12406..fd28ff5437b5 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -2177,6 +2177,12 @@ bool evsel__detect_missing_features(struct evsel *evsel)
+>                  perf_missing_features.inherit_sample_read = true;
+>                  pr_debug2("Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.\n");
+>                  return true;
+> +       } else if (!perf_missing_features.aux_pause_resume &&
+> +           (evsel->core.attr.aux_pause || evsel->core.attr.aux_resume ||
+> +            evsel->core.attr.aux_start_paused)) {
+> +               perf_missing_features.aux_pause_resume = true;
+> +               pr_debug2_peo("Kernel has no aux_pause/aux_resume support, bailing out\n");
+> +               return false;
+>          } else if (!perf_missing_features.branch_counters &&
+>              (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS)) {
+>                  perf_missing_features.branch_counters = true;
+> @@ -3397,6 +3403,10 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+>                          return scnprintf(msg, size,
+>          "%s: PMU Hardware doesn't support 'aux_output' feature",
+>                                           evsel__name(evsel));
+> +               if (evsel->core.attr.aux_action)
+> +                       return scnprintf(msg, size,
+> +       "%s: PMU Hardware doesn't support 'aux_action' feature",
+> +                                       evsel__name(evsel));
+>                  if (evsel->core.attr.sample_period != 0)
+>                          return scnprintf(msg, size,
+>          "%s: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'",
+> @@ -3427,6 +3437,8 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+>                          return scnprintf(msg, size, "clockid feature not supported.");
+>                  if (perf_missing_features.clockid_wrong)
+>                          return scnprintf(msg, size, "wrong clockid (%d).", clockid);
+> +               if (perf_missing_features.aux_pause_resume)
+> +                       return scnprintf(msg, size, "The 'aux_pause / aux_resume' feature is not supported, update the kernel.");
+>                  if (perf_missing_features.aux_output)
+>                          return scnprintf(msg, size, "The 'aux_output' feature is not supported, update the kernel.");
+>                  if (!target__has_cpu(target))
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index bd08d94d3f8a..d40df2051718 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -221,6 +221,7 @@ struct perf_missing_features {
+>          bool weight_struct;
+>          bool read_lost;
+>          bool branch_counters;
+> +       bool aux_pause_resume;
+>          bool inherit_sample_read;
+>   };
+> 
+> --
+> 2.43.0
+> 
+> 
