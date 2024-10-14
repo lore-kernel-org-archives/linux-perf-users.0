@@ -1,136 +1,85 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA2E13D52C
-	for <linux-perf-users@vger.kernel.org>; Mon, 14 Oct 2024 06:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0312C14AD2E;
+	Mon, 14 Oct 2024 08:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728886169; cv=none; b=pMjkOFuSQCKXgBCa87PNg0jYYgjQlc7RmNw2WfDIF7PXvbSBFfk/S+WP54G9r4t0hV1qIbVkPmvxNS5iNb6uva0kB5hID+6IR13suTiZkuKwJqg2U1cqbVwmJx0IwtDz40CCCBmNkGgrqLWwQ621tCR9NRm/s1/3xmCwXh427MA=
+	t=1728893651; cv=none; b=qEcXD+BmQJQNHL0hUV9WDEzYhJcW6eit4iS5ZZiEXa+31HyKVxwXMgm/SGeaUqsGcqSBKMP7Fs9jWm70GGV+gyZZvqZCVesdR4ad7gUSEywibPXbc04+wspP+IEKioaL/zP/Y1sHGI1bkY5U4hNg1pi1bsvWFRloVqcSIPUQ9mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728886169; c=relaxed/simple;
-	bh=nv8qLXjacwOGsNr3ILmZF8qwOncQUaBG2RFwEAkUrbk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bwFYss8/M0lrvN4tedryjluat8jaa93LIHkGDBk7c5zgNHx/INY5+kAPKsuvJ9MtNbYQl4qjJgCoR3R98oZpjejyiFjgKfJYl92XKUjRZaJ+TbZ2saf2puWReV+wGzJlYuVV08Bbg7sxeBTJ1++ZKj+5Abxq/VfrXI8mfY09AYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-83a686237ceso132437939f.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 13 Oct 2024 23:09:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728886165; x=1729490965;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NKiXsArvGra0VX5VVktVVDzHkecq7lDHEZLHLanAM8Y=;
-        b=kexp0GmRSxgKRkSKbWphB1xgVSE7zT4XCkQyODJ9zvySpLyFjxQ973sOboFVU2aY+4
-         t+kWCTidZBLTFy7dw+MXBIJbHmsnpV6wMq2BVvAZIwB9qvUShKrKBrjT0h+utiDBUMWW
-         91cweAD8aYiDHULCoBLLK0+qnAnQswwi4fWl5CmML9yXvhOHsHqGQTOAPehul6jhimPY
-         BYJheW6MNotUE3iW0eDBNIHEN1lLqjPMV7irhiE0+rVm/jUPybczuSDAuzimgD6MWsjK
-         D2Zr+tJkE86AekDMauRU8jIyO9G3FwjcfFS9JgxLrGcK9braPJxdCbgFi1ep28IC8W/D
-         TXBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBf2nus7w6whdhnkm10Zo0MDswiAfw92Ux+O46QtmsZl1/0WSpnz/OyAQus8I6ocIPcpEZqnYbhOrKkZPE8uKL@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUgAOVz0ux8CMMt9KnUX1gvdWyaWnIQIyZU2rgwKiWJZTVDi8l
-	xVhdaGPaEs/0+X3uZGfP6euzqn93tKZADVh0AuC2e+dCN02cKmR0CexnpK/n81HiybHGEb1q7Yv
-	oMougCLut580voME+ronOSidWVdesWyauEYCjPNaRWLnP1gUj+odK5so=
-X-Google-Smtp-Source: AGHT+IFcI7LD8MU0anBfXZfOQmjNnGHnPHe7/s0l+xyckvvJ88KkptyJzhS7CWyLdpeQhOBwZlFZIfN63SadvrKBXZy5YDOhnwpQ
+	s=arc-20240116; t=1728893651; c=relaxed/simple;
+	bh=EKD07Qj6JcVqClDp8w5hX4Ow8T50FvUf1cSyUeXs/8M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c45AFVKCq7T+Nwk7sDDdi6aFa/C5IEwBLJeztYWvZKV6QIsp/fa3qvSiPHosWXM0ipWl4rcP+az0CQNHQFOi5XLLO7/sFBO3Zy4GTLh14Wdbx6M2ZXC+G55U1kolLj2cwHSM3TNOzSO/zoeONGAjIvPbqoV9byYxH3PyVG107FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ceH6GsK0; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ceH6GsK0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Wk8EcJ/7b4OEG+IFikYEtXUWa6XJYMvqVFBhG68Lv7Q=; b=ceH6GsK0E6q43xq2xtT81K5DtF
+	3Nv2eWGdf1mapppB0kDWQVaJ2UaTYBDWU2VnALi+jCZfOvEhbOubKwj/k5GWwIl5Z/L5pVgoLCA2v
+	fl1ZNnPuY4jH12qm20XvZgXEFuKOj55yxd5DeypDIOTvRr2DLZhLuYgojbFs3ZWKwj8I9vsjhh9Yz
+	t4rN/M1l8bCR4Lb49UiBA46djQowVK5t4LppB3HjTqDLEdGvZA82l15S8xI8ainkw+9UBJvjsk37Z
+	19vllUQfPQ48dNNu2iJMCGmfvBPSlWj5GdivVduMjfRslZoROENMKpnk4b64wT3K3Bi9ieN16NbUp
+	GeSC4EKw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t0GDG-000000012qw-0aZ2;
+	Mon, 14 Oct 2024 08:13:58 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1C7BB300777; Mon, 14 Oct 2024 10:13:58 +0200 (CEST)
+Date: Mon, 14 Oct 2024 10:13:58 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
+	corbet@lwn.net, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, akpm@linux-foundation.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, jserv@ccns.ncku.edu.tw,
+	linux-kernel@vger.kernel.org, linux-bcache@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/3] lib/min_heap: Introduce non-inline versions of min
+ heap API functions
+Message-ID: <20241014081358.GS17263@noisy.programming.kicks-ass.net>
+References: <20241013184703.659652-1-visitorckw@gmail.com>
+ <20241013184703.659652-2-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c8b:b0:3a3:9471:8967 with SMTP id
- e9e14a558f8ab-3a3b5f9fca7mr84667255ab.11.1728886165034; Sun, 13 Oct 2024
- 23:09:25 -0700 (PDT)
-Date: Sun, 13 Oct 2024 23:09:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <670cb595.050a0220.4cbc0.0043.GAE@google.com>
-Subject: [syzbot] [perf?] KCSAN: data-race in _free_event / perf_pending_task (2)
-From: syzbot <syzbot+e75157f5b04f8ff40e17@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241013184703.659652-2-visitorckw@gmail.com>
 
-Hello,
+On Mon, Oct 14, 2024 at 02:47:01AM +0800, Kuan-Wei Chiu wrote:
+> All current min heap API functions are marked with '__always_inline'.
+> However, as the number of users increases, inlining these functions
+> everywhere leads to a significant increase in kernel size.
+> 
+> In performance-critical paths, such as when perf events are enabled and
+> min heap functions are called on every context switch, it is important
+> to retain the inline versions for optimal performance. To balance this,
+> the original inline functions are kept, and additional non-inline
+> versions of the functions have been added in lib/min_heap.c.
 
-syzbot found the following issue on:
+The reason it is all __always_inline is because then the whole
+min_heap_callbacks thing can be constant propagated and the func->less()
+etc calls become direct calls.
 
-HEAD commit:    87d6aab2389e Merge tag 'for_linus' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10104f9f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a2f7ae2f221e9eae
-dashboard link: https://syzkaller.appspot.com/bug?extid=e75157f5b04f8ff40e17
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Doing out of line for this stuff, makes them indirect calls, and
+indirect calls are super retarded expensive ever since spectre. But also
+things like kCFI add significant cost to indirect calls.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Something that would be a trivial subtract instruction becomes this
+giant mess of an indirect function call.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/cce40536bdc3/disk-87d6aab2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/479edc06c8d8/vmlinux-87d6aab2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/9d377c65ffca/bzImage-87d6aab2.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e75157f5b04f8ff40e17@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in _free_event / perf_pending_task
-
-write to 0xffff8881155361e8 of 4 bytes by task 9574 on cpu 1:
- perf_pending_task+0xe8/0x220 kernel/events/core.c:6976
- task_work_run+0x13a/0x1a0 kernel/task_work.c:228
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0xbe/0x130 kernel/entry/common.c:218
- do_syscall_64+0xd6/0x1c0 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff8881155361e8 of 4 bytes by task 9573 on cpu 0:
- perf_pending_task_sync kernel/events/core.c:5302 [inline]
- _free_event+0x3d/0xa10 kernel/events/core.c:5326
- put_event kernel/events/core.c:5454 [inline]
- perf_event_release_kernel+0x61a/0x670 kernel/events/core.c:5579
- perf_release+0x1f/0x30 kernel/events/core.c:5589
- __fput+0x17a/0x6d0 fs/file_table.c:431
- ____fput+0x1c/0x30 fs/file_table.c:459
- task_work_run+0x13a/0x1a0 kernel/task_work.c:228
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0xbe/0x130 kernel/entry/common.c:218
- do_syscall_64+0xd6/0x1c0 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x7ad100bf -> 0x00000000
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 UID: 0 PID: 9573 Comm: syz.3.2265 Tainted: G        W          6.12.0-rc2-syzkaller-00006-g87d6aab2389e #0
-Tainted: [W]=WARN
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Given the whole min_heap thing is basically a ton of less() and swp()
+calls, I really don't think this trade off makes any kind of sense.
