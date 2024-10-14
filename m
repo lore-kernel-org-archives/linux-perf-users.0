@@ -1,67 +1,56 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7F549659;
-	Mon, 14 Oct 2024 15:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A10231CA4;
+	Mon, 14 Oct 2024 15:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728920891; cv=none; b=ljCqNPhQWYwSd8YYMh7FcyQgtzsCT3HnINW/pZ5HU0VPabVvkfC4GP5PXWM2WsdWc6DZCPDL+2RgYJxePKU4K8Gwgo2a2MjXKlFEHcZ+kHXRxWPP3B87GxezZbtDlIJatZeT+Z6e+7CpHz1YhCNvokxwUANH0is1kBXJF2PYoaY=
+	t=1728921074; cv=none; b=eJ170kR/NXMmeV14pC+ESmqtY4qQRG0j9u2QHO+aTHWtXwuzMksuzB3Ak9lZIPP47E5GFbpuwq/jAvRNx8L2YGK9xUnBeRKkJiBRQZN81GPrys4m0t75qcijXtCPpSkF78hMJQMr3rGr5l5c+vG9PSrC70iGOrApK3CPVj89aB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728920891; c=relaxed/simple;
-	bh=E8NAc1rPlB54YfCHnEK8PZkZMrzWKd3HqcptMOAU8OQ=;
+	s=arc-20240116; t=1728921074; c=relaxed/simple;
+	bh=HhPrxWs1dM37KDlTXC1Ni3YUM5RwkVU2HNXUsmfxu5E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R3Rs9HMVYbqkYXZw143DhmByrXPXcXQDIQIgJ9c7tnOcFgkW7j9bkNN3CMBo2xH/TeEflu4OqgBwLyGbqbaWvi+1eqZLMA64V7NhaGA7lxm7ZsjciulnVYP87qg1X02EmMDEqk1kxVbS0/SeMvJ7JZz38nCSX8d8g+KwTKoHUho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=H4y6RVpg; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=JjP4Tl59viwlFrTT8OjOs1bsJlsXv810QCEwkpeaOuug69/4f4dUbnKMuRYlTRFv0EqCAz6O26kVcQmFzdl9hjdnfJkX+PFGWN97ggtFTCIF/FyrqaCvqAtjVah2/086CbpqrR5LExCbw/dsJb4eV/NnkfW2QIsvfIn//0zUIoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=agurejxZ; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="H4y6RVpg"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49EEPArw027489;
-	Mon, 14 Oct 2024 15:47:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=m
-	qTXyRWMB3w0HH0XDXzBsU9A4VKm9qePpWykY6DK43Q=; b=H4y6RVpgiYsGQPpOt
-	gCmJWd1gzeYNZXLvt79UsOUMjRQdZ+WMQ/53slT8i3a38gIhXaFemfkm0zyYL2TS
-	P5P4D3iM0Q+ap9Z4LcjU6eyqcRBcZ+zfIC8wrAmF7z0hjDzPLR68TjQcViLj0m2B
-	6Q+toG7DuodZPn44U974gKIG43fRx55fyfCgtDDULyu/MC0PxKWap7OV1uSc3P/F
-	vfeoOdiNwWBGPMs9ReMQBE/isePJG/b1bepAlYtfgmbL9HAepNZhoTDQlc/tTCBi
-	QOHnn1FGyKqkqYsXGViVAUXQvxWc0kNFXdouKCQ+1D+2uWSDh+vLjMMImLXuX/PQ
-	C9zhg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42951u8d9f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Oct 2024 15:47:05 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49EFggWY013650;
-	Mon, 14 Oct 2024 15:47:05 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42951u8d98-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Oct 2024 15:47:04 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49ECgom4005930;
-	Mon, 14 Oct 2024 15:47:03 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 428650q0jk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Oct 2024 15:47:03 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49EFl2FM41484626
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Oct 2024 15:47:02 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 43ED75805E;
-	Mon, 14 Oct 2024 15:47:02 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1171758050;
-	Mon, 14 Oct 2024 15:46:41 +0000 (GMT)
-Received: from [9.43.6.16] (unknown [9.43.6.16])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 14 Oct 2024 15:46:40 +0000 (GMT)
-Message-ID: <43eacfd6-e1a3-4d2c-9511-9b5a5707bdcf@linux.ibm.com>
-Date: Mon, 14 Oct 2024 21:16:38 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="agurejxZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728921073; x=1760457073;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HhPrxWs1dM37KDlTXC1Ni3YUM5RwkVU2HNXUsmfxu5E=;
+  b=agurejxZuzmUi5t8x1cSGmMfec45Q8nqYBXPrMpuIV24donmvrOW2tg5
+   IIwLbZ2VyvAF8xuvtafXRngL18IUXbIK/02kEHefg/3Bzhh4bQaSqWn1S
+   cSvHR+BizfCy39uwVnbQbiDKYI0gsV4JVJP+WbtZ3xZ5FBePq49OTnCgA
+   r+7wB3Qww4elEBEpOKRTLq3nFEWD3NvXMeiWvK95ELuPVjlanPkOgkZyA
+   uwsT4ufnDxnQ31JEKLnbj4PsKjln2yVst3pu6xnhoGapwKLX7jF63dcra
+   79QXkHOP2HIrVZ4dwEGrhaIHGgOqj+zQlOHk9Z+i6KSeTLNVEofms9ncU
+   g==;
+X-CSE-ConnectionGUID: UW/3P7d+QfWAg/xzyPgf8w==
+X-CSE-MsgGUID: +JrwazQuR7mKVN3qu5Tivw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11224"; a="39654866"
+X-IronPort-AV: E=Sophos;i="6.11,203,1725346800"; 
+   d="scan'208";a="39654866"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 08:51:12 -0700
+X-CSE-ConnectionGUID: +S79P0jnToaF+FpQ6U3LTw==
+X-CSE-MsgGUID: bCQJkcYlT5+XLGw44IexsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,203,1725346800"; 
+   d="scan'208";a="82651019"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 08:51:11 -0700
+Received: from [10.212.61.73] (kliang2-mobl1.ccr.corp.intel.com [10.212.61.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 5751D20B5782;
+	Mon, 14 Oct 2024 08:51:08 -0700 (PDT)
+Message-ID: <3cc05609-4fbd-4fb8-87bf-34ea1092ab2b@linux.intel.com>
+Date: Mon, 14 Oct 2024 11:51:06 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,108 +58,84 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] powerpc: perf: Use perf_arch_instruction_pointer()
-To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-        Sean Christopherson <seanjc@google.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-References: <20240920174740.781614-1-coltonlewis@google.com>
- <20240920174740.781614-4-coltonlewis@google.com>
+Subject: Re: [RFC PATCH v3 14/58] perf: Add switch_interrupt() interface
+To: Peter Zijlstra <peterz@infradead.org>, Mingwei Zhang <mizhang@google.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
+ <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+ Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ Like Xu <like.xu.linux@gmail.com>,
+ Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240801045907.4010984-1-mizhang@google.com>
+ <20240801045907.4010984-15-mizhang@google.com>
+ <20241014120354.GG16066@noisy.programming.kicks-ass.net>
 Content-Language: en-US
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-In-Reply-To: <20240920174740.781614-4-coltonlewis@google.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20241014120354.GG16066@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Jwz0y2srETrJq5vnDrTRMrnGUJsrEiit
-X-Proofpoint-ORIG-GUID: ZjFOQbPfI4aepiuQmLev7nPPg0fy7QCF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-14_10,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 clxscore=1015 adultscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2409260000 definitions=main-2410140113
 
 
 
-On 9/20/24 11:17 PM, Colton Lewis wrote:
-> Make sure powerpc uses the arch-specific function now that those have
-> been reorganized.
->
-
-Changes looks fine to me.
-Acked-by: Madhavan Srinivasan <maddy@linux.ibm.com>
-
- 
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> ---
->  arch/powerpc/perf/callchain.c    | 2 +-
->  arch/powerpc/perf/callchain_32.c | 2 +-
->  arch/powerpc/perf/callchain_64.c | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+On 2024-10-14 8:03 a.m., Peter Zijlstra wrote:
+> On Thu, Aug 01, 2024 at 04:58:23AM +0000, Mingwei Zhang wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> There will be a dedicated interrupt vector for guests on some platforms,
+>> e.g., Intel. Add an interface to switch the interrupt vector while
+>> entering/exiting a guest.
+>>
+>> When PMI switch into a new guest vector, guest_lvtpc value need to be
+>> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
+>> bit should be cleared also, then PMI can be generated continuously
+>> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
+>> and switch_interrupt().
+>>
+>> At switch_interrupt(), the target pmu with PASSTHROUGH cap should
+>> be found. Since only one passthrough pmu is supported, we keep the
+>> implementation simply by tracking the pmu as a global variable.
+>>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> [Simplify the commit with removal of srcu lock/unlock since only one pmu is
+>> supported.]
+>>
+>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+>> ---
+>>  include/linux/perf_event.h |  9 +++++++--
+>>  kernel/events/core.c       | 36 ++++++++++++++++++++++++++++++++++--
+>>  2 files changed, 41 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index 75773f9890cc..aeb08f78f539 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -541,6 +541,11 @@ struct pmu {
+>>  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
+>>  	 */
+>>  	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
+>> +
+>> +	/*
+>> +	 * Switch the interrupt vectors, e.g., guest enter/exit.
+>> +	 */
+>> +	void (*switch_interrupt)	(bool enter, u32 guest_lvtpc); /* optional */
+>>  };
 > 
-> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-> index 6b4434dd0ff3..26aa26482c9a 100644
-> --- a/arch/powerpc/perf/callchain.c
-> +++ b/arch/powerpc/perf/callchain.c
-> @@ -51,7 +51,7 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
->  
->  	lr = regs->link;
->  	sp = regs->gpr[1];
-> -	perf_callchain_store(entry, perf_instruction_pointer(regs));
-> +	perf_callchain_store(entry, perf_arch_instruction_pointer(regs));
->  
->  	if (!validate_sp(sp, current))
->  		return;
-> diff --git a/arch/powerpc/perf/callchain_32.c b/arch/powerpc/perf/callchain_32.c
-> index ea8cfe3806dc..ddcc2d8aa64a 100644
-> --- a/arch/powerpc/perf/callchain_32.c
-> +++ b/arch/powerpc/perf/callchain_32.c
-> @@ -139,7 +139,7 @@ void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
->  	long level = 0;
->  	unsigned int __user *fp, *uregs;
->  
-> -	next_ip = perf_instruction_pointer(regs);
-> +	next_ip = perf_arch_instruction_pointer(regs);
->  	lr = regs->link;
->  	sp = regs->gpr[1];
->  	perf_callchain_store(entry, next_ip);
-> diff --git a/arch/powerpc/perf/callchain_64.c b/arch/powerpc/perf/callchain_64.c
-> index 488e8a21a11e..115d1c105e8a 100644
-> --- a/arch/powerpc/perf/callchain_64.c
-> +++ b/arch/powerpc/perf/callchain_64.c
-> @@ -74,7 +74,7 @@ void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
->  	struct signal_frame_64 __user *sigframe;
->  	unsigned long __user *fp, *uregs;
->  
-> -	next_ip = perf_instruction_pointer(regs);
-> +	next_ip = perf_arch_instruction_pointer(regs);
->  	lr = regs->link;
->  	sp = regs->gpr[1];
->  	perf_callchain_store(entry, next_ip);
+> I'm thinking the guets_lvtpc argument shouldn't be part of the
+> interface. That should be PMU implementation data and accessed by the
+> method implementation.
 
+I think the name of the perf_switch_interrupt() is too specific.
+Here should be to switch the guest context. The interrupt should be just
+part of the context. Maybe a interface as below
+
+void (*switch_guest_ctx)	(bool enter, void *data); /* optional */
+
+Thanks,
+Kan
