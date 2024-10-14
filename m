@@ -1,81 +1,106 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9795C195811;
-	Mon, 14 Oct 2024 10:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43AE81AAE23;
+	Mon, 14 Oct 2024 11:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728903320; cv=none; b=NxwA2RxXYYWSNW3KgPSoHaXBfNlhnYGvuIa+ssLScwgrPU/F4ffVujn+nibSKWF38nzVFF+u7pArzqHJxrMbkp6yxCZMspnmyZqGG4YC2YRpFpXvx1U8dMSQqnjmgjjuOf8pBYEBXX96dXHP7hnfUc1d4cUk1jo2G7m98oXyLI0=
+	t=1728903618; cv=none; b=QpoW2JZzYhWeP8o9FQtCCw3Cm8CzVfZ/zynlIhe3NB3p7kilD8LW5oDdCohZtYbdtDVycNfq7iRKO994/UK0cANFludtHdSCpkn+rGSuvnXNcvd7Fbrbq0RPzUOnw0xaif0pPSVb+slAmYwRVFLc7Pe3X4s8DKPzu4DIvQMr4cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728903320; c=relaxed/simple;
-	bh=Wv8sheBY9wyuuQECNz9jMXKquIBWVGBbSPFlBvDzmdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TdwHJbcGGL372SSPbncY3dvq7/SXjFlR5YIdbq2ZZlpR3ZTQ+mKvdSVN47H8d4lUdkIfwZjayN/lmS9lvn8x5VtLJ3veJNQFf14fCDRlz1eMCtSflYsReSwkKk9/eK9m15umKTLaGMgmFCfhpf4pOfI0uyKIMDQV/T04fpUB3gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=q3zcjKYW; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q3zcjKYW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=w3x6GHag03/bv+m3o3GPI6JrLsYF4G1ACh00ZNPF3aY=; b=q3zcjKYWTFQ3YOrbR+FNOvIptJ
-	KGzYRKIyJbp/0zDclGmpW37bvjmpP9G/XzayP9wgQ1bqTWayG+H/H5MY4n+8fN7VOD2LUQ+4c3dQ+
-	tAPHVsDpMzXjjZ1Muj+K87+Sf6PFcgTomQS9YNCAwXavAB3LLKLJSWRxo4VWqCdrWf3X5WazbxAw8
-	H9x/hkgXd4KanqnjbBa6gh9o1Yv8XDRG2pF7Kc0lp5YlGHdGqDC8urAgdHOQlnqFQedwgvT+ws+SP
-	gqtSTyRP0sAvdrZHyDAl8fT65rprX9OY93Xr7/jjqRAykF9DwAsv1Q9MUhexFUnjSA87Q8gigDU42
-	jke87rDw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t0IjB-00000006JqI-3HlN;
-	Mon, 14 Oct 2024 10:55:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0CB2A30015F; Mon, 14 Oct 2024 12:55:05 +0200 (CEST)
-Date: Mon, 14 Oct 2024 12:55:04 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Mingwei Zhang <mizhang@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Xiong Zhang <xiong.y.zhang@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kan Liang <kan.liang@intel.com>,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Manali Shukla <manali.shukla@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Jim Mattson <jmattson@google.com>,
-	Stephane Eranian <eranian@google.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	gce-passthrou-pmu-dev@google.com,
-	Samantha Alt <samantha.alt@intel.com>,
-	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
-	Like Xu <like.xu.linux@gmail.com>,
-	Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+	s=arc-20240116; t=1728903618; c=relaxed/simple;
+	bh=ckI1+T2GFgSWcVYnvAcaN2k41SpN9b7TGriYQVjzmWI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=i9BM+aPJgJLWkBWmbx23IgDHdKZj/bRCqaYC/L/R5mVTF1WAj5+IRcD6LV7IRqB0D1Q5O9a4f16PIUJPswIQ77CntslSrzWMmdplzeeJ1U8RRuPGSkyvDQEjp2MuH9w8CpqPaUxcBrEiLzID+OZneHlhF1aMHgPEbVcMv8R64/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89DBA168F;
+	Mon, 14 Oct 2024 04:00:46 -0700 (PDT)
+Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B5403F51B;
+	Mon, 14 Oct 2024 04:00:14 -0700 (PDT)
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Greg Marsden <greg.marsden@oracle.com>,
+	Ivan Ivanov <ivan.ivanov@suse.com>,
+	Kalesh Singh <kaleshsingh@google.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Matthias Brugger <mbrugger@suse.com>,
+	Miroslav Benes <mbenes@suse.cz>,
+	Will Deacon <will@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v3 09/58] perf: Add a EVENT_GUEST flag
-Message-ID: <20241014105504.GB16066@noisy.programming.kicks-ass.net>
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-10-mizhang@google.com>
- <20241011184237.GQ17263@noisy.programming.kicks-ass.net>
- <a3326ee7-5ff0-4745-9e33-3ed5eec94c24@linux.intel.com>
+Subject: [RFC PATCH v1 16/57] perf: Remove PAGE_SIZE compile-time constant assumption
+Date: Mon, 14 Oct 2024 11:58:23 +0100
+Message-ID: <20241014105912.3207374-16-ryan.roberts@arm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241014105912.3207374-1-ryan.roberts@arm.com>
+References: <20241014105514.3206191-1-ryan.roberts@arm.com>
+ <20241014105912.3207374-1-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a3326ee7-5ff0-4745-9e33-3ed5eec94c24@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 11, 2024 at 03:49:44PM -0400, Liang, Kan wrote:
-> 
-> 
-> On 2024-10-11 2:42 p.m., Peter Zijlstra wrote:
-> > 
-> > Can you rework this one along these lines?
-> 
-> Sure.
+To prepare for supporting boot-time page size selection, refactor code
+to remove assumptions about PAGE_SIZE being compile-time constant. Code
+intended to be equivalent when compile-time page size is active.
 
-Thanks!
+Refactor a BUILD_BUG_ON() so that we test against the limit; _format is
+invariant to page size so testing it is no bigger than the minimum
+supported size is sufficient.
+
+Wrap global variables that are initialized with PAGE_SIZE derived values
+using DEFINE_GLOBAL_PAGE_SIZE_VAR() so their initialization can be
+deferred for boot-time page size builds.
+
+Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+---
+
+***NOTE***
+Any confused maintainers may want to read the cover note here for context:
+https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
+
+ include/linux/perf_event.h | 2 +-
+ kernel/events/core.c       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 1a8942277ddad..b7972155f93eb 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1872,7 +1872,7 @@ _name##_show(struct device *dev,					\
+ 			       struct device_attribute *attr,		\
+ 			       char *page)				\
+ {									\
+-	BUILD_BUG_ON(sizeof(_format) >= PAGE_SIZE);			\
++	BUILD_BUG_ON(sizeof(_format) >= PAGE_SIZE_MIN);			\
+ 	return sprintf(page, _format "\n");				\
+ }									\
+ 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 8a6c6bbcd658a..81149663ab7d8 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -419,7 +419,7 @@ static struct kmem_cache *perf_event_cache;
+ int sysctl_perf_event_paranoid __read_mostly = 2;
+ 
+ /* Minimum for 512 kiB + 1 user control page */
+-int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024); /* 'free' kiB per user */
++__DEFINE_GLOBAL_PAGE_SIZE_VAR(int, sysctl_perf_event_mlock, __read_mostly, 512 + (PAGE_SIZE / 1024)); /* 'free' kiB per user */
+ 
+ /*
+  * max perf event sample rate
+-- 
+2.43.0
+
