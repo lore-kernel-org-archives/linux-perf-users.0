@@ -1,148 +1,102 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1381B19E806;
-	Mon, 14 Oct 2024 13:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8617A1AA783
+	for <linux-perf-users@vger.kernel.org>; Mon, 14 Oct 2024 13:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728911167; cv=none; b=H+/lz/kIqoxpysJv+Wu132TdscDYJQlZfQ56PAnnD6BRtqLaf0yAvrlXc0lHnzL4clc+dJVxGnyoJQsIAgMR4691qQzcEnjXTSGfvwGZG5qd8Uik3yxResPJlJj2vLekkXnbBr7d8WW5GAlTeOa7I+EfJJjEK9jE0gXoXAe2s9k=
+	t=1728911257; cv=none; b=Dvt8E3ZZb3ba/UeVE294kryHHgz98+55tJ5vSBeJUm7sHJX0iqbYg3kwCKCA38xrhacLriB3kXilAvt/DPYU6UBhMrTWl2sxYcR7ODQVuB8GDiuBxbjwK43CJ3jHY5waNEmT9fOR7Oml7F2QLd6wfXO/18Fq0214jRWH/AIABes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728911167; c=relaxed/simple;
-	bh=5yIE1AXTBtccQw+b33agkVNO7ZB538iyS504JjLMXcY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=lK2+yjqi5+S8i2PfzfsymyrYPTfoBxef+5cCQaLiX1+A0PRT/X0XbZq8Xh3+1Qz0+kCfq/ACfx4wi3GBEQ1PRladYRpBjLm4e2NoopO0uiD7IkE+By9MVSFSlX+8AbVDaq1KTvWzr6GbZsbrNyOA9xma4sGwH8WBXNMYVr6OYNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-37d473c4bb6so3343124f8f.3;
-        Mon, 14 Oct 2024 06:06:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728911164; x=1729515964;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=arN2EaeGbfyQzTtje2PaOTjOburdceclvq3hXPjtlHw=;
-        b=kzVLSJOlH7byGvjrHI06MVCebsBp2Rb1bs2pGH+Xm1gVL4UCuLLFB5rImdeCwcA00U
-         P27ai4q2z1tldkxWP5Z3x1hwaNmyCBGFn6T8+jiweaA7idf4kR1Dz3BPZ9pYoCOwt85A
-         X9t2W5nBL0JWJoJRVTVSaV5pkcr49Zg83sTUrjcfSWquxZeMW6GpElbxNxVJE8KbWViE
-         8rP4NgUr2zDbgHbDAjelP11Eiz6HuA8HrANzhYMZn21lO510jxro4Ee5oUE5dVkC4gn/
-         3+SNlxDrBWYbwgPiTSGnnmzjpO4D+ApDb7/FY8VkYjPlTHQkEaQDJJZDpG5y4IwS7qMr
-         yo8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVMu1fS/UZN8iVGLaq2fXfGZ7B1LrOq5UXXsfIvdIqW5P3c4PB+cADfNP6/+cpcSCFDnF1KHd5SgVhpWdzBohLbYw==@vger.kernel.org, AJvYcCW+YmqGx9WmKKsn23beoZLJzsaPGAn3qDMq7PtS5A9+YaiDFvtuVxcgzgZZ6aoAjgaRPpVwcwDfc74EoK0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXaZ6K03OrjHkDE7BUc6NUGf0RZikf9PbGMMe2+q9MFc1Oz8IJ
-	VoMVHT0PzxE7I5Mv+mDP7+h1zJKfXXIOxzMVHVU0Pwky08zRViF5
-X-Google-Smtp-Source: AGHT+IFslGH1lFnLmbVAguvq3NPJ2Hq/naL7JW5Qulsjtxs4o1vYcbMFGHXyrS8up5WDYkXYYuvR7w==
-X-Received: by 2002:adf:f483:0:b0:37c:d2e3:1298 with SMTP id ffacd0b85a97d-37d601eea06mr6796782f8f.55.1728911164250;
-        Mon, 14 Oct 2024 06:06:04 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b6a8911sm11289688f8f.14.2024.10.14.06.06.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Oct 2024 06:06:03 -0700 (PDT)
-Message-ID: <1b96ef59-3b25-4c16-b3ee-cb4c7432afc0@kernel.org>
-Date: Mon, 14 Oct 2024 15:06:02 +0200
+	s=arc-20240116; t=1728911257; c=relaxed/simple;
+	bh=N7i07W7JgKWJgaXhOdx1uMP7PnOAWhaXuytQvNK/7fo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bnyDBm5JtmjqW/Of0WPbWSCwdGnKCo0UbJSf51JcgYRuFv3k9N7TCeKjfaqprEMHl+pSylhAB8ytt4cCyg62/dRVgCaNuZqpyxZTe16XXOGD+79xJ1gAjsjVcDcf9OgJS2b8h1lavwlgbHyArCTE9qOLD9X2ZNtZ+95YJ38faEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ISAP6ML/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ISAP6ML/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728911254;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vz/tKiNrcgfaOfQOUItP+eBpx3zXx1nT4M1JqYodY10=;
+	b=ISAP6ML/lUixp7fBumAjfbOot+8kGsyEn2+vncroFjC4iseL50U6nsNVLR6MwTiY44Nn3f
+	8mWRZkkhfaHQZX2qh86OoCZWsSknEkHCrM3JoexDaqGXNvBghnhOcDPdfhD51fh3iH7ofK
+	GSa9Iotv09vBEimhhINC7N/ojloMLUk=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-324-SAWN3ukaOJG4VqctiKMELg-1; Mon,
+ 14 Oct 2024 09:07:31 -0400
+X-MC-Unique: SAWN3ukaOJG4VqctiKMELg-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 56C4419772D6;
+	Mon, 14 Oct 2024 13:07:28 +0000 (UTC)
+Received: from Carbon (unknown [10.39.208.9])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 697CD1956088;
+	Mon, 14 Oct 2024 13:07:21 +0000 (UTC)
+Date: Mon, 14 Oct 2024 15:07:17 +0200 (CEST)
+From: Michael Petlan <mpetlan@redhat.com>
+To: vmolnaro@redhat.com
+cc: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com, 
+    mpetlan@redhat.com, peterz@infradead.org, mingo@redhat.com, 
+    namhyung@kernel.org, mark.rutland@arm.com, irogers@google.com, 
+    alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+    adrian.hunter@intel.com, kan.liang@linux.intel.com
+Subject: Re: [PATCH] perf dso: Fix symtab_type for kmod compression
+In-Reply-To: <20241010144836.16424-1-vmolnaro@redhat.com>
+Message-ID: <0f2939d-b7ca-aa8e-8d2a-381b52d613a@redhat.com>
+References: <20241010144836.16424-1-vmolnaro@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH/RFT] Re: [PATCH v5 1/8] perf trace: Fix iteration of
- syscall ids in syscalltbl->entries
-From: Jiri Slaby <jirislaby@kernel.org>
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Howard Chu <howardchu95@gmail.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@redhat.com>
-References: <0f841525-e02a-4e11-b5f8-1acc61979ccf@kernel.org>
- <ZtYJ0z8f-1jwYSbV@x1> <c279ad02-2543-4a95-9404-9304e1e704da@kernel.org>
- <ffc2eb09-ac78-4594-a376-3fff9918c2a7@kernel.org>
- <ZwYbQswnGHSstClc@google.com>
- <CAH0uvoi622J7gZ9BoTik7niNH3axVJR0kPNovUQnMjUB6GWLNg@mail.gmail.com>
- <CAH0uvojw5EKqxqETq_H3-5zmjXiK=ew2hBQiPDpCtZmO7=mrKA@mail.gmail.com>
- <3a592835-a14f-40be-8961-c0cee7720a94@kernel.org>
- <ZwgAzde-jVyo4cSu@google.com> <ZwgBenahw7EImQLk@google.com>
- <ZwhA1SL706f60ynd@x1> <2a91f9d0-8950-4936-9776-7ba59ab1d42a@kernel.org>
- <CA+JHD937angqu=48-kPC7LvtMMQPgUGp+2x5b+JKVNoFa3+9HQ@mail.gmail.com>
- <5c2151fc-d7ed-4677-9456-4589f67d5f51@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <5c2151fc-d7ed-4677-9456-4589f67d5f51@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 14. 10. 24, 15:04, Jiri Slaby wrote:
-> On 14. 10. 24, 14:43, Arnaldo Carvalho de Melo wrote:
->> And works? :-)
+On Thu, 10 Oct 2024, vmolnaro@redhat.com wrote:
+> From: Veronika Molnarova <vmolnaro@redhat.com>
 > 
-> I cannot tell :P.
+> During the rework of the dso structure in patch ee756ef7491eafd an
+> increment was forgotten for the symtab_type in case the data for
+> the kernel module are compressed. This affects the probing of the
+> kernel modules, which fails if the data are not already cached.
 > 
->> I need to get access to a 32-bit arm distro that I can use with qemu 
->> or with one of the libre computer arm64 boards I have, can you point 
->> me to one? :-)
+> Increment the value of the symtab_type to its compressed variant so the
+> data could be recovered successfully.
 > 
-> The former might be openSUSE. I have just booted:
-> https://download.opensuse.org/ports/armv7hl/tumbleweed/appliances/openSUSE-Tumbleweed-ARM-JeOS-efi.armv7l.raw.xz
+> Fixes: ee756ef7491eafd7 ("perf dso: Add reference count checking and accessor functions")
+> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+
+Acked-by: Michael Petlan <mpetlan@redhat.com>
+Tested-by: Michael Petlan <mpetlan@redhat.com>
+
+> ---
+>  tools/perf/util/machine.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> with (when unpacked and aavmf-aarch32-vars.bin copied to /tmp/arm.bin):
-> qemu-system-arm -cpu cortex-a15 -M virt -hda 
-> /tmp/openSUSE-Tumbleweed-ARM-JeOS-efi.armv7l.raw -nographic -drive 
-> if=pflash,format=raw,unit=0,readonly=on,file=/usr/share/qemu/aavmf-aarch32-code.bin -drive if=pflash,format=raw,unit=1,file=/tmp/arm.bin -m 2000
-
-FWIW
-
-login: root
-pass: linux
-
-in all openSUSE images.
-
-> thanks,-- 
--- 
-js
-suse labs
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index fad227b625d155c5..4f0ac998b0ccfd7a 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -1343,7 +1343,7 @@ static int maps__set_module_path(struct maps *maps, const char *path, struct kmo
+>  	 * we need to update the symtab_type if needed.
+>  	 */
+>  	if (m->comp && is_kmod_dso(dso)) {
+> -		dso__set_symtab_type(dso, dso__symtab_type(dso));
+> +		dso__set_symtab_type(dso, dso__symtab_type(dso)+1);
+>  		dso__set_comp(dso, m->comp);
+>  	}
+>  	map__put(map);
+> -- 
+> 2.43.0
+> 
+> 
 
