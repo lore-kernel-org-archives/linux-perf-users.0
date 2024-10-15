@@ -1,431 +1,193 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393CA156243
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 00:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF0E16190C;
+	Tue, 15 Oct 2024 02:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728950533; cv=none; b=vEcB0iNBAgE3YlVOxg746AB2d2Wv9Eo+o5GtlmZ5/5DpD31W3SsgMLbI3cFEcbxDwKZaSD0/JTXR7S1STcTKwkykJNsDGBPzaAQEet26JYJbBsrXJYvNTqbcPaw/b6mYsxhYlc1B8XZWwClry2aHFIiiijTB76urIkoOEnsBrl0=
+	t=1728961161; cv=none; b=d/zsSuHr/qjoztyIdMdxsuHz6eu/HnQmv2GouKNKuDw2/hRpaSWMfWr9mZS3eHCUGdXOfIsE0plD0tW7TGsY58ycxVYWyQEdU6fyW7iYX4NuYLUQo1Sw5NbHmJLfF2dwU1UA/BMShiwF5RMV7gXae/GmmHhYVcn4e23ZoKiFyDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728950533; c=relaxed/simple;
-	bh=5V0HYfJIoCqORROOyQxgxCGkVp4lqZYz2wWzhJxbol0=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=smlp69keee/asC/FBRRz4aR6Gp2nSgryuvV5xlHizZ3pI3RvbG1E1mIsp9r8GQEMSOgheqv3CvxlcBEAOZL2b2pTL23OLsB6RsIdK5/UlRcB1M5G0yYt2YVFZ/1rDq5ZX6EdVbIJLpIoUk5i8qHiH6pVjwh2Crmg2sBwMC+CsIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gN5a3UnW; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gN5a3UnW"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e35199eb2bso51395077b3.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Oct 2024 17:02:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728950530; x=1729555330; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g5AyR3CEmAHSsZGpk4O76mSgfPIu474vcsykhPTnG9Y=;
-        b=gN5a3UnW8w+Ixs99tGPUM5OINsyPZFF+opkq/iY5JPUFRUhHd1HJ+Twdfuuuc65YgD
-         dtpX7KY2FO8EyK+dAgpiqMszKJPfKpQ2h/qQodG3EYD/c9BCk06E7RGlEe80pGlNzdCi
-         uC/3DxQoOTb41/W8U/zCjCG2NRDQA0Ic6UTy/v89rTV2QOjKyrb+nS4ezfOoooKA9uzp
-         o6qGMwWe4rqOTzS7PLyJZBahBedTd4LOf6e3ElgfGp2PQO5OLUDBDRm6Rbqca9P09dEn
-         pMKsI+Z6tXrjzYBN0xGj1keMPy0+wkj2141gjqS45kl2I/OUd8J6zQgLE9g6jrEzU4j8
-         al/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728950530; x=1729555330;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g5AyR3CEmAHSsZGpk4O76mSgfPIu474vcsykhPTnG9Y=;
-        b=LGn7RYwSDS1nWo9NwjxOdNLlHapKfmpsNqRcAUUdqO5iJ60bfdPXjiXlvM+uwZlsMS
-         uXUVGKa3MteogP9G2UjidW8HuOf/T3qtRKd442cjvVzAxBffoC3UKT0TLTmgBP7Bfcx1
-         rJ8GT3dATRcIL/0WFd3B9/3XPuWN6OykYbvRt1McGWl4XelA4cqLur0NKeMk9LNaSRiK
-         44Ijgw70BehUtZ/UUwqfwOo4KCosy7EEcnAqQiPvcmddSCKHUJx1elyI5AaC/7wc8zyx
-         LLgJ5uBOLcJfRaAPshRPbSQ/6SZr277MqcQ7B50/0igJIeQ6q/VTA95fDsg+6R1XtPru
-         LHqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXveyfvHaNd+iIXW6o/vxl4QRdEmC+d3iJWiYrR0/NMMsvhhqzs/gUjleh5Sm6t1U794ROX6wBGda7lL7hoLGvl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6Bjd68PHg5fVt/QZ2K0ip+YJqEfhPPa9oBlZapAuP97w+qNX4
-	0ZVKcQwdM+nzsr344L8o2XV/DUHw5xPdNZEMltmf9TAVuFrNMFJVPBWLlRvG6W2HE6tlh820rmy
-	hFoTFgA==
-X-Google-Smtp-Source: AGHT+IF6M1b/mOXdPo+NfGA6vsUb9d0doLOHoCglmRsIwn3yki8stDt9Wl700p5+nakgabzGXEiq+4mVsW4L
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:f1f9:f6b6:68bc:5a14])
- (user=irogers job=sendgmr) by 2002:a05:690c:290b:b0:6e2:b263:103f with SMTP
- id 00721157ae682-6e3471dcd1emr1036107b3.0.1728950530193; Mon, 14 Oct 2024
- 17:02:10 -0700 (PDT)
-Date: Mon, 14 Oct 2024 17:01:58 -0700
-In-Reply-To: <20241015000158.871828-1-irogers@google.com>
-Message-Id: <20241015000158.871828-4-irogers@google.com>
+	s=arc-20240116; t=1728961161; c=relaxed/simple;
+	bh=+b+elXxAVVxfj8rJTcv5UBxWvX8Yo0n65x7WAh9G9ok=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JGvytbpvXrpxehPPSBv/EFeDZjujqrbqsKzCXpH/LXvSR2WHH00H+9wsF6uM0vTLdhzxWMhHqty5Wjr2RIU7YWp/mlKpKKrtAkBW6lORLdVt4z84yy68M2bsyDo2rQ7hXPBhLYt5fyixD+FwhcRewK9FrQw7ui5F0g54JGKMfos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from zq-Legion-Y7000.. (unknown [121.237.44.89])
+	by APP-01 (Coremail) with SMTP id qwCowABXXipl2g1nHjicBw--.43054S2;
+	Tue, 15 Oct 2024 10:58:46 +0800 (CST)
+From: zhouquan@iscas.ac.cn
+To: anup@brainfault.org,
+	ajones@ventanamicro.com,
+	atishp@atishpatra.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	Quan Zhou <zhouquan@iscas.ac.cn>
+Subject: [PATCH v4 0/2] riscv: Add perf support to collect KVM guest statistics from host side
+Date: Tue, 15 Oct 2024 10:58:05 +0800
+Message-Id: <cover.1728957131.git.zhouquan@iscas.ac.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241015000158.871828-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
-Subject: [PATCH v2 3/3] perf test: Move attr files into shell directory where
- they are used
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	zhaimingbing <zhaimingbing@cmss.chinamobile.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, Leo Yan <leo.yan@linux.dev>, 
-	Howard Chu <howardchu95@gmail.com>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowABXXipl2g1nHjicBw--.43054S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxuw1xJw15CF13uryDCF45KFg_yoW7XrWrpr
+	43Crsxtr4YyryIqw4Iyr1Y9ry5J397Xrn3GrnxXw4rAr4jvaykZwnFgw4xZrW0qryvgryf
+	Xr1vqFy3Kas0yFUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7Cj
+	xVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwV
+	W8JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
+	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
+	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUXBM_UUUUU
+	=
+X-CM-SenderInfo: 52kr31xxdqqxpvfd2hldfou0/1tbiDAgLBmcNsJGSrAAAs8
 
-Now the attr tests are shell tests move the associated python and
-configuration files. Update the installation build rules for the new
-directories. Recycle the lib install rules for python files allowing
-the explicit attr.py install line to be dropped.
+From: Quan Zhou <zhouquan@iscas.ac.cn>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Add basic guest support to RISC-V perf, enabling it to distinguish
+whether PMU interrupts occur in the host or the guest, and then
+collect some basic guest information from the host side
+(guest os callchain is not supported for now).
+
+Based on the x86/arm implementation, tested with kvm-riscv.
+test env:
+- host: qemu-9.0.0
+- guest: qemu-9.0.0 --enable-kvm (only start one guest and run top)
+
+-----------------------------------------
+1) perf kvm top
+./perf kvm --host --guest \
+  --guestkallsyms=/<path-to-kallsyms> \
+  --guestmodules=/<path-to-modules> top
+
+PerfTop:      41 irqs/sec  kernel:97.6% us: 0.0% guest kernel: 0.0% guest us: 0.0% exact:  0.0% [250Hz cycles:P],  (all, 4 CPUs)
+-------------------------------------------------------------------------------
+
+    64.57%  [kernel]        [k] default_idle_call
+     3.12%  [kernel]        [k] _raw_spin_unlock_irqrestore
+     3.03%  [guest.kernel]  [g] mem_serial_out
+     2.61%  [kernel]        [k] handle_softirqs
+     2.32%  [kernel]        [k] do_trap_ecall_u
+     1.71%  [kernel]        [k] _raw_spin_unlock_irq
+     1.26%  [guest.kernel]  [g] do_raw_spin_lock
+     1.25%  [kernel]        [k] finish_task_switch.isra.0
+     1.16%  [kernel]        [k] do_idle
+     0.77%  libc.so.6       [.] ioctl
+     0.76%  [kernel]        [k] queue_work_on
+     0.69%  [kernel]        [k] __local_bh_enable_ip
+     0.67%  [guest.kernel]  [g] __noinstr_text_start
+     0.64%  [guest.kernel]  [g] mem_serial_in
+     0.41%  libc.so.6       [.] pthread_sigmask
+     0.39%  [kernel]        [k] mem_cgroup_uncharge_skmem
+     0.39%  [kernel]        [k] __might_resched
+     0.39%  [guest.kernel]  [g] _nohz_idle_balance.isra.0
+     0.37%  [kernel]        [k] sched_balance_update_blocked_averages
+     0.34%  [kernel]        [k] sched_balance_rq
+
+2) perf kvm record
+./perf kvm --host --guest \
+  --guestkallsyms=/<path-to-kallsyms> \
+  --guestmodules=/<path-to-modules> record -a sleep 60
+
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 1.292 MB perf.data.kvm (17990 samples) ]
+
+3) perf kvm report
+./perf kvm --host --guest \
+  --guestkallsyms=/<path-to-kallsyms> \
+  --guestmodules=/<path-to-modules> report -i perf.data.kvm
+
+# Total Lost Samples: 0
+#
+# Samples: 17K of event 'cycles:P'
+# Event count (approx.): 269968947184
+#
+# Overhead  Command          Shared Object            Symbol                                        
+# ........  ...............  .......................  ..............................................
+#
+    61.86%  swapper          [kernel.kallsyms]        [k] default_idle_call
+     2.93%  :6463            [guest.kernel.kallsyms]  [g] do_raw_spin_lock
+     2.82%  :6462            [guest.kernel.kallsyms]  [g] mem_serial_out
+     2.11%  sshd             [kernel.kallsyms]        [k] _raw_spin_unlock_irqrestore
+     1.78%  :6462            [guest.kernel.kallsyms]  [g] do_raw_spin_lock
+     1.37%  swapper          [kernel.kallsyms]        [k] handle_softirqs
+     1.36%  swapper          [kernel.kallsyms]        [k] do_idle
+     1.21%  sshd             [kernel.kallsyms]        [k] do_trap_ecall_u
+     1.21%  sshd             [kernel.kallsyms]        [k] _raw_spin_unlock_irq
+     1.11%  qemu-system-ris  [kernel.kallsyms]        [k] do_trap_ecall_u
+     0.93%  qemu-system-ris  libc.so.6                [.] ioctl
+     0.89%  sshd             [kernel.kallsyms]        [k] __local_bh_enable_ip
+     0.77%  qemu-system-ris  [kernel.kallsyms]        [k] _raw_spin_unlock_irqrestore
+     0.68%  qemu-system-ris  [kernel.kallsyms]        [k] queue_work_on
+     0.65%  sshd             [kernel.kallsyms]        [k] handle_softirqs
+     0.44%  :6462            [guest.kernel.kallsyms]  [g] mem_serial_in
+     0.42%  sshd             libc.so.6                [.] pthread_sigmask
+     0.34%  :6462            [guest.kernel.kallsyms]  [g] serial8250_tx_chars
+     0.30%  swapper          [kernel.kallsyms]        [k] finish_task_switch.isra.0
+     0.29%  swapper          [kernel.kallsyms]        [k] sched_balance_rq
+     0.29%  sshd             [kernel.kallsyms]        [k] __might_resched
+     0.26%  swapper          [kernel.kallsyms]        [k] tick_nohz_idle_exit
+     0.26%  swapper          [kernel.kallsyms]        [k] sched_balance_update_blocked_averages
+     0.26%  swapper          [kernel.kallsyms]        [k] _nohz_idle_balance.isra.0
+     0.24%  qemu-system-ris  [kernel.kallsyms]        [k] finish_task_switch.isra.0
+     0.23%  :6462            [guest.kernel.kallsyms]  [g] __noinstr_text_start
+
 ---
- tools/perf/Makefile.perf                                     | 5 ++---
- tools/perf/tests/shell/attr.sh                               | 2 +-
- tools/perf/tests/{ => shell}/attr/README                     | 0
- tools/perf/tests/{ => shell}/attr/base-record                | 0
- tools/perf/tests/{ => shell}/attr/base-record-spe            | 0
- tools/perf/tests/{ => shell}/attr/base-stat                  | 0
- tools/perf/tests/{ => shell}/attr/system-wide-dummy          | 0
- tools/perf/tests/{ => shell}/attr/test-record-C0             | 0
- tools/perf/tests/{ => shell}/attr/test-record-basic          | 0
- tools/perf/tests/{ => shell}/attr/test-record-branch-any     | 0
- .../tests/{ => shell}/attr/test-record-branch-filter-any     | 0
- .../{ => shell}/attr/test-record-branch-filter-any_call      | 0
- .../tests/{ => shell}/attr/test-record-branch-filter-any_ret | 0
- .../perf/tests/{ => shell}/attr/test-record-branch-filter-hv | 0
- .../{ => shell}/attr/test-record-branch-filter-ind_call      | 0
- .../perf/tests/{ => shell}/attr/test-record-branch-filter-k  | 0
- .../perf/tests/{ => shell}/attr/test-record-branch-filter-u  | 0
- tools/perf/tests/{ => shell}/attr/test-record-count          | 0
- tools/perf/tests/{ => shell}/attr/test-record-data           | 0
- tools/perf/tests/{ => shell}/attr/test-record-dummy-C0       | 0
- tools/perf/tests/{ => shell}/attr/test-record-freq           | 0
- tools/perf/tests/{ => shell}/attr/test-record-graph-default  | 0
- .../tests/{ => shell}/attr/test-record-graph-default-aarch64 | 0
- tools/perf/tests/{ => shell}/attr/test-record-graph-dwarf    | 0
- tools/perf/tests/{ => shell}/attr/test-record-graph-fp       | 0
- .../perf/tests/{ => shell}/attr/test-record-graph-fp-aarch64 | 0
- tools/perf/tests/{ => shell}/attr/test-record-group-sampling | 0
- .../perf/tests/{ => shell}/attr/test-record-group-sampling1  | 0
- .../perf/tests/{ => shell}/attr/test-record-group-sampling2  | 0
- tools/perf/tests/{ => shell}/attr/test-record-group1         | 0
- tools/perf/tests/{ => shell}/attr/test-record-group2         | 0
- tools/perf/tests/{ => shell}/attr/test-record-group3         | 0
- tools/perf/tests/{ => shell}/attr/test-record-no-buffering   | 0
- tools/perf/tests/{ => shell}/attr/test-record-no-inherit     | 0
- tools/perf/tests/{ => shell}/attr/test-record-no-samples     | 0
- tools/perf/tests/{ => shell}/attr/test-record-period         | 0
- tools/perf/tests/{ => shell}/attr/test-record-pfm-period     | 0
- tools/perf/tests/{ => shell}/attr/test-record-raw            | 0
- tools/perf/tests/{ => shell}/attr/test-record-spe-period     | 0
- .../perf/tests/{ => shell}/attr/test-record-spe-period-term  | 0
- .../tests/{ => shell}/attr/test-record-spe-physical-address  | 0
- .../{ => shell}/attr/test-record-user-regs-no-sve-aarch64    | 0
- .../{ => shell}/attr/test-record-user-regs-old-sve-aarch64   | 0
- .../tests/{ => shell}/attr/test-record-user-regs-sve-aarch64 | 0
- tools/perf/tests/{ => shell}/attr/test-stat-C0               | 0
- tools/perf/tests/{ => shell}/attr/test-stat-basic            | 0
- tools/perf/tests/{ => shell}/attr/test-stat-default          | 0
- tools/perf/tests/{ => shell}/attr/test-stat-detailed-1       | 0
- tools/perf/tests/{ => shell}/attr/test-stat-detailed-2       | 0
- tools/perf/tests/{ => shell}/attr/test-stat-detailed-3       | 0
- tools/perf/tests/{ => shell}/attr/test-stat-group1           | 0
- tools/perf/tests/{ => shell}/attr/test-stat-no-inherit       | 0
- tools/perf/tests/{ => shell/lib}/attr.py                     | 0
- 53 files changed, 3 insertions(+), 4 deletions(-)
- rename tools/perf/tests/{ => shell}/attr/README (100%)
- rename tools/perf/tests/{ => shell}/attr/base-record (100%)
- rename tools/perf/tests/{ => shell}/attr/base-record-spe (100%)
- rename tools/perf/tests/{ => shell}/attr/base-stat (100%)
- rename tools/perf/tests/{ => shell}/attr/system-wide-dummy (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-C0 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-basic (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-any (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-any (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-any_call (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-any_ret (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-hv (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-ind_call (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-k (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-u (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-count (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-data (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-dummy-C0 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-freq (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-graph-default (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-graph-default-aarch64 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-graph-dwarf (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-graph-fp (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-graph-fp-aarch64 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-group-sampling (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-group-sampling1 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-group-sampling2 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-group1 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-group2 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-group3 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-no-buffering (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-no-inherit (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-no-samples (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-period (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-pfm-period (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-raw (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-spe-period (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-spe-period-term (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-spe-physical-address (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-user-regs-no-sve-aarch64 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-user-regs-old-sve-aarch64 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-user-regs-sve-aarch64 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-C0 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-basic (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-default (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-detailed-1 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-detailed-2 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-detailed-3 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-group1 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-no-inherit (100%)
- rename tools/perf/tests/{ => shell/lib}/attr.py (100%)
+Change since v3:
+- Rebased on v6.12-rc3
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 9dd2e8d3f3c9..105f734b6820 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -1128,12 +1128,11 @@ endif
- install-tests: all install-gtk
- 	$(call QUIET_INSTALL, tests) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
--		$(INSTALL) tests/attr.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
- 		$(INSTALL) tests/pe-file.exe* '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
--		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/attr'; \
--		$(INSTALL) tests/attr/* -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/attr'; \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
- 		$(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/attr'; \
-+		$(INSTALL) tests/shell/attr/* -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/attr'; \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
- 		$(INSTALL) tests/shell/lib/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
- 		$(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
-diff --git a/tools/perf/tests/shell/attr.sh b/tools/perf/tests/shell/attr.sh
-index e094f3baffb7..5a4e43b2471d 100755
---- a/tools/perf/tests/shell/attr.sh
-+++ b/tools/perf/tests/shell/attr.sh
-@@ -17,6 +17,6 @@ trap trap_cleanup EXIT TERM INT
- 
- shelldir=$(dirname "$0")
- perf_path=$(which perf)
--python "${shelldir}"/../attr.py -d "${shelldir}"/../attr -v -p "$perf_path"
-+python "${shelldir}"/lib/attr.py -d "${shelldir}"/attr -v -p "$perf_path"
- cleanup
- exit $err
-diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/shell/attr/README
-similarity index 100%
-rename from tools/perf/tests/attr/README
-rename to tools/perf/tests/shell/attr/README
-diff --git a/tools/perf/tests/attr/base-record b/tools/perf/tests/shell/attr/base-record
-similarity index 100%
-rename from tools/perf/tests/attr/base-record
-rename to tools/perf/tests/shell/attr/base-record
-diff --git a/tools/perf/tests/attr/base-record-spe b/tools/perf/tests/shell/attr/base-record-spe
-similarity index 100%
-rename from tools/perf/tests/attr/base-record-spe
-rename to tools/perf/tests/shell/attr/base-record-spe
-diff --git a/tools/perf/tests/attr/base-stat b/tools/perf/tests/shell/attr/base-stat
-similarity index 100%
-rename from tools/perf/tests/attr/base-stat
-rename to tools/perf/tests/shell/attr/base-stat
-diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/shell/attr/system-wide-dummy
-similarity index 100%
-rename from tools/perf/tests/attr/system-wide-dummy
-rename to tools/perf/tests/shell/attr/system-wide-dummy
-diff --git a/tools/perf/tests/attr/test-record-C0 b/tools/perf/tests/shell/attr/test-record-C0
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-C0
-rename to tools/perf/tests/shell/attr/test-record-C0
-diff --git a/tools/perf/tests/attr/test-record-basic b/tools/perf/tests/shell/attr/test-record-basic
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-basic
-rename to tools/perf/tests/shell/attr/test-record-basic
-diff --git a/tools/perf/tests/attr/test-record-branch-any b/tools/perf/tests/shell/attr/test-record-branch-any
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-branch-any
-rename to tools/perf/tests/shell/attr/test-record-branch-any
-diff --git a/tools/perf/tests/attr/test-record-branch-filter-any b/tools/perf/tests/shell/attr/test-record-branch-filter-any
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-branch-filter-any
-rename to tools/perf/tests/shell/attr/test-record-branch-filter-any
-diff --git a/tools/perf/tests/attr/test-record-branch-filter-any_call b/tools/perf/tests/shell/attr/test-record-branch-filter-any_call
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-branch-filter-any_call
-rename to tools/perf/tests/shell/attr/test-record-branch-filter-any_call
-diff --git a/tools/perf/tests/attr/test-record-branch-filter-any_ret b/tools/perf/tests/shell/attr/test-record-branch-filter-any_ret
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-branch-filter-any_ret
-rename to tools/perf/tests/shell/attr/test-record-branch-filter-any_ret
-diff --git a/tools/perf/tests/attr/test-record-branch-filter-hv b/tools/perf/tests/shell/attr/test-record-branch-filter-hv
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-branch-filter-hv
-rename to tools/perf/tests/shell/attr/test-record-branch-filter-hv
-diff --git a/tools/perf/tests/attr/test-record-branch-filter-ind_call b/tools/perf/tests/shell/attr/test-record-branch-filter-ind_call
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-branch-filter-ind_call
-rename to tools/perf/tests/shell/attr/test-record-branch-filter-ind_call
-diff --git a/tools/perf/tests/attr/test-record-branch-filter-k b/tools/perf/tests/shell/attr/test-record-branch-filter-k
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-branch-filter-k
-rename to tools/perf/tests/shell/attr/test-record-branch-filter-k
-diff --git a/tools/perf/tests/attr/test-record-branch-filter-u b/tools/perf/tests/shell/attr/test-record-branch-filter-u
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-branch-filter-u
-rename to tools/perf/tests/shell/attr/test-record-branch-filter-u
-diff --git a/tools/perf/tests/attr/test-record-count b/tools/perf/tests/shell/attr/test-record-count
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-count
-rename to tools/perf/tests/shell/attr/test-record-count
-diff --git a/tools/perf/tests/attr/test-record-data b/tools/perf/tests/shell/attr/test-record-data
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-data
-rename to tools/perf/tests/shell/attr/test-record-data
-diff --git a/tools/perf/tests/attr/test-record-dummy-C0 b/tools/perf/tests/shell/attr/test-record-dummy-C0
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-dummy-C0
-rename to tools/perf/tests/shell/attr/test-record-dummy-C0
-diff --git a/tools/perf/tests/attr/test-record-freq b/tools/perf/tests/shell/attr/test-record-freq
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-freq
-rename to tools/perf/tests/shell/attr/test-record-freq
-diff --git a/tools/perf/tests/attr/test-record-graph-default b/tools/perf/tests/shell/attr/test-record-graph-default
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-graph-default
-rename to tools/perf/tests/shell/attr/test-record-graph-default
-diff --git a/tools/perf/tests/attr/test-record-graph-default-aarch64 b/tools/perf/tests/shell/attr/test-record-graph-default-aarch64
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-graph-default-aarch64
-rename to tools/perf/tests/shell/attr/test-record-graph-default-aarch64
-diff --git a/tools/perf/tests/attr/test-record-graph-dwarf b/tools/perf/tests/shell/attr/test-record-graph-dwarf
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-graph-dwarf
-rename to tools/perf/tests/shell/attr/test-record-graph-dwarf
-diff --git a/tools/perf/tests/attr/test-record-graph-fp b/tools/perf/tests/shell/attr/test-record-graph-fp
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-graph-fp
-rename to tools/perf/tests/shell/attr/test-record-graph-fp
-diff --git a/tools/perf/tests/attr/test-record-graph-fp-aarch64 b/tools/perf/tests/shell/attr/test-record-graph-fp-aarch64
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-graph-fp-aarch64
-rename to tools/perf/tests/shell/attr/test-record-graph-fp-aarch64
-diff --git a/tools/perf/tests/attr/test-record-group-sampling b/tools/perf/tests/shell/attr/test-record-group-sampling
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-group-sampling
-rename to tools/perf/tests/shell/attr/test-record-group-sampling
-diff --git a/tools/perf/tests/attr/test-record-group-sampling1 b/tools/perf/tests/shell/attr/test-record-group-sampling1
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-group-sampling1
-rename to tools/perf/tests/shell/attr/test-record-group-sampling1
-diff --git a/tools/perf/tests/attr/test-record-group-sampling2 b/tools/perf/tests/shell/attr/test-record-group-sampling2
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-group-sampling2
-rename to tools/perf/tests/shell/attr/test-record-group-sampling2
-diff --git a/tools/perf/tests/attr/test-record-group1 b/tools/perf/tests/shell/attr/test-record-group1
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-group1
-rename to tools/perf/tests/shell/attr/test-record-group1
-diff --git a/tools/perf/tests/attr/test-record-group2 b/tools/perf/tests/shell/attr/test-record-group2
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-group2
-rename to tools/perf/tests/shell/attr/test-record-group2
-diff --git a/tools/perf/tests/attr/test-record-group3 b/tools/perf/tests/shell/attr/test-record-group3
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-group3
-rename to tools/perf/tests/shell/attr/test-record-group3
-diff --git a/tools/perf/tests/attr/test-record-no-buffering b/tools/perf/tests/shell/attr/test-record-no-buffering
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-no-buffering
-rename to tools/perf/tests/shell/attr/test-record-no-buffering
-diff --git a/tools/perf/tests/attr/test-record-no-inherit b/tools/perf/tests/shell/attr/test-record-no-inherit
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-no-inherit
-rename to tools/perf/tests/shell/attr/test-record-no-inherit
-diff --git a/tools/perf/tests/attr/test-record-no-samples b/tools/perf/tests/shell/attr/test-record-no-samples
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-no-samples
-rename to tools/perf/tests/shell/attr/test-record-no-samples
-diff --git a/tools/perf/tests/attr/test-record-period b/tools/perf/tests/shell/attr/test-record-period
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-period
-rename to tools/perf/tests/shell/attr/test-record-period
-diff --git a/tools/perf/tests/attr/test-record-pfm-period b/tools/perf/tests/shell/attr/test-record-pfm-period
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-pfm-period
-rename to tools/perf/tests/shell/attr/test-record-pfm-period
-diff --git a/tools/perf/tests/attr/test-record-raw b/tools/perf/tests/shell/attr/test-record-raw
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-raw
-rename to tools/perf/tests/shell/attr/test-record-raw
-diff --git a/tools/perf/tests/attr/test-record-spe-period b/tools/perf/tests/shell/attr/test-record-spe-period
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-spe-period
-rename to tools/perf/tests/shell/attr/test-record-spe-period
-diff --git a/tools/perf/tests/attr/test-record-spe-period-term b/tools/perf/tests/shell/attr/test-record-spe-period-term
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-spe-period-term
-rename to tools/perf/tests/shell/attr/test-record-spe-period-term
-diff --git a/tools/perf/tests/attr/test-record-spe-physical-address b/tools/perf/tests/shell/attr/test-record-spe-physical-address
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-spe-physical-address
-rename to tools/perf/tests/shell/attr/test-record-spe-physical-address
-diff --git a/tools/perf/tests/attr/test-record-user-regs-no-sve-aarch64 b/tools/perf/tests/shell/attr/test-record-user-regs-no-sve-aarch64
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-user-regs-no-sve-aarch64
-rename to tools/perf/tests/shell/attr/test-record-user-regs-no-sve-aarch64
-diff --git a/tools/perf/tests/attr/test-record-user-regs-old-sve-aarch64 b/tools/perf/tests/shell/attr/test-record-user-regs-old-sve-aarch64
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-user-regs-old-sve-aarch64
-rename to tools/perf/tests/shell/attr/test-record-user-regs-old-sve-aarch64
-diff --git a/tools/perf/tests/attr/test-record-user-regs-sve-aarch64 b/tools/perf/tests/shell/attr/test-record-user-regs-sve-aarch64
-similarity index 100%
-rename from tools/perf/tests/attr/test-record-user-regs-sve-aarch64
-rename to tools/perf/tests/shell/attr/test-record-user-regs-sve-aarch64
-diff --git a/tools/perf/tests/attr/test-stat-C0 b/tools/perf/tests/shell/attr/test-stat-C0
-similarity index 100%
-rename from tools/perf/tests/attr/test-stat-C0
-rename to tools/perf/tests/shell/attr/test-stat-C0
-diff --git a/tools/perf/tests/attr/test-stat-basic b/tools/perf/tests/shell/attr/test-stat-basic
-similarity index 100%
-rename from tools/perf/tests/attr/test-stat-basic
-rename to tools/perf/tests/shell/attr/test-stat-basic
-diff --git a/tools/perf/tests/attr/test-stat-default b/tools/perf/tests/shell/attr/test-stat-default
-similarity index 100%
-rename from tools/perf/tests/attr/test-stat-default
-rename to tools/perf/tests/shell/attr/test-stat-default
-diff --git a/tools/perf/tests/attr/test-stat-detailed-1 b/tools/perf/tests/shell/attr/test-stat-detailed-1
-similarity index 100%
-rename from tools/perf/tests/attr/test-stat-detailed-1
-rename to tools/perf/tests/shell/attr/test-stat-detailed-1
-diff --git a/tools/perf/tests/attr/test-stat-detailed-2 b/tools/perf/tests/shell/attr/test-stat-detailed-2
-similarity index 100%
-rename from tools/perf/tests/attr/test-stat-detailed-2
-rename to tools/perf/tests/shell/attr/test-stat-detailed-2
-diff --git a/tools/perf/tests/attr/test-stat-detailed-3 b/tools/perf/tests/shell/attr/test-stat-detailed-3
-similarity index 100%
-rename from tools/perf/tests/attr/test-stat-detailed-3
-rename to tools/perf/tests/shell/attr/test-stat-detailed-3
-diff --git a/tools/perf/tests/attr/test-stat-group1 b/tools/perf/tests/shell/attr/test-stat-group1
-similarity index 100%
-rename from tools/perf/tests/attr/test-stat-group1
-rename to tools/perf/tests/shell/attr/test-stat-group1
-diff --git a/tools/perf/tests/attr/test-stat-no-inherit b/tools/perf/tests/shell/attr/test-stat-no-inherit
-similarity index 100%
-rename from tools/perf/tests/attr/test-stat-no-inherit
-rename to tools/perf/tests/shell/attr/test-stat-no-inherit
-diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/shell/lib/attr.py
-similarity index 100%
-rename from tools/perf/tests/attr.py
-rename to tools/perf/tests/shell/lib/attr.py
+Change since v2:
+- Rebased on v6.11-rc7
+- Keep the misc type consistent with other architectures as `unsigned long` (Andrew)
+- Add the same comment for `kvm_arch_pmi_in_guest` as in arm64. (Andrew)
+
+Change since v1:
+- Rebased on v6.11-rc3
+- Fix incorrect misc type (Andrew)
+
+---
+v3 link:
+https://lore.kernel.org/all/cover.1726126795.git.zhouquan@iscas.ac.cn/
+v2 link:
+https://lore.kernel.org/all/cover.1723518282.git.zhouquan@iscas.ac.cn/
+v1 link:
+https://lore.kernel.org/all/cover.1721271251.git.zhouquan@iscas.ac.cn/
+
+Quan Zhou (2):
+  riscv: perf: add guest vs host distinction
+  riscv: KVM: add basic support for host vs guest profiling
+
+ arch/riscv/include/asm/kvm_host.h   | 10 ++++++++
+ arch/riscv/include/asm/perf_event.h |  6 +++++
+ arch/riscv/kernel/perf_callchain.c  | 38 +++++++++++++++++++++++++++++
+ arch/riscv/kvm/Kconfig              |  1 +
+ arch/riscv/kvm/main.c               | 12 +++++++--
+ arch/riscv/kvm/vcpu.c               |  7 ++++++
+ 6 files changed, 72 insertions(+), 2 deletions(-)
+
+
+base-commit: 8e929cb546ee42c9a61d24fae60605e9e3192354
 -- 
-2.47.0.rc1.288.g06298d1525-goog
+2.34.1
 
