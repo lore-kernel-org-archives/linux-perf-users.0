@@ -1,160 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1971EC006;
-	Tue, 15 Oct 2024 20:16:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21C9158D9C;
+	Tue, 15 Oct 2024 20:37:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729023389; cv=none; b=d0L+Y5RqiQy3bYEop3iVzp78PCRkrRigHxZ8Y+ZS+74r1ZkwyEGNY/zrcGjhlQr7zcS74tLNeR3QOPGLDbKZaveGDEtpCEwwce+FgHmb3otc2Dg1TC9EyJfcdZYbLhRU8gcXxSUBpJZcH1+l2DqfMOvX4an7ZhylyH2q+Idal3k=
+	t=1729024661; cv=none; b=Ta1kC5PtCZKWw/2WDkcuPI9aEU62W0t+N6Bx+jAEivgFNN6AczPh83VOURjS1fyQQLvELUFQz716FFelE12PFF8oPvsdc0jAfcHRWfLFj4vBtantX7Zke5Zx19f7g+Vo3N8fRmozRjKRYreLYTItlOdaFqpTXZQAv/FPCKVvcPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729023389; c=relaxed/simple;
-	bh=3XU7Cf0i8FuoFLj0d1WainiX5TPPtsxGLKvRwUE6YCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=aiN4uNwxDrfWjM0boPYaieE9Okzu9ohl8KldUiWsWMJDPEaWzJfbaQxfoTbDJpXzuSDxsRhXiGRE7uvXpnsMGJDxAOmR6ihxZYjhECLllD6lZkgR8ZAfa2qCOnECCe0Wn/CqtRdxoYo4mZKoAF93Yuta01MJ2ZSn69e7gl2tHn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=saVfkNRV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729024661; c=relaxed/simple;
+	bh=uPz2K29rBQnQu4jOwz9rFPLvCog9LrME2wH0ycT9U6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CfyK1v65wPH4TT7OiaVABMmQj5v6JYnYisQZbEfhW/LX8vy4OsYl9lDJDzWp/8cqs6BmnsAXWGOYvdH8i84YUsCgNGRC9nxXrzZJYYRZtFc5QgMKSxPd7CqGobTtyKFgKRV79bCluLWezlCHIfYaO5Wkv8QRHdXKJqP/e8lltok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orXSbokZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="saVfkNRV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1207CC4CEC6;
-	Tue, 15 Oct 2024 20:16:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orXSbokZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CAFBC4CEC6;
+	Tue, 15 Oct 2024 20:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729023387;
-	bh=3XU7Cf0i8FuoFLj0d1WainiX5TPPtsxGLKvRwUE6YCg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=saVfkNRVXGjZAruWPwWn8yA5vH6/acmiof2Q59outIc3ywHIo50dkOwc6bPhBIsDg
-	 Thr9vznZXC2VLBCOb696UzwQ7ERKIlYWkicmXGrDLkB3+666SN7SplHCUsqKA0PU3Q
-	 bJdnjiMwc/r3yGwUUV3n46SCXeJhSfZ+g2HuScUKOBbpth2CInbr1cgnzBmE1+77CG
-	 eWH64ZQGbijF6hCmlWm7w0/GeLwiCJuiYHm9+nIYbho0d5wD8B+l49yCMewo8GvrzT
-	 RoFcOmjf6H9zSziJlPmECGeh0dYD62xOOWmVQe26n+dtYs0im1hdpkYNe4jJID5dsL
-	 tDnOZuz04wsNw==
-Date: Tue, 15 Oct 2024 17:16:24 -0300
+	s=k20201202; t=1729024661;
+	bh=uPz2K29rBQnQu4jOwz9rFPLvCog9LrME2wH0ycT9U6I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=orXSbokZXIvrSNTc1oBrnPyZv956fsdhkqE+uqllM7My7zoKylcFZriJqvlMe0kwE
+	 Q5XZxp2fltzmNkqHiW/JSlCQzjvrkaWXFPQcjusIwfynadq1d1149KFgSFIViEK1Nq
+	 2ZaL8QcM0B3s4JT2HpOKaSFgJbbOhVn/8qcC4ikTgamkDxm/S5lHReh/MhTgo7Wcua
+	 DSdfjqydb+VO2y53/NwS7D3rLVRNivO+RM0isLT3ony1Dp/6qtRL+qxLqE03e7iog3
+	 SVxljr39WxoEHAS4U4r0QkmCc0DgfWEwli7E6MwMLH9lszn0KPewxbyDrhr8PPB+dB
+	 9qf3jc1S6y3wg==
+Date: Tue, 15 Oct 2024 17:37:38 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andrea Righi <andrea.righi@linux.dev>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Song Liu <songliubraving@fb.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1 perf-tools] perf trace augmented_raw_syscalls: Add extra
- array index bounds checking to satisfy some BPF verifiers
-Message-ID: <Zw7NmIep-PdhdKIB@x1>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>, Howard Chu <howardchu95@gmail.com>,
+	Andrea Righi <andrea.righi@linux.dev>, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, james.clark@linaro.org,
+	alan.maguire@oracle.com
+Subject: Re: [PATCH v2 0/2] perf trace: Fix support for the new BPF feature
+ in clang 12
+Message-ID: <Zw7SkmEaz730uVbL@x1>
+References: <20241011021403.4089793-1-howardchu95@gmail.com>
+ <Zw61TUe1V97dKWer@google.com>
+ <Zw7D9HXBanPLUO4G@x1>
+ <Zw7JgJc0LOwSpuvx@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zw7JgJc0LOwSpuvx@x1>
 
-In a RHEL8 kernel (4.18.0-513.11.1.el8_9.x86_64), that, as enterprise
-kernels go, have backports from modern kernels, the verifier complains
-about lack of bounds check for the index into the array of syscall
-arguments, on a BPF bytecode generated by clang 17, with:
-
-  ; } else if (size < 0 && size >= -6) { /* buffer */
-  116: (b7) r1 = -6
-  117: (2d) if r1 > r6 goto pc-30
-   R0=map_value(id=0,off=0,ks=4,vs=24688,imm=0) R1_w=inv-6 R2=map_value(id=0,off=16,ks=4,vs=8272,imm=0) R3=inv(id=0) R5=inv40 R6=inv(id=0,umin_value=18446744073709551610,var_off=(0xffffffff00000000; 0xffffffff)) R7=map_value(id=0,off=56,ks=4,vs=8272,imm=0) R8=invP6 R9=map_value(id=0,off=20,ks=4,vs=24,imm=0) R10=fp0 fp-8=mmmmmmmm fp-16=map_value fp-24=map_value fp-32=inv40 fp-40=ctx fp-48=map_value fp-56=inv1 fp-64=map_value fp-72=map_value fp-80=map_value
-  ; index = -(size + 1);
-  118: (a7) r6 ^= -1
-  119: (67) r6 <<= 32
-  120: (77) r6 >>= 32
-  ; aug_size = args->args[index];
-  121: (67) r6 <<= 3
-  122: (79) r1 = *(u64 *)(r10 -24)
-  123: (0f) r1 += r6
-  last_idx 123 first_idx 116
-  regs=40 stack=0 before 122: (79) r1 = *(u64 *)(r10 -24)
-  regs=40 stack=0 before 121: (67) r6 <<= 3
-  regs=40 stack=0 before 120: (77) r6 >>= 32
-  regs=40 stack=0 before 119: (67) r6 <<= 32
-  regs=40 stack=0 before 118: (a7) r6 ^= -1
-  regs=40 stack=0 before 117: (2d) if r1 > r6 goto pc-30
-  regs=42 stack=0 before 116: (b7) r1 = -6
-   R0_w=map_value(id=0,off=0,ks=4,vs=24688,imm=0) R1_w=inv1 R2_w=map_value(id=0,off=16,ks=4,vs=8272,imm=0) R3_w=inv(id=0) R5_w=inv40 R6_rw=invP(id=0,smin_value=-2147483648,smax_value=0) R7_w=map_value(id=0,off=56,ks=4,vs=8272,imm=0) R8_w=invP6 R9_w=map_value(id=0,off=20,ks=4,vs=24,imm=0) R10=fp0 fp-8=mmmmmmmm fp-16_w=map_value fp-24_r=map_value fp-32_w=inv40 fp-40=ctx fp-48=map_value fp-56_w=inv1 fp-64_w=map_value fp-72=map_value fp-80=map_value
-  parent didn't have regs=40 stack=0 marks
-  last_idx 110 first_idx 98
-  regs=40 stack=0 before 110: (6d) if r1 s> r6 goto pc+5
-  regs=42 stack=0 before 109: (b7) r1 = 1
-  regs=40 stack=0 before 108: (65) if r6 s> 0x1000 goto pc+7
-  regs=40 stack=0 before 98: (55) if r6 != 0x1 goto pc+9
-   R0_w=map_value(id=0,off=0,ks=4,vs=24688,imm=0) R1_w=invP12 R2_w=map_value(id=0,off=16,ks=4,vs=8272,imm=0) R3_rw=inv(id=0) R5_w=inv24 R6_rw=invP(id=0,smin_value=-2147483648,smax_value=2147483647) R7_w=map_value(id=0,off=40,ks=4,vs=8272,imm=0) R8_rw=invP4 R9_w=map_value(id=0,off=12,ks=4,vs=24,imm=0) R10=fp0 fp-8=mmmmmmmm fp-16_rw=map_value fp-24_r=map_value fp-32_rw=invP24 fp-40_r=ctx fp-48_r=map_value fp-56_w=invP1 fp-64_rw=map_value fp-72_r=map_value fp-80_r=map_value
-  parent already had regs=40 stack=0 marks
-  124: (79) r6 = *(u64 *)(r1 +16)
-   R0=map_value(id=0,off=0,ks=4,vs=24688,imm=0) R1_w=map_value(id=0,off=0,ks=4,vs=8272,umax_value=34359738360,var_off=(0x0; 0x7fffffff8),s32_max_value=2147483640,u32_max_value=-8) R2=map_value(id=0,off=16,ks=4,vs=8272,imm=0) R3=inv(id=0) R5=inv40 R6_w=invP(id=0,umax_value=34359738360,var_off=(0x0; 0x7fffffff8),s32_max_value=2147483640,u32_max_value=-8) R7=map_value(id=0,off=56,ks=4,vs=8272,imm=0) R8=invP6 R9=map_value(id=0,off=20,ks=4,vs=24,imm=0) R10=fp0 fp-8=mmmmmmmm fp-16=map_value fp-24=map_value fp-32=inv40 fp-40=ctx fp-48=map_value fp-56=inv1 fp-64=map_value fp-72=map_value fp-80=map_value
-  R1 unbounded memory access, make sure to bounds check any such access
-  processed 466 insns (limit 1000000) max_states_per_insn 2 total_states 20 peak_states 20 mark_read 3
-
-If we add this line, as used in other BPF programs, to cap that index:
-
-   index &= 7;
-
-The generated BPF program is considered safe by that version of the BPF
-verifier, allowing perf to collect the syscall args in one more kernel
-using the BPF based pointer contents collector.
-
-With the above one-liner it works with that kernel:
-
-  [root@dell-per740-01 ~]# uname -a
-  Linux dell-per740-01.khw.eng.rdu2.dc.redhat.com 4.18.0-513.11.1.el8_9.x86_64 #1 SMP Thu Dec 7 03:06:13 EST 2023 x86_64 x86_64 x86_64 GNU/Linux
-  [root@dell-per740-01 ~]# ~acme/bin/perf trace -e *sleep* sleep 1.234567890
-       0.000 (1234.704 ms): sleep/3863610 nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 234567890 })                  = 0
-  [root@dell-per740-01 ~]#
-
-As well as with the one in Fedora 40:
-
-  root@number:~# uname -a
-  Linux number 6.11.3-200.fc40.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Oct 10 22:31:19 UTC 2024 x86_64 GNU/Linux
-  root@number:~# perf trace -e *sleep* sleep 1.234567890
-       0.000 (1234.722 ms): sleep/14873 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 234567890 }, rmtp: 0x7ffe87311a40) = 0
-  root@number:~#
-
-I'll investigate using virtme-ng[1] to have all the perf BPF based
-functionality thoroughly tested over multiple kernels and clang
-versions.
-
-[1] https://kernel-recipes.org/en/2024/virtme-ng/
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alan Maguire <alan.maguire@oracle.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrea Righi <andrea.righi@linux.dev>
-Cc: Howard Chu <howardchu95@gmail.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Link: https://lore.kernel.org/lkml/Zw7JgJc0LOwSpuvx@x1
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index b2f17cca014bcff4..f01c7cb84d22d181 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -477,6 +477,7 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
- 				augmented = true;
- 		} else if (size < 0 && size >= -6) { /* buffer */
- 			index = -(size + 1);
-+			index &= 7; // To satisfy the bounds checking with the verifier in some kernels
- 			aug_size = args->args[index];
+On Tue, Oct 15, 2024 at 04:58:56PM -0300, Arnaldo Carvalho de Melo wrote:
+> So I'm trying adding extra bounds checking, marking the index as
+> volatile, adding compiler barriers, etc, all the fun with the verifier,
+> but got distracted with other stuff, coming back to this now.
  
- 			if (aug_size > TRACE_AUG_MAX_BUF)
--- 
-2.46.0
+> Ok, the following seems to do the trick:
+ 
+> [acme@dell-per740-01 perf-tools]$ git diff
+> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> index 3b30aa74a3ae..ef87a04ff8d0 100644
+> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> @@ -486,6 +486,7 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>                                 augmented = true;
+>                 } else if (size < 0 && size >= -6) { /* buffer */
+>                         index = -(size + 1);
+> +                       index &= 7; // To satisfy the bounds checking with the verifier in some kernels
+>                         aug_size = args->args[index];
+>  
+>                         if (aug_size > TRACE_AUG_MAX_BUF)
+> 
+> I'll now test it without Howard's patch to see if it fixes the RHEL8 +
+> clang 17 case.
 
+It works with this one-liner + the simplified patch from Howard and also
+on this other system (RHEL9), as well as with Fedora 40, it would be
+nice if someone could test with clang 16 and report back the version of
+the kernel tested as well as the distro name/release, that way I can try
+to get my hands on such as system and test there as well.
+
+Its all at:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tmp.perf-tools
+
+This is the current set of patches that when further tested will go to
+Linus for v6.12:
+
+⬢[acme@toolbox perf-tools]$ git log --oneline torvalds/master..
+ff14baa7a290bf42 (HEAD -> perf-tools, x1/perf-tools, perf-tools/tmp.perf-tools) perf trace augmented_raw_syscalls: Add more checks to pass the verifier
+46180bec048aad85 perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
+45d1aadac64869a2 perf build: Change the clang check back to 12.0.1
+4e21679eb81b5f0d perf trace: The return from 'write' isn't a pid
+2d2314d4b09b5ed9 tools headers UAPI: Sync linux/const.h with the kernel headers
+⬢[acme@toolbox perf-tools]$
+
+[root@nine ~]# uname -a
+Linux nine 5.14.0-427.31.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Aug 9 14:06:03 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux
+[root@nine ~]# perf trace -e *sleep* sleep 1.234567890
+     0.000 (1234.742 ms): sleep/80014 clock_nanosleep(rqtp: 0x7ffc55b11240, rmtp: 0x7ffc55b11230)           = 0
+[root@nine ~]# clang --version
+clang version 17.0.6 (Red Hat, Inc. 17.0.6-5.el9)
+Target: x86_64-redhat-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+[root@nine ~]#
+
+- Arnaldo
