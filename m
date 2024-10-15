@@ -1,170 +1,141 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FF81B3941
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 15:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2541F7065;
+	Tue, 15 Oct 2024 16:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729005300; cv=none; b=R4V5Ri0xYtFfMQHPGWlbayXq4o2Sksf+Bl1bdITVchAXDSJuaBoS7uZG9fDJrTILlT54NQgOcyNjCNzEW0/ouXf39yaL4hDunoAc1G4QFUp1P4ODiL0fd6w1D33VwP0gTS5BCiB6DdWrfm9/XEy+AdV92rdJ0CeRrDzoKzKTFls=
+	t=1729008002; cv=none; b=letB8RavK4yFkTKD5SLniIcI/M/x5IbeeJKq5iE+gdnEH2ONuQst9ftizO8RWMwzQro/J1zjE8HZmjx0+4+j7PsuDpYxxXteAsgy2zM7mUbETt7aF0Qcu0I5DglvyLE8D9EDZEK43vkBkZbWQRfd1zbQCHGHJLxz29CYS9ZBtxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729005300; c=relaxed/simple;
-	bh=YJuTAWbzfzEkY5tnxjA/cxqO44FG6D08+g44dBiovj4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ECKXdDh4Jyj4w3gUxGo80fKU9fpUWXBfCbPmLvX/xrDRh9Qz1DIlygWIGVQHit+xTCJP/n3p0ohAGzA+wzliJ8+oipKEEubLBe1coyaJvngMVvpEuVh9xd+hFEIG0n4qofr9l9UCRjQPEscMBhC6hpv2zp68zxcfW65JqObkBcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=udD0Kz0h; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1729008002; c=relaxed/simple;
+	bh=pCU+pB0KfcrmrFmAlcoOMXk3l4RlE2A7qXOkifOQMqI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oJ1LgGxKPXys/qOen7BipCYQxtWKsmn10NNrKgvLzgXYyfeNny0ZjLZn28s5M7Imdve1htSvZlmpIqvA3OD6xI58BNfDK3MRiN4LMkiqzSniIHDAnP1hTh5azCjLhI5bERXl49DST3c4uRpBMt5yDMApJXEbDY9AjGrpl/MOcnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ix78B4lr; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="udD0Kz0h"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a3b3f4b2afso1192795ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 08:14:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729005298; x=1729610098; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nX9GKoYWAHpa9ysEIADsrbx0IvSYvOkUeOyeyDQEEAQ=;
-        b=udD0Kz0hq0AVM8y4FKyUJTnxpN9ioqPr27ZiMysdp4AWVNDWAZVioOpgltinjo3PRV
-         Ts2owFmpFZJVSPCGEUNTg4oudOBe0PVbkl8jVtNYQbMse5nwZW6Z49Iq4JQ3c7gDHGnN
-         e6AE+A6Gs72bdjKtTZR6sTErm2jrGQAVzd+jr0v+7o1BwKx4zIDhE4owVbCJdymyK9yH
-         oByFbGuFMYDnmXmEniba84VZ8unzdoZPGV3yyv93Rif0PAAZN9aAoBHZSpY5mmhzHrKJ
-         tU9xuc2FjruXogsOeVN9XXJNNV31CgX5sXoUpIsy51biALw1xx/vnqgedk1y314oob9W
-         hgqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729005298; x=1729610098;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nX9GKoYWAHpa9ysEIADsrbx0IvSYvOkUeOyeyDQEEAQ=;
-        b=lay4nTNvVRtp7g/DyycqSCYtpBeyL3GAPQX5O2+6M+TzUYY9ERF1SkVerxjcPi5/Bl
-         zpx7bvuLEkGo+iNRQgQ9skburdndhk1I5r/d48QDrDszs182hgCxFHNxDeD0GkKW4CyA
-         yKAN9a2bPvB9BLI00Id0BPtbKeglzzjPYaspHinniaNmi6+aHxq/Eew9lpUACKvdJisT
-         sNB87y7XLwKEeATqzKn8gxizmmcamTYIj1iBwe7ZxfEI6Zm7XUNOc/8rwhr4yW2ZKgG2
-         PH5FSuNGmHWo8nr/oyLapHnQC2Lq0mn6RFFdN4V6tsEJgeMRivcRl3zHIjHMAE0QT57p
-         fVyw==
-X-Gm-Message-State: AOJu0Yy/DChkYht6a7Vjblg2AXD+DvcRjzmDGGZBtO64kvMnyjbg7/+X
-	ciOdVrKcp7cMyj5eF7pKiFVedFT6dV75HAT7QOnJqBJEdrF2Ukq8FiTI46rvGbRDigA0S378OuQ
-	6ceEN6KNhYSpuM2g0M5xj1/00hX523ClbPx7M
-X-Google-Smtp-Source: AGHT+IHcapq1UQHNvRWE/S8IaAe+w7qwa7HlKHT7LTqC5T18uKQCSvQHXk35kawm1KKOBgjt3+0fr/Z3rQr4JKByzJA=
-X-Received: by 2002:a92:c54b:0:b0:3a0:9cb6:cb with SMTP id e9e14a558f8ab-3a3bdd34525mr14545835ab.7.1729005297931;
- Tue, 15 Oct 2024 08:14:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ix78B4lr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729008000; x=1760544000;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pCU+pB0KfcrmrFmAlcoOMXk3l4RlE2A7qXOkifOQMqI=;
+  b=ix78B4lrBj3l6qWUTxTDoPL6V1DyuhSWmeC+UbQPePH8f7zJO7bX9RfD
+   wOMIeRHQc5JyYpY6k8N/UY4Pp6EQHJEdKzAxs7pUk3ciXnQHgPnJDYAk2
+   X0hYJCIOc8/kYESr5wB+K+rbJOB7L2k+62WatFHhf8jiHvPDd7g3VIfdP
+   X1uVwhiTPPkv6LV9Aqiyhtp9kZ3qt++8aseXLzAbBBWPQlGTXKqBwvG2C
+   JfZeZx3KX2dNkza2EgHVLOJmoFHVIzfrXJNlguY3OX4XFjWmK93QcScB3
+   eNk8qR7EbhKgMJX0pWt9pSPKhyQ4cr56smJr7sUwfQHi/UF6PUSjvX8mE
+   Q==;
+X-CSE-ConnectionGUID: gc+kxh2ERVaepErZshRv0Q==
+X-CSE-MsgGUID: UcPDkYCjQkKwiCPw8XhqVw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="39533452"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="39533452"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 08:59:59 -0700
+X-CSE-ConnectionGUID: 6PdZecyvQDmtSavWVaMIlw==
+X-CSE-MsgGUID: MXiTfl4KQUC53NZSD6JFKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,205,1725346800"; 
+   d="scan'208";a="78010530"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 08:59:59 -0700
+Received: from [10.212.125.233] (kliang2-mobl1.ccr.corp.intel.com [10.212.125.233])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 4890F20B5782;
+	Tue, 15 Oct 2024 08:59:56 -0700 (PDT)
+Message-ID: <4580f0d0-97e6-4f25-8837-3c30dacd3249@linux.intel.com>
+Date: Tue, 15 Oct 2024 11:59:54 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241015145416.583690-1-james.clark@linaro.org> <20241015145416.583690-2-james.clark@linaro.org>
-In-Reply-To: <20241015145416.583690-2-james.clark@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 15 Oct 2024 08:14:41 -0700
-Message-ID: <CAP-5=fW7aERe3KHtAoYX9UWsVWrhU95RcCgabgP+DNHi1whjsQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/1] libperf: evlist: Fix --cpu argument on hybrid platform
-To: James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 14/58] perf: Add switch_interrupt() interface
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mingwei Zhang <mizhang@google.com>, Manali Shukla
+ <manali.shukla@amd.com>, Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Sandipan Das <sandipan.das@amd.com>,
+ Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ Like Xu <like.xu.linux@gmail.com>,
+ Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240801045907.4010984-1-mizhang@google.com>
+ <20240801045907.4010984-15-mizhang@google.com>
+ <9bf5ba7d-d65e-4f2c-96fb-1a1ca0193732@amd.com>
+ <1db598cd-328e-4b4d-a147-7030eb697ece@linux.intel.com>
+ <3dd7e187-9fbe-4748-9be5-638c8816116e@amd.com>
+ <CAL715W+a9p_44CVdXZ6HCS42oUgfam=qYT_XoeN6zxfS16YY8w@mail.gmail.com>
+ <20241014115903.GF16066@noisy.programming.kicks-ass.net>
+ <c4d61d85-fb4f-40c4-8400-4a5b907c79a7@linux.intel.com>
+ <20241014174556.GJ16066@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20241014174556.GJ16066@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 15, 2024 at 7:54=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
-> Since the linked fixes: commit, specifying a CPU on hybrid platforms
-> results in an error because Perf tries to open an extended type event
-> on "any" CPU which isn't valid. Extended type events can only be opened
-> on CPUs that match the type.
->
-> Before (working):
->
->   $ perf record --cpu 1 -- true
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 2.385 MB perf.data (7 samples) ]
->
-> After (not working):
->
->   $ perf record -C 1 -- true
->   WARNING: A requested CPU in '1' is not supported by PMU 'cpu_atom' (CPU=
-s 16-27) for event 'cycles:P'
->   Error:
->   The sys_perf_event_open() syscall returned with 22 (Invalid argument) f=
-or event (cpu_atom/cycles:P/).
->   /bin/dmesg | grep -i perf may provide additional information.
->
-> (Ignore the warning message, that's expected and not particularly
-> relevant to this issue).
->
-> This is because perf_cpu_map__intersect() of the user specified CPU (1)
-> and one of the PMU's CPUs (16-27) correctly results in an empty (NULL)
-> CPU map. However for the purposes of opening an event, libperf converts
-> empty CPU maps into an any CPU (-1) which the kernel rejects.
 
-Ugh. The cpumap API tries its best to confuse NULL =3D=3D empty but empty
-can give you dummy, dummy is also known as 'any' or -1, 'any' sounds a
-lot like 'all' but sometimes 'all' is only online CPUs. I tried to
-tidy up the naming a while ago, but there is still a mess.
 
-> Fix it by deleting evsels with empty CPU maps in the specific case where
-> user requested CPU maps are evaluated.
+On 2024-10-14 1:45 p.m., Peter Zijlstra wrote:
+> On Mon, Oct 14, 2024 at 12:15:11PM -0400, Liang, Kan wrote:
+>>
+>>
+>> On 2024-10-14 7:59 a.m., Peter Zijlstra wrote:
+>>> On Mon, Sep 23, 2024 at 08:49:17PM +0200, Mingwei Zhang wrote:
+>>>
+>>>> The original implementation is by design having a terrible performance
+>>>> overhead, ie., every PMU context switch at runtime requires a SRCU
+>>>> lock pair and pmu list traversal. To reduce the overhead, we put
+>>>> "passthrough" pmus in the front of the list and quickly exit the pmu
+>>>> traversal when we just pass the last "passthrough" pmu.
+>>>
+>>> What was the expensive bit? The SRCU memory barrier or the list
+>>> iteration? How long is that list really?
+>>
+>> Both. But I don't think there is any performance data.
+>>
+>> The length of the list could vary on different platforms. For a modern
+>> server, there could be hundreds of PMUs from uncore PMUs, CXL PMUs,
+>> IOMMU PMUs, PMUs of accelerator devices and PMUs from all kinds of
+>> devices. The number could keep increasing with more and more devices
+>> supporting the PMU capability.
+>>
+>> Two methods were considered.
+>> - One is to add a global variable to track the "passthrough" pmu. The
+>> idea assumes that there is only one "passthrough" pmu that requires the
+>> switch, and the situation will not be changed in the near feature.
+>> So the SRCU memory barrier and the list iteration can be avoided.
+>> It's implemented in the patch
+>>
+>> - The other one is always put the "passthrough" pmus in the front of the
+>> list. So the unnecessary list iteration can be avoided. It does nothing
+>> for the SRCU lock pair.
+> 
+> PaulMck has patches that introduce srcu_read_lock_lite(), which would
+> avoid the smp_mb() in most cases.
+> 
+>   https://lkml.kernel.org/r/20241011173931.2050422-6-paulmck@kernel.org
+> 
+> We can also keep a second list, just for the passthrough pmus. A bit
+> like sched_cb_list.
 
-If we delete evsels than the indices can be broken for certain things.
-I'm guessing asan testing is clean but the large number of side data
-structures that are indexed by things in another data structure makes
-the whole code base brittle and I am nervous around this change.
-
-> Fixes: 251aa040244a ("perf parse-events: Wildcard most "numeric" events")
-> Signed-off-by: James Clark <james.clark@linaro.org>
-
-Reviewed-by: Ian Rogers <irogers@google.com>
+Maybe we can do something like pmu_event_list, which has its own lock.
+So we should not need the srcu and the module reference.
 
 Thanks,
-Ian
+Kan
 
-> ---
->  tools/lib/perf/evlist.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index c6d67fc9e57e..8fae9a157a91 100644
-> --- a/tools/lib/perf/evlist.c
-> +++ b/tools/lib/perf/evlist.c
-> @@ -47,6 +47,13 @@ static void __perf_evlist__propagate_maps(struct perf_=
-evlist *evlist,
->                  */
->                 perf_cpu_map__put(evsel->cpus);
->                 evsel->cpus =3D perf_cpu_map__intersect(evlist->user_requ=
-ested_cpus, evsel->own_cpus);
-> +
-> +               /*
-> +                * Empty cpu lists would eventually get opened as "any" s=
-o remove
-> +                * genuinely empty ones before they're opened in the wron=
-g place.
-> +                */
-> +               if (perf_cpu_map__is_empty(evsel->cpus))
-> +                       perf_evlist__remove(evlist, evsel);
->         } else if (!evsel->own_cpus || evlist->has_user_cpus ||
->                 (!evsel->requires_cpu && perf_cpu_map__has_any_cpu(evlist=
-->user_requested_cpus))) {
->                 /*
-> @@ -80,11 +87,11 @@ static void __perf_evlist__propagate_maps(struct perf=
-_evlist *evlist,
->
->  static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
->  {
-> -       struct perf_evsel *evsel;
-> +       struct perf_evsel *evsel, *n;
->
->         evlist->needs_map_propagation =3D true;
->
-> -       perf_evlist__for_each_evsel(evlist, evsel)
-> +       list_for_each_entry_safe(evsel, n, &evlist->entries, node)
->                 __perf_evlist__propagate_maps(evlist, evsel);
->  }
->
-> --
-> 2.34.1
->
+
