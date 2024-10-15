@@ -1,155 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0ED61B2181;
-	Tue, 15 Oct 2024 13:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2523A1B21B0;
+	Tue, 15 Oct 2024 14:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728998591; cv=none; b=cGRYvd/4HhRABpWnGOSABHQBuhfy43jaqJJ3SWBtzYFgQSDGRDDC/A3Yr6mCac5SzSY7VzGvvkdm0EYq1RycuDblILIDvqLH9+pHOm4C29JNe2sY3g0NYmgPGKHNEonJ4TzmlZvIz4UCeO6e9Ii0pmww8T1WfLwxb9k5vJvq14M=
+	t=1729000878; cv=none; b=KUw3+x+5/luB7P5p8HLDK9ycEKMs5nz1gtMv1SbRZdblQAMI5ZQMbdtRy5JqzMXWV7GuVR5hhpVgVJs6RwoGa3clksEd8iJ5n1TWV4SNhm3/fX3MDHHAD23GlZRCddyDGBPc7WOcgTmFFxnQRpbltGS2pPcKXQAkn9qPhdWWbkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728998591; c=relaxed/simple;
-	bh=HwZG0ynlovbLC0YjioshrHqux1oDWiaxe6IYxIZAeZQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SuUmp1jFgT0Z1hlXjVN8HgSDURL/CFgHI5+Sj3aDFQ0/2CV7o+jiRKHkKue34uYJf8/w8pacDjUhtjz37BM2NEe6TwKeTABGmJpZHsLFzK1JnRjCkrm4vRn7N+Fc3r7xJyMTngxOi0JPW9WrD1w4UJtYkaoIPHLg0FawSuzVr+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=labYjZUX; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1729000878; c=relaxed/simple;
+	bh=Z0r/dHXVc0QwsPI8hR1fwuilSJ5GLHg7hj5KGYDBVCs=;
+	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:MIME-Version; b=C9yUbAe/wldffsWp1Kwx9wA5ReVtHqOI5bIOoyqFauvuMdel/kojPMRhPNvRiablAUnAn9mkKXvrvg7WbPO5vOSgeJbQjcbBW1YmIY8BaxhmrM3bwGGmkE4TnR7NptFp1biGmP9lDIGkB9Brd2xrrtA2oEsKAT+DMBSyPt92Gxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=J+pMv31Z; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="labYjZUX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728998590; x=1760534590;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HwZG0ynlovbLC0YjioshrHqux1oDWiaxe6IYxIZAeZQ=;
-  b=labYjZUXujV971wBs/E0/zM4J/GjQ4F4STcj84ptebwx8NW0wcK9Z081
-   7S7nbbfjKBvY/ciXfOedUSn01nxHa8s2PbJLmIRHAdZIsmRB3PMhFw+P+
-   Emww3UYomKqSUUpIYqRuWRyvrUVdEKYaesd9hRJwcKmp8WJDZ4ajGJxAD
-   Oh7Uu8sczjIIovRgWix8AgC+tc3y95/9c2NYmarV+FDxadP1mifSX1LGo
-   mXVALKefuOacccstxjoMOdlhUs1rV0H+8Dv7m7+ZzigwzsYCQ0PWF6np0
-   9Hx1lBEmbmV0U/CEVXRdPB8P91fr6k3JWKGlxlFitoJnzFubWa4pbj58Q
-   Q==;
-X-CSE-ConnectionGUID: c8YtOIsDRUWl0fI0ZaSzdQ==
-X-CSE-MsgGUID: MtX9whZQSZS2gu3XlgDglA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11225"; a="27872579"
-X-IronPort-AV: E=Sophos;i="6.11,205,1725346800"; 
-   d="scan'208";a="27872579"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 06:23:09 -0700
-X-CSE-ConnectionGUID: hjg30QUFRZ6Ixw4g5soS5g==
-X-CSE-MsgGUID: hoeIldPMQY6kMZQKUXwk8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,205,1725346800"; 
-   d="scan'208";a="82457053"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 06:23:09 -0700
-Received: from [10.212.125.233] (kliang2-mobl1.ccr.corp.intel.com [10.212.125.233])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 0322520CFEDE;
-	Tue, 15 Oct 2024 06:23:05 -0700 (PDT)
-Message-ID: <411cce4d-593e-4643-8c5c-d6a34cde0e54@linux.intel.com>
-Date: Tue, 15 Oct 2024 09:23:04 -0400
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="J+pMv31Z"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49FDJYLB007785;
+	Tue, 15 Oct 2024 13:55:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=mB1V9/
+	hfZslMHKfRFaMtUHr1ZjB11GLtBtGZqeB7D+E=; b=J+pMv31ZDjpem9k8+S4yNz
+	q5ZRSRSzroOVTYQvC3RhAHyEWMERTfUK5dwDxnnpld2HuvsFS404+EtUPdbHsdrH
+	xU9Cp62iNUyPCnjOmW5MRW1TVHc+HxE/Lpvb7LueyLEIwMa5E9hGRbWZJ4jdqDeG
+	FjC1w6U20MWYv0El6j9afVcEXtj/EaLty//DOcX+3hN3vh0oQQojr0XfihTLI/LG
+	FJC9j00+KsJQXBUTXtzdjET6FZsMMGvK9lORpz5iHFN63+2wlHSNlxiTS1AG0oNn
+	6m5hQg6JMtmP4O/lroYPsJsfUfnH6EHwrdvirQWiMZcm+mBiqEmI3bfjl98ZtzqA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 429s68g6hh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Oct 2024 13:55:53 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49FDtq3g014593;
+	Tue, 15 Oct 2024 13:55:52 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 429s68g6ha-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Oct 2024 13:55:52 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49FCC8Vd005936;
+	Tue, 15 Oct 2024 13:55:51 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 428650uth0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Oct 2024 13:55:51 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49FDtoTw51511662
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 15 Oct 2024 13:55:50 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E1E5B2004B;
+	Tue, 15 Oct 2024 13:55:49 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F302C20043;
+	Tue, 15 Oct 2024 13:55:43 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.243.49])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 15 Oct 2024 13:55:43 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH 2/3] perf disasm: Use disasm_line__free() to properly free
+ disasm_line
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20241014114248.212711-2-lihuafei1@huawei.com>
+Date: Tue, 15 Oct 2024 19:25:29 +0530
+Cc: namhyung@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        kjain@linux.ibm.com, sesse@google.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <90BD7422-B738-4A35-8D45-51212E17716C@linux.vnet.ibm.com>
+References: <20241014114248.212711-1-lihuafei1@huawei.com>
+ <20241014114248.212711-2-lihuafei1@huawei.com>
+To: Li Huafei <lihuafei1@huawei.com>
+X-Mailer: Apple Mail (2.3818.100.11.1.3)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: qc84fsz6gJrz586ldqe9TYoXSK7dYkOX
+X-Proofpoint-ORIG-GUID: 8Ryjo94gFxI5NyUXif-eZdDhmwsOP6Sl
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 14/58] perf: Add switch_interrupt() interface
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Mingwei Zhang <mizhang@google.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
- <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>,
- Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- Like Xu <like.xu.linux@gmail.com>,
- Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-15-mizhang@google.com>
- <20241014120354.GG16066@noisy.programming.kicks-ass.net>
- <3cc05609-4fbd-4fb8-87bf-34ea1092ab2b@linux.intel.com>
- <20241014174929.GL16066@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20241014174929.GL16066@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ clxscore=1011 malwarescore=0 suspectscore=0 lowpriorityscore=0
+ mlxlogscore=999 adultscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410150094
 
 
 
-On 2024-10-14 1:49 p.m., Peter Zijlstra wrote:
-> On Mon, Oct 14, 2024 at 11:51:06AM -0400, Liang, Kan wrote:
->> On 2024-10-14 8:03 a.m., Peter Zijlstra wrote:
->>> On Thu, Aug 01, 2024 at 04:58:23AM +0000, Mingwei Zhang wrote:
->>>> From: Kan Liang <kan.liang@linux.intel.com>
->>>>
->>>> There will be a dedicated interrupt vector for guests on some platforms,
->>>> e.g., Intel. Add an interface to switch the interrupt vector while
->>>> entering/exiting a guest.
->>>>
->>>> When PMI switch into a new guest vector, guest_lvtpc value need to be
->>>> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
->>>> bit should be cleared also, then PMI can be generated continuously
->>>> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
->>>> and switch_interrupt().
->>>>
->>>> At switch_interrupt(), the target pmu with PASSTHROUGH cap should
->>>> be found. Since only one passthrough pmu is supported, we keep the
->>>> implementation simply by tracking the pmu as a global variable.
->>>>
->>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->>>>
->>>> [Simplify the commit with removal of srcu lock/unlock since only one pmu is
->>>> supported.]
->>>>
->>>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->>>> ---
->>>>  include/linux/perf_event.h |  9 +++++++--
->>>>  kernel/events/core.c       | 36 ++++++++++++++++++++++++++++++++++--
->>>>  2 files changed, 41 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->>>> index 75773f9890cc..aeb08f78f539 100644
->>>> --- a/include/linux/perf_event.h
->>>> +++ b/include/linux/perf_event.h
->>>> @@ -541,6 +541,11 @@ struct pmu {
->>>>  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
->>>>  	 */
->>>>  	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
->>>> +
->>>> +	/*
->>>> +	 * Switch the interrupt vectors, e.g., guest enter/exit.
->>>> +	 */
->>>> +	void (*switch_interrupt)	(bool enter, u32 guest_lvtpc); /* optional */
->>>>  };
->>>
->>> I'm thinking the guets_lvtpc argument shouldn't be part of the
->>> interface. That should be PMU implementation data and accessed by the
->>> method implementation.
->>
->> I think the name of the perf_switch_interrupt() is too specific.
->> Here should be to switch the guest context. The interrupt should be just
->> part of the context. Maybe a interface as below
->>
->> void (*switch_guest_ctx)	(bool enter, void *data); /* optional */
-> 
-> I don't think you even need the data thing. For example, the x86/intel
-> implementation can just look at a x86_pmu data field to find the magic
-> value.
+> On 14 Oct 2024, at 5:12=E2=80=AFPM, Li Huafei <lihuafei1@huawei.com> wrot=
+e:
+>=20
+> The structure disasm_line contains members that require dynamically
+> allocated memory and need to be freed correctly using
+> disasm_line__free().
+>=20
+> This patch fixes the incorrect freeing in
+> symbol__disassemble_capstone_powerpc().  Also, since cs_disasm is not
+> enabled, it does not need to handle the situation described in
+> symbol__disassemble_capstone() where "offset !=3D len" may occur due to
+> unknown instructions.
+>=20
+> Fixes: c5d60de1813a ("perf annotate: Add support to use libcapstone in po=
+werpc")
+> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 
-The new vector is created by KVM, not perf. So it cannot be found in the
-x86_pmu data field. Perf needs it to update the interrupt vector so the
-guest PMI can be handled by KVM directly.
+For the patches
 
-Thanks,
-Kan
+Tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com <mailto:atrajeev@linu=
+x.vnet.ibm.com>>
+
+Thanks
+Athira
+> ---
+> tools/perf/util/disasm.c | 16 +---------------
+> 1 file changed, 1 insertion(+), 15 deletions(-)
+>=20
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index 42222d61ceb5..40d99f4d5cc7 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+> @@ -1580,20 +1580,6 @@ static int symbol__disassemble_capstone_powerpc(ch=
+ar *filename, struct symbol *s
+> offset +=3D 4;
+> }
+>=20
+> - /* It failed in the middle */
+> - if (offset !=3D len) {
+> - struct list_head *list =3D &notes->src->source;
+> -
+> - /* Discard all lines and fallback to objdump */
+> - while (!list_empty(list)) {
+> - dl =3D list_first_entry(list, struct disasm_line, al.node);
+> -
+> - list_del_init(&dl->al.node);
+> - disasm_line__free(dl);
+> - }
+> - count =3D -1;
+> - }
+> -
+> out:
+> if (needs_cs_close)
+> cs_close(&handle);
+> @@ -1612,7 +1598,7 @@ static int symbol__disassemble_capstone_powerpc(cha=
+r *filename, struct symbol *s
+> */
+> list_for_each_entry_safe(dl, tmp, &notes->src->source, al.node) {
+> list_del(&dl->al.node);
+> - free(dl);
+> + disasm_line__free(dl);
+> }
+> }
+> count =3D -1;
+> --=20
+> 2.25.1
+>=20
 
