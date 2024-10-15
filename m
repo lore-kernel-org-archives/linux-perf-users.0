@@ -1,177 +1,185 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA841C8787;
-	Tue, 15 Oct 2024 08:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38AC1D0E0F
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 10:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728981836; cv=none; b=e1JOz5MZAyC55MVIvWAnixDRjgixFQKQn/yansbPbRKW6dcMMR8Nmco5j4cnXhwAGQHc7afKuiIhtAyoEnQlgbKp3dlQ9GE6kblHXocZxlQ2+Mio/fXt6DUvn/iQxdfCO6AM5U7vHnBiNLRhdyTV/19PfWl+DxoFoqjYkI/gXWk=
+	t=1728989203; cv=none; b=F5itIKWf6jzmx0V9YdUbprufHqzsuz9tuxVtl8rPJ0uvKf0v8Gmdlu+yUkE1Depn9ilpyVPLgPgwZBzWH5ibApRjanKDucSlHKQIydsO9GtAzqn1N1WOk91UCulM0wokvZrKlpiafU+kn778R/JnvW9euby79uScqivSUrJPOWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728981836; c=relaxed/simple;
-	bh=BQjouuICO8yjO21LK2K/DbVaOz18+S+vi29DpeNLs5M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fwCd+nJTvMC+CjG4uIwwmxFJUCQthLj4iMXcblV6j0efDWn8DYBxVnwapS2WKheagdt2gBNu3Hefajam3jVOdZsmEaU+gLUF+oGMSe4EPTRFDp6vnWCmc/dAQxlMhr1lktb8uqUVI3vEPNzW2Stjm/P2K43r9o0nmZN5DiEjRko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from zq-Legion-Y7000.. (unknown [121.237.44.89])
-	by APP-01 (Coremail) with SMTP id qwCowADnx7U7Kw5nCvutBw--.31767S2;
-	Tue, 15 Oct 2024 16:43:40 +0800 (CST)
-From: zhouquan@iscas.ac.cn
-To: anup@brainfault.org,
-	ajones@ventanamicro.com,
-	atishp@atishpatra.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	Quan Zhou <zhouquan@iscas.ac.cn>
-Subject: [PATCH v5 2/2] riscv: KVM: add basic support for host vs guest profiling
-Date: Tue, 15 Oct 2024 16:43:00 +0800
-Message-Id: <00342d535311eb0629b9ba4f1e457a48e2abee33.1728980031.git.zhouquan@iscas.ac.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1728980031.git.zhouquan@iscas.ac.cn>
-References: <cover.1728980031.git.zhouquan@iscas.ac.cn>
+	s=arc-20240116; t=1728989203; c=relaxed/simple;
+	bh=fW476nZCmDCSRgye7UwJvzeVl9dNa+iwAAalvvIkHZM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ROMA5l2RTiK2NpaP00SY4BdWHD10AtKO0tgtzwVq2AiJ0bt1NwBispqkEJ0FQ+U7GOouL1oMCPYJjVKzoD5dJNMILX1oESTCbRwmiWk/pwLtZEWWxJ4oyvTyBrr0HgEO1E2ciePN8w64qcmjyMWCYqCv77F2QYC1BiHOrUWTCz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U4F7Y0ga; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U4F7Y0ga"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728989200;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IDU1D/r+iHdlN/95BqAJt4M/vmdPwT06riD32mBzX2I=;
+	b=U4F7Y0ga9ueo4j4fdoDJgbi2y6dXhtVj6v9EIPMmgqMtpg1+gjUyNrQNN1ajumbixAAue8
+	6FlTmwZGr4t9VJBnBYNORj3h+QkW99T9NFMrx3bgmwhj6xD+OElt8UEZGClPoEGg96g2vB
+	UzSDGD0BJsar/5b3wwmOFia9a4IK9jY=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-460-8_NquyS0M26XRArhO-6KaA-1; Tue, 15 Oct 2024 06:46:39 -0400
+X-MC-Unique: 8_NquyS0M26XRArhO-6KaA-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4312731c7bfso15616835e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 03:46:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728989198; x=1729593998;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IDU1D/r+iHdlN/95BqAJt4M/vmdPwT06riD32mBzX2I=;
+        b=QFJo+RjWdlsRIWgJhaa34tIeiUb1jxMwJvXZt7avvX1yVCXgs/25dyaqzYiH6Bs2Sa
+         n+V4x169CCqojttan3zahOg3GmonWOYLLeeW4LI62qGoT/IAKQhxSCwC1A0KPfg10RPX
+         V7sFdQjcPc4uuPotRiRY+olJKnrFdk4UcTwykPsRYM9IecRaqiKt9OYQNqqMIw8ec73O
+         wjKlxiCI47H4FE8c8bhNKKnORCNVdxikbBH/2EbzZgT3BmdQzIbV9XGCluC53EKt/uUM
+         v0je9k1hnt3ABPGNnBY3tVCSiW9RQrpiCai9fDkRUcf1QnaUt0TEXzwhXXNhn+A6816B
+         4lvw==
+X-Forwarded-Encrypted: i=1; AJvYcCVy1bzy8sjdqXI+ndky6JniHLzc619X+v08kTBS7+/JRYnIlSA5PQegJEDyETqkzj/VjKJibOswTm+iMguCbkbj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXMTmKgEjupxmoHCG2d8OHl6eb71LjaWHJxt6ZqUeWid0GSrVw
+	ZAHbgGpBR6PA2+ETqEI051PhV7VMY2BeqQxR9nYvae9EgsgXmy+yHjrCospbkGuu3oYCCDuEWhb
+	mhaZ3nWzdUYV6JqEbxFP5d4YRJelEr2E1m46JdfWKSn2oo+XB0cBeu+9GK5EWLJjK6xY=
+X-Received: by 2002:a05:600c:1c03:b0:426:593c:9361 with SMTP id 5b1f17b1804b1-4314a35ee09mr387435e9.26.1728989198387;
+        Tue, 15 Oct 2024 03:46:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH5tzDNsvw78nPVMi9k1REjGUg4XGV2iEzziTWMsPaqrmq2TWxV+DN6MD4mOFzehVuI5P/yng==
+X-Received: by 2002:a05:600c:1c03:b0:426:593c:9361 with SMTP id 5b1f17b1804b1-4314a35ee09mr387165e9.26.1728989197940;
+        Tue, 15 Oct 2024 03:46:37 -0700 (PDT)
+Received: from [10.202.147.124] (nat-pool-brq-u.redhat.com. [213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4313f56ea05sm14089065e9.23.2024.10.15.03.46.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2024 03:46:37 -0700 (PDT)
+Message-ID: <2a212bcf-a8ee-4f10-9c5b-948b9f6895f3@redhat.com>
+Date: Tue, 15 Oct 2024 12:46:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf test: Fix probe testsuite with a new error message
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ linux-perf-users <linux-perf-users@vger.kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Michael Petlan <mpetlan@redhat.com>
+References: <20241010051620.1066407-1-namhyung@kernel.org>
+ <ZwfNL2sLL8cDy2au@x1> <ZwfNmDNzQAXf0ZQV@x1>
+ <af8c186d-72ba-4fcb-8737-84b665017cdd@redhat.com>
+ <CA+JHD91skZHrEanhANQzWaq=4wpZomTn8Vab4j+wT2kHdibTkA@mail.gmail.com>
+Content-Language: en-US
+From: Veronika Molnarova <vmolnaro@redhat.com>
+In-Reply-To: <CA+JHD91skZHrEanhANQzWaq=4wpZomTn8Vab4j+wT2kHdibTkA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowADnx7U7Kw5nCvutBw--.31767S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJFW7KrW7Kw13AFy8GFyrCrg_yoW5ur1rpF
-	Z8ur9Y9r4rKr97C34ayr1v9r45WFsYgw13Xry7CFy5Wr4Utry8Jr4vg34DAry5JFW8Xa4S
-	kFyrKFyruwn8Aw7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
-	4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7Cj
-	xVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r4a6rW5MxkIecxEwVAFwV
-	W8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMI
-	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRkHUkUUUUU
-	=
-X-CM-SenderInfo: 52kr31xxdqqxpvfd2hldfou0/1tbiCRELBmcOALGnrQAAsH
 
-From: Quan Zhou <zhouquan@iscas.ac.cn>
 
-For the information collected on the host side, we need to
-identify which data originates from the guest and record
-these events separately, this can be achieved by having
-KVM register perf callbacks.
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
----
- arch/riscv/include/asm/kvm_host.h | 10 ++++++++++
- arch/riscv/kvm/Kconfig            |  1 +
- arch/riscv/kvm/main.c             | 12 ++++++++++--
- arch/riscv/kvm/vcpu.c             |  7 +++++++
- 4 files changed, 28 insertions(+), 2 deletions(-)
+On 10/10/24 16:40, Arnaldo Carvalho de Melo wrote:
+> On Thu, Oct 10, 2024, 10:31 AM Veronika Molnarova <vmolnaro@redhat.com>
+> wrote:
+> 
+>>
+>>
+>> On 10/10/24 14:50, Arnaldo Carvalho de Melo wrote:
+>>> On Thu, Oct 10, 2024 at 09:48:52AM -0300, Arnaldo Carvalho de Melo wrote:
+>>>> On Wed, Oct 09, 2024 at 10:16:20PM -0700, Namhyung Kim wrote:
+>>>>> On my system, it's constantly failing because of new error message from
+>>>>> perf probe.  It should update the regex pattern to match the message -
+>>>>> "A function DIE doesn't have decl_line. Maybe broken DWARF?".
+>>>>>
+>>>>>   $ sudo head -n 2 /sys/kernel/debug/kprobes/blacklist | cut -f2
+>>>>>   warn_thunk_thunk
+>>>>>   asm_exc_divide_error
+>>>>>
+>>>>>   $ sudo perf probe warn_thunk_thunk
+>>>>>   A function DIE doesn't have decl_line. Maybe broken DWARF?
+>>>>>   A function DIE doesn't have decl_line. Maybe broken DWARF?
+>>>>>   Probe point 'warn_thunk_thunk' not found.
+>>>>>     Error: Failed to add events.
+>>>>>
+>>>>>   $ sudo perf probe asm_exc_overflow
+>>>>>   Failed to find scope of probe point.
+>>>>>     Error: Failed to add events.
+>>>>
+>>>> We discussed this in the past, I came up with a similar patch, Veronika
+>>>> rightly pointed out that this may point to a real problem, Masami said
+>>>> that since these are for DWARF from assembly those are known issues, I
+>>>> suggested Veronika checked if the CU where the function came from was
+>>>> generated from Assembly (there are DWARF tags that have that info), IIRC
+>>>> she said she would try to do it.
+>>>>
+>>>> I'll try to find out the threads and see what happened.
+>>>
+>>> https://lore.kernel.org/all/ZvXhJLkJcR99Y2sF@google.com/T/#u
+>>>
+>>> Veronika, was there a v3?
+>>>
+>>> Thanks,
+>> Well the patch was already applied upstream so we are talking about a fix
+>> not v3, right?
+> 
+> 
+> 
+> 
+> Can you provide a url for the patch that was applied upstream?
+> 
+> I just checked at
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh?h=perf-tools-next
+> 
+> And I'm not seeing it.
 
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index 2e2254fd2a2a..35eab6e0f4ae 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -286,6 +286,16 @@ struct kvm_vcpu_arch {
- 	} sta;
- };
- 
-+/*
-+ * Returns true if a Performance Monitoring Interrupt (PMI), a.k.a. perf event,
-+ * arrived in guest context.  For riscv, any event that arrives while a vCPU is
-+ * loaded is considered to be "in guest".
-+ */
-+static inline bool kvm_arch_pmi_in_guest(struct kvm_vcpu *vcpu)
-+{
-+	return IS_ENABLED(CONFIG_GUEST_PERF_EVENTS) && !!vcpu;
-+}
-+
- static inline void kvm_arch_sync_events(struct kvm *kvm) {}
- 
- #define KVM_RISCV_GSTAGE_TLB_MIN_ORDER		12
-diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
-index 26d1727f0550..0c3cbb0915ff 100644
---- a/arch/riscv/kvm/Kconfig
-+++ b/arch/riscv/kvm/Kconfig
-@@ -32,6 +32,7 @@ config KVM
- 	select KVM_XFER_TO_GUEST_WORK
- 	select KVM_GENERIC_MMU_NOTIFIER
- 	select SCHED_INFO
-+	select GUEST_PERF_EVENTS if PERF_EVENTS
- 	help
- 	  Support hosting virtualized guest machines.
- 
-diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
-index f3427f6de608..5682e338ae6d 100644
---- a/arch/riscv/kvm/main.c
-+++ b/arch/riscv/kvm/main.c
-@@ -51,6 +51,12 @@ void kvm_arch_disable_virtualization_cpu(void)
- 	csr_write(CSR_HIDELEG, 0);
- }
- 
-+static void kvm_riscv_teardown(void)
-+{
-+	kvm_riscv_aia_exit();
-+	kvm_unregister_perf_callbacks();
-+}
-+
- static int __init riscv_kvm_init(void)
- {
- 	int rc;
-@@ -105,9 +111,11 @@ static int __init riscv_kvm_init(void)
- 		kvm_info("AIA available with %d guest external interrupts\n",
- 			 kvm_riscv_aia_nr_hgei);
- 
-+	kvm_register_perf_callbacks(NULL);
-+
- 	rc = kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
- 	if (rc) {
--		kvm_riscv_aia_exit();
-+		kvm_riscv_teardown();
- 		return rc;
- 	}
- 
-@@ -117,7 +125,7 @@ module_init(riscv_kvm_init);
- 
- static void __exit riscv_kvm_exit(void)
- {
--	kvm_riscv_aia_exit();
-+	kvm_riscv_teardown();
- 
- 	kvm_exit();
- }
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index 8d7d381737ee..e8ffb3456898 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -226,6 +226,13 @@ bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
- 	return (vcpu->arch.guest_context.sstatus & SR_SPP) ? true : false;
- }
- 
-+#ifdef CONFIG_GUEST_PERF_EVENTS
-+unsigned long kvm_arch_vcpu_get_ip(struct kvm_vcpu *vcpu)
-+{
-+	return vcpu->arch.guest_context.sepc;
-+}
-+#endif
-+
- vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
- {
- 	return VM_FAULT_SIGBUS;
--- 
-2.34.1
+Well the patch adding the failing test case that you can see at
+
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh?h=perf-tools-next
+
+There was the whole patchset that contained the failing probe test case.
+The patchset was applied and merged upstream so there won't be a v3 for 
+the failing test case, instead we will send a fix patch resolving the 
+mentioned issue. Hopefully this explains the confusion that I think
+happened.
+
+We will send the next patchset soon containing also the patch fixing
+the probe issue with bad dwarf so if there will still be some confusion 
+that should resolve that.
+
+- Veronika
+
+> 
+> - Arnaldo
+> 
+> As Arnaldo mentioned, I got together a fix patch that checks
+> 
+>> the CU for the Assembly for blacklisted probe. Michael also suggested the
+>> possibility to check multiple blacklisted probes if we are not able to
+>> check
+>> for the Assembly, so I also added that.
+>>
+>> I will send the fix patch soon as part of the perftool upstreaming patchset
+>> to prevent conflicts happening. Hopefully, this can be at the start of the
+>> next week if all of the checks pass.
+>>
+>> Thanks,
+>> Veronika
+>>>
+>>> - Arnaldo
+>>>
+>>
+>>
+> 
 
