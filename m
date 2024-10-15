@@ -1,145 +1,83 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAF5231C95;
-	Tue, 15 Oct 2024 07:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CEB189BA7;
+	Tue, 15 Oct 2024 07:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728978472; cv=none; b=XtrfScH2CzLpuzSeX7i72qvpN2YOSIiV6BXtxi9w3PQsh0jhtvCKJq+lHX38EDDAl0Oc9kKtVG1K0Ioym2lWSDaKtyt/MxrJ5KjcExKoSNr5HiFcns+F1W4bXxxdLR/xF5mok+n58/JTxeIMisVGXJ+k8ptXIoqM41ID/23xhH0=
+	t=1728978824; cv=none; b=pnWH0yV29Mc5mNUvVQ4Q1JHcwNu90AKzG98WWzB6DUdJ//DRKfKLVHo1GJA6beZDlJIBJVBDDFk/dLs8I74Mk5aca85K0VtvMnusZIhcLz0R0VShMDJLVy0ZEHpVCQ8lxL0YqiLza5/54EEZdD3JvNzER1GzjSaX8/rQIvyg/Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728978472; c=relaxed/simple;
-	bh=bjQqn46aGvfBXM/1EuRak8ND/FNHrfXMzpYKGjs4ayA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fztQynlVM1vOYtqZUzlgyQrd6TmL/EYIm/xtRalqTd9KWvlG4bak4Ca2xVJlaSHa3AkprQuCaDZjuw67NzfjqMXiuHnM3dc/oclF2Y+cdRYKec85kgRAAlyI9oyNFC5uZA9qhjbx/+DKW1SeIq7flV3bqn7pEfDJ57lwsTHUtrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=D5l+JJGI; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1728978824; c=relaxed/simple;
+	bh=N10GtP79W0SQR6wTu+fzxDJSpZ/fzVfhJC0zpyVlcsI=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=oYr87HxSddGnhAIwqDKvCs/rA8KbHCB1LfB61GQK6fHpzQ/ycyn4tinoTH+1jdtLGo3vn98XTvG1hqu/bCT7eYmNz023mGzif6ZSjBUtvKGmGsdIoFSnWZZtQaTXXrP/EHlldQ6Ue5Y8HlJk1wJo4lmS7LUL60nR0GmkqBpRlw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=i5wzU23O; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="D5l+JJGI"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49F7KOrt031017;
-	Tue, 15 Oct 2024 07:47:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=FUw6yiePSnsbQ/cW85U02YPjxHS0W4rGT9lOjxkPw
-	Q4=; b=D5l+JJGIeOiFviFBWtOx6wxD2qbT2mD5HRitZjq7dTrbYpa8tREgC8gVn
-	K3cn+RBbz2nHD69ifyx4MhZDcv195tdBUKmvbxsz3a7Tzy5W3XOyPvEsGq1OcOGR
-	PatXbwpI2Lf1WqSUNMczczdGRUgu/lVJY0HvtxE+AErVKTXcCES4JruWwA4f4kY7
-	kve/v7jn1jmFNAPLlj9QVM7UjUc86sAX/CO3LwR9CmSQQQJuD7TFSLVJ6SsGHh9l
-	UBJOcMxDR8dzkWPTtpqf5Iibq8PBdW+WnZRv51m2CnrOOB4k64QJZqKme5Gfwy3B
-	po/xYQxReVQz/Zp+roZJ3HOT5t6uw==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 429kwvr470-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Oct 2024 07:47:40 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49F4800l006401;
-	Tue, 15 Oct 2024 07:47:39 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4284xk2evx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Oct 2024 07:47:39 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49F7laDr31588922
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 15 Oct 2024 07:47:36 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2A3B120049;
-	Tue, 15 Oct 2024 07:47:36 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0018820040;
-	Tue, 15 Oct 2024 07:47:35 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 15 Oct 2024 07:47:35 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, namhyung@kernel.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: Fix perf test case 84 on s390
-Date: Tue, 15 Oct 2024 09:47:26 +0200
-Message-ID: <20241015074726.268029-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="i5wzU23O"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1728978814; h=From:To:Subject:Date:Message-Id;
+	bh=iOQC40k/fMHf8VAUXityLW99zk2gANc5PBCPfsApcU4=;
+	b=i5wzU23OQzbSTl+F2NckQX1fuVwijuTur7VmdKaIEZjFzwKIBzlfALvm1ykM35ALtblAdi9jbEckav9i8TsSdU2ai2EVunuoqk2XPQNBA2BaqVoY0YLDgT39FuNQABBwehkvz8r4B+XYUbBY7JXNreZDaETIg7B02v/Eq0jkXAU=
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0WHCfYCS_1728978808 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 15 Oct 2024 15:53:34 +0800
+From: Jing Zhang <renyu.zj@linux.alibaba.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: xueshuai@linux.alibaba.com,
+	zhuo.song@linux.alibaba.com
+Subject: [PATCH] perf/tests: fix record+probe_libc_inet_pton test on aarch64
+Date: Tue, 15 Oct 2024 15:53:27 +0800
+Message-Id: <1728978807-81116-1-git-send-email-renyu.zj@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: x_9bzKsb9YCoEXrhLBvQ5ikC6DjQNHa4
-X-Proofpoint-ORIG-GUID: x_9bzKsb9YCoEXrhLBvQ5ikC6DjQNHa4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- clxscore=1011 phishscore=0 suspectscore=0 impostorscore=0 malwarescore=0
- mlxlogscore=999 lowpriorityscore=0 mlxscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410150049
 
-Perf test case 84 'perf pipe recording and injection test'
-sometime fails on s390, especially on z/VM virtual machines.
+Since commit 1f85d016768f ("perf test record+probe_libc_inet_pton: Fix
+call chain match on x86_64") remove function getaddrinfo() on expected
+file, the test failed on aarch64. On aarch64, function getaddrinfo()
+show up in the call chain.
 
-This is caused by a very short run time of workload
+$perf script -i /tmp/perf.data.1PV
+ping 2588319 [125] 500119.122843: probe_libc:inet_pton: (ffff9a4f7410)
+            ffff9a4f7410 __GI___inet_pton+0x0 (/usr/lib64/libc-2.32.so)
+            ffff9a4c5f7c getaddrinfo+0xec (/usr/lib64/libc-2.32.so)
+            aaaad6d32b38 [unknown] (/usr/bin/ping)
 
-  # perf test -w noploop
+So just remove getaddrinfo() on x86_64.
 
-which runs for 1 second. Occasionally this is not long
-enough and the perf report has no samples for symbol noploop.
-
-Fix this and enlarge the runtime for the perf work load
-to 3 seconds. This ensures the symbol noploop is always
-present.
-
-Output before:
- Inject -b build-ids test
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.195 MB - ]
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.277 MB - ]
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.195 MB - ]
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.160 MB
-			 /tmp/perf.data.ELzRdq (4031 samples) ]
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.195 MB - ]
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.195 MB - ]
- Inject -b build-ids test [Success]
-
- Inject --buildid-all build-ids test
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.195 MB - ]
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.014 MB - ]
- Inject --buildid-all build-ids test [Failed - cannot find
-				noploop function in pipe #2]
-
-Output after:
-Successful execution for over 10 times in a loop.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Fixes: 1f85d016768f ("perf test record+probe_libc_inet_pton: Fix call chain match on x86_64")
+Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 ---
- tools/perf/tests/shell/pipe_test.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/tests/shell/pipe_test.sh b/tools/perf/tests/shell/pipe_test.sh
-index d4c8005ce9b9..02d9ef27c8e7 100755
---- a/tools/perf/tests/shell/pipe_test.sh
-+++ b/tools/perf/tests/shell/pipe_test.sh
-@@ -12,7 +12,7 @@ skip_test_missing_symbol ${sym}
- 
- data=$(mktemp /tmp/perf.data.XXXXXX)
- data2=$(mktemp /tmp/perf.data2.XXXXXX)
--prog="perf test -w noploop"
-+prog="perf test -w noploop 3"
- err=0
- 
- set -e
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index 47a26f2..09d7b0b 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -52,8 +52,12 @@ trace_libc_inet_pton_backtrace() {
+ 		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+ 		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+ 		;;
++	x86_64)
++		eventattr='max-stack=3'
++		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+ 	*)
+ 		eventattr='max-stack=3'
++		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+ 		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+ 		;;
+ 	esac
 -- 
-2.47.0
+1.8.3.1
 
