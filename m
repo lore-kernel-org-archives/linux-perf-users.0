@@ -1,37 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE2617BB16
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 18:25:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DD418870C;
+	Tue, 15 Oct 2024 18:32:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729016703; cv=none; b=tntzR2Ew3NfRh9zr9cZlcaSv4m2w2t2Afynj7cPi+o59vZetE9PSNThI2TsaROIh2iK2Ah/K4oFFU9ZRW2NEMHTQFkLN63jT9yZF9Eh23zBhsVi0zWGkvERob91vPkN2AT2+UJzVn4GmaSWSqnIjM/HeD9A5tJCULkmMLRZyQmc=
+	t=1729017167; cv=none; b=jRWjlhPwDcqtEgJMJ8/bZoFkF25K2Cooez8nrxi1IOffktlt4+4YH9lZrLxeSYXQyeflheWf+GuT/BXt+pEYBKzlnYyL7qirV1QlJPv3p5ZUFk6Sxunc2hNTVwRefbBBv5yKpZkTrkn5xTPhjxBnxAKJyLLvL2HM7Y47V7lJb8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729016703; c=relaxed/simple;
-	bh=eIOtiQ3wtxtX4ixU6bIp0TSpxQV4Ln9Q7+V3TWe56fo=;
+	s=arc-20240116; t=1729017167; c=relaxed/simple;
+	bh=eXyTxIn0BglKxRIQBZyfKUTN2Io3vKgjDguSNoAEE1M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AuWg0JVUDIA5XVwIFmQBu555oe/3iA1uTZSAzyqstqat/v/EIZnYzHN4zzKxsbJoMcMeydq/wAfcZSbJBU7lcQrFxskk8o9b6EptMN2fPFyLWYO8L4KRRL/Ep4PrJZRGp3HWjbieDRfUnUMK2D1XqlOWForeRPed8tDFp54Csnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Azb97/2C; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fzP9qXd4snqrkaR1gySPlTVymIHJhK0kG8M9AbJz65/wRgLBvCCAnWfHfQ2XC8rZjtgX0ebl/yWG/XJE3ZjDITyyXzo4KeW+i5rXobRHq5y6yk3oAsjyoEQm5v8oeVk20Blu85jSjbqdRHiGQ8DaQgRxRqljIEzCIJQfgrmks1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJY9cLOe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Azb97/2C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279E6C4CEC7;
-	Tue, 15 Oct 2024 18:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1729016703;
-	bh=eIOtiQ3wtxtX4ixU6bIp0TSpxQV4Ln9Q7+V3TWe56fo=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJY9cLOe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1258C4CED0;
+	Tue, 15 Oct 2024 18:32:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729017167;
+	bh=eXyTxIn0BglKxRIQBZyfKUTN2Io3vKgjDguSNoAEE1M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Azb97/2CCsAIMKKgUA5OvBSei7xp8NOeW/Suf7q4Ve0cK3ubVb9wR7LCdx/Fm2u9L
-	 XeAWf+JW2dvBDECxJBAHkNiz4xi+vKraAEuEaCeBn6KCGN8YwBJZr5IjU0s2OQrN+l
-	 GGmlHGVhlGDRLneRl2QgkA0EStn49foTwvy49NRI=
-Date: Tue, 15 Oct 2024 14:25:02 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Yunseong Kim <yskelg@gmail.com>, linux-perf-users@vger.kernel.org
-Subject: Re: Migrating from perf.wiki.kernel.org to RTD
-Message-ID: <20241015-warping-condor-of-storm-afa06f@meerkat>
-References: <20241011-quiet-chowchow-of-temperance-d0e205@meerkat>
- <CAP-5=fUz5CFEL8D1L+UATsNqs4MBb6rNeYtZ26+pFC4NgRYt6w@mail.gmail.com>
- <20241011-uncovered-original-vole-cda87d@meerkat>
+	b=FJY9cLOe/OL6Dr6isL8dCx4/S3wU3r+qkOwyQ7fYcCEi3MQ3VsZ0DjZmj8HZIaV5I
+	 OlLK9lLMgEZdvRcHZ8m7bN7qa5WD3/RrziNRWtDJ3R2gA8APV48vwewk6uF5a9w/Dz
+	 kU4Pyqnuf5vKm8ZUp3/HFe114JDOjD6FfMObJJ2699yjtqakDp58qFoe6bxwpRvyqz
+	 7s07pq//GlR/Pi/ROPK3lYEw1CTYyPMgy6bRgwxcZWuj13LSDhgsWb9cxEupN8ITp6
+	 pMcyVRcwHfEQRJ18LOc6b8p11MUxJre0t3dW4wKF1xE4KB3lRoohGusvvixXO6pyH7
+	 z7xzRvbI8wZeQ==
+Date: Tue, 15 Oct 2024 11:32:45 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, james.clark@linaro.org,
+	alan.maguire@oracle.com
+Subject: Re: [PATCH v2 0/2] perf trace: Fix support for the new BPF feature
+ in clang 12
+Message-ID: <Zw61TUe1V97dKWer@google.com>
+References: <20241011021403.4089793-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,21 +47,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241011-uncovered-original-vole-cda87d@meerkat>
+In-Reply-To: <20241011021403.4089793-1-howardchu95@gmail.com>
 
-On Fri, Oct 11, 2024 at 06:39:09PM -0400, Konstantin Ryabitsev wrote:
-> > Yunseong created:
-> > https://perfwiki.github.io/main/
-> > Perhaps the solution here is to make perf.wiki.kernel.org a redirect
-> > to https://perfwiki.github.io/main/
+On Thu, Oct 10, 2024 at 07:14:00PM -0700, Howard Chu wrote:
+> Changes in v2:
+> - Resolved a clang-16 build error pointed out by Namhyung Kim
+>   <namhyung@kernel.org>
+> 
+> The new augmentation feature in perf trace, along with the protocol
+> change (from payload to payload->value), breaks the clang 12 build.
+> 
+> perf trace actually builds for any clang version newer than clang 16.
+> However, as pointed out by Namhyung Kim <namhyung@kernel.org> and Ian
+> Rogers <irogers@google.com>, clang 16, which was released in 2023, is
+> still too new for most users. Additionally, as James Clark
+> <james.clark@linaro.org> noted, some commonly used distributions do not
+> yet support clang 16. Therefore, breaking BPF features between clang 12
+> and clang 15 is not a good approach.
+> 
+> This patch series rewrites the BPF program in a way that allows it to
+> pass the BPF verifier, even when the BPF bytecode is generated by older
+> versions of clang.
+> 
+> However, I have only tested it till clang 14, as older versions are not
+> supported by my distribution.
+> 
+> Howard Chu (2):
+>   perf build: Change the clang check back to 12.0.1
+>   perf trace: Rewrite BPF code to pass the verifier
 
-To speed things along, and since the old perf wiki was near-unusable anyway,
-I went ahead and set the redirects from perf.wiki.kernel.org to
-perfwiki.github.io.
+Tested with clang 16.  And I think it's better to change the order of
+the commits so it can fix the problem first and then check the version.
 
-Please feel free to follow up if we need to revisit this, but things look good
-to me with this change.
+Thanks,
+Namhyung
 
-Thank you!
-
--K
+> 
+>  tools/perf/Makefile.config                    |   4 +-
+>  .../bpf_skel/augmented_raw_syscalls.bpf.c     | 122 ++++++++++--------
+>  2 files changed, 69 insertions(+), 57 deletions(-)
+> 
+> -- 
+> 2.43.0
+> 
