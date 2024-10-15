@@ -1,55 +1,57 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0423B2281FE
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 14:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A1122911A
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 14:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729004093; cv=none; b=HPmVkextVg6MKUtwdtbQ+R3Lna9kxt9sJqnB+Ph50qT9BUYGUURya/Exr86sHyq4Lob5+Novd5DchPzd8drZOQe6mYDnWapRJFir0WsjhZUoy+ZnEYin5ZoXXhKFBKSz/jRXUEOUGf8voTWT++pGJ4Y+NCmxpqnc7Q09yu73R0c=
+	t=1729004095; cv=none; b=mg5fGKrYrBKTTGOO5tuZj7/wm2k0TZf9PnUvNdfXKIcB6cmxpYDqxad5PNOgDv9NcHfyjGRkimKWRl2PEj8fVCpk8CbtgZOop3wqm08K5P0NzA57aozd0rXErQ6L6INwwaCglDDX28fBBMF9+dYPrgh/K3tptFSSz7lRCsXGcME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729004093; c=relaxed/simple;
-	bh=RQYGn2jIDYaqutoCESCR+eXIQFlOxeIgFw1cN2aVNGo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kbbHC4g4p26corgjDmLJGOnevES3ykPXqRAdAkPXyZxEgXbISgePGrZyFZPIcPsUgLpkaf5dTIzFu69rxrv1HXyRtLVLpeMXZfyXpBTicKVDlwlc2eged/gRShQwaTraQLaElmArNRVFONFuEPoi7gSeJLEuly6zsTQzQ/Id7Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sSZ2hddO; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1729004095; c=relaxed/simple;
+	bh=X7xNxKCQNUdQcARokBvPMUfQpGmnK8/YLfygRBghiIc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=smoFLOm2bv9BMGIkLl4MmQOnTUA4tBwU7Q3XFoHVgZolOwXXO3uMUllsO2AvfswMGQ/W2eFVHqR5WE3o89uFdhYycqUqAyzcwXiNdVw1OBafokDJG5mKVc491IoOjBnlk5fbBuG48lc8pu5k73kx6hivMxFg7snwotD61+NSxGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Bh61NBCf; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sSZ2hddO"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-430558cddbeso37495855e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 07:54:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bh61NBCf"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-37d518f9abcso3053568f8f.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 07:54:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729004090; x=1729608890; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JNppHPuInbdvtUJgo5QglFbpfisVUb1nYRslX9GMCO8=;
-        b=sSZ2hddOXxGHUGs0/ccFR0WLza0l5zPbzWUqzFqnds4HurarRb+JcoygrVZCJ34lNU
-         lY051aK99MQTPVVO/N+YSQxqAHGh4rBXu9ej1R0qehfcRRbJkStog5uJLA/jSGYfgPYP
-         TqIoduW/a+Hy2koXE+EY/8WuA1Vd/GtV9QN8UBu5XARgvV2dsUcxDnSvVtE4f6g8RGbf
-         sXpUNLXg0rsLETcAE9QpuCc+cFonwDyt21GP2qMApZGBNyAqxvqH6h/WAicXEHZG36Nn
-         G+828NXbmQlTuhCzjn6rHEvus577sS5tJWVKIEUO4Gi52K7sYZX+JECz77FXR4jfpWZG
-         U3PA==
+        d=linaro.org; s=google; t=1729004092; x=1729608892; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VqXeLBBN6riMzdyx0YRdKT0mUVd1OzRisoF3SqIRYcs=;
+        b=Bh61NBCfLG8VGxQPwvmPODkVi/iS5nsT6aWVj98Pc0OGfLiQoRnaCxlgZ0RyL1t+pq
+         EZ4Q8rwYfH8r45RgreUJZU1teoqg/eb9742LDXu0e7igUCzAYNsdap7O+XhYIfxJH5Sc
+         stqcirY5S8U2bMkL8TPmZXTz3iC1CbzEHeKDWygutZwlNc+xE1HEKqbircYO2fDTzRTp
+         EuB1j+SnWhSDJst4q7Z73dbElGE7BnDEfzph5+qp42STfPdYs+yKgimbau8G3vqZi//8
+         Op4Z/nmG8gz5HvhzOcpeDCMo09pltKkco96Wo0RRUk9tO1NVDWmyG2yTlCbnPB0nJHkw
+         X8GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729004090; x=1729608890;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JNppHPuInbdvtUJgo5QglFbpfisVUb1nYRslX9GMCO8=;
-        b=WSJ4FdschAh6dvTXc6rX/tBKr/wiP2N/sc/XmSLuCB+3LRG5Ynjr90JVrPX+Is4kL7
-         a1+U6pG+3AOu3mdoqJ1jcCgIZ0WUa5EWjNHo9bBnHrP03Uf9vNKYWE0hKjz0pkbVeeG6
-         zqxCAH3IJbYXcbIvpYAx0Lig4arnqsL2hE4q5VJQamBQKndSs3eeafEzXiMFD9YsCxBA
-         HQTN3lnXv7lD3CIjgHOYKWd/tqBBjKa/BiyoyHoJEH3A7ZtJi01HrYFU4r7DvpCoMRm6
-         0JxE9Vl88vUUIZ8HKde6BCyT64F9hnTzkRyM9dW2Cp9zto79hKttfB8rMiLh11FTagkl
-         kwSg==
-X-Gm-Message-State: AOJu0YzqVf1nDbormES/yADDbSYWsOmK6cMR8Zjq3m+qjsinsJB+1I19
-	oheHmOxl5mDvrrN6KpoMh+XsPJQZvVCQ21VNR1XqDTQWEYkF5mqLPebGZAJUAZ7nM8vCGR8Wnqf
-	yZkc=
-X-Google-Smtp-Source: AGHT+IEzjo1rKrOzsn3saugp6Nyk3pZBYBBnzKAPBRpXjDasPkzIHtcBAjBta3AKHNl9TSCoJQWSLg==
-X-Received: by 2002:a05:600c:5248:b0:424:a7f1:ba2 with SMTP id 5b1f17b1804b1-4314a3abf68mr7691945e9.17.1729004090227;
-        Tue, 15 Oct 2024 07:54:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729004092; x=1729608892;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VqXeLBBN6riMzdyx0YRdKT0mUVd1OzRisoF3SqIRYcs=;
+        b=SnBs6OBeOt/w3EnRRiiTP672d8QE31T7leJMs+dxTaQN6bgm11NOfmzPTrk6Euc0Fp
+         LEY8QhZWxg0DeE4/NQwqSbTWWKbilQbIQfnsCCsXwxyw5Q0Q0tEIhs+CFPBL1zu8uq+G
+         LAtaurIGns2CYkwezFwDgPSbRxR06Bezi6Oskvw66XbnkhpCVmZOtrXWCd2eWg2QPQso
+         a8op4uXi0MKlg2Hjt1kquqIK8PVWe1VAb6x6ieEPPMlbD3V/e+XWberftgIvkGuehcZp
+         KMaWAWEM2lvwedlgShxTvCSNbYKgP0QF8Kza4eu36952GV+NzU2AAXc079bda+bFPe+o
+         bL2g==
+X-Gm-Message-State: AOJu0Yy0wZ4YQhdKrQV+Q/VtrOv982BOklTLJMJtVxu/Br7/NRNg/8pe
+	GY0aECjCqPIY1tnei8/7e+fl2jiq2OyEoDI/+udK/G9DIzSxBWbGLZGhYafC1/fVuZK8lNX1k84
+	AYCo=
+X-Google-Smtp-Source: AGHT+IHc+QazhHkxSzFsRqXIXs5yi6LRfCc062pWDzMOF0qgkZ8F11jX7umqpfdqQmQbUYNrSSI1dQ==
+X-Received: by 2002:adf:f212:0:b0:37d:5113:cdef with SMTP id ffacd0b85a97d-37d86d5031emr479342f8f.43.1729004091687;
+        Tue, 15 Oct 2024 07:54:51 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4313f20fd99sm20363955e9.0.2024.10.15.07.54.48
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4313f20fd99sm20363955e9.0.2024.10.15.07.54.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2024 07:54:49 -0700 (PDT)
+        Tue, 15 Oct 2024 07:54:51 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: linux-perf-users@vger.kernel.org,
 	acme@kernel.org,
@@ -64,10 +66,12 @@ Cc: James Clark <james.clark@linaro.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 0/1] libperf: evlist: Fix --cpu argument on hybrid platform
-Date: Tue, 15 Oct 2024 15:54:14 +0100
-Message-Id: <20241015145416.583690-1-james.clark@linaro.org>
+Subject: [RFC PATCH 1/1] libperf: evlist: Fix --cpu argument on hybrid platform
+Date: Tue, 15 Oct 2024 15:54:15 +0100
+Message-Id: <20241015145416.583690-2-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241015145416.583690-1-james.clark@linaro.org>
+References: <20241015145416.583690-1-james.clark@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -76,53 +80,74 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I noticed that this isn't working on Arm or Intel, and I've attached a
-hack that I don't really think is the right fix but it does work. It's
-not strictly a regression from the linked fixes: commit, as before that
-events wouldn't be opened on multiple PMUs properly. But after it the
-error becomes more fatal.
+Since the linked fixes: commit, specifying a CPU on hybrid platforms
+results in an error because Perf tries to open an extended type event
+on "any" CPU which isn't valid. Extended type events can only be opened
+on CPUs that match the type.
 
-Posting the RFC because whatever the fix should be isn't straightforward
-and probably needs discussion. I think similar things have been
-discussed before about the empty cpumap issue, but not related to the
---cpu option.
+Before (working):
 
-I thought of a few possible fixes:
+  $ perf record --cpu 1 -- true
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 2.385 MB perf.data (7 samples) ]
 
- * Don't open "empty" CPU maps in Perf. This would make Perf and libperf
-   diverge. Also not sure if libperf is supposed to be backwards
-   compatible? But this would be a breaking change because someone might
-   be using empty == all deliberately.
+After (not working):
 
- * Prune the evlist for empty CPU maps in every tool in Perf. This isn't
-   great because users of libperf also have to do this and is a lot of
-   duplication in Perf.
+  $ perf record -C 1 -- true
+  WARNING: A requested CPU in '1' is not supported by PMU 'cpu_atom' (CPUs 16-27) for event 'cycles:P'
+  Error:
+  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cpu_atom/cycles:P/).
+  /bin/dmesg | grep -i perf may provide additional information.
 
- * Use cpumap->nr == 0 for empty instead of cpumap == NULL
+(Ignore the warning message, that's expected and not particularly
+relevant to this issue).
 
-One issue with the attached fix is that you can only delete the core
-evsel from within libperf and not Perf's part of it. Also maybe it's a
-bit weird for the propagate function to start deleting things.
+This is because perf_cpu_map__intersect() of the user specified CPU (1)
+and one of the PMU's CPUs (16-27) correctly results in an empty (NULL)
+CPU map. However for the purposes of opening an event, libperf converts
+empty CPU maps into an any CPU (-1) which the kernel rejects.
 
-For reference the empty to any code is here:
+Fix it by deleting evsels with empty CPU maps in the specific case where
+user requested CPU maps are evaluated.
 
-static int __evsel__prepare_open(...)
-	if (cpus == NULL) {
-		if (empty_cpu_map == NULL) {
-			empty_cpu_map = perf_cpu_map__new_any_cpu();
-			if (empty_cpu_map == NULL)
-				return -ENOMEM;
-		}
-
-		cpus = empty_cpu_map;
-	}
- 
-James Clark (1):
-  libperf: evlist: Fix --cpu argument on hybrid platform
-
+Fixes: 251aa040244a ("perf parse-events: Wildcard most "numeric" events")
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
  tools/lib/perf/evlist.c | 11 +++++++++--
  1 file changed, 9 insertions(+), 2 deletions(-)
 
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index c6d67fc9e57e..8fae9a157a91 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -47,6 +47,13 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+ 		 */
+ 		perf_cpu_map__put(evsel->cpus);
+ 		evsel->cpus = perf_cpu_map__intersect(evlist->user_requested_cpus, evsel->own_cpus);
++
++		/*
++		 * Empty cpu lists would eventually get opened as "any" so remove
++		 * genuinely empty ones before they're opened in the wrong place.
++		 */
++		if (perf_cpu_map__is_empty(evsel->cpus))
++			perf_evlist__remove(evlist, evsel);
+ 	} else if (!evsel->own_cpus || evlist->has_user_cpus ||
+ 		(!evsel->requires_cpu && perf_cpu_map__has_any_cpu(evlist->user_requested_cpus))) {
+ 		/*
+@@ -80,11 +87,11 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+ 
+ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
+ {
+-	struct perf_evsel *evsel;
++	struct perf_evsel *evsel, *n;
+ 
+ 	evlist->needs_map_propagation = true;
+ 
+-	perf_evlist__for_each_evsel(evlist, evsel)
++	list_for_each_entry_safe(evsel, n, &evlist->entries, node)
+ 		__perf_evlist__propagate_maps(evlist, evsel);
+ }
+ 
 -- 
 2.34.1
 
