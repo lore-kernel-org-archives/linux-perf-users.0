@@ -1,63 +1,66 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F952E630
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 00:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9891F749C
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 00:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728950526; cv=none; b=HvmVmvSnma3EyDFAPJYbSGxR5RKjyvR/Ud0/K5+tu6U0Imx3XY/j6y9TciktHUPmSABPnyrl60JHzgQJKQRbKWW3k9Zre6bh66lEBmJL5ymqeuVIB2QaFeC4732FCXw5C0Qi5oPzi+fm5LEVNtZ2Cln15ITo1+hCD522zN+EXNo=
+	t=1728950528; cv=none; b=Gnaxmd5CHJaahKX/f0LHznSJtgNUrUBjrbAYzozdriADZ8pV1husVpAp6YaqafOiR7TZ34HO3NEODAA4QG9gkVvaD2PB05qf6FWo/h3B+G6PsDjDTQuZCXyE3/qG2UERW549V5JKjH0/X+lsiuTD3dtabt6ZMgxizyY9HZ8M6JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728950526; c=relaxed/simple;
-	bh=+rxryxOQHkZdgHYAqWw/VS2szzAnEupTKSmElKJsiNA=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=T4rSoUX1RZBQAMkP0Ke4+Fb5Kd6EKQV1ASW4faOjvIvDNAz7vV35u/umTBPCPYf0BF1dWEcxapJqCxtZvD+SIku1jUtv+hEW4Cc8oMB7v6DYZMVswKuUDUhinKtk/x192w4VnTYUbkDuVAnnH1YqKnI9PZzVuLBX0zuDyWHKUxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hlrBSlu1; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1728950528; c=relaxed/simple;
+	bh=8NLROw6KKSFllbopuuSL8swQth3r2BSa+1UDDDHl3pw=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=PwBKvEmGhuleN03DmMe0J8DgdMXsRRVGOKuNQgAecU8asyMoUdHioK+eJuqRwJ1Ed3g4N7x7mzN9ja7Uo0WE05U7BJUTQHzdyXJiHZEamiPnVauT9PNTWDUe5u3dh8Nt9nZQWR5AT5+l3Ir4VlMX3chlbtDKLOPMcYxIoW7g3kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wpkql1C3; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hlrBSlu1"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e3245ed6b8so69918937b3.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Oct 2024 17:02:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wpkql1C3"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-690404fd230so89948357b3.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Oct 2024 17:02:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728950523; x=1729555323; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lpVYqTqakCwPUiKlO3zjPeSJzwD+j1X//3FbjHx6SHU=;
-        b=hlrBSlu1y57MiMe1qAfFhZPi5XCjTvprPa/bMg8Rr0gVhVBhQnS1m2IOPV97p+FTB9
-         P/vWM9DEhteFP4xcTBqsxHLllvTBgeqbwmkBwOmauuVPwaSHZk2Lbc2XfiFMFR5pTjZ6
-         WXBMEINcBsjxK9pUiEGZdsg58EIHlU/oGb63baU3966TMIgdA6FlUA1/qu01523K/rGV
-         rFZV5UBXT5lJ+9x+n4z5io+aX3+iunRXkreF38wzbHFu35BC+uR0oD8JiUmTV2wOvW4E
-         2v9Dx+dP/NejOJbVKNxNhUgBytPzVLq3SzYIGut2xpOCKm/9mP1LpcGsNwMI+OMNx+1l
-         aWDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728950523; x=1729555323;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1728950525; x=1729555325; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=lpVYqTqakCwPUiKlO3zjPeSJzwD+j1X//3FbjHx6SHU=;
-        b=b1RsmHf74/UI9sRK4hla9WYVAUI0JgE4iK4kVqfJZxx/P53dR3Uip5qGB2jRbcaHDB
-         fgbxYRKKWtuYa5wg124tHKFtfMOhTHuUtpqZGG82JT4ly1iRJxAeEBe2LCJrMbTIj5vx
-         kHIvkiIpuTrlGnOBUesfSwT9NeTca9547/SEEub6d/IM+PL1uSeRV4ccwfSLTd/tHk1w
-         wL2SjJ48zi9j1CNXX4+CpueT3FAOkPOta9StSoPqu1c8MAulXWNWGgltZL1PY25ZYPZW
-         gXOwGnqxoKaQlElXw1iIjDgzgJxJM3vUxVbOuk440afSHrTDAlPlDgXyDjm3Pte0n+8o
-         +43A==
-X-Forwarded-Encrypted: i=1; AJvYcCXyaVcSshlM+18qhAMANFd7JxZQToOqM+xM5OO6am1XYmvbwLx9ROVkGeUjQfN6Gi0q00/zC4q2aQeFRO3lWohm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9t3SaqHAoTCfFw5bbnAQ4oo02n+GWMbKl6+EWCYnzBYa30R0d
-	ShIenZZpEwQRZFl+lBvODY5TCRIuh+0IuVwe7w40VU9o4foRcDwhJ2ZU6xJcaB/2nOJozmTLlKE
-	kzaYrCg==
-X-Google-Smtp-Source: AGHT+IFn7RW4A+NhhePaa6d8PAFoTugBI7glIea25mnv8/8OfaQ+Jv6KthT7fYH+cQj6brMY5eqzs2mw1EFl
+        bh=5sWId1MW2gWjJ8B3DXmeL36O281P7L5ABFWtGa9JPb4=;
+        b=Wpkql1C34d0y9PYrSB1ojwgAqGXDO4pmw6Rq6sV3bt+jSmHbamsFUh8gx+NWH3LVCf
+         MKke7QuLUwHvMg0/0H8Y0+oSJePgbHKuiRej3r3DxtrvCwdcyAqGuofRKsplooa0HxJb
+         SWjffvOWx/IBwrhjunC3bDJTsEU+qeH5pBAlHsM7Ena9Nxd/XfV/43UeOcsyEhABOwuK
+         efSbjBIdVchWrAbruPDWHFgPOtbQqfoGHWc4C1d5yQ/BX2T59NhdSzsf/oJqa6cEBnwf
+         UvhaKQHoetX//OW7VxpF5nb5s/b5f4KGFTqjrr1ckSs2g5x/Vxe24c6hUleXnQj5/BZY
+         BKtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728950525; x=1729555325;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5sWId1MW2gWjJ8B3DXmeL36O281P7L5ABFWtGa9JPb4=;
+        b=AD73YE3OeNYHTEXgmz3nAFRhAxymL/oyJE9/Gcs5oDOAtQ9Adf9ibLBFbe0OKGGJGH
+         oJhvp4NRdUXSX/KzhfMX3WShbhz1bhAWy9kzpOnFswiCYd1OerOQgm9K3j8Z/4fuygOX
+         hR0KV6N+o/09fDfkRy1jyI7FU1q/xWn2hJCaaY1/1jMqN81AM1U0H8uyobqgdFlXbcOi
+         /DIZD0H0KjrvmLFaMCyKgh47gcA45t6H6KX/QUpxYezzjFot+Eu1bdsPNmDMJjeUAiBY
+         NXThOnvYffHV1ND87LeKN4LfoMAtHuTUK1aqdGoq576+3YQWDKqInQemw0XoIKpqWbH5
+         2++g==
+X-Forwarded-Encrypted: i=1; AJvYcCXC3uHCqRCJFXHGVM4VzReW4u6HYdLmVULA8KgHxYwMJxithlAxDzV3us/FUb4TPf5S1bnVWR8rUROE4V/mWk2B@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrE954a65PYo4JXxfmGs6eAIGc4+fAl3y4evZmCBZeyr8niGc/
+	9LfmqOsCNcdR7vVW34/z7GxgIgAhd8ugj8ZdiKtBh3t1StsmXfLYNzM4mAcaV5Obg6/t7KeziVE
+	IxSImbQ==
+X-Google-Smtp-Source: AGHT+IHFyTiWxaw8Ek0l8rj6yZD1R6f2jnu5vF6MOt2oGc8LyxuLsasPkZ2Bh7M2Yo+gJ2nm1BVEIFgcatJj
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:f1f9:f6b6:68bc:5a14])
- (user=irogers job=sendgmr) by 2002:a05:690c:3588:b0:6e2:e462:e191 with SMTP
- id 00721157ae682-6e347c67c26mr3300437b3.6.1728950523426; Mon, 14 Oct 2024
- 17:02:03 -0700 (PDT)
-Date: Mon, 14 Oct 2024 17:01:55 -0700
-Message-Id: <20241015000158.871828-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:2e12:b0:6e2:371f:4aef with SMTP
+ id 00721157ae682-6e347b2fe3bmr320727b3.3.1728950525613; Mon, 14 Oct 2024
+ 17:02:05 -0700 (PDT)
+Date: Mon, 14 Oct 2024 17:01:56 -0700
+In-Reply-To: <20241015000158.871828-1-irogers@google.com>
+Message-Id: <20241015000158.871828-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20241015000158.871828-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
-Subject: [PATCH v2 0/3] Make "Setup struct perf_event_attr" a shell test
+Subject: [PATCH v2 1/3] perf test: Add a shell wrapper for "Setup struct perf_event_attr"
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,163 +76,46 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
 Content-Type: text/plain; charset="UTF-8"
 
-The path detection for "Setup struct perf_event_attr" test is brittle
-and leads to the test frequently not running. Running shell tests is
-reasonably robust, so make the test a shell test. Move the test files
-to reflect this.
+The "Setup struct perf_event_attr" test in attr.c does a bunch of
+directory finding to set up running a python test that in general is
+more brittle than similar logic we have in shell tests. Add a shell
+test that invokes and runs the tests in the python attr.py script.
 
-Before, if you build perf like `make -C tools/perf O=/tmp/perf` then
-run the built perf test for the "Setup struct perf_event_attr" it
-skips (causing the tests to bitrot, fixes to be sent, etc.):
-```
-$ sudo /tmp/perf/perf test -vv perf_event_attr
-capget syscall failed (No such file or directory - 2) fall back on root check
-17: Setup struct perf_event_attr:
-17: Setup struct perf_event_attr:
---- start ---
-test child forked, pid 806601
-Using CPUID GenuineIntel-6-8D-1
----- end(-2) ----
-17: Setup struct perf_event_attr                                    : Skip
-```
-
-The issue is around the path set up, the test has a few path
-expectations but they are brittle as shown above. While we could
-endeavour to set up the path in C code, it makes sense to migrate the
-test to a shell test due to the tests smaller size, ease of
-environment variable manipulation, existing perf test support for
-better path setup, etc. Ie let's not reinvent the shell test
-infrastructure that handles python tests for the sake of one C test.
-
-After this change:
-```
-$ sudo /tmp/perf/perf test attribute
-76: Perf attribute expectations test                                : Ok
-```
-
-v2: Add __SANE_USERSPACE_TYPES__ to fix PowerPC build, Tested-by
-    Athira Rajeev <atrajeev@linux.vnet.ibm.com> and Stephen Rothwell
-    <sfr@canb.auug.org.au>.
-
-Ian Rogers (3):
-  perf test: Add a shell wrapper for "Setup struct perf_event_attr"
-  perf test: Remove C test wrapper for attr.py
-  perf test: Move attr files into shell directory where they are used
-
- tools/perf/Makefile.perf                      |   5 +-
- tools/perf/perf.c                             |   2 -
- tools/perf/tests/Build                        |   1 -
- tools/perf/tests/attr.c                       | 218 ------------------
- tools/perf/tests/builtin-test.c               |   1 -
- tools/perf/tests/shell/attr.sh                |  22 ++
- tools/perf/tests/{ => shell}/attr/README      |   0
- tools/perf/tests/{ => shell}/attr/base-record |   0
- .../tests/{ => shell}/attr/base-record-spe    |   0
- tools/perf/tests/{ => shell}/attr/base-stat   |   0
- .../tests/{ => shell}/attr/system-wide-dummy  |   0
- .../tests/{ => shell}/attr/test-record-C0     |   0
- .../tests/{ => shell}/attr/test-record-basic  |   0
- .../{ => shell}/attr/test-record-branch-any   |   0
- .../attr/test-record-branch-filter-any        |   0
- .../attr/test-record-branch-filter-any_call   |   0
- .../attr/test-record-branch-filter-any_ret    |   0
- .../attr/test-record-branch-filter-hv         |   0
- .../attr/test-record-branch-filter-ind_call   |   0
- .../attr/test-record-branch-filter-k          |   0
- .../attr/test-record-branch-filter-u          |   0
- .../tests/{ => shell}/attr/test-record-count  |   0
- .../tests/{ => shell}/attr/test-record-data   |   0
- .../{ => shell}/attr/test-record-dummy-C0     |   0
- .../tests/{ => shell}/attr/test-record-freq   |   0
- .../attr/test-record-graph-default            |   0
- .../attr/test-record-graph-default-aarch64    |   0
- .../{ => shell}/attr/test-record-graph-dwarf  |   0
- .../{ => shell}/attr/test-record-graph-fp     |   0
- .../attr/test-record-graph-fp-aarch64         |   0
- .../attr/test-record-group-sampling           |   0
- .../attr/test-record-group-sampling1          |   0
- .../attr/test-record-group-sampling2          |   0
- .../tests/{ => shell}/attr/test-record-group1 |   0
- .../tests/{ => shell}/attr/test-record-group2 |   0
- .../tests/{ => shell}/attr/test-record-group3 |   0
- .../{ => shell}/attr/test-record-no-buffering |   0
- .../{ => shell}/attr/test-record-no-inherit   |   0
- .../{ => shell}/attr/test-record-no-samples   |   0
- .../tests/{ => shell}/attr/test-record-period |   0
- .../{ => shell}/attr/test-record-pfm-period   |   0
- .../tests/{ => shell}/attr/test-record-raw    |   0
- .../{ => shell}/attr/test-record-spe-period   |   0
- .../attr/test-record-spe-period-term          |   0
- .../attr/test-record-spe-physical-address     |   0
- .../attr/test-record-user-regs-no-sve-aarch64 |   0
- .../test-record-user-regs-old-sve-aarch64     |   0
- .../attr/test-record-user-regs-sve-aarch64    |   0
- .../perf/tests/{ => shell}/attr/test-stat-C0  |   0
- .../tests/{ => shell}/attr/test-stat-basic    |   0
- .../tests/{ => shell}/attr/test-stat-default  |   0
- .../{ => shell}/attr/test-stat-detailed-1     |   0
- .../{ => shell}/attr/test-stat-detailed-2     |   0
- .../{ => shell}/attr/test-stat-detailed-3     |   0
- .../tests/{ => shell}/attr/test-stat-group1   |   0
- .../{ => shell}/attr/test-stat-no-inherit     |   0
- tools/perf/tests/{ => shell/lib}/attr.py      |   0
- tools/perf/util/evsel.c                       | 127 +++++++++-
- tools/perf/util/util.h                        |   7 -
- 59 files changed, 147 insertions(+), 236 deletions(-)
- delete mode 100644 tools/perf/tests/attr.c
+Signed-off-by: Ian Rogers <irogers@google.com>
+Tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/tests/shell/attr.sh | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
  create mode 100755 tools/perf/tests/shell/attr.sh
- rename tools/perf/tests/{ => shell}/attr/README (100%)
- rename tools/perf/tests/{ => shell}/attr/base-record (100%)
- rename tools/perf/tests/{ => shell}/attr/base-record-spe (100%)
- rename tools/perf/tests/{ => shell}/attr/base-stat (100%)
- rename tools/perf/tests/{ => shell}/attr/system-wide-dummy (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-C0 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-basic (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-any (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-any (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-any_call (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-any_ret (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-hv (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-ind_call (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-k (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-branch-filter-u (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-count (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-data (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-dummy-C0 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-freq (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-graph-default (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-graph-default-aarch64 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-graph-dwarf (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-graph-fp (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-graph-fp-aarch64 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-group-sampling (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-group-sampling1 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-group-sampling2 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-group1 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-group2 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-group3 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-no-buffering (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-no-inherit (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-no-samples (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-period (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-pfm-period (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-raw (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-spe-period (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-spe-period-term (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-spe-physical-address (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-user-regs-no-sve-aarch64 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-user-regs-old-sve-aarch64 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-record-user-regs-sve-aarch64 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-C0 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-basic (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-default (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-detailed-1 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-detailed-2 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-detailed-3 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-group1 (100%)
- rename tools/perf/tests/{ => shell}/attr/test-stat-no-inherit (100%)
- rename tools/perf/tests/{ => shell/lib}/attr.py (100%)
 
+diff --git a/tools/perf/tests/shell/attr.sh b/tools/perf/tests/shell/attr.sh
+new file mode 100755
+index 000000000000..e094f3baffb7
+--- /dev/null
++++ b/tools/perf/tests/shell/attr.sh
+@@ -0,0 +1,22 @@
++#!/bin/bash
++# Perf attribute expectations test
++# SPDX-License-Identifier: GPL-2.0
++
++err=0
++
++cleanup() {
++  trap - EXIT TERM INT
++}
++
++trap_cleanup() {
++  echo "Unexpected signal in ${FUNCNAME[1]}"
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
++shelldir=$(dirname "$0")
++perf_path=$(which perf)
++python "${shelldir}"/../attr.py -d "${shelldir}"/../attr -v -p "$perf_path"
++cleanup
++exit $err
 -- 
 2.47.0.rc1.288.g06298d1525-goog
 
