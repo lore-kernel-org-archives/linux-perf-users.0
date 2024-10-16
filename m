@@ -1,201 +1,220 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2333B1885BB
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 19:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB94F208D9F
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 19:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729105505; cv=none; b=etj0ejaLfd6eEFMjLMhirQ1qX8SWw/lxzcmFau2H/UlvDNkTtQX9P49hajQ7F2MQqPSCnZEcxS1wAQ4lwFPZtmP4STcG9xNQQfRLP0K6TU7DU+XxDqPN7itavIrJB3EWVr7QDfFGpAdUzIWliFcdK1q3SLWqLE+KieSHxvgQA7k=
+	t=1729106884; cv=none; b=qeTjNfytXfjUbmIqxs/xDBQEki5N3V2BU1zBIbKlswVMlIRgzZRaAbItxygqhOkVP1KGflQzTVIuV7yWNMc+iUhWEIQ4zeJENK5H/rw78n98OMIwB1He9wZiBicXDfMx8A+FIj7KufueP1+TmqyLx/NtPNAlrd5L2hicrEmdnZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729105505; c=relaxed/simple;
-	bh=zRQ3X1yKrhjM9MjxEnBO8bVsZAz/MNAO5jq9d1cT2ws=;
+	s=arc-20240116; t=1729106884; c=relaxed/simple;
+	bh=kgnqpdKkc/l7Qu2ygVy3RP3nHEyLe2cZrbhYsgl6YD4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E/4Ph5I7r4KvsaKP/C7JYlEyT2Hj/aM35Zx5IJmD/aURzdL9yKn9VKE0NowDdq3R6RXddW2pe94sURDU0KYJ8Au0XtqF+hLEo7ijfMeIF2kFY3PaepDp5laZow/juSjl6YgaHNMeRBwAtyVvJxNS7J3xGmQuGcbYxYfD29TnGww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mP4Chxyp; arc=none smtp.client-ip=209.85.160.179
+	 To:Cc:Content-Type; b=G/tpN4S971XbMAF+XW3QE2Pw8EkAxQKXmWUyphN8P30QCnzWOoHc7aWDb/4YW4+p+4F43B8kt5wbDQCRTQjBHdlJRUggyoL5R27XnbpfOOvFMJUcCnEh93EWwB6U2rHyI/U9qcmwBVvMBNp1c0LW0DOTVeka2u9YFu56hd92Kfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BgDxISaN; arc=none smtp.client-ip=209.85.166.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mP4Chxyp"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-460969c49f2so48011cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 12:05:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BgDxISaN"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a3b3f4b2afso42435ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 12:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729105503; x=1729710303; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729106882; x=1729711682; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=t7zRfX4mGGXxSTxvTu2G9/F4Ncm83GwEzwpAfcljlS0=;
-        b=mP4ChxypLrtuQQoBzoJhzMi69CwBfWDuLeSedFjBSBnKNFX3Nh9QBOhwXnglHN1DRF
-         mC0qZWOK3BmvTq8b1/gAuFbx/NuiAjp3xG5V7mScBaov96I50UlFF++HbpH5rzx5q6Ne
-         JLM+NRhEam3Qzb3hSWokYZ8c8wDu8ihGWhe882kvoWl/aNNKl+5hoeQjJS2oLkgMc/W2
-         uK2eo2wjVoLrqQOCUTYQo+MDfhF2SjZuILngw1/lbSXlDUZ8OnYo43c/fnXsNT/x5DhZ
-         cY/7x8dny4I6qwkRZUOAdR5FPM5tKm8OtHKfb6AfxjWLCF290mq+VQnm72XDOYCcs4oA
-         FFCQ==
+        bh=d0xFVkJStAPxCfaCemrTY4BomoxBEHGl8j5YbuyJ6Tc=;
+        b=BgDxISaNRG4qhuw3ExwHy4gfhDoepcy9PxHUwTnQbS0hQ9xOmR41W5dy7VIUGOSqcC
+         ZnhFbcveHo0sYM3w9gosJ39kz/NSJDyeaagPxkWkX4Nqf21e07DBiu2d7EtGnHumRW7n
+         fb+MwL/HsHQTgSkw9oLYtWWpZhyvn4CabBwpXT+xLrAmHrRP+QtWJxHle59L6lR35uaz
+         hqtPk5lI6xJEqiuvO5pVTJBG0BTZnK3LguAihdjvJrGTLAGRmyNmwv8Ngin2M4Myhmtc
+         yM78LngqWeu1pNgy0W2v/CQgd4sQgggEcq8mFEKTGg8mcXsQj7OLlfYkDqwj54rUzn66
+         mslw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729105503; x=1729710303;
+        d=1e100.net; s=20230601; t=1729106882; x=1729711682;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=t7zRfX4mGGXxSTxvTu2G9/F4Ncm83GwEzwpAfcljlS0=;
-        b=bw4sOBsy2wOaYJNX4Wvcy52bOZ9FMMYMGaXTrmRh7v4GfUg0iPyB8YHHhwVnP/ki9u
-         h//DibviJt/SQyGAKpP5E5iTCqBOTzNnQCI7IydknDIaogZsj8rmSsemEyy8nWnkffw6
-         xa/k6ruEhTgM/LbKfLb7Fw1JpQFOjQ+wEMgkcKin/GqFKIH9fO+VakQln5Q1/c8WILoV
-         AbG2AlSoCnmLXM26WBBfQ1oJO9MGKL7CsBGtDgghFRP77AknUf72vKTe31m54YISrAFM
-         dnvwzfL6QQVyJa5VigwvKxznRbzcQmagb5g1OSUwyPvPcJyqGQpjARrpmIU2AXw4d+81
-         NI9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU+EpwnrwTf6GVFGWE34PykWXMwcDGfaN+jDFp9xMq5aeJLBTsWHm/VVo+pE2PjD7CDYrVkxzsVCs5RRjpqDTMe@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyUC57cfXliTGpAuFwm5S/Lt840bVtU2E9qZy3hmIpoIcbgUx/
-	CHMswRkZAnGh5P4KPbd0KFDgBoncLmFTpgOzoddv3McBR2Bh/phhqvn9S79xSxwf9yECKbUMDY8
-	jxq+K1VPeeGO+u5CPAlX4MZLW4W5mmqqbwitY
-X-Google-Smtp-Source: AGHT+IF6yT/3DZPUJjVREQ085mlGzCKYggvS44niMjh+ismHxC3q3Agj0jop5VQ9GGNmLz4ZIwzzoI848WEnMWOHipc=
-X-Received: by 2002:a05:622a:a709:b0:447:e59b:54eb with SMTP id
- d75a77b69052e-4609c8e1bf2mr479661cf.26.1729105502801; Wed, 16 Oct 2024
- 12:05:02 -0700 (PDT)
+        bh=d0xFVkJStAPxCfaCemrTY4BomoxBEHGl8j5YbuyJ6Tc=;
+        b=XPCpPtrurW+y6MGznYRFGqlCHNdsq0+XO4dS9jejr+TBDHtuFHwR7+BYL6fybfjKHn
+         vLb3R/y1aEqhi19sioI+UjQP3xwXe2MU3Njj7Ie6yDqcAQcHp2DxYgfVR7HFHKDOfv4r
+         izTP7YV/FYZBypqvXmfPc10jh/qnnByP/4ODXJ+xybQGuCpNmFK5JdP9OIJLBwUdI/vf
+         4+IQcFqvNAUnBzVDt+z8vNi6TN7KIsAf8+nnXicfN7/ZBqzIu9FwpaILYDNfJvBSp+bH
+         y9FsHBMz2jLc5i2RjEQkR4UrQRL9doSN6L14dAYqRP74fqHPRXk5kvVR1F4sqSO+M6qA
+         Blvg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPWmar3UI+fbc1wb5WZCbKSVdBZgAtgi1C3rCb2HVFwjltKcIEMQBNyNu3EVsW1m0jAOWVD5VbaONCI2hkU28J@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpBY7j9xURjf5zdpFhbB4+NYVKSo+IQ9wl7U+giZHZTSSGzkTn
+	9xTNJu+yv9MwTFYsPoWHX4l44mgFZPGRHuhm93T1vc1Cumz4hQvhfdCKD6M8zqAW+L1l3T3bXBg
+	e4+oNcgWsRUQnlBHc9lIXM9jiGDIKh/mNm60o
+X-Google-Smtp-Source: AGHT+IG5weUPZ8RB6PaxtT/ZgYfk37msbb5rdpaXmMg2MUFpnJ7Hg14FZtyDabvRZAmUFO68QI7w/w/ShcCtt7VhaUs=
+X-Received: by 2002:a05:6e02:1d8a:b0:3a0:be64:a351 with SMTP id
+ e9e14a558f8ab-3a3e58ef5d2mr673165ab.10.1729106881679; Wed, 16 Oct 2024
+ 12:28:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241013173742.71882-1-atrajeev@linux.vnet.ibm.com>
- <Zw1UXbWTS9Gk3lmw@google.com> <8B5B2251-E41E-4584-881E-61A468AFB222@linux.vnet.ibm.com>
- <CAP-5=fWQsQp3WgJcLvZWsBsiJ2VzxP6j2kOfd5Hrzi0oBUNy2g@mail.gmail.com> <E64BA2C9-3046-4C96-ACB8-A4F0D99BDA40@linux.vnet.ibm.com>
-In-Reply-To: <E64BA2C9-3046-4C96-ACB8-A4F0D99BDA40@linux.vnet.ibm.com>
+References: <20241016190009.866615-1-bgeffon@google.com>
+In-Reply-To: <20241016190009.866615-1-bgeffon@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 16 Oct 2024 12:04:49 -0700
-Message-ID: <CAP-5=fWEkpxsUkX_o_wMjkn6rvwr81oGPJ=6_85Q45RZhqXUng@mail.gmail.com>
-Subject: Re: [PATCH] tools/perf/tests: Fix compilation error with strncpy in tests/tool_pmu
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, acme@kernel.org, jolsa@kernel.org, 
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com, maddy@linux.ibm.com, 
-	kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
+Date: Wed, 16 Oct 2024 12:27:50 -0700
+Message-ID: <CAP-5=fWy7geJGM-T3XPjbbmdYg4spj4H9s+jE_+aqCSEUJeSFQ@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: sched-pipe bench: add (-n) nonblocking benchmark
+To: Brian Geffon <bgeffon@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 16, 2024 at 11:23=E2=80=AFAM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
+On Wed, Oct 16, 2024 at 12:00=E2=80=AFPM Brian Geffon <bgeffon@google.com> =
+wrote:
 >
+> The -n mode will benchmark pipes in a non-blocking mode using
+> epoll_wait.
 >
+> This specific mode was added to demonstrate the broken sync nature
+> of epoll: https://lore.kernel.org/lkml/20240426-zupfen-jahrzehnt-5be786bc=
+df04@brauner
 >
-> > On 16 Oct 2024, at 8:36=E2=80=AFPM, Ian Rogers <irogers@google.com> wro=
-te:
-> >
-> > On Wed, Oct 16, 2024 at 5:30=E2=80=AFAM Athira Rajeev
-> > <atrajeev@linux.vnet.ibm.com> wrote:
-> >>
-> >>
-> >>
-> >>> On 14 Oct 2024, at 10:56=E2=80=AFPM, Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> >>>
-> >>> Hello Athira,
-> >>>
-> >>> On Sun, Oct 13, 2024 at 11:07:42PM +0530, Athira Rajeev wrote:
-> >>>> perf fails to compile on systems with GCC version11
-> >>>> as below:
-> >>>>
-> >>>> In file included from /usr/include/string.h:519,
-> >>>>                from /home/athir/perf-tools-next/tools/include/linux/=
-bitmap.h:5,
-> >>>>                from /home/athir/perf-tools-next/tools/perf/util/pmu.=
-h:5,
-> >>>>                from /home/athir/perf-tools-next/tools/perf/util/evse=
-l.h:14,
-> >>>>                from /home/athir/perf-tools-next/tools/perf/util/evli=
-st.h:14,
-> >>>>                from tests/tool_pmu.c:3:
-> >>>> In function =E2=80=98strncpy=E2=80=99,
-> >>>>   inlined from =E2=80=98do_test=E2=80=99 at tests/tool_pmu.c:25:3:
-> >>>> /usr/include/bits/string_fortified.h:95:10: error: =E2=80=98__builti=
-n_strncpy=E2=80=99 specified bound 128 equals destination size [-Werror=3Ds=
-tringop-truncation]
-> >>>>  95 |   return __builtin___strncpy_chk (__dest, __src, __len,
-> >>>>     |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>>>  96 |                                   __glibc_objsize (__dest));
-> >>>>     |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>>>
-> >>>> The compile error is from strncpy refernce in do_test:
-> >>>> strncpy(str, tool_pmu__event_to_str(ev), sizeof(str));
-> >>>>
-> >>>> This behaviour is not observed with GCC version 8, but observed
-> >>>> with GCC version 11 . This is message from gcc for detecting
-> >>>> truncation while using strncpu. Use snprintf instead of strncpy
-> >>>> here to be safe.
-> >>>>
-> >>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> >>>
-> >>> I found this issue now and thanks for the quick fix.  I will push to
-> >>> perf-tools-next soon.
-> >>>
-> >>> Thanks,
-> >>> Namhyung
-> >>>
-> >>
-> >> Sure
-> >>
-> >> Thanks Namhyung for pulling in the change
-> >>
-> >> Athira
-> >
-> > Thanks for the fixes. As this is test code I don't think performance,
-> > style, etc. matter much. The GCC strncpy warnings are annoying imo,
-> > I'm not sure it makes sense for them to be enabled. I see in the
-> > kernel lots of "sizeof(foo)-1" as a workaround. strlcpy looks like a
-> > better alternative but it gets a checkpatch warning as in the kernel
-> > strscpy is preferred. Perhaps we should create a strscpy shim.
-> >
->
-> IIUC, strscpy is defined in kernel source and is currently not used in to=
-ols side.
->
-> Ian,
-> Your point here is that we can create an interface in tools side so that =
-we can later safely use strscpy in cases like this ?
+> Signed-off-by: Brian Geffon <bgeffon@google.com>
 
-Yeah. Tbh the string code is a bit chaotic in the code base. There's
-some stuff using char*s, some asprintf, there's strbuf then there all
-the kernel ways of doing things. I lose track of why strscpy is
-superior to strlcpy, but strlcpy will get you a checkpath warning.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-The standard kernel solution to the GCC strncpy warning I've seen,
-changing "strncpy(a, b, sizeof(a))" to "strncpy(a, b, sizeof(a) - 1)",
-looks dodgy and possibly worse to me. The point of the warning I think
-relates to strncpy not necessarily \0 terminating the string and you
-need to reserve at least 1 character for this, while strlcpy
-guarantees the \0 termination. Doing "sizeof(..) - 1" likely confuses
-the checker making it give up, but now you have less space to copy a
-potential \0 as well as not getting a \0.
+I liked the commentary in:
+https://lore.kernel.org/lkml/ZxAOgj9RWm4NTl9d@google.com/
 
 Thanks,
 Ian
 
-
-> Thanks
-> Athira
+> ---
+>  tools/perf/bench/sched-pipe.c | 43 +++++++++++++++++++++++++++++------
+>  1 file changed, 36 insertions(+), 7 deletions(-)
 >
-> > Thanks,
-> > Ian
-> >
-> >>>> ---
-> >>>> tools/perf/tests/tool_pmu.c | 2 +-
-> >>>> 1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/tools/perf/tests/tool_pmu.c b/tools/perf/tests/tool_pmu=
-.c
-> >>>> index 94d0dd8fd3cb..297cc8c55579 100644
-> >>>> --- a/tools/perf/tests/tool_pmu.c
-> >>>> +++ b/tools/perf/tests/tool_pmu.c
-> >>>> @@ -22,7 +22,7 @@ static int do_test(enum tool_pmu_event ev, bool wi=
-th_pmu)
-> >>>> if (with_pmu)
-> >>>> snprintf(str, sizeof(str), "tool/%s/", tool_pmu__event_to_str(ev));
-> >>>> else
-> >>>> - strncpy(str, tool_pmu__event_to_str(ev), sizeof(str));
-> >>>> + snprintf(str, sizeof(str), "%s", tool_pmu__event_to_str(ev));
-> >>>>
-> >>>> parse_events_error__init(&err);
-> >>>> ret =3D parse_events(evlist, str, &err);
-> >>>> --
-> >>>> 2.43.5
+> diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.=
+c
+> index 3af6d3c55aba..e2562677df96 100644
+> --- a/tools/perf/bench/sched-pipe.c
+> +++ b/tools/perf/bench/sched-pipe.c
+> @@ -23,6 +23,7 @@
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <assert.h>
+> +#include <sys/epoll.h>
+>  #include <sys/time.h>
+>  #include <sys/types.h>
+>  #include <sys/syscall.h>
+> @@ -34,6 +35,8 @@ struct thread_data {
+>         int                     nr;
+>         int                     pipe_read;
+>         int                     pipe_write;
+> +       struct epoll_event      epoll_ev;
+> +       int                     epoll_fd;
+>         bool                    cgroup_failed;
+>         pthread_t               pthread;
+>  };
+> @@ -44,6 +47,7 @@ static        int                     loops =3D LOOPS_D=
+EFAULT;
+>  /* Use processes by default: */
+>  static bool                    threaded;
+>
+> +static bool                    nonblocking;
+>  static char                    *cgrp_names[2];
+>  static struct cgroup           *cgrps[2];
+>
+> @@ -81,6 +85,7 @@ static int parse_two_cgroups(const struct option *opt _=
+_maybe_unused,
+>  }
+>
+>  static const struct option options[] =3D {
+> +       OPT_BOOLEAN('n', "nonblocking", &nonblocking,   "Use non-blocking=
+ operations"),
+>         OPT_INTEGER('l', "loop",        &loops,         "Specify number o=
+f loops"),
+>         OPT_BOOLEAN('T', "threaded",    &threaded,      "Specify threads/=
+process based task setup"),
+>         OPT_CALLBACK('G', "cgroups", NULL, "SEND,RECV",
+> @@ -165,11 +170,25 @@ static void exit_cgroup(int nr)
+>         free(cgrp_names[nr]);
+>  }
+>
+> +static inline int read_pipe(struct thread_data *td)
+> +{
+> +       int ret, m;
+> +retry:
+> +       if (nonblocking) {
+> +               ret =3D epoll_wait(td->epoll_fd, &td->epoll_ev, 1, -1);
+> +               if (ret < 0)
+> +                       return ret;
+> +       }
+> +       ret =3D read(td->pipe_read, &m, sizeof(int));
+> +       if (nonblocking && ret < 0 && errno =3D=3D EWOULDBLOCK)
+> +               goto retry;
+> +       return ret;
+> +}
+> +
+>  static void *worker_thread(void *__tdata)
+>  {
+>         struct thread_data *td =3D __tdata;
+> -       int m =3D 0, i;
+> -       int ret;
+> +       int i, ret, m =3D 0;
+>
+>         ret =3D enter_cgroup(td->nr);
+>         if (ret < 0) {
+> @@ -177,16 +196,23 @@ static void *worker_thread(void *__tdata)
+>                 return NULL;
+>         }
+>
+> +       if (nonblocking) {
+> +               td->epoll_ev.events =3D EPOLLIN;
+> +               td->epoll_fd =3D epoll_create(1);
+> +               BUG_ON(td->epoll_fd < 0);
+> +               BUG_ON(epoll_ctl(td->epoll_fd, EPOLL_CTL_ADD, td->pipe_re=
+ad, &td->epoll_ev) < 0);
+> +       }
+> +
+>         for (i =3D 0; i < loops; i++) {
+>                 if (!td->nr) {
+> -                       ret =3D read(td->pipe_read, &m, sizeof(int));
+> +                       ret =3D read_pipe(td);
+>                         BUG_ON(ret !=3D sizeof(int));
+>                         ret =3D write(td->pipe_write, &m, sizeof(int));
+>                         BUG_ON(ret !=3D sizeof(int));
+>                 } else {
+>                         ret =3D write(td->pipe_write, &m, sizeof(int));
+>                         BUG_ON(ret !=3D sizeof(int));
+> -                       ret =3D read(td->pipe_read, &m, sizeof(int));
+> +                       ret =3D read_pipe(td);
+>                         BUG_ON(ret !=3D sizeof(int));
+>                 }
+>         }
+> @@ -209,13 +235,16 @@ int bench_sched_pipe(int argc, const char **argv)
+>          * discarding returned value of read(), write()
+>          * causes error in building environment for perf
+>          */
+> -       int __maybe_unused ret, wait_stat;
+> +       int __maybe_unused ret, wait_stat, flags =3D 0;
+>         pid_t pid, retpid __maybe_unused;
+>
+>         argc =3D parse_options(argc, argv, options, bench_sched_pipe_usag=
+e, 0);
+>
+> -       BUG_ON(pipe(pipe_1));
+> -       BUG_ON(pipe(pipe_2));
+> +       if (nonblocking)
+> +               flags |=3D O_NONBLOCK;
+> +
+> +       BUG_ON(pipe2(pipe_1, flags));
+> +       BUG_ON(pipe2(pipe_2, flags));
+>
+>         gettimeofday(&start, NULL);
+>
+> --
+> 2.47.0.rc1.288.g06298d1525-goog
 >
 >
