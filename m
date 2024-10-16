@@ -1,127 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EF421E3C1;
-	Wed, 16 Oct 2024 14:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E82156225;
+	Wed, 16 Oct 2024 14:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729088538; cv=none; b=dZzPp3z3DWiQswZls45/oyeQlWUyLdECBxReI7XhqWSsIdP8xglqJf5nADxatGZBqF9yid++UcEYWHEMQC3AMVfZxoNb7TJUcYeKJ4psfK/lbzM1DzC9R1iL66XwnQgrdwyxuCSqBQOD0CRs4fqrCU1AbtyDV/sxakrAG4YNL3U=
+	t=1729089648; cv=none; b=qWxYxmIZOWfWqKb05u1uQqUgQ7NepwnIRkO4ieuu2tJUg3MKM+PvwLFkzEpmCKsdBiEvkfDbglKdg9RE0IsgVhUSgCQltmI3vYUunSFe3WNtoGmq2VpscAet/aX9EqjYcEvpF3q2u/73HPnsmqM8GM4a9xhcjCisWu+hj19i+9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729088538; c=relaxed/simple;
-	bh=gMskM2GDWGub7qyVinecyjz/vxqKyOtsZPjwLotEZR8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ctUZS7b358BUF1EwrY4nNlGwmHYeXz+6Q5+epVtTicowp08YDxMdvMBCUgntIET6vz8MVg6dBGEewj9kO+EWaB7UjcBBCPuhAXgq0i9HrlW5fjNcZTf+Cfvr1MjjCwRCa1BklfF8NRmI9eBsR+QBcxyc5/1OcQR3shvqalgvBTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X69X+0ij; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X69X+0ij"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3E73C4CEC5;
-	Wed, 16 Oct 2024 14:22:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729088538;
-	bh=gMskM2GDWGub7qyVinecyjz/vxqKyOtsZPjwLotEZR8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X69X+0ijrVC+ser2PGOmJE9v3cRx85QfgxDiKE09/hAHwEVQoe6S89mKPkpRl0CCM
-	 7Vr1naLKeUa3c2UoYnR5GUz49gvnRxnSiRYKuDIz0nyvsGJMJWgXZomvzLGvFU/5nk
-	 c6Ojyrjm++n5PRKHAFwMR/ab0tcu0u4cRzTErL+XVg6fcYsaYvO7lHKnpi4dF9Wwr4
-	 U6zXBxN3ux0X8/AMAkvmz0K0VKP1YTr0uiM7Sn0qqAmsi5HdHw3rMpWGVU0E8s6OBE
-	 YYZ8+8XD994EybvoMqGGHBLVUgylO/hY8bO4+X6y8fDKptYZ/EBBXOgAU/gwbyVt8S
-	 ra78Ua4wQFY1Q==
-Date: Wed, 16 Oct 2024 11:22:15 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>, Howard Chu <howardchu95@gmail.com>,
-	Andrea Righi <andrea.righi@linux.dev>, peterz@infradead.org,
-	mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, james.clark@linaro.org,
-	alan.maguire@oracle.com
-Subject: Re: [PATCH v2 0/2] perf trace: Fix support for the new BPF feature
- in clang 12
-Message-ID: <Zw_MFwkejeWC2qbv@x1>
-References: <20241011021403.4089793-1-howardchu95@gmail.com>
- <Zw61TUe1V97dKWer@google.com>
- <Zw7D9HXBanPLUO4G@x1>
- <Zw7JgJc0LOwSpuvx@x1>
- <Zw7SkmEaz730uVbL@x1>
- <Zw8fqyCZNqSABMkM@google.com>
+	s=arc-20240116; t=1729089648; c=relaxed/simple;
+	bh=ul8TFX6/qO2uhWK1XiYqRn/NjGuEyHYIevcEye9EmYY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Oc2uMr6L2BcROUCIG27XQI2ZYFG5rRIgU3+DNgkyNSg+JAPbeG8uMl8bqzOe0RYMdeknRp1YzAurmNg3pVb5zCGR+l8q/xoMW82XtiAl9JZYfRBau5d+vqw553rc+F/oYn+q/00Y9vSRB9nMQAz1kMMJVcsrfqcLMXRB3haGS5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 758AFFEC;
+	Wed, 16 Oct 2024 07:41:16 -0700 (PDT)
+Received: from [10.1.28.177] (XHFQ2J9959.cambridge.arm.com [10.1.28.177])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 848913F71E;
+	Wed, 16 Oct 2024 07:40:43 -0700 (PDT)
+Message-ID: <c997e5c6-ba45-4492-95ce-28747643bd39@arm.com>
+Date: Wed, 16 Oct 2024 15:40:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zw8fqyCZNqSABMkM@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 16/57] perf: Remove PAGE_SIZE compile-time constant
+ assumption
+Content-Language: en-GB
+To: Andrew Morton <akpm@linux-foundation.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ David Hildenbrand <david@redhat.com>, Greg Marsden
+ <greg.marsden@oracle.com>, Ivan Ivanov <ivan.ivanov@suse.com>,
+ Kalesh Singh <kaleshsingh@google.com>, Marc Zyngier <maz@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <mbrugger@suse.com>,
+ Miroslav Benes <mbenes@suse.cz>, Will Deacon <will@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-perf-users@vger.kernel.org
+References: <20241014105514.3206191-1-ryan.roberts@arm.com>
+ <20241014105912.3207374-1-ryan.roberts@arm.com>
+ <20241014105912.3207374-16-ryan.roberts@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20241014105912.3207374-16-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 15, 2024 at 07:06:35PM -0700, Namhyung Kim wrote:
-> Hi Arnaldo,
++ Arnaldo Carvalho de Melo, Ingo Molnar, Namhyung Kim, Peter Zijlstra
+
+This was a rather tricky series to get the recipients correct for and my script
+did not realize that "supporter" was a pseudonym for "maintainer" so you were
+missed off the original post. Appologies!
+
+More context in cover letter:
+https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
+
+
+On 14/10/2024 11:58, Ryan Roberts wrote:
+> To prepare for supporting boot-time page size selection, refactor code
+> to remove assumptions about PAGE_SIZE being compile-time constant. Code
+> intended to be equivalent when compile-time page size is active.
 > 
-> On Tue, Oct 15, 2024 at 05:37:38PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Tue, Oct 15, 2024 at 04:58:56PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > So I'm trying adding extra bounds checking, marking the index as
-> > > volatile, adding compiler barriers, etc, all the fun with the verifier,
-> > > but got distracted with other stuff, coming back to this now.
-> >  
-> > > Ok, the following seems to do the trick:
-> >  
-> > > [acme@dell-per740-01 perf-tools]$ git diff
-> > > diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > > index 3b30aa74a3ae..ef87a04ff8d0 100644
-> > > --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > > +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > > @@ -486,6 +486,7 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
-> > >                                 augmented = true;
-> > >                 } else if (size < 0 && size >= -6) { /* buffer */
-> > >                         index = -(size + 1);
-> > > +                       index &= 7; // To satisfy the bounds checking with the verifier in some kernels
-> > >                         aug_size = args->args[index];
-> > >  
-> > >                         if (aug_size > TRACE_AUG_MAX_BUF)
-> > > 
-> > > I'll now test it without Howard's patch to see if it fixes the RHEL8 +
-> > > clang 17 case.
-> > 
-> > It works with this one-liner + the simplified patch from Howard and also
-> > on this other system (RHEL9), as well as with Fedora 40, it would be
-> > nice if someone could test with clang 16 and report back the version of
-> > the kernel tested as well as the distro name/release, that way I can try
-> > to get my hands on such as system and test there as well.
-> > 
-> > Its all at:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tmp.perf-tools
-> > 
-> > This is the current set of patches that when further tested will go to
-> > Linus for v6.12:
-> > 
-> > ⬢[acme@toolbox perf-tools]$ git log --oneline torvalds/master..
-> > ff14baa7a290bf42 (HEAD -> perf-tools, x1/perf-tools, perf-tools/tmp.perf-tools) perf trace augmented_raw_syscalls: Add more checks to pass the verifier
-> > 46180bec048aad85 perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
-> > 45d1aadac64869a2 perf build: Change the clang check back to 12.0.1
+> Refactor a BUILD_BUG_ON() so that we test against the limit; _format is
+> invariant to page size so testing it is no bigger than the minimum
+> supported size is sufficient.
 > 
-> Wouldn't it be better to have this change after fixing the verifier
-> issues in the later commits?
-
-I'm still testing it, this is a one-liner, so I think that the order in
-which the patches are applied isn't important. Also Howard's patch (the
-simplified one) doesn't clash with it.
- 
-> > 4e21679eb81b5f0d perf trace: The return from 'write' isn't a pid
-> > 2d2314d4b09b5ed9 tools headers UAPI: Sync linux/const.h with the kernel headers
-> > ⬢[acme@toolbox perf-tools]$
+> Wrap global variables that are initialized with PAGE_SIZE derived values
+> using DEFINE_GLOBAL_PAGE_SIZE_VAR() so their initialization can be
+> deferred for boot-time page size builds.
 > 
-> I guess you also need the syscalltbl fix from Jiri Slaby.
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
 > 
-> https://lore.kernel.org/linux-perf-users/3a592835-a14f-40be-8961-c0cee7720a94@kernel.org/
+> ***NOTE***
+> Any confused maintainers may want to read the cover note here for context:
+> https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
+> 
+>  include/linux/perf_event.h | 2 +-
+>  kernel/events/core.c       | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 1a8942277ddad..b7972155f93eb 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1872,7 +1872,7 @@ _name##_show(struct device *dev,					\
+>  			       struct device_attribute *attr,		\
+>  			       char *page)				\
+>  {									\
+> -	BUILD_BUG_ON(sizeof(_format) >= PAGE_SIZE);			\
+> +	BUILD_BUG_ON(sizeof(_format) >= PAGE_SIZE_MIN);			\
+>  	return sprintf(page, _format "\n");				\
+>  }									\
+>  
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 8a6c6bbcd658a..81149663ab7d8 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -419,7 +419,7 @@ static struct kmem_cache *perf_event_cache;
+>  int sysctl_perf_event_paranoid __read_mostly = 2;
+>  
+>  /* Minimum for 512 kiB + 1 user control page */
+> -int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024); /* 'free' kiB per user */
+> +__DEFINE_GLOBAL_PAGE_SIZE_VAR(int, sysctl_perf_event_mlock, __read_mostly, 512 + (PAGE_SIZE / 1024)); /* 'free' kiB per user */
+>  
+>  /*
+>   * max perf event sample rate
 
-Right, he provided a report about the patch I sent solving the case, I
-have to check if he replied to my question about perf trace actually
-_working_ on a 32-bit arch system.
-
-I also want to test it, I'm trying to get hold of such a system.
-
-- Arnaldo
