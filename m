@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301272139CF
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 17:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194D22144AA
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 17:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729101243; cv=none; b=SPWVSBQBQmO9z9iublsGJRT0AKQfxLlRH6ciAIp+cwavDgBU+T4O74YG/CxHpPvjMZjW32k+A3oFb6cX8FdEEEAHyFy2m2x6xV9EIIkVGWICbiB+w3cHOIqNLYDT1oGti4ZMl/RdNZ7uO4uYAt/sSNiTBSJGvqaH4PKqHUmam9c=
+	t=1729101246; cv=none; b=EKEeH3begS1Eb7rBBhw/S3SEiGpEHna7W/yk/aMEc66HoxqwiWgGvEyq2XuVOheQdb0VF6kkwEPbqHQv7tXCLuGMVQYKnPme6NOz0VMMTNTVWrtMit5kU27YpnUlOvrzTPRA1yT9cu2qZJoW2zokPsUm1x4SW+bY+FIZWo1R7KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729101243; c=relaxed/simple;
-	bh=d4p2SSC+jRmzGX9QPS6kNxF3hzHXI6/kfpx81KrMoUw=;
+	s=arc-20240116; t=1729101246; c=relaxed/simple;
+	bh=tWKJqnfBwSOmrMspZ2sdkDVmtmOQkJadh5Otwb2PTrM=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=kzz924P1YpDFpSpaHDvbQJQu6yxYHTpQ2JwjEwO+LuOs3XX47PXMlVj/flGcMitLy0LQ06CHR1NFq7i5K4PDapVpWHlF2uM13lza6h7IvsSbNkeGdKhooys6DoVx93FAQc6tL9JkBZfW8pnz6VdiSo/s/f984JbMVf2Zw1v0Lu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OkB0J/f2; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=D5hbmZBWOqFV9hSLxwJ5UZgNkzpbOyT7lQlWsQIyFFGp63LEzmfFqfyx9xsZkSuGPvj3vSldcpv0K2GWfbspW83QaRmwejnKYeCSvpAbzvsCArHNwFLYCjAvVqtc5/xa/le/75LP9z7ldewIPUIR9iuIg6+sovFM4kdu/HDL+KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nSFuQ3zv; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OkB0J/f2"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e376aa4586so3341187b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 10:54:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nSFuQ3zv"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e29142c79d6so56509276.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 10:54:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729101241; x=1729706041; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729101243; x=1729706043; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=82hKZR8Ty5xgYC+xyYfKClAaNBzZJMlhS4+fNhwIq44=;
-        b=OkB0J/f2hP9TFV7P62zun8ZB0OuWZEPuVPtCU3UYh2Eal0/ZyFLfyTec4jSYx8Atru
-         jrePS5Ta9uQGL5gYxSy6QIEAAmGNY4Stvw2OOYOYM5s8f4Ec8hy80s2XvcGftyRpuMi5
-         LFl/cK6EgnulqgSUxMBMs8/SHeM/1kkgnDpSKmJQDHcawq1LI40nMeNQpJ+u6YpmGeSl
-         j9lBiSLGXVNAGyRaTWIv8unVz6JgPxfdefk/5diag7COe6tinlnaZWliJsiaWQNt4gCl
-         8AZqBwDLW20zA89+kBgHk3nDNqvLOrYUewYciqHj3JeF5oq0u3oZTRxq9zY4C1YP077J
-         lq1g==
+        bh=e2/oyoGU6HrX/Xxl9SMoDXlcRLOo1IYbCdJ0T7Dlej0=;
+        b=nSFuQ3zv66b3+ICwOEnquoFChnbGinRg9mzWc9uWveUrqxeAG08VyQFH+EOjj8KESa
+         ZBvJQg4TvwynzA882n69dDe3cR3v7shN4Jf+baKR2t9F9mvLXKNj2BRejIyJeTF4NuwX
+         qOarH0H2rBEoohjfNdjswKypw0N5Y1hWcVlQINlKNxZ1qEjZ/Zd8Vsv9CR55vCzs1Pdg
+         7ei7TP+9jwyOvF++8Eo+zju2MVsHvQogNxaJbIIRfWwpivSkB15pI/z+CSdJfcJDbGiX
+         J1E0KM2vdvPUsGjW9yqYDivz3YraLeFfBmy3RZRdgdOeO4WKyOyTS8+tdBRLxWZ1FR8L
+         eUUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729101241; x=1729706041;
+        d=1e100.net; s=20230601; t=1729101243; x=1729706043;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=82hKZR8Ty5xgYC+xyYfKClAaNBzZJMlhS4+fNhwIq44=;
-        b=jJLDhCwLWzBhIREctFJqTBOoWEfDKizgjrmTSIVrFLLgTx5bpzrCdjEqHRgZVnMks9
-         XigxSf3gemulfGPk3NrRWqjSFrgPqdDsHZ48501W2xtpHAow5EE95EZJ/GiSrjpC1YV9
-         iHMnukew+zSbnbaG685MrTBohUyo7FZGmG6QmBpx9kRkC8a9aCNJQgrLpGgdYMOYadG1
-         0PsTcBzv3c34md3yiilqY6xsdqexUf/xGhu/VYY+XvkeASwRxCWz85hdJKJHbxzIW+bS
-         0j4BBoP+I1fToI+QxcwBvq+PCehtNlD7kEsKbR+tMIqlhDdKFEFydt9AB5Sk/17fKQ9J
-         J25g==
-X-Forwarded-Encrypted: i=1; AJvYcCUfcw6gjcu1DmGiNii1cGdbCToqvYwUjoq1krF+69DEL4YQnmGIQo0Sdjl3CM30i1SVxfKwVEp89tSWmw6Ogb6C@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlLZ4Itu59mPdzoGm8w3o0urtluG3Capr+PgvtWRMfVK4rQ36V
-	G+eQYZGdOS1nzADNQfBXKmtB9TNRS7DFfeHfoqXCiJJXJWKCwNoHkidq9tAam2YzYKp9Q5K/9rG
-	ETMAV6Q==
-X-Google-Smtp-Source: AGHT+IELo/jxtpIhUM+zuErAUU16bxjwCcPutOaOC6eTpP+GPy7PKQPs4wQx1eWp+F3YHF1VSqeKWTcYrvVB
+        bh=e2/oyoGU6HrX/Xxl9SMoDXlcRLOo1IYbCdJ0T7Dlej0=;
+        b=ABMxajOZ69R9XBpPSPx+r0qBdcXqwEnzAs+scmpKyJU4iZEB0m3VYYWsMuw6A7dZP6
+         VSRs6wfz986otbIn0eVSz3M096k0euKIbU3ytunmKRvJbIJk3vZVlEliTe7HfAsAAUB5
+         z4X5lqaDPKlcsFap4pMWMncAPdQJBgyhKAOhkBLlgC3BuYAKRo4VMj24VAQA+GHT+wjY
+         qflu0ne3DU5YlEYKUaMmY7j2fT6HXvnTOzFYArufbiYYTacIx7WPv2vwMI1pk0HDrpwc
+         zHWff9UMp34/CRoRTPSyo1iaSVSGRh5qI5PkhtwRqqQhYOXkLamUkfmcxTYjx5c8pz3v
+         gPwg==
+X-Forwarded-Encrypted: i=1; AJvYcCWFyHgWVGd5fVzwTHfw8UT8fON4gcP8uY3x9iVY8CXdAvZGkbwPtfT64it5GaY+ft/ezApTKd7+O5jMqSuSoa2v@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7U0gEfOmTcsRGFgRM+MW9PtfVwBS1jH6tj09qKJqIV3mGdLlc
+	l2K0pYC7S3FZ/J3Y+acudlaE+kC3iymft2nKXy+Lil8qIAjY8beCnPOjFRNejwv8gBsgJ+rj06u
+	uWPYsHg==
+X-Google-Smtp-Source: AGHT+IHCPG9L9oWbfk5tOWCZkv2tp2sF7rrGkdVUIb+ubd1ZsfFeQQS6KOfWmd9ApJSK1xc5jRsIrFnSeVvf
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:a00a:f237:9bc0:79c])
- (user=irogers job=sendgmr) by 2002:a25:a227:0:b0:e29:1864:5215 with SMTP id
- 3f1490d57ef6-e29782d1629mr2522276.1.1729101241059; Wed, 16 Oct 2024 10:54:01
+ (user=irogers job=sendgmr) by 2002:a25:dc10:0:b0:e2a:e7e2:60cf with SMTP id
+ 3f1490d57ef6-e2ae7e2629bmr1152276.10.1729101243038; Wed, 16 Oct 2024 10:54:03
  -0700 (PDT)
-Date: Wed, 16 Oct 2024 10:53:45 -0700
+Date: Wed, 16 Oct 2024 10:53:46 -0700
 In-Reply-To: <20241016175350.116227-1-irogers@google.com>
-Message-Id: <20241016175350.116227-4-irogers@google.com>
+Message-Id: <20241016175350.116227-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241016175350.116227-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.105.g07ac214952-goog
-Subject: [PATCH v3 3/8] perf stat: Display "none" for NaN with metric only json
+Subject: [PATCH v3 4/8] perf stat: Drop metric-unit if unit is NULL
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,45 +76,36 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Return earlier for an empty unit case. If snprintf of the fmt doesn't
-produce digits between vals and ends, as happens with NaN, make the
-value "none" as happens in print_metric_end.
+Avoid cases like:
+```
+$ perf stat -a -M topdownl1 -j -I 1000
+...
+{"interval" : 11.127757275, "counter-value" : "85715898.000000", "unit" : "", "event" : "IDQ.MITE_UOPS", "event-runtime" : 988376123, "pcnt-running" : 100.00, "metric-value" : "0.000000", "metric-unit" : "(null)"}
+...
+```
+
+If there is no unit then drop the metric-value too as:
+Suggested-by: Tim Chen <tim.c.chen@linux.intel.com>
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-display.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ tools/perf/util/stat-display.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index ef0ca8cd802d..a137b377efa4 100644
+index a137b377efa4..c6d33010ed22 100644
 --- a/tools/perf/util/stat-display.c
 +++ b/tools/perf/util/stat-display.c
-@@ -610,19 +610,22 @@ static void print_metric_only_json(struct perf_stat_config *config __maybe_unuse
- {
+@@ -471,8 +471,8 @@ static void print_metric_json(struct perf_stat_config *config __maybe_unused,
  	struct outstate *os = ctx;
  	FILE *out = os->fh;
--	char buf[64], *vals, *ends;
-+	char buf[64], *ends;
- 	char tbuf[1024];
-+	const char *vals;
  
- 	if (!valid_only_metric(unit))
- 		return;
- 	unit = fixunit(tbuf, os->evsel, unit);
-+	if (!unit[0])
-+		return;
- 	snprintf(buf, sizeof(buf), fmt ?: "", val);
--	ends = vals = skip_spaces(buf);
-+	vals = ends = skip_spaces(buf);
- 	while (isdigit(*ends) || *ends == '.')
- 		ends++;
- 	*ends = 0;
--	if (!unit[0] || !vals[0])
--		return;
-+	if (!vals[0])
-+		vals = "none";
- 	fprintf(out, "%s\"%s\" : \"%s\"", os->first ? "" : ", ", unit, vals);
- 	os->first = false;
+-	fprintf(out, "\"metric-value\" : \"%f\", ", val);
+-	fprintf(out, "\"metric-unit\" : \"%s\"", unit);
++	if (unit)
++		fprintf(out, "\"metric-value\" : \"%f\", \"metric-unit\" : \"%s\"", val, unit);
+ 	if (!config->metric_only)
+ 		fprintf(out, "}");
  }
 -- 
 2.47.0.105.g07ac214952-goog
