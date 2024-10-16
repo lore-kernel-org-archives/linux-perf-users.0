@@ -1,140 +1,143 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525FD1D4351
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 22:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E8B1D4326;
+	Wed, 16 Oct 2024 23:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729117310; cv=none; b=p2udHWPCdU1WuhXdO46BZtXrSbwJOt2/ooz89t5TjuLVgJBn4V7sYH+M6KVtsHq+k7Fezatg9zio/amv0tivi2oratYoFzg2kSkKFlqoX6GMmbZtcPeHkp87D1w3eUgU5F3K8CmRS66RW4w8LHtw9lDxKOPP6cF6+PCp1T/Bkgw=
+	t=1729122540; cv=none; b=KRcQ9yfpiktWv7GZO55pEBj0HPTFUrVV1f14HnEjS0wkZFUGQL0XXV59OOKdvbF+S9lhL3UEQa5+dkWaI2xqd3gi2Mh4C32OvjDViw35DguDjaW5UKy8dCaVNVRfJZM36g+ASskdJ153bltYF/fSAWXzEXKWNcxo40dDrOEWJeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729117310; c=relaxed/simple;
-	bh=Z3ayjFJol3t+JrwPYtJyBbDwU16XxVVIKPsBEf5HWlw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=afneKuF+nqGuWeiol30XhI1+z/dIoiM9MAOdadisSlq24IMXzjX3iLxGCbFjug2LB9+iIeRLcpKfZiLcUG3r4yjULFrOAhsTr6JUjt8jTfOlthuOLl8vwlVTAO1+l6+3yCstE2/WZwr0Nxim0eFVgdAmD4fSA1rf+Yxna64Ac/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mnoyuL2t; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1729122540; c=relaxed/simple;
+	bh=OTwOkoWmfTn4F0dH9iJsnedRplKiFkYwk4xyDcdIE8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HOjTqBqVjhvYbBhbunsayuVLuVIhVGSg3wfSMx2DCMp1bw0EEKxhWbYlAUBYUUeOAviEdTaZK20IX8R1u3Wcx7fLp2luPCFFdRfL73tpLws2Iob2N7WMKvFpE8Y9Itn8V5ikIOCvOXjqvXepS9mUIEmXemJ2elJCOmV+m2QD5Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vs2FdFPi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mnoyuL2t"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5c96df52c52so429953a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 15:21:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729117306; x=1729722106; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=brWM2G6t2emt3c4j9EVo7ifDZXhOJXvFytTyLfgg90Q=;
-        b=mnoyuL2tjjd9AaxXDr82hATrE7NLmb5OJB+hrC5iGdd/7CX7mPlCKFMxtu2Oh8lGAh
-         GTcr+DZ1ZnR4w05HFrYOTOOQ0dlWNhra/TgEWOmeY2V/ygSIOsr3IAUrw5agFAiofLhY
-         IaWYuvvnQxrD+xlAoxNhljDEfYeDtFI1zVbwfit7wH/dJ4ajiZO4L6LSJh5kDheX9XwC
-         I+gQ+Cwbt2TYrhak+AOrRaERUuUxtyLjnCwS1BYqW6MtsHYtQRqxOgBqPYaBtalVmV7Y
-         K0x8XG4JOUvHZ/MasGi7VVYeYGYPu+4NnQPf/q92d5KWLmicZfpQ/1URrxcsUuaknJKR
-         PHtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729117306; x=1729722106;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=brWM2G6t2emt3c4j9EVo7ifDZXhOJXvFytTyLfgg90Q=;
-        b=Zu5ByBow7nkxZ0T82Y/Pu3W094jLnMsnWmXYQcXGRybOLJ7MFKvY99W7AN16HKynWh
-         36J+a4sXdyT3FylXO6J5npC2bBg3PZrnBLYaB1awCDr+0y5k6Il5NdDVoN0zX0PgFFl0
-         PAnffaz/ICf98hdoxyNCF/QwIY8d2i4Qh2ZlYEd8oPdUOWPTRrICNBY3nDcFWSudEHzv
-         6Sgci1+1eePEJZCQvEGoNBaAwTDMWzLYKl5xXNCXOWqnRc7GUkM0nfr+h9NU43Sx1NOX
-         eZNIPMlHbwu2QkkL6jaiJ1d2GXEbSS4hIkukfP6pgc/xrdMiQzFCX2YzZDlE1Nss7Akk
-         LvSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXatoyHAccorD4uRr2yL9sKRxDzomAPhSjqJFwUZmi/9OvYqFxZZdtY/nLUcEnLdrYrkc/fZ967v8DDjjXwhFTR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzky3ltLbapPMdMz0Hu8lBXRKs2c+50P+gUo33TjYqqIrn53drO
-	Y448nEND0FWAT+5YTfN1yyLiLlEHXpPjjKeE9UKWe5PnfEqkSHteSQPwmMx3zhKx+qMeIUEVY62
-	5WLGZoY29027nrlnefnHH0HPgusoUeSEnT8q6
-X-Google-Smtp-Source: AGHT+IF07Z3g6o1w4z/AIMrQc+IqyySmDc7fz9ahOcksvgrfvFQRgMCGsZu1SdjfEi+cXeR9yZ4s1v+3VJ01Rrmazho=
-X-Received: by 2002:a17:907:7ea0:b0:a77:c95e:9b1c with SMTP id
- a640c23a62f3a-a99e3b700b8mr1638007066b.27.1729117306331; Wed, 16 Oct 2024
- 15:21:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vs2FdFPi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 059D4C4CEC5;
+	Wed, 16 Oct 2024 23:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729122539;
+	bh=OTwOkoWmfTn4F0dH9iJsnedRplKiFkYwk4xyDcdIE8c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vs2FdFPi/ml057V1uZ/GMcyC8BPQpEXvAzu+LMqhPES4ha2Jz1BXFrWRuQXyZZ/4e
+	 EmX5O/Qw24ZdDeCKxHpEljE3vV6EDsf7+mwbAPKpfyr5pBJK7Lw3kqD8U3r6SjYAK7
+	 JnWRNhwNdtTRFqjjOgyv9FLWc3pnDsITCVRD/XEyAMbAiifCutrrZBLK6LP1keOC4O
+	 ySymYpJtnYl3QieW3fQY0na+WXRdKjxFlGucvFYgU8Ff/bakQS4wy8F1rsxgFX+AJP
+	 77+KqC7y7NSM1JmBoJ6J0BE2dLuCbtSFwKGzXSOSIgzpMYz2SJeCKjGmFIrD8gj5z1
+	 aEHuwA4BBVe6w==
+Date: Wed, 16 Oct 2024 16:48:57 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 0/8] Run tests in parallel showing number of tests
+ running
+Message-ID: <ZxBQ6Z2dvxmQ9Vi0@google.com>
+References: <20241011220354.756798-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241016221629.1043883-1-andrii@kernel.org>
-In-Reply-To: <20241016221629.1043883-1-andrii@kernel.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Wed, 16 Oct 2024 15:21:08 -0700
-Message-ID: <CAJD7tkZmDz5siqwSHmqck27taMHP+z_Ds2yJPXpzA6vFUOvTwQ@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf] lib/buildid: handle memfd_secret() files in build_id_parse()
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net, 
-	martin.lau@kernel.org, linux-mm@kvack.org, linux-perf-users@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, rppt@kernel.org, david@redhat.com, 
-	shakeel.butt@linux.dev, Yi Lai <yi1.lai@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241011220354.756798-1-irogers@google.com>
 
-On Wed, Oct 16, 2024 at 3:16=E2=80=AFPM Andrii Nakryiko <andrii@kernel.org>=
- wrote:
->
-> From memfd_secret(2) manpage:
->
->   The memory areas backing the file created with memfd_secret(2) are
->   visible only to the processes that have access to the file descriptor.
->   The memory region is removed from the kernel page tables and only the
->   page tables of the processes holding the file descriptor map the
->   corresponding physical memory. (Thus, the pages in the region can't be
->   accessed by the kernel itself, so that, for example, pointers to the
->   region can't be passed to system calls.)
->
-> So folios backed by such secretmem files are not mapped into kernel
-> address space and shouldn't be accessed, in general.
->
-> To make this a bit more generic of a fix and prevent regression in the
-> future for similar special mappings, do a generic check of whether the
-> folio we got is mapped with kernel_page_present(), as suggested in [1].
-> This will handle secretmem, and any future special cases that use
-> a similar approach.
->
-> Original report and repro can be found in [0].
->
->   [0] https://lore.kernel.org/bpf/ZwyG8Uro%2FSyTXAni@ly-workstation/
->   [1] https://lore.kernel.org/bpf/CAJD7tkbpEMx-eC4A-z8Jm1ikrY_KJVjWO+mhhz=
-1_fni4x+COKw@mail.gmail.com/
->
-> Reported-by: Yi Lai <yi1.lai@intel.com>
-> Suggested-by: Yosry Ahmed <yosryahmed@google.com>
-> Fixes: de3ec364c3c3 ("lib/buildid: add single folio-based file reader abs=
-traction")
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> ---
->  lib/buildid.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/lib/buildid.c b/lib/buildid.c
-> index 290641d92ac1..90df64fd64c1 100644
-> --- a/lib/buildid.c
-> +++ b/lib/buildid.c
-> @@ -5,6 +5,7 @@
->  #include <linux/elf.h>
->  #include <linux/kernel.h>
->  #include <linux/pagemap.h>
-> +#include <linux/set_memory.h>
->
->  #define BUILD_ID 3
->
-> @@ -74,7 +75,9 @@ static int freader_get_folio(struct freader *r, loff_t =
-file_off)
->                 filemap_invalidate_unlock_shared(r->file->f_mapping);
->         }
->
-> -       if (IS_ERR(r->folio) || !folio_test_uptodate(r->folio)) {
-> +       if (IS_ERR(r->folio) ||
-> +           !kernel_page_present(&r->folio->page) ||
-> +           !folio_test_uptodate(r->folio)) {
+On Fri, Oct 11, 2024 at 03:03:46PM -0700, Ian Rogers wrote:
+> Avoid waitpid so that stdout/stderr aren't destroyed prior to wanting
+> to read them for display. When running on a color terminal, display
+> the number of running tests (1 if sequential). To avoid previous
+> flicker, only delete and refresh the display line when it changes. An
+> earlier version of this code is here:
+> https://lore.kernel.org/lkml/20240701044236.475098-1-irogers@google.com/
+> 
+> Add a signal handler for perf tests so that unexpected signals are
+> displayed and test clean up is possible.
+> 
+> In perf test add an "exclusive" flag that causes a test to be run with
+> no other test. Set this flag manually for C tests and via a
+> "(exclusive)" in the test description for shell tests. Add the flag to
+> shell tests that may fail when run with other tests.
+> 
+> Change the perf test loop to run in two passes. For parallel
+> execution, the first pass runs all tests that can be run in parallel
+> then the 2nd runs remaining tests sequentially. This causes the
+> "exclusive" tests to be run last and with test numbers moderately out
+> of alignment.
+> 
+> Change the default to be to run tests in parallel. Running tests in
+> parallel brings the execution time down to less than half.
+> 
+> v2: Fix inaccurate remaining counts when running specific
+>     tests. Rename "remaining" to "active" to better reflect the
+>     testing behavior. Move the exclusive flag to test cases and not
+>     entire suites. Add more "(exclusive)" flags to test as
+>     suggested-by James Clark. Remove "(exclusive)" flag from test
+>     descriptions to keep the command line output more concise. Add
+>     James Clark's tested-by.
+> 
+> Ian Rogers (8):
+>   tools subcmd: Add non-waitpid check_if_command_finished()
+>   perf test: Display number of active running tests
+>   perf test: Reduce scope of parallel variable
+>   perf test: Avoid list test blocking on writing to stdout
+>   perf test: Tag parallel failing shell tests with "(exclusive)"
+>   perf test: Add a signal handler around running a test
+>   perf test: Run parallel tests in two passes
+>   perf test: Make parallel testing the default
 
-Do we need a comment here about the kernel_page_present() check to
-make it clear that it is handling things like secretmem?
+Nice work!  It looks much better now.
 
->                 if (!IS_ERR(r->folio))
->                         folio_put(r->folio);
->                 r->folio =3D NULL;
-> --
-> 2.43.5
->
+But I'm seeing more failures in parallel mode.  Maybe we want to
+keep the default serial mode for a little more.
+
+Thanks,
+Namhyung
+
+> 
+>  tools/lib/subcmd/run-command.c                |  33 +++
+>  tools/perf/tests/builtin-test.c               | 274 ++++++++++++------
+>  .../tests/shell/coresight/asm_pure_loop.sh    |   2 +-
+>  .../shell/coresight/memcpy_thread_16k_10.sh   |   2 +-
+>  .../coresight/thread_loop_check_tid_10.sh     |   2 +-
+>  .../coresight/thread_loop_check_tid_2.sh      |   2 +-
+>  .../shell/coresight/unroll_loop_thread_10.sh  |   2 +-
+>  tools/perf/tests/shell/list.sh                |   5 +-
+>  .../tests/shell/perftool-testsuite_report.sh  |   2 +-
+>  tools/perf/tests/shell/record.sh              |   2 +-
+>  tools/perf/tests/shell/record_lbr.sh          |   2 +-
+>  tools/perf/tests/shell/record_offcpu.sh       |   2 +-
+>  tools/perf/tests/shell/stat_all_pmu.sh        |   2 +-
+>  tools/perf/tests/shell/test_arm_coresight.sh  |   2 +-
+>  .../tests/shell/test_arm_coresight_disasm.sh  |   2 +-
+>  tools/perf/tests/shell/test_arm_spe.sh        |   2 +-
+>  tools/perf/tests/shell/test_intel_pt.sh       |   2 +-
+>  .../perf/tests/shell/test_stat_intel_tpebs.sh |   2 +-
+>  tools/perf/tests/task-exit.c                  |   9 +-
+>  tools/perf/tests/tests-scripts.c              |   7 +-
+>  tools/perf/tests/tests.h                      |   9 +
+>  tools/perf/util/color.h                       |   1 +
+>  22 files changed, 258 insertions(+), 110 deletions(-)
+> 
+> -- 
+> 2.47.0.rc1.288.g06298d1525-goog
+> 
