@@ -1,45 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CFE18660A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0791210C01;
 	Wed, 16 Oct 2024 17:12:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729098762; cv=none; b=Udpt0YsrBFk+eUKiNCpFY+HqGCG3F6MoWVxjBCJrm97NUGWDlKivIVFxUcJtSJt4kg9ZDEaJswiNqrP1MHx1dLa60cW/YeHLN5uog76K9vVCas/3kVV7+TBP/iQDBbRwgznlRA7idPG2deqnmhTWN7One3IyVwQnIBYsnxkILFk=
+	t=1729098763; cv=none; b=V8NiP8fT4tsKrDFtsmPiNyf/m2Y/YixjCEi1P1WeSjKguCL2Yqguv4+o5872Awu1m0p7blgOkLfpdWMjMjkJmRqBKU/U7WhzBVXFLzKgaYxJw/U9Ajuo4v4PUc6yI/N1hFdgDe4RbgWSNvt/v/jvn6gcz4e3cw34zU/XIkmaUoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729098762; c=relaxed/simple;
-	bh=Rl3gy5Vl2zrK+bfmn5LbLCvFikHLNss6GUqX9LuMmFY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=q3v7FfPTkYBnhglmUJszZAyX18mirLmmRJoi7gkxC8Zqs89NPmg+Pm6o+jphJ7+Sg90ofOKo30qe+vYUqGu9S8JupJ5Ymi0dSKCONypjHTpsm+2w9JO3/rvZIVQHe51XWpAKlueBHg5ZClNViK3iuFdL8rfavd4NnRGVul5qtO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=isWgfLIY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729098763; c=relaxed/simple;
+	bh=lFQPezS2i4B2u6KpoHCdXtTqSLsp8pf3GFF2tDZvQBM=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=kN70j1qF4uKBnjaBI/mRjsdprH+pEyN4lmBWVF1KDcTkUCZl4AS3yYkmlZQBDzzHsdol1EaiztTJq6AfE5fUJM7vn/mT6MsAY2Ouhd1nfO9qLNxnCRAFV4GawqERb3CAUXf7L8i/IBsTAMI0x/iEX/F/l7HcUhYRI2465OMQkTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iqK7ac09; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="isWgfLIY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84D57C4CEC5;
-	Wed, 16 Oct 2024 17:12:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iqK7ac09"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14D1DC4CED1;
+	Wed, 16 Oct 2024 17:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729098761;
-	bh=Rl3gy5Vl2zrK+bfmn5LbLCvFikHLNss6GUqX9LuMmFY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=isWgfLIYBS1wHJOsuT8iupAnds4s+m2FhP5XUjSZIgPyugkLuoESsVre6qiaFnytu
-	 XmnHzppFtxS5JqD3uidzobZpaGi82BNXgSpKP10OJUHDjbYOlEqSP8vuLFJOfYhYvr
-	 sVt62RuRA3lBVW5jU+P9jKiV2U8DBTwMsV+tQXGItkg9WxrBNV47MmeGoSdJB7YuQD
-	 ni6b55mG8zKV5JrxPhjfHr6/U54097F0xpWdjrojfVhYgvhHAYAt58taC80GCtNVgt
-	 UneK7ymNYnyb/9EI7vJRxPObyV5taLyQF9AIloJ3C4RDqJUs/u3UJoygupRbbgTrI1
-	 FrVFrtz8bjZCA==
+	s=k20201202; t=1729098762;
+	bh=lFQPezS2i4B2u6KpoHCdXtTqSLsp8pf3GFF2tDZvQBM=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=iqK7ac09qcSV2o14tzRzLMFQYHJObD2F5CMfcABKXEG+ztKVjK+zWnUM9b0r50X21
+	 EYxWyQAahpkSnbXt1yRRyNkvOfnDoJakqNlMMYC3szdHarJlG+sDtlGCNRFc6bqXVO
+	 Pyilw++3uUgzi92AN7ANjXCMUEBV/xmw3SA2Z9NIINo1OkWHjP40EEzNFr0I/4k8ty
+	 KSTCOCmxkhN2DSDAiWbqzcXOLc24Io5bGPGt2BnFKGQ0hW8rflOhGFfnC1T79D/U5k
+	 eNza3Z9NWohAR/H/bRMwbcpvvfw3+8QVvVukowwsY9yZWR/KqqyJ08PC8uZatxHUzm
+	 4LDg5RPZkiQuw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
- Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
- bpf@vger.kernel.org
-In-Reply-To: <20241009202009.884884-1-namhyung@kernel.org>
-References: <20241009202009.884884-1-namhyung@kernel.org>
-Subject: Re: [PATCH 1/2] perf tools: Fix possible compiler warnings in
- hashmap
-Message-Id: <172909876148.288721.10451526265503632803.b4-ty@kernel.org>
-Date: Wed, 16 Oct 2024 10:12:41 -0700
+ Ian Rogers <irogers@google.com>, 
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com, 
+ Tim Chen <tim.c.chen@linux.intel.com>, 
+ linux-perf-users <linux-perf-users@vger.kernel.org>, 
+ LKML <linux-kernel@vger.kernel.org>, 
+ Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <20241004170756.18064-1-vineethr@linux.ibm.com>
+References: <20241004170756.18064-1-vineethr@linux.ibm.com>
+Subject: Re: [PATCH v6] perf sched timehist: Add pre-migration wait time
+ option
+Message-Id: <172909876202.288721.13527604855301602409.b4-ty@kernel.org>
+Date: Wed, 16 Oct 2024 10:12:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,30 +52,19 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14-dev-d4707
 
-On Wed, 09 Oct 2024 13:20:08 -0700, Namhyung Kim wrote:
+On Fri, 04 Oct 2024 22:37:56 +0530, Madadi Vineeth Reddy wrote:
 
-> The hashmap__for_each_entry[_safe] is accessing 'map' as if it's a
-> pointer.  But it does without parentheses so passing a static hash map
-> with an ampersand (like &slab_hash below) caused compiler warnings due
-> to unmatched types.
+> pre-migration wait time is the time that a task unnecessarily spends
+> on the runqueue of a CPU but doesn't get switched-in there. In terms
+> of tracepoints, it is the time between sched:sched_wakeup and
+> sched:sched_migrate_task.
 > 
->   In file included from util/bpf_lock_contention.c:5:
->   util/bpf_lock_contention.c: In function ‘exit_slab_cache_iter’:
->   linux/tools/perf/util/hashmap.h:169:32: error: invalid type argument of ‘->’ (have ‘struct hashmap’)
->     169 |         for (bkt = 0; bkt < map->cap; bkt++)                                \
->         |                                ^~
->   util/bpf_lock_contention.c:105:9: note: in expansion of macro ‘hashmap__for_each_entry’
->     105 |         hashmap__for_each_entry(&slab_hash, cur, bkt)
->         |         ^~~~~~~~~~~~~~~~~~~~~~~
->   /home/namhyung/project/linux/tools/perf/util/hashmap.h:170:31: error: invalid type argument of ‘->’ (have ‘struct hashmap’)
->     170 |                 for (cur = map->buckets[bkt]; cur; cur = cur->next)
->         |                               ^~
->   util/bpf_lock_contention.c:105:9: note: in expansion of macro ‘hashmap__for_each_entry’
->     105 |         hashmap__for_each_entry(&slab_hash, cur, bkt)
->         |         ^~~~~~~~~~~~~~~~~~~~~~~
+> Let's say a task woke up on CPU2, then it got migrated to CPU4 and
+> then it's switched-in to CPU4. So, here pre-migration wait time is
+> time that it was waiting on runqueue of CPU2 after it is woken up.
 > 
 > [...]
 
