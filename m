@@ -1,203 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C63170A37;
-	Wed, 16 Oct 2024 06:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C7C1862AE
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 08:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729061815; cv=none; b=ipKOYnFpaYmYQ6iS4BZt+WXZlPmzotq/pywkKnN6MCepfG6NBbysXobPxOcc6nV6gSu6vWJpMUUnWHjBJZue2tCUNQLy96HG1RAmZDHxWqBF850+BT3rTtewLVR+2wgLFyMHjBvta5w7TQvDvML7aCVlIbUbhhC3O24VGI+ksR8=
+	t=1729067146; cv=none; b=Rz1bl6ZuSwomXyz0wI1Ivwjk3OvwOOjl8q8CALDaxoVSYwSt0VVytd1kwy3qAI69T+XbjYTmPSL1+a3taSTizDLRF39QuYQtLLrfli2a6z4l+6iGdad0bPXVTyuWx/C4ViIQdqrzOmSDVQbpZX/oQQPG6wb/9gyYFQ/Pkn1Yb7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729061815; c=relaxed/simple;
-	bh=67Lo5XWuBMF7Ka0ADi5GW/RvQSjy2I7Ba8q6tBW1DUo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gepOozrWvWZYJnykiKJMXBeI9PlMBirdN2zeerPy5833/YzacqaYNnmU8dsvl8LABUnRm1FuyvxWmQ2kIIlGQyiKt3I2AVQ7XEGEHbKR0DhYOMWLNe8R2TANnGnDiaQYKf0POBLEb6MT5593bRHKsobjTpZynoPzfWxrC3/5pMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eXEDOe0r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729067146; c=relaxed/simple;
+	bh=cHNU5Nlmdv0S2aOXaW1YmI5Vi55Yd0a+mORnEs+1XLE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JU/XtxWX5+RVPZVLEWfZ7E6gY2ErUDpi5u352C4bJkSx2a02Lfm/aE5f6b6cU0DVC124IoinicUkGTALISrq+8ToVISL6QYPbgi3DuQUavCo49hXDLTQUoLtm7xqBtvGA1mhuV6w+nroDuY+jroQjz4DicXcu/y7hwq6aYfZ99I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fQYIO/Z6; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eXEDOe0r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8430C4CEC5;
-	Wed, 16 Oct 2024 06:56:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729061815;
-	bh=67Lo5XWuBMF7Ka0ADi5GW/RvQSjy2I7Ba8q6tBW1DUo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=eXEDOe0rgoY9xpwBoNmyk5+/AH5CT2frDv5ITkGgxoBKBKAOLMkT72jI3p96nrSR6
-	 MoluXHpBjU+09J053pkrjDyYIQ2ft3odWhaLrnAzAX6OAwIXX6WktZJF8XT55G8mJP
-	 nKsyuxpLfT65r4++IS8wVcf3JQ47Vuupzp6YBAQWmFK+txyC1vrmZ83O557I4D8sRP
-	 tMhxnXUNuif1NAAdtn/p2a9cyQWez1i6e0bG/uLffLn5dwl3dLn1MxLnATXOymjBam
-	 /hen14b0mqLmyJvwEOxD7CCx6UwC/4sO4yEBPnIMAemWvgXiOL0lTTE+IyN1ZX0mVh
-	 mzVy+kTV1eGaA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	James Clark <james.clark@linaro.org>,
-	Leo Yan <leo.yan@arm.com>,
-	German Gomez <german.gomez@arm.com>,
-	Carsten Haitzler <carsten.haitzler@arm.com>
-Subject: [PATCH] perf test: Speed up some tests using perf list
-Date: Tue, 15 Oct 2024 23:56:54 -0700
-Message-ID: <20241016065654.269994-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fQYIO/Z6"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-37d4fd00574so406471f8f.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 01:25:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1729067143; x=1729671943; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YTtC+Ws3fVNan1tFRA0VRBhmS9l1bU8+DPHPhAm/2m8=;
+        b=fQYIO/Z6xB0J1wosZdLoyeYH6XGGTRxVGuMJKDjjDD4XJFYXrelXKdwIa4GqbZfZBa
+         awVBzuKRAA0f93lp9vSory4VvxkDxG0FVCz/c/JoeDDfdwKSAI+YUx4j829nS02noMaX
+         vfqYH7owLXd6IQTcHNasUcf6dX16AIAufwhw3x7cnj6hcpucNLAX1A3i73Depxvz7BIy
+         mTRjXTbScosj2pQhXSPYrBX/gQ4Ojq/aygdoj6jcVFoyUc5XaId6ZWIv+brf8ihzd4Eb
+         UlAQMyDRoFjBTDrKc11AWVJw1F+McoKgbfuf9tUBAZMa6mX5WRO1wLMGPF22yRyuJSKl
+         VNPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729067143; x=1729671943;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YTtC+Ws3fVNan1tFRA0VRBhmS9l1bU8+DPHPhAm/2m8=;
+        b=QNq4T2qspk1uUv9yWKD1bExCpjdaYIRqpfPQweqkknWBIbFaKiD/jWIzcAnWt9Gc1J
+         UKDzjPSx4f+PbnTE9WlllbhQ3ih2rx+RmmStpBWyiZWeotR6E4AIbiIryoxHn8C+BXa+
+         /Xnw8Rrf4L/14N0+Ohj2RURAK05Y5uXJ17nkgJnv+63bNLHwpQmqqgHnMi8hOZs1vUZC
+         lMVaK/oKYSSsPqXggaWMObPRtnrx2wyPFz1dN6qu4abG42UNiobA/YFNfwmbh++qahL9
+         zkXDcuTjxbBy6rBqc6KTSe620M1mwTMiRyqbBeFnGjmfAiycLryYi7A3lZfS1Tn91lRD
+         JC5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU87/VupGD2WMeB61IEBCFdzTL6IhMh2KAE3gsK5HsHulmWBlfkDIXSU/eFBcqKDCMcmrYO5l/sazziIKPUcArm@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd1W/hXg/BV+4nRmNqPXpv8BX+yb+n7ECKNNbFnfmzzmJXV3O+
+	yoxVjyDJw3H0Yp6RhPHiembpUOxzorT6NZi5+isCGRi7QUpHK4NDRh89Rf5Q0X4=
+X-Google-Smtp-Source: AGHT+IEMMChsNHzste9atUwBuPlSVeJ6Nh/ZCpuS0zBDCoPbZFXSkfvsEaGtm/P2e319k3WMElMnNg==
+X-Received: by 2002:a5d:6882:0:b0:371:8685:84c with SMTP id ffacd0b85a97d-37d551fbe1emr13520902f8f.15.1729067142813;
+        Wed, 16 Oct 2024 01:25:42 -0700 (PDT)
+Received: from [192.168.1.3] ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fc113f9sm3673888f8f.90.2024.10.16.01.25.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Oct 2024 01:25:42 -0700 (PDT)
+Message-ID: <c28ce930-9a70-4f23-9f6b-541c16c212e3@linaro.org>
+Date: Wed, 16 Oct 2024 09:25:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf test: Speed up some tests using perf list
+To: Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+ Leo Yan <leo.yan@arm.com>, German Gomez <german.gomez@arm.com>,
+ Carsten Haitzler <carsten.haitzler@arm.com>
+References: <20241016065654.269994-1-namhyung@kernel.org>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20241016065654.269994-1-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On my system, perf list is very slow to print the whole events.  I think
-there's a performance issue in SDT and uprobes event listing.  I noticed
-this issue while running perf test on x86 but it takes long to check
-some CoreSight event which should be skipped quickly.
 
-Anyway, some test uses perf list to check whether the required event is
-available before running the test.  The perf list command can take an
-argument to specify event class or (glob) pattern.  But glob pattern is
-only to suppress output for unmatched ones after checking all events.
 
-In this case, specifying event class is better to reduce the number of
-events it checks and to avoid buggy subsystems entirely.
+On 16/10/2024 7:56 am, Namhyung Kim wrote:
+> On my system, perf list is very slow to print the whole events.  I think
+> there's a performance issue in SDT and uprobes event listing.  I noticed
+> this issue while running perf test on x86 but it takes long to check
+> some CoreSight event which should be skipped quickly.
+> 
+> Anyway, some test uses perf list to check whether the required event is
+> available before running the test.  The perf list command can take an
+> argument to specify event class or (glob) pattern.  But glob pattern is
+> only to suppress output for unmatched ones after checking all events.
+> 
+> In this case, specifying event class is better to reduce the number of
+> events it checks and to avoid buggy subsystems entirely.
+> 
+> No functional changes intended.
+> 
+> Cc: German Gomez <german.gomez@arm.com>
+> Cc: Carsten Haitzler <carsten.haitzler@arm.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
 
-No functional changes intended.
-
-Cc: German Gomez <german.gomez@arm.com>
-Cc: Carsten Haitzler <carsten.haitzler@arm.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/lib/coresight.sh             | 2 +-
- tools/perf/tests/shell/lock_contention.sh           | 2 +-
- tools/perf/tests/shell/record.sh                    | 2 +-
- tools/perf/tests/shell/test_arm_coresight.sh        | 2 +-
- tools/perf/tests/shell/test_arm_coresight_disasm.sh | 2 +-
- tools/perf/tests/shell/test_arm_spe.sh              | 2 +-
- tools/perf/tests/shell/test_arm_spe_fork.sh         | 2 +-
- tools/perf/tests/shell/test_intel_pt.sh             | 2 +-
- tools/perf/tests/shell/trace+probe_vfs_getname.sh   | 2 +-
- 9 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/tools/perf/tests/shell/lib/coresight.sh b/tools/perf/tests/shell/lib/coresight.sh
-index 11ed2c25ed912649..184d62e7e5bdf9f4 100644
---- a/tools/perf/tests/shell/lib/coresight.sh
-+++ b/tools/perf/tests/shell/lib/coresight.sh
-@@ -18,7 +18,7 @@ BIN="$DIR/$TEST"
- # If the test tool/binary does not exist and is executable then skip the test
- if ! test -x "$BIN"; then exit 2; fi
- # If CoreSight is not available, skip the test
--perf list cs_etm | grep -q cs_etm || exit 2
-+perf list pmu | grep -q cs_etm || exit 2
- DATD="."
- # If the data dir env is set then make the data dir use that instead of ./
- if test -n "$PERF_TEST_CORESIGHT_DATADIR"; then
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-index c1ec5762215ba430..30d195d4c62f74d0 100755
---- a/tools/perf/tests/shell/lock_contention.sh
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -27,7 +27,7 @@ check() {
- 		exit
- 	fi
- 
--	if ! perf list | grep -q lock:contention_begin; then
-+	if ! perf list tracepoint | grep -q lock:contention_begin; then
- 		echo "[Skip] No lock contention tracepoints"
- 		err=2
- 		exit
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 8d6366d96883edb3..3eee72242290d1fb 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -94,7 +94,7 @@ test_per_thread() {
- 
- test_register_capture() {
-   echo "Register capture test"
--  if ! perf list | grep -q 'br_inst_retired.near_call'
-+  if ! perf list pmu | grep -q 'br_inst_retired.near_call'
-   then
-     echo "Register capture test [Skipped missing event]"
-     return
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-index 3302ea0b96723b1a..6b8c4831eedc6f10 100755
---- a/tools/perf/tests/shell/test_arm_coresight.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight.sh
-@@ -12,7 +12,7 @@
- glb_err=0
- 
- skip_if_no_cs_etm_event() {
--	perf list | grep -q 'cs_etm//' && return 0
-+	perf list pmu | grep -q 'cs_etm//' && return 0
- 
- 	# cs_etm event doesn't exist
- 	return 2
-diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-index af63e3757cb0a930..dba086a40d846721 100755
---- a/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-@@ -8,7 +8,7 @@
- # the script. Test all 3 parts are working correctly by running the script.
- 
- skip_if_no_cs_etm_event() {
--	perf list | grep -q 'cs_etm//' && return 0
-+	perf list pmu | grep -q 'cs_etm//' && return 0
- 
- 	# cs_etm event doesn't exist
- 	return 2
-diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
-index 03d5c7d12ee53d07..6c21fb1f10d8f129 100755
---- a/tools/perf/tests/shell/test_arm_spe.sh
-+++ b/tools/perf/tests/shell/test_arm_spe.sh
-@@ -9,7 +9,7 @@
- # German Gomez <german.gomez@arm.com>, 2021
- 
- skip_if_no_arm_spe_event() {
--	perf list | grep -E -q 'arm_spe_[0-9]+//' && return 0
-+	perf list pmu | grep -E -q 'arm_spe_[0-9]+//' && return 0
- 
- 	# arm_spe event doesn't exist
- 	return 2
-diff --git a/tools/perf/tests/shell/test_arm_spe_fork.sh b/tools/perf/tests/shell/test_arm_spe_fork.sh
-index 1a7e6a82d0e34124..8efeef9fb9564a56 100755
---- a/tools/perf/tests/shell/test_arm_spe_fork.sh
-+++ b/tools/perf/tests/shell/test_arm_spe_fork.sh
-@@ -5,7 +5,7 @@
- # German Gomez <german.gomez@arm.com>, 2022
- 
- skip_if_no_arm_spe_event() {
--	perf list | grep -E -q 'arm_spe_[0-9]+//' && return 0
-+	perf list pmu | grep -E -q 'arm_spe_[0-9]+//' && return 0
- 	return 2
- }
- 
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index 723ec501f99abe03..bf9017b812aa6ed9 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -5,7 +5,7 @@
- set -e
- 
- # Skip if no Intel PT
--perf list | grep -q 'intel_pt//' || exit 2
-+perf list pmu | grep -q 'intel_pt//' || exit 2
- 
- shelldir=$(dirname "$0")
- # shellcheck source=lib/waiting.sh
-diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-index 3146a1eece0789ae..97b4b9cd23784c89 100755
---- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-@@ -19,7 +19,7 @@ skip_if_no_perf_trace || exit 2
- . "$(dirname $0)"/lib/probe_vfs_getname.sh
- 
- trace_open_vfs_getname() {
--	evts="$(echo "$(perf list syscalls:sys_enter_open* 2>/dev/null | grep -E 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/')" | sed ':a;N;s:\n:,:g')"
-+	evts="$(echo "$(perf list tracepoint 2>/dev/null | grep -E 'syscalls:sys_enter_open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/')" | sed ':a;N;s:\n:,:g')"
- 	perf trace -e $evts touch $file 2>&1 | \
- 	grep -E " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch/[0-9]+ open(at)?\((dfd: +CWD, +)?filename: +\"?${file}\"?, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
- }
--- 
-2.47.0.rc1.288.g06298d1525-goog
+Reviewed-by: James Clark <james.clark@linaro.org>
 
