@@ -1,172 +1,174 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842E92144D6;
-	Wed, 16 Oct 2024 19:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9082C2141B9
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 19:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729107336; cv=none; b=JesjPsRE5y4JoJk0j1WjzMJ0Vs5rNncZni3wzIQMI2GOy1ZvpldCjDx4GDg08QUPkMA+n3a0TikqUqML0JCmUzeFpXc6kBhmZ9dW7LUFlbRjm9dohRoQnQuspIDGNALeoePgksLKnZU3yZwyKrxcnnyo5X0EcKDoYAkMHNUYtQE=
+	t=1729108796; cv=none; b=mv/1vaqR1cRkwN5v7n/JX2FwweUs1xBMNqbn3/yGwwgUvlQLFtT1gmJZVqOsVKQQszFBSDG9Z4Uwj7LWARXAMmYCg0r7h+2tRwBzE2HvdA7wZgWc1BF+TGhVaEc9yHRjtoiKJz/9wRCzy+xYePh6jZze2ojtu28pIJCuNJWexO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729107336; c=relaxed/simple;
-	bh=NNrE3qOWb+EtP1SO1axezSvQxQFBxRZOewvdPogIiNY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=cgOfup+EwBPQmnRArmfTfZKjWE/D3N5HOwWvaUKRxLv3Td7Z10J0++qacDPc1H2aIO2iI7Rnn7yt7cqx/gJzZ92zUdp99iz7s3nu7jnmJmQC6O9ofDLDy5OP69vna/Xp5aGyx0wWPRQXo9WCCj6OokbF0KX/HvZXzqrPQ2eDdBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HLtq5enn; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729108796; c=relaxed/simple;
+	bh=/ZtkV779/ytLCI0J/cbkxqqXWmY0bXLd/xN+SO3bDw0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=puRbk/hZ/C3LDx4XiqluAHzUW2WOjgHr+MzGrFdmbqPMY4OGOYzxWibRIQm27tl3PjzlHxvjz1xb9RM5WeVWZJ+ycFgSxXYo/fuSvhgCg6D2NbtpCnyccK50M9lafOsT+jFL25DP6dsZOfrXZDDN23phv9Y/uglJnunihUTpey8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ADUoIMa2; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLtq5enn"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-71e5130832aso118005b3a.0;
-        Wed, 16 Oct 2024 12:35:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ADUoIMa2"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a9a0ef5179dso23962666b.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 12:59:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729107334; x=1729712134; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=COadM9mdsklFEqY/AYc1kTUqOtiuxLFYkQWjQblcUb8=;
-        b=HLtq5enn+P7wkznoglSsUZSekjpbt17gufFZdVQ9s7qT+aXeQZ3MeSr8xY+yTLEZpX
-         U4wzUYwV8oeqqGa9TjiKAaxQUuliyTYY1bu/V41jvEm04a3AbsRYtzvpwMbUeC3W54bB
-         ABY71juL3H1fFfN9C5IY80DJOZOtCwhQ+NT+1l324/acgP++8PWTfAHNAVo4rpsz95WX
-         S/vI5wmwV0o05dWku3EBC6JxMihyAxwErdGuz5vQavXVEUDDK+0kUX7AXYIeGxxSFyal
-         V4SatUVc5zQTmD1ORstit0X08/BSVLYO6tvzBprMP6TbYEwnyGI5prBIGHxy9b6UU7LR
-         pvJw==
+        d=google.com; s=20230601; t=1729108792; x=1729713592; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y+lPf3FNOmE8pMU/2Iycp1XnYxIydARXrVQNA1uL0No=;
+        b=ADUoIMa2s+9DQ2EaNc3U00HPIBmyZ/dqzWJMR/kUt4DqIP7kmBNylM5/QFVQXGGdpg
+         IREOqLlR0FwQzeJOLuDDoCPzvlve0VsUOVPecl1g2rYx30d9Fxls0ka09Yl+AQ9T+3u9
+         y6cmnc7OZKXVxVlz/J9HWJ6TyBzfbPjQ/MkLc1KI57qDiG3+goIiB35KH6mLhOpObZ0f
+         UNce0sZrpwsvrs3Vf18bnu/gOboa1fwO2clAbtyF6AIdzgoyKfJ0+Qi6tbBbMWOkv6mI
+         1f53l0l3vPaxqlRr9uootXR8YQUHWNL7VVO3/P/RHyFx6Tb1DyirgFL4cmZ+qlKx5pea
+         OIZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729107334; x=1729712134;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=COadM9mdsklFEqY/AYc1kTUqOtiuxLFYkQWjQblcUb8=;
-        b=V9jU8WqZTakG7hEKTio8q5LfTthTExlMq7HPlg5g0oVhsYzE9l2PEuCrF8vM41zuh/
-         JaMjffM3E3nvM7lTkLt3zupb23FZCjDYHF1aUEMa5RLVzUNEHzEN8PgCnFqcFAC10sYU
-         iJw/43cvQsl7W7ZhqlIH/dS3384yzL9fHOFwrHv/0PABE9Waw6WX5pkDJOi04pBRhMjU
-         6bNGDvQZl6n/0Ioln/2eAQIHjl+vZwTZyPFKViUA4W0YC4n9HnIK4e/8u2wSn2R95QvQ
-         vpl+LpYLW4GAgX7P+WsUftnbqXY+pzOEsq+18uWtjNBSRTmUD3/8vqVABY4gB70uqnKA
-         UJQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUM7/p+rcfmCEQ46Fm3+SUs82OKzvl7QPqwuyhftNOHW5qAQrqGy3WK9STPzDh5hraohTbJwwKiOAt6ES3eilrd6g==@vger.kernel.org, AJvYcCWztfmMYTj6nYdXME8svb730k3z1m2g8UDoZuo/CkPJcIqyyk8HgWoFLXoTv383pcwKrwo=@vger.kernel.org, AJvYcCXu5QuclPf2rw/n3Y94GVw0xQWLEwhq6LRbO2GTVflsCQFRNW4xYhxK/+T/kq1xlBac8RO/mbeLhuwObA3t@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLig/mAq3CLW6/k1PxdMaCGvKzFmatimIF9GLvDM/078TSv+6E
-	OoKekkkGEXHJIezZof0bvpS5dXfyICfAY+kI0FeJxnpf40huLAb07S2BPIr9DrpHU4y3G0kcJGM
-	JLhpbMG1M5kIc9UZkWPguf1Ohv8k=
-X-Google-Smtp-Source: AGHT+IFoR2J8QArYG4GdvA2ZTWym2yAF0bf4yapmxEQIyk6yGf8CBIPNs9eBCYoDoGXIUYd1KvkSmPfdgVyJgfl2iMU=
-X-Received: by 2002:a05:6a00:2e11:b0:71e:6ed:9108 with SMTP id
- d2e1a72fcca58-71e4c13db67mr24548702b3a.2.1729107333688; Wed, 16 Oct 2024
- 12:35:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729108792; x=1729713592;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y+lPf3FNOmE8pMU/2Iycp1XnYxIydARXrVQNA1uL0No=;
+        b=jIJjrHtmg6xvwzhleP/RVKzPVRMtqdGfOyP8YNDb3KdONnWHlQDQdfu2mSUecqwumU
+         mnYEyFsj1JtwGcFl93Btb2fBcT5wTmYQK9sQM6mz9YvTadRABJeKfnlKDxAqjlI8Xgtj
+         FTE10xTlfAHTPwK6bf9/sXG0+ZlqOmnErZnIEaZE25GRCJJSGGmhXDDEmJwB1B6IqwuC
+         CzoBJ4NgOL4D9+0NxaVqmvrWSaX6acPby9/FoFDviQ0ScHByQkzmAIYUhIcMiJEhG/AG
+         CI+LRCcLxw+AjgmhVXpkVGs6/kOMK5w+0dvofQagLWkwUYE4B0ysrB8o6gSFgje6oIl+
+         ilfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVx5+6UAZr851S/oSfcqSUcatIl9Ja+XOt/XJOxYhTenQ62OK8S1bSTqs0E+eVm6q/PBc5BCOmDp4PE/uTcMWDg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTAV9FiAI9IrrgJLgjlYg1Os4UqsCHXiUgWqYDSXun3Hui3uYo
+	nnCJ2yTnCy3SqOQ6XtBlEqUsLzl2BtJq1nq9D2qW+jXeczHa/PrYdcuTcg4IJBO27E3dF9H44Kg
+	4N/N1EuWQDRWHRBlQvfJyn9lE3QhL8EXZACiC
+X-Google-Smtp-Source: AGHT+IHeHGSJGST3y7pnbjWTe7yANkgiRQ1Q+ewN/4YgOGby4P6amBbfCGy33IqgOgmGsE0A8OhBdeVemB3UzdU3xTM=
+X-Received: by 2002:a17:907:9815:b0:a99:5d4c:7177 with SMTP id
+ a640c23a62f3a-a9a34c80793mr404655566b.6.1729108791587; Wed, 16 Oct 2024
+ 12:59:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 16 Oct 2024 12:35:21 -0700
-Message-ID: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
-Subject: The state of uprobes work and logistics
-To: Peter Ziljstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Liao Chang <liaochang1@huawei.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Kernel Team <kernel-team@meta.com>
+References: <20241014235631.1229438-1-andrii@kernel.org> <2rweiiittlxcio6kknwy45wez742mlgjnfdg3tq3xdkmyoq5nn@g7bfoqy4vdwt>
+In-Reply-To: <2rweiiittlxcio6kknwy45wez742mlgjnfdg3tq3xdkmyoq5nn@g7bfoqy4vdwt>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Wed, 16 Oct 2024 12:59:13 -0700
+Message-ID: <CAJD7tkbpEMx-eC4A-z8Jm1ikrY_KJVjWO+mhhz1_fni4x+COKw@mail.gmail.com>
+Subject: Re: [PATCH bpf] lib/buildid: handle memfd_secret() files in build_id_parse()
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, martin.lau@kernel.org, linux-mm@kvack.org, 
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Yi Lai <yi1.lai@intel.com>, pbonzini@redhat.com, seanjc@google.com, 
+	tabba@google.com, david@redhat.com, jackmanb@google.com, jannh@google.com, 
+	rppt@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, Oct 16, 2024 at 11:39=E2=80=AFAM Shakeel Butt <shakeel.butt@linux.d=
+ev> wrote:
+>
+> Ccing couple more folks who are doing similar work (ASI, guest_memfd)
+>
+> Folks, what is the generic way to check if a given mapping has folios
+> unmapped from kernel address space?
 
-I wanted to provide a bit of a context about and tie together a few
-separate work streams (across a few separate kernel trees) all
-revolving around uprobe improvements, as there are a bunch of them and
-I'm sure it's hard to keep track of all of them. And hopefully I can
-also get Peter and ARM maintainer's input on some specific questions I
-asked below. Thank you in advance!
+I suppose you mean specifically if a folio is not mapped in the direct
+map, because a folio can also be mapped in other regions of the kernel
+address space (e.g. vmalloc).
 
-In short, in the last few months there was a high activity around
-fixing and improving uprobes. All this is the result of increased and
-more varied use of uprobes/uretprobe in production settings. Uprobe
-performance is **very** important, and yes, we do have real use cases
-that go to millions per second uprobe/uretprobe triggering throughput,
-unfortunately. So any small bit of performance and scalability
-improvement is helpful. No, this isn't just some nerdy perf
-optimization work (I've been asked this a few times, so I thought I'd
-emphasize this again).
+From my perspective of working on ASI on the x86 side, I think
+lookup_address() is
+the right API to use. It returns a PTE and you can check if it is
+present.
 
-So, we've already landed a bunch of work, mainly (not an exhaustive list):
+Based on that, I would say that the generic way is perhaps
+kernel_page_present(), which does the above on x86, not sure about
+other architectures. It seems like kernel_page_present() always
+returns true with !CONFIG_ARCH_HAS_SET_DIRECT_MAP, which assumes that
+unmapping folios from the direct map uses set_direct_map_*().
 
-  - various clean ups, API improvements, and bug fixes from Oleg
-Nesterov ([0], [1]). This simplified internal APIs and was a
-prerequisite of the rest of the work;
-  - changes to refcounting and RCU-ifying of uprobe lifetime from me
-([2]). This improved single-threaded performance somewhat, but mainly
-significantly improved scalability in the presence of multiple CPUs
-triggering lots of uprobes;
-  - ARM64-specific optimization of uprobe emulation of NOP instruction
-by Liao Chang ([3]). This change alone gives 2x (!) speed up for a
-USDT tracing use cases *on ARM64* (we already have this optimization
-in x86-64);
-  - there was a bit earlier work by Jiri Olsa ([4]) to add uretprobe()
-syscall, giving +30% speed ups.
+For secretmem, it seems like set_direct_map_*() is indeed the method
+used to unmap folios. I am not sure if the same stands for
+guest_memfd, but I don't see why not.
 
-And there are a few more outstanding changes:
+ASI does not use set_direct_map_*(), but it doesn't matter in this
+context, read below if you care about the reasoning.
 
-  - Jiri Olsa's uprobe "session" support ([5]). This is less
-performance focused, but important functionality by itself. But I'm
-calling this out here because the first two patches are pure uprobe
-internal changes, and I believe they should go into tip/perf/core to
-avoid conflicts with the rest of pending uprobe changes.
+ASI does not unmap folios from the direct map in the kernel address
+space, but it creates a new "restricted" address space that has the
+folios unmapped from the direct map by default. However, I don't think
+this is relevant here. IIUC, the purpose of this patch is to check if
+the folio is accessible by the kernel, which should be true even in
+the ASI restricted address space, because ASI will just transparently
+switch to the unrestricted kernel address space where the folio is
+mapped if needed.
 
-Peter, do you mind applying those two and creating a stable tag for
-bpf-next to pull? We'll apply the rest of Jiri's series to
-bpf-next/master.
-
-  - Liao Chang's ARM64-specific STP instruction emulation support
-([6]). This one will give 2x (!) improvement for a common case of
-having STP instruction being a first instruction in traced user
-function (similar to NOP for USDTs).
-
-ARM64 maintainers (cc'ed Catalin, Will, and Mark), can you guys please
-take another look? This one was a bit more controversial, but
-hopefully there is a way to massage it to be acceptable and not
-introduce unnecessary slowdowns (there were some concerns about memory
-ordering/visibility, which hopefully don't apply to uprobe cases).
-It's an important improvement, I'd really appreciate it if we can make
-progress here, thank you!
-
-  - my speculative VMA-to-uprobe lookup series ([7]). This makes entry
-uprobe scalability scale linearly with the number of CPUs (the
-ultimate goal of uprobe scalability work).
-
-I think it's ready to go in. It has **implicit** dependency on
-Christian Brauner's recent change for FMODE_BACKING, for which he
-provided a stable tag. Peter, do you have any remaining concerns or
-this can be also merged soon?
-
-  - another patch set of mine, switching uretprobe fast path to SRCU
-(with timeout) ([8]). This makes return uprobes (uretprobes) linearly
-scalable in the common case (again, the ultimate scalability goal).
-
-I haven't gotten much feedback here, would love to get some objective
-review here. This is an important counterpart to the speculative
-VMA-to-uprobe lookup series. Both are needed in practice.
-
-  - patch set dropping unnecessary siglock usage in uprobe by Liao
-Chang ([9]). This one removes yet another lock, for a less common case
-(at least on x86-64) of single-stepped uprobe (where the probed
-instruction can't be emulated).
-
-This one needs a rebase, but it was already acked by Oleg. Liao,
-please prioritize the rebase and send v4 ASAP, so this is not lost.
+I hope this helps.
 
 
-As you can see, lots of stuff needs to be landed and most of it is in
-good shape already. I'd love to hear thoughts of relevant people
-called out above, thank you!
-
-
-  [0] https://lore.kernel.org/linux-trace-kernel/20240729134444.GA12293@redhat.com/
-  [1] https://lore.kernel.org/linux-trace-kernel/20240929144201.GA9429@redhat.com/
-  [2] https://lore.kernel.org/linux-trace-kernel/20240903174603.3554182-1-andrii@kernel.org/
-  [3] https://lore.kernel.org/linux-trace-kernel/20240909071114.1150053-1-liaochang1@huawei.com/
-  [4] https://lore.kernel.org/linux-trace-kernel/20240523121149.575616-1-jolsa@kernel.org/
-  [5] https://lore.kernel.org/bpf/20241015091050.3731669-1-jolsa@kernel.org/
-  [6] https://lore.kernel.org/linux-trace-kernel/20240910060407.1427716-1-liaochang1@huawei.com/
-  [7] https://lore.kernel.org/linux-trace-kernel/20241010205644.3831427-1-andrii@kernel.org/
-  [8] https://lore.kernel.org/linux-trace-kernel/20241008002556.2332835-1-andrii@kernel.org/
-  [9] https://lore.kernel.org/linux-trace-kernel/20240815014629.2685155-1-liaochang1@huawei.com/
-
--- Andrii
+>
+> On Mon, Oct 14, 2024 at 04:56:31PM GMT, Andrii Nakryiko wrote:
+> > From memfd_secret(2) manpage:
+> >
+> >   The memory areas backing the file created with memfd_secret(2) are
+> >   visible only to the processes that have access to the file descriptor=
+.
+> >   The memory region is removed from the kernel page tables and only the
+> >   page tables of the processes holding the file descriptor map the
+> >   corresponding physical memory. (Thus, the pages in the region can't b=
+e
+> >   accessed by the kernel itself, so that, for example, pointers to the
+> >   region can't be passed to system calls.)
+> >
+> > We need to handle this special case gracefully in build ID fetching
+> > code. Return -EACCESS whenever secretmem file is passed to build_id_par=
+se()
+> > family of APIs. Original report and repro can be found in [0].
+> >
+> >   [0] https://lore.kernel.org/bpf/ZwyG8Uro%2FSyTXAni@ly-workstation/
+> >
+> > Reported-by: Yi Lai <yi1.lai@intel.com>
+> > Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
+> > Fixes: de3ec364c3c3 ("lib/buildid: add single folio-based file reader a=
+bstraction")
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > ---
+> >  lib/buildid.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/lib/buildid.c b/lib/buildid.c
+> > index 290641d92ac1..f0e6facf61c5 100644
+> > --- a/lib/buildid.c
+> > +++ b/lib/buildid.c
+> > @@ -5,6 +5,7 @@
+> >  #include <linux/elf.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/pagemap.h>
+> > +#include <linux/secretmem.h>
+> >
+> >  #define BUILD_ID 3
+> >
+> > @@ -64,6 +65,10 @@ static int freader_get_folio(struct freader *r, loff=
+_t file_off)
+> >
+> >       freader_put_folio(r);
+> >
+> > +     /* reject secretmem folios created with memfd_secret() */
+> > +     if (secretmem_mapping(r->file->f_mapping))
+> > +             return -EACCES;
+> > +
+> >       r->folio =3D filemap_get_folio(r->file->f_mapping, file_off >> PA=
+GE_SHIFT);
+> >
+> >       /* if sleeping is allowed, wait for the page, if necessary */
+> > --
+> > 2.43.5
+> >
