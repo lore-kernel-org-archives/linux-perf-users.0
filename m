@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F481B2185;
-	Wed, 16 Oct 2024 06:24:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5401B395F;
+	Wed, 16 Oct 2024 06:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729059846; cv=none; b=Iotk+i61nKlSp/FApvYUGmySFqj0VUwtwsa+avnQmBMs3ZRjknsBCo68uQtaF67Fu8o13mATwLddQT22l0pwnml2aMuFTcS+las+s09DP2K+J0DLHg9wcHhQFeOPiRwFwQBOgYtjGIltows2t7Uiv53GpVO8pJM5eVga+7j9GEo=
+	t=1729059846; cv=none; b=ASAR5uUV3apkLOB5re1QOZXcTThb+nFJVLqNx537HmJ3V1CrJfwG9AVgmKDXTeNPgfy9F3mMwt2KtP9w3DhVqeFMxVIkTJHAVCnvhIqXqI6XQsug+JCEun1dbD3X0+LMBEFlNT6qQAZNguliGHB2lsqDu/iico90QeQMihzGBEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1729059846; c=relaxed/simple;
-	bh=4u2/7ezE+cWeue94azvuOtqAysSTt8l2h1qfZ+QYrIY=;
+	bh=rnRrIKaQslEqNn8T+FG377t3JCt5vKicziBWbvSfEEI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hXOmlyFlRs6ybVJkEUCnjRu3+tFDLHfehIRVh7xfu99241I5P2y6B5VA8eiZKsbgt3AG8ir9liRWu4lth5y8lBXV4sS6XX1LrqOiKWU4GV5kuoevT+S/PlNG4lNQ2WfmgH5RQ864LbBgmvrak8Z8iST9Ej5GUMFXcFcGvMpIuPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hhIMjroL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=udieJi1eYAbHOcjLM3HhM6uRxdMEYJQw4vAxbKiMroIEAhhj+8r8L9hKN1h1kj3UWVUCtUCBEfYRYk9X7pKxwNimIsHCOy7c0Y9b5cLQyISltAkPYmtL5fzyoUR0Agtk6vMMd/79y6AxdeT4u7GX7dFicXkL6b/jmme22Icl+z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eMK1NizS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hhIMjroL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2612C4CED5;
-	Wed, 16 Oct 2024 06:24:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eMK1NizS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E120C4CED4;
+	Wed, 16 Oct 2024 06:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729059845;
-	bh=4u2/7ezE+cWeue94azvuOtqAysSTt8l2h1qfZ+QYrIY=;
+	s=k20201202; t=1729059846;
+	bh=rnRrIKaQslEqNn8T+FG377t3JCt5vKicziBWbvSfEEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hhIMjroLvSPwuDMpwrlguEJ9DcyquTNOp4sCqoLmfnh98y7GD6RqOVdg2U1iucbMl
-	 PqvMbGP9lMvOGOFSOFbHo5gtwtGkwF/ZeX5n7v1RjPAm9+IPFmtINp7Th9ab1sjwOl
-	 xez+Ve9+FVOHyOC4bb848Kc4hn8bxuJbpqS3/XD6YTmhg688QuDUCa8sYYdRu63r5i
-	 EhYOtLVwcK2yoJGjpVoFBFOno5OAgh4/CiSxkDoWy1MRCfyXzfGRKQ5BgLl/bu17cP
-	 HN639cH8V1m8MLraPsnrZs1S3uUbDH1fHDfTSCIMygFGvyDwtqakSSSo9dTuIKzO0f
-	 oIbpeNvFvzU9w==
+	b=eMK1NizSlWoQSIRj/eK5RnqG8te6h/Lh3wDLjiqC9ZDNJELcWV3CedJh8eHPbixwj
+	 j2b9njw9bF4j9V4yyP0FGhrpcZwCs20xVD0G8lXluE4SXL6zhOXKP/ZDUVnfgoI3UK
+	 3ma6x8L3aALbn1KHVGOq08dwHdOXJINjZ6uHlPhJQbi1gLUzT9sSusKEJlb3ubacnh
+	 iMRVwyrxeOiyZESKCUZ823bkBVolMbMe81xQ/CnCRNeHYUPeYMAIvksrilMPa22VqW
+	 wVhRDgw6/8HwC4zZZUBP7HklC3zPKcfT//09ujHDPgIVxve/xM0ZqKHc3/eXG15hUf
+	 oH+1Fm8pAk+hA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -45,9 +45,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Palmer Dabbelt <palmer@rivosinc.com>,
 	Mingwei Zhang <mizhang@google.com>,
 	James Clark <james.clark@linaro.org>
-Subject: [PATCH v5 6/9] perf tools: Move x86__is_amd_cpu() to util/env.c
-Date: Tue, 15 Oct 2024 23:23:56 -0700
-Message-ID: <20241016062359.264929-7-namhyung@kernel.org>
+Subject: [PATCH v5 7/9] perf tools: Check fallback error and order
+Date: Tue, 15 Oct 2024 23:23:57 -0700
+Message-ID: <20241016062359.264929-8-namhyung@kernel.org>
 X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
 In-Reply-To: <20241016062359.264929-1-namhyung@kernel.org>
 References: <20241016062359.264929-1-namhyung@kernel.org>
@@ -59,139 +59,98 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It can be called from non-x86 platform so let's move it to the general
-util directory.  Also add a new helper perf_env__is_x86_amd_cpu() so
-that it can be called with an existing perf_env as well.
+The perf_event_open might fail due to various reasons, so blindly
+reducing precise_ip level might not be the best way to deal with it.
+
+It seems the kernel return -EOPNOTSUPP when PMU doesn't support the
+given precise level.  Let's try again with the correct error code.
+
+This caused a problem on AMD, as it stops on precise_ip of 2 for IBS but
+user events with exclude_kernel=1 cannot make progress.  Let's add the
+evsel__handle_error_quirks() to this case specially.  I plan to work on
+the kernel side to improve this situation but it'd still need some
+special handling for IBS.
 
 Acked-by: Kan Liang <kan.liang@linux.intel.com>
 Reviewed-by: James Clark <james.clark@linaro.org>
 Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/arch/x86/util/Build |  1 -
- tools/perf/arch/x86/util/env.c | 19 -------------------
- tools/perf/arch/x86/util/env.h |  7 -------
- tools/perf/arch/x86/util/pmu.c |  2 +-
- tools/perf/util/env.c          | 23 +++++++++++++++++++++++
- tools/perf/util/env.h          |  4 ++++
- 6 files changed, 28 insertions(+), 28 deletions(-)
- delete mode 100644 tools/perf/arch/x86/util/env.c
- delete mode 100644 tools/perf/arch/x86/util/env.h
+ tools/perf/util/evsel.c | 38 +++++++++++++++++++++++++++++---------
+ 1 file changed, 29 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
-index 2607ed5c42966543..ce6d802a1381c5ab 100644
---- a/tools/perf/arch/x86/util/Build
-+++ b/tools/perf/arch/x86/util/Build
-@@ -10,7 +10,6 @@ perf-util-y += evlist.o
- perf-util-y += mem-events.o
- perf-util-y += evsel.o
- perf-util-y += iostat.o
--perf-util-y += env.o
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a7213cfa75f31150..68380d08a21c5a36 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2060,9 +2060,9 @@ static void evsel__detect_missing_brstack_features(struct evsel *evsel)
  
- perf-util-$(CONFIG_DWARF) += dwarf-regs.o
- perf-util-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
-diff --git a/tools/perf/arch/x86/util/env.c b/tools/perf/arch/x86/util/env.c
-deleted file mode 100644
-index 3e537ffb1353aab2..0000000000000000
---- a/tools/perf/arch/x86/util/env.c
-+++ /dev/null
-@@ -1,19 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include "linux/string.h"
--#include "util/env.h"
--#include "env.h"
--
--bool x86__is_amd_cpu(void)
--{
--	struct perf_env env = { .total_mem = 0, };
--	static int is_amd; /* 0: Uninitialized, 1: Yes, -1: No */
--
--	if (is_amd)
--		goto ret;
--
--	perf_env__cpuid(&env);
--	is_amd = env.cpuid && strstarts(env.cpuid, "AuthenticAMD") ? 1 : -1;
--	perf_env__exit(&env);
--ret:
--	return is_amd >= 1 ? true : false;
--}
-diff --git a/tools/perf/arch/x86/util/env.h b/tools/perf/arch/x86/util/env.h
-deleted file mode 100644
-index d78f080b6b3f889a..0000000000000000
---- a/tools/perf/arch/x86/util/env.h
-+++ /dev/null
-@@ -1,7 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _X86_ENV_H
--#define _X86_ENV_H
--
--bool x86__is_amd_cpu(void);
--
--#endif /* _X86_ENV_H */
-diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-index c3d89d6ba1bf03ad..e0060dac2a9f9242 100644
---- a/tools/perf/arch/x86/util/pmu.c
-+++ b/tools/perf/arch/x86/util/pmu.c
-@@ -16,7 +16,7 @@
- #include "../../../util/fncache.h"
- #include "../../../util/pmus.h"
- #include "mem-events.h"
--#include "env.h"
-+#include "util/env.h"
+ 	/*
+ 	 * Must probe features in the order they were added to the
+-	 * perf_event_attr interface.  These are PMU specific limitation
+-	 * so we can detect with the given hardware event and stop on the
+-	 * first one succeeded.
++	 * perf_event_attr interface.  These are kernel core limitation but
++	 * specific to PMUs with branch stack.  So we can detect with the given
++	 * hardware event and stop on the first one succeeded.
+ 	 */
  
- void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
- {
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 1edbccfc3281d2b1..ccb4640266428947 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -5,6 +5,7 @@
- #include "util/header.h"
- #include "linux/compiler.h"
- #include <linux/ctype.h>
-+#include <linux/string.h>
- #include <linux/zalloc.h>
- #include "cgroup.h"
- #include <errno.h>
-@@ -639,3 +640,25 @@ void perf_env__find_br_cntr_info(struct perf_env *env,
- 					     env->pmu_caps->br_cntr_width;
- 	}
+ 	/* Please add new feature detection here. */
+@@ -2288,6 +2288,25 @@ static bool evsel__detect_missing_features(struct evsel *evsel)
+ 	return false;
  }
-+
-+bool perf_env__is_x86_amd_cpu(struct perf_env *env)
+ 
++static bool evsel__handle_error_quirks(struct evsel *evsel, int error)
 +{
-+	static int is_amd; /* 0: Uninitialized, 1: Yes, -1: No */
++	/*
++	 * AMD core PMU tries to forward events with precise_ip to IBS PMU
++	 * implicitly.  But IBS PMU has more restrictions so it can fail with
++	 * supported event attributes.  Let's forward it back to the core PMU
++	 * by clearing precise_ip only if it's from precise_max (:P).
++	 */
++	if ((error == -EINVAL || error == -ENOENT) && x86__is_amd_cpu() &&
++	    evsel->core.attr.precise_ip && evsel->precise_max) {
++		evsel->core.attr.precise_ip = 0;
++		pr_debug2_peo("removing precise_ip on AMD\n");
++		display_attr(&evsel->core.attr);
++		return true;
++	}
 +
-+	if (is_amd == 0)
-+		is_amd = env->cpuid && strstarts(env->cpuid, "AuthenticAMD") ? 1 : -1;
-+
-+	return is_amd >= 1 ? true : false;
++	return false;
 +}
 +
-+bool x86__is_amd_cpu(void)
-+{
-+	struct perf_env env = { .total_mem = 0, };
-+	bool is_amd;
+ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		struct perf_thread_map *threads,
+ 		int start_cpu_map_idx, int end_cpu_map_idx)
+@@ -2408,9 +2427,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	return 0;
+ 
+ try_fallback:
+-	if (evsel__precise_ip_fallback(evsel))
+-		goto retry_open;
+-
+ 	if (evsel__ignore_missing_thread(evsel, perf_cpu_map__nr(cpus),
+ 					 idx, threads, thread, err)) {
+ 		/* We just removed 1 thread, so lower the upper nthreads limit. */
+@@ -2427,11 +2443,15 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
+ 		goto retry_open;
+ 
+-	if (err != -EINVAL || idx > 0 || thread > 0)
+-		goto out_close;
++	if (err == -EOPNOTSUPP && evsel__precise_ip_fallback(evsel))
++		goto retry_open;
+ 
+-	if (evsel__detect_missing_features(evsel))
++	if (err == -EINVAL && evsel__detect_missing_features(evsel))
+ 		goto fallback_missing_features;
 +
-+	perf_env__cpuid(&env);
-+	is_amd = perf_env__is_x86_amd_cpu(&env);
-+	perf_env__exit(&env);
++	if (evsel__handle_error_quirks(evsel, err))
++		goto retry_open;
 +
-+	return is_amd;
-+}
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 51b36c36019be666..ae604c4edbb7eb44 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -195,4 +195,8 @@ bool perf_env__has_pmu_mapping(struct perf_env *env, const char *pmu_name);
- void perf_env__find_br_cntr_info(struct perf_env *env,
- 				 unsigned int *nr,
- 				 unsigned int *width);
-+
-+bool x86__is_amd_cpu(void);
-+bool perf_env__is_x86_amd_cpu(struct perf_env *env);
-+
- #endif /* __PERF_ENV_H */
+ out_close:
+ 	if (err)
+ 		threads->err_thread = thread;
 -- 
 2.47.0.rc1.288.g06298d1525-goog
 
