@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC232144CD
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 17:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA1F215F5E
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 17:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729101249; cv=none; b=CDmnFWzmRDDTzVsWoC4XJc09WcMToTWtAFO73IoU0CWN0jNEoEBvDaBTmrB12iGnz/3/NzzgdLZvfmiSq73iHhCOqPtgBu8Pi5B9wbjiX7Mx727VVUoOPOGJemv3kMQdNF7dU8nf7sRo3f+PnIe3165hdPKcwCxAdAkPOhXJjtM=
+	t=1729101250; cv=none; b=CbX6k7MqCBg2hAR9Snf8gP2lmhk7uN9ME5qFNNidF3oDnexZN27uJJNtcG+3m22Hkz/Sj/FKd/3rorR0qWqVDhcB652q0PJ8KHb72eOe/su663NJJwHfE5aTaQmF3vqJybKwsffFUxyo5E2ws54LeHuVrtWTLqh/H+4JNYvAKPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729101249; c=relaxed/simple;
-	bh=RVW6wkDVKjRG51bYEhA4x0xQ+lNpEYTqs22+cLMthkA=;
+	s=arc-20240116; t=1729101250; c=relaxed/simple;
+	bh=E4U7wuaBoI9LgrVIYNQQ2sVZhXY461X+XET2GkpBy3I=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=U3LTx41B0wj7v7Mn4TOs3JtODhNJZ95pFWXZLuwacjXggiaDxeimR2kduycBgbYbzVnX2VFuoj6qnGNXmADa4viFYKMwdIpipI6BviAQZ2RMfp0UoSOlWGkUnGECtguRTXit5Qj7NXOTrR3mLvkdJWa9GIWFxeKNBtCzXxZbDYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SoGK99tZ; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=ZaqCNHji5g4uza+bJB94QTJDZAhgzSwsL3CXmC92tvtmkCwweZGVkaXp/teXA/8yGmU07UzjxpCInJYoTn3w1Qd6M6vpT8XxReltWblMsj3GBjnUu3lsbfXvpnLIp49MYLSDml9zegQ2rvNncu6IQZ6Fd+i/cM9rLy1zqQg8PAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i7gGUFOQ; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SoGK99tZ"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e29142c79d6so56546276.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 10:54:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i7gGUFOQ"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e02b5792baaso74543276.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 10:54:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729101245; x=1729706045; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729101247; x=1729706047; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YGfOVTovWxk2hP7JLrRDPs7H1ZDJlZRA8sfvnLLeCQY=;
-        b=SoGK99tZ2Tr1O9SRja9aQ+954D9NeIKr4VTKU8XA4AV6lTSTJvcfx6+0ofpYjJ7W4x
-         O1nrbjrmxDfFqQy5vCYW+fzTangUt2ucQOC733SKicKWVuso9TmYfo+fA0lU/Q4gl7SZ
-         6pGv1fOb6TBgrBauoXq945n04XDvop3Jf2XnVEx2JTK++C8E48/YHcakq+zDUeN7uuS1
-         0+/TxxAcq5gmsGtQRu3rVKfbm43M9iLbyp92IZ1kmd85YeDzXGWpTG4M9kwxH910/3Ca
-         fwMrcgvx1+u2izfXLkiz8M3/mHBvyxWXRzFqdxdTwiLR+7g2VP+J10XAU8F4R61uCvd+
-         SuJw==
+        bh=LGXxZcfS4OJGTX3QvHqzTzFNN5FRZqsvmi/1r7EUvS4=;
+        b=i7gGUFOQXRl1k3KQIKT01U/zYwe2lfirE2OjD93wJxLTq0hk82qra4y21YbPGqNL9l
+         COVbKyXKY+AQDStIG0nR+fLdFO5t/ut0w4zGAUsn0Qu+hd03s+WTL/LAJXXkdwqAyQVh
+         Gn9kYU9OvUKGdGlF2+7NCeAwylS/UzgtROwMDwfmKWzPvzwP0DlPOtUHfgn+ZaYFXrXF
+         5u/7VqM6PCa2y2RoxbJvHkgeGtwUQBKq/UgMvaV+fJeblSwcSCD0LywdNyv/pFUT4QVp
+         eIiibg9vnhCdmZ8HSCbTm60bU4Vox9VFnyLyErIRc6cZz41u9VEIidgsm8nQXDT6Qr3n
+         n1vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729101245; x=1729706045;
+        d=1e100.net; s=20230601; t=1729101247; x=1729706047;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YGfOVTovWxk2hP7JLrRDPs7H1ZDJlZRA8sfvnLLeCQY=;
-        b=d2VIO6dcYDwA3UR7lBhPqyDObUvqlendWN/oHTdCvKhMxguyEynTNfHRXokqJdAx51
-         DHtYrTN6iw89CHD7InazEmZgu/RucJ94DRLZTTtz6Cwu3hx9CLq7VNpeeiFkWH0U07f5
-         iU02xk/n2ornDREu4PFzVzV6mPaMt8psm/if/BZXn5s3ZFL033lPHt9HfSKe2stMMkQN
-         bE0c5rE2z/zZ1VNl7uQNXNbhjHbReQqWTUz06YjrNlRsp/yao1MPKPKhcWtgugNTEOkD
-         ZjG5HoQ6GUt3LFCNMwr98FqfANu7CBfcztHRLnWHLyh4ij3Dl5COJWdjtytlQTXYoZPX
-         eefQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEsD8Nm/25GgVLff3jnAM3/OdgviZuNEOJAlkaUBvYPsLpqnEyUHlX5ld4E0IXVMLC36qJfiTZBKMEGl/LvtIN@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTPlcEWqbCJBPxUwUggohj3pJ3lp0BluSTGR6CH9EDqw4EhxJ5
-	YIzL5XcZSYmaTNVM7+eckWpV+bmjNQ0gVvxExqWhhZT3yRLDNIhq/BWvxqbdvZJzLYIsh2KdLuB
-	kqsBTRQ==
-X-Google-Smtp-Source: AGHT+IGnjGhMvSzFHtZVcWPfdwWsuD0sysf4JIVTVrQ37M/sAfCzj1Luw0ZPOV2J/4JItSFYfyglzY+Xq9bC
+        bh=LGXxZcfS4OJGTX3QvHqzTzFNN5FRZqsvmi/1r7EUvS4=;
+        b=EmqLzBumcmO0ey64Kr2sv8G5cmJSmtSUTxf1kpligB2O6EVrZpyCQdlwxs/5iu0nFD
+         wsXynD6uWoAHkhAIp4XsyQg0cB71SWPJ4thGXS4UZ82tEJ8xKSsnFcfPxIw0lXaqPLdy
+         Sf7UaGCnl1BuR7nnCmO47wF3myBuBQPP6WfBVp2SrqT1Q1r6o+Z8alm/HfkTkrBdT3B7
+         qpT3SiksbMCVbRvFDw3URAW/6rDAvyYAbB7opepwHO+piYb0WI7ErBj83HSSsykvaAS4
+         7WjRr5y8FYy4OHEQEaXqVMtyDtnspWIJmHGD02wVchIociOQtMbOumsa5/T8nz0jxasn
+         z1dw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnU4BWLb8qosbbfHlG2/6E1ambH9nYKTdB0Uhc/7UsANdN7TJSRG0zumdM5/YeK6eIhBRnvpOrLN2JNPlC9yZH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7dxtxg8nvt9YIuN+HRZKwMvq122/bmB4Qw/j8Pw40RXhljgci
+	S8bopj0wUchrkrwTcxSlliOmTqt4P5mo8oUyiE9mWMJBfAE83JIMZlrtXzRt+bHkQbZ8Y2Rhvxf
+	yGf1evg==
+X-Google-Smtp-Source: AGHT+IEwDyVefJvbnEcXnUCGDgtLYI48Vd4K1wm26M6QP/9FKjnedwPjo/gKvNj2E5l5gpOWprueXZVBXC8I
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:a00a:f237:9bc0:79c])
- (user=irogers job=sendgmr) by 2002:a05:6902:1824:b0:e28:fba4:8b6e with SMTP
- id 3f1490d57ef6-e2979482a97mr2696276.7.1729101245270; Wed, 16 Oct 2024
- 10:54:05 -0700 (PDT)
-Date: Wed, 16 Oct 2024 10:53:47 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:3284:b0:e29:7cd6:593b with SMTP
+ id 3f1490d57ef6-e297cd65b8amr5311276.8.1729101247548; Wed, 16 Oct 2024
+ 10:54:07 -0700 (PDT)
+Date: Wed, 16 Oct 2024 10:53:48 -0700
 In-Reply-To: <20241016175350.116227-1-irogers@google.com>
-Message-Id: <20241016175350.116227-6-irogers@google.com>
+Message-Id: <20241016175350.116227-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241016175350.116227-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.105.g07ac214952-goog
-Subject: [PATCH v3 5/8] perf stat: Change color to threshold in print_metric
+Subject: [PATCH v3 6/8] perf stat: Display metric threshold value in CSV output
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,482 +76,148 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Colors don't mean things in CSV and JSON output, switch to a threshold
-enum value that the standard output can convert to a color. Updating
-the CSV and JSON output will be later changes.
+Add a column with a metric threshold value. For example, the bad/good
+in the last column below:
+```
+$ perf stat -a -M topdownl1 -x, -I 1000
+1.000103288,4677067630,,TOPDOWN.SLOTS,16029302700,100.00,31.1,%  tma_backend_bound,bad
+1.000103288,,,,,,51.0,%  tma_frontend_bound,bad
+1.000103288,,,,,,7.6,%  tma_bad_speculation,good
+1.000103288,,,,,,10.2,%  tma_retiring,good
+1.000103288,476781750,,topdown-retiring,16029302700,100.00,,
+1.000103288,2389693619,,topdown-fe-bound,16029302700,100.00,,
+1.000103288,1431602465,,topdown-be-bound,16029302700,100.00,,
+1.000103288,378991388,,topdown-bad-spec,16029302700,100.00,,
+1.000103288,4934535,,INT_MISC.CLEARS_COUNT,16029339890,100.00,,
+1.000103288,56474476,,IDQ.MS_UOPS,16029292873,100.00,,
+1.000103288,3188888,,INT_MISC.UOP_DROPPING,16029239908,100.00,,
+1.000103288,484429099,,UOPS_RETIRED.SLOTS,16029176080,100.00,,
+1.000103288,49066178,,UOPS_DECODED.DEC0,16029100912,100.00,,
+1.000103288,26472844,,cpu/UOPS_DECODED.DEC0,cmask=1/,16029009707,100.00,,
+1.000103288,709313662,,UOPS_ISSUED.ANY,16028914990,100.00,,
+1.000103288,346833383,,IDQ.MITE_UOPS,16028820330,100.00,,
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/util/iostat.c |   2 +-
- tools/perf/builtin-script.c       |   6 +-
- tools/perf/util/stat-display.c    |  40 ++++++++----
- tools/perf/util/stat-shadow.c     | 105 +++++++++++++++---------------
- tools/perf/util/stat.h            |  12 +++-
- 5 files changed, 97 insertions(+), 68 deletions(-)
+ tools/perf/Documentation/perf-stat.txt    |  1 +
+ tools/perf/tests/shell/stat+csv_output.sh | 24 ++++++++++----------
+ tools/perf/util/stat-display.c            | 27 +++++++++++++++++++----
+ 3 files changed, 36 insertions(+), 16 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
-index df7b5dfcc26a..366b44d0bb7e 100644
---- a/tools/perf/arch/x86/util/iostat.c
-+++ b/tools/perf/arch/x86/util/iostat.c
-@@ -444,7 +444,7 @@ void iostat_print_metric(struct perf_stat_config *config, struct evsel *evsel,
- 		iostat_value = (count->val - prev_count_val) /
- 			       ((double) count->run / count->ena);
- 	}
--	out->print_metric(config, out->ctx, NULL, "%8.0f", iostat_metric,
-+	out->print_metric(config, out->ctx, METRIC_THRESHOLD_UNKNOWN, "%8.0f", iostat_metric,
- 			  iostat_value / (256 * 1024));
- }
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 2bc063672486..9bfa1a085e98 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -622,6 +622,7 @@ The fields are in this order:
+ 	- optional variance if multiple values are collected with -r
+ 	- optional metric value
+ 	- optional unit of metric
++	- optional how the value relates to a metric threshold
  
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index a644787fa9e1..8c5d5cecfba4 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2136,11 +2136,11 @@ struct metric_ctx {
- };
+ Additional metrics may be printed with all earlier fields being empty.
  
- static void script_print_metric(struct perf_stat_config *config __maybe_unused,
--				void *ctx, const char *color,
--			        const char *fmt,
--			        const char *unit, double val)
-+				void *ctx, enum metric_threshold_classify thresh,
-+				const char *fmt, const char *unit, double val)
- {
- 	struct metric_ctx *mctx = ctx;
-+	const char *color = metric_threshold_classify__color(thresh);
+diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
+index fc2d8cc6e5e0..a3bc3c99b534 100755
+--- a/tools/perf/tests/shell/stat+csv_output.sh
++++ b/tools/perf/tests/shell/stat+csv_output.sh
+@@ -31,19 +31,19 @@ function commachecker()
+ 	local exp=0
  
- 	if (!fmt)
- 		return;
+ 	case "$1"
+-	in "--no-args")		exp=6
+-	;; "--system-wide")	exp=6
+-	;; "--event")		exp=6
+-	;; "--interval")	exp=7
++	in "--no-args")		exp=7
++	;; "--system-wide")	exp=7
++	;; "--event")		exp=7
++	;; "--interval")	exp=8
+ 	;; "--per-thread")	exp=7
+-	;; "--system-wide-no-aggr")	exp=7
+-				[ "$(uname -m)" = "s390x" ] && exp='^[6-7]$'
+-	;; "--per-core")	exp=8
+-	;; "--per-socket")	exp=8
+-	;; "--per-node")	exp=8
+-	;; "--per-die")		exp=8
+-	;; "--per-cluster")	exp=8
+-	;; "--per-cache")	exp=8
++	;; "--system-wide-no-aggr")	exp=8
++				[ "$(uname -m)" = "s390x" ] && exp='^[7-8]$'
++	;; "--per-core")	exp=9
++	;; "--per-socket")	exp=9
++	;; "--per-node")	exp=9
++	;; "--per-die")		exp=9
++	;; "--per-cluster")	exp=9
++	;; "--per-cache")	exp=9
+ 	esac
+ 
+ 	while read line
 diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index c6d33010ed22..5974aaead95f 100644
+index 5974aaead95f..f2750d1b34aa 100644
 --- a/tools/perf/util/stat-display.c
 +++ b/tools/perf/util/stat-display.c
-@@ -73,6 +73,19 @@ static const char *aggr_header_std[] = {
- 	[AGGR_GLOBAL] 	=	""
- };
+@@ -86,6 +86,19 @@ const char *metric_threshold_classify__color(enum metric_threshold_classify thre
+ 	return colors[thresh];
+ }
  
-+const char *metric_threshold_classify__color(enum metric_threshold_classify thresh)
++static const char *metric_threshold_classify__str(enum metric_threshold_classify thresh)
 +{
-+	const char * const colors[] = {
-+		"", /* unknown */
-+		PERF_COLOR_RED,     /* bad */
-+		PERF_COLOR_MAGENTA, /* nearly bad */
-+		PERF_COLOR_YELLOW,  /* less good */
-+		PERF_COLOR_GREEN,   /* good */
++	const char * const strs[] = {
++		"unknown",
++		"bad",
++		"nearly bad",
++		"less good",
++		"good",
 +	};
-+	static_assert(ARRAY_SIZE(colors) - 1  == METRIC_THRESHOLD_GOOD, "missing enum value");
-+	return colors[thresh];
++	static_assert(ARRAY_SIZE(strs) - 1  == METRIC_THRESHOLD_GOOD, "missing enum value");
++	return strs[thresh];
 +}
 +
  static void print_running_std(struct perf_stat_config *config, u64 run, u64 ena)
  {
  	if (run != ena)
-@@ -405,13 +418,14 @@ static void do_new_line_std(struct perf_stat_config *config,
+@@ -455,14 +468,15 @@ static void new_line_csv(struct perf_stat_config *config, void *ctx)
+ 		fputs(config->csv_sep, os->fh);
  }
  
- static void print_metric_std(struct perf_stat_config *config,
--			     void *ctx, const char *color, const char *fmt,
--			     const char *unit, double val)
-+			     void *ctx, enum metric_threshold_classify thresh,
-+			     const char *fmt, const char *unit, double val)
- {
- 	struct outstate *os = ctx;
- 	FILE *out = os->fh;
- 	int n;
- 	bool newline = os->newline;
-+	const char *color = metric_threshold_classify__color(thresh);
- 
- 	os->newline = false;
- 
-@@ -443,7 +457,7 @@ static void new_line_csv(struct perf_stat_config *config, void *ctx)
- 
- static void print_metric_csv(struct perf_stat_config *config __maybe_unused,
+-static void print_metric_csv(struct perf_stat_config *config __maybe_unused,
++static void print_metric_csv(struct perf_stat_config *config,
  			     void *ctx,
--			     const char *color __maybe_unused,
-+			     enum metric_threshold_classify thresh __maybe_unused,
+-			     enum metric_threshold_classify thresh __maybe_unused,
++			     enum metric_threshold_classify thresh,
  			     const char *fmt, const char *unit, double val)
  {
  	struct outstate *os = ctx;
-@@ -464,7 +478,7 @@ static void print_metric_csv(struct perf_stat_config *config __maybe_unused,
+ 	FILE *out = os->fh;
+ 	char buf[64], *vals, *ends;
++	const char *thresh_str = "";
+ 
+ 	if (unit == NULL || fmt == NULL) {
+ 		fprintf(out, "%s%s", config->csv_sep, config->csv_sep);
+@@ -473,7 +487,12 @@ static void print_metric_csv(struct perf_stat_config *config __maybe_unused,
+ 	while (isdigit(*ends) || *ends == '.')
+ 		ends++;
+ 	*ends = 0;
+-	fprintf(out, "%s%s%s%s", config->csv_sep, vals, config->csv_sep, skip_spaces(unit));
++	if (thresh != METRIC_THRESHOLD_UNKNOWN || !rblist__empty(&config->metric_events))
++		thresh_str = metric_threshold_classify__str(thresh);
++	fprintf(out, "%s%s%s%s%s%s",
++		config->csv_sep, vals,
++		config->csv_sep, skip_spaces(unit),
++		config->csv_sep, thresh_str);
+ }
  
  static void print_metric_json(struct perf_stat_config *config __maybe_unused,
- 			     void *ctx,
--			     const char *color __maybe_unused,
-+			     enum metric_threshold_classify thresh __maybe_unused,
- 			     const char *fmt __maybe_unused,
- 			     const char *unit, double val)
- {
-@@ -559,13 +573,14 @@ static const char *fixunit(char *buf, struct evsel *evsel,
+@@ -528,7 +547,7 @@ static void print_metricgroup_header_csv(struct perf_stat_config *config,
+ 
+ 	for (i = 0; i < os->nfields; i++)
+ 		fputs(config->csv_sep, os->fh);
+-	fprintf(config->output, "%s", metricgroup_name);
++	fprintf(config->output, "%s%s", metricgroup_name, config->csv_sep);
+ 	new_line_csv(config, ctx);
  }
  
- static void print_metric_only(struct perf_stat_config *config,
--			      void *ctx, const char *color, const char *fmt,
--			      const char *unit, double val)
-+			      void *ctx, enum metric_threshold_classify thresh,
-+			      const char *fmt, const char *unit, double val)
- {
- 	struct outstate *os = ctx;
- 	FILE *out = os->fh;
- 	char buf[1024], str[1024];
- 	unsigned mlen = config->metric_only_len;
-+	const char *color = metric_threshold_classify__color(thresh);
- 
- 	if (!valid_only_metric(unit))
- 		return;
-@@ -582,7 +597,8 @@ static void print_metric_only(struct perf_stat_config *config,
- }
- 
- static void print_metric_only_csv(struct perf_stat_config *config __maybe_unused,
--				  void *ctx, const char *color __maybe_unused,
-+				  void *ctx,
-+				  enum metric_threshold_classify thresh __maybe_unused,
- 				  const char *fmt,
- 				  const char *unit, double val)
- {
-@@ -604,7 +620,8 @@ static void print_metric_only_csv(struct perf_stat_config *config __maybe_unused
- }
- 
- static void print_metric_only_json(struct perf_stat_config *config __maybe_unused,
--				  void *ctx, const char *color __maybe_unused,
-+				  void *ctx,
-+				  enum metric_threshold_classify thresh __maybe_unused,
- 				  const char *fmt,
- 				  const char *unit, double val)
- {
-@@ -636,7 +653,8 @@ static void new_line_metric(struct perf_stat_config *config __maybe_unused,
- }
- 
- static void print_metric_header(struct perf_stat_config *config,
--				void *ctx, const char *color __maybe_unused,
-+				void *ctx,
-+				enum metric_threshold_classify thresh __maybe_unused,
- 				const char *fmt __maybe_unused,
- 				const char *unit, double val __maybe_unused)
- {
-@@ -810,7 +828,7 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
- 
- 	if (run == 0 || ena == 0 || counter->counts->scaled == -1) {
- 		if (config->metric_only) {
--			pm(config, os, NULL, "", "", 0);
-+			pm(config, os, METRIC_THRESHOLD_UNKNOWN, "", "", 0);
- 			return;
- 		}
- 
-@@ -865,7 +883,7 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
- 			perf_stat__print_shadow_stats(config, counter, uval, aggr_idx,
- 						      &out, &config->metric_events);
- 	} else {
--		pm(config, os, /*color=*/NULL, /*format=*/NULL, /*unit=*/"", /*val=*/0);
-+		pm(config, os, METRIC_THRESHOLD_UNKNOWN, /*format=*/NULL, /*unit=*/"", /*val=*/0);
- 	}
- 
- 	if (!config->metric_only) {
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 512890d50b69..ada787947e16 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -137,18 +137,14 @@ static enum stat_type evsel__stat_type(struct evsel *evsel)
- 	return STAT_NONE;
- }
- 
--static const char *get_ratio_color(const double ratios[3], double val)
-+static enum metric_threshold_classify get_ratio_thresh(const double ratios[3], double val)
- {
--	const char *color = PERF_COLOR_NORMAL;
-+	assert(ratios[0] > ratios[1]);
-+	assert(ratios[1] > ratios[2]);
- 
--	if (val > ratios[0])
--		color = PERF_COLOR_RED;
--	else if (val > ratios[1])
--		color = PERF_COLOR_MAGENTA;
--	else if (val > ratios[2])
--		color = PERF_COLOR_YELLOW;
--
--	return color;
-+	return val > ratios[1]
-+		? (val > ratios[0] ? METRIC_THRESHOLD_BAD : METRIC_THRESHOLD_NEARLY_BAD)
-+		: (val > ratios[2] ? METRIC_THRESHOLD_LESS_GOOD : METRIC_THRESHOLD_GOOD);
- }
- 
- static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type type)
-@@ -196,21 +192,21 @@ static void print_ratio(struct perf_stat_config *config,
- 			const struct evsel *evsel, int aggr_idx,
- 			double numerator, struct perf_stat_output_ctx *out,
- 			enum stat_type denominator_type,
--			const double color_ratios[3], const char *_unit)
-+			const double thresh_ratios[3], const char *_unit)
- {
- 	double denominator = find_stat(evsel, aggr_idx, denominator_type);
- 	double ratio = 0;
--	const char *color = NULL;
-+	enum metric_threshold_classify thresh = METRIC_THRESHOLD_UNKNOWN;
- 	const char *fmt = NULL;
- 	const char *unit = NULL;
- 
- 	if (numerator && denominator) {
- 		ratio = numerator / denominator * 100.0;
--		color = get_ratio_color(color_ratios, ratio);
-+		thresh = get_ratio_thresh(thresh_ratios, ratio);
- 		fmt = "%7.2f%%";
- 		unit = _unit;
- 	}
--	out->print_metric(config, out->ctx, color, fmt, unit, ratio);
-+	out->print_metric(config, out->ctx, thresh, fmt, unit, ratio);
- }
- 
- static void print_stalled_cycles_front(struct perf_stat_config *config,
-@@ -218,9 +214,9 @@ static void print_stalled_cycles_front(struct perf_stat_config *config,
- 				int aggr_idx, double stalled,
- 				struct perf_stat_output_ctx *out)
- {
--	static const double color_ratios[3] = {50.0, 30.0, 10.0};
-+	const double thresh_ratios[3] = {50.0, 30.0, 10.0};
- 
--	print_ratio(config, evsel, aggr_idx, stalled, out, STAT_CYCLES, color_ratios,
-+	print_ratio(config, evsel, aggr_idx, stalled, out, STAT_CYCLES, thresh_ratios,
- 		    "frontend cycles idle");
- }
- 
-@@ -229,9 +225,9 @@ static void print_stalled_cycles_back(struct perf_stat_config *config,
- 				int aggr_idx, double stalled,
- 				struct perf_stat_output_ctx *out)
- {
--	static const double color_ratios[3] = {75.0, 50.0, 20.0};
-+	const double thresh_ratios[3] = {75.0, 50.0, 20.0};
- 
--	print_ratio(config, evsel, aggr_idx, stalled, out, STAT_CYCLES, color_ratios,
-+	print_ratio(config, evsel, aggr_idx, stalled, out, STAT_CYCLES, thresh_ratios,
- 		    "backend cycles idle");
- }
- 
-@@ -240,9 +236,9 @@ static void print_branch_miss(struct perf_stat_config *config,
- 			int aggr_idx, double misses,
- 			struct perf_stat_output_ctx *out)
- {
--	static const double color_ratios[3] = {20.0, 10.0, 5.0};
-+	const double thresh_ratios[3] = {20.0, 10.0, 5.0};
- 
--	print_ratio(config, evsel, aggr_idx, misses, out, STAT_BRANCHES, color_ratios,
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_BRANCHES, thresh_ratios,
- 		    "of all branches");
- }
- 
-@@ -251,9 +247,9 @@ static void print_l1d_miss(struct perf_stat_config *config,
- 			int aggr_idx, double misses,
- 			struct perf_stat_output_ctx *out)
- {
--	static const double color_ratios[3] = {20.0, 10.0, 5.0};
-+	const double thresh_ratios[3] = {20.0, 10.0, 5.0};
- 
--	print_ratio(config, evsel, aggr_idx, misses, out, STAT_L1_DCACHE, color_ratios,
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_L1_DCACHE, thresh_ratios,
- 		    "of all L1-dcache accesses");
- }
- 
-@@ -262,9 +258,9 @@ static void print_l1i_miss(struct perf_stat_config *config,
- 			int aggr_idx, double misses,
- 			struct perf_stat_output_ctx *out)
- {
--	static const double color_ratios[3] = {20.0, 10.0, 5.0};
-+	const double thresh_ratios[3] = {20.0, 10.0, 5.0};
- 
--	print_ratio(config, evsel, aggr_idx, misses, out, STAT_L1_ICACHE, color_ratios,
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_L1_ICACHE, thresh_ratios,
- 		    "of all L1-icache accesses");
- }
- 
-@@ -273,9 +269,9 @@ static void print_ll_miss(struct perf_stat_config *config,
- 			int aggr_idx, double misses,
- 			struct perf_stat_output_ctx *out)
- {
--	static const double color_ratios[3] = {20.0, 10.0, 5.0};
-+	const double thresh_ratios[3] = {20.0, 10.0, 5.0};
- 
--	print_ratio(config, evsel, aggr_idx, misses, out, STAT_LL_CACHE, color_ratios,
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_LL_CACHE, thresh_ratios,
- 		    "of all LL-cache accesses");
- }
- 
-@@ -284,9 +280,9 @@ static void print_dtlb_miss(struct perf_stat_config *config,
- 			int aggr_idx, double misses,
- 			struct perf_stat_output_ctx *out)
- {
--	static const double color_ratios[3] = {20.0, 10.0, 5.0};
-+	const double thresh_ratios[3] = {20.0, 10.0, 5.0};
- 
--	print_ratio(config, evsel, aggr_idx, misses, out, STAT_DTLB_CACHE, color_ratios,
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_DTLB_CACHE, thresh_ratios,
- 		    "of all dTLB cache accesses");
- }
- 
-@@ -295,9 +291,9 @@ static void print_itlb_miss(struct perf_stat_config *config,
- 			int aggr_idx, double misses,
- 			struct perf_stat_output_ctx *out)
- {
--	static const double color_ratios[3] = {20.0, 10.0, 5.0};
-+	const double thresh_ratios[3] = {20.0, 10.0, 5.0};
- 
--	print_ratio(config, evsel, aggr_idx, misses, out, STAT_ITLB_CACHE, color_ratios,
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_ITLB_CACHE, thresh_ratios,
- 		    "of all iTLB cache accesses");
- }
- 
-@@ -306,9 +302,9 @@ static void print_cache_miss(struct perf_stat_config *config,
- 			int aggr_idx, double misses,
- 			struct perf_stat_output_ctx *out)
- {
--	static const double color_ratios[3] = {20.0, 10.0, 5.0};
-+	const double thresh_ratios[3] = {20.0, 10.0, 5.0};
- 
--	print_ratio(config, evsel, aggr_idx, misses, out, STAT_CACHE_REFS, color_ratios,
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_CACHE_REFS, thresh_ratios,
- 		    "of all cache refs");
- }
- 
-@@ -324,16 +320,16 @@ static void print_instructions(struct perf_stat_config *config,
- 				find_stat(evsel, aggr_idx, STAT_STALLED_CYCLES_BACK));
- 
- 	if (cycles) {
--		print_metric(config, ctxp, /*color=*/NULL, "%7.2f ", "insn per cycle",
--			     instructions / cycles);
-+		print_metric(config, ctxp, METRIC_THRESHOLD_UNKNOWN, "%7.2f ",
-+			     "insn per cycle", instructions / cycles);
- 	} else {
--		print_metric(config, ctxp, /*color=*/NULL, /*fmt=*/NULL, "insn per cycle", 0);
-+		print_metric(config, ctxp, METRIC_THRESHOLD_UNKNOWN, /*fmt=*/NULL,
-+			     "insn per cycle", 0);
- 	}
--
- 	if (max_stalled && instructions) {
- 		out->new_line(config, ctxp);
--		print_metric(config, ctxp, /*color=*/NULL, "%7.2f ", "stalled cycles per insn",
--			max_stalled / instructions);
-+		print_metric(config, ctxp, METRIC_THRESHOLD_UNKNOWN, "%7.2f ",
-+			     "stalled cycles per insn", max_stalled / instructions);
- 	}
- }
- 
-@@ -347,9 +343,11 @@ static void print_cycles(struct perf_stat_config *config,
- 	if (cycles && nsecs) {
- 		double ratio = cycles / nsecs;
- 
--		out->print_metric(config, out->ctx, /*color=*/NULL, "%8.3f", "GHz", ratio);
-+		out->print_metric(config, out->ctx, METRIC_THRESHOLD_UNKNOWN, "%8.3f",
-+				  "GHz", ratio);
- 	} else {
--		out->print_metric(config, out->ctx, /*color=*/NULL, /*fmt=*/NULL, "GHz", 0);
-+		out->print_metric(config, out->ctx, METRIC_THRESHOLD_UNKNOWN, /*fmt=*/NULL,
-+				  "GHz", 0);
- 	}
- }
- 
-@@ -363,10 +361,11 @@ static void print_nsecs(struct perf_stat_config *config,
- 	double wall_time = avg_stats(&walltime_nsecs_stats);
- 
- 	if (wall_time) {
--		print_metric(config, ctxp, /*color=*/NULL, "%8.3f", "CPUs utilized",
-+		print_metric(config, ctxp, METRIC_THRESHOLD_UNKNOWN, "%8.3f", "CPUs utilized",
- 			nsecs / (wall_time * evsel->scale));
- 	} else {
--		print_metric(config, ctxp, /*color=*/NULL, /*fmt=*/NULL, "CPUs utilized", 0);
-+		print_metric(config, ctxp, METRIC_THRESHOLD_UNKNOWN, /*fmt=*/NULL,
-+			     "CPUs utilized", 0);
- 	}
- }
- 
-@@ -500,7 +499,7 @@ static void generic_metric(struct perf_stat_config *config,
- 	double ratio, scale, threshold;
- 	int i;
- 	void *ctxp = out->ctx;
--	const char *color = NULL;
-+	enum metric_threshold_classify thresh = METRIC_THRESHOLD_UNKNOWN;
- 
- 	pctx = expr__ctx_new();
- 	if (!pctx)
-@@ -523,8 +522,8 @@ static void generic_metric(struct perf_stat_config *config,
- 			if (metric_threshold &&
- 			    expr__parse(&threshold, pctx, metric_threshold) == 0 &&
- 			    !isnan(threshold)) {
--				color = fpclassify(threshold) == FP_ZERO
--					? PERF_COLOR_GREEN : PERF_COLOR_RED;
-+				thresh = fpclassify(threshold) == FP_ZERO
-+					? METRIC_THRESHOLD_GOOD : METRIC_THRESHOLD_BAD;
- 			}
- 
- 			if (metric_unit && metric_name) {
-@@ -539,22 +538,22 @@ static void generic_metric(struct perf_stat_config *config,
- 					scnprintf(metric_bf, sizeof(metric_bf),
- 					  "%s  %s", unit, metric_name);
- 
--				print_metric(config, ctxp, color, "%8.1f",
-+				print_metric(config, ctxp, thresh, "%8.1f",
- 					     metric_bf, ratio);
- 			} else {
--				print_metric(config, ctxp, color, "%8.2f",
-+				print_metric(config, ctxp, thresh, "%8.2f",
- 					metric_name ?
- 					metric_name :
- 					out->force_header ?  evsel->name : "",
- 					ratio);
- 			}
- 		} else {
--			print_metric(config, ctxp, color, /*fmt=*/NULL,
-+			print_metric(config, ctxp, thresh, /*fmt=*/NULL,
- 				     out->force_header ?
- 				     (metric_name ?: evsel->name) : "", 0);
- 		}
- 	} else {
--		print_metric(config, ctxp, color, /*fmt=*/NULL,
-+		print_metric(config, ctxp, thresh, /*fmt=*/NULL,
- 			     out->force_header ?
- 			     (metric_name ?: evsel->name) : "", 0);
- 	}
-@@ -725,7 +724,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 
- 				if (unit != ' ')
- 					snprintf(unit_buf, sizeof(unit_buf), "%c/sec", unit);
--				print_metric(config, ctxp, /*color=*/NULL, "%8.3f",
-+				print_metric(config, ctxp, METRIC_THRESHOLD_UNKNOWN, "%8.3f",
- 					     unit_buf, ratio);
- 			} else {
- 				num = 0;
-@@ -736,8 +735,10 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 	perf_stat__print_shadow_stats_metricgroup(config, evsel, aggr_idx,
- 						  &num, NULL, out, metric_events);
- 
--	if (num == 0)
--		print_metric(config, ctxp, /*color=*/NULL, /*fmt=*/NULL, /*unit=*/NULL, 0);
-+	if (num == 0) {
-+		print_metric(config, ctxp, METRIC_THRESHOLD_UNKNOWN,
-+			     /*fmt=*/NULL, /*unit=*/NULL, 0);
-+	}
- }
- 
- /**
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index a5f3d7d00101..6f8cff3cd39a 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -154,8 +154,18 @@ struct evlist;
- extern struct stats walltime_nsecs_stats;
- extern struct rusage_stats ru_stats;
- 
-+enum metric_threshold_classify {
-+	METRIC_THRESHOLD_UNKNOWN,
-+	METRIC_THRESHOLD_BAD,
-+	METRIC_THRESHOLD_NEARLY_BAD,
-+	METRIC_THRESHOLD_LESS_GOOD,
-+	METRIC_THRESHOLD_GOOD,
-+};
-+const char *metric_threshold_classify__color(enum metric_threshold_classify thresh);
-+
- typedef void (*print_metric_t)(struct perf_stat_config *config,
--			       void *ctx, const char *color,
-+			       void *ctx,
-+			       enum metric_threshold_classify thresh,
- 			       const char *fmt,
- 			       const char *unit,
- 			       double val);
 -- 
 2.47.0.105.g07ac214952-goog
 
