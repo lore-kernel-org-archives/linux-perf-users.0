@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9547418BB8A
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 04:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D2318BC31
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 04:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729052686; cv=none; b=hks546dSs0UcPJS/sMQJOWJE635kRPfse8+Mub8lONEJt0SHguXTixz8Zpm6aKBD43yiLTjnCaYOlCNrAHJjXhJLKB9dkr3oxThpgM4zfzqNH2KimngpCt9PPuRUlM249Ogg2ePgoOnkKOOnwEVigFpHedcHU21ulVXj+GQ8jsQ=
+	t=1729052689; cv=none; b=FPs5P90cwdmWhhYyiyRY/JJLZCHociX3QTJ+3Mzlqji4WX27p6JpHPDyBdifNpcGE6SivYSEBSO3G/bX9YsjWDU4ISI5rMtMUcZDOd9W93lkNQFDgSIrNSy69WPyk4Tr1GtB4FJS55VaH799IA221TsEvcvSHNmiX3YnhysYq5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729052686; c=relaxed/simple;
-	bh=zLV372V3NqdgZLhhP3Ug7ewTDMXX2WZU0AoI5q9l/W8=;
+	s=arc-20240116; t=1729052689; c=relaxed/simple;
+	bh=sevNlyfEJVFmCq0ytEyhLchplPVQxoaCC3sAsSe1/f8=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=s1QLLXZUzT6i9vxY3MshMV3nFB1Q/hbATXBhQ0x2pedcg1iXkI/3gDzv3zM6t4fIeoVcJJ6rk8bm1WDRigoUJruRXBY6rma7UOhU56yhUNvj6HgKEixoVoJKXSkAm4WVfPr+FCOGF0HdQFvL04bAkHnryk5mfseKIaF6yvdWXnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lESikxwv; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=KyRfi4+/LpI7khDEK0BBKt4A9rKCP1UGsk+YiyL+Fqn2X7W2/ugb1XhiF0uoKW2lEh4AzTVRB7W751upYDWYYpqG6+mgv4+1pm/kjUPcPDNm/FaEI3cyCsi7Sg+2c4GcIu+1lvfZP/Tq1IBmlcFp/Biu56guZZebBdn7ftG7Pqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HUb4LeMs; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lESikxwv"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e383ba6763so50111487b3.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 21:24:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HUb4LeMs"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e2a8355786dso178565276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Oct 2024 21:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729052684; x=1729657484; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729052686; x=1729657486; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=F3AUkqayHUmU4e0+n944DcuSfXi0VxOxh6mXGhbne8U=;
-        b=lESikxwv4CDUGMvoJqrGR0bTIUaHfbjo6bGiuAGx7laFa6qfwMOZv8vy/g83iezMcv
-         o3iDQJvRfJBIs0iQVSMueb43P+VS3gSx1+UnfEcGV/+Ng1kd/tulVibLRl6lJ0AbFFAo
-         npDaHTiV9JGISE7XDQZ/c0hi/vrwAna9Yf86rT4Jh7cW6VMvnRt3ER9G4mEHw/vIVuMJ
-         lSTu5PvYEY/2FYjYnLiO05OQUEA6EYrexLgmiP68PNhsKmQgcLBJVnt6ZSSKDdURgHxo
-         NAa6m3R7ODnIcLiX15XQDDCNteRoZDdxopIyMJGb8MuuubekcI3j3fjdBacMa0QTaaLp
-         YYfA==
+        bh=qQyl2EObKlFstHveBm/uzMgWIzegkTZ8/5AcFUtSIFY=;
+        b=HUb4LeMs2+Mh/5tKP4SureS+LlKFM0nW9D2y+Ox6j12Hm6z1dqVfeC8hT0SRyrE9Jz
+         1KvdmMRpD7M7mBY9ob0SpGK16yvwhB8wICJGQJcVNCDhqPdropIe3tfrj1tcAL1ocgJx
+         paZhH0V+qYeSZ4ZpgUVPaeHW5m8LQOBOT2B9IykubBkQVq3RIFAppZEb3vAVRNI7T7id
+         TgallTmxgY8xChHZ8MpIjmKgKrI+ahhWm30MHqliWgl7IhkFyaPUdd7pri40Pb3Zk6FZ
+         OsbFX1zBl+f2zFuHQpseh93ubpnihNE32lEXc9JoM8lgzcyCwmaRIAO+nXQly3EgIs8e
+         hrEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729052684; x=1729657484;
+        d=1e100.net; s=20230601; t=1729052686; x=1729657486;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F3AUkqayHUmU4e0+n944DcuSfXi0VxOxh6mXGhbne8U=;
-        b=kWoaZvEV0rAgs4wufsNd1zz8HXR3N9eLxllblVi/aUT9if40mX89+fBZyfo0NCt93A
-         ndUDDe7ACvEgEZE1B/nO3S7D4T7sbPXcQXfLuEXd1BhRKQbB7RCxaF1PDbK3I9/v3Woo
-         F4hqDqazrswd2gQcCkQIjd2HrXFqZUTZAjiGz/tTcUZqjd5yb4V53bNoIUAq4jxvmxd6
-         bhAwAxPa5grBbgbRohbXlFvosWGsLDKIyRGDPy5CuqLreilYpdUubj6g32dWH1K60twf
-         ajN5s83Oda0gpnUVaM/CVCVtAevcNp2ok1Rbe12akadOZahNgqa6Db1eot1HhmWxdNdU
-         5L5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW61QFgoEeYOOfQ6tvzppY/kqVSAAeBX+FN8YpR9jii2AAw6LoYKL9fP4/Y8eUqH/YTo/SNgng4fBgSLLnO6Pr6@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMADtG3vGlsMRY+X7xbOlvTiqwSZwByJyM6sTplUtl3I2b6SLr
-	hCPtRw0t0BFZJ5sFlc2uM70L21GRCJKcNLQsgyQkG8UFQLbKYtIFxbxP1l0z+gHCVrNy2WIClD6
-	vFEPzPg==
-X-Google-Smtp-Source: AGHT+IH+B/UstQTaBPNWylRCfG5c7G6KjVDSfo/SEGNBz24zXUN6VhnJfUctTb/L68W/BCQ7jhbH+DG86Cpy
+        bh=qQyl2EObKlFstHveBm/uzMgWIzegkTZ8/5AcFUtSIFY=;
+        b=PW7ZeFB+D0zzBsuK8IDtoxgPlMpbDGQDTKpXS5rtrjiIcttjM/b6bvAeBdIGXyBUVm
+         e4IMrfpmy1J3S8IZxpmCrdmpID5uXBZw80mHyk304AOWFpBz4zchIZDCFNLqkTYJG6Uo
+         lur21dGnMawpl7kuz8KbmFzYYuq2qDl9jYYxvNFTo0uAJi1hfTy6uVTCEkanHob4fcBy
+         eFrrDQaid4eBX/Vne5I5oHlR1Lc9KBBDUNhiFI9q8j7ZIH2PYoKCBHFYGc/zQFzsHz+m
+         +A2EPPm37Q4sHWh2mnLGacfy1vvyVrzNn9yBibBCxlYQgrebm2W/pMiecN6haWbuSv+Q
+         8yYw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsjvVeo0zObHy6LPPuKrHZdPkKPoM0Hv05cyETXFn6vGFy6X+5PRnovSUJp6KrmYAQ37vhjkH1Dz8VWtG2fy2t@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAsrBCKvHR5wPSNHbFzz/cbK0usXthHLTNSaWrdp1/N4hISadG
+	iyQQPgNl1Rbwnc1TmEQFczzECd19k1yOmGsMSkjWzFEQsKNNOLTglBPP2cBrpYgvk8VIgsa/IOM
+	Aylhj0A==
+X-Google-Smtp-Source: AGHT+IFirg7lf86uX0MYsDX47DXOxSEArB6ExV/cuOBucvZo3ssUJELaOGG3Jw59lLKBF1qxYnQ0FIv7XUJa
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:a00a:f237:9bc0:79c])
- (user=irogers job=sendgmr) by 2002:a05:690c:2502:b0:6e2:70e:e82e with SMTP id
- 00721157ae682-6e3d41cb4aamr547127b3.6.1729052683538; Tue, 15 Oct 2024
- 21:24:43 -0700 (PDT)
-Date: Tue, 15 Oct 2024 21:24:03 -0700
+ (user=irogers job=sendgmr) by 2002:a25:aaa3:0:b0:e20:25f5:a889 with SMTP id
+ 3f1490d57ef6-e29783030e0mr1502276.5.1729052685919; Tue, 15 Oct 2024 21:24:45
+ -0700 (PDT)
+Date: Tue, 15 Oct 2024 21:24:04 -0700
 In-Reply-To: <20241016042415.7552-1-irogers@google.com>
-Message-Id: <20241016042415.7552-5-irogers@google.com>
+Message-Id: <20241016042415.7552-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241016042415.7552-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
-Subject: [PATCH v2 04/16] perf script: Move scripting_max_stack out of builtin
+Subject: [PATCH v2 05/16] perf kvm: Move functions used in util out of builtin
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,60 +76,243 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-scripting_max_stack is used in util code which is linked into the
-python module. Move the variable declaration to
-util/trace-event-scripting.c to avoid conditional compilation.
+The util library code is used by the python module but doesn't have
+access to the builtin files. Make a util/kvm-stat.c to match the
+kvm-stat.h file that declares the functions and move the functions
+there.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-script.c             | 2 --
- tools/perf/util/python.c                | 2 --
- tools/perf/util/trace-event-scripting.c | 3 +++
- 3 files changed, 3 insertions(+), 4 deletions(-)
+ tools/perf/builtin-kvm.c   | 61 ---------------------------------
+ tools/perf/util/Build      |  1 +
+ tools/perf/util/kvm-stat.c | 70 ++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/kvm-stat.h |  3 ++
+ tools/perf/util/python.c   | 30 ----------------
+ 5 files changed, 74 insertions(+), 91 deletions(-)
+ create mode 100644 tools/perf/util/kvm-stat.c
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index a644787fa9e1..621c26c388c8 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -92,8 +92,6 @@ static struct dlfilter		*dlfilter;
- static int			dlargc;
- static char			**dlargv;
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 55ea17c5ff02..6f34099d5fb0 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -615,67 +615,6 @@ static const char *get_filename_for_perf_kvm(void)
  
--unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
+ #if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+ 
+-void exit_event_get_key(struct evsel *evsel,
+-			struct perf_sample *sample,
+-			struct event_key *key)
+-{
+-	key->info = 0;
+-	key->key  = evsel__intval(evsel, sample, kvm_exit_reason);
+-}
 -
- enum perf_output_field {
- 	PERF_OUTPUT_COMM            = 1ULL << 0,
- 	PERF_OUTPUT_TID             = 1ULL << 1,
+-bool kvm_exit_event(struct evsel *evsel)
+-{
+-	return evsel__name_is(evsel, kvm_exit_trace);
+-}
+-
+-bool exit_event_begin(struct evsel *evsel,
+-		      struct perf_sample *sample, struct event_key *key)
+-{
+-	if (kvm_exit_event(evsel)) {
+-		exit_event_get_key(evsel, sample, key);
+-		return true;
+-	}
+-
+-	return false;
+-}
+-
+-bool kvm_entry_event(struct evsel *evsel)
+-{
+-	return evsel__name_is(evsel, kvm_entry_trace);
+-}
+-
+-bool exit_event_end(struct evsel *evsel,
+-		    struct perf_sample *sample __maybe_unused,
+-		    struct event_key *key __maybe_unused)
+-{
+-	return kvm_entry_event(evsel);
+-}
+-
+-static const char *get_exit_reason(struct perf_kvm_stat *kvm,
+-				   struct exit_reasons_table *tbl,
+-				   u64 exit_code)
+-{
+-	while (tbl->reason != NULL) {
+-		if (tbl->exit_code == exit_code)
+-			return tbl->reason;
+-		tbl++;
+-	}
+-
+-	pr_err("unknown kvm exit code:%lld on %s\n",
+-		(unsigned long long)exit_code, kvm->exit_reasons_isa);
+-	return "UNKNOWN";
+-}
+-
+-void exit_event_decode_key(struct perf_kvm_stat *kvm,
+-			   struct event_key *key,
+-			   char *decode)
+-{
+-	const char *exit_reason = get_exit_reason(kvm, key->exit_reasons,
+-						  key->key);
+-
+-	scnprintf(decode, KVM_EVENT_NAME_LEN, "%s", exit_reason);
+-}
+-
+ static bool register_kvm_events_ops(struct perf_kvm_stat *kvm)
+ {
+ 	struct kvm_reg_events_ops *events_ops = kvm_reg_events_ops;
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index fa508e113dd0..2a2f7780e595 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -120,6 +120,7 @@ perf-util-y += spark.o
+ perf-util-y += topdown.o
+ perf-util-y += iostat.o
+ perf-util-y += stream.o
++perf-util-y += kvm-stat.o
+ perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
+ perf-util-$(CONFIG_AUXTRACE) += intel-pt-decoder/
+ perf-util-$(CONFIG_AUXTRACE) += intel-pt.o
+diff --git a/tools/perf/util/kvm-stat.c b/tools/perf/util/kvm-stat.c
+new file mode 100644
+index 000000000000..38ace736db5c
+--- /dev/null
++++ b/tools/perf/util/kvm-stat.c
+@@ -0,0 +1,70 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "debug.h"
++#include "evsel.h"
++#include "kvm-stat.h"
++
++#if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
++
++bool kvm_exit_event(struct evsel *evsel)
++{
++	return evsel__name_is(evsel, kvm_exit_trace);
++}
++
++void exit_event_get_key(struct evsel *evsel,
++			struct perf_sample *sample,
++			struct event_key *key)
++{
++	key->info = 0;
++	key->key  = evsel__intval(evsel, sample, kvm_exit_reason);
++}
++
++
++bool exit_event_begin(struct evsel *evsel,
++		      struct perf_sample *sample, struct event_key *key)
++{
++	if (kvm_exit_event(evsel)) {
++		exit_event_get_key(evsel, sample, key);
++		return true;
++	}
++
++	return false;
++}
++
++bool kvm_entry_event(struct evsel *evsel)
++{
++	return evsel__name_is(evsel, kvm_entry_trace);
++}
++
++bool exit_event_end(struct evsel *evsel,
++		    struct perf_sample *sample __maybe_unused,
++		    struct event_key *key __maybe_unused)
++{
++	return kvm_entry_event(evsel);
++}
++
++static const char *get_exit_reason(struct perf_kvm_stat *kvm,
++				   struct exit_reasons_table *tbl,
++				   u64 exit_code)
++{
++	while (tbl->reason != NULL) {
++		if (tbl->exit_code == exit_code)
++			return tbl->reason;
++		tbl++;
++	}
++
++	pr_err("unknown kvm exit code:%lld on %s\n",
++		(unsigned long long)exit_code, kvm->exit_reasons_isa);
++	return "UNKNOWN";
++}
++
++void exit_event_decode_key(struct perf_kvm_stat *kvm,
++			   struct event_key *key,
++			   char *decode)
++{
++	const char *exit_reason = get_exit_reason(kvm, key->exit_reasons,
++						  key->key);
++
++	scnprintf(decode, KVM_EVENT_NAME_LEN, "%s", exit_reason);
++}
++
++#endif
+diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
+index 3e9ac754c3d1..4249542544bb 100644
+--- a/tools/perf/util/kvm-stat.h
++++ b/tools/perf/util/kvm-stat.h
+@@ -115,6 +115,8 @@ struct kvm_reg_events_ops {
+ 	struct kvm_events_ops *ops;
+ };
+ 
++#if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
++
+ void exit_event_get_key(struct evsel *evsel,
+ 			struct perf_sample *sample,
+ 			struct event_key *key);
+@@ -127,6 +129,7 @@ bool exit_event_end(struct evsel *evsel,
+ void exit_event_decode_key(struct perf_kvm_stat *kvm,
+ 			   struct event_key *key,
+ 			   char *decode);
++#endif
+ 
+ bool kvm_exit_event(struct evsel *evsel);
+ bool kvm_entry_event(struct evsel *evsel);
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 974578a04099..298f43981fc5 100644
+index 298f43981fc5..ab67abf3b607 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -1306,8 +1306,6 @@ PyMODINIT_FUNC PyInit_perf(void)
+@@ -1306,36 +1306,6 @@ PyMODINIT_FUNC PyInit_perf(void)
  /* The following are stubs to avoid dragging in builtin-* objects. */
  /* TODO: move the code out of the builtin-* file into util. */
  
--unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
+-bool kvm_entry_event(struct evsel *evsel __maybe_unused)
+-{
+-	return false;
+-}
 -
- bool kvm_entry_event(struct evsel *evsel __maybe_unused)
+-bool kvm_exit_event(struct evsel *evsel __maybe_unused)
+-{
+-	return false;
+-}
+-
+-bool exit_event_begin(struct evsel *evsel __maybe_unused,
+-		      struct perf_sample *sample  __maybe_unused,
+-		      struct event_key *key  __maybe_unused)
+-{
+-	return false;
+-}
+-
+-bool exit_event_end(struct evsel *evsel __maybe_unused,
+-		    struct perf_sample *sample __maybe_unused,
+-		    struct event_key *key __maybe_unused)
+-{
+-	return false;
+-}
+-
+-void exit_event_decode_key(struct perf_kvm_stat *kvm __maybe_unused,
+-			   struct event_key *key __maybe_unused,
+-			   char *decode __maybe_unused)
+-{
+-}
+-
+ int find_scripts(char **scripts_array  __maybe_unused, char **scripts_path_array  __maybe_unused,
+ 		int num  __maybe_unused, int pathlen __maybe_unused)
  {
- 	return false;
-diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-index bd0000300c77..8abb7a7b6888 100644
---- a/tools/perf/util/trace-event-scripting.c
-+++ b/tools/perf/util/trace-event-scripting.c
-@@ -16,9 +16,12 @@
- #include "debug.h"
- #include "trace-event.h"
- #include "evsel.h"
-+#include <linux/perf_event.h>
- #include <linux/zalloc.h>
- #include "util/sample.h"
- 
-+unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
-+
- struct scripting_context *scripting_context;
- 
- void scripting_context__update(struct scripting_context *c,
 -- 
 2.47.0.rc1.288.g06298d1525-goog
 
