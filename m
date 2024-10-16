@@ -1,41 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EA0212D0A;
-	Wed, 16 Oct 2024 17:12:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF102139A4;
+	Wed, 16 Oct 2024 17:12:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729098764; cv=none; b=sSgyweSFkngXokwNnqF8H2B6XcOPQ/HA/NZNkDwmv9+QBDk8ocT+VplazcBdPCCG2/CX1jbnQCb9hJjg1lYc5rx/H4yNuv7l1LrWlsP4Eq2ZXTromjU/Le9R5Lsk0EKu2EXFmRawGOcOEsqgTIJ+2CGviFDrxeCrU/dE79LTm0c=
+	t=1729098764; cv=none; b=lkeEayji+cw3NyK3TdkakvA/1ZeLbiebD7VOq9Hceg74VHWvQ0b9eKp8VjOHFW8+GMz6KpD5ZxSt5MJcMQhoBvHSTJGqCVi5LO0r0fRnBBQ4WtX0+9PHHb6DRKWxWRJc3p7s2vDxl++B81ltT15WsqHrlzjb9pjyGtr223d0jcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1729098764; c=relaxed/simple;
-	bh=PMGT7Qvoq5gBx8nWkUlzvq1J8DycrICRUXpa1QY+fSE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qz4fZG4G64ig9qT0tjxBQMTYO6qx8u56HgrFnmdAxNlzXzWrrGnl1Xuyg2ytpMnj4xI/OSckWyRaiziYjwCu+t2UkVUwa1HOUHqO+oZD+vbcuyn2mmBkbs8D39lJCzjTmvtE5exHVVuRAMOfi/G63BOS2kLFK6QWhhwrKUk7UnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ca5lWMGF; arc=none smtp.client-ip=10.30.226.201
+	bh=+aXZrt6/RTi+SPWcF89FLkozplJ0sSJZth1HAEjojNE=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=rutAa6pVPiH4aO05uUT90725W8wR69zHjvVxlbwgDc35gJbq3vmBld0Ab50w41ai7UqZl6tlf+7X1R3BIpgshe0AccxM9EVujHKNQVGrJUaP4VAxEThGvmWiUb389Q/A65GP39Mi9sdZGC2Y//9LY7ckBC/YD0xv4XhiVTo2kAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8gpyoy9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ca5lWMGF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36FD7C4CED9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8gpyoy9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C54C2C4CECF;
 	Wed, 16 Oct 2024 17:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729098763;
-	bh=PMGT7Qvoq5gBx8nWkUlzvq1J8DycrICRUXpa1QY+fSE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ca5lWMGFsus27ZmtP6zfzw0gRfj0dd46YNbUv9VeRaU+D+OZmNiNTVvX+uzWVstw5
-	 ZklIo7rC3XBqsXQe74LTu8vhlt7j1JCpgXA/Et86AWAZEOnITQZasHSy1meHABs+So
-	 UHoAyRNN3a4xCWrxVXQXZ3fg1a0m+v2UcjGqCMx2GaaJNbXDEqBFRRervSobbkgetu
-	 CiV9iMw6QQoO2tJysKlNZCxmhPin5v/9JJcsANUkpv9xIGHJ7rv+yM6O6scN+Adkn/
-	 d46SmcJ4KRqLmveQq4j2l0aOBfDkKrCSAlgRfIkSgjx+E16Go1ycdF0MBFJNR0QfI3
-	 wVi3LUKHC5qng==
+	s=k20201202; t=1729098764;
+	bh=+aXZrt6/RTi+SPWcF89FLkozplJ0sSJZth1HAEjojNE=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=X8gpyoy9fr8LUnIRMSj0XOYsrHwRSu3cXR8vEY5pslXbvPTiqcTBvR6TxF3zZK9Fj
+	 jRlQfFurLj+u4HtoKtcZ9GXso0em4jH/OmY/ti9jq8aKk9JNeGjZ4+hrBFUhTYuhy8
+	 w28wQM3P21XVCIaaOUwCMJXSxllaAmM0VAqMIRJLbg8F74rX3Hq8oZySQcol1f2HUB
+	 y3hK5/EaysXqjtV4jiTS85Fws1D82LkMsvqwwsbbd3GLpcoa58rPDbOSJTf2oJ05o7
+	 /YwWLySvgi5qRLVfbqo3d9wh1ymSY8T9IOT5LDvCI1trLU5jvf7IxtuMxwA4zKmLOV
+	 9FTmGVM52AbfA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: peterz@infradead.org, Howard Chu <howardchu95@gmail.com>
-Cc: mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, 
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
- adrian.hunter@intel.com, matt@readmodwrite.com, kan.liang@linux.intel.com, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20241011055700.4142694-1-howardchu95@gmail.com>
-References: <20241011055700.4142694-1-howardchu95@gmail.com>
-Subject: Re: [PATCH] perf test: Delete unused Intel CQM test
-Message-Id: <172909876316.288721.302392506374666174.b4-ty@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Besar Wicaksono <bwicaksono@nvidia.com>, 
+ James Clark <james.clark@linaro.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ "Liang, Kan" <kan.liang@linux.intel.com>, 
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+ Mike Leach <mike.leach@linaro.org>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Leo Yan <leo.yan@arm.com>
+In-Reply-To: <20241003185322.192357-1-leo.yan@arm.com>
+References: <20241003185322.192357-1-leo.yan@arm.com>
+Subject: Re: [PATCH v3 0/7] perf arm-spe: Refactor data source encoding
+Message-Id: <172909876374.288721.8485422607016756276.b4-ty@kernel.org>
 Date: Wed, 16 Oct 2024 10:12:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -47,14 +53,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14-dev-d4707
 
-On Thu, 10 Oct 2024 22:57:00 -0700, Howard Chu wrote:
+On Thu, 03 Oct 2024 19:53:15 +0100, Leo Yan wrote:
 
-> As Ian Rogers <irogers@google.com> pointed out, intel-cqm.c is neither
-> used nor built. It was deleted in the following commit:
+> As more Arm CPU variants (not only Neoverse CPUs) support data source
+> encoding, they share the same format for the data source packet.
 > 
-> commit b24413180f56 ("License cleanup: add SPDX GPL-2.0 license identifier to files with no license")
-> 
-> However, it resurfaced soon after in the following commit:
+> To extend supporting these CPU variants for Arm SPE data source, this
+> series refactors the code. It converts the Neoverse specific naming to
+> the common naming, and then based on the MIDR stored in the metadata to
+> decide if the CPU follows up the common encoding format.
 > 
 > [...]
 
