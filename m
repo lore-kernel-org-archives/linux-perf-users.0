@@ -1,129 +1,127 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FD61DFF5;
-	Wed, 16 Oct 2024 12:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EF421E3C1;
+	Wed, 16 Oct 2024 14:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729081844; cv=none; b=MTomKPgic//cE3nJvITHPKKfDZqT7Pr0qmZubpzMAiQpjVjpveS7SxixP2UXOk+iDmw0qhXVBUrRjzQr5RRXc5gBOJENeUn+auE9Dsw7gQS+2bciu72S66Mp+0HaT+iiqX2Sg8lcdiFJtmfWDgks8Rhx0YYxI4/TJQOnaDIXpGI=
+	t=1729088538; cv=none; b=dZzPp3z3DWiQswZls45/oyeQlWUyLdECBxReI7XhqWSsIdP8xglqJf5nADxatGZBqF9yid++UcEYWHEMQC3AMVfZxoNb7TJUcYeKJ4psfK/lbzM1DzC9R1iL66XwnQgrdwyxuCSqBQOD0CRs4fqrCU1AbtyDV/sxakrAG4YNL3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729081844; c=relaxed/simple;
-	bh=8ItB8GX4brTAtKv9DPFQRgvH2s2EG6Du2d7C4auImP0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=epjYu/G8VcUZ9cf3wwkhE8tf1sYVxxzyxMnXVfD1OcKFVCIaeC0dSoiFtqk5gC5L5fLVzyGR/XHA7FUtg8Awk5l86U2IzJBgbvooJMo6s8GeeDZvkN0YaiI0ZgAHYQ1znOqD1MiMSdYq06NaYnDPfA1SaMdELKOk85qfRavxb9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lzx22hkL; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1729088538; c=relaxed/simple;
+	bh=gMskM2GDWGub7qyVinecyjz/vxqKyOtsZPjwLotEZR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ctUZS7b358BUF1EwrY4nNlGwmHYeXz+6Q5+epVtTicowp08YDxMdvMBCUgntIET6vz8MVg6dBGEewj9kO+EWaB7UjcBBCPuhAXgq0i9HrlW5fjNcZTf+Cfvr1MjjCwRCa1BklfF8NRmI9eBsR+QBcxyc5/1OcQR3shvqalgvBTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X69X+0ij; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lzx22hkL"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49GCThTD014061;
-	Wed, 16 Oct 2024 12:30:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=NP+q8P
-	lXDawFgvRDYFei3jtXLCEGrXvSZgAkTMaquMg=; b=lzx22hkLX2wjJFOq6McD05
-	bsy8aeJo4dZIB5/H89hhnEQ5l57ndsnhnaL4XGFv1DeJgldVNFl8576Z6v+ZtfPD
-	KnQI9G4kEZq+bBpYTKqJyAYBRhUcVZuXb4Mv0ktDZvMQ+E8TlDtApQtD8RAuw8WE
-	mvrFqhvu0BFSf0G4zf+KK4NXpLZaGRHWZ63swmglZemuYLSXRzeeEHA2PhXPevKZ
-	Tjv/BkFJC2uwl5qpffORMryDLrf84tmDGFnJISdBLR/BdaPfPld1lPa92PIq119o
-	I4LDkPdDQ5m583IYHfbI3re8e0evR2vQFiHy0ZTx5w6hRZB5Yx7ReUOhbOR4Z6kg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42adhqg094-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Oct 2024 12:30:33 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49GCUXI1016152;
-	Wed, 16 Oct 2024 12:30:33 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42adhqg08w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Oct 2024 12:30:33 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49GAIYQ7006405;
-	Wed, 16 Oct 2024 12:30:32 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4284xk97nu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Oct 2024 12:30:32 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49GCUSb622806846
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Oct 2024 12:30:28 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5C9D720043;
-	Wed, 16 Oct 2024 12:30:28 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0E6C220040;
-	Wed, 16 Oct 2024 12:30:23 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.244.19])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 16 Oct 2024 12:30:22 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X69X+0ij"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3E73C4CEC5;
+	Wed, 16 Oct 2024 14:22:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729088538;
+	bh=gMskM2GDWGub7qyVinecyjz/vxqKyOtsZPjwLotEZR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X69X+0ijrVC+ser2PGOmJE9v3cRx85QfgxDiKE09/hAHwEVQoe6S89mKPkpRl0CCM
+	 7Vr1naLKeUa3c2UoYnR5GUz49gvnRxnSiRYKuDIz0nyvsGJMJWgXZomvzLGvFU/5nk
+	 c6Ojyrjm++n5PRKHAFwMR/ab0tcu0u4cRzTErL+XVg6fcYsaYvO7lHKnpi4dF9Wwr4
+	 U6zXBxN3ux0X8/AMAkvmz0K0VKP1YTr0uiM7Sn0qqAmsi5HdHw3rMpWGVU0E8s6OBE
+	 YYZ8+8XD994EybvoMqGGHBLVUgylO/hY8bO4+X6y8fDKptYZ/EBBXOgAU/gwbyVt8S
+	 ra78Ua4wQFY1Q==
+Date: Wed, 16 Oct 2024 11:22:15 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>, Howard Chu <howardchu95@gmail.com>,
+	Andrea Righi <andrea.righi@linux.dev>, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, james.clark@linaro.org,
+	alan.maguire@oracle.com
+Subject: Re: [PATCH v2 0/2] perf trace: Fix support for the new BPF feature
+ in clang 12
+Message-ID: <Zw_MFwkejeWC2qbv@x1>
+References: <20241011021403.4089793-1-howardchu95@gmail.com>
+ <Zw61TUe1V97dKWer@google.com>
+ <Zw7D9HXBanPLUO4G@x1>
+ <Zw7JgJc0LOwSpuvx@x1>
+ <Zw7SkmEaz730uVbL@x1>
+ <Zw8fqyCZNqSABMkM@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: Re: [PATCH] tools/perf/tests: Remove duplicate evlist__delete in
- tests/tool_pmu.c
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <172892779762.897882.10648635927487710641.b4-ty@kernel.org>
-Date: Wed, 16 Oct 2024 18:00:12 +0530
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D96F2226-12DA-4087-802B-74B347BFE43B@linux.vnet.ibm.com>
-References: <20241013170732.71339-1-atrajeev@linux.vnet.ibm.com>
- <172892779762.897882.10648635927487710641.b4-ty@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3818.100.11.1.3)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 5HNLB9f0Hp45-X39MzvxShrV9gbxJRzD
-X-Proofpoint-ORIG-GUID: 6yOhLDAqGiOT7OTwDqwYVOVveR1iCt9e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- lowpriorityscore=0 mlxscore=0 spamscore=0 phishscore=0 priorityscore=1501
- bulkscore=0 malwarescore=0 impostorscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2409260000
- definitions=main-2410160077
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zw8fqyCZNqSABMkM@google.com>
 
+On Tue, Oct 15, 2024 at 07:06:35PM -0700, Namhyung Kim wrote:
+> Hi Arnaldo,
+> 
+> On Tue, Oct 15, 2024 at 05:37:38PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Tue, Oct 15, 2024 at 04:58:56PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > So I'm trying adding extra bounds checking, marking the index as
+> > > volatile, adding compiler barriers, etc, all the fun with the verifier,
+> > > but got distracted with other stuff, coming back to this now.
+> >  
+> > > Ok, the following seems to do the trick:
+> >  
+> > > [acme@dell-per740-01 perf-tools]$ git diff
+> > > diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> > > index 3b30aa74a3ae..ef87a04ff8d0 100644
+> > > --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> > > +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> > > @@ -486,6 +486,7 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+> > >                                 augmented = true;
+> > >                 } else if (size < 0 && size >= -6) { /* buffer */
+> > >                         index = -(size + 1);
+> > > +                       index &= 7; // To satisfy the bounds checking with the verifier in some kernels
+> > >                         aug_size = args->args[index];
+> > >  
+> > >                         if (aug_size > TRACE_AUG_MAX_BUF)
+> > > 
+> > > I'll now test it without Howard's patch to see if it fixes the RHEL8 +
+> > > clang 17 case.
+> > 
+> > It works with this one-liner + the simplified patch from Howard and also
+> > on this other system (RHEL9), as well as with Fedora 40, it would be
+> > nice if someone could test with clang 16 and report back the version of
+> > the kernel tested as well as the distro name/release, that way I can try
+> > to get my hands on such as system and test there as well.
+> > 
+> > Its all at:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tmp.perf-tools
+> > 
+> > This is the current set of patches that when further tested will go to
+> > Linus for v6.12:
+> > 
+> > ⬢[acme@toolbox perf-tools]$ git log --oneline torvalds/master..
+> > ff14baa7a290bf42 (HEAD -> perf-tools, x1/perf-tools, perf-tools/tmp.perf-tools) perf trace augmented_raw_syscalls: Add more checks to pass the verifier
+> > 46180bec048aad85 perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
+> > 45d1aadac64869a2 perf build: Change the clang check back to 12.0.1
+> 
+> Wouldn't it be better to have this change after fixing the verifier
+> issues in the later commits?
 
+I'm still testing it, this is a one-liner, so I think that the order in
+which the patches are applied isn't important. Also Howard's patch (the
+simplified one) doesn't clash with it.
+ 
+> > 4e21679eb81b5f0d perf trace: The return from 'write' isn't a pid
+> > 2d2314d4b09b5ed9 tools headers UAPI: Sync linux/const.h with the kernel headers
+> > ⬢[acme@toolbox perf-tools]$
+> 
+> I guess you also need the syscalltbl fix from Jiri Slaby.
+> 
+> https://lore.kernel.org/linux-perf-users/3a592835-a14f-40be-8961-c0cee7720a94@kernel.org/
 
-> On 14 Oct 2024, at 11:13=E2=80=AFPM, Namhyung Kim =
-<namhyung@kernel.org> wrote:
->=20
-> On Sun, 13 Oct 2024 22:37:32 +0530, Athira Rajeev wrote:
->=20
->> The testcase for tool_pmu failed in powerpc as below:
->>=20
->> ./perf test -v "Parsing without PMU name"
->>  8: Tool PMU                                                        :
->>  8.1: Parsing without PMU name                                      : =
-FAILED!
->>=20
->> This happens when parse_events results in either skip or fail
->> of an event. Because the code invokes evlist__delete(evlist)
->> and "goto out".
->>=20
->> [...]
->=20
-> Applied to perf-tools-next, thanks!
+Right, he provided a report about the patch I sent solving the case, I
+have to check if he replied to my question about perf trace actually
+_working_ on a 32-bit arch system.
 
-Thanks Namhyung for picking the change
+I also want to test it, I'm trying to get hold of such a system.
 
-Athira
->=20
-> Best regards,
-> Namhyung
->=20
->=20
-
+- Arnaldo
