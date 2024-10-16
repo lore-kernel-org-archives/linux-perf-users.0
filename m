@@ -1,113 +1,111 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E82156225;
-	Wed, 16 Oct 2024 14:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497C514F114
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 14:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729089648; cv=none; b=qWxYxmIZOWfWqKb05u1uQqUgQ7NepwnIRkO4ieuu2tJUg3MKM+PvwLFkzEpmCKsdBiEvkfDbglKdg9RE0IsgVhUSgCQltmI3vYUunSFe3WNtoGmq2VpscAet/aX9EqjYcEvpF3q2u/73HPnsmqM8GM4a9xhcjCisWu+hj19i+9s=
+	t=1729090533; cv=none; b=KQ0YgDpsKU2F3jhKCESEcxZ5f65Rl6NGYF6ilKQKImbCMbtoUuL/xXi99SUUyDwNhdJo2hffsNkbcKN4U1Wc1m6JM9KcSvGopiGaOmJBs9tD1qZ6+3r357ZMTU5AKdC+pX392lgmZL0Or42MTnKxbpQHj7bKbU1y05mBrNmMIr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729089648; c=relaxed/simple;
-	bh=ul8TFX6/qO2uhWK1XiYqRn/NjGuEyHYIevcEye9EmYY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Oc2uMr6L2BcROUCIG27XQI2ZYFG5rRIgU3+DNgkyNSg+JAPbeG8uMl8bqzOe0RYMdeknRp1YzAurmNg3pVb5zCGR+l8q/xoMW82XtiAl9JZYfRBau5d+vqw553rc+F/oYn+q/00Y9vSRB9nMQAz1kMMJVcsrfqcLMXRB3haGS5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 758AFFEC;
-	Wed, 16 Oct 2024 07:41:16 -0700 (PDT)
-Received: from [10.1.28.177] (XHFQ2J9959.cambridge.arm.com [10.1.28.177])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 848913F71E;
-	Wed, 16 Oct 2024 07:40:43 -0700 (PDT)
-Message-ID: <c997e5c6-ba45-4492-95ce-28747643bd39@arm.com>
-Date: Wed, 16 Oct 2024 15:40:41 +0100
+	s=arc-20240116; t=1729090533; c=relaxed/simple;
+	bh=lhStgkW1nOmPDE/zibhXWPJlliM/BQNg1rEJG90y3R8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tgu8xdeNXlsiog28AlPkIYQO+LIkIBySvLpETfWwwEyI3R9MnpypqS7DttdW6eXYyLd1kmoZ6NwRdfHUfeezJShDY0z3k7WeCfVFxfUD3mANp6j9L7f7gNBpJ85PSCvmlOFnMbhEIhXWcBjn+msC8OkHsl7sN9VB7iW3xaMbo5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=agmDJ8UU; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="agmDJ8UU"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a3b28ac9a1so171795ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 07:55:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1729090531; x=1729695331; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x5ndcWCV7GBa6KmSNUJ6McmDrO0FkYlO8NF3CckatKQ=;
+        b=agmDJ8UUPD8qZNqIasRUSLjKi62ccJvOmPjOG3xj/UGR39qJUXcCj8haLNpK/ixbW+
+         7Lr26Ryq2MXUby2lHvqpKwAo34hE1QNc/XjTjMr1odgpiWpGqx1cgo6b0MCcwAJBIrri
+         A6zgQ0ixMgA7/R3Hjeu1tBTNCYP+mga+cko1PoC9zmn0wkif/0nFLjFx9LhgO/ue/t2K
+         j50Qu/Ql2VrJjCFATyBHmxoZTgOQHHmxwSz1WQ2J7u66ptLG//fK6IsyGDDIeWuW9Wt2
+         3RjQ/ifz0N93Z5ZV1Nmgj7bz5BGcsFKlSV/R/pm7sxdXyvLnM+OrBQV8SYcJeB/Nk+Ka
+         WPxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729090531; x=1729695331;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x5ndcWCV7GBa6KmSNUJ6McmDrO0FkYlO8NF3CckatKQ=;
+        b=cGwqfSk+Q05DjUUSSK/W4jKByL2yruorEJ10wuZHiXPvFTWoIH6ZEd9rL8TRfGhbrl
+         W/RKplQqDQCh3suiXgUE7oNIb5Owy/kvG6YhxiaMVtVdS7wi26aeB1TrkikHVJl/zCby
+         BH23xRVUK84j4zJ7VKs9T974u0wS7dZrnbZk/KdnafCBfORKqbjpQEQhe01pxQoZP6NO
+         a7wfT3Tl3tEls9N79R9XN6/5RcWbhN8vGyAZVmEV8DIssPiVEyK/yejQjJ6FuW0pGs1O
+         Fk5L7ZJPAVEqRVjrBZtn0miLUMQBK50s+xM7AA38xnI6n/5zEXsi6YE9qpgHej2Boc2h
+         2n3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUgmzV6QiWRPQBl/J+5VSZ06ZKfdufhlThbGX6zzfFXzUyt+GJexyR3cdvpEvDTcnN+5c/tnyWoHVt4Ags12Dec@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx12iPXE2+HFe3lJPEqY1+3mOr7iD2kfrq5wCVMw/aVhmioY2gA
+	r8VTIvL08wIav5pPnA3Rkgg8z0KIUUrLrncWZQJxD7AB4dnjBbp+5Wmb2PvG8Jmov3Zsws4RrEZ
+	hQtLj8KAVzxLXEG6/3hiZyAYYO6JX0PaElzlo
+X-Google-Smtp-Source: AGHT+IFAD0SSxWQ+/5diCeKc7c0u4sL0M9E0RTFkufYU9vk1dYWzrc01o217x2qTlswxzulprYDuCd9aEEc+tGDtBM8=
+X-Received: by 2002:a05:6e02:13aa:b0:375:bb49:930d with SMTP id
+ e9e14a558f8ab-3a3de7d22dfmr2880775ab.23.1729090531199; Wed, 16 Oct 2024
+ 07:55:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 16/57] perf: Remove PAGE_SIZE compile-time constant
- assumption
-Content-Language: en-GB
-To: Andrew Morton <akpm@linux-foundation.org>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- David Hildenbrand <david@redhat.com>, Greg Marsden
- <greg.marsden@oracle.com>, Ivan Ivanov <ivan.ivanov@suse.com>,
- Kalesh Singh <kaleshsingh@google.com>, Marc Zyngier <maz@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <mbrugger@suse.com>,
- Miroslav Benes <mbenes@suse.cz>, Will Deacon <will@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-perf-users@vger.kernel.org
-References: <20241014105514.3206191-1-ryan.roberts@arm.com>
- <20241014105912.3207374-1-ryan.roberts@arm.com>
- <20241014105912.3207374-16-ryan.roberts@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20241014105912.3207374-16-ryan.roberts@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20241016065654.269994-1-namhyung@kernel.org> <c28ce930-9a70-4f23-9f6b-541c16c212e3@linaro.org>
+In-Reply-To: <c28ce930-9a70-4f23-9f6b-541c16c212e3@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 16 Oct 2024 07:55:17 -0700
+Message-ID: <CAP-5=fW3So87z8Q+J5eNf+a2PP2toDe3GX5HB7akecR7TBV__A@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Speed up some tests using perf list
+To: James Clark <james.clark@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>, 
+	German Gomez <german.gomez@arm.com>, Carsten Haitzler <carsten.haitzler@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-+ Arnaldo Carvalho de Melo, Ingo Molnar, Namhyung Kim, Peter Zijlstra
+On Wed, Oct 16, 2024 at 1:25=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+>
+>
+> On 16/10/2024 7:56 am, Namhyung Kim wrote:
+> > On my system, perf list is very slow to print the whole events.  I thin=
+k
+> > there's a performance issue in SDT and uprobes event listing.  I notice=
+d
+> > this issue while running perf test on x86 but it takes long to check
+> > some CoreSight event which should be skipped quickly.
+> >
+> > Anyway, some test uses perf list to check whether the required event is
+> > available before running the test.  The perf list command can take an
+> > argument to specify event class or (glob) pattern.  But glob pattern is
+> > only to suppress output for unmatched ones after checking all events.
+> >
+> > In this case, specifying event class is better to reduce the number of
+> > events it checks and to avoid buggy subsystems entirely.
+> >
+> > No functional changes intended.
+> >
+> > Cc: German Gomez <german.gomez@arm.com>
+> > Cc: Carsten Haitzler <carsten.haitzler@arm.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+>
+> Reviewed-by: James Clark <james.clark@linaro.org>
 
-This was a rather tricky series to get the recipients correct for and my script
-did not realize that "supporter" was a pseudonym for "maintainer" so you were
-missed off the original post. Appologies!
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-More context in cover letter:
-https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
+There's a nice better than >2x speed up waiting in too :-)
+https://lore.kernel.org/lkml/20241011220354.756798-1-irogers@google.com/
 
-
-On 14/10/2024 11:58, Ryan Roberts wrote:
-> To prepare for supporting boot-time page size selection, refactor code
-> to remove assumptions about PAGE_SIZE being compile-time constant. Code
-> intended to be equivalent when compile-time page size is active.
-> 
-> Refactor a BUILD_BUG_ON() so that we test against the limit; _format is
-> invariant to page size so testing it is no bigger than the minimum
-> supported size is sufficient.
-> 
-> Wrap global variables that are initialized with PAGE_SIZE derived values
-> using DEFINE_GLOBAL_PAGE_SIZE_VAR() so their initialization can be
-> deferred for boot-time page size builds.
-> 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
-> 
-> ***NOTE***
-> Any confused maintainers may want to read the cover note here for context:
-> https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
-> 
->  include/linux/perf_event.h | 2 +-
->  kernel/events/core.c       | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 1a8942277ddad..b7972155f93eb 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -1872,7 +1872,7 @@ _name##_show(struct device *dev,					\
->  			       struct device_attribute *attr,		\
->  			       char *page)				\
->  {									\
-> -	BUILD_BUG_ON(sizeof(_format) >= PAGE_SIZE);			\
-> +	BUILD_BUG_ON(sizeof(_format) >= PAGE_SIZE_MIN);			\
->  	return sprintf(page, _format "\n");				\
->  }									\
->  
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 8a6c6bbcd658a..81149663ab7d8 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -419,7 +419,7 @@ static struct kmem_cache *perf_event_cache;
->  int sysctl_perf_event_paranoid __read_mostly = 2;
->  
->  /* Minimum for 512 kiB + 1 user control page */
-> -int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024); /* 'free' kiB per user */
-> +__DEFINE_GLOBAL_PAGE_SIZE_VAR(int, sysctl_perf_event_mlock, __read_mostly, 512 + (PAGE_SIZE / 1024)); /* 'free' kiB per user */
->  
->  /*
->   * max perf event sample rate
-
+Thanks,
+Ian
