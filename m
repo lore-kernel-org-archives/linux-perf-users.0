@@ -1,99 +1,118 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0231384B3;
-	Wed, 16 Oct 2024 21:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071B01D2700
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 21:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729115149; cv=none; b=HxK4ljaxBz6Z/SmezrrNBeK9SB/d2JSRDbv0DT3Vw3MEhM9mkcR3688lHbygX4tDfSstMoUO2D3xTe8xnJgDdrHEqu6aV1wnocajuYm5bAURh2Na+Qfxviihah0kHXw3DaJp2wfKS/4MJhoXPbvnMArwGfn91qxEKizWo15v8Ug=
+	t=1729115515; cv=none; b=NJH9SVKIFc15/3d4FbRHcWOb7xkRw9z9nY2PmPN3zKu6RJhwLR938wUNUehZPxQMIulGNokmIrA6fCu0mr4eVTveAJTVVpyYqDS+y4qm/ijUc8ozWNxbZEJEmKrx2v9y8DAj06xFvRC73VEF9tQ2wgudswvKn6bVX8jGJe7tufs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729115149; c=relaxed/simple;
-	bh=1/V4feXPUB4kGNXKsu2hBzl5oCt2y19qqOaw9nM6uRI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rkrukumMWU5c2oZPXw7SBjr/sOmcqEinuz39coosBQb65iZX1Wmv0OhuvEfJTfLNUWi3NrC0M6iNePs7RpiuOYsNqq9htmMK9K8IjACHE3AdcNpL4B9YfI4n6xXwFZRfSGSvirB0+2TEAZeaoKe44Mt79yKatGaxGjUP3lALJqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tU4ZhuCZ; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1729115515; c=relaxed/simple;
+	bh=5B5zZtVhPu3KcXjmmRnPd3ir3Y6025YdvNPQ0dugF50=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=TS5RxnF28Oc+fJsbmVSLp39A8zOvR3omrRkpamf5f/4Gj2ewyQDXJdqyV+qGPSpvCDfBsCNID35Sl3BM1G8JHYASPyuwGyC+UScmX3RXErxQaugf5ER7/T60EOLa/3hm6kiFcRyasBYWGA/n0M2I6lGqPkHZqlTk+PXrL8mU6N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ugeIRybP; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tU4ZhuCZ"
-Date: Wed, 16 Oct 2024 14:45:37 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1729115145;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v5cxppTEMM7NUJQ2rhvny6tsM0muKpV+U5GhjqYjGB4=;
-	b=tU4ZhuCZJKMgX7Vht4WtZmHqMrcvFgLxy4ZoA/bDRs+sRX/YFmu5OUMY7gbvgpIJANpft9
-	WYYI2QfKlBdgkAyFx8WmTjfvjfqLd+/WXtebKXI+G3Tk3GuDsfvnAVTxpEV6RpdIDVBIcF
-	dGMdsygCheqtOw2+pbk2SOLtqzItV0o=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
-	ast@kernel.org, daniel@iogearbox.net, martin.lau@kernel.org, linux-mm@kvack.org, 
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, Yi Lai <yi1.lai@intel.com>, 
-	pbonzini@redhat.com, seanjc@google.com, tabba@google.com, david@redhat.com, 
-	jackmanb@google.com, jannh@google.com, rppt@kernel.org
-Subject: Re: [PATCH bpf] lib/buildid: handle memfd_secret() files in
- build_id_parse()
-Message-ID: <55xdknbnbcyj4fv3qfoqrjyc5okfxltlcbkxmmdhvb5eflgexs@y6b5nfrpr4ex>
-References: <20241014235631.1229438-1-andrii@kernel.org>
- <2rweiiittlxcio6kknwy45wez742mlgjnfdg3tq3xdkmyoq5nn@g7bfoqy4vdwt>
- <CAJD7tkbpEMx-eC4A-z8Jm1ikrY_KJVjWO+mhhz1_fni4x+COKw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ugeIRybP"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e3529d80e5so7247297b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 14:51:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1729115513; x=1729720313; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=un/+KbZ/raL6SrexERiPhTBZjrcdtpNN2gh/5Lox+Yc=;
+        b=ugeIRybPh6JMN2M0PD3Kcmzq9uILtZhCZgFrJEgd2NR0Q2isS70bRQyYazQQOc4YYz
+         6vTPa3ADg8ZCmjSTqUgggzDEIVk41OMtgUKOHj4EmQp2D7hlhRdbZLR0uNA0Uu9DlWR0
+         dmc5bdvy8OSPQwIagK1VBPjmQYnOTiKrim1H3OsuJ2ZF+SEc9/96nITSrrB6n4bB/1Ww
+         xD+X50GiI2biNuFcCYoctOZfybm/reTyn9r54K6Lh1yzCb32t6XZqXBPaxw6zPbJKG13
+         Vu35/waKnbw8mbiTbnasDr4I0aXVYdgND7/8zwd43F0DZKhzgJw5s3wLXH/uhwuIXte3
+         A8Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729115513; x=1729720313;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=un/+KbZ/raL6SrexERiPhTBZjrcdtpNN2gh/5Lox+Yc=;
+        b=QRw3SzgwSg354lTzBVdGe7RKyDWZxDPYs+eaPNd2nCfhTRNuWi6WIBtKCaKV6bD4V7
+         ZcsLh9ztFEBqUxLyL1F6UwI6rPbkOcafHT5bXT7ZYuh+AsHOKZ8d8USendaYZwiYeK3G
+         ZpvBD4ii6qO+wSrpkhVkuBTDCr2GE1PD2lh7ssiirIbb44hTHODT3mNmLzy++MQQ6318
+         O+S44L8tCcYX0oi92G0/vaBSqDWIyJT28U7BlWqB0IVEdivCEpwRTa3WpOWihvjPPe36
+         stfo9TJ5uV+D0HirecjJnRn7UAH5yy77AwHnnUBYSJy/4MgYek9JMb4KRy8USTWyJSsG
+         KBmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxLmnEsa+3XCvQCdrq6WHtbR9gDHx890dQEXSgGsb7OTBsfN6bAIHNCSLMe3X29H7GuGh6lLcdW9y2YaY91pGH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwujLcZfxrVbfFlRgZKKIj1vBU1CxDcYJ9La1tEfheOQqPv7AEF
+	Y3sNUYSxUGHgLw1TY+OL/bUhm5DuphwQTPOYiJ91mVJB3vQHJl+asq2GpKXQ/G68KpixRaMd6Fw
+	2arQEsQ==
+X-Google-Smtp-Source: AGHT+IEXigOqFWcNIr6ONd5QDFk41xOSSJkIXQuEyJcx7SV8OgGq4bdAOSyhZcuIkwTpfwaTRb1ysaxdRzQd
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:a00a:f237:9bc0:79c])
+ (user=irogers job=sendgmr) by 2002:a05:690c:9a86:b0:6e2:6f2:efc with SMTP id
+ 00721157ae682-6e3d41c84bdmr1189017b3.5.1729115512794; Wed, 16 Oct 2024
+ 14:51:52 -0700 (PDT)
+Date: Wed, 16 Oct 2024 14:51:31 -0700
+Message-Id: <20241016215139.212939-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJD7tkbpEMx-eC4A-z8Jm1ikrY_KJVjWO+mhhz1_fni4x+COKw@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.105.g07ac214952-goog
+Subject: [PATCH v4 0/7] CSV/JSON metric thresholds, fix printf modifiers
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Tim Chen <tim.c.chen@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Sumanth Korikkar <sumanthk@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Oct 16, 2024 at 12:59:13PM GMT, Yosry Ahmed wrote:
-> On Wed, Oct 16, 2024 at 11:39 AM Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> >
-> > Ccing couple more folks who are doing similar work (ASI, guest_memfd)
-> >
-> > Folks, what is the generic way to check if a given mapping has folios
-> > unmapped from kernel address space?
-> 
-> I suppose you mean specifically if a folio is not mapped in the direct
-> map, because a folio can also be mapped in other regions of the kernel
-> address space (e.g. vmalloc).
-> 
-> From my perspective of working on ASI on the x86 side, I think
-> lookup_address() is
-> the right API to use. It returns a PTE and you can check if it is
-> present.
-> 
-> Based on that, I would say that the generic way is perhaps
-> kernel_page_present(), which does the above on x86, not sure about
-> other architectures. It seems like kernel_page_present() always
-> returns true with !CONFIG_ARCH_HAS_SET_DIRECT_MAP, which assumes that
-> unmapping folios from the direct map uses set_direct_map_*().
-> 
-> For secretmem, it seems like set_direct_map_*() is indeed the method
-> used to unmap folios. I am not sure if the same stands for
-> guest_memfd, but I don't see why not.
-> 
-> ASI does not use set_direct_map_*(), but it doesn't matter in this
-> context, read below if you care about the reasoning.
-> 
-> ASI does not unmap folios from the direct map in the kernel address
-> space, but it creates a new "restricted" address space that has the
-> folios unmapped from the direct map by default. However, I don't think
-> this is relevant here. IIUC, the purpose of this patch is to check if
-> the folio is accessible by the kernel, which should be true even in
-> the ASI restricted address space, because ASI will just transparently
-> switch to the unrestricted kernel address space where the folio is
-> mapped if needed.
-> 
-> I hope this helps.
-> 
+Metric thresholds are being computed for CSV and JSON output but not
+displayed. Rename the color that encodes the threshold as enum values
+and use to generate string constants for a json dictionary
+value. Disable metric thresholds with CSV output.
 
-Thanks a lot. This is really helpful.
+Add printf attribute to functions in color.h that could support
+it. Fix bad printf format strings that this detected.
+
+v4. Drop CSV metric thresholds due to formatting variation on
+    hypervisors (broken counters) and not as detected by
+    tests/shell/stat+csv_output.sh.
+v3. Rebase.
+v2. Don't display metric-value for json output if there is no unit.
+
+Ian Rogers (7):
+  perf color: Add printf format checking and resolve issues
+  perf stat: Fix/add parameter names for print_metric
+  perf stat: Display "none" for NaN with metric only json
+  perf stat: Drop metric-unit if unit is NULL
+  perf stat: Change color to threshold in print_metric
+  perf stat: Add metric-threshold to json output
+  perf stat: Disable metric thresholds for CSV and JSON metric-only mode
+
+ tools/perf/arch/x86/util/iostat.c             |   2 +-
+ tools/perf/builtin-sched.c                    |   2 +-
+ tools/perf/builtin-script.c                   |   6 +-
+ tools/perf/builtin-stat.c                     |   8 ++
+ tools/perf/builtin-trace.c                    |   2 +-
+ .../tests/shell/lib/perf_json_output_lint.py  |   5 +-
+ tools/perf/util/arm-spe.c                     |   2 +-
+ tools/perf/util/color.h                       |   9 +-
+ tools/perf/util/intel-bts.c                   |   2 +-
+ tools/perf/util/intel-pt.c                    |   2 +-
+ tools/perf/util/s390-cpumsf.c                 |   2 +-
+ tools/perf/util/s390-sample-raw.c             |   6 +-
+ tools/perf/util/stat-display.c                |  73 +++++++---
+ tools/perf/util/stat-shadow.c                 | 128 ++++++++++--------
+ tools/perf/util/stat.h                        |  16 ++-
+ 15 files changed, 169 insertions(+), 96 deletions(-)
+
+-- 
+2.47.0.105.g07ac214952-goog
 
