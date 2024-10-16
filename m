@@ -1,190 +1,174 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480B81C6F55
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 09:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528E020896A
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 12:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729070411; cv=none; b=dMVOzCAmAkYau9hXALAItjN6VAFEtY7rmVYpHA9PsMRh9DaLCZMyJK9TEUDT+AjSiHFc3nKdA7fqUFy/h4Z7b7ozKlgWrk1Z+35kpWyMn40PCH29vkvdH0x0+T0zsttl3gdFcvCV7xv85eTpAkOUdNBVkkM2idVcLbaB1i1uXDw=
+	t=1729081815; cv=none; b=oJMZD/Mc2dVIR0sEhcNXv+wVZ/rFP0DdvuGLJk3L/R5Aiupeb00BuefVQS8UVW6+lf+3SOJigSFSQoNJ/aa8qVuAe+Gqbm0HVHlXqVKkznkJP5nKJD2pIsJ6/78+iNWK5xYOwT8RCwxoj5v4NOrpTCRLV+MgkK1qvlCFdBqDGhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729070411; c=relaxed/simple;
-	bh=ZJgqU7D2tEQg77R4kba5Yy9aZywjprp4o4yoANv/N74=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uzBQhXhoc5KIpYmHPZA6OXDXbLGNIgVVLIZPNgcfSzoNQK5frvz4vxgers7nwOJyVViQfxu9HkRS24sHI1hKJMg7MQIcqjd/XWQAjj0QLMOVacZrY49kn1w+XBuC6hnfUsHxZuFQ9e+nUUuFbvzZlMlrd+YPxfgcV9pzQGIoUbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cf5dLb/Z; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1729081815; c=relaxed/simple;
+	bh=1c4Grr/9aI5Eq1bLymJOsvr/0TrgC/vqBlZzZOsR8VE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=SrxRPiM539KHSjuqxY8D9CWM2EOYPBRv66gAqEWKsoSvUMRRKdUNHDtri6tmG7Y0TjJdUy5QtYN1NQPPop/UCH0SgrEpe99ImtsX5OiAX+0J0gud4rUYvOz5eZIZjCQPpklaQHJ/4KWQPDpHmh5MEBctbWDNgtBp1x51QX2ZGy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iVoLq4tZ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cf5dLb/Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729070409;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MD4PH+TjntKYNaAOSsAlc5YKOp3Bk0mCE3I/9BhgQQM=;
-	b=cf5dLb/Ze8y4pjxUXD+lyNyUsWyYHqqvlq1BWYzrka/z3TVYP+kVFLE2CJViWshfMPX4x1
-	8sVZvcV71b9mZ/EUkb5qSfLt+HXdfaedcYDeJO8QwPl9MIvSrDsTaMcz6AdaUsNZfyNa5H
-	WLTUqbV4vTv9uqhsWkxmRpJ7v1rvRn8=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-74-JGGOLuF_OJ6zH1KC-6Qn8A-1; Wed,
- 16 Oct 2024 05:20:05 -0400
-X-MC-Unique: JGGOLuF_OJ6zH1KC-6Qn8A-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7A00A1955EE6;
-	Wed, 16 Oct 2024 09:20:03 +0000 (UTC)
-Received: from dhcpe026.fit.vutbr.com (unknown [10.45.226.97])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 502691956086;
-	Wed, 16 Oct 2024 09:19:53 +0000 (UTC)
-From: vmolnaro@redhat.com
-To: linux-perf-users@vger.kernel.org,
-	acme@kernel.org,
-	acme@redhat.com
-Cc: mpetlan@redhat.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf test: Handle perftool-testsuite_probe failure due to broken DWARF
-Date: Wed, 16 Oct 2024 11:19:30 +0200
-Message-ID: <20241016091930.191761-1-vmolnaro@redhat.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iVoLq4tZ"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49GAK5wj022175;
+	Wed, 16 Oct 2024 12:30:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=aiUeGk
+	+hwdjG29xRD5MljY+A1mdGiwdWe9aACfJUrrA=; b=iVoLq4tZHwI4vrCekeJIzb
+	D734bvlWs8bMyXNyJ/Qfps+sbYnwiHrI5GH205zsT4hRyaML/B4rVEML7eOlsQIy
+	oFNazcsv4yD4nR8f7VmcXBoz8LzPYkd/BHryC1OC+uwMQLn/QfdckLyUuC9vshIT
+	V1anHb0iY5zhc6M+NAgyYP07sXZPRfbdVgsU7syAB/KDJR6NKp0bTtz6eu7+Hh8I
+	FVLWt2wyJNu0QImJquKvKsZlPDyHwIVESBB662OczkjbKWM/4zasakBHjrwMOSVj
+	ofNj8oZ20UzDAwEtE2zjMKR39XyYNwXYAj2kpS7H3ZSvwvduwrM5koO24dyE3cqg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42abn0gksu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Oct 2024 12:30:02 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49GCU2nS021931;
+	Wed, 16 Oct 2024 12:30:02 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42abn0gksh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Oct 2024 12:30:02 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49G9WV2B006663;
+	Wed, 16 Oct 2024 12:30:01 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4283es1hhy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Oct 2024 12:30:01 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49GCTv7A56885682
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Oct 2024 12:29:57 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B3F612004B;
+	Wed, 16 Oct 2024 12:29:57 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AB7F820043;
+	Wed, 16 Oct 2024 12:29:52 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.244.19])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 16 Oct 2024 12:29:52 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: [PATCH] tools/perf/tests: Fix compilation error with strncpy in
+ tests/tool_pmu
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <Zw1UXbWTS9Gk3lmw@google.com>
+Date: Wed, 16 Oct 2024 17:59:38 +0530
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        hbathini@linux.ibm.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8B5B2251-E41E-4584-881E-61A468AFB222@linux.vnet.ibm.com>
+References: <20241013173742.71882-1-atrajeev@linux.vnet.ibm.com>
+ <Zw1UXbWTS9Gk3lmw@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3818.100.11.1.3)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: AeZNnQnQtUJIn2eVam4w1166aIGkbFDd
+X-Proofpoint-ORIG-GUID: oo4sG4uSbvgG9k-VfJ-VJJmHLsoBQc2r
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ mlxscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410160077
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
 
-Test case test_adding_blacklisted ends in failure if the blacklisted
-probe is of an assembler function with no DWARF available. At the same
-time, probing the blacklisted function with ASM DWARF doesn't test the
-blacklist itself as the failure is a result of the broken DWARF.
 
-When the broken DWARF output is encountered, check if the probed
-function was compiled by the assembler. If so, the broken DWARF message
-is expected and does not report a perf issue, else report a failure.
-If the ASM DWARF affected the probe, try the next probe on the blacklist.
-If the first 5 probes are defective due to broken DWARF, skip the test
-case.
+> On 14 Oct 2024, at 10:56=E2=80=AFPM, Namhyung Kim =
+<namhyung@kernel.org> wrote:
+>=20
+> Hello Athira,
+>=20
+> On Sun, Oct 13, 2024 at 11:07:42PM +0530, Athira Rajeev wrote:
+>> perf fails to compile on systems with GCC version11
+>> as below:
+>>=20
+>> In file included from /usr/include/string.h:519,
+>>                 from =
+/home/athir/perf-tools-next/tools/include/linux/bitmap.h:5,
+>>                 from =
+/home/athir/perf-tools-next/tools/perf/util/pmu.h:5,
+>>                 from =
+/home/athir/perf-tools-next/tools/perf/util/evsel.h:14,
+>>                 from =
+/home/athir/perf-tools-next/tools/perf/util/evlist.h:14,
+>>                 from tests/tool_pmu.c:3:
+>> In function =E2=80=98strncpy=E2=80=99,
+>>    inlined from =E2=80=98do_test=E2=80=99 at tests/tool_pmu.c:25:3:
+>> /usr/include/bits/string_fortified.h:95:10: error: =
+=E2=80=98__builtin_strncpy=E2=80=99 specified bound 128 equals =
+destination size [-Werror=3Dstringop-truncation]
+>>   95 |   return __builtin___strncpy_chk (__dest, __src, __len,
+>>      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>   96 |                                   __glibc_objsize (__dest));
+>>      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~
+>>=20
+>> The compile error is from strncpy refernce in do_test:
+>> strncpy(str, tool_pmu__event_to_str(ev), sizeof(str));
+>>=20
+>> This behaviour is not observed with GCC version 8, but observed
+>> with GCC version 11 . This is message from gcc for detecting
+>> truncation while using strncpu. Use snprintf instead of strncpy
+>> here to be safe.
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>=20
+> I found this issue now and thanks for the quick fix.  I will push to
+> perf-tools-next soon.
+>=20
+> Thanks,
+> Namhyung
+>=20
 
-Fixes: def5480d63c1e847 ("perf testsuite probe: Add test for blacklisted kprobes handling")
-Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
----
- .../base_probe/test_adding_blacklisted.sh     | 74 +++++++++++++++----
- 1 file changed, 59 insertions(+), 15 deletions(-)
+Sure
 
-diff --git a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-index b5dc10b2a73810b3..f67b3b267ac55269 100755
---- a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-+++ b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-@@ -19,35 +19,79 @@
- TEST_RESULT=0
- 
- # skip if not supported
--BLACKFUNC=`head -n 1 /sys/kernel/debug/kprobes/blacklist 2> /dev/null | cut -f2`
--if [ -z "$BLACKFUNC" ]; then
-+BLACKFUNC_LIST=`head -n 5 /sys/kernel/debug/kprobes/blacklist 2> /dev/null | cut -f2`
-+if [ -z "$BLACKFUNC_LIST" ]; then
- 	print_overall_skipped
- 	exit 0
- fi
- 
-+# chceck if locate is present to find vmlinux with DWARF debug info
-+locate --help 2&> /dev/null
-+if [ $? -eq 0 ]; then
-+	VMLINUX_FILE=$(locate -r '/vmlinux$' | xargs -I{} sh -c 'test -f "{}" && echo "{}"' | grep "$(uname -r)")
-+fi
-+
- # remove all previously added probes
- clear_all_probes
- 
- 
- ### adding blacklisted function
--
--# functions from blacklist should be skipped by perf probe
--! $CMD_PERF probe $BLACKFUNC > $LOGS_DIR/adding_blacklisted.log 2> $LOGS_DIR/adding_blacklisted.err
--PERF_EXIT_CODE=$?
--
- REGEX_SCOPE_FAIL="Failed to find scope of probe point"
- REGEX_SKIP_MESSAGE=" is blacklisted function, skip it\."
--REGEX_NOT_FOUND_MESSAGE="Probe point \'$BLACKFUNC\' not found."
-+REGEX_NOT_FOUND_MESSAGE="Probe point \'$RE_EVENT\' not found."
- REGEX_ERROR_MESSAGE="Error: Failed to add events."
- REGEX_INVALID_ARGUMENT="Failed to write event: Invalid argument"
- REGEX_SYMBOL_FAIL="Failed to find symbol at $RE_ADDRESS"
--REGEX_OUT_SECTION="$BLACKFUNC is out of \.\w+, skip it"
--../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" < $LOGS_DIR/adding_blacklisted.err
--CHECK_EXIT_CODE=$?
--
--print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLACKFUNC"
--(( TEST_RESULT += $? ))
--
-+REGEX_OUT_SECTION="$RE_EVENT is out of \.\w+, skip it"
-+REGEX_MISSING_DECL_LINE="A function DIE doesn't have decl_line. Maybe broken DWARF?"
-+
-+BLACKFUNC=""
-+SKIP_DWARF=0
-+
-+for BLACKFUNC in $BLACKFUNC_LIST; do
-+	echo "Probing $BLACKFUNC"
-+
-+	# functions from blacklist should be skipped by perf probe
-+	! $CMD_PERF probe $BLACKFUNC > $LOGS_DIR/adding_blacklisted.log 2> $LOGS_DIR/adding_blacklisted.err
-+	PERF_EXIT_CODE=$?
-+
-+	# check for bad DWARF polluting the result
-+	../common/check_all_patterns_found.pl "$REGEX_MISSING_DECL_LINE" >/dev/null < $LOGS_DIR/adding_blacklisted.err
-+
-+	if [ $? -eq 0 ]; then
-+		SKIP_DWARF=1
-+
-+		# confirm that the broken DWARF comes from assembler
-+		if [ -n "$VMLINUX_FILE" ]; then
-+			readelf -wi "$VMLINUX_FILE" |
-+			awk -v probe="$BLACKFUNC" '/DW_AT_language/ { comp_lang = $0 }
-+										$0 ~ probe { if (comp_lang) { print comp_lang }; exit }' |
-+			grep -q "MIPS assembler"
-+
-+			CHECK_EXIT_CODE=$?
-+			if [ $CHECK_EXIT_CODE -ne 0 ]; then
-+				SKIP_DWARF=0 # broken DWARF while available
-+				break
-+			fi
-+		else
-+			echo "Result polluted by broken DWARF, trying another probe"
-+		fi
-+
-+	else
-+		../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" < $LOGS_DIR/adding_blacklisted.err
-+		CHECK_EXIT_CODE=$?
-+
-+		SKIP_DWARF=0
-+		break
-+	fi
-+done
-+
-+if [ $SKIP_DWARF -eq 1 ]; then
-+	print_testcase_skipped "adding blacklisted function $BLACKFUNC"
-+else
-+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLACKFUNC"
-+	(( TEST_RESULT += $? ))
-+fi
- 
- ### listing not-added probe
- 
--- 
-2.43.0
+Thanks Namhyung for pulling in the change
+
+Athira
+>> ---
+>> tools/perf/tests/tool_pmu.c | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/tools/perf/tests/tool_pmu.c =
+b/tools/perf/tests/tool_pmu.c
+>> index 94d0dd8fd3cb..297cc8c55579 100644
+>> --- a/tools/perf/tests/tool_pmu.c
+>> +++ b/tools/perf/tests/tool_pmu.c
+>> @@ -22,7 +22,7 @@ static int do_test(enum tool_pmu_event ev, bool =
+with_pmu)
+>> if (with_pmu)
+>> snprintf(str, sizeof(str), "tool/%s/", tool_pmu__event_to_str(ev));
+>> else
+>> - strncpy(str, tool_pmu__event_to_str(ev), sizeof(str));
+>> + snprintf(str, sizeof(str), "%s", tool_pmu__event_to_str(ev));
+>>=20
+>> parse_events_error__init(&err);
+>> ret =3D parse_events(evlist, str, &err);
+>> --=20
+>> 2.43.5
+
 
