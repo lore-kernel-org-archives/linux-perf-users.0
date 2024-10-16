@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FE31D47CD
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 21:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725651D5164
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 21:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729115528; cv=none; b=o/LyS4h2ItA0ygfYc68LtgT+9TmuJxMPBUcQooKledTvkKSZFTOzYUWgZEPGqOgkR9rbt4G/jDuuf41d+Z7cpY8CA57/7FzwGR1ECiNT1ok4sDq8WzbmQJWt9c5TKys81HHsn7tyAZXkGmknEjK/Uu/FSLjwXmr27HDhMCbqRwU=
+	t=1729115530; cv=none; b=MrUUCR4JZETGN2JKYiWG/Bm1R7e8RHmnbUcvcEMQSbUQun6I0DKreCnWLQcgB681M4Peb55rZu7bt6Rkp9h6oSsnSsfoHqNGY7odRX6WXO/UqpIhUEhUj2+N2VEDIqN6H8TDf4l4bKkfR++n8bslzKVou0i7d6Z1ym6taU0OzC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729115528; c=relaxed/simple;
-	bh=nR/8QLcBCh+39nvfzpZZaCLHNApxIUJpcbhdwvA+Oxk=;
+	s=arc-20240116; t=1729115530; c=relaxed/simple;
+	bh=xxNoLSb6kFTUL1OnMX+2sTQ86EFI5XTgz4LWu0BFnc8=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=SVu7Q7wrlxC+mnubzO9iBTwpjqyvXBDKKF0PaNqY7apOrgdmuTHlmBOCAy1pBx7LFIPhpXOvNiwEXaBsZl/dnBMs7TK3/tWlP/0vYwTbuoVPnlEAq4r0s6j1SWeXvEBNlxuekRWdrqDXFL9ekAM5jgWybn8PjUu37YqQ4lAieD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bm89Csiw; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=Tor9TWJ96G2QM+3UnYKdNNndgHKWK2pmOOUf9dryKuE1tNPtrd9DpSz7DOAUM4y0nU/KR/c+ytD3Q6ilX1CLVwkambyv6lBwTGagJ+aL6IYSpIAj67ctHvKBFPW385FRgZaq2agdj2NEgetmWSr0Pm746oySEBPDsQE58JQozxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GkXn++DS; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bm89Csiw"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e290b8b69f8so576666276.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 14:52:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GkXn++DS"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e3c638cc27so8628777b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 14:52:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729115526; x=1729720326; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729115528; x=1729720328; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/n/isiF2Sq7ntpurAmJIm0kx07dBkasA8rH7Du+HlQ=;
-        b=bm89Csiw/+BWqYpC8Xzm1Or+pAEqQVIZmuFg6FC98M2Q9vDVhldAZE9BNkEmTyVQEv
-         nRYGOJ+bVqzBdqoJi+6tUsRxU7PYrd5mG/HE4rRJD05wgFoLryy1HWS+r2Qg0JWY8kjl
-         PZ3Pl0apVcsD1BtHD/GWGZ+nACInMEyfVIz+Y/HCIxZeaamTdilbVUVj2/zzhIYK54GQ
-         o3iMCC4L9NNJz7lOi3rzTdrXfO1/RwoPTzs2zmsQFskcIolULXz9K9Nr5QYhEZ8JkYIO
-         9lLQucptcOY0lbob2xeFFcSDqTFPYA0v5T4ffelT3HN2K5bNEEBkW5QN1lbpXlqr9Ze3
-         Er+Q==
+        bh=PO/jFnTS1VOsCUFZImr0igUuGTgy/DTrx5IiSFpgwUc=;
+        b=GkXn++DSPhaPxgg9orAmlw9FWKSHH1hNzkEZjZLQy08dQEY1uO5udxPtRI1PZ+dYu0
+         z7NvNYfAYscu5UaYNHCn3Y7R/bbE3F36kJLAkGiPQosDNbkgga/YoecBHkYxikwI5/3Q
+         S1erpEb7Uums1J3krqH+7fXhmsjsnxZhIRmc+nBy0wk6jBnFlD+dsPCGITU19xLrqaTy
+         UwFHGYQVop3G2NB/hp2SHKh2sM7yOE4s4T+Wjuuk8eje2fSeoG7Ce8adGdkGSPucSzO3
+         AlgfgZ329IROfD0QcfrHQkniORoWFUtsEctZqW2flNUTxHYa0bqUPjUg8LjkBn3bypVf
+         tkmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729115526; x=1729720326;
+        d=1e100.net; s=20230601; t=1729115528; x=1729720328;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/n/isiF2Sq7ntpurAmJIm0kx07dBkasA8rH7Du+HlQ=;
-        b=gfV6IYpAzNx8i4tYcr96/F775DoYpmHUQPM4cCl4zrSEjRmEtaPClDxAvr/WoQo6LP
-         lmzoj5GPVcLYL8XAjAkxWikfdWwdWLdWfESfLwxIn+SNQhV63F0VkJPhAQQuIsHy6NBr
-         HV1hplH6IO1UuKgwss3A7qmyEyO4XlwSesuXUrKcfmTjgGhXZ94QlKx5eqiHpVM9W3u0
-         gGLSBpwgAG0rPPKj3tfyJrB2LmE3aLcTsskVMX6kDx54UUCkIAUh9NM2tOCv8b6ZpnSX
-         QJkbDYm2EBxKZvRAFUyTPFPgHkOJe11txgm124axOJJON6q9MWeMBa5L7uUB4kxhYkNb
-         zjbg==
-X-Forwarded-Encrypted: i=1; AJvYcCXpg0ignSQpPjEKR24CKl6e+dCNU36+ANaDF04OqD3o3IXgicgsElN4DjjH7lNRNVJJQaPNG12OCZlNKrK+YdEL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0wqZPP95yfWVwrxLVDx8usCEY9M/pdzmyUrWSXAglJZx7vnuZ
-	aTsAsfluc13HvhQb847bs5QcEFdbdSrsnMO07HsPECQTgW/ClXwimdVe65ommLpGosMdwgtppPj
-	6m/EkuQ==
-X-Google-Smtp-Source: AGHT+IFSvAouIEyGKuUHCGGxmtliMqlphatHL69knjIbTi+zL83r9H3bHCah6svBmYQ3oXXSz2bxFLai+XrX
+        bh=PO/jFnTS1VOsCUFZImr0igUuGTgy/DTrx5IiSFpgwUc=;
+        b=jrvZA+6N1z9LRo+vIVo4X7pOrDWHEygmbbFoMEbzQ2diNBWMv5FxvUO+6+6PKV6dxc
+         ruTWzArBVlo0oFHyYBnwlAxOnUOa+rBix7r2RTG25RPIsYoaxY7i8ZEeonV4G1uGz9aE
+         XQQ2KKuQUKdfsxDTTkCPBe+qLv8N+4mJVYCv9AJmeW9eoh8BpfQrQM6ExcDy82HxbSIu
+         T/nPUhhKyNyc24vKlQUFAkL/L8EgG5NcugRgpFC/fz8twG7LCp5NQF2uppwFmBBQGrUK
+         KGS5tx7A5dJAzTLDTUa6wlIw3eWtOXS/2W15mn3D58D/7nEPWwVJVzZtQ8My9P9s6c9A
+         1yEg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvrZU38K9fY/qrgTrONBELMHQeegcX9CGG3VHGYQpoFVFpH0whp47QExxrmJSSRzx1l0r4KxFU7mHhvd1Jmy2F@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZl69jwTOq/964HUm5J78YaBGdUfLlWVeSXo6nmx6yEBEyyY47
+	UFIZXFMUFwkgQ9KVUlUlXcFW8hraWKNPjsbVqT2E5GFhig86ZEU9NXtFiUv6gF9MrlCY2birnJX
+	fnbDfyw==
+X-Google-Smtp-Source: AGHT+IEZ/3okGxqKo52wIDEn7oVplnHQSqmsfGn8AYDNPEd7z/jQScRIZ0BVQENfrM+1EqkxY/OrF8JWG4El
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:a00a:f237:9bc0:79c])
- (user=irogers job=sendgmr) by 2002:a25:6982:0:b0:e29:6e61:3daf with SMTP id
- 3f1490d57ef6-e29782d5207mr2545276.2.1729115526329; Wed, 16 Oct 2024 14:52:06
- -0700 (PDT)
-Date: Wed, 16 Oct 2024 14:51:37 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:6f11:b0:6e3:1023:3645 with SMTP
+ id 00721157ae682-6e3d41ea284mr1443167b3.8.1729115528496; Wed, 16 Oct 2024
+ 14:52:08 -0700 (PDT)
+Date: Wed, 16 Oct 2024 14:51:38 -0700
 In-Reply-To: <20241016215139.212939-1-irogers@google.com>
-Message-Id: <20241016215139.212939-7-irogers@google.com>
+Message-Id: <20241016215139.212939-8-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241016215139.212939-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.105.g07ac214952-goog
-Subject: [PATCH v4 6/7] perf stat: Add metric-threshold to json output
+Subject: [PATCH v4 7/7] perf stat: Disable metric thresholds for CSV and JSON
+ metric-only mode
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,110 +77,33 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-When the threshold isn't unknown add a value to the json like:
-"metric-threshold" : "good"
-
-A more complete example:
-```
-$ perf stat -a -j -I 1000
-{"interval" : 1.001089747, "counter-value" : "16045.281449", "unit" : "msec", "event" : "cpu-clock", "event-runtime" : 16045355135, "pcnt-running" : 100.00, "metric-value" : "16.045281", "metric-unit" : "CPUs utilized"}
-{"interval" : 1.001089747, "counter-value" : "10003.000000", "unit" : "", "event" : "context-switches", "event-runtime" : 16045314844, "pcnt-running" : 100.00, "metric-value" : "623.423156", "metric-unit" : "/sec"}
-{"interval" : 1.001089747, "counter-value" : "328.000000", "unit" : "", "event" : "cpu-migrations", "event-runtime" : 16045321403, "pcnt-running" : 100.00, "metric-value" : "20.442147", "metric-unit" : "/sec"}
-{"interval" : 1.001089747, "counter-value" : "20114.000000", "unit" : "", "event" : "page-faults", "event-runtime" : 16045355927, "pcnt-running" : 100.00, "metric-value" : "1.253577", "metric-unit" : "K/sec"}
-{"interval" : 1.001089747, "counter-value" : "4066679471.000000", "unit" : "", "event" : "instructions", "event-runtime" : 16045369123, "pcnt-running" : 100.00, "metric-value" : "1.628330", "metric-unit" : "insn per cycle"}
-{"interval" : 1.001089747, "counter-value" : "2497454658.000000", "unit" : "", "event" : "cycles", "event-runtime" : 16045374810, "pcnt-running" : 100.00, "metric-value" : "0.155650", "metric-unit" : "GHz"}
-{"interval" : 1.001089747, "counter-value" : "914974294.000000", "unit" : "", "event" : "branches", "event-runtime" : 16045379877, "pcnt-running" : 100.00, "metric-value" : "57.024509", "metric-unit" : "M/sec"}
-{"interval" : 1.001089747, "counter-value" : "9237201.000000", "unit" : "", "event" : "branch-misses", "event-runtime" : 16045375017, "pcnt-running" : 100.00, "metric-value" : "1.009559", "metric-unit" : "of all branches", "metric-threshold" : "good"}
-{"interval" : 1.001089747, "event-runtime" : 16045397172, "pcnt-running" : 100.00, "metricgroup" : "TopdownL1"}
-{"interval" : 1.001089747, "metric-value" : "22.036686", "metric-unit" : "%  tma_backend_bound", "metric-threshold" : "bad"}
-{"interval" : 1.001089747, "metric-value" : "7.610161", "metric-unit" : "%  tma_bad_speculation", "metric-threshold" : "good"}
-{"interval" : 1.001089747, "metric-value" : "36.729687", "metric-unit" : "%  tma_frontend_bound", "metric-threshold" : "bad"}
-{"interval" : 1.001089747, "metric-value" : "33.623465", "metric-unit" : "%  tma_retiring"}
-...
-```
+These modes don't use the threshold, so don't compute it saving time
+and potentially reducing events.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../tests/shell/lib/perf_json_output_lint.py  |  5 ++++-
- tools/perf/util/stat-display.c                | 22 +++++++++++++++++--
- 2 files changed, 24 insertions(+), 3 deletions(-)
+ tools/perf/builtin-stat.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-index abc1fd737782..8ddb85586131 100644
---- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-+++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-@@ -57,6 +57,7 @@ def check_json_output(expected_items):
-       'interval': lambda x: isfloat(x),
-       'metric-unit': lambda x: True,
-       'metric-value': lambda x: isfloat(x),
-+      'metric-threshold': lambda x: x in ['unknown', 'good', 'less good', 'nearly bad', 'bad'],
-       'metricgroup': lambda x: True,
-       'node': lambda x: True,
-       'pcnt-running': lambda x: isfloat(x),
-@@ -68,13 +69,15 @@ def check_json_output(expected_items):
-   for item in json.loads(input):
-     if expected_items != -1:
-       count = len(item)
--      if count != expected_items and count >= 1 and count <= 6 and 'metric-value' in item:
-+      if count != expected_items and count >= 1 and count <= 7 and 'metric-value' in item:
-         # Events that generate >1 metric may have isolated metric
-         # values and possibly other prefixes like interval, core,
-         # aggregate-number, or event-runtime/pcnt-running from multiplexing.
-         pass
-       elif count != expected_items and count >= 1 and count <= 5 and 'metricgroup' in item:
-         pass
-+      elif count == expected_items + 1 and 'metric-threshold' in item:
-+          pass
-       elif count != expected_items:
-         raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
-                            f' in \'{item}\'')
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 5974aaead95f..53dcdf07f5a2 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -86,6 +86,19 @@ const char *metric_threshold_classify__color(enum metric_threshold_classify thre
- 	return colors[thresh];
- }
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index b5e18853982c..7639ecda6c05 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2561,6 +2561,14 @@ int cmd_stat(int argc, const char **argv)
+ 		goto out;
+ 	}
  
-+static const char *metric_threshold_classify__str(enum metric_threshold_classify thresh)
-+{
-+	const char * const strs[] = {
-+		"unknown",
-+		"bad",
-+		"nearly bad",
-+		"less good",
-+		"good",
-+	};
-+	static_assert(ARRAY_SIZE(strs) - 1  == METRIC_THRESHOLD_GOOD, "missing enum value");
-+	return strs[thresh];
-+}
-+
- static void print_running_std(struct perf_stat_config *config, u64 run, u64 ena)
- {
- 	if (run != ena)
-@@ -478,15 +491,20 @@ static void print_metric_csv(struct perf_stat_config *config __maybe_unused,
- 
- static void print_metric_json(struct perf_stat_config *config __maybe_unused,
- 			     void *ctx,
--			     enum metric_threshold_classify thresh __maybe_unused,
-+			     enum metric_threshold_classify thresh,
- 			     const char *fmt __maybe_unused,
- 			     const char *unit, double val)
- {
- 	struct outstate *os = ctx;
- 	FILE *out = os->fh;
- 
--	if (unit)
-+	if (unit) {
- 		fprintf(out, "\"metric-value\" : \"%f\", \"metric-unit\" : \"%s\"", val, unit);
-+		if (thresh != METRIC_THRESHOLD_UNKNOWN) {
-+			fprintf(out, ", \"metric-threshold\" : \"%s\"",
-+				metric_threshold_classify__str(thresh));
-+		}
++	if (stat_config.csv_output || (stat_config.metric_only && stat_config.json_output)) {
++		/*
++		 * Current CSV and metric-only JSON output doesn't display the
++		 * metric threshold so don't compute it.
++		 */
++		stat_config.metric_no_threshold = true;
 +	}
- 	if (!config->metric_only)
- 		fprintf(out, "}");
- }
++
+ 	if (stat_config.walltime_run_table && stat_config.run_count <= 1) {
+ 		fprintf(stderr, "--table is only supported with -r\n");
+ 		parse_options_usage(stat_usage, stat_options, "r", 1);
 -- 
 2.47.0.105.g07ac214952-goog
 
