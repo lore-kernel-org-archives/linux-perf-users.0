@@ -1,47 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB02825779;
-	Thu, 17 Oct 2024 20:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5AA1D0411;
+	Thu, 17 Oct 2024 20:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729196129; cv=none; b=G2uc+Qso+2ojETsQ03ofcz63CB5LCXCfXJKS2LscXNPUksdc6is6+hcUaxmcKtDKsePOJ64NT6z/wPh8F3Mx0usfCpaVLXkJbLovpw6SvaSMka+FlySN5maETIDQsQ++2lXNl2VE5pf6fas+6da2mRbgAg49tApJGAqZWSX4pxQ=
+	t=1729196913; cv=none; b=bTrcZKJHi+ankczkINqXvrhGdWSpqe9vAp7e2B+nLvAmXoxiSebAenjAWryt8naGMU+JHaQcT7yYRgi/AoHkV0ncFc6ilncExxj5q4Is5dVd7ISO6k+aLAv4a932kb4Ea6/RY3ZerG1wsmb3egS4f9qiZmfwchIliAHYreLOo3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729196129; c=relaxed/simple;
-	bh=imfqAzKY4Gp9I1oyFEDFJkWnfvErNKrkiPzfYoWfrjo=;
+	s=arc-20240116; t=1729196913; c=relaxed/simple;
+	bh=tJ4rJNhg/4ydmSmPq8aVI54R0C/xVla61sQugEFmtoA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TNMQZW5YbIJnIBE0r0SgVL56OY9/Mx8kwYAYvp53q1ByEBJUZWAthncu/3ur7jym/RYgI0VBxhmJ706CbTJ0ugL/NN1JzxY+gI+RaXxrEY5D1s8INIFksp3IyhGRE65sVqxIMYKBfKlauOGwwHrH+kqswkIBUqnyIfdEfK9EKeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ckKEl2cF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QtwOGNaVXy4lxHgeKyoIeuLglDuj6Gdw3SQ+Ee4tsCYZJoiEMv7cSP7YRfpsZUvTIrNR18DnG50oMors1TiHqLQy3U8fjKmnk3X9FxY6d4HIbrRQFn5REOc6WHeAPQYDCvX5y/eDeiVFI+GLG9FGmKJVokqZj2JCKuV2SKz5zXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=teTVgDz3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ckKEl2cF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D261CC4CEC3;
-	Thu, 17 Oct 2024 20:15:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teTVgDz3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6DE1C4CEC3;
+	Thu, 17 Oct 2024 20:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729196127;
-	bh=imfqAzKY4Gp9I1oyFEDFJkWnfvErNKrkiPzfYoWfrjo=;
+	s=k20201202; t=1729196913;
+	bh=tJ4rJNhg/4ydmSmPq8aVI54R0C/xVla61sQugEFmtoA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ckKEl2cF8/ORlnqPBL1p5ZULT8EGyiwCFQ3yQg8yztUq9uZ2CFSXVHm14z0Ny/9UW
-	 qdt9/cm4XbnNpdqMxWgJykUudNsb/OFmYWJ+DNwFeoJZv8zONC9WjoHA3omp3nxNQM
-	 ZgCMRKmOunqXEO5+z9t3Efge8jNKJPwC5gONlIEE4BhTve2nbFyPGBBoSKhOyd0blv
-	 WMFOygMiPXwr2UjbvZQnT0uKCIYY+xhuQUPUSA0DAnOuuUkhZWIlLsF7fgx1qwNCA3
-	 b2auTtHa6y7ADXWfc4aKBbtj4O9YyV5EOmM1UdeIhw5JIDWqcbLVVCNteNBwGl00aJ
-	 j6tEULnA8d9+A==
-Date: Thu, 17 Oct 2024 13:15:25 -0700
+	b=teTVgDz3jXSmApFXLpt30oa+aQ36jXc3V+LL3s8IUn/IQbO94jElZS3gN6TsseiD9
+	 rcp3Vfm25JCfP4IutO6KyMKWyR/vFAYZqMeMkISwg6Xcy6UOYrmBWelBhkuiutKnGl
+	 jKtfr53hyk/szWOUqnRtnjn5is4C0HvZDtbjmI7Y81TM5HmBEyiB69v52m87a+rEA2
+	 F6yV3JgKiUl5bBclwpFvA5fueMcSx5d8MMC2qZ2icdRFb3ZMXLv7Cvnv934NODgzYR
+	 WIdmHWsVxCR1mF6F9ppRdQuZU9VoFzIUFco5FS0LMeVSBO/uxsASAjyBXjjo/+AflY
+	 zcUlASFf59X1w==
+Date: Thu, 17 Oct 2024 13:28:31 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH 2/3] perf test: Introduce '-w --list' to list the
- available workloads
-Message-ID: <ZxFwXdz3jotLRnSj@google.com>
-References: <20241011171449.1362979-1-acme@kernel.org>
- <20241011171449.1362979-3-acme@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
+	sumanthk@linux.ibm.com, hca@linux.ibm.com
+Subject: Re: [PATCH] perf test: Fix perf test case 84 on s390
+Message-ID: <ZxFzb7LEu9n9piVG@google.com>
+References: <20241015074726.268029-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,106 +43,81 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241011171449.1362979-3-acme@kernel.org>
+In-Reply-To: <20241015074726.268029-1-tmricht@linux.ibm.com>
 
-Hi Arnaldo,
+Hello,
 
-The commit subject line should be changed to --list-workloads too.
+On Tue, Oct 15, 2024 at 09:47:26AM +0200, Thomas Richter wrote:
+> Perf test case 84 'perf pipe recording and injection test'
+> sometime fails on s390, especially on z/VM virtual machines.
+> 
+> This is caused by a very short run time of workload
+> 
+>   # perf test -w noploop
+> 
+> which runs for 1 second. Occasionally this is not long
+> enough and the perf report has no samples for symbol noploop.
+> 
+> Fix this and enlarge the runtime for the perf work load
+> to 3 seconds. This ensures the symbol noploop is always
+> present.
+
+Hmm.. but it would slow down the test quite a lot.  Can you please make
+it conditional on s390 or something?
+
+Maybe you could add a fallback logic to increase the period if it fails.
 
 Thanks,
 Namhyung
 
-
-On Fri, Oct 11, 2024 at 02:14:48PM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> Using it:
+> Output before:
+>  Inject -b build-ids test
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.195 MB - ]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.277 MB - ]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.195 MB - ]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.160 MB
+> 			 /tmp/perf.data.ELzRdq (4031 samples) ]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.195 MB - ]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.195 MB - ]
+>  Inject -b build-ids test [Success]
 > 
->   $ perf test -w noplop
->   No workload found: noplop
->   $
->   $ perf test -w
->    Error: switch `w' requires a value
->    Usage: perf test [<options>] [{list <test-name-fragment>|[<test-name-fragments>|<test-numbers>]}]
+>  Inject --buildid-all build-ids test
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.195 MB - ]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.014 MB - ]
+>  Inject --buildid-all build-ids test [Failed - cannot find
+> 				noploop function in pipe #2]
 > 
->       -w, --workload <work>
->                             workload to run for testing, use '--list-workloads' to list the available ones.
->   $
->   $ perf test --list-workloads
->   noploop
->   thloop
->   leafloop
->   sqrtloop
->   brstack
->   datasym
->   landlock
->   $
+> Output after:
+> Successful execution for over 10 times in a loop.
 > 
-> Would be good at some point to have a description in 'struct test_workload'.
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Reviewed-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
 > ---
->  tools/perf/tests/builtin-test.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
+>  tools/perf/tests/shell/pipe_test.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index 2201f7ed432ce9f2..cc43b9f366d09436 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -505,6 +505,17 @@ static int perf_test__list(int argc, const char **argv)
->  	return 0;
->  }
+> diff --git a/tools/perf/tests/shell/pipe_test.sh b/tools/perf/tests/shell/pipe_test.sh
+> index d4c8005ce9b9..02d9ef27c8e7 100755
+> --- a/tools/perf/tests/shell/pipe_test.sh
+> +++ b/tools/perf/tests/shell/pipe_test.sh
+> @@ -12,7 +12,7 @@ skip_test_missing_symbol ${sym}
 >  
-> +static int workloads__fprintf_list(FILE *fp)
-> +{
-> +	struct test_workload *twl;
-> +	int printed = 0;
-> +
-> +	workloads__for_each(twl)
-> +		printed += fprintf(fp, "%s\n", twl->name);
-> +
-> +	return printed;
-> +}
-> +
->  static int run_workload(const char *work, int argc, const char **argv)
->  {
->  	struct test_workload *twl;
-> @@ -535,6 +546,7 @@ int cmd_test(int argc, const char **argv)
->  	};
->  	const char *skip = NULL;
->  	const char *workload = NULL;
-> +	bool list_workloads = false;
->  	const struct option test_options[] = {
->  	OPT_STRING('s', "skip", &skip, "tests", "tests to skip"),
->  	OPT_INCR('v', "verbose", &verbose,
-> @@ -544,7 +556,8 @@ int cmd_test(int argc, const char **argv)
->  	OPT_BOOLEAN('p', "parallel", &parallel, "Run the tests in parallel"),
->  	OPT_BOOLEAN('S', "sequential", &sequential,
->  		    "Run the tests one after another rather than in parallel"),
-> -	OPT_STRING('w', "workload", &workload, "work", "workload to run for testing"),
-> +	OPT_STRING('w', "workload", &workload, "work", "workload to run for testing, use '--list-workloads' to list the available ones."),
-> +	OPT_BOOLEAN(0, "list-workloads", &list_workloads, "List the available builtin workloads to use with -w/--workload"),
->  	OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
->  	OPT_STRING(0, "objdump", &test_objdump_path, "path",
->  		   "objdump binary to use for disassembly and annotations"),
-> @@ -570,6 +583,11 @@ int cmd_test(int argc, const char **argv)
->  	if (workload)
->  		return run_workload(workload, argc, argv);
+>  data=$(mktemp /tmp/perf.data.XXXXXX)
+>  data2=$(mktemp /tmp/perf.data2.XXXXXX)
+> -prog="perf test -w noploop"
+> +prog="perf test -w noploop 3"
+>  err=0
 >  
-> +	if (list_workloads) {
-> +		workloads__fprintf_list(stdout);
-> +		return 0;
-> +	}
-> +
->  	if (dont_fork)
->  		sequential = true;
->  	else if (parallel)
+>  set -e
 > -- 
 > 2.47.0
 > 
