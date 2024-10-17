@@ -1,51 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176891DF73A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0139E1DF96A;
 	Thu, 17 Oct 2024 16:39:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729183161; cv=none; b=UQGscK6MMlujZDYSp9OeUM4ueHFbuEQCIMS+uPaVscZ7rYN0fIbALu2mqeDUk0eTwuK2ueBcRJWmE0iyFf8gtF3b93pv/ZH8P+4mGKZvwqjydw3eIz5+CI2u36Av0nAsAyq39aPwCGxy83e+u4cK13lDg7EcB+9ggyNxPYBk86w=
+	t=1729183162; cv=none; b=sGf9Zd1TYA9TY952x7NGlyBnosTX21FCzLizZ1S36kh1m6TR6KuUCTc3GLEi7W4i4Dsv120gBoxw5BeFVngZ8nDbf0GaZTV8OjQChXwv3XIZGCB69iYXS12bbVPdPR9SvtsHP27dt9Rm7YF7g6KSjrrxv3U63p7iEhcnkwkspIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729183161; c=relaxed/simple;
-	bh=sQmjhkW1sVHwavY1/+k1svK1lnupAJBrdjjQaarKm6I=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NNGNyp1zLGbRdXtItgoS/s0myWb6a/fPia5VfZXVY4yO/Y8ECMT7ufVgLkn7NzD+X557vVcZ4z0tvwy34SUdTt7j7r1o/8tYD2Y92cyeb9G7SPKiAjP9vmUpT1cP1EbNFXbRo6K9c19kLOJyKyEj8yEbXXPz5P7k02zlnU4jHaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQh9wuNQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729183162; c=relaxed/simple;
+	bh=cOKKWhh4cH54ijyTYF/dhdvlBiofHanqyemxRApam/g=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=mOKnh83vjJNAuKvIQcUtj+DRxu7QVCBsbuMfZtc9YirQni/StK0CIM88G8ai3AMODogNYz3reXaKs8Gi+jQODvHNj3mj1KJ94cz1jIoQA65AhXRBVjB4sLH1vG4gr4iy+3IFCiJlMxtVwF3XVAI/KJFivSFaHTUocdKbgVUdKjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q2+EarCM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQh9wuNQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573C1C4CECE;
-	Thu, 17 Oct 2024 16:39:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q2+EarCM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17D34C4CED0;
+	Thu, 17 Oct 2024 16:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729183160;
-	bh=sQmjhkW1sVHwavY1/+k1svK1lnupAJBrdjjQaarKm6I=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=rQh9wuNQRpbtWPiTzJb2H4B0GSvr9T0v0zkF73raMagLHakbncXKsfJiL5d2dckpy
-	 lNIU2il0q+uP2hhx9fltJEvqm/zMkoDHq6J3dSJ2cllrx6H+TTCOOQV9mYCtK33I9F
-	 c/3Zf7hCHkiMNeQm/tWfviJLfN+I9jbTC07SyKcoMDqrY5SnzX9sJpmZRepirGrpyK
-	 3dxbImaNM5fDS/6Jd93c/f9Otc7zlCgJy3+01JqS7ggyjLwignW4YgRXARFua8Lz8O
-	 +YiSRXjyKAOkgrtXDnV8FTwdkLso/r7wsISZwZ6TDp4B8T/2/bv4MO2BPy7zWmwnV6
-	 1DS3/7ZgUJyGA==
+	s=k20201202; t=1729183161;
+	bh=cOKKWhh4cH54ijyTYF/dhdvlBiofHanqyemxRApam/g=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=q2+EarCMJB8qYHH0x5PU3mu7w8XLt1gZYteP8OI3HbJfooSJBc+fxWZEvRYSBu8Qr
+	 nu0dkZGzpTqw4bSlMIXI/4S+YyT0DCSkUUbh5Auc4TLkVv9YxK580ujKMKgnusSK8V
+	 bRAuTIVngcVYablwOdIk6LjaK3oOg0feJ9CBDQ4Qjkg2VyfPB7n/brG1ZipbFmCXVS
+	 grvoyIFelNqUbbrsewgSGkBXxzsecYzqAzvGm6GyC1al9C53Rlbs5jymJqO/QPS3aQ
+	 UeT/sWRQ7my+7v1kF81yZsWFS4qqDtV5onH3etDhwKMY9UjFOKBg2D/bNAt4SdXsze
+	 WAZDX89s1VC3w==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
- Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
- Yicong Yang <yangyicong@hisilicon.com>, Weilin Wang <weilin.wang@intel.com>, 
- Tim Chen <tim.c.chen@linux.intel.com>, 
- Thomas Richter <tmricht@linux.ibm.com>, 
- Sumanth Korikkar <sumanthk@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
-In-Reply-To: <20241016175350.116227-1-irogers@google.com>
-References: <20241016175350.116227-1-irogers@google.com>
-Subject: Re: [PATCH v3 0/8] CSV/JSON metric thresholds, fix printf
- modifiers
-Message-Id: <172918316032.639809.5792146702013848062.b4-ty@kernel.org>
-Date: Thu, 17 Oct 2024 09:39:20 -0700
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+ James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
+ German Gomez <german.gomez@arm.com>, 
+ Carsten Haitzler <carsten.haitzler@arm.com>
+In-Reply-To: <20241016065654.269994-1-namhyung@kernel.org>
+References: <20241016065654.269994-1-namhyung@kernel.org>
+Subject: Re: [PATCH] perf test: Speed up some tests using perf list
+Message-Id: <172918316105.639809.18120373431908950671.b4-ty@kernel.org>
+Date: Thu, 17 Oct 2024 09:39:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,15 +51,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Wed, 16 Oct 2024 10:53:42 -0700, Ian Rogers wrote:
+On Tue, 15 Oct 2024 23:56:54 -0700, Namhyung Kim wrote:
 
-> Metric thresholds are being computed for CSV and JSON output but not
-> displayed. Rename the color that encodes the threshold as enum values
-> and use to generate string constants in a CSV column or json
-> dictionary value.
+> On my system, perf list is very slow to print the whole events.  I think
+> there's a performance issue in SDT and uprobes event listing.  I noticed
+> this issue while running perf test on x86 but it takes long to check
+> some CoreSight event which should be skipped quickly.
 > 
-> Add printf attribute to functions in color.h that could support
-> it. Fix bad printf format strings that this detected.
+> Anyway, some test uses perf list to check whether the required event is
+> available before running the test.  The perf list command can take an
+> argument to specify event class or (glob) pattern.  But glob pattern is
+> only to suppress output for unmatched ones after checking all events.
 > 
 > [...]
 
