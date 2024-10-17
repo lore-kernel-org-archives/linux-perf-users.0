@@ -1,185 +1,194 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FE51DFE03
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 17:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56ACF1E0085;
+	Thu, 17 Oct 2024 17:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729187660; cv=none; b=Eosx+MVwX5s5ZigIVkJty5eNG3IHZNRBw8GGL7aS/esEu5cUwTLHo3dVY4COtQ0RdPb70rZBy5e5DZTnrFBwqTi2Dw/6WByPouKo6n1XJoANaLE6K9zK2gEiivIGyhYTmCWjw1DZLexdQpM85sjdDIi5nx14wZzMvIGSQlF2IWw=
+	t=1729187722; cv=none; b=gxeAGk4nx3tYn0oF11jwcj1g2Mf1MGi+TOhUaBdCNKtiqoXsqkKfImHt0m12zxteHdi1IalngFs8p3ppr6y831/zbYUAnFzg0Hpxh33kx8lzt7F/5ywQwtrpIhJguLxH6VEELheo3fwDcbAFXcxTDycjvoCDmPUY8INRxOhz5kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729187660; c=relaxed/simple;
-	bh=nR/8QLcBCh+39nvfzpZZaCLHNApxIUJpcbhdwvA+Oxk=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=e8bSDfzoVoqJ7T2NIt9yCmK3kJXOnvgyBu6l7pIdWIoeHr0Yu1xDxdUHYkDV71dQQaCP2XNCzVt3ffP87F85Y1Z7oqGTuZpzyd5A7WYN4lKw6pDwyCWsLFKXLzve9CX0bUoij5hebaX8+IANYdvaCZ7fRvT3NRFSoRch7wLA1Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FS99niwa; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1729187722; c=relaxed/simple;
+	bh=Y9N3ZQVWfcsH53gJXLZS/tZseBaeZ4sCkFXOQ74XfjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Jpmq3D0tG6G1ScvkQPuQw6YNQA5x4EVyd2h00STllOc55mFFvHu7uMJz/hF9o9rYApNz+tHfwsdkjTHRj3LoDykGO+y3kry/w9NS9YZ1ynZa9bpSMXhkChLZAEEBD/3q03Q2ZmkpC/5IaE35iJUbJSWI1j0S5V2UbNF059cxBEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RLf9rHuK; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FS99niwa"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e000d68bb1so25734367b3.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 10:54:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729187655; x=1729792455; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/n/isiF2Sq7ntpurAmJIm0kx07dBkasA8rH7Du+HlQ=;
-        b=FS99niwa82SQSFyWaEOeE3xIN9+mVy6jXkTOgpfUmraIkOe897q9HcFPcFhpttcRqt
-         7qAfuGd8IQCqoytpc0/j8EnpNhHrqbJyDOoyAhr3NJ2okjWTf4L47oWZIwtobnpZJ5CU
-         J+nmdmro7nX9RtzjqZbt9vsL7PZagsC4OKG//gGSZ9ToTcl/lXl3dpRtjwV+3heIvimx
-         JlQzugw4+OrHqBVRGahQrGOl9z+sUG1XbvAmh0QHJtoBdEjxD0VR2GhK4o4y4HWcFaDb
-         W+j/pcl8YrldxkV7TlY4Obwhw9Sg77HtTUSK7bD9oP8m+X42xMAxlGlJAXHqfQe17DWx
-         Jxeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729187655; x=1729792455;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/n/isiF2Sq7ntpurAmJIm0kx07dBkasA8rH7Du+HlQ=;
-        b=I5OeJRQfbH0dQdrPIePhBmKE1kFC7TRZwt9Ob2b5+tqNARdG3ZBnu9McfGECgto6Jj
-         HLALdC9uL3vDbUX0zzIgYuWNWAsFUlDSYmkXllOTxyjrppXWC2E2uc4h5e6DlvCTWgBn
-         q93+pWcHlO8hmXBCxySjgN7auAAtDkPjSXz6Wniy6g7ZFqdQlRlNyMgC/YlawLKG4ubm
-         sQubKLRFoJmMLNhiqWA8aUC0PBpOUqmaPtOvzU2M2Ql44avX/IWe/YZJa8JkzNGqBLqG
-         2LfXoSTvOvIg0+HdxtA28aBG4TyKSZaskyam5YshhAgXzWJlSxIGZvWWCWuNrM7VPe1l
-         v/Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCWImGlQBGSCoUu5K66Q7NE2yqigmqhsjfpPWKWu3dHR7ca2c7K0k2W5DnfoFCVRzzS510k3IHeOoCjnG/L0sqfa@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywm/EjLzQwP9/voNLUD2TtxP9ggXfOqeMd23GN/RxBvrWLiCzgC
-	LRR4A2wIdAGLRRDig2y0+/MHxlO4HbiFGzz71AndVa0ocIVWGk0QqsaWwZsAVUAqZVPwNdpsnM9
-	MKc0ctw==
-X-Google-Smtp-Source: AGHT+IFkq//YcMLCTfQVRn0x0a7UIOUag/SxD792fuWu3fhbg1GW7c20XG4ZYGJl76OK+axyzL3R3Opp2pnU
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:98a5:142e:8c2e:e9e5])
- (user=irogers job=sendgmr) by 2002:a25:aa0c:0:b0:e1c:ffab:a801 with SMTP id
- 3f1490d57ef6-e2b9ce000a9mr7046276.2.1729187654825; Thu, 17 Oct 2024 10:54:14
- -0700 (PDT)
-Date: Thu, 17 Oct 2024 10:53:55 -0700
-In-Reply-To: <20241017175356.783793-1-irogers@google.com>
-Message-Id: <20241017175356.783793-7-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RLf9rHuK"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49HHshVm016053;
+	Thu, 17 Oct 2024 17:54:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=vAtZ9j
+	Wrijh6PsUWgaMk2LuM+jVG7BmLBCS0J4uEBYE=; b=RLf9rHuKFy6KSn54+ngTT0
+	RkvzVYSdo3j7ybBeUYSS6bDTgm0dA+GkG0d63TEyI7GGyGTepQqeuWf4XYSbqTPY
+	mJ45oE+PUGb6Cvixt9uSGZuoDwQbGF4JpNMRnGyhZaGJyFWuendoCuuUFPPrQ9IC
+	kLKRel/CpJD4VJqxqyUfMsqw+FD3nayXzEgl7mtbGE+zns4REd5FW0hXrGGoQcTY
+	TFn7nCuJVz9bJ97fh6BU4GBwPXTeIDFxQoDXbH6Rz4gnW3c1j2kixM/CMGN4noSK
+	k1cVyRxP7kK6CxKThsuGjNvEeA+I07utmyst3A/VxRFOlxdF2SHdQ+01XmNjBiHA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42ar0u4g3y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Oct 2024 17:54:43 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49HHsgpf015961;
+	Thu, 17 Oct 2024 17:54:42 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42ar0u4g3f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Oct 2024 17:54:42 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49HH6HfW006338;
+	Thu, 17 Oct 2024 17:54:37 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4286517xdm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Oct 2024 17:54:37 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49HHsXPP21168894
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Oct 2024 17:54:33 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7C8302004B;
+	Thu, 17 Oct 2024 17:54:33 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A7ADA20040;
+	Thu, 17 Oct 2024 17:54:32 +0000 (GMT)
+Received: from osiris (unknown [9.171.18.6])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 17 Oct 2024 17:54:32 +0000 (GMT)
+Date: Thu, 17 Oct 2024 19:54:31 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>,
+        David Hildenbrand <david@redhat.com>, g@linux.dev,
+        Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, martin.lau@kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, rppt@kernel.org, yosryahmed@google.com,
+        Yi Lai <yi1.lai@intel.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: Re: [PATCH v2 bpf] lib/buildid: handle memfd_secret() files in
+ build_id_parse()
+Message-ID: <20241017175431.6183-A-hca@linux.ibm.com>
+References: <20241016221629.1043883-1-andrii@kernel.org>
+ <a1501f7a-80b3-4623-ab7b-5f5e0c3f7008@redhat.com>
+ <oeoujpsqousyabzgnnavwoinq6lrojbdejvblxdwtav7o5wamw@6dyfuoc7725j>
+ <CAEf4BzZzctRsxQ7n42AJrm8XTyxhN+-ceE7Oz5jokz4ALqDekQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZzctRsxQ7n42AJrm8XTyxhN+-ceE7Oz5jokz4ALqDekQ@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: XtvCaoikFufyZS_nrstXfQ9G85UdXSuv
+X-Proofpoint-ORIG-GUID: YFRQ8Yv4j6zSyAnh_V8Ly3weTxOz-J0e
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241017175356.783793-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.105.g07ac214952-goog
-Subject: [PATCH v5 6/7] perf stat: Add metric-threshold to json output
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Tim Chen <tim.c.chen@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Sumanth Korikkar <sumanthk@linux.ibm.com>, 
-	Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ spamscore=0 bulkscore=0 adultscore=0 mlxlogscore=999 phishscore=0
+ suspectscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410170121
 
-When the threshold isn't unknown add a value to the json like:
-"metric-threshold" : "good"
+On Thu, Oct 17, 2024 at 10:35:27AM -0700, Andrii Nakryiko wrote:
+> On Thu, Oct 17, 2024 at 9:35 AM Shakeel Butt <shakeel.butt@linux.dev> wrote:
+> > On Thu, Oct 17, 2024 at 11:18:34AM GMT, David Hildenbrand wrote:
+> > > As replied elsewhere, can't we take a look at the mapping?
+> > >
+> > > We do the same thing in gup_fast_folio_allowed() where we check
+> > > secretmem_mapping().
+> >
+> > Responded on the v1 but I think we can go with v1 of this work as
+> > whoever will be working on unmapping folios from direct map will need to
+> > fix gup_fast_folio_allowed(), they can fix this code as well. Also it
+> > seems like some arch don't have kernel_page_present() and builds are
+> > failing.
+> >
+> 
+> Yeah, we are lucky that BPF CI tested s390x and caught this issue.
+> 
+> > Andrii, let's move forward with the v1 patch.
+> 
+> Let me post v3 based on v1 (checking for secretmem_mapping()), but
+> I'll change return code to -EFAULT, so in the future this can be
+> rolled into generic error handling code path with no change in error
+> code.
 
-A more complete example:
-```
-$ perf stat -a -j -I 1000
-{"interval" : 1.001089747, "counter-value" : "16045.281449", "unit" : "msec", "event" : "cpu-clock", "event-runtime" : 16045355135, "pcnt-running" : 100.00, "metric-value" : "16.045281", "metric-unit" : "CPUs utilized"}
-{"interval" : 1.001089747, "counter-value" : "10003.000000", "unit" : "", "event" : "context-switches", "event-runtime" : 16045314844, "pcnt-running" : 100.00, "metric-value" : "623.423156", "metric-unit" : "/sec"}
-{"interval" : 1.001089747, "counter-value" : "328.000000", "unit" : "", "event" : "cpu-migrations", "event-runtime" : 16045321403, "pcnt-running" : 100.00, "metric-value" : "20.442147", "metric-unit" : "/sec"}
-{"interval" : 1.001089747, "counter-value" : "20114.000000", "unit" : "", "event" : "page-faults", "event-runtime" : 16045355927, "pcnt-running" : 100.00, "metric-value" : "1.253577", "metric-unit" : "K/sec"}
-{"interval" : 1.001089747, "counter-value" : "4066679471.000000", "unit" : "", "event" : "instructions", "event-runtime" : 16045369123, "pcnt-running" : 100.00, "metric-value" : "1.628330", "metric-unit" : "insn per cycle"}
-{"interval" : 1.001089747, "counter-value" : "2497454658.000000", "unit" : "", "event" : "cycles", "event-runtime" : 16045374810, "pcnt-running" : 100.00, "metric-value" : "0.155650", "metric-unit" : "GHz"}
-{"interval" : 1.001089747, "counter-value" : "914974294.000000", "unit" : "", "event" : "branches", "event-runtime" : 16045379877, "pcnt-running" : 100.00, "metric-value" : "57.024509", "metric-unit" : "M/sec"}
-{"interval" : 1.001089747, "counter-value" : "9237201.000000", "unit" : "", "event" : "branch-misses", "event-runtime" : 16045375017, "pcnt-running" : 100.00, "metric-value" : "1.009559", "metric-unit" : "of all branches", "metric-threshold" : "good"}
-{"interval" : 1.001089747, "event-runtime" : 16045397172, "pcnt-running" : 100.00, "metricgroup" : "TopdownL1"}
-{"interval" : 1.001089747, "metric-value" : "22.036686", "metric-unit" : "%  tma_backend_bound", "metric-threshold" : "bad"}
-{"interval" : 1.001089747, "metric-value" : "7.610161", "metric-unit" : "%  tma_bad_speculation", "metric-threshold" : "good"}
-{"interval" : 1.001089747, "metric-value" : "36.729687", "metric-unit" : "%  tma_frontend_bound", "metric-threshold" : "bad"}
-{"interval" : 1.001089747, "metric-value" : "33.623465", "metric-unit" : "%  tma_retiring"}
-...
-```
+Ok, I've seen that you don't need kernel_page_present() anymore, just
+after I implemented it for s390. I guess I'll send the patch below
+(with a different commit message) upstream anyway, just in case
+somebody else comes up with a similar use case.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+From b625edc35de64293b728b030c62f7aaa65c8627e Mon Sep 17 00:00:00 2001
+From: Heiko Carstens <hca@linux.ibm.com>
+Date: Thu, 17 Oct 2024 19:41:07 +0200
+Subject: [PATCH] s390/pageattr: Implement missing kernel_page_present()
+
+kernel_page_present() was intentionally not implemented when adding
+ARCH_HAS_SET_DIRECT_MAP support, since it was only used for suspend/resume
+which is not supported anymore on s390.
+
+However a new bpf use case now leads to a compile error specific to
+s390. Implement kernel_page_present() to fix this.
+
+Reported-by: Daniel Borkmann <daniel@iogearbox.net>
+Closes: https://lore.kernel.org/all/045de961-ac69-40cc-b141-ab70ec9377ec@iogearbox.net
+Fixes: 0490d6d7ba0a ("s390/mm: enable ARCH_HAS_SET_DIRECT_MAP")
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 ---
- .../tests/shell/lib/perf_json_output_lint.py  |  5 ++++-
- tools/perf/util/stat-display.c                | 22 +++++++++++++++++--
- 2 files changed, 24 insertions(+), 3 deletions(-)
+ arch/s390/include/asm/set_memory.h |  1 +
+ arch/s390/mm/pageattr.c            | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-index abc1fd737782..8ddb85586131 100644
---- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-+++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-@@ -57,6 +57,7 @@ def check_json_output(expected_items):
-       'interval': lambda x: isfloat(x),
-       'metric-unit': lambda x: True,
-       'metric-value': lambda x: isfloat(x),
-+      'metric-threshold': lambda x: x in ['unknown', 'good', 'less good', 'nearly bad', 'bad'],
-       'metricgroup': lambda x: True,
-       'node': lambda x: True,
-       'pcnt-running': lambda x: isfloat(x),
-@@ -68,13 +69,15 @@ def check_json_output(expected_items):
-   for item in json.loads(input):
-     if expected_items != -1:
-       count = len(item)
--      if count != expected_items and count >= 1 and count <= 6 and 'metric-value' in item:
-+      if count != expected_items and count >= 1 and count <= 7 and 'metric-value' in item:
-         # Events that generate >1 metric may have isolated metric
-         # values and possibly other prefixes like interval, core,
-         # aggregate-number, or event-runtime/pcnt-running from multiplexing.
-         pass
-       elif count != expected_items and count >= 1 and count <= 5 and 'metricgroup' in item:
-         pass
-+      elif count == expected_items + 1 and 'metric-threshold' in item:
-+          pass
-       elif count != expected_items:
-         raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
-                            f' in \'{item}\'')
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 5974aaead95f..53dcdf07f5a2 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -86,6 +86,19 @@ const char *metric_threshold_classify__color(enum metric_threshold_classify thre
- 	return colors[thresh];
+diff --git a/arch/s390/include/asm/set_memory.h b/arch/s390/include/asm/set_memory.h
+index 06fbabe2f66c..cb4cc0f59012 100644
+--- a/arch/s390/include/asm/set_memory.h
++++ b/arch/s390/include/asm/set_memory.h
+@@ -62,5 +62,6 @@ __SET_MEMORY_FUNC(set_memory_4k, SET_MEMORY_4K)
+ 
+ int set_direct_map_invalid_noflush(struct page *page);
+ int set_direct_map_default_noflush(struct page *page);
++bool kernel_page_present(struct page *page);
+ 
+ #endif
+diff --git a/arch/s390/mm/pageattr.c b/arch/s390/mm/pageattr.c
+index 5f805ad42d4c..aec9eb16b6f7 100644
+--- a/arch/s390/mm/pageattr.c
++++ b/arch/s390/mm/pageattr.c
+@@ -406,6 +406,21 @@ int set_direct_map_default_noflush(struct page *page)
+ 	return __set_memory((unsigned long)page_to_virt(page), 1, SET_MEMORY_DEF);
  }
  
-+static const char *metric_threshold_classify__str(enum metric_threshold_classify thresh)
++bool kernel_page_present(struct page *page)
 +{
-+	const char * const strs[] = {
-+		"unknown",
-+		"bad",
-+		"nearly bad",
-+		"less good",
-+		"good",
-+	};
-+	static_assert(ARRAY_SIZE(strs) - 1  == METRIC_THRESHOLD_GOOD, "missing enum value");
-+	return strs[thresh];
++	unsigned long addr;
++	unsigned int cc;
++
++	addr = (unsigned long)page_address(page);
++	asm volatile(
++		"	lra	%[addr],0(%[addr])\n"
++		"	ipm	%[cc]\n"
++		: [cc] "=d" (cc), [addr] "+a" (addr)
++		:
++		: "cc");
++	return (cc >> 28) == 0;
 +}
 +
- static void print_running_std(struct perf_stat_config *config, u64 run, u64 ena)
- {
- 	if (run != ena)
-@@ -478,15 +491,20 @@ static void print_metric_csv(struct perf_stat_config *config __maybe_unused,
+ #if defined(CONFIG_DEBUG_PAGEALLOC) || defined(CONFIG_KFENCE)
  
- static void print_metric_json(struct perf_stat_config *config __maybe_unused,
- 			     void *ctx,
--			     enum metric_threshold_classify thresh __maybe_unused,
-+			     enum metric_threshold_classify thresh,
- 			     const char *fmt __maybe_unused,
- 			     const char *unit, double val)
- {
- 	struct outstate *os = ctx;
- 	FILE *out = os->fh;
- 
--	if (unit)
-+	if (unit) {
- 		fprintf(out, "\"metric-value\" : \"%f\", \"metric-unit\" : \"%s\"", val, unit);
-+		if (thresh != METRIC_THRESHOLD_UNKNOWN) {
-+			fprintf(out, ", \"metric-threshold\" : \"%s\"",
-+				metric_threshold_classify__str(thresh));
-+		}
-+	}
- 	if (!config->metric_only)
- 		fprintf(out, "}");
- }
+ static void ipte_range(pte_t *pte, unsigned long address, int nr)
 -- 
-2.47.0.105.g07ac214952-goog
+2.45.2
 
