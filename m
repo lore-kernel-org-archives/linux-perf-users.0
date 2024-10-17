@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2BB1C174C;
-	Thu, 17 Oct 2024 22:12:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA871C1ADA;
+	Thu, 17 Oct 2024 22:20:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729203158; cv=none; b=QA0BLkhEYyZxRruhTnx8EIbWziyXTYyH5MifUcKQXtVHMhkJLZ6YvkFS8LHCSvOtmk4bNS+Rl19Wt33HEBr3TnW/xQm45nl32N0D0XYmpOoqRwHb2Oum9yYL6NhrqOzdLLBoIHmunFoG85QxkCmtDr3ydismspJ40Fnhzd/myC0=
+	t=1729203652; cv=none; b=jSjwvdIKwZkfiGU7Stlt6z0/h+mzuRLTul1tgHyCbnzagZfnUiGWmIiPtDOSuCQ0rQS+SBFfCYZ2X94zGSWSzUk01P33qMElCL7xkMgbBYx7YMGOoY5xzWJOk4EmdRsfpybJTv3o4DDUeYi5S5Sfv4VgscnrLNRvnWfn85F/pb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729203158; c=relaxed/simple;
-	bh=bTsHE+Y0emmnEbXfSn8H0bEpvMkkGZ2DH2E7Mk4Bjo8=;
+	s=arc-20240116; t=1729203652; c=relaxed/simple;
+	bh=UZFQlI8ALtTjuxp1+9vlyb/9Sn3LWMwZCxzz5dUuJmU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e66GPqlA7+8/RmTUHvsuHY5x98+AENks/EVa4SB2LPEH8FJIkbr821JdRKN70gnXQzZncpmhnRE+LUkPqg7ltb3JBF310TldtROGic/pZ6cUqHswMMp1Lg9XtsR/6fzKKmYxYwkJxvayb6TFSleNbZDYkpFn2DnU37bnc893iMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnZsK7Oh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=koga1Kc7lVKkZ3CPmPRFRT2f7wQa/x3wRQjJ91sj1sf1J0DZe1jjzpeuI4aEDzfOjp8JRMwm68zoKS7dD+cP1w3EnAFgEIRJmb4FCLoN8OXF5PZ2WY2ZmECXvlDoGLXAh/ucHG8IUWY87Vnq6/3CEDQK8Gwpa/3PDh/LepZ02Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSjWbuON; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnZsK7Oh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D7CC4CEC3;
-	Thu, 17 Oct 2024 22:12:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSjWbuON"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A128C4CEC3;
+	Thu, 17 Oct 2024 22:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729203157;
-	bh=bTsHE+Y0emmnEbXfSn8H0bEpvMkkGZ2DH2E7Mk4Bjo8=;
+	s=k20201202; t=1729203651;
+	bh=UZFQlI8ALtTjuxp1+9vlyb/9Sn3LWMwZCxzz5dUuJmU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BnZsK7OhzpAE9MqbR/+bBWjLGSNolhvq5jvlxMaXdTSCLT+/ij0oJcyF2Nz2X00Xe
-	 KV3MnBY8aJ7WYqIpbOzWxp3+hSc5GpFIiGP6NBy3rCcSjSWKgTO+HZjYhVJC6y/gB3
-	 0WW8iYe/cVGC7WH18dO3qBPJPwpX250Rtur5de2c38umIzKqLpCTfRLtGf2YBqAwkg
-	 BXWOH7GFzRCLCnGNKnuSTZvJA2UFn8afgH4rPO1QfSyRlYNDuOiL/NEaWOKtnLzd2D
-	 ufJkh31UAICP3Qfno+ix5GoQ4gyAOOtv8Q271jEZ3cgAgxVZl9dp4m1q5lQSp6UpwF
-	 hRJkYntJcBXeg==
-Date: Thu, 17 Oct 2024 15:12:36 -0700
+	b=QSjWbuONw9XjQ2z/6dtwTZVOqSRIbR9FH7gQYBWXXl/y/z6OoLBoNOiNRVmrvWOIQ
+	 mFgqc6QGaF77bBg8NaVYmPfvFtIBhgOFh+To7a0YQ7hY+6fhjoureyWQqndTJexRg3
+	 AwkHqDJ4pgotr+Id+jCPkG731W5Hza/yOh5dyPIo5V0ab9/Wlz32XuzJVb0KiVmrSb
+	 1KhwhVL+Otart7XW2VRELn1pX1rCrI5Zzp7ePknlObhkeMtiI28ucRTxUAQS6p2NF6
+	 r7duqbt+w+SEzbidbAnY5FuJLJdI3EDG2KJC7A7ExYnsDoMw9P9gyDSxdDUoF1qWgG
+	 hshIzaqS6cp1w==
+Date: Thu, 17 Oct 2024 15:20:49 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	xueshuai@linux.alibaba.com, zhuo.song@linux.alibaba.com
-Subject: Re: [PATCH] perf/tests: fix record+probe_libc_inet_pton test on
- aarch64
-Message-ID: <ZxGL1LF9mVzrUGOU@google.com>
-References: <1728978807-81116-1-git-send-email-renyu.zj@linux.alibaba.com>
+To: Li Huafei <lihuafei1@huawei.com>
+Cc: atrajeev@linux.vnet.ibm.com, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, kjain@linux.ibm.com, sesse@google.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] perf disasm: Fix not cleaning up disasm_line in
+ symbol__disassemble_raw()
+Message-ID: <ZxGNwWjlflH1azE7@google.com>
+References: <20241014114248.212711-1-lihuafei1@huawei.com>
+ <20241014114248.212711-3-lihuafei1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,58 +48,68 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1728978807-81116-1-git-send-email-renyu.zj@linux.alibaba.com>
+In-Reply-To: <20241014114248.212711-3-lihuafei1@huawei.com>
 
-Hello,
+On Mon, Oct 14, 2024 at 07:42:48PM +0800, Li Huafei wrote:
+> In symbol__disassemble_raw(), the created disasm_line should be
+> discarded before returning an error.
 
-On Tue, Oct 15, 2024 at 03:53:27PM +0800, Jing Zhang wrote:
-> Since commit 1f85d016768f ("perf test record+probe_libc_inet_pton: Fix
-> call chain match on x86_64") remove function getaddrinfo() on expected
-> file, the test failed on aarch64. On aarch64, function getaddrinfo()
-> show up in the call chain.
-> 
-> $perf script -i /tmp/perf.data.1PV
-> ping 2588319 [125] 500119.122843: probe_libc:inet_pton: (ffff9a4f7410)
->             ffff9a4f7410 __GI___inet_pton+0x0 (/usr/lib64/libc-2.32.so)
->             ffff9a4c5f7c getaddrinfo+0xec (/usr/lib64/libc-2.32.so)
->             aaaad6d32b38 [unknown] (/usr/bin/ping)
-
-I'm curious how other ARM folks don't see this.  Does it depend on
-something other?  Then can we make the line optional like we did on
-s390 recently?
-
-> 
-> So just remove getaddrinfo() on x86_64.
-
-I'm not sure how it works on other archs.
+But other error paths don't need to free the disasm_line because they
+failed before creating one.  I think the simpler fix is to break the
+loop when it fails on disasm_line__new().
 
 Thanks,
 Namhyung
 
 > 
-> Fixes: 1f85d016768f ("perf test record+probe_libc_inet_pton: Fix call chain match on x86_64")
-> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+> Fixes: 0b971e6bf1c3 ("perf annotate: Add support to capture and parse raw instruction in powerpc using dso__data_read_offset utility")
+> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 > ---
->  tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 4 ++++
->  1 file changed, 4 insertions(+)
+>  tools/perf/util/disasm.c | 26 ++++++++++++--------------
+>  1 file changed, 12 insertions(+), 14 deletions(-)
 > 
-> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> index 47a26f2..09d7b0b 100755
-> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> @@ -52,8 +52,12 @@ trace_libc_inet_pton_backtrace() {
->  		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
->  		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
->  		;;
-> +	x86_64)
-> +		eventattr='max-stack=3'
-> +		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
->  	*)
->  		eventattr='max-stack=3'
-> +		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
->  		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
->  		;;
->  	esac
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index 40d99f4d5cc7..4e5becd5eca6 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+> @@ -1774,25 +1774,23 @@ static int symbol__disassemble_raw(char *filename, struct symbol *sym,
+>  		offset += 4;
+>  	}
+>  
+> -	/* It failed in the middle */
+> -	if (offset != len) {
+> -		struct list_head *list = &notes->src->source;
+> -
+> -		/* Discard all lines and fallback to objdump */
+> -		while (!list_empty(list)) {
+> -			dl = list_first_entry(list, struct disasm_line, al.node);
+> -
+> -			list_del_init(&dl->al.node);
+> -			disasm_line__free(dl);
+> -		}
+> -		count = -1;
+> -	}
+> -
+>  out:
+>  	free(buf);
+>  	return count < 0 ? count : 0;
+>  
+>  err:
+> +	if (!list_empty(&notes->src->source)) {
+> +		struct disasm_line *tmp;
+> +
+> +		/*
+> +		 * It probably failed in the middle of the above loop.
+> +		 * Release any resources it might add.
+> +		 */
+> +		list_for_each_entry_safe(dl, tmp, &notes->src->source, al.node) {
+> +			list_del(&dl->al.node);
+> +			disasm_line__free(dl);
+> +		}
+> +	}
+>  	count = -1;
+>  	goto out;
+>  }
 > -- 
-> 1.8.3.1
+> 2.25.1
 > 
