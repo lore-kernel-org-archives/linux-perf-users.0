@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F5C3FB1B
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 00:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12ABB676
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 00:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729124070; cv=none; b=P//hUu5ywt8grakST1WTliDbOxAsG0ywUs9KuqfM4bxtdIvZlbNiuEboIvLiP2akONyNIl72BX8y5l3MmH2ZlboSj8gPdwXNpdb34pd2Z0NzXI4dLObrc8QJOqC1zt2MAx8yAw/Mi5IUOwA/2dHAtx3jZ+2h2cd52iRoF0iLnXo=
+	t=1729124073; cv=none; b=dSGlni5Alh5V3kzl58DuseaVDNdEJ52nQqyKyDFK1fqEVpgtE82CPSOD6xYO7/GwkzaDvupOG4nCKRkYXS4dfxsSh3kw1JfQe/aB+WB2gLFNfzKL9aztWn2pERrHxm+wb0dDVyDBXecg+ELOr8xZXNTacKf1KbSw6NG7kZqzobg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729124070; c=relaxed/simple;
-	bh=6lnA1afczAn/Hrm3ssm5ac2ILt01CYNiuH2KQKGGpNw=;
+	s=arc-20240116; t=1729124073; c=relaxed/simple;
+	bh=uTZGzDP2K1Gr+UdxyFj4+kEYNFidcL7ChzEuLmDixB8=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=jmBm+mps84vAJK8Z0OIfn3RYufwchEEou7LYJY+oSXmtgguUeY6TaREoKIlgvXLuoboC0VZvBujvckbrrfmJn0NT6TQEDEBnN6Gj9A4xduvwK52VP9QzzBU5JAaegZ11uYM2bhV58tp/Qu6gjYmHGbLkgKE+FLvbGRMw73Mvt+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DxP0zrqW; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=IEOAlCxeqri81cVPoWvPLefMdH1VWEipKxBeV4901C+1TvHYQzoXwYz/y1G4U1BtdejvChTTnPHN0xgZwpL4vg2m/jRMveEOB0OUQP8ebBvzEC+kMdU6LGj5jkxfs3eVoeqzE73QVoKuVDyuW3KjleCpTI4ztmvXsQmRsRn+u1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N05sPLCx; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DxP0zrqW"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e290222fde4so519732276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 17:14:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N05sPLCx"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e3c638cc27so10014237b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 17:14:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729124068; x=1729728868; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729124070; x=1729728870; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1qh2zjK+x7XBUWzGHdV6OoNs12UKt+cT6XlR5rxtiUA=;
-        b=DxP0zrqWmMNIBPAlLHKUkzAX4IdH3wxwfk0j5p6Ti8JGQNoPmKAdXIlcvqpAmPnQSy
-         7dtPLiXBXVc+6m/tZYSHVf4BoZlOa3L/CfOQo+qR+pPlO04UmD16Tyl3afZ10KL7UDCg
-         uDK6RuEdkQrUFezq/Tejgw/mGv9U8QyNBKmF/FMU2MJe4TlLC6lyy43wkRoRLKxZN5BS
-         1VTlHMf/bkMBcS7B7luU/aGAsV7VkeyIutENxsD35je1Id0OoHtQ4PWbMfqYyGHPPqO8
-         BzKajczzheKV/uhtR7B9Udmj+TNOhqSuXdRjXk9fcqtfSxX0c/clJ0qoH0ZQcDWuudla
-         bRzQ==
+        bh=ZdCPmUKkGrBwCDxgLym0jfSR0ZKu6+x5u848gg4O+mI=;
+        b=N05sPLCxImTKU5r4MDbFCUV0eRbeAr6P0ths/CfwORyHoXqxBnewwue5lNvoyFwXLq
+         84y6T6K/5vBkwSEnQSzMRazXwdPjp3ZoiqAzbd47eyOySEKN8AkBl3gZ7ZkPe+ruokH5
+         ZMqp3v98PxAYpw4Rq86f04chNuj2qxCmdX7TfaS7AW4WrtFXNO2Cj0laTmXnRZdMw47z
+         JEFsbAMnyY4rpkJqapsguHl6Ko1bkLTWwefKxE0GoXgPKv0P/Y5aFrCMwGn2XO77ZA31
+         ipZ6qDkA6QDYU2aEQP10eYsl3xXXLehuZWeCHkhAPjEadKs1tOjd7s1SFiSqle6bdk7H
+         mB7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729124068; x=1729728868;
+        d=1e100.net; s=20230601; t=1729124070; x=1729728870;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1qh2zjK+x7XBUWzGHdV6OoNs12UKt+cT6XlR5rxtiUA=;
-        b=sFvjaNbFbED22rAmYnkKf4aOCnIcm/wAIFvIYC9tkloVwiKI4y9GnYs+HGm6hVDQ0t
-         M24UEpJxdWscNwKYLUNGicw3O7BTVLnE/2k/NcCKprEi6X3BiGMv5fuKIbGpWHV/7ujN
-         Iqs1dpqWie7o7FFpNqnUQQOzT00nmy0JxLMmwCvU8AIS63z+HrvxfSJNq5K0UBazEApE
-         3tjYT31LlMWJIphlFEh8hLYoibkGou9WOldK8SV91YDrkHM153hGClc/Kzsf3ayuR1GL
-         6/M8/rH25rpWbPxczg3C5oVYScrcaTz5W+Pql8u/3rGQy1LoQRaZTdMFcT2BxT9g1gvg
-         7LzA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgPvcgYIAE2zicU57mNhG3Vmliyf46dYuMeMFMtSL4zyqOYUTzMliyHJ0BZ3r5KUvsf3hY6mOMfLZEirdJK31k@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHSRYMHyggqx3R1vK5oxT3mxaQF32mIrYvvsZuUyslqaFNxHqM
-	lGK9fcHxti62G6VkMGxXBXflTr2DKQu534qhtnoViHSOi6wyRBPQv6LMcaexKkvpJctjmEZzep8
-	eH2w0Uw==
-X-Google-Smtp-Source: AGHT+IHtAAWEjwLOSRrE8Z0h7hca1srTS54pxI+wryyHRm20lJxdMRhTmhsocAjNM1mA5T35yVe/pOVDJqw6
+        bh=ZdCPmUKkGrBwCDxgLym0jfSR0ZKu6+x5u848gg4O+mI=;
+        b=eo3i2eihu/Bqek/ktL2LmiRLcFO/dzrg1ssMQ+oEj1xDoA0Ue12AGSIPTedbi3dKw8
+         mnGHZmQxk3cBNrUzLFSs9N1YDh+YnTXLF6TpA9fqanT5VSL9xn0XJgQzSsTIYzo2pIfH
+         1ePzCoEB+COkrSIvG9tPjAdICHVJWCJpl0u6C4S194+nW7ZMSNPtubzusdlJUptOP2YK
+         W95GzGC7qfdnDCOxzDb80DjW6HcZf6ru/227ziY74Ae2xxbOIBHrHp/wSuPngLFUsvIL
+         IPE15EN+01S/nN+mXPMIK3KEVVQ61c1pOYTYuOuz+uxz7+/9EKgEOZzJb+dHBm01Nqov
+         AC5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXWn7zv4Ir+Vf5kWYXOqyReKXL15PQUm9RYOFVeLSxEPy3oK5s0Xmo8sVE6veXNbjlgIoPC9Q6cC/Ixil14supK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6KJC7lq+OUmRe//COLL6dGqzutbHdw0G3DwUNwZygiXxgjvAQ
+	NFrS2uuOowph+zkUuQccR+uVLWwYZFwVFXamBZ9XZV6qMvev0gXyTi321VxcTzvJugCazj4TEi9
+	WA4NYYQ==
+X-Google-Smtp-Source: AGHT+IGmCqxqV/cR4e1mDBCmPDGgT/SSooHjQkQC219R9juE6phrOXnwsqdvmP6ECvOzFqzwnY8OkCCPIcef
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:a00a:f237:9bc0:79c])
- (user=irogers job=sendgmr) by 2002:a25:824f:0:b0:e29:b6d7:20e2 with SMTP id
- 3f1490d57ef6-e29b704e8e4mr4569276.0.1729124067417; Wed, 16 Oct 2024 17:14:27
- -0700 (PDT)
-Date: Wed, 16 Oct 2024 17:13:53 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:2502:b0:6e2:70e:e82e with SMTP id
+ 00721157ae682-6e3d41cb4aamr1150577b3.6.1729124069686; Wed, 16 Oct 2024
+ 17:14:29 -0700 (PDT)
+Date: Wed, 16 Oct 2024 17:13:54 -0700
 In-Reply-To: <20241017001354.56973-1-irogers@google.com>
-Message-Id: <20241017001354.56973-11-irogers@google.com>
+Message-Id: <20241017001354.56973-12-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241017001354.56973-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.105.g07ac214952-goog
-Subject: [PATCH v3 10/11] perf build: Rename HAVE_DWARF_SUPPORT to HAVE_LIBDW_SUPPORT
+Subject: [PATCH v3 11/11] perf build: Rename CONFIG_DWARF to CONFIG_LIBDW
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -88,440 +88,200 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 
 In Makefile.config for unwinding the name dwarf implies either
-libunwind or libdw. Make it clearer that HAVE_DWARF_SUPPORT is really
-just defined when libdw is present by renaming to HAVE_LIBDW_SUPPORT.
+libunwind or libdw. Make it clearer that CONFIG_DWARF is really just
+defined when libdw is present by renaming to CONFIG_LIBDW.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/perf-check.txt         |  6 +++---
- tools/perf/Makefile.config                      |  2 +-
- tools/perf/arch/powerpc/annotate/instructions.c |  4 ++--
- tools/perf/arch/x86/annotate/instructions.c     |  2 +-
- tools/perf/builtin-annotate.c                   |  2 +-
- tools/perf/builtin-check.c                      |  6 +++---
- tools/perf/builtin-probe.c                      | 12 ++++++------
- tools/perf/builtin-report.c                     |  4 ++--
- tools/perf/util/annotate-data.h                 |  8 ++++----
- tools/perf/util/debuginfo.h                     |  6 +++---
- tools/perf/util/disasm.c                        |  4 ++--
- tools/perf/util/disasm.h                        |  4 ++--
- tools/perf/util/genelf.c                        |  4 ++--
- tools/perf/util/genelf.h                        |  2 +-
- tools/perf/util/include/dwarf-regs.h            |  6 +++---
- tools/perf/util/probe-event.c                   |  4 ++--
- tools/perf/util/probe-finder.h                  |  4 ++--
- 17 files changed, 40 insertions(+), 40 deletions(-)
+ tools/perf/Makefile.config           |  2 +-
+ tools/perf/arch/arm/util/Build       |  2 +-
+ tools/perf/arch/arm64/util/Build     |  2 +-
+ tools/perf/arch/csky/util/Build      |  2 +-
+ tools/perf/arch/loongarch/util/Build |  2 +-
+ tools/perf/arch/mips/util/Build      |  2 +-
+ tools/perf/arch/powerpc/util/Build   |  4 ++--
+ tools/perf/arch/riscv/util/Build     |  2 +-
+ tools/perf/arch/s390/util/Build      |  2 +-
+ tools/perf/arch/sh/util/Build        |  2 +-
+ tools/perf/arch/sparc/util/Build     |  2 +-
+ tools/perf/arch/x86/util/Build       |  2 +-
+ tools/perf/arch/xtensa/util/Build    |  2 +-
+ tools/perf/util/Build                | 12 ++++++------
+ 14 files changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-index 45101a8e4154..31741499e786 100644
---- a/tools/perf/Documentation/perf-check.txt
-+++ b/tools/perf/Documentation/perf-check.txt
-@@ -47,15 +47,15 @@ feature::
-                 bpf                     /  HAVE_LIBBPF_SUPPORT
-                 bpf_skeletons           /  HAVE_BPF_SKEL
-                 debuginfod              /  HAVE_DEBUGINFOD_SUPPORT
--                dwarf                   /  HAVE_DWARF_SUPPORT
--                dwarf_getlocations      /  HAVE_DWARF_SUPPORT
-+                dwarf                   /  HAVE_LIBDW_SUPPORT
-+                dwarf_getlocations      /  HAVE_LIBDW_SUPPORT
-                 dwarf-unwind            /  HAVE_DWARF_UNWIND_SUPPORT
-                 auxtrace                /  HAVE_AUXTRACE_SUPPORT
-                 libaudit                /  HAVE_LIBAUDIT_SUPPORT
-                 libbfd                  /  HAVE_LIBBFD_SUPPORT
-                 libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
-                 libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
--                libdw-dwarf-unwind      /  HAVE_DWARF_SUPPORT
-+                libdw-dwarf-unwind      /  HAVE_LIBDW_SUPPORT
-                 libelf                  /  HAVE_LIBELF_SUPPORT
-                 libnuma                 /  HAVE_LIBNUMA_SUPPORT
-                 libopencsd              /  HAVE_CSTRACE_SUPPORT
 diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 7dbcf8394f3d..d0ad2919983c 100644
+index d0ad2919983c..b93ed2b7623f 100644
 --- a/tools/perf/Makefile.config
 +++ b/tools/perf/Makefile.config
-@@ -559,7 +559,7 @@ ifndef NO_LIBELF
-       $(warning DWARF register mappings have not been defined for architecture $(SRCARCH), DWARF support disabled)
-       NO_LIBDW := 1
-     else
--      CFLAGS += -DHAVE_DWARF_SUPPORT $(LIBDW_CFLAGS)
-+      CFLAGS += -DHAVE_LIBDW_SUPPORT $(LIBDW_CFLAGS)
+@@ -562,7 +562,7 @@ ifndef NO_LIBELF
+       CFLAGS += -DHAVE_LIBDW_SUPPORT $(LIBDW_CFLAGS)
        LDFLAGS += $(LIBDW_LDFLAGS)
        EXTLIBS += ${DWARFLIBS}
-       $(call detected,CONFIG_DWARF)
-diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
-index ede9eeade0ab..54478cf5cccc 100644
---- a/tools/perf/arch/powerpc/annotate/instructions.c
-+++ b/tools/perf/arch/powerpc/annotate/instructions.c
-@@ -255,7 +255,7 @@ static struct ins_ops *check_ppc_insn(struct disasm_line *dl)
-  * is moved to r31. update_insn_state_powerpc tracks these state
-  * changes
-  */
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- static void update_insn_state_powerpc(struct type_state *state,
- 		struct data_loc_info *dloc, Dwarf_Die * cu_die __maybe_unused,
- 		struct disasm_line *dl)
-@@ -300,7 +300,7 @@ static void update_insn_state_powerpc(struct type_state *state,
- 			insn_offset, src->reg1, dst->reg1);
- 	pr_debug_type_name(&tsr->type, tsr->kind);
- }
--#endif /* HAVE_DWARF_SUPPORT */
-+#endif /* HAVE_LIBDW_SUPPORT */
+-      $(call detected,CONFIG_DWARF)
++      $(call detected,CONFIG_LIBDW)
+     endif # PERF_HAVE_DWARF_REGS
+   endif # NO_LIBDW
  
- static int powerpc__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
- {
-diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
-index 5caf5a17f03d..c869abe3c31d 100644
---- a/tools/perf/arch/x86/annotate/instructions.c
-+++ b/tools/perf/arch/x86/annotate/instructions.c
-@@ -207,7 +207,7 @@ static int x86__annotate_init(struct arch *arch, char *cpuid)
- 	return err;
- }
+diff --git a/tools/perf/arch/arm/util/Build b/tools/perf/arch/arm/util/Build
+index e6dd7cd79ebd..e06fea1ea8ff 100644
+--- a/tools/perf/arch/arm/util/Build
++++ b/tools/perf/arch/arm/util/Build
+@@ -1,6 +1,6 @@
+ perf-util-y += perf_regs.o
  
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- static void update_insn_state_x86(struct type_state *state,
- 				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
- 				  struct disasm_line *dl)
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 04af13eb4a4c..bb87e6e7687d 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -840,7 +840,7 @@ int cmd_annotate(int argc, const char **argv)
- 	}
- #endif
+-perf-util-$(CONFIG_DWARF) += dwarf-regs.o
++perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
  
--#ifndef HAVE_DWARF_SUPPORT
-+#ifndef HAVE_LIBDW_SUPPORT
- 	if (annotate.data_type) {
- 		pr_err("Error: Data type profiling is disabled due to missing DWARF support\n");
- 		return -ENOTSUP;
-diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-index 18c0a815243b..2346536a5ee1 100644
---- a/tools/perf/builtin-check.c
-+++ b/tools/perf/builtin-check.c
-@@ -27,15 +27,15 @@ struct feature_status supported_features[] = {
- 	FEATURE_STATUS("bpf", HAVE_LIBBPF_SUPPORT),
- 	FEATURE_STATUS("bpf_skeletons", HAVE_BPF_SKEL),
- 	FEATURE_STATUS("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
--	FEATURE_STATUS("dwarf", HAVE_DWARF_SUPPORT),
--	FEATURE_STATUS("dwarf_getlocations", HAVE_DWARF_SUPPORT),
-+	FEATURE_STATUS("dwarf", HAVE_LIBDW_SUPPORT),
-+	FEATURE_STATUS("dwarf_getlocations", HAVE_LIBDW_SUPPORT),
- 	FEATURE_STATUS("dwarf-unwind", HAVE_DWARF_UNWIND_SUPPORT),
- 	FEATURE_STATUS("auxtrace", HAVE_AUXTRACE_SUPPORT),
- 	FEATURE_STATUS("libaudit", HAVE_LIBAUDIT_SUPPORT),
- 	FEATURE_STATUS("libbfd", HAVE_LIBBFD_SUPPORT),
- 	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
- 	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
--	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_DWARF_SUPPORT),
-+	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_LIBDW_SUPPORT),
- 	FEATURE_STATUS("libelf", HAVE_LIBELF_SUPPORT),
- 	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
- 	FEATURE_STATUS("libopencsd", HAVE_CSTRACE_SUPPORT),
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 91672bb3047c..69800e4d9530 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -229,7 +229,7 @@ static int opt_set_target_ns(const struct option *opt __maybe_unused,
+ perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
+ perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+index 343ef7589a77..4387a6d6a6c3 100644
+--- a/tools/perf/arch/arm64/util/Build
++++ b/tools/perf/arch/arm64/util/Build
+@@ -4,7 +4,7 @@ perf-util-y += perf_regs.o
+ perf-util-y += tsc.o
+ perf-util-y += pmu.o
+ perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+-perf-util-$(CONFIG_DWARF)     += dwarf-regs.o
++perf-util-$(CONFIG_LIBDW)     += dwarf-regs.o
+ perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+ perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
  
- /* Command option callbacks */
+diff --git a/tools/perf/arch/csky/util/Build b/tools/perf/arch/csky/util/Build
+index 99d83f41bf43..1325310cab6a 100644
+--- a/tools/perf/arch/csky/util/Build
++++ b/tools/perf/arch/csky/util/Build
+@@ -1,4 +1,4 @@
+ perf-util-y += perf_regs.o
  
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- static int opt_show_lines(const struct option *opt,
- 			  const char *str, int unset __maybe_unused)
- {
-@@ -505,7 +505,7 @@ static int perf_del_probe_events(struct strfilter *filter)
- 	return ret;
- }
+-perf-util-$(CONFIG_DWARF) += dwarf-regs.o
++perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+ perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
+index b6b97de48233..06ff95394921 100644
+--- a/tools/perf/arch/loongarch/util/Build
++++ b/tools/perf/arch/loongarch/util/Build
+@@ -1,7 +1,7 @@
+ perf-util-y += header.o
+ perf-util-y += perf_regs.o
  
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- #define PROBEDEF_STR	\
- 	"[EVENT=]FUNC[@SRC][+OFF|%return|:RL|;PT]|SRC:AL|SRC;PT [[NAME=]ARG ...]"
- #else
-@@ -521,7 +521,7 @@ __cmd_probe(int argc, const char **argv)
- 		"perf probe [<options>] --add 'PROBEDEF' [--add 'PROBEDEF' ...]",
- 		"perf probe [<options>] --del '[GROUP:]EVENT' ...",
- 		"perf probe --list [GROUP:]EVENT ...",
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- 		"perf probe [<options>] --line 'LINEDESC'",
- 		"perf probe [<options>] --vars 'PROBEPOINT'",
- #endif
-@@ -545,7 +545,7 @@ __cmd_probe(int argc, const char **argv)
- 		"\t\tFUNC:\tFunction name\n"
- 		"\t\tOFF:\tOffset from function entry (in byte)\n"
- 		"\t\t%return:\tPut the probe at function return\n"
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- 		"\t\tSRC:\tSource code path\n"
- 		"\t\tRL:\tRelative line number from function entry.\n"
- 		"\t\tAL:\tAbsolute line number in file.\n"
-@@ -612,7 +612,7 @@ __cmd_probe(int argc, const char **argv)
- 	set_option_flag(options, 'd', "del", PARSE_OPT_EXCLUSIVE);
- 	set_option_flag(options, 'D', "definition", PARSE_OPT_EXCLUSIVE);
- 	set_option_flag(options, 'l', "list", PARSE_OPT_EXCLUSIVE);
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- 	set_option_flag(options, 'L', "line", PARSE_OPT_EXCLUSIVE);
- 	set_option_flag(options, 'V', "vars", PARSE_OPT_EXCLUSIVE);
- #else
-@@ -694,7 +694,7 @@ __cmd_probe(int argc, const char **argv)
- 		if (ret < 0)
- 			pr_err_with_code("  Error: Failed to show functions.", ret);
- 		return ret;
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- 	case 'L':
- 		ret = show_line_range(&params->line_range, params->target,
- 				      params->nsi, params->uprobes);
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 2251aa61ea53..45304ee5537c 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -455,7 +455,7 @@ static int report__setup_sample_type(struct report *rep)
- 	if (!(evlist__combined_branch_type(session->evlist) & PERF_SAMPLE_BRANCH_ANY))
- 		rep->nonany_branch_mode = true;
+-perf-util-$(CONFIG_DWARF)     += dwarf-regs.o
++perf-util-$(CONFIG_LIBDW)     += dwarf-regs.o
+ perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+ perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+ perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+diff --git a/tools/perf/arch/mips/util/Build b/tools/perf/arch/mips/util/Build
+index e4644f1e68a0..b328109fc16c 100644
+--- a/tools/perf/arch/mips/util/Build
++++ b/tools/perf/arch/mips/util/Build
+@@ -1,3 +1,3 @@
+ perf-util-y += perf_regs.o
+-perf-util-$(CONFIG_DWARF) += dwarf-regs.o
++perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+ perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
+index 6c588ecdf3bd..3d979480a188 100644
+--- a/tools/perf/arch/powerpc/util/Build
++++ b/tools/perf/arch/powerpc/util/Build
+@@ -7,8 +7,8 @@ perf-util-y += sym-handling.o
+ perf-util-y += evsel.o
+ perf-util-y += event.o
  
--#if !defined(HAVE_LIBUNWIND_SUPPORT) && !defined(HAVE_DWARF_SUPPORT)
-+#if !defined(HAVE_LIBUNWIND_SUPPORT) && !defined(HAVE_LIBDW_SUPPORT)
- 	if (dwarf_callchain_users) {
- 		ui__warning("Please install libunwind or libdw "
- 			    "development packages during the perf build.\n");
-@@ -1705,7 +1705,7 @@ int cmd_report(int argc, const char **argv)
- 		report.data_type = true;
- 		annotate_opts.annotate_src = false;
+-perf-util-$(CONFIG_DWARF) += dwarf-regs.o
+-perf-util-$(CONFIG_DWARF) += skip-callchain-idx.o
++perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
++perf-util-$(CONFIG_LIBDW) += skip-callchain-idx.o
  
--#ifndef HAVE_DWARF_SUPPORT
-+#ifndef HAVE_LIBDW_SUPPORT
- 		pr_err("Error: Data type profiling is disabled due to missing DWARF support\n");
- 		goto error;
- #endif
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index 8ac0fd94a0ba..98c80b2268dd 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -9,7 +9,7 @@
- #include "dwarf-regs.h"
- #include "annotate.h"
+ perf-util-$(CONFIG_LIBUNWIND) += unwind-libunwind.o
+ perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
+index f865cb0489ec..8f93091b8345 100644
+--- a/tools/perf/arch/riscv/util/Build
++++ b/tools/perf/arch/riscv/util/Build
+@@ -2,5 +2,5 @@ perf-util-y += perf_regs.o
+ perf-util-y += header.o
  
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- #include "debuginfo.h"
- #endif
+ perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+-perf-util-$(CONFIG_DWARF) += dwarf-regs.o
++perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+ perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/s390/util/Build b/tools/perf/arch/s390/util/Build
+index 1ac830030ff3..787410f99bb3 100644
+--- a/tools/perf/arch/s390/util/Build
++++ b/tools/perf/arch/s390/util/Build
+@@ -2,7 +2,7 @@ perf-util-y += header.o
+ perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+ perf-util-y += perf_regs.o
  
-@@ -165,7 +165,7 @@ struct annotated_data_stat {
- };
- extern struct annotated_data_stat ann_data_stat;
+-perf-util-$(CONFIG_DWARF) += dwarf-regs.o
++perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+ perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
  
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- /*
-  * Type information in a register, valid when @ok is true.
-  * The @caller_saved registers are invalidated after a function call.
-@@ -244,7 +244,7 @@ bool get_global_var_info(struct data_loc_info *dloc, u64 addr,
- 				const char **var_name, int *var_offset);
- void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind);
+ perf-util-y += machine.o
+diff --git a/tools/perf/arch/sh/util/Build b/tools/perf/arch/sh/util/Build
+index 32f44fc4ab98..2337a0b710a2 100644
+--- a/tools/perf/arch/sh/util/Build
++++ b/tools/perf/arch/sh/util/Build
+@@ -1 +1 @@
+-perf-util-$(CONFIG_DWARF) += dwarf-regs.o
++perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+diff --git a/tools/perf/arch/sparc/util/Build b/tools/perf/arch/sparc/util/Build
+index 32f44fc4ab98..2337a0b710a2 100644
+--- a/tools/perf/arch/sparc/util/Build
++++ b/tools/perf/arch/sparc/util/Build
+@@ -1 +1 @@
+-perf-util-$(CONFIG_DWARF) += dwarf-regs.o
++perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
+index 2607ed5c4296..9705cda4f240 100644
+--- a/tools/perf/arch/x86/util/Build
++++ b/tools/perf/arch/x86/util/Build
+@@ -12,7 +12,7 @@ perf-util-y += evsel.o
+ perf-util-y += iostat.o
+ perf-util-y += env.o
  
--#else /* HAVE_DWARF_SUPPORT */
-+#else /* HAVE_LIBDW_SUPPORT */
+-perf-util-$(CONFIG_DWARF) += dwarf-regs.o
++perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+ perf-util-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
  
- static inline struct annotated_data_type *
- find_data_type(struct data_loc_info *dloc __maybe_unused)
-@@ -276,7 +276,7 @@ static inline int hist_entry__annotate_data_tty(struct hist_entry *he __maybe_un
- 	return -1;
- }
+ perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
+diff --git a/tools/perf/arch/xtensa/util/Build b/tools/perf/arch/xtensa/util/Build
+index e813e618954b..2d1a48696ad9 100644
+--- a/tools/perf/arch/xtensa/util/Build
++++ b/tools/perf/arch/xtensa/util/Build
+@@ -1 +1 @@
+-perf-$(CONFIG_DWARF) += dwarf-regs.o
++perf-$(CONFIG_LIBDW) += dwarf-regs.o
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index fa508e113dd0..1eedead5f2f2 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -200,11 +200,11 @@ ifndef CONFIG_SETNS
+ perf-util-y += setns.o
+ endif
  
--#endif /* HAVE_DWARF_SUPPORT */
-+#endif /* HAVE_LIBDW_SUPPORT */
+-perf-util-$(CONFIG_DWARF) += probe-finder.o
+-perf-util-$(CONFIG_DWARF) += dwarf-aux.o
+-perf-util-$(CONFIG_DWARF) += dwarf-regs.o
+-perf-util-$(CONFIG_DWARF) += debuginfo.o
+-perf-util-$(CONFIG_DWARF) += annotate-data.o
++perf-util-$(CONFIG_LIBDW) += probe-finder.o
++perf-util-$(CONFIG_LIBDW) += dwarf-aux.o
++perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
++perf-util-$(CONFIG_LIBDW) += debuginfo.o
++perf-util-$(CONFIG_LIBDW) += annotate-data.o
  
- #ifdef HAVE_SLANG_SUPPORT
- int hist_entry__annotate_data_tui(struct hist_entry *he, struct evsel *evsel,
-diff --git a/tools/perf/util/debuginfo.h b/tools/perf/util/debuginfo.h
-index ad6422c3f8ca..a52d69932815 100644
---- a/tools/perf/util/debuginfo.h
-+++ b/tools/perf/util/debuginfo.h
-@@ -5,7 +5,7 @@
- #include <errno.h>
- #include <linux/compiler.h>
+ perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+ perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind-local.o
+@@ -235,7 +235,7 @@ perf-util-$(CONFIG_LIBLLVM) += llvm-c-helpers.o
+ ifdef CONFIG_JITDUMP
+ perf-util-$(CONFIG_LIBELF) += jitdump.o
+ perf-util-$(CONFIG_LIBELF) += genelf.o
+-perf-util-$(CONFIG_DWARF) += genelf_debug.o
++perf-util-$(CONFIG_LIBDW) += genelf_debug.o
+ endif
  
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- 
- #include "dwarf-aux.h"
- 
-@@ -25,7 +25,7 @@ void debuginfo__delete(struct debuginfo *dbg);
- int debuginfo__get_text_offset(struct debuginfo *dbg, Dwarf_Addr *offs,
- 			       bool adjust_offset);
- 
--#else /* HAVE_DWARF_SUPPORT */
-+#else /* HAVE_LIBDW_SUPPORT */
- 
- /* dummy debug information structure */
- struct debuginfo {
-@@ -49,7 +49,7 @@ static inline int debuginfo__get_text_offset(struct debuginfo *dbg __maybe_unuse
- 	return -EINVAL;
- }
- 
--#endif /* HAVE_DWARF_SUPPORT */
-+#endif /* HAVE_LIBDW_SUPPORT */
- 
- #ifdef HAVE_DEBUGINFOD_SUPPORT
- int get_source_from_debuginfod(const char *raw_path, const char *sbuild_id,
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 2c8063660f2e..aef06a36bf40 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -151,14 +151,14 @@ static struct arch architectures[] = {
- 			.memory_ref_char = '(',
- 			.imm_char = '$',
- 		},
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- 		.update_insn_state = update_insn_state_x86,
- #endif
- 	},
- 	{
- 		.name = "powerpc",
- 		.init = powerpc__annotate_init,
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- 		.update_insn_state = update_insn_state_powerpc,
- #endif
- 	},
-diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-index f56beedeb9da..486c269b29ba 100644
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -4,7 +4,7 @@
- 
- #include "map_symbol.h"
- 
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- #include "dwarf-aux.h"
- #endif
- 
-@@ -39,7 +39,7 @@ struct arch {
- 		char memory_ref_char;
- 		char imm_char;
- 	} objdump;
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- 	void		(*update_insn_state)(struct type_state *state,
- 				struct data_loc_info *dloc, Dwarf_Die *cu_die,
- 				struct disasm_line *dl);
-diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-index c8f6bee1fa61..cdce7f173d00 100644
---- a/tools/perf/util/genelf.c
-+++ b/tools/perf/util/genelf.c
-@@ -16,7 +16,7 @@
- #include <inttypes.h>
- #include <fcntl.h>
- #include <err.h>
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- #include <dwarf.h>
- #endif
- 
-@@ -499,7 +499,7 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
- 	shdr->sh_size = sizeof(bnote);
- 	shdr->sh_entsize = 0;
- 
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- 	if (debug && nr_debug_entries) {
- 		retval = jit_add_debug_info(e, load_addr, debug, nr_debug_entries);
- 		if (retval)
-diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
-index 4e2e4f40e134..9f0b875d6548 100644
---- a/tools/perf/util/genelf.h
-+++ b/tools/perf/util/genelf.h
-@@ -8,7 +8,7 @@
- int jit_write_elf(int fd, uint64_t code_addr, const char *sym,
- 		  const void *code, int csize, void *debug, int nr_debug_entries,
- 		  void *unwinding, uint64_t unwinding_header_size, uint64_t unwinding_size);
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- /* genelf_debug.c */
- int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_entries);
- #endif
-diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
-index 75b28dcc8317..29a7d0546b82 100644
---- a/tools/perf/util/include/dwarf-regs.h
-+++ b/tools/perf/util/include/dwarf-regs.h
-@@ -6,7 +6,7 @@
- #define DWARF_REG_PC  0xd3af9c /* random number */
- #define DWARF_REG_FB  0xd3affb /* random number */
- 
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- const char *get_arch_regstr(unsigned int n);
- /*
-  * get_dwarf_regstr - Returns ftrace register string from DWARF regnum
-@@ -23,7 +23,7 @@ int get_arch_regnum(const char *name);
-  */
- int get_dwarf_regnum(const char *name, unsigned int machine);
- 
--#else /* HAVE_DWARF_SUPPORT */
-+#else /* HAVE_LIBDW_SUPPORT */
- 
- static inline int get_dwarf_regnum(const char *name __maybe_unused,
- 				   unsigned int machine __maybe_unused)
-@@ -32,7 +32,7 @@ static inline int get_dwarf_regnum(const char *name __maybe_unused,
- }
- #endif
- 
--#if !defined(__powerpc__) || !defined(HAVE_DWARF_SUPPORT)
-+#if !defined(__powerpc__) || !defined(HAVE_LIBDW_SUPPORT)
- static inline void get_powerpc_regs(u32 raw_insn __maybe_unused, int is_source __maybe_unused,
- 		struct annotated_op_loc *op_loc __maybe_unused)
- {
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 698a92875374..1e6628ebd25b 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -342,7 +342,7 @@ static char *find_module_name(const char *module)
- 	return mod_name;
- }
- 
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- 
- static int kernel_get_module_dso(const char *module, struct dso **pdso)
- {
-@@ -1250,7 +1250,7 @@ int show_available_vars(struct perf_probe_event *pevs, int npevs,
- 	return ret;
- }
- 
--#else	/* !HAVE_DWARF_SUPPORT */
-+#else	/* !HAVE_LIBDW_SUPPORT */
- 
- static void debuginfo_cache__exit(void)
- {
-diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-finder.h
-index 5ced3b058fd8..dfcf8cdd9e8d 100644
---- a/tools/perf/util/probe-finder.h
-+++ b/tools/perf/util/probe-finder.h
-@@ -21,7 +21,7 @@ static inline int is_c_varname(const char *name)
- 	return isalpha(name[0]) || name[0] == '_';
- }
- 
--#ifdef HAVE_DWARF_SUPPORT
-+#ifdef HAVE_LIBDW_SUPPORT
- 
- #include "dwarf-aux.h"
- #include "debuginfo.h"
-@@ -102,6 +102,6 @@ struct line_finder {
- 	int			found;
- };
- 
--#endif /* HAVE_DWARF_SUPPORT */
-+#endif /* HAVE_LIBDW_SUPPORT */
- 
- #endif /*_PROBE_FINDER_H */
+ perf-util-y += perf-hooks.o
 -- 
 2.47.0.105.g07ac214952-goog
 
