@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35E113AD06
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 00:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC0A13CA8D
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 00:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729124757; cv=none; b=bgCZ90kVIpTzR4aU74vPp405MlHQcibqXYcDLmaJ8Be5UW2dsdOVYZq1SFRgh/k7Thrumh9wP88G2FaCUw/wReHcpeNyBIIdAM1+/i54RiyetQR3IH9RWMzvUs1qSyO07vaC9/JHzlgebm77T2PO7nRT/AgnO2lc7tMc4rLcdYY=
+	t=1729124759; cv=none; b=awDI20PJt+fcbYEDxR8BxOpSXYRpl0Lh1aRx0ajl+w+FKsLaW9Ef3mZ4UvxWUm4+6WI/1Fzvc/7V9rA9MOrNvYjxVzq3M12Zy9Dg+NS5ABb68uVTpJYZAb1w3fYB6Cnf2BKI6IrzGBs8rfMOOmaEebG58zuGSN3ivSn6/DFy0Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729124757; c=relaxed/simple;
-	bh=yB9luoxNfz1ZB0ZSIvo+9O35nSVN9IWONPN5tQ/jUuA=;
+	s=arc-20240116; t=1729124759; c=relaxed/simple;
+	bh=ewP1pd5x/QdaYYTA7ggjdp8xLh0lFpl3Jzu/cc1pukU=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=hbEk/ZHrGtLhLZOLk1MnvmnnqrPq8jy7vLxa/s/YntT+MtBO/KLEQL1eZwYaiK5KUaiz2w09stVWMLlLV7bhOJF6KY7cW/ZBS7X/gtb0/leqmMsu4TPWYuOPyUWKGCjfragnBiA6bmTRkosZQ2Y4eINtaLaQHOm5cE+1dCMJsHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K9jXfHP1; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=WRmFHftEicXvsFevKP15G0vf/jkjo/06MtVMbfgMY3KL+AyCQyVq6IxqXy1hm0O5d7w1acJOl+/LccnxeddueP/GUD5xL8pUxizsci4DpT8iGJhQWBYk2r2WdWDycCzU2atItaz0xGnbSs3iVOEQThAzZfkzLMbW/4T7z4BQFUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nG5MZP7s; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K9jXfHP1"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e390b164c7so8997667b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 17:25:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nG5MZP7s"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e000d68bb1so17293997b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 17:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729124755; x=1729729555; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729124757; x=1729729557; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qQMh1GkNDXXWwo5/jydOz7DZ+MfVb3HK+m6RjxS97PU=;
-        b=K9jXfHP1iY8/o9jrCqS44Xut4mXRrFfWdo56ol40WuaD9crx62hU6ExM90BaUlxw6Z
-         tUtmVincZMUH8zJACzB8uB0Y58/fwANdqNHIBXSniIBuZlre78nRy8YwyQcBR3V0BGKQ
-         NS1AEegQB/hwGngEkeHDExGkQ+YMJxot0t+Z1o6vUH+Brpw9lQHHgS8blpnmyvgXDa27
-         n+NPdRs4CJeuTnWLnw1+vgXFB2qPCMZnW5nZAHVD6fwdFoHy3Mvr87nQYzc8GX4b/VqD
-         M1WzOs2yywAcHfJsn/a47Zq/Eg3n7eKJ6a0EbvGZKUOj47Py+ViQu+9W+frtt+PtoXUP
-         GMHw==
+        bh=d1gwdO3+1z4qg/OPZ1ChVHm0fXT+3tjeEKhF61J/sGo=;
+        b=nG5MZP7spmkQaGsxglkzeE2BYWq5qVtABBly0B59VlDVWRCyvf3EGjQNuwN085kme5
+         KwgwYZStLuGpY1yZ/TWcxXvvcSnGRidVmR+TKYCu394LvY2bdRCwRR6hfgGYWV699xuD
+         f+tYPm6alTlBZvd7SanqDH84BSM3KuX+5cVDA/D662Pqz4ffjuK9YN/qtEsQRSoRTjri
+         QLX3tQ7EDnmMAaKjROvzzcrBXP+1lZ2vAxXXrP+GQ6uPjf1UUkj/mOfAeqYR3SWX2lZM
+         0+hY6s3CJXzU5YDJUD1WCXvhZd+4c0qsPjlsEI6aLlYweOlmQTCImE97HkwIyE9iWbSQ
+         oRRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729124755; x=1729729555;
+        d=1e100.net; s=20230601; t=1729124757; x=1729729557;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qQMh1GkNDXXWwo5/jydOz7DZ+MfVb3HK+m6RjxS97PU=;
-        b=ibPGok4VBnu6b0+cyDUYXcpKmEFBh5L1dtdD5jUtAD5kWLXvA37svf9Qytso4P8evF
-         BKSx3TjW60PlynFzFGbsQXQdsEts9bU1Ez02udnR8G+04S9MLj5/eFPzQoKZ96g1wY05
-         SABvAPCjYgqDUK8srp91doSPQPT/ErCImek2wKzpJ015R4eSJzInMWG9HKSuOapYs9gt
-         p6fKz9qsnVxQHAKV2Y+IOGMJ6rr+3Dsow9Lvo5/g+VTTGstTn1f2ASjcTgrPv7j/2Hxg
-         fiV9TjWae048YfbYeu0T03TE04sSiTcmbPq00wVm91B3q/+FlJFHWSVrkYbXX27pE/Pr
-         n5HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZvJ5kWh2q3woyvZ1wcDIBH5NbRWbJidcfeuRXcZRvR9l96CpvP/tavnZd4HVA4X6mUYyXjh8tM5rVbkMO7Cz8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqK/VzsIw8BgkrM1lbdzYWGlPqPU6QNfvyhlVZbiTi4d9tLPf6
-	Q82M2EfcH0Kyhbjxc9CiOexfoeZLIF4wexfgLFnY5lTjgw/Jy0RcrgBiT+lBu4lKuJTwFrACuvk
-	UFesjtQ==
-X-Google-Smtp-Source: AGHT+IFbm6vwQJDAC4QPC5+PLfr8ycUWXoPY5PpZT0CV0PYSnLWVe//zo2w300WIdP2MxiCfoWlmNy3scmw0
+        bh=d1gwdO3+1z4qg/OPZ1ChVHm0fXT+3tjeEKhF61J/sGo=;
+        b=so8Tn6MiBQCNni+9gKlbTxghbaH6foxqaVFuPcZYRBqUh7b4dQjSzUiyIqRnV76bNb
+         QCrOZSPMf7PTnViu3Hy86T1ulf5H4UhcpbcgfOvZ+EROql1cqrswNRtxpfDrM/sKJ8sa
+         gk8MFmXYxFwAgg5wornDBme5p91VBYXYDgeGfbn1G9IMw1HBjUhTAOSbxbD14J3GCAZy
+         4VmAaYAauWCitv0ul3B8a5MHR5/C8ipnEqIV+M0/qYxHQa8CjSox4/JUgtxE/H7VYBXn
+         opZURtEK7GvMbPD25Bz+jk814QMi84gTEkdPftRDDavFpPl48ZtmsORa9zQ841o4jmvO
+         kqEg==
+X-Forwarded-Encrypted: i=1; AJvYcCVws8cumR+5tJ0JhwlvDWPc8VNkcmJtGq3CsyTj1UtFhePmmJU0A4XgqfFf0fh8SJR3uKlFYUaPflJWrN8R2Tbc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4lkqaqQ7pYiaeY0lHELQ/WHTkOtvGw/ppn4SDOQ6tbAcfthRc
+	DmrqqvtNjSvw+fm2GzwtTtMgNbvxhyRFpXzJ2OagZpKqAm8+ZydJM7YtwLwTBxX3CdecGFweeKC
+	x2gCMXQ==
+X-Google-Smtp-Source: AGHT+IEOn1sxy9x0RhzE2O4lUwxI35kyyV2nRBroxh4Xt3euuArl/KNycbORbJCMSm8H+wpY0Zuqg0FylbxQ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:a00a:f237:9bc0:79c])
- (user=irogers job=sendgmr) by 2002:a0d:c405:0:b0:6b2:3ecc:817 with SMTP id
- 00721157ae682-6e3d41eb817mr501607b3.8.1729124754732; Wed, 16 Oct 2024
- 17:25:54 -0700 (PDT)
-Date: Wed, 16 Oct 2024 17:25:11 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:2d04:b0:6e2:c1c7:ec27 with SMTP
+ id 00721157ae682-6e5a3d1cb28mr93127b3.1.1729124757072; Wed, 16 Oct 2024
+ 17:25:57 -0700 (PDT)
+Date: Wed, 16 Oct 2024 17:25:12 -0700
 In-Reply-To: <20241017002520.59124-1-irogers@google.com>
-Message-Id: <20241017002520.59124-12-irogers@google.com>
+Message-Id: <20241017002520.59124-13-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241017002520.59124-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.105.g07ac214952-goog
-Subject: [PATCH v3 11/20] perf loongarch: Remove dwarf-regs.c
+Subject: [PATCH v3 12/20] perf mips: Remove dwarf-regs.c
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -90,79 +90,79 @@ Content-Type: text/plain; charset="UTF-8"
 The file just provides the function get_arch_regstr, however, if in
 the only caller get_dwarf_regstr EM_HOST is used for the EM_NONE case
 the function can never be called. So remove as dead code. Tidy up the
-EM_NONE cases for loongarch in dwarf-regs.c.
+EM_NONE cases for mips in dwarf-regs.c.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/loongarch/util/Build        |  1 -
- tools/perf/arch/loongarch/util/dwarf-regs.c | 34 ---------------------
- tools/perf/util/dwarf-regs.c                |  4 +--
- tools/perf/util/include/dwarf-regs.h        |  3 +-
- 4 files changed, 4 insertions(+), 38 deletions(-)
- delete mode 100644 tools/perf/arch/loongarch/util/dwarf-regs.c
+ tools/perf/arch/mips/util/Build        |  1 -
+ tools/perf/arch/mips/util/dwarf-regs.c | 38 --------------------------
+ tools/perf/util/dwarf-regs.c           |  4 +--
+ tools/perf/util/include/dwarf-regs.h   |  2 +-
+ 4 files changed, 3 insertions(+), 42 deletions(-)
+ delete mode 100644 tools/perf/arch/mips/util/dwarf-regs.c
 
-diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
-index 06ff95394921..0aa31986ecb5 100644
---- a/tools/perf/arch/loongarch/util/Build
-+++ b/tools/perf/arch/loongarch/util/Build
-@@ -1,7 +1,6 @@
- perf-util-y += header.o
+diff --git a/tools/perf/arch/mips/util/Build b/tools/perf/arch/mips/util/Build
+index b328109fc16c..691fa2051958 100644
+--- a/tools/perf/arch/mips/util/Build
++++ b/tools/perf/arch/mips/util/Build
+@@ -1,3 +1,2 @@
  perf-util-y += perf_regs.o
- 
--perf-util-$(CONFIG_LIBDW)     += dwarf-regs.o
+-perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
  perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
- perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
- perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
-diff --git a/tools/perf/arch/loongarch/util/dwarf-regs.c b/tools/perf/arch/loongarch/util/dwarf-regs.c
+diff --git a/tools/perf/arch/mips/util/dwarf-regs.c b/tools/perf/arch/mips/util/dwarf-regs.c
 deleted file mode 100644
-index bee08fdcf2fd..000000000000
---- a/tools/perf/arch/loongarch/util/dwarf-regs.c
+index 25c13a91c2a7..000000000000
+--- a/tools/perf/arch/mips/util/dwarf-regs.c
 +++ /dev/null
-@@ -1,34 +0,0 @@
+@@ -1,38 +0,0 @@
 -// SPDX-License-Identifier: GPL-2.0
 -/*
 - * dwarf-regs.c : Mapping of DWARF debug register numbers into register names.
 - *
-- * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+- * Copyright (C) 2013 Cavium, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
 - */
 -
 -#include <stdio.h>
--#include <errno.h> /* for EINVAL */
--#include <string.h> /* for strcmp */
 -#include <dwarf-regs.h>
 -
--struct pt_regs_dwarfnum {
--	const char *name;
--	unsigned int dwarfnum;
--};
--
--static struct pt_regs_dwarfnum loongarch_gpr_table[] = {
--	{"%r0", 0}, {"%r1", 1}, {"%r2", 2}, {"%r3", 3},
--	{"%r4", 4}, {"%r5", 5}, {"%r6", 6}, {"%r7", 7},
--	{"%r8", 8}, {"%r9", 9}, {"%r10", 10}, {"%r11", 11},
--	{"%r12", 12}, {"%r13", 13}, {"%r14", 14}, {"%r15", 15},
--	{"%r16", 16}, {"%r17", 17}, {"%r18", 18}, {"%r19", 19},
--	{"%r20", 20}, {"%r21", 21}, {"%r22", 22}, {"%r23", 23},
--	{"%r24", 24}, {"%r25", 25}, {"%r26", 26}, {"%r27", 27},
--	{"%r28", 28}, {"%r29", 29}, {"%r30", 30}, {"%r31", 31},
--	{NULL, 0}
+-static const char *mips_gpr_names[32] = {
+-	"$0", "$1", "$2", "$3", "$4", "$5", "$6", "$7", "$8", "$9",
+-	"$10", "$11", "$12", "$13", "$14", "$15", "$16", "$17", "$18", "$19",
+-	"$20", "$21", "$22", "$23", "$24", "$25", "$26", "$27", "$28", "$29",
+-	"$30", "$31"
 -};
 -
 -const char *get_arch_regstr(unsigned int n)
 -{
--	n %= 32;
--	return loongarch_gpr_table[n].name;
+-	if (n < 32)
+-		return mips_gpr_names[n];
+-	if (n == 64)
+-		return "hi";
+-	if (n == 65)
+-		return "lo";
+-	return NULL;
 -}
 diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
-index 9a76f83af62c..efc41d0fbee9 100644
+index efc41d0fbee9..d536964df43c 100644
 --- a/tools/perf/util/dwarf-regs.c
 +++ b/tools/perf/util/dwarf-regs.c
 @@ -32,7 +32,7 @@
  const char *get_dwarf_regstr(unsigned int n, unsigned int machine, unsigned int flags)
  {
  #if EM_HOST == EM_X86_64 || EM_HOST == EM_386 || EM_HOST == EM_AARCH64 || EM_HOST == EM_ARM \
--    || EM_HOST == EM_CSKY
-+    || EM_HOST == EM_CSKY || EM_HOST == EM_LOONGARCH
+-    || EM_HOST == EM_CSKY || EM_HOST == EM_LOONGARCH
++    || EM_HOST == EM_CSKY || EM_HOST == EM_LOONGARCH || EM_HOST == EM_MIPS
  	if (machine == EM_NONE) {
  		/* Generic arch - use host arch */
  		machine = EM_HOST;
@@ -170,22 +170,21 @@ index 9a76f83af62c..efc41d0fbee9 100644
  #endif
  	switch (machine) {
  #if EM_HOST != EM_X86_64 && EM_HOST != EM_386 && EM_HOST != EM_AARCH64 && EM_HOST != EM_ARM \
--    && EM_HOST != EM_CSKY
-+    && EM_HOST != EM_CSKY && EM_HOST != EM_LOONGARCH
+-    && EM_HOST != EM_CSKY && EM_HOST != EM_LOONGARCH
++    && EM_HOST != EM_CSKY && EM_HOST != EM_LOONGARCH && EM_HOST != EM_MIPS
  	case EM_NONE:	/* Generic arch - use host arch */
  		return get_arch_regstr(n);
  #endif
 diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
-index b72d9d308ce4..4f205a58db89 100644
+index 4f205a58db89..1f771b635789 100644
 --- a/tools/perf/util/include/dwarf-regs.h
 +++ b/tools/perf/util/include/dwarf-regs.h
-@@ -79,7 +79,8 @@
- #define DWARF_REG_FB  0xd3affb /* random number */
+@@ -80,7 +80,7 @@
  
  #ifdef HAVE_LIBDW_SUPPORT
--#if !defined(__x86_64__) && !defined(__i386__) && !defined(__aarch64__) && !defined(__arm__)
-+#if !defined(__x86_64__) && !defined(__i386__) && !defined(__aarch64__) && !defined(__arm__) \
-+    && !defined(__loongarch__)
+ #if !defined(__x86_64__) && !defined(__i386__) && !defined(__aarch64__) && !defined(__arm__) \
+-    && !defined(__loongarch__)
++    && !defined(__loongarch__) && !defined(__mips__)
  const char *get_arch_regstr(unsigned int n);
  #endif
  
