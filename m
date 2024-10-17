@@ -1,45 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA871C1ADA;
-	Thu, 17 Oct 2024 22:20:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF551D7999
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 22:26:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729203652; cv=none; b=jSjwvdIKwZkfiGU7Stlt6z0/h+mzuRLTul1tgHyCbnzagZfnUiGWmIiPtDOSuCQ0rQS+SBFfCYZ2X94zGSWSzUk01P33qMElCL7xkMgbBYx7YMGOoY5xzWJOk4EmdRsfpybJTv3o4DDUeYi5S5Sfv4VgscnrLNRvnWfn85F/pb4=
+	t=1729204008; cv=none; b=PpCy798cnLD+cLP98gxqOnGy+3YOmIDKaZlofryqj+iOZbjkJtDRfyYbOLdgLd4r5S7FUAT8xFb6pZviXaaI32okKSGYGH0o4pj4JDHj1evnJGYDwSUPyl2DkMjlWNnCh192UgvDHmpAc2TyEoP2WwD0C3Ye/KhXgGyT9L3BE0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729203652; c=relaxed/simple;
-	bh=UZFQlI8ALtTjuxp1+9vlyb/9Sn3LWMwZCxzz5dUuJmU=;
+	s=arc-20240116; t=1729204008; c=relaxed/simple;
+	bh=pkiwBijR7TpuinWp7aOA8igGuhlYLhkL0iClX2b6/sU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=koga1Kc7lVKkZ3CPmPRFRT2f7wQa/x3wRQjJ91sj1sf1J0DZe1jjzpeuI4aEDzfOjp8JRMwm68zoKS7dD+cP1w3EnAFgEIRJmb4FCLoN8OXF5PZ2WY2ZmECXvlDoGLXAh/ucHG8IUWY87Vnq6/3CEDQK8Gwpa/3PDh/LepZ02Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSjWbuON; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=PKwQTZKR6jqbjPP1BBIlaTZRKn10WsELWtTUaVB95wL7jwOghs5igS7oRFGDOfc2z6RrZZaTyKJsM8M90Z0PW3gAy7FMmwoNHFsHmyJPfj09MzwX2/f8iVYAmu4SKMIbLtFpo02WxzSx6nBsRnGy1tmZqByQH9vZmT5HprmGxq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uBqmXAk3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSjWbuON"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A128C4CEC3;
-	Thu, 17 Oct 2024 22:20:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uBqmXAk3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE945C4CEC7;
+	Thu, 17 Oct 2024 22:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729203651;
-	bh=UZFQlI8ALtTjuxp1+9vlyb/9Sn3LWMwZCxzz5dUuJmU=;
+	s=k20201202; t=1729204007;
+	bh=pkiwBijR7TpuinWp7aOA8igGuhlYLhkL0iClX2b6/sU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QSjWbuONw9XjQ2z/6dtwTZVOqSRIbR9FH7gQYBWXXl/y/z6OoLBoNOiNRVmrvWOIQ
-	 mFgqc6QGaF77bBg8NaVYmPfvFtIBhgOFh+To7a0YQ7hY+6fhjoureyWQqndTJexRg3
-	 AwkHqDJ4pgotr+Id+jCPkG731W5Hza/yOh5dyPIo5V0ab9/Wlz32XuzJVb0KiVmrSb
-	 1KhwhVL+Otart7XW2VRELn1pX1rCrI5Zzp7ePknlObhkeMtiI28ucRTxUAQS6p2NF6
-	 r7duqbt+w+SEzbidbAnY5FuJLJdI3EDG2KJC7A7ExYnsDoMw9P9gyDSxdDUoF1qWgG
-	 hshIzaqS6cp1w==
-Date: Thu, 17 Oct 2024 15:20:49 -0700
+	b=uBqmXAk3hFI6SeZk9RDZWpgljKTFZ/Nz+6WjaQcIVIzeJFL8zZmUds8JaQBEvPD9A
+	 g9e4PgGiERn6nSRzt5MnJnzOzSK2BIznOrx1tr8XQnEFWxJB8qLCpc/aXgHP3+9XsO
+	 h+TbNyLwtAAzNBljRe9BYK0lQqWSWwYCgcrUqF5T59wcmhvcbDwuyHUV4kPhKSE/lq
+	 i5XrVFKO2seErNBFyTVRGT76M5Iwsq4rhWw1r2J1Z7cr37bkygnl6fZR/jk5prnXvG
+	 HM3Hrs3z7fw3Olv0mli3Y5lnx81VPHeuC5SygM8EZ3tGjKep2XtjTI98m5ho/wGEck
+	 nTB0PikKc4UtQ==
+Date: Thu, 17 Oct 2024 15:26:46 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Li Huafei <lihuafei1@huawei.com>
-Cc: atrajeev@linux.vnet.ibm.com, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, kjain@linux.ibm.com, sesse@google.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf disasm: Fix not cleaning up disasm_line in
- symbol__disassemble_raw()
-Message-ID: <ZxGNwWjlflH1azE7@google.com>
-References: <20241014114248.212711-1-lihuafei1@huawei.com>
- <20241014114248.212711-3-lihuafei1@huawei.com>
+To: Fengkai Sun <qcloud1014@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: Toggle perf stat on/off periodically and keep each sample
+Message-ID: <ZxGPJpbElYMQhQDX@google.com>
+References: <CAF6YOcNRt1=Dgw85QtVgwOY1QYTOd9E=V4Vr9xY2cjZp5n+bgw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,68 +41,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241014114248.212711-3-lihuafei1@huawei.com>
+In-Reply-To: <CAF6YOcNRt1=Dgw85QtVgwOY1QYTOd9E=V4Vr9xY2cjZp5n+bgw@mail.gmail.com>
 
-On Mon, Oct 14, 2024 at 07:42:48PM +0800, Li Huafei wrote:
-> In symbol__disassemble_raw(), the created disasm_line should be
-> discarded before returning an error.
+Hello,
 
-But other error paths don't need to free the disasm_line because they
-failed before creating one.  I think the simpler fix is to break the
-loop when it fails on disasm_line__new().
+On Wed, Oct 16, 2024 at 09:28:33AM +0800, Fengkai Sun wrote:
+> Hi all,
+> 
+> I've been using control fd and delay=-1 to toggle perf stat on until a
+> certain point of the program, and it works like a charm.
+> 
+> Now, I want to do this periodically and keep all the results.
+> Specifically, I have a performance-critical network program that reads
+> the packets in batches and processes them, and I want to record the
+> hardware counters on each batch, for future comparison.
+> 
+> Intuitively, this requires two functionalities I have no idea how to achieve:
+> 
+> 1. The ability to zero out all recorded counters when the current
+> sample is finished and
+> 2. The ability to keep individual samples, instead of outputting a
+> single overall result when the process finishes.
+> 
+> I'm wondering if this can be achieved under current version of perf,
+> and if such recording makes sense (e.g., does not incur too much
+> overhead). Thank you!
+
+I think you are looking for something like interval mode like -I 1000.
+
+  $ sudo perf stat -a -I 1000 -e cycles,instructions sleep 5
+  #           time             counts unit events
+       1.001064439        644,313,943      cycles                                                                
+       1.001064439        548,175,426      instructions                     #    0.85  insn per cycle            
+       2.002682133        570,454,723      cycles                                                                
+       2.002682133        426,891,566      instructions                     #    0.75  insn per cycle            
+       3.004412672        565,162,161      cycles                                                                
+       3.004412672        351,875,655      instructions                     #    0.62  insn per cycle            
+       4.006131920        463,748,461      cycles                                                                
+       4.006131920        239,702,866      instructions                     #    0.52  insn per cycle            
+       5.001878221        466,409,911      cycles                                                                
+       5.001878221        235,684,130      instructions                     #    0.51  insn per cycle
+
+Of course it doesn't turn the events on and off.  But is it something
+similar to what you want?
 
 Thanks,
 Namhyung
 
-> 
-> Fixes: 0b971e6bf1c3 ("perf annotate: Add support to capture and parse raw instruction in powerpc using dso__data_read_offset utility")
-> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
-> ---
->  tools/perf/util/disasm.c | 26 ++++++++++++--------------
->  1 file changed, 12 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index 40d99f4d5cc7..4e5becd5eca6 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -1774,25 +1774,23 @@ static int symbol__disassemble_raw(char *filename, struct symbol *sym,
->  		offset += 4;
->  	}
->  
-> -	/* It failed in the middle */
-> -	if (offset != len) {
-> -		struct list_head *list = &notes->src->source;
-> -
-> -		/* Discard all lines and fallback to objdump */
-> -		while (!list_empty(list)) {
-> -			dl = list_first_entry(list, struct disasm_line, al.node);
-> -
-> -			list_del_init(&dl->al.node);
-> -			disasm_line__free(dl);
-> -		}
-> -		count = -1;
-> -	}
-> -
->  out:
->  	free(buf);
->  	return count < 0 ? count : 0;
->  
->  err:
-> +	if (!list_empty(&notes->src->source)) {
-> +		struct disasm_line *tmp;
-> +
-> +		/*
-> +		 * It probably failed in the middle of the above loop.
-> +		 * Release any resources it might add.
-> +		 */
-> +		list_for_each_entry_safe(dl, tmp, &notes->src->source, al.node) {
-> +			list_del(&dl->al.node);
-> +			disasm_line__free(dl);
-> +		}
-> +	}
->  	count = -1;
->  	goto out;
->  }
-> -- 
-> 2.25.1
-> 
