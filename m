@@ -1,194 +1,120 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56ACF1E0085;
-	Thu, 17 Oct 2024 17:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAE01DED44;
+	Thu, 17 Oct 2024 18:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729187722; cv=none; b=gxeAGk4nx3tYn0oF11jwcj1g2Mf1MGi+TOhUaBdCNKtiqoXsqkKfImHt0m12zxteHdi1IalngFs8p3ppr6y831/zbYUAnFzg0Hpxh33kx8lzt7F/5ywQwtrpIhJguLxH6VEELheo3fwDcbAFXcxTDycjvoCDmPUY8INRxOhz5kY=
+	t=1729189220; cv=none; b=BXReezfh+LPHWq6tpzhrFdajWAdI6pfd7+KG6ukwlKFbZ6MI2255f7t5lHG8iQcPqKUURlSwCqzorfBs40knkVSgV2AwcJy5Cjf9Kb8kfXLoAQtwlhMI2tsBD/sUk/yTMmXWvDRG0CK1s0IhHd1lpQCpmqIQ0ffbCf0vsMqBZGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729187722; c=relaxed/simple;
-	bh=Y9N3ZQVWfcsH53gJXLZS/tZseBaeZ4sCkFXOQ74XfjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Jpmq3D0tG6G1ScvkQPuQw6YNQA5x4EVyd2h00STllOc55mFFvHu7uMJz/hF9o9rYApNz+tHfwsdkjTHRj3LoDykGO+y3kry/w9NS9YZ1ynZa9bpSMXhkChLZAEEBD/3q03Q2ZmkpC/5IaE35iJUbJSWI1j0S5V2UbNF059cxBEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RLf9rHuK; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1729189220; c=relaxed/simple;
+	bh=ivkBgESkuHQeUA+hxdWGTQLdKw0exukVJcksX9LbMxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MdvUidEA6eZR1tFDwDjmrPjXUVXf370fKw4QGeQBydHtsBqFz/NyIZKMc4LEkJSs/M/3XeungL4WNdNJglT0Iac84C36MJTExfhj24zuDfnA8+L3NRDeS5Y/GPCHjXLgDgFtWuqIoLl5SMfiogeqOHEs22UEIxUiCMDdG1viFOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovBq+K/H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RLf9rHuK"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49HHshVm016053;
-	Thu, 17 Oct 2024 17:54:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=vAtZ9j
-	Wrijh6PsUWgaMk2LuM+jVG7BmLBCS0J4uEBYE=; b=RLf9rHuKFy6KSn54+ngTT0
-	RkvzVYSdo3j7ybBeUYSS6bDTgm0dA+GkG0d63TEyI7GGyGTepQqeuWf4XYSbqTPY
-	mJ45oE+PUGb6Cvixt9uSGZuoDwQbGF4JpNMRnGyhZaGJyFWuendoCuuUFPPrQ9IC
-	kLKRel/CpJD4VJqxqyUfMsqw+FD3nayXzEgl7mtbGE+zns4REd5FW0hXrGGoQcTY
-	TFn7nCuJVz9bJ97fh6BU4GBwPXTeIDFxQoDXbH6Rz4gnW3c1j2kixM/CMGN4noSK
-	k1cVyRxP7kK6CxKThsuGjNvEeA+I07utmyst3A/VxRFOlxdF2SHdQ+01XmNjBiHA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42ar0u4g3y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Oct 2024 17:54:43 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49HHsgpf015961;
-	Thu, 17 Oct 2024 17:54:42 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42ar0u4g3f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Oct 2024 17:54:42 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49HH6HfW006338;
-	Thu, 17 Oct 2024 17:54:37 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4286517xdm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Oct 2024 17:54:37 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49HHsXPP21168894
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Oct 2024 17:54:33 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7C8302004B;
-	Thu, 17 Oct 2024 17:54:33 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A7ADA20040;
-	Thu, 17 Oct 2024 17:54:32 +0000 (GMT)
-Received: from osiris (unknown [9.171.18.6])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 17 Oct 2024 17:54:32 +0000 (GMT)
-Date: Thu, 17 Oct 2024 19:54:31 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>,
-        David Hildenbrand <david@redhat.com>, g@linux.dev,
-        Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, martin.lau@kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, rppt@kernel.org, yosryahmed@google.com,
-        Yi Lai <yi1.lai@intel.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: Re: [PATCH v2 bpf] lib/buildid: handle memfd_secret() files in
- build_id_parse()
-Message-ID: <20241017175431.6183-A-hca@linux.ibm.com>
-References: <20241016221629.1043883-1-andrii@kernel.org>
- <a1501f7a-80b3-4623-ab7b-5f5e0c3f7008@redhat.com>
- <oeoujpsqousyabzgnnavwoinq6lrojbdejvblxdwtav7o5wamw@6dyfuoc7725j>
- <CAEf4BzZzctRsxQ7n42AJrm8XTyxhN+-ceE7Oz5jokz4ALqDekQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzZzctRsxQ7n42AJrm8XTyxhN+-ceE7Oz5jokz4ALqDekQ@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: XtvCaoikFufyZS_nrstXfQ9G85UdXSuv
-X-Proofpoint-ORIG-GUID: YFRQ8Yv4j6zSyAnh_V8Ly3weTxOz-J0e
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovBq+K/H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89230C4CECD;
+	Thu, 17 Oct 2024 18:20:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729189220;
+	bh=ivkBgESkuHQeUA+hxdWGTQLdKw0exukVJcksX9LbMxY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ovBq+K/H7+b8B/o7XLNJQRdTJ2nu0ua/et6QA9Md3FGAoQhaYijMmhpJtLAwAUITB
+	 ZvDjvgyf9I+KLJdc3Nu2FxQL9ATakg541vOUOKvUtpgfHJ/LAOkLM3f4aayQwMsiyh
+	 Muw24OtqMe1xkwvKpi58IBzVQmrutKBuDOK3xnJBRffkBNmFd1KjzJOzALdmItxz6X
+	 rfrDEDFuxnrgAqoh5PXA2EJGnxbYUVqcKnAMReVi1uw3YKcve6HHcVF2EH/h7Xgus8
+	 EWU5MCYER8q/42OX1QhVBfMCmsnH1FBVGzB6a+QU4G9ibZ6OpeM+j+8UNZjj0q/oiE
+	 aXav1LWXIQEAA==
+Date: Thu, 17 Oct 2024 11:20:18 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Tim Chen <tim.c.chen@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Sumanth Korikkar <sumanthk@linux.ibm.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/7] CSV/JSON metric thresholds, fix printf modifiers
+Message-ID: <ZxFVYvDTtmz_JbMU@google.com>
+References: <20241017175356.783793-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- spamscore=0 bulkscore=0 adultscore=0 mlxlogscore=999 phishscore=0
- suspectscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410170121
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241017175356.783793-1-irogers@google.com>
 
-On Thu, Oct 17, 2024 at 10:35:27AM -0700, Andrii Nakryiko wrote:
-> On Thu, Oct 17, 2024 at 9:35 AM Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> > On Thu, Oct 17, 2024 at 11:18:34AM GMT, David Hildenbrand wrote:
-> > > As replied elsewhere, can't we take a look at the mapping?
-> > >
-> > > We do the same thing in gup_fast_folio_allowed() where we check
-> > > secretmem_mapping().
-> >
-> > Responded on the v1 but I think we can go with v1 of this work as
-> > whoever will be working on unmapping folios from direct map will need to
-> > fix gup_fast_folio_allowed(), they can fix this code as well. Also it
-> > seems like some arch don't have kernel_page_present() and builds are
-> > failing.
-> >
+Hi Ian,
+
+On Thu, Oct 17, 2024 at 10:53:49AM -0700, Ian Rogers wrote:
+> Metric thresholds are being computed for CSV and JSON output but not
+> displayed. Rename the color that encodes the threshold as enum values
+> and use to generate string constants for a json dictionary
+> value. Disable metric thresholds with CSV output.
 > 
-> Yeah, we are lucky that BPF CI tested s390x and caught this issue.
+> Add printf attribute to functions in color.h that could support
+> it. Fix bad printf format strings that this detected.
+
+Thanks for the quick fix, I'll take this.
+
 > 
-> > Andrii, let's move forward with the v1 patch.
+> v5. Switch some u64 printf flags to PRIx64 rather than llx (kernel
+>     convention) to resolve 32-bit build issues.
+> v4. Drop CSV metric thresholds due to formatting variation on
+>     hypervisors (broken counters) and not as detected by
+>     tests/shell/stat+csv_output.sh.
+
+I'm ok with dropping CSV support for now, but could you explain
+a bit more detail about the problem?  Is it possible to see the
+same problem on host if it has a unsupported event?
+
+Thanks,
+Namhyung
+
+
+> v3. Rebase.
+> v2. Don't display metric-value for json output if there is no unit.
 > 
-> Let me post v3 based on v1 (checking for secretmem_mapping()), but
-> I'll change return code to -EFAULT, so in the future this can be
-> rolled into generic error handling code path with no change in error
-> code.
-
-Ok, I've seen that you don't need kernel_page_present() anymore, just
-after I implemented it for s390. I guess I'll send the patch below
-(with a different commit message) upstream anyway, just in case
-somebody else comes up with a similar use case.
-
-From b625edc35de64293b728b030c62f7aaa65c8627e Mon Sep 17 00:00:00 2001
-From: Heiko Carstens <hca@linux.ibm.com>
-Date: Thu, 17 Oct 2024 19:41:07 +0200
-Subject: [PATCH] s390/pageattr: Implement missing kernel_page_present()
-
-kernel_page_present() was intentionally not implemented when adding
-ARCH_HAS_SET_DIRECT_MAP support, since it was only used for suspend/resume
-which is not supported anymore on s390.
-
-However a new bpf use case now leads to a compile error specific to
-s390. Implement kernel_page_present() to fix this.
-
-Reported-by: Daniel Borkmann <daniel@iogearbox.net>
-Closes: https://lore.kernel.org/all/045de961-ac69-40cc-b141-ab70ec9377ec@iogearbox.net
-Fixes: 0490d6d7ba0a ("s390/mm: enable ARCH_HAS_SET_DIRECT_MAP")
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
----
- arch/s390/include/asm/set_memory.h |  1 +
- arch/s390/mm/pageattr.c            | 15 +++++++++++++++
- 2 files changed, 16 insertions(+)
-
-diff --git a/arch/s390/include/asm/set_memory.h b/arch/s390/include/asm/set_memory.h
-index 06fbabe2f66c..cb4cc0f59012 100644
---- a/arch/s390/include/asm/set_memory.h
-+++ b/arch/s390/include/asm/set_memory.h
-@@ -62,5 +62,6 @@ __SET_MEMORY_FUNC(set_memory_4k, SET_MEMORY_4K)
- 
- int set_direct_map_invalid_noflush(struct page *page);
- int set_direct_map_default_noflush(struct page *page);
-+bool kernel_page_present(struct page *page);
- 
- #endif
-diff --git a/arch/s390/mm/pageattr.c b/arch/s390/mm/pageattr.c
-index 5f805ad42d4c..aec9eb16b6f7 100644
---- a/arch/s390/mm/pageattr.c
-+++ b/arch/s390/mm/pageattr.c
-@@ -406,6 +406,21 @@ int set_direct_map_default_noflush(struct page *page)
- 	return __set_memory((unsigned long)page_to_virt(page), 1, SET_MEMORY_DEF);
- }
- 
-+bool kernel_page_present(struct page *page)
-+{
-+	unsigned long addr;
-+	unsigned int cc;
-+
-+	addr = (unsigned long)page_address(page);
-+	asm volatile(
-+		"	lra	%[addr],0(%[addr])\n"
-+		"	ipm	%[cc]\n"
-+		: [cc] "=d" (cc), [addr] "+a" (addr)
-+		:
-+		: "cc");
-+	return (cc >> 28) == 0;
-+}
-+
- #if defined(CONFIG_DEBUG_PAGEALLOC) || defined(CONFIG_KFENCE)
- 
- static void ipte_range(pte_t *pte, unsigned long address, int nr)
--- 
-2.45.2
-
+> Ian Rogers (7):
+>   perf color: Add printf format checking and resolve issues
+>   perf stat: Fix/add parameter names for print_metric
+>   perf stat: Display "none" for NaN with metric only json
+>   perf stat: Drop metric-unit if unit is NULL
+>   perf stat: Change color to threshold in print_metric
+>   perf stat: Add metric-threshold to json output
+>   perf stat: Disable metric thresholds for CSV and JSON metric-only mode
+> 
+>  tools/perf/arch/x86/util/iostat.c             |   2 +-
+>  tools/perf/builtin-sched.c                    |   2 +-
+>  tools/perf/builtin-script.c                   |   6 +-
+>  tools/perf/builtin-stat.c                     |   8 ++
+>  tools/perf/builtin-trace.c                    |   2 +-
+>  .../tests/shell/lib/perf_json_output_lint.py  |   5 +-
+>  tools/perf/util/arm-spe.c                     |   2 +-
+>  tools/perf/util/color.h                       |   9 +-
+>  tools/perf/util/intel-bts.c                   |   2 +-
+>  tools/perf/util/intel-pt.c                    |   2 +-
+>  tools/perf/util/s390-cpumsf.c                 |   2 +-
+>  tools/perf/util/s390-sample-raw.c             |   8 +-
+>  tools/perf/util/stat-display.c                |  73 +++++++---
+>  tools/perf/util/stat-shadow.c                 | 128 ++++++++++--------
+>  tools/perf/util/stat.h                        |  16 ++-
+>  15 files changed, 170 insertions(+), 97 deletions(-)
+> 
+> -- 
+> 2.47.0.105.g07ac214952-goog
+> 
