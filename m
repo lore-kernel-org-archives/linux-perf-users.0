@@ -1,123 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5AA1D0411;
-	Thu, 17 Oct 2024 20:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2851137C35;
+	Thu, 17 Oct 2024 21:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729196913; cv=none; b=bTrcZKJHi+ankczkINqXvrhGdWSpqe9vAp7e2B+nLvAmXoxiSebAenjAWryt8naGMU+JHaQcT7yYRgi/AoHkV0ncFc6ilncExxj5q4Is5dVd7ISO6k+aLAv4a932kb4Ea6/RY3ZerG1wsmb3egS4f9qiZmfwchIliAHYreLOo3Q=
+	t=1729200095; cv=none; b=H5Mpegcjd9mh3Gh3ZsX3gh+VozgTzdpmeYmEjh7dx/w78DVvqb9Rhq5lQTnT2e3lXWE982SE2znV8SahxMgN3Mm7IQcok6yaC0mAw5W/hmvkFabxDsLe268WmJ+T57CSJgAehM965qbH4EWnqPvufWjQHyw/Aw2Bgg37jLCBifI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729196913; c=relaxed/simple;
-	bh=tJ4rJNhg/4ydmSmPq8aVI54R0C/xVla61sQugEFmtoA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QtwOGNaVXy4lxHgeKyoIeuLglDuj6Gdw3SQ+Ee4tsCYZJoiEMv7cSP7YRfpsZUvTIrNR18DnG50oMors1TiHqLQy3U8fjKmnk3X9FxY6d4HIbrRQFn5REOc6WHeAPQYDCvX5y/eDeiVFI+GLG9FGmKJVokqZj2JCKuV2SKz5zXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=teTVgDz3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729200095; c=relaxed/simple;
+	bh=JupxIBqBY2YQ9bKRrQhPGDGE/PRgKivFsQK1f5mq40c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z1+/KIwrBLWaPtl8U3MSlxBUAwAkihNq4f6feTkiS1L8jrKYYEnmmwkH4LShaMbA+U0jbvhtOy6vlH4HZxZU/SsUENFptZa9enbMrvJt34Ur01HRIYt3mF7sjA6E2lbyrk1KQfhHsFLXFQEmJXi0hJvl+DUPZPXe/8oRxit1VJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XkSmooE9; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teTVgDz3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6DE1C4CEC3;
-	Thu, 17 Oct 2024 20:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729196913;
-	bh=tJ4rJNhg/4ydmSmPq8aVI54R0C/xVla61sQugEFmtoA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=teTVgDz3jXSmApFXLpt30oa+aQ36jXc3V+LL3s8IUn/IQbO94jElZS3gN6TsseiD9
-	 rcp3Vfm25JCfP4IutO6KyMKWyR/vFAYZqMeMkISwg6Xcy6UOYrmBWelBhkuiutKnGl
-	 jKtfr53hyk/szWOUqnRtnjn5is4C0HvZDtbjmI7Y81TM5HmBEyiB69v52m87a+rEA2
-	 F6yV3JgKiUl5bBclwpFvA5fueMcSx5d8MMC2qZ2icdRFb3ZMXLv7Cvnv934NODgzYR
-	 WIdmHWsVxCR1mF6F9ppRdQuZU9VoFzIUFco5FS0LMeVSBO/uxsASAjyBXjjo/+AflY
-	 zcUlASFf59X1w==
-Date: Thu, 17 Oct 2024 13:28:31 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
-	sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH] perf test: Fix perf test case 84 on s390
-Message-ID: <ZxFzb7LEu9n9piVG@google.com>
-References: <20241015074726.268029-1-tmricht@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkSmooE9"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a9a1b8d45fcso21586266b.2;
+        Thu, 17 Oct 2024 14:21:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729200092; x=1729804892; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JupxIBqBY2YQ9bKRrQhPGDGE/PRgKivFsQK1f5mq40c=;
+        b=XkSmooE9gswlGVHN+t2Jjzk4oJLbyd5twRILZ8uchvdRSIcWhd1J6peo6q4B7wnfVo
+         6QwnXLtD9TgI38fdkk6n5dp5XhbZsoHtqSeS50fwi7mf+hj11McaAXoRRrrvuTJhQfAr
+         qkXXyrfgrhltzsPeqYb+T1csK9OQ2Hii/BNgqjO4Wq52O2g7SsVFwNZ42KN1uE7UOfYW
+         SRMFd+V8oKnK0ioVCOU4byUbcVgrYODay1VB1YrOgyjDTqLL4coW59hFf6vxF7EEGl7f
+         Ap1IiY3aoPRvdQl+HjskN0DfVbONIMsiKgqkVEYZgWMu+AZU4w4KIDlulV09Wk2p6w9J
+         N5PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729200092; x=1729804892;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JupxIBqBY2YQ9bKRrQhPGDGE/PRgKivFsQK1f5mq40c=;
+        b=Sfoal4U4VBw/OefhyCpLkQk6AO5652eKQOj4GGlb4P/Dkitprb9BC/LHBTa0b1p6E5
+         p37ud/GVqRZSTCpY0zDrbmKXJOS2lLdFtCrmP70YIciZHPp6EgUpI8OzxjX+kWVrF3SE
+         ZMb2It1Hh1noa/S5mpGSvqp7OYaY3iowyow1id2HaS/gum8siM9Xp/6UZpAtrZGRNrMx
+         /o0ecXpa836vTKVwjjW3PomW/JKkKLmruegoADzx4ahcXTITaMOYL60L8h8fs5FaQGjD
+         3h2GRyjggxGIEnLnzf4IJIGUSmDCr2Sg6CZU89N/A8NNgtFwWEIvRxrZN6gp75uzqiip
+         ICFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEyKSc/4pI59hvBT21k0TkbS4sUKkK4f9Ji1OARc6Ju0Hl1UL8MM55hn26u+In6nBOXEJO9ovX/KNNyUY=@vger.kernel.org, AJvYcCXgj6yYV87zJCKPxGK1mRXKs9cjIRH8eFE/wtD5WwD6D8VtsT4vYLvY9UspmLXJDr+txAQ5e2ItD+n8gp+7eMgAGA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY2MjAXxCt2XIkcj3ZlQiQRyy+JupLz/QGaI6H7GLh6a2chO8Q
+	I2IwTr3/oboRrEpDZhp8glXpaESY3o49OzBW9gKdfxqWk0RmPnT3Ge2o5j2/tg5+SuCYbq9G6GA
+	XcM+n3XvXRglKtyw4Cy1lh0ca1fU=
+X-Google-Smtp-Source: AGHT+IF+X1XELYaL+l8kT/yLBTPU69odgsfaUlCxjuqU7BiE+GqNEumtBo9+e2ONAaz38If3Qf76SpdWSiwpEta63Vs=
+X-Received: by 2002:a05:6402:4402:b0:5c9:2a46:b45c with SMTP id
+ 4fb4d7f45d1cf-5ca0ac512famr49694a12.3.1729200092043; Thu, 17 Oct 2024
+ 14:21:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241015074726.268029-1-tmricht@linux.ibm.com>
+References: <CAJg=8jzsPbjKkKmZudMvFJDnmBHhRrZqPLACs4NibLNdga02MQ@mail.gmail.com>
+ <874j9wkf5j.fsf@linux.intel.com> <CAJg=8jynwj2SkEBYRM_XKs=zYh_wg5RKxMDTCOQxs5WRthRQfg@mail.gmail.com>
+In-Reply-To: <CAJg=8jynwj2SkEBYRM_XKs=zYh_wg5RKxMDTCOQxs5WRthRQfg@mail.gmail.com>
+From: Marius Fleischer <fleischermarius@gmail.com>
+Date: Thu, 17 Oct 2024 14:21:20 -0700
+Message-ID: <CAJg=8jwkdSu=a+_1v-O0GqS2oYQYExwsC+uF3BFxTfUynv2t7w@mail.gmail.com>
+Subject: Re: WARNING in __perf_event_overflow
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller@googlegroups.com, 
+	harrisonmichaelgreen@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Hi,
 
-On Tue, Oct 15, 2024 at 09:47:26AM +0200, Thomas Richter wrote:
-> Perf test case 84 'perf pipe recording and injection test'
-> sometime fails on s390, especially on z/VM virtual machines.
-> 
-> This is caused by a very short run time of workload
-> 
->   # perf test -w noploop
-> 
-> which runs for 1 second. Occasionally this is not long
-> enough and the perf report has no samples for symbol noploop.
-> 
-> Fix this and enlarge the runtime for the perf work load
-> to 3 seconds. This ensures the symbol noploop is always
-> present.
+Hope you are doing well!
 
-Hmm.. but it would slow down the test quite a lot.  Can you please make
-it conditional on s390 or something?
+Quick update from our side: The reproducers from the previous email
+still trigger on v5.15.167 (commit hash
+3a5928702e7120f83f703fd566082bfb59f1a57e) as well as v6.12-rc3
+(commit hash 8e929cb546ee42c9a61d24fae60605e9e3192354 in the stable repo).
+Happy to also test on other kernel versions if that helps.
 
-Maybe you could add a fallback logic to increase the period if it fails.
+Please let us know if there is any other helpful information we can provide.
 
-Thanks,
-Namhyung
+Wishing you a nice day!
 
-> 
-> Output before:
->  Inject -b build-ids test
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.195 MB - ]
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.277 MB - ]
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.195 MB - ]
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.160 MB
-> 			 /tmp/perf.data.ELzRdq (4031 samples) ]
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.195 MB - ]
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.195 MB - ]
->  Inject -b build-ids test [Success]
-> 
->  Inject --buildid-all build-ids test
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.195 MB - ]
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.014 MB - ]
->  Inject --buildid-all build-ids test [Failed - cannot find
-> 				noploop function in pipe #2]
-> 
-> Output after:
-> Successful execution for over 10 times in a loop.
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Reviewed-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> ---
->  tools/perf/tests/shell/pipe_test.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/shell/pipe_test.sh b/tools/perf/tests/shell/pipe_test.sh
-> index d4c8005ce9b9..02d9ef27c8e7 100755
-> --- a/tools/perf/tests/shell/pipe_test.sh
-> +++ b/tools/perf/tests/shell/pipe_test.sh
-> @@ -12,7 +12,7 @@ skip_test_missing_symbol ${sym}
->  
->  data=$(mktemp /tmp/perf.data.XXXXXX)
->  data2=$(mktemp /tmp/perf.data2.XXXXXX)
-> -prog="perf test -w noploop"
-> +prog="perf test -w noploop 3"
->  err=0
->  
->  set -e
-> -- 
-> 2.47.0
-> 
+Best,
+Marius
