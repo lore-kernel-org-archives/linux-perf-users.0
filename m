@@ -1,280 +1,170 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA7018C92F
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 00:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9E41E4B0
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 00:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729124781; cv=none; b=H6R4VtR+/g15USSqgTAGEu13hzVSAg5MfGiZblqwIBlHTX5qz2d1tkLuDfI3B6BDE4THFPYTI9E9bPtbiwh82K4SLV00/bqsl0pvFkaQqqFjjCG6NshUNVVoT2+j/oDdzDZmR/FS+3dMKxcBIJMJEsV4MR6PWDHD2+ldX0GFIYg=
+	t=1729124918; cv=none; b=ib8jL3cOTJh/fjNo+DZJ63wu4DuM19ZC+nk0JJxw8RGu0wVg10EzHLs59UJT5oM6dEgRrZIQQIqE1dnRZam5v8UOWWJX0rT7V64AginVqVeXjzrne75cyw/6vO90/F6N566U2k6nOyzF5Ql1OFHsmNplSomfWSplpL1TzUtUwFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729124781; c=relaxed/simple;
-	bh=atImUl0FotF7zSp+sUCObNt0Nr4nOLPdsoGiee7Bvjg=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=YEEqycsLMXDshJOlB4Hp00y2+p8RZfaqO/aOogcsqonQ97kVD2WKkojG8zhppvV+FTrZaxsnb+Z31P4urUx60g+3BiRrw/Jzmgm8oJEVKg4IiYBq8dP0Akv+pwLcSbbJ5HngvpiCyTsQHYD9kFZ/NwLQbrbJHa/383T6DvOwAU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Sz/ctqxK; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1729124918; c=relaxed/simple;
+	bh=Ij6D5mCxFViYNOZCyVBrXtjAhS5MQbJzMGYbiJbJvRM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ra7hCwjDkoL5g4+LfUL/7lsjhDssAOrKW6/ImjeNtc2q01GMZlQ9ERlItSUuOmUo3kDcnNfQmt6SsSt2BX8CZWyeIKMiQft90ZEjrql65v3TEnAFhbWZw+oTi7s/bdyvz/p6xzEZKIK+8817+kvJmjgZWS/9f4geDTyCJitmoXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YtT/iHxC; arc=none smtp.client-ip=209.85.166.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sz/ctqxK"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e31d9c8efcso10944057b3.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 17:26:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YtT/iHxC"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a3b28ac9a1so60085ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Oct 2024 17:28:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729124779; x=1729729579; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SquaAPD0AcQIjNNI8ogmi7jeRDo2TBHiGE7l1NG90xo=;
-        b=Sz/ctqxK3yKIJqd7v9wcFgQDQ7/ELhOIRWc7X1/QRjuwXTrf4hj+4CmmI9pj9bYbT3
-         Gat1T2/cFoC2ZuESRWRPP+rhdoD9Tfvn5etO2N6hIRRhypebs43vF5DTOFYfN7akbFSM
-         ia4iYOE2HkWcQ/lX8bwX8ISD/92yNq8tWA2Zlqy0QKGzTs107WcRWpzqYJKI6qF5O/WY
-         5RD/EoT8O1jQQ9kqNpEdUlC851qnDk/VD/nu/ATApHy0W9h+rDja6XiQDQkWRsACPly+
-         mg4+bEyw+JOwM+L8celfLrWf1Li9zgqNPMnu4lLZElgd/Cr/5IXj4zMriatcN3+UrNBH
-         uMwg==
+        d=google.com; s=20230601; t=1729124915; x=1729729715; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tW+swacrnZ0UL3GBvERjuGakj5+j4ErZJOApHuj0ufM=;
+        b=YtT/iHxCSN5Joett2rCuzbBssOxSnajyvziUe3kthxHYc6d6Ib9o0keWiBdsyhJnZp
+         w+yozxN/lqC0OSBmTUFvYr3aNtEIXyAymoQ0AA6dbOmpUPay9XaYetjaoMm+EoyFLCzZ
+         YZNJr3NxLmHegFZr+fLJstHe19AvZgguB9e9NSEEQ+MByKo3IriTbQ38P+TrbAQBC+QX
+         Rt4pzuPglQoPUje+u9ZKhMFOta0ypM76ANhxKfYewCkoH5totwB7prJoIdm49bpgWErv
+         3WZjmAdtIMm89RpufMi50W+Xa62zZGE7RThzJPMxCMxIya8yaAvMJ8aYfqXdvbaHGewV
+         pCnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729124779; x=1729729579;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SquaAPD0AcQIjNNI8ogmi7jeRDo2TBHiGE7l1NG90xo=;
-        b=qxsRb/g3Y5Yi6GguYnuKKgHmcPxLZx3rSC3DAWE4oBQLCbxVyhqDtfgWyNiUBydAEE
-         x57tvxDptrzNTSOSJi3s0QDmW17PXg0XH/cjcIukBg9v6D58AbOR+zCG/ugc8t+qr45O
-         dssA6dZbNvPdFFQYmshtsrG/RiKB+eznqCGbCVVddNwcwWPEIx8FI0Cr16+RHJ3HwyI+
-         2pbHCYa4p9lXPidZypJszWhrZnNJCQHwu2ehFiLqhGY3c9AqUKsz4PEoN16Ephv5vVqs
-         LEBWYvj1UoRDIoTd3n06bZe+sSstGs4KEauTdch7ftJpQ48N7HC8iXwU3yBnaLKG04WO
-         eOjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFF+DHIj3Y6uiABvyG2osWlIVK6RJ36JG6o03zDsUj80YADvikMXVGvuVA6vdS5rJ3Indl9MtCptuNyVnz8+oj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFbKt8wlD/MUZQRElZD+n4VOBny2sEXRJhokIj7XvxoG9NUMdr
-	zYvO0Nd179CrRRx6RV/kOJ9LccgtDcJqC/6d0hS0sc5qsgRPVf/Mp7RfBuFl1SEs/kxq+7oh9RL
-	liFdK0A==
-X-Google-Smtp-Source: AGHT+IGs4WdpXIM0biaGJT8f6W/Ar64INlqNJ5uuSoIpjWhZg3wOMLE81Q/Ij8NPQT52fZqpf6BkfGWtnGFO
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:a00a:f237:9bc0:79c])
- (user=irogers job=sendgmr) by 2002:a25:26c4:0:b0:e28:ef6f:3624 with SMTP id
- 3f1490d57ef6-e2978319b29mr3216276.5.1729124778489; Wed, 16 Oct 2024 17:26:18
- -0700 (PDT)
-Date: Wed, 16 Oct 2024 17:25:20 -0700
-In-Reply-To: <20241017002520.59124-1-irogers@google.com>
-Message-Id: <20241017002520.59124-21-irogers@google.com>
+        d=1e100.net; s=20230601; t=1729124915; x=1729729715;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tW+swacrnZ0UL3GBvERjuGakj5+j4ErZJOApHuj0ufM=;
+        b=WQvy849PCpZFuxjVoJ92hlhFGPK18vlYUBnniDWpeeutX9lL1T16QLVsII0FyUnvoy
+         f1B7cOzslKY3YOA9wVi+gA0bb0s2aMp8c3Y/fqFKHqc6Ya4hHT9fhD8HZ+zs8crHQLPv
+         UQK9f1Jrik+SeBi5/S7ArYEUoedydbXif8SAIQsll9HiYVo5QifBB9vJOul6ApM+9cfu
+         VIwigSBdsBNyJYetTJLI5YYBuY8MeJfV7sXAGeAEIiSOlb0bGy+N2AVI1RVLEy4CJL5r
+         v3wCEeUsBAO47Mah3h72jHbpMenf+IRwvuo+uoTNpPJagSoMhygbX3u8u3IrpPOos8dJ
+         QOxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqALeqBafUVBu4lZy3Psvkz2uGJYUB1UVYqEhxSbJmYGC4k4hmU0vNUHKR4ZP0P1Z6USl0qV1R5BrAQlXNIko4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyR0arH4tVj2bmD3Ntg5tu9memVbZRKSfyJUptAYvAMxdjHp5br
+	Hq6n2YbK3QpoOid05U/AvgW8IkYGFi9QUti0/RgeuEqPmLdZRTHwOJUsx9znUEKm5Iwt6eqrzzB
+	vq9FsqiLqZd8JgZc5mMJTRzXt2CV0aYhFDemi
+X-Google-Smtp-Source: AGHT+IFf5pKKv6CnsP7+3IYeOqkHivPqYLICTnWPWzmH7cw51vk0QMKsEZMBZAqmZ5vTbjvIywigueV4F5q7Je6iqKs=
+X-Received: by 2002:a05:6e02:1a49:b0:3a2:6d7a:73e0 with SMTP id
+ e9e14a558f8ab-3a3e58ef125mr1912025ab.12.1729124914768; Wed, 16 Oct 2024
+ 17:28:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241017002520.59124-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.105.g07ac214952-goog
-Subject: [PATCH v3 20/20] perf build: Remove PERF_HAVE_DWARF_REGS
+MIME-Version: 1.0
+References: <20241011220354.756798-1-irogers@google.com> <ZxBQ6Z2dvxmQ9Vi0@google.com>
+In-Reply-To: <ZxBQ6Z2dvxmQ9Vi0@google.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+Date: Wed, 16 Oct 2024 17:28:21 -0700
+Message-ID: <CAP-5=fUpYZWGU_vDrDekwJu-n-Dw-aymaFsbohnZtqjYG1rDRw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/8] Run tests in parallel showing number of tests running
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
-	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Kajol Jain <kjain@linux.ibm.com>, 
-	Atish Patra <atishp@rivosinc.com>, Shenlin Liang <liangshenlin@eswincomputing.com>, 
-	Anup Patel <anup@brainfault.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	"Steinar H. Gunderson" <sesse@google.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Chen Pei <cp0613@linux.alibaba.com>, Dima Kogan <dima@secretsauce.net>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, 
+	Veronika Molnarova <vmolnaro@redhat.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PERF_HAVE_DWARF_REGS was true when an architecture had a dwarf-regs.c
-file. There are no more architecture dwarf-regs.c files, selection is
-done using constants from the ELF file rather than conditional
-compilation. When removing PERF_HAVE_DWARF_REGS was the only variable
-in the Makefile, remove the Makefile.
+On Wed, Oct 16, 2024 at 4:49=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Fri, Oct 11, 2024 at 03:03:46PM -0700, Ian Rogers wrote:
+> > Avoid waitpid so that stdout/stderr aren't destroyed prior to wanting
+> > to read them for display. When running on a color terminal, display
+> > the number of running tests (1 if sequential). To avoid previous
+> > flicker, only delete and refresh the display line when it changes. An
+> > earlier version of this code is here:
+> > https://lore.kernel.org/lkml/20240701044236.475098-1-irogers@google.com=
+/
+> >
+> > Add a signal handler for perf tests so that unexpected signals are
+> > displayed and test clean up is possible.
+> >
+> > In perf test add an "exclusive" flag that causes a test to be run with
+> > no other test. Set this flag manually for C tests and via a
+> > "(exclusive)" in the test description for shell tests. Add the flag to
+> > shell tests that may fail when run with other tests.
+> >
+> > Change the perf test loop to run in two passes. For parallel
+> > execution, the first pass runs all tests that can be run in parallel
+> > then the 2nd runs remaining tests sequentially. This causes the
+> > "exclusive" tests to be run last and with test numbers moderately out
+> > of alignment.
+> >
+> > Change the default to be to run tests in parallel. Running tests in
+> > parallel brings the execution time down to less than half.
+> >
+> > v2: Fix inaccurate remaining counts when running specific
+> >     tests. Rename "remaining" to "active" to better reflect the
+> >     testing behavior. Move the exclusive flag to test cases and not
+> >     entire suites. Add more "(exclusive)" flags to test as
+> >     suggested-by James Clark. Remove "(exclusive)" flag from test
+> >     descriptions to keep the command line output more concise. Add
+> >     James Clark's tested-by.
+> >
+> > Ian Rogers (8):
+> >   tools subcmd: Add non-waitpid check_if_command_finished()
+> >   perf test: Display number of active running tests
+> >   perf test: Reduce scope of parallel variable
+> >   perf test: Avoid list test blocking on writing to stdout
+> >   perf test: Tag parallel failing shell tests with "(exclusive)"
+> >   perf test: Add a signal handler around running a test
+> >   perf test: Run parallel tests in two passes
+> >   perf test: Make parallel testing the default
+>
+> Nice work!  It looks much better now.
+>
+> But I'm seeing more failures in parallel mode.  Maybe we want to
+> keep the default serial mode for a little more.
 
-Add missing SPDX for RISC-V Makefile.
+As you say, I think we should be conservative and mark all tests that
+need to serial/sequential/exclusive with the exclusive tag. If you
+tell me the failing tests I can add them to 'perf test: Tag parallel
+failing shell tests with "(exclusive)"' as I did for James Clark with
+the ARM tests. I'd prefer we did the tagging rather than not enabling
+parallel testing as otherwise I may never learn which tests fail for
+people when run in parallel.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config         | 13 ++++---------
- tools/perf/arch/arm/Makefile       |  3 ---
- tools/perf/arch/arm64/Makefile     |  3 ---
- tools/perf/arch/csky/Makefile      |  4 ----
- tools/perf/arch/loongarch/Makefile |  3 ---
- tools/perf/arch/mips/Makefile      |  4 ----
- tools/perf/arch/powerpc/Makefile   |  4 ----
- tools/perf/arch/riscv/Makefile     |  4 +---
- tools/perf/arch/s390/Makefile      |  3 ---
- tools/perf/arch/sh/Makefile        |  4 ----
- tools/perf/arch/sparc/Makefile     |  4 ----
- tools/perf/arch/x86/Makefile       |  3 ---
- tools/perf/arch/xtensa/Makefile    |  4 ----
- 13 files changed, 5 insertions(+), 51 deletions(-)
- delete mode 100644 tools/perf/arch/csky/Makefile
- delete mode 100644 tools/perf/arch/sh/Makefile
- delete mode 100644 tools/perf/arch/xtensa/Makefile
+Thanks,
+Ian
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 1d3f7dcc6b66..87dae64c0501 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -551,15 +551,10 @@ ifndef NO_LIBELF
-   endif
- 
-   ifndef NO_LIBDW
--    ifeq ($(origin PERF_HAVE_DWARF_REGS), undefined)
--      $(warning DWARF register mappings have not been defined for architecture $(SRCARCH), DWARF support disabled)
--      NO_LIBDW := 1
--    else
--      CFLAGS += -DHAVE_LIBDW_SUPPORT $(LIBDW_CFLAGS)
--      LDFLAGS += $(LIBDW_LDFLAGS)
--      EXTLIBS += ${DWARFLIBS}
--      $(call detected,CONFIG_LIBDW)
--    endif # PERF_HAVE_DWARF_REGS
-+    CFLAGS += -DHAVE_LIBDW_SUPPORT $(LIBDW_CFLAGS)
-+    LDFLAGS += $(LIBDW_LDFLAGS)
-+    EXTLIBS += ${DWARFLIBS}
-+    $(call detected,CONFIG_LIBDW)
-   endif # NO_LIBDW
- 
-   ifndef NO_LIBBPF
-diff --git a/tools/perf/arch/arm/Makefile b/tools/perf/arch/arm/Makefile
-index 9b164d379548..8b59ce8efb89 100644
---- a/tools/perf/arch/arm/Makefile
-+++ b/tools/perf/arch/arm/Makefile
-@@ -1,5 +1,2 @@
- # SPDX-License-Identifier: GPL-2.0-only
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
- PERF_HAVE_JITDUMP := 1
-diff --git a/tools/perf/arch/arm64/Makefile b/tools/perf/arch/arm64/Makefile
-index ca2e35961287..91570d5d428e 100644
---- a/tools/perf/arch/arm64/Makefile
-+++ b/tools/perf/arch/arm64/Makefile
-@@ -1,7 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
- PERF_HAVE_JITDUMP := 1
- HAVE_KVM_STAT_SUPPORT := 1
- 
-diff --git a/tools/perf/arch/csky/Makefile b/tools/perf/arch/csky/Makefile
-deleted file mode 100644
-index 119b06a64bed..000000000000
---- a/tools/perf/arch/csky/Makefile
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
-diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
-index 79b432744296..52544d59245b 100644
---- a/tools/perf/arch/loongarch/Makefile
-+++ b/tools/perf/arch/loongarch/Makefile
-@@ -1,7 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
- PERF_HAVE_JITDUMP := 1
- HAVE_KVM_STAT_SUPPORT := 1
- 
-diff --git a/tools/perf/arch/mips/Makefile b/tools/perf/arch/mips/Makefile
-index 733f7b76f52d..827168f1077a 100644
---- a/tools/perf/arch/mips/Makefile
-+++ b/tools/perf/arch/mips/Makefile
-@@ -1,8 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
--
- # Syscall table generation for perf
- out    := $(OUTPUT)arch/mips/include/generated/asm
- header := $(out)/syscalls_n64.c
-diff --git a/tools/perf/arch/powerpc/Makefile b/tools/perf/arch/powerpc/Makefile
-index ae05727835d8..dc8f4fb8e324 100644
---- a/tools/perf/arch/powerpc/Makefile
-+++ b/tools/perf/arch/powerpc/Makefile
-@@ -1,8 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
--
- HAVE_KVM_STAT_SUPPORT := 1
- PERF_HAVE_JITDUMP := 1
- 
-diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
-index f01ab2171fd0..087e099fb453 100644
---- a/tools/perf/arch/riscv/Makefile
-+++ b/tools/perf/arch/riscv/Makefile
-@@ -1,5 +1,3 @@
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
-+# SPDX-License-Identifier: GPL-2.0
- PERF_HAVE_JITDUMP := 1
- HAVE_KVM_STAT_SUPPORT := 1
-diff --git a/tools/perf/arch/s390/Makefile b/tools/perf/arch/s390/Makefile
-index 58e79f5b67a4..c431c21b11ef 100644
---- a/tools/perf/arch/s390/Makefile
-+++ b/tools/perf/arch/s390/Makefile
-@@ -1,7 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
- HAVE_KVM_STAT_SUPPORT := 1
- PERF_HAVE_JITDUMP := 1
- 
-diff --git a/tools/perf/arch/sh/Makefile b/tools/perf/arch/sh/Makefile
-deleted file mode 100644
-index 119b06a64bed..000000000000
---- a/tools/perf/arch/sh/Makefile
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
-diff --git a/tools/perf/arch/sparc/Makefile b/tools/perf/arch/sparc/Makefile
-index 7741184894c8..8b59ce8efb89 100644
---- a/tools/perf/arch/sparc/Makefile
-+++ b/tools/perf/arch/sparc/Makefile
-@@ -1,6 +1,2 @@
- # SPDX-License-Identifier: GPL-2.0-only
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
--
- PERF_HAVE_JITDUMP := 1
-diff --git a/tools/perf/arch/x86/Makefile b/tools/perf/arch/x86/Makefile
-index 51cf267f4d85..a6b6e0a9308a 100644
---- a/tools/perf/arch/x86/Makefile
-+++ b/tools/perf/arch/x86/Makefile
-@@ -1,7 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
- HAVE_KVM_STAT_SUPPORT := 1
- PERF_HAVE_JITDUMP := 1
- 
-diff --git a/tools/perf/arch/xtensa/Makefile b/tools/perf/arch/xtensa/Makefile
-deleted file mode 100644
-index 119b06a64bed..000000000000
---- a/tools/perf/arch/xtensa/Makefile
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--ifndef NO_LIBDW
--PERF_HAVE_DWARF_REGS := 1
--endif
--- 
-2.47.0.105.g07ac214952-goog
-
+> >
+> >  tools/lib/subcmd/run-command.c                |  33 +++
+> >  tools/perf/tests/builtin-test.c               | 274 ++++++++++++------
+> >  .../tests/shell/coresight/asm_pure_loop.sh    |   2 +-
+> >  .../shell/coresight/memcpy_thread_16k_10.sh   |   2 +-
+> >  .../coresight/thread_loop_check_tid_10.sh     |   2 +-
+> >  .../coresight/thread_loop_check_tid_2.sh      |   2 +-
+> >  .../shell/coresight/unroll_loop_thread_10.sh  |   2 +-
+> >  tools/perf/tests/shell/list.sh                |   5 +-
+> >  .../tests/shell/perftool-testsuite_report.sh  |   2 +-
+> >  tools/perf/tests/shell/record.sh              |   2 +-
+> >  tools/perf/tests/shell/record_lbr.sh          |   2 +-
+> >  tools/perf/tests/shell/record_offcpu.sh       |   2 +-
+> >  tools/perf/tests/shell/stat_all_pmu.sh        |   2 +-
+> >  tools/perf/tests/shell/test_arm_coresight.sh  |   2 +-
+> >  .../tests/shell/test_arm_coresight_disasm.sh  |   2 +-
+> >  tools/perf/tests/shell/test_arm_spe.sh        |   2 +-
+> >  tools/perf/tests/shell/test_intel_pt.sh       |   2 +-
+> >  .../perf/tests/shell/test_stat_intel_tpebs.sh |   2 +-
+> >  tools/perf/tests/task-exit.c                  |   9 +-
+> >  tools/perf/tests/tests-scripts.c              |   7 +-
+> >  tools/perf/tests/tests.h                      |   9 +
+> >  tools/perf/util/color.h                       |   1 +
+> >  22 files changed, 258 insertions(+), 110 deletions(-)
+> >
+> > --
+> > 2.47.0.rc1.288.g06298d1525-goog
+> >
