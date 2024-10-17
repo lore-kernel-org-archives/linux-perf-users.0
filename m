@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E0F1DF96E;
-	Thu, 17 Oct 2024 16:39:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D118E1DFD89
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 16:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729183162; cv=none; b=JWuEkTVl7wjxp/efZ+31MrAeSp+HgapXQpjfzIsWY7KiyXuMIKJpFZmD7s/jv/a52EXkBeJbJURY6/L2QJwcGc6j/hr91lruFeKtTYr4II1tXEFDRRcfU+T+/31YNNBwjam43+/liGIw1730DbuYhhfI6sWm1vEMsjvhtV+0LY8=
+	t=1729183162; cv=none; b=qGw77zNEtAWUqrT2NLKLm5grg17WDsPE9yYzj3XbUJCLkr89d+FhBOkBQPpjrPTdwEP1cEQWDxKtQA9XortiePa53RqjE2G6pSMZ6HFQKKi/sqP+g309W4SbRV9PTGkmaIKEh/ZRh7QtRZ96oxoRZqKgPeBAOV8d8HKHTjAuPDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1729183162; c=relaxed/simple;
-	bh=tb8dQv7yx10S84kB5tKyG8Quvbrc86dllNNk0OqOzWM=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=chFKmcIH0WxZoaGUJ/n3pgs+/DshkOm9pmqP+pCnze3ZZ8M1oCkk+VUCHVuuBStvXSiU9f6zlqQIYKOFWZvvxafoDX6IigsBSYrCdpvDKSUAy51W8Fo8fsiGh1ZuPB7ykjdhuQFJPuvfWW2W0NKNRg2RsqoVCZ3BwQiheTFMVk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ipguhI9e; arc=none smtp.client-ip=10.30.226.201
+	bh=seZg1qIx+Rx79z2DfNz7trH9BAWwfAqlYJyOT5deBl4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=M9Z8BkPfAU+5kLLipMugjljCVRfV2Iq2UjA7H2air63Fn2dwD5CUcU1iQs4AEXHTkO7IqU42Unpi+cvHfGNutd2dKmhwAa5LS4NsurxqQrx8nJ+aJxyAWY9H4PRmGcZfboiFqy+3WcVnJtIb874WMU1sTE/cQ8ue5TH14mhp1iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spf1wJjg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ipguhI9e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 980DCC4CED2;
-	Thu, 17 Oct 2024 16:39:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spf1wJjg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10FC4C4CED3;
+	Thu, 17 Oct 2024 16:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729183161;
-	bh=tb8dQv7yx10S84kB5tKyG8Quvbrc86dllNNk0OqOzWM=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=ipguhI9e6EFYQ00lg1LtXzijlZrcbs65oWkf8UwJ1feSiMAKrz84T2iC9LX04yVV4
-	 xCQPp6MPGnS6hZNdVp7cStKD6caLv0NJVk2apnDGP6CiS20jm94h9EfTOQ/ccywevK
-	 p3QWiOFtcjKsTeYdIngQXHQxICf7O9FWZT+nWAyR82GG0N/7qXWxLZZflXAqlOewb4
-	 0nfhmn4RwUK34feH+CjzRzYtJvVlTLGn77nqpHkzn2CxU4C4hWqMC6OKQgpq/EIWnO
-	 GfyZYjXCEaAbohr5uQtcsA34yhIxhjckkxFospLnyOrl1oZVQvD7Nc90PGu2H+vvDX
-	 cf+HsCdunf9IQ==
+	s=k20201202; t=1729183162;
+	bh=seZg1qIx+Rx79z2DfNz7trH9BAWwfAqlYJyOT5deBl4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=spf1wJjgTO9A82g4I1yPqvXZKbg0OwgsgucOoJx6ioNEpgv+tB571VTKPgadlqXGg
+	 xVnH3H4qWVnutyloFpqVyhC9uJMSYCmOF/2rMO47bWdQiloCrCRFPVZtucVZTzM9sy
+	 cBaazKE1GPk5XWlHyxp/TCOXpLFCq5mEDvTs9Odmn+yuolNnyl8tehuyvRUZXd4xm/
+	 NirHOtNGq66rvZ++lOgEolHMohEFXE/LvpCuMjSzbInUvG5Cu8pzY9ze1CFHIbOKtv
+	 vEfgFc5mR0URuhoWjbfDdEm67Qgp0qCS2QGGUvJ7gBZwb8oVeBrvjNQttatUYhtbq0
+	 b4u0lBxwn5HqA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- "Liang, Kan" <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
-In-Reply-To: <20241012204725.928794-1-leo.yan@arm.com>
-References: <20241012204725.928794-1-leo.yan@arm.com>
-Subject: Re: [PATCH v3 0/3] perf probe: Improve logs for long name string
-Message-Id: <172918316158.639809.15313412336355889892.b4-ty@kernel.org>
-Date: Thu, 17 Oct 2024 09:39:21 -0700
+To: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com, 
+ vmolnaro@redhat.com
+Cc: mpetlan@redhat.com, peterz@infradead.org, mingo@redhat.com, 
+ mark.rutland@arm.com, irogers@google.com, 
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+ adrian.hunter@intel.com, kan.liang@linux.intel.com
+In-Reply-To: <20241010144836.16424-1-vmolnaro@redhat.com>
+References: <20241010144836.16424-1-vmolnaro@redhat.com>
+Subject: Re: [PATCH] perf dso: Fix symtab_type for kmod compression
+Message-Id: <172918316203.639809.13939468676531242481.b4-ty@kernel.org>
+Date: Thu, 17 Oct 2024 09:39:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,14 +48,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Sat, 12 Oct 2024 21:47:22 +0100, Leo Yan wrote:
+On Thu, 10 Oct 2024 16:48:36 +0200, vmolnaro@redhat.com wrote:
 
-> The series [1] tries to use hashed symbol names for event names. This
-> can avoid failures due to long symbol names. Somehow, it is preferred to
-> specify a distinct event name when adding a probe.
+> During the rework of the dso structure in patch ee756ef7491eafd an
+> increment was forgotten for the symtab_type in case the data for
+> the kernel module are compressed. This affects the probing of the
+> kernel modules, which fails if the data are not already cached.
 > 
-> This series follows up on the comment to improve the logs for long event
-> strings.
+> Increment the value of the symtab_type to its compressed variant so the
+> data could be recovered successfully.
 > 
 > [...]
 
