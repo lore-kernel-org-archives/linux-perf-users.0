@@ -1,45 +1,46 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2064.outbound.protection.outlook.com [40.107.94.64])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2086.outbound.protection.outlook.com [40.107.243.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B69613A88A;
-	Fri, 18 Oct 2024 09:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62899190482;
+	Fri, 18 Oct 2024 09:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.86
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729243888; cv=fail; b=Vk3Jx5f5df/ww8cQrgSlY+F0uleUfCizyiw7FDoaLe/pC42f6cumMgyJOq+b6JFyYao6UC50N6+nM7TW+zVzz2j9Dz8kTmihgeRQ5d67/Ch7CRRG75PEEL/NZqLEN6IRNoWIwUTDDC6FxLUA7Z33NDj9ZXJAvDdCheYENVVMQ0Q=
+	t=1729243914; cv=fail; b=iriXdCwUXIZx4G3cWGjzJJLL2IlaEbAW1xbiuKNJ9vLTA6zLXgDrys1kcRafkZhKQu3yW+MiUuCbEzJYvO1n9X0xaEku2JxgW681ufaPMNjhbtNzWOjLNcTzNT2eiJI267Mg2ZZPLwRxdiC9EanLuzXBolhFDT6DXYahYzR2Pzs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729243888; c=relaxed/simple;
-	bh=3pdbNGO/KRk1FgNtqk51yPL0n1nk1qphymTpReIkWmY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FRBHCFXopYZg5lU93NrnLA2aXV0V6fCJYjFpaWN7pkfS1qVDBCPnO/zcsS2mbsmzXx/S80Qby/1NtLyQ5abHwc6Pxh5iUScG7QGlOr3w6WiQfiZkxltYr+iP2e1DUn8gb6PAjiZS41Vo61LSFtvYs2I7baLOizfdaMtXSmQ3wCA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2qV9vmOC; arc=fail smtp.client-ip=40.107.94.64
+	s=arc-20240116; t=1729243914; c=relaxed/simple;
+	bh=HQfe3kiNOkhZZ5Sv9j/jhXIE3tUBLrpSBNY/ne075pY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=boe3MSU4gKC1UsLDJUkMl/pu7Vx3vYI7yxQFhCZj11DWaf+nJUghm7Nec8L9Wafr3VV+kNQdF5AkRAUCPdLN7a4W8UvxvFF8DDy3qjY/+sN0hqPbdbLQecPWuCaZMjM2d8XywNiHJIgtxXRBFWa45JIOYg0JDxosg11/wBHv4XU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kTbY1ARb; arc=fail smtp.client-ip=40.107.243.86
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2qV9vmOC"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kTbY1ARb"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Wuvi8J/wx9yJ1yC1NcNCwFm985w2ywi+HMDU1SFnYPXsxLYsGjtxnJNutNqvRgLa+E2n/FF5yruG57fR5MpZRKy+yC9FDn1o7zKa+KKMaEow1H8KimUR4iHh8Ljgbykvy7JDPxazuiYvHjNKywChNuHjcl2hHswoKjnG6z1now2R8FB9vEajSstAMMCfTHQkH3gtqbHSYdycX9tfrU5HU8tMTIIkwa0qUE7IEn9g+0CtYpvmGK7MvFzh+JkfFdW5wF4J0o/rRPxzwih+K9gUStUoRqrq5hhE7JOUQjQfZU4BvD7Og8tONVw15fs+cHEgKchcZrKz/Kf/EK/GqH25/Q==
+ b=ISF0mLf4eBTQtw+/A+E8dGCmmH9WMcUHRiGmY+WjBkYRuDsLpFblqRj4zzk08e+QM5tw0y7riea4FhuD20L+bc3VqI7jmP2zruY0UA4JY/oK+MNj9t5xf51mKNoFF7Y6NZPTNH43HrOBqTdCyA7Mkxpqu4N7tYAXpd3rLAhvH1nYEYl41EKHHXhOC1sM1hqNM2Tb/OR54sfcZuQlgc2uwH+8aI6KXlWrWe16aN6zZJ69eI4XMpRWetYkL+cGiaWO5LXVSTJ6EXYs4RSvXie/BvwEzPnh/aR88UWLtz9Kvw12YfncqNchk4PNWqf7DKtWy8cnteJhnsFJdpffHsWVsQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CJwiDdZkkelCSKib88vZkgGzzpcxX78gWgEMyX8aKOc=;
- b=sD2RXxFbNMmhQH96CDF+EUBD8xxmkzDgntBRdi6bZip0tsDCw92ZuedDzKjkqWsNsd3l0brieQGuQRHHqpiwWV7Id0LrUcBpi+JLXf6TwJBTsbTLVC65B9AVzktWS4uY4uS7dSFKHh0xFDk52oRbYKSpcsldlRysjzJQqegQU5E3RpOuVSPCR68xZN0KfZtVzkE9zs57tofeFsILmsejHIpIxGG2JfBVEScYne0z75WRy3X/hFQxDQD7oGh3ifXx5uDBwATNYQxTpiFEE/iXwiWY/qPYz3ZOEhrSnqOLG8vbz0Ftq9tpYzQyWGUY9OVruh9rOU9J/7wjHADqAhM6ag==
+ bh=hoAtaf3hTLa0p2qW1KfJN3fgHt+Lxyav0NFyDUWEsF0=;
+ b=LIgJcq6CTRmhUwaFU5Ptf89gMGxL3KkIBP5GwBU2mk/8/MoC2wZa5HJxqNNvWlHWb8KXKokCPXOad+jONgE2Drq7cepyAQ79tJM7djUsRPNwM9K94+5AgA6HDK2vZve89JvarBbvP6Y5AbQPAMKxnm24EJLS2vPmePDlQWrAQ/vtItMwfXTfC9xGvcwjYA7D9ZK9PiQQU/PgzjJyhSRPV6yTPOCuufSWFs0JGwS8lwvldNDb3SiwaMDya/7GCQvTC2Uxqpy3UhtjZ+OpOWQZTMrY8KxPVdw+giFhzb7kl7ETV0+IbDn4NuKLz5QQCUcIG0HYMVzpfSDPKsQIdkoJTw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CJwiDdZkkelCSKib88vZkgGzzpcxX78gWgEMyX8aKOc=;
- b=2qV9vmOCCdqo4kKO/5lUPEbOrGBafc7h97s92gKi6h80y7UiVnTZbtbHTXHRJKyZnrkXp1ohZRwEsmF3VujKXc6HI4KQVKUbaOf8tO0pGMOVcO+I18/R1nbR8GInsCYl0Sg4zqsunpHGJouRsqmXBga3ioLpr+crqX6vWLDDHgU=
-Received: from CYZPR20CA0017.namprd20.prod.outlook.com (2603:10b6:930:a2::24)
- by CYYPR12MB8889.namprd12.prod.outlook.com (2603:10b6:930:cb::16) with
+ bh=hoAtaf3hTLa0p2qW1KfJN3fgHt+Lxyav0NFyDUWEsF0=;
+ b=kTbY1ARbVXR/n3/FSMtc9kgy5SzT/ec5qnXQGqjCRryMizR8fRJTsV3R2KuzckHdATmmLBVkt5L1fJ5KMRKwOjXmGFBw5xcsUZIol74nGI1BWQyz8ryNtAA5GJCJuh7jD8WDsmdX83JRTU9oSL8QYNKqosp2RhlVuy3bryZkMKk=
+Received: from PH8PR15CA0005.namprd15.prod.outlook.com (2603:10b6:510:2d2::12)
+ by MW3PR12MB4394.namprd12.prod.outlook.com (2603:10b6:303:54::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.20; Fri, 18 Oct
- 2024 09:31:24 +0000
-Received: from CY4PEPF0000EDD0.namprd03.prod.outlook.com
- (2603:10b6:930:a2:cafe::20) by CYZPR20CA0017.outlook.office365.com
- (2603:10b6:930:a2::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.21 via Frontend
- Transport; Fri, 18 Oct 2024 09:31:24 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.26; Fri, 18 Oct
+ 2024 09:31:43 +0000
+Received: from CY4PEPF0000EDD3.namprd03.prod.outlook.com
+ (2603:10b6:510:2d2:cafe::2d) by PH8PR15CA0005.outlook.office365.com
+ (2603:10b6:510:2d2::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.23 via Frontend
+ Transport; Fri, 18 Oct 2024 09:31:41 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EDD0.mail.protection.outlook.com (10.167.241.196) with Microsoft
+ CY4PEPF0000EDD3.mail.protection.outlook.com (10.167.241.199) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8069.17 via Frontend Transport; Fri, 18 Oct 2024 09:31:23 +0000
+ 15.20.8069.17 via Frontend Transport; Fri, 18 Oct 2024 09:31:41 +0000
 Received: from sindhu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 18 Oct
- 2024 04:31:18 -0500
+ 2024 04:31:36 -0500
 From: Sandipan Das <sandipan.das@amd.com>
 To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
@@ -61,10 +62,12 @@ CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
 	<irogers@google.com>, <adrian.hunter@intel.com>, <eranian@google.com>,
 	<ravi.bangoria@amd.com>, <ananth.narayan@amd.com>, <sandipan.das@amd.com>
-Subject: [PATCH 0/3] perf vendor events amd: Add more Zen 5 events and metrics
-Date: Fri, 18 Oct 2024 15:01:02 +0530
-Message-ID: <cover.1729242778.git.sandipan.das@amd.com>
+Subject: [PATCH 1/3] perf vendor events amd: Add Zen 5 data fabric events
+Date: Fri, 18 Oct 2024 15:01:03 +0530
+Message-ID: <198049e27366f3980e4991b95cec5eaac6d31d75.1729242778.git.sandipan.das@amd.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1729242778.git.sandipan.das@amd.com>
+References: <cover.1729242778.git.sandipan.das@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -77,69 +80,1706 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD0:EE_|CYYPR12MB8889:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb8e57f5-b917-41bb-d9da-08dcef57a202
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD3:EE_|MW3PR12MB4394:EE_
+X-MS-Office365-Filtering-Correlation-Id: bee9779f-235f-4cd8-2668-08dcef57acbc
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|7416014|36860700013|376014;
+	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OONDq0USCFbExLmohhSH+8f/l/G/h0YyeNtP989t1j9RQaFj7Z7EpzDKl+0B?=
- =?us-ascii?Q?cYveg/ZyVYkNw0tJx4iE9VoehozabAxzFn+BrTD0ZrSe1nYwARxG0BcN2QZn?=
- =?us-ascii?Q?99MYNDYQhOhZRvp3FPZsKI++s0XpVHfJU2Zb1ys9vhxUYvHA7y40FJTRBhzk?=
- =?us-ascii?Q?xQFAzpL9Da6tgEFX2hIgqL/W5jG6bmC2p2MZkxsNiGVCuO6F8mNMwpEQxKVq?=
- =?us-ascii?Q?dj/FMZw/jIwSEF+og6Sw/LLlmVVYENihgrMPLiOZw2WR6YaQ1xDLYHxuzKuJ?=
- =?us-ascii?Q?4aYsB/zlw+Q1kqjFw6NBeH93I2/dMS8tNZQ5f8L54a6FGJTf9Q2AGGEaNGRl?=
- =?us-ascii?Q?AL6FlCFDQjdYZL09fYZDUQSQvfY/j7yxcEr2KDJrAsOl9Hj1ajijoDA1r2RA?=
- =?us-ascii?Q?kHxVY+6/X+dQKubGtxx256we2tH5Crvdu0euIdDSpQzxHY1VgJFdHaCG/D5j?=
- =?us-ascii?Q?bfMv2Tra762cvN93tXZjuNxpXoXh/goQH8FP4373bMoSguLprAQtZP3GBvVX?=
- =?us-ascii?Q?w5pCOlH8FSGzQIC4FYd0EtzJXv+AQrYnPzaFxKtLLOpz+DQ/kzjDSmuwLk7S?=
- =?us-ascii?Q?ESRsetzd7WdikK5Ws4ERVSbZ4ftlYEEYySdoRjfa63htaD6/xi9rhHGKnBZA?=
- =?us-ascii?Q?7b2LxLXhX7Ni3hKIAwVs3p976bs3hGfXrr0yc0YwbB75WsCsRN9ppPR4Qar3?=
- =?us-ascii?Q?M88yaKQvN8OYxpLeS4wiUZ6n95wjLIxHyrpw6J2NLE3nyZtOJ0wYvks3nRHL?=
- =?us-ascii?Q?U42mmC1YfxrlqhAnKlI3ULfagiLK0qR+4/TUNS3RihpVU8k+YazbLVgpOmXt?=
- =?us-ascii?Q?7/F6zgTZzsOR/4ME5o8hYL4Dx++1qRmgzo4wyLGITKPOOc6rnJMJLTfT3/Ek?=
- =?us-ascii?Q?b5+8ymCdijCxxUJ338s1S+2fYETodgJsY8PtLrAQ5txbW14tWkZbXbLcml0l?=
- =?us-ascii?Q?dEQC4zxwsFgUulDgTVaHoUwdWoTrtckjI72KNxMzMlRWGQoK0wuKsqQbGWry?=
- =?us-ascii?Q?nKAFPUsSGffv+8f5YH/kdfTaWXA4xSqKKgObmCWizaiantpKOUft65N4Xye7?=
- =?us-ascii?Q?8gbkFo8wmlX3eCDXHs+i/cwz4oBzYtWvos54ZfUCaPIZveBvwwV5Wo01hVpf?=
- =?us-ascii?Q?UyRgpBjz8jDT1TjDTg6NVNHSVeg9RzbpOzzCtTlR3NYmVWVE07QGVbsPCByB?=
- =?us-ascii?Q?Iv+n5stxLIvPqZfbR6bNZ1q23JeBg2GFL5Bi+1X2XIHQ1U1i0ssUggsl2EIY?=
- =?us-ascii?Q?FFHxeRBwImb+xVcjUTX1Ek6f04Ay2ww2pfLOdBvrJCG0fpL4+MExAFRJ6g72?=
- =?us-ascii?Q?4Rdk4iiUaL6FYVsa3ZQdxjjJrOVLMSPgpzFySPlYK2G4wqb1S64HsayXLd8R?=
- =?us-ascii?Q?/MweZs39CcWx/rPb+Aj8rA4P9yCI+AmUu0jMbCI6qjBjacV1Tg=3D=3D?=
+	=?us-ascii?Q?owZ9d1LhYpNsP80GNWWW707OKuEnHgRUbnGZ5Smj3Tzvuf17C5jsK2uYJPKw?=
+ =?us-ascii?Q?xTeK8T/XlTNiwJ8goRMRNA/rHnyhD35UujbmYvMbZWYXKWCF5+SM8PXtTdvt?=
+ =?us-ascii?Q?Mqpxwy2+IK+tupx29Zf1J6KTKIuwtdkrW+25iPWmwyUCnlxvfqzO5MqHMRQx?=
+ =?us-ascii?Q?ya2M0pf7xEYHUUSJkS4fD19kUShD4NN2GchKu1swx/Sn8Rb5zDsW68mcYs9W?=
+ =?us-ascii?Q?+/BBbhQQwa30/ISjI9ntG2hsseU5BvJpKZnKiOms+8+KtXguo6t/2BxUY5/f?=
+ =?us-ascii?Q?6mkcI9KgMX5alUnMsLgeLgsRG/fJrmJ1ZEAPBrezRmp76p3Yibz/i+LnAAgU?=
+ =?us-ascii?Q?0b969L2YOfthIGMfFAcJdMk1rI6viV8nhTtHT5uYEpxmPuzAciyr3L+gvyJf?=
+ =?us-ascii?Q?U566HiAXtmLzwyYaA1L+JcAjzexA7fjShR/xtFrntskPXKjnoOfEffZEReUa?=
+ =?us-ascii?Q?MJHtQ/c734Hh0pS3v699cf4JXi/cWFkkefXsPMAvyOcRiC2qsQx3Qbnurv0e?=
+ =?us-ascii?Q?GA/aP3dwsG4ITQ0/s+jU/A5IYUgHpH8ZeqKBc9f2lwtAHNXNp434UALhdHB4?=
+ =?us-ascii?Q?CkVn9yqZg1XIWlzuOZ7W2Ra8+BXs4NMYWwjiqgGp1A+j1A725YgNXjbCwRAE?=
+ =?us-ascii?Q?Ot8onwpxhbSqtk80xHFHmAV6Tu4rOyt0L/+Kf7vx9HeHm1iPDQkgskmDKKoE?=
+ =?us-ascii?Q?5iwvealItSkt1mwm4Rg+QkQsmUcyIefyEAxxrcuRL9FmN/FcKeYBmVtblLD1?=
+ =?us-ascii?Q?W/TYILsJqA2YkkY/KVqpu1SudapxdBYZTyRkibrGlTw95jeiS+nRRrbZi9aU?=
+ =?us-ascii?Q?i6d6JeG8bm/jvsDVlJrHjjgR/EuZBtrG61eG1F7oN5MgrdQJEBjDi5tEVd7u?=
+ =?us-ascii?Q?Uh5hswMMFW3m0V5nrlAIGp90a8ckFhzqV03UtORIxV4PSaA36bpED/xp7LJv?=
+ =?us-ascii?Q?krHGcDiQxnGsKksK4gup2ULW1vUsmUy1t5BXX/OEwV6Rr5Oy0YGPAqxFg0di?=
+ =?us-ascii?Q?BHnADmhkGLee3wmOmK79MAVJ+t94r0jU9ragdL43IGCTPgd/z21gMRfLjkts?=
+ =?us-ascii?Q?sd1rnGqoI1x8ooZvsheY6n21GjErc7MrMg4+9dhUNWgY7zH6T29t7u5CyL2i?=
+ =?us-ascii?Q?jvOhTZKZFb3ebsEJ21LG4b9Nh/0eBuiwY+zWOl7UpHZDo8KDty61tQhrgQBs?=
+ =?us-ascii?Q?6vQZn7VIqhbNKVkY05qr4jJPLc24kmAjeK6Ec6jBv9XgIoplBUQRYxnwxMKf?=
+ =?us-ascii?Q?aXlzOJ/wGHsVIWJyXkdzkqftp3n09fXIsIUFB20XGVbu2r4YvEqEfZRsGF2g?=
+ =?us-ascii?Q?FNTPxgTsX2kyyGVY+jITitv1yMRHcjDLij/7iNgcwzVYydi3QtgCLBxXt8l6?=
+ =?us-ascii?Q?St94Pl2elRFuBIiaK87U1ZQWKbr+hQMvmiCHKFBBU2QQpTGoiA=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(36860700013)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2024 09:31:23.7181
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2024 09:31:41.7097
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb8e57f5-b917-41bb-d9da-08dcef57a202
+X-MS-Exchange-CrossTenant-Network-Message-Id: bee9779f-235f-4cd8-2668-08dcef57acbc
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EDD0.namprd03.prod.outlook.com
+	CY4PEPF0000EDD3.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8889
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4394
 
-Add data fabric events and metrics taken from the now released Processor
-Programming Reference (PPR) for AMD Family 1Ah Model 02h Revision C1
-Processors document available at the link below.
-https://bugzilla.kernel.org/attachment.cgi?id=307010
+Add data fabric events taken from Section 2.1.16.2 "Performance
+Measurement" in the Processor Programming Reference (PPR) for AMD Family
+1Ah Model 02h Revision C1 Processors document available at the link
+below.
 
-While at it, also update some missing or redundant data cache metrics.
+This constitutes events which capture the flow of data beats at various
+links and interfaces in the data fabric.
 
-Sandipan Das (3):
-  perf vendor events amd: Add Zen 5 data fabric events
-  perf vendor events amd: Add Zen 5 data fabric metrics
-  perf vendor events amd: Update Zen 5 data cache fill events
-
+Link: https://bugzilla.kernel.org/attachment.cgi?id=307010
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+---
  .../arch/x86/amdzen5/data-fabric.json         | 1634 +++++++++++++++++
- .../arch/x86/amdzen5/load-store.json          |   78 +-
- .../arch/x86/amdzen5/recommended.json         |  112 ++
- 3 files changed, 1818 insertions(+), 6 deletions(-)
+ 1 file changed, 1634 insertions(+)
  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen5/data-fabric.json
 
+diff --git a/tools/perf/pmu-events/arch/x86/amdzen5/data-fabric.json b/tools/perf/pmu-events/arch/x86/amdzen5/data-fabric.json
+new file mode 100644
+index 000000000000..fa06569d881d
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/amdzen5/data-fabric.json
+@@ -0,0 +1,1634 @@
++[
++  {
++    "EventName": "local_or_remote_socket_read_data_beats_dram_0",
++    "PublicDescription": "Read data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 0.",
++    "EventCode": "0x1f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_read_data_beats_dram_1",
++    "PublicDescription": "Read data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 1.",
++    "EventCode": "0x5f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_read_data_beats_dram_2",
++    "PublicDescription": "Read data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 2.",
++    "EventCode": "0x9f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_read_data_beats_dram_3",
++    "PublicDescription": "Read data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 3.",
++    "EventCode": "0xdf",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_read_data_beats_dram_4",
++    "PublicDescription": "Read data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 4.",
++    "EventCode": "0x11f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_read_data_beats_dram_5",
++    "PublicDescription": "Read data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 5.",
++    "EventCode": "0x15f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_read_data_beats_dram_6",
++    "PublicDescription": "Read data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 6.",
++    "EventCode": "0x19f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_read_data_beats_dram_7",
++    "PublicDescription": "Read data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 7.",
++    "EventCode": "0x1df",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_read_data_beats_dram_8",
++    "PublicDescription": "Read data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 8.",
++    "EventCode": "0x21f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_read_data_beats_dram_9",
++    "PublicDescription": "Read data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 9.",
++    "EventCode": "0x25f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_read_data_beats_dram_10",
++    "PublicDescription": "Read data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 10.",
++    "EventCode": "0x29f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_read_data_beats_dram_11",
++    "PublicDescription": "Read data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 11.",
++    "EventCode": "0x2df",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_write_data_beats_dram_0",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local socket and DRAM Channel 0.",
++    "EventCode": "0x1f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_write_data_beats_dram_1",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local socket and DRAM Channel 1.",
++    "EventCode": "0x5f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_write_data_beats_dram_2",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local socket and DRAM Channel 2.",
++    "EventCode": "0x9f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_write_data_beats_dram_3",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local socket and DRAM Channel 3.",
++    "EventCode": "0xdf",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_write_data_beats_dram_4",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local socket and DRAM Channel 4.",
++    "EventCode": "0x11f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_write_data_beats_dram_5",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local socket and DRAM Channel 5.",
++    "EventCode": "0x15f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_write_data_beats_dram_6",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local socket and DRAM Channel 6.",
++    "EventCode": "0x19f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_write_data_beats_dram_7",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local socket and DRAM Channel 7.",
++    "EventCode": "0x1df",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_write_data_beats_dram_8",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local socket and DRAM Channel 8.",
++    "EventCode": "0x21f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_write_data_beats_dram_9",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local socket and DRAM Channel 9.",
++    "EventCode": "0x25f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_write_data_beats_dram_10",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local socket and DRAM Channel 10.",
++    "EventCode": "0x29f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_write_data_beats_dram_11",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local socket and DRAM Channel 11.",
++    "EventCode": "0x2df",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_write_data_beats_dram_0",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between remote socket and DRAM Channel 0.",
++    "EventCode": "0x1f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_write_data_beats_dram_1",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between remote socket and DRAM Channel 1.",
++    "EventCode": "0x5f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_write_data_beats_dram_2",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between remote socket and DRAM Channel 2.",
++    "EventCode": "0x9f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_write_data_beats_dram_3",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between remote socket and DRAM Channel 3.",
++    "EventCode": "0xdf",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_write_data_beats_dram_4",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between remote socket and DRAM Channel 4.",
++    "EventCode": "0x11f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_write_data_beats_dram_5",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between remote socket and DRAM Channel 5.",
++    "EventCode": "0x15f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_write_data_beats_dram_6",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between remote socket and DRAM Channel 6.",
++    "EventCode": "0x19f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_write_data_beats_dram_7",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between remote socket and DRAM Channel 7.",
++    "EventCode": "0x1df",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_write_data_beats_dram_8",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between remote socket and DRAM Channel 8.",
++    "EventCode": "0x21f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_write_data_beats_dram_9",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between remote socket and DRAM Channel 9.",
++    "EventCode": "0x25f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_write_data_beats_dram_10",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between remote socket and DRAM Channel 10.",
++    "EventCode": "0x29f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_write_data_beats_dram_11",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between remote socket and DRAM Channel 11.",
++    "EventCode": "0x2df",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_write_data_beats_dram_0",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 0.",
++    "EventCode": "0x1f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_write_data_beats_dram_1",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 1.",
++    "EventCode": "0x5f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_write_data_beats_dram_2",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 2.",
++    "EventCode": "0x9f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_write_data_beats_dram_3",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 3.",
++    "EventCode": "0xdf",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_write_data_beats_dram_4",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 4.",
++    "EventCode": "0x11f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_write_data_beats_dram_5",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 5.",
++    "EventCode": "0x15f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_write_data_beats_dram_6",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 6.",
++    "EventCode": "0x19f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_write_data_beats_dram_7",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 7.",
++    "EventCode": "0x1df",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_write_data_beats_dram_8",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 8.",
++    "EventCode": "0x21f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_write_data_beats_dram_9",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 9.",
++    "EventCode": "0x25f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_write_data_beats_dram_10",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 10.",
++    "EventCode": "0x29f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_write_data_beats_dram_11",
++    "PublicDescription": "Write data beats (64 bytes) for transactions between local or remote socket and DRAM Channel 11.",
++    "EventCode": "0x2df",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_read_data_beats_io_0",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local socket and IO Root Complex 0.",
++    "EventCode": "0x81f",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_read_data_beats_io_1",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local socket and IO Root Complex 1.",
++    "EventCode": "0x85f",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_read_data_beats_io_2",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local socket and IO Root Complex 2.",
++    "EventCode": "0x89f",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_read_data_beats_io_3",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local socket and IO Root Complex 3.",
++    "EventCode": "0x8df",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_read_data_beats_io_4",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local socket and IO Root Complex 4.",
++    "EventCode": "0x91f",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_read_data_beats_io_5",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local socket and IO Root Complex 5.",
++    "EventCode": "0x95f",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_read_data_beats_io_6",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local socket and IO Root Complex 6.",
++    "EventCode": "0x99f",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_read_data_beats_io_7",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local socket and IO Root Complex 7.",
++    "EventCode": "0x9df",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_write_data_beats_io_0",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local socket and IO Root Complex 0.",
++    "EventCode": "0x81f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_write_data_beats_io_1",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local socket and IO Root Complex 1.",
++    "EventCode": "0x85f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_write_data_beats_io_2",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local socket and IO Root Complex 2.",
++    "EventCode": "0x89f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_write_data_beats_io_3",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local socket and IO Root Complex 3.",
++    "EventCode": "0x8df",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_write_data_beats_io_4",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local socket and IO Root Complex 4.",
++    "EventCode": "0x91f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_write_data_beats_io_5",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local socket and IO Root Complex 5.",
++    "EventCode": "0x95f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_write_data_beats_io_6",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local socket and IO Root Complex 6.",
++    "EventCode": "0x99f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_upstream_write_data_beats_io_7",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local socket and IO Root Complex 7.",
++    "EventCode": "0x9df",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_read_data_beats_io_0",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between remote socket and IO Root Complex 0.",
++    "EventCode": "0x81f",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_read_data_beats_io_1",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between remote socket and IO Root Complex 1.",
++    "EventCode": "0x85f",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_read_data_beats_io_2",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between remote socket and IO Root Complex 2.",
++    "EventCode": "0x89f",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_read_data_beats_io_3",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between remote socket and IO Root Complex 3.",
++    "EventCode": "0x8df",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_read_data_beats_io_4",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between remote socket and IO Root Complex 4.",
++    "EventCode": "0x91f",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_read_data_beats_io_5",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between remote socket and IO Root Complex 5.",
++    "EventCode": "0x95f",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_read_data_beats_io_6",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between remote socket and IO Root Complex 6.",
++    "EventCode": "0x99f",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_read_data_beats_io_7",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between remote socket and IO Root Complex 7.",
++    "EventCode": "0x9df",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_write_data_beats_io_0",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between remote socket and IO Root Complex 0.",
++    "EventCode": "0x81f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_write_data_beats_io_1",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between remote socket and IO Root Complex 1.",
++    "EventCode": "0x85f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_write_data_beats_io_2",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between remote socket and IO Root Complex 2.",
++    "EventCode": "0x89f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_write_data_beats_io_3",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between remote socket and IO Root Complex 3.",
++    "EventCode": "0x8df",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_write_data_beats_io_4",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between remote socket and IO Root Complex 4.",
++    "EventCode": "0x91f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_write_data_beats_io_5",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between remote socket and IO Root Complex 5.",
++    "EventCode": "0x95f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_write_data_beats_io_6",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between remote socket and IO Root Complex 6.",
++    "EventCode": "0x99f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_upstream_write_data_beats_io_7",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between remote socket and IO Root Complex 7.",
++    "EventCode": "0x9df",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_read_data_beats_io_0",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 0.",
++    "EventCode": "0x81f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_read_data_beats_io_1",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 1.",
++    "EventCode": "0x85f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_read_data_beats_io_2",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 2.",
++    "EventCode": "0x89f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_read_data_beats_io_3",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 3.",
++    "EventCode": "0x8df",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_read_data_beats_io_4",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 4.",
++    "EventCode": "0x91f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_read_data_beats_io_5",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 5.",
++    "EventCode": "0x95f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_read_data_beats_io_6",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 6.",
++    "EventCode": "0x99f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_read_data_beats_io_7",
++    "PublicDescription": "Upstream DMA read data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 7.",
++    "EventCode": "0x9df",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_write_data_beats_io_0",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 0.",
++    "EventCode": "0x81f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_write_data_beats_io_1",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 1.",
++    "EventCode": "0x85f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_write_data_beats_io_2",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 2.",
++    "EventCode": "0x89f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_write_data_beats_io_3",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 3.",
++    "EventCode": "0x8df",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_write_data_beats_io_4",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 4.",
++    "EventCode": "0x91f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_write_data_beats_io_5",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 5.",
++    "EventCode": "0x95f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_write_data_beats_io_6",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 6.",
++    "EventCode": "0x99f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_upstream_write_data_beats_io_7",
++    "PublicDescription": "Upstream DMA write data beats (64 bytes) for transactions between local or remote socket and IO Root Complex 7.",
++    "EventCode": "0x9df",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_0",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 0.",
++    "EventCode": "0x41e",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_1",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 1.",
++    "EventCode": "0x45e",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_2",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 2.",
++    "EventCode": "0x49e",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_3",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 3.",
++    "EventCode": "0x4de",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_4",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 4.",
++    "EventCode": "0x51e",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_5",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 5.",
++    "EventCode": "0x55e",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_6",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 6.",
++    "EventCode": "0x59e",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_7",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 7.",
++    "EventCode": "0x5de",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_8",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 8.",
++    "EventCode": "0x41f",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_9",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 9.",
++    "EventCode": "0x45f",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_10",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 10.",
++    "EventCode": "0x49f",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_11",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 11.",
++    "EventCode": "0x4df",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_12",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 12.",
++    "EventCode": "0x51f",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_13",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 13.",
++    "EventCode": "0x55f",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_14",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 14.",
++    "EventCode": "0x59f",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_cfi_15",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local socket and Core-to-Fabric Interface 15.",
++    "EventCode": "0x5df",
++    "UMask": "0x7fe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_0",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 0.",
++    "EventCode": "0x41e",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_1",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 1.",
++    "EventCode": "0x45e",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_2",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 2.",
++    "EventCode": "0x49e",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_3",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 3.",
++    "EventCode": "0x4de",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_4",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 4.",
++    "EventCode": "0x51e",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_5",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 5.",
++    "EventCode": "0x55e",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_6",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 6.",
++    "EventCode": "0x59e",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_7",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 7.",
++    "EventCode": "0x5de",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_8",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 8.",
++    "EventCode": "0x41f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_9",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 9.",
++    "EventCode": "0x45f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_10",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 10.",
++    "EventCode": "0x49f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_11",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 11.",
++    "EventCode": "0x4df",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_12",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 12.",
++    "EventCode": "0x51f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_13",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 13.",
++    "EventCode": "0x55f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_14",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 14.",
++    "EventCode": "0x59f",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_cfi_15",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and Core-to-Fabric Interface 15.",
++    "EventCode": "0x5df",
++    "UMask": "0x7ff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_0",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 0.",
++    "EventCode": "0x41e",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_1",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 1.",
++    "EventCode": "0x45e",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_2",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 2.",
++    "EventCode": "0x49e",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_3",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 3.",
++    "EventCode": "0x4de",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_4",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 4.",
++    "EventCode": "0x51e",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_5",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 5.",
++    "EventCode": "0x55e",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_6",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 6.",
++    "EventCode": "0x59e",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_7",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 7.",
++    "EventCode": "0x5de",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_8",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 8.",
++    "EventCode": "0x41f",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_9",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 9.",
++    "EventCode": "0x45f",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_10",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 10.",
++    "EventCode": "0x49f",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_11",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 11.",
++    "EventCode": "0x4df",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_12",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 12.",
++    "EventCode": "0x51f",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_13",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 13.",
++    "EventCode": "0x55f",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_14",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 14.",
++    "EventCode": "0x59f",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_inbound_data_beats_cfi_15",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between remote socket and Core-to-Fabric Interface 15.",
++    "EventCode": "0x5df",
++    "UMask": "0xbfe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_0",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 0.",
++    "EventCode": "0x41e",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_1",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 1.",
++    "EventCode": "0x45e",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_2",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 2.",
++    "EventCode": "0x49e",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_3",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 3.",
++    "EventCode": "0x4de",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_4",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 4.",
++    "EventCode": "0x51e",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_5",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 5.",
++    "EventCode": "0x55e",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_6",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 6.",
++    "EventCode": "0x59e",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_7",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 7.",
++    "EventCode": "0x5de",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_8",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 8.",
++    "EventCode": "0x41f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_9",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 9.",
++    "EventCode": "0x45f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_10",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 10.",
++    "EventCode": "0x49f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_11",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 11.",
++    "EventCode": "0x4df",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_12",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 12.",
++    "EventCode": "0x51f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_13",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 13.",
++    "EventCode": "0x55f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_14",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 14.",
++    "EventCode": "0x59f",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "remote_socket_outbound_data_beats_cfi_15",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between remote socket and Core-to-Fabric Interface 15.",
++    "EventCode": "0x5df",
++    "UMask": "0xbff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_0",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 0.",
++    "EventCode": "0x41e",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_1",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 1.",
++    "EventCode": "0x45e",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_2",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 2.",
++    "EventCode": "0x49e",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_3",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 3.",
++    "EventCode": "0x4de",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_4",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 4.",
++    "EventCode": "0x51e",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_5",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 5.",
++    "EventCode": "0x55e",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_6",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 6.",
++    "EventCode": "0x59e",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_7",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 7.",
++    "EventCode": "0x5de",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_8",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 8.",
++    "EventCode": "0x41f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_9",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 9.",
++    "EventCode": "0x45f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_10",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 10.",
++    "EventCode": "0x49f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_11",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 11.",
++    "EventCode": "0x4df",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_12",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 12.",
++    "EventCode": "0x51f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_13",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 13.",
++    "EventCode": "0x55f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_14",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 14.",
++    "EventCode": "0x59f",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_inbound_data_beats_cfi_15",
++    "PublicDescription": "Inbound data beats (32 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 15.",
++    "EventCode": "0x5df",
++    "UMask": "0xffe",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_0",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 0.",
++    "EventCode": "0x41e",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_1",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 1.",
++    "EventCode": "0x45e",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_2",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 2.",
++    "EventCode": "0x49e",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_3",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 3.",
++    "EventCode": "0x4de",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_4",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 4.",
++    "EventCode": "0x51e",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_5",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 5.",
++    "EventCode": "0x55e",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_6",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 6.",
++    "EventCode": "0x59e",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_7",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 7.",
++    "EventCode": "0x5de",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_8",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 8.",
++    "EventCode": "0x41f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_9",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 9.",
++    "EventCode": "0x45f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_10",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 10.",
++    "EventCode": "0x49f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_11",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 11.",
++    "EventCode": "0x4df",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_12",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 12.",
++    "EventCode": "0x51f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_13",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 13.",
++    "EventCode": "0x55f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_14",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 14.",
++    "EventCode": "0x59f",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_or_remote_socket_outbound_data_beats_cfi_15",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local or remote socket and Core-to-Fabric Interface 15.",
++    "EventCode": "0x5df",
++    "UMask": "0xfff",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_link_0",
++    "PublicDescription": "Inbound data beats (64 bytes) for transactions between local socket and remote socket over Cross-socket Link 0.",
++    "EventCode": "0xd5f",
++    "UMask": "0xf3f",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_link_1",
++    "PublicDescription": "Inbound data beats (64 bytes) for transactions between local socket and remote socket over Cross-socket Link 1.",
++    "EventCode": "0xd9f",
++    "UMask": "0xf3f",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_link_2",
++    "PublicDescription": "Inbound data beats (64 bytes) for transactions between local socket and remote socket over Cross-socket Link 2.",
++    "EventCode": "0xddf",
++    "UMask": "0xf3f",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_link_3",
++    "PublicDescription": "Inbound data beats (64 bytes) for transactions between local socket and remote socket over Cross-socket Link 3.",
++    "EventCode": "0xe1f",
++    "UMask": "0xf3f",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_link_4",
++    "PublicDescription": "Inbound data beats (64 bytes) for transactions between local socket and remote socket over Cross-socket Link 4.",
++    "EventCode": "0xe5f",
++    "UMask": "0xf3f",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_inbound_data_beats_link_5",
++    "PublicDescription": "Inbound data beats (64 bytes) for transactions between local socket and remote socket over Cross-socket Link 5.",
++    "EventCode": "0xe9f",
++    "UMask": "0xf3f",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_link_0",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and remote socket over Cross-socket Link 0.",
++    "EventCode": "0xd5f",
++    "UMask": "0xf3e",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_link_1",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and remote socket over Cross-socket Link 1.",
++    "EventCode": "0xd9f",
++    "UMask": "0xf3e",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_link_2",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and remote socket over Cross-socket Link 2.",
++    "EventCode": "0xddf",
++    "UMask": "0xf3e",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_link_3",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and remote socket over Cross-socket Link 3.",
++    "EventCode": "0xe1f",
++    "UMask": "0xf3e",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_link_4",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and remote socket over Cross-socket Link 4.",
++    "EventCode": "0xe5f",
++    "UMask": "0xf3e",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  },
++  {
++    "EventName": "local_socket_outbound_data_beats_link_5",
++    "PublicDescription": "Outbound data beats (64 bytes) for transactions between local socket and remote socket over Cross-socket Link 5.",
++    "EventCode": "0xe9f",
++    "UMask": "0xf3e",
++    "PerPkg": "1",
++    "Unit": "DFPMC"
++  }
++]
 -- 
 2.43.0
 
