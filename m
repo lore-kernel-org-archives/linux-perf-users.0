@@ -1,223 +1,156 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA0C176AAF
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 05:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A535E16A956
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 05:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729229720; cv=none; b=It6uDXvdcct1MkW2oqahK7K4Joocwj/1jlVR9YG0Gf/J5RXt48/jgT6Ex6VRZQOc+NmhjTjpWT/TyOldtktfbyoVjQuUNpCrF9fgT/9jCcUSgBaM+s88w3hexnQl+ubazvGi03nh98dTHtAB30H5aQerEXjql6ERgRhM+RIhzOg=
+	t=1729230451; cv=none; b=eX6ENfKwgQX+psn/cvvJSGmxQvbqU3G26xMak2BAc78PZPsshqUTD3sQXEhQ+qkpnz+Mru7Y0xZTlHauJ1t7E3o/XFkQhst3uywY9koUSA8WrbUxQFEH1sylYwvj1McVtKT5Vzvj2aHR3KhZybIlDcNiV2lQoc2ovwTwdASFTnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729229720; c=relaxed/simple;
-	bh=8+3NdgN2FXjm3yWJDvuSnzf7aTqWK6HAiTKjBlOUnRY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Fu/Yg51pPFwoNYClGJ8sc8W4y9UkWaPvSmK73iaq80Yt0rP0Iad9hJnTbDY65Un4GSh5ZxX1qsmaN+1viPmVL6c87kOT82SFVDaR5Yy56nZh+Dilwjb6N/+lYiyEmnBJG0UgZFsKcxYnm0IIDXbAOrJAnFRSgFpdcYS84X9sUnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=q6a+WAbL; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1729230451; c=relaxed/simple;
+	bh=Be9XG85+7HH1poiSwiKb5Q0p1njOYAcmV4hvbUMH2pw=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=F8mF7btmCrul5aJKiW6FKUf6is7ThVeAyBevxJ2Vt7jRmqoK2+gnYQ3RFlCl4YB/NHdd6fBPQuNoeE3y2fRnvv54/k8iEKwZAGM2+DGCxRF5xCP+bClFjhfCEvZNkkHyV5iuzFoTqqFV98BPgRRKqa+sw2fwmQpyftxVgzMDUWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RaaSsAW+; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="q6a+WAbL"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49HJSAVO017544;
-	Fri, 18 Oct 2024 05:35:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=GfK7bP
-	i6IdCB7ex8oq6M7wTtKsPVoKOrfFT7oK1qN0A=; b=q6a+WAbLEev4UJrwWOQUbu
-	Kxmluoov3GfdvGGDZ39rWaVRF/Gy1yhkjW6jz0S6ZTX6TjL3iP+D18eT9PlUeSIb
-	L+NoUwXQTWz/RYTv+MNsg4WyRJyA+e05GdfdwwpCB35sKxv/1zRZxTH/32X6cxVd
-	KuCuq0WfweoFY7k+KmeWsr+I/AlQlfJVuk6eSpiOetR60hF81slduBBrHdhtmWh2
-	wCYqUbSzogS+sIX63Cpo7Er0Ouy7r86MiNVynY2zlxa6zWGnF762Rc5zFEdI9y7X
-	Y9nTYQVuX4kT33HkFnb2cRPCjAgw3MC8GBY3ZqKQ21vn5Opgzx3xf12pUzvIqetA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42ar0u6t08-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Oct 2024 05:35:06 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49I5Z6G8001275;
-	Fri, 18 Oct 2024 05:35:06 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42ar0u6t05-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Oct 2024 05:35:05 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49I4f4N7005218;
-	Fri, 18 Oct 2024 05:35:05 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4285njjdmc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Oct 2024 05:35:05 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49I5Z15L51642662
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 18 Oct 2024 05:35:01 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8718920049;
-	Fri, 18 Oct 2024 05:35:01 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B927C20040;
-	Fri, 18 Oct 2024 05:34:54 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.241.172])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 18 Oct 2024 05:34:54 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RaaSsAW+"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e2946a143efso2322182276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 22:47:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1729230449; x=1729835249; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VrQeD5sru+L6xsNKe/FlD8yMmpNuX81cs9n3mjgfW1s=;
+        b=RaaSsAW+epgTl0H2h7pR5GzMSzQdfqTlW+P19EEyTGrgbBD8AiyVjydbe5JAluDm35
+         RUPkBR8N+S5sB7wZB+i6Ds62Qpx/uKT8p2LxwevytAjXu1nC8lK1pffmxwT3L2di8qsY
+         OQ/5W3ql7CRUak7+J4h89zcKHRIMgqLHcUTtDueTZzzyhvh91FjTDb0c6DSL0sZUhfNM
+         t3cyKm3f3VmAse5MwCnSWdg/Ql6Su1PDXi/7WHnfLJtc+jAxaRYvOXNmdHcTQ5zcubYn
+         vQVGDpdEILUeOljAvTljosJsLfokjT8ERupyJKEuZYnF8AJTQSsGkIhZ/ZetXLU/W31l
+         ZwEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729230449; x=1729835249;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VrQeD5sru+L6xsNKe/FlD8yMmpNuX81cs9n3mjgfW1s=;
+        b=HmfHRN5rUSqtwtUsV6/d408tOPEXvkKScEIHsOuurRQ6YXRPQ+vfAE8XNq+WOciyi3
+         6/TiY9DTof9CxsntOmP1ZEpHpx5hqm+GTHiK0oLyqRYS61zC8AyTSuYdC1IvYj1ifbfN
+         8G8/MufNAU0F53AFf6ZznPxAoNWoCAChhOSk/q8wX5dkNvU5kBItZPNHBQHGjU7KiMkP
+         WS1+ibaK5ZEhqpVAl//H+ghNfmXS+/pJ1u3WdYXpFLbElhKIQjLaBwDfch8I29sKRu25
+         wtx7e4nG/yFup9OtayZrQwS32On+C5Bas+mJE9XB9NtxTWhrAsnw8KcRXc6ACfEOn/Xo
+         0+RA==
+X-Forwarded-Encrypted: i=1; AJvYcCUm8OelZdz1i7iCRPAFyUT/umEff7ZzEe+sZFEYFEyihqn0KWUelsd6WhDZYEBFi7oXczvsIdBoorILsMT7gjvB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy682wE40en7Tqaum9+PpGb2sQATsBMMcstqoY4/lLb9168PEgq
+	s6BPuq4LRuLWyGBBSoplNoj+t5h8XTrf2OHzkz12ogkHHzDVb5FK8lw92F9AOnTfIIij1WpWNeD
+	Agk376Q==
+X-Google-Smtp-Source: AGHT+IGvMxo4IadnWSZnubeWMpuJOJ/5tIo85LiRdyaxo/4QBcuMEWS68hP1qt6QarMqEQAZZouDD/gt0Fme
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:30c5:9d92:bcd:7977])
+ (user=irogers job=sendgmr) by 2002:a25:844c:0:b0:e20:2da6:ed77 with SMTP id
+ 3f1490d57ef6-e2bb3268464mr3521276.5.1729230448659; Thu, 17 Oct 2024 22:47:28
+ -0700 (PDT)
+Date: Thu, 17 Oct 2024 22:47:10 -0700
+Message-Id: <20241018054719.1004128-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: Re: [PATCH] tools/perf/tests/shell/base_probe: Enhance
- print_overall_results to print summary information
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <d7c34f4f-692e-4c1b-c268-582c645a6c33@redhat.com>
-Date: Fri, 18 Oct 2024 11:04:39 +0530
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <42B1CAD9-C932-4D96-B249-5305049C2D90@linux.vnet.ibm.com>
-References: <20241014154025.85564-1-atrajeev@linux.vnet.ibm.com>
- <d7c34f4f-692e-4c1b-c268-582c645a6c33@redhat.com>
-To: Michael Petlan <mpetlan@redhat.com>
-X-Mailer: Apple Mail (2.3818.100.11.1.3)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: niwwMTSra3zxbGqzC9O5ngW1Grbcy2Lh
-X-Proofpoint-ORIG-GUID: buif0MqBx7wpT1mNE1DqnuRMAPYFE12m
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- spamscore=0 bulkscore=0 adultscore=0 mlxlogscore=999 phishscore=0
- suspectscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410180032
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.105.g07ac214952-goog
+Subject: [PATCH v3 0/9] Run tests in parallel showing number of tests running
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
+	Michael Petlan <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Ilya Leoshkevich <iii@linux.ibm.com>, Colin Ian King <colin.i.king@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Avoid waitpid so that stdout/stderr aren't destroyed prior to wanting
+to read them for display. When running on a color terminal, display
+the number of running tests (1 if sequential). To avoid previous
+flicker, only delete and refresh the display line when it changes. An
+earlier version of this code is here:
+https://lore.kernel.org/lkml/20240701044236.475098-1-irogers@google.com/
 
+Add a signal handler for perf tests so that unexpected signals are
+displayed and test clean up is possible.
 
-> On 17 Oct 2024, at 3:52=E2=80=AFPM, Michael Petlan =
-<mpetlan@redhat.com> wrote:
->=20
-> On Mon, 14 Oct 2024, Athira Rajeev wrote:
->> Currently print_overall_results prints the number of
->> fails in the summary, example from base_probe tests in
->> testsuite_probe:
->>=20
->> ## [ FAIL ] ## perf_probe :: test_invalid_options SUMMARY ::
->> 11 failures found
->>=20
->> test_invalid_options contains multiple tests and out
->> of that 11 failed. Sometimes it could happen that it
->> is due to missing dependency in the build or environment
->> dependency.
->>=20
->> Example, perf probe -L requires DWARF enabled. otherwise
->> it fails as below:
->> ./perf probe -L
->>  Error: switch `L' is not available because NO_DWARF=3D1
->>=20
->> "-L" is tested as one of the option in :
->>   for opt in '-a' '-d' '-L' '-V'; do
->>   <<perf probe test>>
->>   print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "missing argument
->> for $opt"
->>=20
->> Here -a and -d doesn't require DWARF. Similarly there
->> are few other tests requiring DWARF. To hint the user that
->> missing dwarf could be one issue, update print_overall_results
->> to print a comment string along with summary hinting the possible
->> cause. Update test_invalid_options.sh and test_line_semantics.sh
->> to pass the info about dwarf requirement since these tests
->> failed when perf is built without DWARF.
->>=20
->> With the change:
->> ## [ FAIL ] ## perf_probe :: test_invalid_options SUMMARY ::
->> 11 failures found :: Some of the tests need DWARF to run
->=20
-> Hello Athira,
->=20
-> I admit that the idea of some hint why the test failed
-> might be useful, however a static hint that might or
-> might not be related to the particular failure seems to
-> be rather misleading to me. If the test fails for any
-> other reason, the user is still told about DWARF which
-> might not be true.
->=20
-> I think that such hints would need some test result post-
-> processing to determine the actual reason.
+In perf test add an "exclusive" flag that causes a test to be run with
+no other test. Set this flag manually for C tests and via a
+"(exclusive)" in the test description for shell tests. Add the flag to
+shell tests that may fail when run with other tests.
 
-Sure, agree to your point. I will add post-processing check for dwarf =
-and accordingly add the summary information
-Will post a V2=20
+Change the perf test loop to run in two passes. For parallel
+execution, the first pass runs all tests that can be run in parallel
+then the 2nd runs remaining tests sequentially. This causes the
+"exclusive" tests to be run last and with test numbers moderately out
+of alignment.
 
-Thanks
-Athira
->=20
-> Michael
->=20
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/tests/shell/base_probe/test_invalid_options.sh | 2 +-
->> tools/perf/tests/shell/base_probe/test_line_semantics.sh  | 2 +-
->> tools/perf/tests/shell/common/init.sh                     | 3 ++-
->> 3 files changed, 4 insertions(+), 3 deletions(-)
->>=20
->> diff --git =
-a/tools/perf/tests/shell/base_probe/test_invalid_options.sh =
-b/tools/perf/tests/shell/base_probe/test_invalid_options.sh
->> index 1fedfd8b0d0d..e133bb0aa949 100755
->> --- a/tools/perf/tests/shell/base_probe/test_invalid_options.sh
->> +++ b/tools/perf/tests/shell/base_probe/test_invalid_options.sh
->> @@ -75,5 +75,5 @@ done
->>=20
->>=20
->> # print overall results
->> -print_overall_results "$TEST_RESULT"
->> +print_overall_results "$TEST_RESULT" "Some of the tests need DWARF =
-to run"
->> exit $?
->> diff --git a/tools/perf/tests/shell/base_probe/test_line_semantics.sh =
-b/tools/perf/tests/shell/base_probe/test_line_semantics.sh
->> index d8f4bde0f585..99f4f56a3292 100755
->> --- a/tools/perf/tests/shell/base_probe/test_line_semantics.sh
->> +++ b/tools/perf/tests/shell/base_probe/test_line_semantics.sh
->> @@ -51,5 +51,5 @@ done
->>=20
->>=20
->> # print overall results
->> -print_overall_results "$TEST_RESULT"
->> +print_overall_results "$TEST_RESULT" "Some of the tests need DWARF =
-to run"
->> exit $?
->> diff --git a/tools/perf/tests/shell/common/init.sh =
-b/tools/perf/tests/shell/common/init.sh
->> index 075f17623c8e..0862cbc1c6f7 100644
->> --- a/tools/perf/tests/shell/common/init.sh
->> +++ b/tools/perf/tests/shell/common/init.sh
->> @@ -46,10 +46,11 @@ print_results()
->> print_overall_results()
->> {
->> RETVAL=3D"$1"; shift
->> + TASK_COMMENT=3D"$*"
->> if [ $RETVAL -eq 0 ]; then
->> _echo "$MALLPASS## [ PASS ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME =
-SUMMARY"
->> else
->> - _echo "$MALLFAIL## [ FAIL ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME =
-SUMMARY :: $RETVAL failures found"
->> + _echo "$MALLFAIL## [ FAIL ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME =
-SUMMARY :: $RETVAL failures found :: $TASK_COMMENT"
->> fi
->> return $RETVAL
->> }
->> --=20
->> 2.43.5
->>=20
->>=20
->>=20
->=20
+Change the default to be to run tests in parallel. Running tests in
+parallel brings the execution time down to less than half.
+
+v3: Mark additional shell tests as "(exclusive)" to avoid issues with
+    shared resources suggested by Namhyung. Add dependent signal
+    handler change so that kill/ctrl-C don't leave lots of processes,
+    previously sent here:
+    https://lore.kernel.org/lkml/20241017052137.225514-1-irogers@google.com/
+
+v2: Fix inaccurate remaining counts when running specific
+    tests. Rename "remaining" to "active" to better reflect the
+    testing behavior. Move the exclusive flag to test cases and not
+    entire suites. Add more "(exclusive)" flags to test as
+    suggested-by James Clark. Remove "(exclusive)" flag from test
+    descriptions to keep the command line output more concise. Add
+    James Clark's tested-by.
+
+Ian Rogers (9):
+  tools subcmd: Add non-waitpid check_if_command_finished()
+  perf test: Display number of active running tests
+  perf test: Reduce scope of parallel variable
+  perf test: Avoid list test blocking on writing to stdout
+  perf test: Tag parallel failing shell tests with "(exclusive)"
+  perf test: Add a signal handler around running a test
+  perf test: Run parallel tests in two passes
+  perf test: Make parallel testing the default
+  perf test: Add a signal handler to kill forked child processes
+
+ tools/lib/subcmd/run-command.c                |  33 ++
+ tools/perf/tests/builtin-test.c               | 304 ++++++++++++------
+ .../tests/shell/coresight/asm_pure_loop.sh    |   2 +-
+ .../shell/coresight/memcpy_thread_16k_10.sh   |   2 +-
+ .../coresight/thread_loop_check_tid_10.sh     |   2 +-
+ .../coresight/thread_loop_check_tid_2.sh      |   2 +-
+ .../shell/coresight/unroll_loop_thread_10.sh  |   2 +-
+ tools/perf/tests/shell/list.sh                |   5 +-
+ .../tests/shell/perftool-testsuite_report.sh  |   2 +-
+ tools/perf/tests/shell/probe_vfs_getname.sh   |   2 +-
+ .../shell/record+script_probe_vfs_getname.sh  |   2 +-
+ tools/perf/tests/shell/record.sh              |   2 +-
+ tools/perf/tests/shell/record_lbr.sh          |   2 +-
+ tools/perf/tests/shell/record_offcpu.sh       |   2 +-
+ tools/perf/tests/shell/stat_all_pmu.sh        |   2 +-
+ tools/perf/tests/shell/stat_bpf_counters.sh   |   2 +-
+ tools/perf/tests/shell/test_arm_coresight.sh  |   2 +-
+ .../tests/shell/test_arm_coresight_disasm.sh  |   2 +-
+ tools/perf/tests/shell/test_arm_spe.sh        |   2 +-
+ tools/perf/tests/shell/test_data_symbol.sh    |   2 +-
+ tools/perf/tests/shell/test_intel_pt.sh       |   2 +-
+ .../perf/tests/shell/test_stat_intel_tpebs.sh |   2 +-
+ .../tests/shell/trace+probe_vfs_getname.sh    |   2 +-
+ tools/perf/tests/task-exit.c                  |   9 +-
+ tools/perf/tests/tests-scripts.c              |   7 +-
+ tools/perf/tests/tests.h                      |   9 +
+ tools/perf/util/color.h                       |   1 +
+ 27 files changed, 293 insertions(+), 115 deletions(-)
+
+-- 
+2.47.0.105.g07ac214952-goog
 
