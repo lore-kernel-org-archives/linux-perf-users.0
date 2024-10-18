@@ -1,119 +1,153 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F593133987
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 16:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2385202F73
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 16:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729267749; cv=none; b=kXlNnpWlNAOpGwiEC+hoJGUbhrkvHPuIXToqM7i0v6fNWNaaQKFBizQrPHx99vQYJZ6r0/mijPtyDZQPE9BALHsUbN+5/oPI+ojzQYC5XFC4WEngPt4OFCn2gpkgpXAw8TbstXMqvk2RmLmVrtrGN2RkbrZ0dm++WejKMllsVvY=
+	t=1729267896; cv=none; b=gsDMbtc0QEnKBTjgZ7jU3uffvKhYKQLIp8UC3QWOMCwp8xZXbYLp2igfzTqb68tQzCkQZUcZKcQ90Gysw3n41ta+llJIBx9J2LkworsXGoJzI6TE3gUC5wbLEtveaZ1VCz9NGQimc0h3Ve8CgH18QLdus7rj4/wP4BL6Le8wDhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729267749; c=relaxed/simple;
-	bh=G/RJTYen395sCHf3o0PPTezlt/2syDXKmHkNmd8dMf4=;
+	s=arc-20240116; t=1729267896; c=relaxed/simple;
+	bh=U5gFiTyyZWD2QwJmIx6pQoswxw3NzvZukFdjf2JPSBA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SGpR+r3SvtpaccIP/4ZfmsFLF+L0CNJEZaeSpBTRPjyVorTQzNO2jg5FyQLgaFaTPnFLcSOitQDB0N5Ftjtaps25W4z6rc2dzfoTw7vJ0+CQs+hcWXsC7Rv70Ie8d6T6gZ/sq+LJvAV/MsU8z28cjlZMsXX43ZMREGbdl+HDZb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KDljfgmN; arc=none smtp.client-ip=209.85.214.169
+	 To:Cc:Content-Type; b=D287IwlR9xLG3K5X7qt1bzDRsLFZHZ5LE4K3nNRfly+YxXhJoQKZULvvKv8N/KEETJRMj8LPCo+iy/aWkbp58u92ddViHxGoQxe68rJOKWXme73W8aSzqISakEgM9ldbtM+beLXMjTonJ5Nu6JSOaWezpxyG1qKWdBOG2pvSPvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iAj2rof0; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KDljfgmN"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-20ca03687fdso232255ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 09:09:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iAj2rof0"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-20c87b0332cso184425ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 09:11:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729267747; x=1729872547; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729267894; x=1729872694; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d02tJ2688aWYnrpNpT8aw0PM607j/vuc3rJOiuZ5dXI=;
-        b=KDljfgmNGP1OXPUSjhl6Dbss1+0u9/PZoI9S18PXIo1+dU9SwBIqrqAIYBiFBgn2GO
-         qoWg/1aTTOqBqyef0MJ8pEzi1anVzJXSHWG2+OArKtNZKya2wPyo9q8lYkzCmQyQItGT
-         Mt/yaTwl+aHj97mRlyE982ZCuHGNj9pEoeuk/94SeisjB6ei5Kptrd5YA8Bu+QiZnlwM
-         2nnQkvz1NqmZwYA135mcJTAuxw/h0nHaCW4JovrzaIocQYfyA2SsK82eLqtYQvfmGW90
-         shLDxKZOH6DcHD95MfZO+I3FdE/fhJwSlly0UqawvP1v3ECTtkRYtJbY/nVWz4RAzVSA
-         2b9A==
+        bh=8B7ibEayFHCsbRQB9ZzYhdirygNU7e0zdMaz7UmJUtc=;
+        b=iAj2rof0uK5ZNNB0Mg+Fn1qWln1LXsFRX+6xJQl5rleNwzjMMLO16YvS/BPHoOGAd5
+         6b1wQYtNFgfmsLp12Tf6koBXADf/hmKp3lfAOR5lff8cHvBtjhsCx9vzfFMGKLsyzdB+
+         UfC3/AkEPJjx5HN3w4EUZBbqFS8tkwxE2EjQVQbh8VpWNv3nFwOO23+ZyT1DLti0DRFx
+         4T0r/0QheUoPdkLMPsOAl/q35oJyBjOVTNGY1fbD0DR3tSekVEonTqyL1iMj66Vw4+Vx
+         9aTggnhqlXNmiw1VOpHs7U3tudpAQEUSbbkdQjJDvUrt2U8By0oeMCdSo3kNFxueV6wp
+         EUwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729267747; x=1729872547;
+        d=1e100.net; s=20230601; t=1729267894; x=1729872694;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d02tJ2688aWYnrpNpT8aw0PM607j/vuc3rJOiuZ5dXI=;
-        b=V/mpakmBPKAOXbZS6GVDq0iY3RK5tsoJHe9bVuJ5rp98PhI+NbdJQClrjI9OEL8tPo
-         aIVSgp4YULplYDmUPAtRx7EiRXQG/siwFEqMRQZztSpWo21BS8QBAYdzSS6/zz26wYbO
-         rbB6N8rfj4QkVXeIL1clGXKmfKd+v/JvtwdACZYvhzbLoM/9OS0ZP9LaA10tJ8Wlo5jL
-         FVaFuz5WvH1TC6M1Xms2pgfqbV7UPbDdeD9mfTtAauxUM+X8erC9Fr18BAxdpkcsFzbv
-         EpAko14ntZIPWfGQvm1dTAJaLl4EROHVu2OuV93gTZUcvQ8d2U9bjLdtf+J11vJkfuC1
-         Hflw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJcj7kfGlTNjOIw8lPwNfi4rhOGf9HtsvYAVcuzzdOALp9k/gBOBniB9hIIlZJa/aN+zm6NbLWaP1EKpRTKpFa@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUU6qsuRxWyKlEAs36zFxPewWB1e+J+w6iL2ZcWXfgsgDMpKsi
-	H/D5dC33nLuT25kzYS1/ZHlogGhBIY6UgLmpm4GnStvGLPdRfvMFMpf6x/zj0ZDoU1c+V4scq1G
-	vw7CqAB3le0cT9cnrqG298IixIFgWYGOd6LfZ
-X-Google-Smtp-Source: AGHT+IGw/e8f9nTq5QjQwKGkhABnd4urQMDSdJvbm22FwwefYnvjUyaXjTm6dZq8c28kvMEL9FEwOmMU+QzXcUtmSx8=
-X-Received: by 2002:a17:902:f68f:b0:20c:568f:37c7 with SMTP id
- d9443c01a7336-20e5b833634mr2711975ad.17.1729267746796; Fri, 18 Oct 2024
- 09:09:06 -0700 (PDT)
+        bh=8B7ibEayFHCsbRQB9ZzYhdirygNU7e0zdMaz7UmJUtc=;
+        b=tdnosrN0S1qMZEco5ezZdTn64yUz7OTWosIDz0UFILOlPi32l07bcicTCao6EdKeKs
+         yvFoU6SafGG2l/rlCzFBnpRr8e8Gl+fljgR69KJzm25Zu2iyJsqkVjiLKGJqfWVj48uh
+         A/ma5sEdNjEWbYsMsFCpEURO9QRcLIDjmB8wTpR0FaQZUbOaQnGqS4Zidmy4JOHXv+qg
+         +J9LyZ38eo2sIWrnbeXitzX8z74IQoi+gmTGthifxQaLkKFExtPW2QGjWDol84uB17+e
+         xUKT/SM5EE08ju6x8JdccIKUoT2TYYZQT9qele11hcEe+H5BdpyqMJfQh7exWszfbdh8
+         0ing==
+X-Forwarded-Encrypted: i=1; AJvYcCWqrcJmypvMMHAkAL9RaeQd2wguF1n1vQwVFE6AqNcfTfEac+E2anWkewBk1bLB0SXwVCqnICbrB8yDH3quLi4F@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAsW3nre0m5hQ+xanq2UWUi5HD3C8LfhkskyWjpp9BeSK0wPd7
+	WBjIBYrA8gMDmNUYexPzzfwmXv7GmhWtzy1UQTya/C1ZFlWxr5QjNbJNIcVj5isRkngN8x3Q2oZ
+	4wfjJdXDlfd6vRBLKzdxofogKEy2DYpcqtYao
+X-Google-Smtp-Source: AGHT+IFMJOmiPu6T5M2aLbt4TGY5oBAvuDIL8R/OOcvgRNxMVDp4/yEjqqq5/qHrwvuJqn2rHURwYpcSKeycrIhYbfc=
+X-Received: by 2002:a17:902:cece:b0:20b:5e34:1850 with SMTP id
+ d9443c01a7336-20e5bd22cd0mr2412525ad.23.1729267893500; Fri, 18 Oct 2024
+ 09:11:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAF6YOcNRt1=Dgw85QtVgwOY1QYTOd9E=V4Vr9xY2cjZp5n+bgw@mail.gmail.com>
- <ZxGPJpbElYMQhQDX@google.com> <CAF6YOcOOQ9gWg_LLzZXfyYrvhvZkgBhDL1rxMv4sHagZqiZRSA@mail.gmail.com>
-In-Reply-To: <CAF6YOcOOQ9gWg_LLzZXfyYrvhvZkgBhDL1rxMv4sHagZqiZRSA@mail.gmail.com>
+References: <20241018081640.1388661-1-tmricht@linux.ibm.com>
+In-Reply-To: <20241018081640.1388661-1-tmricht@linux.ibm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 18 Oct 2024 09:08:52 -0700
-Message-ID: <CAP-5=fW6OnBvyGwEZHJut0QA6c=KD3UBf7mNKZC1YS5AjCNZsA@mail.gmail.com>
-Subject: Re: Toggle perf stat on/off periodically and keep each sample
-To: Fengkai Sun <qcloud1014@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
+Date: Fri, 18 Oct 2024 09:11:21 -0700
+Message-ID: <CAP-5=fWx64SW2BnVm6zbLKpNWqOp1Qm4JT1B5b9shwq0h+yNrg@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Fix perf test case 84 on s390
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	acme@kernel.org, namhyung@kernel.org, agordeev@linux.ibm.com, 
+	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 18, 2024 at 7:19=E2=80=AFAM Fengkai Sun <qcloud1014@gmail.com> =
-wrote:
+On Fri, Oct 18, 2024 at 1:17=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
 >
-> Hello Namhyung, thank you very much for your reply!
+> Perf test case 84 'perf pipe recording and injection test'
+> sometime fails on s390, especially on z/VM virtual machines.
 >
-> On Fri, Oct 18, 2024 at 6:26=E2=80=AFAM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > I think you are looking for something like interval mode like -I 1000.
-> >
-> >   $ sudo perf stat -a -I 1000 -e cycles,instructions sleep 5
-> >   #           time             counts unit events
-> >        1.001064439        644,313,943      cycles
-> >        1.001064439        548,175,426      instructions                =
-     #    0.85  insn per cycle
-> >        2.002682133        570,454,723      cycles
-> >        2.002682133        426,891,566      instructions                =
-     #    0.75  insn per cycle
-> >        3.004412672        565,162,161      cycles
-> >        3.004412672        351,875,655      instructions                =
-     #    0.62  insn per cycle
-> >        4.006131920        463,748,461      cycles
-> >        4.006131920        239,702,866      instructions                =
-     #    0.52  insn per cycle
-> >        5.001878221        466,409,911      cycles
-> >        5.001878221        235,684,130      instructions                =
-     #    0.51  insn per cycle
-> >
-> > Of course it doesn't turn the events on and off.  But is it something
-> > similar to what you want?
-> >
-> > Thanks,
-> > Namhyung
-> >
+> This is caused by a very short run time of workload
 >
-> Yes, this is similar to what I want. Of course, I want the interval to
-> be variable and can be set from the user program. I guess this cannot
-> be achieved by current perf, right?
+>   # perf test -w noploop
+>
+> which runs for 1 second. Occasionally this is not long
+> enough and the perf report has no samples for symbol noploop.
+>
+> Fix this and enlarge the runtime for the perf work load
+> to 3 seconds. This ensures the symbol noploop is always
+> present. Since only s390 is affected, make this loop
+> architecture dependend.
+>
+> Output before:
+>  Inject -b build-ids test
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.195 MB - ]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.277 MB - ]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.195 MB - ]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.160 MB
+>                          /tmp/perf.data.ELzRdq (4031 samples) ]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.195 MB - ]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.195 MB - ]
+>  Inject -b build-ids test [Success]
+>
+>  Inject --buildid-all build-ids test
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.195 MB - ]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.014 MB - ]
+>  Inject --buildid-all build-ids test [Failed - cannot find
+>                                 noploop function in pipe #2]
+>
+> Output after:
+> Successful execution for over 10 times in a loop.
+>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Reviewed-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
 
-You could gather more data than you need and discard the ones you
-don't? There's a json output to perf stat that may be useful for
-scripting on top of this.
+Lgtm, fwiw if we can land the parallel testing [1] I'm not sure it
+matters if a test takes 3 seconds to run as long as it is running
+amongst the concurrently running tests.
 
-Fwiw, in the future writing python code to do this kind of thing
-should be more straightforward:
-https://lore.kernel.org/lkml/20241016042415.7552-17-irogers@google.com/
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
+[1] https://lore.kernel.org/lkml/20241018054719.1004128-1-irogers@google.co=
+m/
+
+> ---
+>  tools/perf/tests/shell/pipe_test.sh | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/perf/tests/shell/pipe_test.sh b/tools/perf/tests/shell=
+/pipe_test.sh
+> index d4c8005ce9b9..e459aa99a951 100755
+> --- a/tools/perf/tests/shell/pipe_test.sh
+> +++ b/tools/perf/tests/shell/pipe_test.sh
+> @@ -13,6 +13,7 @@ skip_test_missing_symbol ${sym}
+>  data=3D$(mktemp /tmp/perf.data.XXXXXX)
+>  data2=3D$(mktemp /tmp/perf.data2.XXXXXX)
+>  prog=3D"perf test -w noploop"
+> +[ "$(uname -m)" =3D "s390x" ] && prog=3D"$prog 3"
+>  err=3D0
+>
+>  set -e
+> --
+> 2.47.0
+>
+>
