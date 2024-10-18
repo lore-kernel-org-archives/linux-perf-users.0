@@ -1,216 +1,124 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1151218C92A
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 21:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6047A18D620;
+	Fri, 18 Oct 2024 22:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729286812; cv=none; b=htauHQsaZvMLdbUDE5mbHauYcKHcc8LB0VFui+qnARN0OwZEHX0aY8ljbK0SKDPfLKhUPApmSWcOm7BrF0RKWTLAo+YG/Cjy/W1LgLIrlkzvda5WTT0FCVJf76jEusZI2scsl/DcYYjWLSVyKZ6muNZVhRAuNxN71Iis0T/spdg=
+	t=1729289809; cv=none; b=qauMANJ05sd3/t3RTRblbAOJLcz0eX0iD18+8v+ezysbdjKpY75GCeo8+c5dksNShzjBD2v95jOxjAKNy00yE7Z0Mdk7pKXuVNHKzJUlOszxzHtp+zTEcjyk0XkX3OrEDwgV1rHYACHRh3pIZqyVhSn2O9NNgMrAOxFWJRsXIUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729286812; c=relaxed/simple;
-	bh=Bifc0ooLfxCPKSJr3sxfNROTVgXl3ObhrwqkBSyou8E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DIXASzX3Kxi/ysy8s+xQgikO6FjMWxZ+zBg1ZIx+Dm1X83wz2ses3PzpkZVZUAQh9KoUZE7k9xZPziLjWYKxHXCnvl+tFJCuNZY9nxupEv7z3mQRoxhMJwFhpItQOXm06HAIvfKFUBhFLMlSv/j6zciX19Hh/3xqMgQKbSU1EBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X9qIxKfk; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1729289809; c=relaxed/simple;
+	bh=5dHJfEm//35pWwhcN2KEO86KY/+VX4OyM6ATgjJuFow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WC2yzLMg64wBp3JpUpXAFybn226rl/z4GKwH81iycQXt3p3QJ2+CK04XIw/4P3fLAWrt+Nj7zQ10H8Jv/Vx6NJo+cbdXQjvluB5z5sPDUIHNLHemq+t0feueOLr1C5NDbJC75W7KGWalbFOzDglhgIqydBJpyIkHl6JCOivwZ0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KmSIL0OO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X9qIxKfk"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-460a8d1a9b7so22161cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 14:26:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729286809; x=1729891609; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bT8Ba4ZWeSCG80fJdq0OruJ7WQHACI1LDVOlqFGGrC4=;
-        b=X9qIxKfkF8yz3ryrRvAe6STEtVwB9WUAbyyZ8ncodGXWWmhTN8TF405HaUKW5Ig0KK
-         +p0dqTvPhY2yqI1n1++EE/o4qegMoij19/06N2EbtRzFGBQ9rLACLwOpzTH4B5h5CSE5
-         1ao0YoPJKJ47JIY5aU9f+stXZqh9+HkESDBGUi17QeA0cEwEdvbXYijVKX+xEa8JBxhn
-         49TlNYPoaI2keTIZ+xmm9J2BVEBBQvINb8uPeplD8LSc9B8w4VEZV8wmGf7FCE9GNEB5
-         P8JIFT02iNKQB7pDAtpMgEbEzZFxIE/dVzjtzkBycR8e4hLPa9dMp+KUB1huydMWGiOu
-         opfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729286809; x=1729891609;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bT8Ba4ZWeSCG80fJdq0OruJ7WQHACI1LDVOlqFGGrC4=;
-        b=pC/yEoBQ2uwusahpf1Kd9u73FMSY/Q2V+AdJImzmFSWB9d34Vd22qafhUQD/2I6Bva
-         Tn7eVXztE2IPSCg2hc2tJOAI88QtE+8m2TBSAo9Bk/QEWGL8Ot745cLlaExqZhiD9uuy
-         jRycAPljJBvKd1DN2U/URtkhY3THvj8fGcVKmrc3i2yHf73LF6pEnXrwsd2ccbxZ+5sM
-         KdTrmaNWpk+kbGaou7ihl+UnTsZWMf7avFLL+HRPRqDP7RbhQjHbZ5drhmUQJfpX9a5l
-         1HVfKFW/kUMUN5GUFZH2foXdQ3FzoGlIIKwgTgf/vGaJjX3JXeXxdwINgy43jlQp54Ml
-         vNOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVStAx+pzMPl/pivlUg+P6VhILq1L181UytTCjhJoDtnMavSHtyHh31GZG23gINjBfhK3HcUuQX6ZdYHgN79GEV@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4JsuIUqYH+ngpPLx0iGDB7v2UPudfg/oWC/E2X3mJWolWIeX9
-	PpN8sg/Xhrl9++KAFhihMa0pX31TLaKl29hXvwrSX+wDQzyBIjb1SbeMsTrZWcYypq42lRAgtEU
-	lNozPXfYD74LlE5URpSobWXzG2FiCQJov6/QK
-X-Google-Smtp-Source: AGHT+IHZ0lrEqW26XgwqaSsbg0q2R0Ve84a2kdgbZqy21howwoTK7IjHy0dsGYUjRDu4c/H0tHhL4vj/GFexTy3Oc8g=
-X-Received: by 2002:ac8:5ac2:0:b0:460:48fc:3cd8 with SMTP id
- d75a77b69052e-460be411dbfmr292291cf.5.1729286808639; Fri, 18 Oct 2024
- 14:26:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KmSIL0OO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 126A7C4CEC6;
+	Fri, 18 Oct 2024 22:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729289808;
+	bh=5dHJfEm//35pWwhcN2KEO86KY/+VX4OyM6ATgjJuFow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KmSIL0OOaHObtvUoi1O1SZEQYGAT80cUtx+ys1Qt124zMTIxotskyKvZx0U7Ty+E2
+	 VNy50yirarmymG1aWuK17ZJaHUC2VUZQXVfXGpysL20keMuxedkHalbBsfudxA8AVE
+	 ozsKZnBkm+pHsRtvKlrMmcHmTaw2BPL7MSUYx5mMnmsnz2sqLThXT82ksdLLo4D4qS
+	 ID+fDk+YluZJmohUwt6Cg0j0JIOVdzR588qBX+QuYoFrmtjbvBgkOM04PrmKRDm8xJ
+	 UltiyoccabinhZl5Of4JYPm0QyrTQ58F7D1+HLWGNU5PNjofPM8Rux2wWdjvZWoYYZ
+	 sjwb2ZVG4XUfg==
+Date: Fri, 18 Oct 2024 19:16:43 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Howard Chu <howardchu95@gmail.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH/RFT] Re: [PATCH v5 1/8] perf trace: Fix iteration of
+ syscall ids in syscalltbl->entries
+Message-ID: <ZxLeS7CQFIR8lTmo@x1>
+References: <c279ad02-2543-4a95-9404-9304e1e704da@kernel.org>
+ <ffc2eb09-ac78-4594-a376-3fff9918c2a7@kernel.org>
+ <ZwYbQswnGHSstClc@google.com>
+ <CAH0uvoi622J7gZ9BoTik7niNH3axVJR0kPNovUQnMjUB6GWLNg@mail.gmail.com>
+ <CAH0uvojw5EKqxqETq_H3-5zmjXiK=ew2hBQiPDpCtZmO7=mrKA@mail.gmail.com>
+ <3a592835-a14f-40be-8961-c0cee7720a94@kernel.org>
+ <ZwgAzde-jVyo4cSu@google.com>
+ <ZwgBenahw7EImQLk@google.com>
+ <ZwhA1SL706f60ynd@x1>
+ <2a91f9d0-8950-4936-9776-7ba59ab1d42a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241018204306.741972-1-namhyung@kernel.org>
-In-Reply-To: <20241018204306.741972-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 18 Oct 2024 14:26:34 -0700
-Message-ID: <CAP-5=fXBJ7XpaXJ+9ZChJfkB3QX5jjM20CxvPH14oN=NFjy8eA@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Update all metrics test like metricgroups test
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a91f9d0-8950-4936-9776-7ba59ab1d42a@kernel.org>
 
-On Fri, Oct 18, 2024 at 1:43=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Like in the metricgroup tests, it should check the permission first and
-> then skip relevant failures accordingly.
->
-> Also it needs to try again with the system wide flag properly.  On the
-> second round, check if the result has the metric name because other
-> failure cases are checked in the first round already.
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+On Mon, Oct 14, 2024 at 02:19:58PM +0200, Jiri Slaby wrote:
+> On 10. 10. 24, 23:02, Arnaldo Carvalho de Melo wrote:
+> > On Thu, Oct 10, 2024 at 09:31:54AM -0700, Namhyung Kim wrote:
+> > > On Thu, Oct 10, 2024 at 09:29:01AM -0700, Namhyung Kim wrote:
+> > > > On Thu, Oct 10, 2024 at 10:22:12AM +0200, Jiri Slaby wrote:
+> > > > > Subject: [PATCH] perf: fix non-listed archs
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+> > > > > Suggested-by: Howard Chu <howardchu95@gmail.com>
+> > > > > Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 
-Thanks,
-Ian
+> > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > > Also with,
+> > > Fixes: 7a2fb5619cc1fb53 ("perf trace: Fix iteration of syscall ids in syscalltbl->entries")
+> > > > Arnaldo, can you please pick this up for v6.12?
 
-> ---
->  tools/perf/tests/shell/stat_all_metrics.sh | 87 ++++++++++++++++------
->  1 file changed, 66 insertions(+), 21 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/test=
-s/shell/stat_all_metrics.sh
-> index 54774525e18a7b9a..73e9347e88a964bd 100755
-> --- a/tools/perf/tests/shell/stat_all_metrics.sh
-> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
-> @@ -2,42 +2,87 @@
->  # perf all metrics test
->  # SPDX-License-Identifier: GPL-2.0
->
-> +ParanoidAndNotRoot()
-> +{
-> +  [ "$(id -u)" !=3D 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid=
-)" -gt $1 ]
-> +}
-> +
-> +system_wide_flag=3D"-a"
-> +if ParanoidAndNotRoot 0
-> +then
-> +  system_wide_flag=3D""
-> +fi
-> +
->  err=3D0
->  for m in $(perf list --raw-dump metrics); do
->    echo "Testing $m"
-> -  result=3D$(perf stat -M "$m" true 2>&1)
-> -  if [[ "$result" =3D~ ${m:0:50} ]] || [[ "$result" =3D~ "<not supported=
->" ]]
-> +  result=3D$(perf stat -M "$m" $system_wide_flag -- sleep 0.01 2>&1)
-> +  result_err=3D$?
-> +  if [[ $result_err -gt 0 ]]
->    then
-> -    continue
-> +    if [[ "$result" =3D~ \
-> +          "Access to performance monitoring and observability operations=
- is limited" ]]
-> +    then
-> +      echo "Permission failure"
-> +      echo $result
-> +      if [[ $err -eq 0 ]]
-> +      then
-> +        err=3D2 # Skip
-> +      fi
-> +      continue
-> +    elif [[ "$result" =3D~ "in per-thread mode, enable system wide" ]]
-> +    then
-> +      echo "Permissions - need system wide mode"
-> +      echo $result
-> +      if [[ $err -eq 0 ]]
-> +      then
-> +        err=3D2 # Skip
-> +      fi
-> +      continue
-> +    elif [[ "$result" =3D~ "<not supported>" ]]
-> +    then
-> +      echo "Not supported events"
-> +      echo $result
-> +      if [[ $err -eq 0 ]]
-> +      then
-> +        err=3D2 # Skip
-> +      fi
-> +      continue
-> +    elif [[ "$result" =3D~ "FP_ARITH" || "$result" =3D~ "AMX" ]]
-> +    then
-> +      echo "FP issues"
-> +      echo $result
-> +      if [[ $err -eq 0 ]]
-> +      then
-> +        err=3D2 # Skip
-> +      fi
-> +      continue
-> +    elif [[ "$result" =3D~ "PMM" ]]
-> +    then
-> +      echo "Optane memory issues"
-> +      echo $result
-> +      if [[ $err -eq 0 ]]
-> +      then
-> +        err=3D2 # Skip
-> +      fi
-> +      continue
-> +    fi
->    fi
-> -  # Failed so try system wide.
-> -  result=3D$(perf stat -M "$m" -a sleep 0.01 2>&1)
-> +
->    if [[ "$result" =3D~ ${m:0:50} ]]
->    then
->      continue
->    fi
-> -  # Failed again, possibly the workload was too small so retry with some=
-thing
-> -  # longer.
-> -  result=3D$(perf stat -M "$m" perf bench internals synthesize 2>&1)
-> +
-> +  # Failed, possibly the workload was too small so retry with something =
-longer.
-> +  result=3D$(perf stat -M "$m" $system_wide_flag -- perf bench internals=
- synthesize 2>&1)
->    if [[ "$result" =3D~ ${m:0:50} ]]
->    then
->      continue
->    fi
->    echo "Metric '$m' not printed in:"
->    echo "$result"
-> -  if [[ "$err" !=3D "1" ]]
-> -  then
-> -    err=3D2
-> -    if [[ "$result" =3D~ "FP_ARITH" || "$result" =3D~ "AMX" ]]
-> -    then
-> -      echo "Skip, not fail, for FP issues"
-> -    elif [[ "$result" =3D~ "PMM" ]]
-> -    then
-> -      echo "Skip, not fail, for Optane memory issues"
-> -    else
-> -      err=3D1
-> -    fi
-> -  fi
-> +  err=3D1
->  done
->
->  exit "$err"
-> --
-> 2.47.0.rc1.288.g06298d1525-goog
->
+> > Sure, probably the safest bet now, but just in case, Jiri, can you test
+> > the following?
+
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Subject: [PATCH 1/1] perf tools arm: Generate syscalltbl.c from arm's syscall.tbl
+> 
+> With this:
+> +++ b/tools/perf/Makefile.config
+> @@ -31,7 +31,7 @@ $(call detected_var,SRCARCH)
+>  ifneq ($(NO_SYSCALL_TABLE),1)
+
+So after merging your changes (thanks) and finding an arm 32-bit system
+(ressurecting a raspberry pi 3), I can build it, with bpf skels, etc but
+then...
+
+; } else if (size > 0 && size <= value_size) { /* struct */
+83: (bf) r1 = r9
+84: (07) r1 += -1
+85: (67) r1 <<= 32
+86: (77) r1 >>= 32
+87: (25) if r1 > 0xfff goto pc+23
+ R0_w=map_value(id=0,off=0,ks=4,vs=24688,imm=0) R1_w=inv(id=0,umax_value=4095,var_off=(0x0; 0xfff)) R2_w=map_value(id=0,off=16,ks=4,vs=8272,imm=0) R3_w=inv(id=0) R6_w=map_value(id=0,off=20,ks=4,vs=24,imm=0) R7_w=map_value(id=0,off=56,ks=4,vs=8272,imm=0) R8_w=invP6 R9_w=inv(id=27,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R10=fp0 fp-8=mmmmmmmm fp-16_w=map_value fp-24=map_value fp-32_w=invP40 fp-40=ctx fp-48=map_value fp-56_w=inv1 fp-64_w=map_value fp-72=map_value fp-80=map_value
+; if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, size, arg))
+88: (79) r1 = *(u64 *)(r10 -16)
+89: (bf) r2 = r9
+90: (85) call bpf_probe_read_user#112
+ R0_w=map_value(id=0,off=0,ks=4,vs=24688,imm=0) R1_w=map_value(id=0,off=112,ks=4,vs=24688,imm=0) R2_w=inv(id=27,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R3_w=inv(id=0) R6_w=map_value(id=0,off=20,ks=4,vs=24,imm=0) R7_w=map_value(id=0,off=56,ks=4,vs=8272,imm=0) R8_w=invP6 R9_w=inv(id=27,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R10=fp0 fp-8=mmmmmmmm fp-16_w=map_value fp-24=map_value fp-32_w=invP40 fp-40=ctx fp-48=map_value fp-56_w=inv1 fp-64_w=map_value fp-72=map_value fp-80=map_value
+R2 unbounded memory access, use 'var &= const' or 'if (var < const)'
+processed 497 insns (limit 1000000) max_states_per_insn 2 total_states 23 peak_states 23 mark_read 15
+-- END PROG LOAD LOG --
+libbpf: prog 'sys_enter': failed to load: -13
+libbpf: failed to load object 'augmented_raw_syscalls_bpf'
+libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -13
+
+Back at playing games with the BPF verifier:
+
+root@aquarius:~# uname -a
+Linux aquarius 5.10.103-v7+ #1529 SMP Tue Mar 8 12:21:37 GMT 2022 armv7l GNU/Linux
+root@aquarius:~# clang-13 --version
+Raspbian clang version 13.0.1-6~deb10u4+rpi1 (172.17.3.10:/build/git/l/llvm-toolchain-13 5bdfde6d6808bed4396414f7000db3d958040453)
+Target: arm-unknown-linux-gnueabihf
+Thread model: posix
+InstalledDir: /usr/bin
+root@aquarius:~#
+
+Will continue chasing windmills tomorrow...
+
+- Arnaldo
