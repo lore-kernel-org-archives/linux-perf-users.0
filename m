@@ -1,198 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40FC13A244;
-	Fri, 18 Oct 2024 21:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1151218C92A
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 21:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729285909; cv=none; b=ho+1OGBi4IfD1IBLLQiRVvoSai6BZm33qsWK/W9rKsmnhmREVawlEBy5NrzUp1Aiot8pJgCcLJ9fu0qrJvtzZrYVrzqHvhLbkRYc5IKitODJ8etbsZ8zWZLXavfk1JeI7r5tq7gfln2BxtIGbM9SSDSrinrjlPG/R6uku8LnHfA=
+	t=1729286812; cv=none; b=htauHQsaZvMLdbUDE5mbHauYcKHcc8LB0VFui+qnARN0OwZEHX0aY8ljbK0SKDPfLKhUPApmSWcOm7BrF0RKWTLAo+YG/Cjy/W1LgLIrlkzvda5WTT0FCVJf76jEusZI2scsl/DcYYjWLSVyKZ6muNZVhRAuNxN71Iis0T/spdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729285909; c=relaxed/simple;
-	bh=kyEwhAQI11+4MwBtBL805huSaoutR76e/zDQvYPmBAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gbIrDnb2sOys02HEqofVIxa6DnXyqSRX8z3XewCHUZ+NxDbFCs9W3jnFqTiu7Bs5zX018ErPLqHYjR0E2IlAnNNSllPt21qncXzyUDwp2Wtsv3PVKr1FMdLn2KSXVHC1G/+qnohP3L0232kpUPc8GjIfEaggQ4azwT5HlR6cZRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HT0Y3/8T; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1729286812; c=relaxed/simple;
+	bh=Bifc0ooLfxCPKSJr3sxfNROTVgXl3ObhrwqkBSyou8E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DIXASzX3Kxi/ysy8s+xQgikO6FjMWxZ+zBg1ZIx+Dm1X83wz2ses3PzpkZVZUAQh9KoUZE7k9xZPziLjWYKxHXCnvl+tFJCuNZY9nxupEv7z3mQRoxhMJwFhpItQOXm06HAIvfKFUBhFLMlSv/j6zciX19Hh/3xqMgQKbSU1EBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X9qIxKfk; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HT0Y3/8T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729285907; x=1760821907;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kyEwhAQI11+4MwBtBL805huSaoutR76e/zDQvYPmBAw=;
-  b=HT0Y3/8TBipOfrRc2pe9w2GHnKbMRHz2z3hmqRVZrS5vm/gQMGO/Yviw
-   G1+2y/ncw9WRnkoeHO8LkgJro48egNCSGoGcYwBGMTKSNuzPe1Hfxt8Nh
-   NAqernmXCip+VPEaT1DGVa70lQUKWWNM9sKDZGAKhpZcqa37coOW+W1JE
-   orW5atxcrUbsJMzel1ut8PfDNYrt/chOooNXB6FicIVwfJHabUO/PYmT8
-   fdUGWbC4ovMaT8ryoeOBk0AP+KCjV0zQo6FlN+i95RgygOnVyQtxCvy/I
-   ICDHTDFlfIArSZAHDqOTvvysz/FQR2ZhrZUGc67RmpZSu+HYClba9tm7F
-   w==;
-X-CSE-ConnectionGUID: Uy+XOep3SlCvLItHwZ1dqw==
-X-CSE-MsgGUID: CXSU7lH1QmCNXe6vcVpalQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11229"; a="39458497"
-X-IronPort-AV: E=Sophos;i="6.11,214,1725346800"; 
-   d="scan'208";a="39458497"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 14:11:46 -0700
-X-CSE-ConnectionGUID: vYVn18IWTUCW7SdXAJoGsg==
-X-CSE-MsgGUID: 3h7oBRudQc+EAcetfT16JA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,214,1725346800"; 
-   d="scan'208";a="83552780"
-Received: from bdomingu-mobl1.amr.corp.intel.com (HELO desk) ([10.125.148.176])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 14:11:45 -0700
-Date: Fri, 18 Oct 2024 14:11:39 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Perry Yuan <Perry.Yuan@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH v4 02/10] x86/cpu/topology: Add CPU type to struct
- cpuinfo_topology
-Message-ID: <20241018211139.wvvfn7az3gp35lwe@desk>
-References: <20240930-add-cpu-type-v4-0-104892b7ab5f@linux.intel.com>
- <20240930-add-cpu-type-v4-2-104892b7ab5f@linux.intel.com>
- <1a96323d-f6e9-4a59-97c4-8cab149a7b31@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X9qIxKfk"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-460a8d1a9b7so22161cf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 14:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1729286809; x=1729891609; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bT8Ba4ZWeSCG80fJdq0OruJ7WQHACI1LDVOlqFGGrC4=;
+        b=X9qIxKfkF8yz3ryrRvAe6STEtVwB9WUAbyyZ8ncodGXWWmhTN8TF405HaUKW5Ig0KK
+         +p0dqTvPhY2yqI1n1++EE/o4qegMoij19/06N2EbtRzFGBQ9rLACLwOpzTH4B5h5CSE5
+         1ao0YoPJKJ47JIY5aU9f+stXZqh9+HkESDBGUi17QeA0cEwEdvbXYijVKX+xEa8JBxhn
+         49TlNYPoaI2keTIZ+xmm9J2BVEBBQvINb8uPeplD8LSc9B8w4VEZV8wmGf7FCE9GNEB5
+         P8JIFT02iNKQB7pDAtpMgEbEzZFxIE/dVzjtzkBycR8e4hLPa9dMp+KUB1huydMWGiOu
+         opfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729286809; x=1729891609;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bT8Ba4ZWeSCG80fJdq0OruJ7WQHACI1LDVOlqFGGrC4=;
+        b=pC/yEoBQ2uwusahpf1Kd9u73FMSY/Q2V+AdJImzmFSWB9d34Vd22qafhUQD/2I6Bva
+         Tn7eVXztE2IPSCg2hc2tJOAI88QtE+8m2TBSAo9Bk/QEWGL8Ot745cLlaExqZhiD9uuy
+         jRycAPljJBvKd1DN2U/URtkhY3THvj8fGcVKmrc3i2yHf73LF6pEnXrwsd2ccbxZ+5sM
+         KdTrmaNWpk+kbGaou7ihl+UnTsZWMf7avFLL+HRPRqDP7RbhQjHbZ5drhmUQJfpX9a5l
+         1HVfKFW/kUMUN5GUFZH2foXdQ3FzoGlIIKwgTgf/vGaJjX3JXeXxdwINgy43jlQp54Ml
+         vNOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVStAx+pzMPl/pivlUg+P6VhILq1L181UytTCjhJoDtnMavSHtyHh31GZG23gINjBfhK3HcUuQX6ZdYHgN79GEV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4JsuIUqYH+ngpPLx0iGDB7v2UPudfg/oWC/E2X3mJWolWIeX9
+	PpN8sg/Xhrl9++KAFhihMa0pX31TLaKl29hXvwrSX+wDQzyBIjb1SbeMsTrZWcYypq42lRAgtEU
+	lNozPXfYD74LlE5URpSobWXzG2FiCQJov6/QK
+X-Google-Smtp-Source: AGHT+IHZ0lrEqW26XgwqaSsbg0q2R0Ve84a2kdgbZqy21howwoTK7IjHy0dsGYUjRDu4c/H0tHhL4vj/GFexTy3Oc8g=
+X-Received: by 2002:ac8:5ac2:0:b0:460:48fc:3cd8 with SMTP id
+ d75a77b69052e-460be411dbfmr292291cf.5.1729286808639; Fri, 18 Oct 2024
+ 14:26:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1a96323d-f6e9-4a59-97c4-8cab149a7b31@amd.com>
+References: <20241018204306.741972-1-namhyung@kernel.org>
+In-Reply-To: <20241018204306.741972-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 18 Oct 2024 14:26:34 -0700
+Message-ID: <CAP-5=fXBJ7XpaXJ+9ZChJfkB3QX5jjM20CxvPH14oN=NFjy8eA@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Update all metrics test like metricgroups test
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 18, 2024 at 11:28:31AM -0500, Mario Limonciello wrote:
-> On 9/30/2024 09:47, Pawan Gupta wrote:
-> > Sometimes it is required to take actions based on if a CPU is a performance
-> > or efficiency core. As an example, intel_pstate driver uses the Intel
-> > core-type to determine CPU scaling. Also, some CPU vulnerabilities only
-> > affect a specific CPU type, like RFDS only affects Intel Atom. Hybrid
-> > systems that have variants P+E, P-only(Core) and E-only(Atom), it is not
-> > straightforward to identify which variant is affected by a type specific
-> > vulnerability.
-> > 
-> > Such processors do have CPUID field that can uniquely identify them. Like,
-> > P+E, P-only and E-only enumerates CPUID.1A.CORE_TYPE identification, while
-> > P+E additionally enumerates CPUID.7.HYBRID. Based on this information, it
-> > is possible for boot CPU to identify if a system has mixed CPU types.
-> > 
-> > Add a new field hw_cpu_type to struct cpuinfo_topology that stores the
-> > hardware specific CPU type. This saves the overhead of IPIs to get the CPU
-> > type of a different CPU. CPU type is populated early in the boot process,
-> > before vulnerabilities are enumerated.
-> > 
-> > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> > ---
-> >   arch/x86/include/asm/cpu.h            |  6 ++++++
-> >   arch/x86/include/asm/processor.h      | 11 +++++++++++
-> >   arch/x86/include/asm/topology.h       |  8 ++++++++
-> >   arch/x86/kernel/cpu/debugfs.c         |  1 +
-> >   arch/x86/kernel/cpu/intel.c           |  5 +++++
-> >   arch/x86/kernel/cpu/topology_common.c | 11 +++++++++++
-> >   6 files changed, 42 insertions(+)
-> > 
-> > diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-> > index aa30fd8cad7f..2244dd86066a 100644
-> > --- a/arch/x86/include/asm/cpu.h
-> > +++ b/arch/x86/include/asm/cpu.h
-> > @@ -32,6 +32,7 @@ extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
-> >   extern bool handle_guest_split_lock(unsigned long ip);
-> >   extern void handle_bus_lock(struct pt_regs *regs);
-> >   u8 get_this_hybrid_cpu_type(void);
-> > +u32 intel_native_model_id(struct cpuinfo_x86 *c);
-> >   #else
-> >   static inline void __init sld_setup(struct cpuinfo_x86 *c) {}
-> >   static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-> > @@ -50,6 +51,11 @@ static inline u8 get_this_hybrid_cpu_type(void)
-> >   {
-> >   	return 0;
-> >   }
-> > +
-> > +static u32 intel_native_model_id(struct cpuinfo_x86 *c)
-> > +{
-> > +	return 0;
-> > +}
-> >   #endif
-> >   #ifdef CONFIG_IA32_FEAT_CTL
-> >   void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
-> > diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-> > index 4a686f0e5dbf..61c8336bc99b 100644
-> > --- a/arch/x86/include/asm/processor.h
-> > +++ b/arch/x86/include/asm/processor.h
-> > @@ -105,6 +105,17 @@ struct cpuinfo_topology {
-> >   	// Cache level topology IDs
-> >   	u32			llc_id;
-> >   	u32			l2c_id;
-> > +
-> > +	// Hardware defined CPU-type
-> > +	union {
-> > +		u32		hw_cpu_type;
-> > +		struct {
-> > +			/* CPUID.1A.EAX[23-0] */
-> > +			u32	intel_core_native_model_id:24;
-> > +			/* CPUID.1A.EAX[31-24] */
-> > +			u32	intel_core_type:8;
-> > +		};
-> > +	};
-> >   };
-> >   struct cpuinfo_x86 {
-> > diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-> > index aef70336d624..faf7cb7f7d7e 100644
-> > --- a/arch/x86/include/asm/topology.h
-> > +++ b/arch/x86/include/asm/topology.h
-> > @@ -114,6 +114,12 @@ enum x86_topology_domains {
-> >   	TOPO_MAX_DOMAIN,
-> >   };
-> > +enum x86_topology_hw_cpu_type {
-> > +	TOPO_HW_CPU_TYPE_UNKNOWN	= 0,
-> > +	TOPO_HW_CPU_TYPE_INTEL_ATOM	= 0x20,
-> > +	TOPO_HW_CPU_TYPE_INTEL_CORE	= 0x40,
-> > +};
-> 
-> This isn't exactly generic.  Unless you have a strong need to know "Atom"
-
-The goal was not to have generic cpu_type here, but the actual CPU type
-that hardware enumerates. I was asked to prepend "hw_" to cpu_type to make
-is clear that this is hardware defined, and to leave scope for generic
-cpu_type, if we add those in future.
-
-> instead of "Efficient" or "Core" instead of "Performance" I think it would
-> be better to do this as:
+On Fri, Oct 18, 2024 at 1:43=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> enum x86_topology_hw_core_type {
-> 	TOPO_HW_CORE_TYPE_UNKNOWN	= 0,
-> 	TOPO_HW_CORE_TYPE_PERFORMANT,
-> 	TOPO_HW_CORE_TYPE_EFFICIENT,
-> };
+> Like in the metricgroup tests, it should check the permission first and
+> then skip relevant failures accordingly.
 >
-> Then you can do the mapping of 0x20 = Efficient and 0x40 = performant in the
-> Intel topology lookup function.
+> Also it needs to try again with the system wide flag properly.  On the
+> second round, check if the result has the metric name because other
+> failure cases are checked in the first round already.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-I can add a lookup function, but I wanted to understand the use case of
-generic cpu_type. If we always have to lookup and map the cpu_type, then
-why not have the actual cpu_type in the first place?
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-One case where generic cpu_type can be useful is when we expose them to
-userspace, which I think is inevitable. Overall I am fine with adding generic
-cpu type. It may also make sense to have separate accessors for generic and
-and hardware defined cpu_type, and the generic ones when we actually have a
-use case. Thoughts?
+Thanks,
+Ian
 
-> After you land the series we can do something similar to move AMD code
-> around and map it out to the right generic mapping.
+> ---
+>  tools/perf/tests/shell/stat_all_metrics.sh | 87 ++++++++++++++++------
+>  1 file changed, 66 insertions(+), 21 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/test=
+s/shell/stat_all_metrics.sh
+> index 54774525e18a7b9a..73e9347e88a964bd 100755
+> --- a/tools/perf/tests/shell/stat_all_metrics.sh
+> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
+> @@ -2,42 +2,87 @@
+>  # perf all metrics test
+>  # SPDX-License-Identifier: GPL-2.0
+>
+> +ParanoidAndNotRoot()
+> +{
+> +  [ "$(id -u)" !=3D 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid=
+)" -gt $1 ]
+> +}
+> +
+> +system_wide_flag=3D"-a"
+> +if ParanoidAndNotRoot 0
+> +then
+> +  system_wide_flag=3D""
+> +fi
+> +
+>  err=3D0
+>  for m in $(perf list --raw-dump metrics); do
+>    echo "Testing $m"
+> -  result=3D$(perf stat -M "$m" true 2>&1)
+> -  if [[ "$result" =3D~ ${m:0:50} ]] || [[ "$result" =3D~ "<not supported=
+>" ]]
+> +  result=3D$(perf stat -M "$m" $system_wide_flag -- sleep 0.01 2>&1)
+> +  result_err=3D$?
+> +  if [[ $result_err -gt 0 ]]
+>    then
+> -    continue
+> +    if [[ "$result" =3D~ \
+> +          "Access to performance monitoring and observability operations=
+ is limited" ]]
+> +    then
+> +      echo "Permission failure"
+> +      echo $result
+> +      if [[ $err -eq 0 ]]
+> +      then
+> +        err=3D2 # Skip
+> +      fi
+> +      continue
+> +    elif [[ "$result" =3D~ "in per-thread mode, enable system wide" ]]
+> +    then
+> +      echo "Permissions - need system wide mode"
+> +      echo $result
+> +      if [[ $err -eq 0 ]]
+> +      then
+> +        err=3D2 # Skip
+> +      fi
+> +      continue
+> +    elif [[ "$result" =3D~ "<not supported>" ]]
+> +    then
+> +      echo "Not supported events"
+> +      echo $result
+> +      if [[ $err -eq 0 ]]
+> +      then
+> +        err=3D2 # Skip
+> +      fi
+> +      continue
+> +    elif [[ "$result" =3D~ "FP_ARITH" || "$result" =3D~ "AMX" ]]
+> +    then
+> +      echo "FP issues"
+> +      echo $result
+> +      if [[ $err -eq 0 ]]
+> +      then
+> +        err=3D2 # Skip
+> +      fi
+> +      continue
+> +    elif [[ "$result" =3D~ "PMM" ]]
+> +    then
+> +      echo "Optane memory issues"
+> +      echo $result
+> +      if [[ $err -eq 0 ]]
+> +      then
+> +        err=3D2 # Skip
+> +      fi
+> +      continue
+> +    fi
+>    fi
+> -  # Failed so try system wide.
+> -  result=3D$(perf stat -M "$m" -a sleep 0.01 2>&1)
+> +
+>    if [[ "$result" =3D~ ${m:0:50} ]]
+>    then
+>      continue
+>    fi
+> -  # Failed again, possibly the workload was too small so retry with some=
+thing
+> -  # longer.
+> -  result=3D$(perf stat -M "$m" perf bench internals synthesize 2>&1)
+> +
+> +  # Failed, possibly the workload was too small so retry with something =
+longer.
+> +  result=3D$(perf stat -M "$m" $system_wide_flag -- perf bench internals=
+ synthesize 2>&1)
+>    if [[ "$result" =3D~ ${m:0:50} ]]
+>    then
+>      continue
+>    fi
+>    echo "Metric '$m' not printed in:"
+>    echo "$result"
+> -  if [[ "$err" !=3D "1" ]]
+> -  then
+> -    err=3D2
+> -    if [[ "$result" =3D~ "FP_ARITH" || "$result" =3D~ "AMX" ]]
+> -    then
+> -      echo "Skip, not fail, for FP issues"
+> -    elif [[ "$result" =3D~ "PMM" ]]
+> -    then
+> -      echo "Skip, not fail, for Optane memory issues"
+> -    else
+> -      err=3D1
+> -    fi
+> -  fi
+> +  err=3D1
+>  done
+>
+>  exit "$err"
+> --
+> 2.47.0.rc1.288.g06298d1525-goog
+>
