@@ -1,155 +1,171 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADEC18A921
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 05:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B78181334
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 05:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729230472; cv=none; b=OvSYY/0CIDTL2fDLld7y2fiFdlANEH935qYHeUHSnvGbhcucvv0aBf1SGXGHuggQ0NE8yuEy27f48Q4ypTMEyXxxd8MqhsUDzN46eGkky9yVJB2FpFQLFBAZhtufZkFdkLF/gJRV5IbeYgAIYcJk+LkPreY4nDuqdlsdnPXvkbs=
+	t=1729230992; cv=none; b=Law2D1Q5TLY6oZiUZ8g+DXwHrRTBlmHj884nxLwcFIMMMjdOKmHh2TQrWrZWQwcyoZDANzukpKHFhxHYcUKwxrukiE+LaztI4xdMIZWw0P5XD9OOjbOPfcP7qTtQpDTPoWJTOjU0KPZpiImytR9EqdQduqHHu2Iay66zA1xZhcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729230472; c=relaxed/simple;
-	bh=5W+gJCgn/iqQR+0OXY2i27BEZMd24fFR3rEA7huJPM4=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=gGFP5INCCQHIPNsvSyePGy9/FhsCX5QsWxzyTNgJgOhrk8q4WkjjKl2DHG9IFILY5/pc9Yra+0z7tn07bCAgmSQjvdIjHr2MGrFARyBARWUB59qz09hkGRJhr1KYbs80edivPbreYeWIEzk64b5f+RSQCjG2GALJk6AZmqqJE1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gN1s6Buh; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1729230992; c=relaxed/simple;
+	bh=jHAgmITfHUVoA16dxa39wOe7wHkkmP8ECxCjG/LaVDw=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=r3AhHJtrHy6/G6OymhwZ+eEMbsfEhD3l8JDOBie/rl8YyTdoYho3fFINeBzENVAtumMrwDdkGydUQMlXG1YQ4DC2n6QK8hfOhnwk6Kb/ceFryoaRR32+hnrrwCzyYDJRQxHLgaq/3EYMFZX+++QfCHWWjK7PRd0zSJ7LaKQeZOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jDW5bPM3; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gN1s6Buh"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e2928d9e615so2676299276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 22:47:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jDW5bPM3"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e321d26b38so33869687b3.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Oct 2024 22:56:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729230470; x=1729835270; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aQvCceMrlghIZnfCb5WUSYCrB9JkcNmVyoorIOTc2vc=;
-        b=gN1s6Buhq8I2Uk2Pt0ZXTFhpmXxlhpxa6Ua/feM1LZI6p+e0fHwmqMM1RFtaPmQPTE
-         p6ak36HaUDSOBD8Pet3lld9AFu5hwtDSm6Q1HoPfa9ZavqbaTmALOHD4dfQltGFY+T34
-         UBz0+jiDqEwVCl97+zKLitHATZPn950uKi0AygY+kEJ2uMBDYmIQFslezJB6S6NDTUQt
-         ToE6UDaiPvMK1tu/QLymBl49YFscHF70MbqKME4LSxRTDiXdo1QbR/fBsifjinEoAQkh
-         SX0BsR1eYf6fEynM/ujdI4uhrX5mzIo8ABNglP2ExUXNBwvC4ERTiSZ00Zf/eaEU4Nmu
-         /hnA==
+        d=google.com; s=20230601; t=1729230990; x=1729835790; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Vs/xnFgki8yyfVih2AGhbV+EZVdwg1h1oKFTNaagDiI=;
+        b=jDW5bPM3lH9RThYB0R7+GGPJ8hLi4u9Jco/3GwxEMSp64TUF541xKtPh0FkG/xmmnt
+         lU9YGK5XvGw/FFEcYCrw+Rsz80KRMT2aK+uKdErP0RFmZiSUttR0d8towcQTFBhIpxR6
+         a79h4WEFwl4qEQpNc5/c7eF23jXNVSVpXIwT9zO2ywSVK5m7vVdE9dBf0SgWALcD+hjf
+         PZpCDdXK2M0qpaTZq5PfuRy33eWY0uXX9o+mdExekbP/JPiJmgjbisc4HsSrJori89WU
+         YDELAnSY1l5405lPvC4L9SDlMt1mQVembIP38nohUG0n4x5lJOXW95VOJHsw6+jkhXc5
+         TGfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729230470; x=1729835270;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aQvCceMrlghIZnfCb5WUSYCrB9JkcNmVyoorIOTc2vc=;
-        b=oIQ4rJM8xvmqheu1H3TZoy6UfQu2xOFflIqOpf2AjS7UEpHFjJjzo69P5WysIqNtz/
-         pEYF/jZaPYgOondNhYICmjGdjd8w3RpZBk8raKMC2PXGoZXDqyFjP+uqyGajf0mDqvWD
-         krZdjzkygZGB5HXUG9Jz6PJCzkUodzZhbUHKiLz8o2tGe1nULv2CxAr929RUnTJDYVXQ
-         0+KIDzR+p/LdRc7buKq+5DPQMfMGPJjEa8+Sjg1jeJbrog8DxJ6WOXJNWduynzkSLR2/
-         IJFzrXi9A2VTkOdqO0O23EE/WjTwT13LKfG9KsOjI9rN7KU9jlZqtcXRnShtK396YRSp
-         hvjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXzgRQ9BXOU0MRhs5wFK+AChiYK3btvcKTkFUA+SmDtrbSBVBy6mdJkB36HFP8lneVeERNjbZL/mfrRn+zfzYQR@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUORPbD3u8SGBk9yT+yQlTjQhEH4J3N+KogDVndk18sfMsbqRH
-	BqEI/fuFZLst9UjfbrhCMS4p/qd/WBx+NeVfWxtU5P4MwriS+fUapWVVKxnvO0uebOkegev+KLg
-	oDScnuA==
-X-Google-Smtp-Source: AGHT+IEetzZbv6xKhA7Bjm58oK7gBLuLrdE7VQtAkXXBp2zVdlHbeXhsBPD8UPUb6aKAm0dZbINOr2lcVA4U
+        d=1e100.net; s=20230601; t=1729230990; x=1729835790;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Vs/xnFgki8yyfVih2AGhbV+EZVdwg1h1oKFTNaagDiI=;
+        b=JcJGLF429KRwHdF//W6vWpOpeNdJh4vRYguZx8Y+svzTuLla4sghVJYmEDR1NL/b30
+         fzxdf2NW9ug3hZbduYQ7YoLBeDPn18pYF/CZnhwNIfPnJuqZj9V3r+eIECN+gP3IKA/q
+         dAa1kAzJt9AKzgzcbDCogrqQB9pJ8u1TYjYZkfcp3sR7xfq73NamSKiEi1akoO03kqWH
+         4YptOdnsGEbX774tHI0qt1+qv0UAT2NlPaogavsy4hjdKKHtMef2YtY3w5CTBAhYyDIP
+         WmxFPKUYM08OZKPA4kY6vTgDFrdxNNSVqC0kFsQR8+n3cnoAp688wdfsPEWh9Eqp4cWJ
+         4vKw==
+X-Forwarded-Encrypted: i=1; AJvYcCXr281bbldcpNGlizYDj8gLAxzrpVC0qs4G+33FngzMCSDVrTqdZG/Oq9hEdIegda4Rygr9Xj2E4j7MQPAc2TfJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPpR0osPTtRvKo/KuTTa8ZCGre3+jBap66bjbxr1Z52SzL5dyq
+	YFbAPX9BD4OPeeezhrXilPFRFjg0vuqwCVNL8wIv7Y6S8fstcxuiYRK/unFqzY/yuGv/gGUwF65
+	FnmL5nw==
+X-Google-Smtp-Source: AGHT+IHN9uSmXknRH9uODr3YKIwoopRaXRXlxF73f4RN0m2yTZqPZ4DZGG7amvJ9japZmRNdf9oOZhfmJ56H
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:30c5:9d92:bcd:7977])
- (user=irogers job=sendgmr) by 2002:a25:860b:0:b0:e28:f231:1aa8 with SMTP id
- 3f1490d57ef6-e2bb11b3e9amr3380276.2.1729230469360; Thu, 17 Oct 2024 22:47:49
- -0700 (PDT)
-Date: Thu, 17 Oct 2024 22:47:19 -0700
-In-Reply-To: <20241018054719.1004128-1-irogers@google.com>
-Message-Id: <20241018054719.1004128-10-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:6f11:b0:6e2:120b:be57 with SMTP
+ id 00721157ae682-6e5bfd596d2mr160147b3.5.1729230990269; Thu, 17 Oct 2024
+ 22:56:30 -0700 (PDT)
+Date: Thu, 17 Oct 2024 22:56:27 -0700
+Message-Id: <20241018055627.1005723-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20241018054719.1004128-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.105.g07ac214952-goog
-Subject: [PATCH v3 9/9] perf test: Add a signal handler to kill forked child processes
+Subject: [PATCH v2] perf check: Add sanitizer feature and use to avoid test failure
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	Michael Petlan <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Ilya Leoshkevich <iii@linux.ibm.com>, Colin Ian King <colin.i.king@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+	Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-If the `perf test` process is killed the child tests continue running
-and may run indefinitely. Propagate SIGINT (ctrl-C) and SIGTERM (kill)
-signals to the running child processes so that they terminate when the
-parent is killed.
+Sanitizer builds can break expectations for test disassembly,
+particularly in the annotate test. Add features for the different
+sanitizer options seen in the source tree. Use the added sanitizer
+feature to skip the annotate test when sanitizers are in use.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c | 34 +++++++++++++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
+v2 build fix.
+---
+ tools/perf/builtin-check.c         | 49 ++++++++++++++++++++++++++++++
+ tools/perf/tests/shell/annotate.sh |  6 ++++
+ 2 files changed, 55 insertions(+)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 78ff7862845a..c4b6300b0212 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -470,13 +470,22 @@ static int start_test(struct test_suite *test, int i, int subi, struct child_tes
- 	for (j = 0, k = 0; j < ARRAY_SIZE(tests); j++, k = 0)	\
- 		while ((t = tests[j][k++]) != NULL)
+diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+index 0b76b6e42b78..c44444008d64 100644
+--- a/tools/perf/builtin-check.c
++++ b/tools/perf/builtin-check.c
+@@ -9,6 +9,49 @@
+ #include <string.h>
+ #include <subcmd/parse-options.h>
  
-+/* State outside of __cmd_test for the sake of the signal handler. */
++#if defined(__has_feature)
++#define HAS_COMPILER_FEATURE(feature) __has_feature(feature)
++#else
++#define HAS_COMPILER_FEATURE(feature) 0
++#endif
 +
-+static size_t num_tests;
-+static struct child_test **child_tests;
-+static jmp_buf cmd_test_jmp_buf;
++#if defined(__SANITIZE_ADDRESS__) || defined(ADDRESS_SANITIZER) || \
++	HAS_COMPILER_FEATURE(address_sanitizer)
++#define HAVE_SANITIZER_ADDRESS 1
++#define HAVE_SANITIZER_LEAK 1
++#elif defined(LEAK_SANITIZER) || HAS_COMPILER_FEATURE(leak_sanitizer)
++#define HAVE_SANITIZER_ADDRESS 0
++#define HAVE_SANITIZER_LEAK 1
++#else
++#define HAVE_SANITIZER_ADDRESS 0
++#define HAVE_SANITIZER_LEAK 0
++#endif
 +
-+static void cmd_test_sig_handler(int sig)
-+{
-+	siglongjmp(cmd_test_jmp_buf, sig);
-+}
++#if defined(MEMORY_SANITIZER) || HAS_COMPILER_FEATURE(memory_sanitizer)
++#define HAVE_SANITIZER_MEMORY 1
++#else
++#define HAVE_SANITIZER_MEMORY 0
++#endif
 +
- static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
- {
- 	struct test_suite *t;
- 	int width = 0;
- 	unsigned int j, k;
--	size_t num_tests = 0;
--	struct child_test **child_tests;
- 	int err = 0;
++#if defined(THREAD_SANITIZER) || HAS_COMPILER_FEATURE(thread_sanitizer)
++#define HAVE_SANITIZER_THREAD 1
++#else
++#define HAVE_SANITIZER_THREAD 0
++#endif
++
++#if defined(UNDEFINED_SANITIZER) || HAS_COMPILER_FEATURE(undefined_sanitizer)
++#define HAVE_SANITIZER_UNDEFINED 1
++#else
++#define HAVE_SANITIZER_UNDEFINED 0
++#endif
++
++#if HAVE_SANITIZER_ADDRESS || HAVE_SANITIZER_LEAK || HAVE_SANITIZER_MEMORY || \
++	HAVE_SANITIZER_THREAD || HAVE_SANITIZER_UNDEFINED
++#define HAVE_SANITIZER 1
++#else
++#define HAVE_SANITIZER 0
++#endif
++
+ static const char * const check_subcommands[] = { "feature", NULL };
+ static struct option check_options[] = {
+ 	OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings or messages"),
+@@ -47,6 +90,12 @@ struct feature_status supported_features[] = {
+ 	FEATURE_STATUS("libunwind", HAVE_LIBUNWIND_SUPPORT),
+ 	FEATURE_STATUS("lzma", HAVE_LZMA_SUPPORT),
+ 	FEATURE_STATUS("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
++	FEATURE_STATUS("sanitizer", HAVE_SANITIZER),
++	FEATURE_STATUS("sanitizer_address", HAVE_SANITIZER_ADDRESS),
++	FEATURE_STATUS("sanitizer_leak", HAVE_SANITIZER_LEAK),
++	FEATURE_STATUS("sanitizer_memory", HAVE_SANITIZER_MEMORY),
++	FEATURE_STATUS("sanitizer_thread", HAVE_SANITIZER_THREAD),
++	FEATURE_STATUS("sanitizer_undefined", HAVE_SANITIZER_UNDEFINED),
+ 	FEATURE_STATUS("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
+ 	FEATURE_STATUS("zlib", HAVE_ZLIB_SUPPORT),
+ 	FEATURE_STATUS("zstd", HAVE_ZSTD_SUPPORT),
+diff --git a/tools/perf/tests/shell/annotate.sh b/tools/perf/tests/shell/annotate.sh
+index 1590a37363de..199f547e656d 100755
+--- a/tools/perf/tests/shell/annotate.sh
++++ b/tools/perf/tests/shell/annotate.sh
+@@ -4,6 +4,12 @@
  
- 	for_each_test(j, k, t) {
-@@ -500,6 +509,25 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
- 	if (!child_tests)
- 		return -ENOMEM;
+ set -e
  
-+	err = sigsetjmp(cmd_test_jmp_buf, 1);
-+	if (err) {
-+		pr_err("Signal while running tests. Terminating tests with signal %d\n", err);
-+		for (size_t x = 0; x < num_tests; x++) {
-+			struct child_test *child_test = child_tests[x];
++if perf check feature -q sanitizer
++then
++  echo "Skip test with sanitizers due to differing assembly code"
++  exit 2
++fi
 +
-+			if (!child_test)
-+				continue;
-+
-+			pr_debug3("Killing %3d pid %d\n",
-+				  child_test->test_num + 1,
-+				  child_test->process.pid);
-+			kill(child_test->process.pid, SIGTERM);
-+		}
-+		goto err_out;
-+	}
-+	signal(SIGINT, cmd_test_sig_handler);
-+	signal(SIGTERM, cmd_test_sig_handler);
-+
- 	/*
- 	 * In parallel mode pass 1 runs non-exclusive tests in parallel, pass 2
- 	 * runs the exclusive tests sequentially. In other modes all tests are
-@@ -560,6 +588,8 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
- 		}
- 	}
- err_out:
-+	signal(SIGINT, SIG_DFL);
-+	signal(SIGTERM, SIG_DFL);
- 	if (err) {
- 		pr_err("Internal test harness failure. Completing any started tests:\n:");
- 		for (size_t x = 0; x < num_tests; x++)
+ shelldir=$(dirname "$0")
+ 
+ # shellcheck source=lib/perf_has_symbol.sh
 -- 
 2.47.0.105.g07ac214952-goog
 
