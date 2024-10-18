@@ -1,44 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520BC23D2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DC2200CB8;
 	Fri, 18 Oct 2024 15:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729264809; cv=none; b=BiQdmHb7UlZQHB5JGbpUxCwheAp0Yy7ppQsB0FhwS17zqTw74q3Bq/6C7AQ0hI+O3ggk/KMlB1odjXSD7qZ0ZxZQ8DAd3Qtocrt7726CUdVxJcIkqpPpkXOHElIn+ykvPcfZFZDGHJfdx+O4adI8Eko2gv+twYF+BIDjID0Xp7k=
+	t=1729264810; cv=none; b=QPconRnZrq0AtYBg6AHo3jcw/Cbg+/i9DXtGHelLHwPgYd1hLMfIp/tbKRs6dJegFJStZcPm9Il3qhSW4cQal4UG7YWKiFWZkQ44ZZBsEvkG+2TfcuQmFHt/A+4iq5AT8WQBDdC+yO9Lve4v7x7g5Tq/5W+r3m8cnNwoOZPw9ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729264809; c=relaxed/simple;
-	bh=dYgNxH1KAZzJc6ZxlPcZAP/+GEwZCh9Os7i+9GyR4d4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=sVcb7UdRg8Jq19iMnZ7rb7zb3PRWT1Dmo8iSTkBhqkNurw8qxuFqemIj2BdzanOdJop+m3ySt029nyJQ6VDIMfRsvkaSAXm+18jaPJawWj7oFXWuO8cwrkuz94JekpD1b2B7zq+bjLSzLE1tvZpC3wJ8zvYtV+0Csvzzp0sT+v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rPEIufVF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729264810; c=relaxed/simple;
+	bh=47V7CroTEM51Vax2Va1ky10O4Tsm5SCIBrnAfESBw98=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Jzw/H6vTavCdLVMy0O0472ciOpI3GScvzwTvl7Z53D4r28KL0qiBYhWn4m6lomJhZK9bILdi8kTdUnxJGi1okJ7Rqo4h8b6JlrnozEEFOjMNl6cc3XnwVLtQd2wf7ox+o90oWiIFToeoLvUumEbftOcczZyKq3zg4tzflX0R8CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KHYNIgLm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rPEIufVF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 905CDC4CEC3;
-	Fri, 18 Oct 2024 15:20:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KHYNIgLm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AAD3C4CEC7;
+	Fri, 18 Oct 2024 15:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729264808;
-	bh=dYgNxH1KAZzJc6ZxlPcZAP/+GEwZCh9Os7i+9GyR4d4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=rPEIufVFvVle4/hC2CotZ+UlZBgPEYWocFgsbfUR8kAoE5OvZ7o7IDFQj23hLpBmR
-	 jHfUUfSOqhhSlOvRMNCl6yf/yXEOebgbLyhubypDljvYJd7Yj0Vo0UgZUMHa2Xub4c
-	 8KL3dnkKcBSq1JYM/R+dfoWGIMp1MoKAm0wPQjSYWIvtikr1OJJvWXWagXDethSbI1
-	 jzF3e6p6ABhjkQZQNN++aEhDwixxl9VATp+0Icx45+DCL5NWRFGvkRp2lXE+Ylryc6
-	 0gTehoePjWHfYi7sw8Fbu53zQYVGJkcp2NadIBa8AG35Emcem3TOvVUystVxkjltcy
-	 IODv7J7Lvg/CQ==
+	s=k20201202; t=1729264809;
+	bh=47V7CroTEM51Vax2Va1ky10O4Tsm5SCIBrnAfESBw98=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=KHYNIgLmn+xkiiCVzFwnu/gKMxArTv/CGTtF83i6mYdYlqnPnFuYn6cfPxaPUxOAZ
+	 xV40gQ64DB2E0zUjWPa/idFI4RU+m3qRiSpK0pzYitFS8benzJAMdPDXhNc8FqMRbr
+	 XLqmHHJlgcmP1kvdq6psWoS1T+1bID8aPxLMYLiUuPWD/mO/YLqfwpCIjkqS9ySBLw
+	 TzPcE1kP+tcvoU87+ickFWC609FyvpipRnSgLVUSxDcoAUBuSsYiAGlLi0cNwk4Faz
+	 r0h3ARREaWBocnZP1z22x1hgBI5MrobZJsx4QDkKi9lBwzRLR30+uSy2EZtmuZDwIa
+	 Mgxez4bRB/tVQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
- irogers@google.com, hbathini@linux.ibm.com, 
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com, maddy@linux.ibm.com, 
- kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-In-Reply-To: <20241010145107.51211-1-atrajeev@linux.vnet.ibm.com>
-References: <20241010145107.51211-1-atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH V2 1/2] tools/perf/pmu-events/powerpc: Add support for
- compat events in json
-Message-Id: <172926480855.1381973.17233939395641584642.b4-ty@kernel.org>
-Date: Fri, 18 Oct 2024 08:20:08 -0700
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+ "Steinar H. Gunderson" <sesse@google.com>, 
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+ Alexander Lobakin <aleksander.lobakin@intel.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Hemant Kumar <hemant@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
+In-Reply-To: <20241016235622.52166-1-irogers@google.com>
+References: <20241016235622.52166-1-irogers@google.com>
+Subject: Re: [PATCH v2 0/2] Fix 2 memory leaks
+Message-Id: <172926480907.1381973.9640137298075802668.b4-ty@kernel.org>
+Date: Fri, 18 Oct 2024 08:20:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,14 +55,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Thu, 10 Oct 2024 20:21:06 +0530, Athira Rajeev wrote:
+On Wed, 16 Oct 2024 16:56:20 -0700, Ian Rogers wrote:
 
-> perf list picks the events supported for specific platform
-> from pmu-events/arch/powerpc/<platform>. Example power10 events
-> are in pmu-events/arch/powerpc/power10, power9 events are part
-> of pmu-events/arch/powerpc/power9. The decision of which
-> platform to pick is determined based on PVR value in powerpc.
-> The PVR value is matched from pmu-events/arch/powerpc/mapfile.csv
+> Fix memory leaks with libcapstone and libdw that are detected by leak
+> sanitizer as part of perf test.
+> 
+> Original v1 was here:
+> https://lore.kernel.org/lkml/20240924003720.617258-1-irogers@google.com/
+> 
+> v2: Avoid broken free reported by Namhyung. Move build fix to
+>     subsequent patch.
 > 
 > [...]
 
