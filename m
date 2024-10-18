@@ -1,52 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EDB2010EA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D6D2022D0;
 	Fri, 18 Oct 2024 15:20:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729264810; cv=none; b=hwOlhLxT0EpgTeSCDrgGeOU6O0p5i8qVjjStQ4bD46XJpW1juuW+9kCp92PKCwoNkjowkEj7uhvUrqFhLJliEav29w7DAinVoUyWdINcv477IV9wr/99LXKDBQZ7usJNPQjITQrdqI6AvQDKv/dNFJ2EZjQtQ0n7nCKHCmJsONE=
+	t=1729264811; cv=none; b=ib3/q5YQ6dUAULgMg4YycPm6iOI5R8mGkgI5Mf2ZzVuW/SPt98ig9ubmAw36prt1gRte8St7glC4wn54zUTtYyADnsWqn0IQWqfhwDCX3SttGFYnR5IwYJg5OsGe/6d/A6rE3USK2mM4Zk6WiIWWiBsfOWMpH61JIPy0+w1WIQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729264810; c=relaxed/simple;
-	bh=y4DrISeZVzRIlfXoffKtCEjelkoshbYi4XvZvyngL1s=;
+	s=arc-20240116; t=1729264811; c=relaxed/simple;
+	bh=5n6NrDNHf6Ja8sTbODF5jff7HURktYBpYt6hKfs7cZM=;
 	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=atAztO1CQISjObqLagNmeJsyXYMaxnwcNL5O7LGewv/blL+jfNwK/ZYBlPZsyjnm6KCPPKmqzu4J9ewIMKmFnolgnZcZwaVhTo3TebRqfAaG/dyUxJEua0COL7zWu6hfdUYQCZJJBkx3PHsaUVH8x8urKWcpP7IXAIFpiHSKTMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHQEsX+G; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=fZOvL/SSKTq0qETl2PFb03khwSTTbav070UkQvVhNQUxvAEwjUAViERr3p03sFms26LR4xY/zP4c5u9a7y3pe03B1u8VG6SfN6IE3Yng32xdxwLUWyl1UaJpqTZbBJP+oV3wErVz265beqGLN+I4HtYT37BsoMhhPfWy3sfSzJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z8lIZRoM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHQEsX+G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC2D9C4CECF;
-	Fri, 18 Oct 2024 15:20:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z8lIZRoM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F1BAC4CEC5;
+	Fri, 18 Oct 2024 15:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1729264810;
-	bh=y4DrISeZVzRIlfXoffKtCEjelkoshbYi4XvZvyngL1s=;
+	bh=5n6NrDNHf6Ja8sTbODF5jff7HURktYBpYt6hKfs7cZM=;
 	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=jHQEsX+GAhcJpM19NTwXLuR2dilxekSWinXH698I5LavzJbVbYoP6ppeIwDiOcCPU
-	 BIS+sBkdRjKs9uia54HJaWMLj4M4Tp2stOGlpjXcdTfuKpjCP34yjy81CQ4yGqVU+E
-	 AInptXgv1OXStAGT4QfOx7XxNKnsrHkSxIN93Rwo/UXKxRpDARa/rsBlsRVQpOr9vn
-	 veeJKQNfwuz+JLp5q/IpOOQcJGB+yFf/xzb+gwxH9ivDuSoHW2haLz5BlVnMpj1qK3
-	 NnUDn03VmqOdj2d4VZF9SAJ2Jm5pDUzNBqCYwAOAlDze9C0Q05lgJO5AIVro+CuzhW
-	 9CGiZffNW4Fsg==
+	b=Z8lIZRoMqDCnFBuf7DrwoRyLaYcYzdMfOHxHFrW5jN9Nl2dcf+e7ixefZ5f++SH0F
+	 mpItnfJI9mgIOhajZskcUT2wUld4Fh4SkYxyPo/oFZjPw3MIMYK0dVE8TAjrSs5OQW
+	 p0P3+B+vRE/UzfoDg1mx2/oKLvQJ8uwQkIbcurxr+W8f9t53yMoLS/uJVtqzY1t2ES
+	 1l5PodraAzc73PTSoogpr2zJc7C05witpCZNI3Ih9LNoIcObuYt5T/jfM6T1q2xDWq
+	 BT+PxhQutUaW2gD4zoz/R9ZpgkC70bxywVIKuyeGlj/OY5QTqXMrJbcjdRt5tT19F7
+	 ukLTZCX23DcFQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
  Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
- Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
- Yicong Yang <yangyicong@hisilicon.com>, 
- Tim Chen <tim.c.chen@linux.intel.com>, 
- Thomas Richter <tmricht@linux.ibm.com>, 
- Sumanth Korikkar <sumanthk@linux.ibm.com>, 
- Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
-In-Reply-To: <20241017175356.783793-1-irogers@google.com>
-References: <20241017175356.783793-1-irogers@google.com>
-Subject: Re: [PATCH v5 0/7] CSV/JSON metric thresholds, fix printf
- modifiers
-Message-Id: <172926480967.1381973.12650335764215597685.b4-ty@kernel.org>
-Date: Fri, 18 Oct 2024 08:20:09 -0700
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ "Liang, Kan" <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+In-Reply-To: <20241012141432.877894-1-leo.yan@arm.com>
+References: <20241012141432.877894-1-leo.yan@arm.com>
+Subject: Re: [PATCH] perf probe: Correct demangled symbols in C++ program
+Message-Id: <172926481029.1381973.12262352035936716485.b4-ty@kernel.org>
+Date: Fri, 18 Oct 2024 08:20:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,15 +49,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Thu, 17 Oct 2024 10:53:49 -0700, Ian Rogers wrote:
+On Sat, 12 Oct 2024 15:14:32 +0100, Leo Yan wrote:
 
-> Metric thresholds are being computed for CSV and JSON output but not
-> displayed. Rename the color that encodes the threshold as enum values
-> and use to generate string constants for a json dictionary
-> value. Disable metric thresholds with CSV output.
+> An issue can be observed when probe C++ demangled symbol with steps:
 > 
-> Add printf attribute to functions in color.h that could support
-> it. Fix bad printf format strings that this detected.
+>   # nm test_cpp_mangle | grep print_data
+>     0000000000000c94 t _GLOBAL__sub_I__Z10print_datai
+>     0000000000000afc T _Z10print_datai
+>     0000000000000b38 T _Z10print_dataR5Point
 > 
 > [...]
 
