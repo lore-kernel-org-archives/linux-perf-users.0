@@ -1,76 +1,72 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2192A40862;
-	Fri, 18 Oct 2024 20:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3423F17BB0D;
+	Fri, 18 Oct 2024 20:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729283240; cv=none; b=SyyJt0yYkZBpsZNr2KbitzgBdVbC18gMnIaciWn8HygU3VgnglwWf33kds2923ntgKR1675hUJhsMbycJhv/SFJw5PL3lAzA4Poalt76bUVuKXynIRopg1wDy5D2mQvBVEGnzElinHSMpxJWp2mp7SReN0clvUbqnlzS5fkLGuk=
+	t=1729283466; cv=none; b=nftIuklyInIPRYo3BWoZp7hAPmexem/wvnp+5yhl9kKksN7oIaKkmpMQEDlTLn4e3lGsYdLmt7q6I/4VvFiKDTw/F1kn0c9yDqQkKEnSTlYBizVFonuuIiCzhsiljUZ8EH62353mJZOgN8vhntaIXeKLtJIh/BzFTX1eEn3K5yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729283240; c=relaxed/simple;
-	bh=ulJIiXuGSzjSoZr1Pfm50dn2MJ30OLcof8T4iqcw4Rw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cU50E5UayGd/jUg39LkxBurItFa/cmDoI5+vKgMXAug9V1MSI8CysSxAIz5UzVvHVy5memHQd21Xt7YIoHRkgneN9w0D0SkVi5dLtDtczfwuEmKyWK6aMk5f0FsI5FrdveR5L2X4EwVqb/XFxk6t/A/jfrIYqiI7q0jb3pJixTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lIPYQylA; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729283466; c=relaxed/simple;
+	bh=DDNmL8tvVOoBT6fJAABXhTxzRTimVNhJ+y3KpUF68Vo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L1JnzL/cy7CY29ZCg1IxaDyQOCb5ugQd/QRsNiIBC5T9hb8tmdwZCLGdlfbHfQN2hW/0QIBmh6CqTKcFK+a1T/kIJOSOv2jCbIFc687kiqqiz63Wpkm/7FYFSlvd1V903ySsXTlPJmwlooEshWMDB+A31y3PSwF9ngXEI/D9FIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C7LY96X4; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lIPYQylA"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a99e3b3a411so568925066b.0;
-        Fri, 18 Oct 2024 13:27:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729283236; x=1729888036; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NLTAIYzIokOOAJ2uN73IdFzEEOIT0hSeGnTqsPosd2E=;
-        b=lIPYQylAooyq8OEr5GXJH5ZLSnr/NdVhMHb9cEqA/p4bARay89zdsgo3zSCMlvxh/D
-         Yt5tI5h8LjYlt6ZzlPq2RgaRCBGcF5PfPjmVxwH37p0MBbjRews+Kk8IEvQJBnXIZwkK
-         sCc9Ov9W+JutvVgnz+RSavAK6MYSr84l6Bdanp5dQgDBCU70FdRRtttH+0pn/J4+vWNw
-         JbeUsRPDErxRGRi7AqMvcT0X7p3J/9wC8cGIp7SoaXPcopAlQ4USqHvkfdqiMVM5/WN2
-         25ZJhoOLVqBaSJtu9nB5bZuN4reywlY+WMaV6FQ6jKHNPB2dyj7Yy60DqH2Fy+DkCyLj
-         gvIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729283236; x=1729888036;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NLTAIYzIokOOAJ2uN73IdFzEEOIT0hSeGnTqsPosd2E=;
-        b=tiPI6SZo2UOErUugM3NDh4MVMEKR9SpTnSZEnDcGE3LoozKlCod/HMaBq95dxJEDc4
-         gTJyRHsXdHHhHd+YyKik/vtkKtVEIJ5PDdSyr3p8a5HEonbckSXbAQvfYtRPnM3YOHqS
-         CNj5ZlDH9WIZjChynH/31IEbBBxukO95iRX1mOoVV5b+lMqavzu3rojLgJTe5EwUyN4j
-         ODVDKvFsBkSDdXXQ91aAeYbqaZONsorhpeOpyAMJUSkJqn44EoOGVhyJDv2SO/ii4vF9
-         9oAyC6TjjX7umDOePgx7NwzNWDR5voNj9p/XVB4JExCCqLlwtrtgIWmZR/6rV2XY9w+L
-         VmtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVikEVgPxKLwpfwBXNlGiosbDwBfuYFGXC4FpxMTDrcjCfSm2NYEmeUIIrWklV4dZncKYE=@vger.kernel.org, AJvYcCXR0alV6yIGEuZrtG+1Rh13a9oFmrnQftB4EtPn1N+MRLitY82BKPezsCY78Wh4V5zhOCkIaOidzCQ90DD2cDM7TzT3@vger.kernel.org, AJvYcCXiCPZ+00NhX9ruAuCKZxrq3mj+5AW+QiI8JlsXWzGZXPHpq0c11FZ5I0zxyKT8xfh4qvYgPS//PKYwdHPV@vger.kernel.org, AJvYcCXxpx7ObrTDN84j5R7VcdaKw0MXnfMzO303zkJIqcWv3z8FcVwJCXqkrpNN80gZQHj2QUP+2aD5QgSWEDBLobMtFg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7A++IJaAWQYx+5Cb604gkiK9i1aG0YmKg80iMBfGukct06uhk
-	oYzEQx2tbvJefH8tVVE362ex5fbGKLtbBUzh35iJFi1flzEuUJIs
-X-Google-Smtp-Source: AGHT+IGdjHTDDVglci63fyGhCtXzlJjrBgte9bk2LEaTfmxkDaZ0bOYrQyR9lSMlajWpF+CnUSa9iw==
-X-Received: by 2002:a17:907:8004:b0:a9a:6c41:50c0 with SMTP id a640c23a62f3a-a9a6c4152aemr236981066b.26.1729283236080;
-        Fri, 18 Oct 2024 13:27:16 -0700 (PDT)
-Received: from krava (85-193-35-5.rib.o2.cz. [85.193.35.5])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a68a8e83dsm136174066b.38.2024.10.18.13.27.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2024 13:27:15 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 18 Oct 2024 22:27:12 +0200
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-	bpf <bpf@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Liao Chang <liaochang1@huawei.com>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
-	Kernel Team <kernel-team@meta.com>
-Subject: Re: The state of uprobes work and logistics
-Message-ID: <ZxLEoPQXiNT-MCdt@krava>
-References: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
- <20241018073628.GC17263@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C7LY96X4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729283465; x=1760819465;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DDNmL8tvVOoBT6fJAABXhTxzRTimVNhJ+y3KpUF68Vo=;
+  b=C7LY96X44yzK4NT9FcD6qIes0oXTd7aEAe7AY4S8ohVTqLvev6xXQ4C9
+   4TosxqmJC/h/dRxACPf0XWMkViBzVWC8PabqvJKItK0NKIPsADyZHug2b
+   JBPhVa+czpL7wbCv0Tjwf06mmmsbob5jK37494KJyK5p6K1UPobL4Jzt9
+   vMoKrkTmcxDvZrWdZzBD9KdZCX8qF+HPpF5a3MnQuyv0dirOggbdBJpJm
+   /NAWtc9NP252wZThuYgNImcn4BPCd731ffDYoFNQWr5wEqdDcTEz7PRy5
+   uhvNrIoeYkGn8kFCEKwOSVRhXmd9ISM9MzH00/ToIDLPFiNmEl9tnhsyb
+   A==;
+X-CSE-ConnectionGUID: 4rmz1b+eS7yoJxYHo+ZJqg==
+X-CSE-MsgGUID: 7TVW2SVAQTmZscnp2shqmQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="39381801"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="39381801"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 13:31:04 -0700
+X-CSE-ConnectionGUID: kHKCqmdSTMizBJKbSAVRSg==
+X-CSE-MsgGUID: 4F6PttTRRy6ypKFOUdWFFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,214,1725346800"; 
+   d="scan'208";a="102267390"
+Received: from bdomingu-mobl1.amr.corp.intel.com (HELO desk) ([10.125.148.176])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 13:31:02 -0700
+Date: Fri, 18 Oct 2024 13:30:53 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v4 02/10] x86/cpu/topology: Add CPU type to struct
+ cpuinfo_topology
+Message-ID: <20241018203053.2x6oyws3dkxfw6rm@desk>
+References: <20240930-add-cpu-type-v4-0-104892b7ab5f@linux.intel.com>
+ <20240930-add-cpu-type-v4-2-104892b7ab5f@linux.intel.com>
+ <20241018161956.GCZxKKrLeTg0VTdfWA@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -79,30 +75,84 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241018073628.GC17263@noisy.programming.kicks-ass.net>
+In-Reply-To: <20241018161956.GCZxKKrLeTg0VTdfWA@fat_crate.local>
 
-On Fri, Oct 18, 2024 at 09:36:28AM +0200, Peter Zijlstra wrote:
-> On Wed, Oct 16, 2024 at 12:35:21PM -0700, Andrii Nakryiko wrote:
+On Fri, Oct 18, 2024 at 06:19:56PM +0200, Borislav Petkov wrote:
+> On Mon, Sep 30, 2024 at 07:47:24AM -0700, Pawan Gupta wrote:
+> > Subject: Re: [PATCH v4 02/10] x86/cpu/topology: Add CPU type to struct...
 > 
-> >   - Jiri Olsa's uprobe "session" support ([5]). This is less
-> > performance focused, but important functionality by itself. But I'm
-> > calling this out here because the first two patches are pure uprobe
-> > internal changes, and I believe they should go into tip/perf/core to
-> > avoid conflicts with the rest of pending uprobe changes.
-> > 
-> > Peter, do you mind applying those two and creating a stable tag for
-> > bpf-next to pull? We'll apply the rest of Jiri's series to
-> > bpf-next/master.
+> x86/cpu: ...
 > 
-> >   [5] https://lore.kernel.org/bpf/20241015091050.3731669-1-jolsa@kernel.org/
+> is enough.
+
+Ok.
+
+> > diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> > index 4a686f0e5dbf..61c8336bc99b 100644
+> > --- a/arch/x86/include/asm/processor.h
+> > +++ b/arch/x86/include/asm/processor.h
+> > @@ -105,6 +105,17 @@ struct cpuinfo_topology {
+> >  	// Cache level topology IDs
+> >  	u32			llc_id;
+> >  	u32			l2c_id;
+> > +
+> > +	// Hardware defined CPU-type
+> > +	union {
+> > +		u32		hw_cpu_type;
+> > +		struct {
+> > +			/* CPUID.1A.EAX[23-0] */
 > 
-> I don't actually appear to have these.. Jiri, can you bounce them my
-> way or resend?
+> Might as well stick to only // comments as we do those in headers now.
 
-sorry about that, I split the uprobe perf/core changes and reposted [1]
+Will do.
 
-thanks,
-jirka
+> > +			u32	intel_core_native_model_id:24;
+> 
+> wow, that needs a whole breath to speak: "intel_core_native_model_id".
+
+Yes, it needs to be shortened.
+
+> "core" and "native" look like they wanna go. What is that field supposed to
+> mean even?
+
+In combination with core_type, this field can be used to uniquely identify
+the microarchitecture.
+
+I will drop "core", but can we keep "native"? "native" is used in SDM to
+define this field. Also model_id could be confused with model number.
+
+  From Intel SDM Vol. 2A:
+
+  Bits 23-00: Native model ID of the core. The core-type and native model
+  ID can be used to uniquely identify the microarchitecture of the core.
+  This native model ID is not unique across core types, and not related to
+  the model ID reported in CPUID leaf 01H, and does not identify the SOC.
 
 
-[1] https://lore.kernel.org/bpf/20241018202252.693462-1-jolsa@kernel.org/T/#ma43c549c4bf684ca1b17fa638aa5e7cbb46893e9
+> > +			/* CPUID.1A.EAX[31-24] */
+> > +			u32	intel_core_type:8;
+> > +		};
+> > +	};
+> >  };
+> 
+> ...
+> 
+> > +enum x86_topology_hw_cpu_type topology_hw_cpu_type(struct cpuinfo_x86 *c)
+> > +{
+> > +	if (c->x86_vendor == X86_VENDOR_INTEL)
+> > +		return c->topo.intel_core_type;
+> > +
+> > +	return c->topo.hw_cpu_type;
+> 
+> Huh, the other vendors are not enabled. This should return
+> TOPO_HW_CPU_TYPE_UNKNOWN then.
+> 
+> I know, it does but make explicit pls.
+
+Yes, topo.hw_cpu_type is initialized to TOPO_HW_CPU_TYPE_UNKNOWN. We should
+not ideally need the vendor check at all. As long as topo.hw_cpu_type has
+the core type, returning it should be enough here. For Intel hw_cpu_type
+also has the native_model_id, that is why we need the vendor check.
+
+If AMD or other vendors have similar use case, it makes sense to add the
+explicit vendor check. Please let me know if thats the likely case.
