@@ -1,108 +1,102 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DCF817
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 23:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EBC1CF29D;
+	Sat, 19 Oct 2024 02:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729295282; cv=none; b=gUxc7NUL80bdebabDFhThp1deIh/UrYOI5JOhs0u8DnVmq1lyv+5bTyNlAPy2XkKWrEpn3aBGS9yt446yibkatVfJy9vSWn3eFZQujaNHyMWG0NgGPwGMdGE4WZPEhNfGRkXdtj/lDX5Ny+4oGwiwwyQC1JpBK9+ei+5qhEDXgk=
+	t=1729306562; cv=none; b=aaILDJCnumuy+vmD2V7/WEGGxJiYoXRFEO41EdCwzmgj1qkHh5TTUBjkDfA/fZ+1NT3D9sCzsb9fQPZw+AlAwL+5BfjRXQpNbpB+99idQhlP8NrMuVSpY3Hq6eA1lMdl86rPBS747Yr0nPcD/mmRreMEyF7Be1+DLq+0vYyKM1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729295282; c=relaxed/simple;
-	bh=dVc/3Jn2Xe1eFoou6kKLBzreCwKjNOyYVIoqVQpxo5c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hyGbhoTrIqDYcpy5emzYr64E+owyuWqo+8dxQ3tWm63Kar3/VSISTOmQpn+zIByGn9ORIDNoSM1qvzE9a7QTljngPah4FKVk7odvD0e0yLVwHbS3NncX/KHJf4w4VRMMBTNr6HlTLn8he0FsIDP4BMfHmsYWNrXJqhHyVUjGWAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y0HyyYn/; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1729306562; c=relaxed/simple;
+	bh=5/Q6mMEQKt/YqZpUFUqGN3VO5GRE3MysNt+6xXWT0ys=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=KyZ2m9grBEp1NakdT+1oNJy4+AaZuvmNlcE8hr7qGWGWzKpInmbQh6uS2tUVu+/nDBwC1EbwT8/MQeLHeOVvy6lIczHiyBEZaGj27g4/Ygh2oKZGY53GyTfV3HOQueYWn9OrZieIAB8ggiEnNP88t/1W3dl/ZTIo1Q2jHYlLGqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ah6eMTly; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y0HyyYn/"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a3b28ac9a1so48825ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Oct 2024 16:48:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ah6eMTly"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e2e23f2931so2259419a91.0;
+        Fri, 18 Oct 2024 19:56:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729295280; x=1729900080; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dVc/3Jn2Xe1eFoou6kKLBzreCwKjNOyYVIoqVQpxo5c=;
-        b=y0HyyYn/kJ9JhLF7zVzsId202ehGoPJztgoSfIS4pgBQxyh3vWsl7uy4qgcLOCOsC2
-         f6wtRT8LsKlC3w1X2rIM+pVlmKu/2JXLDn8c+scO3cjp6gOUaJ+QvXYZZyVJmyAHJo2W
-         Ebqe5pDz7vV3CKM6HaEqpftC6SKAScfMWTFDIjPPXjFqXRCDyStrnopMAZa3kZuc9LsH
-         qQ4v5WYsBkgJfzZrgjc5QrbWQt+sJV+rhHEy2Z4ohMBfgMYUFVeFUmT0+mLUfzBze2gw
-         QwFAAp/eFCuwd8pCbMdcE0Vg6WvPmfjdUEoSVTh8K4I+C3n0BksE3HJI1i5n2oRJST7E
-         Aqpg==
+        d=gmail.com; s=20230601; t=1729306560; x=1729911360; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zjvn7HsbY/vgKPllNGPzOYRc5ty961DmQb25tJ1aZoI=;
+        b=Ah6eMTlyVEJVvgBTYjQPgmieI7BjIh0g/awujXCY/cKljD0njNGkZp0PoOkn4erYzh
+         sza+5tsyDNkwUXzaRH5iUnj58ha1Pklw6yl6ctmZQannXE9vEik7syW40EOGAMfqKg3o
+         c6ZJgXnHqCNTyHA2J/I5Odx+3Va72k4eyM7g60vIpaJo1RF70TCdEmlJhHnWycyj/V31
+         +IOJRCV64/oEnDXybWvrVj5ZXFtQBy1WEC+cgvdNE8jmjcszV0WvBy0bViRe6xXRkzWD
+         6XHyMs/ciX6qIxMM5qbOCO8o2W2fSSKee6IsXtSDxWQ12i8uiDVpm+w+EmNp2bXyjUwm
+         X+pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729295280; x=1729900080;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dVc/3Jn2Xe1eFoou6kKLBzreCwKjNOyYVIoqVQpxo5c=;
-        b=hutKh6jtuv47XvQOKydPmBAos61ME3k+72i39dJZVBugVkXqQRWSvEu0Ph/OlbXsql
-         WEmkdevObrrWWbGW0dTc4qEvw8N+wvdB3ZLxtqgdVnCpZmtXkaVbSGFK9XtQ05dX3m6R
-         HHG1UiiCYwQcPuA90pMMjTar6pcJADCE0lKnXZqRK54yci5uMuzFiMbOCt4znrWkomE3
-         p86dgCydsUnaM4UT04TIEaG6fW5XfsXZeOIJjVjO4AxoSAwOAXySUfETakWcjEunp8eh
-         IfhjeBUbpPOEBBmM6HsGep+klSxgsG4OXD/YAhe1AQYLqwIcUSjasqkzcaeU7NizZKkb
-         L8jA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcab2DDotvwbWk8bktj+MitxnKiURESDGsc/wL7udqQJYOqyTHuJt/h+svlt/rXo+AAlohKc0eLsl+srym+hwc@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNkVO3drSGyu5YJE9r410DoJuRjP9gZpw2vkcLepw4Y6oSXULB
-	0OFshH3KvAvdMBVHRWEhVjs3cQK/JtDKcjS6VlkoiD1mw4VhGEvON/IYA4+GymbAq/6L5ZZzfoe
-	tv84LoFPEvHANVC29gDOiWgD8rs553GeE6Ppl
-X-Google-Smtp-Source: AGHT+IHX4JpuxwpzRf8AmHn/r5FS2o5FM8RjzTAqlhbkH31+MBZNx3rOdXPwqb4uojc4bFjOMCC8sp1FcGILYmAff+Y=
-X-Received: by 2002:a05:6e02:3b0a:b0:3a0:9f85:d768 with SMTP id
- e9e14a558f8ab-3a3fa3bbf1dmr600655ab.11.1729295279607; Fri, 18 Oct 2024
- 16:47:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729306560; x=1729911360;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zjvn7HsbY/vgKPllNGPzOYRc5ty961DmQb25tJ1aZoI=;
+        b=lO3B+WsF5tna2tzFRMJo4uYN8tVvWbt+MhpqIEmzmpDM1073QGCSvSfiT1ytVaPzZi
+         GC6o0BL6zS2X9qUhqdzwgw3hLUgNxXubmkP0sSUZ2GCufo3pNQHbkVQFfpKWCpIP0K64
+         HVbB24zt3WW7GAnmxXrKInHoyn5feLSaBWnQknPudo9aUDNhrU0wTf+AcXE0CNkU8N0Z
+         TuSfg1X1JzRiVMBmgIQzjuk9YDrmxN3z7HCsrILPKe46i+6NRSxjtZxsQY/gvqqiU8PR
+         PVtS1y/KyiVBQbf1PyIlDBD5gDGgaJSn6x2v2oZkha+tO8jR6gufQ3veZf3AzSYAiW4R
+         RhNg==
+X-Forwarded-Encrypted: i=1; AJvYcCUE1WW83p7wHeqD1uGtT5TS6QFEd1o+d48hToP+Ha9B1ttr5nFnVOdWSkYnYAepoZ8ZqzTQRUto3EgjZJEsAq0=@vger.kernel.org, AJvYcCVTTVgxJjEwQqVjLuefvaOv3CpGXWmFXFZh9xxPU54IGweTo8jjewKAIUDU5WOWlnQAtAQGrWkPSGQzsiXGR3lYIw==@vger.kernel.org, AJvYcCVs73llRcBxOfguq0HxYJnVTwqyZh/Q9D278ZV7UI6kKcrnIrWLkRa5PnsBqungB1ZnPEaeiPmRsXa2nyY+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJd16nQHjzQW44sEyktdverM0hY6K5smAKMyoNBFPRA958C21m
+	zkHpjy4lEop8VbglWya1vAZa2N8+Aklmi9Vay4pFYPfRyR/lu1/J
+X-Google-Smtp-Source: AGHT+IEPqWiwtVaGplrYbUc0xpArNcC0LaqOO99PH7sLEakviT8UYNXgSidnH4I5Y7jc0N37OI9r7Q==
+X-Received: by 2002:a17:90a:8a83:b0:2e2:e2f1:aee with SMTP id 98e67ed59e1d1-2e5617487d7mr5072291a91.22.1729306559845;
+        Fri, 18 Oct 2024 19:55:59 -0700 (PDT)
+Received: from mail.google.com (125-239-144-11-fibre.sparkbb.co.nz. [125.239.144.11])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e58390d63bsm522052a91.0.2024.10.18.19.55.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2024 19:55:59 -0700 (PDT)
+Date: Sat, 19 Oct 2024 15:55:48 +1300
+From: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: paulo.miguel.almeida.rodenas@gmail.com, linux-hardening@vger.kernel.org
+Subject: [PATCH][next] perf/x86/amd: replace snprintf with sysfs_emit helper
+ function
+Message-ID: <ZxMftFRJ1b91KbRV@mail.google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241011-quiet-chowchow-of-temperance-d0e205@meerkat>
- <CAP-5=fUz5CFEL8D1L+UATsNqs4MBb6rNeYtZ26+pFC4NgRYt6w@mail.gmail.com>
- <20241011-uncovered-original-vole-cda87d@meerkat> <20241015-warping-condor-of-storm-afa06f@meerkat>
- <Zw8cN9daNBvCJd3u@google.com>
-In-Reply-To: <Zw8cN9daNBvCJd3u@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 18 Oct 2024 16:47:46 -0700
-Message-ID: <CAP-5=fXsVXYkncR0rwxXvKp_f5dR40L9_x-qoLxwHXWMiyXh3g@mail.gmail.com>
-Subject: Re: Migrating from perf.wiki.kernel.org to RTD
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>, Yunseong Kim <yskelg@gmail.com>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Oct 15, 2024 at 6:51=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hello Konstantin,
->
-> On Tue, Oct 15, 2024 at 02:25:02PM -0400, Konstantin Ryabitsev wrote:
-> > On Fri, Oct 11, 2024 at 06:39:09PM -0400, Konstantin Ryabitsev wrote:
-> > > > Yunseong created:
-> > > > https://perfwiki.github.io/main/
-> > > > Perhaps the solution here is to make perf.wiki.kernel.org a redirec=
-t
-> > > > to https://perfwiki.github.io/main/
-> >
-> > To speed things along, and since the old perf wiki was near-unusable an=
-yway,
-> > I went ahead and set the redirects from perf.wiki.kernel.org to
-> > perfwiki.github.io.
-> >
-> > Please feel free to follow up if we need to revisit this, but things lo=
-ok good
-> > to me with this change.
->
-> Thanks for your work, it looks good to me too.
+sysfs_emit() helper function should be used when formatting the value to
+be returned to user space as per the documentation. No need to replicate
+logic in sysfs .show() callbacks.
 
-Thanks Konstantin and Yunseong, I think it looks good!
-I think the pages need some improving, there are empty pages and
-things that look abandoned, such as the white paper linked from the
-side bar:
-https://perfwiki.github.io/main/white-paper/
-I pushed a few improvements to the glossary and useful links. It
-should be as easy as creating a pull request for others to contribute,
-so I look forward to this.
+This patch replaces open-coded sysfs_emit() logic sysfs .show()
+callbacks.
 
-Thanks,
-Ian
+Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+---
+ arch/x86/events/amd/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index b4a1a2576510..bbada8e3e491 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -1346,7 +1346,7 @@ static ssize_t branches_show(struct device *cdev,
+ 			      struct device_attribute *attr,
+ 			      char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
++	return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
+ }
+ 
+ static DEVICE_ATTR_RO(branches);
+-- 
+2.47.0
+
