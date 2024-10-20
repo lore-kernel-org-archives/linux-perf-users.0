@@ -1,132 +1,118 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05827489
-	for <linux-perf-users@vger.kernel.org>; Sun, 20 Oct 2024 04:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CB5747F;
+	Sun, 20 Oct 2024 05:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729399759; cv=none; b=gFD67li5Jv4VnY16XzJFtgdTeFYdhW0AsDrI3roim1z1mwCdt3vGeECnJyEFI/2YE0/thWHQXF8VgB3v8LtVIsIBDsP3tl40rAEjP4uH/ziN11F8HNJKPkJ1a5WvmFc9qCd+IOytd9+mta4HTifUf2vJAilemKf/yqKpw46ce7o=
+	t=1729401328; cv=none; b=ZxjvICL1AwaC2cgvat+7POd/HUdLClB9MJXkAoDsBaFAqjmEImJZfopI3yWTQCRaQArLUYUlQunFUK88+b76dszCLLum45x33LuGZA7/9Hs42cCUzdcQ0v37HKcjpEOytVlh5jwb45k8aB/MT3qlM7QUcR782j7WCp2ausAQGvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729399759; c=relaxed/simple;
-	bh=V8/CaGwAkgVPFQvx0e5tswgosaeMMXzjSs6/ap5B71c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eKDA3aQ0sWTAnkPsLeCjFy0MpFr33Zg+h1uKcxk2wGVhhWKnWganJip/3xbCgsAvlx8EtoQ3aW71mfmbzmaWizmC8pCLWjVw4EqMggJH0kCGKYtjasDUCRDffy1udaQ8pWuHaabCOsfIxj3A8Xll8/e5GRXNhPxvaqSbVxC+uk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PgurAk8b; arc=none smtp.client-ip=209.85.216.52
+	s=arc-20240116; t=1729401328; c=relaxed/simple;
+	bh=EiS1xJd1Mm5kFjrRr9U5CfecgYtGUDFHb98U0Psae/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hfbQOXx46+ZoGlR4eZqV48PQjGsuUY3EfB2iC8glfltz05l3hVvefuVJ1qSy+2VoiC4uc27fhBzTt2Nb2wCEnUFKlfFp5nVifWv5AMDibog8dsS3QU1+24JmOdDV/rLJPAC2rN+wpDVpQswsoVWZmZgvt5lKNCXr9zX9cC5pIOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QKTtG7Tj; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgurAk8b"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2e2af4dca5cso667142a91.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 19 Oct 2024 21:49:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKTtG7Tj"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-20cceb8d8b4so20015995ad.1;
+        Sat, 19 Oct 2024 22:15:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729399757; x=1730004557; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YmzlUejJoflLf1VpmPq1KtW89kLT4qtL3i9eLCSeR/Y=;
-        b=PgurAk8bsMcuLyWZiPfi+feJWAUKbCMo1hxEKuCRvrEB9qG+eKMywwAOgOhxUIMd+x
-         iCKfGn907sTbIsebE7Sx9HMpeDJQva6tK0JS7ZpwJgiKK2CvR6qIJrLE/G9AkzZWx4ni
-         xZtR52Nxi+znjo+GoegZRWB41Ul7ofE2ICm+CHgMcTi4/Qvn2eUQv1QJ5NjHYnJe4Lgb
-         65tPpZ28OUYOB/lCDBUwZ9yTeoL9gBKX8mq9lWuvIOx4IlDDhVXx7odu2m1ESn5ZQWz2
-         Pb7gm5kPAPOedySi2ueOiGpcc/jmsO+5JZXmk7ImiJwTiwZH894Y/iygkJPMvQ+fg+fW
-         eIvw==
+        d=gmail.com; s=20230601; t=1729401326; x=1730006126; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mPLTUkSwRn/ADCNGu4AGpEmYT7rtlb2CMdwqNdOxpTA=;
+        b=QKTtG7TjOstHNeIvKZ3umi8kdnWBls6FPY1U4KIZpeDb6CwQ2LpjEltMFQAuyNcEvX
+         fgQXWDsAa4o9CbeOyrmbIxzM5tVFLAJwjAL5lc2q5PDkz010JNlqp9ursrPz28M6YTkl
+         ZIha354g2WaVFeKHkGh1Qkev58tZ6dOHJUH2JMKDP03T8dCg2in1Nm05OWyd+D8mMlxs
+         +ZXfZJIIubl0bHXZ7Y2R2/RXrk9DNost0DgaLG2YJaXfuqKyWo/p+yBn/HUZm2TqdozK
+         5Ge7IwRCznCP5xlvPkA0vHTsgjn2/uBFV6Hy9CNTn2VXqlg1oQXh9StNrfKceAvMegPL
+         YJ9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729399757; x=1730004557;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YmzlUejJoflLf1VpmPq1KtW89kLT4qtL3i9eLCSeR/Y=;
-        b=SWnQ8qFwpKZA0gfb017GphCJYTUuGLuX7Z+bI3Wfi95/bQ4KwU43YepqVeEh6SCm0W
-         hzrqAG1Q0Ld1teh4BWkrQYFDW7VnhgmhZ0BewDIp4G5xud9vrPEobpTegugoPCvE8fGF
-         tAzrmpW/iVjelPqUYST6rQT4Dchx25r2XIzmoQ50NGCmpk57vJHKR9NRP8P1GDqX0Mbi
-         6URJzvvLypf6Ggprn5lviYsbsqPDglOPillgZkxihLh7VudRKDayQOBxwDCd5SWMYMMH
-         TPYOapcB21nZ2/UO/Joiiyf/u5T9AW/plI1pvldDWSGr3E3SiKvNiWm7Ik52JFVxbu17
-         eLbw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0G8882R/8NchVKdl/p+zYpfmdB21Mz3ntiIuOg3zKDKBH9XdkPY50bWs8cprtUDQdyFJL42EaRsg3qX/EU+1Q@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzqe5ajuCZUjQn1vjVVFz2IUNZdPIAIM83/eKAGPzhvx8U9y0Q
-	kioMZfJ+c+4GuVlPKOl2uiCPfNvOTJc/BYzIdBWdL6kMhKkptt5L
-X-Google-Smtp-Source: AGHT+IGKsqx9/8S5ymWC7MPxmDaR/rf4ymjZrVfSVXqme+2N/aioRpL0HsdA4pzhgSzmibhVA37Udw==
-X-Received: by 2002:a05:6a00:2e24:b0:71e:66bb:d33b with SMTP id d2e1a72fcca58-71ea3129093mr4576476b3a.1.1729399756634;
-        Sat, 19 Oct 2024 21:49:16 -0700 (PDT)
-Received: from [192.168.50.136] ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ec14159dfsm524019b3a.197.2024.10.19.21.49.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 19 Oct 2024 21:49:16 -0700 (PDT)
-Message-ID: <a0626ecb-cc64-4c6a-abf3-76868178234f@gmail.com>
-Date: Sun, 20 Oct 2024 13:49:11 +0900
+        d=1e100.net; s=20230601; t=1729401326; x=1730006126;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mPLTUkSwRn/ADCNGu4AGpEmYT7rtlb2CMdwqNdOxpTA=;
+        b=wJx0IPOGaYzYxohIDgFKrTejasMXZhwpai0HFytJJ31QEFUPqo/7vWba5AZbAUb/YD
+         YqoaZNtBWB3LCLNFLSNDd+gV6h7+TLh+68psdLqnhdARK5GQSBAKejxXhT9oWo3FpEG0
+         u4FuSHaxgYVTMJMCWaUKFxwnEdFnor8nUwfX2u5ttG0JCkdV7Cn5vqCrZCH8cEyroFMJ
+         4Qxg3MMGZWfNsuhR8RhEeOf2fprfFRw7mMN4QJAoZjzkuggv4VYl0PZuW/mmT+t+YqED
+         K5zfUkkLBU7kbt8JkURa4aAC6LJ6zSlrWL+oWoO5o19mB36UfgTxlM6am41vmnCI/Ape
+         hPWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjrU6i6CTyaKkIDzuGU8rL9yMntdPoDvMG6iR2mAyIEvPG+FYdR7z6nhMmuBEzh3IIL8GliH5tnPEW@vger.kernel.org, AJvYcCWS1S4RnVsFLtqfziCKymX9dhTwk0sQwsW+CmLCR38lG/MfanQTdJy27M4RzUKAH889BNzOhiOUCA8655Vm@vger.kernel.org, AJvYcCXLyRZwQBR+TZwJfAvovZAgDiNVCcpOiY6JHpdrDxMxUA9Qe9NJuLfmE0PCC2g/vMKVrmh3UAUAWrSgXzw=@vger.kernel.org, AJvYcCXMWtU6YraYQQ2WvRwfbbk3TNckgituUls2EZEgOY/IetL1deKImGLooTI0zgoiXUS54/oyB7BNaXvQS8xs+5U=@vger.kernel.org, AJvYcCXP9b9B5Wke35+YC7La4vKRTJ3HfpBPt2ERDHTxoT/qv24yoxmWkiwkg8W7z+oTZ/TCauj/NuB5FheyVFImSfhpwQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBkDwb3gophCq+V3OljVPK2BnljDrL3Wo87ISP8rWEUQdwxQyp
+	QvlKNT8FkMazjxua27WhdtamnglobE8eUqTy166wXLvOe+l9EfUckJQtpA==
+X-Google-Smtp-Source: AGHT+IE2fzzFACXVkzcnLBp5pcAmsooXt9koAwUC1XLg/0exaP+5fY0FgX9aH1MGPibSba2Conm9sg==
+X-Received: by 2002:a17:902:d4c9:b0:20b:c043:3873 with SMTP id d9443c01a7336-20e5c29ab00mr108315935ad.21.1729401326147;
+        Sat, 19 Oct 2024 22:15:26 -0700 (PDT)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7f0de39fsm4857465ad.206.2024.10.19.22.15.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Oct 2024 22:15:24 -0700 (PDT)
+Date: Sun, 20 Oct 2024 13:15:19 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
+	corbet@lwn.net, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, akpm@linux-foundation.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, jserv@ccns.ncku.edu.tw,
+	linux-kernel@vger.kernel.org, linux-bcache@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/3] lib/min_heap: Introduce non-inline versions of min
+ heap API functions
+Message-ID: <ZxSR50u0qLYPUeH+@visitorckw-System-Product-Name>
+References: <20241013184703.659652-1-visitorckw@gmail.com>
+ <20241013184703.659652-2-visitorckw@gmail.com>
+ <20241014081358.GS17263@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Migrating from perf.wiki.kernel.org to RTD
-To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- linux-perf-users@vger.kernel.org, Howard Chu <howardchu95@gmail.com>,
- MichelleJin <shjy180909@gmail.com>, Austin Kim <austindh.kim@gmail.com>
-References: <20241011-quiet-chowchow-of-temperance-d0e205@meerkat>
- <CAP-5=fUz5CFEL8D1L+UATsNqs4MBb6rNeYtZ26+pFC4NgRYt6w@mail.gmail.com>
- <20241011-uncovered-original-vole-cda87d@meerkat>
- <20241015-warping-condor-of-storm-afa06f@meerkat>
- <Zw8cN9daNBvCJd3u@google.com>
- <CAP-5=fXsVXYkncR0rwxXvKp_f5dR40L9_x-qoLxwHXWMiyXh3g@mail.gmail.com>
-Content-Language: en-US
-From: Yunseong Kim <yskelg@gmail.com>
-In-Reply-To: <CAP-5=fXsVXYkncR0rwxXvKp_f5dR40L9_x-qoLxwHXWMiyXh3g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241014081358.GS17263@noisy.programming.kicks-ass.net>
 
-Hi 
+On Mon, Oct 14, 2024 at 10:13:58AM +0200, Peter Zijlstra wrote:
+> On Mon, Oct 14, 2024 at 02:47:01AM +0800, Kuan-Wei Chiu wrote:
+> > All current min heap API functions are marked with '__always_inline'.
+> > However, as the number of users increases, inlining these functions
+> > everywhere leads to a significant increase in kernel size.
+> > 
+> > In performance-critical paths, such as when perf events are enabled and
+> > min heap functions are called on every context switch, it is important
+> > to retain the inline versions for optimal performance. To balance this,
+> > the original inline functions are kept, and additional non-inline
+> > versions of the functions have been added in lib/min_heap.c.
+> 
+> The reason it is all __always_inline is because then the whole
+> min_heap_callbacks thing can be constant propagated and the func->less()
+> etc calls become direct calls.
+> 
+> Doing out of line for this stuff, makes them indirect calls, and
+> indirect calls are super retarded expensive ever since spectre. But also
+> things like kCFI add significant cost to indirect calls.
+> 
+> Something that would be a trivial subtract instruction becomes this
+> giant mess of an indirect function call.
+> 
+> Given the whole min_heap thing is basically a ton of less() and swp()
+> calls, I really don't think this trade off makes any kind of sense.
 
-I would like to express my sincere gratitude to everyone for their help in the
-official renewal of the perf wiki.
+BTW, Regarding the concerns about the efficiency impact of indirect
+function calls, should we also consider converting some calls to
+sort()/list_sort() into inline function calls? The comparison functions
+they require could lead to a significant number of indirect calls.
 
-Additionally, the reason I chose to use Markdown is that I wanted to actively
-utilize its media features. For example, I wanted to embed videos,
-presentation slide or display Mermaid diagrams directly on the page.
-I thought these features would be welcomed by users who are new to perf tools.
+For instance, the comparison function passed to list_sort() in ubifs
+calls cond_resched(), which implies that the linked list could be
+lengthy, further increasing the likelihood of numerous indirect calls.
 
-On 10/19/24 8:47 오전, Ian Rogers wrote:
-> On Tue, Oct 15, 2024 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
->>
->> Hello Konstantin,
->>
->> On Tue, Oct 15, 2024 at 02:25:02PM -0400, Konstantin Ryabitsev wrote:
->>> On Fri, Oct 11, 2024 at 06:39:09PM -0400, Konstantin Ryabitsev wrote:
->>>>> Yunseong created:
->>>>> https://perfwiki.github.io/main/
->>>>> Perhaps the solution here is to make perf.wiki.kernel.org a redirect
->>>>> to https://perfwiki.github.io/main/
->>>
->>> To speed things along, and since the old perf wiki was near-unusable anyway,
->>> I went ahead and set the redirects from perf.wiki.kernel.org to
->>> perfwiki.github.io.
->>>
->>> Please feel free to follow up if we need to revisit this, but things look good
->>> to me with this change.
->>
->> Thanks for your work, it looks good to me too.
-
-I have been continuously improving the content of the documentation, so please
-feel free to share any good ideas you may have. :)
-
-> Thanks Konstantin and Yunseong, I think it looks good!
-> I think the pages need some improving, there are empty pages and
-> things that look abandoned, such as the white paper linked from the
-> side bar:
-> https://perfwiki.github.io/main/white-paper/
-> I pushed a few improvements to the glossary and useful links. It
-> should be as easy as creating a pull request for others to contribute,
-> so I look forward to this.
-
-Thank you so much Ian, I added per-page editing features to make it more convenient
-for people to edit the documentation and submit pull requests.
-Link: https://github.com/perfwiki/main/commit/4289b6a6e5c2e53d69a7605d01d0773366a33c52
-
-> Thanks,
-> Ian
-
-Best regards,
-Yunseong Kim
+Regards,
+Kuan-Wei
