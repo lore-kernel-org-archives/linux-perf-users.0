@@ -1,50 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41A4F9D6;
-	Sun, 20 Oct 2024 02:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D65446BA;
+	Sun, 20 Oct 2024 04:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729390739; cv=none; b=qGxujD5pMjeleScVewU2plKBJu83h4yG3C+ymlta5KfU2+sqVfKpK/6uMeLsW9OjZie+vhi/gIYm2vnklg0aPIpfo4w+vPz8yIqHTBwp2hrI6QVLAj96U/cizjIzW7VJIc4BAH0Qg56onuCoThpJaQyxSg+y4Z3ZBDfdzsy2l24=
+	t=1729396943; cv=none; b=nMmWoPBtwABaVrIVwsoF7Or9E5SGBGh2eku73RTN9rzsDuq50fgrh1drx/oc6m3m2COat7Ov4CBSduUDtyHgfWVgaJXhesxg0cmuuTgUiU3J4Ocl9jOpBGfpdZ4tY4n6oqSc5zsHwXPqiSD/936qntQ609O7BN5toMyBWpmbgxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729390739; c=relaxed/simple;
-	bh=uEidP98ywWJq8H0kIhCZAdHTssdP9Yzu6PBq3aq5i3Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VydfJ3EzGFirAvMAxBOPeK3iXjiJFvrkDZzdil/AvNYLlsF+IU9dTe0BH9PwIPAc3aJ+U/l5Vkyqerg58ILvFBooJcq8QMrrcplAtvb40xdLaDZzutp2RRnzx4PfsdEFoWqncZrKSRfnWsGJAZ4z+I8jaOzTwLMUqdKb/KW9txQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U0l2WMSh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729396943; c=relaxed/simple;
+	bh=PPZcedfeN2xci0bMtr41qkobsQvnGAlUSAMTUIbyAS4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j5J1r9F1yAoc0JOXKFhPeBVzCysYj6CkGBNBgnImAkSDocXq1IxOxyTaoiKkw81I9/IAfl1zxXV99iN3JaY3km1OAp1qrz6vcI1YNB02p0KJHL6o3kcE+yJLfWz5maYfrmluCxzMKUw9bh5j/gqtZo66/nPshjBjuAv7VpPhKQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WwlSuj74; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U0l2WMSh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB79C4CED1;
-	Sun, 20 Oct 2024 02:18:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729390738;
-	bh=uEidP98ywWJq8H0kIhCZAdHTssdP9Yzu6PBq3aq5i3Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U0l2WMShLcDKlorJKmJdAIxypws1qbiTiuWGczY4WRTJ9uGgh2mTThbc6Z18DC0xc
-	 xe7QNwhvmN60it9/mwV2I62AvAfevRX43R0CwhycKZdBv5I79GhpgRMl+RsV4Mm/lA
-	 apyCVegNY4nScZx60Y95SumxIQZJbLCRiDqEMZL/H3Bg/IhcP2FRueruFcz32/ZNPt
-	 qOujwvAuhMQR6UeHr4imwI9PvGcW3eb8JUNnyRV0EB/JCzF0wSnVZ6VrVXUcMOozv7
-	 //ZxWZOug7eB67BKKy37O1/uI9gKFc0vb946IY1BIM1M8Xy2fTKa78THxkVgmWBrqD
-	 yOKsb+9/t4HLA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WwlSuj74"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2e30116efc9so2833105a91.2;
+        Sat, 19 Oct 2024 21:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729396941; x=1730001741; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PT29tbH0TQkyRmcXcOhR5RBzyV0h0z0uVsdQMLDTPYc=;
+        b=WwlSuj74D/99bLhfwcKSkHVOiTKWT6v0UoZFsgeVyS1gsg7EPC08tsqKUP8uD/x2kb
+         jR6ZaBEfOYT822l8ByfCo2MFUzfuHVXTfdi7dfvly8PDgY1DlBCCVCK6zE6BIV8mf5Z0
+         gMeO39nwsG8GVp5c2JEQif1W/zWDwLr8sOjrrhGQkr6hOaic/HCV50mgnzY5DRcVyN1O
+         QCttJGsC6hnRC12ZLvdYe6ul58FHargIgJXokNsvzwzu7zi6VFL03AAKNOKhyWGfjwx8
+         EB1OcHzWyLAlPEui10zcSe/kEtmA8p2aUoYDrvfef096q6rnfRmcx6SJgDOXIV5FHDkg
+         Pcsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729396941; x=1730001741;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PT29tbH0TQkyRmcXcOhR5RBzyV0h0z0uVsdQMLDTPYc=;
+        b=nn2GGgxyfDRvl+M/y3h4fdfYJh9fvfEDbMIDEe9bay1Nx5IaJTzFtWMKiQeVtsz+O2
+         DWYI2qeTo+iHy964N5HrJhhIvVHPdsydUXn0S00IrXS1VoGYGtAr1vgqWz25Mkhh1ARu
+         aOKgCnT8x1uAsZWqWpTXEIZniR9L4SIhw39mst6gTeHCo2ks+BvsHKHk5fZKS1jcfDdB
+         FJtuItHdI++/w9UJ4DjNCSkP1uIZzJBcuMxWLamGuXdXg5jnj8hHLJ9RMTJY//eMC8Ti
+         3YGhiRM3DuUhrTrrKNOhKuIHFkjRVMEpBMU5JU6saCjZK8HxmsF2p0QWtH56C9OOMLDC
+         FByQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3veN0TEH2n1rNFQDgHDjJBgCAx7N0/XFq3Gdtz2Cpsw4/rk0OhTbb35KXmdjXBiZBI/yizgHI2bicWek=@vger.kernel.org, AJvYcCV/yaog5bS8rMlDp6cTYkfNBiyOXtPRIQC8iNsLz7YMtFadIWeogz0xY+EA01iXwrGmxu/PvGEHjYcOEkZWkSBMmQ==@vger.kernel.org, AJvYcCVRGG+AOb4wNZZdtMEYXL0fZ+RZr5GtDjn41vAIUgRa0WtMES+ohknMh2O6cd5F2rrHeyUOoLHudswtMKZP@vger.kernel.org, AJvYcCX7eNkDbStdnRI7nQteSKCEeZFUaK2AUXhvG1KmAb81ClYgRyxcrQv3Fj9A/MycfN0sRN65t1U1hPRS@vger.kernel.org, AJvYcCXafUeTXEaHH4s/DSq1S69WBkSYlxssEjUuMdhfMKQ3aekOyEwmiyhKANEZJ2Zf4rd+1t94kftNwcn2aavA8Hs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/t0rmrxkdhMOrOOCm8PN8mO7FOFhZGG+rlc66HhqCKWnMXYgV
+	HsDJJKr/SLrfvhNcCBMPtXmViHjgEeysOoazTF17Pf3EJVE0d8/l
+X-Google-Smtp-Source: AGHT+IGmbAyhBDIy64nkkXVLYjxt6z953fnbtTFvv+n4vjmyvQ+UsqLXOPoUEJ4jHZKyS4u8EuhTMQ==
+X-Received: by 2002:a17:90a:8a91:b0:2e2:cc47:f1b0 with SMTP id 98e67ed59e1d1-2e5616e667bmr8376177a91.3.1729396940670;
+        Sat, 19 Oct 2024 21:02:20 -0700 (PDT)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e5ad3678d3sm633668a91.24.2024.10.19.21.02.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Oct 2024 21:02:20 -0700 (PDT)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: colyli@suse.de,
+	kent.overstreet@linux.dev,
+	msakai@redhat.com,
+	corbet@lwn.net,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	akpm@linux-foundation.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	willy@infradead.org,
+	jserv@ccns.ncku.edu.tw,
 	linux-kernel@vger.kernel.org,
+	linux-bcache@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	James Clark <james.clark@linaro.org>
-Subject: [PATCH 3/3] perf test: Document the -w/--workload option
-Date: Sat, 19 Oct 2024 23:18:42 -0300
-Message-ID: <20241020021842.1752770-4-acme@kernel.org>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241020021842.1752770-1-acme@kernel.org>
-References: <20241020021842.1752770-1-acme@kernel.org>
+	linux-doc@vger.kernel.org,
+	Kuan-Wei Chiu <visitorckw@gmail.com>
+Subject: [PATCH v2 00/10] Enhance min heap API with non-inline functions and optimizations
+Date: Sun, 20 Oct 2024 12:01:50 +0800
+Message-Id: <20241020040200.939973-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,48 +87,70 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Add non-inline versions of the min heap API functions in lib/min_heap.c
+and updates all users outside of kernel/events/core.c to use these
+non-inline versions. To mitigate the performance impact of indirect
+function calls caused by the non-inline versions of the swap and
+compare functions, a builtin swap has been introduced that swaps
+elements based on their size. Additionally, it micro-optimizes the
+efficiency of the min heap by pre-scaling the counter, following the
+same approach as in lib/sort.c. Documentation for the min heap API has
+also been added to the core-api section.
 
-Wasn't documented so far, mention that it is mostly used in the shell
-regression tests.
+Regards,
+Kuan-Wei
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/lkml/20241011171449.1362979-4-acme@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-test.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-test.txt b/tools/perf/Documentation/perf-test.txt
-index 9acb8d1f658890e9..efcdec528a8f7243 100644
---- a/tools/perf/Documentation/perf-test.txt
-+++ b/tools/perf/Documentation/perf-test.txt
-@@ -48,3 +48,20 @@ OPTIONS
- 
- --dso::
- 	Specify a DSO for the "Symbols" test.
-+
-+-w::
-+--workload=::
-+	Run a built-in workload, to list them use '--list-workloads', current ones include:
-+	noploop, thloop, leafloop, sqrtloop, brstack, datasym and landlock.
-+
-+	Used with the shell script regression tests.
-+
-+	Some accept an extra parameter:
-+
-+		seconds: leafloop, noploop, sqrtloop, thloop
-+		nrloops: brstack
-+
-+	The datasym and landlock workloads don't accept any.
-+
-+--list-workloads::
-+	List the available workloads to use with -w/--workload.
+Changes in v2:
+- Added a builtin swap to reduce the performance impact of indirect
+  function calls.
+- Cleaned up duplicate min_heap_callbacks in bcachefs.
+- Wrapped documentation at 80 columns.
+- Updated Example Usage.
+- Included documentation explaining that NULL can be passed to the
+  swp in min_heap_callbacks to use the builtin swap.
+
+v1: https://lore.kernel.org/lkml/20241013184703.659652-1-visitorckw@gmail.com
+
+Kuan-Wei Chiu (10):
+  lib/min_heap: Introduce non-inline versions of min heap API functions
+  lib min_heap: Optimize min heap by prescaling counters for better
+    performance
+  lib min_heap: Avoid indirect function call by providing default swap
+  lib/test_min_heap: Update min_heap_callbacks to use default builtin
+    swap
+  perf/core: Update min_heap_callbacks to use default builtin swap
+  dm vdo: Update min_heap_callbacks to use default builtin swap
+  bcache: Update min_heap_callbacks to use default builtin swap
+  bcachefs: Clean up duplicate min_heap_callbacks declarations
+  bcachefs: Update min_heap_callbacks to use default builtin swap
+  Documentation/core-api: Add min heap API introduction
+
+ Documentation/core-api/index.rst    |   1 +
+ Documentation/core-api/min_heap.rst | 300 +++++++++++++++++++++++
+ drivers/md/bcache/Kconfig           |   1 +
+ drivers/md/bcache/alloc.c           |  11 +-
+ drivers/md/bcache/bset.c            |  14 +-
+ drivers/md/bcache/extents.c         |  10 +-
+ drivers/md/bcache/movinggc.c        |  10 +-
+ drivers/md/dm-vdo/Kconfig           |   1 +
+ drivers/md/dm-vdo/repair.c          |   2 +-
+ drivers/md/dm-vdo/slab-depot.c      |  10 +-
+ fs/bcachefs/Kconfig                 |   1 +
+ fs/bcachefs/clock.c                 |  25 +-
+ fs/bcachefs/ec.c                    |  19 +-
+ include/linux/min_heap.h            | 357 ++++++++++++++++++++++------
+ kernel/events/core.c                |  15 +-
+ lib/Kconfig                         |   3 +
+ lib/Kconfig.debug                   |   1 +
+ lib/Makefile                        |   1 +
+ lib/min_heap.c                      |  70 ++++++
+ lib/test_min_heap.c                 |  16 +-
+ 20 files changed, 694 insertions(+), 174 deletions(-)
+ create mode 100644 Documentation/core-api/min_heap.rst
+ create mode 100644 lib/min_heap.c
+
 -- 
-2.46.2
+2.34.1
 
