@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0EC2BE5E;
-	Sun, 20 Oct 2024 02:18:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41A4F9D6;
+	Sun, 20 Oct 2024 02:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729390736; cv=none; b=Zg0uQ/edPVzHtySUSLlAZt672i8leWmFhIvOgzgeinhStNtarfjo+XD23zcMquk36aU8jRoDLUYZQUt2qk3SXhkPomMB090zPqQxg7+zO0iXPQeuO8uZ7wPEPE4OrlTtfeILO3BBPjFYK1xaHUNhmVnRS8po3UpbwJsRtxncX+I=
+	t=1729390739; cv=none; b=qGxujD5pMjeleScVewU2plKBJu83h4yG3C+ymlta5KfU2+sqVfKpK/6uMeLsW9OjZie+vhi/gIYm2vnklg0aPIpfo4w+vPz8yIqHTBwp2hrI6QVLAj96U/cizjIzW7VJIc4BAH0Qg56onuCoThpJaQyxSg+y4Z3ZBDfdzsy2l24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729390736; c=relaxed/simple;
-	bh=bBPuIvSFwObOYnBape4WJZ+7xTE7/R7yrTNG+rvAiQI=;
+	s=arc-20240116; t=1729390739; c=relaxed/simple;
+	bh=uEidP98ywWJq8H0kIhCZAdHTssdP9Yzu6PBq3aq5i3Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pNmk7HRJ+TOhP7S3fIjcrSLMmIFjlCqeM6DONogZ8XqGlVQoQWE87ubhCtPJf/fWL+XbEUOpGkFJm+j3ldi6eT239zqhgeKTfVsNvq3PVykxqXTryXMHOiG+4nQKPOju+GQvj/Sc6TokmzVDO8bmMuMrZ5oHg6rnahQ6uCAz3mM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZrtdVUQE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VydfJ3EzGFirAvMAxBOPeK3iXjiJFvrkDZzdil/AvNYLlsF+IU9dTe0BH9PwIPAc3aJ+U/l5Vkyqerg58ILvFBooJcq8QMrrcplAtvb40xdLaDZzutp2RRnzx4PfsdEFoWqncZrKSRfnWsGJAZ4z+I8jaOzTwLMUqdKb/KW9txQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U0l2WMSh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZrtdVUQE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E687DC4CED0;
-	Sun, 20 Oct 2024 02:18:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U0l2WMSh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB79C4CED1;
+	Sun, 20 Oct 2024 02:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729390735;
-	bh=bBPuIvSFwObOYnBape4WJZ+7xTE7/R7yrTNG+rvAiQI=;
+	s=k20201202; t=1729390738;
+	bh=uEidP98ywWJq8H0kIhCZAdHTssdP9Yzu6PBq3aq5i3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZrtdVUQE6M8Nm0YEz3ESzzmFgYKjDTh3vCpbUlojTVOfWNfOtc+Bkq2dT+s9ESHZA
-	 D3WIQMGTK/iL8qNEqAkHengHT8ahiUHSR3TEj8EREzMmd/bhL7HvMSAc4G/MRmyhiE
-	 i9xIb5rDq6I/eJ05gifCNmxMZf5Vr6pqyJ6KpswfJ4ruuweDPw4HcpCPNA/j7K7HQf
-	 NNS39FJc08R7CruV1zwJDv5tTG9SIG/A59TU8BjBxOFeggrSAhHOw7Nj+/x91iTOQf
-	 M1kVw91XwnlFehBOvaJMv5a7DlXQpOAGi7rGmB8i9nKkOQkuJduxb5EqymBJ4FmCf2
-	 Tb3znSdDPllTg==
+	b=U0l2WMShLcDKlorJKmJdAIxypws1qbiTiuWGczY4WRTJ9uGgh2mTThbc6Z18DC0xc
+	 xe7QNwhvmN60it9/mwV2I62AvAfevRX43R0CwhycKZdBv5I79GhpgRMl+RsV4Mm/lA
+	 apyCVegNY4nScZx60Y95SumxIQZJbLCRiDqEMZL/H3Bg/IhcP2FRueruFcz32/ZNPt
+	 qOujwvAuhMQR6UeHr4imwI9PvGcW3eb8JUNnyRV0EB/JCzF0wSnVZ6VrVXUcMOozv7
+	 //ZxWZOug7eB67BKKy37O1/uI9gKFc0vb946IY1BIM1M8Xy2fTKa78THxkVgmWBrqD
+	 yOKsb+9/t4HLA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	James Clark <james.clark@linaro.org>
-Subject: [PATCH 2/3] perf test: Introduce --list-workloads to list the available workloads
-Date: Sat, 19 Oct 2024 23:18:41 -0300
-Message-ID: <20241020021842.1752770-3-acme@kernel.org>
+Subject: [PATCH 3/3] perf test: Document the -w/--workload option
+Date: Sat, 19 Oct 2024 23:18:42 -0300
+Message-ID: <20241020021842.1752770-4-acme@kernel.org>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241020021842.1752770-1-acme@kernel.org>
 References: <20241020021842.1752770-1-acme@kernel.org>
@@ -55,29 +55,8 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Using it:
-
-  $ perf test -w noplop
-  No workload found: noplop
-  $
-  $ perf test -w
-   Error: switch `w' requires a value
-   Usage: perf test [<options>] [{list <test-name-fragment>|[<test-name-fragments>|<test-numbers>]}]
-
-      -w, --workload <work>
-                            workload to run for testing, use '--list-workloads' to list the available ones.
-  $
-  $ perf test --list-workloads
-  noploop
-  thloop
-  leafloop
-  sqrtloop
-  brstack
-  datasym
-  landlock
-  $
-
-Would be good at some point to have a description in 'struct test_workload'.
+Wasn't documented so far, mention that it is mostly used in the shell
+regression tests.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
@@ -85,64 +64,37 @@ Cc: James Clark <james.clark@linaro.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/lkml/20241011171449.1362979-3-acme@kernel.org
+Link: https://lore.kernel.org/lkml/20241011171449.1362979-4-acme@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-test.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 2201f7ed432ce9f2..cc43b9f366d09436 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -505,6 +505,17 @@ static int perf_test__list(int argc, const char **argv)
- 	return 0;
- }
+diff --git a/tools/perf/Documentation/perf-test.txt b/tools/perf/Documentation/perf-test.txt
+index 9acb8d1f658890e9..efcdec528a8f7243 100644
+--- a/tools/perf/Documentation/perf-test.txt
++++ b/tools/perf/Documentation/perf-test.txt
+@@ -48,3 +48,20 @@ OPTIONS
  
-+static int workloads__fprintf_list(FILE *fp)
-+{
-+	struct test_workload *twl;
-+	int printed = 0;
+ --dso::
+ 	Specify a DSO for the "Symbols" test.
 +
-+	workloads__for_each(twl)
-+		printed += fprintf(fp, "%s\n", twl->name);
++-w::
++--workload=::
++	Run a built-in workload, to list them use '--list-workloads', current ones include:
++	noploop, thloop, leafloop, sqrtloop, brstack, datasym and landlock.
 +
-+	return printed;
-+}
++	Used with the shell script regression tests.
 +
- static int run_workload(const char *work, int argc, const char **argv)
- {
- 	struct test_workload *twl;
-@@ -535,6 +546,7 @@ int cmd_test(int argc, const char **argv)
- 	};
- 	const char *skip = NULL;
- 	const char *workload = NULL;
-+	bool list_workloads = false;
- 	const struct option test_options[] = {
- 	OPT_STRING('s', "skip", &skip, "tests", "tests to skip"),
- 	OPT_INCR('v', "verbose", &verbose,
-@@ -544,7 +556,8 @@ int cmd_test(int argc, const char **argv)
- 	OPT_BOOLEAN('p', "parallel", &parallel, "Run the tests in parallel"),
- 	OPT_BOOLEAN('S', "sequential", &sequential,
- 		    "Run the tests one after another rather than in parallel"),
--	OPT_STRING('w', "workload", &workload, "work", "workload to run for testing"),
-+	OPT_STRING('w', "workload", &workload, "work", "workload to run for testing, use '--list-workloads' to list the available ones."),
-+	OPT_BOOLEAN(0, "list-workloads", &list_workloads, "List the available builtin workloads to use with -w/--workload"),
- 	OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
- 	OPT_STRING(0, "objdump", &test_objdump_path, "path",
- 		   "objdump binary to use for disassembly and annotations"),
-@@ -570,6 +583,11 @@ int cmd_test(int argc, const char **argv)
- 	if (workload)
- 		return run_workload(workload, argc, argv);
- 
-+	if (list_workloads) {
-+		workloads__fprintf_list(stdout);
-+		return 0;
-+	}
++	Some accept an extra parameter:
 +
- 	if (dont_fork)
- 		sequential = true;
- 	else if (parallel)
++		seconds: leafloop, noploop, sqrtloop, thloop
++		nrloops: brstack
++
++	The datasym and landlock workloads don't accept any.
++
++--list-workloads::
++	List the available workloads to use with -w/--workload.
 -- 
 2.46.2
 
