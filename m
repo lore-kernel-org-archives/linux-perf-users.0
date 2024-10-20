@@ -1,433 +1,132 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2313192599;
-	Sun, 20 Oct 2024 04:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05827489
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Oct 2024 04:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729396995; cv=none; b=kyi5VR939HKCDH9n4BfP7uxBV1IEP9T4NIo94R2RHO1ogQumW2Zd2orPJsDKAdI9v9ZQo5SguFMVyjIRE2nE97Gnc2eMB42ybGnB82jj48d3Twf4uIBTXoKB7zvF7mRDP2JvdupTrlk2XmJc7BxNoEV0+uuyszHn4znv8YFmKEM=
+	t=1729399759; cv=none; b=gFD67li5Jv4VnY16XzJFtgdTeFYdhW0AsDrI3roim1z1mwCdt3vGeECnJyEFI/2YE0/thWHQXF8VgB3v8LtVIsIBDsP3tl40rAEjP4uH/ziN11F8HNJKPkJ1a5WvmFc9qCd+IOytd9+mta4HTifUf2vJAilemKf/yqKpw46ce7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729396995; c=relaxed/simple;
-	bh=P8v7bl0HUC8PgdWG90Udu7/e7VMI09byj7xPkrgmymQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MsYDMmLnDXyXq2RnDJB/ejM+cFekfDKnY1744DxhdUZGOmR46VKDaC1qNlyfDOp8nnkfb4H1PWBG1Re5EhLwPAy2Z6U0Kd8Kszv60iFGgL8OGBxzBeeQI1pae4fbeFDpCvItiri9GZAzZaaUu0JlVsor2A2891GrC3m4D+F8pX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=juge8A1b; arc=none smtp.client-ip=209.85.216.46
+	s=arc-20240116; t=1729399759; c=relaxed/simple;
+	bh=V8/CaGwAkgVPFQvx0e5tswgosaeMMXzjSs6/ap5B71c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eKDA3aQ0sWTAnkPsLeCjFy0MpFr33Zg+h1uKcxk2wGVhhWKnWganJip/3xbCgsAvlx8EtoQ3aW71mfmbzmaWizmC8pCLWjVw4EqMggJH0kCGKYtjasDUCRDffy1udaQ8pWuHaabCOsfIxj3A8Xll8/e5GRXNhPxvaqSbVxC+uk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PgurAk8b; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="juge8A1b"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2e2cc47f1d7so2297366a91.0;
-        Sat, 19 Oct 2024 21:03:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgurAk8b"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2e2af4dca5cso667142a91.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 19 Oct 2024 21:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729396992; x=1730001792; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PfhCaNqjkwqDBbL7z5yBWj9nWr3RVKAleAhUoJxmWMY=;
-        b=juge8A1bmvXp2101xxV3EFFfJ9cbNHMIM4Q0XHcX3EnXdb0yLPKJG2gCx1NRPWt/EK
-         NehL892Tl0mv2J0PlNWJisx5Eus46QCQfqc6DV1+wxG/ValwhNjQYFjq+UYsFzjkqzrN
-         9SqwZ8Vqjyr8m0Jd+mkUoDU1nzTRyILZHvkBm8kFZWsYVicErBp/CQrhLtIe10cy5TqM
-         xJOrLJ21iFxXM9bwWPYfZjSqEfcdS8w/obPB/9fuTIv56muIJ2xcOQ43tXyTEPpPPCqt
-         CZEpLW2sUzb1XdCmV4k/NYZ5nIL+dTEEBtJalAySBZEcAKZs3P+zEZ16SSRwPAu02j3o
-         4bTw==
+        d=gmail.com; s=20230601; t=1729399757; x=1730004557; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YmzlUejJoflLf1VpmPq1KtW89kLT4qtL3i9eLCSeR/Y=;
+        b=PgurAk8bsMcuLyWZiPfi+feJWAUKbCMo1hxEKuCRvrEB9qG+eKMywwAOgOhxUIMd+x
+         iCKfGn907sTbIsebE7Sx9HMpeDJQva6tK0JS7ZpwJgiKK2CvR6qIJrLE/G9AkzZWx4ni
+         xZtR52Nxi+znjo+GoegZRWB41Ul7ofE2ICm+CHgMcTi4/Qvn2eUQv1QJ5NjHYnJe4Lgb
+         65tPpZ28OUYOB/lCDBUwZ9yTeoL9gBKX8mq9lWuvIOx4IlDDhVXx7odu2m1ESn5ZQWz2
+         Pb7gm5kPAPOedySi2ueOiGpcc/jmsO+5JZXmk7ImiJwTiwZH894Y/iygkJPMvQ+fg+fW
+         eIvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729396992; x=1730001792;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PfhCaNqjkwqDBbL7z5yBWj9nWr3RVKAleAhUoJxmWMY=;
-        b=QyW2MybuWUqRYDqMojfI2wkT/JYR5Jj3ZZO2jp7Bodn9+NJkEPr5UHnMl7gZPLGNt0
-         Wzdk7XzYvXTtivXqgQgqTuwXPRVm4a+qbYu/XvCPdd1aT6uc1xZ28Y2b/Fz695U09ap1
-         MHyUpqsbe1OoIRGBJw8XTd/8BScRItoBQLGqUxHsUjb9Aift4BsN8W/LnR4O2VFerPrj
-         lwyADjJZZFM0YUsOyQvhDsHdxM00xgGJm2XnQiKTPfvp/kKMq0bCc9JyiAZt1NszzJNV
-         qdtkZzfreCDt1zSBc4upkYM87hnfXvXgeSA/2mpt5fbaA/Np88GTvOTT6/09U4PaecSa
-         FCCA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/W4KktdXKLk6GPEIfGsEBRhC0LGkdnVGBYgIErQPgaMfrYBQxsOUdfQ9km+ylJz+32hiC2UUdNqPbep0=@vger.kernel.org, AJvYcCUdNQyo21qE7wi7U2e2G62M2SyghArqKn0ja94QZoNuNjz7l/naB4lvFTvf8/ZuOa9YfZOsPlFkcS+E@vger.kernel.org, AJvYcCVlJMuiXqjK0KFLeYSiK005t9VfEwAD4IwMXrbXw9ZWAHOsLIfG+D/JJXjO/DmnqLaRnSjEhhUmzaGtaWwQ@vger.kernel.org, AJvYcCWED+yOJhONk8HEdlnu0SpckezsHsoJh3ahVdoCOjINXn/twwNtOLscai4pUhkVwLEhUZFb7zDlNN/ljzLN/9vX6g==@vger.kernel.org, AJvYcCXrS8Pfk2k33xB6KIdRDnu1UWdCp39yd+IodpiOu5AJ2sMkLFE6ynoYzjtF+2wBsy1BJIt5vaIHKzx70ELAelg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9FK1QEEW99cRyjjt7Tep7HcQBoJvRjab43h3GflRca/i+L9yv
-	UARqJJarADbyaCKzAlgvZJ0Qaj3JEWbwzex/38wvDBJcfGsKN2cC
-X-Google-Smtp-Source: AGHT+IGRS93cFoJkaSz24BSwCStwXbRxjwOMLShcvR70iLhHYFKXqmS8/9zXr3Tt016pUsTc/n4+5g==
-X-Received: by 2002:a17:90b:4c12:b0:2e3:bc3e:feef with SMTP id 98e67ed59e1d1-2e5644991c9mr10156817a91.3.1729396991894;
-        Sat, 19 Oct 2024 21:03:11 -0700 (PDT)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e5ad3678d3sm633668a91.24.2024.10.19.21.03.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2024 21:03:11 -0700 (PDT)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: colyli@suse.de,
-	kent.overstreet@linux.dev,
-	msakai@redhat.com,
-	corbet@lwn.net,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	akpm@linux-foundation.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	willy@infradead.org,
-	jserv@ccns.ncku.edu.tw,
-	linux-kernel@vger.kernel.org,
-	linux-bcache@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Kuan-Wei Chiu <visitorckw@gmail.com>
-Subject: [PATCH v2 10/10] Documentation/core-api: Add min heap API introduction
-Date: Sun, 20 Oct 2024 12:02:00 +0800
-Message-Id: <20241020040200.939973-11-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241020040200.939973-1-visitorckw@gmail.com>
-References: <20241020040200.939973-1-visitorckw@gmail.com>
+        d=1e100.net; s=20230601; t=1729399757; x=1730004557;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YmzlUejJoflLf1VpmPq1KtW89kLT4qtL3i9eLCSeR/Y=;
+        b=SWnQ8qFwpKZA0gfb017GphCJYTUuGLuX7Z+bI3Wfi95/bQ4KwU43YepqVeEh6SCm0W
+         hzrqAG1Q0Ld1teh4BWkrQYFDW7VnhgmhZ0BewDIp4G5xud9vrPEobpTegugoPCvE8fGF
+         tAzrmpW/iVjelPqUYST6rQT4Dchx25r2XIzmoQ50NGCmpk57vJHKR9NRP8P1GDqX0Mbi
+         6URJzvvLypf6Ggprn5lviYsbsqPDglOPillgZkxihLh7VudRKDayQOBxwDCd5SWMYMMH
+         TPYOapcB21nZ2/UO/Joiiyf/u5T9AW/plI1pvldDWSGr3E3SiKvNiWm7Ik52JFVxbu17
+         eLbw==
+X-Forwarded-Encrypted: i=1; AJvYcCV0G8882R/8NchVKdl/p+zYpfmdB21Mz3ntiIuOg3zKDKBH9XdkPY50bWs8cprtUDQdyFJL42EaRsg3qX/EU+1Q@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyzqe5ajuCZUjQn1vjVVFz2IUNZdPIAIM83/eKAGPzhvx8U9y0Q
+	kioMZfJ+c+4GuVlPKOl2uiCPfNvOTJc/BYzIdBWdL6kMhKkptt5L
+X-Google-Smtp-Source: AGHT+IGKsqx9/8S5ymWC7MPxmDaR/rf4ymjZrVfSVXqme+2N/aioRpL0HsdA4pzhgSzmibhVA37Udw==
+X-Received: by 2002:a05:6a00:2e24:b0:71e:66bb:d33b with SMTP id d2e1a72fcca58-71ea3129093mr4576476b3a.1.1729399756634;
+        Sat, 19 Oct 2024 21:49:16 -0700 (PDT)
+Received: from [192.168.50.136] ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ec14159dfsm524019b3a.197.2024.10.19.21.49.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 19 Oct 2024 21:49:16 -0700 (PDT)
+Message-ID: <a0626ecb-cc64-4c6a-abf3-76868178234f@gmail.com>
+Date: Sun, 20 Oct 2024 13:49:11 +0900
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Migrating from perf.wiki.kernel.org to RTD
+To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+ linux-perf-users@vger.kernel.org, Howard Chu <howardchu95@gmail.com>,
+ MichelleJin <shjy180909@gmail.com>, Austin Kim <austindh.kim@gmail.com>
+References: <20241011-quiet-chowchow-of-temperance-d0e205@meerkat>
+ <CAP-5=fUz5CFEL8D1L+UATsNqs4MBb6rNeYtZ26+pFC4NgRYt6w@mail.gmail.com>
+ <20241011-uncovered-original-vole-cda87d@meerkat>
+ <20241015-warping-condor-of-storm-afa06f@meerkat>
+ <Zw8cN9daNBvCJd3u@google.com>
+ <CAP-5=fXsVXYkncR0rwxXvKp_f5dR40L9_x-qoLxwHXWMiyXh3g@mail.gmail.com>
+Content-Language: en-US
+From: Yunseong Kim <yskelg@gmail.com>
+In-Reply-To: <CAP-5=fXsVXYkncR0rwxXvKp_f5dR40L9_x-qoLxwHXWMiyXh3g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Introduce an overview of the min heap API, detailing its usage and
-functionality. The documentation aims to provide developers with a
-clear understanding of how to implement and utilize min heaps within
-the Linux kernel, enhancing the overall accessibility of this data
-structure.
+Hi 
 
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
----
-Changes in v2:
-- Wrapped lines at 80 columns.
-- Updated Example Usage.
-- Added documentation for the ability to pass NULL to the swp in
-  min_heap_callbacks to use the builtin swap.
+I would like to express my sincere gratitude to everyone for their help in the
+official renewal of the perf wiki.
 
- Documentation/core-api/index.rst    |   1 +
- Documentation/core-api/min_heap.rst | 300 ++++++++++++++++++++++++++++
- 2 files changed, 301 insertions(+)
- create mode 100644 Documentation/core-api/min_heap.rst
+Additionally, the reason I chose to use Markdown is that I wanted to actively
+utilize its media features. For example, I wanted to embed videos,
+presentation slide or display Mermaid diagrams directly on the page.
+I thought these features would be welcomed by users who are new to perf tools.
 
-diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
-index 6a875743dd4b..563b8fc0002f 100644
---- a/Documentation/core-api/index.rst
-+++ b/Documentation/core-api/index.rst
-@@ -52,6 +52,7 @@ Library functionality that is used throughout the kernel.
-    wrappers/atomic_bitops
-    floating-point
-    union_find
-+   min_heap
- 
- Low level entry and exit
- ========================
-diff --git a/Documentation/core-api/min_heap.rst b/Documentation/core-api/min_heap.rst
-new file mode 100644
-index 000000000000..0c636c8b7aa5
---- /dev/null
-+++ b/Documentation/core-api/min_heap.rst
-@@ -0,0 +1,300 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+============
-+Min Heap API
-+============
-+
-+Introduction
-+============
-+
-+The Min Heap API provides a set of functions and macros for managing min-heaps
-+in the Linux kernel. A min-heap is a binary tree structure where the value of
-+each node is less than or equal to the values of its children, ensuring that
-+the smallest element is always at the root.
-+
-+This document provides a guide to the Min Heap API, detailing how to define and
-+use min-heaps. Users should not directly call functions with **__min_heap_*()**
-+prefixes, but should instead use the provided macro wrappers.
-+
-+In addition to the standard version of the functions, the API also includes a
-+set of inline versions for performance-critical scenarios. These inline
-+functions have the same names as their non-inline counterparts but include an
-+**_inline** suffix. For example, **__min_heap_init_inline** and its
-+corresponding macro wrapper **min_heap_init_inline**. The inline versions allow
-+custom comparison and swap functions to be called directly, rather than through
-+indirect function calls. This can significantly reduce overhead, especially
-+when CONFIG_MITIGATION_RETPOLINE is enabled, as indirect function calls become
-+more expensive. As with the non-inline versions, it is important to use the
-+macro wrappers for inline functions instead of directly calling the functions
-+themselves.
-+
-+Data Structures
-+===============
-+
-+Min-Heap Definition
-+-------------------
-+
-+The core data structure for representing a min-heap is defined using the
-+**MIN_HEAP_PREALLOCATED** and **DEFINE_MIN_HEAP** macros. These macros allow
-+you to define a min-heap with a preallocated buffer or dynamically allocated
-+memory.
-+
-+Example:
-+
-+.. code-block:: c
-+
-+    #define MIN_HEAP_PREALLOCATED(_type, _name, _nr)
-+    struct _name {
-+        int nr;         /* Number of elements in the heap */
-+        int size;       /* Maximum number of elements that can be held */
-+        _type *data;    /* Pointer to the heap data */
-+        _type preallocated[_nr];  /* Static preallocated array */
-+    }
-+
-+    #define DEFINE_MIN_HEAP(_type, _name) MIN_HEAP_PREALLOCATED(_type, _name, 0)
-+
-+A typical heap structure will include a counter for the number of elements
-+(`nr`), the maximum capacity of the heap (`size`), and a pointer to an array of
-+elements (`data`). Optionally, you can specify a static array for preallocated
-+heap storage using **MIN_HEAP_PREALLOCATED**.
-+
-+Min Heap Callbacks
-+------------------
-+
-+The **struct min_heap_callbacks** provides customization options for ordering
-+elements in the heap and swapping them. It contains two function pointers:
-+
-+.. code-block:: c
-+
-+    struct min_heap_callbacks {
-+        bool (*less)(const void *lhs, const void *rhs, void *args);
-+        void (*swp)(void *lhs, void *rhs, void *args);
-+    };
-+
-+- **less** is the comparison function used to establish the order of elements.
-+- **swp** is a function for swapping elements in the heap. If swp is set to
-+  NULL, the default swap function will be used, which swaps the elements based on their size
-+
-+Macro Wrappers
-+==============
-+
-+The following macro wrappers are provided for interacting with the heap in a
-+user-friendly manner. Each macro corresponds to a function that operates on the
-+heap, and they abstract away direct calls to internal functions.
-+
-+Each macro accepts various parameters that are detailed below.
-+
-+Heap Initialization
-+--------------------
-+
-+.. code-block:: c
-+
-+    min_heap_init(heap, data, size);
-+
-+- **heap**: A pointer to the min-heap structure to be initialized.
-+- **data**: A pointer to the buffer where the heap elements will be stored. If
-+  `NULL`, the preallocated buffer within the heap structure will be used.
-+- **size**: The maximum number of elements the heap can hold.
-+
-+This macro initializes the heap, setting its initial state. If `data` is
-+`NULL`, the preallocated memory inside the heap structure will be used for
-+storage. Otherwise, the user-provided buffer is used. The operation is **O(1)**.
-+
-+**Inline Version:** min_heap_init_inline(heap, data, size)
-+
-+Accessing the Top Element
-+-------------------------
-+
-+.. code-block:: c
-+
-+    element = min_heap_peek(heap);
-+
-+- **heap**: A pointer to the min-heap from which to retrieve the smallest
-+  element.
-+
-+This macro returns a pointer to the smallest element (the root) of the heap, or
-+`NULL` if the heap is empty. The operation is **O(1)**.
-+
-+**Inline Version:** min_heap_peek_inline(heap)
-+
-+Heap Insertion
-+--------------
-+
-+.. code-block:: c
-+
-+    success = min_heap_push(heap, element, callbacks, args);
-+
-+- **heap**: A pointer to the min-heap into which the element should be inserted.
-+- **element**: A pointer to the element to be inserted into the heap.
-+- **callbacks**: A pointer to a `struct min_heap_callbacks` providing the
-+  `less` and `swp` functions.
-+- **args**: Optional arguments passed to the `less` and `swp` functions.
-+
-+This macro inserts an element into the heap. It returns `true` if the insertion
-+was successful and `false` if the heap is full. The operation is **O(log n)**.
-+
-+**Inline Version:** min_heap_push_inline(heap, element, callbacks, args)
-+
-+Heap Removal
-+------------
-+
-+.. code-block:: c
-+
-+    success = min_heap_pop(heap, callbacks, args);
-+
-+- **heap**: A pointer to the min-heap from which to remove the smallest element.
-+- **callbacks**: A pointer to a `struct min_heap_callbacks` providing the
-+  `less` and `swp` functions.
-+- **args**: Optional arguments passed to the `less` and `swp` functions.
-+
-+This macro removes the smallest element (the root) from the heap. It returns
-+`true` if the element was successfully removed, or `false` if the heap is
-+empty. The operation is **O(log n)**.
-+
-+**Inline Version:** min_heap_pop_inline(heap, callbacks, args)
-+
-+Heap Maintenance
-+----------------
-+
-+You can use the following macros to maintain the heap's structure:
-+
-+.. code-block:: c
-+
-+    min_heap_sift_down(heap, pos, callbacks, args);
-+
-+- **heap**: A pointer to the min-heap.
-+- **pos**: The index from which to start sifting down.
-+- **callbacks**: A pointer to a `struct min_heap_callbacks` providing the
-+  `less` and `swp` functions.
-+- **args**: Optional arguments passed to the `less` and `swp` functions.
-+
-+This macro restores the heap property by moving the element at the specified
-+index (`pos`) down the heap until it is in the correct position. The operation
-+is **O(log n)**.
-+
-+**Inline Version:** min_heap_sift_down_inline(heap, pos, callbacks, args)
-+
-+.. code-block:: c
-+
-+    min_heap_sift_up(heap, idx, callbacks, args);
-+
-+- **heap**: A pointer to the min-heap.
-+- **idx**: The index of the element to sift up.
-+- **callbacks**: A pointer to a `struct min_heap_callbacks` providing the
-+  `less` and `swp` functions.
-+- **args**: Optional arguments passed to the `less` and `swp` functions.
-+
-+This macro restores the heap property by moving the element at the specified
-+index (`idx`) up the heap. The operation is **O(log n)**.
-+
-+**Inline Version:** min_heap_sift_up_inline(heap, idx, callbacks, args)
-+
-+.. code-block:: c
-+
-+    min_heapify_all(heap, callbacks, args);
-+
-+- **heap**: A pointer to the min-heap.
-+- **callbacks**: A pointer to a `struct min_heap_callbacks` providing the
-+  `less` and `swp` functions.
-+- **args**: Optional arguments passed to the `less` and `swp` functions.
-+
-+This macro ensures that the entire heap satisfies the heap property. It is
-+called when the heap is built from scratch or after many modifications. The
-+operation is **O(n)**.
-+
-+**Inline Version:** min_heapify_all_inline(heap, callbacks, args)
-+
-+Removing Specific Elements
-+--------------------------
-+
-+.. code-block:: c
-+
-+    success = min_heap_del(heap, idx, callbacks, args);
-+
-+- **heap**: A pointer to the min-heap.
-+- **idx**: The index of the element to delete.
-+- **callbacks**: A pointer to a `struct min_heap_callbacks` providing the
-+  `less` and `swp` functions.
-+- **args**: Optional arguments passed to the `less` and `swp` functions.
-+
-+This macro removes an element at the specified index (`idx`) from the heap and
-+restores the heap property. The operation is **O(log n)**.
-+
-+**Inline Version:** min_heap_del_inline(heap, idx, callbacks, args)
-+
-+Other Utilities
-+===============
-+
-+- **min_heap_full(heap)**: Checks whether the heap is full.
-+  Complexity: **O(1)**.
-+
-+.. code-block:: c
-+
-+    bool full = min_heap_full(heap);
-+
-+- `heap`: A pointer to the min-heap to check.
-+
-+This macro returns `true` if the heap is full, otherwise `false`.
-+
-+**Inline Version:** min_heap_full_inline(heap)
-+
-+- **min_heap_empty(heap)**: Checks whether the heap is empty.
-+  Complexity: **O(1)**.
-+
-+.. code-block:: c
-+
-+    bool empty = min_heap_empty(heap);
-+
-+- `heap`: A pointer to the min-heap to check.
-+
-+This macro returns `true` if the heap is empty, otherwise `false`.
-+
-+**Inline Version:** min_heap_empty_inline(heap)
-+
-+Example Usage
-+=============
-+
-+An example usage of the min-heap API would involve defining a heap structure,
-+initializing it, and inserting and removing elements as needed.
-+
-+.. code-block:: c
-+
-+    #include <linux/min_heap.h>
-+
-+    int my_less_function(const void *lhs, const void *rhs, void *args) {
-+        return (*(int *)lhs < *(int *)rhs);
-+    }
-+
-+    struct min_heap_callbacks heap_cb = {
-+        .less = my_less_function,    /* Comparison function for heap order */
-+        .swp  = NULL,                /* Use default swap function */
-+    };
-+
-+    void example_usage(void) {
-+        /* Pre-populate the buffer with elements */
-+        int buffer[5] = {5, 2, 8, 1, 3};
-+        /* Declare a min-heap */
-+        DEFINE_MIN_HEAP(int, my_heap);
-+
-+        /* Initialize the heap with preallocated buffer and size */
-+        min_heap_init(&my_heap, buffer, 5);
-+
-+        /* Build the heap using min_heapify_all */
-+        my_heap.nr = 5;  /* Set the number of elements in the heap */
-+        min_heapify_all(&my_heap, &heap_cb, NULL);
-+
-+        /* Peek at the top element (should be 1 in this case) */
-+        int *top = min_heap_peek(&my_heap);
-+        pr_info("Top element: %d\n", *top);
-+
-+        /* Pop the top element (1) and get the new top (2) */
-+        min_heap_pop(&my_heap, &heap_cb, NULL);
-+        top = min_heap_peek(&my_heap);
-+        pr_info("New top element: %d\n", *top);
-+
-+        /* Insert a new element (0) and recheck the top */
-+        int new_element = 0;
-+        min_heap_push(&my_heap, &new_element, &heap_cb, NULL);
-+        top = min_heap_peek(&my_heap);
-+        pr_info("Top element after insertion: %d\n", *top);
-+    }
--- 
-2.34.1
+On 10/19/24 8:47 오전, Ian Rogers wrote:
+> On Tue, Oct 15, 2024 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>>
+>> Hello Konstantin,
+>>
+>> On Tue, Oct 15, 2024 at 02:25:02PM -0400, Konstantin Ryabitsev wrote:
+>>> On Fri, Oct 11, 2024 at 06:39:09PM -0400, Konstantin Ryabitsev wrote:
+>>>>> Yunseong created:
+>>>>> https://perfwiki.github.io/main/
+>>>>> Perhaps the solution here is to make perf.wiki.kernel.org a redirect
+>>>>> to https://perfwiki.github.io/main/
+>>>
+>>> To speed things along, and since the old perf wiki was near-unusable anyway,
+>>> I went ahead and set the redirects from perf.wiki.kernel.org to
+>>> perfwiki.github.io.
+>>>
+>>> Please feel free to follow up if we need to revisit this, but things look good
+>>> to me with this change.
+>>
+>> Thanks for your work, it looks good to me too.
 
+I have been continuously improving the content of the documentation, so please
+feel free to share any good ideas you may have. :)
+
+> Thanks Konstantin and Yunseong, I think it looks good!
+> I think the pages need some improving, there are empty pages and
+> things that look abandoned, such as the white paper linked from the
+> side bar:
+> https://perfwiki.github.io/main/white-paper/
+> I pushed a few improvements to the glossary and useful links. It
+> should be as easy as creating a pull request for others to contribute,
+> so I look forward to this.
+
+Thank you so much Ian, I added per-page editing features to make it more convenient
+for people to edit the documentation and submit pull requests.
+Link: https://github.com/perfwiki/main/commit/4289b6a6e5c2e53d69a7605d01d0773366a33c52
+
+> Thanks,
+> Ian
+
+Best regards,
+Yunseong Kim
