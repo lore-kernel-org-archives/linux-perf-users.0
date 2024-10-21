@@ -1,67 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F211D5ABA;
-	Mon, 21 Oct 2024 16:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FC5178395;
+	Mon, 21 Oct 2024 16:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729526505; cv=none; b=FNgDY+cxdje/jHFe+hN96pJf4fpwIGkNRByHm4D4Ei9tv6mKaP0PJDsToVJdxpsTDIGkxzN4Vu6FTGnlgnchdta8YIQJ8HY4boLTg5k2M6LRR2nG+qijtsmbik8SzIALLTIW4rY+0BtzusX+cj4OAdUYlf3EXM+akZPDsehSjyU=
+	t=1729527498; cv=none; b=KyhvShDAM4+maLEgZxwDTwNXVMS7kAQGbNk2IE4iCMXlJ9o9ucHPZLXWh7S4KeHVOveYEbOgxVEUC5OyOpGyEw0DUZ6aWP9K+tHe6NPr0XiBYK0J2PN5BAQ2k6yGC2o2XZgaqWLl6CVk4UytqnG0JOtxyD4OGgE1ZGN80zibnWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729526505; c=relaxed/simple;
-	bh=+mYM+Gz8k2rxf9vmX5CHZ927K8o2lDQPIO2MrE/TqoE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=CVDn3jkojJpLd8aqnd2GynlPUr9ZD2CUUJ5UOSBQtGJTHD+oMCg5Uxr+ur50Jt+bkOehKiWwPHB3hF7IPFHzw07PvtmqYsdGuzHx/azPcombmbhYg0YjHagUn9LHYcF9PQS3Hr6BG6XqYbIbxZVuz5811Qf1fQ1QQ7XiO37qAgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XeBkItyc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729527498; c=relaxed/simple;
+	bh=UA8DMdA9ExWRyddpZQ7CnN8ViJmO/LyOSjr+tas7ijg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KnE+2S/dyZY+qv7kgOTQV1BeqhFcA0WSk1EW9DtLmKXvHM8GoodOR/CIpa43jxbOnOwNbcUdb3R8AJCHVuo1CfxS+jXdORX8fTXoGLFZa4pGABlRzVn8k3eryAvc0U+aGUhh4Q/HolV90lsuIgB452OwGAhsAWSC2xV2Jy6TtcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GvgyGxKY; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XeBkItyc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7971C4CEE6;
-	Mon, 21 Oct 2024 16:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729526505;
-	bh=+mYM+Gz8k2rxf9vmX5CHZ927K8o2lDQPIO2MrE/TqoE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=XeBkItyccQUt4LAe/wv5poScQk7AGpxffVT+QkJ9FCZEM8vJ3CR0tClnz3QztcFJx
-	 TCphqMB/AjPBlPaBbk9PK4n7ScOrYHPk2+vFjsSFXE+2GzuGZw5tduv5sVmCRN4Cz5
-	 btJx/3pbmDcyHjHoIXnvS9ne3MA0j8gEuk0Pc0Vyr/ZZaUNSwHe7dJnCT8gk/tE492
-	 7BjI4Mf/P5ddbnI6divjTTvEv3JJiAUEtOfTVPlNsgErnbsalDEzLY/2DKXWmbFkU7
-	 X+h66PoJDgExwNm3Li99LjJgkI4wo1CH7mG3q3HFsowluOV1xLelzi8fctpful6Z7x
-	 pzZby5T9IDvnA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sandipan Das <sandipan.das@amd.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
- irogers@google.com, adrian.hunter@intel.com, eranian@google.com, 
- ravi.bangoria@amd.com, ananth.narayan@amd.com
-In-Reply-To: <cover.1729242778.git.sandipan.das@amd.com>
-References: <cover.1729242778.git.sandipan.das@amd.com>
-Subject: Re: [PATCH 0/3] perf vendor events amd: Add more Zen 5 events and
- metrics
-Message-Id: <172952650471.3574386.17747155626378590525.b4-ty@kernel.org>
-Date: Mon, 21 Oct 2024 09:01:44 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GvgyGxKY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729527497; x=1761063497;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UA8DMdA9ExWRyddpZQ7CnN8ViJmO/LyOSjr+tas7ijg=;
+  b=GvgyGxKYiHhV6jqbQ4z24IAJU+T+XKtRSIHHhX9xSDnR8496d2P0VAz+
+   aLIGL8fLoTA59df6b0cUsujXuuyh3Zz8Ku1I5AfuvGy4FxXi1eZHra2tx
+   2cU4wq4O15lHAsQ3r1qhYEQD7SU6G++EYcrV5ioxbYXyK/0DfpnZORjZu
+   q2Be/hBFcaDg8cKjbxz8HcBxAVSMXt7a/EMxv5ZY3tQ6PtcD7cIV0FPIZ
+   RApS47MghbeYkHHAhHMm9EV45y7u7QepE0eVtnlo/ObgLVrUFy5Zz8ncb
+   /fdX6Jha0BG2Ub+wFiqF+8ysi42tStmwIKpEwA5PkkuZukuuhtkZH4z1u
+   Q==;
+X-CSE-ConnectionGUID: 76jwGXBJT4Ss9RCRe5aVdw==
+X-CSE-MsgGUID: T7ZCSuNIR6WCRISYbH5XKg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11232"; a="16652508"
+X-IronPort-AV: E=Sophos;i="6.11,221,1725346800"; 
+   d="scan'208";a="16652508"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 09:18:16 -0700
+X-CSE-ConnectionGUID: kVuQ0PUiQjef6QVQBmCO4Q==
+X-CSE-MsgGUID: w+Q5XNLKRSm2Pgs/jwb33w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,221,1725346800"; 
+   d="scan'208";a="79752437"
+Received: from cphoward-mobl.amr.corp.intel.com (HELO desk) ([10.125.147.124])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 09:18:04 -0700
+Date: Mon, 21 Oct 2024 09:17:48 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v4 04/10] perf/x86/intel: Use topology_hw_cpu_type()
+Message-ID: <20241021161748.67hnp4vexywdjdkq@desk>
+References: <20240930-add-cpu-type-v4-0-104892b7ab5f@linux.intel.com>
+ <20240930-add-cpu-type-v4-4-104892b7ab5f@linux.intel.com>
+ <e7de0a73-23de-4b79-95e2-8a6dd9addfe7@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e7de0a73-23de-4b79-95e2-8a6dd9addfe7@linux.intel.com>
 
-On Fri, 18 Oct 2024 15:01:02 +0530, Sandipan Das wrote:
-
-> Add data fabric events and metrics taken from the now released Processor
-> Programming Reference (PPR) for AMD Family 1Ah Model 02h Revision C1
-> Processors document available at the link below.
-> https://bugzilla.kernel.org/attachment.cgi?id=307010
+On Mon, Oct 21, 2024 at 09:54:57AM -0400, Liang, Kan wrote:
+> Hi Pawan,
 > 
-> While at it, also update some missing or redundant data cache metrics.
+> On 2024-09-30 10:47 a.m., Pawan Gupta wrote:
+> > get_this_hybrid_cpu_type() misses a case when cpu-type is populated
+> > regardless of X86_FEATURE_HYBRID_CPU. This is particularly true for hybrid
+> > variants that have P or E cores fused off.
+> > 
+> > Instead use topology_hw_cpu_type() as it does not rely on hybrid feature to
+> > enumerate cpu-type. This can also help avoid the model-specific fixup
+> > get_hybrid_cpu_type().
+> > 
+> > Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> > ---
+> >  arch/x86/events/intel/core.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> > index d879478db3f5..80a2a307e678 100644
+> > --- a/arch/x86/events/intel/core.c
+> > +++ b/arch/x86/events/intel/core.c
+> > @@ -4906,7 +4906,8 @@ static void intel_pmu_check_hybrid_pmus(struct x86_hybrid_pmu *pmu)
+> >  
+> >  static struct x86_hybrid_pmu *find_hybrid_pmu_for_cpu(void)
+> >  {
+> > -	u8 cpu_type = get_this_hybrid_cpu_type();
+> > +	struct cpuinfo_x86 *c = &cpu_data(smp_processor_id());
+> > +	u8 cpu_type = topology_hw_cpu_type(c);
+> >  	int i;
+> >  
+> >  	/*
+> > 
 > 
-> [...]
+> Dapeng's patch to utilize the native model ID in perf has been merged.
+> Please replace the get_this_hybrid_cpu_native_id() as well when you spin
+> a new version.
 
-Applied to perf-tools-next, thanks!
-
-Best regards,
-Namhyung
-
+Will do. Thanks for letting me know.
