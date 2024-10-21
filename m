@@ -1,419 +1,150 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01895198E6F;
-	Mon, 21 Oct 2024 11:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5A51EABC3;
+	Mon, 21 Oct 2024 12:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729509191; cv=none; b=cqZE++8/nCfwr8K/2MkpIZS7oE7jeqoK+dQBr88/IhUg7bjUuGEYFeZMv0s8ptRQyTKB+7iTrr6z5GMD59F01eoTeDj6oCZ/VkrFWonPNSzxm+oTo1qnsty6Uvb/A2m59tgdfge6CLMyqrT2C4U1UQaGeVNVlfbQMuwbGCho7jE=
+	t=1729512242; cv=none; b=cnkh0Zj+ltBWYUMeuDr39ZqGkeoC/JGbP6V0p8HSIKgO/4sxbNTUvSxClUhmjGrG84oU7cWmhbtJ7EfJNJ4oEbOGG2qZ46mfnccc0T6WcTfQH87hpzsxleOFfakkDev91vl76lS+6TrXhmyfQ22hD1EEpuwrHx6Xkmrg+f39+QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729509191; c=relaxed/simple;
-	bh=4dDvbEpl9eKOaaklFG3kheMx5IPMVk8CfRxoop9ZaD0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iAQJ0Ajhi1kpxKx2Rw7euksyP7O4LMswP2I7KvPi0BD37LsuUaqXiv/uPl7CWLy7cX1HwwnACho47380D088yV4mCMSFalG/V6dzv9wQonYs20bcpDN1V4S+NeBDjcsh7DbWS2gkb0DiDdsvhpdg9FB7n4igITHxz2gJdNhenNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4XXCMf3Zmyz4f3nJr;
-	Mon, 21 Oct 2024 19:12:46 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 9EB1C1A0568;
-	Mon, 21 Oct 2024 19:13:04 +0800 (CST)
-Received: from huawei.com (unknown [10.67.174.45])
-	by APP2 (Coremail) with SMTP id Syh0CgC3NlwxNxZn5mXIEg--.38372S3;
-	Mon, 21 Oct 2024 19:13:04 +0800 (CST)
-From: Tengda Wu <wutengda@huaweicloud.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	song@kernel.org,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH -next v5 1/2] perf stat: Support inherit events during fork() for bperf
-Date: Mon, 21 Oct 2024 11:02:00 +0000
-Message-Id: <20241021110201.325617-2-wutengda@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241021110201.325617-1-wutengda@huaweicloud.com>
-References: <20241021110201.325617-1-wutengda@huaweicloud.com>
+	s=arc-20240116; t=1729512242; c=relaxed/simple;
+	bh=MexqYOOCFAKTWp7wFixbyK1Hi5aI+zLK7LGUYsL1zjg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XrUaWGJVa1avsWdihAs7W/H0Ee7dcGVy1tbcmZTpQafLpBLvrFGzoOLbHOFWhaGJTvReMhGMXpuaN5C5bK+UqGO+4R9+vrtsG4vLCBIT1xE/fkW8eafmkW+KvpOSldTZB0JDoeB/Ch77qETzq9ODUcEJZxrseZOvctGJ5pL+1AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4XXDSQ5FcBzpX4d;
+	Mon, 21 Oct 2024 20:01:58 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1A15518005F;
+	Mon, 21 Oct 2024 20:03:56 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Mon, 21 Oct 2024 20:03:55 +0800
+Message-ID: <895ce437-d6b1-46ba-b06f-e422f58a03cb@huawei.com>
+Date: Mon, 21 Oct 2024 20:03:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] uprobes: Improve the usage of xol slots for better
+ scalability
+To: Oleg Nesterov <oleg@redhat.com>
+CC: <ak@linux.intel.com>, <mhiramat@kernel.org>, <andrii@kernel.org>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
+References: <20240927094549.3382916-1-liaochang1@huawei.com>
+ <20240927171838.GA15877@redhat.com>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <20240927171838.GA15877@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgC3NlwxNxZn5mXIEg--.38372S3
-X-Coremail-Antispam: 1UD129KBjvJXoWfGFyfuF47uF18Cr45Zw1rCrg_yoWDZFWUpF
-	sxC34vk395Way3Wwn8Jw4kWryru347u3y5WFn3K3yftF1kJr93Ka4xKFW7tF13Wr4DCFyS
-	qF1qgw4UJ3ykX3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmab4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGw
-	A2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI
-	0_Jw0_GFylc7CjxVAKzI0EY4vE52x082I5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
-	c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
-	CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
-	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
-	4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsG
-	vfC2KfnxnUUI43ZEXa7IU02-e5UUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-bperf has a nice ability to share PMUs, but it still does not support
-inherit events during fork(), resulting in some deviations in its stat
-results compared with perf.
+Oleg,
 
-perf stat result:
-$ ./perf stat -e cycles,instructions -- ./perf test -w sqrtloop
-   Performance counter stats for './perf test -w sqrtloop':
+My bad to take so long to reply. I have recently returned from a long vacation.
 
-       2,316,038,116      cycles
-       2,859,350,725      instructions
+在 2024/9/28 1:18, Oleg Nesterov 写道:
+> On 09/27, Liao Chang wrote:
+>>
+>> +int recycle_utask_slot(struct uprobe_task *utask, struct xol_area *area)
+>> +{
+>> +	int slot = UINSNS_PER_PAGE;
+>> +
+>> +	/*
+>> +	 * Ensure that the slot is not in use on other CPU. However, this
+>> +	 * check is unnecessary when called in the context of an exiting
+>> +	 * thread. See xol_free_insn_slot() called from uprobe_free_utask()
+>> +	 * for more details.
+>> +	 */
+>> +	if (test_and_put_task_slot(utask)) {
+>> +		list_del(&utask->gc);
+>> +		clear_bit(utask->insn_slot, area->bitmap);
+>> +		atomic_dec(&area->slot_count);
+>> +		utask->insn_slot = UINSNS_PER_PAGE;
+>> +		refcount_set(&utask->slot_ref, 1);
+> 
+> This lacks a barrier, CPU can reorder the last 2 insns
+> 
+> 		refcount_set(&utask->slot_ref, 1);
+> 		utask->insn_slot = UINSNS_PER_PAGE;
+> 
+> so the "utask->insn_slot == UINSNS_PER_PAGE" check in xol_get_insn_slot()
+> can be false negative.
 
-         1.009603637 seconds time elapsed
+Good catcha! Would an atomic_set() with release ordering be sufficient here
+instead of smp_mb()?
 
-         1.004196000 seconds user
-         0.003950000 seconds sys
+> 
+>> +static unsigned long xol_get_insn_slot(struct uprobe_task *utask,
+>> +				       struct uprobe *uprobe)
+>>  {
+>>  	struct xol_area *area;
+>>  	unsigned long xol_vaddr;
+>> @@ -1665,16 +1740,46 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
+>>  	if (!area)
+>>  		return 0;
+>>
+>> -	xol_vaddr = xol_take_insn_slot(area);
+>> -	if (unlikely(!xol_vaddr))
+>> +	/*
+>> +	 * The racing on the utask associated slot_ref can occur unless the
+>> +	 * area runs out of slots. This isn't a common case. Even if it does
+>> +	 * happen, the scalability bottleneck will shift to another point.
+>> +	 */
+> 
+> I don't understand the comment, I guess it means the race with
+> recycle_utask_slot() above.
+> >> +	if (!test_and_get_task_slot(utask))
 
-bperf stat result:
-$ ./perf stat --bpf-counters -e cycles,instructions -- \
-      ./perf test -w sqrtloop
+Exactly, While introducing another refcount operation here might seem like
+a downside, the potential racing on it should be less than the ones on
+xol_area->bitmap and xol_area->slot_count(which you've already optimized).
 
-   Performance counter stats for './perf test -w sqrtloop':
+>>  		return 0;
+> 
+> No, we can't do this. xol_get_insn_slot() should never fail.
+> 
+> OK, OK, currently xol_get_insn_slot() _can_ fail, but only if get_xol_area()
+> fails to allocate the memory. Which should "never" happen and we can do nothing
+> in this case anyway.
 
-          18,762,093      cycles
-          23,487,766      instructions
+Sorry, I haven't trace the exact path where xol_get_insn_slot() fails. I suspect
+it might repeatedly trigger BRK exceptions before get_xol_area() successfully
+returns. Please correct me if I am wrong.
 
-         1.008913769 seconds time elapsed
+> 
+> But it certainly must not fail if it races with another thread, this is insane.
 
-         1.003248000 seconds user
-         0.004069000 seconds sys
+Agreed, it is somewhat costly when race fails. I suggest that it allocates a new
+slot upon the race fails instead of returning 0.
 
-In order to support event inheritance, two new bpf programs are added
-to monitor the fork and exit of tasks respectively. When a task is
-created, add it to the filter map to enable counting, and reuse the
-`accum_key` of its parent task to count together with the parent task.
-When a task exits, remove it from the filter map to disable counting.
+> 
+> And. This patch changes the functions which ask for cleanups. I'll try to send
+> a couple of simple patches on Monday.
 
-After support:
-$ ./perf stat --bpf-counters -e cycles,instructions -- \
-      ./perf test -w sqrtloop
+Thank you for pointing that out, I must have missed some patches while I was on
+vacation, I will carefully review the mailing list to ensure that this patch can
+work with any recent cleanups.
 
- Performance counter stats for './perf test -w sqrtloop':
+> 
+> Oleg.
+> 
+> 
 
-     2,316,252,189      cycles
-     2,859,946,547      instructions
-
-       1.009422314 seconds time elapsed
-
-       1.003597000 seconds user
-       0.004270000 seconds sys
-
-Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
----
- tools/perf/builtin-stat.c                     |  1 +
- tools/perf/util/bpf_counter.c                 | 35 +++++--
- tools/perf/util/bpf_skel/bperf_follower.bpf.c | 98 +++++++++++++++++--
- tools/perf/util/bpf_skel/bperf_u.h            |  5 +
- tools/perf/util/target.h                      |  1 +
- 5 files changed, 126 insertions(+), 14 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 3e6b9f216e80..8bc880479417 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2620,6 +2620,7 @@ int cmd_stat(int argc, const char **argv)
- 	} else if (big_num_opt == 0) /* User passed --no-big-num */
- 		stat_config.big_num = false;
- 
-+	target.inherit = !stat_config.no_inherit;
- 	err = target__validate(&target);
- 	if (err) {
- 		target__strerror(&target, err, errbuf, BUFSIZ);
-diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-index 7a8af60e0f51..73fcafbffc6a 100644
---- a/tools/perf/util/bpf_counter.c
-+++ b/tools/perf/util/bpf_counter.c
-@@ -394,6 +394,7 @@ static int bperf_check_target(struct evsel *evsel,
- }
- 
- static	struct perf_cpu_map *all_cpu_map;
-+static __u32 filter_entry_cnt;
- 
- static int bperf_reload_leader_program(struct evsel *evsel, int attr_map_fd,
- 				       struct perf_event_attr_map_entry *entry)
-@@ -444,12 +445,32 @@ static int bperf_reload_leader_program(struct evsel *evsel, int attr_map_fd,
- 	return err;
- }
- 
-+static int bperf_attach_follower_program(struct bperf_follower_bpf *skel,
-+					 enum bperf_filter_type filter_type,
-+					 bool inherit)
-+{
-+	struct bpf_link *link;
-+	int err = 0;
-+
-+	if ((filter_type == BPERF_FILTER_PID ||
-+	    filter_type == BPERF_FILTER_TGID) && inherit)
-+		/* attach all follower bpf progs to enable event inheritance */
-+		err = bperf_follower_bpf__attach(skel);
-+	else {
-+		link = bpf_program__attach(skel->progs.fexit_XXX);
-+		if (IS_ERR(link))
-+			err = PTR_ERR(link);
-+	}
-+
-+	return err;
-+}
-+
- static int bperf__load(struct evsel *evsel, struct target *target)
- {
- 	struct perf_event_attr_map_entry entry = {0xffffffff, 0xffffffff};
- 	int attr_map_fd, diff_map_fd = -1, err;
- 	enum bperf_filter_type filter_type;
--	__u32 filter_entry_cnt, i;
-+	__u32 i;
- 
- 	if (bperf_check_target(evsel, target, &filter_type, &filter_entry_cnt))
- 		return -1;
-@@ -529,9 +550,6 @@ static int bperf__load(struct evsel *evsel, struct target *target)
- 	/* set up reading map */
- 	bpf_map__set_max_entries(evsel->follower_skel->maps.accum_readings,
- 				 filter_entry_cnt);
--	/* set up follower filter based on target */
--	bpf_map__set_max_entries(evsel->follower_skel->maps.filter,
--				 filter_entry_cnt);
- 	err = bperf_follower_bpf__load(evsel->follower_skel);
- 	if (err) {
- 		pr_err("Failed to load follower skeleton\n");
-@@ -543,6 +561,7 @@ static int bperf__load(struct evsel *evsel, struct target *target)
- 	for (i = 0; i < filter_entry_cnt; i++) {
- 		int filter_map_fd;
- 		__u32 key;
-+		struct bperf_filter_value fval = { i, 0 };
- 
- 		if (filter_type == BPERF_FILTER_PID ||
- 		    filter_type == BPERF_FILTER_TGID)
-@@ -553,12 +572,14 @@ static int bperf__load(struct evsel *evsel, struct target *target)
- 			break;
- 
- 		filter_map_fd = bpf_map__fd(evsel->follower_skel->maps.filter);
--		bpf_map_update_elem(filter_map_fd, &key, &i, BPF_ANY);
-+		bpf_map_update_elem(filter_map_fd, &key, &fval, BPF_ANY);
- 	}
- 
- 	evsel->follower_skel->bss->type = filter_type;
-+	evsel->follower_skel->bss->inherit = target->inherit;
- 
--	err = bperf_follower_bpf__attach(evsel->follower_skel);
-+	err = bperf_attach_follower_program(evsel->follower_skel, filter_type,
-+					    target->inherit);
- 
- out:
- 	if (err && evsel->bperf_leader_link_fd >= 0)
-@@ -623,7 +644,7 @@ static int bperf__read(struct evsel *evsel)
- 	bperf_sync_counters(evsel);
- 	reading_map_fd = bpf_map__fd(skel->maps.accum_readings);
- 
--	for (i = 0; i < bpf_map__max_entries(skel->maps.accum_readings); i++) {
-+	for (i = 0; i < filter_entry_cnt; i++) {
- 		struct perf_cpu entry;
- 		__u32 cpu;
- 
-diff --git a/tools/perf/util/bpf_skel/bperf_follower.bpf.c b/tools/perf/util/bpf_skel/bperf_follower.bpf.c
-index f193998530d4..0595063139a3 100644
---- a/tools/perf/util/bpf_skel/bperf_follower.bpf.c
-+++ b/tools/perf/util/bpf_skel/bperf_follower.bpf.c
-@@ -5,6 +5,8 @@
- #include <bpf/bpf_tracing.h>
- #include "bperf_u.h"
- 
-+#define MAX_ENTRIES 102400
-+
- struct {
- 	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
- 	__uint(key_size, sizeof(__u32));
-@@ -22,25 +24,29 @@ struct {
- struct {
- 	__uint(type, BPF_MAP_TYPE_HASH);
- 	__uint(key_size, sizeof(__u32));
--	__uint(value_size, sizeof(__u32));
-+	__uint(value_size, sizeof(struct bperf_filter_value));
-+	__uint(max_entries, MAX_ENTRIES);
-+	__uint(map_flags, BPF_F_NO_PREALLOC);
- } filter SEC(".maps");
- 
- enum bperf_filter_type type = 0;
- int enabled = 0;
-+int inherit;
- 
- SEC("fexit/XXX")
- int BPF_PROG(fexit_XXX)
- {
- 	struct bpf_perf_event_value *diff_val, *accum_val;
- 	__u32 filter_key, zero = 0;
--	__u32 *accum_key;
-+	__u32 accum_key;
-+	struct bperf_filter_value *fval;
- 
- 	if (!enabled)
- 		return 0;
- 
- 	switch (type) {
- 	case BPERF_FILTER_GLOBAL:
--		accum_key = &zero;
-+		accum_key = zero;
- 		goto do_add;
- 	case BPERF_FILTER_CPU:
- 		filter_key = bpf_get_smp_processor_id();
-@@ -49,22 +55,34 @@ int BPF_PROG(fexit_XXX)
- 		filter_key = bpf_get_current_pid_tgid() & 0xffffffff;
- 		break;
- 	case BPERF_FILTER_TGID:
--		filter_key = bpf_get_current_pid_tgid() >> 32;
-+		/* Use pid as the filter_key to exclude new task counts
-+		 * when inherit is disabled. Don't worry about the existing
-+		 * children in TGID losing their counts, bpf_counter has
-+		 * already added them to the filter map via perf_thread_map
-+		 * before this bpf prog runs.
-+		 */
-+		filter_key = inherit ?
-+			     bpf_get_current_pid_tgid() >> 32 :
-+			     bpf_get_current_pid_tgid() & 0xffffffff;
- 		break;
- 	default:
- 		return 0;
- 	}
- 
--	accum_key = bpf_map_lookup_elem(&filter, &filter_key);
--	if (!accum_key)
-+	fval = bpf_map_lookup_elem(&filter, &filter_key);
-+	if (!fval)
- 		return 0;
- 
-+	accum_key = fval->accum_key;
-+	if (fval->exited)
-+		bpf_map_delete_elem(&filter, &filter_key);
-+
- do_add:
- 	diff_val = bpf_map_lookup_elem(&diff_readings, &zero);
- 	if (!diff_val)
- 		return 0;
- 
--	accum_val = bpf_map_lookup_elem(&accum_readings, accum_key);
-+	accum_val = bpf_map_lookup_elem(&accum_readings, &accum_key);
- 	if (!accum_val)
- 		return 0;
- 
-@@ -75,4 +93,70 @@ int BPF_PROG(fexit_XXX)
- 	return 0;
- }
- 
-+/* The program is only used for PID or TGID filter types. */
-+SEC("tp_btf/task_newtask")
-+int BPF_PROG(on_newtask, struct task_struct *task, __u64 clone_flags)
-+{
-+	__u32 parent_key, child_key;
-+	struct bperf_filter_value *parent_fval;
-+	struct bperf_filter_value child_fval = { 0 };
-+
-+	if (!enabled)
-+		return 0;
-+
-+	switch (type) {
-+	case BPERF_FILTER_PID:
-+		parent_key = bpf_get_current_pid_tgid() & 0xffffffff;
-+		child_key = task->pid;
-+		break;
-+	case BPERF_FILTER_TGID:
-+		parent_key = bpf_get_current_pid_tgid() >> 32;
-+		child_key = task->tgid;
-+		if (child_key == parent_key)
-+			return 0;
-+		break;
-+	default:
-+		return 0;
-+	}
-+
-+	/* Check if the current task is one of the target tasks to be counted */
-+	parent_fval = bpf_map_lookup_elem(&filter, &parent_key);
-+	if (!parent_fval)
-+		return 0;
-+
-+	/* Start counting for the new task by adding it into filter map,
-+	 * inherit the accum key of its parent task so that they can be
-+	 * counted together.
-+	 */
-+	child_fval.accum_key = parent_fval->accum_key;
-+	child_fval.exited = 0;
-+	bpf_map_update_elem(&filter, &child_key, &child_fval, BPF_NOEXIST);
-+
-+	return 0;
-+}
-+
-+/* The program is only used for PID or TGID filter types. */
-+SEC("tp_btf/sched_process_exit")
-+int BPF_PROG(on_exittask, struct task_struct *task)
-+{
-+	__u32 pid;
-+	struct bperf_filter_value *fval;
-+
-+	if (!enabled)
-+		return 0;
-+
-+	/* Stop counting for this task by removing it from filter map.
-+	 * For TGID type, if the pid can be found in the map, it means that
-+	 * this pid belongs to the leader task. After the task exits, the
-+	 * tgid of its child tasks (if any) will be 1, so the pid can be
-+	 * safely removed.
-+	 */
-+	pid = task->pid;
-+	fval = bpf_map_lookup_elem(&filter, &pid);
-+	if (fval)
-+		fval->exited = 1;
-+
-+	return 0;
-+}
-+
- char LICENSE[] SEC("license") = "Dual BSD/GPL";
-diff --git a/tools/perf/util/bpf_skel/bperf_u.h b/tools/perf/util/bpf_skel/bperf_u.h
-index 1ce0c2c905c1..4a4a753980be 100644
---- a/tools/perf/util/bpf_skel/bperf_u.h
-+++ b/tools/perf/util/bpf_skel/bperf_u.h
-@@ -11,4 +11,9 @@ enum bperf_filter_type {
- 	BPERF_FILTER_TGID,
- };
- 
-+struct bperf_filter_value {
-+	__u32 accum_key;
-+	__u8 exited;
-+};
-+
- #endif /* __BPERF_STAT_U_H */
-diff --git a/tools/perf/util/target.h b/tools/perf/util/target.h
-index d582cae8e105..2ee2cc30340f 100644
---- a/tools/perf/util/target.h
-+++ b/tools/perf/util/target.h
-@@ -17,6 +17,7 @@ struct target {
- 	bool	     default_per_cpu;
- 	bool	     per_thread;
- 	bool	     use_bpf;
-+	bool	     inherit;
- 	int	     initial_delay;
- 	const char   *attr_map;
- };
 -- 
-2.34.1
+BR
+Liao, Chang
 
