@@ -1,129 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8FD4C8E;
-	Mon, 21 Oct 2024 00:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BFC2C95;
+	Mon, 21 Oct 2024 05:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729471534; cv=none; b=nLLskZpimnhUJuoz3nZ5qD35P7aZs6gD9kyQ2PL7m9AVoMBva6BUAVvdQyJIE23BU1+thpX1EcKCkoXFaK6Xsw/yCElB65stucFjivL+bv8rLjggck9tSmaLnS+YZBPcB6O3tl4dOtILoD+tpjRQWpcb8nhd6UDZHadcOYZDZV0=
+	t=1729489435; cv=none; b=UfzSZdqiDgm6arQs5sDdKxDM0X8qWuiXKqNtaWN28MUH8gRT8wZwI/1oVxGwxZroGJREgJPFsf3VvAE06Ep9h3J6x+w1aunh83rrMoDQFO79YikXDO++GSRdwczEKntowHNgBYBAJktV+eCreE4SBH2tGug9gWqQA6/BP3LI5MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729471534; c=relaxed/simple;
-	bh=zX3N1d60n3AIuJZwfC7pPNYT00ZeDOB7cX1e1JHUt6c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MgkO3YGhkC2Oed0HfVq1ujgnyEOuIqwKoBTu8Gh7RJu+2S+CVav/hjOp0LtCNNSea3MrCNw0TJZpjt830nPL403YE/YDEccvJLN/0vpf3vivqIJREzNT8rLNq8esXPFlh9RzvxXLYin1AGDSxNyFZkuN0g+Ads30ER+5CX91G8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g6v3fe6T; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1729489435; c=relaxed/simple;
+	bh=+jMZKYXXdTKazfQkmVpqSWQN+lEilEPD0wkDen4cRbg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UM2nVL9CLqJWIGSbYF0J1MbIqPnkZkCsLk4ACkNz0RZSgUH9P56edXsFz9VSpgWi2fgNZfQz/oQax6oggody7Ujg9xb2oc/mxulGFWACHVq9EcxmVBSOYZFeZNx6TJfp7mAHKfzx8VTqdJfVJ8jTPz+eS0l7MMQAJsVn/r9YK9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lUOPTqiP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g6v3fe6T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729471532; x=1761007532;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zX3N1d60n3AIuJZwfC7pPNYT00ZeDOB7cX1e1JHUt6c=;
-  b=g6v3fe6T5ytKtNpZrPxTR9VuO20K7lzlG/0GEhgD6WuAZRNV4NIfQcIF
-   gtCH3lX7ajzv7CBwpEX7ZHAaSO4lOprn7tX8GoQzQ0snSKf1gJR/Mhy4O
-   nBTuqH4xBrzuyk6b1xE7/E2XsE1DstefgIcv93S8B/GcZkEUaPjBUygcH
-   5NRgxHbdwdf2NHc8uXwpZc+wPWzGGqocMi0zfvdeM7sjHejn9Z/bUttGL
-   e0wgagLX5m/sqR1YXojqacZguEK6WlUB+8XEzW5w9mgdqGkCJCdIal36C
-   KE5o/Ja2PZ3oJsWlKbhKn6/ozFkZ06tV57VquO5FN6WgDfYsE3wNMMtkf
-   A==;
-X-CSE-ConnectionGUID: Z58wfJN/TqSarIx2ceeh6w==
-X-CSE-MsgGUID: e/6kBZv5Qn+kqkhPyIatlA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11231"; a="31804018"
-X-IronPort-AV: E=Sophos;i="6.11,219,1725346800"; 
-   d="scan'208";a="31804018"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2024 17:45:31 -0700
-X-CSE-ConnectionGUID: 99B1zdIWT/KwEtlUrlwOMA==
-X-CSE-MsgGUID: IcarFqj8Rr+rvNHEUas1wQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,219,1725346800"; 
-   d="scan'208";a="83952169"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 20 Oct 2024 17:45:26 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t2gY0-000Qww-0O;
-	Mon, 21 Oct 2024 00:45:24 +0000
-Date: Mon, 21 Oct 2024 08:45:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>,
-	James Clark <james.clark@linaro.org>,
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Changbin Du <changbin.du@huawei.com>, Ze Gao <zegao2021@gmail.com>,
-	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v5 2/5] perf hwmon_pmu: Add a tool PMU exposing events
- from hwmon in sysfs
-Message-ID: <202410210800.pNLlo3bN-lkp@intel.com>
-References: <20241017063555.366065-3-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lUOPTqiP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFA90C4CEC3;
+	Mon, 21 Oct 2024 05:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729489435;
+	bh=+jMZKYXXdTKazfQkmVpqSWQN+lEilEPD0wkDen4cRbg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lUOPTqiPNXuqapwh7Yj4paWiNCeu1slmb49QlzOSafbIwTUXn78If3gkXbEZOPvYF
+	 AjtYSMB5YwhLvhdMTSkQlcr2OZ9A4gv6rxoIUFfM+Onzdfaxj3wVqM/rjauMZ5/Gfq
+	 M6nC2y+Lwr1xiS7Jaa5aSxr7zI3xlI8X1e5RA8DwT4ntgHbiIIhUtFE7YYD3V8vT1X
+	 1Ri3dm/sgha0FFnac9J5LurWazakXkJnjsGyNYKq2JX5kQ1hIpGRgBuCfcNsWPNkMt
+	 IHsSuw4T4wS2F/4e1NKZe5gEhOeXF4UNs0WXjNjUlPPbglXLNo8jmRL6LsWGuNIPy9
+	 seR3hRdkozeqQ==
+Message-ID: <744634f0-5010-4465-85cd-0df79506f5d9@kernel.org>
+Date: Mon, 21 Oct 2024 07:43:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241017063555.366065-3-irogers@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH/RFT] Re: [PATCH v5 1/8] perf trace: Fix iteration of
+ syscall ids in syscalltbl->entries
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Howard Chu <howardchu95@gmail.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>
+References: <ffc2eb09-ac78-4594-a376-3fff9918c2a7@kernel.org>
+ <ZwYbQswnGHSstClc@google.com>
+ <CAH0uvoi622J7gZ9BoTik7niNH3axVJR0kPNovUQnMjUB6GWLNg@mail.gmail.com>
+ <CAH0uvojw5EKqxqETq_H3-5zmjXiK=ew2hBQiPDpCtZmO7=mrKA@mail.gmail.com>
+ <3a592835-a14f-40be-8961-c0cee7720a94@kernel.org>
+ <ZwgAzde-jVyo4cSu@google.com> <ZwgBenahw7EImQLk@google.com>
+ <ZwhA1SL706f60ynd@x1> <2a91f9d0-8950-4936-9776-7ba59ab1d42a@kernel.org>
+ <ZxLeS7CQFIR8lTmo@x1> <ZxLglVIivPk05c97@x1>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <ZxLglVIivPk05c97@x1>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Ian,
+On 19. 10. 24, 0:26, Arnaldo Carvalho de Melo wrote:
+> root@aquarius:~# ls -la /sys/kernel/debug/tracing/events/syscalls
+> ls: cannot access '/sys/kernel/debug/tracing/events/syscalls': No such file or directory
 
-kernel test robot noticed the following build errors:
+Doesn't 5.10 have /sys/kernel/tracing/events/syscalls yet?
 
-[auto build test ERROR on perf-tools-next/perf-tools-next]
-[also build test ERROR on next-20241018]
-[cannot apply to tip/perf/core perf-tools/perf-tools linus/master acme/perf/core v6.12-rc3]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Alternatively, isn't debugfs mounted elsewhere on debian? (Or mounted at 
+all?)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/tools-api-io-Ensure-line_len_out-is-always-initialized/20241017-143759
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
-patch link:    https://lore.kernel.org/r/20241017063555.366065-3-irogers%40google.com
-patch subject: [PATCH v5 2/5] perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241021/202410210800.pNLlo3bN-lkp@intel.com/reproduce)
+> Unsure where to find the config used to build this kernel:
+> 
+> root@aquarius:~# uname -a
+> Linux aquarius 5.10.103-v7+ #1529 SMP Tue Mar 8 12:21:37 GMT 2022 armv7l GNU/Linux
+> root@aquarius:~#
+> 
+> normally is in /boot/ but I'm no debian user, ideas?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410210800.pNLlo3bN-lkp@intel.com/
+Won't something dpkg -L linux-image tell you (I haven't used deb for years)?
 
-All errors (new ones prefixed by >>):
+Looking into:
+https://ftp.debian.org/debian/pool/main/l/linux/linux-image-5.10.0-0.deb10.16-armmp_5.10.127-2~bpo10+1_armhf.deb
 
-   Makefile.config:665: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR
-     PERF_VERSION = 6.12.rc3.gd8463b89755f
-   util/hwmon_pmu.c: In function 'parse_hwmon_filename':
->> util/hwmon_pmu.c:175:9: error: implicit declaration of function 'strlcpy'; did you mean 'strncpy'? [-Werror=implicit-function-declaration]
-     175 |         strlcpy(fn_type, filename, sizeof(fn_type));
-         |         ^~~~~~~
-         |         strncpy
-   cc1: all warnings being treated as errors
-   make[7]: *** [tools/build/Makefile.build:106: tools/perf/util/hwmon_pmu.o] Error 1
-   make[7]: *** Waiting for unfinished jobs....
-   make[6]: *** [tools/build/Makefile.build:158: util] Error 2
-   make[5]: *** [Makefile.perf:789: tools/perf/perf-util-in.o] Error 2
-   make[5]: *** Waiting for unfinished jobs....
-   make[4]: *** [Makefile.perf:292: sub-make] Error 2
-   make[3]: *** [Makefile:76: all] Error 2
+the config should really live in /boot.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+js
+suse labs
+
