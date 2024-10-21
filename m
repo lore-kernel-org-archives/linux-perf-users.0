@@ -1,105 +1,123 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15F146BA;
-	Mon, 21 Oct 2024 13:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B801D4336;
+	Mon, 21 Oct 2024 13:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729518475; cv=none; b=Q71R1FCOGEd6EVuKNn5IS50QMguPS16Nb7SYXOw5gOWDmT1idZuE/2XU7rw9Z5SybL0H7owd3VWHZkAQaZRfYOYM5hoAldAWBn1K2qRiZQRDCRbnlRTIg2vmGNbv8YTAmYMylMT20WHFm2JaDAsn2hySZNLVSPijbUyNO/K3tbQ=
+	t=1729518904; cv=none; b=kxCnWgyd8efvBhl49urEsmKa5g6OUBpuZB1uuVNJmhKD19gSxxLWNEQqq78IVF/oDhnGkESUITXma/qdPOTnelIXMpCbbqOkjbCwIe/ZyIUeTjakSpV7215lYwVZ4Q6ZtCcyqSiPVrGpLDrG3fNWDJBJcZ6k7GYOaIZSlD7T6fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729518475; c=relaxed/simple;
-	bh=aUw4WJZmdSfNhxDFuiH2LCXSrIkyodmCvTqA3zgVJps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B7skpGBLveR1URqZI5cteMEgnPeoxs8k6AOTIvkRX0L86i3qMvcjdZtvpUtXOfQwJsvkfryEx4mSP+rEtaK7OGnnjCsgjaPspAEp/BkfjR9PynMtLqJQ9tCIiksZk5EEfd2zN+lxs5p3dLeWDxi3C2qn628BWezrnmAgQQiUpJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mypYa7AF; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729518904; c=relaxed/simple;
+	bh=oRrVys6S7JyRpghjQILzNHcW3pfvWtk7uuRmS8b2obA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lPgKykbFo0CEy0V6AYQpIQUIxEzCOpVslrhcds7DTvq5TWk5jyLA+t6u7nmUzHfAZjrYmJmzFofqenaHkXPZ4b646DXGgF4ohU4z8nyCl72ILsfX7ZOkxyXCSaUSveVt7exGeK9WpaFC+MgMRWhJDJZdTTai/kebdgkdRDlxpdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IRFMDFiD; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mypYa7AF"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20cb89a4e4cso30739965ad.3;
-        Mon, 21 Oct 2024 06:47:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729518471; x=1730123271; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nD+KqOyffsNNyL4338nxmJl3FPWZED5MQGf79DLqDV4=;
-        b=mypYa7AFgrWz+0wQG3I0xNXqdvJpZkKLddJ1Yhe8IHbP24QvbheVMSYRRsxSITAxid
-         tp87djKzwgzJVHKser1X3RJFSQCRravKREm1Nyr82cstOKcKLS9nW38q1NJgs3pW/9M3
-         tGvN8ohVI7vnF5aoxBhEp5NT03/ibWW/xkuH6NjzhztawJTJWHBJoMCmeC7OCzYPgp+y
-         GgEwCfWICt1SB9oO6SAUogtBadu/O272/ySEnoVlMYFBDB1/UEr+IH/PSaAEwtbWBPaB
-         gQzOhde2+waT05vgaUjjocqDVGzml9Jxvw/MZnqx91zkKA0AzJ0NwhzMk2UjcDH/GXUr
-         Nzdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729518471; x=1730123271;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nD+KqOyffsNNyL4338nxmJl3FPWZED5MQGf79DLqDV4=;
-        b=gH0MgGsc4jVvJEDPjnwtkl+/NVFlKJ1H88uOisp0dr/hcR2GQjEzW/77jA0c6VoPHb
-         +IwJZ4nc109E7NoDH9JbPiSA8zfkOE2xByPOET1R8CBPQsyZjTSSEMa8PuZLvCuhddfu
-         XWoQBNkXV4MRA09abpJp0atr9QQP0tvqP4K14/+nRZs/OFrzY0G4ib80KzIDqhkknfF1
-         P1VQk5BQkJ6pqxYy9Z+2eWNppBuucVbrWcAtdznOD7lg0aohaER+DveadlQqk+oVr77S
-         U0if69ZdWstsm0PL3dkxjwbA62NzYqNXEJOiWKdduySz6iuh+8Jb1S8xLmNwlvDHpL1w
-         FCJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUfeTuGLnCNW8bdAQeAs4atsLGeHMDsE7qxw5x48648KQA9tBv9tRhnIBMhwloe7Wgk+vU90Cq2p8Bt@vger.kernel.org, AJvYcCUyENcnlZsIY/9CFYUD5XC+x/tgKn3be0ngWhMYuT6az5lUrxxDiz3T88+gW6xM/gjJ7LAGKLX9PtxL+dQ=@vger.kernel.org, AJvYcCVe8ywqOLvJgmdG18ckehmkYFuIVHI7xeFkY8xa9RO4Htf28/5cCUYDl8GyjRENFYLBoj5EI22z7PmPc134e/K8dA==@vger.kernel.org, AJvYcCW3DGux/nPU5UOqsFUDK/K9EiiMcwOijE9KflYfX/vNVkvVGTo3J1aHusrZ/xBSM5YzR9fsqQJZ+0wcQcDG@vger.kernel.org, AJvYcCWJtbjoDVKY7/Ov7Xj2jBxJExCbTpkglmNzNuJDaPXiAbz57rjgAxkNu2umkExmxRFR2vJHcjSS2ezL4abhsH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmxR3WIcnTHap+4ZgEv4MKqSf+L1SwTVY/brMJ1RHVQmSuGaDB
-	7ON0+ZQUP7Y2F/ZQfSc/FBZ9YAE3ITWd5bqXzpt8+dSX7/9fJzNz
-X-Google-Smtp-Source: AGHT+IGpQioQQSjVna+u0kcFMLLDGy8gnz92x4raQ8iP4uL9jWeq86xdAWB9VASoS23M74pBaQs88w==
-X-Received: by 2002:a17:902:ec83:b0:20b:9f8c:e9de with SMTP id d9443c01a7336-20e5a7529f1mr179366035ad.13.1729518471094;
-        Mon, 21 Oct 2024 06:47:51 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7f0bd2b8sm25853735ad.159.2024.10.21.06.47.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2024 06:47:50 -0700 (PDT)
-Date: Mon, 21 Oct 2024 21:47:45 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
-	corbet@lwn.net, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, namhyung@kernel.org, akpm@linux-foundation.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, willy@infradead.org,
-	jserv@ccns.ncku.edu.tw, linux-kernel@vger.kernel.org,
-	linux-bcache@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 00/10] Enhance min heap API with non-inline functions
- and optimizations
-Message-ID: <ZxZbgWc2IsztAOOx@visitorckw-System-Product-Name>
-References: <20241020040200.939973-1-visitorckw@gmail.com>
- <ZxYf8VvQIZv9_Y1j@archie.me>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IRFMDFiD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729518902; x=1761054902;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=oRrVys6S7JyRpghjQILzNHcW3pfvWtk7uuRmS8b2obA=;
+  b=IRFMDFiD3ZA9MGC+Abm9xXOPM3n2vYsgpb0+1QHmMESIvOxcL/pZcwJS
+   lMAeqmPm5+rfyW6DiWYjT2B8blGDo0d/xshCzmCelSyiOyK6VdGSkQPkv
+   h4KrwXinSnWta442LL2/75FUkYsoPXbZl12HKSWUUx6PuM+yrse050dlu
+   i3aZBWY6p5daJ5RHFCJtv6l0kYtvE4VYRGWYmZkYyZYJXJ5Aj2nqVgaqD
+   jdQrraI83FI/mjOCkvUlxVCGizYfwhp23BbJV8pduwwXvqtRFQ/bvls16
+   AMo+5ZFtQhLjX2cK0DZXUnSKroM6wFUnuHZ2JzXgZ2NyrDZZUFj8t11O/
+   w==;
+X-CSE-ConnectionGUID: AAJ4IJr2TcWTfCXez63rCw==
+X-CSE-MsgGUID: isgEZL0MTkSYSI2EqJttZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11232"; a="28443786"
+X-IronPort-AV: E=Sophos;i="6.11,221,1725346800"; 
+   d="scan'208";a="28443786"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 06:55:02 -0700
+X-CSE-ConnectionGUID: VYBrYh/2Qk6ieStU8j6BRw==
+X-CSE-MsgGUID: vaymWihdSxG1sPL8Nug1Fg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,221,1725346800"; 
+   d="scan'208";a="84151031"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 06:55:01 -0700
+Received: from [10.212.126.102] (kliang2-mobl1.ccr.corp.intel.com [10.212.126.102])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id D80FA20CFEE2;
+	Mon, 21 Oct 2024 06:54:58 -0700 (PDT)
+Message-ID: <e7de0a73-23de-4b79-95e2-8a6dd9addfe7@linux.intel.com>
+Date: Mon, 21 Oct 2024 09:54:57 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZxYf8VvQIZv9_Y1j@archie.me>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 04/10] perf/x86/intel: Use topology_hw_cpu_type()
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+ Andrew Cooper <andrew.cooper3@citrix.com>,
+ Brice Goglin <brice.goglin@gmail.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Perry Yuan <Perry.Yuan@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+References: <20240930-add-cpu-type-v4-0-104892b7ab5f@linux.intel.com>
+ <20240930-add-cpu-type-v4-4-104892b7ab5f@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240930-add-cpu-type-v4-4-104892b7ab5f@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 21, 2024 at 04:33:37PM +0700, Bagas Sanjaya wrote:
-> On Sun, Oct 20, 2024 at 12:01:50PM +0800, Kuan-Wei Chiu wrote:
-> > Add non-inline versions of the min heap API functions in lib/min_heap.c
-> > and updates all users outside of kernel/events/core.c to use these
-> > non-inline versions. To mitigate the performance impact of indirect
-> > function calls caused by the non-inline versions of the swap and
-> > compare functions, a builtin swap has been introduced that swaps
-> > elements based on their size. Additionally, it micro-optimizes the
-> > efficiency of the min heap by pre-scaling the counter, following the
-> > same approach as in lib/sort.c. Documentation for the min heap API has
-> > also been added to the core-api section.
-> 
-> What tree (and commit) this series is based on?
-> 
-> Confused...
-> 
-This patchset is based on Linus' tree, commit 715ca9dd687f ("Merge tag
-'io_uring-6.12-20241019' of git://git.kernel.dk/linux"). Since it
-touches multiple subsystems, I'm not entirely sure which tree I should
-base it on. Should it be linux-next, perhaps?
+Hi Pawan,
 
-Regards,
-Kuan-Wei
+On 2024-09-30 10:47 a.m., Pawan Gupta wrote:
+> get_this_hybrid_cpu_type() misses a case when cpu-type is populated
+> regardless of X86_FEATURE_HYBRID_CPU. This is particularly true for hybrid
+> variants that have P or E cores fused off.
+> 
+> Instead use topology_hw_cpu_type() as it does not rely on hybrid feature to
+> enumerate cpu-type. This can also help avoid the model-specific fixup
+> get_hybrid_cpu_type().
+> 
+> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> ---
+>  arch/x86/events/intel/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index d879478db3f5..80a2a307e678 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4906,7 +4906,8 @@ static void intel_pmu_check_hybrid_pmus(struct x86_hybrid_pmu *pmu)
+>  
+>  static struct x86_hybrid_pmu *find_hybrid_pmu_for_cpu(void)
+>  {
+> -	u8 cpu_type = get_this_hybrid_cpu_type();
+> +	struct cpuinfo_x86 *c = &cpu_data(smp_processor_id());
+> +	u8 cpu_type = topology_hw_cpu_type(c);
+>  	int i;
+>  
+>  	/*
+> 
 
+Dapeng's patch to utilize the native model ID in perf has been merged.
+Please replace the get_this_hybrid_cpu_native_id() as well when you spin
+a new version.
+https://lore.kernel.org/all/20240820073853.1974746-4-dapeng1.mi@linux.intel.com/
+
+Thanks,
+Kan
