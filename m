@@ -1,119 +1,119 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECCE1E0E11
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Oct 2024 08:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C5D1E105F;
+	Mon, 21 Oct 2024 09:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729498285; cv=none; b=tyZ+PsAA0W7SLTmtcrRgSwXnaInr2xAmxb7SriiReXCYtN7WueTEOS5M5dU1UCxaourgNDFUDnt1bbTeuVEesIsI7jxUpL6lSLdf+TxXTt4O2O8EdvDXx1RIDWBhLeRckl2hErp4OeALtyiPqJDoouinUiBkDEy9o7f4OBmlBtw=
+	t=1729503224; cv=none; b=T6QayznAoQfzHiy5dH+0KjEOwBXQ0mGmYri0KEnxA43IV7Y7jUOgJRLKCywssUYuF9iQX9pfyPlgCO5NPGNOnLOyH5OoF93kjrHpjrL+WBknsUeX/eT4mDS0HrP2lRNULP79wryoadJ6vuWvHXCNKdxWQm0M1AdwfvEcisrK3rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729498285; c=relaxed/simple;
-	bh=Ou2p3DdsJDTxeC21wWk0uoZwVL2HA6zxt1bnh4k8tHE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JvfOiM6l33XW+fqGFMkXfpVHAFxbWowNVoKJ4mlI/YLDUqb3yvwi5SMsBEz3bqnJr5m53uDn/qL43ZFZ+HIk5pHeAGujd0jdup5ZMgvY3xl77hgg/O0JgliQ5XTzBWXQZJIquAMoJDQH+k7uoatc8Xg3Pp2nSOdD84BhVPlsl/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WSwBVUVx; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1729503224; c=relaxed/simple;
+	bh=+hvwglD+xMIZQSpeY8TNOenvPPVT8cBwFOr0rdwiYac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cj7M5FgJq2+243EztZS27PL0xfzgWiFugBmFJwS4CMx15oxAufJ4pr13ISMpKN+uVBniAxmVVUFHC2mQqATKVXy04x6g1axm6vQ6H5WXyGYX/94B3WlugNzPP/b/onYF+sZmT7Q2MI5OhKWtbmb9vQdqCqju1IyPExCoVx4E9gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TKqDrK4Z; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WSwBVUVx"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5c9634c9160so4610978a12.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Oct 2024 01:11:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKqDrK4Z"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3e6075cba82so802645b6e.0;
+        Mon, 21 Oct 2024 02:33:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729498281; x=1730103081; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iCypqz++1+bKOXfbjNAZskehde2MtPKa6tzi3WQaYiI=;
-        b=WSwBVUVx8q6Zinqq8/5oe4Gbla9RUyXow4wHqw0KL70QFmdT0+5oj/E4i1nbA9FUBO
-         s7nGvBMYHubwf2FP7+XRE54/3V1iH8DCjR65KPqQqAFrqI41n2RHkwlIOWAZx5gHxsla
-         iyTzu9riXQyYZfzDQKNZS6/LV1EV+jCEktnp10/oaZcAjpleF4sJ3N6LNtLFz9PIc/8t
-         A1E9iw5ohTm8E91iu4/9mUG6zJ7cuLzM6aLQCxeBlZsaFxkiC5aD4v0gbRXXRxsiJaWx
-         kNp2lDsSMZFfDNPDXIzCkk5BgOUQlq9huyLLkg5p8jlBm5l2px9OP2hdPfZ25tpABrex
-         zLmg==
+        d=gmail.com; s=20230601; t=1729503222; x=1730108022; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+hvwglD+xMIZQSpeY8TNOenvPPVT8cBwFOr0rdwiYac=;
+        b=TKqDrK4ZHHexPu241KbOYrz7beOcgqJY2cdu6h/Ttf1Va/pXkux39IazndxGVfs7Qt
+         O9AcIX+cKv84C4QtYDcpK0+URkiUF0YaVpNIDcyn2bQYvuidmRL/kHYmmkSw+wpKGfHz
+         q/hxu+KActzJBXF8z/i0NfkJB2WCX4pK34pwLzXH2WCcFFWNLVENTMx/5IzRZMY+jBOO
+         MWw52sJMAxXlMjEjyejCDxgjKGKCNAigryXKklFMwsFXD9QtMaDw31NHb4jo1UHz9XSD
+         sKrDs67iLr5xmQLJAic95QC2+V5zaygc2raUO6B2HcqS5DedryDAHMvGJ2AmhBJl8MAN
+         /N9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729498281; x=1730103081;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iCypqz++1+bKOXfbjNAZskehde2MtPKa6tzi3WQaYiI=;
-        b=T4Iu13XoLXEYe28SIUlBdfsGYj1F6fSfwHB7VJ3yZnv83aM9VpD5LehQkR4QYuff+h
-         qYdRkD6jiYnklfden83uGXwvvWvAItBNkBSV3XJImFOV71S/hXVZW3bXJ42ejAelsMSz
-         A5mKm/+XuhmBosdhykQ5pq0wbSNAW+XY18yr1oVeMoihI2c7dVwQK56L75QPgqyhbdVT
-         kxwu1Q0XAebwrNKLVziHx60/9puv3iPfIL3qQ/T6hfkhARrtFxAzUCzO5UsjpHp8KzR4
-         +n7vxcWsJDW+WXS81hznJm91ldRQkbmi6+a44XlbcivPvCgvub389f7ZAUc+xyetB4lI
-         6anw==
-X-Forwarded-Encrypted: i=1; AJvYcCXM9EWvqUv3SN4cPXpwqLF/dH1sr+TK9Q08C2svHrTZm+Bd2xfFJV+jM//YSFDQrSs0EFMJgVk7ZLL3yMJODNsi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7IaLqYri1IYAR/+JHlEM1bkh/GTPn3XQJfQSUIle0rLBT0Ezq
-	hgcE/xz7kJdGV+wFBYixof+1xJ4T2b9UGYMPgDTFwDtdBVLs8y+FuVLpSVOYH5k=
-X-Google-Smtp-Source: AGHT+IH3Kset7YK4tOEJjljVdnmxSfw7aCq/ZTMRUTaAXcJ8Q/fYGB3ILhxg/5A2uLZZWvdaBo+ygw==
-X-Received: by 2002:a17:907:2cc6:b0:a9a:1565:1051 with SMTP id a640c23a62f3a-a9a69969fbfmr1126644466b.10.1729498281298;
-        Mon, 21 Oct 2024 01:11:21 -0700 (PDT)
-Received: from [192.168.68.136] ([209.198.129.102])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a912d6255sm175790566b.19.2024.10.21.01.11.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Oct 2024 01:11:20 -0700 (PDT)
-Message-ID: <c6691700-4aa2-4d10-97df-2dacb6bf7fc0@linaro.org>
-Date: Mon, 21 Oct 2024 09:11:18 +0100
+        d=1e100.net; s=20230601; t=1729503222; x=1730108022;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+hvwglD+xMIZQSpeY8TNOenvPPVT8cBwFOr0rdwiYac=;
+        b=mUGcbI5t6WD4T40k++DEPwL3o80AtG+36fFFL7dInmJb9+CZF6bwRCPCeip3BWKcW3
+         p9evn8attXCWrA44kUPi98OzXeKtmQGJiX/crLGFFzgUf8H3JgULdkLq6DNqE8bvueFG
+         VGaS9diRAqwjrdcntdeUf0HpetFrhzDG3/7WTprDp80HjIj0bepB3TxWcFFNSNX88L1o
+         2J78bHB3mcMwcFU/xuPuI7NhMozwnXIcgSdJAzDZYIFxneZxqK6tE1tNSFfhaMYyp+ny
+         EAfYFF1V6TeRv21thedIU0cajQ8+cRqvgGI9w9DEZvtshlDBWf3sx6NldJUxy0tPMiG1
+         0XRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnYraZn/ebn0SgOX200PkN+Kw8/zrkb8I0nmZidmBoyfYxeGZEmxcioZ+NLcWAmL+68+KQcStVgftFNnro@vger.kernel.org, AJvYcCVQ6eAEbsidRpyzxOECMMMAh/kO0eWYHg9I2Rrrk/NUFUIXe/hlm5vvxbjsTq7+4e5yDGdaiqcPVP6q2HfKws8=@vger.kernel.org, AJvYcCWMZup/cxxBZSzBk0Fsri26mj4IYXd+8cPv2tWUaz5EqahP/fryT9V3YCjIJ4hTV6LxnfuiyOMyhWGpN6DTvmYX6A==@vger.kernel.org, AJvYcCXc+ZqwWc8usuKaDoKmaLjxf3BQfwTBt6tnjv3+cOXYGIP+cU4/wKDNxbeTk8OLJca+TUfaHDBrc1kD@vger.kernel.org, AJvYcCXselr8F6nm3S2Hg/1DJOKkgEZFC4atPplgOnitqQG9Ge1zGOXZQKWau/dYVY/dt0mR5K2fMESFFrqar1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtyaA2Ow+eXVvwHB6xxvGokJuk+/JOksFUiee1ztKJU+yi+ozY
+	JfGTZcQ8Q4pPNAImRciqBvHbx/8y+MxZ0kWpEm4EAz9rpKWk2Xm0
+X-Google-Smtp-Source: AGHT+IHEqtcKiYTdbqqfRyoy/XfAUa5oXZdBUPYTVW5peAzxo1UMbv5yHBrUak4k0TnoMhvzjBSbUQ==
+X-Received: by 2002:a05:6808:13c4:b0:3e3:a99a:433f with SMTP id 5614622812f47-3e602c87dc9mr8847801b6e.13.1729503221785;
+        Mon, 21 Oct 2024 02:33:41 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7eaeaafd36esm2637774a12.6.2024.10.21.02.33.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2024 02:33:40 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 87E574396293; Mon, 21 Oct 2024 16:33:37 +0700 (WIB)
+Date: Mon, 21 Oct 2024 16:33:37 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>, colyli@suse.de,
+	kent.overstreet@linux.dev, msakai@redhat.com, corbet@lwn.net,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, akpm@linux-foundation.org
+Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, willy@infradead.org,
+	jserv@ccns.ncku.edu.tw, linux-kernel@vger.kernel.org,
+	linux-bcache@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 00/10] Enhance min heap API with non-inline functions
+ and optimizations
+Message-ID: <ZxYf8VvQIZv9_Y1j@archie.me>
+References: <20241020040200.939973-1-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3 v3] Expose the 'perf test -w' workloads functionality
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@redhat.com>
-References: <20241020021842.1752770-1-acme@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241020021842.1752770-1-acme@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="AZgPemEmi7boKc4w"
+Content-Disposition: inline
+In-Reply-To: <20241020040200.939973-1-visitorckw@gmail.com>
 
 
+--AZgPemEmi7boKc4w
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 20/10/2024 3:18 am, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Hi,
-> 
->          I noticed that the 'perf test -w' code wasn't well exposed, so
-> add a '--list-workloads' option to list the existing workloads and document it
-> in the 'perf test' man page.
-> 
-> - Arnaldo
-> 
-> v3:
-> 
-> - Fixup references to --list-workloads in a patch subject (Namhyumg)
-> 
-> - Fixup references to --list-workloads in the 'perf test' man page (James)
-> 
-> - Add an entry for --list-workloads in the 'perf test' man page.
-> 
-> v2:
-> 
-> - Use --list-workloads, as suggested by James Clark.
-> 
-> - Add info in the man page about the parameters the built-in workloads
->    accept.
-> 
-> Arnaldo Carvalho de Melo (3):
->    perf test: Introduce workloads__for_each()
->    perf test: Introduce --list-workloads to list the available workloads
->    perf test: Document the -w/--workload option
-> 
->   tools/perf/Documentation/perf-test.txt | 17 ++++++++++++++++
->   tools/perf/tests/builtin-test.c        | 27 ++++++++++++++++++++++----
->   2 files changed, 40 insertions(+), 4 deletions(-)
-> 
+On Sun, Oct 20, 2024 at 12:01:50PM +0800, Kuan-Wei Chiu wrote:
+> Add non-inline versions of the min heap API functions in lib/min_heap.c
+> and updates all users outside of kernel/events/core.c to use these
+> non-inline versions. To mitigate the performance impact of indirect
+> function calls caused by the non-inline versions of the swap and
+> compare functions, a builtin swap has been introduced that swaps
+> elements based on their size. Additionally, it micro-optimizes the
+> efficiency of the min heap by pre-scaling the counter, following the
+> same approach as in lib/sort.c. Documentation for the min heap API has
+> also been added to the core-api section.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+What tree (and commit) this series is based on?
 
+Confused...
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--AZgPemEmi7boKc4w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZxYf7AAKCRD2uYlJVVFO
+oxXdAP9wQqt51VFB/Z0o1sG9jAlrumF8GTPSGUKzrPnp/NQr1wD/SJT0xCbRALqQ
+/PjGaG28z15cfomZT4A3WrBSIvSSmgo=
+=BKhT
+-----END PGP SIGNATURE-----
+
+--AZgPemEmi7boKc4w--
