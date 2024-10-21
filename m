@@ -1,37 +1,78 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D0F72A1BB;
-	Sun, 20 Oct 2024 11:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8FD4C8E;
+	Mon, 21 Oct 2024 00:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729424143; cv=none; b=LdA3SW7TDp8zZ5N0JMN340H5rPn0ImU6pPCGJH6YFehquvJmhCGETaVozG/XTy5CspzMAMGPuGUAwnXkGarrgadkc4DTraqY2HD8mNtVcg9zsoeAaGaUHAiTuVPFQfoCgj9Jf5EjDd5Fzaaamb8nuHEh2iBaYJ9RZs5pdXUcB0E=
+	t=1729471534; cv=none; b=nLLskZpimnhUJuoz3nZ5qD35P7aZs6gD9kyQ2PL7m9AVoMBva6BUAVvdQyJIE23BU1+thpX1EcKCkoXFaK6Xsw/yCElB65stucFjivL+bv8rLjggck9tSmaLnS+YZBPcB6O3tl4dOtILoD+tpjRQWpcb8nhd6UDZHadcOYZDZV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729424143; c=relaxed/simple;
-	bh=VaaRuCyBRkIo/n7NWbWKipHspm80+to1MIvlczVbwMQ=;
+	s=arc-20240116; t=1729471534; c=relaxed/simple;
+	bh=zX3N1d60n3AIuJZwfC7pPNYT00ZeDOB7cX1e1JHUt6c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g+6gbZF5WRC3QqJ2xZv3h8U4lVEvONrdBwknhzL5HbrlgbhGojY55eTghWYn1VAqWcyFY/7y8R0OoaDA208xqxT3U2ftcAcUKr+c6tZni6Xirbzl3PP7HIgbNSY72tyNsGCW9bcsazFr4WqN5BGpudyRHs2/e9TJ9t9DPdYG7So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5882DA7;
-	Sun, 20 Oct 2024 04:36:09 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E4643F58B;
-	Sun, 20 Oct 2024 04:35:39 -0700 (PDT)
-Date: Sun, 20 Oct 2024 12:35:28 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jing Zhang <renyu.zj@linux.alibaba.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=MgkO3YGhkC2Oed0HfVq1ujgnyEOuIqwKoBTu8Gh7RJu+2S+CVav/hjOp0LtCNNSea3MrCNw0TJZpjt830nPL403YE/YDEccvJLN/0vpf3vivqIJREzNT8rLNq8esXPFlh9RzvxXLYin1AGDSxNyFZkuN0g+Ads30ER+5CX91G8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g6v3fe6T; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g6v3fe6T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729471532; x=1761007532;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zX3N1d60n3AIuJZwfC7pPNYT00ZeDOB7cX1e1JHUt6c=;
+  b=g6v3fe6T5ytKtNpZrPxTR9VuO20K7lzlG/0GEhgD6WuAZRNV4NIfQcIF
+   gtCH3lX7ajzv7CBwpEX7ZHAaSO4lOprn7tX8GoQzQ0snSKf1gJR/Mhy4O
+   nBTuqH4xBrzuyk6b1xE7/E2XsE1DstefgIcv93S8B/GcZkEUaPjBUygcH
+   5NRgxHbdwdf2NHc8uXwpZc+wPWzGGqocMi0zfvdeM7sjHejn9Z/bUttGL
+   e0wgagLX5m/sqR1YXojqacZguEK6WlUB+8XEzW5w9mgdqGkCJCdIal36C
+   KE5o/Ja2PZ3oJsWlKbhKn6/ozFkZ06tV57VquO5FN6WgDfYsE3wNMMtkf
+   A==;
+X-CSE-ConnectionGUID: Z58wfJN/TqSarIx2ceeh6w==
+X-CSE-MsgGUID: e/6kBZv5Qn+kqkhPyIatlA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11231"; a="31804018"
+X-IronPort-AV: E=Sophos;i="6.11,219,1725346800"; 
+   d="scan'208";a="31804018"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2024 17:45:31 -0700
+X-CSE-ConnectionGUID: 99B1zdIWT/KwEtlUrlwOMA==
+X-CSE-MsgGUID: IcarFqj8Rr+rvNHEUas1wQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,219,1725346800"; 
+   d="scan'208";a="83952169"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 20 Oct 2024 17:45:26 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t2gY0-000Qww-0O;
+	Mon, 21 Oct 2024 00:45:24 +0000
+Date: Mon, 21 Oct 2024 08:45:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	xueshuai@linux.alibaba.com, zhuo.song@linux.alibaba.com
-Subject: Re: [PATCH] perf/tests: fix record+probe_libc_inet_pton test on
- aarch64
-Message-ID: <20241020113528.GA3209400@e132581.arm.com>
-References: <1728978807-81116-1-git-send-email-renyu.zj@linux.alibaba.com>
- <ZxGL1LF9mVzrUGOU@google.com>
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Yoshihiro Furudera <fj5100bi@fujitsu.com>,
+	James Clark <james.clark@linaro.org>,
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Changbin Du <changbin.du@huawei.com>, Ze Gao <zegao2021@gmail.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v5 2/5] perf hwmon_pmu: Add a tool PMU exposing events
+ from hwmon in sysfs
+Message-ID: <202410210800.pNLlo3bN-lkp@intel.com>
+References: <20241017063555.366065-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,103 +81,49 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZxGL1LF9mVzrUGOU@google.com>
+In-Reply-To: <20241017063555.366065-3-irogers@google.com>
 
-Hi Namhyung, Jing,
+Hi Ian,
 
-On Thu, Oct 17, 2024 at 03:12:36PM -0700, Namhyung Kim wrote:
-> 
-> Hello,
-> 
-> On Tue, Oct 15, 2024 at 03:53:27PM +0800, Jing Zhang wrote:
-> > Since commit 1f85d016768f ("perf test record+probe_libc_inet_pton: Fix
-> > call chain match on x86_64") remove function getaddrinfo() on expected
-> > file, the test failed on aarch64. On aarch64, function getaddrinfo()
-> > show up in the call chain.
-> >
-> > $perf script -i /tmp/perf.data.1PV
-> > ping 2588319 [125] 500119.122843: probe_libc:inet_pton: (ffff9a4f7410)
-> >             ffff9a4f7410 __GI___inet_pton+0x0 (/usr/lib64/libc-2.32.so)
-> >             ffff9a4c5f7c getaddrinfo+0xec (/usr/lib64/libc-2.32.so)
-> >             aaaad6d32b38 [unknown] (/usr/bin/ping)
-> 
-> I'm curious how other ARM folks don't see this.  Does it depend on
-> something other?
+kernel test robot noticed the following build errors:
 
-This test has several dependencies. E.g. libtraceevent and IPv6 (one
-of my machines skips the test due to lack IPv6 interface).
+[auto build test ERROR on perf-tools-next/perf-tools-next]
+[also build test ERROR on next-20241018]
+[cannot apply to tip/perf/core perf-tools/perf-tools linus/master acme/perf/core v6.12-rc3]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-This test is definitely a regression on Arm64 machine. I will go back to
-check why this test failure is missed in our CI. If have any update,
-will let you know.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/tools-api-io-Ensure-line_len_out-is-always-initialized/20241017-143759
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
+patch link:    https://lore.kernel.org/r/20241017063555.366065-3-irogers%40google.com
+patch subject: [PATCH v5 2/5] perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241021/202410210800.pNLlo3bN-lkp@intel.com/reproduce)
 
-> Then can we make the line optional like we did on s390 recently?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410210800.pNLlo3bN-lkp@intel.com/
 
-I verified two distros (one is libc-2.31 and another is libc-2.37), both of
-them have the symbol "getaddrinfo":
+All errors (new ones prefixed by >>):
 
-Machine 1:
+   Makefile.config:665: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR
+     PERF_VERSION = 6.12.rc3.gd8463b89755f
+   util/hwmon_pmu.c: In function 'parse_hwmon_filename':
+>> util/hwmon_pmu.c:175:9: error: implicit declaration of function 'strlcpy'; did you mean 'strncpy'? [-Werror=implicit-function-declaration]
+     175 |         strlcpy(fn_type, filename, sizeof(fn_type));
+         |         ^~~~~~~
+         |         strncpy
+   cc1: all warnings being treated as errors
+   make[7]: *** [tools/build/Makefile.build:106: tools/perf/util/hwmon_pmu.o] Error 1
+   make[7]: *** Waiting for unfinished jobs....
+   make[6]: *** [tools/build/Makefile.build:158: util] Error 2
+   make[5]: *** [Makefile.perf:789: tools/perf/perf-util-in.o] Error 2
+   make[5]: *** Waiting for unfinished jobs....
+   make[4]: *** [Makefile.perf:292: sub-make] Error 2
+   make[3]: *** [Makefile:76: all] Error 2
 
-  # nm -D /usr/lib/aarch64-linux-gnu/libc-2.31.so | grep getaddrinfo
-    00000000000bdf58 T getaddrinfo
-
-Machine 2:
-
-  # /usr/lib/aarch64-linux-gnu/libc.so.6
-  GNU C Library (Debian GLIBC 2.37-16) stable release version 2.37.
-
-  # nm -D /usr/lib/aarch64-linux-gnu/libc.so.6 | grep getaddrinfo
-  00000000000d4da4 T getaddrinfo@@GLIBC_2.17
-  0000000000114260 T getaddrinfo_a@@GLIBC_2.34
-  0000000000114260 T getaddrinfo_a@GLIBC_2.17
-
-I don't see the need for making the line optional. And I don't see any
-requirement for adding conditional check for symbol "gaih_inet".
-
-> > So just remove getaddrinfo() on x86_64.
-> 
-> I'm not sure how it works on other archs.
-
-I have no idea neither. Maybe this patch is fine - it just rolls back to
-old format for rest archs, before if the test can work well on them, then
-this patch just makes it to work again.
-
-However, this patch has a syntax error. Please see below.
-
-> > Fixes: 1f85d016768f ("perf test record+probe_libc_inet_pton: Fix call chain match on x86_64")
-> > Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> > ---
-> >  tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> > index 47a26f2..09d7b0b 100755
-> > --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> > +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> > @@ -52,8 +52,12 @@ trace_libc_inet_pton_backtrace() {
-> >               echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
-> >               echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-> >               ;;
-> > +     x86_64)
-> > +             eventattr='max-stack=3'
-> > +             echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-
-Please add ";;" at here to break switch, otherwise, it reports syntax
-error.
-
-With this change:
-
-Tested-by: Leo Yan <leo.yan@arm.com>
-
-Thanks for the fixing!
-
-> >       *)
-> >               eventattr='max-stack=3'
-> > +             echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
-> >               echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-> >               ;;
-> >       esac
-> > --
-> > 1.8.3.1
-> >
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
