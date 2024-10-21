@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86431D0153;
-	Mon, 21 Oct 2024 16:01:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F211D5ABA;
+	Mon, 21 Oct 2024 16:01:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729526505; cv=none; b=L9rDkPUCFFLNrQi62Yli+VnwNCwpW3SoFdTy1og1bNM9d8Lu5kNriU1qnVMOF4JPdphOVmAT81A8VhSsV40HIgueCo5R/g9DQgQ6m0vpXIAyyQoMsMFSz/JvOi+RDvxnU6g0npbpA2Vd6JNJZBsAsaj3vNcneK7fSVilfkrytls=
+	t=1729526505; cv=none; b=FNgDY+cxdje/jHFe+hN96pJf4fpwIGkNRByHm4D4Ei9tv6mKaP0PJDsToVJdxpsTDIGkxzN4Vu6FTGnlgnchdta8YIQJ8HY4boLTg5k2M6LRR2nG+qijtsmbik8SzIALLTIW4rY+0BtzusX+cj4OAdUYlf3EXM+akZPDsehSjyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1729526505; c=relaxed/simple;
-	bh=Nhxa5kOx0iAj+/T0R3ms+1J4YXNHCkA/zB+wzsAaK08=;
+	bh=+mYM+Gz8k2rxf9vmX5CHZ927K8o2lDQPIO2MrE/TqoE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=G8ZzCIJmeA8AygFs1qfoMLEEBN2TfhFKlq0m6BvZVY0XDFGRUOo7PcDjceHOAprIhXpEJ1dasD7JE7bAs36snvvigKiraWoT6fP49Uopi8Lhz688ERj91Bwk4BR82z18O2NU2QgK3B+anpCOMRIcy3jrob/yIxbOXYSWjmZIzEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TyAG5bIe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CVDn3jkojJpLd8aqnd2GynlPUr9ZD2CUUJ5UOSBQtGJTHD+oMCg5Uxr+ur50Jt+bkOehKiWwPHB3hF7IPFHzw07PvtmqYsdGuzHx/azPcombmbhYg0YjHagUn9LHYcF9PQS3Hr6BG6XqYbIbxZVuz5811Qf1fQ1QQ7XiO37qAgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XeBkItyc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TyAG5bIe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FDEAC4CECD;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XeBkItyc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7971C4CEE6;
 	Mon, 21 Oct 2024 16:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729526504;
-	bh=Nhxa5kOx0iAj+/T0R3ms+1J4YXNHCkA/zB+wzsAaK08=;
+	s=k20201202; t=1729526505;
+	bh=+mYM+Gz8k2rxf9vmX5CHZ927K8o2lDQPIO2MrE/TqoE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=TyAG5bIevWrhW1h5euO8wqyzXBFF8koOqQu72txC0aGeZoVa9azi7VflfaereioYD
-	 yVRpG3leV/Nu5ildgNkragTUtEuAimLzA2iqqPK83sHBDsF6sniY7aQqf1vZ4UPL6R
-	 X4kFOzjBg16pcyunu9J6B/TGMDEHf7Y/xdEyqdydHzf8QrPpbBZ4ntDE3ZzzUQHM3I
-	 tPIH22amRuDD/wBOV9ScbmN/3MwJYiXFfc2/5ZH2AwV0kDv3e3Q32y1N2c2M5oiHTi
-	 RNem3ZjSlwG/yEw0iZOoTMhk8l8MBPGic6749rdcsKM5ATZpR3weh13XH57N4jenN+
-	 L4SH4Wj+DLBiA==
+	b=XeBkItyccQUt4LAe/wv5poScQk7AGpxffVT+QkJ9FCZEM8vJ3CR0tClnz3QztcFJx
+	 TCphqMB/AjPBlPaBbk9PK4n7ScOrYHPk2+vFjsSFXE+2GzuGZw5tduv5sVmCRN4Cz5
+	 btJx/3pbmDcyHjHoIXnvS9ne3MA0j8gEuk0Pc0Vyr/ZZaUNSwHe7dJnCT8gk/tE492
+	 7BjI4Mf/P5ddbnI6divjTTvEv3JJiAUEtOfTVPlNsgErnbsalDEzLY/2DKXWmbFkU7
+	 X+h66PoJDgExwNm3Li99LjJgkI4wo1CH7mG3q3HFsowluOV1xLelzi8fctpful6Z7x
+	 pzZby5T9IDvnA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- acme@kernel.org, Thomas Richter <tmricht@linux.ibm.com>
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
- hca@linux.ibm.com
-In-Reply-To: <20241018081732.1391060-1-tmricht@linux.ibm.com>
-References: <20241018081732.1391060-1-tmricht@linux.ibm.com>
-Subject: Re: [PATCH v2] perf test: Fix perf test case 84 on s390
-Message-Id: <172952650435.3574386.7528819225898340561.b4-ty@kernel.org>
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sandipan Das <sandipan.das@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+ irogers@google.com, adrian.hunter@intel.com, eranian@google.com, 
+ ravi.bangoria@amd.com, ananth.narayan@amd.com
+In-Reply-To: <cover.1729242778.git.sandipan.das@amd.com>
+References: <cover.1729242778.git.sandipan.das@amd.com>
+Subject: Re: [PATCH 0/3] perf vendor events amd: Add more Zen 5 events and
+ metrics
+Message-Id: <172952650471.3574386.17747155626378590525.b4-ty@kernel.org>
 Date: Mon, 21 Oct 2024 09:01:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -46,14 +49,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Fri, 18 Oct 2024 10:17:32 +0200, Thomas Richter wrote:
+On Fri, 18 Oct 2024 15:01:02 +0530, Sandipan Das wrote:
 
-> Perf test case 84 'perf pipe recording and injection test'
-> sometime fails on s390, especially on z/VM virtual machines.
+> Add data fabric events and metrics taken from the now released Processor
+> Programming Reference (PPR) for AMD Family 1Ah Model 02h Revision C1
+> Processors document available at the link below.
+> https://bugzilla.kernel.org/attachment.cgi?id=307010
 > 
-> This is caused by a very short run time of workload
-> 
->   # perf test -w noploop
+> While at it, also update some missing or redundant data cache metrics.
 > 
 > [...]
 
