@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F981C8FDB
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 17:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD391C9DEA
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 17:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729618286; cv=none; b=qt+Cd02rwassHilKvwTZ5zbrHq7HVH1Z9GELWtslGEnMynA5I312q0jqhpw426kmP7pPheS9sSd0WAifJz2q/KL6IivjGlFsos3XYZ/1k86woANtSy8TUvCBvANWaE+7j+9iMN+odahWTVOvEdHYpWdAwNf/JN3n3VlwFwgk1d0=
+	t=1729618289; cv=none; b=Gb8WnQmNGvLNjcgLpuHLm4T5ZmAFw/e6X2BMcDfzXw5fCwRvPPFW5SMuHfICGMXj0/rpwJc3bYhBrSZ55rcZA5JiGnjWjSFnRTS4LQ9oDrpqUBV/ojxmyVgB4GYy76dLMTzQjq6MieXor4oV9WdiFy2kuRZZTmE0cgtifT5GY7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729618286; c=relaxed/simple;
-	bh=wP5xmkvAAF0cc6yxByZSQ91mHbkEonU1IDc+KMo9VIA=;
+	s=arc-20240116; t=1729618289; c=relaxed/simple;
+	bh=uf+pqZIq59zWUrhBXlbY8/wph3KVNlWL4TVWGoXzUW4=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=HAyiz9wjxZaQbBXUZULp9rppcbLcWBP0QT2s690ChhQ/ggi8hvdcAdTHMEv+fKJvX/7E0U/fQqmzCGUyvuusNyxUOcV4csvw7eocCVMLP/hdQVtBPyfcC4b2hYn3SZoF8Z3vL2CJvS1RXNwtBVrWJIUnq4hw2STdvnxggUuKL9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S+cnXiMv; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=knS6i3MS9/dxbPGUaowPguGQWnl2yWRVTdAFXUHIqLWkgstUzjRMEz4ZUB/5PrbvAYFI+KXfM06uKSG1ih8g5jilhjlbbfw1OH14qZBtaaspHkexZvXV2vsxuMMZggubFQpfxaSwYPnQ1I28EOhu+rfFZV8yzz8DfbI2b1VYkCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wkATsuC4; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S+cnXiMv"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e7e0093018so15527427b3.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 10:31:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wkATsuC4"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e2bd09d2505so5484787276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 10:31:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729618284; x=1730223084; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729618287; x=1730223087; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=q2lIQmRoJAPcxBHPZc9OawDV+vOklIH/TcpOqXgiCgo=;
-        b=S+cnXiMvonGNZ2dW1NWAbfZPGyVUqLS+LJwN07yliAZ15SHPfGcAHzbGM+db1f4VQN
-         YTDpheEsSNv+J+xtrR3W352yXYokN686ocW0R1900sy0h8SGOx60X4uqx7fWKFibbZeP
-         q0BFMY4QrNRJPYwtciyoTLplR9t8ZC/38ng1cwsL0vGPpaNXEStsUneiZ+JHZY6cj8s5
-         RiHrqugy/5E9ytrxWxl5ie9bU27Wdqw1jzWHKUzx7ZVbEXfnYTNhljpNVphEfTl2ll7q
-         3Iof+oOI/4phkaUHenS9z+/bZPt1uk2Xtv38qZJ9bQLt1cpLXYbuhYsj13k4o9hnTIls
-         aYBA==
+        bh=4RCKTfa55Bgazupu7nQwlQJBbYx0nTCBpL94lBi/7F4=;
+        b=wkATsuC4dwNJxwGu0MHucKw42b6iqQ+QYNdG0nVfmsI2ZowDc9+1JK2MhqHQtBH+NP
+         9+p+gPl03ngmSjW0b9rJXgFk67JGUcWkDvJBNWidYtORk1i1vybqDXaK6JysctB3p6f3
+         7QhIPrbPvB/56OCkiTnig+t6BUD4HWsjphmnnTN/NJ0H+T9qE82h3QyIEjB8u4wDRvXv
+         TmQQzzLY1LoimL7k62XqxZdvVuYe1DJdcQnUWug3TnoxaZBbgRHfY5Ao2eh66lQJA7C8
+         b6hmgTVTezXrRsPkaTjMMlOKuHgCtF8d2II8PcVUjaeD3Bqfa+RmFImFK/uhx+r6fYiu
+         ZW3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729618284; x=1730223084;
+        d=1e100.net; s=20230601; t=1729618287; x=1730223087;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q2lIQmRoJAPcxBHPZc9OawDV+vOklIH/TcpOqXgiCgo=;
-        b=Wn1AonOxiPwNlV+f2qVWcnB5/xGGKOqhIk/FgHENn9GNO33IhsTvkkUdyVJJYmY7q7
-         ZUX8kKBwRrMbj5t2oYA8pIV2sznJir8t07nL62/Up0SNW/jA0SZbji4Dw6xcnaNY4pHn
-         haXBPzRdbNjktAONQ3uw3Mk2MLo7B9IBhU4cIcUelX8W6PltAkVoGMr9ApesCGzgqiR/
-         HMnFNAbGYp7gU7WLFXnQiFhry3NEB+uaZRC/X8x7767puHh3xzHf1C8TftwIT4AxCbNT
-         1IqCDMhwn1h8RgprTsG4tl+46OetHEwInsLScP9sJ0MiLOsc5dWzexTgJbr7AY79wcG5
-         4m+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUjw80A+JcDJ64Xt5rJc3k84dR1UiXdwcR5bssbA8wyOPpEf6ky8cCTIISBB9RuyG3Xf8E3//9MknpObr2bmfc8@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIJouYJxBapHvQ2n+CXyQfyj+98G++jH31BoH0PCIU4MFciZh9
-	rU4TffLz3PriYggHXDUmIIkKVKxjp7wYmwEQVsnVuFV34OieTRIYnoZEGatff6RkYh2dTFw+Ld3
-	LR/MLHw==
-X-Google-Smtp-Source: AGHT+IGzmwekM0FkphwepMJvsOqlkRGtCfnNkqk3W7pCbVKQLK6M3uitUSkN44V5hE7kzuyq8IwCiMDHpmhT
+        bh=4RCKTfa55Bgazupu7nQwlQJBbYx0nTCBpL94lBi/7F4=;
+        b=FBXdCB06EY2LY0Lb6zKymk+MLYeKKPqC1vMiWlUXTj+vPdR95zYWK3aHdNqVeeA3wY
+         zZjv2iHKRaS2LjpNIUC3cJ2IdihiwnTWZ6XJg8f3pyHOO1FFwtoORBYB3nQWxqqMl67y
+         Qh6oL/lcwKikLWSZrnJ2a9eghgDas+jLkyVcWFpKK+eUwuueJP7OcaEsI0wjfMW5Pg8x
+         0L9uMCbe7xNWFIMgYVhVTIfdpm3hXddJt8sIWl+6+w5qqMCTOgicSB3emW78vxVjcCUI
+         cUZfz0+uRmvFpxMtAWsqWkqJhHMh9xG6BLiqRWo1v+kT8u/+vyIEKcnzMXQWh0+gPTDS
+         cZIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpnkdfMFmzpG2OtTBbNGxBvDbvDjIAU95GdpX+O/C8D4UIwnjhD4npxip8OaVm2ZHMnnXrwbE+wY7sokqAdUZV@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGFY9rQiF4zeo9zLU1LYPugzYJ+gYsb5qZvYkUoztfnerQgcjd
+	xdgTt2D8pgpdNRCvYosQldDHqu2HXKkgaOdK/hKGS3iKoy2gXOWzOBeiiXoyUK1B/BBPqVCfnGw
+	Tflz9Tw==
+X-Google-Smtp-Source: AGHT+IELK1cabkM9jyDLWipM07rBPcwjibrm8lK+0QxhvWjalP/V3OW1tr82/CblTbowpRmugUTYhUZLFi7Y
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:57ba:88e0:aaf6:282])
- (user=irogers job=sendgmr) by 2002:a05:690c:4783:b0:6db:c3b8:c4ce with SMTP
- id 00721157ae682-6e5bfd8b0edmr535057b3.7.1729618284520; Tue, 22 Oct 2024
- 10:31:24 -0700 (PDT)
-Date: Tue, 22 Oct 2024 10:30:13 -0700
+ (user=irogers job=sendgmr) by 2002:a25:d350:0:b0:e28:fc1b:66bb with SMTP id
+ 3f1490d57ef6-e2bb158a800mr8674276.6.1729618286412; Tue, 22 Oct 2024 10:31:26
+ -0700 (PDT)
+Date: Tue, 22 Oct 2024 10:30:14 -0700
 In-Reply-To: <20241022173015.437550-1-irogers@google.com>
-Message-Id: <20241022173015.437550-16-irogers@google.com>
+Message-Id: <20241022173015.437550-17-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241022173015.437550-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
-Subject: [PATCH v3 15/16] perf build: Remove test library from python shared object
+Subject: [PATCH v3 16/16] perf python: Add parse_events function
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,32 +76,62 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-With the attr.c code moved to a shell test, there is no need to link
-the test code into the python dso to avoid a missing reference to
-test_attr__open. Drop the test code from the python library.
-
-With the bench and test code removed from the python library on my x86
-debian derived laptop the python library is reduced in size by 508,712
-bytes or nearly 5%.
+Add basic parse_events function that takes a string and returns an
+evlist.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Makefile.perf | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/python.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index e54c6953cf02..957b25322786 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -487,7 +487,7 @@ endif
- EXTLIBS := $(call filter-out,$(EXCLUDE_EXTLIBS),$(EXTLIBS))
- LIBS = -Wl,--whole-archive $(PERFLIBS) $(EXTRA_PERFLIBS) -Wl,--no-whole-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 6e2ff0076daa..ec37f887db43 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -1201,6 +1201,30 @@ static PyObject *pyrf__tracepoint(struct pyrf_evsel *pevsel,
+ #endif // HAVE_LIBTRACEEVENT
+ }
  
--PERFLIBS_PY := $(call filter-out,$(LIBPERF_BENCH),$(PERFLIBS))
-+PERFLIBS_PY := $(call filter-out,$(LIBPERF_BENCH) $(LIBPERF_TEST),$(PERFLIBS))
- LIBS_PY = -Wl,--whole-archive $(PERFLIBS_PY) $(EXTRA_PERFLIBS) -Wl,--no-whole-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
++static PyObject *pyrf__parse_events(PyObject *self, PyObject *args)
++{
++	const char *input;
++	struct pyrf_evlist *pevlist;
++	struct parse_events_error err;
++
++	if (!PyArg_ParseTuple(args, "s", &input))
++		return NULL;
++
++	pevlist = PyObject_New(struct pyrf_evlist, &pyrf_evlist__type);
++	if (!pevlist)
++		return NULL;
++
++	parse_events_error__init(&err);
++	memset(&pevlist->evlist, 0, sizeof(pevlist->evlist));
++	evlist__init(&pevlist->evlist, NULL, NULL);
++	if (parse_events(&pevlist->evlist, input, &err)) {
++		parse_events_error__print(&err, input);
++		PyErr_SetFromErrno(PyExc_OSError);
++		return NULL;
++	}
++	return (PyObject *)pevlist;
++}
++
+ static PyMethodDef perf__methods[] = {
+ 	{
+ 		.ml_name  = "tracepoint",
+@@ -1208,6 +1232,12 @@ static PyMethodDef perf__methods[] = {
+ 		.ml_flags = METH_VARARGS | METH_KEYWORDS,
+ 		.ml_doc	  = PyDoc_STR("Get tracepoint config.")
+ 	},
++	{
++		.ml_name  = "parse_events",
++		.ml_meth  = (PyCFunction) pyrf__parse_events,
++		.ml_flags = METH_VARARGS,
++		.ml_doc	  = PyDoc_STR("Parse a string of events and return an evlist.")
++	},
+ 	{ .ml_name = NULL, }
+ };
  
- export INSTALL SHELL_PATH
 -- 
 2.47.0.163.g1226f6d8fa-goog
 
