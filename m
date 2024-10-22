@@ -1,178 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C197E3232;
-	Tue, 22 Oct 2024 06:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF1F152160;
+	Tue, 22 Oct 2024 07:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729579467; cv=none; b=Zq13bnH/K23IdWr97EViALkjMdcs/bK+d+MUlBRmKBWnsyh8EgLQMfMtMVi9Yt+imNBAOVfGzR6cWy891VjtkoLBHuVh3FqYoTOyGHZFDodq0DwLvKpun2TrvWwoNRiF81nxH3xc3wj86Gv2V1FVr091+MtzWUAxezL4644591c=
+	t=1729582950; cv=none; b=kr2mapSr8H3SWQoQYanFEb8wRjLLDDlbnC4xTvylsZSBdAwRWNfhtdjRr+WNOu4y6ZJv2gNJ9+ekP8bS6mEdXj9s8HqiG0cZWO1iyQbvRY+wsrFy4qlrCoawMMH5Ljy3Mu2NCnDwkH87cvZK15CqFhjV9qR2BycdhFp8HEWZUIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729579467; c=relaxed/simple;
-	bh=WHYtqEj6eKwKaQm6D/1FwTR37a31xmIR32wf+Ihmaz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D0VSCvdv51SMZZmNgjfdNM+ukPpz1GbM/yyE5zoR4E2klv3f7FmlgWVRr472n6AvuY/90LQBQ/+o1+bC58RIo4PgkeCXw+hr6cbc2slwRnb9pYpwyNmWcI5wnwGLtNuR7sA5HyW5LFPuMrriH+uu7wi2z/SbpHSCmto/eAWkao8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFnAsAeE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFnAsAeE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83B39C4CEC3;
-	Tue, 22 Oct 2024 06:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729579467;
-	bh=WHYtqEj6eKwKaQm6D/1FwTR37a31xmIR32wf+Ihmaz8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YFnAsAeEdY6SyMiSAgYxoAoT9xjguXn1VTQ+mZRPDFcIhyxr2cqnp3IAHLeryjOuT
-	 OEEQScV+pbQNH6bdn5UEgv+Oqn8XYHU3H+12DGOHjUXPiY8O1EmwPLHHGWNiOrjGVi
-	 xH0+A5Puuxmtj4qo2EyxpU7awfwSUdBVTOaAqAZkg2ObAyb5epWtn4Du4w7pID89f1
-	 X5dCclHvHbuF77Yel2iZ+g4KjMezOCAKqTGiaca5xXK0asrtcCbYRdtKrQaPdp87Up
-	 Y2vUX8hEYgItEBR4BRkBF+sfgW7dZrmB3hBEFisCi8vtbbYujDlyz5rQm8mklxy8Ww
-	 KDAUafJmv6XpA==
-Date: Mon, 21 Oct 2024 23:44:25 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 13/16] perf bench: Remove reference to cmd_inject
-Message-ID: <ZxdJyRpCv7dmmin9@google.com>
-References: <20241016042415.7552-1-irogers@google.com>
- <20241016042415.7552-14-irogers@google.com>
+	s=arc-20240116; t=1729582950; c=relaxed/simple;
+	bh=Sns24Kn2/dehSLQImOAaNKLYhQYfH0psondXhJgNDFw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ny6f9V825piJJPKTsh9bGD+wwZpP2770zpyXrh2sSuZ8Ag/eo1cQT+/Q5wFwv0FYmgyBuLco37zGctJpFLO/CIEGFIcdzlBCc+f7b2JLyYDkgE2HpzpFB70FWjNvbc5LdPcX9j/n3L+5ClwR+8YxHbqMnapFo8zFDq8VeVzro9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4XXkdS2Xz2z20qWg;
+	Tue, 22 Oct 2024 15:41:32 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id D7580140361;
+	Tue, 22 Oct 2024 15:42:22 +0800 (CST)
+Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
+ (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Tue, 22 Oct
+ 2024 15:42:22 +0800
+From: Liao Chang <liaochang1@huawei.com>
+To: <andrii.nakryiko@gmail.com>, <mhiramat@kernel.org>, <oleg@redhat.com>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
+Subject: [PATCH v4 0/2] uprobes: Improve scalability by reducing the contention on siglock
+Date: Tue, 22 Oct 2024 07:31:39 +0000
+Message-ID: <20241022073141.3291245-1-liaochang1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241016042415.7552-14-irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On Tue, Oct 15, 2024 at 09:24:12PM -0700, Ian Rogers wrote:
-> Avoid `perf bench internals inject-build-id` referencing the
-> cmd_inject sub-command that requires perf-bench to backward reference
-> internals of builtins. Replace the reference to cmd_inject with a call
-> to main. To avoid python.c needing to link with something providing
-> main, drop the libperf-bench library from the python shared object.
+The profiling result of BPF selftest on ARM64 platform reveals the
+significant contention on the current->sighand->siglock is the
+scalability bottleneck. The reason is also very straightforward that all
+producer threads of benchmark have to contend the spinlock mentioned to
+resume the TIF_SIGPENDING bit in thread_info that might be removed in
+uprobe_deny_signal().
 
-Looks like a clever trick!  But I guess by removing libperf-bench from
-the python object, you can remove the reference to cmd_inject, right?
+The contention on current->sighand->siglock is unnecessary, this series
+remove them thoroughly. I've use the script developed by Andrii in [1]
+to run benchmark. The CPU used was Kunpeng916 (Hi1616), 4 NUMA nodes,
+64 cores@2.4GHz running the kernel on next tree + the optimization in
+[2] for get_xol_insn_slot().
 
-Thanks,
-Namhyung
+before-opt
+----------
+uprobe-nop      ( 1 cpus):    0.907 ± 0.003M/s  (  0.907M/s/cpu)
+uprobe-nop      ( 2 cpus):    1.676 ± 0.008M/s  (  0.838M/s/cpu)
+uprobe-nop      ( 4 cpus):    3.210 ± 0.003M/s  (  0.802M/s/cpu)
+uprobe-nop      ( 8 cpus):    4.457 ± 0.003M/s  (  0.557M/s/cpu)
+uprobe-nop      (16 cpus):    3.724 ± 0.011M/s  (  0.233M/s/cpu)
+uprobe-nop      (32 cpus):    2.761 ± 0.003M/s  (  0.086M/s/cpu)
+uprobe-nop      (64 cpus):    1.293 ± 0.015M/s  (  0.020M/s/cpu)
 
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Makefile.perf          |  7 +++++--
->  tools/perf/bench/inject-buildid.c | 13 +++++++------
->  tools/perf/util/python.c          |  6 ------
->  3 files changed, 12 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 105f734b6820..e54c6953cf02 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -487,6 +487,9 @@ endif
->  EXTLIBS := $(call filter-out,$(EXCLUDE_EXTLIBS),$(EXTLIBS))
->  LIBS = -Wl,--whole-archive $(PERFLIBS) $(EXTRA_PERFLIBS) -Wl,--no-whole-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
->  
-> +PERFLIBS_PY := $(call filter-out,$(LIBPERF_BENCH),$(PERFLIBS))
-> +LIBS_PY = -Wl,--whole-archive $(PERFLIBS_PY) $(EXTRA_PERFLIBS) -Wl,--no-whole-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
-> +
->  export INSTALL SHELL_PATH
->  
->  ### Build rules
-> @@ -735,9 +738,9 @@ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
->  # Create python binding output directory if not already present
->  $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
->  
-> -$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): util/python.c util/setup.py $(PERFLIBS)
-> +$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): util/python.c util/setup.py $(PERFLIBS_PY)
->  	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
-> -        CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS) $(LIBS)' \
-> +        CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS) $(LIBS_PY)' \
->  	  $(PYTHON_WORD) util/setup.py \
->  	  --quiet build_ext; \
->  	cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/
-> diff --git a/tools/perf/bench/inject-buildid.c b/tools/perf/bench/inject-buildid.c
-> index a759eb2328be..f55c07e4be94 100644
-> --- a/tools/perf/bench/inject-buildid.c
-> +++ b/tools/perf/bench/inject-buildid.c
-> @@ -52,7 +52,7 @@ struct bench_dso {
->  static int nr_dsos;
->  static struct bench_dso *dsos;
->  
-> -extern int cmd_inject(int argc, const char *argv[]);
-> +extern int main(int argc, const char **argv);
->  
->  static const struct option options[] = {
->  	OPT_UINTEGER('i', "iterations", &iterations,
-> @@ -294,7 +294,7 @@ static int setup_injection(struct bench_data *data, bool build_id_all)
->  
->  	if (data->pid == 0) {
->  		const char **inject_argv;
-> -		int inject_argc = 2;
-> +		int inject_argc = 3;
->  
->  		close(data->input_pipe[1]);
->  		close(data->output_pipe[0]);
-> @@ -318,15 +318,16 @@ static int setup_injection(struct bench_data *data, bool build_id_all)
->  		if (inject_argv == NULL)
->  			exit(1);
->  
-> -		inject_argv[0] = strdup("inject");
-> -		inject_argv[1] = strdup("-b");
-> +		inject_argv[0] = strdup("perf");
-> +		inject_argv[1] = strdup("inject");
-> +		inject_argv[2] = strdup("-b");
->  		if (build_id_all)
-> -			inject_argv[2] = strdup("--buildid-all");
-> +			inject_argv[3] = strdup("--buildid-all");
->  
->  		/* signal that we're ready to go */
->  		close(ready_pipe[1]);
->  
-> -		cmd_inject(inject_argc, inject_argv);
-> +		main(inject_argc, inject_argv);
->  
->  		exit(0);
->  	}
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 91fd444615cd..c52da509ae58 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -19,7 +19,6 @@
->  #include "util/kwork.h"
->  #include "util/sample.h"
->  #include <internal/lib.h>
-> -#include "../builtin.h"
->  
->  #define _PyUnicode_FromString(arg) \
->    PyUnicode_FromString(arg)
-> @@ -1309,8 +1308,3 @@ struct kwork_work *perf_kwork_add_work(struct perf_kwork *kwork __maybe_unused,
->  {
->  	return NULL;
->  }
-> -
-> -int cmd_inject(int argc __maybe_unused, const char *argv[] __maybe_unused)
-> -{
-> -	return -1;
-> -}
-> -- 
-> 2.47.0.rc1.288.g06298d1525-goog
-> 
+uprobe-push     ( 1 cpus):    0.883 ± 0.001M/s  (  0.883M/s/cpu)
+uprobe-push     ( 2 cpus):    1.642 ± 0.005M/s  (  0.821M/s/cpu)
+uprobe-push     ( 4 cpus):    3.086 ± 0.002M/s  (  0.771M/s/cpu)
+uprobe-push     ( 8 cpus):    3.390 ± 0.003M/s  (  0.424M/s/cpu)
+uprobe-push     (16 cpus):    2.652 ± 0.005M/s  (  0.166M/s/cpu)
+uprobe-push     (32 cpus):    2.713 ± 0.005M/s  (  0.085M/s/cpu)
+uprobe-push     (64 cpus):    1.313 ± 0.009M/s  (  0.021M/s/cpu)
+
+uprobe-ret      ( 1 cpus):    1.774 ± 0.000M/s  (  1.774M/s/cpu)
+uprobe-ret      ( 2 cpus):    3.350 ± 0.001M/s  (  1.675M/s/cpu)
+uprobe-ret      ( 4 cpus):    6.604 ± 0.000M/s  (  1.651M/s/cpu)
+uprobe-ret      ( 8 cpus):    6.706 ± 0.005M/s  (  0.838M/s/cpu)
+uprobe-ret      (16 cpus):    5.231 ± 0.001M/s  (  0.327M/s/cpu)
+uprobe-ret      (32 cpus):    5.743 ± 0.003M/s  (  0.179M/s/cpu)
+uprobe-ret      (64 cpus):    4.726 ± 0.016M/s  (  0.074M/s/cpu)
+
+after-opt
+---------
+uprobe-nop      ( 1 cpus):    0.985 ± 0.002M/s  (  0.985M/s/cpu)
+uprobe-nop      ( 2 cpus):    1.773 ± 0.005M/s  (  0.887M/s/cpu)
+uprobe-nop      ( 4 cpus):    3.304 ± 0.001M/s  (  0.826M/s/cpu)
+uprobe-nop      ( 8 cpus):    5.328 ± 0.002M/s  (  0.666M/s/cpu)
+uprobe-nop      (16 cpus):    6.475 ± 0.002M/s  (  0.405M/s/cpu)
+uprobe-nop      (32 cpus):    4.831 ± 0.082M/s  (  0.151M/s/cpu)
+uprobe-nop      (64 cpus):    2.564 ± 0.053M/s  (  0.040M/s/cpu)
+
+uprobe-push     ( 1 cpus):    0.964 ± 0.001M/s  (  0.964M/s/cpu)
+uprobe-push     ( 2 cpus):    1.766 ± 0.002M/s  (  0.883M/s/cpu)
+uprobe-push     ( 4 cpus):    3.290 ± 0.009M/s  (  0.823M/s/cpu)
+uprobe-push     ( 8 cpus):    4.670 ± 0.002M/s  (  0.584M/s/cpu)
+uprobe-push     (16 cpus):    5.197 ± 0.004M/s  (  0.325M/s/cpu)
+uprobe-push     (32 cpus):    5.068 ± 0.161M/s  (  0.158M/s/cpu)
+uprobe-push     (64 cpus):    2.605 ± 0.026M/s  (  0.041M/s/cpu)
+
+uprobe-ret      ( 1 cpus):    1.833 ± 0.001M/s  (  1.833M/s/cpu)
+uprobe-ret      ( 2 cpus):    3.384 ± 0.003M/s  (  1.692M/s/cpu)
+uprobe-ret      ( 4 cpus):    6.677 ± 0.004M/s  (  1.669M/s/cpu)
+uprobe-ret      ( 8 cpus):    6.854 ± 0.005M/s  (  0.857M/s/cpu)
+uprobe-ret      (16 cpus):    6.508 ± 0.006M/s  (  0.407M/s/cpu)
+uprobe-ret      (32 cpus):    5.793 ± 0.009M/s  (  0.181M/s/cpu)
+uprobe-ret      (64 cpus):    4.743 ± 0.016M/s  (  0.074M/s/cpu)
+
+Above benchmark results demonstrates a obivious improvement in the
+scalability of trig-uprobe-nop and trig-uprobe-push, the peak throughput
+of which are from 4.5M/s to 6.4M/s and 3.3M/s to 5.1M/s individually.
+
+v4->v3:
+1. Rebase v3 [3] to the lateset tip/perf/core.
+2. Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+3. Acked-by: Oleg Nesterov <oleg@redhat.com>
+
+v3->v2:
+Renaming the flag in [2/2], s/deny_signal/signal_denied/g.
+
+v2->v1:
+Oleg pointed out the _DENY_SIGNAL will be replaced by _ACK upon the
+completion of singlestep which leads to handle_singlestep() has no
+chance to restore the removed TIF_SIGPENDING [3] and some case in
+question. So this revision proposes to use a flag in uprobe_task to
+track the denied TIF_SIGPENDING instead of new UPROBE_SSTEP state.
+
+[1] https://lore.kernel.org/all/20240731214256.3588718-1-andrii@kernel.org
+[2] https://lore.kernel.org/all/20240727094405.1362496-1-liaochang1@huawei.com
+[3] https://lore.kernel.org/all/20240815014629.2685155-1-liaochang1@huawei.com/ 
+
+Liao Chang (2):
+  uprobes: Remove redundant spinlock in uprobe_deny_signal()
+  uprobes: Remove the spinlock within handle_singlestep()
+
+ include/linux/uprobes.h |  1 +
+ kernel/events/uprobes.c | 10 +++++-----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+-- 
+2.34.1
+
