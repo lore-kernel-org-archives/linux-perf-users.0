@@ -1,177 +1,85 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3282933DF;
-	Tue, 22 Oct 2024 00:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB34132124;
+	Tue, 22 Oct 2024 02:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729556994; cv=none; b=F8rZwaGWWzIyCXw56hmEHq+EmbTO7Wgi4ucyOYvcmZAEqGpNkTZRGDRhlh7qLA5crzjhsN4KVYvnJSOFKnMph476lbqv+yUW8MlMya9IKQzjh62cdMN1+o68HJETFy0asR5c5WjZjpSIXWNe3ncpiv8gqitvlm91vhIAIIYVF3g=
+	t=1729563748; cv=none; b=UqaqIgq/WG8bv5PWkvwvali5ejltA1yVAQ7Z2Y5U7+sp/iICnKIgY/G1b78M4JpGox+S9GRVXP1Y3vCkWlaFralCerMOday5mejdPkMCNYxaXAgoGYa0yL7PpLAm8Z2y0tZnn5bhIx3xo7SWcRf8sQO4eWkeYYgduyjviFryMJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729556994; c=relaxed/simple;
-	bh=0trWI6aKnWXJRIWmRiUZ02jhbTAEw4gb5S43ZDWA2Yo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ntxQwDF+fojDGiwpvi2Ue13JJv2lrkhOept37165dHkUuzsbOMWXLMKZI4R3HBBWWD5ExkQpiKP1s6+VdLS8h6OqJVqSDUUtdz/TCozffyCB+X0aZZSrdZVn1Hzkn1IQ/rojd63SSp5rz0PFelW7Syo+LY/eWW4KR1QQfKK6l+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=ZyfV10VO; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1729563748; c=relaxed/simple;
+	bh=cvOmKRaGaYic+n9hOuxtcNdHZWL09dWwyvl2zywQ6YA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=f+Ocb1HJ7YkU195LIm+OlNhMAPr5RKrO+tEKiKAYQazUYQhJpDozHK7fuvBuI5jx1f5r6rsmUaZg8KTcXlFJXH8hdMyzytT41zDyRW0iPiEGyy/9lspdt2mwGvMquRPvbve230vc9FcVMuekP1jBEYR+u57ur16n+C4kejdmQIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vBjvOxRG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="ZyfV10VO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=l86PKJYHxpCVury3Aip81gz2MyfrzRyWfLwP5FGx1m4=; b=ZyfV10VOpcsErRx3
-	dclNRyJhOtR67Qv2rRG0dLLfh7DfmeOKfPMdT0wzG7Q2VPFc8YMxNl/24qxcp5UbE76MwCdS3nvcc
-	HVh5U1ZgcM+cw+J2whjEe4Bs08NC3DeV9U6iYk9rWdhX81kN+9sbG0iG6eu5Ml1rbeUlqsIMA0lIV
-	ypo+dnF6vsdZTt79HgtPHAxOUtHTAeSyoGMQLV0A2wCkTo6gYPgbLt03EqJPD73RVtOkWJ1Fs2H61
-	F4m63XY6RrrugX2z5yJNLAyskjM1PA+/OhYkCFx4rjFbs4ShYxQK9swCP9QmN9CLNh7MhnRCMcbWE
-	T+j+Ns+vrKjset+x8w==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1t32mL-00CePD-1l;
-	Tue, 22 Oct 2024 00:29:41 +0000
-From: linux@treblig.org
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] perf: Remove unused del_perf_probe_events
-Date: Tue, 22 Oct 2024 01:29:40 +0100
-Message-ID: <20241022002940.302946-1-linux@treblig.org>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vBjvOxRG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5B84C4CEC3;
+	Tue, 22 Oct 2024 02:22:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729563746;
+	bh=cvOmKRaGaYic+n9hOuxtcNdHZWL09dWwyvl2zywQ6YA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=vBjvOxRGdj9JZ0nSM7TA2sy0vRXPjqAC1D6zruQaiuk9dyPya31u1p8bAQmzZk3a3
+	 9x5nFBCwPdGYk4CRPzLkxQ4g8FMfpgm5/44kbrdG3SezFZL9tUN8wnJ+zpzhbEIfoZ
+	 EhFIEhRksSf1VbHTjvR7fr+1EHGkD7A3fbN0pTbgsxfWikGhu9a+/wItrxUO57uC29
+	 5j6cUda1NSV3q3sDWWwqCUtquUVqGhU7d2R/VnxYV84o85n3ujbbFAzHtO1Z8AP+nL
+	 CWELl1DIrHS379TaS08rbjd3VMdbSS9uIkkEFblzA54ArRR2MLiEUDWJ2lsEw+UIQP
+	 Njwqo4GA6PZGg==
+Date: Tue, 22 Oct 2024 11:22:22 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Liao Chang <liaochang1@huawei.com>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ mhiramat@kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Remove redundant spinlock in
+ uprobe_deny_signal
+Message-Id: <20241022112222.1edeeac3aee13714a53c217c@kernel.org>
+In-Reply-To: <20240731141231.GB16718@redhat.com>
+References: <20240731095017.1560516-1-liaochang1@huawei.com>
+	<20240731141231.GB16718@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Wed, 31 Jul 2024 16:12:32 +0200
+Oleg Nesterov <oleg@redhat.com> wrote:
 
-del_perf_probe_events() last use was removed by
-commit 3d6dfae88917 ("perf parse-events: Remove BPF event support")
+> On 07/31, Liao Chang wrote:
+> >
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -1979,9 +1979,7 @@ bool uprobe_deny_signal(void)
+> >  	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
+> >  
+> >  	if (task_sigpending(t)) {
+> > -		spin_lock_irq(&t->sighand->siglock);
+> >  		clear_tsk_thread_flag(t, TIF_SIGPENDING);
+> > -		spin_unlock_irq(&t->sighand->siglock);
+> 
+> Agreed, in this case ->siglock buys nothing, another signal can come
+> right after spin_unlock().
+> 
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> 
+> 
 
-Remove it.
+Looks good to me.
 
-It was the last user of probe_file__del_events, so remove it as well.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- tools/perf/util/probe-event.c | 35 -----------------------------------
- tools/perf/util/probe-event.h |  2 --
- tools/perf/util/probe-file.c  | 19 -------------------
- tools/perf/util/probe-file.h  |  1 -
- 4 files changed, 57 deletions(-)
+Peter, can you pick this?
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 698a92875374..e8e381bddded 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -3705,41 +3705,6 @@ void cleanup_perf_probe_events(struct perf_probe_event *pevs, int npevs)
- 	}
- }
- 
--int del_perf_probe_events(struct strfilter *filter)
--{
--	int ret, ret2, ufd = -1, kfd = -1;
--	char *str = strfilter__string(filter);
--
--	if (!str)
--		return -EINVAL;
--
--	/* Get current event names */
--	ret = probe_file__open_both(&kfd, &ufd, PF_FL_RW);
--	if (ret < 0)
--		goto out;
--
--	ret = probe_file__del_events(kfd, filter);
--	if (ret < 0 && ret != -ENOENT)
--		goto error;
--
--	ret2 = probe_file__del_events(ufd, filter);
--	if (ret2 < 0 && ret2 != -ENOENT) {
--		ret = ret2;
--		goto error;
--	}
--	ret = 0;
--
--error:
--	if (kfd >= 0)
--		close(kfd);
--	if (ufd >= 0)
--		close(ufd);
--out:
--	free(str);
--
--	return ret;
--}
--
- int show_available_funcs(const char *target, struct nsinfo *nsi,
- 			 struct strfilter *_filter, bool user)
- {
-diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
-index 4850e52f274e..61a5f4ff4e9c 100644
---- a/tools/perf/util/probe-event.h
-+++ b/tools/perf/util/probe-event.h
-@@ -167,8 +167,6 @@ void cleanup_perf_probe_events(struct perf_probe_event *pevs, int npevs);
- 
- struct strfilter;
- 
--int del_perf_probe_events(struct strfilter *filter);
--
- int show_perf_probe_event(const char *group, const char *event,
- 			  struct perf_probe_event *pev,
- 			  const char *module, bool use_stdout);
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index 3d50de3217d5..ec8ac242fedb 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -366,25 +366,6 @@ int probe_file__del_strlist(int fd, struct strlist *namelist)
- 	return ret;
- }
- 
--int probe_file__del_events(int fd, struct strfilter *filter)
--{
--	struct strlist *namelist;
--	int ret;
--
--	namelist = strlist__new(NULL, NULL);
--	if (!namelist)
--		return -ENOMEM;
--
--	ret = probe_file__get_events(fd, filter, namelist);
--	if (ret < 0)
--		goto out;
--
--	ret = probe_file__del_strlist(fd, namelist);
--out:
--	strlist__delete(namelist);
--	return ret;
--}
--
- /* Caller must ensure to remove this entry from list */
- static void probe_cache_entry__delete(struct probe_cache_entry *entry)
- {
-diff --git a/tools/perf/util/probe-file.h b/tools/perf/util/probe-file.h
-index 0dba88c0f5f0..c2bb6a5b9dcc 100644
---- a/tools/perf/util/probe-file.h
-+++ b/tools/perf/util/probe-file.h
-@@ -44,7 +44,6 @@ struct strlist *probe_file__get_namelist(int fd);
- struct strlist *probe_file__get_rawlist(int fd);
- int probe_file__add_event(int fd, struct probe_trace_event *tev);
- 
--int probe_file__del_events(int fd, struct strfilter *filter);
- int probe_file__get_events(int fd, struct strfilter *filter,
- 				  struct strlist *plist);
- int probe_file__del_strlist(int fd, struct strlist *namelist);
+Thanks,
+
 -- 
-2.47.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
