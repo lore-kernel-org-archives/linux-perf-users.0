@@ -1,114 +1,142 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266C31CB316
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 18:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247CB17C98;
+	Tue, 22 Oct 2024 18:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729620400; cv=none; b=RWJ4famc5PWEuwbXyu/vfd+en+2m4C0Gg05jaueTDg1JnvWlT+UXqZHVvL/r6gkZmDZPpwrDD7OErmHmVfgIAS8S+B/8xJrRHBY4UhMihfjfu2dt5UKk8s047UcQqVYVFCZWfSwnsPemzKeO4BlI4KvqEfRibusDVl02PjlIKp8=
+	t=1729621986; cv=none; b=rmAAHF73Wc8W0ECpgqjiCr1PHX4QqSpaQMo57JBm17rT9KX5NAV0TjMhieZlWSZjQFIvDCMPlpspm4m3M8f1+ePt3zbIwiqon++NNUQsLgOpXw+WQClKLcqueMz5DQlFrt6HG0w7CHM78ET1sN7sI4ZbcgNqDfyGzRKXbehmaOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729620400; c=relaxed/simple;
-	bh=raAc7l7+e6idjT0jvMkbeIhgwYBlvolRxU41kRdYBDY=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=rQP5CQYwIA/f4Hf/BOhV3MX5IiTod/0IVJrjnwtQ7SR9ftmCsng5Lm0OpuS5XLx29hylFuRDja9mN+JrRd/Jypf0ORtJNx/rkeHXJs7513s/q+hlLuxD4YBexjg4aBFM7EQqwvV/JUYuurZUpRkSHMgu4Es4QQSsWNkADI1MWBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vlP1q6VT; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1729621986; c=relaxed/simple;
+	bh=24yn3OFS2AZsp+QNzelAVzSZ8vU4Vf1mostOE7lH+eM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e+ZiOd8o5yibG95f/k8W6PgREDKj+xtQupVuRuN7AUR6c0xyiCE0jJvsRngMnDRkBANYRGJRhADwqAJu1fcbV0cVhAVF4cNQIyeAtYIPmIqPoy1VnqIrVMU1QVPKoL7UTWohK98VwqvmvDY7rIZ4q+KUi+g3BYcJ1YFtKVg6dnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uIY8ekuB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vlP1q6VT"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e355f1ff4bso106071287b3.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 11:06:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729620398; x=1730225198; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZE4khg3hVWn747RG5rCs/fiqdzgdZsOYLI35TpLPnqU=;
-        b=vlP1q6VTX1uOJ1p2NfIoBJD5jScMfTbWb4y9YJzDHhy7FwDuYWPvC2LQFnIkFmtoZD
-         YdnVxAOjQuPlPakj1O6nX9gXUSWbfGLcaVGzuQ/KecaGnKf8SVe3nTsIzF9kdwEpmSnT
-         O9YSgK9KjGZlHHoZKoB/45M+t/vSMfHqc1YqQXjhCQEkU2NWUnDEfS3gbQ8FG3L8Z4pz
-         3NTJ743l7xL18VUrzA9WRsVFJrImDcT+/CThB9aVfaFU9DZLbn7/iaO3nnVejfRKPHrx
-         17CwNru3t02YKr4DZkOb1ajs/ErgjdrobDeFr0aW4Yk4D+q7xeUcbp5V30WCnTRax0Kk
-         559g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729620398; x=1730225198;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZE4khg3hVWn747RG5rCs/fiqdzgdZsOYLI35TpLPnqU=;
-        b=IfPsyWquXaJdssqFUqOzN/cpBtRwXWYzBudTd4bOKviSzLmrjQlHjP2hp353wG0XGL
-         1U2HVJwoPeoY0+NVbamiFvGUX2+MtdkF+KYcw3+6D/KlrsXMjx4kf6vgoo2F3qAUmf3M
-         jBJfDFhmlQaY942CKnFH81J4itZRSpsZg48Vu1FcEMMfVAAVQsxjwyg1ZRRcBwQOFcrj
-         d/6KtL6WNYehUoWOnzA9ycjBssYEniJXnQxuwiVhOLaJQ/47+xDZhPuIna9ovkObLajS
-         fF/iO1bP/IfVJrSteqGbX8WJHEi8ejcMOeCT4KY1o+e4HLtr5JKEAoR63LcRB9hJi2kz
-         zrqg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQWEzTzMENZWvu0/znWXUVQKBt8w5PkXM1+ulrtcpoby9u7Jo1SPVehjZyOBJnRp5r7VfaI6OS+TtfnORl0bCY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx83OubI6J3oPOycea56H1JtEEE3ikkd5n01+oixVXKJ3UPjdkm
-	Xbd/xlJ6mOWfMfBzL/HMMzr4tKmZfHGtUcjRwfgr1ZGNQn7Ke/RTBcEJJCxE+2OMlDTHDn3HlSY
-	tf7J28Q==
-X-Google-Smtp-Source: AGHT+IFY42xpVIqwy/PLKWqYkV7Dh3ULqLd+brSMo2MMREjD/kH2QEjNWxekmpVPCZaO/0nWYg8m6558YIAF
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:57ba:88e0:aaf6:282])
- (user=irogers job=sendgmr) by 2002:a05:690c:6681:b0:62c:f976:a763 with SMTP
- id 00721157ae682-6e5bf61b030mr5277577b3.1.1729620398304; Tue, 22 Oct 2024
- 11:06:38 -0700 (PDT)
-Date: Tue, 22 Oct 2024 11:06:23 -0700
-In-Reply-To: <20241022180623.463131-1-irogers@google.com>
-Message-Id: <20241022180623.463131-6-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uIY8ekuB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C3E0C4CEC3;
+	Tue, 22 Oct 2024 18:33:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729621986;
+	bh=24yn3OFS2AZsp+QNzelAVzSZ8vU4Vf1mostOE7lH+eM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uIY8ekuBu6EGpDByeacwBvKaIs+/IfvWXCPWtLCmSX+6np6LqmsOvkjL23NcPFnOz
+	 NB6btTGM0gJI9D5w84sqroMhRqrAqo4jIrqzkddhQuTzTL5gHhHhzqKMlVND+GFxKc
+	 pCOA2dnIWNULlciSdDahpz7nU9cdwsPDs5cKdfekiQ8QxfqQBWpsgBjplbk58Cfp+L
+	 yup+QcY4G3Wq7BgLg0wJbARfw4QJCbiKc7eIVX0794Ro7zoNsZDhV+vjmN0A7pWqt+
+	 xxWDVzAngod994Gh0F3vzExRT+m5F5Qh+oJ66PQmLhcqH22w7JrQZPMyw1sHiDO4ht
+	 YlCR/jazJceEw==
+Date: Tue, 22 Oct 2024 15:33:00 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>, Howard Chu <howardchu95@gmail.com>,
+	Andrea Righi <andrea.righi@linux.dev>, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, james.clark@linaro.org,
+	alan.maguire@oracle.com
+Subject: Re: [PATCH v2 0/2] perf trace: Fix support for the new BPF feature
+ in clang 12
+Message-ID: <Zxfv3BupKqhi3zGV@x1>
+References: <20241011021403.4089793-1-howardchu95@gmail.com>
+ <Zw61TUe1V97dKWer@google.com>
+ <Zw7D9HXBanPLUO4G@x1>
+ <Zw7JgJc0LOwSpuvx@x1>
+ <Zw7SkmEaz730uVbL@x1>
+ <Zw8fqyCZNqSABMkM@google.com>
+ <Zw_MFwkejeWC2qbv@x1>
+ <ZxfbNJ6nKXzoEYVn@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241022180623.463131-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
-Subject: [PATCH v6 5/5] perf docs: Document tool and hwmon events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Yoshihiro Furudera <fj5100bi@fujitsu.com>, 
-	James Clark <james.clark@linaro.org>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	Howard Chu <howardchu95@gmail.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Changbin Du <changbin.du@huawei.com>, Ze Gao <zegao2021@gmail.com>, 
-	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZxfbNJ6nKXzoEYVn@google.com>
 
-Add a few paragraphs on tool and hwmon events.
+On Tue, Oct 22, 2024 at 10:04:52AM -0700, Namhyung Kim wrote:
+> Hi Arnaldo,
+> 
+> On Wed, Oct 16, 2024 at 11:22:15AM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Tue, Oct 15, 2024 at 07:06:35PM -0700, Namhyung Kim wrote:
+> > > Hi Arnaldo,
+> > > 
+> > > On Tue, Oct 15, 2024 at 05:37:38PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > On Tue, Oct 15, 2024 at 04:58:56PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > > So I'm trying adding extra bounds checking, marking the index as
+> > > > > volatile, adding compiler barriers, etc, all the fun with the verifier,
+> > > > > but got distracted with other stuff, coming back to this now.
+> > > >  
+> > > > > Ok, the following seems to do the trick:
+> > > >  
+> > > > > [acme@dell-per740-01 perf-tools]$ git diff
+> > > > > diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> > > > > index 3b30aa74a3ae..ef87a04ff8d0 100644
+> > > > > --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> > > > > +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> > > > > @@ -486,6 +486,7 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+> > > > >                                 augmented = true;
+> > > > >                 } else if (size < 0 && size >= -6) { /* buffer */
+> > > > >                         index = -(size + 1);
+> > > > > +                       index &= 7; // To satisfy the bounds checking with the verifier in some kernels
+> > > > >                         aug_size = args->args[index];
+> > > > >  
+> > > > >                         if (aug_size > TRACE_AUG_MAX_BUF)
+> > > > > 
+> > > > > I'll now test it without Howard's patch to see if it fixes the RHEL8 +
+> > > > > clang 17 case.
+> > > > 
+> > > > It works with this one-liner + the simplified patch from Howard and also
+> > > > on this other system (RHEL9), as well as with Fedora 40, it would be
+> > > > nice if someone could test with clang 16 and report back the version of
+> > > > the kernel tested as well as the distro name/release, that way I can try
+> > > > to get my hands on such as system and test there as well.
+> > > > 
+> > > > Its all at:
+> > > > 
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tmp.perf-tools
+> > > > 
+> > > > This is the current set of patches that when further tested will go to
+> > > > Linus for v6.12:
+> > > > 
+> > > > ⬢[acme@toolbox perf-tools]$ git log --oneline torvalds/master..
+> > > > ff14baa7a290bf42 (HEAD -> perf-tools, x1/perf-tools, perf-tools/tmp.perf-tools) perf trace augmented_raw_syscalls: Add more checks to pass the verifier
+> > > > 46180bec048aad85 perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
+> > > > 45d1aadac64869a2 perf build: Change the clang check back to 12.0.1
+> > > 
+> > > Wouldn't it be better to have this change after fixing the verifier
+> > > issues in the later commits?
+> > 
+> > I'm still testing it, this is a one-liner, so I think that the order in
+> > which the patches are applied isn't important. Also Howard's patch (the
+> > simplified one) doesn't clash with it.
+> 
+> I'm afraid if it'd break git bisect by allowing old clang versions
+> before the fix.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/perf-list.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+I can reorder the patches if you think it is interesting, but from the
+extended set of tests I'm performing on different kernel and clang
+version and in x86_64 and arm 64-bit, 32-bit and various distros, I'm
+not sure bisection is an option for BPF programs at this stage 8-)
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index 14621f39b375..d0c65fad419a 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -243,6 +243,21 @@ For accessing trace point events perf needs to have read access to
- /sys/kernel/tracing, even when perf_event_paranoid is in a relaxed
- setting.
- 
-+TOOL/HWMON EVENTS
-+-----------------
-+
-+Some events don't have an associated PMU instead reading values
-+available to software without perf_event_open. As these events don't
-+support sampling they can only really be read by tools like perf stat.
-+
-+Tool events provide times and certain system parameters. Examples
-+include duration_time, user_time, system_time and num_cpus_online.
-+
-+Hwmon events provide easy access to hwmon sysfs data typically in
-+/sys/class/hwmon. This information includes temperatures, fan speeds
-+and energy usage.
-+
-+
- TRACING
- -------
- 
--- 
-2.47.0.163.g1226f6d8fa-goog
+There, did it now it looks like this:
 
+⬢ [acme@toolbox perf-tools]$ git log --oneline torvalds/master..
+5d3a1b9ca3b1a059 (HEAD -> perf-tools) perf trace arm32: Fix iteration of syscall ids in syscalltbl->entries
+34d2358a24fb5963 perf trace augmented_raw_syscalls: Add more checks to pass the verifier
+cdb84c31bd2813de perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
+e5c1811c590c4312 perf build: Change the clang check back to 12.0.1
+39c6a356201ebbd7 perf trace: The return from 'write' isn't a pid
+ab8aaab874c4aa37 tools headers UAPI: Sync linux/const.h with the kernel headers
+⬢ [acme@toolbox perf-tools]$
+
+Is that what you meant?
+
+Thanks,
+
+- Arnaldo
