@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E4412C491;
-	Tue, 22 Oct 2024 06:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C197E3232;
+	Tue, 22 Oct 2024 06:44:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729579012; cv=none; b=ECci2gLagsi2Khqe+HEus69Bwy9CtE7euUkLYDP2g3FIg2UU8zQT4ToqQB9lpRVCeSPSpgM9oxlAcCqu4yfNi1wBbVVNWyrnaXFJMExub83U4IzbHFDVs4zgSrvI/EBxYzegirMN0/0Sksu0P4YblH6SnGhW+9IlAaR3v7i4Zvc=
+	t=1729579467; cv=none; b=Zq13bnH/K23IdWr97EViALkjMdcs/bK+d+MUlBRmKBWnsyh8EgLQMfMtMVi9Yt+imNBAOVfGzR6cWy891VjtkoLBHuVh3FqYoTOyGHZFDodq0DwLvKpun2TrvWwoNRiF81nxH3xc3wj86Gv2V1FVr091+MtzWUAxezL4644591c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729579012; c=relaxed/simple;
-	bh=kgom7S4dPlCjQ4rDpUTg5UtN9tz4unR1RuFCpmQYr4k=;
+	s=arc-20240116; t=1729579467; c=relaxed/simple;
+	bh=WHYtqEj6eKwKaQm6D/1FwTR37a31xmIR32wf+Ihmaz8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cgPWbCuCHx3SNiTLGnfOvhPH/SgxAHldy3nof84tI0XXaY5vHwx1zj1sNkPk0KLBd6IquQ0WehkR5gpKIpC0iGRwvML22WL/zFyVS3v61cvROcoGXTXKHrFFqvhUv/LcSyJrSGOWa2aX9/k+dxOdT3mpj9fFWZoHdUkr1EtRmzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZzTccQX1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=D0VSCvdv51SMZZmNgjfdNM+ukPpz1GbM/yyE5zoR4E2klv3f7FmlgWVRr472n6AvuY/90LQBQ/+o1+bC58RIo4PgkeCXw+hr6cbc2slwRnb9pYpwyNmWcI5wnwGLtNuR7sA5HyW5LFPuMrriH+uu7wi2z/SbpHSCmto/eAWkao8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFnAsAeE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZzTccQX1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18DE5C4CEC3;
-	Tue, 22 Oct 2024 06:36:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFnAsAeE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83B39C4CEC3;
+	Tue, 22 Oct 2024 06:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729579011;
-	bh=kgom7S4dPlCjQ4rDpUTg5UtN9tz4unR1RuFCpmQYr4k=;
+	s=k20201202; t=1729579467;
+	bh=WHYtqEj6eKwKaQm6D/1FwTR37a31xmIR32wf+Ihmaz8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZzTccQX1j4on01K8VyRf17gqFj0ymMUyxBZtwOyYPrdHSq0HsJatq0hT8InZv1D/H
-	 XDJxI4qjhWaUdMbZrODgqT88qZQJC82fZhGBBSDBNZwAzWVwsX9fNro1O3M2Kb20+G
-	 0OLhqf2uAq6XIP12BatWLl6opWnNsJbddsomfpvmd2LQoJeESVM20j5vFgj8CKU7XL
-	 BkRIerY3xAGdXfvy9S2KogKBL71a2LtrrTKRH7/z9sTubA4lRuxRFz0opMnEgH8xhE
-	 evgPcRP0wUt34nQ8L2RZGKBPyTI5DzFGgBIegQPxn1jbHBn6ppkp59StN4HG1cUrZN
-	 Xr6HzShE0XyYw==
-Date: Mon, 21 Oct 2024 23:36:49 -0700
+	b=YFnAsAeEdY6SyMiSAgYxoAoT9xjguXn1VTQ+mZRPDFcIhyxr2cqnp3IAHLeryjOuT
+	 OEEQScV+pbQNH6bdn5UEgv+Oqn8XYHU3H+12DGOHjUXPiY8O1EmwPLHHGWNiOrjGVi
+	 xH0+A5Puuxmtj4qo2EyxpU7awfwSUdBVTOaAqAZkg2ObAyb5epWtn4Du4w7pID89f1
+	 X5dCclHvHbuF77Yel2iZ+g4KjMezOCAKqTGiaca5xXK0asrtcCbYRdtKrQaPdp87Up
+	 Y2vUX8hEYgItEBR4BRkBF+sfgW7dZrmB3hBEFisCi8vtbbYujDlyz5rQm8mklxy8Ww
+	 KDAUafJmv6XpA==
+Date: Mon, 21 Oct 2024 23:44:25 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -48,11 +48,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Weilin Wang <weilin.wang@intel.com>,
 	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 12/16] perf lock: Move common lock contention code to
- new file
-Message-ID: <ZxdIAfwD7YzyRMI-@google.com>
+Subject: Re: [PATCH v2 13/16] perf bench: Remove reference to cmd_inject
+Message-ID: <ZxdJyRpCv7dmmin9@google.com>
 References: <20241016042415.7552-1-irogers@google.com>
- <20241016042415.7552-13-irogers@google.com>
+ <20241016042415.7552-14-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,186 +60,119 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241016042415.7552-13-irogers@google.com>
+In-Reply-To: <20241016042415.7552-14-irogers@google.com>
 
-On Tue, Oct 15, 2024 at 09:24:11PM -0700, Ian Rogers wrote:
-> Avoid references from util code to builtin-lock that require python
-> stubs. Move the functions and related variables to
-> util/lock-contention.c. Add max_stack_depth parameter to
-> match_callstack_filter to avoid sharing a global variable.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-lock.c             | 137 +--------------------
->  tools/perf/util/Build                 |   1 +
->  tools/perf/util/bpf_lock_contention.c |   2 +-
->  tools/perf/util/lock-contention.c     | 170 ++++++++++++++++++++++++++
->  tools/perf/util/lock-contention.h     |  37 ++----
->  tools/perf/util/python.c              |  17 ---
->  6 files changed, 185 insertions(+), 179 deletions(-)
->  create mode 100644 tools/perf/util/lock-contention.c
-> 
-[SNIP]
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 2a2f7780e595..ea2d9eced92e 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -121,6 +121,7 @@ perf-util-y += topdown.o
->  perf-util-y += iostat.o
->  perf-util-y += stream.o
->  perf-util-y += kvm-stat.o
-> +perf-util-y += lock-contention.o
->  perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
->  perf-util-$(CONFIG_AUXTRACE) += intel-pt-decoder/
->  perf-util-$(CONFIG_AUXTRACE) += intel-pt.o
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-> index 41a1ad087895..37e17c56f106 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
-> @@ -458,7 +458,7 @@ int lock_contention_read(struct lock_contention *con)
->  		if (con->save_callstack) {
->  			bpf_map_lookup_elem(stack, &key.stack_id, stack_trace);
->  
-> -			if (!match_callstack_filter(machine, stack_trace)) {
-> +			if (!match_callstack_filter(machine, stack_trace, con->max_stack)) {
->  				con->nr_filtered += data.count;
->  				goto next;
->  			}
-> diff --git a/tools/perf/util/lock-contention.c b/tools/perf/util/lock-contention.c
-> new file mode 100644
-> index 000000000000..841bb18b1f06
-> --- /dev/null
-> +++ b/tools/perf/util/lock-contention.c
-[SNIP]
-> +#ifndef HAVE_BPF_SKEL
-> +int lock_contention_prepare(struct lock_contention *con __maybe_unused)
-> +{
-> +	return 0;
-> +}
-> +
-> +int lock_contention_start(void)
-> +{
-> +	return 0;
-> +}
-> +
-> +int lock_contention_stop(void)
-> +{
-> +	return 0;
-> +}
-> +
-> +int lock_contention_finish(struct lock_contention *con __maybe_unused)
-> +{
-> +	return 0;
-> +}
-> +
-> +int lock_contention_read(struct lock_contention *con __maybe_unused)
-> +{
-> +	return 0;
-> +}
-> +#endif  /* !HAVE_BPF_SKEL */
+On Tue, Oct 15, 2024 at 09:24:12PM -0700, Ian Rogers wrote:
+> Avoid `perf bench internals inject-build-id` referencing the
+> cmd_inject sub-command that requires perf-bench to backward reference
+> internals of builtins. Replace the reference to cmd_inject with a call
+> to main. To avoid python.c needing to link with something providing
+> main, drop the libperf-bench library from the python shared object.
 
-Do we really need this part?  Why not leave it in the header file?
+Looks like a clever trick!  But I guess by removing libperf-bench from
+the python object, you can remove the reference to cmd_inject, right?
 
 Thanks,
 Namhyung
 
-
-> diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-> index 1a7248ff3889..bfa5c7db0a5d 100644
-> --- a/tools/perf/util/lock-contention.h
-> +++ b/tools/perf/util/lock-contention.h
-> @@ -67,10 +67,11 @@ struct lock_stat {
->   */
->  #define MAX_LOCK_DEPTH 48
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/Makefile.perf          |  7 +++++--
+>  tools/perf/bench/inject-buildid.c | 13 +++++++------
+>  tools/perf/util/python.c          |  6 ------
+>  3 files changed, 12 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 105f734b6820..e54c6953cf02 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -487,6 +487,9 @@ endif
+>  EXTLIBS := $(call filter-out,$(EXCLUDE_EXTLIBS),$(EXTLIBS))
+>  LIBS = -Wl,--whole-archive $(PERFLIBS) $(EXTRA_PERFLIBS) -Wl,--no-whole-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
 >  
-> -struct lock_stat *lock_stat_find(u64 addr);
-> -struct lock_stat *lock_stat_findnew(u64 addr, const char *name, int flags);
-> +/* based on kernel/lockdep.c */
-> +#define LOCKHASH_BITS		12
-> +#define LOCKHASH_SIZE		(1UL << LOCKHASH_BITS)
->  
-> -bool match_callstack_filter(struct machine *machine, u64 *callstack);
-> +extern struct hlist_head *lockhash_table;
->  
->  /*
->   * struct lock_seq_stat:
-> @@ -148,7 +149,14 @@ struct lock_contention {
->  	bool save_callstack;
->  };
->  
-> -#ifdef HAVE_BPF_SKEL
-> +struct option;
-> +int parse_call_stack(const struct option *opt, const char *str, int unset);
-> +bool needs_callstack(void);
+> +PERFLIBS_PY := $(call filter-out,$(LIBPERF_BENCH),$(PERFLIBS))
+> +LIBS_PY = -Wl,--whole-archive $(PERFLIBS_PY) $(EXTRA_PERFLIBS) -Wl,--no-whole-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
 > +
-> +struct lock_stat *lock_stat_find(u64 addr);
-> +struct lock_stat *lock_stat_findnew(u64 addr, const char *name, int flags);
-> +
-> +bool match_callstack_filter(struct machine *machine, u64 *callstack, int max_stack_depth);
+>  export INSTALL SHELL_PATH
 >  
->  int lock_contention_prepare(struct lock_contention *con);
->  int lock_contention_start(void);
-> @@ -156,25 +164,4 @@ int lock_contention_stop(void);
->  int lock_contention_read(struct lock_contention *con);
->  int lock_contention_finish(struct lock_contention *con);
+>  ### Build rules
+> @@ -735,9 +738,9 @@ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
+>  # Create python binding output directory if not already present
+>  $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
 >  
-> -#else  /* !HAVE_BPF_SKEL */
-> -
-> -static inline int lock_contention_prepare(struct lock_contention *con __maybe_unused)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline int lock_contention_start(void) { return 0; }
-> -static inline int lock_contention_stop(void) { return 0; }
-> -static inline int lock_contention_finish(struct lock_contention *con __maybe_unused)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline int lock_contention_read(struct lock_contention *con __maybe_unused)
-> -{
-> -	return 0;
-> -}
-> -
-> -#endif  /* HAVE_BPF_SKEL */
-> -
->  #endif  /* PERF_LOCK_CONTENTION_H */
+> -$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): util/python.c util/setup.py $(PERFLIBS)
+> +$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): util/python.c util/setup.py $(PERFLIBS_PY)
+>  	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
+> -        CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS) $(LIBS)' \
+> +        CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS) $(LIBS_PY)' \
+>  	  $(PYTHON_WORD) util/setup.py \
+>  	  --quiet build_ext; \
+>  	cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/
+> diff --git a/tools/perf/bench/inject-buildid.c b/tools/perf/bench/inject-buildid.c
+> index a759eb2328be..f55c07e4be94 100644
+> --- a/tools/perf/bench/inject-buildid.c
+> +++ b/tools/perf/bench/inject-buildid.c
+> @@ -52,7 +52,7 @@ struct bench_dso {
+>  static int nr_dsos;
+>  static struct bench_dso *dsos;
+>  
+> -extern int cmd_inject(int argc, const char *argv[]);
+> +extern int main(int argc, const char **argv);
+>  
+>  static const struct option options[] = {
+>  	OPT_UINTEGER('i', "iterations", &iterations,
+> @@ -294,7 +294,7 @@ static int setup_injection(struct bench_data *data, bool build_id_all)
+>  
+>  	if (data->pid == 0) {
+>  		const char **inject_argv;
+> -		int inject_argc = 2;
+> +		int inject_argc = 3;
+>  
+>  		close(data->input_pipe[1]);
+>  		close(data->output_pipe[0]);
+> @@ -318,15 +318,16 @@ static int setup_injection(struct bench_data *data, bool build_id_all)
+>  		if (inject_argv == NULL)
+>  			exit(1);
+>  
+> -		inject_argv[0] = strdup("inject");
+> -		inject_argv[1] = strdup("-b");
+> +		inject_argv[0] = strdup("perf");
+> +		inject_argv[1] = strdup("inject");
+> +		inject_argv[2] = strdup("-b");
+>  		if (build_id_all)
+> -			inject_argv[2] = strdup("--buildid-all");
+> +			inject_argv[3] = strdup("--buildid-all");
+>  
+>  		/* signal that we're ready to go */
+>  		close(ready_pipe[1]);
+>  
+> -		cmd_inject(inject_argc, inject_argv);
+> +		main(inject_argc, inject_argv);
+>  
+>  		exit(0);
+>  	}
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 35d84a96dbec..91fd444615cd 100644
+> index 91fd444615cd..c52da509ae58 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
-> @@ -18,7 +18,6 @@
->  #include "mmap.h"
+> @@ -19,7 +19,6 @@
 >  #include "util/kwork.h"
 >  #include "util/sample.h"
-> -#include "util/lock-contention.h"
 >  #include <internal/lib.h>
->  #include "../builtin.h"
+> -#include "../builtin.h"
 >  
-> @@ -1311,22 +1310,6 @@ struct kwork_work *perf_kwork_add_work(struct perf_kwork *kwork __maybe_unused,
+>  #define _PyUnicode_FromString(arg) \
+>    PyUnicode_FromString(arg)
+> @@ -1309,8 +1308,3 @@ struct kwork_work *perf_kwork_add_work(struct perf_kwork *kwork __maybe_unused,
+>  {
 >  	return NULL;
 >  }
->  
-> -bool match_callstack_filter(struct machine *machine __maybe_unused, u64 *callstack __maybe_unused)
-> -{
-> -	return false;
-> -}
 > -
-> -struct lock_stat *lock_stat_find(u64 addr __maybe_unused)
+> -int cmd_inject(int argc __maybe_unused, const char *argv[] __maybe_unused)
 > -{
-> -	return NULL;
+> -	return -1;
 > -}
-> -
-> -struct lock_stat *lock_stat_findnew(u64 addr __maybe_unused, const char *name __maybe_unused,
-> -				int flags __maybe_unused)
-> -{
-> -	return NULL;
-> -}
-> -
->  int cmd_inject(int argc __maybe_unused, const char *argv[] __maybe_unused)
->  {
->  	return -1;
 > -- 
 > 2.47.0.rc1.288.g06298d1525-goog
 > 
