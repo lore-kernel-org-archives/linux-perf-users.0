@@ -1,126 +1,246 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE821E495;
-	Tue, 22 Oct 2024 06:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E4412C491;
+	Tue, 22 Oct 2024 06:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729577942; cv=none; b=bCJZIHCzR/89jL2QPXW/vo+STiB3ODI/Y4W73rTh5B2lnOb+uJyEKtgPWnMczxTKCYDHeglhPUiQ0DM8kmJs4A5IV6bQ/gTvF/lWhCKbvoA3aDHpM35WDwJ9aCsqqgHp4VTYavaG5etBETIx6Rxvnuu4TwlrRb6sqBVIrY52yZ0=
+	t=1729579012; cv=none; b=ECci2gLagsi2Khqe+HEus69Bwy9CtE7euUkLYDP2g3FIg2UU8zQT4ToqQB9lpRVCeSPSpgM9oxlAcCqu4yfNi1wBbVVNWyrnaXFJMExub83U4IzbHFDVs4zgSrvI/EBxYzegirMN0/0Sksu0P4YblH6SnGhW+9IlAaR3v7i4Zvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729577942; c=relaxed/simple;
-	bh=tLiAn0BeLFoim24NopHHPe7F7XmfCPa+lJJMTWGqkMI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=piqLs/HJjdMZ59EUKWw8geKvJBI4b1zd6gzjioxN6R/wk48hkB+0AzN+cSM5WMUa/Et6FItpoB7VALh8CNaXem5LF44c7E5K4+9AM/bZLw3zFqZlxWArAhavEsW315i/OBtD7D0yRFbqNfgmW1zt3LFui0f30pDn1jhvknaZpVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4XXhmX0DYXz1jBJk;
-	Tue, 22 Oct 2024 14:17:32 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7C7B11A016C;
-	Tue, 22 Oct 2024 14:18:53 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Tue, 22 Oct 2024 14:18:52 +0800
-Message-ID: <04cecf07-85c0-4830-9f98-ffe96923d440@huawei.com>
-Date: Tue, 22 Oct 2024 14:18:52 +0800
+	s=arc-20240116; t=1729579012; c=relaxed/simple;
+	bh=kgom7S4dPlCjQ4rDpUTg5UtN9tz4unR1RuFCpmQYr4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cgPWbCuCHx3SNiTLGnfOvhPH/SgxAHldy3nof84tI0XXaY5vHwx1zj1sNkPk0KLBd6IquQ0WehkR5gpKIpC0iGRwvML22WL/zFyVS3v61cvROcoGXTXKHrFFqvhUv/LcSyJrSGOWa2aX9/k+dxOdT3mpj9fFWZoHdUkr1EtRmzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZzTccQX1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZzTccQX1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18DE5C4CEC3;
+	Tue, 22 Oct 2024 06:36:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729579011;
+	bh=kgom7S4dPlCjQ4rDpUTg5UtN9tz4unR1RuFCpmQYr4k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZzTccQX1j4on01K8VyRf17gqFj0ymMUyxBZtwOyYPrdHSq0HsJatq0hT8InZv1D/H
+	 XDJxI4qjhWaUdMbZrODgqT88qZQJC82fZhGBBSDBNZwAzWVwsX9fNro1O3M2Kb20+G
+	 0OLhqf2uAq6XIP12BatWLl6opWnNsJbddsomfpvmd2LQoJeESVM20j5vFgj8CKU7XL
+	 BkRIerY3xAGdXfvy9S2KogKBL71a2LtrrTKRH7/z9sTubA4lRuxRFz0opMnEgH8xhE
+	 evgPcRP0wUt34nQ8L2RZGKBPyTI5DzFGgBIegQPxn1jbHBn6ppkp59StN4HG1cUrZN
+	 Xr6HzShE0XyYw==
+Date: Mon, 21 Oct 2024 23:36:49 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 12/16] perf lock: Move common lock contention code to
+ new file
+Message-ID: <ZxdIAfwD7YzyRMI-@google.com>
+References: <20241016042415.7552-1-irogers@google.com>
+ <20241016042415.7552-13-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] uprobes: Improve scalability by reducing the
- contention on siglock
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Oleg Nesterov
-	<oleg@redhat.com>
-References: <20240815014629.2685155-1-liaochang1@huawei.com>
- <cfa88a34-617b-9a24-a648-55262a4e8a4c@huawei.com>
- <20240915151803.GD27726@redhat.com>
- <c5765c03-a584-3527-8ca4-54b646f49433@huawei.com>
- <CAEf4BzbWLf3K4C7GT58nXZ0FJfnoeCdLeRvKtwA76oM9Jdm7jg@mail.gmail.com>
- <e62dbebc-d366-453a-b305-67f50baeff05@huawei.com>
- <CAEf4BzYUdPJrgy1Dqinxk5ATPxA8WCTzQW3QcWobZpXjiYDZNw@mail.gmail.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4BzYUdPJrgy1Dqinxk5ATPxA8WCTzQW3QcWobZpXjiYDZNw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241016042415.7552-13-irogers@google.com>
 
-
-
-在 2024/10/22 1:18, Andrii Nakryiko 写道:
-> On Mon, Oct 21, 2024 at 3:43 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>
->>
->>
->> 在 2024/10/12 3:34, Andrii Nakryiko 写道:
->>> On Tue, Sep 17, 2024 at 7:05 PM Liao, Chang <liaochang1@huawei.com> wrote:
->>>>
->>>> Hi, Peter and Masami
->>>>
->>>> I look forward to your inputs on these series. Andrii has proven they are
->>>> hepful for uprobe scalability.
->>>>
->>>> Thanks.
->>>>
->>>> 在 2024/9/15 23:18, Oleg Nesterov 写道:
->>>>> Hi Liao,
->>>>>
->>>>> On 09/14, Liao, Chang wrote:
->>>>>>
->>>>>> Hi, Oleg
->>>>>>
->>>>>> Kindly ping.
->>>>>>
->>>>>> This series have been pending for a month. Is thre any issue I overlook?
->>>>>
->>>>> Well, I have already acked both patches.
->>>>>
->>>>> Please resend them to Peter/Masami, with my acks included.
->>>>>
->>>
->>> Hey Liao,
->>>
->>> I didn't see v4 from you for this patch set with Oleg's acks. Did you
->>> get a chance to rebase, add acks, and send the latest version?
->>
->> Andrii,
->>
->> I am ready to send v4 based on the latest kernel from next tree. Otherwise,
->> I haven't heard back from any of maintainers except Oleg, so I'm a bit unsure
->> if I should make further changes to this series.
->>
+On Tue, Oct 15, 2024 at 09:24:11PM -0700, Ian Rogers wrote:
+> Avoid references from util code to builtin-lock that require python
+> stubs. Move the functions and related variables to
+> util/lock-contention.c. Add max_stack_depth parameter to
+> match_callstack_filter to avoid sharing a global variable.
 > 
-> Let's just rebase to the latest tip/perf/core and resend with Oleg's
-> ack. Hopefully this should be enough.
-
-OK, the v4 is on the way with Masami's Acked-by.
-
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-lock.c             | 137 +--------------------
+>  tools/perf/util/Build                 |   1 +
+>  tools/perf/util/bpf_lock_contention.c |   2 +-
+>  tools/perf/util/lock-contention.c     | 170 ++++++++++++++++++++++++++
+>  tools/perf/util/lock-contention.h     |  37 ++----
+>  tools/perf/util/python.c              |  17 ---
+>  6 files changed, 185 insertions(+), 179 deletions(-)
+>  create mode 100644 tools/perf/util/lock-contention.c
 > 
->>>
->>>>> Oleg.
->>>>>
->>>>>
->>>>
->>>> --
->>>> BR
->>>> Liao, Chang
->>
->> --
->> BR
->> Liao, Chang
->>
+[SNIP]
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 2a2f7780e595..ea2d9eced92e 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -121,6 +121,7 @@ perf-util-y += topdown.o
+>  perf-util-y += iostat.o
+>  perf-util-y += stream.o
+>  perf-util-y += kvm-stat.o
+> +perf-util-y += lock-contention.o
+>  perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
+>  perf-util-$(CONFIG_AUXTRACE) += intel-pt-decoder/
+>  perf-util-$(CONFIG_AUXTRACE) += intel-pt.o
+> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+> index 41a1ad087895..37e17c56f106 100644
+> --- a/tools/perf/util/bpf_lock_contention.c
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -458,7 +458,7 @@ int lock_contention_read(struct lock_contention *con)
+>  		if (con->save_callstack) {
+>  			bpf_map_lookup_elem(stack, &key.stack_id, stack_trace);
+>  
+> -			if (!match_callstack_filter(machine, stack_trace)) {
+> +			if (!match_callstack_filter(machine, stack_trace, con->max_stack)) {
+>  				con->nr_filtered += data.count;
+>  				goto next;
+>  			}
+> diff --git a/tools/perf/util/lock-contention.c b/tools/perf/util/lock-contention.c
+> new file mode 100644
+> index 000000000000..841bb18b1f06
+> --- /dev/null
+> +++ b/tools/perf/util/lock-contention.c
+[SNIP]
+> +#ifndef HAVE_BPF_SKEL
+> +int lock_contention_prepare(struct lock_contention *con __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +
+> +int lock_contention_start(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +int lock_contention_stop(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +int lock_contention_finish(struct lock_contention *con __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +
+> +int lock_contention_read(struct lock_contention *con __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +#endif  /* !HAVE_BPF_SKEL */
 
--- 
-BR
-Liao, Chang
+Do we really need this part?  Why not leave it in the header file?
 
+Thanks,
+Namhyung
+
+
+> diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
+> index 1a7248ff3889..bfa5c7db0a5d 100644
+> --- a/tools/perf/util/lock-contention.h
+> +++ b/tools/perf/util/lock-contention.h
+> @@ -67,10 +67,11 @@ struct lock_stat {
+>   */
+>  #define MAX_LOCK_DEPTH 48
+>  
+> -struct lock_stat *lock_stat_find(u64 addr);
+> -struct lock_stat *lock_stat_findnew(u64 addr, const char *name, int flags);
+> +/* based on kernel/lockdep.c */
+> +#define LOCKHASH_BITS		12
+> +#define LOCKHASH_SIZE		(1UL << LOCKHASH_BITS)
+>  
+> -bool match_callstack_filter(struct machine *machine, u64 *callstack);
+> +extern struct hlist_head *lockhash_table;
+>  
+>  /*
+>   * struct lock_seq_stat:
+> @@ -148,7 +149,14 @@ struct lock_contention {
+>  	bool save_callstack;
+>  };
+>  
+> -#ifdef HAVE_BPF_SKEL
+> +struct option;
+> +int parse_call_stack(const struct option *opt, const char *str, int unset);
+> +bool needs_callstack(void);
+> +
+> +struct lock_stat *lock_stat_find(u64 addr);
+> +struct lock_stat *lock_stat_findnew(u64 addr, const char *name, int flags);
+> +
+> +bool match_callstack_filter(struct machine *machine, u64 *callstack, int max_stack_depth);
+>  
+>  int lock_contention_prepare(struct lock_contention *con);
+>  int lock_contention_start(void);
+> @@ -156,25 +164,4 @@ int lock_contention_stop(void);
+>  int lock_contention_read(struct lock_contention *con);
+>  int lock_contention_finish(struct lock_contention *con);
+>  
+> -#else  /* !HAVE_BPF_SKEL */
+> -
+> -static inline int lock_contention_prepare(struct lock_contention *con __maybe_unused)
+> -{
+> -	return 0;
+> -}
+> -
+> -static inline int lock_contention_start(void) { return 0; }
+> -static inline int lock_contention_stop(void) { return 0; }
+> -static inline int lock_contention_finish(struct lock_contention *con __maybe_unused)
+> -{
+> -	return 0;
+> -}
+> -
+> -static inline int lock_contention_read(struct lock_contention *con __maybe_unused)
+> -{
+> -	return 0;
+> -}
+> -
+> -#endif  /* HAVE_BPF_SKEL */
+> -
+>  #endif  /* PERF_LOCK_CONTENTION_H */
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 35d84a96dbec..91fd444615cd 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -18,7 +18,6 @@
+>  #include "mmap.h"
+>  #include "util/kwork.h"
+>  #include "util/sample.h"
+> -#include "util/lock-contention.h"
+>  #include <internal/lib.h>
+>  #include "../builtin.h"
+>  
+> @@ -1311,22 +1310,6 @@ struct kwork_work *perf_kwork_add_work(struct perf_kwork *kwork __maybe_unused,
+>  	return NULL;
+>  }
+>  
+> -bool match_callstack_filter(struct machine *machine __maybe_unused, u64 *callstack __maybe_unused)
+> -{
+> -	return false;
+> -}
+> -
+> -struct lock_stat *lock_stat_find(u64 addr __maybe_unused)
+> -{
+> -	return NULL;
+> -}
+> -
+> -struct lock_stat *lock_stat_findnew(u64 addr __maybe_unused, const char *name __maybe_unused,
+> -				int flags __maybe_unused)
+> -{
+> -	return NULL;
+> -}
+> -
+>  int cmd_inject(int argc __maybe_unused, const char *argv[] __maybe_unused)
+>  {
+>  	return -1;
+> -- 
+> 2.47.0.rc1.288.g06298d1525-goog
+> 
