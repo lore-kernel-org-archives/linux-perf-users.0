@@ -1,68 +1,68 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873164438B
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 17:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920991BD4FD
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 17:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729617354; cv=none; b=p496D9eNdFMRXPnrEJgLyYXqC1Aux7U1mx5FFE+4J7InJS0QddJ8BO/SLQIqfEddI4jYAps5yu+SL3DHfJtZGBBP7TIiGF4Tlu/TX7EWdh5MBJ3bZckarqlpsFEP1yQk/q68KuI/odeg6OEro2jfjeMZntzgbXDtBpqqB4Xz3KY=
+	t=1729617681; cv=none; b=ZltXJ59tAHiB0YQZZ7Jk7SRATYduJ6xkjqRF/rwsziLHvuhqQ4Ib+LZE51Ol7AUOk5PDCcj+hSbeFvy8ektMmlvimXaUzITWFsBRGjRsj042a/lVpTHuHWpOTxO3QwrE+V5ITgtfwNjaV5vcFt4b1dQOhNAjHWO7WiKjTeNjSWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729617354; c=relaxed/simple;
-	bh=z2ipP4my5QnyVNvAfHRwu9o0oRXT4HEUJ/+g6IV1ubU=;
+	s=arc-20240116; t=1729617681; c=relaxed/simple;
+	bh=b1CGs5gpBNBkiTDp2Q1qyoLrLUaK244tosMToWA6kRA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hf+uC72KSIYN9P31ZLSkqrY7XU1QTRzSqoTQK9E6vtsjLXrFrAiw2b42iMFVRFy0Y8MlC+32vZgNstSO21h1gokSzbBt0ufIabYc8L8wC3TzBvqbXMlkx1lmlMvpYu6nYyrwqVXn47q/PnTUL78xMW+MaMTrUEDE/uN/DLT2hOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FnzOozB0; arc=none smtp.client-ip=209.85.166.179
+	 To:Cc:Content-Type; b=YUc6Q4XFT6RXsci8lq1V1lXjm+0oTYgkfDS5d6mof3J32R0DSM/YzXLQXb120f2kqc3YNEpwdc3YJ/BhXrQaLRsQycO6/YBYzMj0uiz19Z8G824/Fp6I9UIupRhn5Z4ZSupCuYodaYmok1LgBVJu2dc+d6TMvgeq1EPSzRw5sjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QxjpZ8VZ; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FnzOozB0"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a3b3f4b2afso12055ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 10:15:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QxjpZ8VZ"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-20ca03687fdso14585ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 10:21:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729617351; x=1730222151; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729617679; x=1730222479; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UaXzMvAYvUxlUCWeHAnHy7Ln3CXIQTuXNPgjIoy8xAk=;
-        b=FnzOozB01z9Qpepj9QiuDDEkO3Jhb82YPgMQGWpL1pmJ6f0vf0ZzqO90N9v0vkrVbR
-         glyHUEiRfYRZWSEEEV7k1EA4PUEr5DLhtuxNmLghKMaWkiNBwIJ/pBNv6kskteBeLVCF
-         21so9r4O7UNZyzYuPCfi9efNO4cUVFVtFD9YUULwMD3ofq7b4dk6Q6UekJGxVQAyr8Xk
-         uqeDLgmVKED3+i97lCATOlvcwdPlIpaI/zmXsG8POEuamdsnVXSFC87pgGt2lR8YuFlt
-         cXzplSjc9JnUYNT7Ez4+eR5L+xSdAEiVtcD41LS1Zssf8y+wGppuUGguKqwCNG/3pJrj
-         gUqQ==
+        bh=bZM6LcuJUHveMyLMVTScG2H/Hgd1xFmDZWDJH7F3T90=;
+        b=QxjpZ8VZ8zuOOfzNt3XlufbVHbyarZLMVnUOehiazHgWmW/kjQ9w7PaKKKxlhIVuHb
+         kpyttd/mI2wHl4DZMXW/yED3XXB1OsWST5BsQMjaslzuE54rmoztmw5Nux0xQK7ox5pN
+         gzvYydYF3Le32Fq4N/Rk0QA9n3TKBT8Ugp148vJ2kpDZgCIkCuRSO+blBUKt2g69SiM7
+         XlEU5bY6+grCpJOLYKpFp4nt7Qp6eJGKR2MXLb/T+DlGInrToEQ4hIm3KNy56YLy8YkN
+         Hb6ANq+1HRJoWf85riS/Fx6E9S4E6qTIqG8mwRnTg8YD7HLvK6CtGcOVXfUOb20+E5Tb
+         1LZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729617351; x=1730222151;
+        d=1e100.net; s=20230601; t=1729617679; x=1730222479;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UaXzMvAYvUxlUCWeHAnHy7Ln3CXIQTuXNPgjIoy8xAk=;
-        b=PFDgXECoesrQX6LjjMCaKmKauVeoJrYlIxJbhu3+T2lKJGHKxew9LyUktH1a9bU9/+
-         NMBaj/zUmxCoydKQpN7nRCP+WZNyHxFXz60uYbz7IbWaa5dv8OmAMiYF8dxuUjthjgv/
-         zaWmCQZaPC8Z+WiLvH9u83Iun81F8axCYPCE9Pw6kXtTlWXVux/j+M6m77O6j3a5avaL
-         9Zc306goEcbjTTLuqJ1oKLJ5F05hqbBw1pidUG/ywCVL+zz7ZprHCO6/H6oJx8shp9/5
-         wgC7aZr8zZC7WHiCEckxcCQdrOzlmCH9pcYk3wVIulEArLkjUTCHXXedWL4qizDjn/mY
-         dq1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUNIeTQn+hBaJ/ZyDDOjm8m/hIU+0hRQc+Vrb/DtrBcM1utzrMHjsxIfyiy4MlRA5MnYZKMMdEGcCbMBtTj88PY@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBphyyHwFgr4lzS42YObW4WyMNkxvgZ0RyY0Nb8ZvtURGVVxnK
-	NL4rnzAq+ktmUIuumgwSud7PfnsfKEo4Jxt6iGjtHMR9I6n/kWr4iTn/WeqidGIuWF2m9xGpIcq
-	iiHzTrFatl9BA/miCG0mZ4Te+8AGHsLX1n5Xq
-X-Google-Smtp-Source: AGHT+IEVy5VyzazC8qQI5OZ8jkSTr1uF7DIcZre/POs3/p26eCu/ktnn4YnUyuyzRspoVg/9iqbEOoec2ztXipcoSMk=
-X-Received: by 2002:a05:6e02:1381:b0:3a0:9b7c:7885 with SMTP id
- e9e14a558f8ab-3a4cca013f9mr5069435ab.22.1729617351393; Tue, 22 Oct 2024
- 10:15:51 -0700 (PDT)
+        bh=bZM6LcuJUHveMyLMVTScG2H/Hgd1xFmDZWDJH7F3T90=;
+        b=DoSn+Btg7+/M8IsczBIEKMXYRcTC1XbHQvdOsVq08HzhGMshE6pT8xiOgoxwhhP3Kd
+         ktsKDkhLZPlaABELueKhq0aVCO95EpdKzHRhpzvwdOkja3usK80SjNr0I4FK75ITN6R2
+         OnrS+TIDvGq0C27It2DBNhnRKshKbHDuum8Ed8mco9n3Z0sP7sG9FPfsQIMY/uDRgLHy
+         RBc+CMmgymo2iheGJGsgxOPlQtv2ZC1mt2dsnowd4gV/Bwmck9BQyBGq1zFzcPLNEKfx
+         PXZ7H5neIJKXsEe6NWgHbYQ6tNbvHUGGCHkuYGCz/265PlgsnBejzaiuhEgAAEKYfhQy
+         4VXg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXQLEOo0LqQkDNL8i+Z5toSVj+TuMz5xis7yBwp6kOOmxk5CH9Mk+JxRrBxDSHNaKi5YJQPFlacw53temZCpuw@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxIiVtgo8wYDxGiABv1sgYdE0m2mauQxCPHKsdKHsWK8+ezCge
+	sf2RowysSzsciHqgkSn/QKVsWru/T/IkQGHf6ejJHrIyDeMnOgm1AJN8pl5/Y89N/vWnzQVBK0R
+	zDjmjULr81wbNLksVJe7c5FxlAs/JWDrI4F93
+X-Google-Smtp-Source: AGHT+IHS9uM8Xo1yuRSba82XgJ86Gi1EmrgIM4rxPyqQKJRmoDr44vwEofb9Y65MfBbw6NLyhZffbqJpvx8ZTBHl3x4=
+X-Received: by 2002:a17:902:ea0e:b0:20c:bb35:dafe with SMTP id
+ d9443c01a7336-20f80c9f411mr31535ad.0.1729617678531; Tue, 22 Oct 2024 10:21:18
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241016042415.7552-1-irogers@google.com> <20241016042415.7552-14-irogers@google.com>
- <ZxdJyRpCv7dmmin9@google.com>
-In-Reply-To: <ZxdJyRpCv7dmmin9@google.com>
+References: <20241016042415.7552-1-irogers@google.com> <20241016042415.7552-8-irogers@google.com>
+ <Zxc-bFLNAh7nrVQC@google.com>
+In-Reply-To: <Zxc-bFLNAh7nrVQC@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 22 Oct 2024 10:15:37 -0700
-Message-ID: <CAP-5=fU7n6iumZuNaUcS7VjsG9uF3ib-mP_6cvUGExKaY-CNQw@mail.gmail.com>
-Subject: Re: [PATCH v2 13/16] perf bench: Remove reference to cmd_inject
+Date: Tue, 22 Oct 2024 10:21:06 -0700
+Message-ID: <CAP-5=fVNwx7D4N42hDeBQMopCuoW-Q4BUch6am8X_jJDeFDy7w@mail.gmail.com>
+Subject: Re: [PATCH v2 07/16] perf stat: Move stat_config into config.c
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -78,46 +78,43 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 21, 2024 at 11:44=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+On Mon, Oct 21, 2024 at 10:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
  wrote:
 >
-> On Tue, Oct 15, 2024 at 09:24:12PM -0700, Ian Rogers wrote:
-> > Avoid `perf bench internals inject-build-id` referencing the
-> > cmd_inject sub-command that requires perf-bench to backward reference
-> > internals of builtins. Replace the reference to cmd_inject with a call
-> > to main. To avoid python.c needing to link with something providing
-> > main, drop the libperf-bench library from the python shared object.
+> On Tue, Oct 15, 2024 at 09:24:06PM -0700, Ian Rogers wrote:
+> > stat_config is accessed by config.c via helper functions, but declared
+> > in builtin-stat. Move to util/config.c so that stub functions aren't
+> > needed in python.c which doesn't link against the builtin files.
+> >
+> > To avoid name conflicts change builtin-script to use the same
+> > stat_config as builtin-stat. Rename local variables in tests to avoid
+> > shadow declaration warnings.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+[snip]
+> > diff --git a/tools/perf/util/path.c b/tools/perf/util/path.c
+> > index 00adf872bf00..9712466c51e2 100644
+> > --- a/tools/perf/util/path.c
+> > +++ b/tools/perf/util/path.c
+> > @@ -68,6 +68,16 @@ bool is_directory(const char *base_path, const struc=
+t dirent *dent)
+> >       return S_ISDIR(st.st_mode);
+> >  }
+> >
+> > +bool is_directory_at(int dir_fd, const char *path)
+> > +{
+> > +     struct stat st;
+> > +
+> > +     if (fstatat(dir_fd, path, &st, /*flags=3D*/0))
+> > +             return false;
+> > +
+> > +     return S_ISDIR(st.st_mode);
+> > +}
+> > +
 >
-> Looks like a clever trick!  But I guess by removing libperf-bench from
-> the python object, you can remove the reference to cmd_inject, right?
+> It looks like an unrelated change.
 
-So this change is looking to clean up cmd_inject yes, an alternative
-thing to do is to remove libperf-bench.a as a python dependency but
-that would use an unused stub. I'm looking to remove all the stubs.
-Once you start cleaning up the cmd_inject stub then you get where this
-patch is.
-
-Wrt cmd_inject have 4 choices:
-1) status quo - have libperf-bench.a be depended on by builtin-bench
-but have a cycle where libperf-bench.a depends on builtin-inject. This
-can yield build issues I've wrestled with in the past and in general
-this shouldn't be done.
-2) this patch - have a dependency from libperf-bench.a to main in
-perf.c, which is less of an internal dependency on the perf.c/builtin
-code but is still an annoying cycle. It's not much better than (1) but
-at least it shouldn't require a #include "../builtin.h" which is
-obviously bad. That #include isn't in the bench code as it re-declares
-the function, again bad. The patch here declares main which isn't
-great, but at least the declaration of main should not be subject to
-change whereas the builtins could be.
-3) move perf inject into util or some other 3rd library. Out of scope
-for this change, but also not something I think we want.
-4) have `perf bench internals inject-build-id` fork/exec the perf
-command. My preference but out of scope here.
-
-So I went with 2 to improve things but without doing some larger
-rewrite. The cleanups all relate to removing cyclic dependencies to
-cmd_inject hence 1 patch.
+Yep. Should have been part of the previous (patch 6) change.
 
 Thanks,
 Ian
