@@ -1,169 +1,194 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7D2153565;
-	Tue, 22 Oct 2024 07:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CF918593C;
+	Tue, 22 Oct 2024 09:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729582950; cv=none; b=IAPZBq2cJA3o1q+rGnllVBx4kpTwY3rwaO8lGzNTc9tT4CYAa6SN0WtiqhPtdWWkDDfJ7gFsHeY5eAyjaCkwAD60kdbCfaOYvKF25LYZUkU07h4tB5qGLOQU2WIgJGBa25F9Do+hiCCHVfpy9uQmuNjb4sGTcnu0MTJ9FAYIAgw=
+	t=1729588727; cv=none; b=Oj7DvdA3MJh0s93sa1/GEW5+vLMgq5DHbGbJibsfhSDeZ69gQ3RZHPETPaGXC9+ufUouoEPv05FNsXxLMs9gA1iBmoloEZU+98OgIg1uNb1TstscH+Fbdv17mnRWxRUBf3dVdMb6WwXAfyrK6b5EGyOJm+b6wnZDB0QbNflwEIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729582950; c=relaxed/simple;
-	bh=yV33fE2DgD7soNvvjb7T7dsvRNU15jFdSM/8XAdHvRA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t0aI+P0OF+VANa1PhFG0NkV0kiLhgQF2OoWlSFagY8EtRT7UVipBc0IjTdRKYU5BGUJnS5fE+3E3rmfe6PeBn0AaGOImbi9lONK3kbwgy/HJGyWVuCdaAB8fALzQxLqf2xCqj6V7EUCk1u7GawXNZj55kU91E0oIQSOUWfOcDvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4XXkdT24XQzQs17;
-	Tue, 22 Oct 2024 15:41:33 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 07E2514011A;
-	Tue, 22 Oct 2024 15:42:24 +0800 (CST)
-Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
- (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Tue, 22 Oct
- 2024 15:42:23 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <andrii.nakryiko@gmail.com>, <mhiramat@kernel.org>, <oleg@redhat.com>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
-Subject: [PATCH v4 2/2] uprobes: Remove the spinlock within handle_singlestep()
-Date: Tue, 22 Oct 2024 07:31:41 +0000
-Message-ID: <20241022073141.3291245-3-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241022073141.3291245-1-liaochang1@huawei.com>
-References: <20241022073141.3291245-1-liaochang1@huawei.com>
+	s=arc-20240116; t=1729588727; c=relaxed/simple;
+	bh=nmKjtqGLDf9m0AgNpWdrsl4yTckIlzdlkgxXMmEmIpg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uufjU5SOKrnRoNr3rcjF3SoeV/Drd72ueaYhP85EkwLv5sq4crMi7c08vEdxiUB2dnVhDXs0AWZkeNAahOFIH9L8+n3J8M5Lw2i4SWA7uVhqorUDuBSHLD140eb7k6T20qtxRiswhWDz5s9Otno7Tdf48vLX/+SYjv+zth3Tx3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from [192.168.12.114] (unknown [121.237.44.89])
+	by APP-05 (Coremail) with SMTP id zQCowABHLmVubBdnKhqRCQ--.25718S2;
+	Tue, 22 Oct 2024 17:12:16 +0800 (CST)
+Message-ID: <a5eb1373-1935-4290-9658-3234359aebe7@iscas.ac.cn>
+Date: Tue, 22 Oct 2024 17:11:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/2] riscv: perf: add guest vs host distinction
+To: Palmer Dabbelt <palmer@dabbelt.com>, Marc Zyngier <maz@kernel.org>
+Cc: anup@brainfault.org, ajones@ventanamicro.com, atishp@atishpatra.org,
+ Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+ Mark Rutland <mark.rutland@arm.com>, alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org
+References: <mhng-c9ba919e-b4a4-4bb9-bdba-f4d3295a930b@palmer-ri-x1c9a>
+Content-Language: en-US
+From: Quan Zhou <zhouquan@iscas.ac.cn>
+In-Reply-To: <mhng-c9ba919e-b4a4-4bb9-bdba-f4d3295a930b@palmer-ri-x1c9a>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+X-CM-TRANSID:zQCowABHLmVubBdnKhqRCQ--.25718S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxKr17GFy7XrWkCF4DtFyxKrg_yoW7XrW5pr
+	4kCFZxKrWUWrn3X34ftr1UuFy5Zr1rXa17Zr10g3W5CrsFvF90qF1qgwn09r18Ar4kXFy8
+	JF1jvrnruwn8tFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvlb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Cr0_Gr
+	1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xK
+	xwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
+	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+	DU0xZFpf9x07UE9akUUUUU=
+X-CM-SenderInfo: 52kr31xxdqqxpvfd2hldfou0/1tbiDAcSBmcXL9LhKwAAsY
 
-This patch introduces a flag to track TIF_SIGPENDING is suppress
-temporarily during the uprobe single-step. Upon uprobe singlestep is
-handled and the flag is confirmed, it could resume the TIF_SIGPENDING
-directly without acquiring the siglock in most case, then reducing
-contention and improving overall performance.
+On 2024/10/19 03:55, Palmer Dabbelt wrote:
+> On Tue, 15 Oct 2024 01:42:50 PDT (-0700), zhouquan@iscas.ac.cn wrote:
+>> From: Quan Zhou <zhouquan@iscas.ac.cn>
+>>
+>> Introduce basic guest support in perf, enabling it to distinguish
+>> between PMU interrupts in the host or guest, and collect
+>> fundamental information.
+>>
+>> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+>> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
+>> ---
+>>  arch/riscv/include/asm/perf_event.h |  6 +++++
+>>  arch/riscv/kernel/perf_callchain.c  | 38 +++++++++++++++++++++++++++++
+>>  2 files changed, 44 insertions(+)
+>>
+>> diff --git a/arch/riscv/include/asm/perf_event.h 
+>> b/arch/riscv/include/asm/perf_event.h
+>> index 665bbc9b2f84..38926b4a902d 100644
+>> --- a/arch/riscv/include/asm/perf_event.h
+>> +++ b/arch/riscv/include/asm/perf_event.h
+>> @@ -8,7 +8,11 @@
+>>  #ifndef _ASM_RISCV_PERF_EVENT_H
+>>  #define _ASM_RISCV_PERF_EVENT_H
+>>
+>> +#ifdef CONFIG_PERF_EVENTS
+>>  #include <linux/perf_event.h>
+>> +extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+>> +extern unsigned long perf_misc_flags(struct pt_regs *regs);
+>> +#define perf_misc_flags(regs) perf_misc_flags(regs)
+>>  #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
+>>
+>>  #define perf_arch_fetch_caller_regs(regs, __ip) { \
+>> @@ -17,4 +21,6 @@
+>>      (regs)->sp = current_stack_pointer; \
+>>      (regs)->status = SR_PP; \
+>>  }
+>> +#endif
+>> +
+>>  #endif /* _ASM_RISCV_PERF_EVENT_H */
+>> diff --git a/arch/riscv/kernel/perf_callchain.c 
+>> b/arch/riscv/kernel/perf_callchain.c
+>> index c7468af77c66..c2c81a80f816 100644
+>> --- a/arch/riscv/kernel/perf_callchain.c
+>> +++ b/arch/riscv/kernel/perf_callchain.c
+>> @@ -28,11 +28,49 @@ static bool fill_callchain(void *entry, unsigned 
+>> long pc)
+>>  void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
+>>               struct pt_regs *regs)
+>>  {
+>> +    if (perf_guest_state()) {
+>> +        /* TODO: We don't support guest os callchain now */
+>> +        return;
+> 
+> That seems kind of weird, but it looks like almost exactly the same 
+> thing Marc did in 75e424620a4f ("arm64: perf: add guest vs host 
+> discrimination").  I think it's safe, as we'll basically just silently 
+> display no backtrace and we can always just fail to backtrace.
+> 
+> That said: I don't understand why we can't backtrace inside a guest?  If 
+> we can get the registers and memory it seems like we should be able to. 
+> Maybe I'm missing something?
+> 
 
-I've use the script developed by Andrii in [1] to run benchmark. The CPU
-used was Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@2.4GHz running the
-kernel on next tree + the optimization for get_xol_insn_slot() [2].
+ From the community's discussion history, there are two reasons:
 
-before-opt
-----------
-uprobe-nop      ( 1 cpus):    0.907 ± 0.003M/s  (  0.907M/s/cpu)
-uprobe-nop      ( 2 cpus):    1.676 ± 0.008M/s  (  0.838M/s/cpu)
-uprobe-nop      ( 4 cpus):    3.210 ± 0.003M/s  (  0.802M/s/cpu)
-uprobe-nop      ( 8 cpus):    4.457 ± 0.003M/s  (  0.557M/s/cpu)
-uprobe-nop      (16 cpus):    3.724 ± 0.011M/s  (  0.233M/s/cpu)
-uprobe-nop      (32 cpus):    2.761 ± 0.003M/s  (  0.086M/s/cpu)
-uprobe-nop      (64 cpus):    1.293 ± 0.015M/s  (  0.020M/s/cpu)
+1) For backtracing, we must traverse the structures within the guest's 
+virtual address space. These structures can change at any time while the 
+guest is running. The page table data we obtain might be corrupted, 
+making it impossible to complete the traversal of the page tables or 
+leading to incorrect data [1].
 
-uprobe-push     ( 1 cpus):    0.883 ± 0.001M/s  (  0.883M/s/cpu)
-uprobe-push     ( 2 cpus):    1.642 ± 0.005M/s  (  0.821M/s/cpu)
-uprobe-push     ( 4 cpus):    3.086 ± 0.002M/s  (  0.771M/s/cpu)
-uprobe-push     ( 8 cpus):    3.390 ± 0.003M/s  (  0.424M/s/cpu)
-uprobe-push     (16 cpus):    2.652 ± 0.005M/s  (  0.166M/s/cpu)
-uprobe-push     (32 cpus):    2.713 ± 0.005M/s  (  0.085M/s/cpu)
-uprobe-push     (64 cpus):    1.313 ± 0.009M/s  (  0.021M/s/cpu)
+2) For security reasons, a significant number of cloud vendors wish to 
+make accessing customer data almost impossible [2].
 
-uprobe-ret      ( 1 cpus):    1.774 ± 0.000M/s  (  1.774M/s/cpu)
-uprobe-ret      ( 2 cpus):    3.350 ± 0.001M/s  (  1.675M/s/cpu)
-uprobe-ret      ( 4 cpus):    6.604 ± 0.000M/s  (  1.651M/s/cpu)
-uprobe-ret      ( 8 cpus):    6.706 ± 0.005M/s  (  0.838M/s/cpu)
-uprobe-ret      (16 cpus):    5.231 ± 0.001M/s  (  0.327M/s/cpu)
-uprobe-ret      (32 cpus):    5.743 ± 0.003M/s  (  0.179M/s/cpu)
-uprobe-ret      (64 cpus):    4.726 ± 0.016M/s  (  0.074M/s/cpu)
+Currently, community prefer to implement this functionality in user 
+space and access the guest through the KVM API, interrupting the guest 
+to perform the unwind operation.
 
-after-opt
----------
-uprobe-nop      ( 1 cpus):    0.985 ± 0.002M/s  (  0.985M/s/cpu)
-uprobe-nop      ( 2 cpus):    1.773 ± 0.005M/s  (  0.887M/s/cpu)
-uprobe-nop      ( 4 cpus):    3.304 ± 0.001M/s  (  0.826M/s/cpu)
-uprobe-nop      ( 8 cpus):    5.328 ± 0.002M/s  (  0.666M/s/cpu)
-uprobe-nop      (16 cpus):    6.475 ± 0.002M/s  (  0.405M/s/cpu)
-uprobe-nop      (32 cpus):    4.831 ± 0.082M/s  (  0.151M/s/cpu)
-uprobe-nop      (64 cpus):    2.564 ± 0.053M/s  (  0.040M/s/cpu)
+As with the x86/ARM architectures, stubs are still retained here for 
+RISC-V. If `guest os callchain` is introduced in the future, they can 
+indicate that additional work needs to be done.
 
-uprobe-push     ( 1 cpus):    0.964 ± 0.001M/s  (  0.964M/s/cpu)
-uprobe-push     ( 2 cpus):    1.766 ± 0.002M/s  (  0.883M/s/cpu)
-uprobe-push     ( 4 cpus):    3.290 ± 0.009M/s  (  0.823M/s/cpu)
-uprobe-push     ( 8 cpus):    4.670 ± 0.002M/s  (  0.584M/s/cpu)
-uprobe-push     (16 cpus):    5.197 ± 0.004M/s  (  0.325M/s/cpu)
-uprobe-push     (32 cpus):    5.068 ± 0.161M/s  (  0.158M/s/cpu)
-uprobe-push     (64 cpus):    2.605 ± 0.026M/s  (  0.041M/s/cpu)
+[1] 
+https://lore.kernel.org/all/ZSlNsn-f1j2bB8pW@FVFF77S0Q05N.cambridge.arm.com/
+[2] https://lore.kernel.org/all/ZXeTvCLURmwzpDkP@google.com/
 
-uprobe-ret      ( 1 cpus):    1.833 ± 0.001M/s  (  1.833M/s/cpu)
-uprobe-ret      ( 2 cpus):    3.384 ± 0.003M/s  (  1.692M/s/cpu)
-uprobe-ret      ( 4 cpus):    6.677 ± 0.004M/s  (  1.669M/s/cpu)
-uprobe-ret      ( 8 cpus):    6.854 ± 0.005M/s  (  0.857M/s/cpu)
-uprobe-ret      (16 cpus):    6.508 ± 0.006M/s  (  0.407M/s/cpu)
-uprobe-ret      (32 cpus):    5.793 ± 0.009M/s  (  0.181M/s/cpu)
-uprobe-ret      (64 cpus):    4.743 ± 0.016M/s  (  0.074M/s/cpu)
+Regards,
+Quan
 
-Above benchmark results demonstrates a obivious improvement in the
-scalability of trig-uprobe-nop and trig-uprobe-push, the peak throughput
-of which are from 4.5M/s to 6.4M/s and 3.3M/s to 5.1M/s individually.
-
-[1] https://lore.kernel.org/all/20240731214256.3588718-1-andrii@kernel.org
-[2] https://lore.kernel.org/all/20240727094405.1362496-1-liaochang1@huawei.com
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- include/linux/uprobes.h | 1 +
- kernel/events/uprobes.c | 8 +++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index 2b294bf1881f..1c5ece4ed55b 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -76,6 +76,7 @@ struct uprobe_task {
- 
- 	struct uprobe			*active_uprobe;
- 	unsigned long			xol_vaddr;
-+	bool				signal_denied;
- 
- 	struct arch_uprobe              *auprobe;
- 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 196366c013f2..315efbee4353 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1986,6 +1986,7 @@ bool uprobe_deny_signal(void)
- 	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
- 
- 	if (task_sigpending(t)) {
-+		utask->signal_denied = true;
- 		clear_tsk_thread_flag(t, TIF_SIGPENDING);
- 
- 		if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
-@@ -2302,9 +2303,10 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
- 	utask->state = UTASK_RUNNING;
- 	xol_free_insn_slot(utask);
- 
--	spin_lock_irq(&current->sighand->siglock);
--	recalc_sigpending(); /* see uprobe_deny_signal() */
--	spin_unlock_irq(&current->sighand->siglock);
-+	if (utask->signal_denied) {
-+		set_thread_flag(TIF_SIGPENDING);
-+		utask->signal_denied = false;
-+	}
- 
- 	if (unlikely(err)) {
- 		uprobe_warn(current, "execute the probed insn, sending SIGILL.");
--- 
-2.34.1
+>> +    }
+>> +
+>>      arch_stack_walk_user(fill_callchain, entry, regs);
+>>  }
+>>
+>>  void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
+>>                 struct pt_regs *regs)
+>>  {
+>> +    if (perf_guest_state()) {
+>> +        /* TODO: We don't support guest os callchain now */
+>> +        return;
+>> +    }
+>> +
+>>      walk_stackframe(NULL, regs, fill_callchain, entry);
+>>  }
+>> +
+>> +unsigned long perf_instruction_pointer(struct pt_regs *regs)
+>> +{
+>> +    if (perf_guest_state())
+>> +        return perf_guest_get_ip();
+>> +
+>> +    return instruction_pointer(regs);
+>> +}
+>> +
+>> +unsigned long perf_misc_flags(struct pt_regs *regs)
+>> +{
+>> +    unsigned int guest_state = perf_guest_state();
+>> +    unsigned long misc = 0;
+>> +
+>> +    if (guest_state) {
+>> +        if (guest_state & PERF_GUEST_USER)
+>> +            misc |= PERF_RECORD_MISC_GUEST_USER;
+>> +        else
+>> +            misc |= PERF_RECORD_MISC_GUEST_KERNEL;
+>> +    } else {
+>> +        if (user_mode(regs))
+>> +            misc |= PERF_RECORD_MISC_USER;
+>> +        else
+>> +            misc |= PERF_RECORD_MISC_KERNEL;
+>> +    }
+>> +
+>> +    return misc;
+>> +}
 
