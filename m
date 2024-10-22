@@ -1,314 +1,372 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437D419AD7E
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 15:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1F013957E;
+	Tue, 22 Oct 2024 15:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729611646; cv=none; b=rEP7F9+V2lZx44GpF9WWZ0RTW2cTu+iyEPkTxhp0Lh/Wl2/ENnjDEL7Otn7W/22+t/H2KMj6f5Ml56XhOcoPjsRqZc3u40P5muqDEEA3CnxDwFLp7qGGmuY+Yl6o9y+TYB/LyNtK8MaEKT83mjLqUjWs3MioUFYSsP2AoxDmVns=
+	t=1729612784; cv=none; b=BXovNhRttxm/K+Db/S/MS7B0AWzuq6pkrHPmN4jxNha7Kx4c5BFc8awTjZnkvmq29hfg2P7sYB1jY/ajy+S/K2Ig368Hw7bDqbHqCTe0/Hui3ZbM8+p5DqUXRQmahzmX9r5sJR75bkdvZzjTQkqH41Gb6UvF/vv2rWiyQfuscDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729611646; c=relaxed/simple;
-	bh=Fz/La2t94ik4/K+LIBtcmpv2qCpf5Dde6QbkFn9j73Q=;
-	h=From:Date:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZHs41OTHyuLDMnk1ffvS+Ccc7ZEaZ1seNzZb1iwtQOGHJhenFV4QV7Nc2/kB6ScDba51daW7i70Gw0J/vrqxTzpezmd5m5XUtyMFzW4och2jYTj+6b31rdOA3olGMyAjk6INA9y7niq8xPmTte5yNjitanp2zjdXyM8G/e7s6tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=gRccz82p; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1729612784; c=relaxed/simple;
+	bh=2QRTfadL8wGiEdvBwoi/9r+GQHSR5iIawBUWr2Nzveg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kY+yZGKh7Fdzu/RLAUT9rk4eAP6rsCPCpgNj1vEk9P1dmDjm/b7qaoICwtoJCRW9dhyK5MJWY+Nwe4Pr3H4eLjl4i7tvWenC23aDA3Gl8zj1LFLuJ85XThSWn3KLvS/SiUX4Zzik6/cuiE3+N7xZQtV4wmKydN5fEkMwCdTxDno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BfB0hp2s; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="gRccz82p"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7b13bf566c0so375950985a.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 08:40:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1729611643; x=1730216443; darn=vger.kernel.org;
-        h=mime-version:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=aCAEp4QAEi7Oa48A7wSJlXlBhHhjC0+UmRGpFNIqQcE=;
-        b=gRccz82pd8r42f9HH7JjZm5mvpQ9N7K8xBx9I7b62z5oGeJrzb6DH8areEdKJd+eGQ
-         YJVbvkh/+GI0WSKgeFFx64iiPsX/H7LIdVGFKakgA/U4QR9Jlu7/VlXDxkCJQTVysgR9
-         rnQIvyLUv1Iiwka/e+3ZB0j8DQ9WgyikKlGWI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729611643; x=1730216443;
-        h=mime-version:message-id:subject:cc:to:date:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aCAEp4QAEi7Oa48A7wSJlXlBhHhjC0+UmRGpFNIqQcE=;
-        b=vKTy5O0kSFGD9jlSJx0Yxw65sJY5Xd4TgvJH2sjA6sUBpAy3iS9G4TXkJTentsCRlz
-         kM4aEmp0OPSV8z2ZlTQwlr/uxsSCjPYyzGjW7o397B2+cDB/Z0L+XzPG5btrT3J6fPTS
-         qTWJA3wMFeU0B9Mziw4uCfuZXz3O4It1p8V6DOXD6K409YyoCQPYGSGrkW+rEPqBgxUu
-         fOZFqGKNJjHt0PeEaZfhovxUos8qG+Vneaq3GCQv5f5tpKHrQ3/2zRja2XmSchLGBXIy
-         Yf9HAWS76XdWmMXjx38tP5IwaRomUfhQyLtBiDxVD0ysUE/nydk3IzmVewL7Wif3oZLz
-         +Qrw==
-X-Gm-Message-State: AOJu0YzEiEFQIHKAhyRmiNaOZ3/wyqgQu4CUHw31a1+KIFLQDg7biJ5K
-	TLsV8R017PhnDH8iz8kwhXPnDKAiy/P8WUCCVrO/vc81CwIKTAL+L/ieCCWCYWcOg2y+qfQzWbV
-	IQw==
-X-Google-Smtp-Source: AGHT+IHQMjwhSP8cVy5yaUW7rStPht83UpR3a0nZdydwtHkSwUyYoxZjE/l86Jkqqy8VlMplyGWNmQ==
-X-Received: by 2002:a05:620a:4714:b0:7b1:516c:8601 with SMTP id af79cd13be357-7b1751cd329mr583889085a.20.1729611642535;
-        Tue, 22 Oct 2024 08:40:42 -0700 (PDT)
-Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b1659b9802sm291221285a.5.2024.10.22.08.40.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2024 08:40:41 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Tue, 22 Oct 2024 11:40:40 -0400 (EDT)
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>, 
-    "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: perf_event: possible circle locking dependency
-Message-ID: <5dde8db3-ffd6-0c84-d00a-ee374fb86af0@maine.edu>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BfB0hp2s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729612783; x=1761148783;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2QRTfadL8wGiEdvBwoi/9r+GQHSR5iIawBUWr2Nzveg=;
+  b=BfB0hp2s6UbXTjoAsU7u3VHEJb1zYFSivgJfOfSgGCSUhOoATPZ0eVCb
+   7ZT31w7lo9xLm2Qbcf+JsW07csvnRtVjhpykSrLHpJ5zdxAjiCWf5f8eX
+   sADqSLs/LTIXn2tD5q4B0qM7v1fbFKiEmud2q9z5pgP8VII+H6SZJVSr/
+   G/ya2/IU9wbCNVOoTncaNFyRdgVMxqY4GbuKxpqBc/naHzSmMlaXLeQuS
+   h8g/mcYaN6LdMDzLl4uxuglaqPbnPC9bi9+wpRr+5p8CBVkd2TkNVFEdl
+   rvMVNgkAhwJl3vzHBHp6BMxQcvo7fD6n7TPZiPPePUXvm17kRaO9M+voF
+   g==;
+X-CSE-ConnectionGUID: 5CnRB5XGQGi+MNEfDTwGAQ==
+X-CSE-MsgGUID: pfs/TL5JSPuQrJmN/OaOug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11233"; a="29270749"
+X-IronPort-AV: E=Sophos;i="6.11,223,1725346800"; 
+   d="scan'208";a="29270749"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 08:59:42 -0700
+X-CSE-ConnectionGUID: d3EF9+eTQ4eBjqTodh9suQ==
+X-CSE-MsgGUID: tJrHmLodQVa2+VF9UbxHeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,223,1725346800"; 
+   d="scan'208";a="79858350"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.ger.corp.intel.com) ([10.246.16.81])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 08:59:33 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	H Peter Anvin <hpa@zytor.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH V14 00/11] perf/core: Add ability for an event to "pause" or "resume" AUX area tracing
+Date: Tue, 22 Oct 2024 18:59:06 +0300
+Message-ID: <20241022155920.17511-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello
+Hi
 
-the perf_fuzzer triggered this circular locking warning on my haswell 
-fuzzing box running 6.12.0-rc2.  Not sure if people care about reports 
-like this.  Unfortunately I can't test if it's repeatable because my 
-logging box was down at the time this happened.
+Note for V14:
+	KVM patches dropped.
 
-Vince
+Note for V12:
+	There was a small conflict between the Intel PT changes in
+	"KVM: x86: Fix Intel PT Host/Guest mode when host tracing" and the
+	changes in this patch set, so I have put the patch sets together,
+	along with outstanding fix "perf/x86/intel/pt: Fix buffer full but
+	size is 0 case"
+
+	Cover letter for KVM changes (patches 2 to 4):
+
+	There is a long-standing problem whereby running Intel PT on host and guest
+	in Host/Guest mode, causes VM-Entry failure.
+
+	The motivation for this patch set is to provide a fix for stable kernels
+	prior to the advent of the "Mediated Passthrough vPMU" patch set:
+
+		https://lore.kernel.org/kvm/20240801045907.4010984-1-mizhang@google.com/
+
+	which would render a large part of the fix unnecessary but likely not be
+	suitable for backport to stable due to its size and complexity.
+
+	Ideally, this patch set would be applied before "Mediated Passthrough vPMU"
+
+	Note that the fix does not conflict with "Mediated Passthrough vPMU", it
+	is just that "Mediated Passthrough vPMU" will make the code to stop and
+	restart Intel PT unnecessary.
+
+Note for V11:
+	Moving aux_paused into a union within struct hw_perf_event caused
+	a regression because aux_paused was being written unconditionally
+	even though it is valid only for AUX (e.g. Intel PT) PMUs.
+	That is fixed in V11.
+
+Hardware traces, such as instruction traces, can produce a vast amount of
+trace data, so being able to reduce tracing to more specific circumstances
+can be useful.
+
+The ability to pause or resume tracing when another event happens, can do
+that.
+
+These patches add such a facilty and show how it would work for Intel
+Processor Trace.
+
+Maintainers of other AUX area tracing implementations are requested to
+consider if this is something they might employ and then whether or not
+the ABI would work for them.  Note, thank you to James Clark (ARM) for
+evaluating the API for Coresight.  Suzuki K Poulose (ARM) also responded
+positively to the RFC.
+
+Changes to perf tools are now (since V4) fleshed out.
+
+Please note, Intel® Architecture Instruction Set Extensions and Future
+Features Programming Reference March 2024 319433-052, currently:
+
+	https://cdrdv2.intel.com/v1/dl/getContent/671368
+
+introduces hardware pause / resume for Intel PT in a feature named
+Intel PT Trigger Tracing.
+
+For that more fields in perf_event_attr will be necessary.  The main
+differences are:
+	- it can be applied not just to overflows, but optionally to
+	every event
+	- a packet is emitted into the trace, optionally with IP
+	information
+	- no PMI
+	- works with PMC and DR (breakpoint) events only
+
+Here are the proposed additions to perf_event_attr, please comment:
+
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index 0c557f0a17b3..05dcc43f11bb 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -369,6 +369,22 @@ enum perf_event_read_format {
+ 	PERF_FORMAT_MAX = 1U << 5,		/* non-ABI */
+ };
+ 
++enum {
++	PERF_AUX_ACTION_START_PAUSED		=   1U << 0,
++	PERF_AUX_ACTION_PAUSE			=   1U << 1,
++	PERF_AUX_ACTION_RESUME			=   1U << 2,
++	PERF_AUX_ACTION_EMIT			=   1U << 3,
++	PERF_AUX_ACTION_NR			= 0x1f << 4,
++	PERF_AUX_ACTION_NO_IP			=   1U << 9,
++	PERF_AUX_ACTION_PAUSE_ON_EVT		=   1U << 10,
++	PERF_AUX_ACTION_RESUME_ON_EVT		=   1U << 11,
++	PERF_AUX_ACTION_EMIT_ON_EVT		=   1U << 12,
++	PERF_AUX_ACTION_NR_ON_EVT		= 0x1f << 13,
++	PERF_AUX_ACTION_NO_IP_ON_EVT		=   1U << 18,
++	PERF_AUX_ACTION_MASK			= ~PERF_AUX_ACTION_START_PAUSED,
++	PERF_AUX_PAUSE_RESUME_MASK		= PERF_AUX_ACTION_PAUSE | PERF_AUX_ACTION_RESUME,
++};
++
+ #define PERF_ATTR_SIZE_VER0	64	/* sizeof first published struct */
+ #define PERF_ATTR_SIZE_VER1	72	/* add: config2 */
+ #define PERF_ATTR_SIZE_VER2	80	/* add: branch_sample_type */
+@@ -515,10 +531,19 @@ struct perf_event_attr {
+ 	union {
+ 		__u32	aux_action;
+ 		struct {
+-			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
+-				aux_pause        :  1, /* on overflow, pause AUX area tracing */
+-				aux_resume       :  1, /* on overflow, resume AUX area tracing */
+-				__reserved_3     : 29;
++			__u32	aux_start_paused  :  1, /* start AUX area tracing paused */
++				aux_pause         :  1, /* on overflow, pause AUX area tracing */
++				aux_resume        :  1, /* on overflow, resume AUX area tracing */
++				aux_emit          :  1, /* generate AUX records instead of events */
++				aux_nr            :  5, /* AUX area tracing reference number */
++				aux_no_ip         :  1, /* suppress IP in AUX records */
++				/* Following apply to event occurrence not overflows */
++				aux_pause_on_evt  :  1, /* on event, pause AUX area tracing */
++				aux_resume_on_evt :  1, /* on event, resume AUX area tracing */
++				aux_emit_on_evt   :  1, /* generate AUX records instead of events */
++				aux_nr_on_evt     :  5, /* AUX area tracing reference number */
++				aux_no_ip_on_evt  :  1, /* suppress IP in AUX records */
++				__reserved_3      : 13;
+ 		};
+ 	};
 
 
-[1174639.971967] ======================================================
-[1174639.971970] WARNING: possible circular locking dependency detected
-[1174639.971974] 6.12.0-rc2 #7 Not tainted
-[1174639.971980] ------------------------------------------------------
-[1174639.971983] perf_fuzzer/3609323 is trying to acquire lock:
-[1174639.971988] ffffffff8339dc18 ((console_sem).lock){-...}-{2:2},
- at: down_trylock+0x11/0x50
-[1174639.972014] 
-                 but task is already holding lock:
-[1174639.972016] ffff888019527018 (&ctx->lock){-.-.}-{2:2}, at: 
-__perf_event_read+0xb4/0x3a0
-[1174639.972035] 
-                 which lock already depends on the new lock.
+Changes in V14:
+      Dropped KVM patches
 
-[1174639.972038] 
-                 the existing dependency chain (in reverse order) is:
-[1174639.972040] 
-                 -> #2 (&ctx->lock){-.-.}-{2:2}:
-[1174639.972051]        _raw_spin_lock+0x2f/0x40
-[1174639.972062]        perf_tp_event+0x309/0x880
-[1174639.972071]        perf_trace_sched_wakeup_template+0x1fe/0x250
-[1174639.972083]        trace_sched_waking+0x99/0xf0
-[1174639.972092]        try_to_wake_up+0x1c4/0x8f0
-[1174639.972101]        __wake_up_common+0xc5/0x110
-[1174639.972109]        __wake_up_sync_key+0x37/0x50
-[1174639.972116]        do_notify_parent+0x47d/0x860
-[1174639.972127]        do_exit+0xd72/0x1130
-[1174639.972135]        do_group_exit+0x63/0x110
-[1174639.972143]        get_signal+0xe09/0xeb0
-[1174639.972149]        arch_do_signal_or_restart+0x82/0x3a0
-[1174639.972157]        irqentry_exit_to_user_mode+0xd3/0x130
-[1174639.972165]        asm_sysvec_reschedule_ipi+0x16/0x20
-[1174639.972174] 
-                 -> #1 (&p->pi_lock){-.-.}-{2:2}:
-[1174639.972183]        _raw_spin_lock_irqsave+0x47/0x70
-[1174639.972192]        try_to_wake_up+0x8f/0x8f0
-[1174639.972199]        up+0x4e/0x60
-[1174639.972205]        __up_console_sem+0x54/0x70
-[1174639.972211]        console_unlock+0x25f/0x2f0
-[1174639.972219]        vprintk_emit.part.0+0x33f/0x570
-[1174639.972227]        devkmsg_emit.constprop.0+0xab/0xde
-[1174639.972234]        devkmsg_write.cold+0x2d/0x5b
-[1174639.972240]        do_iter_readv_writev+0x1df/0x370
-[1174639.972248]        vfs_writev+0x211/0x700
-[1174639.972256]        do_writev+0xdf/0x200
-[1174639.972263]        do_syscall_64+0x69/0x170
-[1174639.972273]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[1174639.972280] 
-                 -> #0 ((console_sem).lock){-...}-{2:2}:
-[1174639.972290]        __lock_acquire+0x1c91/0x31b0
-[1174639.972297]        lock_acquire.part.0+0x10c/0x2d0
-[1174639.972303]        _raw_spin_lock_irqsave+0x47/0x70
-[1174639.972312]        down_trylock+0x11/0x50
-[1174639.972318]        __down_trylock_console_sem+0x2f/0xa0
-[1174639.972325]        console_trylock+0x36/0x90
-[1174639.972332]        vprintk_emit.part.0+0x336/0x570
-[1174639.972339]        _printk+0xb2/0xe5
-[1174639.972345]        lockdep_rcu_suspicious+0x87/0x180
-[1174639.972355]        get_callchain_entry+0x12f/0x190
-[1174639.972361]        get_perf_callchain+0x9d/0x2d0
-[1174639.972367]        perf_callchain+0xc9/0xe0
-[1174639.972374]        setup_pebs_fixed_sample_data+0x6ae/0x820
-[1174639.972382]        intel_pmu_drain_pebs_nhm+0x795/0x9f0
-[1174639.972389]        intel_pmu_drain_pebs_buffer+0x8c/0xd0
-[1174639.972400]        intel_pmu_auto_reload_read+0x3f/0x60
-[1174639.972407]        __perf_event_read+0x308/0x3a0
-[1174639.972415]        __flush_smp_call_function_queue+0x154/0x370
-[1174639.972427]        __sysvec_call_function_single+0x4c/0x1f0
-[1174639.972438]        sysvec_call_function_single+0x4c/0xc0
-[1174639.972449]        asm_sysvec_call_function_single+0x16/0x20
-[1174639.972456] 
-                 other info that might help us debug this:
+      perf/x86/intel/pt: Add support for pause / resume
+	Set pt->handle_nmi after configuration is completed instead of during
 
-[1174639.972459] Chain exists of:
-                   (console_sem).lock --> &p->pi_lock --> &ctx->lock
+Changes in V13:
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Do aux_resume at the end of __perf_event_overflow() so as to trace
+	less of perf itself
 
-[1174639.972472]  Possible unsafe locking scenario:
+      perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
+	Add error message also in EOPNOTSUPP case (Leo)
 
-[1174639.972475]        CPU0                    CPU1
-[1174639.972477]        ----                    ----
-[1174639.972479]   lock(&ctx->lock);
-[1174639.972485]                                lock(&p->pi_lock);
-[1174639.972490]                                lock(&ctx->lock);
-[1174639.972496]   lock((console_sem).lock);
-[1174639.972501] 
-                  *** DEADLOCK ***
+Changes in V12:
+	Add previously sent patch "perf/x86/intel/pt: Fix buffer full
+	but size is 0 case"
 
-[1174639.972503] 1 lock held by perf_fuzzer/3609323:
-[1174639.972508]  #0: ffff888019527018 (&ctx->lock){-.-.}-{2:2}, at: __perf_event_read+0xb4/0x3a0
-[1174639.972527] 
-                 stack backtrace:
-[1174639.972531] CPU: 0 UID: 1000 PID: 3609323 Comm: perf_fuzzer Not tainted 6.12.0-rc2 #7
-[1174639.972540] Hardware name: LENOVO 10AM000AUS/SHARKBAY, BIOS FBKT72AUS 01/26/2014
-[1174639.972545] Call Trace:
-[1174639.972549]  <TASK>
-[1174639.972553]  dump_stack_lvl+0x68/0x90
-[1174639.972566]  print_circular_bug.cold+0x193/0x1e2
-[1174639.972582]  check_noncircular+0x24a/0x290
-[1174639.972595]  ? __pfx_check_noncircular+0x10/0x10
-[1174639.972605]  ? __pfx__prb_read_valid+0x10/0x10
-[1174639.972618]  ? lockdep_lock+0xb1/0x160
-[1174639.972627]  ? __pfx_lockdep_lock+0x10/0x10
-[1174639.972640]  __lock_acquire+0x1c91/0x31b0
-[1174639.972658]  ? __pfx___lock_acquire+0x10/0x10
-[1174639.972667]  ? vprintk_store+0x543/0x610
-[1174639.972679]  lock_acquire.part.0+0x10c/0x2d0
-[1174639.972687]  ? down_trylock+0x11/0x50
-[1174639.972697]  ? __pfx_lock_acquire.part.0+0x10/0x10
-[1174639.972705]  ? rcu_is_watching+0x34/0x60
-[1174639.972717]  ? trace_lock_acquire+0x110/0x140
-[1174639.972729]  ? lock_acquire+0x3b/0x90
-[1174639.972735]  ? down_trylock+0x11/0x50
-[1174639.972746]  _raw_spin_lock_irqsave+0x47/0x70
-[1174639.972755]  ? down_trylock+0x11/0x50
-[1174639.972763]  down_trylock+0x11/0x50
-[1174639.972770]  ? vprintk_emit.part.0+0x336/0x570
-[1174639.972779]  __down_trylock_console_sem+0x2f/0xa0
-[1174639.972788]  console_trylock+0x36/0x90
-[1174639.972796]  vprintk_emit.part.0+0x336/0x570
-[1174639.972806]  ? __pfx_vprintk_emit.part.0+0x10/0x10
-[1174639.972817]  ? __lock_acquire+0x94b/0x31b0
-[1174639.972829]  _printk+0xb2/0xe5
-[1174639.972836]  ? __pfx__printk+0x10/0x10
-[1174639.972846]  ? __pfx___lock_acquire+0x10/0x10
-[1174639.972855]  ? find_held_lock+0x83/0xa0
-[1174639.972863]  ? nbcon_cpu_emergency_enter+0x20/0x30
-[1174639.972873]  lockdep_rcu_suspicious+0x87/0x180
-[1174639.972887]  get_callchain_entry+0x12f/0x190
-[1174639.972896]  get_perf_callchain+0x9d/0x2d0
-[1174639.972905]  ? __pfx_get_perf_callchain+0x10/0x10
-[1174639.972916]  ? lock_is_held_type+0xd5/0x130
-[1174639.972923]  ? __rcu_read_unlock+0x4e/0x2a0
-[1174639.972933]  ? perf_event_update_userpage+0x2a4/0x450
-[1174639.972945]  perf_callchain+0xc9/0xe0
-[1174639.972956]  setup_pebs_fixed_sample_data+0x6ae/0x820
-[1174639.972971]  intel_pmu_drain_pebs_nhm+0x795/0x9f0
-[1174639.972990]  ? __pfx_intel_pmu_drain_pebs_nhm+0x10/0x10
-[1174639.973000]  ? __lock_acquire+0x94b/0x31b0
-[1174639.973014]  ? find_held_lock+0x83/0xa0
-[1174639.973024]  ? lock_release+0x28f/0x430
-[1174639.973033]  ? mark_lock+0x101/0xcd0
-[1174639.973049]  ? wp_page_reuse+0xdb/0xf0
-[1174639.973071]  intel_pmu_drain_pebs_buffer+0x8c/0xd0
-[1174639.973085]  ? __pfx_intel_pmu_drain_pebs_buffer+0x10/0x10
-[1174639.973098]  ? __pfx___lock_acquire+0x10/0x10
-[1174639.973106]  ? __pfx_mark_lock+0x10/0x10
-[1174639.973117]  ? lock_acquire.part.0+0x10c/0x2d0
-[1174639.973126]  ? lock_acquire.part.0+0x11c/0x2d0
-[1174639.973134]  ? __pfx_lock_acquire.part.0+0x10/0x10
-[1174639.973142]  ? rcu_is_watching+0x34/0x60
-[1174639.973152]  ? do_raw_spin_lock+0x10c/0x1a0
-[1174639.973163]  ? lock_is_held_type+0xd5/0x130
-[1174639.973173]  ? intel_pmu_lbr_disable_all+0x3c/0xe0
-[1174639.973184]  intel_pmu_auto_reload_read+0x3f/0x60
-[1174639.973193]  __perf_event_read+0x308/0x3a0
-[1174639.973202]  ? rcu_is_watching+0x34/0x60
-[1174639.973213]  ? __pfx___perf_event_read+0x10/0x10
-[1174639.973221]  __flush_smp_call_function_queue+0x154/0x370
-[1174639.973231]  ? __pfx___perf_event_read+0x10/0x10
-[1174639.973242]  __sysvec_call_function_single+0x4c/0x1f0
-[1174639.973254]  sysvec_call_function_single+0x4c/0xc0
-[1174639.973265]  asm_sysvec_call_function_single+0x16/0x20
-[1174639.973274] RIP: 0033:0x5616fdc38bd7
-[1174639.973281] Code: 0f 1f 00 48 89 d1 31 c0 48 89 f2 89 fe bf 41 01 00 00 e9 9c 06 ff ff 66 2e 0f 1f 84 00 00 00 00 00 66 90 31 c9 b9 1f a1 07 00 <ff> c9 75 fc 31 c0 c3 66 90 48 8b 05 99 a0 00 00 48 89 44 24 f8 b9
-[1174639.973289] RSP: 002b:00007ffeffe6f0b8 EFLAGS: 00000202
-[1174639.973296] RAX: 0000000000000000 RBX: 000000000000000d RCX: 000000000005c0b0
-[1174639.973302] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-[1174639.973306] RBP: 00007ffeffe6f0d0 R08: 0000000000000000 R09: 00007fef59807740
-[1174639.973311] R10: 00007fef59a540b8 R11: 0000000000000246 R12: 0000000000000000
-[1174639.973316] R13: 00007ffeffe71528 R14: 00007fef59a53000 R15: 00005616fdc45dd8
-[1174639.973333]  </TASK>
-[1174640.764359] =============================
-[1174640.768560] WARNING: suspicious RCU usage
-[1174640.772765] 6.12.0-rc2 #7 Not tainted
-[1174640.776620] -----------------------------
-[1174640.780825] kernel/events/callchain.c:162 suspicious rcu_dereference_check() usage!
-[1174640.788672] 
-                 other info that might help us debug this:
+	Add previously sent patch set "KVM: x86: Fix Intel PT Host/Guest
+	mode when host tracing"
 
-[1174640.797209] 
-                 rcu_scheduler_active = 2, debug_locks = 1
-[1174640.804097] 1 lock held by perf_fuzzer/3609323:
-[1174640.808817]  #0: ffff888019527018 (&ctx->lock){-.-.}-{2:2}, at: __perf_event_read+0xb4/0x3a0
-[1174640.817452]                  stack backtrace:
-[1174640.822176] CPU: 0 UID: 1000 PID: 3609323 Comm: perf_fuzzer Not tainted 6.12.0-rc2 #7
-[1174640.830192] Hardware name: LENOVO 10AM000AUS/SHARKBAY, BIOS FBKT72AUS 01/26/2014
-[1174640.837775] Call Trace:
-[1174640.840416]  <TASK>
-[1174640.842713]  dump_stack_lvl+0x68/0x90
-[1174640.846569]  lockdep_rcu_suspicious.cold+0x4e/0xad
-[1174640.851555]  get_callchain_entry+0x12f/0x190
-[1174640.856016]  get_perf_callchain+0x9d/0x2d0
-[1174640.860306]  ? __pfx_get_perf_callchain+0x10/0x10
-[1174640.865205]  ? lock_is_held_type+0xd5/0x130
-[1174640.869581]  ? __rcu_read_unlock+0x4e/0x2a0
-[1174640.873959]  ? perf_event_update_userpage+0x2a4/0x450
-[1174640.879205]  perf_callchain+0xc9/0xe0
-[1174640.883057]  setup_pebs_fixed_sample_data+0x6ae/0x820
-[1174640.888307]  intel_pmu_drain_pebs_nhm+0x795/0x9f0
-[1174640.893214]  ? __pfx_intel_pmu_drain_pebs_nhm+0x10/0x10
-[1174640.898633]  ? __lock_acquire+0x94b/0x31b0
-[1174640.902922]  ? find_held_lock+0x83/0xa0
-[1174640.906951]  ? lock_release+0x28f/0x430
-[1174640.910984]  ? mark_lock+0x101/0xcd0
-[1174640.914754]  ? wp_page_reuse+0xdb/0xf0
-[1174640.918699]  intel_pmu_drain_pebs_buffer+0x8c/0xd0
-[1174640.923691]  ? __pfx_intel_pmu_drain_pebs_buffer+0x10/0x10
-[1174640.929372]  ? __pfx___lock_acquire+0x10/0x10
-[1174640.933924]  ? __pfx_mark_lock+0x10/0x10
-[1174640.938042]  ? lock_acquire.part.0+0x10c/0x2d0
-[1174640.942675]  ? lock_acquire.part.0+0x11c/0x2d0
-[1174640.947311]  ? __pfx_lock_acquire.part.0+0x10/0x10
-[1174640.952290]  ? rcu_is_watching+0x34/0x60
-[1174640.956404]  ? do_raw_spin_lock+0x10c/0x1a0
-[1174640.960782]  ? lock_is_held_type+0xd5/0x130
-[1174640.965157]  ? intel_pmu_lbr_disable_all+0x3c/0xe0
-[1174640.970140]  intel_pmu_auto_reload_read+0x3f/0x60
-[1174640.975037]  __perf_event_read+0x308/0x3a0
-[1174640.979329]  ? rcu_is_watching+0x34/0x60
-[1174640.983443]  ? __pfx___perf_event_read+0x10/0x10
-[1174640.988247]  __flush_smp_call_function_queue+0x154/0x370
-[1174640.993748]  ? __pfx___perf_event_read+0x10/0x10
-[1174640.998548]  __sysvec_call_function_single+0x4c/0x1f0
-[1174641.003795]  sysvec_call_function_single+0x4c/0xc0
-[1174641.008776]  asm_sysvec_call_function_single+0x16/0x20
-[1174641.014105] RIP: 0033:0x5616fdc38bd7
-[1174641.017873] Code: 0f 1f 00 48 89 d1 31 c0 48 89 f2 89 fe bf 41 01 00 00 e9 9c 06 ff ff 66 2e 0f 1f 84 00 00 00 00 00 66 90 31 c9 b9 1f a1 07 00 <ff> c9 75 fc 31 c0 c3 66 90 48 8b 05 99 a0 00 00 48 89 44 24 f8 b9
-[1174641.036825] RSP: 002b:00007ffeffe6f0b8 EFLAGS: 00000202
-[1174641.042245] RAX: 0000000000000000 RBX: 000000000000000d RCX: 000000000005c0b0
-[1174641.049573] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-[1174641.056894] RBP: 00007ffeffe6f0d0 R08: 0000000000000000 R09: 00007fef59807740
-[1174641.064218] R10: 00007fef59a540b8 R11: 0000000000000246 R12: 0000000000000000
-[1174641.071541] R13: 00007ffeffe71528 R14: 00007fef59a53000 R15: 00005616fdc45dd8
-[1174641.078870]  </TASK>
+	Rebase on current tip plus patch set "KVM: x86: Fix Intel PT Host/Guest
+	mode when host tracing"
 
+Changes in V11:
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Make assignment to event->hw.aux_paused conditional on
+	(pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE).
+
+      perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
+	Remove definition of has_aux_action() because it has
+	already been added as an inline function.
+
+      perf/x86/intel/pt: Fix sampling synchronization
+      perf tools: Enable evsel__is_aux_event() to work for ARM/ARM64
+      perf tools: Enable evsel__is_aux_event() to work for S390_CPUMSF
+	Dropped because they have already been applied
+
+Changes in V10:
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Move aux_paused into a union within struct hw_perf_event.
+	Additional comment wrt PERF_EF_PAUSE/PERF_EF_RESUME.
+	Factor out has_aux_action() as an inline function.
+	Use scoped_guard for irqsave.
+	Move calls of perf_event_aux_pause() from __perf_event_output()
+	to __perf_event_overflow().
+
+Changes in V9:
+      perf/x86/intel/pt: Fix sampling synchronization
+	New patch
+
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Move aux_paused to struct hw_perf_event
+
+      perf/x86/intel/pt: Add support for pause / resume
+	Add more comments and barriers for resume_allowed and
+	pause_allowed
+	Always use WRITE_ONCE with resume_allowed
+
+
+Changes in V8:
+
+      perf tools: Parse aux-action
+	Fix clang warning:
+	     util/auxtrace.c:821:7: error: missing field 'aux_action' initializer [-Werror,-Wmissing-field-initializers]
+	     821 |         {NULL},
+	         |              ^
+
+Changes in V7:
+
+	Add Andi's Reviewed-by for patches 2-12
+	Re-base
+
+Changes in V6:
+
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Removed READ/WRITE_ONCE from __perf_event_aux_pause()
+	Expanded comment about guarding against NMI
+
+Changes in V5:
+
+    perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Added James' Ack
+
+    perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
+	New patch
+
+    perf tools
+	Added Ian's Ack
+
+Changes in V4:
+
+    perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Rename aux_output_cfg -> aux_action
+	Reorder aux_action bits from:
+		aux_pause, aux_resume, aux_start_paused
+	to:
+		aux_start_paused, aux_pause, aux_resume
+	Fix aux_action bits __u64 -> __u32
+
+    coresight: Have a stab at support for pause / resume
+	Dropped
+
+    perf tools
+	All new patches
+
+Changes in RFC V3:
+
+    coresight: Have a stab at support for pause / resume
+	'mode' -> 'flags' so it at least compiles
+
+Changes in RFC V2:
+
+	Use ->stop() / ->start() instead of ->pause_resume()
+	Move aux_start_paused bit into aux_output_cfg
+	Tighten up when Intel PT pause / resume is allowed
+	Add an example of how it might work for CoreSight
+
+
+Adrian Hunter (11):
+      perf/x86/intel/pt: Fix buffer full but size is 0 case
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+      perf/x86/intel/pt: Add support for pause / resume
+      perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
+      perf tools: Add aux_start_paused, aux_pause and aux_resume
+      perf tools: Add aux-action config term
+      perf tools: Parse aux-action
+      perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
+      perf intel-pt: Improve man page format
+      perf intel-pt: Add documentation for pause / resume
+      perf intel-pt: Add a test for pause / resume
+
+ arch/x86/events/intel/core.c               |   4 +-
+ arch/x86/events/intel/pt.c                 |  84 +++-
+ arch/x86/events/intel/pt.h                 |   6 +
+ include/linux/perf_event.h                 |  28 ++
+ include/uapi/linux/perf_event.h            |  11 +-
+ kernel/events/core.c                       |  75 +++-
+ kernel/events/internal.h                   |   1 +
+ tools/include/uapi/linux/perf_event.h      |  11 +-
+ tools/perf/Documentation/perf-intel-pt.txt | 596 ++++++++++++++++++-----------
+ tools/perf/Documentation/perf-record.txt   |   4 +
+ tools/perf/builtin-record.c                |   4 +-
+ tools/perf/tests/shell/test_intel_pt.sh    |  28 ++
+ tools/perf/util/auxtrace.c                 |  67 +++-
+ tools/perf/util/auxtrace.h                 |   6 +-
+ tools/perf/util/evsel.c                    |  15 +
+ tools/perf/util/evsel.h                    |   1 +
+ tools/perf/util/evsel_config.h             |   1 +
+ tools/perf/util/parse-events.c             |  10 +
+ tools/perf/util/parse-events.h             |   1 +
+ tools/perf/util/parse-events.l             |   1 +
+ tools/perf/util/perf_event_attr_fprintf.c  |   3 +
+ tools/perf/util/pmu.c                      |   1 +
+ 22 files changed, 716 insertions(+), 242 deletions(-)
+
+
+Regards
+Adrian
