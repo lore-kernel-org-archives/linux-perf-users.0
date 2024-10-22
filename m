@@ -1,192 +1,206 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C82A49652
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 16:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1B054FB5
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 16:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729614654; cv=none; b=lZWipZqQLZoYkZv5vnCCpdy97TI3gxTyzP/uEIOAuPz+epIpzDjkDP/GzquIR8ZJtgM990DJpj11DSbKBUVHnGsh4zX1oGuPPNGgJQKfDq2DPEpEdCi0a1dXuqp0rTosRt0T+rKSC575EwNtI3uYvicyFYCt1VVc8+AB6vanQFo=
+	t=1729614915; cv=none; b=XaoXpRoqu1beUTYzq1j3RSKAtwd0dsIvUaZeHcAtuZ8n3kS2IBNfjtfD2KNkyYQiT1oDeyjAONccm+Vls9Q57m3O2gtpuMW6iB2bV2i7Bd/WSRSOs2T5BazKke/NGF4OL4Ws7aAjgFTOXUCC6I6+rNmC+eGVPSpbs8oO9noapiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729614654; c=relaxed/simple;
-	bh=QOPxs8wUWKMAIDl2V9pd953dr2fdLJZqCSgzDiAXVz4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=q5ZzSe0W83k52FXcDtLAomGjX9HmieNRtABJgAPjs5QZuu45CfEmYB1xfyLRcOAp1M/3gVXYyTPjCbgPHnY9Ddlcrxxkjw0jdTO6BpsgbOchIazOveyRI3TdvFn5AcwrKX/TRT8/yoHy8p7GE2uLNeMuHGchSgmZgGq6t3anADY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fqGLSzzr; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1729614915; c=relaxed/simple;
+	bh=1Gz1fWo3YmskqisPfhyRkFPsuIcbAbaL0/5AgmQG+mw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RsojvLkmu103vvUuIcUDpGZrr5zN2p/lonGd5FsM5F0I+VjVpPA0AnEbG3vY2f3izvSuMAyDtPl4rz0n6lD0xnT6Cmu5Ikwyr2ILLDaUV+O7nsEz+KtZOjqjcbXI98qDho25hcEqKp0pWhjYCF+SwZPpWvLiEqxfij/hBLjilRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K6cYtW78; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fqGLSzzr"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e290b8b69f8so9738765276.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 09:30:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K6cYtW78"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20ca03687fdso1975ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 09:35:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729614651; x=1730219451; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9kRp9X9Evgeqhd6nWrjVapRhaCIHseB9bHGDukDgzlg=;
-        b=fqGLSzzriuboJZlYznc2xAYIPnlzhSZqNeiZRtE0IPWHc5a9Txq//hAEjkI7dTa/4/
-         hcuG/Omms7ZVw6Bc3gcioQ5fQt6AxxNt5t3m68aDkSAZt3RLmnHlU71iFgtNTf1zDbLG
-         Pt2X7GA2wALJsXSyDpmxhSzJZDYP5YizdwpJF1wAoOtseBT53WX2aCbVEDs/l/RlN6Kp
-         Bw2bAM7sJ+butLU4k5orLMEkkRd5KK8SKxw7w37zDary+0tIL423qNRs5/4cBnJNjI9R
-         UdaprmPlzdGBgHf6B5jNTlYfdvvgPKLGhvPUkufNwrw6lDQdrhojhb/15LBywTPcuiw3
-         EbfQ==
+        d=google.com; s=20230601; t=1729614913; x=1730219713; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4Rk55zFTxsd34yZyWk5FqwEG1HO5rWiSggBlow3srns=;
+        b=K6cYtW78tfsoqYyejfSONQAr44KEo2x2+Mywbho/RWXJ3B4w839UpKvbTIhx5C2Xqx
+         N8/jBKZazVBfKaFofh8DDXqSfHMwprszVg1PZfivS3w8cOVsI46t4lWaviY/bYUcobIW
+         H7E7fQEexMgythncYVE3Ubl+PLQPsdunHENvW5sSNzPs7Qle6vWWnvFsf4n4x6u3muBM
+         WtEIuxhZNG1uU6ezZnpJD8Q17XygkW0BIFTOyDSlPYLjduHDTL8TvbzYI2Yg4srxmnqp
+         vkfs5LZDlL7WgzYH+sCp9SjdasvQcM999dSP4LWgtleMdNWOHbo6jsLzSiLVzSHGMqyt
+         vqpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729614651; x=1730219451;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9kRp9X9Evgeqhd6nWrjVapRhaCIHseB9bHGDukDgzlg=;
-        b=D5NK50Vs4L4vWx4JbaQ5hpfoKbHPHOA8rPiMUh85bxSoMJEmGuAnD/veioSGRZ+Njl
-         +8BdxLc/d2k79cyfUypg7ZEbzMLsI5rTGxv/ja27o2m3LB4RZ8fyTRrJupYP85IpB9TM
-         3VhYdQyLjkP2pZZybIXZIoICMRDY6jMfeOcKTuDQfYpec6SbbboUvuiwMU0iZ1Hu+3yu
-         3iTGpaGzImLvG8Nh5vScQFWh5zpWlq8IMhU+RPt0qdZJQXoZOQXn3th5Oyadv37TKUMO
-         suODmszEmYN3VANaptidbRjk28zkk+CpuPD6YA/HNScCfAqboo1f25/1QVTsCAkJPqKg
-         B/3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVXZDw6PTpL4tBVcxnr0DYecIdB1wNcg9g10YSLKxbpkDQ5JvXOo2snAZaLyxDWDmhIqY8cXInymG2YF7Ok31Rr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcHD1f+WergJysuA3MDdb1m7BV+nAjZHKORFJOEdHx8m1wC+/s
-	NNsaVSw3JhbJUcMadHiYjkW05QmynPberyP6gYRQxOwltpqOk4LfeHChpvo1XRlGB/Dtyged9/4
-	r3w==
-X-Google-Smtp-Source: AGHT+IFhidXoMwHV1i3xjXEppuei+o0CgKpCcKTpOo27zytz1Beo5NbI8wae2gvpTFRD+0KpTD3bdky90Rg=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a5b:c10:0:b0:e20:2502:be14 with SMTP id
- 3f1490d57ef6-e2bb168d0f5mr9106276.7.1729614650729; Tue, 22 Oct 2024 09:30:50
- -0700 (PDT)
-Date: Tue, 22 Oct 2024 09:30:49 -0700
-In-Reply-To: <b29e8ba4-5893-4ca0-b2cc-55d95f2fc968@intel.com>
+        d=1e100.net; s=20230601; t=1729614913; x=1730219713;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4Rk55zFTxsd34yZyWk5FqwEG1HO5rWiSggBlow3srns=;
+        b=J3upM1Sisq4yoTebo0dM4H6E+3hEIqH6QcFFV0dOeOZpGu5uR8qQhfPdceZOg92vtX
+         gpJ/OOkz5CJ/YoYI49Q2JRRGG2zHx7Rtd5HgP8P1EGxrJxC2QxZOTAhQdj9/mzYAIZTM
+         xuFQSki3g4h1rJZrDFwGMEe/ihZ59pvxB7poPNuO05gfrsONdlJwQ3PYGQKWz4SqXaXV
+         W7yKOC4P5VQg5QJYVSLxvjJyQWjAZzM7IWAV+ccH+y+V7nzScjlIQVvMhnMIg8AX/7ni
+         bw6B+JG6egiw5C12HtO+bMG8eW/rBLL01Xu+iUSj7pqtm5rs4LFZZP6PnMKbLZzNG2wF
+         +SUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVK3uf8GAuNJ227p1rpCt2gwkDirnLVo3HjqK9R88zkEdldfS4p6/NJN2KNKgEDsNxB0K7yNMDnJSFYLWq68iL1@vger.kernel.org
+X-Gm-Message-State: AOJu0YzORcKMzYuBQpsRPl8AyOVgwhWTP4eVK1SkqMH7i2/RlTb2x7QU
+	nG6Nn4IDbBvxp38sEDuXSI/z7VOppCRtjV2YPBqvJ44OeQ3qn4nJrwHXv53/plzw5G8dR5O+KXC
+	JLR7dQAZkDykbSUkZjQ03jfSUCmAi3+OdUF8X
+X-Google-Smtp-Source: AGHT+IEM79Unt4z+3n5XnYAuhS6UR6WxKhsPucZaXZ85ws1SpxaJfbbu58Y8JuhMkMCIPGjqD8Nx1FwHBSxIBOVN1Ok=
+X-Received: by 2002:a17:902:e541:b0:20b:bf5a:c8 with SMTP id
+ d9443c01a7336-20e97fbde77mr3506015ad.10.1729614913297; Tue, 22 Oct 2024
+ 09:35:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241014105124.24473-1-adrian.hunter@intel.com>
- <20241014105124.24473-4-adrian.hunter@intel.com> <Zw1iCMNSI4Lc0mSG@google.com>
- <b29e8ba4-5893-4ca0-b2cc-55d95f2fc968@intel.com>
-Message-ID: <ZxfTOQzcXTBEiXMG@google.com>
-Subject: Re: [PATCH V13 03/14] KVM: x86: Fix Intel PT Host/Guest mode when
- host tracing also
-From: Sean Christopherson <seanjc@google.com>
+MIME-Version: 1.0
+References: <20240806220614.831914-1-irogers@google.com> <cc7d6bdf-1aeb-4179-9029-4baf50b59342@intel.com>
+In-Reply-To: <cc7d6bdf-1aeb-4179-9029-4baf50b59342@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 22 Oct 2024 09:34:59 -0700
+Message-ID: <CAP-5=fVXvus+7PMO=WU+V3CnVNSboGgwS5EcPgXhJKb5MtRAWw@mail.gmail.com>
+Subject: Re: [PATCH v3] perf cap: Tidy up and improve capability testing
 To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	James Clark <james.clark@arm.com>, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, Yicong Yang <yangyicong@hisilicon.com>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon <will@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, H Peter Anvin <hpa@zytor.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>, mizhang@google.com, 
-	kvm@vger.kernel.org, Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
+	Oliver Upton <oliver.upton@linux.dev>, Leo Yan <leo.yan@linux.dev>, 
+	Changbin Du <changbin.du@huawei.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 22, 2024, Adrian Hunter wrote:
-> On 14/10/24 21:25, Sean Christopherson wrote:
-> >> Fixes: 2ef444f1600b ("KVM: x86: Add Intel PT context switch for each vcpu")
-> >> Cc: stable@vger.kernel.org
-> > 
-> > This is way, way too big for stable@.  Given that host/guest mode is disabled by
-> > default and that no one has complained about this, I think it's safe to say that
-> > unless we can provide a minimal patch, fixing this in LTS kernels isn't a priority.
-> > 
-> > Alternatively, I'm tempted to simply drop support for host/guest mode.  It clearly
-> > hasn't been well tested, and given the lack of bug reports, likely doesn't have
-> > many, if any, users.  And I'm guessing the overhead needed to context switch all
-> > the RTIT MSRs makes tracing in the guest relatively useless.
-> 
-> As a control flow trace, it is not affected by context switch overhead.
+On Tue, Oct 22, 2024 at 6:56=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+>
+> On 7/08/24 01:06, Ian Rogers wrote:
+> > Remove dependence on libcap. libcap is only used to query whether a
+> > capability is supported, which is just 1 capget system call.
+> >
+> > If the capget system call fails, fall back on root permission
+> > checking. Previously if libcap fails then the permission is assumed
+> > not present which may be pessimistic/wrong.
+> >
+> > Add a used_root out argument to perf_cap__capable to say whether the
+> > fall back root check was used. This allows the correct error message,
+> > "root" vs "users with the CAP_PERFMON or CAP_SYS_ADMIN capability", to
+> > be selected.
+> >
+> > Tidy uses of perf_cap__capable so that tests aren't repeated if capget
+> > isn't supported.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> I find I need to revert this.  E.g.
+>
+> $ install-perf.sh
+> $ perf record -e intel_pt//k uname
+> WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
+> check /proc/sys/kernel/kptr_restrict and
+> /proc/sys/kernel/perf_event_paranoid.
+>
+> Samples in kernel functions may not be resolved if a suitable vmlinux
+> file is not found in the buildid cache or in the vmlinux path.
+>
+> Samples in kernel modules won't be resolved at all.
+>
+> If some relocation was applied (e.g. kexec) symbols may be misresolved
+> even with a suitable vmlinux or kallsyms file.
+>
+> Couldn't record kernel reference relocation symbol
+> Symbol resolution may be skewed if relocation was used (e.g. kexec).
+> Check /proc/kallsyms permission or run as root.
+> Linux
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.061 MB perf.data ]
+> $ git revert e25ebda78e230283bf707ae3e9655270ff40a7f9
+> Auto-merging tools/perf/Makefile.config
+> Auto-merging tools/perf/builtin-ftrace.c
+> Auto-merging tools/perf/util/Build
+> Auto-merging tools/perf/util/symbol.c
+> [master 752707588a700] Revert "perf cap: Tidy up and improve capability
+> testing"
+>  7 files changed, 70 insertions(+), 73 deletions(-)
+> $ install-perf.sh
+> $ perf record -e intel_pt//k uname
+> Linux
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.065 MB perf.data ]
 
-Out of curiosity, how much is Intel PT used purely for control flow tracing, i.e.
-without caring _at all_ about perceived execution time?
+Sorry for this. I couldn't immediately see a code path that should
+impact `perf record` and the reproducer works for me without the
+revert. Running your command under gdb looking for calls to
+perf_cap__capable:
 
-> Intel PT timestamps are also not affected by that.
+1)
+```
+#0  0x00005555557f7abe in symbol__read_kptr_restrict () at util/symbol.c:24=
+29
+#1  0x00005555557f759f in symbol__init (env=3D0x0) at util/symbol.c:2523
+#2  0x00005555555e7ca3 in cmd_record (argc=3D1, argv=3D0x7fffffffe390) at
+builtin-record.c:4114
+#3  0x000055555569775f in run_builtin (p=3D0x5555560bda50
+<commands+288>, argc=3D4,
+   argv=3D0x7fffffffe390) at perf.c:351
+#4  0x0000555555696e13 in handle_internal_command (argc=3D4,
+argv=3D0x7fffffffe390) at perf.c:404
+#5  0x000055555569762f in run_argv (argcp=3D0x7fffffffe1dc,
+argv=3D0x7fffffffe1d0) at perf.c:448
+#6  0x0000555555696a74 in main (argc=3D4, argv=3D0x7fffffffe390) at perf.c:=
+562
+```
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/builtin-record.c?h=3Dperf-tools-next#n4108
+```
+/*
+* Allow aliases to facilitate the lookup of symbols for address
+* filters. Refer to auxtrace_parse_filters().
+*/
+symbol_conf.allow_aliases =3D true;
 
-Timestamps are affected because the guest will see inexplicable jumps in time.
-Those gaps are unavoidable to some degree, but context switching on every entry
-and exit is 
+symbol__init(NULL);
+```
+I don't think this is the cause but it seems unfortunate we're
+enabling symbols in perf record unconditionally.
 
-> This patch reduces the MSR switching.
+2)
+```
+#0  perf_cap__capable (cap=3D21, used_root=3D0x7fffffffbd87) at util/cap.c:=
+22
+#1  0x0000555555878236 in perf_event_paranoid_check (max_level=3D-1) at
+util/util.c:330
+#2  0x00005555559574ba in intel_pt_recording_options
+(itr=3D0x55555610ada0, evlist=3D0x5555560f36f0,
+   opts=3D0x5555560b4818 <record+320>) at arch/x86/util/intel-pt.c:619
+#3  0x00005555558a46ad in auxtrace_record__options
+(itr=3D0x55555610ada0, evlist=3D0x5555560f36f0,
+   opts=3D0x5555560b4818 <record+320>) at util/auxtrace.c:619
+#4  0x00005555555e8139 in cmd_record (argc=3D1, argv=3D0x7fffffffe390) at
+builtin-record.c:4206
+#5  0x000055555569775f in run_builtin (p=3D0x5555560bda50
+<commands+288>, argc=3D4,
+   argv=3D0x7fffffffe390) at perf.c:351
+#6  0x0000555555696e13 in handle_internal_command (argc=3D4,
+argv=3D0x7fffffffe390) at perf.c:404
+#7  0x000055555569762f in run_argv (argcp=3D0x7fffffffe1dc,
+argv=3D0x7fffffffe1d0) at perf.c:448
+#8  0x0000555555696a74 in main (argc=3D4, argv=3D0x7fffffffe390) at perf.c:=
+562
+```
+So this looks like the cause.
 
-To be clear, I'm not objecting to any of the ideas in this patch, I'm "objecting"
-to trying to put band-aids on KVM's existing implementation, which is clearly
-buggy and, like far too many PMU-ish features in KVM, was probably developed
-without any thought as to how it would affect use cases beyond the host admin
-and the VM owner being a single person.  And I'm also objecting, vehemently, to
-sending anything of this magnitude and complexity to LTS kernels.
+Would it be possible for you to trace (strace/gdb/perf trace) what's
+happening in perf_cap__capable? I suspect the system call capget and
+its interpretation are the source of the problem, but I can't eyeball
+an issue in:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/cap.c?h=3Dperf-tools-next#n53
 
-> > /me fiddles around
-> > 
-> > LOL, yeah, this needs to be burned with fire.  It's wildly broken.  So for stable@,
-> 
-> It doesn't seem wildly broken.  Just the VMM passing invalid CPUID
-> and KVM not validating it.
+I'd prefer a fix to a revert but I'll leave that to others to decide.
 
-Heh, I agree with "just", but unfortunately "just ... not validating" a large
-swath of userspace inputs is pretty widly broken.  More importantly, it's not
-easy to fix.  E.g. KVM could require the inputs to exactly match hardware, but
-that creates an ABI that I'm not entirely sure is desirable in the long term.
-
-> > I'll post a patch to hide the module param if CONFIG_BROKEN=n (and will omit
-> > stable@ for the previous patch).
-> > 
-> > Going forward, if someone actually cares about virtualizing PT enough to want to
-> > fix KVM's mess, then they can put in the effort to fix all the bugs, write all
-> > the tests, and in general clean up the implementation to meet KVM's current
-> > standards.  E.g. KVM usage of intel_pt_validate_cap() instead of KVM's guest CPUID
-> > and capabilities infrastructure needs to go.
-> 
-> The problem below seems to be caused by not validating against the *host*
-> CPUID.  KVM's CPUID information seems to be invalid.
-
-Yes.
-
-> > My vote is to queue the current code for removal, and revisit support after the
-> > mediated PMU has landed.  Because I don't see any point in supporting Intel PT
-> > without a mediated PMU, as host/guest mode really only makes sense if the entire
-> > PMU is being handed over to the guest.
-> 
-> Why?
-
-To simplify the implementation, and because I don't see how virtualizing Intel PT
-without also enabling the mediated PMU makes any sense.
-
-Conceptually, KVM's PT implementation is very, very similar to the mediated PMU.
-They both effectively give the guest control of hardware when the vCPU starts
-running, and take back control when the vCPU stops running.
-
-If KVM allows Intel PT without the mediated PMU, then KVM and perf have to support
-two separate implementations for the same model.  If virtualizing Intel PT is
-allowed if and only if the mediated PMU is enabled, then .handle_intel_pt_intr()
-goes away.  And on the flip side, it becomes super obvious that host usage of
-Intel PT needs to be mutually exclusive with the mediated PMU.
-
-> Intel PT PMU is programmed separately from the x86 PMU.
-
-Except for the minor detail that Intel PT generates PMIs, and that PEBS can log
-to PT buffers.  Oh, and giving the guest control of the PMU means host usage of
-Intel PT will break the host *and* guest.  The host won't get PMIs, while the
-guest will see spurious PMIs.
-
-So I don't see any reason to try to separate the two.
-
-> > [ 1458.686107] ------------[ cut here ]------------
-> > [ 1458.690766] Invalid MSR 588, please adapt vmx_possible_passthrough_msrs[]
-> 
-> VMM is trying to set a non-existent MSR.  Looks like it has
-> decided there are more PT address filter MSRs that are architecturally
-> possible.
-> 
-> I had no idea QEMU was so broken.  
-
-It's not QEMU that's broken, it's KVM that's broken.  
-
-> I always just use -cpu host.
-
-Yes, and that's exactly the problem.  The only people that have ever touched this
-likely only ever use `-cpu host`, and so KVM's flaws have gone unnoticed.
-
-> What were you setting?
-
-I tweaked your selftest to feed KVM garbage.
+Thanks,
+Ian
