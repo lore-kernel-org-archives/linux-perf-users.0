@@ -1,296 +1,203 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590B11A00D6
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 14:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729608921; cv=fail; b=Zux4CnhQt5EHaQbIy2pVfZffrJ/nTitXkuCRp9WuhLy6H5x5NFCjS24RSDTwDmDsmcFyb8m3xM+/IV+uxCp5aKI51VhN71wpAeHMg8Q1oGRxiFszwWsB0hKTt74GO4J+XTjumjsXKjbrukjrUkEjcltyO/bIXSgQBhzrUaRijCE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729608921; c=relaxed/simple;
-	bh=EWaDJTOG4cS9Cvj/SHmrnQ6OmGaTZKz/2fBrlchyNvc=;
-	h=Message-ID:Date:To:From:Subject:Content-Type:MIME-Version; b=mN2UXNCvBGx5sKD1h5e7c3KCbJvYZKaOOk6dR//M7VqGnBQqe40EGtkhbA8NsjamFdmwU1nKABO2hiPCPF1M8a6UfLUkwjjvj8ZVL72tay7tA4cLkfua0pONoqYIeXdgxHAlrMvNIrhaFi5kPdG7w/dBUQDhwUfCAzEOovaT5g8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cWHg3mgV; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=RiKa9h6r; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051CD1A0AF2;
+	Tue, 22 Oct 2024 15:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729610321; cv=none; b=HmBPqyiJ5oh5bcTqm0CDHQ0fXsX/f/iODjJANCemtgmx9+milRPWPBScxl5a+oLxNsg6FVTUaBTvgcQoHttMfYnP0q+4JX0FN4ZInjn22AdrmifzBRMEbZKh7UCxStId+XPf+xi9B7vYuqpuxR5V8UK0Y1YFFPmKzlLWZl4LS6w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729610321; c=relaxed/simple;
+	bh=CSfYJ73PoiHlK1B0hKxExTw/zBdaJ8h97t83JEP4vOc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VqsmIwyrVnxVdqcX6rtPcKnYZHiyL8rq7C5JRr4H0RF3vDvgor3IKeSb8M3DLWjDZ33AF0+Ocb8z2KVaiOAfQA8RNZRpqapTq5kRW/xEfgbJNlHH+Blq5WKIhHapIpz2+T9MPn8ylKOSg7g0zExyxLUIOZEtioZRtkA4VkuaGI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ia0qI+D1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cWHg3mgV";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="RiKa9h6r"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49MEfdDH029445;
-	Tue, 22 Oct 2024 14:55:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=corp-2023-11-20; bh=m8ciE9PeOo5EWHHf
-	nYYLnGtEcWK0xLBMnO1iNUk4xmI=; b=cWHg3mgVhCuacQxstgd+NUPAli7wlijN
-	tES4ngL3xfB8MpnsrgyqyYn+JSMPe+ZJy7zGeFQDARdpBwF89dqpvVesI1+5aAX3
-	C53oNCNtMrEuiEwdIXy3tSLt/zZg6BJUEE6Vlfvvj6MzeWJyZ268V16ZocM4SdoB
-	3jSuN1C4mYym1FE5CTm68kYqYO25p+lWHDpH1RtzHBNS6kPtVx6cAJhtTZ3kM4VM
-	34/vOgyusHG8nBu+fQL7ryLZjGDRuMZmxxop7lGCpg5GwXmP2zGW2g+Ouzrjn9Kl
-	2jSZyg2hpGRwVsymWnXNjZPI5Q3KhtXowEE7OJgdHtm5cruFe7rQMg==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42c5asdu75-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Oct 2024 14:55:13 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 49MDgvOp035267;
-	Tue, 22 Oct 2024 14:55:11 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2048.outbound.protection.outlook.com [104.47.58.48])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 42c378hnd8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Oct 2024 14:55:11 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sh3zTtWTiArQhQFrYXDnUj4IwJ2A5LGV74Ydr5OqgPsIWZewWt3x5SbXJKQNdVxpbCFkxdq5d2aAQJ8Z/8YBIauQSsXXi5un0hvgo0ctQjyqy5ZPBLbHyxDS3g6OmGwToJQOTVb96hkaVFgtFgMVVVH3AHO8Z8Mi8yTEx8t18pY2lT98hfsGtLyDOWx7myDMOWv0z1F2XzR92WN3iEJU7A3orNxXcbczGJxE0EQ6hGt9/gpt8R2ZPwpDoibQ1+I22All1MXX23I9gdvGWi3c4WJiTeMLlvu7p+0I2RQ4ygSbE6UYEDw/+3xFy6+p9gbW1uggXfxgObknC2v7dk5gIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=m8ciE9PeOo5EWHHfnYYLnGtEcWK0xLBMnO1iNUk4xmI=;
- b=ioLmI4+yUq+wl85wPgpx54rLnZVIrSRE/j+LKQmsFxsnDpgA3fjmfqKOTB+fr/0MUvPt3ZRA3czyTH4CnFB1oHZMQO4VwDzbiIFg05nbQer+A8EIJQ2puqQeDL85pSyo7oil9e2ZDlo/dg0zOuJCKFPnPelSz1l9CGlxMwmBC4EZXfS+bHzVeBMFNY87QHAMUqz0dZlBBYfwacKIxn4I2n5dZQFB7xeamaCzoErBXRbNOxx1992qpXr2ayDYm1Ii9LxAwff9DoAB6w47ahE1E66wegds7oTW+85BsY/iiiIC1467ibGenn1tRdMWjsLvck8LgWwqqiNx4iXyol7mLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=m8ciE9PeOo5EWHHfnYYLnGtEcWK0xLBMnO1iNUk4xmI=;
- b=RiKa9h6rsPFPHCuXNxS8Q0Wv2S8Qy5LgQSRgpUVjBsegzQ/pFNFCF/ky4Iyhzgua7egU5pXjHBir5DCUCJUiPgNeXFFYPmfRVRc+q19doQEhSANaKndL7Dxs9KiOl+qucu6AVdalLrC+Rhta5LqhtcQlhdiYHKZhD8lZ6tQ7WkE=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by IA0PR10MB7229.namprd10.prod.outlook.com (2603:10b6:208:400::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.28; Tue, 22 Oct
- 2024 14:55:08 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%5]) with mapi id 15.20.8069.027; Tue, 22 Oct 2024
- 14:55:08 +0000
-Message-ID: <156a0ee3-18d5-4144-9f86-230a3946940e@oracle.com>
-Date: Tue, 22 Oct 2024 15:55:05 +0100
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-perf-users@vger.kernel.org, x86@kernel.org
-From: John Garry <john.g.garry@oracle.com>
-Subject: [bug report] perf top generates kernel "unchecked MSR access error:
- WRMSR"
-Organization: Oracle Corporation
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0415.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a0::19) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ia0qI+D1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD8E7C4CEC3;
+	Tue, 22 Oct 2024 15:18:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729610320;
+	bh=CSfYJ73PoiHlK1B0hKxExTw/zBdaJ8h97t83JEP4vOc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ia0qI+D1EDfyaNJVL+fRWbBSkEXT/Hf4e/YmdoysJc0jMwlVAOiZgbnsZSlZ7vaYP
+	 pePNKvK1friTwMrZwjbixyog/B8cku6tVImzqRz7NJsP5LqZsDeDBxTfWjkkcdOAj9
+	 5+YOovUpAoj8qU4mghPGrs1bOUjZ2PPjwXA3ur2oh/iqLtmcwYH1RG+nM7VDXMsOSk
+	 mSaByG0Sill0fXVbYEkyjBbMmWvE/jwpKsEIQE5bH4LOWAYpa2PDTKanrNrhoFxB1Y
+	 TecH9QD+2l+3oe6pJNSYgKErAIKTffRavwQqSdusSy6uRlhT6sHk+b5iemBzGvkDHk
+	 x8PtTFGYwvtSw==
+Date: Tue, 22 Oct 2024 12:18:36 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Howard Chu <howardchu95@gmail.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH/RFT] Re: [PATCH v5 1/8] perf trace: Fix iteration of
+ syscall ids in syscalltbl->entries
+Message-ID: <ZxfCTG76hvFaSxzi@x1>
+References: <CAH0uvoi622J7gZ9BoTik7niNH3axVJR0kPNovUQnMjUB6GWLNg@mail.gmail.com>
+ <CAH0uvojw5EKqxqETq_H3-5zmjXiK=ew2hBQiPDpCtZmO7=mrKA@mail.gmail.com>
+ <3a592835-a14f-40be-8961-c0cee7720a94@kernel.org>
+ <ZwgAzde-jVyo4cSu@google.com>
+ <ZwgBenahw7EImQLk@google.com>
+ <ZwhA1SL706f60ynd@x1>
+ <2a91f9d0-8950-4936-9776-7ba59ab1d42a@kernel.org>
+ <ZxLeS7CQFIR8lTmo@x1>
+ <ZxLglVIivPk05c97@x1>
+ <744634f0-5010-4465-85cd-0df79506f5d9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|IA0PR10MB7229:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9e3ee90f-d6f2-4018-e6ba-08dcf2a98548
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?b0JueFR4Uk1FYnVDTnMxOWhzMFljWkZKNS92c1IzL2ZoNTc5aDlVMzBuREp4?=
- =?utf-8?B?R3UweVlUSEhPUTFLbWVaRGtvOW92cHM3R1BMSGltZUFwZjNPc0pIZm1DTWh6?=
- =?utf-8?B?eG56akptaFFSWnlaaGdsdkpqUlhNcmoyK2FVUngxS3IvZDZNekFsNkc2Ny9y?=
- =?utf-8?B?TkRLdXJ5U09TNkdXOENlZXduYzhNRTlqWW9rWTZZODhOUW5RakdpOE1oZlRq?=
- =?utf-8?B?ak9qYThPUVFEekt5Z1dYbjB0UzlXUlB2aTFrN1hua3ZxL05MYlJGZlJCMUEx?=
- =?utf-8?B?RUFDZmp5WXNkeEF2eFRpdHpKREpvVVlpU2FpVUVpK1JGQTBHM054bmVzeERt?=
- =?utf-8?B?blNqNkJaWTJXa21KZUxnaXJ3QmxOdVBkZ2RRNXhrVjBJck1HMVhpY01jckVC?=
- =?utf-8?B?b2FEUFlGK094ZU1YNW9RbmExdzJNRVBYYXNSVWMzYWQycFpkL01oRm9qeVRV?=
- =?utf-8?B?UlpBeEJBd2lBbXBsL0FoUWl0bHhHV201S0tsZlcyekc2LzE1cUZXVjBLVVZV?=
- =?utf-8?B?c24ySkRlMk5pUEVsYldOWGlTZS9DU0ZkbGl2YVhZbHJZa25ObVdhMTZvdnly?=
- =?utf-8?B?UTZreENocWk0RFRIMWhvMkx6MXRmRElqV29odW9nZHpkdXdqRE1zMUtZQkhh?=
- =?utf-8?B?eFVjbVQ4Qy9mQks2VzNtQ2ZDVktDQVI4eU9aQUhhY2ZJdWpzVEZHMXN5eGFu?=
- =?utf-8?B?TEphZE95WkZRZG53QUx1ck1TTXFtMG5yQW1DSytTYkVzVUQyMmlhYkxzOE81?=
- =?utf-8?B?SEtoUFMzeXlyNmpqbnFyS0tNT2dMd045Rmt1bTR5Q3oydG5WdEN1eW9PSkZq?=
- =?utf-8?B?UUl6eHNYYTYwaEs1VzI4R2owdjJ1aTdROTlXV2ZQNHlDQVhkZU1QeXU1dVRI?=
- =?utf-8?B?dzdhNXdlZHltYzJ4Mi9VT1NhT3BveUdoQm9nc2xyS0Q3RGorVmZiYTYxQWJK?=
- =?utf-8?B?UjljRDNDb0VaWVBIcldIcTQxVTY5d25wR1dvaFlZaUNMVStqN1BlSTBQY0dE?=
- =?utf-8?B?YTZJMEkvQkc5cTFCQjR0WGtKQWtmWloyTVBnZWNVSGx2dTNHamdqWFBwK0Uv?=
- =?utf-8?B?dFRwM1JBTFNjRmx0YWFkMUwwSnYyQ3hYR1NzUUJCMG9TTkcwMXVyMVd1K0xh?=
- =?utf-8?B?RVp4bndhV3lkQWJQRzN0NGpJRXhHcnFPaFFPM1pGM0JHOWNmTzdCRk1aNVZE?=
- =?utf-8?B?NmJwWGlra091RVBiTldHNjBaTXdJWGdnUGE5R0xqUXUwSGZCazBkOWZ6cXkx?=
- =?utf-8?B?enZlZ2NGem40Z04rb2lGWGh1Qmorb2NqVjUyN21Ja3VpdFhXT0ZaK29JTm9k?=
- =?utf-8?B?ZUxuaVZoNmJoZUJFakhoRnVXWGZ6TEFPSUY3MytGZ25NaFRDRFpTT3RQQS9l?=
- =?utf-8?B?VVI1YWVxdERuMFpoM0kwdGZBbGJDeXl3cUF6SUYrZ3QxNnRmZjQvdURoeXBq?=
- =?utf-8?B?RkNIcGZZbHgrMGF5NkV6ancxajFoRXlKZ1NrMlhFQ3RxTjZyMHF4SnNvNEFt?=
- =?utf-8?B?STdPWVlYMmdQdjZYbWQ4dnNqbG1FbGs4dmY3cnNIYW11YmI1WHQ3RXlvZWV1?=
- =?utf-8?B?d1gyTUFHdFFPRzBnTmZEa1FmdzJpcFFxVlVQSlo2eWhPT3h0UTRkeS9ITnhH?=
- =?utf-8?B?bGE5UXdXQ3h5U09yQjhaU1p3ZFpoZHh4ZnZEL0dPM3dKekpWd09QcXBaMXpI?=
- =?utf-8?B?clZiMU11NUoyYWZnYUdCcWMzcHYvcDBKczkzL05YUmNPbTJVdFpxa3IyUXVR?=
- =?utf-8?Q?WN/57e0HaM/Xa+oWX8Rzt9I09GsvEVcVztNpCY1?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cEdCTlN6c0pUU2pscVVPVVU5RWdEZEhFNHhVS3dCejcwbHBKbmQydDRKVWtk?=
- =?utf-8?B?SzVTSnV0eHdVNHdhVjRXMFRLYlhZYlRjRFErVi83OG95ZUg4Z3lkMU1DOENm?=
- =?utf-8?B?aXhBeGdlMEZFRTZGdCtiUFJ4eVZscE1LeHAyWjZ2N3FNM1AwTmlzM0h4SkI0?=
- =?utf-8?B?ZVlVV3FjS3pVMUZ1bTdTTkViMmhMNmNOVjR5VUJVUHppUzZLSFJmeGJzMTlC?=
- =?utf-8?B?azZXcXdPK2RsS1J2L2lkZEtGOW11TGV6OWpyRHAwR3l1MTA5UTVNSi8rY2ZH?=
- =?utf-8?B?VVdLWXZpNEJvbjBteHpIZ1ZhRUdjUDlIVHdkMm5XVHY1d2FwZFZTR3JZdHZm?=
- =?utf-8?B?SlpITVpBc0dPS2QyRmJQeEtsNEFhTklaMWo2WEZQT0I2dkhEQ3FVSzJhaWc3?=
- =?utf-8?B?SUhIa05XOWFWdlk1QVB4Q2NHN25yVm4yU2YrVk5lVll0a2FFL2MzZmhOUWZX?=
- =?utf-8?B?ZDlOUzMxR0NQYThNZkJOVWJMeGw3NzRQSEZwYkRIa1pDOTBPdHRNS01obFNR?=
- =?utf-8?B?S3hhd2JCUTA5KzJiZUw4NWw0bEc1SDQxRmZwTlQ3M2U0YXJlNDU0dHZtdWpZ?=
- =?utf-8?B?YzNTd3BWSnBick52U3AvY0dNTmNEMzJKcXUwTmdOdjI4OG1CL09NaUtvenNV?=
- =?utf-8?B?VTZ4aGtDYmJUZDJmc25UQkF3RHAzbmRURS90cTBsQWhOYmZhL2piS00ralBG?=
- =?utf-8?B?S3NReUR3MllRaHZMcnBVS012aXJxQnVONmFOYmRvekcvempOdXYrcHZPRXFH?=
- =?utf-8?B?bEdqNUM2R3NzU0ljb2JOZkFXbFkxRmxnc2FTa25nbDc1ZmM3WGF6OGFhMlJo?=
- =?utf-8?B?TkhLNmRBK0I0RXdHSDZja29SNW1mUVM2UUZPL3pXSklaZm1vQmhFa0E5RnRl?=
- =?utf-8?B?UjRBM1J0U1NKa0ZjaHVDWHVCWVRLTktyRnN5cW0zNlM0T2hoejJKMExGZUll?=
- =?utf-8?B?aUlFeDVZR010OFQ3N08vbGhNN1dSWTNoaktDSWZnWUNCQ0Y5UXZoMWVmOThE?=
- =?utf-8?B?c0tpODJxb0hSdFU0RDc5OGl2K2RKT08xZm1zbklrSW8wanpFVkxIRGVxN3Qv?=
- =?utf-8?B?S1JNT1IxTlFUUHYrZ2xDMXhyTTBqUWRoNytlVEhZU0xtSWJac0hzNENQYVFH?=
- =?utf-8?B?dldDNFNOeXBmdy9TKzAvakJwWWZiS3Z1aFlSd0p0WDZBcWFYY3JpTFcrcG1j?=
- =?utf-8?B?S2doeW1OeGhYdmRKZnVFSldZYUREOHhmZGNCQ2VnWnB3WnkrODFxb1ZDQ0c1?=
- =?utf-8?B?SjNzS2Rrblo0VCsrK2s0emNpR09RcEVNMlFwdVBWMWtCUEJyOUJBZ3E4K0tH?=
- =?utf-8?B?c2h2M2RxY2V4QndZZzMwWmcwSHRUS2NLRXpCQzUvWVV6R3dBcGtJS0RTWUc0?=
- =?utf-8?B?UHRIWHdDNXhzODRScERGNHpGcmtkeDBlNmpJY0RuaHUxZ2RuUlJNNk5OWGxP?=
- =?utf-8?B?UW96UXkwK0NLL2R0Tm1NMWJ4K040Z3lsZy8zY1VJSk95dDdkMFJUcGQrcStB?=
- =?utf-8?B?LzBqR1cxajFpMkxXTStrNDBzVk9rbDVRK0tGYVpMNFJmelBrK0JmaElhYmMr?=
- =?utf-8?B?czRwSkphQUd2L1ZTTW9kdG0zSTFRWFRJVk9XRzZvaXJyU0hlM1NnL0F2WTF4?=
- =?utf-8?B?MDdQb3Z6UFcrMjRNaVdKNWFreDF4Uk5penVWeFpjVzdLQWNndXFXaHpSdUpn?=
- =?utf-8?B?QlJCN1Z1QVBEMkFsT3BZZlJaV1YvQnRZYjhWL2tYOG5lWXMwc2orMVlaYXZn?=
- =?utf-8?B?aTEyRmFoNHVUdlJlbjFjbkx6NUdsQW1VT1dTRDFXenNPSjBMMzMrWFQ5NjVU?=
- =?utf-8?B?dXk0a0duNXJReWpvZzNCZjZlb1l0cWtjWWNINWtqd0V0Tjc4V2c2eWZxUlV4?=
- =?utf-8?B?RjJBNlc1Q1hkSnhub0JQSGpNakdtMFpLOTFtRTlTZTYycDdMUFRtQ2s3TVZy?=
- =?utf-8?B?TFNkR0xnVjlLOWpqcUtzZHpOQTZDNkZjdkhZOHBHU3NXeGc1cEphMnNQNUZQ?=
- =?utf-8?B?V0pBVGZVdFluNXM4ZnNxNS9zeDFQMURCd1RYOFhHNzQ1Ti9iTXUyVUdFbHVD?=
- =?utf-8?B?cFlVaGhGR2E2eWdScGRSNlMzQkl2U1VsbXU0eC8vUlVmczRRUzNmRWl6YVd4?=
- =?utf-8?Q?7GSldMshsKXQkGkgK9ONyD5OK?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	UcS3Q1jqxdsKQ0s7Kd/Z90p3QO7c1WlHUowzL+ML4OXtw3LrMUoIsI87F5nlQs61MSIPMh5plnt900gDQCbz7uDxdtBAkwYiZ1jJbKoXuT1Ip319JdqI6Nga0a6ExnEXlgU1/5X0i4FIb8jcNL0jRxeyFibvnm58hle7RglXBwJfZNOuzt0Aapl32R+yfM+urkp/qrzQOGNybDsA2Kyuy+7D253EobkZ21LeIbk1HO10E0f803vPd+RhB1GCEfowh1udMu4e4xgnbGtQ0n2l+Y7I9jwJ2TCkIGfcNkfiKutvhmZIXdE+f8nTK8Ivbgn5GI1SvbUksiecxAnrHmTHJo7BdoP6W8T+V0OKW8dShSiAZUq9zCdYZqIDndDVzGBktpKv0D7F2QRq8ECPeyyip2N1XPBZP469dFGMV5vtLe2Afzb5K4cMBvmP7fb4zDvls7PkHNRU4llPGbo6cLJ1TDVXZmq8LltzUU2dZ52cbnSUY2MTrOoawvL8aeVGzpTq2Obn/nASg7QGhAM5d5uWid8DjqAicld0zJXCvNDCPc9qkuTYHMP4XDofcYqXuFOvJGUdKbZfZr/DaTNmV66jQ6dfQ7wQJog1j4ZEXMCnWJg=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e3ee90f-d6f2-4018-e6ba-08dcf2a98548
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2024 14:55:08.1708
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /0aKEzaNtUdDkHlLGUpOj2BftTFmT7nMEsQZMqcrokicAk2HSmnaDdPw2KgQdhDSa1KHjPWKRdN7rEmMllcxEQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB7229
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-22_15,2024-10-22_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 adultscore=0
- mlxscore=0 spamscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
- definitions=main-2410220095
-X-Proofpoint-GUID: Rt3iPQTjlymuVsNkG545GXcr9YBIpglS
-X-Proofpoint-ORIG-GUID: Rt3iPQTjlymuVsNkG545GXcr9YBIpglS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <744634f0-5010-4465-85cd-0df79506f5d9@kernel.org>
 
-Hi all,
+On Mon, Oct 21, 2024 at 07:43:50AM +0200, Jiri Slaby wrote:
+> On 19. 10. 24, 0:26, Arnaldo Carvalho de Melo wrote:
+> > root@aquarius:~# ls -la /sys/kernel/debug/tracing/events/syscalls
+> > ls: cannot access '/sys/kernel/debug/tracing/events/syscalls': No such file or directory
+> 
+> Doesn't 5.10 have /sys/kernel/tracing/events/syscalls yet?
 
-On my VM, "perf top" gives this stackframe on v6.12-rc4:
+The config for rpi doesn't have, I had to install bookworm, 6.6 based
+kernel, then rebuild it after enabling DWARF, BTF,
+CONFIG_FTRACE_SYSCALLS and then it works, I was able to do some initial
+testing of my patch:
 
-[  930.527581] unchecked MSR access error: WRMSR to 0xc0010200 (tried to 
-write 0x0000020000510076) at rIP: 0xffffffff94ead548 
-(native_write_msr+0x8/0x30)
-[  930.531135] Call Trace:
-[  930.531456]  <IRQ>
-[  930.531749]  ? ex_handler_msr+0x138/0x150
-[  930.532285]  ? search_extable+0x26/0x30
-[  930.532780]  ? fixup_exception+0x9c/0x310
-[  930.533405]  ? exc_general_protection+0x10c/0x490
-[  930.534081]  ? asm_exc_general_protection+0x26/0x30
-[  930.534768]  ? native_write_msr+0x8/0x30
-[  930.535357]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  930.535998]  x86_pmu_enable_event+0xa5/0xd0
-[  930.536641]  amd_pmu_enable_all+0x4e/0x80
-[  930.537211]  ctx_resched+0x13b/0x1d0
-[  930.537735]  __perf_install_in_context+0x2a2/0x390
-[  930.538439]  remote_function+0x49/0x60
-[  930.538931]  __flush_smp_call_function_queue+0xdc/0x700
-[  930.539694]  ? __pfx_remote_function+0x10/0x10
-[  930.540480]  __sysvec_call_function_single+0x38/0x140
-[  930.541134]  sysvec_call_function_single+0x6c/0x90
-[  930.541970]  </IRQ>
-[  930.542269]  <TASK>
-[  930.542766]  asm_sysvec_call_function_single+0x1a/0x20
-[  930.543493] RIP: 0010:pv_native_safe_halt+0xf/0x20
-[  930.544195] Code: 22 d7 e9 ff b5 13 00 0f 1f 40 00 90 90 90 90 90 90 
-90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa eb 07 0f 00 2d d3 e3 25 00 fb 
-f4 <e9> d7 b5 13 00 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
-[  930.546841] RSP: 0018:ffffffff96a03e68 EFLAGS: 00000206
-[  930.547563] RAX: 0000000000000006 RBX: ffffffff96a269c0 RCX: 
-0000000000000000
-[  930.548579] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 
-ffffffff94f53f31
-[  930.549568] RBP: 0000000000000000 R08: 0000000000000001 R09: 
-0000000000000000
-[  930.550529] R10: 0000000000000001 R11: 0000000000000000 R12: 
-ffffffff970608e0
-[  930.551582] R13: ffffffff96a269c0 R14: 0000000000000000 R15: 
-0000000000000000
-[  930.552683]  ? do_idle+0x1d1/0x2a0
-[  930.553182]  default_idle+0x9/0x20
-[  930.553670]  default_idle_call+0x7d/0xc0
-[  930.554226]  do_idle+0x1d1/0x2a0
-[  930.554696]  cpu_startup_entry+0x29/0x30
-[  930.555154]  rest_init+0x12e/0x1d0
-[  930.555621]  start_kernel+0x60f/0x6d0
-[  930.556064]  x86_64_start_reservations+0x21/0x40
-[  930.556633]  x86_64_start_kernel+0x91/0xa0
-[  930.557107]  common_startup_64+0x13e/0x141
-[  930.558038]  </TASK>
-[  930.738880] perf: interrupt took too long (2511 > 2500), lowering 
-kernel.perf_event_max_sample_rate to 79000
-[  930.772912] perf: interrupt took too long (3414 > 3138), lowering 
-kernel.perf_event_max_sample_rate to 58000
-[  930.797764] perf: interrupt took too long (4275 > 4267), lowering 
-kernel.perf_event_max_sample_rate to 46000
-[  931.117733] perf: interrupt took too long (5345 > 5343), lowering 
-kernel.perf_event_max_sample_rate to 37000
-[  933.862829] perf: interrupt took too long (6765 > 6681), lowering 
-kernel.perf_event_max_sample_rate to 29000
-[opc@jgarry-atomic-write-exp-e4-8-instance-20231214-1221 ~]$ ^C
+root@raspberrypi:~# ~acme/bin/perf trace -e write,read cat /etc/passwd |& tail
+saned:x:109:120::/var/lib/saned:/usr/sbin/nologin
+vnc:x:992:992:vnc:/nonexistent:/usr/sbin/nologin
+colord:x:110:121:colord colour management daemon,,,:/var/lib/colord:/usr/sbin/nologin
+hplip:x:111:7:HPLIP system user,,,:/run/hplip:/bin/false
+acme:x:1000:1000:,,,:/home/acme:/bin/bash
+     0.000 ( 0.035 ms): read(fd: 3, buf: 0x7efde570, count: 512)                              = 512
+     0.256 ( 0.011 ms): read(fd: 3, buf: 0x7efde108, count: 512)                              = 512
+     1.153 ( 0.019 ms): read(fd: 3, buf: 0x76939000, count: 131072)                           = 1851
+     1.179 ( 0.043 ms): write(fd: 1, buf: , count: 1851)                                      = 1851
+     1.227 ( 0.006 ms): read(fd: 3, buf: 0x76939000, count: 131072)                           = 0
+root@raspberrypi:~#
 
-a known issue?
+root@raspberrypi:~# ~acme/bin/perf --version
+perf version 6.12.rc3.g0f709a2d7be1
 
-more /proc/cpuinfo gives:
+root@raspberrypi:~# ls -la /sys/kernel/tracing/events/syscalls/
+Display all 760 possibilities? (y or n)^C
+root@raspberrypi:~# uname -a
+Linux raspberrypi 6.6.57-v7+ #1 SMP Mon Oct 21 20:55:20 -03 2024 armv7l GNU/Linux
+root@raspberrypi:~# head /etc/debian_version 
+12.7
+root@raspberrypi:~#
 
-processor       : 0
-vendor_id       : AuthenticAMD
-cpu family      : 25
-model           : 1
-model name      : AMD EPYC 7J13 64-Core Processor
-stepping        : 1
-microcode       : 0x1000065
-cpu MHz         : 2445.322
-cache size      : 512 KB
-physical id     : 0
-siblings        : 16
-core id         : 0
-cpu cores       : 8
-apicid          : 0
-initial apicid  : 0
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 16
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
-mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext 
-fxsr_opt pdpe1gb rdtscp lm rep_good nopl xtopology cpuid extd_apicid tsc_kn
-own_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe 
-popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm 
-cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topo
-ext perfctr_core ssbd ibrs ibpb stibp vmmcall fsgsbase tsc_adjust bmi1 
-avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni 
-xsaveopt xsavec xgetbv1 xsaves clzero xsaveerptr wbnoinvd arat npt nrip_sa
-ve umip pku ospke vaes vpclmulqdq rdpid arch_capabilities
-bugs            : sysret_ss_attrs null_seg spectre_v1 spectre_v2 
-spec_store_bypass srso ibpb_no_ret
-bogomips        : 4890.64
-TLB size        : 1024 4K pages
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 40 bits physical, 48 bits virtual
-power management:
+Now I'm back dabbling with the BPF verifier in various kernels,
+including this 6.6 arm7 32-bit one:
 
-Thanks,
-John
+root@raspberrypi:~# clang --version
+Raspbian clang version 14.0.6
+Target: arm-unknown-linux-gnueabihf
+Thread model: posix
+InstalledDir: /usr/bin
+root@raspberrypi:~# 
+
+root@raspberrypi:~# ~acme/bin/perf trace -e clock_nanosleep,nanosleep sleep 1.23456 |& tail -20
+83: (bf) r1 = r9                      ; R1_w=scalar(id=13,umax=4294967295,var_off=(0x0; 0xffffffff)) R9_w=scalar(id=13,umax=4294967295,var_off=(0x0; 0xffffffff))
+84: (07) r1 += -1                     ; R1_w=scalar(smin=-1,smax=4294967294)
+85: (67) r1 <<= 32                    ; R1_w=scalar(smax=9223372032559808512,umax=18446744069414584320,var_off=(0x0; 0xffffffff00000000),s32_min=0,s32_max=0,u32_max=0)
+86: (77) r1 >>= 32                    ; R1=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+87: (25) if r1 > 0xfff goto pc+23     ; R1=scalar(umax=4095,var_off=(0x0; 0xfff))
+; if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, size, arg))
+88: (79) r1 = *(u64 *)(r10 -16)       ; R1_w=map_value(off=112,ks=4,vs=24688,imm=0) R10=fp0 fp-16=map_value
+89: (bf) r2 = r9                      ; R2_w=scalar(id=13,umax=4294967295,var_off=(0x0; 0xffffffff)) R9=scalar(id=13,umax=4294967295,var_off=(0x0; 0xffffffff))
+90: (85) call bpf_probe_read_user#112
+R2 unbounded memory access, use 'var &= const' or 'if (var < const)'
+processed 490 insns (limit 1000000) max_states_per_insn 2 total_states 23 peak_states 23 mark_read 15
+-- END PROG LOAD LOG --
+libbpf: prog 'sys_enter': failed to load: -13
+libbpf: failed to load object 'augmented_raw_syscalls_bpf'
+libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -13
+libbpf: map '__augmented_syscalls__': can't use BPF map without FD (was it created?)
+libbpf: map '__augmented_syscalls__': can't use BPF map without FD (was it created?)
+libbpf: map '__augmented_syscalls__': can't use BPF map without FD (was it created?)
+libbpf: map '__augmented_syscalls__': can't use BPF map without FD (was it created?)
+     0.000 (1234.739 ms): clock_nanosleep(rqtp: 0x7ea35adc, rmtp: 0x7ea35ad4)                   = 0
+root@raspberrypi:~#
+
+So the original problem, that you reported, i.e. not being able to build
+on 32-bit arm seems to be mostly gone, I need to do some more tests with
+globbing, i.e.:
+
+root@raspberrypi:~# ~acme/bin/perf trace -e *anosleep sleep 1.23456 |& tail
+processed 490 insns (limit 1000000) max_states_per_insn 2 total_states 23 peak_states 23 mark_read 15
+-- END PROG LOAD LOG --
+libbpf: prog 'sys_enter': failed to load: -13
+libbpf: failed to load object 'augmented_raw_syscalls_bpf'
+libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -13
+libbpf: map '__augmented_syscalls__': can't use BPF map without FD (was it created?)
+libbpf: map '__augmented_syscalls__': can't use BPF map without FD (was it created?)
+libbpf: map '__augmented_syscalls__': can't use BPF map without FD (was it created?)
+libbpf: map '__augmented_syscalls__': can't use BPF map without FD (was it created?)
+     0.000 (1234.730 ms): clock_nanosleep(rqtp: 0x7ef0cadc, rmtp: 0x7ef0cad4)                   = 0
+root@raspberrypi:~#
+
+Ah, it is working, lets try something else:
+
+root@raspberrypi:~# ~acme/bin/perf trace -e open*
+<BIG SNIP>
+  6245.506 ( 0.018 ms): (udev-worker)/14286 openat(dfd: 13, filename: 0xd6bac0, flags: RDONLY|CLOEXEC|LARGEFILE|PATH|0x20000) = 6
+  6245.570 ( 0.018 ms): (udev-worker)/14286 openat(dfd: 6, filename: 0xd6bac0, flags: RDONLY|CLOEXEC|LARGEFILE|PATH|0x20000) = 13
+  6245.713 ( 0.017 ms): (udev-worker)/14286 openat(dfd: CWD, filename: 0x5097c0, flags: RDONLY|CLOEXEC|DIRECTORY|PATH|0x20000) = 6
+  6245.755 ( 0.016 ms): (udev-worker)/14286 openat(dfd: 6, filename: 0xceb5d8, flags: RDONLY|CLOEXEC|LARGEFILE|PATH|0x20000) = 13
+  6245.815 ( 0.018 ms): (udev-worker)/14286 openat(dfd: 13, filename: 0xceb5d8, flags: RDONLY|CLOEXEC|LARGEFILE|PATH|0x20000) = 6
+  6246.269 ( 0.049 ms): (udev-worker)/14286 openat(dfd: CWD, filename: 0x7eb10620, flags: RDONLY|CLOEXEC|NOCTTY|0x20000) = 6
+  6246.466 ( 0.032 ms): (udev-worker)/14286 openat(dfd: CWD, filename: 0x7eb10630, flags: RDONLY|CLOEXEC|0x20000) = 6
+^Croot@raspberrypi:~# 
+
+Yeah, works.
+
+So to summarize: the patch I sent and you filled in the missing bits,
+that is in perf-tools/tmp.perf-tools was tested on arm v7, 32-bit, on a
+Raspberry PI 3 and it builds and then when tested, works:
+
+acme@raspberrypi:~/git/linux $ git log --oneline torvalds/master..
+0f709a2d7be1 (HEAD -> perf-tools, perf-tools/perf-tools) perf trace arm32: Fix iteration of syscall ids in syscalltbl->entries
+2c881b312117 perf trace augmented_raw_syscalls: Add more checks to pass the verifier
+6a6c689b7540 perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
+44c1d54d4d26 perf build: Change the clang check back to 12.0.1
+39c6a356201e perf trace: The return from 'write' isn't a pid
+ab8aaab874c4 tools headers UAPI: Sync linux/const.h with the kernel headers
+acme@raspberrypi:~/git/linux $
+
+Now I need to go back to the augmented_raw_syscall.bpf.o problems here
+and there, probably will just push what I have (listed above) and leave
+it soak in linux-next so that I can send to Linus, as it improves the
+current situation.
+
+- Arnaldo
+ 
+> Alternatively, isn't debugfs mounted elsewhere on debian? (Or mounted at
+> all?)
+> 
+> > Unsure where to find the config used to build this kernel:
+> > 
+> > root@aquarius:~# uname -a
+> > Linux aquarius 5.10.103-v7+ #1529 SMP Tue Mar 8 12:21:37 GMT 2022 armv7l GNU/Linux
+> > root@aquarius:~#
+> > 
+> > normally is in /boot/ but I'm no debian user, ideas?
+> 
+> Won't something dpkg -L linux-image tell you (I haven't used deb for years)?
+> 
+> Looking into:
+> https://ftp.debian.org/debian/pool/main/l/linux/linux-image-5.10.0-0.deb10.16-armmp_5.10.127-2~bpo10+1_armhf.deb
+> 
+> the config should really live in /boot.
+> 
+> -- 
+> js
+> suse labs
