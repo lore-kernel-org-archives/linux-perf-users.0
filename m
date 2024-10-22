@@ -1,38 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F1E12CDBF
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 05:35:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1BD139566;
+	Tue, 22 Oct 2024 05:41:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729575312; cv=none; b=npOqOcCJgeWqLQpC6k2BE57tchP2Fh/b639NFykOfUbczG0LpPL0ILPG4xSujjr79Rg3L/tjvaDg3qy21X3rvB1Q6aOpmJ0BboHdoHPvn3X5E8WnABQG4jPOEDhvs9n1iFhmm9cA+ydUG2UBgP/z3W6qFUE8kO6zvJrCPq8Nhfw=
+	t=1729575681; cv=none; b=N8nxcdlzbDBRHlXPUlwe4MyaTdDxrbgZfi8hJuLR0RR/apeHylWqsshPtFnXijB7ijV2Hmg9cxLvzPcN2PUKkm0KMrKgBEhUDNUlI7lLjBA9PL/pPvwY/BEGUBOk8TBbPf+m1EP7fqOCEBILcZMrBjDVKavRWTshRDjKErVgPDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729575312; c=relaxed/simple;
-	bh=Npf3NhRL7c1CD2/bCw5eVzzSy3huaUxt7Y1LpvyB08c=;
+	s=arc-20240116; t=1729575681; c=relaxed/simple;
+	bh=CElZF6oRP9IlY0RwgVPhOFqNpURPY/hGMZANUgAw6DM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZJsEyBtnVcP7CeO/f9yIKEfZTJI7axQCkdVg2uiMcodEIrzvr9IzU+Ehqsu9Pb1Eha2S9H3ih7aXmfHQsurA3p4g+zv6MFOICnHfbLgN3ipWFYqMcSauL/oCNBXkeUfuNRU1rDZgG7ljK1MqRy/+38qzs90Mt8j49mW9nkIcFP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7NZpMJd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JdrcsNwxsHCufqe35DQa1OFy4i6M9lIUJAgkAY4m07uXy+gFT6XcTmRar85wLoeUAls97OhMUU611jC+UW220dT9rIXEMoUYs6EAzfUQF8ggfj7C68vZkR/3gpTmG3Lvl9F1I8/c0JsDJxfNl8inathGNc/vCA6JFH6Hjuxo/3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHjsGY0M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7NZpMJd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DC71C4CEC3;
-	Tue, 22 Oct 2024 05:35:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHjsGY0M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B3B2C4CEE8;
+	Tue, 22 Oct 2024 05:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729575312;
-	bh=Npf3NhRL7c1CD2/bCw5eVzzSy3huaUxt7Y1LpvyB08c=;
+	s=k20201202; t=1729575680;
+	bh=CElZF6oRP9IlY0RwgVPhOFqNpURPY/hGMZANUgAw6DM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X7NZpMJdKHpdtn7kmAxK30izqbSyY2t5W9mzE6ctcntIqAdBBCGu+rTpzKf0vGHGA
-	 jo9qhqIMygm+uMhomA0BsScfSbeJLDTVTTmyTd94Kx6HMtFMJ9VWvRfAy/ppHUtM6X
-	 xUpVnKgYfZ03tMsy72XCeOmi+KCg28ymjgVxSSBUcuWl5AvIR/u0Ev/kdgFEYDZVTE
-	 2ea4DLOX9ObUX/6Qz4G5u4ws/HGKsrSXJPwj1JFIZ/lVzou5pukv3sJFsjLvcqw9uS
-	 nag19euDFTnn46tq2mRmpLlQAypzY3SfmtzO+lAAJ63tGANSnO1wqB3I359BvkJ8dC
-	 sPui40fkcZ4yw==
-Date: Mon, 21 Oct 2024 22:35:10 -0700
+	b=bHjsGY0MgVHqzlwdXQL9IqStYsWNzCgMfOFlvyCrbvYDJUrcEkbQ5OCFnELDccBlP
+	 gqeMgrg8j9htSKHm5P7D4SRk2hMg+AWlR6PG5VXLh6X+vRzbPLrGCnbPxQ/OhM2wEk
+	 KXeEa1xYZGwnoNCVKUemnd/ajQjzY5ET/K0CQEphTirSTiuWUBVSZgd7tweUX4Qlp7
+	 iAfaLd/UVjFAAQXx+xkEKgtRz0/2/1aIqZ5P4sMzoCYP/zhmoOIl9Cdg6/y3wXqd/K
+	 Q1KQ1k9RHRJERfjtVO5b2rGeQB7RFJY1SzQesWiqVVmmb10d/V7rEiPbXHgtgX+7T2
+	 7eKK+glETqHjw==
+Date: Mon, 21 Oct 2024 22:41:18 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: Using the perf python module with address sanitizer
-Message-ID: <Zxc5jlkvV4D2MLv5@google.com>
-References: <CAP-5=fVX4hOUq-Tni8ZRHcX6p3nrLuWaNTx8PvCU0sbaO=XvMA@mail.gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf check: Add sanitizer feature and use to avoid
+ test failure
+Message-ID: <Zxc6_jZdDcWgtEom@google.com>
+References: <20241018055627.1005723-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,109 +51,118 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fVX4hOUq-Tni8ZRHcX6p3nrLuWaNTx8PvCU0sbaO=XvMA@mail.gmail.com>
+In-Reply-To: <20241018055627.1005723-1-irogers@google.com>
 
-On Thu, Oct 17, 2024 at 09:20:07AM -0700, Ian Rogers wrote:
-> Hi,
-> 
-> I just wanted to capture/share the steps I used for getting the perf
-> python module working with address sanitizer. The process isn't ideal
-> so hopefully others can suggest improvements and possibly how we can
-> make this more automatic in the build, or use for automated testing,
-> etc.
-> 
-> To build perf with address sanitizer you add to the CFLAGS by passing to make:
-> EXTRA_CFLAGS="-fsanitize=address"
-> 
-> However, this yields a python module that fails with an undefined symbol:
-> ```
-> $ perf test python -v
-> --- start ---
-> test child forked, pid 712715
-> python usage test: "echo "import sys ; sys.path.insert(0,
-> '/tmp/perf/python'); import perf" | '/usr/bin/python3' "
-> Traceback (most recent call last):
->  File "<stdin>", line 1, in <module>
-> ImportError: /tmp/perf/python/perf.cpython-311-x86_64-linux-gnu.so:
-> undefined symbol: __asan_option_detect_stack_use_after_return
-> ---- end(-1) ----
-> 18: 'import perf' in python                                         : FAILED!
-> ```
-> 
-> To resolve this issue add "-shared-libasan" to the CFLAGS:
-> EXTRA_CFLAGS="-fsanitize=address -shared-libasan"
-> 
-> The build needs to find (on x86) libclang_rt.asan-x86_64.so which for
-> me on a Debian derived OS wasn't on the LD_LIBRARY_PATH. I found it
-> with:
-> ```
-> $ dpkg -L libclang-rt-16-dev|grep libclang_rt.asan-x86_64.so
-> /usr/lib/llvm-16/lib/clang/16/lib/linux/libclang_rt.asan-x86_64.so
-> ```
+On Thu, Oct 17, 2024 at 10:56:27PM -0700, Ian Rogers wrote:
+> Sanitizer builds can break expectations for test disassembly,
+> particularly in the annotate test. Add features for the different
+> sanitizer options seen in the source tree. Use the added sanitizer
+> feature to skip the annotate test when sanitizers are in use.
 
-I think we can use llvm-config like below.
+Can you please split the perf check changes from the test change?
+It's good to add an example output (of perf version --build-options)
+with new sanitizer features.
 
-  $ find $(llvm-config --libdir) -name libclang_rt.asan-$(uname -m).so
-  /usr/lib/llvm-16/lib/clang/16/lib/linux/libclang_rt.asan-x86_64.so
+Also it might be helpful if you share how the test fails.  I don't
+think the disasm format is changed.  Then it probably missed to find
+the target symbol in the first 250 lines for some reason.
 
 Thanks,
 Namhyung
 
-
-> I then built with:
-> ```
-> $ LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/llvm-16/lib/clang/16/lib/linux
-> make EXTRA_CFLAGS="-fsanitize=address -shared-libasan"
-> ```
 > 
-> However, still using the module wasn't successful:
-> ```
-> $ LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/llvm-16/lib/clang/16/lib/linux
-> perf test python -v
-> --- start ---
-> test child forked, pid 720500
-> python usage test: "echo "import sys ; sys.path.insert(0,
-> '/tmp/perf/python'); import perf" | '/usr/bin/python3' "
-> ==720503==ASan runtime does not come first in initial library list;
-> you should either link runtime to your application or manually preload
-> it with LD_PRELOAD.
-> ---- end(-1) ----
-> 18: 'import perf' in python                                         : FAILED!
-> ```
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> v2 build fix.
+> ---
+>  tools/perf/builtin-check.c         | 49 ++++++++++++++++++++++++++++++
+>  tools/perf/tests/shell/annotate.sh |  6 ++++
+>  2 files changed, 55 insertions(+)
 > 
-> I resolved this with LD_PRELOAD but there is a leak sanitizer issue
-> that doesn't relate to importing the perf module:
-> ```
-> $ LD_PRELOAD=/usr/lib/llvm-16/lib/clang/16/lib/linux/libclang_rt.asan-x86_64.so
-> perf test python -v
-> --- start ---
-> test child forked, pid 720967
-> python usage test: "echo "import sys ; sys.path.insert(0,
-> '/tmp/perf/python'); import perf" | '/usr/bin/python3' "
+> diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+> index 0b76b6e42b78..c44444008d64 100644
+> --- a/tools/perf/builtin-check.c
+> +++ b/tools/perf/builtin-check.c
+> @@ -9,6 +9,49 @@
+>  #include <string.h>
+>  #include <subcmd/parse-options.h>
+>  
+> +#if defined(__has_feature)
+> +#define HAS_COMPILER_FEATURE(feature) __has_feature(feature)
+> +#else
+> +#define HAS_COMPILER_FEATURE(feature) 0
+> +#endif
+> +
+> +#if defined(__SANITIZE_ADDRESS__) || defined(ADDRESS_SANITIZER) || \
+> +	HAS_COMPILER_FEATURE(address_sanitizer)
+> +#define HAVE_SANITIZER_ADDRESS 1
+> +#define HAVE_SANITIZER_LEAK 1
+> +#elif defined(LEAK_SANITIZER) || HAS_COMPILER_FEATURE(leak_sanitizer)
+> +#define HAVE_SANITIZER_ADDRESS 0
+> +#define HAVE_SANITIZER_LEAK 1
+> +#else
+> +#define HAVE_SANITIZER_ADDRESS 0
+> +#define HAVE_SANITIZER_LEAK 0
+> +#endif
+> +
+> +#if defined(MEMORY_SANITIZER) || HAS_COMPILER_FEATURE(memory_sanitizer)
+> +#define HAVE_SANITIZER_MEMORY 1
+> +#else
+> +#define HAVE_SANITIZER_MEMORY 0
+> +#endif
+> +
+> +#if defined(THREAD_SANITIZER) || HAS_COMPILER_FEATURE(thread_sanitizer)
+> +#define HAVE_SANITIZER_THREAD 1
+> +#else
+> +#define HAVE_SANITIZER_THREAD 0
+> +#endif
+> +
+> +#if defined(UNDEFINED_SANITIZER) || HAS_COMPILER_FEATURE(undefined_sanitizer)
+> +#define HAVE_SANITIZER_UNDEFINED 1
+> +#else
+> +#define HAVE_SANITIZER_UNDEFINED 0
+> +#endif
+> +
+> +#if HAVE_SANITIZER_ADDRESS || HAVE_SANITIZER_LEAK || HAVE_SANITIZER_MEMORY || \
+> +	HAVE_SANITIZER_THREAD || HAVE_SANITIZER_UNDEFINED
+> +#define HAVE_SANITIZER 1
+> +#else
+> +#define HAVE_SANITIZER 0
+> +#endif
+> +
+>  static const char * const check_subcommands[] = { "feature", NULL };
+>  static struct option check_options[] = {
+>  	OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings or messages"),
+> @@ -47,6 +90,12 @@ struct feature_status supported_features[] = {
+>  	FEATURE_STATUS("libunwind", HAVE_LIBUNWIND_SUPPORT),
+>  	FEATURE_STATUS("lzma", HAVE_LZMA_SUPPORT),
+>  	FEATURE_STATUS("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
+> +	FEATURE_STATUS("sanitizer", HAVE_SANITIZER),
+> +	FEATURE_STATUS("sanitizer_address", HAVE_SANITIZER_ADDRESS),
+> +	FEATURE_STATUS("sanitizer_leak", HAVE_SANITIZER_LEAK),
+> +	FEATURE_STATUS("sanitizer_memory", HAVE_SANITIZER_MEMORY),
+> +	FEATURE_STATUS("sanitizer_thread", HAVE_SANITIZER_THREAD),
+> +	FEATURE_STATUS("sanitizer_undefined", HAVE_SANITIZER_UNDEFINED),
+>  	FEATURE_STATUS("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
+>  	FEATURE_STATUS("zlib", HAVE_ZLIB_SUPPORT),
+>  	FEATURE_STATUS("zstd", HAVE_ZSTD_SUPPORT),
+> diff --git a/tools/perf/tests/shell/annotate.sh b/tools/perf/tests/shell/annotate.sh
+> index 1590a37363de..199f547e656d 100755
+> --- a/tools/perf/tests/shell/annotate.sh
+> +++ b/tools/perf/tests/shell/annotate.sh
+> @@ -4,6 +4,12 @@
+>  
+>  set -e
+>  
+> +if perf check feature -q sanitizer
+> +then
+> +  echo "Skip test with sanitizers due to differing assembly code"
+> +  exit 2
+> +fi
+> +
+>  shelldir=$(dirname "$0")
+>  
+>  # shellcheck source=lib/perf_has_symbol.sh
+> -- 
+> 2.47.0.105.g07ac214952-goog
 > 
-> =================================================================
-> ==720971==ERROR: LeakSanitizer: detected memory leaks
-> 
-> Direct leak of 13628 byte(s) in 6 object(s) allocated from:
->    #0 0x7fda504e8b42 in __interceptor_malloc
-> (/usr/lib/llvm-16/lib/clang/16/lib/linux/libclang_rt.asan-x86_64.so+0xe8b42)
->    #1 0x4de57f in PyMem_RawMalloc build-static/../Objects/obmalloc.c:586:12
->    #2 0x4de57f in _PyObject_Malloc build-static/../Objects/obmalloc.c:2003:11
->    #3 0x4de57f in _PyObject_Malloc build-static/../Objects/obmalloc.c:1996:1
-> 
-> SUMMARY: AddressSanitizer: 13628 byte(s) leaked in 6 allocation(s).
-> ---- end(-1) ----
-> 18: 'import perf' in python
-> ```
-> 
-> To clean that up I added "ASAN_OPTIONS=detect_leaks=0":
-> ```
-> $ LD_PRELOAD=/usr/lib/llvm-16/lib/clang/16/lib/linux/libclang_rt.asan-x86_64.so
-> ASAN_OPTIONS=detect_leaks=0 perf test python -v
-> 18: 'import perf' in python                                         : Ok
-> ```
-> 
-> So somewhat convoluted but it is possible.
-> 
-> Thanks,
-> Ian
