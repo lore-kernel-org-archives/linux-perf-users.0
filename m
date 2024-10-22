@@ -1,45 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7706E38B;
-	Tue, 22 Oct 2024 04:31:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F1E12CDBF
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 05:35:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729571505; cv=none; b=BDkdFEMXmreGOrTHwvCZyKPNcrAgpPTf1imwAqcfMX+03DkHJlHyg9WQkd44P6nmtzkH0sToaw8sR9T4Hk4Y604DqpIj+7YbtduyajkxK3qmla6PnMpgDbzlLhSoHw2GbBtli+u2ttHFTyu1fcEa3CX78DBhRIKLRJi+p6+2VMc=
+	t=1729575312; cv=none; b=npOqOcCJgeWqLQpC6k2BE57tchP2Fh/b639NFykOfUbczG0LpPL0ILPG4xSujjr79Rg3L/tjvaDg3qy21X3rvB1Q6aOpmJ0BboHdoHPvn3X5E8WnABQG4jPOEDhvs9n1iFhmm9cA+ydUG2UBgP/z3W6qFUE8kO6zvJrCPq8Nhfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729571505; c=relaxed/simple;
-	bh=JMmllV14RxvZYGSLvcuoLFa+QPWXIA4n1DSytG3zbNU=;
+	s=arc-20240116; t=1729575312; c=relaxed/simple;
+	bh=Npf3NhRL7c1CD2/bCw5eVzzSy3huaUxt7Y1LpvyB08c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LC9TPoGSKz6zFdMFR4X80z9wKQKpf0vT+AmygYP2QX+FrJIK4J8eLvs400d0ub9Z3ZfUnTUHr2lzMxWMLRKb5Pw49luZWEQxPSleDNgApU02jTLm5D5g6fHPuok9AcTXIKVzfSKShb07ej2s6EKnMBhsFLJJ2Qeh1doFgtB7cdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ARS4QCzq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZJsEyBtnVcP7CeO/f9yIKEfZTJI7axQCkdVg2uiMcodEIrzvr9IzU+Ehqsu9Pb1Eha2S9H3ih7aXmfHQsurA3p4g+zv6MFOICnHfbLgN3ipWFYqMcSauL/oCNBXkeUfuNRU1rDZgG7ljK1MqRy/+38qzs90Mt8j49mW9nkIcFP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7NZpMJd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ARS4QCzq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D800C4CEC3;
-	Tue, 22 Oct 2024 04:31:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7NZpMJd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DC71C4CEC3;
+	Tue, 22 Oct 2024 05:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729571505;
-	bh=JMmllV14RxvZYGSLvcuoLFa+QPWXIA4n1DSytG3zbNU=;
+	s=k20201202; t=1729575312;
+	bh=Npf3NhRL7c1CD2/bCw5eVzzSy3huaUxt7Y1LpvyB08c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ARS4QCzqVeAuPpPAOMnoV+wMs5UzgiExWTl4F2GVzYPeL28mg2DNp7GtMDYzeIulE
-	 bU0kkDAC3roa2u9omxWrN381IwkPoxibb/hGR4frA1kTvtYWuJHuyKluroQRIGDVUE
-	 zbqtGobhOsIX3U+RIUut3yOFHx81Bq8PBzZyNKJj04kX2Iw1tpKKIjJlGdXinpMqif
-	 x/Qck7q66ssC/Nr+ZeulTZOPELehBH15VBIOeXjeihd9m+GV0VNWMBfLMDu0+nAMU4
-	 1BCZ12Ewk3LXfoJIr0veDpWH9njMw8KWlKBQHVatNDtPnbFMCBCuqJem+yL99E/TSc
-	 Y2VSYMLUEzXRA==
-Date: Mon, 21 Oct 2024 21:31:43 -0700
+	b=X7NZpMJdKHpdtn7kmAxK30izqbSyY2t5W9mzE6ctcntIqAdBBCGu+rTpzKf0vGHGA
+	 jo9qhqIMygm+uMhomA0BsScfSbeJLDTVTTmyTd94Kx6HMtFMJ9VWvRfAy/ppHUtM6X
+	 xUpVnKgYfZ03tMsy72XCeOmi+KCg28ymjgVxSSBUcuWl5AvIR/u0Ev/kdgFEYDZVTE
+	 2ea4DLOX9ObUX/6Qz4G5u4ws/HGKsrSXJPwj1JFIZ/lVzou5pukv3sJFsjLvcqw9uS
+	 nag19euDFTnn46tq2mRmpLlQAypzY3SfmtzO+lAAJ63tGANSnO1wqB3I359BvkJ8dC
+	 sPui40fkcZ4yw==
+Date: Mon, 21 Oct 2024 22:35:10 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Junhao He <hejunhao3@huawei.com>, irogers@google.com
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jonathan.cameron@huawei.com,
-	yangyicong@huawei.com, linuxarm@huawei.com,
-	prime.zeng@hisilicon.com
-Subject: Re: [PATCH v2] perf metrics: Support parsing metrics if platforms
- only have json table of system PMU
-Message-ID: <Zxcqr85riwxaHwQG@google.com>
-References: <20241010074430.16685-1-hejunhao3@huawei.com>
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: Using the perf python module with address sanitizer
+Message-ID: <Zxc5jlkvV4D2MLv5@google.com>
+References: <CAP-5=fVX4hOUq-Tni8ZRHcX6p3nrLuWaNTx8PvCU0sbaO=XvMA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,127 +41,109 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241010074430.16685-1-hejunhao3@huawei.com>
+In-Reply-To: <CAP-5=fVX4hOUq-Tni8ZRHcX6p3nrLuWaNTx8PvCU0sbaO=XvMA@mail.gmail.com>
 
-Hello,
+On Thu, Oct 17, 2024 at 09:20:07AM -0700, Ian Rogers wrote:
+> Hi,
+> 
+> I just wanted to capture/share the steps I used for getting the perf
+> python module working with address sanitizer. The process isn't ideal
+> so hopefully others can suggest improvements and possibly how we can
+> make this more automatic in the build, or use for automated testing,
+> etc.
+> 
+> To build perf with address sanitizer you add to the CFLAGS by passing to make:
+> EXTRA_CFLAGS="-fsanitize=address"
+> 
+> However, this yields a python module that fails with an undefined symbol:
+> ```
+> $ perf test python -v
+> --- start ---
+> test child forked, pid 712715
+> python usage test: "echo "import sys ; sys.path.insert(0,
+> '/tmp/perf/python'); import perf" | '/usr/bin/python3' "
+> Traceback (most recent call last):
+>  File "<stdin>", line 1, in <module>
+> ImportError: /tmp/perf/python/perf.cpython-311-x86_64-linux-gnu.so:
+> undefined symbol: __asan_option_detect_stack_use_after_return
+> ---- end(-1) ----
+> 18: 'import perf' in python                                         : FAILED!
+> ```
+> 
+> To resolve this issue add "-shared-libasan" to the CFLAGS:
+> EXTRA_CFLAGS="-fsanitize=address -shared-libasan"
+> 
+> The build needs to find (on x86) libclang_rt.asan-x86_64.so which for
+> me on a Debian derived OS wasn't on the LD_LIBRARY_PATH. I found it
+> with:
+> ```
+> $ dpkg -L libclang-rt-16-dev|grep libclang_rt.asan-x86_64.so
+> /usr/lib/llvm-16/lib/clang/16/lib/linux/libclang_rt.asan-x86_64.so
+> ```
 
-On Thu, Oct 10, 2024 at 03:44:30PM +0800, Junhao He wrote:
-> The system PMUs don't depend on the certain CPUs and we don't need a CPUID
-> to metric table mapping to match the json event for generating the metric
-> table. For example HiSilicon HIP09 only have json events table of system
-> PMUs in the "sys/" subdirectory.
-> 
-> Currently for this case the struct of system metric table
-> "pmu_metrics__hisilicon_hip09_sys" generating works fine and metrics
-> display as expected by using `perf list`. But `perf stat` doesn't work
-> for such metrics.
-> 
->   $ perf list metric
->   Metrics:
->     cpa_p0_avg_bw
->          [Average bandwidth of CPA Port 0]
->     cpa_p1_avg_bw
->          [Average bandwidth of CPA Port 1]
->   $ perf stat -M cpa_p0_avg_bw --timeout 1000 --> No error messages output
->   $ echo $?
->   234
-> 
-> The metricgroup__parse_groups() expects to find an cpu metric table, but
-> the hisilicon/hip09 doesn't uses CPUID to map json events and metrics, so
-> pmu_metrics_table__find() will return NULL, than the cmd run failed.
-> 
-> But in metricgroup__add_metric(), the function parse for each sys metric
-> and add it to metric_list, which also will get an valid sys metric table.
-> So, we can ignore the NULL result of pmu_metrics_table__find() and to use
-> the sys metric table.
-> 
-> metricgroup__parse_groups
->  -> parse_groups
->      -> metricgroup__add_metric_list
->          -> metricgroup__add_metric
-> 	     -> pmu_for_each_sys_metric   --> parse for each sys metric
-> 
-> Testing:
->   $ perf stat -M cpa_p0_avg_bw --timeout 1000
-> 
->  Performance counter stats for 'system wide':
-> 
->      4,004,863,602      cpa_cycles                #     0.00 cpa_p0_avg_bw
->                  0      cpa_p0_wr_dat
->                  0      cpa_p0_rd_dat_64b
->                  0      cpa_p0_rd_dat_32b
-> 
->        1.001306160 seconds time elapsed
+I think we can use llvm-config like below.
 
-Ian, can you please review this?
+  $ find $(llvm-config --libdir) -name libclang_rt.asan-$(uname -m).so
+  /usr/lib/llvm-16/lib/clang/16/lib/linux/libclang_rt.asan-x86_64.so
 
 Thanks,
 Namhyung
 
+
+> I then built with:
+> ```
+> $ LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/llvm-16/lib/clang/16/lib/linux
+> make EXTRA_CFLAGS="-fsanitize=address -shared-libasan"
+> ```
 > 
-> Signed-off-by: Junhao He <hejunhao3@huawei.com>
-> Tested-by: Yicong Yang <yangyicong@hisilicon.com>
-> ---
-> v1 --> v2:
->  -Add some comments to explain the table is null.
->  -Modify the patch commit.
->  -Add Yicong Test-by.
-> v1:https://lore.kernel.org/all/20240807040002.47119-1-hejunhao3@huawei.com/
-> ---
->  tools/perf/util/metricgroup.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+> However, still using the module wasn't successful:
+> ```
+> $ LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/llvm-16/lib/clang/16/lib/linux
+> perf test python -v
+> --- start ---
+> test child forked, pid 720500
+> python usage test: "echo "import sys ; sys.path.insert(0,
+> '/tmp/perf/python'); import perf" | '/usr/bin/python3' "
+> ==720503==ASan runtime does not come first in initial library list;
+> you should either link runtime to your application or manually preload
+> it with LD_PRELOAD.
+> ---- end(-1) ----
+> 18: 'import perf' in python                                         : FAILED!
+> ```
 > 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 69f6a46402c3..cb428eabd485 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1123,7 +1123,7 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_metric *pm,
->  
->  	ret = add_metric(d->metric_list, pm, d->modifier, d->metric_no_group,
->  			 d->metric_no_threshold, d->user_requested_cpu_list,
-> -			 d->system_wide, d->root_metric, d->visited, d->table);
-> +			 d->system_wide, d->root_metric, d->visited, d->table ?: table);
->  	if (ret)
->  		goto out;
->  
-> @@ -1226,7 +1226,8 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
->   * @system_wide: Are events for all processes recorded.
->   * @metric_list: The list that the metric or metric group are added to.
->   * @table: The table that is searched for metrics, most commonly the table for the
-> - *       architecture perf is running upon.
-> + *       architecture perf is running upon. This value could be NULL if no core
-> + *       metrics matches the architecture and we'll try to use the table of system PMUs.
->   */
->  static int metricgroup__add_metric(const char *pmu, const char *metric_name, const char *modifier,
->  				   bool metric_no_group, bool metric_no_threshold,
-> @@ -1239,7 +1240,8 @@ static int metricgroup__add_metric(const char *pmu, const char *metric_name, con
->  	int ret;
->  	bool has_match = false;
->  
-> -	{
-> +	/* Add core metrics to the metric list */
-> +	if (table) {
->  		struct metricgroup__add_metric_data data = {
->  			.list = &list,
->  			.pmu = pmu,
-> @@ -1263,6 +1265,7 @@ static int metricgroup__add_metric(const char *pmu, const char *metric_name, con
->  		has_match = data.has_match;
->  	}
->  	{
-> +		/* Parse metrics table of system PMUs */
->  		struct metricgroup_iter_data data = {
->  			.fn = metricgroup__add_metric_sys_event_iter,
->  			.data = (void *) &(struct metricgroup_add_iter_data) {
-> @@ -1697,7 +1700,8 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
->  	const struct pmu_metrics_table *table = pmu_metrics_table__find();
->  
->  	if (!table)
-> -		return -EINVAL;
-> +		pr_debug("The core metric table not found, continue to parse system metric table\n");
-> +
->  	if (hardware_aware_grouping)
->  		pr_debug("Use hardware aware grouping instead of traditional metric grouping method\n");
->  
-> -- 
-> 2.33.0
+> I resolved this with LD_PRELOAD but there is a leak sanitizer issue
+> that doesn't relate to importing the perf module:
+> ```
+> $ LD_PRELOAD=/usr/lib/llvm-16/lib/clang/16/lib/linux/libclang_rt.asan-x86_64.so
+> perf test python -v
+> --- start ---
+> test child forked, pid 720967
+> python usage test: "echo "import sys ; sys.path.insert(0,
+> '/tmp/perf/python'); import perf" | '/usr/bin/python3' "
 > 
+> =================================================================
+> ==720971==ERROR: LeakSanitizer: detected memory leaks
+> 
+> Direct leak of 13628 byte(s) in 6 object(s) allocated from:
+>    #0 0x7fda504e8b42 in __interceptor_malloc
+> (/usr/lib/llvm-16/lib/clang/16/lib/linux/libclang_rt.asan-x86_64.so+0xe8b42)
+>    #1 0x4de57f in PyMem_RawMalloc build-static/../Objects/obmalloc.c:586:12
+>    #2 0x4de57f in _PyObject_Malloc build-static/../Objects/obmalloc.c:2003:11
+>    #3 0x4de57f in _PyObject_Malloc build-static/../Objects/obmalloc.c:1996:1
+> 
+> SUMMARY: AddressSanitizer: 13628 byte(s) leaked in 6 allocation(s).
+> ---- end(-1) ----
+> 18: 'import perf' in python
+> ```
+> 
+> To clean that up I added "ASAN_OPTIONS=detect_leaks=0":
+> ```
+> $ LD_PRELOAD=/usr/lib/llvm-16/lib/clang/16/lib/linux/libclang_rt.asan-x86_64.so
+> ASAN_OPTIONS=detect_leaks=0 perf test python -v
+> 18: 'import perf' in python                                         : Ok
+> ```
+> 
+> So somewhat convoluted but it is possible.
+> 
+> Thanks,
+> Ian
