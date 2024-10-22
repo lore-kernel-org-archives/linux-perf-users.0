@@ -1,191 +1,138 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1D01B654C
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 16:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFEC256D;
+	Tue, 22 Oct 2024 17:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729616176; cv=none; b=Ima0jg2u+ctb1oqQurSZrClnoverAXTP5eUM3Rs13DlP5kH73vJb5EkxuKyDO8WIFStj0uUqTj77JcStgAHOOtfQBJ78T4GWLeIqDtCVhds9NqxMLnb+L4G0cZB2QhSOiF3PIehGqPEliVlDzYI4yeJhtDDxC9JSWfMF4KBl/Tw=
+	t=1729616695; cv=none; b=cS6RrJn1Um4MxnKoXAY7XehQtDKOPsHn5k0VnfyiRemi/mOsfiCzKdAp45ydQRGKoU9t1/x4jOWGG38Ubd/w7jdPB9TLhPfpp8ZEBLrs4E0Un+CspcBia0CUvprUXDhXuS6ygW3eL0vMV6leksdTgKZvbAIEbOe3FAfhcsCLhlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729616176; c=relaxed/simple;
-	bh=mxbA1MJvfgB8GD3sBLun6XprDlPyDtkipogNBsuQFw4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DFxW4DxbaVZrPPZICly4z7Osuc56Tk1pXEV4tBIbQjMgTJLlavQiuDhF4sleNqjaizGEMbP7Ic1UvhghYxC9R8aeU7GePov42h7p3ynQt1nZzFsUJqg6FOI4CNmwL9U0PI7hW2xkFKhAenoUR/u9kTXEAL90e1946qd5u1PoZ3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WIpbe7QX; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1729616695; c=relaxed/simple;
+	bh=dnzywOLb2D/osssfwAX6Xm+weLGD8+cwQbYfop+7Tc8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rBCASb93/thtld9/U6Ov5YHtjsrLEiLg5y7GOPsKSFHFtGwVw9fuODzdFWxosvDZVa13ZDiF6VcOlotRGX+C9AtYcLtgwW5C4yRht5Z92260BbGViDcoOB5VsOlqw0jiFOOAO9U9HT58BFnaQprzAJeomgGTMOzKSW6cqF2lLUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HyS4WoSL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WIpbe7QX"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-460a8d1a9b7so5431cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 09:56:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729616174; x=1730220974; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/ESu4WqtRf9/2MFFr1073JLGDWHR1zEFiE/LbaA3GYw=;
-        b=WIpbe7QXI3WsFjpTuur9pOcwi/6aYYA7WK6Lr79Ok7EgX1Vmq0JM2jNBzNrE2X4Xje
-         F66yuL+bfWN4A/basD7HV8hqs7Vp3JuPPecQUUeGdi9G9hST7LzE+uQgp7g/9hXrKu/s
-         hZ041BJqvetvU12r9E2U4fflJUF4KQw56bkyfO5Q45xEQKVRWeXen0SxeLx2YNAO6Jgy
-         xefXkm6GsWgFLN2RLxxrTG1arnX8HDI3kt6djJqAWBN8/81Pv4QaoFImyf77vNEVtJa7
-         UKWbAPfuPns5KFGRt+jHkrJprfSA5+xX2hHToG3Pd15MBkZgusjq1P+/LtbiRiahNLe9
-         4jaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729616174; x=1730220974;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/ESu4WqtRf9/2MFFr1073JLGDWHR1zEFiE/LbaA3GYw=;
-        b=E0REiCqyl/QlckTu4HHA5+FzLLcm1247hrA2ZXqX1KywL0LnCT9CLBZYz33vaSB1mo
-         20oj9vhEfFmHn4/CcVUED8fAU2lyl2lxDvV3JS+Gkeb8zcID9l0OkBtE9KCvU4Nzm1yx
-         lUiBjogqy67Ss177/UvhJJcK4oqjN+GDAlzCEaMx1c7lHE8FX/WZRaQGiol/yrkGck/Y
-         +XlSviCMxyokWuIhvCzet8+9qy+P5JVa2cq1GOl98/W8FAylSUJpgbfkuJzKZh1xCsjj
-         BG60Bw+GP4bEiEhtPmLygWofkh/PazV74lzXjZJnFxjTBkOb+vDOaRtFWunPYfjAN1pq
-         a20Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUOJaaOKC5eV08H7YjiAK/CdKlJj/fBpvKxNW70XROCFpSyvUimr/Fn1SZjwQ9DRVIi89ReQkQWVlrIiCEROK1d@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBg8/P6KiV0pSEIs1jANZgAnVFOuvz9i4DOEO/4Y/lRCFaQp1B
-	4BFLUloe8QDtR3/3XB+iYMqfkT3f4x3fOlxtEUd/yqMySKfRcxVPHGMRHX66mU05+FmpOAZ/XgT
-	71FyuGgzlffqdb3yAiKrJspUJxdIHpP0EMJAo
-X-Google-Smtp-Source: AGHT+IFyzSD1nq1kW+vShKuDGIqORhiRNgNY50Ld5nAzCe8Lxet036UirBAuIWblEYuYfqS4pcCgAKIg35nYLLknTLA=
-X-Received: by 2002:ac8:7dcf:0:b0:460:46a8:9e67 with SMTP id
- d75a77b69052e-46100a7fe22mr4691901cf.10.1729616173598; Tue, 22 Oct 2024
- 09:56:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HyS4WoSL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EFC0C4CEC7;
+	Tue, 22 Oct 2024 17:04:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729616694;
+	bh=dnzywOLb2D/osssfwAX6Xm+weLGD8+cwQbYfop+7Tc8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HyS4WoSLGRXfsWgv53aWFoSFVcEkEEFzsWeiWw9jSxxLoYzCzGDIQXtNxOlhdL3mt
+	 rbq9pW5zHq7gaF353s2YeEC14WE0VIlGV/EW+n971qQ3RDVwTxx58iJMIcnhtQzoss
+	 aEoEAA5W43IGNeLYcPI+vBCcAOhzCXQ3BVWx7dvxDFgPj7ouygSvr7dzcG3QK29nMN
+	 /kB0owkzDz1kJMi+W53V2OQWEsUJBxfS4NS8XSYodskCnNMNgq1MHLk3nzjOvlnZ/K
+	 Tokl9Lf+onURwDmL4zDCaTReOJYMruz3nk+znaUbv03rGlcsNXb8nmwWc4U6e1O9bd
+	 zHF2v2rsdNX9g==
+Date: Tue, 22 Oct 2024 10:04:52 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>, Howard Chu <howardchu95@gmail.com>,
+	Andrea Righi <andrea.righi@linux.dev>, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, james.clark@linaro.org,
+	alan.maguire@oracle.com
+Subject: Re: [PATCH v2 0/2] perf trace: Fix support for the new BPF feature
+ in clang 12
+Message-ID: <ZxfbNJ6nKXzoEYVn@google.com>
+References: <20241011021403.4089793-1-howardchu95@gmail.com>
+ <Zw61TUe1V97dKWer@google.com>
+ <Zw7D9HXBanPLUO4G@x1>
+ <Zw7JgJc0LOwSpuvx@x1>
+ <Zw7SkmEaz730uVbL@x1>
+ <Zw8fqyCZNqSABMkM@google.com>
+ <Zw_MFwkejeWC2qbv@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241016042415.7552-1-irogers@google.com> <20241016042415.7552-13-irogers@google.com>
- <ZxdIAfwD7YzyRMI-@google.com>
-In-Reply-To: <ZxdIAfwD7YzyRMI-@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 22 Oct 2024 09:56:02 -0700
-Message-ID: <CAP-5=fVvM_8T9b6EXC+JfpV5FAWPDJN=HfFtFhO+KU5rXd4P1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 12/16] perf lock: Move common lock contention code to
- new file
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zw_MFwkejeWC2qbv@x1>
 
-On Mon, Oct 21, 2024 at 11:36=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Tue, Oct 15, 2024 at 09:24:11PM -0700, Ian Rogers wrote:
-> > Avoid references from util code to builtin-lock that require python
-> > stubs. Move the functions and related variables to
-> > util/lock-contention.c. Add max_stack_depth parameter to
-> > match_callstack_filter to avoid sharing a global variable.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-lock.c             | 137 +--------------------
-> >  tools/perf/util/Build                 |   1 +
-> >  tools/perf/util/bpf_lock_contention.c |   2 +-
-> >  tools/perf/util/lock-contention.c     | 170 ++++++++++++++++++++++++++
-> >  tools/perf/util/lock-contention.h     |  37 ++----
-> >  tools/perf/util/python.c              |  17 ---
-> >  6 files changed, 185 insertions(+), 179 deletions(-)
-> >  create mode 100644 tools/perf/util/lock-contention.c
-> >
-> [SNIP]
-> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > index 2a2f7780e595..ea2d9eced92e 100644
-> > --- a/tools/perf/util/Build
-> > +++ b/tools/perf/util/Build
-> > @@ -121,6 +121,7 @@ perf-util-y +=3D topdown.o
-> >  perf-util-y +=3D iostat.o
-> >  perf-util-y +=3D stream.o
-> >  perf-util-y +=3D kvm-stat.o
-> > +perf-util-y +=3D lock-contention.o
-> >  perf-util-$(CONFIG_AUXTRACE) +=3D auxtrace.o
-> >  perf-util-$(CONFIG_AUXTRACE) +=3D intel-pt-decoder/
-> >  perf-util-$(CONFIG_AUXTRACE) +=3D intel-pt.o
-> > diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bp=
-f_lock_contention.c
-> > index 41a1ad087895..37e17c56f106 100644
-> > --- a/tools/perf/util/bpf_lock_contention.c
-> > +++ b/tools/perf/util/bpf_lock_contention.c
-> > @@ -458,7 +458,7 @@ int lock_contention_read(struct lock_contention *co=
-n)
-> >               if (con->save_callstack) {
-> >                       bpf_map_lookup_elem(stack, &key.stack_id, stack_t=
-race);
-> >
-> > -                     if (!match_callstack_filter(machine, stack_trace)=
-) {
-> > +                     if (!match_callstack_filter(machine, stack_trace,=
- con->max_stack)) {
-> >                               con->nr_filtered +=3D data.count;
-> >                               goto next;
-> >                       }
-> > diff --git a/tools/perf/util/lock-contention.c b/tools/perf/util/lock-c=
-ontention.c
-> > new file mode 100644
-> > index 000000000000..841bb18b1f06
-> > --- /dev/null
-> > +++ b/tools/perf/util/lock-contention.c
-> [SNIP]
-> > +#ifndef HAVE_BPF_SKEL
-> > +int lock_contention_prepare(struct lock_contention *con __maybe_unused=
-)
-> > +{
-> > +     return 0;
-> > +}
-> > +
-> > +int lock_contention_start(void)
-> > +{
-> > +     return 0;
-> > +}
-> > +
-> > +int lock_contention_stop(void)
-> > +{
-> > +     return 0;
-> > +}
-> > +
-> > +int lock_contention_finish(struct lock_contention *con __maybe_unused)
-> > +{
-> > +     return 0;
-> > +}
-> > +
-> > +int lock_contention_read(struct lock_contention *con __maybe_unused)
-> > +{
-> > +     return 0;
-> > +}
-> > +#endif  /* !HAVE_BPF_SKEL */
->
-> Do we really need this part?  Why not leave it in the header file?
+Hi Arnaldo,
 
-I agree it could be in the header but I think it is better not to have
-it in the header. The change is trying to move things into a new
-util/lock-contention.c. We didn't have the C file in the past so
-putting things in the header was okay. In general `static inline` is
-something of a code smell, the static says make it local to every C
-file leading to duplication, the inline doesn't actually mean inline
-the code it means the symbol definition should be hidden. There's
-generally plenty of confusion over static inline that it's best to
-avoid its use, we don't want code in header files and let LTO resolve
-performance issues - there are different arguments in particular
-performance crucial code that relies on inlining, but this isn't it.
-It also helps the debugger to place the code into the C file. There is
-also a lessening of cognitive load when you read the header file which
-is smaller and without #ifdefs. I was also hoping to reduce/remove the
-scope of these functions if possible.
+On Wed, Oct 16, 2024 at 11:22:15AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Oct 15, 2024 at 07:06:35PM -0700, Namhyung Kim wrote:
+> > Hi Arnaldo,
+> > 
+> > On Tue, Oct 15, 2024 at 05:37:38PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Tue, Oct 15, 2024 at 04:58:56PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > So I'm trying adding extra bounds checking, marking the index as
+> > > > volatile, adding compiler barriers, etc, all the fun with the verifier,
+> > > > but got distracted with other stuff, coming back to this now.
+> > >  
+> > > > Ok, the following seems to do the trick:
+> > >  
+> > > > [acme@dell-per740-01 perf-tools]$ git diff
+> > > > diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> > > > index 3b30aa74a3ae..ef87a04ff8d0 100644
+> > > > --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> > > > +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> > > > @@ -486,6 +486,7 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+> > > >                                 augmented = true;
+> > > >                 } else if (size < 0 && size >= -6) { /* buffer */
+> > > >                         index = -(size + 1);
+> > > > +                       index &= 7; // To satisfy the bounds checking with the verifier in some kernels
+> > > >                         aug_size = args->args[index];
+> > > >  
+> > > >                         if (aug_size > TRACE_AUG_MAX_BUF)
+> > > > 
+> > > > I'll now test it without Howard's patch to see if it fixes the RHEL8 +
+> > > > clang 17 case.
+> > > 
+> > > It works with this one-liner + the simplified patch from Howard and also
+> > > on this other system (RHEL9), as well as with Fedora 40, it would be
+> > > nice if someone could test with clang 16 and report back the version of
+> > > the kernel tested as well as the distro name/release, that way I can try
+> > > to get my hands on such as system and test there as well.
+> > > 
+> > > Its all at:
+> > > 
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tmp.perf-tools
+> > > 
+> > > This is the current set of patches that when further tested will go to
+> > > Linus for v6.12:
+> > > 
+> > > ⬢[acme@toolbox perf-tools]$ git log --oneline torvalds/master..
+> > > ff14baa7a290bf42 (HEAD -> perf-tools, x1/perf-tools, perf-tools/tmp.perf-tools) perf trace augmented_raw_syscalls: Add more checks to pass the verifier
+> > > 46180bec048aad85 perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
+> > > 45d1aadac64869a2 perf build: Change the clang check back to 12.0.1
+> > 
+> > Wouldn't it be better to have this change after fixing the verifier
+> > issues in the later commits?
+> 
+> I'm still testing it, this is a one-liner, so I think that the order in
+> which the patches are applied isn't important. Also Howard's patch (the
+> simplified one) doesn't clash with it.
 
-So yes, strictly this tidying isn't necessary but given I was creating
-the C file and tidying lock_contention.h it made sense to me to clean
-up these.
+I'm afraid if it'd break git bisect by allowing old clang versions
+before the fix.
 
 Thanks,
-Ian
+Namhyung
+
+>  
+> > > 4e21679eb81b5f0d perf trace: The return from 'write' isn't a pid
+> > > 2d2314d4b09b5ed9 tools headers UAPI: Sync linux/const.h with the kernel headers
+> > > ⬢[acme@toolbox perf-tools]$
+> > 
+> > I guess you also need the syscalltbl fix from Jiri Slaby.
+> > 
+> > https://lore.kernel.org/linux-perf-users/3a592835-a14f-40be-8961-c0cee7720a94@kernel.org/
+> 
+> Right, he provided a report about the patch I sent solving the case, I
+> have to check if he replied to my question about perf trace actually
+> _working_ on a 32-bit arch system.
+> 
+> I also want to test it, I'm trying to get hold of such a system.
+> 
+> - Arnaldo
