@@ -1,131 +1,98 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E4C515B0E2;
-	Wed, 23 Oct 2024 09:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC16158A33;
+	Wed, 23 Oct 2024 10:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729676047; cv=none; b=JAifPdwFKTd2MBazfmsv9NwUBcgRHP5NDfAEFuz1LVn6biIU9LJX0YRarCm2Rh8v2BCiMAfk7FspRX2nv7l8BVI4NBYmGqlAf1q7tW+6FN4owU5e35eVhHVKuxfn56gu5RIhvRYh9pbc5Ga8lyeoqMGJQzFYlmPQPNtUuM7PvXQ=
+	t=1729677699; cv=none; b=Kvr2DOYKoz4Z1nUY/L72t4lMue1UddZ29V1kTjMhkDoE4I28eVwakfo6HPYN60XfsMInbWQiZOZp2+pt03t2KaBcmzdcQBcHmsCgJfXvse+0Jv2GT8tHsG/w5XfcnRLv/GieCLELHNDp21w3Ft8PbPsCIoJ5vxhW7GktQctNoao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729676047; c=relaxed/simple;
-	bh=iHUY89vn25umH+1yGshHz52mTMNZow05R42xVeaG8HU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EZpbpZtqXKYbqaBevtWT70ish5/dW42a+PpqYaqWvQwJjTBInCpZQes6VJ3EJMC/KOpqER/KgWBgXgf3g/1e/4dsJjtrx3jKrtgAQMRvEhw/ZHZsRYNyVOIl8H9Zte3v/b7hFFWVzt7j0aNYedvJAt+3qnqNyaihkzamYsL988U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9C5E497;
-	Wed, 23 Oct 2024 02:34:34 -0700 (PDT)
-Received: from [10.57.88.34] (unknown [10.57.88.34])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D2983F71E;
-	Wed, 23 Oct 2024 02:34:02 -0700 (PDT)
-Message-ID: <060b220d-f7d6-4594-9b2b-e878a2ba98c6@arm.com>
-Date: Wed, 23 Oct 2024 10:33:54 +0100
+	s=arc-20240116; t=1729677699; c=relaxed/simple;
+	bh=h/oyxIDvVzPzjLipe711o5wG2T0uCbbxdKu5d6vkWxM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GAmHwSP2bQRHyZXIrH8k+WvWylY55G7aGxtkkPwpR+zfZdCaQ4rL7fD8ooFeptmGomboCoJZa+Cy7qVBea5tEkPA8/02ku9hxMi7n20qbssE+ezne2xuAyO4t/+d+jB5oUYMaRUp6zg0x6fpyLuQ711i1OxRR0xnf6ZPIdZ70AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MES1Hn9G; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MES1Hn9G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27EF4C4CEC6;
+	Wed, 23 Oct 2024 10:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729677698;
+	bh=h/oyxIDvVzPzjLipe711o5wG2T0uCbbxdKu5d6vkWxM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MES1Hn9G5ikIFgZ8V6H5a5yxzsAhxdNemqfy67ozsIeQd8vBFI+SU8A385UFkAyGJ
+	 rfojsUp6XyXm5rSk2rW0XHD3CV3gdCaZbu0+wtSnlVXl3ssJ1y4ksSQcnVcwqj7s+Q
+	 3cDudo/PZV+Q99GttTChfcbuIlH5Zy6QEmerd+zLi6/jeD3R/sHpvkb/WPUjdDFcCZ
+	 I/Kb5pIuuXLdM4/QXo/1mzf/MX5p3cd4lsf+Ao6brBt1tPsbPJ9RADmChWdNxn4V6n
+	 H7CkgtnmMd8YOp++887kKK1JH+1deEb9xBgPXMOX7GaQvSimKv2J7n76Lp1wSAuJzz
+	 Nyuyl3B1QyBDw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Sean Young <sean@mess.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>
+Subject: [PATCH bpf] bpf,perf: Fix perf_event_detach_bpf_prog error handling
+Date: Wed, 23 Oct 2024 12:01:31 +0200
+Message-ID: <20241023100131.3400274-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2] perf Documentation: Describe the PMU naming
- convention
-To: Ian Rogers <irogers@google.com>, "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
- Tuan Phan <tuanphan@os.amperecomputing.com>,
- Thomas Richter <tmricht@linux.ibm.com>,
- Bhaskara Budiredla <bbudiredla@marvell.com>,
- Bharat Bhushan <bbhushan2@marvell.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Will Deacon <will@kernel.org>, Stephane Eranian <eranian@google.com>
-References: <20240606044959.335715-1-irogers@google.com>
- <c7d6eedb-7c5e-4411-a83f-4328dc75ec46@linux.intel.com>
- <CAP-5=fXY2Ofr_GRc7Mq7BfoR+2150o8e1JeyGctcGPRG70DqPg@mail.gmail.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <CAP-5=fXY2Ofr_GRc7Mq7BfoR+2150o8e1JeyGctcGPRG70DqPg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 2024-10-23 5:06 am, Ian Rogers wrote:
-> On Thu, Jun 6, 2024 at 11:15 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2024-06-06 12:49 a.m., Ian Rogers wrote:
->>> It is an existing convention to use suffixes with PMU names. Try to
->>> capture that convention so that future PMU devices may adhere to it.
->>>
->>> The name of the file and date within the file try to follow existing
->>> conventions, particularly sysfs-bus-event_source-devices-events.
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
->>> ---
->>>   .../testing/sysfs-bus-event_source-devices    | 24 +++++++++++++++++++
->>>   1 file changed, 24 insertions(+)
->>>   create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices
->>>
->>
->> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> 
-> Thanks for all the reviews. Could we land this?
+Peter reported that perf_event_detach_bpf_prog might skip to release
+the bpf program for -ENOENT error from bpf_prog_array_copy.
 
-Hmm, it's not always going to be strictly true as written though - we 
-will also have cases where multiple PMU instances owned by the same 
-driver don't all support the same events/filters/etc., and/or are 
-entirely unrelated such that the same event encoding may mean completely 
-different things. I've just landed a driver where not only are the 
-instances going to be heterogeneous (since it's for arbitrary bits of 
-interconnect), but for hierarchy reasons the most logical place to put 
-the instance ID in the name wasn't even at the end :(
+This can't happen because bpf program is stored in perf event and is
+detached and released only when perf event is freed.
 
-FWIW I think if we want to nail down a strict ABI, it would seem more 
-robust to have an explicit attribute to describe underlying PMU 
-properties like whether instances do represent identical "slices" or 
-not. The hex suffix thing is already proving how fragile names alone are 
-liable to be.
+Let's make it obvious and add WARN_ON_ONCE on the -ENOENT check and
+make sure the bpf program is released in any case.
 
-Thanks,
-Robin.
+Cc: Sean Young <sean@mess.org>
+Fixes: 170a7e3ea070 ("bpf: bpf_prog_array_copy() should return -ENOENT if exclude_prog not found")
+Closes: https://lore.kernel.org/lkml/20241022111638.GC16066@noisy.programming.kicks-ass.net/
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ kernel/trace/bpf_trace.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> 
-> Thanks,
-> Ian
-> 
->>> diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices b/Documentation/ABI/testing/sysfs-bus-event_source-devices
->>> new file mode 100644
->>> index 000000000000..79b268319df1
->>> --- /dev/null
->>> +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices
->>> @@ -0,0 +1,24 @@
->>> +What: /sys/bus/event_source/devices/<pmu>
->>> +Date: 2014/02/24
->>> +Contact:     Linux kernel mailing list <linux-kernel@vger.kernel.org>
->>> +Description: Performance Monitoring Unit (<pmu>)
->>> +
->>> +             Each <pmu> directory, for a PMU device, is a name
->>> +             optionally followed by an underscore and then either a
->>> +             decimal or hexadecimal number. For example, cpu is a
->>> +             PMU name without a suffix as is intel_bts,
->>> +             uncore_imc_0 is a PMU name with a 0 numeric suffix,
->>> +             ddr_pmu_87e1b0000000 is a PMU name with a hex
->>> +             suffix. The hex suffix must be more than two
->>> +             characters long to avoid ambiguity with PMUs like the
->>> +             S390 cpum_cf.
->>> +
->>> +             Tools can treat PMUs with the same name that differ by
->>> +             suffix as instances of the same PMU for the sake of,
->>> +             for example, opening an event. For example, the PMUs
->>> +             uncore_imc_free_running_0 and
->>> +             uncore_imc_free_running_1 have an event data_read;
->>> +             opening the data_read event on a PMU specified as
->>> +             uncore_imc_free_running should be treated as opening
->>> +             the data_read event on PMU uncore_imc_free_running_0
->>> +             and PMU uncore_imc_free_running_1.
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 95b6b3b16bac..2c064ba7b0bd 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2216,8 +2216,8 @@ void perf_event_detach_bpf_prog(struct perf_event *event)
+ 
+ 	old_array = bpf_event_rcu_dereference(event->tp_event->prog_array);
+ 	ret = bpf_prog_array_copy(old_array, event->prog, NULL, 0, &new_array);
+-	if (ret == -ENOENT)
+-		goto unlock;
++	if (WARN_ON_ONCE(ret == -ENOENT))
++		goto put;
+ 	if (ret < 0) {
+ 		bpf_prog_array_delete_safe(old_array, event->prog);
+ 	} else {
+@@ -2225,6 +2225,7 @@ void perf_event_detach_bpf_prog(struct perf_event *event)
+ 		bpf_prog_array_free_sleepable(old_array);
+ 	}
+ 
++put:
+ 	bpf_prog_put(event->prog);
+ 	event->prog = NULL;
+ 
+-- 
+2.46.2
 
