@@ -1,50 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E821CBE9A;
-	Wed, 23 Oct 2024 18:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9102F1E51D
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2024 18:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729706994; cv=none; b=Dh6t99zDyY5oGNIz69sMWWSgtsj+He6Uj4lMEJ9iCYEVMwbxEZriql8F0HiwqEeVS58n9WlNvz0lc3qc03reBxfWeJXUGGJliIwj2K9LGFvDUyR9WvN/siDF0HuYG9bObIxcJqUiHjZNGtxkgedxMkZajpmOkLQMFk7mTmipVAk=
+	t=1729707465; cv=none; b=NLmOEaOhCpSeEhvR66sWL/eR2IOmjmq+o9ajELdPNYwW+KZg56ngbxw7/7Go0X0zFdVbOBtkxslA0np640useivXn+zd617oPrW6Ji6p+XypQ/cHUP5dDQoAaqSBaZvClxX3EhGemw8nPlu+jC6NBkndvbYorkQSf0bYc+6lXWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729706994; c=relaxed/simple;
-	bh=2rCl2EkGUq3eQaPQ784zJRGPXTj72TQkCboL00ZG36c=;
+	s=arc-20240116; t=1729707465; c=relaxed/simple;
+	bh=f96nDEa8NHKjLs9xqcw/O4JT0vPq796DN+etc8n5Tvo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bstZYxNlhub0U+UpFmyYCMJWhm5K5Ty4WDq+8OL2ptBnOd+dBPm1f1uLI/nX88xNUFKSljVDhpUSM/GxABWwRDuNGLMcst64FBqa2h+VdZkZymuYrBz59IGGyg3U53SaxqM9UhdgdndwOtBsPI7S9hyC6HKNTscEJvGl7Ik83/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i3yF+k+u; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=XlvA3YSo0rUqYl+boAs71eyE0UvHca/LSZvrt7kAWxuTSQmH+/AnoulPpT5TEvZ+n9D3ahUsPFSSpxkymZ6/xs6bAJnJgD6ntLVKHZXmtcVb/vSVVzxATiVHLEcluXroJos0oRhN5sYxSZKJcQGWJz5JQocXx5g441MUR3FIZ6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D2P8Djr7; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i3yF+k+u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729706992; x=1761242992;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2rCl2EkGUq3eQaPQ784zJRGPXTj72TQkCboL00ZG36c=;
-  b=i3yF+k+uBOQmRdjZpBYCL3ImSOEtGsM6G3k3ZWGqlkdlDXgdVlxRW7jj
-   MvLA56tLukS58a1y9qj0Gfv4l7ONA4etzChTyZn6emryLwV3ts5z9GLu8
-   r9NrQ1jY57vjmlz+VsLbi5I8RsWkj3UiyObfUExZWJzcKEhTaQbKvjuOK
-   MhJjfKyEoDGHLer+EmogVNiUINbXTeJX7g9YS/GWE1Piq0ajj5kHXglVM
-   VRcjXN5xEKMBQVIO39Jj+qtBCikTMEhIfoGogReQC8OeZrPDhpywrMsWI
-   EOAlTyfVHcmXaZ719FvHTsiFZFLsHsfPAiYgZNtcVRgF41RBBhHsWsCBv
-   w==;
-X-CSE-ConnectionGUID: FcFXP+wOR9GDtlCDjCCprQ==
-X-CSE-MsgGUID: 0TTX3j1rQQCxuhTFhJQkwQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11234"; a="32166881"
-X-IronPort-AV: E=Sophos;i="6.11,226,1725346800"; 
-   d="scan'208";a="32166881"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 11:09:52 -0700
-X-CSE-ConnectionGUID: Zinfi+i6Sa6zRiLFIJWmzA==
-X-CSE-MsgGUID: C/7rh0eMSamHvy3oTBNjfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,226,1725346800"; 
-   d="scan'208";a="80497846"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.245.115.59])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 11:09:41 -0700
-Message-ID: <175dc21f-a4e6-484f-8ee0-ec64c6dfc392@intel.com>
-Date: Wed, 23 Oct 2024 21:09:35 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2P8Djr7"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7c3d8105646so9315a12.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2024 11:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729707463; x=1730312263; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=52O7UlAiRB1q3e/wJz1OAEsAKmREJXvHVlWC3TmguMg=;
+        b=D2P8Djr7HfEPJaXhG/MdrZzcf7sMxb765b4pn2iCT5aoGNOr9CU3FxcGPRY5Z5jdxU
+         trij41td8/yIjtlNwzp3LoPPpblFMtbmqChxOFHe9Hrwfk63P/FgS3qVbzsuKCy0WiMN
+         spNFWfoDC5O9oFcvx3e/VrN5/ygHlP7SWfK8+CDWIto58wjVtcSLeUhLrOoPn5wi2uKj
+         fmj1aIloEmvJVB+v4qen2fJbOjdwO6p0VAhxc5bLi+sDTaJRlfrMyq4RlSwlrxFAaeUM
+         22kXz6+v7PZkaS43jv/R9qVXhN9BFHksyM4v6oywPzFlC+PGLaoKI2K/gP5XZJNdI8OB
+         agLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729707463; x=1730312263;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=52O7UlAiRB1q3e/wJz1OAEsAKmREJXvHVlWC3TmguMg=;
+        b=SfVJTL75XAsRqX7co4GttjHBl0/WgKpDbgMAVjZb0+8OOOO6c1pHebzL7of2lX/xNM
+         NdjasfEgoXXPkuWu3y0IlljRFe9cmkBzeKevPqcb3bsN+u1KwYmNPJFEiJI7urQ/5iQY
+         O80ymlvt4yyBA5pnhfLqwog3PWSr5fzA99eYfpDDscs2ldunHGo8BzMsslLr390P12Ty
+         j02hbK4qQQmuOC2C8xFCYo8DmCRwXfk+EPsXucu3d0WXo1lulMxUfjJUiGGnTyi1UJSJ
+         PfmvKuCjSpHg/A9WcLyYFmJeAjNeYitiulj5lezWTItnSpHVVUZUUpo7ZcOkmHpTkUPl
+         JD9g==
+X-Gm-Message-State: AOJu0YwpI8b5kj7VjxlmYkQw6R5rzUIGmM8cTLyEVSvwJo4Lb0mZrsN9
+	jDyJ3ymwkJ9otgsilMs0PlIw/kWunQNbixNm7rpdrLJKBfsKrsLK
+X-Google-Smtp-Source: AGHT+IGymFCEQV/ipvm68HGJpQfErRlnUTlllFIR3O5LpvMxL5TlZ3HbCaU6pJAqQIefZ3N4fnLv0w==
+X-Received: by 2002:a17:902:da84:b0:20c:60d6:2dd5 with SMTP id d9443c01a7336-20fa9e9f922mr21064915ad.12.1729707462683;
+        Wed, 23 Oct 2024 11:17:42 -0700 (PDT)
+Received: from [192.168.50.136] ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7eda2c8ccfdsm1466401a12.45.2024.10.23.11.17.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Oct 2024 11:17:42 -0700 (PDT)
+Message-ID: <b11407cf-8cfe-40ec-abe7-165122807e1d@gmail.com>
+Date: Thu, 24 Oct 2024 03:17:38 +0900
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,93 +60,112 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V13 03/14] KVM: x86: Fix Intel PT Host/Guest mode when
- host tracing also
-To: Sean Christopherson <seanjc@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Paolo Bonzini
- <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Hendrik Brueckner <brueckner@linux.ibm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
- <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- H Peter Anvin <hpa@zytor.com>, Kan Liang <kan.liang@linux.intel.com>,
- Zhenyu Wang <zhenyuw@linux.intel.com>, mizhang@google.com,
- kvm@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20241014105124.24473-1-adrian.hunter@intel.com>
- <20241014105124.24473-4-adrian.hunter@intel.com>
- <Zw1iCMNSI4Lc0mSG@google.com>
- <b29e8ba4-5893-4ca0-b2cc-55d95f2fc968@intel.com>
- <ZxfTOQzcXTBEiXMG@google.com>
- <2a8e6f2c-4284-4218-9b91-af6a4d65e982@intel.com>
- <ZxgnoTKt2IBnBBJ2@google.com>
+Subject: Re: Migrating from perf.wiki.kernel.org to RTD
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+ arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Namhyung Kim <namhyung@kernel.org>
+References: <20241011-quiet-chowchow-of-temperance-d0e205@meerkat>
+ <CAP-5=fUz5CFEL8D1L+UATsNqs4MBb6rNeYtZ26+pFC4NgRYt6w@mail.gmail.com>
+ <20241011-uncovered-original-vole-cda87d@meerkat>
+ <20241015-warping-condor-of-storm-afa06f@meerkat>
+ <Zw8cN9daNBvCJd3u@google.com>
+ <CAP-5=fXsVXYkncR0rwxXvKp_f5dR40L9_x-qoLxwHXWMiyXh3g@mail.gmail.com>
+ <a0626ecb-cc64-4c6a-abf3-76868178234f@gmail.com>
+ <b1c1a76b-5094-4384-9304-360a6012e3ad@intel.com>
 Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <ZxgnoTKt2IBnBBJ2@google.com>
+From: Yunseong Kim <yskelg@gmail.com>
+In-Reply-To: <b1c1a76b-5094-4384-9304-360a6012e3ad@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 23/10/24 01:30, Sean Christopherson wrote:
-> On Tue, Oct 22, 2024, Adrian Hunter wrote:
->> On 22/10/24 19:30, Sean Christopherson wrote:
->>>>> LOL, yeah, this needs to be burned with fire.  It's wildly broken.  So for stable@,
->>>>
->>>> It doesn't seem wildly broken.  Just the VMM passing invalid CPUID
->>>> and KVM not validating it.
->>>
->>> Heh, I agree with "just", but unfortunately "just ... not validating" a large
->>> swath of userspace inputs is pretty widly broken.  More importantly, it's not
->>> easy to fix.  E.g. KVM could require the inputs to exactly match hardware, but
->>> that creates an ABI that I'm not entirely sure is desirable in the long term.
+Hi Adrian,
+
+On 10/24/24 2:34 오전, Adrian Hunter wrote:
+> On 20/10/24 07:49, Yunseong Kim wrote:
+>> I would like to express my sincere gratitude to everyone for their help in the
+>> official renewal of the perf wiki.
 >>
->> Although the CPUID ABI does not really change.  KVM does not support
->> emulating Intel PT, so accepting CPUID that the hardware cannot support
->> seems like a bit of a lie.
+>> Additionally, the reason I chose to use Markdown is that I wanted to actively
+>> utilize its media features. For example, I wanted to embed videos,
+>> presentation slide or display Mermaid diagrams directly on the page.
+>> I thought these features would be welcomed by users who are new to perf tools.
+>>
+>> On 10/19/24 8:47 오전, Ian Rogers wrote:
+>>> On Tue, Oct 15, 2024 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>>>> On Tue, Oct 15, 2024 at 02:25:02PM -0400, Konstantin Ryabitsev wrote:
+>>>>> On Fri, Oct 11, 2024 at 06:39:09PM -0400, Konstantin Ryabitsev wrote:
+>>>>>>> Yunseong created:
+>>>>>>> https://perfwiki.github.io/main/
+>>>>>>> Perhaps the solution here is to make perf.wiki.kernel.org a redirect
+>>>>>>> to https://perfwiki.github.io/main/
+>>>>>
+>>>>> To speed things along, and since the old perf wiki was near-unusable anyway,
+>>>>> I went ahead and set the redirects from perf.wiki.kernel.org to
+>>>>> perfwiki.github.io.
 > 
-> But it's not all or nothing, e.g. KVM should support exposing fewer address ranges
-> than are supported by hardware, so that the same virtual CPU model can be run on
-> different generations of hardware.
+> Links to old pages end up at the main page.  For example:
 > 
->> Aren't there other features that KVM does not support if the hardware support
->> is not there?
+> https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace
+> https://perf.wiki.kernel.org/index.php/Top-Down_Analysis
 > 
-> Many.  But either features are one-off things without configurable properties,
-> or KVM does the right thing (usually).  E.g. nested virtualization heavily relies
-> on hardware, and has a plethora of knobs, but KVM (usually) honors and validates
-> the configuration provided by userspace.
-> 
->> To some degree, a testing and debugging feature does not have to be
->> available in 100% of cases because it can still be useful when it is
->> available.
-> 
-> I don't disagree, but "works on my machine" is how KVM has gotten into so many
-> messes with such features.  I also don't necessarily disagree with supporting a
-> very limited subset of use cases, but I want such support to come as well-defined
-> package with proper guard rails, docs, and ideally tests.
+> Any way to get them to redirect to the correct page?
 
-Ok, so how about: leave VMM to choose CPUID, but then map it to what the
-hardware actually supports for what is possible.  So the guest user might
-not get trace data exactly as expected, or perhaps not at all, but at least
-KVM doesn't die.  Then add documentation to explain how it all works.
+We can use web.archive.org as of September 30th of last month.
 
-Note, the number of address ranges is not that much of an issue because
-currently all processors that support Intel PT virtualization have 2.
+Intel PT Link:
+https://web.archive.org/web/20240930185823/https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace
 
-I have a feeling QEMU was targeting compatibility with IceLake, which
-would probably work for all processors that support Intel PT virtualization
-except for one feature - the maximum number of cycle thresholds (dropped
-from 2048 to 16)
+Top-Down_Analysis Link:
+https://web.archive.org/web/20240930164757/https://perf.wiki.kernel.org/index.php/Top-Down_Analysis
 
+
+>>>>> Please feel free to follow up if we need to revisit this, but things look good
+>>>>> to me with this change.
+> 
+> Do we still have the old pages?  I would like to check that the Intel PT
+> page is not missing anything or munged.
+> 
+>>>>
+>>>> Thanks for your work, it looks good to me too.
+>>
+>> I have been continuously improving the content of the documentation, so please
+>> feel free to share any good ideas you may have. :)
+>>
+>>> Thanks Konstantin and Yunseong, I think it looks good!
+>>> I think the pages need some improving, there are empty pages and
+>>> things that look abandoned, such as the white paper linked from the
+>>> side bar:
+>>> https://perfwiki.github.io/main/white-paper/
+>>> I pushed a few improvements to the glossary and useful links. It
+>>> should be as easy as creating a pull request for others to contribute,
+>>> so I look forward to this.
+>>
+>> Thank you so much Ian, I added per-page editing features to make it more convenient
+>> for people to edit the documentation and submit pull requests.
+>> Link: https://github.com/perfwiki/main/commit/4289b6a6e5c2e53d69a7605d01d0773366a33c52
+> 
+> I do not understand.  Is it a wiki anymore?  If so, what is
+> needed to edit a page?
+
+If you need to update the page directly, I can grant you permission to
+do so. This is similar to the previous login system based on Media Wiki.
+
+The issue with the old wiki was that logging in was broken(sadly) for
+several months.
+
+> Also how can page updates be submitted programmatically?
+
+You can submit a Pull Request or if you have the necessary permissions,
+you can directly update the document to add changes to the main branch.
+
+> I had a script auto-updating the latest man pages, using
+> MediaWiki API, which I will have to redo :-(
+
+Could you let me know what script auto-updating you were performing with
+the URL of the API or the specific functionality? If there is anything
+else you need, please feel free to let me know. I will do my best to
+assist you.
+
+Best regards,
+Yunseong Kim
