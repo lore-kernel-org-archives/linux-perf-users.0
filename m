@@ -1,81 +1,112 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC36515746E
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2024 21:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABC01FDFBD;
+	Wed, 23 Oct 2024 22:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729720642; cv=none; b=ZvtzWOcKODJ4DcMyZ2K4swqFynt+hZpcwOtraoAGcGWk9qYAM583hptILGudbyfCSUCTL6ebRiqfmd/SdaBupFuYNu4opbw8F9+BFAtqxG1bqPDV4E5IRAgTYjJIavKGAyA1SO+0fbaIOJIXC6HKEDHKt7SK9Yn35eU+DZnV42o=
+	t=1729721981; cv=none; b=XpZPoI5JQKi/Nl2xznqlh7PHrMqTp2pYhEIB82/80i8VPbRx4zu8aCwn9jsBeZ6fLIY4KukdcJJGEuuFLZn/3bZOA9GHPtnZhTi4MMhk0Ac+1VoFvQ8I8MQF9K/o0J/IYda7YQK2W9kCMZfBqqQ6LA8VXq6wGvy0w5lIYe9uQV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729720642; c=relaxed/simple;
-	bh=T2xGFeke+iOeRxlPLeuSO4msAVCygbsF7AoDY8kGvj4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=j5cqdX/i34o6oMp2nbVQ99A9yzNA5yu5iPRiO1lZy9FHLwHjTmwZBxGkQRoahJV0o6nR1HK/UxCAgnOhLaEgWzOedECKc6EbSF5OSmp1DIMpN5iDoDgO4CwaKscpY7Y29QZ7CRsp8WCCmIgktVoFtBuGHFrNEozhVUQ52m41P20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TGmxMYmW; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1729721981; c=relaxed/simple;
+	bh=Dw3jN8UXPpeXAOKIsCxlxoWmdgdYhKqQcjOgPzGKFtU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nBYFCSbTztuA18jAEiVELRsaXf400FvWKvFoGlNXZn+bl3GArpuvL94wnOwStvRD0N24s3KyS5hiHLYUXhuL92ZhKrH2fg6kImSU/bXiCfuK5HBBnIhlD8wmsal2xqzJ2j/ZEQrdG6lFpq83eo7FL+XN/+DXbuYA75hge3YCFKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+i2VPDc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TGmxMYmW"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-20ca03687fdso20575ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2024 14:57:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729720640; x=1730325440; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=T2xGFeke+iOeRxlPLeuSO4msAVCygbsF7AoDY8kGvj4=;
-        b=TGmxMYmW7fY1Ndc1oZyex27pAVjZ/6D5CegvyDy5DsrJhYSYSH7DclC+ZGqKB+S+jI
-         vI2kS9tKlEdz66N4Tr9bW9efrrT8U2BlPSIRf7irpzfYSqrsbhiukAeAH5nUG6RqKYh7
-         64bcRtTc5/gdN/r+MkH88HcEE9TaPGDQfCkLX+v6JWXn7+00ESO+yHhWiXGXqbBrYJJM
-         WUdBn1ENwWmlK6WrrbTRI/lQ7YdDo8MRA0W5z2KGFR9Urc/ZP/8Up1TDu/SLvxr8pRo1
-         Nn/uVVqS/eKpxPBmOj2c6vudWtf8hk0lFICLaUnxVp8H477JNygjIsjfcXkXQHimGHIA
-         QU4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729720640; x=1730325440;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=T2xGFeke+iOeRxlPLeuSO4msAVCygbsF7AoDY8kGvj4=;
-        b=U0gwfbTIsSAEeb9WG4FTNZQ/Y30k79XQQKr60Mbf20AQvSIJ7D0UcUvBG5WDM+v9j3
-         XUD2gtgUCK4UOEHB7k7xj8yTLA0fmWiRRWL0hV88UKjMTlyQNp1msSVAIFwzXzi1H6um
-         IdQDkS62QDJ4dd+CzqWCz1Jfm01q6qp+1RTLMlRXf4AYqH94UxIPzSz9N0AiavDT4pVL
-         Af7wRJ97XaQThNeT/4gSw6NBAPRgt12RnfBOjOnIwXeveeOcYp+6yBkITq1ebmqlfY0j
-         PQebNbYSrLe9w+5hUcmnYufyzT3CpbG077he0bXRULTuupOyYwoLMUfVBm+PtmRj2PiP
-         yaTg==
-X-Gm-Message-State: AOJu0Yxr4ZVu3yAIh6mc6fItpNMSXPFc4rcnTSeQueM0PtBDHJMFGeOO
-	KOMq4y7bOmPnRNtxVOK+5X7VwV6CH4infdDEf7vfFuY10NjDD2ZaV+D4SIaJoEoytCKaWpb6oDR
-	UfW2DWxbCw7wNPD5jWmRKBT2nxSPa6VfDAUCQRc3Ydcpv3A6rdVhQ
-X-Google-Smtp-Source: AGHT+IHb+GNhExJ6XL0/O/4j+1Sprd3Xd3ItgM0C3NqKj/6u+HgDJeL5Wd7o9FCedGVBCmoWFPdgUzQHf37JbmVdip0=
-X-Received: by 2002:a17:902:ec84:b0:20b:bf5a:c8 with SMTP id
- d9443c01a7336-20fb5eca2edmr1010835ad.10.1729720639450; Wed, 23 Oct 2024
- 14:57:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+i2VPDc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EECE3C4CEE5;
+	Wed, 23 Oct 2024 22:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729721980;
+	bh=Dw3jN8UXPpeXAOKIsCxlxoWmdgdYhKqQcjOgPzGKFtU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z+i2VPDcRJO+rZIfGLFWo1W7lL2FvKjHO9Ci72s6U/byaYNDCwumTNYwsYabcCQNi
+	 0qe2/NDwbsE3C9DvoEUJ69tiVY6awS9BuYrqFMTloYwLgaf9ovfDX5+yOB70m3EvVK
+	 yLCT0EQoS9FnZodTalFgd8DkojLr3fkNEMcxuHuMzKEM/vojp1gQ+gdmZdim8DHXBz
+	 BKtgCDidcwJYNecErjLWNZuZG2UAIyCNlUcGSw9Y51Sz0E0tbcJ7GaxBVNVtgdrRK9
+	 JXQRsTMuu2t5iUPyrtQ4HMYanH/hT9Ca6qINmYYw+fuOv75Z0jGjRA/Gec3bu+/zAI
+	 XCfZSRf6sIvqg==
+Date: Wed, 23 Oct 2024 15:19:38 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf check: Add sanitizer feature and use to avoid
+ test failure
+Message-ID: <Zxl2etmBtc5XsQ3p@google.com>
+References: <20241018055627.1005723-1-irogers@google.com>
+ <Zxc6_jZdDcWgtEom@google.com>
+ <CAP-5=fU04PAN4T=7KuHA4h+po=oTy+6Nbee-Gvx9hCsEf2Lh0w@mail.gmail.com>
+ <ZxiVKvmzjeHd4xBQ@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 23 Oct 2024 14:57:05 -0700
-Message-ID: <CAP-5=fUXkp-d7gkzX4eF+nbjb2978dZsiHZ9abGHN=BN1qAcbg@mail.gmail.com>
-Subject: Can perf drop libunwind support
-To: linux-perf-users <linux-perf-users@vger.kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZxiVKvmzjeHd4xBQ@google.com>
 
-Hi,
+On Tue, Oct 22, 2024 at 11:18:18PM -0700, Namhyung Kim wrote:
+> On Tue, Oct 22, 2024 at 10:39:36AM -0700, Ian Rogers wrote:
+> > Sure, the reproduction is trivial, just add -fsanitize=address, so I'm
+> > surprised you're not already seeing it:
+> > ```
+> > $ perf test annotate -v
+> > --- start ---
+> > test child forked, pid 444258
+> >  68e8a0-68e96b l noploop
+> > perf does have symbol 'noploop'
+> > Basic perf annotate test
+> >          : 0      0x68e8a0 <noploop>:
+> >     0.00 :   68e8a0:       pushq   %rbp
+> >     0.00 :   68e8a1:       movq    %rsp, %rbp
+> >     0.00 :   68e8a4:       subq    $0x30, %rsp
+[...]
+> >     0.00 :   92d6:       shrl    %cl, %edx
+> >     0.00 :   92d8:       movl    %edx, %ecx
+> >     0.00 :   92da:       movq    %rax, %rdx
+> > Basic annotate [Failed: missing disasm output when specifying the target symbol]
+> 
+> Hmm.. this is strange.  The error message says it failed when it
+> specified the target symbol (noploop) for perf annotate.
+> 
+> As it's the dominant symbol, it should have the same output for the
+> first function (noploop) whether it has target symbol or not and it
+> should match the disasm_regex.  I'm curious how it can fail here.
 
-perf wants to build with BPF support these days. libbpf has a
-dependency on libelf, part of elfutils. libdw is also part of elfutils
-and amongst other things provides unwinding support. My understanding
-is libdw unwinding is used by perf in preference to libunwind when
-present. My suspicion is that libunwind is being feature tested,
-linked against but then seldom or never used. Given this could perf
-drop libunwind support in order to simplify the code base?
+Hmm.. ok.  For some reason, it wasn't failed when I add DEBUG=1.
 
-Possible savings:
- - remove libunwind's 8 feature tests
- - removal of 10 arch or not libunwind C files in perf
- - removal of libunwind #ifdef-ed code throughout common files.
+Without DEBUG, I can see it now.
+
+=================================================================
+==1053492==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 33 byte(s) in 1 object(s) allocated from:
+    #0 0x7f1ad78edd20 in strdup ../../../../src/libsanitizer/asan/asan_interceptors.cpp:566
+    #1 0x55eda19cb76f in perf_data__open (linux/tools/perf/perf+0x65276f) (BuildId: 6fc1b7cdc123c7bd586ce55ea8b727875f42cda2)
+    #2 0x55eda18ffafa in __perf_session__new (linux/tools/perf/perf+0x586afa) (BuildId: 6fc1b7cdc123c7bd586ce55ea8b727875f42cda2)
+    #3 0x55eda15485d3 in cmd_annotate (linux/tools/perf/perf+0x1cf5d3) (BuildId: 6fc1b7cdc123c7bd586ce55ea8b727875f42cda2)
+    #4 0x55eda1695467 in run_builtin (linux/tools/perf/perf+0x31c467) (BuildId: 6fc1b7cdc123c7bd586ce55ea8b727875f42cda2)
+    #5 0x55eda1695c0e in handle_internal_command (linux/tools/perf/perf+0x31cc0e) (BuildId: 6fc1b7cdc123c7bd586ce55ea8b727875f42cda2)
+    #6 0x55eda153ba72 in main (linux/tools/perf/perf+0x1c2a72) (BuildId: 6fc1b7cdc123c7bd586ce55ea8b727875f42cda2)
+    #7 0x7f1acda43b89 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+SUMMARY: AddressSanitizer: 33 byte(s) leaked in 1 allocation(s).
+Unexpected signal in test_basic
+
+No idea how it can leak the data->file.path (that's what I can find
+where strdup is used in the function).
 
 Thanks,
-Ian
+Namhyung
+
