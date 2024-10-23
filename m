@@ -1,173 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262CC14EC62;
-	Wed, 23 Oct 2024 20:24:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CAE1D9A68;
+	Wed, 23 Oct 2024 21:05:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729715055; cv=none; b=lsxtezJ2HkaR8XEjL98gOmRUfPHFiqUyFOp//bVxBgEQMPt4J0vfG2/o8ffL1nRJDgoQQR4d0cWSMQ62w83RvpKGfo50eRnomZowvu2eCwAhZf61y0F6QV25udIGz1t+tc91JR1QZfCvqGZC3o62awi9bCFlb6pbl2j9epJh57Y=
+	t=1729717510; cv=none; b=arwmRELlNqefbLGtA6P0Wad3jfQ5bfK1d0j0sg7s1nFkYVQ0K0bbyiuH40/r/4H3r9E7456AIuLXzQqERWj7wJ2hMhKB4x9dxzvHJ1x1x/rsuVolVyV7KFLyMan0/poHPko6b4yRWezepFQ/ZQNyYZ1mMyZ1l5Sq3rwRmJVZERU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729715055; c=relaxed/simple;
-	bh=BlgLFVi9BOXbusOcDAl1qyQmxS9LNlPv5ENh5+eQVhQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IwmewI/dinH9eHI+CTOD1IMCEA/rnnyZ3uR/a/BRl0/psvz08WXuuA8xAFn8gKLkJubvYAHUDCFSB9mfjfQw/O4saza8ygKL9qF0qAXzxZqfWBaJAB7fzjrCXG7bR1fG9VBI5X45YCzOvrUH9MR2f38xyzUAYaHaxw4Sfp5s9aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y/EyUbTZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729717510; c=relaxed/simple;
+	bh=YGxT/21cdM6lSvXvWqYvvIrJsI/bS0dImUF6eX1aAgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BvBPko0qpAwctBdBZ13EZSggxtUgP9i1ZShKZhBRC26qWnpC5Ige69VH9SJEFPU0B/n2XFDcihr5P7vF5fEue9Dpg63Tg3UCYOLJF74cFC0mBXqcEpwDCxSkz90TViehMz2D+ew0BlupH07QugmLWaSZ6X4P2frRH14H63b3PRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=leKFgbsh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y/EyUbTZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09E4CC4CEC6;
-	Wed, 23 Oct 2024 20:24:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="leKFgbsh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D0E4C4CEC6;
+	Wed, 23 Oct 2024 21:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729715053;
-	bh=BlgLFVi9BOXbusOcDAl1qyQmxS9LNlPv5ENh5+eQVhQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y/EyUbTZtQRKhmaIicmx1lg30QFPzaQEl3Xghdj2drn+cdpGQ3/zLxGca8yCrWk9y
-	 kkruTIGhwwrX2Wpwa7K/ERPKR7zzZoR4J1b7eSgTvl5wx3T0hJOUZ93SOYIyG8pyIQ
-	 Bvt8PZGtJwKBqURhRPY7Z8zeZqFwQYIOoDY96xXBbDTCNDuJdiR9sXh5gtEawx1TRg
-	 oOMB7bQ8rrVabnDQxxAjewzrbOAvQ9EMhyp9j07bOOud5hEz5xjYGUne8jwNhWyWB/
-	 rQcB8543fEsLC+Pg2Mb7h6S6T80FzwvnYq5+s88hnOv7iM9fr9bkYpXO1ShJUBh7K1
-	 YbwU7OgeAg6FA==
-Date: Wed, 23 Oct 2024 17:24:10 -0300
+	s=k20201202; t=1729717509;
+	bh=YGxT/21cdM6lSvXvWqYvvIrJsI/bS0dImUF6eX1aAgs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=leKFgbshLphDRPiHlYl2kAjVr9MglbBobK+bsjFeiqaFl1NPntM6eoxLzuvfzaoSi
+	 q+K9IVvUF+eLeE9OIt43Ii3o5A41WgRT8xie9oWXsmXStonCcSs703FQ1ovXzRi3ea
+	 HhfBKD0TUm6sR/ERZ4MXJTk9+ibyRDP5cRKu1cCfeJTmali01LHF45tcBXzjKecf3C
+	 5FWdI06Fanjg++xuv9UKaJ75y1YJdPzLzyn7XE5080N8lDJH29OH4z8nPtqO5cmLM1
+	 HO1PjYaAH2cGJOPeh+3eDLuCbNFvekToZ73LJwHUMjlUExtxGVXfbPKugOsBkQvf0k
+	 i2sQbVdbq2sgQ==
+Date: Wed, 23 Oct 2024 18:05:06 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: vmolnaro@redhat.com
-Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, mpetlan@redhat.com,
-	peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf test: Handle perftool-testsuite_probe failure
- due to broken DWARF
-Message-ID: <ZxlbakzNhwDTTlWf@x1>
-References: <Zw_mutl867MINXPi@x1>
- <20241017161555.236769-1-vmolnaro@redhat.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH 1/1 perf-tools] perf python: Fix up the build on
+ architectures without HAVE_KVM_STAT_SUPPORT
+Message-ID: <ZxllAtpmEw5fg9oy@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241017161555.236769-1-vmolnaro@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 17, 2024 at 06:15:55PM +0200, vmolnaro@redhat.com wrote:
-> From: Veronika Molnarova <vmolnaro@redhat.com>
-> 
-> Test case test_adding_blacklisted ends in failure if the blacklisted
-> probe is of an assembler function with no DWARF available. At the same
-> time, probing the blacklisted function with ASM DWARF doesn't test the
-> blacklist itself as the failure is a result of the broken DWARF.
-> 
-> When the broken DWARF output is encountered, check if the probed
-> function was compiled by the assembler. If so, the broken DWARF message
-> is expected and does not report a perf issue, else report a failure.
-> If the ASM DWARF affected the probe, try the next probe on the blacklist.
-> If the first 5 probes are defective due to broken DWARF, skip the test
-> case.
+Noticed while building on a raspbian arm 32-bit system.
 
-Tested and applied to perf-tools.
+There was also this other case, fixed by adding a missing util/stat.h
+with the prototypes:
 
-- Arnaldo
+  /tmp/tmp.MbiSHoF3dj/perf-6.12.0-rc3/tools/perf/util/python.c:1396:6: error: no previous prototype for ‘perf_stat__set_no_csv_summary’ [-Werror=missing-prototypes]
+   1396 | void perf_stat__set_no_csv_summary(int set __maybe_unused)
+        |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /tmp/tmp.MbiSHoF3dj/perf-6.12.0-rc3/tools/perf/util/python.c:1400:6: error: no previous prototype for ‘perf_stat__set_big_num’ [-Werror=missing-prototypes]
+   1400 | void perf_stat__set_big_num(int set __maybe_unused)
+        |      ^~~~~~~~~~~~~~~~~~~~~~
+  cc1: all warnings being treated as errors
+
+In other architectures this must be building due to some lucky indirect
+inclusion of that header.
+
+Fixes: 9dabf4003423c8d3 ("perf python: Switch module to linking libraries from building source")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/python.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 31a223eaf8e65fa3..ee3d43a7ba4570f0 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -19,6 +19,7 @@
+ #include "util/bpf-filter.h"
+ #include "util/env.h"
+ #include "util/kvm-stat.h"
++#include "util/stat.h"
+ #include "util/kwork.h"
+ #include "util/sample.h"
+ #include "util/lock-contention.h"
+@@ -1355,6 +1356,7 @@ PyMODINIT_FUNC PyInit_perf(void)
  
-> Fixes: def5480d63c1e847 ("perf testsuite probe: Add test for blacklisted kprobes handling")
-> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-> ---
->  .../base_probe/test_adding_blacklisted.sh     | 69 +++++++++++++++----
->  1 file changed, 54 insertions(+), 15 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-> index b5dc10b2a73810b3..bead723e34af3f0e 100755
-> --- a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-> +++ b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-> @@ -19,35 +19,74 @@
->  TEST_RESULT=0
->  
->  # skip if not supported
-> -BLACKFUNC=`head -n 1 /sys/kernel/debug/kprobes/blacklist 2> /dev/null | cut -f2`
-> -if [ -z "$BLACKFUNC" ]; then
-> +BLACKFUNC_LIST=`head -n 5 /sys/kernel/debug/kprobes/blacklist 2> /dev/null | cut -f2`
-> +if [ -z "$BLACKFUNC_LIST" ]; then
->  	print_overall_skipped
->  	exit 0
->  fi
->  
-> +# try to find vmlinux with DWARF debug info
-> +VMLINUX_FILE=$(perf probe -v random_probe |& grep "Using.*for symbols" | sed -r 's/^Using (.*) for symbols$/\1/')
-> +
->  # remove all previously added probes
->  clear_all_probes
->  
->  
->  ### adding blacklisted function
-> -
-> -# functions from blacklist should be skipped by perf probe
-> -! $CMD_PERF probe $BLACKFUNC > $LOGS_DIR/adding_blacklisted.log 2> $LOGS_DIR/adding_blacklisted.err
-> -PERF_EXIT_CODE=$?
-> -
->  REGEX_SCOPE_FAIL="Failed to find scope of probe point"
->  REGEX_SKIP_MESSAGE=" is blacklisted function, skip it\."
-> -REGEX_NOT_FOUND_MESSAGE="Probe point \'$BLACKFUNC\' not found."
-> +REGEX_NOT_FOUND_MESSAGE="Probe point \'$RE_EVENT\' not found."
->  REGEX_ERROR_MESSAGE="Error: Failed to add events."
->  REGEX_INVALID_ARGUMENT="Failed to write event: Invalid argument"
->  REGEX_SYMBOL_FAIL="Failed to find symbol at $RE_ADDRESS"
-> -REGEX_OUT_SECTION="$BLACKFUNC is out of \.\w+, skip it"
-> -../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" < $LOGS_DIR/adding_blacklisted.err
-> -CHECK_EXIT_CODE=$?
-> -
-> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLACKFUNC"
-> -(( TEST_RESULT += $? ))
-> -
-> +REGEX_OUT_SECTION="$RE_EVENT is out of \.\w+, skip it"
-> +REGEX_MISSING_DECL_LINE="A function DIE doesn't have decl_line. Maybe broken DWARF?"
-> +
-> +BLACKFUNC=""
-> +SKIP_DWARF=0
-> +
-> +for BLACKFUNC in $BLACKFUNC_LIST; do
-> +	echo "Probing $BLACKFUNC"
-> +
-> +	# functions from blacklist should be skipped by perf probe
-> +	! $CMD_PERF probe $BLACKFUNC > $LOGS_DIR/adding_blacklisted.log 2> $LOGS_DIR/adding_blacklisted.err
-> +	PERF_EXIT_CODE=$?
-> +
-> +	# check for bad DWARF polluting the result
-> +	../common/check_all_patterns_found.pl "$REGEX_MISSING_DECL_LINE" >/dev/null < $LOGS_DIR/adding_blacklisted.err
-> +
-> +	if [ $? -eq 0 ]; then
-> +		SKIP_DWARF=1
-> +		echo "Result polluted by broken DWARF, trying another probe"
-> +
-> +		# confirm that the broken DWARF comes from assembler
-> +		if [ -n "$VMLINUX_FILE" ]; then
-> +			readelf -wi "$VMLINUX_FILE" |
-> +			awk -v probe="$BLACKFUNC" '/DW_AT_language/ { comp_lang = $0 }
-> +						   $0 ~ probe { if (comp_lang) { print comp_lang }; exit }' |
-> +			grep -q "MIPS assembler"
-> +
-> +			CHECK_EXIT_CODE=$?
-> +			if [ $CHECK_EXIT_CODE -ne 0 ]; then
-> +				SKIP_DWARF=0 # broken DWARF while available
-> +				break
-> +			fi
-> +		fi
-> +	else
-> +		../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" < $LOGS_DIR/adding_blacklisted.err
-> +		CHECK_EXIT_CODE=$?
-> +
-> +		SKIP_DWARF=0
-> +		break
-> +	fi
-> +done
-> +
-> +if [ $SKIP_DWARF -eq 1 ]; then
-> +	print_testcase_skipped "adding blacklisted function $BLACKFUNC"
-> +else
-> +	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLACKFUNC"
-> +	(( TEST_RESULT += $? ))
-> +fi
->  
->  ### listing not-added probe
->  
-> -- 
-> 2.43.0
-> 
+ unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
+ 
++#ifdef HAVE_KVM_STAT_SUPPORT
+ bool kvm_entry_event(struct evsel *evsel __maybe_unused)
+ {
+ 	return false;
+@@ -1384,6 +1386,7 @@ void exit_event_decode_key(struct perf_kvm_stat *kvm __maybe_unused,
+ 			   char *decode __maybe_unused)
+ {
+ }
++#endif // HAVE_KVM_STAT_SUPPORT
+ 
+ int find_scripts(char **scripts_array  __maybe_unused, char **scripts_path_array  __maybe_unused,
+ 		int num  __maybe_unused, int pathlen __maybe_unused)
+-- 
+2.46.0
+
