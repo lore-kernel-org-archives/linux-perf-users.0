@@ -1,49 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFA315746E
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2024 21:54:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C6F17DE16;
+	Wed, 23 Oct 2024 21:57:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729720483; cv=none; b=YwVBMco/8fb96FI31GLEWIjcrJxSYCoFUJmAnwFwJgcWUaxR4NYWAX51WWb4BmNTENIYb/48Kaz0W6XOalfPOghFV1PKvbGv5//dTZTpSUOtvP249czuOrJptnrzOIyJb/lbiE86ObXIsPdnUpm2fmtsP6+7Y9MVwdHQVjyQqH4=
+	t=1729720641; cv=none; b=JyBz0srcGt4LyUDrh7pRZmsQLIb4mLKoE1czhG8Ey6M0M09kF2X54IGCdE6D1PUp2PJubs+iS+i05Ij0r9u26o0PvTa2c5rhqZGsa/5IfHXAD1q8rB6HCWWFNsQ37knxQeiGO5pv52DDgx+IP4fzVzwqmwYko1YobmjQMImGBXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729720483; c=relaxed/simple;
-	bh=lmUKdBaSK9Dkw8Liv4b4VF+Tp+oQ/1cq+++uASlnThs=;
+	s=arc-20240116; t=1729720641; c=relaxed/simple;
+	bh=RG0bGMbyOGkTEX0rTcKK//agJ+NrEKekSWU6CWmm7JQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U7ap9D16K0gQEDLYs19uD42EpvK/Qkl5gpUfBJ1D8uocrEPybQVKkP4aDXbT+3rDxTNXGi1Y1EepabhqulhTa3Co/UXN9JPDorbYEdEb0+omX9HQJh5CwLEI4+oTKuoiW8r6wLAHmXwyp58W/pKfor9F5WyNt29sqcPH8JJ/j1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvLn+ZQd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hf0Q4A81WyN8n1bYlv+cbCpadyEV4+62VoPkizn5SK2UUA8dM4GcM3UFPqr5qpyCpeSl/pJ9Z32MgN1F/y+eu+kYGId9TDIXYkZsNJ0QUxlmKrQX/5XwggiJOZEZ0hfAZAhIsNeN6vRlMsQH5pZp6F4gn/RJIvSyBOkjG+1+5J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFZWZRb4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvLn+ZQd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 707F3C4CEC6;
-	Wed, 23 Oct 2024 21:54:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFZWZRb4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D522DC4CEE6;
+	Wed, 23 Oct 2024 21:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729720482;
-	bh=lmUKdBaSK9Dkw8Liv4b4VF+Tp+oQ/1cq+++uASlnThs=;
+	s=k20201202; t=1729720641;
+	bh=RG0bGMbyOGkTEX0rTcKK//agJ+NrEKekSWU6CWmm7JQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XvLn+ZQdnVM04TDzsrzD8eppBLllufXu305pS251/WiOf2fX01E8gSP/HxVD9rrHr
-	 vZ8Y4iTZPjlAcG6wJaLvnepxe+jFW9z4IKAWUYUxJjTQAAGCUERvwZ6UA1wkjw9+up
-	 +PQ6FZuwXpSZGQcLfrPndzjGJPmo6dpRHXA7IocokecL/gv62ZqV/JAPZURwSyQVBb
-	 OyW6UmRa3nx42EIW0XeTzdbungseRg3pgNBi4CrIpSbqaP9X5lYKodYTxQPJjtls6Z
-	 QJ441lUyEYIEPHIj+mtd+jjs3tM9MU4cCdx0nGe363c1XQv5hK/dJestfiND08ZlJK
-	 3o4ISI+MDrC1A==
-Date: Wed, 23 Oct 2024 14:54:40 -0700
+	b=HFZWZRb4SbgQaPf1epDqKrwSww9SGMxssOghFj5Wv8eaH9ZgudCbcH3xjm4qpGObX
+	 hbEkmWbwWB9ftmRzj6/14jVB/XxpTmy3fs+b1/nDT0Mia05f+HXm0bFojXAJiymFFn
+	 ZDMxoV3TAIc4q6Y52M+COeyNY7/y7vFHZ4/Jkwqs+xf+fXL2X11alxKgcxP7i5+Axv
+	 bCydBfU1BT9qgWadhWxtU3DRVrBNgDSIeqtSGKwK9lDregaYo9DnrtrWofbW0+TmiG
+	 E15RTb6ikqH+3HWvTCbmubxcMT5p0/99yALKvyBKz7r4TQOg3ljhBeUbyhM1rAtaKC
+	 90B5t5geKqCCQ==
+Date: Wed, 23 Oct 2024 14:57:19 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Yunseong Kim <yskelg@gmail.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Subject: Re: Migrating from perf.wiki.kernel.org to RTD
-Message-ID: <ZxlwoN57PF_5YX0F@google.com>
-References: <20241011-quiet-chowchow-of-temperance-d0e205@meerkat>
- <CAP-5=fUz5CFEL8D1L+UATsNqs4MBb6rNeYtZ26+pFC4NgRYt6w@mail.gmail.com>
- <20241011-uncovered-original-vole-cda87d@meerkat>
- <20241015-warping-condor-of-storm-afa06f@meerkat>
- <Zw8cN9daNBvCJd3u@google.com>
- <CAP-5=fXsVXYkncR0rwxXvKp_f5dR40L9_x-qoLxwHXWMiyXh3g@mail.gmail.com>
- <a0626ecb-cc64-4c6a-abf3-76868178234f@gmail.com>
- <b1c1a76b-5094-4384-9304-360a6012e3ad@intel.com>
- <b11407cf-8cfe-40ec-abe7-165122807e1d@gmail.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>, Howard Chu <howardchu95@gmail.com>,
+	Andrea Righi <andrea.righi@linux.dev>, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, james.clark@linaro.org,
+	alan.maguire@oracle.com
+Subject: Re: [PATCH v2 0/2] perf trace: Fix support for the new BPF feature
+ in clang 12
+Message-ID: <ZxlxP2otBeW3OYrc@google.com>
+References: <Zw61TUe1V97dKWer@google.com>
+ <Zw7D9HXBanPLUO4G@x1>
+ <Zw7JgJc0LOwSpuvx@x1>
+ <Zw7SkmEaz730uVbL@x1>
+ <Zw8fqyCZNqSABMkM@google.com>
+ <Zw_MFwkejeWC2qbv@x1>
+ <ZxfbNJ6nKXzoEYVn@google.com>
+ <Zxfv3BupKqhi3zGV@x1>
+ <Zxg6sCJAUDUsaVBM@google.com>
+ <ZxkKnIaz6QaIC4VN@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,106 +59,78 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b11407cf-8cfe-40ec-abe7-165122807e1d@gmail.com>
+In-Reply-To: <ZxkKnIaz6QaIC4VN@x1>
 
-On Thu, Oct 24, 2024 at 03:17:38AM +0900, Yunseong Kim wrote:
-> Hi Adrian,
+On Wed, Oct 23, 2024 at 11:39:24AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Oct 22, 2024 at 04:52:16PM -0700, Namhyung Kim wrote:
+> > On Tue, Oct 22, 2024 at 03:33:00PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Tue, Oct 22, 2024 at 10:04:52AM -0700, Namhyung Kim wrote:
+> > > > On Wed, Oct 16, 2024 at 11:22:15AM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > > On Tue, Oct 15, 2024 at 07:06:35PM -0700, Namhyung Kim wrote:
+> > > > > > On Tue, Oct 15, 2024 at 05:37:38PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > > > > On Tue, Oct 15, 2024 at 04:58:56PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > > > > Its all at:
 > 
-> On 10/24/24 2:34 오전, Adrian Hunter wrote:
-> > On 20/10/24 07:49, Yunseong Kim wrote:
-> >> I would like to express my sincere gratitude to everyone for their help in the
-> >> official renewal of the perf wiki.
-> >>
-> >> Additionally, the reason I chose to use Markdown is that I wanted to actively
-> >> utilize its media features. For example, I wanted to embed videos,
-> >> presentation slide or display Mermaid diagrams directly on the page.
-> >> I thought these features would be welcomed by users who are new to perf tools.
-> >>
-> >> On 10/19/24 8:47 오전, Ian Rogers wrote:
-> >>> On Tue, Oct 15, 2024 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >>>> On Tue, Oct 15, 2024 at 02:25:02PM -0400, Konstantin Ryabitsev wrote:
-> >>>>> On Fri, Oct 11, 2024 at 06:39:09PM -0400, Konstantin Ryabitsev wrote:
-> >>>>>>> Yunseong created:
-> >>>>>>> https://perfwiki.github.io/main/
-> >>>>>>> Perhaps the solution here is to make perf.wiki.kernel.org a redirect
-> >>>>>>> to https://perfwiki.github.io/main/
-> >>>>>
-> >>>>> To speed things along, and since the old perf wiki was near-unusable anyway,
-> >>>>> I went ahead and set the redirects from perf.wiki.kernel.org to
-> >>>>> perfwiki.github.io.
-> > 
-> > Links to old pages end up at the main page.  For example:
-> > 
-> > https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace
-> > https://perf.wiki.kernel.org/index.php/Top-Down_Analysis
-> > 
-> > Any way to get them to redirect to the correct page?
+> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tmp.perf-tools
 > 
-> We can use web.archive.org as of September 30th of last month.
+> > > > > > > This is the current set of patches that when further tested will go to
+> > > > > > > Linus for v6.12:
 > 
-> Intel PT Link:
-> https://web.archive.org/web/20240930185823/https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace
+> > > > > > > ⬢[acme@toolbox perf-tools]$ git log --oneline torvalds/master..
+> > > > > > > ff14baa7a290bf42 (HEAD -> perf-tools, x1/perf-tools, perf-tools/tmp.perf-tools) perf trace augmented_raw_syscalls: Add more checks to pass the verifier
+> > > > > > > 46180bec048aad85 perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
+> > > > > > > 45d1aadac64869a2 perf build: Change the clang check back to 12.0.1
 > 
-> Top-Down_Analysis Link:
-> https://web.archive.org/web/20240930164757/https://perf.wiki.kernel.org/index.php/Top-Down_Analysis
+> > > > > > Wouldn't it be better to have this change after fixing the verifier
+> > > > > > issues in the later commits?
+> 
+> > > > > I'm still testing it, this is a one-liner, so I think that the order in
+> > > > > which the patches are applied isn't important. Also Howard's patch (the
+> > > > > simplified one) doesn't clash with it.
+> 
+> > > > I'm afraid if it'd break git bisect by allowing old clang versions
+> > > > before the fix.
+> 
+> > > I can reorder the patches if you think it is interesting, but from the
+> > > extended set of tests I'm performing on different kernel and clang
+> > > version and in x86_64 and arm 64-bit, 32-bit and various distros, I'm
+> > > not sure bisection is an option for BPF programs at this stage 8-)
+> 
+> > Maybe.  But at least we can try our best. :)
+> 
+> That rhel8 verifier case was with clang 17 even, but whatever, see below
+> :-)
+> 
+> > > There, did it now it looks like this:
+> > > 
+> > > ⬢ [acme@toolbox perf-tools]$ git log --oneline torvalds/master..
+> > > 5d3a1b9ca3b1a059 (HEAD -> perf-tools) perf trace arm32: Fix iteration of syscall ids in syscalltbl->entries
+> > > 34d2358a24fb5963 perf trace augmented_raw_syscalls: Add more checks to pass the verifier
+> > > cdb84c31bd2813de perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
+> > > e5c1811c590c4312 perf build: Change the clang check back to 12.0.1
+> > > 39c6a356201ebbd7 perf trace: The return from 'write' isn't a pid
+> > > ab8aaab874c4aa37 tools headers UAPI: Sync linux/const.h with the kernel headers
+> > > ⬢ [acme@toolbox perf-tools]$
+> 
+> > > Is that what you meant?
+>  
+> > Nope, I'd like to have e5c1811c590c4312 after the verifier fixes:
+>  
+> >  34d2358a24fb5963 perf trace augmented_raw_syscalls: Add more checks to pass the verifier
+> >  cdb84c31bd2813de perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
+> 
+> Done:
+> 
+> ⬢ [acme@toolbox perf-tools]$ git log --oneline torvalds/master..
+> d822ca29a4fc5278 (HEAD -> perf-tools) tools headers UAPI: Sync kvm headers with the kernel sources
+> 5d35634ecc2d2c39 perf trace: Fix non-listed archs in the syscalltbl routines
+> 7fbff3c0e085745b perf build: Change the clang check back to 12.0.1
+> 395d38419f1853de perf trace augmented_raw_syscalls: Add more checks to pass the verifier
+> ecabac70ff919580 perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
+> 39c6a356201ebbd7 perf trace: The return from 'write' isn't a pid
+> ab8aaab874c4aa37 tools headers UAPI: Sync linux/const.h with the kernel headers
+> ⬢ [acme@toolbox perf-tools]$
 
-The corresponding pages in the new site are:
-
- https://perfwiki.github.io/main/perf-tools-support-for-intel-processor-trace/
-
- https://perfwiki.github.io/main/top-down-analysis/
-
-Thanks,
+Thanks!
 Namhyung
 
-> 
-> 
-> >>>>> Please feel free to follow up if we need to revisit this, but things look good
-> >>>>> to me with this change.
-> > 
-> > Do we still have the old pages?  I would like to check that the Intel PT
-> > page is not missing anything or munged.
-> > 
-> >>>>
-> >>>> Thanks for your work, it looks good to me too.
-> >>
-> >> I have been continuously improving the content of the documentation, so please
-> >> feel free to share any good ideas you may have. :)
-> >>
-> >>> Thanks Konstantin and Yunseong, I think it looks good!
-> >>> I think the pages need some improving, there are empty pages and
-> >>> things that look abandoned, such as the white paper linked from the
-> >>> side bar:
-> >>> https://perfwiki.github.io/main/white-paper/
-> >>> I pushed a few improvements to the glossary and useful links. It
-> >>> should be as easy as creating a pull request for others to contribute,
-> >>> so I look forward to this.
-> >>
-> >> Thank you so much Ian, I added per-page editing features to make it more convenient
-> >> for people to edit the documentation and submit pull requests.
-> >> Link: https://github.com/perfwiki/main/commit/4289b6a6e5c2e53d69a7605d01d0773366a33c52
-> > 
-> > I do not understand.  Is it a wiki anymore?  If so, what is
-> > needed to edit a page?
-> 
-> If you need to update the page directly, I can grant you permission to
-> do so. This is similar to the previous login system based on Media Wiki.
-> 
-> The issue with the old wiki was that logging in was broken(sadly) for
-> several months.
-> 
-> > Also how can page updates be submitted programmatically?
-> 
-> You can submit a Pull Request or if you have the necessary permissions,
-> you can directly update the document to add changes to the main branch.
-> 
-> > I had a script auto-updating the latest man pages, using
-> > MediaWiki API, which I will have to redo :-(
-> 
-> Could you let me know what script auto-updating you were performing with
-> the URL of the API or the specific functionality? If there is anything
-> else you need, please feel free to let me know. I will do my best to
-> assist you.
-> 
-> Best regards,
-> Yunseong Kim
