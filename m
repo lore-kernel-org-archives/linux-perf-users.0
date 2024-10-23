@@ -1,107 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CAE1D9A68;
-	Wed, 23 Oct 2024 21:05:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6EDCE56A;
+	Wed, 23 Oct 2024 21:40:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729717510; cv=none; b=arwmRELlNqefbLGtA6P0Wad3jfQ5bfK1d0j0sg7s1nFkYVQ0K0bbyiuH40/r/4H3r9E7456AIuLXzQqERWj7wJ2hMhKB4x9dxzvHJ1x1x/rsuVolVyV7KFLyMan0/poHPko6b4yRWezepFQ/ZQNyYZ1mMyZ1l5Sq3rwRmJVZERU=
+	t=1729719621; cv=none; b=UjfkubgSli+OCjMVnlJ5dFZtJqoPLiQWRi7hMInqPoETC+TuMWoEYhMfw/w2t+xl8Q1aLhKFTI07966pw5DNCghmTq0lfKdDI591NEEsqEL9pTWxW4Lxy09xawTsgsn4h4+Qlf3hDeab/291lk9Q3BEBIUz2P74TIc6k5QIOiuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729717510; c=relaxed/simple;
-	bh=YGxT/21cdM6lSvXvWqYvvIrJsI/bS0dImUF6eX1aAgs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=BvBPko0qpAwctBdBZ13EZSggxtUgP9i1ZShKZhBRC26qWnpC5Ige69VH9SJEFPU0B/n2XFDcihr5P7vF5fEue9Dpg63Tg3UCYOLJF74cFC0mBXqcEpwDCxSkz90TViehMz2D+ew0BlupH07QugmLWaSZ6X4P2frRH14H63b3PRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=leKFgbsh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729719621; c=relaxed/simple;
+	bh=jKy5wynMTGLDO4QbtaNOIV9J+dPC4QzcKbiyxcc8OAQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=iqvgcmYmwmE0VFS3+BdsU/q2tuoCNSyXCTqUEQyjzZuQFjueOdoR8pYGbQm/ZzdiCozT1tkNeJ05A2pvBlLzySqHoc4grpQvIUdsa1Jwe1uUpYwFU6rOyBmdTPWKeb3Ru/4LvFxuXOTBYe82JfUXAawhU0rtTGN6+KihrhE3j6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvmneGLJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="leKFgbsh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D0E4C4CEC6;
-	Wed, 23 Oct 2024 21:05:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvmneGLJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 489CEC4CEC6;
+	Wed, 23 Oct 2024 21:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729717509;
-	bh=YGxT/21cdM6lSvXvWqYvvIrJsI/bS0dImUF6eX1aAgs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=leKFgbshLphDRPiHlYl2kAjVr9MglbBobK+bsjFeiqaFl1NPntM6eoxLzuvfzaoSi
-	 q+K9IVvUF+eLeE9OIt43Ii3o5A41WgRT8xie9oWXsmXStonCcSs703FQ1ovXzRi3ea
-	 HhfBKD0TUm6sR/ERZ4MXJTk9+ibyRDP5cRKu1cCfeJTmali01LHF45tcBXzjKecf3C
-	 5FWdI06Fanjg++xuv9UKaJ75y1YJdPzLzyn7XE5080N8lDJH29OH4z8nPtqO5cmLM1
-	 HO1PjYaAH2cGJOPeh+3eDLuCbNFvekToZ73LJwHUMjlUExtxGVXfbPKugOsBkQvf0k
-	 i2sQbVdbq2sgQ==
-Date: Wed, 23 Oct 2024 18:05:06 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 1/1 perf-tools] perf python: Fix up the build on
- architectures without HAVE_KVM_STAT_SUPPORT
-Message-ID: <ZxllAtpmEw5fg9oy@x1>
+	s=k20201202; t=1729719620;
+	bh=jKy5wynMTGLDO4QbtaNOIV9J+dPC4QzcKbiyxcc8OAQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=lvmneGLJaJAhIpfhm3WrgR7wSBK+DGY2fMzLotIqa8qUxvclbXNsue7Ij/RSiS6J2
+	 atOSF1wEnMRs4j4CdSJTAlikj5onoe5cSRWJ4tZsc+U+iY8FhkIuN+rFMygzh9c5vN
+	 zyozdl7jWwgfllWumgD//Fp80P0NGUlHnvfpAKWcWwiyG1otuiNk1vx22wkI+qg5cz
+	 YrcsHn9pJkdlroq3jdgGLeNx/1Lk0HFOTQYkpLhoO4zKuft3+LXhWrb23TvO1LOXFL
+	 /lfJ+FoFA/Cbf6acSeg/pMTl7EJOQkIy2fuTag5RqS09i+y84UrYVI6JyPGVX5l+Zy
+	 dU2DCLkHkqn5g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EBAE23809A8A;
+	Wed, 23 Oct 2024 21:40:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCHv2 bpf] bpf,perf: Fix perf_event_detach_bpf_prog error handling
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172971962677.1732914.2511360924070038542.git-patchwork-notify@kernel.org>
+Date: Wed, 23 Oct 2024 21:40:26 +0000
+References: <20241023200352.3488610-1-jolsa@kernel.org>
+In-Reply-To: <20241023200352.3488610-1-jolsa@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, sean@mess.org,
+ peterz@infradead.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ kafai@fb.com, songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
+ kpsingh@chromium.org, sdf@fomichev.me, haoluo@google.com
 
-Noticed while building on a raspbian arm 32-bit system.
+Hello:
 
-There was also this other case, fixed by adding a missing util/stat.h
-with the prototypes:
+This patch was applied to bpf/bpf.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
 
-  /tmp/tmp.MbiSHoF3dj/perf-6.12.0-rc3/tools/perf/util/python.c:1396:6: error: no previous prototype for ‘perf_stat__set_no_csv_summary’ [-Werror=missing-prototypes]
-   1396 | void perf_stat__set_no_csv_summary(int set __maybe_unused)
-        |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  /tmp/tmp.MbiSHoF3dj/perf-6.12.0-rc3/tools/perf/util/python.c:1400:6: error: no previous prototype for ‘perf_stat__set_big_num’ [-Werror=missing-prototypes]
-   1400 | void perf_stat__set_big_num(int set __maybe_unused)
-        |      ^~~~~~~~~~~~~~~~~~~~~~
-  cc1: all warnings being treated as errors
+On Wed, 23 Oct 2024 22:03:52 +0200 you wrote:
+> Peter reported that perf_event_detach_bpf_prog might skip to release
+> the bpf program for -ENOENT error from bpf_prog_array_copy.
+> 
+> This can't happen because bpf program is stored in perf event and is
+> detached and released only when perf event is freed.
+> 
+> Let's drop the -ENOENT check and make sure the bpf program is released
+> in any case.
+> 
+> [...]
 
-In other architectures this must be building due to some lucky indirect
-inclusion of that header.
+Here is the summary with links:
+  - [PATCHv2,bpf] bpf,perf: Fix perf_event_detach_bpf_prog error handling
+    https://git.kernel.org/bpf/bpf/c/0ee288e69d03
 
-Fixes: 9dabf4003423c8d3 ("perf python: Switch module to linking libraries from building source")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/python.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 31a223eaf8e65fa3..ee3d43a7ba4570f0 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -19,6 +19,7 @@
- #include "util/bpf-filter.h"
- #include "util/env.h"
- #include "util/kvm-stat.h"
-+#include "util/stat.h"
- #include "util/kwork.h"
- #include "util/sample.h"
- #include "util/lock-contention.h"
-@@ -1355,6 +1356,7 @@ PyMODINIT_FUNC PyInit_perf(void)
- 
- unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
- 
-+#ifdef HAVE_KVM_STAT_SUPPORT
- bool kvm_entry_event(struct evsel *evsel __maybe_unused)
- {
- 	return false;
-@@ -1384,6 +1386,7 @@ void exit_event_decode_key(struct perf_kvm_stat *kvm __maybe_unused,
- 			   char *decode __maybe_unused)
- {
- }
-+#endif // HAVE_KVM_STAT_SUPPORT
- 
- int find_scripts(char **scripts_array  __maybe_unused, char **scripts_path_array  __maybe_unused,
- 		int num  __maybe_unused, int pathlen __maybe_unused)
+You are awesome, thank you!
 -- 
-2.46.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
