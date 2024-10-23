@@ -1,138 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF5D1B652C
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2024 17:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7931F1B652C;
+	Wed, 23 Oct 2024 17:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729704876; cv=none; b=Y7iq1G+PWAJvuB7TmDiApmI6Fg2aDzMdeR2pwmApgMREu7f0H8oALPG27gYYW51Fx/tSANOIpCPAxKNzNtkTzh00E9b+1Y4qVeJ4lH753p0pvSlHDYcgpFMje07dk28pu8N5k4LraskBlqQRSrMzzvL0BlJY9xptebJ+21RxPvg=
+	t=1729705150; cv=none; b=WAfg+v2aqHbP+WmilQPJXw7Tx1xvg50anhgRoFKY3i8GdtaQwJbQfPs+6jEYHqMZgv/ST+WEPW9fjFoGUilmKPIoOQiU+zPdq4CwZ776AleU+0vd9yDGfn8sqsTkTU+FDJvosO6/+T3lu1Ttb8vPsdBRfA/HVurSS8GpU1RMmgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729704876; c=relaxed/simple;
-	bh=BSvnNNJiiKMK4xHZDKdZueOHNRC7No8YnLMZ8hCnJUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dHFHyerKUCHplh+dkptR7YsPuohurwvgp3AUIoY4OTJkepL263psyRFUxHTdmKUBhiUwo2F8nfFQIaWYOU0yz5EoURIiRqGLwuYstTDQEn2nesfCCq5hkoow38yGnU+G8Xl6OL1KXV1Rz9dKFH7X+HbHMIM80zR0giPPQHyemsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ENw9G+4j; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1729705150; c=relaxed/simple;
+	bh=D09xnxmrSjdgS5FrT2I25115nOJgEcySe0O5Fg3OvQE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LBjcO9XsofRBjtryr3pSLtIPhveboWLe+wx7u+uUq0djgN6mBWMF/qkOfsiGerBv2w//RnVOAt69YTwfPRTm3ymKRUPCb6s+pq91zLs7hb8EP+C0j55gPmlBwrEhcQdTMPNJB4IUA0+nMHpx9eImgX9aFU+eYQ4hIfj3f2TLoMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fHIC+5zm; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ENw9G+4j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729704874; x=1761240874;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BSvnNNJiiKMK4xHZDKdZueOHNRC7No8YnLMZ8hCnJUM=;
-  b=ENw9G+4jjn18ENIxYyJUvg98Z0OQI/KC8EmvU+F+LDT8o57BqcBfG8l6
-   3iHS3M5GW4ZBo2YT9Xy4rLtsvI/f2mqdAkvhKIsncixxe2JZTz69bIjOg
-   PEjbfVH9WAaroIhjdH1JcAU+838vFCR/JrykWSSf9cmg4fIN7n+Vyw0Cn
-   QcDEsZTphOImG6vlS3M1MEDem/LNyz9gBk6MNz6NkcgX8oCkIW7hl4sh4
-   7A8Itoyv235t7ghAVKyt3mJBAk1L3k7YPTQdC2+pmkeS81L3d3o6VJw24
-   CIRBMOq7ZKpQ2p3zA1dc8R3fGKEsKzbhyvgVlY9Nx97FscKjJ4gbo3tQO
-   w==;
-X-CSE-ConnectionGUID: XYGiy5ntTd+bayTZZTykIA==
-X-CSE-MsgGUID: ZZuLBY98Swq5AszoYyLViQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29089094"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="29089094"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 10:34:32 -0700
-X-CSE-ConnectionGUID: YqNvyFytSDCUdjvDcYOmgw==
-X-CSE-MsgGUID: XPLpDVZBQoSSQgaqqngm1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,226,1725346800"; 
-   d="scan'208";a="80227371"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.245.115.59])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 10:34:29 -0700
-Message-ID: <b1c1a76b-5094-4384-9304-360a6012e3ad@intel.com>
-Date: Wed, 23 Oct 2024 20:34:19 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHIC+5zm"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7ea9739647bso31882a12.0;
+        Wed, 23 Oct 2024 10:39:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729705148; x=1730309948; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4RFNnnB+O0p0aRvheGlQAuqZY0fWkIb7EfMdt4bgYjU=;
+        b=fHIC+5zmCtSFK5GilycIQX5Sh/Xol4e8rh5DPQBvRVwFp42bU8XiMLwGZEvrTC6753
+         t7dPR2jypCS6eSeIchTno1TF/UZ0/qrQgbnpS04vh422f12HOU6stl9DqDqrdwniOSOB
+         5FNIDJpwLkJmfRdnkyul7idmMg7WCSr9OG4MluCzSsHGkrcZ8S3XvitK1Pm1t0tKrTyi
+         /tPi4sI/PKojr/rUYA+wY9fiYuBXU2b1QGzoVvS2p3oPU1SNu/u7hYnbXaID1Wyn2eX1
+         4LWklzrD2k9fIypAdYzAt5hPSBHo9lwrLhkljxsesMcrH0tyhEeStwCM4mgBrG8AxU2/
+         /SCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729705148; x=1730309948;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4RFNnnB+O0p0aRvheGlQAuqZY0fWkIb7EfMdt4bgYjU=;
+        b=gsY4UoMLrk6sxqxhJlkMb+9sjQLB488Iy2Uv5RfVCUg11dnDidQ3Jr/Fc3eNQFCKvO
+         /vDAf2oAh3ricdhWjG/hwLF0PuUir6VTCcjcLcBZsjD3v3EUZlladz2X5NVwwKVXTpCp
+         VMgSJlMtyZdThebbrNn5cTDg22PuBLB/ZnjfWzJvA9f/CWiV/lyyjk1TYAlFWn5GWa9i
+         GOAaNdsl2sZB+OCGRplm83DbfGJWQKR91/EirpauP1b5j3uh1swRea4WYLNdtm6vb9zd
+         6Mn2n2VY1IvXYmjjQedMNrbhVcXB5d4GqCfP1cn6sLSHoaqJZtRbNvjdTdzERN04bCnD
+         Lazg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJuIJor0+h/ZRrPCeNXkfBb1w5n/9kZzbeVPnYxEntOX+HtwwwyOW8Q4X85XLTGUw0J/B7t6AmQoQn9ileOG9z5g==@vger.kernel.org, AJvYcCVZWnkXaRaSLtZmwXf4VeC0fc0Ywe6NK5h14PK96d0OBdmE8j35Am8Ec260ORgMsA7prUonUeQG1kLOzJlB@vger.kernel.org, AJvYcCWBRAElr9Q2f3RxvpzezpokrG6QxkBn3oZiihWZNSmOWHIsy5QhPGo2Vu7/GUqn1cMoqgI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2yIGElI5k8qsd9/627X33yogMRZI4FSk8FwUxG7qHHPglfZ3S
+	BcLWL5lY31fO6DHw1yX2qO6rpYs2tHnuycodpiGGGr/uIBSbbg2JuxmpXP4rtpo8O1HoPopK5sY
+	5D1QQNLOkU2q79h7mL4+XEW+nqq4=
+X-Google-Smtp-Source: AGHT+IEi3chO4cJaxRAniC9KHshTFGfUXN96jvePl/7aNO37ofgEOlQMW+oad4DUIwtadK1f+w1v1UP4u0KBo3qeVKc=
+X-Received: by 2002:a05:6a21:178a:b0:1d9:aa7:d6cc with SMTP id
+ adf61e73a8af0-1d978b2da18mr4156793637.24.1729705146359; Wed, 23 Oct 2024
+ 10:39:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Migrating from perf.wiki.kernel.org to RTD
-To: Yunseong Kim <yskelg@gmail.com>, Ian Rogers <irogers@google.com>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- linux-perf-users@vger.kernel.org, Howard Chu <howardchu95@gmail.com>,
- MichelleJin <shjy180909@gmail.com>, Austin Kim <austindh.kim@gmail.com>,
- arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>
-References: <20241011-quiet-chowchow-of-temperance-d0e205@meerkat>
- <CAP-5=fUz5CFEL8D1L+UATsNqs4MBb6rNeYtZ26+pFC4NgRYt6w@mail.gmail.com>
- <20241011-uncovered-original-vole-cda87d@meerkat>
- <20241015-warping-condor-of-storm-afa06f@meerkat>
- <Zw8cN9daNBvCJd3u@google.com>
- <CAP-5=fXsVXYkncR0rwxXvKp_f5dR40L9_x-qoLxwHXWMiyXh3g@mail.gmail.com>
- <a0626ecb-cc64-4c6a-abf3-76868178234f@gmail.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <a0626ecb-cc64-4c6a-abf3-76868178234f@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
+In-Reply-To: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 23 Oct 2024 10:38:54 -0700
+Message-ID: <CAEf4BzacLW14OmuW1nV4s=cMcSqcrSAO2Y_0XY3jT2efGNfmuw@mail.gmail.com>
+Subject: Re: The state of uprobes work and logistics
+To: Peter Ziljstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Liao Chang <liaochang1@huawei.com>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Kernel Team <kernel-team@meta.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 20/10/24 07:49, Yunseong Kim wrote:
-> I would like to express my sincere gratitude to everyone for their help in the
-> official renewal of the perf wiki.
-> 
-> Additionally, the reason I chose to use Markdown is that I wanted to actively
-> utilize its media features. For example, I wanted to embed videos,
-> presentation slide or display Mermaid diagrams directly on the page.
-> I thought these features would be welcomed by users who are new to perf tools.
-> 
-> On 10/19/24 8:47 오전, Ian Rogers wrote:
->> On Tue, Oct 15, 2024 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
->>> On Tue, Oct 15, 2024 at 02:25:02PM -0400, Konstantin Ryabitsev wrote:
->>>> On Fri, Oct 11, 2024 at 06:39:09PM -0400, Konstantin Ryabitsev wrote:
->>>>>> Yunseong created:
->>>>>> https://perfwiki.github.io/main/
->>>>>> Perhaps the solution here is to make perf.wiki.kernel.org a redirect
->>>>>> to https://perfwiki.github.io/main/
->>>>
->>>> To speed things along, and since the old perf wiki was near-unusable anyway,
->>>> I went ahead and set the redirects from perf.wiki.kernel.org to
->>>> perfwiki.github.io.
+Ok, 7 days has passed, let's see how we are doing here...
 
-Links to old pages end up at the main page.  For example:
+On Wed, Oct 16, 2024 at 12:35=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> Hello,
+>
+> I wanted to provide a bit of a context about and tie together a few
+> separate work streams (across a few separate kernel trees) all
+> revolving around uprobe improvements, as there are a bunch of them and
+> I'm sure it's hard to keep track of all of them. And hopefully I can
+> also get Peter and ARM maintainer's input on some specific questions I
+> asked below. Thank you in advance!
+>
+> In short, in the last few months there was a high activity around
+> fixing and improving uprobes. All this is the result of increased and
+> more varied use of uprobes/uretprobe in production settings. Uprobe
+> performance is **very** important, and yes, we do have real use cases
+> that go to millions per second uprobe/uretprobe triggering throughput,
+> unfortunately. So any small bit of performance and scalability
+> improvement is helpful. No, this isn't just some nerdy perf
+> optimization work (I've been asked this a few times, so I thought I'd
+> emphasize this again).
+>
+> So, we've already landed a bunch of work, mainly (not an exhaustive list)=
+:
+>
+>   - various clean ups, API improvements, and bug fixes from Oleg
+> Nesterov ([0], [1]). This simplified internal APIs and was a
+> prerequisite of the rest of the work;
+>   - changes to refcounting and RCU-ifying of uprobe lifetime from me
+> ([2]). This improved single-threaded performance somewhat, but mainly
+> significantly improved scalability in the presence of multiple CPUs
+> triggering lots of uprobes;
+>   - ARM64-specific optimization of uprobe emulation of NOP instruction
+> by Liao Chang ([3]). This change alone gives 2x (!) speed up for a
+> USDT tracing use cases *on ARM64* (we already have this optimization
+> in x86-64);
+>   - there was a bit earlier work by Jiri Olsa ([4]) to add uretprobe()
+> syscall, giving +30% speed ups.
+>
+> And there are a few more outstanding changes:
+>
+>   - Jiri Olsa's uprobe "session" support ([5]). This is less
+> performance focused, but important functionality by itself. But I'm
+> calling this out here because the first two patches are pure uprobe
+> internal changes, and I believe they should go into tip/perf/core to
+> avoid conflicts with the rest of pending uprobe changes.
+>
+> Peter, do you mind applying those two and creating a stable tag for
+> bpf-next to pull? We'll apply the rest of Jiri's series to
+> bpf-next/master.
 
-https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace
-https://perf.wiki.kernel.org/index.php/Top-Down_Analysis
+Jiri has reposted patches this time CC'ing Peter, heh :), it would be
+great to apply those two patches and get a stable tag. This is
+blocking the landing of uprobe sessions in bpf-next and also my
+remaining patches will be based on top of Jiri's uprobe changes, most
+probably. Peter, please take another look, thank you.
 
-Any way to get them to redirect to the correct page?
+>
+>   - Liao Chang's ARM64-specific STP instruction emulation support
+> ([6]). This one will give 2x (!) improvement for a common case of
+> having STP instruction being a first instruction in traced user
+> function (similar to NOP for USDTs).
+>
+> ARM64 maintainers (cc'ed Catalin, Will, and Mark), can you guys please
+> take another look? This one was a bit more controversial, but
+> hopefully there is a way to massage it to be acceptable and not
+> introduce unnecessary slowdowns (there were some concerns about memory
+> ordering/visibility, which hopefully don't apply to uprobe cases).
+> It's an important improvement, I'd really appreciate it if we can make
+> progress here, thank you!
+>
 
->>>>
->>>> Please feel free to follow up if we need to revisit this, but things look good
->>>> to me with this change.
+Ping. ARM64 folks, can you please take a look and reply? Thank you.
 
-Do we still have the old pages?  I would like to check that the Intel PT
-page is not missing anything or munged.
+>   - my speculative VMA-to-uprobe lookup series ([7]). This makes entry
+> uprobe scalability scale linearly with the number of CPUs (the
+> ultimate goal of uprobe scalability work).
+>
+> I think it's ready to go in. It has **implicit** dependency on
+> Christian Brauner's recent change for FMODE_BACKING, for which he
+> provided a stable tag. Peter, do you have any remaining concerns or
+> this can be also merged soon?
 
->>>
->>> Thanks for your work, it looks good to me too.
-> 
-> I have been continuously improving the content of the documentation, so please
-> feel free to share any good ideas you may have. :)
-> 
->> Thanks Konstantin and Yunseong, I think it looks good!
->> I think the pages need some improving, there are empty pages and
->> things that look abandoned, such as the white paper linked from the
->> side bar:
->> https://perfwiki.github.io/main/white-paper/
->> I pushed a few improvements to the glossary and useful links. It
->> should be as easy as creating a pull request for others to contribute,
->> so I look forward to this.
-> 
-> Thank you so much Ian, I added per-page editing features to make it more convenient
-> for people to edit the documentation and submit pull requests.
-> Link: https://github.com/perfwiki/main/commit/4289b6a6e5c2e53d69a7605d01d0773366a33c52
+No changes, still ready to go in. Might need a rebase if Jiri's
+patches are applied.
 
-I do not understand.  Is it a wiki anymore?  If so, what is
-needed to edit a page?
+>
+>   - another patch set of mine, switching uretprobe fast path to SRCU
+> (with timeout) ([8]). This makes return uprobes (uretprobes) linearly
+> scalable in the common case (again, the ultimate scalability goal).
+>
+> I haven't gotten much feedback here, would love to get some objective
+> review here. This is an important counterpart to the speculative
+> VMA-to-uprobe lookup series. Both are needed in practice.
+>
 
-Also how can page updates be submitted programmatically?
-I had a script auto-updating the latest man pages, using
-MediaWiki API, which I will have to redo :-(
+The only thing that has progressed, thank you. I'll apply suggested
+state changes, but I intend to postpone delayed_uprobe_lock rework to
+a separate follow up patch set. Just a heads up.
 
+>   - patch set dropping unnecessary siglock usage in uprobe by Liao
+> Chang ([9]). This one removes yet another lock, for a less common case
+> (at least on x86-64) of single-stepped uprobe (where the probed
+> instruction can't be emulated).
+>
+> This one needs a rebase, but it was already acked by Oleg. Liao,
+> please prioritize the rebase and send v4 ASAP, so this is not lost.
+>
+
+This was rebased and acked by Masami. Seems to be ready to be applied.
+
+>
+> As you can see, lots of stuff needs to be landed and most of it is in
+> good shape already. I'd love to hear thoughts of relevant people
+> called out above, thank you!
+>
+>
+>   [0] https://lore.kernel.org/linux-trace-kernel/20240729134444.GA12293@r=
+edhat.com/
+>   [1] https://lore.kernel.org/linux-trace-kernel/20240929144201.GA9429@re=
+dhat.com/
+>   [2] https://lore.kernel.org/linux-trace-kernel/20240903174603.3554182-1=
+-andrii@kernel.org/
+>   [3] https://lore.kernel.org/linux-trace-kernel/20240909071114.1150053-1=
+-liaochang1@huawei.com/
+>   [4] https://lore.kernel.org/linux-trace-kernel/20240523121149.575616-1-=
+jolsa@kernel.org/
+>   [5] https://lore.kernel.org/bpf/20241015091050.3731669-1-jolsa@kernel.o=
+rg/
+>   [6] https://lore.kernel.org/linux-trace-kernel/20240910060407.1427716-1=
+-liaochang1@huawei.com/
+>   [7] https://lore.kernel.org/linux-trace-kernel/20241010205644.3831427-1=
+-andrii@kernel.org/
+>   [8] https://lore.kernel.org/linux-trace-kernel/20241008002556.2332835-1=
+-andrii@kernel.org/
+>   [9] https://lore.kernel.org/linux-trace-kernel/20240815014629.2685155-1=
+-liaochang1@huawei.com/
+>
+> -- Andrii
