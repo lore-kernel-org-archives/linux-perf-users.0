@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16313137776;
-	Wed, 23 Oct 2024 18:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3971CACEB;
+	Wed, 23 Oct 2024 18:00:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729706421; cv=none; b=bbHNjI6pirUcvRtPwO8mBUFkTkWsgJSWgPdXwb3uvIIaCX3qTntLr369Bwt5VYsFHnluuvc4f0mH+HErXBuCnO/WTR1xRnC79ljUzOv+BtKSK1dkbxMMcvdnwVmlNBLtiYKILqKv50hBc+xAEHJZeP0To6ZtMmpc9vFXwPorOeU=
+	t=1729706421; cv=none; b=XTXbdI7TjW5jnkxh/kCg8Pnr8dQx8Z8tphtvaT/PS8hDv5v5Ld/B7IhjuW7a+M1oMANGBoUb6M5Wo2MWd239hwk1Ep6ZtrkfE4aL6AV26OifiGSuMd5eC4KfaJ/2uT9elTwI9kZtE3Kd0EUhNGB/v81+9fde40Uxfay/zhRoJEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1729706421; c=relaxed/simple;
-	bh=NHCfiBqL3e7BAY9HX4hxpEblYY8yvQhUCNOqPDOFPto=;
+	bh=GC5YOYBRx+gZl5V2Ks6B0SwBBanF3+LpkxO9ECEL3OE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kymDCB2Ez5UFZJK2hWTutnqUDc3u9zWOFMyafsNIaoH+7OWj95qDSR/X3vIkyrHz8s4EunkcpDRzaIYyQNxEwfUU0ndJG1erwyK49C67IBHNCf4kIxyPSanaWjMsmZubTdDEKd0Qi8/6GmWCHw2DJoD87w2x77PNt555FCFbyM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZstdBQNK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=pEHaFXitSH6HTkqBbaB3tI3FOxBWTWqs4ZBXJkITaNj6iXLMCC8dvHUM3yia87xcQddRogffg/Y6cj+Vv6A6nHk7PgUJO0Vf8NCuEJsNITGPyEU0P3FWox93dggLF2TU9oomnOfr6DYVMcXrS9MHU7vmzNEkRuJBbk6+pxyPXg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHi+3rIW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZstdBQNK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FC15C4CECD;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHi+3rIW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF47BC4CEE8;
 	Wed, 23 Oct 2024 18:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729706420;
-	bh=NHCfiBqL3e7BAY9HX4hxpEblYY8yvQhUCNOqPDOFPto=;
+	s=k20201202; t=1729706421;
+	bh=GC5YOYBRx+gZl5V2Ks6B0SwBBanF3+LpkxO9ECEL3OE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ZstdBQNKznlJytZGiQI8dNQvZL/3TafU6iiK3QExTNNppOlozz4k6mceFMLKGbnsC
-	 7rxTBQS4z5E/pzrCqGHoT/+gsak2cE92cNzbA9KW7r+y01hrOBJ6O1chHWi8F5NLoA
-	 +oCFmN5jYOkK9FV6sJqBr91Cf2FY1JY/Ba6nXcxH9hi7IatZnSM7abdtgDysjc7ohy
-	 siIYIcn6fZBjdDES8hQfus37Xhwg7ktHHal3WJO/vvh/XTk87aLAgH7/eJVegLZpWK
-	 QPJ/hqMoLt6uryqiCwiRf2x++AWVyERdbybdXKrfoOCdgm6G9LA6KKwKh2VtFo0AuF
-	 QuzFWVkAcNzKQ==
+	b=gHi+3rIWTAlYmZiI9E/LBenZ+HjGozLX/pfewYaJz9B8m7hafF6Ty8/iUVtYeBitE
+	 CkOE+uo4sB814xC1iBshkTIqcMr2M3PjKqabpM5VU2TbEzFInA6+IH6R4EaEdw/3MX
+	 uB0Hx7u0hnvXBKKyuP/HjBd6tXJ2S0OYgZYiUgI9Krbe5yXUrZgAcVJRTZsQKSBXmQ
+	 RsR+YPcnwNHaGvIkQZQZxN1Ea0S8wsJNP6p8iagEY8D9B8mexyMQFJ8igCivoN6PLQ
+	 uezCIihveURVpG5kmgX0ysdYdKML6IebvN5ZPWLNeS1RxCiGqCrFKuGDTwgNgAu/x6
+	 kqqNtQgq+UNog==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, 
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- Arnaldo Carvalho de Melo <acme@redhat.com>, 
- James Clark <james.clark@linaro.org>
-In-Reply-To: <20241020021842.1752770-1-acme@kernel.org>
-References: <20241020021842.1752770-1-acme@kernel.org>
-Subject: Re: [PATCH 0/3 v3] Expose the 'perf test -w' workloads
- functionality
-Message-Id: <172970642028.1242473.4878778833467222484.b4-ty@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Brian Geffon <bgeffon@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>
+In-Reply-To: <20241016190009.866615-1-bgeffon@google.com>
+References: <20241016190009.866615-1-bgeffon@google.com>
+Subject: Re: [PATCH] perf tools: sched-pipe bench: add (-n) nonblocking
+ benchmark
+Message-Id: <172970642080.1242473.4539711950671023449.b4-ty@kernel.org>
 Date: Wed, 23 Oct 2024 11:00:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -51,15 +49,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Sat, 19 Oct 2024 23:18:39 -0300, Arnaldo Carvalho de Melo wrote:
+On Wed, 16 Oct 2024 15:00:09 -0400, Brian Geffon wrote:
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> The -n mode will benchmark pipes in a non-blocking mode using
+> epoll_wait.
 > 
-> Hi,
+> This specific mode was added to demonstrate the broken sync nature
+> of epoll: https://lore.kernel.org/lkml/20240426-zupfen-jahrzehnt-5be786bcdf04@brauner
 > 
->         I noticed that the 'perf test -w' code wasn't well exposed, so
-> add a '--list-workloads' option to list the existing workloads and document it
-> in the 'perf test' man page.
 > 
 > [...]
 
