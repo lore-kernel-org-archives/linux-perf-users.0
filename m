@@ -1,216 +1,271 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7931F1B652C;
-	Wed, 23 Oct 2024 17:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B4B83CDA;
+	Wed, 23 Oct 2024 17:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729705150; cv=none; b=WAfg+v2aqHbP+WmilQPJXw7Tx1xvg50anhgRoFKY3i8GdtaQwJbQfPs+6jEYHqMZgv/ST+WEPW9fjFoGUilmKPIoOQiU+zPdq4CwZ776AleU+0vd9yDGfn8sqsTkTU+FDJvosO6/+T3lu1Ttb8vPsdBRfA/HVurSS8GpU1RMmgw=
+	t=1729705609; cv=none; b=GUekV45372FWoxuiA1Ua+0MUCcvU2hv6suQ2qWzzv9fUx0M91IoQJg2qDWGo2ITYsLC4NoT0UT9eHi6y/NmMLAI7XUhNqIywo9nBupAgaeb/CTmnYLLn83+mo1AK6Mb0d0FaFsDiI13p/VUYmUZmsmBUrbg2q2hBDMDiyv1GgWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729705150; c=relaxed/simple;
-	bh=D09xnxmrSjdgS5FrT2I25115nOJgEcySe0O5Fg3OvQE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LBjcO9XsofRBjtryr3pSLtIPhveboWLe+wx7u+uUq0djgN6mBWMF/qkOfsiGerBv2w//RnVOAt69YTwfPRTm3ymKRUPCb6s+pq91zLs7hb8EP+C0j55gPmlBwrEhcQdTMPNJB4IUA0+nMHpx9eImgX9aFU+eYQ4hIfj3f2TLoMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fHIC+5zm; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729705609; c=relaxed/simple;
+	bh=DU8+bg5SNI4oXTTw77GkxJG0vawcjUiseS+OAiYnRYc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RrLVmMpDil8Fz0CtTzxKbBovGXjR0d07FkE930k6gMPHv4O0v3JoC3d9vnw8oALiTCKTDpuS0VnJugEMzz1QtxjbxrepfFdFWWCECyP4rmJeA4ZzSprDh0kajitgS+azifLtRw+NYIQ8OdkluUfbkVKdGrouvh77T8nnLmdZ6mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZZWaYWvd; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHIC+5zm"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7ea9739647bso31882a12.0;
-        Wed, 23 Oct 2024 10:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729705148; x=1730309948; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4RFNnnB+O0p0aRvheGlQAuqZY0fWkIb7EfMdt4bgYjU=;
-        b=fHIC+5zmCtSFK5GilycIQX5Sh/Xol4e8rh5DPQBvRVwFp42bU8XiMLwGZEvrTC6753
-         t7dPR2jypCS6eSeIchTno1TF/UZ0/qrQgbnpS04vh422f12HOU6stl9DqDqrdwniOSOB
-         5FNIDJpwLkJmfRdnkyul7idmMg7WCSr9OG4MluCzSsHGkrcZ8S3XvitK1Pm1t0tKrTyi
-         /tPi4sI/PKojr/rUYA+wY9fiYuBXU2b1QGzoVvS2p3oPU1SNu/u7hYnbXaID1Wyn2eX1
-         4LWklzrD2k9fIypAdYzAt5hPSBHo9lwrLhkljxsesMcrH0tyhEeStwCM4mgBrG8AxU2/
-         /SCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729705148; x=1730309948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4RFNnnB+O0p0aRvheGlQAuqZY0fWkIb7EfMdt4bgYjU=;
-        b=gsY4UoMLrk6sxqxhJlkMb+9sjQLB488Iy2Uv5RfVCUg11dnDidQ3Jr/Fc3eNQFCKvO
-         /vDAf2oAh3ricdhWjG/hwLF0PuUir6VTCcjcLcBZsjD3v3EUZlladz2X5NVwwKVXTpCp
-         VMgSJlMtyZdThebbrNn5cTDg22PuBLB/ZnjfWzJvA9f/CWiV/lyyjk1TYAlFWn5GWa9i
-         GOAaNdsl2sZB+OCGRplm83DbfGJWQKR91/EirpauP1b5j3uh1swRea4WYLNdtm6vb9zd
-         6Mn2n2VY1IvXYmjjQedMNrbhVcXB5d4GqCfP1cn6sLSHoaqJZtRbNvjdTdzERN04bCnD
-         Lazg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJuIJor0+h/ZRrPCeNXkfBb1w5n/9kZzbeVPnYxEntOX+HtwwwyOW8Q4X85XLTGUw0J/B7t6AmQoQn9ileOG9z5g==@vger.kernel.org, AJvYcCVZWnkXaRaSLtZmwXf4VeC0fc0Ywe6NK5h14PK96d0OBdmE8j35Am8Ec260ORgMsA7prUonUeQG1kLOzJlB@vger.kernel.org, AJvYcCWBRAElr9Q2f3RxvpzezpokrG6QxkBn3oZiihWZNSmOWHIsy5QhPGo2Vu7/GUqn1cMoqgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2yIGElI5k8qsd9/627X33yogMRZI4FSk8FwUxG7qHHPglfZ3S
-	BcLWL5lY31fO6DHw1yX2qO6rpYs2tHnuycodpiGGGr/uIBSbbg2JuxmpXP4rtpo8O1HoPopK5sY
-	5D1QQNLOkU2q79h7mL4+XEW+nqq4=
-X-Google-Smtp-Source: AGHT+IEi3chO4cJaxRAniC9KHshTFGfUXN96jvePl/7aNO37ofgEOlQMW+oad4DUIwtadK1f+w1v1UP4u0KBo3qeVKc=
-X-Received: by 2002:a05:6a21:178a:b0:1d9:aa7:d6cc with SMTP id
- adf61e73a8af0-1d978b2da18mr4156793637.24.1729705146359; Wed, 23 Oct 2024
- 10:39:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZZWaYWvd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729705608; x=1761241608;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=DU8+bg5SNI4oXTTw77GkxJG0vawcjUiseS+OAiYnRYc=;
+  b=ZZWaYWvdueaYV9murWrfg2Rzu2GJVLSdcsGCZFETrV4UrzI59+kMd3F6
+   rX/LpVI26QODsz91ijLDOxgDzT5rq0QQrQEBqHKXZHRuN7y5HeGaF7nju
+   UZDjyHtNTYUDdyg/rFrjQvaVF6dcKREDf9MTjg/lMU0M0tBnaoD2H7paA
+   +2nExkyFPJrl6lxeuf8AptIjpFUdWNVwaG+Upu302JaY0dt3bHJsxIQdO
+   hjn5U0ZpXuvcMC93TiL87DWFLf6pKNVWN3J4N9VlKFwV2d8D8cymyDwAc
+   D2j2Psvn6O/tDrZ7PDUE+PpXtxWxaR5Sy/D9W23SfbPdxODsNi0aNPwNF
+   A==;
+X-CSE-ConnectionGUID: ITExNTphRJSae/Tgbx1Lrg==
+X-CSE-MsgGUID: CIfB3vqHS9aUp5+vVXwbQg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11234"; a="29411200"
+X-IronPort-AV: E=Sophos;i="6.11,226,1725346800"; 
+   d="scan'208";a="29411200"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 10:46:47 -0700
+X-CSE-ConnectionGUID: oPOVRNMHTgSh+ktrEkYgWQ==
+X-CSE-MsgGUID: 1YzJA9nUTgieXeZJSAhBQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,226,1725346800"; 
+   d="scan'208";a="84288042"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 10:46:47 -0700
+Received: from [10.212.27.194] (kliang2-mobl1.ccr.corp.intel.com [10.212.27.194])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 5080620CFED2;
+	Wed, 23 Oct 2024 10:46:45 -0700 (PDT)
+Message-ID: <eb552133-829d-4935-87e9-101e052fd40c@linux.intel.com>
+Date: Wed, 23 Oct 2024 13:46:43 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
-In-Reply-To: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 23 Oct 2024 10:38:54 -0700
-Message-ID: <CAEf4BzacLW14OmuW1nV4s=cMcSqcrSAO2Y_0XY3jT2efGNfmuw@mail.gmail.com>
-Subject: Re: The state of uprobes work and logistics
-To: Peter Ziljstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Liao Chang <liaochang1@huawei.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Kernel Team <kernel-team@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] perf: Generic hotplug support for a PMU with a scope
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: linux-kernel@vger.kernel.org, irogers@google.com, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240802151643.1691631-1-kan.liang@linux.intel.com>
+ <20240802151643.1691631-2-kan.liang@linux.intel.com>
+ <f856d105-5463-4b8b-8715-0e6871165616@kernel.org>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <f856d105-5463-4b8b-8715-0e6871165616@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Ok, 7 days has passed, let's see how we are doing here...
 
-On Wed, Oct 16, 2024 at 12:35=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> Hello,
->
-> I wanted to provide a bit of a context about and tie together a few
-> separate work streams (across a few separate kernel trees) all
-> revolving around uprobe improvements, as there are a bunch of them and
-> I'm sure it's hard to keep track of all of them. And hopefully I can
-> also get Peter and ARM maintainer's input on some specific questions I
-> asked below. Thank you in advance!
->
-> In short, in the last few months there was a high activity around
-> fixing and improving uprobes. All this is the result of increased and
-> more varied use of uprobes/uretprobe in production settings. Uprobe
-> performance is **very** important, and yes, we do have real use cases
-> that go to millions per second uprobe/uretprobe triggering throughput,
-> unfortunately. So any small bit of performance and scalability
-> improvement is helpful. No, this isn't just some nerdy perf
-> optimization work (I've been asked this a few times, so I thought I'd
-> emphasize this again).
->
-> So, we've already landed a bunch of work, mainly (not an exhaustive list)=
-:
->
->   - various clean ups, API improvements, and bug fixes from Oleg
-> Nesterov ([0], [1]). This simplified internal APIs and was a
-> prerequisite of the rest of the work;
->   - changes to refcounting and RCU-ifying of uprobe lifetime from me
-> ([2]). This improved single-threaded performance somewhat, but mainly
-> significantly improved scalability in the presence of multiple CPUs
-> triggering lots of uprobes;
->   - ARM64-specific optimization of uprobe emulation of NOP instruction
-> by Liao Chang ([3]). This change alone gives 2x (!) speed up for a
-> USDT tracing use cases *on ARM64* (we already have this optimization
-> in x86-64);
->   - there was a bit earlier work by Jiri Olsa ([4]) to add uretprobe()
-> syscall, giving +30% speed ups.
->
-> And there are a few more outstanding changes:
->
->   - Jiri Olsa's uprobe "session" support ([5]). This is less
-> performance focused, but important functionality by itself. But I'm
-> calling this out here because the first two patches are pure uprobe
-> internal changes, and I believe they should go into tip/perf/core to
-> avoid conflicts with the rest of pending uprobe changes.
->
-> Peter, do you mind applying those two and creating a stable tag for
-> bpf-next to pull? We'll apply the rest of Jiri's series to
-> bpf-next/master.
 
-Jiri has reposted patches this time CC'ing Peter, heh :), it would be
-great to apply those two patches and get a stable tag. This is
-blocking the landing of uprobe sessions in bpf-next and also my
-remaining patches will be based on top of Jiri's uprobe changes, most
-probably. Peter, please take another look, thank you.
+On 2024-10-23 1:09 p.m., Matthieu Baerts wrote:
+> Hi Kan Liang,
+> 
+> (+ cc Perf ML)
+> 
+> On 02/08/2024 17:16, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The perf subsystem assumes that the counters of a PMU are per-CPU. So
+>> the user space tool reads a counter from each CPU in the system wide
+>> mode. However, many PMUs don't have a per-CPU counter. The counter is
+>> effective for a scope, e.g., a die or a socket. To address this, a
+>> cpumask is exposed by the kernel driver to restrict to one CPU to stand
+>> for a specific scope. In case the given CPU is removed,
+>> the hotplug support has to be implemented for each such driver.
+>>
+>> The codes to support the cpumask and hotplug are very similar.
+>> - Expose a cpumask into sysfs
+>> - Pickup another CPU in the same scope if the given CPU is removed.
+>> - Invoke the perf_pmu_migrate_context() to migrate to a new CPU.
+>> - In event init, always set the CPU in the cpumask to event->cpu
+>>
+>> Similar duplicated codes are implemented for each such PMU driver. It
+>> would be good to introduce a generic infrastructure to avoid such
+>> duplication.
+>>
+>> 5 popular scopes are implemented here, core, die, cluster, pkg, and
+>> the system-wide. The scope can be set when a PMU is registered. If so, a
+>> "cpumask" is automatically exposed for the PMU.
+>>
+>> The "cpumask" is from the perf_online_<scope>_mask, which is to track
+>> the active CPU for each scope. They are set when the first CPU of the
+>> scope is online via the generic perf hotplug support. When a
+>> corresponding CPU is removed, the perf_online_<scope>_mask is updated
+>> accordingly and the PMU will be moved to a new CPU from the same scope
+>> if possible.
+> 
+> Thank you for the patch.
+> 
+> It looks like this modification causes the following warning on my side
+> when shutting down a VM running a kernel built with a debug config
+> including CONFIG_PROVE_RCU_LIST=y (and CONFIG_RCU_EXPERT=y):
+> 
+> 
+>> # /usr/lib/klibc/bin/poweroff
+>>
+>> =============================
+>> WARNING: suspicious RCU usage
+>> 6.12.0-rc3+ #3 Not tainted
+>> -----------------------------
+>> kernel/events/core.c:13962 RCU-list traversed in non-reader section!!
+>>
+>> other info that might help us debug this:
+>>
+>>
+>> rcu_scheduler_active = 2, debug_locks = 1
+>> 3 locks held by poweroff/11748:
+>>  #0: ffffffff9b441e28 (system_transition_mutex){+.+.}-{3:3}, at: __do_sys_reboot (kernel/reboot.c:770)
+>>  #1: ffffffff9b43eab0 ((reboot_notifier_list).rwsem){++++}-{3:3}, at: blocking_notifier_call_chain (kernel/notifier.c:388)
+>>  #2: ffffffff9b6d06c8 (pmus_lock){+.+.}-{3:3}, at: perf_event_exit_cpu_context (kernel/events/core.c:13983)
+>>
+>> stack backtrace:
+>> CPU: 0 UID: 0 PID: 11748 Comm: poweroff Not tainted 6.12.0-rc3+ #3
+>> Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+>> Call Trace:
+>>  <TASK>
+>>  dump_stack_lvl (lib/dump_stack.c:123)
+>>  lockdep_rcu_suspicious (kernel/locking/lockdep.c:6822)
+>>  perf_event_clear_cpumask (kernel/events/core.c:13962 (discriminator 9))
+>>  ? __pfx_perf_event_clear_cpumask (kernel/events/core.c:13939)
+>>  ? acpi_execute_simple_method (drivers/acpi/utils.c:679)
+>>  ? __pfx_acpi_execute_simple_method (drivers/acpi/utils.c:679)
+>>  ? md_notify_reboot (drivers/md/md.c:9860)
+>>  perf_event_exit_cpu_context (kernel/events/core.c:13984 (discriminator 1))
+>>  perf_reboot (kernel/events/core.c:14066 (discriminator 3))
+>>  ? trace_notifier_run (include/trace/events/notifier.h:59 (discriminator 2))
+>>  notifier_call_chain (kernel/notifier.c:93)
+>>  blocking_notifier_call_chain (kernel/notifier.c:389)
+>>  kernel_power_off (kernel/reboot.c:294)
+>>  __do_sys_reboot (kernel/reboot.c:771)
+>>  ? __pfx___do_sys_reboot (kernel/reboot.c:717)
+>>  ? __pfx_ksys_sync (fs/sync.c:98)
+>>  do_syscall_64 (arch/x86/entry/common.c:52 (discriminator 1))
+>>  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+> 
+> 
+> It is very easy for me to reproduce it: simply by stopping the VM. Just
+> in case, here are the steps I used to have the same VM:
+> 
+>   $ cd [kernel source code]
+>   $ echo true > .virtme-exec-run
+>   $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+>         --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+>         auto-debug -e RCU_EXPERT -e PROVE_RCU_LIST
+> 
+> 
+> I have one question below about the modification you did here.
+> 
+> (...)
+> 
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index aa3450bdc227..5e1877c4cb4c 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+> 
+> (...)
+> 
+>> @@ -13730,6 +13816,40 @@ static void __perf_event_exit_context(void *__info)
+>>  	raw_spin_unlock(&ctx->lock);
+>>  }
+>>  
+>> +static void perf_event_clear_cpumask(unsigned int cpu)
+>> +{
+>> +	int target[PERF_PMU_MAX_SCOPE];
+>> +	unsigned int scope;
+>> +	struct pmu *pmu;
+>> +
+>> +	cpumask_clear_cpu(cpu, perf_online_mask);
+>> +
+>> +	for (scope = PERF_PMU_SCOPE_NONE + 1; scope < PERF_PMU_MAX_SCOPE; scope++) {
+>> +		const struct cpumask *cpumask = perf_scope_cpu_topology_cpumask(scope, cpu);
+>> +		struct cpumask *pmu_cpumask = perf_scope_cpumask(scope);
+>> +
+>> +		target[scope] = -1;
+>> +		if (WARN_ON_ONCE(!pmu_cpumask || !cpumask))
+>> +			continue;
+>> +
+>> +		if (!cpumask_test_and_clear_cpu(cpu, pmu_cpumask))
+>> +			continue;
+>> +		target[scope] = cpumask_any_but(cpumask, cpu);
+>> +		if (target[scope] < nr_cpu_ids)
+>> +			cpumask_set_cpu(target[scope], pmu_cpumask);
+>> +	}
+>> +
+>> +	/* migrate */
+>> +	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+> 
+> 
+> Here is the line causing the warning, because rcu_read_lock() is not
+> used before.
+> 
+> I don't know this code, but I guess you are not only doing read
+> operations here if you are migrating something, right? This operation is
+> done under the "pmus_lock", maybe the "_rcu" variant is not needed here?
+> 
+> So just using this instead is maybe enough?
+> 
+>   list_for_each_entry(pmu, &pmus, entry) {
 
->
->   - Liao Chang's ARM64-specific STP instruction emulation support
-> ([6]). This one will give 2x (!) improvement for a common case of
-> having STP instruction being a first instruction in traced user
-> function (similar to NOP for USDTs).
->
-> ARM64 maintainers (cc'ed Catalin, Will, and Mark), can you guys please
-> take another look? This one was a bit more controversial, but
-> hopefully there is a way to massage it to be acceptable and not
-> introduce unnecessary slowdowns (there were some concerns about memory
-> ordering/visibility, which hopefully don't apply to uprobe cases).
-> It's an important improvement, I'd really appreciate it if we can make
-> progress here, thank you!
->
+Yes, it's good enough. A patch has been proposed, but haven't been
+merged yet.
 
-Ping. ARM64 folks, can you please take a look and reply? Thank you.
+https://lore.kernel.org/lkml/20240913162340.2142976-1-kan.liang@linux.intel.com/
 
->   - my speculative VMA-to-uprobe lookup series ([7]). This makes entry
-> uprobe scalability scale linearly with the number of CPUs (the
-> ultimate goal of uprobe scalability work).
->
-> I think it's ready to go in. It has **implicit** dependency on
-> Christian Brauner's recent change for FMODE_BACKING, for which he
-> provided a stable tag. Peter, do you have any remaining concerns or
-> this can be also merged soon?
+Thanks,
+Kan
+> 
+> 
+>> +		if (pmu->scope == PERF_PMU_SCOPE_NONE ||
+>> +		    WARN_ON_ONCE(pmu->scope >= PERF_PMU_MAX_SCOPE))
+>> +			continue;
+>> +
+>> +		if (target[pmu->scope] >= 0 && target[pmu->scope] < nr_cpu_ids)
+>> +			perf_pmu_migrate_context(pmu, cpu, target[pmu->scope]);
+>> +	}
+>> +}
+>> +
+>>  static void perf_event_exit_cpu_context(int cpu)
+>>  {
+>>  	struct perf_cpu_context *cpuctx;
+>> @@ -13737,6 +13857,11 @@ static void perf_event_exit_cpu_context(int cpu)
+>>  
+>>  	// XXX simplify cpuctx->online
+>>  	mutex_lock(&pmus_lock);
+>> +	/*
+>> +	 * Clear the cpumasks, and migrate to other CPUs if possible.
+>> +	 * Must be invoked before the __perf_event_exit_context.
+>> +	 */
+>> +	perf_event_clear_cpumask(cpu);
+>>  	cpuctx = per_cpu_ptr(&perf_cpu_context, cpu);
+>>  	ctx = &cpuctx->ctx;
+>>  
+>> @@ -13744,7 +13869,6 @@ static void perf_event_exit_cpu_context(int cpu)
+>>  	smp_call_function_single(cpu, __perf_event_exit_context, ctx, 1);
+>>  	cpuctx->online = 0;
+>>  	mutex_unlock(&ctx->mutex);
+>> -	cpumask_clear_cpu(cpu, perf_online_mask);
+>>  	mutex_unlock(&pmus_lock);
+>>  }
+>>  #else
+> (...)
+> 
+> Cheers,
+> Matt
 
-No changes, still ready to go in. Might need a rebase if Jiri's
-patches are applied.
-
->
->   - another patch set of mine, switching uretprobe fast path to SRCU
-> (with timeout) ([8]). This makes return uprobes (uretprobes) linearly
-> scalable in the common case (again, the ultimate scalability goal).
->
-> I haven't gotten much feedback here, would love to get some objective
-> review here. This is an important counterpart to the speculative
-> VMA-to-uprobe lookup series. Both are needed in practice.
->
-
-The only thing that has progressed, thank you. I'll apply suggested
-state changes, but I intend to postpone delayed_uprobe_lock rework to
-a separate follow up patch set. Just a heads up.
-
->   - patch set dropping unnecessary siglock usage in uprobe by Liao
-> Chang ([9]). This one removes yet another lock, for a less common case
-> (at least on x86-64) of single-stepped uprobe (where the probed
-> instruction can't be emulated).
->
-> This one needs a rebase, but it was already acked by Oleg. Liao,
-> please prioritize the rebase and send v4 ASAP, so this is not lost.
->
-
-This was rebased and acked by Masami. Seems to be ready to be applied.
-
->
-> As you can see, lots of stuff needs to be landed and most of it is in
-> good shape already. I'd love to hear thoughts of relevant people
-> called out above, thank you!
->
->
->   [0] https://lore.kernel.org/linux-trace-kernel/20240729134444.GA12293@r=
-edhat.com/
->   [1] https://lore.kernel.org/linux-trace-kernel/20240929144201.GA9429@re=
-dhat.com/
->   [2] https://lore.kernel.org/linux-trace-kernel/20240903174603.3554182-1=
--andrii@kernel.org/
->   [3] https://lore.kernel.org/linux-trace-kernel/20240909071114.1150053-1=
--liaochang1@huawei.com/
->   [4] https://lore.kernel.org/linux-trace-kernel/20240523121149.575616-1-=
-jolsa@kernel.org/
->   [5] https://lore.kernel.org/bpf/20241015091050.3731669-1-jolsa@kernel.o=
-rg/
->   [6] https://lore.kernel.org/linux-trace-kernel/20240910060407.1427716-1=
--liaochang1@huawei.com/
->   [7] https://lore.kernel.org/linux-trace-kernel/20241010205644.3831427-1=
--andrii@kernel.org/
->   [8] https://lore.kernel.org/linux-trace-kernel/20241008002556.2332835-1=
--andrii@kernel.org/
->   [9] https://lore.kernel.org/linux-trace-kernel/20240815014629.2685155-1=
--liaochang1@huawei.com/
->
-> -- Andrii
