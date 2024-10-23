@@ -1,152 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7850E126C05;
-	Tue, 22 Oct 2024 23:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BC06CDAF
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2024 04:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729641138; cv=none; b=aO/fL9UFAzhzuKiFaetTzC4l/e0HcFPf2Mokm/WXNVC2qO8txa85tlm0PsCUs/1HFDmONFlm1/Wb4dOGnjqtPUJgl6z0qs7c55bLH16P7K2a0Bzs/sgfoioC6uVQnlJ9V8UkIU19B7dQcwPYqSeSnpHafPgM6i/j/KkDgmDdPSo=
+	t=1729656414; cv=none; b=ppf7tXlP7QV6QRY5GIBljdUKR5ar9VII2Wc4DNP+9iLq4C5aCVK2tIjr5zRFXceM8QOBHBHUHaRnQx9HSNoWBrr1oXiZUrS82fCkvj+TipxesjFsreoF2n40x7qFN3yFW9HBMMi6dEbEiaGclGCw3yCt85TCz/DUgESiuIlGFn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729641138; c=relaxed/simple;
-	bh=rFVlsj1qHn0/duDf7jKx17I7NGXKofb8ULGbc4GE0XI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kUB8kE486n8rm99iCHU7kURlROR1e1uqm29dsuGFN/WHmLqpW6Vagk1vx9Uxzs43KS7GhKVnJXkU6jkg/JZLErb/MWz1qYSG0I8jF5b5Nko4PRcuWVMo890J6m05+bmFfdWFRn9c4P3qCpk/KkM9s84FDM4Q2RfEQeyCAlLrGRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sW8yb4Cg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729656414; c=relaxed/simple;
+	bh=FrQLENoGP/dCOAZctQLYD3mOzEEySi5JjYNMWjRZHBw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bl1NAZJZEOoWzZBitQeBRVcbY0pwphRrzNrNyiO6g1s6SNQSBCWF33XWCwq0vCxWz2/hS5RYLHFRZDWLGnrCo8DyzpttY9apo8hOCTXJn9YY/g7f0wIbP71TQyEedGmmisS2iOZDSc+GjF5/kywGTxlhc6exrUmzW5AV4SQuAx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=al/7KxfA; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sW8yb4Cg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DBCCC4CEC3;
-	Tue, 22 Oct 2024 23:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729641138;
-	bh=rFVlsj1qHn0/duDf7jKx17I7NGXKofb8ULGbc4GE0XI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sW8yb4CgXjRyuzn3MRhtnszS8mdpFspNU2huCIPazc07bCEAKZORjJxPKbw17eAqF
-	 7qFgowQUCXRLpTpqzKodv6Jp4U0vlnrKOtw9S+bjBPKzQbcP1kKGYjRGQ2/On7A7p8
-	 4xHzZY21eBgWXyNZOdFIjX83AaMXJuL9E/AT53fGpcbqIRdx5rrNHP4Uxos1saHkd9
-	 Z8vnbovbGHlfD2IsjTjLCYfUMJA6+eVg4LO9htSthcJAHW8WhGjNpJGkZuADn5yQ33
-	 fxcP/oWVhxquaNa6g5z7Abcoq2S8QEciQGpoWgewfmKCWhCfZ7CKw0pdj3GADQcYCr
-	 libLGrNRrEa7A==
-Date: Tue, 22 Oct 2024 16:52:16 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>, Howard Chu <howardchu95@gmail.com>,
-	Andrea Righi <andrea.righi@linux.dev>, peterz@infradead.org,
-	mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, james.clark@linaro.org,
-	alan.maguire@oracle.com
-Subject: Re: [PATCH v2 0/2] perf trace: Fix support for the new BPF feature
- in clang 12
-Message-ID: <Zxg6sCJAUDUsaVBM@google.com>
-References: <20241011021403.4089793-1-howardchu95@gmail.com>
- <Zw61TUe1V97dKWer@google.com>
- <Zw7D9HXBanPLUO4G@x1>
- <Zw7JgJc0LOwSpuvx@x1>
- <Zw7SkmEaz730uVbL@x1>
- <Zw8fqyCZNqSABMkM@google.com>
- <Zw_MFwkejeWC2qbv@x1>
- <ZxfbNJ6nKXzoEYVn@google.com>
- <Zxfv3BupKqhi3zGV@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="al/7KxfA"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4608dddaa35so185771cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2024 21:06:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1729656411; x=1730261211; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HitsFUO1EidESPoKRuV/OlPLmnVZu05z2WbOguU93h4=;
+        b=al/7KxfAOsb5fB/0fhN4m+sRBwLHAwkEh3kiUqiRmgJCnr8WZ7yZoizOtT9w7n8L1E
+         Kv30ORazqgyiFMPyy8TQQVNT/f6oagpSBgkIkuM7u2uuZMISmiQKi/LcV79i9gmYmdgu
+         onr+2kdLnDjSPnhlR3r3OHleFSUXMuDZZUqaerODbnv0kPhGajImhDxZE9g2+MU+i9V3
+         h+mwlz3YngF+itGfTKWI3hgEnkBDAxW0IWMJI/LBg+Z34cTq8G/uY2GXydu+h+nMBNht
+         z7f7I4m5rl6zhH01R4wsuA+SsWczwAyYa12E9Mos/UqOsJuYHQTphCaqqJcxjyQMruNT
+         58Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729656411; x=1730261211;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HitsFUO1EidESPoKRuV/OlPLmnVZu05z2WbOguU93h4=;
+        b=RzprYe6Eyc/NdWmRuBzuKm7FJlNzJa2xNykQR5GlXchhw1OKVy+8zZoRYu8bSZne5y
+         3sBswrFmlMjkkvDKSXXRKPwAR46ivqLQOZCqMvKTlDq94r7bWAQ8JrKxiyg4lA5Mg9qB
+         017aP93kYfVumJSeBgFLcCAUa21RFcvSvYHqc+o0cWF0V7m2HJTS1SUJuPudRO1nr5xn
+         /WXbw7ej/PCqGrruZU30h2qgWjWF78CQgBNRpuszPiFt9dpAuYp3VSDHKTh5arydxLhx
+         AXRVIM1BJrLA+t7auqmGketlbSo16CKjM3nvrURabCuKSNKnPYP78TZDGOxcNGUwsrJ2
+         gLCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdBhKPPdSJgNEVy7f1kZFG0qWrVFxP5dHACNBhPORZlBiX7N0+FzjINuhUrN9wn8lKZAIz3K5Vao+WCeoC/JUn@vger.kernel.org
+X-Gm-Message-State: AOJu0YzImkFcuT8O/Lg5A2CfoKZ/hqI/nlRoZa3vQLh6vKbmtbdLdPid
+	3+5LaCw88/h5ncL3TPn8VITSgcVa4fy1ZQd4T1f/fe61lGKcrZyqQ/ojmD0cQWJiMjmDQBRnkay
+	Adi0XvADu6TExDBCPMdvg8eGr//M3M76q+T/P
+X-Google-Smtp-Source: AGHT+IEjcmtwfLg+spZLHWFvoEQXhFCmc9lNLMfvrW3qkW/32GsJj6JhV52GinHNNzPhYKR/JM2jrFxzsdoMeNJWl9s=
+X-Received: by 2002:a05:622a:5e8d:b0:460:b5ac:c23f with SMTP id
+ d75a77b69052e-46113d497a8mr2104581cf.7.1729656411326; Tue, 22 Oct 2024
+ 21:06:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zxfv3BupKqhi3zGV@x1>
+References: <20240606044959.335715-1-irogers@google.com> <c7d6eedb-7c5e-4411-a83f-4328dc75ec46@linux.intel.com>
+In-Reply-To: <c7d6eedb-7c5e-4411-a83f-4328dc75ec46@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 22 Oct 2024 21:06:36 -0700
+Message-ID: <CAP-5=fXY2Ofr_GRc7Mq7BfoR+2150o8e1JeyGctcGPRG70DqPg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] perf Documentation: Describe the PMU naming convention
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Tuan Phan <tuanphan@os.amperecomputing.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Bhaskara Budiredla <bbudiredla@marvell.com>, Bharat Bhushan <bbhushan2@marvell.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@arm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 22, 2024 at 03:33:00PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Tue, Oct 22, 2024 at 10:04:52AM -0700, Namhyung Kim wrote:
-> > Hi Arnaldo,
-> > 
-> > On Wed, Oct 16, 2024 at 11:22:15AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Tue, Oct 15, 2024 at 07:06:35PM -0700, Namhyung Kim wrote:
-> > > > Hi Arnaldo,
-> > > > 
-> > > > On Tue, Oct 15, 2024 at 05:37:38PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > On Tue, Oct 15, 2024 at 04:58:56PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > > So I'm trying adding extra bounds checking, marking the index as
-> > > > > > volatile, adding compiler barriers, etc, all the fun with the verifier,
-> > > > > > but got distracted with other stuff, coming back to this now.
-> > > > >  
-> > > > > > Ok, the following seems to do the trick:
-> > > > >  
-> > > > > > [acme@dell-per740-01 perf-tools]$ git diff
-> > > > > > diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > > > > > index 3b30aa74a3ae..ef87a04ff8d0 100644
-> > > > > > --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > > > > > +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > > > > > @@ -486,6 +486,7 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
-> > > > > >                                 augmented = true;
-> > > > > >                 } else if (size < 0 && size >= -6) { /* buffer */
-> > > > > >                         index = -(size + 1);
-> > > > > > +                       index &= 7; // To satisfy the bounds checking with the verifier in some kernels
-> > > > > >                         aug_size = args->args[index];
-> > > > > >  
-> > > > > >                         if (aug_size > TRACE_AUG_MAX_BUF)
-> > > > > > 
-> > > > > > I'll now test it without Howard's patch to see if it fixes the RHEL8 +
-> > > > > > clang 17 case.
-> > > > > 
-> > > > > It works with this one-liner + the simplified patch from Howard and also
-> > > > > on this other system (RHEL9), as well as with Fedora 40, it would be
-> > > > > nice if someone could test with clang 16 and report back the version of
-> > > > > the kernel tested as well as the distro name/release, that way I can try
-> > > > > to get my hands on such as system and test there as well.
-> > > > > 
-> > > > > Its all at:
-> > > > > 
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tmp.perf-tools
-> > > > > 
-> > > > > This is the current set of patches that when further tested will go to
-> > > > > Linus for v6.12:
-> > > > > 
-> > > > > ⬢[acme@toolbox perf-tools]$ git log --oneline torvalds/master..
-> > > > > ff14baa7a290bf42 (HEAD -> perf-tools, x1/perf-tools, perf-tools/tmp.perf-tools) perf trace augmented_raw_syscalls: Add more checks to pass the verifier
-> > > > > 46180bec048aad85 perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
-> > > > > 45d1aadac64869a2 perf build: Change the clang check back to 12.0.1
-> > > > 
-> > > > Wouldn't it be better to have this change after fixing the verifier
-> > > > issues in the later commits?
-> > > 
-> > > I'm still testing it, this is a one-liner, so I think that the order in
-> > > which the patches are applied isn't important. Also Howard's patch (the
-> > > simplified one) doesn't clash with it.
-> > 
-> > I'm afraid if it'd break git bisect by allowing old clang versions
-> > before the fix.
-> 
-> I can reorder the patches if you think it is interesting, but from the
-> extended set of tests I'm performing on different kernel and clang
-> version and in x86_64 and arm 64-bit, 32-bit and various distros, I'm
-> not sure bisection is an option for BPF programs at this stage 8-)
+On Thu, Jun 6, 2024 at 11:15=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+>
+>
+> On 2024-06-06 12:49 a.m., Ian Rogers wrote:
+> > It is an existing convention to use suffixes with PMU names. Try to
+> > capture that convention so that future PMU devices may adhere to it.
+> >
+> > The name of the file and date within the file try to follow existing
+> > conventions, particularly sysfs-bus-event_source-devices-events.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> > ---
+> >  .../testing/sysfs-bus-event_source-devices    | 24 +++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-de=
+vices
+> >
+>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Maybe.  But at least we can try our best. :)
-
-> 
-> There, did it now it looks like this:
-> 
-> ⬢ [acme@toolbox perf-tools]$ git log --oneline torvalds/master..
-> 5d3a1b9ca3b1a059 (HEAD -> perf-tools) perf trace arm32: Fix iteration of syscall ids in syscalltbl->entries
-> 34d2358a24fb5963 perf trace augmented_raw_syscalls: Add more checks to pass the verifier
-> cdb84c31bd2813de perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
-> e5c1811c590c4312 perf build: Change the clang check back to 12.0.1
-> 39c6a356201ebbd7 perf trace: The return from 'write' isn't a pid
-> ab8aaab874c4aa37 tools headers UAPI: Sync linux/const.h with the kernel headers
-> ⬢ [acme@toolbox perf-tools]$
-> 
-> Is that what you meant?
-
-Nope, I'd like to have e5c1811c590c4312 after the verifier fixes:
-
- 34d2358a24fb5963 perf trace augmented_raw_syscalls: Add more checks to pass the verifier
- cdb84c31bd2813de perf trace augmented_raw_syscalls: Add extra array index bounds checking to satisfy some BPF verifiers
+Thanks for all the reviews. Could we land this?
 
 Thanks,
-Namhyung
+Ian
 
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices b=
+/Documentation/ABI/testing/sysfs-bus-event_source-devices
+> > new file mode 100644
+> > index 000000000000..79b268319df1
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices
+> > @@ -0,0 +1,24 @@
+> > +What: /sys/bus/event_source/devices/<pmu>
+> > +Date: 2014/02/24
+> > +Contact:     Linux kernel mailing list <linux-kernel@vger.kernel.org>
+> > +Description: Performance Monitoring Unit (<pmu>)
+> > +
+> > +             Each <pmu> directory, for a PMU device, is a name
+> > +             optionally followed by an underscore and then either a
+> > +             decimal or hexadecimal number. For example, cpu is a
+> > +             PMU name without a suffix as is intel_bts,
+> > +             uncore_imc_0 is a PMU name with a 0 numeric suffix,
+> > +             ddr_pmu_87e1b0000000 is a PMU name with a hex
+> > +             suffix. The hex suffix must be more than two
+> > +             characters long to avoid ambiguity with PMUs like the
+> > +             S390 cpum_cf.
+> > +
+> > +             Tools can treat PMUs with the same name that differ by
+> > +             suffix as instances of the same PMU for the sake of,
+> > +             for example, opening an event. For example, the PMUs
+> > +             uncore_imc_free_running_0 and
+> > +             uncore_imc_free_running_1 have an event data_read;
+> > +             opening the data_read event on a PMU specified as
+> > +             uncore_imc_free_running should be treated as opening
+> > +             the data_read event on PMU uncore_imc_free_running_0
+> > +             and PMU uncore_imc_free_running_1.
