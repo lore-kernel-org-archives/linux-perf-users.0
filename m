@@ -1,63 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3971CACEB;
-	Wed, 23 Oct 2024 18:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F224611E;
+	Wed, 23 Oct 2024 18:01:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729706421; cv=none; b=XTXbdI7TjW5jnkxh/kCg8Pnr8dQx8Z8tphtvaT/PS8hDv5v5Ld/B7IhjuW7a+M1oMANGBoUb6M5Wo2MWd239hwk1Ep6ZtrkfE4aL6AV26OifiGSuMd5eC4KfaJ/2uT9elTwI9kZtE3Kd0EUhNGB/v81+9fde40Uxfay/zhRoJEE=
+	t=1729706495; cv=none; b=JAj2H0laORxuaC4t3g1JNMSbuIAGVqAlQtUuuPjQo7/BRMVgP72gHSSg0N7otJJU0H9aMJntOAmjVETab6gK+uYrDq2pQA/1yIoDcwjpddrV2igeI0FaZvmawwSbzP3tNG4vhgvJERCbXpDHKQ7CUpHtrJae676+XYG/NzXG6iU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729706421; c=relaxed/simple;
-	bh=GC5YOYBRx+gZl5V2Ks6B0SwBBanF3+LpkxO9ECEL3OE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pEHaFXitSH6HTkqBbaB3tI3FOxBWTWqs4ZBXJkITaNj6iXLMCC8dvHUM3yia87xcQddRogffg/Y6cj+Vv6A6nHk7PgUJO0Vf8NCuEJsNITGPyEU0P3FWox93dggLF2TU9oomnOfr6DYVMcXrS9MHU7vmzNEkRuJBbk6+pxyPXg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHi+3rIW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729706495; c=relaxed/simple;
+	bh=K6hu94uMlnMahjpTUGzUwEPK6QP+a6Re7F3l/BAs3qs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MyHj3l/N5j3gdMLSM/q1dOTPBDLuJHr5XVJNVuNRYsgJOZCu7mqftztQaV8lLq9vgW8cRjLd/aJzgKw1z1dSxDmTCMbpih4Vhju8VpVsGpu7e46AIX+Xnjn4a/Q2yrVA/Dt6dX7d22YugMrWVy/xrb1czvC1F+PHg+jgV8vxO8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=duIGalvs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHi+3rIW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF47BC4CEE8;
-	Wed, 23 Oct 2024 18:00:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="duIGalvs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E5B5C4CEC6;
+	Wed, 23 Oct 2024 18:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729706421;
-	bh=GC5YOYBRx+gZl5V2Ks6B0SwBBanF3+LpkxO9ECEL3OE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=gHi+3rIWTAlYmZiI9E/LBenZ+HjGozLX/pfewYaJz9B8m7hafF6Ty8/iUVtYeBitE
-	 CkOE+uo4sB814xC1iBshkTIqcMr2M3PjKqabpM5VU2TbEzFInA6+IH6R4EaEdw/3MX
-	 uB0Hx7u0hnvXBKKyuP/HjBd6tXJ2S0OYgZYiUgI9Krbe5yXUrZgAcVJRTZsQKSBXmQ
-	 RsR+YPcnwNHaGvIkQZQZxN1Ea0S8wsJNP6p8iagEY8D9B8mexyMQFJ8igCivoN6PLQ
-	 uezCIihveURVpG5kmgX0ysdYdKML6IebvN5ZPWLNeS1RxCiGqCrFKuGDTwgNgAu/x6
-	 kqqNtQgq+UNog==
+	s=k20201202; t=1729706494;
+	bh=K6hu94uMlnMahjpTUGzUwEPK6QP+a6Re7F3l/BAs3qs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=duIGalvspfw1JLsGiSuRFIgsi5LqNAN9FHMs2U3ckv/6OHsnCNTslrjFfMvqiaib/
+	 e/NwlY8vEHL8WW2bXWNGWzG0nnA0WsIduQ4IrfsLBt6+7nsPZk4v2CGdjgVODMiMbE
+	 f6eKkU/W3BS4/DGnaRSTDPNlkE3xey0DtctRmGWERgIjd20ahsoTZ3JAFlF5lC7JAT
+	 1MpQ3ZaMg33gqlTCaoodz8p6xhc/eyU0NiTKT7pGH6HhBhFAj65KcQXMhOaa1pRsBi
+	 1EFA9xUcrJYfCmYOL9tBlpGK6dCOnSihQZYXzA5e28KR1Stz3ZOBPSNzs8idN4dbmu
+	 C0CAsNdAvjf7Q==
+Date: Wed, 23 Oct 2024 11:01:32 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Brian Geffon <bgeffon@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>
-In-Reply-To: <20241016190009.866615-1-bgeffon@google.com>
-References: <20241016190009.866615-1-bgeffon@google.com>
-Subject: Re: [PATCH] perf tools: sched-pipe bench: add (-n) nonblocking
- benchmark
-Message-Id: <172970642080.1242473.4539711950671023449.b4-ty@kernel.org>
-Date: Wed, 23 Oct 2024 11:00:20 -0700
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	James Clark <james.clark@arm.com>, Kajol Jain <kjain@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Mingwei Zhang <mizhang@google.com>
+Subject: Re: [PATCHSET 0/9] perf tools: Do not set attr.exclude_guest by
+ default (v5)
+Message-ID: <Zxk5_OaAWdiVZhvr@google.com>
+References: <20241016062359.264929-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241016062359.264929-1-namhyung@kernel.org>
 
-On Wed, 16 Oct 2024 15:00:09 -0400, Brian Geffon wrote:
-
-> The -n mode will benchmark pipes in a non-blocking mode using
-> epoll_wait.
+On Tue, Oct 15, 2024 at 11:23:50PM -0700, Namhyung Kim wrote:
+> Hello,
 > 
-> This specific mode was added to demonstrate the broken sync nature
-> of epoll: https://lore.kernel.org/lkml/20240426-zupfen-jahrzehnt-5be786bcdf04@brauner
+> I found perf tools set exclude_guest bit inconsistently.  It used to
+> set the bit but now the default event for perf record doesn't.  So I'm
+> wondering why we want the bit in the first place.
 > 
-> 
+> Actually it's not good for PMUs don't support any exclusion like AMD
+> IBS because it disables new features after the exclude_guest due to
+> the missing feature detection logic.
+>
 > [...]
 
 Applied to perf-tools-next, thanks!
