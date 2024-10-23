@@ -1,57 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71454D599;
-	Wed, 23 Oct 2024 22:57:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE63315573D
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2024 22:59:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729724234; cv=none; b=hk2rHv8EU92LrjZHWuUbFZXm7Xe97NP7eMVR0QFhJ8AXOLeE1Wfah3b0J0FVRiopCL0RyCn1Q7eN9o4wLRbociH07hxKTTNjCRWQ5zMXINz2DAy2PDAEGiXzt+pdnBeU45qbbBJJmG5DIC6G8I6C4x+/4GpwkFLSUArvofp9ybo=
+	t=1729724387; cv=none; b=aelq+sA98aRu1kjA8dZXNII90/W/QV+j/Fh4K8csE8I34LBQaB8GwMnnVpHFlAidTbViaVl7bDSRxBsvmDUGN7cOboXoh03ftLJnlvgJBS5s5O5oAVyYbWZZg28KXE/xoe5Wej1aCDmV2oLo5fJtl/pf9hJFwcSZIrG+FUfBViY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729724234; c=relaxed/simple;
-	bh=v2QkCIqU8GCdpfjR3qsNEiGrKMT2MRsQMJlgtLNW8fg=;
+	s=arc-20240116; t=1729724387; c=relaxed/simple;
+	bh=JtZnLEPSec4mjz1imELKRsKFLR6tGw6MK08BGMHtz4w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MqjnJem/0CbjX3fkzqTmNWX2c4Ub/ctYiZo2v8uxSy/XLx4F2mRy0In8kVXngE+jGcVKmQ2bnPMXSky/YRx7zLu16anPKqsJ4g9112A22G6iQBlJuodOE04qDiT5AvQyXrx0eAPqC2Aypd+yfYhPmmOIbtBME8F5yst9fxFd7zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QCr++ZRx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EPnWk7XiJbrKJ7hiJJr9tjLdo/btsk4jsthbgGudORRR+30voaILz7ODQR/lwxUXU4MMCSj4B8Gd+n9afAg0SDTVHPTSbdLzxr5faywiL5/drahlPfujc24gbMlajrBWJWt6LSuSnJkFFEtWLRxPhc36g4wvqYdg1+32luarq/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxdcKrBT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QCr++ZRx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AA33C4CEC6;
-	Wed, 23 Oct 2024 22:57:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxdcKrBT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62B61C4CECC;
+	Wed, 23 Oct 2024 22:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729724234;
-	bh=v2QkCIqU8GCdpfjR3qsNEiGrKMT2MRsQMJlgtLNW8fg=;
+	s=k20201202; t=1729724387;
+	bh=JtZnLEPSec4mjz1imELKRsKFLR6tGw6MK08BGMHtz4w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QCr++ZRxC/3jA3oOAO53kISWC6u8L/P5EZUSEwbTTYfUOFnX2oJ3CuPhmHtfoUVs/
-	 MKS3iHyEOJ+l7dNUhZBXfTHH5XviVvYL7ODLHVMa4AA0iD2U+HZzsGWLKUrzcDYbsj
-	 E+S+wSuJZ4F8c8KHPJ+8S9gdqHoTX+iAkzeweccgK5jToFRNsokfn99Jtd5kPidVqq
-	 sFSMQAEGYrmDybga81mpY2KxNEBSUpD1V1iPxBAF/jKfHrEsr0k603GJ6hT2FoG8Nv
-	 tnAsKW+eLZ/yp9OA2FtW26wmbMm+mb7DMUHQXpVpmgV2RnQPxOA81wOo79q6XzHAjT
-	 TM40Hqf0yZYjA==
-Date: Wed, 23 Oct 2024 15:57:12 -0700
+	b=mxdcKrBTrFcoyCregnbiEVk/b9PwzNMY7GnQKJQivC+OFgnGpxztVDhS6q3Da9LOS
+	 YZ+v8NcH9FjG6rwFcA9DE3Mj4iawRr5x6gCn1DrzVezR7qYIi/CyyuSCMrUuGZy+MY
+	 76Tos5pLrj9ukew6kJOyK21STJLUd0UIMwylg2jtK3NwZVQJ7+GwtBU8C+f9EkbZ39
+	 APVJpWuX79d+ZTj3ja8f7CEFpwOunpbAeLoHsvXMv4o68BEsch7T8/Sc6NbdrWAzXV
+	 lBEeal9mZ0SUk6vakC9VmBcjCmvsz+yN4cK4QQrd9wyivybBG2Wooe3WnD3JVrquG7
+	 IL1s9bxBxphyw==
+Date: Wed, 23 Oct 2024 15:59:45 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 0/9] Run tests in parallel showing number of tests
- running
-Message-ID: <Zxl_SGGuIrYcmMA9@google.com>
-References: <20241018054719.1004128-1-irogers@google.com>
+To: John Garry <john.g.garry@oracle.com>
+Cc: linux-perf-users@vger.kernel.org, x86@kernel.org, ravi.bangoria@amd.com,
+	sandipan.das@amd.com
+Subject: Re: [bug report] perf top generates kernel "unchecked MSR access
+ error: WRMSR"
+Message-ID: <Zxl_4TvxWTtmO_e8@google.com>
+References: <156a0ee3-18d5-4144-9f86-230a3946940e@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,95 +43,118 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241018054719.1004128-1-irogers@google.com>
+In-Reply-To: <156a0ee3-18d5-4144-9f86-230a3946940e@oracle.com>
 
-On Thu, Oct 17, 2024 at 10:47:10PM -0700, Ian Rogers wrote:
-> Avoid waitpid so that stdout/stderr aren't destroyed prior to wanting
-> to read them for display. When running on a color terminal, display
-> the number of running tests (1 if sequential). To avoid previous
-> flicker, only delete and refresh the display line when it changes. An
-> earlier version of this code is here:
-> https://lore.kernel.org/lkml/20240701044236.475098-1-irogers@google.com/
-> 
-> Add a signal handler for perf tests so that unexpected signals are
-> displayed and test clean up is possible.
-> 
-> In perf test add an "exclusive" flag that causes a test to be run with
-> no other test. Set this flag manually for C tests and via a
-> "(exclusive)" in the test description for shell tests. Add the flag to
-> shell tests that may fail when run with other tests.
-> 
-> Change the perf test loop to run in two passes. For parallel
-> execution, the first pass runs all tests that can be run in parallel
-> then the 2nd runs remaining tests sequentially. This causes the
-> "exclusive" tests to be run last and with test numbers moderately out
-> of alignment.
-> 
-> Change the default to be to run tests in parallel. Running tests in
-> parallel brings the execution time down to less than half.
+Adding Ravi and Sandipan to CC.
 
-Can you renumber the tests so that the numbers can be continuous?
-
-Also, it doesn't apply to the current perf-tools-next, please rebase.
-
-Thanks,
-Namhyung
-
+On Tue, Oct 22, 2024 at 03:55:05PM +0100, John Garry wrote:
+> Hi all,
 > 
-> v3: Mark additional shell tests as "(exclusive)" to avoid issues with
->     shared resources suggested by Namhyung. Add dependent signal
->     handler change so that kill/ctrl-C don't leave lots of processes,
->     previously sent here:
->     https://lore.kernel.org/lkml/20241017052137.225514-1-irogers@google.com/
+> On my VM, "perf top" gives this stackframe on v6.12-rc4:
 > 
-> v2: Fix inaccurate remaining counts when running specific
->     tests. Rename "remaining" to "active" to better reflect the
->     testing behavior. Move the exclusive flag to test cases and not
->     entire suites. Add more "(exclusive)" flags to test as
->     suggested-by James Clark. Remove "(exclusive)" flag from test
->     descriptions to keep the command line output more concise. Add
->     James Clark's tested-by.
+> [  930.527581] unchecked MSR access error: WRMSR to 0xc0010200 (tried to
+> write 0x0000020000510076) at rIP: 0xffffffff94ead548
+> (native_write_msr+0x8/0x30)
+> [  930.531135] Call Trace:
+> [  930.531456]  <IRQ>
+> [  930.531749]  ? ex_handler_msr+0x138/0x150
+> [  930.532285]  ? search_extable+0x26/0x30
+> [  930.532780]  ? fixup_exception+0x9c/0x310
+> [  930.533405]  ? exc_general_protection+0x10c/0x490
+> [  930.534081]  ? asm_exc_general_protection+0x26/0x30
+> [  930.534768]  ? native_write_msr+0x8/0x30
+> [  930.535357]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [  930.535998]  x86_pmu_enable_event+0xa5/0xd0
+> [  930.536641]  amd_pmu_enable_all+0x4e/0x80
+> [  930.537211]  ctx_resched+0x13b/0x1d0
+> [  930.537735]  __perf_install_in_context+0x2a2/0x390
+> [  930.538439]  remote_function+0x49/0x60
+> [  930.538931]  __flush_smp_call_function_queue+0xdc/0x700
+> [  930.539694]  ? __pfx_remote_function+0x10/0x10
+> [  930.540480]  __sysvec_call_function_single+0x38/0x140
+> [  930.541134]  sysvec_call_function_single+0x6c/0x90
+> [  930.541970]  </IRQ>
+> [  930.542269]  <TASK>
+> [  930.542766]  asm_sysvec_call_function_single+0x1a/0x20
+> [  930.543493] RIP: 0010:pv_native_safe_halt+0xf/0x20
+> [  930.544195] Code: 22 d7 e9 ff b5 13 00 0f 1f 40 00 90 90 90 90 90 90 90
+> 90 90 90 90 90 90 90 90 90 f3 0f 1e fa eb 07 0f 00 2d d3 e3 25 00 fb f4 <e9>
+> d7 b5 13 00 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
+> [  930.546841] RSP: 0018:ffffffff96a03e68 EFLAGS: 00000206
+> [  930.547563] RAX: 0000000000000006 RBX: ffffffff96a269c0 RCX:
+> 0000000000000000
+> [  930.548579] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
+> ffffffff94f53f31
+> [  930.549568] RBP: 0000000000000000 R08: 0000000000000001 R09:
+> 0000000000000000
+> [  930.550529] R10: 0000000000000001 R11: 0000000000000000 R12:
+> ffffffff970608e0
+> [  930.551582] R13: ffffffff96a269c0 R14: 0000000000000000 R15:
+> 0000000000000000
+> [  930.552683]  ? do_idle+0x1d1/0x2a0
+> [  930.553182]  default_idle+0x9/0x20
+> [  930.553670]  default_idle_call+0x7d/0xc0
+> [  930.554226]  do_idle+0x1d1/0x2a0
+> [  930.554696]  cpu_startup_entry+0x29/0x30
+> [  930.555154]  rest_init+0x12e/0x1d0
+> [  930.555621]  start_kernel+0x60f/0x6d0
+> [  930.556064]  x86_64_start_reservations+0x21/0x40
+> [  930.556633]  x86_64_start_kernel+0x91/0xa0
+> [  930.557107]  common_startup_64+0x13e/0x141
+> [  930.558038]  </TASK>
+> [  930.738880] perf: interrupt took too long (2511 > 2500), lowering
+> kernel.perf_event_max_sample_rate to 79000
+> [  930.772912] perf: interrupt took too long (3414 > 3138), lowering
+> kernel.perf_event_max_sample_rate to 58000
+> [  930.797764] perf: interrupt took too long (4275 > 4267), lowering
+> kernel.perf_event_max_sample_rate to 46000
+> [  931.117733] perf: interrupt took too long (5345 > 5343), lowering
+> kernel.perf_event_max_sample_rate to 37000
+> [  933.862829] perf: interrupt took too long (6765 > 6681), lowering
+> kernel.perf_event_max_sample_rate to 29000
+> [opc@jgarry-atomic-write-exp-e4-8-instance-20231214-1221 ~]$ ^C
 > 
-> Ian Rogers (9):
->   tools subcmd: Add non-waitpid check_if_command_finished()
->   perf test: Display number of active running tests
->   perf test: Reduce scope of parallel variable
->   perf test: Avoid list test blocking on writing to stdout
->   perf test: Tag parallel failing shell tests with "(exclusive)"
->   perf test: Add a signal handler around running a test
->   perf test: Run parallel tests in two passes
->   perf test: Make parallel testing the default
->   perf test: Add a signal handler to kill forked child processes
+> a known issue?
 > 
->  tools/lib/subcmd/run-command.c                |  33 ++
->  tools/perf/tests/builtin-test.c               | 304 ++++++++++++------
->  .../tests/shell/coresight/asm_pure_loop.sh    |   2 +-
->  .../shell/coresight/memcpy_thread_16k_10.sh   |   2 +-
->  .../coresight/thread_loop_check_tid_10.sh     |   2 +-
->  .../coresight/thread_loop_check_tid_2.sh      |   2 +-
->  .../shell/coresight/unroll_loop_thread_10.sh  |   2 +-
->  tools/perf/tests/shell/list.sh                |   5 +-
->  .../tests/shell/perftool-testsuite_report.sh  |   2 +-
->  tools/perf/tests/shell/probe_vfs_getname.sh   |   2 +-
->  .../shell/record+script_probe_vfs_getname.sh  |   2 +-
->  tools/perf/tests/shell/record.sh              |   2 +-
->  tools/perf/tests/shell/record_lbr.sh          |   2 +-
->  tools/perf/tests/shell/record_offcpu.sh       |   2 +-
->  tools/perf/tests/shell/stat_all_pmu.sh        |   2 +-
->  tools/perf/tests/shell/stat_bpf_counters.sh   |   2 +-
->  tools/perf/tests/shell/test_arm_coresight.sh  |   2 +-
->  .../tests/shell/test_arm_coresight_disasm.sh  |   2 +-
->  tools/perf/tests/shell/test_arm_spe.sh        |   2 +-
->  tools/perf/tests/shell/test_data_symbol.sh    |   2 +-
->  tools/perf/tests/shell/test_intel_pt.sh       |   2 +-
->  .../perf/tests/shell/test_stat_intel_tpebs.sh |   2 +-
->  .../tests/shell/trace+probe_vfs_getname.sh    |   2 +-
->  tools/perf/tests/task-exit.c                  |   9 +-
->  tools/perf/tests/tests-scripts.c              |   7 +-
->  tools/perf/tests/tests.h                      |   9 +
->  tools/perf/util/color.h                       |   1 +
->  27 files changed, 293 insertions(+), 115 deletions(-)
+> more /proc/cpuinfo gives:
 > 
-> -- 
-> 2.47.0.105.g07ac214952-goog
+> processor       : 0
+> vendor_id       : AuthenticAMD
+> cpu family      : 25
+> model           : 1
+> model name      : AMD EPYC 7J13 64-Core Processor
+> stepping        : 1
+> microcode       : 0x1000065
+> cpu MHz         : 2445.322
+> cache size      : 512 KB
+> physical id     : 0
+> siblings        : 16
+> core id         : 0
+> cpu cores       : 8
+> apicid          : 0
+> initial apicid  : 0
+> fpu             : yes
+> fpu_exception   : yes
+> cpuid level     : 16
+> wp              : yes
+> flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca
+> cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt
+> pdpe1gb rdtscp lm rep_good nopl xtopology cpuid extd_apicid tsc_kn
+> own_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt
+> tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy
+> svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topo
+> ext perfctr_core ssbd ibrs ibpb stibp vmmcall fsgsbase tsc_adjust bmi1 avx2
+> smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt
+> xsavec xgetbv1 xsaves clzero xsaveerptr wbnoinvd arat npt nrip_sa
+> ve umip pku ospke vaes vpclmulqdq rdpid arch_capabilities
+> bugs            : sysret_ss_attrs null_seg spectre_v1 spectre_v2
+> spec_store_bypass srso ibpb_no_ret
+> bogomips        : 4890.64
+> TLB size        : 1024 4K pages
+> clflush size    : 64
+> cache_alignment : 64
+> address sizes   : 40 bits physical, 48 bits virtual
+> power management:
 > 
+> Thanks,
+> John
