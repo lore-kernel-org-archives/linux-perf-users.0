@@ -1,153 +1,100 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BE9148826
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Oct 2024 02:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6C014A0A4;
+	Thu, 24 Oct 2024 02:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729736432; cv=none; b=YQDZi93Q+OCXa3nWG/JzrdOdffvyl4NJJrdxYccZ2S+KpEr2L4/Gj6pNQ/tM9N+yCeqy7iO+QV0OWghrDaArvJS0mm+rb7ow1pxhfL62JlhWli216p62vgreLUd+XWRitoqpHe+cvwFGzPz5FNOUL2a7dcKNzlLfkWodVuCXLBk=
+	t=1729736565; cv=none; b=Ck4iWPzGFNRBBsDJPHBD40vYtkereb38rmJ4HeFcCXD1iQU4yoHLRaev4bfeLEQ3oaFezzJ0Y8cWeRhUzz71850IGvyh/vsAQ9wXO61v4tZizUe4eVkpOJkwxgZkxFtoqsXqocxWif1BIwLULQYPVR0x7DkqmhdC7o/gFJtlNQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729736432; c=relaxed/simple;
-	bh=WJnKJxHvB8UnVy6vhcLiN5HJIWT5kMa+bvWIc0uJbl4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=URV6LehCQ7cARVP+ocR9gG+8lF2HtyXU/nK/rrOKGUwd+iviev0rFMrzOchn6OsO3DoiRSaPsXDxyylgA4Nll+kH62mxPq23ceqTvTAnGG5Me0DNOqz3tu5FB754LeLYzXltwIDDGpDGwNAU1PgdLUlCVqj9/Vkk0nW4+Phy8gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zHBGjJr1; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zHBGjJr1"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a3b3f4b599so70455ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2024 19:20:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729736430; x=1730341230; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3pIngecXtsdxG6meylK9oaVYnKTv5n7OxGRDRvncAmg=;
-        b=zHBGjJr1O3H9IDglk8TeY1UWc0DMjqbYF3pL3FWfQukTWlDpUfMJw4Li2l/o/7mLT4
-         RUYVn+tNsyZ+latmwQbjEyrxi+nP7PP3cmwvhwARFJn0yQuu+IzYexkaXJT8Nudtbhf5
-         Vx3o2hto63PkGLa1GUdEIAjMNU25W+A5zW/yLyRByajJ4Gh8FW1vFkBv8zxPWBN9ayio
-         FMFibERGpgiA0Q7inqzeFznQvSKBqQ7qSRqYEjCXwKMK1tMWkNpbNdtD1kPIu1uHXHTm
-         GgT1WopuQn/4ehJFC9Q39KtrZ9UvPSjBHkMVa75CaeY8JID5FL8YyWO3gAv/uTGJYyEO
-         XXFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729736430; x=1730341230;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3pIngecXtsdxG6meylK9oaVYnKTv5n7OxGRDRvncAmg=;
-        b=A17IgDp7BwxvsA63419l+XYQYfWhCf+ZhnyaHIM9fF2PPEi67Js4/399oUuwmxmm0O
-         mLswCttPJIMVHD/qo7X55kzNzILZMD+gq6GIxEz+RDcpqyIf4xmxzu8spJyGaCsWMk4q
-         4u0nwN1AFUVam2KJW87o4GTiNZgQfXMT7LUS751zUQPf59iZpquIe0aGkFz4S7qRf376
-         YzKlmm3OEmVlZR9RKrU2CStVJ/oUi1Qi71ew3lf0R+LJRopyJ6yirdF+W5lXIdIuViC4
-         bWkEFMWhcEqMQN6X7F+JEEZiH6p4UFscQ5qLK5i25CSj8F/u/Y5EXniRgLM/lxE4QtNW
-         tr4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVwcXjqCjoE+EVxHIGPjpkB6bgeNr2zh60eQc4R16AvsuiWAypJ+W1S5lL/giVQAu8dSrrL0kNEtCag9N7sBoEN@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFyH5u2XhmLao96eTpzmZ5MNE+JrVGglzRVl95JaBM9kuIaJEo
-	R0bMnJ8X3idqFPrMPEwn624FoeD/hf//U5FqQ73WTGJ94nup7eFbyup9kwJAc4da09sAALCSMsd
-	hR8jb1d5lvukwXGhXfbwOavY/ZHRWu5XI4SDZ
-X-Google-Smtp-Source: AGHT+IGG/Dw2k/witcZ02E7496UMWI+dKZv2aHv4zHjcU9haI1uZHPhi9mkLxkPFhlTYMDiG5YLcVAijc6sdwZ1JLq0=
-X-Received: by 2002:a92:ca4b:0:b0:3a4:d2ba:2011 with SMTP id
- e9e14a558f8ab-3a4dcdf6107mr1872945ab.0.1729736429527; Wed, 23 Oct 2024
- 19:20:29 -0700 (PDT)
+	s=arc-20240116; t=1729736565; c=relaxed/simple;
+	bh=/bsFfXhqxFQeYpxnwAKt55tZ3OPExl8MrGGksL0ndrY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UYx/z/Y9PBpytvrfpOqE2ITJe3YgshoQlsxfmvXqgk8wNCvtRyC/MuvVgnZ9y5xM2OHxnT0GQoka/mhYPej/v7w805Rb+4sWpxn6Py5A9tQ01vDgT2Brz+a5UnagXLTsjhoy+5i/sn5X94Z8eq2L0Tq7A1YBQXLBpsi+jhU0fuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF8BBC4CEC6;
+	Thu, 24 Oct 2024 02:22:41 +0000 (UTC)
+Date: Wed, 23 Oct 2024 22:22:38 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, Indu Bhagat
+ <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
+ James <sam@gentoo.org>, x86@kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+ Ilya Leoshkevich <iii@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v2 00/11] unwind, perf: sframe user space unwinding,
+ deferred perf callchains
+Message-ID: <20241023222238.5fc17ecb@rorschach.local.home>
+In-Reply-To: <a5c67047-94d9-482b-892b-ef1662d2fe65@linux.ibm.com>
+References: <cover.1726268190.git.jpoimboe@kernel.org>
+	<a5c67047-94d9-482b-892b-ef1662d2fe65@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241011-quiet-chowchow-of-temperance-d0e205@meerkat>
- <CAP-5=fUz5CFEL8D1L+UATsNqs4MBb6rNeYtZ26+pFC4NgRYt6w@mail.gmail.com>
- <20241011-uncovered-original-vole-cda87d@meerkat> <20241015-warping-condor-of-storm-afa06f@meerkat>
- <Zw8cN9daNBvCJd3u@google.com> <CAP-5=fXsVXYkncR0rwxXvKp_f5dR40L9_x-qoLxwHXWMiyXh3g@mail.gmail.com>
- <a0626ecb-cc64-4c6a-abf3-76868178234f@gmail.com> <b1c1a76b-5094-4384-9304-360a6012e3ad@intel.com>
- <b11407cf-8cfe-40ec-abe7-165122807e1d@gmail.com> <ZxlwoN57PF_5YX0F@google.com>
- <Zxl5sduEDnoxEmd2@x1>
-In-Reply-To: <Zxl5sduEDnoxEmd2@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 23 Oct 2024 19:20:14 -0700
-Message-ID: <CAP-5=fVj_M4heMdYSiOrpQCm1_t+r7zsWkZWzsG-4f6jsVYbWA@mail.gmail.com>
-Subject: Re: Migrating from perf.wiki.kernel.org to RTD
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Yunseong Kim <yskelg@gmail.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 23, 2024 at 3:33=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Wed, Oct 23, 2024 at 02:54:40PM -0700, Namhyung Kim wrote:
-> > On Thu, Oct 24, 2024 at 03:17:38AM +0900, Yunseong Kim wrote:
-> > > On 10/24/24 2:34 =EC=98=A4=EC=A0=84, Adrian Hunter wrote:
-> > > > On 20/10/24 07:49, Yunseong Kim wrote:
-> > > >> I would like to express my sincere gratitude to everyone for their=
- help in the
-> > > >> official renewal of the perf wiki.
->
-> > > >> Additionally, the reason I chose to use Markdown is that I wanted =
-to actively
-> > > >> utilize its media features. For example, I wanted to embed videos,
-> > > >> presentation slide or display Mermaid diagrams directly on the pag=
-e.
-> > > >> I thought these features would be welcomed by users who are new to=
- perf tools.
->
-> > > >> On 10/19/24 8:47 =EC=98=A4=EC=A0=84, Ian Rogers wrote:
-> > > >>> On Tue, Oct 15, 2024 at 6:51=E2=80=AFPM Namhyung Kim <namhyung@ke=
-rnel.org> wrote:
-> > > >>>> On Tue, Oct 15, 2024 at 02:25:02PM -0400, Konstantin Ryabitsev w=
-rote:
-> > > >>>>> On Fri, Oct 11, 2024 at 06:39:09PM -0400, Konstantin Ryabitsev =
-wrote:
-> > > >>>>>>> Yunseong created:
-> > > >>>>>>> https://perfwiki.github.io/main/
-> > > >>>>>>> Perhaps the solution here is to make perf.wiki.kernel.org a r=
-edirect
-> > > >>>>>>> to https://perfwiki.github.io/main/
->
-> > > >>>>> To speed things along, and since the old perf wiki was near-unu=
-sable anyway,
-> > > >>>>> I went ahead and set the redirects from perf.wiki.kernel.org to
-> > > >>>>> perfwiki.github.io.
->
-> > > > Links to old pages end up at the main page.  For example:
->
-> > > > https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel=
-%C2%AE_Processor_Trace
-> > > > https://perf.wiki.kernel.org/index.php/Top-Down_Analysis
->
-> > > > Any way to get them to redirect to the correct page?
->
-> > > We can use web.archive.org as of September 30th of last month.
->
-> > > Intel PT Link:
-> > > https://web.archive.org/web/20240930185823/https://perf.wiki.kernel.o=
-rg/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace
->
-> > > Top-Down_Analysis Link:
-> > > https://web.archive.org/web/20240930164757/https://perf.wiki.kernel.o=
-rg/index.php/Top-Down_Analysis
->
-> > The corresponding pages in the new site are:
->
-> >  https://perfwiki.github.io/main/perf-tools-support-for-intel-processor=
--trace/
->
-> >  https://perfwiki.github.io/main/top-down-analysis/
->
-> It is unfortunate that we can't have some sort of mapping from the old
-> URLs to the new ones, I can imagine other sites having links that now
-> will get broken :-\
+On Wed, 23 Oct 2024 15:22:35 +0200
+Jens Remus <jremus@linux.ibm.com> wrote:
 
-Are there particular pages you think will get broken? When I follow
-old links I get the "main" page and it has links to the intel PT and
-other pages on the left. Perhaps 1 more mouse click is necessary, and
-we need to make sure it is easy to get to the popular old pages from
-the main page. I agree it isn't ideal but I'm not sure we can do
-better. It isn't totally broken, which the old wiki login system had
-become - so this is an improvement for me as I can at least edit
-pages.
+> We are looking forward to implement support for unwinding of user space
+> using SFrame in kernel/perf on s390. One major concern is that your x86
+> implementation currently relies on a fallback to unwinding using frame
+> pointer. On s390 unwinding using frame pointer is unsupported, because
+> of lack of proper s390x ABI [1] specification and compiler support. In
+> theory there would be a s390-specific alternative of unwinding using
+> backchain (compiler option -mbackchain), but this has limitations and
+> there is currently no distribution where user space is built with
+> backchain.
+> 
+> How much of an issue would it be if s390 could not provide an unwinding
+> fallback implementation? Do you see the possibility to get away without?
 
-Thanks,
-Ian
+Yes. Even with x86, there's no guarantee that the applications will
+have frame pointers available. Basically it just returns a stack frame
+of one (the IP of where user space entered the kernel).
+
+> 
+> For s390 support of unwinding using SFrame we would need to make a few
+> changes to your generic unwinding framework in the kernel:
+> 
+> - Support for architectures that do not define CFA == SP at callsite:
+>    On s390 the CFA is defined as SP at callsite +160. The stack pointer
+>    (SP) therefore unwinds as SP = CFA - 160. For that we would introduce
+>    e.g. a sp_val_off field (SP value offset from CFA) in struct
+>    user_unwind_frame that would default to 0 on all architectures except
+>    s390.
+> 
+> - Support for architectures where RA is not necessarily saved on stack:
+>    On s390 the return address (RA) is not saved (on stack) at function
+>    entry. In leaf functions it is not necessarily saved at all.
+> 
+> - Support for architectures were RA/FP are saved in registers in leaf
+>    functions:
+>    On s390 the frame pointer (FP) and return address (RA) registers can
+>    be saved in other registers when in leaf functions. In the SFrame
+>    format we would encode the DWARF register number as offset using the
+>    least-significant bit as indication: offset = (regnum << 1) | 1.
+>    Therefore we would need to extend your generic unwinding framework to
+>    support FP and RA to be restored from registers.
+> 
+> [1]: s390x ELF ABI supplement,
+>       https://github.com/IBM/s390x-abi/releases
+
+Note that Indu (who's on the Cc and is also the author of sframes) gave
+a talk at GNU Cauldron about s390 support. I'm assuming that her new
+sframe specification will cover all of this. Then we will have to
+implement it.
+
+-- Steve
+
