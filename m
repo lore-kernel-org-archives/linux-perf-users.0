@@ -1,175 +1,160 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A4A189916
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Oct 2024 07:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648281A071C
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Oct 2024 07:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729753683; cv=none; b=SxqK4RRuBWVNqXnutqGop5yo63XhNTgL+ofuG6q9vOSElBqR/ovEuPpHQjbrULWesu1H05LTtFIc7oraUhd2yvNpozMOFSRWGMuXCQLV6eCR7u7B31Jp7Ulnkg39WBJyqjfRq3AD349HfZb+gY/9aYMdr/2KtLvCZHOG4cXqtiA=
+	t=1729755211; cv=none; b=EfZdpXfEnY0Iu025CRQkmDl2mm96VCQf7VnImPVhvnX5cVBCpyOupsDAWUhHSAo7k3ssy2ej6mEV3KeFioZ8Ppa6UICZzJbu9rW6qNuqzqjqZDW+bkOeCerBpWRvStM9xlunuddqYbWKqNoqbVhclJlzZ0r9ND8mDlx7I/Cmwd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729753683; c=relaxed/simple;
-	bh=NauFo3WBlImoLtFsJOMl+FLWJ0VfI6WpEaNhQHEaHS4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qdpPlxHo1jTx1tGh7b+wSF2mIE/ERbbsPqJYhIXe6I14IDWDCPY5UbL4Zk68F+Azny46dWTR0fhO9NIVCsVutl0g1gyQPitjbfkBvWS8XuRLDApaAuSBmyFW/lK3HekvRDTG8G2xJKdvDfH6KIlC0rSPSVGZ8N4IZTvST9PrxSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YHUsoMRO; arc=none smtp.client-ip=209.85.214.172
+	s=arc-20240116; t=1729755211; c=relaxed/simple;
+	bh=OQkhUlmEEqbXpB+pBzdQUwbOmBl0iJzWCygIQYaTCg8=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=aIaa6XdmuqOc25j8MT7xaWggfufGkMYuN9ouQQrv7kN5K/tL30zsv1gG75H3JgCW+teCPZZ8tETcFiFltQ12Fopn5KlIdrD82CqBbmL/MsnuyJLiBrycemM0/W3KdXoPT1uluTtj7ng/S4Y9+4wNz9ED7nzjI8ifYt7Ap+Fu4Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FdDMa56r; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YHUsoMRO"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-20c8ac50b79so48495ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Oct 2024 00:08:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FdDMa56r"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e2946a143efso902460276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Oct 2024 00:33:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729753680; x=1730358480; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ufgf6SU5y6MU1sS4oN/MrtWQ1EZH9od+Vif+VJ4QaT8=;
-        b=YHUsoMROAvkphczO7F6lZ1zE3Vdvb74DIHyHZCkILuyW19FmO7dFgzztk62hBnmwEY
-         nxhbMNsHqOgIFVVCn3/okKxlMSoSGhR98xTodKXelbnLW59rkcEbq7DtGLE4pDWthPOy
-         1Srhipz1A/useqw7qrUr5UQFWOyvXfp0a8CJ9suOBfv9mggJXx1ic0gkOzKuY572g5aG
-         KjFBaSCw1boMr54xPw9qPIiNA77bNqp8XH6xbaB1wgpL8YWpuQOsLaur6X0TYC7UhJRv
-         ctOFnzR4j3PiQn4/59Mf0QbXdLLVP5nS3t7qFtAUYqt5bU8JqHtDPtAymngtQmEYLCtR
-         g+ZQ==
+        d=google.com; s=20230601; t=1729755208; x=1730360008; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=M77V5JZaZYSeYCOYRB0a7mZE3uzLmx3YYpmuM6s/PP8=;
+        b=FdDMa56riLvMPtuOZPsB8qh8J/pyyPbaLTuhf16mejP8FkrdNa5erNeXm821kIbmwP
+         cFKtBMTE1esxJcOyOQwi+yBqSg6pDJ71a+CYWTRfr7xsMAWEgKpC6OIRbSr5LqvaiLuB
+         E4Dwi/LUbpHFVKVMH6PVWi36VoFyPxF2A1p8y3x1YZuCRBgDmwgyW1eeRThMTd9Tw5Bi
+         /xpFbxKnFf7i1AfOnZ8xfuOqgoCH92gksiClqSrUMDZnEFzk+weloJFTagy7IWSZkldy
+         576UMzscSHrh8sWAHfv7oI5b5URH5A2UQ6FBBt4t4hSzFMjHxUVvj/VtKeLT6Lc7gxyR
+         MT6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729753680; x=1730358480;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ufgf6SU5y6MU1sS4oN/MrtWQ1EZH9od+Vif+VJ4QaT8=;
-        b=lt6i+IreaoS9nLqVrBwA+82wHT7SPRaXAjyqtaDBdPWrOo2KHcbQeTUKN0p7GTP7Wb
-         PTIBKfzDelds9GZgmix6mieZRomvHf8cc9au0io4RH3bdX9upJkJSntE5kNkJaP3XD5Y
-         b/Er4m11c3v2r3AkoLk38b2QsSAuzGyFie3Fq2JKh5Kgx0YgXsRCpiVjvkQw93aL0Lw+
-         GnxLBbvRH/X+IrZ4avq0t+LjdiLRq5BNVaHJQyj0hSYgMIx/AqW4SW7b+dhZ3u74kBmo
-         qydZQ/t3rHQWUV9RxNUqoLz06M1IcaEYMm77dDihDuLe2aH8SajRBHnrrHn+1JPs4WJM
-         PVgg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/Z9JD+2Dab3QWcz0NOMLy5Ef76XolHotKRRneA2TMH2SIgw+bm/gGwHIz6PozE4P33mKkZ8UZtSU42bfOQbxR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzShJ8tPHguOKsaLiOruTPHKmOufvEB3t1a04UcUu8eshGylFNg
-	pyMStlRn/iDDlL3nBkmrZmiqS85gO0+f/NQGJF/noebxoLB8b6gqlemPXaMjps3aZK17lGznKfJ
-	plgkBxZfVct4y8Bzi7+f5ZgX9Fs5CzlbnM8aK
-X-Google-Smtp-Source: AGHT+IFe5aNvZD97KruIlUL4kGgN0v01ZzrWZ8AcP0Ivwbbhf/A67Fw0cHOyj6OyvXujk4w9nmI9nc7qoYmhvbKLlw0=
-X-Received: by 2002:a17:902:e543:b0:20b:a6f5:2770 with SMTP id
- d9443c01a7336-20fb5f2ee73mr2079375ad.6.1729753680197; Thu, 24 Oct 2024
- 00:08:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729755208; x=1730360008;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=M77V5JZaZYSeYCOYRB0a7mZE3uzLmx3YYpmuM6s/PP8=;
+        b=DC4M5lBV2/6G5OZVN9hwj2KfhKUK971dYSfI8+BYqdWz/APhRC6eOUR81UKdTv7UBG
+         vgr0t/o9Jz5dyGLwN2nb7vKfh4Crh9dM1id9MdOtk6E6/8MeAes62USeAztvBggCORD5
+         kl2dwkL5N72q/I+YdECw38ip5ERAnXoXq8TbsdcviVGDK8hR8/9QTnKi53OrD0j/C4E1
+         yWRWJfhr5Q4iY9qH97nKngZTcWqa5W9kmFqC1GEZmIbZKKpHjhACLitcsGGKELjtrkif
+         pJ5lTgTCmb2mh3GmUC+J5nD6JBoq6Qgh0vnzO+KP0UaRnZbrejLvk20Ak3SkeYk81A8E
+         qRfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYG1BHd5fIplsR8XZ7kAv914uthaLh6awv4K+i5+H+t/+jMz7OA7pp0XaRvTuPJSY/8AVKJzp7B7ft0w9cR3BB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1p9pPaZE2t7s1w055COaNK3Rvv1qEtO/0eE7cVwIZ3XUcSqcV
+	q9RYdBRNxH3xt6AHZhBhCD1PIJlyE0+m4/rjmfHB2LY6nLxTqKcRpsEaXM1TAv2aQvQ1TNodUKi
+	y58jeUg==
+X-Google-Smtp-Source: AGHT+IFX2iXZND5ZNv6DTaf/WGNs9vqFP3Y9OJNvW5URba/OF+Oua1CDf+FnSnTQOsXtRULyO26E0vGPEL9z
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:2391:e0be:5394:f85d])
+ (user=irogers job=sendgmr) by 2002:a05:6902:52b:b0:e2e:2c2e:277b with SMTP id
+ 3f1490d57ef6-e2eb86afea8mr11407276.3.1729755208334; Thu, 24 Oct 2024 00:33:28
+ -0700 (PDT)
+Date: Thu, 24 Oct 2024 00:33:14 -0700
+Message-Id: <20241024073324.1513433-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241022180623.463131-1-irogers@google.com> <Zxm5w6wXLxpbERZx@google.com>
-In-Reply-To: <Zxm5w6wXLxpbERZx@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
+Subject: [PATCH v4 00/10] Run tests in parallel showing number of tests running
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 24 Oct 2024 00:07:46 -0700
-Message-ID: <CAP-5=fXfyd9b7Ns-SL5F+iffc7oy4NFHBsT3oj3CRMbBa1QCfg@mail.gmail.com>
-Subject: Re: [PATCH v6 0/5] Hwmon PMUs
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>, James Clark <james.clark@linaro.org>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Howard Chu <howardchu95@gmail.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Changbin Du <changbin.du@huawei.com>, 
-	Ze Gao <zegao2021@gmail.com>, Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
+	Michael Petlan <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Ilya Leoshkevich <iii@linux.ibm.com>, Colin Ian King <colin.i.king@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 23, 2024 at 8:06=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hi Ian,
->
-> On Tue, Oct 22, 2024 at 11:06:18AM -0700, Ian Rogers wrote:
-> > Following the convention of the tool PMU, create a hwmon PMU that
-> > exposes hwmon data for reading. For example, the following shows
-> > reading the CPU temperature and 2 fan speeds alongside the uncore
-> > frequency:
-> > ```
-> > $ perf stat -e temp_cpu,fan1,hwmon_thinkpad/fan2/,tool/num_cpus_online/=
- -M UNCORE_FREQ -I 1000
-> >      1.001153138              52.00 'C   temp_cpu
-> >      1.001153138              2,588 rpm  fan1
-> >      1.001153138              2,482 rpm  hwmon_thinkpad/fan2/
-> >      1.001153138                  8      tool/num_cpus_online/
-> >      1.001153138      1,077,101,397      UNC_CLOCK.SOCKET              =
-   #     1.08 UNCORE_FREQ
-> >      1.001153138      1,012,773,595      duration_time
-> > ...
-> > ```
-> >
-> > Additional data on the hwmon events is in perf list:
-> > ```
-> > $ perf list
-> > ...
-> > hwmon:
-> > ...
-> >   temp_core_0 OR temp2
-> >        [Temperature in unit coretemp named Core 0. crit=3D100'C,max=3D1=
-00'C crit_alarm=3D0'C. Unit:
-> >         hwmon_coretemp]
-> > ...
-> > ```
-> >
-> > v6: Add string.h #include for issue reported by kernel test robot.
-> > v5: Fix asan issue in parse_hwmon_filename caught by a TMA metric.
-> > v4: Drop merged patches 1 to 10. Separate adding the hwmon_pmu from
-> >     the update to perf_pmu to use it. Try to make source of literal
-> >     strings clearer via named #defines. Fix a number of GCC warnings.
-> > v3: Rebase, add Namhyung's acked-by to patches 1 to 10.
-> > v2: Address Namhyung's review feedback. Rebase dropping 4 patches
-> >     applied by Arnaldo, fix build breakage reported by Arnaldo.
-> >
-> > Ian Rogers (5):
-> >   tools api io: Ensure line_len_out is always initialized
-> >   perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs
-> >   perf pmu: Add calls enabling the hwmon_pmu
-> >   perf test: Add hwmon "PMU" test
-> >   perf docs: Document tool and hwmon events
->
-> I think the patch 2 can be easily splitted into core and other parts
-> like dealing with aliases and units.  I believe it'd be helpful for
-> others (like me) to understand how it works.
->
-> Please take a look at 'perf/hwmon-pmu' branch in:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+Avoid waitpid so that stdout/stderr aren't destroyed prior to wanting
+to read them for display. When running on a color terminal, display
+the number of running tests (1 if sequential). To avoid previous
+flicker, only delete and refresh the display line when it changes. An
+earlier version of this code is here:
+https://lore.kernel.org/lkml/20240701044236.475098-1-irogers@google.com/
 
-Thanks Namhyung but I'm not really seeing this making anything simpler
-and I can see significant new bugs. Your new patch:
-https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git/com=
-mit/?h=3Dperf/hwmon-pmu&id=3D85c78b5bf71fb3e67ae815f7b2d044648fa08391
-Has taken about 40% out of patch 2, but done so by splitting function
-declarations from their definitions, enum declarations from any use,
-etc. It also adds in code like:
+Add a signal handler for perf tests so that unexpected signals are
+displayed and test clean up is possible.
 
-snprintf(buf, sizeof(buf), "%s_input", evsel->name);
+In perf test add an "exclusive" flag that causes a test to be run with
+no other test. Set this flag manually for C tests and via a
+"(exclusive)" in the test description for shell tests. Add the flag to
+shell tests that may fail when run with other tests.
 
-but this would be a strange thing to do. The evsel->name is rewritten
-by fallback logic, so cycles may become cycles:u if kernel profiling
-is restricted. This is why we have metric-id in the evsel as we cannot
-rely on the evsel->name not mutating when looking up events for the
-sake of metrics. Using the name as part of a sysfs filename lookup
-doesn't make sense to me as now the evsel fallback logic can break a
-hwmon event. In the original patch the code was:
+Change the perf test loop to run in two passes. For parallel
+execution, the first pass runs all tests that can be run in parallel
+then the 2nd runs remaining tests sequentially. This causes the
+"exclusive" tests to be run last and with test numbers moderately out
+of alignment.
 
-snprintf(buf, sizeof(buf), "%s%d_input", hwmon_type_strs[key.type], key.num=
-);
+Change the default to be to run tests in parallel. Running tests in
+parallel brings the execution time down to less than half.
 
-where those two values are constants and key.type and key.num both
-values embedded in the config value the evsel fallback logic won't
-change. But bringing in the code that does that basically brings in
-all of the rest of patch 2.
+v4: Add patch to sort exclusive tests last, this allows for increasing
+    test numbers as requested by Namhyung.
 
-So the patch is adding a PMU that looks broken, so rather than
-simplifying things it just creates a broken intermediate state and
-should that be fixed for the benefit of bisects?
-It also complicates understanding as the declarations of functions and
-enums have kernel-doc, but now the definitions of enums and functions
-are split apart. For me, to understand the code I'd want to squash the
-patches back together again so I could see a declaration with its
-definition.
+v3: Mark additional shell tests as "(exclusive)" to avoid issues with
+    shared resources suggested by Namhyung. Add dependent signal
+    handler change so that kill/ctrl-C don't leave lots of processes,
+    previously sent here:
+    https://lore.kernel.org/lkml/20241017052137.225514-1-irogers@google.com/
 
-Thanks,
-Ian
+v2: Fix inaccurate remaining counts when running specific
+    tests. Rename "remaining" to "active" to better reflect the
+    testing behavior. Move the exclusive flag to test cases and not
+    entire suites. Add more "(exclusive)" flags to test as
+    suggested-by James Clark. Remove "(exclusive)" flag from test
+    descriptions to keep the command line output more concise. Add
+    James Clark's tested-by.
+
+Ian Rogers (10):
+  tools subcmd: Add non-waitpid check_if_command_finished()
+  perf test: Display number of active running tests
+  perf test: Reduce scope of parallel variable
+  perf test: Avoid list test blocking on writing to stdout
+  perf test: Tag parallel failing shell tests with "(exclusive)"
+  perf test: Add a signal handler around running a test
+  perf test: Run parallel tests in two passes
+  perf test: Make parallel testing the default
+  perf test: Add a signal handler to kill forked child processes
+  perf test: Sort tests placing exclusive tests last
+
+ tools/lib/subcmd/run-command.c                |  33 ++
+ tools/perf/tests/builtin-test.c               | 405 ++++++++++++------
+ .../tests/shell/coresight/asm_pure_loop.sh    |   2 +-
+ .../shell/coresight/memcpy_thread_16k_10.sh   |   2 +-
+ .../coresight/thread_loop_check_tid_10.sh     |   2 +-
+ .../coresight/thread_loop_check_tid_2.sh      |   2 +-
+ .../shell/coresight/unroll_loop_thread_10.sh  |   2 +-
+ tools/perf/tests/shell/list.sh                |   5 +-
+ .../tests/shell/perftool-testsuite_report.sh  |   2 +-
+ tools/perf/tests/shell/probe_vfs_getname.sh   |   2 +-
+ .../shell/record+script_probe_vfs_getname.sh  |   2 +-
+ tools/perf/tests/shell/record.sh              |   2 +-
+ tools/perf/tests/shell/record_lbr.sh          |   2 +-
+ tools/perf/tests/shell/record_offcpu.sh       |   2 +-
+ tools/perf/tests/shell/stat_all_pmu.sh        |   2 +-
+ tools/perf/tests/shell/stat_bpf_counters.sh   |   2 +-
+ tools/perf/tests/shell/test_arm_coresight.sh  |   2 +-
+ .../tests/shell/test_arm_coresight_disasm.sh  |   2 +-
+ tools/perf/tests/shell/test_arm_spe.sh        |   2 +-
+ tools/perf/tests/shell/test_data_symbol.sh    |   2 +-
+ tools/perf/tests/shell/test_intel_pt.sh       |   2 +-
+ .../perf/tests/shell/test_stat_intel_tpebs.sh |   2 +-
+ .../tests/shell/trace+probe_vfs_getname.sh    |   2 +-
+ tools/perf/tests/task-exit.c                  |   9 +-
+ tools/perf/tests/tests-scripts.c              |   7 +-
+ tools/perf/tests/tests.h                      |   9 +
+ tools/perf/util/color.h                       |   1 +
+ 27 files changed, 365 insertions(+), 144 deletions(-)
+
+-- 
+2.47.0.163.g1226f6d8fa-goog
+
