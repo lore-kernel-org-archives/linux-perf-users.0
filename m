@@ -1,182 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB781DD0D9;
-	Thu, 24 Oct 2024 16:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC241FBF58;
+	Thu, 24 Oct 2024 17:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729788060; cv=none; b=JC31GvRFx4QCpJzcTvqG9pRH8p+u5fUc7dJL21bovgVlIkFql83RoWJ3V/BA1HlRB0YjfZnssWbAK/45rBdPzkXI5v+V32PW1YmfLmrGXqTCxjCIt+jO7be3iQIso+kuLOybIlX8w8mlNUKwecNjft+OrOwlNGV/ersbnvhNq4o=
+	t=1729791530; cv=none; b=IqT22sQdJkhlMYbQC6tNpiiZMg4LRQHIP8eszt8qxnqO5k1EAubNPZFNNjGUVAiNHU1+nT4/PI1L0WvHgJZcp5mQ8bSzxHTb3ji34/9zRitCkozi1Yl2nmlYFTgjd/Ea1JFamQd2FkISvqz1y3leE0VIfAboHfCuOqquqktj9Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729788060; c=relaxed/simple;
-	bh=faHVFb2xb/Fc6TEDHZCcyQQGgQulULSTV8l2eFgj3SU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cPRyPoAlZ5eT8ZLKKph2pjmyjFO1opXXqPvs/z8gU86LjYfWswIi0t0NbJk0tIBleRXj6o5mA/FyYrRaZBvbaj9MKnJXY3TLZRwq0XuxSuS5COOlB/WO/GKHi71+oa9vWS9YXzL4NNfRrM69KoPHIadQiU94J13QepiUPsUmNjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJyf4dmA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729791530; c=relaxed/simple;
+	bh=pINhcv0N6nz/VfV5Jhpd2PDP/ExPppcDqdNC675LxOA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qIlnuc0n/5Sk8p5f9KL4l+eEHXO7PtdqBNjkWKlx6YZBCl5C3hAsAlE4Bw7CZUijAiIKZfF8opl8Pcn/DgDaW++262oAyAKE6gTvEf3L003+UByDAkYCxEyl+CuITzGHXaSG/WOafTlrGmRkHc9n0BbPjt7eb/+V1dHALEekEOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QPy0JSZl; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJyf4dmA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 997DAC4CEC7;
-	Thu, 24 Oct 2024 16:40:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729788060;
-	bh=faHVFb2xb/Fc6TEDHZCcyQQGgQulULSTV8l2eFgj3SU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RJyf4dmAOhT2IppasgAgSZKB7nEsa29a04NxE+RzCtBGVtveugc8v5wPoJCW1ancA
-	 Br5fZEJmp4LPvh7CBKvW680FH8kCjHZ3tRugN1qzzuawsLE7/3WjmxWEcHGv7mfwMn
-	 17INaw9ZBylP2r0sJ31VsI9Uc+bppkEmUgdIVOs/gRlvE2vKmjuuPtC2kGJGCCUJmc
-	 cWl4EesYa0sxJxG9rVcFJdTxs4SD/6y/YBslGJp2ujgeJrSw1Or34gd/u5ElOCpRXN
-	 wXdP6Bmpk7Pe2LtzroFeSWxoWxOmDaq3Py/4GgQ1Ert9BTXes2XwiJvnQNoQCsyxGZ
-	 G+ljtm0HU5g9Q==
-Date: Thu, 24 Oct 2024 09:40:57 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QPy0JSZl"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a9aa8895facso175828066b.2;
+        Thu, 24 Oct 2024 10:38:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729791526; x=1730396326; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yYax1c4EcHPuvhMblqzST6JvEaLizq8jVu6/eC35yLo=;
+        b=QPy0JSZlYrDqQcNSKQ1Ttwf+1A2a2svMJu22TfKA9s+Jc+44PBuad3+V9n9UuwlFCE
+         oha2aORjAP0kp1CqckOq7w+BS5ojZZId5x2fraoGmMPLdMvrkkrb+osNHs3lkR2kTT6J
+         +fC/qDxMBsUpJOYmVu45wnN+gl5QwZjPDNWNneQVUnQpM9mDrvx2qA/m+FBTbWyqtVkA
+         17taZ8uX4V6i0JTzvrA3+d5+3UcUF2iEYNw+udf/OVvfllqTQUhQEnpoIhdo1r5E1vxc
+         T2vBEpF2FTD0G+E1bTeJnwEKCDvgXRuuLPhvWv+sUnKO7bBmuxqYbcEOGlp7CyG0183X
+         83KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729791526; x=1730396326;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yYax1c4EcHPuvhMblqzST6JvEaLizq8jVu6/eC35yLo=;
+        b=mO/HB/mZpFz0N1eFHc8skiK9TNW0g+0gMy46WKy/4m9SDdBD7tqnjk8XPv9BZccTic
+         Vb0qQDVEQFCjpW/ifMZzd/b37W1n0rNEcQTjlLqyDSlPr1OPfQze/OLb6pC7pWoaq7ke
+         JQmEaqsA/0IQ6LmqJ5xURnZZNQJjHDCK+xlH2LSkZGoYQ3XvypiHiiiUpHFLhhMog6Mq
+         MaftCAMLDY/5IzlpQlUb1gyTFvAEM8FK5xgTM45ahBK9qTLoD8xueATVI0Knri+bDJ3O
+         gy1kZHivDnrCfndJJLtTgMYGCOziJKBUVp7Px0d6xsoFO4zPuYxPoFTdmJQSv6i1dy9u
+         eeTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUqCLdAqd2H6w8VzQ48a2Shf63mBtk5JWtZbwHLX7uOYzsVoWfP4xUhpcCs6uWug3MTYSHcsckkCw+LFwSvd3+1/25@vger.kernel.org, AJvYcCV8OHI3SKkFxvoVOSmmFeA33JsVf5dCglQQWvwxShKIP9b0Vtk3L0eTO/R/JPTFg74SYi4BW3nYbfURhVWHXu5xvg==@vger.kernel.org, AJvYcCW1RSCtGDRTj81Oycbotg4A3amotkSPZIc3hHMgNu5bLE6AD7jZE3Oc+QqEvmxhYNMop5M=@vger.kernel.org, AJvYcCWuWm0nrMbpVaJHv/pfbGlH6R1vfQC34DA8Bb29WNw4q+5s815PEpuBHzQ1olOmdM7kBSQQ3MSJM/zHuz+l@vger.kernel.org
+X-Gm-Message-State: AOJu0YznULrke/Adyr3tlzd3Lpxk/6S06EKCtLwogS3wfck+WaLoXCsy
+	M9LbrZlxPQZ9kYoGj5VgeNfGWtK2hlrq1kQ1EEAGW9dTFtaK++jX
+X-Google-Smtp-Source: AGHT+IGQijkEwwhyn+S+mnlYVM5n4XrYCdRooz1oxvJslidQBkR9XRDm1xeUlhBy5dOaYPMf48xVKQ==
+X-Received: by 2002:a17:907:7b85:b0:a99:ffdb:6fef with SMTP id a640c23a62f3a-a9ad2814065mr285615766b.46.1729791525922;
+        Thu, 24 Oct 2024 10:38:45 -0700 (PDT)
+Received: from krava (85-193-35-80.rib.o2.cz. [85.193.35.80])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a91598f11sm642982666b.193.2024.10.24.10.38.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2024 10:38:45 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 24 Oct 2024 19:38:43 +0200
+To: Peter Ziljstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>,
-	James Clark <james.clark@linaro.org>,
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Changbin Du <changbin.du@huawei.com>, Ze Gao <zegao2021@gmail.com>,
-	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v6 0/5] Hwmon PMUs
-Message-ID: <Zxp4mbzsFyO5nUh7@google.com>
-References: <20241022180623.463131-1-irogers@google.com>
- <Zxm5w6wXLxpbERZx@google.com>
- <CAP-5=fXfyd9b7Ns-SL5F+iffc7oy4NFHBsT3oj3CRMbBa1QCfg@mail.gmail.com>
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	bpf <bpf@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Liao Chang <liaochang1@huawei.com>,
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
+	Kernel Team <kernel-team@meta.com>
+Subject: Re: The state of uprobes work and logistics
+Message-ID: <ZxqGIyvIQMXCyApJ@krava>
+References: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
+ <CAEf4BzacLW14OmuW1nV4s=cMcSqcrSAO2Y_0XY3jT2efGNfmuw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXfyd9b7Ns-SL5F+iffc7oy4NFHBsT3oj3CRMbBa1QCfg@mail.gmail.com>
+In-Reply-To: <CAEf4BzacLW14OmuW1nV4s=cMcSqcrSAO2Y_0XY3jT2efGNfmuw@mail.gmail.com>
 
-On Thu, Oct 24, 2024 at 12:07:46AM -0700, Ian Rogers wrote:
-> On Wed, Oct 23, 2024 at 8:06 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi Ian,
-> >
-> > On Tue, Oct 22, 2024 at 11:06:18AM -0700, Ian Rogers wrote:
-> > > Following the convention of the tool PMU, create a hwmon PMU that
-> > > exposes hwmon data for reading. For example, the following shows
-> > > reading the CPU temperature and 2 fan speeds alongside the uncore
-> > > frequency:
-> > > ```
-> > > $ perf stat -e temp_cpu,fan1,hwmon_thinkpad/fan2/,tool/num_cpus_online/ -M UNCORE_FREQ -I 1000
-> > >      1.001153138              52.00 'C   temp_cpu
-> > >      1.001153138              2,588 rpm  fan1
-> > >      1.001153138              2,482 rpm  hwmon_thinkpad/fan2/
-> > >      1.001153138                  8      tool/num_cpus_online/
-> > >      1.001153138      1,077,101,397      UNC_CLOCK.SOCKET                 #     1.08 UNCORE_FREQ
-> > >      1.001153138      1,012,773,595      duration_time
-> > > ...
-> > > ```
-> > >
-> > > Additional data on the hwmon events is in perf list:
-> > > ```
-> > > $ perf list
-> > > ...
-> > > hwmon:
-> > > ...
-> > >   temp_core_0 OR temp2
-> > >        [Temperature in unit coretemp named Core 0. crit=100'C,max=100'C crit_alarm=0'C. Unit:
-> > >         hwmon_coretemp]
-> > > ...
-> > > ```
-> > >
-> > > v6: Add string.h #include for issue reported by kernel test robot.
-> > > v5: Fix asan issue in parse_hwmon_filename caught by a TMA metric.
-> > > v4: Drop merged patches 1 to 10. Separate adding the hwmon_pmu from
-> > >     the update to perf_pmu to use it. Try to make source of literal
-> > >     strings clearer via named #defines. Fix a number of GCC warnings.
-> > > v3: Rebase, add Namhyung's acked-by to patches 1 to 10.
-> > > v2: Address Namhyung's review feedback. Rebase dropping 4 patches
-> > >     applied by Arnaldo, fix build breakage reported by Arnaldo.
-> > >
-> > > Ian Rogers (5):
-> > >   tools api io: Ensure line_len_out is always initialized
-> > >   perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs
-> > >   perf pmu: Add calls enabling the hwmon_pmu
-> > >   perf test: Add hwmon "PMU" test
-> > >   perf docs: Document tool and hwmon events
-> >
-> > I think the patch 2 can be easily splitted into core and other parts
-> > like dealing with aliases and units.  I believe it'd be helpful for
-> > others (like me) to understand how it works.
-> >
-> > Please take a look at 'perf/hwmon-pmu' branch in:
-> >
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+On Wed, Oct 23, 2024 at 10:38:54AM -0700, Andrii Nakryiko wrote:
+
+SNIP
+
+> > Peter, do you mind applying those two and creating a stable tag for
+> > bpf-next to pull? We'll apply the rest of Jiri's series to
+> > bpf-next/master.
 > 
-> Thanks Namhyung but I'm not really seeing this making anything simpler
-> and I can see significant new bugs. Your new patch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git/commit/?h=perf/hwmon-pmu&id=85c78b5bf71fb3e67ae815f7b2d044648fa08391
-> Has taken about 40% out of patch 2, but done so by splitting function
-> declarations from their definitions, enum declarations from any use,
+> Jiri has reposted patches this time CC'ing Peter, heh :), it would be
+> great to apply those two patches and get a stable tag. This is
 
-Yeah, it's just because I was lazy and you can split header files too
-(and please do so).
+hi,
+any news on this one? I saw the patches in peterz/perf/core,
+but I think we still need the stable tag for bpf-next/master
 
-> etc. It also adds in code like:
-> 
-> snprintf(buf, sizeof(buf), "%s_input", evsel->name);
-> 
-> but this would be a strange thing to do. The evsel->name is rewritten
-> by fallback logic, so cycles may become cycles:u if kernel profiling
-
-I know it doesn't work but just want to highlight how it's supposed to
-work.  Eventually what we need is a correct file name.  In fact, I think
-it'd work if we can pass a correct event name probably like:
-
-  perf stat -e hwmon5/name=fan1/ true
-
-> is restricted. This is why we have metric-id in the evsel as we cannot
-> rely on the evsel->name not mutating when looking up events for the
-> sake of metrics. Using the name as part of a sysfs filename lookup
-> doesn't make sense to me as now the evsel fallback logic can break a
-> hwmon event. In the original patch the code was:
-
-The fallback logic is used only if the kernel returns an error.  Thus
-it'd be fine as long as it correctly finds the sysfs filename.  But it's
-not used in the final code and the change is a simple one-liner.
-
-> 
-> snprintf(buf, sizeof(buf), "%s%d_input", hwmon_type_strs[key.type], key.num);
-> 
-> where those two values are constants and key.type and key.num both
-> values embedded in the config value the evsel fallback logic won't
-> change. But bringing in the code that does that basically brings in
-> all of the rest of patch 2.
-
-Right, that's why I did that way.
-
-> 
-> So the patch is adding a PMU that looks broken, so rather than
-> simplifying things it just creates a broken intermediate state and
-> should that be fixed for the benefit of bisects?
-
-Actually it's not broken since it's not enabled yet. :)
+thanks,
+jirka
 
 
-> It also complicates understanding as the declarations of functions and
-> enums have kernel-doc, but now the definitions of enums and functions
-> are split apart. For me, to understand the code I'd want to squash the
-> patches back together again so I could see a declaration with its
-> definition.
+> blocking the landing of uprobe sessions in bpf-next and also my
+> remaining patches will be based on top of Jiri's uprobe changes, most
+> probably. Peter, please take another look, thank you.
 
-Yep, please move the declarations to the patch 3.
-
-Thanks,
-Namhyung
-
+SNIP
