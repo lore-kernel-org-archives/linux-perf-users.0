@@ -1,99 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB82F5FEED
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Oct 2024 16:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB781DD0D9;
+	Thu, 24 Oct 2024 16:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729787813; cv=none; b=p+enEQ8y2JJ2vWSDavi552j4d2AERgW3YL/LXor2NJhbaLyLVq+SI8kM9wsKpKotenJfJpm5KwLjmCLsjwk8zAcYrR8ArDyo/YHA40rptM8hoJcwTmUEoZhz8TJ63lEFQLYvkQw/w9RpL9/H3mF1X1ki0X/Kon695QYVSalsRBc=
+	t=1729788060; cv=none; b=JC31GvRFx4QCpJzcTvqG9pRH8p+u5fUc7dJL21bovgVlIkFql83RoWJ3V/BA1HlRB0YjfZnssWbAK/45rBdPzkXI5v+V32PW1YmfLmrGXqTCxjCIt+jO7be3iQIso+kuLOybIlX8w8mlNUKwecNjft+OrOwlNGV/ersbnvhNq4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729787813; c=relaxed/simple;
-	bh=SDCvV8aE6hdIf4M8P8Q+cOyK6lnxNUXKQPWiu6Jri7c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IkafS6Rjwi5YiSCRMXTKmFsZhU25PG18Y43Ae2zG5U5giFXJIOWMd6g3w6RhB8ARJEyKS35189QJeqA53RrEMI2OSAl20GlEZm3QHLslg1MTdSeB9XOwX2LNeEjXl6CtwSz2Cxt1XoVfbCe7MhmO8hOR/0cu3t0bBv9CvgOxR0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cz/KHKCA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1729788060; c=relaxed/simple;
+	bh=faHVFb2xb/Fc6TEDHZCcyQQGgQulULSTV8l2eFgj3SU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cPRyPoAlZ5eT8ZLKKph2pjmyjFO1opXXqPvs/z8gU86LjYfWswIi0t0NbJk0tIBleRXj6o5mA/FyYrRaZBvbaj9MKnJXY3TLZRwq0XuxSuS5COOlB/WO/GKHi71+oa9vWS9YXzL4NNfRrM69KoPHIadQiU94J13QepiUPsUmNjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJyf4dmA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cz/KHKCA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729787809;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=j+nv3eEwAGh0frH05xjtAGDDHesSMoZyNGwhnkoHhXw=;
-	b=cz/KHKCAR5SECMAgwwe9V4oJ9wC8nDSEWeEjs1NJSbemsSasZIJCedlTDriIQ5CjQ9iJpp
-	ccFvPqMWvoAs2rFojWIF1Lv26WzCNyOhgpYzrv+M8IGNrUkHcas+Nc3VWisSdtDMmI1E0a
-	USOD5VWgaUJPpps97Y04qMlryLvtOPk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-104-S_TOOROzPRuUIq22LfKHPg-1; Thu,
- 24 Oct 2024 12:36:46 -0400
-X-MC-Unique: S_TOOROzPRuUIq22LfKHPg-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B56F91955EA9;
-	Thu, 24 Oct 2024 16:36:43 +0000 (UTC)
-Received: from fedora.brq.redhat.com (unknown [10.43.17.17])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 075F1196BB7D;
-	Thu, 24 Oct 2024 16:36:40 +0000 (UTC)
-From: vmolnaro@redhat.com
-To: linux-perf-users@vger.kernel.org
-Cc: mpetlan@redhat.com,
-	kan.liang@linux.intel.com,
-	irogers@google.com,
-	acme@redhat.com,
-	ak@linux.intel.com,
-	alexander.shishkin@linux.intel.com,
-	namhyung@kernel.org
-Subject: perf sched timehist --state vs perf script
-Date: Thu, 24 Oct 2024 18:36:30 +0200
-Message-ID: <20241024163630.24882-1-vmolnaro@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJyf4dmA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 997DAC4CEC7;
+	Thu, 24 Oct 2024 16:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729788060;
+	bh=faHVFb2xb/Fc6TEDHZCcyQQGgQulULSTV8l2eFgj3SU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RJyf4dmAOhT2IppasgAgSZKB7nEsa29a04NxE+RzCtBGVtveugc8v5wPoJCW1ancA
+	 Br5fZEJmp4LPvh7CBKvW680FH8kCjHZ3tRugN1qzzuawsLE7/3WjmxWEcHGv7mfwMn
+	 17INaw9ZBylP2r0sJ31VsI9Uc+bppkEmUgdIVOs/gRlvE2vKmjuuPtC2kGJGCCUJmc
+	 cWl4EesYa0sxJxG9rVcFJdTxs4SD/6y/YBslGJp2ujgeJrSw1Or34gd/u5ElOCpRXN
+	 wXdP6Bmpk7Pe2LtzroFeSWxoWxOmDaq3Py/4GgQ1Ert9BTXes2XwiJvnQNoQCsyxGZ
+	 G+ljtm0HU5g9Q==
+Date: Thu, 24 Oct 2024 09:40:57 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Yoshihiro Furudera <fj5100bi@fujitsu.com>,
+	James Clark <james.clark@linaro.org>,
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Changbin Du <changbin.du@huawei.com>, Ze Gao <zegao2021@gmail.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v6 0/5] Hwmon PMUs
+Message-ID: <Zxp4mbzsFyO5nUh7@google.com>
+References: <20241022180623.463131-1-irogers@google.com>
+ <Zxm5w6wXLxpbERZx@google.com>
+ <CAP-5=fXfyd9b7Ns-SL5F+iffc7oy4NFHBsT3oj3CRMbBa1QCfg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <CAP-5=fXfyd9b7Ns-SL5F+iffc7oy4NFHBsT3oj3CRMbBa1QCfg@mail.gmail.com>
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
+On Thu, Oct 24, 2024 at 12:07:46AM -0700, Ian Rogers wrote:
+> On Wed, Oct 23, 2024 at 8:06 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hi Ian,
+> >
+> > On Tue, Oct 22, 2024 at 11:06:18AM -0700, Ian Rogers wrote:
+> > > Following the convention of the tool PMU, create a hwmon PMU that
+> > > exposes hwmon data for reading. For example, the following shows
+> > > reading the CPU temperature and 2 fan speeds alongside the uncore
+> > > frequency:
+> > > ```
+> > > $ perf stat -e temp_cpu,fan1,hwmon_thinkpad/fan2/,tool/num_cpus_online/ -M UNCORE_FREQ -I 1000
+> > >      1.001153138              52.00 'C   temp_cpu
+> > >      1.001153138              2,588 rpm  fan1
+> > >      1.001153138              2,482 rpm  hwmon_thinkpad/fan2/
+> > >      1.001153138                  8      tool/num_cpus_online/
+> > >      1.001153138      1,077,101,397      UNC_CLOCK.SOCKET                 #     1.08 UNCORE_FREQ
+> > >      1.001153138      1,012,773,595      duration_time
+> > > ...
+> > > ```
+> > >
+> > > Additional data on the hwmon events is in perf list:
+> > > ```
+> > > $ perf list
+> > > ...
+> > > hwmon:
+> > > ...
+> > >   temp_core_0 OR temp2
+> > >        [Temperature in unit coretemp named Core 0. crit=100'C,max=100'C crit_alarm=0'C. Unit:
+> > >         hwmon_coretemp]
+> > > ...
+> > > ```
+> > >
+> > > v6: Add string.h #include for issue reported by kernel test robot.
+> > > v5: Fix asan issue in parse_hwmon_filename caught by a TMA metric.
+> > > v4: Drop merged patches 1 to 10. Separate adding the hwmon_pmu from
+> > >     the update to perf_pmu to use it. Try to make source of literal
+> > >     strings clearer via named #defines. Fix a number of GCC warnings.
+> > > v3: Rebase, add Namhyung's acked-by to patches 1 to 10.
+> > > v2: Address Namhyung's review feedback. Rebase dropping 4 patches
+> > >     applied by Arnaldo, fix build breakage reported by Arnaldo.
+> > >
+> > > Ian Rogers (5):
+> > >   tools api io: Ensure line_len_out is always initialized
+> > >   perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs
+> > >   perf pmu: Add calls enabling the hwmon_pmu
+> > >   perf test: Add hwmon "PMU" test
+> > >   perf docs: Document tool and hwmon events
+> >
+> > I think the patch 2 can be easily splitted into core and other parts
+> > like dealing with aliases and units.  I believe it'd be helpful for
+> > others (like me) to understand how it works.
+> >
+> > Please take a look at 'perf/hwmon-pmu' branch in:
+> >
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> 
+> Thanks Namhyung but I'm not really seeing this making anything simpler
+> and I can see significant new bugs. Your new patch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git/commit/?h=perf/hwmon-pmu&id=85c78b5bf71fb3e67ae815f7b2d044648fa08391
+> Has taken about 40% out of patch 2, but done so by splitting function
+> declarations from their definitions, enum declarations from any use,
 
-Hello!
+Yeah, it's just because I was lazy and you can split header files too
+(and please do so).
 
-We encountered an issue with 'perf sched timehist --state' when
-we expected for a test case that the process of a workload would 
-eventually end in the dead state(marked by 'X') and be switched
-out. This can be seen also by using 'perf script':
+> etc. It also adds in code like:
+> 
+> snprintf(buf, sizeof(buf), "%s_input", evsel->name);
+> 
+> but this would be a strange thing to do. The evsel->name is rewritten
+> by fallback logic, so cycles may become cycles:u if kernel profiling
 
-    # perf sched record -a sleep 1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.167 MB perf.data (166 samples) ]
-    # perf script | grep sleep
-           sleep  151541 [000] 193461.410617: sched:sched_stat_runtime: comm=sleep pid=151541 runtime=3132275 [ns]
-           sleep  151541 [000] 193461.410624:       sched:sched_switch: sleep:151541 [120] S ==> swapper/0:0 [120]
-         swapper       0 [000] 193462.410688:       sched:sched_waking: comm=sleep pid=151541 prio=120 target_cpu=000
-         swapper       0 [000] 193462.410698:       sched:sched_switch: swapper/0:0 [120] R ==> sleep:151541 [120]
-         :151541  151541 [000] 193462.411100: sched:sched_stat_runtime: comm=sleep pid=151541 runtime=407210 [ns]
-         :151541  151541 [000] 193462.411107:       sched:sched_switch: sleep:151541 [120] X ==> swapper/0:0 [120]
+I know it doesn't work but just want to highlight how it's supposed to
+work.  Eventually what we need is a correct file name.  In fact, I think
+it'd work if we can pass a correct event name probably like:
 
-But for the 'perf sched timehist --state' the process is shown
-in the zombie state when it is being switched out:
+  perf stat -e hwmon5/name=fan1/ true
 
-    # perf sched timehist --state | grep 151541
-    Samples do not have callchains.
-      193461.410624 [0000]  sleep[151541]                       0.000      0.054      3.129      S 
-      193462.411107 [0000]  :151541[151541]                     0.000      0.000      0.408      Z 
+> is restricted. This is why we have metric-id in the evsel as we cannot
+> rely on the evsel->name not mutating when looking up events for the
+> sake of metrics. Using the name as part of a sysfs filename lookup
+> doesn't make sense to me as now the evsel fallback logic can break a
+> hwmon event. In the original patch the code was:
 
-Shouldn't both commands report the same result, or is there a reason
-why 'perf script' uses the dead state while 'perf sched' uses dead?
-It also seems that the 'perf sched' cannot read the name of the zombie
-process, but that can be a different issue.
+The fallback logic is used only if the kernel returns an error.  Thus
+it'd be fine as long as it correctly finds the sysfs filename.  But it's
+not used in the final code and the change is a simple one-liner.
+
+> 
+> snprintf(buf, sizeof(buf), "%s%d_input", hwmon_type_strs[key.type], key.num);
+> 
+> where those two values are constants and key.type and key.num both
+> values embedded in the config value the evsel fallback logic won't
+> change. But bringing in the code that does that basically brings in
+> all of the rest of patch 2.
+
+Right, that's why I did that way.
+
+> 
+> So the patch is adding a PMU that looks broken, so rather than
+> simplifying things it just creates a broken intermediate state and
+> should that be fixed for the benefit of bisects?
+
+Actually it's not broken since it's not enabled yet. :)
+
+
+> It also complicates understanding as the declarations of functions and
+> enums have kernel-doc, but now the definitions of enums and functions
+> are split apart. For me, to understand the code I'd want to squash the
+> patches back together again so I could see a declaration with its
+> definition.
+
+Yep, please move the declarations to the patch 3.
 
 Thanks,
-
-Veronika
+Namhyung
 
