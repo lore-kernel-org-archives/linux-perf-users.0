@@ -1,141 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4D0482EB;
-	Thu, 24 Oct 2024 03:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F187641E
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Oct 2024 05:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729739206; cv=none; b=Hm7W1s43v3sdqiyPrIgdByzVqFUHcmFboqc/EPaVXhLZFmtzbPFSqJz5gu/dbiSqXmnewb32yrzmGUksJdWLtxIFg/T0TN+RYYe7CQJnKGjQaPBCRcQXT4iETRv6BlilH6K972V6upZ1JHhmR7GlpASriVMWIYrihZTIdYj+H8U=
+	t=1729749527; cv=none; b=s8998kCCxe9Fj2BMi/RnrF4vMl/FDyK59hWkPDYOHhvEcFbCg067orcssl2Y7p7Wt05MbPjZO7vey0nLTkNIzV45kP+nSWf8scPSjC3Ujy4JgsFo37nvekS9u/rSs+/c9Dh9U/rULD9EUifmB9LvhGXpjGAG1DIQr5hY1cXiqus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729739206; c=relaxed/simple;
-	bh=idlAGLwFHth059G6pQJOOqh6gCScQHa8vkEmecsBQLY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sap7hBexI3JuuXSDB0QFo52K7S7BI0s+fUOjvmCXRz5pZ+t26RKiJPxKNFCqfSPFmIOosWY5EPuiAy+3Wmc104x9QjcP7+mG3d/o34zNL8q/be1JOIVrs+Nsxos6PpuV7o01NxDo83q0Esavy+/BdiJxz8M1AgkYJhQ/p8LQyr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2oHIB1O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729749527; c=relaxed/simple;
+	bh=RW9wc6yAUcLojMi4eaEK6hdnKqGecyiWcQVxGUZKE9g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nb5UhzovTtE50qqWzlBvj9biUw9CH02mA7wGGcwS1ep1E5R03zSM9o7MqRZANedPX2eEmBe4k/pKHeF1d28ooiJYflghiV/wQo/Mp8t59SMrBscvwGzh2zZiITXfnn4Gdcg9ezzS+wS4HOvSpWAvi/A1thDX2aqRTQZIlrv7uQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hCBFa01k; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2oHIB1O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF4CBC4CEC6;
-	Thu, 24 Oct 2024 03:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729739205;
-	bh=idlAGLwFHth059G6pQJOOqh6gCScQHa8vkEmecsBQLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y2oHIB1OVeN0kjMdZCOyV8quz5zRIv2RAF0/LszqlxEMpchNt3bnZcLZXujIYUttU
-	 EwNcZ3VC7c1cL/kapD56Re0wcd7qN0uUKrY6TSxALfmguZJdhqXVIyOMFAiUhs2ICP
-	 a1Kmpe/Sz7y1n+odpKbCYxvkaRM4tLKqpb1aIlpjZ+L73nnhK4rKdFJd4iJjbs2i1t
-	 +xG4gE9sas1wEM9kFh3CTHLuHf00zWfV3hhHwg6ATkZ3cjJTA0wRfD5T1lfQKwQB9a
-	 ASlaWuSOt+O+z5LYYFnjUL2h9AWJ9HhC0dwJyFY4gTfvKRrQgsdEhqlA3Agr6kK/kc
-	 3BmGh2ZR1DBOQ==
-Date: Wed, 23 Oct 2024 20:06:43 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>,
-	James Clark <james.clark@linaro.org>,
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Changbin Du <changbin.du@huawei.com>, Ze Gao <zegao2021@gmail.com>,
-	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v6 0/5]  Hwmon PMUs
-Message-ID: <Zxm5w6wXLxpbERZx@google.com>
-References: <20241022180623.463131-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hCBFa01k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729749525; x=1761285525;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RW9wc6yAUcLojMi4eaEK6hdnKqGecyiWcQVxGUZKE9g=;
+  b=hCBFa01kCAJC4MbezUOQEPUWgGROE9Bw8I5BmsT+hPBg9XKRseON5MMn
+   syHvIfGhQmZokoNYN/u/1sOds5K/A2q4kLceNVbSwadn5WW77V8UeDuPe
+   ugKFMJPdBD1lw1fDKFWaJcr9MgS+HGmUaa8h73dW2BxzyGX1P293wGBvp
+   5iVK5FW/9kBIAs81GPzTBjgdqbW8GHHWcGra1fU/pkYPaehIBwc4BE5qE
+   uwboT1JaoDJ0p8EVJ+JF8e4/iiTg5Fb+J8BcB5Z6ZGxi9+ZpVb8mmS7e/
+   3CxPuU+Zv3CU1DdrERMfKlfZ4HVQJgW+EradJ3e9jJduxRBL7l7J8JZ39
+   A==;
+X-CSE-ConnectionGUID: 8kW8VlYmTty4+oDI/YvyTA==
+X-CSE-MsgGUID: 1X9sujsmRYK8v1HsgW3OJA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11234"; a="54768252"
+X-IronPort-AV: E=Sophos;i="6.11,228,1725346800"; 
+   d="scan'208";a="54768252"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 22:58:44 -0700
+X-CSE-ConnectionGUID: XESGFCJLTb29PT8nQc9uqw==
+X-CSE-MsgGUID: 1J/rqPSQTaGXi9lIsYPnPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,228,1725346800"; 
+   d="scan'208";a="85610700"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.16.81])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 22:58:41 -0700
+Message-ID: <533a9e5e-b320-41d6-8d8a-223f69d719f5@intel.com>
+Date: Thu, 24 Oct 2024 08:58:36 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241022180623.463131-1-irogers@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Migrating from perf.wiki.kernel.org to RTD
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Yunseong Kim <yskelg@gmail.com>, linux-perf-users@vger.kernel.org,
+ Ian Rogers <irogers@google.com>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+References: <20241011-quiet-chowchow-of-temperance-d0e205@meerkat>
+ <CAP-5=fUz5CFEL8D1L+UATsNqs4MBb6rNeYtZ26+pFC4NgRYt6w@mail.gmail.com>
+ <20241011-uncovered-original-vole-cda87d@meerkat>
+ <20241015-warping-condor-of-storm-afa06f@meerkat>
+ <Zw8cN9daNBvCJd3u@google.com>
+ <CAP-5=fXsVXYkncR0rwxXvKp_f5dR40L9_x-qoLxwHXWMiyXh3g@mail.gmail.com>
+ <a0626ecb-cc64-4c6a-abf3-76868178234f@gmail.com>
+ <b1c1a76b-5094-4384-9304-360a6012e3ad@intel.com>
+ <b11407cf-8cfe-40ec-abe7-165122807e1d@gmail.com>
+ <ZxlwoN57PF_5YX0F@google.com> <Zxl5sduEDnoxEmd2@x1>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <Zxl5sduEDnoxEmd2@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Ian,
-
-On Tue, Oct 22, 2024 at 11:06:18AM -0700, Ian Rogers wrote:
-> Following the convention of the tool PMU, create a hwmon PMU that
-> exposes hwmon data for reading. For example, the following shows
-> reading the CPU temperature and 2 fan speeds alongside the uncore
-> frequency:
-> ```
-> $ perf stat -e temp_cpu,fan1,hwmon_thinkpad/fan2/,tool/num_cpus_online/ -M UNCORE_FREQ -I 1000
->      1.001153138              52.00 'C   temp_cpu
->      1.001153138              2,588 rpm  fan1
->      1.001153138              2,482 rpm  hwmon_thinkpad/fan2/
->      1.001153138                  8      tool/num_cpus_online/
->      1.001153138      1,077,101,397      UNC_CLOCK.SOCKET                 #     1.08 UNCORE_FREQ
->      1.001153138      1,012,773,595      duration_time
-> ...
-> ```
+On 24/10/24 01:33, Arnaldo Carvalho de Melo wrote:
+> On Wed, Oct 23, 2024 at 02:54:40PM -0700, Namhyung Kim wrote:
+>> On Thu, Oct 24, 2024 at 03:17:38AM +0900, Yunseong Kim wrote:
+>>> On 10/24/24 2:34 오전, Adrian Hunter wrote:
+>>>> On 20/10/24 07:49, Yunseong Kim wrote:
+>>>>> I would like to express my sincere gratitude to everyone for their help in the
+>>>>> official renewal of the perf wiki.
 > 
-> Additional data on the hwmon events is in perf list:
-> ```
-> $ perf list
-> ...
-> hwmon:
-> ...
->   temp_core_0 OR temp2
->        [Temperature in unit coretemp named Core 0. crit=100'C,max=100'C crit_alarm=0'C. Unit:
->         hwmon_coretemp]
-> ...
-> ```
+>>>>> Additionally, the reason I chose to use Markdown is that I wanted to actively
+>>>>> utilize its media features. For example, I wanted to embed videos,
+>>>>> presentation slide or display Mermaid diagrams directly on the page.
+>>>>> I thought these features would be welcomed by users who are new to perf tools.
 > 
-> v6: Add string.h #include for issue reported by kernel test robot.
-> v5: Fix asan issue in parse_hwmon_filename caught by a TMA metric.
-> v4: Drop merged patches 1 to 10. Separate adding the hwmon_pmu from
->     the update to perf_pmu to use it. Try to make source of literal
->     strings clearer via named #defines. Fix a number of GCC warnings.
-> v3: Rebase, add Namhyung's acked-by to patches 1 to 10.
-> v2: Address Namhyung's review feedback. Rebase dropping 4 patches
->     applied by Arnaldo, fix build breakage reported by Arnaldo.
+>>>>> On 10/19/24 8:47 오전, Ian Rogers wrote:
+>>>>>> On Tue, Oct 15, 2024 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>>>>>>> On Tue, Oct 15, 2024 at 02:25:02PM -0400, Konstantin Ryabitsev wrote:
+>>>>>>>> On Fri, Oct 11, 2024 at 06:39:09PM -0400, Konstantin Ryabitsev wrote:
+>>>>>>>>>> Yunseong created:
+>>>>>>>>>> https://perfwiki.github.io/main/
+>>>>>>>>>> Perhaps the solution here is to make perf.wiki.kernel.org a redirect
+>>>>>>>>>> to https://perfwiki.github.io/main/
 > 
-> Ian Rogers (5):
->   tools api io: Ensure line_len_out is always initialized
->   perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs
->   perf pmu: Add calls enabling the hwmon_pmu
->   perf test: Add hwmon "PMU" test
->   perf docs: Document tool and hwmon events
+>>>>>>>> To speed things along, and since the old perf wiki was near-unusable anyway,
+>>>>>>>> I went ahead and set the redirects from perf.wiki.kernel.org to
+>>>>>>>> perfwiki.github.io.
+> 
+>>>> Links to old pages end up at the main page.  For example:
+> 
+>>>> https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace
+>>>> https://perf.wiki.kernel.org/index.php/Top-Down_Analysis
+>  
+>>>> Any way to get them to redirect to the correct page?
+> 
+>>> We can use web.archive.org as of September 30th of last month.
 
-I think the patch 2 can be easily splitted into core and other parts
-like dealing with aliases and units.  I believe it'd be helpful for
-others (like me) to understand how it works.
-
-Please take a look at 'perf/hwmon-pmu' branch in:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-Thanks,
-Namhyung
+I would prefer the source.  Does anyone have that?
 
 > 
->  tools/lib/api/io.h                     |   1 +
->  tools/perf/Documentation/perf-list.txt |  15 +
->  tools/perf/tests/Build                 |   1 +
->  tools/perf/tests/builtin-test.c        |   1 +
->  tools/perf/tests/hwmon_pmu.c           | 243 ++++++++
->  tools/perf/tests/tests.h               |   1 +
->  tools/perf/util/Build                  |   1 +
->  tools/perf/util/evsel.c                |   9 +
->  tools/perf/util/hwmon_pmu.c            | 821 +++++++++++++++++++++++++
->  tools/perf/util/hwmon_pmu.h            | 154 +++++
->  tools/perf/util/pmu.c                  |  20 +
->  tools/perf/util/pmu.h                  |   2 +
->  tools/perf/util/pmus.c                 |   9 +
->  tools/perf/util/pmus.h                 |   3 +
->  14 files changed, 1281 insertions(+)
->  create mode 100644 tools/perf/tests/hwmon_pmu.c
->  create mode 100644 tools/perf/util/hwmon_pmu.c
->  create mode 100644 tools/perf/util/hwmon_pmu.h
+>>> Intel PT Link:
+>>> https://web.archive.org/web/20240930185823/https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace
 > 
-> -- 
-> 2.47.0.163.g1226f6d8fa-goog
+>>> Top-Down_Analysis Link:
+>>> https://web.archive.org/web/20240930164757/https://perf.wiki.kernel.org/index.php/Top-Down_Analysis
+>  
+>> The corresponding pages in the new site are:
+>  
+>>  https://perfwiki.github.io/main/perf-tools-support-for-intel-processor-trace/
+>  
+>>  https://perfwiki.github.io/main/top-down-analysis/
 > 
+> It is unfortunate that we can't have some sort of mapping from the old
+> URLs to the new ones, I can imagine other sites having links that now
+> will get broken :-\
+
+Why do we need mappings?  Just use the same page names and have the
+redirect keep the final part of the url.
+
+By the way, the new "wiki" doesn't seem to render "page not found"
+properly for non-existent pages:
+
+	https://perfwiki.github.io/main/not-a-page
+
