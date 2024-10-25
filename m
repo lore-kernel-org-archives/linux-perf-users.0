@@ -1,126 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540043D97A;
-	Fri, 25 Oct 2024 02:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEFD218C346;
+	Fri, 25 Oct 2024 06:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729824924; cv=none; b=qfjO1UUV5qpAuKQtgfhtN+8AtceAGU57Jgs2Q6EnoYkWkjiHL8FHNydAgaKWH7ulNhJIAoyKbFmh+VSTG3rMpqR2SKdNsw7ygCXrLGH+dxBWJnnLWqUUHyxjBUs9KlVkjiTVR836yIgHyfEi5/on+qNwHRKGhPmS93yDZBR+HDM=
+	t=1729837093; cv=none; b=gLGwTGt54u/+HbvyZPa4b3zKUZMWhBcvgc3J84txWICfn2OM5VcDzkXoz4AA2h5lssGV6pT+lxC5we53hUAMrsw4+0mVJCyyQiNg5jz37spLCggs8tzI1imiACzNJzxD3Q/14jPzKM8qofotjD8HZd2TjEZoxVSasPBPyCDlCmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729824924; c=relaxed/simple;
-	bh=ZVTrbUnLp8cvUUYzJaO7obUrGlncOA7TraEHwEycEJo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HD2Q5eOY/3EwooX9iPDYFVczpmEEVuDjmE3hg36Dxr7W1zceoVg50rLB5UH9JzkvsrdkgC4blt5lToAYb3vKi5s+gkvcJQaON/HZtAJwPXUlHU71GGdVKYsXXnbRM6YRr0Wor+aNSIYJBdjUWGovjvcYEaDlpy5bajYKNnOxUOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BsaoVDJU; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1729837093; c=relaxed/simple;
+	bh=2nyYr3pCSkfs9TcMjtrwxXmMYdE5WjKJFzBM7ud4rJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HXUrItNqLYiA3HlKQOFfjOzHgK9JnxXeG6UZlP9rAC0cVlGGIYIy2TygsKAzIIBcLyJKjefJ6nuWN5gktIrI0Mp9789tWJuYBichNh7m1QTXEEUNhso8JU/5ST/eGRnTJd284GyuxodRh/yGM9ssdd5yxi2uWid/yoFgZDQogTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XDUWc2F8; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BsaoVDJU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729824922; x=1761360922;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ZVTrbUnLp8cvUUYzJaO7obUrGlncOA7TraEHwEycEJo=;
-  b=BsaoVDJUlpkQAysDz44n+JGCsJzD0ZwMKko0M8jDMhsl0rK08oq5MheY
-   5gvgMPWtjLo/fQyX+Io3At6QCOxuCubS3ZjJ3T10MFRLd9iP2IaVPiL1k
-   O1hSNByOigWWIRa6BcBAnSL5pWqWndPTDbS9jUv52Xt0FpcLt3GsqbPQA
-   ltKBraSZz87Zs31E8i2L7do8uGHfHfioyrmRhmOBnGNB6afzOhxHMQzzi
-   /cb0PDjfOy9+ubf+A/B5AhkqHlSM0+RLOAu5559pudhmlE8lkUSqP3rcq
-   hfgpQk3PUeAYYUqcJHAjUygSrD89bievdujiTl1tZssWmtDFrE7ExHNJ0
-   g==;
-X-CSE-ConnectionGUID: 9wveYtqIQdC39GBG9xxrDA==
-X-CSE-MsgGUID: T38S9L4oRNSgjPtuTxdkmw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11235"; a="17113816"
-X-IronPort-AV: E=Sophos;i="6.11,231,1725346800"; 
-   d="scan'208";a="17113816"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2024 19:55:21 -0700
-X-CSE-ConnectionGUID: 25XcgmakTYeR8SuEy/3Ukw==
-X-CSE-MsgGUID: JHsRSBJQSsKtbdfFEymPjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,231,1725346800"; 
-   d="scan'208";a="81618759"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.125.240.3]) ([10.125.240.3])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2024 19:55:16 -0700
-Message-ID: <ce1cc916-7aff-499e-a5ae-6677aaada9b5@linux.intel.com>
-Date: Fri, 25 Oct 2024 10:55:13 +0800
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XDUWc2F8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=AYP4qbZ3o+CMsl4aAqLA3W1YHtZzQfPTOIWKI8N9y0c=;
+	b=XDUWc2F8rrXOpgPRMEQp3adLb+kRbAseHGod+iQCA1DIyxDlKmxPrE4KkePL2b
+	tqt9kTDPojO8z0dFMM/Ib0iB0dhoN+SovbCv7wbxlbHTPIRc4Qeyc2nK6ZbgqnKK
+	FrKtAh3MdeOPHfvK5nuhBwwhk7LCi+PXpn1+bGY1lrHpY=
+Received: from localhost (unknown [36.5.190.42])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgCXBFYLOBtntrOeBQ--.18141S2;
+	Fri, 25 Oct 2024 14:17:47 +0800 (CST)
+Date: Fri, 25 Oct 2024 14:17:47 +0800
+From: Qianqiang Liu <qianqiang.liu@163.com>
+To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/x86/intel/pt: Fix NULL pointer dereference in
+ pt_buffer_reset_markers
+Message-ID: <Zxs4C_oha56QcExV@mac.local>
+References: <20241001082757.111385-2-qianqiang.liu@163.com>
+ <87bjz9vjih.fsf@ubik.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 41/58] KVM: x86/pmu: Add support for PMU context
- switch at VM-exit/enter
-To: "Chen, Zide" <zide.chen@intel.com>, Mingwei Zhang <mizhang@google.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>,
- Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-42-mizhang@google.com>
- <748e89d0-b27f-49d0-9dba-d4f65503dcf0@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <748e89d0-b27f-49d0-9dba-d4f65503dcf0@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87bjz9vjih.fsf@ubik.fi.intel.com>
+X-CM-TRANSID:QCgvCgCXBFYLOBtntrOeBQ--.18141S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvj4RLa9-UUUUU
+X-CM-SenderInfo: xtld01pldqwhxolxqiywtou0bp/1tbiLxiDamcbNrUd8wAAsP
 
+> So no, not a bug. It might deserve a comment explaining the above logic,
+> so that more versions of this patch don't get generated from static
+> analyzers' reports.
 
-On 10/25/2024 3:57 AM, Chen, Zide wrote:
->
-> On 7/31/2024 9:58 PM, Mingwei Zhang wrote:
->> From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
->>
->> Add correct PMU context switch at VM_entry/exit boundary.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
->> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
->> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->> ---
->>  arch/x86/kvm/x86.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index dd6d2c334d90..70274c0da017 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -11050,6 +11050,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->>  		set_debugreg(0, 7);
->>  	}
->>  
->> +	if (is_passthrough_pmu_enabled(vcpu))
->> +		kvm_pmu_restore_pmu_context(vcpu);
-> Suggest to move is_passthrough_pmu_enabled() into the PMU restore API to
-> keep x86.c clean. It's up to PMU to decide in what scenarios it needs to
-> do context switch.
+Got it, thanks!
 
-Agree.
+-- 
+Best,
+Qianqiang Liu
 
-
->
->> +
->>  	guest_timing_enter_irqoff();
->>  
->>  	for (;;) {
->> @@ -11078,6 +11081,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->>  		++vcpu->stat.exits;
->>  	}
->>  
->> +	if (is_passthrough_pmu_enabled(vcpu))
->> +		kvm_pmu_save_pmu_context(vcpu);
-> ditto.
->
->>  	/*
->>  	 * Do this here before restoring debug registers on the host.  And
->>  	 * since we do this before handling the vmexit, a DR access vmexit
