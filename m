@@ -1,127 +1,80 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29ECC1D3593
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Oct 2024 09:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2592218A93F;
+	Fri, 25 Oct 2024 10:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729847025; cv=none; b=OjYr0VjHoNnVJbBthuHqjO8ZoO196M/u7QdAVOHwty8m36RyZhoKjSfndXWyy36lIzgROxKT/B8663VFpuWQ6D9VoRjFz21h7K1nRPUtLZvPXYAOvYOg2ARHMnpbTdrXt/MKNllveOiKD/xFjrxs1wuj8lktYJJIRDJSX3NS1LI=
+	t=1729850716; cv=none; b=eflID4UzrmyJFap/zI218pok7pzFMhE2lcgiGRLud/kmMNcTOo2Nn1m5T71QT5Z6DRACGEWR/XhZarceXgtn7vTf6nw1ak+MifSovUGyY9dYGAvyfyrcnI8isYlDs55h7sMUEACxKNfd9ZJH0WA9ZyqV2co+rrPv508OOAjuBxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729847025; c=relaxed/simple;
-	bh=fRipP0VupOjbutNPJpp1Ks0QKn1SzrbAH6lSGoJ3LW4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TprbuYeyQA5bJmJ/qBQ5AIfMx/HHlzBukkdYbg9B1+e0W6xhMMtACzSFRrjiVCXayYZAbq95s3EsbsTQdc37r2Gzt+z5eu3gZlZIGDq6HFMVK6UPN+KEtVHUoR6g6GNW0HPlM5WwnY801vkOip5rXVuzPHaGgSlBCcn4CjTYkos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ls8df0w3; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1729850716; c=relaxed/simple;
+	bh=5Rmgse8OJ9Svz+cStz1SqIUagwANKfQx5Aew6921C2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DOflMscL00MC4JzW8FivfO4KDEg3I5ow65Slax+CvBtKS9cpMhAwDLvpAx3VXWXqXR/qGoOKVjLd3+6uJCiMVz3nIt4ZNPMLmVd0pbr4HKmcGtkS2/AdHU5SCPc6fmzyG/FkSE6SB16FVcGnkAW/r3irR88SHwYxttTyrRzIx+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=saWduF+r; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ls8df0w3"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42f6bec84b5so18798545e9.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Oct 2024 02:03:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729847021; x=1730451821; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=01A1j94vmhd+ARl+zBAKJGbXXIGCTBMufeRwg2gBhf0=;
-        b=ls8df0w3vkAx4ZWEA0QMVgI6+n/J7x3tNpawaukf48n56nSO1vUc8/lSt66ulN2IF9
-         vuhwEd8fBJDKdoIVOtsJMJuGrtgTv/oinxYqrr5Ue6+ouOx6eqX65KW4KuTVnIf7Eo2E
-         /JfWnM5zoZ8jjCmJW4qu1RTybZbd1liENy/nGDnDF3vc6TdvJ77/cEl3aA+ZC88kZmkU
-         qaF7wS0agnubxy57NW07XAVT4LmghQxP6nWAsGkcB2Z7rkUOWgSJm/3h22uT7dznt/p9
-         NrdLiGWFPTS8LaP9X3KdBf2DEecJgz1Sj967RKEcKijnLwIS6kcanbgUryuRutrNy4dj
-         Q3DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729847021; x=1730451821;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=01A1j94vmhd+ARl+zBAKJGbXXIGCTBMufeRwg2gBhf0=;
-        b=gpYMhPMkP3XL1eyIiStFgFfN4U97xmcvSYj2LB5fhQnQSqgACA3DeO8vQwWtjlm2OK
-         SwYakHWmQjcyp8NWI58YxAe9ElsfIu8+UhQATe+5xq7OHkJLQAIHILAEQcYS2kbMtMPs
-         M4xHXtIWsz87k8v+GFgEuH3rix4H/XWfXd/7NQ83BLR2g8q3M8M4QC6P89w299E3hK7G
-         XO0G4y0n9C1JOwOtHzILU2EyFMwaj1NwoZXr0svg7r8Nxo3zzmp2rqR9M6wZ5vihrn6v
-         q6BdnmZiPTt295qCoazAsPY05+daco9tcU5IylyCplwkFpD2NNm5ZiTNkJnE8qx3gMtF
-         lO+Q==
-X-Gm-Message-State: AOJu0Yx8qgOwmqFSlOCMRzYJpbt13jWbccNcqi7xxUmFvEyfN+OeTUXu
-	4b1HZT04nD+hP7hS3L1fhohLldkPeMQZoY3dlB8GMQSKR1s+V3spULAQzfqQwjK8wq3Q9GtCrGp
-	p96Q=
-X-Google-Smtp-Source: AGHT+IFzkO91rPDtKnROlYlIiYOGngkrNk6KEIKDxXZg1cjlw04ELYhDD9KA0T464/wEBQtr1iKAfQ==
-X-Received: by 2002:adf:f581:0:b0:37d:4ebe:1647 with SMTP id ffacd0b85a97d-380458f38abmr3019953f8f.49.1729847021421;
-        Fri, 25 Oct 2024 02:03:41 -0700 (PDT)
-Received: from pop-os.. ([145.224.65.57])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b70c73sm988689f8f.72.2024.10.25.02.03.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2024 02:03:41 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-To: linux-perf-users@vger.kernel.org,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	tim.c.chen@linux.intel.com
-Cc: James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="saWduF+r"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=F5eurqf5UlrsNfBs8L/ryTJL5XF2hPl7LkVdrOAI/+U=; b=saWduF+rw4whm/ncm4eoOE7X36
+	LwL51Pl25i1Af0VWtOFpsE+UqNFFysEUkFO0fyrA7L8iSBrZNsVlopBQir/a65KW/pOHW3Wr4vWHd
+	43UIwjy7EvKtPfmSaSA7r2t29fc+qgutMCAHVKbzLfFMAkmfiYCarZuNlwpY71am4WC5LOx+1ypDf
+	DSF2Mw+SUVjACQNeG4kora21fhn1A3CWsDaKuqMR61/BAV2VB/DTwfyNSkoNmuY13/rCn1f+S94lA
+	uZKB9o8cWK4lFrtxRrQcx21YzSzLbMgx9VsPly+60eVmP+IMDobZhv5Cn/cB3Lbe/LomzRgggqTIT
+	dU++cFuA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t4HBw-000000055hT-1wb0;
+	Fri, 25 Oct 2024 10:05:13 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7966430083E; Fri, 25 Oct 2024 12:05:12 +0200 (CEST)
+Date: Fri, 25 Oct 2024 12:05:12 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] perf stat: Also hide metric from JSON if units are an empty string
-Date: Fri, 25 Oct 2024 10:03:05 +0100
-Message-Id: <20241025090307.59127-3-james.clark@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241025090307.59127-1-james.clark@linaro.org>
-References: <20241025090307.59127-1-james.clark@linaro.org>
+Subject: Re: [peterz-queue:perf/pmu-unregister] [perf] 24b8359383:
+ WARNING:possible_circular_locking_dependency_detected
+Message-ID: <20241025100512.GJ14555@noisy.programming.kicks-ass.net>
+References: <202410251647.21bf487b-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202410251647.21bf487b-lkp@intel.com>
 
-We decided to hide NULL metric units rather than showing it as "(null)",
-but on hybrid systems if the process doesn't hit a PMU you get an empty
-string metric unit instead. To make it consistent also remove empty
-strings.
+On Fri, Oct 25, 2024 at 04:37:22PM +0800, kernel test robot wrote:
 
-Note that metric-threshold is already hidden in this case without this
-change.
+> [   90.688729][  T589] WARNING: possible circular locking dependency detected
+> [   90.689307][  T589] 6.12.0-rc2-00016-g24b8359383ae #1 Tainted: G                T
+> [   90.689852][  T589] ------------------------------------------------------
+> [   90.690348][  T589] trinity-c2/589 is trying to acquire lock:
+> [ 90.690768][ T589] ee61f668 (&ctx->mutex){+.+.}-{3:3}, at: perf_event_ctx_lock_nested (kernel/events/core.c:1318) 
+> [   90.691425][  T589]
+> [   90.691425][  T589] but task is already holding lock:
+> [ 90.691944][ T589] ed2041d4 (&mm->mmap_lock){++++}-{3:3}, at: vm_mmap_pgoff (arch/x86/include/asm/jump_label.h:41 include/linux/jump_label.h:207 include/linux/mmap_lock.h:35 include/linux/mmap_lock.h:123 mm/util.c:586) 
+> [   90.692525][  T589]
+> [   90.692525][  T589] which lock already depends on the new lock.
+> [   90.692525][  T589]
+> [   90.693271][  T589]
+> [   90.693271][  T589] the existing dependency chain (in reverse order) is:
+> [   90.693907][  T589]
+> [   90.693907][  T589] -> #1 (&mm->mmap_lock){++++}-{3:3}:
+> [   90.697787][  T589] -> #0 (&ctx->mutex){+.+.}-{3:3}:
 
-Where a process only runs on cpu_core and never hits cpu_atom:
-Before:
- $ perf stat -j -- true
- ...
- {"counter-value" : "<not counted>", "unit" : "", "event" : "cpu_atom/branch-misses/", "event-runtime" : 0, "pcnt-running" : 0.00, "metric-value" : "0.000000", "metric-unit" : ""}
- {"counter-value" : "6326.000000", "unit" : "", "event" : "cpu_core/branch-misses/", "event-runtime" : 293786, "pcnt-running" : 100.00, "metric-value" : "3.553394", "metric-unit" : "of all branches", "metric-threshold" : "good"}
- ...
+> [   90.707850][  T589] 1 lock held by trinity-c2/589:
+> [ 90.708198][ T589] #0: ed2041d4 (&mm->mmap_lock){++++}-{3:3}, at: vm_mmap_pgoff (arch/x86/include/asm/jump_label.h:41 include/linux/jump_label.h:207 include/linux/mmap_lock.h:35 include/linux/mmap_lock.h:123 mm/util.c:586) 
+> [   90.708811][  T589]
 
-After:
- ...
- {"counter-value" : "<not counted>", "unit" : "", "event" : "cpu_atom/branch-misses/", "event-runtime" : 0, "pcnt-running" : 0.00}
- {"counter-value" : "5778.000000", "unit" : "", "event" : "cpu_core/branch-misses/", "event-runtime" : 282240, "pcnt-running" : 100.00, "metric-value" : "3.226797", "metric-unit" : "of all branches", "metric-threshold" : "good"}
- ...
+Damn, I'm an idiot. But also, how did I not manage to trigger this
+myself...
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/util/stat-display.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index a5d72f4a515c..9b7fd985a42a 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -506,7 +506,7 @@ static void print_metric_json(struct perf_stat_config *config __maybe_unused,
- 	struct outstate *os = ctx;
- 	FILE *out = os->fh;
- 
--	if (unit) {
-+	if (unit && strlen(unit)) {
- 		json_out(os, "\"metric-value\" : \"%f\", \"metric-unit\" : \"%s\"", val, unit);
- 		if (thresh != METRIC_THRESHOLD_UNKNOWN) {
- 			json_out(os, "\"metric-threshold\" : \"%s\"",
--- 
-2.34.1
-
+Oh well, something to do over the weekend I suppose :/
