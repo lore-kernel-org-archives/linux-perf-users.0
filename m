@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD3BC20BB4D;
-	Fri, 25 Oct 2024 14:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6750820D4F7;
+	Fri, 25 Oct 2024 14:30:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729866658; cv=none; b=RfvGjwHTqlBRz2ZoXLiC9cP5Cr8TFRSlRqh6HVCsN43cDWin/LIMt0ektDQiCzPy+1ReJaNlSDH+6C3fiUVu6N/xv+pBBA8JETwNvWe5Mp/OpBGNRGBQ4s3kR9EMd7yHIJSVx4m3den26I3gk9m2a7f5R2rR8uQFhRow/lCjUhY=
+	t=1729866661; cv=none; b=Id5A4EeO72T+orh2pz/izebDLIHuxUtxxDlpPLdkZCnN6hbvaaSON8couFBbeat9PpFNCrHR7ihx3WDBZelOOR39yOH2hPk6NocBdWW9uingtoA7ZkecZXnLAndQFEl3vt5Y1KrtmmzhC1CyOeBDqlSq/B1B2xWR2qnXVf6HRN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729866658; c=relaxed/simple;
-	bh=+m1Fd6DkkUo2YpyeBWMJx86vmQUvxg9ZMGY1A/hh8zo=;
+	s=arc-20240116; t=1729866661; c=relaxed/simple;
+	bh=bxlavruyCeOG0aiYoX6EJZfe8AAgSdNwL5KyPxMXcQw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fhdVkvMMT2XeOf5MpeyL3bB+8M1bMMikPDhZSluLEfA5uD7b2eALAZX95br09bjirRh9tUpg4fKvZxRZTTdaXBSkwowrHa0Rb1aZYC9hP839SpeDFtfR2kbx1RvfIKCR5aIrjpE5xcms6WkaECOj+RS3qrJVBFs9Dnysz6Udjgo=
+	 MIME-Version; b=bwYtv4U95wGSiJlEErz7g3erD+bQFqwQk6f/L6IiHWzeKfFG6SMjySdi93s+CxtDxVEOrjn87YjPJdjZCgt5wewPbXkm0NOOaIBEuvr18saBoXzVk37kHAujVPxu3gBcMTn7vCEYq2jdP4V1tIyMgar49RPzMwLIrH/jx7dmcSM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E74A7339;
-	Fri, 25 Oct 2024 07:31:25 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 835B9497;
+	Fri, 25 Oct 2024 07:31:28 -0700 (PDT)
 Received: from VDW30FN91H.arm.com (unknown [10.57.79.117])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F3AB53F73B;
-	Fri, 25 Oct 2024 07:30:53 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 873E53F73B;
+	Fri, 25 Oct 2024 07:30:56 -0700 (PDT)
 From: Graham Woodward <graham.woodward@arm.com>
 To: acme@kernel.org,
 	namhyung@kernel.org,
@@ -32,9 +32,9 @@ To: acme@kernel.org,
 	linux-arm-kernel@lists.infradead.org
 Cc: nd@arm.com,
 	Graham Woodward <graham.woodward@arm.com>
-Subject: [PATCH v1 2/4] perf arm-spe: Use ARM_SPE_OP_BRANCH_ERET when synthesizing branches
-Date: Fri, 25 Oct 2024 15:30:07 +0100
-Message-Id: <20241025143009.25419-3-graham.woodward@arm.com>
+Subject: [PATCH v1 3/4] perf arm-spe: Correctly set sample flags
+Date: Fri, 25 Oct 2024 15:30:08 +0100
+Message-Id: <20241025143009.25419-4-graham.woodward@arm.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 In-Reply-To: <20241025143009.25419-1-graham.woodward@arm.com>
 References: <20241025143009.25419-1-graham.woodward@arm.com>
@@ -46,55 +46,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Instead of checking the type for just branch misses, we can instead
-check for the OP_BRANCH_ERET and synthesise branches as well as
-branch misses.
+Set flags on all synthesized instruction and branch samples.
 
 Signed-off-by: Graham Woodward <graham.woodward@arm.com>
 ---
- tools/perf/util/arm-spe.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ tools/perf/builtin-script.c |  1 +
+ tools/perf/util/arm-spe.c   | 17 +++++++++++++++++
+ tools/perf/util/event.h     |  1 +
+ 3 files changed, 19 insertions(+)
 
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 8c5d5cecfba4..6b6d4472db6e 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1728,6 +1728,7 @@ static struct {
+ 	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TRACE_END, "tr end"},
+ 	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_VMENTRY, "vmentry"},
+ 	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_VMEXIT, "vmexit"},
++	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_BRANCH_MISS, "br miss"},
+ 	{0, NULL}
+ };
+ 
 diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 49b763807360..e60e21d24735 100644
+index e60e21d24735..a291a412f6a1 100644
 --- a/tools/perf/util/arm-spe.c
 +++ b/tools/perf/util/arm-spe.c
-@@ -68,7 +68,7 @@ struct arm_spe {
- 	u64				llc_access_id;
- 	u64				tlb_miss_id;
- 	u64				tlb_access_id;
--	u64				branch_miss_id;
-+	u64				branch_id;
- 	u64				remote_access_id;
- 	u64				memory_id;
- 	u64				instructions_id;
-@@ -672,8 +672,8 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
- 		}
- 	}
+@@ -100,6 +100,7 @@ struct arm_spe_queue {
+ 	u64				timestamp;
+ 	struct thread			*thread;
+ 	u64				period_instructions;
++	u32				flags;
+ };
  
--	if (spe->sample_branch && (record->type & ARM_SPE_BRANCH_MISS)) {
--		err = arm_spe__synth_branch_sample(speq, spe->branch_miss_id);
-+	if (spe->sample_branch && (record->op & ARM_SPE_OP_BRANCH_ERET)) {
-+		err = arm_spe__synth_branch_sample(speq, spe->branch_id);
- 		if (err)
- 			return err;
- 	}
-@@ -1385,12 +1385,12 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 	if (spe->synth_opts.branches) {
- 		spe->sample_branch = true;
+ static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
+@@ -394,6 +395,7 @@ static int arm_spe__synth_branch_sample(struct arm_spe_queue *speq,
+ 	sample.stream_id = spe_events_id;
+ 	sample.addr = record->to_ip;
+ 	sample.weight = record->latency;
++	sample.flags = speq->flags;
  
--		/* Branch miss */
-+		/* Branch */
- 		err = perf_session__deliver_synth_attr_event(session, &attr, id);
- 		if (err)
- 			return err;
--		spe->branch_miss_id = id;
--		arm_spe_set_event_name(evlist, id, "branch-miss");
-+		spe->branch_id = id;
-+		arm_spe_set_event_name(evlist, id, "branch");
- 		id += 1;
- 	}
+ 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+ }
+@@ -423,6 +425,7 @@ static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
+ 	sample.data_src = data_src;
+ 	sample.period = spe->instructions_sample_period;
+ 	sample.weight = record->latency;
++	sample.flags = speq->flags;
  
+ 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+ }
+@@ -440,6 +443,19 @@ static const struct midr_range common_ds_encoding_cpus[] = {
+ 	{},
+ };
+ 
++static void arm_spe__sample_flags(struct arm_spe_queue *speq)
++{
++	const struct arm_spe_record *record = &speq->decoder->record;
++
++	speq->flags = 0;
++	if (record->op & ARM_SPE_OP_BRANCH_ERET) {
++		speq->flags = PERF_IP_FLAG_BRANCH;
++
++		if (record->type & ARM_SPE_BRANCH_MISS)
++			speq->flags |= PERF_IP_FLAG_BRANCH_MISS;
++	}
++}
++
+ static void arm_spe__synth_data_source_common(const struct arm_spe_record *record,
+ 					      union perf_mem_data_src *data_src)
+ {
+@@ -622,6 +638,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+ 	u64 data_src;
+ 	int err;
+ 
++	arm_spe__sample_flags(speq);
+ 	data_src = arm_spe__synth_data_source(speq, record);
+ 
+ 	if (spe->sample_flc) {
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index f8742e6230a5..2744c54f404e 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -66,6 +66,7 @@ enum {
+ 	PERF_IP_FLAG_VMEXIT		= 1ULL << 12,
+ 	PERF_IP_FLAG_INTR_DISABLE	= 1ULL << 13,
+ 	PERF_IP_FLAG_INTR_TOGGLE	= 1ULL << 14,
++	PERF_IP_FLAG_BRANCH_MISS	= 1ULL << 15,
+ };
+ 
+ #define PERF_IP_FLAG_CHARS "bcrosyiABExghDt"
 -- 
 2.40.1
 
