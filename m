@@ -1,111 +1,124 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CB1206519
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Oct 2024 13:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB00952F76;
+	Fri, 25 Oct 2024 13:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729861695; cv=none; b=Bl8iLTRVYodtpc5DyqE2DkpytpnrF1U42Gls0AQbU1NT/bNGE3HBu5NayYoovaMJG0v8fcrsQolfbNjqcWB2KATrVxXLGygFjsgELaUsAA/JiqNElBflE8vkx/kzFCZdg0JG5M5W1MMKRPTRcMp5O8Qq3W3k8zOjBm0joEH9ayw=
+	t=1729862433; cv=none; b=lsYc9URyVbPf+W+bLc8zVK8pYYOiwNhivTfOy8JDZ9D7nym6Y4Eq5UX61CezmMYrDM9j7YfYr84ZVi3svkrfFkdjyCMFebITWRGcUM4g+yWvTogvH6RY1MzNT+QcQOyXg/xVKDoCRl8CnGeOnXnJbffWxdxSZCZnp/eTWy25XPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729861695; c=relaxed/simple;
-	bh=OBLteaS4HM2lnpRIJrjsfcl72EPB1NXuaAiDGpXkXFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VnG74Qq60WiOFUAaE6YWoXj2X+I+nsh20kHuFnBMRJoQoggnRrzS3ZXE0MBBuyesYzy4OtUbOERWhap5ML1ngY4lKTW6arrwdo05XzP/vkJUEgg7CsdjkcIm7teP8IvOx4Y9m0xDzzVOmACtqKlBxOzvLOmYEy0eqqoHRk2rnY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P/g5rBQT; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P/g5rBQT"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-539f72c913aso2648760e87.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Oct 2024 06:08:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729861691; x=1730466491; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eM5nkTRxomZGNrAn6Kh9dqC0qKVLwKAVOyxctouNCUI=;
-        b=P/g5rBQT0LG9PGWy5RtuIM8KkDLLIKcbZr5MQJi0tOANJvpexbgKg8XGAF9jLViWl/
-         gdTDGbD4k7yL2TYB5WujuLZu2HmaA/5Vnm2lBAJbaDl0VG4TLKxwyAKzsU+pLLEB3+MG
-         o6fu7dgT2iuNzW7Kj2jz6vnvB5AeHlhWDb6IloxhoRH+BBVpe6ZhQWRi1Tg15I7JyC2Q
-         b5NSDFl2NCaOh8TXYHmx9Ef0aBs4x9EuVLNC53/1yiA4LdZoCAmW5EYmaKKBtR7/cmM+
-         ZKfQ2xa67J/AbiflSD50LyEnEla7zaelmGY3VovoPWJRI7SnDJ7ZqrLdzPckZqrETiso
-         LShg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729861691; x=1730466491;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eM5nkTRxomZGNrAn6Kh9dqC0qKVLwKAVOyxctouNCUI=;
-        b=hy9O11tg888fivlp3GvNytNf4QAjJLP1ILVVM1+IbLlM337WrUca3oYtR29B5ylQTI
-         pSsf3ngKMJxkxVNvJGl63qryyeACB10BDLIZ6ouu3IUrh5iHWLFCIPtnN6ZTG5U5fUbj
-         Nm4ADogGW40sv2AzMd6XT+NUcRhFtfT8Dc2ngZ1TJ/Qo34booliHnDrja7y+gJ1Br8mS
-         getnhEdJrhm08BF6+9GzMUCgXpO8QGn0kq3KrAqT8uF3Zgz93ApHtCEH8ICrngQ/dREx
-         nw7iEfqDyJ3i7eTl3anlnd8h5PyQh39MAr7gml56AT6S+STTUsOTh0xQbeVteULwbJ0i
-         RhFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXOp+BYyxD4nW3ca6FfHu+YT/vntMqJDCIfzsJc0ZgY2KH2kliodgouO8IsRLR53DSCL/+Hf50Ac9irYGo5P1bb@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRTGusZ6dOowtPjsv3+aVxFRAy/XYACIVXBodlfDufk2YAuu9J
-	jaCZBe91pipc1IZj255TgsKjXzBU+kgId4e6CXOSTPyU4lW15R1sCyDIu7XkV3w=
-X-Google-Smtp-Source: AGHT+IFCT0tBIW4gocugoLB0PVdeFxoiVJ9M/pABhSRPvl5b0xI66ZUSnk//HMoGyQlwk1X0S/7NtA==
-X-Received: by 2002:a05:6512:1286:b0:539:fc42:e5ee with SMTP id 2adb3069b0e04-53b23e0880amr3207615e87.29.1729861690929;
-        Fri, 25 Oct 2024 06:08:10 -0700 (PDT)
-Received: from [192.168.68.136] ([145.224.65.57])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4318b58b7e8sm48189595e9.48.2024.10.25.06.08.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2024 06:08:10 -0700 (PDT)
-Message-ID: <1e115332-f68f-479a-8ae9-6b9a3120b21c@linaro.org>
-Date: Fri, 25 Oct 2024 14:08:09 +0100
+	s=arc-20240116; t=1729862433; c=relaxed/simple;
+	bh=Eudzm+dYRXS5yMi3FTODqWIFrwzENn5t60Or8yh2U6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i2RyIZ90KtQjx9psncclnBSfV1LiqbxKRnxAoQlDBYE8t4OoxhtRIkbfGEglNB8b2g6ruO4oQNcDq2uiZ9StuUJWtUhPajIvlsqTBh1uDCdGoSy0qkISjviFGEq+lK0a9XaE3iYNfwnYUIWyo2TG0FCDTQICSapgdKGKaKIQg14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60CAC339;
+	Fri, 25 Oct 2024 06:20:57 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42D3F3F71E;
+	Fri, 25 Oct 2024 06:20:27 -0700 (PDT)
+Date: Fri, 25 Oct 2024 14:20:21 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	xueshuai@linux.alibaba.com, zhuo.song@linux.alibaba.com
+Subject: Re: [PATCH] perf/tests: fix record+probe_libc_inet_pton test on
+ aarch64
+Message-ID: <20241025132021.GB359792@e132581.arm.com>
+References: <1728978807-81116-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <ZxGL1LF9mVzrUGOU@google.com>
+ <20241020113528.GA3209400@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 0/4] perf arm-spe: Allow synthesizing of branch
- instructions
-To: Graham Woodward <graham.woodward@arm.com>
-Cc: nd@arm.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- jolsa@kernel.org, irogers@google.com, mike.leach@linaro.org,
- leo.yan@linux.dev, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20241025105212.51779-1-graham.woodward@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241025105212.51779-1-graham.woodward@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241020113528.GA3209400@e132581.arm.com>
 
+On Sun, Oct 20, 2024 at 12:35:28PM +0100, Leo Yan wrote:
 
-
-On 25/10/2024 11:52 am, Graham Woodward wrote:
-> Currently the --itrace=b will only show branch-misses but this change
-> allows perf to synthesize branches as well.
+> Hi Namhyung, Jing,
 > 
-> The change also incorporates the ability to display the target
-> addresses when specifying the addr field if the instruction is a branch.
+> On Thu, Oct 17, 2024 at 03:12:36PM -0700, Namhyung Kim wrote:
+> >
+> > Hello,
+> >
+> > On Tue, Oct 15, 2024 at 03:53:27PM +0800, Jing Zhang wrote:
+> > > Since commit 1f85d016768f ("perf test record+probe_libc_inet_pton: Fix
+> > > call chain match on x86_64") remove function getaddrinfo() on expected
+> > > file, the test failed on aarch64. On aarch64, function getaddrinfo()
+> > > show up in the call chain.
+> > >
+> > > $perf script -i /tmp/perf.data.1PV
+> > > ping 2588319 [125] 500119.122843: probe_libc:inet_pton: (ffff9a4f7410)
+> > >             ffff9a4f7410 __GI___inet_pton+0x0 (/usr/lib64/libc-2.32.so)
+> > >             ffff9a4c5f7c getaddrinfo+0xec (/usr/lib64/libc-2.32.so)
+> > >             aaaad6d32b38 [unknown] (/usr/bin/ping)
+> >
+> > I'm curious how other ARM folks don't see this.  Does it depend on
+> > something other?
 > 
-> Graham Woodward (4):
->    perf arm-spe: Set sample.addr to target address for instruction sample
->    perf arm-spe: Use ARM_SPE_OP_BRANCH_ERET when synthesizing branches
->    perf arm-spe: Correctly set sample flags
->    perf arm-spe: Update --itrace help text
+> This test has several dependencies. E.g. libtraceevent and IPv6 (one
+> of my machines skips the test due to lack IPv6 interface).
 > 
->   tools/perf/Documentation/itrace.txt       |  2 +-
->   tools/perf/Documentation/perf-arm-spe.txt |  2 +-
->   tools/perf/builtin-script.c               |  1 +
->   tools/perf/util/arm-spe.c                 | 31 ++++++++++++++++++-----
->   tools/perf/util/auxtrace.h                |  3 +--
->   tools/perf/util/event.h                   |  1 +
->   6 files changed, 29 insertions(+), 11 deletions(-)
+> This test is definitely a regression on Arm64 machine. I will go back to
+> check why this test failure is missed in our CI. If have any update,
+> will let you know.
 > 
+> > Then can we make the line optional like we did on s390 recently?
+> 
+> I verified two distros (one is libc-2.31 and another is libc-2.37), both of
+> them have the symbol "getaddrinfo":
+> 
+> Machine 1:
+> 
+>   # nm -D /usr/lib/aarch64-linux-gnu/libc-2.31.so | grep getaddrinfo
+>     00000000000bdf58 T getaddrinfo
+> 
+> Machine 2:
+> 
+>   # /usr/lib/aarch64-linux-gnu/libc.so.6
+>   GNU C Library (Debian GLIBC 2.37-16) stable release version 2.37.
+> 
+>   # nm -D /usr/lib/aarch64-linux-gnu/libc.so.6 | grep getaddrinfo
+>   00000000000d4da4 T getaddrinfo@@GLIBC_2.17
+>   0000000000114260 T getaddrinfo_a@@GLIBC_2.34
+>   0000000000114260 T getaddrinfo_a@GLIBC_2.17
 
-Hi Graham,
+Update a bit for Arm64. Without this patch, we do see the test can pass on
+Debian bookworm (with libc 2.36) but failed on older distros.
 
-I think this is V1? Also it looks like the base doesn't include a few of 
-the new SPE changes and it doesn't apply cleanly. Make sure it's based 
-of the latest (46610ba41ef1)
+On the Debian bookworm, it prints out the log same as above. Seems to me,
+these symbols with suffix "@GLIBC_2.x" are legacy functions for old libc
+compatible but is not used by the new libc.
 
-With that LGTM:
+So we need to rule out the case for the symbol with suffix. Please check
+if below change is suitable?
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index f38c8ead0b03..2079c9375af5 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -54,6 +54,11 @@ trace_libc_inet_pton_backtrace() {
+                ;;
+        *)
+                eventattr='max-stack=3'
++               # The new version libc (e.g. libc 2.36) contains symbol getaddrinfo@@GLIBC_2.17
++               # which is not used. Do strick checking for 'getaddrinfo' without any suffix.
++               if nm -D $libc | grep -q 'getaddrinfo$'; then
++                       echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
++               fi
+                echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+                ;;
+        esac
 
+Thanks,
+Leo
