@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5AD216205
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Oct 2024 19:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BBE216DF4
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Oct 2024 19:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729884083; cv=none; b=FBWIpJFkQRp3cjgZ3UZyTMOTgZbnhFS0m9T74Cbg1OYHg3A6X02zgsOtYkBLP+/0nDBJW4Enz/fBHOMSmxjpz+y4kfu7awL1YlUoZvnNupwbLHrAZP5uNbaFl+/QEAGd/yIid1SvwuKqYAgWikElPSPZhRMidl14xUq2QCsljbE=
+	t=1729884083; cv=none; b=MRRLv40z7HTYo0WeRq3lGZfBHOYZDXyY3k0PJ7XmRZfbIJdrHBze49RGt5SzdI1Orq5va3awVptCMB84va76EMeWXm8DhjHdHqLnspO14U8dKRfcFPYZS+3Jf46tKItykPpYu6K0TL+tiCN12ys0BPttVBCRu0ekIlYGVghk1LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1729884083; c=relaxed/simple;
-	bh=TSak5ySXPhsLutG7PU4Surkoqp+hdpOAqqLFfKer4U4=;
+	bh=bl0TwbExu4G349NNkk4dquZriD14f6vKBPjGiiViYyk=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=PBbNEX5IwbeY6GZyFb0wnkWUzVthDFNDQjF5f574KttYd8qt9GlGGmlNICuJGfFN1wgwsYKSVarAtRDrqNMH1QSKpVzZiwr5BTzQCni9eG6xXew7JVBqmOzC/QBkwfnFXV3XRUjTRwrGrLBue9tFlFbTcM7ZqcTi8Ar86tqJlPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n0CM3qlx; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=JEHDEKNCmeHE+5vR0Thws3SgrahI+Is9hVfcK8W23sf2jCMLt0KSMHmx1CYHiih8qQU+kHvt2C55AXdsAOPQYJYhJBXffMKPHSWy5/gPTRreFiYku4B0PAmgqZ8QwRIkUUlDDRUBLLtj/q25LqVo98Rq8g6YKZWav+9ZE3yGLlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bpjDkPiE; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n0CM3qlx"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e292dbfd834so4162423276.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Oct 2024 12:21:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bpjDkPiE"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e35d1d8c82so47714097b3.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Oct 2024 12:21:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729884079; x=1730488879; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729884081; x=1730488881; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6to4NuyfolqiFxIhj4wLEb7fpmyV6YykqeCK5v8XPJY=;
-        b=n0CM3qlxR7A0VYCh7ZEhhK5cQHXTAhT3zWBhzw8hCNnWocXZ6U4t5sPTpVfsSCKH5n
-         ndFMFk/ZaLW059oVfdPcukUnVFvNfGlOHjz6rgFlfCB/DcCl+rUerGZxbx+0r+a58wJZ
-         t5YSAqen31kh3mP7GfyfT7NP4N+hT+4tcU+l7atiM4CkFfpWIBDUFyV7fo9Ht9Zfn4lD
-         6n7sYXMgHHK7DsbNGla9MZjdHtpGbjUHQkUA3vo4u6Gix+YltvIZaD1gcqwMvg8YoHR9
-         V8P8OXUB5Ji13GbVf2AvPzp+QQ7zrxUYOnM/DunOkWn9vtJMDXq1If8dTqxqq3scpAMl
-         rNUw==
+        bh=2yVnPqZ8RpP/8r+vCUjKwDzk1QDMtk4+iGqU5/U/LQI=;
+        b=bpjDkPiEVbqldAK7qFtuGUmE/yqWjEGWL06+Z6X94otan2KK31U/gjgQ1987Mo2bHX
+         MQ/WWUKm1MPk5BAWyBo7T4Py5lbcbKnF7FSHiSl+dyidozDaWKKjR7rXvPDjqR66qj73
+         3ORiXnSrTQ+OLAuy6IFF2ob5TNZWi34wjqcAwKDkDhHEX7lhM3Rc1Mxypw0peR+jZZRy
+         6o73/inlcaoIwSIl986YbE/qqLVFHagYhE6z0shTUH9xap9e1Tw5g9WjmEPKpsoNRzwW
+         rZjJL+gvQRvb+oOBoIqLvyKDeA8cwYFnm4pmcXTqdDuO/q4dilSxW4rAVnUNw8s3gCUx
+         OjOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729884079; x=1730488879;
+        d=1e100.net; s=20230601; t=1729884081; x=1730488881;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6to4NuyfolqiFxIhj4wLEb7fpmyV6YykqeCK5v8XPJY=;
-        b=FxIgs+uZ73CWWwxvb90pWN0ZUgEaiHnOIjeMtB3lPT1nf/svOxpKSi4AuEIt5eZilT
-         LzAPvAbkWfIdr9I6zQexSC3HHKm4thigeq88b0Blu88X7pMwtMg54wYE/ye5YVzJmTax
-         /ZqQ4yThs2gIjYvGTph9XMXaDQ4+7zUhqRLm3SlZA8CObNcFtt4mmyU5v10dZqh1EgCs
-         hi5MipjO/ixxP/a1dZKMXsfdmHCWohp/DIiU4aapGwqjRqcYM8oG15fgwAoSRwv9MTgE
-         c16xPBE3Y4lUKmEvjBJCootIXP0e9QfZPePwj72H3c4xs+HRwpseUmNJgyUrEQPngftS
-         fJEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXD5TFVlsRBZNVYOtn2mAoTpuX3qQoiVRLgS4l/ZOTcPzcPnvu3yON9tVh+7fB7UGhb9gwXnAmzpbIfXPrbyrSI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2uPDskdRZ7NBjbB/O0zR9kLP4Vx9X5QshNf7VX819zEaJo19+
-	l8Xa1/UvZeGhTu8uz4v9qCKuTsupa2JrxwVdJLiDmNu/20x6uD1f1VEi3IOXzBgMpuECw2ZiPy1
-	NccBYhA==
-X-Google-Smtp-Source: AGHT+IFl8rpmB5FEi/EyN+kh7NSuUq3DxgF+xg/csv+FgCNCtMuNqbfN+F6ZnzymbET6RYToa4IrWf6THyTU
+        bh=2yVnPqZ8RpP/8r+vCUjKwDzk1QDMtk4+iGqU5/U/LQI=;
+        b=O4MS86lnxQjhi2j8+5PIKa2w9HogMV3zLm3YXpwOIGYf4eRQ6Iw1jujyefvoehdoYR
+         NPOWEwJwe0fG1llinHo654/QxlpqJpQ6dVt9bX/rigbSDpIUjB60T3Uf6qX40ghl0xVG
+         c4RndqhVy7aO51t4rUeHZXXF495rn61AiLnUj7HU5zJVLcr1b09As2CPEmqUa4cUB58E
+         LOIPPaBcf/MYLiYEAT872ujAvFtS+ClgoKjWEYLVHrBAaO46EdFgUgA+ZCnmGhGQUl4p
+         m6ZPKWWFRMIvk6MHxYd5pD0Zft5Nv7reumdU+s7XHW1FQ1rou5Sh1BhoB5XC42QBLGoA
+         YHTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkvfDP2AS6aAMDhCHpNSVqaleEWmPxca3oqJncpCSaq03F6qLRp4LyHujQXJ6wPGRwuwBPvaA3Y+cjhsNrb5ZN@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzqUXP5TGqvQJeFfdsNRX1D4Lxc+Xc0OWyuEMmz3lfud7t1L6Z
+	2aXCYTBT54KNvzcmjLivSWVVitGGKHYOovjTJjFKi3U6uVQehDj9S1DMa66rSgCLvcLFlD8AlwR
+	KvFwOog==
+X-Google-Smtp-Source: AGHT+IGD95Dz7s4SY58TIPO1jaSqaYOrqZkpzNst4Ej+pMqlACgZPWYG4A3kUs+EkUUpEclRsAV7/bDATl4y
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:5d42:c43e:5e08:3a85])
- (user=irogers job=sendgmr) by 2002:a05:6902:4ca:b0:e2e:4391:67cc with SMTP id
- 3f1490d57ef6-e3087a65968mr2038276.4.1729884078818; Fri, 25 Oct 2024 12:21:18
- -0700 (PDT)
-Date: Fri, 25 Oct 2024 12:21:01 -0700
+ (user=irogers job=sendgmr) by 2002:a81:be05:0:b0:6d4:30f0:3a74 with SMTP id
+ 00721157ae682-6e9d8b5ed4emr165137b3.6.1729884080901; Fri, 25 Oct 2024
+ 12:21:20 -0700 (PDT)
+Date: Fri, 25 Oct 2024 12:21:02 -0700
 In-Reply-To: <20241025192109.132482-1-irogers@google.com>
-Message-Id: <20241025192109.132482-3-irogers@google.com>
+Message-Id: <20241025192109.132482-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241025192109.132482-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
-Subject: [PATCH v5 02/10] perf test: Display number of active running tests
+Subject: [PATCH v5 03/10] perf test: Reduce scope of parallel variable
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,202 +76,42 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Before polling or sleeping to wait for a test to complete, print out
-": Running (<num> active)" where the number of active tests is
-determined by iterating over the tests and seeing which return false
-for check_if_command_finished. The line erasing and printing out only
-occur if the number of runnings tests changes to avoid the line
-flickering excessively. Knowing tests are running allows a user to
-know a test is running and in parallel mode how many of the tests are
-waiting to complete. If color mode is disabled then avoid displaying
-the "Running" message as deleting the line isn't reliable.
+The variable duplicates sequential but is only used for command line
+argument processing. Reduce scope to make the behavior clearer.
 
 Tested-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c | 93 ++++++++++++++++++++++-----------
- tools/perf/util/color.h         |  1 +
- 2 files changed, 63 insertions(+), 31 deletions(-)
+ tools/perf/tests/builtin-test.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 7d27e30d9b2d..57d2e9e03fbc 100644
+index 57d2e9e03fbc..0e8f877f4b1f 100644
 --- a/tools/perf/tests/builtin-test.c
 +++ b/tools/perf/tests/builtin-test.c
-@@ -245,7 +245,10 @@ static int run_test_child(struct child_process *process)
- 	return -err;
- }
+@@ -41,9 +41,6 @@
+ static bool dont_fork;
+ /* Don't fork the tests in parallel and wait for their completion. */
+ static bool sequential = true;
+-/* Do it in parallel, lacks infrastructure to avoid running tests that clash for resources,
+- * So leave it as the developers choice to enable while working on the needed infra */
+-static bool parallel;
+ const char *dso_to_test;
+ const char *test_objdump_path = "objdump";
  
--static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width)
-+#define TEST_RUNNING -3
-+
-+static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width,
-+			     int running)
- {
- 	if (has_subtests(t)) {
- 		int subw = width > 2 ? width - 2 : width;
-@@ -255,6 +258,9 @@ static int print_test_result(struct test_suite *t, int i, int subtest, int resul
- 		pr_info("%3d: %-*s:", i + 1, width, test_description(t, subtest));
- 
- 	switch (result) {
-+	case TEST_RUNNING:
-+		color_fprintf(stderr, PERF_COLOR_YELLOW, " Running (%d active)\n", running);
-+		break;
- 	case TEST_OK:
- 		pr_info(" Ok\n");
- 		break;
-@@ -276,14 +282,17 @@ static int print_test_result(struct test_suite *t, int i, int subtest, int resul
- 	return 0;
- }
- 
--static int finish_test(struct child_test *child_test, int width)
-+static int finish_test(struct child_test **child_tests, int running_test, int child_test_num,
-+		       int width)
- {
-+	struct child_test *child_test = child_tests[running_test];
- 	struct test_suite *t = child_test->test;
- 	int i = child_test->test_num;
- 	int subi = child_test->subtest;
- 	int err = child_test->process.err;
--	bool err_done = err <= 0;
-+	bool err_done = false;
- 	struct strbuf err_output = STRBUF_INIT;
-+	int last_running = -1;
- 	int ret;
- 
- 	/*
-@@ -297,7 +306,7 @@ static int finish_test(struct child_test *child_test, int width)
- 	 * Busy loop reading from the child's stdout/stderr that are set to be
- 	 * non-blocking until EOF.
- 	 */
--	if (!err_done)
-+	if (err > 0)
- 		fcntl(err, F_SETFL, O_NONBLOCK);
- 	if (verbose > 1) {
- 		if (has_subtests(t))
-@@ -311,38 +320,60 @@ static int finish_test(struct child_test *child_test, int width)
- 			  .events = POLLIN | POLLERR | POLLHUP | POLLNVAL,
- 			},
- 		};
--		char buf[512];
--		ssize_t len;
--
--		/* Poll to avoid excessive spinning, timeout set for 100ms. */
--		poll(pfds, ARRAY_SIZE(pfds), /*timeout=*/100);
--		if (!err_done && pfds[0].revents) {
--			errno = 0;
--			len = read(err, buf, sizeof(buf) - 1);
--
--			if (len <= 0) {
--				err_done = errno != EAGAIN;
--			} else {
--				buf[len] = '\0';
--				if (verbose > 1)
--					fprintf(stdout, "%s", buf);
--				else
-+		if (perf_use_color_default) {
-+			int running = 0;
-+
-+			for (int y = running_test; y < child_test_num; y++) {
-+				if (check_if_command_finished(&child_tests[y]->process) == 0)
-+					running++;
-+			}
-+			if (running != last_running) {
-+				if (last_running != -1) {
-+					/*
-+					 * Erase "Running (.. active)" line
-+					 * printed before poll/sleep.
-+					 */
-+					fprintf(debug_file(), PERF_COLOR_DELETE_LINE);
-+				}
-+				print_test_result(t, i, subi, TEST_RUNNING, width, running);
-+				last_running = running;
-+			}
-+		}
-+
-+		err_done = true;
-+		if (err <= 0) {
-+			/* No child stderr to poll, sleep for 10ms for child to complete. */
-+			usleep(10 * 1000);
-+		} else {
-+			/* Poll to avoid excessive spinning, timeout set for 100ms. */
-+			poll(pfds, ARRAY_SIZE(pfds), /*timeout=*/100);
-+			if (pfds[0].revents) {
-+				char buf[512];
-+				ssize_t len;
-+
-+				len = read(err, buf, sizeof(buf) - 1);
-+
-+				if (len > 0) {
-+					err_done = false;
-+					buf[len] = '\0';
- 					strbuf_addstr(&err_output, buf);
-+				}
- 			}
- 		}
-+		if (err_done)
-+			err_done = check_if_command_finished(&child_test->process);
-+	}
-+	if (perf_use_color_default && last_running != -1) {
-+		/* Erase "Running (.. active)" line printed before poll/sleep. */
-+		fprintf(debug_file(), PERF_COLOR_DELETE_LINE);
- 	}
- 	/* Clean up child process. */
- 	ret = finish_command(&child_test->process);
--	if (verbose == 1 && ret == TEST_FAIL) {
--		/* Add header for test that was skipped above. */
--		if (has_subtests(t))
--			pr_info("%3d.%1d: %s:\n", i + 1, subi + 1, test_description(t, subi));
--		else
--			pr_info("%3d: %s:\n", i + 1, test_description(t, -1));
-+	if (verbose > 1 || (verbose == 1 && ret == TEST_FAIL))
- 		fprintf(stderr, "%s", err_output.buf);
--	}
-+
- 	strbuf_release(&err_output);
--	print_test_result(t, i, subi, ret, width);
-+	print_test_result(t, i, subi, ret, width, /*running=*/0);
- 	if (err > 0)
- 		close(err);
- 	return 0;
-@@ -358,7 +389,7 @@ static int start_test(struct test_suite *test, int i, int subi, struct child_tes
- 		pr_debug("--- start ---\n");
- 		err = test_function(test, subi)(test, subi);
- 		pr_debug("---- end ----\n");
--		print_test_result(test, i, subi, err, width);
-+		print_test_result(test, i, subi, err, width, /*running=*/0);
- 		return 0;
- 	}
- 
-@@ -383,7 +414,7 @@ static int start_test(struct test_suite *test, int i, int subi, struct child_tes
- 	err = start_command(&(*child)->process);
- 	if (err || !sequential)
- 		return  err;
--	return finish_test(*child, width);
-+	return finish_test(child, /*running_test=*/0, /*child_test_num=*/1, width);
- }
- 
- #define for_each_test(j, k, t)					\
-@@ -468,7 +499,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
- 	}
- 	for (i = 0; i < child_test_num; i++) {
- 		if (!sequential) {
--			int ret  = finish_test(child_tests[i], width);
-+			int ret  = finish_test(child_tests, i, child_test_num, width);
- 
- 			if (ret)
- 				return ret;
-diff --git a/tools/perf/util/color.h b/tools/perf/util/color.h
-index b2f37de305f6..9a7248dbe2d7 100644
---- a/tools/perf/util/color.h
-+++ b/tools/perf/util/color.h
-@@ -23,6 +23,7 @@
- #define MIN_GREEN	0.5
- #define MIN_RED		5.0
- 
-+#define PERF_COLOR_DELETE_LINE	"\033[A\33[2K\r"
- /*
-  * This variable stores the value of color.ui
-  */
+@@ -578,6 +575,12 @@ int cmd_test(int argc, const char **argv)
+ 	const char *skip = NULL;
+ 	const char *workload = NULL;
+ 	bool list_workloads = false;
++	/*
++	 * Run tests in parallel, lacks infrastructure to avoid running tests
++	 * that clash for resources, So leave it as the developers choice to
++	 * enable while working on the needed infra.
++	 */
++	bool parallel = false;
+ 	const struct option test_options[] = {
+ 	OPT_STRING('s', "skip", &skip, "tests", "tests to skip"),
+ 	OPT_INCR('v', "verbose", &verbose,
 -- 
 2.47.0.163.g1226f6d8fa-goog
 
