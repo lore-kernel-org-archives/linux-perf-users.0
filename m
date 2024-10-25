@@ -1,163 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB84320B;
-	Fri, 25 Oct 2024 16:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEDF2064F1
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Oct 2024 17:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729874784; cv=none; b=XdcEO29pusqxw4IoHwqUAM42hBNSe12mK4Gjq6BDGzJ9ssStIus2yAwMN1Eb2B1cgsNQXfIn1+HQwZB0s4xghErCBYTIbavr7edi3HcPOS0Rn6fMrPB+szJJ5qeJfH6byBZKLgv9WTmbHFfm/uzMJ4MmPaGQjzHVKcsoJ6d6/4Q=
+	t=1729876989; cv=none; b=KDE4Fb+5IlTbd7wSBKftAShYr/3H3HRsQuljnbQQ29VPoyD/ph1CHt+QkIYHbqCOIbusPfnZ7ItmMklep/ah9yM0rGD98iFNLHu49pwJx1o2roGsm+yVJ2DRt38wBWnDreXCnWn7Cx4uKlaL5ZaIe8AQRWG9CyOwUvjumCL3j8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729874784; c=relaxed/simple;
-	bh=8dhg0mD8QTOXORuIIu5J9uE0TBP2PYczuhJ6uG5Fc9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t/yoO/p9QKzyPvt5bNs3V54SYHod3pJSVjTWuhqn4WFrJxca9S/lySL8C4wxtQBEdD33uLHlPLUX/7g8LQyBbTHP/I0hN8pp7trBzqOhWisNGNuFqBJRWWaxFBDT/kgEyoxSmHBHgZg5cI5KlPpbexikaX8jSkKJnAkIRrtZP0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GFMAP8sm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729876989; c=relaxed/simple;
+	bh=jDw2DtjTh/d2C9SAVH2SzICTX68aZnUWB2tE77E7XCM=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=sO6jhRn0HVHHToYqenYNFWr48yDprR8eKXR6QNalmakBTlFjSII7mLkV8pgWlt1fqLYdFMcst9tjk86HBjkw2fuTRYCzw8Ql6N1PAFBJy/9oRXkM7RXX6dWUncylpIZZyxRliFS5uC0B0qJmBTCABOB7a0hZbiqknfv71UBfoNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HBgNwkHo; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GFMAP8sm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CBF5C4CEC3;
-	Fri, 25 Oct 2024 16:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729874784;
-	bh=8dhg0mD8QTOXORuIIu5J9uE0TBP2PYczuhJ6uG5Fc9s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GFMAP8sm4YNFc3gqfzKZaf+xtba6VdI+VqMoKKnMUEQrHXQZSUjf/lgeoMENXw4rv
-	 4OJXa/3TagS8FWcjvPGHg1zwMAS2rrpAkKsGXcmBiJAtYH2StYN70nuD7NYC7g07uw
-	 PwkSV6nA0XGlUBDXcMuSQeOrk5i0MvikAFw4Z5bZNE1ShoD+4ACTTroE1go6dZy5vs
-	 mSeFFcse7+WWUNQpmL3Ew7oFFeqDS7Iw72hNbbYBmRS0KKNURAtx55QvizL57Ljjob
-	 jjLF0o0bD9oB4d4dXsBXPyzi/TzQj/7wv1HlLLLAfUUdKmkqzSaBAYbaoQzIAxgWh5
-	 Yt6QeU84iZpxg==
-Date: Fri, 25 Oct 2024 09:46:19 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 00/10] Run tests in parallel showing number of tests
- running
-Message-ID: <ZxvLW-DMFcM9_K71@google.com>
-References: <20241024073324.1513433-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HBgNwkHo"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e6101877abso45196107b3.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Oct 2024 10:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1729876987; x=1730481787; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xnWHGw0eKbzFpr+Bgh2ZHR3jRDdoOl8w2bFZjp2fXKE=;
+        b=HBgNwkHoLq0c9Ardm7hGqbCNH4cvUDqseDBcDEIW/Gi2KJD/H8OrX+oNfR0RMwsWPh
+         Y4F7CmnxGTBv0tdJIBu98pHVSLtZ+PSCCX41VYVlF9zVmrSqzv4pwchqvS0zvoK5y297
+         fLYo1EM4Koy8C8zLQChsKDtVNfXscQb3bxekxrK5ObeuUGBiukOPlQAJX545YZN+Ym4p
+         gpxTPSuZFCYYdxLkXZyP51e78qR/HjVTxcay8/tYbvjJ6dw32ANpePKYTVODJ/vtAwt9
+         jPsRi1nFoPkEAyqTg2kprhXoI1Ht2qK9Cx993329hCpHsCwYvUKMKj1UgoR5SlxHTUxs
+         cqag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729876987; x=1730481787;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xnWHGw0eKbzFpr+Bgh2ZHR3jRDdoOl8w2bFZjp2fXKE=;
+        b=XIH+rmg9OITIJU6qno0VjWaz7R5kaPQlYzLd6oi8Pc2kt3XYAL8lAp4tvSfXScMQrZ
+         KaS5KEHZ4Ut6ewD3WxnbVGrpW37lHTDxnG7MESD9tiTyCLdsrcKO7IBfcK6bnNtQ3005
+         qb0uXnmCA5mVXSopE9EZUh2nglm5RBYa8uEoGRcvBF7QkSJwDiWhR+9Dk2p0RTtLl13O
+         c8YxEc4KmLrMchYk9yLGZY9UyV69Ew7pYgXHxFCPy/yLy5BV+kz7yxZhBxLSuxsljrzq
+         vRxXQMgpSdeGiRqvybkCdZEoIxJHXBksyDGYPPx5YQzPBXXFPnTkrK+J7/uB2fJoOl4i
+         gUBw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmnpK/5EvaUnKNtShq/D6s4F6vS7n95mXVfhMbQVgEl24kdT5Fx1UOGh1rCkXUhrSNROrl4hnvRk0Rx4mDWUvE@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyaPQgTBL86NualCuFN5jl+v7lHegDQxIKOck++QMcAo8gtTCJ
+	lKd5N5fzUCo//1oaPVETMMfEEefDVRGDKFLDdfpMGpCmAAcMljnW9koFOzqruPq8tMGl5HNxGlo
+	XSioE8Q==
+X-Google-Smtp-Source: AGHT+IHrCQXmBcypl47HjTYUFhsAA6XprwVd3+2HKX5oHa5YuMXPMF/2Cyd+MSETogZ6mmUFrjUMrY+qgkrM
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:5d42:c43e:5e08:3a85])
+ (user=irogers job=sendgmr) by 2002:a05:690c:994:b0:6e2:b263:103f with SMTP id
+ 00721157ae682-6e9d86fa10bmr82907b3.0.1729876986894; Fri, 25 Oct 2024 10:23:06
+ -0700 (PDT)
+Date: Fri, 25 Oct 2024 10:22:57 -0700
+Message-Id: <20241025172303.77538-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241024073324.1513433-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
+Subject: [PATCH v1 0/6] Mypy and pylint build support
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	John Garry <john.g.garry@oracle.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
+	Veronika Molnarova <vmolnaro@redhat.com>, Ze Gao <zegao2021@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ian,
+Support building perf checking the python code with mypy and/or
+pylint. Currently there are too many errors to make this a default.
 
-On Thu, Oct 24, 2024 at 12:33:14AM -0700, Ian Rogers wrote:
-> Avoid waitpid so that stdout/stderr aren't destroyed prior to wanting
-> to read them for display. When running on a color terminal, display
-> the number of running tests (1 if sequential). To avoid previous
-> flicker, only delete and refresh the display line when it changes. An
-> earlier version of this code is here:
-> https://lore.kernel.org/lkml/20240701044236.475098-1-irogers@google.com/
-> 
-> Add a signal handler for perf tests so that unexpected signals are
-> displayed and test clean up is possible.
-> 
-> In perf test add an "exclusive" flag that causes a test to be run with
-> no other test. Set this flag manually for C tests and via a
-> "(exclusive)" in the test description for shell tests. Add the flag to
-> shell tests that may fail when run with other tests.
-> 
-> Change the perf test loop to run in two passes. For parallel
-> execution, the first pass runs all tests that can be run in parallel
-> then the 2nd runs remaining tests sequentially. This causes the
-> "exclusive" tests to be run last and with test numbers moderately out
-> of alignment.
-> 
-> Change the default to be to run tests in parallel. Running tests in
-> parallel brings the execution time down to less than half.
+Shellcheck generates no output on success, so linking shellcheck files
+doesn't cause `ld` to fail. Mypy and pylint generate output that will
+break `ld` so change the Makefile.build to ignore test log files.
 
-Thanks for the update, but I got a build error for this version.
+Address some initial mypy errors.
 
-  tests/builtin-test.c: In function '__cmd_test':                                 
-  tests/builtin-test.c:479:6: error: variable 'width' might be clobbered by 'longjmp' or 'vfork' [-Werror=clobbered]
-    int width = 0;                                                                
-        ^~~~~
+Ian Rogers (6):
+  tools/build: Don't pass test log files to linker
+  perf build: Rename TEST_LOGS to SHELL_TEST_LOGS
+  perf build: Add mypy build tests
+  perf build: Add pylint build tests
+  perf test: Address attr.py mypy error
+  perf python: Fix setup.py mypy errors
 
-Thanks,
-Namhyung
+ tools/build/Makefile.build         |  6 +++++-
+ tools/perf/Build                   | 32 +++++++++++++++++++++++++++---
+ tools/perf/Makefile.perf           | 14 +++++++++++--
+ tools/perf/arch/x86/Build          |  6 +++---
+ tools/perf/arch/x86/tests/Build    |  6 +++---
+ tools/perf/pmu-events/Build        | 25 ++++++++++++++++++++++-
+ tools/perf/scripts/Build           | 26 ++++++++++++++++++++++++
+ tools/perf/tests/Build             | 32 +++++++++++++++++++++++++++---
+ tools/perf/tests/shell/lib/attr.py |  8 +-------
+ tools/perf/trace/beauty/Build      |  6 +++---
+ tools/perf/util/Build              | 31 ++++++++++++++++++++++++++---
+ tools/perf/util/setup.py           | 10 ++++++++--
+ 12 files changed, 171 insertions(+), 31 deletions(-)
 
-> 
-> v4: Add patch to sort exclusive tests last, this allows for increasing
->     test numbers as requested by Namhyung.
-> 
-> v3: Mark additional shell tests as "(exclusive)" to avoid issues with
->     shared resources suggested by Namhyung. Add dependent signal
->     handler change so that kill/ctrl-C don't leave lots of processes,
->     previously sent here:
->     https://lore.kernel.org/lkml/20241017052137.225514-1-irogers@google.com/
-> 
-> v2: Fix inaccurate remaining counts when running specific
->     tests. Rename "remaining" to "active" to better reflect the
->     testing behavior. Move the exclusive flag to test cases and not
->     entire suites. Add more "(exclusive)" flags to test as
->     suggested-by James Clark. Remove "(exclusive)" flag from test
->     descriptions to keep the command line output more concise. Add
->     James Clark's tested-by.
-> 
-> Ian Rogers (10):
->   tools subcmd: Add non-waitpid check_if_command_finished()
->   perf test: Display number of active running tests
->   perf test: Reduce scope of parallel variable
->   perf test: Avoid list test blocking on writing to stdout
->   perf test: Tag parallel failing shell tests with "(exclusive)"
->   perf test: Add a signal handler around running a test
->   perf test: Run parallel tests in two passes
->   perf test: Make parallel testing the default
->   perf test: Add a signal handler to kill forked child processes
->   perf test: Sort tests placing exclusive tests last
-> 
->  tools/lib/subcmd/run-command.c                |  33 ++
->  tools/perf/tests/builtin-test.c               | 405 ++++++++++++------
->  .../tests/shell/coresight/asm_pure_loop.sh    |   2 +-
->  .../shell/coresight/memcpy_thread_16k_10.sh   |   2 +-
->  .../coresight/thread_loop_check_tid_10.sh     |   2 +-
->  .../coresight/thread_loop_check_tid_2.sh      |   2 +-
->  .../shell/coresight/unroll_loop_thread_10.sh  |   2 +-
->  tools/perf/tests/shell/list.sh                |   5 +-
->  .../tests/shell/perftool-testsuite_report.sh  |   2 +-
->  tools/perf/tests/shell/probe_vfs_getname.sh   |   2 +-
->  .../shell/record+script_probe_vfs_getname.sh  |   2 +-
->  tools/perf/tests/shell/record.sh              |   2 +-
->  tools/perf/tests/shell/record_lbr.sh          |   2 +-
->  tools/perf/tests/shell/record_offcpu.sh       |   2 +-
->  tools/perf/tests/shell/stat_all_pmu.sh        |   2 +-
->  tools/perf/tests/shell/stat_bpf_counters.sh   |   2 +-
->  tools/perf/tests/shell/test_arm_coresight.sh  |   2 +-
->  .../tests/shell/test_arm_coresight_disasm.sh  |   2 +-
->  tools/perf/tests/shell/test_arm_spe.sh        |   2 +-
->  tools/perf/tests/shell/test_data_symbol.sh    |   2 +-
->  tools/perf/tests/shell/test_intel_pt.sh       |   2 +-
->  .../perf/tests/shell/test_stat_intel_tpebs.sh |   2 +-
->  .../tests/shell/trace+probe_vfs_getname.sh    |   2 +-
->  tools/perf/tests/task-exit.c                  |   9 +-
->  tools/perf/tests/tests-scripts.c              |   7 +-
->  tools/perf/tests/tests.h                      |   9 +
->  tools/perf/util/color.h                       |   1 +
->  27 files changed, 365 insertions(+), 144 deletions(-)
-> 
-> -- 
-> 2.47.0.163.g1226f6d8fa-goog
-> 
+-- 
+2.47.0.163.g1226f6d8fa-goog
+
