@@ -1,146 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E957080E;
-	Fri, 25 Oct 2024 16:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB84320B;
+	Fri, 25 Oct 2024 16:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729872983; cv=none; b=dshX3Q6cXywyvHHyUzBZH/dr8qnmtegY4FwgDRF1+tGRpI4uqjOKwURyCVeO306wbPDic5SXbzBgZPFgYy62vq+O3iHjGwSGPRoXMqGfteeAbqvAN8E9yAufKwl7S/LXYpfDOXAD2h6FGu+mTB71YmfQxZtAly41AC11u8eaxlk=
+	t=1729874784; cv=none; b=XdcEO29pusqxw4IoHwqUAM42hBNSe12mK4Gjq6BDGzJ9ssStIus2yAwMN1Eb2B1cgsNQXfIn1+HQwZB0s4xghErCBYTIbavr7edi3HcPOS0Rn6fMrPB+szJJ5qeJfH6byBZKLgv9WTmbHFfm/uzMJ4MmPaGQjzHVKcsoJ6d6/4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729872983; c=relaxed/simple;
-	bh=jAyEYdh61XeY7Gsp+z+t8Gb7g67E3e88u1Ybd1z+u8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gTuur95wrjEVQsKF4sOsaXyfnbZgSFbg2ZYOD1pSSudYoxffYfLtYUCemjvt24rkWvMJXYXNmHJASHsNxP8wnWPUlHhbkzHTiEXjC65PoubEeJaGGZztuKuCjbkRiaFuHob9Cnpwiw9kOalg5bMMUNIS06CjrGbSJ//8Cq9n5Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=culC0GUY; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1729874784; c=relaxed/simple;
+	bh=8dhg0mD8QTOXORuIIu5J9uE0TBP2PYczuhJ6uG5Fc9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t/yoO/p9QKzyPvt5bNs3V54SYHod3pJSVjTWuhqn4WFrJxca9S/lySL8C4wxtQBEdD33uLHlPLUX/7g8LQyBbTHP/I0hN8pp7trBzqOhWisNGNuFqBJRWWaxFBDT/kgEyoxSmHBHgZg5cI5KlPpbexikaX8jSkKJnAkIRrtZP0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GFMAP8sm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="culC0GUY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729872981; x=1761408981;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jAyEYdh61XeY7Gsp+z+t8Gb7g67E3e88u1Ybd1z+u8M=;
-  b=culC0GUYLyRb8Nq3agJl2TUYKZ6sq9L8qToZ36/hM6K8WqzWI6BOIQxF
-   S5k6wnLonyd7z3686z+IybVxav94DP7cHmJLu9l/fbdTCOshYnT39+yul
-   TKOuTJ+hJONu0ERiwdSDsTHUw95bkHPWfbpoPKNVNXpTMcbFUz7QFbg5H
-   MJ56zLDVzUcS4X0ToAokogjde310xf07cyJY88HfgXAja9hZVasIBwvq7
-   9M+RIIYn7ILCTWgICHRCckJ8KslC4bI+VQkozzwoohVfgtvu9c7yMpP3I
-   E/PMaMTh0IKDPLyfi2v60tM7tAJ9VniToEBIpvmIJr811WYQp4lzIOORp
-   A==;
-X-CSE-ConnectionGUID: CAbqRnVpS8CmDh4I/r8Gcw==
-X-CSE-MsgGUID: Hwgbh5U1S2mRUKmMDUR/fA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11236"; a="32407167"
-X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
-   d="scan'208";a="32407167"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 09:16:21 -0700
-X-CSE-ConnectionGUID: RpympDO8R2uMpCQDRTAaaA==
-X-CSE-MsgGUID: nKB+BOxNT2izVtoTvjHSvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
-   d="scan'208";a="111764279"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.24.8.117]) ([10.24.8.117])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 09:16:20 -0700
-Message-ID: <d0d8a945-1623-448a-b08a-8877464a4531@intel.com>
-Date: Fri, 25 Oct 2024 09:16:20 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GFMAP8sm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CBF5C4CEC3;
+	Fri, 25 Oct 2024 16:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729874784;
+	bh=8dhg0mD8QTOXORuIIu5J9uE0TBP2PYczuhJ6uG5Fc9s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GFMAP8sm4YNFc3gqfzKZaf+xtba6VdI+VqMoKKnMUEQrHXQZSUjf/lgeoMENXw4rv
+	 4OJXa/3TagS8FWcjvPGHg1zwMAS2rrpAkKsGXcmBiJAtYH2StYN70nuD7NYC7g07uw
+	 PwkSV6nA0XGlUBDXcMuSQeOrk5i0MvikAFw4Z5bZNE1ShoD+4ACTTroE1go6dZy5vs
+	 mSeFFcse7+WWUNQpmL3Ew7oFFeqDS7Iw72hNbbYBmRS0KKNURAtx55QvizL57Ljjob
+	 jjLF0o0bD9oB4d4dXsBXPyzi/TzQj/7wv1HlLLLAfUUdKmkqzSaBAYbaoQzIAxgWh5
+	 Yt6QeU84iZpxg==
+Date: Fri, 25 Oct 2024 09:46:19 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4 00/10] Run tests in parallel showing number of tests
+ running
+Message-ID: <ZxvLW-DMFcM9_K71@google.com>
+References: <20241024073324.1513433-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 43/58] KVM: x86/pmu: Introduce PMU operator for
- setting counter overflow
-To: Mingwei Zhang <mizhang@google.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
- <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-44-mizhang@google.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <20240801045907.4010984-44-mizhang@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241024073324.1513433-1-irogers@google.com>
 
+Hi Ian,
 
+On Thu, Oct 24, 2024 at 12:33:14AM -0700, Ian Rogers wrote:
+> Avoid waitpid so that stdout/stderr aren't destroyed prior to wanting
+> to read them for display. When running on a color terminal, display
+> the number of running tests (1 if sequential). To avoid previous
+> flicker, only delete and refresh the display line when it changes. An
+> earlier version of this code is here:
+> https://lore.kernel.org/lkml/20240701044236.475098-1-irogers@google.com/
+> 
+> Add a signal handler for perf tests so that unexpected signals are
+> displayed and test clean up is possible.
+> 
+> In perf test add an "exclusive" flag that causes a test to be run with
+> no other test. Set this flag manually for C tests and via a
+> "(exclusive)" in the test description for shell tests. Add the flag to
+> shell tests that may fail when run with other tests.
+> 
+> Change the perf test loop to run in two passes. For parallel
+> execution, the first pass runs all tests that can be run in parallel
+> then the 2nd runs remaining tests sequentially. This causes the
+> "exclusive" tests to be run last and with test numbers moderately out
+> of alignment.
+> 
+> Change the default to be to run tests in parallel. Running tests in
+> parallel brings the execution time down to less than half.
 
-On 7/31/2024 9:58 PM, Mingwei Zhang wrote:
-> Introduce PMU operator for setting counter overflow. When emulating counter
-> increment, multiple counters could overflow at the same time, i.e., during
-> the execution of the same instruction. In passthrough PMU, having an PMU
-> operator provides convenience to update the PMU global status in one shot
-> with details hidden behind the vendor specific implementation.
+Thanks for the update, but I got a build error for this version.
 
-Since neither Intel nor AMD does implement this API, this patch should
-be dropped.
+  tests/builtin-test.c: In function '__cmd_test':                                 
+  tests/builtin-test.c:479:6: error: variable 'width' might be clobbered by 'longjmp' or 'vfork' [-Werror=clobbered]
+    int width = 0;                                                                
+        ^~~~~
+
+Thanks,
+Namhyung
 
 > 
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->  arch/x86/include/asm/kvm-x86-pmu-ops.h | 1 +
->  arch/x86/kvm/pmu.h                     | 1 +
->  arch/x86/kvm/vmx/pmu_intel.c           | 5 +++++
->  3 files changed, 7 insertions(+)
+> v4: Add patch to sort exclusive tests last, this allows for increasing
+>     test numbers as requested by Namhyung.
 > 
-> diff --git a/arch/x86/include/asm/kvm-x86-pmu-ops.h b/arch/x86/include/asm/kvm-x86-pmu-ops.h
-> index 72ca78df8d2b..bd5b118a5ce5 100644
-> --- a/arch/x86/include/asm/kvm-x86-pmu-ops.h
-> +++ b/arch/x86/include/asm/kvm-x86-pmu-ops.h
-> @@ -28,6 +28,7 @@ KVM_X86_PMU_OP_OPTIONAL(passthrough_pmu_msrs)
->  KVM_X86_PMU_OP_OPTIONAL(save_pmu_context)
->  KVM_X86_PMU_OP_OPTIONAL(restore_pmu_context)
->  KVM_X86_PMU_OP_OPTIONAL(incr_counter)
-> +KVM_X86_PMU_OP_OPTIONAL(set_overflow)
->  
->  #undef KVM_X86_PMU_OP
->  #undef KVM_X86_PMU_OP_OPTIONAL
-> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-> index 325f17673a00..78a7f0c5f3ba 100644
-> --- a/arch/x86/kvm/pmu.h
-> +++ b/arch/x86/kvm/pmu.h
-> @@ -45,6 +45,7 @@ struct kvm_pmu_ops {
->  	void (*save_pmu_context)(struct kvm_vcpu *vcpu);
->  	void (*restore_pmu_context)(struct kvm_vcpu *vcpu);
->  	bool (*incr_counter)(struct kvm_pmc *pmc);
-> +	void (*set_overflow)(struct kvm_vcpu *vcpu);
->  
->  	const u64 EVENTSEL_EVENT;
->  	const int MAX_NR_GP_COUNTERS;
-> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-> index 42af2404bdb9..2d46c911f0b7 100644
-> --- a/arch/x86/kvm/vmx/pmu_intel.c
-> +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> @@ -881,6 +881,10 @@ static void intel_restore_guest_pmu_context(struct kvm_vcpu *vcpu)
->  	wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl_hw);
->  }
->  
-> +static void intel_set_overflow(struct kvm_vcpu *vcpu)
-> +{
-> +}
-> +
->  struct kvm_pmu_ops intel_pmu_ops __initdata = {
->  	.rdpmc_ecx_to_pmc = intel_rdpmc_ecx_to_pmc,
->  	.msr_idx_to_pmc = intel_msr_idx_to_pmc,
-> @@ -897,6 +901,7 @@ struct kvm_pmu_ops intel_pmu_ops __initdata = {
->  	.save_pmu_context = intel_save_guest_pmu_context,
->  	.restore_pmu_context = intel_restore_guest_pmu_context,
->  	.incr_counter = intel_incr_counter,
-> +	.set_overflow = intel_set_overflow,
->  	.EVENTSEL_EVENT = ARCH_PERFMON_EVENTSEL_EVENT,
->  	.MAX_NR_GP_COUNTERS = KVM_INTEL_PMC_MAX_GENERIC,
->  	.MIN_NR_GP_COUNTERS = 1,
-
+> v3: Mark additional shell tests as "(exclusive)" to avoid issues with
+>     shared resources suggested by Namhyung. Add dependent signal
+>     handler change so that kill/ctrl-C don't leave lots of processes,
+>     previously sent here:
+>     https://lore.kernel.org/lkml/20241017052137.225514-1-irogers@google.com/
+> 
+> v2: Fix inaccurate remaining counts when running specific
+>     tests. Rename "remaining" to "active" to better reflect the
+>     testing behavior. Move the exclusive flag to test cases and not
+>     entire suites. Add more "(exclusive)" flags to test as
+>     suggested-by James Clark. Remove "(exclusive)" flag from test
+>     descriptions to keep the command line output more concise. Add
+>     James Clark's tested-by.
+> 
+> Ian Rogers (10):
+>   tools subcmd: Add non-waitpid check_if_command_finished()
+>   perf test: Display number of active running tests
+>   perf test: Reduce scope of parallel variable
+>   perf test: Avoid list test blocking on writing to stdout
+>   perf test: Tag parallel failing shell tests with "(exclusive)"
+>   perf test: Add a signal handler around running a test
+>   perf test: Run parallel tests in two passes
+>   perf test: Make parallel testing the default
+>   perf test: Add a signal handler to kill forked child processes
+>   perf test: Sort tests placing exclusive tests last
+> 
+>  tools/lib/subcmd/run-command.c                |  33 ++
+>  tools/perf/tests/builtin-test.c               | 405 ++++++++++++------
+>  .../tests/shell/coresight/asm_pure_loop.sh    |   2 +-
+>  .../shell/coresight/memcpy_thread_16k_10.sh   |   2 +-
+>  .../coresight/thread_loop_check_tid_10.sh     |   2 +-
+>  .../coresight/thread_loop_check_tid_2.sh      |   2 +-
+>  .../shell/coresight/unroll_loop_thread_10.sh  |   2 +-
+>  tools/perf/tests/shell/list.sh                |   5 +-
+>  .../tests/shell/perftool-testsuite_report.sh  |   2 +-
+>  tools/perf/tests/shell/probe_vfs_getname.sh   |   2 +-
+>  .../shell/record+script_probe_vfs_getname.sh  |   2 +-
+>  tools/perf/tests/shell/record.sh              |   2 +-
+>  tools/perf/tests/shell/record_lbr.sh          |   2 +-
+>  tools/perf/tests/shell/record_offcpu.sh       |   2 +-
+>  tools/perf/tests/shell/stat_all_pmu.sh        |   2 +-
+>  tools/perf/tests/shell/stat_bpf_counters.sh   |   2 +-
+>  tools/perf/tests/shell/test_arm_coresight.sh  |   2 +-
+>  .../tests/shell/test_arm_coresight_disasm.sh  |   2 +-
+>  tools/perf/tests/shell/test_arm_spe.sh        |   2 +-
+>  tools/perf/tests/shell/test_data_symbol.sh    |   2 +-
+>  tools/perf/tests/shell/test_intel_pt.sh       |   2 +-
+>  .../perf/tests/shell/test_stat_intel_tpebs.sh |   2 +-
+>  .../tests/shell/trace+probe_vfs_getname.sh    |   2 +-
+>  tools/perf/tests/task-exit.c                  |   9 +-
+>  tools/perf/tests/tests-scripts.c              |   7 +-
+>  tools/perf/tests/tests.h                      |   9 +
+>  tools/perf/util/color.h                       |   1 +
+>  27 files changed, 365 insertions(+), 144 deletions(-)
+> 
+> -- 
+> 2.47.0.163.g1226f6d8fa-goog
+> 
