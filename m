@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBCA1D47D9
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Oct 2024 12:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762651D61A7
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Oct 2024 12:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729945089; cv=none; b=fiyWhCoSy+QPy+/lIkMvF9VAyaSLnN4NuZKtQ3ghlYzHQp9U8+YMBBsqA8IHd9n9DSr0kaN/C1RbW5MOA2H+EkbojBp+IzEX9RM5boisPQsZ2RovZnD3yIW7EmX9fJo7VsZHKKEqfeyncQVNOegf19MHZm5lWsmzXhPEp0rObpY=
+	t=1729945092; cv=none; b=U/q0j1VxBOmzGv8JTLovnBSeShwQzMl6UJtlfWblgkFt368OCdyTu/VHqkdyMEpmSJYvTtN66J9N/DdW1ZCvRjh7kKWkggRH+m+hxm6LZGiEq1t5y0Su0ebMmPK9AkWvxHmiIkb2oE6SPFBOYVJeVhmK6rEHlnI9mI3mZ6zZ5gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729945089; c=relaxed/simple;
-	bh=vZB35SPaUV/ecna2U9vXm56Rzj4+ti0U2yyXIsnH7v4=;
+	s=arc-20240116; t=1729945092; c=relaxed/simple;
+	bh=QMbvqc11c1t3yQ/Xre0ZQBICf4/YYduHNNtc/69A+Xg=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=sdDT80PgEuuqt9GFUYxOr7KaLugkkx0qwOjRnTMduT8yyCNrDJy9K/mrPNMffwmr9y56/UVHEH/U5cFMrrPESuyijHYd3qlj4FvBzbI/hGEnubOPWabs+/3D7wvoC0hWltRJdlcxbzEyKrFCl58NlTCLtVUp2d9MmwDeAj34XFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pTbgIa5h; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=SW+coDKge7LStYo2TY/P4SsDPinbm9iXrTKo/r2B+JMzbox/TaG6w79mV6qN1gUTKSpf81YazdxXyrjNpKUF8AkKkLCfLavexCPlIi+ig2FAhc8koUr1Jb1BTGmnls8d89IN3xOwcQXfI2vFnskK0ImWri679HYgR87FSknH5IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yNg5EHSZ; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pTbgIa5h"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e31d9c8efcso53542157b3.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 26 Oct 2024 05:18:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yNg5EHSZ"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e9ba43a9a0so36033667b3.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 26 Oct 2024 05:18:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729945086; x=1730549886; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729945089; x=1730549889; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=WdNDvzlbuJZcRwH/3AdtbsrZFMtP+MFgk5KWwVeQrN0=;
-        b=pTbgIa5hI2IAgriHGqHyJlxkOz0rUChEhig5H0wFI+JpUKXabEfmJ+5zk8C12Sh1pi
-         Rg7las5fOC8LkWvEttwDIQ2iFQUFieExDNSsi9W9aPMnoTy23zTgNFvguPkmP5a+uYWL
-         BiyXpltetJeuXW7hyZb8S5Jqp6srD7xQIxPWFzosmJGKAd72IWHvX6PJteDPEpyLXu9l
-         dlrUAAbR2doiFK2tGrcfhtetpTesBUuG9gQ4YHPYMh4EwDcOk4sMJyXY5MW2AOT+8If9
-         uzoLTuinaZGMNd8NjBoCDrfCcQYND3Z8M+P8BfFij2ioA+0/rqtHxSlykL9A+mejQPnY
-         w+rg==
+        bh=7F7PVEl1yMjHz9vox0k4Hp07MzhtEZCh12BPQyxhhQY=;
+        b=yNg5EHSZZCJjhB7Ff/ZK2sqDzcGIxQMNs9d6ONBIG0e2Tg2fd07oMw0E+JYGSJ4dz+
+         fZ0I0IAagRgqA5cToMBngKzfODYFS1aJALnoHOvr1Bih7rd3nDnUbu4x8N3ZnwjL5dhd
+         89nkSWgQKFHe5UOoXLx97wZTRrw9UT5161N2aLkEyAH+t6AcQm8cxvWsgOPk322XLI5U
+         FdNUHwzPBua9e3t27V3QKTrCH9ZkAVE/GFBA0sa0wr9ortr86Cosb4vTPvsKwGv59csa
+         lwtmh9TBOF7AGpAMmvjYSK1Zc2MxTGggSIq07QPQKdmH9jmV7twxOV+5CUhPt3vv1okB
+         Ghyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729945086; x=1730549886;
+        d=1e100.net; s=20230601; t=1729945089; x=1730549889;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WdNDvzlbuJZcRwH/3AdtbsrZFMtP+MFgk5KWwVeQrN0=;
-        b=t3WsBoZQ1xYdxJ/JuQO3lB4wnx2IoWrg9iMah6FPmLcjg6wwiYSx+RHSMOX7DfpVgp
-         gRbpX53Be3+kVRhc/wvaOYi8RDuQQMWTupbaralr93bT04Q7I9PntGveSy16N90mmkTf
-         NDZD0W2MAY6BZJqt50c7WnrcyGfAEcktRi2l4TU59ZGzLuMRIpQ3cAV+6Ox8SZsCBBM7
-         HL+wtIYUIWLrLwz3uWes5a6tXKXqicrFR0S/gakOtjnrkZwJDuJkcalFn6oqwX2iXzb5
-         uPrUD6VPSF2NWrKfjTpzZi54uimHoGh2s74E3HVeS7OCxREJL2lHY3xczrcOyYBP/Gjs
-         YGrg==
-X-Forwarded-Encrypted: i=1; AJvYcCWw2/aw9cqLqvYTV6L0zdJ5kOPQzwCWIuTzcDQRGxT5xuK7PmnFht0kVcidBG+eoGmdFKn0vmwvkv1mStSNVnJi@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZd+ZcO+iCuzELDcABZP5PUJ9RpAoKujDgcQocRwS7Dt6gyPt5
-	Vr5Sprh0akQWBywMehOvhJPyosHChZ9ERoEITqPmt3pbCkFthrVM4D6/H5xABWSg2k9ffbSjf4V
-	C4tt7OQ==
-X-Google-Smtp-Source: AGHT+IFOl40mvdVs5SQR71bN1+vwfDx/yPB8F4Q/dtZHVs4/wMyo+J/RvfVAtx7pjhDNaEO8viHyeAKpEpqm
+        bh=7F7PVEl1yMjHz9vox0k4Hp07MzhtEZCh12BPQyxhhQY=;
+        b=blr3FUhEOQQGDzubBN/ckwOIPGQozPcOYBYoyc14Tf8BFJE9Yug6CaHvcDNBJtcdmM
+         8sqFSFxyAYzmR8125kxd3hmyYG1hjLBKQd/bikpb6q0/9/J6TmNatbRX4VUylne7b/4R
+         lO0W/YMD2Vajti0JrTFj4OkBZwg/999mH7A924XOMgGhKEfOEhUZHjo+Voq3Xx5Pc5dU
+         LyChHBuHCYl3uW4WVWkGRsdvXwDDbymYotVAL8vvEWfByyqSL7JTlX9I4+XtexdiaGcL
+         Lj20GTu2p/4FeMD1RtFJhm6BJTkEypmJx1Vgh/VFE0vJNy3YDxbZlypBsjnsCvMqK2ow
+         s0og==
+X-Forwarded-Encrypted: i=1; AJvYcCViGRpNb7/rbdpcPRPP1gqQgPuwGWssmW8F1J5xssSZfbaZXwcDYC+CtPZ/KgGTr3CrhBR/kgyIZBiNB/+OlEtO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAT8ZgW+NF5bLkSTO/6th8q/rfwhbmMWcqBQ1blT6qwkKBNHEV
+	cr+9vjgxSGF3+5Lwc7mfDCzPEuZuCBHLNHqkgtKkmFTkR/5uFrmEmrCmMlPwSDI0d0UvlIqsAb4
+	7QfotwA==
+X-Google-Smtp-Source: AGHT+IGokN+iNYXdGTM/m8jAXY+rBHKDjwssa4ELvzrrAB/oAfWnGPy244qe6dALscEwgMiTq4roYYY/2wDq
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:4bc4:f7cc:83b4:dece])
- (user=irogers job=sendgmr) by 2002:a05:690c:6ac6:b0:6e3:2f0b:b595 with SMTP
- id 00721157ae682-6e9d8b171afmr600867b3.5.1729945086125; Sat, 26 Oct 2024
- 05:18:06 -0700 (PDT)
-Date: Sat, 26 Oct 2024 05:17:55 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:3607:b0:68d:52a1:be9 with SMTP id
+ 00721157ae682-6e9d88b0b4cmr691497b3.1.1729945088518; Sat, 26 Oct 2024
+ 05:18:08 -0700 (PDT)
+Date: Sat, 26 Oct 2024 05:17:56 -0700
 In-Reply-To: <20241026121758.143259-1-irogers@google.com>
-Message-Id: <20241026121758.143259-2-irogers@google.com>
+Message-Id: <20241026121758.143259-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241026121758.143259-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
-Subject: [PATCH v1 1/4] perf evsel: Add pmu_name helper
+Subject: [PATCH v1 2/4] perf stat: Fix find_stat for mixed legacy/non-legacy events
 From: Ian Rogers <irogers@google.com>
 To: Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org, 
 	beeman@rivosinc.com, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -75,48 +75,96 @@ To: Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add helper to get the name of the evsel's PMU. This handles the case
-where there's no sysfs PMU via parse_events event_type helper.
+Legacy events typically don't have a PMU when added leading to
+mismatched legacy/non-legacy cases in find_stat. Use evsel__find_pmu
+to make sure the evsel PMU is looked up. Update the evsel__find_pmu
+code to look for the PMU using the extended config type or, for legacy
+hardware/hw_cache events on non-hybrid systems, just use the core PMU.
 
+Before:
+```
+$ perf stat -e cycles,cpu/instructions/ -a sleep 1
+ Performance counter stats for 'system wide':
+
+       215,309,764      cycles
+        44,326,491      cpu/instructions/
+
+       1.002555314 seconds time elapsed
+```
+After:
+```
+$ perf stat -e cycles,cpu/instructions/ -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+       990,676,332      cycles
+     1,235,762,487      cpu/instructions/                #    1.25  insn per cycle
+
+       1.002667198 seconds time elapsed
+```
+
+Fixes: 3612ca8e2935 ("perf stat: Fix the hard-coded metrics
+calculation on the hybrid")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c | 10 ++++++++++
- tools/perf/util/evsel.h |  1 +
- 2 files changed, 11 insertions(+)
+ tools/perf/util/pmus.c        | 20 +++++++++++++++++---
+ tools/perf/util/stat-shadow.c |  3 ++-
+ 2 files changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index f780e30aa259..87ed417df133 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -236,6 +236,16 @@ int evsel__object_config(size_t object_size, int (*init)(struct evsel *evsel),
- 	return 0;
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 107de86c2637..8d8eeeb28868 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -708,11 +708,25 @@ char *perf_pmus__default_pmu_name(void)
+ struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
+ {
+ 	struct perf_pmu *pmu = evsel->pmu;
++	bool legacy_core_type;
+ 
+-	if (!pmu) {
+-		pmu = perf_pmus__find_by_type(evsel->core.attr.type);
+-		((struct evsel *)evsel)->pmu = pmu;
++	if (pmu)
++		return pmu;
++
++	pmu = perf_pmus__find_by_type(evsel->core.attr.type);
++	legacy_core_type =
++		evsel->core.attr.type == PERF_TYPE_HARDWARE ||
++		evsel->core.attr.type == PERF_TYPE_HW_CACHE;
++	if (!pmu && legacy_core_type) {
++		if (perf_pmus__supports_extended_type()) {
++			u32 type = evsel->core.attr.config >> PERF_PMU_TYPE_SHIFT;
++
++			pmu = perf_pmus__find_by_type(type);
++		} else {
++			pmu = perf_pmus__find_core_pmu();
++		}
+ 	}
++	((struct evsel *)evsel)->pmu = pmu;
+ 	return pmu;
  }
  
-+const char *evsel__pmu_name(const struct evsel *evsel)
-+{
-+	struct perf_pmu *pmu = evsel__find_pmu(evsel);
-+
-+	if (pmu)
-+		return pmu->name;
-+
-+	return event_type(evsel->core.attr.type);
-+}
-+
- #define FD(e, x, y) (*(int *)xyarray__entry(e->core.fd, x, y))
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index ada787947e16..f6d34e12e65c 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -151,6 +151,7 @@ static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type
+ {
+ 	struct evsel *cur;
+ 	int evsel_ctx = evsel_context(evsel);
++	struct perf_pmu *evsel_pmu = evsel__find_pmu(evsel);
  
- int __evsel__sample_size(u64 sample_type)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 04934a7af174..5774a9d4d725 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -232,6 +232,7 @@ int evsel__object_config(size_t object_size,
- 			 void (*fini)(struct evsel *evsel));
+ 	evlist__for_each_entry(evsel->evlist, cur) {
+ 		struct perf_stat_aggr *aggr;
+@@ -177,7 +178,7 @@ static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type
+ 		 * Except the SW CLOCK events,
+ 		 * ignore if not the PMU we're looking for.
+ 		 */
+-		if ((type != STAT_NSECS) && (evsel->pmu != cur->pmu))
++		if ((type != STAT_NSECS) && (evsel_pmu != evsel__find_pmu(cur)))
+ 			continue;
  
- struct perf_pmu *evsel__find_pmu(const struct evsel *evsel);
-+const char *evsel__pmu_name(const struct evsel *evsel);
- bool evsel__is_aux_event(const struct evsel *evsel);
- 
- struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx);
+ 		aggr = &cur->stats->aggr[aggr_idx];
 -- 
 2.47.0.163.g1226f6d8fa-goog
 
