@@ -1,246 +1,212 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2058.outbound.protection.outlook.com [40.107.102.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B421190696;
-	Mon, 28 Oct 2024 09:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730107172; cv=fail; b=ZW+D5dN71D+kuSymnPfOnci/BaB+VGHMi00F/X1qbrBd2VBvP1s+nwMpOEfhgtcU3sG8o3JlXX50F6Pw+NqziSEWEwkMN+sD7hE3Q6MCWuXvgkWuMaMn/n18iCc22MDsiKMn4HkNRCyv1nI+QuXFH9LabjprynfFdnUvVMHZC/s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730107172; c=relaxed/simple;
-	bh=P/cKaQwMLNu4ib+fnDTtC+gCifgqo2y2qs2F2q7KjpM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FoXXwph7A37PQUEyo19uCg9r9XYts40ioE3eskJyaO/1YrewXx3GpBobsWoz+WawiuSSTQFdVikzTjqY+fTbTQ23lGvT5dKhw2znsg/VnPS4qNakvxqjVAAj5dmnfocqCtDGgrHPTKFnSJWfJdaT3X96k2g/XECIKuDQWaT6x7s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LLLjwBfA; arc=fail smtp.client-ip=40.107.102.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18B11D959B;
+	Mon, 28 Oct 2024 12:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730118102; cv=none; b=JeOe5u7YjrTrtsh5ftrYmjqaKNtrwXpy0eygON80YBgdF9k7KDv6fq0FZq97tOPQZAV4//bdO/hw6IBO8C5Q+ACx2+RPPVE38il/NzV7UMEQxj2y0we9qPQWUesjYwklGqF5CF3VQ5AvdSGNbnqT9FrY+tyyPCH3SleJ98HWZHo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730118102; c=relaxed/simple;
+	bh=JKM0ShELTOKoSqHWt3M5BDy+zBaQnH4xCraeC4T6Av0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o5QKCfYZWi9zy8m0ftDUi8LqY8tLNtDsoyQw4FHrI1zbYZRQB9PavXxg0rV+uS2MqGlDCHmIWmOPSDBCRei9k1sFO/R9fbv2XBjnvd2j8lWfoaS/fM0calV8R0GjzUx6Slp1kf/KulXSC8+xg/jWcGraUUzfnNqhnpxw7fqRJB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=li/h3x9c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LLLjwBfA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dUW5r9vgD6eQyZXidPof5NINgur4kK5xpj2W1AQPV5sMJez2I4UcQ8t0EhAE5SHNSNQOTPie8OhG2j2BxsXjOgcp0PEP0aRE9lkNw83hO232iMNoMuyj0EhJWPrNL4Ps1TipzIllUsyG0vTPpO0c8qRGmBQ0MScS0kS+y8ZaX/yOVrKfw004TDF03SnFaOaj1+vcllDpqDdfE0YG3dqQuH8HeF4yVvyhjCJUxhq+7FpDOR22RelcVLxoP9HUX+yZ+/Vke2X4TL1t/b1milwh1+/cDfqKam746TGu63LgXdLs9rPZK9vqLJg/yZikRUYnCcFPxMvlpwcWOK/9pyKSFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wIGcHL9nzCUq+PZjq2FjGTvHM/05QYMuJirRff5IxIo=;
- b=CWIEYTPc0jYIZgbaIF0lrdAFiWst4le7tltIH9LHwt0LrvH4I8ZNPMyBHrjfM1TtE8eKiNB8/He243GJV8Zk5qnxqLAL8rWukQiqJKDBXxjwgfKJBZOD1CVz2ZYz7be/gBekfiE32aQN9OPKB1bK2OI8DV6Khkr9ntmkCodYWeFzMUCGG66DBU7KWA6Smf/KxY8vG7iwkT7dcCtk9d+TM1lMa8j2NJI41/Jf81/nOR/Loc/4G0rZzb7tZ+v0QWfWBE7SxRlJcKBDiRCV5g3r3Dr2KZFdQwt1GTqe3lLjbleUIHO8Q/bAix0voUL5f2tqG73a6RfR30777o/Nez3gzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wIGcHL9nzCUq+PZjq2FjGTvHM/05QYMuJirRff5IxIo=;
- b=LLLjwBfA06RASsr3JcAdUt20CFUbXYzoc7TNQxuWCzgXxo/y1OSGNT30ce4t5Lv1bilystEaJDtg0igndkmJ4uEmx24t/g5vo91SXYb5mohfsfBHHgq0cgsAPJx4CcG7UOgzPXictAkfgxOEZNYaEAYZpQKVCpJ2mxy0ZCRxwCU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
- by DM4PR12MB7696.namprd12.prod.outlook.com (2603:10b6:8:100::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.23; Mon, 28 Oct
- 2024 09:19:27 +0000
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9%7]) with mapi id 15.20.8048.017; Mon, 28 Oct 2024
- 09:19:27 +0000
-Message-ID: <52e578d0-a885-4d6c-836d-fc3ec0f491b2@amd.com>
-Date: Mon, 28 Oct 2024 14:49:13 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 03/10] perf/x86/rapl: Remove the cpu_to_rapl_pmu()
- function
-To: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
-Cc: peterz@infradead.org, mingo@redhat.com, rui.zhang@intel.com,
- acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, tglx@linutronix.de,
- bp@alien8.de, dave.hansen@linux.intel.com, ananth.narayan@amd.com,
- kprateek.nayak@amd.com, ravi.bangoria@amd.com, x86@kernel.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241025111348.3810-1-Dhananjay.Ugwekar@amd.com>
- <20241025111348.3810-4-Dhananjay.Ugwekar@amd.com>
- <Zx9RHtFAURrORTrd@BLRRASHENOY1.amd.com>
-Content-Language: en-US
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-In-Reply-To: <Zx9RHtFAURrORTrd@BLRRASHENOY1.amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR01CA0003.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::16) To LV8PR12MB9207.namprd12.prod.outlook.com
- (2603:10b6:408:187::15)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="li/h3x9c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CBE5C4CEE4;
+	Mon, 28 Oct 2024 12:21:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730118102;
+	bh=JKM0ShELTOKoSqHWt3M5BDy+zBaQnH4xCraeC4T6Av0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=li/h3x9cAlRKxXqbtpqPOdWohkw358jNpkm5W7iT78GU7ghspb/W+n7WESsaaS+bF
+	 Fay1kDVsRRhAaIsCIZEbD3YIOdIjGlF7mDKB4S6rWD3F3MoCahd0/wUIc89Pp10v48
+	 iNveh0QPfxrUf8ur6vPb+mTNd+wJvnlVXi7M4akFjWIOr6SITi6oLyjAxLZaom6KUx
+	 MFfYnNtKWNsKmRzlzN/qmsByJLnNyOdHa7TALo5XzRN7H13RMkrX5rUKXhBeJ4DXo6
+	 L3/LcNTCGrnhDFp53FvSUfyY7Y6Z5bkSpKgIJT7m2Lwc6BMFrEcf+IB6KyRlDw510N
+	 ZWWnw3+qcAP2g==
+Date: Mon, 28 Oct 2024 13:21:39 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Lai, Yi" <yi1.lai@linux.intel.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>, yi1.lai@intel.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
+Message-ID: <Zx-B0wK3xqRQsCOS@localhost.localdomain>
+References: <20240624152732.1231678-1-bigeasy@linutronix.de>
+ <20240624152732.1231678-3-bigeasy@linutronix.de>
+ <Zx9Losv4YcJowaP/@ly-workstation>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|DM4PR12MB7696:EE_
-X-MS-Office365-Filtering-Correlation-Id: c5a17a91-9f47-45c3-1772-08dcf7319ec5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZzgxalFaU1FlWEZBVnJUTmY2b1M3ZU12ekRYWnc5Ry9lRHBHL3BlTnE3UTVj?=
- =?utf-8?B?bE0xSHIvTW5zdlNRS2VnS1lzZ0hnazdtRkkxTzFZb05MdkhlUmxVWlhtQy9O?=
- =?utf-8?B?ZWRkWW01QXVNbFR6Q0hHY0pYZjhRY0NZV3VmSEE2bmRHYVNWM2VjeXRMcGMz?=
- =?utf-8?B?TGxxcGtYTWxubGFyMU8zUmlXNEI2WE4rUmUvSkJGaFdCWjJRNW81WTZ2TFJy?=
- =?utf-8?B?R2lYWk50Vnc1U1FBWEJVZXhleE1RMlJPcHd5aDFvZ2xLdENKZit2bEdVeTJV?=
- =?utf-8?B?RFN6ZXRQOWR0ajRKN1lDVVMvRFRNazJrUHlPWjVXbHhNWWE0c1M2c1A2d21k?=
- =?utf-8?B?MjVVNWhHTmNodzFwU0hyNmJOLzMwS2s1cnJiSUhkYUFxN3BNbERsUDZXcTlM?=
- =?utf-8?B?S2svdHBDMHZ1Z0kvZE1RY1g0MjBtSmwwTGFJaXBBUFFaTGgxd2dGbWo3REFD?=
- =?utf-8?B?c3BjMkllTXAzVzVINlEzMUtRemF5NWZwK0RWWFp4Wm9PeTA4aGRrNVpuYWo4?=
- =?utf-8?B?SEF6a2xEL1JOZ0R2ZHdCTFQ5aHc1dzUrU2ZBU3kvMnI4WHFmN3k4YWZmakpW?=
- =?utf-8?B?QVVLUldqM3Z5bjk5RHk2ZUF0b3Ziak0zVnl5cEFRWHNmRDVocXJVMSs5VkJo?=
- =?utf-8?B?TUJYOW02d0VGRTFZT1dkQjI3SG1YWEJWL3ozVmgyRFlnRkJJRFBiVExMMW5t?=
- =?utf-8?B?anRqNXdJMm1hSFBlM2J2OGhMSlJIeGZWNHVSWXRXSW9kQ25TOG5BR0VZenNF?=
- =?utf-8?B?YXRxbk1wL2FsQ2ZsV2I4SG5TbWRXYjVYK0h0akVqeVlzZWtKK3lTSC84eDhi?=
- =?utf-8?B?OFIvc2hGdkhsNG4yZldwRExlbmMwbmh5c2NJZUhnN2dIUXdwVDVwY29yS1hZ?=
- =?utf-8?B?VkF2NnpsREYrNy83cHIyT0l3S2tUeDBNRTlCSHhDekd2d3k1OHkwQUhmWTdR?=
- =?utf-8?B?Wlk3KzczSVZ6Wk9nRkFvM2NsT3BGdUVONnFGNWRWU2trQUhRZ21yNWxjamFM?=
- =?utf-8?B?M29OM3RtVENJR3ZTdkZvQ2JVQWVYU2pmSzVzeEp2K2hHaUxzUnE3OGdwVzlE?=
- =?utf-8?B?UmdrTXFha0hNMVhxOUx1RzRxNkVuSmQyb3IwT1l0dEFMVGNoaWduTEpXUDIr?=
- =?utf-8?B?NjhiQTJ4VnRkYWROa0duOExwUWkwR0RuUzdSUmxseVRmcVRjOXVTNC9GcEpG?=
- =?utf-8?B?SGNqRVA1ZVpoZGw0MGdhdUY4bDh5SFBLQTBzZTJzallRY0cxbGIzeTRPR3Vp?=
- =?utf-8?B?di8zN25xd2JNNG45MDRYWjNNeVQvV2lyVTNhdzFrdW9TWHFhVUxRUGNva1Bu?=
- =?utf-8?B?NStxZGVJNlA0d0FhSnBxWDlnVjV6UmN6eGw4emlzNml0cjMrWExKS1VialZD?=
- =?utf-8?B?Z041ZkwySU5Nd1VPYlMrM09DWjBsd2dubEttOUIxRjlvSVh3TUJ3ZHVycUN0?=
- =?utf-8?B?U3ZBdmx2RDJIQ3RWOHpsZkhRMFc4NnYrcU1aMjZMcjVPOVpzTlFsT291ZTE0?=
- =?utf-8?B?NW5Qdjk1SWVRN25qZkRlMjdJWlZ2dHFjUFk0b0o4N0R0QldCZi9PNzFLeWJP?=
- =?utf-8?B?WVphcXFqb1NSVWhNcHgzVHRHbEJnV3NSYzdQdWNJTDhtdGdNU0hERWxFWlE5?=
- =?utf-8?B?ak1RWDAyRUZUT0l2VFdqeSt6UjFyeVltTW9xN2taQWtyWXpPUGtmVEpENGQv?=
- =?utf-8?B?SFdxK1FYM095WVA0aXRuMzJqeGlVOVhYbzVheERCUGVjZWNML3B1ZWZYN2g5?=
- =?utf-8?Q?5Z3URTHKiUSdAGVldc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TkZuck1tcjhaMnpiQW5GTUVSTElTSmR2U0I4cUlYcUsybE1jQkVXUmlqc09S?=
- =?utf-8?B?UjFOeC80L1ZOUUhlTm9QQ1lJeXM2d09CckRMTi9FVk9jbVgyUzFvbERZWTQ2?=
- =?utf-8?B?WDI1bTJNNG9UaFNNNXZMQlRtaS96RC92Nko4QmQyVlJrSEsvL0RGR0g0VDkz?=
- =?utf-8?B?aHBkVklObEw3Y0ZCK0g1S2dOOFh1ZTgzaG5Xam1PQTRKV3VwcGVDbGZUaE0w?=
- =?utf-8?B?WFlsMXl3V2FWeUtybmRpRURHQ2crenEycHBxbUNTL2IzVElwNjZ2MlNHQ0J4?=
- =?utf-8?B?MktudXYzSVlBTTZVbDIvemY1eDhEbWRHYmZqQ3dsOTF3MGlXVjdXZHBjKytr?=
- =?utf-8?B?TTZFOEMwc3NKVnpFUGFXeTBsM2lBS3FUQ1NKL0paNzJmVjVDNkJFUk54bllE?=
- =?utf-8?B?RkdTNEFyVWhRdmcrRmt6WUtRTG5ZZjZ4R21uSERKNlAwakdoUWJycXVSWmx1?=
- =?utf-8?B?RU5QZnNnSzZZOFpib09xQzkwZnFQUExBTGpiYi93SE5XaFZHZWZEWnFudzc4?=
- =?utf-8?B?c2UyWENqbFVSbkcrWDFORXUzU1RGejczc1FpWE1Nb3BVKzZSVm9HTmdlcjA4?=
- =?utf-8?B?M1N1QnEybHhUdjFHczRtS0tKOWZSd1JySi80bzlDSFY5eHFiQzVoVHA5RnRL?=
- =?utf-8?B?U2ZkcitxaGxaVkJsK1RydmZKcW1ZTkVTYUpuZ09mN3FMUmdQaGhrUXlmOEk3?=
- =?utf-8?B?dW45VmlpZ2dUMGIxeHRENGtuTm9JOURpZmMxeEx1QW5WOHQwSGdtbFdnVTNs?=
- =?utf-8?B?RGpqS1paTGZOMFVlZzNUUEhXc0ZYazdacVNQR1o1ZVlOSkNtaklyeGpiZTZU?=
- =?utf-8?B?OTJwSzFzc0d2elVXdU44NEFRZEFmMUpqQ0ZqRWhJcG81d2FjdXdYZnc5OFhV?=
- =?utf-8?B?WnhSRG1YcmVnY2FQM1IxVE8zdmdxU0dSNm9PNDc2UzJjMGNoR2VtTmFSaWx3?=
- =?utf-8?B?SnZhNjFiTDJzcEZxMkZjTEtXbjBZM2Q1QUN0OHlUZ0I4bHh2MExTdTBFbnJG?=
- =?utf-8?B?Z2xSaVFZUExaTlNBcWViVGVscjlZYm9DK2xrbWQ0N21OMjg0TklmeHZIUUdi?=
- =?utf-8?B?RjM4RjNQUWhrYmJIaFZYRVBzT1BRRFRCSlZDWXA1NlRQZS9SVmhkcHRSRjk3?=
- =?utf-8?B?eEcxWFVxaXhWZG8xeFFTUlBIK0hMcklhNUpqWXUzMDM5NE5KSXZGTmhkMXp6?=
- =?utf-8?B?OXRrNW5lbDVoUTZ6dG9SMFBKRDV5VEZIUkhjZkMwV0wvK09iNThLKzhwU21V?=
- =?utf-8?B?ekhZSXljdThUT3lpdy9TZ1BOZG14TzZNd0Z2Sm9taGxxaEF2aE5qWkorMzN1?=
- =?utf-8?B?dTV3bWdvc29pT0RLMExIV3pXL1kxWmJxaFJLTUEwQVZYTG9CUS9SUURrYmsx?=
- =?utf-8?B?ajdQL1ZvVE5vRk03dEJ4djNERzVCZk9ua1pRWXIxN2VJVnRBekdhdDR6N2RL?=
- =?utf-8?B?VVcwS2VwVWloeVUwZ05HQzFRWFp4WUg1NEYvRnNrR0ZzQ0NtVThRZE5SeTgw?=
- =?utf-8?B?M0I3SzVUMExaRkVPSStCdnF3Z1c2S3B3OTVwR2hKWlBNUDdTd2JxTW5ISVVs?=
- =?utf-8?B?ZEVBWFlhZ2pHZW85U1l3LzQrZnlIZzVORnpDS1hUMDdwNDkrd0hzVHBUVnVM?=
- =?utf-8?B?NEgwV25HeWFMUXBkUGFmL2dXUTRNOXNFRVY1eVpHUGVPZy9iQjRhSDFldERG?=
- =?utf-8?B?N1Q5UWRJOEpTd096WDFnTVpKZEVTcGhiNGR5NTgzeUJOR21jQitJK0pwRldj?=
- =?utf-8?B?YVkwbXd1aVlDcmtER0xJUjVLb09tb2VIcnFCSEZtb04zWklaY0dRak8xZmIv?=
- =?utf-8?B?Y0x2dHlIN1FhN1JIcFUxKzduVU1kbytRd01zT2Z0WVRydzhFWFFhdEJESVZM?=
- =?utf-8?B?eHRJUUpiV1FrTDdtWlNodUJpMThPMjJZK3JxZmRSbGxwSk83bExnZ0tMUVYy?=
- =?utf-8?B?RVJMb3NrRC9XZHNRbHdMRUhjQmZpaTlMZFZ3MkUwUmdqU0tNcXFxZG4yQkcy?=
- =?utf-8?B?bS9PNERsSWZTOW1GVUhYWk9UdGdKRkJWbWlBeWVRbEpHQ3JMYjRRbFhFLzB4?=
- =?utf-8?B?SjlYR0FiZHhhWVNXM2pUYXRkbHNxdmJLTzQ1YUt0WFJYdWNLSmVhRm8vVFE3?=
- =?utf-8?Q?yjWgXuHLwSR6Pl3ObbbOqF+NS?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5a17a91-9f47-45c3-1772-08dcf7319ec5
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2024 09:19:27.2532
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kmOcjOgAV7tlIdFvURkLNPAWnxmwEHjCtBywb4/Qx0CY28svO8exj9fJVXUEDqWz/KK1tJaMg2emycGEinN0+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7696
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zx9Losv4YcJowaP/@ly-workstation>
 
-Hello Gautham,
+Le Mon, Oct 28, 2024 at 04:30:26PM +0800, Lai, Yi a écrit :
+> [  300.651268] INFO: task repro:671 blocked for more than 147 seconds.
+> [  300.651706]       Not tainted 6.12.0-rc4-42f7652d3eb5+ #1
+> [  300.652006] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [  300.652430] task:repro           state:D stack:0     pid:671   tgid:671   ppid:670    flags:0x00004002
+> [  300.652939] Call Trace:
+> [  300.653088]  <TASK>
+> [  300.653221]  __schedule+0xe13/0x33a0
+> [  300.653474]  ? __pfx___schedule+0x10/0x10
+> [  300.653704]  ? lock_release+0x441/0x870
+> [  300.653946]  ? __pfx_lock_release+0x10/0x10
+> [  300.654184]  ? trace_lock_acquire+0x139/0x1b0
+> [  300.654439]  ? lock_acquire+0x80/0xb0
+> [  300.654651]  ? schedule+0x216/0x3f0
+> [  300.654859]  schedule+0xf6/0x3f0
+> [  300.655083]  _free_event+0x531/0x14c0
+> [  300.655317]  perf_event_release_kernel+0x648/0x870
+> [  300.655597]  ? __pfx_perf_event_release_kernel+0x10/0x10
+> [  300.655899]  ? trace_hardirqs_on+0x51/0x60
+> [  300.656176]  ? __sanitizer_cov_trace_const_cmp2+0x1c/0x30
+> [  300.656474]  ? __pfx_perf_release+0x10/0x10
+> [  300.656697]  perf_release+0x3a/0x50
+> [  300.656916]  __fput+0x414/0xb60
+> [  300.657163]  ____fput+0x22/0x30
+> [  300.657335]  task_work_run+0x19c/0x2b0
 
-On 10/28/2024 2:23 PM, Gautham R. Shenoy wrote:
-> Hello Dhananjay,
-> 
-> On Fri, Oct 25, 2024 at 11:13:41AM +0000, Dhananjay Ugwekar wrote:
->> Prepare for the addition of RAPL core energy counter support.
->> Post which, one CPU might be mapped to more than one rapl_pmu
->> (package/die one and a core one). So, remove the cpu_to_rapl_pmu()
->> function.
->>
->> Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
->> ---
->>  arch/x86/events/rapl.c | 19 ++++++-------------
->>  1 file changed, 6 insertions(+), 13 deletions(-)
->>
->> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
->> index f70c49ca0ef3..d20c5b1dd0ad 100644
->> --- a/arch/x86/events/rapl.c
->> +++ b/arch/x86/events/rapl.c
->> @@ -162,17 +162,6 @@ static inline unsigned int get_rapl_pmu_idx(int cpu)
->>  					 topology_logical_die_id(cpu);
->>  }
->>  
->> -static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
->> -{
->> -	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
->> -
->> -	/*
->> -	 * The unsigned check also catches the '-1' return value for non
->> -	 * existent mappings in the topology map.
->> -	 */
-> 
-> 
-> See the comment here why rapl_pmu_idx should be an "unsigned int".
-> 
-> 
->> -	return rapl_pmu_idx < rapl_pmus->nr_rapl_pmu ? rapl_pmus->pmus[rapl_pmu_idx] : NULL;
->> -}
->> -
->>  static inline u64 rapl_read_counter(struct perf_event *event)
->>  {
->>  	u64 raw;
->> @@ -348,7 +337,7 @@ static void rapl_pmu_event_del(struct perf_event *event, int flags)
->>  static int rapl_pmu_event_init(struct perf_event *event)
->>  {
->>  	u64 cfg = event->attr.config & RAPL_EVENT_MASK;
->> -	int bit, ret = 0;
->> +	int bit, rapl_pmu_idx, ret = 0;
-> 
-> Considering that, shouldn't rapl_pmu_idx be an "unsigned int" no?
+Ah the perf_pending_task work is pending but perf_pending_task_sync()
+fails to cancel there:
 
-Correct, with unsigned int we will be able to check for negative values as well with the 
-"if (rapl_pmu_idx >= rapl_pmus->nr_rapl_pmu)" check. Will fix this in next version.
+	/*
+	 * If the task is queued to the current task's queue, we
+	 * obviously can't wait for it to complete. Simply cancel it.
+	 */
+	if (task_work_cancel(current, head)) {
+		event->pending_work = 0;
+		local_dec(&event->ctx->nr_no_switch_fast);
+		return;
+	}
 
-Thanks,
-Dhananjay
+And that's because the work is not anymore on the task work
+list in task->task_works. Instead it's in the executing list
+in task_work_run(). It's a blind spot for task_work_cancel()
+if the current task is already running the task works. And it
+does since it's running the fput delayed work.
 
-> 
-> --
-> Thanks and Regards
-> gautham.
-> 
-> 
->>  	struct rapl_pmu *pmu;
->>  
->>  	/* only look at RAPL events */
->> @@ -376,8 +365,12 @@ static int rapl_pmu_event_init(struct perf_event *event)
->>  	if (event->attr.sample_period) /* no sampling */
->>  		return -EINVAL;
->>  
->> +	rapl_pmu_idx = get_rapl_pmu_idx(event->cpu);
->> +	if (rapl_pmu_idx >= rapl_pmus->nr_rapl_pmu)
->> +		return -EINVAL;
->> +
->>  	/* must be done before validate_group */
->> -	pmu = cpu_to_rapl_pmu(event->cpu);
->> +	pmu = rapl_pmus->pmus[rapl_pmu_idx];
->>  	if (!pmu)
->>  		return -EINVAL;
->>  	event->pmu_private = pmu;
->> -- 
->> 2.34.1
->>
+Something like this untested?
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 449dd64ed9ac..035580fa2c81 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1163,6 +1163,7 @@ struct task_struct {
+ 	unsigned int			sas_ss_flags;
+ 
+ 	struct callback_head		*task_works;
++	struct callback_head		*task_works_running;
+ 
+ #ifdef CONFIG_AUDIT
+ #ifdef CONFIG_AUDITSYSCALL
+diff --git a/include/linux/task_work.h b/include/linux/task_work.h
+index cf5e7e891a77..fdd70f09a7f0 100644
+--- a/include/linux/task_work.h
++++ b/include/linux/task_work.h
+@@ -33,6 +33,7 @@ struct callback_head *task_work_cancel_match(struct task_struct *task,
+ 	bool (*match)(struct callback_head *, void *data), void *data);
+ struct callback_head *task_work_cancel_func(struct task_struct *, task_work_func_t);
+ bool task_work_cancel(struct task_struct *task, struct callback_head *cb);
++bool task_work_cancel_current(struct callback_head *cb);
+ void task_work_run(void);
+ 
+ static inline void exit_task_work(struct task_struct *task)
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e3589c4287cb..1b15f3c83595 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5305,7 +5305,7 @@ static void perf_pending_task_sync(struct perf_event *event)
+ 	 * If the task is queued to the current task's queue, we
+ 	 * obviously can't wait for it to complete. Simply cancel it.
+ 	 */
+-	if (task_work_cancel(current, head)) {
++	if (task_work_cancel_current(head)) {
+ 		event->pending_work = 0;
+ 		local_dec(&event->ctx->nr_no_switch_fast);
+ 		return;
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 89ceb4a68af2..1b898701d888 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2450,6 +2450,7 @@ __latent_entropy struct task_struct *copy_process(
+ 
+ 	p->pdeath_signal = 0;
+ 	p->task_works = NULL;
++	p->task_works_running = NULL;
+ 	clear_posix_cputimers_work(p);
+ 
+ #ifdef CONFIG_KRETPROBES
+diff --git a/kernel/task_work.c b/kernel/task_work.c
+index 5d14d639ac71..2efa81a6cbf6 100644
+--- a/kernel/task_work.c
++++ b/kernel/task_work.c
+@@ -184,6 +184,26 @@ bool task_work_cancel(struct task_struct *task, struct callback_head *cb)
+ 	return ret == cb;
+ }
+ 
++bool task_work_cancel_current(struct callback_head *cb)
++{
++	struct callback_head **running;
++
++	if (task_work_cancel(current, cb))
++		return true;
++
++	running = &current->task_works_running;
++	while (*running) {
++		if (*running == cb) {
++			*running = cb->next;
++			return true;
++		}
++		running = &(*running)->next;
++	}
++
++	return false;
++}
++
++
+ /**
+  * task_work_run - execute the works added by task_work_add()
+  *
+@@ -195,7 +215,7 @@ bool task_work_cancel(struct task_struct *task, struct callback_head *cb)
+ void task_work_run(void)
+ {
+ 	struct task_struct *task = current;
+-	struct callback_head *work, *head, *next;
++	struct callback_head *work, *head;
+ 
+ 	for (;;) {
+ 		/*
+@@ -223,10 +243,11 @@ void task_work_run(void)
+ 		raw_spin_lock_irq(&task->pi_lock);
+ 		raw_spin_unlock_irq(&task->pi_lock);
+ 
++		WARN_ON_ONCE(task->task_works_running);
+ 		do {
+-			next = work->next;
++			task->task_works_running = work->next;
+ 			work->func(work);
+-			work = next;
++			work = task->task_works_running;
+ 			cond_resched();
+ 		} while (work);
+ 	}
+
