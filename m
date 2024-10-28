@@ -1,154 +1,159 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D4B1422AB
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Oct 2024 19:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A5D1DFE1C;
+	Mon, 28 Oct 2024 20:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730144185; cv=none; b=qF8WDYekoBszLNWqHTW+NpMLjuHWPaQN8MR3UaUn/phHbV/12lydRVua5cA623QnSB4ODJaTE4pmnCCKYcQ5vvGk4pI0CVl7/RFXQ2SwsNALohKb1WP1/EdciKz78KmqVpN4AHK/4LUGddC0QcSIXgUuLhcEOQs3sDZWLNG7glk=
+	t=1730147018; cv=none; b=s9JgtNlopUFkwT4izm3cSgo6TM1FGCpCKwgpbNMe7Ws3rolzxSw+8kdl5wk5ZaWr21wWfGgfRsrWrOImM3wZFwJzksjAKCKjN8CCVzYiEw4CeIWoKaSCpDAS7daA703O0WjP5/ih8Mo1Le1sZ2/ZH3UNpl3vMu2XtaOAWAtncLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730144185; c=relaxed/simple;
-	bh=viqJIcjf2TXOv5DBWOT5NyB73K2UIrJGjSw23TdvG3g=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=ezaDh5DERByTDPGtH0z4bSLBLmB69hKqvoYI8FD1MEnkkU+dMZV4OUNxFW+XCctNWzjChfzYn21Usd/2eXQIdjpDVIQeJO/dkFsIC1Q4h71GbJiBgFiEaeCbl/1PBPT/wqTpR2xEMcQI6rt9ctFEFxOYACXvjjLRhPP4YLQQpvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gk9RscLT; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1730147018; c=relaxed/simple;
+	bh=ygxt109xKE1bMCf6lGpv/3u6u0A5LB3R6ch8sQBAzGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N4QTarOMZlnz7pGhE6YGleUofBia+jQ4T3TZ5jVpQfHtJyjn91eiaXrbFutAkiUGTaF+dPN2p++VFPSEJ6GNrM7vS5YeXITlytL/kfkFLzgfcf7QBeAYb6BDDeR4OOD5JRNixvkr24riQpuppW8H6QfsphIyug4gDFIcrzh5Eq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=av7GQBxM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gk9RscLT"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e3d660a1afso80518627b3.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Oct 2024 12:36:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730144182; x=1730748982; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yF5sdmQv/v38/bFXfks7Mw1baK2Tg6j2c6FqlkJRLPU=;
-        b=Gk9RscLTx+k/RdNnyW0itxHlRtwo1zWw6WckpzUN4efH9vq2DbZbRG/aBUTibZEIHv
-         +X6g1a+tkyjMgtSDBlNzPo/xtzHb1hxaWxoHN3bss6XnPuHBQvIfpHDZfzE7++rQA41U
-         2xBCkiGIW3lOudtd8tUE9EOd48g0yseryvRIFMenw5TckXgLegvNkqzXHOjvMA+QpwdK
-         0mHABLuZXaNiL4zozKeuXTHC34gaDKzBPbsU9+8IdZFs6JMotOKXh+JsKWHzwds3n1wh
-         xeuUkY/ytifUgzd/9230Wn39Q1UvIQ8pd7+pIGUU68A8/+ywfH1zGyak9X5T07OeXVmS
-         pI1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730144182; x=1730748982;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yF5sdmQv/v38/bFXfks7Mw1baK2Tg6j2c6FqlkJRLPU=;
-        b=EP31jTMXsNf5HzR4M5s5BoxjjVznsZD4FCZbN+MJmElKVjrnetpXoaf8y+EP/gCvCJ
-         JazvSDgR79VP62mJH35OEFuzlmFdChemXRfFNeXc33IWIeD9CXX91iSkddXDYFmcKGnc
-         DgkUk9LYlmLmJd1CM6ytJUJQ4Ky7dNcUP6jY8u99fC07kyZLmBZT9LPq7Y6uqDEsj3GF
-         Lde8Pb4FT63iny7pxNK38ycJe4oDyQoq/EXBJaeDpWAiJ/8yyjDAkwlLPIiPmstCRF4b
-         Oyb5njjaQdTLOg1fRSjI2wVhIV1LBteCuRXaP8E+UezMnmf38TzvnZFy3Kmo117f7NFn
-         5LXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNDMLV4e6XbLU6wxd6Z7zuZs1QrBZ4/dY2smPn2ChOVEqghXDKyZOT1h8JfO+I82GcVDH/Wv6EqbCQNjAgLumI@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLLBTFv9lGZYhF7OEXvnekDDVjPISJNJ82wjS3+iaKJCz7vMEB
-	mAXLSUitpgoRRIOccTE9kDCVARPcvHP/ch23OiT3FVtBk39Dyy6MBMvnK4Yh7T+lhzDscAPHoJq
-	GMUq78A==
-X-Google-Smtp-Source: AGHT+IHb9ku3VWFkQuxz8YshxF9EpG++pYbx6Ld7Dpt2cU20aAZO00WQlfm55K+qpKPmZmKL2x/h856TNzt6
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:7532:f6ae:e607:9ac3])
- (user=irogers job=sendgmr) by 2002:a05:690c:490a:b0:6e2:1ab6:699a with SMTP
- id 00721157ae682-6e9d8acaf1bmr4842907b3.7.1730144182230; Mon, 28 Oct 2024
- 12:36:22 -0700 (PDT)
-Date: Mon, 28 Oct 2024 12:36:19 -0700
-Message-Id: <20241028193619.247727-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="av7GQBxM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0B58C4CEE3;
+	Mon, 28 Oct 2024 20:23:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730147018;
+	bh=ygxt109xKE1bMCf6lGpv/3u6u0A5LB3R6ch8sQBAzGE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=av7GQBxMizERkeAvSNQzZ6LT9Y3Wa3PuAXd2dEG2SAVCTNWo46fKTLLB7z6QJieFL
+	 8HhlcfIACN4d0+7PIbaGVgnHpaTDE+COzauxkmMp2OtbSf5P8QXC21a5gyqdf8GDQr
+	 IzUcy97nHbWnc5nFXl+45VosXBc+/UuxtIK0qHsLlpv7S/1zMrz6eB4/+UW73stCD5
+	 CnG+2BRs4kThdTRG1sx14y8HKSKgVBUzLJ13Ja2r/k+E35gA2TW450p/BowVDf2dqm
+	 Fcs+Jfb9mbJxsHgMJ714iQp6i3jT2mVQumk5/vDh7LGFji5hPalhqUNHS2Uf0G/WnA
+	 Cm2Db2HRtBmXg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf mem: Add -H/--hierarchy option for report subcommand
+Date: Mon, 28 Oct 2024 13:23:36 -0700
+Message-ID: <20241028202336.1478570-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
-Subject: [PATCH v2] perf build: Make libunwind opt-in rather than opt-out
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Having multiple unwinding libraries makes the perf code harder to
-understand and we have unused/untested code paths.
+Like in perf report, the -H/--hierarchy mode supports hierarchical
+output using the given sort key.  But with -T/--type-profile option it
+would be better to have the 'type' sort key in the beginning so that
+users can see something like following:
 
-Perf made BPF support an opt-out rather than opt-in feature. As libbpf
-has a libelf dependency, elfutils that provides libelf will also
-provide libdw. When libdw is present perf will use libdw unwinding
-rather than libunwind unwinding even if libunwind support is compiled
-in.
+  $ perf mem report -T -H
+  ...
+  #
+  #          Overhead       Samples  Data Type / Memory access / Snoop / TLB access
+  # ...............................  ..............................................
+  #
+      97.96%          4099           (unknown)
+         97.05%          4089           L1 hit
+            97.05%          4089           None
+               97.05%          4089           L1 or L2 hit
+          0.71%             6           RAM hit
+             0.71%             6           Hit
+                0.71%             6           L1 or L2 hit
+          0.16%             2           L2 hit
+             0.16%             2           None
+                0.16%             2           L1 or L2 hit
+          0.04%             2           LFB/MAB hit
+             0.04%             2           None
+                0.04%             2           L1 or L2 hit
+       0.98%            12           struct folio
+          0.61%             9           L1 hit
+             0.61%             9           None
+                0.61%             9           L1 or L2 hit
+          0.37%             3           LFB/MAB hit
+             0.37%             3           None
+                0.37%             3           L1 or L2 hit
+       0.45%             5           unsigned char
+          0.45%             5           LFB/MAB hit
+             0.45%             5           None
 
-Rather than have libunwind built into perf and never used, explicitly
-disable the support and make it opt-in.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Closes: https://lore.kernel.org/linux-perf-users/CAP-5=fUXkp-d7gkzX4eF+nbjb2978dZsiHZ9abGHN=BN1qAcbg@mail.gmail.com/
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
-v2: update build tests.
----
- tools/perf/Makefile.config | 4 ++++
- tools/perf/Makefile.perf   | 2 +-
- tools/perf/tests/make      | 6 +++---
- 3 files changed, 8 insertions(+), 4 deletions(-)
+ tools/perf/Documentation/perf-mem.txt |  6 ++++++
+ tools/perf/builtin-mem.c              | 10 +++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index b93ed2b7623f..707d7355ff18 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -91,6 +91,10 @@ ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390 csky riscv loon
-   NO_LIBDW_DWARF_UNWIND := 1
- endif
+diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
+index 8a1bd9ff0f86dfb8..ac16c1b276e3912c 100644
+--- a/tools/perf/Documentation/perf-mem.txt
++++ b/tools/perf/Documentation/perf-mem.txt
+@@ -125,6 +125,12 @@ REPORT OPTIONS
+ 	Specify the field separator used when dump raw samples (-D option). By default,
+ 	The separator is the space character.
  
-+ifneq ($(LIBUNWIND),1)
-+  NO_LIBUNWIND := 1
-+endif
++-H::
++--hierarchy::
++	Enable hierarchical output.  In the hierarchy mode, each sort key groups
++	samples based on the criteria and then sub-divide it using the lower
++	level sort key.  See linkperf:perf-report[1] for details.
 +
- ifeq ($(LIBUNWIND_LIBS),)
-   NO_LIBUNWIND := 1
- endif
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index b4dee7c20ed1..d74241a15131 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -52,7 +52,7 @@ include ../scripts/utilities.mak
- #
- # Define NO_LIBELF if you do not want libelf dependency (e.g. cross-builds)
- #
--# Define NO_LIBUNWIND if you do not want libunwind dependency for dwarf
-+# Define LIBUNWIND if you do not want libunwind dependency for dwarf
- # backtrace post unwind.
- #
- # Define NO_BACKTRACE if you do not want stack backtrace debug feature
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index a5040772043f..a7fcbd589752 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -81,7 +81,7 @@ make_no_gtk2        := NO_GTK2=1
- make_no_ui          := NO_SLANG=1 NO_GTK2=1
- make_no_demangle    := NO_DEMANGLE=1
- make_no_libelf      := NO_LIBELF=1
--make_no_libunwind   := NO_LIBUNWIND=1
-+make_libunwind      := LIBUNWIND=1
- make_no_libdw_dwarf_unwind := NO_LIBDW_DWARF_UNWIND=1
- make_no_backtrace   := NO_BACKTRACE=1
- make_no_libcapstone := NO_CAPSTONE=1
-@@ -121,7 +121,7 @@ make_static         := LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX3
+ In addition, for report all perf report options are valid, and for record
+ all perf record options.
  
- # all the NO_* variable combined
- make_minimal        := NO_LIBPERL=1 NO_LIBPYTHON=1 NO_GTK2=1
--make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1
-+make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_BACKTRACE=1
- make_minimal        += NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1
- make_minimal        += NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1
- make_minimal        += NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
-@@ -153,7 +153,7 @@ run += make_no_gtk2
- run += make_no_ui
- run += make_no_demangle
- run += make_no_libelf
--run += make_no_libunwind
-+run += make_libunwind
- run += make_no_libdw_dwarf_unwind
- run += make_no_backtrace
- run += make_no_libcapstone
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 651188c1d8259842..2efa01947cf17aa0 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -39,6 +39,7 @@ struct perf_mem {
+ 	bool			all_kernel;
+ 	bool			all_user;
+ 	bool			data_type;
++	bool			report_hierarchy;
+ 	int			operation;
+ 	const char		*cpu_list;
+ 	DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+@@ -329,6 +330,8 @@ static char *get_sort_order(struct perf_mem *mem)
+ 
+ 	if (mem->sort_key)
+ 		scnprintf(sort, sizeof(sort), "--sort=%s", mem->sort_key);
++	else if (mem->report_hierarchy && mem->data_type)
++		strcpy(sort, "--sort=type,mem,snoop,tlb");
+ 	else if (mem->data_type)
+ 		strcpy(sort, "--sort=mem,snoop,tlb,type");
+ 	/*
+@@ -374,7 +377,7 @@ static int __cmd_report(int argc, const char **argv, struct perf_mem *mem,
+ 	if (mem->dump_raw)
+ 		return report_raw_events(mem);
+ 
+-	rep_argc = argc + 3;
++	rep_argc = argc + 5;
+ 	rep_argv = calloc(rep_argc + 1, sizeof(char *));
+ 	if (!rep_argv)
+ 		return -1;
+@@ -387,6 +390,9 @@ static int __cmd_report(int argc, const char **argv, struct perf_mem *mem,
+ 	if (new_sort_order)
+ 		rep_argv[i++] = new_sort_order;
+ 
++	if (mem->report_hierarchy)
++		rep_argv[i++] = "-H";
++
+ 	for (j = 0; j < argc; j++, i++)
+ 		rep_argv[i] = argv[j];
+ 
+@@ -513,6 +519,8 @@ int cmd_mem(int argc, const char **argv)
+ 		   sort_order_help),
+ 	OPT_BOOLEAN('T', "type-profile", &mem.data_type,
+ 		    "Show data-type profile result"),
++	OPT_BOOLEAN('H', "hierarchy", &mem.report_hierarchy,
++		    "Show entries in a hierarchy"),
+ 	OPT_PARENT(mem_options)
+ 	};
+ 	const char *const mem_subcommands[] = { "record", "report", NULL };
 -- 
 2.47.0.163.g1226f6d8fa-goog
 
