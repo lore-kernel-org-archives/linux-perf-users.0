@@ -1,81 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82AA1DB350;
-	Mon, 28 Oct 2024 16:40:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BA513AD11
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Oct 2024 17:01:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730133625; cv=none; b=Fum+01CL3+rebvYozTj3Hc8b+d25e+rlBkF/Oclv8B65saCYfEmbCyby6pvxM7OthXG4BN063DyFfcrii0d6kdwQnLkOIMb+gEqlDsW0SWJgFIIWNwLtrJ2JZbyc3bzsneEKoXyA9sb4H64zvFb+2zB/eDa9pfzuHg0FvJt/ZrI=
+	t=1730134881; cv=none; b=l/fEFmA5rtDVFQLHT5YJdDzpRLhs+txtDtm1+W5bismp0IdsGq5jTpH272T7NaOAYnr/DhYFUt++Qk6kDdiUj10tdCQsfCKBe90YWUXmNkMsVUS/KITzEsHaXWx0vEamKZmnsV9GStTTnTNVVMiXJ14omz95Dso6lXX1rO8mLFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730133625; c=relaxed/simple;
-	bh=OptEfkBlqnLUcNrZkw8zjO+SkzPv2Z++IFDjSLN66ow=;
+	s=arc-20240116; t=1730134881; c=relaxed/simple;
+	bh=kdGCNGPFrHbBc21gfZLuHiW9sHHvBjXh5uK9c2elIgg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TQlKJEGKsEJaol7Iy6b8DRsQyWVq+khetadf+qJiKllKgypaT2eSM9RFfu8ewrNlj7RXI/lZRMrcPDnNoIsorOXlL/PI5foH3HpxvhcA/Ov+cVCdG0+N68LKaesriopuKyPkaFElRrhHgBb7Jw2F8nvOEEgo3Y1nGnx6ebqDxFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ooNScbAj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MHR9vcuSpik1uhEfE0f3utOaC9rrO+5gWrY8T4vnfq8AkLPUiStChNz/IOTCqWCVUROIUmHbK7/TX/tcMvD7JJU80hAE+sb1BFNo8wpmqVPoADe7J9GUXwKBxh8bPLJGytjnkJyVcpSNoPK5POXYDBnvSpbzqpx9brPxxxqxoWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkbNb8iJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ooNScbAj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2195C4CEC7;
-	Mon, 28 Oct 2024 16:40:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkbNb8iJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1047C4CEC3;
+	Mon, 28 Oct 2024 17:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730133624;
-	bh=OptEfkBlqnLUcNrZkw8zjO+SkzPv2Z++IFDjSLN66ow=;
+	s=k20201202; t=1730134881;
+	bh=kdGCNGPFrHbBc21gfZLuHiW9sHHvBjXh5uK9c2elIgg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ooNScbAjyxpdu74JVGExx/m71ciQbe/1kU+MHXg0Xm+JT/vCgVpKenkCIkf1JGmVJ
-	 9nkQvvvAPHyXcTvz5hMjTNxdw6U64zWj2JVUvllxeF43Fz52gSn8hRr80UZsYiIFnE
-	 BpnbHdTJSzRauOJ0i6WaJExnzalfVoxs6PZGGD5+ZOe5m/6uQys0UFy4Ff7wPai2Hk
-	 80iIJYYr8rTIeB3zD+F1EFCOn/NZQbGBtK50zhudN+FGepn7Pkmz8jcn8pIx/xvegf
-	 79pJeMRZeIYxpowZwE8DM/09biIXtQdJHl0bE7mQ0ZIoPjzyfX13Y5GpyAgKHVhgMS
-	 1Muk0FaRQMN8w==
-Date: Mon, 28 Oct 2024 09:40:21 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Graham Woodward <graham.woodward@arm.com>
-Cc: acme@kernel.org, mark.rutland@arm.com, jolsa@kernel.org,
-	irogers@google.com, james.clark@linaro.org, mike.leach@linaro.org,
-	leo.yan@linux.dev, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	nd@arm.com
-Subject: Re: [PATCH v1 0/4] perf arm-spe: Allow synthesizing of branch
-Message-ID: <Zx--dTqaZPjeWA2I@google.com>
-References: <20241025143009.25419-1-graham.woodward@arm.com>
+	b=CkbNb8iJmYkNl59w/brnZYB2wo0HfgSPOsgkZrmSasdz2MHcB1CHoMv32bvF7aehU
+	 Ycv0jXIng7cUWqR5dM6mApJcW5/88zNO2p9Vck18l9brBRYlSNYebVTeZXxMm9Bdi3
+	 B5tFJhSfSQEc5kZ+H13M9Px4/jghSMAHIWkT9a9YImrXewjcbM+aJTYVa1P+S7bZFe
+	 T95jA2qjw9V78+iP7LfOEJWv1b8F7LdqJ3eQtMzvI65lgmqExV5RLbLcIuV+YKByw3
+	 Pdnd0Y83eN/S/MkGlTQ58P3WfH8nntoYE0DUxgpixdy7ISsbDcTnuzhFTgMIcIKqeh
+	 modWptDPzi40w==
+Date: Mon, 28 Oct 2024 18:01:18 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	linux-perf-users <linux-perf-users@vger.kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: Can perf drop libunwind support
+Message-ID: <Zx_DXt3ESi394mcx@localhost.localdomain>
+References: <CAP-5=fUXkp-d7gkzX4eF+nbjb2978dZsiHZ9abGHN=BN1qAcbg@mail.gmail.com>
+ <Zx-1tx0eH19iBpjy@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20241025143009.25419-1-graham.woodward@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zx-1tx0eH19iBpjy@x1>
 
-Hello,
+Le Mon, Oct 28, 2024 at 01:03:03PM -0300, Arnaldo Carvalho de Melo a écrit :
+> On Wed, Oct 23, 2024 at 02:57:05PM -0700, Ian Rogers wrote:
+> > Hi,
+> > 
+> > perf wants to build with BPF support these days. libbpf has a
+> > dependency on libelf, part of elfutils. libdw is also part of elfutils
+> > and amongst other things provides unwinding support. My understanding
+> > is libdw unwinding is used by perf in preference to libunwind when
+> > present. My suspicion is that libunwind is being feature tested,
+> > linked against but then seldom or never used. Given this could perf
+> > drop libunwind support in order to simplify the code base?
+> 
+> Probably Jiri remembers the reasons for us to have support for both,
+> IIRC libunwind was a bit more mature at the time and so we decided to
+> have both and when some broken behaviour appears we try the other one,
+> in the process trying to fix the one wioth a problem?
+> 
+> Adding Frederic as well, this is when we started to use libunwind:
 
-On Fri, Oct 25, 2024 at 03:30:05PM +0100, Graham Woodward wrote:
-> Currently the --itrace=b will only show branch-misses but this change
-> allows perf to synthesize branches as well.
-> 
-> The change also incorporates the ability to display the target
-> addresses when specifying the addr field if the instruction is a branch.
-> 
-> Graham Woodward (4):
->   perf arm-spe: Set sample.addr to target address for instruction sample
->   perf arm-spe: Use ARM_SPE_OP_BRANCH_ERET when synthesizing branches
->   perf arm-spe: Correctly set sample flags
->   perf arm-spe: Update --itrace help text
+Ouch, memories are blurry... It's possible that libdw deprecated
+libunwind at some point. I'm sorry I completely lost track of these
+things since then :-s
 
-It doesn't apply to perf-tools-next cleanly.  Can you please rebase?
-
-Thanks,
-Namhyung
-
-> 
->  tools/perf/Documentation/itrace.txt       |  2 +-
->  tools/perf/Documentation/perf-arm-spe.txt |  2 +-
->  tools/perf/builtin-script.c               |  1 +
->  tools/perf/util/arm-spe.c                 | 31 ++++++++++++++++++-----
->  tools/perf/util/auxtrace.h                |  3 +--
->  tools/perf/util/event.h                   |  1 +
->  6 files changed, 29 insertions(+), 11 deletions(-)
-> 
-> -- 
-> 2.40.1
-> 
+thanks.
