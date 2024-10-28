@@ -1,122 +1,154 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBB41DFDB3
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Oct 2024 19:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D4B1422AB
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Oct 2024 19:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730142645; cv=none; b=rysJ8vyw+vklZSXJyYBNM972y8uv54HPgqxcwTVVofA4goAZ1YN3uCJyOEgaHgmnZZ6N1pBFXEEgSFI4E9ax0krFN+lE/1efcNxmSkjSlr4NZPsHpJnqp8bQfY6xqeu9Vg+PnNZMsmvyv7IhjiEt/MkfAmwkOlK6IuO1AaZKmlc=
+	t=1730144185; cv=none; b=qF8WDYekoBszLNWqHTW+NpMLjuHWPaQN8MR3UaUn/phHbV/12lydRVua5cA623QnSB4ODJaTE4pmnCCKYcQ5vvGk4pI0CVl7/RFXQ2SwsNALohKb1WP1/EdciKz78KmqVpN4AHK/4LUGddC0QcSIXgUuLhcEOQs3sDZWLNG7glk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730142645; c=relaxed/simple;
-	bh=32AuFszMUKT5DLdd5nIiGjbeuBc7WYxahugru1WcfCE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uRjfJ34bfqATfgyoUq8bHveOaOPVt6Hr4I0iG1wfgSqkT7IRrwZPwMRJgIaMeuqwmRwuR1zpfkmxBkP/H+7uYf7LrGh/4SUC8d62pfyHNstoM3YxTw7UhhcvecgDgng5z3yfGQksxxAaiqHN0/Q1bF5JBcu6nz2WikjKFYnoDXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vbuuT2XM; arc=none smtp.client-ip=209.85.160.176
+	s=arc-20240116; t=1730144185; c=relaxed/simple;
+	bh=viqJIcjf2TXOv5DBWOT5NyB73K2UIrJGjSw23TdvG3g=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=ezaDh5DERByTDPGtH0z4bSLBLmB69hKqvoYI8FD1MEnkkU+dMZV4OUNxFW+XCctNWzjChfzYn21Usd/2eXQIdjpDVIQeJO/dkFsIC1Q4h71GbJiBgFiEaeCbl/1PBPT/wqTpR2xEMcQI6rt9ctFEFxOYACXvjjLRhPP4YLQQpvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gk9RscLT; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vbuuT2XM"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-460b295b9eeso42121cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Oct 2024 12:10:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gk9RscLT"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e3d660a1afso80518627b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Oct 2024 12:36:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730142642; x=1730747442; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=32AuFszMUKT5DLdd5nIiGjbeuBc7WYxahugru1WcfCE=;
-        b=vbuuT2XM1qIAUY3IH8VXuhTbk4Uv50CT2bDIAYPaSquOVdcCFPqzkZ+PjMmlcb+Tu3
-         58cKEfvP7o9BdfzyA8DaAj+pVswO/6eQD8opdZTK4vnkT/CMsIopfBaTkO6/2z+ktUVI
-         pQLrrKYvU5D+o7oz29XjCiUUtdK0V/VgP6DirPeGPDU5zez8THWW1ZxVykgKJcr6kSox
-         EZWGeaksylSdbRYMip/xgNKfroceDvWRwaRUp2ww/5ZFHz1VcLjR6SVhl+xVSQGeXYrj
-         Rt8GSzAvuwnxeraDBUfopHPN+WP8rWSYyzbB1vjxk5jHTcqxdkP+W1ChK6TN7AUoJj1B
-         QOEQ==
+        d=google.com; s=20230601; t=1730144182; x=1730748982; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yF5sdmQv/v38/bFXfks7Mw1baK2Tg6j2c6FqlkJRLPU=;
+        b=Gk9RscLTx+k/RdNnyW0itxHlRtwo1zWw6WckpzUN4efH9vq2DbZbRG/aBUTibZEIHv
+         +X6g1a+tkyjMgtSDBlNzPo/xtzHb1hxaWxoHN3bss6XnPuHBQvIfpHDZfzE7++rQA41U
+         2xBCkiGIW3lOudtd8tUE9EOd48g0yseryvRIFMenw5TckXgLegvNkqzXHOjvMA+QpwdK
+         0mHABLuZXaNiL4zozKeuXTHC34gaDKzBPbsU9+8IdZFs6JMotOKXh+JsKWHzwds3n1wh
+         xeuUkY/ytifUgzd/9230Wn39Q1UvIQ8pd7+pIGUU68A8/+ywfH1zGyak9X5T07OeXVmS
+         pI1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730142642; x=1730747442;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=32AuFszMUKT5DLdd5nIiGjbeuBc7WYxahugru1WcfCE=;
-        b=ouS49VPdH9bRsg90WNpVKaHgGOIqOuK2Zjd2yyDxl74xIApiKnmvEU2XIO7YfgZS+T
-         4Z6dSBcVA0+RBSHJwry0sljE+OKDUO7qKuap6EIz7ItcKxJATGk5Qwrjy3G2alfFYk3E
-         dssFejs82Rxjg7BDW5jBxDbRi8ZGX6DWs0gAVNASmKRoxG8EH2+zRM/QFRIu+2NXyHo2
-         XKVexoImESeKehLylmeI0s0KK9007I1mcgly5TqrvRL9MfMff9sZ50S4DZA/vHULPyzW
-         Z3y3E8t9LgxzIxKXUFklt3bAxKOnYCZ5AC4MWoKix8q4M5cxH2JRFoCqEzANubt3aMLR
-         X82w==
-X-Forwarded-Encrypted: i=1; AJvYcCXzImvIxpLSMmOvxlymtwIys8PP3QSz+Fi6hUNarWEzX6G4qXjsoXyr9/njZjbYVz+mZbzT6Uhy7I3xsE3Pm4Yz@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQGwmF0iFpjXloKf1LM9Hl2uAsGSI+EIaxzPcoe1eJ7yWLW/Vf
-	bZ3BiHKlN0FX2ieuvJN/UsKqdcWF2bSmfsh858AC9U9XCrtK031MiXNmCXPmTrrAJxgT1GLz4YR
-	dCvkLqz3gU992kBG+AeShsfz8BV0UfAt4gqal
-X-Google-Smtp-Source: AGHT+IGItQXn4sKUPZhRmh8zcDmQcBJ15fP7uZ3IBzSB+dvEscffQLiuXwhmWZkM9YGGjDNVO6VdA8kYoctcipZDsnk=
-X-Received: by 2002:a05:622a:5d3:b0:460:4aa1:78d6 with SMTP id
- d75a77b69052e-46164fcea00mr544451cf.20.1730142642275; Mon, 28 Oct 2024
- 12:10:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1730144182; x=1730748982;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yF5sdmQv/v38/bFXfks7Mw1baK2Tg6j2c6FqlkJRLPU=;
+        b=EP31jTMXsNf5HzR4M5s5BoxjjVznsZD4FCZbN+MJmElKVjrnetpXoaf8y+EP/gCvCJ
+         JazvSDgR79VP62mJH35OEFuzlmFdChemXRfFNeXc33IWIeD9CXX91iSkddXDYFmcKGnc
+         DgkUk9LYlmLmJd1CM6ytJUJQ4Ky7dNcUP6jY8u99fC07kyZLmBZT9LPq7Y6uqDEsj3GF
+         Lde8Pb4FT63iny7pxNK38ycJe4oDyQoq/EXBJaeDpWAiJ/8yyjDAkwlLPIiPmstCRF4b
+         Oyb5njjaQdTLOg1fRSjI2wVhIV1LBteCuRXaP8E+UezMnmf38TzvnZFy3Kmo117f7NFn
+         5LXA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNDMLV4e6XbLU6wxd6Z7zuZs1QrBZ4/dY2smPn2ChOVEqghXDKyZOT1h8JfO+I82GcVDH/Wv6EqbCQNjAgLumI@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLLBTFv9lGZYhF7OEXvnekDDVjPISJNJ82wjS3+iaKJCz7vMEB
+	mAXLSUitpgoRRIOccTE9kDCVARPcvHP/ch23OiT3FVtBk39Dyy6MBMvnK4Yh7T+lhzDscAPHoJq
+	GMUq78A==
+X-Google-Smtp-Source: AGHT+IHb9ku3VWFkQuxz8YshxF9EpG++pYbx6Ld7Dpt2cU20aAZO00WQlfm55K+qpKPmZmKL2x/h856TNzt6
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:7532:f6ae:e607:9ac3])
+ (user=irogers job=sendgmr) by 2002:a05:690c:490a:b0:6e2:1ab6:699a with SMTP
+ id 00721157ae682-6e9d8acaf1bmr4842907b3.7.1730144182230; Mon, 28 Oct 2024
+ 12:36:22 -0700 (PDT)
+Date: Mon, 28 Oct 2024 12:36:19 -0700
+Message-Id: <20241028193619.247727-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAP-5=fUXkp-d7gkzX4eF+nbjb2978dZsiHZ9abGHN=BN1qAcbg@mail.gmail.com>
- <Zx-1tx0eH19iBpjy@x1> <Zx_DXt3ESi394mcx@localhost.localdomain>
-In-Reply-To: <Zx_DXt3ESi394mcx@localhost.localdomain>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
+Subject: [PATCH v2] perf build: Make libunwind opt-in rather than opt-out
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 28 Oct 2024 12:10:30 -0700
-Message-ID: <CAP-5=fUOv_bV5Xmr=hHjARgTMfa_PkFH6ZKBt4Yk3FK2KcORSA@mail.gmail.com>
-Subject: Re: Can perf drop libunwind support
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 28, 2024 at 10:01=E2=80=AFAM Frederic Weisbecker
-<frederic@kernel.org> wrote:
->
-> Le Mon, Oct 28, 2024 at 01:03:03PM -0300, Arnaldo Carvalho de Melo a =C3=
-=A9crit :
-> > On Wed, Oct 23, 2024 at 02:57:05PM -0700, Ian Rogers wrote:
-> > > Hi,
-> > >
-> > > perf wants to build with BPF support these days. libbpf has a
-> > > dependency on libelf, part of elfutils. libdw is also part of elfutil=
-s
-> > > and amongst other things provides unwinding support. My understanding
-> > > is libdw unwinding is used by perf in preference to libunwind when
-> > > present. My suspicion is that libunwind is being feature tested,
-> > > linked against but then seldom or never used. Given this could perf
-> > > drop libunwind support in order to simplify the code base?
-> >
-> > Probably Jiri remembers the reasons for us to have support for both,
-> > IIRC libunwind was a bit more mature at the time and so we decided to
-> > have both and when some broken behaviour appears we try the other one,
-> > in the process trying to fix the one wioth a problem?
-> >
-> > Adding Frederic as well, this is when we started to use libunwind:
->
-> Ouch, memories are blurry... It's possible that libdw deprecated
-> libunwind at some point. I'm sorry I completely lost track of these
-> things since then :-s
+Having multiple unwinding libraries makes the perf code harder to
+understand and we have unused/untested code paths.
 
-Thanks all.
+Perf made BPF support an opt-out rather than opt-in feature. As libbpf
+has a libelf dependency, elfutils that provides libelf will also
+provide libdw. When libdw is present perf will use libdw unwinding
+rather than libunwind unwinding even if libunwind support is compiled
+in.
 
-Something that Arnaldo has mentioned is a need to reduce perf tool
-dependencies. My thought is that CFI isn't that interesting to require
->1 way to provide support for it. In fact all these library
-dependencies are something of a perf source base curse, where we look
-to libraries or forking processes rather than doing things in the
-tool. The tool pays performance and complexity penalties as a
-consequence - see the removal of libcap as a dependency as an example,
-also how we process addr2line output.
+Rather than have libunwind built into perf and never used, explicitly
+disable the support and make it opt-in.
 
-Masami and others have mentioned that potentially there are users for
-libunwind but at the moment nobody has been able to come up with one.
-Given this I think it is safe to move libunwind to being opt-in rather
-than opt-out as in:
-https://lore.kernel.org/lkml/20241026014305.233607-1-irogers@google.com/
-I'm hoping by doing this we'll learn what the remaining libunwind
-use-cases are and possibly to make it more of a default again. Of
-course if it is just baggage then we should tidy that up.
+Signed-off-by: Ian Rogers <irogers@google.com>
+Closes: https://lore.kernel.org/linux-perf-users/CAP-5=fUXkp-d7gkzX4eF+nbjb2978dZsiHZ9abGHN=BN1qAcbg@mail.gmail.com/
+---
+v2: update build tests.
+---
+ tools/perf/Makefile.config | 4 ++++
+ tools/perf/Makefile.perf   | 2 +-
+ tools/perf/tests/make      | 6 +++---
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index b93ed2b7623f..707d7355ff18 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -91,6 +91,10 @@ ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390 csky riscv loon
+   NO_LIBDW_DWARF_UNWIND := 1
+ endif
+ 
++ifneq ($(LIBUNWIND),1)
++  NO_LIBUNWIND := 1
++endif
++
+ ifeq ($(LIBUNWIND_LIBS),)
+   NO_LIBUNWIND := 1
+ endif
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index b4dee7c20ed1..d74241a15131 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -52,7 +52,7 @@ include ../scripts/utilities.mak
+ #
+ # Define NO_LIBELF if you do not want libelf dependency (e.g. cross-builds)
+ #
+-# Define NO_LIBUNWIND if you do not want libunwind dependency for dwarf
++# Define LIBUNWIND if you do not want libunwind dependency for dwarf
+ # backtrace post unwind.
+ #
+ # Define NO_BACKTRACE if you do not want stack backtrace debug feature
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index a5040772043f..a7fcbd589752 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -81,7 +81,7 @@ make_no_gtk2        := NO_GTK2=1
+ make_no_ui          := NO_SLANG=1 NO_GTK2=1
+ make_no_demangle    := NO_DEMANGLE=1
+ make_no_libelf      := NO_LIBELF=1
+-make_no_libunwind   := NO_LIBUNWIND=1
++make_libunwind      := LIBUNWIND=1
+ make_no_libdw_dwarf_unwind := NO_LIBDW_DWARF_UNWIND=1
+ make_no_backtrace   := NO_BACKTRACE=1
+ make_no_libcapstone := NO_CAPSTONE=1
+@@ -121,7 +121,7 @@ make_static         := LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX3
+ 
+ # all the NO_* variable combined
+ make_minimal        := NO_LIBPERL=1 NO_LIBPYTHON=1 NO_GTK2=1
+-make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1
++make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_BACKTRACE=1
+ make_minimal        += NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1
+ make_minimal        += NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1
+ make_minimal        += NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
+@@ -153,7 +153,7 @@ run += make_no_gtk2
+ run += make_no_ui
+ run += make_no_demangle
+ run += make_no_libelf
+-run += make_no_libunwind
++run += make_libunwind
+ run += make_no_libdw_dwarf_unwind
+ run += make_no_backtrace
+ run += make_no_libcapstone
+-- 
+2.47.0.163.g1226f6d8fa-goog
+
