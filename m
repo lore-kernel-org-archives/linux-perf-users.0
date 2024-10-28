@@ -1,116 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF40D205E1E;
-	Mon, 28 Oct 2024 21:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34621F426C
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Oct 2024 21:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730152125; cv=none; b=kvzD6IWQwjQgKfOp6MxJhgwiohz18q3z2CE8Ng1g90PzP9xeXSaOten9Krk8su5xlh4VPvEf/3pX5fAErkd3m+xhWZ1OuX2RtTC1rbRV5y7DlHkS20zHWs3b+ABnKtLgOmiHEEPpxQK9eidTECwCtWWfse2kUsFxz89sVgVsXTk=
+	t=1730152125; cv=none; b=EC2Qmi7HskFphODsuDc9lbMQo1bwB7wM+K12ky5YQjdYXg9qpPUV12l+qx0D2bzSzyd0IN2hVOas9wB3Yekb5EakK//FaqH/yO47BH3gwkxWE3bvDC8vK5UKbTD1ARJBLb7GDvg1+H55Qlyh3BNZHyI9ljimKqWsS7hOfs57hz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730152125; c=relaxed/simple;
-	bh=FAGQnaAp9X/oqvdaCFG+QdxKrKoTF5tQk3+U3LCGtAU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZmYSvEOdQSHY7j1/xxxkTc66zAVsVHUeCRixc3OC3NMb9EjG0Pph0+C6uA3uCssO/niIh2d09aGoxSeRXbVneRT1j6VPpSSfRMe1kx1rJGoR14UbWzJDGEFrADBD4k6mB7RaPZzLejqJT1+og0wAvk8dm56JQfhvpa5hJvlJMNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lMI1naWt; arc=none smtp.client-ip=10.30.226.201
+	bh=DHx3V9c6d7RzA8Hica7IwbiE0hndkhK3ioMyo+uODqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sChPzVydvCWa1wl3R3I+WvHCNCqd3cLlrD2jVIjzQpYwcv54mCEiyHz3hPgdcPNpFO6RjKpm6fpmayE9m1NhYJdJLhjHhaMiLbfsYbEtsJ90GF9EMpselOyG+Zo0y66qRGvD0HdeCr2Kq+to1lk67DnD+nBcPGQ9kC2VEJ2rumo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WQBQc5ew; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lMI1naWt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E126BC4CEE9;
-	Mon, 28 Oct 2024 21:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730152124;
-	bh=FAGQnaAp9X/oqvdaCFG+QdxKrKoTF5tQk3+U3LCGtAU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lMI1naWt/OcRVRfW3r//9dUCbm60Z7U9GFAvivgychWGOyJsGRwGD7FFmPobIioXh
-	 NWA2FU1CSKluSVPqXrHZ32iKd+sPyPIrMQxQNVM9HcfBnWfvEGzGKzfSw7nwd6gFMU
-	 H+ZsOqoBqkZFbsikanxh0SD5LO9epHX2+COfkuLTGwCq/6bC8khTQv7G8x7kQtz4cX
-	 QHfB/EfwQwc7uT9H7dEPU8WP3BkxOQCby2gmsKDf375gmmniVCgJl13W80vAqG4+u8
-	 mFfezumdshymeAaZC9pCfJDnO5xaYw6qmiJ7DBijUtaiN4lo+bef0WpN0lSr8DmrGQ
-	 bF/nGFoqrVbjg==
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WQBQc5ew"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730152121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P8f6rNRcHbHfSirLmOVvnWqIPco4XSliHtz6q5ZmdDI=;
+	b=WQBQc5ewr2OGV6Qw7C5gw3s/NPudzwzP9G2l9jz19PuA7J/AY3bR4fuM4fx+oeeA3cajPC
+	OXljIV+bm+BNuzw5BADqdgu1mlmvKrrT/PwE7XAlsAAn28PIOxamdAqy9kSss8bi7hPiPE
+	6tcr4gKRd9QePNaJiUDNlcunY78OoUI=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-138-M30AHQ37OOqJexREAoKPCA-1; Mon,
+ 28 Oct 2024 17:48:38 -0400
+X-MC-Unique: M30AHQ37OOqJexREAoKPCA-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7B31C1955EEA;
+	Mon, 28 Oct 2024 21:48:36 +0000 (UTC)
+Received: from redhat.com (unknown [10.22.80.130])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E345819560AA;
+	Mon, 28 Oct 2024 21:48:35 +0000 (UTC)
+Received: from fche by redhat.com with local (Exim 4.94.2)
+	(envelope-from <fche@redhat.com>)
+	id 1t5XbF-0006m0-AC; Mon, 28 Oct 2024 17:48:33 -0400
+Date: Mon, 28 Oct 2024 17:48:33 -0400
+From: "Frank Ch. Eigler" <fche@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Francesco Nigro <fnigro@redhat.com>,
+	Aaron Merey <amerey@redhat.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org,
-	Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>,
-	linux-trace-kernel@vger.kerne.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v3 14/19] perf: Simplify get_perf_callchain() user logic
-Date: Mon, 28 Oct 2024 14:48:01 -0700
-Message-ID: <4d141847262054cc73551fa33609bc3099f0d2f9.1730150953.git.jpoimboe@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1730150953.git.jpoimboe@kernel.org>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/1 perf-tools-next] perf probe: Fix retrieval of source
+ files from a debuginfod server
+Message-ID: <20241028214833.GB25044@redhat.com>
+References: <ZyACsIFUETsr7-09@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-ID: <20241028214801.zi-myr9H2yCe3TgBacXzNi44uzBD4yOzzXDxPAasyR8@z>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZyACsIFUETsr7-09@x1>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Simplify the get_perf_callchain() user logic a bit.  task_pt_regs()
-should never be NULL.
+Hi -
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- kernel/events/callchain.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+> -		if (!get_source_from_debuginfod(raw_path, sbuild_id, new_path))
+> +		char prefixed_raw_path[PATH_MAX];
+> +
+> +		path__join(prefixed_raw_path, sizeof(prefixed_raw_path), comp_dir, raw_path);
+> +
+> +		if (!get_source_from_debuginfod(prefixed_raw_path, sbuild_id, n
+ew_path))
 
-diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index 655fb25a725b..2278402b7ac9 100644
---- a/kernel/events/callchain.c
-+++ b/kernel/events/callchain.c
-@@ -241,22 +241,20 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
- 
- 	if (user) {
- 		if (!user_mode(regs)) {
--			if  (current->mm)
--				regs = task_pt_regs(current);
--			else
--				regs = NULL;
-+			if (!current->mm)
-+				goto exit_put;
-+			regs = task_pt_regs(current);
- 		}
- 
--		if (regs) {
--			if (add_mark)
--				perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
-+		if (add_mark)
-+			perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
- 
--			start_entry_idx = entry->nr;
--			perf_callchain_user(&ctx, regs);
--			fixup_uretprobe_trampoline_entries(entry, start_entry_idx);
--		}
-+		start_entry_idx = entry->nr;
-+		perf_callchain_user(&ctx, regs);
-+		fixup_uretprobe_trampoline_entries(entry, start_entry_idx);
- 	}
- 
-+exit_put:
- 	put_callchain_entry(rctx);
- 
- 	return entry;
--- 
-2.47.0
+lgtm!
+
+- FChE
 
