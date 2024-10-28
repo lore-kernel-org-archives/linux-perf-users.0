@@ -1,50 +1,30 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFBD524C;
-	Mon, 28 Oct 2024 07:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354BB1B373B;
+	Mon, 28 Oct 2024 07:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730100348; cv=none; b=bV732/f5i6QaNRQavwfxigIFZROw6DCBrWRb1Lwu8qJxxO5JyjThGbdtc5gvqQH3ZcldIQCSS8u3lzmLqA1oBtqzVb90uM0ZjCRjxy2/g4oNIWnXwL8OhualXlWdczm61/pLW66cCX1kQyKOgMabX1wP73jDG+asIwiACKwt0Ik=
+	t=1730101866; cv=none; b=DX2b7gLKBFFrE1mrcm3JMtN7FJKYRJ6163IgWqJwSvvFtfA5mNqWIWDK1g5qFIZExI9x00/MVNawU/cEEO+/Tvo/8lzcSxwZyncXv0k09KcYrmUVTDvWs7rpl72/a+BpfuuX8BkGCHHDt3ZsbW/jGZpKOY2d6FcldQtCgM/7DkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730100348; c=relaxed/simple;
-	bh=DlfgfbOFLJSyhy9MbiabcErhB4Sk+ICJGR4zWwL4UMI=;
+	s=arc-20240116; t=1730101866; c=relaxed/simple;
+	bh=s8Q4rfWz/gaos6sXM0jhIFaGwJ02Sv7mW5XizBt+Odc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X8FnLle7nLcBB0MQcUZBZW+tbDeUnCjZCQade9m/ZlxdP4mC4qo8liKEDdI/qmpeg23288JS2pRAUNAddd9TZ45L8W/YWjbLZJeBPTmpuYZIzrWNi3jMy7HoHxMjrBwnkfZ5WdeR9SCjPxuyYQ/EYZL20gYJUd2A5Rc/ME6Uk8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WPdoI2+E; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WPdoI2+E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730100346; x=1761636346;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DlfgfbOFLJSyhy9MbiabcErhB4Sk+ICJGR4zWwL4UMI=;
-  b=WPdoI2+EE5URFIAILMV1EYZL0eMG04r4jVPs2RFezewAvmY8cbcGOY0Z
-   F2M32/E3M4yMKm3Fyu/h7vaUmwBOg519MFkcM/6Ku7cLbC5YvsMDxsg4P
-   +QeY+KBp7ktEov23ycLp8LXhwJ39ncK9AFz2UqfXxl656ofnjzaZV85YE
-   uvyYJ8ADfbW7xKeknnxlUnPFe8Z2kbHR2o0aSukTJir/78rLhOeFb8gD2
-   E8P4vaLZVx3y8qmB8d54VfkCG/QJ3W+GIPpRdTEaCswankD4hjmMSu9+X
-   UcilpqWg8zWCl9+IiljQI8eXmiQHCvBqVHUa8Op+AJEylFsJaP7cDrLlE
-   g==;
-X-CSE-ConnectionGUID: 3CWY7UBcTwql+pI9yc3y8g==
-X-CSE-MsgGUID: Bcy/QGPeRcuLBE99H/Y+KA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11238"; a="29119687"
-X-IronPort-AV: E=Sophos;i="6.11,238,1725346800"; 
-   d="scan'208";a="29119687"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 00:25:45 -0700
-X-CSE-ConnectionGUID: EArWpR0eSDKukeWUKhI57Q==
-X-CSE-MsgGUID: Pu58TxwVQ8OUNSnKmwCp4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,238,1725346800"; 
-   d="scan'208";a="81444865"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.16.81])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 00:25:41 -0700
-Message-ID: <c19ca53b-b0e6-4763-8691-09ee4a095492@intel.com>
-Date: Mon, 28 Oct 2024 09:25:36 +0200
+	 In-Reply-To:Content-Type; b=TffY8JF4uqBtPGjgotNrlZKeioSZqdLlLJboEhUpDsxwgWIuYuIxpriaEiM9Usm48NNlRDwX8gi00JulztZEBSsGH0rdYfLgardYwso0DCDBKpwfHmyMkzJES+x9L9lLAUo5eKo+ikPymG8Sbjr7R4SMTRfUhZ2rAKhwu05O694=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4XcQYB4Srzz4f3nT5;
+	Mon, 28 Oct 2024 15:50:38 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 105C91A018D;
+	Mon, 28 Oct 2024 15:50:57 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP4 (Coremail) with SMTP id gCh0CgD304dfQh9n6JasAA--.54004S2;
+	Mon, 28 Oct 2024 15:50:56 +0800 (CST)
+Message-ID: <3d3c0add-0e6a-477a-87d1-f66314dafa0b@huaweicloud.com>
+Date: Mon, 28 Oct 2024 15:50:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,111 +32,465 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf cap: Add __NR_capget to arch/x86 unistd
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+Subject: Re: [PATCH -next v5 1/2] perf stat: Support inherit events during
+ fork() for bperf
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, song@kernel.org,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20241026055448.312247-1-irogers@google.com>
- <CAP-5=fXLL1dB4MEfe7Z+fhp_RzC9DV91gBLBHjjywW-_RXmM-Q@mail.gmail.com>
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20241021110201.325617-1-wutengda@huaweicloud.com>
+ <20241021110201.325617-2-wutengda@huaweicloud.com>
+ <ZxclNg9Y5hUXGXCf@google.com>
+ <e1faa3b2-5448-403f-93ab-78731daffce4@huaweicloud.com>
+ <Zxl8iRgHi0ZZKMf-@google.com>
+ <58fc2ccf-17ed-41eb-ac53-a3813ef75edc@huaweicloud.com>
+ <CAM9d7cgRmzoTeLRCCSL38cpoVFWOXNghML99qeYmmapPokLDfQ@mail.gmail.com>
 Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAP-5=fXLL1dB4MEfe7Z+fhp_RzC9DV91gBLBHjjywW-_RXmM-Q@mail.gmail.com>
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <CAM9d7cgRmzoTeLRCCSL38cpoVFWOXNghML99qeYmmapPokLDfQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgD304dfQh9n6JasAA--.54004S2
+X-Coremail-Antispam: 1UD129KBjvAXoWfJF1DKFyrurW3try5Kr47CFg_yoW8XryDCo
+	WrJF43Ja1rGry5AF1DA3srtr4Yy3WUJrWxJrWUWwn8Cwnrtw1jv3yrAr4fJan8AF1UGF4U
+	G34UJw4kZrZ5trn5n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUY27kC6x804xWl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK
+	8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7
+	CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
+	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
+	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kK
+	e7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07
+	UAwIDUUUUU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On 26/10/24 09:00, Ian Rogers wrote:
-> On Fri, Oct 25, 2024 at 10:54 PM Ian Rogers <irogers@google.com> wrote:
+
+
+On 2024/10/28 14:23, Namhyung Kim wrote:
+> On Wed, Oct 23, 2024 at 7:11 PM Tengda Wu <wutengda@huaweicloud.com> wrote:
 >>
->> As there are duplicated kernel headers in tools/include libc can pick
->> up the wrong definitions. This was causing the wrong system call for
->> capget in perf.
 >>
->> Closes: https://lore.kernel.org/lkml/cc7d6bdf-1aeb-4179-9029-4baf50b59342@intel.com/
->> Signed-off-by: Ian Rogers <irogers@google.com>
+>>
+>> On 2024/10/24 6:45, Namhyung Kim wrote:
+>>> On Tue, Oct 22, 2024 at 05:39:23PM +0800, Tengda Wu wrote:
+>>>>
+>>>>
+>>>> On 2024/10/22 12:08, Namhyung Kim wrote:
+>>>>> Hello,
+>>>>>
+>>>>> On Mon, Oct 21, 2024 at 11:02:00AM +0000, Tengda Wu wrote:
+>>>>>> bperf has a nice ability to share PMUs, but it still does not support
+>>>>>> inherit events during fork(), resulting in some deviations in its stat
+>>>>>> results compared with perf.
+>>>>>>
+>>>>>> perf stat result:
+>>>>>> $ ./perf stat -e cycles,instructions -- ./perf test -w sqrtloop
+>>>>>>    Performance counter stats for './perf test -w sqrtloop':
+>>>>>>
+>>>>>>        2,316,038,116      cycles
+>>>>>>        2,859,350,725      instructions
+>>>>>>
+>>>>>>          1.009603637 seconds time elapsed
+>>>>>>
+>>>>>>          1.004196000 seconds user
+>>>>>>          0.003950000 seconds sys
+>>>>>>
+>>>>>> bperf stat result:
+>>>>>> $ ./perf stat --bpf-counters -e cycles,instructions -- \
+>>>>>>       ./perf test -w sqrtloop
+>>>>>>
+>>>>>>    Performance counter stats for './perf test -w sqrtloop':
+>>>>>>
+>>>>>>           18,762,093      cycles
+>>>>>>           23,487,766      instructions
+>>>>>>
+>>>>>>          1.008913769 seconds time elapsed
+>>>>>>
+>>>>>>          1.003248000 seconds user
+>>>>>>          0.004069000 seconds sys
+>>>>>>
+>>>>>> In order to support event inheritance, two new bpf programs are added
+>>>>>> to monitor the fork and exit of tasks respectively. When a task is
+>>>>>> created, add it to the filter map to enable counting, and reuse the
+>>>>>> `accum_key` of its parent task to count together with the parent task.
+>>>>>> When a task exits, remove it from the filter map to disable counting.
+>>>>>>
+>>>>>> After support:
+>>>>>> $ ./perf stat --bpf-counters -e cycles,instructions -- \
+>>>>>>       ./perf test -w sqrtloop
+>>>>>>
+>>>>>>  Performance counter stats for './perf test -w sqrtloop':
+>>>>>>
+>>>>>>      2,316,252,189      cycles
+>>>>>>      2,859,946,547      instructions
+>>>>>>
+>>>>>>        1.009422314 seconds time elapsed
+>>>>>>
+>>>>>>        1.003597000 seconds user
+>>>>>>        0.004270000 seconds sys
+>>>>>>
+>>>>>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+>>>>>> ---
+>>>>>>  tools/perf/builtin-stat.c                     |  1 +
+>>>>>>  tools/perf/util/bpf_counter.c                 | 35 +++++--
+>>>>>>  tools/perf/util/bpf_skel/bperf_follower.bpf.c | 98 +++++++++++++++++--
+>>>>>>  tools/perf/util/bpf_skel/bperf_u.h            |  5 +
+>>>>>>  tools/perf/util/target.h                      |  1 +
+>>>>>>  5 files changed, 126 insertions(+), 14 deletions(-)
+>>>>>>
+>>>>>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>>>>>> index 3e6b9f216e80..8bc880479417 100644
+>>>>>> --- a/tools/perf/builtin-stat.c
+>>>>>> +++ b/tools/perf/builtin-stat.c
+>>>>>> @@ -2620,6 +2620,7 @@ int cmd_stat(int argc, const char **argv)
+>>>>>>    } else if (big_num_opt == 0) /* User passed --no-big-num */
+>>>>>>            stat_config.big_num = false;
+>>>>>>
+>>>>>> +  target.inherit = !stat_config.no_inherit;
+>>>>>>    err = target__validate(&target);
+>>>>>>    if (err) {
+>>>>>>            target__strerror(&target, err, errbuf, BUFSIZ);
+>>>>>> diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+>>>>>> index 7a8af60e0f51..73fcafbffc6a 100644
+>>>>>> --- a/tools/perf/util/bpf_counter.c
+>>>>>> +++ b/tools/perf/util/bpf_counter.c
+>>>>>> @@ -394,6 +394,7 @@ static int bperf_check_target(struct evsel *evsel,
+>>>>>>  }
+>>>>>>
+>>>>>>  static    struct perf_cpu_map *all_cpu_map;
+>>>>>> +static __u32 filter_entry_cnt;
+>>>>>>
+>>>>>>  static int bperf_reload_leader_program(struct evsel *evsel, int attr_map_fd,
+>>>>>>                                   struct perf_event_attr_map_entry *entry)
+>>>>>> @@ -444,12 +445,32 @@ static int bperf_reload_leader_program(struct evsel *evsel, int attr_map_fd,
+>>>>>>    return err;
+>>>>>>  }
+>>>>>>
+>>>>>> +static int bperf_attach_follower_program(struct bperf_follower_bpf *skel,
+>>>>>> +                                   enum bperf_filter_type filter_type,
+>>>>>> +                                   bool inherit)
+>>>>>> +{
+>>>>>> +  struct bpf_link *link;
+>>>>>> +  int err = 0;
+>>>>>> +
+>>>>>> +  if ((filter_type == BPERF_FILTER_PID ||
+>>>>>> +      filter_type == BPERF_FILTER_TGID) && inherit)
+>>>>>> +          /* attach all follower bpf progs to enable event inheritance */
+>>>>>> +          err = bperf_follower_bpf__attach(skel);
+>>>>>> +  else {
+>>>>>> +          link = bpf_program__attach(skel->progs.fexit_XXX);
+>>>>>> +          if (IS_ERR(link))
+>>>>>> +                  err = PTR_ERR(link);
+>>>>>> +  }
+>>>>>> +
+>>>>>> +  return err;
+>>>>>> +}
+>>>>>> +
+>>>>>>  static int bperf__load(struct evsel *evsel, struct target *target)
+>>>>>>  {
+>>>>>>    struct perf_event_attr_map_entry entry = {0xffffffff, 0xffffffff};
+>>>>>>    int attr_map_fd, diff_map_fd = -1, err;
+>>>>>>    enum bperf_filter_type filter_type;
+>>>>>> -  __u32 filter_entry_cnt, i;
+>>>>>> +  __u32 i;
+>>>>>>
+>>>>>>    if (bperf_check_target(evsel, target, &filter_type, &filter_entry_cnt))
+>>>>>>            return -1;
+>>>>>> @@ -529,9 +550,6 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+>>>>>>    /* set up reading map */
+>>>>>>    bpf_map__set_max_entries(evsel->follower_skel->maps.accum_readings,
+>>>>>>                             filter_entry_cnt);
+>>>>>> -  /* set up follower filter based on target */
+>>>>>> -  bpf_map__set_max_entries(evsel->follower_skel->maps.filter,
+>>>>>> -                           filter_entry_cnt);
+>>>>>>    err = bperf_follower_bpf__load(evsel->follower_skel);
+>>>>>>    if (err) {
+>>>>>>            pr_err("Failed to load follower skeleton\n");
+>>>>>> @@ -543,6 +561,7 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+>>>>>>    for (i = 0; i < filter_entry_cnt; i++) {
+>>>>>>            int filter_map_fd;
+>>>>>>            __u32 key;
+>>>>>> +          struct bperf_filter_value fval = { i, 0 };
+>>>>>>
+>>>>>>            if (filter_type == BPERF_FILTER_PID ||
+>>>>>>                filter_type == BPERF_FILTER_TGID)
+>>>>>> @@ -553,12 +572,14 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+>>>>>>                    break;
+>>>>>>
+>>>>>>            filter_map_fd = bpf_map__fd(evsel->follower_skel->maps.filter);
+>>>>>> -          bpf_map_update_elem(filter_map_fd, &key, &i, BPF_ANY);
+>>>>>> +          bpf_map_update_elem(filter_map_fd, &key, &fval, BPF_ANY);
+>>>>>>    }
+>>>>>>
+>>>>>>    evsel->follower_skel->bss->type = filter_type;
+>>>>>> +  evsel->follower_skel->bss->inherit = target->inherit;
+>>>>>>
+>>>>>> -  err = bperf_follower_bpf__attach(evsel->follower_skel);
+>>>>>> +  err = bperf_attach_follower_program(evsel->follower_skel, filter_type,
+>>>>>> +                                      target->inherit);
+>>>>>>
+>>>>>>  out:
+>>>>>>    if (err && evsel->bperf_leader_link_fd >= 0)
+>>>>>> @@ -623,7 +644,7 @@ static int bperf__read(struct evsel *evsel)
+>>>>>>    bperf_sync_counters(evsel);
+>>>>>>    reading_map_fd = bpf_map__fd(skel->maps.accum_readings);
+>>>>>>
+>>>>>> -  for (i = 0; i < bpf_map__max_entries(skel->maps.accum_readings); i++) {
+>>>>>> +  for (i = 0; i < filter_entry_cnt; i++) {
+>>>>>>            struct perf_cpu entry;
+>>>>>>            __u32 cpu;
+>>>>>>
+>>>>>> diff --git a/tools/perf/util/bpf_skel/bperf_follower.bpf.c b/tools/perf/util/bpf_skel/bperf_follower.bpf.c
+>>>>>> index f193998530d4..0595063139a3 100644
+>>>>>> --- a/tools/perf/util/bpf_skel/bperf_follower.bpf.c
+>>>>>> +++ b/tools/perf/util/bpf_skel/bperf_follower.bpf.c
+>>>>>> @@ -5,6 +5,8 @@
+>>>>>>  #include <bpf/bpf_tracing.h>
+>>>>>>  #include "bperf_u.h"
+>>>>>>
+>>>>>> +#define MAX_ENTRIES 102400
+>>>>>> +
+>>>>>>  struct {
+>>>>>>    __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+>>>>>>    __uint(key_size, sizeof(__u32));
+>>>>>> @@ -22,25 +24,29 @@ struct {
+>>>>>>  struct {
+>>>>>>    __uint(type, BPF_MAP_TYPE_HASH);
+>>>>>>    __uint(key_size, sizeof(__u32));
+>>>>>> -  __uint(value_size, sizeof(__u32));
+>>>>>> +  __uint(value_size, sizeof(struct bperf_filter_value));
+>>>>>> +  __uint(max_entries, MAX_ENTRIES);
+>>>>>> +  __uint(map_flags, BPF_F_NO_PREALLOC);
+>>>>>>  } filter SEC(".maps");
+>>>>>>
+>>>>>>  enum bperf_filter_type type = 0;
+>>>>>>  int enabled = 0;
+>>>>>> +int inherit;
+>>>>>>
+>>>>>>  SEC("fexit/XXX")
+>>>>>>  int BPF_PROG(fexit_XXX)
+>>>>>>  {
+>>>>>>    struct bpf_perf_event_value *diff_val, *accum_val;
+>>>>>>    __u32 filter_key, zero = 0;
+>>>>>> -  __u32 *accum_key;
+>>>>>> +  __u32 accum_key;
+>>>>>> +  struct bperf_filter_value *fval;
+>>>>>>
+>>>>>>    if (!enabled)
+>>>>>>            return 0;
+>>>>>>
+>>>>>>    switch (type) {
+>>>>>>    case BPERF_FILTER_GLOBAL:
+>>>>>> -          accum_key = &zero;
+>>>>>> +          accum_key = zero;
+>>>>>>            goto do_add;
+>>>>>>    case BPERF_FILTER_CPU:
+>>>>>>            filter_key = bpf_get_smp_processor_id();
+>>>>>> @@ -49,22 +55,34 @@ int BPF_PROG(fexit_XXX)
+>>>>>>            filter_key = bpf_get_current_pid_tgid() & 0xffffffff;
+>>>>>>            break;
+>>>>>>    case BPERF_FILTER_TGID:
+>>>>>> -          filter_key = bpf_get_current_pid_tgid() >> 32;
+>>>>>> +          /* Use pid as the filter_key to exclude new task counts
+>>>>>> +           * when inherit is disabled. Don't worry about the existing
+>>>>>> +           * children in TGID losing their counts, bpf_counter has
+>>>>>> +           * already added them to the filter map via perf_thread_map
+>>>>>> +           * before this bpf prog runs.
+>>>>>> +           */
+>>>>>> +          filter_key = inherit ?
+>>>>>> +                       bpf_get_current_pid_tgid() >> 32 :
+>>>>>> +                       bpf_get_current_pid_tgid() & 0xffffffff;
+>>>>>
+>>>>> I'm not sure why this is needed.  Isn't the existing code fine?
+>>>>
+>>>> No, it's not. If I don't modify here, all child threads will always be counted
+>>>> when inherit is disabled.
+>>>>
+>>>>
+>>>> Before explaining this modification, we may need to first clarify what is included
+>>>> in the filter map.
+>>>>
+>>>> 1. The fexit_XXX prog determines whether to count by filter_key during each
+>>>>    context switch. If the key is found in the filter map, it will be counted,
+>>>>    otherwise not.
+>>>> 2. The keys in the filter map are synchronized from the perf_thread_map when
+>>>>    bperf__load().
+>>>> 3. The threads in perf_thread_map are added through cmd_stat()->evlist__create_maps()
+>>>>    before bperf__load().
+>>>> 4. evlist__create_maps() fills perf_thread_map by traversing the /proc/%d/task
+>>>>    directory, and these pids belong to the same tgid.
+>>>>
+>>>> Therefore, when the bperf command is issued, the filter map already holds all
+>>>> existing threads with the same tgid as the specified process.
+>>>>
+>>>>
+>>>> Now, let's take a look at the TGID case. We hope the behavior is as follows:
+>>>>
+>>>>  * TGID w/ inherit : specified process + all children from the processes
+>>>>  * TGID w/o inherit: specified process (all threads in the process) only
+>>>>
+>>>> Assuming that a new thread is created during bperf stats, the new thread should
+>>>> exhibit the following behavior in the fexit_XXX prog:
+>>>>
+>>>>  * TGID w/ inherit : do_add
+>>>>  * TGID w/o inherit: skip and return
+>>>>
+>>>> Let's now test the code before and after modification.
+>>>>
+>>>> Before modification: (filter_key = tgid)
+>>>>
+>>>>  * TGID w/ inherit:
+>>>>       create  : new thread
+>>>>       enter   : fexit_XXX prog
+>>>>       assign  : filter_key = new thread's tgid
+>>>>       match   : bpf_map_lookup_elem(&filter, &filter_key)
+>>>>       do_add
+>>>>    (PASS)
+>>>>
+>>>>  * TGID w/o inherit:
+>>>>       [...]   /* like above */
+>>>>       do_add
+>>>>    (FAILED, expect skip and return)
+>>>>
+>>>> After modification: (filter_key = inherit ? tgid : pid)
+>>>>
+>>>>  * TGID w/ inherit:
+>>>>       create  : new thread
+>>>>       enter   : fexit_XXX prog
+>>>>       assign  : filter_key = new thread's tgid
+>>>>       match   : bpf_map_lookup_elem(&filter, &filter_key)
+>>>>       do_add
+>>>>    (PASS)
+>>>>
+>>>>  * TGID w/o inherit:
+>>>>       create  : new thread
+>>>>       enter   : fexit_XXX prog
+>>>>       assign  : filter_key = new thread's pid
+>>>>       mismatch: bpf_map_lookup_elem(&filter, &filter_key)
+>>>>       skip and return
+>>>>    (PASS)
+>>>>
+>>>> As we can see, filter_key=tgid counts incorrectly in TGID w/o inherit case,
+>>>> and we need to change it to filter_key=pid to fix it.
+>>>
+>>> I'm sorry but I don't think I'm following.  A new thread in TGID mode
+>>> (regardless inherit) should be counted always, right?  Why do you
+>>> expect to skip it?
+>>
+>> This is how perf originally performs. To confirm this, I wrote a workload
+>> that creates one new thread per second and then stat it, as shown below.
+>> You can see that in 'TGID w/o inherit' case, perf does not count for the
+>> newly created threads.
+>>
+>> Perf TGID w/ inherit:
+>> ---
+>>   $ ./perf stat -e cpu-clock --timeout 5000 -- ./new_thread_per_second
+>>   thread 367444: start [main]
+>>   thread 367448: start
+>>   thread 367455: start
+>>   thread 367462: start
+>>   thread 367466: start
+>>   thread 367473: start
+>>   ./new_thread_per_second: Terminated
+>>
+>>   Performance counter stats for './new_thread_per_second':
+>>
+>>           10,017.71 msec cpu-clock
+>>
+>>         5.005538048 seconds time elapsed
+>>
+>>         10.018777000 seconds user
+>>         0.000000000 seconds sys
+>>
+>> Perf TGID w/o inherit:
+>> ---
+>>   $ ./perf stat -e cpu-clock --timeout 5000 -i -- ./new_thread_per_second
+>>   thread 366679: start [main]
+>>   thread 366686: start
+>>   thread 366693: start
+>>   thread 366697: start
+>>   thread 366704: start
+>>   thread 366708: start
+>>   ./new_thread_per_second: Terminated
+>>
+>>   Performance counter stats for './new_thread_per_second':
+>>
+>>                 4.29 msec cpu-clock
+>>
+>>         5.005539338 seconds time elapsed
+>>
+>>         10.019673000 seconds user
+>>         0.000000000 seconds sys
+>>
+>>
+>> Therefore, we also need to distinguish it in bperf so that the collection
+>> results can be consistent with perf.
+>>
+>> Bperf TGID w/o inherit: (BEFORE FIX)
+>> ---
+>>   $ ./perf stat --bpf-counters -e cpu-clock --timeout 5000 -i -- ./new_thread_per_second
+>>   thread 369127: start [main]
+>>   thread 369134: start
+>>   thread 369141: start
+>>   thread 369145: start
+>>   thread 369152: start
+>>   thread 369156: start
+>>   ./new_thread_per_second: Terminated
+>>
+>>   Performance counter stats for './new_thread_per_second':
+>>
+>>           10,019.05 msec cpu-clock
+>>
+>>         5.005567266 seconds time elapsed
+>>
+>>         10.018528000 seconds user
+>>         0.000000000 seconds sys
+>>
+>> Bperf TGID w/o inherit: (AFTER FIX)
+>> ---
+>>   $ ./perf stat --bpf-counters -e cpu-clock --timeout 5000 -i -- ./new_thread_per_second
+>>   thread 366616: start [main]
+>>   thread 366623: start
+>>   thread 366627: start
+>>   thread 366634: start
+>>   thread 366638: start
+>>   thread 366645: start
+>>   ./new_thread_per_second: Terminated
+>>
+>>   Performance counter stats for './new_thread_per_second':
+>>
+>>                 4.95 msec cpu-clock
+>>
+>>         5.005511173 seconds time elapsed
+>>
+>>         10.018790000 seconds user
+>>         0.000000000 seconds sys
+>>
+>>
+>> Thanks,
+>> Tengda
+>>
 > 
-> Forgot:
-> Fixes: e25ebda78e23 ("perf cap: Tidy up and improve capability testing")
-
-Works for me, thank you!
-
-Tested-by: Adrian Hunter <adrian.hunter@intel.com>
-
+> Thanks for the explanation.  Ok I think it's the limitation of the current
+> implementation of perf_event that works at thread-level.  Even if we
+> can count events at process-level with bperf, it might be important to
+> keep the compatibility with the existing behavior.
 > 
 > Thanks,
-> Ian
-> 
->> ---
->>  tools/arch/x86/include/uapi/asm/unistd_32.h |  3 +++
->>  tools/arch/x86/include/uapi/asm/unistd_64.h |  3 +++
->>  tools/perf/util/cap.c                       | 10 +++-------
->>  3 files changed, 9 insertions(+), 7 deletions(-)
->>
->> diff --git a/tools/arch/x86/include/uapi/asm/unistd_32.h b/tools/arch/x86/include/uapi/asm/unistd_32.h
->> index 9de35df1afc3..63182a023e9d 100644
->> --- a/tools/arch/x86/include/uapi/asm/unistd_32.h
->> +++ b/tools/arch/x86/include/uapi/asm/unistd_32.h
->> @@ -11,6 +11,9 @@
->>  #ifndef __NR_getpgid
->>  #define __NR_getpgid 132
->>  #endif
->> +#ifndef __NR_capget
->> +#define __NR_capget 184
->> +#endif
->>  #ifndef __NR_gettid
->>  #define __NR_gettid 224
->>  #endif
->> diff --git a/tools/arch/x86/include/uapi/asm/unistd_64.h b/tools/arch/x86/include/uapi/asm/unistd_64.h
->> index d0f2043d7132..77311e8d1b5d 100644
->> --- a/tools/arch/x86/include/uapi/asm/unistd_64.h
->> +++ b/tools/arch/x86/include/uapi/asm/unistd_64.h
->> @@ -11,6 +11,9 @@
->>  #ifndef __NR_getpgid
->>  #define __NR_getpgid 121
->>  #endif
->> +#ifndef __NR_capget
->> +#define __NR_capget 125
->> +#endif
->>  #ifndef __NR_gettid
->>  #define __NR_gettid 186
->>  #endif
->> diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
->> index 7574a67651bc..69d9a2bcd40b 100644
->> --- a/tools/perf/util/cap.c
->> +++ b/tools/perf/util/cap.c
->> @@ -7,13 +7,9 @@
->>  #include "debug.h"
->>  #include <errno.h>
->>  #include <string.h>
->> -#include <unistd.h>
->>  #include <linux/capability.h>
->>  #include <sys/syscall.h>
->> -
->> -#ifndef SYS_capget
->> -#define SYS_capget 90
->> -#endif
->> +#include <unistd.h>
->>
->>  #define MAX_LINUX_CAPABILITY_U32S _LINUX_CAPABILITY_U32S_3
->>
->> @@ -21,9 +17,9 @@ bool perf_cap__capable(int cap, bool *used_root)
->>  {
->>         struct __user_cap_header_struct header = {
->>                 .version = _LINUX_CAPABILITY_VERSION_3,
->> -               .pid = getpid(),
->> +               .pid = 0,
->>         };
->> -       struct __user_cap_data_struct data[MAX_LINUX_CAPABILITY_U32S];
->> +       struct __user_cap_data_struct data[MAX_LINUX_CAPABILITY_U32S] = {};
->>         __u32 cap_val;
->>
->>         *used_root = false;
->> --
->> 2.47.0.163.g1226f6d8fa-goog
->>
+> Namhyung
+
+Yeah, thanks for your every review!
+
+Best regards,
+Tengda
 
