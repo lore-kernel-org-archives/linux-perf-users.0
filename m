@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE901EF92F;
-	Mon, 28 Oct 2024 21:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D30D204940;
+	Mon, 28 Oct 2024 21:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730152115; cv=none; b=je712gc4CPqWHVrtESw5y1nmLBRKcdTyP0/+Yhvrgz7YQPe/eN0qhhZsEGrLH3CcWWFgLJhUH8k7Z2dL2Ka/78/KppL1V8w4kKBrLLOIxktnQoeWW9l0WQDrZxHcw6gO2t9ksSAT1k+KyzPLjj6QXEjotYRMftpCSsTSlbmtFO0=
+	t=1730152116; cv=none; b=k2QNeofH4WKrfkVnJnAchhlkB1EZhO6krAnaaumrgHldB+MLUubPFnaYvDgoQQdmllZndpEHqlkUnUMjPmRWhNg/tUtNWF4JIg0Quf94KPKUpOu+mht2raqV5qOqI9TM8jeWtwUcq2HQsbTR9r9Pk/LA5+Y7pSJOVRN+BplguhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730152115; c=relaxed/simple;
-	bh=novk9n48ZW5HwpctN0xt5g9gOey0iB8co3QMa5J7oe8=;
+	s=arc-20240116; t=1730152116; c=relaxed/simple;
+	bh=csgk8n4iRRjcqkq8BEX7gzKoaA91YAbqf7sWW4GqaNA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XGRzT1rEJIDl/C6INWq9a1nWu4JBowt03j45IDGikm8eps80jvucg4mV5LZ5WfymKNYKUy1HWC4ESdafbG2OWW/J4H5vUZQ17il93B38mK9tFGBDtrIl9jltNR3CV0RUqPsYUWmRmcyaaX+gfKnMN2YsyFRMQ8rwG+hxMrsanbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pq4TNxbQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qcJIAiWx91UJisT5h7igPHb0Jz4h9Sn6ROfzq6veqmDwMq+1wshLwyPV1uR5r0pNwaqL7MNAW0abb2mJxlOAT40QJN4KdTGp0lbgR3856HFaL1m9o0tASis0DeIUXRn9sVRrbfxwHqarNMo0N6NEKU7AJElJiGM5D7Ce166oJSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijb5dyNg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pq4TNxbQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CAD6C4CEC3;
-	Mon, 28 Oct 2024 21:48:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijb5dyNg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E98AC4CEE9;
+	Mon, 28 Oct 2024 21:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730152115;
-	bh=novk9n48ZW5HwpctN0xt5g9gOey0iB8co3QMa5J7oe8=;
+	s=k20201202; t=1730152116;
+	bh=csgk8n4iRRjcqkq8BEX7gzKoaA91YAbqf7sWW4GqaNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Pq4TNxbQUWnHzF0/p/OHd81qstZ991ZkhGmctWZz7gnWBviq+8OJUB7u7GT5603Su
-	 7CNdAZluhI7IjrUoZ09cUdbitS/3nAYWDTU7SkHKMaetMOS1YrH9Qrza9LPBvApcl8
-	 +DIznj4q60FYmR7s3U1YEZXfVybdcksgY8KzovUt6LXNHcppeY+MpiaM4Y3r6VWqnv
-	 3FgFxcVwvfj4q93Lm0re6mUPFvdd1AmgG0WAmFDQk8XC6mtPffPU1LGtH5uvMHFVqZ
-	 XhyO2WxyM5KCMOEoJg96q1shEniiJzJeLdS76yey3/KlDs/ZpliOZk+mPJEmSKAbwG
-	 KPsR5YynqIg8w==
+	b=ijb5dyNgkc4TtnhRxSnT4WDozXMbt2uEjiaWW22Y5IOlFHXx1yy9KqyZcZIBCcwV/
+	 +IE6m8/Iuj3ghBl/o1LcE3qE6Rgr8CtPwOcqZb9ZmInZU/ilOulwHrHoru2zw6mFCT
+	 XoPU/4Jcqc1brMpbwMpwDp1UqX5URIOOzPBoFDDUBLNi9LU1Nj9Xx5iZIFKFcTMuWo
+	 MMydmTWIQe/o382RuMSoq6AtHssgWq6St9kC557nvwrkUo43Unk7USbTEcknXWKpof
+	 4aqGcnPhl0AxQn673MKuHwew99TM+FP0aT7oDDwxYST5AFDXn0BABTowqpULK6b2KG
+	 Eesxu5SYisfdw==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
@@ -51,9 +51,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v3 05/19] x86/vdso: Use CFI macros in __vdso_sgx_enter_enclave()
-Date: Mon, 28 Oct 2024 14:47:52 -0700
-Message-ID: <95cb05cfd657091c0d3126709a55535ebd09e2ba.1730150953.git.jpoimboe@kernel.org>
+Subject: [PATCH v3 06/19] x86/vdso: Enable sframe generation in VDSO
+Date: Mon, 28 Oct 2024 14:47:53 -0700
+Message-ID: <ebc4e4a51af47cd1e9a1c515407410e1f69d224f.1730150953.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1730150953.git.jpoimboe@kernel.org>
 References: <cover.1730150953.git.jpoimboe@kernel.org>
@@ -64,57 +64,91 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Message-ID: <20241028214752.EZdSeKXLz2s3lAAICFDTihxSz57ElnO8C23RMovhqxA@z>
+Message-ID: <20241028214753.-hfD_ytd9Xj1tlTcNFYf_mV9LQVYCyWVW1ynhto9ln4@z>
 
-Use the CFI macros instead of the raw .cfi_* directives to be consistent
-with the rest of the VDSO asm.  It's also easier on the eyes.
-
-No functional changes.
+Enable sframe generation in the VDSO library so kernel and user space
+can unwind through it.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/x86/entry/vdso/vsgx.S | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ arch/x86/entry/vdso/Makefile          | 6 ++++--
+ arch/x86/entry/vdso/vdso-layout.lds.S | 3 +++
+ arch/x86/include/asm/dwarf2.h         | 5 ++++-
+ 3 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vsgx.S b/arch/x86/entry/vdso/vsgx.S
-index c0342238c976..8d7b8eb45c50 100644
---- a/arch/x86/entry/vdso/vsgx.S
-+++ b/arch/x86/entry/vdso/vsgx.S
-@@ -24,13 +24,14 @@
- .section .text, "ax"
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index c9216ac4fb1e..75ae9e093a2d 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -47,13 +47,15 @@ quiet_cmd_vdso2c = VDSO2C  $@
+ $(obj)/vdso-image-%.c: $(obj)/vdso%.so.dbg $(obj)/vdso%.so $(obj)/vdso2c FORCE
+ 	$(call if_changed,vdso2c)
  
- SYM_FUNC_START(__vdso_sgx_enter_enclave)
-+	SYM_F_ALIGN
- 	push	%rbp
--	.cfi_adjust_cfa_offset	8
--	.cfi_rel_offset		%rbp, 0
-+	CFI_ADJUST_CFA_OFFSET	8
-+	CFI_REL_OFFSET		%rbp, 0
- 	mov	%rsp, %rbp
--	.cfi_def_cfa_register	%rbp
-+	CFI_DEF_CFA_REGISTER	%rbp
- 	push	%rbx
--	.cfi_rel_offset		%rbx, -8
-+	CFI_REL_OFFSET		%rbx, -8
++SFRAME_CFLAGS := $(call as-option,-Wa$(comma)-gsframe,)
++
+ #
+ # Don't omit frame pointers for ease of userspace debugging, but do
+ # optimize sibling calls.
+ #
+ CFL := $(PROFILING) -mcmodel=small -fPIC -O2 -fasynchronous-unwind-tables -m64 \
+        $(filter -g%,$(KBUILD_CFLAGS)) -fno-stack-protector \
+-       -fno-omit-frame-pointer -foptimize-sibling-calls \
++       -fno-omit-frame-pointer $(SFRAME_CFLAGS) -foptimize-sibling-calls \
+        -DDISABLE_BRANCH_PROFILING -DBUILD_VDSO
  
- 	mov	%ecx, %eax
- .Lenter_enclave:
-@@ -77,13 +78,11 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
- .Lout:
- 	pop	%rbx
- 	leave
--	.cfi_def_cfa		%rsp, 8
-+	CFI_DEF_CFA		%rsp, 8
- 	RET
+ ifdef CONFIG_MITIGATION_RETPOLINE
+@@ -63,7 +65,7 @@ endif
+ endif
  
--	/* The out-of-line code runs with the pre-leave stack frame. */
--	.cfi_def_cfa		%rbp, 16
+ $(vobjs): KBUILD_CFLAGS := $(filter-out $(PADDING_CFLAGS) $(CC_FLAGS_LTO) $(CC_FLAGS_CFI) $(RANDSTRUCT_CFLAGS) $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS)) $(CFL)
+-$(vobjs): KBUILD_AFLAGS += -DBUILD_VDSO
++$(vobjs): KBUILD_AFLAGS += -DBUILD_VDSO $(SFRAME_CFLAGS)
+ 
+ #
+ # vDSO code runs in userspace and -pg doesn't help with profiling anyway.
+diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
+index a42c7d4a33da..f6cd6654bb9e 100644
+--- a/arch/x86/entry/vdso/vdso-layout.lds.S
++++ b/arch/x86/entry/vdso/vdso-layout.lds.S
+@@ -69,6 +69,7 @@ SECTIONS
+ 	.eh_frame_hdr	: { *(.eh_frame_hdr) }		:text	:eh_frame_hdr
+ 	.eh_frame	: { KEEP (*(.eh_frame)) }	:text
+ 
++	.sframe		: { *(.sframe) }		:text	:sframe
+ 
+ 	/*
+ 	 * Text is well-separated from actual data: there's plenty of
+@@ -97,6 +98,7 @@ SECTIONS
+  * Very old versions of ld do not recognize this name token; use the constant.
+  */
+ #define PT_GNU_EH_FRAME	0x6474e550
++#define PT_GNU_SFRAME	0x6474e554
+ 
+ /*
+  * We must supply the ELF program headers explicitly to get just one
+@@ -108,4 +110,5 @@ PHDRS
+ 	dynamic		PT_DYNAMIC	FLAGS(4);		/* PF_R */
+ 	note		PT_NOTE		FLAGS(4);		/* PF_R */
+ 	eh_frame_hdr	PT_GNU_EH_FRAME;
++	sframe		PT_GNU_SFRAME;
+ }
+diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
+index b1aa3fcd5bca..1a49492817a1 100644
+--- a/arch/x86/include/asm/dwarf2.h
++++ b/arch/x86/include/asm/dwarf2.h
+@@ -12,8 +12,11 @@
+ 	 * For the vDSO, emit both runtime unwind information and debug
+ 	 * symbols for the .dbg file.
+ 	 */
 -
- .Linvalid_input:
-+	CFI_DEF_CFA		%rbp, 16
- 	mov	$(-EINVAL), %eax
- 	jmp	.Lout
++#ifdef __x86_64__
++	.cfi_sections .eh_frame, .debug_frame, .sframe
++#else
+ 	.cfi_sections .eh_frame, .debug_frame
++#endif
  
+ #define CFI_STARTPROC		.cfi_startproc
+ #define CFI_ENDPROC		.cfi_endproc
 -- 
 2.47.0
 
