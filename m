@@ -1,31 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676B92036F4;
-	Mon, 28 Oct 2024 21:48:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D300F2038B1;
+	Mon, 28 Oct 2024 21:48:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730152109; cv=none; b=hnmq5/qm+mF7ja9Siz656VX82OUrZEgA8dHHkEVZncsx1YjCI4+SczdglNd1hoad0u3Nd2PstkgNqR6SYY+ZFwKgg+NKMOKDczrm2kczSkrjF1ZccvrqpFLmLSC+Bo1/1SKFs1kMlIKknNlGkrqvfKtocIFs/tEdzcwzvqrAJAA=
+	t=1730152110; cv=none; b=aWv8NygEh4DqT+Ptx5RWTcBsDlD173jhjSp9AJ6NPTVAvFgUJVV7j7jGIzitPogWtsDJEpMs+KsDR0DAq06BabH+E//rCzG27QO1BgLKwo5fywc+lQAp8ns7H52r8k/3EkBN7DmKO+A1nO3YJ8qGclIytFdf1e+rGdwWuj1I0GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730152109; c=relaxed/simple;
-	bh=WyQ7upbPHHR2F6skLp0O6redGtIa3A+g4lv+tFWe+IU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nMWyufVwuKirQ7FhQ0oY39SxEZ19Akyr1eS724J+uXqWTbD5BAJLTgSswdXj3e+XG+LL7Lr3WMF4DZDXIdE3TOlNXx56tbYcstijDYI7HQT+rElTD2sqZk1KqcL3Lg14Aq5XBOpxePt2Z0cMMcpSjMnPqE3RSudwZbxtbQvbpRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h9YnRCvU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730152110; c=relaxed/simple;
+	bh=DigfQVMbSZDd+BKHqmNjpUWl4LLpGFKZjeEsBqtUWCE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZpMi+QNRV2Z7s192OiiiqrhW2XTAe5+nuv8btuguiVdSpw8Pj7UzvMZM8j2aPrXhfptcvSKnWhuX3VWBSqzhAHvsv95aaXmDmAwPwP12KNxLnpMA4NItU0pHYsetxXjZrFyeHhmMwHtUqpEzEthjsFcX/g833yP1rEJpJFEz9ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+Jgqq9j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h9YnRCvU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6490BC4CEEB;
-	Mon, 28 Oct 2024 21:48:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+Jgqq9j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70CD6C4CEED;
+	Mon, 28 Oct 2024 21:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730152109;
-	bh=WyQ7upbPHHR2F6skLp0O6redGtIa3A+g4lv+tFWe+IU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h9YnRCvUQsg4iit5spBlCLNATRQdFhWrTSwXXO22Q4JQygwrJFvDIlX2RwyGdVJmJ
-	 YzIdWJKQR/mrPeqPf8c/EON8zxNdKLcMbbUquvrmJyUrkQ7ja1nn7zoFwGrBK+FKwF
-	 nwzPH6NJZlsDlj5dj2ht/BntRcaj7UEPYW1yu27YCMVw4wf4wd+JaytulEDWCePYOP
-	 L1YtdrLaVJgStgXiR9H8W1KKivTvw7rWgymrceWN53QnwKoSCvSSorD/CxO9FMiAKF
-	 VR91rhL0UHoQurXnQAUf/E1BiRhc52KOfZTV+4fysik2UG05NBU1TiWaovoX3RJ2td
-	 ++Rtc4G9qJFvw==
+	s=k20201202; t=1730152110;
+	bh=DigfQVMbSZDd+BKHqmNjpUWl4LLpGFKZjeEsBqtUWCE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=p+Jgqq9jTSGn5bxXQHDbX2uz1VC7GG7Om2cmA/F9wby208fOF1v5Xr7wdewaA6LE5
+	 djYu+vrvmnlohoUORXmREvnxm2ieEdWRr/tdYk6fftyhW6pisSzo44o+vN+NsJK7jK
+	 kzkTtORXIoCK7vjwJTtA9u6kpWTdGbMMajKPmtxszfR2pNUYpkTAPMPe3ACjrKszhz
+	 5DHSEjfWyibDTMFUBbcSQYmRXaY10i73oxfotGRUGLM42bmwhGHVZdylm0jjslrKFT
+	 eqbWLGzAzzPePlalu3xqm6WsuOrotwep0WyXi0sk1DU1MMcpkJr2Q/uC9Fp68fju9I
+	 rEmU9104azwtg==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
@@ -51,12 +50,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v3 19/19] perf tools: Merge deferred user callchains
-Date: Mon, 28 Oct 2024 14:47:46 -0700
-Message-ID: <bf761da86e91c09e3d916a3f004101f4d4544407.1730150953.git.jpoimboe@kernel.org>
+Subject: [PATCH v3 00/19] unwind, perf: sframe user space unwinding
+Date: Mon, 28 Oct 2024 14:47:47 -0700
+Message-ID: <cover.1730150953.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1730150953.git.jpoimboe@kernel.org>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,296 +61,175 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Message-ID: <20241028214747.iF-DIhGLGS65g6_Cgu_MYlMSAA1sixOMEs_--Foy1CA@z>
 
-From: Namhyung Kim <namhyung@kernel.org>
+This has all the changes discussed in v2, plus VDSO sframe support and
+Namhyung's perf tool patches (see detailed changelog below).
 
-Save samples with deferred callchains in a separate list and deliver
-them after merging the user callchains.  If users don't want to merge
-they can set tool->merge_deferred_callchains to false to prevent the
-behavior.
+I did quite a bit of testing, it seems to work well.  It still needs
+some binutils and glibc patches which I'll send in a reply.
 
-With previous result, now perf script will show the merged callchains.
+Questions for perf experts:
 
-  $ perf script
-  perf     801 [000]    18.031793:          1 cycles:P:
-          ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.kallsyms])
-          ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
-          ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
-          ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
-          ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
-          ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsyms])
-          ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
-          ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsyms])
-          ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
-          ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
-          ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
-          ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
-          ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
-              7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-gnu/libc.so.6)
-  ...
+  - Is the perf_event lifetime managed correctly or do we need to do
+    something to ensure it exists in unwind_user_task_work()?
 
-The old output can be get using --no-merge-callchain option.
-Also perf report can get the user callchain entry at the end.
+    Or alternatively is the original perf_event even needed in
+    unwind_user_task_work() or can a new one be created on demand?
 
-  $ perf report --no-children --percent-limit=0 --stdio -q -S __intel_pmu_enable_all.isra.0
-  # symbol: __intel_pmu_enable_all.isra.0
-       0.00%  perf     [kernel.kallsyms]
-              |
-              ---__intel_pmu_enable_all.isra.0
-                 perf_ctx_enable
-                 event_function
-                 remote_function
-                 generic_exec_single
-                 smp_call_function_single
-                 event_function_call
-                 perf_event_for_each_child
-                 _perf_ioctl
-                 perf_ioctl
-                 __x64_sys_ioctl
-                 do_syscall_64
-                 entry_SYSCALL_64
-                 __GI___ioctl
+  - Is --call-graph=sframe needed for consistency?
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- tools/perf/Documentation/perf-script.txt |  5 ++
- tools/perf/builtin-script.c              |  5 +-
- tools/perf/util/callchain.c              | 24 +++++++++
- tools/perf/util/callchain.h              |  3 ++
- tools/perf/util/evlist.c                 |  1 +
- tools/perf/util/evlist.h                 |  1 +
- tools/perf/util/session.c                | 63 +++++++++++++++++++++++-
- tools/perf/util/tool.c                   |  1 +
- tools/perf/util/tool.h                   |  1 +
- 9 files changed, 102 insertions(+), 2 deletions(-)
+  - Should perf use the context cookie?  Note that because the callback
+    is usually only called once for multiple NMIs in the same entry
+    context, it's possible for the PERF_RECORD_CALLCHAIN_DEFERRED event
+    to arrive *before* some of the corresponding kernel events.  The
+    context cookie disambiguates the corner cases.
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index b72866ef270b..69f018b3d199 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -518,6 +518,11 @@ include::itrace.txt[]
- 	The known limitations include exception handing such as
- 	setjmp/longjmp will have calls/returns not match.
- 
-+--merge-callchains::
-+	Enable merging deferred user callchains if available.  This is the
-+	default behavior.  If you want to see separate CALLCHAIN_DEFERRED
-+	records for some reason, use --no-merge-callchains explicitly.
-+
- :GMEXAMPLECMD: script
- :GMEXAMPLESUBCMD:
- include::guest-files.txt[]
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 311580e25f5b..e3acf4979c36 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -4031,6 +4031,7 @@ int cmd_script(int argc, const char **argv)
- 	bool header_only = false;
- 	bool script_started = false;
- 	bool unsorted_dump = false;
-+	bool merge_deferred_callchains = true;
- 	char *rec_script_path = NULL;
- 	char *rep_script_path = NULL;
- 	struct perf_session *session;
-@@ -4184,6 +4185,8 @@ int cmd_script(int argc, const char **argv)
- 		    "Guest code can be found in hypervisor process"),
- 	OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
- 		    "Enable LBR callgraph stitching approach"),
-+	OPT_BOOLEAN('\0', "merge-callchains", &merge_deferred_callchains,
-+		    "Enable merge deferred user callchains"),
- 	OPTS_EVSWITCH(&script.evswitch),
- 	OPT_END()
- 	};
-@@ -4439,7 +4442,7 @@ int cmd_script(int argc, const char **argv)
- 	script.tool.throttle		 = process_throttle_event;
- 	script.tool.unthrottle		 = process_throttle_event;
- 	script.tool.ordering_requires_timestamps = true;
--	script.tool.merge_deferred_callchains = false;
-+	script.tool.merge_deferred_callchains = merge_deferred_callchains;
- 	session = perf_session__new(&data, &script.tool);
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 0c7564747a14..d1114491c3da 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1832,3 +1832,27 @@ int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
- 	}
- 	return 0;
- }
-+
-+int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
-+				     struct perf_sample *sample_callchain)
-+{
-+	u64 nr_orig = sample_orig->callchain->nr - 1;
-+	u64 nr_deferred = sample_callchain->callchain->nr;
-+	struct ip_callchain *callchain;
-+
-+	callchain = calloc(1 + nr_orig + nr_deferred, sizeof(u64));
-+	if (callchain == NULL) {
-+		sample_orig->deferred_callchain = false;
-+		return -ENOMEM;
-+	}
-+
-+	callchain->nr = nr_orig + nr_deferred;
-+	/* copy except for the last PERF_CONTEXT_USER_DEFERRED */
-+	memcpy(callchain->ips, sample_orig->callchain->ips, nr_orig * sizeof(u64));
-+	/* copy deferred use callchains */
-+	memcpy(&callchain->ips[nr_orig], sample_callchain->callchain->ips,
-+	       nr_deferred * sizeof(u64));
-+
-+	sample_orig->callchain = callchain;
-+	return 0;
-+}
-diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index 86ed9e4d04f9..89785125ed25 100644
---- a/tools/perf/util/callchain.h
-+++ b/tools/perf/util/callchain.h
-@@ -317,4 +317,7 @@ int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
- 				    struct perf_sample *sample, int max_stack,
- 				    bool symbols, callchain_iter_fn cb, void *data);
- 
-+int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
-+				     struct perf_sample *sample_callchain);
-+
- #endif	/* __PERF_CALLCHAIN_H */
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index f14b7e6ff1dc..f27d8c4a22aa 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -81,6 +81,7 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
- 	evlist->ctl_fd.ack = -1;
- 	evlist->ctl_fd.pos = -1;
- 	evlist->nr_br_cntr = -1;
-+	INIT_LIST_HEAD(&evlist->deferred_samples);
- }
- 
- struct evlist *evlist__new(void)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index bcc1c6984bb5..c26379366554 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -84,6 +84,7 @@ struct evlist {
- 		int	pos;	/* index at evlist core object to check signals */
- 	} ctl_fd;
- 	struct event_enable_timer *eet;
-+	struct list_head deferred_samples;
- };
- 
- struct evsel_str_handler {
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 1248a0317a2f..e0a21b896b57 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1256,6 +1256,56 @@ static int evlist__deliver_sample(struct evlist *evlist, const struct perf_tool
- 					    &sample->read.one, machine);
- }
- 
-+struct deferred_event {
-+	struct list_head list;
-+	union perf_event *event;
-+};
-+
-+static int evlist__deliver_deferred_samples(struct evlist *evlist,
-+					    const struct perf_tool *tool,
-+					    union  perf_event *event,
-+					    struct perf_sample *sample,
-+					    struct machine *machine)
-+{
-+	struct deferred_event *de, *tmp;
-+	struct evsel *evsel;
-+	int ret = 0;
-+
-+	if (!tool->merge_deferred_callchains) {
-+		evsel = evlist__id2evsel(evlist, sample->id);
-+		return tool->callchain_deferred(tool, event, sample,
-+						evsel, machine);
-+	}
-+
-+	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
-+		struct perf_sample orig_sample;
-+
-+		ret = evlist__parse_sample(evlist, de->event, &orig_sample);
-+		if (ret < 0) {
-+			pr_err("failed to parse original sample\n");
-+			break;
-+		}
-+
-+		if (sample->tid != orig_sample.tid)
-+			continue;
-+
-+		evsel = evlist__id2evsel(evlist, orig_sample.id);
-+		sample__merge_deferred_callchain(&orig_sample, sample);
-+		ret = evlist__deliver_sample(evlist, tool, de->event,
-+					     &orig_sample, evsel, machine);
-+
-+		if (orig_sample.deferred_callchain)
-+			free(orig_sample.callchain);
-+
-+		list_del(&de->list);
-+		free(de);
-+
-+		if (ret)
-+			break;
-+	}
-+	return ret;
-+}
-+
- static int machines__deliver_event(struct machines *machines,
- 				   struct evlist *evlist,
- 				   union perf_event *event,
-@@ -1284,6 +1334,16 @@ static int machines__deliver_event(struct machines *machines,
- 			return 0;
- 		}
- 		dump_sample(evsel, event, sample, perf_env__arch(machine->env));
-+		if (sample->deferred_callchain && tool->merge_deferred_callchains) {
-+			struct deferred_event *de = malloc(sizeof(*de));
-+
-+			if (de == NULL)
-+				return -ENOMEM;
-+
-+			de->event = event;
-+			list_add_tail(&de->list, &evlist->deferred_samples);
-+			return 0;
-+		}
- 		return evlist__deliver_sample(evlist, tool, event, sample, evsel, machine);
- 	case PERF_RECORD_MMAP:
- 		return tool->mmap(tool, event, sample, machine);
-@@ -1343,7 +1403,8 @@ static int machines__deliver_event(struct machines *machines,
- 		return tool->aux_output_hw_id(tool, event, sample, machine);
- 	case PERF_RECORD_CALLCHAIN_DEFERRED:
- 		dump_deferred_callchain(evsel, event, sample);
--		return tool->callchain_deferred(tool, event, sample, evsel, machine);
-+		return evlist__deliver_deferred_samples(evlist, tool, event,
-+							sample, machine);
- 	default:
- 		++evlist->stats.nr_unknown_events;
- 		return -1;
-diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index e78f16de912e..385043e06627 100644
---- a/tools/perf/util/tool.c
-+++ b/tools/perf/util/tool.c
-@@ -238,6 +238,7 @@ void perf_tool__init(struct perf_tool *tool, bool ordered_events)
- 	tool->cgroup_events = false;
- 	tool->no_warn = false;
- 	tool->show_feat_hdr = SHOW_FEAT_NO_HEADER;
-+	tool->merge_deferred_callchains = true;
- 
- 	tool->sample = process_event_sample_stub;
- 	tool->mmap = process_event_stub;
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 9987bbde6d5e..d06580478ab1 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -87,6 +87,7 @@ struct perf_tool {
- 	bool		cgroup_events;
- 	bool		no_warn;
- 	bool		dont_split_sample_group;
-+	bool		merge_deferred_callchains;
- 	enum show_feature_header show_feat_hdr;
- };
- 
+Based on tip/master.
+
+Also at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git sframe-v3
+
+
+v3:
+- move the "deferred" logic out of perf and into unwind_user with new
+  unwind_user_deferred() interface [Steven, Mathieu]
+- add more sframe sanity checks [Steven]
+- make frame pointers optional depending on arch [Jens]
+- fix perf event output [Namhyung]
+- include Namhyung's perf tool patches
+- enable sframe generation in VDSO
+- fix build errors [robot]
+
+v2: https://lore.kernel.org/cover.1726268190.git.jpoimboe@kernel.org
+- rebase on v6.11-rc7
+- reorganize the patches to add sframe first
+- change to sframe v2
+- add new perf event type: PERF_RECORD_CALLCHAIN_DEFERRED
+- add new perf attribute: defer_callchain
+
+v1: https://lore.kernel.org/cover.1699487758.git.jpoimboe@kernel.org
+
+Some distros have started compiling frame pointers into all their
+packages to enable the kernel to do system-wide profiling of user space.
+Unfortunately that creates a runtime performance penalty across the
+entire system.  Using DWARF (or .eh_frame) instead isn't feasible
+because of complexity and slowness.
+
+For in-kernel unwinding we solved this problem with the creation of the
+ORC unwinder for x86_64.  Similarly, for user space the GNU assembler
+has created the SFrame ("Simple Frame") v2 format starting with binutils
+2.41.
+
+These patches add support for unwinding user space from the kernel using
+SFrame with perf.  It should be easy to add user unwinding support for
+other components like ftrace.
+
+There were two main challenges:
+
+1) Finding .sframe sections in shared/dlopened libraries
+
+   The kernel has no visibility to the contents of shared libraries.
+   This was solved by adding a PR_ADD_SFRAME option to prctl() which
+   allows the runtime linker to manually provide the in-memory address
+   of an .sframe section to the kernel.
+
+2) Dealing with page faults
+
+   Keeping all binaries' sframe data pinned would likely waste a lot of
+   memory.  Instead, read it from user space on demand.  That can't be
+   done from perf NMI context due to page faults, so defer the unwind to
+   the next user exit.  Since the NMI handler doesn't do exit work,
+   self-IPI and then schedule task work to be run on exit from the IPI.
+
+Special thanks to Indu for the original concept, and to Steven and Peter
+for helping a lot with the design.  And to Steven for letting me do it ;-)
+
+
+
+Josh Poimboeuf (15):
+  x86/vdso: Fix DWARF generation for getrandom()
+  x86/asm: Avoid emitting DWARF CFI for non-VDSO
+  x86/asm: Fix VDSO DWARF generation with kernel IBT enabled
+  x86/vdso: Use SYM_FUNC_{START,END} in __kernel_vsyscall()
+  x86/vdso: Use CFI macros in __vdso_sgx_enter_enclave()
+  x86/vdso: Enable sframe generation in VDSO
+  unwind: Add user space unwinding API
+  unwind/x86: Enable CONFIG_HAVE_UNWIND_USER_FP
+  unwind: Introduce sframe user space unwinding
+  unwind/x86: Enable CONFIG_HAVE_UNWIND_USER_SFRAME
+  unwind: Add deferred user space unwinding API
+  perf: Remove get_perf_callchain() 'init_nr' argument
+  perf: Remove get_perf_callchain() 'crosstask' argument
+  perf: Simplify get_perf_callchain() user logic
+  perf: Add deferred user callchains
+
+Namhyung Kim (4):
+  perf tools: Minimal CALLCHAIN_DEFERRED support
+  perf record: Enable defer_callchain for user callchains
+  perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
+  perf tools: Merge deferred user callchains
+
+ arch/Kconfig                              |  14 +
+ arch/x86/Kconfig                          |   2 +
+ arch/x86/entry/vdso/Makefile              |   6 +-
+ arch/x86/entry/vdso/vdso-layout.lds.S     |   5 +-
+ arch/x86/entry/vdso/vdso32/system_call.S  |  10 +-
+ arch/x86/entry/vdso/vgetrandom-chacha.S   |   3 +-
+ arch/x86/entry/vdso/vsgx.S                |  19 +-
+ arch/x86/include/asm/dwarf2.h             |  40 ++-
+ arch/x86/include/asm/linkage.h            |  29 +-
+ arch/x86/include/asm/mmu.h                |   2 +-
+ arch/x86/include/asm/unwind_user.h        |  11 +
+ arch/x86/include/asm/vdso.h               |   1 -
+ fs/binfmt_elf.c                           |  35 +-
+ include/linux/entry-common.h              |   3 +
+ include/linux/mm_types.h                  |   3 +
+ include/linux/perf_event.h                |  12 +-
+ include/linux/sched.h                     |   5 +
+ include/linux/sframe.h                    |  41 +++
+ include/linux/unwind_user.h               |  99 ++++++
+ include/uapi/linux/elf.h                  |   1 +
+ include/uapi/linux/perf_event.h           |  22 +-
+ include/uapi/linux/prctl.h                |   3 +
+ kernel/Makefile                           |   1 +
+ kernel/bpf/stackmap.c                     |  14 +-
+ kernel/events/callchain.c                 |  47 +--
+ kernel/events/core.c                      |  70 +++-
+ kernel/fork.c                             |  14 +
+ kernel/sys.c                              |  11 +
+ kernel/unwind/Makefile                    |   2 +
+ kernel/unwind/sframe.c                    | 380 ++++++++++++++++++++++
+ kernel/unwind/sframe.h                    | 215 ++++++++++++
+ kernel/unwind/user.c                      | 318 ++++++++++++++++++
+ mm/init-mm.c                              |   6 +
+ tools/include/uapi/linux/perf_event.h     |  22 +-
+ tools/lib/perf/include/perf/event.h       |   7 +
+ tools/perf/Documentation/perf-script.txt  |   5 +
+ tools/perf/builtin-script.c               |  92 ++++++
+ tools/perf/util/callchain.c               |  24 ++
+ tools/perf/util/callchain.h               |   3 +
+ tools/perf/util/event.c                   |   1 +
+ tools/perf/util/evlist.c                  |   1 +
+ tools/perf/util/evlist.h                  |   1 +
+ tools/perf/util/evsel.c                   |  32 +-
+ tools/perf/util/evsel.h                   |   1 +
+ tools/perf/util/machine.c                 |   1 +
+ tools/perf/util/perf_event_attr_fprintf.c |   1 +
+ tools/perf/util/sample.h                  |   3 +-
+ tools/perf/util/session.c                 |  78 +++++
+ tools/perf/util/tool.c                    |   2 +
+ tools/perf/util/tool.h                    |   4 +-
+ 50 files changed, 1634 insertions(+), 88 deletions(-)
+ create mode 100644 arch/x86/include/asm/unwind_user.h
+ create mode 100644 include/linux/sframe.h
+ create mode 100644 include/linux/unwind_user.h
+ create mode 100644 kernel/unwind/Makefile
+ create mode 100644 kernel/unwind/sframe.c
+ create mode 100644 kernel/unwind/sframe.h
+ create mode 100644 kernel/unwind/user.c
+
 -- 
 2.47.0
 
