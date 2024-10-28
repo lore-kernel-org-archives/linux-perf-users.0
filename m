@@ -1,161 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1CA1DED44
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Oct 2024 16:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A286B1DE8B4;
+	Mon, 28 Oct 2024 16:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730131420; cv=none; b=OEMOZBHOuPVtk9tWK6F4Ci9gWru24A0Sv3Mh4bJALMKG8RBU3HCa/yYgTJglWH7WFkDWodjnk1V2iT8N0Qg5F0jbR/CeTjcEQCy6DvZM6l1CRAnqTnfPOpd43K6jLsSsliVyN3WcSHoCBJ4H6kiZFDz3iEg0zbxEjMQd52BZaC0=
+	t=1730131708; cv=none; b=JoV0fvgMSKpBqM4zYJE+uqmH7Ktd6tUWXZCTdC2HDLahe2DQrnHdYWDpG2G8BtnhAJ43+rpuCE0BvHoFvocISlTnVE8j/Jiau6L03kMGjTO8vebRV/b1jh0l+ykgMQB49Jn5G5zBh2Jw1sci9rQN5kYguNtEoiwuSrSuY9TjOnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730131420; c=relaxed/simple;
-	bh=f89FKjt89JAmV4RDpYFHzqYxDMJrlu5OTs5W7BR5H8g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YNQHw4eP4Xa1lzKhqTT2ElC+kLIqZvFuHOXOYsbKX4jn2Y3+oBWO5gDYhGRZI/3TTjgJvzcYc/QuYPxO9FvQgV/Fj/exXBHs4JZsiYPcBnORg2ifYgKZGk9D2T7yIGvxp8M1b0cqvhXYkTy6x5emTSp1K9DAM4EeY5TXhgpLtQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jZFrWGRx; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1730131708; c=relaxed/simple;
+	bh=QCl5kdGtws/gZEzPILUveMBgYMgEM6pFSQgc8jF1ex8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e9rTaCAoc4RSFmnB9lWJQYOZ8Jy0HDWEJxTCgI+L4nGSMcR1M8q2q12YxU1VFTI6hO0vOy4YRBBOs8HHnVx0o2WEq3QeGHv8NSOA8SNnlC5mdt0h+SPfvPxlLRp4fABPXqiD4ET4+iv47CNage+mgNliSxMHP438xVinadnnMOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lLTDTCDT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jZFrWGRx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730131418; x=1761667418;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=f89FKjt89JAmV4RDpYFHzqYxDMJrlu5OTs5W7BR5H8g=;
-  b=jZFrWGRxvnJx5SzarmEX+BMc8FmGxukG6hKaGPgPy0TiCL5NZjFqIJ8/
-   YX3bAssFFRR8oFvRGNJArW6sUSFJsVK2FXrVVdBoxZ7Q3mgLKBXEAeWKA
-   BNSfydoHmupNHvX7k423GdeITclbM6ME4Q7mh7ha04lkurl8diB6bJqAA
-   tnUQg51KZQCqCNOkO3uxmLjgBgcAxHkkczVyD0lRI1ZGTndcvl8ijJe4/
-   3d5BpK4122SuxYdsMJHVpQLVlI+YTUux9CigAk5kS1LE1ekNEz59H/2g6
-   GsmlP1yiSTTOXVaf4x0WlMwjSyhi6KA/C1j/7JNgD6cjZ4XqrJpGgnuzw
-   A==;
-X-CSE-ConnectionGUID: Byb+HPa2RnCVbO+iu/bK8A==
-X-CSE-MsgGUID: 81cKvL+QRrWpousDieDaOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11239"; a="29165345"
-X-IronPort-AV: E=Sophos;i="6.11,239,1725346800"; 
-   d="scan'208";a="29165345"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 09:03:37 -0700
-X-CSE-ConnectionGUID: XR3gaTduS22q3O6w4Yhvmg==
-X-CSE-MsgGUID: uzXtaPkYTLiO1VoTU9SOTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,239,1725346800"; 
-   d="scan'208";a="81555611"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.16.81])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 09:03:34 -0700
-Message-ID: <5eec31c9-a24a-4fe0-a7a6-484eb7dbac7d@intel.com>
-Date: Mon, 28 Oct 2024 18:03:24 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lLTDTCDT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C43FCC4CEC3;
+	Mon, 28 Oct 2024 16:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730131708;
+	bh=QCl5kdGtws/gZEzPILUveMBgYMgEM6pFSQgc8jF1ex8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lLTDTCDTfp1wfbTG1RD4IoUOpGEz7Pvg8zU0OsKGxnoxCo6EFMb06hKcDrkCTVKFf
+	 WI7s6xIC28tQiKocBr595ncOCPm3LzHHD1hwwdLpGjVxChSMzxJIcjZ3xHl+GsRgdE
+	 8x5o3t3MvnDE0QaFOvNRHIOOxhiXC2kRED2nvTED4Mas3UKYkpgg2JJWyvaZLP/DD4
+	 HD5+lnd596RjdJg+LiiR86+SbZqeZzvmHhk/lZBR71OBf4t07BgtS2oCjb0qjn34cQ
+	 d7bYLYZ2DPweIegank0CHenREu0UM4vpwoPEDa7kQ5HtuU76dzHQuWVlNRGYvkzzhS
+	 EvlgguRh+0f8w==
+Date: Mon, 28 Oct 2024 13:08:24 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1] perf cap: Add __NR_capget to arch/x86 unistd
+Message-ID: <Zx-2-GhdII3ZIizi@x1>
+References: <20241026055448.312247-1-irogers@google.com>
+ <CAP-5=fXLL1dB4MEfe7Z+fhp_RzC9DV91gBLBHjjywW-_RXmM-Q@mail.gmail.com>
+ <c19ca53b-b0e6-4763-8691-09ee4a095492@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Migrating from perf.wiki.kernel.org to RTD
-To: Yunseong Kim <yskelg@gmail.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-References: <20241011-quiet-chowchow-of-temperance-d0e205@meerkat>
- <CAP-5=fUz5CFEL8D1L+UATsNqs4MBb6rNeYtZ26+pFC4NgRYt6w@mail.gmail.com>
- <20241011-uncovered-original-vole-cda87d@meerkat>
- <20241015-warping-condor-of-storm-afa06f@meerkat>
- <Zw8cN9daNBvCJd3u@google.com>
- <CAP-5=fXsVXYkncR0rwxXvKp_f5dR40L9_x-qoLxwHXWMiyXh3g@mail.gmail.com>
- <a0626ecb-cc64-4c6a-abf3-76868178234f@gmail.com>
- <b1c1a76b-5094-4384-9304-360a6012e3ad@intel.com>
- <b11407cf-8cfe-40ec-abe7-165122807e1d@gmail.com>
- <ZxlwoN57PF_5YX0F@google.com> <Zxl5sduEDnoxEmd2@x1>
- <533a9e5e-b320-41d6-8d8a-223f69d719f5@intel.com>
- <3a6a3cab-6d4f-4136-97d9-3042279eb7a8@gmail.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <3a6a3cab-6d4f-4136-97d9-3042279eb7a8@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <c19ca53b-b0e6-4763-8691-09ee4a095492@intel.com>
 
-On 27/10/24 19:08, Yunseong Kim wrote:
-> Hi Adrian,
+On Mon, Oct 28, 2024 at 09:25:36AM +0200, Adrian Hunter wrote:
+> On 26/10/24 09:00, Ian Rogers wrote:
+> > On Fri, Oct 25, 2024 at 10:54 PM Ian Rogers <irogers@google.com> wrote:
+> >>
+> >> As there are duplicated kernel headers in tools/include libc can pick
+> >> up the wrong definitions. This was causing the wrong system call for
+> >> capget in perf.
+> >>
+> >> Closes: https://lore.kernel.org/lkml/cc7d6bdf-1aeb-4179-9029-4baf50b59342@intel.com/
+> >> Signed-off-by: Ian Rogers <irogers@google.com>
+> > 
+> > Forgot:
+> > Fixes: e25ebda78e23 ("perf cap: Tidy up and improve capability testing")
 > 
-> On 10/24/24 2:58 오후, Adrian Hunter wrote:
->> I would prefer the source.  Does anyone have that?
+> Works for me, thank you!
 > 
-> Looking through the archives, I found a source version that predates
-> September 30th.
-> Link:
-> https://web.archive.org/web/20240526075334/https://perf.wiki.kernel.org/index.php?title=Perf_tools_support_for_Intel%C2%AE_Processor_Trace&action=edit
-> 
-> The Markdown version is available here:
-> https://github.com/perfwiki/main/blob/main/docs/perf-tools-support-for-intel-processor-trace.md
-> 
-> You can edit it directly:
-> https://github.com/perfwiki/main/edit/main/docs/perf-tools-support-for-intel-processor-trace.md
-> 
-> Once finalized, it will be visible here:
-> https://perfwiki.github.io/main/perf-tools-support-for-intel-processor-trace/
-> 
->>>>> Intel PT Link:
->>>>> https://web.archive.org/web/20240930185823/https://
->>>>> perf.wiki.kernel.org/index.php/
->>>>> Perf_tools_support_for_Intel%C2%AE_Processor_Trace
->>>>> Top-Down_Analysis Link:
->>>>> https://web.archive.org/web/20240930164757/https://
->>>>> perf.wiki.kernel.org/index.php/Top-Down_Analysis
->>>
->>>> The corresponding pages in the new site are:
->>>
->>>>  https://perfwiki.github.io/main/perf-tools-support-for-intel-
->>>> processor-trace/
->>>
->>>>  https://perfwiki.github.io/main/top-down-analysis/
->>> It is unfortunate that we can't have some sort of mapping from the old
->>> URLs to the new ones, I can imagine other sites having links that now
->>> will get broken 😕
->> Why do we need mappings?  Just use the same page names and have the
->> redirect keep the final part of the url.
-> 
-> If possible, I'll try to set up a redirection. Thank you for suggesting
-> this good idea.
-> 
->> By the way, the new "wiki" doesn't seem to render "page not found"
->> properly for non-existent pages:
->>
->> 	https://perfwiki.github.io/main/not-a-page
-> 
-> I'll work on fixing this as soon as possible. I see that it's showing a
-> 404 page but the webpage style is broken.
-> 
-> On 10/24/24 3:07 오후, Adrian Hunter wrote:
->> On 23/10/24 21:17, Yunseong Kim wrote:
->>> Hi Adrian,
->>>
->>> Intel PT Link:
->>>
-> https://web.archive.org/web/20240930185823/https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace
->>>
->>> Top-Down_Analysis Link:
->>>
-> https://web.archive.org/web/20240930164757/https://perf.wiki.kernel.org/index.php/Top-Down_Analysis
->>>>
->>>> Do we still have the old pages?  I would like to check that the Intel PT
->>>> page is not missing anything or munged.
->>>> I do not understand.  Is it a wiki anymore?  If so, what is
->>>> needed to edit a page?
->>>
->>> If you need to update the page directly, I can grant you permission to
->>> do so. This is similar to the previous login system based on Media Wiki.
->>
->> Yes please.
-> 
-> Are you using the GitHub account from that link?
-> https://github.com/ahunter6
-> 
-> I've sent an writer access request so you can work directly on the
-> documentation in the repository.
+> Tested-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Thank you! You have been very helpful :-)
+Thanks, I also added this:
 
+Reported-by: Adrian Hunter <adrian.hunter@intel.com>
+
+Applied to perf-tools, for v6.12-rc.
+
+- Arnaldo
+ 
+> > 
+> > Thanks,
+> > Ian
+> > 
+> >> ---
+> >>  tools/arch/x86/include/uapi/asm/unistd_32.h |  3 +++
+> >>  tools/arch/x86/include/uapi/asm/unistd_64.h |  3 +++
+> >>  tools/perf/util/cap.c                       | 10 +++-------
+> >>  3 files changed, 9 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/tools/arch/x86/include/uapi/asm/unistd_32.h b/tools/arch/x86/include/uapi/asm/unistd_32.h
+> >> index 9de35df1afc3..63182a023e9d 100644
+> >> --- a/tools/arch/x86/include/uapi/asm/unistd_32.h
+> >> +++ b/tools/arch/x86/include/uapi/asm/unistd_32.h
+> >> @@ -11,6 +11,9 @@
+> >>  #ifndef __NR_getpgid
+> >>  #define __NR_getpgid 132
+> >>  #endif
+> >> +#ifndef __NR_capget
+> >> +#define __NR_capget 184
+> >> +#endif
+> >>  #ifndef __NR_gettid
+> >>  #define __NR_gettid 224
+> >>  #endif
+> >> diff --git a/tools/arch/x86/include/uapi/asm/unistd_64.h b/tools/arch/x86/include/uapi/asm/unistd_64.h
+> >> index d0f2043d7132..77311e8d1b5d 100644
+> >> --- a/tools/arch/x86/include/uapi/asm/unistd_64.h
+> >> +++ b/tools/arch/x86/include/uapi/asm/unistd_64.h
+> >> @@ -11,6 +11,9 @@
+> >>  #ifndef __NR_getpgid
+> >>  #define __NR_getpgid 121
+> >>  #endif
+> >> +#ifndef __NR_capget
+> >> +#define __NR_capget 125
+> >> +#endif
+> >>  #ifndef __NR_gettid
+> >>  #define __NR_gettid 186
+> >>  #endif
+> >> diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
+> >> index 7574a67651bc..69d9a2bcd40b 100644
+> >> --- a/tools/perf/util/cap.c
+> >> +++ b/tools/perf/util/cap.c
+> >> @@ -7,13 +7,9 @@
+> >>  #include "debug.h"
+> >>  #include <errno.h>
+> >>  #include <string.h>
+> >> -#include <unistd.h>
+> >>  #include <linux/capability.h>
+> >>  #include <sys/syscall.h>
+> >> -
+> >> -#ifndef SYS_capget
+> >> -#define SYS_capget 90
+> >> -#endif
+> >> +#include <unistd.h>
+> >>
+> >>  #define MAX_LINUX_CAPABILITY_U32S _LINUX_CAPABILITY_U32S_3
+> >>
+> >> @@ -21,9 +17,9 @@ bool perf_cap__capable(int cap, bool *used_root)
+> >>  {
+> >>         struct __user_cap_header_struct header = {
+> >>                 .version = _LINUX_CAPABILITY_VERSION_3,
+> >> -               .pid = getpid(),
+> >> +               .pid = 0,
+> >>         };
+> >> -       struct __user_cap_data_struct data[MAX_LINUX_CAPABILITY_U32S];
+> >> +       struct __user_cap_data_struct data[MAX_LINUX_CAPABILITY_U32S] = {};
+> >>         __u32 cap_val;
+> >>
+> >>         *used_root = false;
+> >> --
+> >> 2.47.0.163.g1226f6d8fa-goog
+> >>
