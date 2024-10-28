@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C533A20400A;
-	Mon, 28 Oct 2024 21:48:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74691204016;
+	Mon, 28 Oct 2024 21:48:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730152112; cv=none; b=FmfZanRKmbD2k/vValxaPG7f39sICNdzKIT2WkMfd185/z6t1GtgXtF+2ZlwM7lWn6a5zd0ePaRFQ43V6s5jZOzq717TZif5Q14cqlqVI8kAKYNBWuBRhrL5bTajv0OvozInUDPpcr0Yft6NNYibzMNRrTK9+OE3zCTx5fazZ/s=
+	t=1730152113; cv=none; b=gqD0oMJ7pd/jMN7kKrdXreYTFh1JrUXRUGuxyP5Gh0czZjTxGqbyAR5t7lZVIVkvQfphPRYF0GhDuZ1Jn53MmVgMXthYFyacW1duvJgSQRyYyc6nVSz+Vg5Y6qFe5Ivg3ecpF2WlHp4l0zpV4DRYIzXDqarcU2JpOIKprX5eOfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730152112; c=relaxed/simple;
-	bh=Poz0p10l/+kW4oqw8/2L7OSc9QLpdN4nyvik6LbO9aw=;
+	s=arc-20240116; t=1730152113; c=relaxed/simple;
+	bh=3UaGSX/DcLgu2RuoIEL7DdM11xoyzjhEsw5DgNuktbc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Lu3BuD7/jkzSj2lhqHJiRjUbTqzhWbVI4LLvKWg+pxqBDRoatzSVIjVxtONWTjnhj+/utKQ5xVyNdTnBUcey53gqOu5JJarFV9cHtgP6IfjyMijQYvqViZlSPX6W+lF7gcF521N08fApxST4fzDRzYD6UxCaGKFt/sg50H4Q6Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VSwAvZNI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bMM2G7GREtr7sdwnLae1mytrSHqd0qm7oZ5pJHxvmdX0gMWEhC4wg0+LwlIumTaBOzAqAKCvpddjHYaA+DlVv/MLsqiPTUaM7+u5hSsrazZol3aqmvHdBGEpe7sk/WoqEpS4yc0WszlE4dC0+yKYjieYAvv3THVtcCt8A/Q8EEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HUuG8cMs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VSwAvZNI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84340C4CEEC;
-	Mon, 28 Oct 2024 21:48:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HUuG8cMs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 807B7C4CEE9;
+	Mon, 28 Oct 2024 21:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730152112;
-	bh=Poz0p10l/+kW4oqw8/2L7OSc9QLpdN4nyvik6LbO9aw=;
+	s=k20201202; t=1730152113;
+	bh=3UaGSX/DcLgu2RuoIEL7DdM11xoyzjhEsw5DgNuktbc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VSwAvZNISAjFTdYkg5vgLY6JUjprGPxIO0R0+DGDzS+KD6/YxziQI4HMO83s2dTLl
-	 RK3l+4MEYDYObswbXSbZxWRNacl07cmrX4jX9tQm979nBXydGn30BMrfucllCa7z/B
-	 wS1p2Nj9e5JpMLiDT6ujAhhfRQIjaHX6z7zTuK2H9r9y3ioNa77skSWfKA1CfD4yfN
-	 GpfsLYzjLCuiWrR9uLXpXUApUmJsGJa41ZoH2bWZTnnnN0DwMCDS/WrmSg53uYtXmw
-	 KV/c6rWLQDWwPUt7ZbCboOVkpW6WnAVXet3ZY/BmDC0WbZeNKLK0A7WcHAOTZHxYpw
-	 Q5ASgFNxyW/qQ==
+	b=HUuG8cMsfc6lzPM5JUjUAzPSBQl+4Cc3fRKd2WIB15NclYzSfCW7DZgwnYDYRXjmr
+	 7Wtu60f05WtXqAIei1cCC72zuN4FQUlPa/xpcpLWQeGCYHMG51Wv95Qq7w59cax5rL
+	 p9SRXuXAT7RkkYbs3P0GGnBylvkZWE6Qvck2OUVrEd9ZVpliQ7pCOJPnLRJD73Pyp9
+	 hwOGdMaIanHBIG8l8W83Q+1tlKGVph/mLCQRlpRcPqV1p0KQkeFeCZh+WUdqstOHy5
+	 s7tem+KUzvugSl+7TLnutcOff6lzkcXC9b92czDIL8AQjmeiyK4QSWKOmuPd3uP3WR
+	 7rQOhrho78HzA==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
@@ -51,9 +51,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v3 02/19] x86/asm: Avoid emitting DWARF CFI for non-VDSO
-Date: Mon, 28 Oct 2024 14:47:49 -0700
-Message-ID: <f2dcdcf95240149bfd21e118209bf3b94efad857.1730150953.git.jpoimboe@kernel.org>
+Subject: [PATCH v3 03/19] x86/asm: Fix VDSO DWARF generation with kernel IBT enabled
+Date: Mon, 28 Oct 2024 14:47:50 -0700
+Message-ID: <b1b8498a9aa9f6dfb69dc27f9bc8b21656c5e7ab.1730150953.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1730150953.git.jpoimboe@kernel.org>
 References: <cover.1730150953.git.jpoimboe@kernel.org>
@@ -64,81 +64,164 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Message-ID: <20241028214749.eqP4mlz5k0szQtXgaPqrapCBKlvG6aM_8ep_6GOzyUw@z>
+Message-ID: <20241028214750.6pqq07EYYABleQ7mcj0x12QkbGUEwwlG5ZAjn25wc48@z>
 
-VDSO is the only part of the "kernel" using DWARF CFI directives.  For
-the kernel proper, ensure the CFI_* macros don't do anything.
+The DWARF .cfi_startproc annotation needs to be at the very beginning of
+a function.  But with kernel IBT that doesn't happen as ENDBR is
+sneakily embedded in SYM_FUNC_START.  So the DWARF unwinding info is
+wrong at the beginning of the VDSO functions.
 
-These macros aren't yet being used outside of VDSO, so there's no
-functional change.
+Fix it by adding CFI_STARTPROC and CFI_ENDPROC to SYM_FUNC_START_* and
+SYM_FUNC_END respectively.  Note this only affects VDSO, as the CFI_*
+macros are empty for the kernel proper.
 
+Fixes: c4691712b546 ("x86/linkage: Add ENDBR to SYM_FUNC_START*()")
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/x86/include/asm/dwarf2.h | 37 +++++++++++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 8 deletions(-)
+ arch/x86/entry/vdso/vdso-layout.lds.S   |  2 +-
+ arch/x86/entry/vdso/vgetrandom-chacha.S |  2 --
+ arch/x86/entry/vdso/vsgx.S              |  4 ----
+ arch/x86/include/asm/linkage.h          | 29 +++++++++++++++++++------
+ arch/x86/include/asm/vdso.h             |  1 -
+ 5 files changed, 23 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
-index 430fca13bb56..b1aa3fcd5bca 100644
---- a/arch/x86/include/asm/dwarf2.h
-+++ b/arch/x86/include/asm/dwarf2.h
-@@ -6,6 +6,15 @@
- #warning "asm/dwarf2.h should be only included in pure assembly files"
+diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
+index bafa73f09e92..a42c7d4a33da 100644
+--- a/arch/x86/entry/vdso/vdso-layout.lds.S
++++ b/arch/x86/entry/vdso/vdso-layout.lds.S
+@@ -1,5 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/vdso.h>
++#include <asm/page_types.h>
+ 
+ /*
+  * Linker script for vDSO.  This is an ELF shared object prelinked to
+diff --git a/arch/x86/entry/vdso/vgetrandom-chacha.S b/arch/x86/entry/vdso/vgetrandom-chacha.S
+index cc82da9216fb..a33212594731 100644
+--- a/arch/x86/entry/vdso/vgetrandom-chacha.S
++++ b/arch/x86/entry/vdso/vgetrandom-chacha.S
+@@ -22,7 +22,6 @@ CONSTANTS:	.octa 0x6b20657479622d323320646e61707865
+  *	rcx: number of 64-byte blocks to write to output
+  */
+ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
+-	CFI_STARTPROC
+ .set	output,		%rdi
+ .set	key,		%rsi
+ .set	counter,	%rdx
+@@ -175,5 +174,4 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
+ 	pxor		temp,temp
+ 
+ 	ret
+-	CFI_ENDPROC
+ SYM_FUNC_END(__arch_chacha20_blocks_nostack)
+diff --git a/arch/x86/entry/vdso/vsgx.S b/arch/x86/entry/vdso/vsgx.S
+index 37a3d4c02366..c0342238c976 100644
+--- a/arch/x86/entry/vdso/vsgx.S
++++ b/arch/x86/entry/vdso/vsgx.S
+@@ -24,8 +24,6 @@
+ .section .text, "ax"
+ 
+ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+-	/* Prolog */
+-	.cfi_startproc
+ 	push	%rbp
+ 	.cfi_adjust_cfa_offset	8
+ 	.cfi_rel_offset		%rbp, 0
+@@ -143,8 +141,6 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+ 	jle	.Lout
+ 	jmp	.Lenter_enclave
+ 
+-	.cfi_endproc
+-
+ _ASM_VDSO_EXTABLE_HANDLE(.Lenclu_eenter_eresume, .Lhandle_exception)
+ 
+ SYM_FUNC_END(__vdso_sgx_enter_enclave)
+diff --git a/arch/x86/include/asm/linkage.h b/arch/x86/include/asm/linkage.h
+index dc31b13b87a0..2866d57ef907 100644
+--- a/arch/x86/include/asm/linkage.h
++++ b/arch/x86/include/asm/linkage.h
+@@ -40,6 +40,10 @@
+ 
+ #ifdef __ASSEMBLY__
+ 
++#ifndef LINKER_SCRIPT
++#include <asm/dwarf2.h>
++#endif
++
+ #if defined(CONFIG_MITIGATION_RETHUNK) && !defined(__DISABLE_EXPORTS) && !defined(BUILD_VDSO)
+ #define RET	jmp __x86_return_thunk
+ #else /* CONFIG_MITIGATION_RETPOLINE */
+@@ -112,40 +116,51 @@
+ # define SYM_FUNC_ALIAS_MEMFUNC	SYM_FUNC_ALIAS
  #endif
  
-+#ifdef BUILD_VDSO
++#define __SYM_FUNC_START				\
++	CFI_STARTPROC ASM_NL				\
++	ENDBR
 +
-+	/*
-+	 * For the vDSO, emit both runtime unwind information and debug
-+	 * symbols for the .dbg file.
-+	 */
++#define __SYM_FUNC_END					\
++	CFI_ENDPROC ASM_NL
 +
-+	.cfi_sections .eh_frame, .debug_frame
-+
- #define CFI_STARTPROC		.cfi_startproc
- #define CFI_ENDPROC		.cfi_endproc
- #define CFI_DEF_CFA		.cfi_def_cfa
-@@ -21,7 +30,8 @@
- #define CFI_UNDEFINED		.cfi_undefined
- #define CFI_ESCAPE		.cfi_escape
+ /* SYM_TYPED_FUNC_START -- use for indirectly called globals, w/ CFI type */
+ #define SYM_TYPED_FUNC_START(name)				\
+ 	SYM_TYPED_START(name, SYM_L_GLOBAL, SYM_F_ALIGN)	\
+-	ENDBR
++	__SYM_FUNC_START
  
--#ifndef BUILD_VDSO
-+#else /* !BUILD_VDSO */
-+
- 	/*
- 	 * Emit CFI data in .debug_frame sections, not .eh_frame sections.
- 	 * The latter we currently just discard since we don't do DWARF
-@@ -29,13 +39,24 @@
- 	 * useful to anyone.  Note we should not use this directive if we
- 	 * ever decide to enable DWARF unwinding at runtime.
- 	 */
-+
- 	.cfi_sections .debug_frame
--#else
--	 /*
--	  * For the vDSO, emit both runtime unwind information and debug
--	  * symbols for the .dbg file.
--	  */
--	.cfi_sections .eh_frame, .debug_frame
--#endif
-+
-+#define CFI_STARTPROC
-+#define CFI_ENDPROC
-+#define CFI_DEF_CFA
-+#define CFI_DEF_CFA_REGISTER
-+#define CFI_DEF_CFA_OFFSET
-+#define CFI_ADJUST_CFA_OFFSET
-+#define CFI_OFFSET
-+#define CFI_REL_OFFSET
-+#define CFI_REGISTER
-+#define CFI_RESTORE
-+#define CFI_REMEMBER_STATE
-+#define CFI_RESTORE_STATE
-+#define CFI_UNDEFINED
-+#define CFI_ESCAPE
-+
-+#endif /* !BUILD_VDSO */
+ /* SYM_FUNC_START -- use for global functions */
+ #define SYM_FUNC_START(name)				\
+ 	SYM_START(name, SYM_L_GLOBAL, SYM_F_ALIGN)	\
+-	ENDBR
++	__SYM_FUNC_START
  
- #endif /* _ASM_X86_DWARF2_H */
+ /* SYM_FUNC_START_NOALIGN -- use for global functions, w/o alignment */
+ #define SYM_FUNC_START_NOALIGN(name)			\
+ 	SYM_START(name, SYM_L_GLOBAL, SYM_A_NONE)	\
+-	ENDBR
++	__SYM_FUNC_START
+ 
+ /* SYM_FUNC_START_LOCAL -- use for local functions */
+ #define SYM_FUNC_START_LOCAL(name)			\
+ 	SYM_START(name, SYM_L_LOCAL, SYM_F_ALIGN)	\
+-	ENDBR
++	__SYM_FUNC_START
+ 
+ /* SYM_FUNC_START_LOCAL_NOALIGN -- use for local functions, w/o alignment */
+ #define SYM_FUNC_START_LOCAL_NOALIGN(name)		\
+ 	SYM_START(name, SYM_L_LOCAL, SYM_A_NONE)	\
+-	ENDBR
++	__SYM_FUNC_START
+ 
+ /* SYM_FUNC_START_WEAK -- use for weak functions */
+ #define SYM_FUNC_START_WEAK(name)			\
+ 	SYM_START(name, SYM_L_WEAK, SYM_F_ALIGN)	\
+-	ENDBR
++	__SYM_FUNC_START
+ 
+ /* SYM_FUNC_START_WEAK_NOALIGN -- use for weak functions, w/o alignment */
+ #define SYM_FUNC_START_WEAK_NOALIGN(name)		\
+ 	SYM_START(name, SYM_L_WEAK, SYM_A_NONE)		\
+-	ENDBR
++	__SYM_FUNC_START
++
++#define SYM_FUNC_END(name)				\
++	__SYM_FUNC_END					\
++	SYM_END(name, SYM_T_FUNC)
+ 
+ #endif /* _ASM_X86_LINKAGE_H */
+ 
+diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
+index d7f6592b74a9..0111c349bbc5 100644
+--- a/arch/x86/include/asm/vdso.h
++++ b/arch/x86/include/asm/vdso.h
+@@ -2,7 +2,6 @@
+ #ifndef _ASM_X86_VDSO_H
+ #define _ASM_X86_VDSO_H
+ 
+-#include <asm/page_types.h>
+ #include <linux/linkage.h>
+ #include <linux/init.h>
+ 
 -- 
 2.47.0
 
