@@ -1,159 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A5D1DFE1C;
-	Mon, 28 Oct 2024 20:23:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3900C188904;
+	Mon, 28 Oct 2024 21:31:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730147018; cv=none; b=s9JgtNlopUFkwT4izm3cSgo6TM1FGCpCKwgpbNMe7Ws3rolzxSw+8kdl5wk5ZaWr21wWfGgfRsrWrOImM3wZFwJzksjAKCKjN8CCVzYiEw4CeIWoKaSCpDAS7daA703O0WjP5/ih8Mo1Le1sZ2/ZH3UNpl3vMu2XtaOAWAtncLk=
+	t=1730151092; cv=none; b=Vrgrbw0+YEE3U1mV020r7c6EfApf0HGfVNbV20GGhn5FHn7UMst/00m9JBGzYFi1qvWHP8cPlLpXhERpXxR5MrifVVPoegKwlOrwI0zZm4St9qFFm9cn8L7vlSmIP67W633VIkOAHBgkS5Kb6CeoOCdxeKDugOydM9DtPCIideQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730147018; c=relaxed/simple;
-	bh=ygxt109xKE1bMCf6lGpv/3u6u0A5LB3R6ch8sQBAzGE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N4QTarOMZlnz7pGhE6YGleUofBia+jQ4T3TZ5jVpQfHtJyjn91eiaXrbFutAkiUGTaF+dPN2p++VFPSEJ6GNrM7vS5YeXITlytL/kfkFLzgfcf7QBeAYb6BDDeR4OOD5JRNixvkr24riQpuppW8H6QfsphIyug4gDFIcrzh5Eq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=av7GQBxM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730151092; c=relaxed/simple;
+	bh=RGZl223q0rxhIgdtO2rcaea+VddtEmNxD71QsdXH1as=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Ak72hGPKaaMWVKRin3H5n0msUwAhf+8kn+B/WCk7FTWgskvXZ8RBKjMQlaiq74WXg5y+lYQiZvauerJ1OpymAFdjtR6/pcbaWqPUG7mxfM6mDnze+hL1Mt4GdFnW3IS4PkStSMg0+TSOYDa3OelneGEMRLghE+JR4wa6s+xobp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FhNPEuMx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="av7GQBxM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0B58C4CEE3;
-	Mon, 28 Oct 2024 20:23:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FhNPEuMx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432D5C4CEC3;
+	Mon, 28 Oct 2024 21:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730147018;
-	bh=ygxt109xKE1bMCf6lGpv/3u6u0A5LB3R6ch8sQBAzGE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=av7GQBxMizERkeAvSNQzZ6LT9Y3Wa3PuAXd2dEG2SAVCTNWo46fKTLLB7z6QJieFL
-	 8HhlcfIACN4d0+7PIbaGVgnHpaTDE+COzauxkmMp2OtbSf5P8QXC21a5gyqdf8GDQr
-	 IzUcy97nHbWnc5nFXl+45VosXBc+/UuxtIK0qHsLlpv7S/1zMrz6eB4/+UW73stCD5
-	 CnG+2BRs4kThdTRG1sx14y8HKSKgVBUzLJ13Ja2r/k+E35gA2TW450p/BowVDf2dqm
-	 Fcs+Jfb9mbJxsHgMJ714iQp6i3jT2mVQumk5/vDh7LGFji5hPalhqUNHS2Uf0G/WnA
-	 Cm2Db2HRtBmXg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
+	s=k20201202; t=1730151091;
+	bh=RGZl223q0rxhIgdtO2rcaea+VddtEmNxD71QsdXH1as=;
+	h=Date:From:To:Cc:Subject:From;
+	b=FhNPEuMxwNsdOIfY9C0Vi4NkoFQvM5EdBvOEgNpHpwBUG/SDJ0FnOkCXhcJlIsZo7
+	 fubBQU0RLZmoiZktqtRaCcB3Y1VKhZ88I68PBAniFSvT1YCUYNAnaNHn0LpI7mktFE
+	 uheE0BYlFH5FDGrfX9WKlSs8xPFOmjXV57dzYIFBNPKh8ZECmTzWsUgWlRZHgt7vF9
+	 STdp7R9jYaKzNh/kUf+rMHqbQ/HO/aL6/FbLXsORZg/IMDmCXXvQb9IeVDpKzBR0V8
+	 szzaCZ1Iiw4tsNR4yoeZkTXkZbnPttNyKuei3K9FneTNmXdeBgfPWO9OgHiPBtIOcN
+	 JRw+ubU51ZXMQ==
+Date: Mon, 28 Oct 2024 18:31:28 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	"Frank Ch. Eigler" <fche@redhat.com>,
+	Francesco Nigro <fnigro@redhat.com>,
+	Aaron Merey <amerey@redhat.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf mem: Add -H/--hierarchy option for report subcommand
-Date: Mon, 28 Oct 2024 13:23:36 -0700
-Message-ID: <20241028202336.1478570-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
+Subject: [PATCH 1/1 perf-tools-next] perf probe: Fix retrieval of source
+ files from a debuginfod server
+Message-ID: <ZyACsIFUETsr7-09@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Like in perf report, the -H/--hierarchy mode supports hierarchical
-output using the given sort key.  But with -T/--type-profile option it
-would be better to have the 'type' sort key in the beginning so that
-users can see something like following:
+When perf is linked with libdebuginfod:
 
-  $ perf mem report -T -H
-  ...
-  #
-  #          Overhead       Samples  Data Type / Memory access / Snoop / TLB access
-  # ...............................  ..............................................
-  #
-      97.96%          4099           (unknown)
-         97.05%          4089           L1 hit
-            97.05%          4089           None
-               97.05%          4089           L1 or L2 hit
-          0.71%             6           RAM hit
-             0.71%             6           Hit
-                0.71%             6           L1 or L2 hit
-          0.16%             2           L2 hit
-             0.16%             2           None
-                0.16%             2           L1 or L2 hit
-          0.04%             2           LFB/MAB hit
-             0.04%             2           None
-                0.04%             2           L1 or L2 hit
-       0.98%            12           struct folio
-          0.61%             9           L1 hit
-             0.61%             9           None
-                0.61%             9           L1 or L2 hit
-          0.37%             3           LFB/MAB hit
-             0.37%             3           None
-                0.37%             3           L1 or L2 hit
-       0.45%             5           unsigned char
-          0.45%             5           LFB/MAB hit
-             0.45%             5           None
+  root@number:~# ldd ~/bin/perf | grep debuginfod
+	libdebuginfod.so.1 => /lib64/libdebuginfod.so.1 (0x00007ff5c3930000)
+  root@number:~# perf check feature debuginfod
+            debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
+  root@number:~#
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+And we don't have a debuginfo package installed for the binary we're
+trying to use, vmlinux in this case as we didn't specify any using 'perf
+probe -x', it will use the build for the running kernel:
+
+  root@number:~# perf buildid-list -k
+  38e927fd7799d50dbc4d99ec5e3f781b6105a6a9
+  root@number:~#
+
+And communicate with a debuginfo server, be it configured in a
+~/.perfconfig file, excerpt from the 'perf config' man page:
+
+       buildid-cache.*
+           buildid-cache.debuginfod=URLs Specify debuginfod URLs to be
+	   used when retrieving perf.data binaries, it follows the same
+	   syntax as the DEBUGINFOD_URLS variable, like:
+
+               buildid-cache.debuginfod=http://192.168.122.174:8002
+
+Or via the DEBUGINFOD_URLS env var, as distros like fedora do by
+default:
+
+  root@number:~# echo $DEBUGINFOD_URLS
+  https://debuginfod.fedoraproject.org/
+  root@number:~#
+
+To pick and cache just what is needed, instead of requiring the manual
+installation of the entire kernel-debuginfo package, which is really
+large.
+
+It will, in this example, use the following cache files, deleted
+before/after this patch just to test the whole process:
+
+  root@number:~# rm -f /root/.cache/debuginfod_client/38e927fd7799d50dbc4d99ec5e3f781b6105a6a9/source-a1414a5d-#usr#src#debug#kernel-6.11.4#linux-6.11.4-201.fc40.x86_64#net#ipv4#icmp.c
+  root@number:~# rm -f /root/.cache/debuginfod_client/38e927fd7799d50dbc4d99ec5e3f781b6105a6a9/debuginfo
+
+Before this patch:
+
+  root@number:~# perf probe -L icmp_rcv
+  Failed to find source file path.
+    Error: Failed to show lines.
+  root@number:~#
+
+This is because 'perf probe' was using just the relative file name, in
+this case "net/ipv4/icmp.c", that is where the 'icmp_rcv' function is
+located, if we add it and comply with the debuginfo_find_source()
+function man page, it contacts the server, finds the necessary files,
+cache them locally and all works:
+
+  root@number:~# perf probe -L icmp_rcv | head
+  <icmp_rcv@/root/.cache/debuginfod_client/38e927fd7799d50dbc4d99ec5e3f781b6105a6a9/source-a1414a5d-#usr#src#debug#kernel-6.11.4#linux-6.11.4-201.fc40.x86_64#net#ipv4#icmp.c:0>
+        0  int icmp_rcv(struct sk_buff *skb)
+           {
+        2  	enum skb_drop_reason reason = SKB_DROP_REASON_NOT_SPECIFIED;
+           	struct rtable *rt = skb_rtable(skb);
+           	struct net *net = dev_net(rt->dst.dev);
+           	struct icmphdr *icmph;
+
+           	if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb)) {
+        8  		struct sec_path *sp = skb_sec_path(skb);
+  root@number:~#
+
+Cc: Aaron Merey <amerey@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Francesco Nigro <fnigro@redhat.com>
+Cc: Frank Ch. Eigler <fche@redhat.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-mem.txt |  6 ++++++
- tools/perf/builtin-mem.c              | 10 +++++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ tools/perf/util/probe-finder.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
-index 8a1bd9ff0f86dfb8..ac16c1b276e3912c 100644
---- a/tools/perf/Documentation/perf-mem.txt
-+++ b/tools/perf/Documentation/perf-mem.txt
-@@ -125,6 +125,12 @@ REPORT OPTIONS
- 	Specify the field separator used when dump raw samples (-D option). By default,
- 	The separator is the space character.
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 18181017f5fd344e..c2ca94e29aca3849 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1874,7 +1874,11 @@ int find_source_path(const char *raw_path, const char *sbuild_id,
+ 	const char *prefix = symbol_conf.source_prefix;
  
-+-H::
-+--hierarchy::
-+	Enable hierarchical output.  In the hierarchy mode, each sort key groups
-+	samples based on the criteria and then sub-divide it using the lower
-+	level sort key.  See linkperf:perf-report[1] for details.
+ 	if (sbuild_id && !prefix) {
+-		if (!get_source_from_debuginfod(raw_path, sbuild_id, new_path))
++		char prefixed_raw_path[PATH_MAX];
 +
- In addition, for report all perf report options are valid, and for record
- all perf record options.
- 
-diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index 651188c1d8259842..2efa01947cf17aa0 100644
---- a/tools/perf/builtin-mem.c
-+++ b/tools/perf/builtin-mem.c
-@@ -39,6 +39,7 @@ struct perf_mem {
- 	bool			all_kernel;
- 	bool			all_user;
- 	bool			data_type;
-+	bool			report_hierarchy;
- 	int			operation;
- 	const char		*cpu_list;
- 	DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
-@@ -329,6 +330,8 @@ static char *get_sort_order(struct perf_mem *mem)
- 
- 	if (mem->sort_key)
- 		scnprintf(sort, sizeof(sort), "--sort=%s", mem->sort_key);
-+	else if (mem->report_hierarchy && mem->data_type)
-+		strcpy(sort, "--sort=type,mem,snoop,tlb");
- 	else if (mem->data_type)
- 		strcpy(sort, "--sort=mem,snoop,tlb,type");
- 	/*
-@@ -374,7 +377,7 @@ static int __cmd_report(int argc, const char **argv, struct perf_mem *mem,
- 	if (mem->dump_raw)
- 		return report_raw_events(mem);
- 
--	rep_argc = argc + 3;
-+	rep_argc = argc + 5;
- 	rep_argv = calloc(rep_argc + 1, sizeof(char *));
- 	if (!rep_argv)
- 		return -1;
-@@ -387,6 +390,9 @@ static int __cmd_report(int argc, const char **argv, struct perf_mem *mem,
- 	if (new_sort_order)
- 		rep_argv[i++] = new_sort_order;
- 
-+	if (mem->report_hierarchy)
-+		rep_argv[i++] = "-H";
++		path__join(prefixed_raw_path, sizeof(prefixed_raw_path), comp_dir, raw_path);
 +
- 	for (j = 0; j < argc; j++, i++)
- 		rep_argv[i] = argv[j];
++		if (!get_source_from_debuginfod(prefixed_raw_path, sbuild_id, new_path))
+ 			return 0;
+ 	}
  
-@@ -513,6 +519,8 @@ int cmd_mem(int argc, const char **argv)
- 		   sort_order_help),
- 	OPT_BOOLEAN('T', "type-profile", &mem.data_type,
- 		    "Show data-type profile result"),
-+	OPT_BOOLEAN('H', "hierarchy", &mem.report_hierarchy,
-+		    "Show entries in a hierarchy"),
- 	OPT_PARENT(mem_options)
- 	};
- 	const char *const mem_subcommands[] = { "record", "report", NULL };
 -- 
-2.47.0.163.g1226f6d8fa-goog
+2.47.0
 
