@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11251EBA1F;
-	Mon, 28 Oct 2024 21:48:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CD21EE031;
+	Mon, 28 Oct 2024 21:48:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730152090; cv=none; b=IPS+tLZWmjxQha7t2DTow1/Lpa3BTekp0u1/A/LIJWavzSgZ+SPtVs5cv07axdOCW0E2kOReE4BZzpwyfJGb96USVn25GU2Y17vVWSqi01tDDrkp4jo6EAuhASYb1tJ6FfHO+hnsTXQNdsqlIAAg8JELPVmQLph8telNSQkK5Co=
+	t=1730152092; cv=none; b=NX+JOF/VzoKBAUx7srKHXdYaqu0ARMWautwuBrSR1PQgaP6++Oj1E+0LfL40wYDwbYkWpJhb8/P/xotQu3Fk0cEcmNLLHGTINtGY9PRG1klYs22TUW5KpVl7dlwp5FLEOO1D8V0bQyRjhg1RMr+ItQ2rItD5r0E/dfv6Dcu6IWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730152090; c=relaxed/simple;
-	bh=0p8Qb45vgp0/wPL3MuhSna7OVGmhZaEJXaATPR0uVvQ=;
+	s=arc-20240116; t=1730152092; c=relaxed/simple;
+	bh=Poz0p10l/+kW4oqw8/2L7OSc9QLpdN4nyvik6LbO9aw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=smSME5ZxSoRjb1hbrYSD+VXn9l6DM+WoxH0pay2Ot+MmTaonPa45FzpkBe7KNjGNE9bvSnqW8MRc0gQpFwgeJGfstIaiqxjZi6tml8CClrbtIbEmF2snIQiun2HZi89vdaH8PHM1kgijD6GhjgQkkdpSz1Y6YkWKvt29d8/aL48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2nl8ce6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sWB5/Z0O//4Ui3SVQpnQE1wKyNr3487wA1zA8DaRXrWtlKJOM4CwdbkqhT6/ICnn5c1Owo5CO9CviY8e9cNntH7LCMfX9JgsHukDPTMrdchxIwYBwKZX0pCtxG81NXGorOXP/bcyOEuPESm1Zqvl2gtTHrFbx2vbGLBGmEgLfzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nhlf7Gs2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2nl8ce6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9AC4C4CEE9;
-	Mon, 28 Oct 2024 21:48:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nhlf7Gs2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3F87C4CEE7;
+	Mon, 28 Oct 2024 21:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730152090;
-	bh=0p8Qb45vgp0/wPL3MuhSna7OVGmhZaEJXaATPR0uVvQ=;
+	s=k20201202; t=1730152091;
+	bh=Poz0p10l/+kW4oqw8/2L7OSc9QLpdN4nyvik6LbO9aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m2nl8ce6DKFWcXsOsYQbnZ5YkcQL7VgntNfnWupj6z8epERM1n9sPKIRhsm81kXBg
-	 v1anSM//pJr2HGMA32jgWaIkPvunMY07RZvwFmqAk8LI9lRhNJfcayobsMtRR0re2v
-	 fV6CvKmx/bYbmDuFcNRnK2K1az3hFVauEBLD0yqIgudXgQoahuFy/GCwWwJ235D9de
-	 g7EKouVpMIOi5szyH9T3nPr2R8q1oo83a9hw1ZhpHbkQ6PFUqda/d579lM5+cr0gF7
-	 p19lm3IPTO3Hohei8BEepR165IDXkKmmTUwTsc09odYM4LVpm4wPYb6Bd+ZwKkooCH
-	 vjrzRKg3dDd0Q==
+	b=Nhlf7Gs28WrvOt/59XwdBND5Rob3rlAQvjng7KeIPsSVWwZUspIREhzPL+0brVcuN
+	 oJgezqUc9pdowxlCHI81oods1cgGEALGcUhHYvFy0s87ld9sXc4f9rM2FQo+U8nZ3i
+	 Th8MvnSFlaHI22yEQWjLmZLn4qUfAC9VDR+mCSWwbO5o0If1LuhBfvrhHYEUtXx594
+	 AcpfC+q/3Vg4WUQYGrxUJZ9gEgRN1sjPbo6mubSV75uoUNrkBQsz+xeDhsKSYwIFVH
+	 aDM28ekW9fT+xNwViD7Wdg4eFJ8S4/FLcYP7zdcPjWstQcbK980Spc+VCuXj6B8Jhy
+	 nxOapzf+/8S4g==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
@@ -51,9 +51,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v3 01/19] x86/vdso: Fix DWARF generation for getrandom()
-Date: Mon, 28 Oct 2024 14:47:28 -0700
-Message-ID: <8e0fdc4c1b30c6040502c6265f455c44d05ea041.1730150953.git.jpoimboe@kernel.org>
+Subject: [PATCH v3 02/19] x86/asm: Avoid emitting DWARF CFI for non-VDSO
+Date: Mon, 28 Oct 2024 14:47:29 -0700
+Message-ID: <f2dcdcf95240149bfd21e118209bf3b94efad857.1730150953.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1730150953.git.jpoimboe@kernel.org>
 References: <cover.1730150953.git.jpoimboe@kernel.org>
@@ -65,42 +65,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Enable DWARF generation for the VDSO implementation of getrandom().
+VDSO is the only part of the "kernel" using DWARF CFI directives.  For
+the kernel proper, ensure the CFI_* macros don't do anything.
 
-Fixes: 33385150ac45 ("x86: vdso: Wire up getrandom() vDSO implementation")
+These macros aren't yet being used outside of VDSO, so there's no
+functional change.
+
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/x86/entry/vdso/vgetrandom-chacha.S | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/dwarf2.h | 37 +++++++++++++++++++++++++++--------
+ 1 file changed, 29 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vgetrandom-chacha.S b/arch/x86/entry/vdso/vgetrandom-chacha.S
-index bcba5639b8ee..cc82da9216fb 100644
---- a/arch/x86/entry/vdso/vgetrandom-chacha.S
-+++ b/arch/x86/entry/vdso/vgetrandom-chacha.S
-@@ -4,7 +4,7 @@
-  */
+diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
+index 430fca13bb56..b1aa3fcd5bca 100644
+--- a/arch/x86/include/asm/dwarf2.h
++++ b/arch/x86/include/asm/dwarf2.h
+@@ -6,6 +6,15 @@
+ #warning "asm/dwarf2.h should be only included in pure assembly files"
+ #endif
  
- #include <linux/linkage.h>
--#include <asm/frame.h>
-+#include <asm/dwarf2.h>
++#ifdef BUILD_VDSO
++
++	/*
++	 * For the vDSO, emit both runtime unwind information and debug
++	 * symbols for the .dbg file.
++	 */
++
++	.cfi_sections .eh_frame, .debug_frame
++
+ #define CFI_STARTPROC		.cfi_startproc
+ #define CFI_ENDPROC		.cfi_endproc
+ #define CFI_DEF_CFA		.cfi_def_cfa
+@@ -21,7 +30,8 @@
+ #define CFI_UNDEFINED		.cfi_undefined
+ #define CFI_ESCAPE		.cfi_escape
  
- .section	.rodata, "a"
- .align 16
-@@ -22,7 +22,7 @@ CONSTANTS:	.octa 0x6b20657479622d323320646e61707865
-  *	rcx: number of 64-byte blocks to write to output
-  */
- SYM_FUNC_START(__arch_chacha20_blocks_nostack)
--
-+	CFI_STARTPROC
- .set	output,		%rdi
- .set	key,		%rsi
- .set	counter,	%rdx
-@@ -175,4 +175,5 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
- 	pxor		temp,temp
+-#ifndef BUILD_VDSO
++#else /* !BUILD_VDSO */
++
+ 	/*
+ 	 * Emit CFI data in .debug_frame sections, not .eh_frame sections.
+ 	 * The latter we currently just discard since we don't do DWARF
+@@ -29,13 +39,24 @@
+ 	 * useful to anyone.  Note we should not use this directive if we
+ 	 * ever decide to enable DWARF unwinding at runtime.
+ 	 */
++
+ 	.cfi_sections .debug_frame
+-#else
+-	 /*
+-	  * For the vDSO, emit both runtime unwind information and debug
+-	  * symbols for the .dbg file.
+-	  */
+-	.cfi_sections .eh_frame, .debug_frame
+-#endif
++
++#define CFI_STARTPROC
++#define CFI_ENDPROC
++#define CFI_DEF_CFA
++#define CFI_DEF_CFA_REGISTER
++#define CFI_DEF_CFA_OFFSET
++#define CFI_ADJUST_CFA_OFFSET
++#define CFI_OFFSET
++#define CFI_REL_OFFSET
++#define CFI_REGISTER
++#define CFI_RESTORE
++#define CFI_REMEMBER_STATE
++#define CFI_RESTORE_STATE
++#define CFI_UNDEFINED
++#define CFI_ESCAPE
++
++#endif /* !BUILD_VDSO */
  
- 	ret
-+	CFI_ENDPROC
- SYM_FUNC_END(__arch_chacha20_blocks_nostack)
+ #endif /* _ASM_X86_DWARF2_H */
 -- 
 2.47.0
 
