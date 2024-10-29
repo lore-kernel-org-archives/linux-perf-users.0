@@ -1,79 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA724AEE0;
-	Tue, 29 Oct 2024 18:23:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB46F201003;
+	Tue, 29 Oct 2024 18:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730226228; cv=none; b=j90405/e3zZSvigzJPLWiv9uuKbUBT6QkZbRBeysVJERjGB2Y/SKvbVAbrJWwT8vQ8YM+rXcs/A0Oena40X0idSVTS3Ke7Ut3B52k+0nKgjnrXKU26CeoNafuoMZzloyjNlkQRWRIQmFCPF9GKdsRoW/SstTsZMVOJu6ARFxuro=
+	t=1730226586; cv=none; b=f9IfrRcQaC1IGEeJNb/2m9/qY/nARzEe6aZ/Mu89wReYxBqd2a5bFeuMCLNw+oSz87SnwbQWl4CA+LZTWlnWsVG0+DTBeslMXRpc3edf9JOkk41R8V57KQ6LQ4uPfov1I0oBou+3XFR+UCEseRw99n8yiKOL6gfn5nq3iCqKl7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730226228; c=relaxed/simple;
-	bh=vfctqJoadOj4Uk/e3YVcbSo7RUdgyucoANUBHx7MvB0=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BXNeHrM9ZqgStZiz2kwOQ1i37OtuRm5qTP4izg/Hf4jwy0ZktRt5ZXGzetPTc115iSserJcXf8CrzIXtx8nCxum+RE8ylp4ImCbLW/ylxUGxFGsjDPX/gCxBScWDJ5SMK24dyJhedIBSQbVpuYSUYMvKg8O340Z0KESQ022hDTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SPLO+D8k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730226586; c=relaxed/simple;
+	bh=UCgYXyHDHZOpF0R5/uphJySyNxle9b54Ia2xXewkD34=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QQ/klnUNMKRFBfW6reWATVNRVqv1czc3Aowucc9MnvO+3HjiqUq5gv5Wz+OFHss5y6aO/Zt2XWYmJ77geFKBjLJ+ZuLmNiE/Emfv9YCgB3jmYkxFR/Exs53UBiaV26OS0bhQD2PdHEEq9p8bCBOWLiFvXsd9Ve+P2fXop8QDGUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jp4sGmz1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SPLO+D8k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0D60C4CECD;
-	Tue, 29 Oct 2024 18:23:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jp4sGmz1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AA5FC4CEE4;
+	Tue, 29 Oct 2024 18:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730226227;
-	bh=vfctqJoadOj4Uk/e3YVcbSo7RUdgyucoANUBHx7MvB0=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=SPLO+D8kRn6rgF4ee8+Rfi2PyoU2ANM5jdv09I/GWxRi3jpAXJdhxgYw43i0NUb3k
-	 xAGEBjWf3Ii2nYR9xuCwRlxuk0+EyMdvzbCfQXBXMfsgMjImWQtTpb5Ge1xIm4forJ
-	 Vp7eoLK2dTIZkoLKYBVBif05wWAIxggcYDaP7J+385KAw+MduCQaKPK5F21TSfyaUx
-	 MGi/ZOMMwxqQpOzm8DYy/0rRCmVfwL0chh4o9GXq/LLdv/pe/5M0JvcRUDcv2/8sgU
-	 wR8CNpgMrqSkHizivYf2NM7ahsU6LBVPmZ5lPf/EExAaG6JhToMWq0WESODkYrM3ky
-	 MTPohAijV2+IA==
+	s=k20201202; t=1730226586;
+	bh=UCgYXyHDHZOpF0R5/uphJySyNxle9b54Ia2xXewkD34=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jp4sGmz1SNrfNmEKtpfI9Cw7nHUPYRkTBfI7Y6yZBLmKKwu0R5zPND37+UYPqRgPc
+	 fFMOZQ4+lBYw2LyvxPefLMkQmEvnQN9UUD2yaKjx6IeaQF2KN2dhOraV0yGDR1miXl
+	 YYdH7sCgOYHJXOFJCChfDzqqylJ7FCUcIuqRDXFCgrh3TwaCOGH2vknQiL1VhsnFNx
+	 wTp51+SLiymnnpNAnOes/1NtsoIgEyzThK75Nl+n/pBpQqyXA5lztLHBFCLnI/sQDj
+	 D82yT13hTG1vZvXtEqiKQXC31Hu/ecS8QLiiAPAs/zNtHcZ4Ku/5MxjykRc96wMRFs
+	 8vDUo8HlRszCQ==
+Date: Tue, 29 Oct 2024 11:29:44 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v5 00/10] Run tests in parallel showing number of tests running
-Date: Tue, 29 Oct 2024 11:23:43 -0700
-Message-ID: <173022620957.677155.18320930793472494703.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
-In-Reply-To: <20241025192109.132482-1-irogers@google.com>
-References: <20241025192109.132482-1-irogers@google.com>
+To: Xu Yang <xu.yang_2@nxp.com>
+Cc: Frank.li@nxp.com, will@kernel.org, mark.rutland@arm.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, john.g.garry@oracle.com, james.clark@linaro.org,
+	mike.leach@linaro.org, leo.yan@linux.dev, peterz@infradead.org,
+	mingo@redhat.com, acme@kernel.org,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 3/3] perf vendor events arm64: Add i.MX91 DDR Performance
+ Monitor metrics
+Message-ID: <ZyEpmC5yKBXR0JfN@google.com>
+References: <20240924061251.3387850-1-xu.yang_2@nxp.com>
+ <20240924061251.3387850-3-xu.yang_2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240924061251.3387850-3-xu.yang_2@nxp.com>
 
-On Fri, 25 Oct 2024 12:20:59 -0700, Ian Rogers wrote:
-
-> Avoid waitpid so that stdout/stderr aren't destroyed prior to wanting
-> to read them for display. When running on a color terminal, display
-> the number of running tests (1 if sequential). To avoid previous
-> flicker, only delete and refresh the display line when it changes. An
-> earlier version of this code is here:
-> https://lore.kernel.org/lkml/20240701044236.475098-1-irogers@google.com/
+On Tue, Sep 24, 2024 at 02:12:51PM +0800, Xu Yang wrote:
+> Add JSON metrics for i.MX91 DDR Performance Monitor.
 > 
-> [...]
+> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
 
 Applied to perf-tools-next, thanks!
 
