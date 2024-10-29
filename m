@@ -1,49 +1,61 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038BA188010
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Oct 2024 12:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD41BE49;
+	Tue, 29 Oct 2024 13:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730206365; cv=none; b=WTZd1jvbwR8liCAHU/eoB0+COCtVG0M70n0rossRa5B4ysdHJY8RQR7MI2pYBscwKeIsI02GJMEgsfYKTnntb/ExvT8FBcV6y82+sDXPdmZqgXbDxLFqnoeUPMR/btTV96M2HXbepna6XTJDFw+8cvJCixQmKaoV4oEeOGYZCpg=
+	t=1730207603; cv=none; b=H7dBeS4wgO/xstlIHEmf5xUA7zjrvF0T6kZ6TiJFZMNfBdZ2qzJG3VoNNdmYr8SbzVMfXNlnPlHNEzo31riXLOPw01JbNUiv+347rD0HtUALzpRUpefQuBDMFghwI6pr1B1Bq2vldeQmI9Va/GHI1iCThfzs2qbuuSPBBItZcWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730206365; c=relaxed/simple;
-	bh=AgS/64H0ikYBHZGxDnekV0MxouKseVkwrQmfNTHL1PQ=;
+	s=arc-20240116; t=1730207603; c=relaxed/simple;
+	bh=VAOZl2p8vMNlMi4Pu5eS5ZMUXsJHugRoTSXwRKJbPRI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CUHKz4ufypLqnAK8mHLs0TuY2T36WVMOnL/inzTF9nGkNDHBvgIu/lqBtmV9I9UsE3aVER0NYZ5SFqTqo5rZ5MxDXIHpTbYDorj+1Q0DkQMvJyyMZeSDCe9eKNEaCuzx1RnB1cP6LPIC/Eu0o4jwMTk0/iV3d62FU0E/mD1DDK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IlLtdpM2; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=AGM9ghluy1B1Dt7nhBAmv3kAlKV6uP+iTszBwlhAIgJtzpOAFW7Vq1GkaaapagbMayR6VM7dIUtoxsoSTw8Tl055Ma9FT/HIXO3ZPZqNGpkFD3vhrU6lUjj7eyqG5DwYXBEJ9qFjhfULvGRkC7cn628aMskW0JcU6Tnme6aEf+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T60wDNHx; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IlLtdpM2"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T60wDNHx"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=AiJMYaj+Oz6Trnr28FGPzdigBnQQLVU5+zJp2nxFeW4=; b=IlLtdpM29j1t/0GX86IkUs4K83
-	2nZycEzcY4ADJ2QGtsPfiA4MkLiVBGUPvXWwn7wd0RTuKLeJ3KyuGosizC1XZmXkT7dFVok71cPLZ
-	GbsO8HYPxiFVp0rDFGjN4T8tLzbJTCq70g82fJtFC02SPhYQXhQXJotK/pnmKbwv0TZMwSxpUANiY
-	ETChGU9w6OqPM2I9/c3jcxXdStTiQpq0/9aw9RZWrGNcLuLiJSFq851l0Oe5Q+zz7vjC2DjUBhlig
-	S00PNGgXlYzocM++gdDSR1mfqZQ4ftOcjxb8vPv9byjNNpDBcqpQNmuKFj5uuvZOaxvfmFBwXnbpS
-	C6NqWPRQ==;
+	bh=QSJoGwZEmbJZFq/ahM82qF8XpggSzckC2poVXBygGts=; b=T60wDNHxmT1RkNP6qiOQpscOVK
+	Vnz1mrZYdiIL0ebv2VjzWPyJZJaQC4KHIboYY5VoVXspqp3wnNQHnbZSAXi1HzJozglJl/XQSLMAy
+	689hCa3pcca9KSX1xFYXXYj3ty/JSgl3rYUPVHNShSYenJOfLUgKlaLhiWnBXy2KGbc8c7V25T+Ap
+	t7alJeoEScKzwA/yTxAwZZ0yuNe5KhIq9USWs4IqEAM23G/5JASgLRgsexN4DRKzzntkZTrLLHEI2
+	4PxVD+AdH3Dqmd1t/l5/1xloEcg9am8vQ28FUJLUsshUB21+6Ym0xOm9cvzfPi5GzHJR8dekWZaNs
+	PhqBXDyg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t5li3-00000009hxI-2CvK;
-	Tue, 29 Oct 2024 12:52:32 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t5m1v-00000009u5R-36Wp;
+	Tue, 29 Oct 2024 13:13:05 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 215FE30073F; Tue, 29 Oct 2024 13:52:31 +0100 (CET)
-Date: Tue, 29 Oct 2024 13:52:31 +0100
+	id 5F0A630073F; Tue, 29 Oct 2024 14:13:03 +0100 (CET)
+Date: Tue, 29 Oct 2024 14:13:03 +0100
 From: Peter Zijlstra <peterz@infradead.org>
-To: Gaosheng Cui <cuigaosheng1@huawei.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, ravi.bangoria@amd.com,
-	wangweiyang2@huawei.com, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH -next] perf: Fix possible null-ptr-deref in
- __perf_pmu_install_event()
-Message-ID: <20241029125231.GU14555@noisy.programming.kicks-ass.net>
-References: <20241029015347.476375-1-cuigaosheng1@huawei.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 08/19] unwind/x86: Enable CONFIG_HAVE_UNWIND_USER_FP
+Message-ID: <20241029131303.GW14555@noisy.programming.kicks-ass.net>
+References: <cover.1730150953.git.jpoimboe@kernel.org>
+ <2354d43022bd336c390e1e77f7cee68126d5f8c8.1730150953.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,33 +64,48 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241029015347.476375-1-cuigaosheng1@huawei.com>
+In-Reply-To: <2354d43022bd336c390e1e77f7cee68126d5f8c8.1730150953.git.jpoimboe@kernel.org>
 
-On Tue, Oct 29, 2024 at 09:53:47AM +0800, Gaosheng Cui wrote:
-> The function find_get_pmu_context() returns ERR_PTR(-ENOMEM) if kzalloc()
-> fails. It is crucial to verify its return value before dereferencing
-> it to avoid a potential nullptr dereference.
+On Mon, Oct 28, 2024 at 02:47:35PM -0700, Josh Poimboeuf wrote:
+> Use ARCH_INIT_USER_FP_FRAME to describe how frame pointers are unwound
+> on x86, and enable CONFIG_HAVE_UNWIND_USER_FP accordingly so the
+> unwind_user interfaces can be used.
 > 
-> Fixes: bd2756811766 ("perf: Rewrite core context handling")
-> Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 > ---
->  kernel/events/core.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  arch/x86/Kconfig                   |  1 +
+>  arch/x86/include/asm/unwind_user.h | 11 +++++++++++
+>  2 files changed, 12 insertions(+)
+>  create mode 100644 arch/x86/include/asm/unwind_user.h
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index afada11ffb9f..4ff45e320314 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -13177,6 +13177,10 @@ static void __perf_pmu_install_event(struct pmu *pmu,
->  
->  	event->cpu = cpu;
->  	epc = find_get_pmu_context(pmu, ctx, event);
-> +	if (IS_ERR(epc)) {
-> +		put_ctx(ctx);
-> +		return;
-> +	}
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 0bdb7a394f59..f91098d6f535 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -289,6 +289,7 @@ config X86
+>  	select HAVE_SYSCALL_TRACEPOINTS
+>  	select HAVE_UACCESS_VALIDATION		if HAVE_OBJTOOL
+>  	select HAVE_UNSTABLE_SCHED_CLOCK
+> +	select HAVE_UNWIND_USER_FP		if X86_64
+>  	select HAVE_USER_RETURN_NOTIFIER
+>  	select HAVE_GENERIC_VDSO
+>  	select VDSO_GETRANDOM			if X86_64
+> diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
+> new file mode 100644
+> index 000000000000..19df26a65132
+> --- /dev/null
+> +++ b/arch/x86/include/asm/unwind_user.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_X86_UNWIND_USER_H
+> +#define _ASM_X86_UNWIND_USER_H
+> +
+> +#define ARCH_INIT_USER_FP_FRAME							\
+> +	.ra_off		= (s32)sizeof(long) * -1,				\
+> +	.cfa_off	= (s32)sizeof(long) * 2,				\
+> +	.fp_off		= (s32)sizeof(long) * -2,				\
+> +	.use_fp		= true,
+> +
+> +#endif /* _ASM_X86_UNWIND_USER_H */
 
-Supposing this is true (hint, it isn't), then you've managed to
-'fix' a NULL deref with silent buggy behaviour.
-
-Is that an improvement?
+What about compat / 32bit userspace?
