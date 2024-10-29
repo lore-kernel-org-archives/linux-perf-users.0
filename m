@@ -1,38 +1,38 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1B91DC739;
-	Tue, 29 Oct 2024 18:08:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050F918130D;
+	Tue, 29 Oct 2024 18:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730225336; cv=none; b=Z4ToRxrozIQpMAqX5SEsqhk9/J+imfuxVEix0yV9ISkJAlT6TQgQxdykgVw4rtb6KWhS94BjKWMDZhfg8Jz18flcnMgox15EafIuMLFeHMjxWp4B+mfAUrkn9W2iMW3lvPPorfW2ZXuWrgW4q4367qVFqXaj9Enk20eqNMKAfUM=
+	t=1730225421; cv=none; b=Ime6slyI2IvkVmRnXngEG8ulMRwpYK8XN0Qe4QYgI/BqkDk5enIXKKqhEZN8KFIc6LLjE5fS0YOwjpSn/f7njsao/ixQGQsDAoAxZQMbgb/j4rbJVYOW2srdEaHBwbtCMwAJ3oaTS0HUwtrmpQ8nHWdCjl3dGm9uXzIUaUevfOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730225336; c=relaxed/simple;
-	bh=AN4iv66DentSAFq4QXzCCx3UrpDmKZxveFdmoxab1CY=;
+	s=arc-20240116; t=1730225421; c=relaxed/simple;
+	bh=rSEPCwo3+FNPhGsdt6dt/oTNiBavhSDE5Kcuve0mHNQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dt+iSigbMA4CsG89eq1v7MlMD/99IwIQqzkGXfLUMvDBjhwDXY4v4YIByMA3Jhnxwbj2MQiJyYaClbqy54WAtupoLbVpDd8YGyi62Z5EGn37oDI7n6Sic1jD2xBHy1rSsr9+OXDUW1fXW/bxAv4cWG6JxMXLpKl1q9vX8lBn/t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UfdF3Ces; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=EAXowjSnxIVXJT1u9lIn+KWq/ZdoVdS88jr9Elk/lAw1DrHAVa2B2HOw+6pv6Hom8+0h9ZlRKgIHTG/JuocLgBxg8rNcWrbBUdUeGJSTfFxI7vC9QRLqUyjiK62aLLVkTnTJvlnq1GA+4pofq9RrFe/ZiajZ8N9v+sXmruBO/Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IYV4OxWf; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UfdF3Ces"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IYV4OxWf"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fgjuHQ78XGkZb7KcQM6xJQ3E19G0vHh//2ashTQs+PI=; b=UfdF3CessnVcHFTyrvbRreKgpW
-	zkCjNxgvYtsONLHLEGf+1c7DAPcDhpOtPPZ4Z29zA5WQbxiEZKNvvd+h788o2FsRbnfxqCxwd/Akg
-	ME79PR0vAHcIxj87B2lALKxmNrSCDL89JvNYrMH65Z5TwUV7IquwPR5MXk9nCLDTuvYuTG1030Cu9
-	OmzDgsEMKOxjtVgJi17zKCw+pUBMf1/bCSO4EfqXbQfPo66gnABiVJeA6gPm0dLE1Wvys/rEQh/Kj
-	T2pmdlhxz5d8W54OEOEmlo7S+G+XRBxj60ediRf6kGI+kqnaMRVy5WRH/2EikGfaZrB0D6G/OwjP2
-	lsWE7YBQ==;
+	bh=4RFd0kI+7YFYqaFoPNrQ859Edbrzs6npcu3fCsS77ac=; b=IYV4OxWfDSGXniyTxmIA+Nqksi
+	hfZn8Oc3qb8GtSkRZU0K7BEIlHRG/TensNiDi2gV892TFHRMPcJD6EYSCENxkvSK1Nbr1VSxvb2rX
+	KkuXw5pESy/mFQO2wPPs6mrUcwUbVvAKdcxUDoYqmuEA9b+UCQ13AF5P1XY1WGQclSRugUjN4qTj1
+	3FebFZCqrrj4s1qNBKRqqD4SZXMB/3+YUcMHy9OqkRn6zvawxuZ1uiyILgTnkQoDq6M7c8ihtqj4b
+	9Tx0+cTJ9Hv6tAUM/RPEVkNhuOI4GeVa+EyKTNn5+4++IURZPYhKQNiIlYmAwhz3WDWYJnWZLU2Ba
+	dCz7KS5A==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t5qdy-0000000ABCN-48JX;
-	Tue, 29 Oct 2024 18:08:39 +0000
+	id 1t5qfQ-0000000ABZ4-1mBv;
+	Tue, 29 Oct 2024 18:10:09 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CAD0630073F; Tue, 29 Oct 2024 19:08:38 +0100 (CET)
-Date: Tue, 29 Oct 2024 19:08:38 +0100
+	id AA8FF30073F; Tue, 29 Oct 2024 19:10:08 +0100 (CET)
+Date: Tue, 29 Oct 2024 19:10:08 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: Josh Poimboeuf <jpoimboe@kernel.org>
 Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -52,12 +52,12 @@ Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v3 08/19] unwind/x86: Enable CONFIG_HAVE_UNWIND_USER_FP
-Message-ID: <20241029180838.GF14555@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
+Message-ID: <20241029181008.GG14555@noisy.programming.kicks-ass.net>
 References: <cover.1730150953.git.jpoimboe@kernel.org>
- <2354d43022bd336c390e1e77f7cee68126d5f8c8.1730150953.git.jpoimboe@kernel.org>
- <20241029131303.GW14555@noisy.programming.kicks-ass.net>
- <20241029163110.xf5o2bvfbfcenlla@treble.attlocal.net>
+ <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
+ <20241029132709.GY14555@noisy.programming.kicks-ass.net>
+ <20241029165018.r4l5wix24s3f22c6@treble.attlocal.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,29 +66,51 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241029163110.xf5o2bvfbfcenlla@treble.attlocal.net>
+In-Reply-To: <20241029165018.r4l5wix24s3f22c6@treble.attlocal.net>
 
-On Tue, Oct 29, 2024 at 09:31:10AM -0700, Josh Poimboeuf wrote:
-> On Tue, Oct 29, 2024 at 02:13:03PM +0100, Peter Zijlstra wrote:
-
-> > > +#define ARCH_INIT_USER_FP_FRAME							\
-> > > +	.ra_off		= (s32)sizeof(long) * -1,				\
-> > > +	.cfa_off	= (s32)sizeof(long) * 2,				\
-> > > +	.fp_off		= (s32)sizeof(long) * -2,				\
-> > > +	.use_fp		= true,
+On Tue, Oct 29, 2024 at 09:50:18AM -0700, Josh Poimboeuf wrote:
+> On Tue, Oct 29, 2024 at 02:27:09PM +0100, Peter Zijlstra wrote:
+> > > +int sframe_add_section(unsigned long sframe_addr, unsigned long text_start,
+> > > +		       unsigned long text_end)
+> > > +{
+> > > +	struct mm_struct *mm = current->mm;
+> > > +	struct vm_area_struct *sframe_vma;
 > > > +
-> > > +#endif /* _ASM_X86_UNWIND_USER_H */
+> > > +	mmap_read_lock(mm);
 > > 
-> > What about compat / 32bit userspace?
+> > DEFINE_GUARD(mmap_read_lock, struct mm_struct *,
+> > 	     mmap_read_lock(_T), mmap_read_unlock(_T))
+> > 
+> > in include/linux/mmap_lock.h ?
 > 
-> Sframe doesn't support 32-bit binaries at the moment.  Does anybody
-> actually care?
+> Will do.
+> 
+> > > @@ -2784,6 +2785,16 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+> > >  	case PR_RISCV_SET_ICACHE_FLUSH_CTX:
+> > >  		error = RISCV_SET_ICACHE_FLUSH_CTX(arg2, arg3);
+> > >  		break;
+> > > +	case PR_ADD_SFRAME:
+> > > +		if (arg5)
+> > > +			return -EINVAL;
+> > > +		error = sframe_add_section(arg2, arg3, arg4);
+> > > +		break;
+> > > +	case PR_REMOVE_SFRAME:
+> > > +		if (arg3 || arg4 || arg5)
+> > > +			return -EINVAL;
+> > > +		error = sframe_remove_section(arg2);
+> > > +		break;
+> > >  	default:
+> > >  		error = -EINVAL;
+> > >  		break;
+> > 
+> > So I realize that mtree has an internal lock, but are we sure we don't
+> > want a lock around those prctl()s?
+> 
+> Not that I can tell?  It relies on the mtree internal locking for
+> atomicity.
+> 
+> For sframe_remove_section() it uses srcu to delay the freeing until all
+> sframe_find()'s have completed.
 
-Dunno, I think the only 32bit code I've recently ran is in selftests and
-wine32 -- because Monkey Island rules :-)
-
-> You're right this regresses existing perf behavior for the frame pointer
-> case.  I'll try to fix that.
-
-Thanks, this patch is the frame pointer unwinder, that really should do
-32bit.
+Yeah it does all that. But I was sorta looking at all that kmalloc and
+copy from user stuff, but I suppose you can race that without problem.
