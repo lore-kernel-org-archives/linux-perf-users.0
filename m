@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6B620FA86
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Oct 2024 23:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8F9190665
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Oct 2024 23:59:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730245828; cv=none; b=b7vDvOy+IzljisI8QpDE5stx3CzL4nV6ftGqZ0x8ySUjpAebEYZAnwgH7UH6XteF9AnxhSho3Luhkpar/8Fzu5cV5XOyvuPNFmlu9iZhpbeK0THFXn0iLdWNIJBZ5T21+DPiNSMVbfOdXpqkqUCHr0e/9busektDuvTW6zFsc88=
+	t=1730246395; cv=none; b=thydHE50Ok8gUtCUnPWebpS/4yDUdvplhxgSQShwVyN8rb4bfX9cZZzAxWhFgIdi7lRZEyebaBsIQJqzzDKcEEsxi28dpJQ0s8ZhPwAmMia4h8saRLYbbY+/SOaF2vO59IKZQBpozgPPwk/sl46ZqskxmtXbvER10NnIY6Nfxqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730245828; c=relaxed/simple;
-	bh=Km9QmhwRo6fGnvgC/ifviJ2aCCdQhRE1CmRblF85asg=;
+	s=arc-20240116; t=1730246395; c=relaxed/simple;
+	bh=3PGjG05cL0ib9NjJ+m7Zaogil8o/zoAM1qJXs34+Osw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QZN5bWEKioRg4DOprLEK0vlMWIOt5XkHAmNCrhZLR9dPIORexelp9uafhiZWXwdygwNRbXd5b1Z0IIHzljmQ4wznwTkRs7kwlfIVJvZFu+iYAM0xSOK9v72P6/PTGGmduhImzJaHwdALiJWVPOORJVbwhYSSa6OGIJrzPH88hoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JC+2IZMk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LaafA0MD57trDr2gBIYufwnv4321NQn3drinh+HCZV3REa4aeA7RqUy4FfinIX4PKEP9vqXcrYk/aMtPfj23SUCOth2d3EeL0w0SOXmmgrXWZtzJfwkX2SxvV4lRFEFIcmGViToFHn73TVV07BVK8+HBXiF8VtVLcNMew1/vmBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DQlFkpVL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JC+2IZMk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA31C4CEEA;
-	Tue, 29 Oct 2024 23:50:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQlFkpVL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2253C4CEE3;
+	Tue, 29 Oct 2024 23:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730245828;
-	bh=Km9QmhwRo6fGnvgC/ifviJ2aCCdQhRE1CmRblF85asg=;
+	s=k20201202; t=1730246395;
+	bh=3PGjG05cL0ib9NjJ+m7Zaogil8o/zoAM1qJXs34+Osw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JC+2IZMkf2PtwUS1yY44nzOEiCDiHphebj+axO+aS3IxTCiSsjv5N1JXcrYWBZCwD
-	 YTTnTA7tIUCg6gLt8hQmYAEVOscvdGKRnihq+CKB0gDPj1qLRP62iFWX7iTyojb7lL
-	 82MaeQ6ZgqkB2nAAq7Z9d0pJDX47tryK6b/zcL5kigT+5vN5xUP6lbv0KgBd7D55op
-	 Evt5P+IRXUnD9sOvwoRskBz8XhTaQC2h0vKzBOHai1j6nMHUsiVZA5WB267J23zke2
-	 ts1ojLLXgwItXxGszMXxyunwAP1y8iNkqPskLhPwfLg8J+pDnfFT6V3nalAolDHow8
-	 i2LNXXA0k/Q8A==
-Date: Tue, 29 Oct 2024 16:50:26 -0700
+	b=DQlFkpVL86I8W/Qkkhs89NgOwBqRFkbkYxuZ2284KfOH+pIyfrLm7MEyh+tojwlZ5
+	 jSkCVNeVDDv4KV6VA0Edpi3esGjjos0qicuIWlhKsQd8hP5PyLCfhREv1LTLRjrAJ9
+	 u8KKrCqsOaYSUcm55ifenkmlf17Dvpk9lTXHhNo599Jm/zFfIQcXQtl2AFcAsYKj+N
+	 ZdPfQcjg8XUlXDtm8/2McpxeYfSJuM3Dj7uLraIxC9tFFE9Br+ThX7waHLqb65YH3l
+	 Ci7d9pJ4yu7Lmb9lYhlUH20vEEWk+DokQsQWVoKtUV2m62HnVhf4IG4LCbhixL7mgZ
+	 SO01mdlmm5luw==
+Date: Tue, 29 Oct 2024 16:59:53 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users <linux-perf-users@vger.kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: Can perf drop libunwind support
-Message-ID: <ZyF0wjYbEvXWUU9s@google.com>
-References: <CAP-5=fUXkp-d7gkzX4eF+nbjb2978dZsiHZ9abGHN=BN1qAcbg@mail.gmail.com>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, irogers@google.com
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
+Subject: Re: [PATCH] tools/perf/tests/expr: Make the system_tsc_freq test
+ only for intel
+Message-ID: <ZyF2-XNUh38p_5Gg@google.com>
+References: <20241022140156.98854-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,31 +45,76 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUXkp-d7gkzX4eF+nbjb2978dZsiHZ9abGHN=BN1qAcbg@mail.gmail.com>
+In-Reply-To: <20241022140156.98854-1-atrajeev@linux.vnet.ibm.com>
 
-Hi Ian,
+Hello,
 
-On Wed, Oct 23, 2024 at 02:57:05PM -0700, Ian Rogers wrote:
-> Hi,
+On Tue, Oct 22, 2024 at 07:31:56PM +0530, Athira Rajeev wrote:
+> The "Simple expression parser" test fails on powerpc
+> as below:
 > 
-> perf wants to build with BPF support these days. libbpf has a
-> dependency on libelf, part of elfutils. libdw is also part of elfutils
-> and amongst other things provides unwinding support. My understanding
-> is libdw unwinding is used by perf in preference to libunwind when
-> present. My suspicion is that libunwind is being feature tested,
-> linked against but then seldom or never used. Given this could perf
-> drop libunwind support in order to simplify the code base?
+>  parsing metric: #system_tsc_freq
+>  Unrecognized literal '#system_tsc_freq'literal: #system_tsc_freq = nan
+>  syntax error
+>  FAILED tests/expr.c:247 #system_tsc_freq
+>  ---- end(-1) ----
+>  7: Simple expression parser  : FAILED!
 > 
-> Possible savings:
->  - remove libunwind's 8 feature tests
->  - removal of 10 arch or not libunwind C files in perf
->  - removal of libunwind #ifdef-ed code throughout common files.
+> In the test, system_tsc_freq is checked as below:
+> 
+>  if (is_intel)
+>     TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
+>  else
+> 
+> But commit 609aa2667f67 ("perf tool_pmu: Switch to standard
+> pmu functions and json descriptions")' changed condition in
 
-I'm ok with removing libunwind to reduce the maintenance burden.
-In general, we'd better not have multiple libraries for the same
-purpose.  Recently we added libllvm support, then it might replace
-libelf, libdw and libcapstone someday. :)
+Probably need to put it as Fixes: tag.
+
+
+> tool_pmu__skip_event so that system_tsc_freq event should
+> only appear on x86
+> 
+>  +#if !defined(__i386__) && !defined(__x86_64__)
+>  +       /* The system_tsc_freq event should only appear on x86. */
+>  +       if (strcasecmp(name, "system_tsc_freq") == 0)
+>  +               return true;
+>  +#endif
+> 
+> After this commit, the testcase breaks for expr__parse of
+> system_tsc_freq in powerpc case. Fix the testcase to have
+> complete system_tsc_freq test within "is_intel" check.
+
+Ian, are you ok with this?
 
 Thanks,
 Namhyung
 
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+>  tools/perf/tests/expr.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+> index e3aa9d4fcf3a..eb3bd68fc4ce 100644
+> --- a/tools/perf/tests/expr.c
+> +++ b/tools/perf/tests/expr.c
+> @@ -244,11 +244,10 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+>  	if (num_dies) // Some platforms do not have CPU die support, for example s390
+>  		TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
+>  
+> -	TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&val, ctx, "#system_tsc_freq") == 0);
+> -	if (is_intel)
+> +	if (is_intel) {
+> +		TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&val, ctx, "#system_tsc_freq") == 0);
+>  		TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
+> -	else
+> -		TEST_ASSERT_VAL("#system_tsc_freq == 0", fpclassify(val) == FP_ZERO);
+> +	}
+>  
+>  	/*
+>  	 * Source count returns the number of events aggregating in a leader
+> -- 
+> 2.43.5
+> 
