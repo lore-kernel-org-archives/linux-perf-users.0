@@ -1,96 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AC41EF92F;
-	Mon, 28 Oct 2024 23:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120B379F6
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Oct 2024 01:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730159759; cv=none; b=kVyzwXgmr3yB5PTbBiv3G7I+bTe8Rla45Rj41HhSUwgq4/tJKTNgJ0/CSzk9kRY+Bcg6v3JZpGb3iEynDhNvJNmf7n8txRzpUprHi2+VWYIZQ2S2g1nent+nYh17FMRM7sPLrf4CP6g6DvMWaGPYeudk9YNLzl9+dW/s4elAA4M=
+	t=1730166834; cv=none; b=iWmr5K5cSCek5gQ6CksEE8Y3F1Wkj3JhP1p7EXBalFDV01lKEf5bR/9A1VH7+oWaQfrOq4Xj87rKNbF8D//YtliOS30yYlwHDGTwLjck/6TBKB2NWp4JTZWxnCjR4oUh2drBb0l3qDncfo59LEvk4hZ0VUGfPTvNmJmdlbpKPPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730159759; c=relaxed/simple;
-	bh=yn8pmXtMPDVwM/CL0GlzMzykBosCTjJtPJtVvsu4WQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y+u55axvVzHauRywbR7Asg/qnq6Xei3kTaqXQUn1gtdo2IP0lejaFPf3aHdz1Gx/Pj/VZaWRodsk6ey71u5nkAwtc8hQtceTlJyDvFij7B+PLFvthUJZNmU3/sVXa0LIJpCJabjyNa/EV9PkrfoXiCNzg2OufOXQnrmW/hEQlu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ht0DV9MH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ht0DV9MH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC76BC4CEC3;
-	Mon, 28 Oct 2024 23:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730159758;
-	bh=yn8pmXtMPDVwM/CL0GlzMzykBosCTjJtPJtVvsu4WQo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ht0DV9MH6A+8IQp4lsAw/aOjztuUM86phGNdQvqcmddWXyin+EbwNUl5d/lYGLV2c
-	 1Y9ZM/IQQ43i5gdkEOthK/wxp23h517TIO3BJhlJsQaQ+DQOJKEP4SCYghTiN6TIgZ
-	 +6HTniG8JE+shaxwolQtFDsJ4/6DmVwJKGH4Sx6ocl7TOXmmz9rfcaD/NZ9omYhq19
-	 ORqZHOvNicnsk3ovMXx1E/HsBqQ9Wu5OIx3r2bdGQT38lV7igE8gdcw5PWyLZwFMWV
-	 EHW1N63/AM/WelLdYeEztAwMrz3pxPhH/eif1Oep67BxIxqiBxAmdDMNNFQPx3fOS+
-	 ZN4t+ie/6yvVA==
-Date: Mon, 28 Oct 2024 16:55:56 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v3 00/19] unwind, perf: sframe user space unwinding
-Message-ID: <20241028235556.oyoyt3uvlau5vzsd@treble.attlocal.net>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
+	s=arc-20240116; t=1730166834; c=relaxed/simple;
+	bh=nBMT5o4bs6JM1Oy8hIrwLJ67l2vZ1JDr9zJ4I3mz3Tg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q3fOA7IOVMWyQEumPSZZi35JiLftQdEBDz4SyaF2LRkad16WBEeKSwoFwYu0Zzu3jre9wt1A0shs2G0qH5A4NUkOEt3Q+KVwMUZH++j6i9oD6gOt1IkhRYzELB+LLx91TH20v8uLjZAAqA3U4PSyuZnFT9OykOsR29CVQR0uWvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4XctYv0nQjz20r52;
+	Tue, 29 Oct 2024 09:52:51 +0800 (CST)
+Received: from kwepemd200011.china.huawei.com (unknown [7.221.188.251])
+	by mail.maildlp.com (Postfix) with ESMTPS id E500314013B;
+	Tue, 29 Oct 2024 09:53:48 +0800 (CST)
+Received: from cgs.huawei.com (10.244.148.83) by
+ kwepemd200011.china.huawei.com (7.221.188.251) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 29 Oct 2024 09:53:48 +0800
+From: Gaosheng Cui <cuigaosheng1@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<ravi.bangoria@amd.com>, <cuigaosheng1@huawei.com>, <wangweiyang2@huawei.com>
+CC: <linux-perf-users@vger.kernel.org>
+Subject: [PATCH -next] perf: Fix possible null-ptr-deref in __perf_pmu_install_event()
+Date: Tue, 29 Oct 2024 09:53:47 +0800
+Message-ID: <20241029015347.476375-1-cuigaosheng1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.1730150953.git.jpoimboe@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd200011.china.huawei.com (7.221.188.251)
 
-On Mon, Oct 28, 2024 at 02:47:27PM -0700, Josh Poimboeuf wrote:
-> This has all the changes discussed in v2, plus VDSO sframe support and
-> Namhyung's perf tool patches (see detailed changelog below).
-> 
-> I did quite a bit of testing, it seems to work well.  It still needs
-> some binutils and glibc patches which I'll send in a reply.
-> 
-> Questions for perf experts:
-> 
->   - Is the perf_event lifetime managed correctly or do we need to do
->     something to ensure it exists in unwind_user_task_work()?
-> 
->     Or alternatively is the original perf_event even needed in
->     unwind_user_task_work() or can a new one be created on demand?
-> 
->   - Is --call-graph=sframe needed for consistency?
-> 
->   - Should perf use the context cookie?  Note that because the callback
->     is usually only called once for multiple NMIs in the same entry
->     context, it's possible for the PERF_RECORD_CALLCHAIN_DEFERRED event
->     to arrive *before* some of the corresponding kernel events.  The
->     context cookie disambiguates the corner cases.
-> 
-> Based on tip/master.
-> 
-> Also at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git sframe-v3
+The function find_get_pmu_context() returns ERR_PTR(-ENOMEM) if kzalloc()
+fails. It is crucial to verify its return value before dereferencing
+it to avoid a potential nullptr dereference.
 
-Argh, apparently it's a bad idea to pass "*.patch" twice on the
-git-send-email cmdline ;-)  Sorry for sending it twice!
+Fixes: bd2756811766 ("perf: Rewrite core context handling")
+Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
+---
+ kernel/events/core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index afada11ffb9f..4ff45e320314 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -13177,6 +13177,10 @@ static void __perf_pmu_install_event(struct pmu *pmu,
+ 
+ 	event->cpu = cpu;
+ 	epc = find_get_pmu_context(pmu, ctx, event);
++	if (IS_ERR(epc)) {
++		put_ctx(ctx);
++		return;
++	}
+ 	event->pmu_ctx = epc;
+ 
+ 	if (event->state >= PERF_EVENT_STATE_OFF)
 -- 
-Josh
+2.25.1
+
