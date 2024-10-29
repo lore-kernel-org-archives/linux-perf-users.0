@@ -1,139 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FF22107;
-	Tue, 29 Oct 2024 18:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36ED71D8E0F;
+	Tue, 29 Oct 2024 18:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730226883; cv=none; b=czVu1y7PCpaT0Tkfy8u7FXscJDUd/gfiD4+hWjtge5LmD0UeChTajSyu7cOyp/c9e0AluWr0Yd01v22v7yOwi/197SOUK9iAtOJTHVXWbuit7zj8a9CnFXvOg/4Qa9Mm2jE6Un4LxMLtKWFPKsoSMSzv/s2q+96Ikex5hfkyjoc=
+	t=1730228163; cv=none; b=KRYUTWdO4uHy5QPsoidWCIEVU33/ATOXCqmCFh6geGJaIxSAPSEx1INFs8/0F1KY7iHAI2qmoLn4d+7meTlgBqKJuy0THLfyKfwN6i4vrfO2G4oRCQymnqmH1koUb3d6OTqvHZQw91RFp/Oym/5cTkfBP/34zh4vrh7ctlTIpjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730226883; c=relaxed/simple;
-	bh=EODAUXNVcC71MCCXMsrsilw4SOigG1r/H9SNpsFpuqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=piLRsXZxmOubpN6HfFMN/AjWNcWBddcdIDxAe+UyZu0XHwgYIM3T21dYEdInuLdd8GddJzOD5VotyuLCu4ENyMkxnXcj/rLyrHvTGd2n8DKoKxC1ws7r/ynKWQfsIw8UaVKvaGPOiTYcDlP9upNpi4qD7ilkTQ9jYpP2eQASOMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6xmXaYi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730228163; c=relaxed/simple;
+	bh=Qmrrcd6oQcoAQSl7qPXGbEiEVMoJ4g1HbbWd5DCSqt4=;
+	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:MIME-Version; b=XP3d0B43LkxtxgY66aFChbjbz9GzjxG3puZsxa+N1ImH6gTUehH4SFlLpm6+lTPhaub1ni+QNiXRbZW9cD10NkQZ9gCd7iPK21H8a7l7H0+LQBP6a6rQ8m4yz5FyGG64Dh+RZUoFBLAU0CWzMCp4TUAp+k0Dq+UReG2kyEXZdAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=F9INojBx; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6xmXaYi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 745C8C4CECD;
-	Tue, 29 Oct 2024 18:34:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730226883;
-	bh=EODAUXNVcC71MCCXMsrsilw4SOigG1r/H9SNpsFpuqE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E6xmXaYicjbqsZKBcoLttfPVngIuu/qQvvOocYnVA4si/VrHKBp0cBB7ve39Ut9Z5
-	 JkokHRXmNwLivK1p/GRADJ3c9c8oo/rFDAWe7h+7GIf08ZiqM2zgrAtuOl+FP/GVbd
-	 Agcb+KoIuS3/syqdbTKYE+f0qJ/zeAgD0I7Rp8fIkSjPptqQHRcCXd4ezWaJrJS6vA
-	 gw0SNa8DxIU2nMu1iNErFnw0ULyZZz0O1Qdav123XWBH09OKSFqpOnZEYGkKYfzmoB
-	 C/jXv6IfQczyDR1c1VavuzUZxd7lIF0zjOrbwnWoj/k3oCPpBIzR48soV9fABvVlci
-	 Ia406QhHf9vAw==
-Date: Tue, 29 Oct 2024 11:34:40 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v3 11/19] unwind: Add deferred user space unwinding API
-Message-ID: <20241029183440.fbwoistveyxneezt@treble.attlocal.net>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
- <a94eb70a80c4a13dedb2655b7848304a992cb1b0.1730150953.git.jpoimboe@kernel.org>
- <20241029135617.GB14555@noisy.programming.kicks-ass.net>
- <20241029171752.4y67p3ob24riogpi@treble.attlocal.net>
- <bcd11a07-45fb-442b-a25b-5cadc6aac0e6@efficios.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="F9INojBx"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49TFRbB7029122;
+	Tue, 29 Oct 2024 18:55:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=mK/4Bz
+	cHnCxFoi+e4s0kq2SmjqHQX1oEGf7zQ10nHjo=; b=F9INojBxgQGX2wjLDacJ1L
+	xPqOr18v4B5p0KHbjVuaXGKOwhnxAy7kf7T5UkAUw1HMZsq6DfSk6I6C6zEfdCKO
+	I8DiG0pvIrIX4TywZgs0LLsGBsJvVxc7eMDZi6nTjC8UW0OQ4NtQR5pGXtQPL4Lc
+	damqtywGXIphHDWUughFG1vgmwzuLY7TdlPGcjnzgnQsfVjv4vPC1on55oGwS83Z
+	cwQarw1zEQfJ9iIBnnDCGb9HAvzEa9TxnUyKkmm6IeeB/mW5cbMGKTkzooKfzjt4
+	eD+Se4suk3EZBfgw4j1hAP3+1rJcN0sk5u+/R+m+bUsCyZC0KQHH2v5s2LZFb0KA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42j3nstp45-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Oct 2024 18:55:41 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49TItf7d032429;
+	Tue, 29 Oct 2024 18:55:41 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42j3nstp3x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Oct 2024 18:55:41 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49THgeSG028275;
+	Tue, 29 Oct 2024 18:55:39 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 42hb4xvk82-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Oct 2024 18:55:39 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49TItZ0m50987366
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Oct 2024 18:55:35 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7FBE52004B;
+	Tue, 29 Oct 2024 18:55:35 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3F54D20043;
+	Tue, 29 Oct 2024 18:55:15 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.246.178])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 29 Oct 2024 18:55:14 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH v5 00/10] Run tests in parallel showing number of tests
+ running
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20241025192109.132482-1-irogers@google.com>
+Date: Wed, 30 Oct 2024 00:25:00 +0530
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        James Clark <james.clark@linaro.org>,
+        Howard Chu <howardchu95@gmail.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Veronika Molnarova <vmolnaro@redhat.com>,
+        Dapeng Mi <dapeng1.mi@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Colin Ian King <colin.i.king@gmail.com>,
+        Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Message-Id: <07039967-2BFC-4D84-AC3E-F98CD510BD3F@linux.vnet.ibm.com>
+References: <20241025192109.132482-1-irogers@google.com>
+To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3818.100.11.1.3)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: JFd9qDpkpRylfJHdAwYyl8nTcSrFyUar
+X-Proofpoint-GUID: L1oELwVRbIbHCw2HsJjuop8SDzF_fvtV
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <bcd11a07-45fb-442b-a25b-5cadc6aac0e6@efficios.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ bulkscore=0 mlxlogscore=999 clxscore=1011 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ malwarescore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410290139
 
-On Tue, Oct 29, 2024 at 01:47:59PM -0400, Mathieu Desnoyers wrote:
-> > > If ftrace needs brain damage like this, can't we push this to the user?
-> > > 
-> > > That is, do away with the per-cpu sequence crap, and add a per-task
-> > > counter that is incremented for every return-to-userspace.
-> > 
-> > That would definitely make things easier for me, though IIRC Steven and
-> > Mathieu had some concerns about TID wrapping over days/months/years.
-> > 
-> > With that mindset I suppose the per-CPU counter could also wrap, though
-> > that could be mitigated by making the cookie a struct with more bits.
-> > 
-> 
-> AFAIR, the scheme we discussed in Prague was different than the
-> implementation here.
 
-It does differ a bit.  I'll explain why below.
 
-> We discussed having a free-running counter per-cpu, and combining it
-> with the cpu number as top (or low) bits, to effectively make a 64-bit
-> value that is unique across the entire system, but without requiring a
-> global counter with its associated cache line bouncing.
-> 
-> Here is part where the implementation here differs from our discussion:
-> I recall we discussed keeping a snapshot of the counter value within
-> the task struct of the thread. So we only snapshot the per-cpu value
-> on first use after entering the kernel, and after that we use the same
-> per-cpu value snapshot (from task struct) up until return to userspace.
-> We clear the task struct cookie snapshot on return to userspace.
+> On 26 Oct 2024, at 12:50=E2=80=AFAM, Ian Rogers <irogers@google.com> wrot=
+e:
+>=20
+> Avoid waitpid so that stdout/stderr aren't destroyed prior to wanting
+> to read them for display. When running on a color terminal, display
+> the number of running tests (1 if sequential). To avoid previous
+> flicker, only delete and refresh the display line when it changes. An
+> earlier version of this code is here:
+> https://lore.kernel.org/lkml/20240701044236.475098-1-irogers@google.com/
+>=20
+> Add a signal handler for perf tests so that unexpected signals are
+> displayed and test clean up is possible.
+>=20
+> In perf test add an "exclusive" flag that causes a test to be run with
+> no other test. Set this flag manually for C tests and via a
+> "(exclusive)" in the test description for shell tests. Add the flag to
+> shell tests that may fail when run with other tests.
+>=20
+> Change the perf test loop to run in two passes. For parallel
+> execution, the first pass runs all tests that can be run in parallel
+> then the 2nd runs remaining tests sequentially. This causes the
+> "exclusive" tests to be run last and with test numbers moderately out
+> of alignment.
+>=20
+> Change the default to be to run tests in parallel. Running tests in
+> parallel brings the execution time down to less than half.
+>=20
+> v5: Make width robust to signal delivery (Namhyung). Minor signal
+>    print message tweaks and test kill value.
+>=20
+> v4: Add patch to sort exclusive tests last, this allows for increasing
+>    test numbers as requested by Namhyung.
+>=20
+> v3: Mark additional shell tests as "(exclusive)" to avoid issues with
+>    shared resources suggested by Namhyung. Add dependent signal
+>    handler change so that kill/ctrl-C don't leave lots of processes,
+>    previously sent here:
+>    https://lore.kernel.org/lkml/20241017052137.225514-1-irogers@google.co=
+m/
+>=20
+> v2: Fix inaccurate remaining counts when running specific
+>    tests. Rename "remaining" to "active" to better reflect the
+>    testing behavior. Move the exclusive flag to test cases and not
+>    entire suites. Add more "(exclusive)" flags to test as
+>    suggested-by James Clark. Remove "(exclusive)" flag from test
+>    descriptions to keep the command line output more concise. Add
+>    James Clark's tested-by.
+>=20
+> Ian Rogers (10):
+>  tools subcmd: Add non-waitpid check_if_command_finished()
+>  perf test: Display number of active running tests
+>  perf test: Reduce scope of parallel variable
+>  perf test: Avoid list test blocking on writing to stdout
+>  perf test: Tag parallel failing shell tests with "(exclusive)"
+>  perf test: Add a signal handler around running a test
+>  perf test: Run parallel tests in two passes
+>  perf test: Make parallel testing the default
+>  perf test: Add a signal handler to kill forked child processes
+>  perf test: Sort tests placing exclusive tests last
 
-Right, so adding some details to this, what I remember specifically
-deciding on:
+Tested-by : Athira Rajeev <atrajeev@linux.vnet.ibm.com <mailto:atrajeev@lin=
+ux.vnet.ibm.com>>
 
- - In unwind_user_deferred(), if task cookie is 0, it snapshots the
-   per-cpu counter, stores the old value in the task cookie, and
-   increments the new value (with CPU # in top 48 bits).
+Thanks
+Athira Rajeev
+>=20
+> tools/lib/subcmd/run-command.c                |  33 ++
+> tools/perf/tests/builtin-test.c               | 408 ++++++++++++------
+> .../tests/shell/coresight/asm_pure_loop.sh    |   2 +-
+> .../shell/coresight/memcpy_thread_16k_10.sh   |   2 +-
+> .../coresight/thread_loop_check_tid_10.sh     |   2 +-
+> .../coresight/thread_loop_check_tid_2.sh      |   2 +-
+> .../shell/coresight/unroll_loop_thread_10.sh  |   2 +-
+> tools/perf/tests/shell/list.sh                |   5 +-
+> .../tests/shell/perftool-testsuite_report.sh  |   2 +-
+> tools/perf/tests/shell/probe_vfs_getname.sh   |   2 +-
+> .../shell/record+script_probe_vfs_getname.sh  |   2 +-
+> tools/perf/tests/shell/record.sh              |   2 +-
+> tools/perf/tests/shell/record_lbr.sh          |   2 +-
+> tools/perf/tests/shell/record_offcpu.sh       |   2 +-
+> tools/perf/tests/shell/stat_all_pmu.sh        |   2 +-
+> tools/perf/tests/shell/stat_bpf_counters.sh   |   2 +-
+> tools/perf/tests/shell/test_arm_coresight.sh  |   2 +-
+> .../tests/shell/test_arm_coresight_disasm.sh  |   2 +-
+> tools/perf/tests/shell/test_arm_spe.sh        |   2 +-
+> tools/perf/tests/shell/test_data_symbol.sh    |   2 +-
+> tools/perf/tests/shell/test_intel_pt.sh       |   2 +-
+> .../perf/tests/shell/test_stat_intel_tpebs.sh |   2 +-
+> .../tests/shell/trace+probe_vfs_getname.sh    |   2 +-
+> tools/perf/tests/task-exit.c                  |   9 +-
+> tools/perf/tests/tests-scripts.c              |   7 +-
+> tools/perf/tests/tests.h                      |   9 +
+> tools/perf/util/color.h                       |   1 +
+> 27 files changed, 367 insertions(+), 145 deletions(-)
+>=20
+> --=20
+> 2.47.0.163.g1226f6d8fa-goog
+>=20
 
- - Future calls to unwind_user_deferred() see the task cookie is set and
-   reuse the same cookie.
-
- - Then the task work (which runs right before exiting the kernel)
-   clears the task cookie (with interrupts disabled), does the unwind,
-   and calls the callbacks.  It clears the task cookie so that any
-   future calls to unwind_user_deferred() (either before exiting the
-   kernel or after next entry) are guaranteed to get an unwind.
-
-That's what I had implemented originally.  It had a major performance
-issue, particularly for long stacks (bash sometimes had 300+ stack
-frames in my testing).
-
-The task work runs with interrupts enabled.  So if another PMU interrupt
-and call to unwind_user_deferred() happens after the task work clears
-the task cookie but before kernel exit, a new cookie is generated and an
-additional task work is scheduled.  For long stacks, performance gets
-really bad, dominated by all the extra unnecessary unwinding.
-
-So I changed the design a bit:
-
-  - Increment a per-cpu counter at kernel entry before interrupts are
-    enabled.
-
-  - In unwind_user_deferred(), if task cookie is 0, it sets the task
-    cookie based on the per-cpu counter, like before.  However if this
-    cookie was the last one used by this callback+task, it skips the
-    callback altogether.
-
-So it eliminates duplicate unwinds except for the CPU migration case.
-
-If I change the entry code to increment a per-task counter instead of a
-per-cpu counter then this problem goes away.  I was just concerned about
-the performance impacts of doing that on every entry.
-
--- 
-Josh
