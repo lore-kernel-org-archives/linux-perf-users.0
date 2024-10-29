@@ -1,170 +1,116 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4EE1946C3
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Oct 2024 15:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7C71CD2B;
+	Tue, 29 Oct 2024 16:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730215563; cv=none; b=gUBikrD0nQ2eWm7TPuSK1bsmBz2APEDUBbO6sD9zlQPnegD6/1zMNnnAgAZK2/jU6sE1sQoudZHDdcWb04l6OoicmWCmzq6fmLtynqTdsXtf/WiA/kw+d07NpreLH6WqyaJld2o8F5dmlwCMeYKLxht3z5/kCEwj3kX0xGZE6rA=
+	t=1730219473; cv=none; b=PXXl9UCYdSqrtpL2O9fuYlXWhQmw16D/06oqWTIIfgiO+QqnwvEEae3TOhSqUqDRB3oDqfF1lD1cR5eUUhBYqmEoAT+WqJpI+fbeVY0PDkc37+t30DcrmBNGmKi2AXtkfrMS2eH1r38GpxjeP2XcxA0ZfqGf9hk8mE8mZm+3fz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730215563; c=relaxed/simple;
-	bh=mSg29KZw+GOimcMkuIU6s6KhSVXuo7YNDY8XrBlkOEQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hxlSOR9xpbBwOBf/UwG92APJqmelasIrYd2pGm1NV/vWj7sPoNWgq9coln8sViKbHVhQPn8n9WA4IPeXFkenAnvcOVy3FXhsyDaajGaG3/yQUIacpbmEST94KN/pF2CzqCwx9BpMl5mfVAQiGyVk1vEDCxCPdxA8ry0rFgvOYM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sCxamihW; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1730219473; c=relaxed/simple;
+	bh=T5XAEMTGYNcVrVOLqsPspj87vONbe6l/2fmCiUAEOec=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K14i0fFYKR28rkgfZTpOaSm90nGkmDKntgM5REUtIq7kgwHAPWW9YeC2J2RbFPABhtcHx+APWyKQ2Uxru9sa7qkNq8urLwKECw3ebbs7pSw5rHOcDv602+PoMM09+nrM8cEqpgYwG0KI/2SQ3cDKvDCkMp8rnd1pbfachCOzoY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRA+bTJk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sCxamihW"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3a4e4776f79so179205ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Oct 2024 08:26:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730215560; x=1730820360; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qbldlQCFGYCFcl+t52QFfn7I9GA9OY/QsBJTXt81BAA=;
-        b=sCxamihW+oreDBDzWlOZbpXYfY7MXS03/MvNs0gd1HL1/PYAfZvoopL6iz1a2qGmUN
-         lv/fJ073tPxkVIz3Yicl6L2yUnXYc1VZ8rw07br4FrqsF6HpPcgdpXnhYFI+KtpSgrz7
-         4kIbvLXuNJ2/RmJZRbG954JWy6KS0irFxIyVD1USHvZ19YlXlTqTlynH/LXypn8xhBA7
-         MrcWM8Z6JV1lhenC72rMc/38F2Kd1kCn3l90L1WxVlABCQtXs+jY2ScKMI3yyurR2HwI
-         JCy10eQ6OVpgEX91dkrUFwsK3P9knb9S1G37JkF9ckldXdANGDT1wkTG5nYiixn4V4mh
-         HSLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730215560; x=1730820360;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qbldlQCFGYCFcl+t52QFfn7I9GA9OY/QsBJTXt81BAA=;
-        b=ifWR8AMWMuS5StbzUlsNYGSIi4921h/q3nOLLlW1M7Vdtm92grKG3Y9o2DXrntB+rU
-         oj7Fumaq40v3H2YbXpaHbSOvrE/7X+MUV0opiQUL3DPwrDD8M4YOE1lLqzBdjdBVwrjF
-         ne3IlNsGVZF+qj1NXXKW/QCUcENsEkaOBc1SbQlYY9BvxAo45V1gIjPQ6FunfN/7aZuw
-         9pzdOLfWU5b/QDthcc6jN16ZEpMvUkCwckAaeGFA5CLsUFFzKObdd9KIuSE4Cy4nnJ3D
-         Z1g0HV02Ct8WvIHTCV/WbJVM6UKYt2ubrcEDrDHqQFvUklVBa6LDb04Hju9Xc2tC6IRk
-         kfZw==
-X-Gm-Message-State: AOJu0YyFke5jrDydMD1MdQcb0AaegswkK7giHCgNSxmE7iU9tk8oBE+F
-	NbUwJharn/UI62iC10Q+SA30YhJqaYLNyzcPbL+B2oQk83QtiNukgk/7vO8Lnd2yuWq8+j5wzLl
-	6KFFAaUQN2pYYxJnPs06AAcurfhGsYnMwTcv/xCI/AghfwSVn1MGIId0=
-X-Gm-Gg: ASbGncv8rSH+nMEkkOt0oQQLzKzUfzwHcJdH4cpe1m00j2IpmWtv6pJz+aAV5LT1+fL
-	WdKxS3FLuJ6Em65SZA6ZwUBmdzrtbx74+BHjb9aA07oHB4/+T8JmL0U524uit2lmB
-X-Google-Smtp-Source: AGHT+IFvrmt/FS7+vhebrqGGHEMe/yzuAr4QA+ywuAtV+Y2wTfuY7IkOdY6/yV/Uxztv6DejR2Br275D6zUjVMisJbE=
-X-Received: by 2002:a05:6e02:3d88:b0:3a0:9f85:d74a with SMTP id
- e9e14a558f8ab-3a509beefb2mr4104595ab.14.1730215560106; Tue, 29 Oct 2024
- 08:26:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRA+bTJk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 389F9C4CECD;
+	Tue, 29 Oct 2024 16:31:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730219473;
+	bh=T5XAEMTGYNcVrVOLqsPspj87vONbe6l/2fmCiUAEOec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gRA+bTJkPChYft7mJH/fttEGyuL/avIx6PC3/oQF58O21C8JtC17Q3KIItH1XcG+m
+	 gilh4aN1R8Y/bDcx/kI4EGT1tzBxw4QJqAyl7QCA3XvDFJVco5H2k/rDlvInahd4TX
+	 h4DMuXV5eWMlOO6zExkKG+xWitcditJEBFZs4AfelkVy2b6TJlaYLQQRi+pj7e6D5B
+	 uH4vTTcNXjCGLxIqdL1ghA87VzYaPSuW3yZi81SOjHG1eX4SHEB1an7Pc/V4QRe+lc
+	 M6rLHD9uk3gatD9yahIx3jTecIKwilJ436SclrYjRMb5QXAu3WPN644/4lh7QcAVit
+	 D7pw0OfQcoFcQ==
+Date: Tue, 29 Oct 2024 09:31:10 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 08/19] unwind/x86: Enable CONFIG_HAVE_UNWIND_USER_FP
+Message-ID: <20241029163110.xf5o2bvfbfcenlla@treble.attlocal.net>
+References: <cover.1730150953.git.jpoimboe@kernel.org>
+ <2354d43022bd336c390e1e77f7cee68126d5f8c8.1730150953.git.jpoimboe@kernel.org>
+ <20241029131303.GW14555@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241029144347.25651-1-vmolnaro@redhat.com>
-In-Reply-To: <20241029144347.25651-1-vmolnaro@redhat.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 29 Oct 2024 08:25:46 -0700
-Message-ID: <CAP-5=fWAH1qzLrFhVjrJBu33NSfqktM30thUohC-zA+94_sf_g@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Parse perf stat Topdown events for aarch64
-To: vmolnaro@redhat.com
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com, 
-	mpetlan@redhat.com, peterz@infradead.org, mingo@redhat.com, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.co, kan.liang@linux.intel.com, 
-	yangyicong@hisilicon.com, tim.c.chen@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241029131303.GW14555@noisy.programming.kicks-ass.net>
 
-On Tue, Oct 29, 2024 at 7:44=E2=80=AFAM <vmolnaro@redhat.com> wrote:
->
-> From: Veronika Molnarova <vmolnaro@redhat.com>
->
-> The 'perf stat' output on aarch64 machines with topdown events wasn't
-> counted for in the 'perf stat STD output linter' test case. Add the
-> topdown metric to the skip_metric list as it is done for topdown events
-> on other systems.
->
-> The Topdown events are also disabled on aarch64 KVM guests because the
-> value of caps/slots is set to 0 due to the part of the system register
-> being a stub. This prevents the metric for the topdown events from being
-> computed, leaving the 'perf stat' topdown metric without any value at
-> all. Add the "TopdownL1" to the skip_metric list as well to handle this
-> possibility.
->
-> Before aarch64:
->
->     100: perf stat STD output linter:
->     --- start ---
->     test child forked, pid 403305
->     Checking STD output: no args Unknown event name in TopdownL1         =
-        #      4.3 percent of slots  slots_lost_misspeculation_fraction
->     ---- end(-1) ----
->     100: perf stat STD output linter                                     =
-: FAILED!
->
-> Before aarch64 KVM:
->
->     100: perf stat STD output linter:
->     --- start ---
->     test child forked, pid 404671
->     Checking STD output: no args Unknown event name in TopdownL1
->     ---- end(-1) ----
->     100: perf stat STD output linter                                     =
-: FAILED!
->
-> After:
->
->     100: perf stat STD output linter:
->     --- start ---
->     test child forked, pid 404777
->     Checking STD output: no args [Success]
->     Checking STD output: system wide [Success]
->     Checking STD output: interval [Success]
->     Checking STD output: per thread [Success]
->     Checking STD output: per node [Success]
->     Checking STD output: system wide no aggregation [Success]
->     Checking STD output: per core [Success]
->     Checking STD output: per cache instance [Success]
->     Checking STD output: per cluster [Success]
->     Checking STD output: per die [Success]
->     Checking STD output: per socket [Success]
->     ---- end(0) ----
->     100: perf stat STD output linter                                     =
-: Ok
->
-> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
->
-> ---
->  tools/perf/tests/shell/stat+std_output.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests=
-/shell/stat+std_output.sh
-> index cbf2894b2c846a04..0f7967be60afdc7d 100755
-> --- a/tools/perf/tests/shell/stat+std_output.sh
-> +++ b/tools/perf/tests/shell/stat+std_output.sh
-> @@ -13,7 +13,7 @@ stat_output=3D$(mktemp /tmp/__perf_test.stat_output.std=
-.XXXXX)
->
->  event_name=3D(cpu-clock task-clock context-switches cpu-migrations page-=
-faults stalled-cycles-frontend stalled-cycles-backend cycles instructions b=
-ranches branch-misses)
->  event_metric=3D("CPUs utilized" "CPUs utilized" "/sec" "/sec" "/sec" "fr=
-ontend cycles idle" "backend cycles idle" "GHz" "insn per cycle" "/sec" "of=
- all branches")
-> -skip_metric=3D("stalled cycles per insn" "tma_" "retiring" "frontend_bou=
-nd" "bad_speculation" "backend_bound")
-> +skip_metric=3D("stalled cycles per insn" "tma_" "retiring" "frontend_bou=
-nd" "bad_speculation" "backend_bound" "TopdownL1" "percent of slots")
+On Tue, Oct 29, 2024 at 02:13:03PM +0100, Peter Zijlstra wrote:
+> On Mon, Oct 28, 2024 at 02:47:35PM -0700, Josh Poimboeuf wrote:
+> > Use ARCH_INIT_USER_FP_FRAME to describe how frame pointers are unwound
+> > on x86, and enable CONFIG_HAVE_UNWIND_USER_FP accordingly so the
+> > unwind_user interfaces can be used.
+> > 
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> > ---
+> >  arch/x86/Kconfig                   |  1 +
+> >  arch/x86/include/asm/unwind_user.h | 11 +++++++++++
+> >  2 files changed, 12 insertions(+)
+> >  create mode 100644 arch/x86/include/asm/unwind_user.h
+> > 
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index 0bdb7a394f59..f91098d6f535 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -289,6 +289,7 @@ config X86
+> >  	select HAVE_SYSCALL_TRACEPOINTS
+> >  	select HAVE_UACCESS_VALIDATION		if HAVE_OBJTOOL
+> >  	select HAVE_UNSTABLE_SCHED_CLOCK
+> > +	select HAVE_UNWIND_USER_FP		if X86_64
+> >  	select HAVE_USER_RETURN_NOTIFIER
+> >  	select HAVE_GENERIC_VDSO
+> >  	select VDSO_GETRANDOM			if X86_64
+> > diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
+> > new file mode 100644
+> > index 000000000000..19df26a65132
+> > --- /dev/null
+> > +++ b/arch/x86/include/asm/unwind_user.h
+> > @@ -0,0 +1,11 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _ASM_X86_UNWIND_USER_H
+> > +#define _ASM_X86_UNWIND_USER_H
+> > +
+> > +#define ARCH_INIT_USER_FP_FRAME							\
+> > +	.ra_off		= (s32)sizeof(long) * -1,				\
+> > +	.cfa_off	= (s32)sizeof(long) * 2,				\
+> > +	.fp_off		= (s32)sizeof(long) * -2,				\
+> > +	.use_fp		= true,
+> > +
+> > +#endif /* _ASM_X86_UNWIND_USER_H */
+> 
+> What about compat / 32bit userspace?
 
-I saw similar issues and sent:
-https://lore.kernel.org/lkml/20240417183219.1208493-1-irogers@google.com/
-but got distracted. A difference there is automating the generation of
-the skip_metric list rather than hard coding it. Hard coding may be
-the most pragmatic thing to do in the near term.
+Sframe doesn't support 32-bit binaries at the moment.  Does anybody
+actually care?
 
-Thanks,
-Ian
+You're right this regresses existing perf behavior for the frame pointer
+case.  I'll try to fix that.
 
->  cleanup() {
->    rm -f "${stat_output}"
-> --
-> 2.43.0
->
+-- 
+Josh
