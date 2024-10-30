@@ -1,157 +1,139 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DDD87489
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2024 02:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9132187FE4
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2024 02:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730256343; cv=none; b=edfNhzKzzKiGnsuf/NaEBFAm0g1+uuNfc06XDFY4YPCqx4P7zxqXy21TsC4kY+Gl0rUKt1x9Vm73DIRWguhqPZ1lFo4tFuv2nPK4+BnGquonCK338q7HCXCuvRCT693ZwSixyVMzRzqLAdxwjhCPAOQHckUxfZ7S0tqmckNKASA=
+	t=1730256359; cv=none; b=NUP9Ol8J3MO6+Mif7kjW6X6HiRcaUAEG542eNn9XwNV6og+eiK2vSEddztlAMTIwnU6re1JhJ7R5OqGAksbbD1kWi6ipaBLbe4ODLAUYj5q6pOsRI3KZ/pqrsamffCryt0TLXoIW+VlHP27nfSA7bejjsKM92Jod7by29AeJzC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730256343; c=relaxed/simple;
-	bh=BN0fMx46VXTzuiutOEuMnPGnMLAB0k3T+4RsPuGzPs8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t2mGM2cyZaTR5l/+6a/5FZHbafSVjpcLInHkMFounSJSDrxVHDzCtqi+BNIkXtumhfzZg0CEMH+sP4FY9N7Fh1u2rubiWfqz6Jo7FiBG78fpE1054fh+oJ0X6S8uXFrKFDGx9y/o2xgBK9IC/Yqjc49hZDlKu3guyL8mJM3uKfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FvcUKlLk; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FvcUKlLk"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3a4e54d3cefso108545ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Oct 2024 19:45:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730256340; x=1730861140; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CvvnEelLqLmapO0x0c3RWR/JLiOjk0uX66oljX30Htg=;
-        b=FvcUKlLkM6LGiittVx7Rli3t416TkMnrVoVfV753sltNkzsCZjKqYziKR5owhLHMs9
-         vKRTxyLoKrDLcR5I1wqlQ44f613vESiMvt6V6y9bPyDQmM0n9k2Vviyzq28WsWvTtxoB
-         uo+s7IJ4lEap0pDH+vLve6YRweOtwJrlnqbL09l9zk5Rjwsq7g9Dp/c/h5y0r4S+GUha
-         MkqR4Uo0U2QlhiWGORwvx6BQz5rqHOX/aESdcobMcDFyUwYMm0n+J4iSzn0J0nOhBHsg
-         N/q6pKon/uGYTw1fs85FjCKAkmIHW4Y77EjiNNZ+d7dYgadcUmjfZnQnJiwVwzw5HGyp
-         zf6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730256340; x=1730861140;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CvvnEelLqLmapO0x0c3RWR/JLiOjk0uX66oljX30Htg=;
-        b=hWPUvvoDWudXBSdf21VdSL2Q2NbzJVUWpbKT1J0wFhuxwG+4Le/IqmAQ7U3J16Bcui
-         art41jV7Qszsjqoi9TZYcNs0ThI1f+R2x603jiJvAPoSORmvsL95CK528pHmfUEocyHk
-         kEHJh5Z+W2C5sSD/zxkuAPUtKXblE9dh0fzThtme8SsgAjU8RvEAYOXGAZNoZiLz4JLG
-         m5jXs1ml7+4KUHO/ZyFe9DmHxqNC7ODgZA0ZbNWu29v8CgAD2GiHiCYUHmTjdmAq8mR1
-         Y7I11Fafg1eS1MGI9z/k5qwmtMn/HlQbqEqWjzG2Ez1Efwz8puyRTH4ln2cjdZo+WAwJ
-         VwMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBRGUDpZ8of1rvhS1B+BZPNbEemlyaWTY0H5v/Uz1Iqen7aCfKNAI888cPmkq+vJKDqu734DjwQqX3HveT7g4m@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJUPN2xQhzELZEolbT81GGEGotRAFtRh/SY4fAT32ifQSDgEY2
-	kW4/Kg4GJweWJq9tFYa2g0xHVgcMAbnl77JynZR0OS+kZz3GN6yv08M5fEUkjb4bqnJYBfHlNM+
-	RajmdU0wKeoG4J302ook7WLR3HnJJmvVCHxYtedlgEFZ5TKrBwmAK
-X-Gm-Gg: ASbGncsizMYjYBZgyu0a0LaLs/AzE1WfDqcZ78aBBSyMsQ5zp5zz5RJccElNw437QOp
-	lTnWvPPT90j3+0+tN3xH7ueRnXb0DbWy2
-X-Google-Smtp-Source: AGHT+IGJtjwJHAQsSLgiWc5Li3w18zYO/PzbZ+kAbilKcgZZ5rvAE4pC+0zbV7W/oHUrm0RGdQr3vvEFSZNivzhE3z8=
-X-Received: by 2002:a05:6e02:1d1b:b0:3a3:f86f:2d1f with SMTP id
- e9e14a558f8ab-3a50b47f5e5mr6322215ab.23.1730256340327; Tue, 29 Oct 2024
- 19:45:40 -0700 (PDT)
+	s=arc-20240116; t=1730256359; c=relaxed/simple;
+	bh=t525uk5UWlE76ONcjXQt5v06PNoUYs+MyqvcfGngJUU=;
+	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=m0fhAqTWvD8L39L2zRdl0b8czq8IeUfD3aBbAC1iCZEOpjzWcg0Of3QoH7R4rHW+vVjRwfi2aJHWkoHcZMzsz+VZMKV5fEaAL6jayT8tZwz9PmglcXISJKgr+BXFqjmLlxYN5vNTZZwSB/ufSNFyQ5fCK99irdPw5IgVmg7R0FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4XdWhj0nl9z1ync6;
+	Wed, 30 Oct 2024 10:45:57 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7607B1402E1;
+	Wed, 30 Oct 2024 10:45:48 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Wed, 30 Oct 2024 10:45:47 +0800
+CC: <yangyicong@hisilicon.com>, <acme@kernel.org>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <linux-perf-users@vger.kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <leo.yan@arm.com>,
+	<amadio@gentoo.org>, <linuxarm@huawei.com>
+Subject: Re: [PATCH] perf build: Add missing cflags when building with custom
+ libtraceevent
+To: Namhyung Kim <namhyung@kernel.org>
+References: <20241024133236.31016-1-yangyicong@huawei.com>
+ <ZyF5_Hf1iL01kldE@google.com>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <a8143fa2-d7e2-48d7-5c9b-2c00e2adbe9c@huawei.com>
+Date: Wed, 30 Oct 2024 10:45:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241025090307.59127-1-james.clark@linaro.org>
- <20241025090307.59127-3-james.clark@linaro.org> <ZyGA9cjrtbE_eWik@google.com>
-In-Reply-To: <ZyGA9cjrtbE_eWik@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 29 Oct 2024 19:45:26 -0700
-Message-ID: <CAP-5=fW=DfWK9qvrtxp7z+N7aELar2xMts_=twUjWbfEQ_9vHg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf stat: Also hide metric from JSON if units are an
- empty string
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	acme@kernel.org, tim.c.chen@linux.intel.com, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZyF5_Hf1iL01kldE@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-On Tue, Oct 29, 2024 at 5:42=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
+On 2024/10/30 8:12, Namhyung Kim wrote:
 > Hello,
->
-> On Fri, Oct 25, 2024 at 10:03:05AM +0100, James Clark wrote:
-> > We decided to hide NULL metric units rather than showing it as "(null)"=
-,
-> > but on hybrid systems if the process doesn't hit a PMU you get an empty
-> > string metric unit instead. To make it consistent also remove empty
-> > strings.
-> >
-> > Note that metric-threshold is already hidden in this case without this
-> > change.
-> >
-> > Where a process only runs on cpu_core and never hits cpu_atom:
-> > Before:
-> >  $ perf stat -j -- true
-> >  ...
-> >  {"counter-value" : "<not counted>", "unit" : "", "event" : "cpu_atom/b=
-ranch-misses/", "event-runtime" : 0, "pcnt-running" : 0.00, "metric-value" =
-: "0.000000", "metric-unit" : ""}
-> >  {"counter-value" : "6326.000000", "unit" : "", "event" : "cpu_core/bra=
-nch-misses/", "event-runtime" : 293786, "pcnt-running" : 100.00, "metric-va=
-lue" : "3.553394", "metric-unit" : "of all branches", "metric-threshold" : =
-"good"}
-> >  ...
->
-> I guess you're talking about "metric-unit", not plain "unit", right?
-> Then please update the subject line to reduce the config.
->
-> Ian, can you please review?
+> 
+> On Thu, Oct 24, 2024 at 09:32:36PM +0800, Yicong Yang wrote:
+>> From: Yicong Yang <yangyicong@hisilicon.com>
+>>
+>> When building with custom libtraceevent, below errors occur:
+>> $ make -C tools/perf NO_LIBPYTHON=1 PKG_CONFIG_PATH=<custom libtraceevent>
+>> In file included from util/session.h:5,
+>>                  from builtin-buildid-list.c:17:
+>> util/trace-event.h:153:10: fatal error: traceevent/event-parse.h: No such file or directory
+>>   153 | #include <traceevent/event-parse.h>
+>>       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+>> <snip similar errors of missing headers>
+>>
+>> This is because the include path is missed in the cflags. Add it.
+>>
+>> Fixes: 0f0e1f445690 ("perf build: Use pkg-config for feature check for libtrace{event,fs}")
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> ---
+>> Another problem occurs when building on my old Ubuntu 18.04.1 (4.15 kernel)
+>> is that linux/mount.h (which is introduced in the later kernel version) is
+>> missing. It's included in tools/include/uapi/linux/fs.h which header is
+>> introduced recently. Does it make sense to have a copy of mount.h in tools/include?
+>>
+>>  tools/perf/Makefile.config | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+>> index 4ddb27a48eed..53fc5f787a77 100644
+>> --- a/tools/perf/Makefile.config
+>> +++ b/tools/perf/Makefile.config
+>> @@ -1194,7 +1194,7 @@ endif
+>>  ifneq ($(NO_LIBTRACEEVENT),1)
+>>    $(call feature_check,libtraceevent)
+>>    ifeq ($(feature-libtraceevent), 1)
+>> -    CFLAGS += -DHAVE_LIBTRACEEVENT
+>> +    CFLAGS += -DHAVE_LIBTRACEEVENT $(shell $(PKG_CONFIG) --cflags libtraceevent)
+> 
+> Does this solve the problem?  On my machine, it returns this:
+> 
+>   $ pkg-config --cflags libtraceevent
+>   -I/usr/include/traceevent 
+> 
+>   $ ls /usr/include/traceevent/
+>   event-parse.h  event-utils.h  kbuffer.h  trace-seq.h
+> 
+> So the include path should be "/usr/include" or we should include
+> <event-parse.h> directly.  We may update the every include statements
+> but just curious how it solved your problem.
+> 
 
-It'd be nice to see the stack trace for when metric-unit is "" as I'm
-not seeing the logic in stat-shadow.c. If we know the caller than it
-seems logical the unit can be passed as NULL rather than "".
+I think you're right, we should use the path according to the pkg-config outputs.
+But it's a different problem, for me it's due to the missing of the include path
+(my libtraceevent is not under the system path). With the fix you proposed and drop
+the change in my patch:
 
-Thanks,
-Ian
+$ PKG_CONFIG_PATH=/home/yangyicong/Community/libtraceevent/install/usr/local/lib/aarch64-linux-gnu/pkgconfig/ pkg-config --cflags-only-I libtraceevent
+-I/home/yangyicong/Community/libtraceevent/install/usr/local/include/traceevent
+$ PKG_CONFIG_PATH=/home/yangyicong/Community/libtraceevent/install/usr/local/lib/aarch64-linux-gnu/pkgconfig/ make -C tools/perf NO_LIBPYTHON=1
+In file included from bench/../util/session.h:5,
+                 from bench/synthesize.c:12:
+bench/../util/trace-event.h:153:10: fatal error: event-parse.h: No such file or directory
+  153 | #include <event-parse.h>
+      |
+[...]
+
+Checked how we handle with libtracefs currently:
+ ifeq ($(feature-libtracefs), 1)
+    CFLAGS +=  $(shell $(PKG_CONFIG) --cflags libtracefs) # we've added the cflags from pkg-config
+    LDFLAGS += $(shell $(PKG_CONFIG) --libs-only-L libtracefs)
+
+Thanks.
 
 > Thanks,
 > Namhyung
->
-> >
-> > After:
-> >  ...
-> >  {"counter-value" : "<not counted>", "unit" : "", "event" : "cpu_atom/b=
-ranch-misses/", "event-runtime" : 0, "pcnt-running" : 0.00}
-> >  {"counter-value" : "5778.000000", "unit" : "", "event" : "cpu_core/bra=
-nch-misses/", "event-runtime" : 282240, "pcnt-running" : 100.00, "metric-va=
-lue" : "3.226797", "metric-unit" : "of all branches", "metric-threshold" : =
-"good"}
-> >  ...
-> >
-> > Signed-off-by: James Clark <james.clark@linaro.org>
-> > ---
-> >  tools/perf/util/stat-display.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-disp=
-lay.c
-> > index a5d72f4a515c..9b7fd985a42a 100644
-> > --- a/tools/perf/util/stat-display.c
-> > +++ b/tools/perf/util/stat-display.c
-> > @@ -506,7 +506,7 @@ static void print_metric_json(struct perf_stat_conf=
-ig *config __maybe_unused,
-> >       struct outstate *os =3D ctx;
-> >       FILE *out =3D os->fh;
-> >
-> > -     if (unit) {
-> > +     if (unit && strlen(unit)) {
-> >               json_out(os, "\"metric-value\" : \"%f\", \"metric-unit\" =
-: \"%s\"", val, unit);
-> >               if (thresh !=3D METRIC_THRESHOLD_UNKNOWN) {
-> >                       json_out(os, "\"metric-threshold\" : \"%s\"",
-> > --
-> > 2.34.1
-> >
+> 
+> 
+>>      LDFLAGS += $(shell $(PKG_CONFIG) --libs-only-L libtraceevent)
+>>      EXTLIBS += $(shell $(PKG_CONFIG) --libs-only-l libtraceevent)
+>>      LIBTRACEEVENT_VERSION := $(shell $(PKG_CONFIG) --modversion libtraceevent).0.0
+>> -- 
+>> 2.24.0
+>>
+> .
+> 
