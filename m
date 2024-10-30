@@ -1,42 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8F9190665
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Oct 2024 23:59:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A71929408
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2024 00:02:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730246395; cv=none; b=thydHE50Ok8gUtCUnPWebpS/4yDUdvplhxgSQShwVyN8rb4bfX9cZZzAxWhFgIdi7lRZEyebaBsIQJqzzDKcEEsxi28dpJQ0s8ZhPwAmMia4h8saRLYbbY+/SOaF2vO59IKZQBpozgPPwk/sl46ZqskxmtXbvER10NnIY6Nfxqc=
+	t=1730246550; cv=none; b=oAaCjvpnRuVjsBSMV2I1GqEka9kOwgoiag/gVxgg0/Jr3gw2Ak9zgaXOYFbd9QvgYLA1lqSg2nOq5ZNw8sBfyUtbUbmkNoPQGY9Tf7x/PGt6/ymQDoIaw++W2qdSN7cmp40fiebpRpPpg+tNDhYjd0jdPz1P18p0WrbmRjZPKGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730246395; c=relaxed/simple;
-	bh=3PGjG05cL0ib9NjJ+m7Zaogil8o/zoAM1qJXs34+Osw=;
+	s=arc-20240116; t=1730246550; c=relaxed/simple;
+	bh=dKfzn9NMhn6EAv6UHq/Cgsx6lIipgiH1d6754fcZxIs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LaafA0MD57trDr2gBIYufwnv4321NQn3drinh+HCZV3REa4aeA7RqUy4FfinIX4PKEP9vqXcrYk/aMtPfj23SUCOth2d3EeL0w0SOXmmgrXWZtzJfwkX2SxvV4lRFEFIcmGViToFHn73TVV07BVK8+HBXiF8VtVLcNMew1/vmBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DQlFkpVL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=s773EKMh4zo5LHEfc7QWG2MIq1SXQsf1pzmBOY7ImsXglHcN0Ac8SmX5f+cs7H/GnGCKpUvs0Ss7P1ASRoMyYzlJVJjN+1C4GhvCWa1vPnm6KAJhlDF9ZqXg6o5iqwlU6dg9nL47TJvIEGxj8W1qIizoa8WhgbfEXpI/2hCSGoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RLMHTJV4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQlFkpVL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2253C4CEE3;
-	Tue, 29 Oct 2024 23:59:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RLMHTJV4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DA6BC4CEE3;
+	Wed, 30 Oct 2024 00:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730246395;
-	bh=3PGjG05cL0ib9NjJ+m7Zaogil8o/zoAM1qJXs34+Osw=;
+	s=k20201202; t=1730246549;
+	bh=dKfzn9NMhn6EAv6UHq/Cgsx6lIipgiH1d6754fcZxIs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DQlFkpVL86I8W/Qkkhs89NgOwBqRFkbkYxuZ2284KfOH+pIyfrLm7MEyh+tojwlZ5
-	 jSkCVNeVDDv4KV6VA0Edpi3esGjjos0qicuIWlhKsQd8hP5PyLCfhREv1LTLRjrAJ9
-	 u8KKrCqsOaYSUcm55ifenkmlf17Dvpk9lTXHhNo599Jm/zFfIQcXQtl2AFcAsYKj+N
-	 ZdPfQcjg8XUlXDtm8/2McpxeYfSJuM3Dj7uLraIxC9tFFE9Br+ThX7waHLqb65YH3l
-	 Ci7d9pJ4yu7Lmb9lYhlUH20vEEWk+DokQsQWVoKtUV2m62HnVhf4IG4LCbhixL7mgZ
-	 SO01mdlmm5luw==
-Date: Tue, 29 Oct 2024 16:59:53 -0700
+	b=RLMHTJV43RnxXVmFAMOxjCKlVxeMATQFuT9j51hfyLfbdijfXtDPGgNdiKsSDyRc7
+	 PyPjmM1+EHA144rmOZ2apEIFU0yvgobayAQ5KoGJfXiTRSAlhnxuZ0a/4b+TSL/anQ
+	 AY0R/0Un68SRyzaUEvrxj00EVSw4uxCDcRBHbE2Q7JrGSATvDoPY636d2T7AkpFvwR
+	 2hytKndKXgIH45YzaG3GKtOCbp5iXjJPBJNsO1SnUN9r23sodixKeir6lfjosSOxSZ
+	 UMgE0YXM58fTsC5qeaKnzk5SYcSXciScTEUhpwV9vGVJrPkxgsGEPQxZhfzbUA+hP3
+	 hrtbzR9aGpIYQ==
+Date: Tue, 29 Oct 2024 17:02:27 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, irogers@google.com
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
-Subject: Re: [PATCH] tools/perf/tests/expr: Make the system_tsc_freq test
- only for intel
-Message-ID: <ZyF2-XNUh38p_5Gg@google.com>
-References: <20241022140156.98854-1-atrajeev@linux.vnet.ibm.com>
+To: laksono <laksono@gmail.com>, Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: Intel SPR: perf-record doesn't support topdown events?
+Message-ID: <ZyF3k__jUtRUAcWm@google.com>
+References: <CALwKgup1UhiKMHvEni_3gaWoC0BLu8kkT6R=7R=b-LkBx5_3ZA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,76 +41,40 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241022140156.98854-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <CALwKgup1UhiKMHvEni_3gaWoC0BLu8kkT6R=7R=b-LkBx5_3ZA@mail.gmail.com>
 
 Hello,
 
-On Tue, Oct 22, 2024 at 07:31:56PM +0530, Athira Rajeev wrote:
-> The "Simple expression parser" test fails on powerpc
-> as below:
-> 
->  parsing metric: #system_tsc_freq
->  Unrecognized literal '#system_tsc_freq'literal: #system_tsc_freq = nan
->  syntax error
->  FAILED tests/expr.c:247 #system_tsc_freq
->  ---- end(-1) ----
->  7: Simple expression parser  : FAILED!
-> 
-> In the test, system_tsc_freq is checked as below:
-> 
->  if (is_intel)
->     TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
->  else
-> 
-> But commit 609aa2667f67 ("perf tool_pmu: Switch to standard
-> pmu functions and json descriptions")' changed condition in
+Adding Kan to the circle.
 
-Probably need to put it as Fixes: tag.
-
-
-> tool_pmu__skip_event so that system_tsc_freq event should
-> only appear on x86
+On Tue, Oct 22, 2024 at 11:40:25AM -0500, laksono wrote:
+> All,
 > 
->  +#if !defined(__i386__) && !defined(__x86_64__)
->  +       /* The system_tsc_freq event should only appear on x86. */
->  +       if (strcasecmp(name, "system_tsc_freq") == 0)
->  +               return true;
->  +#endif
+> I am interested in using Intel TMA support in Linux perf. I can run
 > 
-> After this commit, the testcase breaks for expr__parse of
-> system_tsc_freq in powerpc case. Fix the testcase to have
-> complete system_tsc_freq test within "is_intel" check.
+> $ perf stat -e '{slots,topdown-be-bound}' ...
+> 
+> on Intel SPR with no problem, but running with perf record doesn't work:
+> 
+> $ perf record -e '{slots,topdown-be-bound}' ...
+> Error:
+> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+> for event (topdown-be-bound).
+> 
+> I suspect MSR_PERF_METRICS cannot be used in the perf_event sampling
+> mode. Could someone (probably from Intel) confirm?
 
-Ian, are you ok with this?
+I guess you need the leader sampling with 'S' modifier.
+
+  $ perf record -e '{slots,topdown-be-bound}:S' ...
 
 Thanks,
 Namhyung
 
+
 > 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/perf/tests/expr.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+> My Linux kernel: 5.15.0-86-generic #96-Ubuntu (just in case this matters).
 > 
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index e3aa9d4fcf3a..eb3bd68fc4ce 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -244,11 +244,10 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
->  	if (num_dies) // Some platforms do not have CPU die support, for example s390
->  		TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
->  
-> -	TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&val, ctx, "#system_tsc_freq") == 0);
-> -	if (is_intel)
-> +	if (is_intel) {
-> +		TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&val, ctx, "#system_tsc_freq") == 0);
->  		TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
-> -	else
-> -		TEST_ASSERT_VAL("#system_tsc_freq == 0", fpclassify(val) == FP_ZERO);
-> +	}
->  
->  	/*
->  	 * Source count returns the number of events aggregating in a leader
-> -- 
-> 2.43.5
+> Regards
 > 
+> Laksono Adhianto
