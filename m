@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88892B67A
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2024 00:12:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371A21803A
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2024 00:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730247166; cv=none; b=P415n0dnBAWLWv1iYb5dwkOTbXdlFMwdZm5b2viFBAfq0B/WMTSgilB8iSYSinZoihJYcWs0wxd8gF/BNVJydxngtTFyC7hulLAeYdj0bzxLOcj9ZXpEFqipY6DD2Fk8RbLTsMQbErOGtvq/JYhh4U3HjnoP0n15f3uBIwUSa90=
+	t=1730248486; cv=none; b=FE7A904le4vbeZsh2jw2KV5zhr7UmLh+6A7yLcS3qvuYu2qIZyBuV8sAFmcBAMfzCQ8obADcYk4YGP9mgEpzYMuriMZJACvdp24wnbNc+3EVmfGvt+ae6RMmsrjMYolndPFE9PPBoSf5SmO4ESBYT1RDnKzUBafycb06LYKN1tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730247166; c=relaxed/simple;
-	bh=6FSxSs0N+w0IMw2J1BVVzx5+kbX2qhypm+vHthERTN0=;
+	s=arc-20240116; t=1730248486; c=relaxed/simple;
+	bh=VhZGgTuLSG5s5oNJVv4OLLVW4ghFMjZgHpQauMNgTJQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YxfNB3xeD4V0Gr5cMjT/ZHcDdsYpiQ2zUPDustQmynhZOgnRdd3Z3bUU58+aUgp1/g4UW+kQqGPR/n0iA0Qck4qT+3yIQpP3LGYiF7uxm1JZw4KnIODfDMGlX5BcG196dISrMiyPEb6CEddhjDNWarMAISMuuR2OXRMqaeFaim0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MY6o99ky; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GbNp05pLcc78dLbQeiW3Zb1IcxThnvbXrItiuat5feQpIede+kgDTGhnLEQWCRVWgZLP/dCNUihUBSpRFyQaslk+sMp/WmUnNmrB3YE25Fq6RqT1ezsAGK/qY/oAyHJ2rdEJUMrBLOlOlSFFGX1GP/l2nx7cu5xevmcxVahlMSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHiURzD2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MY6o99ky"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E72AC4CECD;
-	Wed, 30 Oct 2024 00:12:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHiURzD2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FE96C4CEE3;
+	Wed, 30 Oct 2024 00:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730247166;
-	bh=6FSxSs0N+w0IMw2J1BVVzx5+kbX2qhypm+vHthERTN0=;
+	s=k20201202; t=1730248485;
+	bh=VhZGgTuLSG5s5oNJVv4OLLVW4ghFMjZgHpQauMNgTJQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MY6o99kycNF/pEiS5TknFJjy6LHWDWheWlVOuj/y3KeogeOfJ2bMnSX0QztsIsFOW
-	 AOmLn4CHJzgJ70U+hmT0rnvQUeJ40JeXxC9EhzZFADUuLo0hy1QNAvuIkmqvaUTM2g
-	 Vo1gzvxdAE8roQfZ2PueUgz5sIkPCyLvnND4m1mPqj+SFtPjr8VXNcc2rZavu1E3jP
-	 BnUy3HfE9K7v8tsYSMvyqiObTkInsCmOzvimpVDYu27+/xJIjO9o79BCzPtUFU2LSa
-	 0jBrMXpcoJLNJmfyV/lGXR3H09Id+jrIkmeYjQvzB1v8suoPIZV5e/HGxd3MslYysu
-	 LW8engkiyEhrA==
-Date: Tue, 29 Oct 2024 17:12:44 -0700
+	b=iHiURzD2mdeh3mXlhYkoP54dH/eIagUjRruLokdwqsM6P2dYUFumNbUccpL0vDaw2
+	 onv18zbrErvvXjwOoSEIPgK8NQInvQ3BjAJ4yXNPU+0fzxfFVvuqG7H402o/BwTUdb
+	 mbqgv8vzGdDhFAuvgXY0LNnSqCS4WEkl5AUaF3lb3eRnF091G57iZo26KOdhQUnoZv
+	 je9OfivGcsBIBoqB5+t9lBxilQnhlSRhwgzh4I7w1+2kuxQt0QW9C+2qA90DhIZ4Vb
+	 zqygEj/eHKUIJiEU6Y9Qctxnt59/psXQ1YCrlFEQBRWR4rAdc8NuGcoY868S1C6dq/
+	 CV5HPDMZNkpUg==
+Date: Tue, 29 Oct 2024 17:34:44 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Yicong Yang <yangyicong@huawei.com>
-Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, leo.yan@arm.com, amadio@gentoo.org,
-	linuxarm@huawei.com, yangyicong@hisilicon.com
-Subject: Re: [PATCH] perf build: Add missing cflags when building with custom
- libtraceevent
-Message-ID: <ZyF5_Hf1iL01kldE@google.com>
-References: <20241024133236.31016-1-yangyicong@huawei.com>
+To: vmolnaro@redhat.com
+Cc: linux-perf-users@vger.kernel.org, mpetlan@redhat.com,
+	kan.liang@linux.intel.com, irogers@google.com, acme@redhat.com,
+	ak@linux.intel.com, alexander.shishkin@linux.intel.com
+Subject: Re: perf sched timehist --state vs perf script
+Message-ID: <ZyF_JDYF4wgEmbrW@google.com>
+References: <20241024163630.24882-1-vmolnaro@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,65 +43,52 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241024133236.31016-1-yangyicong@huawei.com>
+In-Reply-To: <20241024163630.24882-1-vmolnaro@redhat.com>
 
-Hello,
-
-On Thu, Oct 24, 2024 at 09:32:36PM +0800, Yicong Yang wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
+On Thu, Oct 24, 2024 at 06:36:30PM +0200, vmolnaro@redhat.com wrote:
+> From: Veronika Molnarova <vmolnaro@redhat.com>
 > 
-> When building with custom libtraceevent, below errors occur:
-> $ make -C tools/perf NO_LIBPYTHON=1 PKG_CONFIG_PATH=<custom libtraceevent>
-> In file included from util/session.h:5,
->                  from builtin-buildid-list.c:17:
-> util/trace-event.h:153:10: fatal error: traceevent/event-parse.h: No such file or directory
->   153 | #include <traceevent/event-parse.h>
->       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> <snip similar errors of missing headers>
+> Hello!
 > 
-> This is because the include path is missed in the cflags. Add it.
+> We encountered an issue with 'perf sched timehist --state' when
+> we expected for a test case that the process of a workload would 
+> eventually end in the dead state(marked by 'X') and be switched
+> out. This can be seen also by using 'perf script':
 > 
-> Fixes: 0f0e1f445690 ("perf build: Use pkg-config for feature check for libtrace{event,fs}")
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> ---
-> Another problem occurs when building on my old Ubuntu 18.04.1 (4.15 kernel)
-> is that linux/mount.h (which is introduced in the later kernel version) is
-> missing. It's included in tools/include/uapi/linux/fs.h which header is
-> introduced recently. Does it make sense to have a copy of mount.h in tools/include?
+>     # perf sched record -a sleep 1
+>     [ perf record: Woken up 1 times to write data ]
+>     [ perf record: Captured and wrote 0.167 MB perf.data (166 samples) ]
+>     # perf script | grep sleep
+>            sleep  151541 [000] 193461.410617: sched:sched_stat_runtime: comm=sleep pid=151541 runtime=3132275 [ns]
+>            sleep  151541 [000] 193461.410624:       sched:sched_switch: sleep:151541 [120] S ==> swapper/0:0 [120]
+>          swapper       0 [000] 193462.410688:       sched:sched_waking: comm=sleep pid=151541 prio=120 target_cpu=000
+>          swapper       0 [000] 193462.410698:       sched:sched_switch: swapper/0:0 [120] R ==> sleep:151541 [120]
+>          :151541  151541 [000] 193462.411100: sched:sched_stat_runtime: comm=sleep pid=151541 runtime=407210 [ns]
+>          :151541  151541 [000] 193462.411107:       sched:sched_switch: sleep:151541 [120] X ==> swapper/0:0 [120]
 > 
->  tools/perf/Makefile.config | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> But for the 'perf sched timehist --state' the process is shown
+> in the zombie state when it is being switched out:
 > 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 4ddb27a48eed..53fc5f787a77 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -1194,7 +1194,7 @@ endif
->  ifneq ($(NO_LIBTRACEEVENT),1)
->    $(call feature_check,libtraceevent)
->    ifeq ($(feature-libtraceevent), 1)
-> -    CFLAGS += -DHAVE_LIBTRACEEVENT
-> +    CFLAGS += -DHAVE_LIBTRACEEVENT $(shell $(PKG_CONFIG) --cflags libtraceevent)
+>     # perf sched timehist --state | grep 151541
+>     Samples do not have callchains.
+>       193461.410624 [0000]  sleep[151541]                       0.000      0.054      3.129      S 
+>       193462.411107 [0000]  :151541[151541]                     0.000      0.000      0.408      Z 
+> 
+> Shouldn't both commands report the same result, or is there a reason
+> why 'perf script' uses the dead state while 'perf sched' uses dead?
 
-Does this solve the problem?  On my machine, it returns this:
+I remember there was a discussion related to this.
 
-  $ pkg-config --cflags libtraceevent
-  -I/usr/include/traceevent 
+https://lore.kernel.org/all/20240122070859.1394479-2-zegao@tencent.com/
 
-  $ ls /usr/include/traceevent/
-  event-parse.h  event-utils.h  kbuffer.h  trace-seq.h
+And it seems it's fixed both in perf and libtraceevent.  Maybe your
+libtraceevent is somewhat outdated and doesn't have the update.
 
-So the include path should be "/usr/include" or we should include
-<event-parse.h> directly.  We may update the every include statements
-but just curious how it solved your problem.
+> It also seems that the 'perf sched' cannot read the name of the zombie
+> process, but that can be a different issue.
+
+Hmm.. right.  It should update thread->comm using the sched_switch event.
 
 Thanks,
 Namhyung
 
-
->      LDFLAGS += $(shell $(PKG_CONFIG) --libs-only-L libtraceevent)
->      EXTLIBS += $(shell $(PKG_CONFIG) --libs-only-l libtraceevent)
->      LIBTRACEEVENT_VERSION := $(shell $(PKG_CONFIG) --modversion libtraceevent).0.0
-> -- 
-> 2.24.0
-> 
