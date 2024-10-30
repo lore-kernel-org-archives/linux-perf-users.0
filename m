@@ -1,111 +1,105 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBB226AC3;
-	Wed, 30 Oct 2024 14:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030101EBFFD;
+	Wed, 30 Oct 2024 14:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730297023; cv=none; b=OQVGLb7aNbKyCPebIY/pn64k1LG4EUSRgmYdNWCb8ZFwT8ihT+xo6PLfivgtINXyQyscFhb2i8HSV4IpecXY9G3ezu+qAq656PLxo01vh8vMVL5Phfo082sVZUQiXzuVI/fzs5q/eKWny23kYUsn2C4V3uOwguN3pP/BBMVDGlI=
+	t=1730297250; cv=none; b=YMos8Gevomr1+maApb4wMXPmDhDCWzIuGhh9tbHo288xkO1swENjNOIwFijkhwIJZAPguO1+B++FDbVQyTB2whoAOmeu+vYg1u2EcgILtYaOWIgCEVV5cKndTaZQwzCB6Any5fsP31tbKBh3F7RvKuemHiGJ9oX3zhSIRuDPmUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730297023; c=relaxed/simple;
-	bh=WREgZgwaUpe0QqIqqKHUlleKGHjEWpMfLFBqRJaBucs=;
+	s=arc-20240116; t=1730297250; c=relaxed/simple;
+	bh=VMOeSFIln/02RJd0YqS4M95LqofrDi/DTZQjA0Y6h5o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kDzRhgsbZoKjV3TbEDzHZQbKhSpUTINh1zLEdDaQH/N5iqLHApyyn9lSQOsK+4Y63DrQFa3u4SM/ZXzDw7wehyNiVpZPTx+NvM9TtZfbKkItckTyjk66a1EuiaKnoeQ3IK3/2ySkqfl2bJ8KRigPqif6BBGbgpQuFJYFOvX1Z9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fbtewNI3; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=QYBL6W9bgm46nABbAqvwhN/6XnBCVgnxeJKi3n6O6j0SFdRUTDkghQt894Vs6A+VsN2C1zDA0nCJcT/gIYu0idrytzRkg9teD9WCcX5nihM04JhbRJEhQk4/2tA3GLhUP/U4D3Z9Vst42tgt5arlckADWL38qOPEFp9bAqQehHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i7wKv0dk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qlWlBozd; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fbtewNI3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=PWbT83tcerTIQi8XzpZf3kWGF9r+M/FnjfrwWbmtpWI=; b=fbtewNI3zJ1+BvW0SBmygie0hA
-	vqIruaTV/c4BX7hGkKMJzFb1sGcoumH+AnQQOhg7T5esdpVpQQGd1LRGuoZYRD3bX3lf/cMOH8VdG
-	YZ1Fgp9dkEP9imwvRuZrTMzUGulku2gFtjNW7wMPpt3jvxtESu9159M744XJZs8CTeout/PppwOEg
-	5bn3FrFOavsDw37VEFfA6CuSQzmWk6Vh6yv4OUY+2wGyWwoD3PJSg46alHErpUOP9/PryT2WrSn1S
-	3pFukxoxFad0cu39jjiMtdpydmYGIQElx9irk1hKQ5pYi8xGJD3a3dOjiFZUDZ5VOoVDNWQE35F9+
-	imuIsrhw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t69ID-0000000AGaY-2YuW;
-	Wed, 30 Oct 2024 14:03:25 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8A06A300ABE; Wed, 30 Oct 2024 15:03:24 +0100 (CET)
-Date: Wed, 30 Oct 2024 15:03:24 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i7wKv0dk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qlWlBozd"
+Date: Wed, 30 Oct 2024 15:07:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1730297244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DVJPScEsi/7iMYMr4y9Tqf6bsqOslAbYjQMdS8PGCi0=;
+	b=i7wKv0dkTiMXOoRJzNVOpwiu0LmTPd7UTz81N26wTsGlOOhvqKvpMtn6xjK5cHRDZYTCAi
+	uVmSOGD+P73kAjsQ8+MV4WLx8CzojHwOmMIHfot5ropYO5kQfth6Xnvu1RrAQCa8nAE2lu
+	47+IOZlD8PpQQzYJ99nTjj1odyXAOUPYHORuXdzdg0aH0Zr14NJj+CuurYT0HmvRdrgo79
+	DuCs45Uyu8v/azOVEx05phkT2DIRWALpLTVnG9o2McLJwsm2p2yYUnGy8mQH3rBcqs7l1m
+	oCr8vTuttfCtvnGJr/NyzEwMEOHOmBXwG/SagkeXYQhSG7yBAP0JCD8o2M9CYg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1730297244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DVJPScEsi/7iMYMr4y9Tqf6bsqOslAbYjQMdS8PGCi0=;
+	b=qlWlBozd15ZyXlaRVSGV1IffE2a85ac7NqVw9AoBd0+r+TO55rbY9cETehJc+Coip8f4EG
+	s86uyccm3HeaSbDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: "Lai, Yi" <yi1.lai@linux.intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v3 11/19] unwind: Add deferred user space unwinding API
-Message-ID: <20241030140324.GM14555@noisy.programming.kicks-ass.net>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
- <a94eb70a80c4a13dedb2655b7848304a992cb1b0.1730150953.git.jpoimboe@kernel.org>
- <20241029135617.GB14555@noisy.programming.kicks-ass.net>
- <20241029171752.4y67p3ob24riogpi@treble.attlocal.net>
- <bcd11a07-45fb-442b-a25b-5cadc6aac0e6@efficios.com>
- <20241029182032.GI14555@noisy.programming.kicks-ass.net>
- <20241030021722.2d1fe6d3@rorschach.local.home>
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>, yi1.lai@intel.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
+Message-ID: <20241030140721.pZzb9D-u@linutronix.de>
+References: <20240624152732.1231678-1-bigeasy@linutronix.de>
+ <20240624152732.1231678-3-bigeasy@linutronix.de>
+ <Zx9Losv4YcJowaP/@ly-workstation>
+ <Zx-B0wK3xqRQsCOS@localhost.localdomain>
+ <20241029172126.5XY8vLBH@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241030021722.2d1fe6d3@rorschach.local.home>
+In-Reply-To: <20241029172126.5XY8vLBH@linutronix.de>
 
-On Wed, Oct 30, 2024 at 02:17:22AM -0400, Steven Rostedt wrote:
-> On Tue, 29 Oct 2024 19:20:32 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > The 48:16 bit split gives you uniqueness for around 78 hours at 1GHz.
-> 
-> Are you saying that there will be one system call per nanosecond? This
-> number is incremented only when a task enters the kernel from user
-> spaces *and* requests a stack trace. If that happens 1000 times a
-> second, that would still be around 9000 years.
-
-We used to be able to do well over a million syscalls a second. I'm not
-exactly sure where we are now, the whole speculation shit-show hurt
-things quite badly.
-
+On 2024-10-29 18:21:31 [+0100], To Frederic Weisbecker wrote:
+> On 2024-10-28 13:21:39 [+0100], Frederic Weisbecker wrote:
+> > Ah the perf_pending_task work is pending but perf_pending_task_sync()
+> > fails to cancel there:
 > > 
-> > But seriously, perf doesn't need this. It really only needs a sequence
-> > number if you care to stitch over a LOST packet (and I can't say I care
-> > about that case much) -- and doing that right doesn't really take much
-> > at all.
+> > 	/*
+> > 	 * If the task is queued to the current task's queue, we
+> > 	 * obviously can't wait for it to complete. Simply cancel it.
+> > 	 */
+> > 	if (task_work_cancel(current, head)) {
+> > 		event->pending_work = 0;
+> > 		local_dec(&event->ctx->nr_no_switch_fast);
+> > 		return;
+> > 	}
+> > 
+> > And that's because the work is not anymore on the task work
+> > list in task->task_works. Instead it's in the executing list
+> > in task_work_run(). It's a blind spot for task_work_cancel()
+> > if the current task is already running the task works. And it
+> > does since it's running the fput delayed work.
+> > 
+> > Something like this untested?
 > 
-> Perf may not care because it has a unique descriptor per task, right?
-> Where it can already know what events are associated to a task. But
-> that's just a unique characteristic of perf. The unwinder should give a
-> identifier for every user space stack trace that it will produce and
-> pass that back to the tracer when it requests a stack trace but it
-> cannot yet be performed. This identifier is what we are calling a
-> context cookie. Then when it wants the stack trace, the unwinder will
-> give the tracer the stack trace along with the identifier
-> (context-cookie) that this stack trace was for in the past.
+> Tested. Not sure if this is a good idea.
+> Couldn't we take the ->next pointer and add it to current::task_works
+> instead?
+> That patch in ZtYyXG4fYbUdoBpk@pavilion.home gets rid of that
+> rcuwait_wait_event().
 
-You're designing things inside out again. You should add functionality
-by adding layers.
-
-Pass a void * into the 'request-unwind' and have the 'do-unwind'
-callback get that same pointer. Then anybody that needs identifiers to
-figure out where things came from can stuff something in there.
-
+Just tested. That patch from ZtYyXG4fYbUdoBpk@pavilion.home also solves
+that problem. Could we take that one instead?
+ 
+Sebastian
