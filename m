@@ -1,114 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2871BD9FA;
-	Wed, 30 Oct 2024 19:17:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691F4199EAB;
+	Wed, 30 Oct 2024 19:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730315854; cv=none; b=Lg2FT0QlIOOEzIjf9J3cDQBDLjHxe/zClf6jBWiJrjQxAUGnrtTO5WSHO/FmiNtG2EoD58ML+iN4vygleXePgS1aeDdsnNmPQltkMJsriQsxhHCTqcBalpPKR9S/HGBxUa/ntrX8x1CLlxDhYyC+qd6ujXDI54m7Tre01O8ExnM=
+	t=1730318300; cv=none; b=r4UdNKL0LRG03AtWDvpoZC3JZ6xXHUR6LCbuBtbcEz1OESeMCTshotG4tnqX1PZquY9hm+iJcFlioz4kf6Z/k8irAXnxFhKaMXWYQKDMsxU7uh7fNB0GJMN5xCfuFCuWeC9NUVIe0ZIVLUGqX3bjTpL1t2e62ISiO+Hsa82o3uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730315854; c=relaxed/simple;
-	bh=OB0SigpF9MF4WLA6zg9tdQ4S3E/qGpEaIraOAxh4yqU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cwu3M/etnBbOF5u27EynAs6gLjWDWw6yN2E8Cy6cz1CNF7qSinqS3g/36QbHdQhVwqV5dB9xabvvS7mXBrHVr6veEKESr6BlSzRzxJ+M1KaSNtTH7zDrV6NSKocv8HwTVRsRywtESjn5X93asDONrLXctEj1DU8M/lK0NItH/aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KRw9q0/3; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KRw9q0/3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5B92C4CECE;
-	Wed, 30 Oct 2024 19:17:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730315853;
-	bh=OB0SigpF9MF4WLA6zg9tdQ4S3E/qGpEaIraOAxh4yqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KRw9q0/3hbFABMXTX/2Ilysz3wBTtLAIrBx2srR+lW5tPwbvwCPj+9wLZlYu3hU8v
-	 MTgMv8g4ZWt8SjoUpWYZiBaztRwGwGXya+ohCspLGeqLY/OV1v2St8Uy3RnkQS5NJl
-	 cGvU/KYGI+xPL230lqHLe3s0+Op5aK27WtISXdQHBXqBpzGGYo3V9HHfd2Wyr6/TWm
-	 vyv16afaBSw6+U7PiwS0LWjMwGN+kmkTCcEZ4C8ZLHQ7bz48drX9S7jO1aBPv7mhDx
-	 /UwG6cLh8q1oybgrocQ/NaFUgPC3Ng6Oaq9VoSnzmnhPeq08ArjjDXbYJjMvfzuZtf
-	 XG8Q8JiFNTlMw==
-Date: Wed, 30 Oct 2024 12:17:31 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v3 06/19] x86/vdso: Enable sframe generation in VDSO
-Message-ID: <20241030191731.tqdw4nmd7htvfrua@treble.attlocal.net>
+	s=arc-20240116; t=1730318300; c=relaxed/simple;
+	bh=1fWLQgEgTK+V17kPkpcyB3IbVdSjn9Cids4/zFTo7YI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fLBBTbXFC1KdRJfsq+SVn5/JYsmYvldsFWE8yY7PUra0sPdoR1WChz6xj30KLMZK1hRs1vqVuPbgNydA16y0qTK9SF3olAg/uLVszMjiCI9AqJr07VvFhrlZR8yQJOQvoBjmfOh2WII5f9BsFGNvK3/YPBoyrLl15RYlg7tMQv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25ECAC4CECE;
+	Wed, 30 Oct 2024 19:58:18 +0000 (UTC)
+Date: Wed, 30 Oct 2024 15:58:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org,
+ Indu Bhagat <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
+ James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org, Andrii Nakryiko
+ <andrii.nakryiko@gmail.com>, Jens Remus <jremus@linux.ibm.com>, Florian
+ Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 11/19] unwind: Add deferred user space unwinding API
+Message-ID: <20241030155816.094edca5@rorschach.local.home>
+In-Reply-To: <20241030140324.GM14555@noisy.programming.kicks-ass.net>
 References: <cover.1730150953.git.jpoimboe@kernel.org>
- <ebc4e4a51af47cd1e9a1c515407410e1f69d224f.1730150953.git.jpoimboe@kernel.org>
- <b89bcb68-d010-4041-aacf-15b934675705@linux.ibm.com>
+	<a94eb70a80c4a13dedb2655b7848304a992cb1b0.1730150953.git.jpoimboe@kernel.org>
+	<20241029135617.GB14555@noisy.programming.kicks-ass.net>
+	<20241029171752.4y67p3ob24riogpi@treble.attlocal.net>
+	<bcd11a07-45fb-442b-a25b-5cadc6aac0e6@efficios.com>
+	<20241029182032.GI14555@noisy.programming.kicks-ass.net>
+	<20241030021722.2d1fe6d3@rorschach.local.home>
+	<20241030140324.GM14555@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b89bcb68-d010-4041-aacf-15b934675705@linux.ibm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 30, 2024 at 07:20:08PM +0100, Jens Remus wrote:
-> > diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-> > index c9216ac4fb1e..75ae9e093a2d 100644
-> > --- a/arch/x86/entry/vdso/Makefile
-> > +++ b/arch/x86/entry/vdso/Makefile
-> > @@ -47,13 +47,15 @@ quiet_cmd_vdso2c = VDSO2C  $@
-> >   $(obj)/vdso-image-%.c: $(obj)/vdso%.so.dbg $(obj)/vdso%.so $(obj)/vdso2c FORCE
-> >   	$(call if_changed,vdso2c)
-> > +SFRAME_CFLAGS := $(call as-option,-Wa$(comma)-gsframe,)
+On Wed, 30 Oct 2024 15:03:24 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> You're designing things inside out again. You should add functionality
+> by adding layers.
 > 
-> I have the impression this test might not work as expected.
+> Pass a void * into the 'request-unwind' and have the 'do-unwind'
+> callback get that same pointer. Then anybody that needs identifiers to
+> figure out where things came from can stuff something in there.
 
-I suspect it works fine on x86-64, since that was the first arch
-supported, so --gsframe being supported also means x86-64 is supported.
+What the hell should I do with a void pointer? I want a stack trace, I
+ask for one, it gives me an identifier for it, then at the end when it
+does my callback it gives me the stack trace I asked for with the
+identifier that it belongs to.
 
-But yeah, other arches (and x86-32) are a different story.
+The identifier should be part of the unwinder code as it has to do with
+the stack trace and has nothing to do with tracing.
 
-> Maybe the following would be an alternative test in the Makefile?
-> 
-> SFRAME_CFLAGS := $(call as-instr,.cfi_sections .sframe\n.cfi_startproc\n.cfi_endproc,-DCONFIG_AS_SFRAME=1)
-> ifneq ($(SFRAME_CFLAGS),)
->        SFRAME_CFLAGS += -Wa,--gsframe
-> endif
-
-Looks good, though the ifneq isn't needed:
-
-SFRAME_CFLAGS := $(call as-instr, \
-		   .cfi_sections .sframe\n.cfi_startproc\n.cfi_endproc, \
-		   Wa$(comma)--gsframe -DCONFIG_AS_SFRAME=1)
-
-
-Though, if multiple arches are going to be using that, maybe it should
-just be a config option:
-
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 33449485eafd..676dd45a7255 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -446,6 +446,9 @@ config HAVE_UNWIND_USER_SFRAME
- 	bool
- 	select UNWIND_USER
- 
-+config AS_SFRAME
-+	def_bool $(as-instr,.cfi_sections .sframe\n.cfi_startproc\n.cfi_endproc)
-+
- config HAVE_PERF_CALLCHAIN_DEFERRED
- 	bool
- 
+-- Steve
