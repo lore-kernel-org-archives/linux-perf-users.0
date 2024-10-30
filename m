@@ -1,79 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4995A197A99;
-	Wed, 30 Oct 2024 06:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D8B85931;
+	Wed, 30 Oct 2024 07:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730269050; cv=none; b=NpVyOce2xbpW70bB8BKMp/SsAYdm6F9B0xgDNVV4fYGDmOHQ1XY2igfyOc6PvFvzjelNpkZ+nWQt+lF+57CL/jcsm+vupMasxkRmNi54rKivV/oH15zopMqRJz8jADJbjnxIl0Q/Jhg/TH134QM2BCLemliez5PjRrciLgleQ0s=
+	t=1730273238; cv=none; b=F3217uJtck8JWZho6ct4Z6PPoEv8MlDVc81K9qkHkblNb701SpQBSdaPw3YV00JgZaD40IYhzWso0EhXFZJiJllJdHpwbJEl+Es2PtIM/dRTeQPJyG0Kaf91zJ5PDDndE5O2YS533Pnnw2N9WmNWr19EvGd/RzajRwsySZTLNuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730269050; c=relaxed/simple;
-	bh=KjFF9nrrYbN8/+R2wcRFgj/seeT8/hxPycZd47+TIHI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G2x3hCbZjlVpsOMOIa4NxTRhSBnvHCR9cvMSga99wEsufjXRo3UDVpM/SW//rIc5XVqma5s6VDNRahHmTey41VUPWzC6cTveAkTFH6irF9dBa/nVwVdFA1V5y9tHmezMRQE6DIPNkIJkJtdQe+DkSU4DglttzvdS7pdd3T5wcDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4298FC4CEE4;
-	Wed, 30 Oct 2024 06:17:26 +0000 (UTC)
-Date: Wed, 30 Oct 2024 02:17:22 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf
- <jpoimboe@kernel.org>, x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org,
- Indu Bhagat <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
- <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
- linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
- James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Jens Remus <jremus@linux.ibm.com>, Florian
- Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v3 11/19] unwind: Add deferred user space unwinding API
-Message-ID: <20241030021722.2d1fe6d3@rorschach.local.home>
-In-Reply-To: <20241029182032.GI14555@noisy.programming.kicks-ass.net>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
-	<a94eb70a80c4a13dedb2655b7848304a992cb1b0.1730150953.git.jpoimboe@kernel.org>
-	<20241029135617.GB14555@noisy.programming.kicks-ass.net>
-	<20241029171752.4y67p3ob24riogpi@treble.attlocal.net>
-	<bcd11a07-45fb-442b-a25b-5cadc6aac0e6@efficios.com>
-	<20241029182032.GI14555@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1730273238; c=relaxed/simple;
+	bh=vGKU/9JKhIPRunU2sozlJwZTP3bFyVs8KZfKBAD/Evo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IzFUHVVUoU46snSa8Nm1Cr2qXGw0obgtpj8c+nv0UCueWFCcyk/9m0PZFpZTAS1G5cPCrDIAGpjxdskb5u4FtnGMc9UPtgjQZPw9Fsw2Q6vEg8QsIT/RSNsCIqTsoDidgrI2DiWtfEUtC4Um/z3jb3FtqqPy94j4zbu32RsZCDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aZzOrWS4; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aZzOrWS4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730273236; x=1761809236;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=vGKU/9JKhIPRunU2sozlJwZTP3bFyVs8KZfKBAD/Evo=;
+  b=aZzOrWS47uaYqWgaeFuBoFHBAjphsk9AACCGMbB7RO7C3OGTuiqTW+tq
+   kYAhSNknvIywTJfu3hIjfMzPJmtDrls80rWybJ1qtmvB50DxIjpTG/+cI
+   GFWmRd4dnmUOJCv1/w9bCTC1+n8tk82ZfLRr6WYLHOVH87eVd5kfAmm6m
+   p1CK/cdQ+Rd0unyW/FuAhU1nA38wOCu0YouL6dlPtF6B6+9OWAAs9Fe+1
+   zOg0BYGXl07CWikwAXQuyVWcdz7jOYBIK65b9h2IQkyyhJaF3zgW6URr/
+   bmjSy9AbwGbt7Xn/Bur0nE+XTJHGTIlj0ueGWaHvAPZk7mLwTTR7Gimw6
+   A==;
+X-CSE-ConnectionGUID: HGu36LyMTyip0yVZ6h6edQ==
+X-CSE-MsgGUID: iEtchNlgSQy4TZE/x7SDpA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11240"; a="32798747"
+X-IronPort-AV: E=Sophos;i="6.11,244,1725346800"; 
+   d="scan'208";a="32798747"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 00:27:02 -0700
+X-CSE-ConnectionGUID: bryCe69USaeq6F6tP2Y8ZQ==
+X-CSE-MsgGUID: yxn/g556S2mCbJnJKJ7oFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,244,1725346800"; 
+   d="scan'208";a="87359263"
+Received: from ubik.fi.intel.com (HELO localhost) ([10.237.72.184])
+  by orviesa004.jf.intel.com with ESMTP; 30 Oct 2024 00:26:56 -0700
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To: Li RongQing <lirongqing@baidu.com>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, tglx@linutronix.de,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ zhiquan1.li@intel.com, alexander.shishkin@linux.intel.com
+Cc: Li RongQing <lirongqing@baidu.com>
+Subject: Re: [PATCH] perf/x86/intel/bts: allocate bts_ctx only if necessary
+In-Reply-To: <20241030063521.4025-1-lirongqing@baidu.com>
+References: <20241030063521.4025-1-lirongqing@baidu.com>
+Date: Wed, 30 Oct 2024 09:26:55 +0200
+Message-ID: <87msimt5j4.fsf@ubik.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Tue, 29 Oct 2024 19:20:32 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+Li RongQing <lirongqing@baidu.com> writes:
 
-> The 48:16 bit split gives you uniqueness for around 78 hours at 1GHz.
+> Avoid unnecessary per-CPU memory allocation on unsupported CPUs,
+> this can save 12K memory for every CPU
 
-Are you saying that there will be one system call per nanosecond? This
-number is incremented only when a task enters the kernel from user
-spaces *and* requests a stack trace. If that happens 1000 times a
-second, that would still be around 9000 years.
+Looks reasonable, but have you tested it? This driver is in serious
+danger of bitrot ever since KPTI. It might save even more if we simply
+remove the whole thing.
 
-> 
-> But seriously, perf doesn't need this. It really only needs a sequence
-> number if you care to stitch over a LOST packet (and I can't say I care
-> about that case much) -- and doing that right doesn't really take much
-> at all.
-
-Perf may not care because it has a unique descriptor per task, right?
-Where it can already know what events are associated to a task. But
-that's just a unique characteristic of perf. The unwinder should give a
-identifier for every user space stack trace that it will produce and
-pass that back to the tracer when it requests a stack trace but it
-cannot yet be performed. This identifier is what we are calling a
-context cookie. Then when it wants the stack trace, the unwinder will
-give the tracer the stack trace along with the identifier
-(context-cookie) that this stack trace was for in the past.
-
-It definitely belongs with the undwinder logic.
-
--- Steve
+Regards,
+--
+Alex
