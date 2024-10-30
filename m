@@ -1,50 +1,36 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C8C4C70;
-	Wed, 30 Oct 2024 13:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23A31EB9E3;
+	Wed, 30 Oct 2024 13:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730294178; cv=none; b=KJ7Bbl7cBi+ah3MOkOwE/afQOtQ2RBlel43KKlBZ9Vm5uaMbRTGnlXy5SUV0jHxudaspIsdd+Kg8p/y53wKDW3fTFWlANT3w5FWYs+TTMj+Q5VWIvDjzranJsfk1SJTD0n+ymtaW2TsqQ/lEIajYEDle0KWxo9myU3wkqQAtwa4=
+	t=1730295956; cv=none; b=sJMf7sghwsSLQ4uNpmMqKxQWqiEiQEEAX6sfrLR+7/sHOhl38nlShzNE9JHSm3TGwF2tCOS5y7xjI3/krxDrXPwe3E63sLl0B93wR2wRa9S2Y7s5PoCEy/jXbkWI378ti00zI1cFQeTRDdGpgl1bEbNK9WnanE+V/gJSZeE3d9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730294178; c=relaxed/simple;
-	bh=7g6BTcK3PoloLvKu3Y8DZJxEbWWg9te/C2/EFD5AjeI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=XUraobxwcc/SYV2WepbayDYmfHnVWNbl+9M1qS5qsCra4eMvhdaHdrptaODD53imyOTe8uGTSmeTXtS3bBzvUSa3SIuqyRGGRnkCufwllL7OjoYOpreGCpX6L9wXf1ndaQiVrWaOaKBbbFCcGaGlj7pnI1S6BHj87AmvOa/uHhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O5jSniRT; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1730295956; c=relaxed/simple;
+	bh=inaXq35j3illj9PkvgGc1dWz3CoE0YPpBiSWZgXyH14=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a0kZEFJPCNuXDJeyJo5j+g5Tj0DbV/IoEQH3lhXpHWhiYsHuKnk0LNPCkgZgtiXizU/vK+c1BdRezLsardZCyNSrZnl9LZGhZVoWRlG0DsYjntN7oryBY8trkvbqOFQ4sjfUFLSOcBI92V5MOixnU6cEd315FtSFVyU62Fh6zdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=FseGwaDA; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O5jSniRT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730294175; x=1761830175;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=7g6BTcK3PoloLvKu3Y8DZJxEbWWg9te/C2/EFD5AjeI=;
-  b=O5jSniRT/xPdL2sCm+JltA+CBKvk/ZEeR9gZ+iuuGefJ9aI3HuBdQ6Yr
-   E8pRb9URW5urfY/B4JzAbl06CGSKZHE/79BcAwL5JvGdiEu6+6rq3MoCx
-   NvkXALv/V79fOeeFvnuNkToQ+vg2+APTjg4ndBEO98OnAsci8veMDEzbW
-   qYskqp8UYHyJgBuVAH4a9jNL+zWsLpZx7OBts1h7eujSdbXcbTDfQ7cq3
-   urgIAgcbnw2BaYSdx+L1n0EYdFlKTRRRFD0HD4QEuq4GmskL/bXrxm1T3
-   Bpb+OarOwvv3jjaz+/JR5iA8XganJ4uxDqMuSeKmK0S99q3UK1/tphC0p
-   Q==;
-X-CSE-ConnectionGUID: FmiBS8CIQdO2cVMo7D3tvg==
-X-CSE-MsgGUID: zVJ9Is3qSLGNxtVoONh2Xg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11241"; a="40600276"
-X-IronPort-AV: E=Sophos;i="6.11,245,1725346800"; 
-   d="scan'208";a="40600276"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 06:16:14 -0700
-X-CSE-ConnectionGUID: eIQ0vLyOSf+/ryrVmuucxQ==
-X-CSE-MsgGUID: PB5SoMk1SGS1rKirHLZUYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,245,1725346800"; 
-   d="scan'208";a="82728993"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.245.115.59])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 06:16:06 -0700
-Message-ID: <7bacbe72-c283-453b-bf1f-6ba05b68cac8@intel.com>
-Date: Wed, 30 Oct 2024 15:16:00 +0200
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="FseGwaDA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1730295951;
+	bh=inaXq35j3illj9PkvgGc1dWz3CoE0YPpBiSWZgXyH14=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FseGwaDAyWUlQyT9V6NJwpyrEul/8LotpIe2AfAY4FEM5/enn2rPCEcSnbvruRitM
+	 6UflBBgdmTrtg9qFuaeR/A/jxMSGz9whx1TJSbcMXlh7nZm7UTZi/UJftEANS0iTDv
+	 SFfrMInsHYtBndoIWnLHjpYU1bHvWuBVC+NYu6CNGQV0CdzT9Vb3ma33bEp+gfKlVG
+	 oleW+gEoMxXKc7OuuWDrJx/5l39McaOxxuGb2SlE/4ca8/isOLvpi6gy+54556TP0c
+	 4r04mdX1wUljdr6fKvZ0cHpmeJ6TsuSeNElkhTpfMEOoQz7zjLm5G9MXVcNJXEhGRq
+	 zPXyjTtxNPz4Q==
+Received: from [172.16.0.134] (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XdpL71YMCzKGr;
+	Wed, 30 Oct 2024 09:45:51 -0400 (EDT)
+Message-ID: <74afc8d4-621a-4876-a8cf-6165a913e4b3@efficios.com>
+Date: Wed, 30 Oct 2024 09:44:14 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,321 +38,177 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V14 00/11] perf/core: Add ability for an event to "pause"
- or "resume" AUX area tracing
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+Subject: Re: [PATCH v3 11/19] unwind: Add deferred user space unwinding API
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+ Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org,
+ Indu Bhagat <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Hendrik Brueckner <brueckner@linux.ibm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
- <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
  Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- H Peter Anvin <hpa@zytor.com>, Kan Liang <kan.liang@linux.intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20241022155920.17511-1-adrian.hunter@intel.com>
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+ Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Jens Remus <jremus@linux.ibm.com>, Florian Weimer <fweimer@redhat.com>,
+ Andy Lutomirski <luto@kernel.org>
+References: <cover.1730150953.git.jpoimboe@kernel.org>
+ <a94eb70a80c4a13dedb2655b7848304a992cb1b0.1730150953.git.jpoimboe@kernel.org>
+ <20241029135617.GB14555@noisy.programming.kicks-ass.net>
+ <20241029171752.4y67p3ob24riogpi@treble.attlocal.net>
+ <bcd11a07-45fb-442b-a25b-5cadc6aac0e6@efficios.com>
+ <20241029183440.fbwoistveyxneezt@treble.attlocal.net>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20241022155920.17511-1-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241029183440.fbwoistveyxneezt@treble.attlocal.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 22/10/24 18:59, Adrian Hunter wrote:
-> Hi
+On 2024-10-29 14:34, Josh Poimboeuf wrote:
+> On Tue, Oct 29, 2024 at 01:47:59PM -0400, Mathieu Desnoyers wrote:
+>>>> If ftrace needs brain damage like this, can't we push this to the user?
+>>>>
+>>>> That is, do away with the per-cpu sequence crap, and add a per-task
+>>>> counter that is incremented for every return-to-userspace.
+>>>
+>>> That would definitely make things easier for me, though IIRC Steven and
+>>> Mathieu had some concerns about TID wrapping over days/months/years.
+>>>
+>>> With that mindset I suppose the per-CPU counter could also wrap, though
+>>> that could be mitigated by making the cookie a struct with more bits.
+>>>
+>>
+>> AFAIR, the scheme we discussed in Prague was different than the
+>> implementation here.
 > 
-> Note for V14:
-> 	KVM patches dropped.
+> It does differ a bit.  I'll explain why below.
+> 
+>> We discussed having a free-running counter per-cpu, and combining it
+>> with the cpu number as top (or low) bits, to effectively make a 64-bit
+>> value that is unique across the entire system, but without requiring a
+>> global counter with its associated cache line bouncing.
+>>
+>> Here is part where the implementation here differs from our discussion:
+>> I recall we discussed keeping a snapshot of the counter value within
+>> the task struct of the thread. So we only snapshot the per-cpu value
+>> on first use after entering the kernel, and after that we use the same
+>> per-cpu value snapshot (from task struct) up until return to userspace.
+>> We clear the task struct cookie snapshot on return to userspace.
+> 
+> Right, so adding some details to this, what I remember specifically
+> deciding on:
+> 
+>   - In unwind_user_deferred(), if task cookie is 0, it snapshots the
+>     per-cpu counter, stores the old value in the task cookie, and
+>     increments the new value (with CPU # in top 48 bits).
+> 
+>   - Future calls to unwind_user_deferred() see the task cookie is set and
+>     reuse the same cookie.
+> 
+>   - Then the task work (which runs right before exiting the kernel)
+>     clears the task cookie (with interrupts disabled), does the unwind,
+>     and calls the callbacks.  It clears the task cookie so that any
+>     future calls to unwind_user_deferred() (either before exiting the
+>     kernel or after next entry) are guaranteed to get an unwind.
 
-ping
+This is where I think we should improve the logic.
+
+If an unwind_user_deferred() is called right over/after the unwind,
+I don't think we want to issue another stack walk: it would be redundant
+with the one already in progress or completed.
+
+What we'd want is to make sure that the cookie returned to that
+unwind_user_deferred() is the same as the cookie associated with the
+in-progress or completed stack unwind. This way, trace analysis can
+look at the surrounding events (before and after) the unwind request
+and find the associated call stack.
 
 > 
-> Note for V12:
-> 	There was a small conflict between the Intel PT changes in
-> 	"KVM: x86: Fix Intel PT Host/Guest mode when host tracing" and the
-> 	changes in this patch set, so I have put the patch sets together,
-> 	along with outstanding fix "perf/x86/intel/pt: Fix buffer full but
-> 	size is 0 case"
+> That's what I had implemented originally.  It had a major performance
+> issue, particularly for long stacks (bash sometimes had 300+ stack
+> frames in my testing).
+
+That's probably because long stacks require a lot of work (user pages
+accesses) to be done when stack walking, which increases the likeliness
+of re-issuing unwind_user_deferred() while the stack walk is being done.
+
+That's basically a lack-of-progress issue: a sufficiently long stack
+walk with a sufficiently frequent unwind_user_deferred() trigger could
+make the system stall forever trying to service stalk walks again
+and again. That's bad.
+
 > 
-> 	Cover letter for KVM changes (patches 2 to 4):
+> The task work runs with interrupts enabled.  So if another PMU interrupt
+> and call to unwind_user_deferred() happens after the task work clears
+> the task cookie but before kernel exit, a new cookie is generated and an
+> additional task work is scheduled.  For long stacks, performance gets
+> really bad, dominated by all the extra unnecessary unwinding.
+
+What you want here is to move the point where you clear the task
+cookie to _after_ completion of stack unwind. There are a few ways
+this can be done:
+
+A) Clear the task cookie in the task_work() right after the
+    unwind_user_deferred() is completed. Downside: if some long task work
+    happen to be done after the stack walk, a new unwind_user_deferred()
+    could be issued again and we may end up looping forever taking stack
+    unwind and never actually making forward progress.
+
+B) Clear the task cookie after the exit_to_user_mode_loop is done,
+    before returning to user-space, while interrupts are disabled.
+
+C) Clear the task cookie when entering kernel space again.
+
+I think (B) and (C) could be interesting approaches, perhaps with
+(B) slightly more interesting because it cleans up after itself
+before returning to userspace. Also (B) allows us to return to a
+purely lazy scheme where there is nothing to do when entering the
+kernel. This is therefore more efficient in terms of cache locality,
+because we can expect our per-task state to be cache hot when
+returning to userspace, but not necessarily when entering into
+the kernel.
+
 > 
-> 	There is a long-standing problem whereby running Intel PT on host and guest
-> 	in Host/Guest mode, causes VM-Entry failure.
+> So I changed the design a bit:
 > 
-> 	The motivation for this patch set is to provide a fix for stable kernels
-> 	prior to the advent of the "Mediated Passthrough vPMU" patch set:
+>    - Increment a per-cpu counter at kernel entry before interrupts are
+>      enabled.
 > 
-> 		https://lore.kernel.org/kvm/20240801045907.4010984-1-mizhang@google.com/
+>    - In unwind_user_deferred(), if task cookie is 0, it sets the task
+>      cookie based on the per-cpu counter, like before.  However if this
+>      cookie was the last one used by this callback+task, it skips the
+>      callback altogether.
 > 
-> 	which would render a large part of the fix unnecessary but likely not be
-> 	suitable for backport to stable due to its size and complexity.
+> So it eliminates duplicate unwinds except for the CPU migration case.
+
+This sounds complicated and fragile. And why would we care about
+duplicated unwinds on cpu migration ?
+
+What prevents us from moving the per-task cookie clearing to after
+exit_to_user_mode_loop instead ? Then there is no need to do per-cpu
+counter increment on every kernel entry and we can go back to a lazy
+scheme.
+
 > 
-> 	Ideally, this patch set would be applied before "Mediated Passthrough vPMU"
-> 
-> 	Note that the fix does not conflict with "Mediated Passthrough vPMU", it
-> 	is just that "Mediated Passthrough vPMU" will make the code to stop and
-> 	restart Intel PT unnecessary.
-> 
-> Note for V11:
-> 	Moving aux_paused into a union within struct hw_perf_event caused
-> 	a regression because aux_paused was being written unconditionally
-> 	even though it is valid only for AUX (e.g. Intel PT) PMUs.
-> 	That is fixed in V11.
-> 
-> Hardware traces, such as instruction traces, can produce a vast amount of
-> trace data, so being able to reduce tracing to more specific circumstances
-> can be useful.
-> 
-> The ability to pause or resume tracing when another event happens, can do
-> that.
-> 
-> These patches add such a facilty and show how it would work for Intel
-> Processor Trace.
-> 
-> Maintainers of other AUX area tracing implementations are requested to
-> consider if this is something they might employ and then whether or not
-> the ABI would work for them.  Note, thank you to James Clark (ARM) for
-> evaluating the API for Coresight.  Suzuki K Poulose (ARM) also responded
-> positively to the RFC.
-> 
-> Changes to perf tools are now (since V4) fleshed out.
-> 
-> Please note, Intel® Architecture Instruction Set Extensions and Future
-> Features Programming Reference March 2024 319433-052, currently:
-> 
-> 	https://cdrdv2.intel.com/v1/dl/getContent/671368
-> 
-> introduces hardware pause / resume for Intel PT in a feature named
-> Intel PT Trigger Tracing.
-> 
-> For that more fields in perf_event_attr will be necessary.  The main
-> differences are:
-> 	- it can be applied not just to overflows, but optionally to
-> 	every event
-> 	- a packet is emitted into the trace, optionally with IP
-> 	information
-> 	- no PMI
-> 	- works with PMC and DR (breakpoint) events only
-> 
-> Here are the proposed additions to perf_event_attr, please comment:
-> 
-> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-> index 0c557f0a17b3..05dcc43f11bb 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -369,6 +369,22 @@ enum perf_event_read_format {
->  	PERF_FORMAT_MAX = 1U << 5,		/* non-ABI */
->  };
->  
-> +enum {
-> +	PERF_AUX_ACTION_START_PAUSED		=   1U << 0,
-> +	PERF_AUX_ACTION_PAUSE			=   1U << 1,
-> +	PERF_AUX_ACTION_RESUME			=   1U << 2,
-> +	PERF_AUX_ACTION_EMIT			=   1U << 3,
-> +	PERF_AUX_ACTION_NR			= 0x1f << 4,
-> +	PERF_AUX_ACTION_NO_IP			=   1U << 9,
-> +	PERF_AUX_ACTION_PAUSE_ON_EVT		=   1U << 10,
-> +	PERF_AUX_ACTION_RESUME_ON_EVT		=   1U << 11,
-> +	PERF_AUX_ACTION_EMIT_ON_EVT		=   1U << 12,
-> +	PERF_AUX_ACTION_NR_ON_EVT		= 0x1f << 13,
-> +	PERF_AUX_ACTION_NO_IP_ON_EVT		=   1U << 18,
-> +	PERF_AUX_ACTION_MASK			= ~PERF_AUX_ACTION_START_PAUSED,
-> +	PERF_AUX_PAUSE_RESUME_MASK		= PERF_AUX_ACTION_PAUSE | PERF_AUX_ACTION_RESUME,
-> +};
-> +
->  #define PERF_ATTR_SIZE_VER0	64	/* sizeof first published struct */
->  #define PERF_ATTR_SIZE_VER1	72	/* add: config2 */
->  #define PERF_ATTR_SIZE_VER2	80	/* add: branch_sample_type */
-> @@ -515,10 +531,19 @@ struct perf_event_attr {
->  	union {
->  		__u32	aux_action;
->  		struct {
-> -			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
-> -				aux_pause        :  1, /* on overflow, pause AUX area tracing */
-> -				aux_resume       :  1, /* on overflow, resume AUX area tracing */
-> -				__reserved_3     : 29;
-> +			__u32	aux_start_paused  :  1, /* start AUX area tracing paused */
-> +				aux_pause         :  1, /* on overflow, pause AUX area tracing */
-> +				aux_resume        :  1, /* on overflow, resume AUX area tracing */
-> +				aux_emit          :  1, /* generate AUX records instead of events */
-> +				aux_nr            :  5, /* AUX area tracing reference number */
-> +				aux_no_ip         :  1, /* suppress IP in AUX records */
-> +				/* Following apply to event occurrence not overflows */
-> +				aux_pause_on_evt  :  1, /* on event, pause AUX area tracing */
-> +				aux_resume_on_evt :  1, /* on event, resume AUX area tracing */
-> +				aux_emit_on_evt   :  1, /* generate AUX records instead of events */
-> +				aux_nr_on_evt     :  5, /* AUX area tracing reference number */
-> +				aux_no_ip_on_evt  :  1, /* suppress IP in AUX records */
-> +				__reserved_3      : 13;
->  		};
->  	};
-> 
-> 
-> Changes in V14:
->       Dropped KVM patches
-> 
->       perf/x86/intel/pt: Add support for pause / resume
-> 	Set pt->handle_nmi after configuration is completed instead of during
-> 
-> Changes in V13:
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Do aux_resume at the end of __perf_event_overflow() so as to trace
-> 	less of perf itself
-> 
->       perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
-> 	Add error message also in EOPNOTSUPP case (Leo)
-> 
-> Changes in V12:
-> 	Add previously sent patch "perf/x86/intel/pt: Fix buffer full
-> 	but size is 0 case"
-> 
-> 	Add previously sent patch set "KVM: x86: Fix Intel PT Host/Guest
-> 	mode when host tracing"
-> 
-> 	Rebase on current tip plus patch set "KVM: x86: Fix Intel PT Host/Guest
-> 	mode when host tracing"
-> 
-> Changes in V11:
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Make assignment to event->hw.aux_paused conditional on
-> 	(pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE).
-> 
->       perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
-> 	Remove definition of has_aux_action() because it has
-> 	already been added as an inline function.
-> 
->       perf/x86/intel/pt: Fix sampling synchronization
->       perf tools: Enable evsel__is_aux_event() to work for ARM/ARM64
->       perf tools: Enable evsel__is_aux_event() to work for S390_CPUMSF
-> 	Dropped because they have already been applied
-> 
-> Changes in V10:
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Move aux_paused into a union within struct hw_perf_event.
-> 	Additional comment wrt PERF_EF_PAUSE/PERF_EF_RESUME.
-> 	Factor out has_aux_action() as an inline function.
-> 	Use scoped_guard for irqsave.
-> 	Move calls of perf_event_aux_pause() from __perf_event_output()
-> 	to __perf_event_overflow().
-> 
-> Changes in V9:
->       perf/x86/intel/pt: Fix sampling synchronization
-> 	New patch
-> 
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Move aux_paused to struct hw_perf_event
-> 
->       perf/x86/intel/pt: Add support for pause / resume
-> 	Add more comments and barriers for resume_allowed and
-> 	pause_allowed
-> 	Always use WRITE_ONCE with resume_allowed
-> 
-> 
-> Changes in V8:
-> 
->       perf tools: Parse aux-action
-> 	Fix clang warning:
-> 	     util/auxtrace.c:821:7: error: missing field 'aux_action' initializer [-Werror,-Wmissing-field-initializers]
-> 	     821 |         {NULL},
-> 	         |              ^
-> 
-> Changes in V7:
-> 
-> 	Add Andi's Reviewed-by for patches 2-12
-> 	Re-base
-> 
-> Changes in V6:
-> 
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Removed READ/WRITE_ONCE from __perf_event_aux_pause()
-> 	Expanded comment about guarding against NMI
-> 
-> Changes in V5:
-> 
->     perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Added James' Ack
-> 
->     perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
-> 	New patch
-> 
->     perf tools
-> 	Added Ian's Ack
-> 
-> Changes in V4:
-> 
->     perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Rename aux_output_cfg -> aux_action
-> 	Reorder aux_action bits from:
-> 		aux_pause, aux_resume, aux_start_paused
-> 	to:
-> 		aux_start_paused, aux_pause, aux_resume
-> 	Fix aux_action bits __u64 -> __u32
-> 
->     coresight: Have a stab at support for pause / resume
-> 	Dropped
-> 
->     perf tools
-> 	All new patches
-> 
-> Changes in RFC V3:
-> 
->     coresight: Have a stab at support for pause / resume
-> 	'mode' -> 'flags' so it at least compiles
-> 
-> Changes in RFC V2:
-> 
-> 	Use ->stop() / ->start() instead of ->pause_resume()
-> 	Move aux_start_paused bit into aux_output_cfg
-> 	Tighten up when Intel PT pause / resume is allowed
-> 	Add an example of how it might work for CoreSight
-> 
-> 
-> Adrian Hunter (11):
->       perf/x86/intel/pt: Fix buffer full but size is 0 case
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
->       perf/x86/intel/pt: Add support for pause / resume
->       perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
->       perf tools: Add aux_start_paused, aux_pause and aux_resume
->       perf tools: Add aux-action config term
->       perf tools: Parse aux-action
->       perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
->       perf intel-pt: Improve man page format
->       perf intel-pt: Add documentation for pause / resume
->       perf intel-pt: Add a test for pause / resume
-> 
->  arch/x86/events/intel/core.c               |   4 +-
->  arch/x86/events/intel/pt.c                 |  84 +++-
->  arch/x86/events/intel/pt.h                 |   6 +
->  include/linux/perf_event.h                 |  28 ++
->  include/uapi/linux/perf_event.h            |  11 +-
->  kernel/events/core.c                       |  75 +++-
->  kernel/events/internal.h                   |   1 +
->  tools/include/uapi/linux/perf_event.h      |  11 +-
->  tools/perf/Documentation/perf-intel-pt.txt | 596 ++++++++++++++++++-----------
->  tools/perf/Documentation/perf-record.txt   |   4 +
->  tools/perf/builtin-record.c                |   4 +-
->  tools/perf/tests/shell/test_intel_pt.sh    |  28 ++
->  tools/perf/util/auxtrace.c                 |  67 +++-
->  tools/perf/util/auxtrace.h                 |   6 +-
->  tools/perf/util/evsel.c                    |  15 +
->  tools/perf/util/evsel.h                    |   1 +
->  tools/perf/util/evsel_config.h             |   1 +
->  tools/perf/util/parse-events.c             |  10 +
->  tools/perf/util/parse-events.h             |   1 +
->  tools/perf/util/parse-events.l             |   1 +
->  tools/perf/util/perf_event_attr_fprintf.c  |   3 +
->  tools/perf/util/pmu.c                      |   1 +
->  22 files changed, 716 insertions(+), 242 deletions(-)
-> 
-> 
-> Regards
-> Adrian
+> If I change the entry code to increment a per-task counter instead of a
+> per-cpu counter then this problem goes away.  I was just concerned about
+> the performance impacts of doing that on every entry.
+
+Moving from per-cpu to per-task makes this cookie task-specific and not
+global anymore, I don't think we want this for a stack walking
+infrastructure meant to be used by various tracers. Also a global cookie
+is more robust and does not depend on guaranteeing that all the
+trace data is present to guarantee current thread ID accuracy and
+thus that cookies match between deferred unwind request and their
+fulfillment.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
 
