@@ -1,202 +1,165 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19DA1C4616;
-	Wed, 30 Oct 2024 18:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DF11BD9DF;
+	Wed, 30 Oct 2024 18:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730312473; cv=none; b=gPIrJQHtZcn+2kzNNNvwI4PhyMxIgIIw3t6dFXbJm7BCrCZ58bsWzmGb4iM7hp1UtUyXcs3jKAekOCT54Pf5QsjA2oYOJqofagqNu22MY+lw9AH1l9aTxebJ0QcjvipHyHn3icuMzpDtiM/le7RbrVRYDtGNMak1n04NMplnclM=
+	t=1730312710; cv=none; b=DuwF5y/a/ELSM4rcDn2BlDAXtsBPI1Oo41UiW8dtrC9l/tmE5MkiycaoI4l1TQwXgTeXVI0mHZJydxrsDSNUoIUTyXR0yfpDu7eW27m/aj/PaX4QIWz5tQHfEaZ3aRmc+0qy+WeQE4CiEhutwJIPHJp6XhucHIE4NQRH5nOXwGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730312473; c=relaxed/simple;
-	bh=XAlAAQuCCo4hw3RB/nLNvUcS3LFHrYtwoU9Pg4fGpCI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HFlxopE2SRIZ2+h9nB82jgK1ckrNODAY3qNDkaH9Ib+2CetqrOHVfZO+HKIk3SDWa2YUK+ILT+tJFTC04KfTjg+OuKo33J02pO/im9uRPGG6EurdVfxh/MJSJod3NgPfEg6XTTwG9TaFHMZ30C8nJqRu1sNfkZs0qVhIJEHZoU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DOgphJ4u; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1730312710; c=relaxed/simple;
+	bh=xtHHaVHjQlJsAq8PH+DEgcvsognlHgDHLIjv3oQ2wlY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HVgotLEVySnNwu3qZ14MZp8HhA+wUM0eIinyBu11NTkqcsg7GfWv53N3k55lYqHxengXdIhthKeOibkxzh3Z3OmrNahOsrFb8aqfra0T1iiCamtvMSCevMoAnPQXVoewlxySfv/AOM3YRSeQlLt+47ri5ljgEw7H4k6vNAm7Uyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GrTJF2RG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DOgphJ4u"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49UHTrkL025454;
-	Wed, 30 Oct 2024 18:20:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Ee6E7+
-	ennRHMEZMdBfnyZdFvi8P6NNf/X8zOfEfVALE=; b=DOgphJ4unvTk1vVIAahDcx
-	PGfKwW7t9eYgWLR0TGjHArjFUu0ntcR9Q5Kilk7FJc7MFyc56lr5mzf/CP9m8qX5
-	2YxCy+TU9pn94LtfDnEay/M5w5AmwtTSprqm6stfOa2YucdVGKgIItN4X4ma9R6M
-	C+3qDSMxzmyxDy/2Y2t9CEc/Li+HJY3p9cR/Xqyk0RWSoY5o8ezae+rSbylaRO/N
-	Goj5M25n6ctbhpNWbgTILAIocvHW6JAKOoVLGR2REjZiggdsXYUv0hBqgufGWM7u
-	5k1afAk6OefdT3WBHRhLtzJPkmxJvngEQf8wuBweUL53hE4+4aF+xp/v2PpiNpPg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42kqnarr19-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Oct 2024 18:20:16 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49UIIh5C032073;
-	Wed, 30 Oct 2024 18:20:15 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42kqnarr15-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Oct 2024 18:20:15 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49UFj9v7013520;
-	Wed, 30 Oct 2024 18:20:14 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 42hbrn199h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Oct 2024 18:20:14 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49UIKAsR54722894
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 30 Oct 2024 18:20:10 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4031520043;
-	Wed, 30 Oct 2024 18:20:10 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E09DF20040;
-	Wed, 30 Oct 2024 18:20:08 +0000 (GMT)
-Received: from [9.152.222.93] (unknown [9.152.222.93])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 30 Oct 2024 18:20:08 +0000 (GMT)
-Message-ID: <b89bcb68-d010-4041-aacf-15b934675705@linux.ibm.com>
-Date: Wed, 30 Oct 2024 19:20:08 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 06/19] x86/vdso: Enable sframe generation in VDSO
-To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GrTJF2RG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6D8FC4CECE;
+	Wed, 30 Oct 2024 18:25:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730312709;
+	bh=xtHHaVHjQlJsAq8PH+DEgcvsognlHgDHLIjv3oQ2wlY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GrTJF2RGKuIXFDebsRtqeyL7zNcUh8IKtqpdL+hpaSxhZoQOXJF53fosdiIFI9YmB
+	 Mnuc7JRBtF8uQR/aMBAb32ukMXWR/bpqok0mPjjMu7zOOC0FjXt8qLE0tVevg8AbnY
+	 zRnhM+3PFkjSCZJwGoBbdcsfQLxIiSEf+ylQ1vCx2DRjRLDNlCgIiZtyoWJ1uUpFuF
+	 7QackYg/Iz77Pa41wRDlaQcty0urU+V8aG0PoGcmMrx83l4M88zjlayf0A3kU+UcPw
+	 Quqt+AJLwopq6XH4urDYoK+6Za2oKYLTrXisSJ4PiXFETFT68aFac9MCHrZ23V4hZ+
+	 vGCaEs1uLyWqw==
+Date: Wed, 30 Oct 2024 11:25:07 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 11/19] unwind: Add deferred user space unwinding API
+Message-ID: <20241030182507.wpjdsvnitn7k2q2p@treble.attlocal.net>
 References: <cover.1730150953.git.jpoimboe@kernel.org>
- <ebc4e4a51af47cd1e9a1c515407410e1f69d224f.1730150953.git.jpoimboe@kernel.org>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <ebc4e4a51af47cd1e9a1c515407410e1f69d224f.1730150953.git.jpoimboe@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: vjGwUuf-Mv_eIdBx_pALhJ5m8BxM9DLb
-X-Proofpoint-ORIG-GUID: 6rV1BhVlk8IjXc0_g1tqdwJ3hYzcPF8z
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+ <a94eb70a80c4a13dedb2655b7848304a992cb1b0.1730150953.git.jpoimboe@kernel.org>
+ <20241029135617.GB14555@noisy.programming.kicks-ass.net>
+ <20241029171752.4y67p3ob24riogpi@treble.attlocal.net>
+ <bcd11a07-45fb-442b-a25b-5cadc6aac0e6@efficios.com>
+ <20241029183440.fbwoistveyxneezt@treble.attlocal.net>
+ <74afc8d4-621a-4876-a8cf-6165a913e4b3@efficios.com>
+ <20241030174752.gwzk6q6n2f3sg52a@treble.attlocal.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- malwarescore=0 adultscore=0 clxscore=1015 impostorscore=0 spamscore=0
- phishscore=0 priorityscore=1501 suspectscore=0 lowpriorityscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410300141
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241030174752.gwzk6q6n2f3sg52a@treble.attlocal.net>
 
-On 28.10.2024 22:47, Josh Poimboeuf wrote:
-> Enable sframe generation in the VDSO library so kernel and user space
-> can unwind through it.
+On Wed, Oct 30, 2024 at 10:47:55AM -0700, Josh Poimboeuf wrote:
+> On Wed, Oct 30, 2024 at 09:44:14AM -0400, Mathieu Desnoyers wrote:
+> > What you want here is to move the point where you clear the task
+> > cookie to _after_ completion of stack unwind. There are a few ways
+> > this can be done:
+> > 
+> > A) Clear the task cookie in the task_work() right after the
+> >    unwind_user_deferred() is completed. Downside: if some long task work
+> >    happen to be done after the stack walk, a new unwind_user_deferred()
+> >    could be issued again and we may end up looping forever taking stack
+> >    unwind and never actually making forward progress.
+> > 
+> > B) Clear the task cookie after the exit_to_user_mode_loop is done,
+> >    before returning to user-space, while interrupts are disabled.
+> 
+> Problem is, if another tracer calls unwind_user_deferred() for the first
+> time, after the task work but before the task cookie gets cleared, it
+> will see the cookie is non-zero and will fail to schedule another task
+> work.  So its callback never gets called.
 
-...
+How about we:
 
-Applying similar changes to s390 and using the current binutils release without SFrame support on s390 results in build errors.
+  - clear task cookie on entry or exit from user space
 
-AFAIK the kernel has a minimum binutils requirement of 2.25 [1] and the assembler option "--gsframe was introduced with 2.40.
+  - use a different variable (rather than clearing of task cookie) to
+    communicate whether task work is pending
 
-> diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-> index c9216ac4fb1e..75ae9e093a2d 100644
-> --- a/arch/x86/entry/vdso/Makefile
-> +++ b/arch/x86/entry/vdso/Makefile
-> @@ -47,13 +47,15 @@ quiet_cmd_vdso2c = VDSO2C  $@
->   $(obj)/vdso-image-%.c: $(obj)/vdso%.so.dbg $(obj)/vdso%.so $(obj)/vdso2c FORCE
->   	$(call if_changed,vdso2c)
->   
-> +SFRAME_CFLAGS := $(call as-option,-Wa$(comma)-gsframe,)
+  - keep track of which callbacks have been called for this cookie
 
-I have the impression this test might not work as expected. On s390 the assembler accepts option --gsframe and only generates an error when the assembler code actually contains any CFI directives:
+something like so?
 
-$ cat test-nocfi.a
-         la      %r1,42
-$ as --gsframe test-nocfi.a
-$ echo $?
-0
+int unwind_user_deferred(struct unwind_callback *callback, u64 *ctx_cookie, void *data)
+{
+	struct unwind_task_info *info = &current->unwind_task_info;
+	unsigned int work_pending = work_pending;
+	u64 cookie = info->ctx_cookie;
+	int idx = callback->idx;
 
-$ cat test-cfi.a
-         .cfi_startproc
-         .cfi_endproc
-$ as --gsframe test-cfi.a
-test-cfi.a: Assembler messages:
-test-cfi.a: Error: .sframe not supported for target
-$ echo $?
-1
+	if (WARN_ON_ONCE(in_nmi()))
+		return -EINVAL;
 
-But the following assembler code triggers an error:
+	if (!current->mm)
+		return -EINVAL;
 
-$ cat test-sframe.a
-         .cfi_sections .sframe
-         .cfi_startproc
-         .cfi_endproc
-$ as test-sframe.a
-test-sframe.a: Assembler messages:
-test-sframe.a: Error: .sframe not supported for target
-$ echo $?
-1
+	guard(irqsave)();
 
-Maybe the following would be an alternative test in the Makefile?
+	if (cookie && (info->pending_callbacks & (1 << idx))) {
+		/* callback already scheduled */
+		goto done;
+	}
 
-SFRAME_CFLAGS := $(call as-instr,.cfi_sections .sframe\n.cfi_startproc\n.cfi_endproc,-DCONFIG_AS_SFRAME=1)
-ifneq ($(SFRAME_CFLAGS),)
-        SFRAME_CFLAGS += -Wa,--gsframe
-endif
+	/*
+	 * If this is the first call from any caller since the most recent
+	 * entry from user space, initialize the task context cookie.
+	 */
+	if (!cookie) {
+		u64 cpu = raw_smp_processor_id();
+		u64 ctx_ctr;
 
-> diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
-> index b1aa3fcd5bca..1a49492817a1 100644
-> --- a/arch/x86/include/asm/dwarf2.h
-> +++ b/arch/x86/include/asm/dwarf2.h
-> @@ -12,8 +12,11 @@
->   	 * For the vDSO, emit both runtime unwind information and debug
->   	 * symbols for the .dbg file.
->   	 */
-> -
-> +#ifdef __x86_64__
+		__this_cpu_inc(unwind_ctx_ctr);
+		ctx_ctr = __this_cpu_read(unwind_ctx_ctr);
 
-#if defined(__x86_64__) && defined(CONFIG_AS_SFRAME)
+		cookie = ctx_to_cookie(cpu, ctx_ctr);
+		info->ctx_cookie = cookie;
 
-> +	.cfi_sections .eh_frame, .debug_frame, .sframe
-> +#else
->   	.cfi_sections .eh_frame, .debug_frame
-> +#endif
->   
->   #define CFI_STARTPROC		.cfi_startproc
->   #define CFI_ENDPROC		.cfi_endproc
+	} else {
+		if (cookie == info->last_cookies[idx]) {
+			/*
+			 * The callback has already been called with this unwind,
+			 * nothing to do.
+			 */
+			goto done;
+		}
 
-[1]: https://docs.kernel.org/process/changes.html
+		if (info->pending_callbacks & (1 << idx)) {
+			/* callback already scheduled */
+			goto done;
+		}
+	}
 
-Regards,
-Jens
+	info->pending_callbacks |= (1 << idx);
+	info->privs[idx] = data;
+	info->last_cookies[idx] = cookie;
+
+	if (!info->task_pending) {
+		info->task_pending = 1; /* cleared by unwind_user_task_work() */
+		task_work_add(current, &info->work, TWA_RESUME);
+	}
+
+done:
+	if (ctx_cookie)
+		*ctx_cookie = cookie;
+	return 0;
+}
+
 -- 
-Jens Remus
-Linux on Z Development (D3303) and z/VSE Support
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+Josh
