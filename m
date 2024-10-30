@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E83E1BD9DD;
-	Wed, 30 Oct 2024 17:47:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020ED194138;
+	Wed, 30 Oct 2024 17:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730310475; cv=none; b=Cg9x8blrWFLAA7az7mwyCXkMRfc8MDsGWxLSGltgWobWITv02LlHr4L6iSAPWjMMhTf5sKDMk+/v4evKCKaRMyXQv9la7cPSwGTiPU6rG7Gw3skgRDldkpN3XrqNBCMvgGzmKLKWrpdwpWtjFVPoKEg9GXvQxyrUwYK7S31GlKQ=
+	t=1730310693; cv=none; b=F8okk+S66TQ6glIS2qL7L75g1J8JcAYfVSGUK7kYfpkYaVqSj8MqyFn4GWv9wvl7kPBIR1B1j3GcnLQIdqKAmlC/3lqH326d/BRIpcmhCrphRmKUGwT4v0dqY3J3UEtOiJ4OJR5Tl1/bkyMGjGdeEYOg3bnFt1nZTFQy4rzocNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730310475; c=relaxed/simple;
-	bh=vYTQVlgGMWO96K/3QDgzX63B6p2f9iKkPER0yzpOEBQ=;
+	s=arc-20240116; t=1730310693; c=relaxed/simple;
+	bh=z8wTrdbbYIa07IBTnGdonMj6/c9OH8/gUjegMvN0tbA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=izeajAo3b+mtkHrot05mse4t0NyNCF9w8msQyb9eOILggWp3fD3d3AhpvMJzOGckeDOigM6LmTLI6Om1vW3ydrMOtbLMqSwkHy3lVNJnKa3Fi/T5SE5ArpqlGRNsgBqgPtfruVg1CYTgGW46LK9NBcSWEmuwdh06Ri0y9nbKafU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WEED2xPL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LV9w4fsnpfeTt6ki1XrmqOBoTorsrECI+lyXXi1b2Nrum4zAPsbvLAjdiMg+FzZZOTrZH7gPA/Ztvu/XdvG7m2J6f7d6moWNq/gtFdf0Com9rvPHHUev+SJjRDCsHATXpsFk2ND+hgubv81TjneaGV4ovzeyy0+5tywahl0uulA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9m+jaWS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WEED2xPL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D5EC4CECE;
-	Wed, 30 Oct 2024 17:47:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9m+jaWS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED7A7C4CECE;
+	Wed, 30 Oct 2024 17:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730310475;
-	bh=vYTQVlgGMWO96K/3QDgzX63B6p2f9iKkPER0yzpOEBQ=;
+	s=k20201202; t=1730310692;
+	bh=z8wTrdbbYIa07IBTnGdonMj6/c9OH8/gUjegMvN0tbA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WEED2xPLUa4s1Q6S58fY+whz/cH+wVXH9Az0I2RqB3WZDVkFXwDMElu5ERFYhQHil
-	 dV9XoHErDQ7iV84LCBtD/rmd2Kc5yqxJWEUkPOW/KFBVo3aEMKTjCfFPt1Go5ZBUEx
-	 U74Sm3TRsKOj/c8DT4yg9wyh6T9HetuqWINdP6t0UiQz7mq8XqegHyjNq8Ag+aDqSf
-	 FztGLSUaKOtUYMFY92zbwUFwPDUrXmUhvx0T8Svn8UYo+elRvRcF9iMQ+y+C5PsOZN
-	 dPeEt0SW4cnZJlUA2UJgz5bA4LEmHTEmynT8hnFKTd3oL5bEPSKRwb0e3BFDNxCY2p
-	 e+oTq2riUJLIA==
-Date: Wed, 30 Oct 2024 10:47:52 -0700
+	b=C9m+jaWSfHjLEnDT1wHd0fL8S9frSXyIjTeRil2B+Vpq8zJdbtzUAujedp8f/bT5a
+	 0oXW+l4rxb9qSWf9kKt9w7g4XlDLo/ugr1Iw7hMF/TFynlH2ChTXrh1ZfIDP+HPDr+
+	 lVlQ/IhK6w+O/py894ZZD2Qy7CE/S5Uu9MIeaLpThOdw/Kxe1TLQ/qJuLGpLHDWjkV
+	 AM41tUF46yHqaNBC7+JIhz9oPgW/ZgqiVGdmMifc1PZyeCaErLAMyKge3BO2fil3pj
+	 YJOI2D2N/cf8eAyQuFIuil2JsXbZ04IG0HxQ50w/MqEyWYdr8Wo8LjcN7n7I1Y8UlF
+	 ZL+0IhpT7VpFg==
+Date: Wed, 30 Oct 2024 10:51:30 -0700
 From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -41,20 +41,16 @@ Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
 	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
 	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v3 11/19] unwind: Add deferred user space unwinding API
-Message-ID: <20241030174752.gwzk6q6n2f3sg52a@treble.attlocal.net>
+Subject: Re: [PATCH v3 02/19] x86/asm: Avoid emitting DWARF CFI for non-VDSO
+Message-ID: <20241030175130.jbbpmqzghbh6gqop@treble.attlocal.net>
 References: <cover.1730150953.git.jpoimboe@kernel.org>
- <a94eb70a80c4a13dedb2655b7848304a992cb1b0.1730150953.git.jpoimboe@kernel.org>
- <20241029135617.GB14555@noisy.programming.kicks-ass.net>
- <20241029171752.4y67p3ob24riogpi@treble.attlocal.net>
- <bcd11a07-45fb-442b-a25b-5cadc6aac0e6@efficios.com>
- <20241029183440.fbwoistveyxneezt@treble.attlocal.net>
- <74afc8d4-621a-4876-a8cf-6165a913e4b3@efficios.com>
+ <f2dcdcf95240149bfd21e118209bf3b94efad857.1730150953.git.jpoimboe@kernel.org>
+ <6796952b-22cf-4477-a4da-70ce9c3962eb@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,44 +59,30 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <74afc8d4-621a-4876-a8cf-6165a913e4b3@efficios.com>
+In-Reply-To: <6796952b-22cf-4477-a4da-70ce9c3962eb@linux.ibm.com>
 
-On Wed, Oct 30, 2024 at 09:44:14AM -0400, Mathieu Desnoyers wrote:
-> What you want here is to move the point where you clear the task
-> cookie to _after_ completion of stack unwind. There are a few ways
-> this can be done:
+On Wed, Oct 30, 2024 at 06:19:43PM +0100, Jens Remus wrote:
+> > +#define CFI_STARTPROC
+> > +#define CFI_ENDPROC
+> > +#define CFI_DEF_CFA
+> > +#define CFI_DEF_CFA_REGISTER
+> > +#define CFI_DEF_CFA_OFFSET
+> > +#define CFI_ADJUST_CFA_OFFSET
+> > +#define CFI_OFFSET
+> > +#define CFI_REL_OFFSET
+> > +#define CFI_REGISTER
+> > +#define CFI_RESTORE
+> > +#define CFI_REMEMBER_STATE
+> > +#define CFI_RESTORE_STATE
+> > +#define CFI_UNDEFINED
+> > +#define CFI_ESCAPE
 > 
-> A) Clear the task cookie in the task_work() right after the
->    unwind_user_deferred() is completed. Downside: if some long task work
->    happen to be done after the stack walk, a new unwind_user_deferred()
->    could be issued again and we may end up looping forever taking stack
->    unwind and never actually making forward progress.
+> Don't all of the above need to be defined to "#", so that they change any
+> parameters into an assembler comment? For example:
 > 
-> B) Clear the task cookie after the exit_to_user_mode_loop is done,
->    before returning to user-space, while interrupts are disabled.
+> #define CFI_STARTPROC		#
 
-Problem is, if another tracer calls unwind_user_deferred() for the first
-time, after the task work but before the task cookie gets cleared, it
-will see the cookie is non-zero and will fail to schedule another task
-work.  So its callback never gets called.
-
-> > If I change the entry code to increment a per-task counter instead of a
-> > per-cpu counter then this problem goes away.  I was just concerned about
-> > the performance impacts of doing that on every entry.
-> 
-> Moving from per-cpu to per-task makes this cookie task-specific and not
-> global anymore, I don't think we want this for a stack walking
-> infrastructure meant to be used by various tracers. Also a global cookie
-> is more robust and does not depend on guaranteeing that all the
-> trace data is present to guarantee current thread ID accuracy and
-> thus that cookies match between deferred unwind request and their
-> fulfillment.
-
-I don't disagree.  What I meant was, on entry (or exit), increment the
-task cookie *with* the CPU bits included.
-
-Or as you suggested previously, the "cookie" just be a struct with two
-fields: CPU # and per-task entry counter.
+Indeed.  Or maybe they could be .macros which ignore the arguments.
 
 -- 
 Josh
