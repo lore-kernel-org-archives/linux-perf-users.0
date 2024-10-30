@@ -1,207 +1,191 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE2A1F4738
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2024 15:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACA71F4711;
+	Wed, 30 Oct 2024 15:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730302750; cv=none; b=nZcz5u+e7P7SqHza3glZuWPCsgTeQ7HnvWdgSxXJaGNPRT9WL6nZnjcvFLj8EfHuIF+Jn2l9lvQ6HEavHhBX3cw+564Krm+VwQcQ6Pvg8au4w3YQw2mGYO3+8GH2y0WcqrUOuj549AuBYc8gsaK0HmHQUKEl/TZoIocex01wNDY=
+	t=1730303185; cv=none; b=eaVy3C1Jz42C3MCYzZ2mtfmFqTcT2yrFRUZZNb08EMl3RGqxofxAbFzVYV3r1YFvwt/Zwjq1xeON9QuqfaSWJl/bj59AN2NCFq6xmbPzJNErd91N23t8bEAlX2qHZxYRwMsra/vbQhTR4F/CU5IoIpVMTAUwaI7jk2BtJNLZ60s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730302750; c=relaxed/simple;
-	bh=G2jmoUbZWmeucgcA5V400Itpx6H5+Q9/pVo3PqRvsIc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MqBN5RQzmNt9ZuzqswqJpmd1iZc2/kUuRTh4k4AHEgW8KLkL3aW3D+I3ak22I9RQKuBJTO815dUH8DDtTSHZdg1gEG2g9Uzv1Jlvl3D/9mh4gmSJVMTjfuUkOCmI0grVhjuc1pZenY+uiGWP/oWdhqrlywWWAtU6jed/XBAlKr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ouD0ZFgW; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1730303185; c=relaxed/simple;
+	bh=02fzOt3hjs0XplZPBlHeTB8KJ/xnkeRcpDH3gjvSSj0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BSe/Nr4ynGipTHQ8upJ0jegoET7aiX1eIiB5l5LnkMfSl2Xx3Q9gxQSwjRwi6KjyRXNqQQlU/EjR9uxNygX+4w/N374T44YsCuxBKVS165tyvlp6+vsv3z8Q5C+DHGkgURCmZXIvrjtzUtF5fDmdw5zJcdsasCESIF7u/+d5xJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQ2Pm/69; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ouD0ZFgW"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3a3b28ac9a1so271675ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2024 08:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730302747; x=1730907547; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=66zbflDx6zqJBO5nUu4XlW0w7XH1NmLpzk/AkOmTTzg=;
-        b=ouD0ZFgWJrrArKDJ+ENf6DfKJgnGCvA1tdU5cfxin1Z7Cr10BhOomqwJAYIXLznRbF
-         lOEy/p9rTCwQF8e1POY9KuL86yKoROy8f6HYYjpQcDPEDDOU1s56b5rxvOUqazd48/VQ
-         wKbUMwiD2uX52EmFjz//j1UNSGpBLkOmjD3nf8GwgGxvkGtWwffEdl50+LiZGCZLtGT1
-         gsVMa8yCaBSgrZORNE/IvN6TAImx3qTJLSkYiEjyMrh3cChVyhfqTfb+XZSg+MEw4TDv
-         NbfNx3aQQNE8UZOvPrPj/xkPeWyxuc+QrkSfnXVA09TyhqC3lWDVS/xzvSZhxpvo498H
-         JCSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730302747; x=1730907547;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=66zbflDx6zqJBO5nUu4XlW0w7XH1NmLpzk/AkOmTTzg=;
-        b=iZcjRuqexRoPjRpABaRP+cAjv4Ba4n6/3hyo1QZOJ88XMgnBipa0T7YJXUhShPkLP8
-         B0Mptwu45yxdifsFYt8tCVTQhkwGs0TIYG2MPOk1bhEKZaD9sL9NrHtPfj+m8ehFWh1U
-         8Racmjq6Y6Qv+oPVO7x14KhqCL0bJeypA/muvG23ekvdGMmuoHudQe3kYnqSVZjyYRdj
-         FpRSRmOqWGHIZjwKAfpHE77YRyAWrEdJivyb/qy7Ar62SFpvLSLQb0aY4EuYqjBnwLWh
-         9wjxq+xXLSKdFLEhQ1Kv/JQ3UFwmbV+tM8PEjWklGr8QbNKXR85fLLjHtXi17A+VOnjk
-         9vSA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9FVyqc061JZbdcWbH6oGcKaD76oetJuMockHAgbgin10cCEckwvm2q3V2lXCuBA3XVfo8+zgMCcu5kU+/bfdT@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpPUyjSfiIf1Nm5HyXZrsEXjf6hkFUVErv4scBgZgFdD0pSbId
-	XBSBTo8ld+SOZTKDEcMBPVsrtcdW+7Im9I/1BbIDdyI2TUDrOSt0Oor+6Mv7MGg/fvjSOsvypmF
-	3u+bBdIhgJTY9NArFjdMkvhiGRWWrH/GZIEXX
-X-Gm-Gg: ASbGnctcuGG53kbdhvqmMWbcOgqy6zUjS8tC7ME2GfIARlf44XRNjDx602Hkg8OwRmP
-	EuRCXIzclrlOIfK8G8MyHNGpk8XCu4LJrwobSCrT0AYvCphDg0uSui3hqaR6Hp2sh
-X-Google-Smtp-Source: AGHT+IERGcd665gPU5pcuGcGkzWNZoCAuE/ytmNq8trw7X7OcueUsdQLotRDk3jolftkSsp1HOEHIrleWV51tJpgKy4=
-X-Received: by 2002:a92:ca45:0:b0:3a3:a639:a591 with SMTP id
- e9e14a558f8ab-3a509bf11dbmr9250295ab.8.1730302746965; Wed, 30 Oct 2024
- 08:39:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQ2Pm/69"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 824FFC4CECE;
+	Wed, 30 Oct 2024 15:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730303184;
+	bh=02fzOt3hjs0XplZPBlHeTB8KJ/xnkeRcpDH3gjvSSj0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QQ2Pm/69WVVKq6UK7oiomNKoOLGOo7xZOlbR6GEyRLHlfnf5rELUZmFJVOOxD1P6A
+	 diatsdY2LEwGrnPGnZ1JalY5iSv3WVNfKSCzKX9kD5nA99eOjzSir2kckQQbFMJX4K
+	 WAv2UZ/LWR6Np0Qhc3k1jvYhv79JHDb0omrFX5K6uLUwNjJ6vdnvm5W9e2MGwPAdJw
+	 cZhwFK6NUU5wOjae4Twyj+t777r2ES2yVc79DxAKPWbsCO2kq5iiBhUKsQNHqjHqut
+	 xZ0iGYzIK6nlxDofWi8YvDhP+ejFa+ZJWR9cP0MEgJ32bf1EeeHOCqA1sMspCxvZUI
+	 7ijMZF7SNE9ag==
+Date: Wed, 30 Oct 2024 16:46:22 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: "Lai, Yi" <yi1.lai@linux.intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>, yi1.lai@intel.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
+Message-ID: <ZyJUzhzHGDu5CLdi@localhost.localdomain>
+References: <20240624152732.1231678-1-bigeasy@linutronix.de>
+ <20240624152732.1231678-3-bigeasy@linutronix.de>
+ <Zx9Losv4YcJowaP/@ly-workstation>
+ <Zx-B0wK3xqRQsCOS@localhost.localdomain>
+ <20241029172126.5XY8vLBH@linutronix.de>
+ <20241030140721.pZzb9D-u@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241025090307.59127-1-james.clark@linaro.org>
- <20241025090307.59127-3-james.clark@linaro.org> <ZyGA9cjrtbE_eWik@google.com>
- <CAP-5=fW=DfWK9qvrtxp7z+N7aELar2xMts_=twUjWbfEQ_9vHg@mail.gmail.com> <1ab9d5be-b31b-4f76-9ccd-001603a55e53@linaro.org>
-In-Reply-To: <1ab9d5be-b31b-4f76-9ccd-001603a55e53@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 30 Oct 2024 08:38:53 -0700
-Message-ID: <CAP-5=fW9fy3PEicYgmhqQFUJmJaFs_LiponqYwEJGc7u7KQcxA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf stat: Also hide metric from JSON if units are an
- empty string
-To: James Clark <james.clark@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, acme@kernel.org, 
-	tim.c.chen@linux.intel.com, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241030140721.pZzb9D-u@linutronix.de>
 
-On Wed, Oct 30, 2024 at 2:36=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
->
->
-> On 30/10/2024 2:45 am, Ian Rogers wrote:
-> > On Tue, Oct 29, 2024 at 5:42=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> >>
-> >> Hello,
-> >>
-> >> On Fri, Oct 25, 2024 at 10:03:05AM +0100, James Clark wrote:
-> >>> We decided to hide NULL metric units rather than showing it as "(null=
-)",
-> >>> but on hybrid systems if the process doesn't hit a PMU you get an emp=
-ty
-> >>> string metric unit instead. To make it consistent also remove empty
-> >>> strings.
-> >>>
-> >>> Note that metric-threshold is already hidden in this case without thi=
-s
-> >>> change.
-> >>>
-> >>> Where a process only runs on cpu_core and never hits cpu_atom:
-> >>> Before:
-> >>>   $ perf stat -j -- true
-> >>>   ...
-> >>>   {"counter-value" : "<not counted>", "unit" : "", "event" : "cpu_ato=
-m/branch-misses/", "event-runtime" : 0, "pcnt-running" : 0.00, "metric-valu=
-e" : "0.000000", "metric-unit" : ""}
-> >>>   {"counter-value" : "6326.000000", "unit" : "", "event" : "cpu_core/=
-branch-misses/", "event-runtime" : 293786, "pcnt-running" : 100.00, "metric=
--value" : "3.553394", "metric-unit" : "of all branches", "metric-threshold"=
- : "good"}
-> >>>   ...
-> >>
-> >> I guess you're talking about "metric-unit", not plain "unit", right?
-> >> Then please update the subject line to reduce the config.
-> >>
->
-> Yep I'll update it.
->
-> >> Ian, can you please review?
-> >
-> > It'd be nice to see the stack trace for when metric-unit is "" as I'm
-> > not seeing the logic in stat-shadow.c. If we know the caller than it
-> > seems logical the unit can be passed as NULL rather than "".
-> >
-> > Thanks,
-> > Ian
-> >
->
->
-> Here's the stack:
->
-> print_metric_json() (stat-display.c:516)
-> printout() (stat-display.c:912)
-> print_counter_aggrdata() (stat-display.c:1110)
-> print_counter() (stat-display.c:1224)
-> evlist__print_counters() (stat-display.c:1734)
-> print_counters() (builtin-stat.c:1016)
-> cmd_stat() (builtin-stat.c:2872)
-> run_builtin() (perf/perf.c:351)
-> handle_internal_command() (perf.c:404)
-> run_argv() (perf.c:448)
-> main() (perf.c:560)
->
-> The empty string is from printout():
->
->    pm(config, os, METRIC_THRESHOLD_UNKNOWN, /*format=3D*/NULL, /*unit=3D*=
-/"",
->       /*val=3D*/0);
->
-> Changing it to NULL seems to work, so is probably a bit neater. I can do
-> that if you think that makes sense?
->
-> There's another one for --metric-only that I didn't run into, but it
-> could also make sense to change:
->
->    if (config->metric_only) {
->      pm(config, os, METRIC_THRESHOLD_UNKNOWN, "", "", 0);
+Le Wed, Oct 30, 2024 at 03:07:21PM +0100, Sebastian Andrzej Siewior a écrit :
+> On 2024-10-29 18:21:31 [+0100], To Frederic Weisbecker wrote:
+> > On 2024-10-28 13:21:39 [+0100], Frederic Weisbecker wrote:
+> > > Ah the perf_pending_task work is pending but perf_pending_task_sync()
+> > > fails to cancel there:
+> > > 
+> > > 	/*
+> > > 	 * If the task is queued to the current task's queue, we
+> > > 	 * obviously can't wait for it to complete. Simply cancel it.
+> > > 	 */
+> > > 	if (task_work_cancel(current, head)) {
+> > > 		event->pending_work = 0;
+> > > 		local_dec(&event->ctx->nr_no_switch_fast);
+> > > 		return;
+> > > 	}
+> > > 
+> > > And that's because the work is not anymore on the task work
+> > > list in task->task_works. Instead it's in the executing list
+> > > in task_work_run(). It's a blind spot for task_work_cancel()
+> > > if the current task is already running the task works. And it
+> > > does since it's running the fput delayed work.
+> > > 
+> > > Something like this untested?
+> > 
+> > Tested. Not sure if this is a good idea.
+> > Couldn't we take the ->next pointer and add it to current::task_works
+> > instead?
+> > That patch in ZtYyXG4fYbUdoBpk@pavilion.home gets rid of that
+> > rcuwait_wait_event().
+> 
+> Just tested. That patch from ZtYyXG4fYbUdoBpk@pavilion.home also solves
+> that problem. Could we take that one instead?
 
-Yeah, it looks like all the callers should be passing NULL. I feel
-more comfortable doing this than ignoring the empty string which is
-something a json metric may accidentally do. Could you send a patch?
+This needs more thoughts. We must make sure that the parent is put _after_
+the child because it's dereferenced on release, for example:
 
-Thanks,
-Ian
+put_event()
+   free_event()
+      irq_work_sync(&event->pending_irq);
+      ====> IRQ or irq_workd
+      perf_event_wakeup()
+         ring_buffer_wakeup()
+	    event = event->parent;
+	    rcu_dereference(event->rb);
 
-> >> Thanks,
-> >> Namhyung
-> >>
-> >>>
-> >>> After:
-> >>>   ...
-> >>>   {"counter-value" : "<not counted>", "unit" : "", "event" : "cpu_ato=
-m/branch-misses/", "event-runtime" : 0, "pcnt-running" : 0.00}
-> >>>   {"counter-value" : "5778.000000", "unit" : "", "event" : "cpu_core/=
-branch-misses/", "event-runtime" : 282240, "pcnt-running" : 100.00, "metric=
--value" : "3.226797", "metric-unit" : "of all branches", "metric-threshold"=
- : "good"}
-> >>>   ...
-> >>>
-> >>> Signed-off-by: James Clark <james.clark@linaro.org>
-> >>> ---
-> >>>   tools/perf/util/stat-display.c | 2 +-
-> >>>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-di=
-splay.c
-> >>> index a5d72f4a515c..9b7fd985a42a 100644
-> >>> --- a/tools/perf/util/stat-display.c
-> >>> +++ b/tools/perf/util/stat-display.c
-> >>> @@ -506,7 +506,7 @@ static void print_metric_json(struct perf_stat_co=
-nfig *config __maybe_unused,
-> >>>        struct outstate *os =3D ctx;
-> >>>        FILE *out =3D os->fh;
-> >>>
-> >>> -     if (unit) {
-> >>> +     if (unit && strlen(unit)) {
-> >>>                json_out(os, "\"metric-value\" : \"%f\", \"metric-unit=
-\" : \"%s\"", val, unit);
-> >>>                if (thresh !=3D METRIC_THRESHOLD_UNKNOWN) {
-> >>>                        json_out(os, "\"metric-threshold\" : \"%s\"",
-> >>> --
-> >>> 2.34.1
-> >>>
->
+And now after this patch it's possible that this happens after
+the parent has been released.
+
+We could put the parent from the child's free_event() but some
+places (inherit_event()) may call free_event() on a child without
+having held a reference to the parent.
+
+Also note that with this patch the task may receive late irrelevant
+signals after the event is removed. It's probably not that bad but
+still... This could be a concern for exec(), is there a missing
+task_work_run() there before flush_signal_handlers()?
+
+Anyway here is an updated version:
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e3589c4287cb..4031d0dbc47b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5448,10 +5448,17 @@ static void perf_remove_from_owner(struct perf_event *event)
+ 
+ static void put_event(struct perf_event *event)
+ {
++	struct perf_event *parent;
++
+ 	if (!atomic_long_dec_and_test(&event->refcount))
+ 		return;
+ 
++	parent = event->parent;
+ 	_free_event(event);
++
++	/* Matches the refcount bump in inherit_event() */
++	if (parent)
++		put_event(parent);
+ }
+ 
+ /*
+@@ -5535,11 +5542,6 @@ int perf_event_release_kernel(struct perf_event *event)
+ 		if (tmp == child) {
+ 			perf_remove_from_context(child, DETACH_GROUP);
+ 			list_move(&child->child_list, &free_list);
+-			/*
+-			 * This matches the refcount bump in inherit_event();
+-			 * this can't be the last reference.
+-			 */
+-			put_event(event);
+ 		} else {
+ 			var = &ctx->refcount;
+ 		}
+@@ -5565,7 +5567,7 @@ int perf_event_release_kernel(struct perf_event *event)
+ 		void *var = &child->ctx->refcount;
+ 
+ 		list_del(&child->child_list);
+-		free_event(child);
++		put_event(child);
+ 
+ 		/*
+ 		 * Wake any perf_event_free_task() waiting for this event to be
+@@ -13325,8 +13327,7 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
+ 		 * Kick perf_poll() for is_event_hup();
+ 		 */
+ 		perf_event_wakeup(parent_event);
+-		free_event(event);
+-		put_event(parent_event);
++		put_event(event);
+ 		return;
+ 	}
+ 
+@@ -13444,13 +13445,11 @@ static void perf_free_event(struct perf_event *event,
+ 	list_del_init(&event->child_list);
+ 	mutex_unlock(&parent->child_mutex);
+ 
+-	put_event(parent);
+-
+ 	raw_spin_lock_irq(&ctx->lock);
+ 	perf_group_detach(event);
+ 	list_del_event(event, ctx);
+ 	raw_spin_unlock_irq(&ctx->lock);
+-	free_event(event);
++	put_event(event);
+ }
+ 
+ /*
