@@ -1,75 +1,37 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABFF1E22E8;
-	Wed, 30 Oct 2024 09:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23B541E47A4
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2024 11:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730281350; cv=none; b=DMLcBX4jIfjBY6+HoZ/6ra6pw/rbZF5X4kGaYanAbTls83qre+c0Wgj8olsWG0Rcr/i2U3VetZe0xAQijE1jA4brtkqrGkmsxhcAEMKUdJV8Wtw/CRcZqpMwWeRpaebRPxVixSGnrFi7UPt65dgJvhuUB/MjPU0umjHfCePZ+pQ=
+	t=1730286307; cv=none; b=c1kHZMJETzPzBgofiExMkUtn31ZD/PNBxEWLJ0sdHy9ne5Zt/MIwnDqaslWXQHIsFIBsdpvbA4QP/Liug1D1isr2S5CPHGKFz+Oj/YW6o8xCYa7DGhFGlQoI2rFPsA7oyaF6W1xcgtpuWgPHXkdI5lTCBGws3EBT14b1WADiyj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730281350; c=relaxed/simple;
-	bh=162bqH31SougarnZJ1L8ILwyRO5oPWFkPAaa1swvXpQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bm8a3fRVATbON6Yol5mGT6RAvaJrTm80R1EIWvBF26ys/dKZmCNDhcpYzdDg7JtwPuLhA5472AdDyrpksdLTeSZymFzzPK1Jon8/qRdfE+j0YQi4eso2Mid/JbqdpbCkPdpPJkRxwWaEgoc/e+FFsQlwHheeIfThnyEPzCAg6dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=klx3EVWY; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klx3EVWY"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-37d4b0943c7so4183487f8f.1;
-        Wed, 30 Oct 2024 02:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730281345; x=1730886145; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uWI6K/rf7yyzgkMjRv3kNpqClOPrOQ72cfml1iwnTbs=;
-        b=klx3EVWYQ8RSnILLicUCsADn1IJsmp+NZHHJkH79/N3yr0K/PsYJ1p2qAkX5WdLxkO
-         +fCAalzF0YDNHKw2PRZMRCSXje5/JLYjYWgiNWwY9ZUr3Ajl5ftoiCk5BEGEjb01MQvH
-         3ty7mJF9VF78uBRtFz4qU83nslgGw2r2SCVQok6Tslq//s+H6qSjDAsu1kUwFX0xKvrR
-         INHHMvV7yquGuX9DdBgGw/jnknwBvvfMxvLTELFvZv2z3rHe2ladUnJxUdoH3HMNMXxV
-         j1MIut28iyBRTFG1lDi23vIhJRcSMScxayq4AykLIF2mErSJycWDiM3Il0TywIyXXS25
-         qqRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730281345; x=1730886145;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uWI6K/rf7yyzgkMjRv3kNpqClOPrOQ72cfml1iwnTbs=;
-        b=WVLbIkbS1fHXi4++6L/J+NoV4KNsYv+skHUFhl/lkZx2WtSzb4C4dbdnX+ZuDiWY2w
-         9+mjAMzL2WX1rZnGRIN9I4GBwj9nwnOffw6QLgwMXPveBQocT5SBHuWu6+Zvm56puXQv
-         LnaE7Jq1cJzrwdw5CfOh7y4YrqXSLqCdcrhRR1Wf3OUg7q2pXtTI8IEYlYQGtByjININ
-         iNvjeQOq7eZiYC+iw4qEVp6zjyE/fPqHE7sHjbXjN7Zpoh17i70i8rgvBeJeXsV5qoCh
-         dgZunZ2OM9d8wfg8h+/bBnulCtWqGlrjTegDHEXJGB+cx6t2MUuWFN7fsifUa3fEuNrV
-         yAdA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkWp4Kai9+L2m/bP0qfKgAoQNwJ0iXHgeRQYN8NS8OiOgTqh36zyDUZnAFpHnHBAaME0/FEfaJOtjKLWHA@vger.kernel.org, AJvYcCWR8KQzaePvyZM+5Wi2QF9VEXEAK/bBdrknoRHpyHnGZvvomaHSeRKsCz+4C1baqVVlF8LVA9lAd15tAwvpdDFVhw==@vger.kernel.org, AJvYcCWnRicjNe47EVLEkOnA9CS4+WkB+3duo4u2qpLJ9W1zOSjhkvJPOUDmrErb3O53GnEoy7zFhljRNKcG74ukeQFnGwkc@vger.kernel.org, AJvYcCXlfEWqegeBkNXnSHraghNg+xSK5iDzkKIznzy1OfzzU34XaLdl9047tKYaNH3eU22OLoQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBtJJY/EpPZvMbGYUZrNNmlky+sQHG+nVFUZjLCbquDyF20RHV
-	WglSkYQwJceIbzqLo9h+icOsNxVVNwXWNAQEVusJTh8mDBeevMkm
-X-Google-Smtp-Source: AGHT+IGgxkYq0IK3fxqLi8TOsD2onQa9lxKRAUf/ZEnDRqoOPLnaHRe93zTXDeoP87QjxNur8CC1qw==
-X-Received: by 2002:adf:e28a:0:b0:37d:45f0:dd0a with SMTP id ffacd0b85a97d-380610f2a9emr11076817f8f.1.1730281344449;
-        Wed, 30 Oct 2024 02:42:24 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058bb4461sm14802711f8f.113.2024.10.30.02.42.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2024 02:42:24 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 30 Oct 2024 10:42:21 +0100
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Ingo Molnar <mingo@kernel.org>
-Cc: Peter Ziljstra <peterz@infradead.org>, Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-	bpf <bpf@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Liao Chang <liaochang1@huawei.com>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
-	Kernel Team <kernel-team@meta.com>
-Subject: Re: The state of uprobes work and logistics
-Message-ID: <ZyH_fWNeL3XYNEH1@krava>
-References: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
+	s=arc-20240116; t=1730286307; c=relaxed/simple;
+	bh=cMyK6z4lp/Es8q2Pm1Fap39wAPmlrK9L1PD1veyZCIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b9S+LUCcceoahnIfQuzLQqgPFeOp844gkMkgYcgkXKBFCI5xF27fqFcT7aO5/JImu0tnZtxRw8x/7cbtwdQPmsn/vwmk4DkcKlrNlMGLFG8jibZboXbq2ptJIcjCBtvDMkjLbf46TPxbw1+oLn37Lw0plI2LJNzw/3OqBuOtEJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17EA1169E;
+	Wed, 30 Oct 2024 04:05:34 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E36643F66E;
+	Wed, 30 Oct 2024 04:05:03 -0700 (PDT)
+Date: Wed, 30 Oct 2024 11:04:58 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Yicong Yang <yangyicong@huawei.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, yangyicong@hisilicon.com,
+	acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, amadio@gentoo.org, linuxarm@huawei.com
+Subject: Re: [PATCH] perf build: Add missing cflags when building with custom
+ libtraceevent
+Message-ID: <20241030110458.GD24446@e132581.arm.com>
+References: <20241024133236.31016-1-yangyicong@huawei.com>
+ <ZyF5_Hf1iL01kldE@google.com>
+ <a8143fa2-d7e2-48d7-5c9b-2c00e2adbe9c@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -78,29 +40,66 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
+In-Reply-To: <a8143fa2-d7e2-48d7-5c9b-2c00e2adbe9c@huawei.com>
 
-On Wed, Oct 16, 2024 at 12:35:21PM -0700, Andrii Nakryiko wrote:
+On Wed, Oct 30, 2024 at 10:45:47AM +0800, Yicong Yang wrote:
 
-SNIP
+[...]
 
->   - Jiri Olsa's uprobe "session" support ([5]). This is less
-> performance focused, but important functionality by itself. But I'm
-> calling this out here because the first two patches are pure uprobe
-> internal changes, and I believe they should go into tip/perf/core to
-> avoid conflicts with the rest of pending uprobe changes.
+> >> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> >> index 4ddb27a48eed..53fc5f787a77 100644
+> >> --- a/tools/perf/Makefile.config
+> >> +++ b/tools/perf/Makefile.config
+> >> @@ -1194,7 +1194,7 @@ endif
+> >>  ifneq ($(NO_LIBTRACEEVENT),1)
+> >>    $(call feature_check,libtraceevent)
+> >>    ifeq ($(feature-libtraceevent), 1)
+> >> -    CFLAGS += -DHAVE_LIBTRACEEVENT
+> >> +    CFLAGS += -DHAVE_LIBTRACEEVENT $(shell $(PKG_CONFIG) --cflags libtraceevent)
+> >
+> > Does this solve the problem?  On my machine, it returns this:
+> >
+> >   $ pkg-config --cflags libtraceevent
+> >   -I/usr/include/traceevent
+> >
+> >   $ ls /usr/include/traceevent/
+> >   event-parse.h  event-utils.h  kbuffer.h  trace-seq.h
+> >
+> > So the include path should be "/usr/include" or we should include
+> > <event-parse.h> directly.  We may update the every include statements
+> > but just curious how it solved your problem.
+> >
 > 
-> Peter, do you mind applying those two and creating a stable tag for
-> bpf-next to pull? We'll apply the rest of Jiri's series to
-> bpf-next/master.
+> I think you're right, we should use the path according to the pkg-config outputs.
+> But it's a different problem, for me it's due to the missing of the include path
+> (my libtraceevent is not under the system path). With the fix you proposed and drop
+> the change in my patch:
+> 
+> $ PKG_CONFIG_PATH=/home/yangyicong/Community/libtraceevent/install/usr/local/lib/aarch64-linux-gnu/pkgconfig/ pkg-config --cflags-only-I libtraceevent
+> -I/home/yangyicong/Community/libtraceevent/install/usr/local/include/traceevent
+> $ PKG_CONFIG_PATH=/home/yangyicong/Community/libtraceevent/install/usr/local/lib/aarch64-linux-gnu/pkgconfig/ make -C tools/perf NO_LIBPYTHON=1
+> In file included from bench/../util/session.h:5,
+>                  from bench/synthesize.c:12:
+> bench/../util/trace-event.h:153:10: fatal error: event-parse.h: No such file or directory
+>   153 | #include <event-parse.h>
+>       |
+> [...]
+> 
+> Checked how we handle with libtracefs currently:
+>  ifeq ($(feature-libtracefs), 1)
+>     CFLAGS +=  $(shell $(PKG_CONFIG) --cflags libtracefs) # we've added the cflags from pkg-config
+>     LDFLAGS += $(shell $(PKG_CONFIG) --libs-only-L libtracefs)
 
+The libtracefs.pc file claims requesting libtraceevent, as a result, it
+returns the header paths for both libtraceevent and libtracefs:
 
-Hi Ingo,
-there's uprobe session support change that already landed in tip tree,
-but we have bpf related changes that need to go in through bpf-next tree
+  $ pkg-config --cflags libtracefs
+  -I/usr/local/include/tracefs -I/usr/local/include/traceevent
 
-could you please create the stable tag that we could pull to bpf-next/master
-and apply the rest of the uprobe session changes in there?
+I checked the packages libtraceevent-dev and libtracefs-dev and either
+can be installed independently. Therefore, it seems to me that this
+patch is correct for finding the traceevent header path, with no
+dependency on tracefs.
 
-thanks,
-jirka
+Thanks,
+Leo
