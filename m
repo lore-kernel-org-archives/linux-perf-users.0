@@ -1,205 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B4C193427;
-	Thu, 31 Oct 2024 09:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46322149C53
+	for <linux-perf-users@vger.kernel.org>; Thu, 31 Oct 2024 11:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730366073; cv=none; b=sPnu9XSB3Rf7yiok0KBuKkMjjZDkntYri4R6remk8KtmRu4ymvhBhKl8t0fMvblR3MyJNuvUx5kXgQVGEf8wn1V1TbCNycE3txeEsGzp8pGTmXXlCp2Y9mO03bnPg09u9Wd8LaIOQ+mT1aNpD0PV3hylOCA/zRHqAd2sME4vcQg=
+	t=1730374369; cv=none; b=Quw6h1LuLU7hU1PnHCLWAEXAViq5GRIrwKqgyoka2Ks2t7OeYXaZRiLCS0Dj4Vk/S9o5Tl2B0XPIskI6IvN+Rc6y9nev9xMXgigPdnEfipG7VQys9zjboOCmi5mS+JqgI3ROihEsMJnt9vt82Ml8u9O/3/Is5K+RmrzSj9e9Dhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730366073; c=relaxed/simple;
-	bh=tli3DYo2LvI+/T7xA8UfS2QU8a1u1b4z9XXM+Z0zBlY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=twCvmYjOEco/fMn/hqrU0NIpqyMhV0mMaLtIaVM4BO6TipqS6MrcUdetwZu+sKqOGej3NbDsDocsgauHhlqfY/aVMZchw8hWRg5pzWNuxZuQYxGnWRacPYcVyKY064Ar2Cws4wO5I6MbYznME6ylSHVdyA+8Bn6KRi1qpMmFvd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YjUbAVJh; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1730374369; c=relaxed/simple;
+	bh=0jnLJL+TyYTEXBKTAG9x6W1q/j7nmnKzIT6FDzcMNqg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sU1cuDimX8Z/S/0NIXXBIgaKBphiWaQzzUyfWEzGhihPFMHywNRGx3jWI80etlSzsUgNeK7FIj9OyuaZB85QDhJBPB5T8LMWUhcvhrjtIzCeZVlg5IrPp6L7PTTwlxznkrC9BJ3SCbdSv3c72W68ZSS7Iuz5QbtQZ2ZwqjLxS9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ao+3nftM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YjUbAVJh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730366071; x=1761902071;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=tli3DYo2LvI+/T7xA8UfS2QU8a1u1b4z9XXM+Z0zBlY=;
-  b=YjUbAVJhlruG5V2o4O5w66Qxs6Z8souR9Fv2ocsmKhMoBS4Dgw3PygfY
-   AYjQaP8AP2sJAkj4I2grH5GHFkGNcYVfA9fVbmA7N/hO8KA4j5BYLb0Ct
-   q4bYyt5Krhkupmuinwc0jHx0dxbhxn+YWrNZA3+8M3IfzdGA9zk8aF3wV
-   Qhi+aMzrAvd+XiBDQWbB7DLSHhWmJ+TXeiDFonG396xr2a/nI1QbgEKYQ
-   paWXt57Qk0lWle///QVLao34F9NfOoFwr6RctZZyECuQG7NSpBa20Q8xK
-   /XvFMGbgMa+50pmzSEOQV2yqI/mFc58fuh4mqAtQtCxsHzP9jXLxV1zyO
-   w==;
-X-CSE-ConnectionGUID: DvfuRDWPSnCGKZt8TQF2PA==
-X-CSE-MsgGUID: 3auvNBAoTEmyBFAcYE9oqg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11241"; a="30310936"
-X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
-   d="scan'208";a="30310936"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 02:14:27 -0700
-X-CSE-ConnectionGUID: x0ylb6c0TsOFfaAWP+/nkQ==
-X-CSE-MsgGUID: UTWKQdeNS+ewCl9ntXG/cA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
-   d="scan'208";a="82485919"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.245.89.141])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 02:14:20 -0700
-Message-ID: <6e6bd96f-912a-40e4-b43e-53f6a99f4338@intel.com>
-Date: Thu, 31 Oct 2024 11:14:15 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ao+3nftM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730374366;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jwu/aoLO9YK4nuC4V0476umiEleaBJSsHSf3gNfQUN8=;
+	b=Ao+3nftMbf7jrnJmAHDaQSRgBcF+l5aflA5KgEU3Rcwprt+eoRaDL0kWxc7Z0bPKk+9rdX
+	NqVEkmKez04Ps+ZmMEZa2wOZkaSthRaku01J1n2ZwMON6SNdyZYrg6fYADYpolhc+kMzGt
+	oMx70eY/KQfrnhexHQQ1PX3BlJoc7Sc=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-344-DeuoOVNmO_uuRyixYskZ0g-1; Thu,
+ 31 Oct 2024 07:32:42 -0400
+X-MC-Unique: DeuoOVNmO_uuRyixYskZ0g-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 80F881955F41;
+	Thu, 31 Oct 2024 11:32:41 +0000 (UTC)
+Received: from Carbon (unknown [10.39.208.11])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 45FDA1956046;
+	Thu, 31 Oct 2024 11:32:38 +0000 (UTC)
+Date: Thu, 31 Oct 2024 12:32:31 +0100 (CET)
+From: Michael Petlan <mpetlan@redhat.com>
+To: Namhyung Kim <namhyung@kernel.org>
+cc: vmolnaro@redhat.com, linux-perf-users@vger.kernel.org, mpetlan@redhat.com, 
+    kan.liang@linux.intel.com, irogers@google.com, acme@redhat.com, 
+    ak@linux.intel.com, alexander.shishkin@linux.intel.com
+Subject: Re: perf sched timehist --state vs perf script
+In-Reply-To: <ZyF_JDYF4wgEmbrW@google.com>
+Message-ID: <a8297e65-97fc-507c-1b73-7547374688c@redhat.com>
+References: <20241024163630.24882-1-vmolnaro@redhat.com> <ZyF_JDYF4wgEmbrW@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 11/21] perf x86: Define arch_fetch_insn in NO_AUXTRACE
- builds
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
- James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>,
- Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
- Michael Petlan <mpetlan@redhat.com>, Veronika Molnarova
- <vmolnaro@redhat.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Thomas Richter <tmricht@linux.ibm.com>, Ilya Leoshkevich
- <iii@linux.ibm.com>, Colin Ian King <colin.i.king@gmail.com>,
- Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>,
- Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20241031014252.753588-1-irogers@google.com>
- <20241031014252.753588-12-irogers@google.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20241031014252.753588-12-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 31/10/24 03:42, Ian Rogers wrote:
-> archinsn.c containing arch_fetch_insn was only enabled with
-> CONFIG_AUXTRACE, but this meant that a NO_AUXTRACE build on x86 would
-> use the empty weak version of arch_fetch_insn - weak symbols are a
-> frequent source of errors like this and are outside of the C
-> specification. Change it so that archinsn.c is always built on x86 and
-> make the weak symbol empty version of arch_fetch_insn a strong one
-> guarded by ifdefs.
+On Tue, 29 Oct 2024, Namhyung Kim wrote:
+> On Thu, Oct 24, 2024 at 06:36:30PM +0200, vmolnaro@redhat.com wrote:
+> > From: Veronika Molnarova <vmolnaro@redhat.com>
+> > 
+> > Hello!
+> > 
+> > We encountered an issue with 'perf sched timehist --state' when
+> > we expected for a test case that the process of a workload would 
+> > eventually end in the dead state(marked by 'X') and be switched
+> > out. This can be seen also by using 'perf script':
+> > 
+> >     # perf sched record -a sleep 1
+> >     [ perf record: Woken up 1 times to write data ]
+> >     [ perf record: Captured and wrote 0.167 MB perf.data (166 samples) ]
+> >     # perf script | grep sleep
+> >            sleep  151541 [000] 193461.410617: sched:sched_stat_runtime: comm=sleep pid=151541 runtime=3132275 [ns]
+> >            sleep  151541 [000] 193461.410624:       sched:sched_switch: sleep:151541 [120] S ==> swapper/0:0 [120]
+> >          swapper       0 [000] 193462.410688:       sched:sched_waking: comm=sleep pid=151541 prio=120 target_cpu=000
+> >          swapper       0 [000] 193462.410698:       sched:sched_switch: swapper/0:0 [120] R ==> sleep:151541 [120]
+> >          :151541  151541 [000] 193462.411100: sched:sched_stat_runtime: comm=sleep pid=151541 runtime=407210 [ns]
+> >          :151541  151541 [000] 193462.411107:       sched:sched_switch: sleep:151541 [120] X ==> swapper/0:0 [120]
+> > 
+> > But for the 'perf sched timehist --state' the process is shown
+> > in the zombie state when it is being switched out:
+> > 
+> >     # perf sched timehist --state | grep 151541
+> >     Samples do not have callchains.
+> >       193461.410624 [0000]  sleep[151541]                       0.000      0.054      3.129      S 
+> >       193462.411107 [0000]  :151541[151541]                     0.000      0.000      0.408      Z 
+> > 
+> > Shouldn't both commands report the same result, or is there a reason
+> > why 'perf script' uses the dead state while 'perf sched' uses dead?
+
+Hello! Thanks for reacting!
 > 
-> arch_fetch_insn on x86 depends on insn_decode which is a function
-> included then built into
-> intel-pt-insn-decoder.c. intel-pt-insn-decoder.c isn't built in a
-> NO_AUXTRACE=1 build. Separate the insn_decode function from
-> intel-pt-insn-decoder.c by just directly compiling the relevant
-> file. Guard this compilation to be for either always on x86 (because
-> of the use in arch_fetch_insn) or when auxtrace is enabled. Apply the
-> CFLAGS overrides as necessary, reducing the amount of code where
-> warnings are disabled.
+> I remember there was a discussion related to this.
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-For Intel PT
-
-Tested-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  tools/perf/arch/x86/util/Build                 |  2 +-
->  tools/perf/util/Build                          |  2 +-
->  tools/perf/util/intel-pt-decoder/Build         | 18 ++++++++++++++----
->  .../intel-pt-decoder/intel-pt-insn-decoder.c   |  3 ---
->  tools/perf/util/trace-event-scripting.c        |  4 +++-
->  5 files changed, 19 insertions(+), 10 deletions(-)
+> https://lore.kernel.org/all/20240122070859.1394479-2-zegao@tencent.com/
 > 
-> diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
-> index bc56a8e70f34..c5df4a2cf180 100644
-> --- a/tools/perf/arch/x86/util/Build
-> +++ b/tools/perf/arch/x86/util/Build
-> @@ -18,6 +18,6 @@ perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
->  perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
->  
->  perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
-> -perf-util-$(CONFIG_AUXTRACE) += archinsn.o
-> +perf-util-y += archinsn.o
->  perf-util-$(CONFIG_AUXTRACE) += intel-pt.o
->  perf-util-$(CONFIG_AUXTRACE) += intel-bts.o
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 650974413849..340544a6f5ec 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -122,7 +122,7 @@ perf-util-y += iostat.o
->  perf-util-y += stream.o
->  perf-util-y += kvm-stat.o
->  perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
-> -perf-util-$(CONFIG_AUXTRACE) += intel-pt-decoder/
-> +perf-util-y += intel-pt-decoder/
->  perf-util-$(CONFIG_AUXTRACE) += intel-pt.o
->  perf-util-$(CONFIG_AUXTRACE) += intel-bts.o
->  perf-util-$(CONFIG_AUXTRACE) += arm-spe.o
-> diff --git a/tools/perf/util/intel-pt-decoder/Build b/tools/perf/util/intel-pt-decoder/Build
-> index 30793d08c6d4..f99d150059b9 100644
-> --- a/tools/perf/util/intel-pt-decoder/Build
-> +++ b/tools/perf/util/intel-pt-decoder/Build
-> @@ -9,14 +9,24 @@ $(OUTPUT)util/intel-pt-decoder/inat-tables.c: $(inat_tables_script) $(inat_table
->  
->  # Busybox's diff doesn't have -I, avoid warning in the case
->  
-> -$(OUTPUT)util/intel-pt-decoder/intel-pt-insn-decoder.o: util/intel-pt-decoder/intel-pt-insn-decoder.c $(OUTPUT)util/intel-pt-decoder/inat-tables.c
-> +ifeq ($(SRCARCH),x86)
-> +  perf-util-y += inat.o insn.o
-> +else
-> +  perf-util-$(CONFIG_AUXTRACE) += inat.o insn.o
-> +endif
-> +
-> +$(OUTPUT)util/intel-pt-decoder/inat.o: $(srctree)/tools/arch/x86/lib/inat.c $(OUTPUT)util/intel-pt-decoder/inat-tables.c
->  	$(call rule_mkdir)
->  	$(call if_changed_dep,cc_o_c)
->  
-> -CFLAGS_intel-pt-insn-decoder.o += -I$(OUTPUT)util/intel-pt-decoder
-> +CFLAGS_inat.o += -I$(OUTPUT)util/intel-pt-decoder
-> +
-> +$(OUTPUT)util/intel-pt-decoder/insn.o: $(srctree)/tools/arch/x86/lib/insn.c
-> +	$(call rule_mkdir)
-> +	$(call if_changed_dep,cc_o_c)
->  
->  ifeq ($(CC_NO_CLANG), 1)
-> -  CFLAGS_intel-pt-insn-decoder.o += -Wno-override-init
-> +  CFLAGS_insn.o += -Wno-override-init
->  endif
->  
-> -CFLAGS_intel-pt-insn-decoder.o += -Wno-packed
-> +CFLAGS_insn.o += -Wno-packed
-> diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
-> index 47cf35799a4d..8fabddc1c0da 100644
-> --- a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
-> +++ b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
-> @@ -11,9 +11,6 @@
->  #include <byteswap.h>
->  #include "../../../arch/x86/include/asm/insn.h"
->  
-> -#include "../../../arch/x86/lib/inat.c"
-> -#include "../../../arch/x86/lib/insn.c"
-> -
->  #include "event.h"
->  
->  #include "intel-pt-insn-decoder.h"
-> diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-> index 2e9da0b089ef..8d71998a9ecd 100644
-> --- a/tools/perf/util/trace-event-scripting.c
-> +++ b/tools/perf/util/trace-event-scripting.c
-> @@ -272,11 +272,13 @@ void setup_perl_scripting(void)
->  #endif
->  #endif
->  
-> -__weak void arch_fetch_insn(struct perf_sample *sample __maybe_unused,
-> +#if !defined(__i386__) && !defined(__x86_64__)
-> +void arch_fetch_insn(struct perf_sample *sample __maybe_unused,
->  		     struct thread *thread __maybe_unused,
->  		     struct machine *machine __maybe_unused)
->  {
->  }
-> +#endif
->  
->  void script_fetch_insn(struct perf_sample *sample, struct thread *thread,
->  		       struct machine *machine, bool native_arch)
+> And it seems it's fixed both in perf and libtraceevent.  Maybe your
+> libtraceevent is somewhat outdated and doesn't have the update.
+>
+Yes! When we've updated libtraceevent to 1.8.3, both show Z now, which is
+probably correct.
+
+Then it comes into my mind whether shouldn't perf-sched and perf-script
+both take it from libtraceevent to unify the approaches, rather than
+perf-sched using its own implementation and perf-script taking it from
+libtraceevent... ?
+
+> > It also seems that the 'perf sched' cannot read the name of the zombie
+> > process, but that can be a different issue.
+> 
+> Hmm.. right.  It should update thread->comm using the sched_switch event.
+
+According to the tests, the name seems that it used to be translated correctly
+in past, so it'd be nice if it worked again, althoug it is pretty clear which
+process it was, according to the PID. Thus, the test can be adjusted to search
+for the combination "PID, status Z", instead of "command, status Z"... I.e. to
+accept the current situation...
+
+Thanks,
+
+Michael
+
+> 
+> Thanks,
+> Namhyung
+> 
+> 
 
