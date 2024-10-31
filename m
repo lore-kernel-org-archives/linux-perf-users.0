@@ -1,79 +1,103 @@
-Received: from BL0PR05CU006.outbound.protection.outlook.com (mail-eastusazon11021140.outbound.protection.outlook.com [52.101.52.140])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531C81BBBE0;
-	Thu, 31 Oct 2024 21:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0F71BC9ED;
+	Thu, 31 Oct 2024 21:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730410539; cv=fail; b=uNbqPy7UscNY9n8DRTNx8MLxjegPIAiWCJFBZGPN48JiziidimhQKFXx+YkxaXZ4BLZqU8IStFk+kqJLeKVQ2TvpaVkmJFu+lwerxyQyle+p8YJHq+QcbmvsWEBLASQOhceiC7oLAjApqSD8nNBVoKM3meNpeWABY5Lf01UEQCw=
+	t=1730410757; cv=fail; b=rmVYIpJLcUVmLkUwOkCyFaaemRp0kQGsMkMUVvamoZtEpiIC8AfIt8htArWeOJS9TTgbcezxNhzzdHA4rP2ASZl4yq54zNMavxDo6h80lIk2Rg36V/0X/jYPCe//nmuBRUsz2fNdPJGtZZWOco89qFJ2WyZeDg5w07NrstM3dTM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730410539; c=relaxed/simple;
-	bh=omV2AR2gfqjWTiG1RkJcOifMFSgoYPeg7HpVJAGUN2w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Lz7tYFx1X4A0wVADp08yNHkUxa+NSlGE+Ka9yXWZcOi9A/8vCazmB5ff1fIHnKOwRWuqBgJ4VZfILW3fG2MsLnmq+ZbLa327c9ZOfVqBASIm4WsgpxPYyIsPcIHGDe5rnNkRUhv0fEuYTgTKmd0VIhDAy9K43L9BX6SZUvdUjTk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=W5cGWHUt; arc=fail smtp.client-ip=52.101.52.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	s=arc-20240116; t=1730410757; c=relaxed/simple;
+	bh=WprEuwGOqRP5roMiNyknuQCiKoKZk96D1NefFoDLr5I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tW2JBVlGaHuJKfd7zP1IXOlmS95UboLux4BaJ61RC2PG1o8auhvILeFak4LXA+HgL5SA4UsJk1geX+ZKLmJOQ0Vg+2so1ULZDdN2D1FRx2E1IdMpnXYT2lSCXuCJcPydiwYQsTb6nT0dUPub77QBifX2pSD/fdppXOkKU99cuWk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=MYAJ+lNI; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=kTHHOt1l; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="W5cGWHUt"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MYAJ+lNI";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="kTHHOt1l"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49VKrwlU019165;
+	Thu, 31 Oct 2024 21:38:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=4AvAyhVGTcI3lM/VfI3IJvPhTfv6gRNjaq6QL4M4Xik=; b=
+	MYAJ+lNI63/LIxy06JXmoAbBWeTqTeRkT20KBjRSRiQickEzYCFrjQaAF2GqjdwR
+	ogAcNPfaTeL06NoFD+XHYKUEvM8dPx1kdRr5yx2DbYtG3Q2GokrDvx5G9JVJeicO
+	SuZd3de7XIhtapq5qBdasIDVUNIe8UDkzXPjnP/5PHFSBYEX3ACQ/3TdURcJRinZ
+	uSzR9m0Aro0XvDngniglc/IYDWDzc84K2CR0z1Dq+cYn/dNYSaAy4TB5lczH77u9
+	ovKyWflCAxzhW63O7wcO91BdrHSpxSYFKBPBMZuwuKVI/wzYQ4A6tmHUwqlNfqEx
+	qpl/AJECNbJeSK9v3muPaQ==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42grdxu9kh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 31 Oct 2024 21:38:40 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 49VKVs1c008613;
+	Thu, 31 Oct 2024 21:38:39 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2169.outbound.protection.outlook.com [104.47.73.169])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 42hnecvjyr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 31 Oct 2024 21:38:39 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZqOIuPwqj0YAxl+Lxuj4TOer2yRLpmi9osaL5ioz9rdWCwSXDWWe1KNglc5UV4Zi1pb5o5GL/0DsZdv0E949fX6ToZtHTSweDIaIkSPFbLiOGSgHPPcAynFur1WYZhr+yUi/U8tvcsNWVwTLBOcnQRNOj4+ZKt15Qe+4IonqiEhEwgRKlGD7YkLbjslpArZTKnu/k0wlYqhEFzopNctdIgR+amhWRVurrFO1j4Tp015LHt2K1+hxIYO1n2W4849uLZV2nvT8IHGhvfIvmYhYkGy3ZlpxZDChf3jx3gTpduGUWtL6N7dDb8fT5BQ6q4d7xHtQXN2tmZo/o4iY34QO+A==
+ b=sDGkY3U5RRbHnyszSavLBW/1K/CVh79Hss7AA+XpGcGheV3e9UcnkcPsCME97by0DBLHZvBv7yc+C8pdBVFdZOSfaKIh7SkzWJD7aYOguqHoLwfYLS1HrJYLTcxd2YEGyZ/AvIgX0581Jk/k0iod3i5MSiKFSZjICeoZR5XUkzt0WgWr+bL5wI+MGnnCPcczbQbyhr1e8TOmwKdx4rhLW5ZXHXQTaYiktqMhFL+g4m7pahqGQ1dFqJNUlKACYOA6pE6qUeRoWjNdTI5mCN5cG7YQxHuApEhia/Wo2CbEd2aeoXq77hxc0hEUqsFbEY1RQhE2f/zSW5aETs0n/VcuzA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mBibkdyjZV/1/ppByaipvOqsJDfDzCiJZNCKX7z2dUI=;
- b=s3o9FfZkbbO4vwkIrLf/A4tJcmxs2NDDPDesrP5XLsdvrAsWRAhrHDpJ6w+bXkcT1phvR7sr55R7kgjYydZzUwzcgv63YEmxwLghtwEtEEOy++dNaRFaGX4DgQxtBDAPBn4sIB9dnhUt6ZtG6DzGkVlzeK/uvSsOQUQcwmIzHrfE6Op5vU3LG/JASChw2bSPJqQAqmojS1WRTwRIjx8ohxz/JjoTdSfsqfK33plRa0CSucpBo3R9xuCugkhBEB/AJO+DGfB7dx9he68mZApT94rLfo13JpGUFKInOmeFXHKS1RaMg4LNKgzvEDY4Whttyvg6sEYpyzHcVtrX77r+Sg==
+ bh=4AvAyhVGTcI3lM/VfI3IJvPhTfv6gRNjaq6QL4M4Xik=;
+ b=QSr2Bhv3gvzQVkLc0IxKRd5i7rqpk41yuJD6RJLRwof7IiUI8xiHRjbj57g1jX6kJRCVTQbOqoBHJs0PDzRMlHPFduAppZSPw8brd5hW5SkaAe1qXF0cDc/aiI+izxQdjacpDtLKW9mlOTHv/27CuVwHA4n+w6xLRByxLLIgvOgxSzzW+VExtXG+9uNS1YrYc+QiQNe++YpWiv6zkHq3AVVbmEAgFlDsZ3gcNExMldlw0eJcNU1Ufj4FrJR6ugDHXPxojFvHDarvcPkMjTadrxCE7pS6fgLnxJvUuPNTLlZQG4BSJVQX0IevYOl6pelHMjOeEUfFi8Wg4qt0Xi74iw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mBibkdyjZV/1/ppByaipvOqsJDfDzCiJZNCKX7z2dUI=;
- b=W5cGWHUt8QQMjfEJy8vBHSAE9zGyC/5UhgepceVl2WeKv/N1Wq/nwa2GvBIefK+J6VvWmnSopf24nbj0wJvWVSwqdWHgSIIB3Yaap4keQYOpIuYIgDxrYWct4xSKiduDCyu3bZfWDgPNziegw+JiySy5m7HElCKVNcrxwsB2Iek=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from MW4PR01MB6228.prod.exchangelabs.com (2603:10b6:303:76::7) by
- PH7PR01MB7871.prod.exchangelabs.com (2603:10b6:510:1de::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8137.7; Thu, 31 Oct 2024 21:35:24 +0000
-Received: from MW4PR01MB6228.prod.exchangelabs.com
- ([fe80::13ba:df5b:8558:8bba]) by MW4PR01MB6228.prod.exchangelabs.com
- ([fe80::13ba:df5b:8558:8bba%3]) with mapi id 15.20.8137.008; Thu, 31 Oct 2024
- 21:35:21 +0000
-From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To: John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Leo Yan <leo.yan@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>
-Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] perf arm-spe: Add support for SPE Data Source packet on AmpereOne
-Date: Thu, 31 Oct 2024 21:35:33 +0000
-Message-ID: <20241031213533.11148-3-ilkka@os.amperecomputing.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241031213533.11148-1-ilkka@os.amperecomputing.com>
-References: <20241031213533.11148-1-ilkka@os.amperecomputing.com>
+ bh=4AvAyhVGTcI3lM/VfI3IJvPhTfv6gRNjaq6QL4M4Xik=;
+ b=kTHHOt1l2U6Eqra3443/1mZbdpPB9LB2thAknlIE01A8kHr22Gqs6NefXK5USO3uPi4uBW/3Aoq2LifiD7kGrgwb7/F6jITGSESfvfTW4ojKq7MpZHjXTHs+Zla/5cVmOTvfjFV1xVT20A/x79jxBvQzXhs7Q9MFN0485Uxz2os=
+Received: from BN6PR1001MB2180.namprd10.prod.outlook.com
+ (2603:10b6:405:32::23) by SJ0PR10MB5860.namprd10.prod.outlook.com
+ (2603:10b6:a03:3ee::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.20; Thu, 31 Oct
+ 2024 21:38:35 +0000
+Received: from BN6PR1001MB2180.namprd10.prod.outlook.com
+ ([fe80::34e:408e:c7a1:2446]) by BN6PR1001MB2180.namprd10.prod.outlook.com
+ ([fe80::34e:408e:c7a1:2446%4]) with mapi id 15.20.8026.020; Thu, 31 Oct 2024
+ 21:38:35 +0000
+Message-ID: <0f40b9b8-53a9-4b45-883b-d4d5ecf9fff6@oracle.com>
+Date: Thu, 31 Oct 2024 14:38:28 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
+        Jens Remus <jremus@linux.ibm.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>
+References: <cover.1730150953.git.jpoimboe@kernel.org>
+ <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
+ <CAEf4BzY_rGszo9O9i3xhB2VFC-BOcqoZ3KGpKT+Hf4o-0W2BAQ@mail.gmail.com>
+ <20241030055314.2vg55ychg5osleja@treble.attlocal.net>
+ <CAEf4BzYzDRHBpTX=ED3peeXyRB4QgOUDvYSA4p__gti6mVQVcw@mail.gmail.com>
+Content-Language: en-US
+From: Indu Bhagat <indu.bhagat@oracle.com>
+In-Reply-To: <CAEf4BzYzDRHBpTX=ED3peeXyRB4QgOUDvYSA4p__gti6mVQVcw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CH5P222CA0013.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:610:1ee::14) To MW4PR01MB6228.prod.exchangelabs.com
- (2603:10b6:303:76::7)
+X-ClientProxiedBy: MW2PR16CA0054.namprd16.prod.outlook.com
+ (2603:10b6:907:1::31) To BN6PR1001MB2180.namprd10.prod.outlook.com
+ (2603:10b6:405:32::23)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,213 +105,270 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR01MB6228:EE_|PH7PR01MB7871:EE_
-X-MS-Office365-Filtering-Correlation-Id: efe4b449-e20b-41ec-c074-08dcf9f3ec1a
+X-MS-TrafficTypeDiagnostic: BN6PR1001MB2180:EE_|SJ0PR10MB5860:EE_
+X-MS-Office365-Filtering-Correlation-Id: 73fd8436-65e2-4710-da83-08dcf9f45fb2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|921020|38350700014;
+	BCL:0;ARA:13230040|1800799024|10070799003|376014|7416014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?jtTDmf6299F/q9xikAip3HnVb8EAKm08OiruNzWoj5U8o/jiwOoh6JfqCrSg?=
- =?us-ascii?Q?0JPJNgMXwVuWb2BYilmGVwUmAV9Wxmu4TxzCHeuf6Vj89S42pTcoqoBMq7Ki?=
- =?us-ascii?Q?2lzCTenuaFRYv9LliE9hhIlSlhYPdxVS/qKpbQZ0VYmxQZAFChPoE3sZlHVa?=
- =?us-ascii?Q?PRAVVW1mh//wNxS/NIWazaC7jVb4Cdp8pBytHEj7QRJuwnW847yMBejgjVT/?=
- =?us-ascii?Q?drDqO90B3bJVPLpJEGf/Sq0LlLfOFh80UaEmzQVduY3lADlBVk6/QL/MbPG+?=
- =?us-ascii?Q?2uW3dywa1tADWUoALQbIbPyXzBzbmpyeKXfPPX7FVWuHScwIlZkw588iMacH?=
- =?us-ascii?Q?lznL6iL22ylmp4nzPOvZmxZLvhSkIbCQbb7qS5+Bsu06Zeuv5O72wC2u1vEG?=
- =?us-ascii?Q?ZePARe+x8WI2dE5K4N3U4WtIXLy/OZBQ+7i0DCttX5xXl/mf4YHJUQVdfuPH?=
- =?us-ascii?Q?ZliabKKFoZ4KFPN0W+QEX1ar+rfK1La2IvENfbHlwvBP+lEZKjEMyIgngurU?=
- =?us-ascii?Q?p7WvdzNfjsJBI1p0TBuA/Va8LP4gzgbhutqsLsHCYSigX0NekZzNYXNV3SS/?=
- =?us-ascii?Q?NbThRobJaE4bb07+uFaPxOW7rr2SFZ5qIluu2LTv2N8pFQL7jui8KUvZmKUC?=
- =?us-ascii?Q?0ih1pD6qQK93RJ0cAF4isiAzgti8v7+uczBxNdr5YqD2fwunR8rLxzWtLdsu?=
- =?us-ascii?Q?inpfJ2AiJJ0YYZCLaTumNvMDalMDGLvHM3vSl/w5kjK5RzXeDQxTmUD0TClR?=
- =?us-ascii?Q?NXhw8pa/PX2chkUUK/P2c51y1Vs3XaQHuWb60Hpz6dx1YTw9oxD265fRaIxU?=
- =?us-ascii?Q?98lK9H6HMGlqDcKchNTJCjHsp1IrDX6z6EqolqXMtAXXp0FroPen9j7WRsVs?=
- =?us-ascii?Q?AjEpD9Z8XBvNZJ/wa/jwYszGQ5uZl5l/H9vXVm8hZXN8orZW3s1YLjYlWVtg?=
- =?us-ascii?Q?yyo+hTAkyuNqbaARLcRpKTRiK0fUDr4/YSIT2CpfNABu1+npLBEROi3bVvP6?=
- =?us-ascii?Q?J9sl6ET64gR3Xsx42hNzUTpSIhyhhOQWyMhysgw9c1IOLZ65+6n9TKZAoJ6C?=
- =?us-ascii?Q?vRy4od8qxZ9fcx9bWEbUBVacyMbVkk4LW9SsNi1bqg11bAviAbMzDrx9ebVe?=
- =?us-ascii?Q?G2xDuGwoCGFq+Y6yeZcoYBqi8gibfSkTICsIBfNrGfZjrd3cC1eW7ok7qKDN?=
- =?us-ascii?Q?kTb1pIKpdbPq2yKxCAE2Y/HjClv9MPTs0stnNOuWQQYdUaINIboSEbWiqB+d?=
- =?us-ascii?Q?myFCVROGocJnjDDO6G566/N4Qhpd7rT6jGsNFcgNfDzNBs0SdxVjbEzl3TF+?=
- =?us-ascii?Q?nCXZe3YC3kOPDL6MZqgKuKwp1gmlPPoJA99egQgTYAo88USyN+XaPcO0IX1E?=
- =?us-ascii?Q?bHaBtlyYABKWlZyNQfHHqTO2/pfF?=
+	=?utf-8?B?UE11MzRmUWFreERzalJBbVhrUlNpMnNkRUVzY3FCQnhldDV5NHJNcStHd0sr?=
+ =?utf-8?B?djJXL3RySEFQMktFeU9GVWtJa3lLWHhoc1FpeXJyY0pZSmJtNEFCUXJyNzRq?=
+ =?utf-8?B?ejlrVlBmOXFzdEJzQVNIMjRVdC9oNnpMUkJDUEpkUEIzcmxDTldNZk8xemZr?=
+ =?utf-8?B?OE9kOTNsS3J6RFJHT2dLZjRMSW4zdThxMWptZEs1TEtVRjU2YWErTDljbWYr?=
+ =?utf-8?B?djNBbWxuTm93QnRsd1VLNUtsaHJOYmFhOTFtUXRSWXpReVNaM0V5N2JBTGl3?=
+ =?utf-8?B?UUhXUjgyWDkxVGJNNVFWOCtBL2wzTzJ1MTNqSjdzUlBJNC9yVGpwbldLU2Qy?=
+ =?utf-8?B?SDkzTjk4WHVRN09MNUcxbnN2UUxublliSUdLYW1NeEtsMDJua3hJc1JJTmE1?=
+ =?utf-8?B?OHFMUmF6Q2hMbmxxcG1iUXlhOTNwS2FqT2pJZzRpUUR0NklFNi8xSnpuSUJn?=
+ =?utf-8?B?YjIyUU1yYkpLUDJYdkladnpRS29rc1pFMklpN3VxSm9kckRFQXpBelBLV2Fy?=
+ =?utf-8?B?WS9vRUg2SVJ4TTJJYVkyZHlnaE5zZjVsOU9tS3lEdHNuZFNTTTNtNlBsWmlo?=
+ =?utf-8?B?c3J3OWlwK0JWT0NQZzRORlBIZXlBblFrbkZSK1NJTnltK0VzZ2Y5OHRzZVVV?=
+ =?utf-8?B?UWFtNHZXWnRDUVB0Um1QMEtqSnhMK0lpS2hEWUt2dTIwZVlEam4yMGpvTFd3?=
+ =?utf-8?B?OEFZTFZFV3dyd1gySkVxQ0IvajNqVFh1bUZSaUErRW5PZ0VrZkZuSlY5Vy9v?=
+ =?utf-8?B?WXl3d1l1U2hlYlBtUUlKUGRuSkZZSy9RUmVDcWhEOUNFOHlQUVJ1MTJ1cnNW?=
+ =?utf-8?B?bWorSTFqNi82Q0oyWnI4VVJPV09VajdKT3F5Z01vbHpLM2RwN3lKemJaU1Qv?=
+ =?utf-8?B?cTNUaHZBbE5CTGhtenNIQzFMQ2hVQTJocGg1YUJCY0VhUmE0S0Z0WllvL1dw?=
+ =?utf-8?B?QWlqV21IRUdzNk10WWNCVm0vNXkvNGl1U2xOdnlaM3pqZTVOQTRxMUx2cFpw?=
+ =?utf-8?B?SWtHQ3Fyd05EY00yTTBIVExpblArdmFPN1grUlU2cjJ4YmZzcWt4c0JqdkZT?=
+ =?utf-8?B?RDVUaURZZlNrTTB3MHNUZkMvbWJUZFNPSjQrS2x5ZDNONEJENWl5a05udCti?=
+ =?utf-8?B?QzlabFRINHFmbDdMaTFlcnNXYVZhcTlWelVrZUI3RDVDOVlqMmVHdFo4RVps?=
+ =?utf-8?B?MytGaVZ1WE4rbkxGR1J5c0JuaVZNL3lDZ2pnUHBpNjZIT3FFUVpXK3ZKdVNw?=
+ =?utf-8?B?TFBnb1JvSWN4TW55TmNnMmkzcll3S2ZreExybDh0UFRwVTExYUdGamlURGI3?=
+ =?utf-8?B?TEVKblhaSmlTSko2UjMvZGt2RXZhdVJ6NkxRc2ZGKzdRVkNGMWwraUFnZUEw?=
+ =?utf-8?B?RkpuUmdLMnNxMDhhYjBHR0xXaFFpOVF0djRGdW5rSnFyT01yTnkwNUQ0QkFl?=
+ =?utf-8?B?bFpPU2hIZWFuNEVkZlBlZ0FLc0Zsait4NktBUXh3ZUNETG1QTHQxTlBHS3Bz?=
+ =?utf-8?B?M3RTUXZhQXhIWnpGdlhFT2tqMjl1dnV1Q3k4a21SNWMzTlVNN2QrQ3FaNG5H?=
+ =?utf-8?B?ajNhY3VxVWhrcTJCV0VaMHFTVG5uSTBaK1NPTVVFMEIzUjFnVy9EOTk3VHpR?=
+ =?utf-8?B?UGVOcG1GSGJ4RjZFVTY1NGx4NWRSQmRENVRxSGhyT1R4QVhJTjgxQmUxSnlB?=
+ =?utf-8?B?OHM1THZ1R3dITHo0cTZzVEthSm0rQVhlMWpiRElpYVpuZytyVzYxUmN6MHlS?=
+ =?utf-8?Q?1/AQGz157+b12CN0a/ZABiCTp2mOH+5zGqsBeZS?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR01MB6228.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(921020)(38350700014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1001MB2180.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?NSdyNIcHf73k4zoXPwnggE/bd7EsxVpep91U3KNHbQqL+uKo5YsZ/YZqNHK1?=
- =?us-ascii?Q?0OnnKu7WB3+C/ytc3Na+lsuMV9hy3JGtM5/atQyf6wlnyZvUumbYS2gwaNS6?=
- =?us-ascii?Q?k/9JgP2r8JgcJjy+PD1xd7vYvzMLdftAYKl0jEguVrVe1EXzNFW/eD8f8TpH?=
- =?us-ascii?Q?1uXoISOA+654/4iRi+dDtw4tCbLJ4usMGz+Uqf4KJXo9D+hqEGxz5Cfto2hb?=
- =?us-ascii?Q?wpuVjWljivHbFpLYDy/T8L8WTC4/UKydNOufLfHfSAyUJYzhYnkU8iYEsM9T?=
- =?us-ascii?Q?8/nG96nIsr61qWdtLCFNO/s22vRrk5zIybm/CDe/oXYepYYgEpLcdzKbYgKS?=
- =?us-ascii?Q?pvUS1kmGY+IBA7cDDky1gJarBhOr153+8NCul2uDGMz6vQ71yJfcmVtep9Gm?=
- =?us-ascii?Q?XHjslxfbhcfWL37C55IkYWT4lm7nCn5FJqBzEFQ0fKzA3vNrzX9asCEnOBNs?=
- =?us-ascii?Q?0uovVc8f4V8JkvOCkZ3O5PMyABf9JgHsDNWdEZBGO8xCDY1Jc/7lB3dIMif6?=
- =?us-ascii?Q?htiHwzySPlJakwbK2IkrV9Mxh03tyS/jAAO9NmZHTzC5pz8lSU1g9wdZqNrg?=
- =?us-ascii?Q?3lXQVwk5BIdCvvukxSI0x7hd8SzpogZAK/YDMBYfovfjG2HQhtI+3UEMaY8W?=
- =?us-ascii?Q?BPCWgjzC0KQjw8NSPqPAZyO+5tqE9NiVwSWz3ybjLF/i452ljU0Zu6620UTK?=
- =?us-ascii?Q?Jw2FeH38InpIddYlkMpTEqnD5fWGRk9dKru3yr1ducF5kENWzszVniIn7Qvh?=
- =?us-ascii?Q?k0EQlrEfLYcgvtP4yWcl3c9kXuW/8+44pUcKvbovNnOtfsnsayh0O1iZiVWy?=
- =?us-ascii?Q?ntbLYJcn+M7lqxQMLqmIB/IGvt7xJGC3Rc1hp08lPAvJmjgZk1oJlIl7N4Nu?=
- =?us-ascii?Q?YY6dPhm8U/0bFj3U3Eh/agvftjCH4L82fXNGO2kTR9OKXmK5RH7937EDYNIt?=
- =?us-ascii?Q?HEB2Nv/o7Qs6BOpkKZMEyMgJod8Gh1R9FQcmgY+2Hug1NI40vhY6MX78f2pu?=
- =?us-ascii?Q?aTQa9BYW/FD7Z52ikxzww5chgTH7ycdf/CCaxkoIVRp0+Hx5yFyvfVbERO8r?=
- =?us-ascii?Q?tOn+UPTUNUAMgOatD7bV2Dm4JCLNKOI61viXGGXHK2n4qODzji8TGTyNMehs?=
- =?us-ascii?Q?cOe6iC/R5NQH+dlz4DiOWErlaitCDorwjPaadeqs+Vnn2n/gtwvySf5awpC5?=
- =?us-ascii?Q?naMpPl0crkoLCHEJWxRP1BKdt+1w8+Aw806HSlC7dMHmKtHfM36VNYGR9Vkq?=
- =?us-ascii?Q?W11gb5xLM8IDbsIlgnCE9IeChTCZZY0E6EsRYAZeich1VXfWsFfbR8Z96+ha?=
- =?us-ascii?Q?4fkyIpnX5rUVr39BlZTW1PNriR7XKwOziouhCFN/Hzpbe4vAaagwvZRYq/w+?=
- =?us-ascii?Q?SZ3HMhn09Rhk3pmWlTdG1DxzrfM+naqgbEJXQhyYI9F2SHMB+wq6lM3xekwR?=
- =?us-ascii?Q?ZjV6/g6t4NUaqmoDT67hxg+6SLsc8l48ZbVIdSYQulOv1Eiitvcd5IMjc9vO?=
- =?us-ascii?Q?DMAkFLpuGQbuSrY5A32Xq5V57MToBNQCVhoujbOLPb8IkFPFrmzQYc2+rGR6?=
- =?us-ascii?Q?0YI8SmUZlN+4AjahZAi8C5+prkXdsJldPGeJzP42CP2KxbgQh4dYDDzIuQ5F?=
- =?us-ascii?Q?hvOHqDWw0eMHiL3pBip8dQ8=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: efe4b449-e20b-41ec-c074-08dcf9f3ec1a
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR01MB6228.prod.exchangelabs.com
+	=?utf-8?B?c2VpTmpBSDJmNGJBZjFwWXdia2pYZ3p4cDdjL25uRUxLQWJiSGVKQ09ISlFs?=
+ =?utf-8?B?Z2Q4Q2Nnd0hDNTJKeHV5RDkva2VlRVd0SFVHU1p2M3dUTG9FWGYrM0R1K1l0?=
+ =?utf-8?B?V21ISU43RUtnYW1HaWlXT1VBYS9Pdnk5bW9QdVh5b2ZvQnIzbFZ3QVNCbWJI?=
+ =?utf-8?B?L0x2VkhJanErL1BjK1FwS1NWTkxGc0IrWC9FVTJmRXRoTUczM1pOOWd3VXh1?=
+ =?utf-8?B?ckRsTkpKQ3VRdVJBaGxXbjlMME51RitrS3MvVkhJdDFCam83R1MvWGZBdzVl?=
+ =?utf-8?B?R09Ya3ZLSVZFSVlJdmNRdjlLdmVOUFZpTEF5MHVxdnFkbmNDc3RnUmlTcDZR?=
+ =?utf-8?B?YmhLbzRDejFwL3JuTVZUY0xtNWlWWXFjUTUxN05wMzNxbWhCelZtS05QaHJx?=
+ =?utf-8?B?bm5KeVcxNGlhNlQ0VVBvMzJJTWVhcDRuZ0pLVDhLYjEvNWZaMUpkMjNPMWMz?=
+ =?utf-8?B?dzhXUFI0enA1TWxCc1JSV0E2dTh5TEM4YmJsbEtPMXpkOWhOWnhjcnMwSVBr?=
+ =?utf-8?B?MUFVUTNVakdMa09CaW1nUlN5c1BSWGFxbktjY2xOR1hpNk9JQXVwWXlGS1pr?=
+ =?utf-8?B?WTd2bFBHcVdhM0ZIMXpzNXFJcDM5U3lsVjhtY0xwclVubDJVcmRWU3IzWVRh?=
+ =?utf-8?B?ZkVvZ1BOb0RIc0ZlZzBIZitVZVhqcm1jZG9zRVVkMUVpb3h6L0ZSelNzYzNX?=
+ =?utf-8?B?RkI3M1FBakxOWmtpMlhpY0ZORHo4SGFEbGcvU3RiZ21tdjB2dFpTWHI1dmQ3?=
+ =?utf-8?B?T2ZpUnBMdlRzdG1uK3RPMmRjUlVlTWhyZXdVV3dCR01QR04zSTJrZUpxMS9H?=
+ =?utf-8?B?clRpQm5VU1ByTjg5L0hvcUIxWDRzKzljRSt6R25JY00vdFRTenpkMHN1cEN5?=
+ =?utf-8?B?Y01McDU2dEVQY0gzWjJKQmZ3aFpYWFZ1NEQxSElpVlhZbDd0M2hMS290WGhC?=
+ =?utf-8?B?OFNmeHBNbmpUbXk5RjUvQVhDUDVtRDJNTkc5UHpCWWxZMHFZeVR6elhOTTlk?=
+ =?utf-8?B?Y1FMSmFKbDhYKzZzdjdEWWdhaTY0dkJ2bmhhNVBXOFZzWEFnY0VtcWpWUDRt?=
+ =?utf-8?B?bmZjQUpkU3pYSFJKaVErUDR6dkZ5cnBqYnFyN0ZBS2lyQ2R6cHU3S0tNbVo2?=
+ =?utf-8?B?QnAxYzZ6ZitMUzQzdXRUeG4xTHZObWhYeTBtVE9DVE83dUJWekI3bnUrbXlJ?=
+ =?utf-8?B?TThsM1J4Tk0vM3VYeC9PeXhYdG1tQWhQVStsYjhiTFdiT08zc3draXYwK3lp?=
+ =?utf-8?B?NStjZHZNaHJhdStuUlN6eDUzcG5tRmV6YktJY3RQUWhpZ0dOclZ4allzVUg4?=
+ =?utf-8?B?VzJwLzRkeXA4UWJYRlY4b09LVU1EaVJnSStKSWFzaElYbWNkWmNVM01xenoy?=
+ =?utf-8?B?bWVvTWtCM2l2RE5wZ2M2RkU4TUcxbzhaWFEyaks2VDhyakp0L1dsOXloS1o1?=
+ =?utf-8?B?SXBLS0pxWml6YTJvcDBGM1FMSGNXdm4xbHY2QVBaclo0VHgwK2dML2hTN2xx?=
+ =?utf-8?B?TEdDZmQ0WDBsVURYNnhhMlVRL2NEOSt5QjlCQWhwTThPckFqMzNwdys3L0lC?=
+ =?utf-8?B?dEY3THRPaUExU2EzWW1ZYU00WjI5aE9NMUtUOUY4SGhUWUFQQnZuQ2JkY0tN?=
+ =?utf-8?B?KzRNTmRMYXlrbzNhT1l3TlQ2SFMyeGI5ZGFxMmsvb2xRVFBiRUhuYjVRWlc0?=
+ =?utf-8?B?cTViaHg2eHhyYitub240NmVOMUJha1NXejQrQUJmaWc0eEk4TlpFUHFmeW0z?=
+ =?utf-8?B?TEhaZFF0dWZzZjZ2WFZ3QlRsNFFMRlFCNm1QTGNSWURla2lUOHRJcVhtWG1G?=
+ =?utf-8?B?c3Y2ZVVSV1UxdE40aHI3Sm0razFkZHcvZEt3Tkhnd2gwNCtsNjFkOE5nVmRj?=
+ =?utf-8?B?NDFrc1hzMFZiWm93TEQvT3lxcHZJdEdoZXNxSzBoQ1IxUEorTUJHKzAzQVRN?=
+ =?utf-8?B?bEVEZVZGOU9ldytEdTdsMCtYOFRJenFYMjNIYVcxT3VrektrNmltQ3BBZDEr?=
+ =?utf-8?B?aWJRcHdMbkIrcVZnMXV4SkNaRGt1SU1ZMHpGTVVpY0VCaVB3cGZWeWxOcW1y?=
+ =?utf-8?B?ZEc2akVrL0k3YU1kWjdxQ3o1VFNZRnBuRG9DTnRMdDlPeUYxeDNXSkpzU3lk?=
+ =?utf-8?B?allkK0FHbWtZS1pKb0dVbitRYXFBZ0NVaThPL3pXZmNsM3ZDSUVrVDZtcU8z?=
+ =?utf-8?Q?xOfVi1w09d0Vinl+YGfQnuQ=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	L4XbxI+I7Vr8dF5Etl3+V6nApYw+i63+N0CyIl2BxGjfkNIMHrfUbNcyMv+38nCW/XpbJuRsLDNkwaZ4vcqZEy2EiPHbEAP/bvV06sUismuk+X38xi99PMcimNEJZywV5S4vhVN8XZAIKQvJ7eDc6ggz2U+OUUCj3xhvBtpz62Nwt4i+weLSyNYXoZkACsnLgWtyfZynfnSubIfk+yh7rqzTgFMiHApnt0qKabOrkrfwvPLLMYX8WwRayyJNLpv2cg8Bs7XJGk/YKjecBHlIBa14I6vyZUON7x5PPCVBzcjqCE/I/Hf+VqK9ccxTgqJkoXtve78dYD9WqdqqXUbtaE1YX/rbxbeIg0ZbrPuDFYIGT0IVM0klOfWWlBjxqKJyJMRYKftFvkKAZymo8f6naFLDL2PX6ofvU6bSAtuU0X2dlByauxlyyKcHXCd3IpvU2iOPce8tJs+ZZHhTz/q2JQD2XD7nb2lZaFdgouvy26Z8zADVSlkVv4t5CFDaXMQ/8oehgeg8UMeI6znQF0ctSfaJKlIVi1C1YzomdD2FOmoCKzNVjZiJyBsVvcqIOfqf4SFvbv/8g3xUja5NoYQqW0om9rtCxS+Yoj+lhaeevSw=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73fd8436-65e2-4710-da83-08dcf9f45fb2
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR1001MB2180.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2024 21:35:21.4605
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2024 21:38:35.4042
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k3NSLxWXMFLtYsalpVv6y8dFJXOMMJA6R4YgQe3odnM5A2vBMWSC/Ql30d6NYU8BYVdvEUQR0qS1girSWivh1e3GtVdw9lpffPJJm4+So7B3qd2g4ME0PM7Z7oQwN/lq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR01MB7871
+X-MS-Exchange-CrossTenant-UserPrincipalName: zrzuQv4nqbMUbrzBcJmb9tMIRpFBfAxqCnp41B5eR1WhVMooYUgSR6tLtzr8n4lkkmjLZ1Bn2KEd5QI+c+SAPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5860
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-31_12,2024-10-31_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
+ definitions=main-2410310164
+X-Proofpoint-GUID: PjUPRL5VVqSKYLY8r9Ujr0g1OPdcVESL
+X-Proofpoint-ORIG-GUID: PjUPRL5VVqSKYLY8r9Ujr0g1OPdcVESL
 
-Decode SPE Data Source packets on AmpereOne. The field is IMPDEF.
+On 10/31/24 1:57 PM, Andrii Nakryiko wrote:
+> On Tue, Oct 29, 2024 at 10:53 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+>>
+>> On Tue, Oct 29, 2024 at 04:32:40PM -0700, Andrii Nakryiko wrote:
+>>> It feels like this patch is trying to do too much. There is both new
+>>> UAPI introduction, and SFrame format definition, and unwinder
+>>> integration, etc, etc. Do you think it can be split further into more
+>>> focused smaller patches?
+>>
+>> True, let me see if I can split it up.
+>>
+>>>> +
+>>>> +                       if ((eppnt->p_flags & PF_X) && k < start_code)
+>>>> +                               start_code = k;
+>>>> +
+>>>> +                       if ((eppnt->p_flags & PF_X) && k + eppnt->p_filesz > end_code)
+>>>> +                               end_code = k + eppnt->p_filesz;
+>>>> +                       break;
+>>>> +               }
+>>>> +               case PT_GNU_SFRAME:
+>>>> +                       sframe_phdr = eppnt;
+>>>
+>>> if I understand correctly, there has to be only one sframe, is that
+>>> right? Should we validate that?
+>>
+>> Yes, there shouldn't be more than one PT_GNU_SFRAME for the executable
+>> itself.  I can validate that.
+>>
+>>>> +                       break;
+>>>>                  }
+>>>>          }
+>>>>
+>>>> +       if (sframe_phdr)
+>>>> +               sframe_add_section(load_addr + sframe_phdr->p_vaddr,
+>>>> +                                  start_code, end_code);
+>>>> +
+>>>
+>>> no error checking?
+>>
+>> Good point.  I remember discussing this with some people at Cauldon/LPC,
+>> I just forgot to do it!
+>>
+>> Right now it does all the validation at unwind, which could really slow
+>> things down unnecessarily if the sframe isn't valid.
+>>
+>>>> +#ifdef CONFIG_HAVE_UNWIND_USER_SFRAME
+>>>> +
+>>>> +#define INIT_MM_SFRAME .sframe_mt = MTREE_INIT(sframe_mt, 0),
+>>>> +
+>>>> +extern void sframe_free_mm(struct mm_struct *mm);
+>>>> +
+>>>> +/* text_start, text_end, file_name are optional */
+>>>
+>>> what file_name? was that an extra argument that got removed?
+>>
+>> Indeed, that was for some old code.
+>>
+>>>>          case PR_RISCV_SET_ICACHE_FLUSH_CTX:
+>>>>                  error = RISCV_SET_ICACHE_FLUSH_CTX(arg2, arg3);
+>>>>                  break;
+>>>> +       case PR_ADD_SFRAME:
+>>>> +               if (arg5)
+>>>> +                       return -EINVAL;
+>>>> +               error = sframe_add_section(arg2, arg3, arg4);
+>>>
+>>> wouldn't it be better to make this interface extendable from the get
+>>> go? Instead of passing 3 arguments with fixed meaning, why not pass a
+>>> pointer to an extendable binary struct like seems to be the trend
+>>> nowadays with nicely extensible APIs. See [0] for one such example
+>>> (specifically, struct procmap_query). Seems more prudent, as we'll
+>>> most probably will be adding flags, options, extra information, etc)
+>>>
+>>>    [0] https://lore.kernel.org/linux-mm/20240627170900.1672542-3-andrii@kernel.org/
+>>
+>> This ioctl interface was admittedly hacked together.  I was hoping
+>> somebody would suggest something better :-)  I'll take a look.
+>>
+>>>> +static int find_fde(struct sframe_section *sec, unsigned long ip,
+>>>> +                   struct sframe_fde *fde)
+>>>> +{
+>>>> +       struct sframe_fde __user *first, *last, *found = NULL;
+>>>> +       u32 ip_off, func_off_low = 0, func_off_high = -1;
+>>>> +
+>>>> +       ip_off = ip - sec->sframe_addr;
+>>>
+>>> what if ip_off is larger than 4GB? ELF section can be bigger than 4GB, right?
+>>
+>> That's baked into sframe v2.
+> 
+> I believe we do have large production binaries with more than 4GB of
+> text, what are we going to do about them? It would be interesting to
+> hear sframe people's opinion. Adding such a far-reaching new format in
+> 2024 with these limitations is kind of sad. At the very least maybe we
+> should allow some form of chaining sframe definitions to cover more
+> than 4GB segments? Please CC relevant folks, I'm wondering what
+> they're thinking about this.
+> 
 
-Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
----
- .../util/arm-spe-decoder/arm-spe-decoder.h    |  9 +++
- tools/perf/util/arm-spe.c                     | 65 +++++++++++++++++++
- 2 files changed, 74 insertions(+)
+SFrame V2 does have that limitation. We can try to have 64-bit 
+representation for the 'ip' in the SFrame FDE and conditionalize it 
+somehow (say, with a flag in the header) so as to not bloat the majority 
+of applications.
 
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-index 358c611eeddb..4bcd627e859f 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-@@ -67,6 +67,15 @@ enum arm_spe_common_data_source {
- 	ARM_SPE_COMMON_DS_DRAM		= 0xe,
- };
- 
-+enum arm_spe_ampereone_data_source {
-+	ARM_SPE_AMPEREONE_LOCAL_CHIP_CACHE_OR_DEVICE    = 0x0,
-+	ARM_SPE_AMPEREONE_SLC                           = 0x3,
-+	ARM_SPE_AMPEREONE_REMOTE_CHIP_CACHE             = 0x5,
-+	ARM_SPE_AMPEREONE_DDR                           = 0x7,
-+	ARM_SPE_AMPEREONE_L1D                           = 0x8,
-+	ARM_SPE_AMPEREONE_L2D                           = 0x9,
-+};
-+
- struct arm_spe_record {
- 	enum arm_spe_sample_type type;
- 	int err;
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 9586416be30a..700d4bc8d8ec 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -103,6 +103,30 @@ struct arm_spe_queue {
- 	u32				flags;
- };
- 
-+struct arm_spe_source_mapping {
-+	u16 source;
-+	enum arm_spe_common_data_source common_src;
-+};
-+
-+#define MAP_SOURCE(src, common)				\
-+	{						\
-+		.source = ARM_SPE_##src,		\
-+		.common_src = ARM_SPE_COMMON_##common,  \
-+	}
-+
-+static int arm_spe__map_to_common_source(u16 source,
-+					 struct arm_spe_source_mapping *tbl,
-+					 int nr_sources)
-+{
-+	while (nr_sources--) {
-+		if (tbl->source == source)
-+			return tbl->common_src;
-+		tbl++;
-+	}
-+
-+	return -1;
-+}
-+
- static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
- 			 unsigned char *buf, size_t len)
- {
-@@ -443,6 +467,11 @@ static const struct midr_range common_ds_encoding_cpus[] = {
- 	{},
- };
- 
-+static const struct midr_range ampereone_ds_encoding_cpus[] = {
-+	MIDR_ALL_VERSIONS(MIDR_AMPERE1A),
-+	{},
-+};
-+
- static void arm_spe__sample_flags(struct arm_spe_queue *speq)
- {
- 	const struct arm_spe_record *record = &speq->decoder->record;
-@@ -532,6 +561,38 @@ static void arm_spe__synth_data_source_common(const struct arm_spe_record *recor
- 	}
- }
- 
-+static struct arm_spe_source_mapping ampereone_sources[] = {
-+	MAP_SOURCE(AMPEREONE_LOCAL_CHIP_CACHE_OR_DEVICE, DS_PEER_CORE),
-+	MAP_SOURCE(AMPEREONE_SLC, DS_SYS_CACHE),
-+	MAP_SOURCE(AMPEREONE_REMOTE_CHIP_CACHE, DS_REMOTE),
-+	MAP_SOURCE(AMPEREONE_DDR, DS_DRAM),
-+	MAP_SOURCE(AMPEREONE_L1D, DS_L1D),
-+	MAP_SOURCE(AMPEREONE_L2D, DS_L2),
-+};
-+
-+/*
-+ * Source is IMPDEF. Here we convert the source code used on AmpereOne cores
-+ * to the common (Neoverse, Cortex) to avoid duplicating the decoding code.
-+ */
-+static void arm_spe__synth_data_source_ampereone(const struct arm_spe_record *record,
-+						 union perf_mem_data_src *data_src)
-+{
-+	int common_src;
-+	struct arm_spe_record common_record;
-+
-+	common_src = arm_spe__map_to_common_source(record->source,
-+						   ampereone_sources,
-+						   ARRAY_SIZE(ampereone_sources));
-+	if (common_src < 0)
-+		 /* Assign a bogus value that's not used for common coding */
-+		common_record.source = 0xfff;
-+	else
-+		common_record.source = common_src;
-+
-+	common_record.op = record->op;
-+	arm_spe__synth_data_source_common(&common_record, data_src);
-+}
-+
- static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
- 					union perf_mem_data_src *data_src)
- {
-@@ -606,6 +667,8 @@ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
- 	union perf_mem_data_src	data_src = { .mem_op = PERF_MEM_OP_NA };
- 	bool is_common = arm_spe__is_ds_encoding_supported(speq,
- 						common_ds_encoding_cpus);
-+	bool is_ampereone = arm_spe__is_ds_encoding_supported(speq,
-+						ampereone_ds_encoding_cpus);
- 
- 	if (record->op & ARM_SPE_OP_LD)
- 		data_src.mem_op = PERF_MEM_OP_LOAD;
-@@ -616,6 +679,8 @@ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
- 
- 	if (is_common)
- 		arm_spe__synth_data_source_common(record, &data_src);
-+	else if (is_ampereone)
-+		arm_spe__synth_data_source_ampereone(record, &data_src);
- 	else
- 		arm_spe__synth_memory_level(record, &data_src);
- 
--- 
-2.47.0
+>>
+>>> and also, does it mean that SFrame doesn't support executables with
+>>> text bigger than 4GB?
+>>
+>> Yes, but is that a realistic concern?
+> 
+> See above, yes. You'd be surprised. As somewhat corroborating
+> evidence, there were tons of problems and churn (within at least Meta)
+> with DWARF not supporting more than 2GB sizes, so yes, this is not an
+> abstract problem for sure. Modern production applications can be
+> ridiculously big.
+> 
+>>
+>>>> +       } else {
+>>>> +               struct vm_area_struct *vma, *text_vma = NULL;
+>>>> +               VMA_ITERATOR(vmi, mm, 0);
+>>>> +
+>>>> +               for_each_vma(vmi, vma) {
+>>>> +                       if (vma->vm_file != sframe_vma->vm_file ||
+>>>> +                           !(vma->vm_flags & VM_EXEC))
+>>>> +                               continue;
+>>>> +
+>>>> +                       if (text_vma) {
+>>>> +                               pr_warn_once("%s[%d]: multiple EXEC segments unsupported\n",
+>>>> +                                            current->comm, current->pid);
+>>>
+>>> is this just something that fundamentally can't be supported by SFrame
+>>> format? Or just an implementation simplification?
+>>
+>> It's a simplification I suppose.
+> 
+> That's a rather random limitation, IMO... How hard would it be to not
+> make that assumption?
+> 
+>>
+>>> It's not illegal to have an executable with multiple VM_EXEC segments,
+>>> no? Should this be a pr_warn_once() then?
+>>
+>> I don't know, is it allowed?  I've never seen it in practice.  The
+> 
+> I'm pretty sure you can do that with a custom linker script, at the
+> very least. Normally this probably won't happen, but I don't think
+> Linux dictates how many executable VMAs an application can have. And
+> it probably just naturally happens for JIT-ted applications (Java, Go,
+> etc).
+> 
+> Linux kernel itself has two executable segments, for instance (though
+> kernel is special, of course, but still).
+> 
+>> pr_warn_once() is not reporting that it's illegal but rather that this
+>> corner case actually exists and maybe needs to be looked at.
+> 
+> This warn() will be logged across millions of machines in the fleet,
+> triggering alarms, people looking at this, making custom internal
+> patches to disable the known-to-happen warn. Why do we need all this?
+> This is an issue that is trivial to trigger by user process that's not
+> doing anything illegal. Why?
+> 
+>>
+>> --
+>> Josh
 
