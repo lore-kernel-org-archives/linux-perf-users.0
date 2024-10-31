@@ -1,132 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46322149C53
-	for <linux-perf-users@vger.kernel.org>; Thu, 31 Oct 2024 11:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5E713AA5F;
+	Thu, 31 Oct 2024 17:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730374369; cv=none; b=Quw6h1LuLU7hU1PnHCLWAEXAViq5GRIrwKqgyoka2Ks2t7OeYXaZRiLCS0Dj4Vk/S9o5Tl2B0XPIskI6IvN+Rc6y9nev9xMXgigPdnEfipG7VQys9zjboOCmi5mS+JqgI3ROihEsMJnt9vt82Ml8u9O/3/Is5K+RmrzSj9e9Dhw=
+	t=1730394730; cv=none; b=LqGwfe1XAZ/2y+r+pF1WWmpbaI2wYbUiK782xKpF5FVF7lHCbeObQQfyvm2DyqDxsue4GegD2B2yvcnUjrv/UkDRvL36XzfG6rtjpFtCS5UWwR5l7wtP3OWIy0QU0MZ+XQo0nSGHV8F0FTHjGWsQ3KYcTPPxF9aoRjdgMUTqOEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730374369; c=relaxed/simple;
-	bh=0jnLJL+TyYTEXBKTAG9x6W1q/j7nmnKzIT6FDzcMNqg=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sU1cuDimX8Z/S/0NIXXBIgaKBphiWaQzzUyfWEzGhihPFMHywNRGx3jWI80etlSzsUgNeK7FIj9OyuaZB85QDhJBPB5T8LMWUhcvhrjtIzCeZVlg5IrPp6L7PTTwlxznkrC9BJ3SCbdSv3c72W68ZSS7Iuz5QbtQZ2ZwqjLxS9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ao+3nftM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1730394730; c=relaxed/simple;
+	bh=6XG12ERMkjluHM55pynix1a/P08nWWDLaHkkO2E/a4Q=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=E3cqFrRlK9nOXYYb88HXWZa5arouqVr7upzLhQIVMQpXgsO6D9+qo2jDhXdTJNa3MtsGPfSNIsz1K0AAKQ422qi8EMSYurQqIEUJkTXMQouK6Gs3lan6hEmXGPnrVA8WL+za89pbbuN8P+4J03ojFE9t/HxeqfXr8DBnEP1stW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYXzwXFt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ao+3nftM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730374366;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jwu/aoLO9YK4nuC4V0476umiEleaBJSsHSf3gNfQUN8=;
-	b=Ao+3nftMbf7jrnJmAHDaQSRgBcF+l5aflA5KgEU3Rcwprt+eoRaDL0kWxc7Z0bPKk+9rdX
-	NqVEkmKez04Ps+ZmMEZa2wOZkaSthRaku01J1n2ZwMON6SNdyZYrg6fYADYpolhc+kMzGt
-	oMx70eY/KQfrnhexHQQ1PX3BlJoc7Sc=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-344-DeuoOVNmO_uuRyixYskZ0g-1; Thu,
- 31 Oct 2024 07:32:42 -0400
-X-MC-Unique: DeuoOVNmO_uuRyixYskZ0g-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 80F881955F41;
-	Thu, 31 Oct 2024 11:32:41 +0000 (UTC)
-Received: from Carbon (unknown [10.39.208.11])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 45FDA1956046;
-	Thu, 31 Oct 2024 11:32:38 +0000 (UTC)
-Date: Thu, 31 Oct 2024 12:32:31 +0100 (CET)
-From: Michael Petlan <mpetlan@redhat.com>
-To: Namhyung Kim <namhyung@kernel.org>
-cc: vmolnaro@redhat.com, linux-perf-users@vger.kernel.org, mpetlan@redhat.com, 
-    kan.liang@linux.intel.com, irogers@google.com, acme@redhat.com, 
-    ak@linux.intel.com, alexander.shishkin@linux.intel.com
-Subject: Re: perf sched timehist --state vs perf script
-In-Reply-To: <ZyF_JDYF4wgEmbrW@google.com>
-Message-ID: <a8297e65-97fc-507c-1b73-7547374688c@redhat.com>
-References: <20241024163630.24882-1-vmolnaro@redhat.com> <ZyF_JDYF4wgEmbrW@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYXzwXFt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15CBCC4CEC3;
+	Thu, 31 Oct 2024 17:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730394729;
+	bh=6XG12ERMkjluHM55pynix1a/P08nWWDLaHkkO2E/a4Q=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=JYXzwXFtMAOhWtK47qQ6/k29acp0Q5tPe1uZlyNHUyJvg04rZ6wM058RzdNRXJrJ4
+	 3LP+Peu2t6aSi7s8XbWPB7SyewWIZPJg4DjR4z10XAUdXq86QxfmkIoMJ+5Ktb8/ux
+	 eFTwgaXOKW8XgsEGpyHcpvqenGtfxUH4unRcoureAK4APt+Y4hapxxp1gbR+xE+zSs
+	 4/Pw40PFj7gmDVq08pUCpJIVFbznmovIJfe80XO4dYF99h7SA4Ox14UEtjmAiUA1BK
+	 mPVm+wcoETa9z4PexMALOlZLTDUMa1LHSFjNJUZkmQjXWzmfeGTyJwggXAfyb8mA1I
+	 4HDkRh594kHaQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>
+Cc: =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Anup Patel <anup@brainfault.org>, Atish Patra <atishp@rivosinc.com>
+In-Reply-To: <20241024190353.46737-1-bjorn@kernel.org>
+References: <20241024190353.46737-1-bjorn@kernel.org>
+Subject: Re: [PATCH] perf, riscv: Wire up perf trace support for RISC-V
+Message-Id: <173039472904.1704862.15241557863386801558.b4-ty@kernel.org>
+Date: Thu, 31 Oct 2024 10:12:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-c04d2
 
-On Tue, 29 Oct 2024, Namhyung Kim wrote:
-> On Thu, Oct 24, 2024 at 06:36:30PM +0200, vmolnaro@redhat.com wrote:
-> > From: Veronika Molnarova <vmolnaro@redhat.com>
-> > 
-> > Hello!
-> > 
-> > We encountered an issue with 'perf sched timehist --state' when
-> > we expected for a test case that the process of a workload would 
-> > eventually end in the dead state(marked by 'X') and be switched
-> > out. This can be seen also by using 'perf script':
-> > 
-> >     # perf sched record -a sleep 1
-> >     [ perf record: Woken up 1 times to write data ]
-> >     [ perf record: Captured and wrote 0.167 MB perf.data (166 samples) ]
-> >     # perf script | grep sleep
-> >            sleep  151541 [000] 193461.410617: sched:sched_stat_runtime: comm=sleep pid=151541 runtime=3132275 [ns]
-> >            sleep  151541 [000] 193461.410624:       sched:sched_switch: sleep:151541 [120] S ==> swapper/0:0 [120]
-> >          swapper       0 [000] 193462.410688:       sched:sched_waking: comm=sleep pid=151541 prio=120 target_cpu=000
-> >          swapper       0 [000] 193462.410698:       sched:sched_switch: swapper/0:0 [120] R ==> sleep:151541 [120]
-> >          :151541  151541 [000] 193462.411100: sched:sched_stat_runtime: comm=sleep pid=151541 runtime=407210 [ns]
-> >          :151541  151541 [000] 193462.411107:       sched:sched_switch: sleep:151541 [120] X ==> swapper/0:0 [120]
-> > 
-> > But for the 'perf sched timehist --state' the process is shown
-> > in the zombie state when it is being switched out:
-> > 
-> >     # perf sched timehist --state | grep 151541
-> >     Samples do not have callchains.
-> >       193461.410624 [0000]  sleep[151541]                       0.000      0.054      3.129      S 
-> >       193462.411107 [0000]  :151541[151541]                     0.000      0.000      0.408      Z 
-> > 
-> > Shouldn't both commands report the same result, or is there a reason
-> > why 'perf script' uses the dead state while 'perf sched' uses dead?
+On Thu, 24 Oct 2024 12:03:51 -0700, Björn Töpel wrote:
 
-Hello! Thanks for reacting!
+> RISC-V does not currently support perf trace, since the system call
+> table is not generated.
 > 
-> I remember there was a discussion related to this.
-> 
-> https://lore.kernel.org/all/20240122070859.1394479-2-zegao@tencent.com/
-> 
-> And it seems it's fixed both in perf and libtraceevent.  Maybe your
-> libtraceevent is somewhat outdated and doesn't have the update.
->
-Yes! When we've updated libtraceevent to 1.8.3, both show Z now, which is
-probably correct.
-
-Then it comes into my mind whether shouldn't perf-sched and perf-script
-both take it from libtraceevent to unify the approaches, rather than
-perf-sched using its own implementation and perf-script taking it from
-libtraceevent... ?
-
-> > It also seems that the 'perf sched' cannot read the name of the zombie
-> > process, but that can be a different issue.
-> 
-> Hmm.. right.  It should update thread->comm using the sched_switch event.
-
-According to the tests, the name seems that it used to be translated correctly
-in past, so it'd be nice if it worked again, althoug it is pretty clear which
-process it was, according to the PID. Thus, the test can be adjusted to search
-for the combination "PID, status Z", instead of "command, status Z"... I.e. to
-accept the current situation...
-
-Thanks,
-
-Michael
-
-> 
-> Thanks,
-> Namhyung
+> Perform the copy/paste exercise, wiring up RISC-V system call table
+> generation.
 > 
 > 
+> [...]
+
+Applied to perf-tools-next, thanks!
+
+Best regards,
+Namhyung
 
