@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01B514AD02
-	for <linux-perf-users@vger.kernel.org>; Thu, 31 Oct 2024 01:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C405C148855
+	for <linux-perf-users@vger.kernel.org>; Thu, 31 Oct 2024 01:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730339041; cv=none; b=X000NxZ6gqGuLuOMFkNZJFDpTnbXZJLMX0qFIz8Sy6mF7mEI2As9M8m/7zcvTfGyGVT1JfTtgz92jhjSIb5MvzbAHwy9/hRDnQZsFmSjBguGN44tx52HHAO/OW1uCrOgrWv4AiYVZ9S6//Xg7XoV0A/f3JTyacCt81+E91+M71M=
+	t=1730339042; cv=none; b=S2tTNr1E63eSO2JMgkLy3XEi3g6Y6ZtLWfx3xxFOhW/sV2tip0rH9yGbH9Pr/Z95MxmN3uM8hF8lf8bIcwZWbHemukVP4r6jx9278SpFZ70UEb1gNbm20g+9pu5igdRuZIGxbnuYW/1ytsPZXkJ1hbFPI6i6hCg5R+zBdlcKiHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730339041; c=relaxed/simple;
-	bh=wFg8rXKhwSk+/WnE2Ybco7HPsV496JVgIBfe+G5oj+I=;
+	s=arc-20240116; t=1730339042; c=relaxed/simple;
+	bh=8nfaXceOAmgiqk2t3wMeEWNA4KSjqafBiascjUECmpw=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=CHNUUWdHItSFwnSNS2DNAoJwOZg5t6F2ubdRfaHC1xPbekRvGj8eZLvTeXwFacvCk2gVvlRrKf61T29GOEmUq2hLfD/fhh1LNIOiPNQyZEu5OXLMnysVvI+0QlDs01CimtfCVZRJlok3K4rKZkJDgequeBFHaViDhSSCkRBWCNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V7KvGWlU; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=Sy2xeO708VQn/Ta1ZG2i/Ix4IV5t7WPoAlKuRrPx+kXu5LbSmZGW9XmCoeomknwFmoAg4gyr46DSm2JRr91L1XqQyYvipBRMBTG48Kjp5fgQU/mBV4WpYTEABjVNN16riIPZBQdGRxZbjNpRDK7mg243iuOE3lGRBkOOr8nFhzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h5tP0Zmh; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V7KvGWlU"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e355f1ff4bso8152937b3.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2024 18:43:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h5tP0Zmh"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e2904d0cad0so867455276.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2024 18:44:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730339038; x=1730943838; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1730339040; x=1730943840; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ACBWh/O4/X4qiB3oXOqHhx7Z60zaZQtrFXt6UTS1Yas=;
-        b=V7KvGWlUOgO3XuIJiy5vYNCJfyuWJhGuyhvZ7EuEcuLmLixdt8+oBiUhA3HFLSrfD/
-         1OXgPD84gJ8m9OwAwscVycMX5r/23Z7fdVhkmOCW+nrdLm2As9f5cSV/4zB8voWz/+Lt
-         54f/KyrJyrArDXS4FR3RdJpzQf3L6qeEaIhBB9ILOyk35BqxZWNoGKLojqXEf7paD7K2
-         SNhU8xZaIGWvlJfsDUGSnJcqsqN4Xpdmj3G9c4PwsgDMPausmMZXzdH04vcSFFn/yacf
-         qXnlSXcZpAaD/adcCtYbOrlckcs7w38RddifCss/A3raGXIYedyUWVSzYqm90WpgXJGI
-         1chQ==
+        bh=dis7RmFKQzQzt6CCLpk0OQW/Lncdns24hHlJR2bLa6w=;
+        b=h5tP0Zmhb4G/H07PxlHisuQxnQwgsBWqC3lgs0LEDkQljmGclh36pMKM5NlLoBBfX7
+         k58QbPEdwHxzqubjNNuUY9L2SXVKvurcr/gQxNOhgFxFSfmUU+V35IOvWT1jYe6LwOrr
+         YoJcbGL/f9PrEbiIoKwhDJz0+nBsv7QQ1eLW3MhUZjlZ2DsRQMXYoDKTXnDCA+1V6sQw
+         lBm5Z/Iuzs6YCiU6Tfmcb6Rk+uBQv88jF/7QNaM0Xn0GWC+KqJOjTsAviaAZowrMY0dO
+         /tBlI/YntEJsHDpV6A7/qHcd0uHGHqqbmHwTNMIKA/3Ks4UIVQBQL3cCRe9YP1oJ13NZ
+         uQNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730339038; x=1730943838;
+        d=1e100.net; s=20230601; t=1730339040; x=1730943840;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ACBWh/O4/X4qiB3oXOqHhx7Z60zaZQtrFXt6UTS1Yas=;
-        b=v69KiGJJ82rQQIbl2mDePjp8guTz46NlN7+BcxlKq1mDGvDL7phMyMPvcSdQDQS1Kw
-         CMDCY0XUU7A6rc1HiDPYEy1EgjGhsScmUztfWG+WiAldIl4kG+RiAJkoOIzyAFQhvnZ8
-         63ug7yBNFDDNkXOofns1Eg1ii7ZlstEMrkwxF+mSD7NimCVb+7Pq2oRXHdgeomNCt1B1
-         yxNhR6oD7XudehAGAvshXXpoHkJZtLan4vtMvEwgTflQzTct10fDucQIYZ/hLKXueKXZ
-         VvuORTf39TsiK36JD2aTkdNPAUMQ/jkU8VhAnHXMI8l2hJ7s7vMx11wUREDCNr8izqna
-         hP0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUq8QBXK6tZX4Aa0HHgfb52/zrY1eVXFDaFkFRrSY5qoFPx4eD3YZAbPWCYsMwf78NsXFxNzMdRUL+1rSuuf5gh@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDrtDJoJ36SgfIi1mi4IyUUTpQgPX9u3l6zx67GF8Occ3dUlw5
-	r98r9/FdtiBOrxQhOPzqFmkdT3ZRpVnQ5AoX7Ch8g17w1RnpUFjvcDedWEHn9ahj90lNMshHsGu
-	FiRLJaw==
-X-Google-Smtp-Source: AGHT+IEqaz7ycUlhAWtRd1uPjKDmpfP1/3VQIxzcug2wLaT0TrrwpCVBkUafJHmQLBHVodYIBtZod9ELpHSN
+        bh=dis7RmFKQzQzt6CCLpk0OQW/Lncdns24hHlJR2bLa6w=;
+        b=stA9NCL1pbd9R5EjhwIfPFg1Fn6HVBhTl0pKtReSR+fkhYwjVJw/jFSDvCNdLFfKM6
+         ZtiK6GKxXRPpb5oJ0UR/QePSgyAa8SzJ0Wb7SJuTChSSscgnhaFRBqA5GtKTQCL6Y3i5
+         n7wxspjPgB1gt3uK3kKVG+90njV2gbvGxvejksJ4+1yDimpnOA09sGZ176itq1gq1jhe
+         wBXAiu2F1W2s1G3RKsMCcBJKu7UFIHrDDJxjifvbD+TWnrTzRF3stbia7DommlkpOY0w
+         2loNj27/9WHC2fbOVMnUR8NnmVxUP06W7lWGbnNFAZ09TxLitTYFeKm5ad7pvwAdmSo9
+         5Pgw==
+X-Forwarded-Encrypted: i=1; AJvYcCWAqM+/n95OJ4umm42WD3sBKHvuzqqx2jVcnLnLH7aU84REgRn33xodtJ0cZNpFreAbU6E69SPvvidVK5pUE3oJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKSDGsTFohqeGQTczWbKUeb7/Lw1Xk2DmaksOQUKi8fH3tVMfr
+	q3j3K41DgJM6gwh7HCihLP+Y5AhvosuP8juywznum8tIKnZh8ODgC3z/ow4Vu8hlKjBkqH9NScs
+	RlrS4hg==
+X-Google-Smtp-Source: AGHT+IGQq3M4vfXsHI+Az7Xvrx0IFPhm3BfRkVi7rYd6AuYsG0RdG+quXrCLKrsw0ORuUqiPHTLwAqWA0VT3
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ad0f:67e7:f1a6:84c4])
- (user=irogers job=sendgmr) by 2002:a81:a844:0:b0:62c:f976:a763 with SMTP id
- 00721157ae682-6e9d892d6cemr5326627b3.1.1730339037973; Wed, 30 Oct 2024
- 18:43:57 -0700 (PDT)
-Date: Wed, 30 Oct 2024 18:42:49 -0700
+ (user=irogers job=sendgmr) by 2002:a5b:18f:0:b0:e25:d46a:a6b6 with SMTP id
+ 3f1490d57ef6-e3087c07f8emr54926276.8.1730339039890; Wed, 30 Oct 2024 18:43:59
+ -0700 (PDT)
+Date: Wed, 30 Oct 2024 18:42:50 -0700
 In-Reply-To: <20241031014252.753588-1-irogers@google.com>
-Message-Id: <20241031014252.753588-19-irogers@google.com>
+Message-Id: <20241031014252.753588-20-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241031014252.753588-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
-Subject: [PATCH v5 18/21] perf python: Add parse_events function
+Subject: [PATCH v5 19/21] perf python: Add __str__ and __repr__ functions to evlist
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,175 +77,66 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add basic parse_events function that takes a string and returns an
-evlist. As the python evlist is embedded in a pyrf_evlist, and the
-evsels are embedded in pyrf_evsels, copy the parsed data into those
-structs and update evsel__clone to enable this.
+This allows the values in the evlist to be shown in the REPL like:
+```
+Python 3.11.9 (main, Jun 19 2024, 00:38:48) [GCC 13.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import sys
+>>> sys.path.insert(0,'/tmp/perf/python')
+>>> import perf
+>>> perf.parse_events('cycles,data_read')
+evlist([cycles,uncore_imc_free_running_0/data_read/,uncore_imc_free_running_1/data_read/])
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/cgroup.c |  2 +-
- tools/perf/util/evsel.c  | 19 ++++++++-----
- tools/perf/util/evsel.h  |  2 +-
- tools/perf/util/python.c | 61 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 75 insertions(+), 9 deletions(-)
+ tools/perf/util/python.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index 0f759dd96db7..fbcc0626f9ce 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -473,7 +473,7 @@ int evlist__expand_cgroup(struct evlist *evlist, const char *str,
- 
- 		leader = NULL;
- 		evlist__for_each_entry(orig_list, pos) {
--			evsel = evsel__clone(pos);
-+			evsel = evsel__clone(/*dest=*/NULL, pos);
- 			if (evsel == NULL)
- 				goto out_err;
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index f780e30aa259..4213ffacdc3c 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -453,7 +453,7 @@ static int evsel__copy_config_terms(struct evsel *dst, struct evsel *src)
-  * The assumption is that @orig is not configured nor opened yet.
-  * So we only care about the attributes that can be set while it's parsed.
-  */
--struct evsel *evsel__clone(struct evsel *orig)
-+struct evsel *evsel__clone(struct evsel *dest, struct evsel *orig)
- {
- 	struct evsel *evsel;
- 
-@@ -466,7 +466,11 @@ struct evsel *evsel__clone(struct evsel *orig)
- 	if (orig->bpf_obj)
- 		return NULL;
- 
--	evsel = evsel__new(&orig->core.attr);
-+	if (dest)
-+		evsel = dest;
-+	else
-+		evsel = evsel__new(&orig->core.attr);
-+
- 	if (evsel == NULL)
- 		return NULL;
- 
-@@ -511,11 +515,12 @@ struct evsel *evsel__clone(struct evsel *orig)
- 	evsel->core.leader = orig->core.leader;
- 
- 	evsel->max_events = orig->max_events;
--	free((char *)evsel->unit);
--	evsel->unit = strdup(orig->unit);
--	if (evsel->unit == NULL)
--		goto out_err;
--
-+	zfree(&evsel->unit);
-+	if (orig->unit) {
-+		evsel->unit = strdup(orig->unit);
-+		if (evsel->unit == NULL)
-+			goto out_err;
-+	}
- 	evsel->scale = orig->scale;
- 	evsel->snapshot = orig->snapshot;
- 	evsel->per_pkg = orig->per_pkg;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 04934a7af174..7f41d6f8cf6f 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -241,7 +241,7 @@ static inline struct evsel *evsel__new(struct perf_event_attr *attr)
- 	return evsel__new_idx(attr, 0);
- }
- 
--struct evsel *evsel__clone(struct evsel *orig);
-+struct evsel *evsel__clone(struct evsel *dest, struct evsel *orig);
- 
- int copy_config_terms(struct list_head *dst, struct list_head *src);
- void free_config_terms(struct list_head *config_terms);
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 6e2ff0076daa..1a53a97c513d 100644
+index 1a53a97c513d..a71bad3418da 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -13,6 +13,7 @@
- #include "evsel.h"
- #include "event.h"
- #include "print_binary.h"
-+#include "strbuf.h"
- #include "thread_map.h"
- #include "trace-event.h"
- #include "mmap.h"
-@@ -1201,6 +1202,60 @@ static PyObject *pyrf__tracepoint(struct pyrf_evsel *pevsel,
- #endif // HAVE_LIBTRACEEVENT
+@@ -1069,6 +1069,30 @@ static PyObject *pyrf_evlist__item(PyObject *obj, Py_ssize_t i)
+ 	return Py_BuildValue("O", container_of(pos, struct pyrf_evsel, evsel));
  }
  
-+static PyObject *pyrf_evsel__from_evsel(struct evsel *evsel)
++static PyObject *pyrf_evlist__str(PyObject *self)
 +{
-+	struct pyrf_evsel *pevsel = PyObject_New(struct pyrf_evsel, &pyrf_evsel__type);
-+
-+	if (!pevsel)
-+		return NULL;
-+
-+	memset(&pevsel->evsel, 0, sizeof(pevsel->evsel));
-+	evsel__init(&pevsel->evsel, &evsel->core.attr, evsel->core.idx);
-+
-+	evsel__clone(&pevsel->evsel, evsel);
-+	return (PyObject *)pevsel;
-+}
-+
-+static PyObject *pyrf_evlist__from_evlist(struct evlist *evlist)
-+{
-+	struct pyrf_evlist *pevlist = PyObject_New(struct pyrf_evlist, &pyrf_evlist__type);
++	struct pyrf_evlist *pevlist = (void *)self;
 +	struct evsel *pos;
-+
-+	if (!pevlist)
-+		return NULL;
-+
-+	memset(&pevlist->evlist, 0, sizeof(pevlist->evlist));
-+	evlist__init(&pevlist->evlist, evlist->core.all_cpus, evlist->core.threads);
-+	evlist__for_each_entry(evlist, pos) {
-+		struct pyrf_evsel *pevsel = (void *)pyrf_evsel__from_evsel(pos);
-+
-+		evlist__add(&pevlist->evlist, &pevsel->evsel);
-+	}
-+	return (PyObject *)pevlist;
-+}
-+
-+static PyObject *pyrf__parse_events(PyObject *self, PyObject *args)
-+{
-+	const char *input;
-+	struct evlist evlist = {};
-+	struct parse_events_error err;
++	struct strbuf sb = STRBUF_INIT;
++	bool first = true;
 +	PyObject *result;
 +
-+	if (!PyArg_ParseTuple(args, "s", &input))
-+		return NULL;
-+
-+	parse_events_error__init(&err);
-+	evlist__init(&evlist, NULL, NULL);
-+	if (parse_events(&evlist, input, &err)) {
-+		parse_events_error__print(&err, input);
-+		PyErr_SetFromErrno(PyExc_OSError);
-+		return NULL;
++	strbuf_addstr(&sb, "evlist([");
++	evlist__for_each_entry(&pevlist->evlist, pos) {
++		if (!first)
++			strbuf_addch(&sb, ',');
++		if (!pos->pmu)
++			strbuf_addstr(&sb, evsel__name(pos));
++		else
++			strbuf_addf(&sb, "%s/%s/", pos->pmu->name, evsel__name(pos));
++		first = false;
 +	}
-+	result = pyrf_evlist__from_evlist(&evlist);
-+	evlist__exit(&evlist);
++	strbuf_addstr(&sb, "])");
++	result = PyUnicode_FromString(sb.buf);
++	strbuf_release(&sb);
 +	return result;
 +}
 +
- static PyMethodDef perf__methods[] = {
- 	{
- 		.ml_name  = "tracepoint",
-@@ -1208,6 +1263,12 @@ static PyMethodDef perf__methods[] = {
- 		.ml_flags = METH_VARARGS | METH_KEYWORDS,
- 		.ml_doc	  = PyDoc_STR("Get tracepoint config.")
- 	},
-+	{
-+		.ml_name  = "parse_events",
-+		.ml_meth  = (PyCFunction) pyrf__parse_events,
-+		.ml_flags = METH_VARARGS,
-+		.ml_doc	  = PyDoc_STR("Parse a string of events and return an evlist.")
-+	},
- 	{ .ml_name = NULL, }
+ static PySequenceMethods pyrf_evlist__sequence_methods = {
+ 	.sq_length = pyrf_evlist__length,
+ 	.sq_item   = pyrf_evlist__item,
+@@ -1086,6 +1110,8 @@ static PyTypeObject pyrf_evlist__type = {
+ 	.tp_doc		= pyrf_evlist__doc,
+ 	.tp_methods	= pyrf_evlist__methods,
+ 	.tp_init	= (initproc)pyrf_evlist__init,
++	.tp_repr        = pyrf_evlist__str,
++	.tp_str         = pyrf_evlist__str,
  };
  
+ static int pyrf_evlist__setup_types(void)
 -- 
 2.47.0.163.g1226f6d8fa-goog
 
