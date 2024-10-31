@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB6D347C7;
-	Thu, 31 Oct 2024 19:21:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E8E347C7;
+	Thu, 31 Oct 2024 19:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730402467; cv=none; b=OBqHT8ZZI1og0to0O5TgMM1er1g9fFpBFZF9iAmVo7ej5mvjgV5SGK/vvZAEyj1iGYgL4cAqQLEjHoAxmliwUYDKm7qnK9q17lYj7TYF+Xd4RHCIA/7OE2WeoXcekJ0qjzZycgnSBhsWwKklZcDI2Ew6TTHL6WTaqYbWEVz96Og=
+	t=1730402488; cv=none; b=VMoM+gbCiikWqaMe3EkmgqD9vc9x19W2Ii6YW8GrUL+RNiWyZn8HoLvUHgHFcl1b5oRFdF/IoYsqP3rrUX/1RxJ7Z0oQvfHYHLZDckMcso2BdwMfkaH8XmNC97iKdrhHbwQfGCBJ6KYl1cObTq80ZcgXzRG2vAd9602pA2yG158=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730402467; c=relaxed/simple;
-	bh=O8OzNAeJYEDuDI8H5uolvFuhdB/IauRTtLsD6e9mocg=;
+	s=arc-20240116; t=1730402488; c=relaxed/simple;
+	bh=dqd150MSKx2SBTWueiBk9xFBLjPz6rjwiqIyVTOFSac=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hIrI9WRrZQpcYmNL20B2tK1xFAk3Bj1KR758OJrXu+REiXGK7mAhOdaOuIqr4VCoXFaQK27bweSTBFTvxWrd29liUO+TmfMF+deL8hDh7JLGChOnnZWC/3bp2AgwAidiIrPkP1LVeWs+AVqK0dgUN191U66KiGAWy1mcMCJMKg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZaiZ+qgs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uCUtnF31tR8PTCmuiE5EmCbRMuvs3hM2AunSwxijlpKK/nZWCCx2VgxIUJ2vavP0r9jlQTTfvUMXBic4J0DPPAB0cEjWl/StjDZTTQotjW9hBW27zUzSliKU4BJFyDKFAIviZgNWGVVIADPsrXceaDegUPOJQ8ZQxYTA41Hp35E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YiMbIX9/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZaiZ+qgs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 498BAC4CEC3;
-	Thu, 31 Oct 2024 19:21:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YiMbIX9/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1F60C4CEC3;
+	Thu, 31 Oct 2024 19:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730402467;
-	bh=O8OzNAeJYEDuDI8H5uolvFuhdB/IauRTtLsD6e9mocg=;
+	s=k20201202; t=1730402488;
+	bh=dqd150MSKx2SBTWueiBk9xFBLjPz6rjwiqIyVTOFSac=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZaiZ+qgsNmDYM/BSiZNELOz8fZd9eqbqpP97r0EoJ0FxkZPF0r+xGq25VohevgHyO
-	 o93sY8B8n8aydWScbrFL68bvDWlnTPovUY8nzitJPKAgMNoXKRTCwCRaBhxeheGTHN
-	 0KD4iMxSwODHtgXElRYSLRLI6cULvMVQYQDgw2NJUlQbzxxdaPYA+Y7hQWATeas3jC
-	 bqKlBp9rWanMXhJBOvmOXoSpUUZWd7A+ly/SCVOW5rLPA/p1uqGI0cNl0vlAm0uOnP
-	 YdL+tYhrLSpMKRLnoo+pntIv7/5lGjwdlUaHzyC3PWblKMc0eUQ9mne56V/G/47NFP
-	 Ee7QsdEWb7x/Q==
-Date: Thu, 31 Oct 2024 16:21:03 -0300
+	b=YiMbIX9/fg6OxkrLYmNGr3Pd/RTnpiE/EXohTlGt7upybfvZyQa7r9AooFAM0+9Hh
+	 lnBV/sdCL1xE8dRb0UdpUPrqRZYK9XHbtJJ2JF50nOmBhrzCbh9hBFc9S6O5o9ggg4
+	 y+Rhv6FXjQymLU3IVDzH5Z9vObWIhm55y8f/DXEl6x9ydTkxedhb7zNDyP4R+Jma7O
+	 qsg0N1OUGWDgDgOVI7kGqmgj/8aiOa2qXzPfAGYUVzqmWLTIF3s4xJyPX1LHGDD/i8
+	 GtWmT4AadV9wq1+FDsTL5R95HuAPHgT30w9shZEiojvOdzhPy8uhtg10Odz2A6Pq1/
+	 Hc/YXIGIFRQew==
+Date: Thu, 31 Oct 2024 16:21:24 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -49,11 +49,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 08/21] perf script: Move script_spec code to
- trace-event-scripting.c
-Message-ID: <ZyPYn3lmNOSWmCUs@x1>
+Subject: Re: [PATCH v5 02/21] perf python: Constify variables and parameters
+Message-ID: <ZyPYtE3dGYUFReVQ@x1>
 References: <20241031014252.753588-1-irogers@google.com>
- <20241031014252.753588-9-irogers@google.com>
+ <20241031014252.753588-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,227 +61,246 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241031014252.753588-9-irogers@google.com>
+In-Reply-To: <20241031014252.753588-3-irogers@google.com>
 
-On Wed, Oct 30, 2024 at 06:42:39PM -0700, Ian Rogers wrote:
-> The script_spec code is referenced in util/trace-event-scripting but
-> the list was in builtin-script, accessed via a function that required
-> a stub function in python.c. Move all the logic to
-> trace-event-scripting, with lookup and foreach functions exposed for
-> builtin-script's benefit.
+On Wed, Oct 30, 2024 at 06:42:33PM -0700, Ian Rogers wrote:
+> Opportunistically constify variables and parameters when possible.
 
 Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
  
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/builtin-script.c             | 67 +---------------------
->  tools/perf/util/python.c                |  5 --
->  tools/perf/util/trace-event-scripting.c | 75 +++++++++++++++++++++++++
->  tools/perf/util/trace-event.h           |  3 +-
->  4 files changed, 80 insertions(+), 70 deletions(-)
+>  tools/perf/util/python.c | 55 +++++++++++++++++++++-------------------
+>  1 file changed, 29 insertions(+), 26 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 62e851fdf5ca..11c0ee8c1afc 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2956,79 +2956,18 @@ static int __cmd_script(struct perf_script *script)
->  	return ret;
->  }
->  
-> -struct script_spec {
-> -	struct list_head	node;
-> -	struct scripting_ops	*ops;
-> -	char			spec[];
-> -};
-> -
-> -static LIST_HEAD(script_specs);
-> -
-> -static struct script_spec *script_spec__new(const char *spec,
-> -					    struct scripting_ops *ops)
-> +static int list_available_languages_cb(struct scripting_ops *ops, const char *spec)
->  {
-> -	struct script_spec *s = malloc(sizeof(*s) + strlen(spec) + 1);
-> -
-> -	if (s != NULL) {
-> -		strcpy(s->spec, spec);
-> -		s->ops = ops;
-> -	}
-> -
-> -	return s;
-> -}
-> -
-> -static void script_spec__add(struct script_spec *s)
-> -{
-> -	list_add_tail(&s->node, &script_specs);
-> -}
-> -
-> -static struct script_spec *script_spec__find(const char *spec)
-> -{
-> -	struct script_spec *s;
-> -
-> -	list_for_each_entry(s, &script_specs, node)
-> -		if (strcasecmp(s->spec, spec) == 0)
-> -			return s;
-> -	return NULL;
-> -}
-> -
-> -int script_spec_register(const char *spec, struct scripting_ops *ops)
-> -{
-> -	struct script_spec *s;
-> -
-> -	s = script_spec__find(spec);
-> -	if (s)
-> -		return -1;
-> -
-> -	s = script_spec__new(spec, ops);
-> -	if (!s)
-> -		return -1;
-> -	else
-> -		script_spec__add(s);
-> -
-> +	fprintf(stderr, "  %-42s [%s]\n", spec, ops->name);
->  	return 0;
->  }
->  
-> -static struct scripting_ops *script_spec__lookup(const char *spec)
-> -{
-> -	struct script_spec *s = script_spec__find(spec);
-> -	if (!s)
-> -		return NULL;
-> -
-> -	return s->ops;
-> -}
-> -
->  static void list_available_languages(void)
->  {
-> -	struct script_spec *s;
-> -
->  	fprintf(stderr, "\n");
->  	fprintf(stderr, "Scripting language extensions (used in "
->  		"perf script -s [spec:]script.[spec]):\n\n");
-> -
-> -	list_for_each_entry(s, &script_specs, node)
-> -		fprintf(stderr, "  %-42s [%s]\n", s->spec, s->ops->name);
-> -
-> +	script_spec__for_each(&list_available_languages_cb);
->  	fprintf(stderr, "\n");
->  }
->  
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 0fa8e27769be..3d938fe2de6a 100644
+> index 02279ab4967c..13dad27169a0 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
-> @@ -1305,11 +1305,6 @@ PyMODINIT_FUNC PyInit_perf(void)
->  /* The following are stubs to avoid dragging in builtin-* objects. */
->  /* TODO: move the code out of the builtin-* file into util. */
+> @@ -62,7 +62,7 @@ struct pyrf_event {
+>  	sample_member_def(sample_period, period, T_ULONGLONG, "event period"),		 \
+>  	sample_member_def(sample_cpu, cpu, T_UINT, "event cpu"),
 >  
-> -int script_spec_register(const char *spec __maybe_unused, struct scripting_ops *ops __maybe_unused)
-> -{
-> -	return -1;
-> -}
-> -
->  arch_syscalls__strerrno_t *arch_syscalls__strerrno_function(const char *arch __maybe_unused)
+> -static char pyrf_mmap_event__doc[] = PyDoc_STR("perf mmap event object.");
+> +static const char pyrf_mmap_event__doc[] = PyDoc_STR("perf mmap event object.");
+>  
+>  static PyMemberDef pyrf_mmap_event__members[] = {
+>  	sample_members
+> @@ -77,7 +77,7 @@ static PyMemberDef pyrf_mmap_event__members[] = {
+>  	{ .name = NULL, },
+>  };
+>  
+> -static PyObject *pyrf_mmap_event__repr(struct pyrf_event *pevent)
+> +static PyObject *pyrf_mmap_event__repr(const struct pyrf_event *pevent)
 >  {
->  	return NULL;
-> diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-> index 8abb7a7b6888..ad62d8e5a368 100644
-> --- a/tools/perf/util/trace-event-scripting.c
-> +++ b/tools/perf/util/trace-event-scripting.c
-> @@ -24,6 +24,81 @@ unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
+>  	PyObject *ret;
+>  	char *s;
+> @@ -106,7 +106,7 @@ static PyTypeObject pyrf_mmap_event__type = {
+>  	.tp_repr	= (reprfunc)pyrf_mmap_event__repr,
+>  };
 >  
->  struct scripting_context *scripting_context;
+> -static char pyrf_task_event__doc[] = PyDoc_STR("perf task (fork/exit) event object.");
+> +static const char pyrf_task_event__doc[] = PyDoc_STR("perf task (fork/exit) event object.");
 >  
-> +struct script_spec {
-> +	struct list_head	node;
-> +	struct scripting_ops	*ops;
-> +	char			spec[];
+>  static PyMemberDef pyrf_task_event__members[] = {
+>  	sample_members
+> @@ -119,7 +119,7 @@ static PyMemberDef pyrf_task_event__members[] = {
+>  	{ .name = NULL, },
+>  };
+>  
+> -static PyObject *pyrf_task_event__repr(struct pyrf_event *pevent)
+> +static PyObject *pyrf_task_event__repr(const struct pyrf_event *pevent)
+>  {
+>  	return PyUnicode_FromFormat("{ type: %s, pid: %u, ppid: %u, tid: %u, "
+>  				   "ptid: %u, time: %" PRI_lu64 "}",
+> @@ -141,7 +141,7 @@ static PyTypeObject pyrf_task_event__type = {
+>  	.tp_repr	= (reprfunc)pyrf_task_event__repr,
+>  };
+>  
+> -static char pyrf_comm_event__doc[] = PyDoc_STR("perf comm event object.");
+> +static const char pyrf_comm_event__doc[] = PyDoc_STR("perf comm event object.");
+>  
+>  static PyMemberDef pyrf_comm_event__members[] = {
+>  	sample_members
+> @@ -152,7 +152,7 @@ static PyMemberDef pyrf_comm_event__members[] = {
+>  	{ .name = NULL, },
+>  };
+>  
+> -static PyObject *pyrf_comm_event__repr(struct pyrf_event *pevent)
+> +static PyObject *pyrf_comm_event__repr(const struct pyrf_event *pevent)
+>  {
+>  	return PyUnicode_FromFormat("{ type: comm, pid: %u, tid: %u, comm: %s }",
+>  				   pevent->event.comm.pid,
+> @@ -170,7 +170,7 @@ static PyTypeObject pyrf_comm_event__type = {
+>  	.tp_repr	= (reprfunc)pyrf_comm_event__repr,
+>  };
+>  
+> -static char pyrf_throttle_event__doc[] = PyDoc_STR("perf throttle event object.");
+> +static const char pyrf_throttle_event__doc[] = PyDoc_STR("perf throttle event object.");
+>  
+>  static PyMemberDef pyrf_throttle_event__members[] = {
+>  	sample_members
+> @@ -181,9 +181,10 @@ static PyMemberDef pyrf_throttle_event__members[] = {
+>  	{ .name = NULL, },
+>  };
+>  
+> -static PyObject *pyrf_throttle_event__repr(struct pyrf_event *pevent)
+> +static PyObject *pyrf_throttle_event__repr(const struct pyrf_event *pevent)
+>  {
+> -	struct perf_record_throttle *te = (struct perf_record_throttle *)(&pevent->event.header + 1);
+> +	const struct perf_record_throttle *te = (const struct perf_record_throttle *)
+> +		(&pevent->event.header + 1);
+>  
+>  	return PyUnicode_FromFormat("{ type: %sthrottle, time: %" PRI_lu64 ", id: %" PRI_lu64
+>  				   ", stream_id: %" PRI_lu64 " }",
+> @@ -201,7 +202,7 @@ static PyTypeObject pyrf_throttle_event__type = {
+>  	.tp_repr	= (reprfunc)pyrf_throttle_event__repr,
+>  };
+>  
+> -static char pyrf_lost_event__doc[] = PyDoc_STR("perf lost event object.");
+> +static const char pyrf_lost_event__doc[] = PyDoc_STR("perf lost event object.");
+>  
+>  static PyMemberDef pyrf_lost_event__members[] = {
+>  	sample_members
+> @@ -210,7 +211,7 @@ static PyMemberDef pyrf_lost_event__members[] = {
+>  	{ .name = NULL, },
+>  };
+>  
+> -static PyObject *pyrf_lost_event__repr(struct pyrf_event *pevent)
+> +static PyObject *pyrf_lost_event__repr(const struct pyrf_event *pevent)
+>  {
+>  	PyObject *ret;
+>  	char *s;
+> @@ -236,7 +237,7 @@ static PyTypeObject pyrf_lost_event__type = {
+>  	.tp_repr	= (reprfunc)pyrf_lost_event__repr,
+>  };
+>  
+> -static char pyrf_read_event__doc[] = PyDoc_STR("perf read event object.");
+> +static const char pyrf_read_event__doc[] = PyDoc_STR("perf read event object.");
+>  
+>  static PyMemberDef pyrf_read_event__members[] = {
+>  	sample_members
+> @@ -245,7 +246,7 @@ static PyMemberDef pyrf_read_event__members[] = {
+>  	{ .name = NULL, },
+>  };
+>  
+> -static PyObject *pyrf_read_event__repr(struct pyrf_event *pevent)
+> +static PyObject *pyrf_read_event__repr(const struct pyrf_event *pevent)
+>  {
+>  	return PyUnicode_FromFormat("{ type: read, pid: %u, tid: %u }",
+>  				   pevent->event.read.pid,
+> @@ -266,7 +267,7 @@ static PyTypeObject pyrf_read_event__type = {
+>  	.tp_repr	= (reprfunc)pyrf_read_event__repr,
+>  };
+>  
+> -static char pyrf_sample_event__doc[] = PyDoc_STR("perf sample event object.");
+> +static const char pyrf_sample_event__doc[] = PyDoc_STR("perf sample event object.");
+>  
+>  static PyMemberDef pyrf_sample_event__members[] = {
+>  	sample_members
+> @@ -274,7 +275,7 @@ static PyMemberDef pyrf_sample_event__members[] = {
+>  	{ .name = NULL, },
+>  };
+>  
+> -static PyObject *pyrf_sample_event__repr(struct pyrf_event *pevent)
+> +static PyObject *pyrf_sample_event__repr(const struct pyrf_event *pevent)
+>  {
+>  	PyObject *ret;
+>  	char *s;
+> @@ -289,13 +290,13 @@ static PyObject *pyrf_sample_event__repr(struct pyrf_event *pevent)
+>  }
+>  
+>  #ifdef HAVE_LIBTRACEEVENT
+> -static bool is_tracepoint(struct pyrf_event *pevent)
+> +static bool is_tracepoint(const struct pyrf_event *pevent)
+>  {
+>  	return pevent->evsel->core.attr.type == PERF_TYPE_TRACEPOINT;
+>  }
+>  
+>  static PyObject*
+> -tracepoint_field(struct pyrf_event *pe, struct tep_format_field *field)
+> +tracepoint_field(const struct pyrf_event *pe, struct tep_format_field *field)
+>  {
+>  	struct tep_handle *pevent = field->event->tep;
+>  	void *data = pe->sample.raw_data;
+> @@ -384,7 +385,7 @@ static PyTypeObject pyrf_sample_event__type = {
+>  	.tp_getattro	= (getattrofunc) pyrf_sample_event__getattro,
+>  };
+>  
+> -static char pyrf_context_switch_event__doc[] = PyDoc_STR("perf context_switch event object.");
+> +static const char pyrf_context_switch_event__doc[] = PyDoc_STR("perf context_switch event object.");
+>  
+>  static PyMemberDef pyrf_context_switch_event__members[] = {
+>  	sample_members
+> @@ -394,7 +395,7 @@ static PyMemberDef pyrf_context_switch_event__members[] = {
+>  	{ .name = NULL, },
+>  };
+>  
+> -static PyObject *pyrf_context_switch_event__repr(struct pyrf_event *pevent)
+> +static PyObject *pyrf_context_switch_event__repr(const struct pyrf_event *pevent)
+>  {
+>  	PyObject *ret;
+>  	char *s;
+> @@ -474,7 +475,7 @@ static PyTypeObject *pyrf_event__type[] = {
+>  	[PERF_RECORD_SWITCH_CPU_WIDE]  = &pyrf_context_switch_event__type,
+>  };
+>  
+> -static PyObject *pyrf_event__new(union perf_event *event)
+> +static PyObject *pyrf_event__new(const union perf_event *event)
+>  {
+>  	struct pyrf_event *pevent;
+>  	PyTypeObject *ptype;
+> @@ -542,7 +543,7 @@ static PySequenceMethods pyrf_cpu_map__sequence_methods = {
+>  	.sq_item   = pyrf_cpu_map__item,
+>  };
+>  
+> -static char pyrf_cpu_map__doc[] = PyDoc_STR("cpu map object.");
+> +static const char pyrf_cpu_map__doc[] = PyDoc_STR("cpu map object.");
+>  
+>  static PyTypeObject pyrf_cpu_map__type = {
+>  	PyVarObject_HEAD_INIT(NULL, 0)
+> @@ -611,7 +612,7 @@ static PySequenceMethods pyrf_thread_map__sequence_methods = {
+>  	.sq_item   = pyrf_thread_map__item,
+>  };
+>  
+> -static char pyrf_thread_map__doc[] = PyDoc_STR("thread map object.");
+> +static const char pyrf_thread_map__doc[] = PyDoc_STR("thread map object.");
+>  
+>  static PyTypeObject pyrf_thread_map__type = {
+>  	PyVarObject_HEAD_INIT(NULL, 0)
+> @@ -795,7 +796,7 @@ static PyMethodDef pyrf_evsel__methods[] = {
+>  	{ .ml_name = NULL, }
+>  };
+>  
+> -static char pyrf_evsel__doc[] = PyDoc_STR("perf event selector list object.");
+> +static const char pyrf_evsel__doc[] = PyDoc_STR("perf event selector list object.");
+>  
+>  static PyTypeObject pyrf_evsel__type = {
+>  	PyVarObject_HEAD_INIT(NULL, 0)
+> @@ -1078,7 +1079,7 @@ static PySequenceMethods pyrf_evlist__sequence_methods = {
+>  	.sq_item   = pyrf_evlist__item,
+>  };
+>  
+> -static char pyrf_evlist__doc[] = PyDoc_STR("perf event selector list object.");
+> +static const char pyrf_evlist__doc[] = PyDoc_STR("perf event selector list object.");
+>  
+>  static PyTypeObject pyrf_evlist__type = {
+>  	PyVarObject_HEAD_INIT(NULL, 0)
+> @@ -1100,10 +1101,12 @@ static int pyrf_evlist__setup_types(void)
+>  
+>  #define PERF_CONST(name) { #name, PERF_##name }
+>  
+> -static struct {
+> +struct perf_constant {
+>  	const char *name;
+>  	int	    value;
+> -} perf__constants[] = {
 > +};
 > +
-> +static LIST_HEAD(script_specs);
-> +
-> +static struct script_spec *script_spec__new(const char *spec,
-> +					    struct scripting_ops *ops)
-> +{
-> +	struct script_spec *s = malloc(sizeof(*s) + strlen(spec) + 1);
-> +
-> +	if (s != NULL) {
-> +		strcpy(s->spec, spec);
-> +		s->ops = ops;
-> +	}
-> +
-> +	return s;
-> +}
-> +
-> +static void script_spec__add(struct script_spec *s)
-> +{
-> +	list_add_tail(&s->node, &script_specs);
-> +}
-> +
-> +static struct script_spec *script_spec__find(const char *spec)
-> +{
-> +	struct script_spec *s;
-> +
-> +	list_for_each_entry(s, &script_specs, node)
-> +		if (strcasecmp(s->spec, spec) == 0)
-> +			return s;
-> +	return NULL;
-> +}
-> +
-> +static int script_spec_register(const char *spec, struct scripting_ops *ops)
-> +{
-> +	struct script_spec *s;
-> +
-> +	s = script_spec__find(spec);
-> +	if (s)
-> +		return -1;
-> +
-> +	s = script_spec__new(spec, ops);
-> +	if (!s)
-> +		return -1;
-> +
-> +	script_spec__add(s);
-> +	return 0;
-> +}
-> +
-> +struct scripting_ops *script_spec__lookup(const char *spec)
-> +{
-> +	struct script_spec *s = script_spec__find(spec);
-> +
-> +	if (!s)
-> +		return NULL;
-> +
-> +	return s->ops;
-> +}
-> +
-> +int script_spec__for_each(int (*cb)(struct scripting_ops *ops, const char *spec))
-> +{
-> +	struct script_spec *s;
-> +	int ret = 0;
-> +
-> +	list_for_each_entry(s, &script_specs, node) {
-> +		ret = cb(s->ops, s->spec);
-> +		if (ret)
-> +			break;
-> +	}
-> +	return ret;
-> +}
-> +
->  void scripting_context__update(struct scripting_context *c,
->  			       union perf_event *event,
->  			       struct perf_sample *sample,
-> diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-> index bbf8b26bc8da..81fceaf297ba 100644
-> --- a/tools/perf/util/trace-event.h
-> +++ b/tools/perf/util/trace-event.h
-> @@ -116,7 +116,8 @@ struct scripting_ops {
->  
->  extern unsigned int scripting_max_stack;
->  
-> -int script_spec_register(const char *spec, struct scripting_ops *ops);
-> +struct scripting_ops *script_spec__lookup(const char *spec);
-> +int script_spec__for_each(int (*cb)(struct scripting_ops *ops, const char *spec));
->  
->  void script_fetch_insn(struct perf_sample *sample, struct thread *thread,
->  		       struct machine *machine);
+> +static const struct perf_constant perf__constants[] = {
+>  	PERF_CONST(TYPE_HARDWARE),
+>  	PERF_CONST(TYPE_SOFTWARE),
+>  	PERF_CONST(TYPE_TRACEPOINT),
 > -- 
 > 2.47.0.163.g1226f6d8fa-goog
+> 
