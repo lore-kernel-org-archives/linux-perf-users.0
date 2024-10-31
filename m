@@ -1,49 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5E713AA5F;
-	Thu, 31 Oct 2024 17:12:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7011BC9ED;
+	Thu, 31 Oct 2024 17:12:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730394730; cv=none; b=LqGwfe1XAZ/2y+r+pF1WWmpbaI2wYbUiK782xKpF5FVF7lHCbeObQQfyvm2DyqDxsue4GegD2B2yvcnUjrv/UkDRvL36XzfG6rtjpFtCS5UWwR5l7wtP3OWIy0QU0MZ+XQo0nSGHV8F0FTHjGWsQ3KYcTPPxF9aoRjdgMUTqOEs=
+	t=1730394730; cv=none; b=tKSg4fZeJII3hwENMWBz2Xsyt9Xcc0N2JLnEVW8ciVqjYMgcbnW5+bf2MZuMoth+LdfwlIjGV/r4cJtxtbjNeicXjGptfVhP7YHRXlwxJo/JPD0H6Wqosw3Rpw0+/x5ikTv0D9vAeWXA4HrNkJ0OeqNE07eMsnva5zgTs3lAHG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730394730; c=relaxed/simple;
-	bh=6XG12ERMkjluHM55pynix1a/P08nWWDLaHkkO2E/a4Q=;
+	bh=wdZjND10ZDR0BKVDfmJVj4J9wRcZcCoyeS77rnzJKd4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=E3cqFrRlK9nOXYYb88HXWZa5arouqVr7upzLhQIVMQpXgsO6D9+qo2jDhXdTJNa3MtsGPfSNIsz1K0AAKQ422qi8EMSYurQqIEUJkTXMQouK6Gs3lan6hEmXGPnrVA8WL+za89pbbuN8P+4J03ojFE9t/HxeqfXr8DBnEP1stW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYXzwXFt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=uvIaN9ppmpLy3+xtbqiGMlCsi6SAkpUFcN9A/kfLN+ianMFfvS0s5idscDi7GJvYrm08vmVBzACOCHd88YLaZEgIXqdhodWZo+Csf+WvyJS1Aqzznd+UXBiUQdNFO5JLnNzoGCabNGEUTCVbCaKOTkuFaDRS+aPpTVn22txbd4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ur8ozKtj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYXzwXFt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15CBCC4CEC3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ur8ozKtj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF73EC4CED0;
 	Thu, 31 Oct 2024 17:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730394729;
-	bh=6XG12ERMkjluHM55pynix1a/P08nWWDLaHkkO2E/a4Q=;
+	s=k20201202; t=1730394730;
+	bh=wdZjND10ZDR0BKVDfmJVj4J9wRcZcCoyeS77rnzJKd4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=JYXzwXFtMAOhWtK47qQ6/k29acp0Q5tPe1uZlyNHUyJvg04rZ6wM058RzdNRXJrJ4
-	 3LP+Peu2t6aSi7s8XbWPB7SyewWIZPJg4DjR4z10XAUdXq86QxfmkIoMJ+5Ktb8/ux
-	 eFTwgaXOKW8XgsEGpyHcpvqenGtfxUH4unRcoureAK4APt+Y4hapxxp1gbR+xE+zSs
-	 4/Pw40PFj7gmDVq08pUCpJIVFbznmovIJfe80XO4dYF99h7SA4Ox14UEtjmAiUA1BK
-	 mPVm+wcoETa9z4PexMALOlZLTDUMa1LHSFjNJUZkmQjXWzmfeGTyJwggXAfyb8mA1I
-	 4HDkRh594kHaQ==
+	b=Ur8ozKtj2ceXFDw5ULGoxUJjRcPor86j7eLO6b/r1h3UkZeEg/5aIy7j2blrpQ+8j
+	 yIQkzZPFtKZh6hoD+Y8PGDGgCz65EexPbJtz1yLH8yKZkDgJnk4V3ilKQEzkjRiU28
+	 wpbyGccdERTjCdEyq9ZkaAippZS7F3akk1mnjjbPEboaGJW2hbRZyB2KoZuc8a0beg
+	 TEmjKXjeaylaKwxAYnDhXAa89N2LCwvI3luB7i9tTBOvMLXzSZ0pyDXn14TKFGk4dM
+	 dHkPSMMZI1nETTaloHpqIUAjmtqULnGC3GJQUGK6bf6i1IIUsPz++D1S8vVlySR2h5
+	 ADXiOLljTMTQA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org, 
- =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>
-Cc: =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Anup Patel <anup@brainfault.org>, Atish Patra <atishp@rivosinc.com>
-In-Reply-To: <20241024190353.46737-1-bjorn@kernel.org>
-References: <20241024190353.46737-1-bjorn@kernel.org>
-Subject: Re: [PATCH] perf, riscv: Wire up perf trace support for RISC-V
-Message-Id: <173039472904.1704862.15241557863386801558.b4-ty@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Gabriele Monaco <gmonaco@redhat.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+ linux-perf-users@vger.kernel.org
+In-Reply-To: <ZyE3frB-hMXHCnMO@x1>
+References: <ZyE3frB-hMXHCnMO@x1>
+Subject: Re: [PATCH 1/1 perf-tools-next] perf ftrace latency: Fix unit on
+ histogram first entry when using --use-nsec
+Message-Id: <173039472974.1704862.14503122898372001335.b4-ty@kernel.org>
 Date: Thu, 31 Oct 2024 10:12:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -52,17 +46,39 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Thu, 24 Oct 2024 12:03:51 -0700, Björn Töpel wrote:
+On Tue, 29 Oct 2024 16:29:02 -0300, Arnaldo Carvalho de Melo wrote:
 
-> RISC-V does not currently support perf trace, since the system call
-> table is not generated.
+> The use_nsec arg wasn't being taken into account when printing the first
+> histogram entry, fix it:
 > 
-> Perform the copy/paste exercise, wiring up RISC-V system call table
-> generation.
-> 
+>   root@number:~# perf ftrace latency --use-nsec -T switch_mm_irqs_off -a sleep 2
+>   #   DURATION     |      COUNT | GRAPH                                          |
+>        0 - 1    us |          0 |                                                |
+>        1 - 2    ns |          0 |                                                |
+>        2 - 4    ns |          0 |                                                |
+>        4 - 8    ns |          0 |                                                |
+>        8 - 16   ns |          0 |                                                |
+>       16 - 32   ns |          0 |                                                |
+>       32 - 64   ns |        125 |                                                |
+>       64 - 128  ns |        335 |                                                |
+>      128 - 256  ns |       2155 | ####                                           |
+>      256 - 512  ns |       9996 | ###################                            |
+>      512 - 1024 ns |       4958 | #########                                      |
+>        1 - 2    us |       4636 | #########                                      |
+>        2 - 4    us |       1053 | ##                                             |
+>        4 - 8    us |         15 |                                                |
+>        8 - 16   us |          1 |                                                |
+>       16 - 32   us |          0 |                                                |
+>       32 - 64   us |          0 |                                                |
+>       64 - 128  us |          0 |                                                |
+>      128 - 256  us |          0 |                                                |
+>      256 - 512  us |          0 |                                                |
+>      512 - 1024 us |          0 |                                                |
+>        1 - ...  ms |          0 |                                                |
+>   root@number:~#
 > 
 > [...]
 
