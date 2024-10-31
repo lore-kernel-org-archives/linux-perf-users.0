@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98822347C7;
-	Thu, 31 Oct 2024 19:18:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B4F13AD03;
+	Thu, 31 Oct 2024 19:19:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730402290; cv=none; b=jsL7TXQUcLBhz/X7wWGImCZ/mFPVV9hGcfTxWU56oldja7inuCTJtvbD1x/+QtPFSUJYsmuYlZQTYOgwsRXTwUJkraaMWVnsZ5p68qEVFzoJ7CLjhnMziigJafMzyIwIbRjOXgCUNIZfLoCIJrWCXwqjHe30+KO0zu4T0h8hW6M=
+	t=1730402364; cv=none; b=uRn1giMT7QgS05KB7M/0a+EquVWUy76JXx5KXUUDAvuSTtXCl9P30OsZZm5h75oIiBTvf/PRkwM19yxBxguJ1tyvfrsNUeqGrMZTYnhneUQExKbPNThjvcVHj74nF8o/+3P2DbVA1QQYWw2sM7zt9T2jHFiKyAvgOUzNiWhzBas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730402290; c=relaxed/simple;
-	bh=QRapKp7LI+jSrloS+B0cqtakWXy2arvxR656abUf6SU=;
+	s=arc-20240116; t=1730402364; c=relaxed/simple;
+	bh=dvTKGiPk4UeXxBUa59Oqd92Jo21z1p/x+RK6+PStoDA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M6IPkdBAVeqUr372AQGQD045fUXUU4l3Lcy6BuWqo949p6nnLVPCVeMv6dZy0K98PjHHtGlY473xyxGW7Vrlr3Sh7AE1KU5DYu/FASSd9VaW+1/PqcefNqd0gAkoyx5yqULGeiQeU7vypmuAmNXZ9Bys65JUevJ4I2POldNuilo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u79OR8Uv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=j5CZvpfjcIcLAZIRz+QGeS+tpu/ctlgajg/TQ07NIa/mj5LpZbqb2EUL9oUsJqy8kBGjwL5fuuKDjA6Q+A1sQUtQDHf38kNfK2eaIIbV8ghouNAy/Cy6OXDEpC+InI/xmbAfxr/qvf6Ko4tZCkV2IpFI5RLTvKUsioVzrMqA/Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2JFxMUF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u79OR8Uv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 642B6C4CEC3;
-	Thu, 31 Oct 2024 19:18:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2JFxMUF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1FE1C4CEC3;
+	Thu, 31 Oct 2024 19:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730402290;
-	bh=QRapKp7LI+jSrloS+B0cqtakWXy2arvxR656abUf6SU=;
+	s=k20201202; t=1730402364;
+	bh=dvTKGiPk4UeXxBUa59Oqd92Jo21z1p/x+RK6+PStoDA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u79OR8UveFFlO3KAbk5b3rtPJwx4Ej/hBizdS5HNCgTb4+QqWg5feSWDpgaDPJOPs
-	 mHm2r7gjlkqsf+oH8hjmSh2/PUIN5Nv6f5Y4hcysfLVfjYJpOCdsKhGDj7D++nhYFG
-	 fJx2mgsXJIfSz/MWinHnWox173heXLDsRU/YIAFy/PHxdi4B9TLJ3OQvUKFJ4RIucZ
-	 YOgbJGZ/QHxWShntA1OeftI9OeFgqmrJ0hqIE0KGr3iULjO21lSQRm79PAzy8q//54
-	 o1ydOnWW38AfqpPHU4cRyvfN7zho0O4tAoExUhspm+58omMN189n8bhaR6q7KP23xl
-	 4uHqN7wqWV7OQ==
-Date: Thu, 31 Oct 2024 16:18:05 -0300
+	b=l2JFxMUFn0c3ptPyk0JT2j/66T4gRT+V+qpiAQbMK4keWG3c8PzxHA2AmMDSRO/Go
+	 K8AeFHwkO5JUhK2M//ixvkTto2+gUxI4b04APRzl6B6thGI+BkDD+rWlKLfXAMJyTv
+	 IiaJBCRe+iDg2a0Xp5MeP+auJC1N2V5JuLHf+ft7WT3COB1XJHHNURWa943DFPW7zt
+	 NszZ7qhY5pBq/DK9L5PXJ/L9Yst5rBSSW+OXbKoF4fgomP8TAmWzjiPrlUbi1QWxhH
+	 syYEyrImMgfmaxX3zbMwiJSsViixXmh+XQvlVdtOusRlAV6J2I/aEtLu0ApkQ+UhwI
+	 idxwNVyQ5iQFw==
+Date: Thu, 31 Oct 2024 16:19:19 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -49,11 +49,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 06/21] perf script: Move find_scripts to
- browser/scripts.c
-Message-ID: <ZyPX7ayIO4teziDX@x1>
+Subject: Re: [PATCH v5 07/21] perf stat: Move stat_config into config.c
+Message-ID: <ZyPYNxL333la6Dmm@x1>
 References: <20241031014252.753588-1-irogers@google.com>
- <20241031014252.753588-7-irogers@google.com>
+ <20241031014252.753588-8-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,460 +61,233 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241031014252.753588-7-irogers@google.com>
+In-Reply-To: <20241031014252.753588-8-irogers@google.com>
 
-On Wed, Oct 30, 2024 at 06:42:37PM -0700, Ian Rogers wrote:
-> The only use of find_scripts is in browser/scripts.c but the
-> definition in builtin causes linking problems requiring a stub in
-> python.c. Move the function to allow the stub to be removed.
+On Wed, Oct 30, 2024 at 06:42:38PM -0700, Ian Rogers wrote:
+> stat_config is accessed by config.c via helper functions, but declared
+> in builtin-stat. Move to util/config.c so that stub functions aren't
+> needed in python.c which doesn't link against the builtin files.
 > 
-> Rewrite the directory iteration to use openat so that large character
-> arrays aren't needed. The arrays are warned about potential buffer
-> overflows by GCC now that all the code exists in a single C file.
+> To avoid name conflicts change builtin-script to use the same
+> stat_config as builtin-stat. Rename local variables in tests to avoid
+> shadow declaration warnings.
 
-Introducing is_directory_at() should be done as a prep patch, as the
-rest of the patch below could end up being reverted after some other
-patch used it, making the process more difficult.
-
-I mentioned cases like this in the past, so doing it again just for the
-record.
-
-- Arnaldo
+Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
  
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/builtin-script.c      | 138 ------------------------
->  tools/perf/builtin.h             |   6 --
->  tools/perf/ui/browsers/scripts.c | 177 ++++++++++++++++++++++++++++++-
->  tools/perf/util/path.c           |  10 ++
->  tools/perf/util/path.h           |   1 +
->  tools/perf/util/python.c         |   6 --
->  6 files changed, 186 insertions(+), 152 deletions(-)
+>  tools/perf/builtin-script.c |  1 -
+>  tools/perf/builtin-stat.c   | 27 ---------------------------
+>  tools/perf/tests/stat.c     | 16 +++++++++-------
+>  tools/perf/util/config.c    | 27 +++++++++++++++++++++++++++
+>  tools/perf/util/python.c    |  9 ---------
+>  tools/perf/util/stat.h      |  3 ++-
+>  6 files changed, 38 insertions(+), 45 deletions(-)
 > 
 > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 5d5a1a06d8c6..e9ec74056f71 100644
+> index e9ec74056f71..62e851fdf5ca 100644
 > --- a/tools/perf/builtin-script.c
 > +++ b/tools/perf/builtin-script.c
-> @@ -3521,144 +3521,6 @@ static void free_dlarg(void)
->  	free(dlargv);
+> @@ -85,7 +85,6 @@ static bool			system_wide;
+>  static bool			print_flags;
+>  static const char		*cpu_list;
+>  static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+> -static struct perf_stat_config	stat_config;
+>  static int			max_blocks;
+>  static bool			native_arch;
+>  static struct dlfilter		*dlfilter;
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index c12158d99353..a1625443e5a5 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -112,8 +112,6 @@ static struct target target = {
+>  	.uid	= UINT_MAX,
+>  };
+>  
+> -#define METRIC_ONLY_LEN 20
+> -
+>  static volatile sig_atomic_t	child_pid			= -1;
+>  static int			detailed_run			=  0;
+>  static bool			transaction_run;
+> @@ -151,21 +149,6 @@ static struct perf_stat		perf_stat;
+>  
+>  static volatile sig_atomic_t done = 0;
+>  
+> -static struct perf_stat_config stat_config = {
+> -	.aggr_mode		= AGGR_GLOBAL,
+> -	.aggr_level		= MAX_CACHE_LVL + 1,
+> -	.scale			= true,
+> -	.unit_width		= 4, /* strlen("unit") */
+> -	.run_count		= 1,
+> -	.metric_only_len	= METRIC_ONLY_LEN,
+> -	.walltime_nsecs_stats	= &walltime_nsecs_stats,
+> -	.ru_stats		= &ru_stats,
+> -	.big_num		= true,
+> -	.ctl_fd			= -1,
+> -	.ctl_fd_ack		= -1,
+> -	.iostat_run		= false,
+> -};
+> -
+>  /* Options set from the command line. */
+>  struct opt_aggr_mode {
+>  	bool node, socket, die, cluster, cache, core, thread, no_aggr;
+> @@ -1071,16 +1054,6 @@ static void sig_atexit(void)
+>  	kill(getpid(), signr);
 >  }
 >  
-> -/*
-> - * Some scripts specify the required events in their "xxx-record" file,
-> - * this function will check if the events in perf.data match those
-> - * mentioned in the "xxx-record".
-> - *
-> - * Fixme: All existing "xxx-record" are all in good formats "-e event ",
-> - * which is covered well now. And new parsing code should be added to
-> - * cover the future complex formats like event groups etc.
-> - */
-> -static int check_ev_match(char *dir_name, char *scriptname,
-> -			struct perf_session *session)
+> -void perf_stat__set_big_num(int set)
 > -{
-> -	char filename[MAXPATHLEN], evname[128];
-> -	char line[BUFSIZ], *p;
-> -	struct evsel *pos;
-> -	int match, len;
-> -	FILE *fp;
-> -
-> -	scnprintf(filename, MAXPATHLEN, "%s/bin/%s-record", dir_name, scriptname);
-> -
-> -	fp = fopen(filename, "r");
-> -	if (!fp)
-> -		return -1;
-> -
-> -	while (fgets(line, sizeof(line), fp)) {
-> -		p = skip_spaces(line);
-> -		if (*p == '#')
-> -			continue;
-> -
-> -		while (strlen(p)) {
-> -			p = strstr(p, "-e");
-> -			if (!p)
-> -				break;
-> -
-> -			p += 2;
-> -			p = skip_spaces(p);
-> -			len = strcspn(p, " \t");
-> -			if (!len)
-> -				break;
-> -
-> -			snprintf(evname, len + 1, "%s", p);
-> -
-> -			match = 0;
-> -			evlist__for_each_entry(session->evlist, pos) {
-> -				if (evsel__name_is(pos, evname)) {
-> -					match = 1;
-> -					break;
-> -				}
-> -			}
-> -
-> -			if (!match) {
-> -				fclose(fp);
-> -				return -1;
-> -			}
-> -		}
-> -	}
-> -
-> -	fclose(fp);
-> -	return 0;
+> -	stat_config.big_num = (set != 0);
 > -}
 > -
-> -/*
-> - * Return -1 if none is found, otherwise the actual scripts number.
-> - *
-> - * Currently the only user of this function is the script browser, which
-> - * will list all statically runnable scripts, select one, execute it and
-> - * show the output in a perf browser.
-> - */
-> -int find_scripts(char **scripts_array, char **scripts_path_array, int num,
-> -		 int pathlen)
+> -void perf_stat__set_no_csv_summary(int set)
 > -{
-> -	struct dirent *script_dirent, *lang_dirent;
-> -	char scripts_path[MAXPATHLEN], lang_path[MAXPATHLEN];
-> -	DIR *scripts_dir, *lang_dir;
-> -	struct perf_session *session;
-> -	struct perf_data data = {
-> -		.path = input_name,
-> -		.mode = PERF_DATA_MODE_READ,
-> -	};
-> -	char *temp;
-> -	int i = 0;
-> -
-> -	session = perf_session__new(&data, NULL);
-> -	if (IS_ERR(session))
-> -		return PTR_ERR(session);
-> -
-> -	snprintf(scripts_path, MAXPATHLEN, "%s/scripts", get_argv_exec_path());
-> -
-> -	scripts_dir = opendir(scripts_path);
-> -	if (!scripts_dir) {
-> -		perf_session__delete(session);
-> -		return -1;
-> -	}
-> -
-> -	for_each_lang(scripts_path, scripts_dir, lang_dirent) {
-> -		scnprintf(lang_path, MAXPATHLEN, "%s/%s", scripts_path,
-> -			  lang_dirent->d_name);
-> -#ifndef HAVE_LIBPERL_SUPPORT
-> -		if (strstr(lang_path, "perl"))
-> -			continue;
-> -#endif
-> -#ifndef HAVE_LIBPYTHON_SUPPORT
-> -		if (strstr(lang_path, "python"))
-> -			continue;
-> -#endif
-> -
-> -		lang_dir = opendir(lang_path);
-> -		if (!lang_dir)
-> -			continue;
-> -
-> -		for_each_script(lang_path, lang_dir, script_dirent) {
-> -			/* Skip those real time scripts: xxxtop.p[yl] */
-> -			if (strstr(script_dirent->d_name, "top."))
-> -				continue;
-> -			if (i >= num)
-> -				break;
-> -			snprintf(scripts_path_array[i], pathlen, "%s/%s",
-> -				lang_path,
-> -				script_dirent->d_name);
-> -			temp = strchr(script_dirent->d_name, '.');
-> -			snprintf(scripts_array[i],
-> -				(temp - script_dirent->d_name) + 1,
-> -				"%s", script_dirent->d_name);
-> -
-> -			if (check_ev_match(lang_path,
-> -					scripts_array[i], session))
-> -				continue;
-> -
-> -			i++;
-> -		}
-> -		closedir(lang_dir);
-> -	}
-> -
-> -	closedir(scripts_dir);
-> -	perf_session__delete(session);
-> -	return i;
+> -	stat_config.no_csv_summary = (set != 0);
 > -}
 > -
->  static char *get_script_path(const char *script_root, const char *suffix)
+>  static int stat__set_big_num(const struct option *opt __maybe_unused,
+>  			     const char *s __maybe_unused, int unset)
 >  {
->  	struct dirent *script_dirent, *lang_dirent;
-> diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-> index 94f4b3769bf7..a07e93c53848 100644
-> --- a/tools/perf/builtin.h
-> +++ b/tools/perf/builtin.h
-> @@ -2,10 +2,6 @@
->  #ifndef BUILTIN_H
->  #define BUILTIN_H
+> diff --git a/tools/perf/tests/stat.c b/tools/perf/tests/stat.c
+> index 6468cc0d0204..d60983657bad 100644
+> --- a/tools/perf/tests/stat.c
+> +++ b/tools/perf/tests/stat.c
+> @@ -27,7 +27,7 @@ static int process_stat_config_event(const struct perf_tool *tool __maybe_unused
+>  				     struct machine *machine __maybe_unused)
+>  {
+>  	struct perf_record_stat_config *config = &event->stat_config;
+> -	struct perf_stat_config stat_config = {};
+> +	struct perf_stat_config test_stat_config = {};
 >  
-> -#include <stddef.h>
-> -#include <linux/compiler.h>
-> -#include <tools/config.h>
-> -
->  struct feature_status {
->  	const char *name;
->  	const char *macro;
-> @@ -56,6 +52,4 @@ int cmd_ftrace(int argc, const char **argv);
->  int cmd_daemon(int argc, const char **argv);
->  int cmd_kwork(int argc, const char **argv);
+>  #define HAS(term, val) \
+>  	has_term(config, PERF_STAT_CONFIG_TERM__##term, val)
+> @@ -39,25 +39,27 @@ static int process_stat_config_event(const struct perf_tool *tool __maybe_unused
 >  
-> -int find_scripts(char **scripts_array, char **scripts_path_array, int num,
-> -		 int pathlen);
->  #endif
-> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-> index e437d7889de6..2d04ece833aa 100644
-> --- a/tools/perf/ui/browsers/scripts.c
-> +++ b/tools/perf/ui/browsers/scripts.c
-> @@ -1,16 +1,18 @@
->  // SPDX-License-Identifier: GPL-2.0
-> -#include "../../builtin.h"
-> -#include "../../perf.h"
->  #include "../../util/util.h" // perf_exe()
->  #include "../util.h"
-> +#include "../../util/evlist.h"
->  #include "../../util/hist.h"
->  #include "../../util/debug.h"
-> +#include "../../util/session.h"
->  #include "../../util/symbol.h"
->  #include "../browser.h"
->  #include "../libslang.h"
->  #include "config.h"
-> +#include <linux/err.h>
->  #include <linux/string.h>
->  #include <linux/zalloc.h>
-> +#include <subcmd/exec-cmd.h>
->  #include <stdlib.h>
+>  #undef HAS
 >  
->  #define SCRIPT_NAMELEN	128
-> @@ -77,6 +79,177 @@ static int scripts_config(const char *var, const char *value, void *data)
+> -	perf_event__read_stat_config(&stat_config, config);
+> +	perf_event__read_stat_config(&test_stat_config, config);
+>  
+> -	TEST_ASSERT_VAL("wrong aggr_mode", stat_config.aggr_mode == AGGR_CORE);
+> -	TEST_ASSERT_VAL("wrong scale",     stat_config.scale == 1);
+> -	TEST_ASSERT_VAL("wrong interval",  stat_config.interval == 1);
+> +	TEST_ASSERT_VAL("wrong aggr_mode", test_stat_config.aggr_mode == AGGR_CORE);
+> +	TEST_ASSERT_VAL("wrong scale",     test_stat_config.scale == 1);
+> +	TEST_ASSERT_VAL("wrong interval",  test_stat_config.interval == 1);
 >  	return 0;
 >  }
 >  
-> +/*
-> + * Some scripts specify the required events in their "xxx-record" file,
-> + * this function will check if the events in perf.data match those
-> + * mentioned in the "xxx-record".
-> + *
-> + * Fixme: All existing "xxx-record" are all in good formats "-e event ",
-> + * which is covered well now. And new parsing code should be added to
-> + * cover the future complex formats like event groups etc.
-> + */
-> +static int check_ev_match(int dir_fd, const char *scriptname, struct perf_session *session)
-> +{
-> +	char line[BUFSIZ];
-> +	FILE *fp;
+>  static int test__synthesize_stat_config(struct test_suite *test __maybe_unused,
+>  					int subtest __maybe_unused)
+>  {
+> -	struct perf_stat_config stat_config = {
+> +	struct perf_stat_config test_stat_config = {
+>  		.aggr_mode	= AGGR_CORE,
+>  		.scale		= 1,
+>  		.interval	= 1,
+>  	};
+>  
+>  	TEST_ASSERT_VAL("failed to synthesize stat_config",
+> -		!perf_event__synthesize_stat_config(NULL, &stat_config, process_stat_config_event, NULL));
+> +		!perf_event__synthesize_stat_config(NULL, &test_stat_config,
+> +						    process_stat_config_event,
+> +						    NULL));
+>  
+>  	return 0;
+>  }
+> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+> index 68f9407ca74b..2d07c9257a1a 100644
+> --- a/tools/perf/util/config.c
+> +++ b/tools/perf/util/config.c
+> @@ -13,6 +13,7 @@
+>  #include <sys/param.h>
+>  #include "cache.h"
+>  #include "callchain.h"
+> +#include "header.h"
+>  #include <subcmd/exec-cmd.h>
+>  #include "util/event.h"  /* proc_map_timeout */
+>  #include "util/hist.h"  /* perf_hist_config */
+> @@ -34,6 +35,22 @@
+>  
+>  #define DEBUG_CACHE_DIR ".debug"
+>  
+> +#define METRIC_ONLY_LEN 20
 > +
-> +	{
-> +		char filename[FILENAME_MAX + 5];
-> +		int fd;
-> +
-> +		scnprintf(filename, sizeof(filename), "bin/%s-record", scriptname);
-> +		fd = openat(dir_fd, filename, O_RDONLY);
-> +		if (fd == -1)
-> +			return -1;
-> +		fp = fdopen(fd, "r");
-> +		if (!fp)
-> +			return -1;
-> +	}
-> +
-> +	while (fgets(line, sizeof(line), fp)) {
-> +		char *p = skip_spaces(line);
-> +
-> +		if (*p == '#')
-> +			continue;
-> +
-> +		while (strlen(p)) {
-> +			int match, len;
-> +			struct evsel *pos;
-> +			char evname[128];
-> +
-> +			p = strstr(p, "-e");
-> +			if (!p)
-> +				break;
-> +
-> +			p += 2;
-> +			p = skip_spaces(p);
-> +			len = strcspn(p, " \t");
-> +			if (!len)
-> +				break;
-> +
-> +			snprintf(evname, len + 1, "%s", p);
-> +
-> +			match = 0;
-> +			evlist__for_each_entry(session->evlist, pos) {
-> +				if (evsel__name_is(pos, evname)) {
-> +					match = 1;
-> +					break;
-> +				}
-> +			}
-> +
-> +			if (!match) {
-> +				fclose(fp);
-> +				return -1;
-> +			}
-> +		}
-> +	}
-> +
-> +	fclose(fp);
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Return -1 if none is found, otherwise the actual scripts number.
-> + *
-> + * Currently the only user of this function is the script browser, which
-> + * will list all statically runnable scripts, select one, execute it and
-> + * show the output in a perf browser.
-> + */
-> +static int find_scripts(char **scripts_array, char **scripts_path_array, int num,
-> +		 int pathlen)
-> +{
-> +	struct dirent *script_dirent, *lang_dirent;
-> +	int scripts_dir_fd, lang_dir_fd;
-> +	DIR *scripts_dir, *lang_dir;
-> +	struct perf_session *session;
-> +	struct perf_data data = {
-> +		.path = input_name,
-> +		.mode = PERF_DATA_MODE_READ,
-> +	};
-> +	char *temp;
-> +	int i = 0;
-> +	const char *exec_path = get_argv_exec_path();
-> +
-> +	session = perf_session__new(&data, NULL);
-> +	if (IS_ERR(session))
-> +		return PTR_ERR(session);
-> +
-> +	{
-> +		char scripts_path[PATH_MAX];
-> +
-> +		snprintf(scripts_path, sizeof(scripts_path), "%s/scripts", exec_path);
-> +		scripts_dir_fd = open(scripts_path, O_DIRECTORY);
-> +		pr_err("Failed to open directory '%s'", scripts_path);
-> +		if (scripts_dir_fd == -1) {
-> +			perf_session__delete(session);
-> +			return -1;
-> +		}
-> +	}
-> +	scripts_dir = fdopendir(scripts_dir_fd);
-> +	if (!scripts_dir) {
-> +		close(scripts_dir_fd);
-> +		perf_session__delete(session);
-> +		return -1;
-> +	}
-> +
-> +	while ((lang_dirent = readdir(scripts_dir)) != NULL) {
-> +		if (lang_dirent->d_type != DT_DIR &&
-> +		    (lang_dirent->d_type == DT_UNKNOWN &&
-> +		     !is_directory_at(scripts_dir_fd, lang_dirent->d_name)))
-> +			continue;
-> +		if (!strcmp(lang_dirent->d_name, ".") || !strcmp(lang_dirent->d_name, ".."))
-> +			continue;
-> +
-> +#ifndef HAVE_LIBPERL_SUPPORT
-> +		if (strstr(lang_dirent->d_name, "perl"))
-> +			continue;
-> +#endif
-> +#ifndef HAVE_LIBPYTHON_SUPPORT
-> +		if (strstr(lang_dirent->d_name, "python"))
-> +			continue;
-> +#endif
-> +
-> +		lang_dir_fd = openat(scripts_dir_fd, lang_dirent->d_name, O_DIRECTORY);
-> +		if (lang_dir_fd == -1)
-> +			continue;
-> +		lang_dir = fdopendir(lang_dir_fd);
-> +		if (!lang_dir) {
-> +			close(lang_dir_fd);
-> +			continue;
-> +		}
-> +		while ((script_dirent = readdir(lang_dir)) != NULL) {
-> +			if (script_dirent->d_type == DT_DIR)
-> +				continue;
-> +			if (script_dirent->d_type == DT_UNKNOWN &&
-> +			    is_directory_at(lang_dir_fd, script_dirent->d_name))
-> +				continue;
-> +			/* Skip those real time scripts: xxxtop.p[yl] */
-> +			if (strstr(script_dirent->d_name, "top."))
-> +				continue;
-> +			if (i >= num)
-> +				break;
-> +			scnprintf(scripts_path_array[i], pathlen, "%s/scripts/%s/%s",
-> +				exec_path,
-> +				lang_dirent->d_name,
-> +				script_dirent->d_name);
-> +			temp = strchr(script_dirent->d_name, '.');
-> +			snprintf(scripts_array[i],
-> +				(temp - script_dirent->d_name) + 1,
-> +				"%s", script_dirent->d_name);
-> +
-> +			if (check_ev_match(lang_dir_fd, scripts_array[i], session))
-> +				continue;
-> +
-> +			i++;
-> +		}
-> +		closedir(lang_dir);
-> +	}
-> +
-> +	closedir(scripts_dir);
-> +	perf_session__delete(session);
-> +	return i;
-> +}
-> +
->  /*
->   * When success, will copy the full path of the selected script
->   * into  the buffer pointed by script_name, and return 0.
-> diff --git a/tools/perf/util/path.c b/tools/perf/util/path.c
-> index 00adf872bf00..9712466c51e2 100644
-> --- a/tools/perf/util/path.c
-> +++ b/tools/perf/util/path.c
-> @@ -68,6 +68,16 @@ bool is_directory(const char *base_path, const struct dirent *dent)
->  	return S_ISDIR(st.st_mode);
+> +struct perf_stat_config stat_config = {
+> +	.aggr_mode		= AGGR_GLOBAL,
+> +	.aggr_level		= MAX_CACHE_LVL + 1,
+> +	.scale			= true,
+> +	.unit_width		= 4, /* strlen("unit") */
+> +	.run_count		= 1,
+> +	.metric_only_len	= METRIC_ONLY_LEN,
+> +	.walltime_nsecs_stats	= &walltime_nsecs_stats,
+> +	.ru_stats		= &ru_stats,
+> +	.big_num		= true,
+> +	.ctl_fd			= -1,
+> +	.ctl_fd_ack		= -1,
+> +	.iostat_run		= false,
+> +};
+>  
+>  char buildid_dir[MAXPATHLEN]; /* root dir for buildid, binary cache */
+>  
+> @@ -455,6 +472,16 @@ static int perf_ui_config(const char *var, const char *value)
+>  	return 0;
 >  }
 >  
-> +bool is_directory_at(int dir_fd, const char *path)
+> +void perf_stat__set_big_num(int set)
 > +{
-> +	struct stat st;
-> +
-> +	if (fstatat(dir_fd, path, &st, /*flags=*/0))
-> +		return false;
-> +
-> +	return S_ISDIR(st.st_mode);
+> +	stat_config.big_num = (set != 0);
 > +}
 > +
->  bool is_executable_file(const char *base_path, const struct dirent *dent)
+> +static void perf_stat__set_no_csv_summary(int set)
+> +{
+> +	stat_config.no_csv_summary = (set != 0);
+> +}
+> +
+>  static int perf_stat_config(const char *var, const char *value)
 >  {
->  	char path[PATH_MAX];
-> diff --git a/tools/perf/util/path.h b/tools/perf/util/path.h
-> index d94902c22222..fbafbe7015dd 100644
-> --- a/tools/perf/util/path.h
-> +++ b/tools/perf/util/path.h
-> @@ -12,6 +12,7 @@ int path__join3(char *bf, size_t size, const char *path1, const char *path2, con
->  
->  bool is_regular_file(const char *file);
->  bool is_directory(const char *base_path, const struct dirent *dent);
-> +bool is_directory_at(int dir_fd, const char *path);
->  bool is_executable_file(const char *base_path, const struct dirent *dent);
->  
->  #endif /* _PERF_PATH_H */
+>  	if (!strcmp(var, "stat.big-num"))
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index ab67abf3b607..5f11ae88943d 100644
+> index 5f11ae88943d..0fa8e27769be 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
-> @@ -1306,12 +1306,6 @@ PyMODINIT_FUNC PyInit_perf(void)
+> @@ -17,7 +17,6 @@
+>  #include "trace-event.h"
+>  #include "mmap.h"
+>  #include "util/env.h"
+> -#include "util/kvm-stat.h"
+>  #include "util/kwork.h"
+>  #include "util/sample.h"
+>  #include "util/lock-contention.h"
+> @@ -1306,14 +1305,6 @@ PyMODINIT_FUNC PyInit_perf(void)
 >  /* The following are stubs to avoid dragging in builtin-* objects. */
 >  /* TODO: move the code out of the builtin-* file into util. */
 >  
-> -int find_scripts(char **scripts_array  __maybe_unused, char **scripts_path_array  __maybe_unused,
-> -		int num  __maybe_unused, int pathlen __maybe_unused)
+> -void perf_stat__set_no_csv_summary(int set __maybe_unused)
 > -{
-> -	return -1;
 > -}
 > -
->  void perf_stat__set_no_csv_summary(int set __maybe_unused)
+> -void perf_stat__set_big_num(int set __maybe_unused)
+> -{
+> -}
+> -
+>  int script_spec_register(const char *spec __maybe_unused, struct scripting_ops *ops __maybe_unused)
 >  {
->  }
+>  	return -1;
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index 6f8cff3cd39a..2fda9acd7374 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -117,8 +117,9 @@ struct perf_stat_config {
+>  	unsigned int		topdown_level;
+>  };
+>  
+> +extern struct perf_stat_config stat_config;
+> +
+>  void perf_stat__set_big_num(int set);
+> -void perf_stat__set_no_csv_summary(int set);
+>  
+>  void update_stats(struct stats *stats, u64 val);
+>  double avg_stats(struct stats *stats);
 > -- 
 > 2.47.0.163.g1226f6d8fa-goog
-> 
