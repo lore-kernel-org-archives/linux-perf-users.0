@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B0E1CB32A;
-	Thu, 31 Oct 2024 19:20:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EDD13AD03;
+	Thu, 31 Oct 2024 19:20:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730402401; cv=none; b=bHzFELn/dlw+USI0AR4nY1sY39KoQcTcv/j18CGfB3y5n/IzWDT40Llz6gIfKFM6jFUAiBVU4qObYK0iSwJClBjFDvC8HFB7LapqoFTCD+fBpfCYiHmDNXZSDlD0hbc60UajLxFLT/TM2Jdfu9Hb1iLoolGEYd750Ss1PwGQbq0=
+	t=1730402422; cv=none; b=djjLY28aJXRvy8X/8N8kHtTUS5pqkoEAjWBzKM5t983ZPdEpaXyK/bZoyE2KHwzhuL3fonrCD29dMDKcurLXHs0x7A/tCEmHbsD8QKOzvKTEoKawjJ6mjUOOTUsi0XXBPsry8D+XmBJPgliXJmggB1lmniLBbeSiEuF6H4jv3EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730402401; c=relaxed/simple;
-	bh=QFy9O6IaZMSEtd3GTV+0L27WTpq3fi3FtH6zYLLmmzc=;
+	s=arc-20240116; t=1730402422; c=relaxed/simple;
+	bh=F5qUSVL7eKLwVT+0y5zs3mUKvspZfS9rfjmVIge0frw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KQkrZu03vL3QQ0xwRLFUnwgJQbAV9czt/y5xPgL1bvJMm18oAt91XPokzfqNXWGWyCzWyAQyLiXT8GiGvrKJUKJkwt+OHsCkbC3BfQ2MHEOWEOz9nj9d4ZbwHiIjZ5ZGFyUQHMS6L+UzuU/PsELm1Ho3LT35TyQAhVKK8iOqJXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=USC4OVyN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=htr3DUWGcmQg7dnDKOm6A1uSEoRNeFmCNnTA1JKJ94BD6Q3MSh8FR7nim66/mJ+h5bQ5D3q/T0y2zL9gxuKQkYZWVr5uO+rPrrIq2CSSUf9iqUxZpavBjcG42F92hh/gx3IcM926h/tOj38LeXsyiEb1EIMd/KWDiTNw1bEFxOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oX7P8Ml6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="USC4OVyN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF223C4CED2;
-	Thu, 31 Oct 2024 19:19:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oX7P8Ml6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83B8AC4CEC3;
+	Thu, 31 Oct 2024 19:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730402400;
-	bh=QFy9O6IaZMSEtd3GTV+0L27WTpq3fi3FtH6zYLLmmzc=;
+	s=k20201202; t=1730402422;
+	bh=F5qUSVL7eKLwVT+0y5zs3mUKvspZfS9rfjmVIge0frw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=USC4OVyNY7cY6HBpw4dvNWS61VXM7JC5cjRWzEdsWv5He0JeMTBwh9JC5zAHC3VND
-	 2dHd2OfLSgtkYjzUya6gNtj+33o3lA2/TGQPwFVdQUK3z5QMJEghVtDuOmz0hAEaLt
-	 JQVqCs0C4+A+TZzwr2u3kER41X9wx6Bv2dVPJIuBvKyYbbXuOLYgVvkyouB7HPsFP7
-	 lsO9nmNx2DT0QzHye7KNAsomnQzmQ8hzFb77Uvi0ZBXxNkvLVkqf+mieZwavMRv/mW
-	 KE4uCYZiU98s4lRNUJgYNj/uNgfRCsbKwswtyxTl+2H4UZeiU4DO+7oeMM3IawQ0qa
-	 gNz2b5BZejTqQ==
-Date: Thu, 31 Oct 2024 16:19:56 -0300
+	b=oX7P8Ml6LK46LV4YRG78WB+d6TaPK9vuxpI7T9U2+Csc5i5M5Hh+LoS1LvQ0MthWH
+	 2+/nZzaYHyR28DWyRGmmrzRcrvBW45RH2W63wHIcxFhZfAIObV0VYhMJsm5RxJZxHK
+	 kwe/Vz5vWk4QbqtHuFb0WAinxMiXvsBTWW7sEl3HMwbv55MbiQAeDsfTHCxLj6brsE
+	 DlJvONl1i99R+684B/58CpSH3HxSXbPa6KdNKPhW6IDvI7xPvRtST+wblQeHPTvi1U
+	 9ydwawV4mja/5jefBiX2/LdFNTtiB30aJ6TtC3mROsTP+Q469lRtxoV08FTqQ2enDe
+	 kdt56Dddri4gw==
+Date: Thu, 31 Oct 2024 16:20:18 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -49,10 +49,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 03/21] perf python: Remove unused #include
-Message-ID: <ZyPYXK79F5NTslE1@x1>
+Subject: Re: [PATCH v5 04/21] perf script: Move scripting_max_stack out of
+ builtin
+Message-ID: <ZyPYck6mr17jS4uV@x1>
 References: <20241031014252.753588-1-irogers@google.com>
- <20241031014252.753588-4-irogers@google.com>
+ <20241031014252.753588-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,29 +62,64 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241031014252.753588-4-irogers@google.com>
+In-Reply-To: <20241031014252.753588-5-irogers@google.com>
 
-On Wed, Oct 30, 2024 at 06:42:34PM -0700, Ian Rogers wrote:
-> Remove unused #include of bpf-filter.h.
+On Wed, Oct 30, 2024 at 06:42:35PM -0700, Ian Rogers wrote:
+> scripting_max_stack is used in util code which is linked into the
+> python module. Move the variable declaration to
+> util/trace-event-scripting.c to avoid conditional compilation.
 
 Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
  
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/python.c | 1 -
->  1 file changed, 1 deletion(-)
+>  tools/perf/builtin-script.c             | 2 --
+>  tools/perf/util/python.c                | 2 --
+>  tools/perf/util/trace-event-scripting.c | 3 +++
+>  3 files changed, 3 insertions(+), 4 deletions(-)
 > 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 6b6d4472db6e..5d5a1a06d8c6 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -92,8 +92,6 @@ static struct dlfilter		*dlfilter;
+>  static int			dlargc;
+>  static char			**dlargv;
+>  
+> -unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
+> -
+>  enum perf_output_field {
+>  	PERF_OUTPUT_COMM            = 1ULL << 0,
+>  	PERF_OUTPUT_TID             = 1ULL << 1,
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 13dad27169a0..974578a04099 100644
+> index 974578a04099..298f43981fc5 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
-> @@ -16,7 +16,6 @@
->  #include "thread_map.h"
+> @@ -1306,8 +1306,6 @@ PyMODINIT_FUNC PyInit_perf(void)
+>  /* The following are stubs to avoid dragging in builtin-* objects. */
+>  /* TODO: move the code out of the builtin-* file into util. */
+>  
+> -unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
+> -
+>  bool kvm_entry_event(struct evsel *evsel __maybe_unused)
+>  {
+>  	return false;
+> diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
+> index bd0000300c77..8abb7a7b6888 100644
+> --- a/tools/perf/util/trace-event-scripting.c
+> +++ b/tools/perf/util/trace-event-scripting.c
+> @@ -16,9 +16,12 @@
+>  #include "debug.h"
 >  #include "trace-event.h"
->  #include "mmap.h"
-> -#include "util/bpf-filter.h"
->  #include "util/env.h"
->  #include "util/kvm-stat.h"
->  #include "util/kwork.h"
+>  #include "evsel.h"
+> +#include <linux/perf_event.h>
+>  #include <linux/zalloc.h>
+>  #include "util/sample.h"
+>  
+> +unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
+> +
+>  struct scripting_context *scripting_context;
+>  
+>  void scripting_context__update(struct scripting_context *c,
 > -- 
 > 2.47.0.163.g1226f6d8fa-goog
