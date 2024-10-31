@@ -1,207 +1,128 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248BB19922E
-	for <linux-perf-users@vger.kernel.org>; Thu, 31 Oct 2024 22:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBDB19F430;
+	Thu, 31 Oct 2024 23:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730414401; cv=none; b=YjKPSFsR2u5fu5LP4T879HrQhjd12hdemKtOM9cqx29b+dXmval/YLW9Sde/VngYCYChKg3nHqVPCxgd6RU1l6lXSPe1b4ys9/Y1f6sdXDn08hpMEB5Ti4/95gwAv8UairBwcdOoQqr9RDAClGoIRYw8YOEI2ZyxKLHBYO7xlpM=
+	t=1730415800; cv=none; b=Ni858ZVH5yfIdJQLp4F09hg83y4A5iHIbweJin6OCZUpRBOl8uvgw3+3cLT/NeGiNUq+BREcGwniXJAqa1WpRRYzsDgF//YlYePu+tKg9pUNR/Xo4DUNZKFfIMZfAU9FXiu9fwzn5UXJz2CLdYCdWnRPiD5Q9fRgkuWm9NNxRHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730414401; c=relaxed/simple;
-	bh=GUzGbrHWB5mVpuujsPRSEUbl4D4r8eQq3oJIcZ5G0OY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lIM6VmGy2disaHazNHcBlij8cBliKCcTK/56UTW+dIJr8fPTUDtBeNHj6SLmBJ2A80K1FmsEGZsFMRD2FHh33mBX3CTjLQzFZTdJ/thg54i0Ve6FtBX+z8kl1Z9wrSjQJmAhZtChKcjKGCuUtm44aJ9/lCv9mX0whU51VGBy5ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j73wEks+; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1730415800; c=relaxed/simple;
+	bh=eUDN0rTSziBFn916MG2w3mYW5lFHgOs2UPSLKU5r+8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uuxHytk0TPb67+EEoKdUjpRu7IUgqfz5M58Xkm4SR3M+J+mGACcRpoCOsdVrdocWNZxrcenQ2jN27VQtcAA6uKh/NOBD8H5IRSxPptSKk+5Qzh5ESz0CThyg2NM48guNeMCJZcUA0xUKtgcffpXIllDFCiKQ6UKhJt4am85XHao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hNZiWT5q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j73wEks+"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-7cbe272efa6so1606749a12.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Oct 2024 15:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730414395; x=1731019195; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VmHPXqbr+V94Cj75rx8E20Ytlg71UGBeuyaaieI1cEM=;
-        b=j73wEks+qscxPko56LJSfLJBVYQbhfAK0TMiK9K6ayQLHaut7TvZ6kD+/J5N2Jn7JM
-         XnGVaR81DzLg+BOYLTxhCZvptddLndHKi/nrBbRKgaqTt0gMQOwB2bT46/N4XCYFg0cX
-         HRSEBRQVtTdr9kElbHy4tF50m/Hv4GaNwmGcTPNRJomlwk2kAveqZBijC82qbnhVa9rC
-         TSbpFe8s1V4xXu3D9FRnTWUyKuy7Jov4zmBsBmh2MQ95RMyJ9UU60mBXtB/NyVoFJknB
-         2yTVG75kJd9dLOz74fmoqSsaE6g/39Zk4ptrA5RZ7ybJkxmRFE4C0QUcnv0t7Vnec7xC
-         EPwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730414395; x=1731019195;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VmHPXqbr+V94Cj75rx8E20Ytlg71UGBeuyaaieI1cEM=;
-        b=vPPBdQ85VMeCYMqLrQQc9CqMxk/5DRCabDwsyg72AuqbXaNOolfbc1QDWUsn+2KcNt
-         urXZ8+JUzx932MrjSiD2hA/0I6S4cokWr3XNL+kw7L/KWkDNW0gD6XpAA7BIsWwz5rhC
-         TCy7lYweA/1x/KLtxwm20cny8BmqSAYg3IY0jSSleif5FWLKck7r+tqWtkXlSQpOnZKF
-         c0nD/p0JXR8NpsBUi8nj/+XbCVoGwHbqXLmFwmB7+BRt1mE/w6yGz9izH71pR65Dg3qJ
-         6soqjR888ovoPquvkE7nRvnu97gYZEKF7wakM/zMHGJFRg7FDnL0leM4V2tTZTcdK4s4
-         G3/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWUlTUpJJ5DTkoNX9qGBKd9W/+vHeZYjL6sKehXJ2V4tBu2G04wbFs/hEsY9BE+qPAIFAE8OQ3fVChUx9GPoJzK@vger.kernel.org
-X-Gm-Message-State: AOJu0YwS31MzxMDzlrQb+NF3zoK0QC4THoi3Fqr5B6Un5fYWNK2jph6v
-	TrXT8BL5pWl6uU6mYZiXtSuJ/xgBR2d5Jj0iYbeycXrZEblCliGSCnBsypI5jAEPi9U50RHk/eQ
-	OgQ==
-X-Google-Smtp-Source: AGHT+IHcwCE9yLFtMhUPOaOa7htLJB9lwLWpIrFC+ZH3Cz7gR1rZQXoHcrxLR5iE/JVP7KGgtKOn1yVdytQ=
-X-Received: from colette.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:ce7])
- (user=ctshao job=sendgmr) by 2002:a17:902:fa07:b0:20c:8dff:b4f9 with SMTP id
- d9443c01a7336-210f74d6e36mr398135ad.4.1730414395507; Thu, 31 Oct 2024
- 15:39:55 -0700 (PDT)
-Date: Thu, 31 Oct 2024 22:39:45 +0000
-In-Reply-To: <20241031223948.4179222-1-ctshao@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hNZiWT5q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44064C4CEC3;
+	Thu, 31 Oct 2024 23:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730415800;
+	bh=eUDN0rTSziBFn916MG2w3mYW5lFHgOs2UPSLKU5r+8o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hNZiWT5qI/dBzEr1U4csl2pjgm5yps5GX6lxUio9BCuWf2M/2Vq5ToALyadBC/CwC
+	 E712bTQbeqPNAeh+FqpAYuRuz/xt+XO7WfgsaYI03YMhMBPiqE6zUDMmq9k8fbW0dq
+	 nDlVnc6gkpAIYOIo0BNYftWXAhD6/BmMg+k8zgHpnFwUvBy+MOesyVf1oFAQICTAYl
+	 KQP3MvFFbJ2Qedj9OpbY+5XK9d3GurWJGKYA4Q5WAw5LJ2wWtJjMpip6V64FgoY/+/
+	 uq1K/1+ql6CT7qjn0kVbawIi7Ca3sJFqHX4onF9sRDx/u6aXmNGcpLw/tBH6XNtFYu
+	 Mc4NNwT1ox/fA==
+Date: Thu, 31 Oct 2024 16:03:13 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
+Message-ID: <20241031230313.ubybve4r7mlbcbuu@jpoimboe>
+References: <cover.1730150953.git.jpoimboe@kernel.org>
+ <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
+ <CAEf4BzY_rGszo9O9i3xhB2VFC-BOcqoZ3KGpKT+Hf4o-0W2BAQ@mail.gmail.com>
+ <20241030055314.2vg55ychg5osleja@treble.attlocal.net>
+ <CAEf4BzYzDRHBpTX=ED3peeXyRB4QgOUDvYSA4p__gti6mVQVcw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241031223948.4179222-1-ctshao@google.com>
-X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
-Message-ID: <20241031223948.4179222-3-ctshao@google.com>
-Subject: [PATCH 3/3] perf evsel: Find process with busy PMUs for EBUSY
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzYzDRHBpTX=ED3peeXyRB4QgOUDvYSA4p__gti6mVQVcw@mail.gmail.com>
 
-It parses fdinfo with PMU type, comparing with the event which failed to
-open, and report the processes causing EBUSY error.
+On Thu, Oct 31, 2024 at 01:57:10PM -0700, Andrii Nakryiko wrote:
+> > > what if ip_off is larger than 4GB? ELF section can be bigger than 4GB, right?
+> >
+> > That's baked into sframe v2.
+> 
+> I believe we do have large production binaries with more than 4GB of
+> text, what are we going to do about them? It would be interesting to
+> hear sframe people's opinion. Adding such a far-reaching new format in
+> 2024 with these limitations is kind of sad. At the very least maybe we
+> should allow some form of chaining sframe definitions to cover more
+> than 4GB segments? Please CC relevant folks, I'm wondering what
+> they're thinking about this.
 
-```
-Testing cycles and intel_pt//
-$ ./perf stat -e cycles &
-[1] 55569
-$ ./perf stat -e intel_pt// &
-[2] 55683
-$ ./perf stat -e intel_pt//
-Error:
-The PMU intel_pt counters are busy and in use by another process.
-Possible processes:
-55683 ./perf stat -e intel_pt//
-```
-Only perf with intel_pt was reported.
+Personally I find the idea of a single 4GB+ text segment pretty
+surprising as I've never seen anything even close to that.
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/util/evsel.c | 79 +++++++++++++++++++++++++++++------------
- 1 file changed, 57 insertions(+), 22 deletions(-)
+Anyway it's iterative development and not everybody's requirements are
+clear from day 1.  Which is why we're discussing it now.  I think there
+are already plans to do an sframe v3.
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9a5b6a6f8d2e5..d2f7c19e023ec 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3286,7 +3286,8 @@ static bool find_process(const char *name)
- 	return ret ? false : true;
- }
+> > > > +                       if (text_vma) {
+> > > > +                               pr_warn_once("%s[%d]: multiple EXEC segments unsupported\n",
+> > > > +                                            current->comm, current->pid);
+> > >
+> > > is this just something that fundamentally can't be supported by SFrame
+> > > format? Or just an implementation simplification?
+> >
+> > It's a simplification I suppose.
+> 
+> That's a rather random limitation, IMO... How hard would it be to not
+> make that assumption?
 
--static int dump_perf_event_processes(char *msg, size_t size)
-+static int dump_perf_event_processes(const struct perf_event_attr *failed_attr,
-+				     char *msg, size_t size)
- {
- 	DIR *proc_dir;
- 	struct dirent *proc_entry;
-@@ -3327,29 +3328,61 @@ static int dump_perf_event_processes(char *msg, size_t size)
- 				continue;
- 			/* Take care as readlink doesn't null terminate the string. */
- 			if (!strncmp(path, "anon_inode:[perf_event]", link_size)) {
--				int cmdline_fd;
--				ssize_t cmdline_size;
--
--				scnprintf(path, sizeof(path), "%s/cmdline", proc_entry->d_name);
--				cmdline_fd = openat(dirfd(proc_dir), path, O_RDONLY);
--				if (cmdline_fd == -1)
--					continue;
--				cmdline_size = read(cmdline_fd, path, sizeof(path) - 1);
--				close(cmdline_fd);
--				if (cmdline_size < 0)
-+				int fdinfo_fd;
-+				ssize_t fdinfo_size;
-+				char *line;
-+				u32 perf_event_type = PERF_TYPE_MAX;
-+
-+				/* Let's check the PMU type reserved by this process */
-+				scnprintf(path, sizeof(path), "%s/fdinfo/%s",
-+					  proc_entry->d_name, fd_entry->d_name);
-+				fdinfo_fd = openat(dirfd(proc_dir), path, O_RDONLY);
-+				fdinfo_size = read(fdinfo_fd, path, sizeof(path) - 1);
-+				if (fdinfo_size < 0)
- 					continue;
--				path[cmdline_size] = '\0';
--				for (ssize_t i = 0; i < cmdline_size; i++) {
--					if (path[i] == '\0')
--						path[i] = ' ';
-+				path[fdinfo_size] = '\0';
-+
-+				line = strtok(path, "\n");
-+				while (line != NULL) {
-+					if (sscanf(line,
-+						   "perf_event-attr.type:\t%u",
-+						   &perf_event_type) == 1)
-+						break;
-+					line = strtok(NULL, "\n");
- 				}
+It's definitely not random, there's no need to complicate the code if
+this condition doesn't exist.
 
--				if (printed == 0)
--					printed += scnprintf(msg, size, "Possible processes:\n");
--
--				printed += scnprintf(msg + printed, size - printed,
--						"%s %s\n", proc_entry->d_name, path);
--				break;
-+				/* Report the process which reserves the conflicted PMU. */
-+				/* If fdinfo does not contain PMU type, report it too. */
-+				if (perf_event_type == failed_attr->type ||
-+				    perf_event_type == PERF_TYPE_MAX) {
-+					int cmdline_fd;
-+					ssize_t cmdline_size;
-+
-+					scnprintf(path, sizeof(path),
-+						  "%s/cmdline",
-+						  proc_entry->d_name);
-+					cmdline_fd = openat(dirfd(proc_dir), path, O_RDONLY);
-+					if (cmdline_fd == -1)
-+						continue;
-+					cmdline_size = read(cmdline_fd, path, sizeof(path) - 1);
-+					close(cmdline_fd);
-+					if (cmdline_size < 0)
-+						continue;
-+					path[cmdline_size] = '\0';
-+					for (ssize_t i = 0; i < cmdline_size; i++) {
-+						if (path[i] == '\0')
-+							path[i] = ' ';
-+					}
-+
-+					if (printed == 0)
-+						printed += scnprintf(
-+							msg, size,
-+							"Possible processes:\n");
-+
-+					printed += scnprintf(msg + printed, size - printed,
-+							"%s %s\n", proc_entry->d_name, path);
-+					break;
-+				}
- 			}
- 		}
- 		closedir(fd_dir);
-@@ -3458,7 +3491,9 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
- 			msg, size,
- 			"The PMU %s counters are busy and in use by another process.\n",
- 			evsel->pmu ? evsel->pmu->name : "");
--		return printed + dump_perf_event_processes(msg + printed, size - printed);
-+		return printed + dump_perf_event_processes(&evsel->core.attr,
-+							   msg + printed,
-+							   size - printed);
- 		break;
- 	case EINVAL:
- 		if (evsel->core.attr.sample_type & PERF_SAMPLE_CODE_PAGE_SIZE && perf_missing_features.code_page_size)
---
-2.47.0.163.g1226f6d8fa-goog
+> > > It's not illegal to have an executable with multiple VM_EXEC segments,
+> > > no? Should this be a pr_warn_once() then?
+> >
+> > I don't know, is it allowed?  I've never seen it in practice.  The
+> 
+> I'm pretty sure you can do that with a custom linker script, at the
+> very least. Normally this probably won't happen, but I don't think
+> Linux dictates how many executable VMAs an application can have.
+> And it probably just naturally happens for JIT-ted applications (Java,
+> Go, etc).
 
+Actually I just double checked and even the kernel's ELF loader assumes
+that each executable has only a single text start+end address pair.
+
+> > pr_warn_once() is not reporting that it's illegal but rather that this
+> > corner case actually exists and maybe needs to be looked at.
+> 
+> This warn() will be logged across millions of machines in the fleet,
+> triggering alarms, people looking at this, making custom internal
+> patches to disable the known-to-happen warn. Why do we need all this?
+> This is an issue that is trivial to trigger by user process that's not
+> doing anything illegal. Why?
+
+There's no point in adding complexity to support some hypothetical.  I
+can remove the printk though.
+
+-- 
+Josh
