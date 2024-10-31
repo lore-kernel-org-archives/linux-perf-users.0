@@ -1,198 +1,244 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152141C2DB4
-	for <linux-perf-users@vger.kernel.org>; Thu, 31 Oct 2024 20:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FB91CCB36;
+	Thu, 31 Oct 2024 20:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730408141; cv=none; b=snNKJWmdKEo/+Tv5YtZjc1LsuA1DJCzueoOKGZj0yhtE/v22U4sStZiH2h1P6jejHg5KHFHi9cxRXlCMgE28b972tgLfSUQLRG9gDtZtpWdj2im+iIlV70TxZ97RjuVpvmG/N8YDPSJfzcUupuc43Hv7S459NePfBZRfn9bOoh0=
+	t=1730408270; cv=none; b=MY7a85b7hOWyl4SCu4G4fYp3BhVoYE1uZf5Idp3yz1+RSz9kPl1GTT0ijQxycCf2pL4cSKjUYwizbQKjHa1OyqrD9MH79BdfO2a84pqeqdRW1tLuH5y1cr1d+pj+tpJYVA6bz5/+LXFtpcs/UiFyomzGrFX8oKdB37Xqbfj3nHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730408141; c=relaxed/simple;
-	bh=9Rd2TkMcA9fVhu68Ovy75vya9w++kpFgTz+yhcbBG+Q=;
+	s=arc-20240116; t=1730408270; c=relaxed/simple;
+	bh=d4yg9w/9Vw56lhG9Ydt399PjnwVlOwH171Y4XyoU32I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OhmSKkheNc7nKb8BdtMJfbfdkz1xJW42Qd3oio32Jtudr8n1GX/lGC67ZZ6+87m9NoyJ/orwkJlISpPx4vIHtwroGsy/3ROXUMOVg6FsBK5ttJCHOPM0i9iNVJXANg5lKG86c1DbPRzBTFzZhxwBiH8SPnqxAAG2gShJ8WIQcEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fvICJ3Sj; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=qHlnad1iYDGVnGGPXz5lZoYgK/h2tijCrVREu3tYH7hfKTkxqZrJQVGI5netbDflk8WREjwxN77wgwSElCakUdYlmXfLYt2TS02Up5BWbn5p46j9e+PXg+ttzmtOLj6FugvDSmtw23YZSBRF9QPWwIA/FMbKECwEBFUAi4+ExKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l3bEnjPU; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fvICJ3Sj"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-460b295b9eeso25551cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Oct 2024 13:55:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3bEnjPU"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5c9634c9160so1516053a12.2;
+        Thu, 31 Oct 2024 13:57:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730408134; x=1731012934; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1730408263; x=1731013063; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=y+KxeuLVX+tE03TpilYSJT4wjTu/mfE3FRXVaPVyu8Y=;
-        b=fvICJ3SjDhGhaLpXDdDVZNv1QbBgC7w+zOCB4NTi5n4gg0XiBIuFv0B1xCkxkB5Vsk
-         kRdgIWZbJ+Vc1NKQMyMoooAEzuzqnH/5hDUEbYwJfw71qv1cZBY/jW2m1t17CxACp529
-         9NvHnOOZjK2p7mr1hqaeoS94CfMKlQ4dLXJ+9pHgALonsYwowPp5tlaHmEebfPxjSrEm
-         E3W7KMTiftZCk30Z0SwrS3CPV1jUNj5nqXG2lr4BK1Ja16XUXnMefwh6raCsBsP2yK/W
-         Sf7ZYYJR3ChKTaWweIo9/Cs5lDv9WiMmJOxXyVUMr14cPfmQbdJrbxNELhM+KEbVnqjj
-         2l1Q==
+        bh=ygzEaG0i+IFdhWqyLLqbh8SUXHugvUXiylqcsVNMp68=;
+        b=l3bEnjPUkoJd7CZohYFpHbJ8FxodYponcFM/CkYCDc8zD6SSB9cRcyfKBYpbdQ4ZjS
+         NVsZWmicpyNTm3sEC3+LR6tvHv+3nMvW7rJwpshwtBwiXA9YlWCfNS04IltHOOSyPUvt
+         Dh+G8OinOA3g04ycRKuP+d73my5uTE8GTrzfPGaYDeWAECExpEfz4+UMf1khtxTe1oTH
+         MpxvzcMGhcie+3+6Wc8BFqBUoxGitqAvYUVhtg+8noWsw+U7p6IXKWZe9clJE/GOd5dq
+         yUx5FZGML6CIPRKE6IEkYrgmjav1y37AblJs9GTS2npDLgHMupUOvFGINVqJvMQjAg1E
+         7CNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730408134; x=1731012934;
+        d=1e100.net; s=20230601; t=1730408263; x=1731013063;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=y+KxeuLVX+tE03TpilYSJT4wjTu/mfE3FRXVaPVyu8Y=;
-        b=EBMmrSrsxkVUA4jzAFTeRGxzZCAsKRyYTCfpumDA1gSpivOsYutdPrsh+2/2sN99Sv
-         je02EBY1/tBTsfScISjFrgCHfr+P0mc7IQkREIEylyDP1+o7S71y/grCB6qetaNXW6Cy
-         WnhSqLmbPwd3EXiC6s4WQklRQw8ZiqX962b+PT9/MPJd3Ibz6v4+wMFXC1BKlqNUrK+y
-         IABIUbm4QnCJ7MGVHJr5Wn9aBcYgBkGD+voi9eHWcfB4AivLkYXpWMJ2bqyAh8xYpbPF
-         H7TH/E8krA2Sp7yCF1yx3CTYCjjyB1qaG7bSs9LvVexHcyxMUu7K6byhhc+GstCQJESC
-         gQdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7pyCVfGrRhn5s3T6bqQ0KJd/WHevj0WmC8BwbR/wVNCPu0SdRM1q+ljkXuB9d27R8PKvhnCfwqOSHzyXGdtAv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUgacz7PFXqvKPnsES2fpEojEYXrQaftO0/T1LVA6ZUa8zJsbz
-	Fu6iK6SJ5f79zVvZkArDYMTVj5jnivYoi6NLGyZfHnWkj+zFEr5H+D3hYnnsGDkGP21ovMaYU1V
-	LCJ81WQ80Vo9HVIG24MYrX4Qrw9N9J11tXbc/
-X-Gm-Gg: ASbGncstp8L+bs3+JdBOTT58PQGDGX6egp3p0N3k8VqZIWWQ10tEKj92CdPlml8SrZZ
-	0kUgUidjRGatQv7gFUI2OpRp7H7ye6Jd1K4p//WWinmcqFjBXDKuf1IRVigwt1S4=
-X-Google-Smtp-Source: AGHT+IHeUtbTCvIWJIbctfZ40HjYELPWH3dcsZHSiQzYyy54WP1139DwIfmJcUr3NN4kGvqzC7SLLW3yMoAxSPAckmc=
-X-Received: by 2002:a05:622a:15cd:b0:462:9e4:de13 with SMTP id
- d75a77b69052e-462ad29cbe8mr4441871cf.9.1730408133773; Thu, 31 Oct 2024
- 13:55:33 -0700 (PDT)
+        bh=ygzEaG0i+IFdhWqyLLqbh8SUXHugvUXiylqcsVNMp68=;
+        b=h2ozZDfhdPFHG+1Mx/FmHXIz7H7mh+wjv3nxpVL2P+TL9aoKB+NiH10cex3jJBm/a4
+         DpHc+RJkhLDfZmdddrlktFoq5cbt4T8EtDyDUezur1t1pgPSx5OWmZQWmVqSlvvc6Nl1
+         YBrPvYMzpxsKQhqnEr7eXxvetHnHhKc+CQqU0xbOaVm/cKbPJkJWkbBb/NOwZMePOE4N
+         uKZ5wFjFAOaXi3PRvkWIMr4yF8eJb72oFi++tOMwIytkNAnex4H8TAPvtHQoeYoBdnXJ
+         Pxlr4Jpyk+TbzyAA9xkIZPFEbxnbMDq7wDrIXWQ3POEHf6XJmnNHZxFmL2xRAEfj4EEF
+         E5rw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2Bsr+5BSps0MraqMZQaTmuc1vLaoVgk2MuvnFMXlz4PTjMkcQLKhnnSNDUgR8ExtHC6I/nbaXRaN7pT4V9LsYFw==@vger.kernel.org, AJvYcCVIOrjcudhJtt9L1xW0gj+i5n13ssrSWbNFFY2rn0mGDKw3LlYVgh1bddBhh2V6a3L1F8vJlzJHZhoDQF+qT6TLgg==@vger.kernel.org, AJvYcCXogRhBGX3kOvMOQkpM3KoOZQbhNdODnS4vZTd8qMvrtUwVxQj57l4N4ZdYbLcpMc4WnGQwni0PBeJnqt4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzyc90yGHR1nakWdQhweLLCVXtI/mtdOb22cgdCD1ajavrbkaFh
+	HHLMNIzT2kQqLbcvfwSXMETliBiKTpR/FNwL2PBpWwWGZoBZuuaxLEXIrcNu3ez1NlhK2ND5Fke
+	c1WRfn7oJqZUhtTZFW0Jc+5o5reU=
+X-Google-Smtp-Source: AGHT+IHw2sp6E6xFgIKGilk2LAD/nLTHzg3NWYpmsoprLayI+JRpSVwQL1nl0nBLIDEYZjZAgd1AY/9F8bHDgQTTuQg=
+X-Received: by 2002:a17:907:1c29:b0:a99:e67a:d12d with SMTP id
+ a640c23a62f3a-a9de61ce61bmr2021732766b.48.1730408262602; Thu, 31 Oct 2024
+ 13:57:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241031014252.753588-1-irogers@google.com> <ZyPdDaaqwy7PM57S@x1>
-In-Reply-To: <ZyPdDaaqwy7PM57S@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 31 Oct 2024 13:55:22 -0700
-Message-ID: <CAP-5=fWyQmVNJXU+wH7RuiDDAVNs_JSxiSpSWHDorn0f5e8fmA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/21] Python module cleanup
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+References: <cover.1730150953.git.jpoimboe@kernel.org> <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
+ <CAEf4BzY_rGszo9O9i3xhB2VFC-BOcqoZ3KGpKT+Hf4o-0W2BAQ@mail.gmail.com> <20241030055314.2vg55ychg5osleja@treble.attlocal.net>
+In-Reply-To: <20241030055314.2vg55ychg5osleja@treble.attlocal.net>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 31 Oct 2024 13:57:10 -0700
+Message-ID: <CAEf4BzYzDRHBpTX=ED3peeXyRB4QgOUDvYSA4p__gti6mVQVcw@mail.gmail.com>
+Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, 
+	Indu Bhagat <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	Mark Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, 
+	Jordan Rome <jordalgo@meta.com>, Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org, 
+	Jens Remus <jremus@linux.ibm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 31, 2024 at 12:40=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Tue, Oct 29, 2024 at 10:53=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.or=
+g> wrote:
 >
-> On Wed, Oct 30, 2024 at 06:42:31PM -0700, Ian Rogers wrote:
-> > This patch:
-> >  - removes workarounds for Python 2 module support due to long
-> >    deprecation and challenges in developing new code;
-> >  - constifies variables and parameters to functions;
-> >  - removes python.c stub code which existed due to missing functions
-> >    that are defined in the builtin-* files, in general the builtin-*
-> >    code is moved into util;
-> >  - remove bench and test perf C code from the python module;
-> >  - adds parse_events to the python perf module.
-> >  - improves upon some of the existing python perf module functins.
+> On Tue, Oct 29, 2024 at 04:32:40PM -0700, Andrii Nakryiko wrote:
+> > It feels like this patch is trying to do too much. There is both new
+> > UAPI introduction, and SFrame format definition, and unwinder
+> > integration, etc, etc. Do you think it can be split further into more
+> > focused smaller patches?
+>
+> True, let me see if I can split it up.
+>
+> > > +
+> > > +                       if ((eppnt->p_flags & PF_X) && k < start_code=
+)
+> > > +                               start_code =3D k;
+> > > +
+> > > +                       if ((eppnt->p_flags & PF_X) && k + eppnt->p_f=
+ilesz > end_code)
+> > > +                               end_code =3D k + eppnt->p_filesz;
+> > > +                       break;
+> > > +               }
+> > > +               case PT_GNU_SFRAME:
+> > > +                       sframe_phdr =3D eppnt;
 > >
-> > v5. Rebase. Fix NO_LIBBPF and NO_AUXTRACE related build failures
-> >     caught by Arnaldo and the build-test. Fix NO_AUXTRACE x86
-> >     arch_fetch_insn in the process, which was incorrectly using an
-> >     empty weak symbol stub.
+> > if I understand correctly, there has to be only one sframe, is that
+> > right? Should we validate that?
 >
+> Yes, there shouldn't be more than one PT_GNU_SFRAME for the executable
+> itself.  I can validate that.
 >
-> I created a 'perf test' shell entry to test the python binding and ran
-> it after each relevant patch in this series, as well as doing 'perf
-> script -' to list available scripts, all seem to work.
+> > > +                       break;
+> > >                 }
+> > >         }
+> > >
+> > > +       if (sframe_phdr)
+> > > +               sframe_add_section(load_addr + sframe_phdr->p_vaddr,
+> > > +                                  start_code, end_code);
+> > > +
+> >
+> > no error checking?
 >
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Good point.  I remember discussing this with some people at Cauldon/LPC,
+> I just forgot to do it!
+>
+> Right now it does all the validation at unwind, which could really slow
+> things down unnecessarily if the sframe isn't valid.
+>
+> > > +#ifdef CONFIG_HAVE_UNWIND_USER_SFRAME
+> > > +
+> > > +#define INIT_MM_SFRAME .sframe_mt =3D MTREE_INIT(sframe_mt, 0),
+> > > +
+> > > +extern void sframe_free_mm(struct mm_struct *mm);
+> > > +
+> > > +/* text_start, text_end, file_name are optional */
+> >
+> > what file_name? was that an extra argument that got removed?
+>
+> Indeed, that was for some old code.
+>
+> > >         case PR_RISCV_SET_ICACHE_FLUSH_CTX:
+> > >                 error =3D RISCV_SET_ICACHE_FLUSH_CTX(arg2, arg3);
+> > >                 break;
+> > > +       case PR_ADD_SFRAME:
+> > > +               if (arg5)
+> > > +                       return -EINVAL;
+> > > +               error =3D sframe_add_section(arg2, arg3, arg4);
+> >
+> > wouldn't it be better to make this interface extendable from the get
+> > go? Instead of passing 3 arguments with fixed meaning, why not pass a
+> > pointer to an extendable binary struct like seems to be the trend
+> > nowadays with nicely extensible APIs. See [0] for one such example
+> > (specifically, struct procmap_query). Seems more prudent, as we'll
+> > most probably will be adding flags, options, extra information, etc)
+> >
+> >   [0] https://lore.kernel.org/linux-mm/20240627170900.1672542-3-andrii@=
+kernel.org/
+>
+> This ioctl interface was admittedly hacked together.  I was hoping
+> somebody would suggest something better :-)  I'll take a look.
+>
+> > > +static int find_fde(struct sframe_section *sec, unsigned long ip,
+> > > +                   struct sframe_fde *fde)
+> > > +{
+> > > +       struct sframe_fde __user *first, *last, *found =3D NULL;
+> > > +       u32 ip_off, func_off_low =3D 0, func_off_high =3D -1;
+> > > +
+> > > +       ip_off =3D ip - sec->sframe_addr;
+> >
+> > what if ip_off is larger than 4GB? ELF section can be bigger than 4GB, =
+right?
+>
+> That's baked into sframe v2.
 
-There is coverage of just "import perf" in:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/tests/python-use.c?h=3Dperf-tools-next
-Which I'd been using throughout creating the series.
+I believe we do have large production binaries with more than 4GB of
+text, what are we going to do about them? It would be interesting to
+hear sframe people's opinion. Adding such a far-reaching new format in
+2024 with these limitations is kind of sad. At the very least maybe we
+should allow some form of chaining sframe definitions to cover more
+than 4GB segments? Please CC relevant folks, I'm wondering what
+they're thinking about this.
 
-Thanks,
-Ian
+>
+> > and also, does it mean that SFrame doesn't support executables with
+> > text bigger than 4GB?
+>
+> Yes, but is that a realistic concern?
 
-> I'll send the perf test entry now.
+See above, yes. You'd be surprised. As somewhat corroborating
+evidence, there were tons of problems and churn (within at least Meta)
+with DWARF not supporting more than 2GB sizes, so yes, this is not an
+abstract problem for sure. Modern production applications can be
+ridiculously big.
+
 >
-> - Arnaldo
+> > > +       } else {
+> > > +               struct vm_area_struct *vma, *text_vma =3D NULL;
+> > > +               VMA_ITERATOR(vmi, mm, 0);
+> > > +
+> > > +               for_each_vma(vmi, vma) {
+> > > +                       if (vma->vm_file !=3D sframe_vma->vm_file ||
+> > > +                           !(vma->vm_flags & VM_EXEC))
+> > > +                               continue;
+> > > +
+> > > +                       if (text_vma) {
+> > > +                               pr_warn_once("%s[%d]: multiple EXEC s=
+egments unsupported\n",
+> > > +                                            current->comm, current->=
+pid);
+> >
+> > is this just something that fundamentally can't be supported by SFrame
+> > format? Or just an implementation simplification?
 >
+> It's a simplification I suppose.
+
+That's a rather random limitation, IMO... How hard would it be to not
+make that assumption?
+
 >
-> > v4. Rebase. Fix the parse events evsel to be embedded in a
-> >     pyrf_evsel. Add __str__/__repr__ functions to evlist and
-> >     evsel. Throw an exception for a bad evlist index.
-> > v3. Move is_directory_at to patch 6 rather than patch 7, respond to
-> >     review feedback on the list from Namhyung.
-> > v2. Add the bottom 4 bullet points - 13 more patches.
-> >
-> > Ian Rogers (21):
-> >   perf python: Remove python 2 scripting support
-> >   perf python: Constify variables and parameters
-> >   perf python: Remove unused #include
-> >   perf script: Move scripting_max_stack out of builtin
-> >   perf kvm: Move functions used in util out of builtin
-> >   perf script: Move find_scripts to browser/scripts.c
-> >   perf stat: Move stat_config into config.c
-> >   perf script: Move script_spec code to trace-event-scripting.c
-> >   perf script: Move script_fetch_insn to trace-event-scripting.c
-> >   perf script: Move perf_sample__sprintf_flags to
-> >     trace-event-scripting.c
-> >   perf x86: Define arch_fetch_insn in NO_AUXTRACE builds
-> >   perf intel-pt: Remove stale build comment
-> >   perf env: Move arch errno function to only use in env
-> >   perf lock: Move common lock contention code to new file
-> >   perf bench: Remove reference to cmd_inject
-> >   perf kwork: Make perf_kwork_add_work a callback
-> >   perf build: Remove test library from python shared object
-> >   perf python: Add parse_events function
-> >   perf python: Add __str__ and __repr__ functions to evlist
-> >   perf python: Add __str__ and __repr__ functions to evsel
-> >   perf python: Correctly throw IndexError
-> >
-> >  tools/perf/Makefile.perf                      |   7 +-
-> >  tools/perf/arch/x86/util/Build                |   2 +-
-> >  tools/perf/bench/inject-buildid.c             |  13 +-
-> >  tools/perf/builtin-kvm.c                      |  61 ----
-> >  tools/perf/builtin-kwork.c                    |   3 +-
-> >  tools/perf/builtin-lock.c                     | 137 +------
-> >  tools/perf/builtin-script.c                   | 304 +---------------
-> >  tools/perf/builtin-stat.c                     |  27 --
-> >  tools/perf/builtin-trace.c                    |   1 -
-> >  tools/perf/builtin.h                          |   6 -
-> >  .../scripts/python/Perf-Trace-Util/Context.c  |  20 +-
-> >  tools/perf/tests/stat.c                       |  16 +-
-> >  tools/perf/trace/beauty/arch_errno_names.sh   |   3 +-
-> >  tools/perf/ui/browsers/scripts.c              | 177 ++++++++-
-> >  tools/perf/util/Build                         |   4 +-
-> >  tools/perf/util/bpf_kwork.c                   |   2 +-
-> >  tools/perf/util/bpf_kwork_top.c               |   2 +-
-> >  tools/perf/util/bpf_lock_contention.c         |   2 +-
-> >  tools/perf/util/cgroup.c                      |   2 +-
-> >  tools/perf/util/config.c                      |  27 ++
-> >  tools/perf/util/dlfilter.c                    |   3 +-
-> >  tools/perf/util/env.c                         |   4 +
-> >  tools/perf/util/env.h                         |   2 -
-> >  tools/perf/util/evsel.c                       |  19 +-
-> >  tools/perf/util/evsel.h                       |   2 +-
-> >  tools/perf/util/intel-pt-decoder/Build        |  18 +-
-> >  .../intel-pt-decoder/intel-pt-insn-decoder.c  |   3 -
-> >  tools/perf/util/kvm-stat.c                    |  70 ++++
-> >  tools/perf/util/kvm-stat.h                    |   3 +
-> >  tools/perf/util/kwork.h                       |   6 +-
-> >  tools/perf/util/lock-contention.c             | 170 +++++++++
-> >  tools/perf/util/lock-contention.h             |  37 +-
-> >  tools/perf/util/path.c                        |  10 +
-> >  tools/perf/util/path.h                        |   1 +
-> >  tools/perf/util/python.c                      | 338 ++++++++----------
-> >  .../scripting-engines/trace-event-python.c    |  63 +---
-> >  tools/perf/util/stat.h                        |   3 +-
-> >  tools/perf/util/trace-event-scripting.c       | 177 +++++++++
-> >  tools/perf/util/trace-event.h                 |   5 +-
-> >  39 files changed, 872 insertions(+), 878 deletions(-)
-> >  create mode 100644 tools/perf/util/kvm-stat.c
-> >  create mode 100644 tools/perf/util/lock-contention.c
-> >
-> > --
-> > 2.47.0.163.g1226f6d8fa-goog
-> >
+> > It's not illegal to have an executable with multiple VM_EXEC segments,
+> > no? Should this be a pr_warn_once() then?
+>
+> I don't know, is it allowed?  I've never seen it in practice.  The
+
+I'm pretty sure you can do that with a custom linker script, at the
+very least. Normally this probably won't happen, but I don't think
+Linux dictates how many executable VMAs an application can have. And
+it probably just naturally happens for JIT-ted applications (Java, Go,
+etc).
+
+Linux kernel itself has two executable segments, for instance (though
+kernel is special, of course, but still).
+
+> pr_warn_once() is not reporting that it's illegal but rather that this
+> corner case actually exists and maybe needs to be looked at.
+
+This warn() will be logged across millions of machines in the fleet,
+triggering alarms, people looking at this, making custom internal
+patches to disable the known-to-happen warn. Why do we need all this?
+This is an issue that is trivial to trigger by user process that's not
+doing anything illegal. Why?
+
+>
+> --
+> Josh
