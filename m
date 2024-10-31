@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83BE1CB316;
-	Thu, 31 Oct 2024 19:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A574C80;
+	Thu, 31 Oct 2024 19:33:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730402657; cv=none; b=bicR3aOcjePOjsWyXa8LXFuUSO4yjs7KZ21FSVHiUs+4qy7RCujk/wC+buUz7DVFu7tfeCLafc8i/Csdp4chkUtVwpZVT8wRkT1btCHHhH8AwmII/ddBthFUmg9Ve3qzr1nUUsr6xWI1xrDp+1hT4t3OAUgy9wgDeiTbsH3i4Ns=
+	t=1730403209; cv=none; b=S0XK111eSM2bJLtvsSIuNB5gk5E3K87/6CRUAPi8uAwVN9Km8laNk4xFlZV1ZqP5zpTTZUeuE93jod2cSv168mEp7Y4iSVXkkkqzeZzgLGIKt9SEEIas3j4khhxS3vxLuIQ/QRsiWFerP0JPsWdA6XJ5JxRAXhLZepL7d4fnPHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730402657; c=relaxed/simple;
-	bh=WzpRpIob8QJ+SjaQ38OrD/oxcKrH/T/5ZQkzfobegfs=;
+	s=arc-20240116; t=1730403209; c=relaxed/simple;
+	bh=8T4Zv392sdQH71AUU0geXyuXvlgzntF7zrArxAKPUfg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=heSsFy311iinHfFTLPJII2HFrxzOAuSI7nVTTa5LTWSDq017pzvcvYnns89zPwm1p1P+YQV/SQIj1/4euMHkctjc5DBhInsmGVINaXiXXeT8ifNT37KFuudpPpa0/9rOfI7d5oTGc51F8s2QDGpFLeoXSDgz2CrgPP6/11hcPcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kbqrnSiR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ULW5Y3xHUDPVnxFVbxsbz757g8nVud49bcZmNBDoDwsp+HdeuwyYwRy3D/asIJPkTAHCPJLagqQQ18fpoON6lwNtZAslz9ej4zPcN21vbUTYhfCSjkyJpEu5lK0sQZvkclqSOtv4uds4ZJeOMzDHsGGcVTW568e9Tz2xY6egQss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X03OYFeu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kbqrnSiR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C52BAC4CED1;
-	Thu, 31 Oct 2024 19:24:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X03OYFeu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADDD6C4CEC3;
+	Thu, 31 Oct 2024 19:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730402657;
-	bh=WzpRpIob8QJ+SjaQ38OrD/oxcKrH/T/5ZQkzfobegfs=;
+	s=k20201202; t=1730403206;
+	bh=8T4Zv392sdQH71AUU0geXyuXvlgzntF7zrArxAKPUfg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kbqrnSiRtA1aggiIf63a9U//G+uGJX52yNWbb0etaS+EPliwx3WawAsP90KmIlWsc
-	 rG7RkGNPBQy3zcZbHi9EAGvH+sdgx9h9p7v7Sk3Px0NxG5kFSuFLaD16GAIethyZV0
-	 ZNLdp7cpd6IYsG6/mq+0fdE/1YhGur+IDDHjWf2evMVSNSHl4/vbDFuFPNVBrQmFPK
-	 BOfxWirXhMLs+Q+zyDAYb6cBdY1+jx364R2S+Kvg+x6Pydz2lO8cfFwzEXj3d2snGG
-	 xA6kPiKJ6GHv1SS0jdApLx2NV+2+hIPtDdmGyPVxzf26ZdmajbvkM90tb1n3XdnNcY
-	 B0jqmMoiwLmGg==
-Date: Thu, 31 Oct 2024 16:24:13 -0300
+	b=X03OYFeujB4MzKIvqJph5AhTd7SB0UIqDqi9P9t88hS1T2+kuuWz2U10fxZLYZIYd
+	 7BODMvzj6+VtqCAYbIkY97Sdj1BDTxBq7k7davVsZGaLIYnNZY7xc/LE70O33u7k/j
+	 qKMRt3h0nzjIPyZ1FNZ5D6cuKYmtWFrm7+B/JeEAsvG1iDP2FF1tQxDSgzKEQfutdL
+	 GiWu5JPQqK1k25elra46Ex5tOJBgT8pNpKR1kWZonYCj++/YUkh6QDk5wkgnow25SA
+	 l13oCeAn6KWEpDZbHsfImHQYXBMz5zpDbixKVkTCkroon732+TMsK14yRnFybGPe3W
+	 n3/MOeT8zoHTQ==
+Date: Thu, 31 Oct 2024 16:33:22 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -49,11 +49,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 05/21] perf kvm: Move functions used in util out of
- builtin
-Message-ID: <ZyPZXUawgU9ZSGhP@x1>
+Subject: Re: [PATCH v5 09/21] perf script: Move script_fetch_insn to
+ trace-event-scripting.c
+Message-ID: <ZyPbggG8jC9MYQbo@x1>
 References: <20241031014252.753588-1-irogers@google.com>
- <20241031014252.753588-6-irogers@google.com>
+ <20241031014252.753588-10-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,248 +62,175 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241031014252.753588-6-irogers@google.com>
+In-Reply-To: <20241031014252.753588-10-irogers@google.com>
 
-On Wed, Oct 30, 2024 at 06:42:36PM -0700, Ian Rogers wrote:
-> The util library code is used by the python module but doesn't have
-> access to the builtin files. Make a util/kvm-stat.c to match the
-> kvm-stat.h file that declares the functions and move the functions
-> there.
+On Wed, Oct 30, 2024 at 06:42:40PM -0700, Ian Rogers wrote:
+> Add native_arch as a parameter to script_fetch_insn rather than
+> relying on the builtin-script value that won't be initialized for the
+> dlfilter and python Context use cases. Assume both of those cases are
+> running natively.
+
+Adrian, can you take a look? Maybe have some machine__native_arch() that
+would use the perf_env struct, uname, etc?
+
+So, as you noticed builtin-script.c does it, sets a global variable
+
+        uname(&uts);
+        if (data.is_pipe) { /* Assume pipe_mode indicates native_arch */
+                native_arch = true;
+        } else if (session->header.env.arch) {
+                if (!strcmp(uts.machine, session->header.env.arch))
+                        native_arch = true;
+                else if (!strcmp(uts.machine, "x86_64") &&
+                         !strcmp(session->header.env.arch, "i386"))
+                        native_arch = true;
+        }
+
+So instead of doing it we should move that global variable to
+env->native_arch and then use it?
+
+Your patch doesn't introduce problems and shows this is a limitation, so
+no problem with it being merged:
 
 Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+But maybe this would be the time to try to fix this? Adrian,
+cross-platform use of dlfilter seems not to be something you would be
+interested on, but using a python script to process something from
+another arch is interesting, as we advertise cross-platorm perf.data
+file analysis as a feature for perf.
+
+- Arnaldo
  
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/builtin-kvm.c   | 61 ---------------------------------
->  tools/perf/util/Build      |  1 +
->  tools/perf/util/kvm-stat.c | 70 ++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/kvm-stat.h |  3 ++
->  tools/perf/util/python.c   | 30 ----------------
->  5 files changed, 74 insertions(+), 91 deletions(-)
->  create mode 100644 tools/perf/util/kvm-stat.c
+>  tools/perf/builtin-script.c                       | 15 +--------------
+>  .../perf/scripts/python/Perf-Trace-Util/Context.c |  2 +-
+>  tools/perf/util/dlfilter.c                        |  3 ++-
+>  tools/perf/util/python.c                          |  6 ------
+>  tools/perf/util/trace-event-scripting.c           | 14 ++++++++++++++
+>  tools/perf/util/trace-event.h                     |  2 +-
+>  6 files changed, 19 insertions(+), 23 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 099ce3ebf67c..e50cd04e3725 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -615,67 +615,6 @@ static const char *get_filename_for_perf_kvm(void)
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 11c0ee8c1afc..22d78a9d8f27 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -1586,19 +1586,6 @@ static int perf_sample__fprintf_callindent(struct perf_sample *sample,
+>  	return len + dlen;
+>  }
 >  
->  #if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->  
-> -void exit_event_get_key(struct evsel *evsel,
-> -			struct perf_sample *sample,
-> -			struct event_key *key)
+> -__weak void arch_fetch_insn(struct perf_sample *sample __maybe_unused,
+> -			    struct thread *thread __maybe_unused,
+> -			    struct machine *machine __maybe_unused)
 > -{
-> -	key->info = 0;
-> -	key->key  = evsel__intval(evsel, sample, kvm_exit_reason);
 > -}
 > -
-> -bool kvm_exit_event(struct evsel *evsel)
+> -void script_fetch_insn(struct perf_sample *sample, struct thread *thread,
+> -		       struct machine *machine)
 > -{
-> -	return evsel__name_is(evsel, kvm_exit_trace);
+> -	if (sample->insn_len == 0 && native_arch)
+> -		arch_fetch_insn(sample, thread, machine);
 > -}
 > -
-> -bool exit_event_begin(struct evsel *evsel,
-> -		      struct perf_sample *sample, struct event_key *key)
-> -{
-> -	if (kvm_exit_event(evsel)) {
-> -		exit_event_get_key(evsel, sample, key);
-> -		return true;
-> -	}
-> -
-> -	return false;
-> -}
-> -
-> -bool kvm_entry_event(struct evsel *evsel)
-> -{
-> -	return evsel__name_is(evsel, kvm_entry_trace);
-> -}
-> -
-> -bool exit_event_end(struct evsel *evsel,
-> -		    struct perf_sample *sample __maybe_unused,
-> -		    struct event_key *key __maybe_unused)
-> -{
-> -	return kvm_entry_event(evsel);
-> -}
-> -
-> -static const char *get_exit_reason(struct perf_kvm_stat *kvm,
-> -				   struct exit_reasons_table *tbl,
-> -				   u64 exit_code)
-> -{
-> -	while (tbl->reason != NULL) {
-> -		if (tbl->exit_code == exit_code)
-> -			return tbl->reason;
-> -		tbl++;
-> -	}
-> -
-> -	pr_err("unknown kvm exit code:%lld on %s\n",
-> -		(unsigned long long)exit_code, kvm->exit_reasons_isa);
-> -	return "UNKNOWN";
-> -}
-> -
-> -void exit_event_decode_key(struct perf_kvm_stat *kvm,
-> -			   struct event_key *key,
-> -			   char *decode)
-> -{
-> -	const char *exit_reason = get_exit_reason(kvm, key->exit_reasons,
-> -						  key->key);
-> -
-> -	scnprintf(decode, KVM_EVENT_NAME_LEN, "%s", exit_reason);
-> -}
-> -
->  static bool register_kvm_events_ops(struct perf_kvm_stat *kvm)
+>  static int perf_sample__fprintf_insn(struct perf_sample *sample,
+>  				     struct evsel *evsel,
+>  				     struct perf_event_attr *attr,
+> @@ -1608,7 +1595,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
 >  {
->  	struct kvm_reg_events_ops *events_ops = kvm_reg_events_ops;
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 1eedead5f2f2..650974413849 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -120,6 +120,7 @@ perf-util-y += spark.o
->  perf-util-y += topdown.o
->  perf-util-y += iostat.o
->  perf-util-y += stream.o
-> +perf-util-y += kvm-stat.o
->  perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
->  perf-util-$(CONFIG_AUXTRACE) += intel-pt-decoder/
->  perf-util-$(CONFIG_AUXTRACE) += intel-pt.o
-> diff --git a/tools/perf/util/kvm-stat.c b/tools/perf/util/kvm-stat.c
-> new file mode 100644
-> index 000000000000..38ace736db5c
-> --- /dev/null
-> +++ b/tools/perf/util/kvm-stat.c
-> @@ -0,0 +1,70 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "debug.h"
-> +#include "evsel.h"
-> +#include "kvm-stat.h"
-> +
-> +#if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
-> +
-> +bool kvm_exit_event(struct evsel *evsel)
-> +{
-> +	return evsel__name_is(evsel, kvm_exit_trace);
-> +}
-> +
-> +void exit_event_get_key(struct evsel *evsel,
-> +			struct perf_sample *sample,
-> +			struct event_key *key)
-> +{
-> +	key->info = 0;
-> +	key->key  = evsel__intval(evsel, sample, kvm_exit_reason);
-> +}
-> +
-> +
-> +bool exit_event_begin(struct evsel *evsel,
-> +		      struct perf_sample *sample, struct event_key *key)
-> +{
-> +	if (kvm_exit_event(evsel)) {
-> +		exit_event_get_key(evsel, sample, key);
-> +		return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +bool kvm_entry_event(struct evsel *evsel)
-> +{
-> +	return evsel__name_is(evsel, kvm_entry_trace);
-> +}
-> +
-> +bool exit_event_end(struct evsel *evsel,
-> +		    struct perf_sample *sample __maybe_unused,
-> +		    struct event_key *key __maybe_unused)
-> +{
-> +	return kvm_entry_event(evsel);
-> +}
-> +
-> +static const char *get_exit_reason(struct perf_kvm_stat *kvm,
-> +				   struct exit_reasons_table *tbl,
-> +				   u64 exit_code)
-> +{
-> +	while (tbl->reason != NULL) {
-> +		if (tbl->exit_code == exit_code)
-> +			return tbl->reason;
-> +		tbl++;
-> +	}
-> +
-> +	pr_err("unknown kvm exit code:%lld on %s\n",
-> +		(unsigned long long)exit_code, kvm->exit_reasons_isa);
-> +	return "UNKNOWN";
-> +}
-> +
-> +void exit_event_decode_key(struct perf_kvm_stat *kvm,
-> +			   struct event_key *key,
-> +			   char *decode)
-> +{
-> +	const char *exit_reason = get_exit_reason(kvm, key->exit_reasons,
-> +						  key->key);
-> +
-> +	scnprintf(decode, KVM_EVENT_NAME_LEN, "%s", exit_reason);
-> +}
-> +
-> +#endif
-> diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
-> index 3e9ac754c3d1..4249542544bb 100644
-> --- a/tools/perf/util/kvm-stat.h
-> +++ b/tools/perf/util/kvm-stat.h
-> @@ -115,6 +115,8 @@ struct kvm_reg_events_ops {
->  	struct kvm_events_ops *ops;
->  };
+>  	int printed = 0;
 >  
-> +#if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
-> +
->  void exit_event_get_key(struct evsel *evsel,
->  			struct perf_sample *sample,
->  			struct event_key *key);
-> @@ -127,6 +129,7 @@ bool exit_event_end(struct evsel *evsel,
->  void exit_event_decode_key(struct perf_kvm_stat *kvm,
->  			   struct event_key *key,
->  			   char *decode);
-> +#endif
+> -	script_fetch_insn(sample, thread, machine);
+> +	script_fetch_insn(sample, thread, machine, native_arch);
 >  
->  bool kvm_exit_event(struct evsel *evsel);
->  bool kvm_entry_event(struct evsel *evsel);
+>  	if (PRINT_FIELD(INSNLEN))
+>  		printed += fprintf(fp, " ilen: %d", sample->insn_len);
+> diff --git a/tools/perf/scripts/python/Perf-Trace-Util/Context.c b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
+> index d742daaa5d5a..60dcfe56d4d9 100644
+> --- a/tools/perf/scripts/python/Perf-Trace-Util/Context.c
+> +++ b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
+> @@ -93,7 +93,7 @@ static PyObject *perf_sample_insn(PyObject *obj, PyObject *args)
+>  	if (c->sample->ip && !c->sample->insn_len && thread__maps(c->al->thread)) {
+>  		struct machine *machine =  maps__machine(thread__maps(c->al->thread));
+>  
+> -		script_fetch_insn(c->sample, c->al->thread, machine);
+> +		script_fetch_insn(c->sample, c->al->thread, machine, /*native_arch=*/true);
+>  	}
+>  	if (!c->sample->insn_len)
+>  		Py_RETURN_NONE; /* N.B. This is a return statement */
+> diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
+> index 7d180bdaedbc..ddacef881af2 100644
+> --- a/tools/perf/util/dlfilter.c
+> +++ b/tools/perf/util/dlfilter.c
+> @@ -234,7 +234,8 @@ static const __u8 *dlfilter__insn(void *ctx, __u32 *len)
+>  			struct machine *machine = maps__machine(thread__maps(al->thread));
+>  
+>  			if (machine)
+> -				script_fetch_insn(d->sample, al->thread, machine);
+> +				script_fetch_insn(d->sample, al->thread, machine,
+> +						  /*native_arch=*/true);
+>  		}
+>  	}
+>  
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 298f43981fc5..ab67abf3b607 100644
+> index 3d938fe2de6a..22edadd64e5f 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
-> @@ -1306,36 +1306,6 @@ PyMODINIT_FUNC PyInit_perf(void)
->  /* The following are stubs to avoid dragging in builtin-* objects. */
->  /* TODO: move the code out of the builtin-* file into util. */
+> @@ -1317,12 +1317,6 @@ struct kwork_work *perf_kwork_add_work(struct perf_kwork *kwork __maybe_unused,
+>  	return NULL;
+>  }
 >  
-> -bool kvm_entry_event(struct evsel *evsel __maybe_unused)
-> -{
-> -	return false;
-> -}
-> -
-> -bool kvm_exit_event(struct evsel *evsel __maybe_unused)
-> -{
-> -	return false;
-> -}
-> -
-> -bool exit_event_begin(struct evsel *evsel __maybe_unused,
-> -		      struct perf_sample *sample  __maybe_unused,
-> -		      struct event_key *key  __maybe_unused)
-> -{
-> -	return false;
-> -}
-> -
-> -bool exit_event_end(struct evsel *evsel __maybe_unused,
-> -		    struct perf_sample *sample __maybe_unused,
-> -		    struct event_key *key __maybe_unused)
-> -{
-> -	return false;
-> -}
-> -
-> -void exit_event_decode_key(struct perf_kvm_stat *kvm __maybe_unused,
-> -			   struct event_key *key __maybe_unused,
-> -			   char *decode __maybe_unused)
+> -void script_fetch_insn(struct perf_sample *sample __maybe_unused,
+> -		struct thread *thread __maybe_unused,
+> -		struct machine *machine __maybe_unused)
 > -{
 > -}
 > -
->  int find_scripts(char **scripts_array  __maybe_unused, char **scripts_path_array  __maybe_unused,
->  		int num  __maybe_unused, int pathlen __maybe_unused)
+>  int perf_sample__sprintf_flags(u32 flags __maybe_unused, char *str __maybe_unused,
+>  			size_t sz __maybe_unused)
 >  {
+> diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
+> index ad62d8e5a368..beac456260ae 100644
+> --- a/tools/perf/util/trace-event-scripting.c
+> +++ b/tools/perf/util/trace-event-scripting.c
+> @@ -13,6 +13,7 @@
+>  #include <traceevent/event-parse.h>
+>  #endif
+>  
+> +#include "archinsn.h"
+>  #include "debug.h"
+>  #include "trace-event.h"
+>  #include "evsel.h"
+> @@ -269,3 +270,16 @@ void setup_perl_scripting(void)
+>  }
+>  #endif
+>  #endif
+> +
+> +__weak void arch_fetch_insn(struct perf_sample *sample __maybe_unused,
+> +		     struct thread *thread __maybe_unused,
+> +		     struct machine *machine __maybe_unused)
+> +{
+> +}
+> +
+> +void script_fetch_insn(struct perf_sample *sample, struct thread *thread,
+> +		       struct machine *machine, bool native_arch)
+> +{
+> +	if (sample->insn_len == 0 && native_arch)
+> +		arch_fetch_insn(sample, thread, machine);
+> +}
+> diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
+> index 81fceaf297ba..e0bb42e6509e 100644
+> --- a/tools/perf/util/trace-event.h
+> +++ b/tools/perf/util/trace-event.h
+> @@ -120,7 +120,7 @@ struct scripting_ops *script_spec__lookup(const char *spec);
+>  int script_spec__for_each(int (*cb)(struct scripting_ops *ops, const char *spec));
+>  
+>  void script_fetch_insn(struct perf_sample *sample, struct thread *thread,
+> -		       struct machine *machine);
+> +		       struct machine *machine, bool native_arch);
+>  
+>  void setup_perl_scripting(void);
+>  void setup_python_scripting(void);
 > -- 
 > 2.47.0.163.g1226f6d8fa-goog
 > 
