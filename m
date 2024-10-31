@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B4F13AD03;
-	Thu, 31 Oct 2024 19:19:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EC41CB304;
+	Thu, 31 Oct 2024 19:19:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730402364; cv=none; b=uRn1giMT7QgS05KB7M/0a+EquVWUy76JXx5KXUUDAvuSTtXCl9P30OsZZm5h75oIiBTvf/PRkwM19yxBxguJ1tyvfrsNUeqGrMZTYnhneUQExKbPNThjvcVHj74nF8o/+3P2DbVA1QQYWw2sM7zt9T2jHFiKyAvgOUzNiWhzBas=
+	t=1730402384; cv=none; b=pf7tqf5jIznfA6zWNx5UZKJKylcazHZ6mzPtYnc/DYatdimFlJvZKDGJaEUm31p6ov66ERIhHroUBNQe9LVz567A7xjTYtxj1djtsgGtRJ+mTTfw4xwIKyfT56XdzkijOtgdLEhV01PznkJ87cuwJJWFq9Q4u7lQjDLoJX6Um+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730402364; c=relaxed/simple;
-	bh=dvTKGiPk4UeXxBUa59Oqd92Jo21z1p/x+RK6+PStoDA=;
+	s=arc-20240116; t=1730402384; c=relaxed/simple;
+	bh=GcID4wSfHLjVwu8YGlBiSorYE1mGUP+rrkj/hSRQ4aM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j5CZvpfjcIcLAZIRz+QGeS+tpu/ctlgajg/TQ07NIa/mj5LpZbqb2EUL9oUsJqy8kBGjwL5fuuKDjA6Q+A1sQUtQDHf38kNfK2eaIIbV8ghouNAy/Cy6OXDEpC+InI/xmbAfxr/qvf6Ko4tZCkV2IpFI5RLTvKUsioVzrMqA/Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2JFxMUF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=itUUfo2mGPx2Q4nOIsYIn8M1CjGQijj11zPSEP9wqf11so/2XYfE31rsw3aQ8rY+xpBFa+OH+qbmd/DouADXBuzkRhR1c7GNOmeDt/fOZ8mJg73SiIWUE3DGOEOH6OkaGWU952kaFmchVG/Uh1RbvFgx1xk5uuK0J7Y0D9FZ+xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GVIWh1J4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2JFxMUF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1FE1C4CEC3;
-	Thu, 31 Oct 2024 19:19:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GVIWh1J4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA33C4CEC3;
+	Thu, 31 Oct 2024 19:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730402364;
-	bh=dvTKGiPk4UeXxBUa59Oqd92Jo21z1p/x+RK6+PStoDA=;
+	s=k20201202; t=1730402384;
+	bh=GcID4wSfHLjVwu8YGlBiSorYE1mGUP+rrkj/hSRQ4aM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l2JFxMUFn0c3ptPyk0JT2j/66T4gRT+V+qpiAQbMK4keWG3c8PzxHA2AmMDSRO/Go
-	 K8AeFHwkO5JUhK2M//ixvkTto2+gUxI4b04APRzl6B6thGI+BkDD+rWlKLfXAMJyTv
-	 IiaJBCRe+iDg2a0Xp5MeP+auJC1N2V5JuLHf+ft7WT3COB1XJHHNURWa943DFPW7zt
-	 NszZ7qhY5pBq/DK9L5PXJ/L9Yst5rBSSW+OXbKoF4fgomP8TAmWzjiPrlUbi1QWxhH
-	 syYEyrImMgfmaxX3zbMwiJSsViixXmh+XQvlVdtOusRlAV6J2I/aEtLu0ApkQ+UhwI
-	 idxwNVyQ5iQFw==
-Date: Thu, 31 Oct 2024 16:19:19 -0300
+	b=GVIWh1J4UpZ0PwtcXZNiHY2gN3OTjX+SDD7v7TssjmzRwa+qv8GDbkCWh/lI86/Kd
+	 DWMFkYj/SWFdZbSDeIcCg7O1HfQQOYYjSw7s+KUU6n6+7c6kxDKzTvNN+gpbZiN8Cu
+	 ECUYInDSxXr3NQacfLf11S+1D6B68c+C3A1DepBoYrH1D3iPlfFYbSEW0/dDRC0SrV
+	 oRKKG51Qqdt1e7i2pOJOGUisYcOUI8QmyUzc5A/DcopcN9wsE+DtLltTMaP0yeaIhA
+	 Skt7eOCSr7gLUP2+v3kY/My36j1PrptZUYbmYuGA3pa8zFWabFpia7rlJVndhJVKOx
+	 zV4uXLjGhSzQg==
+Date: Thu, 31 Oct 2024 16:19:40 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -49,10 +49,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 07/21] perf stat: Move stat_config into config.c
-Message-ID: <ZyPYNxL333la6Dmm@x1>
+Subject: Re: [PATCH v5 01/21] perf python: Remove python 2 scripting support
+Message-ID: <ZyPYTA8htkhxlZFX@x1>
 References: <20241031014252.753588-1-irogers@google.com>
- <20241031014252.753588-8-irogers@google.com>
+ <20241031014252.753588-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,233 +61,405 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241031014252.753588-8-irogers@google.com>
+In-Reply-To: <20241031014252.753588-2-irogers@google.com>
 
-On Wed, Oct 30, 2024 at 06:42:38PM -0700, Ian Rogers wrote:
-> stat_config is accessed by config.c via helper functions, but declared
-> in builtin-stat. Move to util/config.c so that stub functions aren't
-> needed in python.c which doesn't link against the builtin files.
-> 
-> To avoid name conflicts change builtin-script to use the same
-> stat_config as builtin-stat. Rename local variables in tests to avoid
-> shadow declaration warnings.
+On Wed, Oct 30, 2024 at 06:42:32PM -0700, Ian Rogers wrote:
+> Python2 was deprecated 4 years ago, remove support and workarounds.
 
 Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
  
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/builtin-script.c |  1 -
->  tools/perf/builtin-stat.c   | 27 ---------------------------
->  tools/perf/tests/stat.c     | 16 +++++++++-------
->  tools/perf/util/config.c    | 27 +++++++++++++++++++++++++++
->  tools/perf/util/python.c    |  9 ---------
->  tools/perf/util/stat.h      |  3 ++-
->  6 files changed, 38 insertions(+), 45 deletions(-)
+>  .../scripts/python/Perf-Trace-Util/Context.c  | 18 -----
+>  tools/perf/util/python.c                      | 73 +++----------------
+>  .../scripting-engines/trace-event-python.c    | 63 +---------------
+>  3 files changed, 15 insertions(+), 139 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index e9ec74056f71..62e851fdf5ca 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -85,7 +85,6 @@ static bool			system_wide;
->  static bool			print_flags;
->  static const char		*cpu_list;
->  static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
-> -static struct perf_stat_config	stat_config;
->  static int			max_blocks;
->  static bool			native_arch;
->  static struct dlfilter		*dlfilter;
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index c12158d99353..a1625443e5a5 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -112,8 +112,6 @@ static struct target target = {
->  	.uid	= UINT_MAX,
+> diff --git a/tools/perf/scripts/python/Perf-Trace-Util/Context.c b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
+> index 01f54d6724a5..d742daaa5d5a 100644
+> --- a/tools/perf/scripts/python/Perf-Trace-Util/Context.c
+> +++ b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
+> @@ -24,16 +24,6 @@
+>  #include "../../../util/srcline.h"
+>  #include "../../../util/srccode.h"
+>  
+> -#if PY_MAJOR_VERSION < 3
+> -#define _PyCapsule_GetPointer(arg1, arg2) \
+> -  PyCObject_AsVoidPtr(arg1)
+> -#define _PyBytes_FromStringAndSize(arg1, arg2) \
+> -  PyString_FromStringAndSize((arg1), (arg2))
+> -#define _PyUnicode_AsUTF8(arg) \
+> -  PyString_AsString(arg)
+> -
+> -PyMODINIT_FUNC initperf_trace_context(void);
+> -#else
+>  #define _PyCapsule_GetPointer(arg1, arg2) \
+>    PyCapsule_GetPointer((arg1), (arg2))
+>  #define _PyBytes_FromStringAndSize(arg1, arg2) \
+> @@ -42,7 +32,6 @@ PyMODINIT_FUNC initperf_trace_context(void);
+>    PyUnicode_AsUTF8(arg)
+>  
+>  PyMODINIT_FUNC PyInit_perf_trace_context(void);
+> -#endif
+>  
+>  static struct scripting_context *get_args(PyObject *args, const char *name, PyObject **arg2)
+>  {
+> @@ -213,12 +202,6 @@ static PyMethodDef ContextMethods[] = {
+>  	{ NULL, NULL, 0, NULL}
 >  };
 >  
-> -#define METRIC_ONLY_LEN 20
-> -
->  static volatile sig_atomic_t	child_pid			= -1;
->  static int			detailed_run			=  0;
->  static bool			transaction_run;
-> @@ -151,21 +149,6 @@ static struct perf_stat		perf_stat;
->  
->  static volatile sig_atomic_t done = 0;
->  
-> -static struct perf_stat_config stat_config = {
-> -	.aggr_mode		= AGGR_GLOBAL,
-> -	.aggr_level		= MAX_CACHE_LVL + 1,
-> -	.scale			= true,
-> -	.unit_width		= 4, /* strlen("unit") */
-> -	.run_count		= 1,
-> -	.metric_only_len	= METRIC_ONLY_LEN,
-> -	.walltime_nsecs_stats	= &walltime_nsecs_stats,
-> -	.ru_stats		= &ru_stats,
-> -	.big_num		= true,
-> -	.ctl_fd			= -1,
-> -	.ctl_fd_ack		= -1,
-> -	.iostat_run		= false,
-> -};
-> -
->  /* Options set from the command line. */
->  struct opt_aggr_mode {
->  	bool node, socket, die, cluster, cache, core, thread, no_aggr;
-> @@ -1071,16 +1054,6 @@ static void sig_atexit(void)
->  	kill(getpid(), signr);
->  }
->  
-> -void perf_stat__set_big_num(int set)
+> -#if PY_MAJOR_VERSION < 3
+> -PyMODINIT_FUNC initperf_trace_context(void)
 > -{
-> -	stat_config.big_num = (set != 0);
+> -	(void) Py_InitModule("perf_trace_context", ContextMethods);
 > -}
-> -
-> -void perf_stat__set_no_csv_summary(int set)
-> -{
-> -	stat_config.no_csv_summary = (set != 0);
-> -}
-> -
->  static int stat__set_big_num(const struct option *opt __maybe_unused,
->  			     const char *s __maybe_unused, int unset)
+> -#else
+>  PyMODINIT_FUNC PyInit_perf_trace_context(void)
 >  {
-> diff --git a/tools/perf/tests/stat.c b/tools/perf/tests/stat.c
-> index 6468cc0d0204..d60983657bad 100644
-> --- a/tools/perf/tests/stat.c
-> +++ b/tools/perf/tests/stat.c
-> @@ -27,7 +27,7 @@ static int process_stat_config_event(const struct perf_tool *tool __maybe_unused
->  				     struct machine *machine __maybe_unused)
->  {
->  	struct perf_record_stat_config *config = &event->stat_config;
-> -	struct perf_stat_config stat_config = {};
-> +	struct perf_stat_config test_stat_config = {};
+>  	static struct PyModuleDef moduledef = {
+> @@ -240,4 +223,3 @@ PyMODINIT_FUNC PyInit_perf_trace_context(void)
 >  
->  #define HAS(term, val) \
->  	has_term(config, PERF_STAT_CONFIG_TERM__##term, val)
-> @@ -39,25 +39,27 @@ static int process_stat_config_event(const struct perf_tool *tool __maybe_unused
->  
->  #undef HAS
->  
-> -	perf_event__read_stat_config(&stat_config, config);
-> +	perf_event__read_stat_config(&test_stat_config, config);
->  
-> -	TEST_ASSERT_VAL("wrong aggr_mode", stat_config.aggr_mode == AGGR_CORE);
-> -	TEST_ASSERT_VAL("wrong scale",     stat_config.scale == 1);
-> -	TEST_ASSERT_VAL("wrong interval",  stat_config.interval == 1);
-> +	TEST_ASSERT_VAL("wrong aggr_mode", test_stat_config.aggr_mode == AGGR_CORE);
-> +	TEST_ASSERT_VAL("wrong scale",     test_stat_config.scale == 1);
-> +	TEST_ASSERT_VAL("wrong interval",  test_stat_config.interval == 1);
->  	return 0;
+>  	return mod;
 >  }
->  
->  static int test__synthesize_stat_config(struct test_suite *test __maybe_unused,
->  					int subtest __maybe_unused)
->  {
-> -	struct perf_stat_config stat_config = {
-> +	struct perf_stat_config test_stat_config = {
->  		.aggr_mode	= AGGR_CORE,
->  		.scale		= 1,
->  		.interval	= 1,
->  	};
->  
->  	TEST_ASSERT_VAL("failed to synthesize stat_config",
-> -		!perf_event__synthesize_stat_config(NULL, &stat_config, process_stat_config_event, NULL));
-> +		!perf_event__synthesize_stat_config(NULL, &test_stat_config,
-> +						    process_stat_config_event,
-> +						    NULL));
->  
->  	return 0;
->  }
-> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-> index 68f9407ca74b..2d07c9257a1a 100644
-> --- a/tools/perf/util/config.c
-> +++ b/tools/perf/util/config.c
-> @@ -13,6 +13,7 @@
->  #include <sys/param.h>
->  #include "cache.h"
->  #include "callchain.h"
-> +#include "header.h"
->  #include <subcmd/exec-cmd.h>
->  #include "util/event.h"  /* proc_map_timeout */
->  #include "util/hist.h"  /* perf_hist_config */
-> @@ -34,6 +35,22 @@
->  
->  #define DEBUG_CACHE_DIR ".debug"
->  
-> +#define METRIC_ONLY_LEN 20
-> +
-> +struct perf_stat_config stat_config = {
-> +	.aggr_mode		= AGGR_GLOBAL,
-> +	.aggr_level		= MAX_CACHE_LVL + 1,
-> +	.scale			= true,
-> +	.unit_width		= 4, /* strlen("unit") */
-> +	.run_count		= 1,
-> +	.metric_only_len	= METRIC_ONLY_LEN,
-> +	.walltime_nsecs_stats	= &walltime_nsecs_stats,
-> +	.ru_stats		= &ru_stats,
-> +	.big_num		= true,
-> +	.ctl_fd			= -1,
-> +	.ctl_fd_ack		= -1,
-> +	.iostat_run		= false,
-> +};
->  
->  char buildid_dir[MAXPATHLEN]; /* root dir for buildid, binary cache */
->  
-> @@ -455,6 +472,16 @@ static int perf_ui_config(const char *var, const char *value)
->  	return 0;
->  }
->  
-> +void perf_stat__set_big_num(int set)
-> +{
-> +	stat_config.big_num = (set != 0);
-> +}
-> +
-> +static void perf_stat__set_no_csv_summary(int set)
-> +{
-> +	stat_config.no_csv_summary = (set != 0);
-> +}
-> +
->  static int perf_stat_config(const char *var, const char *value)
->  {
->  	if (!strcmp(var, "stat.big-num"))
+> -#endif
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 5f11ae88943d..0fa8e27769be 100644
+> index 31a223eaf8e6..02279ab4967c 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
-> @@ -17,7 +17,6 @@
->  #include "trace-event.h"
->  #include "mmap.h"
->  #include "util/env.h"
-> -#include "util/kvm-stat.h"
->  #include "util/kwork.h"
->  #include "util/sample.h"
->  #include "util/lock-contention.h"
-> @@ -1306,14 +1305,6 @@ PyMODINIT_FUNC PyInit_perf(void)
->  /* The following are stubs to avoid dragging in builtin-* objects. */
->  /* TODO: move the code out of the builtin-* file into util. */
+> @@ -25,40 +25,14 @@
+>  #include <internal/lib.h>
+>  #include "../builtin.h"
 >  
-> -void perf_stat__set_no_csv_summary(int set __maybe_unused)
-> -{
-> -}
+> -#if PY_MAJOR_VERSION < 3
+> -#define _PyUnicode_FromString(arg) \
+> -  PyString_FromString(arg)
+> -#define _PyUnicode_AsString(arg) \
+> -  PyString_AsString(arg)
+> -#define _PyUnicode_FromFormat(...) \
+> -  PyString_FromFormat(__VA_ARGS__)
+> -#define _PyLong_FromLong(arg) \
+> -  PyInt_FromLong(arg)
 > -
-> -void perf_stat__set_big_num(int set __maybe_unused)
-> -{
-> -}
+> -#else
 > -
->  int script_spec_register(const char *spec __maybe_unused, struct scripting_ops *ops __maybe_unused)
+>  #define _PyUnicode_FromString(arg) \
+>    PyUnicode_FromString(arg)
+>  #define _PyUnicode_FromFormat(...) \
+>    PyUnicode_FromFormat(__VA_ARGS__)
+>  #define _PyLong_FromLong(arg) \
+>    PyLong_FromLong(arg)
+> -#endif
+>  
+> -#ifndef Py_TYPE
+> -#define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
+> -#endif
+> -
+> -/* Define PyVarObject_HEAD_INIT for python 2.5 */
+> -#ifndef PyVarObject_HEAD_INIT
+> -# define PyVarObject_HEAD_INIT(type, size) PyObject_HEAD_INIT(type) size,
+> -#endif
+> -
+> -#if PY_MAJOR_VERSION < 3
+> -PyMODINIT_FUNC initperf(void);
+> -#else
+>  PyMODINIT_FUNC PyInit_perf(void);
+> -#endif
+>  
+>  #define member_def(type, member, ptype, help) \
+>  	{ #member, ptype, \
+> @@ -116,7 +90,7 @@ static PyObject *pyrf_mmap_event__repr(struct pyrf_event *pevent)
+>  		     pevent->event.mmap.pgoff, pevent->event.mmap.filename) < 0) {
+>  		ret = PyErr_NoMemory();
+>  	} else {
+> -		ret = _PyUnicode_FromString(s);
+> +		ret = PyUnicode_FromString(s);
+>  		free(s);
+>  	}
+>  	return ret;
+> @@ -147,7 +121,7 @@ static PyMemberDef pyrf_task_event__members[] = {
+>  
+>  static PyObject *pyrf_task_event__repr(struct pyrf_event *pevent)
 >  {
->  	return -1;
-> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-> index 6f8cff3cd39a..2fda9acd7374 100644
-> --- a/tools/perf/util/stat.h
-> +++ b/tools/perf/util/stat.h
-> @@ -117,8 +117,9 @@ struct perf_stat_config {
->  	unsigned int		topdown_level;
+> -	return _PyUnicode_FromFormat("{ type: %s, pid: %u, ppid: %u, tid: %u, "
+> +	return PyUnicode_FromFormat("{ type: %s, pid: %u, ppid: %u, tid: %u, "
+>  				   "ptid: %u, time: %" PRI_lu64 "}",
+>  				   pevent->event.header.type == PERF_RECORD_FORK ? "fork" : "exit",
+>  				   pevent->event.fork.pid,
+> @@ -180,7 +154,7 @@ static PyMemberDef pyrf_comm_event__members[] = {
+>  
+>  static PyObject *pyrf_comm_event__repr(struct pyrf_event *pevent)
+>  {
+> -	return _PyUnicode_FromFormat("{ type: comm, pid: %u, tid: %u, comm: %s }",
+> +	return PyUnicode_FromFormat("{ type: comm, pid: %u, tid: %u, comm: %s }",
+>  				   pevent->event.comm.pid,
+>  				   pevent->event.comm.tid,
+>  				   pevent->event.comm.comm);
+> @@ -211,7 +185,7 @@ static PyObject *pyrf_throttle_event__repr(struct pyrf_event *pevent)
+>  {
+>  	struct perf_record_throttle *te = (struct perf_record_throttle *)(&pevent->event.header + 1);
+>  
+> -	return _PyUnicode_FromFormat("{ type: %sthrottle, time: %" PRI_lu64 ", id: %" PRI_lu64
+> +	return PyUnicode_FromFormat("{ type: %sthrottle, time: %" PRI_lu64 ", id: %" PRI_lu64
+>  				   ", stream_id: %" PRI_lu64 " }",
+>  				   pevent->event.header.type == PERF_RECORD_THROTTLE ? "" : "un",
+>  				   te->time, te->id, te->stream_id);
+> @@ -246,7 +220,7 @@ static PyObject *pyrf_lost_event__repr(struct pyrf_event *pevent)
+>  		     pevent->event.lost.id, pevent->event.lost.lost) < 0) {
+>  		ret = PyErr_NoMemory();
+>  	} else {
+> -		ret = _PyUnicode_FromString(s);
+> +		ret = PyUnicode_FromString(s);
+>  		free(s);
+>  	}
+>  	return ret;
+> @@ -273,7 +247,7 @@ static PyMemberDef pyrf_read_event__members[] = {
+>  
+>  static PyObject *pyrf_read_event__repr(struct pyrf_event *pevent)
+>  {
+> -	return _PyUnicode_FromFormat("{ type: read, pid: %u, tid: %u }",
+> +	return PyUnicode_FromFormat("{ type: read, pid: %u, tid: %u }",
+>  				   pevent->event.read.pid,
+>  				   pevent->event.read.tid);
+>  	/*
+> @@ -308,7 +282,7 @@ static PyObject *pyrf_sample_event__repr(struct pyrf_event *pevent)
+>  	if (asprintf(&s, "{ type: sample }") < 0) {
+>  		ret = PyErr_NoMemory();
+>  	} else {
+> -		ret = _PyUnicode_FromString(s);
+> +		ret = PyUnicode_FromString(s);
+>  		free(s);
+>  	}
+>  	return ret;
+> @@ -342,7 +316,7 @@ tracepoint_field(struct pyrf_event *pe, struct tep_format_field *field)
+>  		}
+>  		if (field->flags & TEP_FIELD_IS_STRING &&
+>  		    is_printable_array(data + offset, len)) {
+> -			ret = _PyUnicode_FromString((char *)data + offset);
+> +			ret = PyUnicode_FromString((char *)data + offset);
+>  		} else {
+>  			ret = PyByteArray_FromStringAndSize((const char *) data + offset, len);
+>  			field->flags &= ~TEP_FIELD_IS_STRING;
+> @@ -431,7 +405,7 @@ static PyObject *pyrf_context_switch_event__repr(struct pyrf_event *pevent)
+>  		     !!(pevent->event.header.misc & PERF_RECORD_MISC_SWITCH_OUT)) < 0) {
+>  		ret = PyErr_NoMemory();
+>  	} else {
+> -		ret = _PyUnicode_FromString(s);
+> +		ret = PyUnicode_FromString(s);
+>  		free(s);
+>  	}
+>  	return ret;
+> @@ -917,17 +891,8 @@ static PyObject *pyrf_evlist__get_pollfd(struct pyrf_evlist *pevlist,
+>  
+>  	for (i = 0; i < evlist->core.pollfd.nr; ++i) {
+>  		PyObject *file;
+> -#if PY_MAJOR_VERSION < 3
+> -		FILE *fp = fdopen(evlist->core.pollfd.entries[i].fd, "r");
+> -
+> -		if (fp == NULL)
+> -			goto free_list;
+> -
+> -		file = PyFile_FromFile(fp, "perf", "r", NULL);
+> -#else
+>  		file = PyFile_FromFd(evlist->core.pollfd.entries[i].fd, "perf", "r", -1,
+>  				     NULL, NULL, NULL, 0);
+> -#endif
+>  		if (file == NULL)
+>  			goto free_list;
+>  
+> @@ -1233,9 +1198,9 @@ static PyObject *pyrf__tracepoint(struct pyrf_evsel *pevsel,
+>  
+>  	tp_format = trace_event__tp_format(sys, name);
+>  	if (IS_ERR(tp_format))
+> -		return _PyLong_FromLong(-1);
+> +		return PyLong_FromLong(-1);
+>  
+> -	return _PyLong_FromLong(tp_format->id);
+> +	return PyLong_FromLong(tp_format->id);
+>  #endif // HAVE_LIBTRACEEVENT
+>  }
+>  
+> @@ -1249,18 +1214,11 @@ static PyMethodDef perf__methods[] = {
+>  	{ .ml_name = NULL, }
 >  };
 >  
-> +extern struct perf_stat_config stat_config;
-> +
->  void perf_stat__set_big_num(int set);
-> -void perf_stat__set_no_csv_summary(int set);
+> -#if PY_MAJOR_VERSION < 3
+> -PyMODINIT_FUNC initperf(void)
+> -#else
+>  PyMODINIT_FUNC PyInit_perf(void)
+> -#endif
+>  {
+>  	PyObject *obj;
+>  	int i;
+>  	PyObject *dict;
+> -#if PY_MAJOR_VERSION < 3
+> -	PyObject *module = Py_InitModule("perf", perf__methods);
+> -#else
+>  	static struct PyModuleDef moduledef = {
+>  		PyModuleDef_HEAD_INIT,
+>  		"perf",			/* m_name */
+> @@ -1273,7 +1231,6 @@ PyMODINIT_FUNC PyInit_perf(void)
+>  		NULL,			/* m_free */
+>  	};
+>  	PyObject *module = PyModule_Create(&moduledef);
+> -#endif
 >  
->  void update_stats(struct stats *stats, u64 val);
->  double avg_stats(struct stats *stats);
+>  	if (module == NULL ||
+>  	    pyrf_event__setup_types() < 0 ||
+> @@ -1281,11 +1238,7 @@ PyMODINIT_FUNC PyInit_perf(void)
+>  	    pyrf_evsel__setup_types() < 0 ||
+>  	    pyrf_thread_map__setup_types() < 0 ||
+>  	    pyrf_cpu_map__setup_types() < 0)
+> -#if PY_MAJOR_VERSION < 3
+> -		return;
+> -#else
+>  		return module;
+> -#endif
+>  
+>  	/* The page_size is placed in util object. */
+>  	page_size = sysconf(_SC_PAGE_SIZE);
+> @@ -1334,7 +1287,7 @@ PyMODINIT_FUNC PyInit_perf(void)
+>  		goto error;
+>  
+>  	for (i = 0; perf__constants[i].name != NULL; i++) {
+> -		obj = _PyLong_FromLong(perf__constants[i].value);
+> +		obj = PyLong_FromLong(perf__constants[i].value);
+>  		if (obj == NULL)
+>  			goto error;
+>  		PyDict_SetItemString(dict, perf__constants[i].name, obj);
+> @@ -1344,9 +1297,7 @@ PyMODINIT_FUNC PyInit_perf(void)
+>  error:
+>  	if (PyErr_Occurred())
+>  		PyErr_SetString(PyExc_ImportError, "perf: Init failed!");
+> -#if PY_MAJOR_VERSION >= 3
+>  	return module;
+> -#endif
+>  }
+>  
+>  
+> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+> index d7183134b669..f1d461d47d73 100644
+> --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+> @@ -58,22 +58,6 @@
+>  #include "mem-events.h"
+>  #include "util/perf_regs.h"
+>  
+> -#if PY_MAJOR_VERSION < 3
+> -#define _PyUnicode_FromString(arg) \
+> -  PyString_FromString(arg)
+> -#define _PyUnicode_FromStringAndSize(arg1, arg2) \
+> -  PyString_FromStringAndSize((arg1), (arg2))
+> -#define _PyBytes_FromStringAndSize(arg1, arg2) \
+> -  PyString_FromStringAndSize((arg1), (arg2))
+> -#define _PyLong_FromLong(arg) \
+> -  PyInt_FromLong(arg)
+> -#define _PyLong_AsLong(arg) \
+> -  PyInt_AsLong(arg)
+> -#define _PyCapsule_New(arg1, arg2, arg3) \
+> -  PyCObject_FromVoidPtr((arg1), (arg2))
+> -
+> -PyMODINIT_FUNC initperf_trace_context(void);
+> -#else
+>  #define _PyUnicode_FromString(arg) \
+>    PyUnicode_FromString(arg)
+>  #define _PyUnicode_FromStringAndSize(arg1, arg2) \
+> @@ -88,7 +72,6 @@ PyMODINIT_FUNC initperf_trace_context(void);
+>    PyCapsule_New((arg1), (arg2), (arg3))
+>  
+>  PyMODINIT_FUNC PyInit_perf_trace_context(void);
+> -#endif
+>  
+>  #ifdef HAVE_LIBTRACEEVENT
+>  #define TRACE_EVENT_TYPE_MAX				\
+> @@ -181,17 +164,7 @@ static int get_argument_count(PyObject *handler)
+>  {
+>  	int arg_count = 0;
+>  
+> -	/*
+> -	 * The attribute for the code object is func_code in Python 2,
+> -	 * whereas it is __code__ in Python 3.0+.
+> -	 */
+> -	PyObject *code_obj = PyObject_GetAttrString(handler,
+> -		"func_code");
+> -	if (PyErr_Occurred()) {
+> -		PyErr_Clear();
+> -		code_obj = PyObject_GetAttrString(handler,
+> -			"__code__");
+> -	}
+> +	PyObject *code_obj = code_obj = PyObject_GetAttrString(handler, "__code__");
+>  	PyErr_Clear();
+>  	if (code_obj) {
+>  		PyObject *arg_count_obj = PyObject_GetAttrString(code_obj,
+> @@ -1899,12 +1872,6 @@ static void set_table_handlers(struct tables *tables)
+>  	tables->synth_handler = get_handler("synth_data");
+>  }
+>  
+> -#if PY_MAJOR_VERSION < 3
+> -static void _free_command_line(const char **command_line, int num)
+> -{
+> -	free(command_line);
+> -}
+> -#else
+>  static void _free_command_line(wchar_t **command_line, int num)
+>  {
+>  	int i;
+> @@ -1912,7 +1879,6 @@ static void _free_command_line(wchar_t **command_line, int num)
+>  		PyMem_RawFree(command_line[i]);
+>  	free(command_line);
+>  }
+> -#endif
+>  
+>  
+>  /*
+> @@ -1922,30 +1888,12 @@ static int python_start_script(const char *script, int argc, const char **argv,
+>  			       struct perf_session *session)
+>  {
+>  	struct tables *tables = &tables_global;
+> -#if PY_MAJOR_VERSION < 3
+> -	const char **command_line;
+> -#else
+>  	wchar_t **command_line;
+> -#endif
+> -	/*
+> -	 * Use a non-const name variable to cope with python 2.6's
+> -	 * PyImport_AppendInittab prototype
+> -	 */
+> -	char buf[PATH_MAX], name[19] = "perf_trace_context";
+> +	char buf[PATH_MAX];
+>  	int i, err = 0;
+>  	FILE *fp;
+>  
+>  	scripting_context->session = session;
+> -#if PY_MAJOR_VERSION < 3
+> -	command_line = malloc((argc + 1) * sizeof(const char *));
+> -	if (!command_line)
+> -		return -1;
+> -
+> -	command_line[0] = script;
+> -	for (i = 1; i < argc + 1; i++)
+> -		command_line[i] = argv[i - 1];
+> -	PyImport_AppendInittab(name, initperf_trace_context);
+> -#else
+>  	command_line = malloc((argc + 1) * sizeof(wchar_t *));
+>  	if (!command_line)
+>  		return -1;
+> @@ -1953,15 +1901,10 @@ static int python_start_script(const char *script, int argc, const char **argv,
+>  	command_line[0] = Py_DecodeLocale(script, NULL);
+>  	for (i = 1; i < argc + 1; i++)
+>  		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
+> -	PyImport_AppendInittab(name, PyInit_perf_trace_context);
+> -#endif
+> +	PyImport_AppendInittab("perf_trace_context", PyInit_perf_trace_context);
+>  	Py_Initialize();
+>  
+> -#if PY_MAJOR_VERSION < 3
+> -	PySys_SetArgv(argc + 1, (char **)command_line);
+> -#else
+>  	PySys_SetArgv(argc + 1, command_line);
+> -#endif
+>  
+>  	fp = fopen(script, "r");
+>  	if (!fp) {
 > -- 
 > 2.47.0.163.g1226f6d8fa-goog
+> 
