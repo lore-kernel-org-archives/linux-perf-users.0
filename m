@@ -1,207 +1,215 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F59312D758;
-	Fri,  1 Nov 2024 21:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975E21D0F61
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Nov 2024 21:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730494859; cv=none; b=mEl1vDjoO/xPqWUu8jHDugdRuuXloX0Fej/Hv4fc/P4b9+Is6F7YI6PIZXOWO/YFrbvEhrw4SBqX/CGXUZTVp+64GHvcMZWafvxTqxuT4/wjRUz5Jnwj2Mq5I1O/9BrSZ4gXqt55i7R4OBpeqF99FER6MhsnagymyhNUwzqTzIo=
+	t=1730495893; cv=none; b=f3iphk+bvfiwu8CfveTHJvzXsF3vxr2xTBdIc5I9hxROPYIZx+Ku7duHsB3DvfZdGgG4WxbRIs6alDV9pxrzQ1jnUD5UubRpL2qe2iA2OlK43ZUsuLmQUvjSZiEwQ972UTmfo8NwLCusRPcQffU2yWatMvSckN4SLMo1UVDeVl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730494859; c=relaxed/simple;
-	bh=miy3Kf2jwUEuhZOasiLIiux1aqtLf72tk87BaWrvkjo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fbAgFIGcZJ3hPeJIirB3pyZVSiKN1t82QRgA4CEu9NzfbK8ps9ejUGNZIECKgzZm5+Hi8kwSiP3/SxujaFwweCwmQrAwN9CcVtyH5DG3G1vKV2Z7gAGJBes6/r4iTOWYH7SP9VWZLi+652pALxXiCtzFnZHICqYOTtEkOmwvHvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DLmVHrGB; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730495893; c=relaxed/simple;
+	bh=1K+1EzPZRuDuWAazdL34ULZOOR+K2+dU7Cnwhnj3bHc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Vhi1VN6E/JcYFxMYZQSVE7BYMH7wggS06lTCiLBvdxz8yzIbrqYSH2B5vTvxwuertlpDYm7BtHqEIkBQ2wx+pznz80pY3znMZRRkfBbLMU9bH4AuQGi/mZWQU9hN2NnXngH2v0q6hls3+Hi/Ssxin2B32JbHllzIzbBnY62VRCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OQBrZPed; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLmVHrGB"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6ea053b5929so20763307b3.0;
-        Fri, 01 Nov 2024 14:00:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OQBrZPed"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2e2c6a5fc86so2371235a91.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 01 Nov 2024 14:18:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730494855; x=1731099655; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qaV7ELqFA+mAL6sc/qk3B5LXboH7u0S8/APmxDBWmp8=;
-        b=DLmVHrGBOaF2f5HhAwbbgQTjMp7MU/epymRSEVO3k2pB7j+zEznhlNYPxEPf0NUzet
-         Sk42Uyt/5Z1/Z6w6V/Fk6GgUyRn+FBiqgbg7SobT1f3osSvBtbWVVJhheJCAVdMSVTZG
-         f1PN/BpfO6YnjKxgXAUD4F4/K8Vw+fMORhill812bhW+YtcbsQqPcmKpH8w0IrUXEHpB
-         3IsOFVrNkzB5jFdsygMtB+hLVKZG63gt8DlEsX9foJSgdktfPVNvigsAg2qNoJQo2Nz/
-         68eG9mCvx44FywQH+z7wuEmY1SZsh5tPScXRtCbsQolEU2GR+qgycZFdt2YtCo8UiRQH
-         6+tA==
+        d=google.com; s=20230601; t=1730495890; x=1731100690; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oWSTQrojMVMrsYh9AlNbCklcB9qjvy1WDWZ7XTJeoJ8=;
+        b=OQBrZPedS/9jXFJ9345FtJ+msGrBNhRB1nTHasO8aQEvZbs4qq08HDSsJIVfTqzb4f
+         ZkNj6Mw4ABW+pSJLtSBVIiyjAU8KF8FAE5MgKNcmzqwg4LcOUdozoRbdQb9cXboCQAuR
+         zKtjVWZRK3JXa4qbBB0d5mfwVlHdGYYJg4U9A2cVotRZYMojeLnX7EA2CUT5kVzlhmCK
+         zWWuN5sESkgafVyM4D0ivmAcD4oTTbExraGNW4MACO0NghL7SvwAidz5LZMTc2dnUZV/
+         DEC+wS/SLaXZyFzL1xaSDS/KRHj0K0Pmaur+SibR0+QZFbOPVBK6ypM8tOXGDRUH4mZM
+         eTyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730494855; x=1731099655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qaV7ELqFA+mAL6sc/qk3B5LXboH7u0S8/APmxDBWmp8=;
-        b=NAZkBEiD/LAF9HhuFyrAhZyjjHLNeGT6QyF03Vgj8KC3IXr2C86Xa+EpSEsATs1jkE
-         EOKsQPKujVTTo58yvt0nUcGf74K3u7NauOVwyV0sDF9ECbUlw5aBLrb4/pYcSacM/N49
-         eKtzojH4xq5CTg54vffG0veWxkPy1ZXq6QgRmDTfj2Xl/YVWc31nmkMUisATQarsPZx5
-         wguOUO2YQz0LRqva1hKd/+ViIWqoJT6Icd+S4oYDYoYlzpHIL//BL7QXSBk3yAtz0XED
-         L8pDxkazzKbqZCbG9UvLGPjZkkLBpimJ8RXROEuq+Moqsirhy6LysGh8J3iClNHSLZ5j
-         FQRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxU3efEdNvBY+Yme39KoOJFPBX5TUBmCwIWjoqOkpifvNegZGGg49+Dk7oWfNa4HbTOE0M85xcp6nOgpr4X9WTYg==@vger.kernel.org, AJvYcCX2i1TuQI+Fu6+qhpDsou1B9QiWI3XnAnb4KaZTzr95P26FomkDcb6+/NLujYBCiMhzwONJIECSdocJkio=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQfTaji6Hl+EF8g419wVKGCC9svCq7AF5Dbu4405J3D7wRkDdj
-	Z5yJm4IC0cpJ1+ncjThdkU42ceySuwk0TGYxa/E9a1pNjPWmTnmS7h/Doi8+HCZv2yEDAC6k2GV
-	r0yuNG4VKOlRnKHLhg8XAEosoYMY=
-X-Google-Smtp-Source: AGHT+IELpH/0F7dV8dRl6EddHDXSq+7XHjxQcti0Y+c3T6a7N/b71cptP8YYhBzeeaH+weNQlnH7APaJPYE8K3tw2/c=
-X-Received: by 2002:a05:690c:6306:b0:6e3:1003:cb0c with SMTP id
- 00721157ae682-6ea64c9f0a9mr51785097b3.46.1730494855149; Fri, 01 Nov 2024
- 14:00:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1730495890; x=1731100690;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oWSTQrojMVMrsYh9AlNbCklcB9qjvy1WDWZ7XTJeoJ8=;
+        b=BihJMQNGVAkfqblYwpPz5idA/I09fRaZeCZtk3x9VqsOUKx4rQ+I8X7CPC4uHj1/pA
+         PoqPK0SEk1yteKS9w3N7tLEeUgYVd1X8Q3mUgxbHZmRO0HrEJF9fY2Zgd6FpzNtPs9r1
+         LeG3Ejg4Lm97dbzZg8P59RSRXZbT8OHUKUqjXIucZ8CBAabZnjClVeS3JFbfYV8+opPB
+         9kpbRrEwPS2WFLy2y3Afbd/NTVCHGHvz+0jGqnzVBxe6cQzgai0he/6KBuiXJ+bkbQ1b
+         b/w1CWj9X8Hf4j9SXTwOEFj/C89s/bRNl7OPHuSxCeUOjj5KnTb4Srq/Y35Pt8BehjL9
+         vX3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWwPXslcYzW3QmFUzAGsTzxjzUe/NbHfVXQVXLH5jkQSoGnIvU2Xb2ltIyDHwuC/VkfjRS6peBBKqbbSVZje+YQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsoBorGJHLymbmqhfXq0ykmMbFmSsHvXTIwi/aXbn5ZGlmorE6
+	UwZWwjUvhJApdqHmNE235FfsAQmeTiwMps6etuYh3V5a+oRobKPQOc2lb7rR9danGDN/j40MbJH
+	ZTQ==
+X-Google-Smtp-Source: AGHT+IGcrF9Nd0YKeNbT2/fZ8v29QoHtRzjzJ4lx7/d1D79YvtfH9TY9JNSjSTEP6wS5SGZQViK95MsJ3Aw=
+X-Received: from colette.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:ce7])
+ (user=ctshao job=sendgmr) by 2002:a17:90b:4a0a:b0:2e2:da81:40c6 with SMTP id
+ 98e67ed59e1d1-2e8f0f4e144mr40997a91.2.1730495889950; Fri, 01 Nov 2024
+ 14:18:09 -0700 (PDT)
+Date: Fri,  1 Nov 2024 21:17:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241101005338.5846-1-benjamin@engflow.com> <20241101172714.84386-1-benjamin@engflow.com>
-In-Reply-To: <20241101172714.84386-1-benjamin@engflow.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 1 Nov 2024 14:00:46 -0700
-Message-ID: <CAH0uvohNO517GAD7XH-VvUvU+dPdeZBKDw0Teij50sAPSe9sCQ@mail.gmail.com>
-Subject: Re: [PATCH v2] perf trace: avoid garbage when not printing a trace
- event's arguments
-To: Benjamin Peterson <benjamin@engflow.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
+Message-ID: <20241101211757.824743-1-ctshao@google.com>
+Subject: [PATCH v2 1/3] perf evsel: Improve the evsel__open_strerror for EBUSY
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, 
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, 
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
+	Liang Kan <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hello Benjamin,
+From: Ian Rogers <irogers@google.com>
 
-Before your patch:
+The existing EBUSY strerror message is:
+```
+The sys_perf_event_open() syscall returned with 16 (Device or resource busy) for event (intel_bts//).
+"dmesg | grep -i perf" may provide additional information.
+```
+The dmesg won't be useful. What is more useful is knowing what
+processes are potentially using the PMU, which some procfs scanning can
+reveal. When parallel testing tests/shell/stat_all_pmu.sh this yields:
+```
+Testing intel_bts//
+Error:
+The PMU intel_bts counters are busy and in use by another process.
+Possible processes:
+2585882 perf list
+2585902 perf list -j -o /tmp/__perf_test.list_output.json.KF9MY
+2585904 perf list
+2585911 perf record -e task-clock --filter period > 1 -o /dev/null --quiet true
+2585912 perf list
+2585915 perf list
+2586042 /tmp/perf/perf record -asdg -e cpu-clock -o /tmp/perftool-testsuite_report.dIF/perf_report/perf.data -- sleep 2
+2589078 perf record -g -e task-clock:u -o - perf test -w noploop
+2589148 /tmp/perf/perf record --control=fifo:control,ack -e cpu-clock -m 1 sleep 10
+2589379 perf --buildid-dir /tmp/perf.debug.Umx record --buildid-all -o /tmp/perf.data.YBm /tmp/perf.ex.MD5.ZQW
+2589568 perf record -o /tmp/__perf_test.program.mtcZH/perf.data --branch-filter any,save_type,u -- perf test -w brstack
+2589649 perf record --per-thread -o /tmp/__perf_test.perf.data.5d3dc perf test -w thloop
+2589898 perf record -o /tmp/perf-test-script.BX2b27Dcnj/pp-perf.data --sample-cpu uname
+```
+Which gets a little closer to finding the issue.
 
-perf $ ./perf trace -e net:netif_rx_exit
-     0.000 irq/79-brcmf_p/1694977 net:netif_rx_exit(6n<)
-    28.153 irq/79-brcmf_p/1694977 net:netif_rx_exit(6n<)
-    36.429 irq/79-brcmf_p/1694977 net:netif_rx_exit(6n<)
-    36.461 irq/79-brcmf_p/1694977 net:netif_rx_exit(6n<)
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/evsel.c | 79 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 78 insertions(+), 1 deletion(-)
 
-After:
-
-perf $ ./perf trace -e net:netif_rx_exit
-     0.000 irq/79-brcmf_p/1694977 net:netif_rx_exit()
-     7.352 irq/79-brcmf_p/1694977 net:netif_rx_exit()
-    30.232 irq/79-brcmf_p/1694977 net:netif_rx_exit()
-    37.529 irq/79-brcmf_p/1694977 net:netif_rx_exit()
-
-It works beautifully, but I'm thinking can we simplify it by just doing:
-
-+       char bf[2048] =3D { 0 };
-        size_t size =3D sizeof(bf);
-
-That being said, trace__fprintf_tp_fields() should return void because
-currently its return value is not used by any other functions, plus
-this line:
-
-return printed + fprintf(trace->output, "%s", bf);
-
-in trace__fprintf_tp_fields() does not make much sense, since that
-will be 2 * printed. So I'm thinking maybe:
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 748b061f8678..8a628d1e80f3 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3021,10 +3021,10 @@ static void bpf_output__fprintf(struct trace *trace=
-,
-        ++trace->nr_events_printed;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index dbf9c8cee3c56..9a5b6a6f8d2e5 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3286,6 +3286,78 @@ static bool find_process(const char *name)
+ 	return ret ? false : true;
  }
 
--static size_t trace__fprintf_tp_fields(struct trace *trace, struct
-evsel *evsel, struct perf_sample *sample,
-+static void trace__fprintf_tp_fields(struct trace *trace, struct
-evsel *evsel, struct perf_sample *sample,
-                                       struct thread *thread, void
-*augmented_args, int augmented_args_size)
- {
--       char bf[2048];
-+       char bf[2048] =3D { 0 };
-        size_t size =3D sizeof(bf);
-        struct tep_format_field *field =3D evsel->tp_format->format.fields;
-        struct syscall_arg_fmt *arg =3D __evsel__syscall_arg_fmt(evsel);
-@@ -3087,7 +3087,7 @@ static size_t trace__fprintf_tp_fields(struct
-trace *trace, struct evsel *evsel,
-                printed +=3D syscall_arg_fmt__scnprintf_val(arg, bf +
-printed, size - printed, &syscall_arg, val);
-        }
++static int dump_perf_event_processes(char *msg, size_t size)
++{
++	DIR *proc_dir;
++	struct dirent *proc_entry;
++	int printed = 0;
++
++	proc_dir = opendir(procfs__mountpoint());
++	if (!proc_dir)
++		return 0;
++
++	/* Walk through the /proc directory. */
++	while ((proc_entry = readdir(proc_dir)) != NULL) {
++		char path[PATH_MAX];
++		DIR *fd_dir;
++		struct dirent *fd_entry;
++		int fd_dir_fd;
++
++		if ((proc_entry->d_type != DT_DIR) ||
++		     !strcmp(".", proc_entry->d_name) ||
++		     !strcmp("..", proc_entry->d_name))
++			continue;
++
++		scnprintf(path, sizeof(path), "%s/fd", proc_entry->d_name);
++		fd_dir_fd = openat(dirfd(proc_dir), path, O_DIRECTORY);
++		if (fd_dir_fd == -1)
++			continue;
++		fd_dir = fdopendir(fd_dir_fd);
++		if (!fd_dir) {
++			close(fd_dir_fd);
++			continue;
++		}
++		while ((fd_entry = readdir(fd_dir)) != NULL) {
++			ssize_t link_size;
++
++			if (fd_entry->d_type != DT_LNK)
++				continue;
++			link_size = readlinkat(fd_dir_fd, fd_entry->d_name, path, sizeof(path));
++			if (link_size < 0)
++				continue;
++			/* Take care as readlink doesn't null terminate the string. */
++			if (!strncmp(path, "anon_inode:[perf_event]", link_size)) {
++				int cmdline_fd;
++				ssize_t cmdline_size;
++
++				scnprintf(path, sizeof(path), "%s/cmdline", proc_entry->d_name);
++				cmdline_fd = openat(dirfd(proc_dir), path, O_RDONLY);
++				if (cmdline_fd == -1)
++					continue;
++				cmdline_size = read(cmdline_fd, path, sizeof(path) - 1);
++				close(cmdline_fd);
++				if (cmdline_size < 0)
++					continue;
++				path[cmdline_size] = '\0';
++				for (ssize_t i = 0; i < cmdline_size; i++) {
++					if (path[i] == '\0')
++						path[i] = ' ';
++				}
++
++				if (printed == 0)
++					printed += scnprintf(msg, size, "Possible processes:\n");
++
++				printed += scnprintf(msg + printed, size - printed,
++						"%s %s\n", proc_entry->d_name, path);
++				break;
++			}
++		}
++		closedir(fd_dir);
++	}
++	closedir(proc_dir);
++	return printed;
++}
++
+ int __weak arch_evsel__open_strerror(struct evsel *evsel __maybe_unused,
+ 				     char *msg __maybe_unused,
+ 				     size_t size __maybe_unused)
+@@ -3319,7 +3391,7 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 			printed += scnprintf(msg, size,
+ 				"No permission to enable %s event.\n\n", evsel__name(evsel));
 
--       return printed + fprintf(trace->output, "%s", bf);
-+       fprintf(trace->output, "%s", bf);
- }
+-		return scnprintf(msg + printed, size - printed,
++		return printed + scnprintf(msg + printed, size - printed,
+ 		 "Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open\n"
+ 		 "access to performance monitoring and observability operations for processes\n"
+ 		 "without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.\n"
+@@ -3382,6 +3454,11 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 			return scnprintf(msg, size,
+ 	"The PMU counters are busy/taken by another profiler.\n"
+ 	"We found oprofile daemon running, please stop it and try again.");
++		printed += scnprintf(
++			msg, size,
++			"The PMU %s counters are busy and in use by another process.\n",
++			evsel->pmu ? evsel->pmu->name : "");
++		return printed + dump_perf_event_processes(msg + printed, size - printed);
+ 		break;
+ 	case EINVAL:
+ 		if (evsel->core.attr.sample_type & PERF_SAMPLE_CODE_PAGE_SIZE && perf_missing_features.code_page_size)
+--
+2.47.0.163.g1226f6d8fa-goog
 
- static int trace__event_handler(struct trace *trace, struct evsel *evsel,
-
-
-Then this will be one more diff line than yours.
-
-But that's just my opinion, yours works just fine, thank you :).
-Arnaldo, what do you think?
-
-Tested-by: Howard Chu <howardchu95@gmail.com>
-
-Thanks,
-Howard
-
-On Fri, Nov 1, 2024 at 10:27=E2=80=AFAM Benjamin Peterson <benjamin@engflow=
-.com> wrote:
->
-> trace__fprintf_tp_fields may not print any tracepoint arguments. E.g., if=
- the
-> argument values are all zero. Previously, this would result in a totally
-> uninitialized buffer being passed to fprintf, which could lead to garbage=
- on the
-> console. Fix the problem by passing the number of initialized bytes fprin=
-tf.
->
-> Remove the return value of trace__fprintf_tp_fields, since it was meaning=
-less
-> and ignored.
->
-> Fixes: f11b2803bb88 ("perf trace: Allow choosing how to augment the trace=
-point arguments")
-> Signed-off-by: Benjamin Peterson <benjamin@engflow.com>
-> ---
->  tools/perf/builtin-trace.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index d3f11b90d025..4e785ea29df6 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -3021,7 +3021,7 @@ static void bpf_output__fprintf(struct trace *trace=
-,
->         ++trace->nr_events_printed;
->  }
->
-> -static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel=
- *evsel, struct perf_sample *sample,
-> +static void trace__fprintf_tp_fields(struct trace *trace, struct evsel *=
-evsel, struct perf_sample *sample,
->                                        struct thread *thread, void *augme=
-nted_args, int augmented_args_size)
->  {
->         char bf[2048];
-> @@ -3087,7 +3087,7 @@ static size_t trace__fprintf_tp_fields(struct trace=
- *trace, struct evsel *evsel,
->                 printed +=3D syscall_arg_fmt__scnprintf_val(arg, bf + pri=
-nted, size - printed, &syscall_arg, val);
->         }
->
-> -       return printed + fprintf(trace->output, "%s", bf);
-> +       fprintf(trace->output, "%.*s", (int)printed, bf);
->  }
->
->  static int trace__event_handler(struct trace *trace, struct evsel *evsel=
-,
-> --
-> 2.39.5
->
