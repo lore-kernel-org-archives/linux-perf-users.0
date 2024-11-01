@@ -1,138 +1,115 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52971BD9DC;
-	Thu, 31 Oct 2024 23:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FC017C69
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Nov 2024 00:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730417311; cv=none; b=eZCcx9y0QMfc7gheGWy3TFODLRuOldrDXo2gQzlrWSPnA6YEnqfUURBQsK/9CekhD1zXQvwbCCEHHO1Rl7fiHzQgPfLzGarVLT8C9QMl81yhB4V8vFt4MIoj2LnTPMjbzfWQXxIfmYdVBiy0thucMO7D+a2fGB1Uf20f6oYtdX8=
+	t=1730422433; cv=none; b=a61SU/HXpj7/5UIDVFzYeTayTSD37q+yC8oW2nb/5wTV4MG63miNOrp+5BCIlXzVXtZQWk62HsyDD0sSgDc/TxfZBpJnlyWGkiVTsh9jlVPMRZwkJhfL+celdGC9ri9uf3f7IxJK2DyUDyyvxNXXvN5O76UDrVyu2kbdGapDUzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730417311; c=relaxed/simple;
-	bh=ihn1bJ13O+ICGeD46Kou/82Z2V4tl7Akt0tFFGiiYtk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dpz3P2xUDynmzE5bsXtGHRFfAXV73j1Nf1EvC+urbDjIehJFyG340zazHv+yU5EUvkN4+qbM3Pod8lz9UR10Ge1JeEnjGZ+yxrqMSUJnHtGN+lnFmeO59VnY3sIuzu/81SdeFcxd1MQ+Y/Or5JoHy9yDnzDhBsMgrNNBAS935+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VbGb8gwV; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730422433; c=relaxed/simple;
+	bh=Fd53hf4/RzRbOlaIQTaXnXLpx98XHo0+e+k+4mKzGzw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cm14z6duJmBF9CjW12c4V/uSldxvN9kE0G3IvAdrFYkQXesTR3s6v18I6mXE2YaBYR7dSaKMB+Gu38auBzIgczJgI4CamJQKs2k5ym2gCbxhA+STw3X/ZrbyndhJGCvR/5tG3vApSrb3rzB/ZbzCCeU2h3aOGZEdzcV+AiO0/3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com; spf=pass smtp.mailfrom=engflow.com; dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b=SjNkMqEy; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engflow.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbGb8gwV"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a9a16b310f5so213266866b.0;
-        Thu, 31 Oct 2024 16:28:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b="SjNkMqEy"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-83ac05206f6so56076539f.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 31 Oct 2024 17:53:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730417304; x=1731022104; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hefIWSSLnXcBqftg5nsPi5v85nNJiSjiEC3JHtAntbU=;
-        b=VbGb8gwV/IQsp1Lo1OwhLFzeSitoqjIwCDqBDyIQ7Ts+PntsZjITgTSSfJYSC4ySPV
-         2IspDADeVcvLwytmapb/Xr81Qk6oTFnucPdJAVy4hFtmq/CO6O4VLvUBbnmtXOx1oUyU
-         GfqKfeiNeHTyltWjUOnuUvdtd+wtKga2v1geQZeFXXZojguSotS4/jY+tcyIr47QzaOl
-         TKhj/ziaC37fO/QdrvTHYcL5ufbWnjlFG99c8z3wbmHYzpCpbTwZSlo8TMuZ9dEuFrFe
-         Q9aF4aMQKnZlV2wyKWEeNGDKHaoidU6fVqYOBPTj/Em3mmQJaavRq86MVLWHKdIEgz7N
-         /uQQ==
+        d=engflow.com; s=google; t=1730422425; x=1731027225; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PIqo+wi9i5UZ//zk2SA7F2V2ncICcbOru3HSWAU6eM0=;
+        b=SjNkMqEyAOzIxGYMpLCGk9aOkq6bT0lv4rsT/JneFQ5/vCtK0jCEsHzhdMKvraRafw
+         zfFcZ3lgt+ClXH9QE2jDIHWU2i03ZEC2rPgtdYzpuWXXZGm/aop1YISwNqs3w5FZ4b4N
+         c69Oryt5YP11KHqXlEDarzVWXTmuE5U62DLIo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730417304; x=1731022104;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hefIWSSLnXcBqftg5nsPi5v85nNJiSjiEC3JHtAntbU=;
-        b=gM1+iLHS1yxLgYwtBOtloG2UiCJci2NUeA9ocpTkqw3T0/OIK+KvmyesM4vSVGwk5a
-         hT+dkSWTVWUFAS/WcFpzaLnUJ/WXPNOGkux+1rzwi4xqAci6b0gsjfcJOIVgAoNPah0s
-         UbPpGhIWwp+QCcunW2d6bhzE8YPG2dEMxuU4Ss5hs59XZ0lpH7xyVvgMaCW/OhNkZfdX
-         HgT3KnSyR4Zn1XrrsPJUNkMd/FHk6M6kg9cea1E5yKy6PtBbKx+e6Eg/jysjtcewLZY3
-         RJ8Nvc5zU89oobBN7jJYtewuXuUZRjeE5n9oTP97NKx6aNgN5WHB+9Piqi59RMb0eJ1v
-         F/9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUWRGb++4D79PJ6KXmlYOECXHIC/owXICFmAaDQWISyNXbxnwcjvURmJfaIOn/DLLmftYbZdZ+xQVJE5xOh2AFojA==@vger.kernel.org, AJvYcCVU0eTX2ks2wzeh4je0nUi6HTtUB05YVXbNZoNLnH5o9CCGCy9oBDSP46aGvZ0bLliCU35Q/GvLKVHpcDY=@vger.kernel.org, AJvYcCVWMat6zcVDsRrFBdgy9KY5Be+trJvICBFP0I0E3VMDFRZvNKOB8S1fliNM1gyW8zEBwa0HCrM7q48km0LfQvBugg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YycO0WIDwUh+NcWXIQTyHgo/d38oTFLMPLrFxUDQFy4O/QIM3Nk
-	3AYOLFNusOkYwdEfdFGZLQQjgCH3zrINWFf40P6iEfNdcqjrjwrV/23uaSvzJI8caViRqO/f3pd
-	gZx9E8ELsaSbbuV/v5o93PH7mxuE=
-X-Google-Smtp-Source: AGHT+IGTC95RMplTXIl7pdwB3Xefp6E7/dapQh+1QehK1yKeaffEy3sTOv2KING0JBmtpOOXvlQk7L+Z39psP0sM3qk=
-X-Received: by 2002:a17:907:72cc:b0:a9a:3ca0:d55a with SMTP id
- a640c23a62f3a-a9e50cae005mr432051466b.57.1730417303621; Thu, 31 Oct 2024
- 16:28:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1730422425; x=1731027225;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PIqo+wi9i5UZ//zk2SA7F2V2ncICcbOru3HSWAU6eM0=;
+        b=poT2YE/uCFmF/TWSzzMpvj6kPuZ5GnsHmOBFqqmrDWlOeWxaOc0VkE1+HwVjrZrNFh
+         nlFlefWMo3I08RugrB33OYW697/ZBFA+Afyy/xRpm4Np2x8mxYTnNHJFvYgYy9WnTRI+
+         vY3el4iYsXZOdnFBkxBhN/eDpYhKSoy8+zj05hbLkn195XA1AtF7uARTmPlyHXF4QOXd
+         HLANA9pCTEmBs57F8xz3FHWgcCSwPPY+qg4wJzS6AGrvcabyerCO3PMrE7hnQXfgy+Bp
+         Q5gJXE/fM5EQbwv/wGmtNaGCUtB0ibjy6BafPq/j9c/O5pFOopkyrFbIyHxtVgFy1dq9
+         Pt9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWFh63/d3iCtNiUqboG0FqsiNsJ8OggsrpW4n18VVb8mzj+prL48r6AQgZ4+3qf/6j4OONdLJKx1gA4TRTgv4SV@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLkI+jrOM+7Zq1cVXSxaHWvm/rxWMpbL2GnkmELCpUCHC6q1iy
+	9lDYmbLnhfYrh9gNUMoXLBkUA/GcqijsZmJhBfgYDmajT2da12yXq2j4fUwdJt8=
+X-Google-Smtp-Source: AGHT+IGLaH5ZkQIPqx3YrpCB9KbvsM5vvwGg8SFqNHbOVbWsBbXePi3eicUjv0FUyngZnJqQ+I7T2A==
+X-Received: by 2002:a05:6602:2cd0:b0:83b:2b89:a14e with SMTP id ca18e2360f4ac-83b65057c06mr557876139f.13.1730422424906;
+        Thu, 31 Oct 2024 17:53:44 -0700 (PDT)
+Received: from benjamin-test-build-vm.us-central1-a.c.engflow-remote-execution.internal (160.244.56.34.bc.googleusercontent.com. [34.56.244.160])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4de04977934sm523548173.97.2024.10.31.17.53.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2024 17:53:43 -0700 (PDT)
+From: Benjamin Peterson <benjamin@engflow.com>
+To: 
+Cc: Benjamin Peterson <benjamin@engflow.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
+Subject: [PATCH] perf trace: avoid garbage when not printing an trace event's arguments
+Date: Fri,  1 Nov 2024 00:53:37 +0000
+Message-Id: <20241101005338.5846-1-benjamin@engflow.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1730150953.git.jpoimboe@kernel.org> <a94eb70a80c4a13dedb2655b7848304a992cb1b0.1730150953.git.jpoimboe@kernel.org>
- <CAEf4BzY3xJ=W2qPD8i6UbSB=zNqpiA1gSd+SC3wKxQAJWjeHhA@mail.gmail.com>
- <20241030061043.eo2vuqgsoqmjytjr@treble.attlocal.net> <CAEf4BzYd5OT9COBS4va435jqMzkjvvAHbe55AR6giv8pitUvAg@mail.gmail.com>
- <20241031231320.h2hwns367e5byvyy@jpoimboe>
-In-Reply-To: <20241031231320.h2hwns367e5byvyy@jpoimboe>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 31 Oct 2024 16:28:08 -0700
-Message-ID: <CAEf4BzZksT=GTs268KBiCsYxUcvWz5KUghjKQQR8OxGdoBt=6A@mail.gmail.com>
-Subject: Re: [PATCH v3 11/19] unwind: Add deferred user space unwinding API
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, 
-	Indu Bhagat <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	Mark Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, 
-	Jordan Rome <jordalgo@meta.com>, Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org, 
-	Jens Remus <jremus@linux.ibm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 31, 2024 at 4:13=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org=
-> wrote:
->
-> On Thu, Oct 31, 2024 at 02:22:48PM -0700, Andrii Nakryiko wrote:
-> > > Problem is, the unwinder doesn't know in advance which tasks will be
-> > > unwound.
-> > >
-> > > Its first clue is unwind_user_register(), would it make sense for the
-> > > caller to clarify whether all tasks need to be unwound or only a
-> > > specific subset?
-> > >
-> > > Its second clue is unwind_user_deferred(), which is called for the ta=
-sk
-> > > itself.  But by then it's too late because it needs to access the
-> > > per-task data from (potentially) irq context so it can't do a lazy
-> > > allocation.
-> > >
-> > > I'm definitely open to ideas...
-> >
-> > The laziest thing would be to perform GFP_ATOMIC allocation, and if
-> > that fails, oops, too bad, no stack trace for you (but, generally
-> > speaking, no big deal). Advantages are clear, though, right? Single
-> > pointer in task_struct, which most of the time will be NULL, so no
-> > unnecessary overheads.
->
-> GFP_ATOMIC is limited, I don't think we want the unwinder to trigger
-> OOM.
->
+trace__fprintf_tp_fields may not print any tracepoint arguments. E.g., if the
+argument values are all zero. Previously, this would result in a totally
+uninitialized buffer being passed to fprintf, which could lead to garbage on the
+console. Fix the problem by passing the number of initialized bytes fprintf.
 
-So all task_structs on the system using 104 bytes more, *permanently*
-and *unconditionally*, is not a concern, but lazy GFP_ATOMIC
-allocation when you actually need it is?
+Remove the return value of trace__fprintf_tp_fields, since it was meaningless
+and ignored.
 
-> > It's the last point that's important to make usability so much
-> > simpler, avoiding unnecessary custom timeouts and stuff like that.
-> > Regardless whether stack trace capture is success or not, user is
-> > guaranteed to get a "notification" about the outcome.
-> >
-> > Hope this helps.
-> >
-> > But basically, if I I called unwind_user_deferred(), I expect to get
-> > some callback, guaranteed, with the result or failure. The only thing
-> > that's not guaranteed (and which makes timeouts bad) is *when* this
-> > will happen. Because stack trace capture can be arbitrarily delayed
-> > and stuff. That's fine, but that also shows why timeout is tricky and
-> > necessarily fragile.
->
-> That sounds reasonable.  In the OOM error case I can just pass a small
-> (stack allocated) one-entry trace with only regs->ip.
->
+Fixes: f11b2803bb88 ("perf trace: Allow choosing how to augment the tracepoint arguments")
+Signed-off-by: Benjamin Peterson <benjamin@engflow.com>
+---
+ tools/perf/builtin-trace.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-SGTM
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index d3f11b90d025..e93f795e680f 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3021,7 +3021,7 @@ static void bpf_output__fprintf(struct trace *trace,
+ 	++trace->nr_events_printed;
+ }
+ 
+-static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel, struct perf_sample *sample,
++static void trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel, struct perf_sample *sample,
+ 				       struct thread *thread, void *augmented_args, int augmented_args_size)
+ {
+ 	char bf[2048];
+@@ -3087,7 +3087,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 		printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
+ 	}
+ 
+-	return printed + fprintf(trace->output, "%s", bf);
++	fprintf(trace->output, "%.*s", printed, bf);
+ }
+ 
+ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+-- 
+2.39.5
 
-> --
-> Josh
->
