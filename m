@@ -1,36 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAF41D0F50;
-	Fri,  1 Nov 2024 19:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917671CACF2;
+	Fri,  1 Nov 2024 19:52:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730490483; cv=none; b=mQIIHIO0U5jAY7dxjC76QoHtNo/baHSM0kpmIt6qeTDc9dXFhxktALS7olBPVQHQNAwWfWpL5Ic9NrCwkq8une3muik+1iSxzrzFdQBajQHzhO6WR55Mb+xkGsXHP0n1NnaMKoR9U1f9VtTZTn18i+bHpp/4XeCWNJwzIOxBezo=
+	t=1730490722; cv=none; b=M1XVkm4Isw/5jkiWXWvnhfVghREH4F0lI5cCwuxs7ROVU2/HhWBb+Y8LrvH1F5ms/AqRcKop4x6MNl2SLVmwKew7940tAQliXy4K6ZAEKwURHQz4TYYkjYyN+6UbQOBKbBuAtoIVFjmVKSyEIysJc4f9fDuvUZ9uJMIR1WU9U3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730490483; c=relaxed/simple;
-	bh=qo7GbqyYnpGbEFsr9GufnLpQzs5ZRmYHGT+PyV+DU3E=;
+	s=arc-20240116; t=1730490722; c=relaxed/simple;
+	bh=U4MvWnH9l3Nyr17zfp+s14ncaolIsfqLhW8jCtTo6YE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WX5VHNvzRAtycnfuhqMwcLMavKKmwD5W4Ithmek30hlacxIVKd4a6SeeUYwP2covofC0zcA/E5SyaB3WuBn8u6o0fzGJp2jC7v7suPXK2rsfQWzRBsmQfd0RAfoAoJfoPo2KsF9xXraNFVJ4ZcdqQPuCeTRnC5RuRUpOLT76mOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBeBYKDo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=b7TPKTNVsPiHuvT+/LenT9W16KFkUrUgS061ed8Dxa4A3cJHZeYKCiHtDqLQfA31WFbpRW4P0KQat1Ih30fIR0Tzb3XUvk2eqYMZWPVdV+xeef4Ny4NqwmSwcvMAsxcfIW147CMx3WvVMQkU7WIKfcoK9teoFhGFgci4FhVEQKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NKfmOGdP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBeBYKDo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EE0CC4CECD;
-	Fri,  1 Nov 2024 19:48:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NKfmOGdP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B31EC4CECD;
+	Fri,  1 Nov 2024 19:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730490483;
-	bh=qo7GbqyYnpGbEFsr9GufnLpQzs5ZRmYHGT+PyV+DU3E=;
+	s=k20201202; t=1730490722;
+	bh=U4MvWnH9l3Nyr17zfp+s14ncaolIsfqLhW8jCtTo6YE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qBeBYKDouAya22fb9hqZbKiAxW/8Vvy8zVTdyxuVusnd7wzvcRt6VG+0iMuMcz12/
-	 ugIdpAuKfYduJg10Y+qbm41VrKXRQds0k+ngUrRkY4ChgcIxRwONAR6mcFLcp/SmwL
-	 7qxvgPCdJJwCbY5jEzPLMuR3Ub9QPDzhG5CShWj0s/7vgnP4BG+4RYZPnRbGfdZiev
-	 l2Kv0C4FftFYGCmNV4Gm0GNDCDi65kdzQ+Gebxs1xRl+sshDOsK23coBqPYvQIoRXf
-	 TCV7rfuh9mDyW0Rk6jbtY48DDuhIRxdMhJSVXkHuIInq2Wz2HPeTCkWxWSX7KZTHHU
-	 7sIZ/0Qt4iDtw==
-Date: Fri, 1 Nov 2024 12:48:00 -0700
+	b=NKfmOGdPUxeCjNHZg25uglySAbe4J5DQLd6ad47Z6b7myndt/NxXB3tbg0h/hL+P+
+	 rGQDA23X9h+MHcxXj71nkImwwJaPoegIzdIWR7mZuQsMzTLbyqOzhDYpr3mAjSfg9P
+	 vpPalyU5hpLaA5If2UJTc/vLbdZL8H22YRgvIBxEWWnfkV/CwsKwR/yzcf5knrWgut
+	 3Ge/5Pygra2hvKFsDQEOkj6RlJHTy5un/YgWfE3euDTMKgLtP47vQJFuQtsvOXuIM+
+	 dx11dcl09AIXYl3/+Pf1CuT8Sc6DjS8al68K4Iqld8Z94xCCRqAkWg2R+nhrprE7YT
+	 uzNzWR01xapKA==
+Date: Fri, 1 Nov 2024 12:51:59 -0700
 From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Segher Boessenkool <segher@kernel.crashing.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -46,18 +45,19 @@ Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org,
 	Jens Remus <jremus@linux.ibm.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>
+	Andy Lutomirski <luto@kernel.org>, bpf <bpf@vger.kernel.org>
 Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
-Message-ID: <20241101194800.wmvjljs7uxcuriem@jpoimboe>
+Message-ID: <20241101195159.6rf7ubde2wmymhpb@jpoimboe>
 References: <cover.1730150953.git.jpoimboe@kernel.org>
  <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
  <CAEf4BzY_rGszo9O9i3xhB2VFC-BOcqoZ3KGpKT+Hf4o-0W2BAQ@mail.gmail.com>
  <20241030055314.2vg55ychg5osleja@treble.attlocal.net>
  <CAEf4BzYzDRHBpTX=ED3peeXyRB4QgOUDvYSA4p__gti6mVQVcw@mail.gmail.com>
  <20241031230313.ubybve4r7mlbcbuu@jpoimboe>
- <20241101190908.GV29862@gate.crashing.org>
- <20241101193305.afwfopg4ryrrgxfb@jpoimboe>
- <20241101193510.53xj5ybz6vyyqb37@jpoimboe>
+ <CAEf4BzaQYqPfe2Qb5n71JVAAD3-1Q7q2+_cnQMQEa43DvV5PCQ@mail.gmail.com>
+ <20241101192937.opf4cbsfaxwixgbm@jpoimboe>
+ <CAEf4Bza6QZt=N8=O7NU3saHpJ_XrXRdGn48gVJMN+kawurNP3g@mail.gmail.com>
+ <CAEf4BzZvhuUeGYbo1Nesfdx3=-WAkAT2OjSdtE4tfRV7H7PZoQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,26 +66,41 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241101193510.53xj5ybz6vyyqb37@jpoimboe>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZvhuUeGYbo1Nesfdx3=-WAkAT2OjSdtE4tfRV7H7PZoQ@mail.gmail.com>
 
-On Fri, Nov 01, 2024 at 12:35:13PM -0700, Josh Poimboeuf wrote:
-> On Fri, Nov 01, 2024 at 12:33:07PM -0700, Josh Poimboeuf wrote:
-> > On Fri, Nov 01, 2024 at 02:09:08PM -0500, Segher Boessenkool wrote:
-> > > On Thu, Oct 31, 2024 at 04:03:13PM -0700, Josh Poimboeuf wrote:
-> > > > Actually I just double checked and even the kernel's ELF loader assumes
-> > > > that each executable has only a single text start+end address pair.
-> > > 
-> > > Huh?  What makes you think that?  There can be many executable PT_LOAD
-> > > segments in each and every binary.
-> > 
-> > Right, but for executables (not shared libraries) the kernel seems to
-> > assume they're contiguous?  See the 'start_code' and 'end_code'
-> > variables in load_elf_binary() load_elf_interp().
+On Fri, Nov 01, 2024 at 12:46:09PM -0700, Andrii Nakryiko wrote:
+> On Fri, Nov 1, 2024 at 12:44 PM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Fri, Nov 1, 2024 at 12:29 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> > >
+> > > On Fri, Nov 01, 2024 at 11:34:48AM -0700, Andrii Nakryiko wrote:
+> > > > 00200000-170ad000 r--p 00000000 07:01 5
+> > > > 172ac000-498e7000 r-xp 16eac000 07:01 5
+> > > > 49ae7000-49b8b000 r--p 494e7000 07:01 5
+> > > > 49d8b000-4a228000 rw-p 4958b000 07:01 5
+> > > > 4a228000-4c677000 rw-p 00000000 00:00 0
+> > > > 4c800000-4ca00000 r-xp 49c00000 07:01 5
+> > > > 4ca00000-4f600000 r-xp 49e00000 07:01 5
+> > > > 4f600000-5b270000 r-xp 4ca00000 07:01 5
+> > > >
 > 
-> Typo, see load_elf_binary (not load_elf_interp).
+> I should have maybe posted this in this form:
+> 
+> 00200000-170ad000 r--p 00000000 07:01 5  /packages/obfuscated_file
+> 172ac000-498e7000 r-xp 16eac000 07:01 5  /packages/obfuscated_file
+> 49ae7000-49b8b000 r--p 494e7000 07:01 5  /packages/obfuscated_file
+> 49d8b000-4a228000 rw-p 4958b000 07:01 5  /packages/obfuscated_file
+> 4a228000-4c677000 rw-p 00000000 00:00 0
+> 4c800000-4ca00000 r-xp 49c00000 07:01 5  /packages/obfuscated_file
+> 4ca00000-4f600000 r-xp 49e00000 07:01 5  /packages/obfuscated_file
+> 4f600000-5b270000 r-xp 4ca00000 07:01 5  /packages/obfuscated_file
+> 
+> Those paths are pointing to the same binary.
 
-Hm, actually AFAICT that's only for reporting things in sysfs/proc.  So
-maybe it's assumed but not really "enforced".
+Ok, thanks for sharing that.  I'll add in support for noncontiguous
+text.
 
 -- 
 Josh
