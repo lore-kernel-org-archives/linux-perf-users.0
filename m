@@ -1,124 +1,83 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD1D1E2843
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 Nov 2024 21:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB1481E47BC;
+	Fri,  1 Nov 2024 21:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730497321; cv=none; b=tsDuwES4H8QbwuGi66+nKkvwJwogF+dTHH3d3vRRg3F2rBUEK/N3S6h5vXvjFWBaUz+xEt/g2Rt2rjSJEsrDENx3D6KG4yQoK5T8h57NQPUAJ8FR+TMzuQvI0fcoIZWuKLnBZwOsMjyRDvB4il7dbIuWMN5qEHu6dweeyAzklPA=
+	t=1730497385; cv=none; b=PmmGO2WY9GCUzt8IMTAod1S7qrogmYkRk0cBQCULqZZKYNJ1PCKf+OvWj6Xr2NwYA3Vxd3MNnTde8il1QbmkyII8gGT6sO35/WIWnnU5knSVVdBs6z/vITbvcwny44s4OW9zmh+4AVF+93TvxvtyRVrsROQNF2J3/B+4ROacIFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730497321; c=relaxed/simple;
-	bh=DbfqY7IFcAPB09OyKpR93DM2ZjDMYjW04ydu1Tn6UTQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FYrSMLXbRv/R/8onJddtuTpXdmTcnT5rmGIA4LNx1oY9Sc4zAUe0Dnu+yJPqJs1DEzKUAvniHSvFHz39y5+iiv9cBnajqMM3Xb4Hlz/tkM9BXxtGvzRqGppAhWxBk0XL5zTrZVrjKD6auI2SycGnvoEKnqod9Y9ZuLbHfI5yYco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com; spf=pass smtp.mailfrom=engflow.com; dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b=fgMaCcHT; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engflow.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b="fgMaCcHT"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-53b13ea6b78so3978989e87.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 Nov 2024 14:41:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=engflow.com; s=google; t=1730497318; x=1731102118; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jo90b8Yd71LhW+/ErXRjU0g+lG1e6qGL15CJicn+PDI=;
-        b=fgMaCcHTsMt7X51dL8HaT5rEY+mU0JMciTpvRAlgWAYq34eclsHs1mbj4uiRPDEKvJ
-         pE1CDg242KhWOW77wVOw/dBA1dUGxEI7oEEkKUJOjA8Eoy9chQz2OylPq10Fk3tJiaSq
-         OJq3OJrsTSsBaadj4snN0AtAj9eZkh5s+qyEY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730497318; x=1731102118;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jo90b8Yd71LhW+/ErXRjU0g+lG1e6qGL15CJicn+PDI=;
-        b=J7Qer9pXv6wmJkrQAPtWNv11GmSneCenrgpalEyzj6pg77pY0yPwGOQiZ7Ooek6KYY
-         P901cZplDt7s7AhdHgisQLkRfbdg4wtNPDqskB1XCv/w5SjHbf1PVWeYmFxxxcOGOpTb
-         zGkfC9hx8fPDHZApV38rR3nPhoDIYUq33+nsr6umRUZ/qBj+P1lhHYvxGVDNFZvNarF1
-         qFLyOZCNuXZdqmpXiKBw/put32VIEarvBTOqwrrO/0h5RD6y5ElsgSiU4ykHgVly4a3+
-         hsBQvDSkk/EwJzTpTyjTPGZ6A3Pi/ugwC2aV+yKZmUtMeKcOgid75xODzvM8qoPKRLpm
-         vePg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEPNu6ZYylkjUfeAx2YCT6/wrtKCtCFk93T1Qez4gYNk/Fpb/ftqY5aEVCQyjewg1UOONE8iNLeTVt6K1qOnn+@vger.kernel.org
-X-Gm-Message-State: AOJu0YxibsFEd0s1cewFtthxqGsdcZVjvUFCyghyv3zr1ZoEy94zDteI
-	oGNijLwqI57+1DXMJtYK4uPBpPtMObutTXhyUKUx1GGqYZij3PJPg+zOdwZzuibMjIWuIHJnG++
-	FytF4YAsBUkcRnu/9yrABSph+uKcgYvI1UAcblw==
-X-Google-Smtp-Source: AGHT+IGcJSS7owX3TBRF8ZsKYn+5S4Q3Hg1EpCxbdq1KPte+oQuDZLnbzKisdC+ggu1lDkdDgpVrbty8dyMekv9XJ2k=
-X-Received: by 2002:a05:6512:3d10:b0:539:94f5:bf with SMTP id
- 2adb3069b0e04-53d65e16d9dmr4558411e87.59.1730497317409; Fri, 01 Nov 2024
- 14:41:57 -0700 (PDT)
+	s=arc-20240116; t=1730497385; c=relaxed/simple;
+	bh=LskIb1qIQx1ILGa3bL59/zRaBlbeR2lnNshvYuMbgZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NQdyaPtWZJJxkfPgFfD5U//fpQZF4msibvX62AHsfMVC4QAh6SHrV/aqyTUPDT0lGP/1fJacN4AjsC0uhpNoRRO8D7vcQCzNHXIu3AnX073VONwFqrxB09j9SFhY6FbpUqsWPpVEhJFl9LyAj/sN7/srzhFCPN9xdyIZiCvhCyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 4A1LZMBI025732;
+	Fri, 1 Nov 2024 16:35:22 -0500
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 4A1LZJNr025728;
+	Fri, 1 Nov 2024 16:35:19 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Fri, 1 Nov 2024 16:35:18 -0500
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
+        Jens Remus <jremus@linux.ibm.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
+Message-ID: <20241101213518.GX29862@gate.crashing.org>
+References: <cover.1730150953.git.jpoimboe@kernel.org> <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org> <CAEf4BzY_rGszo9O9i3xhB2VFC-BOcqoZ3KGpKT+Hf4o-0W2BAQ@mail.gmail.com> <20241030055314.2vg55ychg5osleja@treble.attlocal.net> <CAEf4BzYzDRHBpTX=ED3peeXyRB4QgOUDvYSA4p__gti6mVQVcw@mail.gmail.com> <20241031230313.ubybve4r7mlbcbuu@jpoimboe> <20241101190908.GV29862@gate.crashing.org> <20241101193305.afwfopg4ryrrgxfb@jpoimboe> <20241101193510.53xj5ybz6vyyqb37@jpoimboe> <20241101194800.wmvjljs7uxcuriem@jpoimboe>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241101005338.5846-1-benjamin@engflow.com> <20241101172714.84386-1-benjamin@engflow.com>
- <CAH0uvohNO517GAD7XH-VvUvU+dPdeZBKDw0Teij50sAPSe9sCQ@mail.gmail.com> <ZyVIgKcAuqZSYYB1@x1>
-In-Reply-To: <ZyVIgKcAuqZSYYB1@x1>
-From: Benjamin Peterson <benjamin@engflow.com>
-Date: Fri, 1 Nov 2024 14:41:46 -0700
-Message-ID: <CAEmfU+ufKWoJLvhksPzADMKkbinV37Tv1KODU6RdJfBM9Juy7w@mail.gmail.com>
-Subject: Re: [PATCH v2] perf trace: avoid garbage when not printing a trace
- event's arguments
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, 
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, 
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241101194800.wmvjljs7uxcuriem@jpoimboe>
+User-Agent: Mutt/1.4.2.3i
 
-On Fri, Nov 1, 2024 at 2:30=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> On Fri, Nov 01, 2024 at 02:00:46PM -0700, Howard Chu wrote:
-> > Hello Benjamin,
+Hi!
 
-Thanks for testing & reviewing.
+On Fri, Nov 01, 2024 at 12:48:00PM -0700, Josh Poimboeuf wrote:
+> On Fri, Nov 01, 2024 at 12:35:13PM -0700, Josh Poimboeuf wrote:
+> > On Fri, Nov 01, 2024 at 12:33:07PM -0700, Josh Poimboeuf wrote:
+> > > On Fri, Nov 01, 2024 at 02:09:08PM -0500, Segher Boessenkool wrote:
+> > > > On Thu, Oct 31, 2024 at 04:03:13PM -0700, Josh Poimboeuf wrote:
+> > > > > Actually I just double checked and even the kernel's ELF loader assumes
+> > > > > that each executable has only a single text start+end address pair.
+> > > > 
+> > > > Huh?  What makes you think that?  There can be many executable PT_LOAD
+> > > > segments in each and every binary.
+> > > 
+> > > Right, but for executables (not shared libraries) the kernel seems to
+> > > assume they're contiguous?  See the 'start_code' and 'end_code'
+> > > variables in load_elf_binary() load_elf_interp().
+> > 
+> > Typo, see load_elf_binary (not load_elf_interp).
+> 
+> Hm, actually AFAICT that's only for reporting things in sysfs/proc.  So
+> maybe it's assumed but not really "enforced".
 
-> >
-> > Before your patch:
-> >
-> > perf $ ./perf trace -e net:netif_rx_exit
-> >      0.000 irq/79-brcmf_p/1694977 net:netif_rx_exit(6n<)
-> >     28.153 irq/79-brcmf_p/1694977 net:netif_rx_exit(6n<)
-> >     36.429 irq/79-brcmf_p/1694977 net:netif_rx_exit(6n<)
-> >     36.461 irq/79-brcmf_p/1694977 net:netif_rx_exit(6n<)
-> >
-> > After:
-> >
-> > perf $ ./perf trace -e net:netif_rx_exit
-> >      0.000 irq/79-brcmf_p/1694977 net:netif_rx_exit()
-> >      7.352 irq/79-brcmf_p/1694977 net:netif_rx_exit()
-> >     30.232 irq/79-brcmf_p/1694977 net:netif_rx_exit()
-> >     37.529 irq/79-brcmf_p/1694977 net:netif_rx_exit()
-> >
-> > It works beautifully, but I'm thinking can we simplify it by just doing=
-:
-> >
-> > +       char bf[2048] =3D { 0 };
-> >         size_t size =3D sizeof(bf);
-> >
+Yes, this is copied to mm->start_code (etc.)  This isn't used for
+anything very important it seems, it seems to be a leftover from when we
+only had really simple binfmts?  For a.out it did actually make sense,
+for example :-)
 
-I believe this is slightly suboptimal because it obliges the compiler
-to zero out 2kib of the stack every time the function is called.
 
-> >
-> > Tested-by: Howard Chu <howardchu95@gmail.com>
->
-> I haven't tested it yet, just in my mind :-)
->
-> The patch looks ok and seems to fix a real problem, my only concern, a
-> pet peeve, was that it, in addition to fixing a real problem, did an
-> unrelated change, the "Remove the return value...", that part looks like
-> a distraction, something that shouldn't be there.
-
-In my mind, it was related because both the bug and the odd return
-value arise from incorrect counting of the number of written bytes.
-Obviously, the fix is what I care about, so feel free to strip out the
-return value change on import, or I can resend.
+Segher
