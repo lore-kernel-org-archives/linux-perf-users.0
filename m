@@ -1,68 +1,122 @@
-Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D259237B;
-	Fri,  1 Nov 2024 19:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50081CF5DE;
+	Fri,  1 Nov 2024 19:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730488672; cv=none; b=gM8kFmm/spAT7ukS1PqlgA+sy3XOTuVYqx4siFpQ0sa5wrTDdMoM8DtS9Wenj2Q80hedIr/uxVrLOW8se2K0EExnMVtV8gldWAAeYg4JxSApqrZANn0uIiJvAZf+7cL1FWyiKkvp6IXTEnC6L0+eZUXAzVuKFpxvQrDCHTYFLrk=
+	t=1730489380; cv=none; b=PwOTWUI/2ZDcA4NTmXalnM+CuUGAMN+Zm82TdtE01JoBWFfGuIeNnaeMLYyagv2CbBEz+ErW+59cfml19EZgsFCLC1OAqH2RvQqeZ6MezcQm1eb6dZ+E5HE0kNAofV1tJF89oo6nWO02fxbpv2pIc7hpG91RkvDY3ZbDTiYVlnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730488672; c=relaxed/simple;
-	bh=VtGa5ZKU9NG61xn0besl1aRipUS8Q+BV5+j5oxULFeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pWJu6hkS4dmxwtN3WfGiFSdAUupODbus/rqDddsBBuMHYVPH7oRH7DsQYWaeTupNj8nhfOwZwC+qhBQqkLKSY5uhShFTyIUNmMdpvrN9ASpnDcjYv0CO3mu+rmF8q9VZAnHxSB98uCHWOFogbIdvZ3KZ4FaFfyjjQ+W8Knx19AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 4A1J9BQU010012;
-	Fri, 1 Nov 2024 14:09:11 -0500
-Received: (from segher@localhost)
-	by gate.crashing.org (8.14.1/8.14.1/Submit) id 4A1J981p010011;
-	Fri, 1 Nov 2024 14:09:08 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date: Fri, 1 Nov 2024 14:09:08 -0500
-From: Segher Boessenkool <segher@kernel.crashing.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-        Jens Remus <jremus@linux.ibm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>
+	s=arc-20240116; t=1730489380; c=relaxed/simple;
+	bh=tMMEau3NtPnyAeHx8uGed61FAphZVULNuA9qHtBhhOg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QsWKWrb8Ilao0xp8fL6PB/UwqKh6yfrKrx9012vPHYvsQkDmcsdqkpY1Ni/mnPv/ViUSCLUmv8JNHmeMpFmc+PjaAYY3epUx3CkhM0+KYWMDf8BJvNLupOyyvkEOjc+WAO6JGHbHKTD0bBFvM6XpsBhvYrFJcfPAT9u2N9i9YsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYlgEYUy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYlgEYUy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B6C4C4CECD;
+	Fri,  1 Nov 2024 19:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730489380;
+	bh=tMMEau3NtPnyAeHx8uGed61FAphZVULNuA9qHtBhhOg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DYlgEYUyOZizWXWR8eNVvJc/QqHohbl60GpAPw3rCs6NZAduJJyXWrK+9LLSPQanO
+	 o/peCEWjEKNFFohrBB01XWsrx4sDpMLqHvdIygolfEUswTt/ryyvlx3de5SgK/ZubQ
+	 JMQPTMACdQD3wGVsrfDJX2YfK8vgkQLErPyRIgQEbIdoyAYg7rfCXaKUFyVH9T9qau
+	 ZhcABDQZLZVdDFwgGa41dxLej7yVMQo1o+LXcIdPOGLACbMqhLpULWpKh5xXDp+aHl
+	 PwbTeiyOE13V5hc8RBriybTJaUYgAwD4GRm1+zio0HAEYmGA/nJxKyXlX2SehqvJJR
+	 ZrH3uUg2RMkww==
+Date: Fri, 1 Nov 2024 12:29:37 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, bpf <bpf@vger.kernel.org>
 Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
-Message-ID: <20241101190908.GV29862@gate.crashing.org>
-References: <cover.1730150953.git.jpoimboe@kernel.org> <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org> <CAEf4BzY_rGszo9O9i3xhB2VFC-BOcqoZ3KGpKT+Hf4o-0W2BAQ@mail.gmail.com> <20241030055314.2vg55ychg5osleja@treble.attlocal.net> <CAEf4BzYzDRHBpTX=ED3peeXyRB4QgOUDvYSA4p__gti6mVQVcw@mail.gmail.com> <20241031230313.ubybve4r7mlbcbuu@jpoimboe>
+Message-ID: <20241101192937.opf4cbsfaxwixgbm@jpoimboe>
+References: <cover.1730150953.git.jpoimboe@kernel.org>
+ <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
+ <CAEf4BzY_rGszo9O9i3xhB2VFC-BOcqoZ3KGpKT+Hf4o-0W2BAQ@mail.gmail.com>
+ <20241030055314.2vg55ychg5osleja@treble.attlocal.net>
+ <CAEf4BzYzDRHBpTX=ED3peeXyRB4QgOUDvYSA4p__gti6mVQVcw@mail.gmail.com>
+ <20241031230313.ubybve4r7mlbcbuu@jpoimboe>
+ <CAEf4BzaQYqPfe2Qb5n71JVAAD3-1Q7q2+_cnQMQEa43DvV5PCQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241031230313.ubybve4r7mlbcbuu@jpoimboe>
-User-Agent: Mutt/1.4.2.3i
+In-Reply-To: <CAEf4BzaQYqPfe2Qb5n71JVAAD3-1Q7q2+_cnQMQEa43DvV5PCQ@mail.gmail.com>
 
-On Thu, Oct 31, 2024 at 04:03:13PM -0700, Josh Poimboeuf wrote:
-> Personally I find the idea of a single 4GB+ text segment pretty
-> surprising as I've never seen anything even close to that.
+On Fri, Nov 01, 2024 at 11:34:48AM -0700, Andrii Nakryiko wrote:
+> 00200000-170ad000 r--p 00000000 07:01 5
+> 172ac000-498e7000 r-xp 16eac000 07:01 5
+> 49ae7000-49b8b000 r--p 494e7000 07:01 5
+> 49d8b000-4a228000 rw-p 4958b000 07:01 5
+> 4a228000-4c677000 rw-p 00000000 00:00 0
+> 4c800000-4ca00000 r-xp 49c00000 07:01 5
+> 4ca00000-4f600000 r-xp 49e00000 07:01 5
+> 4f600000-5b270000 r-xp 4ca00000 07:01 5
+>
+> Sorry, I'm probably dense and missing something. But from the example
+> process above, isn't this check violated already? Or it's two
+> different things? Not sure, honestly.
 
-It is pretty common I'm afraid.
+It's hard to tell exactly what's going on, did you strip the file names?
 
-> Actually I just double checked and even the kernel's ELF loader assumes
-> that each executable has only a single text start+end address pair.
+The sframe limitation is per file, not per address space.  I assume
+these are one file:
 
-Huh?  What makes you think that?  There can be many executable PT_LOAD
-segments in each and every binary.
+> 172ac000-498e7000 r-xp 16eac000 07:01 5
 
+and these are another:
 
-Segher
+> 4c800000-4ca00000 r-xp 49c00000 07:01 5
+> 4ca00000-4f600000 r-xp 49e00000 07:01 5
+> 4f600000-5b270000 r-xp 4ca00000 07:01 5
+
+Multiple mappings for a single file is fine, as long as they're
+contiguous.
+
+> > Actually I just double checked and even the kernel's ELF loader assumes
+> > that each executable has only a single text start+end address pair.
+> 
+> See above, very confused by such assumptions, but I'm hoping we are
+> talking about two different things here.
+
+The "contiguous text" thing seems enforced by the kernel for
+executables.  However it doesn't manage shared libraries, those are
+mapped by the loader, e.g. /lib64/ld-linux-x86-64.so.2.
+
+At a quick glance I can't tell if /lib64/ld-linux-x86-64.so.2 enforces
+that.
+
+> > There's no point in adding complexity to support some hypothetical.  I
+> > can remove the printk though.
+> 
+> We are talking about fundamental things like format for supporting
+> frame pointer-less stack trace capture. It will take years to adopt
+> SFrame everywhere, so I think it's prudent to think a bit ahead beyond
+> just saying "no real application should need more than 4GB text", IMO.
+
+I don't think anybody is saying that...
+
+-- 
+Josh
