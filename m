@@ -1,106 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917671CACF2;
-	Fri,  1 Nov 2024 19:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F59312D758;
+	Fri,  1 Nov 2024 21:00:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730490722; cv=none; b=M1XVkm4Isw/5jkiWXWvnhfVghREH4F0lI5cCwuxs7ROVU2/HhWBb+Y8LrvH1F5ms/AqRcKop4x6MNl2SLVmwKew7940tAQliXy4K6ZAEKwURHQz4TYYkjYyN+6UbQOBKbBuAtoIVFjmVKSyEIysJc4f9fDuvUZ9uJMIR1WU9U3s=
+	t=1730494859; cv=none; b=mEl1vDjoO/xPqWUu8jHDugdRuuXloX0Fej/Hv4fc/P4b9+Is6F7YI6PIZXOWO/YFrbvEhrw4SBqX/CGXUZTVp+64GHvcMZWafvxTqxuT4/wjRUz5Jnwj2Mq5I1O/9BrSZ4gXqt55i7R4OBpeqF99FER6MhsnagymyhNUwzqTzIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730490722; c=relaxed/simple;
-	bh=U4MvWnH9l3Nyr17zfp+s14ncaolIsfqLhW8jCtTo6YE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b7TPKTNVsPiHuvT+/LenT9W16KFkUrUgS061ed8Dxa4A3cJHZeYKCiHtDqLQfA31WFbpRW4P0KQat1Ih30fIR0Tzb3XUvk2eqYMZWPVdV+xeef4Ny4NqwmSwcvMAsxcfIW147CMx3WvVMQkU7WIKfcoK9teoFhGFgci4FhVEQKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NKfmOGdP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730494859; c=relaxed/simple;
+	bh=miy3Kf2jwUEuhZOasiLIiux1aqtLf72tk87BaWrvkjo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fbAgFIGcZJ3hPeJIirB3pyZVSiKN1t82QRgA4CEu9NzfbK8ps9ejUGNZIECKgzZm5+Hi8kwSiP3/SxujaFwweCwmQrAwN9CcVtyH5DG3G1vKV2Z7gAGJBes6/r4iTOWYH7SP9VWZLi+652pALxXiCtzFnZHICqYOTtEkOmwvHvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DLmVHrGB; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NKfmOGdP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B31EC4CECD;
-	Fri,  1 Nov 2024 19:52:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730490722;
-	bh=U4MvWnH9l3Nyr17zfp+s14ncaolIsfqLhW8jCtTo6YE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NKfmOGdPUxeCjNHZg25uglySAbe4J5DQLd6ad47Z6b7myndt/NxXB3tbg0h/hL+P+
-	 rGQDA23X9h+MHcxXj71nkImwwJaPoegIzdIWR7mZuQsMzTLbyqOzhDYpr3mAjSfg9P
-	 vpPalyU5hpLaA5If2UJTc/vLbdZL8H22YRgvIBxEWWnfkV/CwsKwR/yzcf5knrWgut
-	 3Ge/5Pygra2hvKFsDQEOkj6RlJHTy5un/YgWfE3euDTMKgLtP47vQJFuQtsvOXuIM+
-	 dx11dcl09AIXYl3/+Pf1CuT8Sc6DjS8al68K4Iqld8Z94xCCRqAkWg2R+nhrprE7YT
-	 uzNzWR01xapKA==
-Date: Fri, 1 Nov 2024 12:51:59 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
-Message-ID: <20241101195159.6rf7ubde2wmymhpb@jpoimboe>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
- <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
- <CAEf4BzY_rGszo9O9i3xhB2VFC-BOcqoZ3KGpKT+Hf4o-0W2BAQ@mail.gmail.com>
- <20241030055314.2vg55ychg5osleja@treble.attlocal.net>
- <CAEf4BzYzDRHBpTX=ED3peeXyRB4QgOUDvYSA4p__gti6mVQVcw@mail.gmail.com>
- <20241031230313.ubybve4r7mlbcbuu@jpoimboe>
- <CAEf4BzaQYqPfe2Qb5n71JVAAD3-1Q7q2+_cnQMQEa43DvV5PCQ@mail.gmail.com>
- <20241101192937.opf4cbsfaxwixgbm@jpoimboe>
- <CAEf4Bza6QZt=N8=O7NU3saHpJ_XrXRdGn48gVJMN+kawurNP3g@mail.gmail.com>
- <CAEf4BzZvhuUeGYbo1Nesfdx3=-WAkAT2OjSdtE4tfRV7H7PZoQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLmVHrGB"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6ea053b5929so20763307b3.0;
+        Fri, 01 Nov 2024 14:00:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730494855; x=1731099655; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qaV7ELqFA+mAL6sc/qk3B5LXboH7u0S8/APmxDBWmp8=;
+        b=DLmVHrGBOaF2f5HhAwbbgQTjMp7MU/epymRSEVO3k2pB7j+zEznhlNYPxEPf0NUzet
+         Sk42Uyt/5Z1/Z6w6V/Fk6GgUyRn+FBiqgbg7SobT1f3osSvBtbWVVJhheJCAVdMSVTZG
+         f1PN/BpfO6YnjKxgXAUD4F4/K8Vw+fMORhill812bhW+YtcbsQqPcmKpH8w0IrUXEHpB
+         3IsOFVrNkzB5jFdsygMtB+hLVKZG63gt8DlEsX9foJSgdktfPVNvigsAg2qNoJQo2Nz/
+         68eG9mCvx44FywQH+z7wuEmY1SZsh5tPScXRtCbsQolEU2GR+qgycZFdt2YtCo8UiRQH
+         6+tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730494855; x=1731099655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qaV7ELqFA+mAL6sc/qk3B5LXboH7u0S8/APmxDBWmp8=;
+        b=NAZkBEiD/LAF9HhuFyrAhZyjjHLNeGT6QyF03Vgj8KC3IXr2C86Xa+EpSEsATs1jkE
+         EOKsQPKujVTTo58yvt0nUcGf74K3u7NauOVwyV0sDF9ECbUlw5aBLrb4/pYcSacM/N49
+         eKtzojH4xq5CTg54vffG0veWxkPy1ZXq6QgRmDTfj2Xl/YVWc31nmkMUisATQarsPZx5
+         wguOUO2YQz0LRqva1hKd/+ViIWqoJT6Icd+S4oYDYoYlzpHIL//BL7QXSBk3yAtz0XED
+         L8pDxkazzKbqZCbG9UvLGPjZkkLBpimJ8RXROEuq+Moqsirhy6LysGh8J3iClNHSLZ5j
+         FQRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxU3efEdNvBY+Yme39KoOJFPBX5TUBmCwIWjoqOkpifvNegZGGg49+Dk7oWfNa4HbTOE0M85xcp6nOgpr4X9WTYg==@vger.kernel.org, AJvYcCX2i1TuQI+Fu6+qhpDsou1B9QiWI3XnAnb4KaZTzr95P26FomkDcb6+/NLujYBCiMhzwONJIECSdocJkio=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQfTaji6Hl+EF8g419wVKGCC9svCq7AF5Dbu4405J3D7wRkDdj
+	Z5yJm4IC0cpJ1+ncjThdkU42ceySuwk0TGYxa/E9a1pNjPWmTnmS7h/Doi8+HCZv2yEDAC6k2GV
+	r0yuNG4VKOlRnKHLhg8XAEosoYMY=
+X-Google-Smtp-Source: AGHT+IELpH/0F7dV8dRl6EddHDXSq+7XHjxQcti0Y+c3T6a7N/b71cptP8YYhBzeeaH+weNQlnH7APaJPYE8K3tw2/c=
+X-Received: by 2002:a05:690c:6306:b0:6e3:1003:cb0c with SMTP id
+ 00721157ae682-6ea64c9f0a9mr51785097b3.46.1730494855149; Fri, 01 Nov 2024
+ 14:00:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZvhuUeGYbo1Nesfdx3=-WAkAT2OjSdtE4tfRV7H7PZoQ@mail.gmail.com>
+References: <20241101005338.5846-1-benjamin@engflow.com> <20241101172714.84386-1-benjamin@engflow.com>
+In-Reply-To: <20241101172714.84386-1-benjamin@engflow.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Fri, 1 Nov 2024 14:00:46 -0700
+Message-ID: <CAH0uvohNO517GAD7XH-VvUvU+dPdeZBKDw0Teij50sAPSe9sCQ@mail.gmail.com>
+Subject: Re: [PATCH v2] perf trace: avoid garbage when not printing a trace
+ event's arguments
+To: Benjamin Peterson <benjamin@engflow.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 01, 2024 at 12:46:09PM -0700, Andrii Nakryiko wrote:
-> On Fri, Nov 1, 2024 at 12:44 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Fri, Nov 1, 2024 at 12:29 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> > >
-> > > On Fri, Nov 01, 2024 at 11:34:48AM -0700, Andrii Nakryiko wrote:
-> > > > 00200000-170ad000 r--p 00000000 07:01 5
-> > > > 172ac000-498e7000 r-xp 16eac000 07:01 5
-> > > > 49ae7000-49b8b000 r--p 494e7000 07:01 5
-> > > > 49d8b000-4a228000 rw-p 4958b000 07:01 5
-> > > > 4a228000-4c677000 rw-p 00000000 00:00 0
-> > > > 4c800000-4ca00000 r-xp 49c00000 07:01 5
-> > > > 4ca00000-4f600000 r-xp 49e00000 07:01 5
-> > > > 4f600000-5b270000 r-xp 4ca00000 07:01 5
-> > > >
-> 
-> I should have maybe posted this in this form:
-> 
-> 00200000-170ad000 r--p 00000000 07:01 5  /packages/obfuscated_file
-> 172ac000-498e7000 r-xp 16eac000 07:01 5  /packages/obfuscated_file
-> 49ae7000-49b8b000 r--p 494e7000 07:01 5  /packages/obfuscated_file
-> 49d8b000-4a228000 rw-p 4958b000 07:01 5  /packages/obfuscated_file
-> 4a228000-4c677000 rw-p 00000000 00:00 0
-> 4c800000-4ca00000 r-xp 49c00000 07:01 5  /packages/obfuscated_file
-> 4ca00000-4f600000 r-xp 49e00000 07:01 5  /packages/obfuscated_file
-> 4f600000-5b270000 r-xp 4ca00000 07:01 5  /packages/obfuscated_file
-> 
-> Those paths are pointing to the same binary.
+Hello Benjamin,
 
-Ok, thanks for sharing that.  I'll add in support for noncontiguous
-text.
+Before your patch:
 
--- 
-Josh
+perf $ ./perf trace -e net:netif_rx_exit
+     0.000 irq/79-brcmf_p/1694977 net:netif_rx_exit(6n<)
+    28.153 irq/79-brcmf_p/1694977 net:netif_rx_exit(6n<)
+    36.429 irq/79-brcmf_p/1694977 net:netif_rx_exit(6n<)
+    36.461 irq/79-brcmf_p/1694977 net:netif_rx_exit(6n<)
+
+After:
+
+perf $ ./perf trace -e net:netif_rx_exit
+     0.000 irq/79-brcmf_p/1694977 net:netif_rx_exit()
+     7.352 irq/79-brcmf_p/1694977 net:netif_rx_exit()
+    30.232 irq/79-brcmf_p/1694977 net:netif_rx_exit()
+    37.529 irq/79-brcmf_p/1694977 net:netif_rx_exit()
+
+It works beautifully, but I'm thinking can we simplify it by just doing:
+
++       char bf[2048] =3D { 0 };
+        size_t size =3D sizeof(bf);
+
+That being said, trace__fprintf_tp_fields() should return void because
+currently its return value is not used by any other functions, plus
+this line:
+
+return printed + fprintf(trace->output, "%s", bf);
+
+in trace__fprintf_tp_fields() does not make much sense, since that
+will be 2 * printed. So I'm thinking maybe:
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 748b061f8678..8a628d1e80f3 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3021,10 +3021,10 @@ static void bpf_output__fprintf(struct trace *trace=
+,
+        ++trace->nr_events_printed;
+ }
+
+-static size_t trace__fprintf_tp_fields(struct trace *trace, struct
+evsel *evsel, struct perf_sample *sample,
++static void trace__fprintf_tp_fields(struct trace *trace, struct
+evsel *evsel, struct perf_sample *sample,
+                                       struct thread *thread, void
+*augmented_args, int augmented_args_size)
+ {
+-       char bf[2048];
++       char bf[2048] =3D { 0 };
+        size_t size =3D sizeof(bf);
+        struct tep_format_field *field =3D evsel->tp_format->format.fields;
+        struct syscall_arg_fmt *arg =3D __evsel__syscall_arg_fmt(evsel);
+@@ -3087,7 +3087,7 @@ static size_t trace__fprintf_tp_fields(struct
+trace *trace, struct evsel *evsel,
+                printed +=3D syscall_arg_fmt__scnprintf_val(arg, bf +
+printed, size - printed, &syscall_arg, val);
+        }
+
+-       return printed + fprintf(trace->output, "%s", bf);
++       fprintf(trace->output, "%s", bf);
+ }
+
+ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+
+
+Then this will be one more diff line than yours.
+
+But that's just my opinion, yours works just fine, thank you :).
+Arnaldo, what do you think?
+
+Tested-by: Howard Chu <howardchu95@gmail.com>
+
+Thanks,
+Howard
+
+On Fri, Nov 1, 2024 at 10:27=E2=80=AFAM Benjamin Peterson <benjamin@engflow=
+.com> wrote:
+>
+> trace__fprintf_tp_fields may not print any tracepoint arguments. E.g., if=
+ the
+> argument values are all zero. Previously, this would result in a totally
+> uninitialized buffer being passed to fprintf, which could lead to garbage=
+ on the
+> console. Fix the problem by passing the number of initialized bytes fprin=
+tf.
+>
+> Remove the return value of trace__fprintf_tp_fields, since it was meaning=
+less
+> and ignored.
+>
+> Fixes: f11b2803bb88 ("perf trace: Allow choosing how to augment the trace=
+point arguments")
+> Signed-off-by: Benjamin Peterson <benjamin@engflow.com>
+> ---
+>  tools/perf/builtin-trace.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index d3f11b90d025..4e785ea29df6 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -3021,7 +3021,7 @@ static void bpf_output__fprintf(struct trace *trace=
+,
+>         ++trace->nr_events_printed;
+>  }
+>
+> -static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel=
+ *evsel, struct perf_sample *sample,
+> +static void trace__fprintf_tp_fields(struct trace *trace, struct evsel *=
+evsel, struct perf_sample *sample,
+>                                        struct thread *thread, void *augme=
+nted_args, int augmented_args_size)
+>  {
+>         char bf[2048];
+> @@ -3087,7 +3087,7 @@ static size_t trace__fprintf_tp_fields(struct trace=
+ *trace, struct evsel *evsel,
+>                 printed +=3D syscall_arg_fmt__scnprintf_val(arg, bf + pri=
+nted, size - printed, &syscall_arg, val);
+>         }
+>
+> -       return printed + fprintf(trace->output, "%s", bf);
+> +       fprintf(trace->output, "%.*s", (int)printed, bf);
+>  }
+>
+>  static int trace__event_handler(struct trace *trace, struct evsel *evsel=
+,
+> --
+> 2.39.5
+>
