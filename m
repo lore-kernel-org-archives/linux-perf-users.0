@@ -1,35 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50081CF5DE;
-	Fri,  1 Nov 2024 19:29:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC511487D6;
+	Fri,  1 Nov 2024 19:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730489380; cv=none; b=PwOTWUI/2ZDcA4NTmXalnM+CuUGAMN+Zm82TdtE01JoBWFfGuIeNnaeMLYyagv2CbBEz+ErW+59cfml19EZgsFCLC1OAqH2RvQqeZ6MezcQm1eb6dZ+E5HE0kNAofV1tJF89oo6nWO02fxbpv2pIc7hpG91RkvDY3ZbDTiYVlnM=
+	t=1730489588; cv=none; b=lhYwtZKIVuFZDNKB2m+iZLhtYckdeZeZMkuOejQ5aEXGRwAqfY3QV8TzloZtyjkieXjnu3hhtnoG/4810L0AlYGgH7Q+J8RNSCwHjaIiPq4/wTYEdHZaRYRbAFpqBCKyyWCKNN2Co6xUr2uGIpVNzvGdD3F5o3Uqu5oVL3+6KGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730489380; c=relaxed/simple;
-	bh=tMMEau3NtPnyAeHx8uGed61FAphZVULNuA9qHtBhhOg=;
+	s=arc-20240116; t=1730489588; c=relaxed/simple;
+	bh=0uD++iOkLSBl1jcPzNlz7t8Yip9BoZIgrsePVcD3N+Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QsWKWrb8Ilao0xp8fL6PB/UwqKh6yfrKrx9012vPHYvsQkDmcsdqkpY1Ni/mnPv/ViUSCLUmv8JNHmeMpFmc+PjaAYY3epUx3CkhM0+KYWMDf8BJvNLupOyyvkEOjc+WAO6JGHbHKTD0bBFvM6XpsBhvYrFJcfPAT9u2N9i9YsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYlgEYUy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=sX3wIAI8fOc4YBlyRM5Wr89n40ltTBIqdM0wwEhTtBS2bAwsYKoPuLF4j0ce1p5ML9pHsO1ip/0hF0TqkduYh0bA+iDQ3Ha5uYvkuaL/ca+tj2ZwHuH5mAobmZYIGUD6r+EYq0HQ8JZKngtQRyqnUgwzmR9BWhHF+fnowpISWAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0iF1QR4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYlgEYUy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B6C4C4CECD;
-	Fri,  1 Nov 2024 19:29:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0iF1QR4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9602BC4CECD;
+	Fri,  1 Nov 2024 19:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730489380;
-	bh=tMMEau3NtPnyAeHx8uGed61FAphZVULNuA9qHtBhhOg=;
+	s=k20201202; t=1730489587;
+	bh=0uD++iOkLSBl1jcPzNlz7t8Yip9BoZIgrsePVcD3N+Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DYlgEYUyOZizWXWR8eNVvJc/QqHohbl60GpAPw3rCs6NZAduJJyXWrK+9LLSPQanO
-	 o/peCEWjEKNFFohrBB01XWsrx4sDpMLqHvdIygolfEUswTt/ryyvlx3de5SgK/ZubQ
-	 JMQPTMACdQD3wGVsrfDJX2YfK8vgkQLErPyRIgQEbIdoyAYg7rfCXaKUFyVH9T9qau
-	 ZhcABDQZLZVdDFwgGa41dxLej7yVMQo1o+LXcIdPOGLACbMqhLpULWpKh5xXDp+aHl
-	 PwbTeiyOE13V5hc8RBriybTJaUYgAwD4GRm1+zio0HAEYmGA/nJxKyXlX2SehqvJJR
-	 ZrH3uUg2RMkww==
-Date: Fri, 1 Nov 2024 12:29:37 -0700
+	b=N0iF1QR4Zrq00f6yzkwn18Dr9KLs4CbBg8u6njyERfEe6kiLR/LpO8qjm15aLisOj
+	 +l6s/riYloOT/DS/J9aXatl1r9zhZZj8rseY2Y4LARYqDbwha38p4lVMLlJZV/8EQ1
+	 I5rHjUuVEDSOU7L8qKAawmOTijuZiQCsLMzVZqH6rsRuWPtaabzIoouqPs+S414rJu
+	 zZRxpxxRxQI+OswOGtQu8F+NKpxClwM8H5jJaZmxdbJWBxNztjssU+62o4S0RSZNLn
+	 yZj5/ho/LxF4Lye+w3XlaT2GorRxaPojoOsOn2j6qzjxVTKpLjXQI87scc4qHpfHNv
+	 ZzW7lQA+QVg7w==
+Date: Fri, 1 Nov 2024 12:33:05 -0700
 From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+To: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -45,16 +46,16 @@ Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Jens Remus <jremus@linux.ibm.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>, bpf <bpf@vger.kernel.org>
+	Andy Lutomirski <luto@kernel.org>
 Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
-Message-ID: <20241101192937.opf4cbsfaxwixgbm@jpoimboe>
+Message-ID: <20241101193305.afwfopg4ryrrgxfb@jpoimboe>
 References: <cover.1730150953.git.jpoimboe@kernel.org>
  <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
  <CAEf4BzY_rGszo9O9i3xhB2VFC-BOcqoZ3KGpKT+Hf4o-0W2BAQ@mail.gmail.com>
  <20241030055314.2vg55ychg5osleja@treble.attlocal.net>
  <CAEf4BzYzDRHBpTX=ED3peeXyRB4QgOUDvYSA4p__gti6mVQVcw@mail.gmail.com>
  <20241031230313.ubybve4r7mlbcbuu@jpoimboe>
- <CAEf4BzaQYqPfe2Qb5n71JVAAD3-1Q7q2+_cnQMQEa43DvV5PCQ@mail.gmail.com>
+ <20241101190908.GV29862@gate.crashing.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,60 +64,19 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzaQYqPfe2Qb5n71JVAAD3-1Q7q2+_cnQMQEa43DvV5PCQ@mail.gmail.com>
+In-Reply-To: <20241101190908.GV29862@gate.crashing.org>
 
-On Fri, Nov 01, 2024 at 11:34:48AM -0700, Andrii Nakryiko wrote:
-> 00200000-170ad000 r--p 00000000 07:01 5
-> 172ac000-498e7000 r-xp 16eac000 07:01 5
-> 49ae7000-49b8b000 r--p 494e7000 07:01 5
-> 49d8b000-4a228000 rw-p 4958b000 07:01 5
-> 4a228000-4c677000 rw-p 00000000 00:00 0
-> 4c800000-4ca00000 r-xp 49c00000 07:01 5
-> 4ca00000-4f600000 r-xp 49e00000 07:01 5
-> 4f600000-5b270000 r-xp 4ca00000 07:01 5
->
-> Sorry, I'm probably dense and missing something. But from the example
-> process above, isn't this check violated already? Or it's two
-> different things? Not sure, honestly.
-
-It's hard to tell exactly what's going on, did you strip the file names?
-
-The sframe limitation is per file, not per address space.  I assume
-these are one file:
-
-> 172ac000-498e7000 r-xp 16eac000 07:01 5
-
-and these are another:
-
-> 4c800000-4ca00000 r-xp 49c00000 07:01 5
-> 4ca00000-4f600000 r-xp 49e00000 07:01 5
-> 4f600000-5b270000 r-xp 4ca00000 07:01 5
-
-Multiple mappings for a single file is fine, as long as they're
-contiguous.
-
+On Fri, Nov 01, 2024 at 02:09:08PM -0500, Segher Boessenkool wrote:
+> On Thu, Oct 31, 2024 at 04:03:13PM -0700, Josh Poimboeuf wrote:
 > > Actually I just double checked and even the kernel's ELF loader assumes
 > > that each executable has only a single text start+end address pair.
 > 
-> See above, very confused by such assumptions, but I'm hoping we are
-> talking about two different things here.
+> Huh?  What makes you think that?  There can be many executable PT_LOAD
+> segments in each and every binary.
 
-The "contiguous text" thing seems enforced by the kernel for
-executables.  However it doesn't manage shared libraries, those are
-mapped by the loader, e.g. /lib64/ld-linux-x86-64.so.2.
-
-At a quick glance I can't tell if /lib64/ld-linux-x86-64.so.2 enforces
-that.
-
-> > There's no point in adding complexity to support some hypothetical.  I
-> > can remove the printk though.
-> 
-> We are talking about fundamental things like format for supporting
-> frame pointer-less stack trace capture. It will take years to adopt
-> SFrame everywhere, so I think it's prudent to think a bit ahead beyond
-> just saying "no real application should need more than 4GB text", IMO.
-
-I don't think anybody is saying that...
+Right, but for executables (not shared libraries) the kernel seems to
+assume they're contiguous?  See the 'start_code' and 'end_code'
+variables in load_elf_binary() load_elf_interp().
 
 -- 
 Josh
