@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1400D16B38B
-	for <linux-perf-users@vger.kernel.org>; Sat,  2 Nov 2024 07:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243AF16DC15
+	for <linux-perf-users@vger.kernel.org>; Sat,  2 Nov 2024 07:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730532187; cv=none; b=VkHwDyQ1e4a9ZDky+h2CF5kw5A9C2CDMUOg2+GNwsI6u/LxE4IUjomRDml/WoLqMUFr2crZyyRkinnq19SBSfduxd30whFvPa5M2dpkcr/kOdKrC1LVeguA2NGgWsFECCuqXmtPZpztUW36lDDoN6I59wUdmlTzcWcxX9+6lCHo=
+	t=1730532189; cv=none; b=D0y1q7ttffWPfpfH4mtqxKmSrSip39eIKnNyIK1em3PaQtGeZNAw6Nn24YCXzwTbBGM3Q2N2SrLf60rmDAWqTNSEFuSkkRLIk+byllhOM8HpbJYdapOPuDcYp8GKOXytmregGdMv1RGiN/kGwe8ZlY+Ws/iizBA40GuXZeILoUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730532187; c=relaxed/simple;
-	bh=7Y4sqAJ8H8/wv4YeVklOCJ++26LwgmHe6Sf8bb4jcEk=;
+	s=arc-20240116; t=1730532189; c=relaxed/simple;
+	bh=CkQ0PqkTIWt9YwGPuFgU+xUVEgjnar/6hDiTfIJH+ac=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=mf/Qt5RC/gf9H3YiY1xPPANmXeYYU9X0jEozmdwh1PEqucd5jf3rXBY5yrhg5EHsyVJJ2joQ0HN3bA3PkbbWxEd6f5MbOrwNIynztIkto/tMpeM1cYOTbIhOBdnNEBSehdOrSz9PTkE/e/M64RTGcGU14D4hH9HaLVbVPJnVVQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fLYy886e; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=moCbgA19SM70AfUDPRP1SYr/q5llJcdCscivNTfTUW8d3r+Z1Od9ZPV+PBpe7p3YJ2LmaEXAJj+ODplUWCYKj6YxvfNuysUJknrzzOMTx5N5ivjDJc43EDcdEV9lY0zU8cXDvErglCz6Nakw10BlKkfFfyqZZYhpi5cEl7LTphE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q3FOzObC; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fLYy886e"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e30cf48435fso5194607276.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 Nov 2024 00:23:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q3FOzObC"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e30cf48435fso5194638276.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 Nov 2024 00:23:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730532185; x=1731136985; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1730532187; x=1731136987; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=T+XLGbF4z6yhLVHsw4IRHpaH32znecDF7ITzpGw3GKA=;
-        b=fLYy886eBSRsaT4u1AXGrkbsIu/fGcccLbaymt3bOKD6vmqwGxdgGLaOmDDnE4Gwsa
-         hnGQfzxIH0VoETFwJO373bphZsO487qv1aGQKsVoVvY1K0sPf6PKFYhWDQBovNVUqyXn
-         81j4XlGCY7F4MvGkbhSHnbWaaoYcWgKqtgyIgMggulPPWoznERvO24Aga07AwDDzxHMW
-         Iv14v7JekOO0BK9sVbj5pp/h4mD6WC0u73LhwJHJ/8MfhGEoLPFsUKMAVYh3NgacEaZl
-         HrsxSYDYSYBoTBx9yR76KrEeTqxOeoeDkQ96I97Z8LtUsZNRIite0kbydDXWtTCrlksP
-         Jgng==
+        bh=bHyQZ7KuzF1BHlUEcfMzmmjCRw5gxHBITHCl3IdIk30=;
+        b=q3FOzObCJ3un9ppxhdsQYxUJpTbD8oCDDCglsYV7tO26wyGjduLHSDLvJTMHivFbKq
+         hfh77X5WBIKY94xDGysfNA6nQZ8tqwfgY1Tbb2EKDHXJNY2Jtv3oejKorXg7FHjqqwzF
+         URgc7J0eNVxHvzLP2rEYNx9qmDDsmfqMkRVDZX6knsSXHsldAz1yXcnJOHLoB51BWlPh
+         b1Ymi5atQoy9TcwFOpSKHSyrT45Nj5wvgTxu8xNcA2hzVgiXCW2G8r/E+r+rbgrGBOoG
+         nKI3USEno8RjPGzl06HyUGqeEjN6PojcTC5SSe3teUIQocrYBYK+w0Glz8I4iDUyuzZ7
+         XqAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730532185; x=1731136985;
+        d=1e100.net; s=20230601; t=1730532187; x=1731136987;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T+XLGbF4z6yhLVHsw4IRHpaH32znecDF7ITzpGw3GKA=;
-        b=dGLK21jkpPD+s8BcyWMUUpYGyFEvVGIGR0fwLsoPMCXVGIdH3/o+3R1VPxn3zhkz9B
-         Fo7ZnFNAo2njotBTZHbSsH7D4Xc+/+9OVy1xKSeThvJZZ5EFjLBTdmAmrK1WwDA0aWC3
-         4rGWm0+PS7GUL0Oqe+3hbhdiV+Tiv104LC2zZOv6OEMhayVsgf/wHSwChYIefHWubM9J
-         LlK4OtJKzK+OCUCwtPEvbJ4eM7Lz2ZA4BoiKWPWCdlfFsu39VaN97ldg3PqaTzpJ3T15
-         ZoTlD3wY2fzUQxkU6GwFH+Nd60fQByMBiaRL7VwF5Fu2mO9h651Km5wLV6NtFwFy5hfw
-         aKEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsW3/uFl+N9+GRLK6rD2jBT6CCSIVgjqHorvd1tzL1QdnEcD89OodK6mZTQLb5n7DT6ozJwSQhU5jTTJUCjrfN@vger.kernel.org
-X-Gm-Message-State: AOJu0YwazG+KYN+L7dJZmF0e2EQjyarZWMRdXyxb3riBHX3yBD8lkFUW
-	v+lthGWwuXnANUFNYDwxIGgESDbIbVQitqyfNSbAaiL1GIyDP6/kb7re6YtMWPXsLCUej1JPSpF
-	5/VgkZA==
-X-Google-Smtp-Source: AGHT+IGuUK4GzkjzC09ZcIJQLIZNDEngjbi2hiidCenaPPeInpbbt1xIcKWP/YxzU3HebhVS+gUfEYonSlgz
+        bh=bHyQZ7KuzF1BHlUEcfMzmmjCRw5gxHBITHCl3IdIk30=;
+        b=gVV+wUkIcWhxg1SyUavbBzMLUyt81DlnTfe46Q4txRM6iZcNcOpwYgREopqsfAYwqA
+         lT6oYmlBIsj3dzUwlSA6AOD5ybkCJE573U7MldletLpb26UyO3zBBa2zgB39YCGiGrUz
+         UaEt7EWrS8ejZIF+6PcGm+2CqVawPB9tj0iCJj6UhsNzdaqJa7P6GT3c5hNF573ZhsBH
+         /PkldG2XC9PTE+cfRKbTUCV/lpUl+ceTP5gIar7/s8DF3H4/OG9nAU5offJSYZk++7vb
+         uMYNX4rGcU0HJ4oHwd7ZlksJ3Fa9w1T7+8RdqJjZHvHpH8BF/PI3oYd26BcllYMirvMd
+         Oi9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXLq1TIPiwBBDpUmCMjN1zHVQZ+CnXAM2HbfI2RnKxQ0ajTcy04dl36LPPTHJ/mBxKc+L+vPSJGU1upXJcahwvE@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzjT5JvEMAG814FB8hZRjopTJ4LjFTiyQuVBp6z6sm7eOEYhXq
+	VErQBwy3w1cHMsGS6d94Xnk2XYjY5bbKRFSL+YQeLF+bqumQKaN0CTmiIb8ih+GAeQEOSxvg8+E
+	jmTxvYg==
+X-Google-Smtp-Source: AGHT+IF41Zce63ZGMol91oHS/oZlPI7m9OX/9GhTsBQL/w+GJOBsQG34pjM2JIHDhO2xseniM2IUe7NhaMGk
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:26a5:cdb5:356c:64a4])
- (user=irogers job=sendgmr) by 2002:a25:83c7:0:b0:e20:2502:be14 with SMTP id
- 3f1490d57ef6-e330356f9camr3227276.7.1730532185049; Sat, 02 Nov 2024 00:23:05
+ (user=irogers job=sendgmr) by 2002:a25:9012:0:b0:e2e:44ae:111a with SMTP id
+ 3f1490d57ef6-e30cf4c9ffamr8497276.8.1730532187061; Sat, 02 Nov 2024 00:23:07
  -0700 (PDT)
-Date: Sat,  2 Nov 2024 00:22:47 -0700
+Date: Sat,  2 Nov 2024 00:22:48 -0700
 In-Reply-To: <20241102072248.12836-1-irogers@google.com>
-Message-Id: <20241102072248.12836-6-irogers@google.com>
+Message-Id: <20241102072248.12836-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241102072248.12836-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.199.ga7371fff76-goog
-Subject: [PATCH v1 5/6] perf evsel: Allow evsel__newtp without libtraceevent
+Subject: [PATCH v1 6/6] perf tests: Enable tests disabled due to tracepoint parsing
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,261 +80,233 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	"Steven Rostedt (Google)" <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Switch from reading the tracepoint format to reading the id directly
-for the evsel config. This avoids the need to initialize
-libtraceevent, plugins, etc. It is sufficient for many tracepoint
-commands to work like:
-$ perf stat -e sched:sched_switch true
-
-To populate evsel->tp_format, do lazy initialization using
-libtraceevent in the evsel__tp_format function (the sys and name are
-saved in evsel__newtp_idx for this purpose). As tracepoints can be
-parsed without libtraceevent with this, remove the associated #ifdefs
-in parse-events.c.
+Tracepoint parsing required libtraceevent but no longer does. Remove
+the Build logic and #ifdefs that caused the tests not to be run. Test
+code that directly uses libtraceevent is still guarded.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c        | 93 ++++++++++++++++++++++++----------
- tools/perf/util/evsel.h        | 14 ++---
- tools/perf/util/parse-events.c | 16 +-----
- 3 files changed, 72 insertions(+), 51 deletions(-)
+ tools/perf/tests/Build          |  6 +++---
+ tools/perf/tests/builtin-test.c |  2 --
+ tools/perf/tests/parse-events.c | 25 +------------------------
+ 3 files changed, 4 insertions(+), 29 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a95db7e900d5..f98e60803b98 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -543,54 +543,91 @@ struct evsel *evsel__clone(struct evsel *orig)
- 	return NULL;
- }
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 03cbdf7c50a0..db33b33dc970 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -5,10 +5,10 @@ perf-test-y += tests-scripts.o
+ perf-test-y += parse-events.o
+ perf-test-y += dso-data.o
+ perf-test-y += vmlinux-kallsyms.o
+-perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall.o
+-perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall-all-cpus.o
++perf-test-y += openat-syscall.o
++perf-test-y += openat-syscall-all-cpus.o
+ perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall-tp-fields.o
+-perf-test-$(CONFIG_LIBTRACEEVENT) += mmap-basic.o
++perf-test-y += mmap-basic.o
+ perf-test-y += perf-record.o
+ perf-test-y += evsel-roundtrip-name.o
+ perf-test-$(CONFIG_LIBTRACEEVENT) += evsel-tp-sched.o
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index d2cabaa8ad92..4c3b622130a9 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -60,11 +60,9 @@ static struct test_suite *arch_tests[] = {
  
-+static int trace_event__id(const char *sys, const char *name)
-+{
-+	char *tp_dir = get_events_file(sys);
-+	char path[PATH_MAX];
-+	int id, err;
-+
-+	if (!tp_dir)
-+		return -1;
-+
-+	scnprintf(path, PATH_MAX, "%s/%s/id", tp_dir, name);
-+	put_events_file(tp_dir);
-+	err = filename__read_int(path, &id);
-+	if (err)
-+		return err;
-+
-+	return id;
-+}
-+
- /*
-  * Returns pointer with encoded error via <linux/err.h> interface.
-  */
+ static struct test_suite *generic_tests[] = {
+ 	&suite__vmlinux_matches_kallsyms,
 -#ifdef HAVE_LIBTRACEEVENT
- struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format)
- {
-+	struct perf_event_attr attr = {
-+		.type	       = PERF_TYPE_TRACEPOINT,
-+		.sample_type   = (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME |
-+				PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD),
-+	};
- 	struct evsel *evsel = zalloc(perf_evsel__object.size);
--	int err = -ENOMEM;
-+	int err = -ENOMEM, id = -1;
- 
--	if (evsel == NULL) {
-+	if (evsel == NULL)
- 		goto out_err;
--	} else {
--		struct perf_event_attr attr = {
--			.type	       = PERF_TYPE_TRACEPOINT,
--			.sample_type   = (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME |
--					  PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD),
--		};
- 
--		if (asprintf(&evsel->name, "%s:%s", sys, name) < 0)
--			goto out_free;
- 
--		event_attr_init(&attr);
-+	if (asprintf(&evsel->name, "%s:%s", sys, name) < 0)
-+		goto out_free;
- 
--		if (format) {
--			evsel->tp_format = trace_event__tp_format(sys, name);
--			if (IS_ERR(evsel->tp_format)) {
--				err = PTR_ERR(evsel->tp_format);
--				evsel->tp_format = NULL;
--				goto out_free;
--			}
--			attr.config = evsel->tp_format->id;
--		} else {
--			attr.config = (__u64) -1;
--		}
-+#ifdef HAVE_LIBTRACEEVENT
-+	evsel->tp_sys = strdup(sys);
-+	if (!evsel->tp_sys)
-+		goto out_free;
- 
-+	evsel->tp_name = strdup(name);
-+	if (!evsel->tp_name)
-+		goto out_free;
-+#endif
- 
--		attr.sample_period = 1;
--		evsel__init(evsel, &attr, idx);
--	}
-+	event_attr_init(&attr);
- 
-+	if (format) {
-+		id = trace_event__id(sys, name);
-+		if (id < 0) {
-+			err = id;
-+			goto out_free;
-+		}
-+	}
-+	attr.config = (__u64)id;
-+	attr.sample_period = 1;
-+	evsel__init(evsel, &attr, idx);
- 	return evsel;
- 
- out_free:
- 	zfree(&evsel->name);
-+#ifdef HAVE_LIBTRACEEVENT
-+	zfree(&evsel->tp_sys);
-+	zfree(&evsel->tp_name);
-+#endif
- 	free(evsel);
- out_err:
- 	return ERR_PTR(err);
- }
-+
-+#ifdef HAVE_LIBTRACEEVENT
-+struct tep_event *evsel__tp_format(struct evsel *evsel)
-+{
-+	if (evsel->tp_format)
-+		return evsel->tp_format;
-+
-+	if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
-+		return NULL;
-+
-+	evsel->tp_format = trace_event__tp_format(evsel->tp_sys, evsel->tp_name);
-+	return evsel->tp_format;
-+}
- #endif
- 
- const char *const evsel__hw_names[PERF_COUNT_HW_MAX] = {
-@@ -1587,6 +1624,10 @@ void evsel__exit(struct evsel *evsel)
- 	perf_thread_map__put(evsel->core.threads);
- 	zfree(&evsel->group_name);
- 	zfree(&evsel->name);
-+#ifdef HAVE_LIBTRACEEVENT
-+	zfree(&evsel->tp_sys);
-+	zfree(&evsel->tp_name);
-+#endif
- 	zfree(&evsel->filter);
- 	zfree(&evsel->group_pmu_name);
- 	zfree(&evsel->unit);
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index c3e53d320bf5..93b6244ec302 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -59,6 +59,8 @@ struct evsel {
- 		char			*group_name;
- 		const char		*group_pmu_name;
- #ifdef HAVE_LIBTRACEEVENT
-+		char			*tp_sys;
-+		char			*tp_name;
- 		struct tep_event	*tp_format;
- #endif
- 		char			*filter;
-@@ -247,25 +249,17 @@ int copy_config_terms(struct list_head *dst, struct list_head *src);
- void free_config_terms(struct list_head *config_terms);
- 
- 
--#ifdef HAVE_LIBTRACEEVENT
--struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format);
--
- /*
-  * Returns pointer with encoded error via <linux/err.h> interface.
-  */
-+struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format);
- static inline struct evsel *evsel__newtp(const char *sys, const char *name)
- {
- 	return evsel__newtp_idx(sys, name, 0, true);
- }
- 
--static inline struct tep_event *evsel__tp_format(struct evsel *evsel)
--{
--	return evsel->tp_format;
--}
+ 	&suite__openat_syscall_event,
+ 	&suite__openat_syscall_event_on_all_cpus,
+ 	&suite__basic_mmap,
 -#endif
--
- #ifdef HAVE_LIBTRACEEVENT
--struct tep_event *event_format__new(const char *sys, const char *name);
-+struct tep_event *evsel__tp_format(struct evsel *evsel);
- #endif
- 
- void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index afeb8d815bbf..7fc1c36ef2a4 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -489,7 +489,6 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 	return found_supported ? 0 : -EINVAL;
+ 	&suite__mem,
+ 	&suite__parse_events,
+ 	&suite__expr,
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 82a19674a38f..5ec2e5607987 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -54,8 +54,6 @@ static bool test_perf_config(const struct perf_evsel *evsel, __u64 expected_conf
+ 	return (evsel->attr.config & PERF_HW_EVENT_MASK) == expected_config;
  }
  
 -#ifdef HAVE_LIBTRACEEVENT
- static void tracepoint_error(struct parse_events_error *e, int err,
- 			     const char *sys, const char *name, int column)
- {
-@@ -644,7 +643,6 @@ static int add_tracepoint_multi_sys(struct parse_events_state *parse_state,
- 	closedir(events_dir);
- 	return ret;
+-
+ #if defined(__s390x__)
+ /* Return true if kvm module is available and loaded. Test this
+  * and return success when trace point kvm_s390_create_vm
+@@ -112,7 +110,6 @@ static int test__checkevent_tracepoint_multi(struct evlist *evlist)
+ 	}
+ 	return TEST_OK;
  }
 -#endif /* HAVE_LIBTRACEEVENT */
  
- size_t default_breakpoint_len(void)
+ static int test__checkevent_raw(struct evlist *evlist)
  {
-@@ -1066,7 +1064,6 @@ static int config_term_pmu(struct perf_event_attr *attr,
- 	return config_term_common(attr, term, err);
+@@ -311,7 +308,6 @@ static int test__checkevent_breakpoint_rw(struct evlist *evlist)
+ 	return TEST_OK;
  }
  
 -#ifdef HAVE_LIBTRACEEVENT
- static int config_term_tracepoint(struct perf_event_attr *attr,
- 				  struct parse_events_term *term,
- 				  struct parse_events_error *err)
-@@ -1111,7 +1108,6 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
- 
- 	return 0;
- }
--#endif
- 
- static int config_attr(struct perf_event_attr *attr,
- 		       const struct parse_events_terms *head,
-@@ -1303,7 +1299,7 @@ int parse_events_add_tracepoint(struct parse_events_state *parse_state,
- 				struct parse_events_terms *head_config, void *loc_)
+ static int test__checkevent_tracepoint_modifier(struct evlist *evlist)
  {
- 	YYLTYPE *loc = loc_;
--#ifdef HAVE_LIBTRACEEVENT
-+
- 	if (head_config) {
- 		struct perf_event_attr attr;
+ 	struct evsel *evsel = evlist__first(evlist);
+@@ -340,7 +336,6 @@ test__checkevent_tracepoint_multi_modifier(struct evlist *evlist)
  
-@@ -1318,16 +1314,6 @@ int parse_events_add_tracepoint(struct parse_events_state *parse_state,
- 	else
- 		return add_tracepoint_event(parse_state, list, sys, event,
- 					    err, head_config, loc);
--#else
--	(void)parse_state;
--	(void)list;
--	(void)sys;
--	(void)event;
--	(void)head_config;
--	parse_events_error__handle(err, loc->first_column, strdup("unsupported tracepoint"),
--				strdup("libtraceevent is necessary for tracepoint support"));
--	return -1;
--#endif
+ 	return test__checkevent_tracepoint_multi(evlist);
+ }
+-#endif /* HAVE_LIBTRACEEVENT */
+ 
+ static int test__checkevent_raw_modifier(struct evlist *evlist)
+ {
+@@ -629,7 +624,6 @@ static int test__checkevent_pmu(struct evlist *evlist)
+ 	return TEST_OK;
  }
  
- static int __parse_events_add_numeric(struct parse_events_state *parse_state,
+-#ifdef HAVE_LIBTRACEEVENT
+ static int test__checkevent_list(struct evlist *evlist)
+ {
+ 	struct evsel *evsel = evlist__first(evlist);
+@@ -671,7 +665,6 @@ static int test__checkevent_list(struct evlist *evlist)
+ 
+ 	return TEST_OK;
+ }
+-#endif
+ 
+ static int test__checkevent_pmu_name(struct evlist *evlist)
+ {
+@@ -971,7 +964,6 @@ static int test__group2(struct evlist *evlist)
+ 	return TEST_OK;
+ }
+ 
+-#ifdef HAVE_LIBTRACEEVENT
+ static int test__group3(struct evlist *evlist __maybe_unused)
+ {
+ 	struct evsel *evsel, *group1_leader = NULL, *group2_leader = NULL;
+@@ -1078,7 +1070,6 @@ static int test__group3(struct evlist *evlist __maybe_unused)
+ 	}
+ 	return TEST_OK;
+ }
+-#endif
+ 
+ static int test__group4(struct evlist *evlist __maybe_unused)
+ {
+@@ -1813,7 +1804,6 @@ static int test__term_equal_legacy(struct evlist *evlist)
+ 	return TEST_OK;
+ }
+ 
+-#ifdef HAVE_LIBTRACEEVENT
+ static int count_tracepoints(void)
+ {
+ 	struct dirent *events_ent;
+@@ -1867,7 +1857,6 @@ static int test__all_tracepoints(struct evlist *evlist)
+ 
+ 	return test__checkevent_tracepoint_multi(evlist);
+ }
+-#endif /* HAVE_LIBTRACEVENT */
+ 
+ struct evlist_test {
+ 	const char *name;
+@@ -1876,7 +1865,6 @@ struct evlist_test {
+ };
+ 
+ static const struct evlist_test test__events[] = {
+-#ifdef HAVE_LIBTRACEEVENT
+ 	{
+ 		.name  = "syscalls:sys_enter_openat",
+ 		.check = test__checkevent_tracepoint,
+@@ -1887,7 +1875,6 @@ static const struct evlist_test test__events[] = {
+ 		.check = test__checkevent_tracepoint_multi,
+ 		/* 1 */
+ 	},
+-#endif
+ 	{
+ 		.name  = "r1a",
+ 		.check = test__checkevent_raw,
+@@ -1938,7 +1925,6 @@ static const struct evlist_test test__events[] = {
+ 		.check = test__checkevent_breakpoint_w,
+ 		/* 1 */
+ 	},
+-#ifdef HAVE_LIBTRACEEVENT
+ 	{
+ 		.name  = "syscalls:sys_enter_openat:k",
+ 		.check = test__checkevent_tracepoint_modifier,
+@@ -1949,7 +1935,6 @@ static const struct evlist_test test__events[] = {
+ 		.check = test__checkevent_tracepoint_multi_modifier,
+ 		/* 3 */
+ 	},
+-#endif
+ 	{
+ 		.name  = "r1a:kp",
+ 		.check = test__checkevent_raw_modifier,
+@@ -1995,13 +1980,11 @@ static const struct evlist_test test__events[] = {
+ 		.check = test__checkevent_breakpoint_w_modifier,
+ 		/* 2 */
+ 	},
+-#ifdef HAVE_LIBTRACEEVENT
+ 	{
+ 		.name  = "r1,syscalls:sys_enter_openat:k,1:1:hp",
+ 		.check = test__checkevent_list,
+ 		/* 3 */
+ 	},
+-#endif
+ 	{
+ 		.name  = "instructions:G",
+ 		.check = test__checkevent_exclude_host_modifier,
+@@ -2032,13 +2015,11 @@ static const struct evlist_test test__events[] = {
+ 		.check = test__group2,
+ 		/* 9 */
+ 	},
+-#ifdef HAVE_LIBTRACEEVENT
+ 	{
+ 		.name  = "group1{syscalls:sys_enter_openat:H,cycles:kppp},group2{cycles,1:3}:G,instructions:u",
+ 		.check = test__group3,
+ 		/* 0 */
+ 	},
+-#endif
+ 	{
+ 		.name  = "{cycles:u,instructions:kp}:p",
+ 		.check = test__group4,
+@@ -2049,13 +2030,11 @@ static const struct evlist_test test__events[] = {
+ 		.check = test__group5,
+ 		/* 2 */
+ 	},
+-#ifdef HAVE_LIBTRACEEVENT
+ 	{
+ 		.name  = "*:*",
+ 		.check = test__all_tracepoints,
+ 		/* 3 */
+ 	},
+-#endif
+ 	{
+ 		.name  = "{cycles,cache-misses:G}:H",
+ 		.check = test__group_gh1,
+@@ -2111,7 +2090,7 @@ static const struct evlist_test test__events[] = {
+ 		.check = test__checkevent_breakpoint_len_rw_modifier,
+ 		/* 4 */
+ 	},
+-#if defined(__s390x__) && defined(HAVE_LIBTRACEEVENT)
++#if defined(__s390x__)
+ 	{
+ 		.name  = "kvm-s390:kvm_s390_create_vm",
+ 		.check = test__checkevent_tracepoint,
+@@ -2265,13 +2244,11 @@ static const struct evlist_test test__events[] = {
+ 		.check = test__checkevent_breakpoint_2_events,
+ 		/* 3 */
+ 	},
+-#ifdef HAVE_LIBTRACEEVENT
+ 	{
+ 		.name = "9p:9p_client_req",
+ 		.check = test__checkevent_tracepoint,
+ 		/* 4 */
+ 	},
+-#endif
+ };
+ 
+ static const struct evlist_test test__events_pmu[] = {
 -- 
 2.47.0.199.ga7371fff76-goog
 
