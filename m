@@ -1,57 +1,57 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD5B1A4E9E
-	for <linux-perf-users@vger.kernel.org>; Sat,  2 Nov 2024 16:54:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81A91AAE02
+	for <linux-perf-users@vger.kernel.org>; Sat,  2 Nov 2024 16:54:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730566454; cv=none; b=jaPh74yTzJldkiwUj/iw1H4JIR7EwbhmhKejWmw/MD6QfhElq+shmsuoJpP+uZOMgPT3S+Z19sbOA7qi4t+yBJyK5fiR0hHqdc4jgI/eBPrNQ7RJ5mn4eF5by6tdzwbtLg98OidCkf6wp9jYonbWYjJx+nQT9k/yuZz8CBlQ1lA=
+	t=1730566456; cv=none; b=mgLoqfe0W0TBgmMNN9toSXMoTSCD8pbsP8okmfkxAPCm126xCwh3A9W/MbhLzzvLpF7oo8e+m6HP4RitP9M4YLq4BukgZaYaNS3jWFMC7PPnG3y5+Dhdz1ZOZk7v6X33o/5QNU1xwCslz6o2zw+Ot1L7KYIfsX88Np/NmH6+DcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730566454; c=relaxed/simple;
-	bh=0UelXkPPHtu3Lbgh81jbZ3m39fj7o+Lntdf2ZlzEBXE=;
+	s=arc-20240116; t=1730566456; c=relaxed/simple;
+	bh=jqtfqcDozTYMQzjOGe7gtUqSxh4PDuu/Rn5JE1kCsYM=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=YE4iK0iAQDyX/+jCa1NkVcQSs8R69FdTsU1owxuXGHaH30WAbXvExz4NQ81wfCv6arKzTDqpCDBmgTI1ihiXWXYf8OXtGW23lWDSbtQOG5IOJRfFvHXxmcYPgW+YqM4ylDBrzKKjVle1tSfVdxTTN7qOfwT52h904GmNKQ0qaQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K83sUV/5; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=mZCUQBbNLeCzq+2iKT6h2+3/lkGbeeJT8pnmdSVd4jyWTrnY5IQHnTDSCWiDYHTeLLN0VNBhlTcjWAREIluUijyE+9ov4sEAC/vzIqhqbUBvD6QvcNqnIcEklXXViF3Ot0xKV/d7AeAKz89W6g9plr3GxPDOqYMpsrN0FH08XwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QXglA3+L; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K83sUV/5"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ea33aad097so48960897b3.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 Nov 2024 09:54:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QXglA3+L"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e376aa4586so61300507b3.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 Nov 2024 09:54:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730566451; x=1731171251; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1730566454; x=1731171254; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=zD1HnzB3QtGTgZf1hSToxgFVkHLaqYNzGE0Bj2UaIas=;
-        b=K83sUV/53EN9py7s+1GIoYlS/izWgZOovbQve2fdQEYY81AwAIe6uHTCvu9/Ygtrs9
-         1I3GAeXO9e84wGTD0BPPxkDX958bzz99dzKeARQLrjrmDudOE8lpIGp3tSTnYmvk1aIL
-         kvNETdZYckBGIjtGliJ24EKEXmTuxbrjqqK6lBt8FbI0Tl25bxdFAoBdxVx5BYyCHbTf
-         9m8yXMzXZ3qAJ6/QmVtooQylwxNFlOx18pS0iiOghJjRuL0pauQQTyG4oEN/AmkETF7J
-         tuYCGE0G8+UDQYq5Kck3OqHRQHBxC/wbNFj6mRlB26StdM4wU38ztmc5hUZkAJQrtjjV
-         amDg==
+        bh=kmeR/ooJwGRf7dfAO7pFQRGOg67G8nX2zbSdm6KkuuA=;
+        b=QXglA3+LQdT8Q5Kjr7m/cxW9naHt8SY2dhi4+CxBJSiTtxa7OIWppFNN+xI0QubqC4
+         oLio/rDTRDaReCw/2ODvlvclJENjFvJHuHvC8xZpfzzTCsf5we5I2oNhG9W0KEUcO2DN
+         dbFus9nFrZJKymzLvMzontD7vb/qKmQi4KAgmKPBYKkpv9+ow36JUCgMK7Y5PESfKfQT
+         eAkbLUAjwvSF+F2zQ6VGmawptyMCi1eGB+Zx93Gk6UL67DSvAizWgavyMAOX0KZIxfa4
+         vQyRySBKDYosFgoDjY+98IIYD8fFVDbEfqkGQCoGWgcOrh2t8s7ZtAfWkqUozI3j4JOK
+         J0CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730566451; x=1731171251;
+        d=1e100.net; s=20230601; t=1730566454; x=1731171254;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zD1HnzB3QtGTgZf1hSToxgFVkHLaqYNzGE0Bj2UaIas=;
-        b=OEmh80rgNhtp4wgKAL8jL+DbLUVLqFcpHY30SrdE8YagEhLQem9MSBHIRlW9/Ugu34
-         L7axx+UqPtyDdCu8hlHg6s5NfOVlVWoAK8pFCtW+/cgRfVVSDlOzxu58k6u8kqRreHSR
-         FElTnEwBcfHqO1a9jp1YSHwzCMa8l+lP7P5n89MWLptkR1bCY1+bYn9G+iC/HPSaZE5z
-         mqX/QoVErd97c7rkcT+ZbxyAXl+BGmMPLCSbpTiA5lQtVipBRCtHxIZivqNjsoEkEjSh
-         cR6yIWGcmGgLaLG1UbzT0IVSrmUr8L5pWaieM5Sw6G/zHNo9HX7zgafMN9oIQ3tQAY2o
-         dlmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVuBRzAYYajTachFQ9YY7xOAQj4UtD7cS9GKssBIPjuTpLXvleKmX2D0AOGgkNJeGnAKengqBy5TeGUh8YV6wFm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk8AoP5IRkqAU/lBTwYPouzerlXWDn/5mXPxbofCJUtgouKF16
-	GMsHuxXl9uHvNhm/1S1I4BHxcXjkGTFYR6XfjCiUGw8bh+xW9imv8lXpGX1MVh72KO1GQA67cuq
-	sY26XCw==
-X-Google-Smtp-Source: AGHT+IFBaTryzrPh+JXnXKZudoEn30+nNMTh+mTSHhYqrA3l+SHSN0vPByNNg0cmbh4sAu9o+ZzPLiReolI1
+        bh=kmeR/ooJwGRf7dfAO7pFQRGOg67G8nX2zbSdm6KkuuA=;
+        b=GhDR6zzbr2Dvpmw4JQOTMoBgUiof3eNraWrSO4AiRUsLcFHHVEGZ9pybu0hAPKk9tC
+         QQf9g3deq3LLEGLXvUVQpsC6MaSovko5UumfJhDgTDnfL2ufQMzDUc+ZBwMoPCmP6Dov
+         DNNGUBrkTUJpQX346shDl8+hIXGJnj0PLbipYAQBBxX4XAjU3sesi2vo4XD7kr1t7YsQ
+         cH6UpqAXAbrPZ9rAsmkP1nx17KZc2Ho3dWuGpKjJhAtiuvZzPYfgAVRVm9CZJwfmKZCt
+         9s6CSK8p18NLpktAFqmofREP+Z4KEHfK6/W2miWmD8CNOBhdyb2WwajaCYOqEzUnK7cz
+         5m6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVThLC3x7t7QTWxYkM0SnRAhNPW7Fcj83bD2Sl8YQr/E5YTA1vybs42WJMw2YnJDUA8inQw6Bq2E5U0NK41HMlL@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMWuhiM0pz8gN7m1RFR9GIYefKklB3jIEc5Uo3l/yjQ0qEnzJp
+	rXcDnovw1qKGaZx1j2YXeIa77o63G1R8FaSup5UjLunSuCdq55KoDGZI2VMYW2JvuAti7uYi2rD
+	7DLXISA==
+X-Google-Smtp-Source: AGHT+IFq/57/M1dR4TI5sTZFRkJ+7pfYTpS18HTUCeIYozNVMDf4uGtf39Rs8KrRHBzucavqtbOBsbu5v5wx
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:26a5:cdb5:356c:64a4])
- (user=irogers job=sendgmr) by 2002:a05:6902:1801:b0:e30:b89f:e3d with SMTP id
- 3f1490d57ef6-e3328a15f4emr1543276.1.1730566451619; Sat, 02 Nov 2024 09:54:11
- -0700 (PDT)
-Date: Sat,  2 Nov 2024 09:53:55 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:45c5:b0:6e3:b93:3ae2 with SMTP id
+ 00721157ae682-6ea3b88e882mr2411427b3.1.1730566453754; Sat, 02 Nov 2024
+ 09:54:13 -0700 (PDT)
+Date: Sat,  2 Nov 2024 09:53:56 -0700
 In-Reply-To: <20241102165400.75785-1-irogers@google.com>
-Message-Id: <20241102165400.75785-2-irogers@google.com>
+Message-Id: <20241102165400.75785-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,8 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241102165400.75785-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.199.ga7371fff76-goog
-Subject: [PATCH v2 1/6] tool api fs: Correctly encode errno for read/write
- open failures
+Subject: [PATCH v2 2/6] perf trace-event: Constify print arguments
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -81,45 +80,53 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	"Steven Rostedt (Google)" <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Switch from returning -1 to -errno so that callers can determine types
-of failure.
+Capture that these functions don't mutate their input.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/fs/fs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/trace-event-parse.c | 4 ++--
+ tools/perf/util/trace-event.h       | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index 337fde770e45..edec23406dbc 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -296,7 +296,7 @@ int filename__read_int(const char *filename, int *value)
- 	int fd = open(filename, O_RDONLY), err = -1;
+diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
+index f0332bd3a501..6f11ca5513e3 100644
+--- a/tools/perf/util/trace-event-parse.c
++++ b/tools/perf/util/trace-event-parse.c
+@@ -99,7 +99,7 @@ unsigned long long read_size(struct tep_event *event, void *ptr, int size)
+ 	return tep_read_number(event->tep, ptr, size);
+ }
  
- 	if (fd < 0)
--		return -1;
-+		return -errno;
+-void event_format__fprintf(struct tep_event *event,
++void event_format__fprintf(const struct tep_event *event,
+ 			   int cpu, void *data, int size, FILE *fp)
+ {
+ 	struct tep_record record;
+@@ -116,7 +116,7 @@ void event_format__fprintf(struct tep_event *event,
+ 	trace_seq_destroy(&s);
+ }
  
- 	if (read(fd, line, sizeof(line)) > 0) {
- 		*value = atoi(line);
-@@ -314,7 +314,7 @@ static int filename__read_ull_base(const char *filename,
- 	int fd = open(filename, O_RDONLY), err = -1;
+-void event_format__print(struct tep_event *event,
++void event_format__print(const struct tep_event *event,
+ 			 int cpu, void *data, int size)
+ {
+ 	return event_format__fprintf(event, cpu, data, size, stdout);
+diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
+index bbf8b26bc8da..084068fb36a1 100644
+--- a/tools/perf/util/trace-event.h
++++ b/tools/perf/util/trace-event.h
+@@ -39,10 +39,10 @@ trace_event__tp_format(const char *sys, const char *name);
  
- 	if (fd < 0)
--		return -1;
-+		return -errno;
+ struct tep_event *trace_event__tp_format_id(int id);
  
- 	if (read(fd, line, sizeof(line)) > 0) {
- 		*value = strtoull(line, NULL, base);
-@@ -372,7 +372,7 @@ int filename__write_int(const char *filename, int value)
- 	char buf[64];
+-void event_format__fprintf(struct tep_event *event,
++void event_format__fprintf(const struct tep_event *event,
+ 			   int cpu, void *data, int size, FILE *fp);
  
- 	if (fd < 0)
--		return err;
-+		return -errno;
+-void event_format__print(struct tep_event *event,
++void event_format__print(const struct tep_event *event,
+ 			 int cpu, void *data, int size);
  
- 	sprintf(buf, "%d", value);
- 	if (write(fd, buf, sizeof(buf)) == sizeof(buf))
+ int parse_ftrace_file(struct tep_handle *pevent, char *buf, unsigned long size);
 -- 
 2.47.0.199.ga7371fff76-goog
 
