@@ -1,83 +1,79 @@
-Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB1481E47BC;
-	Fri,  1 Nov 2024 21:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BFD191;
+	Sat,  2 Nov 2024 00:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730497385; cv=none; b=PmmGO2WY9GCUzt8IMTAod1S7qrogmYkRk0cBQCULqZZKYNJ1PCKf+OvWj6Xr2NwYA3Vxd3MNnTde8il1QbmkyII8gGT6sO35/WIWnnU5knSVVdBs6z/vITbvcwny44s4OW9zmh+4AVF+93TvxvtyRVrsROQNF2J3/B+4ROacIFQ=
+	t=1730507887; cv=none; b=tWps2T7Cbk3+GTpvaWHQfXP+SFtVkmjYqbZtiXoed+fU1b3slT7daw3cN+hlQ6DzVF8EVhVL4dkw0jxnJ/c8s7sLaafc9UOibh5miuG+xDoSrnSlW2yfz7RA/m3R4IAdLVm6FDlaZeGIAZCo1PofevogjWPDBc5Iiq7rsSioNgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730497385; c=relaxed/simple;
-	bh=LskIb1qIQx1ILGa3bL59/zRaBlbeR2lnNshvYuMbgZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NQdyaPtWZJJxkfPgFfD5U//fpQZF4msibvX62AHsfMVC4QAh6SHrV/aqyTUPDT0lGP/1fJacN4AjsC0uhpNoRRO8D7vcQCzNHXIu3AnX073VONwFqrxB09j9SFhY6FbpUqsWPpVEhJFl9LyAj/sN7/srzhFCPN9xdyIZiCvhCyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 4A1LZMBI025732;
-	Fri, 1 Nov 2024 16:35:22 -0500
-Received: (from segher@localhost)
-	by gate.crashing.org (8.14.1/8.14.1/Submit) id 4A1LZJNr025728;
-	Fri, 1 Nov 2024 16:35:19 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date: Fri, 1 Nov 2024 16:35:18 -0500
-From: Segher Boessenkool <segher@kernel.crashing.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-        Jens Remus <jremus@linux.ibm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
-Message-ID: <20241101213518.GX29862@gate.crashing.org>
-References: <cover.1730150953.git.jpoimboe@kernel.org> <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org> <CAEf4BzY_rGszo9O9i3xhB2VFC-BOcqoZ3KGpKT+Hf4o-0W2BAQ@mail.gmail.com> <20241030055314.2vg55ychg5osleja@treble.attlocal.net> <CAEf4BzYzDRHBpTX=ED3peeXyRB4QgOUDvYSA4p__gti6mVQVcw@mail.gmail.com> <20241031230313.ubybve4r7mlbcbuu@jpoimboe> <20241101190908.GV29862@gate.crashing.org> <20241101193305.afwfopg4ryrrgxfb@jpoimboe> <20241101193510.53xj5ybz6vyyqb37@jpoimboe> <20241101194800.wmvjljs7uxcuriem@jpoimboe>
+	s=arc-20240116; t=1730507887; c=relaxed/simple;
+	bh=JFK1OHVqTofEDq3leWsTvT03TNJPeYi4cNAO7FLcsmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HePn47fGifjYi8WWHEZO4Fuyy5vVPChMOoNHHGCXlGjHLPB2h/h+wvdAovSrwZ6SHloAFb5uBt+PrOemy5PUv6GSLq95QFbTpd2NZ7rwRc2zfn1iilExoe47LO1X0TiKl9BXBg25P5mFMoZrarl0oIoQ8Mp9mANSzFMxcZg3wq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZAeSHjuF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZAeSHjuF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235ADC4CECD;
+	Sat,  2 Nov 2024 00:38:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730507886;
+	bh=JFK1OHVqTofEDq3leWsTvT03TNJPeYi4cNAO7FLcsmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZAeSHjuFr/X2PgBrC0GfOEsdFPZxqJBmAWFhVXHBgM3PGf7XjVv1tSYNKnDw+uQgq
+	 qFVkobVEevn7EAuCMxmdjqYa2cWjdlJVswgtuZfZoJpXrHZ69YuaKZRrPL5YWFh8dZ
+	 CCYAV31482ubwjKopaSTbOmBtxmHkqHl/g8lG0saeDJo6OqdSRhkIgILl9lk3T4ez8
+	 92ZzOzWNs3eQMeoV8wN6PIGYI1oP9q/t8yBIhJAKD22kjVXdXBvJngdN0NGQCx2LTK
+	 n2DMLz7la9GdqttmpeCafpiFxQjHbhxt3KJIrYJDj28FkVH5hY9fl1Fz0lP1ldWL8c
+	 Wy3IgO3bX2bmA==
+Date: Fri, 1 Nov 2024 21:38:03 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Benjamin Peterson <benjamin@engflow.com>
+Cc: Howard Chu <howardchu95@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] perf trace: avoid garbage when not printing a trace
+ event's arguments
+Message-ID: <ZyV0a6e_46R9pmQw@x1>
+References: <20241101005338.5846-1-benjamin@engflow.com>
+ <20241101172714.84386-1-benjamin@engflow.com>
+ <CAH0uvohNO517GAD7XH-VvUvU+dPdeZBKDw0Teij50sAPSe9sCQ@mail.gmail.com>
+ <ZyVIgKcAuqZSYYB1@x1>
+ <CAEmfU+ufKWoJLvhksPzADMKkbinV37Tv1KODU6RdJfBM9Juy7w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241101194800.wmvjljs7uxcuriem@jpoimboe>
-User-Agent: Mutt/1.4.2.3i
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEmfU+ufKWoJLvhksPzADMKkbinV37Tv1KODU6RdJfBM9Juy7w@mail.gmail.com>
 
-Hi!
+On Fri, Nov 01, 2024 at 02:41:46PM -0700, Benjamin Peterson wrote:
+> On Fri, Nov 1, 2024 at 2:30 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > I haven't tested it yet, just in my mind :-)
 
-On Fri, Nov 01, 2024 at 12:48:00PM -0700, Josh Poimboeuf wrote:
-> On Fri, Nov 01, 2024 at 12:35:13PM -0700, Josh Poimboeuf wrote:
-> > On Fri, Nov 01, 2024 at 12:33:07PM -0700, Josh Poimboeuf wrote:
-> > > On Fri, Nov 01, 2024 at 02:09:08PM -0500, Segher Boessenkool wrote:
-> > > > On Thu, Oct 31, 2024 at 04:03:13PM -0700, Josh Poimboeuf wrote:
-> > > > > Actually I just double checked and even the kernel's ELF loader assumes
-> > > > > that each executable has only a single text start+end address pair.
-> > > > 
-> > > > Huh?  What makes you think that?  There can be many executable PT_LOAD
-> > > > segments in each and every binary.
-> > > 
-> > > Right, but for executables (not shared libraries) the kernel seems to
-> > > assume they're contiguous?  See the 'start_code' and 'end_code'
-> > > variables in load_elf_binary() load_elf_interp().
-> > 
-> > Typo, see load_elf_binary (not load_elf_interp).
-> 
-> Hm, actually AFAICT that's only for reporting things in sysfs/proc.  So
-> maybe it's assumed but not really "enforced".
+> > The patch looks ok and seems to fix a real problem, my only concern, a
+> > pet peeve, was that it, in addition to fixing a real problem, did an
+> > unrelated change, the "Remove the return value...", that part looks like
+> > a distraction, something that shouldn't be there.
+ 
+> In my mind, it was related because both the bug and the odd return
+> value arise from incorrect counting of the number of written bytes.
 
-Yes, this is copied to mm->start_code (etc.)  This isn't used for
-anything very important it seems, it seems to be a leftover from when we
-only had really simple binfmts?  For a.out it did actually make sense,
-for example :-)
+> Obviously, the fix is what I care about, so feel free to strip out the
+> return value change on import, or I can resend.
 
+The point is to try to focus on the fix, and do just what is needed for
+that. Everything else ends up being a distraction.
 
-Segher
+- Arnaldo
