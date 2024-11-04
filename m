@@ -1,144 +1,111 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11B71D5CC2
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 22:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1051AAE27;
+	Mon,  4 Nov 2024 22:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730757822; cv=none; b=llcHEvQ4MStTigxq0PYpa9mCY0sXVfUpDjMZPr5wOkwrdzEY/E4p3RGtlXdMts5o2RHytLFjWv26kbQLWLvm5hqjxxfXJRjKQCUcYKkUZwOjRjFbCLYQv3B0a+QBr046qEXxBASso666B+u0Qr21w32z6b6NUznFunHivq1JEmo=
+	t=1730758184; cv=none; b=aQ4Kf9d0J0m8Uj0muqv+ymyT1/tubA1qTE2PqUZzvSj6BX7J5n4Gtzp+iVFtdpGvlXTxxXoNAklCRG+FlPn1J4o1Kng3iIMU4Y06sygQ6SvbrzuVM3BLQkcGySrt+rwq7PY/o5+MI4cpT1PjLt3TvRsEX2EbRlxzAyzvytlp2pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730757822; c=relaxed/simple;
-	bh=FwdJ/tZnq5Q1ZNjaalXxz9pm9mHtJsnsrILgdEWNMTI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YtapH9VJOyYMQtTUh+H/66v20H7n14bcYWaNabXuZtjhUYMizcOBQiS4U6LD2riQGXL0fIciJMhiCKIxVwsN68HuFcM4x6z0pa1sJEmwHAcX9vFCmMWuyOVmrIb1FJCORAxvW20+bMy0Jtq4vkW0TWZmdmB989CoR1blgDtM5Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dXWibLQp; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1730758184; c=relaxed/simple;
+	bh=Hd/GX4rs/QFp7jmf45XPlXgJZu+CdI3P4iDkuE5QVMg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nwMWp/slQjEeFVGBiYTideBiaUQF95dZlxrdGfPNJ2ibsf8qplXc3DTAxxvpov1sOrDSZT6e8FLVcFmY2GeAn6cd19HBnGatbReCLlMcKWhiUYkvG07cCe6SUD7NV1H6fkJVnwQN87rz71iIQSCIP+ev4KzaH/GzYKaCPmjRTN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfRF+nbt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dXWibLQp"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20c87b0332cso27265ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 14:03:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730757820; x=1731362620; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FwdJ/tZnq5Q1ZNjaalXxz9pm9mHtJsnsrILgdEWNMTI=;
-        b=dXWibLQpNrIWrk0HRxsj0Sj29SkxNk7/doQpfI212XJNwtsrHMzl61g/geVopl2R1x
-         flj1ceS6uTShJF9f/mdhwjzmuyk35lb08eLtTfkHbElqOyIF0KKiKMp/gRFAPoyA0BUX
-         hyxrEvsPMHmAZTs5jIZ9Jehwy43mt1xnV83TjkZZq125rdhjFR/07hpJQmrlzIn1CR2C
-         aw5ASygB8cHqXPC3udkXaRpqvMwSFA+VYnL52Fq5ZDyYSRqiwi2CcafJW2dL1DPbp5Uw
-         fPOGY03xMMuRsQRrL5LsVu8efP8xkJnCYjJeYej05xGFa0HBoBgSFZcETtfz9XxlIuiu
-         1mUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730757820; x=1731362620;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FwdJ/tZnq5Q1ZNjaalXxz9pm9mHtJsnsrILgdEWNMTI=;
-        b=FwBHV/L01NZ2a3k+r7RfV+zy4y0NW1MGYi2Siu5/ljyT8dRfR78G57QiPZWleRCsOE
-         P1GxTD591MdlSNhw09qmqVsAA8mHV8xJJuGcNiWuY9R4sDXP+2uDk4GrBiw/jRjsjmi7
-         5X3vm/zH/XQzlHTlPoxU2Mu+p4mBt+jSEUnZYC6d+VNGSaWMZm/TCo7AM0ZvWkgHfKby
-         Dye+Kg89yaWtP2BPDdCd/UtvroKFAzakAJud3/c2k3WwUkxMTaSlJwcnOWy8PwH0o/65
-         Cgl8ENVcjI55oVTisaU/U8WIcM3kMX+ik+/YjDh2RnNoOhxemaK0GyjeeX2maORmq++x
-         EQqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVp7iIbI1MuYQEvXjHbwiM2toWiIdof/S1MoHefGhaqyukKiJUpjFb1s4Bnz8bam1PFx8xELB9EfiarV4TPNQLU@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRzhfxqJmaOyyMGcaHAekWxp6cQfKK9R0PRH+mfSP9lY0TNpSa
-	Vy1Ah/ms6cuLki53cMucgsIMVduIOD46aAYDfwLXMU6lTeOvs0F7rmTJWHPnYdHaEG2hhA9G7Vr
-	IJGU0CR1FPg62TfJNbjGLLSRtO6dkuNj9C8CU
-X-Gm-Gg: ASbGnctOr9fOBhYa76S5nrWqoybKcisEPBFx6HCHUSMvK+ZYalgFirB2za8GeKw+oV0
-	I0KB2OlNyWMpE7og/81VAJmL+Suvivec0wg+0GBZnwfZ7teZ3cItS7pGtzMQjopY=
-X-Google-Smtp-Source: AGHT+IEti60SDL7RHxI+cAhb1vGKCJSZIYIvkK03gIl3UEiSV24cOOJW04C/9MY0z0qdxUSpneeeMi3ERfOoxdjdYyo=
-X-Received: by 2002:a17:902:c401:b0:206:b7b2:4876 with SMTP id
- d9443c01a7336-2115e2cb7c5mr1245345ad.20.1730757819913; Mon, 04 Nov 2024
- 14:03:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfRF+nbt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0026BC4CECE;
+	Mon,  4 Nov 2024 22:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730758183;
+	bh=Hd/GX4rs/QFp7jmf45XPlXgJZu+CdI3P4iDkuE5QVMg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MfRF+nbt5tPvE+BClZDGgRrksornQrxb8nU0LGUXjEB8funSyWG7zYErrKnhfY/mt
+	 MxhJZdKEnfmejkxjkP3x6sEB+EMJomO2Okcb6+W9YkrvQ4ayRf9RQ3ikiRl6ARIZ5/
+	 W4XMq9rcP+TFyu6e8VuQnpCPJZyBZugwULMmDSED4SxORju4o7S7EGsF66baqqgJzy
+	 iCkQBFtq5lj341w9qhdpqzhOHY9t7RgXENemJ2S6zmxFjXcnh7cTB2CpAueAInrCIz
+	 +aLPNAe/xVKraFeMdMcZs0SBzdDs6NKn+iHuzvmIKZf3sLO8m6AIBNVeSwzDAsr3GH
+	 Usd/9JbHMShJA==
+Date: Mon, 4 Nov 2024 14:09:40 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v5 06/21] perf script: Move find_scripts to
+ browser/scripts.c
+Message-ID: <ZylGJF7Ux3JdJllo@google.com>
+References: <20241031014252.753588-1-irogers@google.com>
+ <20241031014252.753588-7-irogers@google.com>
+ <ZyPX7ayIO4teziDX@x1>
+ <CAP-5=fVgJu8BJWFVUkCy1Zsi3piTPdV-GXL1bTpWZeO=nm=jrg@mail.gmail.com>
+ <Zykk2MJ4REGCaqVw@google.com>
+ <CAP-5=fXQpej43wxEtMYFbxdofHtUi98X68W4AaR9UCfsbDir5A@mail.gmail.com>
+ <ZykxD41c6gWQoIrQ@x1>
+ <CAP-5=fWf8guTgqwfrrct3AGYDC=Lb1Oxo7kXU_x1yEr5urFSkQ@mail.gmail.com>
+ <Zyk19KgzI7ybPkQ4@google.com>
+ <CAP-5=fXj1-wqt+Bs-0ZypRsaZw2VP0qyKdeeRHpjUD5BwO9OBg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241104-perf_syscalltbl-v1-0-9adae5c761ef@rivosinc.com>
- <3b56fc50-4c6c-4520-adba-461797a3b5ec@app.fastmail.com> <Zyk9hX8CB_2rbWsi@ghost>
-In-Reply-To: <Zyk9hX8CB_2rbWsi@ghost>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 4 Nov 2024 14:03:28 -0800
-Message-ID: <CAP-5=fUdZRbCp+2ghEUdp+qJ1BuMDuTtw9R+dFAaom+3oqQV_g@mail.gmail.com>
-Subject: Re: [PATCH RFT 00/16] perf tools: Use generic syscall scripts for all archs
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Christian Brauner <brauner@kernel.org>, guoren <guoren@kernel.org>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXj1-wqt+Bs-0ZypRsaZw2VP0qyKdeeRHpjUD5BwO9OBg@mail.gmail.com>
 
-On Mon, Nov 4, 2024 at 1:32=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.co=
-m> wrote:
->
-> On Mon, Nov 04, 2024 at 10:13:18PM +0100, Arnd Bergmann wrote:
-> > On Mon, Nov 4, 2024, at 22:06, Charlie Jenkins wrote:
-> > > Standardize the generation of syscall headers around syscall tables.
-> > > Previously each architecture independently selected how syscall heade=
-rs
-> > > would be generated, or would not define a way and fallback onto
-> > > libaudit. Convert all architectures to use a standard syscall header
-> > > generation script and allow each architecture to override the syscall
-> > > table to use if they do not use the generic table.
-> > >
-> > > As a result of these changes, no architecture will require libaudit, =
-and
-> > > so the fallback case of using libaudit is removed by this series.
-> > >
-> > > Testing:
-> > >
-> > > I have tested that the syscall mappings of id to name generation work=
-s
-> > > as expected for every architecture, but I have only validated that pe=
-rf
-> > > trace compiles and runs as expected on riscv, arm64, and x86_64.
-> > >
-> > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+On Mon, Nov 04, 2024 at 01:06:35PM -0800, Ian Rogers wrote:
+> On Mon, Nov 4, 2024 at 1:00 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > Thanks for doing this, I had plans to do this myself, but hadn't
-> > completed that bit so far. I'm travelling at the moment, so I'm
-> > not sure I have time to look at it in enough detail this week.
+> > On Mon, Nov 04, 2024 at 12:48:01PM -0800, Ian Rogers wrote:
+> > > Namhyung was asking that the c&p of code be 1 patch then "add new
+> > > changes like using openat() on top". That is:
+> > >
+> > > patch 1: add is_directory_at - introduce the 2 line helper function
+> > > patch 2: move the code
+> > > patch 3: update the code to use is_directory_at
+> > >
+> > > patch 2 is known broken as patch 3 is fixing it.
+> > >
+> > > Hopefully this is clear.
 > >
-> > One problem I ran into doing this previously was the incompatible
-> > format of the tables for x86 and s390, which have conflicting
-> > interpretations of what the '-' character means. It's possible
-> > that this is only really relevant for the in-kernel table,
-> > not the version in tools.
-> >
->
-> I don't think that is an issue for this usecase because the only
-> information that is taken from the syscall table is the number and the
-> name of the syscall. '-' doesn't appear in either of these columns!
+> > Actually I don't care about the patch ordering.  My request is not
+> > to break build and just to separate different changes out. :)
+> 
+> So, patch 2 can't be separated from patch 3 - are we agreed? So we
+> squash patch 2 with patch 3. Patch 1 is trivial and fails to meet the
+> bar of a meaningful change, so we squash that. We end up with this
+> patch. If there's a later revert and a dependence of the 2 liner, just
+> don't revert that part of the change. We've never had such a revert so
+> it is hard to see why we need to generate so much churn because of it.
 
-This is cool stuff. An area that may not be immediately apparent for
-improvement is that the x86-64 build only has access to the 64-bit
-syscall table. Perhaps all the syscall tables should always be built
-and then at runtime the architecture of the perf.data file, etc. used
-to choose the appropriate one. The cleanup to add an ELF host #define
-could help with this:
-https://lore.kernel.org/linux-perf-users/20241017002520.59124-1-irogers@goo=
-gle.com/
+As I said the patch 1 should be the c&p and no need to introduce
+is_directory_at() before that.  Why not doing
 
-Ultimately I'd like to see less arch code as it inherently makes cross
-platform worker harder. That doesn't impact this work which I'm happy
-to review.
+ patch1: move the code
+ patch2: add and use is_directory_at() + openat()
+
+?
 
 Thanks,
-Ian
+Namhyung
+
