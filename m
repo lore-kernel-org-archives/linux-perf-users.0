@@ -1,102 +1,71 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3006A18BBB6
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 10:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9CAF13049E
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 10:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730715959; cv=none; b=X5F9vG1PT3ztFF5Eh6cenhhOoB2KHwsw/Zv6SIzVXe4Ty39b/ykos/tqvinqyxXvUj3qSHMDxinOfW9v0pN1cu2A22dn9J0XjFbYCkWSsT3ArLU/LRM222gKYZgZYOzqyk7H6MExreLyMIrZo9MDr8rvwVqljhE9UeyRRO4Jmy8=
+	t=1730717265; cv=none; b=t8lwOz6zC+abN9Rb48t6no7jOYvln6Jpf2yN2CbBqkW57Ip5ZAm3PozNHtRZzcSRyD+NuXHKBgVE01E6Nro4SzCdsX2nrIHAEDVsA+CBUT62keeqwMhUO2GYnmKZOeQQEXwTe+0hd+Tv2hImvWB7rFxvBRXbjUQalVY5M0Li3lU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730715959; c=relaxed/simple;
-	bh=IAytfkWaxSpCWWNS2mgqR2jRA3ZfShQpRdFffHUhKrQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=gNj6xRxGaEJGuWqIFGg097UIZ8ThotJdPLJOzsbopcuJa54fn7UVokDkwYjKxPNo8D/xHIlQsKfQc4GIOUJ2qPv0nrFr0xQ4lpL+agXTsyET0EuoUaJwVD1dDqlWKKU5WxWij/M6vFZRQiypqziQ9dFjCCfqZxy3WFX+MI5dJ/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RiDLQWTc; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RiDLQWTc"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4314c4cb752so35228195e9.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 02:25:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1730715955; x=1731320755; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gcHX9y8K+xEl/vxDS1h1dNPYSKOS/f3blhvp7DupZd4=;
-        b=RiDLQWTcU/Ki2kfnN1ciB1syv5Sy8AGrjynPjFC/fj9IWwW84kk//C3k8BynS9xWxA
-         at7kKjHjyaqDmdk0PdWMB5rUrseiyNsplSv31syGUpzwn4JSkNmwhrj4eH3YtsgyDJPo
-         VZ6cWZWY7E8tS7MxFGceMGt/pivtkKOh3xI+9XDlnmJGI8RC7jO3jYT+qG+TCbdPNFkw
-         hvI4b0axLGuDgmlK3ejDTX+ZXHK2mMm7fLiMR87ryrj3cpe6fTR0V3YsfZ5n6zluF+6b
-         Mf31IeTod5kE3WhLXogeG10jszaz3Q3Y/Uk69+FRY6AWjvWplijz4Suc2bWpNiloLcUM
-         xA9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730715955; x=1731320755;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gcHX9y8K+xEl/vxDS1h1dNPYSKOS/f3blhvp7DupZd4=;
-        b=NHboj+tStiyt2fUtdA9fp8vutKpBI7QlyGj3SqfFZ1eMxC+E9ThD0WrhfkTGcrUL1S
-         Cc4g29utzC6cOR5kP+flTUK9jpc04co2be9gEARIJWTMcRwP2d4DOmWiGBkIMtJ8pnDC
-         R9TZ6L2HMCNdKRWf8ro4ApnoDxXL9MECR+8p+9mbP1vsuXMwnlfIgqDHAr0XrtCjHq4u
-         hhjSi0azQeW/oTByWPjoBzsfshWPTVlRidRRE5dEJ1SJ1QSaSbbybyf8Ih59XwFpuYV7
-         yEp+ExiV6ZJAx2vnjUsI8IF1BmnuhGShTrgkk4kmyjG76Xc4ApM0Ii3V1mfCbhLP3p90
-         vECQ==
-X-Gm-Message-State: AOJu0YxSkvJZ/BPDMbZ3of7kI3VcwGPKhods/opQhCXFIIqV4KfLKI6Q
-	mH+Wj8VjFJ34O0EGrYTEx8C0d58i/cOyqw5mdRItjJki4XOZuGRSzvRU7309N5Q=
-X-Google-Smtp-Source: AGHT+IGUpMoqoZLiDfOgxeJUAm8ZHBb1rIbbYA6EvrIoyUjQ5itWNImJ5Lp2//6sqt/sp10mJDiOTA==
-X-Received: by 2002:a05:6000:1867:b0:37d:4d80:34ae with SMTP id ffacd0b85a97d-381be7adff4mr13159726f8f.4.1730715955465;
-        Mon, 04 Nov 2024 02:25:55 -0800 (PST)
-Received: from [192.168.68.163] ([145.224.66.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c11898easm12824851f8f.117.2024.11.04.02.25.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Nov 2024 02:25:55 -0800 (PST)
-Message-ID: <b53d4d92-7d2d-4bb2-b9b4-9ecf353cf80f@linaro.org>
-Date: Mon, 4 Nov 2024 10:25:53 +0000
+	s=arc-20240116; t=1730717265; c=relaxed/simple;
+	bh=sTly4Xc9qOsAuE7K2i+dDte2HmBHd+l/rda/36lD1tI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SefNFdWx00pG4rdY4RT+mX5WzPFXnF2Hp50mr/mD3pxrpXBmYfywZb+ff8BlhpCY75JXUHNqYgOA3LvwoMg4V6QkKKdKNa2XTYBUqQt7j8Jqwv8R0DWnJ2Tiexa/HFk5PrziPsULZ+Jd2qj1ivf1xHNsCtD9eUiDjkj4o7hbQAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12D4FFEC;
+	Mon,  4 Nov 2024 02:48:13 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE4283F66E;
+	Mon,  4 Nov 2024 02:47:42 -0800 (PST)
+Date: Mon, 4 Nov 2024 10:47:41 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Yicong Yang <yangyicong@huawei.com>, yangyicong@hisilicon.com,
+	acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, amadio@gentoo.org, linuxarm@huawei.com
+Subject: Re: [PATCH] perf build: Add missing cflags when building with custom
+ libtraceevent
+Message-ID: <20241104104741.GA14610@e132581.arm.com>
+References: <20241024133236.31016-1-yangyicong@huawei.com>
+ <ZyF5_Hf1iL01kldE@google.com>
+ <a8143fa2-d7e2-48d7-5c9b-2c00e2adbe9c@huawei.com>
+ <20241030110458.GD24446@e132581.arm.com>
+ <ZyXFX-8SnakeuZrl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Can perf record make buildid-mmap the default
-To: Ian Rogers <irogers@google.com>
-References: <CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com>
-Content-Language: en-US
-Cc: linux-perf-users <linux-perf-users@vger.kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZyXFX-8SnakeuZrl@google.com>
 
+On Fri, Nov 01, 2024 at 11:23:27PM -0700, Namhyung Kim wrote:
 
+[...]
 
-On 03/11/2024 6:03 am, Ian Rogers wrote:
-> Hi,
+> > > Checked how we handle with libtracefs currently:
+> > >  ifeq ($(feature-libtracefs), 1)
+> > >     CFLAGS +=  $(shell $(PKG_CONFIG) --cflags libtracefs) # we've added the cflags from pkg-config
+> > >     LDFLAGS += $(shell $(PKG_CONFIG) --libs-only-L libtracefs)
+> >
+> > The libtracefs.pc file claims requesting libtraceevent, as a result, it
+> > returns the header paths for both libtraceevent and libtracefs:
+> >
+> >   $ pkg-config --cflags libtracefs
+> >   -I/usr/local/include/tracefs -I/usr/local/include/traceevent
+> >
+> > I checked the packages libtraceevent-dev and libtracefs-dev and either
+> > can be installed independently. Therefore, it seems to me that this
+> > patch is correct for finding the traceevent header path, with no
+> > dependency on tracefs.
 > 
-> Without command line flags perf record will post process samples
-> adding DSO buildid events with samples it will also populate the
-> buildid cache. The --buildid-mmap option is superior as mmap events
-> have buildids within them and the buildid cache isn't generated. As
-> buildid-mmap has been available since 5.12, a full major release, can
-> we just make its defaults the defaults for perf record?
-> 
-> Thanks,
-> Ian
-> 
+> I'm ok with the patch itself.  Can I get your Acked-by, Leo?
 
-There's already the perf_can_record_build_id() check when it's 
-requested, so seems easy enough to have it on by default only when it's 
-supported.
+Yes.
 
-Ubuntu 20 is still in support and on 5.4 kernel so there could be a 
-small potential to break someones workflow if we had it on unconditionally.
-
-
-
-
+Reviewed-by: Leo Yan <leo.yan@arm.com>
