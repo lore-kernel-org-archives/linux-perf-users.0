@@ -1,215 +1,225 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EE71C8767
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 21:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168891FA263
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 21:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730754146; cv=none; b=oPUDpnoPX3IhPM/+cDISERumjsFV6pL46AvnY+Jk/7WTYpMo9eGyOkUrB3A5dhXu9T7ofv/dYQsYncNC1RaDV4wMBpYtvkerarCS/Ed208PNOBp1b+eWHfAerFFAU3yd+QaUmiKThgoBOg//+QKf+L/STVset9ppMPhiw6RYKes=
+	t=1730754406; cv=none; b=HDWB8nCPFfflNzFqQqRktqgcQqvmCNO4Vy7eN179dfUEkiVXMnL+BnexkAieeHNOdMrGsh8TLZbx0PXU4eDJPP1icbAuzzx31MiTu/xR8aaGgqvTDKOj4L6QRWKKPEdLE+FCyFgfbNJyg7jnUxf0v5NsnbSv8OIrKT2ogqAOXL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730754146; c=relaxed/simple;
-	bh=mQRAzqLwZxZBpeCMeLt10YkglB34o54AhZJV0mqr2pE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=foViyKcgnKCNLULx8bcJjUEzwZZi4Kk04ILJ/S79G+twX+ifSLBEF+SN7D7W3YopPWvvzOvNAWElwDgPDbTHUHZdZE0RAKDjlaXphMCrEvx3xN/irmURsOdoGtIvxOIU55ndKYmKijzb6IFCYJj7wTbSvczGQGDeMvP2638aMag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t520OVkU; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1730754406; c=relaxed/simple;
+	bh=5/i4aYa+bDmYTyC5+2MiIF90lU7UD7sa8a5447uXxv8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LyvMfS5bDjwNA8U14BnN59lTIr1gic9ZJv0MPNxrDdhXOmkaLNakNXuky36XfMTjaJLpbhZtJE2fMAwWGAYyQkuwj66bZA869Oeaif6JXBe/ZyAG8zHVG0EPdqddQXrv23PNMeOB25BhxxIndrkgOM5FbrWOGnq6ZVuT7xsnwC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=z1yOEn+f; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t520OVkU"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3a6c3bdbebcso19295ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 13:02:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="z1yOEn+f"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-720c286bcd6so3701476b3a.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 13:06:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730754144; x=1731358944; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uJ68oLt1BvdJpTXqYSNLPbv4o5eNZm7+qs/QrLliEOY=;
-        b=t520OVkUCBOMwlYSsL63sYA0oQD3ZN9lpY1eO9WfGMp6f4EQ4GZBzDIX6i0YWh8X0q
-         lIgndaVQoD5qbPFFC6YiMaT/H+HtxjB8ltrBf9hbk1APg/n/ee18Rjet2zE3Ga6XWWnI
-         gP5LLfFoQXg9v6aeqegUVCXhiIeFS51k4lMkkQDzI+XZrW7vMiC/2R+hRKGM9oLlr/zW
-         UTbBgNRzdh3rHcS/GRx6fR5LD/lsqPztXi/krWu6y7sF/u5olDSSBaZ4nujosehaP695
-         ZNJeNv8cnYguBU0ZBoLTMgWqQA9o1F3cunMkmtvoQV7jQWE61FK3rN7oNwF2yd0avxnb
-         aZLQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1730754402; x=1731359202; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4V9Yv2fAvOK/vMiP82IoKQz/aaC4GtvY8C8de1dPo6U=;
+        b=z1yOEn+flhKXg8I1JSj4uCDyhQcr++5qhPuW4e9nTtRUhby6Iefe42ANg2SspvsKfv
+         KaIcgOL45jgrnR9I0HEBcgjbTjTCodEvlvwTY+pH3AUb+laFPqyJGEd1YN6P3W5KGxt3
+         RUycyDy9/OGrKHnqqUKQSUkliPPfIEF5ipHIpUq/BO84d/EXAk4Thpdaj3y41xNkPVtc
+         0KMckUeSErZiXjnMPLlrGGPHXCg9wJhlHUUu6YrXyjhMcZNo4zX5SQHZ/mfoQ8ZKMH0V
+         49iqVr9vmjmHmw0YvhXb1/AnuTA0OhkgJeRCBbD9eKTjFWcNa8CJaHq7f8ZFT91h7daz
+         lsvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730754144; x=1731358944;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uJ68oLt1BvdJpTXqYSNLPbv4o5eNZm7+qs/QrLliEOY=;
-        b=i9fIlsVlyzvf3PN5uaCu0DL5hUuBoV4k/5LVlYwngDdCRGfh8p19mG3C4g3R0+e+WZ
-         /yE8YtEf8aolwdjTEENjDD7t2TlxgCha5P08JDyAqXOz2eEgoLW68oZmropt2S5FIMJC
-         tQn1Lf1Q+O4W4izFDqy5hLw4h8Z0uqVCJnLRV5+Y6TeCEz8W0ps2drhHsf2uRtSXBKhb
-         fSqf3fTTXOz//agBUc13kRi/qEwKBO777ShCRV1BGdKRdGfXBi8RLs+REXcVwZvnkGW+
-         +GUVj8GuINLlHGQqeDOPCu4HECntYNeKnnAMY3dcIiSkvkYmld7DEdiAt/Va7emdU+17
-         PyAw==
-X-Forwarded-Encrypted: i=1; AJvYcCX0atD8ML40Im2tLxvthyivp7R9hwhnUqezrejwqZtGcynqWRB4ae2o43ugRnX1f+ssIK0ZOmTBN9X46jiPKD7p@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg09iEVr1PXRqAzRqEIstmaNwUxFuXLpvvt/9d+dQiQ02G7h25
-	J9cqDtctCplkovvl8u2oR5FzqPcABql6x+9BemttB/av6aHodkLp3gUNUkHOzNOUOEIH+n9/+lD
-	2vAbj5/Qoeav6jX4aB+vJQepIRe7UvFkNIugMZyafLvw1KYgNicqR
-X-Gm-Gg: ASbGnctpZmdG+KllU1IhFJnVhHIr30iDMJge6Hv1n8rrFZ+vQU8H7T6E4EnYuZgJQbe
-	YFwgyOFXqQ+j2KKcl5Xx/EmTFHd1yEUftU4l3TD/aGL6lgr3xq9yB/q0Q//NClXo=
-X-Google-Smtp-Source: AGHT+IEXRBEnfz+bmmrxEbzCK+nou//ojvw9LhODU8WyvC1tr73EEfO51NmnGxD/VOzW/aLxESTh87p5xWuMRdejivo=
-X-Received: by 2002:a05:6e02:1a4f:b0:3a6:b0a3:540b with SMTP id
- e9e14a558f8ab-3a6da9c4eeemr816575ab.20.1730754143977; Mon, 04 Nov 2024
- 13:02:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1730754402; x=1731359202;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4V9Yv2fAvOK/vMiP82IoKQz/aaC4GtvY8C8de1dPo6U=;
+        b=B0hcCKb29bMgGFVPfppFgFxAo4YX91RWQWQxLym+LZ48nLwuvVDL3xyUx8O2WIKuOx
+         cLTpMEW89f/nNjebVdb06yMinIE1D/hhyitDKivg1+EkJKxy8q7kOJWp5tPN/FmXEi+J
+         SdqRc45XmzQQRm6b6/Hd7wJQA2ZqPuw5rKeIBmgpfgUECFzKROy0WH9tQxkbS1FLs72v
+         ZUx54VbZ1QB6rTZ/tMd5CaYWOwry2q7/BmqhE7Yg8NUZHDAheOqP6dsDmLX+LGFPjPlM
+         Xkc24eS4LQNQlEei7OsYmgEmfq/xjhghscQjTndoXY4bVx7AEGm8+gAKNjGOx9dPwLTC
+         DlYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdCoHvg524aocH0SZj6WTlYTmmePPbtvXf3xD8SewN6HMcJGNdbtrDNsKbtx5vp2xYivC85dVtzR6p5AFZkosM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/Ilu5fJKxuah0wrIwvx3Uw/aTxBL0GDsmj8jpSh28crUkJYnc
+	YPc4I2W/9kJb2iLzzLn1BSszUVEhoayNAvCnlkB1bZjOvUE6FdH0vsKNIULbIeQ=
+X-Google-Smtp-Source: AGHT+IFk0UULo9afhQbnlnWjUo65KmcRu9RXVFubvhCDhtDv1i7bMZR037d187cAIN7jV72mG65BAw==
+X-Received: by 2002:a05:6a00:398f:b0:71e:3b8:666f with SMTP id d2e1a72fcca58-72062f712a6mr45086642b3a.11.1730754402245;
+        Mon, 04 Nov 2024 13:06:42 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ee490e08f4sm7248293a12.40.2024.11.04.13.06.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 13:06:41 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH RFT 00/16] perf tools: Use generic syscall scripts for all
+ archs
+Date: Mon, 04 Nov 2024 13:06:02 -0800
+Message-Id: <20241104-perf_syscalltbl-v1-0-9adae5c761ef@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241104175953.535202-1-acme@kernel.org> <20241104175953.535202-3-acme@kernel.org>
-In-Reply-To: <20241104175953.535202-3-acme@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 4 Nov 2024 13:02:12 -0800
-Message-ID: <CAP-5=fVZpdO=ct9sFMpVs9QunjofSz9JT0MLf_MoF98EitQ7=Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Don't build the python binding builtin
- test case with NO_LIBPYTHON=1
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Howard Chu <howardchu95@gmail.com>, 
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Veronika Molnarova <vmolnaro@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADs3KWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDS0Nj3YLUorT44sri5MScnJKkHF2zNEuLlNS05GSzNFMloK6CotS0zAq
+ widFKQW4hSrG1tQBojDoLZgAAAA==
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
+ =?utf-8?q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+ Christian Brauner <brauner@kernel.org>, Guo Ren <guoren@kernel.org>, 
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+ James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+ Leo Yan <leo.yan@linux.dev>, Jonathan Corbet <corbet@lwn.net>, 
+ Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, linux-security-module@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-csky@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7158; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=5/i4aYa+bDmYTyC5+2MiIF90lU7UD7sa8a5447uXxv8=;
+ b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ7qmeciNY1P03++xMXAsfRHbpe+78drinTw1tXbGz7+Wr
+ Ju8KWh2RykLgxgHg6yYIgvPtQbm1jv6ZUdFyybAzGFlAhnCwMUpABM5EsbI8GVF2ZM24Xkrris0
+ z/sq5lEb29TY+lRskptvquex1zdnTmVkeMmzRCpUqM1DZ3Uzn/zaQNNXQb5t557syf19M6pitXc
+ /DwA=
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-On Mon, Nov 4, 2024 at 10:00=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> The python_use test suite was being built even when the python binding
-> that it is designed to test is not being built, fix it.
+Standardize the generation of syscall headers around syscall tables.
+Previously each architecture independently selected how syscall headers
+would be generated, or would not define a way and fallback onto
+libaudit. Convert all architectures to use a standard syscall header
+generation script and allow each architecture to override the syscall
+table to use if they do not use the generic table.
 
-The python module that the test is testing isn't strictly using
-libpython.so, that's `perf script`. Perhaps there needs to be more
-than 1 overloaded #define.
+As a result of these changes, no architecture will require libaudit, and
+so the fallback case of using libaudit is removed by this series.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Testing:
 
-Thanks,
-Ian
+I have tested that the syscall mappings of id to name generation works
+as expected for every architecture, but I have only validated that perf
+trace compiles and runs as expected on riscv, arm64, and x86_64.
 
-> Testing this patch:
->
-> When building with NO_LIBPYTHON=3D1, i.e. explicitely disabling linking
-> against libpython and thus not building the python binding:
->
->   $ perf check feature libpython
->              libpython: [ OFF ]  # HAVE_LIBPYTHON_SUPPORT
->   $ perf test "import perf"
->   $
->
-> Not disabling linking with libpython, the default, that results in the
-> python binding being built:
->
->   $ perf check feature libpython
->                libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
->   $ perf test "import perf"
->    17: 'import perf' in python                                         : =
-Ok
->   $ perf test -vv "import perf"
->   Couldn't bump rlimit(MEMLOCK), failures may take place when creating BP=
-F maps, etc
->    17: 'import perf' in python:
->   --- start ---
->   test child forked, pid 533419
->   python usage test: "'/usr/bin/python3' -c "import sys ; sys.path.insert=
-(0, '/tmp/build/perf-tools-next/python'); import perf" "
->   ---- end(0) ----
->    17: 'import perf' in python                                         : =
-Ok
->   $ strace -s1024 -f -e execve perf test 17
->   execve("/home/acme/bin/perf", ["perf", "test", "17"], 0x7ffe04832040 /*=
- 38 vars */) =3D 0
->   strace: Process 533458 attached
->    17: 'import perf' in python                                         : =
-Running (1 active)
->   strace: Process 533459 attached
->   [pid 533459] execve("/bin/sh", ["sh", "-c", "--", "'/usr/bin/python3' -=
-c \"import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); i=
-mport perf\" 2> /dev/null"], 0x133179a0 /* 40 vars */) =3D 0
->   strace: Process 533460 attached
->   [pid 533460] execve("/usr/bin/python3", ["/usr/bin/python3", "-c", "imp=
-ort sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import p=
-erf"], 0x5566715c7280 /* 40 vars */) =3D 0
->   [pid 533460] +++ exited with 0 +++
->   [pid 533459] --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DCLD_EXITED, si_=
-pid=3D533460, si_uid=3D1000, si_status=3D0, si_utime=3D4 /* 0.04 s */, si_s=
-time=3D2 /* 0.02 s */} ---
->   [pid 533459] +++ exited with 0 +++
->   [pid 533458] --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DCLD_EXITED, si_=
-pid=3D533459, si_uid=3D1000, si_status=3D0, si_utime=3D0, si_stime=3D0} ---
->   [pid 533458] +++ exited with 0 +++
->    17: 'import perf' in python                                         : =
-Ok
->   +++ exited with 0 +++
->   $
->
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Cc: Howard Chu <howardchu95@gmail.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Leo Yan <leo.yan@linux.dev>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: Veronika Molnarova <vmolnaro@redhat.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/tests/Build          | 2 +-
->  tools/perf/tests/builtin-test.c | 2 ++
->  tools/perf/tests/tests.h        | 2 ++
->  3 files changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> index 01ed9335db4dba4e..8596616907adf244 100644
-> --- a/tools/perf/tests/Build
-> +++ b/tools/perf/tests/Build
-> @@ -20,7 +20,7 @@ perf-test-y +=3D hists_link.o
->  perf-test-y +=3D hists_filter.o
->  perf-test-y +=3D hists_output.o
->  perf-test-y +=3D hists_cumulate.o
-> -perf-test-y +=3D python-use.o
-> +perf-test-$(CONFIG_LIBPYTHON) +=3D python-use.o
->  perf-test-y +=3D bp_signal.o
->  perf-test-y +=3D bp_signal_overflow.o
->  perf-test-y +=3D bp_account.o
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> index d2cabaa8ad922d68..13f7b24694d1d0b0 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -79,7 +79,9 @@ static struct test_suite *generic_tests[] =3D {
->         &suite__syscall_openat_tp_fields,
->  #endif
->         &suite__hists_link,
-> +#ifdef HAVE_LIBPYTHON_SUPPORT
->         &suite__python_use,
-> +#endif
->         &suite__bp_signal,
->         &suite__bp_signal_overflow,
->         &suite__bp_accounting,
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index af284dd47e5c7855..3144c7916532825c 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -99,7 +99,9 @@ DECLARE_SUITE(dso_data_cache);
->  DECLARE_SUITE(dso_data_reopen);
->  DECLARE_SUITE(parse_events);
->  DECLARE_SUITE(hists_link);
-> +#ifdef HAVE_LIBPYTHON_SUPPORT
->  DECLARE_SUITE(python_use);
-> +#endif
->  DECLARE_SUITE(bp_signal);
->  DECLARE_SUITE(bp_signal_overflow);
->  DECLARE_SUITE(bp_accounting);
-> --
-> 2.47.0
->
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+Charlie Jenkins (16):
+      perf tools: Create generic syscall table support
+      perf tools: arc: Support generic syscall headers
+      perf tools: csky: Support generic syscall headers
+      perf tools: arm: Support syscall headers
+      perf tools: sh: Support syscall headers
+      perf tools: sparc: Support syscall headers
+      perf tools: xtensa: Support syscall header
+      perf tools: x86: Use generic syscall scripts
+      perf tools: alpha: Support syscall header
+      perf tools: parisc: Support syscall header
+      perf tools: arm64: Use syscall table
+      perf tools: loongarch: Use syscall table
+      perf tools: mips: Use generic syscall scripts
+      perf tools: powerpc: Use generic syscall table scripts
+      perf tools: s390: Use generic syscall table scripts
+      perf tools: Remove dependency on libaudit
+
+ Documentation/admin-guide/workload-tracing.rst     |   2 +-
+ tools/build/feature/Makefile                       |   4 -
+ tools/build/feature/test-libaudit.c                |  11 -
+ tools/perf/Documentation/perf-check.txt            |   1 -
+ tools/perf/Makefile.config                         |  28 +-
+ tools/perf/Makefile.perf                           |  12 +-
+ tools/perf/arch/alpha/entry/syscalls/Kbuild        |   2 +
+ .../arch/alpha/entry/syscalls/Makefile.syscalls    |   5 +
+ tools/perf/arch/alpha/entry/syscalls/syscall.tbl   | 504 ++++++++++++++++++++
+ tools/perf/arch/alpha/include/syscall_table.h      |   2 +
+ tools/perf/arch/arc/entry/syscalls/Kbuild          |   2 +
+ .../perf/arch/arc/entry/syscalls/Makefile.syscalls |   3 +
+ tools/perf/arch/arc/include/syscall_table.h        |   2 +
+ tools/perf/arch/arm/entry/syscalls/Kbuild          |   4 +
+ .../perf/arch/arm/entry/syscalls/Makefile.syscalls |   2 +
+ tools/perf/arch/arm/entry/syscalls/syscall.tbl     | 479 +++++++++++++++++++
+ tools/perf/arch/arm/include/syscall_table.h        |   2 +
+ tools/perf/arch/arm64/Makefile                     |  22 -
+ tools/perf/arch/arm64/entry/syscalls/Kbuild        |   3 +
+ .../arch/arm64/entry/syscalls/Makefile.syscalls    |   6 +
+ tools/perf/arch/arm64/entry/syscalls/mksyscalltbl  |  46 --
+ .../perf/arch/arm64/entry/syscalls/syscall_32.tbl  | 476 +++++++++++++++++++
+ .../perf/arch/arm64/entry/syscalls/syscall_64.tbl  |   1 +
+ tools/perf/arch/arm64/include/syscall_table.h      |   8 +
+ tools/perf/arch/csky/entry/syscalls/Kbuild         |   2 +
+ .../arch/csky/entry/syscalls/Makefile.syscalls     |   3 +
+ tools/perf/arch/csky/include/syscall_table.h       |   2 +
+ tools/perf/arch/loongarch/Makefile                 |  22 -
+ tools/perf/arch/loongarch/entry/syscalls/Kbuild    |   2 +
+ .../loongarch/entry/syscalls/Makefile.syscalls     |   3 +
+ .../arch/loongarch/entry/syscalls/mksyscalltbl     |  45 --
+ tools/perf/arch/loongarch/include/syscall_table.h  |   2 +
+ tools/perf/arch/mips/Makefile                      |  18 -
+ tools/perf/arch/mips/entry/syscalls/Kbuild         |   2 +
+ .../arch/mips/entry/syscalls/Makefile.syscalls     |   5 +
+ tools/perf/arch/mips/entry/syscalls/mksyscalltbl   |  32 --
+ tools/perf/arch/mips/include/syscall_table.h       |   2 +
+ tools/perf/arch/parisc/entry/syscalls/Kbuild       |   3 +
+ .../arch/parisc/entry/syscalls/Makefile.syscalls   |   6 +
+ tools/perf/arch/parisc/entry/syscalls/syscall.tbl  | 463 +++++++++++++++++++
+ tools/perf/arch/parisc/include/syscall_table.h     |   8 +
+ tools/perf/arch/powerpc/Makefile                   |  25 -
+ tools/perf/arch/powerpc/entry/syscalls/Kbuild      |   3 +
+ .../arch/powerpc/entry/syscalls/Makefile.syscalls  |   6 +
+ .../perf/arch/powerpc/entry/syscalls/mksyscalltbl  |  39 --
+ tools/perf/arch/powerpc/include/syscall_table.h    |   8 +
+ tools/perf/arch/riscv/entry/syscalls/Kbuild        |   2 +
+ .../arch/riscv/entry/syscalls/Makefile.syscalls    |   4 +
+ tools/perf/arch/riscv/include/syscall_table.h      |   8 +
+ tools/perf/arch/s390/Makefile                      |  21 -
+ tools/perf/arch/s390/entry/syscalls/Kbuild         |   2 +
+ .../arch/s390/entry/syscalls/Makefile.syscalls     |   5 +
+ tools/perf/arch/s390/entry/syscalls/mksyscalltbl   |  32 --
+ tools/perf/arch/s390/include/syscall_table.h       |   2 +
+ tools/perf/arch/sh/entry/syscalls/Kbuild           |   2 +
+ .../perf/arch/sh/entry/syscalls/Makefile.syscalls  |   4 +
+ tools/perf/arch/sh/entry/syscalls/syscall.tbl      | 468 +++++++++++++++++++
+ tools/perf/arch/sh/include/syscall_table.h         |   2 +
+ tools/perf/arch/sparc/entry/syscalls/Kbuild        |   3 +
+ .../arch/sparc/entry/syscalls/Makefile.syscalls    |   5 +
+ tools/perf/arch/sparc/entry/syscalls/syscall.tbl   | 510 +++++++++++++++++++++
+ tools/perf/arch/sparc/include/syscall_table.h      |   8 +
+ tools/perf/arch/x86/Build                          |   1 -
+ tools/perf/arch/x86/Makefile                       |  25 -
+ tools/perf/arch/x86/entry/syscalls/Kbuild          |   3 +
+ .../perf/arch/x86/entry/syscalls/Makefile.syscalls |   6 +
+ tools/perf/arch/x86/entry/syscalls/syscalltbl.sh   |  42 --
+ tools/perf/arch/x86/include/syscall_table.h        |   8 +
+ tools/perf/arch/xtensa/entry/syscalls/Kbuild       |   2 +
+ .../arch/xtensa/entry/syscalls/Makefile.syscalls   |   4 +
+ tools/perf/arch/xtensa/entry/syscalls/syscall.tbl  | 435 ++++++++++++++++++
+ tools/perf/arch/xtensa/include/syscall_table.h     |   2 +
+ tools/perf/builtin-check.c                         |   1 -
+ tools/perf/builtin-help.c                          |   2 -
+ tools/perf/builtin-trace.c                         |  30 --
+ tools/perf/check-headers.sh                        |   9 +
+ tools/perf/perf.c                                  |   6 +-
+ tools/perf/scripts/Makefile.syscalls               |  69 +++
+ tools/perf/scripts/syscalltbl.sh                   |  86 ++++
+ tools/perf/tests/make                              |   7 +-
+ tools/perf/util/env.c                              |   4 +-
+ tools/perf/util/generate-cmdlist.sh                |   4 +-
+ tools/perf/util/syscalltbl.c                       |  87 +---
+ tools/scripts/syscall.tbl                          | 405 ++++++++++++++++
+ 84 files changed, 4089 insertions(+), 555 deletions(-)
+---
+base-commit: 59b723cd2adbac2a34fc8e12c74ae26ae45bf230
+change-id: 20240913-perf_syscalltbl-6f98defcc6f5
+-- 
+- Charlie
+
