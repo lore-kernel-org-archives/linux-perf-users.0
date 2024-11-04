@@ -1,93 +1,100 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE5C1F5846
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 20:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD591F5846
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 20:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730752622; cv=none; b=EH+A3x4spEo4/87lHFtnZ2+Pm7guOX3fGO/B3FDmxHdBj/FGZxDaEtX/4KfrcjJw8rzvq0BDMwKimrWCARR+7gXJzVfM6Ilme3kTagjwjxPH+q0K/tFXFgq7nAXx/e1suiJgqNV30gkSqu5CU/ivNZnOs5yqvc7fdHV2T+pVs9Y=
+	t=1730752687; cv=none; b=I4+yGDm3DAg4Sxjlifyexvbe30SRRdOWIqmdRP4IOc3XBaF+y1a3TDB/JVa9oh/Ve+ZNzN9L42uxduTNEtQ0V+gtZqd7CjBGPUJ2sXAGahl/kUx7SjXTXuOCXJ0BKLoFyUAUWxqek68n2qro3VE8jMmVTaUN9JJoDiWE1nZ98Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730752622; c=relaxed/simple;
-	bh=4nBRmUtbA108cfLj2oSnAsY8P82ZupaRNwnNsR+3/5o=;
+	s=arc-20240116; t=1730752687; c=relaxed/simple;
+	bh=EKafFQrcHqow9XPVbJXW8QnhNB4BpZ5ghDQ4nVOgs4k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LIb+ib8WgQoIqtl9hHjC0j+PzyiPfvHTVS3MGXx0avYuS8Dz90JSKgfdwonLaxS2iw2L5jz4ONcnof9HoyRM81mymPHvedsvjA8ph6Y0wlwnAmoTagI+IJF8C4nMZsj3Nw9Fh734wRheDnxFSiGYR7+3F+JfECgpaLYxszEwlsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sjFO3h9C; arc=none smtp.client-ip=209.85.166.181
+	 To:Cc:Content-Type; b=l8Dk7THX8tposaewFxw98UUhDg6FufasGf9pEHIwoKsemzyMuHoKwxfjUax+UwYjYH92rt7H1yfT78Hn5JeaGQ3yUg4i6Iq0x18Ic3HS2QjP+Z1iOf50XVQNuZqhJVm52RdE9E4IiZ9tKcVqOjURFMxSWDFGet9c9kXsfoSj4ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vHzGnAyB; arc=none smtp.client-ip=209.85.166.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sjFO3h9C"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a3b28ac9a1so1995ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 12:37:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vHzGnAyB"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3a4e4776f79so31445ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 12:38:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730752619; x=1731357419; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1730752684; x=1731357484; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YjVDRx6oH+xeW6jQUK0g6WGli8hpIwXPydX3YYIiQho=;
-        b=sjFO3h9C7KSRCegTLvegsh3crfCEKRTKKwRus67oxBcpkeXH6EZf0tC5Kh1MmcRb7E
-         msju2noJhhfVkKXf3nAKfQFN1cmJjX2fBn5mtkr00HUOSpWry81lStqWvkamzyqUMI+X
-         ckSWUyHARLYy2/KNo3/gGni+ccdnLI/qIxJsLccJy8SWAYbxZNXyslud4+FKwlCN8JNM
-         LwLCGbg9+E+IOFI32P+MQwKVhsTow0NbYrJaWjuTut4xVqcYr6CtZthbb4ktei4Z1jlE
-         pI0V974ncjNVsssOBJ2DlLghhoRe4ec5DJ2EdNs5ni4su5wRwGH1aNINe5FxHxdAu1Tz
-         /nww==
+        bh=nVs9awL5pwovmY2hQCH3pAdF4ZPipMvKa1BaDejQHMc=;
+        b=vHzGnAyBAD023s+j7k7i5d/wSAnTq5UhCYwiEVwplKHYTYOXJpo/QV+olSmNIoVE4t
+         yrb7aNmfJAUTJHQmExqLl1G8XdHooN9WSn5WGnFmTIdTY/OPXay0E02/HsQ5fW6cxlIW
+         NlIf+WYIzxtt8OSdKvy1S0bzypgv+Uje3GHwZS1vwSpbbA1NidxensmejeWXvgtSUa11
+         YLFdC9u7pCC9J0SXBqKEc1XWlya5SsAXfqmEzcQaCZqv05yUfScDIlBQRZUCi47+7X1c
+         Bi/v0I/lrUSUmEI4RhQLZ52KoFo7mKiYQ7cY7m5dy5WTIvFKadWjBT8hoDH53SJAdR6c
+         vmOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730752619; x=1731357419;
+        d=1e100.net; s=20230601; t=1730752684; x=1731357484;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YjVDRx6oH+xeW6jQUK0g6WGli8hpIwXPydX3YYIiQho=;
-        b=dw/eWFGRlAaHM1bkzo50Lf06t6nE8ZeD+0/ke/TcbF/va5FuUntmL2ZBJmX2d2wJCN
-         m9aQ7ngxLTXqj2y6OHE/GsUxhLRYLi3LTPmncm2U/f1/62MmCL1Io9Fj1SvAx4oYaHwQ
-         gDX9nvEfwMDIkcACz8mZEe/VZXlqvs9imQwfzpDGi1gu8vCoZ3X0anzL7Jpv60o9gTVh
-         lk931apOwi3JsEcDKQlFPFzwA+cDOzOgvibadUTVBSdqD1huqInmnYv7r9xiz+DsHsmx
-         ulgMUrutWsc5dfpB4BzhNUvElrNgou05YqS5XufzSijYCTc39OD3JhZ3D/HFYnS2Te/5
-         tc9g==
-X-Forwarded-Encrypted: i=1; AJvYcCV0ltMWcoF+c5aDQtkl2IKq7x42/sVzx7JO0K364SM3BF1cCFxCsge2/3ug+zs6MRJW+RtrcdngH1sHo0oHLX1a@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn/LMy39puMRY+tq5KKTAAYAUDf0LyTaB3u443LMM/cW8iuq1C
-	jnbEBfRvsCB47PeDW5qb4MdPoI6vVTo52/FymRRaI61HGAavYmiEBekkpCADdYCvHQc6KB3I4Qz
-	5paGmppp9iJSlKHunTRb9t8Pr0BdbUCZX4pKT
-X-Gm-Gg: ASbGncu0ueTsG9NvsVejt7C+MF5l984WGjT/BaEeQeXmuI+lpA3b1E2rd43vSamDfbJ
-	/IMs61Oc5CLf6Rhe96iIUaHRrKacQC4mFoBwq7O6X4YV9syFZMsfitvQckR2+LA==
-X-Google-Smtp-Source: AGHT+IESkicvZoSSZrcJAJpL2CY40Vg5qDWTWVmcUyR/sBcGeJfCyGZQrc40LU+36/ln0l+5dHy3kQgKyy9BNSbN0Bg=
-X-Received: by 2002:a05:6e02:12b4:b0:3a6:b318:3b99 with SMTP id
- e9e14a558f8ab-3a6daa9e751mr627685ab.27.1730752619348; Mon, 04 Nov 2024
- 12:36:59 -0800 (PST)
+        bh=nVs9awL5pwovmY2hQCH3pAdF4ZPipMvKa1BaDejQHMc=;
+        b=JMRGutopDhbg5b1hQzVr+N8cPpYp6u3icatypf1HqZub/Vk3KjuUh0XW5Xqw5i1FXB
+         gWCoPO0NURARY+AP8Kc07wZ8SaA/vz86wfUUxoff1zqLtaCi2hGiOjdjgIjli91H3DHy
+         VYONW/imyMpgOTsx1JuYaXV6kLtxM2JtMpznVbK7HXRaPy/DO8rJ5Uldh+o4e7oVQWOp
+         s47ScnYDs8WxDiamVmQSrOixUSGD0gCBHAU4W7qfinmNmaRKF0Z8ZW/AGVHfm40oBG4m
+         X+Xb1qXKxUV2MhbtgQDKBbzBJQwFlnhGKZ/bzDQCJygxvs8Rcuom+Uecu+ZhXMfzkin9
+         qH8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWIrmWG9PyauTq2G0fQHVcUzGf+zMfI4LPTjgV0VClkcLhzF60ZbWp0wcWT8yDgT87ltIdObe493sJUx7r1L8q/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJTo4mxv5y2Mjr0ymN/eNrAEHTuMQlnOH2LTyaViRPUZ2TfUpj
+	ktMPcFYhmgSfiNGNUnVksOeDhVKWtu/mjldjYyEglncNxeXzfy9kO1GmlMvbFSgUwVpoV38xzVK
+	gfLGx4f6SqvmRtVyNW3JVc76L2PC/xN3PIKSu
+X-Gm-Gg: ASbGncuapNKPSUe45k/58DWXHucgIDDykt45jstdev5nh8fU2wgp7GuYA9H/DS1GCBp
+	15LX/ctM657DcPWADLLQTbWeFQ+fS24+gIUojh5u2ugTcaMfiR1oujZuwuq2ojw==
+X-Google-Smtp-Source: AGHT+IEEd3WZqMqGwi0DOclLDdNE3GFZvePWwxu3+r9Hp4UUKKAxQnCVELnwD/+bq1Kic9iZOf6yhkkcdiQhPEr5Zrs=
+X-Received: by 2002:a05:6e02:1a0b:b0:3a6:b3b0:5696 with SMTP id
+ e9e14a558f8ab-3a6daa9633cmr605255ab.7.1730752683770; Mon, 04 Nov 2024
+ 12:38:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241103142302.230370-1-linux@treblig.org>
-In-Reply-To: <20241103142302.230370-1-linux@treblig.org>
+References: <ZyjbksKYnV22zmz-@x1>
+In-Reply-To: <ZyjbksKYnV22zmz-@x1>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 4 Nov 2024 12:36:48 -0800
-Message-ID: <CAP-5=fXNJ_QbEA20eusx7EDqp=pQgVdW_+-w1T=vsrzH4BGjpw@mail.gmail.com>
-Subject: Re: [PATCH] perf: event: Remove deadcode
-To: linux@treblig.org
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 4 Nov 2024 12:37:52 -0800
+Message-ID: <CAP-5=fXNis590NMNfS=7nuJ3DoiB4ojvWtv1xvTVvnz7DFXG4Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] perf tests: Remove dangling CFLAGS for removed attr.o object
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Howard Chu <howardchu95@gmail.com>, James Clark <james.clark@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Ze Gao <zegao2021@gmail.com>, 
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 3, 2024 at 6:23=E2=80=AFAM <linux@treblig.org> wrote:
+On Mon, Nov 4, 2024 at 6:35=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
 >
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> Since the C test wrapper for attr.py was removed we don't have an attr.o
+> object for that CFLAGS_attr.o to apply for, remove it.
 >
-> event_format__print() last use was removed by 2017's
-> commit 894f3f1732cb ("perf script: Use event_format__fprintf()")
->
-> evlist__find_tracepoint_by_id() last use was removed by 2012's
-> commit e60fc847cefa ("perf evlist: Remove some unused methods")
->
-> evlist__set_tp_filter_pid() last use was removed by 2017's
-> commit dd1a50377c92 ("perf trace: Introduce filter_loop_pids()")
->
-> Remove them.
->
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> Fixes: 3a447031f5fc21c4 ("perf test: Remove C test wrapper for attr.py")
+> Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Cc: Howard Chu <howardchu95@gmail.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Leo Yan <leo.yan@linux.dev>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: Veronika Molnarova <vmolnaro@redhat.com>
+> Cc: Weilin Wang <weilin.wang@intel.com>
+> Cc: Ze Gao <zegao2021@gmail.com>
+> Cc: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
@@ -95,116 +102,24 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/util/evlist.c            | 18 ------------------
->  tools/perf/util/evlist.h            |  2 --
->  tools/perf/util/trace-event-parse.c |  6 ------
->  tools/perf/util/trace-event.h       |  3 ---
->  4 files changed, 29 deletions(-)
+>  tools/perf/tests/Build | 1 -
+>  1 file changed, 1 deletion(-)
 >
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index f14b7e6ff1dc..4b992a3f2985 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -362,19 +362,6 @@ __weak int arch_evlist__add_default_attrs(struct evl=
-ist *evlist,
->         return __evlist__add_default_attrs(evlist, attrs, nr_attrs);
->  }
+> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> index 03cbdf7c50a09be4..01ed9335db4dba4e 100644
+> --- a/tools/perf/tests/Build
+> +++ b/tools/perf/tests/Build
+> @@ -72,7 +72,6 @@ ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powe=
+rpc))
+>  perf-test-$(CONFIG_DWARF_UNWIND) +=3D dwarf-unwind.o
+>  endif
 >
-> -struct evsel *evlist__find_tracepoint_by_id(struct evlist *evlist, int i=
-d)
-> -{
-> -       struct evsel *evsel;
-> -
-> -       evlist__for_each_entry(evlist, evsel) {
-> -               if (evsel->core.attr.type   =3D=3D PERF_TYPE_TRACEPOINT &=
-&
-> -                   (int)evsel->core.attr.config =3D=3D id)
-> -                       return evsel;
-> -       }
-> -
-> -       return NULL;
-> -}
-> -
->  struct evsel *evlist__find_tracepoint_by_name(struct evlist *evlist, con=
-st char *name)
->  {
->         struct evsel *evsel;
-> @@ -1199,11 +1186,6 @@ int evlist__set_tp_filter_pids(struct evlist *evli=
-st, size_t npids, pid_t *pids)
->         return ret;
->  }
+> -CFLAGS_attr.o         +=3D -DBINDIR=3D"BUILD_STR($(bindir_SQ))" -DPYTHON=
+=3D"BUILD_STR($(PYTHON_WORD))"
+>  CFLAGS_python-use.o   +=3D -DPYTHONPATH=3D"BUILD_STR($(OUTPUT)python)" -=
+DPYTHON=3D"BUILD_STR($(PYTHON_WORD))"
+>  CFLAGS_dwarf-unwind.o +=3D -fno-optimize-sibling-calls
 >
-> -int evlist__set_tp_filter_pid(struct evlist *evlist, pid_t pid)
-> -{
-> -       return evlist__set_tp_filter_pids(evlist, 1, &pid);
-> -}
-> -
->  int evlist__append_tp_filter_pids(struct evlist *evlist, size_t npids, p=
-id_t *pids)
->  {
->         char *filter =3D asprintf__tp_filter_pids(npids, pids);
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index bcc1c6984bb5..ff73908e2178 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -144,7 +144,6 @@ int __evlist__set_tracepoints_handlers(struct evlist =
-*evlist,
->         __evlist__set_tracepoints_handlers(evlist, array, ARRAY_SIZE(arra=
-y))
->
->  int evlist__set_tp_filter(struct evlist *evlist, const char *filter);
-> -int evlist__set_tp_filter_pid(struct evlist *evlist, pid_t pid);
->  int evlist__set_tp_filter_pids(struct evlist *evlist, size_t npids, pid_=
-t *pids);
->
->  int evlist__append_tp_filter(struct evlist *evlist, const char *filter);
-> @@ -152,7 +151,6 @@ int evlist__append_tp_filter(struct evlist *evlist, c=
-onst char *filter);
->  int evlist__append_tp_filter_pid(struct evlist *evlist, pid_t pid);
->  int evlist__append_tp_filter_pids(struct evlist *evlist, size_t npids, p=
-id_t *pids);
->
-> -struct evsel *evlist__find_tracepoint_by_id(struct evlist *evlist, int i=
-d);
->  struct evsel *evlist__find_tracepoint_by_name(struct evlist *evlist, con=
-st char *name);
->
->  int evlist__add_pollfd(struct evlist *evlist, int fd);
-> diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-=
-event-parse.c
-> index f0332bd3a501..d97830cdbd7e 100644
-> --- a/tools/perf/util/trace-event-parse.c
-> +++ b/tools/perf/util/trace-event-parse.c
-> @@ -116,12 +116,6 @@ void event_format__fprintf(struct tep_event *event,
->         trace_seq_destroy(&s);
->  }
->
-> -void event_format__print(struct tep_event *event,
-> -                        int cpu, void *data, int size)
-> -{
-> -       return event_format__fprintf(event, cpu, data, size, stdout);
-> -}
-> -
->  /*
->   * prev_state is of size long, which is 32 bits on 32 bit architectures.
->   * As it needs to have the same bits for both 32 bit and 64 bit architec=
-tures
-> diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.=
-h
-> index bbf8b26bc8da..0e5133f1b910 100644
-> --- a/tools/perf/util/trace-event.h
-> +++ b/tools/perf/util/trace-event.h
-> @@ -42,9 +42,6 @@ struct tep_event *trace_event__tp_format_id(int id);
->  void event_format__fprintf(struct tep_event *event,
->                            int cpu, void *data, int size, FILE *fp);
->
-> -void event_format__print(struct tep_event *event,
-> -                        int cpu, void *data, int size);
-> -
->  int parse_ftrace_file(struct tep_handle *pevent, char *buf, unsigned lon=
-g size);
->  int parse_event_file(struct tep_handle *pevent,
->                      char *buf, unsigned long size, char *sys);
 > --
 > 2.47.0
 >
