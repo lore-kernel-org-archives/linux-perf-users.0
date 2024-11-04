@@ -1,44 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9166C1ABEBA;
-	Mon,  4 Nov 2024 23:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BB21FDFB4
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 23:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730763281; cv=none; b=sXLZX/0FPl8O/YjElJiXz2JIe+SIium/TIzrp692EqWeDYgkaMJEMgAcNmgqPsPYYA65SDgTy+rqcTPc7o6dJGGh2rVYz3SFJ5pCGFPPXribnT5zzlSsbP5uI0oQfcboFHyfFoeDBZFXCwLyUM5Gj5VSycCETbn2eJw//YdVVKQ=
+	t=1730763339; cv=none; b=Rk+96Pk1vASCXh3EL4GMXEY83zE/BoWLuMTgVA2f3i7pJQR2ctqQ280pm1KzsrzIo2PzRGo66mH27OCjo9RkRXtdUoBm4iPRGIJ1H+lX4OYomY2zDwF8lbbz5Z6+19nr6wDL2jCPYe8vyvUJUxmW1r+7W+R31tj/YfK4+GJ7oLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730763281; c=relaxed/simple;
-	bh=88TYumyhWbfjVMyfSLi2/8DI4JnQwU62uhhbbbI3EPc=;
+	s=arc-20240116; t=1730763339; c=relaxed/simple;
+	bh=KrmY+S+q6BIC6iikQDGqq/OAqNilCEI8g7m4VhXfxKY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yj9tANpXxwYx0kslX3PhSF7smrVsE4agwDFo9q13yIgEK6PCG86KQtF0gA9i9OyCG/6EMSBr6M423cmhTAGJJ30+o1sS4O6d66rVm2/4XOGsvMqJd+tctCRzm+QiQ1opYxzElNKdXKjw3CPW3/46KAnF4oNu4EETEmdY04FpjkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bk2WE9bR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=N2XeptCfNkZp0loZeK4G8kFakZ5RtdexKWrDTAwM5UpeKDnJy9i3BtLsq0M9ZZOYHpdhwE1xX1qT9WV8eWkry2AzMlqmu8W6xwKLMd41jp0YL9eslZh6vAAHbmwIrHZIlkKwcTwInXZc0KdDus0wgQmF4HO0dm9w/IpndOHwq6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=XohlK632; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bk2WE9bR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5FDCC4CED1;
-	Mon,  4 Nov 2024 23:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730763280;
-	bh=88TYumyhWbfjVMyfSLi2/8DI4JnQwU62uhhbbbI3EPc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bk2WE9bRtabX0pG/dgRccsTHBgk3EKcHrehNbj5h74YnMHZlwsGo6fKaH2m0wXp3k
-	 iE6KH+DZpT5uYmvB2VIz1m03obmFmHmkhfyYiwZ9rYD07lTh4eW+BFFwppXdOKnxLt
-	 5AnTsWLqxlW1sjxaiQ8JU638m/VdU11GB5DrKh6pj3QWgeZrDKj7zTtosRmTxpy0Fy
-	 RIIeVGYc3DP2GIRJ5xeOZKGa0f8VmGlLKgwWlLZIuOCYhlTNFUbX1WimsV/6oNZ/r+
-	 MdytaQ1+UQix5E25D6/Hi6ryDchy3Fwhno1axOeFEVqRn2b4Iho2RoLkO1OSUKNbe4
-	 uWTSuW+7cv2jw==
-Date: Mon, 4 Nov 2024 15:34:38 -0800
-From: Namhyung Kim <namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="XohlK632"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2110a622d76so36568885ad.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 15:35:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1730763337; x=1731368137; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=31BGTQSdIkP/4Zu0IN+x2yZh6+VSpCdF3MI1H4dhuNY=;
+        b=XohlK632eUpc2BcnmIxUPkgr1LiSBJG+Bv1tV/Fk48ez7StLDZGT8lwiW7mEp7BpMU
+         jmEhpBrdnDsMSRxA8vxVmQnhNfcXUlwBcFixuVcTDOGg7agf17CPfPOCy1sIvfO3Ihzt
+         bs81q67b+9aWmOZk+uOnz+WtopmwwbVsWG18lRrQgNKgKAFco6rId4lUeaREg5/yFgYw
+         INuImmwHILRgS56naJ6udVcckXR+lV/unVdVYwvI6weSP1kwL2kPCntH2JPGPLZTl8ew
+         xyaxBg0B1vAXkwHMDkYcxGGh0RSgODBn8gIooM5CBmJBPFEansQ0JaDrn91Dzo5KCCKU
+         DDTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730763337; x=1731368137;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=31BGTQSdIkP/4Zu0IN+x2yZh6+VSpCdF3MI1H4dhuNY=;
+        b=EuM/PGTRetCu/fO3vDV2+fo8YbWf9n36HNQlhw4HA8RpHGf9wf6kudp8md48hMY0hj
+         Rlqm7SyHnzXi6iGbwGa63hOG7UyfKXSd6tEXtaUVs7Pzrzls/NBC1QObnYgNt+YjEtsl
+         sKDP8PXFFo0Pa4Or17ymQYId48wfiJSFnKAiBvhqK+E/3tvLg1K//Zj2ms0UPf8znQ5d
+         XZFb6m2HR2AKDfe9ipJKPeewNmGhVMG5NxkiTMNCDDOOVZgx82hWZviVCEuKplYS1Edy
+         MDfCMMnpAFCSRERvAJmZwRxGKeGtH+eAzJCri4rguzuEwi63ovEBnRKlA1AhLEAXinCN
+         oZVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWTvPQNNXYNLrJkywKzW8TuwDYoqLsszSqcgjrEoZMSf7HV47//L9YDPuTc7+V4mTLywHdz3HwkLCEDwG89Is4@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTeL51vHjqOZqncKzi00xinzktp7qv6EteIfT9ydbRvhZZH1Ai
+	O/CxrzmNol1gdVv5Iq2/10e/VbZmu4ihGg1ADFCnhYZMXmqnsrBMZTrn4GaMkjU=
+X-Google-Smtp-Source: AGHT+IHUkdei85jsd4jEJe1dv8cR5cqR+1/XIGSXNDsrFT+G8g62SWEwp7GVusVEZsJaOrWKuYtEtQ==
+X-Received: by 2002:a17:903:40ca:b0:20c:a19d:e73e with SMTP id d9443c01a7336-210c6cf2237mr433175125ad.57.1730763336945;
+        Mon, 04 Nov 2024 15:35:36 -0800 (PST)
+Received: from ghost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211057c7560sm66579565ad.237.2024.11.04.15.35.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 15:35:36 -0800 (PST)
+Date: Mon, 4 Nov 2024 15:35:33 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
 To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+Cc: Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf test: Fix LBR test by adding indirect calls
-Message-ID: <ZylaDu6NjJIq6rUf@google.com>
-References: <20241103002414.2281869-1-namhyung@kernel.org>
- <CAP-5=fUg-DFKM4SQa7P2fWRd62y7kDiP+qP2kP-TiZMy2EX7mQ@mail.gmail.com>
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Christian Brauner <brauner@kernel.org>, guoren <guoren@kernel.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH RFT 00/16] perf tools: Use generic syscall scripts for
+ all archs
+Message-ID: <ZylaRaMqEsEjYjs6@ghost>
+References: <20241104-perf_syscalltbl-v1-0-9adae5c761ef@rivosinc.com>
+ <3b56fc50-4c6c-4520-adba-461797a3b5ec@app.fastmail.com>
+ <Zyk9hX8CB_2rbWsi@ghost>
+ <CAP-5=fUdZRbCp+2ghEUdp+qJ1BuMDuTtw9R+dFAaom+3oqQV_g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,65 +93,70 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUg-DFKM4SQa7P2fWRd62y7kDiP+qP2kP-TiZMy2EX7mQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fUdZRbCp+2ghEUdp+qJ1BuMDuTtw9R+dFAaom+3oqQV_g@mail.gmail.com>
 
-On Sat, Nov 02, 2024 at 09:58:03PM -0700, Ian Rogers wrote:
-> On Sat, Nov 2, 2024 at 5:24 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Mon, Nov 04, 2024 at 02:03:28PM -0800, Ian Rogers wrote:
+> On Mon, Nov 4, 2024 at 1:32 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
 > >
-> > I've noticed sometimes perf record LBR tests failed on indirect call
-> > test because it has empty branch stacks more than expected.
+> > On Mon, Nov 04, 2024 at 10:13:18PM +0100, Arnd Bergmann wrote:
+> > > On Mon, Nov 4, 2024, at 22:06, Charlie Jenkins wrote:
+> > > > Standardize the generation of syscall headers around syscall tables.
+> > > > Previously each architecture independently selected how syscall headers
+> > > > would be generated, or would not define a way and fallback onto
+> > > > libaudit. Convert all architectures to use a standard syscall header
+> > > > generation script and allow each architecture to override the syscall
+> > > > table to use if they do not use the generic table.
+> > > >
+> > > > As a result of these changes, no architecture will require libaudit, and
+> > > > so the fallback case of using libaudit is removed by this series.
+> > > >
+> > > > Testing:
+> > > >
+> > > > I have tested that the syscall mappings of id to name generation works
+> > > > as expected for every architecture, but I have only validated that perf
+> > > > trace compiles and runs as expected on riscv, arm64, and x86_64.
+> > > >
+> > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > >
+> > > Thanks for doing this, I had plans to do this myself, but hadn't
+> > > completed that bit so far. I'm travelling at the moment, so I'm
+> > > not sure I have time to look at it in enough detail this week.
+> > >
+> > > One problem I ran into doing this previously was the incompatible
+> > > format of the tables for x86 and s390, which have conflicting
+> > > interpretations of what the '-' character means. It's possible
+> > > that this is only really relevant for the in-kernel table,
+> > > not the version in tools.
+> > >
 > >
-> > The test workload (thloop) spawns a thread and calls a loop function for
-> > 1 second both from the main thread and the new thread.  However neither
-> > of them has indirect calls in the body so it ended up with empty branch
-> > stacks.
-> >
-> >   LBR any indirect call test
-> >   [ perf record: Woken up 21 times to write data ]
-> >   [ perf record: Captured and wrote 5.607 MB /tmp/__perf_test.perf.data.pujKd (7924 samples) ]
-> >   LBR any indirect call test: 7924 samples
-> >   LBR any indirect call test [Failed empty br stack ratio exceed 2%: 3%]
-> >
-> > Refactor the test workload to call the test_loop() both directly and
-> > indirectly.  Now expectation of indirect call is 50% but let's add some
-> > margin for startup and finish routines.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/tests/shell/record_lbr.sh | 2 +-
-> >  tools/perf/tests/workloads/thloop.c  | 9 ++++++---
-> >  2 files changed, 7 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/shell/record_lbr.sh b/tools/perf/tests/shell/record_lbr.sh
-> > index 8d750ee631f877fd..7a23b2095be8acba 100755
-> > --- a/tools/perf/tests/shell/record_lbr.sh
-> > +++ b/tools/perf/tests/shell/record_lbr.sh
-> > @@ -121,7 +121,7 @@ lbr_test "-j any_ret" "any ret" 2
-> >  lbr_test "-j ind_call" "any indirect call" 2
-> >  lbr_test "-j ind_jmp" "any indirect jump" 100
-> >  lbr_test "-j call" "direct calls" 2
-> > -lbr_test "-j ind_call,u" "any indirect user call" 100
-> > +lbr_test "-j ind_call,u" "any indirect user call" 52
-> >  lbr_test "-a -b" "system wide any branch" 2
-> >  lbr_test "-a -j any_call" "system wide any call" 2
-> >
-> > diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
-> > index 457b29f91c3ee277..fa5547939882cf6c 100644
-> > --- a/tools/perf/tests/workloads/thloop.c
-> > +++ b/tools/perf/tests/workloads/thloop.c
-> > @@ -18,14 +18,16 @@ static void sighandler(int sig __maybe_unused)
-> >
-> >  noinline void test_loop(void)
-> >  {
-> > -       while (!done);
-> > +       for (volatile int i = 0; i < 10000; i++)
+> > I don't think that is an issue for this usecase because the only
+> > information that is taken from the syscall table is the number and the
+> > name of the syscall. '-' doesn't appear in either of these columns!
 > 
-> I don't think the volatile here will stop a sufficiently eager
-> optimizing compiler. I think it may need to be static as well.
+> This is cool stuff. An area that may not be immediately apparent for
+> improvement is that the x86-64 build only has access to the 64-bit
+> syscall table. Perhaps all the syscall tables should always be built
+> and then at runtime the architecture of the perf.data file, etc. used
+> to choose the appropriate one. The cleanup to add an ELF host #define
+> could help with this:
+> https://lore.kernel.org/linux-perf-users/20241017002520.59124-1-irogers@google.com/
 
-Ok, probably we can disbale optimizations in this code like others
-in the test workloads.
+Oh that's a great idea! I think these changes will make it more seamless
+to make that a reality.
 
-Thanks for your review!
-Namhyung
+> 
+> Ultimately I'd like to see less arch code as it inherently makes cross
+> platform worker harder. That doesn't impact this work which I'm happy
+> to review.
 
+Yeah I agree. Reducing arch code was the motivation for this change.
+There was the issue a couple weeks ago that caused all architectures
+that used libaudit to break from commit 7a2fb5619cc1fb53 ("perf trace:
+Fix iteration of syscall ids in syscalltbl->entries"), so this change
+will eliminate that source of difference between architectures.
+
+- Charlie
+
+> 
+> Thanks,
+> Ian
