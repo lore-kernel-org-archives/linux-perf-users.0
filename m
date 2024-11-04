@@ -1,142 +1,210 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F951F5846
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 20:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE5C1F5846
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 20:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730752501; cv=none; b=ju9EWNdElug1q3PJSrIpNfzN3BgngZn5bGMgPRqTB219i4rUcCh9CkL+Igp86iG3LmsKIBOVf7Ka7g4u5InOyEyR5ylPoVVhg/dp/DFceWStepcueawFd2n9aR6f+Qs/aD/SY10xbGOg50z0Y70bcj5kDSPKsskznKqUIOTfFC0=
+	t=1730752622; cv=none; b=EH+A3x4spEo4/87lHFtnZ2+Pm7guOX3fGO/B3FDmxHdBj/FGZxDaEtX/4KfrcjJw8rzvq0BDMwKimrWCARR+7gXJzVfM6Ilme3kTagjwjxPH+q0K/tFXFgq7nAXx/e1suiJgqNV30gkSqu5CU/ivNZnOs5yqvc7fdHV2T+pVs9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730752501; c=relaxed/simple;
-	bh=fCXm53AZpLvD3mlG5kaIz/uCWSEGjcylvGsCkXzMLrU=;
+	s=arc-20240116; t=1730752622; c=relaxed/simple;
+	bh=4nBRmUtbA108cfLj2oSnAsY8P82ZupaRNwnNsR+3/5o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HTXha5K1xyySQf3IIsAFZn+aADjVeIupkRFKS4mUlIHf+Eqv9CRFcmBJLXrLZVU2eMiWqwAAZ99+BloYqS8ivNPBgp/1da0kauO6hGfTVAnkA5YmrZ32gZELAnJmD+TB1gnmPnIUKoYmw6htw99YIxNMFmqkDS1omrsGr5BwV4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SX5sEeHz; arc=none smtp.client-ip=209.85.166.170
+	 To:Cc:Content-Type; b=LIb+ib8WgQoIqtl9hHjC0j+PzyiPfvHTVS3MGXx0avYuS8Dz90JSKgfdwonLaxS2iw2L5jz4ONcnof9HoyRM81mymPHvedsvjA8ph6Y0wlwnAmoTagI+IJF8C4nMZsj3Nw9Fh734wRheDnxFSiGYR7+3F+JfECgpaLYxszEwlsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sjFO3h9C; arc=none smtp.client-ip=209.85.166.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SX5sEeHz"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a6c3bdbebcso2905ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 12:35:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sjFO3h9C"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a3b28ac9a1so1995ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 12:37:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730752499; x=1731357299; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1730752619; x=1731357419; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oTtHTuauzkyyFaQ5FOERKTQGUplDXz7vVkQVmXIkb2o=;
-        b=SX5sEeHz1a5qcc8B1kpCYbJuLVH9cymsFjoIIl53YcwGm+gm7sKBr2d+27Pn//50oi
-         6sjUcNW95hjlivMOEV66hAznYcSF7SS04Ga/6ALGpxYyCwB0WOuH9XfSdeD1NCiQeahz
-         g/G3ZGRrbuzOhImtGeDmLDGw8+HcOlpNKEXF0EF760qP5N881eNbMxbuuo0MNaUWght1
-         InjVdy4rUFid4dM+JFRt5kulK4XYAhMU0VYw55lxecG+2CfBtR8b0JBKT7g4vhxBvvpU
-         wyce1SKul8O/mlE+PPW8mMAt4j+XzCu3FtJQQ45nWMwGk+bmLOpxIGC6DAa3yQkZM1EJ
-         S+iQ==
+        bh=YjVDRx6oH+xeW6jQUK0g6WGli8hpIwXPydX3YYIiQho=;
+        b=sjFO3h9C7KSRCegTLvegsh3crfCEKRTKKwRus67oxBcpkeXH6EZf0tC5Kh1MmcRb7E
+         msju2noJhhfVkKXf3nAKfQFN1cmJjX2fBn5mtkr00HUOSpWry81lStqWvkamzyqUMI+X
+         ckSWUyHARLYy2/KNo3/gGni+ccdnLI/qIxJsLccJy8SWAYbxZNXyslud4+FKwlCN8JNM
+         LwLCGbg9+E+IOFI32P+MQwKVhsTow0NbYrJaWjuTut4xVqcYr6CtZthbb4ktei4Z1jlE
+         pI0V974ncjNVsssOBJ2DlLghhoRe4ec5DJ2EdNs5ni4su5wRwGH1aNINe5FxHxdAu1Tz
+         /nww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730752499; x=1731357299;
+        d=1e100.net; s=20230601; t=1730752619; x=1731357419;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oTtHTuauzkyyFaQ5FOERKTQGUplDXz7vVkQVmXIkb2o=;
-        b=nwKN9iQrNrtJSTWR3WDB7Y6Rp+teaRkKPIeo6HBfKlasJt3SCZct8P1gF6XD4OwuVi
-         H5vYxZ+XLB1YufUcYXkY7nmv57sFGhjbHeS+9hJnjoo/cfMYgy/+fq9UX+H3jHnkSBpy
-         QZSviRy7jLWP5+rku0dcreRUZorTm46ntTH3lVCX0uOng5wydoc51J5CztsBTp5Gp3Gu
-         vH4z/bBACJZhqE6kIWddtHQDjCwWlVG5+RgT+fcfKOb3F9DqvA/DBDElFI2xw4uMtq3q
-         XaButSg5GV+E6QAfZOr3R1nqGvBfpvg9EUyMa77Uvi/3USk/e1j/LWPTiv7lC3T4LxwT
-         ql5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUYD6fIGiTFek2o+Ejmh+VJU+D4IWrCOb8BQi5DFpH+mimUbYXvNAudLciw9TucfD/2Hm0hXVoZdj5s/LYf9PMi@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnQhvUO7NlNqbDaPlRAzqYx7iwLKRm74ZaxGFgrL0/lkq0i0iB
-	EYvNo127QP8bceBwe2dIo/Iljd/aScXxt6YMPW/oo+IiV45sjoQjPxHWbaBKc7JibyPCc5jfszZ
-	Qo2PcoKYg4Lp1AOim/HpI7WI1IqLi4nb+QZ5X
-X-Gm-Gg: ASbGncvOJrAti1HvwyDyNLxKs+fZnc+9Z81JCUujIwuqNO1Hm4IYo0QxMWwnFwxsofV
-	kCbM2X5zberaVznVT1XrlpMhFvdWC1caZggpjjkQB2B6F7OIetrnu56kAphrCJw==
-X-Google-Smtp-Source: AGHT+IF2RG8jMIhbr3G3wIVER0dIaBDxrGWf6Ov4CTuuI8RTqGpMnA/hqfSnwPEmDAXRhsf/y2Q0ha81fWR+0ujBjJg=
-X-Received: by 2002:a05:6e02:1a87:b0:3a4:d2ba:2011 with SMTP id
- e9e14a558f8ab-3a6da8bd59bmr676595ab.0.1730752499214; Mon, 04 Nov 2024
- 12:34:59 -0800 (PST)
+        bh=YjVDRx6oH+xeW6jQUK0g6WGli8hpIwXPydX3YYIiQho=;
+        b=dw/eWFGRlAaHM1bkzo50Lf06t6nE8ZeD+0/ke/TcbF/va5FuUntmL2ZBJmX2d2wJCN
+         m9aQ7ngxLTXqj2y6OHE/GsUxhLRYLi3LTPmncm2U/f1/62MmCL1Io9Fj1SvAx4oYaHwQ
+         gDX9nvEfwMDIkcACz8mZEe/VZXlqvs9imQwfzpDGi1gu8vCoZ3X0anzL7Jpv60o9gTVh
+         lk931apOwi3JsEcDKQlFPFzwA+cDOzOgvibadUTVBSdqD1huqInmnYv7r9xiz+DsHsmx
+         ulgMUrutWsc5dfpB4BzhNUvElrNgou05YqS5XufzSijYCTc39OD3JhZ3D/HFYnS2Te/5
+         tc9g==
+X-Forwarded-Encrypted: i=1; AJvYcCV0ltMWcoF+c5aDQtkl2IKq7x42/sVzx7JO0K364SM3BF1cCFxCsge2/3ug+zs6MRJW+RtrcdngH1sHo0oHLX1a@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn/LMy39puMRY+tq5KKTAAYAUDf0LyTaB3u443LMM/cW8iuq1C
+	jnbEBfRvsCB47PeDW5qb4MdPoI6vVTo52/FymRRaI61HGAavYmiEBekkpCADdYCvHQc6KB3I4Qz
+	5paGmppp9iJSlKHunTRb9t8Pr0BdbUCZX4pKT
+X-Gm-Gg: ASbGncu0ueTsG9NvsVejt7C+MF5l984WGjT/BaEeQeXmuI+lpA3b1E2rd43vSamDfbJ
+	/IMs61Oc5CLf6Rhe96iIUaHRrKacQC4mFoBwq7O6X4YV9syFZMsfitvQckR2+LA==
+X-Google-Smtp-Source: AGHT+IESkicvZoSSZrcJAJpL2CY40Vg5qDWTWVmcUyR/sBcGeJfCyGZQrc40LU+36/ln0l+5dHy3kQgKyy9BNSbN0Bg=
+X-Received: by 2002:a05:6e02:12b4:b0:3a6:b318:3b99 with SMTP id
+ e9e14a558f8ab-3a6daa9e751mr627685ab.27.1730752619348; Mon, 04 Nov 2024
+ 12:36:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241031014252.753588-1-irogers@google.com> <20241031014252.753588-7-irogers@google.com>
- <ZyPX7ayIO4teziDX@x1> <CAP-5=fVgJu8BJWFVUkCy1Zsi3piTPdV-GXL1bTpWZeO=nm=jrg@mail.gmail.com>
- <Zykk2MJ4REGCaqVw@google.com>
-In-Reply-To: <Zykk2MJ4REGCaqVw@google.com>
+References: <20241103142302.230370-1-linux@treblig.org>
+In-Reply-To: <20241103142302.230370-1-linux@treblig.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 4 Nov 2024 12:34:47 -0800
-Message-ID: <CAP-5=fXQpej43wxEtMYFbxdofHtUi98X68W4AaR9UCfsbDir5A@mail.gmail.com>
-Subject: Re: [PATCH v5 06/21] perf script: Move find_scripts to browser/scripts.c
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+Date: Mon, 4 Nov 2024 12:36:48 -0800
+Message-ID: <CAP-5=fXNJ_QbEA20eusx7EDqp=pQgVdW_+-w1T=vsrzH4BGjpw@mail.gmail.com>
+Subject: Re: [PATCH] perf: event: Remove deadcode
+To: linux@treblig.org
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 4, 2024 at 11:47=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Sun, Nov 3, 2024 at 6:23=E2=80=AFAM <linux@treblig.org> wrote:
 >
-> On Thu, Oct 31, 2024 at 01:51:36PM -0700, Ian Rogers wrote:
-> > On Thu, Oct 31, 2024 at 12:18=E2=80=AFPM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Wed, Oct 30, 2024 at 06:42:37PM -0700, Ian Rogers wrote:
-> > > > The only use of find_scripts is in browser/scripts.c but the
-> > > > definition in builtin causes linking problems requiring a stub in
-> > > > python.c. Move the function to allow the stub to be removed.
-> > > >
-> > > > Rewrite the directory iteration to use openat so that large charact=
-er
-> > > > arrays aren't needed. The arrays are warned about potential buffer
-> > > > overflows by GCC now that all the code exists in a single C file.
-> > >
-> > > Introducing is_directory_at() should be done as a prep patch, as the
-> > > rest of the patch below could end up being reverted after some other
-> > > patch used it, making the process more difficult.
-> > >
-> > > I mentioned cases like this in the past, so doing it again just for t=
-he
-> > > record.
-> >
-> > This is highlighted in the commit message:
-> > ```
-> > Rewrite the directory iteration to use openat so that large character
-> > arrays aren't needed. The arrays are warned about potential buffer
-> > overflows by GCC now that all the code exists in a single C file.
-> > ```
-> > so without the change the code wouldn't build. The new is_directory_at
-> > function is effectively 2 statements fstatat and S_ISDIR on the
-> > result, it is put next to is_directory for consistency but could have
-> > been a static function in the only C file to use it.
-> >
-> > For the record, patches introducing 2 line long functions can be
-> > excessively noisy, especially in a 21 patch series. There is always
-> > the declared but not used build error to worry about - here things
-> > couldn't just be simply moved due to triggering a different build
-> > error. Given the simplicity of the function here I made a decision not
-> > to split up the work - the commit message would likely be longer than
-> > the function. The work never intended to introduce is_directory_at but
-> > was forced into it through a desire not to disable compiler warnings.
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 >
-> This patch does more than just moving the code which can be easy to miss
-> something in the middle.  I think you can move the code as is without
-> introducing build errors and then add new changes like using openat() on
-> top (you may separate the change out of this series).  I think it's
-> ok to have a small change if it clearly has different semantics.
+> event_format__print() last use was removed by 2017's
+> commit 894f3f1732cb ("perf script: Use event_format__fprintf()")
+>
+> evlist__find_tracepoint_by_id() last use was removed by 2012's
+> commit e60fc847cefa ("perf evlist: Remove some unused methods")
+>
+> evlist__set_tp_filter_pid() last use was removed by 2017's
+> commit dd1a50377c92 ("perf trace: Introduce filter_loop_pids()")
+>
+> Remove them.
+>
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-If you are trying to bisect to find something that broke a build,
-having commits that knowingly break the build will cause the bisect to
-fail. The bisect will falsely fail on the known to be broken commit.
-It should be unacceptable to knowingly break the build in a commit for
-this reason.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
+
+> ---
+>  tools/perf/util/evlist.c            | 18 ------------------
+>  tools/perf/util/evlist.h            |  2 --
+>  tools/perf/util/trace-event-parse.c |  6 ------
+>  tools/perf/util/trace-event.h       |  3 ---
+>  4 files changed, 29 deletions(-)
+>
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index f14b7e6ff1dc..4b992a3f2985 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -362,19 +362,6 @@ __weak int arch_evlist__add_default_attrs(struct evl=
+ist *evlist,
+>         return __evlist__add_default_attrs(evlist, attrs, nr_attrs);
+>  }
+>
+> -struct evsel *evlist__find_tracepoint_by_id(struct evlist *evlist, int i=
+d)
+> -{
+> -       struct evsel *evsel;
+> -
+> -       evlist__for_each_entry(evlist, evsel) {
+> -               if (evsel->core.attr.type   =3D=3D PERF_TYPE_TRACEPOINT &=
+&
+> -                   (int)evsel->core.attr.config =3D=3D id)
+> -                       return evsel;
+> -       }
+> -
+> -       return NULL;
+> -}
+> -
+>  struct evsel *evlist__find_tracepoint_by_name(struct evlist *evlist, con=
+st char *name)
+>  {
+>         struct evsel *evsel;
+> @@ -1199,11 +1186,6 @@ int evlist__set_tp_filter_pids(struct evlist *evli=
+st, size_t npids, pid_t *pids)
+>         return ret;
+>  }
+>
+> -int evlist__set_tp_filter_pid(struct evlist *evlist, pid_t pid)
+> -{
+> -       return evlist__set_tp_filter_pids(evlist, 1, &pid);
+> -}
+> -
+>  int evlist__append_tp_filter_pids(struct evlist *evlist, size_t npids, p=
+id_t *pids)
+>  {
+>         char *filter =3D asprintf__tp_filter_pids(npids, pids);
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index bcc1c6984bb5..ff73908e2178 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -144,7 +144,6 @@ int __evlist__set_tracepoints_handlers(struct evlist =
+*evlist,
+>         __evlist__set_tracepoints_handlers(evlist, array, ARRAY_SIZE(arra=
+y))
+>
+>  int evlist__set_tp_filter(struct evlist *evlist, const char *filter);
+> -int evlist__set_tp_filter_pid(struct evlist *evlist, pid_t pid);
+>  int evlist__set_tp_filter_pids(struct evlist *evlist, size_t npids, pid_=
+t *pids);
+>
+>  int evlist__append_tp_filter(struct evlist *evlist, const char *filter);
+> @@ -152,7 +151,6 @@ int evlist__append_tp_filter(struct evlist *evlist, c=
+onst char *filter);
+>  int evlist__append_tp_filter_pid(struct evlist *evlist, pid_t pid);
+>  int evlist__append_tp_filter_pids(struct evlist *evlist, size_t npids, p=
+id_t *pids);
+>
+> -struct evsel *evlist__find_tracepoint_by_id(struct evlist *evlist, int i=
+d);
+>  struct evsel *evlist__find_tracepoint_by_name(struct evlist *evlist, con=
+st char *name);
+>
+>  int evlist__add_pollfd(struct evlist *evlist, int fd);
+> diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-=
+event-parse.c
+> index f0332bd3a501..d97830cdbd7e 100644
+> --- a/tools/perf/util/trace-event-parse.c
+> +++ b/tools/perf/util/trace-event-parse.c
+> @@ -116,12 +116,6 @@ void event_format__fprintf(struct tep_event *event,
+>         trace_seq_destroy(&s);
+>  }
+>
+> -void event_format__print(struct tep_event *event,
+> -                        int cpu, void *data, int size)
+> -{
+> -       return event_format__fprintf(event, cpu, data, size, stdout);
+> -}
+> -
+>  /*
+>   * prev_state is of size long, which is 32 bits on 32 bit architectures.
+>   * As it needs to have the same bits for both 32 bit and 64 bit architec=
+tures
+> diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.=
+h
+> index bbf8b26bc8da..0e5133f1b910 100644
+> --- a/tools/perf/util/trace-event.h
+> +++ b/tools/perf/util/trace-event.h
+> @@ -42,9 +42,6 @@ struct tep_event *trace_event__tp_format_id(int id);
+>  void event_format__fprintf(struct tep_event *event,
+>                            int cpu, void *data, int size, FILE *fp);
+>
+> -void event_format__print(struct tep_event *event,
+> -                        int cpu, void *data, int size);
+> -
+>  int parse_ftrace_file(struct tep_handle *pevent, char *buf, unsigned lon=
+g size);
+>  int parse_event_file(struct tep_handle *pevent,
+>                      char *buf, unsigned long size, char *sys);
+> --
+> 2.47.0
+>
