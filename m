@@ -1,51 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514741ABEBA;
-	Mon,  4 Nov 2024 23:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9166C1ABEBA;
+	Mon,  4 Nov 2024 23:34:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730763056; cv=none; b=VjdjF/al3ANStG8o0BT/lzfsG0EqYRANEiDxs5Tr7A5nzZvmDFe2lswlOgDPsNA4vMvykmXPoq+YJZCq+uNChfSjeZ+EZ5hN12WhTTCmwHpMV61z7gfChgRpuJECkd2R9xrRwXYSF346FMYJ5olElC4FsKR18qFZcZ96yPKJT9s=
+	t=1730763281; cv=none; b=sXLZX/0FPl8O/YjElJiXz2JIe+SIium/TIzrp692EqWeDYgkaMJEMgAcNmgqPsPYYA65SDgTy+rqcTPc7o6dJGGh2rVYz3SFJ5pCGFPPXribnT5zzlSsbP5uI0oQfcboFHyfFoeDBZFXCwLyUM5Gj5VSycCETbn2eJw//YdVVKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730763056; c=relaxed/simple;
-	bh=hJhl8MJ+oO5wSq1y/pplD9Xg9rKSnY+dmsRkSF8q9Cc=;
+	s=arc-20240116; t=1730763281; c=relaxed/simple;
+	bh=88TYumyhWbfjVMyfSLi2/8DI4JnQwU62uhhbbbI3EPc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BuHzpMOsqZPMYG7izJn60LbQRm5bsQT0Ri4PTU5oESxipqAkME85Kg9mEELlAcipMHl/TrCbomO2nBFdy+dkie7L1tMwWNRkkIemKAMELgFh812Ns+neeBo7584w1gVpGF8YBLes2Y9fDMFcRJtYYrMV6n0TGmBE83Do5q4L4es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rtJ1tpx4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yj9tANpXxwYx0kslX3PhSF7smrVsE4agwDFo9q13yIgEK6PCG86KQtF0gA9i9OyCG/6EMSBr6M423cmhTAGJJ30+o1sS4O6d66rVm2/4XOGsvMqJd+tctCRzm+QiQ1opYxzElNKdXKjw3CPW3/46KAnF4oNu4EETEmdY04FpjkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bk2WE9bR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rtJ1tpx4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D404C4CECE;
-	Mon,  4 Nov 2024 23:30:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bk2WE9bR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5FDCC4CED1;
+	Mon,  4 Nov 2024 23:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730763056;
-	bh=hJhl8MJ+oO5wSq1y/pplD9Xg9rKSnY+dmsRkSF8q9Cc=;
+	s=k20201202; t=1730763280;
+	bh=88TYumyhWbfjVMyfSLi2/8DI4JnQwU62uhhbbbI3EPc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rtJ1tpx4rPV0jJfZc0b84WvJulNkkE+gfGhAGanvG18jmx3L4B8dQ8vnfNKzLdHMt
-	 zU0B3PrQ7FnllNNgNmDRGmoRcj8BKXYDy7U5vxjOmtWSEgZVGiQn0FkNogsBX7+5x6
-	 410+Tq4zU+EBKobHXIgQYsxRZw3Uanm50ySr2YcqQFqyqiz1J5fX0pf4i6Ktbc17dF
-	 1n4cck6PHPNghxhlZkWqjnlvh8+8kQdECdJ/iR48EoVmBeWc6VqDevkHQt1Duoc9Yk
-	 oaukCRjmpHSAsnOB/LIxSdr8EH2yPcreaQkZ7ubtuSA8wOrVb8wsNDIpI7ub0zx6tE
-	 jJpM6QgJw3LnQ==
-Date: Mon, 4 Nov 2024 15:30:53 -0800
+	b=bk2WE9bRtabX0pG/dgRccsTHBgk3EKcHrehNbj5h74YnMHZlwsGo6fKaH2m0wXp3k
+	 iE6KH+DZpT5uYmvB2VIz1m03obmFmHmkhfyYiwZ9rYD07lTh4eW+BFFwppXdOKnxLt
+	 5AnTsWLqxlW1sjxaiQ8JU638m/VdU11GB5DrKh6pj3QWgeZrDKj7zTtosRmTxpy0Fy
+	 RIIeVGYc3DP2GIRJ5xeOZKGa0f8VmGlLKgwWlLZIuOCYhlTNFUbX1WimsV/6oNZ/r+
+	 MdytaQ1+UQix5E25D6/Hi6ryDchy3Fwhno1axOeFEVqRn2b4Iho2RoLkO1OSUKNbe4
+	 uWTSuW+7cv2jw==
+Date: Mon, 4 Nov 2024 15:34:38 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>
-Subject: Re: [PATCH 2/2] perf test: Don't build the python binding builtin
- test case with NO_LIBPYTHON=1
-Message-ID: <ZylZLYC34jSajfQQ@google.com>
-References: <20241104175953.535202-1-acme@kernel.org>
- <20241104175953.535202-3-acme@kernel.org>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf test: Fix LBR test by adding indirect calls
+Message-ID: <ZylaDu6NjJIq6rUf@google.com>
+References: <20241103002414.2281869-1-namhyung@kernel.org>
+ <CAP-5=fUg-DFKM4SQa7P2fWRd62y7kDiP+qP2kP-TiZMy2EX7mQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,122 +47,66 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241104175953.535202-3-acme@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUg-DFKM4SQa7P2fWRd62y7kDiP+qP2kP-TiZMy2EX7mQ@mail.gmail.com>
 
-On Mon, Nov 04, 2024 at 02:59:53PM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Sat, Nov 02, 2024 at 09:58:03PM -0700, Ian Rogers wrote:
+> On Sat, Nov 2, 2024 at 5:24 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > I've noticed sometimes perf record LBR tests failed on indirect call
+> > test because it has empty branch stacks more than expected.
+> >
+> > The test workload (thloop) spawns a thread and calls a loop function for
+> > 1 second both from the main thread and the new thread.  However neither
+> > of them has indirect calls in the body so it ended up with empty branch
+> > stacks.
+> >
+> >   LBR any indirect call test
+> >   [ perf record: Woken up 21 times to write data ]
+> >   [ perf record: Captured and wrote 5.607 MB /tmp/__perf_test.perf.data.pujKd (7924 samples) ]
+> >   LBR any indirect call test: 7924 samples
+> >   LBR any indirect call test [Failed empty br stack ratio exceed 2%: 3%]
+> >
+> > Refactor the test workload to call the test_loop() both directly and
+> > indirectly.  Now expectation of indirect call is 50% but let's add some
+> > margin for startup and finish routines.
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/tests/shell/record_lbr.sh | 2 +-
+> >  tools/perf/tests/workloads/thloop.c  | 9 ++++++---
+> >  2 files changed, 7 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/shell/record_lbr.sh b/tools/perf/tests/shell/record_lbr.sh
+> > index 8d750ee631f877fd..7a23b2095be8acba 100755
+> > --- a/tools/perf/tests/shell/record_lbr.sh
+> > +++ b/tools/perf/tests/shell/record_lbr.sh
+> > @@ -121,7 +121,7 @@ lbr_test "-j any_ret" "any ret" 2
+> >  lbr_test "-j ind_call" "any indirect call" 2
+> >  lbr_test "-j ind_jmp" "any indirect jump" 100
+> >  lbr_test "-j call" "direct calls" 2
+> > -lbr_test "-j ind_call,u" "any indirect user call" 100
+> > +lbr_test "-j ind_call,u" "any indirect user call" 52
+> >  lbr_test "-a -b" "system wide any branch" 2
+> >  lbr_test "-a -j any_call" "system wide any call" 2
+> >
+> > diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
+> > index 457b29f91c3ee277..fa5547939882cf6c 100644
+> > --- a/tools/perf/tests/workloads/thloop.c
+> > +++ b/tools/perf/tests/workloads/thloop.c
+> > @@ -18,14 +18,16 @@ static void sighandler(int sig __maybe_unused)
+> >
+> >  noinline void test_loop(void)
+> >  {
+> > -       while (!done);
+> > +       for (volatile int i = 0; i < 10000; i++)
 > 
-> The python_use test suite was being built even when the python binding
-> that it is designed to test is not being built, fix it.
+> I don't think the volatile here will stop a sufficiently eager
+> optimizing compiler. I think it may need to be static as well.
 
-Can we keep the test and skip it instead?  It'd be helpful to maintain
-the test number consistent and to give a clear message why it skipped.
+Ok, probably we can disbale optimizations in this code like others
+in the test workloads.
 
-Thanks,
+Thanks for your review!
 Namhyung
 
-> 
-> Testing this patch:
-> 
-> When building with NO_LIBPYTHON=1, i.e. explicitely disabling linking
-> against libpython and thus not building the python binding:
-> 
->   $ perf check feature libpython
->              libpython: [ OFF ]  # HAVE_LIBPYTHON_SUPPORT
->   $ perf test "import perf"
->   $
-> 
-> Not disabling linking with libpython, the default, that results in the
-> python binding being built:
-> 
->   $ perf check feature libpython
->                libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
->   $ perf test "import perf"
->    17: 'import perf' in python                                         : Ok
->   $ perf test -vv "import perf"
->   Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
->    17: 'import perf' in python:
->   --- start ---
->   test child forked, pid 533419
->   python usage test: "'/usr/bin/python3' -c "import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf" "
->   ---- end(0) ----
->    17: 'import perf' in python                                         : Ok
->   $ strace -s1024 -f -e execve perf test 17
->   execve("/home/acme/bin/perf", ["perf", "test", "17"], 0x7ffe04832040 /* 38 vars */) = 0
->   strace: Process 533458 attached
->    17: 'import perf' in python                                         : Running (1 active)
->   strace: Process 533459 attached
->   [pid 533459] execve("/bin/sh", ["sh", "-c", "--", "'/usr/bin/python3' -c \"import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf\" 2> /dev/null"], 0x133179a0 /* 40 vars */) = 0
->   strace: Process 533460 attached
->   [pid 533460] execve("/usr/bin/python3", ["/usr/bin/python3", "-c", "import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf"], 0x5566715c7280 /* 40 vars */) = 0
->   [pid 533460] +++ exited with 0 +++
->   [pid 533459] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=533460, si_uid=1000, si_status=0, si_utime=4 /* 0.04 s */, si_stime=2 /* 0.02 s */} ---
->   [pid 533459] +++ exited with 0 +++
->   [pid 533458] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=533459, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
->   [pid 533458] +++ exited with 0 +++
->    17: 'import perf' in python                                         : Ok
->   +++ exited with 0 +++
->   $
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Cc: Howard Chu <howardchu95@gmail.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Leo Yan <leo.yan@linux.dev>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: Veronika Molnarova <vmolnaro@redhat.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/tests/Build          | 2 +-
->  tools/perf/tests/builtin-test.c | 2 ++
->  tools/perf/tests/tests.h        | 2 ++
->  3 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> index 01ed9335db4dba4e..8596616907adf244 100644
-> --- a/tools/perf/tests/Build
-> +++ b/tools/perf/tests/Build
-> @@ -20,7 +20,7 @@ perf-test-y += hists_link.o
->  perf-test-y += hists_filter.o
->  perf-test-y += hists_output.o
->  perf-test-y += hists_cumulate.o
-> -perf-test-y += python-use.o
-> +perf-test-$(CONFIG_LIBPYTHON) += python-use.o
->  perf-test-y += bp_signal.o
->  perf-test-y += bp_signal_overflow.o
->  perf-test-y += bp_account.o
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index d2cabaa8ad922d68..13f7b24694d1d0b0 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -79,7 +79,9 @@ static struct test_suite *generic_tests[] = {
->  	&suite__syscall_openat_tp_fields,
->  #endif
->  	&suite__hists_link,
-> +#ifdef HAVE_LIBPYTHON_SUPPORT
->  	&suite__python_use,
-> +#endif
->  	&suite__bp_signal,
->  	&suite__bp_signal_overflow,
->  	&suite__bp_accounting,
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index af284dd47e5c7855..3144c7916532825c 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -99,7 +99,9 @@ DECLARE_SUITE(dso_data_cache);
->  DECLARE_SUITE(dso_data_reopen);
->  DECLARE_SUITE(parse_events);
->  DECLARE_SUITE(hists_link);
-> +#ifdef HAVE_LIBPYTHON_SUPPORT
->  DECLARE_SUITE(python_use);
-> +#endif
->  DECLARE_SUITE(bp_signal);
->  DECLARE_SUITE(bp_signal_overflow);
->  DECLARE_SUITE(bp_accounting);
-> -- 
-> 2.47.0
-> 
