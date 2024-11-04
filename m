@@ -1,165 +1,313 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A222123A6
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 19:52:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9751CBA1E;
+	Mon,  4 Nov 2024 20:08:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730749927; cv=none; b=KkbZpxbItzpFBqr25k/SBnPVJrlT25hWTokiigVD9TxhpXpJbcDa6q13VcL7WNb77fJXlVA0cTWR0jZjpPM/fMUByFJMzGdKTst2p2DVulaRfqN7Vpl/3JXA+u3mPrOzxErbRjbJoJX/VBaVueD/XhivBGGPUIRP7PNQCp7NWPM=
+	t=1730750891; cv=none; b=DXTN4MyEi7lHYlM0kn/8MSV9ONK6AnTbvm5j76lTiVVmXWsBa01OLAu0Lt2YldGDyhXRTHTF5yNG6hWsC3oy66BIrsmQ9PFc8TulVHkJOqDQdjXz6+4eE1HH/57BvmvpYqlckfiJDroqRo2U6oXjSfJSCsREHlZ8PA8Z/LZVsSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730749927; c=relaxed/simple;
-	bh=daJVoLWMJgnDAQoF8idqLRpe4+dcNNTu2JiI5rzPbvY=;
+	s=arc-20240116; t=1730750891; c=relaxed/simple;
+	bh=ZWXfHzZV8JFxl2OE0LhWYeMXSQTAlbrxB+quB/L7dPI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=THeTrVAy35wNgSVji5Dxke4TOhy4FY4pfyetQoVLeHwOiOLCCuF3vuEbrQy0OmEPCcson24zU5WmLCXmDu8iuGN5mfdONFkVmZqz18uh40FVjDajc/1dX30dXnV89yYsr8NptoLcL0EtAYHgUORf/FVynebsoAuv+DwGbrThRNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxR8Bw7/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ywr0aRM+e8RuU+eunpzToB+zWFEG0wYlpTSFPYCygO1kaP/uy+HhxH0+n30ss68WX3rHC8uD1glr7tUkHEHmNNWfnTFAtnCS9McZPQytN87m0OQYqCzldKBvjJQ6Q5gbPnN483F6BSvrSxmcwoktyy1VaUkgDW55502GojwUndo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qwarq9Vc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxR8Bw7/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BC12C4CED0;
-	Mon,  4 Nov 2024 19:52:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qwarq9Vc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98DE4C4CECE;
+	Mon,  4 Nov 2024 20:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730749927;
-	bh=daJVoLWMJgnDAQoF8idqLRpe4+dcNNTu2JiI5rzPbvY=;
+	s=k20201202; t=1730750891;
+	bh=ZWXfHzZV8JFxl2OE0LhWYeMXSQTAlbrxB+quB/L7dPI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OxR8Bw7/kBoB4J+I7s0+skhftbhMfE63iflbGPpD67mTPk2jVvZVTb8DiAepyKrE9
-	 rh5LsSJO1Z/5qCxDLvBh7k/pETPZzsHLCCtOloMlIK4yIG/Fb0C0QuayHyZX/bKjRc
-	 FMDrEn21/0pzhm5ZNQk48JXohSxN5pv2OnOaLIJlLZ48HFKCfM+fyksjkBUEp3AAc9
-	 88iUNhLX+fWoHtzIN/7h3L+77EOgRjJiRfP2Z64eqxl+u3T17E4zNi2QBgkCQ1vHqa
-	 ne9rn7tMNP161FeMoSmexeDUPnSqJjRmfyFrXITBC5K4aPCk74CF8+PCfai90yWYke
-	 vsuwMrBwI6xYQ==
-Date: Mon, 4 Nov 2024 11:52:05 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Michael Petlan <mpetlan@redhat.com>
-Cc: linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-	Arnaldo de Melo <acme@redhat.com>, vmolnaro@redhat.com
-Subject: Re: perf test fail :: "perf stat --bpf-counters --for-each-cgroup
- test"
-Message-ID: <Zykl5Xk8u5nhe0Pm@google.com>
-References: <alpine.LRH.2.20.2407191137440.11376@Diego>
- <CA+JHD90TkDVHPw4jqxMX2guqsg-8xrqD2iiEfZ_akixvVYZKZg@mail.gmail.com>
- <alpine.LRH.2.20.2407191303000.11376@Diego>
- <536d5b91-f9ed-99b3-6c17-3d93bf451ffd@redhat.com>
+	b=qwarq9Vc3QMaMiPJRVhaLSi1pnSHQ4oagkvZtvqR6B5vTLgGv8IWKuDd45gCLAj6L
+	 7AZemnACfcJVxud4JlJxcAZb7Ba2ghlnIX+PHRPf/ekKtGR5dM5fkGx9m7fRuTTA3q
+	 0G3wNJuw1WLjxYhJPiNlbLltKFicOnqoqUkqA/Qbn3EdN5t/DxyJO1+GsudUVw8Qe6
+	 WFiCWDqHYe5hTTzD1Dyzbc5aw0wiZvQTRGqUpHITGugI1H22YBsZZfc7VMtWCeFUbP
+	 bd2i8qJ1P7lmHMPIk0FAnRCLAWIgEfnj5iiwpbV7RpNpdFz/iXrA4hIlr4pwZYo29i
+	 ZK7zz/LXISwPg==
+Date: Mon, 4 Nov 2024 17:08:05 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Ian Rogers <irogers@google.com>,
+	Dima Kogan <dima@secretsauce.net>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] perf-probe: Improbe non-C language support
+Message-ID: <ZykppTmCLGqP9nGi@x1>
+References: <173073702882.2098439.13342508872190995896.stgit@mhiramat.roam.corp.google.com>
+ <ZykYwHifTM6niEmG@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <536d5b91-f9ed-99b3-6c17-3d93bf451ffd@redhat.com>
+In-Reply-To: <ZykYwHifTM6niEmG@x1>
 
-Hello Michael,
+On Mon, Nov 04, 2024 at 03:56:00PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Nov 05, 2024 at 01:17:08AM +0900, Masami Hiramatsu (Google) wrote:
+> > Hi,
 
-On Fri, Nov 01, 2024 at 11:15:39AM +0100, Michael Petlan wrote:
+I also now noticed that the cover letter subject has a typo, it should
+be "Improve", not "Improbe" :-)
+
+- Arnaldo
+  
+> > Here is a series of patches for perf probe to improve non-C language
+> > (e.g. Rust, Go) support.
+>  
+> > The non-C symbols are demangled style in debuginfo, e.g. golang stores
+>  
+> > ----
+> > $ ./perf probe -x /work/go/example/outyet/main -F main*
+> > main.(*Server).ServeHTTP
+> > main.(*Server).ServeHTTP.Print.func1
+> > main.(*Server).poll
+> > ...
+> > -----
 > 
-> On Fri, 19 Jul 2024, Michael Petlan wrote:
-> > On Fri, 19 Jul 2024, Arnaldo Carvalho de Melo wrote:
-> > > On Fri, Jul 19, 2024, 6:50 AM Michael Petlan <mpetlan@redhat.com> wrote:
-> > >       Hello Namhyung,
-> > > 
-> > >       we were investigating some test failures of the testcase mentioned
-> > >       in $subj. We have narrowed it down to:
-> > > 
-> > >           # perf stat -C 0,1 --for-each-cgroup system.slice,user.slice -e cycles -- taskset -c 1 perf test -w thloop
-> > > 
-> > >           Performance counter stats for 'CPU(s) 0,1':
-> > >                <not counted>      cycles                           system.slice
-> > >                3,020,401,084      cycles                           user.slice                       
-> > > 
-> > >                1.009787097 seconds time elapsed
-> > > 
-> > >       As seen, the system.slice is not counted properly in our case. It
-> > >       happens even without bpf-counters being involved.
-> > > 
-> > >       There were rumours that it might be caused due to too small system
-> > >       load, but it apparently happens even when the load was replaced by
-> > >       "thloop" workload from perf-test's workload library. However, even
-> > >       so, if the load was insufficient, we'd see a value – 0 instead of
-> > >       "not counted". The "<not counted>" result is printed if the counter
-> > >       wasn't properly enabled and running.
-> > > 
-> > >       Have you encountered this problem? What could cause it?
-> > > 
-> > > 
-> > > What does running with -vvv says? Some inconclusive error coming from the kernel? 
+> I presented about this last year:
+> 
+> https://tracingsummit.org/ts/2023/bpf-non-c/
+> https://tracingsummit.org/ts/2023/files/Trying_to_use_uprobes_and_BPF_on_non-C_userspace.pdf
+> https://www.youtube.com/watch?v=RDFRy1vWyHg&feature=youtu.be
+> 
+> So trying to do some of the things I did while playing with golang, and
+> with your patches applied, I only had to cope with a minor clash with a
+> patch by Ian Rogers that is present on perf-tools-next, related to:
+> 
+>         char buf[MAX_EVENT_NAME_LEN];
+> 
+> That in your patch expects the old 64 hard coded value, which will
+> appear in the my tests:
+> 
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -x main -F github*counter*
+> github.com/prometheus/client_golang/prometheus.(*counter).Add
+> github.com/prometheus/client_golang/prometheus.(*counter).AddWithExemplar
+> github.com/prometheus/client_golang/prometheus.(*counter).Collect
+> github.com/prometheus/client_golang/prometheus.(*counter).Desc
+> github.com/prometheus/client_golang/prometheus.(*counter).Describe
+> github.com/prometheus/client_golang/prometheus.(*counter).Inc
+> github.com/prometheus/client_golang/prometheus.(*counter).Write
+> github.com/prometheus/client_golang/prometheus.(*counter).updateExemplar
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -x main -F github*counter*
+> 
+> Then trying to add for all those:
+> 
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -d *:*
+> "*:*" does not hit any event.
+>   Error: Failed to delete events.
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -l
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus#
+> 
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -x main github*counter*
+> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> snprintf() failed: -7; the event name 'github_com_prometheus_client_golang_prometheus_counter_AddWithExemplar' is too long
+>   Hint: Set a shorter event with syntax "EVENT=PROBEDEF"
+>         EVENT: Event name (max length: 64 bytes).
+>   Error: Failed to add events.
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus#
+> 
+> But:
+> 
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -l
+>   probe_main:github_com_prometheus_client_golang_prometheus_counter_Desc (on github.com/prometheus/client_golang/prometheus.(*counter).Des>
+> (END)
+> 
+> That pager thing looks odd as well, since there is just one line in the
+> output...
+> 
+> So it failed to do all those, added just one, maybe state that some were
+> added but from the problematic one onwards it stopped? Or try all of
+> them and just state the ones that couldn't be added?
+> 
+> I.e. something like:
+> 
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -x main -F github*counter* | while read probename ; do perf probe -x main $probename ; done
+> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> Failed to find debug information for address 0x3287e0
+> Probe point 'github.com/prometheus/client_golang/prometheus.(*counter).Add' not found.
+>   Error: Failed to add events.
+> snprintf() failed: -7; the event name 'github_com_prometheus_client_golang_prometheus_counter_AddWithExemplar' is too long
+>   Hint: Set a shorter event with syntax "EVENT=PROBEDEF"
+>         EVENT: Event name (max length: 64 bytes).
+>   Error: Failed to add events.
+> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> Failed to find debug information for address 0x33ab40
+> Probe point 'github.com/prometheus/client_golang/prometheus.(*counter).Collect' not found.
+>   Error: Failed to add events.
+> Error: event "github_com_prometheus_client_golang_prometheus_counter_Desc" already exists.
+>  Hint: Remove existing event by 'perf probe -d'
+>        or force duplicates by 'perf probe -f'
+>        or set 'force=yes' in BPF source.
+>   Error: Failed to add events.
+> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> Failed to find debug information for address 0x33aba0
+> Probe point 'github.com/prometheus/client_golang/prometheus.(*counter).Describe' not found.
+>   Error: Failed to add events.
+> Added new event:
+>   probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc (on github.com/prometheus/client_golang/prometheus.(*counter).Inc in /home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
+> 
+> You can now use it in all perf tools, such as:
+> 
+> 	perf record -e probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc -aR sleep 1
+> 
+> Added new event:
+>   probe_main:github_com_prometheus_client_golang_prometheus_counter_Write (on github.com/prometheus/client_golang/prometheus.(*counter).Write in /home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
+> 
+> You can now use it in all perf tools, such as:
+> 
+> 	perf record -e probe_main:github_com_prometheus_client_golang_prometheus_counter_Write -aR sleep 1
+> 
+> snprintf() failed: -7; the event name 'github_com_prometheus_client_golang_prometheus_counter_updateExemplar' is too long
+>   Hint: Set a shorter event with syntax "EVENT=PROBEDEF"
+>         EVENT: Event name (max length: 64 bytes).
+>   Error: Failed to add events.
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus#
+> 
+> In the end we get:
+> 
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -l
+>   probe_main:github_com_prometheus_client_golang_prometheus_counter_Desc (on github.com/prometheus/client_golang/prometheus.(*counter).Desc@prometheus/counter.go in /home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
+>   probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc (on github.com/prometheus/client_golang/prometheus.(*counter).Inc@prometheus/counter.go in /home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
+>   probe_main:github_com_prometheus_client_golang_prometheus_counter_Write (on github.com/prometheus/client_golang/prometheus.(*counter).Write@prometheus/counter.go in /home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus#
+> 
+> That also explains the pager kicking in: I had to reduce font size in my
+> xterm (gnome-terminal really) and then the perf pager wasn't used (no
+> (END) at the last line waiting for me to press 'q').
+> 
+> The ones that got installed are working:
+> 
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf trace -e probe_main:*
+>      0.000 main/616840 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
+>   1001.043 main/616926 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
+>   1001.080 main/616926 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
+>   4000.994 main/616926 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
+> ^Croot@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf trace -e probe_main:*/max-stack=8/
+>      0.000 main/616926 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
+>                                        github.com/prometheus/client_golang/prometheus.(*counter).Inc (/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
+>                                        runtime.goexit.abi0 (/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
+>      0.030 main/616926 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
+>                                        github.com/prometheus/client_golang/prometheus.(*counter).Inc (/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
+>                                        runtime.goexit.abi0 (/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
+>   3000.166 main/616840 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
+>                                        github.com/prometheus/client_golang/prometheus.(*counter).Inc (/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
+>                                        runtime.goexit.abi0 (/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
+> ^Croot@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus#
+> 
+> I'll test this some more later/tomorrow, just wanted to give this first
+> reaction, thanks for working on this!
+> 
+> Btw, some more info about the environment (fedora 40):
+> 
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# readelf -wi main | head -20
+> Contents of the .debug_info section:
+> 
+>   Compilation Unit @ offset 0:
+>    Length:        0x506 (32-bit)
+>    Version:       4
+>    Abbrev Offset: 0
+>    Pointer Size:  8
+>  <0><b>: Abbrev Number: 1 (DW_TAG_compile_unit)
+>     <c>   DW_AT_name        : google.golang.org/protobuf/internal/strs
+>     <35>   DW_AT_language    : 22	(Go)
+>     <36>   DW_AT_stmt_list   : 0
+>     <3a>   DW_AT_low_pc      : 0x667c40
+>     <42>   DW_AT_ranges      : 0
+>     <46>   DW_AT_comp_dir    : .
+>     <48>   DW_AT_producer    : Go cmd/compile go1.22.7; regabi
+>     <68>   Unknown AT value: 2905: strs
+>  <1><6d>: Abbrev Number: 5 (DW_TAG_subprogram)
+>     <6e>   DW_AT_name        : google.golang.org/protobuf/internal/strs.isASCIILower
+>     <a4>   DW_AT_inline      : 1	(inlined)
+>     <a5>   DW_AT_decl_line   : 188
+> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus#
+> 
+> - Arnaldo
+>  
+> > And Rust stores
+> > -----
+> > $ ./perf probe -x /work/cro3/target/x86_64-unknown-linux-gnu/debug/cro3 -F cro3::cmd::servo*
+> > cro3::cmd::servo::run
+> > cro3::cmd::servo::run::CALLSITE
+> > cro3::cmd::servo::run::CALLSITE::META
+> > cro3::cmd::servo::run_control
+> > -----
 > > 
-> Hello!
-> 
-> We have been investigating this issue a bit more again and we have come
-> to conclusion that everything is probably OK, except of the testcase
-> which in short relies on the fact that taskset can force any system.slice
-> workload to happen on a particular CPU, which in my opinion does not
-> apply, being rather random and that's why the test sometimes fails.
-> 
-> To summarize the problem a bit:
-> 
-> 1) The $subj testcase sometimes fails.
-> 
-> 2) It consists of two parts, one performs counting system-wide and the
-> second limits the counting to CPUs 0 and 1. The second one sometimes
-> fails, while the first (systemwide) passes always.
-> 
-> 3) The reason why the test fails is because system.slice may get
-> <not counted> result.
-> 
-> 4) There is another problem with this testcase on single-cpu boxes, since
-> there is no "cpu 1", so we decided to try having "-C 0" and "taskset -c 0"
-> on such boxes. The problems with getting "<not counted>" disappeared!
-> 
-> ---------------------------
-> 
-> So... The systemwide tracing test works:
-> 
-> # perf stat --for-each-cgroup system.slice,user.slice -e cycles -a -- sleep 3
->  Performance counter stats for 'system wide':
-> 
->      8,884,593      cycles            system.slice
->      5,645,624      cycles            user.slice
-> 
->    3.004137451 seconds time elapsed
-> 
-> When we pin the workload AND tracing to particular CPU, it might fail:
-> 
-> # perf stat -C 0 --for-each-cgroup system.slice,user.slice -e cycles -- taskset -c 0 true
-> 
->  Performance counter stats for 'CPU(s) 0':
-> 
->      <not counted>  cycles            system.slice
->      2,722,263      cycles            user.slice
-> 
->    0.004184686 seconds time elapsed
-> 
-> Namhyung said that there might be not enough load, which finally appears
-> to be the problem. But not in the manner that replacing `true` by something
-> more "heavy" would help, but in the fact that system.slice didn't run on
-> CPU 0 at all during the `perf stat` counting.
-> 
-> Taskset can pin the process to some CPU, but even without it (or when we
-> pin it to CPU 3 for example), _some_ user.slice content is always run on
-> cpu 0, so we get values.
-> 
-> However, there is no guarantee that system.slice will run there. We would
-> probably need to load more the content that systemd decides to put under
-> "system.slice" and hope that it will get a chance to run on CPU 0 or 1 or
-> whatever we use in the testcase.
-> 
-> Of course, the more CPUs the machine has, the higher chance to get the
-> <not counted> result for system.slice is. That's why -a works and also
-> that's why it works on a single-CPU machine.
-> 
-> ............
-> 
-> Thus, I think that we should simply remove the taskset part of the testcase
-> and leave only the systemwide part.
-> 
-> Thoughts?
-
-Thanks for taking a look at this.  I admit that the CPU list can make
-troubles.  We need a better cgroup testing infra.  Anyway let's get rid
-of the problematic test for now.
-
-Thanks,
-Namhyung
-
+> > These symbols are not parsed correctly because it looks like a file name or
+> > including line numbers (`:` caused it.) So, I decided to introduce the changes
+> > 
+> >  - filename MUST start from '@'. (so it is able to distinguish the filename
+> >    and the function name)
+> >  - Fix to allow backslash to escape to --lines option.
+> >  - Introduce quotation mark support.
+> >  - Replace non-alnum character to '_' for event name (for non-C symbols).
+> > 
+> > With these changes, we can run -L (--lines) on golang;
+> > 
+> > ------
+> > $ perf probe -x goexample/hello/hello -L \"main.main\"
+> > <main.main@/work/goexample/hello/hello.go:0>
+> >       0  func main() {
+> >                 // Configure logging for a command-line program.
+> >       2         log.SetFlags(0)
+> >       3         log.SetPrefix("hello: ")
+> > 
+> >                 // Parse flags.
+> >       6         flag.Usage = usage
+> >       7         flag.Parse()
+> > ------
+> > 
+> > And Rust
+> > ------
+> > $ perf probe -x cro3 -L \"cro3::cmd::servo::run_show\"
+> > <run_show@/work/cro3/src/cmd/servo.rs:0>
+> >       0  fn run_show(args: &ArgsShow) -> Result<()> {
+> >       1      let list = ServoList::discover()?;
+> >       2      let s = list.find_by_serial(&args.servo)?;
+> >       3      if args.json {
+> >       4          println!("{s}");
+> > ------
+> > 
+> > And event name are created automatically like below;
+> > 
+> > $ ./perf probe -x /work/go/example/outyet/main -D 'main.(*Server).poll'
+> > p:probe_main/main_Server_poll /work/go/example/outyet/main:0x353040
+> > 
+> > $ ./perf probe -x cro3 -D \"cro3::cmd::servo::run_show\"
+> > p:probe_cro3/cro3_cmd_servo_run_show /work/cro3/target/x86_64-unknown-linux-gnu/debug/cro3:0x197530
+> > 
+> > We still need some more work, but these shows how perf-probe can work
+> > with other languages.
+> > 
+> > Thank you,
+> > 
+> > ---
+> > 
+> > Masami Hiramatsu (Google) (4):
+> >       perf-probe: Fix to ignore escaped characters in --lines option
+> >       perf-probe: Require '@' prefix for filename always
+> >       perf-probe: Introduce quotation marks support
+> >       perf-probe: Replace unacceptable characters when generating event name
+> > 
+> > 
+> >  tools/perf/util/probe-event.c  |  136 ++++++++++++++++++++++------------------
+> >  tools/perf/util/probe-finder.c |    3 +
+> >  tools/perf/util/string.c       |  100 +++++++++++++++++++++++++++++
+> >  tools/perf/util/string2.h      |    2 +
+> >  4 files changed, 180 insertions(+), 61 deletions(-)
+> > 
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
