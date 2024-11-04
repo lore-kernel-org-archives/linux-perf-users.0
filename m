@@ -1,115 +1,114 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1C31FCC4B
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 21:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEC11FCC56
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 21:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730755166; cv=none; b=HUMVg7r8l+Ze/UhPti58fVvTrOTGMXYFZMesXmtGcktp+GyBrX2gkUnbAj6zPePunga/bIk+e2GztFssx/r6T1gTNEF+w97jJQ16TKD3C4Sy6aTDPj62y9NxHCUVzyu5NvEB5CSlMnfy7h8QgKcQEXPrH3KtplpSfDgxOU4Mp0w=
+	t=1730755329; cv=none; b=ghMjxn5Ker73EGV08fKV+FvQZGKS8nhYoc79E2HX1/8wmz1DAdmH1dmDfLyAALzIUSG2wFAAlqAN5zm6T+KnRHWID8mOsg5KO5oBmfXEdI+OigNmpL/Kqgj+u01rKTvRsm4RggnGmnVuLf9zXOcIjGbqT/D4/j/ob4AltH/14Sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730755166; c=relaxed/simple;
-	bh=ckz2b09PADmewB6PWKzCnnP2d1FGRyLX6Oab2Bw7LRc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XGjd51gbygqasko5tuKN/juyLOpYJTaHjnB9qrKJdSGLaIJhNMZLRVlATGvgsVZhBpU1E10ymms3DecqTk8tu8Ra2tB/536dHuIQfwMQOGE70iOuryVw7cmNwVbDDhxnfee1mbHLDfJIOxTtYSK9zVM5itpi54cgFylavv1crLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=R7Ijie7k; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1730755329; c=relaxed/simple;
+	bh=I55DVc3umMZtwJE/B7Oa+c/JP4VFip3QnIER8iIzNDM=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=XmwCzp+O3c2KRj4W45VaaYAI4xpR6vU/ssl+jtJ2tE/M+Q9ppHu0UJlOIdXEYcHGFOr+u0ksv6xY+n+A0fT3i4fbOsh86fRjhERHLidKoPKECzuRdLpMI3p2+w8gBfBoiMbOYXLfCrFe37lUdbZLkiyHNYXPYDhc//JvJhQ2bfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SZyqavIS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="R7Ijie7k"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-720c2db824eso4355739b3a.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 13:19:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1730755164; x=1731359964; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=B7VFZJDeshaBgjeWIFYPhisTVO49atYEdsiOoKJAJfU=;
-        b=R7Ijie7kXJ8wsjT/1pYW8Ej/7SP9EUPXbJmPf55xHJjY24BK5/aBwywefTSSryZgix
-         uQb0v/Szql9jyAhFGv3Oh+IkheILL6qV4UJSyyqnbp78lTSCtrAEuNljUH+r3ExlnaVa
-         1qSkS2sObX7KyXnVzd6EaSAb8AUnGNwtPNuLjaUXih0m+APvnQX5bYjRD+cLa6sftzx3
-         Ot/nVU1zZxwo7ou3NWzVez16nHssRn3iXeqdBhYTwum5CZBowe2v8DxbWaHYx7DIAK1S
-         tPG6ixLxKQYCgPziSKl4WOQem45JsWga1Nv509CGl1aZun5iyeUJZS5j4vjA//PZ/IDl
-         66RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730755164; x=1731359964;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B7VFZJDeshaBgjeWIFYPhisTVO49atYEdsiOoKJAJfU=;
-        b=iWxNw6sssyRK8+0+l6Sc8w8U/tKYLdsZsRB2fbVAppBuVBT34o64NzJJUwsAi2sr4i
-         ZAcEMwQ6ajGOKeJTdC9xXvKR47tQ2YBxLpSoVp78GLt00LePEEL1Jlnxa9UndLuLh1Mo
-         4UDvkm9AmplzREsWXGulPpiv2BSQymOHQ84anOzxNAGbWUJTObTbsiOIxpV1hSmZcoXF
-         MHPSHxe5uUDKhjHx4+3kqiE+FISlEWIMhw31tKyDAp4o759LIuiaII0XFW3oOavdaglZ
-         dUWgPqa6AMTxOc9L4CZaWTCcUG6amr9ic2a3DpeQ8XHIv1WRwiozZct1Jgb6rxj326XP
-         xZuA==
-X-Gm-Message-State: AOJu0Ywf+UcHcZwAOCDWfNC3U8XTnMqMBzlqNS9ZvI/t58vUxTc/QrkK
-	WzKpI8iUYbUuBOAr63At4smZ8nUFVD/KYpwfIcI53JKA/su0FQgm3mgfXR3uMqsMdrJc+mehp1+
-	M
-X-Google-Smtp-Source: AGHT+IGxdnQJocTNFzEN9oyHKVuXZJvNTwlFkn8XBlUG6umm69XvTTuY4E2zmsa/aNVVZeehrny4Vw==
-X-Received: by 2002:a05:6a20:7f93:b0:1db:f0af:2277 with SMTP id adf61e73a8af0-1dbf0af227fmr639531637.38.1730755163757;
-        Mon, 04 Nov 2024 13:19:23 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7f3e0efa90csm1270988a12.2.2024.11.04.13.19.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2024 13:19:23 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Mon, 04 Nov 2024 13:19:15 -0800
-Subject: [PATCH] perf: Add all shellcheck_log to gitignore
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SZyqavIS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730755326;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=dkzVn2g6Rhti6dXYRVWNocj9m+J8sSPlJVpexm6wlgY=;
+	b=SZyqavIS2raed30XjnGl54haKc53Zh2TaDjKpFr2P+4rnhiriUbmXyJWHuYhPVaaCMOIo3
+	mRo4ADWHSxo/j7GaBwxbnFTUX3di1YhfgwxRQmkrlR3wfmghcIzvYmf6389absFqCjcrXS
+	VzG5/Y2qbiXzfTLAChU+qGzMxcJ6bmw=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-678-ZdtHcMSHPCmURUHU2Lka9w-1; Mon,
+ 04 Nov 2024 16:22:04 -0500
+X-MC-Unique: ZdtHcMSHPCmURUHU2Lka9w-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E084C1955EA7;
+	Mon,  4 Nov 2024 21:22:03 +0000 (UTC)
+Received: from Carbon (unknown [10.39.208.11])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C5EFF19560A3;
+	Mon,  4 Nov 2024 21:22:01 +0000 (UTC)
+Date: Mon, 4 Nov 2024 22:21:57 +0100 (CET)
+From: Michael Petlan <mpetlan@redhat.com>
+To: irogers@google.com, linux-perf-users@vger.kernel.org
+cc: acme@redhat.com, vmolnaro@redhat.com, jplesnik@redhat.com
+Subject: python3-perf pulling dependencies after build refactoring
+Message-ID: <fafa202f-59a-4838-1e30-74b4862aed5@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241104-shellcheck_gitignore-v1-1-ffc179f57dc9@rivosinc.com>
-X-B4-Tracking: v=1; b=H4sIAFI6KWcC/x3MQQqAIBBA0avIrBMcE4KuEhFpkw6FhkYE0d2Tl
- m/x/wOFMlOBXjyQ6eLCKVZgI8CFOXqSvFSDVtogKiNLoH13gdw2eT7Zx5RJalQOW7Rtpy3U9Mi
- 08v1vh/F9P3EJMlFmAAAA
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=853; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=ckz2b09PADmewB6PWKzCnnP2d1FGRyLX6Oab2Bw7LRc=;
- b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ7qmVQivWdGPzzMWVzaeetaT0DZ94/mJvy+d+/BFJyPhj
- 4qpTtGnjlIWBjEOBlkxRRaeaw3MrXf0y46Klk2AmcPKBDKEgYtTACZiuIvhf/kymWdLeYv3BR6+
- tiPwrIaL3ZT2N4uXn4xJa9ySJqG9egojw8f/lw6Hl0Y/TPJeft5go35n3kW1QMalr6fnLZzp8EB
- wMy8A
-X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
- fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Instead of adding specific shellcheck_log files to the gitignore, add
-all of them to prevent these files from cluttering the git status.
+Hello Ian,
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
----
- tools/perf/.gitignore | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Jitka Plesnikova has spotted an interesting fact about he python bindings --
+perf.cpython-*-x86_64-linux-gnu.so library -- the number of shared objects it
+links against has significantly grown between v6.10 and v6.11:
 
-diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
-index f5b81d439387..19ce1cd56f8c 100644
---- a/tools/perf/.gitignore
-+++ b/tools/perf/.gitignore
-@@ -39,9 +39,7 @@ trace/beauty/generated/
- pmu-events/pmu-events.c
- pmu-events/jevents
- pmu-events/metric_test.log
--tests/shell/*.shellcheck_log
--tests/shell/coresight/*.shellcheck_log
--tests/shell/lib/*.shellcheck_log
-+*.shellcheck_log
- feature/
- libapi/
- libbpf/
+Before:
 
----
-base-commit: 59b723cd2adbac2a34fc8e12c74ae26ae45bf230
-change-id: 20241104-shellcheck_gitignore-210c131b372b
--- 
-- Charlie
+    # ldd python/perf.cpython-39-x86_64-linux-gnu.so
+    linux-vdso.so.1 (0x00007ffefd1cb000)
+    libm.so.6 => /lib64/libm.so.6 (0x00007f4c9315e000)
+    libz.so.1 => /lib64/libz.so.1 (0x00007f4c93144000)
+    libelf.so.1 => /lib64/libelf.so.1 (0x00007f4c929e4000)
+    libslang.so.2 => /lib64/libslang.so.2 (0x00007f4c92600000)
+    libc.so.6 => /lib64/libc.so.6 (0x00007f4c92200000)
+    libnuma.so.1 => /lib64/libnuma.so.1 (0x00007f4c93136000)
+    /lib64/ld-linux-x86-64.so.2 (0x00007f4c93247000)
+    libzstd.so.1 => /lib64/libzstd.so.1 (0x00007f4c9290d000)
+
+After:
+
+    # ldd python/perf.cpython-39-x86_64-linux-gnu.so
+    linux-vdso.so.1 (0x00007ffd889f3000)
+    libm.so.6 => /lib64/libm.so.6 (0x00007f75cd125000)
+    libz.so.1 => /lib64/libz.so.1 (0x00007f75cdbc0000)
+    libelf.so.1 => /lib64/libelf.so.1 (0x00007f75cdba4000)
+    libdw.so.1 => /lib64/libdw.so.1 (0x00007f75cd089000)
+    libcrypto.so.3 => /lib64/libcrypto.so.3 (0x00007f75ccc00000)
+    libslang.so.2 => /lib64/libslang.so.2 (0x00007f75cc800000)
+    libperl.so.5.32 => /lib64/libperl.so.5.32 (0x00007f75cc400000)
+    libc.so.6 => /lib64/libc.so.6 (0x00007f75cc000000)
+    libpython3.9.so.1.0 => /lib64/libpython3.9.so.1.0 (0x00007f75cbc00000)
+    libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007f75cb800000)
+    liblzma.so.5 => /lib64/liblzma.so.5 (0x00007f75cdb76000)
+    libzstd.so.1 => /lib64/libzstd.so.1 (0x00007f75ccb29000)
+    libcap.so.2 => /lib64/libcap.so.2 (0x00007f75cdb6a000)
+    libnuma.so.1 => /lib64/libnuma.so.1 (0x00007f75cdb5c000)
+    libbabeltrace-ctf.so.1 => /lib64/libbabeltrace-ctf.so.1 (0x00007f75cd03f000)
+    libpfm.so.4 => /lib64/libpfm.so.4 (0x00007f75cb400000)
+    libtraceevent.so.1 => /lib64/libtraceevent.so.1 (0x00007f75ccb08000)
+    /lib64/ld-linux-x86-64.so.2 (0x00007f75cdbe8000)
+    libbz2.so.1 => /lib64/libbz2.so.1 (0x00007f75cdb49000)
+    libcrypt.so.2 => /lib64/libcrypt.so.2 (0x00007f75cc7c6000)
+    libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007f75ccaed000)
+    libbabeltrace.so.1 => /lib64/libbabeltrace.so.1 (0x00007f75ccadd000)
+    libpopt.so.0 => /lib64/libpopt.so.0 (0x00007f75cc7b7000)
+    libuuid.so.1 => /lib64/libuuid.so.1 (0x00007f75cdb3d000)
+    libgmodule-2.0.so.0 => /lib64/libgmodule-2.0.so.0 (0x00007f75cd039000)
+    libglib-2.0.so.0 => /lib64/libglib-2.0.so.0 (0x00007f75cc2c5000)
+    libpcre.so.1 => /lib64/libpcre.so.1 (0x00007f75cc24d000)
+
+I have narrowed it down to e467705a9fb3 ("perf util: Make util its own library").
+It has also grown in size, probably because of this linking change. I think we
+need to get rid of this probably unwanted side-effect of the build optimization.
+What do you think?
+
+Regards,
+Michael
 
