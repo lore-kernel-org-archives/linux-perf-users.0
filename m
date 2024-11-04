@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02198224F0;
-	Mon,  4 Nov 2024 18:00:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C23E1CACEE;
+	Mon,  4 Nov 2024 18:00:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730743212; cv=none; b=Fd9uA2ry221H76OxCsIl7C+I4IP1roXdB4VXACSXOcDIJayQ2HsHnAne0jyW0VfkAF/P6Vvi7nprwFDjzLOWjlWLKAe3cxuB+m5mK+EO5EbZ68Snbwne8pvV3gyyeHGEqwuz7LnUHmx4LFEB165PWwQSLaWjH+b8t2FAiD7oXaI=
+	t=1730743219; cv=none; b=gKVFVsVV/rdKJSjvry3RTKrUBOfo40pvxDvEoMeq+MhICWkhvfhsmy7RYPEFEMkq42Szrg9lM3ab4mscbbT+OX6bz0Ja3M8eAa3gMR04aWFR9ytWdFiQHJZB3QNGnpyKpy2YMYIxf4KJAUte7FY6jtkeD/rT3zHeR7P5g17wC/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730743212; c=relaxed/simple;
-	bh=Fxu93FpW7yH4xNEj1+55fYSFb+Dsm9yIclT6WJXEnvY=;
+	s=arc-20240116; t=1730743219; c=relaxed/simple;
+	bh=F1s6u0X+Iv0mHmZbN7On6qu/JK/gHnv7NSXJRTaaqC0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GeUoeCBV8iA0Bw32kR4nDRuI8owMPRUFJNswDw8jCzWHybcy/aoHi6XoOuzbPkQTcD5VlVLrEGVfhNW4gbiuqJn60kTcnUcmGnLp/aVc9FgRALSuWoM/NByOl9H7j0/7X2mLzICe4BTxfIMfkUUTYDNbwViL72mRlyM1iACC4QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GvcsAwY0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bbGiC11SMj34ir+yyNBRyqOS3eKyetOSYAn2W1iZIolb3OltjHY6OcijHbseT7NKR70jLs+kSumvrOmhlvDfkXj77JJGbLKCL8WSF5bbtOeEg10P9ptiaCrjh+Ina23VvR1GIQNFn9HZFHSRpNUVi9e7o96+xVlKYsopDVjH6Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ysq6NZAj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GvcsAwY0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5C7FC4CED1;
-	Mon,  4 Nov 2024 18:00:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ysq6NZAj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43283C4CECE;
+	Mon,  4 Nov 2024 18:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730743211;
-	bh=Fxu93FpW7yH4xNEj1+55fYSFb+Dsm9yIclT6WJXEnvY=;
+	s=k20201202; t=1730743219;
+	bh=F1s6u0X+Iv0mHmZbN7On6qu/JK/gHnv7NSXJRTaaqC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GvcsAwY0ooF1J4DDoxGphzcXqIhDZaXjgUFb95qPwEQxiFtsK0WhhJUZIeOCcgwZZ
-	 iGsB9ru2AEBN3oipqxzRkg+1R1olKPSvnQ855egW+/TpPC1OS7AtWgnGLnCEgwZKVi
-	 8ajlOJCKCgg7Qg63VSHIpPSRkKK7uBJ5io17ZLs6IuO9jk4857gh/GsABMMPP6hOCW
-	 43uxGW0kcUUolTBiSwuPiFvhniVcmbHJFaqgkqnUS8q5eqpJQuo4NOSBb7pkbyOiZw
-	 q0j1B7mZwl+Ma7hjfb8Uu8+I3zAq4PReTzyoUZoFevoo/hhLqa3gdrZfRK+Fiw9uCK
-	 hgAflmfA3P8lw==
+	b=Ysq6NZAjesTKBIGwYPKfAtTnAi2hDUcC/VRgZlN4MFs0CtKyEa+4OTuo63HLGWmsk
+	 KXd5TVBOe0nGJESkNFu1/DCIMdoICLGRfggeT8SrHll841iPdo+HNtJxGtHCQx70Eh
+	 8kWISpFnMbWqGkjGgeDlsEUaY9+7A/DLlFGK5zMUm6HdxwdWaBZYWhpxt+BygiFJIW
+	 O9piVZOs4NR0Nid0EEudka4B4i5pmXE2fWF/5uGyDF00lIfzSa/9G8AaOcrdxh4jB7
+	 0cqefoB0y7sH2pzaqLo5BGeXcszK+B0cqqF6U+DxT435udNx/Rb03o4SwuceK/C4DL
+	 GPrZUvqr0HJRw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -44,9 +44,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Leo Yan <leo.yan@linux.dev>,
 	Thomas Richter <tmricht@linux.ibm.com>,
 	Veronika Molnarova <vmolnaro@redhat.com>
-Subject: [PATCH 1/2] perf test python: Robustify the 'perf test python' test case
-Date: Mon,  4 Nov 2024 14:59:52 -0300
-Message-ID: <20241104175953.535202-2-acme@kernel.org>
+Subject: [PATCH 2/2] perf test: Don't build the python binding builtin test case with NO_LIBPYTHON=1
+Date: Mon,  4 Nov 2024 14:59:53 -0300
+Message-ID: <20241104175953.535202-3-acme@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241104175953.535202-1-acme@kernel.org>
 References: <20241104175953.535202-1-acme@kernel.org>
@@ -60,103 +60,50 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-While working on a patch to not build the 'perf test' entry that tests
-the python binding when NO_LIBPYTHON=1 is used when building perf,
-meaning that the python binding will not be built, thus no need to test
-it, I noticed this inconsistency:
+The python_use test suite was being built even when the python binding
+that it is designed to test is not being built, fix it.
 
-  $ perf test 17
-   17: 'import perf' in python                                         : Ok
-  $ perf test -F 17
-   17: 'import perf' in python                                         : Ok
-  $
+Testing this patch:
+
+When building with NO_LIBPYTHON=1, i.e. explicitely disabling linking
+against libpython and thus not building the python binding:
+
   $ perf check feature libpython
-               libpython: [ OFF ]  # HAVE_LIBPYTHON_SUPPORT
-  $ ldd ~/bin/perf | grep python
+             libpython: [ OFF ]  # HAVE_LIBPYTHON_SUPPORT
+  $ perf test "import perf"
   $
 
-Even without any python binding or support for loading it present in
-perf, it says that testing that feature somehow "passes":
+Not disabling linking with libpython, the default, that results in the
+python binding being built:
 
-  $ strace -s1024 -f -e execve perf test 17
-  execve("/home/acme/bin/perf", ["perf", "test", "17"], 0x7ffe99ae5d50 /* 38 vars */) = 0
-  strace: Process 519319 attached
-   17: 'import perf' in python                                         : Running (1 active)
-  strace: Process 519320 attached
-  [pid 519320] execve("/bin/sh", ["sh", "-c", "--", "echo \"import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf\" |  2> /dev/null"], 0x377ba9a0 /* 40 vars */) = 0
-  strace: Process 519321 attached
-  strace: Process 519322 attached
-  [pid 519321] +++ exited with 0 +++
-  [pid 519322] +++ exited with 0 +++
-  [pid 519320] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=519321, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
-  [pid 519320] +++ exited with 0 +++
-  [pid 519319] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=519320, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
-  [pid 519319] +++ exited with 0 +++
+  $ perf check feature libpython
+               libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+  $ perf test "import perf"
    17: 'import perf' in python                                         : Ok
-  +++ exited with 0 +++
-  $
-
-It doesn't matter if we fork a new perf process to run just that test
-entry or if we don't:
-
-  $ perf test -h -F
-
-   Usage: perf test [<options>] [{list <test-name-fragment>|[<test-name-fragments>|<test-numbers>]}]
-
-      -F, --dont-fork       Do not fork for testcase
-  $
-
-  $ strace -s1024 -f -e execve perf test -F 17
-  execve("/home/acme/bin/perf", ["perf", "test", "-F", "17"], 0x7ffda8fafed8 /* 38 vars */) = 0
-  strace: Process 519336 attached
-  [pid 519336] execve("/bin/sh", ["sh", "-c", "--", "echo \"import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf\" |  2> /dev/null"], 0x159d99a0 /* 40 vars */) = 0
-  strace: Process 519337 attached
-  strace: Process 519338 attached
-  [pid 519337] +++ exited with 0 +++
-  [pid 519338] +++ exited with 0 +++
-  [pid 519336] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=519337, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
-  [pid 519336] +++ exited with 0 +++
-  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=519336, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
-   17: 'import perf' in python                                         : Ok
-  +++ exited with 0 +++
-  $
-
-The system() call (that execve) will return zero even with that echo
-being piped into nothing:
-
-  # sh -c -- echo \"import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf\" |  2> /dev/null
-  -bash: syntax error near unexpected token `0,'
-  # echo $?
-  2
-  # sh -c -- echo \"import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf\" |
-  -bash: syntax error near unexpected token `0,'
-  # echo $?
-  2
-  #
-
-If we instead avoid the echo and use 'python -c' to pass that simple
-python script just trying to load the non-existent perf binding we get
-less processes and a more consistent result even in this pathological
-case where PYTHON="":
-
-  $ perf test 17
-   17: 'import perf' in python                                         : FAILED!
-  $ perf test -F 17
-   17: 'import perf' in python                                         : FAILED!
-  $
-  $ perf test -vv 17
+  $ perf test -vv "import perf"
   Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
    17: 'import perf' in python:
   --- start ---
-  test child forked, pid 522859
-  python usage test: " -c "import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf" "
-  sh: line 1: -c: command not found
-  ---- end(-1) ----
-   17: 'import perf' in python                                         : FAILED!
+  test child forked, pid 533419
+  python usage test: "'/usr/bin/python3' -c "import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf" "
+  ---- end(0) ----
+   17: 'import perf' in python                                         : Ok
+  $ strace -s1024 -f -e execve perf test 17
+  execve("/home/acme/bin/perf", ["perf", "test", "17"], 0x7ffe04832040 /* 38 vars */) = 0
+  strace: Process 533458 attached
+   17: 'import perf' in python                                         : Running (1 active)
+  strace: Process 533459 attached
+  [pid 533459] execve("/bin/sh", ["sh", "-c", "--", "'/usr/bin/python3' -c \"import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf\" 2> /dev/null"], 0x133179a0 /* 40 vars */) = 0
+  strace: Process 533460 attached
+  [pid 533460] execve("/usr/bin/python3", ["/usr/bin/python3", "-c", "import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf"], 0x5566715c7280 /* 40 vars */) = 0
+  [pid 533460] +++ exited with 0 +++
+  [pid 533459] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=533460, si_uid=1000, si_status=0, si_utime=4 /* 0.04 s */, si_stime=2 /* 0.02 s */} ---
+  [pid 533459] +++ exited with 0 +++
+  [pid 533458] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=533459, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+  [pid 533458] +++ exited with 0 +++
+   17: 'import perf' in python                                         : Ok
+  +++ exited with 0 +++
   $
-
-The next patch will sidestep all this by plain not building the python
-binding test when the binding isn't built, i.e. with NO_LIBPYTHON=1.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
@@ -171,24 +118,52 @@ Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: Veronika Molnarova <vmolnaro@redhat.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/python-use.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/tests/Build          | 2 +-
+ tools/perf/tests/builtin-test.c | 2 ++
+ tools/perf/tests/tests.h        | 2 ++
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/python-use.c b/tools/perf/tests/python-use.c
-index 0ebc22ac8d5b47ed..b7325caad22bab10 100644
---- a/tools/perf/tests/python-use.c
-+++ b/tools/perf/tests/python-use.c
-@@ -14,8 +14,8 @@ static int test__python_use(struct test_suite *test __maybe_unused, int subtest
- 	char *cmd;
- 	int ret;
- 
--	if (asprintf(&cmd, "echo \"import sys ; sys.path.insert(0, '%s'); import perf\" | %s %s",
--		     PYTHONPATH, PYTHON, verbose > 0 ? "" : "2> /dev/null") < 0)
-+	if (asprintf(&cmd, "%s -c \"import sys ; sys.path.insert(0, '%s'); import perf\" %s",
-+		     PYTHON, PYTHONPATH, verbose > 0 ? "" : "2> /dev/null") < 0)
- 		return -1;
- 
- 	pr_debug("python usage test: \"%s\"\n", cmd);
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 01ed9335db4dba4e..8596616907adf244 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -20,7 +20,7 @@ perf-test-y += hists_link.o
+ perf-test-y += hists_filter.o
+ perf-test-y += hists_output.o
+ perf-test-y += hists_cumulate.o
+-perf-test-y += python-use.o
++perf-test-$(CONFIG_LIBPYTHON) += python-use.o
+ perf-test-y += bp_signal.o
+ perf-test-y += bp_signal_overflow.o
+ perf-test-y += bp_account.o
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index d2cabaa8ad922d68..13f7b24694d1d0b0 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -79,7 +79,9 @@ static struct test_suite *generic_tests[] = {
+ 	&suite__syscall_openat_tp_fields,
+ #endif
+ 	&suite__hists_link,
++#ifdef HAVE_LIBPYTHON_SUPPORT
+ 	&suite__python_use,
++#endif
+ 	&suite__bp_signal,
+ 	&suite__bp_signal_overflow,
+ 	&suite__bp_accounting,
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index af284dd47e5c7855..3144c7916532825c 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -99,7 +99,9 @@ DECLARE_SUITE(dso_data_cache);
+ DECLARE_SUITE(dso_data_reopen);
+ DECLARE_SUITE(parse_events);
+ DECLARE_SUITE(hists_link);
++#ifdef HAVE_LIBPYTHON_SUPPORT
+ DECLARE_SUITE(python_use);
++#endif
+ DECLARE_SUITE(bp_signal);
+ DECLARE_SUITE(bp_signal_overflow);
+ DECLARE_SUITE(bp_accounting);
 -- 
 2.47.0
 
