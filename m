@@ -1,141 +1,115 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E601C57A5;
-	Mon,  4 Nov 2024 21:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1C31FCC4B
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 21:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730754825; cv=none; b=q1DPpMXorLmuFv0xTI8UwXShfm5nu1aVQqc+b1niAsH/MKRZE9ROQaFBstetpUZ78ExSiX7AjqQW/LDHXMMevHrS+I7A8XTjdwCLhv+FsvOHZpgzIfjOA/nV05ab27sP60uVpKb/xnuY8xcAeNuYWB1k5RV+j9YiNpt48doMHTY=
+	t=1730755166; cv=none; b=HUMVg7r8l+Ze/UhPti58fVvTrOTGMXYFZMesXmtGcktp+GyBrX2gkUnbAj6zPePunga/bIk+e2GztFssx/r6T1gTNEF+w97jJQ16TKD3C4Sy6aTDPj62y9NxHCUVzyu5NvEB5CSlMnfy7h8QgKcQEXPrH3KtplpSfDgxOU4Mp0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730754825; c=relaxed/simple;
-	bh=TdV1m7lsJV9n+gRB4GbAabE6d/d+dG0m6q0qhV7Vk8A=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=jEF2iBUtTqbTVYSArqhuKMM/nsJMKQJqPRUzPNWrJxVyqZgUVNs0C7kFkGUfH8hJOWNLuzzy6Lcl9NOP9/JmCd6cIRLEt5DJ6LgfbVMmsbtY9l7hdNX4V7MBC343xZZufs5aYuqXPcS879hQfq3p/j/pQXKCjpuyWzx/oYGN7os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=HYxM/F1j; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A07LXhM+; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1730755166; c=relaxed/simple;
+	bh=ckz2b09PADmewB6PWKzCnnP2d1FGRyLX6Oab2Bw7LRc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XGjd51gbygqasko5tuKN/juyLOpYJTaHjnB9qrKJdSGLaIJhNMZLRVlATGvgsVZhBpU1E10ymms3DecqTk8tu8Ra2tB/536dHuIQfwMQOGE70iOuryVw7cmNwVbDDhxnfee1mbHLDfJIOxTtYSK9zVM5itpi54cgFylavv1crLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=R7Ijie7k; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="HYxM/F1j";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A07LXhM+"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 1785425400BB;
-	Mon,  4 Nov 2024 16:13:40 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Mon, 04 Nov 2024 16:13:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1730754819;
-	 x=1730841219; bh=V0h+HnwYM6G14tqfuEBcSfoAhMcxFQIDMQETosW9jT0=; b=
-	HYxM/F1j4lMV3qcZLf2/ywYPB0bgQgPU6nQk/K+naRkovv97U83DYHb5KcZpVf0x
-	ZhuynQAg2mHgQNN0HFSmADvFhF7W9d3aHDAY+PwKB96XTDbcfrRyBU5b3+YOqxF8
-	lSs3ySfRLS5x4/W/BuRz3ksq2PI415eD9vq5HefepgZdoRPI7NKVqZlqj8whkqJ1
-	3I4g4CTkC56DDZ51egRLXec1uHz0TMxxcMYZlCULGmJsX43AipvtOXBugK4W5eWO
-	V9dYVQHJjlW64YoXXdjryU6Nn0fsAb0X86QsCIBylrRXYd8Jbr+2HBFc01Yu89Ly
-	Jgxm0YMrYBejXJTS+Cdjag==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1730754819; x=
-	1730841219; bh=V0h+HnwYM6G14tqfuEBcSfoAhMcxFQIDMQETosW9jT0=; b=A
-	07LXhM+Iq1HCBnCunXqpgfNDV2r2wBsNjVcaZBED84teZ5OBI84eO40xTruVaIlb
-	CTu83Z7rZQ2g8IgSY0iTyGsddlsmaSymS8tyx1YgdBNMiEIdjPhO/8NyuWBsAQ4R
-	3BFY+ngJ4zsKrv96GIyRw/02pP+F6h35hwPpRiObV2FABJLxInkhSlBx2LpvWHul
-	V+Pf7xzFnQ5C4DWgfCzFo3teifpTB3Dfy14StP7CJfAPLbaUBebJEEZic94jUVZZ
-	kSnsXvCgjRtBS8YSngsbswoTuY+AYE4lBGLlDQb7KenMqJqKtDLPMDZFaSDjBtdi
-	tlbU1kJwhvS+te9me5dNQ==
-X-ME-Sender: <xms:AjkpZ7iLwMb7LS52CjGTazhHzh1hC8c78ofVs3xc41WaM4CjDfFK9g>
-    <xme:AjkpZ4DpGENhrWdnaGR8Via9b10QYZcLhlzRZMc6gY3rzc6XU4y_y32T3mzMtaXJO
-    gQ-LbupRVMkdcAaFvQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdeliedgudeghecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeef
-    uddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhguse
-    grrhhmrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhr
-    tghpthhtohepmhhitgesughighhikhhougdrnhgvthdprhgtphhtthhopegrohhusegvvg
-    gtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtohepghhnohgrtghksehgohhoghhl
-    vgdrtghomhdprhgtphhtthhopehirhhoghgvrhhssehgohhoghhlvgdrtghomhdprhgtph
-    htthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegrughr
-    ihgrnhdrhhhunhhtvghrsehinhhtvghlrdgtohhmpdhrtghpthhtoheprggtmhgvsehkvg
-    hrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:AjkpZ7HDxCwy4I__a2KM4WoXIAT-uVa-FUNo5xAINlv6PIc3MDmN3g>
-    <xmx:AjkpZ4TEpwHRFnIZ1r1FdqqUbIpgwi0-D_DPyXW0gWwGbaQgNqoybQ>
-    <xmx:AjkpZ4wI8UxMGhZhBFFMXFGGRBq8PaJdE2Bz84HCW1PVRGBfp3N5_Q>
-    <xmx:AjkpZ-4HRRofSWplUrAHFwaw7MrOvwaTcko0TgpGFlly-Euyx3Q6Ew>
-    <xmx:AzkpZx8kPUEQuc9kjEr7jGh3aP1zGFEnrt0qIDe_xxeUuWuooZ8w3Cme>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 708CF2220071; Mon,  4 Nov 2024 16:13:38 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="R7Ijie7k"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-720c2db824eso4355739b3a.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 13:19:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1730755164; x=1731359964; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B7VFZJDeshaBgjeWIFYPhisTVO49atYEdsiOoKJAJfU=;
+        b=R7Ijie7kXJ8wsjT/1pYW8Ej/7SP9EUPXbJmPf55xHJjY24BK5/aBwywefTSSryZgix
+         uQb0v/Szql9jyAhFGv3Oh+IkheILL6qV4UJSyyqnbp78lTSCtrAEuNljUH+r3ExlnaVa
+         1qSkS2sObX7KyXnVzd6EaSAb8AUnGNwtPNuLjaUXih0m+APvnQX5bYjRD+cLa6sftzx3
+         Ot/nVU1zZxwo7ou3NWzVez16nHssRn3iXeqdBhYTwum5CZBowe2v8DxbWaHYx7DIAK1S
+         tPG6ixLxKQYCgPziSKl4WOQem45JsWga1Nv509CGl1aZun5iyeUJZS5j4vjA//PZ/IDl
+         66RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730755164; x=1731359964;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B7VFZJDeshaBgjeWIFYPhisTVO49atYEdsiOoKJAJfU=;
+        b=iWxNw6sssyRK8+0+l6Sc8w8U/tKYLdsZsRB2fbVAppBuVBT34o64NzJJUwsAi2sr4i
+         ZAcEMwQ6ajGOKeJTdC9xXvKR47tQ2YBxLpSoVp78GLt00LePEEL1Jlnxa9UndLuLh1Mo
+         4UDvkm9AmplzREsWXGulPpiv2BSQymOHQ84anOzxNAGbWUJTObTbsiOIxpV1hSmZcoXF
+         MHPSHxe5uUDKhjHx4+3kqiE+FISlEWIMhw31tKyDAp4o759LIuiaII0XFW3oOavdaglZ
+         dUWgPqa6AMTxOc9L4CZaWTCcUG6amr9ic2a3DpeQ8XHIv1WRwiozZct1Jgb6rxj326XP
+         xZuA==
+X-Gm-Message-State: AOJu0Ywf+UcHcZwAOCDWfNC3U8XTnMqMBzlqNS9ZvI/t58vUxTc/QrkK
+	WzKpI8iUYbUuBOAr63At4smZ8nUFVD/KYpwfIcI53JKA/su0FQgm3mgfXR3uMqsMdrJc+mehp1+
+	M
+X-Google-Smtp-Source: AGHT+IGxdnQJocTNFzEN9oyHKVuXZJvNTwlFkn8XBlUG6umm69XvTTuY4E2zmsa/aNVVZeehrny4Vw==
+X-Received: by 2002:a05:6a20:7f93:b0:1db:f0af:2277 with SMTP id adf61e73a8af0-1dbf0af227fmr639531637.38.1730755163757;
+        Mon, 04 Nov 2024 13:19:23 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7f3e0efa90csm1270988a12.2.2024.11.04.13.19.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 13:19:23 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Mon, 04 Nov 2024 13:19:15 -0800
+Subject: [PATCH] perf: Add all shellcheck_log to gitignore
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 04 Nov 2024 22:13:18 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Charlie Jenkins" <charlie@rivosinc.com>,
- "Peter Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Namhyung Kim" <namhyung@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
- "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>,
- "Adrian Hunter" <adrian.hunter@intel.com>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
- "Christian Brauner" <brauner@kernel.org>, guoren <guoren@kernel.org>,
- "John Garry" <john.g.garry@oracle.com>, "Will Deacon" <will@kernel.org>,
- "James Clark" <james.clark@linaro.org>, "Mike Leach" <mike.leach@linaro.org>,
- "Leo Yan" <leo.yan@linux.dev>, "Jonathan Corbet" <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-security-module@vger.kernel.org,
- bpf@vger.kernel.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-Message-Id: <3b56fc50-4c6c-4520-adba-461797a3b5ec@app.fastmail.com>
-In-Reply-To: <20241104-perf_syscalltbl-v1-0-9adae5c761ef@rivosinc.com>
-References: <20241104-perf_syscalltbl-v1-0-9adae5c761ef@rivosinc.com>
-Subject: Re: [PATCH RFT 00/16] perf tools: Use generic syscall scripts for all archs
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20241104-shellcheck_gitignore-v1-1-ffc179f57dc9@rivosinc.com>
+X-B4-Tracking: v=1; b=H4sIAFI6KWcC/x3MQQqAIBBA0avIrBMcE4KuEhFpkw6FhkYE0d2Tl
+ m/x/wOFMlOBXjyQ6eLCKVZgI8CFOXqSvFSDVtogKiNLoH13gdw2eT7Zx5RJalQOW7Rtpy3U9Mi
+ 08v1vh/F9P3EJMlFmAAAA
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=853; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=ckz2b09PADmewB6PWKzCnnP2d1FGRyLX6Oab2Bw7LRc=;
+ b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ7qmVQivWdGPzzMWVzaeetaT0DZ94/mJvy+d+/BFJyPhj
+ 4qpTtGnjlIWBjEOBlkxRRaeaw3MrXf0y46Klk2AmcPKBDKEgYtTACZiuIvhf/kymWdLeYv3BR6+
+ tiPwrIaL3ZT2N4uXn4xJa9ySJqG9egojw8f/lw6Hl0Y/TPJeft5go35n3kW1QMalr6fnLZzp8EB
+ wMy8A
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-On Mon, Nov 4, 2024, at 22:06, Charlie Jenkins wrote:
-> Standardize the generation of syscall headers around syscall tables.
-> Previously each architecture independently selected how syscall headers
-> would be generated, or would not define a way and fallback onto
-> libaudit. Convert all architectures to use a standard syscall header
-> generation script and allow each architecture to override the syscall
-> table to use if they do not use the generic table.
->
-> As a result of these changes, no architecture will require libaudit, and
-> so the fallback case of using libaudit is removed by this series.
->
-> Testing:
->
-> I have tested that the syscall mappings of id to name generation works
-> as expected for every architecture, but I have only validated that perf
-> trace compiles and runs as expected on riscv, arm64, and x86_64.
->
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+Instead of adding specific shellcheck_log files to the gitignore, add
+all of them to prevent these files from cluttering the git status.
 
-Thanks for doing this, I had plans to do this myself, but hadn't
-completed that bit so far. I'm travelling at the moment, so I'm
-not sure I have time to look at it in enough detail this week.
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+ tools/perf/.gitignore | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-One problem I ran into doing this previously was the incompatible
-format of the tables for x86 and s390, which have conflicting
-interpretations of what the '-' character means. It's possible
-that this is only really relevant for the in-kernel table,
-not the version in tools.
+diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
+index f5b81d439387..19ce1cd56f8c 100644
+--- a/tools/perf/.gitignore
++++ b/tools/perf/.gitignore
+@@ -39,9 +39,7 @@ trace/beauty/generated/
+ pmu-events/pmu-events.c
+ pmu-events/jevents
+ pmu-events/metric_test.log
+-tests/shell/*.shellcheck_log
+-tests/shell/coresight/*.shellcheck_log
+-tests/shell/lib/*.shellcheck_log
++*.shellcheck_log
+ feature/
+ libapi/
+ libbpf/
 
-     Arnd
+---
+base-commit: 59b723cd2adbac2a34fc8e12c74ae26ae45bf230
+change-id: 20241104-shellcheck_gitignore-210c131b372b
+-- 
+- Charlie
+
