@@ -1,217 +1,255 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BB11C07EC;
-	Mon,  4 Nov 2024 11:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CAA18A6B5
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 11:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730719680; cv=none; b=b5vfRTHirM7zXZpjjWUJcVWvxO/d2guZ9vbhZotV6rVr+lynoux8eVHx8v0hbUVAYb6/18AR+8dVHcLelBZAZckbv0RI1qMS1jF0bwEZmnNeyEJbpWxwMVD3DppKkKs6V1ssQwNPlQib1zt8iov3zzVPxOkYKICPQ+59g5hOVSI=
+	t=1730720832; cv=none; b=aP8ADdWaHGh/d92z3kD1Dq5oFClp00Nrn72rvoR3fvS6UgkqPZIke0lZwvF8dNmujbN0V0VeOSfjtfeLuzW1e0XrF4qE4gIbD4bnBAAleqd+cKMkgHTKZ17WQqHYpmOxYCnh5PrDzRG1/AxS0X8zeIfQetyeoHORooOKjYl3MLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730719680; c=relaxed/simple;
-	bh=r04tfij5AvjHLqWSHMynEE+bUdin3ecVxudrG96bYJk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lWPpLeAtkg+HBRo2UO+vcevpNY+JCjHJebVF5HCfLOVZAtUFM85esdYoP0L+34c8qbbkXkQJvV7PW12O2RkyN93IID30JBPnCWQf+Nt1NiXv76wVP47rAAJ0gRIkaadZ9X/vdch6RejvBeCzx1ML+Bp9kbYHgCSoxWuHPghLrTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZEi9BpRJ; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1730720832; c=relaxed/simple;
+	bh=PyullqZk2NrriXcY6CBFMfbW7+XiGUFm8DUyVMWaVk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U4y5dEeC/PZ8OM/pAP5mpK4+RcbOPleQfV0B0EkUGEuPmmMxOOmt5SS85kJq/WWJtVwS6S0sjq7sLAFa+V4y+/tvEsW5p3dZ+IfqpRuKwwzo8k0zu+WNia8SAlo9f8E5UcJdB+d82+FGN1DxEo6UlRInlgBsAWZhF4vgtlU2S10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nrN3fTDf; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZEi9BpRJ"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1730719675; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=Wd2oxyb+vbPAQp/ebmoKg3Otxx3owYEaGtIP0qtImK4=;
-	b=ZEi9BpRJfLWElE9sLHw+D4Pku2FaJ/hBcQy34hIBs6w/fWxRILVBCWCtpC6DnP/yuDz0dhveH6gpOXbngBH7yV39Lb4skYwy0YHlAMeunstE84m95g6B5jcEQCjLGBH+L6wk1QFOUFYiY8UOc2cDSUICh3PY+6b7/eq/za+iuEY=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WIgekWY_1730719672 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 04 Nov 2024 19:27:53 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	acme@kernel.org,
-	gregkh@linuxfoundation.org
-Cc: adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	irogers@google.com,
-	mark.rutland@arm.com,
-	namhyung@kernel.org,
-	peterz@infradead.org,
-	acme@redhat.com,
-	kprateek.nayak@amd.com,
-	ravi.bangoria@amd.com,
-	sandipan.das@amd.com,
-	anshuman.khandual@arm.com,
-	german.gomez@arm.com,
-	james.clark@arm.com,
-	terrelln@fb.com,
-	seanjc@google.com,
-	changbin.du@huawei.com,
-	liuwenyu7@huawei.com,
-	yangjihong1@huawei.com,
-	mhiramat@kernel.org,
-	ojeda@kernel.org,
-	song@kernel.org,
-	leo.yan@linaro.org,
-	kjain@linux.ibm.com,
-	ak@linux.intel.com,
-	kan.liang@linux.intel.com,
-	atrajeev@linux.vnet.ibm.com,
-	siyanteng@loongson.cn,
-	liam.howlett@oracle.com,
-	pbonzini@redhat.com,
-	jolsa@kernel.org
-Subject: [PATCH 5.10.y 2/2] perf session: Add missing evlist__delete when deleting a session
-Date: Mon,  4 Nov 2024 19:27:36 +0800
-Message-ID: <20241104112736.28554-3-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20241104112736.28554-1-xueshuai@linux.alibaba.com>
-References: <20241104112736.28554-1-xueshuai@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nrN3fTDf"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-37d447de11dso3295620f8f.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 03:47:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1730720829; x=1731325629; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lh5+3KGOkaelrIB4Nl2tEoQoHe7RgDBZJ7Oaq3ExHpo=;
+        b=nrN3fTDfe5xoy6oP6JIY/CdvjsmXpAqHqzWB85/a4SjJlQm637V/8xI+9ywb5Iz5uc
+         tG0DrkTTUUG8Jxc6c6u/nVXa1WoCjQeG8iT6kxysRg5s8deh37Vc7ok0h81GxokMPMHe
+         1M6uZkZbjJfu5Zc5EMLO+FS5H4xn9KY897K5sC5nL6N+2cWqV5Jxo60UPrdRehjQV14Y
+         ryLi6kjkvtgKHGgd87POanMKdd1iRxtoJDCdO9B6/ky/nJsfr7vueIL6S8rzJcqjkq8A
+         85qtKpft+Pq/tfLJ7/49XODpC8qqF5Sv4f3ezK9CzkMRVo2Fi47M2UP5+Pyod6HZeGU8
+         3seg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730720829; x=1731325629;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lh5+3KGOkaelrIB4Nl2tEoQoHe7RgDBZJ7Oaq3ExHpo=;
+        b=ePB7ja5L+m+Gb0ouELevqcYTcIJTrOhrFkloVmwF6yiR2teYOgDiehSdyBlml1groT
+         f1dqP1P1ZMavr8elLyIchFY809Cdy31nEkjqpqWF6cI9U0+QqA5kBLq/G7JqUMlnvbLa
+         HieW/9jNKjDWu4XZ+edHpAltrEYqDpjkHcoLZmBGdRzamIZFDv44OBQNsUas48pC9/7F
+         QYn+GqXvjxVhRTV2Ljp5iobtoSTlGKh36g2iEn6K5r2c/WQu/9XtLo4EeDxFDmfzbc3C
+         kO7Oz7+TunXzqumT/lEt7PjNi8oZlE3e8mRUk1H0lbJaDGHxy+Cec7tOvcUC3xkgBesD
+         HdTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWjHxZX7nOUbP6e1KQWCodmRhho2/QKmnZmxKEsGlzwySCB1U4QRuJCmUFnkdVBBWMFj2EvdkkEGhaHSk8GSRRS@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDxhyBWBNRgQXpHo332TlDkQJEQt60Fz/AFSd/rrgFK0tqCdsv
+	cCp7wMpbft5NzoFnhUWjU/948wDZyvGjOq2WcJIk7PJVQaVik+xo4fXdM2Wti/k=
+X-Google-Smtp-Source: AGHT+IGpbkSWgNkUv+H2MDavqFNOI/hX8U3WpCkkxEpPxrbnjPpDbaoC59i6YBF7QSDjt9Pl6iuLIA==
+X-Received: by 2002:a5d:64a1:0:b0:37d:4fe9:b6a7 with SMTP id ffacd0b85a97d-381bea1c1f4mr13084577f8f.36.1730720828889;
+        Mon, 04 Nov 2024 03:47:08 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.66.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c10b7c13sm13193474f8f.13.2024.11.04.03.47.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Nov 2024 03:47:08 -0800 (PST)
+Message-ID: <ed15526d-9b1a-4204-92a3-4d319b03b790@linaro.org>
+Date: Mon, 4 Nov 2024 11:47:06 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] perf arm-spe: Add support for SPE Data Source
+ packet on AmpereOne
+To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Graham Woodward <graham.woodward@arm.com>
+References: <20241031213533.11148-1-ilkka@os.amperecomputing.com>
+ <20241031213533.11148-3-ilkka@os.amperecomputing.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20241031213533.11148-3-ilkka@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Riccardo Mancini <rickyman7@gmail.com>
 
-commit cf96b8e45a9bf74d2a6f1e1f88a41b10e9357c6b upstream.
 
-ASan reports a memory leak caused by evlist not being deleted on exit in
-perf-report, perf-script and perf-data.
-The problem is caused by evlist->session not being deleted, which is
-allocated in perf_session__read_header, called in perf_session__new if
-perf_data is in read mode.
-In case of write mode, the session->evlist is filled by the caller.
-This patch solves the problem by calling evlist__delete in
-perf_session__delete if perf_data is in read mode.
+On 31/10/2024 9:35 pm, Ilkka Koskinen wrote:
+> Decode SPE Data Source packets on AmpereOne. The field is IMPDEF.
+> 
+> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+> ---
+>   .../util/arm-spe-decoder/arm-spe-decoder.h    |  9 +++
+>   tools/perf/util/arm-spe.c                     | 65 +++++++++++++++++++
+>   2 files changed, 74 insertions(+)
+> 
+> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> index 358c611eeddb..4bcd627e859f 100644
+> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> @@ -67,6 +67,15 @@ enum arm_spe_common_data_source {
+>   	ARM_SPE_COMMON_DS_DRAM		= 0xe,
+>   };
+>   
+> +enum arm_spe_ampereone_data_source {
+> +	ARM_SPE_AMPEREONE_LOCAL_CHIP_CACHE_OR_DEVICE    = 0x0,
+> +	ARM_SPE_AMPEREONE_SLC                           = 0x3,
+> +	ARM_SPE_AMPEREONE_REMOTE_CHIP_CACHE             = 0x5,
+> +	ARM_SPE_AMPEREONE_DDR                           = 0x7,
+> +	ARM_SPE_AMPEREONE_L1D                           = 0x8,
+> +	ARM_SPE_AMPEREONE_L2D                           = 0x9,
+> +};
+> +
+>   struct arm_spe_record {
+>   	enum arm_spe_sample_type type;
+>   	int err;
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index 9586416be30a..700d4bc8d8ec 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -103,6 +103,30 @@ struct arm_spe_queue {
+>   	u32				flags;
+>   };
+>   
+> +struct arm_spe_source_mapping {
+> +	u16 source;
+> +	enum arm_spe_common_data_source common_src;
+> +};
+> +
+> +#define MAP_SOURCE(src, common)				\
+> +	{						\
+> +		.source = ARM_SPE_##src,		\
+> +		.common_src = ARM_SPE_COMMON_##common,  \
+> +	}
+> +
+> +static int arm_spe__map_to_common_source(u16 source,
+> +					 struct arm_spe_source_mapping *tbl,
+> +					 int nr_sources)
+> +{
+> +	while (nr_sources--) {
+> +		if (tbl->source == source)
+> +			return tbl->common_src;
+> +		tbl++;
+> +	}
+> +
 
-Changes in v2:
- - call evlist__delete from within perf_session__delete
+Hi Ilkka,
 
-v1: https://lore.kernel.org/lkml/20210621234317.235545-1-rickyman7@gmail.com/
+I think a simple switch statement here would be easier to follow than 
+the loop, custom macro and then having the mappings in some other place:
 
-ASan report follows:
+switch(source)
+case 0x0: /* AMPEREONE_LOCAL_CHIP_CACHE_OR_DEVICE */
+   return DS_PEER_CORE;
 
-$ ./perf script report flamegraph
-=================================================================
-==227640==ERROR: LeakSanitizer: detected memory leaks
+etc...
 
-<SNIP unrelated>
+> +	return -1;
 
-Indirect leak of 2704 byte(s) in 1 object(s) allocated from:
-    #0 0x4f4137 in calloc (/home/user/linux/tools/perf/perf+0x4f4137)
-    #1 0xbe3d56 in zalloc /home/user/linux/tools/lib/perf/../../lib/zalloc.c:8:9
-    #2 0x7f999e in evlist__new /home/user/linux/tools/perf/util/evlist.c:77:26
-    #3 0x8ad938 in perf_session__read_header /home/user/linux/tools/perf/util/header.c:3797:20
-    #4 0x8ec714 in perf_session__open /home/user/linux/tools/perf/util/session.c:109:6
-    #5 0x8ebe83 in perf_session__new /home/user/linux/tools/perf/util/session.c:213:10
-    #6 0x60c6de in cmd_script /home/user/linux/tools/perf/builtin-script.c:3856:12
-    #7 0x7b2930 in run_builtin /home/user/linux/tools/perf/perf.c:313:11
-    #8 0x7b120f in handle_internal_command /home/user/linux/tools/perf/perf.c:365:8
-    #9 0x7b2493 in run_argv /home/user/linux/tools/perf/perf.c:409:2
-    #10 0x7b0c89 in main /home/user/linux/tools/perf/perf.c:539:3
-    #11 0x7f5260654b74  (/lib64/libc.so.6+0x27b74)
+And the default case can return 0xfff directly, which avoids the if else 
+later only to convert this -1 back into 0xfff.
 
-Indirect leak of 568 byte(s) in 1 object(s) allocated from:
-    #0 0x4f4137 in calloc (/home/user/linux/tools/perf/perf+0x4f4137)
-    #1 0xbe3d56 in zalloc /home/user/linux/tools/lib/perf/../../lib/zalloc.c:8:9
-    #2 0x80ce88 in evsel__new_idx /home/user/linux/tools/perf/util/evsel.c:268:24
-    #3 0x8aed93 in evsel__new /home/user/linux/tools/perf/util/evsel.h:210:9
-    #4 0x8ae07e in perf_session__read_header /home/user/linux/tools/perf/util/header.c:3853:11
-    #5 0x8ec714 in perf_session__open /home/user/linux/tools/perf/util/session.c:109:6
-    #6 0x8ebe83 in perf_session__new /home/user/linux/tools/perf/util/session.c:213:10
-    #7 0x60c6de in cmd_script /home/user/linux/tools/perf/builtin-script.c:3856:12
-    #8 0x7b2930 in run_builtin /home/user/linux/tools/perf/perf.c:313:11
-    #9 0x7b120f in handle_internal_command /home/user/linux/tools/perf/perf.c:365:8
-    #10 0x7b2493 in run_argv /home/user/linux/tools/perf/perf.c:409:2
-    #11 0x7b0c89 in main /home/user/linux/tools/perf/perf.c:539:3
-    #12 0x7f5260654b74  (/lib64/libc.so.6+0x27b74)
+> +}
+> +
+>   static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
+>   			 unsigned char *buf, size_t len)
+>   {
+> @@ -443,6 +467,11 @@ static const struct midr_range common_ds_encoding_cpus[] = {
+>   	{},
+>   };
+>   
+> +static const struct midr_range ampereone_ds_encoding_cpus[] = {
+> +	MIDR_ALL_VERSIONS(MIDR_AMPERE1A),
+> +	{},
+> +};
+> +
+>   static void arm_spe__sample_flags(struct arm_spe_queue *speq)
+>   {
+>   	const struct arm_spe_record *record = &speq->decoder->record;
+> @@ -532,6 +561,38 @@ static void arm_spe__synth_data_source_common(const struct arm_spe_record *recor
+>   	}
+>   }
+>   
+> +static struct arm_spe_source_mapping ampereone_sources[] = {
+> +	MAP_SOURCE(AMPEREONE_LOCAL_CHIP_CACHE_OR_DEVICE, DS_PEER_CORE),
+> +	MAP_SOURCE(AMPEREONE_SLC, DS_SYS_CACHE),
+> +	MAP_SOURCE(AMPEREONE_REMOTE_CHIP_CACHE, DS_REMOTE),
+> +	MAP_SOURCE(AMPEREONE_DDR, DS_DRAM),
+> +	MAP_SOURCE(AMPEREONE_L1D, DS_L1D),
+> +	MAP_SOURCE(AMPEREONE_L2D, DS_L2),
+> +};
+> +
+> +/*
+> + * Source is IMPDEF. Here we convert the source code used on AmpereOne cores
+> + * to the common (Neoverse, Cortex) to avoid duplicating the decoding code.
+> + */
+> +static void arm_spe__synth_data_source_ampereone(const struct arm_spe_record *record,
+> +						 union perf_mem_data_src *data_src)
+> +{
+> +	int common_src;
+> +	struct arm_spe_record common_record;
+> +
+> +	common_src = arm_spe__map_to_common_source(record->source,
+> +						   ampereone_sources,
+> +						   ARRAY_SIZE(ampereone_sources));
+> +	if (common_src < 0)
+> +		 /* Assign a bogus value that's not used for common coding */
+> +		common_record.source = 0xfff;
+> +	else
+> +		common_record.source = common_src;
+> +
+> +	common_record.op = record->op;
+> +	arm_spe__synth_data_source_common(&common_record, data_src);
+> +}
+> +
+>   static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+>   					union perf_mem_data_src *data_src)
+>   {
+> @@ -606,6 +667,8 @@ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
+>   	union perf_mem_data_src	data_src = { .mem_op = PERF_MEM_OP_NA };
+>   	bool is_common = arm_spe__is_ds_encoding_supported(speq,
+>   						common_ds_encoding_cpus);
+> +	bool is_ampereone = arm_spe__is_ds_encoding_supported(speq,
+> +						ampereone_ds_encoding_cpus);
 
-Indirect leak of 264 byte(s) in 1 object(s) allocated from:
-    #0 0x4f4137 in calloc (/home/user/linux/tools/perf/perf+0x4f4137)
-    #1 0xbe3d56 in zalloc /home/user/linux/tools/lib/perf/../../lib/zalloc.c:8:9
-    #2 0xbe3e70 in xyarray__new /home/user/linux/tools/lib/perf/xyarray.c:10:23
-    #3 0xbd7754 in perf_evsel__alloc_id /home/user/linux/tools/lib/perf/evsel.c:361:21
-    #4 0x8ae201 in perf_session__read_header /home/user/linux/tools/perf/util/header.c:3871:7
-    #5 0x8ec714 in perf_session__open /home/user/linux/tools/perf/util/session.c:109:6
-    #6 0x8ebe83 in perf_session__new /home/user/linux/tools/perf/util/session.c:213:10
-    #7 0x60c6de in cmd_script /home/user/linux/tools/perf/builtin-script.c:3856:12
-    #8 0x7b2930 in run_builtin /home/user/linux/tools/perf/perf.c:313:11
-    #9 0x7b120f in handle_internal_command /home/user/linux/tools/perf/perf.c:365:8
-    #10 0x7b2493 in run_argv /home/user/linux/tools/perf/perf.c:409:2
-    #11 0x7b0c89 in main /home/user/linux/tools/perf/perf.c:539:3
-    #12 0x7f5260654b74  (/lib64/libc.so.6+0x27b74)
+I know this probably already works, but we don't really need is_common 
+is_ampere etc, it will only grow anyway. All we need is a list of midrs 
+and function pairs. That also avoids doing is_ampereone even after we 
+already know is_common == true.
 
-Indirect leak of 32 byte(s) in 1 object(s) allocated from:
-    #0 0x4f4137 in calloc (/home/user/linux/tools/perf/perf+0x4f4137)
-    #1 0xbe3d56 in zalloc /home/user/linux/tools/lib/perf/../../lib/zalloc.c:8:9
-    #2 0xbd77e0 in perf_evsel__alloc_id /home/user/linux/tools/lib/perf/evsel.c:365:14
-    #3 0x8ae201 in perf_session__read_header /home/user/linux/tools/perf/util/header.c:3871:7
-    #4 0x8ec714 in perf_session__open /home/user/linux/tools/perf/util/session.c:109:6
-    #5 0x8ebe83 in perf_session__new /home/user/linux/tools/perf/util/session.c:213:10
-    #6 0x60c6de in cmd_script /home/user/linux/tools/perf/builtin-script.c:3856:12
-    #7 0x7b2930 in run_builtin /home/user/linux/tools/perf/perf.c:313:11
-    #8 0x7b120f in handle_internal_command /home/user/linux/tools/perf/perf.c:365:8
-    #9 0x7b2493 in run_argv /home/user/linux/tools/perf/perf.c:409:2
-    #10 0x7b0c89 in main /home/user/linux/tools/perf/perf.c:539:3
-    #11 0x7f5260654b74  (/lib64/libc.so.6+0x27b74)
+static const struct data_src[] = {
+...
+	DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2), common_ds),
+	DS(MIDR_ALL_VERSIONS(MIDR_AMPERE1A), ampere_ds),
+	{},
+...
+};
 
-Indirect leak of 7 byte(s) in 1 object(s) allocated from:
-    #0 0x4b8207 in strdup (/home/user/linux/tools/perf/perf+0x4b8207)
-    #1 0x8b4459 in evlist__set_event_name /home/user/linux/tools/perf/util/header.c:2292:16
-    #2 0x89d862 in process_event_desc /home/user/linux/tools/perf/util/header.c:2313:3
-    #3 0x8af319 in perf_file_section__process /home/user/linux/tools/perf/util/header.c:3651:9
-    #4 0x8aa6e9 in perf_header__process_sections /home/user/linux/tools/perf/util/header.c:3427:9
-    #5 0x8ae3e7 in perf_session__read_header /home/user/linux/tools/perf/util/header.c:3886:2
-    #6 0x8ec714 in perf_session__open /home/user/linux/tools/perf/util/session.c:109:6
-    #7 0x8ebe83 in perf_session__new /home/user/linux/tools/perf/util/session.c:213:10
-    #8 0x60c6de in cmd_script /home/user/linux/tools/perf/builtin-script.c:3856:12
-    #9 0x7b2930 in run_builtin /home/user/linux/tools/perf/perf.c:313:11
-    #10 0x7b120f in handle_internal_command /home/user/linux/tools/perf/perf.c:365:8
-    #11 0x7b2493 in run_argv /home/user/linux/tools/perf/perf.c:409:2
-    #12 0x7b0c89 in main /home/user/linux/tools/perf/perf.c:539:3
-    #13 0x7f5260654b74  (/lib64/libc.so.6+0x27b74)
+"arm_spe__is_ds_encoding_supported" then becomes a direct call to 
+"arm_spe__synth_ds" and we can drop the is_ampereone and is_common vars. 
+Then adding new ones doesn't require changing the function anymore.
 
-SUMMARY: AddressSanitizer: 3728 byte(s) leaked in 7 allocation(s).
-
-Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
-Acked-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20210624231926.212208-1-rickyman7@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: stable@vger.kernel.org # 5.10.228
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
----
- tools/perf/util/session.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 354e1e04a266..81b7ec2ae861 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -299,8 +299,11 @@ void perf_session__delete(struct perf_session *session)
- 	perf_session__release_decomp_events(session);
- 	perf_env__exit(&session->header.env);
- 	machines__exit(&session->machines);
--	if (session->data)
-+	if (session->data) {
-+		if (perf_data__is_read(session->data))
-+			evlist__delete(session->evlist);
- 		perf_data__close(session->data);
-+	}
- 	free(session);
- }
- 
--- 
-2.39.3
+>   
+>   	if (record->op & ARM_SPE_OP_LD)
+>   		data_src.mem_op = PERF_MEM_OP_LOAD;
+> @@ -616,6 +679,8 @@ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
+>   
+>   	if (is_common)
+>   		arm_spe__synth_data_source_common(record, &data_src);
+> +	else if (is_ampereone)
+> +		arm_spe__synth_data_source_ampereone(record, &data_src);
+>   	else
+>   		arm_spe__synth_memory_level(record, &data_src);
+>   
 
