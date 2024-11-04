@@ -1,139 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D701CC177;
-	Mon,  4 Nov 2024 20:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEBA1F5855
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 20:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730752787; cv=none; b=i/QilvK79v/lYGecZUguQzGE9WFsmzpcgx49bJ5H1sY2pi8IGo6BRwOONHHkFhgju3FM2hXEixy8ONPA/JExtRFlfgn2MDtHffeLZ42yGipavhBfhwP+6nx1IyhVydQBzU+YExHzE8pc0Qhp+Kjtc3MCk5UB/h5YnNk8SaoveKU=
+	t=1730753104; cv=none; b=J0qeMN1DsvUtTDiX8kR7/NiKToWb1DnYGp47wm2XmGpLl3ZovRLho6POQ6G24ZTl/b/qWeceYUdV3bDoyoTTLBgMrVt11aJC67bK2rqL0aOFfseTAURV4hZ/zJh3fZAhxXn+RtDaTbHmx1IQbGDCls4twY6/4BiwnGfHmoMrBgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730752787; c=relaxed/simple;
-	bh=6gM3XdRQr6llsKWLWiuYpygeRwrLp4MTLa4RKpQrBQA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a8PAZRLPVIeNVo6+03sfAEtteFkoJ7k3lgFoubV7Va70RrM+lgCtuSMq+suJYavnbSp6KgM1ES6y+11uZInC+zIPlqz0s7HRfhzy/tW9FF9aEEcU59T59ZwNyONf8go3WodCK1gvJTyM/ZLpL3GRp8/+iU+E1eLd4B1qRVMonbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T92t7NCR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730753104; c=relaxed/simple;
+	bh=gBsANRIO/MtUpXMmcvpZvTAjfQFDrxxd019G/8JkFdE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jrWnz6y8a+G8cPVraWjhuMMTYYLc99nVHDu55lFuKOjhP3AjwSB3cUR5mkXlr4cXkVRYQmwRlQebg9YLXVqkvRqq9LrSgvpGiXqBfUJu+7cuQ9/SmiocYIBnhFWWSW5Va51YUED55c56apaQSOtJnTrlx3KhIIg6ms2pdqW3cVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JMfIwLCz; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T92t7NCR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 865DAC4CECE;
-	Mon,  4 Nov 2024 20:39:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730752787;
-	bh=6gM3XdRQr6llsKWLWiuYpygeRwrLp4MTLa4RKpQrBQA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T92t7NCRMFhKtWKChKzEmx1s8v8rdBkQgoXX0mmvN+Y+f6cQcpexUrWoh9nvUWs5f
-	 Me6t5KL3z2EQmLfaSTjhShB5PKGYV8jUwwjv+LMUvXkjZIThVoiWO4Vzuix8YErrdU
-	 TPWCqrx2NSLLG5T3E4meqvnyrleETZke5glgRovg5xW9gsX4BYEmqKwWn2ZHSAvrQX
-	 JqqnQQw0CUt3FTrnL07rT2kbHv3omnfnKJ9LSv2cKKoGWyk1zwslo/hgrSoMXwuKm+
-	 i5a2oIxl6AgLcFYF0ei02VHgV8GFc26SmKz2bKNUElCgRTjzrPzK75Ii27d6IC6ENI
-	 q2U+Hvrqwh34A==
-Date: Mon, 4 Nov 2024 17:39:43 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 06/21] perf script: Move find_scripts to
- browser/scripts.c
-Message-ID: <ZykxD41c6gWQoIrQ@x1>
-References: <20241031014252.753588-1-irogers@google.com>
- <20241031014252.753588-7-irogers@google.com>
- <ZyPX7ayIO4teziDX@x1>
- <CAP-5=fVgJu8BJWFVUkCy1Zsi3piTPdV-GXL1bTpWZeO=nm=jrg@mail.gmail.com>
- <Zykk2MJ4REGCaqVw@google.com>
- <CAP-5=fXQpej43wxEtMYFbxdofHtUi98X68W4AaR9UCfsbDir5A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JMfIwLCz"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3a6c3bdbebcso9655ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 12:45:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730753102; x=1731357902; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=He3P8aPu/Jm2CYhNDWEntlDA9h70vRKHNVKjtIl0OdM=;
+        b=JMfIwLCzEGfWJaIjSEb/fdxnJWrlw6uutklXCQ5ncbpYP+I72FSbqDES+WfXkbWd3c
+         KvjLjvKtSsXDZVGpBeiyxwNkjV+Jdi2r7AsHG3F+2b0dieqWOlk9xd1FW9PyED7BXqO2
+         HSee9HfKEQ7ThbXtQQNffsEmubi15Ale27PkHqYrHQewHlxZzlBr8KKO+jW4wC4ZzZeG
+         Gd5QnxtPL7nnFENGi821XMPIaL4HHJIoO8HnoCmNtTRMyXBZh28pZ/YBSig2BczzQtQs
+         9KOdfAVhB9L/uPODkgxgDrNgXguwVOG6RQsMbWWr2HQZ7fjHW9JsSpo6nL70px1wg80T
+         tZjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730753102; x=1731357902;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=He3P8aPu/Jm2CYhNDWEntlDA9h70vRKHNVKjtIl0OdM=;
+        b=EfBYImV4iWz8G1AasvjeHZH+9XS4J80/8ETTYAs50cHT01VexARGGFGvrzckywonCL
+         LhP2THj+g3i5hrITUe4wAXpXMi7NkaXxPEb9wOuw6dBe4uimtkAL8tkkCbPQwejHtyXh
+         GY7PK1XoxMR42T6hmjEGCAU46CboQzV8fZdOL8oOzS67v0KDXw4NMBJIdbwPxz3G7caQ
+         7IIVYvgN16XZE2W4l+JE5w0tduA//couqKTtSidobJjlP5jQT6ttrN69kal8HAk15gnv
+         NckMJNMqfuwUG2OcgnDQCSYNyD/fFHtLATGA47r00XtvhWyIy6DHoIgZf3yfkMhaW+02
+         E3ug==
+X-Forwarded-Encrypted: i=1; AJvYcCX46briS24pLHvpsLpX5RGea7o2vIg9E2kXwUvZqMoukC1smLXSOtcnNNJv7/0iTrV2Bmsne9UfKEGUWehi/v3F@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk0tEiRklEaZutuGRWHbt68f7/jiEm9NjdtqDmqczRKpw/yHBr
+	tQNxpRYbV29Cq/IVB92hr16xjE3BdDRh21H+GikSjndOnURPO4V6mqj1lnSuC5u9dqdbo9jTblm
+	X4Y51bZIY4CN9PpVnuoYAstOOYo7p50RrF4+L
+X-Gm-Gg: ASbGncs0yPIV85E+vjw4EbsDsh4+eLFqwC1tJDsXlh7KmeqBM+/ndvy4/0ycXP7PyZh
+	AJDMpo+xboIL7U3oo2RT5Fg86jnbFXfsjv2x+lcblQVkEUMCDmY23vqnf+wT72w==
+X-Google-Smtp-Source: AGHT+IFfnbN9BAA2BakuIB2L/xKT1aGeT83pEF3lKubysgH7OYLfMygoLxxccfWtXB15UBsXLNUWr0QuSRdAoh5f9KU=
+X-Received: by 2002:a05:6e02:154d:b0:377:1653:a1da with SMTP id
+ e9e14a558f8ab-3a6daaa5be9mr713115ab.19.1730753101548; Mon, 04 Nov 2024
+ 12:45:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXQpej43wxEtMYFbxdofHtUi98X68W4AaR9UCfsbDir5A@mail.gmail.com>
+References: <20241022140156.98854-1-atrajeev@linux.vnet.ibm.com>
+ <ZyF2-XNUh38p_5Gg@google.com> <B72F330F-2A56-41B0-ABED-FCA7DC9EE711@linux.vnet.ibm.com>
+In-Reply-To: <B72F330F-2A56-41B0-ABED-FCA7DC9EE711@linux.vnet.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 4 Nov 2024 12:44:50 -0800
+Message-ID: <CAP-5=fXCYURva6Q8ktRVmnf2QCcsr-E3fPn327k0JRCw_9fn3A@mail.gmail.com>
+Subject: Re: [PATCH] tools/perf/tests/expr: Make the system_tsc_freq test only
+ for intel
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, James Clark <james.clark@linaro.org>, tmricht@linux.ibm.com, 
+	acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com, 
+	disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 04, 2024 at 12:34:47PM -0800, Ian Rogers wrote:
-> On Mon, Nov 4, 2024 at 11:47 AM Namhyung Kim <namhyung@kernel.org> wrote:
+On Sun, Nov 3, 2024 at 8:17=E2=80=AFPM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
+>
+>
+>
+> > On 30 Oct 2024, at 5:29=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> =
+wrote:
 > >
-> > On Thu, Oct 31, 2024 at 01:51:36PM -0700, Ian Rogers wrote:
-> > > On Thu, Oct 31, 2024 at 12:18 PM Arnaldo Carvalho de Melo
-> > > <acme@kernel.org> wrote:
-> > > >
-> > > > On Wed, Oct 30, 2024 at 06:42:37PM -0700, Ian Rogers wrote:
-> > > > > The only use of find_scripts is in browser/scripts.c but the
-> > > > > definition in builtin causes linking problems requiring a stub in
-> > > > > python.c. Move the function to allow the stub to be removed.
-> > > > >
-> > > > > Rewrite the directory iteration to use openat so that large character
-> > > > > arrays aren't needed. The arrays are warned about potential buffer
-> > > > > overflows by GCC now that all the code exists in a single C file.
-> > > >
-> > > > Introducing is_directory_at() should be done as a prep patch, as the
-> > > > rest of the patch below could end up being reverted after some other
-> > > > patch used it, making the process more difficult.
-> > > >
-> > > > I mentioned cases like this in the past, so doing it again just for the
-> > > > record.
-> > >
-> > > This is highlighted in the commit message:
-> > > ```
-> > > Rewrite the directory iteration to use openat so that large character
-> > > arrays aren't needed. The arrays are warned about potential buffer
-> > > overflows by GCC now that all the code exists in a single C file.
-> > > ```
-> > > so without the change the code wouldn't build. The new is_directory_at
-> > > function is effectively 2 statements fstatat and S_ISDIR on the
-> > > result, it is put next to is_directory for consistency but could have
-> > > been a static function in the only C file to use it.
-> > >
-> > > For the record, patches introducing 2 line long functions can be
-> > > excessively noisy, especially in a 21 patch series. There is always
-> > > the declared but not used build error to worry about - here things
-> > > couldn't just be simply moved due to triggering a different build
-> > > error. Given the simplicity of the function here I made a decision not
-> > > to split up the work - the commit message would likely be longer than
-> > > the function. The work never intended to introduce is_directory_at but
-> > > was forced into it through a desire not to disable compiler warnings.
+> > Hello,
 > >
-> > This patch does more than just moving the code which can be easy to miss
-> > something in the middle.  I think you can move the code as is without
-> > introducing build errors and then add new changes like using openat() on
-> > top (you may separate the change out of this series).  I think it's
-> > ok to have a small change if it clearly has different semantics.
-> 
-> If you are trying to bisect to find something that broke a build,
-> having commits that knowingly break the build will cause the bisect to
-> fail. The bisect will falsely fail on the known to be broken commit.
+> > On Tue, Oct 22, 2024 at 07:31:56PM +0530, Athira Rajeev wrote:
+> >> The "Simple expression parser" test fails on powerpc
+> >> as below:
+> >>
+> >> parsing metric: #system_tsc_freq
+> >> Unrecognized literal '#system_tsc_freq'literal: #system_tsc_freq =3D n=
+an
+> >> syntax error
+> >> FAILED tests/expr.c:247 #system_tsc_freq
+> >> ---- end(-1) ----
+> >> 7: Simple expression parser  : FAILED!
+> >>
+> >> In the test, system_tsc_freq is checked as below:
+> >>
+> >> if (is_intel)
+> >>    TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
+> >> else
+> >>
+> >> But commit 609aa2667f67 ("perf tool_pmu: Switch to standard
+> >> pmu functions and json descriptions")' changed condition in
+> >
+> > Probably need to put it as Fixes: tag.
+> >
+> >
+> >> tool_pmu__skip_event so that system_tsc_freq event should
+> >> only appear on x86
+> >>
+> >> +#if !defined(__i386__) && !defined(__x86_64__)
+> >> +       /* The system_tsc_freq event should only appear on x86. */
+> >> +       if (strcasecmp(name, "system_tsc_freq") =3D=3D 0)
+> >> +               return true;
+> >> +#endif
+> >>
+> >> After this commit, the testcase breaks for expr__parse of
+> >> system_tsc_freq in powerpc case. Fix the testcase to have
+> >> complete system_tsc_freq test within "is_intel" check.
+> >
+> > Ian, are you ok with this?
+> >
+> > Thanks,
+> > Namhyung
+> >
+>
+> Hi Ian
+>
+> If the change looks good to you, I will send a V2 with Fixes tag added. P=
+lease share your review comments
+>
+> Hi James, Thomas
+>
+> Looking for help to test since in non-intel platform, this test will fail=
+ without the patch
 
-I'm not understanding, AFAIK nobody is advocating for breaking
-bisection, just to first instroduce a function, then use it to avoid:
 
-1) Introduce function foo() and use it for feature bar()
-2) Somebody else uses function foo()
-3) We find a justification to revert 1) but can't, since it will break
-   2) so we need to add 4) that removes bar() from 1).
+Hi Athira,
 
-- Arnaldo
+sorry for the breakage and thank you for the detailed explanation. As
+the code will run on AMD I think your change will break that - . It is
+probably safest to keep the ".. else { .." for this case but guard it
+in the ifdef.
 
-> It should be unacceptable to knowingly break the build in a commit for
-> this reason.
-> 
-> Thanks,
-> Ian
+Thanks,
+Ian
+
+> Thanks
+> Athira
+>
+> >>
+> >> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> >> ---
+> >> tools/perf/tests/expr.c | 7 +++----
+> >> 1 file changed, 3 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+> >> index e3aa9d4fcf3a..eb3bd68fc4ce 100644
+> >> --- a/tools/perf/tests/expr.c
+> >> +++ b/tools/perf/tests/expr.c
+> >> @@ -244,11 +244,10 @@ static int test__expr(struct test_suite *t __may=
+be_unused, int subtest __maybe_u
+> >> if (num_dies) // Some platforms do not have CPU die support, for examp=
+le s390
+> >> TEST_ASSERT_VAL("#num_dies >=3D #num_packages", num_dies >=3D num_pack=
+ages);
+> >>
+> >> - TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&val, ctx, "#system_=
+tsc_freq") =3D=3D 0);
+> >> - if (is_intel)
+> >> + if (is_intel) {
+> >> + TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&val, ctx, "#system_=
+tsc_freq") =3D=3D 0);
+> >> TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
+> >> - else
+> >> - TEST_ASSERT_VAL("#system_tsc_freq =3D=3D 0", fpclassify(val) =3D=3D =
+FP_ZERO);
+> >> + }
+> >>
+> >> /*
+> >>  * Source count returns the number of events aggregating in a leader
+> >> --
+> >> 2.43.5
+>
+>
