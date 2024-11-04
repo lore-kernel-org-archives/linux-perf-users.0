@@ -1,207 +1,165 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A291FAC31
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 21:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3DD1FAC3A
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2024 21:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730754409; cv=none; b=ZG8gBhBLL6JzjGOlMnTrCDmpNU3Dcj4pkSsqLFFifZNonBuSpB+oKDtn5+kbh2q3d511a2Ht75jeafvXIvJ+sEmczyZhjI4VXjMy3Ce5p/NRqEaNWNRi5SMpMzM++NFeyVAr45hud/KNY2bEQBvhuy5hcwXjFnfFAXtA3K/9H0M=
+	t=1730754410; cv=none; b=nwkAN+2w7kiU9RAE5rQInX51RR5WZrISlqxia8KYCp0gaDowww20rHFu4PrecUwy2siBVbk79GWSZNVocEaf5uJcaR41guPuoo7mogbsWScA4CxxEZLg8NPM31nDh/PsCaD8gXoTwyYtvf0Q/pXU5TsCK95THtFfTxVKdBTpcMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730754409; c=relaxed/simple;
-	bh=p4I8egqMIvs9Mt1ZgPAste4N0lCFUZnjOnGlLdeA+l4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Se9iMUb+bMo1AsYR986AEwEzUb//Yo0GLQSFzgTMgdo92QG2G5pcp325M8H+7acvSvJTv1l4dCj9n9Oh6ChkYRsqPeCvfa7ZfbvfRtk4sAp/qMifVBPrpb15jA1Yorcz23cM8ctt9iS455jWgtrrTS9G8wLCAQ++tXUgqAp32eU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ecA/RaIY; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1730754410; c=relaxed/simple;
+	bh=9RjTPFEQXXi8G0IerLZGozkA4RzgGbTlEP2CyRIRfeA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CLo/FOlx9eBpeGhyjzgInJlpPrRkc7Ee5vh54KysT7rfI+NLfd+yuLW4rxZ15tBj4VttoLC+Hn40L1YX29bKvEDaApN2kM5CO6Vw2NHjy0OhgearMMo5RTddirZnq+CF26BdaJSEd5JiOmufaGehfrpjpsXLzuuVO9KL+b57Yg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=NhjMGgMU; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ecA/RaIY"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a4e4776f79so45905ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 13:06:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="NhjMGgMU"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-71e8235f0b6so4143995b3a.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2024 13:06:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730754407; x=1731359207; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7X8h3w9ARspwQBdqBvA6URma1cvCX4zBiK/RBU29C0g=;
-        b=ecA/RaIYxU0GjAJNjzCWNvFTz2nsdog1ue3KyWkiPXMoo3mIx764LL2h+TjaF/+yVs
-         5uw05noJWpimMPbHqTVwx5LGW4ggHqiFeEA+uc420bsl+NRbVhSvw+5FY4Sryn661GYl
-         qfTKPjLZeU2RNjMEMMhlHOvz/WCcPvb70ArosIslkRxTKOyMYgmAsV8jxIi0Qr8Z4ufI
-         Lg0l8MzZMmqpj2ClYLFEcW2jeoVVzbg/lVmeocJV9K9972PkLFtQ96ppzgVJs7ypcDf1
-         bqwwVlz4/Ag794dc5eTW2/po4j0Bs+yzNNXOTgo8UFIgfW7tXcW0U9eyyrMiuHHQG4gg
-         gsKQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1730754407; x=1731359207; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IBYozqmP4kgDqCATVF4mr9l1mgqwfE3SxQIhbzP4kRk=;
+        b=NhjMGgMUEhgRno7PwfPvg6lB9l+PEwpt6ye+KSHWVS5F5iT9iFGvBllz8wwcC56ejm
+         kv42oOgWIdOMajUCC5ddSPjdPYaNJWNVngXYcmpY1NGr9nE3418abzwbW7vO1jCVxTDy
+         rPkCiYWbYjmwbENymnDv8leINzDK00qPAQ87QEwPOTPgPQlCc5Qdc1iQphA+GcEyjxQm
+         ct/DBeZxAVnSb69RHe0JZNApS2uNXbJ+IQ9bJHZ9+dw/E27mAUMVXwyq0SICl+ervKYt
+         6XaK9QbFY1K/iKGwf93r3mrYHeADV2WB4ztIUZnR/c3KGs1hhXP/xStfOzCduyd/tzDY
+         Nf0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1730754407; x=1731359207;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7X8h3w9ARspwQBdqBvA6URma1cvCX4zBiK/RBU29C0g=;
-        b=oD8ZGvzTpunBsqQsOHXiLL8fzIIH1oCBgtHeK75jxJAYN7JI11CYCbKqcZwTxDiSmF
-         ACfaMMwKUq7YwkfhhM1ILA3emxK9zzSijEnb7N85/UKMHGjSpVMZGjP39UDFTG8i9hy9
-         IlP4xTUORiTSehcf/0wgbZue4g3t8ZW98zo6s9w2RDCGTgG7DPWvqAfClFlbJ8iHj+Lq
-         NAaKTZGxuoGxUX5FuaWM983EPzdYzqBHzn/0DJF8SZGN1tu/URqC1WCglK7fHm/vV+Wv
-         SPEHnpWweejIVwohXDUaUrqxvaYy7h3GQWQ+8RJC/fulh5hxAav31IlTOYIMFgu0cH9p
-         rUcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTgbNm2mbslSl2HuFqjWst5cLazY3gdn97yJYQldzjB1BCtZx/w31cwkdsiCOq1fOd+MTPXVPpLx+25TX6vrIR@vger.kernel.org
-X-Gm-Message-State: AOJu0YweEldxQ+TmQGulEOjSWUbp8LpQkVElPe2vvFxHNL5t1LsIBe0s
-	NVahnCL2GOgLZYaDif0u5cWY8vEPYDQ6NndJbjAcv2w+yXenSTqUfHzf4rmLC7XWqWObIQnj8E/
-	Dj+8ODP78VwHszgqHkGM7ukqYRsrnpht6qlj9
-X-Gm-Gg: ASbGncvQoiczMjG0MLKm/QbCrMes7zjdzv8jqsh8ToTjqWNx3dTASjB8XHx0jfTAjba
-	lspmFjx2MiymJa9e2QCNGhqbtFidrN4rWP9RCD72HPK4g+uX7v/pc+XlbfcEoYDo=
-X-Google-Smtp-Source: AGHT+IF/DUYBoiOfozUGmZtvuCTaqwIGsVuJkSkhvnEO8q4dU3jkpIXU2foqX4/8PGuJz7DzFpbk+Mu1jhtW49HcMkA=
-X-Received: by 2002:a05:6e02:1aa5:b0:3a0:9ffd:2b7a with SMTP id
- e9e14a558f8ab-3a6daa96453mr755235ab.9.1730754406481; Mon, 04 Nov 2024
- 13:06:46 -0800 (PST)
+        bh=IBYozqmP4kgDqCATVF4mr9l1mgqwfE3SxQIhbzP4kRk=;
+        b=MeONUVQUqYfylYlPzQ7emiISKBwLIikjhBba5LrZZDVnjIEIMjlxOKW/T6rng+NLfk
+         inp7GW0IfOwfmSgH/fOXwQiwsSROW0M2qCLrnQDjKB9gxTsKAKP7VsblU7fwsVvfINrI
+         daHFZOZv+5qN/49e8f36CAsmQLVUq561UiWVuK+FitHV/09AHqRgHrpwnKvAnlWgtzWY
+         2Xwzp1qTQg/+uROxlmpqbVyxKwgAFj4kV2XRgd4ojLPN4fEk2svy2ySljZcWiaFMLyge
+         G63Qfhcwz33243urrQiIFgkuWwAR0gWYIryxq1O7LnbQ/+wxPslhUVwUQTOdm5g18T26
+         ENPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSAJbehI4Lko9psS4uAliAjwc4pOWsnBR/XibzMJuv8R+5aGrMvZFzCraRx/do8rHmTbgwkywbaR7fBaEWw/b9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv624yR+zmURqwFfj4fjGHAzDm5sfJlSZrJKA6+NCx6bckEd++
+	Wzn1pByiPXnp9dT6Zd8NlP8MxRl2w+8yh4AuEW8hf7y+y0VFEaQKpMZ8YC/iTVI=
+X-Google-Smtp-Source: AGHT+IEw7Pl3WMMSXrcg/sNy1bE2C/ljw19KDpDHK234X+biDUyX9c1c/9FjwUYq0Fp1+rkwdwDnZQ==
+X-Received: by 2002:a05:6a20:d8a:b0:1c6:fb66:cfe with SMTP id adf61e73a8af0-1db91dbb56emr23905631637.21.1730754407516;
+        Mon, 04 Nov 2024 13:06:47 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ee490e08f4sm7248293a12.40.2024.11.04.13.06.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 13:06:46 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Mon, 04 Nov 2024 13:06:04 -0800
+Subject: [PATCH RFT 02/16] perf tools: arc: Support generic syscall headers
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241031014252.753588-1-irogers@google.com> <20241031014252.753588-7-irogers@google.com>
- <ZyPX7ayIO4teziDX@x1> <CAP-5=fVgJu8BJWFVUkCy1Zsi3piTPdV-GXL1bTpWZeO=nm=jrg@mail.gmail.com>
- <Zykk2MJ4REGCaqVw@google.com> <CAP-5=fXQpej43wxEtMYFbxdofHtUi98X68W4AaR9UCfsbDir5A@mail.gmail.com>
- <ZykxD41c6gWQoIrQ@x1> <CAP-5=fWf8guTgqwfrrct3AGYDC=Lb1Oxo7kXU_x1yEr5urFSkQ@mail.gmail.com>
- <Zyk19KgzI7ybPkQ4@google.com>
-In-Reply-To: <Zyk19KgzI7ybPkQ4@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 4 Nov 2024 13:06:35 -0800
-Message-ID: <CAP-5=fXj1-wqt+Bs-0ZypRsaZw2VP0qyKdeeRHpjUD5BwO9OBg@mail.gmail.com>
-Subject: Re: [PATCH v5 06/21] perf script: Move find_scripts to browser/scripts.c
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241104-perf_syscalltbl-v1-2-9adae5c761ef@rivosinc.com>
+References: <20241104-perf_syscalltbl-v1-0-9adae5c761ef@rivosinc.com>
+In-Reply-To: <20241104-perf_syscalltbl-v1-0-9adae5c761ef@rivosinc.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
+ =?utf-8?q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+ Christian Brauner <brauner@kernel.org>, Guo Ren <guoren@kernel.org>, 
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+ James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+ Leo Yan <leo.yan@linux.dev>, Jonathan Corbet <corbet@lwn.net>, 
+ Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, linux-security-module@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-csky@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2475; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=9RjTPFEQXXi8G0IerLZGozkA4RzgGbTlEP2CyRIRfeA=;
+ b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ7qmeZT/lrQPcgVSp866b5oottGWZXne8zlbMz/PXfP45
+ jJB/7jmjlIWBjEOBlkxRRaeaw3MrXf0y46Klk2AmcPKBDKEgYtTACbCkM/I8EGjLfRN5emCxfff
+ Rt6svpYVp9S0KufSprL9ixpVVctvHWVk2Lp43dZb9d071xb2bZlirmHzr33jpYSkuarLqw/PaGT
+ YywQA
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-On Mon, Nov 4, 2024 at 1:00=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Mon, Nov 04, 2024 at 12:48:01PM -0800, Ian Rogers wrote:
-> > On Mon, Nov 4, 2024 at 12:39=E2=80=AFPM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Mon, Nov 04, 2024 at 12:34:47PM -0800, Ian Rogers wrote:
-> > > > On Mon, Nov 4, 2024 at 11:47=E2=80=AFAM Namhyung Kim <namhyung@kern=
-el.org> wrote:
-> > > > >
-> > > > > On Thu, Oct 31, 2024 at 01:51:36PM -0700, Ian Rogers wrote:
-> > > > > > On Thu, Oct 31, 2024 at 12:18=E2=80=AFPM Arnaldo Carvalho de Me=
-lo
-> > > > > > <acme@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Wed, Oct 30, 2024 at 06:42:37PM -0700, Ian Rogers wrote:
-> > > > > > > > The only use of find_scripts is in browser/scripts.c but th=
-e
-> > > > > > > > definition in builtin causes linking problems requiring a s=
-tub in
-> > > > > > > > python.c. Move the function to allow the stub to be removed=
-.
-> > > > > > > >
-> > > > > > > > Rewrite the directory iteration to use openat so that large=
- character
-> > > > > > > > arrays aren't needed. The arrays are warned about potential=
- buffer
-> > > > > > > > overflows by GCC now that all the code exists in a single C=
- file.
-> > > > > > >
-> > > > > > > Introducing is_directory_at() should be done as a prep patch,=
- as the
-> > > > > > > rest of the patch below could end up being reverted after som=
-e other
-> > > > > > > patch used it, making the process more difficult.
-> > > > > > >
-> > > > > > > I mentioned cases like this in the past, so doing it again ju=
-st for the
-> > > > > > > record.
-> > > > > >
-> > > > > > This is highlighted in the commit message:
-> > > > > > ```
-> > > > > > Rewrite the directory iteration to use openat so that large cha=
-racter
-> > > > > > arrays aren't needed. The arrays are warned about potential buf=
-fer
-> > > > > > overflows by GCC now that all the code exists in a single C fil=
-e.
-> > > > > > ```
-> > > > > > so without the change the code wouldn't build. The new is_direc=
-tory_at
-> > > > > > function is effectively 2 statements fstatat and S_ISDIR on the
-> > > > > > result, it is put next to is_directory for consistency but coul=
-d have
-> > > > > > been a static function in the only C file to use it.
-> > > > > >
-> > > > > > For the record, patches introducing 2 line long functions can b=
-e
-> > > > > > excessively noisy, especially in a 21 patch series. There is al=
-ways
-> > > > > > the declared but not used build error to worry about - here thi=
-ngs
-> > > > > > couldn't just be simply moved due to triggering a different bui=
-ld
-> > > > > > error. Given the simplicity of the function here I made a decis=
-ion not
-> > > > > > to split up the work - the commit message would likely be longe=
-r than
-> > > > > > the function. The work never intended to introduce is_directory=
-_at but
-> > > > > > was forced into it through a desire not to disable compiler war=
-nings.
-> > > > >
-> > > > > This patch does more than just moving the code which can be easy =
-to miss
-> > > > > something in the middle.  I think you can move the code as is wit=
-hout
-> > > > > introducing build errors and then add new changes like using open=
-at() on
-> > > > > top (you may separate the change out of this series).  I think it=
-'s
-> > > > > ok to have a small change if it clearly has different semantics.
-> > > >
-> > > > If you are trying to bisect to find something that broke a build,
-> > > > having commits that knowingly break the build will cause the bisect=
- to
-> > > > fail. The bisect will falsely fail on the known to be broken commit=
-.
-> > >
-> > > I'm not understanding, AFAIK nobody is advocating for breaking
-> > > bisection, just to first instroduce a function, then use it to avoid:
-> > >
-> > > 1) Introduce function foo() and use it for feature bar()
-> > > 2) Somebody else uses function foo()
-> > > 3) We find a justification to revert 1) but can't, since it will brea=
-k
-> > >    2) so we need to add 4) that removes bar() from 1).
-> >
-> > Namhyung was asking that the c&p of code be 1 patch then "add new
-> > changes like using openat() on top". That is:
-> >
-> > patch 1: add is_directory_at - introduce the 2 line helper function
-> > patch 2: move the code
-> > patch 3: update the code to use is_directory_at
-> >
-> > patch 2 is known broken as patch 3 is fixing it.
-> >
-> > Hopefully this is clear.
->
-> Actually I don't care about the patch ordering.  My request is not
-> to break build and just to separate different changes out. :)
+Arc uses the generic syscall table, use that in perf instead of
+requiring libaudit.
 
-So, patch 2 can't be separated from patch 3 - are we agreed? So we
-squash patch 2 with patch 3. Patch 1 is trivial and fails to meet the
-bar of a meaningful change, so we squash that. We end up with this
-patch. If there's a later revert and a dependence of the 2 liner, just
-don't revert that part of the change. We've never had such a revert so
-it is hard to see why we need to generate so much churn because of it.
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+ tools/perf/Makefile.config                           | 2 +-
+ tools/perf/Makefile.perf                             | 2 +-
+ tools/perf/arch/arc/entry/syscalls/Kbuild            | 2 ++
+ tools/perf/arch/arc/entry/syscalls/Makefile.syscalls | 3 +++
+ tools/perf/arch/arc/include/syscall_table.h          | 2 ++
+ 5 files changed, 9 insertions(+), 2 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 6774b67d4668..504d762cc572 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -36,7 +36,7 @@ ifneq ($(NO_SYSCALL_TABLE),1)
+   endif
+ 
+   # architectures that use the generic syscall table scripts
+-  ifeq ($(SRCARCH),riscv)
++  ifeq ($(SRCARCH),$(filter $(SRCARCH),riscv arc))
+     NO_SYSCALL_TABLE := 0
+     CFLAGS += -DGENERIC_SYSCALL_TABLE
+     CFLAGS += -I$(OUTPUT)arch/$(SRCARCH)/include/generated
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 18294b840121..02ff3f2fcf12 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -311,7 +311,7 @@ FEATURE_TESTS := all
+ endif
+ endif
+ # architectures that use the generic syscall table
+-ifeq ($(SRCARCH),riscv)
++ifeq ($(SRCARCH),$(filter $(SRCARCH),riscv arc))
+ include $(srctree)/tools/perf/scripts/Makefile.syscalls
+ endif
+ include Makefile.config
+diff --git a/tools/perf/arch/arc/entry/syscalls/Kbuild b/tools/perf/arch/arc/entry/syscalls/Kbuild
+new file mode 100644
+index 000000000000..11707c481a24
+--- /dev/null
++++ b/tools/perf/arch/arc/entry/syscalls/Kbuild
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++syscall-y += syscalls_32.h
+diff --git a/tools/perf/arch/arc/entry/syscalls/Makefile.syscalls b/tools/perf/arch/arc/entry/syscalls/Makefile.syscalls
+new file mode 100644
+index 000000000000..391d30ab7a83
+--- /dev/null
++++ b/tools/perf/arch/arc/entry/syscalls/Makefile.syscalls
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++
++syscall_abis_32 += arc time32 renameat stat64 rlimit
+diff --git a/tools/perf/arch/arc/include/syscall_table.h b/tools/perf/arch/arc/include/syscall_table.h
+new file mode 100644
+index 000000000000..4c942821662d
+--- /dev/null
++++ b/tools/perf/arch/arc/include/syscall_table.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <asm/syscalls_32.h>
+
+-- 
+2.34.1
+
