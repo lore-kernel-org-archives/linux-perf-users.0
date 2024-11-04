@@ -1,442 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992061CC178;
-	Mon,  4 Nov 2024 20:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6791E631A;
+	Mon,  4 Nov 2024 20:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730751796; cv=none; b=WehdRsQB3T9WwIETX7eNNjSTVTrm4joBOBlp2KZcAU5FrybMYcG/q6dq9OPIIZpYgd1gu0o4ypDpTweVCtwVpA+T8LQZ3GgCMiuhqQsaNdPMAP7D7z0ayT91LoaiKto1vMzk6Kkdniw9mQlu1+5dl29UkwZRRqZ4wi6Au4PZ8UI=
+	t=1730752377; cv=none; b=s5wu2+bLXJFSjNJIltP1QtqA9mLo0nSkzDSfj0aDXPdIN1UHycvOsp8KVsRblpWAJajpbGSQnmUnbaDpsvslygp8apCqy/XikjldA+k+9Ry4bKwJ4dkmDiLAiwUEgaVhlFo15zjGWkYzHgHMp4pVRz22FQPtVy9pr99GzXLL5Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730751796; c=relaxed/simple;
-	bh=2eOebLyxN0BOvtsVjtwcA15U2WCECWrXd2l44VjFy74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uUDuL1RUf780g57s1vfcioZT0rcuV7oN6J1I296zwOhzQzt/xecz7g7EYI7cV7YGy5A0Z3Kc3CYv7bXy+lIdjw5sdZVSSbrj7iytfmUvaRedDJWLqwZSCCBd9PuEgwYQ+vllowFVC7BKuMJdkWaaZpZMHPmYjdHt7BgKmiNh7RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lHsPQYDK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730752377; c=relaxed/simple;
+	bh=6JOFTXPAMGciBT2ihX0VJ+WB0kKtmWPUmtAfoMozhOU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=GLeHx9gWgVlj+bgAs8zRF4/32ALfNmwKA2xvv5nIqjjo21FGpw4QWizEl4l123RGCvi2RqKA9rjLY/ZzsuKIM3/W6gAeDmudHjd3ckoBUDvpBPn11qNeQCZcnfa+iCbrMU0y0hgYko0suBsLKaquE0R/V4HQoo29w/F0dM/XCbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U9cMZubT; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lHsPQYDK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7674FC4CECE;
-	Mon,  4 Nov 2024 20:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730751796;
-	bh=2eOebLyxN0BOvtsVjtwcA15U2WCECWrXd2l44VjFy74=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lHsPQYDKm8ncdwwxtr44gsxjtiQL+p/ridxg/FL5dYyUOjNIj0hoIUundIsbwpkE7
-	 ZMy/EUNX2YUQqXMHuHnrLVLs85BNOHMsiokHfNkjHq7qEfXXpeJFzqEDEHrKP+8vsj
-	 a5Sy3MLHqpLynVYfzt0UjpeAnsaGqX60HQSAwrorE7/N7fL9EYGOCAnbbaWcozHGCc
-	 xQT0pp0/XRjuyXQDgx1IxPevNgwwKDOeX2svc38I7myQNUKAxt0hYV+Wlja5W+q6oi
-	 c9U/ftM0kTaPFTkpVOoxPfG7p8YNZ6V0uxYOHxvcnLiANtcDyITWAlBLYIOD4N/xFe
-	 SiRX/8tPwmGfg==
-Date: Mon, 4 Nov 2024 17:23:11 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Ian Rogers <irogers@google.com>,
-	Dima Kogan <dima@secretsauce.net>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] perf-probe: Introduce quotation marks support
-Message-ID: <ZyktL05NmqRTr213@x1>
-References: <173073702882.2098439.13342508872190995896.stgit@mhiramat.roam.corp.google.com>
- <173073705572.2098439.4076465830484831945.stgit@mhiramat.roam.corp.google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U9cMZubT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730752375; x=1762288375;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=6JOFTXPAMGciBT2ihX0VJ+WB0kKtmWPUmtAfoMozhOU=;
+  b=U9cMZubTdrOjT29ikPUTOd6ObIn30oT3w/z8ycBxh0KbR5ItiCIgI0yf
+   iqWXBOFdleRSQsxeq/Y6in70Wcg6E2o2fyAAoGVP92trKnVU2rORY9neu
+   ei4WmP20GhU42Qbqgc8cPzVdd2OJlIHduLUzmqUAT7pr48ay8qtdj7xf/
+   i4ihdyHmEdba9RZV5gBCAe+hdVoxzeOQqrnEEJD6rURL9iXX05Yon8Bwo
+   2+mJJE6AKxX9uhxKH1OpiKTiQtQAYfHTwcNov1+ucOCrOPoUktHHAICV8
+   qQePeiKRcbZ76qijwRfRW7jG2N7edo+aY2XoBD59tY3dhnMG4ae+EdaNR
+   A==;
+X-CSE-ConnectionGUID: kPTeRgr0QfKT1YFbdWplYQ==
+X-CSE-MsgGUID: iMSQwo0iTdmAsCR+1QU1LA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30321662"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="30321662"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 12:32:55 -0800
+X-CSE-ConnectionGUID: dNZWarN3R+6BOcUk10Y1Mg==
+X-CSE-MsgGUID: MqNOm0eOQ+uy5GYL4AB3Pw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,258,1725346800"; 
+   d="scan'208";a="84584413"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 12:32:55 -0800
+Received: from [10.212.67.175] (kliang2-mobl1.ccr.corp.intel.com [10.212.67.175])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 6B63820B5703;
+	Mon,  4 Nov 2024 12:32:53 -0800 (PST)
+Message-ID: <38738c32-0435-42ea-a96e-bb1ba7b22e3b@linux.intel.com>
+Date: Mon, 4 Nov 2024 15:32:52 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173073705572.2098439.4076465830484831945.stgit@mhiramat.roam.corp.google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] perf/x86/intel: New start period for the freq mode
+To: peterz@infradead.org, mingo@kernel.org, tglx@linutronix.de,
+ acme@kernel.org, namhyung@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, ak@linux.intel.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20241022130414.2493923-1-kan.liang@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20241022130414.2493923-1-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 05, 2024 at 01:17:35AM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> In non-C languages, it is possible to have ':' in the function names.
-> It is possible to escape it with backslashes, but if there are too many
-> backslashes, it is annoying.
-> This introduce quotation marks (`"` or `'`) support.
+Hi Peter,
 
-Can you please split the patch so that strpbrk_esq() and strdup_esq()
-are introduced in different patches?
+Ping. Could you please let me know if you have any comments.
 
-- Arnaldo
- 
-> For example, without quotes, we have to pass it as below
+Thanks,
+Kan
+
+On 2024-10-22 9:04 a.m., kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> $ perf probe -x cro3 -L "cro3\:\:cmd\:\:servo\:\:run_show"
-> <run_show@/work/cro3/src/cmd/servo.rs:0>
->       0  fn run_show(args: &ArgsShow) -> Result<()> {
->       1      let list = ServoList::discover()?;
->       2      let s = list.find_by_serial(&args.servo)?;
->       3      if args.json {
->       4          println!("{s}");
+> The freq mode is the current default mode of Linux perf. 1 period is
+> used as a start period. The period is auto-adjusted in each tick or an
+> overflow to meet the frequency target.
 > 
-> With quotes, we can more naturally write the function name as below;
+> The start period 1 is too low and may trigger some issues.
+> - Many HWs do not support period 1 well.
+>   https://lore.kernel.org/lkml/875xs2oh69.ffs@tglx/
+> - For an event that occurs frequently, period 1 is too far away from the
+>   real period. Lots of the samples are generated at the beginning.
+>   The distribution of samples may not be even.
+> - A low start period for the frequently occurring event also challenges
+>   virtualization, which has a longer path to handle a PMI.
 > 
-> $ ./perf probe -x cro3 -L \"cro3::cmd::servo::run_show\"
-> <run_show@/work/cro3/src/cmd/servo.rs:0>
->       0  fn run_show(args: &ArgsShow) -> Result<()> {
->       1      let list = ServoList::discover()?;
->       2      let s = list.find_by_serial(&args.servo)?;
->       3      if args.json {
->       4          println!("{s}");
+> The limit_period only checks the minimum acceptable value for HW.
+> It cannot be used to set the start period. Because, some events may
+> need a very low period. The limit_period cannot be set too high. It
+> doesn't help with the events that occur frequently.
 > 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> It's hard to find a universal start period for all events. The idea is
+> only to give an estimate for the popular HW and HW cache events. For the
+> rest of the events, start from the lowest possible recommended value.
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > ---
->  tools/perf/util/probe-event.c  |   76 ++++++++++++++++--------------
->  tools/perf/util/probe-finder.c |    3 +
->  tools/perf/util/string.c       |  100 ++++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/string2.h      |    2 +
->  4 files changed, 145 insertions(+), 36 deletions(-)
 > 
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index 913a27cbb5d9..bcba8273204d 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -1065,6 +1065,7 @@ static int __show_line_range(struct line_range *lr, const char *module,
+> Changes since V1:
+> - Move to Intel specific code
+> 
+>  arch/x86/events/intel/core.c | 85 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 812b1a1cdf47..d3b133384361 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4076,6 +4076,85 @@ static void intel_pmu_set_acr_dyn_mask(struct perf_event *event, int idx,
+>  		event->hw.dyn_mask &= mask;
+>  }
 >  
->  	ret = debuginfo__find_line_range(dinfo, lr);
->  	if (!ret) {	/* Not found, retry with an alternative */
-> +		pr_debug2("Failed to find line range in debuginfo. Fallback to alternative\n");
->  		ret = get_alternative_line_range(dinfo, lr, module, user);
->  		if (!ret)
->  			ret = debuginfo__find_line_range(dinfo, lr);
-> @@ -1078,7 +1079,7 @@ static int __show_line_range(struct line_range *lr, const char *module,
->  		pr_warning("Specified source line is not found.\n");
->  		return -ENOENT;
->  	} else if (ret < 0) {
-> -		pr_warning("Debuginfo analysis failed.\n");
-> +		pr_warning("Debuginfo analysis failed (%d).\n", ret);
+> +static u64 intel_pmu_freq_start_period(struct perf_event *event)
+> +{
+> +	int type = event->attr.type;
+> +	u64 config, factor;
+> +	s64 start;
+> +
+> +	/*
+> +	 * The 127 is the lowest possible recommended SAV (sample after value)
+> +	 * for a 4000 freq (default freq), according to the event list JSON file.
+> +	 * Also, assume the workload is idle 50% time.
+> +	 */
+> +	factor = 64 * 4000;
+> +	if (type != PERF_TYPE_HARDWARE && type != PERF_TYPE_HW_CACHE)
+> +		goto end;
+> +
+> +	/*
+> +	 * The estimation of the start period in the freq mode is
+> +	 * based on the below assumption.
+> +	 *
+> +	 * For a cycles or an instructions event, 1GHZ of the
+> +	 * underlying platform, 1 IPC. The workload is idle 50% time.
+> +	 * The start period = 1,000,000,000 * 1 / freq / 2.
+> +	 *		    = 500,000,000 / freq
+> +	 *
+> +	 * Usually, the branch-related events occur less than the
+> +	 * instructions event. According to the Intel event list JSON
+> +	 * file, the SAV (sample after value) of a branch-related event
+> +	 * is usually 1/4 of an instruction event.
+> +	 * The start period of branch-related events = 125,000,000 / freq.
+> +	 *
+> +	 * The cache-related events occurs even less. The SAV is usually
+> +	 * 1/20 of an instruction event.
+> +	 * The start period of cache-related events = 25,000,000 / freq.
+> +	 */
+> +	config = event->attr.config & PERF_HW_EVENT_MASK;
+> +	if (type == PERF_TYPE_HARDWARE) {
+> +		switch (config) {
+> +		case PERF_COUNT_HW_CPU_CYCLES:
+> +		case PERF_COUNT_HW_INSTRUCTIONS:
+> +		case PERF_COUNT_HW_BUS_CYCLES:
+> +		case PERF_COUNT_HW_STALLED_CYCLES_FRONTEND:
+> +		case PERF_COUNT_HW_STALLED_CYCLES_BACKEND:
+> +		case PERF_COUNT_HW_REF_CPU_CYCLES:
+> +			factor = 500000000;
+> +			break;
+> +		case PERF_COUNT_HW_BRANCH_INSTRUCTIONS:
+> +		case PERF_COUNT_HW_BRANCH_MISSES:
+> +			factor = 125000000;
+> +			break;
+> +		case PERF_COUNT_HW_CACHE_REFERENCES:
+> +		case PERF_COUNT_HW_CACHE_MISSES:
+> +			factor = 25000000;
+> +			break;
+> +		default:
+> +			goto end;
+> +		}
+> +	}
+> +
+> +	if (type == PERF_TYPE_HW_CACHE)
+> +		factor = 25000000;
+> +end:
+> +	/*
+> +	 * Usually, a prime or a number with less factors (close to prime)
+> +	 * is chosen as an SAV, which makes it less likely that the sampling
+> +	 * period synchronizes with some periodic event in the workload.
+> +	 * Minus 1 to make it at least avoiding values near power of twos
+> +	 * for the default freq.
+> +	 */
+> +	start = DIV_ROUND_UP_ULL(factor, event->attr.sample_freq) - 1;
+> +
+> +	if (start > x86_pmu.max_period)
+> +		start = x86_pmu.max_period;
+> +
+> +	if (x86_pmu.limit_period)
+> +		x86_pmu.limit_period(event, &start);
+> +
+> +	return start;
+> +}
+> +
+>  static int intel_pmu_hw_config(struct perf_event *event)
+>  {
+>  	int ret = x86_pmu_hw_config(event);
+> @@ -4087,6 +4166,12 @@ static int intel_pmu_hw_config(struct perf_event *event)
+>  	if (ret)
 >  		return ret;
->  	}
 >  
-> @@ -1187,7 +1188,7 @@ static int show_available_vars_at(struct debuginfo *dinfo,
->  			pr_err("Failed to find the address of %s\n", buf);
->  			ret = -ENOENT;
->  		} else
-> -			pr_warning("Debuginfo analysis failed.\n");
-> +			pr_warning("Debuginfo analysis failed(2).\n");
->  		goto end;
->  	}
->  
-> @@ -1343,30 +1344,39 @@ static bool is_c_func_name(const char *name)
->   *
->   *         @SRC[:SLN[+NUM|-ELN]]
->   *         FNC[@SRC][:SLN[+NUM|-ELN]]
-> + *
-> + * SRC and FUNC can be quoted by double/single quotes.
->   */
->  int parse_line_range_desc(const char *arg, struct line_range *lr)
->  {
-> -	char *range, *file, *name = strdup(arg);
-> +	char *buf = strdup(arg);
-> +	char *p;
->  	int err;
->  
-> -	if (!name)
-> +	if (!buf)
->  		return -ENOMEM;
->  
->  	lr->start = 0;
->  	lr->end = INT_MAX;
->  
-> -	range = strpbrk_esc(name, ":");
-> -	if (range) {
-> -		*range++ = '\0';
-> +	pr_debug2("Input line range: %s\n", buf);
-> +	p = strpbrk_esq(buf, ":");
-> +	if (p) {
-> +		if (p == buf) {
-> +			semantic_error("No file/function name in '%s'.\n", p);
-> +			err = -EINVAL;
-> +			goto err;
-> +		}
-> +		*(p++) = '\0';
->  
-> -		err = parse_line_num(&range, &lr->start, "start line");
-> +		err = parse_line_num(&p, &lr->start, "start line");
->  		if (err)
->  			goto err;
->  
-> -		if (*range == '+' || *range == '-') {
-> -			const char c = *range++;
-> +		if (*p == '+' || *p == '-') {
-> +			const char c = *(p++);
->  
-> -			err = parse_line_num(&range, &lr->end, "end line");
-> +			err = parse_line_num(&p, &lr->end, "end line");
->  			if (err)
->  				goto err;
->  
-> @@ -1390,28 +1400,22 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
->  				       " than end line.\n");
->  			goto err;
->  		}
-> -		if (*range != '\0') {
-> -			semantic_error("Tailing with invalid str '%s'.\n", range);
-> +		if (*p != '\0') {
-> +			semantic_error("Tailing with invalid str '%s'.\n", p);
->  			goto err;
->  		}
->  	}
->  
-> -	file = strpbrk_esc(name, "@");
-> -	if (file) {
-> -		*file = '\0';
-> -		lr->file = strdup_esc(++file);
-> -		if (lr->file == NULL) {
-> -			err = -ENOMEM;
-> -			goto err;
-> -		}
-> -		if (*name != '\0')
-> -			lr->function = name;
-> -	} else
-> -		lr->function = name;
-> +	p = strpbrk_esq(buf, "@");
-> +	if (p) {
-> +		*(p++) = '\0';
-> +		lr->file = strdup_esq(p);
-> +	}
-> +	lr->function = strdup_esq(buf);
-> +	err = 0;
->  
-> -	return 0;
->  err:
-> -	free(name);
-> +	free(buf);
->  	return err;
->  }
->  
-> @@ -1419,19 +1423,19 @@ static int parse_perf_probe_event_name(char **arg, struct perf_probe_event *pev)
->  {
->  	char *ptr;
->  
-> -	ptr = strpbrk_esc(*arg, ":");
-> +	ptr = strpbrk_esq(*arg, ":");
->  	if (ptr) {
->  		*ptr = '\0';
->  		if (!pev->sdt && !is_c_func_name(*arg))
->  			goto ng_name;
-> -		pev->group = strdup_esc(*arg);
-> +		pev->group = strdup_esq(*arg);
->  		if (!pev->group)
->  			return -ENOMEM;
->  		*arg = ptr + 1;
->  	} else
->  		pev->group = NULL;
->  
-> -	pev->event = strdup_esc(*arg);
-> +	pev->event = strdup_esq(*arg);
->  	if (pev->event == NULL)
->  		return -ENOMEM;
->  
-> @@ -1470,7 +1474,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
->  			arg++;
->  	}
->  
-> -	ptr = strpbrk_esc(arg, ";=@+%");
-> +	ptr = strpbrk_esq(arg, ";=@+%");
->  	if (pev->sdt) {
->  		if (ptr) {
->  			if (*ptr != '@') {
-> @@ -1484,7 +1488,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
->  				pev->target = build_id_cache__origname(tmp);
->  				free(tmp);
->  			} else
-> -				pev->target = strdup_esc(ptr + 1);
-> +				pev->target = strdup_esq(ptr + 1);
->  			if (!pev->target)
->  				return -ENOMEM;
->  			*ptr = '\0';
-> @@ -1518,7 +1522,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
->  		arg++;
->  	}
->  
-> -	ptr = strpbrk_esc(arg, ";:+@%");
-> +	ptr = strpbrk_esq(arg, ";:+@%");
->  	if (ptr) {
->  		nc = *ptr;
->  		*ptr++ = '\0';
-> @@ -1527,7 +1531,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
->  	if (arg[0] == '\0')
->  		tmp = NULL;
->  	else {
-> -		tmp = strdup_esc(arg);
-> +		tmp = strdup_esq(arg);
->  		if (tmp == NULL)
->  			return -ENOMEM;
->  	}
-> @@ -1565,7 +1569,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
->  				return -ENOMEM;
->  			break;
->  		}
-> -		ptr = strpbrk_esc(arg, ";:+@%");
-> +		ptr = strpbrk_esq(arg, ";:+@%");
->  		if (ptr) {
->  			nc = *ptr;
->  			*ptr++ = '\0';
-> @@ -1592,7 +1596,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
->  				semantic_error("SRC@SRC is not allowed.\n");
->  				return -EINVAL;
->  			}
-> -			pp->file = strdup_esc(arg);
-> +			pp->file = strdup_esq(arg);
->  			if (pp->file == NULL)
->  				return -ENOMEM;
->  			break;
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index 630e16c54ed5..5462b5541a6d 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -1796,6 +1796,7 @@ int debuginfo__find_line_range(struct debuginfo *dbg, struct line_range *lr)
->  		struct dwarf_callback_param line_range_param = {
->  			.data = (void *)&lf, .retval = 0};
->  
-> +		pr_debug2("Start searching function '%s' in getpubname\n", lr->function);
->  		dwarf_getpubnames(dbg->dbg, pubname_search_cb,
->  				  &pubname_param, 0);
->  		if (pubname_param.found) {
-> @@ -1803,8 +1804,10 @@ int debuginfo__find_line_range(struct debuginfo *dbg, struct line_range *lr)
->  			if (lf.found)
->  				goto found;
->  		}
-> +		pr_debug2("Not found, use DIE tree\n");
->  	}
->  
-> +	pr_debug2("Search function '%s' in DIE tree\n", lr->function);
->  	/* Loop on CUs (Compilation Unit) */
->  	while (!lf.found && ret >= 0) {
->  		if (dwarf_nextcu(dbg->dbg, off, &noff, &cuhl,
-> diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
-> index 116a642ad99d..308fc7ec88cc 100644
-> --- a/tools/perf/util/string.c
-> +++ b/tools/perf/util/string.c
-> @@ -263,6 +263,34 @@ char *strpbrk_esc(char *str, const char *stopset)
->  	return ptr;
->  }
->  
-> +/* Like strpbrk_esc(), but not break if it is quoted with single/double quotes */
-> +char *strpbrk_esq(char *str, const char *stopset)
-> +{
-> +	char *_stopset = NULL;
-> +	char *ptr;
-> +	const char *squote = "'";
-> +	const char *dquote = "\"";
-> +
-> +	if (asprintf(&_stopset, "%s%c%c", stopset, *squote, *dquote) < 0)
-> +		return NULL;
-> +
-> +	do {
-> +		ptr = strpbrk_esc(str, _stopset);
-> +		if (!ptr)
-> +			break;
-> +		if (*ptr == *squote)
-> +			ptr = strpbrk_esc(ptr + 1, squote);
-> +		else if (*ptr == *dquote)
-> +			ptr = strpbrk_esc(ptr + 1, dquote);
-> +		else
-> +			break;
-> +		str = ptr + 1;
-> +	} while (ptr);
-> +
-> +	free(_stopset);
-> +	return ptr;
-> +}
-> +
->  /* Like strdup, but do not copy a single backslash */
->  char *strdup_esc(const char *str)
->  {
-> @@ -293,6 +321,78 @@ char *strdup_esc(const char *str)
->  	return ret;
->  }
->  
-> +/* Remove backslash right before quote and return next quote address. */
-> +static char *remove_consumed_esc(char *str, int len, int quote)
-> +{
-> +	char *ptr = str, *end = str + len;
-> +
-> +	while (*ptr != quote && ptr < end) {
-> +		if (*ptr == '\\' && *(ptr + 1) == quote) {
-> +			memmove(ptr, ptr + 1, end - (ptr + 1));
-> +			/* now *ptr is `quote`. */
-> +			end--;
-> +		}
-> +		ptr++;
+> +	if (event->attr.freq && event->attr.sample_freq) {
+> +		event->hw.sample_period = intel_pmu_freq_start_period(event);
+> +		event->hw.last_period = event->hw.sample_period;
+> +		local64_set(&event->hw.period_left, event->hw.sample_period);
 > +	}
 > +
-> +	return *ptr == quote ? ptr : NULL;
-> +}
-> +
-> +/*
-> + * Like strdup_esc, but keep quoted string as it is (and single backslash
-> + * before quote is removed). If there is no closed quote, return NULL.
-> + */
-> +char *strdup_esq(const char *str)
-> +{
-> +	char *d, *ret;
-> +
-> +	/* If there is no quote, return normal strdup_esc() */
-> +	d = strpbrk_esc((char *)str, "\"'");
-> +	if (!d)
-> +		return strdup_esc(str);
-> +
-> +	ret = strdup(str);
-> +	if (!ret)
-> +		return NULL;
-> +
-> +	d = ret;
-> +	do {
-> +		d = strpbrk(d, "\\\"\'");
-> +		if (!d)
-> +			break;
-> +
-> +		if (*d == '"' || *d == '\'') {
-> +			/* This is non-escaped quote */
-> +			int quote = *d;
-> +			int len = strlen(d + 1) + 1;
-> +
-> +			/*
-> +			 * Remove the start quote and remove consumed escape (backslash
-> +			 * before quote) and remove the end quote. If there is no end
-> +			 * quote, it is the input error.
-> +			 */
-> +			memmove(d, d + 1, len);
-> +			d = remove_consumed_esc(d, len, quote);
-> +			if (!d)
-> +				goto error;
-> +			memmove(d, d + 1, strlen(d + 1) + 1);
-> +		}
-> +		if (*d == '\\') {
-> +			memmove(d, d + 1, strlen(d + 1) + 1);
-> +			if (*d == '\\') {
-> +				/* double backslash -- keep the second one. */
-> +				d++;
-> +			}
-> +		}
-> +	} while (*d != '\0');
-> +
-> +	return ret;
-> +
-> +error:
-> +	free(ret);
-> +	return NULL;
-> +}
-> +
->  unsigned int hex(char c)
->  {
->  	if (c >= '0' && c <= '9')
-> diff --git a/tools/perf/util/string2.h b/tools/perf/util/string2.h
-> index 52cb8ba057c7..4c8bff47cfd3 100644
-> --- a/tools/perf/util/string2.h
-> +++ b/tools/perf/util/string2.h
-> @@ -37,6 +37,8 @@ char *asprintf__tp_filter_pids(size_t npids, pid_t *pids);
->  
->  char *strpbrk_esc(char *str, const char *stopset);
->  char *strdup_esc(const char *str);
-> +char *strpbrk_esq(char *str, const char *stopset);
-> +char *strdup_esq(const char *str);
->  
->  unsigned int hex(char c);
->  char *strreplace_chars(char needle, const char *haystack, const char *replace);
+>  	if (event->attr.precise_ip) {
+>  		if ((event->attr.config & INTEL_ARCH_EVENT_MASK) == INTEL_FIXED_VLBR_EVENT)
+>  			return -EINVAL;
+
