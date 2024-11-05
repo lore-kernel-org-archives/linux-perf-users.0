@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391057DA6F;
-	Tue,  5 Nov 2024 17:18:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960831E0DBF;
+	Tue,  5 Nov 2024 17:22:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730827121; cv=none; b=PwR7l5k+lhyLHwHDbXaeSxq7k/+raCRnwMkxqEadza+SQG1WOZT/iSjcrm518rIfiQj3ekU58yhwkXRc6D7a1ZALOIQpuiauDsNMlITyYae1tkEyxUfpbubY0XSyEJueI+GgIQz4Rmvm+7s31qFYFvBFdSC17AzmGyrY1h5w/lc=
+	t=1730827373; cv=none; b=TrhtSK5vzm5bQWdqghOlPZl7XnDzY9bXtORx2fmDkfoVpo1tmUrx2otWg5N0/Me+9TcIFXVJ9cyF+q7U08qBC2ijdQb9HzT64WckYtsOjFQY2tRLXkj1SGknrkNO4Hv04//63FYZiMvpPJRyBdGL4x1DbKqL/IhnNnPVNo2czbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730827121; c=relaxed/simple;
-	bh=X1tjw+DqzERc1tNyRRoK1laUCQc7IxShhk67AjUwTr0=;
+	s=arc-20240116; t=1730827373; c=relaxed/simple;
+	bh=gJNs3OM487k44bvDEB1mLU1Fr4d9X2WvQIpWvqnIn14=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xj1RtZnRve6IqG3ympzLWczVkEIldLX6IKBblGM+SNfzevY2WYAoV1nh65920SdccICGRvdzPav4UCTMnCOX9L/a3krTkRUKCnyRnjBCBaU7JVgglrfrv2uSTmICnaZ80K7r8JOz4C4S7wb5M8s4eaO9V4BxtqCqx1sLF3bph44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJUrsHOR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=sDHw8AhmuUUMT7TA/G6SKtxgiefwhAdbFsrN5Vrk0bjQ1qWdsVYgi9FLfd19VHCb41EF0OIir/CeSd34HMd42EzMxNl7HTBDmpA57AOKSgsdD2N9rWgM4TePmHTQ8g8HPVRxDsegoHsLEfBskgrcFa8DquvgeqQOZcTHn3oIVyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yw1Zevgn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJUrsHOR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C219C4CECF;
-	Tue,  5 Nov 2024 17:18:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yw1Zevgn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F564C4CED1;
+	Tue,  5 Nov 2024 17:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730827121;
-	bh=X1tjw+DqzERc1tNyRRoK1laUCQc7IxShhk67AjUwTr0=;
+	s=k20201202; t=1730827373;
+	bh=gJNs3OM487k44bvDEB1mLU1Fr4d9X2WvQIpWvqnIn14=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tJUrsHORW7WQKlPEDJlTEtXJoT7vsT96jOrQMOloEZ22/oKEY6hjG7DxJVFbqIi18
-	 VkmKlQPET4LOKT3KDqFi8o4MPpmkbeyyN61nw8w1rqXEYzEwg1JqQf/6sBjXiQLp/E
-	 pBLwTqnfAmUCPdw5X15zMt2G2Csx/vIcvKzf19VrWc85YYN0cy6Hy1uH3optXnyc5h
-	 7WSE34XmlLYqW9cf5kN4px1bRKIUIBB6yaCKf4xNh9+09z5sRCKespBh3TtT+dGRjg
-	 wT3u7Qt6R81BxlBwkh+B9Hp2oiYEkkTiWhPgdfm5rWXRsBHkTQXQ5a0hXz7r4bAOvp
-	 PEJjXHBPfpUJA==
-Date: Tue, 5 Nov 2024 14:18:36 -0300
+	b=Yw1ZevgnlthmNypJ151xMZ73CctukCmhQGDwzSg45EfajXiN99Tb7g+0ADMeGbOhV
+	 cHoFpawWnofn9qgrYeyKAVSYnoFlHidbas9wLeg5WOq2diBuVl9WtYuM1L9tmEqSRG
+	 ncui3Hy6CmhLw8x6rwcB0kvv8od6IbAq1gJlO+PTOoxiWAUvl2GpXc4X8uffjF8qjg
+	 +SCwF529c2MftSUGTRibWly7KM5DzEgoD5EmGrm5uMaCM6ge6LqzTiG8XeJpwrXqjk
+	 yno60wFAQ+D9rmamyNF+dzRjM3SpNzWt3nZtIFkzQY3VnSuykZw7sA0SG31H1Fjtne
+	 ZR2gC01novQiA==
+Date: Tue, 5 Nov 2024 14:22:48 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -53,10 +53,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Thomas Falcon <thomas.falcon@intel.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
 	"Steven Rostedt (Google)" <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 2/6] perf trace-event: Constify print arguments
-Message-ID: <ZypTbPyzplDg1cf9@x1>
+Subject: Re: [PATCH v2 3/6] perf trace-event: Always build trace-event-info.c
+Message-ID: <ZypUaPH9UjXQyXYz@x1>
 References: <20241102165400.75785-1-irogers@google.com>
- <20241102165400.75785-3-irogers@google.com>
+ <20241102165400.75785-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,10 +65,11 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241102165400.75785-3-irogers@google.com>
+In-Reply-To: <20241102165400.75785-4-irogers@google.com>
 
-On Sat, Nov 02, 2024 at 09:53:56AM -0700, Ian Rogers wrote:
-> Capture that these functions don't mutate their input.
+On Sat, Nov 02, 2024 at 09:53:57AM -0700, Ian Rogers wrote:
+> trace-event-info.c has no libtraceevent depdendencies, always build it
+> and use it in builtin-record and perf_event_attr printing.
 
 Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -76,48 +77,68 @@ Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
  
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/trace-event-parse.c | 4 ++--
->  tools/perf/util/trace-event.h       | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
+>  tools/perf/builtin-record.c               | 2 --
+>  tools/perf/util/Build                     | 2 +-
+>  tools/perf/util/perf_event_attr_fprintf.c | 4 ----
+>  3 files changed, 1 insertion(+), 7 deletions(-)
 > 
-> diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-> index f0332bd3a501..6f11ca5513e3 100644
-> --- a/tools/perf/util/trace-event-parse.c
-> +++ b/tools/perf/util/trace-event-parse.c
-> @@ -99,7 +99,7 @@ unsigned long long read_size(struct tep_event *event, void *ptr, int size)
->  	return tep_read_number(event->tep, ptr, size);
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index f83252472921..0b637cea4850 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1748,10 +1748,8 @@ static void record__init_features(struct record *rec)
+>  	if (rec->no_buildid)
+>  		perf_header__clear_feat(&session->header, HEADER_BUILD_ID);
+>  
+> -#ifdef HAVE_LIBTRACEEVENT
+>  	if (!have_tracepoints(&rec->evlist->core.entries))
+>  		perf_header__clear_feat(&session->header, HEADER_TRACING_DATA);
+> -#endif
+>  
+>  	if (!rec->opts.branch_stack)
+>  		perf_header__clear_feat(&session->header, HEADER_BRANCH_STACK);
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 1eedead5f2f2..609c69995c51 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -85,7 +85,7 @@ perf-util-y += pmu-flex.o
+>  perf-util-y += pmu-bison.o
+>  perf-util-y += tool_pmu.o
+>  perf-util-y += svghelper.o
+> -perf-util-$(CONFIG_LIBTRACEEVENT) += trace-event-info.o
+> +perf-util-y += trace-event-info.o
+>  perf-util-y += trace-event-scripting.o
+>  perf-util-$(CONFIG_LIBTRACEEVENT) += trace-event.o
+>  perf-util-$(CONFIG_LIBTRACEEVENT) += trace-event-parse.o
+> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+> index 59fbbba79697..a73c74b99a3b 100644
+> --- a/tools/perf/util/perf_event_attr_fprintf.c
+> +++ b/tools/perf/util/perf_event_attr_fprintf.c
+> @@ -212,7 +212,6 @@ static void __p_config_hw_cache_id(char *buf, size_t size, u64 value)
+>  	}
 >  }
 >  
-> -void event_format__fprintf(struct tep_event *event,
-> +void event_format__fprintf(const struct tep_event *event,
->  			   int cpu, void *data, int size, FILE *fp)
+> -#ifdef HAVE_LIBTRACEEVENT
+>  static void __p_config_tracepoint_id(char *buf, size_t size, u64 value)
 >  {
->  	struct tep_record record;
-> @@ -116,7 +116,7 @@ void event_format__fprintf(struct tep_event *event,
->  	trace_seq_destroy(&s);
+>  	char *str = tracepoint_id_to_name(value);
+> @@ -220,7 +219,6 @@ static void __p_config_tracepoint_id(char *buf, size_t size, u64 value)
+>  	print_id_hex(str);
+>  	free(str);
 >  }
+> -#endif
 >  
-> -void event_format__print(struct tep_event *event,
-> +void event_format__print(const struct tep_event *event,
->  			 int cpu, void *data, int size)
+>  static void __p_config_id(struct perf_pmu *pmu, char *buf, size_t size, u32 type, u64 value)
 >  {
->  	return event_format__fprintf(event, cpu, data, size, stdout);
-> diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-> index bbf8b26bc8da..084068fb36a1 100644
-> --- a/tools/perf/util/trace-event.h
-> +++ b/tools/perf/util/trace-event.h
-> @@ -39,10 +39,10 @@ trace_event__tp_format(const char *sys, const char *name);
->  
->  struct tep_event *trace_event__tp_format_id(int id);
->  
-> -void event_format__fprintf(struct tep_event *event,
-> +void event_format__fprintf(const struct tep_event *event,
->  			   int cpu, void *data, int size, FILE *fp);
->  
-> -void event_format__print(struct tep_event *event,
-> +void event_format__print(const struct tep_event *event,
->  			 int cpu, void *data, int size);
->  
->  int parse_ftrace_file(struct tep_handle *pevent, char *buf, unsigned long size);
+> @@ -238,9 +236,7 @@ static void __p_config_id(struct perf_pmu *pmu, char *buf, size_t size, u32 type
+>  	case PERF_TYPE_HW_CACHE:
+>  		return __p_config_hw_cache_id(buf, size, value);
+>  	case PERF_TYPE_TRACEPOINT:
+> -#ifdef HAVE_LIBTRACEEVENT
+>  		return __p_config_tracepoint_id(buf, size, value);
+> -#endif
+>  	case PERF_TYPE_RAW:
+>  	case PERF_TYPE_BREAKPOINT:
+>  	default:
 > -- 
 > 2.47.0.199.ga7371fff76-goog
