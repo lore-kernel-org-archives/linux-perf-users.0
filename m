@@ -1,191 +1,326 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7EFEAD2;
-	Tue,  5 Nov 2024 17:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4F91E32D0
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Nov 2024 17:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730828455; cv=none; b=q1lk44mShoFigL9M6VFTjV4l+gJlUsmbGNU4LY9AlJ5NXfkww0mzDYertvNn7rr0BSIK/zXoc2MzPqUotd3xw2/v7vK66+IgnVh9Uo+/tyc5N1EfKVyqG0dG0QR9laxTRKLMLlSrfn7PelGfo2URl138ViSqTuUn3FEegUlBUUE=
+	t=1730828480; cv=none; b=nVOJsI1SjXaXjhzJ5zYOH/PTtVFEmW7bYAcfwomGY3yTLuUgc2sPqbpXDHgOoSZ3R6Eay/M+ilXAqnssMmpqZMvYubuTABN4ebtxZbpxpLrG5ktyEQyQcxk3Lq7PF8t4oFfTTeUyUX44o9i/VDlFd+mnrvCqjCA/dFAOj+MEbVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730828455; c=relaxed/simple;
-	bh=tp38WzGOIsaq/18EaZQ+5yUjmXbzC6Iy1G/ZJK35JoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mt9xdvIKdCURlQjLQNaTzqDffNCwwF+Z3kCMijyn3K8kYQxw4GJezwiSXXpQgwCmpZaDANyuIQFrjyRZ4qm55189wd01sL5eWkUg8c48UtS6JMV7VRITN/84ZT1jUodc/hrRnb8CUcTVXbKxGpJxo3Z0L1f0fieyT/jcqdT8u+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9F9FC4CECF;
-	Tue,  5 Nov 2024 17:40:52 +0000 (UTC)
-Date: Tue, 5 Nov 2024 12:40:53 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>, Mark
- Rutland <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian
- Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, Mark
- Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, Jordan Rome
- <jordalgo@meta.com>, Sam James <sam@gentoo.org>,
- linux-trace-kernel@vger.kerne.org, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Jens Remus <jremus@linux.ibm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Florian Weimer
- <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
-Message-ID: <20241105124053.523e93dd@gandalf.local.home>
-In-Reply-To: <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
-	<42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1730828480; c=relaxed/simple;
+	bh=qpTbufCwzH8I25DiwP2Bsp0OfQgYMi1mBz9M6K3WF48=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PbIkXxpOghgNL/qTK7rm50fFnTbBJzzYYfbZ+wMI+3DapODHb0M2Wk8ObsgVGsepI8mFV54RvTpRVfJ0AhTjH0PUQyp29qZTdFQqF5v/Qbk0iAXzdbNUMIbJYsIvu2NUZ6COXMV2zWvoNdf1zR2eaTsRVVw6SR4VJ8M3fq5cNkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xBQ7446r; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xBQ7446r"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3a6c3bdbebcso300715ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Nov 2024 09:41:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730828478; x=1731433278; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n0lJpoKJj2EK5cJjiPDReD4fq+ImZCdH+adMojPVPqY=;
+        b=xBQ7446rbI86bCNa04PAmv52B6BATfE3kARAa4ctnj8VUO4K3nTGC8TkERRBnjYuSD
+         PdZ8n0LHuH7Zu0RIAxsrkNEx+sR9hAtL51ebwmZvOB3+LBS7qKiNEqhA8cduES/YCtv1
+         LVDcVQuTAnNXXZAK1jeQXAEV30si81bQ/xg87GkblmiJ5MEGEudgGOPBJUOmS062FoqR
+         ipkrrRRDS+ZQAnDxxHuvkeLl+bN1XSrJ2w44AimQcy3+uiUlRKZq++02AmsRuWh58067
+         UMquMEd1MxZ7EXVo3w4dsQn5dsk/D3CDmolAP6y1cYCcUjKjaTmp9lKvArHmVGA8xSod
+         2Jvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730828478; x=1731433278;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n0lJpoKJj2EK5cJjiPDReD4fq+ImZCdH+adMojPVPqY=;
+        b=Uq88WTscbrHv1eadJDyMRKD2uaBTp6eG/m67DvTGI3JUEiw8Ks8pRtvY+gYaAgprme
+         vp8fSgDDzJOcqHfDxwcpLW/Lg60jKakHddcUmeVPe+g6h4ceJb41TiDUg/GeUqdT8eIx
+         2ZEEo+eb1xyY3qdM/cJe/1sMnEEnEpdrhDW45BM8ZvaQKBGGcP7C4Yv/gwAGSQ6WRG0K
+         KKr7W+HPG2DAmYK2UkwLRgYqSLuz1+UDRc24ALyqzjq1sSik76JmqcaHs+x69WycRQuK
+         YVhQQotcLKUgSMy4fqtEy51a94a0u4iegHqVZKI6bed4dS6Pu6nuDWz8PvPN90YzXZEB
+         Cf8A==
+X-Forwarded-Encrypted: i=1; AJvYcCV1uJQhnAU6l8clzBKSXePRFVnrhRzaozEqlpbJACkTtuBwAtXRNhl4aeqHPIJDYI5fQ91VemMLVhknaYDGNYmZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNK40MN+8MwArFNJ0ABLeJ/JUQGRv+kRtOGccnCf6ZJxdWb4VV
+	z6gjm5vEmP9SfL44qbH5U+nKnFwNpyUqojLaMRimQLdnwCBQR0Te2A0vtVFAwNNCcOFb2fqN9yK
+	Yz3h1uL7GjWIxtv/vSEaTmGqZhRzqljaZEMCd
+X-Gm-Gg: ASbGncuzWb5BVnKHpBWWcHiKgrZta271TlHjASIhR9KXcDbjOyHMEpCyhIfAhN6yhM5
+	gPC728C/NC8+Hy3deGtDGXaV4pECcvpHe
+X-Google-Smtp-Source: AGHT+IGTvwqqYkeTtirjxSdFHrxdcw5lIc7C0xy3BIx18v0NkSra6VHHJ/ScxATVbz0L5aGGhIxNLX0/HPWm5ouD4D8=
+X-Received: by 2002:a05:6e02:12ca:b0:3a0:44d1:dca4 with SMTP id
+ e9e14a558f8ab-3a6da95f94emr4550175ab.6.1730828476469; Tue, 05 Nov 2024
+ 09:41:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20241105172635.2463800-1-namhyung@kernel.org> <20241105172635.2463800-4-namhyung@kernel.org>
+In-Reply-To: <20241105172635.2463800-4-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 5 Nov 2024 09:41:05 -0800
+Message-ID: <CAP-5=fV3JAJD_beASNdP_Sxh=oAFv-yh_cqW=P=Bc9FabddUpQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4] perf lock contention: Resolve slab object name using BPF
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>, Vlastimil Babka <vbabka@suse.cz>, Kees Cook <kees@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 28 Oct 2024 14:47:56 -0700
-Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+On Tue, Nov 5, 2024 at 9:26=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> The bpf_get_kmem_cache() kfunc can return an address of the slab cache
+> (kmem_cache).  As it has the name of the slab cache from the iterator,
+> we can use it to symbolize some dynamic kernel locks in a slab.
+>
+> Before:
+>   root@virtme-ng:/home/namhyung/project/linux# tools/perf/perf lock con -=
+abl sleep 1
+>    contended   total wait     max wait     avg wait            address   =
+symbol
+>
+>            2      3.34 us      2.87 us      1.67 us   ffff9d7800ad9600   =
+ (mutex)
+>            2      2.16 us      1.93 us      1.08 us   ffff9d7804b992d8   =
+ (mutex)
+>            4      1.37 us       517 ns       343 ns   ffff9d78036e6e00   =
+ (mutex)
+>            1      1.27 us      1.27 us      1.27 us   ffff9d7804b99378   =
+ (mutex)
+>            2       845 ns       599 ns       422 ns   ffffffff9e1c3620   =
+delayed_uprobe_lock (mutex)
+>            1       845 ns       845 ns       845 ns   ffffffff9da0b280   =
+jiffies_lock (spinlock)
+>            2       377 ns       259 ns       188 ns   ffffffff9e1cf840   =
+pcpu_alloc_mutex (mutex)
+>            1       305 ns       305 ns       305 ns   ffffffff9e1b4cf8   =
+tracepoint_srcu_srcu_usage (mutex)
+>            1       295 ns       295 ns       295 ns   ffffffff9e1c0940   =
+pack_mutex (mutex)
+>            1       232 ns       232 ns       232 ns   ffff9d7804b7d8d8   =
+ (mutex)
+>            1       180 ns       180 ns       180 ns   ffffffff9e1b4c28   =
+tracepoint_srcu_srcu_usage (mutex)
+>            1       165 ns       165 ns       165 ns   ffffffff9da8b3a0   =
+text_mutex (mutex)
+>
+> After:
+>   root@virtme-ng:/home/namhyung/project/linux# tools/perf/perf lock con -=
+abl sleep 1
+>    contended   total wait     max wait     avg wait            address   =
+symbol
+>
+>            2      1.95 us      1.77 us       975 ns   ffff9d5e852d3498   =
+&task_struct (mutex)
+>            1      1.18 us      1.18 us      1.18 us   ffff9d5e852d3538   =
+&task_struct (mutex)
+>            4      1.12 us       354 ns       279 ns   ffff9d5e841ca800   =
+&kmalloc-cg-512 (mutex)
+>            2       859 ns       617 ns       429 ns   ffffffffa41c3620   =
+delayed_uprobe_lock (mutex)
+>            3       691 ns       388 ns       230 ns   ffffffffa41c0940   =
+pack_mutex (mutex)
+>            3       421 ns       164 ns       140 ns   ffffffffa3a8b3a0   =
+text_mutex (mutex)
+>            1       409 ns       409 ns       409 ns   ffffffffa41b4cf8   =
+tracepoint_srcu_srcu_usage (mutex)
+>            2       362 ns       239 ns       181 ns   ffffffffa41cf840   =
+pcpu_alloc_mutex (mutex)
+>            1       220 ns       220 ns       220 ns   ffff9d5e82b534d8   =
+&signal_cache (mutex)
+>            1       215 ns       215 ns       215 ns   ffffffffa41b4c28   =
+tracepoint_srcu_srcu_usage (mutex)
+>
+> Note that the name starts with '&' sign for slab objects to inform they
+> are dynamic locks.  It won't give the accurate lock or type names but
+> it's still useful.  We may add type info to the slab cache later to get
+> the exact name of the lock in the type later.
 
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index 06dc4a57ba78..434c548f0837 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -47,6 +47,7 @@
->  #include <linux/dax.h>
->  #include <linux/uaccess.h>
->  #include <linux/rseq.h>
-> +#include <linux/sframe.h>
->  #include <asm/param.h>
->  #include <asm/page.h>
->  
-> @@ -633,11 +634,13 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
->  		unsigned long no_base, struct elf_phdr *interp_elf_phdata,
->  		struct arch_elf_state *arch_state)
+Many variables may reference a lock through a pointer, should the name
+not be associated with the lock or from decoding the task_struct?
+The '&' looks redundant as the addresses are clearly different.
+How are >1 lock/mutex in the same struct handled?
+
+Thanks,
+Ian
+
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/bpf_lock_contention.c         | 52 +++++++++++++++++++
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  | 21 +++++++-
+>  2 files changed, 71 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_=
+lock_contention.c
+> index a2efd40897bad316..50c3039c647d4d77 100644
+> --- a/tools/perf/util/bpf_lock_contention.c
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -2,6 +2,7 @@
+>  #include "util/cgroup.h"
+>  #include "util/debug.h"
+>  #include "util/evlist.h"
+> +#include "util/hashmap.h"
+>  #include "util/machine.h"
+>  #include "util/map.h"
+>  #include "util/symbol.h"
+> @@ -20,12 +21,25 @@
+>
+>  static struct lock_contention_bpf *skel;
+>  static bool has_slab_iter;
+> +static struct hashmap slab_hash;
+> +
+> +static size_t slab_cache_hash(long key, void *ctx __maybe_unused)
+> +{
+> +       return key;
+> +}
+> +
+> +static bool slab_cache_equal(long key1, long key2, void *ctx __maybe_unu=
+sed)
+> +{
+> +       return key1 =3D=3D key2;
+> +}
+>
+>  static void check_slab_cache_iter(struct lock_contention *con)
 >  {
-> -	struct elf_phdr *eppnt;
-> +	struct elf_phdr *eppnt, *sframe_phdr = NULL;
->  	unsigned long load_addr = 0;
->  	int load_addr_set = 0;
->  	unsigned long error = ~0UL;
->  	unsigned long total_size;
-> +	unsigned long start_code = ~0UL;
-> +	unsigned long end_code = 0;
->  	int i;
->  
->  	/* First of all, some simple consistency checks */
-> @@ -659,7 +662,8 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
->  
->  	eppnt = interp_elf_phdata;
->  	for (i = 0; i < interp_elf_ex->e_phnum; i++, eppnt++) {
-> -		if (eppnt->p_type == PT_LOAD) {
-> +		switch (eppnt->p_type) {
-> +		case PT_LOAD: {
->  			int elf_type = MAP_PRIVATE;
->  			int elf_prot = make_prot(eppnt->p_flags, arch_state,
->  						 true, true);
-> @@ -688,7 +692,7 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
->  			/*
->  			 * Check to see if the section's size will overflow the
->  			 * allowed task size. Note that p_filesz must always be
-> -			 * <= p_memsize so it's only necessary to check p_memsz.
-> +			 * <= p_memsz so it's only necessary to check p_memsz.
->  			 */
->  			k = load_addr + eppnt->p_vaddr;
->  			if (BAD_ADDR(k) ||
-> @@ -698,9 +702,24 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
->  				error = -ENOMEM;
->  				goto out;
->  			}
+>         struct btf *btf =3D btf__load_vmlinux_btf();
+>         s32 ret;
+>
+> +       hashmap__init(&slab_hash, slab_cache_hash, slab_cache_equal, /*ct=
+x=3D*/NULL);
 > +
-> +			if ((eppnt->p_flags & PF_X) && k < start_code)
-> +				start_code = k;
+>         ret =3D libbpf_get_error(btf);
+>         if (ret) {
+>                 pr_debug("BTF loading failed: %d\n", ret);
+> @@ -50,6 +64,7 @@ static void run_slab_cache_iter(void)
+>  {
+>         int fd;
+>         char buf[256];
+> +       long key, *prev_key;
+>
+>         if (!has_slab_iter)
+>                 return;
+> @@ -65,6 +80,34 @@ static void run_slab_cache_iter(void)
+>                 continue;
+>
+>         close(fd);
 > +
-> +			if ((eppnt->p_flags & PF_X) && k + eppnt->p_filesz > end_code)
-> +				end_code = k + eppnt->p_filesz;
-> +			break;
-> +		}
-> +		case PT_GNU_SFRAME:
-> +			sframe_phdr = eppnt;
-> +			break;
->  		}
->  	}
->  
-> +	if (sframe_phdr)
-> +		sframe_add_section(load_addr + sframe_phdr->p_vaddr,
-> +				   start_code, end_code);
+> +       /* Read the slab cache map and build a hash with IDs */
+> +       fd =3D bpf_map__fd(skel->maps.slab_caches);
+> +       prev_key =3D NULL;
+> +       while (!bpf_map_get_next_key(fd, prev_key, &key)) {
+> +               struct slab_cache_data *data;
 > +
->  	error = load_addr;
->  out:
->  	return error;
-> @@ -823,7 +842,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
->  	int first_pt_load = 1;
->  	unsigned long error;
->  	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
-> -	struct elf_phdr *elf_property_phdata = NULL;
-> +	struct elf_phdr *elf_property_phdata = NULL, *sframe_phdr = NULL;
->  	unsigned long elf_brk;
->  	int retval, i;
->  	unsigned long elf_entry;
-> @@ -931,6 +950,10 @@ static int load_elf_binary(struct linux_binprm *bprm)
->  				executable_stack = EXSTACK_DISABLE_X;
->  			break;
->  
-> +		case PT_GNU_SFRAME:
-> +			sframe_phdr = elf_ppnt;
-
-You need to save the p_vaddr here and not the pointer.
-
-> +			break;
+> +               data =3D malloc(sizeof(*data));
+> +               if (data =3D=3D NULL)
+> +                       break;
 > +
->  		case PT_LOPROC ... PT_HIPROC:
->  			retval = arch_elf_pt_proc(elf_ex, elf_ppnt,
->  						  bprm->file, false,
-> @@ -1321,6 +1344,10 @@ static int load_elf_binary(struct linux_binprm *bprm)
->  					    task_pid_nr(current), retval);
->  	}
-
-Before this code we have:
-
-	kfree(elf_phdata);
-
-And I added:
-
-	if (sframe_phdr)
-		trace_printk("after sframe vaddr=%x\n", sframe_phdr->p_vaddr);
-	kfree(elf_phdata);
-	if (sframe_phdr)
-		trace_printk("after sframe vaddr=%x\n", sframe_phdr->p_vaddr);
-
-Which produced:
-
-         scan-fs-940   [007] .....    16.091081: bprint:               load_elf_binary: after sframe vaddr=2298
-         scan-fs-940   [007] .....    16.091083: bprint:               load_elf_binary: after sframe vaddr=0
-
-I was wondering why it wasn't working.
-
--- Steve
-
->  
-> +	if (sframe_phdr)
-> +		sframe_add_section(load_bias + sframe_phdr->p_vaddr,
-> +				   start_code, end_code);
+> +               if (bpf_map_lookup_elem(fd, &key, data) < 0)
+> +                       break;
 > +
->  	regs = current_pt_regs();
->  #ifdef ELF_PLAT_INIT
->  	/*
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 381d22eba088..6e7561c1a5fc 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -1052,6 +1052,9 @@ struct mm_struct {
->  #endif
->  		} lru_gen;
->  #endif /* CONFIG_LRU_GEN_WALKS_MMU */
-> +#ifdef CONFIG_HAVE_UNWIND_USER_SFRAME
-> +		struct maple_tree sframe_mt;
-> +#endif
->  	} __randomize_layout;
->  
->  	/*
+> +               hashmap__add(&slab_hash, data->id, data);
+> +               prev_key =3D &key;
+> +       }
+> +}
+> +
+> +static void exit_slab_cache_iter(void)
+> +{
+> +       struct hashmap_entry *cur;
+> +       unsigned bkt;
+> +
+> +       hashmap__for_each_entry(&slab_hash, cur, bkt)
+> +               free(cur->pvalue);
+> +
+> +       hashmap__clear(&slab_hash);
+>  }
+>
+>  int lock_contention_prepare(struct lock_contention *con)
+> @@ -398,6 +441,7 @@ static const char *lock_contention_get_name(struct lo=
+ck_contention *con,
+>
+>         if (con->aggr_mode =3D=3D LOCK_AGGR_ADDR) {
+>                 int lock_fd =3D bpf_map__fd(skel->maps.lock_syms);
+> +               struct slab_cache_data *slab_data;
+>
+>                 /* per-process locks set upper bits of the flags */
+>                 if (flags & LCD_F_MMAP_LOCK)
+> @@ -416,6 +460,12 @@ static const char *lock_contention_get_name(struct l=
+ock_contention *con,
+>                                 return "rq_lock";
+>                 }
+>
+> +               /* look slab_hash for dynamic locks in a slab object */
+> +               if (hashmap__find(&slab_hash, flags & LCB_F_SLAB_ID_MASK,=
+ &slab_data)) {
+> +                       snprintf(name_buf, sizeof(name_buf), "&%s", slab_=
+data->name);
+> +                       return name_buf;
+> +               }
+> +
+>                 return "";
+>         }
+>
+> @@ -590,5 +640,7 @@ int lock_contention_finish(struct lock_contention *co=
+n)
+>                 cgroup__put(cgrp);
+>         }
+>
+> +       exit_slab_cache_iter();
+> +
+>         return 0;
+>  }
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/=
+util/bpf_skel/lock_contention.bpf.c
+> index fd24ccb00faec0ba..b5bc37955560a58e 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -123,6 +123,8 @@ struct mm_struct___new {
+>         struct rw_semaphore mmap_lock;
+>  } __attribute__((preserve_access_index));
+>
+> +extern struct kmem_cache *bpf_get_kmem_cache(u64 addr) __ksym __weak;
+> +
+>  /* control flags */
+>  const volatile int has_cpu;
+>  const volatile int has_task;
+> @@ -496,8 +498,23 @@ int contention_end(u64 *ctx)
+>                 };
+>                 int err;
+>
+> -               if (aggr_mode =3D=3D LOCK_AGGR_ADDR)
+> -                       first.flags |=3D check_lock_type(pelem->lock, pel=
+em->flags);
+> +               if (aggr_mode =3D=3D LOCK_AGGR_ADDR) {
+> +                       first.flags |=3D check_lock_type(pelem->lock,
+> +                                                      pelem->flags & LCB=
+_F_TYPE_MASK);
+> +
+> +                       /* Check if it's from a slab object */
+> +                       if (bpf_get_kmem_cache) {
+> +                               struct kmem_cache *s;
+> +                               struct slab_cache_data *d;
+> +
+> +                               s =3D bpf_get_kmem_cache(pelem->lock);
+> +                               if (s !=3D NULL) {
+> +                                       d =3D bpf_map_lookup_elem(&slab_c=
+aches, &s);
+> +                                       if (d !=3D NULL)
+> +                                               first.flags |=3D d->id;
+> +                               }
+> +                       }
+> +               }
+>
+>                 err =3D bpf_map_update_elem(&lock_stat, &key, &first, BPF=
+_NOEXIST);
+>                 if (err < 0) {
+> --
+> 2.47.0.199.ga7371fff76-goog
+>
