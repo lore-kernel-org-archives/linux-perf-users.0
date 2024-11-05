@@ -1,57 +1,57 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D01421645C
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Nov 2024 21:27:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD762161FB
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Nov 2024 21:27:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730842031; cv=none; b=dAI8d73b0KycPfik5wdKEUhxxNG/jp64x/oiqJwDwYzS8Ys1lqeHvk2v0wVLnyzpiE9W9uMd+9plPNIsoHC8u7o6YImBMIFwxWxrTQ/cqSFX6eXN/9TZGHERkI+dLP6ZKmhAk0Uz124n4FyO5yH2uksygzqk29g7LtGDNSabW2E=
+	t=1730842033; cv=none; b=SqZgqlijNpzjX+HQiVSBC5LOF7bDrP63hnoCnpwjin6ijufQoFJRJshgZ+ZDuojUzBoDlbURjke82NY5ixD2dtzcacsVpGH/Tg6vDwjmb2Mihq5GzHrCEWResC24wcXwviwP5h8GuDRXonsNj3WrmPqkfc0vOIHIrYtUd9pzN78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730842031; c=relaxed/simple;
-	bh=kktSizmGuiF+K5THa2oXtQCxLi27KuZABkhpk8xc5Ys=;
+	s=arc-20240116; t=1730842033; c=relaxed/simple;
+	bh=qcUpsCevuN/4ezMm92doq0Egamb9T9a2FAtuBKLW57I=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=buSmgbQn5x1oictC1Io2OfZ8xmRluhk6PaQlCcY2fF3erml8DM+crXgT+5qVm6jI514yvib9aiqXZJQQxuwLsmLFnh+evLxPGhkw8rjt2kXQH1Y/P8C6HYkO0uCS3NZ6DsWXUSxYFw4pB/YRNKBjhVoMNqovm6Tth+R+wKQ0Bic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bxYTL7ID; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=JwNosmxP5/5p2/VBThaEsJW74RDwWQEChwKqXHV9IYehvt6n9A3FTnbY182ZzgcDTOO/rnnvkyoxWRhwJzj5WSukxaiEp1P/LxSHa9invcE1VPnWUEXhfu2x1eg1rqRuaWYgb/2Vom5DsphGn7lbfAhgCTzQ1jyuLYeqeSXQNYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3i39oQM0; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bxYTL7ID"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ea9618de40so44998397b3.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Nov 2024 13:27:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3i39oQM0"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ea8a5e83a3so60773237b3.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Nov 2024 13:27:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730842028; x=1731446828; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1730842030; x=1731446830; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=g9JIxqiyxQ8/YfNKn7aVumhvEGOeYVkTs06oLW8rwk4=;
-        b=bxYTL7ID4A2FUiu85LnBya3hAjh5PhB6AR14SX9Z6VzD4ln6S4ZrPOwlLNTxeIyLoQ
-         XyYCknFAhWHxswZYBkH2cV/rXGRYFP8hYvGMG8J73iTFnCs3aAqZ+P4bIM95zKrhuOxl
-         af2Z7fBgiQn9t/22naXYYDF4tgaIP0GwreTzkX/mjdtFulkMIW97tZrMW25hcrMQwfsv
-         ASiY+H3wwuWLa3QQmxC95TPf9fs1KlJHh9UARUV5hKGyCzxnOKPEb8S/rUHrChkxFOG6
-         Fx6f24xWnhrqddZE05PmwtkXC2n3iqTwOPMlGoWaf51B8UpHbZ3aB5IVjuGHascDz93S
-         X33A==
+        bh=cKL4rNcuhrwPlLoLHBamtHw/kLIkbIZ6raoruCdzEkE=;
+        b=3i39oQM0QQhaTZeSVZWrPZkF+RhuTrm51YqWfKnmOXNqDlSbFL2DxSTY3/sK09K6yU
+         pSa6TFhI0qXyXDjoOjXgCpwNevGWdH5ZRIp+IRto9y6WV3TcFjRr8J5Jc47CLv82Y9cP
+         /CBw8YULldg7qlFxsbRViagCOTacmAlm4QQTyqhdbNhw9Ec5R46rF8qgeDC0MXp1d9JU
+         xDL1Rf13qYGPjAaMaV/43doTmZ4irmy8i2TzNRUUEsaLvXpDhIMLQUWxbRBHQvpeQvKF
+         2x03FafGEyS7pt6ypaPO7EjgcE9zIED8LpRqkUDrewCwfz3CwiJYh35s9pYTwPvuDqL1
+         oMMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730842028; x=1731446828;
+        d=1e100.net; s=20230601; t=1730842030; x=1731446830;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g9JIxqiyxQ8/YfNKn7aVumhvEGOeYVkTs06oLW8rwk4=;
-        b=cZ9gbMeHp2wuz6jNipmY6yhggkd5mQdGVle2QB0Lasnn1g8S4/9C+s+iKsGVrswyVC
-         +sBZiVX1O7a9EMOnNcKVHFU3ea6heouZr2gvq0yV3WfszZVUufXlxNLmpGMyvp/07SUN
-         2I/MaMkc7uYhK3JMXnv4EVX3xQmyJ8Atu896jAfNUQk1v0yMVgUpH6Bt2a9xfKopwpCX
-         M1+YzGxCa0puA/ojek02WPs3RlVLfUkQDJQgYNLTQOW659aA2wpBY8TtTRo84b0vYhNf
-         vBinAu50iGEf9oR3I499P5TpPeVwyDYBccVG5AQUh0Bnl4KpXLet2tGUu/Z0d6E3hmPV
-         sGRw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQeBDdP97IuhmbkdDGOeQansidbuTvupaoNKnaem3a/qygeDrJIBlPaUopE9O3ZV2MYH6/RfDmU+DfQIyMYIkL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwR/sl28PGJE3AFEOHlhWrK7R/D7LTQsZSG1e2Y2QCASwJHx8l9
-	IXDm86KHYrMuLhYIhawYUXdRa80qEWi411dnPC4PkuVGAAT/hNa83l26cvA7WljGoDbxGcm3Ryz
-	IdIgOzQ==
-X-Google-Smtp-Source: AGHT+IHlXkm7uDStF8T8/7c6k3J0fJK6T9+IqrSynk6CWiOkxeDTAp4pZ4oiqvOR4PcOW9LFKpmtKRWeh1eo
+        bh=cKL4rNcuhrwPlLoLHBamtHw/kLIkbIZ6raoruCdzEkE=;
+        b=OVWLgaODOpW7v19cwYgH8CbZ4ZUMRaO9q5saF7fn3c6o4Yz2HMy2+ePbzRZ390VRfV
+         A5JbZGEq6JKtPrjZhjgZANasIIdrHxAbDRoa19PNj9GOYyGgDGEnfKaj55S5N4dcv+Ax
+         riSUZ+d5b1J2bDxBz7wyTmf9ytoZVmoKVSsejlaFFR+i88I2tqhlmSuIE07+k3v6DCGo
+         3WCJziicKcgfY4z31P1LFPBRhaNF8WgGhxmVqx45FAEanSFxoJaV20JCQMfZgX7zucZP
+         uHgLmr343ENFDB/UzeYHuYIErI0KJiiQjcm++1DT57PDWKpa6xmyOo7KWmaZ6Y0Jd+Gr
+         bCSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTsnROv42BMS4fjz8LcC4lpGUUU2qil4X91a7kR8iyd3qfqFAkKeaK9zM3VGZ6HTZusG8OrdNgrAwNMiPUsttf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyaaxr4CvqdUcv7APHDpY12PPibej8xCS/0bGjq56k8lDPC5vkt
+	iU/433kYei6pGkANcd/7PZZyqx1nmo9R5Ah98ACezav+Lxb99itFUNm3m34EanY7VAFRCneCccH
+	zE5VSAg==
+X-Google-Smtp-Source: AGHT+IFv1sJKq07men45gPnsWR9dVL6mOnMJVvJj4ob2Bl+KtxZ/0C1pvMFJQl0nS23CEVtHEPUlpZPsXzhm
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ff9e:ab12:75ac:c1a0])
- (user=irogers job=sendgmr) by 2002:a25:ea48:0:b0:e30:d37d:2792 with SMTP id
- 3f1490d57ef6-e30d37d2919mr34580276.0.1730842028331; Tue, 05 Nov 2024 13:27:08
- -0800 (PST)
-Date: Tue,  5 Nov 2024 13:26:50 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:4c09:b0:6e7:e493:2db6 with SMTP
+ id 00721157ae682-6ea3b951361mr2800337b3.3.1730842030506; Tue, 05 Nov 2024
+ 13:27:10 -0800 (PST)
+Date: Tue,  5 Nov 2024 13:26:51 -0800
 In-Reply-To: <20241105212652.401943-1-irogers@google.com>
-Message-Id: <20241105212652.401943-5-irogers@google.com>
+Message-Id: <20241105212652.401943-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241105212652.401943-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.199.ga7371fff76-goog
-Subject: [PATCH v3 4/6] perf evsel: Add/use accessor for tp_format
+Subject: [PATCH v3 5/6] perf evsel: Allow evsel__newtp without libtraceevent
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,521 +80,280 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	"Steven Rostedt (Google)" <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Add an accessor function for tp_format. Rather than search+replace
-uses try to use a variable and reuse it. Add additional NULL checks
-when accessing/using the value. Make sure the PTR_ERR is nulled out on
-error path in evsel__newtp_idx.
+Switch from reading the tracepoint format to reading the id directly
+for the evsel config. This avoids the need to initialize
+libtraceevent, plugins, etc. It is sufficient for many tracepoint
+commands to work like:
+$ perf stat -e sched:sched_switch true
+
+To populate evsel->tp_format, do lazy initialization using
+libtraceevent in the evsel__tp_format function (the sys and name are
+saved in evsel__newtp_idx for this purpose). Reading the id should be
+indicative of the format failing to load, but if not an error is
+reported in evsel__tp_format. This could happen for a tracepoint with
+a format that fails to parse.
+
+As tracepoints can be parsed without libtraceevent with this, remove
+the associated #ifdefs in parse-events.c.
+
+By only lazily parsing the tracepoint format information it is hoped
+this will help improve the performance of code using tracepoints but
+not the format information. It also cuts down on the build and ifdef
+logic.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-kmem.c                     | 12 +--
- tools/perf/builtin-kwork.c                    |  3 +-
- tools/perf/builtin-script.c                   |  9 ++-
- tools/perf/builtin-trace.c                    | 79 +++++++++++++------
- tools/perf/util/data-convert-bt.c             | 10 ++-
- tools/perf/util/data-convert-json.c           |  8 +-
- tools/perf/util/evsel.c                       |  9 ++-
- tools/perf/util/evsel.h                       |  5 ++
- tools/perf/util/evsel_fprintf.c               |  4 +-
- .../util/scripting-engines/trace-event-perl.c |  3 +-
- .../scripting-engines/trace-event-python.c    |  3 +-
- tools/perf/util/sort.c                        | 33 +++++---
- tools/perf/util/trace-event-scripting.c       | 10 ++-
- 13 files changed, 128 insertions(+), 60 deletions(-)
+ tools/perf/util/evsel.c        | 103 ++++++++++++++++++++++++---------
+ tools/perf/util/evsel.h        |  14 ++---
+ tools/perf/util/parse-events.c |  16 +----
+ 3 files changed, 82 insertions(+), 51 deletions(-)
 
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index a756147e2eec..0ffbb0681fd9 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -761,6 +761,7 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
- 	};
- 	struct trace_seq seq;
- 	char *str, *pos = NULL;
-+	const struct tep_event *tp_format;
- 
- 	if (nr_gfps) {
- 		struct gfp_flag key = {
-@@ -772,8 +773,9 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
- 	}
- 
- 	trace_seq_init(&seq);
--	tep_print_event(evsel->tp_format->tep,
--			&seq, &record, "%s", TEP_PRINT_INFO);
-+	tp_format = evsel__tp_format(evsel);
-+	if (tp_format)
-+		tep_print_event(tp_format->tep, &seq, &record, "%s", TEP_PRINT_INFO);
- 
- 	str = strtok_r(seq.buffer, " ", &pos);
- 	while (str) {
-@@ -2012,13 +2014,13 @@ int cmd_kmem(int argc, const char **argv)
- 
- 	if (kmem_page) {
- 		struct evsel *evsel = evlist__find_tracepoint_by_name(session->evlist, "kmem:mm_page_alloc");
-+		const struct tep_event *tp_format = evsel ? evsel__tp_format(evsel) : NULL;
- 
--		if (evsel == NULL) {
-+		if (tp_format == NULL) {
- 			pr_err(errmsg, "page", "page");
- 			goto out_delete;
- 		}
--
--		kmem_page_size = tep_get_page_size(evsel->tp_format->tep);
-+		kmem_page_size = tep_get_page_size(tp_format->tep);
- 		symbol_conf.use_callchain = true;
- 	}
- 
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index c1daf82c9b92..e564da5293b5 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -1103,7 +1103,8 @@ static char *evsel__softirq_name(struct evsel *evsel, u64 num)
- 	char *name = NULL;
- 	bool found = false;
- 	struct tep_print_flag_sym *sym = NULL;
--	struct tep_print_arg *args = evsel->tp_format->print_fmt.args;
-+	const struct tep_event *tp_format = evsel__tp_format(evsel);
-+	struct tep_print_arg *args = tp_format ? tp_format->print_fmt.args : NULL;
- 
- 	if ((args == NULL) || (args->next == NULL))
- 		return NULL;
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 6b6d4472db6e..0acdb98314f8 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2289,8 +2289,13 @@ static void process_event(struct perf_script *script,
- 	}
- #ifdef HAVE_LIBTRACEEVENT
- 	if (PRINT_FIELD(TRACE) && sample->raw_data) {
--		event_format__fprintf(evsel->tp_format, sample->cpu,
--				      sample->raw_data, sample->raw_size, fp);
-+		const struct tep_event *tp_format = evsel__tp_format(evsel);
-+
-+		if (tp_format) {
-+			event_format__fprintf(tp_format, sample->cpu,
-+					      sample->raw_data, sample->raw_size,
-+					      fp);
-+		}
- 	}
- #endif
- 	if (attr->type == PERF_TYPE_SYNTH && PRINT_FIELD(SYNTH))
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index c1e9e14c8686..5882a206e248 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -389,7 +389,12 @@ static struct syscall_arg_fmt *evsel__syscall_arg_fmt(struct evsel *evsel)
- 	}
- 
- 	if (et->fmt == NULL) {
--		et->fmt = calloc(evsel->tp_format->format.nr_fields, sizeof(struct syscall_arg_fmt));
-+		const struct tep_event *tp_format = evsel__tp_format(evsel);
-+
-+		if (tp_format == NULL)
-+			goto out_delete;
-+
-+		et->fmt = calloc(tp_format->format.nr_fields, sizeof(struct syscall_arg_fmt));
- 		if (et->fmt == NULL)
- 			goto out_delete;
- 	}
-@@ -2154,8 +2159,12 @@ static int evsel__init_tp_arg_scnprintf(struct evsel *evsel, bool *use_btf)
- 	struct syscall_arg_fmt *fmt = evsel__syscall_arg_fmt(evsel);
- 
- 	if (fmt != NULL) {
--		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields, use_btf);
--		return 0;
-+		const struct tep_event *tp_format = evsel__tp_format(evsel);
-+
-+		if (tp_format) {
-+			syscall_arg_fmt__init_array(fmt, tp_format->format.fields, use_btf);
-+			return 0;
-+		}
- 	}
- 
- 	return -ENOMEM;
-@@ -3026,7 +3035,8 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- {
- 	char bf[2048];
- 	size_t size = sizeof(bf);
--	struct tep_format_field *field = evsel->tp_format->format.fields;
-+	const struct tep_event *tp_format = evsel__tp_format(evsel);
-+	struct tep_format_field *field = tp_format ? tp_format->format.fields : NULL;
- 	struct syscall_arg_fmt *arg = __evsel__syscall_arg_fmt(evsel);
- 	size_t printed = 0, btf_printed;
- 	unsigned long val;
-@@ -3149,11 +3159,13 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
- 
- 	if (evsel__is_bpf_output(evsel)) {
- 		bpf_output__fprintf(trace, sample);
--	} else if (evsel->tp_format) {
--		if (strncmp(evsel->tp_format->name, "sys_enter_", 10) ||
--		    trace__fprintf_sys_enter(trace, evsel, sample)) {
-+	} else {
-+		const struct tep_event *tp_format = evsel__tp_format(evsel);
-+
-+		if (tp_format && (strncmp(tp_format->name, "sys_enter_", 10) ||
-+				  trace__fprintf_sys_enter(trace, evsel, sample))) {
- 			if (trace->libtraceevent_print) {
--				event_format__fprintf(evsel->tp_format, sample->cpu,
-+				event_format__fprintf(tp_format, sample->cpu,
- 						      sample->raw_data, sample->raw_size,
- 						      trace->output);
- 			} else {
-@@ -4081,17 +4093,23 @@ static int ordered_events__deliver_event(struct ordered_events *oe,
- static struct syscall_arg_fmt *evsel__find_syscall_arg_fmt_by_name(struct evsel *evsel, char *arg,
- 								   char **type)
- {
--	struct tep_format_field *field;
- 	struct syscall_arg_fmt *fmt = __evsel__syscall_arg_fmt(evsel);
-+	const struct tep_event *tp_format;
-+
-+	if (!fmt)
-+		return NULL;
- 
--	if (evsel->tp_format == NULL || fmt == NULL)
-+	tp_format = evsel__tp_format(evsel);
-+	if (!tp_format)
- 		return NULL;
- 
--	for (field = evsel->tp_format->format.fields; field; field = field->next, ++fmt)
-+	for (const struct tep_format_field *field = tp_format->format.fields; field;
-+	     field = field->next, ++fmt) {
- 		if (strcmp(field->name, arg) == 0) {
- 			*type = field->type;
- 			return fmt;
- 		}
-+	}
- 
- 	return NULL;
- }
-@@ -4844,13 +4862,18 @@ static void evsel__set_syscall_arg_fmt(struct evsel *evsel, const char *name)
- 		const struct syscall_fmt *scfmt = syscall_fmt__find(name);
- 
- 		if (scfmt) {
--			int skip = 0;
-+			const struct tep_event *tp_format = evsel__tp_format(evsel);
-+
-+			if (tp_format) {
-+				int skip = 0;
- 
--			if (strcmp(evsel->tp_format->format.fields->name, "__syscall_nr") == 0 ||
--			    strcmp(evsel->tp_format->format.fields->name, "nr") == 0)
--				++skip;
-+				if (strcmp(tp_format->format.fields->name, "__syscall_nr") == 0 ||
-+				    strcmp(tp_format->format.fields->name, "nr") == 0)
-+					++skip;
- 
--			memcpy(fmt + skip, scfmt->arg, (evsel->tp_format->format.nr_fields - skip) * sizeof(*fmt));
-+				memcpy(fmt + skip, scfmt->arg,
-+				       (tp_format->format.nr_fields - skip) * sizeof(*fmt));
-+			}
- 		}
- 	}
- }
-@@ -4860,10 +4883,16 @@ static int evlist__set_syscall_tp_fields(struct evlist *evlist, bool *use_btf)
- 	struct evsel *evsel;
- 
- 	evlist__for_each_entry(evlist, evsel) {
--		if (evsel->priv || !evsel->tp_format)
-+		const struct tep_event *tp_format;
-+
-+		if (evsel->priv)
-+			continue;
-+
-+		tp_format = evsel__tp_format(evsel);
-+		if (!tp_format)
- 			continue;
- 
--		if (strcmp(evsel->tp_format->system, "syscalls")) {
-+		if (strcmp(tp_format->system, "syscalls")) {
- 			evsel__init_tp_arg_scnprintf(evsel, use_btf);
- 			continue;
- 		}
-@@ -4871,20 +4900,24 @@ static int evlist__set_syscall_tp_fields(struct evlist *evlist, bool *use_btf)
- 		if (evsel__init_syscall_tp(evsel))
- 			return -1;
- 
--		if (!strncmp(evsel->tp_format->name, "sys_enter_", 10)) {
-+		if (!strncmp(tp_format->name, "sys_enter_", 10)) {
- 			struct syscall_tp *sc = __evsel__syscall_tp(evsel);
- 
- 			if (__tp_field__init_ptr(&sc->args, sc->id.offset + sizeof(u64)))
- 				return -1;
- 
--			evsel__set_syscall_arg_fmt(evsel, evsel->tp_format->name + sizeof("sys_enter_") - 1);
--		} else if (!strncmp(evsel->tp_format->name, "sys_exit_", 9)) {
-+			evsel__set_syscall_arg_fmt(evsel,
-+						   tp_format->name + sizeof("sys_enter_") - 1);
-+		} else if (!strncmp(tp_format->name, "sys_exit_", 9)) {
- 			struct syscall_tp *sc = __evsel__syscall_tp(evsel);
- 
--			if (__tp_field__init_uint(&sc->ret, sizeof(u64), sc->id.offset + sizeof(u64), evsel->needs_swap))
-+			if (__tp_field__init_uint(&sc->ret, sizeof(u64),
-+						  sc->id.offset + sizeof(u64),
-+						  evsel->needs_swap))
- 				return -1;
- 
--			evsel__set_syscall_arg_fmt(evsel, evsel->tp_format->name + sizeof("sys_exit_") - 1);
-+			evsel__set_syscall_arg_fmt(evsel,
-+						   tp_format->name + sizeof("sys_exit_") - 1);
- 		}
- 	}
- 
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index 021e9b1d5cc5..d022d3c2955e 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -426,8 +426,9 @@ static int add_tracepoint_values(struct ctf_writer *cw,
- 				 struct evsel *evsel,
- 				 struct perf_sample *sample)
- {
--	struct tep_format_field *common_fields = evsel->tp_format->format.common_fields;
--	struct tep_format_field *fields        = evsel->tp_format->format.fields;
-+	const struct tep_event *tp_format = evsel__tp_format(evsel);
-+	struct tep_format_field *common_fields = tp_format->format.common_fields;
-+	struct tep_format_field *fields        = tp_format->format.fields;
- 	int ret;
- 
- 	ret = add_tracepoint_fields_values(cw, event_class, event,
-@@ -1064,8 +1065,9 @@ static int add_tracepoint_types(struct ctf_writer *cw,
- 				struct evsel *evsel,
- 				struct bt_ctf_event_class *class)
- {
--	struct tep_format_field *common_fields = evsel->tp_format->format.common_fields;
--	struct tep_format_field *fields        = evsel->tp_format->format.fields;
-+	const struct tep_event *tp_format = evsel__tp_format(evsel);
-+	struct tep_format_field *common_fields = tp_format ? tp_format->format.common_fields : NULL;
-+	struct tep_format_field *fields        = tp_format ? tp_format->format.fields : NULL;
- 	int ret;
- 
- 	ret = add_tracepoint_fields_types(cw, common_fields, class);
-diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-index 20bfb0884e9e..eb068f38ca81 100644
---- a/tools/perf/util/data-convert-json.c
-+++ b/tools/perf/util/data-convert-json.c
-@@ -230,12 +230,12 @@ static int process_sample_event(const struct perf_tool *tool,
- 
- #ifdef HAVE_LIBTRACEEVENT
- 	if (sample->raw_data) {
--		int i;
--		struct tep_format_field **fields;
-+		struct tep_event *tp_format = evsel__tp_format(evsel);
-+		struct tep_format_field **fields = tp_format ? tep_event_fields(tp_format) : NULL;
- 
--		fields = tep_event_fields(evsel->tp_format);
- 		if (fields) {
--			i = 0;
-+			int i = 0;
-+
- 			while (fields[i]) {
- 				struct trace_seq s;
- 
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index f780e30aa259..a95db7e900d5 100644
+index a95db7e900d5..56e19e32a852 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -570,6 +570,7 @@ struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool
- 			evsel->tp_format = trace_event__tp_format(sys, name);
- 			if (IS_ERR(evsel->tp_format)) {
- 				err = PTR_ERR(evsel->tp_format);
-+				evsel->tp_format = NULL;
- 				goto out_free;
- 			}
- 			attr.config = evsel->tp_format->id;
-@@ -3209,12 +3210,16 @@ u16 evsel__id_hdr_size(const struct evsel *evsel)
- #ifdef HAVE_LIBTRACEEVENT
- struct tep_format_field *evsel__field(struct evsel *evsel, const char *name)
- {
--	return tep_find_field(evsel->tp_format, name);
-+	struct tep_event *tp_format = evsel__tp_format(evsel);
-+
-+	return tp_format ? tep_find_field(tp_format, name) : NULL;
+@@ -543,54 +543,101 @@ struct evsel *evsel__clone(struct evsel *orig)
+ 	return NULL;
  }
  
- struct tep_format_field *evsel__common_field(struct evsel *evsel, const char *name)
- {
--	return tep_find_common_field(evsel->tp_format, name);
-+	struct tep_event *tp_format = evsel__tp_format(evsel);
-+
-+	return tp_format ? tep_find_common_field(tp_format, name) : NULL;
- }
- 
- void *evsel__rawptr(struct evsel *evsel, struct perf_sample *sample, const char *name)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 04934a7af174..c3e53d320bf5 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -257,6 +257,11 @@ static inline struct evsel *evsel__newtp(const char *sys, const char *name)
- {
- 	return evsel__newtp_idx(sys, name, 0, true);
- }
-+
-+static inline struct tep_event *evsel__tp_format(struct evsel *evsel)
++static int trace_event__id(const char *sys, const char *name)
 +{
++	char *tp_dir = get_events_file(sys);
++	char path[PATH_MAX];
++	int id, err;
++
++	if (!tp_dir)
++		return -1;
++
++	scnprintf(path, PATH_MAX, "%s/%s/id", tp_dir, name);
++	put_events_file(tp_dir);
++	err = filename__read_int(path, &id);
++	if (err)
++		return err;
++
++	return id;
++}
++
+ /*
+  * Returns pointer with encoded error via <linux/err.h> interface.
+  */
+-#ifdef HAVE_LIBTRACEEVENT
+ struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format)
+ {
++	struct perf_event_attr attr = {
++		.type	       = PERF_TYPE_TRACEPOINT,
++		.sample_type   = (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME |
++				PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD),
++	};
+ 	struct evsel *evsel = zalloc(perf_evsel__object.size);
+-	int err = -ENOMEM;
++	int err = -ENOMEM, id = -1;
+ 
+-	if (evsel == NULL) {
++	if (evsel == NULL)
+ 		goto out_err;
+-	} else {
+-		struct perf_event_attr attr = {
+-			.type	       = PERF_TYPE_TRACEPOINT,
+-			.sample_type   = (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME |
+-					  PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD),
+-		};
+ 
+-		if (asprintf(&evsel->name, "%s:%s", sys, name) < 0)
+-			goto out_free;
+ 
+-		event_attr_init(&attr);
++	if (asprintf(&evsel->name, "%s:%s", sys, name) < 0)
++		goto out_free;
+ 
+-		if (format) {
+-			evsel->tp_format = trace_event__tp_format(sys, name);
+-			if (IS_ERR(evsel->tp_format)) {
+-				err = PTR_ERR(evsel->tp_format);
+-				evsel->tp_format = NULL;
+-				goto out_free;
+-			}
+-			attr.config = evsel->tp_format->id;
+-		} else {
+-			attr.config = (__u64) -1;
+-		}
++#ifdef HAVE_LIBTRACEEVENT
++	evsel->tp_sys = strdup(sys);
++	if (!evsel->tp_sys)
++		goto out_free;
+ 
++	evsel->tp_name = strdup(name);
++	if (!evsel->tp_name)
++		goto out_free;
++#endif
+ 
+-		attr.sample_period = 1;
+-		evsel__init(evsel, &attr, idx);
+-	}
++	event_attr_init(&attr);
+ 
++	if (format) {
++		id = trace_event__id(sys, name);
++		if (id < 0) {
++			err = id;
++			goto out_free;
++		}
++	}
++	attr.config = (__u64)id;
++	attr.sample_period = 1;
++	evsel__init(evsel, &attr, idx);
+ 	return evsel;
+ 
+ out_free:
+ 	zfree(&evsel->name);
++#ifdef HAVE_LIBTRACEEVENT
++	zfree(&evsel->tp_sys);
++	zfree(&evsel->tp_name);
++#endif
+ 	free(evsel);
+ out_err:
+ 	return ERR_PTR(err);
+ }
++
++#ifdef HAVE_LIBTRACEEVENT
++struct tep_event *evsel__tp_format(struct evsel *evsel)
++{
++	struct tep_event *tp_format = evsel->tp_format;
++
++	if (tp_format)
++		return tp_format;
++
++	if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
++		return NULL;
++
++	tp_format = trace_event__tp_format(evsel->tp_sys, evsel->tp_name);
++	if (IS_ERR(tp_format)) {
++		int err = -PTR_ERR(evsel->tp_format);
++
++		pr_err("Error getting tracepoint format '%s' '%s'(%d)\n",
++			evsel__name(evsel), strerror(err), err);
++		return NULL;
++	}
++	evsel->tp_format = tp_format;
 +	return evsel->tp_format;
 +}
  #endif
  
+ const char *const evsel__hw_names[PERF_COUNT_HW_MAX] = {
+@@ -1587,6 +1634,10 @@ void evsel__exit(struct evsel *evsel)
+ 	perf_thread_map__put(evsel->core.threads);
+ 	zfree(&evsel->group_name);
+ 	zfree(&evsel->name);
++#ifdef HAVE_LIBTRACEEVENT
++	zfree(&evsel->tp_sys);
++	zfree(&evsel->tp_name);
++#endif
+ 	zfree(&evsel->filter);
+ 	zfree(&evsel->group_pmu_name);
+ 	zfree(&evsel->unit);
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index c3e53d320bf5..93b6244ec302 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -59,6 +59,8 @@ struct evsel {
+ 		char			*group_name;
+ 		const char		*group_pmu_name;
  #ifdef HAVE_LIBTRACEEVENT
-diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
-index c2c0500d5da9..54c5702f8c00 100644
---- a/tools/perf/util/evsel_fprintf.c
-+++ b/tools/perf/util/evsel_fprintf.c
-@@ -81,13 +81,15 @@ int evsel__fprintf(struct evsel *evsel, struct perf_attr_details *details, FILE
- #ifdef HAVE_LIBTRACEEVENT
- 	if (details->trace_fields) {
- 		struct tep_format_field *field;
-+		const struct tep_event *tp_format;
- 
- 		if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT) {
- 			printed += comma_fprintf(fp, &first, " (not a tracepoint)");
- 			goto out;
- 		}
- 
--		field = evsel->tp_format->format.fields;
-+		tp_format = evsel__tp_format(evsel);
-+		field = tp_format ? tp_format->format.fields : NULL;
- 		if (field == NULL) {
- 			printed += comma_fprintf(fp, &first, " (no trace field)");
- 			goto out;
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index e16257d5ab2c..0d63b77b5140 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -344,7 +344,7 @@ static void perl_process_tracepoint(struct perf_sample *sample,
- 				    struct addr_location *al)
- {
- 	struct thread *thread = al->thread;
--	struct tep_event *event = evsel->tp_format;
-+	struct tep_event *event;
- 	struct tep_format_field *field;
- 	static char handler[256];
- 	unsigned long long val;
-@@ -362,6 +362,7 @@ static void perl_process_tracepoint(struct perf_sample *sample,
- 	if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
- 		return;
- 
-+	event = evsel__tp_format(evsel);
- 	if (!event) {
- 		pr_debug("ug! no event found for type %" PRIu64, (u64)evsel->core.attr.config);
- 		return;
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index d7183134b669..77f1ab2d3eac 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -946,7 +946,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 				      struct addr_location *al,
- 				      struct addr_location *addr_al)
- {
--	struct tep_event *event = evsel->tp_format;
-+	struct tep_event *event;
- 	PyObject *handler, *context, *t, *obj = NULL, *callchain;
- 	PyObject *dict = NULL, *all_entries_dict = NULL;
- 	static char handler_name[256];
-@@ -963,6 +963,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 
- 	bitmap_zero(events_defined, TRACE_EVENT_TYPE_MAX);
- 
-+	event = evsel__tp_format(evsel);
- 	if (!event) {
- 		snprintf(handler_name, sizeof(handler_name),
- 			 "ug! no event found for type %" PRIu64, (u64)evsel->core.attr.config);
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 168c488f0178..710839ec3f99 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -1038,17 +1038,19 @@ static char *get_trace_output(struct hist_entry *he)
- 		.data = he->raw_data,
- 		.size = he->raw_size,
- 	};
-+	struct tep_event *tp_format;
- 
- 	evsel = hists_to_evsel(he->hists);
- 
- 	trace_seq_init(&seq);
--	if (symbol_conf.raw_trace) {
--		tep_print_fields(&seq, he->raw_data, he->raw_size,
--				 evsel->tp_format);
--	} else {
--		tep_print_event(evsel->tp_format->tep,
--				&seq, &rec, "%s", TEP_PRINT_INFO);
-+	tp_format = evsel__tp_format(evsel);
-+	if (tp_format) {
-+		if (symbol_conf.raw_trace)
-+			tep_print_fields(&seq, he->raw_data, he->raw_size, tp_format);
-+		else
-+			tep_print_event(tp_format->tep, &seq, &rec, "%s", TEP_PRINT_INFO);
- 	}
-+
- 	/*
- 	 * Trim the buffer, it starts at 4KB and we're not going to
- 	 * add anything more to this buffer.
-@@ -3293,9 +3295,8 @@ static int __dynamic_dimension__add(struct evsel *evsel,
- static int add_evsel_fields(struct evsel *evsel, bool raw_trace, int level)
- {
- 	int ret;
--	struct tep_format_field *field;
--
--	field = evsel->tp_format->format.fields;
-+	struct tep_event *tp_format = evsel__tp_format(evsel);
-+	struct tep_format_field *field = tp_format ? tp_format->format.fields : NULL;
- 	while (field) {
- 		ret = __dynamic_dimension__add(evsel, field, raw_trace, level);
- 		if (ret < 0)
-@@ -3328,13 +3329,19 @@ static int add_all_matching_fields(struct evlist *evlist,
- {
- 	int ret = -ESRCH;
- 	struct evsel *evsel;
--	struct tep_format_field *field;
- 
- 	evlist__for_each_entry(evlist, evsel) {
-+		struct tep_event *tp_format;
-+		struct tep_format_field *field;
-+
- 		if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
- 			continue;
- 
--		field = tep_find_any_field(evsel->tp_format, field_name);
-+		tp_format = evsel__tp_format(evsel);
-+		if (tp_format == NULL)
-+			continue;
-+
-+		field = tep_find_any_field(tp_format, field_name);
- 		if (field == NULL)
- 			continue;
- 
-@@ -3416,7 +3423,9 @@ static int add_dynamic_entry(struct evlist *evlist, const char *tok,
- 	if (!strcmp(field_name, "*")) {
- 		ret = add_evsel_fields(evsel, raw_trace, level);
- 	} else {
--		struct tep_format_field *field = tep_find_any_field(evsel->tp_format, field_name);
-+		struct tep_event *tp_format = evsel__tp_format(evsel);
-+		struct tep_format_field *field =
-+			tp_format ? tep_find_any_field(tp_format, field_name) : NULL;
- 
- 		if (field == NULL) {
- 			pr_debug("Cannot find event field for %s.%s\n",
-diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-index bd0000300c77..bab893587863 100644
---- a/tools/perf/util/trace-event-scripting.c
-+++ b/tools/perf/util/trace-event-scripting.c
-@@ -28,12 +28,14 @@ void scripting_context__update(struct scripting_context *c,
- 			       struct addr_location *al,
- 			       struct addr_location *addr_al)
- {
--	c->event_data = sample->raw_data;
--	c->pevent = NULL;
- #ifdef HAVE_LIBTRACEEVENT
--	if (evsel->tp_format)
--		c->pevent = evsel->tp_format->tep;
-+	const struct tep_event *tp_format = evsel__tp_format(evsel);
-+
-+	c->pevent = tp_format ? tp_format->tep : NULL;
-+#else
-+	c->pevent = NULL;
++		char			*tp_sys;
++		char			*tp_name;
+ 		struct tep_event	*tp_format;
  #endif
-+	c->event_data = sample->raw_data;
- 	c->event = event;
- 	c->sample = sample;
- 	c->evsel = evsel;
+ 		char			*filter;
+@@ -247,25 +249,17 @@ int copy_config_terms(struct list_head *dst, struct list_head *src);
+ void free_config_terms(struct list_head *config_terms);
+ 
+ 
+-#ifdef HAVE_LIBTRACEEVENT
+-struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format);
+-
+ /*
+  * Returns pointer with encoded error via <linux/err.h> interface.
+  */
++struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format);
+ static inline struct evsel *evsel__newtp(const char *sys, const char *name)
+ {
+ 	return evsel__newtp_idx(sys, name, 0, true);
+ }
+ 
+-static inline struct tep_event *evsel__tp_format(struct evsel *evsel)
+-{
+-	return evsel->tp_format;
+-}
+-#endif
+-
+ #ifdef HAVE_LIBTRACEEVENT
+-struct tep_event *event_format__new(const char *sys, const char *name);
++struct tep_event *evsel__tp_format(struct evsel *evsel);
+ #endif
+ 
+ void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index afeb8d815bbf..7fc1c36ef2a4 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -489,7 +489,6 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
+ 	return found_supported ? 0 : -EINVAL;
+ }
+ 
+-#ifdef HAVE_LIBTRACEEVENT
+ static void tracepoint_error(struct parse_events_error *e, int err,
+ 			     const char *sys, const char *name, int column)
+ {
+@@ -644,7 +643,6 @@ static int add_tracepoint_multi_sys(struct parse_events_state *parse_state,
+ 	closedir(events_dir);
+ 	return ret;
+ }
+-#endif /* HAVE_LIBTRACEEVENT */
+ 
+ size_t default_breakpoint_len(void)
+ {
+@@ -1066,7 +1064,6 @@ static int config_term_pmu(struct perf_event_attr *attr,
+ 	return config_term_common(attr, term, err);
+ }
+ 
+-#ifdef HAVE_LIBTRACEEVENT
+ static int config_term_tracepoint(struct perf_event_attr *attr,
+ 				  struct parse_events_term *term,
+ 				  struct parse_events_error *err)
+@@ -1111,7 +1108,6 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ static int config_attr(struct perf_event_attr *attr,
+ 		       const struct parse_events_terms *head,
+@@ -1303,7 +1299,7 @@ int parse_events_add_tracepoint(struct parse_events_state *parse_state,
+ 				struct parse_events_terms *head_config, void *loc_)
+ {
+ 	YYLTYPE *loc = loc_;
+-#ifdef HAVE_LIBTRACEEVENT
++
+ 	if (head_config) {
+ 		struct perf_event_attr attr;
+ 
+@@ -1318,16 +1314,6 @@ int parse_events_add_tracepoint(struct parse_events_state *parse_state,
+ 	else
+ 		return add_tracepoint_event(parse_state, list, sys, event,
+ 					    err, head_config, loc);
+-#else
+-	(void)parse_state;
+-	(void)list;
+-	(void)sys;
+-	(void)event;
+-	(void)head_config;
+-	parse_events_error__handle(err, loc->first_column, strdup("unsupported tracepoint"),
+-				strdup("libtraceevent is necessary for tracepoint support"));
+-	return -1;
+-#endif
+ }
+ 
+ static int __parse_events_add_numeric(struct parse_events_state *parse_state,
 -- 
 2.47.0.199.ga7371fff76-goog
 
