@@ -1,331 +1,386 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3CB163;
-	Tue,  5 Nov 2024 09:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD57E1D1500
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Nov 2024 10:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730800096; cv=none; b=PDJngvAHb/dhdVE2ng3cOqiYFQYLyQkVsNqrRVJkhBRHEC4p9cwcAPivV49cpPBaDnvcpbVWHca+NJ92benrpjco5LOiWi4jkhVvyyQqnJPOLjuF6rQHWIctH8Jcr6k/30t3WAPMmZvlr+BFu8+pYftXKRQBY2dEei8JRuscY8E=
+	t=1730804254; cv=none; b=kCGvBcT9Hza5w0gEUFMXji54oxQfNuttX0r6aL9ZIggPu7t7FKfMW+DAycoEHBHrO27VEVFJu+XxtBYpqEpBUTFnhD5Fz8rKUTvHogV4psVi1dpWqNVtzRLzhceNz0gNPfskG3p2DlyAu/JSVQSSVA+hYY7pOauJgt+1cDknIH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730800096; c=relaxed/simple;
-	bh=k7XKiw9IwqHy40KHuQPepYxcJBNl5vEHlPrYP3X0Hdk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ax1nJsOmZfKYIDrBgN8kGk9jZTuq9hg1nTfSzBI1T4TY3y4HWTkGcbNjAgC8zQsUbMqN0YequsIb5GdXfmiTIcV3ycwvmhdV96P7yhWqefJ0TiduVZ0koQ18V5pvwoKtTXfsy6dLB2rq3NMHuT0ny3gDueu5DOiu+N6AkQy4SeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lrsf4vFt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lrsf4vFt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79086C4CECF;
-	Tue,  5 Nov 2024 09:48:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730800095;
-	bh=k7XKiw9IwqHy40KHuQPepYxcJBNl5vEHlPrYP3X0Hdk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lrsf4vFty2CX93eITvtfE02J86QeNNwTeE1dhjVkflj1u/giY/PTek/oTaRzDKPw+
-	 o56EmqeNbGhStzlIQYJPT4Ijf4DGB4y3eHCmO1YteeLvib99ILc9vYLhZqO7/YYhLQ
-	 jd3+bPxEiPv6/WthAEAGtYz1L3o2yljlAod5IRHfphsPxAYi5Aq4OxZk6lrYAQgPbc
-	 T1DdwRryxb2kVUcnBt6glqCNd0NeQT3Go4LySkuY34X37pq2WGf//IWXqZr5MOAA0Q
-	 t9LA8ttVVTq7n30C+N05ixPucnqv9PIC8Z38YXOBvyE9TCHXCFU9Zhck4aizW7Jl7m
-	 jVS6inbQXWfwg==
-Date: Tue, 5 Nov 2024 18:48:12 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Ian Rogers
- <irogers@google.com>, Dima Kogan <dima@secretsauce.net>, Alexander Lobakin
- <aleksander.lobakin@intel.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] perf-probe: Improbe non-C language support
-Message-Id: <20241105184812.e8256c3078505b63b83a6cf6@kernel.org>
-In-Reply-To: <ZykYwHifTM6niEmG@x1>
-References: <173073702882.2098439.13342508872190995896.stgit@mhiramat.roam.corp.google.com>
-	<ZykYwHifTM6niEmG@x1>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1730804254; c=relaxed/simple;
+	bh=mzSR0TwCzM/8T+2pVaFCsHhUiSSdgtB+rE1izpwyx/U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TbvTB8T6ALKgjGed7Q6Fi9PvOe3OUTqtos5bXlGmSBiOHxylNMPkib+xRFJCZQs660uVdcxd+IVgWMRp9qQ9p0iwA5dtt4CYjVVAPlcNgHJSJwezA05T7ASjv9lVskAYN93mL63yxUEXXiw0EOY92IVV5H0LKr86G52XshRVJao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4XjQH14Plxz1jwYn;
+	Tue,  5 Nov 2024 18:55:41 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id 37BA11402E2;
+	Tue,  5 Nov 2024 18:57:21 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 5 Nov 2024 18:57:20 +0800
+From: Yicong Yang <yangyicong@huawei.com>
+To: <acme@kernel.org>, <namhyung@kernel.org>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <leo.yan@arm.com>, <amadio@gentoo.org>,
+	<linux-perf-users@vger.kernel.org>
+CC: <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <linuxarm@huawei.com>,
+	<yangyicong@hisilicon.com>
+Subject: [PATCH] perf build: Include libtraceevent headers directly indicated by pkg-config
+Date: Tue, 5 Nov 2024 18:56:49 +0800
+Message-ID: <20241105105649.45399-1-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-On Mon, 4 Nov 2024 15:56:00 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-> On Tue, Nov 05, 2024 at 01:17:08AM +0900, Masami Hiramatsu (Google) wrote:
-> > Hi,
->  
-> > Here is a series of patches for perf probe to improve non-C language
-> > (e.g. Rust, Go) support.
->  
-> > The non-C symbols are demangled style in debuginfo, e.g. golang stores
->  
-> > ----
-> > $ ./perf probe -x /work/go/example/outyet/main -F main*
-> > main.(*Server).ServeHTTP
-> > main.(*Server).ServeHTTP.Print.func1
-> > main.(*Server).poll
-> > ...
-> > -----
-> 
-> I presented about this last year:
-> 
-> https://tracingsummit.org/ts/2023/bpf-non-c/
-> https://tracingsummit.org/ts/2023/files/Trying_to_use_uprobes_and_BPF_on_non-C_userspace.pdf
-> https://www.youtube.com/watch?v=RDFRy1vWyHg&feature=youtu.be
+Currently the libtraceevent's found by pkg-config, which give the
+include path as:
+[root@localhost tmp]# pkg-config --cflags libtraceevent
+-I/usr/local/include/traceevent
 
-Nice!
+So we should include the libtraceevent headers directly without
+"traceevent/" prefix. Update all the users.
 
-> 
-> So trying to do some of the things I did while playing with golang, and
-> with your patches applied, I only had to cope with a minor clash with a
-> patch by Ian Rogers that is present on perf-tools-next, related to:
-> 
->         char buf[MAX_EVENT_NAME_LEN];
-> 
-> That in your patch expects the old 64 hard coded value, which will
-> appear in the my tests:
+Fixes: 0f0e1f445690 ("perf build: Use pkg-config for feature check for libtrace{event,fs}")
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+[https://lore.kernel.org/linux-perf-users/ZyF5_Hf1iL01kldE@google.com/]
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ tools/build/feature/test-libtraceevent.c               | 2 +-
+ tools/perf/builtin-kmem.c                              | 2 +-
+ tools/perf/builtin-kwork.c                             | 2 +-
+ tools/perf/builtin-report.c                            | 2 +-
+ tools/perf/builtin-script.c                            | 2 +-
+ tools/perf/builtin-timechart.c                         | 2 +-
+ tools/perf/builtin-trace.c                             | 2 +-
+ tools/perf/tests/evsel-tp-sched.c                      | 2 +-
+ tools/perf/util/data-convert-bt.c                      | 2 +-
+ tools/perf/util/data-convert-json.c                    | 2 +-
+ tools/perf/util/debug.c                                | 2 +-
+ tools/perf/util/evsel.c                                | 2 +-
+ tools/perf/util/evsel_fprintf.c                        | 2 +-
+ tools/perf/util/header.c                               | 2 +-
+ tools/perf/util/python.c                               | 2 +-
+ tools/perf/util/scripting-engines/trace-event-perl.c   | 2 +-
+ tools/perf/util/scripting-engines/trace-event-python.c | 2 +-
+ tools/perf/util/sort.c                                 | 2 +-
+ tools/perf/util/trace-event-parse.c                    | 2 +-
+ tools/perf/util/trace-event-read.c                     | 2 +-
+ tools/perf/util/trace-event-scripting.c                | 2 +-
+ tools/perf/util/trace-event.c                          | 2 +-
+ tools/perf/util/trace-event.h                          | 2 +-
+ 23 files changed, 23 insertions(+), 23 deletions(-)
 
-Ah, OK let me rebase on it.
-
-> 
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -x main -F github*counter*
-> github.com/prometheus/client_golang/prometheus.(*counter).Add
-> github.com/prometheus/client_golang/prometheus.(*counter).AddWithExemplar
-> github.com/prometheus/client_golang/prometheus.(*counter).Collect
-> github.com/prometheus/client_golang/prometheus.(*counter).Desc
-> github.com/prometheus/client_golang/prometheus.(*counter).Describe
-> github.com/prometheus/client_golang/prometheus.(*counter).Inc
-> github.com/prometheus/client_golang/prometheus.(*counter).Write
-> github.com/prometheus/client_golang/prometheus.(*counter).updateExemplar
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -x main -F github*counter*
-> 
-> Then trying to add for all those:
-> 
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -d *:*
-> "*:*" does not hit any event.
->   Error: Failed to delete events.
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -l
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus#
-> 
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -x main github*counter*
-> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> snprintf() failed: -7; the event name 'github_com_prometheus_client_golang_prometheus_counter_AddWithExemplar' is too long
->   Hint: Set a shorter event with syntax "EVENT=PROBEDEF"
->         EVENT: Event name (max length: 64 bytes).
->   Error: Failed to add events.
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus#
-> 
-> But:
-> 
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -l
->   probe_main:github_com_prometheus_client_golang_prometheus_counter_Desc (on github.com/prometheus/client_golang/prometheus.(*counter).Des>
-> (END)
-> 
-> That pager thing looks odd as well, since there is just one line in the
-> output...
-> 
-> So it failed to do all those, added just one, maybe state that some were
-> added but from the problematic one onwards it stopped? Or try all of
-> them and just state the ones that couldn't be added?
-
-OK, yes, it should show what events are actually added.
-
-> 
-> I.e. something like:
-> 
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -x main -F github*counter* | while read probename ; do perf probe -x main $probename ; done
-> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> Failed to find debug information for address 0x3287e0
-> Probe point 'github.com/prometheus/client_golang/prometheus.(*counter).Add' not found.
->   Error: Failed to add events.
-> snprintf() failed: -7; the event name 'github_com_prometheus_client_golang_prometheus_counter_AddWithExemplar' is too long
->   Hint: Set a shorter event with syntax "EVENT=PROBEDEF"
->         EVENT: Event name (max length: 64 bytes).
->   Error: Failed to add events.
-> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> Failed to find debug information for address 0x33ab40
-> Probe point 'github.com/prometheus/client_golang/prometheus.(*counter).Collect' not found.
->   Error: Failed to add events.
-> Error: event "github_com_prometheus_client_golang_prometheus_counter_Desc" already exists.
->  Hint: Remove existing event by 'perf probe -d'
->        or force duplicates by 'perf probe -f'
->        or set 'force=yes' in BPF source.
->   Error: Failed to add events.
-> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> Failed to find debug information for address 0x33aba0
-> Probe point 'github.com/prometheus/client_golang/prometheus.(*counter).Describe' not found.
->   Error: Failed to add events.
-> Added new event:
->   probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc (on github.com/prometheus/client_golang/prometheus.(*counter).Inc in /home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
-> 
-> You can now use it in all perf tools, such as:
-> 
-> 	perf record -e probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc -aR sleep 1
-> 
-> Added new event:
->   probe_main:github_com_prometheus_client_golang_prometheus_counter_Write (on github.com/prometheus/client_golang/prometheus.(*counter).Write in /home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
-> 
-> You can now use it in all perf tools, such as:
-> 
-> 	perf record -e probe_main:github_com_prometheus_client_golang_prometheus_counter_Write -aR sleep 1
-> 
-> snprintf() failed: -7; the event name 'github_com_prometheus_client_golang_prometheus_counter_updateExemplar' is too long
->   Hint: Set a shorter event with syntax "EVENT=PROBEDEF"
->         EVENT: Event name (max length: 64 bytes).
->   Error: Failed to add events.
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus#
-> 
-> In the end we get:
-> 
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf probe -l
->   probe_main:github_com_prometheus_client_golang_prometheus_counter_Desc (on github.com/prometheus/client_golang/prometheus.(*counter).Desc@prometheus/counter.go in /home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
->   probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc (on github.com/prometheus/client_golang/prometheus.(*counter).Inc@prometheus/counter.go in /home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
->   probe_main:github_com_prometheus_client_golang_prometheus_counter_Write (on github.com/prometheus/client_golang/prometheus.(*counter).Write@prometheus/counter.go in /home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus#
-> 
-> That also explains the pager kicking in: I had to reduce font size in my
-> xterm (gnome-terminal really) and then the perf pager wasn't used (no
-> (END) at the last line waiting for me to press 'q').
-> 
-> The ones that got installed are working:
-> 
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf trace -e probe_main:*
->      0.000 main/616840 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
->   1001.043 main/616926 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
->   1001.080 main/616926 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
->   4000.994 main/616926 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
-> ^Croot@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# perf trace -e probe_main:*/max-stack=8/
->      0.000 main/616926 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
->                                        github.com/prometheus/client_golang/prometheus.(*counter).Inc (/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
->                                        runtime.goexit.abi0 (/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
->      0.030 main/616926 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
->                                        github.com/prometheus/client_golang/prometheus.(*counter).Inc (/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
->                                        runtime.goexit.abi0 (/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
->   3000.166 main/616840 probe_main:github_com_prometheus_client_golang_prometheus_counter_Inc(__probe_ip: 7506464)
->                                        github.com/prometheus/client_golang/prometheus.(*counter).Inc (/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
->                                        runtime.goexit.abi0 (/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus/main)
-> ^Croot@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus#
-> 
-> I'll test this some more later/tomorrow, just wanted to give this first
-> reaction, thanks for working on this!
-
-Thanks for testing and the information!
-
-Since the event name limitation is in the kernel too, user should specify
-abbreviated event name in this case (or use only the last few words).
-
-Thank you,
-
-> 
-> Btw, some more info about the environment (fedora 40):
-> 
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus# readelf -wi main | head -20
-> Contents of the .debug_info section:
-> 
->   Compilation Unit @ offset 0:
->    Length:        0x506 (32-bit)
->    Version:       4
->    Abbrev Offset: 0
->    Pointer Size:  8
->  <0><b>: Abbrev Number: 1 (DW_TAG_compile_unit)
->     <c>   DW_AT_name        : google.golang.org/protobuf/internal/strs
->     <35>   DW_AT_language    : 22	(Go)
->     <36>   DW_AT_stmt_list   : 0
->     <3a>   DW_AT_low_pc      : 0x667c40
->     <42>   DW_AT_ranges      : 0
->     <46>   DW_AT_comp_dir    : .
->     <48>   DW_AT_producer    : Go cmd/compile go1.22.7; regabi
->     <68>   Unknown AT value: 2905: strs
->  <1><6d>: Abbrev Number: 5 (DW_TAG_subprogram)
->     <6e>   DW_AT_name        : google.golang.org/protobuf/internal/strs.isASCIILower
->     <a4>   DW_AT_inline      : 1	(inlined)
->     <a5>   DW_AT_decl_line   : 188
-> root@x1:/home/acme/git/libbpf-bootstrap/examples/c/tests/prometheus#
-> 
-> - Arnaldo
->  
-> > And Rust stores
-> > -----
-> > $ ./perf probe -x /work/cro3/target/x86_64-unknown-linux-gnu/debug/cro3 -F cro3::cmd::servo*
-> > cro3::cmd::servo::run
-> > cro3::cmd::servo::run::CALLSITE
-> > cro3::cmd::servo::run::CALLSITE::META
-> > cro3::cmd::servo::run_control
-> > -----
-> > 
-> > These symbols are not parsed correctly because it looks like a file name or
-> > including line numbers (`:` caused it.) So, I decided to introduce the changes
-> > 
-> >  - filename MUST start from '@'. (so it is able to distinguish the filename
-> >    and the function name)
-> >  - Fix to allow backslash to escape to --lines option.
-> >  - Introduce quotation mark support.
-> >  - Replace non-alnum character to '_' for event name (for non-C symbols).
-> > 
-> > With these changes, we can run -L (--lines) on golang;
-> > 
-> > ------
-> > $ perf probe -x goexample/hello/hello -L \"main.main\"
-> > <main.main@/work/goexample/hello/hello.go:0>
-> >       0  func main() {
-> >                 // Configure logging for a command-line program.
-> >       2         log.SetFlags(0)
-> >       3         log.SetPrefix("hello: ")
-> > 
-> >                 // Parse flags.
-> >       6         flag.Usage = usage
-> >       7         flag.Parse()
-> > ------
-> > 
-> > And Rust
-> > ------
-> > $ perf probe -x cro3 -L \"cro3::cmd::servo::run_show\"
-> > <run_show@/work/cro3/src/cmd/servo.rs:0>
-> >       0  fn run_show(args: &ArgsShow) -> Result<()> {
-> >       1      let list = ServoList::discover()?;
-> >       2      let s = list.find_by_serial(&args.servo)?;
-> >       3      if args.json {
-> >       4          println!("{s}");
-> > ------
-> > 
-> > And event name are created automatically like below;
-> > 
-> > $ ./perf probe -x /work/go/example/outyet/main -D 'main.(*Server).poll'
-> > p:probe_main/main_Server_poll /work/go/example/outyet/main:0x353040
-> > 
-> > $ ./perf probe -x cro3 -D \"cro3::cmd::servo::run_show\"
-> > p:probe_cro3/cro3_cmd_servo_run_show /work/cro3/target/x86_64-unknown-linux-gnu/debug/cro3:0x197530
-> > 
-> > We still need some more work, but these shows how perf-probe can work
-> > with other languages.
-> > 
-> > Thank you,
-> > 
-> > ---
-> > 
-> > Masami Hiramatsu (Google) (4):
-> >       perf-probe: Fix to ignore escaped characters in --lines option
-> >       perf-probe: Require '@' prefix for filename always
-> >       perf-probe: Introduce quotation marks support
-> >       perf-probe: Replace unacceptable characters when generating event name
-> > 
-> > 
-> >  tools/perf/util/probe-event.c  |  136 ++++++++++++++++++++++------------------
-> >  tools/perf/util/probe-finder.c |    3 +
-> >  tools/perf/util/string.c       |  100 +++++++++++++++++++++++++++++
-> >  tools/perf/util/string2.h      |    2 +
-> >  4 files changed, 180 insertions(+), 61 deletions(-)
-> > 
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
+diff --git a/tools/build/feature/test-libtraceevent.c b/tools/build/feature/test-libtraceevent.c
+index 416b11ffd4b4..804ad80dbbd9 100644
+--- a/tools/build/feature/test-libtraceevent.c
++++ b/tools/build/feature/test-libtraceevent.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <traceevent/trace-seq.h>
++#include <trace-seq.h>
+ 
+ int main(void)
+ {
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index a756147e2eec..4d8d94146f8d 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -36,7 +36,7 @@
+ #include <regex.h>
+ 
+ #include <linux/ctype.h>
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ 
+ static int	kmem_slab;
+ static int	kmem_page;
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index c1daf82c9b92..8234410cba4c 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -23,7 +23,7 @@
+ 
+ #include <subcmd/pager.h>
+ #include <subcmd/parse-options.h>
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ 
+ #include <errno.h>
+ #include <inttypes.h>
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 5dc17ffee27a..cc354adb07bc 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -70,7 +70,7 @@
+ #include <linux/mman.h>
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #endif
+ 
+ struct report {
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index a644787fa9e1..a7917ec630c2 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -67,7 +67,7 @@
+ 
+ #include <linux/ctype.h>
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #endif
+ 
+ static char const		*script_name;
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 218c8b44d7be..9b50076449bd 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -38,7 +38,7 @@
+ #include "util/tracepoint.h"
+ #include "util/util.h"
+ #include <linux/err.h>
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ 
+ #ifdef LACKS_OPEN_MEMSTREAM_PROTOTYPE
+ FILE *open_memstream(char **ptr, size_t *sizeloc);
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index f6e847529073..ccc6e1d35cd7 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -88,7 +88,7 @@
+ #include <perf/mmap.h>
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #endif
+ 
+ #ifndef O_CLOEXEC
+diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
+index cf4da3d748c2..2fa6b133af93 100644
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/err.h>
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #include "evsel.h"
+ #include "tests.h"
+ #include "debug.h"
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index 021e9b1d5cc5..f0599c61fab4 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -36,7 +36,7 @@
+ #include "util/sample.h"
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #endif
+ 
+ #define pr_N(n, fmt, ...) \
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index 20bfb0884e9e..8304cd2d4a9c 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -28,7 +28,7 @@
+ #include "util/tool.h"
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #endif
+ 
+ struct convert_json {
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index d633d15329fa..995f6bb05b5f 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -27,7 +27,7 @@
+ #include <linux/ctype.h>
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #else
+ #define LIBTRACEEVENT_VERSION 0
+ #endif
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index dbf9c8cee3c5..5d75a78e16fc 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -64,7 +64,7 @@
+ #include <linux/ctype.h>
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #endif
+ 
+ struct perf_missing_features perf_missing_features;
+diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
+index c2c0500d5da9..86b7f46f9e2a 100644
+--- a/tools/perf/util/evsel_fprintf.c
++++ b/tools/perf/util/evsel_fprintf.c
+@@ -14,7 +14,7 @@
+ #include "dso.h"
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #endif
+ 
+ static int comma_fprintf(FILE *fp, bool *first, const char *fmt, ...)
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index a6386d12afd7..fca27b316faf 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -58,7 +58,7 @@
+ #include <internal/lib.h>
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #endif
+ 
+ /*
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 31a223eaf8e6..82e0c0382058 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -6,7 +6,7 @@
+ #include <linux/err.h>
+ #include <perf/cpumap.h>
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #endif
+ #include <perf/mmap.h>
+ #include "evlist.h"
+diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
+index e16257d5ab2c..85b7f188f729 100644
+--- a/tools/perf/util/scripting-engines/trace-event-perl.c
++++ b/tools/perf/util/scripting-engines/trace-event-perl.c
+@@ -27,7 +27,7 @@
+ #include <errno.h>
+ #include <linux/bitmap.h>
+ #include <linux/time64.h>
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ 
+ #include <stdbool.h>
+ /* perl needs the following define, right after including stdbool.h */
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index d7183134b669..0ed0c12cbacd 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -31,7 +31,7 @@
+ #include <linux/compiler.h>
+ #include <linux/time64.h>
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #endif
+ 
+ #include "../build-id.h"
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 013020f33ece..27b8ae43769f 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -35,7 +35,7 @@
+ #include <linux/string.h>
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #endif
+ 
+ regex_t		parent_regex;
+diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
+index f0332bd3a501..9bdad10d00d4 100644
+--- a/tools/perf/util/trace-event-parse.c
++++ b/tools/perf/util/trace-event-parse.c
+@@ -12,7 +12,7 @@
+ 
+ #include <linux/ctype.h>
+ #include <linux/kernel.h>
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ 
+ static int get_common_field(struct scripting_context *context,
+ 			    int *offset, int *size, const char *type)
+diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
+index 1162c49b8082..ecbbb93f0185 100644
+--- a/tools/perf/util/trace-event-read.c
++++ b/tools/perf/util/trace-event-read.c
+@@ -11,7 +11,7 @@
+ #include <sys/stat.h>
+ #include <sys/wait.h>
+ #include <sys/mman.h>
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <errno.h>
+diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
+index bd0000300c77..5596fcda2c10 100644
+--- a/tools/perf/util/trace-event-scripting.c
++++ b/tools/perf/util/trace-event-scripting.c
+@@ -10,7 +10,7 @@
+ #include <string.h>
+ #include <errno.h>
+ #ifdef HAVE_LIBTRACEEVENT
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #endif
+ 
+ #include "debug.h"
+diff --git a/tools/perf/util/trace-event.c b/tools/perf/util/trace-event.c
+index 8ad75b31e09b..6a8c66c64b70 100644
+--- a/tools/perf/util/trace-event.c
++++ b/tools/perf/util/trace-event.c
+@@ -8,7 +8,7 @@
+ #include <fcntl.h>
+ #include <linux/kernel.h>
+ #include <linux/err.h>
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ #include <api/fs/tracing_path.h>
+ #include <api/fs/fs.h>
+ #include "trace-event.h"
+diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
+index bbf8b26bc8da..c9fcd4d0b1fc 100644
+--- a/tools/perf/util/trace-event.h
++++ b/tools/perf/util/trace-event.h
+@@ -150,7 +150,7 @@ int common_lock_depth(struct scripting_context *context);
+ int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz);
+ 
+ #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+-#include <traceevent/event-parse.h>
++#include <event-parse.h>
+ 
+ static inline bool tep_field_is_relative(unsigned long flags)
+ {
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.24.0
+
