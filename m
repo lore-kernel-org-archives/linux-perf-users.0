@@ -1,45 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DF01DAC9C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17CB1DC075;
 	Tue,  5 Nov 2024 16:41:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730824901; cv=none; b=cmdM4/1Xl2dNzjL+0fhoHsX0tw/d3OhIHFyN60D4kxuxdOENVgL2CiFdxIrWkxwNlxD5gPvwPmbBO20U4cDmgUFAjOtKbkaNHlJXMGeTNYQMd5a1wxaNPnQLf41Vh+y2iDoxrSGPxJxhLpdcSPFOelGy/pPRLCL755obUWT7hn0=
+	t=1730824901; cv=none; b=jn39vqmjMw0yb74jIUEVjxNLUyICt69MHqHZJWYMAgDhI3K7xnr4o8ISgqGAvZ5GjHDKoCxkPR4MxqfqrKDqcjq+sbE8N3cCJFp+YWwPg5aSyAeyXr72z6hTMM/j+i4sj/JPYce4OSw9n6F1bKFwOAntWh7vz2F6YDJ6ezLpd/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730824901; c=relaxed/simple;
-	bh=huzjT5JLAbdXJL39b8UFkSas8RwAXCriFRg4uuS1oQY=;
+	bh=75ssd3UUB0N2VS8QeO6/PZRZc4Ti/4WoNRn31qFMKrU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=BRwnID9Pq9OjjByA0ru2h7Qzeh1ortMTBp8zyVjwiKkjkwfGj/71XJ2iKI+m1dB4vbzqKHIhftRrvMcRfW5f6xQgedzFOBRFWlKEpkOQsGoQQxReuUor0OZeNyaThkvg3+ITiWjx0ZfWE8Vt5h7hQcAZpRWdDRjVJMEeF8SMBAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVDlh7K2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Y12qyzfY7vlMh5ghx8nePWKB1KRK/9maQ+JxwPD8G//Awinc4OpNbfuzOLI9suDm6EVY7pV12TKnK+rNFKEcSexolP6nkUMNOb74EpdifLC4cuKBAAX9xK1k06JyRr2e+coQX0p1p9Y0FwWITemUy5WBxezTo6Av9NU9vKssSRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EUJNoeUp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EVDlh7K2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7BCDC4CED7;
-	Tue,  5 Nov 2024 16:41:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EUJNoeUp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 513D2C4CECF;
+	Tue,  5 Nov 2024 16:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1730824901;
-	bh=huzjT5JLAbdXJL39b8UFkSas8RwAXCriFRg4uuS1oQY=;
+	bh=75ssd3UUB0N2VS8QeO6/PZRZc4Ti/4WoNRn31qFMKrU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=EVDlh7K2Bb9mlboDjyCCsLgGjdwRi6DsRyZNEozHIir6PN90CwaERe9JEsDCFBoHZ
-	 84POk98VNrkRMxZvzVGao+DejphvhKT1bFodm/EQ+87fDpCBEuSYt1sjmpJerOAHoy
-	 mM3fuIp5D7mIlgnmL5MAGSZSIeuFfXI/Bq5rLqxJKF0Qy/yMLAUm5oVMoeRz7/QVPZ
-	 qGiMutcY4CrZyYlV2ISOnfihd6b6ko+l6t+1/SL2AHVeK8W4wwGoqB5hwSkskq2vio
-	 Cg382KwU3ybmWlJdfJDOYZLGgurETUAbHV4lUcd82DQDpr0DlbASmP7ekDsV3GUIqT
-	 /FfveTjlCEotA==
+	b=EUJNoeUpbrrLMVxUxzu3z5KZNG/TbnafSxnetU8wwdwMBZvHWXNeGyyDW2HyGl8tu
+	 s7j4WC0kYACX2n6ZwP/ffdEptwogmKUXgYrdwbBA0O3R9sRc+7PaAMpJMJQ88FMrzK
+	 p/CJux7VnSYLG0m+NziGX3NmOM9pl8s9rUQ0bKrBW3uNWJoMtnezJumYrGdhp8fVb0
+	 /l0yWggBuoepE1O/tJCLUzIu/KpmhgQg/4Im1RLO4+8R2ZGC6aEedNblXW0JhzmXjj
+	 Agnmsra+hdbIE+SUr/OCIiD+wzVRRAAcPD5cOp1xXf5Yqi9i1OpkJ8NiGXPHO/Y9Bh
+	 728rdVZz5FFDQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Charlie Jenkins <charlie@rivosinc.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20241104-shellcheck_gitignore-v1-1-ffc179f57dc9@rivosinc.com>
-References: <20241104-shellcheck_gitignore-v1-1-ffc179f57dc9@rivosinc.com>
-Subject: Re: [PATCH] perf: Add all shellcheck_log to gitignore
-Message-Id: <173082490077.149345.18139380841551734980.b4-ty@kernel.org>
-Date: Tue, 05 Nov 2024 08:41:40 -0800
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, 
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+ Howard Chu <howardchu95@gmail.com>, James Clark <james.clark@linaro.org>, 
+ Leo Yan <leo.yan@linux.dev>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+ Thomas Richter <tmricht@linux.ibm.com>, 
+ Veronika Molnarova <vmolnaro@redhat.com>, 
+ Weilin Wang <weilin.wang@intel.com>, Ze Gao <zegao2021@gmail.com>, 
+ zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+ linux-perf-users@vger.kernel.org
+In-Reply-To: <ZyjbksKYnV22zmz-@x1>
+References: <ZyjbksKYnV22zmz-@x1>
+Subject: Re: [PATCH 1/1] perf tests: Remove dangling CFLAGS for removed
+ attr.o object
+Message-Id: <173082490129.149345.12072597067529723354.b4-ty@kernel.org>
+Date: Tue, 05 Nov 2024 08:41:41 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,10 +54,10 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Mon, 04 Nov 2024 13:19:15 -0800, Charlie Jenkins wrote:
+On Mon, 04 Nov 2024 11:34:58 -0300, Arnaldo Carvalho de Melo wrote:
 
-> Instead of adding specific shellcheck_log files to the gitignore, add
-> all of them to prevent these files from cluttering the git status.
+> Since the C test wrapper for attr.py was removed we don't have an attr.o
+> object for that CFLAGS_attr.o to apply for, remove it.
 > 
 > 
 
