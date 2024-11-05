@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE6A1D9A42;
-	Tue,  5 Nov 2024 16:41:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88711D9A78
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Nov 2024 16:41:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730824900; cv=none; b=jaAhk/3UiT/JxDyyXfrzOtw8fsUfL7mbsHbrt93vJbkbE36Lh1T2DGcMqnfpP1jhIm9kVy//ogMzGFdSyDw3nmCc4Z1XX5EGrSfokeEglMJOA36HYcJFPF/s547fOYrebs3WZc+TWD1zkoYU/4b95DpK06kTz5ss2aTloV9X5vg=
+	t=1730824900; cv=none; b=TLbGciL0U2bGB/EBz4wW/Cq/rM235+HiTcCaEei8s1/9x6KkgtfVZnSUGqocItfHk3SkI8yM3OtGX4d/z4URjaqQjGogciYE/gzp9MIpNwzQlbMpE3SnNwTgD9vr94M6CL20wNPC78Fzre9vfikJCMR0Dx/vsNzHqQLGrEVDobQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730824900; c=relaxed/simple;
-	bh=ddhGO9cFAfhI9o6x1Mpa9cI2mzc8RX4F03f85iZjwyw=;
+	bh=zlm3wJUoZEwaVXwacSndXAgejscEE+PEvT8R/xiVrDU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Mm/HA8HAWn/7BZoHRUPQgfeuTEZgnfaNykcv0WKUcTv5MQYlEeVHevUW8EpxROLpZ0khizOE4WVxemrHFyPnieOXnF7R8sEO+sR9sM6Qkm5YhVI88gLfBs+oLi/jPcFXnchW99Vs+KlMqm74qoyA+wRgug18HxarJCYMxXdCINc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3O26zMQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=itD6Mwn+Nl5GdjBhkzf58hhSILmovvz+l7hTOS3Gw96i6UHi3EcP4eHXkV/HOUDYSbVtzgjTyJGefyjXvzlCYP3ZPy3Xzu96JO+ILTihKpNuAejKqnuwLDvmv82s949JnsbF5ImsR0uBKZKqB0shTk04zQdvPUlvurp341NelbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dLCto/tI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3O26zMQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D14B6C4CED3;
-	Tue,  5 Nov 2024 16:41:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dLCto/tI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48009C4CED2;
+	Tue,  5 Nov 2024 16:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1730824900;
-	bh=ddhGO9cFAfhI9o6x1Mpa9cI2mzc8RX4F03f85iZjwyw=;
+	bh=zlm3wJUoZEwaVXwacSndXAgejscEE+PEvT8R/xiVrDU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=B3O26zMQ+pAyjJdUE4zVO8DVZPhTxSCC3ii5cW9z/gwCG2eOwot9D7FghmkVoDRGf
-	 362Dn+vfxF5FrZdblTKfy8JeFRlwdvLn36fbBhncs5cap0bVO5dcQbIELkae4ExMCM
-	 J/ZmAWXNjNz1bfKIk4Q1H7wUFG3C86GHJj72kHgKoZv9W+Rk2NX0NkUuiFgnb4xr8J
-	 YqLn+xcJ0Z+FttdR+WphS5N/bX1CV32ecqV8kERK0QjICO9U6sXW1PPQEJKrhcg6/J
-	 NnWMwm5X9bhzN8Sss+qJKypSL7SKp+ah2iGCygeuckQWx/Eu4XZcQ893XyhOHBHgIE
-	 knp0OwLjstinQ==
+	b=dLCto/tInkZFmyUB0OTfSiZWEgOqxg57QbdcMvcvd5gViEJHsPSJkaozXMBEbFQ/T
+	 P5Y3I62SMdyGijH7Z6ebf1gO7SMtC6wGhvgkCn5jqpvGZStJvPBnRXTwnCp7EmaDZK
+	 WGWpS6hhjeqfqxq4hwyMJ91XBe48lVFz5XjE4kmIcBICvC1Ga1rmIT1o9mvoPgXtp/
+	 mpuAw+46HB2NTCbpqR3kNAMvdMsMq3akCrTBwYHfxWbKKI+Irug+Ow/1q8YK2RVekD
+	 vdreuhvp7hvtMqPR8TmLACCqYJthz6zipzgP29DgrtIzw2ZQwYEDGMp5uk8FziCSt4
+	 avQCUDNd1fKpg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: acme@kernel.org, linux-perf-users@vger.kernel.org, 
- Michael Petlan <mpetlan@redhat.com>
-Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org, 
- mingo@kernel.org, peterz@infradead.org, bpf@vger.kernel.org, 
- vmolnaro@redhat.com
-In-Reply-To: <20241101102812.576425-1-mpetlan@redhat.com>
-References: <20241101102812.576425-1-mpetlan@redhat.com>
-Subject: Re: [PATCH] perf test stat_bpf_counters_cgrp: Remove cpu-list BPF
- counter test
-Message-Id: <173082489981.149345.4034112511557410509.b4-ty@kernel.org>
-Date: Tue, 05 Nov 2024 08:41:39 -0800
+To: acme@kernel.org, peterz@infradead.org, mingo@redhat.com, 
+ linux-perf-users@vger.kernel.org, Yicong Yang <yangyicong@huawei.com>
+Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+ jolsa@kernel.org, irogers@google.com, leo.yan@arm.com, amadio@gentoo.org, 
+ linuxarm@huawei.com, yangyicong@hisilicon.com
+In-Reply-To: <20241024133236.31016-1-yangyicong@huawei.com>
+References: <20241024133236.31016-1-yangyicong@huawei.com>
+Subject: Re: [PATCH] perf build: Add missing cflags when building with
+ custom libtraceevent
+Message-Id: <173082490025.149345.6326847612586446439.b4-ty@kernel.org>
+Date: Tue, 05 Nov 2024 08:41:40 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,15 +48,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Fri, 01 Nov 2024 11:28:12 +0100, Michael Petlan wrote:
+On Thu, 24 Oct 2024 21:32:36 +0800, Yicong Yang wrote:
 
-> The cpu-list part of this testcase has proven itself to be unreliable.
-> Sometimes, we get "<not counted>" for system.slice when pinned to CPUs
-> 0 and 1. In such case, the test fails.
-> 
-> Since we cannot simply guarantee that any system.slice load will run
-> on any arbitrary list of CPUs, except the whole set of all CPUs, let's
-> rather remove the cpu-list subtest.
+> When building with custom libtraceevent, below errors occur:
+> $ make -C tools/perf NO_LIBPYTHON=1 PKG_CONFIG_PATH=<custom libtraceevent>
+> In file included from util/session.h:5,
+>                  from builtin-buildid-list.c:17:
+> util/trace-event.h:153:10: fatal error: traceevent/event-parse.h: No such file or directory
+>   153 | #include <traceevent/event-parse.h>
+>       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> <snip similar errors of missing headers>
 > 
 > [...]
 
