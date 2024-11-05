@@ -1,326 +1,363 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4F91E32D0
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Nov 2024 17:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B51188703;
+	Tue,  5 Nov 2024 17:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730828480; cv=none; b=nVOJsI1SjXaXjhzJ5zYOH/PTtVFEmW7bYAcfwomGY3yTLuUgc2sPqbpXDHgOoSZ3R6Eay/M+ilXAqnssMmpqZMvYubuTABN4ebtxZbpxpLrG5ktyEQyQcxk3Lq7PF8t4oFfTTeUyUX44o9i/VDlFd+mnrvCqjCA/dFAOj+MEbVk=
+	t=1730828716; cv=none; b=MA/VRXByp39r2PCGLv4NI+aiE5PopvSGQad6A3UYPmkZr1GIcnPQiOeb5BK8MLPuBGaqP1GQcEULXNdHMs0FNdkBO+3CdErUHak//mzpgv9crRDsN5PtDMmiIwlJpiLwzipJW48J+Y+Hh1oE0KzosGTx0bKkrq+kf9QI+IWKVwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730828480; c=relaxed/simple;
-	bh=qpTbufCwzH8I25DiwP2Bsp0OfQgYMi1mBz9M6K3WF48=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PbIkXxpOghgNL/qTK7rm50fFnTbBJzzYYfbZ+wMI+3DapODHb0M2Wk8ObsgVGsepI8mFV54RvTpRVfJ0AhTjH0PUQyp29qZTdFQqF5v/Qbk0iAXzdbNUMIbJYsIvu2NUZ6COXMV2zWvoNdf1zR2eaTsRVVw6SR4VJ8M3fq5cNkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xBQ7446r; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1730828716; c=relaxed/simple;
+	bh=NMylTTk75XNfB6KH+l+siRGLPjelpm/Cl8oMQn0fsiE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ixolFbkvGpvTjyTRnaQL41nmR5rjCFHFo7kCHvqbaZY2L6fzy9tAPN4Qun51wv0qd0/LvOQwx5wNpP4ca61cXzafZLmMoJgnAJmfKUaqSuDdqAYfTuQUO6C+X3FUvvgpvDTGGfPkWKH54eiJUaigEYnAi2gWBjI9YU0Qwo6sSWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ngI4+POv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xBQ7446r"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3a6c3bdbebcso300715ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Nov 2024 09:41:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730828478; x=1731433278; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n0lJpoKJj2EK5cJjiPDReD4fq+ImZCdH+adMojPVPqY=;
-        b=xBQ7446rbI86bCNa04PAmv52B6BATfE3kARAa4ctnj8VUO4K3nTGC8TkERRBnjYuSD
-         PdZ8n0LHuH7Zu0RIAxsrkNEx+sR9hAtL51ebwmZvOB3+LBS7qKiNEqhA8cduES/YCtv1
-         LVDcVQuTAnNXXZAK1jeQXAEV30si81bQ/xg87GkblmiJ5MEGEudgGOPBJUOmS062FoqR
-         ipkrrRRDS+ZQAnDxxHuvkeLl+bN1XSrJ2w44AimQcy3+uiUlRKZq++02AmsRuWh58067
-         UMquMEd1MxZ7EXVo3w4dsQn5dsk/D3CDmolAP6y1cYCcUjKjaTmp9lKvArHmVGA8xSod
-         2Jvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730828478; x=1731433278;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n0lJpoKJj2EK5cJjiPDReD4fq+ImZCdH+adMojPVPqY=;
-        b=Uq88WTscbrHv1eadJDyMRKD2uaBTp6eG/m67DvTGI3JUEiw8Ks8pRtvY+gYaAgprme
-         vp8fSgDDzJOcqHfDxwcpLW/Lg60jKakHddcUmeVPe+g6h4ceJb41TiDUg/GeUqdT8eIx
-         2ZEEo+eb1xyY3qdM/cJe/1sMnEEnEpdrhDW45BM8ZvaQKBGGcP7C4Yv/gwAGSQ6WRG0K
-         KKr7W+HPG2DAmYK2UkwLRgYqSLuz1+UDRc24ALyqzjq1sSik76JmqcaHs+x69WycRQuK
-         YVhQQotcLKUgSMy4fqtEy51a94a0u4iegHqVZKI6bed4dS6Pu6nuDWz8PvPN90YzXZEB
-         Cf8A==
-X-Forwarded-Encrypted: i=1; AJvYcCV1uJQhnAU6l8clzBKSXePRFVnrhRzaozEqlpbJACkTtuBwAtXRNhl4aeqHPIJDYI5fQ91VemMLVhknaYDGNYmZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNK40MN+8MwArFNJ0ABLeJ/JUQGRv+kRtOGccnCf6ZJxdWb4VV
-	z6gjm5vEmP9SfL44qbH5U+nKnFwNpyUqojLaMRimQLdnwCBQR0Te2A0vtVFAwNNCcOFb2fqN9yK
-	Yz3h1uL7GjWIxtv/vSEaTmGqZhRzqljaZEMCd
-X-Gm-Gg: ASbGncuzWb5BVnKHpBWWcHiKgrZta271TlHjASIhR9KXcDbjOyHMEpCyhIfAhN6yhM5
-	gPC728C/NC8+Hy3deGtDGXaV4pECcvpHe
-X-Google-Smtp-Source: AGHT+IGTvwqqYkeTtirjxSdFHrxdcw5lIc7C0xy3BIx18v0NkSra6VHHJ/ScxATVbz0L5aGGhIxNLX0/HPWm5ouD4D8=
-X-Received: by 2002:a05:6e02:12ca:b0:3a0:44d1:dca4 with SMTP id
- e9e14a558f8ab-3a6da95f94emr4550175ab.6.1730828476469; Tue, 05 Nov 2024
- 09:41:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ngI4+POv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B602C4CED3;
+	Tue,  5 Nov 2024 17:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730828715;
+	bh=NMylTTk75XNfB6KH+l+siRGLPjelpm/Cl8oMQn0fsiE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ngI4+POvWxcqfhaUkUhVZSwDo0Wdizgy51f7ucQsIeSnzeJKp3feYnLe+W+xkpO/q
+	 6Ns8LHhVv++sIU7kHqCuFMkka4nDk5yoFMVTpvhjG0ubGKfrg1rG32uw2Nf7zuyo5x
+	 lDvgi5nqlUgYbDLY8eED+pDkEFjn0P8b7KhCfE3PWLy3XI6R1TdtIQmbpkxmsR54Qi
+	 BipNJQH/4OtQp886y+9kJTiHlXvK+BsykoPicR2Gs9+rWrsUQFyMfBN0G48WL+bsMt
+	 sdz717FMpakeTrKBLiTgDP0w/GnCwpwr295jkoeUNJiLxU/FJsvhVVwNANbAkj5fOI
+	 BNzOPQkLp6cLw==
+Date: Tue, 5 Nov 2024 14:45:10 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+	James Clark <james.clark@linaro.org>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
+	Zixian Cai <fzczx123@gmail.com>, Andi Kleen <ak@linux.intel.com>,
+	Paran Lee <p4ranlee@gmail.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>
+Subject: Re: [PATCH v2 5/6] perf evsel: Allow evsel__newtp without
+ libtraceevent
+Message-ID: <ZypZpjh1bDDqpxn6@x1>
+References: <20241102165400.75785-1-irogers@google.com>
+ <20241102165400.75785-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241105172635.2463800-1-namhyung@kernel.org> <20241105172635.2463800-4-namhyung@kernel.org>
-In-Reply-To: <20241105172635.2463800-4-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 5 Nov 2024 09:41:05 -0800
-Message-ID: <CAP-5=fV3JAJD_beASNdP_Sxh=oAFv-yh_cqW=P=Bc9FabddUpQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4] perf lock contention: Resolve slab object name using BPF
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
-	Stephane Eranian <eranian@google.com>, Vlastimil Babka <vbabka@suse.cz>, Kees Cook <kees@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241102165400.75785-6-irogers@google.com>
 
-On Tue, Nov 5, 2024 at 9:26=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> The bpf_get_kmem_cache() kfunc can return an address of the slab cache
-> (kmem_cache).  As it has the name of the slab cache from the iterator,
-> we can use it to symbolize some dynamic kernel locks in a slab.
->
-> Before:
->   root@virtme-ng:/home/namhyung/project/linux# tools/perf/perf lock con -=
-abl sleep 1
->    contended   total wait     max wait     avg wait            address   =
-symbol
->
->            2      3.34 us      2.87 us      1.67 us   ffff9d7800ad9600   =
- (mutex)
->            2      2.16 us      1.93 us      1.08 us   ffff9d7804b992d8   =
- (mutex)
->            4      1.37 us       517 ns       343 ns   ffff9d78036e6e00   =
- (mutex)
->            1      1.27 us      1.27 us      1.27 us   ffff9d7804b99378   =
- (mutex)
->            2       845 ns       599 ns       422 ns   ffffffff9e1c3620   =
-delayed_uprobe_lock (mutex)
->            1       845 ns       845 ns       845 ns   ffffffff9da0b280   =
-jiffies_lock (spinlock)
->            2       377 ns       259 ns       188 ns   ffffffff9e1cf840   =
-pcpu_alloc_mutex (mutex)
->            1       305 ns       305 ns       305 ns   ffffffff9e1b4cf8   =
-tracepoint_srcu_srcu_usage (mutex)
->            1       295 ns       295 ns       295 ns   ffffffff9e1c0940   =
-pack_mutex (mutex)
->            1       232 ns       232 ns       232 ns   ffff9d7804b7d8d8   =
- (mutex)
->            1       180 ns       180 ns       180 ns   ffffffff9e1b4c28   =
-tracepoint_srcu_srcu_usage (mutex)
->            1       165 ns       165 ns       165 ns   ffffffff9da8b3a0   =
-text_mutex (mutex)
->
-> After:
->   root@virtme-ng:/home/namhyung/project/linux# tools/perf/perf lock con -=
-abl sleep 1
->    contended   total wait     max wait     avg wait            address   =
-symbol
->
->            2      1.95 us      1.77 us       975 ns   ffff9d5e852d3498   =
-&task_struct (mutex)
->            1      1.18 us      1.18 us      1.18 us   ffff9d5e852d3538   =
-&task_struct (mutex)
->            4      1.12 us       354 ns       279 ns   ffff9d5e841ca800   =
-&kmalloc-cg-512 (mutex)
->            2       859 ns       617 ns       429 ns   ffffffffa41c3620   =
-delayed_uprobe_lock (mutex)
->            3       691 ns       388 ns       230 ns   ffffffffa41c0940   =
-pack_mutex (mutex)
->            3       421 ns       164 ns       140 ns   ffffffffa3a8b3a0   =
-text_mutex (mutex)
->            1       409 ns       409 ns       409 ns   ffffffffa41b4cf8   =
-tracepoint_srcu_srcu_usage (mutex)
->            2       362 ns       239 ns       181 ns   ffffffffa41cf840   =
-pcpu_alloc_mutex (mutex)
->            1       220 ns       220 ns       220 ns   ffff9d5e82b534d8   =
-&signal_cache (mutex)
->            1       215 ns       215 ns       215 ns   ffffffffa41b4c28   =
-tracepoint_srcu_srcu_usage (mutex)
->
-> Note that the name starts with '&' sign for slab objects to inform they
-> are dynamic locks.  It won't give the accurate lock or type names but
-> it's still useful.  We may add type info to the slab cache later to get
-> the exact name of the lock in the type later.
+On Sat, Nov 02, 2024 at 09:53:59AM -0700, Ian Rogers wrote:
+> Switch from reading the tracepoint format to reading the id directly
+> for the evsel config. This avoids the need to initialize
+> libtraceevent, plugins, etc. It is sufficient for many tracepoint
+> commands to work like:
+> $ perf stat -e sched:sched_switch true
 
-Many variables may reference a lock through a pointer, should the name
-not be associated with the lock or from decoding the task_struct?
-The '&' looks redundant as the addresses are clearly different.
-How are >1 lock/mutex in the same struct handled?
+root@x1:~# perf check feature libtraceevent
+         libtraceevent: [ OFF ]  # HAVE_LIBTRACEEVENT
+root@x1:~# perf stat -e sched:sched_switch -I 1000
+#           time             counts unit events
+     1.001071607              4,631      sched:sched_switch                                                    
+     2.004003548              5,138      sched:sched_switch                                                    
+     3.006847313              4,967      sched:sched_switch                                                    
+^C     3.944095456              5,553      sched:sched_switch                                                    
 
-Thanks,
-Ian
+root@x1:~#
 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Works:
+
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+ 
+> To populate evsel->tp_format, do lazy initialization using
+> libtraceevent in the evsel__tp_format function (the sys and name are
+> saved in evsel__newtp_idx for this purpose). Reading the id should be
+> indicative of the format failing to load, but if not an error is
+> reported in evsel__tp_format. This could happen for a tracepoint with
+> a format that fails to parse.
+> 
+> As tracepoints can be parsed without libtraceevent with this, remove
+> the associated #ifdefs in parse-events.c.
+> 
+> By only lazily parsing the tracepoint format information it is hoped
+> this will help improve the performance of code using tracepoints but
+> not the format information. It also cuts down on the build and ifdef
+> logic.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/bpf_lock_contention.c         | 52 +++++++++++++++++++
->  .../perf/util/bpf_skel/lock_contention.bpf.c  | 21 +++++++-
->  2 files changed, 71 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_=
-lock_contention.c
-> index a2efd40897bad316..50c3039c647d4d77 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
-> @@ -2,6 +2,7 @@
->  #include "util/cgroup.h"
->  #include "util/debug.h"
->  #include "util/evlist.h"
-> +#include "util/hashmap.h"
->  #include "util/machine.h"
->  #include "util/map.h"
->  #include "util/symbol.h"
-> @@ -20,12 +21,25 @@
->
->  static struct lock_contention_bpf *skel;
->  static bool has_slab_iter;
-> +static struct hashmap slab_hash;
-> +
-> +static size_t slab_cache_hash(long key, void *ctx __maybe_unused)
-> +{
-> +       return key;
-> +}
-> +
-> +static bool slab_cache_equal(long key1, long key2, void *ctx __maybe_unu=
-sed)
-> +{
-> +       return key1 =3D=3D key2;
-> +}
->
->  static void check_slab_cache_iter(struct lock_contention *con)
->  {
->         struct btf *btf =3D btf__load_vmlinux_btf();
->         s32 ret;
->
-> +       hashmap__init(&slab_hash, slab_cache_hash, slab_cache_equal, /*ct=
-x=3D*/NULL);
-> +
->         ret =3D libbpf_get_error(btf);
->         if (ret) {
->                 pr_debug("BTF loading failed: %d\n", ret);
-> @@ -50,6 +64,7 @@ static void run_slab_cache_iter(void)
->  {
->         int fd;
->         char buf[256];
-> +       long key, *prev_key;
->
->         if (!has_slab_iter)
->                 return;
-> @@ -65,6 +80,34 @@ static void run_slab_cache_iter(void)
->                 continue;
->
->         close(fd);
-> +
-> +       /* Read the slab cache map and build a hash with IDs */
-> +       fd =3D bpf_map__fd(skel->maps.slab_caches);
-> +       prev_key =3D NULL;
-> +       while (!bpf_map_get_next_key(fd, prev_key, &key)) {
-> +               struct slab_cache_data *data;
-> +
-> +               data =3D malloc(sizeof(*data));
-> +               if (data =3D=3D NULL)
-> +                       break;
-> +
-> +               if (bpf_map_lookup_elem(fd, &key, data) < 0)
-> +                       break;
-> +
-> +               hashmap__add(&slab_hash, data->id, data);
-> +               prev_key =3D &key;
-> +       }
-> +}
-> +
-> +static void exit_slab_cache_iter(void)
-> +{
-> +       struct hashmap_entry *cur;
-> +       unsigned bkt;
-> +
-> +       hashmap__for_each_entry(&slab_hash, cur, bkt)
-> +               free(cur->pvalue);
-> +
-> +       hashmap__clear(&slab_hash);
+>  tools/perf/util/evsel.c        | 103 ++++++++++++++++++++++++---------
+>  tools/perf/util/evsel.h        |  14 ++---
+>  tools/perf/util/parse-events.c |  16 +----
+>  3 files changed, 82 insertions(+), 51 deletions(-)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index a95db7e900d5..56e19e32a852 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -543,54 +543,101 @@ struct evsel *evsel__clone(struct evsel *orig)
+>  	return NULL;
 >  }
->
->  int lock_contention_prepare(struct lock_contention *con)
-> @@ -398,6 +441,7 @@ static const char *lock_contention_get_name(struct lo=
-ck_contention *con,
->
->         if (con->aggr_mode =3D=3D LOCK_AGGR_ADDR) {
->                 int lock_fd =3D bpf_map__fd(skel->maps.lock_syms);
-> +               struct slab_cache_data *slab_data;
->
->                 /* per-process locks set upper bits of the flags */
->                 if (flags & LCD_F_MMAP_LOCK)
-> @@ -416,6 +460,12 @@ static const char *lock_contention_get_name(struct l=
-ock_contention *con,
->                                 return "rq_lock";
->                 }
->
-> +               /* look slab_hash for dynamic locks in a slab object */
-> +               if (hashmap__find(&slab_hash, flags & LCB_F_SLAB_ID_MASK,=
- &slab_data)) {
-> +                       snprintf(name_buf, sizeof(name_buf), "&%s", slab_=
-data->name);
-> +                       return name_buf;
-> +               }
+>  
+> +static int trace_event__id(const char *sys, const char *name)
+> +{
+> +	char *tp_dir = get_events_file(sys);
+> +	char path[PATH_MAX];
+> +	int id, err;
 > +
->                 return "";
->         }
->
-> @@ -590,5 +640,7 @@ int lock_contention_finish(struct lock_contention *co=
-n)
->                 cgroup__put(cgrp);
->         }
->
-> +       exit_slab_cache_iter();
+> +	if (!tp_dir)
+> +		return -1;
 > +
->         return 0;
+> +	scnprintf(path, PATH_MAX, "%s/%s/id", tp_dir, name);
+> +	put_events_file(tp_dir);
+> +	err = filename__read_int(path, &id);
+> +	if (err)
+> +		return err;
+> +
+> +	return id;
+> +}
+> +
+>  /*
+>   * Returns pointer with encoded error via <linux/err.h> interface.
+>   */
+> -#ifdef HAVE_LIBTRACEEVENT
+>  struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format)
+>  {
+> +	struct perf_event_attr attr = {
+> +		.type	       = PERF_TYPE_TRACEPOINT,
+> +		.sample_type   = (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME |
+> +				PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD),
+> +	};
+>  	struct evsel *evsel = zalloc(perf_evsel__object.size);
+> -	int err = -ENOMEM;
+> +	int err = -ENOMEM, id = -1;
+>  
+> -	if (evsel == NULL) {
+> +	if (evsel == NULL)
+>  		goto out_err;
+> -	} else {
+> -		struct perf_event_attr attr = {
+> -			.type	       = PERF_TYPE_TRACEPOINT,
+> -			.sample_type   = (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME |
+> -					  PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD),
+> -		};
+>  
+> -		if (asprintf(&evsel->name, "%s:%s", sys, name) < 0)
+> -			goto out_free;
+>  
+> -		event_attr_init(&attr);
+> +	if (asprintf(&evsel->name, "%s:%s", sys, name) < 0)
+> +		goto out_free;
+>  
+> -		if (format) {
+> -			evsel->tp_format = trace_event__tp_format(sys, name);
+> -			if (IS_ERR(evsel->tp_format)) {
+> -				err = PTR_ERR(evsel->tp_format);
+> -				evsel->tp_format = NULL;
+> -				goto out_free;
+> -			}
+> -			attr.config = evsel->tp_format->id;
+> -		} else {
+> -			attr.config = (__u64) -1;
+> -		}
+> +#ifdef HAVE_LIBTRACEEVENT
+> +	evsel->tp_sys = strdup(sys);
+> +	if (!evsel->tp_sys)
+> +		goto out_free;
+>  
+> +	evsel->tp_name = strdup(name);
+> +	if (!evsel->tp_name)
+> +		goto out_free;
+> +#endif
+>  
+> -		attr.sample_period = 1;
+> -		evsel__init(evsel, &attr, idx);
+> -	}
+> +	event_attr_init(&attr);
+>  
+> +	if (format) {
+> +		id = trace_event__id(sys, name);
+> +		if (id < 0) {
+> +			err = id;
+> +			goto out_free;
+> +		}
+> +	}
+> +	attr.config = (__u64)id;
+> +	attr.sample_period = 1;
+> +	evsel__init(evsel, &attr, idx);
+>  	return evsel;
+>  
+>  out_free:
+>  	zfree(&evsel->name);
+> +#ifdef HAVE_LIBTRACEEVENT
+> +	zfree(&evsel->tp_sys);
+> +	zfree(&evsel->tp_name);
+> +#endif
+>  	free(evsel);
+>  out_err:
+>  	return ERR_PTR(err);
 >  }
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/=
-util/bpf_skel/lock_contention.bpf.c
-> index fd24ccb00faec0ba..b5bc37955560a58e 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -123,6 +123,8 @@ struct mm_struct___new {
->         struct rw_semaphore mmap_lock;
->  } __attribute__((preserve_access_index));
->
-> +extern struct kmem_cache *bpf_get_kmem_cache(u64 addr) __ksym __weak;
 > +
->  /* control flags */
->  const volatile int has_cpu;
->  const volatile int has_task;
-> @@ -496,8 +498,23 @@ int contention_end(u64 *ctx)
->                 };
->                 int err;
->
-> -               if (aggr_mode =3D=3D LOCK_AGGR_ADDR)
-> -                       first.flags |=3D check_lock_type(pelem->lock, pel=
-em->flags);
-> +               if (aggr_mode =3D=3D LOCK_AGGR_ADDR) {
-> +                       first.flags |=3D check_lock_type(pelem->lock,
-> +                                                      pelem->flags & LCB=
-_F_TYPE_MASK);
+> +#ifdef HAVE_LIBTRACEEVENT
+> +struct tep_event *evsel__tp_format(struct evsel *evsel)
+> +{
+> +	struct tep_event *tp_format = evsel->tp_format;
 > +
-> +                       /* Check if it's from a slab object */
-> +                       if (bpf_get_kmem_cache) {
-> +                               struct kmem_cache *s;
-> +                               struct slab_cache_data *d;
+> +	if (tp_format)
+> +		return tp_format;
 > +
-> +                               s =3D bpf_get_kmem_cache(pelem->lock);
-> +                               if (s !=3D NULL) {
-> +                                       d =3D bpf_map_lookup_elem(&slab_c=
-aches, &s);
-> +                                       if (d !=3D NULL)
-> +                                               first.flags |=3D d->id;
-> +                               }
-> +                       }
-> +               }
->
->                 err =3D bpf_map_update_elem(&lock_stat, &key, &first, BPF=
-_NOEXIST);
->                 if (err < 0) {
-> --
+> +	if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
+> +		return NULL;
+> +
+> +	tp_format = trace_event__tp_format(evsel->tp_sys, evsel->tp_name);
+> +	if (IS_ERR(tp_format)) {
+> +		int err = -PTR_ERR(evsel->tp_format);
+> +
+> +		pr_err("Error getting tracepoint format '%s' '%s'(%d)\n",
+> +			evsel__name(evsel), strerror(err), err);
+> +		return NULL;
+> +	}
+> +	evsel->tp_format = tp_format;
+> +	return evsel->tp_format;
+> +}
+>  #endif
+>  
+>  const char *const evsel__hw_names[PERF_COUNT_HW_MAX] = {
+> @@ -1587,6 +1634,10 @@ void evsel__exit(struct evsel *evsel)
+>  	perf_thread_map__put(evsel->core.threads);
+>  	zfree(&evsel->group_name);
+>  	zfree(&evsel->name);
+> +#ifdef HAVE_LIBTRACEEVENT
+> +	zfree(&evsel->tp_sys);
+> +	zfree(&evsel->tp_name);
+> +#endif
+>  	zfree(&evsel->filter);
+>  	zfree(&evsel->group_pmu_name);
+>  	zfree(&evsel->unit);
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index c3e53d320bf5..93b6244ec302 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -59,6 +59,8 @@ struct evsel {
+>  		char			*group_name;
+>  		const char		*group_pmu_name;
+>  #ifdef HAVE_LIBTRACEEVENT
+> +		char			*tp_sys;
+> +		char			*tp_name;
+>  		struct tep_event	*tp_format;
+>  #endif
+>  		char			*filter;
+> @@ -247,25 +249,17 @@ int copy_config_terms(struct list_head *dst, struct list_head *src);
+>  void free_config_terms(struct list_head *config_terms);
+>  
+>  
+> -#ifdef HAVE_LIBTRACEEVENT
+> -struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format);
+> -
+>  /*
+>   * Returns pointer with encoded error via <linux/err.h> interface.
+>   */
+> +struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format);
+>  static inline struct evsel *evsel__newtp(const char *sys, const char *name)
+>  {
+>  	return evsel__newtp_idx(sys, name, 0, true);
+>  }
+>  
+> -static inline struct tep_event *evsel__tp_format(struct evsel *evsel)
+> -{
+> -	return evsel->tp_format;
+> -}
+> -#endif
+> -
+>  #ifdef HAVE_LIBTRACEEVENT
+> -struct tep_event *event_format__new(const char *sys, const char *name);
+> +struct tep_event *evsel__tp_format(struct evsel *evsel);
+>  #endif
+>  
+>  void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index afeb8d815bbf..7fc1c36ef2a4 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -489,7 +489,6 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
+>  	return found_supported ? 0 : -EINVAL;
+>  }
+>  
+> -#ifdef HAVE_LIBTRACEEVENT
+>  static void tracepoint_error(struct parse_events_error *e, int err,
+>  			     const char *sys, const char *name, int column)
+>  {
+> @@ -644,7 +643,6 @@ static int add_tracepoint_multi_sys(struct parse_events_state *parse_state,
+>  	closedir(events_dir);
+>  	return ret;
+>  }
+> -#endif /* HAVE_LIBTRACEEVENT */
+>  
+>  size_t default_breakpoint_len(void)
+>  {
+> @@ -1066,7 +1064,6 @@ static int config_term_pmu(struct perf_event_attr *attr,
+>  	return config_term_common(attr, term, err);
+>  }
+>  
+> -#ifdef HAVE_LIBTRACEEVENT
+>  static int config_term_tracepoint(struct perf_event_attr *attr,
+>  				  struct parse_events_term *term,
+>  				  struct parse_events_error *err)
+> @@ -1111,7 +1108,6 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
+>  
+>  	return 0;
+>  }
+> -#endif
+>  
+>  static int config_attr(struct perf_event_attr *attr,
+>  		       const struct parse_events_terms *head,
+> @@ -1303,7 +1299,7 @@ int parse_events_add_tracepoint(struct parse_events_state *parse_state,
+>  				struct parse_events_terms *head_config, void *loc_)
+>  {
+>  	YYLTYPE *loc = loc_;
+> -#ifdef HAVE_LIBTRACEEVENT
+> +
+>  	if (head_config) {
+>  		struct perf_event_attr attr;
+>  
+> @@ -1318,16 +1314,6 @@ int parse_events_add_tracepoint(struct parse_events_state *parse_state,
+>  	else
+>  		return add_tracepoint_event(parse_state, list, sys, event,
+>  					    err, head_config, loc);
+> -#else
+> -	(void)parse_state;
+> -	(void)list;
+> -	(void)sys;
+> -	(void)event;
+> -	(void)head_config;
+> -	parse_events_error__handle(err, loc->first_column, strdup("unsupported tracepoint"),
+> -				strdup("libtraceevent is necessary for tracepoint support"));
+> -	return -1;
+> -#endif
+>  }
+>  
+>  static int __parse_events_add_numeric(struct parse_events_state *parse_state,
+> -- 
 > 2.47.0.199.ga7371fff76-goog
->
+> 
