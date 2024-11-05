@@ -1,50 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EE3383
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Nov 2024 06:08:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66252383;
+	Tue,  5 Nov 2024 06:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730786896; cv=none; b=YUZVPFXNjVb6UNdCawb2dRHPbxsIM+vyOcddmW267RDhgBj6fJl/HJE5q5+XxYmOehVxj6prUOyW8BimpA4eG4yWCR2SoHExqg23B8J1DR0unszduMrh+nV6itPyVCBUNFtBPZAjzDRpQrnBTE1LR/gpYYOZVyWDHP/FhPrVyPM=
+	t=1730787281; cv=none; b=mE/Pwt1SZIbWWs70PE1ZTmMaXP+lVJeYhHi292t6QlGj4IVgG582EgP/5Ib25cZj+lf5yNn2HFf99ShhDaIbBCWJb1ysbjJubitSQ1vAcxDpzJYMBoGnK1YKpt+G0kTjwNcnmxweRJbU0YBDdo66SqEB0Iqx/0s4vYpM12sKYYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730786896; c=relaxed/simple;
-	bh=oArN6ZU24DqOFDhHdvQ1R8DCbNQDAGbXJaXisbblSgQ=;
+	s=arc-20240116; t=1730787281; c=relaxed/simple;
+	bh=agzzbpp7l8r9gGcWt4SGJOxi/C1Sf+mXADljyim46VQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IM4bT21mha1PEXkOti2ZPr7RZpFm8rv2rgKWI9egjsLYxC/PSPJbBxDFLsjBxiKa0jKSfgxSsS4RS8Eq31wAFnOZgbg59xSe+wg6szaKmglJa6xHX42kRf7ijsowY1duIaqWQwUsZjHruFheJf/CD80N8utpPJsNmxo2HCzeRKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9FH3/1r; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z0yy1ZoZQKoBVAMt4bR2x8hTMhUawsyO76MonlBXuHcgl1kwi3xZtR5/AXyE0INcEU90/x9c0n4PRou4UYBaT17aqDQJmD5Ni6t+0enKScjv0+Gp1U82P4Ayf9vOC5A+S4iNRQxwXg5BX6w/mHcP6XH7f8u07Jr/rNdIQhi8cLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKJlsJok; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9FH3/1r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB497C4CECF;
-	Tue,  5 Nov 2024 06:08:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKJlsJok"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B85CC4CECF;
+	Tue,  5 Nov 2024 06:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730786894;
-	bh=oArN6ZU24DqOFDhHdvQ1R8DCbNQDAGbXJaXisbblSgQ=;
+	s=k20201202; t=1730787280;
+	bh=agzzbpp7l8r9gGcWt4SGJOxi/C1Sf+mXADljyim46VQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J9FH3/1r3YViZC8eqy/Og0melq/IP6sHL+n6OCpsnnHB7kanq/ipFEaxTct9UNcjP
-	 ztxMFG+50T0WcozaLsZzWK6g714el5/EaqQgsM62bNtpcEQYjWP0c+JuyZvDBbd3GJ
-	 0r2+e9IcgwHElJ5W9ywI6sV2O44Yn/1LOzMLfsfpVaAvIzfVSnOLNz8OqfWre9QNu0
-	 1v+qyCUbuwupoTx/Bof8UwoM4Ss23UA5usEAJ/QuFZrwXhHH6naJjRy3UuQVqwXU31
-	 b2GozJ5o+xbOTXFt81VBJ71sssii8cTAz5TC54NY1PePURpPjXUdExDjU8WFaoKj3S
-	 sIgqjTYfOZIuA==
-Date: Mon, 4 Nov 2024 22:08:11 -0800
+	b=eKJlsJokCI5+XRBJmK2E4ik4ypZ52jwZWoVjsftqMn4OMgBFqZAw7w08YWhJNHBiP
+	 xGzRnyKKnScXTJYX+gNUa953mywFaFERWfumWdhgGYOm9vuAcSvC9RGGpFSEWOEI+K
+	 EZaqho7oz7/kWN9kxjGrKv+Iq0qBxoBjZRkMtaSAfPDO1xo6u0YERC+H5ugxbWpqTC
+	 CqqSx/Tzg/Wgv5epAl0yYm98G/Gy27IohxdxIuMjvADfzJPftWpyGyHA8GSsjfiwa/
+	 MpVL5Nt5WzeUJq9QbN4R+1ukrdyANhkMI4QYeN16Wuf8AaQEpaR9INzGSxD6FE4jNT
+	 7SO1/r51m7QcQ==
+Date: Mon, 4 Nov 2024 22:14:36 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Yicong Yang <yangyicong@huawei.com>
-Cc: yangyicong@hisilicon.com, acme@kernel.org, peterz@infradead.org,
-	mingo@redhat.com, linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, linuxarm@huawei.com,
-	Guilherme Amadio <amadio@gentoo.org>, Leo Yan <leo.yan@arm.com>
-Subject: Re: [PATCH] perf build: Add missing cflags when building with custom
- libtraceevent
-Message-ID: <Zym2S-7rdqlfMaUK@google.com>
-References: <20241024133236.31016-1-yangyicong@huawei.com>
- <ZyF5_Hf1iL01kldE@google.com>
- <a8143fa2-d7e2-48d7-5c9b-2c00e2adbe9c@huawei.com>
- <20241030110458.GD24446@e132581.arm.com>
- <ZyXFX-8SnakeuZrl@google.com>
- <20241104104741.GA14610@e132581.arm.com>
- <ZyjDatxYxoIg0R5J@gentoo.org>
- <260274f8-3188-cc77-4783-ee04d98eeb44@huawei.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v5 06/21] perf script: Move find_scripts to
+ browser/scripts.c
+Message-ID: <Zym3zLDMY2eBuXg5@google.com>
+References: <Zykk2MJ4REGCaqVw@google.com>
+ <CAP-5=fXQpej43wxEtMYFbxdofHtUi98X68W4AaR9UCfsbDir5A@mail.gmail.com>
+ <ZykxD41c6gWQoIrQ@x1>
+ <CAP-5=fWf8guTgqwfrrct3AGYDC=Lb1Oxo7kXU_x1yEr5urFSkQ@mail.gmail.com>
+ <Zyk19KgzI7ybPkQ4@google.com>
+ <CAP-5=fXj1-wqt+Bs-0ZypRsaZw2VP0qyKdeeRHpjUD5BwO9OBg@mail.gmail.com>
+ <ZylGJF7Ux3JdJllo@google.com>
+ <CAP-5=fUz_LSJ4v4aaAWoLMQRXAtsqeQSjcyRun2kBVXUHTzvUA@mail.gmail.com>
+ <ZylXI4zj7Hs8Uvov@google.com>
+ <CAP-5=fVK96t3-TKwqRQ1bfH2sOJHLhtVvDdJQ9U539Z1rd3kfg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,57 +70,68 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <260274f8-3188-cc77-4783-ee04d98eeb44@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVK96t3-TKwqRQ1bfH2sOJHLhtVvDdJQ9U539Z1rd3kfg@mail.gmail.com>
 
-On Tue, Nov 05, 2024 at 10:06:34AM +0800, Yicong Yang wrote:
-> On 2024/11/4 20:51, Guilherme Amadio wrote:
-> > Hi Namhyung,
-> > 
-> > On Mon, Nov 04, 2024 at 10:47:41AM +0000, Leo Yan wrote:
-> >> On Fri, Nov 01, 2024 at 11:23:27PM -0700, Namhyung Kim wrote:
-> >>
-> >> [...]
-> >>
-> >>>>> Checked how we handle with libtracefs currently:
-> >>>>>  ifeq ($(feature-libtracefs), 1)
-> >>>>>     CFLAGS +=  $(shell $(PKG_CONFIG) --cflags libtracefs) # we've added the cflags from pkg-config
-> >>>>>     LDFLAGS += $(shell $(PKG_CONFIG) --libs-only-L libtracefs)
-> >>>>
-> >>>> The libtracefs.pc file claims requesting libtraceevent, as a result, it
-> >>>> returns the header paths for both libtraceevent and libtracefs:
-> >>>>
-> >>>>   $ pkg-config --cflags libtracefs
-> >>>>   -I/usr/local/include/tracefs -I/usr/local/include/traceevent
-> >>>>
-> >>>> I checked the packages libtraceevent-dev and libtracefs-dev and either
-> >>>> can be installed independently. Therefore, it seems to me that this
-> >>>> patch is correct for finding the traceevent header path, with no
-> >>>> dependency on tracefs.
-> >>>
-> >>> I'm ok with the patch itself.  Can I get your Acked-by, Leo?
-> >>
-> >> Yes.
-> >>
-> >> Reviewed-by: Leo Yan <leo.yan@arm.com>
-> > 
-> > I agree that this was a mistake I made in my patch. I added the cflags
-> > to the feature check in tools/build/Makefile.feature, but in Makefile.config
-> > I added it only for libtracefs and missed it for libtraceevent. The fixes tag
-> > is correct. This patch fixes my mistake.
-> > 
-> > Reviewed-by: Guilherme Amadio <amadio@gentoo.org>
-> > 
+On Mon, Nov 04, 2024 at 03:28:15PM -0800, Ian Rogers wrote:
+> On Mon, Nov 4, 2024 at 3:22 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Mon, Nov 04, 2024 at 02:20:30PM -0800, Ian Rogers wrote:
+> > > On Mon, Nov 4, 2024 at 2:09 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > On Mon, Nov 04, 2024 at 01:06:35PM -0800, Ian Rogers wrote:
+> > > > > On Mon, Nov 4, 2024 at 1:00 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > >
+> > > > > > On Mon, Nov 04, 2024 at 12:48:01PM -0800, Ian Rogers wrote:
+> > > > > > > Namhyung was asking that the c&p of code be 1 patch then "add new
+> > > > > > > changes like using openat() on top". That is:
+> > > > > > >
+> > > > > > > patch 1: add is_directory_at - introduce the 2 line helper function
+> > > > > > > patch 2: move the code
+> > > > > > > patch 3: update the code to use is_directory_at
+> > > > > > >
+> > > > > > > patch 2 is known broken as patch 3 is fixing it.
+> > > > > > >
+> > > > > > > Hopefully this is clear.
+> > > > > >
+> > > > > > Actually I don't care about the patch ordering.  My request is not
+> > > > > > to break build and just to separate different changes out. :)
+> > > > >
+> > > > > So, patch 2 can't be separated from patch 3 - are we agreed? So we
+> > > > > squash patch 2 with patch 3. Patch 1 is trivial and fails to meet the
+> > > > > bar of a meaningful change, so we squash that. We end up with this
+> > > > > patch. If there's a later revert and a dependence of the 2 liner, just
+> > > > > don't revert that part of the change. We've never had such a revert so
+> > > > > it is hard to see why we need to generate so much churn because of it.
+> > > >
+> > > > As I said the patch 1 should be the c&p and no need to introduce
+> > > > is_directory_at() before that.  Why not doing
+> > > >
+> > > >  patch1: move the code
+> > > >  patch2: add and use is_directory_at() + openat()
+> > > >
+> > > > ?
+> > >
+> > > Because placing all the code in 1 file expands GCC's analysis and the
+> > > build fails. In the commit message I describe this:
+> > > "The arrays are warned about potential buffer overflows by GCC now
+> > > that all the code exists in a single C file."
+> > > A standard unsound workaround to this is to change "sizeof(...)" to
+> > > "sizeof(...) - 1", as it is ugly I added is_directory_at to not suffer
+> > > the problem as the arrays are gone.
+> >
+> > Ok, it's strange that this type of analysis depends on the placement.
+> > Anyway it seems there's a problem in the code already.  Then we can fix
+> > it first and then move.  How about this?
+> >
+> >  patch1: add and use is_directory_at() + openat()
+> >  patch2: move the code
 > 
-> Thanks for the review by Leo and Guilherme!
-> 
-> Hi Namhyung,
-> 
-> As you noticed we should use the include path from pkg-config [1]. Would you like
-> to post a patch yourself or want me to post this as well? It's correct and we also
-> need this. (I didn't found this may because I changed my custom libtraceevent.pc when
-> debugging and currently approach is ok if libtraceevent's installed system wide).
+> I'm happy if the maintainers do that.
 
-Please do that as a follow-up.
+It's probably not gonna happen anytime soon and I'd be happy if you
+could do that.
 
 Thanks,
 Namhyung
+
