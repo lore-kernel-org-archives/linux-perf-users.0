@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AF5166F1A;
-	Tue,  5 Nov 2024 16:41:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE6A1D9A42;
+	Tue,  5 Nov 2024 16:41:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730824900; cv=none; b=X2MEK8qw7S7GUDf2vDjJtnO8VvonWV1KdJniLeVGeq/kFzAVwXRFOMxr89Oaw7qgiL1ks83Y7XSA4vOlQFhteuuAgh36ofvsLXrN7UgtxCfftd9iBTIcLDLMhFNfTRadWS/JZVakjkk7B0X5/uIbr+pSYrebz4xAdELuuiUpw1M=
+	t=1730824900; cv=none; b=jaAhk/3UiT/JxDyyXfrzOtw8fsUfL7mbsHbrt93vJbkbE36Lh1T2DGcMqnfpP1jhIm9kVy//ogMzGFdSyDw3nmCc4Z1XX5EGrSfokeEglMJOA36HYcJFPF/s547fOYrebs3WZc+TWD1zkoYU/4b95DpK06kTz5ss2aTloV9X5vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730824900; c=relaxed/simple;
-	bh=i1MV6yXqnpQf1LWUHeE9WK3SA3UiEMTLBIekvA0MA0Q=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=TsOAiffRlaL0TyWytZ3cJzbttQStazgg6/ypl5FlkOX9DQ2Ec/INFQLvKRsOaUSY5uOYHfklkZLxuMQTTRsDut7qaxa9K3CP+NkmJbifnBmdDifNCXFe3VAvsDRk5clhFjSs6k0Mb8ESNOYr6P8PErjKYgOntNtzaFxOJ9yBOHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LC601RKq; arc=none smtp.client-ip=10.30.226.201
+	bh=ddhGO9cFAfhI9o6x1Mpa9cI2mzc8RX4F03f85iZjwyw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Mm/HA8HAWn/7BZoHRUPQgfeuTEZgnfaNykcv0WKUcTv5MQYlEeVHevUW8EpxROLpZ0khizOE4WVxemrHFyPnieOXnF7R8sEO+sR9sM6Qkm5YhVI88gLfBs+oLi/jPcFXnchW99Vs+KlMqm74qoyA+wRgug18HxarJCYMxXdCINc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3O26zMQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LC601RKq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A39EC4CECF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3O26zMQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D14B6C4CED3;
 	Tue,  5 Nov 2024 16:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730824899;
-	bh=i1MV6yXqnpQf1LWUHeE9WK3SA3UiEMTLBIekvA0MA0Q=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=LC601RKqeOnG5Ok6rV1hZmsYdFGBUu41Jd2c1bZ18S9mWhzl/X+YkUWri5e4x25+n
-	 LlXSiW5i+3ERFSwNE/DmtmLA0KQYSuPCBUMzMZfh4kWhpepOxPG8FdwHKIPNM+F/aM
-	 bTrpC6YIgGLcC/5xNvgZOi/LJAXdPFvTAwtwNWZiFBI9cKyYfzZx3PsbjYrppwQL5l
-	 ipFhiAHXDyBTsHJtH/6kJVM0BZ2JogqTclygltzCY4h+dcRgNvoc12Y0gu5h+MRpgB
-	 Bby6Vya2PW9DNoMnbaHlHFzeiWw0xddEsUPkilY0HvHdbfbu2h2Dl8ehpbJ180wjqX
-	 vLc4/xP8s5JTQ==
+	s=k20201202; t=1730824900;
+	bh=ddhGO9cFAfhI9o6x1Mpa9cI2mzc8RX4F03f85iZjwyw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=B3O26zMQ+pAyjJdUE4zVO8DVZPhTxSCC3ii5cW9z/gwCG2eOwot9D7FghmkVoDRGf
+	 362Dn+vfxF5FrZdblTKfy8JeFRlwdvLn36fbBhncs5cap0bVO5dcQbIELkae4ExMCM
+	 J/ZmAWXNjNz1bfKIk4Q1H7wUFG3C86GHJj72kHgKoZv9W+Rk2NX0NkUuiFgnb4xr8J
+	 YqLn+xcJ0Z+FttdR+WphS5N/bX1CV32ecqV8kERK0QjICO9U6sXW1PPQEJKrhcg6/J
+	 NnWMwm5X9bhzN8Sss+qJKypSL7SKp+ah2iGCygeuckQWx/Eu4XZcQ893XyhOHBHgIE
+	 knp0OwLjstinQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
-In-Reply-To: <20241028193619.247727-1-irogers@google.com>
-References: <20241028193619.247727-1-irogers@google.com>
-Subject: Re: [PATCH v2] perf build: Make libunwind opt-in rather than
- opt-out
-Message-Id: <173082489932.149345.16688202672767622276.b4-ty@kernel.org>
+To: acme@kernel.org, linux-perf-users@vger.kernel.org, 
+ Michael Petlan <mpetlan@redhat.com>
+Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org, 
+ mingo@kernel.org, peterz@infradead.org, bpf@vger.kernel.org, 
+ vmolnaro@redhat.com
+In-Reply-To: <20241101102812.576425-1-mpetlan@redhat.com>
+References: <20241101102812.576425-1-mpetlan@redhat.com>
+Subject: Re: [PATCH] perf test stat_bpf_counters_cgrp: Remove cpu-list BPF
+ counter test
+Message-Id: <173082489981.149345.4034112511557410509.b4-ty@kernel.org>
 Date: Tue, 05 Nov 2024 08:41:39 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -50,16 +48,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Mon, 28 Oct 2024 12:36:19 -0700, Ian Rogers wrote:
+On Fri, 01 Nov 2024 11:28:12 +0100, Michael Petlan wrote:
 
-> Having multiple unwinding libraries makes the perf code harder to
-> understand and we have unused/untested code paths.
+> The cpu-list part of this testcase has proven itself to be unreliable.
+> Sometimes, we get "<not counted>" for system.slice when pinned to CPUs
+> 0 and 1. In such case, the test fails.
 > 
-> Perf made BPF support an opt-out rather than opt-in feature. As libbpf
-> has a libelf dependency, elfutils that provides libelf will also
-> provide libdw. When libdw is present perf will use libdw unwinding
-> rather than libunwind unwinding even if libunwind support is compiled
-> in.
+> Since we cannot simply guarantee that any system.slice load will run
+> on any arbitrary list of CPUs, except the whole set of all CPUs, let's
+> rather remove the cpu-list subtest.
 > 
 > [...]
 
