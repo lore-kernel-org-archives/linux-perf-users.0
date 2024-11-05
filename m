@@ -1,93 +1,107 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6724288DA;
-	Tue,  5 Nov 2024 01:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0D322F1C
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Nov 2024 02:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730770126; cv=none; b=VU5Z8eh3xSP9GzRS+mUPXaHlg4ELEyVXtqpDLPsySwL20OLr8KsQDhpj4YaHE0Th4wjSc36NB7FOXBBnGjORRzoMdavG4/IRVYi2vZeZ5oltC9Fv2Xd9aWlEJBaMsd/qkD3PCjxeKBPtUyfgScDDL66ehwwykmIldUjYQYe04ok=
+	t=1730772408; cv=none; b=AsQIJE9ALwMbKsmIZw/ydTY9hRzBXvaVAmEhCv6g2rbPmFZFDNQ7dPieT7iDqJVuY6U6JvR1M53gSVzIG0KUIvYkT6LqFkWLOBqFEEssibUhDLHku2EniOc+BWA7SbMcecAnIcvPurBBkRN3/T0ik+kCaxBFngrYPb0meBQupCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730770126; c=relaxed/simple;
-	bh=H5XfEhKOEzISIPvy1BCZlKaYQlO85XMro+9WSRsKA9Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KJbNxO8ds+9Pm1HDph03E2FdoPHyWwW4H7zsM4nRB6z5QrMqbRPtXNpYxulVC5Ol1I1rTnDPucUF2F4CTEJEZ7qB3TZTgQzj+/Yn5YDyq4GkehjUQf9JkhPXOKurGSPwd3xxh4y/QNWH5Xy/DiRAxHcxWRBnZIrvE9Nkurseo6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xj9hW52b2z4f3jtF;
-	Tue,  5 Nov 2024 09:28:27 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 833791A0568;
-	Tue,  5 Nov 2024 09:28:40 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP4 (Coremail) with SMTP id gCh0CgAH44bHdClnOnWFAw--.40595S2;
-	Tue, 05 Nov 2024 09:28:40 +0800 (CST)
-Message-ID: <6b9be7a5-4eeb-4688-a485-7ea9bf1b73b8@huaweicloud.com>
-Date: Tue, 5 Nov 2024 09:28:38 +0800
+	s=arc-20240116; t=1730772408; c=relaxed/simple;
+	bh=W3Yzy9X0vFDuxGWrw2cdGJBtpshunwvFJbMXaGPCHO4=;
+	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=I8y3TRIe0qmaA/5Fit4pJ2w8FqWh4IpuC7ae1/HxaplWxX2UO5B8CCxjcjgrTr9JC8jtlZzzJuV2dFB57KpTZuyy8O7dv5X9YrXgxfFil+loKrP5dwoCo5kafXV5+bBmeeHhaeiOF1z4/8m1B0MxXHEtYZ90l40mGTX2pVX+VEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4XjBVK2ndGzpY33;
+	Tue,  5 Nov 2024 10:04:41 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id C6D3814022D;
+	Tue,  5 Nov 2024 10:06:35 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 5 Nov 2024 10:06:35 +0800
+CC: <yangyicong@hisilicon.com>, <acme@kernel.org>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <linux-perf-users@vger.kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <linuxarm@huawei.com>, Guilherme
+ Amadio <amadio@gentoo.org>, Leo Yan <leo.yan@arm.com>
+Subject: Re: [PATCH] perf build: Add missing cflags when building with custom
+ libtraceevent
+To: Namhyung Kim <namhyung@kernel.org>
+References: <20241024133236.31016-1-yangyicong@huawei.com>
+ <ZyF5_Hf1iL01kldE@google.com>
+ <a8143fa2-d7e2-48d7-5c9b-2c00e2adbe9c@huawei.com>
+ <20241030110458.GD24446@e132581.arm.com> <ZyXFX-8SnakeuZrl@google.com>
+ <20241104104741.GA14610@e132581.arm.com> <ZyjDatxYxoIg0R5J@gentoo.org>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <260274f8-3188-cc77-4783-ee04d98eeb44@huawei.com>
+Date: Tue, 5 Nov 2024 10:06:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v5 0/2] perf stat: Support inherit events for bperf
-To: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, song@kernel.org
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-References: <20241021110201.325617-1-wutengda@huaweicloud.com>
- <173074271194.3826985.11091687571723568879.b4-ty@kernel.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <173074271194.3826985.11091687571723568879.b4-ty@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <ZyjDatxYxoIg0R5J@gentoo.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgAH44bHdClnOnWFAw--.40595S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYV7kC6x804xWl14x267AKxVW8JVW5JwAF
-	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
-	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
-	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
-	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
-	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
-	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kI
-	c2xKxwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AKxVWUtVW8ZwCFx2IqxVCFs4
-	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
-	MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
-	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
-	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-
-
-On 2024/11/5 1:51, Namhyung Kim wrote:
-> On Mon, 21 Oct 2024 11:01:59 +0000, Tengda Wu wrote:
+On 2024/11/4 20:51, Guilherme Amadio wrote:
+> Hi Namhyung,
 > 
->> Here is the 5th version of the series to support inherit events for bperf.
->> This version added the `inherit` flag for struct `target` instead of
->> `bpf_stat_opts`, and also fixed the logic when TGID w/o inherit.
->>
->>
->> bperf (perf-stat --bpf-counter) has not supported inherit events during
->> fork() since it was first introduced.
+> On Mon, Nov 04, 2024 at 10:47:41AM +0000, Leo Yan wrote:
+>> On Fri, Nov 01, 2024 at 11:23:27PM -0700, Namhyung Kim wrote:
 >>
 >> [...]
+>>
+>>>>> Checked how we handle with libtracefs currently:
+>>>>>  ifeq ($(feature-libtracefs), 1)
+>>>>>     CFLAGS +=  $(shell $(PKG_CONFIG) --cflags libtracefs) # we've added the cflags from pkg-config
+>>>>>     LDFLAGS += $(shell $(PKG_CONFIG) --libs-only-L libtracefs)
+>>>>
+>>>> The libtracefs.pc file claims requesting libtraceevent, as a result, it
+>>>> returns the header paths for both libtraceevent and libtracefs:
+>>>>
+>>>>   $ pkg-config --cflags libtracefs
+>>>>   -I/usr/local/include/tracefs -I/usr/local/include/traceevent
+>>>>
+>>>> I checked the packages libtraceevent-dev and libtracefs-dev and either
+>>>> can be installed independently. Therefore, it seems to me that this
+>>>> patch is correct for finding the traceevent header path, with no
+>>>> dependency on tracefs.
+>>>
+>>> I'm ok with the patch itself.  Can I get your Acked-by, Leo?
+>>
+>> Yes.
+>>
+>> Reviewed-by: Leo Yan <leo.yan@arm.com>
 > 
-> Applied to perf-tools-next, thanks!
+> I agree that this was a mistake I made in my patch. I added the cflags
+> to the feature check in tools/build/Makefile.feature, but in Makefile.config
+> I added it only for libtracefs and missed it for libtraceevent. The fixes tag
+> is correct. This patch fixes my mistake.
 > 
-> Best regards,
-> Namhyung
+> Reviewed-by: Guilherme Amadio <amadio@gentoo.org>
+> 
 
-You're welcome, thank you!
+Thanks for the review by Leo and Guilherme!
 
-With Best regards,
-Tengda
+Hi Namhyung,
+
+As you noticed we should use the include path from pkg-config [1]. Would you like
+to post a patch yourself or want me to post this as well? It's correct and we also
+need this. (I didn't found this may because I changed my custom libtraceevent.pc when
+debugging and currently approach is ok if libtraceevent's installed system wide).
+
+[1] https://lore.kernel.org/linux-perf-users/ZyF5_Hf1iL01kldE@google.com/
+
+Thanks.
 
