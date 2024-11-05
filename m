@@ -1,291 +1,289 @@
-Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100D8215F5F
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Nov 2024 19:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6F01E8850;
+	Tue,  5 Nov 2024 20:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730836597; cv=none; b=md6z7TwVyTJrU7T8H3qzb8B65g8moJtchMQ2SJCeXDcly9LDiBSq4UtAiu4sODXUgNjn9Eul7G3WoJEaV+8/bs2Mq9QKGGp3wQLCwNpHD7oMCDcTkGbpIvWxvMBW1bQ0ic/NJK1M84je1YA1EDvt0trmJl3okpIxNpP1+SDMXOQ=
+	t=1730839554; cv=none; b=GCVoWkGQziXAXmLo+bJLtw48RtLDsPPvdS40wJpU34y6NmqfKFELehkXRQVVE/X7fA+q+63BQj2L66cWuf+ybnCTse8Y6KNIJ5hBryDl+1IcHCWyXktcNXC+mjxhV46SW3JidwpUfoxoeskq2Cap3kwWe6SE+LBSsmvagoZkHvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730836597; c=relaxed/simple;
-	bh=l1rv9ZRZCEsMJagCqCJCU6OUmj4qSL7qwYsMuLLwVjU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jtXpwRdiuDiCCnHla3Aw0HSnwBAUeWFV1ah3SwvAw+3Pkn4YLoeQqrM1pq+qEpKdnQlSd6cYS5MsUWy9jzN61TIgfvveeW6uLExj9ZPpZ0LG5u6WYqH9m+vIzT82syd0fxy4sY0FQYWSjjCA/qbFAvZHyTW/dSi/HauGuwruYys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M5CkU1RR; arc=none smtp.client-ip=209.85.166.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1730839554; c=relaxed/simple;
+	bh=l/2LzhhtyfYCWhr9GyEgv8CcKr8sswLmcLKwY1SoILo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CoEj3D0FlZKrgmlg8NUhTUGRnZ27CkOVRco+12IIGMwD/sRMYBQth30RA5Hi9LrY8TdK+wbPCpXw9RZCfhjRkE0sLxXx4c+1uc9DwAH3zIziVhPCcuRILXfRl4c0mpYOHohZzt3NIjjtxB82rd3NsQpA08OT73xUPxR21s2dFL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PC54bAub; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M5CkU1RR"
-Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-83ac1f28d2bso613259039f.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Nov 2024 11:56:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730836594; x=1731441394; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m4LSX7jp2Qk0unPMxnSvbmTUvnRmwzrHBbuAe/XVNyI=;
-        b=M5CkU1RRs/YYQNpYQnhGqa2hb7WZb4jxbgn7i2JSpRbEaiXXEFj0i3sMqbgWtRTTyh
-         HuGn9YqtBAxOA+5hAxQ+TPhWCamn8ZGMiA8R/bqZF85CqbijMbxBtgZZFgtH2fNSsKbl
-         3cbQnQCUp3lrUsNe1E6qWxoINVAetOGR0DiEBVplObrqBKLfQGUAHTFWrl1uHFocJ/Vi
-         SH2T3q6CL5MhykZgr7+xk0CU48gECwOTHjxFd6V6DGqEEBEwM52AorNwqgElcXEFK4qV
-         G2y0jEgR/aT8/QnxnG9CKigapVdlGWyZXO65YArf2zhJs8nZk1LJpsoK5bXDDCgXzsee
-         wbvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730836594; x=1731441394;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m4LSX7jp2Qk0unPMxnSvbmTUvnRmwzrHBbuAe/XVNyI=;
-        b=vLMrX1WWssCDOBoGe1Bu3cXbJOok97O6aqjpToS8KBmQ4GbETiEMsCohyszoWO+5HQ
-         RMAnoUm0KS8SwWnJBenmy0PZlqESLEhBPst5ns7CiaLnFDpgc9dma4zJCEUuoKjOmGRd
-         n1UICfVaOeldfCT3XviMk6NMBV7On9g27+8eBdhbYaEFtjfsC0KjELvbimeBf8MHQlqr
-         SJA3aATizNUdypnVuKHcXPFTKmyI6N3YscC5Rmzd91sfXMlvIlOowD6OuXINxY9qYX7t
-         SD1Ano4cCPoj5eS+6Dl/oNXrxGDQ0wYM187jDooNU1fEXUYVGkG7f6fG1WqAENThLqKL
-         CyRg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjD9qrtVVTdKmDIFP2p39wm3RzC0iODMbhpbNapka+ICv59QTgHeG1t7nbLp7c9i+PuLfRYAHi14vLkZwxXtH0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0DexqMpxR21FEsRTpaJfciczDybaldhMByEVkhOQIMB5onCJg
-	XgTN8lJa5FJFBF5D3gNFVraUhWYZ1qsINElWJN7gPr5zYOQD/Bhz0Duo2k1eLLSTHULbCp/RDK8
-	/EvoD3Fc2ZunxU2BCQbZXjw==
-X-Google-Smtp-Source: AGHT+IGFWv6Kn3TvX6dXV3OFqthDQLbL+dvhQJb9vkUUge7jztFf2TETEHNZy98hndWREoqhSt0rcXIvqTH5LIwoGQ==
-X-Received: from coltonlewis-kvm.c.googlers.com ([fda3:e722:ac3:cc00:11b:3898:ac11:fa18])
- (user=coltonlewis job=sendgmr) by 2002:a05:6602:3f81:b0:82d:821:96a7 with
- SMTP id ca18e2360f4ac-83b1c4c870cmr11455439f.3.1730836594061; Tue, 05 Nov
- 2024 11:56:34 -0800 (PST)
-Date: Tue,  5 Nov 2024 19:56:02 +0000
-In-Reply-To: <20241105195603.2317483-1-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PC54bAub"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6220C4CED1;
+	Tue,  5 Nov 2024 20:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730839554;
+	bh=l/2LzhhtyfYCWhr9GyEgv8CcKr8sswLmcLKwY1SoILo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PC54bAubv2+HzNGTQkKx17B2KfkLH537ALrwCKDAM4sW5vMaU2O/Q3+ECEJ4fFPwc
+	 0V/5tSk+PP+kZ7h1covm09iz2LQBBiasmrs51M79X0De6rdPY8erC90gVyOZHXS2hk
+	 /LhgqGjf9TadtGwihle3x3CO0CSBAtHu5xDfxv52KCgdGACGp9dcXz/EDf5lCQKl46
+	 Qavj/Zbxshzo2uWmbXnn6eku+UWuJtc4QISGtUw+HywoJC5U1afdzPlOpVxvqNVIQr
+	 phR8IC/COAzFhNFrSJ4mbJSH1L7tt6FdwMimUtGZTzRFJSvIJRH9tucOz8u3yukr2/
+	 iHo+t4HQoBIQg==
+Date: Tue, 5 Nov 2024 12:45:50 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Kees Cook <kees@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Subject: Re: [PATCH 3/4] perf lock contention: Resolve slab object name using
+ BPF
+Message-ID: <ZyqD_sM8U7d1TOqS@google.com>
+References: <20241105172635.2463800-1-namhyung@kernel.org>
+ <20241105172635.2463800-4-namhyung@kernel.org>
+ <CAP-5=fV3JAJD_beASNdP_Sxh=oAFv-yh_cqW=P=Bc9FabddUpQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241105195603.2317483-1-coltonlewis@google.com>
-X-Mailer: git-send-email 2.47.0.199.ga7371fff76-goog
-Message-ID: <20241105195603.2317483-6-coltonlewis@google.com>
-Subject: [PATCH v6 5/5] perf: Correct perf sampling with guest VMs
-From: Colton Lewis <coltonlewis@google.com>
-To: kvm@vger.kernel.org
-Cc: Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Will Deacon <will@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	Colton Lewis <coltonlewis@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fV3JAJD_beASNdP_Sxh=oAFv-yh_cqW=P=Bc9FabddUpQ@mail.gmail.com>
 
-Previously any PMU overflow interrupt that fired while a VCPU was
-loaded was recorded as a guest event whether it truly was or not. This
-resulted in nonsense perf recordings that did not honor
-perf_event_attr.exclude_guest and recorded guest IPs where it should
-have recorded host IPs.
+Hi Ian,
 
-Rework the sampling logic to only record guest samples for events with
-exclude_guest = 0. This way any host-only events with exclude_guest
-set will never see unexpected guest samples. The behaviour of events
-with exclude_guest = 0 is unchanged.
+On Tue, Nov 05, 2024 at 09:41:05AM -0800, Ian Rogers wrote:
+> On Tue, Nov 5, 2024 at 9:26 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > The bpf_get_kmem_cache() kfunc can return an address of the slab cache
+> > (kmem_cache).  As it has the name of the slab cache from the iterator,
+> > we can use it to symbolize some dynamic kernel locks in a slab.
+> >
+> > Before:
+> >   root@virtme-ng:/home/namhyung/project/linux# tools/perf/perf lock con -abl sleep 1
+> >    contended   total wait     max wait     avg wait            address   symbol
+> >
+> >            2      3.34 us      2.87 us      1.67 us   ffff9d7800ad9600    (mutex)
+> >            2      2.16 us      1.93 us      1.08 us   ffff9d7804b992d8    (mutex)
+> >            4      1.37 us       517 ns       343 ns   ffff9d78036e6e00    (mutex)
+> >            1      1.27 us      1.27 us      1.27 us   ffff9d7804b99378    (mutex)
+> >            2       845 ns       599 ns       422 ns   ffffffff9e1c3620   delayed_uprobe_lock (mutex)
+> >            1       845 ns       845 ns       845 ns   ffffffff9da0b280   jiffies_lock (spinlock)
+> >            2       377 ns       259 ns       188 ns   ffffffff9e1cf840   pcpu_alloc_mutex (mutex)
+> >            1       305 ns       305 ns       305 ns   ffffffff9e1b4cf8   tracepoint_srcu_srcu_usage (mutex)
+> >            1       295 ns       295 ns       295 ns   ffffffff9e1c0940   pack_mutex (mutex)
+> >            1       232 ns       232 ns       232 ns   ffff9d7804b7d8d8    (mutex)
+> >            1       180 ns       180 ns       180 ns   ffffffff9e1b4c28   tracepoint_srcu_srcu_usage (mutex)
+> >            1       165 ns       165 ns       165 ns   ffffffff9da8b3a0   text_mutex (mutex)
+> >
+> > After:
+> >   root@virtme-ng:/home/namhyung/project/linux# tools/perf/perf lock con -abl sleep 1
+> >    contended   total wait     max wait     avg wait            address   symbol
+> >
+> >            2      1.95 us      1.77 us       975 ns   ffff9d5e852d3498   &task_struct (mutex)
+> >            1      1.18 us      1.18 us      1.18 us   ffff9d5e852d3538   &task_struct (mutex)
+> >            4      1.12 us       354 ns       279 ns   ffff9d5e841ca800   &kmalloc-cg-512 (mutex)
+> >            2       859 ns       617 ns       429 ns   ffffffffa41c3620   delayed_uprobe_lock (mutex)
+> >            3       691 ns       388 ns       230 ns   ffffffffa41c0940   pack_mutex (mutex)
+> >            3       421 ns       164 ns       140 ns   ffffffffa3a8b3a0   text_mutex (mutex)
+> >            1       409 ns       409 ns       409 ns   ffffffffa41b4cf8   tracepoint_srcu_srcu_usage (mutex)
+> >            2       362 ns       239 ns       181 ns   ffffffffa41cf840   pcpu_alloc_mutex (mutex)
+> >            1       220 ns       220 ns       220 ns   ffff9d5e82b534d8   &signal_cache (mutex)
+> >            1       215 ns       215 ns       215 ns   ffffffffa41b4c28   tracepoint_srcu_srcu_usage (mutex)
+> >
+> > Note that the name starts with '&' sign for slab objects to inform they
+> > are dynamic locks.  It won't give the accurate lock or type names but
+> > it's still useful.  We may add type info to the slab cache later to get
+> > the exact name of the lock in the type later.
+> 
+> Many variables may reference a lock through a pointer, should the name
+> not be associated with the lock or from decoding the task_struct?
 
-Note that events configured to sample both host and guest may still
-misattribute a PMI that arrived in the host as a guest event depending
-on KVM arch and vendor behavior.
+I'm not sure I understood you correctly.  But this only covers when the
+lock variable is inside a slab object so that the address falls into the
+slab pages.
 
-Signed-off-by: Colton Lewis <coltonlewis@google.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
----
- arch/arm64/include/asm/perf_event.h |  4 ----
- arch/arm64/kernel/perf_callchain.c  | 28 ----------------------------
- arch/x86/events/core.c              | 16 ++++------------
- include/linux/perf_event.h          | 21 +++++++++++++++++++--
- kernel/events/core.c                | 21 +++++++++++++++++----
- 5 files changed, 40 insertions(+), 50 deletions(-)
+> The '&' looks redundant as the addresses are clearly different.
 
-diff --git a/arch/arm64/include/asm/perf_event.h b/arch/arm64/include/asm/perf_event.h
-index 31a5584ed423..ee45b4e77347 100644
---- a/arch/arm64/include/asm/perf_event.h
-+++ b/arch/arm64/include/asm/perf_event.h
-@@ -10,10 +10,6 @@
- #include <asm/ptrace.h>
- 
- #ifdef CONFIG_PERF_EVENTS
--struct pt_regs;
--extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
--extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
--#define perf_arch_misc_flags(regs)	perf_misc_flags(regs)
- #define perf_arch_bpf_user_pt_regs(regs) &regs->user_regs
- #endif
- 
-diff --git a/arch/arm64/kernel/perf_callchain.c b/arch/arm64/kernel/perf_callchain.c
-index 01a9d08fc009..9b7f26b128b5 100644
---- a/arch/arm64/kernel/perf_callchain.c
-+++ b/arch/arm64/kernel/perf_callchain.c
-@@ -38,31 +38,3 @@ void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
- 
- 	arch_stack_walk(callchain_trace, entry, current, regs);
- }
--
--unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
--{
--	if (perf_guest_state())
--		return perf_guest_get_ip();
--
--	return instruction_pointer(regs);
--}
--
--unsigned long perf_arch_misc_flags(struct pt_regs *regs)
--{
--	unsigned int guest_state = perf_guest_state();
--	int misc = 0;
--
--	if (guest_state) {
--		if (guest_state & PERF_GUEST_USER)
--			misc |= PERF_RECORD_MISC_GUEST_USER;
--		else
--			misc |= PERF_RECORD_MISC_GUEST_KERNEL;
--	} else {
--		if (user_mode(regs))
--			misc |= PERF_RECORD_MISC_USER;
--		else
--			misc |= PERF_RECORD_MISC_KERNEL;
--	}
--
--	return misc;
--}
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 24910c625e3d..aae0c5eabf09 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -3005,9 +3005,6 @@ static unsigned long code_segment_base(struct pt_regs *regs)
- 
- unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
- {
--	if (perf_guest_state())
--		return perf_guest_get_ip();
--
- 	return regs->ip + code_segment_base(regs);
- }
- 
-@@ -3034,17 +3031,12 @@ unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs)
- 
- unsigned long perf_arch_misc_flags(struct pt_regs *regs)
- {
--	unsigned int guest_state = perf_guest_state();
- 	unsigned long misc = common_misc_flags(regs);
- 
--	if (guest_state) {
--		misc |= perf_arch_guest_misc_flags(regs);
--	} else {
--		if (user_mode(regs))
--			misc |= PERF_RECORD_MISC_USER;
--		else
--			misc |= PERF_RECORD_MISC_KERNEL;
--	}
-+	if (user_mode(regs))
-+		misc |= PERF_RECORD_MISC_USER;
-+	else
-+		misc |= PERF_RECORD_MISC_KERNEL;
- 
- 	return misc;
- }
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 772ad352856b..e207acdd9e73 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1655,8 +1655,9 @@ extern void perf_tp_event(u16 event_type, u64 count, void *record,
- 			  struct task_struct *task);
- extern void perf_bp_event(struct perf_event *event, void *data);
- 
--extern unsigned long perf_misc_flags(struct pt_regs *regs);
--extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
-+extern unsigned long perf_misc_flags(struct perf_event *event, struct pt_regs *regs);
-+extern unsigned long perf_instruction_pointer(struct perf_event *event,
-+					      struct pt_regs *regs);
- 
- #ifndef perf_arch_misc_flags
- # define perf_arch_misc_flags(regs) \
-@@ -1667,6 +1668,22 @@ extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
- # define perf_arch_bpf_user_pt_regs(regs) regs
- #endif
- 
-+#ifndef perf_arch_guest_misc_flags
-+static inline unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs)
-+{
-+	unsigned long guest_state = perf_guest_state();
-+
-+	if (guest_state & PERF_GUEST_USER)
-+		return PERF_RECORD_MISC_GUEST_USER;
-+
-+	if (guest_state & PERF_GUEST_ACTIVE)
-+		return PERF_RECORD_MISC_GUEST_KERNEL;
-+
-+	return 0;
-+}
-+# define perf_arch_guest_misc_flags(regs)	perf_arch_guest_misc_flags(regs)
-+#endif
-+
- static inline bool has_branch_stack(struct perf_event *event)
- {
- 	return event->attr.sample_type & PERF_SAMPLE_BRANCH_STACK;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2c44ffd6f4d8..c62164a2ff23 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7022,13 +7022,26 @@ void perf_unregister_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)
- EXPORT_SYMBOL_GPL(perf_unregister_guest_info_callbacks);
- #endif
- 
--unsigned long perf_misc_flags(struct pt_regs *regs)
-+static bool should_sample_guest(struct perf_event *event)
- {
-+	return !event->attr.exclude_guest && perf_guest_state();
-+}
-+
-+unsigned long perf_misc_flags(struct perf_event *event,
-+			      struct pt_regs *regs)
-+{
-+	if (should_sample_guest(event))
-+		return perf_arch_guest_misc_flags(regs);
-+
- 	return perf_arch_misc_flags(regs);
- }
- 
--unsigned long perf_instruction_pointer(struct pt_regs *regs)
-+unsigned long perf_instruction_pointer(struct perf_event *event,
-+				       struct pt_regs *regs)
- {
-+	if (should_sample_guest(event))
-+		return perf_guest_get_ip();
-+
- 	return perf_arch_instruction_pointer(regs);
- }
- 
-@@ -7849,7 +7862,7 @@ void perf_prepare_sample(struct perf_sample_data *data,
- 	__perf_event_header__init_id(data, event, filtered_sample_type);
- 
- 	if (filtered_sample_type & PERF_SAMPLE_IP) {
--		data->ip = perf_instruction_pointer(regs);
-+		data->ip = perf_instruction_pointer(event, regs);
- 		data->sample_flags |= PERF_SAMPLE_IP;
- 	}
- 
-@@ -8013,7 +8026,7 @@ void perf_prepare_header(struct perf_event_header *header,
- {
- 	header->type = PERF_RECORD_SAMPLE;
- 	header->size = perf_sample_data_size(data, event);
--	header->misc = perf_misc_flags(regs);
-+	header->misc = perf_misc_flags(event, regs);
- 
- 	/*
- 	 * If you're adding more sample types here, you likely need to do
--- 
-2.47.0.199.ga7371fff76-goog
+Probably.  But sometimes users may want clear separation without looking
+at the address values.  Also we want to use it in the filters and that
+would need some form of indication for the slab locks.
 
+> How are >1 lock/mutex in the same struct handled?
+
+It cannot distinguish them for now.  It'll be possible once we can have
+type info (BTF) for slab objects and a helper to tell the offset inside
+the object from the given address.  With that, we could have something
+like &task_struct.futex_exit_mutex or &signal_struct.cred_guard_mutex.
+
+Thanks,
+Namhyung
+
+> 
+> Thanks,
+> Ian
+> 
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/bpf_lock_contention.c         | 52 +++++++++++++++++++
+> >  .../perf/util/bpf_skel/lock_contention.bpf.c  | 21 +++++++-
+> >  2 files changed, 71 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+> > index a2efd40897bad316..50c3039c647d4d77 100644
+> > --- a/tools/perf/util/bpf_lock_contention.c
+> > +++ b/tools/perf/util/bpf_lock_contention.c
+> > @@ -2,6 +2,7 @@
+> >  #include "util/cgroup.h"
+> >  #include "util/debug.h"
+> >  #include "util/evlist.h"
+> > +#include "util/hashmap.h"
+> >  #include "util/machine.h"
+> >  #include "util/map.h"
+> >  #include "util/symbol.h"
+> > @@ -20,12 +21,25 @@
+> >
+> >  static struct lock_contention_bpf *skel;
+> >  static bool has_slab_iter;
+> > +static struct hashmap slab_hash;
+> > +
+> > +static size_t slab_cache_hash(long key, void *ctx __maybe_unused)
+> > +{
+> > +       return key;
+> > +}
+> > +
+> > +static bool slab_cache_equal(long key1, long key2, void *ctx __maybe_unused)
+> > +{
+> > +       return key1 == key2;
+> > +}
+> >
+> >  static void check_slab_cache_iter(struct lock_contention *con)
+> >  {
+> >         struct btf *btf = btf__load_vmlinux_btf();
+> >         s32 ret;
+> >
+> > +       hashmap__init(&slab_hash, slab_cache_hash, slab_cache_equal, /*ctx=*/NULL);
+> > +
+> >         ret = libbpf_get_error(btf);
+> >         if (ret) {
+> >                 pr_debug("BTF loading failed: %d\n", ret);
+> > @@ -50,6 +64,7 @@ static void run_slab_cache_iter(void)
+> >  {
+> >         int fd;
+> >         char buf[256];
+> > +       long key, *prev_key;
+> >
+> >         if (!has_slab_iter)
+> >                 return;
+> > @@ -65,6 +80,34 @@ static void run_slab_cache_iter(void)
+> >                 continue;
+> >
+> >         close(fd);
+> > +
+> > +       /* Read the slab cache map and build a hash with IDs */
+> > +       fd = bpf_map__fd(skel->maps.slab_caches);
+> > +       prev_key = NULL;
+> > +       while (!bpf_map_get_next_key(fd, prev_key, &key)) {
+> > +               struct slab_cache_data *data;
+> > +
+> > +               data = malloc(sizeof(*data));
+> > +               if (data == NULL)
+> > +                       break;
+> > +
+> > +               if (bpf_map_lookup_elem(fd, &key, data) < 0)
+> > +                       break;
+> > +
+> > +               hashmap__add(&slab_hash, data->id, data);
+> > +               prev_key = &key;
+> > +       }
+> > +}
+> > +
+> > +static void exit_slab_cache_iter(void)
+> > +{
+> > +       struct hashmap_entry *cur;
+> > +       unsigned bkt;
+> > +
+> > +       hashmap__for_each_entry(&slab_hash, cur, bkt)
+> > +               free(cur->pvalue);
+> > +
+> > +       hashmap__clear(&slab_hash);
+> >  }
+> >
+> >  int lock_contention_prepare(struct lock_contention *con)
+> > @@ -398,6 +441,7 @@ static const char *lock_contention_get_name(struct lock_contention *con,
+> >
+> >         if (con->aggr_mode == LOCK_AGGR_ADDR) {
+> >                 int lock_fd = bpf_map__fd(skel->maps.lock_syms);
+> > +               struct slab_cache_data *slab_data;
+> >
+> >                 /* per-process locks set upper bits of the flags */
+> >                 if (flags & LCD_F_MMAP_LOCK)
+> > @@ -416,6 +460,12 @@ static const char *lock_contention_get_name(struct lock_contention *con,
+> >                                 return "rq_lock";
+> >                 }
+> >
+> > +               /* look slab_hash for dynamic locks in a slab object */
+> > +               if (hashmap__find(&slab_hash, flags & LCB_F_SLAB_ID_MASK, &slab_data)) {
+> > +                       snprintf(name_buf, sizeof(name_buf), "&%s", slab_data->name);
+> > +                       return name_buf;
+> > +               }
+> > +
+> >                 return "";
+> >         }
+> >
+> > @@ -590,5 +640,7 @@ int lock_contention_finish(struct lock_contention *con)
+> >                 cgroup__put(cgrp);
+> >         }
+> >
+> > +       exit_slab_cache_iter();
+> > +
+> >         return 0;
+> >  }
+> > diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> > index fd24ccb00faec0ba..b5bc37955560a58e 100644
+> > --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> > +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> > @@ -123,6 +123,8 @@ struct mm_struct___new {
+> >         struct rw_semaphore mmap_lock;
+> >  } __attribute__((preserve_access_index));
+> >
+> > +extern struct kmem_cache *bpf_get_kmem_cache(u64 addr) __ksym __weak;
+> > +
+> >  /* control flags */
+> >  const volatile int has_cpu;
+> >  const volatile int has_task;
+> > @@ -496,8 +498,23 @@ int contention_end(u64 *ctx)
+> >                 };
+> >                 int err;
+> >
+> > -               if (aggr_mode == LOCK_AGGR_ADDR)
+> > -                       first.flags |= check_lock_type(pelem->lock, pelem->flags);
+> > +               if (aggr_mode == LOCK_AGGR_ADDR) {
+> > +                       first.flags |= check_lock_type(pelem->lock,
+> > +                                                      pelem->flags & LCB_F_TYPE_MASK);
+> > +
+> > +                       /* Check if it's from a slab object */
+> > +                       if (bpf_get_kmem_cache) {
+> > +                               struct kmem_cache *s;
+> > +                               struct slab_cache_data *d;
+> > +
+> > +                               s = bpf_get_kmem_cache(pelem->lock);
+> > +                               if (s != NULL) {
+> > +                                       d = bpf_map_lookup_elem(&slab_caches, &s);
+> > +                                       if (d != NULL)
+> > +                                               first.flags |= d->id;
+> > +                               }
+> > +                       }
+> > +               }
+> >
+> >                 err = bpf_map_update_elem(&lock_stat, &key, &first, BPF_NOEXIST);
+> >                 if (err < 0) {
+> > --
+> > 2.47.0.199.ga7371fff76-goog
+> >
