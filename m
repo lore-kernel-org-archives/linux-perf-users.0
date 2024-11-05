@@ -1,154 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACABB667;
-	Tue,  5 Nov 2024 00:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6724288DA;
+	Tue,  5 Nov 2024 01:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730765528; cv=none; b=UuHVgkehMOJEKplKrWKRTuw/fh6dQGtesu9kkWGI/gctVlBG+nNJ71TnLSml8dJpHBzpzVDLbLDPu9PSj1lYkQSFiDOhHqoGOhrI1doOGEMW8f14XIOrX2SwAih13vcdoh10WYY3yvYcAhr8NAMcqcAAKlecqm/yN+G6etM3yvs=
+	t=1730770126; cv=none; b=VU5Z8eh3xSP9GzRS+mUPXaHlg4ELEyVXtqpDLPsySwL20OLr8KsQDhpj4YaHE0Th4wjSc36NB7FOXBBnGjORRzoMdavG4/IRVYi2vZeZ5oltC9Fv2Xd9aWlEJBaMsd/qkD3PCjxeKBPtUyfgScDDL66ehwwykmIldUjYQYe04ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730765528; c=relaxed/simple;
-	bh=w7D1Hj3ipxcnW2gjAuaYHySmVpmD4euqpzkiW/spD5Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I6kvuB/IszKNgtZGjjl5bgkQT9XVqk3ogD6V36RdK/7kdZ/nUgKfhwQVPTg6dAkLnu3e8H1r83yg0bBFuc4egTw4+8FLESDej9006K8uqNyZzzCv4oZbJYKTNY2k70dnzjWugiwfa5TwTRGw18seJvButy1tI7+hSsJ5Rh0PBvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qcOM/gr+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qcOM/gr+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F41CFC4CECE;
-	Tue,  5 Nov 2024 00:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730765527;
-	bh=w7D1Hj3ipxcnW2gjAuaYHySmVpmD4euqpzkiW/spD5Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qcOM/gr+EwjXicV1S9H4Wjli8ALlc9StWLjoHjMzcjuDS+FPMf5wjmZno2Qpa8pnX
-	 FnA5yWS7UiHQYuv0JwCckghrwx0MwZzGKnThuex3yl+eN3HTdEpWCzrgE5Xx6hMGaq
-	 0qb7D8MIZ4wyG1g7YCZdLY0x1YrT0HevP6K+c5g6ifR9IscdkOTcgyksWBZjMdOs+m
-	 Y0nplmIw7uIO5Tz5ELKKM0aw1CPgu+/nZwRcAjt0HfMohq2Clc2uycjF0U2WeX+HZ5
-	 ETPCqbk6fdPOoIDtlCXRrAAHY8BW3lZaWtCamCi+dPOvodf3Vucxps85ABSmSZNoh5
-	 yQ4vbzS5HdYAw==
-Date: Mon, 4 Nov 2024 16:12:05 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] perf: Reveal PMU type in fdinfo
-Message-ID: <Zyli1TWn8ZaNWSxm@google.com>
-References: <20241101211757.824743-1-ctshao@google.com>
- <20241101211757.824743-2-ctshao@google.com>
+	s=arc-20240116; t=1730770126; c=relaxed/simple;
+	bh=H5XfEhKOEzISIPvy1BCZlKaYQlO85XMro+9WSRsKA9Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KJbNxO8ds+9Pm1HDph03E2FdoPHyWwW4H7zsM4nRB6z5QrMqbRPtXNpYxulVC5Ol1I1rTnDPucUF2F4CTEJEZ7qB3TZTgQzj+/Yn5YDyq4GkehjUQf9JkhPXOKurGSPwd3xxh4y/QNWH5Xy/DiRAxHcxWRBnZIrvE9Nkurseo6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xj9hW52b2z4f3jtF;
+	Tue,  5 Nov 2024 09:28:27 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 833791A0568;
+	Tue,  5 Nov 2024 09:28:40 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP4 (Coremail) with SMTP id gCh0CgAH44bHdClnOnWFAw--.40595S2;
+	Tue, 05 Nov 2024 09:28:40 +0800 (CST)
+Message-ID: <6b9be7a5-4eeb-4688-a485-7ea9bf1b73b8@huaweicloud.com>
+Date: Tue, 5 Nov 2024 09:28:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241101211757.824743-2-ctshao@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next v5 0/2] perf stat: Support inherit events for bperf
+To: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, song@kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20241021110201.325617-1-wutengda@huaweicloud.com>
+ <173074271194.3826985.11091687571723568879.b4-ty@kernel.org>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <173074271194.3826985.11091687571723568879.b4-ty@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgAH44bHdClnOnWFAw--.40595S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYV7kC6x804xWl14x267AKxVW8JVW5JwAF
+	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
+	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
+	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
+	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kI
+	c2xKxwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AKxVWUtVW8ZwCFx2IqxVCFs4
+	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+	MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
+	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
+	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Fri, Nov 01, 2024 at 09:17:56PM +0000, Chun-Tse Shao wrote:
-> It gives useful info on knowing which PMUs are reserved by this process.
-> Also add extra attributes which would be useful.
+
+
+On 2024/11/5 1:51, Namhyung Kim wrote:
+> On Mon, 21 Oct 2024 11:01:59 +0000, Tengda Wu wrote:
 > 
-> ```
-> Testing cycles
-> $ ./perf stat -e cycles &
-> $ cat /proc/`pidof perf`/fdinfo/3
-> pos:    0
-> flags:  02000002
-> mnt_id: 16
-> ino:    3081
-> perf_event-attr.type:   0
-
-Maybe 'perf_event_attr' would be appropriate as it's the name of the
-struct.
-
-> perf_event-attr.config: 0
-> perf_event-attr.config1:        0
-> perf_event-attr.config2:        0
-> perf_event-attr.config3:        0
-
-It's hard to pick which fields to show here but I'd say that those
-config[123] are not used frequently at least for regular events.
-Maybe just showing type and config is fine.
-
+>> Here is the 5th version of the series to support inherit events for bperf.
+>> This version added the `inherit` flag for struct `target` instead of
+>> `bpf_stat_opts`, and also fixed the logic when TGID w/o inherit.
+>>
+>>
+>> bperf (perf-stat --bpf-counter) has not supported inherit events during
+>> fork() since it was first introduced.
+>>
+>> [...]
 > 
-> Testing L1-dcache-load-misses//
-> $ ./perf stat -e L1-dcache-load-misses &
-> $ cat /proc/`pidof perf`/fdinfo/3
-> pos:    0
-> flags:  02000002
-> mnt_id: 16
-> ino:    1072
-> perf_event-attr.type:   3
-> perf_event-attr.config: 65536
-> perf_event-attr.config1:        0
-> perf_event-attr.config2:        0
-> perf_event-attr.config3:        0
-> ```
+> Applied to perf-tools-next, thanks!
 > 
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> ---
->  kernel/events/core.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> Best regards,
+> Namhyung
 
-FYI usually the kernel changes are applied to a different tree than the
-tools.
+You're welcome, thank you!
 
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index cdd09769e6c56..c950b6fc92cda 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -55,6 +55,7 @@
->  #include <linux/pgtable.h>
->  #include <linux/buildid.h>
->  #include <linux/task_work.h>
-> +#include <linux/seq_file.h>
-> 
->  #include "internal.h"
-> 
-> @@ -6820,6 +6821,17 @@ static int perf_fasync(int fd, struct file *filp, int on)
->  	return 0;
->  }
-> 
-> +static void perf_show_fdinfo(struct seq_file *m, struct file *f)
-> +{
-> +	struct perf_event *event = f->private_data;
-> +
-> +	seq_printf(m, "perf_event-attr.type:\t%u\n", event->orig_type);
-> +	seq_printf(m, "perf_event-attr.config:\t%llu\n", event->attr.config);
+With Best regards,
+Tengda
 
-I'm not sure if all archs are happy with treating it as %llu.
-
-Thanks,
-Namhyung
-
-
-> +	seq_printf(m, "perf_event-attr.config1:\t%llu\n", event->attr.config1);
-> +	seq_printf(m, "perf_event-attr.config2:\t%llu\n", event->attr.config2);
-> +	seq_printf(m, "perf_event-attr.config3:\t%llu\n", event->attr.config3);
-> +}
-> +
->  static const struct file_operations perf_fops = {
->  	.release		= perf_release,
->  	.read			= perf_read,
-> @@ -6828,6 +6840,7 @@ static const struct file_operations perf_fops = {
->  	.compat_ioctl		= perf_compat_ioctl,
->  	.mmap			= perf_mmap,
->  	.fasync			= perf_fasync,
-> +	.show_fdinfo		= perf_show_fdinfo,
->  };
-> 
->  /*
-> --
-> 2.47.0.163.g1226f6d8fa-goog
-> 
