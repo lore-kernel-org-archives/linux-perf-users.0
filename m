@@ -1,48 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17CB1DC075;
-	Tue,  5 Nov 2024 16:41:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456C41DD0DC;
+	Tue,  5 Nov 2024 16:41:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730824901; cv=none; b=jn39vqmjMw0yb74jIUEVjxNLUyICt69MHqHZJWYMAgDhI3K7xnr4o8ISgqGAvZ5GjHDKoCxkPR4MxqfqrKDqcjq+sbE8N3cCJFp+YWwPg5aSyAeyXr72z6hTMM/j+i4sj/JPYce4OSw9n6F1bKFwOAntWh7vz2F6YDJ6ezLpd/o=
+	t=1730824902; cv=none; b=FrstwX2AWROrmOR8I4n97dceEuQahkKsKmiXeyBOBUaa+bwJkZOpwu/Zts62AJUJhysHLWg1eOWIhT1Dbw/Pggl5pPrKU7kl6QaATDARtaF/dg6B/Gp7cg7PqH3YtlGl8h+ASzbM7ZAVsi4QYhQ8ktxZAkgpVpDsJzU7kC1muVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730824901; c=relaxed/simple;
-	bh=75ssd3UUB0N2VS8QeO6/PZRZc4Ti/4WoNRn31qFMKrU=;
+	s=arc-20240116; t=1730824902; c=relaxed/simple;
+	bh=w5LNjnL8bN89NOkJV3QdTW8R96XvIGdaMyqkSdyLA0w=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Y12qyzfY7vlMh5ghx8nePWKB1KRK/9maQ+JxwPD8G//Awinc4OpNbfuzOLI9suDm6EVY7pV12TKnK+rNFKEcSexolP6nkUMNOb74EpdifLC4cuKBAAX9xK1k06JyRr2e+coQX0p1p9Y0FwWITemUy5WBxezTo6Av9NU9vKssSRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EUJNoeUp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=KwJzblqQMJLytdMWxy2Jlqull2fqqKFqiFadoqsBJ3vyDpl7Junh0Mt2PzarWLfYsFUb5+mEvJEbIbfOdXPMiX1hgqvDy6NuUWnnWN25HW4nEz6Yfpi63qPdEExKvPDgqjcjERutiZopJu8rR6AzKT10/0JxWJ68RkDNQLA/mWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pz8I552x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EUJNoeUp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 513D2C4CECF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pz8I552x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D51C1C4CED5;
 	Tue,  5 Nov 2024 16:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730824901;
-	bh=75ssd3UUB0N2VS8QeO6/PZRZc4Ti/4WoNRn31qFMKrU=;
+	s=k20201202; t=1730824902;
+	bh=w5LNjnL8bN89NOkJV3QdTW8R96XvIGdaMyqkSdyLA0w=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=EUJNoeUpbrrLMVxUxzu3z5KZNG/TbnafSxnetU8wwdwMBZvHWXNeGyyDW2HyGl8tu
-	 s7j4WC0kYACX2n6ZwP/ffdEptwogmKUXgYrdwbBA0O3R9sRc+7PaAMpJMJQ88FMrzK
-	 p/CJux7VnSYLG0m+NziGX3NmOM9pl8s9rUQ0bKrBW3uNWJoMtnezJumYrGdhp8fVb0
-	 /l0yWggBuoepE1O/tJCLUzIu/KpmhgQg/4Im1RLO4+8R2ZGC6aEedNblXW0JhzmXjj
-	 Agnmsra+hdbIE+SUr/OCIiD+wzVRRAAcPD5cOp1xXf5Yqi9i1OpkJ8NiGXPHO/Y9Bh
-	 728rdVZz5FFDQ==
+	b=Pz8I552xAOM/j0GNLHWwmwTYk+8MO17ONOV9IW0Z1O86+A9FOUT7i6EdxMr+RZUQz
+	 fYwGUnvpfkUXVVwIVv1pDcuQ+qqW9RNpK2YAM4ck4sVPEMrJcFbasEV9xxnvIyLCxh
+	 PAxkKYKgXaICGNiNhB6V1xHIzy9ikAdHmcq047w6rZxzURsHwWMPfr/m8BM6S57ZgT
+	 ZpqydyXg0N6VvlsxDfyRdcZptBYz0Q7ZcqKp0GJKsCE8hAnr16Z+9KGh/ARwFIHZyi
+	 FtfOa5IRWYhvYrpLUYkS/qv+fuV7QMs3Ekag8I3neJuAU8CUkkYCBU7UoaDoa7qiw1
+	 vopjn5IGrtDWw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, 
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
- Howard Chu <howardchu95@gmail.com>, James Clark <james.clark@linaro.org>, 
- Leo Yan <leo.yan@linux.dev>, Stephen Rothwell <sfr@canb.auug.org.au>, 
- Thomas Richter <tmricht@linux.ibm.com>, 
- Veronika Molnarova <vmolnaro@redhat.com>, 
- Weilin Wang <weilin.wang@intel.com>, Ze Gao <zegao2021@gmail.com>, 
- zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
- linux-perf-users@vger.kernel.org
-In-Reply-To: <ZyjbksKYnV22zmz-@x1>
-References: <ZyjbksKYnV22zmz-@x1>
-Subject: Re: [PATCH 1/1] perf tests: Remove dangling CFLAGS for removed
- attr.o object
-Message-Id: <173082490129.149345.12072597067529723354.b4-ty@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20241102231702.2262258-1-namhyung@kernel.org>
+References: <20241102231702.2262258-1-namhyung@kernel.org>
+Subject: Re: [PATCH] perf test: Fix ftrace test with regex patterns
+Message-Id: <173082490183.149345.8969186375573010854.b4-ty@kernel.org>
 Date: Tue, 05 Nov 2024 08:41:41 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -54,12 +48,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Mon, 04 Nov 2024 11:34:58 -0300, Arnaldo Carvalho de Melo wrote:
+On Sat, 02 Nov 2024 16:17:02 -0700, Namhyung Kim wrote:
 
-> Since the C test wrapper for attr.py was removed we don't have an attr.o
-> object for that CFLAGS_attr.o to apply for, remove it.
+> During the parallel testing, I've noticed some ftrace test failures.  It
+> seems the regex pattern checks 100 msec of nanosleep with the error
+> range of 10 msec.  But sometimes it's affected by other processes and
+> resulted in more time in the syscall.
 > 
+> The following output shows that it took more than 120 msec and failed.
+> Let's update the regex pattern so that it can allow more drifts.
 > 
+> [...]
 
 Applied to perf-tools-next, thanks!
 
