@@ -1,133 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652EB1E25FD;
-	Tue,  5 Nov 2024 19:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E2A213EC5
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Nov 2024 19:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730836370; cv=none; b=eDOJbyVjm4SxjmV0AkwSmvnbnAAK5n9nRO+/GHFMuWQq8MWZm6+lKsK2q8/1QtBLa8d98uo3J4JexPFS9xarGfAhn1G2ZzzK1yHVpvF7aOrUOKdT/O+zfR9zeoBVWyFgWBGMCnp/HekfCMDcvvNiTojy6fxO7C2LlGyi1rMcBLU=
+	t=1730836591; cv=none; b=am73qLtgkfNzLUK7HyhOK5jbUCGcUtRC4BVYZI7D8EggIOROLONcjulOKqDLvgwhdyZbbteUvKv2YuIGVgc9y99xFW9/AoEhGp683vjR3inG1WRh5bohmk4Xq2muuj44zAZWlRsLjSfhjmNnzzUeO8PlFQXHlRbElwv60Dp7bmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730836370; c=relaxed/simple;
-	bh=ifdrJqfK1N4E0OCQaVRQ91URLptDkX6eScHJuwPFLLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qiN0om2uSovi6wUAngGioWdMY5BamgNmYn4dPb/yD7kaXxFOFyTVDNa8MkMFQXnnqsL5mrLXGepby69c7bj/+aMpoYxxnevZrhdNCp7EsCRIQAdsyO+0ui4zBtk1iXsmrgxC36jwooPxRldrJfV4h7rCIY2fcGF+rh/wf684ye8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iItkjvTu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730836591; c=relaxed/simple;
+	bh=sAKKgucoI4QTRhj9J+f6y3dNEk0UUb1jSv7yTfaZEHk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=lBgExcJCbYdl4q16KUpyD05vUv7grz8B82r39J1UcT7P9Xnjv1DrMN9F0F6XJjYpzp9ysrMP8bUypMuB6trsahLWqoMKwrjAk4Tppdkw2tduSpJV34k9uSLxakMjg4hxuqn8i0cY7GqV6S3q9hKu80qbRGNZllUXEqux/Ko2UIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oQBx1en3; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iItkjvTu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20AEFC4CECF;
-	Tue,  5 Nov 2024 19:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730836369;
-	bh=ifdrJqfK1N4E0OCQaVRQ91URLptDkX6eScHJuwPFLLg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iItkjvTufXsEKLa2SL9674Ih7Q0fed8Tc1jTBBuFbwZPajk+JJ2IJB1pLwobyFj21
-	 DH0/7X3FsDP0WXwRKSIS2CQhSqSzslM5z8qU0bYbfqwgUfz/TPV25q7W5OlM8QSp44
-	 g7or9dcp15LVyTK2FYqReezpSSoz/0c1v1pidolBfEqcRJ5M0iKyhwKYQSaVG/454i
-	 PRb0eTdTqDFYhJsF08+28+nP4mqqyXI+U8fzog9BIeHGmV/GQZ6Jf+uenHsnGhY3ES
-	 BdYyYeAxh2K04fDefkYddsEYmmDIktsxUjgRlYdVzRWJJOmL9TJSfwPUIwjStJ+7JI
-	 thYtQ0kkqVNRw==
-Date: Tue, 5 Nov 2024 16:52:45 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-	James Clark <james.clark@linaro.org>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
-	Zixian Cai <fzczx123@gmail.com>, Andi Kleen <ak@linux.intel.com>,
-	Paran Lee <p4ranlee@gmail.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 4/6] perf evsel: Add/use accessor for tp_format
-Message-ID: <Zyp3jeLz4ympxfHv@x1>
-References: <20241102165400.75785-1-irogers@google.com>
- <20241102165400.75785-5-irogers@google.com>
- <ZypXmtlqQUxABhMI@x1>
- <CAP-5=fUNR_t8R33enM1WHzR1-ZzZMUDM1hTLohPdefbKfhMSXA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oQBx1en3"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e30c7a7ca60so8102296276.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Nov 2024 11:56:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730836589; x=1731441389; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hzMiS31Q99SH+ivi/H+fLjhfNr8W/1ENyadMPU3uzYk=;
+        b=oQBx1en3JDZTc0i3f08iqxy2rQYzsKR88cDHyn/fdqHSgv79sLaRo+ESj7hf+cmPo/
+         SkA7TtK74KvmPx1nVQx5gvdSrDKMPTNRUBOeR5kGuUnQKZqZ+K5weiJRa+u71NO/P4Jh
+         csTGNOQHBsMN3hxu0hcm37ht2OyhD4Wbnyvv96d7DLIPECwajjC1LdBYvMX8zoeKc0zf
+         xPqlbao+gDXRvpDvPH2YK6nPUAy69qHut8pe/z23jCKLdvK8uGq0yFo3HE0hLMf2GSMQ
+         ioOTvDdo31AGGg4/5R8g+DAuBEDoPvF9gmbyf52JJO03puIll3uA36UHaX/0clVSTTIb
+         ZPpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730836589; x=1731441389;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hzMiS31Q99SH+ivi/H+fLjhfNr8W/1ENyadMPU3uzYk=;
+        b=WWD55A469/aDSBBaYlwVaTAAjDBNKagGDWbhrv5ImLG1HgXgHpAungO1DpDjTZ3sYF
+         O+SOfDR/hQFZ5/I5li1y8NadYYRLJw923VeP1F/G/Ky/LPKwleSF3+QK8HEGho+Kzk0k
+         HGLljJPQczG4V2BNWzGMbP3qgw8BgaDomiNBzT1q60UJLkJ1rDnbmh48Be2vagy1CI7z
+         U0XwY3PhtmNHzo7B9PM7YebFDZcANDbqIt/dl6oH3sT7zgDAal+nFEsLiuP9pQU/H0Nz
+         JRDXP57RahqI5Q7pqXM431VDWM38J5hU5HJv6BESvQeFu1DPeeYuSAlht7fAn+Temhqh
+         sk4g==
+X-Forwarded-Encrypted: i=1; AJvYcCWHgWb4AGjbGibOHdXNWGWev61HZJUGUC8i3GpEsAl1zkbr594c078uNzLfof06+7eSQQbzqATvqIlOixKaFMIq@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUyHQMshFctF4doz5TyYo3Dw/iELGxxNGdZz49uyITNE+0GQiI
+	uk9zptNAR0zZxzht9ofeRb+1XB5y2AzdXnnwaf0lalqa4ETu9xEYV7DzjDHiUFP0gIG0umLFXLb
+	UugW8qR2fFCOkhlr0otF8aw==
+X-Google-Smtp-Source: AGHT+IGCeubudBZvDHKVyK9hoysogwq8Oy8BphtTGtN9ESDHF0Oe45MlIu4/byZXs6BbgdCbpbF4nba1Gh+JSm/9sQ==
+X-Received: from coltonlewis-kvm.c.googlers.com ([fda3:e722:ac3:cc00:11b:3898:ac11:fa18])
+ (user=coltonlewis job=sendgmr) by 2002:a25:b28e:0:b0:e29:6df8:ef58 with SMTP
+ id 3f1490d57ef6-e3087a5bd64mr143088276.4.1730836589136; Tue, 05 Nov 2024
+ 11:56:29 -0800 (PST)
+Date: Tue,  5 Nov 2024 19:55:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUNR_t8R33enM1WHzR1-ZzZMUDM1hTLohPdefbKfhMSXA@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.199.ga7371fff76-goog
+Message-ID: <20241105195603.2317483-1-coltonlewis@google.com>
+Subject: [PATCH v6 0/5] Correct perf sampling with Guest VMs
+From: Colton Lewis <coltonlewis@google.com>
+To: kvm@vger.kernel.org
+Cc: Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Will Deacon <will@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	Colton Lewis <coltonlewis@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Nov 05, 2024 at 11:33:09AM -0800, Ian Rogers wrote:
-> On Tue, Nov 5, 2024 at 9:36 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > On Sat, Nov 02, 2024 at 09:53:58AM -0700, Ian Rogers wrote:
-> > > Add an accessor function for tp_format. Rather than search+replace
-> > > uses try to use a variable and reuse it. Add additional NULL checks
-> > > when accessing/using the value. Make sure the PTR_ERR is nulled out on
-> > > error path in evsel__newtp_idx.
+v6:
+* Apply all Reviewed-by and Acked-by trailers from previous versions
+* Rebase to v6.12-rc6
 
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
+v5:
+https://lore.kernel.org/all/20240920174740.781614-1-coltonlewis@google.com/
 
-> > > +++ b/tools/perf/builtin-kmem.c
-> > > @@ -772,8 +773,9 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
-> > >       }
-> > >
-> > >       trace_seq_init(&seq);
-> > > -     tep_print_event(evsel->tp_format->tep,
-> > > -                     &seq, &record, "%s", TEP_PRINT_INFO);
-> > > +     tp_format = evsel__tp_format(evsel);
-> > > +     if (tp_format)
-> > > +             tep_print_event(tp_format->tep, &seq, &record, "%s", TEP_PRINT_INFO);
-> > >
-> > >       str = strtok_r(seq.buffer, " ", &pos);
-> > >       while (str) {
-> > > @@ -2011,14 +2013,15 @@ int cmd_kmem(int argc, const char **argv)
-> > >       }
-> > >
-> > >       if (kmem_page) {
-> > > -             struct evsel *evsel = evlist__find_tracepoint_by_name(session->evlist, "kmem:mm_page_alloc");
-> > > +             struct evsel *evsel = evlist__find_tracepoint_by_name(session->evlist,
-> > > +                                                                   "kmem:mm_page_alloc");
-> >
-> > Try to avoid these reflows to reduce patch size, please.
-> 
-> Agreed, in this case check `checkpatch.pl` is complaining that the
-> line length is 109 columns.
+v4:
+https://lore.kernel.org/kvm/20240919190750.4163977-1-coltonlewis@google.com/
 
-Ok, but it was like that before, your patch is not touching that line
-for some other reason, so it is unrelated to what you're doing, causing
-a distraction.
+v3:
+https://lore.kernel.org/kvm/20240912205133.4171576-1-coltonlewis@google.com/
 
-Besides, even the documentation for checkpatch mentions that that is:
+v2:
+https://lore.kernel.org/kvm/20240911222433.3415301-1-coltonlewis@google.com/
 
-  **LONG_LINE**
-    The line has exceeded the specified maximum length.
-    To use a different maximum line length, the --max-line-length=n option
-    may be added while invoking checkpatch.
+v1:
+https://lore.kernel.org/kvm/20240904204133.1442132-1-coltonlewis@google.com/
 
-    Earlier, the default line length was 80 columns.  Commit bdc48fa11e46
-    ("checkpatch/coding-style: deprecate 80-column warning") increased the
-    limit to 100 columns.  This is not a hard limit either and it's
-    preferable to stay within 80 columns whenever possible.
+This series cleans up perf recording around guest events and improves
+the accuracy of the resulting perf reports.
 
-    See: https://www.kernel.org/doc/html/latest/process/coding-style.html#breaking-long-lines-and-strings
+Perf was incorrectly counting any PMU overflow interrupt that occurred
+while a VCPU was loaded as a guest event even when the events were not
+truely guest events. This lead to much less accurate and useful perf
+recordings.
 
-----------------
+See as an example the below reports of `perf record
+dirty_log_perf_test -m 2 -v 4` before and after the series on ARM64.
 
-So if it was there already, meaning the original author preferred it
-that way, its not touched by the feature that is being worked on in this
-patch, ends up being an extra hunk, just reflowing, a distraction.
- 
-- Arnaldo
+Without series:
+
+Samples: 15K of event 'instructions', Event count (approx.): 31830580924
+Overhead  Command          Shared Object        Symbol
+  54.54%  dirty_log_perf_  dirty_log_perf_test  [.] run_test
+   5.39%  dirty_log_perf_  dirty_log_perf_test  [.] vcpu_worker
+   0.89%  dirty_log_perf_  [kernel.vmlinux]     [k] release_pages
+   0.70%  dirty_log_perf_  [kernel.vmlinux]     [k] free_pcppages_bulk
+   0.62%  dirty_log_perf_  dirty_log_perf_test  [.] userspace_mem_region_find
+   0.49%  dirty_log_perf_  dirty_log_perf_test  [.] sparsebit_is_set
+   0.46%  dirty_log_perf_  dirty_log_perf_test  [.] _virt_pg_map
+   0.46%  dirty_log_perf_  dirty_log_perf_test  [.] node_add
+   0.37%  dirty_log_perf_  dirty_log_perf_test  [.] node_reduce
+   0.35%  dirty_log_perf_  [kernel.vmlinux]     [k] free_unref_page_commit
+   0.33%  dirty_log_perf_  [kernel.vmlinux]     [k] __kvm_pgtable_walk
+   0.31%  dirty_log_perf_  [kernel.vmlinux]     [k] stage2_attr_walker
+   0.29%  dirty_log_perf_  [kernel.vmlinux]     [k] unmap_page_range
+   0.29%  dirty_log_perf_  dirty_log_perf_test  [.] test_assert
+   0.26%  dirty_log_perf_  [kernel.vmlinux]     [k] __mod_memcg_lruvec_state
+   0.24%  dirty_log_perf_  [kernel.vmlinux]     [k] kvm_s2_put_page
+
+With series:
+
+Samples: 15K of event 'instructions', Event count (approx.): 31830580924
+Samples: 15K of event 'instructions', Event count (approx.): 30898031385
+Overhead  Command          Shared Object        Symbol
+  54.05%  dirty_log_perf_  dirty_log_perf_test  [.] run_test
+   5.48%  dirty_log_perf_  [kernel.kallsyms]    [k] kvm_arch_vcpu_ioctl_run
+   4.70%  dirty_log_perf_  dirty_log_perf_test  [.] vcpu_worker
+   3.11%  dirty_log_perf_  [kernel.kallsyms]    [k] kvm_handle_guest_abort
+   2.24%  dirty_log_perf_  [kernel.kallsyms]    [k] up_read
+   1.98%  dirty_log_perf_  [kernel.kallsyms]    [k] __kvm_tlb_flush_vmid_ipa_nsh
+   1.97%  dirty_log_perf_  [kernel.kallsyms]    [k] __pi_clear_page
+   1.30%  dirty_log_perf_  [kernel.kallsyms]    [k] down_read
+   1.13%  dirty_log_perf_  [kernel.kallsyms]    [k] release_pages
+   1.12%  dirty_log_perf_  [kernel.kallsyms]    [k] __kvm_pgtable_walk
+   1.08%  dirty_log_perf_  [kernel.kallsyms]    [k] folio_batch_move_lru
+   1.06%  dirty_log_perf_  [kernel.kallsyms]    [k] __srcu_read_lock
+   1.03%  dirty_log_perf_  [kernel.kallsyms]    [k] get_page_from_freelist
+   1.01%  dirty_log_perf_  [kernel.kallsyms]    [k] __pte_offset_map_lock
+   0.82%  dirty_log_perf_  [kernel.kallsyms]    [k] handle_mm_fault
+   0.74%  dirty_log_perf_  [kernel.kallsyms]    [k] mas_state_walk
+
+Colton Lewis (5):
+  arm: perf: Drop unused functions
+  perf: Hoist perf_instruction_pointer() and perf_misc_flags()
+  powerpc: perf: Use perf_arch_instruction_pointer()
+  x86: perf: Refactor misc flag assignments
+  perf: Correct perf sampling with guest VMs
+
+ arch/arm/include/asm/perf_event.h            |  7 ---
+ arch/arm/kernel/perf_callchain.c             | 17 -------
+ arch/arm64/include/asm/perf_event.h          |  4 --
+ arch/arm64/kernel/perf_callchain.c           | 28 ------------
+ arch/powerpc/include/asm/perf_event_server.h |  6 +--
+ arch/powerpc/perf/callchain.c                |  2 +-
+ arch/powerpc/perf/callchain_32.c             |  2 +-
+ arch/powerpc/perf/callchain_64.c             |  2 +-
+ arch/powerpc/perf/core-book3s.c              |  4 +-
+ arch/s390/include/asm/perf_event.h           |  6 +--
+ arch/s390/kernel/perf_event.c                |  4 +-
+ arch/x86/events/core.c                       | 47 +++++++++++---------
+ arch/x86/include/asm/perf_event.h            | 12 ++---
+ include/linux/perf_event.h                   | 26 +++++++++--
+ kernel/events/core.c                         | 27 ++++++++++-
+ 15 files changed, 95 insertions(+), 99 deletions(-)
+
+
+base-commit: 59b723cd2adbac2a34fc8e12c74ae26ae45bf230
+--
+2.47.0.199.ga7371fff76-goog
