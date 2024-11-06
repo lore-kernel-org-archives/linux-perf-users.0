@@ -1,200 +1,94 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7864F9F8
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Nov 2024 00:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD12410E3
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Nov 2024 00:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730853158; cv=none; b=Yhu7L1y6QrnZw//h0nCi8GARbn9DJSsBUuj0KPNAAvoc8evtcfYxhnecwT0F5tpqocBPOqbJm9neA1tGTVFrBrbt0EnNrvPwQpZeftG2+VLkqgFsOzadkYJw+ml+MkbgXS13aHGuYUwnVSlPfwXFGVnzKbBF4Sd1EBOabtC6VV4=
+	t=1730854108; cv=none; b=Q6Tfltz3Z+NJZ4Q6btuMQuRCeH5prj9W1dLC4DFvwHrIjGK8PIccxaUqIGbVhyK0cl66zZrEyr8FlrWhV4Zhxy4HYMHriSN4Z1suFdSM53GHpKLQMokko9+slllHkoJbOc1jXOfV4wNwPKehHLmF3mphSXZeekz/QozqeWJJXSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730853158; c=relaxed/simple;
-	bh=W2MNS7vs8Wdqb5q6mm979sTO3PGe0U27MYkgdgZT9Yc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a7U9PJi71oCtjSyfUEEM/tn6nW6r+Ceg3P1XVhv8p9XIqR5EslDMlkg3eB+Fw8CmS1G8aETRXhKElo7Z5UztzxuhSDnv9Ajvmea/rzEFnPWDSnnCyX0Q+rgMoqCTBti7jhBbVs/yKsBexW9xiqVbB0B4oK3GFYHGQWjZCtrhHDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ogNx1LKA; arc=none smtp.client-ip=209.85.128.48
+	s=arc-20240116; t=1730854108; c=relaxed/simple;
+	bh=9I6xl/pCNtYb3pgbMGqxTrPrnk7hUSdh2wehgp4aL/0=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=iudQjccUu2x4fDm8QZjKym1qgCA1L9P9kPLGV2ButIdZeINrQN5Md/c2rKo94hbCfDV2HXZD+Epsu91GZtD6Te5W+m6riDc8Zqr/RX1W3GjOmwHmy6BrvRMevZUBfQYhnNnc5IHlQwALPthflL/c3EJn7oXgn1VjkNGHbBmOHUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZMGLJB7W; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ogNx1LKA"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4315e62afe0so51889345e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Nov 2024 16:32:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZMGLJB7W"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e29135d1d0cso9784563276.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Nov 2024 16:48:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730853154; x=1731457954; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OgQmIWY1Y20zXq4aq/x6E7RoCbmNzYOzB+1w+5Cai0k=;
-        b=ogNx1LKAx01eLG1aVoibjEiAK6VkjRNvvzmV/LUhiqjB3sTYH9e9a8dP/amdD7RHuO
-         LGhJRY8OElJqxur6LLcPAE7iGQMGvX6wKttqbi1Z3srnLZ2rHWCCJ8vECFKQ5YuQbu5v
-         0Q0Wwjgmh84/Wp3+bSSYJPBZDZkqhXU2oZgeMDzEDYK+lZw8gOwi6MrXOdW6R+1ZBvps
-         qxR5Ir4Q5q6lnD2y0u9STHGEObhnh+sOi4xPnczKH4enk0Ai/m5YztddPVeIbxoAE3CT
-         t0hAq4816N58tM3RyToQVxISq284g3DLiF9RYaGc8jjY0IxRHo1nrjV4/BUMNX9Rjh15
-         /Izg==
+        d=google.com; s=20230601; t=1730854106; x=1731458906; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vYd57AoGodRvVgwIHi85ZBfZjyzkHdyJhjySvflJKD0=;
+        b=ZMGLJB7WUhtq/nE1s3UeDjO0KNgsDo6DKs8Gz0cteN9z2vbjK+01wZ6c9hDBq3lMjz
+         RgSFstfMrv7UYzYAx+p4hQdMT7MMjcZSygYokzVW+Ip3og7j6HO/8R9r0lPr4CHtrZdm
+         McjZs2wYtHAd0MkCQYmsh8wtBcoAV1VA5SeOCbmFgwPp+LduoknEl77Q8rHryYJzsYC+
+         3KFA0DBviyxT6r31AsgSZrNV3WSdJIVJ+GXcGFFt5Nwhm57xAy1pET5GD8KO3ifvuwe1
+         jgdVn+NjpfRjoHLq/8Bz5BWH9ksn3JetkC+oVd4diV8e1m/Yf+wKed4TgBT7+2aAwAni
+         v4gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730853154; x=1731457954;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OgQmIWY1Y20zXq4aq/x6E7RoCbmNzYOzB+1w+5Cai0k=;
-        b=OMYsH5GygdKvkj2C5xCaNTWj63eecwQvysjU8s0luuuq2vbhuap6uYkE1ESVtRoFbJ
-         aJTXzOwRhXMD2ahx1cgGdZPEirMRgi/ejNsim13IEI7/U2GldpKLq3D8+4er7ztL862F
-         WN/Z9CoTvo3tcSPL6hIPxxgUDlM5a8eJPvTtdfJYXI41Q6BcUXz8Rv0VBjooc05DnB53
-         JQTtyjdPJBzgaH61IMuw2xXJkGqysfb2cCgBxoIwmhAY9duKh2bVYojwK8aphqW9SVgU
-         lsM5UrjG4AEGiMeDQsv0Mgi5tKxzeLQbVQQUg7UEGKjlrAc27uiXmfflvlGWX/tCPwQV
-         ivXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSNjMKs6bP8TYJ9fqLPgP/AZXqDCeWaPpyGQcNRyRtsVWYBKORsKEM3UXwgwjxBg8NBgFNSK9sMq34NJlC+pWg@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCqMnaCUBQcChi4GqocjinKXU1an1V1KgI+oK2+eI2cgpWWM1U
-	yzLoZ6QFo3dqay7XYOt8iqOja6zdlH2rWnY+5QtGh6G97QdFJvIV6ZCLrYsvEkIpUfH0ebzp9bq
-	frFEj5AuKIdsylE+nh88105K2MbF7o6db77J1
-X-Google-Smtp-Source: AGHT+IGRX/BfDnE/ylrb2nu1HzcsSnkrmxoFVgn2PYUGFFm5Kq6UXrZ/5K54cVuz+foZxCgeQTkVL30IMYttPtUfOcA=
-X-Received: by 2002:a5d:4045:0:b0:37d:3bad:a503 with SMTP id
- ffacd0b85a97d-380611e0f45mr25473953f8f.40.1730853154062; Tue, 05 Nov 2024
- 16:32:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1730854106; x=1731458906;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vYd57AoGodRvVgwIHi85ZBfZjyzkHdyJhjySvflJKD0=;
+        b=l1GXZtqovMWB9rSt+UI1bxFvCNS3S3AOZm2bNMZ/jQ1RT5wOv7WekTdNEH19pozktA
+         FlDhZJtEcNS70krtSU8sXSrXRu+846W0xNbjpSE9qC9LzYjKAOQh+8fuyOIAvEK3ZMrR
+         M6lGByEE1pG9nbOHRTIqgdiGze/Dwa9fkSHyH2NcoZc8sS5v1iyOGnhrEAR8yVfihQI+
+         /3+eFXU2MHgkaq29NWaz002MSR77myya2vBLo+R6AoXGr9GugDOfnRJB/YPhcm+7tj5F
+         EHpm8GkHfmGbw8M0gpAgh4E+XlmJvHqqAdivuKwyzADO1dJKebL84KgNFg1XKV1tlC5K
+         Rz4w==
+X-Forwarded-Encrypted: i=1; AJvYcCU6/ooCf8Knmnuat8aHlNSaXrMdrY/tr2PvkusUneok7vvEZNsMR6mrs3iwvr1XASomv5hXBsFwAl9J2D1khyO2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnS4tDF+fsStyDi7SNVF8KSw0TIjKrX7R6kXBZSM8kdpFnlIWH
+	Jn7Vq11YGgf1cFGPzV+NeOvsAk+KXgKK7wdIQ6epKefP4lc3ktELIsNOYN8G+3j1YOD2UbVh7dg
+	bQpJyzA==
+X-Google-Smtp-Source: AGHT+IEObSlB6Ht1DmKatDDLJH5puuB4Uxp9+SL2zbA9P+sOY39CyoDGJ97g9J4RcN87Uji5jwYp7xyib0mX
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ff9e:ab12:75ac:c1a0])
+ (user=irogers job=sendgmr) by 2002:a25:9b42:0:b0:e30:c741:ab06 with SMTP id
+ 3f1490d57ef6-e30cf42ddb2mr16401276.5.1730854105236; Tue, 05 Nov 2024 16:48:25
+ -0800 (PST)
+Date: Tue,  5 Nov 2024 16:48:18 -0800
+Message-Id: <20241106004818.2174593-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241101211757.824743-1-ctshao@google.com> <20241101211757.824743-2-ctshao@google.com>
- <Zyli1TWn8ZaNWSxm@google.com>
-In-Reply-To: <Zyli1TWn8ZaNWSxm@google.com>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Tue, 5 Nov 2024 16:32:22 -0800
-Message-ID: <CAJpZYjVrTsuSwT-31hBYihzmK94j6BWGD4XxudTXMB0W+Hcb+g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] perf: Reveal PMU type in fdinfo
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.199.ga7371fff76-goog
+Subject: [PATCH v1] perf stat: Expand metric+unit buffer size
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Liang Kan <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Thanks for your review, Namhyung! Here is the link to patch v3:
-https://lore.kernel.org/all/20241106003007.2112584-2-ctshao@google.com/
+Long metric names combined with units may exceed the metric_bf and
+lead to truncation. Double metric_bf in size to avoid this.
 
-On Mon, Nov 4, 2024 at 4:12=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Fri, Nov 01, 2024 at 09:17:56PM +0000, Chun-Tse Shao wrote:
-> > It gives useful info on knowing which PMUs are reserved by this process=
-.
-> > Also add extra attributes which would be useful.
-> >
-> > ```
-> > Testing cycles
-> > $ ./perf stat -e cycles &
-> > $ cat /proc/`pidof perf`/fdinfo/3
-> > pos:    0
-> > flags:  02000002
-> > mnt_id: 16
-> > ino:    3081
-> > perf_event-attr.type:   0
->
-> Maybe 'perf_event_attr' would be appropriate as it's the name of the
-> struct.
->
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/stat-shadow.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Agree.
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 8c9292aa61d3..6b531d4f58a3 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -507,7 +507,7 @@ static void generic_metric(struct perf_stat_config *config,
+ 	if (!metric_events[i]) {
+ 		if (expr__parse(&ratio, pctx, metric_expr) == 0) {
+ 			char *unit;
+-			char metric_bf[64];
++			char metric_bf[128];
+ 
+ 			if (metric_threshold &&
+ 			    expr__parse(&threshold, pctx, metric_threshold) == 0 &&
+-- 
+2.47.0.199.ga7371fff76-goog
 
-> > perf_event-attr.config: 0
-> > perf_event-attr.config1:        0
-> > perf_event-attr.config2:        0
-> > perf_event-attr.config3:        0
->
-> It's hard to pick which fields to show here but I'd say that those
-> config[123] are not used frequently at least for regular events.
-> Maybe just showing type and config is fine.
->
-
-Agree, it should be fine to add more if needed.
-
-> >
-> > Testing L1-dcache-load-misses//
-> > $ ./perf stat -e L1-dcache-load-misses &
-> > $ cat /proc/`pidof perf`/fdinfo/3
-> > pos:    0
-> > flags:  02000002
-> > mnt_id: 16
-> > ino:    1072
-> > perf_event-attr.type:   3
-> > perf_event-attr.config: 65536
-> > perf_event-attr.config1:        0
-> > perf_event-attr.config2:        0
-> > perf_event-attr.config3:        0
-> > ```
-> >
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > ---
-> >  kernel/events/core.c | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
->
-> FYI usually the kernel changes are applied to a different tree than the
-> tools.
->
-
-Thanks for the heads up!
-
-> >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index cdd09769e6c56..c950b6fc92cda 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -55,6 +55,7 @@
-> >  #include <linux/pgtable.h>
-> >  #include <linux/buildid.h>
-> >  #include <linux/task_work.h>
-> > +#include <linux/seq_file.h>
-> >
-> >  #include "internal.h"
-> >
-> > @@ -6820,6 +6821,17 @@ static int perf_fasync(int fd, struct file *filp=
-, int on)
-> >       return 0;
-> >  }
-> >
-> > +static void perf_show_fdinfo(struct seq_file *m, struct file *f)
-> > +{
-> > +     struct perf_event *event =3D f->private_data;
-> > +
-> > +     seq_printf(m, "perf_event-attr.type:\t%u\n", event->orig_type);
-> > +     seq_printf(m, "perf_event-attr.config:\t%llu\n", event->attr.conf=
-ig);
->
-> I'm not sure if all archs are happy with treating it as %llu.
->
-
-I think with type casting to `unsigned long long`, it will make it
-print in `%llu` for all archs.
-
-
-> Thanks,
-> Namhyung
->
->
-> > +     seq_printf(m, "perf_event-attr.config1:\t%llu\n", event->attr.con=
-fig1);
-> > +     seq_printf(m, "perf_event-attr.config2:\t%llu\n", event->attr.con=
-fig2);
-> > +     seq_printf(m, "perf_event-attr.config3:\t%llu\n", event->attr.con=
-fig3);
-> > +}
-> > +
-> >  static const struct file_operations perf_fops =3D {
-> >       .release                =3D perf_release,
-> >       .read                   =3D perf_read,
-> > @@ -6828,6 +6840,7 @@ static const struct file_operations perf_fops =3D=
- {
-> >       .compat_ioctl           =3D perf_compat_ioctl,
-> >       .mmap                   =3D perf_mmap,
-> >       .fasync                 =3D perf_fasync,
-> > +     .show_fdinfo            =3D perf_show_fdinfo,
-> >  };
-> >
-> >  /*
-> > --
-> > 2.47.0.163.g1226f6d8fa-goog
-> >
