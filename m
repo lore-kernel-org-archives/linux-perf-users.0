@@ -1,134 +1,97 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5322208986
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Nov 2024 20:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCA520C493;
+	Wed,  6 Nov 2024 22:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730926321; cv=none; b=qcdBjtewjmetips/bf/bl24Et3bOl15tuuONULqfj9fM2R7PQTnqPedLJ/naNnuX+KwnMxEYYHOJlFy0e7ltBxwaiyghoVGjnlHDU886wjJVXM4AG46lN27vHgQ0/rmBbrg2Y1jyTZppdjHyFN0r63OKZhakBy25wmPj6yDrac8=
+	t=1730932832; cv=none; b=pCrDf/CFGRZaszVKWXfzhYrQUN6DNVh9q+Ar4Wy2dDUVNcZOPP0pGEQ1fvd38C+DBnB0wVRp0gwpknaPa/4abiJB+pHulU6w6W//v87oY3S+0ezV+IjKsA9Ml3P1BO2OJZCFxeJI+sTaI9mn9MPtHLoZJAKUaP3P6zfcHqoGZrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730926321; c=relaxed/simple;
-	bh=BUiy1Lrkui/QDhUO26WuXJ0XiAVZDQ7hDrKZilM9VkY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cW3RdP256CMVdEyrJb2wur0DOnnva5OCnvE13JUEpa3Y/C3BLmXfqpO6eJBFDf68Q0bA0tWcrWiXJnhWR6kTRF3/+xzsrrFJkSBN0Nb4zxdTaqOh84YnJzO5tNz1dUpk0KqL4sGsziHMSr8wsJvkNnDuQb3T9QlosVySz0vE6Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Bw/NSx1j; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1730932832; c=relaxed/simple;
+	bh=21udNx/M9w2pruaMuHrnxKYz6D3+pTy5p84fVG7+hnM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SEUBTBM43VMJh4Z4XNDfd1lKYEP7e/HrLBIqQSSt7Eur5XZEcq5CzBucFhCzCx5o43HezeF64MUIB78TrNlS6af5E3zfRDP6RiTJ96rOFQ1nprJiViueZj83wbNJfPBfss0TCShwI/kqJvt/4IP7c/Rfbav7XuVg3sY6lHO49kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Le2zWAkj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Bw/NSx1j"
-Date: Wed, 6 Nov 2024 12:51:40 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1730926316;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iTbQ6DPhP6MjHwSaDILXhZVjYXEH8BwsiSbm61YVqgE=;
-	b=Bw/NSx1j2z8iH74+2uUPsORZOF/lHwjDSE1XgPO3bR7hc3VDGRgJjxxqihTFVbyt2Vu2w8
-	raQ7DhoPXKD5HHKOAaOJujYj6vS582FOQLBKtpnd3xvd1RSxRYMmmhyO+1CxVOE0maifyR
-	a4U5OreS2n4YhRCs77wj4S8lLE19n7c=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org,
-	Sean Christopherson <seanjc@google.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Le2zWAkj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFDC2C4CEC6;
+	Wed,  6 Nov 2024 22:40:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730932831;
+	bh=21udNx/M9w2pruaMuHrnxKYz6D3+pTy5p84fVG7+hnM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Le2zWAkjwnxSTNlxELNE/S2Y/fVIwErr/27yl0lCNLwFTmASaqps25CfthIFNF7hq
+	 3IMisaq3EevONAa7lBAnBPU+NQGsoXob1vlTAGgIoFygZM0PxFMOU+guOlNEuYXknG
+	 TzFVq7EMpnKOa5TW+lAAMCSnMkQX4Hdw/3VniUK5JfYPkRztj6Wykj01DarhnaBOn4
+	 K6S9OexJMKisKX8yBFCsqdCyqwsXbJQ9cVFTrU0C92BwBFnsWo8wqw0Rp7aZ9Z5H2i
+	 tyNf9H/1qdmdyhZeLmhUpH8Qkvz97nA0vnkz+XeZg8yJ/8DZ3e4EmJALIu8Mpe22cV
+	 JN05jyJym6M6A==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v6 4/5] x86: perf: Refactor misc flag assignments
-Message-ID: <ZyvW3FxcezmYyOMa@linux.dev>
-References: <20241105195603.2317483-1-coltonlewis@google.com>
- <20241105195603.2317483-5-coltonlewis@google.com>
- <65675ed8-e569-47f8-b1eb-40c853751bfb@linux.intel.com>
- <ZyvLOjy8Vfvai5cG@linux.dev>
- <597dbcf6-8169-4084-881c-8942ed363189@linux.intel.com>
+	Sean Young <sean@mess.org>
+Subject: [PATCH bpf-next] selftests/bpf: Fix uprobe consumer test (again)
+Date: Wed,  6 Nov 2024 23:40:25 +0100
+Message-ID: <20241106224025.3708580-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <597dbcf6-8169-4084-881c-8942ed363189@linux.intel.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 06, 2024 at 03:33:30PM -0500, Liang, Kan wrote:
-> On 2024-11-06 3:02 p.m., Oliver Upton wrote:
-> > On Wed, Nov 06, 2024 at 11:03:10AM -0500, Liang, Kan wrote:
-> >>> +static unsigned long common_misc_flags(struct pt_regs *regs)
-> >>> +{
-> >>> +	if (regs->flags & PERF_EFLAGS_EXACT)
-> >>> +		return PERF_RECORD_MISC_EXACT_IP;
-> >>> +
-> >>> +	return 0;
-> >>> +}
-> >>> +
-> >>> +unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs)
-> >>> +{
-> >>> +	unsigned long guest_state = perf_guest_state();
-> >>> +	unsigned long flags = common_misc_flags(regs);
-> >>> +
-> >>> +	if (guest_state & PERF_GUEST_USER)
-> >>> +		flags |= PERF_RECORD_MISC_GUEST_USER;
-> >>> +	else if (guest_state & PERF_GUEST_ACTIVE)
-> >>> +		flags |= PERF_RECORD_MISC_GUEST_KERNEL;
-> >>> +
-> >>
-> >> The logic of setting the GUEST_KERNEL flag is implicitly changed here.
-> >>
-> >> For the current code, the GUEST_KERNEL flag is set for !PERF_GUEST_USER,
-> >> which include both guest_in_kernel and guest_in_NMI.
-> > 
-> > Where is the "guest_in_NMI" state coming from? KVM only reports user v.
-> > kernel mode.
-> 
-> I may understand the kvm_arch_pmi_in_guest() wrong.
+The new uprobe changes bring bit some new behaviour that we need
+to reflect in the consumer test.
 
-kvm_arch_pmi_in_guest() is trying to *guess* whether or not an overflow
-interrupt caused the most recent VM-exit, implying a counter overflowed
-while in the VM. It has no idea what events are loaded on the PMU and
-which contexts they're intended to sample in.
+There's special case when we have one of the existing uretprobes removed
+and at the same time we're adding the other uretprobe. In this case we get
+hit on the new uretprobe consumer only if there was already another uprobe
+existing so the uprobe object stayed valid for uprobe return instance.
 
-It only makes sense to check kvm_arch_pmi_in_guest() if you're dealing with
-an event that counts in both host and guest modes and you need to decide who
-to sample.
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ .../selftests/bpf/prog_tests/uprobe_multi_test.c    | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-> However, the kvm_guest_state() at least return 3 states.
-> 0
-> PERF_GUEST_ACTIVE
-> PERF_GUEST_ACTIVE | PERF_GUEST_USER
-> 
-> The existing code indeed assumes two modes. If it's not user mode, it
-> must be kernel mode.
-> However, the proposed code behave differently, or at least implies there
-> are more modes.
-> If it's not user mode and sets PERF_GUEST_ACTIVE, it's kernel mode.
-
-A precondition of the call to perf_arch_guest_misc_flags() is that guest
-state is nonzero, meaning a vCPU is loaded presently on this CPU.
-
+diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
+index 619b31cd24a1..545b91385749 100644
+--- a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
++++ b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
+@@ -873,10 +873,21 @@ static int consumer_test(struct uprobe_multi_consumers *skel,
+ 			 * which means one of the 'return' uprobes was alive when probe was hit:
+ 			 *
+ 			 *   idxs: 2/3 uprobe return in 'installed' mask
++			 *
++			 * There's special case when we have one of the existing uretprobes removed
++			 * and at the same time we're adding the other uretprobe. In this case we get
++			 * hit on the new uretprobe consumer only if there was already another uprobe
++			 * existing so the uprobe object stayed valid for uprobe return instance.
+ 			 */
+ 			unsigned long had_uretprobes  = before & 0b1100; /* is uretprobe installed */
++			unsigned long b = before >> 2, a = after >> 2;
++			bool hit = true;
++
++			/* Match for following a/b cases: 01/10 10/01 */
++			if ((a ^ b) == 0b11)
++				hit = before & 0b11;
+ 
+-			if (had_uretprobes && test_bit(idx, after))
++			if (hit && had_uretprobes && test_bit(idx, after))
+ 				val++;
+ 			fmt = "idx 2/3: uretprobe";
+ 		}
 -- 
-Thanks,
-Oliver
+2.47.0
+
