@@ -1,134 +1,137 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56145202620;
-	Wed,  6 Nov 2024 16:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDDD202F6C;
+	Wed,  6 Nov 2024 16:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730909714; cv=none; b=JD7sgadZLkGhw3VQbwpmOPh7T8OT7ncolQ+i8I/nXQ3TgNoRAV32KB37cSJE3ntpHxrt/f5ttL2Vst8oFhnNEgPk6ic0CS+YysGYJKgutdUHFjb8R7xaXv+OXt4gJnt0SBqpt22bXVlQLEkJgEf99jXsYhX92DYAgztO5YOivY0=
+	t=1730910201; cv=none; b=sprMe56T52Sj+cKOQTsykRb/2mlCerINM8fv/F8qFwRlS7YQen72hyM6FOkGH8WxNf7isB1kNrwwHsd1YJR2dBvZGiQezCrGun6px1by3pseBpkxiM47vxczGekoVtHXmyI00Xlblm6yqvD/V/wTx8sdvFXbTqcI8EiovFrGRJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730909714; c=relaxed/simple;
-	bh=c9tnBYgUOdSrn0I+qBFaOnvVIUWOFf6RdjI3dGuX/ac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LnDWj2UEAV/63eKoGJIQJWwFCpVFyvh4rHyKHFQwMf1yVjYz7G1au4duG3XDpbkz2rqrwYY2WE5WVLpt+8LCTHLGFPQxj3Vh6GHjYgXsj+J+PQS8qcm3Lde/rmEh2ByjivtbRS9I4KkFLOAtTC+uzgLuVMyfsEgRjk0FK4r1BUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=awcB549r; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730910201; c=relaxed/simple;
+	bh=3t18mQxornvSkAQZRcmr+jk6jcmoLH7cx944HKMvwzs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=konf+Ux1krnMpGWtkpnOkW21UC9eaGCq+an0Vql3Y+VmqTWzhvqKtWocpxocy7jio6mDyX5HVSX9ZMR2XCp6JLL6BN8Qrg5iRqTV9fq4ZKgLdlGwdC0YvFbDjHQbG1qxDw/nYA8mtvHA0heFcTi+aeAH1f81RcAF7fPJKj1lDM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V3MA5A7t; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="awcB549r"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20c6f492d2dso75705005ad.0;
-        Wed, 06 Nov 2024 08:15:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730909713; x=1731514513; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FuM9FPVYlyiO8dA3+OPrpH3HUSy+nPdZ2IbMvNIALEU=;
-        b=awcB549ryZS1EC9M33SPSVgH3jp90nzLbvp+GfC0HWxsZdgYTnCNGYfYDwFo++tJiA
-         yeeJAwTB7z75kP5M+alBhpe88PyH8rRAGQnCkNGVMsbs5c+8aVJ4mmCcy5xRp9uHAa4r
-         Dfm5UVqVr3thgYYWZrEqWbKEvS0lwWoODPxtqf50b65vGUDH+jW3exdseqm/dwA8AYDC
-         G+WzdMpLq04pQ6/5a6tydLO+I2uExdQJ5tbEl7dCmoGkjkFn5+dgZKDUuaN5LQIblOHz
-         TGpvGDfO5+m4Co0zMwqT1zBmV0q1ehFCfkRx9DfMr/h2feQYtS1RmZ4IX9NV88nRyGD2
-         zubw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730909713; x=1731514513;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FuM9FPVYlyiO8dA3+OPrpH3HUSy+nPdZ2IbMvNIALEU=;
-        b=pxEwhnF59ANK+rSO60BykvPhXz7rsQzQ5GD+ZcntXmhBGQSezfMrBI9f1sSZWsdVYW
-         Eb7c4GDWzjEyC+eD6MEvkZynBvoqikvcOUeLXOmFZGr4y+4XOAcofmzwBWQz6Fw3N5G5
-         tps7NN1nj+qOVdzoJ+c8fxoW6GqbZAvAcpuWalSwdoibqcCMv3HvkpTOppB0Y2LU6lFJ
-         Z62gjLvMAvXO+H0bnYAy252vf0fehfHW7kmVooI0bYbg3jKYqXJvts+4pNVknPrRks2n
-         zf2O6ldbkhHGX32tJN8u8Bp7NqGgzEA8TfgcXYz2OvAeNkZICLShwszo7PimEMxCGtMf
-         e5Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEo/NcobFYvk9vlmxl1oZ0FzLXtLxZxz4heOdBQG71rORn8I6RxulSQJ6xmIuWMOfsmSE=@vger.kernel.org, AJvYcCVbBDEVFzOJS7EwLUt32EjkMTye5AuQKF+ZqZfJApOuUTsmdRJRsQgk/EtQevhjuSr+RM/FP0+0lb5MOE17JKijIRPD@vger.kernel.org, AJvYcCWMsZcxqHJhFoy4sP+RAky0LFXivuJlKBtqaGMktSR33vZyWR541xjiLt7CxE5+iPluSRrElE+JF51jW3mE@vger.kernel.org, AJvYcCWQ28n9TG7VVMlZ81UpMfSyfh+BGFOQGgpjCUuLC+1xR5DfQbDh+0UYN5WgETskEk3OxcrfiEXp4kwtPg6Rl0ii9g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoZj4i8XDY6gEccYWJ9E2WWRNiS3YtD6QBY9yIrJpCSp/TY3xT
-	euz2ZS4by3ge6PR/Ebg7+lWOZG8mRxzMVegIj5Krw+XqDSwHG2PUlCIoEsvfZVNZkuTHrzd/DId
-	BD7gdXkDmnMjryKJdleMDz6i42rQ=
-X-Google-Smtp-Source: AGHT+IGE7as/zhJ/0hEXJE5Nd8KS+oVlK6xJ3ACRVLTTH5+NKKQj62K4Tvc4N/owmW8kKUkfFogKU95TIgG/KpD68IE=
-X-Received: by 2002:a17:903:2cd:b0:207:6fd:57d5 with SMTP id
- d9443c01a7336-2111af38936mr255571785ad.36.1730909712511; Wed, 06 Nov 2024
- 08:15:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V3MA5A7t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730910199; x=1762446199;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3t18mQxornvSkAQZRcmr+jk6jcmoLH7cx944HKMvwzs=;
+  b=V3MA5A7tLCUe3seSEwFz/B6KQZR4fIovV4ua0qOFZjtSEgLtChZQnZfJ
+   QlQqmBkIoWEjn7FPX9i2EJB8VOAHMB11X2f/6Lr2wneT5qBw8k0D6FKsw
+   GqtLeseW9QRWirOnDwRhi9xaCvcPuKW3uhGJfl1CFu3zBC/fO7bmp47xG
+   qgCx7RobTdtvYSREwHl6kdavnRYhICZUB46wsyH6fyKyZpzmLIF614jR/
+   Ld01ZjvJlxdXjsfUERWapCbYcEstPwo9l+RGurC3RuBKFuOaAIY9XmgP9
+   CBG3psncCEcN/7qgaE9tp2Cg7ppsgOvj4gVNUgNH8qkFEx3NQBxHeJOGX
+   A==;
+X-CSE-ConnectionGUID: VIGZt45ySYWqpFzHggMcuQ==
+X-CSE-MsgGUID: /UHVIPbzSh2ldw0Kgd9XRw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11248"; a="34498997"
+X-IronPort-AV: E=Sophos;i="6.11,263,1725346800"; 
+   d="scan'208";a="34498997"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 08:23:19 -0800
+X-CSE-ConnectionGUID: wZ8EUHJgQQyGZHcGPHLPiA==
+X-CSE-MsgGUID: yhawi+coRtyF7joFHFAK6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,263,1725346800"; 
+   d="scan'208";a="84253798"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 08:23:18 -0800
+Received: from [10.212.82.230] (kliang2-mobl1.ccr.corp.intel.com [10.212.82.230])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id CE92F20B5703;
+	Wed,  6 Nov 2024 08:23:16 -0800 (PST)
+Message-ID: <06c73597-5b23-4759-9101-6594cc13cabc@linux.intel.com>
+Date: Wed, 6 Nov 2024 11:23:15 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
- <ZyH_fWNeL3XYNEH1@krava> <CAEf4BzZTTuBdCT2Qe=n7gqhf3yENZwHYUdsrQP9WfaEC4C35rw@mail.gmail.com>
- <20241106104639.GL10375@noisy.programming.kicks-ass.net> <20241106110557.GY33184@noisy.programming.kicks-ass.net>
-In-Reply-To: <20241106110557.GY33184@noisy.programming.kicks-ass.net>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 6 Nov 2024 08:15:00 -0800
-Message-ID: <CAEf4Bzbv_kv11STXafjdO3FsfyMuMNEG-=xWpeTw1cJdMHj+gw@mail.gmail.com>
-Subject: Re: The state of uprobes work and logistics
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Liao Chang <liaochang1@huawei.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Kernel Team <kernel-team@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf stat: Expand metric+unit buffer size
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241106004818.2174593-1-irogers@google.com>
+ <126ebac6-fb52-4c3c-b364-0b423e164d40@linux.intel.com>
+ <CAP-5=fV3RuvU0N_bt7R-ZMs2nX1_wfKh30PA59u3MW0TF4nzBg@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fV3RuvU0N_bt7R-ZMs2nX1_wfKh30PA59u3MW0TF4nzBg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 6, 2024 at 3:06=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
-> wrote:
->
-> On Wed, Nov 06, 2024 at 11:46:39AM +0100, Peter Zijlstra wrote:
-> > On Tue, Nov 05, 2024 at 06:11:07PM -0800, Andrii Nakryiko wrote:
-> > > On Wed, Oct 30, 2024 at 2:42=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com=
-> wrote:
-> > > >
-> > > > On Wed, Oct 16, 2024 at 12:35:21PM -0700, Andrii Nakryiko wrote:
-> > > >
-> > > > SNIP
-> > > >
-> > > > >   - Jiri Olsa's uprobe "session" support ([5]). This is less
-> > > > > performance focused, but important functionality by itself. But I=
-'m
-> > > > > calling this out here because the first two patches are pure upro=
-be
-> > > > > internal changes, and I believe they should go into tip/perf/core=
- to
-> > > > > avoid conflicts with the rest of pending uprobe changes.
-> > > > >
-> > > > > Peter, do you mind applying those two and creating a stable tag f=
-or
-> > > > > bpf-next to pull? We'll apply the rest of Jiri's series to
-> > > > > bpf-next/master.
-> > > >
-> > > >
-> > > > Hi Ingo,
-> > > > there's uprobe session support change that already landed in tip tr=
-ee,
-> > > > but we have bpf related changes that need to go in through bpf-next=
- tree
-> > > >
-> > > > could you please create the stable tag that we could pull to bpf-ne=
-xt/master
-> > > > and apply the rest of the uprobe session changes in there?
-> > >
-> > > Ping. We (BPF) are blocked on this, we can't apply Jiri's uprobe
-> > > session series ([0]), until we merge two of his patches that landed
-> > > into perf/core. Can we please get a stable tag which we can use to
-> > > pull perf/core's patches into bpf-next/master?
-> >
-> > The whole tip/perf/core should be stable, but let me try and figure out
-> > how git tags work.. might as well read a man-page today.
->
-> I might have managed to create a perf-core-for-bpf-next tag, but I'm not
-> sure I know enough about git to even test it.
->
-> Let me know..
 
-Looks good, thank you. I'm merging it into bpf-next, testing, and if
-everything looks good I'll apply Jiri's patches on top.
 
-Tag is more so of a promise that everything up to that tag won't be
-rebased, otherwise we'll run into tons of problems during the merge
-window. That seems to be the case, so I'm proceeding, thank you!
+On 2024-11-06 11:04 a.m., Ian Rogers wrote:
+> On Wed, Nov 6, 2024 at 7:27 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2024-11-05 7:48 p.m., Ian Rogers wrote:
+>>> Long metric names combined with units may exceed the metric_bf and
+>>> lead to truncation. Double metric_bf in size to avoid this.
+>>>
+>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>> ---
+>>>  tools/perf/util/stat-shadow.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+>>> index 8c9292aa61d3..6b531d4f58a3 100644
+>>> --- a/tools/perf/util/stat-shadow.c
+>>> +++ b/tools/perf/util/stat-shadow.c
+>>> @@ -507,7 +507,7 @@ static void generic_metric(struct perf_stat_config *config,
+>>>       if (!metric_events[i]) {
+>>>               if (expr__parse(&ratio, pctx, metric_expr) == 0) {
+>>>                       char *unit;
+>>> -                     char metric_bf[64];
+>>> +                     char metric_bf[128];
+>>
+>> I thin there is already a MAX_EVENT_NAME.
+>> Can we similarly define a MAX_METRIC_NAME for it?
+> 
+> So in this case the buffer needs to be big enough to hold the metric
+> name, the unit from the scaleunit (e.g. the "%" from "100%"). I'd
+> prefer we used dynamic memory allocation to having hard coded limits,
+> just to avoid a "640K ought to be enough for anybody," moment.
+> Although this change is implicitly a hard coded limit, sigh. There is
+> also the metric only name length:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/builtin-stat.c?h=perf-tools-next#n160
+> That looked like it was planned to be dynamically computed but then
+> the patch adding that never materialized - meaning "standard"
+> metric-only output has its own cut-off rules at 20 characters. I'd
+> rather wait on doing a larger cleanup and do this quick fix for now,
+> mainly as I have enough to do.
+
+OK
+
+> 
+> While we're talking metrics, I'm still looking for feedback on the
+> python generation of metrics. v1 was sent back in January, if v4 looks
+> okay some acknowledgement would be nice:
+> https://lore.kernel.org/lkml/CAP-5=fVX5wypmAAhR8LsE4nSWp5BmN_qhGf9+WCh2bebNcGYTg@mail.gmail.com/
+> Leo sent some feedback to improve some of the ARM metrics, so I can
+> resend the whole series. Would be nice to gather some acked-by or
+> other tags.
+> 
+
+Somehow I missed your last reply. I will take a look.
+
+Thanks,
+Kan
+
