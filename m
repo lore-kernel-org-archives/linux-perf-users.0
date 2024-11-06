@@ -1,291 +1,339 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY4PR02CU008.outbound.protection.outlook.com (mail-westcentralusazon11021085.outbound.protection.outlook.com [40.93.199.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99A62E414
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Nov 2024 00:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730853104; cv=none; b=FX3+gE2h3qsZe+a71RZQ1fdRhJkTuu8FN8W0GXPoBJ0vwqU2sJNveNZKYfPgjVVOyIizqT7qHpE5jnemjmCpiIpeccU4QBPGuvUKFrcQfXRpsTEaWRlZ4dMHkNwrxa2ehHcw2P0n1i4uM1jj8SzBSzBs7msF1byoI6V/3yXN8Xc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730853104; c=relaxed/simple;
-	bh=tvqbSBvbe2a/Rt2zk5esfR2gvTPpdX2tE2rZG4WOpQE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qm7cWrxX2aO2ajJy7okjFVPPOXZvJ+5lUKryvodxqKU0B0JJpnf40/SEi4X/u/kxdVcB57Ysmb+Q/JJp+dHfotFSZk4OllJlHQmujc5OrcunA3zj56HYqeNgmoQzbtz10IxZLqY/FXpPFbsPdueITkBlm15QhKwRxwPjf+pnl2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tahfV2vt; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B19E10E3;
+	Wed,  6 Nov 2024 00:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.199.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730853150; cv=fail; b=I+umLQWoDsh+nVNnpYi1SYX7rZtcBvm2e0WBp80bxwVF85/YPyTNkyZBaIfhQU90kCEIuzn/GQ3c5mfVqEUhdW17fm8xnc+T6T7B5SiKp9m6OhUNVDglz4KwbPQNpTAvS0oVRdAjBA4oWFqhWpYFKrhFpc+9edAkH0VpDwEMqxY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730853150; c=relaxed/simple;
+	bh=NfI6RDa95zsn3idGHM+KTJB+Y66LODokFNN1lR+eFGA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 Content-Type:MIME-Version; b=GAOB2fr2ADkZzfNwHT/KM3h5Q+s/viDDDKtSxiVRgn1R2w0VQgYJ005gcm+9rzZggD6+nqHS1Pq4FpbjhjA+57u4c2IYA4OolImSY7tQ+CBEXmG0NY7sC6/0DCchU0gLR9qHigOTzYKDIogCEM7KJgmF/qDhe5bMN10mnY7BdKY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=Vo+bLEoI; arc=fail smtp.client-ip=40.93.199.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tahfV2vt"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-37d55f0cf85so4075166f8f.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Nov 2024 16:31:42 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="Vo+bLEoI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pcCEuwnaqginx95X5UaFH4UcLe1sBgewVlirpna+B0C7NEKjMsvbeIONyZGcgDvar48Ngb2wRB14FQYlZIoE2hL7UW/b/9JSpFHzPeNBOTrSx3X/SgM1qWdH+5Y/9edtmWiVOd7Gma/2iME+hC4SdLtl1phjiHA3RN1j3gnjnMCZ3PQmIFYOyzaqm3AC31k2WmBin8nx4KvdTqaZKVrpROD+stVigiOEvygMKn6aX+djRB6NgYUjBnyhIZIg+0C6a/yta5MvFsP50yM8AzpuZ9YRRWpVIfPLoruCa2lpDzCA6g1aBXgzc2+obEDi5Zx6OdG59owBUrAWPlEiD+d65A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OonQ3n27GpTNyHLcyJNSYW94OP6gRJ62TNjw/KhLJZQ=;
+ b=qI2KLWsFs0QMeeGvEZcOb1nuhDglQbKi4naW8+eU7F4waTcIGCMaXmohLdghGebJb8RcNm30vit58rt2xhAFsOmbeHLO7IpbhcQFB7RSIa/dkkFdAnC6mpkOaye5OQXJmvJW21kczRrofiUU+O6CeS0mUEaYpfrRzzl3n72EMRB1Aqxe1byKhASg+ael1ytXRBgQyKTAZgRzME4f/VpjL8ZRuKJUWUL0FOfg8rY91jj1GOaXdZFWUUCNcAHA/07mHPIo7j/PfG8Wb3+hdRp0sTK5D2pusvPzcU/e+GGY7Y9X7BojklAMt/VFXoyo8+Q1Uf9oRC7ln/VCnf1iVgPAig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730853101; x=1731457901; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+bwT6sj9f92fSfbjyqUGWo/OaOQvWzzTMdBrwJO9qLQ=;
-        b=tahfV2vt+E71Up5j4m+xBUfJRr4fhHctX1f4SXq5K+5BvSCVIa6SvWfbpiyObnX5jj
-         X7muD47t2LmPHEYSj1ywmwuFZeSuPJjCun5kCa2kPZOD5xdRo1t7RT+vQSegN0Zwy7t2
-         Ie44HML+nPcsNLDAd2yfkBB+i8iUl1vsBS+NMdq96yxyQws5boommWqn2zAmki4zsXvW
-         MQj6JoMkkhoCgrIlETvbDdsWL7i/qFemJ3XWVa1qvSQhauqrhPgafLj9xF0SpqAHC8XM
-         PoyQNC4rOrpqaSzqLXWgP6IsoldqBJ7xibRv8dgTVPIkEzSJ57+/mo3BqZqTHkFY+v29
-         uXfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730853101; x=1731457901;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+bwT6sj9f92fSfbjyqUGWo/OaOQvWzzTMdBrwJO9qLQ=;
-        b=JKqzQ6m6VRfUrtk5e9e1dxoaCHh4jN/do+3ZsWm/LE8yzw0BjcbJkgE/Habf46OpXs
-         mh1Alj3wqtyxVUxfR5dKqfuDIiRSj8byJDXQyiWnoR6VwZ4fGQkE4H/j0RsWgLKP07yT
-         HWTSQ/ZH3Xp57Hci9iMaKVtmZwuAA7GNrtMj8oC+aGd2Ra+1LiiO6tMOw0JK6/efAGS2
-         IKEf+HX4d/Vpy7mo0a65K0NqlKppUXeTSeNKlG30Jz0nj6ko2MoEVDxTqe5X6hvaHVFV
-         TLnBgtxypm1YYvw2hvQ/sFYexdYJY7br/K6SIny0o0aHVGj9XKJfgI1XxDX6qFG8GyxG
-         JvKA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhIDyNPesuEbdZKkDYKBjLJOlBSAFnL66MHy0dnR10ZJrWfnSisBTDjng61hs9uQnwrVL0ohLeGKgf2rSdkkp8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfqRtt/CI/ZGkHbVmmLslL0eN1ZzyJSd4I6DdmNmm42p0obLDo
-	gAPiAwX2FkKECuzzTV+gGWmyj82QEsUITjwO7HULvYjaqSHraoooSaVzZDq0QQzexadxj5ugCsk
-	PaCkXdLqXcJa4rFL8d1fPoaFwpyrMWg+Ih8aW
-X-Google-Smtp-Source: AGHT+IFFX0zQ/6/F3wqKJIs6TJpCatofV/WGLJ3DATwLu5tbxPv7XwxGrY/F+RnpB/wLYAEhH3FHmupLmvA76tThdc0=
-X-Received: by 2002:a05:6000:178a:b0:37c:d227:d193 with SMTP id
- ffacd0b85a97d-381be7654bbmr18783674f8f.10.1730853100973; Tue, 05 Nov 2024
- 16:31:40 -0800 (PST)
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OonQ3n27GpTNyHLcyJNSYW94OP6gRJ62TNjw/KhLJZQ=;
+ b=Vo+bLEoI8uDRFYtVsAUJfipHdj6CRZyVT+LFqQnra5SDXSx92AyK+YKqEo+M+75iHDRUwNGTiBlEL0q6c5DMgSDiwIOG6arCZIaHnHy45m1LNzXBOCjP9/VVuAAvTRJ+SmR/gk0AoQ2Rj2LRtYhQLxFfxIs4uLlSicWVZpZYwGg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from MW4PR01MB6228.prod.exchangelabs.com (2603:10b6:303:76::7) by
+ SA1PR01MB6655.prod.exchangelabs.com (2603:10b6:806:1a3::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8137.19; Wed, 6 Nov 2024 00:32:25 +0000
+Received: from MW4PR01MB6228.prod.exchangelabs.com
+ ([fe80::13ba:df5b:8558:8bba]) by MW4PR01MB6228.prod.exchangelabs.com
+ ([fe80::13ba:df5b:8558:8bba%3]) with mapi id 15.20.8137.018; Wed, 6 Nov 2024
+ 00:32:24 +0000
+Date: Tue, 5 Nov 2024 16:32:20 -0800 (PST)
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: James Clark <james.clark@linaro.org>
+cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
+    linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, John Garry <john.g.garry@oracle.com>, 
+    Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>, 
+    Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>, 
+    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Adrian Hunter <adrian.hunter@intel.com>, 
+    "Liang, Kan" <kan.liang@linux.intel.com>, 
+    Graham Woodward <graham.woodward@arm.com>
+Subject: Re: [PATCH v2 2/2] perf arm-spe: Add support for SPE Data Source
+ packet on AmpereOne
+In-Reply-To: <ed15526d-9b1a-4204-92a3-4d319b03b790@linaro.org>
+Message-ID: <4c2aa7e9-8e4e-aa1a-9c0-23c62f6b15cd@os.amperecomputing.com>
+References: <20241031213533.11148-1-ilkka@os.amperecomputing.com> <20241031213533.11148-3-ilkka@os.amperecomputing.com> <ed15526d-9b1a-4204-92a3-4d319b03b790@linaro.org>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-ClientProxiedBy: MW4PR02CA0004.namprd02.prod.outlook.com
+ (2603:10b6:303:16d::19) To MW4PR01MB6228.prod.exchangelabs.com
+ (2603:10b6:303:76::7)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241101211757.824743-1-ctshao@google.com> <ZylgYE2HXzGpAdKQ@google.com>
-In-Reply-To: <ZylgYE2HXzGpAdKQ@google.com>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Tue, 5 Nov 2024 16:31:29 -0800
-Message-ID: <CAJpZYjWEr9T5z-aKAATmBsf1jgHq4c+WsV-qYriGQqbM-32uuw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] perf evsel: Improve the evsel__open_strerror for EBUSY
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Liang Kan <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Thanks for your review Namhyung! Here is the link to the v3 patch:
-https://lore.kernel.org/all/20241106003007.2112584-1-ctshao@google.com/
-
-On Mon, Nov 4, 2024 at 4:01=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> Hello CT,
->
-> On Fri, Nov 01, 2024 at 09:17:55PM +0000, Chun-Tse Shao wrote:
-> > From: Ian Rogers <irogers@google.com>
-> >
-> > The existing EBUSY strerror message is:
-> > ```
-> > The sys_perf_event_open() syscall returned with 16 (Device or resource =
-busy) for event (intel_bts//).
-> > "dmesg | grep -i perf" may provide additional information.
-> > ```
->
-> Just a nitpick.  I'd like to avoid this github markdown style notation
-> of triple backticks as it doesn't clearly separate code blocks (IMHO)
-> nor protect anything like '#' sign in the beginning of a line.
->
-> I prefer indenting with 2 spaces before and after a blank line.
->
-
-Fixed in v3.
-
->
-> > The dmesg won't be useful. What is more useful is knowing what
-> > processes are potentially using the PMU, which some procfs scanning can
-> > reveal. When parallel testing tests/shell/stat_all_pmu.sh this yields:
-> > ```
-> > Testing intel_bts//
-> > Error:
-> > The PMU intel_bts counters are busy and in use by another process.
-> > Possible processes:
-> > 2585882 perf list
-> > 2585902 perf list -j -o /tmp/__perf_test.list_output.json.KF9MY
-> > 2585904 perf list
-> > 2585911 perf record -e task-clock --filter period > 1 -o /dev/null --qu=
-iet true
-> > 2585912 perf list
-> > 2585915 perf list
-> > 2586042 /tmp/perf/perf record -asdg -e cpu-clock -o /tmp/perftool-tests=
-uite_report.dIF/perf_report/perf.data -- sleep 2
-> > 2589078 perf record -g -e task-clock:u -o - perf test -w noploop
-> > 2589148 /tmp/perf/perf record --control=3Dfifo:control,ack -e cpu-clock=
- -m 1 sleep 10
-> > 2589379 perf --buildid-dir /tmp/perf.debug.Umx record --buildid-all -o =
-/tmp/perf.data.YBm /tmp/perf.ex.MD5.ZQW
-> > 2589568 perf record -o /tmp/__perf_test.program.mtcZH/perf.data --branc=
-h-filter any,save_type,u -- perf test -w brstack
-> > 2589649 perf record --per-thread -o /tmp/__perf_test.perf.data.5d3dc pe=
-rf test -w thloop
-> > 2589898 perf record -o /tmp/perf-test-script.BX2b27Dcnj/pp-perf.data --=
-sample-cpu uname
-> > ```
-> > Which gets a little closer to finding the issue.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/evsel.c | 79 ++++++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 78 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index dbf9c8cee3c56..9a5b6a6f8d2e5 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -3286,6 +3286,78 @@ static bool find_process(const char *name)
-> >       return ret ? false : true;
-> >  }
-> >
-> > +static int dump_perf_event_processes(char *msg, size_t size)
-> > +{
-> > +     DIR *proc_dir;
-> > +     struct dirent *proc_entry;
-> > +     int printed =3D 0;
-> > +
-> > +     proc_dir =3D opendir(procfs__mountpoint());
-> > +     if (!proc_dir)
-> > +             return 0;
-> > +
-> > +     /* Walk through the /proc directory. */
-> > +     while ((proc_entry =3D readdir(proc_dir)) !=3D NULL) {
-> > +             char path[PATH_MAX];
->
-> Can we use a much smaller buffer as it expects PIDs only?
->
-
-It is actually used as a general purpose buffer, not only for `path`.
-It is also served for parsing `fdinfo` in patch 3, which I think 256
-would be safe for now.
-
->
-> > +             DIR *fd_dir;
-> > +             struct dirent *fd_entry;
-> > +             int fd_dir_fd;
-> > +
-> > +             if ((proc_entry->d_type !=3D DT_DIR) ||
-> > +                  !strcmp(".", proc_entry->d_name) ||
-> > +                  !strcmp("..", proc_entry->d_name))
->
-> Maybe something like this?
-
-Fixed in v3.
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR01MB6228:EE_|SA1PR01MB6655:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5102dbc1-7763-4604-fcf1-08dcfdfa7bcb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?RgOYK6/UjwkdJh3DzLtOAb6Oyb9TDzwzoq/NFSrO9rc+ZpC0UYJzRzzfaY4W?=
+ =?us-ascii?Q?TXvcIf85Ro7jl+C+Igx2By1moPEkDKRQkic5CYrZG+qluvkKPWdtDDAQjhlX?=
+ =?us-ascii?Q?82UjYri7hZqkgTIx0v2GxAf+Vq1MgUBCt0LGSawfzQNXFalOl/E2VTu8nUsa?=
+ =?us-ascii?Q?Ur/tIJb1YIqerljOWu1AEpCO3x0oNMTM0TuKW/HqoT4348h1qJ8bje6+r+NE?=
+ =?us-ascii?Q?YJ0miXOyZNc7/HzXQXz5U4USf/l2gzO7U+lDDNt5YBrmclOpKbMURFzfyIWG?=
+ =?us-ascii?Q?zl7sGc6rTW6bZViI4DPvk82IZWzJ97d/UwRtG3YFzyf/+Tf83Nw4spE+RCRO?=
+ =?us-ascii?Q?T7Uafvsl21aa2tkak3I/V03OQWr5srZzWmfZTQMddrt4FDE5oQtKVz+7OliI?=
+ =?us-ascii?Q?lwY8yPftXaDgab2czTl4NKVFXNXTYh/Rq5yt0aRmZUktM3cxowBrsSBTP6OH?=
+ =?us-ascii?Q?+tZGTA0zgeNxEOOInnfAV0vB0xgVpj0puueOVet+fP1v4FZ7/Q3evMeurlRx?=
+ =?us-ascii?Q?ov6/hygHfHDdMHaNPN7Jhnq071C7pIw1vbWYAA5Sa/J+ydairJ9wxxT4xcSb?=
+ =?us-ascii?Q?Qlt05KGn+uk6ygeKYb72FkNaw6yfdyj5JHl+EFMFKckj8/2iKw7fjyB0Zf2S?=
+ =?us-ascii?Q?LtbMS779VyaWkS6PLIV2CXkpBEPBGcJsxx2RKqpSADFMbZly4W1EwoBqVTkE?=
+ =?us-ascii?Q?dCsSqIj0T7yKGjYshkR9op70dGqsLmlmuCJ6Sjlicu9m9JXfQyzx5cs4gDso?=
+ =?us-ascii?Q?ZWKSOfCfXKRkTh8Vs8oGzrgXwQAMaJtiYyrdzZO48QplnMaxGcepI1q5xaYp?=
+ =?us-ascii?Q?3m/kpmVyZYpQiMOGhkojkcfPO72GMho98NEI02W/KUFIYrKKT4XUTKVU8Jz0?=
+ =?us-ascii?Q?A9HoLBK//9aKVpYu/ne6w6J68yyf4LYlm+ON+ULS2/zOOXSoBG1JUHIkGi2j?=
+ =?us-ascii?Q?pYDJ8hweZF1SCKbYzxJhrhIQZTIjkGKJGGwhqi/9k2iYHcbd6jB9ExXWF41O?=
+ =?us-ascii?Q?Nc/6ZCxiWgTZODPl4EH234ckV24P+naxR8727vrppryL57NSfUpLNb/bG9JJ?=
+ =?us-ascii?Q?FjwcEgAxKXYtwtzjrkflfsmnPEOgItJOEiAbu8Eb6oAX0rWXRiX3tCy2WeT1?=
+ =?us-ascii?Q?9CHUxtfh/nQ1RqsRSnzxysCNOm0s/qkbSnQgvQAOoFmYaEZrWfzXentU29lq?=
+ =?us-ascii?Q?XmpLaAezacPtNxhPcn4DWYpfyoqpKciaFMaS/N+NyKVoS+C5G6/3USwCO3OV?=
+ =?us-ascii?Q?AydGv84d3eGQ/NxTAyTHeABpykfeeORK0jGhbulFFka0XcmlLs1YobzR7VKh?=
+ =?us-ascii?Q?MgbKzWwEGBcsOMGilfp82CFiXRT0AHX86yoU4X0MZpIDVYdaB5xABLT4jNHf?=
+ =?us-ascii?Q?gwBDX8s=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR01MB6228.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?nNZhg/7xiSa1dDpAm4tO7y+lC/AbCSktbk452dKp/gAXRRBpnQbatLqSsY7/?=
+ =?us-ascii?Q?cMGIsU3HD9y6RBwdFZE894JfPuI0sG4Uhh7noJs28M6SZ4To7HhfZOdFf4iF?=
+ =?us-ascii?Q?lB0+v4qShxIPEEtcunV6Zge83aXeNdTM2482dxUkS8YSORWfDE5jxr5jvJwe?=
+ =?us-ascii?Q?4Th6MZ2GLft+RGWE5P2Qq8seb5KHen1g/q/UlCweBgJdIiKgLJWRrim73/Hv?=
+ =?us-ascii?Q?R/T5RSTCx/anrKBGVKYodXbgwHj60AZl8R7rLdUsPVILvA3TsB3W2NOKndcg?=
+ =?us-ascii?Q?AzbZi7RtDwOGleWyIfXOfX4QB7PKsWmJBjF+srWEZX4/RH20/CSyLFt9zpmQ?=
+ =?us-ascii?Q?tiyuj8uQadIEgfcp9GBAFVi7mcEU1ntgl35u8S6+ffM9ZwFQ+Xg4lVCeyBXK?=
+ =?us-ascii?Q?XIVJSTMdGG1VD4U1dH9DBY2kR9i33iqlj4E+Mxp8Oumj9URijtoARlIKflvR?=
+ =?us-ascii?Q?Vh3MgAKEPhiOy3dSXRlBdMxSZWn6D3U/QEXxh0Gy97a5XfMpXIKIsDYALPBT?=
+ =?us-ascii?Q?AJCUoRRZb9Luv8AuRhkVqDYe7lrKZUQfrE6GVDZWkmlIj2vsNg9hs1pHJUDq?=
+ =?us-ascii?Q?x3cEDwLHgeH1bFH606my1wqNbZ/kFgE+3ANTvFfcdxJQ3lzZs4Sl2Vp76dZi?=
+ =?us-ascii?Q?GasCskUmHI6rtNPxY88fn17RTxQeSdJAz4AgePD729IrC1Srjmxq4W0eYxIJ?=
+ =?us-ascii?Q?hei8GCDumhiSIX1nYrpQw5GCAnUYbS6C5kL1xvbJCdd8CPRNjaYzT6cdIVIa?=
+ =?us-ascii?Q?6Vanlz4L/kBec5kCxJHNlBpKYLp/FGJUcW3wNPCk8GOiKxYUXpeNJyPLuDiC?=
+ =?us-ascii?Q?j4nfWOboTg3XVySjlxq95wHXyODTZLfiFA4yiZ21TsMiF7fFYvnb2ep6Qh5o?=
+ =?us-ascii?Q?3fjXBLYmz0q3bqi3D4hAZ9zxvzt3/JUIzo/Va190/ZoWvsyVsGKeNM/vzCJs?=
+ =?us-ascii?Q?qYn1PtlcPdyNnsINBP58Z503Ug8Nl/E3qwpRb56aV3EoavcHevyKirG+Q0AE?=
+ =?us-ascii?Q?ph6lkbZ10XLIKHe6BUwz8UrNS4GRQyiFDxlYDLV0U9lv7qFt60yV8/Cvvu6C?=
+ =?us-ascii?Q?S7/LD51ljJAoUnQ3lwY/mDIsDaUECljMcKxBF3y+WMZDUbwHFr3JEN6MTIdw?=
+ =?us-ascii?Q?35jCBo1Qctzo59VDpxb1DeVptP19njNgRmKqUhGaJA9DZZXGzMDRr2d6+UXf?=
+ =?us-ascii?Q?2XnpWofm0uTTkl93WZF+9aHJPgHo3+3OIr27UCOclg8VxNTIC8anyz6iY1Hd?=
+ =?us-ascii?Q?PynrRXM1z7kt7FlFog7fg0e5gxJ3PJnjxqCJ8tThXXhs8x5fXH/E3UF9Znzo?=
+ =?us-ascii?Q?kkM0yODtfR+EUmwjfemBDto+PVQl1oOVoau/d3/wGKlUe5OGWgFXhsuHUyr/?=
+ =?us-ascii?Q?OKBMLOcIoYawteD4909ytjhZm0TB/cv2X3CN/9q5aNIPrbXHdAmylU7T00dq?=
+ =?us-ascii?Q?zSaZ3NRfNvF6MsQctAr2scd71gItuqQjejFDfG0kRJ4/eZ6LilI7/X7gpHb/?=
+ =?us-ascii?Q?mX572Fb4J7OT82you/+/L+d4ClEjk2iLo3EJqltf7KWxS/yumOUsNDM2XElQ?=
+ =?us-ascii?Q?pBU39cIwwObudJ3kALwB16+nMrAEyXbLvz5fjy8skoldLHmYKkYi4arjEZHJ?=
+ =?us-ascii?Q?crMnfwHp/KYPSnZhpODm4gI=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5102dbc1-7763-4604-fcf1-08dcfdfa7bcb
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR01MB6228.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2024 00:32:24.1557
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aVYvZGgaUuvqEVe7q10ghgPSXh7cVRAj5tly+iIPgNxLoz144sRa+/BGePWdMN/F78egqrIugB478N9eA+m3RH8BsIEao8yi9Wx84BwG7/jCYEuQZEv5WAZuozPradKL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR01MB6655
 
 
+Hi James,
+
+On Mon, 4 Nov 2024, James Clark wrote:
+> On 31/10/2024 9:35 pm, Ilkka Koskinen wrote:
+>> Decode SPE Data Source packets on AmpereOne. The field is IMPDEF.
+>> 
+>> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+>> ---
+>>   .../util/arm-spe-decoder/arm-spe-decoder.h    |  9 +++
+>>   tools/perf/util/arm-spe.c                     | 65 +++++++++++++++++++
+>>   2 files changed, 74 insertions(+)
+>> 
+>> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h 
+>> b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>> index 358c611eeddb..4bcd627e859f 100644
+>> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>> @@ -67,6 +67,15 @@ enum arm_spe_common_data_source {
+>>   	ARM_SPE_COMMON_DS_DRAM		= 0xe,
+>>   };
+>>   +enum arm_spe_ampereone_data_source {
+>> +	ARM_SPE_AMPEREONE_LOCAL_CHIP_CACHE_OR_DEVICE    = 0x0,
+>> +	ARM_SPE_AMPEREONE_SLC                           = 0x3,
+>> +	ARM_SPE_AMPEREONE_REMOTE_CHIP_CACHE             = 0x5,
+>> +	ARM_SPE_AMPEREONE_DDR                           = 0x7,
+>> +	ARM_SPE_AMPEREONE_L1D                           = 0x8,
+>> +	ARM_SPE_AMPEREONE_L2D                           = 0x9,
+>> +};
+>> +
+>>   struct arm_spe_record {
+>>   	enum arm_spe_sample_type type;
+>>   	int err;
+>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+>> index 9586416be30a..700d4bc8d8ec 100644
+>> --- a/tools/perf/util/arm-spe.c
+>> +++ b/tools/perf/util/arm-spe.c
+>> @@ -103,6 +103,30 @@ struct arm_spe_queue {
+>>   	u32				flags;
+>>   };
+>>   +struct arm_spe_source_mapping {
+>> +	u16 source;
+>> +	enum arm_spe_common_data_source common_src;
+>> +};
+>> +
+>> +#define MAP_SOURCE(src, common)				\
+>> +	{						\
+>> +		.source = ARM_SPE_##src,		\
+>> +		.common_src = ARM_SPE_COMMON_##common,  \
+>> +	}
+>> +
+>> +static int arm_spe__map_to_common_source(u16 source,
+>> +					 struct arm_spe_source_mapping *tbl,
+>> +					 int nr_sources)
+>> +{
+>> +	while (nr_sources--) {
+>> +		if (tbl->source == source)
+>> +			return tbl->common_src;
+>> +		tbl++;
+>> +	}
+>> +
 >
->                 if (proc_entry->d_type !=3D DT_DIR ||
->                     !isdigit(proc_entry->d_name[0]) ||
->                     strlen(proc_entry->d_name) > sizeof(path) - 4)
+> Hi Ilkka,
 >
-> Thanks,
-> Namhyung
+> I think a simple switch statement here would be easier to follow than the 
+> loop, custom macro and then having the mappings in some other place:
+>
+> switch(source)
+> case 0x0: /* AMPEREONE_LOCAL_CHIP_CACHE_OR_DEVICE */
+>  return DS_PEER_CORE;
+>
+> etc...
+>
+>> +	return -1;
+>
+> And the default case can return 0xfff directly, which avoids the if else 
+> later only to convert this -1 back into 0xfff.
+
+I can surely do that.
+
+
+>
+>> +}
+>> +
+>>   static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
+>>   			 unsigned char *buf, size_t len)
+>>   {
+>> @@ -443,6 +467,11 @@ static const struct midr_range 
+>> common_ds_encoding_cpus[] = {
+>>   	{},
+>>   };
+>>   +static const struct midr_range ampereone_ds_encoding_cpus[] = {
+>> +	MIDR_ALL_VERSIONS(MIDR_AMPERE1A),
+>> +	{},
+>> +};
+>> +
+>>   static void arm_spe__sample_flags(struct arm_spe_queue *speq)
+>>   {
+>>   	const struct arm_spe_record *record = &speq->decoder->record;
+>> @@ -532,6 +561,38 @@ static void arm_spe__synth_data_source_common(const 
+>> struct arm_spe_record *recor
+>>   	}
+>>   }
+>>   +static struct arm_spe_source_mapping ampereone_sources[] = {
+>> +	MAP_SOURCE(AMPEREONE_LOCAL_CHIP_CACHE_OR_DEVICE, DS_PEER_CORE),
+>> +	MAP_SOURCE(AMPEREONE_SLC, DS_SYS_CACHE),
+>> +	MAP_SOURCE(AMPEREONE_REMOTE_CHIP_CACHE, DS_REMOTE),
+>> +	MAP_SOURCE(AMPEREONE_DDR, DS_DRAM),
+>> +	MAP_SOURCE(AMPEREONE_L1D, DS_L1D),
+>> +	MAP_SOURCE(AMPEREONE_L2D, DS_L2),
+>> +};
+>> +
+>> +/*
+>> + * Source is IMPDEF. Here we convert the source code used on AmpereOne 
+>> cores
+>> + * to the common (Neoverse, Cortex) to avoid duplicating the decoding 
+>> code.
+>> + */
+>> +static void arm_spe__synth_data_source_ampereone(const struct 
+>> arm_spe_record *record,
+>> +						 union perf_mem_data_src 
+>> *data_src)
+>> +{
+>> +	int common_src;
+>> +	struct arm_spe_record common_record;
+>> +
+>> +	common_src = arm_spe__map_to_common_source(record->source,
+>> +						   ampereone_sources,
+>> + 
+>> ARRAY_SIZE(ampereone_sources));
+>> +	if (common_src < 0)
+>> +		 /* Assign a bogus value that's not used for common coding */
+>> +		common_record.source = 0xfff;
+>> +	else
+>> +		common_record.source = common_src;
+>> +
+>> +	common_record.op = record->op;
+>> +	arm_spe__synth_data_source_common(&common_record, data_src);
+>> +}
+>> +
+>>   static void arm_spe__synth_memory_level(const struct arm_spe_record 
+>> *record,
+>>   					union perf_mem_data_src *data_src)
+>>   {
+>> @@ -606,6 +667,8 @@ static u64 arm_spe__synth_data_source(struct 
+>> arm_spe_queue *speq,
+>>   	union perf_mem_data_src	data_src = { .mem_op = PERF_MEM_OP_NA };
+>>   	bool is_common = arm_spe__is_ds_encoding_supported(speq,
+>>   						common_ds_encoding_cpus);
+>> +	bool is_ampereone = arm_spe__is_ds_encoding_supported(speq,
+>> +						ampereone_ds_encoding_cpus);
+>
+> I know this probably already works, but we don't really need is_common 
+> is_ampere etc, it will only grow anyway. All we need is a list of midrs and 
+> function pairs. That also avoids doing is_ampereone even after we already 
+> know is_common == true.
+>
+> static const struct data_src[] = {
+> ...
+> 	DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2), common_ds),
+> 	DS(MIDR_ALL_VERSIONS(MIDR_AMPERE1A), ampere_ds),
+> 	{},
+> ...
+> };
+>
+> "arm_spe__is_ds_encoding_supported" then becomes a direct call to 
+> "arm_spe__synth_ds" and we can drop the is_ampereone and is_common vars. Then 
+> adding new ones doesn't require changing the function anymore.
+
+To be honest, I'm not a big fan of the is_xyz() thing but I just didn't 
+want to change it. Anyway, I'll change it for the next version.
+
+Cheers, Ilkka
+
+
+>
+>>     	if (record->op & ARM_SPE_OP_LD)
+>>   		data_src.mem_op = PERF_MEM_OP_LOAD;
+>> @@ -616,6 +679,8 @@ static u64 arm_spe__synth_data_source(struct 
+>> arm_spe_queue *speq,
+>>     	if (is_common)
+>>   		arm_spe__synth_data_source_common(record, &data_src);
+>> +	else if (is_ampereone)
+>> +		arm_spe__synth_data_source_ampereone(record, &data_src);
+>>   	else
+>>   		arm_spe__synth_memory_level(record, &data_src);
+>> 
 >
 >
-> > +                     continue;
-> > +
-> > +             scnprintf(path, sizeof(path), "%s/fd", proc_entry->d_name=
-);
-> > +             fd_dir_fd =3D openat(dirfd(proc_dir), path, O_DIRECTORY);
-> > +             if (fd_dir_fd =3D=3D -1)
-> > +                     continue;
-> > +             fd_dir =3D fdopendir(fd_dir_fd);
-> > +             if (!fd_dir) {
-> > +                     close(fd_dir_fd);
-> > +                     continue;
-> > +             }
-> > +             while ((fd_entry =3D readdir(fd_dir)) !=3D NULL) {
-> > +                     ssize_t link_size;
-> > +
-> > +                     if (fd_entry->d_type !=3D DT_LNK)
-> > +                             continue;
-> > +                     link_size =3D readlinkat(fd_dir_fd, fd_entry->d_n=
-ame, path, sizeof(path));
-> > +                     if (link_size < 0)
-> > +                             continue;
-> > +                     /* Take care as readlink doesn't null terminate t=
-he string. */
-> > +                     if (!strncmp(path, "anon_inode:[perf_event]", lin=
-k_size)) {
-> > +                             int cmdline_fd;
-> > +                             ssize_t cmdline_size;
-> > +
-> > +                             scnprintf(path, sizeof(path), "%s/cmdline=
-", proc_entry->d_name);
-> > +                             cmdline_fd =3D openat(dirfd(proc_dir), pa=
-th, O_RDONLY);
-> > +                             if (cmdline_fd =3D=3D -1)
-> > +                                     continue;
-> > +                             cmdline_size =3D read(cmdline_fd, path, s=
-izeof(path) - 1);
-> > +                             close(cmdline_fd);
-> > +                             if (cmdline_size < 0)
-> > +                                     continue;
-> > +                             path[cmdline_size] =3D '\0';
-> > +                             for (ssize_t i =3D 0; i < cmdline_size; i=
-++) {
-> > +                                     if (path[i] =3D=3D '\0')
-> > +                                             path[i] =3D ' ';
-> > +                             }
-> > +
-> > +                             if (printed =3D=3D 0)
-> > +                                     printed +=3D scnprintf(msg, size,=
- "Possible processes:\n");
-> > +
-> > +                             printed +=3D scnprintf(msg + printed, siz=
-e - printed,
-> > +                                             "%s %s\n", proc_entry->d_=
-name, path);
-> > +                             break;
-> > +                     }
-> > +             }
-> > +             closedir(fd_dir);
-> > +     }
-> > +     closedir(proc_dir);
-> > +     return printed;
-> > +}
-> > +
-> >  int __weak arch_evsel__open_strerror(struct evsel *evsel __maybe_unuse=
-d,
-> >                                    char *msg __maybe_unused,
-> >                                    size_t size __maybe_unused)
-> > @@ -3319,7 +3391,7 @@ int evsel__open_strerror(struct evsel *evsel, str=
-uct target *target,
-> >                       printed +=3D scnprintf(msg, size,
-> >                               "No permission to enable %s event.\n\n", =
-evsel__name(evsel));
-> >
-> > -             return scnprintf(msg + printed, size - printed,
-> > +             return printed + scnprintf(msg + printed, size - printed,
-> >                "Consider adjusting /proc/sys/kernel/perf_event_paranoid=
- setting to open\n"
-> >                "access to performance monitoring and observability oper=
-ations for processes\n"
-> >                "without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Li=
-nux capability.\n"
-> > @@ -3382,6 +3454,11 @@ int evsel__open_strerror(struct evsel *evsel, st=
-ruct target *target,
-> >                       return scnprintf(msg, size,
-> >       "The PMU counters are busy/taken by another profiler.\n"
-> >       "We found oprofile daemon running, please stop it and try again."=
-);
-> > +             printed +=3D scnprintf(
-> > +                     msg, size,
-> > +                     "The PMU %s counters are busy and in use by anoth=
-er process.\n",
-> > +                     evsel->pmu ? evsel->pmu->name : "");
-> > +             return printed + dump_perf_event_processes(msg + printed,=
- size - printed);
-> >               break;
-> >       case EINVAL:
-> >               if (evsel->core.attr.sample_type & PERF_SAMPLE_CODE_PAGE_=
-SIZE && perf_missing_features.code_page_size)
-> > --
-> > 2.47.0.163.g1226f6d8fa-goog
-> >
