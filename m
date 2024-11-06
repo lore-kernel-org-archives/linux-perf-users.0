@@ -1,189 +1,105 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E3320126B;
-	Wed,  6 Nov 2024 14:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E531DDC39;
+	Wed,  6 Nov 2024 15:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730904611; cv=none; b=t9faB3CtO+8ebJgLJLcyAWIQNYLO7gSlh2CxBBAW5em8H6LCuOYVC6TlWqRt0PRLL7d07qUSERY6pE4Lvsy/4a7pS2KxVBpckuDfk/PFNSx7k1FWlibPvrpQa043ZfHb1SPYN5yb/QHPizFEpwK9pYzqfycONtOyT0EEte+7wIs=
+	t=1730906829; cv=none; b=FMKUGWY8WIa4+CWovaVGpC2+ah0WhcjCcfsxaQkDqmKMuEFOsdVVuP6IWdl5JnzVjvWgvtKyhsK0vMyU06H+uwfkfhOkz+RM49HGDK6DNttP3D/NM5RlFg8zc/9dAEYbcziuk9mc1GLljlz4F6+EQpk/wVzUvpOZ2yTTnZIXOZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730904611; c=relaxed/simple;
-	bh=pafdbCKJ4T0X9ew4LkODpKKyd/czMwM+QSMDM1Wv1xs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OY7A5JyNtyJnx68zHXEhhduVQDbhenxi8nkBhPhXm2woWijWdHinw0WN43fwNtcrZP208xaFW6aKfNGkaSUeS2JBKenjLKZSOrCOh8Gc+mnK6coMb8AivbOMIoQfnh5/TIlzpWesX3zukUPZN40vOafbyydNnOCQrvzC3Alr3xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=ppsfjl+v; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1730906829; c=relaxed/simple;
+	bh=Brk1X9aA3sPBHjbXFyQDwaIQz3kg94ymUeRtoiv8woE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Q2Htrz1RFEy55udfvw/wrkejAgrT3Ko3YZV+o7GBv/k7F+6vOiFRdUsWgvavN5OxA34v5fse10hMx0e0wlQqkMYv+TGj52Bp32qhm0F5ZCz5AHOlGyZFfCd7qYtWmng3de+2YRKCoRb2JHiH2/74ZcpwDfDENZJ56BH7VcK0tNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f9fXJVQJ; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="ppsfjl+v"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=48SrrvM08TEZKc3LzQPWlbvvtC60XKoMO5KYeMToqlI=; b=ppsfjl+vksFmgwWr
-	XvHipSjpAP6g+RGH9s0bJ0d/+MFrcZm/u/TE3jnsO0zbLa/K1QBPcGqT5R++vbkZLsvO9Dk5rGdHf
-	2DxPH4BMuIus5cnUcHj7Sj57cSIsVVdCV6iHNHEz7FEFWlQopOrqGlJQekpaGh+0gXy2ss3iA+nWG
-	xqPFdvBbImn1cniif05Wd7bcEVR6W5aq5UVGJW3erbNG0/dKUQ6bepuXIq3A0i0e5T2FDuNdEhBkc
-	MqFYArCsUkTOu43pyoLWy56m/rPJpyqQ+azkeluerli1QYs43V/KA8HU3XJk1yFi25dJyTWpE2I3X
-	bGNxxlWhxJVByuYDtA==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1t8hM7-00FoOw-0i;
-	Wed, 06 Nov 2024 14:49:59 +0000
-Date: Wed, 6 Nov 2024 14:49:59 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: event: Remove deadcode
-Message-ID: <ZyuCF3reuIHZjZwp@gallifrey>
-References: <20241103142302.230370-1-linux@treblig.org>
- <ZyscLqAzo9Z7Zg02@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f9fXJVQJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730906828; x=1762442828;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=Brk1X9aA3sPBHjbXFyQDwaIQz3kg94ymUeRtoiv8woE=;
+  b=f9fXJVQJ9qGzBnxuCgVBAukUDGe6hB9jlWjSmewiRV8ZaJJr02ooE1bg
+   6hm0gcmwYar/hQjEAp7cISnrDlBYDe6Mohj6heBRhIFRmszFCdyhEQdwd
+   jwmRuhdeu572bnWYqDequDjrRPpv1LmUJZmVR2bwYxVc4xxXgjaywZ99F
+   Xu9T0/ItkrN5+SG7j1fr5HEHRDkeKkf5wmhZiFtXkH7f46eJQ6F/gME7s
+   PiS4TqhiPaqSk7dw8w+NX9Kbic/HWcBKzE7t3Fbf7mg0oo0MFcuVrcjkE
+   mcTw20lSN6prowLEISiH/Ncyv0aiJoe+4aeYmQ1IVlOJw8FpNZFB00Ela
+   g==;
+X-CSE-ConnectionGUID: xeA5W8g5RVWGWWO9zWETMw==
+X-CSE-MsgGUID: ZMWl+jcCQVayZVwV3vobbQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30891168"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="30891168"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 07:27:07 -0800
+X-CSE-ConnectionGUID: sPnCpIvdR1uJFfwMaCaNEg==
+X-CSE-MsgGUID: sBopCpaBQ/uaRRjUFOcSeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,263,1725346800"; 
+   d="scan'208";a="89190380"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 07:27:07 -0800
+Received: from [10.212.82.230] (kliang2-mobl1.ccr.corp.intel.com [10.212.82.230])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id EDAED20B5703;
+	Wed,  6 Nov 2024 07:27:04 -0800 (PST)
+Message-ID: <126ebac6-fb52-4c3c-b364-0b423e164d40@linux.intel.com>
+Date: Wed, 6 Nov 2024 10:27:03 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <ZyscLqAzo9Z7Zg02@google.com>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 14:49:36 up 182 days,  2:03,  1 user,  load average: 0.00, 0.01,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf stat: Expand metric+unit buffer size
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241106004818.2174593-1-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20241106004818.2174593-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-* Namhyung Kim (namhyung@kernel.org) wrote:
-> Hello,
+
+
+On 2024-11-05 7:48 p.m., Ian Rogers wrote:
+> Long metric names combined with units may exceed the metric_bf and
+> lead to truncation. Double metric_bf in size to avoid this.
 > 
-> On Sun, Nov 03, 2024 at 02:23:01PM +0000, linux@treblig.org wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > event_format__print() last use was removed by 2017's
-> > commit 894f3f1732cb ("perf script: Use event_format__fprintf()")
-> > 
-> > evlist__find_tracepoint_by_id() last use was removed by 2012's
-> > commit e60fc847cefa ("perf evlist: Remove some unused methods")
-> > 
-> > evlist__set_tp_filter_pid() last use was removed by 2017's
-> > commit dd1a50377c92 ("perf trace: Introduce filter_loop_pids()")
-> > 
-> > Remove them.
-> > 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/stat-shadow.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Unfortunately it doesn't apply to the current perf-tools-next cleanly.
-> Can you please rebase?
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 8c9292aa61d3..6b531d4f58a3 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -507,7 +507,7 @@ static void generic_metric(struct perf_stat_config *config,
+>  	if (!metric_events[i]) {
+>  		if (expr__parse(&ratio, pctx, metric_expr) == 0) {
+>  			char *unit;
+> -			char metric_bf[64];
+> +			char metric_bf[128];
 
-Done, you should see the v2 as a reply to your message
-with id 20241106144826.91728-1-linux@treblig.org
+I thin there is already a MAX_EVENT_NAME.
+Can we similarly define a MAX_METRIC_NAME for it?
 
-Dave
+Thanks,
+Kan
+>  
+>  			if (metric_threshold &&
+>  			    expr__parse(&threshold, pctx, metric_threshold) == 0 &&
 
-> Thanks,
-> Namhyung
-> 
-> > ---
-> >  tools/perf/util/evlist.c            | 18 ------------------
-> >  tools/perf/util/evlist.h            |  2 --
-> >  tools/perf/util/trace-event-parse.c |  6 ------
-> >  tools/perf/util/trace-event.h       |  3 ---
-> >  4 files changed, 29 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> > index f14b7e6ff1dc..4b992a3f2985 100644
-> > --- a/tools/perf/util/evlist.c
-> > +++ b/tools/perf/util/evlist.c
-> > @@ -362,19 +362,6 @@ __weak int arch_evlist__add_default_attrs(struct evlist *evlist,
-> >  	return __evlist__add_default_attrs(evlist, attrs, nr_attrs);
-> >  }
-> >  
-> > -struct evsel *evlist__find_tracepoint_by_id(struct evlist *evlist, int id)
-> > -{
-> > -	struct evsel *evsel;
-> > -
-> > -	evlist__for_each_entry(evlist, evsel) {
-> > -		if (evsel->core.attr.type   == PERF_TYPE_TRACEPOINT &&
-> > -		    (int)evsel->core.attr.config == id)
-> > -			return evsel;
-> > -	}
-> > -
-> > -	return NULL;
-> > -}
-> > -
-> >  struct evsel *evlist__find_tracepoint_by_name(struct evlist *evlist, const char *name)
-> >  {
-> >  	struct evsel *evsel;
-> > @@ -1199,11 +1186,6 @@ int evlist__set_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *pids)
-> >  	return ret;
-> >  }
-> >  
-> > -int evlist__set_tp_filter_pid(struct evlist *evlist, pid_t pid)
-> > -{
-> > -	return evlist__set_tp_filter_pids(evlist, 1, &pid);
-> > -}
-> > -
-> >  int evlist__append_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *pids)
-> >  {
-> >  	char *filter = asprintf__tp_filter_pids(npids, pids);
-> > diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> > index bcc1c6984bb5..ff73908e2178 100644
-> > --- a/tools/perf/util/evlist.h
-> > +++ b/tools/perf/util/evlist.h
-> > @@ -144,7 +144,6 @@ int __evlist__set_tracepoints_handlers(struct evlist *evlist,
-> >  	__evlist__set_tracepoints_handlers(evlist, array, ARRAY_SIZE(array))
-> >  
-> >  int evlist__set_tp_filter(struct evlist *evlist, const char *filter);
-> > -int evlist__set_tp_filter_pid(struct evlist *evlist, pid_t pid);
-> >  int evlist__set_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *pids);
-> >  
-> >  int evlist__append_tp_filter(struct evlist *evlist, const char *filter);
-> > @@ -152,7 +151,6 @@ int evlist__append_tp_filter(struct evlist *evlist, const char *filter);
-> >  int evlist__append_tp_filter_pid(struct evlist *evlist, pid_t pid);
-> >  int evlist__append_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *pids);
-> >  
-> > -struct evsel *evlist__find_tracepoint_by_id(struct evlist *evlist, int id);
-> >  struct evsel *evlist__find_tracepoint_by_name(struct evlist *evlist, const char *name);
-> >  
-> >  int evlist__add_pollfd(struct evlist *evlist, int fd);
-> > diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-> > index f0332bd3a501..d97830cdbd7e 100644
-> > --- a/tools/perf/util/trace-event-parse.c
-> > +++ b/tools/perf/util/trace-event-parse.c
-> > @@ -116,12 +116,6 @@ void event_format__fprintf(struct tep_event *event,
-> >  	trace_seq_destroy(&s);
-> >  }
-> >  
-> > -void event_format__print(struct tep_event *event,
-> > -			 int cpu, void *data, int size)
-> > -{
-> > -	return event_format__fprintf(event, cpu, data, size, stdout);
-> > -}
-> > -
-> >  /*
-> >   * prev_state is of size long, which is 32 bits on 32 bit architectures.
-> >   * As it needs to have the same bits for both 32 bit and 64 bit architectures
-> > diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-> > index bbf8b26bc8da..0e5133f1b910 100644
-> > --- a/tools/perf/util/trace-event.h
-> > +++ b/tools/perf/util/trace-event.h
-> > @@ -42,9 +42,6 @@ struct tep_event *trace_event__tp_format_id(int id);
-> >  void event_format__fprintf(struct tep_event *event,
-> >  			   int cpu, void *data, int size, FILE *fp);
-> >  
-> > -void event_format__print(struct tep_event *event,
-> > -			 int cpu, void *data, int size);
-> > -
-> >  int parse_ftrace_file(struct tep_handle *pevent, char *buf, unsigned long size);
-> >  int parse_event_file(struct tep_handle *pevent,
-> >  		     char *buf, unsigned long size, char *sys);
-> > -- 
-> > 2.47.0
-> > 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
