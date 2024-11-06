@@ -1,27 +1,28 @@
-Received: from BL0PR05CU006.outbound.protection.outlook.com (mail-eastusazon11021080.outbound.protection.outlook.com [52.101.52.80])
+Received: from BL0PR05CU006.outbound.protection.outlook.com (mail-eastusazon11021086.outbound.protection.outlook.com [52.101.52.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D6E20ADDC;
-	Wed,  6 Nov 2024 19:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3BB20C30F;
+	Wed,  6 Nov 2024 19:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.86
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730921829; cv=fail; b=pJ39Bc8LJL1hHPzWp+hh7OumT50fQrhDm1ncwz5xAskueHk/k0/eZePdWxgXt3S55Hdjl4vDnSJdeP8OmOlQshqDU2SFKJv2iQC7/ZIoRsa6H7evwdu9sZKVhhe46F9mGrurhXBeibdM+uqbJMOnTMjTnhRF9JkYp6KlVzHfMF0=
+	t=1730921836; cv=fail; b=L2jNtIvfKqfXtJKo6cemfmL4B/a4cjQZFG0M/LAx0WjzKBP/AwnaUtRMIL92dNbUOsH/HGvuXLesnhOj5ysNgQ405NozHem4RMdtcwu5X+piqNzaGSRtKFeQ658qBZoHmCwPdWYBKHMc5UMVjHLVo+g+Yp9N1tElS0ngGEXa17o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730921829; c=relaxed/simple;
-	bh=qq37zE6G7az9lJIqk/pdBJ73NBKNfRB6B0TMLt6pLGM=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=VcfiL9epagdH1Q5rwo7zeu/K1BvxNeh5EVS8KcgyIN29HcSyItDlpgX8afunGqqi94A3cVIukt28/8EiQEz17inqxTxZn2Hc4K9TYn7oO5wvTHEO5Lm/PZu/bX9iUQrCDr+CkiaXoopgbNigJE3SrmGWHdpkZn5tOksyII9KueA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=YWDeRcdD; arc=fail smtp.client-ip=52.101.52.80
+	s=arc-20240116; t=1730921836; c=relaxed/simple;
+	bh=gt9SvD+TA4nRx4Sn0dwyFU69Gm55I3amhufw2L5zzBQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TH418GNIh0JX/KUpe79Lwax3ZrE/v/OjhxXpnjQSvBm1urW/5zstmBQ2SE3yy4zx3mPz2SFEHGsMerMewHN8yJV6qKM98mJOyL/5sL6UP+UlZW7+Zda+OJjs8YNohTWmVe9+OgPob4YibgooxSN8rH6bnYh8uBWdaEYUCPR0KRU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=lDwgBQed; arc=fail smtp.client-ip=52.101.52.86
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="YWDeRcdD"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="lDwgBQed"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BoxSPhcVJgBBlW2vAeujAd7yyC/94WXpdZ2sNPaiDNgpInHJFElxdIAXmFBC9uuvGFccoBkdZn8YF0uOqH9UHScaXTjt2bfsk6/2bCzRz1eUoRJOy3ru1brzbxcEvmmvG72o8EVIXFx3CB9eDzEUTxr70FOGeJRa15X8iKyDg4P499bB5gliNcVBHyZGIVvl/llulhcrWleBK+ittIwl2O/OHoYMo86Hbq7VFT9+Zl6JH8E/UhGecA5HIA2AZ+98Fsh3XZckOMBe9ca6Rv0arAohcPHHoc6XuD8TSSveYzXOQSTVyvck6ZUNgSP0XlCVWXafAEX3vWAx77yyjdA1KQ==
+ b=FG+aJlUGIzP/OnBbB8uMHj9ZscPTHhoMq7mPvogjA/BRwcDksrYsNHybxOhez5HL32uiiEjmsbzLYmE+HIBV+uEWSzW+Hey2dYoJysLBv/BoC1rNJyFSj4NwR1AZAYE183VdMTUi84TEe4oAnFrCJRe9XZfOvlFCmg5TVtnYz+wHionOgpxkboCx4aFJIHfH9zIcMxwEI5iysIBbqdpHEHRLJENZAwsnXMJzFHqlaJ/pF7CrVdC4IK7/2TXEte1ctyDpPE3cqbyNmEzsTS0ploUgAPmopFHTuubHxvxJZLYDfM4VnzNpG/lZPWGVKp7FcWGiG7GQ5JAGx5MH1XN7cQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I/lUbTxaqWLpO2jwM0miN5zXaAb24E+6j43pOyerS0I=;
- b=Oi59dK9+w4+UJ0MUpEMvowUHOe1eo8TeFB4x/vFs9pmgNNvEfi9X5FyMY3Dtnh0Du/hZFx0vwH6mjU2Ci8UCTPjVV5Yv+kIj0+scLWvoCPy9W9beJCoeMor0el1q7et8GAqb2zI/BE/o8NSxXQxv1wtWLYBu98CttN1QOTAom1qZHG0gHJMvW2+E8dsJBR6s6MAe1J4PhTKzpvxu6d5LfxkbZEwj1yeQfwwz3dg7EadJlCpFuzL99fAtxU+vSwkzRfqxbLNmmklZc60nW5kfv7blkTM1fqr86AsXFtNZpvY9tYeCiYS8IDH8cbneTo3NnTzgE2q+pmHGEUoV8XKO6w==
+ bh=ZaoqbpkRgrgy8PNxBKuexzT/HltuIpEhApRiHOA08to=;
+ b=TOYZa0HbB76JLJfkZIEiV45Yjqj+ODdNjVWeJXDmteJjbMvTEQTYBUqR6vNCcae72XOY8tGDZNbn8bsF7WYRYix+1rQORkyDXzwawqfdjkEXRMMspIRYJOuM9/Drbjx2FW/JyAd7t0zFmjgRuBXorXK+Xjt2UGptLIBoT7MQ0lv00P33+2o+pva7CbDG+hXFL6TnzaQhYpdgUxRdHJI6UjCsiPT4Ct0ZnNXMwGRFqsZzetxww7DypQF1fDCPEtI60OYIzHoo49RCmIJuDo8bLDqUnDvpaaHqEPB769t3RdOhZjI33rJPYzzppjA9yet6dE/D4RuBeubUi+DKknTwwg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
  header.from=os.amperecomputing.com; dkim=pass
@@ -29,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=os.amperecomputing.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I/lUbTxaqWLpO2jwM0miN5zXaAb24E+6j43pOyerS0I=;
- b=YWDeRcdD0Y5LmyJGqVXEgjWRGbEo9dSYJBgaB0rUchlJ3N28c26P3fazkmPgeR6b1wVWQloja71MTgKAqhIcn2Ckqdxu5BcPNN7ckL0OJfJca4eWDT+bFZY2+7GaM1HYcoR334H18KcLyO8wMgoouDxgtNh+qJ1w5g3fqim/ySk=
+ bh=ZaoqbpkRgrgy8PNxBKuexzT/HltuIpEhApRiHOA08to=;
+ b=lDwgBQed7JjtPlE1DT0Jl8htkp+zYLDyZ+cDY4ohyiM49ToyK7v5DBrprebOVXtAFnUSCLFl14p9qyRzvpvu6wI/PbvMLdG4XlbDcRlynnuFv44vZ0YIQi2W6XCt/sWjWjKcVPs80oIosSxKG0SOnOwsUhZLIbCQdLr4nax8VCE=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
 Received: from MW4PR01MB6228.prod.exchangelabs.com (2603:10b6:303:76::7) by
  DS1PR01MB8775.prod.exchangelabs.com (2603:10b6:8:220::7) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8137.18; Wed, 6 Nov 2024 19:37:04 +0000
+ 15.20.8137.18; Wed, 6 Nov 2024 19:37:12 +0000
 Received: from MW4PR01MB6228.prod.exchangelabs.com
  ([fe80::13ba:df5b:8558:8bba]) by MW4PR01MB6228.prod.exchangelabs.com
  ([fe80::13ba:df5b:8558:8bba%3]) with mapi id 15.20.8137.018; Wed, 6 Nov 2024
- 19:37:04 +0000
+ 19:37:11 +0000
 From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 To: John Garry <john.g.garry@oracle.com>,
 	Will Deacon <will@kernel.org>,
@@ -62,10 +63,12 @@ Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] perf arm-spe: Add support for SPE Data Source packet on AmpereOne
-Date: Wed,  6 Nov 2024 19:37:38 +0000
-Message-ID: <20241106193740.6159-1-ilkka@os.amperecomputing.com>
+Subject: [PATCH v3 1/2] perf arm-spe: Prepare for adding data source packet implementations for other cores
+Date: Wed,  6 Nov 2024 19:37:39 +0000
+Message-ID: <20241106193740.6159-2-ilkka@os.amperecomputing.com>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241106193740.6159-1-ilkka@os.amperecomputing.com>
+References: <20241106193740.6159-1-ilkka@os.amperecomputing.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: CH0PR03CA0332.namprd03.prod.outlook.com
@@ -79,105 +82,208 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: MW4PR01MB6228:EE_|DS1PR01MB8775:EE_
-X-MS-Office365-Filtering-Correlation-Id: a6655d08-555a-4e7a-187b-08dcfe9a6442
+X-MS-Office365-Filtering-Correlation-Id: 0c076ac4-b768-47d0-da02-08dcfe9a68e0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|38350700014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HW4gKospNLQXZb9OOqBNEIR8rW/OQUpv3YbRKeLaIsCJOLzAPG+XL7WWaQQ7?=
- =?us-ascii?Q?nngJ+lB+s/jtuKD8bZnXgB9WzacaA3d0uXeGU67jspgshsMgxveFDwOz1qhE?=
- =?us-ascii?Q?4Tb/bS36OCKD9z/06fSjg6zVXKWIOVYt8Q40tth2vnx18acfxsmenyO88r94?=
- =?us-ascii?Q?fA0JaLbLhpVudlTT6wBbk6y3VH62Uv7d6awud3ABxu4XPeP3HP9yVdg8Q1Uf?=
- =?us-ascii?Q?w9W9/5FdUZR6xfI74ubD9cyfxh4TVqoDAeFoVNneziHp9o6eXeqTwhhbnXEG?=
- =?us-ascii?Q?qau1FW5Iq/PE4dkPK5sZ01/u+zNy4i8e+63gwMuQXPQJXeRr4/YP1rcG6STD?=
- =?us-ascii?Q?SaA7pwJf+XxJiTx+zq4yDF3dS3i+NHLHspGUxLBrV+ljIE8PKJgznDHkhEsy?=
- =?us-ascii?Q?ny9SulSH93eHBWOVQ2Dp5Xq8CB2TF5Ydz3SENEkC75Yv4aMGPH7Afdrrm/vH?=
- =?us-ascii?Q?6q62qgJu/5zglCeHq2W8+9NspE3qRny5kq3aCcBg9DfY9KGlKw/Tlo/YnVbD?=
- =?us-ascii?Q?YRG+c5rKr5YfLCAdEjH35GzrTzlOCJZPkAsktpDk+5o/5nitxDyZRMk3PtQj?=
- =?us-ascii?Q?csl31dnS2PWTO3W3FwbtTJ6LPsZN4c1tePQQJIMFcDtsgT125ok5hpmwyTdN?=
- =?us-ascii?Q?ny61+/C1LVmwsuXhuPaR4oss5hHfd+L21GtaNpmgJ+WNuTuwBAo/NVFIRj/E?=
- =?us-ascii?Q?IugZfSKC2xnhShT/j7Bqos4xMeWkXgmbvV2xGr7QBTSeddVjRE9yz2yp8Ois?=
- =?us-ascii?Q?bcMgE/1lMNchIV0d4FQyWo+2+w93C9uQa21cA/sVc+4TvqAqdfW/86e1r8+q?=
- =?us-ascii?Q?fLG2TITP9TbPyzNo25SNfCTqIgm9P7HY1gQEC+dSHx6WPsieUcSjxf0qxXsp?=
- =?us-ascii?Q?dPL3DY1ieigoubIxkkO+8kkp+D1NahnzwnxwB9xWg8S+bCp9O9my+TMY5yO0?=
- =?us-ascii?Q?QfC1+KuLpmTUFE1Gl5AhHxdjKNA9SMhLWki7J2B+KBn5UpWegCYaHa2m4VRE?=
- =?us-ascii?Q?NrCUjax+LnWH+JKOhab9emALlXhBWpZQ2sGRTLdyp6pRbB1VZhFnjcJKyPWW?=
- =?us-ascii?Q?LymKoCyvvVJueGw1e80NVCTM7kirar2ftPTnz3L5Pw0wgBOvd3Ba6wG0c9gB?=
- =?us-ascii?Q?lZq8iTqXw4nvNiKziSpUl+eVhXJGnV5AhgtxKeaErN/eiJ7J3yCmbeNuFGDt?=
- =?us-ascii?Q?Qf6590bwROLgpHfiBbxsFqr7MrSpBlEEI4RU11BTeuKAzH59VUyvBWBBzn1R?=
- =?us-ascii?Q?M992rDYs9nPe7v5TPN4u6f2ld0HlBSGtaXAuhr6NKXf781teRa/J4fhQMIYO?=
- =?us-ascii?Q?P7f04tv91Eg3ag1Cf23aTlnUKFimdLwSgJROYfh8Bcc77iUKcctMbQozzEk3?=
- =?us-ascii?Q?Xf6mSk8/HrQ7cZbnnbQu3m+l6XvZ?=
+	=?us-ascii?Q?ZsBmUxGYXVDbExnXaRPR2a/9ATpn04n5V5riDbBnuBcFZwwuIjSxhp42VVZb?=
+ =?us-ascii?Q?OWyut5V5SHBYeVnCO8nACGkjjpvTJNPNjss/4/ZRjfwJ8vB37iRECn4nm3Z/?=
+ =?us-ascii?Q?1sIBVbE22Hjt5TTsC9rpG41N67KaHG0mpIQi6Gk980N4xO1LAH+a7b9dsFpf?=
+ =?us-ascii?Q?A8/fUnJRO5G/WPBNeWPBQ001ov8qBRc5Z2o1aI20rX+DE8y/4fEo2oDguBH/?=
+ =?us-ascii?Q?ZeZRR/4hEZxJm3h03ymzDamQxVecNptWhxE5VL++Y3A3I4aVCajKuSo+f/9t?=
+ =?us-ascii?Q?mCzFui5X6JXFUW5FcdIga34/kK8F7TbVhBOtsA5W6nijQJQQdhu6ltmcWpyi?=
+ =?us-ascii?Q?wgVHpGKu7v1RXaAyNyzleSYcbAwyAGCxecbgfR0R7+mrH2po3vDkqMH5wJAv?=
+ =?us-ascii?Q?Cd6JcvodkvzQp9e4d33sljA25NzU6r/ZyVhB3Nf1ZvcG93NgwEfCfzazqruY?=
+ =?us-ascii?Q?ClYKs4x7nJD/7AkbKsV4pvpDLqaXLz2WeQ/WJLQdpm77cAMBm0MT6uPKVDsl?=
+ =?us-ascii?Q?LvCxB+YNmTVoaqolHhKEd9Z0Dp6mqbzHoqNfefCTERTPY7YEefJVkNtuvHUM?=
+ =?us-ascii?Q?4EfIkWER+BP8drGI+tgEIL8U61jXy+X2loDBTpD8F5lalchxlsRPeOWwecqI?=
+ =?us-ascii?Q?YhdPB4rmGF/zK4pkqiPSLpizeS5d61dPwyudO09ZftRHwxfsEkZn1c+rullo?=
+ =?us-ascii?Q?LmzeSYQYmuP3BdG8t9WPmyIW/ys4baNCquRcSjh7gsT53Gojd9t0MynB0wSM?=
+ =?us-ascii?Q?v1EzpaKYgtyqnK/CnK/fsOi4RVmPzYl+1AJX+mSUV+n9Du2erA0Rmh4SzyIA?=
+ =?us-ascii?Q?Fj0Zp2BrBi5iNEDdESiKtt4NK9RBUOUMFQ3xXDi4fwi/Cjue0a0okOfXwYKs?=
+ =?us-ascii?Q?XgQXjPr7cAhYVR3kPAf46GoBpOndV54Y4XoVA2ZF0a/GXeQoT19PWRT6pBWR?=
+ =?us-ascii?Q?14bC0M8Ix8/0giYkQj2No+q4uxXcshElrl5SJFub66rvWTLYG9PlVML/ZmNL?=
+ =?us-ascii?Q?ZlCsIRyjw+IocX7oBMklHE7QFadmWSQKhTVDft1DDBtXe7Jjz+lTJAOEoWs1?=
+ =?us-ascii?Q?IBtdZRLMS0bRzlJSb2s2tp0qPn9S59tQ92hGlGCasVJlkR04cEuEWD7/OsaS?=
+ =?us-ascii?Q?dcz+CiT1eZx4u2XeHiGqVCw11N61eXkF4d97Z3DBPFhHQi7e2oWVZa/nC23g?=
+ =?us-ascii?Q?P1nQVU/6tVol9NA3aGxlXSeFODcejPPhcmNB7R1j2Lvl0j3cOm/LM5c9lCuQ?=
+ =?us-ascii?Q?h7GFtUcWgZJF28ntCoPjxZ8ZLHI/nybCbEnTS8+q5+01hDrSKeiPchjV/Rf0?=
+ =?us-ascii?Q?g3IRr/4iAzsBznoqO7Uda7dUmvVCO+ioYjHk7TBMWg3kriZHzobOrVDQ3zio?=
+ =?us-ascii?Q?jpZKYh6hjy4jdOD6cpqAS5qThqGP?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR01MB6228.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?m4QHNWnp3RLYPC0roNXX7KYSNIyD8noDQyRrw0IqZZFvoCbHq2hO+OGW9XQ9?=
- =?us-ascii?Q?/LuUalIvbqFa6mR5c1R0Yk5R687nLRQDaj6nwbYgKxf2BmFoD5X8qkkC3aq8?=
- =?us-ascii?Q?PPMFqQPRUM9bE6/o5LpyWZFsQ3waWvwxvj7//4G5Cvcax2uta5lbV6CYG3Qs?=
- =?us-ascii?Q?n+hAmX2Kjphyq+qlZPkARRXfsdQVaNJAA+/DuzGSf3+Jdkig6eVoJRq8j4uY?=
- =?us-ascii?Q?+4FS5E/1SbI0k+nnpDicEtemi94o/m5VL0Y9fl+pHFPVqyKzohSF6Ae+viXd?=
- =?us-ascii?Q?RcoqyFxQBQ9ZVvLEPWMgD5j6xgHt7N1E6F/OcKMbORzBqFfCP9TXKo3M934A?=
- =?us-ascii?Q?GJITC2c23ibidcQh1NAQe4KYsi7cO3iafX5+deS7VcrNXo07QnzHvZuS2W+r?=
- =?us-ascii?Q?TeBVKn8elHSOaNuX2wnh2mJdNaEL1eY/tQLpFPCJgK3MeaWPM6R7+QqRoPTr?=
- =?us-ascii?Q?znD2VdObpi3EDxtCV/jLAklaR4O54biFrCbKvH8nOZgXYIhsGbBRW4ids8Gp?=
- =?us-ascii?Q?ITiER8AB0qp5LvcikZoBPDUrfoZ8J2HDGDHAu3jVUdAgzyMHxxZIh/fnch4T?=
- =?us-ascii?Q?SAtQ3G4CIyH90rn1zDGqg5Yk47q+Q0iNQVXfbk3UCvq9QMgzgHxXiG19HaU4?=
- =?us-ascii?Q?+9pPJaAW9J8DdSNOz9lbTQFKK/U+OgVaXVAX1+dnj6xbVGsYAf9HkJu+Di+a?=
- =?us-ascii?Q?H+a030I/8gJUZTEM2GYLwbhTpXDHVYLiWC8RJS7+IvgbVbysRJo1UEbhH4xh?=
- =?us-ascii?Q?UIkGc+wKHza0tDzRRHK6D/ucI3NMuvY6eUmPTkFjGYGR+RjYQHK4/VnGYX69?=
- =?us-ascii?Q?CLavXscSZ398D28u51EK1CZQ7zVyWr1rlw9xccVSSurl5aLVP8kyccaP/nJw?=
- =?us-ascii?Q?W93luwu3CaDoeRRtDxHIKtmta4RmqkFFvrQ9UaBQwEoA5hL/eCK9oyFlabJr?=
- =?us-ascii?Q?hjuI2RDbgbgvVPbnwdRkBacuRwdNgo8yl3FkfhXV2HdhFgwAuMvkqKYcwDuu?=
- =?us-ascii?Q?v8OpIfjQ6FOSViusFQcoYkdN260uOyEY0ov0QgIFHyLC3blrNmnZG/RhZgl2?=
- =?us-ascii?Q?JSLdtmQJWWc0bCaecvF2NxIY3XubCdJe/KxC/cXrybNkJ9XljP9wOHYYV9CA?=
- =?us-ascii?Q?kqf38o18CCnEiFIc49A3Jsj8hTKBft9cd9IeeWn64+gwyjaoWpQmTEmQa0O1?=
- =?us-ascii?Q?xiprIg/Ilg7H6A+cka8U9NTTc+ZTrZb1LDZSp4vMNZUIbX90A8jh7BBy1+Ly?=
- =?us-ascii?Q?N7/XkKTT7VObgPRmhcanOK26kV2+KfCgOQbE/CQM/uFVWuZy4+MKDiyzRLEq?=
- =?us-ascii?Q?yD8Vp2BzJKFg8UxNuba/gFozLRBipNNIuR0K/CgF7Js1dhutZowra4XGvgJo?=
- =?us-ascii?Q?J/Crm7zDF8YsDLqLPYoiF8yi99ZPAS1Gft4IQqWmHYGb7CtxOxMGvtqrtzNk?=
- =?us-ascii?Q?GmMSdvpSA60Vv5yZD+HLeQEjPudm+surrltlBb0aDIfUxGcRt/kPBUV82A8N?=
- =?us-ascii?Q?2duD52FhBxS7z6uY7yQsiHD78490EuXxoYOG39Xut1Zo/2ArmEPRshqpwHNg?=
- =?us-ascii?Q?HV2RwwK6uWmXgEPeIteAWKmg5OqwFfkOnxpkQ05JAmjOD4TaMw1xgd6mnHRq?=
- =?us-ascii?Q?UAOeR6RkL5vEMZ6A/nqvVjM=3D?=
+	=?us-ascii?Q?7g9hymY1fjfSP4V5AJ1r5C6wkBjtvyogmpUa7ZA6NkWB16c9m7noijl7+oXq?=
+ =?us-ascii?Q?vICRDFnBQFXxT8UkH+DjCH11By0TiT3LpZK2Q/iqlsAXY/u67LJ7U9p9e8EW?=
+ =?us-ascii?Q?6rdwoKeI+Q6Kv2oAXYcTp4K0KcwCdn9BLAs1+aAN+Kn7SWiAJ+yYL6olNUAx?=
+ =?us-ascii?Q?WONC5tjJRAAvZTDpjDMcemAODKJb0gys97d+jLXIbxJUr4b73DoHEtJuf7S0?=
+ =?us-ascii?Q?OBmeC8fo7eIy2DB4qYjBW3kiJrQzWkhTCb32LymJ0PsSNwwkXG7B3VNQ+fcI?=
+ =?us-ascii?Q?5A7g55OdE5qoG9FYmIOU3wqy785T+FUtxeI741kBlG192KVMK8TrRVAOFzx3?=
+ =?us-ascii?Q?CwrdQtNyu402FdTspgMzcll5qyXzAu1WYniip/TAJ8Ys6ugViFtJHrWKmBsv?=
+ =?us-ascii?Q?YFxG+bdJ6+WY+qGfA/SVJuc++V989dm/GlRkJxEfLSkX74RnIOvtOjSPxA0i?=
+ =?us-ascii?Q?P5ZHvMH7QYHlD4r0iTKBeiQE9ikhxB8oyR7CvKn1Ef1Wj9tBH0GYRn7eUyuM?=
+ =?us-ascii?Q?FqC2jh4y3w0WmwvnhFKxg55GO3YPTsd+PaGkSh9Hmthvq97LuSYs9r5hLmbA?=
+ =?us-ascii?Q?N1UU+q6CjOELnXIumAHGMKtx8TypPJMCgUzv3yjRcSA5sOSe5/m5ryGk7BnC?=
+ =?us-ascii?Q?thiswxrYW96lkZNqnCVaDBE+2Os9pC6XryeC4YIsSa7aLYqGcZwSbAIg8rnz?=
+ =?us-ascii?Q?YHAP/vp9Rr9VBGl6v+yeqWLNUwRAA9S9WXFaSJnv1hQ0tTfFA6YNIn4g/+pj?=
+ =?us-ascii?Q?S3riKIjfRQCVjUMrhxVI2cl3ohzNth79788LO6DNQHTsAPSwA/Z3NWfgRjA1?=
+ =?us-ascii?Q?qVhbkeAYW95D0zv4L2tqVp9zMpgwn0fPvdtZ6dosC14acJXmaVwlLuItSeGU?=
+ =?us-ascii?Q?Pwag/dwmx/z9aLA46DtFo6HcOexwRjZzqAKiZ+llGTUcF66PC5FszSMP9WMu?=
+ =?us-ascii?Q?FxERBmnQmBCu0QFYM7fekOqjXQozLJJaJfBOgJvMQEPUMDXNUepqApUJNKBV?=
+ =?us-ascii?Q?sf2Z8tBjNQamm1jvl2JsqQMM489hTd+TkYomL9TwaoMEgFgA1rVgZkWUJDjr?=
+ =?us-ascii?Q?HpxZzcLBua4zynQAIvHBtPRR0knJfxrzzMBeFTMpk9OYqKkTccNhLIUhU/xW?=
+ =?us-ascii?Q?7oArZiWkWGz2pJcD43QURbcWqSClqFyScgGynLWVCPnDZ5Lwod/5fkV1hk9A?=
+ =?us-ascii?Q?8XT3gG7H/MjTWGR3s0RXFCGX/kmeCkxOkjRdzUaBC4OdonhVWtjRw7tB7fYK?=
+ =?us-ascii?Q?QYuTgDh5C2bjMpDB+XWUInuH1I+H7V8fzIkI/abVcLYaGFvwZRFtj4IvtGnX?=
+ =?us-ascii?Q?afSzK0IMvSE6PuHgWOKGgheTr3CyoZV+VhANdMkryZwQud+JGzVfvxtBXRGt?=
+ =?us-ascii?Q?uIcy17MXTOPSLo2g2t5vQw8zLUVOo+qshnP5K9LxAKVLuFuimfJLJPyEEwiN?=
+ =?us-ascii?Q?RZNprlthyKYkXaolnYGep9mClHjdoSlxxIUN4SV1N2BMf6rh5Cw++YaygMmX?=
+ =?us-ascii?Q?zfnMNStMnO7PQeVBGp8usdWaUSbsGsSKswQ+LbJAh8bwCvHd+wiJHpxDcnXk?=
+ =?us-ascii?Q?D9ukGaPbs/ZecElFD4h2zX4qulbBRrjMjC3+ZTa2BtCw3rBOQFB+r4yTwns3?=
+ =?us-ascii?Q?qlev8a6Qpq7e+5QbcqbwLiY=3D?=
 X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6655d08-555a-4e7a-187b-08dcfe9a6442
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c076ac4-b768-47d0-da02-08dcfe9a68e0
 X-MS-Exchange-CrossTenant-AuthSource: MW4PR01MB6228.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2024 19:37:04.2444
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2024 19:37:11.9162
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hjvdHmo2bZuypxefHv1FgzoS3BsqrnpkNuqDd+/IBLV4fkQrkVoTq2Zw6El9dwTmbYzYUqhhEy2v8pz1zpezE5zKoSvUUZQ656paIVOB74nBCxUO4tnbauSUIPxJvQqc
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5408EUNlU3E6NjDx1+gqA4jKX8mXoTKaI2z9PjyCzFslCNIXSdwewDRUZVSCBVBWn824h7m/OtNjcT7YSQTRNBblyJ2W051G+KRk7tJB6fnyeEtVSIY2HbZ+N6HjlxKt
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS1PR01MB8775
 
-v1:
-	* https://lore.kernel.org/all/20241024233035.7979-1-ilkka@os.amperecomputing.com/
+Split Data Source Packet handling to prepare adding support for
+other implementations.
 
-v2:
-	* Doesn't use read_cpuid_implementor() anymore as that was broken and
-	  unnecessary.
-	* Convert AmpereOne source field to matching common source fields to
-	  avoid duplicating the code.
-	* Rebased on top of perf-tools-next/perf-tools-next (ba993e5ada1d)
-	* https://lore.kernel.org/all/20241031213533.11148-1-ilkka@os.amperecomputing.com/
+Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+---
+ tools/perf/util/arm-spe.c | 65 ++++++++++++++++++++++++---------------
+ 1 file changed, 40 insertions(+), 25 deletions(-)
 
-v3:
-	* Changed source mapping to simple switch statement
-	* Dropped is_xyz() stuff
-	* Added table to map midr to data source decoding function
-
-Ilkka Koskinen (2):
-  perf arm-spe: Prepare for adding data source packet implementations
-    for other cores
-  perf arm-spe: Add support for SPE Data Source packet on AmpereOne
-
- .../util/arm-spe-decoder/arm-spe-decoder.h    |   9 ++
- tools/perf/util/arm-spe.c                     | 104 +++++++++++++-----
- 2 files changed, 88 insertions(+), 25 deletions(-)
-
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index dbf13f47879c..b222557cc27a 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -103,6 +103,18 @@ struct arm_spe_queue {
+ 	u32				flags;
+ };
+ 
++struct data_src {
++	struct midr_range midr_range;
++	void (*ds_synth)(const struct arm_spe_record *record,
++			 union perf_mem_data_src *data_src);
++};
++
++#define DS(range, func)			\
++	{						\
++		.midr_range = range,			\
++		.ds_synth = arm_spe__synth_##func,	\
++	}
++
+ static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
+ 			 unsigned char *buf, size_t len)
+ {
+@@ -430,19 +442,6 @@ static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
+ 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+ }
+ 
+-static const struct midr_range common_ds_encoding_cpus[] = {
+-	MIDR_ALL_VERSIONS(MIDR_CORTEX_A720),
+-	MIDR_ALL_VERSIONS(MIDR_CORTEX_A725),
+-	MIDR_ALL_VERSIONS(MIDR_CORTEX_X1C),
+-	MIDR_ALL_VERSIONS(MIDR_CORTEX_X3),
+-	MIDR_ALL_VERSIONS(MIDR_CORTEX_X925),
+-	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
+-	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
+-	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
+-	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2),
+-	{},
+-};
+-
+ static void arm_spe__sample_flags(struct arm_spe_queue *speq)
+ {
+ 	const struct arm_spe_record *record = &speq->decoder->record;
+@@ -532,6 +531,19 @@ static void arm_spe__synth_data_source_common(const struct arm_spe_record *recor
+ 	}
+ }
+ 
++static const struct data_src data_sources[] = {
++	DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_A720), data_source_common),
++	DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_A725), data_source_common),
++	DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_X1C), data_source_common),
++	DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_X3), data_source_common),
++	DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_X925), data_source_common),
++	DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1), data_source_common),
++	DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2), data_source_common),
++	DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1), data_source_common),
++	DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2), data_source_common),
++	{},
++};
++
+ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+ 					union perf_mem_data_src *data_src)
+ {
+@@ -555,12 +567,14 @@ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+ 		data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
+ }
+ 
+-static bool arm_spe__is_common_ds_encoding(struct arm_spe_queue *speq)
++static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
++			      const struct arm_spe_record *record,
++			      union perf_mem_data_src *data_src)
+ {
+ 	struct arm_spe *spe = speq->spe;
+-	bool is_in_cpu_list;
++	const struct data_src *src = data_sources;
+ 	u64 *metadata = NULL;
+-	u64 midr = 0;
++	u64 midr;
+ 
+ 	/* Metadata version 1 assumes all CPUs are the same (old behavior) */
+ 	if (spe->metadata_ver == 1) {
+@@ -592,18 +606,21 @@ static bool arm_spe__is_common_ds_encoding(struct arm_spe_queue *speq)
+ 		midr = metadata[ARM_SPE_CPU_MIDR];
+ 	}
+ 
+-	is_in_cpu_list = is_midr_in_range_list(midr, common_ds_encoding_cpus);
+-	if (is_in_cpu_list)
+-		return true;
+-	else
+-		return false;
++	while (src->midr_range.model) {
++		if (is_midr_in_range(midr, &src->midr_range)) {
++			src->ds_synth(record, data_src);
++			return true;
++		}
++		src++;
++	}
++
++	return false;
+ }
+ 
+ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
+ 				      const struct arm_spe_record *record)
+ {
+ 	union perf_mem_data_src	data_src = { .mem_op = PERF_MEM_OP_NA };
+-	bool is_common = arm_spe__is_common_ds_encoding(speq);
+ 
+ 	if (record->op & ARM_SPE_OP_LD)
+ 		data_src.mem_op = PERF_MEM_OP_LOAD;
+@@ -612,9 +629,7 @@ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
+ 	else
+ 		return 0;
+ 
+-	if (is_common)
+-		arm_spe__synth_data_source_common(record, &data_src);
+-	else
++	if (!arm_spe__synth_ds(speq, record, &data_src))
+ 		arm_spe__synth_memory_level(record, &data_src);
+ 
+ 	if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
 -- 
 2.47.0
 
