@@ -1,189 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D366F204028;
-	Wed,  6 Nov 2024 16:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DCE204028
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Nov 2024 16:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730909001; cv=none; b=IxfyfprJ1sHeCHEz3J2bVHNQZ2nnFRZG07pcynG103IpwbBO6aO4pBhno6wCTVw0aWj9IvfGil9dvGjZqaNcMPN+Hvue57TIp0jyEEmwFM+DA423yp2fYn5jfc/Lm2932Cm5tMrv3JKHfQxIGHYmirfF9pcKdt6meicN9Z4UetM=
+	t=1730909105; cv=none; b=AjpAROpsdd1lnJv7IQbF5f6VA2zdZRzB26wyqEBSxSfDC7gFemT+Mub1dmilSkvgTEDDnXVIYjhpRVgBiOJeyDd1wzjKU72dw4FDgdIuXLfdhWDLFFF0bgrIY419s9Nan72ZJORTYOZsnlayCxYIMnCC0tgdtI4lzmherdHwsK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730909001; c=relaxed/simple;
-	bh=eeEXuIJ2vlczIF22PZRVZhnTIMIbHqdB4rwbCI1c/Sg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ioHxjZvG2b/rKl6i/a9S1Pg1BDRxa0z/4iLF/c/FJbM0VqV0EHMGsIS4X9gifo/pSYDnIP7wsKPjBNBS7wDV6lgPJzDoUdiMPaDa/1gTKI1ISVPvBY142jZaCISZLGzbvfs2TEc3tP0Tk1bhI7CVZBvXTaA+mIY6rE8lrgENED4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NKC//QNW; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1730909105; c=relaxed/simple;
+	bh=cH5OE7NX7Mz/bdUBs66w08qwMK7Qsujzly9jtp/uTs0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jw6xZDkeOJpTMeLwrwxFmuk6um9WdYEivlp1HMhsInG4JQ7gU+XxFY6oFgaEcXs1OLzAGz6+6hgq5clYJ2FjJzI+MjMHnSR4f5oWtx71g5jjJJSi6anT6Jkqtd2RdZyqNm29n6TC0miiMkCFsfEOQPiys9utpQ7gxweg6AEw6Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dGyJjcHv; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NKC//QNW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730908999; x=1762444999;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=eeEXuIJ2vlczIF22PZRVZhnTIMIbHqdB4rwbCI1c/Sg=;
-  b=NKC//QNWBYXoeHvZEqxuSnuxCT8KPuPef2vRSskVLfPrVkXKORdjfijW
-   PT7V0JcFNbWVVXXhZwlVA794AgC694G7LGkNkSz2IbCO1hDExl+sq3xG7
-   /fRkRkG5ju89ymQYYguwuEomHa1v/GjWw8MjjK28lvNUNJOBNDv7AcMWZ
-   yxw0QRmo+0ToBCzstBTRpq6oTMdqgIVJr7/PZ8W2ga3++bO5+X8dG+MrF
-   K1YcUPu0accPxz4YTPXOifFZJSr29oIB8TOZSmE/1ttypxAeeUppdpFAP
-   F5DBWDDDNkKxnuwtnTrUfyig6yjxQPRNXpi7UcMAHMhIUtz0PiPYhRudm
-   w==;
-X-CSE-ConnectionGUID: Nh3lJl2hQrih+hUTaZUwAg==
-X-CSE-MsgGUID: kfGnJJAiTmm8xeWlk7XzkQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="48176917"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="48176917"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 08:03:17 -0800
-X-CSE-ConnectionGUID: a5M3gJ+/QYaSWgS/qH6ALg==
-X-CSE-MsgGUID: phJVPBFJQuabQWlVho3xvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,263,1725346800"; 
-   d="scan'208";a="84715253"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 08:03:17 -0800
-Received: from [10.212.82.230] (kliang2-mobl1.ccr.corp.intel.com [10.212.82.230])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 2C51820B5703;
-	Wed,  6 Nov 2024 08:03:12 -0800 (PST)
-Message-ID: <65675ed8-e569-47f8-b1eb-40c853751bfb@linux.intel.com>
-Date: Wed, 6 Nov 2024 11:03:10 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dGyJjcHv"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-460a8d1a9b7so250731cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Nov 2024 08:05:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730909102; x=1731513902; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IL4bTsX4yoJsol4u3vZrSSAIg09xmcdzQI4G8r3j4oA=;
+        b=dGyJjcHvAHDgfRG3X/RgQ+bx5l3YhTieFfM7h+u6PvzEBy+fdt4/0RDso71iBRIvUN
+         4uKyUZ8euqX6fEDRAU1FArMbIjqAwM9UOELJH70sJFzu6nB7rZyP2KVTgARPpvS2APvB
+         z5/0DTOkEhZpuVCW8cmTWumMpLrHEIJCQZThCp6Wouo8A0IVELVLFl5IEUwImMOhoBvU
+         E/z07b+C9k/4yagcuO7NziwpUnThJA13kHW7yuzOlq4i8R7WPaXaI6h4iXxz4NvYxPmj
+         FEIiKIe2mBL6lYGSdc3VNWbFhg8w2wBqMCPm0dJNfiLeC4ONPnyENm0n5oGygwhfaUPk
+         4W7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730909102; x=1731513902;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IL4bTsX4yoJsol4u3vZrSSAIg09xmcdzQI4G8r3j4oA=;
+        b=SiDtkH1GZYswaAgbYwDzYMV7VW8WCnYK2ypBSi8jZxf05yBCRoVaBaoh1HBHXN/5gi
+         BQEhb5ScoenrahqnZGX8dgcISLgVyIL32q0OqZ8Hr7kxdXcXAgsYIkYjlVlt7jkwaW2B
+         opyo1IChMijND6XViA1a39wHxGlJwijsP3arjmV7V6CPVvh1FUqp97SotQ5aL1Ue5rYJ
+         RqN0TjLg8KCcepmTKESW8Fl3c7moT2RT7xiIDSaVhJNspxa6tQnziCNH+iUO4n4C8lqv
+         nnhrhbTXpiSvEYQXhQO79sVEmD3uHdWzFzjIWrrZSzPfoyEVz2nuFcxhsHxP8n+UL+i2
+         SD4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXIK5DJlFiS3i4Nyao+kNH2MILzUjNXMcdiBPjqD34lkciSXgcUO/MVd6EnvXk+V5u7a7sEEI8BtlLEmf4yXF8L@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5b1ZGbGrCGT8qTMfQM0SWoAD2n9yUc+tFpzxuglLyFYY16g/0
+	WSEZQ28adPNFqkNnBvYR4L3MFr85c0Oe86y/hfSg4SxaJbPPRuHrCq7SEecnWF4fMZSK/9J6bLD
+	5JwKGa3uv5OsOPy+ITqFDBhitfXIdRms+Dsr2
+X-Gm-Gg: ASbGnctY1T7UkDF6OYgf3Zf8DbdJZ7702/WQVG/hUkBZ4h93LJ9ra+9hcPV0rrpUma9
+	NOQVVHxJnGvVuulweKiShKcI20TIZgB7ejEYqGLAywJ0gpD/iZTsE8DHtzhTjzbU=
+X-Google-Smtp-Source: AGHT+IGVuAyYxfbKNtvaZjW52zgPaDYQVeAmhHgdEdnwxmPFzOVkFKrhtvzICzMYI5c5fjUF6KVTO9JuvH8HQgPdF7Y=
+X-Received: by 2002:a05:622a:612:b0:461:6e0a:6a27 with SMTP id
+ d75a77b69052e-462fa6113c7mr288421cf.20.1730909102271; Wed, 06 Nov 2024
+ 08:05:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/5] x86: perf: Refactor misc flag assignments
-To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
-Cc: Oliver Upton <oliver.upton@linux.dev>,
- Sean Christopherson <seanjc@google.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Will Deacon <will@kernel.org>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org
-References: <20241105195603.2317483-1-coltonlewis@google.com>
- <20241105195603.2317483-5-coltonlewis@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20241105195603.2317483-5-coltonlewis@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20241106004818.2174593-1-irogers@google.com> <126ebac6-fb52-4c3c-b364-0b423e164d40@linux.intel.com>
+In-Reply-To: <126ebac6-fb52-4c3c-b364-0b423e164d40@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 6 Nov 2024 08:04:51 -0800
+Message-ID: <CAP-5=fV3RuvU0N_bt7R-ZMs2nX1_wfKh30PA59u3MW0TF4nzBg@mail.gmail.com>
+Subject: Re: [PATCH v1] perf stat: Expand metric+unit buffer size
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Nov 6, 2024 at 7:27=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
+>
+>
+>
+> On 2024-11-05 7:48 p.m., Ian Rogers wrote:
+> > Long metric names combined with units may exceed the metric_bf and
+> > lead to truncation. Double metric_bf in size to avoid this.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/stat-shadow.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shado=
+w.c
+> > index 8c9292aa61d3..6b531d4f58a3 100644
+> > --- a/tools/perf/util/stat-shadow.c
+> > +++ b/tools/perf/util/stat-shadow.c
+> > @@ -507,7 +507,7 @@ static void generic_metric(struct perf_stat_config =
+*config,
+> >       if (!metric_events[i]) {
+> >               if (expr__parse(&ratio, pctx, metric_expr) =3D=3D 0) {
+> >                       char *unit;
+> > -                     char metric_bf[64];
+> > +                     char metric_bf[128];
+>
+> I thin there is already a MAX_EVENT_NAME.
+> Can we similarly define a MAX_METRIC_NAME for it?
 
+So in this case the buffer needs to be big enough to hold the metric
+name, the unit from the scaleunit (e.g. the "%" from "100%"). I'd
+prefer we used dynamic memory allocation to having hard coded limits,
+just to avoid a "640K ought to be enough for anybody," moment.
+Although this change is implicitly a hard coded limit, sigh. There is
+also the metric only name length:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/builtin-stat.c?h=3Dperf-tools-next#n160
+That looked like it was planned to be dynamically computed but then
+the patch adding that never materialized - meaning "standard"
+metric-only output has its own cut-off rules at 20 characters. I'd
+rather wait on doing a larger cleanup and do this quick fix for now,
+mainly as I have enough to do.
 
-On 2024-11-05 2:56 p.m., Colton Lewis wrote:
-> Break the assignment logic for misc flags into their own respective
-> functions to reduce the complexity of the nested logic.
-> 
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
-> ---
->  arch/x86/events/core.c            | 31 +++++++++++++++++++++++--------
->  arch/x86/include/asm/perf_event.h |  2 ++
->  2 files changed, 25 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index d19e939f3998..24910c625e3d 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -3011,16 +3011,34 @@ unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
->  	return regs->ip + code_segment_base(regs);
->  }
->  
-> +static unsigned long common_misc_flags(struct pt_regs *regs)
-> +{
-> +	if (regs->flags & PERF_EFLAGS_EXACT)
-> +		return PERF_RECORD_MISC_EXACT_IP;
-> +
-> +	return 0;
-> +}
-> +
-> +unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs)
-> +{
-> +	unsigned long guest_state = perf_guest_state();
-> +	unsigned long flags = common_misc_flags(regs);
-> +
-> +	if (guest_state & PERF_GUEST_USER)
-> +		flags |= PERF_RECORD_MISC_GUEST_USER;
-> +	else if (guest_state & PERF_GUEST_ACTIVE)
-> +		flags |= PERF_RECORD_MISC_GUEST_KERNEL;
-> +
-
-The logic of setting the GUEST_KERNEL flag is implicitly changed here.
-
-For the current code, the GUEST_KERNEL flag is set for !PERF_GUEST_USER,
-which include both guest_in_kernel and guest_in_NMI.
-
-With the above change, the GUEST_KERNEL flag should be only set for the
-guest_in_kernel case.
-IIUC, this is the series's target, right?
-
-If so, could you please move the explanation into this patch?
-For x86, the behavior has already been changed since this patch.
+While we're talking metrics, I'm still looking for feedback on the
+python generation of metrics. v1 was sent back in January, if v4 looks
+okay some acknowledgement would be nice:
+https://lore.kernel.org/lkml/CAP-5=3DfVX5wypmAAhR8LsE4nSWp5BmN_qhGf9+WCh2be=
+bNcGYTg@mail.gmail.com/
+Leo sent some feedback to improve some of the ARM metrics, so I can
+resend the whole series. Would be nice to gather some acked-by or
+other tags.
 
 Thanks,
-Kan
-
-> +	return flags;
-> +}
-> +
->  unsigned long perf_arch_misc_flags(struct pt_regs *regs)
->  {
->  	unsigned int guest_state = perf_guest_state();
-> -	int misc = 0;
-> +	unsigned long misc = common_misc_flags(regs);
->  
->  	if (guest_state) {
-> -		if (guest_state & PERF_GUEST_USER)
-> -			misc |= PERF_RECORD_MISC_GUEST_USER;
-> -		else
-> -			misc |= PERF_RECORD_MISC_GUEST_KERNEL;
-> +		misc |= perf_arch_guest_misc_flags(regs);
->  	} else {
->  		if (user_mode(regs))
->  			misc |= PERF_RECORD_MISC_USER;
-> @@ -3028,9 +3046,6 @@ unsigned long perf_arch_misc_flags(struct pt_regs *regs)
->  			misc |= PERF_RECORD_MISC_KERNEL;
->  	}
->  
-> -	if (regs->flags & PERF_EFLAGS_EXACT)
-> -		misc |= PERF_RECORD_MISC_EXACT_IP;
-> -
->  	return misc;
->  }
->  
-> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-> index feb87bf3d2e9..d95f902acc52 100644
-> --- a/arch/x86/include/asm/perf_event.h
-> +++ b/arch/x86/include/asm/perf_event.h
-> @@ -538,7 +538,9 @@ struct x86_perf_regs {
->  
->  extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
->  extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
-> +extern unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs);
->  #define perf_arch_misc_flags(regs)	perf_arch_misc_flags(regs)
-> +#define perf_arch_guest_misc_flags(regs)	perf_arch_guest_misc_flags(regs)
->  
->  #include <asm/stacktrace.h>
->  
-
+Ian
