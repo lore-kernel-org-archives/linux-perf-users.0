@@ -1,113 +1,170 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739E51DDC1C;
-	Wed,  6 Nov 2024 02:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB981514CC;
+	Wed,  6 Nov 2024 07:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730859081; cv=none; b=FiknUjKbDuCJJq8+na8yiUh6T4F1D+wqOnGC7S6v1vIhMZctqELWu+EXz0DPNTUgBdT5aGZ/LrmVd3uXCGjXd4aqMF8ybSRLIeQIOAaRQS8MMpJFXKSsw/DF+PmNxosXeqAD+tUjK9fE9jkndrYu9yj2wDVMteZpJfrhvlm87Q8=
+	t=1730878513; cv=none; b=sS392Atr9acr0l4BvzsZuD2bbJCPgCxQcTFciGCLtUJzg3GC6APkZetPg7LrPzs52IgQNWN2MTa7sXMWSuIKs19NiQhF/fgG75E1oLhAVEEJKzz0561fj3vKmmIrc5fNcOnRgsBShLqo0kYWqUfuX7eYFvbNX4aE7Y9YEVTRt7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730859081; c=relaxed/simple;
-	bh=obMhTpK3d+UU3JSNJrBtMMUWyHBoU0qKH/rNVB8ORy0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZzG4y8cZ5vIosvQsf2Lhjt88Sy6zCemZt8PTE6tt3VLytMdEDD197TK1/wpmIfHQLnEK0TMuL9rudK9M178CJEiYSbnbIk4wt/0CHFfsmrIceUDdjz7r3gxTPF9kHo5srhRnHsTC73Ghy7ptdVVt8A+VQ/FFb2w9svmeCfJ5zd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rv8INxvM; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730878513; c=relaxed/simple;
+	bh=PNzVjE3G8vsQQ1r/KmwaBnxHzJDfpwVNWliRRgu5B/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TXT6qQQoM/PhNBzQkTMUFP43CQqo4PPGGkcEylVC6Od/287UQuPQQxKBiBb25rUQVGyALNJoToHzG/mBTHHaLdUG0+zybaB1tokNRP5hhoeygLdgWQxzhvVm+GLHU8fDSLeyhWfbbFbnmhNnLRQM6aPmPNcJoZH4u0bQ9ZRYNRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fg1WYRzn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rv8INxvM"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2e30116efc9so4886270a91.2;
-        Tue, 05 Nov 2024 18:11:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730859080; x=1731463880; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M+BC9bKNYRzaIUhTatFOzGkofunov+kcpxiHDzejgjs=;
-        b=Rv8INxvM+HJ+fje5XpKVqqIARYcvKVMplnNPeUYc9hSCe2nTEwXINLGsZbgD1BDYaf
-         Lzs/gmyKEBg4vMBhcstZGCu4AAw/P8oil4WeDUHUNIyd5TRan6GCxQVgkCEJUwR3OgQc
-         WCLHXpt0lEVScpCiNfMLYe7LJVWJUXfEWwOtN6M1/NoTEw2EJJW0CR8ukjpNQUDoe1rv
-         nn5ZyKjE7yQ5fqPHQQR/pn3j+xTwAjN3qfGXpCI4hsHIIK024O2oNl7XNei+jgGGMszY
-         yHiABSqlJUT16JlCCFqrCCzNYuCMG+YNEZw8d2XlpEtwcy/tGDwtEtxD6z+lMwrl9Ppw
-         Oyyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730859080; x=1731463880;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M+BC9bKNYRzaIUhTatFOzGkofunov+kcpxiHDzejgjs=;
-        b=rvkumE2VW8/UCQHQg9f0krtk3TTJZ02JEeSO5ANrDx867HXlEZTNgasu0qgMSpWqH9
-         LlsLTkCTH/JIZlluVvQZCWj+TbZ06BCoXXZ+QSlwlaJaOMGCk0iaQOoV1t+sy3HkDEY6
-         DV3UGwV+xjsev7qFDyzjFmEEjHPEGNE5B9a3cf/Gp8kArqUTLGWInfhRlJJhT8zZeFs2
-         0cgx/47YMiYYj1p7SDapSy2N412myjzBSCa39ktwqp+D2G0mT7cmSe2EyxOjbtEpS5C5
-         CuorAnro7z+XaH2RYDn17R3e0AS7tjywMB2LcyOn9LhjLoYfqcz1I6OiVw9Z9y9kthf0
-         Ty4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUFgkSksiPovFlEvQjcGduxGhkrQdP2o7E6lcXodDl7juY9OK78shrsw17wrLxwq2pwu6PmLXdF/QQEQ0v5Aq5V+Q==@vger.kernel.org, AJvYcCXNRs3ZmOxt1WEmLljrTpXHNlyT7QzC6bU5HGeU5/XZQ1Vj0SmyfGtfaZgPXKZYbZaZrbw=@vger.kernel.org, AJvYcCXXWH0m87DsHhOEztimrgUN2fG3xupRywc4WVeqESBOqOetlIX9e6Hep8isqkMjsoxiaDy4T1Qqr0TIOOkILQPlxR4y@vger.kernel.org, AJvYcCXojluwzjh1NA54BnfxZCKjt4/DpzTZxkcLEHmMK0Bw/+dc9k8QsHCiYlf6wrL3K2ChGf6sMOrPYpFBo0JO@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzGWU0OvxU7POxBwhJmm9zD+Ah74BfDu6f1lXQG9EB5K+APO1t
-	hZKCaNPxNuiVcAJt/I7PMIaAgO9fHj6p7clb8etX8GPbj4cXJ0adsVpwoertapd+2uB16EqvJFy
-	gQoagIaenhP6lc91AoDsGgC2akd4=
-X-Google-Smtp-Source: AGHT+IGhuQ0Ki8lFJVw8HHIMRmUd846pjUdGQf6LulmYw2lSFPmOAplOZpFFGIuvUvpuGEld1hpQerhc+3AfhlnAJUo=
-X-Received: by 2002:a17:90b:3848:b0:2e2:aef9:8f60 with SMTP id
- 98e67ed59e1d1-2e8f0d531ffmr41021824a91.0.1730859079752; Tue, 05 Nov 2024
- 18:11:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fg1WYRzn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 600E8C4CECD;
+	Wed,  6 Nov 2024 07:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730878512;
+	bh=PNzVjE3G8vsQQ1r/KmwaBnxHzJDfpwVNWliRRgu5B/Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fg1WYRznaH9JgzyBIc16RiDUHA8+z4EzR4fMiNtmtYhz8jjRqS/Vi0kFtOP6py9Bx
+	 Nx8uEWwy3xq3N/6+YebSzBok8+QKsvCiM51XOq5vG9gvTOJ3dUyfbEwgruI/KjS60T
+	 jtifNnhUF/vGnNBj6PA/wUWZ4q/oWIfh4wso1cibOQZCwq7f1RRorYMCaY+UQAUvRD
+	 Yt37bW6MMS5UNW2cXOsSCBR5tqcwK7pOSoFUHIpn7G46TJfX9TT5Ldunv03fsfYBLR
+	 51TVMQktfSYF95U3fFzXnXq09wDRpeCDdp8ZT/I7ptiSizNw6gyAB4lfZAbUIQ5kSK
+	 1C0tfrL4F9Kzg==
+Date: Tue, 5 Nov 2024 23:35:10 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: linux@treblig.org
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: event: Remove deadcode
+Message-ID: <ZyscLqAzo9Z7Zg02@google.com>
+References: <20241103142302.230370-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
- <ZyH_fWNeL3XYNEH1@krava>
-In-Reply-To: <ZyH_fWNeL3XYNEH1@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 5 Nov 2024 18:11:07 -0800
-Message-ID: <CAEf4BzZTTuBdCT2Qe=n7gqhf3yENZwHYUdsrQP9WfaEC4C35rw@mail.gmail.com>
-Subject: Re: The state of uprobes work and logistics
-To: Jiri Olsa <olsajiri@gmail.com>, Ingo Molnar <mingo@kernel.org>
-Cc: Peter Ziljstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Liao Chang <liaochang1@huawei.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Kernel Team <kernel-team@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241103142302.230370-1-linux@treblig.org>
 
-On Wed, Oct 30, 2024 at 2:42=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Wed, Oct 16, 2024 at 12:35:21PM -0700, Andrii Nakryiko wrote:
->
-> SNIP
->
-> >   - Jiri Olsa's uprobe "session" support ([5]). This is less
-> > performance focused, but important functionality by itself. But I'm
-> > calling this out here because the first two patches are pure uprobe
-> > internal changes, and I believe they should go into tip/perf/core to
-> > avoid conflicts with the rest of pending uprobe changes.
-> >
-> > Peter, do you mind applying those two and creating a stable tag for
-> > bpf-next to pull? We'll apply the rest of Jiri's series to
-> > bpf-next/master.
->
->
-> Hi Ingo,
-> there's uprobe session support change that already landed in tip tree,
-> but we have bpf related changes that need to go in through bpf-next tree
->
-> could you please create the stable tag that we could pull to bpf-next/mas=
-ter
-> and apply the rest of the uprobe session changes in there?
+Hello,
 
-Ping. We (BPF) are blocked on this, we can't apply Jiri's uprobe
-session series ([0]), until we merge two of his patches that landed
-into perf/core. Can we please get a stable tag which we can use to
-pull perf/core's patches into bpf-next/master?
+On Sun, Nov 03, 2024 at 02:23:01PM +0000, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> event_format__print() last use was removed by 2017's
+> commit 894f3f1732cb ("perf script: Use event_format__fprintf()")
+> 
+> evlist__find_tracepoint_by_id() last use was removed by 2012's
+> commit e60fc847cefa ("perf evlist: Remove some unused methods")
+> 
+> evlist__set_tp_filter_pid() last use was removed by 2017's
+> commit dd1a50377c92 ("perf trace: Introduce filter_loop_pids()")
+> 
+> Remove them.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-  [0] https://lore.kernel.org/all/20241018204109.713820-1-jolsa@kernel.org/
+Unfortunately it doesn't apply to the current perf-tools-next cleanly.
+Can you please rebase?
 
->
-> thanks,
-> jirka
+Thanks,
+Namhyung
+
+> ---
+>  tools/perf/util/evlist.c            | 18 ------------------
+>  tools/perf/util/evlist.h            |  2 --
+>  tools/perf/util/trace-event-parse.c |  6 ------
+>  tools/perf/util/trace-event.h       |  3 ---
+>  4 files changed, 29 deletions(-)
+> 
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index f14b7e6ff1dc..4b992a3f2985 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -362,19 +362,6 @@ __weak int arch_evlist__add_default_attrs(struct evlist *evlist,
+>  	return __evlist__add_default_attrs(evlist, attrs, nr_attrs);
+>  }
+>  
+> -struct evsel *evlist__find_tracepoint_by_id(struct evlist *evlist, int id)
+> -{
+> -	struct evsel *evsel;
+> -
+> -	evlist__for_each_entry(evlist, evsel) {
+> -		if (evsel->core.attr.type   == PERF_TYPE_TRACEPOINT &&
+> -		    (int)evsel->core.attr.config == id)
+> -			return evsel;
+> -	}
+> -
+> -	return NULL;
+> -}
+> -
+>  struct evsel *evlist__find_tracepoint_by_name(struct evlist *evlist, const char *name)
+>  {
+>  	struct evsel *evsel;
+> @@ -1199,11 +1186,6 @@ int evlist__set_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *pids)
+>  	return ret;
+>  }
+>  
+> -int evlist__set_tp_filter_pid(struct evlist *evlist, pid_t pid)
+> -{
+> -	return evlist__set_tp_filter_pids(evlist, 1, &pid);
+> -}
+> -
+>  int evlist__append_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *pids)
+>  {
+>  	char *filter = asprintf__tp_filter_pids(npids, pids);
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index bcc1c6984bb5..ff73908e2178 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -144,7 +144,6 @@ int __evlist__set_tracepoints_handlers(struct evlist *evlist,
+>  	__evlist__set_tracepoints_handlers(evlist, array, ARRAY_SIZE(array))
+>  
+>  int evlist__set_tp_filter(struct evlist *evlist, const char *filter);
+> -int evlist__set_tp_filter_pid(struct evlist *evlist, pid_t pid);
+>  int evlist__set_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *pids);
+>  
+>  int evlist__append_tp_filter(struct evlist *evlist, const char *filter);
+> @@ -152,7 +151,6 @@ int evlist__append_tp_filter(struct evlist *evlist, const char *filter);
+>  int evlist__append_tp_filter_pid(struct evlist *evlist, pid_t pid);
+>  int evlist__append_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *pids);
+>  
+> -struct evsel *evlist__find_tracepoint_by_id(struct evlist *evlist, int id);
+>  struct evsel *evlist__find_tracepoint_by_name(struct evlist *evlist, const char *name);
+>  
+>  int evlist__add_pollfd(struct evlist *evlist, int fd);
+> diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
+> index f0332bd3a501..d97830cdbd7e 100644
+> --- a/tools/perf/util/trace-event-parse.c
+> +++ b/tools/perf/util/trace-event-parse.c
+> @@ -116,12 +116,6 @@ void event_format__fprintf(struct tep_event *event,
+>  	trace_seq_destroy(&s);
+>  }
+>  
+> -void event_format__print(struct tep_event *event,
+> -			 int cpu, void *data, int size)
+> -{
+> -	return event_format__fprintf(event, cpu, data, size, stdout);
+> -}
+> -
+>  /*
+>   * prev_state is of size long, which is 32 bits on 32 bit architectures.
+>   * As it needs to have the same bits for both 32 bit and 64 bit architectures
+> diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
+> index bbf8b26bc8da..0e5133f1b910 100644
+> --- a/tools/perf/util/trace-event.h
+> +++ b/tools/perf/util/trace-event.h
+> @@ -42,9 +42,6 @@ struct tep_event *trace_event__tp_format_id(int id);
+>  void event_format__fprintf(struct tep_event *event,
+>  			   int cpu, void *data, int size, FILE *fp);
+>  
+> -void event_format__print(struct tep_event *event,
+> -			 int cpu, void *data, int size);
+> -
+>  int parse_ftrace_file(struct tep_handle *pevent, char *buf, unsigned long size);
+>  int parse_event_file(struct tep_handle *pevent,
+>  		     char *buf, unsigned long size, char *sys);
+> -- 
+> 2.47.0
+> 
