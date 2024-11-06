@@ -1,137 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDDD202F6C;
-	Wed,  6 Nov 2024 16:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5E81DE2DE;
+	Wed,  6 Nov 2024 16:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730910201; cv=none; b=sprMe56T52Sj+cKOQTsykRb/2mlCerINM8fv/F8qFwRlS7YQen72hyM6FOkGH8WxNf7isB1kNrwwHsd1YJR2dBvZGiQezCrGun6px1by3pseBpkxiM47vxczGekoVtHXmyI00Xlblm6yqvD/V/wTx8sdvFXbTqcI8EiovFrGRJw=
+	t=1730910453; cv=none; b=jwKeQ7DEw6LUJ8ehsdf1qGrUJyLTl6Rr9kW+tJSLP5UakASEFiKxaXEmcpj2us6y3di4AsP724O+qZm90iexJOu+MsBXfrIQCeH0TjdTfYoJAJkiikq+QYMYthFlPjRYT99+hBwe5riwtd4ea0rU6ECGgz0rfv1oq4h11E/9Ck0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730910201; c=relaxed/simple;
-	bh=3t18mQxornvSkAQZRcmr+jk6jcmoLH7cx944HKMvwzs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=konf+Ux1krnMpGWtkpnOkW21UC9eaGCq+an0Vql3Y+VmqTWzhvqKtWocpxocy7jio6mDyX5HVSX9ZMR2XCp6JLL6BN8Qrg5iRqTV9fq4ZKgLdlGwdC0YvFbDjHQbG1qxDw/nYA8mtvHA0heFcTi+aeAH1f81RcAF7fPJKj1lDM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V3MA5A7t; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1730910453; c=relaxed/simple;
+	bh=dqDHGCKp076r/ubz/6dxcP+mhyFxuV6k2hXCDYfTq+Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P1qTUUnFZ5Mnt+KD0rSOXrsL0Nf9jOuAzPrRTiE9Vs2AIduVgYcWcACRphlBxrWayfbazbODArO3NYYZOqC8wZpm2Dejy7xcfHOE+0w5HOW1wxx2sAjetr8YRpqIo/B2KH8LkmjOG38f4UhCsuOqkyUb6o/9K2paGaU/Ne/A6ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VTdcGpEV; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V3MA5A7t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730910199; x=1762446199;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3t18mQxornvSkAQZRcmr+jk6jcmoLH7cx944HKMvwzs=;
-  b=V3MA5A7tLCUe3seSEwFz/B6KQZR4fIovV4ua0qOFZjtSEgLtChZQnZfJ
-   QlQqmBkIoWEjn7FPX9i2EJB8VOAHMB11X2f/6Lr2wneT5qBw8k0D6FKsw
-   GqtLeseW9QRWirOnDwRhi9xaCvcPuKW3uhGJfl1CFu3zBC/fO7bmp47xG
-   qgCx7RobTdtvYSREwHl6kdavnRYhICZUB46wsyH6fyKyZpzmLIF614jR/
-   Ld01ZjvJlxdXjsfUERWapCbYcEstPwo9l+RGurC3RuBKFuOaAIY9XmgP9
-   CBG3psncCEcN/7qgaE9tp2Cg7ppsgOvj4gVNUgNH8qkFEx3NQBxHeJOGX
-   A==;
-X-CSE-ConnectionGUID: VIGZt45ySYWqpFzHggMcuQ==
-X-CSE-MsgGUID: /UHVIPbzSh2ldw0Kgd9XRw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11248"; a="34498997"
-X-IronPort-AV: E=Sophos;i="6.11,263,1725346800"; 
-   d="scan'208";a="34498997"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 08:23:19 -0800
-X-CSE-ConnectionGUID: wZ8EUHJgQQyGZHcGPHLPiA==
-X-CSE-MsgGUID: yhawi+coRtyF7joFHFAK6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,263,1725346800"; 
-   d="scan'208";a="84253798"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 08:23:18 -0800
-Received: from [10.212.82.230] (kliang2-mobl1.ccr.corp.intel.com [10.212.82.230])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id CE92F20B5703;
-	Wed,  6 Nov 2024 08:23:16 -0800 (PST)
-Message-ID: <06c73597-5b23-4759-9101-6594cc13cabc@linux.intel.com>
-Date: Wed, 6 Nov 2024 11:23:15 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTdcGpEV"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-20cdbe608b3so70161565ad.1;
+        Wed, 06 Nov 2024 08:27:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730910451; x=1731515251; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2WsPRBTQwc5dj4lXDl+OK/MBpD2SjiCdDP2sbqnAg9M=;
+        b=VTdcGpEV9ZKhzgxY6UBssZWiVgHtvHGLrHC4TtUnttALWq1yqNge6YKthOjF0lNDv6
+         JskF1QCKKbsQ5DVnxVUqFcE1qGQ/X5DmaugvNHc4ouZlgbhB9TW90zK9dGOveHjNmuEE
+         K9+Tn/5zFUdJ8GiKzx98vtXvIr6y5qauQ6GZXbOLQjA5CF96Sd+Es+bJSJbsjqTSDFAj
+         O5HwOPlRAypZQOhQo7KXMm2fJnhtuYLAejSm/fT5KA7uWwHV/kD6k9/fE1Gic6Ij8k3Z
+         wtWTrzlgeClOD33qKokL3tMVzWkuLfy5/Ojj9IuCQy1+jGZRc4pZdorepxeqXx2D4Mxy
+         LxEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730910451; x=1731515251;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2WsPRBTQwc5dj4lXDl+OK/MBpD2SjiCdDP2sbqnAg9M=;
+        b=BzGGKxl3Jpe6MUtbDVbRJBvWH12vLycOaItRdqyDAPGeuMF5m+KUuUhhFcDtSU8S6w
+         Mkkt8jN+q708vTf67l6QSwBLvk6YgUEZrEQKzcYum34J0EGATW73go95eiZvdjmsQCE0
+         7P8RBcDFShNlTo3d+RArBIjuVpnKtGSYwKkDwBpnae38WS7Cl5HvIzzwsqi7Ym5L2MM2
+         LFMukoBJ9oATjUgF5DNnAy6HD9ZvjW2xUNHyquYACwBhNtxegl4PhRccNtESQa36iw4/
+         u63djSDQ0Zw+a/h585/Do0JVdczpNeAuw2U2lYn8oEXopvqct37m1SsqcCgwKDfhNWqC
+         jE+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVe7jc0s7Ox2B/pneA7DN0u3OwUWGP434+KRCu40mSVI+JmRBPOHtZb14X7qtp6l1HHXcIxEMRlxt/dl7xq@vger.kernel.org, AJvYcCW0gG3m0bJwoRT9ak5Sh08Hx+lZeAtQ+nHqsJpT2o7t8wjYok0NfG1tTZn/xncJ0DWQiXH0QuXrRiaR1qmF5/Booe3j@vger.kernel.org, AJvYcCXMkYAGetLmFK7XPjwPv7O65hun7SasqqVYDq/p738NNR6ChKJ/JPIprCAFJ15dU89qVJc=@vger.kernel.org, AJvYcCXcBOx76WF2GG2RE6ualqZmAV3v9moPXblhx2ouLF2gip8H5l8gP5OBX+uh6XSHrY4GKDIqrXuFxYEyH/7hQEJxlA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5nQX+4IVzGjKhJSibQr1ZnisHTN5XPhEddjvacg8XKS5d4pCv
+	yRTTzoppi6LrrfvwJ08W0sNduGIXyfdHmogMVqLzFF5zhQeXhROYdFaum5imq1fIgJBJ1C1OuN5
+	nYb0Q7QDT2OJ/nW4nLDPJrte1U8X8Ew==
+X-Google-Smtp-Source: AGHT+IFZ7HPko/c4Xkh8GcCqUVhoDlLwVi5fZbQ8zNvjsTCHeshsiiTyyBk7S/FdYeBvDsBuooWoB3NR+4xTtuy981A=
+X-Received: by 2002:a17:902:ec8c:b0:20e:5777:1b83 with SMTP id
+ d9443c01a7336-210f75339d6mr395312835ad.24.1730910451252; Wed, 06 Nov 2024
+ 08:27:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf stat: Expand metric+unit buffer size
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241106004818.2174593-1-irogers@google.com>
- <126ebac6-fb52-4c3c-b364-0b423e164d40@linux.intel.com>
- <CAP-5=fV3RuvU0N_bt7R-ZMs2nX1_wfKh30PA59u3MW0TF4nzBg@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fV3RuvU0N_bt7R-ZMs2nX1_wfKh30PA59u3MW0TF4nzBg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240927094549.3382916-1-liaochang1@huawei.com> <8bcc6d5b-08d6-48a8-99d2-d8bb2bef2d6c@huawei.com>
+In-Reply-To: <8bcc6d5b-08d6-48a8-99d2-d8bb2bef2d6c@huawei.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 6 Nov 2024 08:27:19 -0800
+Message-ID: <CAEf4BzbJZ72Yr6tQuGLpz6fpKFXeUw3cD1BRO3T3j1psV4Qkdg@mail.gmail.com>
+Subject: Re: [PATCH v2] uprobes: Improve the usage of xol slots for better scalability
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: andrii@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	bpf@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Nov 6, 2024 at 1:12=E2=80=AFAM Liao, Chang <liaochang1@huawei.com> =
+wrote:
+>
+>
+>
+> =E5=9C=A8 2024/9/27 17:45, Liao Chang =E5=86=99=E9=81=93:
+> >>  2 files changed, 139 insertions(+), 42 deletions(-)
+> >>
+> > Liao,
+> >
+> > Assuming your ARM64 improvements go through, would you still need
+> > these changes? XOL case is a slow case and if possible should be
+> > avoided at all costs. If all common cases for ARM64 are covered
+> > through instruction emulation, would we need to add all this
+> > complexity to optimize slow case?
+>
+> Andrii,
+>
+> I've studied the optimizations merged over the past month, it seems
+> that part of the problem addressed in this patch has been resolved
+> by Oleg(uprobes: kill xol_area->slot_count). And I hope you've received
+> the email with the re-run results for -push using simulated STP on
+> the latest kernel (tag next-20241104). It show significant improvements,
+> althought there's still room to match the throughput of -nop and -ret.
+> So based on these results, I would prioritize the STP simulation patch.
 
+Great, I was hoping that Oleg's patches would help. And yes, I
+absolutely agree, STP simulation to avoid kernel->user->kernel switch
+is probably the biggest bang for the buck for ARM64 specifically now.
+Can you please send a fastest simulation approach that works like
+x86-64, and we can try to continue conversation on the refreshed
+patch?
 
-On 2024-11-06 11:04 a.m., Ian Rogers wrote:
-> On Wed, Nov 6, 2024 at 7:27 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2024-11-05 7:48 p.m., Ian Rogers wrote:
->>> Long metric names combined with units may exceed the metric_bf and
->>> lead to truncation. Double metric_bf in size to avoid this.
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>  tools/perf/util/stat-shadow.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
->>> index 8c9292aa61d3..6b531d4f58a3 100644
->>> --- a/tools/perf/util/stat-shadow.c
->>> +++ b/tools/perf/util/stat-shadow.c
->>> @@ -507,7 +507,7 @@ static void generic_metric(struct perf_stat_config *config,
->>>       if (!metric_events[i]) {
->>>               if (expr__parse(&ratio, pctx, metric_expr) == 0) {
->>>                       char *unit;
->>> -                     char metric_bf[64];
->>> +                     char metric_bf[128];
->>
->> I thin there is already a MAX_EVENT_NAME.
->> Can we similarly define a MAX_METRIC_NAME for it?
-> 
-> So in this case the buffer needs to be big enough to hold the metric
-> name, the unit from the scaleunit (e.g. the "%" from "100%"). I'd
-> prefer we used dynamic memory allocation to having hard coded limits,
-> just to avoid a "640K ought to be enough for anybody," moment.
-> Although this change is implicitly a hard coded limit, sigh. There is
-> also the metric only name length:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/builtin-stat.c?h=perf-tools-next#n160
-> That looked like it was planned to be dynamically computed but then
-> the patch adding that never materialized - meaning "standard"
-> metric-only output has its own cut-off rules at 20 characters. I'd
-> rather wait on doing a larger cleanup and do this quick fix for now,
-> mainly as I have enough to do.
-
-OK
-
-> 
-> While we're talking metrics, I'm still looking for feedback on the
-> python generation of metrics. v1 was sent back in January, if v4 looks
-> okay some acknowledgement would be nice:
-> https://lore.kernel.org/lkml/CAP-5=fVX5wypmAAhR8LsE4nSWp5BmN_qhGf9+WCh2bebNcGYTg@mail.gmail.com/
-> Leo sent some feedback to improve some of the ARM metrics, so I can
-> resend the whole series. Would be nice to gather some acked-by or
-> other tags.
-> 
-
-Somehow I missed your last reply. I will take a look.
-
-Thanks,
-Kan
-
+>
+> --
+> BR
+> Liao, Chang
+>
