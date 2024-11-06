@@ -1,111 +1,201 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5E81DE2DE;
-	Wed,  6 Nov 2024 16:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2191615383D;
+	Wed,  6 Nov 2024 16:46:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730910453; cv=none; b=jwKeQ7DEw6LUJ8ehsdf1qGrUJyLTl6Rr9kW+tJSLP5UakASEFiKxaXEmcpj2us6y3di4AsP724O+qZm90iexJOu+MsBXfrIQCeH0TjdTfYoJAJkiikq+QYMYthFlPjRYT99+hBwe5riwtd4ea0rU6ECGgz0rfv1oq4h11E/9Ck0=
+	t=1730911621; cv=none; b=pONZmZ3NJOKwpSjDnMf0HCYJNhgOC9nxCYu39ScPjacuNtK4BSsixyVrmzLqc5apxsw/QnaGEgPDPnlJG5ii5YpDHdme0/OcyoLqSsJZA2/0Vq+m2i+PXqz44mR6x0pqjrgqFUDUAwwmEXrkJDhTLzssyNI3obHxkvN8cG0v9n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730910453; c=relaxed/simple;
-	bh=dqDHGCKp076r/ubz/6dxcP+mhyFxuV6k2hXCDYfTq+Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P1qTUUnFZ5Mnt+KD0rSOXrsL0Nf9jOuAzPrRTiE9Vs2AIduVgYcWcACRphlBxrWayfbazbODArO3NYYZOqC8wZpm2Dejy7xcfHOE+0w5HOW1wxx2sAjetr8YRpqIo/B2KH8LkmjOG38f4UhCsuOqkyUb6o/9K2paGaU/Ne/A6ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VTdcGpEV; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730911621; c=relaxed/simple;
+	bh=f4kpoM+UckIWIVsdIZs5+Y5ZMUcHWZ7ptKWmdXVHOhU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MrC67tQ2JmsZ5p99iY627orgUZ2EpRlYJNSsmKlTwCFf5POFyN4y+oXT7k4dS9IBrl4ak1kfYiccJBSuff1dfE0eEqhuoM98xWQE9JHDFfAtS8ONla5pIBG/E7JbbO9TdvcIQO3NkksLVrF3i7512e0AOP+hOHAEqRSP6hBG6OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZCM56cfg; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTdcGpEV"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-20cdbe608b3so70161565ad.1;
-        Wed, 06 Nov 2024 08:27:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730910451; x=1731515251; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2WsPRBTQwc5dj4lXDl+OK/MBpD2SjiCdDP2sbqnAg9M=;
-        b=VTdcGpEV9ZKhzgxY6UBssZWiVgHtvHGLrHC4TtUnttALWq1yqNge6YKthOjF0lNDv6
-         JskF1QCKKbsQ5DVnxVUqFcE1qGQ/X5DmaugvNHc4ouZlgbhB9TW90zK9dGOveHjNmuEE
-         K9+Tn/5zFUdJ8GiKzx98vtXvIr6y5qauQ6GZXbOLQjA5CF96Sd+Es+bJSJbsjqTSDFAj
-         O5HwOPlRAypZQOhQo7KXMm2fJnhtuYLAejSm/fT5KA7uWwHV/kD6k9/fE1Gic6Ij8k3Z
-         wtWTrzlgeClOD33qKokL3tMVzWkuLfy5/Ojj9IuCQy1+jGZRc4pZdorepxeqXx2D4Mxy
-         LxEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730910451; x=1731515251;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2WsPRBTQwc5dj4lXDl+OK/MBpD2SjiCdDP2sbqnAg9M=;
-        b=BzGGKxl3Jpe6MUtbDVbRJBvWH12vLycOaItRdqyDAPGeuMF5m+KUuUhhFcDtSU8S6w
-         Mkkt8jN+q708vTf67l6QSwBLvk6YgUEZrEQKzcYum34J0EGATW73go95eiZvdjmsQCE0
-         7P8RBcDFShNlTo3d+RArBIjuVpnKtGSYwKkDwBpnae38WS7Cl5HvIzzwsqi7Ym5L2MM2
-         LFMukoBJ9oATjUgF5DNnAy6HD9ZvjW2xUNHyquYACwBhNtxegl4PhRccNtESQa36iw4/
-         u63djSDQ0Zw+a/h585/Do0JVdczpNeAuw2U2lYn8oEXopvqct37m1SsqcCgwKDfhNWqC
-         jE+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVe7jc0s7Ox2B/pneA7DN0u3OwUWGP434+KRCu40mSVI+JmRBPOHtZb14X7qtp6l1HHXcIxEMRlxt/dl7xq@vger.kernel.org, AJvYcCW0gG3m0bJwoRT9ak5Sh08Hx+lZeAtQ+nHqsJpT2o7t8wjYok0NfG1tTZn/xncJ0DWQiXH0QuXrRiaR1qmF5/Booe3j@vger.kernel.org, AJvYcCXMkYAGetLmFK7XPjwPv7O65hun7SasqqVYDq/p738NNR6ChKJ/JPIprCAFJ15dU89qVJc=@vger.kernel.org, AJvYcCXcBOx76WF2GG2RE6ualqZmAV3v9moPXblhx2ouLF2gip8H5l8gP5OBX+uh6XSHrY4GKDIqrXuFxYEyH/7hQEJxlA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5nQX+4IVzGjKhJSibQr1ZnisHTN5XPhEddjvacg8XKS5d4pCv
-	yRTTzoppi6LrrfvwJ08W0sNduGIXyfdHmogMVqLzFF5zhQeXhROYdFaum5imq1fIgJBJ1C1OuN5
-	nYb0Q7QDT2OJ/nW4nLDPJrte1U8X8Ew==
-X-Google-Smtp-Source: AGHT+IFZ7HPko/c4Xkh8GcCqUVhoDlLwVi5fZbQ8zNvjsTCHeshsiiTyyBk7S/FdYeBvDsBuooWoB3NR+4xTtuy981A=
-X-Received: by 2002:a17:902:ec8c:b0:20e:5777:1b83 with SMTP id
- d9443c01a7336-210f75339d6mr395312835ad.24.1730910451252; Wed, 06 Nov 2024
- 08:27:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZCM56cfg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730911620; x=1762447620;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=f4kpoM+UckIWIVsdIZs5+Y5ZMUcHWZ7ptKWmdXVHOhU=;
+  b=ZCM56cfgcEqBe1QKX71k7Q1Gnc+6ELv0J6lkhcsQ8wzq5KwvHZr6E/GD
+   IFvsFBzwWJT578wsGOwSF9BNpNvMpb3/JWjV/zKcHx1UQ+Gcdgl4MnFRK
+   EwZrIZIPthw7VlywQXk0akwDEWIz1PX1Ub7GhFuuzg2Z8N7+s7en/5RAY
+   BJ1CMkQLwvIZSjzfQtO0qnS/6C4rt2cRDFUEA7QgcBIMmGZY2jt9Vjjuu
+   YuIBWpXdVkznDc6VtpcaknX5TFATREKawjTkRWIbvv/Mk1XBiXgb3DExu
+   3r19lW8rRCOAavk0ZAWj3XCKN/Ro5asvIU2xiRMsGkHWfqwSxYZV7gxJF
+   w==;
+X-CSE-ConnectionGUID: toPvrb4hQzOuuqm69irieA==
+X-CSE-MsgGUID: TvB6JlAvTqa97BeAGscwIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11248"; a="41341604"
+X-IronPort-AV: E=Sophos;i="6.11,263,1725346800"; 
+   d="scan'208";a="41341604"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 08:47:00 -0800
+X-CSE-ConnectionGUID: cVcVBIRQQ3qhN4SjFJ4J3Q==
+X-CSE-MsgGUID: dNcRJR1qRveZXL8BCSBObg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,263,1725346800"; 
+   d="scan'208";a="89499895"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 08:46:59 -0800
+Received: from [10.212.82.230] (kliang2-mobl1.ccr.corp.intel.com [10.212.82.230])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 6CDCF20C0667;
+	Wed,  6 Nov 2024 08:46:57 -0800 (PST)
+Message-ID: <07ee39aa-309f-4414-aee0-cc5b86a66af7@linux.intel.com>
+Date: Wed, 6 Nov 2024 11:46:56 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240927094549.3382916-1-liaochang1@huawei.com> <8bcc6d5b-08d6-48a8-99d2-d8bb2bef2d6c@huawei.com>
-In-Reply-To: <8bcc6d5b-08d6-48a8-99d2-d8bb2bef2d6c@huawei.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 6 Nov 2024 08:27:19 -0800
-Message-ID: <CAEf4BzbJZ72Yr6tQuGLpz6fpKFXeUw3cD1BRO3T3j1psV4Qkdg@mail.gmail.com>
-Subject: Re: [PATCH v2] uprobes: Improve the usage of xol slots for better scalability
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: andrii@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 00/22] Python generated Intel metrics
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Perry Taylor <perry.taylor@intel.com>, Samantha Alt
+ <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>,
+ Weilin Wang <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>
+References: <20240926175035.408668-1-irogers@google.com>
+ <bbbd024c-d2df-47ea-9587-f68e5bc45962@linux.intel.com>
+ <CAP-5=fVX5wypmAAhR8LsE4nSWp5BmN_qhGf9+WCh2bebNcGYTg@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fVX5wypmAAhR8LsE4nSWp5BmN_qhGf9+WCh2bebNcGYTg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 6, 2024 at 1:12=E2=80=AFAM Liao, Chang <liaochang1@huawei.com> =
-wrote:
->
->
->
-> =E5=9C=A8 2024/9/27 17:45, Liao Chang =E5=86=99=E9=81=93:
-> >>  2 files changed, 139 insertions(+), 42 deletions(-)
-> >>
-> > Liao,
-> >
-> > Assuming your ARM64 improvements go through, would you still need
-> > these changes? XOL case is a slow case and if possible should be
-> > avoided at all costs. If all common cases for ARM64 are covered
-> > through instruction emulation, would we need to add all this
-> > complexity to optimize slow case?
->
-> Andrii,
->
-> I've studied the optimizations merged over the past month, it seems
-> that part of the problem addressed in this patch has been resolved
-> by Oleg(uprobes: kill xol_area->slot_count). And I hope you've received
-> the email with the re-run results for -push using simulated STP on
-> the latest kernel (tag next-20241104). It show significant improvements,
-> althought there's still room to match the throughput of -nop and -ret.
-> So based on these results, I would prioritize the STP simulation patch.
 
-Great, I was hoping that Oleg's patches would help. And yes, I
-absolutely agree, STP simulation to avoid kernel->user->kernel switch
-is probably the biggest bang for the buck for ARM64 specifically now.
-Can you please send a fastest simulation approach that works like
-x86-64, and we can try to continue conversation on the refreshed
-patch?
 
->
-> --
-> BR
-> Liao, Chang
->
+On 2024-10-09 12:02 p.m., Ian Rogers wrote:
+> On Fri, Sep 27, 2024 at 11:34 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2024-09-26 1:50 p.m., Ian Rogers wrote:
+>>> Generate twenty sets of additional metrics for Intel. Rapl and Idle
+>>> metrics aren't specific to Intel but are placed here for ease and
+>>> convenience. Smi and tsx metrics are added so they can be dropped from
+>>> the per model json files.
+>>
+>> Are Smi and tsx metrics the only two metrics who's duplicate metrics in
+>> the json files will be dropped?
+> 
+> Yes. These metrics with their runtime detection and use of sysfs event
+> names I feel more naturally fit here rather than in the Intel perfmon
+> github converter script.
+> 
+>> It sounds like there will be many duplicate metrics in perf list, right?
+> 
+> That's not the goal. There may be memory bandwidth computed in
+> different ways, like TMA and using uncore, but that seems okay as the
+> metrics are using different counters so may say different things. I
+> think there is an action to always watch the metrics and ensure
+> duplicates don't occur, but some duplication can be beneficial.
+
+
+Can we give a common prefix for all the automatically generated metrics,
+e.g., general_ or std_?
+As you said, there may be different metrics to calculate the same thing.
+
+With a common prefix, we can clearly understand where the metrics is
+from. In case, there are any issues found later for some metrics. I can
+tell the end user to use either the TMA metrics or the automatically
+generated metrics.
+If they count the same thing, the main body of the metric name should be
+the same.
+
+Thanks,
+Kan
+
+> 
+>> Also, is it an attempt to define some architectural metrics for perf?
+> 
+> There are many advantages of using python to generate the metric json,
+> a few are:
+> 1) we verify the metrics use events from the event json,
+> 2) the error prone escaping of commas and slashes is handled by the python,
+> 3) metric expressions can be spread over multiple lines and have comments.
+> It is also an advantage that we can avoid copy-pasting one metric from
+> one architectural metric json to another. This helps propagate fixes.
+> 
+> So, it's not so much a goal to have architectural metrics but its nice
+> that we avoid copy-paste. Somewhere where I've tried to set up common
+> events across all architectures is with making tool have its own PMU.
+> Rather than have the tool PMU describe events using custom code it
+> just reuses the existing PMU json support:
+> https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/tools/perf/pmu-events/arch/common/common/tool.json
+> 
+>> How do you decide which metrics should be added here?
+> 
+> The goal is to try to make open source metrics that Google has
+> internally. I've set up a git repo for this here:
+> https://github.com/googleprodkernel/linux-perf
+> Often the source of the metric is Intel's documentation on things like
+> uncore events, it's just such metrics aren't part of the perfmon
+> process and so we're adding them here. Were all these metrics on the
+> Intel github it'd be reasonable to remove them from here. If Intel
+> would like to work on or contribute some metrics here, that's also
+> fine. I think the main thing is to be giving users useful metrics.
+> 
+> Thanks,
+> Ian
+> 
+>>> There are four uncore sets of metrics and
+>>> eleven core metrics. Add a CheckPmu function to metric to simplify
+>>> detecting the presence of hybrid PMUs in events. Metrics with
+>>> experimental events are flagged as experimental in their description.
+>>>
+>>> The patches should be applied on top of:
+>>> https://lore.kernel.org/lkml/20240926174101.406874-1-irogers@google.com/
+>>>
+>>> v4. Experimental metric descriptions. Add mesh bandwidth metric. Rebase.
+>>> v3. Swap tsx and CheckPMU patches that were in the wrong order. Some
+>>>     minor code cleanup changes. Drop reference to merged fix for
+>>>     umasks/occ_sel in PCU events and for cstate metrics.
+>>> v2. Drop the cycles breakdown in favor of having it as a common
+>>>     metric, spelling and other improvements suggested by Kan Liang
+>>>     <kan.liang@linux.intel.com>.
+>>>
+>>> Ian Rogers (22):
+>>>   perf jevents: Add RAPL metrics for all Intel models
+>>>   perf jevents: Add idle metric for Intel models
+>>>   perf jevents: Add smi metric group for Intel models
+>>>   perf jevents: Add CheckPmu to see if a PMU is in loaded json events
+>>>   perf jevents: Mark metrics with experimental events as experimental
+>>>   perf jevents: Add tsx metric group for Intel models
+>>>   perf jevents: Add br metric group for branch statistics on Intel
+>>>   perf jevents: Add software prefetch (swpf) metric group for Intel
+>>>   perf jevents: Add ports metric group giving utilization on Intel
+>>>   perf jevents: Add L2 metrics for Intel
+>>>   perf jevents: Add load store breakdown metrics ldst for Intel
+>>>   perf jevents: Add ILP metrics for Intel
+>>>   perf jevents: Add context switch metrics for Intel
+>>>   perf jevents: Add FPU metrics for Intel
+>>>   perf jevents: Add Miss Level Parallelism (MLP) metric for Intel
+>>>   perf jevents: Add mem_bw metric for Intel
+>>>   perf jevents: Add local/remote "mem" breakdown metrics for Intel
+>>>   perf jevents: Add dir breakdown metrics for Intel
+>>>   perf jevents: Add C-State metrics from the PCU PMU for Intel
+>>>   perf jevents: Add local/remote miss latency metrics for Intel
+>>>   perf jevents: Add upi_bw metric for Intel
+>>>   perf jevents: Add mesh bandwidth saturation metric for Intel
+>>>
+>>>  tools/perf/pmu-events/intel_metrics.py | 1046 +++++++++++++++++++++++-
+>>>  tools/perf/pmu-events/metric.py        |   52 ++
+>>>  2 files changed, 1095 insertions(+), 3 deletions(-)
+>>>
+
