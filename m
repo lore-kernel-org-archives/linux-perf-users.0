@@ -1,312 +1,96 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B94E216A31
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Nov 2024 21:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA8E2E414;
+	Wed,  6 Nov 2024 00:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730842036; cv=none; b=O/JhKxe7KdqJoJ592fPy+wpKrZ69wBDU2iGssFqeluU8Cdhm9VWmKVH1mMRUOg4rSZIKCrPToX60BFpT3HUw+7PYMVbyyEo6tmdQkqsit2rkfDz2kH5Fz6aWdb9A+nQDS3lqVdIvX6Qqf9bxuy59wz6ve+z4Ev6M9gTEcaap/7s=
+	t=1730853004; cv=none; b=KQ2V7fOrRuqhh/NMkoliZsv5KzXJ5WcHDUx4AyUKfrK0ScOnHld0ccLFm8KD0zJA8QYPij5Qo/jlO5BkfZIrooUnd0op8uGj5poMRtp9WFI5oWFaF2rVGEet2bGZrjI3QT8geqChpe5QGLFpsh4bc2k4Zs3bFNawSaTOvE8IFvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730842036; c=relaxed/simple;
-	bh=TkS5pGIRNnEam46bfgl9Uj7ffjeE7cIcCgpMGBkUSW0=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=gHWwTLkzym7K/tveteojoohaQonv2lGhS/7tLM0P1mokB4XqsOmrJuAvilMKi5Qr0A/vuDSfsuG5kV224yeh8A7gDX0diZL97eYMoAr6JSdtGNk28P96WJ50Y4DjnaB81548kV5j1uwQwMvRoaHqz0xIYS2Wd5DWa6nuoJnige4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vSyUidcq; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1730853004; c=relaxed/simple;
+	bh=SvTZ9anqdqLkDP9mkBXnlIduEzxiWw+Kp1hFVBLDlWM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r/lxKKllMHAlG9g5mIcy/jvSBFUvvH/RnWM8cJjbNUxv3Lgdshf0AXsL676nCO8fy0XhRQZM/Cjzdjr4LJi0sexaN1jF1o5Y60vSjrzpDeHkktSpfUVf5pOzLFNH443grRqWKvKUZ2yDTzJpPHoBBc69dAcVZgSBpvgrqrJGF9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PxS8m9rO; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vSyUidcq"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ea82a5480fso66615317b3.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Nov 2024 13:27:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PxS8m9rO"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6ea339a41f1so52833247b3.2;
+        Tue, 05 Nov 2024 16:30:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730842034; x=1731446834; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=M2PH93HMmorh1b48i5mQD0XLDSM5RTSRQhDdzjBbjYo=;
-        b=vSyUidcqVcdp90i/CKHbddEqU1x8N8ReUwLFJWakuVkDafP2cdU6ueGXLAcB5Zj3L7
-         kzYCSIGDZAS3MrBZvQCn0W/5JfpTfXuI+vtc1btj8UB7H2WresOOW0NpdT+umM08vi1Q
-         AUn1hXFVDaSdTpYMc4KNqOL7jJMUy/14hvXZxMQ7GnVNmGJqfofZIE8rV9IUVeViJCJR
-         8gFzSjg24wceM0zmRZce5d45d1KhIYKLHMopgahxX/moymGQFiOj+TmPk1d6RobMDQWR
-         ViI/2PiDQIokiWp2IHRYMuKLpVEm5DK1FbFYh7XSNDDSr48Gr/OQpWBxNNtac78QKteA
-         PUnQ==
+        d=gmail.com; s=20230601; t=1730853002; x=1731457802; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SvTZ9anqdqLkDP9mkBXnlIduEzxiWw+Kp1hFVBLDlWM=;
+        b=PxS8m9rOMEYz0uHCXq1rAXdSaE/B4zYyMWkzD/WFTUPe93pjr1QFOi921zRcYhTNwz
+         fgW8XeDmGbjwl4Xp1/pWZYuarcZxetJ/qVlTUulgPDFT7rBv7BOdQPrnjCm+f3+A5JKJ
+         kZKjzPJG8anuX+yFxTzuDf8f3ar9YnihvBCnNQjrAhTCRJEqb9GOZZ4YrSxKtOUcpc09
+         9Ejib6JsTxQFbb9V58zrQRU9y1UaREZdCF7S3uEk3XCJzcNj8oF9KmlY7uy6pcc8QphV
+         RBVFftkw3HL34SAgYfYjFZC/BVhPmnb9iU8pLyQx6AXpesi/NbUeHZ5OhYZjSkNl4M9F
+         uJ0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730842034; x=1731446834;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M2PH93HMmorh1b48i5mQD0XLDSM5RTSRQhDdzjBbjYo=;
-        b=muGZwZcaUDNpH2iy2ZeGwQAu/IYIA5K9b3eOK6gkf2hPobTU60C/YIE2k9iRa024KV
-         xPnEDkjH07o/xhoiahAuWxEAeU1bNY51mRL35wGzYTQvdnvxWIwgGIYjCb1quJR4hgxY
-         YzEFkyTEezXBwv6ssdnHpVBX9fQcKxbhy8MXnHW6LM8LAbR43CuSkrZVtVsyLIux/3vY
-         ckRAaGzYFK/xo16kgyZuWcxKJqOBscbyg8mk55cZXogd+IDF8bfDDvIUel2mmNhdAFRj
-         NP7jH2+Na4C6LPvlTyCxdcxcFsuIvT14CsMtUGIXz6KupQHTkz1pER13cmBzZxiOFkMc
-         Q7Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCUATZ428e6qJ3UdDfgg8pMJ01OgfKRNPIxhJTzd2vOKhk+WwQm0L6lV7w5M+VpMReSh0XPAPpeHC5BaCyZ41N6p@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOtydYzM1GEbi3QftlnGEgfpD+WUFDDxXFXbZtPBNfARqOe1nh
-	V1OIKLJORiBZJNztgg1/QrygBk2BCalCEujrzbI5wJVSMefNYvKinmKyVdOEM0UJ7fNSd4OT9he
-	7fL4GIg==
-X-Google-Smtp-Source: AGHT+IFjcXLcs06B8eplottHdJv3MowMx13MBZYVrZnj9CxGN1Q3h93fubGTb1YnkrC9EQnU8zgOBA2YBhDb
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ff9e:ab12:75ac:c1a0])
- (user=irogers job=sendgmr) by 2002:a05:690c:4484:b0:6dd:fda3:6568 with SMTP
- id 00721157ae682-6ea64b8c23cmr1322607b3.3.1730842034072; Tue, 05 Nov 2024
- 13:27:14 -0800 (PST)
-Date: Tue,  5 Nov 2024 13:26:52 -0800
-In-Reply-To: <20241105212652.401943-1-irogers@google.com>
-Message-Id: <20241105212652.401943-7-irogers@google.com>
+        d=1e100.net; s=20230601; t=1730853002; x=1731457802;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SvTZ9anqdqLkDP9mkBXnlIduEzxiWw+Kp1hFVBLDlWM=;
+        b=iYhr659pnFvXf40vqOyoobBh7GpvHshlDgQgFVfVnT/b180yDdTkj2lG8Qp6n13SN3
+         R8Qr3zKNo1VCrTB/ky9pDpPtjoE/Hlg0qi+/cv3Ty3bjU6L14+uMQoMLQB6CDBZp2Uyx
+         KpJycC7QbpdKG/rdmm9x25hJ2DLTU0eMXX8N6uUM7sc30LYt3VooU00vNAsHHXNINQPi
+         3PtzX53EhdeeEq0mRaUDiogsYIxO4DBm4snLsffxS0JU1jc0pch9NuwClnbkCm8/HAUD
+         tpPfOEsRh3tm3bWjwoHPuzSnIKEEhg596Eh8/nH5GRtz3qedfZHzmS1CHDLxPtXlxrGF
+         ToOg==
+X-Forwarded-Encrypted: i=1; AJvYcCWVkfRvY/OQoMXarNra1FBsJpZUh86N06I4nSKh680rX2eUfdvgOg4q/36qej+432ZsYkseK4BrMKJ+KTjCLPMAVw==@vger.kernel.org, AJvYcCWmtpdHZxNN3FX3bhrQoF9TAQ7mpSbjNjEYcjhjDVc5JNDUQPVnZCVZlOaii6Ye9djjKCFIfosrvhd+zsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTUOOYuudlrxKt6VjeHy/TRFjVlgvV+oF/lRdYjQtLvLLsaEud
+	JQtNLTUsjP6o/29rH9RYCw1bqC/nWX1L/rXUTQJVc+cjXRHyz4VspkRmBr0Kb5O+bsyJbOavgdm
+	5oA7nnlY2AxFQ5ydRke6y5+PRyXTeloCagNk1oA==
+X-Google-Smtp-Source: AGHT+IF3bFUpeU2iENfR1omoILaQqFbe3hskL8zeNMNJ6Lhtk8rni9S1T6CjjlIXlVSoP/UMFjAZC4X2STJj742A+lA=
+X-Received: by 2002:a05:690c:25c8:b0:6e5:e571:108b with SMTP id
+ 00721157ae682-6ea523216f0mr218477547b3.8.1730853001537; Tue, 05 Nov 2024
+ 16:30:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241105212652.401943-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.199.ga7371fff76-goog
-Subject: [PATCH v3 6/6] perf tests: Enable tests disabled due to tracepoint parsing
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+MIME-Version: 1.0
+References: <20241105070046.424750-1-danielyangkang@gmail.com> <3CA737FF-2F21-42CA-BF95-5F0341F6B68B@linux.vnet.ibm.com>
+In-Reply-To: <3CA737FF-2F21-42CA-BF95-5F0341F6B68B@linux.vnet.ibm.com>
+From: Daniel Yang <danielyangkang@gmail.com>
+Date: Tue, 5 Nov 2024 16:29:25 -0800
+Message-ID: <CAGiJo8RyjXdgNqyPNhZFJ_5oH0z1RWeXnM6RGnq65KCDbyp6DQ@mail.gmail.com>
+Subject: Re: [PATCH] Use strscpy() instead of the deprecated strlcpy()
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	James Clark <james.clark@linaro.org>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Yang Li <yang.lee@linux.alibaba.com>, Colin Ian King <colin.i.king@gmail.com>, 
-	Yang Jihong <yangjihong@bytedance.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Ben Gainey <ben.gainey@arm.com>, zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
-	Zixian Cai <fzczx123@gmail.com>, Andi Kleen <ak@linux.intel.com>, Paran Lee <p4ranlee@gmail.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>
+	"Liang, Kan" <kan.liang@linux.intel.com>, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tracepoint parsing required libtraceevent but no longer does. Remove
-the Build logic and #ifdefs that caused the tests not to be run. Test
-code that directly uses libtraceevent is still guarded.
+On Tue, Nov 5, 2024 at 4:25=E2=80=AFAM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
+> Hi,
+>
+> This hits a compilation fail:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/Build          |  6 +++---
- tools/perf/tests/builtin-test.c |  2 --
- tools/perf/tests/parse-events.c | 25 +------------------------
- 3 files changed, 4 insertions(+), 29 deletions(-)
+Oh I see. Apologies, I thought compiling the kernel also compiled the
+tools directory so I didn't get any compilation errors.
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 01ed9335db4d..f26a668a96df 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -5,10 +5,10 @@ perf-test-y += tests-scripts.o
- perf-test-y += parse-events.o
- perf-test-y += dso-data.o
- perf-test-y += vmlinux-kallsyms.o
--perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall.o
--perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall-all-cpus.o
-+perf-test-y += openat-syscall.o
-+perf-test-y += openat-syscall-all-cpus.o
- perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall-tp-fields.o
--perf-test-$(CONFIG_LIBTRACEEVENT) += mmap-basic.o
-+perf-test-y += mmap-basic.o
- perf-test-y += perf-record.o
- perf-test-y += evsel-roundtrip-name.o
- perf-test-$(CONFIG_LIBTRACEEVENT) += evsel-tp-sched.o
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index d2cabaa8ad92..4c3b622130a9 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -60,11 +60,9 @@ static struct test_suite *arch_tests[] = {
- 
- static struct test_suite *generic_tests[] = {
- 	&suite__vmlinux_matches_kallsyms,
--#ifdef HAVE_LIBTRACEEVENT
- 	&suite__openat_syscall_event,
- 	&suite__openat_syscall_event_on_all_cpus,
- 	&suite__basic_mmap,
--#endif
- 	&suite__mem,
- 	&suite__parse_events,
- 	&suite__expr,
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 82a19674a38f..5ec2e5607987 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -54,8 +54,6 @@ static bool test_perf_config(const struct perf_evsel *evsel, __u64 expected_conf
- 	return (evsel->attr.config & PERF_HW_EVENT_MASK) == expected_config;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
--
- #if defined(__s390x__)
- /* Return true if kvm module is available and loaded. Test this
-  * and return success when trace point kvm_s390_create_vm
-@@ -112,7 +110,6 @@ static int test__checkevent_tracepoint_multi(struct evlist *evlist)
- 	}
- 	return TEST_OK;
- }
--#endif /* HAVE_LIBTRACEEVENT */
- 
- static int test__checkevent_raw(struct evlist *evlist)
- {
-@@ -311,7 +308,6 @@ static int test__checkevent_breakpoint_rw(struct evlist *evlist)
- 	return TEST_OK;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
- static int test__checkevent_tracepoint_modifier(struct evlist *evlist)
- {
- 	struct evsel *evsel = evlist__first(evlist);
-@@ -340,7 +336,6 @@ test__checkevent_tracepoint_multi_modifier(struct evlist *evlist)
- 
- 	return test__checkevent_tracepoint_multi(evlist);
- }
--#endif /* HAVE_LIBTRACEEVENT */
- 
- static int test__checkevent_raw_modifier(struct evlist *evlist)
- {
-@@ -629,7 +624,6 @@ static int test__checkevent_pmu(struct evlist *evlist)
- 	return TEST_OK;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
- static int test__checkevent_list(struct evlist *evlist)
- {
- 	struct evsel *evsel = evlist__first(evlist);
-@@ -671,7 +665,6 @@ static int test__checkevent_list(struct evlist *evlist)
- 
- 	return TEST_OK;
- }
--#endif
- 
- static int test__checkevent_pmu_name(struct evlist *evlist)
- {
-@@ -971,7 +964,6 @@ static int test__group2(struct evlist *evlist)
- 	return TEST_OK;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
- static int test__group3(struct evlist *evlist __maybe_unused)
- {
- 	struct evsel *evsel, *group1_leader = NULL, *group2_leader = NULL;
-@@ -1078,7 +1070,6 @@ static int test__group3(struct evlist *evlist __maybe_unused)
- 	}
- 	return TEST_OK;
- }
--#endif
- 
- static int test__group4(struct evlist *evlist __maybe_unused)
- {
-@@ -1813,7 +1804,6 @@ static int test__term_equal_legacy(struct evlist *evlist)
- 	return TEST_OK;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
- static int count_tracepoints(void)
- {
- 	struct dirent *events_ent;
-@@ -1867,7 +1857,6 @@ static int test__all_tracepoints(struct evlist *evlist)
- 
- 	return test__checkevent_tracepoint_multi(evlist);
- }
--#endif /* HAVE_LIBTRACEVENT */
- 
- struct evlist_test {
- 	const char *name;
-@@ -1876,7 +1865,6 @@ struct evlist_test {
- };
- 
- static const struct evlist_test test__events[] = {
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "syscalls:sys_enter_openat",
- 		.check = test__checkevent_tracepoint,
-@@ -1887,7 +1875,6 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_tracepoint_multi,
- 		/* 1 */
- 	},
--#endif
- 	{
- 		.name  = "r1a",
- 		.check = test__checkevent_raw,
-@@ -1938,7 +1925,6 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_w,
- 		/* 1 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "syscalls:sys_enter_openat:k",
- 		.check = test__checkevent_tracepoint_modifier,
-@@ -1949,7 +1935,6 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_tracepoint_multi_modifier,
- 		/* 3 */
- 	},
--#endif
- 	{
- 		.name  = "r1a:kp",
- 		.check = test__checkevent_raw_modifier,
-@@ -1995,13 +1980,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_w_modifier,
- 		/* 2 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "r1,syscalls:sys_enter_openat:k,1:1:hp",
- 		.check = test__checkevent_list,
- 		/* 3 */
- 	},
--#endif
- 	{
- 		.name  = "instructions:G",
- 		.check = test__checkevent_exclude_host_modifier,
-@@ -2032,13 +2015,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__group2,
- 		/* 9 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "group1{syscalls:sys_enter_openat:H,cycles:kppp},group2{cycles,1:3}:G,instructions:u",
- 		.check = test__group3,
- 		/* 0 */
- 	},
--#endif
- 	{
- 		.name  = "{cycles:u,instructions:kp}:p",
- 		.check = test__group4,
-@@ -2049,13 +2030,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__group5,
- 		/* 2 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "*:*",
- 		.check = test__all_tracepoints,
- 		/* 3 */
- 	},
--#endif
- 	{
- 		.name  = "{cycles,cache-misses:G}:H",
- 		.check = test__group_gh1,
-@@ -2111,7 +2090,7 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_len_rw_modifier,
- 		/* 4 */
- 	},
--#if defined(__s390x__) && defined(HAVE_LIBTRACEEVENT)
-+#if defined(__s390x__)
- 	{
- 		.name  = "kvm-s390:kvm_s390_create_vm",
- 		.check = test__checkevent_tracepoint,
-@@ -2265,13 +2244,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_2_events,
- 		/* 3 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name = "9p:9p_client_req",
- 		.check = test__checkevent_tracepoint,
- 		/* 4 */
- 	},
--#endif
- };
- 
- static const struct evlist_test test__events_pmu[] = {
--- 
-2.47.0.199.ga7371fff76-goog
+> So the strscpy here is defined as strcpy itself.
+>
+> Ian discussed about having an strscpy shim for perf here :
+> https://lore.kernel.org/linux-perf-users/172892779710.897882.149495430825=
+61189584.b4-ty@kernel.org/T/#meaa2f8d993c6db435f9ed399dc1bf10132a31292
+>
+> So IIUC, we are yet to have the safe strscpy in the tools perf.
 
+Is there any issue with just porting over the kernel code?
+
+- Daniel
