@@ -1,187 +1,248 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DA6205E11;
-	Wed,  6 Nov 2024 17:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA1D207A1D
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Nov 2024 18:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730915583; cv=none; b=oN2Lm7aBL9gSsu81qO5AGaBW4sv0CefULHBGANNvGOEnzOkMSsUNzRKOJRYNL0Ih/31DiLOAJFEF8Ck+5xHkWZPDgVr3/dYoNvbijilosivLQcFCBVorujbsNgoRPKCJStXo0vf2Pduc5qRL0fy2kLGDzVxrb1AYnolOfjxBYVg=
+	t=1730916399; cv=none; b=cj02KxwPDm9RS6Fj2X2lWykjyT5glgy5yjkFDYX9lF2Mx8yG8rYKbUrKJR2WLhDjToW+o/jqZGXhbnnSoNTpGPwSyPqKCcAMLqgUU/Sy1sx25//uNTJsB0w05fmkN13E9RFq23rxEUigApXp3BepmhBjPjMczB7L5QXCJsuHP/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730915583; c=relaxed/simple;
-	bh=hI5g072hwyeIma5XJ1a6SD58g7lhAxNM4XIWHVAuGN4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Yii7b7aAeiwjj0zh6R5t5+9+08mytTdhGNctzK26/5py20U7Irx+jJ08OR5pmmdbL1swNxL0KnpN+1Ix7AIue1cayfmI7NT7R/TJIUT5B8EAWBpP0Kbvh8mVKM0uQHBiFTefhtojRweyPUefCZXvIISL0r2PRM+dCWfvvsycfig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DF+meZZN; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1730916399; c=relaxed/simple;
+	bh=0mrHr0Utt97KBxmJvOpiUOSn74oL94f9WxrcIOaA2Vg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JeShIo1PloDznbGgk2f0YTT6JQyVIaHq8Pu0y8r85dwHpnQzM/pVKWc0od+S9F1E2/Kxlc+kkJvXRyBKpudIKvMyBAUqUomB9pFb6bz3rwRHqWBRnqCX45nMQ+DtOxy9jYfsEoX9RQDpODDxPUIG2Cg//Z3EsoiXPCuc1F1kpSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BlKbRYnx; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DF+meZZN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730915582; x=1762451582;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=hI5g072hwyeIma5XJ1a6SD58g7lhAxNM4XIWHVAuGN4=;
-  b=DF+meZZN9kTt10F08fFjNk+gY2yTtNcBFlCQAIUTmnXLuLo2dW32j8Dl
-   ParJM2xRTppQrhvVNMuP6ZApU4zV7qpC/i6dYX8+4FMBBgL4cPkc/3C2c
-   KaJnoCkGQd7pX/ngzEin8mRlRmmjpVI4+trXfQZzj9fdWox1eIxiL9hgD
-   EFWuyv5y7BPxyM+F4NMd8DsI4iSRzVnlQQRgHLZV3inNyFHn+TVfZ33sN
-   oREdTNcM8oizAH+7fDV1PK+tsPUb/ig9i7jj8kIyi5DD2f9J7wHDbykFL
-   JHeptxZoiToU9/nNWTRnA4klAU6t1dcUb7/QwBbKf93cSgMsBU0CVWK9s
-   Q==;
-X-CSE-ConnectionGUID: BvUxMyT2RIuPqzNxiRq7Yg==
-X-CSE-MsgGUID: oVs67PILQHa2SMXIX1JbCA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11248"; a="34508431"
-X-IronPort-AV: E=Sophos;i="6.11,263,1725346800"; 
-   d="scan'208";a="34508431"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 09:53:01 -0800
-X-CSE-ConnectionGUID: eb2KSZ/AS+mBYMbhDjrXUg==
-X-CSE-MsgGUID: ay4pzBApS9OUG1m5EtDkfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,263,1725346800"; 
-   d="scan'208";a="84203631"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 09:53:00 -0800
-Received: from [10.212.82.230] (kliang2-mobl1.ccr.corp.intel.com [10.212.82.230])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 509E820B5703;
-	Wed,  6 Nov 2024 09:52:58 -0800 (PST)
-Message-ID: <244b4c80-2ab2-4248-b930-22fea9ed6429@linux.intel.com>
-Date: Wed, 6 Nov 2024 12:52:56 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BlKbRYnx"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4608dddaa35so14501cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Nov 2024 10:06:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730916396; x=1731521196; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hyl3wfbScVxxC47vu5pNhpEby/1fXzJxVEuHqZTyUyY=;
+        b=BlKbRYnxLry9wMb5zXcsh8iQqZ98FFQWLJPWAq5bHeHgloswFXCjONLtcNtTxPSxbp
+         yPAU8EV6hR+IYRSePKfeLaAPOqD9AAG6WJqi4VWgek0VMtynEgR9v+pO0fsV8jLfY9wk
+         YaMRUobOkLNrgX80UgmnmmVTPjmsi9/ctoQsvjsd+SU0kInWmDDFWaNUYOTIIlYzzfhd
+         h4IS4XaE7+YbPO9WbMXgCogMNzD6XPC+krwtRfH6tUI6ZzS4bjDGSI7CR6729khbqz9k
+         lUQY/a5IvduxvMKzs8l03uUGgsxgbA8rlQShv2b34J98s0da+vdj19Qqi6WmjNHRmEPO
+         ao9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730916396; x=1731521196;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Hyl3wfbScVxxC47vu5pNhpEby/1fXzJxVEuHqZTyUyY=;
+        b=pHpG9XtvD++EdOOrfcxy9uCNF6M+7XR09j4e5dNZTqWuXqWPJ6pZZyTeQaWcGB6ln+
+         7O8c+MtVtb4yC9ql6kdEsT9OIglX1s2HOiL7clze8pnc/rx++9i1b5Suk0AXdIOzQ6iy
+         QK5p5LeZaok6eVKUlPMFCypGQGgwWYWGRSpOuns2M3gD2bcLYBKwQNG3LnuG+OmHAToO
+         m/roUneixl+jVi7v9SDrmYUGksoewGMeFONFVkBqiGsNEQ+lTXm5zqEMYBZjNQvibmwF
+         4o9l4mjC8BAkFDEddfefum/OSt4scu0Y7f6TqkRxrbZjDrjozvn/ZzDPXo3eOwde6xfQ
+         yvYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOnneMuQakEdwNlX4h410PHMMiPneXbTgCtwfXVXYY/kFL+2S2D8IR5SOVHmr6Pp3SCzjkNdQmBfcQ9r0h+CK3@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKQRE1IUrnIkPC6Q8/VYrF9IKYpJ9zckGb+YccKrIPY7+jPAME
+	kL9X03Z/r6wFvFF2mLxwtGpMAs8rbIztNPiw6KDWjmsgDufQS35DPic0uZ4P7rTdVKB0fWnA8xb
+	uMeAqM0vZF28NNxIRF4SBuWlvQx1WXgR4osYL
+X-Gm-Gg: ASbGncuVYIgtGSBT6ifQffXgC/YrF60QtgCh0FVbP0pQhEkacqBqI943BIyvi00UT/m
+	QpbTnkfhNRP9ktJvyfZePAblD9ZH36eQSsnjjv0FoYKfsyMGAZJWwsZ/tu2G+qH4=
+X-Google-Smtp-Source: AGHT+IGPoYgJc3j2I/YyO9JGYGQOsQ8SsLdn/7zJeCUSZOOROyDTSPgqGhTTkb+38xDwFmXDF9UiUMEXOvqvXZcRFTA=
+X-Received: by 2002:a05:622a:5b91:b0:461:6bb5:99ba with SMTP id
+ d75a77b69052e-462fa56542dmr839001cf.5.1730916395754; Wed, 06 Nov 2024
+ 10:06:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/22] perf jevents: Add tsx metric group for Intel
- models
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Perry Taylor <perry.taylor@intel.com>, Samantha Alt
- <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>,
- Weilin Wang <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>
-References: <20240926175035.408668-1-irogers@google.com>
- <20240926175035.408668-7-irogers@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240926175035.408668-7-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20241106085441.3945502-1-xu.yang_2@nxp.com>
+In-Reply-To: <20241106085441.3945502-1-xu.yang_2@nxp.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 6 Nov 2024 10:06:24 -0800
+Message-ID: <CAP-5=fVN93EJN9FqMmF6h2meiLbU_OWJ2=Vt0EVdZds6nZSKpA@mail.gmail.com>
+Subject: Re: [PATCH] perf jevents: fix breakage when do perf stat on system metric
+To: Xu Yang <xu.yang_2@nxp.com>, john.g.garry@oracle.com
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	sandipan.das@amd.com, bgray@linux.ibm.com, linux-perf-users@vger.kernel.org, 
+	imx@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Nov 6, 2024 at 12:55=E2=80=AFAM Xu Yang <xu.yang_2@nxp.com> wrote:
+>
+> When do perf stat on sys metric, perf tool output nothing now:
+> $ perf stat -a -M imx95_ddr_read.all -I 1000
+> $
+>
+> This command runs on an arm64 machine and the Soc has one DDR hw pmu
+> except one armv8_cortex_a55 pmu. Their maps show as follows:
+>
+> const struct pmu_events_map pmu_events_map[] =3D {
+> {
+>         .arch =3D "arm64",
+>         .cpuid =3D "0x00000000410fd050",
+>         .event_table =3D {
+>                 .pmus =3D pmu_events__arm_cortex_a55,
+>                 .num_pmus =3D ARRAY_SIZE(pmu_events__arm_cortex_a55)
+>         },
+>         .metric_table =3D {
+>                 .pmus =3D NULL,
+>                 .num_pmus =3D 0
+>         }
+> },
+>
+> static const struct pmu_sys_events pmu_sys_event_tables[] =3D {
+> {
+>         .event_table =3D {
+>                 .pmus =3D pmu_events__freescale_imx95_sys,
+>                 .num_pmus =3D ARRAY_SIZE(pmu_events__freescale_imx95_sys)
+>         },
+>         .metric_table =3D {
+>                 .pmus =3D pmu_metrics__freescale_imx95_sys,
+>                 .num_pmus =3D ARRAY_SIZE(pmu_metrics__freescale_imx95_sys=
+)
+>         },
+>         .name =3D "pmu_events__freescale_imx95_sys",
+> },
+>
+> Currently, pmu_metrics_table__find() will return NULL when only do perf
+> stat on sys metric. Then parse_groups() will never be called to parse
+> sys metric_name, finally perf tool will exit directly. This should be a
+> common problem. To fix the issue, this will keep the logic before commit
+> f20c15d13f01 ("perf pmu-events: Remember the perf_events_map for a PMU")
+> to return a empty metric table rather than a NULL pointer. This should
+> be fine since the removed part just check if the table match provided
+> metric_name. Without these code, the code in parse_groups() will also
+> check the validity of metrci_name too.
 
+So we carry this code for ARM:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/arch/arm64/util/pmu.c?h=3Dperf-tools-next#n21
 
-On 2024-09-26 1:50 p.m., Ian Rogers wrote:
-> Allow duplicated metric to be dropped from json files. Detect when TSX
-> is supported by a model by using the json events, use sysfs events at
-> runtime as hypervisors, etc. may disable TSX.
-> 
-> Add CheckPmu to metric to determine if which PMUs have been associated
-> with the loaded events.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/pmu-events/intel_metrics.py | 52 +++++++++++++++++++++++++-
->  1 file changed, 51 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-> index f34b4230a4ee..58e243695f0a 100755
-> --- a/tools/perf/pmu-events/intel_metrics.py
-> +++ b/tools/perf/pmu-events/intel_metrics.py
-> @@ -1,12 +1,13 @@
->  #!/usr/bin/env python3
->  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-> -from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
-> +from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
->                      JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
->                      MetricGroup, MetricRef, Select)
->  import argparse
->  import json
->  import math
->  import os
-> +from typing import Optional
->  
->  # Global command line arguments.
->  _args = None
-> @@ -74,6 +75,54 @@ def Smi() -> MetricGroup:
->      ], description = 'System Management Interrupt metrics')
->  
->  
-> +def Tsx() -> Optional[MetricGroup]:
-> +  pmu = "cpu_core" if CheckPmu("cpu_core") else "cpu"
-> +  cycles = Event('cycles')
+On x86 and other architectures the PMU is always passed as NULL (the
+effect of this change):
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/pmu.c?h=3Dperf-tools-next#n843
 
-Isn't the pmu prefix required for cycles as well?
+The blame shows me as the author, but that's because I factored event
+and metric tables to be separate things. When I did that I brought
+over ARM's event table logic to the metric table.
 
-> +  cycles_in_tx = Event(f'{pmu}/cycles\-t/')
-> +  cycles_in_tx_cp = Event(f'{pmu}/cycles\-ct/')
-> +  try:
-> +    # Test if the tsx event is present in the json, prefer the
-> +    # sysfs version so that we can detect its presence at runtime.
-> +    transaction_start = Event("RTM_RETIRED.START")
-> +    transaction_start = Event(f'{pmu}/tx\-start/')
+Why do we pass a PMU to this code anyway?
+So on x86 the cpuid will give a different string for
+heterogeneous/hybrid/BIG.little parts. On ARM you get a different
+CPUID depending on which logical CPU you ask the question of. The CPUs
+associated with a PMU are used to look up the CPUID string.
 
-What's the difference between this check and the later has_event() check?
+This whole thing is spaghetti code (fwiw, I dislike the whole arch
+directory plus weak symbols thing that is a by design breakage of at
+least cross platform work - hopefully the maintainers will review [1]
+so we can delete a sizeable chunk of it) and the ARM situation looks
+sub-optimal. We really need to scan a plurality of metric tables for
+the heterogeneous parts on ARM. We're passing a PMU rather than just a
+CPU, I think passing a CPU would be more intention revealing.
 
-All the tsx related events are model-specific events. We should check
-them all before using it.
+Then there's the pleasure of system metrics, which are only loosely in
+my mental model of things as John Garry did the heavy lifting for
+these.
+
+So the problems I see:
+1) ARM needs multiple metric tables to be parsed in the metric group
+logic as the invariant of 1 CPUID 1 table doesn't hold on ARM.
+2) The lack of a metric table causes an early exit from the metric parsing =
+code:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/metricgroup.c?h=3Dperf-tools-next#n1700
+However, the system metrics pattern conceptually match PMU names and
+aren't tied to CPUIDs. The iteration logic still uses the metric table
+though:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/metricgroup.c?h=3Dperf-tools-next#n1283
+3) Crufty spaghetti from the use of arch/weak that means we aren't
+testing the same code paths leading to divergence and rot.
+
+I'll try to pull something together. But for the sake of expediently
+addressing your issue:
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Kan
-> +  except:> +    return None
-> +
-> +  elision_start = None
-> +  try:
-> +    # Elision start isn't supported by all models, but we'll not
-> +    # generate the tsx_cycles_per_elision metric in that
-> +    # case. Again, prefer the sysfs encoding of the event.
-> +    elision_start = Event("HLE_RETIRED.START")
-> +    elision_start = Event(f'{pmu}/el\-start/')
-> +  except:
-> +    pass
-> +
-> +  return MetricGroup('transaction', [
-> +      Metric('tsx_transactional_cycles',
-> +             'Percentage of cycles within a transaction region.',
-> +             Select(cycles_in_tx / cycles, has_event(cycles_in_tx), 0),
-> +             '100%'),
-> +      Metric('tsx_aborted_cycles', 'Percentage of cycles in aborted transactions.',
-> +             Select(max(cycles_in_tx - cycles_in_tx_cp, 0) / cycles,
-> +                    has_event(cycles_in_tx),
-> +                    0),
-> +             '100%'),
-> +      Metric('tsx_cycles_per_transaction',
-> +             'Number of cycles within a transaction divided by the number of transactions.',
-> +             Select(cycles_in_tx / transaction_start,
-> +                    has_event(cycles_in_tx),
-> +                    0),
-> +             "cycles / transaction"),
-> +      Metric('tsx_cycles_per_elision',
-> +             'Number of cycles within a transaction divided by the number of elisions.',
-> +             Select(cycles_in_tx / elision_start,
-> +                    has_event(elision_start),
-> +                    0),
-> +             "cycles / elision") if elision_start else None,
-> +  ], description="Breakdown of transactional memory statistics")
-> +
-> +
->  def main() -> None:
->    global _args
->  
-> @@ -100,6 +149,7 @@ def main() -> None:
->        Idle(),
->        Rapl(),
->        Smi(),
-> +      Tsx(),
->    ])
->  
->  
+Ian
 
+
+[1] https://lore.kernel.org/lkml/20241017002520.59124-1-irogers@google.com/
+
+
+
+> Fixes: f20c15d13f01 ("perf pmu-events: Remember the perf_events_map for a=
+ PMU")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+> ---
+>  tools/perf/pmu-events/empty-pmu-events.c | 12 +-----------
+>  tools/perf/pmu-events/jevents.py         | 12 +-----------
+>  2 files changed, 2 insertions(+), 22 deletions(-)
+>
+> diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-ev=
+ents/empty-pmu-events.c
+> index 2b7516946ded..b8719dab264d 100644
+> --- a/tools/perf/pmu-events/empty-pmu-events.c
+> +++ b/tools/perf/pmu-events/empty-pmu-events.c
+> @@ -585,17 +585,7 @@ const struct pmu_metrics_table *perf_pmu__find_metri=
+cs_table(struct perf_pmu *pm
+>          if (!map)
+>                  return NULL;
+>
+> -        if (!pmu)
+> -                return &map->metric_table;
+> -
+> -        for (size_t i =3D 0; i < map->metric_table.num_pmus; i++) {
+> -                const struct pmu_table_entry *table_pmu =3D &map->metric=
+_table.pmus[i];
+> -                const char *pmu_name =3D &big_c_string[table_pmu->pmu_na=
+me.offset];
+> -
+> -                if (pmu__name_match(pmu, pmu_name))
+> -                           return &map->metric_table;
+> -        }
+> -        return NULL;
+> +       return &map->metric_table;
+>  }
+>
+>  const struct pmu_events_table *find_core_events_table(const char *arch, =
+const char *cpuid)
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
+ents.py
+> index 6e71b09dbc2a..70f4fd5395fb 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -1101,17 +1101,7 @@ const struct pmu_metrics_table *perf_pmu__find_met=
+rics_table(struct perf_pmu *pm
+>          if (!map)
+>                  return NULL;
+>
+> -        if (!pmu)
+> -                return &map->metric_table;
+> -
+> -        for (size_t i =3D 0; i < map->metric_table.num_pmus; i++) {
+> -                const struct pmu_table_entry *table_pmu =3D &map->metric=
+_table.pmus[i];
+> -                const char *pmu_name =3D &big_c_string[table_pmu->pmu_na=
+me.offset];
+> -
+> -                if (pmu__name_match(pmu, pmu_name))
+> -                           return &map->metric_table;
+> -        }
+> -        return NULL;
+> +       return &map->metric_table;
+>  }
+>
+>  const struct pmu_events_table *find_core_events_table(const char *arch, =
+const char *cpuid)
+> --
+> 2.34.1
+>
