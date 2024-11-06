@@ -1,104 +1,86 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743061DACBB;
-	Wed,  6 Nov 2024 11:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA8B11DF722;
+	Wed,  6 Nov 2024 12:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730891170; cv=none; b=MZnpVqLE8p/1Itgor0VIrRnrkEJQcVoRB4Fd3KXxErl5H34qTsuSVgyrqv2ce9WFlivxjDXLUI66B34kuh6o72sQgtgK2v2TgPg51wtkzavqeweNr+H4bWfAKoZK4OWKm81xbk9ZA6l51Wa9S/FvNHjQfIpCuKzmLvtYnj67wio=
+	t=1730895277; cv=none; b=tV5rYZO4PFClMi/Zs1KZMWrCS1GVG9GcHmKz3kT68UyAL/5VUHvilMq4hMopVsUpPnGEmsUtaRol9sBTUON0MuU5Gc/ZSU0CWpTZtDbmiDENHCkE7VSYzbqoPCT+4rW5m7P9O0+CwS7Yg40WpzJkc+/Ph3vbWdx33UziyafW15A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730891170; c=relaxed/simple;
-	bh=x1daPAci/sH83L77hKsJtfM7BbABjcNhbB9A2zFZeIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fUt1f6iM3o/M30r91Ea3/YG2k9Vt5uwQ9MHFF3LxrEoAGfH7eveV4Jal5EfHhE6qg6RWh5vx0QkRZi0A/eG00iCucg2VCzMEu7ocAbcNK147tf7dd5keNbzQgaJyJETtntb47dHlaO7WBGZKtG9ZYPCHfMgjVI73wzWQzc6BeVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YYc5yuky; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1730895277; c=relaxed/simple;
+	bh=s+7ythMgvireZhHwMrelXrMJjMe+ZrPkY+vUjQgq9/I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EOWvIBqRr2rhUnxretLdH1cxIbcsy3bi0zy52bWVkU+9YEOgPzJks55zYWVzm0dHqrPqLCUqPyFKWTMT4cO1beM/t0VIeZS197icKTAuxBF1EpTh7jPsA9966DfL33R2jIpbdpdXhZC1Zwk4RYTeW7nYLOC9bIKq/X5pNyKuBfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ObfifXCQ; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YYc5yuky"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=KHhlvkY8UlSzLnmAPPPFJYM+1mV9xaApz1N9IxO+X3E=; b=YYc5yukyNei5Uqg2meExPOJ1cv
-	4/f75h4eVieapeaztoHVEuXr6JM6ZSh3S95Iiz0oH29FJR5dNlaftCulT51z+1KKUMbX2j7lVKXOi
-	fYN8I7PAKZgVQdUYlkqbHjowT6i1HBz0lEpO7N59D4wzQSOHJf15Z0/h/gQrEe9/MATutq/npDHO4
-	BpqRuiztCUgxSok5E0he8kysi3woj0V0vqAhbDvc9QHVeOgUp0+132q3n16FwiruXa2FLQBnsAm2Y
-	fRJ7oUjdqvbHU0OyKMhw7qv5bMoVeQdp4RSjS9OxVMs62DwKgLL81/9xylcyLEC3ruN/DXUG6obDO
-	eCsXzMnA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t8drK-0000000BwK8-1Hm8;
-	Wed, 06 Nov 2024 11:05:58 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 809ED300478; Wed,  6 Nov 2024 12:05:57 +0100 (CET)
-Date: Wed, 6 Nov 2024 12:05:57 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Ingo Molnar <mingo@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ObfifXCQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=WoFB7
+	HdhzNakUB5i2S2RJjooXmmquq4KbFJkQtdU1wU=; b=ObfifXCQtdBwGSqO9om6S
+	i9NcZqIvmxn2YhY0L1XPEvjY/bErqUP9gnhaLczkGSME+JgVxy5vroGLjRxR/hlU
+	/9LqOhKTCG8U1KR4My88Iq5Mz4Ge0jnFyUK29Cf2Gy09/PJEkmoY9JcUf5CospCn
+	rHih/McpEmuRnkbJ2JDNzQ=
+Received: from localhost.localdomain (unknown [114.86.104.95])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wD334deXStnf7GyFQ--.7977S2;
+	Wed, 06 Nov 2024 20:13:19 +0800 (CST)
+From: Haiyue Wang <haiyuewa@163.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Haiyue Wang <haiyuewa@163.com>,
+	Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-	bpf <bpf@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Liao Chang <liaochang1@huawei.com>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
-	Kernel Team <kernel-team@meta.com>
-Subject: Re: The state of uprobes work and logistics
-Message-ID: <20241106110557.GY33184@noisy.programming.kicks-ass.net>
-References: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
- <ZyH_fWNeL3XYNEH1@krava>
- <CAEf4BzZTTuBdCT2Qe=n7gqhf3yENZwHYUdsrQP9WfaEC4C35rw@mail.gmail.com>
- <20241106104639.GL10375@noisy.programming.kicks-ass.net>
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
+Subject: [PATCH v2] perf tools: Add the empty-pmu-events build to .gitignore
+Date: Wed,  6 Nov 2024 20:12:14 +0800
+Message-ID: <20241106121254.2869-1-haiyuewa@163.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241106104639.GL10375@noisy.programming.kicks-ass.net>
+X-CM-TRANSID:_____wD334deXStnf7GyFQ--.7977S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7GrWDJFy8JryfAw4fCF48WFg_yoWfCrc_Kw
+	4xWrWqvr45tr9YyrWxCF45Zr4Fqa1Yy3s8JrW7tF1rAayUG34j93Z0yrZrA3yrWa9rGw1j
+	kwn8Gr18XFWxujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbF_MDUUUUU==
+X-CM-SenderInfo: 5kdl53xhzdqiywtou0bp/1tbiLxmPa2crT6j3OQAAs3
 
-On Wed, Nov 06, 2024 at 11:46:39AM +0100, Peter Zijlstra wrote:
-> On Tue, Nov 05, 2024 at 06:11:07PM -0800, Andrii Nakryiko wrote:
-> > On Wed, Oct 30, 2024 at 2:42 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> > >
-> > > On Wed, Oct 16, 2024 at 12:35:21PM -0700, Andrii Nakryiko wrote:
-> > >
-> > > SNIP
-> > >
-> > > >   - Jiri Olsa's uprobe "session" support ([5]). This is less
-> > > > performance focused, but important functionality by itself. But I'm
-> > > > calling this out here because the first two patches are pure uprobe
-> > > > internal changes, and I believe they should go into tip/perf/core to
-> > > > avoid conflicts with the rest of pending uprobe changes.
-> > > >
-> > > > Peter, do you mind applying those two and creating a stable tag for
-> > > > bpf-next to pull? We'll apply the rest of Jiri's series to
-> > > > bpf-next/master.
-> > >
-> > >
-> > > Hi Ingo,
-> > > there's uprobe session support change that already landed in tip tree,
-> > > but we have bpf related changes that need to go in through bpf-next tree
-> > >
-> > > could you please create the stable tag that we could pull to bpf-next/master
-> > > and apply the rest of the uprobe session changes in there?
-> > 
-> > Ping. We (BPF) are blocked on this, we can't apply Jiri's uprobe
-> > session series ([0]), until we merge two of his patches that landed
-> > into perf/core. Can we please get a stable tag which we can use to
-> > pull perf/core's patches into bpf-next/master?
-> 
-> The whole tip/perf/core should be stable, but let me try and figure out
-> how git tags work.. might as well read a man-page today.
+The commit 0fe881f10ceb ("perf jevents: Autogenerate empty-pmu-events.c")
+build will generate two files, add them to .gitignore:
 
-I might have managed to create a perf-core-for-bpf-next tag, but I'm not
-sure I know enough about git to even test it.
+	tools/perf/pmu-events/empty-pmu-events.log
+	tools/perf/pmu-events/test-empty-pmu-events.c
 
-Let me know..
+Signed-off-by: Haiyue Wang <haiyuewa@163.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+---
+v2: Rebase the perf-tools-next.git on branch 'perf-tools-next'
+---
+ tools/perf/.gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
+index 19ce1cd56f8c..5aaf73df6700 100644
+--- a/tools/perf/.gitignore
++++ b/tools/perf/.gitignore
+@@ -39,6 +39,8 @@ trace/beauty/generated/
+ pmu-events/pmu-events.c
+ pmu-events/jevents
+ pmu-events/metric_test.log
++pmu-events/empty-pmu-events.log
++pmu-events/test-empty-pmu-events.c
+ *.shellcheck_log
+ feature/
+ libapi/
+-- 
+2.47.0
+
