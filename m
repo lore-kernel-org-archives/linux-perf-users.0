@@ -1,293 +1,121 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66421DE4EF;
-	Wed,  6 Nov 2024 17:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA02206948
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Nov 2024 17:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730912969; cv=none; b=g9n9j9JBdR/l7bOqwjMyWE7FwzaRkQyRt6AJwU4dqO1SuSYXdM2LndfRZQswH3fu3iQ7ygbXJMMQK0wTYM3U5unIMwaHXw1KFZ4BQ+8VKJSG8sGTHuF7l7XFU2xr6X07P9CsYsc4m33diOzQ2kaKagA4bgaFWOn1OK07BXY/cFk=
+	t=1730914152; cv=none; b=XIzAR11kfjoWVbKyDa/fUXKCCO1umFsxOHzudDmRcCvmMGBW7rrpXDvApg8gqX1BLcQgdB/0t6V7XcKOyga6+wdubISV1QuQ096+28LA8xR5TIIzoec7rDOeY4SyKyRBa16gUQy41IBbL3bRLXrrnJ7E5WxFKo/jKv4vqvlhDNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730912969; c=relaxed/simple;
-	bh=41LsHXoX987C4fNFtmJj2o2V8wDdrdxLnruf1+GeCrk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MQPu70ESrQnXA9EHm310+njmJAw4uVnDnB6FhK8+Dad6GgRjWLUJsrIa1LU2BYqLMoTpVarjhTt38JbSrYMM8xe0yMi2dT+0bso5ZBF7bmRI/gAfPsRZusZ/VjpY80ts//5WlGUcN/f5+3CsAm8yWu7V+YkZyZD4XvIKGLOIfK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ETlzRxm4; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1730914152; c=relaxed/simple;
+	bh=Js4xf9bjePQ7YFFhaBShMODMGHdgaF7gn0ytc8NoTvY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nM2l+tcCU9LKMfnDSJvmb9+7DkSjWCPJTM85F4hAEUeHIXiFfEgVbFqlCoHm8CjjbwCHFq0dDzMbneKpqHuEy9XedB6XwEX58iIhzVrRLClIqMYqR23Rp65Aaevm3kuuSbjzQ9RX650C6bYLY29jN7qkMNDfl2kpQUmZFVKbNa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i5i8jk1K; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ETlzRxm4"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A6H6ph6005159;
-	Wed, 6 Nov 2024 17:08:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=fevTHl
-	45RE9CKA3n1iiJliFCZI5cGe0f+tLLXFWGdpE=; b=ETlzRxm48457iUotNvv2JP
-	aaeziDrbsHe0UYOy59PUgFwEGKqNo7Las3duRlVGSGY7ZS58L23oEhsBiCqivafh
-	ex9nrSty5gw2qODohqkesfaOT90OCMPxoDH5Rnlnex5Z5hNmWh2J+ESVzwmglJr+
-	w1ODkNS6CDqDtNmuf3XrP6R44OJgRejohQyIR0ufob+mawqXN0U+DMOfRKnTWWoE
-	b/bCz6ao9nRQ1a8NFci4oLG0ECTROO70/vwsAMCfm5fU6dBaK3RAH+j726dmcjtN
-	R9euHZAxt2GMfM/u2eO/dl8ec4VxEMQYcMfGPDKIWp5cncM4fE+2cOQpNu9XNvGw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42rba0gk5e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Nov 2024 17:08:57 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4A6H6qeD005319;
-	Wed, 6 Nov 2024 17:08:57 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42rba0gk32-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Nov 2024 17:08:56 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4A6FGn5T019085;
-	Wed, 6 Nov 2024 17:04:12 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 42p0mj6fye-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Nov 2024 17:04:12 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4A6H48FY47710652
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 6 Nov 2024 17:04:08 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 611BA20040;
-	Wed,  6 Nov 2024 17:04:08 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 17B1320043;
-	Wed,  6 Nov 2024 17:04:07 +0000 (GMT)
-Received: from [9.152.222.93] (unknown [9.152.222.93])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  6 Nov 2024 17:04:07 +0000 (GMT)
-Message-ID: <dc588eb9-f4ec-4ec8-b472-19e894b753e9@linux.ibm.com>
-Date: Wed, 6 Nov 2024 18:04:06 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
-To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
- <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ZWjQAsrbLnnnQrWJyHlh0lryrAE7UvIA
-X-Proofpoint-ORIG-GUID: M9vnOA56mAYv8FrsMXCtZQaJeayKSw9c
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i5i8jk1K"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3a4e54d3cefso297095ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Nov 2024 09:29:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730914150; x=1731518950; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=teDWCAC+SsPNKfZDGmf1mQnLJlQp1SAmCbKNEmulZa0=;
+        b=i5i8jk1KOE3ZFT2oeFwXEueaa+4bEuyvxjTPA6huD7weWGn3ueBRDDCMojW8+6F4uO
+         ghF1tMBRcCuowIrI5eaY0Ww3+Z4kpYl6RDiTu/gJCaC/LhIMy+tr3qMBPDuKYWuU2LyI
+         JlyhiTPvnBu8e4zbHL5UyagmT5w1mXboxqDUjIOlVqp70Y5mtx/yl1WA1AT50zXw31bd
+         5hieoD5Pj7/Ft6vi5YXAjJbdbz8JpSta+Zxy+ZM8RZGUElZAcrBLNFB2Gor4TmK7W+Ap
+         TDs8L5ntQTO6tFcDCrPlLrtoXVhkPTWDPWsRgH0vCB2EJTo9ggvVq/Jd+ZOvKiu3g1fl
+         j6Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730914150; x=1731518950;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=teDWCAC+SsPNKfZDGmf1mQnLJlQp1SAmCbKNEmulZa0=;
+        b=eftnmFwftaigHgvb8s3iDvHFIve6HAJ3pS5oiN/cUOaY4kXCgZcs3vi4thrwWboD45
+         5W4ePmbIZihMFRK1TeYex7ASWE2EickcZo3smcVtMGUowpY5XkC2JHBrJe3MVywOhxOZ
+         +/7ZGxu82Ch+3FwgEaru1DnN8VTzVHJUn+pl3HKpgborU4q2UCv2hbDfMwE3vmEc+lDw
+         EDt/snww+/IedsQxk8xc31jRvt+GqdHEcExgAQE1uJ0RDybXx8TGYaQTxtLZM+Oovx8t
+         6pvI0JQ5QqLlKVO4WNxPG7oOM2Rk+lAZdaXFkuNCCnVKlNGM4jj1atLBiCriBfC0RAOW
+         cfIg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+s/ZWUsrNX822IGjMfO1/mVCQPHuS4X/nu0wmtjmfFWfbmI+lFweke3Vq50AMschSxvy7sbmUxdpfAIg5O2vo@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxJflVWDqdvJlCI+wj97cnAyey8N/1+bRt1PZZr4YOsahyATXy
+	uMcaewGifTPKdjt5LqehwuSud0bHGw8+kEuBpgYi8NXdATCiWIr9cgz6valOql0YPDxfRsFq2wa
+	TJLrcs1AOsQFGWM/2ey08cfPyHZEaGgiI6SHk
+X-Gm-Gg: ASbGncvFHsKxxV6ffp/JR5RxEwCLuWrxvhWvS4dljo0CGFN+tjBQP76fU4wlUVRcJWZ
+	TWZetZ3Sx5akzgQE/mw4sYG4xtHMcl4pMmQEg8rMuatGF0WzvH9slaFgh79n61Ro=
+X-Google-Smtp-Source: AGHT+IH+pqRdAphMkhb+luRB44r6bMNk9ISZ0EBRdYi0HWpiCxWijfTal5pLT+eibz9N193imWzcDdOEn3SXagF4YGA=
+X-Received: by 2002:a05:6e02:1c29:b0:3a0:a224:eb2c with SMTP id
+ e9e14a558f8ab-3a6e7a6de76mr736005ab.25.1730914150297; Wed, 06 Nov 2024
+ 09:29:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- clxscore=1015 adultscore=0 malwarescore=0 priorityscore=1501 phishscore=0
- impostorscore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2409260000
- definitions=main-2411060133
+References: <20241022174838.449862-1-irogers@google.com> <20241022174838.449862-2-irogers@google.com>
+ <ZxmHOkp1USQCujM-@google.com>
+In-Reply-To: <ZxmHOkp1USQCujM-@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 6 Nov 2024 09:28:58 -0800
+Message-ID: <CAP-5=fXTiHY6-Tb5kLGxQq7MGmW_qQpM9ZYV3Oaz=hyfw0sxYg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] perf test: Skip annotate test for sanitizer builds
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 28.10.2024 22:47, Josh Poimboeuf wrote:
-...
+On Wed, Oct 23, 2024 at 4:31=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Tue, Oct 22, 2024 at 10:48:38AM -0700, Ian Rogers wrote:
+> > Symbols vary and the test breaks.
+> >
+> > Closes: https://lore.kernel.org/lkml/CAP-5=3DfU04PAN4T=3D7KuHA4h+po=3Do=
+Ty+6Nbee-Gvx9hCsEf2Lh0w@mail.gmail.com/
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/tests/shell/annotate.sh | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/tools/perf/tests/shell/annotate.sh b/tools/perf/tests/shel=
+l/annotate.sh
+> > index 1590a37363de..199f547e656d 100755
+> > --- a/tools/perf/tests/shell/annotate.sh
+> > +++ b/tools/perf/tests/shell/annotate.sh
+> > @@ -4,6 +4,12 @@
+> >
+> >  set -e
+> >
+> > +if perf check feature -q sanitizer
+> > +then
+> > +  echo "Skip test with sanitizers due to differing assembly code"
+>
+> I don't think it's because of different assembly code.
+> It should be the return value from ASAN leak detector.
+>
+> Maybe we can enable it using "ASAN_OPTIONS=3Ddetect_leaks=3D0"?
+> Probably with a comment that mentions we don't call
+> perf_session__delete() in perf annotate for a performance reason.
 
-> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-...
-> +#define __SFRAME_GET_USER(out, user_ptr, type)				\
-> +({									\
-> +	type __tmp;							\
-> +	if (get_user(__tmp, (type __user *)user_ptr))			\
-> +		return -EFAULT;						\
-> +	user_ptr += sizeof(__tmp);					\
-> +	out = __tmp;							\
-> +})
-> +
-> +#define SFRAME_GET_USER(out, user_ptr, size)				\
-> +({									\
-> +	switch (size) {							\
-> +	case 1:								\
-> +		__SFRAME_GET_USER(out, user_ptr, u8);			\
-> +		break;							\
-> +	case 2:								\
-> +		__SFRAME_GET_USER(out, user_ptr, u16);			\
-> +		break;							\
-> +	case 4:								\
-> +		__SFRAME_GET_USER(out, user_ptr, u32);			\
-> +		break;							\
-> +	default:							\
-> +		return -EINVAL;						\
-> +	}								\
-> +})
-> +
-> +static unsigned char fre_type_to_size(unsigned char fre_type)
-> +{
-> +	if (fre_type > 2)
-> +		return 0;
-> +	return 1 << fre_type;
-> +}
-> +
-> +static unsigned char offset_size_enum_to_size(unsigned char off_size)
-> +{
-> +	if (off_size > 2)
-> +		return 0;
-> +	return 1 << off_size;
-> +}
-...
-> +static int find_fre(struct sframe_section *sec, struct sframe_fde *fde,
-> +		    unsigned long ip, struct unwind_user_frame *frame)
-> +{
-> +	unsigned char fde_type = SFRAME_FUNC_FDE_TYPE(fde->info);
-> +	unsigned char fre_type = SFRAME_FUNC_FRE_TYPE(fde->info);
-> +	unsigned char offset_count, offset_size;
-> +	s32 cfa_off, ra_off, fp_off, ip_off;
-> +	void __user *f, *last_f = NULL;
-> +	unsigned char addr_size;
-> +	u32 last_fre_ip_off = 0;
-> +	u8 fre_info = 0;
-> +	int i;
-> +
-> +	addr_size = fre_type_to_size(fre_type);
-> +	if (!addr_size)
-> +		return -EINVAL;
-> +
-> +	ip_off = ip - (sec->sframe_addr + fde->start_addr);
-> +
-> +	f = (void __user *)sec->fres_addr + fde->fres_off;
-> +
-> +	for (i = 0; i < fde->fres_num; i++) {
-> +		u32 fre_ip_off;
-> +
-> +		SFRAME_GET_USER(fre_ip_off, f, addr_size);
-> +
-> +		if (fre_ip_off < last_fre_ip_off)
-> +			return -EINVAL;
-> +
-> +		last_fre_ip_off = fre_ip_off;
-> +
-> +		if (fde_type == SFRAME_FDE_TYPE_PCINC) {
-> +			if (ip_off < fre_ip_off)
-> +				break;
-> +		} else {
-> +			/* SFRAME_FDE_TYPE_PCMASK */
-> +			if (ip_off % fde->rep_size < fre_ip_off)
-> +				break;
-> +		}
-> +
-> +		SFRAME_GET_USER(fre_info, f, 1);
-> +
-> +		offset_count = SFRAME_FRE_OFFSET_COUNT(fre_info);
-> +		offset_size  = offset_size_enum_to_size(SFRAME_FRE_OFFSET_SIZE(fre_info));
-> +
-> +		if (!offset_count || !offset_size)
-> +			return -EINVAL;
-> +
-> +		last_f = f;
-> +		f += offset_count * offset_size;
-> +	}
-> +
-> +	if (!last_f)
-> +		return -EINVAL;
-> +
-> +	f = last_f;
-> +
-> +	SFRAME_GET_USER(cfa_off, f, offset_size);
+So doing things like not deleting things for performance reasons is
+okay but should be guarded by an "#ifndef NDEBUG" or worse case
+"#ifndef LEAK_SANITIZER", not always be on. The comment about a
+performance optimization belongs there. We should be trying to avoid
+disabling sanitizers in tests as otherwise we're missing the benefits
+of sanitizers. I'll see if doing this can to avoid the test skipping.
+It'd be nice if other people tested with sanitizers. I think we still
+want the features for if we get other issues in the future.
 
-SFRAME_GET_USER() does not work for the signed SFrame CFA offset.
-
-> +	offset_count--;
-> +
-> +	ra_off = sec->ra_off;
-> +	if (!ra_off) {
-> +		if (!offset_count--)
-> +			return -EINVAL;
-> +
-> +		SFRAME_GET_USER(ra_off, f, offset_size);
-
-Likewise for the signed SFrame RA offset.
-
-Excerpt from my added trace. Note the RA_off=65488 (unsigned) = 0xFFD0 = 
--48 (signed):
-
-unwind_user_next: WARNING: RA could not be obtained from user space 
-(IP=0x000003ffbb5f4218, CFA=0x000003ffc22f8f10, RA_off=65488)
-
-Excerpt from perf script:
-
-3ffbb5f4218 internal_fnwmatch+0x558 (/usr/lib64/libc.so.6)
-
-Excerpts from objdump -wt --sframe:
-
-00000000000f3cc0 l     F .text  000000000000195c 
-internal_fnwmatch
-
-func idx [1715]: pc = 0xf3cc0, size = 6492 bytes
-STARTPC         CFA       FP        RA           INFO
-00000000000f3cc0  sp+160    u         u            (1*1B)
-00000000000f3cc6  sp+160    c-72      c-48         (3*1B)
-00000000000f3cd0  sp+4256   c-72      c-48         (3*2B)
-00000000000f3cdc  sp+8352   c-72      c-48         (3*2B)
-00000000000f3ce8  sp+10792  c-72      c-48         (3*2B)
-00000000000f3f7e  sp+160    u         u            (1*1B)
-00000000000f3f80  sp+10792  c-72      c-48         (3*2B)
-
-> +	}
-> +
-> +	fp_off = sec->fp_off;
-> +	if (!fp_off && offset_count) {
-> +		offset_count--;
-> +		SFRAME_GET_USER(fp_off, f, offset_size);
-
-Likewise for the signed SFrame FP offset.
-
-> +	}
-> +
-> +	if (offset_count)
-> +		return -EINVAL;
-> +
-> +	frame->cfa_off = cfa_off;
-> +	frame->ra_off = ra_off;
-> +	frame->fp_off = fp_off;
-> +	frame->use_fp = SFRAME_FRE_CFA_BASE_REG_ID(fre_info) == SFRAME_BASE_REG_FP;
-> +
-> +	return 0;
-> +}
-...
-
-I have verified that reintroducing and using SFRAME_GET_USER_SIGNED() 
-works correctly.
-
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303) and z/VSE Support
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des 
-Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der 
-Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+Thanks,
+Ian
