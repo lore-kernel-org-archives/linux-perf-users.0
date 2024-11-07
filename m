@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFC6212EF5;
-	Thu,  7 Nov 2024 14:52:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1245212F13;
+	Thu,  7 Nov 2024 14:53:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730991173; cv=none; b=clM6jE+s+Jz7x6JtAozx8qBos3AA+kIoZbVkHsTu1fsG+7XU7LoMwdjfr16zNVPtm+m5hX/Qlo7XY88LsWHplyaZth0awwUocGVJfkGpEqyXLVAqbFZ9zIFyfsSXdH9z5MFFVwSO1iPPJhIOFKvaAIRvoMnJmKNpU5XD/+/TkA4=
+	t=1730991181; cv=none; b=CIQ2eb2mSBRg8gL/DxrfMoT2DwlkeVlaStOYgYwspmtMbNw5E61mBVBAn6t+AsrdIJGmqDoNsUxbGZZnYRcgmlFT/XzqUbAjuFryOVd12ufmwWnqLwkn8226wtXCJnPR1UkLJ+iH6/0Ldy/Ux9cLB15jm40+CEm9Bvg9eiW7avU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730991173; c=relaxed/simple;
-	bh=KSH4WAzi4UEuFjxwQ20KJeJtd2CrJXRhr/o51tJNrLU=;
+	s=arc-20240116; t=1730991181; c=relaxed/simple;
+	bh=aF5UWRxmpeI2jfApNUrAdqNXT9wZqj6b1Dborwa4GoA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YpSGV1RqaEAapm3MoCHLhDogL4nYq7sOlU/mLZTfl60Po9gsEYrLcjdOmLedNLJPSoKFmLG/HwhDYsjD1Nxiq6WXFJWbuOc7Y6/H7ljjYs6ltgQbeGmctyw5JLxXuWBm8e3f7ON5CBDUGh7laRVhCrEym+QdTHqVGIgyhxlo6v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SqT+4XAA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Yc3S5wBRj1pfmymLqqQK2Sjbf/dIcZJFKKMdq17HMcPDBd8yLQZs9RD/gI7swfwhnTeWuDVbcWuINF5sQhgMz9N1hWjfM1V8BPz0X3TgBg06QJRvebXVIua0Poi1rCikpaSLYPzP1CEiJviLOeDvqqmBRbJsq58DtXd8X8Dz4Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SNCa6TUE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SqT+4XAA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C80BC4CECC;
-	Thu,  7 Nov 2024 14:52:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SNCa6TUE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC241C4CECC;
+	Thu,  7 Nov 2024 14:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730991172;
-	bh=KSH4WAzi4UEuFjxwQ20KJeJtd2CrJXRhr/o51tJNrLU=;
+	s=k20201202; t=1730991181;
+	bh=aF5UWRxmpeI2jfApNUrAdqNXT9wZqj6b1Dborwa4GoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SqT+4XAAeduKqeKXvHV6YMVSAVOthWXEoLRmGcuJSYN5E4IB2JOqtfH3HoXCiOeQU
-	 j//mKeNMPumQg1X2ko9lJroRUQinq8U/4Q47due2cpYEvPV5VXlD9wmKrIqlO8QrID
-	 ZKFrjDj+5jJhJfdm7+j3DctITpmnNX8QZ1dMboOlSE+eg/Gc9OXzPBdXMxiU44trJw
-	 yQIVtKt6imP5XFVQArPWeNqBUosn2crQw98zEieeembwtiCXSxxAbl28XVc1iDYBFo
-	 L1qIGuL7yqebeUXhemOHhWYryUljGsmd+L0Non8A5OQF6jOwpA1DDCTTtvqZO8fSit
-	 dMs+/KERYhuvw==
+	b=SNCa6TUEBx7JwU3aP10vL5rJXIEUBibgAdOd0nIz3Yyby1wvnt9d5BsRzT6WS1XBq
+	 AH8P4S6qazho8ykpqwWkxEXfg6di6xiQZQ+NSMB9OYb6S9ETxMFvof4jxgFS1xowop
+	 jAo47OqgtKNHXkIKubI6UxmcPLxRcseFD3u8d3Hi90+RxROoTxgDA8oSsusNqHj4L3
+	 3i+0vDG52FRdJv1xCGu/5akmpDOAPFA7Gn0kZYBVnW26koH8qy82Q2wU9Y16XejSJZ
+	 h+I/ClGGEWo2aiMrOss26XJ+U2cukZp+VsM8VQMfNpnUN0+JglIDVU1thcj+KQVcTL
+	 e3HS5r/E57cvg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>
@@ -38,9 +38,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/6] perf-probe: Introduce quotation marks support
-Date: Thu,  7 Nov 2024 23:52:49 +0900
-Message-ID:  <173099116941.2431889.11609129616090100386.stgit@mhiramat.roam.corp.google.com>
+Subject: [PATCH v2 6/6] perf-probe: Replace unacceptable characters when generating event name
+Date: Thu,  7 Nov 2024 23:52:58 +0900
+Message-ID:  <173099117811.2431889.17590362733353379842.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
 In-Reply-To:  <173099112488.2431889.1181692857521683304.stgit@mhiramat.roam.corp.google.com>
 References:  <173099112488.2431889.1181692857521683304.stgit@mhiramat.roam.corp.google.com>
@@ -56,232 +56,173 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In non-C languages, it is possible to have ':' in the function names.
-It is possible to escape it with backslashes, but if there are too many
-backslashes, it is annoying.
-This introduce quotation marks (`"` or `'`) support.
+Replace unacceptable characters with '_' when generating event name from
+the probing function name. This is not for C program. For the C program,
+it will continue to remove suffixes.
+Note that this language checking depends on the debuginfo. So without the
+debuginfo, perf probe will always replaces unacceptable characters with
+'_'.
 
-For example, without quotes, we have to pass it as below
+For example.
 
-$ perf probe -x cro3 -L "cro3\:\:cmd\:\:servo\:\:run_show"
-<run_show@/work/cro3/src/cmd/servo.rs:0>
-      0  fn run_show(args: &ArgsShow) -> Result<()> {
-      1      let list = ServoList::discover()?;
-      2      let s = list.find_by_serial(&args.servo)?;
-      3      if args.json {
-      4          println!("{s}");
+$ ./perf probe -x cro3 -D \"cro3::cmd::servo::run_show\"
+p:probe_cro3/cro3_cmd_servo_run_show /work/cro3/target/x86_64-unknown-linux-gnu/debug/cro3:0x197530
 
-With quotes, we can more naturally write the function name as below;
-
-$ ./perf probe -x cro3 -L \"cro3::cmd::servo::run_show\"
-<run_show@/work/cro3/src/cmd/servo.rs:0>
-      0  fn run_show(args: &ArgsShow) -> Result<()> {
-      1      let list = ServoList::discover()?;
-      2      let s = list.find_by_serial(&args.servo)?;
-      3      if args.json {
-      4          println!("{s}");
+$ ./perf probe -x /work/go/example/outyet/main -D 'main.(*Server).poll'
+p:probe_main/main_Server_poll /work/go/example/outyet/main:0x353040
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
  Changes in v2:
-  - split str*_esq() functions from this patch.
-  - update for the changes in previous patches.
+  - Check dwarf language instead of checking wildcards.
 ---
- tools/perf/util/probe-event.c |   75 ++++++++++++++++++++++-------------------
- 1 file changed, 41 insertions(+), 34 deletions(-)
+ tools/perf/util/probe-event.c  |   32 +++++++++++++++++++++++++-------
+ tools/perf/util/probe-event.h  |    3 ++-
+ tools/perf/util/probe-finder.c |   15 +++++++++++++++
+ tools/perf/util/probe-finder.h |    6 +++++-
+ 4 files changed, 47 insertions(+), 9 deletions(-)
 
 diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 777ef00f0d3f..31e257c84cd1 100644
+index 31e257c84cd1..9eaf0fc7975a 100644
 --- a/tools/perf/util/probe-event.c
 +++ b/tools/perf/util/probe-event.c
-@@ -1076,6 +1076,7 @@ static int __show_line_range(struct line_range *lr, const char *module,
+@@ -2771,7 +2771,7 @@ int show_perf_probe_events(struct strfilter *filter)
  
- 	ret = debuginfo__find_line_range(dinfo, lr);
- 	if (!ret) {	/* Not found, retry with an alternative */
-+		pr_debug2("Failed to find line range in debuginfo. Fallback to alternative\n");
- 		ret = get_alternative_line_range(dinfo, lr, module, user);
- 		if (!ret)
- 			ret = debuginfo__find_line_range(dinfo, lr);
-@@ -1359,30 +1360,37 @@ static bool is_c_func_name(const char *name)
-  *         FNC[@SRC][:SLN[+NUM|-ELN]]
-  *
-  * FNC@SRC accepts `FNC@*` which forcibly specify FNC as function name.
-+ * SRC and FUNC can be quoted by double/single quotes.
-  */
- int parse_line_range_desc(const char *arg, struct line_range *lr)
+ static int get_new_event_name(char *buf, size_t len, const char *base,
+ 			      struct strlist *namelist, bool ret_event,
+-			      bool allow_suffix)
++			      bool allow_suffix, bool not_C_symname)
  {
--	char *range, *file, *name = strdup(arg);
-+	char *buf = strdup(arg);
-+	char *p;
- 	int err;
- 
--	if (!name)
-+	if (!buf)
+ 	int i, ret;
+ 	char *p, *nbase;
+@@ -2782,10 +2782,24 @@ static int get_new_event_name(char *buf, size_t len, const char *base,
+ 	if (!nbase)
  		return -ENOMEM;
  
- 	lr->start = 0;
- 	lr->end = INT_MAX;
+-	/* Cut off the dot suffixes (e.g. .const, .isra) and version suffixes */
+-	p = strpbrk(nbase, ".@");
+-	if (p && p != nbase)
+-		*p = '\0';
++	if (not_C_symname) {
++		/* Replace non-alnum with '_' */
++		char *s, *d;
++
++		s = d = nbase;
++		do {
++			if (*s && !isalnum(*s)) {
++				if (d != nbase && *(d - 1) != '_')
++					*d++ = '_';
++			} else
++				*d++ = *s;
++		} while (*s++);
++	} else {
++		/* Cut off the dot suffixes (e.g. .const, .isra) and version suffixes */
++		p = strpbrk(nbase, ".@");
++		if (p && p != nbase)
++			*p = '\0';
++	}
  
--	range = strpbrk_esc(name, ":");
--	if (range) {
--		*range++ = '\0';
-+	p = strpbrk_esq(buf, ":");
-+	if (p) {
-+		if (p == buf) {
-+			semantic_error("No file/function name in '%s'.\n", p);
-+			err = -EINVAL;
-+			goto err;
+ 	/* Try no suffix number */
+ 	ret = e_snprintf(buf, len, "%s%s", nbase, ret_event ? "__return" : "");
+@@ -2874,6 +2888,7 @@ static int probe_trace_event__set_name(struct probe_trace_event *tev,
+ 				       bool allow_suffix)
+ {
+ 	const char *event, *group;
++	bool not_C_symname = true;
+ 	char buf[64];
+ 	int ret;
+ 
+@@ -2888,8 +2903,10 @@ static int probe_trace_event__set_name(struct probe_trace_event *tev,
+ 			(strncmp(pev->point.function, "0x", 2) != 0) &&
+ 			!strisglob(pev->point.function))
+ 			event = pev->point.function;
+-		else
++		else {
+ 			event = tev->point.realname;
++			not_C_symname = !is_known_C_lang(tev->lang);
 +		}
-+		*(p++) = '\0';
- 
--		err = parse_line_num(&range, &lr->start, "start line");
-+		err = parse_line_num(&p, &lr->start, "start line");
- 		if (err)
- 			goto err;
- 
--		if (*range == '+' || *range == '-') {
--			const char c = *range++;
-+		if (*p == '+' || *p == '-') {
-+			const char c = *(p++);
- 
--			err = parse_line_num(&range, &lr->end, "end line");
-+			err = parse_line_num(&p, &lr->end, "end line");
- 			if (err)
- 				goto err;
- 
-@@ -1406,42 +1414,41 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
- 				       " than end line.\n");
- 			goto err;
- 		}
--		if (*range != '\0') {
--			semantic_error("Tailing with invalid str '%s'.\n", range);
-+		if (*p != '\0') {
-+			semantic_error("Tailing with invalid str '%s'.\n", p);
- 			goto err;
- 		}
  	}
+ 	if (pev->group && !pev->sdt)
+ 		group = pev->group;
+@@ -2900,7 +2917,8 @@ static int probe_trace_event__set_name(struct probe_trace_event *tev,
  
--	file = strpbrk_esc(name, "@");
--	if (file) {
--		*file++ = '\0';
--		if (strcmp(file, "*")) {
--			lr->file = strdup_esc(file);
-+	p = strpbrk_esq(buf, "@");
-+	if (p) {
-+		*p++ = '\0';
-+		if (strcmp(p, "*")) {
-+			lr->file = strdup_esq(p);
- 			if (lr->file == NULL) {
- 				err = -ENOMEM;
- 				goto err;
- 			}
- 		}
--		if (*name != '\0')
--			lr->function = name;
-+		if (*buf != '\0')
-+			lr->function = strdup_esq(buf);
- 		if (!lr->function && !lr->file) {
- 			semantic_error("Only '@*' is not allowed.\n");
- 			err = -EINVAL;
- 			goto err;
- 		}
--	} else if (strpbrk_esc(name, "/."))
--		lr->file = name;
--	else if (is_c_func_name(name))/* We reuse it for checking funcname */
--		lr->function = name;
-+	} else if (strpbrk_esq(buf, "/."))
-+		lr->file = strdup_esq(buf);
-+	else if (is_c_func_name(buf))/* We reuse it for checking funcname */
-+		lr->function = strdup_esq(buf);
- 	else {	/* Invalid name */
--		semantic_error("'%s' is not a valid function name.\n", name);
-+		semantic_error("'%s' is not a valid function name.\n", buf);
- 		err = -EINVAL;
- 		goto err;
+ 	/* Get an unused new event name */
+ 	ret = get_new_event_name(buf, sizeof(buf), event, namelist,
+-				 tev->point.retprobe, allow_suffix);
++				 tev->point.retprobe, allow_suffix,
++				 not_C_symname);
+ 	if (ret < 0)
+ 		return ret;
+ 
+diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
+index 7e3b6c3d1f74..6516105f43e2 100644
+--- a/tools/perf/util/probe-event.h
++++ b/tools/perf/util/probe-event.h
+@@ -57,7 +57,8 @@ struct probe_trace_event {
+ 	char				*event;	/* Event name */
+ 	char				*group;	/* Group name */
+ 	struct probe_trace_point	point;	/* Trace point */
+-	int				nargs;	/* Number of args */
++	int					nargs;	/* Number of args */
++	int					lang;	/* Dwarf language code */
+ 	bool				uprobes;	/* uprobes only */
+ 	struct probe_trace_arg		*args;	/* Arguments */
+ };
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 630e16c54ed5..13ff45d3d6a4 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -35,6 +35,19 @@
+ /* Kprobe tracer basic type is up to u64 */
+ #define MAX_BASIC_TYPE_BITS	64
+ 
++bool is_known_C_lang(int lang)
++{
++	switch (lang) {
++	case DW_LANG_C89:
++	case DW_LANG_C:
++	case DW_LANG_C99:
++	case DW_LANG_C11:
++		return true;
++	default:
++		return false;
++	}
++}
++
+ /*
+  * Probe finder related functions
+  */
+@@ -1272,6 +1285,8 @@ static int add_probe_trace_event(Dwarf_Die *sc_die, struct probe_finder *pf)
+ 		ret = -ENOMEM;
+ 		goto end;
  	}
++	tev->lang = dwarf_srclang(dwarf_diecu(sc_die, &pf->cu_die,
++										  NULL, NULL));
  
--	return 0;
- err:
--	free(name);
-+	free(buf);
- 	return err;
- }
+ 	pr_debug("Probe point found: %s+%lu\n", tev->point.symbol,
+ 		 tev->point.offset);
+diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-finder.h
+index 3add5ff516e1..04a52d5fd568 100644
+--- a/tools/perf/util/probe-finder.h
++++ b/tools/perf/util/probe-finder.h
+@@ -26,6 +26,9 @@ static inline int is_c_varname(const char *name)
+ #include "dwarf-aux.h"
+ #include "debuginfo.h"
  
-@@ -1449,19 +1456,19 @@ static int parse_perf_probe_event_name(char **arg, struct perf_probe_event *pev)
- {
- 	char *ptr;
++/* Check the language code is known C */
++bool is_known_C_lang(int lang);
++
+ /* Find probe_trace_events specified by perf_probe_event from debuginfo */
+ int debuginfo__find_trace_events(struct debuginfo *dbg,
+ 				 struct perf_probe_event *pev,
+@@ -103,7 +106,8 @@ struct line_finder {
+ 	Dwarf_Die		sp_die;
+ 	int			found;
+ };
+-
++#else
++#define is_known_C_lang(lang) (false)
+ #endif /* HAVE_DWARF_SUPPORT */
  
--	ptr = strpbrk_esc(*arg, ":");
-+	ptr = strpbrk_esq(*arg, ":");
- 	if (ptr) {
- 		*ptr = '\0';
- 		if (!pev->sdt && !is_c_func_name(*arg))
- 			goto ng_name;
--		pev->group = strdup_esc(*arg);
-+		pev->group = strdup_esq(*arg);
- 		if (!pev->group)
- 			return -ENOMEM;
- 		*arg = ptr + 1;
- 	} else
- 		pev->group = NULL;
- 
--	pev->event = strdup_esc(*arg);
-+	pev->event = strdup_esq(*arg);
- 	if (pev->event == NULL)
- 		return -ENOMEM;
- 
-@@ -1500,7 +1507,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 			arg++;
- 	}
- 
--	ptr = strpbrk_esc(arg, ";=@+%");
-+	ptr = strpbrk_esq(arg, ";=@+%");
- 	if (pev->sdt) {
- 		if (ptr) {
- 			if (*ptr != '@') {
-@@ -1514,7 +1521,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 				pev->target = build_id_cache__origname(tmp);
- 				free(tmp);
- 			} else
--				pev->target = strdup_esc(ptr + 1);
-+				pev->target = strdup_esq(ptr + 1);
- 			if (!pev->target)
- 				return -ENOMEM;
- 			*ptr = '\0';
-@@ -1555,7 +1562,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 			file_spec = true;
- 	}
- 
--	ptr = strpbrk_esc(arg, ";:+@%");
-+	ptr = strpbrk_esq(arg, ";:+@%");
- 	if (ptr) {
- 		nc = *ptr;
- 		*ptr++ = '\0';
-@@ -1564,7 +1571,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 	if (arg[0] == '\0')
- 		tmp = NULL;
- 	else {
--		tmp = strdup_esc(arg);
-+		tmp = strdup_esq(arg);
- 		if (tmp == NULL)
- 			return -ENOMEM;
- 	}
-@@ -1602,7 +1609,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 				return -ENOMEM;
- 			break;
- 		}
--		ptr = strpbrk_esc(arg, ";:+@%");
-+		ptr = strpbrk_esq(arg, ";:+@%");
- 		if (ptr) {
- 			nc = *ptr;
- 			*ptr++ = '\0';
-@@ -1631,7 +1638,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 			}
- 			if (!strcmp(arg, "*"))
- 				break;
--			pp->file = strdup_esc(arg);
-+			pp->file = strdup_esq(arg);
- 			if (pp->file == NULL)
- 				return -ENOMEM;
- 			break;
+ #endif /*_PROBE_FINDER_H */
 
