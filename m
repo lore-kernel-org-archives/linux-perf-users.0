@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967A9212EF7;
-	Thu,  7 Nov 2024 14:52:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D53212D31;
+	Thu,  7 Nov 2024 14:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730991146; cv=none; b=WZ2449U54SCIOn7lc3tFmxTKYU74C1C/5CL10Pghxcgk1LUtok+EIYqKWuO7tw2li9fcRFWSSLIcM8I/pZsvNcxMgJJn/A6g0KdsGJckAhx2jTfYDogRds6ZDQeQi8MhiQoQw5J/nlOusBZKJf3+4JG67uYJyuZ0vgoBTtSxBRU=
+	t=1730991155; cv=none; b=dxSjhfEfADrZ4YyFOnosOYui8v8FuyuwWSVSKU257KpNJjLG3N2R8PB3dRRF/BMgmxN08wzGfx3phVqQCZuz4JtCs+5E7TN6RqxOnGNf8lZRcumbostJbtGOb/F48tXlXRVy7tM32NKOA5NKdUiGiiujOIT6+8wuz41kYlnRR6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730991146; c=relaxed/simple;
-	bh=R1SFzj/BMW6nwC7W6jz7Tajr09BNZ4XHK+JOMxdxMUM=;
+	s=arc-20240116; t=1730991155; c=relaxed/simple;
+	bh=BvEaGbKvMA4VXey4QzVmBrEbnIqbTzoxmJ27zc63m2E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=om1nSKD/ONav9dZPjfU95Z6Soo0q5Gji1I4/xWO/c2KQ6kS5Zhxgoam6akFZFgHNYzh6rhsodWh8UnCXk7vgk6sTtNhjwgmj0w2NREywckBtMIgUHFr8AnYH1XAkGKyQDMZJ9+QZYe5rD0IvAu3FGt9+y6SwmUKdeJ7K9SKcwJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSq0+A1z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Afk/M7zH2mq97YbnAT842VpWuK42atRX1cYzazLxDgiBa+mE5moQZHQAoVrNk0pXXb94eLjrFKQ+6ukHxPeH9CZ4GX4Glq7zqlOvPinYBzAlnXEpm5WLhS0DN+kyKxAybmf/zsS5rXtclvPUJchnz8lZXgUJUvmxPXP6g/6K7aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHqXc8TV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TSq0+A1z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89DC5C4CECC;
-	Thu,  7 Nov 2024 14:52:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHqXc8TV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E334C4CECC;
+	Thu,  7 Nov 2024 14:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730991146;
-	bh=R1SFzj/BMW6nwC7W6jz7Tajr09BNZ4XHK+JOMxdxMUM=;
+	s=k20201202; t=1730991155;
+	bh=BvEaGbKvMA4VXey4QzVmBrEbnIqbTzoxmJ27zc63m2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TSq0+A1zFKKET+q9tjS3hyGD/TS7X67ZaeJJMZADclmN8Bpanh2fmlzTfAaa9ZGpd
-	 KITxN7wANokZwM8ATyQyUpUW/1fHEyq9ixzMPUY1/sccTCOCAZhBGT9qlf2zZQ7vlk
-	 QmU+RBsDZZifzTMJjgAxChLO6mZo/Bgsa6DrMHv7or77nvld2BSYiec4hVIuLYgm/t
-	 SlSmbGxI/Hgiu07KVDyhEbaNuXp6AAP6bt4j0chGqWG3XIcXN5eRYTumNS0NkjZTel
-	 fNSCX5bDbNFnSoBaNmAknCobYVHE/bgJMUl0ZRhFoYi/Ky//rIjceLnxB5XeSjakdU
-	 wY2hSuviHnW+Q==
+	b=sHqXc8TVMXEgSTmI9AlU8fQfuotOEczC+pllvZXkaq6iM5z11L0g7Whb83b/gXknk
+	 ywB+1mp4tGVwvO1juDqebbXBmUHiuP6bmVWUWKwtL2g6PlT7PZj/fZKoqQp10GnqYo
+	 6NdPdXQlz3gBeXPphremfHbxKHd3z/ZdX0pJesgi+CFqvv6T4Bx7XPferSH1Mz8U6z
+	 /VkPx44orrf42qcClvQ3DCSitB3wqtEzuRsIMOhMgLgjJw17srJcaSfPVSRsp7lIPG
+	 EjgXrSWTjW1szNtlFjiLKznhvV7FHZQiVjch3deczDBghsp8w+ccUU2F8YYkNdx3ZF
+	 ekya7H3HWTWDw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>
@@ -38,9 +38,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/6] perf-probe: Fix to ignore escaped characters in --lines option
-Date: Thu,  7 Nov 2024 23:52:22 +0900
-Message-ID:  <173099114272.2431889.4820591557298941207.stgit@mhiramat.roam.corp.google.com>
+Subject: [PATCH v2 3/6] perf-probe: Accept FUNC@* to specify function name explicitly
+Date: Thu,  7 Nov 2024 23:52:31 +0900
+Message-ID:  <173099115149.2431889.13682110856853358354.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
 In-Reply-To:  <173099112488.2431889.1181692857521683304.stgit@mhiramat.roam.corp.google.com>
 References:  <173099112488.2431889.1181692857521683304.stgit@mhiramat.roam.corp.google.com>
@@ -56,44 +56,66 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Use strbprk_esc() and strdup_esc() to ignore escaped characters in
---lines option. This has been done for other options, but only --lines
-option doesn't.
+In Golang, the function name will have the '.', and perf probe
+misinterpret it is a file name. To mitigate this situation, introduce
+`function@*` so that user can explicitly specify that is a function
+name.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- tools/perf/util/probe-event.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Changes in v2:
+  - Added new patch.
+---
+ tools/perf/util/probe-event.c |   22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 6bfe7ead3681..edc205e4b0ee 100644
+index edc205e4b0ee..777ef00f0d3f 100644
 --- a/tools/perf/util/probe-event.c
 +++ b/tools/perf/util/probe-event.c
-@@ -1369,7 +1369,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
- 	lr->start = 0;
- 	lr->end = INT_MAX;
+@@ -1357,6 +1357,8 @@ static bool is_c_func_name(const char *name)
+  *
+  *         SRC[:SLN[+NUM|-ELN]]
+  *         FNC[@SRC][:SLN[+NUM|-ELN]]
++ *
++ * FNC@SRC accepts `FNC@*` which forcibly specify FNC as function name.
+  */
+ int parse_line_range_desc(const char *arg, struct line_range *lr)
+ {
+@@ -1412,13 +1414,21 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
  
--	range = strchr(name, ':');
-+	range = strpbrk_esc(name, ":");
- 	if (range) {
- 		*range++ = '\0';
- 
-@@ -1410,7 +1410,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
- 		}
- 	}
- 
--	file = strchr(name, '@');
-+	file = strpbrk_esc(name, "@");
+ 	file = strpbrk_esc(name, "@");
  	if (file) {
- 		*file = '\0';
- 		lr->file = strdup(++file);
-@@ -1419,7 +1419,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+-		*file = '\0';
+-		lr->file = strdup(++file);
+-		if (lr->file == NULL) {
+-			err = -ENOMEM;
++		*file++ = '\0';
++		if (strcmp(file, "*")) {
++			lr->file = strdup_esc(file);
++			if (lr->file == NULL) {
++				err = -ENOMEM;
++				goto err;
++			}
++		}
++		if (*name != '\0')
++			lr->function = name;
++		if (!lr->function && !lr->file) {
++			semantic_error("Only '@*' is not allowed.\n");
++			err = -EINVAL;
  			goto err;
  		}
- 		lr->function = name;
--	} else if (strchr(name, '/') || strchr(name, '.'))
-+	} else if (strpbrk_esc(name, "/."))
+-		lr->function = name;
+ 	} else if (strpbrk_esc(name, "/."))
  		lr->file = name;
  	else if (is_c_func_name(name))/* We reuse it for checking funcname */
- 		lr->function = name;
+@@ -1619,6 +1629,8 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 				semantic_error("SRC@SRC is not allowed.\n");
+ 				return -EINVAL;
+ 			}
++			if (!strcmp(arg, "*"))
++				break;
+ 			pp->file = strdup_esc(arg);
+ 			if (pp->file == NULL)
+ 				return -ENOMEM;
 
