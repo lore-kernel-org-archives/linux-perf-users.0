@@ -1,207 +1,201 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E943120EA31;
-	Thu,  7 Nov 2024 17:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A52191F66
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Nov 2024 17:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730998810; cv=none; b=SML7pAU3vCDD/JnYPuvk8m8b1cb30R3krAF7gAiRP8m/+twuAW1LIWp0PJwH6ItGDVBzVykkO34iseN3+HuPVtJ0VE8w6ZT8R9Ar0kMFrQJFzQdCYGIZ96MAcXzLOhyDOiSlX7h4NARplRrF7pKNYl+4niFP/WvDwHPXoV85BZg=
+	t=1730999558; cv=none; b=qeZNux3wMnnMHWZ21jEnGS9OMu+RFQB+qIe+AOUB9wfhon8aHAZEDigrCiGzxLiZmh6UPOoiziRLLIZtxTqZFJeYZct/gOVCUcjr7zWH0zAkpex9HPCIYRcSV9Vn5Mg8h0BM598j0H0e6OgjS/cYYjY/uIc7e5aVk9cZX7oGdx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730998810; c=relaxed/simple;
-	bh=3y7x3t5gVFxOW6z3Jq8Cosco9ze83OAiKthqUh4vERE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uGl6vFVyR+ea3F2I8XziV7a68aHlHOmcVyQMknk8b3wVRjO3Ralbc1ygvVPJYtJU7LyQvFWFfWdmTH8M7OY3wVB4KKE4bSkJ8//OiXATtZoA6wXqFze47jRsvJbjKVk5koI+vB80nCF5yezslIERJdaHF2khkZU/ZdWBbrnKHd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JCU8k+Mm; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1730999558; c=relaxed/simple;
+	bh=Fko8ahXBkH5aH664McIMR1mSzMhk8KH28E/TtmDGays=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PBvsFzJcbWdk8UKRSrqWTxkylriEBKUkF2YstJb0dtM5RThYscK+jDxs0BwirTon8sd/mB3WkhUgSD6Nu00s3z1p3XaIylGWTA01+9XnYBrJnz2MRfV3qYWD5d+NRMFyuxt5afckRxpnfLvltb5OyaRP+k2Cn7hFXWMdPfS8mlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BKBcjveg; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JCU8k+Mm"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A7GAD2Q015652;
-	Thu, 7 Nov 2024 16:59:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=WXFoL5
-	zwptAunsfgZklfDDu9wxucMsjwItFltAGzzEE=; b=JCU8k+MmS2s37V0BfkwHRm
-	sMk1q/mKung6ovNW5wFht6yAwPNgEntPFm0dgEQoURCe80BesHE+gS+ecQamPUD+
-	tzQ1zRGjKBATBnnLR+vDt+wtQutbWD3kx3yDMHTPQGlWQY3jurOxXAvVho5mIEJt
-	hPSaf/+NgQEjL4LJpN4PCYYLwFQsCfOkIFLc9RY678hDuztAjVnqF0mI94kXDK6s
-	HNkP97IGnjdbs+J58+YzArrvAJal4NyMHMQNxeR9N3WZQiCGtGEA7imgJXCmanHS
-	oxXXCKXO4Hwm36SBuXPOuXMZCDc319DGXIh7UPP0N/BMd6PrjDvO9ojhjk+/8V5A
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42s0u106vu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Nov 2024 16:59:14 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4A7GxEYk020254;
-	Thu, 7 Nov 2024 16:59:14 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42s0u106vm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Nov 2024 16:59:14 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4A7DPaq1012237;
-	Thu, 7 Nov 2024 16:59:13 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 42p1410g0b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Nov 2024 16:59:12 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4A7Gx9Za34800160
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 7 Nov 2024 16:59:09 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5F1A220043;
-	Thu,  7 Nov 2024 16:59:09 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F328220040;
-	Thu,  7 Nov 2024 16:59:08 +0000 (GMT)
-Received: from [9.152.222.93] (unknown [9.152.222.93])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  7 Nov 2024 16:59:08 +0000 (GMT)
-Message-ID: <1f83be89-b816-48a3-a7ee-9b72f07b558e@linux.ibm.com>
-Date: Thu, 7 Nov 2024 17:59:08 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
-Content-Language: en-US
-To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
- <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: D6BC3dfdxaCvSOwDYqIlspUzLTj5G94D
-X-Proofpoint-ORIG-GUID: s0m_uslS-RNTtw7xnE1ZGot58aLVATYM
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BKBcjveg"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20ca03687fdso203455ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Nov 2024 09:12:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730999556; x=1731604356; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5NWh57MfDRD05DzT/rzXr1TJz9IgYGlNmYb4EAOieGo=;
+        b=BKBcjvegV0tVSapGX0HSXKi7K1H7eTQmbjUonKWhwBSZwp7p55yQUKK5Tt4W04mX9J
+         KffkGsVvXpVlwAy2Al68gs6Vgm9/nWG5AZfUsuncK1oE/DMBh8p3DezYn46s/qswImVj
+         6qeqm+A/c/lgwvEIHnLQ57a1+pyrxp7Wq48y+RC98iXwRQHASdlT2YBizjOsPm6qfS0j
+         1f80fWYOGXq/HV5yuD1pwHfE2uxqPnIz+8ICGCIU2bHD6tUC7/dYDYRB89aVwcjEUp4c
+         vnXpzg7uFsngKjkPco7rDZmF8HSa+HmTkoRBDtCEn7mtZXW61RQU6kVoo5het+dG9eeb
+         +79A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730999556; x=1731604356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5NWh57MfDRD05DzT/rzXr1TJz9IgYGlNmYb4EAOieGo=;
+        b=FqgvuUEbvZnHoVsjApluf/LxTNOcYwGBIdR159p5/ylpphPg7KYKPfAchwM12KnTue
+         FHg84vTE1voFpYZwR55kiateun4uwSas+otND6a3Hsesp4/PXv5GAZSG71rhNH8asysg
+         ip3mMxUD93hcHrW90qgEVcy9c6q3KZm6IJDwVWelDaIyWrivDFmkT/sxclVRbWWbdjFp
+         QOO5useAFxJ43/rfjHk90MNGy0Ju6UHH/uvyyJG54cgJhKueq9WqljxnNf+0YdIshX0T
+         kNL0nNabrft7xY7l+votU4tmvww29OKtCcDMXjQOM88T2uSmKCc595HJxYSTbsDFBN0P
+         EMTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjyQVy35i0+/U92wccVPN0ijWoZGlN3Pwoiat8SrUmDB6HLIEVruUEK7u8awnSUjeER2veFo7/bYcwHSJBB8hq@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1XdRY0pevXSm9PDPFwzqYrxaX3Iqdbu6RZtIcC9esBn0H+Tam
+	h1eK54Q0zBDNGL+krN2TlpQACIHzLuiRWxtkFQJc0fDeB5utPblUEsJCszjWEHK9Zc0d/19awvM
+	zihjYJOz32BghVUtoDECJ5j2hRAK5m4PBdd3Q
+X-Gm-Gg: ASbGnctTRsMjJnnZDXqgHuN9Uo70xD6DPTNVSeFmsW3Zo6xwRgKIXWQh8cuI9mqMxmA
+	EhuBcdqusmd+TftPzxiJYP01zpshL/v69JXrg1PMSvYZpnyT1i8viQIoIapkc6/I=
+X-Google-Smtp-Source: AGHT+IEpMNMu/yZ92qvLmOnuklE7ty5UbDfNsSGZQy8H1saraOvpqVzLvr+TkG5LQ9RC7i5mxNV+DpzJOwqrKT/v+OM=
+X-Received: by 2002:a17:903:234a:b0:20c:675d:920f with SMTP id
+ d9443c01a7336-21174a00513mr3732345ad.25.1730999555396; Thu, 07 Nov 2024
+ 09:12:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 malwarescore=0 adultscore=0 spamscore=0 impostorscore=0
- clxscore=1015 suspectscore=0 mlxlogscore=999 phishscore=0
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2409260000 definitions=main-2411070129
+References: <20240926175035.408668-1-irogers@google.com> <20240926175035.408668-10-irogers@google.com>
+ <0d48bf82-5de2-4928-bd15-1c5abfd4f087@linux.intel.com>
+In-Reply-To: <0d48bf82-5de2-4928-bd15-1c5abfd4f087@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 7 Nov 2024 09:12:23 -0800
+Message-ID: <CAP-5=fWGGQh_Kwr5mWPQv6RO=o8bk2mmShJ6MjR9i1v42e0Ziw@mail.gmail.com>
+Subject: Re: [PATCH v4 09/22] perf jevents: Add ports metric group giving
+ utilization on Intel
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
+	Samantha Alt <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 28.10.2024 22:47, Josh Poimboeuf wrote:
-...
-> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-...
-> +static int find_fde(struct sframe_section *sec, unsigned long ip,
-> +		    struct sframe_fde *fde)
-> +{
-> +	struct sframe_fde __user *first, *last, *found = NULL;
-> +	u32 ip_off, func_off_low = 0, func_off_high = -1;
-> +
-> +	ip_off = ip - sec->sframe_addr;
-> +
-> +	first = (void __user *)sec->fdes_addr;
-> +	last = first + sec->fdes_nr;
+On Thu, Nov 7, 2024 at 7:00=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
+>
+>
+>
+> On 2024-09-26 1:50 p.m., Ian Rogers wrote:
+> > The ports metric group contains a metric for each port giving its
+> > utilization as a ratio of cycles. The metrics are created by looking
+> > for UOPS_DISPATCHED.PORT events.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/pmu-events/intel_metrics.py | 33 ++++++++++++++++++++++++--
+> >  1 file changed, 31 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-ev=
+ents/intel_metrics.py
+> > index f4707e964f75..3ef4eb868580 100755
+> > --- a/tools/perf/pmu-events/intel_metrics.py
+> > +++ b/tools/perf/pmu-events/intel_metrics.py
+> > @@ -1,12 +1,13 @@
+> >  #!/usr/bin/env python3
+> >  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> >  from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEnco=
+deMetric,
+> > -                    JsonEncodeMetricGroupDescriptions, LoadEvents, Met=
+ric,
+> > -                    MetricGroup, MetricRef, Select)
+> > +                    JsonEncodeMetricGroupDescriptions, Literal, LoadEv=
+ents,
+> > +                    Metric, MetricGroup, MetricRef, Select)
+> >  import argparse
+> >  import json
+> >  import math
+> >  import os
+> > +import re
+> >  from typing import Optional
+> >
+> >  # Global command line arguments.
+> > @@ -260,6 +261,33 @@ def IntelBr():
+> >                       description=3D"breakdown of retired branch instru=
+ctions")
+> >
+> >
+> > +def IntelPorts() -> Optional[MetricGroup]:
+> > +  pipeline_events =3D json.load(open(f"{_args.events_path}/x86/{_args.=
+model}/pipeline.json"))
+> > +
+> > +  core_cycles =3D Event("CPU_CLK_UNHALTED.THREAD_P_ANY",
+> > +                      "CPU_CLK_UNHALTED.DISTRIBUTED",
+> > +                      "cycles")
+> > +  # Number of CPU cycles scaled for SMT.
+> > +  smt_cycles =3D Select(core_cycles / 2, Literal("#smt_on"), core_cycl=
+es)
+> > +
+> > +  metrics =3D []
+> > +  for x in pipeline_events:
+> > +    if "EventName" in x and re.search("^UOPS_DISPATCHED.PORT", x["Even=
+tName"]):
+> > +      name =3D x["EventName"]
+> > +      port =3D re.search(r"(PORT_[0-9].*)", name).group(0).lower()
+> > +      if name.endswith("_CORE"):
+> > +        cyc =3D core_cycles
+> > +      else:
+> > +        cyc =3D smt_cycles
+> > +      metrics.append(Metric(port, f"{port} utilization (higher is bett=
+er)",
+> > +                            d_ratio(Event(name), cyc), "100%"))
+>
+>
+> The generated metric highly depends on the event name, which is very
+> fragile. We will probably have the same event in a new generation, but
+> with a different name. Long-term maintenance could be a problem.
+> Is there an idea regarding how to sync the event names for new generation=
+s?
 
-Could it be that this needs to be:
+I agree with the idea that it is fragile, it is also strangely robust
+as you say, new generations will gain support if they follow the same
+naming convention. We have tests that load bearing metrics exists on
+our platforms so maybe the appropriate place to test for existence is
+in Weilin's metrics test.
 
-	last = first + sec->fdes_nr - 1;
 
-> +	while (first <= last) {
-> +		struct sframe_fde __user *mid;
-> +		u32 func_off;
-> +
-> +		mid = first + ((last - first) / 2);
-> +
-> +		if (get_user(func_off, (s32 __user *)mid))
-> +			return -EFAULT;
-> +
-> +		if (ip_off >= func_off) {
-> +			/* validate sort order */
-> +			if (func_off < func_off_low)
-> +				return -EINVAL;
+> Maybe we should improve the event generation script and do an automatic
+> check to tell which metrics are missed. Then we may decide if updating
+> the new event name, dropping the metric or adding a different metric.
 
-Otherwise I run into this when the IP is within the function whose FDE 
-is the last one in the .sframe section:
+So I'm not sure it is a bug to not have the metric, if it were we
+could just throw rather than return None. We're going to run the
+script for every model including old models like nehalem, so I've
+generally kept it as None. I think doing future work on testing is
+probably best. It would also indicate use of the metric if people
+notice it missing (not that the script aims for that :-) ).
 
-find_fde: IP=0x000000000110fbcc: ERROR: func_off < func_off_low 
-(func_off=196608, func_off_low=4294224904)
+Thanks,
+Ian
 
-110fbcc dump_sframe+0x2ec (/opt/binutils-sframe2/bin/objdump)
-
-func idx [2275]: pc = 0x110f8e0, size = 3310 bytes <dump_sframe>
-STARTPC         CFA       FP        RA           INFO
-000000000110f8e0  sp+160    u         u            (1*1B)
-000000000110f8e6  sp+160    c-72      c-48         (3*1B)
-000000000110f8f6  sp+632    c-72      c-48         (3*1B)
-000000000110fa82  sp+160    u         u            (1*1B)
-000000000110fa88  sp+632    c-72      c-48         (3*1B)
-0000000001110486  sp+160    u         u            (1*1B)
-000000000111048c  sp+632    c-72      c-48         (3*1B)
-0000000001110574  sp+160    u         u            (1*1B)
-000000000111057a  sp+632    c-72      c-48         (3*1B)
-
-> +
-> +			func_off_low = func_off;
-> +
-> +			found = mid;
-> +			first = mid + 1;
-> +		} else {
-> +			/* validate sort order */
-> +			if (func_off > func_off_high)
-> +				return -EINVAL;
-> +
-> +			func_off_high = func_off;
-> +
-> +			last = mid - 1;
-> +		}
-> +	}
-> +
-> +	if (!found)
-> +		return -EINVAL;
-> +
-> +	if (copy_from_user(fde, found, sizeof(*fde)))
-> +		return -EFAULT;
-> +
-> +	/* check for gaps */
-> +	if (ip_off < fde->start_addr || ip_off >= fde->start_addr + fde->size)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-
-Thanks and regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303) and z/VSE Support
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des 
-Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der 
-Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+> Thanks,
+> Kan
+>
+> > +  if len(metrics) =3D=3D 0:
+> > +    return None
+> > +
+> > +  return MetricGroup("ports", metrics, "functional unit (port) utiliza=
+tion -- "
+> > +                     "fraction of cycles each port is utilized (higher=
+ is better)")
+> > +
+> > +
+> >  def IntelSwpf() -> Optional[MetricGroup]:
+> >    ins =3D Event("instructions")
+> >    try:
+> > @@ -352,6 +380,7 @@ def main() -> None:
+> >        Smi(),
+> >        Tsx(),
+> >        IntelBr(),
+> > +      IntelPorts(),
+> >        IntelSwpf(),
+> >    ])
+> >
+>
