@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B30A219C93
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 Nov 2024 16:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E61219CA5
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Nov 2024 16:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730996460; cv=none; b=EHVILXy0lipYxZgb1/14LMeGQiYOfbO1PzRk4KT//pVajXVxxo94k+avoGLYeK9zTH0UcDTj0pY9Fmfy5UZR8OsF9elvnwxPIKjMaum72zUclDg745Z6Kpe7ZuwvD6BPE/XtWjkONJjfbs7KpkxW3WlJY9x9FrCvqA5SwL9IQkQ=
+	t=1730996461; cv=none; b=YJk83xLgv/CsMjszkR1EMsq6Se6Rawk/JcbdOc9By1t8yZAz2HWPWozVD3rRAoMx2w2nbm2U6pq9IplI/iJQe7cEZDBRxFCfgwUgZIxvdmpRMv3kzlE6/SR7JR4FDvRdIH9rknCScaBfwqoDtJpAdpeDaIY9siMXe+cGte8Ti/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730996460; c=relaxed/simple;
-	bh=CajUs616qyGppVWZm3vfBDC8+tgu0BtGWij+wkPy5Mo=;
+	s=arc-20240116; t=1730996461; c=relaxed/simple;
+	bh=yZE5usv7POpAFkWXsWAe3Jof3/secgiiDH647AJzosE=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=XOFbUHQLDRAfLWBsH5CrOJrGwG8vH/s2wRJrqN4PxoJQqV/52RtY2CrJutR5UcdiRmaY1bCLbkYhS4Zbjgod7IS/15M5P75+f2D8R7QlB9YKLxIU17w/hoQ4eiLeKhhGOX92FjsWuH0dvwL+lsuyAR3xcoGekr4vB6iHTXaONRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=18y3afOa; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=Hwfh64GnJsit7e1hVONIBk1RcfWjf0EpJtuC/FKZ2+EnKheaLnp1DFiAVkqdq725IjFvC1x/GASyYDbUsTkUFq0WCWwR1DI8LkEzNbtTQ2XmU1C7LWfec/6Da1YxTlr28C2eQFCQ805sqrPAED7ZpabUUgMsbHJ1YW4qFeLN2xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R7yQO+Re; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="18y3afOa"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e9d6636498so21933297b3.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Nov 2024 08:20:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R7yQO+Re"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e3314237b86so1969996276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Nov 2024 08:20:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730996456; x=1731601256; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1730996459; x=1731601259; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=OmDxOz/jwQKQ9IxxvIQzkp5N2zsrObhsgCU4K9BCHGc=;
-        b=18y3afOaEsuDgT2+2V/ctSZfF7MOErusX0gPmmS7dk/dJUuWKWeY+/SEuzQzG3SQVD
-         FQlFFsGyu/+qKJ4S+zCA3SeCnidWhMzhg2IHp17TrKt13FWPBv/O10JszKGSSWuH3MyE
-         zQcudwDuI5AXsiq/d8hn7tdgeOopHqe+WjZ1U2xbs2yZ3tVQE61N0SXRkP1JA9lDgAbj
-         FgG0ifHH6eb3kTdRI6EfvjhMPbsAtWPGRp76hjDbJORywkduLAFZXbhEuUTiDAuWWoYa
-         V/ldZY+U/i3S6mTVcbUpERgHnH7bchh+UKKe0CstIPdJv94hZ153EIQqIoHsTrDVpoUh
-         JcFQ==
+        bh=gW9+CPTVwMKZIVurnVHCFx7TIdR/e/ydt61yKCEQTG0=;
+        b=R7yQO+ReOWcwDT7SKiA2vlfmB2fzWyeqivDUjPzqUXtnkR1732jWoKBlOho1J6hZTV
+         NbQGpNt6rQ12yvZltZY54/bwRwrYIfduRD24huPhvxFCKMELozDMZ8rdwijLDh6TmM1h
+         O7z8oMTzqrbPC8kNRLppVBaNR4GgL3auJ7e0BrfibhX5yTnPDzGf7glO+ZNDhimT46o4
+         23OK7VwMzE75gNK4UhtLCIlQWAaCYM367pIMmjreAumwDrnV5t3fiTl67IhDJXyJfnod
+         AeVX7TrtIgsVu5Olv3XOrUQ+ty65RpUTCDVH/QlV2Z2iQXMMU+pYR175M4b0+UFTYFZh
+         OwhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730996456; x=1731601256;
+        d=1e100.net; s=20230601; t=1730996459; x=1731601259;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OmDxOz/jwQKQ9IxxvIQzkp5N2zsrObhsgCU4K9BCHGc=;
-        b=kSBKiaeZSBrY98ipJXDPprIk90p5NM+jBOMSwWOtjoOvSDH7S80GcshxUeLRYNaVty
-         k45yFDPEr5cNnyP1hvyIuFiOCeKD5rwYH3MUk1jovuM09o4NgBFwua0IHEvE3+1yLCkK
-         yhjeBdQrLm9af0juoYwFgOJztASGbru+vh88MPhsyd6hQqxmvBi1Oy+EDASka14W8Siu
-         q+JDeuKS9qXNswfA5SAjg7GDheTnotY2GABPRgC+VvxpNTct3wmoursTMzDasZjF5C5f
-         Z9s6brO6yyabiobHjHC/ayPue+wyx+ONdmCsru3ii1aWKgfQNBi3h4DnKyiI0aHObP/3
-         nq0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUZHhT5alFxr35MmLkscpBIe6pDjE0p082L5kTVpqlPZFtIIzQSeSGvT2NBeNhauvijkr4kXNHRUMLMyO5/JBkD@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKNvUd60nUhv2bXYWi8X6YqrDOFGImB/Q00M5p5QMFn8ZHibhI
-	G3rYW29uyU9ik0+9fN/6wBePm/L3ia4haolOzs15XcTjLU22oyeilQbn6BfeuSfKTQGmdB03MPj
-	ThY9Exw==
-X-Google-Smtp-Source: AGHT+IHCkQtw3cbe4yQXJVnOkaPBqQ3DtdlxV254RMwS9iWgJ8X5235+bgRmL2AfqDh6oANhnB+TqaB5uCbI
+        bh=gW9+CPTVwMKZIVurnVHCFx7TIdR/e/ydt61yKCEQTG0=;
+        b=FezXGiqojiW4bNKtBgDBMzm69AnxSi4s2eymrY0BMir45ffYd5qSusNCBxgq2VqhcF
+         Vv1sIT3PRHOmN0YGbaXbcQxJCQiuIEpv5iX+ndFRkd2rQ2T3zjEgRF23gYpcFLirjXCG
+         obHlLcfWQZZfPQH+/ESigPtx3wkMpCEZ8XO8SecXcj1/RSjW8UmkN9IrTg6KZm8KnSk8
+         /G8mZBiShXqiU0pVJnc3VAw85rsDDNhcbMXgSWXh+syEIs2MnfoQfW6UrgZ5V2QaML5s
+         yMTZyrR8M6+xPx2A1Eas0bKq/tXouI3cP8QwsIjCGqNHXHuzw7vWo3IcVS9sNvFGWaOH
+         7hsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwg6ZiTBmqDkpCYzUu4bUnu8XGwOGmmKV1TRwdDZ7HquX1Zkxez6pvKx54YeG3OxFvGwccvL4WqyqjEd8QyTYc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp5D4B6KnA+J5KVJesUV/gBkxVHhY5fIjNb54hNCxwJ1W0FbaW
+	aoFxv8xSXffeQtj5L3HHoDJpQu5oCu2+F8Hv4xzdOHZtnW1j8jvGC6MIdZzqMLZh1Eb6XUgfK05
+	K896Vyg==
+X-Google-Smtp-Source: AGHT+IEYlgs/V2F/Aoj+pbdeOvGuquRFfNPybrBK44Ua6MKMX5mUoZiZ1vNXICCo8jUP4hj+0QFM6lTQ0dhC
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:acc7:bda:7167:18d8])
- (user=irogers job=sendgmr) by 2002:a81:de03:0:b0:6e2:371f:4aef with SMTP id
- 00721157ae682-6eadaf980f4mr79097b3.3.1730996456017; Thu, 07 Nov 2024 08:20:56
+ (user=irogers job=sendgmr) by 2002:a25:acd7:0:b0:e24:a28e:9399 with SMTP id
+ 3f1490d57ef6-e337e3878cfmr1276.4.1730996458511; Thu, 07 Nov 2024 08:20:58
  -0800 (PST)
-Date: Thu,  7 Nov 2024 08:20:34 -0800
+Date: Thu,  7 Nov 2024 08:20:35 -0800
 In-Reply-To: <20241107162035.52206-1-irogers@google.com>
-Message-Id: <20241107162035.52206-8-irogers@google.com>
+Message-Id: <20241107162035.52206-9-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241107162035.52206-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.199.ga7371fff76-goog
-Subject: [PATCH v2 7/8] perf jevents: Add map_for_cpu
+Subject: [PATCH v2 8/8] perf pmu: Move pmu_metrics_table__find and remove ARM override
 From: Ian Rogers <irogers@google.com>
 To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
 	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
@@ -83,131 +83,145 @@ To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
 	linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-The PMU is no longer part of the map finding process and for metrics
-doesn't make sense as they lack a PMU.
+Move pmu_metrics_table__find to the jevents.py generated pmu-events.c
+and remove indirection override for ARM. The movement removes
+perf_pmu__find_metrics_table that exists to enable the ARM
+override. The ARM override isn't necessary as just the CPUID, not PMU,
+is used in the metric table lookup. On non-ARM the CPU argument is
+just ignored for the CPUID, for ARM -1 is passed so that the CPUID for
+the first logical CPU is read.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/empty-pmu-events.c | 20 +++++++++++++-------
- tools/perf/pmu-events/jevents.py         | 20 +++++++++++++-------
- 2 files changed, 26 insertions(+), 14 deletions(-)
+ tools/perf/arch/arm64/util/pmu.c         | 20 --------------------
+ tools/perf/pmu-events/empty-pmu-events.c | 10 ++++------
+ tools/perf/pmu-events/jevents.py         | 10 ++++------
+ tools/perf/pmu-events/pmu-events.h       |  2 +-
+ tools/perf/util/pmu.c                    |  5 -----
+ tools/perf/util/pmu.h                    |  1 -
+ 6 files changed, 9 insertions(+), 39 deletions(-)
 
+diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
+index a0964b191fcb..895fb0d0610c 100644
+--- a/tools/perf/arch/arm64/util/pmu.c
++++ b/tools/perf/arch/arm64/util/pmu.c
+@@ -1,29 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-#include <internal/cpumap.h>
+-#include "../../../util/cpumap.h"
+-#include "../../../util/header.h"
+ #include "../../../util/pmu.h"
+ #include "../../../util/pmus.h"
+ #include "../../../util/tool_pmu.h"
+ #include <api/fs/fs.h>
+-#include <math.h>
+-
+-const struct pmu_metrics_table *pmu_metrics_table__find(void)
+-{
+-	struct perf_pmu *pmu;
+-
+-	/* Metrics aren't currently supported on heterogeneous Arm systems */
+-	if (perf_pmus__num_core_pmus() > 1)
+-		return NULL;
+-
+-	/* Doesn't matter which one here because they'll all be the same */
+-	pmu = perf_pmus__find_core_pmu();
+-	if (pmu)
+-		return perf_pmu__find_metrics_table(pmu);
+-
+-	return NULL;
+-}
+ 
+ u64 tool_pmu__cpu_slots_per_cycle(void)
+ {
 diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
-index 51ca8d61c15d..17306e316a3c 100644
+index 17306e316a3c..1c7a2cfa321f 100644
 --- a/tools/perf/pmu-events/empty-pmu-events.c
 +++ b/tools/perf/pmu-events/empty-pmu-events.c
-@@ -503,11 +503,11 @@ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
-         return 0;
+@@ -587,14 +587,12 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
+         return NULL;
  }
  
--static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
-+static const struct pmu_events_map *map_for_cpu(struct perf_cpu cpu)
+-const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct perf_pmu *pmu)
++const struct pmu_metrics_table *pmu_metrics_table__find(void)
  {
-         static struct {
-                 const struct pmu_events_map *map;
--                struct perf_pmu *pmu;
-+                struct perf_cpu cpu;
-         } last_result;
-         static struct {
-                 const struct pmu_events_map *map;
-@@ -515,15 +515,12 @@ static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
-         } last_map_search;
-         static bool has_last_result, has_last_map_search;
-         const struct pmu_events_map *map = NULL;
--        struct perf_cpu cpu = {-1};
-         char *cpuid = NULL;
-         size_t i;
- 
--        if (has_last_result && last_result.pmu == pmu)
-+        if (has_last_result && last_result.cpu.cpu == cpu.cpu)
-                 return last_result.map;
- 
--        if (pmu)
--                cpu = perf_cpu_map__min(pmu->cpus);
-         cpuid = get_cpuid_allow_env_override(cpu);
- 
-         /*
-@@ -555,12 +552,21 @@ static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
-                has_last_map_search = true;
-         }
- out_update_last_result:
--        last_result.pmu = pmu;
-+        last_result.cpu = cpu;
-         last_result.map = map;
-         has_last_result = true;
-         return map;
- }
- 
-+static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
-+{
+-        const struct pmu_events_map *map = map_for_pmu(pmu);
+-
+-        if (!map)
+-                return NULL;
 +        struct perf_cpu cpu = {-1};
-+
-+        if (pmu)
-+                cpu = perf_cpu_map__min(pmu->cpus);
-+        return map_for_cpu(cpu);
-+}
-+
- const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
- {
-         const struct pmu_events_map *map = map_for_pmu(pmu);
++        const struct pmu_events_map *map = map_for_cpu(cpu);
+ 
+-	return &map->metric_table;
++        return map ? &map->metric_table : NULL;
+ }
+ 
+ const struct pmu_events_table *find_core_events_table(const char *arch, const char *cpuid)
 diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index b5ff872e2beb..e44b72e56ac3 100755
+index e44b72e56ac3..d781a377757a 100755
 --- a/tools/perf/pmu-events/jevents.py
 +++ b/tools/perf/pmu-events/jevents.py
-@@ -1019,11 +1019,11 @@ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
-         return 0;
+@@ -1103,14 +1103,12 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
+         return NULL;
  }
  
--static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
-+static const struct pmu_events_map *map_for_cpu(struct perf_cpu cpu)
+-const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct perf_pmu *pmu)
++const struct pmu_metrics_table *pmu_metrics_table__find(void)
  {
-         static struct {
-                 const struct pmu_events_map *map;
--                struct perf_pmu *pmu;
-+                struct perf_cpu cpu;
-         } last_result;
-         static struct {
-                 const struct pmu_events_map *map;
-@@ -1031,15 +1031,12 @@ static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
-         } last_map_search;
-         static bool has_last_result, has_last_map_search;
-         const struct pmu_events_map *map = NULL;
--        struct perf_cpu cpu = {-1};
-         char *cpuid = NULL;
-         size_t i;
- 
--        if (has_last_result && last_result.pmu == pmu)
-+        if (has_last_result && last_result.cpu.cpu == cpu.cpu)
-                 return last_result.map;
- 
--        if (pmu)
--                cpu = perf_cpu_map__min(pmu->cpus);
-         cpuid = get_cpuid_allow_env_override(cpu);
- 
-         /*
-@@ -1071,12 +1068,21 @@ static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
-                has_last_map_search = true;
-         }
- out_update_last_result:
--        last_result.pmu = pmu;
-+        last_result.cpu = cpu;
-         last_result.map = map;
-         has_last_result = true;
-         return map;
- }
- 
-+static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
-+{
+-        const struct pmu_events_map *map = map_for_pmu(pmu);
+-
+-        if (!map)
+-                return NULL;
 +        struct perf_cpu cpu = {-1};
-+
-+        if (pmu)
-+                cpu = perf_cpu_map__min(pmu->cpus);
-+        return map_for_cpu(cpu);
-+}
-+
- const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
- {
-         const struct pmu_events_map *map = map_for_pmu(pmu);
++        const struct pmu_events_map *map = map_for_cpu(cpu);
+ 
+-	return &map->metric_table;
++        return map ? &map->metric_table : NULL;
+ }
+ 
+ const struct pmu_events_table *find_core_events_table(const char *arch, const char *cpuid)
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index 5435ad92180c..675562e6f770 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -103,7 +103,7 @@ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table, pm
+ 				     void *data);
+ 
+ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu);
+-const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct perf_pmu *pmu);
++const struct pmu_metrics_table *pmu_metrics_table__find(void);
+ const struct pmu_events_table *find_core_events_table(const char *arch, const char *cpuid);
+ const struct pmu_metrics_table *find_core_metrics_table(const char *arch, const char *cpuid);
+ int pmu_for_each_core_event(pmu_event_iter_fn fn, void *data);
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 514cb865f57b..45838651b361 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -818,11 +818,6 @@ static int is_sysfs_pmu_core(const char *name)
+ 	return file_available(path);
+ }
+ 
+-__weak const struct pmu_metrics_table *pmu_metrics_table__find(void)
+-{
+-	return perf_pmu__find_metrics_table(NULL);
+-}
+-
+ /**
+  * Return the length of the PMU name not including the suffix for uncore PMUs.
+  *
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index fba3fc608b64..7b3e71194e49 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -260,7 +260,6 @@ void perf_pmu__arch_init(struct perf_pmu *pmu);
+ void pmu_add_cpu_aliases_table(struct perf_pmu *pmu,
+ 			       const struct pmu_events_table *table);
+ 
+-const struct pmu_metrics_table *pmu_metrics_table__find(void);
+ bool pmu_uncore_identifier_match(const char *compat, const char *id);
+ 
+ int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
 -- 
 2.47.0.199.ga7371fff76-goog
 
