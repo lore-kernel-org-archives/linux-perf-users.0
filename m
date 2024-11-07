@@ -1,168 +1,234 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB27417C79;
-	Thu,  7 Nov 2024 15:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4164847F4A;
+	Thu,  7 Nov 2024 15:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730991622; cv=none; b=l14oueGUqhLPHSyHMuiHBIUrNmQtk7+l0gw9WR5Obf1tQccOoYQKGQqMDjuC7XItzpTI7AlakIEdIQOnVtZprYhoEEvKUNSaBfPD3YFQzngW1JLsaudB2FdvnDgeWX2PwbI8oZ3M2Bzh+mTHUZtL0rGKf8xgwowbaBuuLweeDpk=
+	t=1730993151; cv=none; b=i+U3eDV2Oi6JsSZ4mfZE1gd03VUyBi86NL9eeRu042OljSCmAfqa4Bcy7lZF4TD6C68uLWZnAWELEuEPdiPHHQI9hQI067oGltKfxC9nFO3QQ/dfREkSCdzvDbp/8ISqH76brcCc8L/jLWSEqMbLRMxl3VVCZNV2LU+kDB1OIuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730991622; c=relaxed/simple;
-	bh=nq6mA8FP/r9Hre+aEuczFlIzcjp4EaPQOSBwpWXRKxk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=eEr0dEkPwYI/8ASMc2bj8qJ7p041MkujzNYLb7eAQUuaYU9x2chAICYXP48PRYuMUqk7ou8IvsgSgIsGbJQwB+X9Y1vMs8L1Bfe4Ey+NBAKuiEFgV0tsuvEfHgSRttpyWngIPcvuVvj1pSb94NCXs0UK9LkhtPnzoBWHGMtRrsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ETow1Yc3; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ETow1Yc3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730991621; x=1762527621;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=nq6mA8FP/r9Hre+aEuczFlIzcjp4EaPQOSBwpWXRKxk=;
-  b=ETow1Yc3ARjxkyT6UWFyctUPW2TYJkLBjY5Pv/0Gq4ivJZuOZcl81BaZ
-   W+23bkGHfSBslnR7nFrbvfQmtSr6IPWW0eCns9AvefSdr1PhHIhNsyOsp
-   pGt37aGzbKis4/O952t5gbc1+W8we/7rTd/VfK0KRzmf0XQ1D3dyyA7lJ
-   o5nDE3aeBLyOieb2bVpHQcstB0tqmZ2SwEA6RnpSz7RXEcA25PBEAzVco
-   wWToTEe+hZhfV3qMMDqpQdTvZL8fHAjWBhWwQOVL7ZMGwgpX2D1j0vfjw
-   WLgZgDrDkkh0o8go5o6bxAbI+nJZ16u79K9MfgDT5DszBDDwmENRWhnmG
-   g==;
-X-CSE-ConnectionGUID: wd33VvbGQ+W3TPZ+kXXNRw==
-X-CSE-MsgGUID: CrOmihOBToynmGhmKelFRw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11249"; a="34762026"
-X-IronPort-AV: E=Sophos;i="6.12,135,1728975600"; 
-   d="scan'208";a="34762026"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 07:00:18 -0800
-X-CSE-ConnectionGUID: 4OpBz/8sQw2SOjZ3U/iHQA==
-X-CSE-MsgGUID: ubpHNa87REWNWPZdPhIODw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,135,1728975600"; 
-   d="scan'208";a="108381934"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 07:00:18 -0800
-Received: from [10.212.68.83] (kliang2-mobl1.ccr.corp.intel.com [10.212.68.83])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 9476820B5703;
-	Thu,  7 Nov 2024 07:00:15 -0800 (PST)
-Message-ID: <0d48bf82-5de2-4928-bd15-1c5abfd4f087@linux.intel.com>
-Date: Thu, 7 Nov 2024 10:00:14 -0500
+	s=arc-20240116; t=1730993151; c=relaxed/simple;
+	bh=vkwe4yCX40nPbehvzGzQzRGAI5lzgQsdlM7UdgGOLRs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GLqxW9pVp0S9z8OqoEy6KYB9CuLSVsZeuyOXJoZPaUMIRNA8RIBcWfltw7fm5WeGgPCpboJ6tZi0+JGN2XshSj2Lv/vW6+Z2zOw36UojiPZ5V2PFhGuBETpFF50hmmHBd1LzqW4/xLo9uNibLtvrkbzcXEe8VSkwh8CPQv6r/Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63405497;
+	Thu,  7 Nov 2024 07:26:17 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 304C53F66E;
+	Thu,  7 Nov 2024 07:25:47 -0800 (PST)
+Date: Thu, 7 Nov 2024 15:25:42 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] perf arm-spe: Prepare for adding data source
+ packet implementations for other cores
+Message-ID: <20241107152542.GC47850@e132581.arm.com>
+References: <20241106193740.6159-1-ilkka@os.amperecomputing.com>
+ <20241106193740.6159-2-ilkka@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/22] perf jevents: Add ports metric group giving
- utilization on Intel
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Perry Taylor <perry.taylor@intel.com>, Samantha Alt
- <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>,
- Weilin Wang <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>
-References: <20240926175035.408668-1-irogers@google.com>
- <20240926175035.408668-10-irogers@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240926175035.408668-10-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241106193740.6159-2-ilkka@os.amperecomputing.com>
 
+Hi Ilkka,
 
+This is a good refactoring for me.  Just several minor comments.
 
-On 2024-09-26 1:50 p.m., Ian Rogers wrote:
-> The ports metric group contains a metric for each port giving its
-> utilization as a ratio of cycles. The metrics are created by looking
-> for UOPS_DISPATCHED.PORT events.
+On Wed, Nov 06, 2024 at 07:37:39PM +0000, Ilkka Koskinen wrote:
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Split Data Source Packet handling to prepare adding support for
+> other implementations.
+> 
+> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 > ---
->  tools/perf/pmu-events/intel_metrics.py | 33 ++++++++++++++++++++++++--
->  1 file changed, 31 insertions(+), 2 deletions(-)
+>  tools/perf/util/arm-spe.c | 65 ++++++++++++++++++++++++---------------
+>  1 file changed, 40 insertions(+), 25 deletions(-)
 > 
-> diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-> index f4707e964f75..3ef4eb868580 100755
-> --- a/tools/perf/pmu-events/intel_metrics.py
-> +++ b/tools/perf/pmu-events/intel_metrics.py
-> @@ -1,12 +1,13 @@
->  #!/usr/bin/env python3
->  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
->  from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
-> -                    JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
-> -                    MetricGroup, MetricRef, Select)
-> +                    JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
-> +                    Metric, MetricGroup, MetricRef, Select)
->  import argparse
->  import json
->  import math
->  import os
-> +import re
->  from typing import Optional
->  
->  # Global command line arguments.
-> @@ -260,6 +261,33 @@ def IntelBr():
->                       description="breakdown of retired branch instructions")
->  
->  
-> +def IntelPorts() -> Optional[MetricGroup]:
-> +  pipeline_events = json.load(open(f"{_args.events_path}/x86/{_args.model}/pipeline.json"))
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index dbf13f47879c..b222557cc27a 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -103,6 +103,18 @@ struct arm_spe_queue {
+>         u32                             flags;
+>  };
+> 
+> +struct data_src {
+> +       struct midr_range midr_range;
+> +       void (*ds_synth)(const struct arm_spe_record *record,
+> +                        union perf_mem_data_src *data_src);
+> +};
+
+The naming is a bit mess. The data structure and the parameter both
+are called "data_src", though this will not cause building issue.
+
+How about rename the structure "data_src" to "data_source_handle" or
+"data_source_class"?
+
+For the "midr_range" field, I'd like to change it to a pointer:
+
+  struct midr_range *midr_range;
+
+Please see below comments, which will present the reason for defining
+it as a pointer.
+
 > +
-> +  core_cycles = Event("CPU_CLK_UNHALTED.THREAD_P_ANY",
-> +                      "CPU_CLK_UNHALTED.DISTRIBUTED",
-> +                      "cycles")
-> +  # Number of CPU cycles scaled for SMT.
-> +  smt_cycles = Select(core_cycles / 2, Literal("#smt_on"), core_cycles)
+> +#define DS(range, func)                        \
+> +       {                                               \
+> +               .midr_range = range,                    \
+> +               .ds_synth = arm_spe__synth_##func,      \
+> +       }
 > +
-> +  metrics = []
-> +  for x in pipeline_events:
-> +    if "EventName" in x and re.search("^UOPS_DISPATCHED.PORT", x["EventName"]):
-> +      name = x["EventName"]
-> +      port = re.search(r"(PORT_[0-9].*)", name).group(0).lower()
-> +      if name.endswith("_CORE"):
-> +        cyc = core_cycles
-> +      else:
-> +        cyc = smt_cycles
-> +      metrics.append(Metric(port, f"{port} utilization (higher is better)",
-> +                            d_ratio(Event(name), cyc), "100%"))
+>  static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
+>                          unsigned char *buf, size_t len)
+>  {
+> @@ -430,19 +442,6 @@ static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
+>         return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+>  }
+> 
+> -static const struct midr_range common_ds_encoding_cpus[] = {
+> -       MIDR_ALL_VERSIONS(MIDR_CORTEX_A720),
+> -       MIDR_ALL_VERSIONS(MIDR_CORTEX_A725),
+> -       MIDR_ALL_VERSIONS(MIDR_CORTEX_X1C),
+> -       MIDR_ALL_VERSIONS(MIDR_CORTEX_X3),
+> -       MIDR_ALL_VERSIONS(MIDR_CORTEX_X925),
+> -       MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
+> -       MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
+> -       MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
+> -       MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2),
+> -       {},
+> -};
 
+We can keep this data structure.  For Ampere CPUs, you can add a new
+data structure:
 
-The generated metric highly depends on the event name, which is very
-fragile. We will probably have the same event in a new generation, but
-with a different name. Long-term maintenance could be a problem.
-Is there an idea regarding how to sync the event names for new generations?
+  static const struct midr_range ampereone_ds_encoding_cpus[] = {
+      MIDR_ALL_VERSIONS(MIDR_AMPERE1A),
+      {},
+  };
 
-Maybe we should improve the event generation script and do an automatic
-check to tell which metrics are missed. Then we may decide if updating
-the new event name, dropping the metric or adding a different metric.
+> -
+>  static void arm_spe__sample_flags(struct arm_spe_queue *speq)
+>  {
+>         const struct arm_spe_record *record = &speq->decoder->record;
+> @@ -532,6 +531,19 @@ static void arm_spe__synth_data_source_common(const struct arm_spe_record *recor
+>         }
+>  }
+> 
+> +static const struct data_src data_sources[] = {
+> +       DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_A720), data_source_common),
+> +       DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_A725), data_source_common),
+> +       DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_X1C), data_source_common),
+> +       DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_X3), data_source_common),
+> +       DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_X925), data_source_common),
+> +       DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1), data_source_common),
+> +       DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2), data_source_common),
+> +       DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1), data_source_common),
+> +       DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2), data_source_common),
+> +       {},
+> +};
+> +
+
+As a result, we can simplify the structure as:
+
+  static const struct data_src data_sources[] = {
+         DS(common_ds_encoding_cpus, data_source_common),
+         DS(ampereone_ds_encoding_cpus, data_source_ampereone),
+  };
+
+>  static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+>                                         union perf_mem_data_src *data_src)
+>  {
+> @@ -555,12 +567,14 @@ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+>                 data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
+>  }
+> 
+> -static bool arm_spe__is_common_ds_encoding(struct arm_spe_queue *speq)
+> +static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
+> +                             const struct arm_spe_record *record,
+> +                             union perf_mem_data_src *data_src)
+>  {
+>         struct arm_spe *spe = speq->spe;
+> -       bool is_in_cpu_list;
+> +       const struct data_src *src = data_sources;
+>         u64 *metadata = NULL;
+> -       u64 midr = 0;
+> +       u64 midr;
+> 
+>         /* Metadata version 1 assumes all CPUs are the same (old behavior) */
+>         if (spe->metadata_ver == 1) {
+> @@ -592,18 +606,21 @@ static bool arm_spe__is_common_ds_encoding(struct arm_spe_queue *speq)
+>                 midr = metadata[ARM_SPE_CPU_MIDR];
+>         }
+> 
+> -       is_in_cpu_list = is_midr_in_range_list(midr, common_ds_encoding_cpus);
+> -       if (is_in_cpu_list)
+> -               return true;
+> -       else
+> -               return false;
+> +       while (src->midr_range.model) {
+> +               if (is_midr_in_range(midr, &src->midr_range)) {
+> +                       src->ds_synth(record, data_src);
+> +                       return true;
+> +               }
+> +               src++;
+> +       }
+
+Here we can traverse the 'data_sources' array:
+
+          for (i = 0; i < ARRAY_SIZE(data_sources); i++) {
+               if (is_midr_in_range(midr, data_sources[i]->midr_range)) {
+                   ...
+               }
+          }
 
 Thanks,
-Kan
+Leo
 
-> +  if len(metrics) == 0:
-> +    return None
 > +
-> +  return MetricGroup("ports", metrics, "functional unit (port) utilization -- "
-> +                     "fraction of cycles each port is utilized (higher is better)")
-> +
-> +
->  def IntelSwpf() -> Optional[MetricGroup]:
->    ins = Event("instructions")
->    try:
-> @@ -352,6 +380,7 @@ def main() -> None:
->        Smi(),
->        Tsx(),
->        IntelBr(),
-> +      IntelPorts(),
->        IntelSwpf(),
->    ])
->  
-
+> +       return false;
+>  }
+> 
+>  static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
+>                                       const struct arm_spe_record *record)
+>  {
+>         union perf_mem_data_src data_src = { .mem_op = PERF_MEM_OP_NA };
+> -       bool is_common = arm_spe__is_common_ds_encoding(speq);
+> 
+>         if (record->op & ARM_SPE_OP_LD)
+>                 data_src.mem_op = PERF_MEM_OP_LOAD;
+> @@ -612,9 +629,7 @@ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
+>         else
+>                 return 0;
+> 
+> -       if (is_common)
+> -               arm_spe__synth_data_source_common(record, &data_src);
+> -       else
+> +       if (!arm_spe__synth_ds(speq, record, &data_src))
+>                 arm_spe__synth_memory_level(record, &data_src);
+> 
+>         if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
+> --
+> 2.47.0
+> 
+> 
