@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1B0212EF0;
-	Thu,  7 Nov 2024 14:52:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFC6212EF5;
+	Thu,  7 Nov 2024 14:52:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730991164; cv=none; b=ovwqj3Z/71Dg99ThZZbf8il0mYUgj5lecYbJ5vlG2uIrxFd8amDoXSmW8LFlr8Dxf//I8TeT7gnAu8ZJw+Em7uC1AxWEfT3Cjg+7bmqqQBhhdRk2JLIo2zi/hD1ajPW1H1wrgg9TEU+nbSnQvVGDAkhMexX+hisWdwU/JftQ7y0=
+	t=1730991173; cv=none; b=clM6jE+s+Jz7x6JtAozx8qBos3AA+kIoZbVkHsTu1fsG+7XU7LoMwdjfr16zNVPtm+m5hX/Qlo7XY88LsWHplyaZth0awwUocGVJfkGpEqyXLVAqbFZ9zIFyfsSXdH9z5MFFVwSO1iPPJhIOFKvaAIRvoMnJmKNpU5XD/+/TkA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730991164; c=relaxed/simple;
-	bh=S3f5Wa2BEYIJpOYrj4xkQRdAC5fv4qqAL3qZ1pqT/cQ=;
+	s=arc-20240116; t=1730991173; c=relaxed/simple;
+	bh=KSH4WAzi4UEuFjxwQ20KJeJtd2CrJXRhr/o51tJNrLU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iwIiQkv8hPc0DsOcYtRZE9A3A58gL716ur+la7xncp2xQRD+MMixYb0F7lxasPXhAxxHd76XN3Mz+XBP4chMLeNC9/zMZrIGfGGWaCrk39DfwQf74tyhEv04r86/XQp9Jp7MuZaQ//1GUk/v0VtxeS7HbBL/zNnmDwld7QMhT6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cL4qUNJ6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=YpSGV1RqaEAapm3MoCHLhDogL4nYq7sOlU/mLZTfl60Po9gsEYrLcjdOmLedNLJPSoKFmLG/HwhDYsjD1Nxiq6WXFJWbuOc7Y6/H7ljjYs6ltgQbeGmctyw5JLxXuWBm8e3f7ON5CBDUGh7laRVhCrEym+QdTHqVGIgyhxlo6v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SqT+4XAA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cL4qUNJ6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67FDEC4CECC;
-	Thu,  7 Nov 2024 14:52:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SqT+4XAA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C80BC4CECC;
+	Thu,  7 Nov 2024 14:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730991164;
-	bh=S3f5Wa2BEYIJpOYrj4xkQRdAC5fv4qqAL3qZ1pqT/cQ=;
+	s=k20201202; t=1730991172;
+	bh=KSH4WAzi4UEuFjxwQ20KJeJtd2CrJXRhr/o51tJNrLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cL4qUNJ6ggDmh29MS7eR5CaG553gnBInVDfTlxp0GiqAbum/TMY7hDyImoMj5GS/r
-	 weI8+0zlknS4S5s5bHyrQhLNmAFKPhhgfQtAPhL73k+3n0YdITizx3IvLZo6sjGsx6
-	 701HGpAcWIV1iDzh9Fkqh8gFx/f8N00qYuOs+ES76SDHFnJOfOk2evmGsY8LmkcZm0
-	 bwZWiUFkih02llu558Z6SEoudUy/4sXBAoRPbBlTREW6+EsgbOjoB9jaPjSEu6qqp+
-	 RK/5XR3dx1P8xPQEQLo1pniELyoN1nXK3aIrMLuu3xqgIP60p3bEcaZrG2ldpNgZ8I
-	 t4wdkeqD2+HEw==
+	b=SqT+4XAAeduKqeKXvHV6YMVSAVOthWXEoLRmGcuJSYN5E4IB2JOqtfH3HoXCiOeQU
+	 j//mKeNMPumQg1X2ko9lJroRUQinq8U/4Q47due2cpYEvPV5VXlD9wmKrIqlO8QrID
+	 ZKFrjDj+5jJhJfdm7+j3DctITpmnNX8QZ1dMboOlSE+eg/Gc9OXzPBdXMxiU44trJw
+	 yQIVtKt6imP5XFVQArPWeNqBUosn2crQw98zEieeembwtiCXSxxAbl28XVc1iDYBFo
+	 L1qIGuL7yqebeUXhemOHhWYryUljGsmd+L0Non8A5OQF6jOwpA1DDCTTtvqZO8fSit
+	 dMs+/KERYhuvw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>
@@ -38,9 +38,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/6] perf: Add strpbrk_esq() and strdup_esq() for escape and quote
-Date: Thu,  7 Nov 2024 23:52:40 +0900
-Message-ID:  <173099116045.2431889.15772916605719019533.stgit@mhiramat.roam.corp.google.com>
+Subject: [PATCH v2 5/6] perf-probe: Introduce quotation marks support
+Date: Thu,  7 Nov 2024 23:52:49 +0900
+Message-ID:  <173099116941.2431889.11609129616090100386.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
 In-Reply-To:  <173099112488.2431889.1181692857521683304.stgit@mhiramat.roam.corp.google.com>
 References:  <173099112488.2431889.1181692857521683304.stgit@mhiramat.roam.corp.google.com>
@@ -56,161 +56,232 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-strpbrk_esq() and strdup_esq() are new variants for strpbrk() and
-strdup() which handles escaped characters and quoted strings.
+In non-C languages, it is possible to have ':' in the function names.
+It is possible to escape it with backslashes, but if there are too many
+backslashes, it is annoying.
+This introduce quotation marks (`"` or `'`) support.
 
-- strpbrk_esq() searches specified set of characters but ignores the
-  escaped characters and quoted strings.
-  e.g. strpbrk_esq("'quote\d' \queue quiz", "qd") returns "quiz".
+For example, without quotes, we have to pass it as below
 
-- strdup_esq() duplicates string but removes backslash and quotes which
-  is used for quotation. It also keeps the string (including backslash)
-  in the quoted part.
-  e.g. strdup_esq("'quote\d' \queue quiz") returns "quote\d queue quiz".
+$ perf probe -x cro3 -L "cro3\:\:cmd\:\:servo\:\:run_show"
+<run_show@/work/cro3/src/cmd/servo.rs:0>
+      0  fn run_show(args: &ArgsShow) -> Result<()> {
+      1      let list = ServoList::discover()?;
+      2      let s = list.find_by_serial(&args.servo)?;
+      3      if args.json {
+      4          println!("{s}");
 
-The (single, double) quotes in the quoted part should be escaped by
-backslash. In this case, strdup_esq() removes that backslash.
-The same quotes must be paired. If you use double quotation, you need
-to use the double quotation to close the quoted part.
+With quotes, we can more naturally write the function name as below;
+
+$ ./perf probe -x cro3 -L \"cro3::cmd::servo::run_show\"
+<run_show@/work/cro3/src/cmd/servo.rs:0>
+      0  fn run_show(args: &ArgsShow) -> Result<()> {
+      1      let list = ServoList::discover()?;
+      2      let s = list.find_by_serial(&args.servo)?;
+      3      if args.json {
+      4          println!("{s}");
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
  Changes in v2:
-  - Added new patch.
+  - split str*_esq() functions from this patch.
+  - update for the changes in previous patches.
 ---
- tools/perf/util/string.c  |  100 +++++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/string2.h |    2 +
- 2 files changed, 102 insertions(+)
+ tools/perf/util/probe-event.c |   75 ++++++++++++++++++++++-------------------
+ 1 file changed, 41 insertions(+), 34 deletions(-)
 
-diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
-index 116a642ad99d..308fc7ec88cc 100644
---- a/tools/perf/util/string.c
-+++ b/tools/perf/util/string.c
-@@ -263,6 +263,34 @@ char *strpbrk_esc(char *str, const char *stopset)
- 	return ptr;
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 777ef00f0d3f..31e257c84cd1 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -1076,6 +1076,7 @@ static int __show_line_range(struct line_range *lr, const char *module,
+ 
+ 	ret = debuginfo__find_line_range(dinfo, lr);
+ 	if (!ret) {	/* Not found, retry with an alternative */
++		pr_debug2("Failed to find line range in debuginfo. Fallback to alternative\n");
+ 		ret = get_alternative_line_range(dinfo, lr, module, user);
+ 		if (!ret)
+ 			ret = debuginfo__find_line_range(dinfo, lr);
+@@ -1359,30 +1360,37 @@ static bool is_c_func_name(const char *name)
+  *         FNC[@SRC][:SLN[+NUM|-ELN]]
+  *
+  * FNC@SRC accepts `FNC@*` which forcibly specify FNC as function name.
++ * SRC and FUNC can be quoted by double/single quotes.
+  */
+ int parse_line_range_desc(const char *arg, struct line_range *lr)
+ {
+-	char *range, *file, *name = strdup(arg);
++	char *buf = strdup(arg);
++	char *p;
+ 	int err;
+ 
+-	if (!name)
++	if (!buf)
+ 		return -ENOMEM;
+ 
+ 	lr->start = 0;
+ 	lr->end = INT_MAX;
+ 
+-	range = strpbrk_esc(name, ":");
+-	if (range) {
+-		*range++ = '\0';
++	p = strpbrk_esq(buf, ":");
++	if (p) {
++		if (p == buf) {
++			semantic_error("No file/function name in '%s'.\n", p);
++			err = -EINVAL;
++			goto err;
++		}
++		*(p++) = '\0';
+ 
+-		err = parse_line_num(&range, &lr->start, "start line");
++		err = parse_line_num(&p, &lr->start, "start line");
+ 		if (err)
+ 			goto err;
+ 
+-		if (*range == '+' || *range == '-') {
+-			const char c = *range++;
++		if (*p == '+' || *p == '-') {
++			const char c = *(p++);
+ 
+-			err = parse_line_num(&range, &lr->end, "end line");
++			err = parse_line_num(&p, &lr->end, "end line");
+ 			if (err)
+ 				goto err;
+ 
+@@ -1406,42 +1414,41 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+ 				       " than end line.\n");
+ 			goto err;
+ 		}
+-		if (*range != '\0') {
+-			semantic_error("Tailing with invalid str '%s'.\n", range);
++		if (*p != '\0') {
++			semantic_error("Tailing with invalid str '%s'.\n", p);
+ 			goto err;
+ 		}
+ 	}
+ 
+-	file = strpbrk_esc(name, "@");
+-	if (file) {
+-		*file++ = '\0';
+-		if (strcmp(file, "*")) {
+-			lr->file = strdup_esc(file);
++	p = strpbrk_esq(buf, "@");
++	if (p) {
++		*p++ = '\0';
++		if (strcmp(p, "*")) {
++			lr->file = strdup_esq(p);
+ 			if (lr->file == NULL) {
+ 				err = -ENOMEM;
+ 				goto err;
+ 			}
+ 		}
+-		if (*name != '\0')
+-			lr->function = name;
++		if (*buf != '\0')
++			lr->function = strdup_esq(buf);
+ 		if (!lr->function && !lr->file) {
+ 			semantic_error("Only '@*' is not allowed.\n");
+ 			err = -EINVAL;
+ 			goto err;
+ 		}
+-	} else if (strpbrk_esc(name, "/."))
+-		lr->file = name;
+-	else if (is_c_func_name(name))/* We reuse it for checking funcname */
+-		lr->function = name;
++	} else if (strpbrk_esq(buf, "/."))
++		lr->file = strdup_esq(buf);
++	else if (is_c_func_name(buf))/* We reuse it for checking funcname */
++		lr->function = strdup_esq(buf);
+ 	else {	/* Invalid name */
+-		semantic_error("'%s' is not a valid function name.\n", name);
++		semantic_error("'%s' is not a valid function name.\n", buf);
+ 		err = -EINVAL;
+ 		goto err;
+ 	}
+ 
+-	return 0;
+ err:
+-	free(name);
++	free(buf);
+ 	return err;
  }
  
-+/* Like strpbrk_esc(), but not break if it is quoted with single/double quotes */
-+char *strpbrk_esq(char *str, const char *stopset)
-+{
-+	char *_stopset = NULL;
-+	char *ptr;
-+	const char *squote = "'";
-+	const char *dquote = "\"";
-+
-+	if (asprintf(&_stopset, "%s%c%c", stopset, *squote, *dquote) < 0)
-+		return NULL;
-+
-+	do {
-+		ptr = strpbrk_esc(str, _stopset);
-+		if (!ptr)
-+			break;
-+		if (*ptr == *squote)
-+			ptr = strpbrk_esc(ptr + 1, squote);
-+		else if (*ptr == *dquote)
-+			ptr = strpbrk_esc(ptr + 1, dquote);
-+		else
-+			break;
-+		str = ptr + 1;
-+	} while (ptr);
-+
-+	free(_stopset);
-+	return ptr;
-+}
-+
- /* Like strdup, but do not copy a single backslash */
- char *strdup_esc(const char *str)
+@@ -1449,19 +1456,19 @@ static int parse_perf_probe_event_name(char **arg, struct perf_probe_event *pev)
  {
-@@ -293,6 +321,78 @@ char *strdup_esc(const char *str)
- 	return ret;
- }
+ 	char *ptr;
  
-+/* Remove backslash right before quote and return next quote address. */
-+static char *remove_consumed_esc(char *str, int len, int quote)
-+{
-+	char *ptr = str, *end = str + len;
-+
-+	while (*ptr != quote && ptr < end) {
-+		if (*ptr == '\\' && *(ptr + 1) == quote) {
-+			memmove(ptr, ptr + 1, end - (ptr + 1));
-+			/* now *ptr is `quote`. */
-+			end--;
-+		}
-+		ptr++;
-+	}
-+
-+	return *ptr == quote ? ptr : NULL;
-+}
-+
-+/*
-+ * Like strdup_esc, but keep quoted string as it is (and single backslash
-+ * before quote is removed). If there is no closed quote, return NULL.
-+ */
-+char *strdup_esq(const char *str)
-+{
-+	char *d, *ret;
-+
-+	/* If there is no quote, return normal strdup_esc() */
-+	d = strpbrk_esc((char *)str, "\"'");
-+	if (!d)
-+		return strdup_esc(str);
-+
-+	ret = strdup(str);
-+	if (!ret)
-+		return NULL;
-+
-+	d = ret;
-+	do {
-+		d = strpbrk(d, "\\\"\'");
-+		if (!d)
-+			break;
-+
-+		if (*d == '"' || *d == '\'') {
-+			/* This is non-escaped quote */
-+			int quote = *d;
-+			int len = strlen(d + 1) + 1;
-+
-+			/*
-+			 * Remove the start quote and remove consumed escape (backslash
-+			 * before quote) and remove the end quote. If there is no end
-+			 * quote, it is the input error.
-+			 */
-+			memmove(d, d + 1, len);
-+			d = remove_consumed_esc(d, len, quote);
-+			if (!d)
-+				goto error;
-+			memmove(d, d + 1, strlen(d + 1) + 1);
-+		}
-+		if (*d == '\\') {
-+			memmove(d, d + 1, strlen(d + 1) + 1);
-+			if (*d == '\\') {
-+				/* double backslash -- keep the second one. */
-+				d++;
-+			}
-+		}
-+	} while (*d != '\0');
-+
-+	return ret;
-+
-+error:
-+	free(ret);
-+	return NULL;
-+}
-+
- unsigned int hex(char c)
- {
- 	if (c >= '0' && c <= '9')
-diff --git a/tools/perf/util/string2.h b/tools/perf/util/string2.h
-index 52cb8ba057c7..4c8bff47cfd3 100644
---- a/tools/perf/util/string2.h
-+++ b/tools/perf/util/string2.h
-@@ -37,6 +37,8 @@ char *asprintf__tp_filter_pids(size_t npids, pid_t *pids);
+-	ptr = strpbrk_esc(*arg, ":");
++	ptr = strpbrk_esq(*arg, ":");
+ 	if (ptr) {
+ 		*ptr = '\0';
+ 		if (!pev->sdt && !is_c_func_name(*arg))
+ 			goto ng_name;
+-		pev->group = strdup_esc(*arg);
++		pev->group = strdup_esq(*arg);
+ 		if (!pev->group)
+ 			return -ENOMEM;
+ 		*arg = ptr + 1;
+ 	} else
+ 		pev->group = NULL;
  
- char *strpbrk_esc(char *str, const char *stopset);
- char *strdup_esc(const char *str);
-+char *strpbrk_esq(char *str, const char *stopset);
-+char *strdup_esq(const char *str);
+-	pev->event = strdup_esc(*arg);
++	pev->event = strdup_esq(*arg);
+ 	if (pev->event == NULL)
+ 		return -ENOMEM;
  
- unsigned int hex(char c);
- char *strreplace_chars(char needle, const char *haystack, const char *replace);
+@@ -1500,7 +1507,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 			arg++;
+ 	}
+ 
+-	ptr = strpbrk_esc(arg, ";=@+%");
++	ptr = strpbrk_esq(arg, ";=@+%");
+ 	if (pev->sdt) {
+ 		if (ptr) {
+ 			if (*ptr != '@') {
+@@ -1514,7 +1521,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 				pev->target = build_id_cache__origname(tmp);
+ 				free(tmp);
+ 			} else
+-				pev->target = strdup_esc(ptr + 1);
++				pev->target = strdup_esq(ptr + 1);
+ 			if (!pev->target)
+ 				return -ENOMEM;
+ 			*ptr = '\0';
+@@ -1555,7 +1562,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 			file_spec = true;
+ 	}
+ 
+-	ptr = strpbrk_esc(arg, ";:+@%");
++	ptr = strpbrk_esq(arg, ";:+@%");
+ 	if (ptr) {
+ 		nc = *ptr;
+ 		*ptr++ = '\0';
+@@ -1564,7 +1571,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 	if (arg[0] == '\0')
+ 		tmp = NULL;
+ 	else {
+-		tmp = strdup_esc(arg);
++		tmp = strdup_esq(arg);
+ 		if (tmp == NULL)
+ 			return -ENOMEM;
+ 	}
+@@ -1602,7 +1609,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 				return -ENOMEM;
+ 			break;
+ 		}
+-		ptr = strpbrk_esc(arg, ";:+@%");
++		ptr = strpbrk_esq(arg, ";:+@%");
+ 		if (ptr) {
+ 			nc = *ptr;
+ 			*ptr++ = '\0';
+@@ -1631,7 +1638,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 			}
+ 			if (!strcmp(arg, "*"))
+ 				break;
+-			pp->file = strdup_esc(arg);
++			pp->file = strdup_esq(arg);
+ 			if (pp->file == NULL)
+ 				return -ENOMEM;
+ 			break;
 
