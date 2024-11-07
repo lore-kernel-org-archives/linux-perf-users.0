@@ -1,179 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8D7216447;
-	Thu,  7 Nov 2024 19:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C31121766D;
+	Thu,  7 Nov 2024 19:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731008458; cv=none; b=jF+05wWTFPcWsJbu4ghFoD3DGhF5gfHEefsN76sdEN/H9n33snljZyTwKxT/rc7CTrR1eZHxRhGa5u58+p9HX58aJ7IwB392EtEmeS3E/zrXRVo0sL6fARJk7zS3+5zOdyrTkxHjxzptPqniHz6m+CDyMlKDwA1+bPDL0YeoG+c=
+	t=1731008505; cv=none; b=TpiEBcJmQGe/KH9YM6ObTBdnhFKuBPdcLqfsdEEzid/k968N4ZnOYZzOtm92gDe/nAqSLdyGTNA5gonfaSOuusF2Q8P1BRCxesxxiK+bBBlfW2qDGRfxA/jAjHQLpCwt9RQnF3bhWtSW725Zuzjn7yLZZyJWE7odplINjuK3J54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731008458; c=relaxed/simple;
-	bh=ZiLvEMXcWk3EnlXkmWOiJoDNigYaUUBGA9qbxDSnzUE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uJVVEiVjcwGG95wGUk7TmC7ku1n/bGIU9eDy4tZuxZ02RJcppjzvVw54Uk04GGHyVZO8OzCaPL3MZbUbX3qVa5m51kKv8yZKXGvvw870Af55HZtOtYZqDPck/Jdv1ZDcI5YlasNu38OBXbrfNOZwa670IHdnynxiAT75t93zALE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwuntsgj; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1731008505; c=relaxed/simple;
+	bh=qcXWjoNzolLbtObYn6+ZbtXzLxRdeRg5xkYwUA1E2h8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pMVQ+ygAe4OHtB+xCL2pLxHmu8HN2mbN2GQLnAZxpY6JYQrUBZ2dsrVvnxdoG7wWSbo7LZRlZKk1KeMbq3gzzPDDXFuoELNtx1nW4GX6G65hvFqrzIADvKmWd5yf2QTEgPG0yI7Sn6VDTsirxZDVXn1PuIelEDks+xOaoez5mfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDClY96t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwuntsgj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731008457; x=1762544457;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ZiLvEMXcWk3EnlXkmWOiJoDNigYaUUBGA9qbxDSnzUE=;
-  b=bwuntsgj9UZyy4AaDRUAjNxbrAcuQvCW2UERFgHG9vWNE2SMjuF80ikw
-   OKfxb6nvscUevrjVffqQcgbVrBgXfDQ4pFtUaRYJU8R2rEHt4TZU95PYZ
-   0Mn/pqIqy7oqDFKqswbCtBVbicEX1dszt6Y3cMafwsbh8Y+OX9Nq3jCF3
-   HLOWQ9I9flBBKf60M3pdYfiCFbKks7a1kmYUu+4anuoea7bSeNaezbiMN
-   c2B/SkDRTCUTyP2+VGyaJt1lJHqTvIZTj2UQNldC5SN9F5xQkY6uXs9Zw
-   xjQTe/mQzaPn5SYpcr/b6c2e5r5Wy68Xd7r8sJD+yTjw9QP2sD3eAdr4g
-   w==;
-X-CSE-ConnectionGUID: 2gGnNH1ZRZe96viWLuEeRA==
-X-CSE-MsgGUID: 1qhrpANWS+eE8KRsAIjFyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11249"; a="56271328"
-X-IronPort-AV: E=Sophos;i="6.12,135,1728975600"; 
-   d="scan'208";a="56271328"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 11:40:56 -0800
-X-CSE-ConnectionGUID: 8diFUQnRTBqpJudeHxV87g==
-X-CSE-MsgGUID: yb097d/eQf2HXs6Mu1tSfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,135,1728975600"; 
-   d="scan'208";a="84728163"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 11:40:56 -0800
-Received: from [10.212.68.83] (kliang2-mobl1.ccr.corp.intel.com [10.212.68.83])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 5A72420B5705;
-	Thu,  7 Nov 2024 11:40:51 -0800 (PST)
-Message-ID: <393bbcf0-aebd-450c-ad0b-e6140f1272b4@linux.intel.com>
-Date: Thu, 7 Nov 2024 14:40:50 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDClY96t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A77EC4CECC;
+	Thu,  7 Nov 2024 19:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731008504;
+	bh=qcXWjoNzolLbtObYn6+ZbtXzLxRdeRg5xkYwUA1E2h8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mDClY96taUjBA/B1xEplac6Y9OGo/BZau+uQ1goeRKI4nC3WqCNZKjm11ARmEZ1iC
+	 GPnRsQ/ECF4vxm4w/E6BcJCCOO5CdsRLeBy2B33Dg5Zqqpb4btrUZ997XL4IboaiKd
+	 rE6ijed+Phw2GnG+pqwgsLMV+MOGoUJSlNidsbcuwyATsnF9VRJPNMxLaFkR9YmK5+
+	 940U5VDcrb5IPDh7i7ZMfuwZ052fBL9I7tg0hbr+5B2B6gUYneUNr0UsaAPyFIkwVj
+	 hgDa4b3S3/tn7mnrKcGSaGPeXjcS7LigG+RkNBjvAVkwvQeDt9f3qBF9S7dFYC3vJW
+	 78IQU9J3L1jNQ==
+Date: Thu, 7 Nov 2024 11:41:42 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	acme@kernel.org, sumanthk@linux.ibm.com, agordeev@linux.ibm.com,
+	gor@linux.ibm.com, hca@linux.ibm.com,
+	Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH] perf/test: fix perf ftrace test on s390
+Message-ID: <Zy0X9kz_tmjNue5D@google.com>
+References: <20241107123343.1580616-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/5] x86: perf: Refactor misc flag assignments
-To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
-Cc: Oliver Upton <oliver.upton@linux.dev>,
- Sean Christopherson <seanjc@google.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Will Deacon <will@kernel.org>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org
-References: <20241107190336.2963882-1-coltonlewis@google.com>
- <20241107190336.2963882-5-coltonlewis@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20241107190336.2963882-5-coltonlewis@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241107123343.1580616-1-tmricht@linux.ibm.com>
 
-
-
-On 2024-11-07 2:03 p.m., Colton Lewis wrote:
-> Break the assignment logic for misc flags into their own respective
-> functions to reduce the complexity of the nested logic.
+On Thu, Nov 07, 2024 at 01:33:43PM +0100, Thomas Richter wrote:
+> On s390 the perf test case ftrace sometimes fails as follows:
 > 
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
-> ---
+>   # ./perf test ftrace
+>   79: perf ftrace tests    : FAILED!
+>   #
+> 
+> The failure depends on the kernel .config file. Some configurarions
+> always work fine, some do not.
 
-Acked-by: Kan Liang <kan.liang@linux.intel.com>
+Which test do you fail?  ftrace trace or profile?  I don't think it's
+gonna be a problem for ftrace latency.
+
+
+> To achieve success for all our tested kernel configurations, enlarge
+> the buffer to store the traces complete without wrapping.
+> The default buffer size is too small  for all kernel configurations.
+> Set the buffer size of /sys/kernel/tracing/buffer_size_kb to 16 MB
+
+Actually you can use -m 16M option for perf ftrace trace and perf ftrace
+profile.  Then you don't need to care about restoring the original size.
 
 Thanks,
-Kan
->  arch/x86/events/core.c            | 32 +++++++++++++++++++++++--------
->  arch/x86/include/asm/perf_event.h |  2 ++
->  2 files changed, 26 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index d19e939f3998..9fdc5fa22c66 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -3011,16 +3011,35 @@ unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
->  	return regs->ip + code_segment_base(regs);
->  }
->  
-> +static unsigned long common_misc_flags(struct pt_regs *regs)
-> +{
-> +	if (regs->flags & PERF_EFLAGS_EXACT)
-> +		return PERF_RECORD_MISC_EXACT_IP;
-> +
-> +	return 0;
-> +}
-> +
-> +unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs)
-> +{
-> +	unsigned long guest_state = perf_guest_state();
-> +	unsigned long flags = common_misc_flags(regs);
-> +
-> +	if (!(guest_state & PERF_GUEST_ACTIVE))
-> +		return flags;
-> +
-> +	if (guest_state & PERF_GUEST_USER)
-> +		return flags & PERF_RECORD_MISC_GUEST_USER;
-> +	else
-> +		return flags & PERF_RECORD_MISC_GUEST_KERNEL;
-> +}
-> +
->  unsigned long perf_arch_misc_flags(struct pt_regs *regs)
->  {
->  	unsigned int guest_state = perf_guest_state();
-> -	int misc = 0;
-> +	unsigned long misc = common_misc_flags(regs);
->  
->  	if (guest_state) {
-> -		if (guest_state & PERF_GUEST_USER)
-> -			misc |= PERF_RECORD_MISC_GUEST_USER;
-> -		else
-> -			misc |= PERF_RECORD_MISC_GUEST_KERNEL;
-> +		misc |= perf_arch_guest_misc_flags(regs);
->  	} else {
->  		if (user_mode(regs))
->  			misc |= PERF_RECORD_MISC_USER;
-> @@ -3028,9 +3047,6 @@ unsigned long perf_arch_misc_flags(struct pt_regs *regs)
->  			misc |= PERF_RECORD_MISC_KERNEL;
->  	}
->  
-> -	if (regs->flags & PERF_EFLAGS_EXACT)
-> -		misc |= PERF_RECORD_MISC_EXACT_IP;
-> -
->  	return misc;
->  }
->  
-> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-> index feb87bf3d2e9..d95f902acc52 100644
-> --- a/arch/x86/include/asm/perf_event.h
-> +++ b/arch/x86/include/asm/perf_event.h
-> @@ -538,7 +538,9 @@ struct x86_perf_regs {
->  
->  extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
->  extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
-> +extern unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs);
->  #define perf_arch_misc_flags(regs)	perf_arch_misc_flags(regs)
-> +#define perf_arch_guest_misc_flags(regs)	perf_arch_guest_misc_flags(regs)
->  
->  #include <asm/stacktrace.h>
->  
+Namhyung
 
+> 
+> Output after:
+>   # ./perf test ftrace
+>   79: perf ftrace tests     : Ok
+>   #
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Suggested-by: Sven Schnelle <svens@linux.ibm.com>
+> ---
+>  tools/perf/tests/shell/ftrace.sh | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
+> index a6ee740f0d7e..742d6b8f34d3 100755
+> --- a/tools/perf/tests/shell/ftrace.sh
+> +++ b/tools/perf/tests/shell/ftrace.sh
+> @@ -80,10 +80,21 @@ test_ftrace_profile() {
+>      echo "perf ftrace profile test  [Success]"
+>  }
+>  
+> +if [ "$(uname -m)" = "s390x" ]
+> +then
+> +	ftrace_size=$(cat /sys/kernel/tracing/buffer_size_kb)
+> +	echo 16384 > /sys/kernel/tracing/buffer_size_kb
+> +fi
+> +
+>  test_ftrace_list
+>  test_ftrace_trace
+>  test_ftrace_latency
+>  test_ftrace_profile
+>  
+> +if [ "$(uname -m)" = "s390x" ]
+> +then
+> +	echo $ftrace_size > /sys/kernel/tracing/buffer_size_kb
+> +fi
+> +
+>  cleanup
+>  exit 0
+> -- 
+> 2.47.0
+> 
