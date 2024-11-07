@@ -1,28 +1,28 @@
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11021099.outbound.protection.outlook.com [52.101.57.99])
+Received: from CY4PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11020119.outbound.protection.outlook.com [40.93.198.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38070198E99;
-	Thu,  7 Nov 2024 23:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DB71F4273;
+	Thu,  7 Nov 2024 23:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.119
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731023756; cv=fail; b=D17h6QqzO8M5ZEi4NccRVemIrCzWqNnruUkxzhuA+yxO24AG8B41/bakeKxXSJLMXPMmjrTq8SllNfqJbValI2jLH/Ih9/yEdtGZapZyaaPZkVp4TbLPBPWyB993EjdqxuWOWkneFU0b8Ofwh0YnHe4kByxpPK+MdIEPsCRcXjg=
+	t=1731023822; cv=fail; b=uKFtWCN9sF/SAYrgdF03MGj2m/eBfDwti+o+DZR5zRezAzJpX80Uawzx7veXWjo6wHQpmcxBmdNfHbjVAkKv0YsiFQfKUKK0z0XmR+2Iw1NXOyE2xJt6sdh4zfvk3eJIrPOsuU0yM826z/XPTYbTzUw0Gy8LtOrwxlj9DAcf8YI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731023756; c=relaxed/simple;
-	bh=0T/nfq0qdUwSwJo2ohISDLHXGdfupUBEktlpNtVgsKA=;
+	s=arc-20240116; t=1731023822; c=relaxed/simple;
+	bh=r7pen4Ia4ydwmXwQBUoQiEXbVOw/bjgzoxeGSqqyKtc=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 Content-Type:MIME-Version; b=FH7rOuCPoWHp596smUCAV3vd4lHe4cgjOkEMjWZDRSKU9NpnSvrVzz7sOWJWSVera/VeAmcEauCAye0XOag33ISLQbj0wJ2PVTsBh4emXP7XxdE3K0L6qXarw7OKH+g/GjspzFnq+MVeXD1yKjmFelFoLeJ32hEw0V36fPLtV/w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=QE9nZO8Z; arc=fail smtp.client-ip=52.101.57.99
+	 Content-Type:MIME-Version; b=NgdCPy4VdVJBXNlp9XnVWSMea6n4AvhyfozVtC5Z+qrqF6/FLLRym/R2SevJKGcvGQn6OGpmsllXywAyG06VKn7xhbbjlWHucghyGOhUN3/XZGt+NsSao3BUON+t8zkpVTW61nFt6m7QOMNx6bPq7q7Wugi8Jo80z50ulDkVVEA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=duwMV3xA; arc=fail smtp.client-ip=40.93.198.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="QE9nZO8Z"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="duwMV3xA"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dHa4za142d0xhMHUnDUdh62lmK/YIYjRKJsWpKgfNkjQP+AaWftshI2FDW/3O4BmdXaosTlk82xurwxcnpZCl4675AEH84O0swhWm5iMYsO2PhjF1fZQORcnY1TM5BRBL4l/pQJffusp4LLw5eH/3HUObznAbNR1ZUkHJ4zmqk6PozCi2h8xj9r9pj3cye/Wlj3g00tq8zbu3AMi8WqCC2oEE22NUSF5SBRBSs+QyoobSY1hWZZOMXtUxLGyt3Tznu8jihIxvwnbGXHpsbDP+9EtsV+mvcuaJHr1eLNTItFnAbbFdAG4rV3I9WYm/u2ow67TMZthnr/tycz/+OcbdA==
+ b=QAUFGCvwz1TJlKeBRO+w9k7yyYwVKh+6La6BL7We4NlcBxtItUeESRSPjwcK+rhtYqsEoWMVCRoJSx01s9VhbYMWfrzB8n0CYhDKzJ6yLToQ9SharjWElSuOiZzJLH/woC00w8x5Uh8CsCciHE4NsfqOafVIDJUbmW2HqQBf48C0oV0K6GoaY+RV86qIbnPFeTDIPkmisJbVUhtJcVOqx8JkcUWRgEhMDhJkak0LOUFK6BeMAyeX28Pb+s32kId5JzqbsM9a5mEmu9UPgUm+F/BrjimU/zqjqFr/+q3DuQhibQIkcvJ1jeqGbO7pT+TDzskYfSatdTm/FzXH/J2RBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kO/tAEwPHNgBzbme1z12/z6dJ5Y3m0DsFoAEqoLjS2Y=;
- b=ctXd4rzh4ei3gpTY5A1DDAc2/VKE09i9irKzdl0wX4eQHDqDcpDAPASgf9jTHt5vU14CFOiG29TGpin+TNBA0WrsX1xYEDHXgrG9ngAUdLJR0B64fF30YjVLfDq8Z2E2mVywILsSGuk5wGVELfQyqL3BovKa3xDgQI87HskrrMLQX48aLft8B5G23I7VqO100gpcPpb7W68FnF8tk4f2ckbhqSNVaxvnQVpFN4P2znA16rnT33ALzZRM9kfs3JuGli/jACDACGm8LXGUlK0AuisPEHjy93voaZoZD/fYWoQJKf1r68ui0rWuLqSmjvdSpBANQJAX0SGI+06j/+9N6Q==
+ bh=H7qcSVM4UvCtKzfDy6UYFuX6nQKTa/HHU949RTZpUTs=;
+ b=QWCWTyJ/MwYHlfYPBEesPSeEA8Ke5uyusPU/i4hyjOBBna+qZzRmeGaoXhozOYHllfYkpRc1Bf0siSwPwwLBOYtVulRRyIf3vzBXDVemIp8SaVLIvS+xeOwlDQFR8JwcpbiprfUiuEpP1jiZCx691nqzuypo6g5xunSnkhs+po01ubBrqA2RPJ6ynyqUlTDEzTD1szpwgWTPwiVzXBOuZf0v0CuhOv4CH74zSqmzyEDiZO5G1IwCb4/tRgfCSneyw3cuG189154CjUTPXzlb8anjbTdrPkYJWYDudUGtwLw3Fb0q0BhyaGf7TKrXaYI3sS3PVebFxnS3t+5/Kku/ew==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
  header.from=os.amperecomputing.com; dkim=pass
@@ -30,19 +30,19 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=os.amperecomputing.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kO/tAEwPHNgBzbme1z12/z6dJ5Y3m0DsFoAEqoLjS2Y=;
- b=QE9nZO8Z8oZMdRRsBmUO9lHOG4Q0p//ZUgJyO79M1jm/YlqaZl3OP2vsGtivzNJMwh9UZz0/HnHLW06R/e5eYnSTAt2sEic9QJWyW694AyAwqiqbgFH9HiUzOUcKpp72hAFEjwrX6IpQtb2TyG0nd1G+DxrxFCBa9Allw6WIL9E=
+ bh=H7qcSVM4UvCtKzfDy6UYFuX6nQKTa/HHU949RTZpUTs=;
+ b=duwMV3xAxs1aKrhqdDNCbDurQFjP9d8KJ1KfDuOvIZr3RNjDIYrALaVHQxPIhc8eo3qG5KXDxmmhJG9OQ6qW7YsX1G9PAxXStYqi51ShVnIkLkqoRNuo6t8LY9HDbRyuYx0OtlJmTAlT7rVE7ab+rl/DARPSHSz9TJJkzbSvPyk=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
 Received: from MW4PR01MB6228.prod.exchangelabs.com (2603:10b6:303:76::7) by
  DS1PR01MB8720.prod.exchangelabs.com (2603:10b6:8:216::6) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8137.18; Thu, 7 Nov 2024 23:55:49 +0000
+ 15.20.8137.18; Thu, 7 Nov 2024 23:56:58 +0000
 Received: from MW4PR01MB6228.prod.exchangelabs.com
  ([fe80::13ba:df5b:8558:8bba]) by MW4PR01MB6228.prod.exchangelabs.com
  ([fe80::13ba:df5b:8558:8bba%3]) with mapi id 15.20.8137.018; Thu, 7 Nov 2024
- 23:55:48 +0000
-Date: Thu, 7 Nov 2024 15:55:41 -0800 (PST)
+ 23:56:57 +0000
+Date: Thu, 7 Nov 2024 15:56:51 -0800 (PST)
 From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 To: Leo Yan <leo.yan@arm.com>
 cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
@@ -58,14 +58,14 @@ cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
     Graham Woodward <graham.woodward@arm.com>, 
     linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] perf arm-spe: Prepare for adding data source
- packet implementations for other cores
-In-Reply-To: <20241107152542.GC47850@e132581.arm.com>
-Message-ID: <1c7db0d2-d08c-2d9-2976-30d1e9d8f2f4@os.amperecomputing.com>
-References: <20241106193740.6159-1-ilkka@os.amperecomputing.com> <20241106193740.6159-2-ilkka@os.amperecomputing.com> <20241107152542.GC47850@e132581.arm.com>
+Subject: Re: [PATCH v3 2/2] perf arm-spe: Add support for SPE Data Source
+ packet on AmpereOne
+In-Reply-To: <20241107154424.GD47850@e132581.arm.com>
+Message-ID: <f84d3b6-ccea-bcc-b628-4966fa19f227@os.amperecomputing.com>
+References: <20241106193740.6159-1-ilkka@os.amperecomputing.com> <20241106193740.6159-3-ilkka@os.amperecomputing.com> <20241107154424.GD47850@e132581.arm.com>
 Content-Type: text/plain; charset=US-ASCII; format=flowed
-X-ClientProxiedBy: CH2PR17CA0014.namprd17.prod.outlook.com
- (2603:10b6:610:53::24) To MW4PR01MB6228.prod.exchangelabs.com
+X-ClientProxiedBy: CH0PR13CA0008.namprd13.prod.outlook.com
+ (2603:10b6:610:b1::13) To MW4PR01MB6228.prod.exchangelabs.com
  (2603:10b6:303:76::7)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -75,272 +75,188 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: MW4PR01MB6228:EE_|DS1PR01MB8720:EE_
-X-MS-Office365-Filtering-Correlation-Id: 921bcad2-f559-4cae-4bb8-08dcff87b3ca
+X-MS-Office365-Filtering-Correlation-Id: a82177c8-b34f-4f1d-af1a-08dcff87dcb2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|366016|376014|1800799024|7416014|52116014|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NjlNR5X7Zf2OtLi/EB6vcvZzjxwhCHtGGYuxrxqP1wpFbF54d2R5sWtxFgs7?=
- =?us-ascii?Q?+Vtpu5BnbRzefpFqOB4Du51nb+gNu4BRSAEEpHZs7vddPYX5sUxO5b4/kdFZ?=
- =?us-ascii?Q?rbqwwyMaivqSGn2WQsQ5fy3bpQEzO/BhvhHmRq97gWsewf4XepFAW8G24zMg?=
- =?us-ascii?Q?RlUYOB34/8hD3Ubjcx0lFoXaYwuwMXbaHs47BovYbZ09LWCaoNxPu5iDZ0Om?=
- =?us-ascii?Q?Gtxsj9lDRP+lz9HFre2AD9DoxdNHjWikyWwlJH5FTHwviazGvEmc0BmXsEJx?=
- =?us-ascii?Q?kjX/dXBeBKzkrJizXEnhTZcnJYcWqIV+/+sbnyABTB8ZzsI1N+J9frVUsjmP?=
- =?us-ascii?Q?wsK3savOi7nD6TNya/DJH3vm/PpeCfxuQfMjwrabJkSSZczkTBvHTyDsHo0y?=
- =?us-ascii?Q?Ddqcy2yQ9khPV64s9UsAWjl5JTK4uoiDyl5vPTTYJgouwWCYnIbbIWZ6MVWF?=
- =?us-ascii?Q?8J2yJwip00rzA1SzbyTqKY4mVi8Qz1QyA5d5NO1wkyXlUIARiMYCd/ENnxq4?=
- =?us-ascii?Q?2sxTZsyt15mhnOwYRamtp2M+NBli4uNjPeKNzTTwTJWe/KXgPVYLcSL3Wi9u?=
- =?us-ascii?Q?335aOCEedY5xmK70Hu2LNbNCgOV2Zu3TZceuCSBMW1++bRMQEUOG8aeCzUNv?=
- =?us-ascii?Q?4crCjYNdexvDVBuDXAYEjST4ELOtj+nn/Uj4bPvhrYJm/nP1Cx/PSt5hTXTv?=
- =?us-ascii?Q?Jzw29Sev9TAFT6fd2VhTdUpW9za5XNIPeIZ0Kul6hiQ8UNjHMEG7c7Nivpvd?=
- =?us-ascii?Q?oe62vGYIAjMkpBIVpbgKqHtxHvv1aAcEjaajCtjduXHFpB03I0Yk4cDehVY5?=
- =?us-ascii?Q?Q7/yjWUlP2W0vlUIX5Uvac4M3HljNqM7QaBS6k2krBwk2EeoSnqEeUDr7aO9?=
- =?us-ascii?Q?ib7p9wlSKnuBXJEf1k5Fg/RW23DZIMeqPQVeqnUYOYTA79JJ9Gensb69pY/P?=
- =?us-ascii?Q?3xIfQjqTUuWEUCtSBbd7oYbUGI7SjZrSPwzZDbETpCJKtcHQDZh6dUUT9SgJ?=
- =?us-ascii?Q?aJ+HAV0Yu0TMFQtLo8A2xIul24MmeXHHqhJSXkdzNZzWOHmWAnU8VkNk8nF+?=
- =?us-ascii?Q?AN5B5qLK8ao/ehrhNj9KNs0nbi3HyG82gYfdDAKn0AE5Thj98a0riJrjTtW6?=
- =?us-ascii?Q?sCPIHKj9iZZnR3FPcOhycimCNvc52G1hCC+ovSqMQs8x+z7Jg8wxYhQ2yjUK?=
- =?us-ascii?Q?qbSG3/edSaj7hs2xRUMFTYxhnS+5i9SIcKfF4BHednn2zHPviCJSQ6d1Aa3Y?=
- =?us-ascii?Q?ymSS1ssDG1PzIGmNsoh4VQIgPbuAg59LF6a1sS0QieIpXEz56CiLPufv4OCd?=
- =?us-ascii?Q?Q0kt+rjk9Pa0fKNynLoER9pBSRLIIYo1zYoP4g9n84NVH+bvwKFzS0Fte2jo?=
- =?us-ascii?Q?W/Zxo9Q=3D?=
+	=?us-ascii?Q?ep+ho7/s15J4IrJYjWuauphmYmkIMPPtRjS8CmcNslQcEO95kr1MzZfy0ACI?=
+ =?us-ascii?Q?p6fRi4SFqAjzK7PwgeV3mdOso4qcTtZZZvi/1cYzuA5XCYF7l1iPd3PNSyR4?=
+ =?us-ascii?Q?ME3mVW3cDDJpCdkcvlDBrSJ6kImp7O4xFK8q9duhXhh0PnXh8wJLLITeL7Ws?=
+ =?us-ascii?Q?/6gRy6c2tjsSPj5uBenQ5nXyfxRLrVSi1jPwqDi0EquzN2AhYUIvuNhyGhHk?=
+ =?us-ascii?Q?qKU8iXnAp+m5v9B2SSMWyGyBQ692i3nX7nbGhA4m0GHmhP3Jgsf0ETqCxcWI?=
+ =?us-ascii?Q?VpK0iXAse1Bc1lkrAAQt99/rPV9PS2GQYQlnaWI6m+9WJlXw9DNMynWAluC9?=
+ =?us-ascii?Q?Q7rF1OBB1G85lYIEtM64Y7PiFHvhu2hyJkOE28y5u8X4MOKOm4sgGCdRizI0?=
+ =?us-ascii?Q?r9PXSLjoGOGSBDrSXxiVeYLn9Cj8LXI+SB46YStmRRQ+s4heuuklIBR9PyPW?=
+ =?us-ascii?Q?fnZDBRtn3/Qq63VY4AAwSdUN5hH8fRsgK1bTAHFw9mAq4u6Hfnz/m01iP7Co?=
+ =?us-ascii?Q?McgeurRH5MIIb2LMVhQzKP6mMnue1INPZg4EdljRonNejz7fSMONMAc3XNbP?=
+ =?us-ascii?Q?KA6QavFtf9yEnRS9jMN6SHv6J4vuBX/KjvtcyONxfGj7q1X7JdSK1+mR1ZDo?=
+ =?us-ascii?Q?2NuoJ5qlj2gd4Cnf0x2bNxvr3VJ3tM1iiiQjyrWLtTbA4+9rr4QF1HWzYLME?=
+ =?us-ascii?Q?N+bBPcqC6vhcHLL7XYpHG1S9NUIsO3P44Vc5IOy3fMraQHzhujJTkwoFaUZA?=
+ =?us-ascii?Q?i/fpPjwBNrHdUdTadI2VIC+IUhLNVNSfwmvyP4j06yE8UHi/TzCYpgSorxiQ?=
+ =?us-ascii?Q?mioRXNteeHEUthJwRwMXQOTmEswMP002sCmkMU3Ns/xIlBbmtNM/6N03ci7G?=
+ =?us-ascii?Q?Al+niruWeCIQfdKOo8HhvLc6AE0lUlzMFAy1AfMxJaGEDr71wgc9kx0FRr0u?=
+ =?us-ascii?Q?vuahTebDpDH7lvOlx9BqIn6Tkj+lX2qFoGxsb86YjG6pQqJFOcO7pMdvyACG?=
+ =?us-ascii?Q?WRuRAnWKcVw0rt/pQ9cKEu5V3CKrd/0G9zhKu7qwEqpZAYSO9vVTkYnRe3L4?=
+ =?us-ascii?Q?Nl/qnzlXu/bF82k1rA0LmWGm2VWpK8FkFTWrGWhI7Hjv869Ya+6y7wxOxyjS?=
+ =?us-ascii?Q?5mvLyIppjt0ar26zQpX6jvQIPwDaXfxCYHAHei0HogIXneNjYtS352v7GMYA?=
+ =?us-ascii?Q?UWNRSoonxG4qmrli1whvVy1JAD3mdpLFEbeDB+9nlKxXRcYrpJ5QNaVfrzxM?=
+ =?us-ascii?Q?VhcXOS+2mxRp71iBl/33fm+Akh918LkftckwA/MgDEBwbBk0+e5jnolmte0w?=
+ =?us-ascii?Q?Pn3CFsnX8lQCVz6jf6/uZY8X614dxpaA+TWX1nlI0acOdvmesRG2/4qi0brU?=
+ =?us-ascii?Q?8z1S3qs=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR01MB6228.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?s9ha0qOCg0TCir859gpnRT7f6zGlucWSImsGIgTWOi3V44aBYNZkMa3dufv9?=
- =?us-ascii?Q?DWaCd9jNek6Tmy2i8CQpT3c5DUtM05HF8bedu+mmVkTrZM3HNTX2Mwm7xiMv?=
- =?us-ascii?Q?qq3nBiN7Gw3Mpe2r9PUAmnkTRQrmhTzhzc7KBBOl1s0wE2BGFrqjEEcLBL/s?=
- =?us-ascii?Q?VT/5iwO7/OzR370t6j2oPJpXsOXK/jkYSqEk0rDNdDOtNU0fdljG2RtJZYgH?=
- =?us-ascii?Q?KyHpIdMjkzLOOFL/AnielmYX91k6kyVNk68orNQqngdex0pvU1ScUBoNekCy?=
- =?us-ascii?Q?HVadMzopcDvixXt+lv/qLsXt5mPASsKupZ9iJfkUUEWLyNONW5T03vSE7IoJ?=
- =?us-ascii?Q?XZldet5ihkImcOet5303Xl0ABink2uuLmrpVtcK+TROU1NrHPItLERL/R8qz?=
- =?us-ascii?Q?/DvEmFQgipqNlk6mqbLjukAKgq2a/IYi4Txjsll4VDKpzEh5rRuiabk9EnFY?=
- =?us-ascii?Q?dWKBNpgK5Fl2/3PZfup14UP4tnjqcRvyiJjxc2teIg+Ormx4+YBTTJ4BvPfZ?=
- =?us-ascii?Q?WZXrZEcpYnonhydB+VOlj0A+dsF/tDpQ/VYiFakCeKIt2QojiCCacIr91Iur?=
- =?us-ascii?Q?II3ZWTXG9P1gOjYnXoOBkn/iuzH7Dm5mYaM4mRKuckNki+vLtrKjzzzmJYzP?=
- =?us-ascii?Q?YSGq6uHOdyVQMxKBii+hSUXZ1YbYH8Jd2K9Nr9BK+x0l73/zxIhTNCDGTAGe?=
- =?us-ascii?Q?WYRsz9U8gv0ry1i5WxY9RL6SweSz3X2q4NINr37+qcYV8MUsbabIFDVUBRss?=
- =?us-ascii?Q?uQnCHbi2OlwIMkDKOxjtYeH8dLxbGSgAQdGXs80lFjQSMlhSN4vGiepWjTUy?=
- =?us-ascii?Q?59DoXvg0gOOm2hhkO+q0QzYeLEzrXr+4GgH6sAusJNtJsCom6BEAKtZxX1vX?=
- =?us-ascii?Q?Mpgn6mG0CK0H217Ho5So+qeOhhagwXSd9yxjowM9VU4NjtD8PgkN09tOAz+S?=
- =?us-ascii?Q?eJ2/NkCrExkDVi7zWSwStw/g/F5oCo6iyD9pqcSadFR9DvIRpJJsmdOzhQ7Q?=
- =?us-ascii?Q?Qq6xUAFw0Iog0m7KdY5qoxAPSvDxmCl4zje5pFS/iReFHqblH7JCXgCZsS1j?=
- =?us-ascii?Q?nBwGtQh+SG2R23bY9NjOi8kgwAUvx+lR7ch3RMrLtyZFh5vzcfgoatL8iAjG?=
- =?us-ascii?Q?vMq3Wl8udKb67KIJT7s+fIQgyXdSM5wKQgGqw8kCaQzVxCd1bGAB/Ksg4+H1?=
- =?us-ascii?Q?q8m4rmbOhBt9eWu01H1+1EXmLp8mvrZY3BUUr0iPY8DF8raYPUTBKkUDCL4Z?=
- =?us-ascii?Q?ZZsMOmTRFPfuoH/DnVt4Spc+L5ROl5T0FGUKa+HC7jyVOECXM4tA0XTLvXQZ?=
- =?us-ascii?Q?pyNES3uPKvTrwf1CUKrtlrg9lzTFEy+2WrG7NaOy8N865Ff/cSH9l8uq3fUk?=
- =?us-ascii?Q?lcyPJyv7wxpb/bX6T044vAlUK6MPFKKhHMzUkA4a4GYmh9bJubP2ZAcBUDbO?=
- =?us-ascii?Q?5+RRzk3oYIh8axfYVicRxzAIoFzHuGEhd+iYJWEqsEitF/vh/y5tjbU32L/Q?=
- =?us-ascii?Q?zx9BemIg4p+B4x15mAHhEfzvO2ievSvAOf29EqDiYUad+/qBY3ht1L3PNq3m?=
- =?us-ascii?Q?Bo3Yu8VeQDTR/xMJZ7R7KsVxagFbJvSb0hupxpDtPtXEEIGUjN8MbKcpuomj?=
- =?us-ascii?Q?T7bG6gkyKqrCUK7LZNoqsLU=3D?=
+	=?us-ascii?Q?XiX3zce2BBf4oboHiaJeRzHDs8InyTTNBan82X3mDm3KjI90MjL97Dv7NM+4?=
+ =?us-ascii?Q?q93smH840fUM9rd0bcjdMkUl27ejvJ0hySsB1D4wWA9n4fyT5l7wLyennwN9?=
+ =?us-ascii?Q?Z1y51YpiTM3Hu3tUU8O6UuuMIc8MiThLQeM4mq/L1UCTgvYOdztcjTEEbXQY?=
+ =?us-ascii?Q?KougmMRyFF61A65senx8hPVMazSyXixs5VpgLIgKM3FR0MkO2aBfaSBWyGqG?=
+ =?us-ascii?Q?WXMRdgjb9yU6yYRIsIeezDQpr72Dtr/GEnEnz4ab/vY7SPM3HAcDv7FdpAs5?=
+ =?us-ascii?Q?/kfoBWP3PoBtWMysjbr/QvGRtAshwmxvW2OND1BNMBM42QDp+DjjQmXDUo3Z?=
+ =?us-ascii?Q?dnNoHP6ixJYQe1owrL1d5veXk6O+BBL2EbO0ceT0tsKlgRo4CrHQmthRl3XX?=
+ =?us-ascii?Q?ihl7NV/TYyD3zeguOvo2TPZ1A6cZpC8r7FEzzEX0+wHp+Q88EYzedzZmL6QR?=
+ =?us-ascii?Q?1vT5EF5UvFwnrplwGei5PbyPBz+JnzpO6UJAksMn/7WDyX6o3W1euug7CYHK?=
+ =?us-ascii?Q?/wlbzOEhe3IAoFFkuYfskRgf/bJpPJ18+vhChSSAehkcqRq5np7oLedy4Ece?=
+ =?us-ascii?Q?QLxrTJd/5bs5N7rOtDRW8jENyo/x4doXsVznWBhC9HyMA1zP3/6X1BQ9YBMO?=
+ =?us-ascii?Q?e77/a/aPkXC5VJkdxOB7lQmRiOoLnXCMIZ+sUz9i2/+dFOPdLvPFrqFtwlOF?=
+ =?us-ascii?Q?y6tvxNPmz7OWNhDln8xm1G8c/2gq8SGJardvwNT5uy0AJ6lwfSuFF9nLF0eI?=
+ =?us-ascii?Q?KWJInv6ar3CDNcHJHvf5snJ1q+fecHonUBfVywZRanu0fPlcBkPrrA4ojy0o?=
+ =?us-ascii?Q?Utc50fq0XZ8EWkouaRVJPqABx8S43DC3q6KxIxVNxxe9lWUuO2sTP+u2BhxB?=
+ =?us-ascii?Q?stCvNDwSQq0OZgyvV1kkuUIzfkmNXdAP2je3UC6ab4sRC8AQL4W4l1J4m4OY?=
+ =?us-ascii?Q?YYhlhe4+w2Mj0l9fGEGQaX2sArGL50v817r+e/8txuKW19IUcFmI3eJGP8/F?=
+ =?us-ascii?Q?CD5UMNlXYMsvhCRdajyF5pOlhVSYqNKpuxPpCfmn77lmYaEb/pEbQhSzKd5E?=
+ =?us-ascii?Q?D4gkoEAAhWI3ABtIzRjA1sAjkM1bBqsxfcGOLUIwbN8A0kRIZl5FV223EmEm?=
+ =?us-ascii?Q?psyiZzHHMzu1ZJt/I6ET1/L2MNEdkjD0Mde91xUxYAW9JQz+CC23ZsLl+WJe?=
+ =?us-ascii?Q?s4UysmbNmyKaUHDIjaQjtyd8suRFxKxQ71xDwWb7x7zQkT/8M1rRWGUHRrsq?=
+ =?us-ascii?Q?Rn/pTbl4629i3nYu1X6yuzYmMT18l6xDqmlrymYxQ+rcWv22iGVHHW0qYJmv?=
+ =?us-ascii?Q?eICwQeGDmxSra7ouExvfqHSt/JE1N0f9qGTgcPM1VQTtQGxOxPJidJnvNQiA?=
+ =?us-ascii?Q?m8XDt/oehqx0h1EWV5ziGs2xKnVxi909eY401WlBl0E7f1Rwv0pRDDsP0k5f?=
+ =?us-ascii?Q?kiM6h242oQQDLwbEXelCLAqKiOF38kLHhlvebV5p5oBc7lGSkdhTNxjQjcb9?=
+ =?us-ascii?Q?eygqzJHrhI4L7FJl/26q1C0g+VlIgFn895ykna4zCndoKEcjsV58OoSmSQQV?=
+ =?us-ascii?Q?A+EqZwAOGNtE4OHnq4gW7RD9WXRijvz49OVkPy9Hlo/CU7175Qnxcg0rBOpK?=
+ =?us-ascii?Q?1nGxlD4OycS7nLdeFKrW4ec=3D?=
 X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 921bcad2-f559-4cae-4bb8-08dcff87b3ca
+X-MS-Exchange-CrossTenant-Network-Message-Id: a82177c8-b34f-4f1d-af1a-08dcff87dcb2
 X-MS-Exchange-CrossTenant-AuthSource: MW4PR01MB6228.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2024 23:55:48.3817
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2024 23:56:56.9555
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: p+07iOIY2G2EYOkCteRJNbEOucO/6QULbHlpLmePAiivF7v/Ih+nwlG5ir+/F6EiZ8YU2nrI0VE95EFhwIKHqlq89wxE1mlEXYqw1XxA7ZVvcKJPS0Dnb+3AlLtlIQ+H
+X-MS-Exchange-CrossTenant-UserPrincipalName: i8WfSeB9dLM1NcmB38g3uUwuZKylpMDeOSwDDl4nYevaZFCXcnvu+7hzNSN/3HQKBkt3IFeWDqj8pTs1C29i/Ea8umIDUMWV1K5t2DWH3HEjTaAxG1Wg14MciAdkjzuF
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS1PR01MB8720
 
 
-Hi Leo,
-
 On Thu, 7 Nov 2024, Leo Yan wrote:
-> Hi Ilkka,
->
-> This is a good refactoring for me.  Just several minor comments.
->
-> On Wed, Nov 06, 2024 at 07:37:39PM +0000, Ilkka Koskinen wrote:
+> On Wed, Nov 06, 2024 at 07:37:40PM +0000, Ilkka Koskinen wrote:
+>> Warning: EXTERNAL SENDER, use caution when opening links or attachments.
 >>
->> Split Data Source Packet handling to prepare adding support for
->> other implementations.
+>>
+>> Decode SPE Data Source packets on AmpereOne. The field is IMPDEF.
 >>
 >> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 >> ---
->>  tools/perf/util/arm-spe.c | 65 ++++++++++++++++++++++++---------------
->>  1 file changed, 40 insertions(+), 25 deletions(-)
+>>  .../util/arm-spe-decoder/arm-spe-decoder.h    |  9 +++++
+>>  tools/perf/util/arm-spe.c                     | 39 +++++++++++++++++++
+>>  2 files changed, 48 insertions(+)
 >>
->> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
->> index dbf13f47879c..b222557cc27a 100644
->> --- a/tools/perf/util/arm-spe.c
->> +++ b/tools/perf/util/arm-spe.c
->> @@ -103,6 +103,18 @@ struct arm_spe_queue {
->>         u32                             flags;
+>> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>> index 358c611eeddb..4bcd627e859f 100644
+>> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>> @@ -67,6 +67,15 @@ enum arm_spe_common_data_source {
+>>         ARM_SPE_COMMON_DS_DRAM          = 0xe,
 >>  };
 >>
->> +struct data_src {
->> +       struct midr_range midr_range;
->> +       void (*ds_synth)(const struct arm_spe_record *record,
->> +                        union perf_mem_data_src *data_src);
+>> +enum arm_spe_ampereone_data_source {
+>> +       ARM_SPE_AMPEREONE_LOCAL_CHIP_CACHE_OR_DEVICE    = 0x0,
+>> +       ARM_SPE_AMPEREONE_SLC                           = 0x3,
+>> +       ARM_SPE_AMPEREONE_REMOTE_CHIP_CACHE             = 0x5,
+>> +       ARM_SPE_AMPEREONE_DDR                           = 0x7,
+>> +       ARM_SPE_AMPEREONE_L1D                           = 0x8,
+>> +       ARM_SPE_AMPEREONE_L2D                           = 0x9,
 >> +};
->
-> The naming is a bit mess. The data structure and the parameter both
-> are called "data_src", though this will not cause building issue.
->
-> How about rename the structure "data_src" to "data_source_handle" or
-> "data_source_class"?
-
-Yeah, I forgot to revisit the naming part. I like "data"source_handle",
-that should clarify it quite a bit.
-
-
->
-> For the "midr_range" field, I'd like to change it to a pointer:
->
->  struct midr_range *midr_range;
->
-> Please see below comments, which will present the reason for defining
-> it as a pointer.
->
 >> +
->> +#define DS(range, func)                        \
->> +       {                                               \
->> +               .midr_range = range,                    \
->> +               .ds_synth = arm_spe__synth_##func,      \
->> +       }
->> +
->>  static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
->>                          unsigned char *buf, size_t len)
->>  {
->> @@ -430,19 +442,6 @@ static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
->>         return arm_spe_deliver_synth_event(spe, speq, event, &sample);
->>  }
->>
->> -static const struct midr_range common_ds_encoding_cpus[] = {
->> -       MIDR_ALL_VERSIONS(MIDR_CORTEX_A720),
->> -       MIDR_ALL_VERSIONS(MIDR_CORTEX_A725),
->> -       MIDR_ALL_VERSIONS(MIDR_CORTEX_X1C),
->> -       MIDR_ALL_VERSIONS(MIDR_CORTEX_X3),
->> -       MIDR_ALL_VERSIONS(MIDR_CORTEX_X925),
->> -       MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
->> -       MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
->> -       MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
->> -       MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2),
->> -       {},
->> -};
->
-> We can keep this data structure.  For Ampere CPUs, you can add a new
-> data structure:
->
->  static const struct midr_range ampereone_ds_encoding_cpus[] = {
->      MIDR_ALL_VERSIONS(MIDR_AMPERE1A),
->      {},
->  };
-
-Sounds good to me. I change all those.
-
-Cheers, Ilkka
-
-
->
->> -
->>  static void arm_spe__sample_flags(struct arm_spe_queue *speq)
->>  {
->>         const struct arm_spe_record *record = &speq->decoder->record;
->> @@ -532,6 +531,19 @@ static void arm_spe__synth_data_source_common(const struct arm_spe_record *recor
+>>  struct arm_spe_record {
+>>         enum arm_spe_sample_type type;
+>>         int err;
+>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+>> index b222557cc27a..40847a3d18b0 100644
+>> --- a/tools/perf/util/arm-spe.c
+>> +++ b/tools/perf/util/arm-spe.c
+>> @@ -531,6 +531,44 @@ static void arm_spe__synth_data_source_common(const struct arm_spe_record *recor
 >>         }
 >>  }
 >>
->> +static const struct data_src data_sources[] = {
->> +       DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_A720), data_source_common),
->> +       DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_A725), data_source_common),
->> +       DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_X1C), data_source_common),
->> +       DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_X3), data_source_common),
->> +       DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_X925), data_source_common),
->> +       DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1), data_source_common),
->> +       DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2), data_source_common),
->> +       DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1), data_source_common),
->> +       DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2), data_source_common),
->> +       {},
->> +};
+>> +/*
+>> + * Source is IMPDEF. Here we convert the source code used on AmpereOne cores
+>> + * to the common (Neoverse, Cortex) to avoid duplicating the decoding code.
+>> + */
+>> +static void arm_spe__synth_data_source_ampereone(const struct arm_spe_record *record,
+>> +                                                union perf_mem_data_src *data_src)
+>> +{
+>> +       struct arm_spe_record common_record;
 >> +
+>> +       switch (record->source) {
+>> +       case ARM_SPE_AMPEREONE_LOCAL_CHIP_CACHE_OR_DEVICE:
+>> +               common_record.source = ARM_SPE_COMMON_DS_PEER_CORE;
+>> +               break;
+>> +       case ARM_SPE_AMPEREONE_SLC:
+>> +               common_record.source = ARM_SPE_COMMON_DS_SYS_CACHE;
+>> +               break;
+>> +       case ARM_SPE_AMPEREONE_REMOTE_CHIP_CACHE:
+>> +               common_record.source = ARM_SPE_COMMON_DS_REMOTE;
+>> +               break;
+>> +       case ARM_SPE_AMPEREONE_DDR:
+>> +               common_record.source = ARM_SPE_COMMON_DS_DRAM;
+>> +               break;
+>> +       case ARM_SPE_AMPEREONE_L1D:
+>> +               common_record.source = ARM_SPE_COMMON_DS_L1D;
+>> +               break;
+>> +       case ARM_SPE_AMPEREONE_L2D:
+>> +               common_record.source = ARM_SPE_COMMON_DS_L2;
+>> +               break;
+>> +       default:
+>> +               /* Assign a bogus value that's not used for common coding */
+>> +               common_record.source = 0xffff;
 >
-> As a result, we can simplify the structure as:
+> For unsupported source value, just bail out and no need to calling
+> arm_spe__synth_data_source_common().
 >
->  static const struct data_src data_sources[] = {
->         DS(common_ds_encoding_cpus, data_source_common),
->         DS(ampereone_ds_encoding_cpus, data_source_ampereone),
->  };
->
->>  static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
->>                                         union perf_mem_data_src *data_src)
->>  {
->> @@ -555,12 +567,14 @@ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
->>                 data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
->>  }
->>
->> -static bool arm_spe__is_common_ds_encoding(struct arm_spe_queue *speq)
->> +static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
->> +                             const struct arm_spe_record *record,
->> +                             union perf_mem_data_src *data_src)
->>  {
->>         struct arm_spe *spe = speq->spe;
->> -       bool is_in_cpu_list;
->> +       const struct data_src *src = data_sources;
->>         u64 *metadata = NULL;
->> -       u64 midr = 0;
->> +       u64 midr;
->>
->>         /* Metadata version 1 assumes all CPUs are the same (old behavior) */
->>         if (spe->metadata_ver == 1) {
->> @@ -592,18 +606,21 @@ static bool arm_spe__is_common_ds_encoding(struct arm_spe_queue *speq)
->>                 midr = metadata[ARM_SPE_CPU_MIDR];
->>         }
->>
->> -       is_in_cpu_list = is_midr_in_range_list(midr, common_ds_encoding_cpus);
->> -       if (is_in_cpu_list)
->> -               return true;
->> -       else
->> -               return false;
->> +       while (src->midr_range.model) {
->> +               if (is_midr_in_range(midr, &src->midr_range)) {
->> +                       src->ds_synth(record, data_src);
->> +                       return true;
->> +               }
->> +               src++;
->> +       }
->
-> Here we can traverse the 'data_sources' array:
->
->          for (i = 0; i < ARRAY_SIZE(data_sources); i++) {
->               if (is_midr_in_range(midr, data_sources[i]->midr_range)) {
->                   ...
->               }
->          }
+> It is good to use pr_warning_once() to print out warning log to remind
+> users.
+
+Hi Leo,
+
+Makes sense, I'll do that.
+
+--Ilkka
+
 >
 > Thanks,
 > Leo
 >
+>> +               break;
+>> +       }
 >> +
->> +       return false;
->>  }
+>> +       common_record.op = record->op;
+>> +       arm_spe__synth_data_source_common(&common_record, data_src);
+>> +}
+>> +
+>>  static const struct data_src data_sources[] = {
+>>         DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_A720), data_source_common),
+>>         DS(MIDR_ALL_VERSIONS(MIDR_CORTEX_A725), data_source_common),
+>> @@ -541,6 +579,7 @@ static const struct data_src data_sources[] = {
+>>         DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2), data_source_common),
+>>         DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1), data_source_common),
+>>         DS(MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2), data_source_common),
+>> +       DS(MIDR_ALL_VERSIONS(MIDR_AMPERE1A), data_source_ampereone),
+>>         {},
+>>  };
 >>
->>  static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
->>                                       const struct arm_spe_record *record)
->>  {
->>         union perf_mem_data_src data_src = { .mem_op = PERF_MEM_OP_NA };
->> -       bool is_common = arm_spe__is_common_ds_encoding(speq);
->>
->>         if (record->op & ARM_SPE_OP_LD)
->>                 data_src.mem_op = PERF_MEM_OP_LOAD;
->> @@ -612,9 +629,7 @@ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
->>         else
->>                 return 0;
->>
->> -       if (is_common)
->> -               arm_spe__synth_data_source_common(record, &data_src);
->> -       else
->> +       if (!arm_spe__synth_ds(speq, record, &data_src))
->>                 arm_spe__synth_memory_level(record, &data_src);
->>
->>         if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
 >> --
 >> 2.47.0
 >>
