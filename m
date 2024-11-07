@@ -1,57 +1,57 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC2D1DE8A5
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 Nov 2024 07:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10561DEFD0
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Nov 2024 07:16:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730963771; cv=none; b=BNlTLSnmDMYehgAy9l1rOzX8loEl6YnnM5px0VBIvulJqU8thmQbGBmxM91I/Rk6SqazFxOYUOIYqdMP5NzvKeXHn0SvQ9RvHtbyYR4F6wzVhC+b7tRpjrtXIsp74c83IKkSfKRWfC6IUU4cy/IaPufxnZacqhgPgcwcczdRrp4=
+	t=1730963773; cv=none; b=FpcCW9SIPg8I/bfG1k/qojbVKZrLbWuBeeHJpaOKIZyEwBpqw4UpHbP8HPuXOpWfs3WVh2NOUOk8v3qf9Ze8wR/S08WEAFp4vIzTiafu/0dyGXS48OVmeKXztn5MmW3HmFkdQgF1ypiSI5sxr0jyt3md4tg1+fMAZtC6wVjSRLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730963771; c=relaxed/simple;
-	bh=UGgs7qpyQsaOAD/+38PffSoTksURxSZGP6Fxx9r4zHE=;
+	s=arc-20240116; t=1730963773; c=relaxed/simple;
+	bh=OHfFGp0ifWb+zyyGJptLLNowSsK7ixiaUATGyiRfl38=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=XTH6onE3EdFm5+quVV+4lSXKYwLXtMTWP+3ckRJHO7Ojrq2UIDpGcTsYk0GV5ZReZsEqX7VaCvCG55dNeG9cUrwFReSIgbJyuu5POdUkwKpjCOnFF5sp1TyKfylFZiVK6oR/+cxFo98YOdGNC6AryH1vx92b3yTwWIy6HQa9PtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PJrCX8Od; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=kLPxQyXTmEqPgEqNnvjuhR+m0Zk7uaqRF1T1vC3DqgzS4bOkRwY49RNe6J3/TTIlifXsYrdqlCGHWl7tgTw/f4gzSHY3KRgHRPu6JqWMNS6TQJaSP4Iv7koEdf7I+Y183z7Nz9v8slq/IhVOV92H0aed34sEPZIXwLbF0FBMDyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sNZAJK3A; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PJrCX8Od"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e30ceaa5feeso1271370276.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Nov 2024 23:16:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sNZAJK3A"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e330f65bcd9so1073599276.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Nov 2024 23:16:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730963768; x=1731568568; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1730963770; x=1731568570; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=QeV5H6hULi4PmNWhXYnKicIpV1Vf/5KV4yP0bFilR2g=;
-        b=PJrCX8OdT7c1isBx4Mlmd1XTGV7MUCa+Ssb8EGzUFA7OJp3+Vshy54YRuOLvd0F5La
-         BkMEUeCOMonBy3hDNkyz8os55Y3/eaHWOudpXeTGKefAKyffpwoVb7fzsCHoYCx2MiM0
-         oUNNi7VeBeSyhC9XmaPiPse5g3xvVJm9ae5RCCtOmbkoDslhW+nAT5Ft4QZsON+/QA7T
-         7LYYHgJTBL1a5L6QORkmMyM3cGZoeCRQEwxvUZ8FYpmMZVW9JON562pF2zKuXvntxVnm
-         ZyCBnc/IaTb+AyY9GXBBSAR4x7I9S9fKbQdw1V4iHSU3nTlJdx5gUclsW3kO+SR05uxh
-         WUIA==
+        bh=cITlh9ATOoPVTRO1t6obQAYHyRTBK7FrpPuOEFqdekQ=;
+        b=sNZAJK3AWcEnfVeBJZ/b3Lr8LNM7UUyZUuCc8LmfxkApGLDORxS1mAAnCrrd9qdzjG
+         iFUhbNwhPgM+DRMAla6GeS+1nMZh1o//OT7JC8BcBjjT7tfBma1Tp+uEZp1h6SM3zTQr
+         5M38fQSjkH7gfBplmwsAK8DChBWrcvXVOXp9v8VSwcLNn18Y4ZXpHkMrDAdnmWcL6J3D
+         qmQY/c7YSw/ohX/rkQo7gXfpybJANHEx6rZAzf7lAZoSZheqUfab9CnR5RxcScGMCyRe
+         naCxl+xoKPsmTHH/ORvM6roALAD6l8MqYm9z+NyiA2vvF9HKjRPfxkyQEFW1W15kE+a8
+         cpiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730963768; x=1731568568;
+        d=1e100.net; s=20230601; t=1730963770; x=1731568570;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QeV5H6hULi4PmNWhXYnKicIpV1Vf/5KV4yP0bFilR2g=;
-        b=WLp1YNhJuuGfbKRk/FYnJAQ35TUSAMNa8q/CYSUvwFSV2LBOjMYD/99ceR1njEXISp
-         5q9i04aAd0rgo070DrimDW9bcSkjYnO1Mj6VMhZql4uePPyDywR2BAuIAmgXs5jtmwh+
-         Vt2cBevTXR844RgrBrum8mym/o16YIG1OLevO8tZbQTtTli+LaNZaaeZogrQAblPkxUg
-         zGPsjnkS8pDSY8DAq3D4lsF9w0b6mrrmqaF/MR5h6AsoNTnfRhNA79rDJdLBOYj9m/wF
-         Ib2ONkS1ybNT24BFZE+9qZAPouhb9T9TCEOn89j8vP1dshP6LcQ/Rzgb2gbNMhZSNXWa
-         UjNA==
-X-Forwarded-Encrypted: i=1; AJvYcCXCL4zNqulb9qpsda+NEksFGMIhpGHw08uQTyOk40vhwMYDVuco3yGH62f8OSzJdJwc9BYpbNjEj8yX3gSnKGIu@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDPQjRnzzhWIhuGJlRphV1prh964r7lE+gKYUgPRiNInbncVjp
-	6zg4I/TDsW9c9BdkLLl75CAl3j/m0RoeOYnuXW41haF0KiawJrkPR85OEcINi6zduc8C89Vp5nI
-	mk/f/qQ==
-X-Google-Smtp-Source: AGHT+IE/ABVQ+QoaXLev0j3L1bcYVcVKTmJ8bev+UrY6tq85vQOpw2ZTVBgndT6AQUc++Em5ZIlqp477wVKR
+        bh=cITlh9ATOoPVTRO1t6obQAYHyRTBK7FrpPuOEFqdekQ=;
+        b=rnhwRSztFuh16xw+rwSgYOmqoH4F2AB+tqaATPf8QgAfHRYuPfQz0FP83zn7GYUjSR
+         bCV+EPCwxr7H20lk8Els5yPb6BGvjRJ9y/2NaxmrV0hVqNxyZpwxNnMCk0slS2FQNg/P
+         j4ugueLhTOBupMLvpm2TjVQ/DDdNewX/rdCD900VQwQ+UV31FKWQeDbgJ1kj3KhlzJmv
+         SuYV5tBcRv5rCSe7rjkW7eaA+xjFQoK42iNR6F3PyeIweB+LOP6vbww8GYxX213jyjIm
+         fSQhpfXEvE5uz2f/WOKAlH9TYrGYM+w71s2eczAwQqGwzY9coc12DLtmWXec5VpZLig9
+         PRXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVr1yDo/gvMLFzN3G35PgY8VGBVcUfDr907w9EtQf+gK+uxzvgS+UclZMw8wFNKEyM+INUnKsv2fTjRLmhqLwYq@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgVJ5R/BXA53NfCmFYbKYoSMtc1XbRhbRBheRQzDyNcZAJiQTP
+	mbXCjemTpa8ulILK9cjFakzOyok46a2KL6Xa0uzOfqexmA903cC5O3Op80YFbRgEEG8rlDrIAVj
+	9EIQLGg==
+X-Google-Smtp-Source: AGHT+IG3hd8yCeGAX7h4k6RVex8boUD3HvG3dEWbSWvGpSoN2fs9Bh/9yh9W9X2pTJW73xmM0xEe1Jlq71HY
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:acc7:bda:7167:18d8])
- (user=irogers job=sendgmr) by 2002:a25:d695:0:b0:e2b:d28f:bf28 with SMTP id
- 3f1490d57ef6-e3302537c7dmr36619276.2.1730963768215; Wed, 06 Nov 2024 23:16:08
+ (user=irogers job=sendgmr) by 2002:a25:901:0:b0:e2e:2c2e:277b with SMTP id
+ 3f1490d57ef6-e33691e2433mr5319276.3.1730963770308; Wed, 06 Nov 2024 23:16:10
  -0800 (PST)
-Date: Wed,  6 Nov 2024 23:15:55 -0800
+Date: Wed,  6 Nov 2024 23:15:56 -0800
 In-Reply-To: <20241107071600.9082-1-irogers@google.com>
-Message-Id: <20241107071600.9082-3-irogers@google.com>
+Message-Id: <20241107071600.9082-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241107071600.9082-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.199.ga7371fff76-goog
-Subject: [PATCH v1 2/7] perf header: Refactor get_cpuid to take a CPU for ARM
+Subject: [PATCH v1 3/7] perf arm64 header: Use cpu argument in get_cpuid
 From: Ian Rogers <irogers@google.com>
 To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
 	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
@@ -83,194 +83,126 @@ To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
 	linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-ARM BIG.little has no notion of a constant CPUID for both core
-types. To reflect this reality, change the get_cpuid function to also
-pass in a possibly unused logical cpu. If the dummy value (-1) is
-passed in then ARM can, as currently happens, select the first logical
-CPU's "CPUID". The changes to ARM getcpuid happen in a follow up
-change.
+Use the cpu to read the MIDR file requested. If the "any" value (-1)
+is passed that keep the behavior of returning the first MIDR file that
+can be read.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/arm64/util/header.c     | 2 +-
- tools/perf/arch/loongarch/util/header.c | 2 +-
- tools/perf/arch/powerpc/util/header.c   | 2 +-
- tools/perf/arch/riscv/util/header.c     | 2 +-
- tools/perf/arch/s390/util/header.c      | 2 +-
- tools/perf/arch/x86/util/auxtrace.c     | 3 ++-
- tools/perf/arch/x86/util/header.c       | 2 +-
- tools/perf/builtin-kvm.c                | 4 +++-
- tools/perf/util/env.c                   | 3 ++-
- tools/perf/util/header.c                | 9 +++++----
- tools/perf/util/header.h                | 2 +-
- 11 files changed, 19 insertions(+), 14 deletions(-)
+ tools/perf/arch/arm64/util/header.c | 63 ++++++++++++++---------------
+ tools/perf/util/header.h            |  1 +
+ 2 files changed, 31 insertions(+), 33 deletions(-)
 
 diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
-index 741df3614a09..760c21784713 100644
+index 760c21784713..f0907daad3ae 100644
 --- a/tools/perf/arch/arm64/util/header.c
 +++ b/tools/perf/arch/arm64/util/header.c
-@@ -50,7 +50,7 @@ static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
- 	return ret;
+@@ -14,55 +14,52 @@
+ #define MIDR_REVISION_MASK      GENMASK(3, 0)
+ #define MIDR_VARIANT_MASK	GENMASK(23, 20)
+ 
+-static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
++static int _get_cpuid(char *buf, size_t sz, struct perf_cpu cpu)
+ {
++	char path[PATH_MAX];
++	FILE *file;
+ 	const char *sysfs = sysfs__mountpoint();
+-	struct perf_cpu cpu;
+-	int idx, ret = EINVAL;
+ 
++	assert(cpu.cpu != -1);
+ 	if (!sysfs || sz < MIDR_SIZE)
+ 		return EINVAL;
+ 
+-	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
+-		char path[PATH_MAX];
+-		FILE *file;
+-
+-		scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d" MIDR,
+-			  sysfs, cpu.cpu);
+-
+-		file = fopen(path, "r");
+-		if (!file) {
+-			pr_debug("fopen failed for file %s\n", path);
+-			continue;
+-		}
+-
+-		if (!fgets(buf, MIDR_SIZE, file)) {
+-			fclose(file);
+-			continue;
+-		}
+-		fclose(file);
++	scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d" MIDR, sysfs, cpu.cpu);
+ 
+-		/* got midr break loop */
+-		ret = 0;
+-		break;
++	file = fopen(path, "r");
++	if (!file) {
++		pr_debug("fopen failed for file %s\n", path);
++		return EINVAL;
+ 	}
+ 
+-	return ret;
++	if (!fgets(buf, MIDR_SIZE, file)) {
++		pr_debug("Failed to read file %s\n", path);
++		fclose(file);
++		return EINVAL;
++	}
++	fclose(file);
++	return 0;
  }
  
--int get_cpuid(char *buf, size_t sz)
-+int get_cpuid(char *buf, size_t sz, struct perf_cpu cpu __maybe_unused)
+-int get_cpuid(char *buf, size_t sz, struct perf_cpu cpu __maybe_unused)
++int get_cpuid(char *buf, size_t sz, struct perf_cpu cpu)
  {
- 	struct perf_cpu_map *cpus = perf_cpu_map__new_online_cpus();
- 	int ret;
-diff --git a/tools/perf/arch/loongarch/util/header.c b/tools/perf/arch/loongarch/util/header.c
-index d962dff55512..f1f0b116962d 100644
---- a/tools/perf/arch/loongarch/util/header.c
-+++ b/tools/perf/arch/loongarch/util/header.c
-@@ -70,7 +70,7 @@ static char *_get_cpuid(void)
- 	return cpuid;
- }
- 
--int get_cpuid(char *buffer, size_t sz)
-+int get_cpuid(char *buffer, size_t sz, struct perf_cpu cpu __maybe_unused)
- {
- 	int ret = 0;
- 	char *cpuid = _get_cpuid();
-diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-index 251cdbf58a4d..6d1a63a2922f 100644
---- a/tools/perf/arch/powerpc/util/header.c
-+++ b/tools/perf/arch/powerpc/util/header.c
-@@ -24,7 +24,7 @@ static bool is_compat_mode(void)
- }
- 
- int
--get_cpuid(char *buffer, size_t sz)
-+get_cpuid(char *buffer, size_t sz, struct perf_cpu cpu __maybe_unused)
- {
- 	unsigned long pvr;
- 	int nb;
-diff --git a/tools/perf/arch/riscv/util/header.c b/tools/perf/arch/riscv/util/header.c
-index 1b29030021ee..ebac294c877f 100644
---- a/tools/perf/arch/riscv/util/header.c
-+++ b/tools/perf/arch/riscv/util/header.c
-@@ -81,7 +81,7 @@ static char *_get_cpuid(void)
- 	return cpuid;
- }
- 
--int get_cpuid(char *buffer, size_t sz)
-+int get_cpuid(char *buffer, size_t sz, struct perf_cpu cpu __maybe_unused)
- {
- 	char *cpuid = _get_cpuid();
- 	int ret = 0;
-diff --git a/tools/perf/arch/s390/util/header.c b/tools/perf/arch/s390/util/header.c
-index 7933f6871c81..2add1a561242 100644
---- a/tools/perf/arch/s390/util/header.c
-+++ b/tools/perf/arch/s390/util/header.c
-@@ -27,7 +27,7 @@
- #define SYSINFO		"/proc/sysinfo"
- #define SRVLVL		"/proc/service_levels"
- 
--int get_cpuid(char *buffer, size_t sz)
-+int get_cpuid(char *buffer, size_t sz, struct perf_cpu cpu __maybe_unused)
- {
- 	char *cp, *line = NULL, *line2;
- 	char type[8], model[33], version[8], manufacturer[32], authorization[8];
-diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
-index 354780ff1605..ecbf61a7eb3a 100644
---- a/tools/perf/arch/x86/util/auxtrace.c
-+++ b/tools/perf/arch/x86/util/auxtrace.c
-@@ -55,11 +55,12 @@ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
- 					      int *err)
- {
- 	char buffer[64];
-+	struct perf_cpu cpu = perf_cpu_map__min(evlist->core.all_cpus);
- 	int ret;
- 
- 	*err = 0;
- 
--	ret = get_cpuid(buffer, sizeof(buffer));
-+	ret = get_cpuid(buffer, sizeof(buffer), cpu);
- 	if (ret) {
- 		*err = ret;
- 		return NULL;
-diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
-index a51444a77a5f..690f86cbbb1c 100644
---- a/tools/perf/arch/x86/util/header.c
-+++ b/tools/perf/arch/x86/util/header.c
-@@ -58,7 +58,7 @@ __get_cpuid(char *buffer, size_t sz, const char *fmt)
- }
- 
- int
--get_cpuid(char *buffer, size_t sz)
-+get_cpuid(char *buffer, size_t sz, struct perf_cpu cpu __maybe_unused)
- {
- 	return __get_cpuid(buffer, sz, "%s,%u,%u,%u$");
- }
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 099ce3ebf67c..274568d712d1 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -1226,7 +1226,9 @@ static int cpu_isa_config(struct perf_kvm_stat *kvm)
- 	int err;
- 
- 	if (kvm->live) {
--		err = get_cpuid(buf, sizeof(buf));
-+		struct perf_cpu cpu = {-1};
+-	struct perf_cpu_map *cpus = perf_cpu_map__new_online_cpus();
+-	int ret;
++	struct perf_cpu_map *cpus;
++	int idx;
 +
-+		err = get_cpuid(buf, sizeof(buf), cpu);
- 		if (err != 0) {
- 			pr_err("Failed to look up CPU type: %s\n",
- 			       str_error_r(err, buf, sizeof(buf)));
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index ccb464026642..93cabdd7ff43 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -373,7 +373,8 @@ int perf_env__read_pmu_mappings(struct perf_env *env)
- int perf_env__read_cpuid(struct perf_env *env)
- {
- 	char cpuid[128];
--	int err = get_cpuid(cpuid, sizeof(cpuid));
-+	struct perf_cpu cpu = {-1};
-+	int err = get_cpuid(cpuid, sizeof(cpuid), cpu);
++	if (cpu.cpu != -1)
++		return _get_cpuid(buf, sz, cpu);
  
- 	if (err)
- 		return err;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 55c28e4377ec..60b42ddc3dac 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -856,18 +856,19 @@ int __weak strcmp_cpuid_str(const char *mapcpuid, const char *cpuid)
-  * default get_cpuid(): nothing gets recorded
-  * actual implementation must be in arch/$(SRCARCH)/util/header.c
-  */
--int __weak get_cpuid(char *buffer __maybe_unused, size_t sz __maybe_unused)
-+int __weak get_cpuid(char *buffer __maybe_unused, size_t sz __maybe_unused,
-+		     struct perf_cpu cpu __maybe_unused)
- {
- 	return ENOSYS; /* Not implemented */
++	cpus = perf_cpu_map__new_online_cpus();
+ 	if (!cpus)
+ 		return EINVAL;
+ 
+-	ret = _get_cpuid(buf, sz, cpus);
+-
+-	perf_cpu_map__put(cpus);
++	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
++		int ret = _get_cpuid(buf, sz, cpu);
+ 
+-	return ret;
++		if (ret == 0)
++			return 0;
++	}
++	return EINVAL;
  }
  
--static int write_cpuid(struct feat_fd *ff,
--		       struct evlist *evlist __maybe_unused)
-+static int write_cpuid(struct feat_fd *ff, struct evlist *evlist)
- {
-+	struct perf_cpu cpu = perf_cpu_map__min(evlist->core.all_cpus);
- 	char buffer[64];
- 	int ret;
+ char *get_cpuid_str(struct perf_pmu *pmu)
+@@ -78,7 +75,7 @@ char *get_cpuid_str(struct perf_pmu *pmu)
+ 		return NULL;
  
--	ret = get_cpuid(buffer, sizeof(buffer));
-+	ret = get_cpuid(buffer, sizeof(buffer), cpu);
- 	if (ret)
- 		return -1;
- 
+ 	/* read midr from list of cpus mapped to this pmu */
+-	res = _get_cpuid(buf, MIDR_SIZE, pmu->cpus);
++	res = get_cpuid(buf, MIDR_SIZE, perf_cpu_map__min(pmu->cpus));
+ 	if (res) {
+ 		pr_err("failed to get cpuid string for PMU %s\n", pmu->name);
+ 		free(buf);
 diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index e91e89d22537..b77f89de12dd 100644
+index b77f89de12dd..3bb768455a60 100644
 --- a/tools/perf/util/header.h
 +++ b/tools/perf/util/header.h
-@@ -201,7 +201,7 @@ int build_caches_for_cpu(u32 cpu, struct cpu_cache_level caches[], u32 *cntp);
- /*
-  * arch specific callback
-  */
--int get_cpuid(char *buffer, size_t sz);
-+int get_cpuid(char *buffer, size_t sz, struct perf_cpu cpu);
+@@ -11,6 +11,7 @@
+ #include <linux/types.h>
+ #include "env.h"
+ #include "pmu.h"
++#include <perf/cpumap.h>
  
- char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused);
- int strcmp_cpuid_str(const char *s1, const char *s2);
+ enum {
+ 	HEADER_RESERVED		= 0,	/* always cleared */
 -- 
 2.47.0.199.ga7371fff76-goog
 
