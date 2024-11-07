@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D060F2E3EB;
-	Thu,  7 Nov 2024 14:52:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967A9212EF7;
+	Thu,  7 Nov 2024 14:52:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730991137; cv=none; b=I178MSLXytqun36SG2pNzP8xnFyYsSEx0f6532XugHBYodO3uIAHWc9nh+LQkFYlJWbTpmEvpj+lhO/QiYRR7+ZdCVW1LvB0qT/EWZdyELgOpOotUZ4wV24g/Tz6mEGH1eN/yJv30lWfXa2kvbOIscatERCFBUu89AVgyRS416k=
+	t=1730991146; cv=none; b=WZ2449U54SCIOn7lc3tFmxTKYU74C1C/5CL10Pghxcgk1LUtok+EIYqKWuO7tw2li9fcRFWSSLIcM8I/pZsvNcxMgJJn/A6g0KdsGJckAhx2jTfYDogRds6ZDQeQi8MhiQoQw5J/nlOusBZKJf3+4JG67uYJyuZ0vgoBTtSxBRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730991137; c=relaxed/simple;
-	bh=niKnau8xp0QGeojUctFEmxGVTs9K3dLLDDtVIkokeG0=;
+	s=arc-20240116; t=1730991146; c=relaxed/simple;
+	bh=R1SFzj/BMW6nwC7W6jz7Tajr09BNZ4XHK+JOMxdxMUM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k7VT/PAPJ4Lff10hUXqUhCgzXNt7MD6DK4238nH+EYXZoL9H7+18wE/8x1jlTxMHhYcesDUG4Cm9lFoPF4G1sKcH3XxD+vKnpskQTqYci+ITY1oZWOk2VUazQnp7ETFXkySHSgQ7ys9Pu6DRFezd3mq6jwxhFilCNzcfTxCS2qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FegfRSTT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=om1nSKD/ONav9dZPjfU95Z6Soo0q5Gji1I4/xWO/c2KQ6kS5Zhxgoam6akFZFgHNYzh6rhsodWh8UnCXk7vgk6sTtNhjwgmj0w2NREywckBtMIgUHFr8AnYH1XAkGKyQDMZJ9+QZYe5rD0IvAu3FGt9+y6SwmUKdeJ7K9SKcwJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSq0+A1z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FegfRSTT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB155C4CECC;
-	Thu,  7 Nov 2024 14:52:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TSq0+A1z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89DC5C4CECC;
+	Thu,  7 Nov 2024 14:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730991137;
-	bh=niKnau8xp0QGeojUctFEmxGVTs9K3dLLDDtVIkokeG0=;
+	s=k20201202; t=1730991146;
+	bh=R1SFzj/BMW6nwC7W6jz7Tajr09BNZ4XHK+JOMxdxMUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FegfRSTTTsWZJdQoc2IapAbPhkFlRztoK8nCtV+qxD/sdisvxOGZNN5JFfmO5m9Tn
-	 Ky4Ts9lLxcRd2RIwXT1VghGkYkofEkRhZSt70/Owfy4RzXcxr+Hi9N+Qlpl1lqXl5O
-	 mBtlLUzoGkKhLwiN/SzvZksawWEwnO3BdtchPacJ0WbDVmuSWewEX+vIw1QTL2x5xm
-	 UvTuWFRldkYyclt7/7a12Tsagt87OcEyjTWJpJX99CEnwPY8ZUg5stcR7TONHuSvw7
-	 2nhGLXRGRQyTKZFSYM0349XiDY1FZbcYKDcocGH95MhIKL0TdAYs9km9+f5jZ7zB5Z
-	 fxHNSP3ZIwdqg==
+	b=TSq0+A1zFKKET+q9tjS3hyGD/TS7X67ZaeJJMZADclmN8Bpanh2fmlzTfAaa9ZGpd
+	 KITxN7wANokZwM8ATyQyUpUW/1fHEyq9ixzMPUY1/sccTCOCAZhBGT9qlf2zZQ7vlk
+	 QmU+RBsDZZifzTMJjgAxChLO6mZo/Bgsa6DrMHv7or77nvld2BSYiec4hVIuLYgm/t
+	 SlSmbGxI/Hgiu07KVDyhEbaNuXp6AAP6bt4j0chGqWG3XIcXN5eRYTumNS0NkjZTel
+	 fNSCX5bDbNFnSoBaNmAknCobYVHE/bgJMUl0ZRhFoYi/Ky//rIjceLnxB5XeSjakdU
+	 wY2hSuviHnW+Q==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>
@@ -38,9 +38,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/6] perf-probe: Fix error message for failing to find line range
-Date: Thu,  7 Nov 2024 23:52:13 +0900
-Message-ID:  <173099113381.2431889.16263147678401426107.stgit@mhiramat.roam.corp.google.com>
+Subject: [PATCH v2 2/6] perf-probe: Fix to ignore escaped characters in --lines option
+Date: Thu,  7 Nov 2024 23:52:22 +0900
+Message-ID:  <173099114272.2431889.4820591557298941207.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
 In-Reply-To:  <173099112488.2431889.1181692857521683304.stgit@mhiramat.roam.corp.google.com>
 References:  <173099112488.2431889.1181692857521683304.stgit@mhiramat.roam.corp.google.com>
@@ -56,59 +56,44 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-With --lines option, if perf-probe fails to find the specified line,
-it warns as "Debuginfo analysis failed." but this misleads user as
-the debuginfo is broken.
-Fix this message to "Specified source line(LINESPEC) is not found."
-so that user can understand the error correctly.
+Use strbprk_esc() and strdup_esc() to ignore escaped characters in
+--lines option. This has been done for other options, but only --lines
+option doesn't.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-Changes in v2:
-  - Added new patch.
----
- tools/perf/util/probe-event.c |   16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ tools/perf/util/probe-event.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index a17c9b8a7a79..6bfe7ead3681 100644
+index 6bfe7ead3681..edc205e4b0ee 100644
 --- a/tools/perf/util/probe-event.c
 +++ b/tools/perf/util/probe-event.c
-@@ -1036,6 +1036,17 @@ static int _show_one_line(FILE *fp, int l, bool skip, bool show_num)
- 	return rv;
- }
+@@ -1369,7 +1369,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+ 	lr->start = 0;
+ 	lr->end = INT_MAX;
  
-+static int sprint_line_description(char *sbuf, size_t size, struct line_range *lr)
-+{
-+	if (!lr->function)
-+		return snprintf(sbuf, size, "file: %s, line: %d", lr->file, lr->start);
-+
-+	if (lr->file)
-+		return snprintf(sbuf, size, "function: %s, file:%s, line: %d", lr->function, lr->file, lr->start);
-+
-+	return snprintf(sbuf, size, "function: %s, line:%d", lr->function, lr->start);
-+}
-+
- #define show_one_line_with_num(f,l)	_show_one_line(f,l,false,true)
- #define show_one_line(f,l)		_show_one_line(f,l,false,false)
- #define skip_one_line(f,l)		_show_one_line(f,l,true,false)
-@@ -1068,6 +1079,8 @@ static int __show_line_range(struct line_range *lr, const char *module,
- 		ret = get_alternative_line_range(dinfo, lr, module, user);
- 		if (!ret)
- 			ret = debuginfo__find_line_range(dinfo, lr);
-+		else /* Ignore error, we just failed to find it. */
-+			ret = -ENOENT;
+-	range = strchr(name, ':');
++	range = strpbrk_esc(name, ":");
+ 	if (range) {
+ 		*range++ = '\0';
+ 
+@@ -1410,7 +1410,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+ 		}
  	}
- 	if (dinfo->build_id) {
- 		build_id__init(&bid, dinfo->build_id, BUILD_ID_SIZE);
-@@ -1075,7 +1088,8 @@ static int __show_line_range(struct line_range *lr, const char *module,
- 	}
- 	debuginfo__delete(dinfo);
- 	if (ret == 0 || ret == -ENOENT) {
--		pr_warning("Specified source line is not found.\n");
-+		sprint_line_description(sbuf, sizeof(sbuf), lr);
-+		pr_warning("Specified source line(%s) is not found.\n", sbuf);
- 		return -ENOENT;
- 	} else if (ret < 0) {
- 		pr_warning("Debuginfo analysis failed.\n");
+ 
+-	file = strchr(name, '@');
++	file = strpbrk_esc(name, "@");
+ 	if (file) {
+ 		*file = '\0';
+ 		lr->file = strdup(++file);
+@@ -1419,7 +1419,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+ 			goto err;
+ 		}
+ 		lr->function = name;
+-	} else if (strchr(name, '/') || strchr(name, '.'))
++	} else if (strpbrk_esc(name, "/."))
+ 		lr->file = name;
+ 	else if (is_c_func_name(name))/* We reuse it for checking funcname */
+ 		lr->function = name;
 
