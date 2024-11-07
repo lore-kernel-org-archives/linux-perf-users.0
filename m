@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10561DEFD0
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 Nov 2024 07:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DB21DF967
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Nov 2024 07:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730963773; cv=none; b=FpcCW9SIPg8I/bfG1k/qojbVKZrLbWuBeeHJpaOKIZyEwBpqw4UpHbP8HPuXOpWfs3WVh2NOUOk8v3qf9Ze8wR/S08WEAFp4vIzTiafu/0dyGXS48OVmeKXztn5MmW3HmFkdQgF1ypiSI5sxr0jyt3md4tg1+fMAZtC6wVjSRLQ=
+	t=1730963775; cv=none; b=qbSlbciG/8Gxd+Bxnra3FJTvZpKarB5aw51wmEzFt0hWdjd0c5rxOXaRdqIt8FJ566GVORX+foi+mKkM2/H+mPW7JD3jI9u4uK6z6OLLjhCurCTceXwgro8vwiYB+U8OHKBLmvgzbQhYPiEAJ+A7EMI88QVWIyKPOusxL4eEqz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730963773; c=relaxed/simple;
-	bh=OHfFGp0ifWb+zyyGJptLLNowSsK7ixiaUATGyiRfl38=;
+	s=arc-20240116; t=1730963775; c=relaxed/simple;
+	bh=Y+vKqYUCxSTt4LSzTKZWPT5tUEvVlBLoT2ItWD2c1T0=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=kLPxQyXTmEqPgEqNnvjuhR+m0Zk7uaqRF1T1vC3DqgzS4bOkRwY49RNe6J3/TTIlifXsYrdqlCGHWl7tgTw/f4gzSHY3KRgHRPu6JqWMNS6TQJaSP4Iv7koEdf7I+Y183z7Nz9v8slq/IhVOV92H0aed34sEPZIXwLbF0FBMDyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sNZAJK3A; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=FGQeFdx4FdaqXyw5TjhpA97Rs7rDLH17ZNoChAQmn3ipt5W86EAESySaA605/tg/kSC4Fz0hekAxlYEEdJqQ4Mex0xJYJLtwPWbxuVIENKbHLdb0oXR/j87ONg3SEmdkuZQJgtMJwzem3vVzYUwKsH+xJ01I1jD5mpGnLnuaADM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2L0//W6C; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sNZAJK3A"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e330f65bcd9so1073599276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Nov 2024 23:16:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2L0//W6C"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ea7c5805ccso11355417b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Nov 2024 23:16:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730963770; x=1731568570; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1730963772; x=1731568572; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cITlh9ATOoPVTRO1t6obQAYHyRTBK7FrpPuOEFqdekQ=;
-        b=sNZAJK3AWcEnfVeBJZ/b3Lr8LNM7UUyZUuCc8LmfxkApGLDORxS1mAAnCrrd9qdzjG
-         iFUhbNwhPgM+DRMAla6GeS+1nMZh1o//OT7JC8BcBjjT7tfBma1Tp+uEZp1h6SM3zTQr
-         5M38fQSjkH7gfBplmwsAK8DChBWrcvXVOXp9v8VSwcLNn18Y4ZXpHkMrDAdnmWcL6J3D
-         qmQY/c7YSw/ohX/rkQo7gXfpybJANHEx6rZAzf7lAZoSZheqUfab9CnR5RxcScGMCyRe
-         naCxl+xoKPsmTHH/ORvM6roALAD6l8MqYm9z+NyiA2vvF9HKjRPfxkyQEFW1W15kE+a8
-         cpiQ==
+        bh=0JtSX1ivElzP67Gy896L9Ack6oYznxDX7izzc96bZIU=;
+        b=2L0//W6C6v6WJQ9QtLDCW3jCP59/rGYz1ugpp7IhRfoHPSn4DbG7JZKu9JPnULVy5t
+         yPWsfuoiJUb1M+C/fB32qB8ZqasoL7Wqv+3YFMTGovON5SmGhwOgpzDqaL9sqsHquEhs
+         nxjlAiA/GLm7GV/1RJMo4YyEtvc5n1zD62IVupUzrKcHEEpGsRlpq0dF4DoAIIiwW6x3
+         wzMnop52jfYj18sSUzIzesFekizChz7n07m2V7MpoA81tyRbHIlKERh11C4CfOpvPqSR
+         +mujjZTKAg7DYXpI02vC2snegUutLUI4AxmEY7SYR4l6NTOk4BuUbtgQYFA04kNWbfTF
+         cIhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730963770; x=1731568570;
+        d=1e100.net; s=20230601; t=1730963772; x=1731568572;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cITlh9ATOoPVTRO1t6obQAYHyRTBK7FrpPuOEFqdekQ=;
-        b=rnhwRSztFuh16xw+rwSgYOmqoH4F2AB+tqaATPf8QgAfHRYuPfQz0FP83zn7GYUjSR
-         bCV+EPCwxr7H20lk8Els5yPb6BGvjRJ9y/2NaxmrV0hVqNxyZpwxNnMCk0slS2FQNg/P
-         j4ugueLhTOBupMLvpm2TjVQ/DDdNewX/rdCD900VQwQ+UV31FKWQeDbgJ1kj3KhlzJmv
-         SuYV5tBcRv5rCSe7rjkW7eaA+xjFQoK42iNR6F3PyeIweB+LOP6vbww8GYxX213jyjIm
-         fSQhpfXEvE5uz2f/WOKAlH9TYrGYM+w71s2eczAwQqGwzY9coc12DLtmWXec5VpZLig9
-         PRXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVr1yDo/gvMLFzN3G35PgY8VGBVcUfDr907w9EtQf+gK+uxzvgS+UclZMw8wFNKEyM+INUnKsv2fTjRLmhqLwYq@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgVJ5R/BXA53NfCmFYbKYoSMtc1XbRhbRBheRQzDyNcZAJiQTP
-	mbXCjemTpa8ulILK9cjFakzOyok46a2KL6Xa0uzOfqexmA903cC5O3Op80YFbRgEEG8rlDrIAVj
-	9EIQLGg==
-X-Google-Smtp-Source: AGHT+IG3hd8yCeGAX7h4k6RVex8boUD3HvG3dEWbSWvGpSoN2fs9Bh/9yh9W9X2pTJW73xmM0xEe1Jlq71HY
+        bh=0JtSX1ivElzP67Gy896L9Ack6oYznxDX7izzc96bZIU=;
+        b=TNXlX8f0e7iIQyXMwb+u0K0BVvumoWTqVovsznEElei/CkUskO4SY3BD5MB237WPTK
+         QuZnJ4vFh6DZP2soZ0dRYm8UVLfQM3xJJQ9a1mT1wWki0lj1OVW/Kq/5LqL94h3onE5W
+         BscRhxuv7KgZkjNOVtzJ6K3HIx+7tJxvnMRxzzBsMVjTInfwioqacogFqYYC1LUMaTrN
+         wPWf6slYa36eE7Z8SFFDXmWwR5ig48Qpt7hCTleR2a2uCDZCaspS+hOhhVsope/in9q7
+         Gk8v9dDYCP34fx8ubemJoe401DIL+7KThFIcSCLri13xuDBRpVzQHOqgALHOHcz1DVVK
+         AM5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV2cRm7qEsBklNwJ9nTOeSUsmYE3vvpB52r1kxvCKvaTOgSZf9l6ihy2ZA4zB4D0zhXXFXAzNnQLbfBHjHW3eHB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqgYaooVfvFLkExxQA32lpdQj7mI1Q9+4piHs6JKuondWDLdrj
+	7dVu9hxH57ifSWhCyL84U9IXmCfGZcnrcYzcvvw+JiMzbCUIXcOCp++wo0BpZKwN7WSyPuOK7Qf
+	7tZZg/Q==
+X-Google-Smtp-Source: AGHT+IHo4j7jX9RyogLzkobNcoqsPX4PHdOeTPc0u8XD0m/LH7jjhm2PFEQw7af1FfiKXF3NPlnJLAyyNQZP
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:acc7:bda:7167:18d8])
- (user=irogers job=sendgmr) by 2002:a25:901:0:b0:e2e:2c2e:277b with SMTP id
- 3f1490d57ef6-e33691e2433mr5319276.3.1730963770308; Wed, 06 Nov 2024 23:16:10
- -0800 (PST)
-Date: Wed,  6 Nov 2024 23:15:56 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:60c6:b0:6ea:71c3:6cc3 with SMTP
+ id 00721157ae682-6ead60ddc27mr1107b3.8.1730963772515; Wed, 06 Nov 2024
+ 23:16:12 -0800 (PST)
+Date: Wed,  6 Nov 2024 23:15:57 -0800
 In-Reply-To: <20241107071600.9082-1-irogers@google.com>
-Message-Id: <20241107071600.9082-4-irogers@google.com>
+Message-Id: <20241107071600.9082-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241107071600.9082-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.199.ga7371fff76-goog
-Subject: [PATCH v1 3/7] perf arm64 header: Use cpu argument in get_cpuid
+Subject: [PATCH v1 4/7] perf header: Avoid transitive PMU includes
 From: Ian Rogers <irogers@google.com>
 To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
 	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
@@ -83,126 +83,52 @@ To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
 	linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Use the cpu to read the MIDR file requested. If the "any" value (-1)
-is passed that keep the behavior of returning the first MIDR file that
-can be read.
+Currently satisfied via header.h. Note, pmu.h includes parse-events.h.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/arm64/util/header.c | 63 ++++++++++++++---------------
- tools/perf/util/header.h            |  1 +
- 2 files changed, 31 insertions(+), 33 deletions(-)
+ tools/perf/tests/expr.c       | 2 ++
+ tools/perf/util/env.c         | 1 +
+ tools/perf/util/probe-event.c | 1 +
+ 3 files changed, 4 insertions(+)
 
-diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
-index 760c21784713..f0907daad3ae 100644
---- a/tools/perf/arch/arm64/util/header.c
-+++ b/tools/perf/arch/arm64/util/header.c
-@@ -14,55 +14,52 @@
- #define MIDR_REVISION_MASK      GENMASK(3, 0)
- #define MIDR_VARIANT_MASK	GENMASK(23, 20)
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index e3aa9d4fcf3a..d60f1ac1d720 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -4,6 +4,8 @@
+ #include "util/expr.h"
+ #include "util/hashmap.h"
+ #include "util/header.h"
++#include "util/pmu.h"
++#include "util/pmus.h"
+ #include "util/smt.h"
+ #include "tests.h"
+ #include <math.h>
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 93cabdd7ff43..e2843ca2edd9 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -12,6 +12,7 @@
+ #include <sys/utsname.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include "pmu.h"
+ #include "pmus.h"
+ #include "strbuf.h"
+ #include "trace/beauty/beauty.h"
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index a580aa2cd512..d399c7e03341 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -40,6 +40,7 @@
+ #include "session.h"
+ #include "string2.h"
+ #include "strbuf.h"
++#include "parse-events.h"
  
--static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
-+static int _get_cpuid(char *buf, size_t sz, struct perf_cpu cpu)
- {
-+	char path[PATH_MAX];
-+	FILE *file;
- 	const char *sysfs = sysfs__mountpoint();
--	struct perf_cpu cpu;
--	int idx, ret = EINVAL;
- 
-+	assert(cpu.cpu != -1);
- 	if (!sysfs || sz < MIDR_SIZE)
- 		return EINVAL;
- 
--	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
--		char path[PATH_MAX];
--		FILE *file;
--
--		scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d" MIDR,
--			  sysfs, cpu.cpu);
--
--		file = fopen(path, "r");
--		if (!file) {
--			pr_debug("fopen failed for file %s\n", path);
--			continue;
--		}
--
--		if (!fgets(buf, MIDR_SIZE, file)) {
--			fclose(file);
--			continue;
--		}
--		fclose(file);
-+	scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d" MIDR, sysfs, cpu.cpu);
- 
--		/* got midr break loop */
--		ret = 0;
--		break;
-+	file = fopen(path, "r");
-+	if (!file) {
-+		pr_debug("fopen failed for file %s\n", path);
-+		return EINVAL;
- 	}
- 
--	return ret;
-+	if (!fgets(buf, MIDR_SIZE, file)) {
-+		pr_debug("Failed to read file %s\n", path);
-+		fclose(file);
-+		return EINVAL;
-+	}
-+	fclose(file);
-+	return 0;
- }
- 
--int get_cpuid(char *buf, size_t sz, struct perf_cpu cpu __maybe_unused)
-+int get_cpuid(char *buf, size_t sz, struct perf_cpu cpu)
- {
--	struct perf_cpu_map *cpus = perf_cpu_map__new_online_cpus();
--	int ret;
-+	struct perf_cpu_map *cpus;
-+	int idx;
-+
-+	if (cpu.cpu != -1)
-+		return _get_cpuid(buf, sz, cpu);
- 
-+	cpus = perf_cpu_map__new_online_cpus();
- 	if (!cpus)
- 		return EINVAL;
- 
--	ret = _get_cpuid(buf, sz, cpus);
--
--	perf_cpu_map__put(cpus);
-+	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
-+		int ret = _get_cpuid(buf, sz, cpu);
- 
--	return ret;
-+		if (ret == 0)
-+			return 0;
-+	}
-+	return EINVAL;
- }
- 
- char *get_cpuid_str(struct perf_pmu *pmu)
-@@ -78,7 +75,7 @@ char *get_cpuid_str(struct perf_pmu *pmu)
- 		return NULL;
- 
- 	/* read midr from list of cpus mapped to this pmu */
--	res = _get_cpuid(buf, MIDR_SIZE, pmu->cpus);
-+	res = get_cpuid(buf, MIDR_SIZE, perf_cpu_map__min(pmu->cpus));
- 	if (res) {
- 		pr_err("failed to get cpuid string for PMU %s\n", pmu->name);
- 		free(buf);
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index b77f89de12dd..3bb768455a60 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -11,6 +11,7 @@
- #include <linux/types.h>
- #include "env.h"
- #include "pmu.h"
-+#include <perf/cpumap.h>
- 
- enum {
- 	HEADER_RESERVED		= 0,	/* always cleared */
+ #include <subcmd/pager.h>
+ #include <linux/ctype.h>
 -- 
 2.47.0.199.ga7371fff76-goog
 
