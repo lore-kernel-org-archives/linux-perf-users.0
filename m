@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D53212D31;
-	Thu,  7 Nov 2024 14:52:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1B0212EF0;
+	Thu,  7 Nov 2024 14:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730991155; cv=none; b=dxSjhfEfADrZ4YyFOnosOYui8v8FuyuwWSVSKU257KpNJjLG3N2R8PB3dRRF/BMgmxN08wzGfx3phVqQCZuz4JtCs+5E7TN6RqxOnGNf8lZRcumbostJbtGOb/F48tXlXRVy7tM32NKOA5NKdUiGiiujOIT6+8wuz41kYlnRR6Q=
+	t=1730991164; cv=none; b=ovwqj3Z/71Dg99ThZZbf8il0mYUgj5lecYbJ5vlG2uIrxFd8amDoXSmW8LFlr8Dxf//I8TeT7gnAu8ZJw+Em7uC1AxWEfT3Cjg+7bmqqQBhhdRk2JLIo2zi/hD1ajPW1H1wrgg9TEU+nbSnQvVGDAkhMexX+hisWdwU/JftQ7y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730991155; c=relaxed/simple;
-	bh=BvEaGbKvMA4VXey4QzVmBrEbnIqbTzoxmJ27zc63m2E=;
+	s=arc-20240116; t=1730991164; c=relaxed/simple;
+	bh=S3f5Wa2BEYIJpOYrj4xkQRdAC5fv4qqAL3qZ1pqT/cQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Afk/M7zH2mq97YbnAT842VpWuK42atRX1cYzazLxDgiBa+mE5moQZHQAoVrNk0pXXb94eLjrFKQ+6ukHxPeH9CZ4GX4Glq7zqlOvPinYBzAlnXEpm5WLhS0DN+kyKxAybmf/zsS5rXtclvPUJchnz8lZXgUJUvmxPXP6g/6K7aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHqXc8TV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=iwIiQkv8hPc0DsOcYtRZE9A3A58gL716ur+la7xncp2xQRD+MMixYb0F7lxasPXhAxxHd76XN3Mz+XBP4chMLeNC9/zMZrIGfGGWaCrk39DfwQf74tyhEv04r86/XQp9Jp7MuZaQ//1GUk/v0VtxeS7HbBL/zNnmDwld7QMhT6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cL4qUNJ6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHqXc8TV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E334C4CECC;
-	Thu,  7 Nov 2024 14:52:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cL4qUNJ6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67FDEC4CECC;
+	Thu,  7 Nov 2024 14:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730991155;
-	bh=BvEaGbKvMA4VXey4QzVmBrEbnIqbTzoxmJ27zc63m2E=;
+	s=k20201202; t=1730991164;
+	bh=S3f5Wa2BEYIJpOYrj4xkQRdAC5fv4qqAL3qZ1pqT/cQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sHqXc8TVMXEgSTmI9AlU8fQfuotOEczC+pllvZXkaq6iM5z11L0g7Whb83b/gXknk
-	 ywB+1mp4tGVwvO1juDqebbXBmUHiuP6bmVWUWKwtL2g6PlT7PZj/fZKoqQp10GnqYo
-	 6NdPdXQlz3gBeXPphremfHbxKHd3z/ZdX0pJesgi+CFqvv6T4Bx7XPferSH1Mz8U6z
-	 /VkPx44orrf42qcClvQ3DCSitB3wqtEzuRsIMOhMgLgjJw17srJcaSfPVSRsp7lIPG
-	 EjgXrSWTjW1szNtlFjiLKznhvV7FHZQiVjch3deczDBghsp8w+ccUU2F8YYkNdx3ZF
-	 ekya7H3HWTWDw==
+	b=cL4qUNJ6ggDmh29MS7eR5CaG553gnBInVDfTlxp0GiqAbum/TMY7hDyImoMj5GS/r
+	 weI8+0zlknS4S5s5bHyrQhLNmAFKPhhgfQtAPhL73k+3n0YdITizx3IvLZo6sjGsx6
+	 701HGpAcWIV1iDzh9Fkqh8gFx/f8N00qYuOs+ES76SDHFnJOfOk2evmGsY8LmkcZm0
+	 bwZWiUFkih02llu558Z6SEoudUy/4sXBAoRPbBlTREW6+EsgbOjoB9jaPjSEu6qqp+
+	 RK/5XR3dx1P8xPQEQLo1pniELyoN1nXK3aIrMLuu3xqgIP60p3bEcaZrG2ldpNgZ8I
+	 t4wdkeqD2+HEw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>
@@ -38,9 +38,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/6] perf-probe: Accept FUNC@* to specify function name explicitly
-Date: Thu,  7 Nov 2024 23:52:31 +0900
-Message-ID:  <173099115149.2431889.13682110856853358354.stgit@mhiramat.roam.corp.google.com>
+Subject: [PATCH v2 4/6] perf: Add strpbrk_esq() and strdup_esq() for escape and quote
+Date: Thu,  7 Nov 2024 23:52:40 +0900
+Message-ID:  <173099116045.2431889.15772916605719019533.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
 In-Reply-To:  <173099112488.2431889.1181692857521683304.stgit@mhiramat.roam.corp.google.com>
 References:  <173099112488.2431889.1181692857521683304.stgit@mhiramat.roam.corp.google.com>
@@ -56,66 +56,161 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In Golang, the function name will have the '.', and perf probe
-misinterpret it is a file name. To mitigate this situation, introduce
-`function@*` so that user can explicitly specify that is a function
-name.
+strpbrk_esq() and strdup_esq() are new variants for strpbrk() and
+strdup() which handles escaped characters and quoted strings.
+
+- strpbrk_esq() searches specified set of characters but ignores the
+  escaped characters and quoted strings.
+  e.g. strpbrk_esq("'quote\d' \queue quiz", "qd") returns "quiz".
+
+- strdup_esq() duplicates string but removes backslash and quotes which
+  is used for quotation. It also keeps the string (including backslash)
+  in the quoted part.
+  e.g. strdup_esq("'quote\d' \queue quiz") returns "quote\d queue quiz".
+
+The (single, double) quotes in the quoted part should be escaped by
+backslash. In this case, strdup_esq() removes that backslash.
+The same quotes must be paired. If you use double quotation, you need
+to use the double quotation to close the quoted part.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
  Changes in v2:
   - Added new patch.
 ---
- tools/perf/util/probe-event.c |   22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ tools/perf/util/string.c  |  100 +++++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/string2.h |    2 +
+ 2 files changed, 102 insertions(+)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index edc205e4b0ee..777ef00f0d3f 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -1357,6 +1357,8 @@ static bool is_c_func_name(const char *name)
-  *
-  *         SRC[:SLN[+NUM|-ELN]]
-  *         FNC[@SRC][:SLN[+NUM|-ELN]]
-+ *
-+ * FNC@SRC accepts `FNC@*` which forcibly specify FNC as function name.
-  */
- int parse_line_range_desc(const char *arg, struct line_range *lr)
- {
-@@ -1412,13 +1414,21 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
+index 116a642ad99d..308fc7ec88cc 100644
+--- a/tools/perf/util/string.c
++++ b/tools/perf/util/string.c
+@@ -263,6 +263,34 @@ char *strpbrk_esc(char *str, const char *stopset)
+ 	return ptr;
+ }
  
- 	file = strpbrk_esc(name, "@");
- 	if (file) {
--		*file = '\0';
--		lr->file = strdup(++file);
--		if (lr->file == NULL) {
--			err = -ENOMEM;
-+		*file++ = '\0';
-+		if (strcmp(file, "*")) {
-+			lr->file = strdup_esc(file);
-+			if (lr->file == NULL) {
-+				err = -ENOMEM;
-+				goto err;
++/* Like strpbrk_esc(), but not break if it is quoted with single/double quotes */
++char *strpbrk_esq(char *str, const char *stopset)
++{
++	char *_stopset = NULL;
++	char *ptr;
++	const char *squote = "'";
++	const char *dquote = "\"";
++
++	if (asprintf(&_stopset, "%s%c%c", stopset, *squote, *dquote) < 0)
++		return NULL;
++
++	do {
++		ptr = strpbrk_esc(str, _stopset);
++		if (!ptr)
++			break;
++		if (*ptr == *squote)
++			ptr = strpbrk_esc(ptr + 1, squote);
++		else if (*ptr == *dquote)
++			ptr = strpbrk_esc(ptr + 1, dquote);
++		else
++			break;
++		str = ptr + 1;
++	} while (ptr);
++
++	free(_stopset);
++	return ptr;
++}
++
+ /* Like strdup, but do not copy a single backslash */
+ char *strdup_esc(const char *str)
+ {
+@@ -293,6 +321,78 @@ char *strdup_esc(const char *str)
+ 	return ret;
+ }
+ 
++/* Remove backslash right before quote and return next quote address. */
++static char *remove_consumed_esc(char *str, int len, int quote)
++{
++	char *ptr = str, *end = str + len;
++
++	while (*ptr != quote && ptr < end) {
++		if (*ptr == '\\' && *(ptr + 1) == quote) {
++			memmove(ptr, ptr + 1, end - (ptr + 1));
++			/* now *ptr is `quote`. */
++			end--;
++		}
++		ptr++;
++	}
++
++	return *ptr == quote ? ptr : NULL;
++}
++
++/*
++ * Like strdup_esc, but keep quoted string as it is (and single backslash
++ * before quote is removed). If there is no closed quote, return NULL.
++ */
++char *strdup_esq(const char *str)
++{
++	char *d, *ret;
++
++	/* If there is no quote, return normal strdup_esc() */
++	d = strpbrk_esc((char *)str, "\"'");
++	if (!d)
++		return strdup_esc(str);
++
++	ret = strdup(str);
++	if (!ret)
++		return NULL;
++
++	d = ret;
++	do {
++		d = strpbrk(d, "\\\"\'");
++		if (!d)
++			break;
++
++		if (*d == '"' || *d == '\'') {
++			/* This is non-escaped quote */
++			int quote = *d;
++			int len = strlen(d + 1) + 1;
++
++			/*
++			 * Remove the start quote and remove consumed escape (backslash
++			 * before quote) and remove the end quote. If there is no end
++			 * quote, it is the input error.
++			 */
++			memmove(d, d + 1, len);
++			d = remove_consumed_esc(d, len, quote);
++			if (!d)
++				goto error;
++			memmove(d, d + 1, strlen(d + 1) + 1);
++		}
++		if (*d == '\\') {
++			memmove(d, d + 1, strlen(d + 1) + 1);
++			if (*d == '\\') {
++				/* double backslash -- keep the second one. */
++				d++;
 +			}
 +		}
-+		if (*name != '\0')
-+			lr->function = name;
-+		if (!lr->function && !lr->file) {
-+			semantic_error("Only '@*' is not allowed.\n");
-+			err = -EINVAL;
- 			goto err;
- 		}
--		lr->function = name;
- 	} else if (strpbrk_esc(name, "/."))
- 		lr->file = name;
- 	else if (is_c_func_name(name))/* We reuse it for checking funcname */
-@@ -1619,6 +1629,8 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 				semantic_error("SRC@SRC is not allowed.\n");
- 				return -EINVAL;
- 			}
-+			if (!strcmp(arg, "*"))
-+				break;
- 			pp->file = strdup_esc(arg);
- 			if (pp->file == NULL)
- 				return -ENOMEM;
++	} while (*d != '\0');
++
++	return ret;
++
++error:
++	free(ret);
++	return NULL;
++}
++
+ unsigned int hex(char c)
+ {
+ 	if (c >= '0' && c <= '9')
+diff --git a/tools/perf/util/string2.h b/tools/perf/util/string2.h
+index 52cb8ba057c7..4c8bff47cfd3 100644
+--- a/tools/perf/util/string2.h
++++ b/tools/perf/util/string2.h
+@@ -37,6 +37,8 @@ char *asprintf__tp_filter_pids(size_t npids, pid_t *pids);
+ 
+ char *strpbrk_esc(char *str, const char *stopset);
+ char *strdup_esc(const char *str);
++char *strpbrk_esq(char *str, const char *stopset);
++char *strdup_esq(const char *str);
+ 
+ unsigned int hex(char c);
+ char *strreplace_chars(char needle, const char *haystack, const char *replace);
 
