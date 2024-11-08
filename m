@@ -1,78 +1,72 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE1A1E22FB
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 Nov 2024 23:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761401AA1EA
+	for <linux-perf-users@vger.kernel.org>; Fri,  8 Nov 2024 23:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731107302; cv=none; b=qYGKfXjCHLoyYnaSySjTYGaXn4KkNU0+bE3WWx8gitPcFt5pKfuYer+yURD2ZIrUUfuvmxmgdWwsCpxRoR1/Y493e2W9H9ziLx/KUoV1yIbrvyE5dEuoPD+bPmXGLII8zOxQOPNmX+eCz66fmKeXV2bzsMmquax9sx2Jzx15f58=
+	t=1731109573; cv=none; b=HxvQCzUoeyYKTZFE4CNelSgsfxrJ2kCIitSe7Lk4UdrMii8DYEtKHy4ofMlNZ2EInX3dItxZm5eY6S0ICUNZgFYh2Vj1N/0algOjkUu/JusZVf18SgekZZusO+Wa6Ee58Xk7VnkkJmGf90lz9RcWrEpVGn+5E8vdN7jropc0HQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731107302; c=relaxed/simple;
-	bh=irsXnTZZxmygNupu1NXScKGAnNXMWo9lfsCc5kdbx9Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MA3LHr8teUj6C3+PkpoOKiNxdmsa+PQuj2uIHxaVEE1oomzLHpHC96eUtcOQ+Y6Vlm+hjMnTkZeTYCvJveKL2BzPQIw6QKjtK06/0XAXxt3yMI2WiQvABjXXRyIU4qqaZFyYXDvuuABq2zVAfKnu19zttb3DQThxca4838HeBw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Rkpve48N; arc=none smtp.client-ip=209.85.166.177
+	s=arc-20240116; t=1731109573; c=relaxed/simple;
+	bh=slTDJpkuXaI2FSflzZPrxxPFD5Jf9rX1KtNIM7MAfoU=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=QEA4WAja7gQ2sA0XkTzyFaSbG3paHEoOd2p0ru5BJl+PDK3/skz7+9601IfjDfve4a7Ip74s58ihRPWJh0UX1u/FnBmIWuOGT2e+DjYqkluR6F9xyM+K1cn0HrXMuit0+j+qWRHPLElpqvShj8/xYYuIqgc8C5kztMEAVF+Hcvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cnpg/lLr; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rkpve48N"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3a4e54d3cefso35785ab.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 15:08:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cnpg/lLr"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6ea33aad097so41864307b3.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 15:46:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731107299; x=1731712099; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IiCqEW55XHvVf8qTba07pGSpYKmfdNiKgbJzhLD73iM=;
-        b=Rkpve48NY0Rgd+nl2vXkSk9J3Te9p2r5JEaZRBEsr9/L1b35TTazoEKv6olDDk4/QM
-         W4BKfqa4TqqyTSNM+qz5zA8aUJXrzIXGyYut1vtMK/vWICR8XHun4ao8cnxxn4EZgc5i
-         4dzF0WFMjQEyryh20/87zIP7cDDR+sk8HFpBqWH1elOFnERynnM62SxHZ/NFYO7ga7vy
-         3tRbop0awyKCx875UGYdf4UhgfV2xt2rAYTEbGyqAj3116G9vNUYXExQMJivhIdHFRXm
-         KCw0aX77mjhJKdSxqJbGJw+dZhSrSeTINGml1Jj8A2pmrKHwejpFNY0Fk8nv7o5UQ9jx
-         3t7g==
+        d=google.com; s=20230601; t=1731109570; x=1731714370; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Bo+XoNcfTiWt9dXZSAxdrxoaHvpnygZk759HUW2Tdtc=;
+        b=cnpg/lLrrHzrGjA6Xnsfa6VxTMuT2o3uTHL1sWo5/cPFNSF28T+05JpuIFjMCCz6v9
+         xte1vqJ43SHIIyEiYzissF3qG1h+FQApnvXBWKARh0iT3cL+C598hy5rV0sbnBbCW/ko
+         3SyOUaZ9cnLMGOMHP63meI8n09upT7ZgWihwb+zvDPe0t3P+embVW1qaV/klQjteG5BA
+         xrXLgRC+8Bb7/nVozy1V+LcvpyHKvk7FkkGlFVOnpFR9Xb+5scysop3MQc9sshLjnFBu
+         nFFctVDR4B91YQNiTtbCKKNRe1hWIGNdZIGzgDNu6dRCNlXcVGCIsmPNjIrYRcOq0W8h
+         IXFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731107299; x=1731712099;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IiCqEW55XHvVf8qTba07pGSpYKmfdNiKgbJzhLD73iM=;
-        b=U6gp/CJoQAI5cPJWIQRNoxZayMhU58qTGIbYnkMDGhXIr0IVGgh4Y4BYWKSZyw+z32
-         wS1dnwQAj1XtYq6X7L0FZpyYbyZSJXoaKxFNfciD1ZKAulll/eUCh5Dil+T3zvGnp7ce
-         cR3MyBG+08RjzQP9OHvu96M+8BLD97JB25GrLU5qoJoOQ6v455ZHA/hKZdWHvS1Ieoep
-         tKdlYZM/FYiyCf9LjrgqgxWhZDTkwO1oYRBAvcPDNq0Q/r+P1xq7I0Po7VGHhkXIdj25
-         +cXHtPk3MuA+G7QIa8DoSOCyj7BQ1uwgBK73qOolgtq8pLM6BBctCek7T2rLnjNXtncG
-         Ox3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ8VskAYZ24DCFKD3IITFlvRcsMAzOGkFcA/grRMSSokB8WDVN8EiiHwqQIx6Fpynuza7nNd9G8rcNLMQLCovH@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHQ4wmTGhCWHAMoMdSkxGE4HRURcODZk2HewqE6UiWN3XDqQ6y
-	cIjLTU4Fp8Pow4VeZmXTHiFeoF2r/s6zJMDhgd9TSDMCm/nreop5lyR8JnI272IhuAqHuI/N/TE
-	GK7WIEnHsv/5kw4fNTiJv7TmFVrQF1VOYs6n4
-X-Gm-Gg: ASbGncsjoKmLD5PNYmtKvnlW+9/+oc9ffsGs3E1njDi7YK9ThV0TkzSs+IQdPU2WWsp
-	lfCz+ykE0mOvOtVdjmXfGmiVn5e/6qnSv
-X-Google-Smtp-Source: AGHT+IEukeGFoyo6dh0VbQTAZvTWfrcspZTzt0yr9OYJp6P2e9ETJS0TnoGpuVFVzJTNq6FY+rr4thPlSIkzzSRgbw0=
-X-Received: by 2002:a05:6e02:1946:b0:3a0:a224:eb2c with SMTP id
- e9e14a558f8ab-3a6f9564132mr264765ab.25.1731107299142; Fri, 08 Nov 2024
- 15:08:19 -0800 (PST)
+        d=1e100.net; s=20230601; t=1731109570; x=1731714370;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Bo+XoNcfTiWt9dXZSAxdrxoaHvpnygZk759HUW2Tdtc=;
+        b=iistiWBxDT7mFxRVZVWXBEb+GUxuZYpMEXbEq1cFzkj7D9T3SDx9CobqdNoz61oSd4
+         92RB1u0Av4w9GYBa1oVBX9BijNkhsGx7evCFb457ngJEUTY52Efh0AuQ50YHFbvESpuW
+         WyrQJ/Iey5XHA6f23/G6HWtvzgHXSu61v9e50GJgx2MFIvEw2MSl2ZK6606TIu9jL3Dy
+         6RZko3Kq+cCu/ywapncTwkMXAWR3Y9eTeh+DhPXD1wVSyHFGZ62e1QMl43NZp6qwL39y
+         OxmaXeDqimPNaACIeHop/VPDEkgDRFT5hsO5WoYLde/FyU2gHK+FmDq9Ff7v1r+G1u8R
+         TwPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXrqnvg5yRmvU/GO+kBpMctc7WTGxFSXq3w/R5jP7S1XhYDgkLEoCF6iJHuO5ayfVN9AIx+ZrPsHiZ5FMGxMxH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgfdAquIhTU6LtYej9XmNOUqUWERMVpaqkYTmJ4iUfylj2Hfjs
+	58NI6PWR6INembNhNx6yz6h5O1Krjy5oyJVRKpeFhEPpfw4PvDdkpFIyomKtxR4vAgSR1jnKOMu
+	fCq3DpA==
+X-Google-Smtp-Source: AGHT+IG7nNHrZbf62YTEIFaabL+CBo69CYr9RS79+TUQD474jGBOE4r4BpO1ymNXWY8gOslRzk6deJr/eKGp
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:6fd2:1e36:6d8c:7c49])
+ (user=irogers job=sendgmr) by 2002:a25:d843:0:b0:e29:7454:e773 with SMTP id
+ 3f1490d57ef6-e337e1d738cmr20475276.5.1731109569972; Fri, 08 Nov 2024 15:46:09
+ -0800 (PST)
+Date: Fri,  8 Nov 2024 15:45:45 -0800
+Message-Id: <20241108234606.429459-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241017002520.59124-1-irogers@google.com> <20241017002520.59124-11-irogers@google.com>
- <Zy5udmX6gZAg0wkS@google.com>
-In-Reply-To: <Zy5udmX6gZAg0wkS@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
+Subject: [PATCH v4 00/20] Remove PERF_HAVE_DWARF_REGS
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 8 Nov 2024 15:08:07 -0800
-Message-ID: <CAP-5=fWhiLJ97smNySGk+TmmQ=ELOdztqdb7h3hrxT+18wG_HA@mail.gmail.com>
-Subject: Re: [PATCH v3 10/20] perf dwarf-regs: Move csky dwarf-regs out of arch
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
 	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
 	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>, 
 	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
@@ -89,143 +83,157 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
 	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 8, 2024 at 12:03=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, Oct 16, 2024 at 05:25:10PM -0700, Ian Rogers wrote:
-> > Move arch/csky/util/dwarf-regs.c to util/dwarf-regs-csky.c and compile
-> > in unconditionally. To avoid get_arch_regstr being duplicated, rename
-> > to get_csky_regstr and add to get_dwarf_regstr switch.
-> >
-> > Update #ifdefs to allow ABI V1 and V2 tables at the same
-> > time. Determine the table from the ELF flags.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/arch/csky/util/Build               |  1 -
-> >  tools/perf/util/Build                         |  1 +
-> >  .../dwarf-regs.c =3D> util/dwarf-regs-csky.c}   | 19 ++++++++++-------=
---
-> >  tools/perf/util/dwarf-regs.c                  | 11 +++++++----
-> >  tools/perf/util/include/dwarf-regs.h          |  2 ++
-> >  5 files changed, 20 insertions(+), 14 deletions(-)
-> >  rename tools/perf/{arch/csky/util/dwarf-regs.c =3D> util/dwarf-regs-cs=
-ky.c} (74%)
-> >
-> > diff --git a/tools/perf/arch/csky/util/Build b/tools/perf/arch/csky/uti=
-l/Build
-> > index 1325310cab6a..5e6ea82c4202 100644
-> > --- a/tools/perf/arch/csky/util/Build
-> > +++ b/tools/perf/arch/csky/util/Build
-> > @@ -1,4 +1,3 @@
-> >  perf-util-y +=3D perf_regs.o
-> >
-> > -perf-util-$(CONFIG_LIBDW) +=3D dwarf-regs.o
-> >  perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
-> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > index 4c615611b9d7..99ae4e2802b8 100644
-> > --- a/tools/perf/util/Build
-> > +++ b/tools/perf/util/Build
-> > @@ -203,6 +203,7 @@ endif
-> >  perf-util-$(CONFIG_LIBDW) +=3D probe-finder.o
-> >  perf-util-$(CONFIG_LIBDW) +=3D dwarf-aux.o
-> >  perf-util-$(CONFIG_LIBDW) +=3D dwarf-regs.o
-> > +perf-util-$(CONFIG_LIBDW) +=3D dwarf-regs-csky.o
-> >  perf-util-$(CONFIG_LIBDW) +=3D dwarf-regs-x86.o
-> >  perf-util-$(CONFIG_LIBDW) +=3D debuginfo.o
-> >  perf-util-$(CONFIG_LIBDW) +=3D annotate-data.o
-> > diff --git a/tools/perf/arch/csky/util/dwarf-regs.c b/tools/perf/util/d=
-warf-regs-csky.c
-> > similarity index 74%
-> > rename from tools/perf/arch/csky/util/dwarf-regs.c
-> > rename to tools/perf/util/dwarf-regs-csky.c
-> > index ca86ecaeacbb..d38ef1f07f3e 100644
-> > --- a/tools/perf/arch/csky/util/dwarf-regs.c
-> > +++ b/tools/perf/util/dwarf-regs-csky.c
-> > @@ -5,9 +5,8 @@
-> >  #include <stddef.h>
-> >  #include <dwarf-regs.h>
-> >
-> > -#if defined(__CSKYABIV2__)
-> > -#define CSKY_MAX_REGS 73
-> > -const char *csky_dwarf_regs_table[CSKY_MAX_REGS] =3D {
-> > +#define CSKY_ABIV2_MAX_REGS 73
-> > +const char *csky_dwarf_regs_table_abiv2[CSKY_ABIV2_MAX_REGS] =3D {
-> >       /* r0 ~ r8 */
-> >       "%a0", "%a1", "%a2", "%a3", "%regs0", "%regs1", "%regs2", "%regs3=
-",
-> >       /* r9 ~ r15 */
-> > @@ -26,9 +25,9 @@ const char *csky_dwarf_regs_table[CSKY_MAX_REGS] =3D =
-{
-> >       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-> >       "%epc",
-> >  };
-> > -#else
-> > -#define CSKY_MAX_REGS 57
-> > -const char *csky_dwarf_regs_table[CSKY_MAX_REGS] =3D {
-> > +
-> > +#define CSKY_ABIV1_MAX_REGS 57
+These changes were originally on top of:
+https://lore.kernel.org/lkml/20241017001354.56973-1-irogers@google.com/
 
-Definition of CSKY_ABIV1_MAX_REGS.
+Prior to these patches PERF_HAVE_DWARF_REGS indicated the presence of
+dwarf-regs.c in the arch directory. dwarf-regs.c provided upto 4
+functions:
 
-> > +const char *csky_dwarf_regs_table_abiv1[CSKY_ABIV1_MAX_REGS] =3D {
-> >       /* r0 ~ r8 */
-> >       "%sp", "%regs9", "%a0", "%a1", "%a2", "%a3", "%regs0", "%regs1",
-> >       /* r9 ~ r15 */
-> > @@ -41,9 +40,11 @@ const char *csky_dwarf_regs_table[CSKY_MAX_REGS] =3D=
- {
-> >       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-> >       "%epc",
-> >  };
-> > -#endif
-> >
-> > -const char *get_arch_regstr(unsigned int n)
-> > +const char *get_csky_regstr(unsigned int n, unsigned int flags)
-> >  {
-> > -     return (n < CSKY_MAX_REGS) ? csky_dwarf_regs_table[n] : NULL;
-> > +     if (flags & EF_CSKY_ABIV2)
->
-> Hmm.. you need it here as well.
+1) regs_query_register_offset would translate a register name into a
+pt_regs offset and was used by BPF prologues. BPF prologues existed
+for BPF events and support for these was removed many releases ago.
+This code was dead and could be removed.
 
-These constants are part of the dwarf-regs-csky.c file and not elf.h.
+2) get_arch_regstr duplicated get_dwarf_regstr and so it could be
+removed.  The case for csky was a little more complicated as the ABI
+controlled the string. The callers of get_dwarf_regstr were updated to
+also pass the ELF flags so that on csky the ABI appropriate table
+could be used. As the argument is only used on csky this a no-op for
+everything else.
 
-> > +             return (n < CSKY_ABIV2_MAX_REGS) ? csky_dwarf_regs_table_=
-abiv2[n] : NULL;
-> > +
-> > +     return (n < CSKY_ABIV1_MAX_REGS) ? csky_dwarf_regs_table_abiv1[n]=
- : NULL;
-> >  }
-> > diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.=
-c
-> > index fd21f9e90e40..9a76f83af62c 100644
-> > --- a/tools/perf/util/dwarf-regs.c
-> > +++ b/tools/perf/util/dwarf-regs.c
-> > @@ -29,17 +29,18 @@
-> >  #define __get_dwarf_regstr(tbl, n) (((n) < ARRAY_SIZE(tbl)) ? (tbl)[(n=
-)] : NULL)
-> >
-> >  /* Return architecture dependent register string (for kprobe-tracer) *=
-/
-> > -const char *get_dwarf_regstr(unsigned int n, unsigned int machine,
-> > -                          unsigned int flags __maybe_unused)
-> > +const char *get_dwarf_regstr(unsigned int n, unsigned int machine, uns=
-igned int flags)
-> >  {
-> > -#if EM_HOST =3D=3D EM_X86_64 || EM_HOST =3D=3D EM_386 || EM_HOST =3D=
-=3D EM_AARCH64 || EM_HOST =3D=3D EM_ARM
-> > +#if EM_HOST =3D=3D EM_X86_64 || EM_HOST =3D=3D EM_386 || EM_HOST =3D=
-=3D EM_AARCH64 || EM_HOST =3D=3D EM_ARM \
-> > +    || EM_HOST =3D=3D EM_CSKY
->
-> And here too.  It seems you also need a rebase.
->
-> At this point, I'm giving up.  Can you please refresh the series with
-> a fix?
+3) get_arch_regnum translated a register name back to a dwarf number
+and only existed on x86 where "al", "ax", "eax" and "rax" could all
+mean register 0. This code was moved to util with similar
+machine/flags logic to get_arch_regstr and for consistency with it.
 
-Sure I'll rebase and add ifndef+defines to dwarf-regs.h, I see we have
-these currently for EM_AARCH64 and EM_LOONGARCH there.
+4) get_powerpc_regs a PowerPC specific function used by annotate that
+should really be in util.
 
-Thanks,
-Ian
+2 and 3 required the wiring through of the ELF machine and flags in
+callers to get_dwarf_regstr and get_dwarf_regnum. When these values
+weren't dependent on an ELF file a new EM_HOST and EF_HOST were added
+to give the host ELF machine and flags. These 2 #defines got rid of
+the existing separate arch files and #ifdefs.
+
+v4: Add CSky defines to dwarf-regs.h Add reviewed-by tags from Masami.
+v3: These files were separated from the rest of the v2 libdw clean up
+    in:
+https://lore.kernel.org/lkml/CAP-5=fVZH3L-6y_sxLwSmT8WyMXDMFnuqUksNULdQYJCPNBFYw@mail.gmail.com/
+
+Ian Rogers (20):
+  perf bpf-prologue: Remove unused file
+  perf dwarf-regs: Remove PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET
+  perf dwarf-regs: Add EM_HOST and EF_HOST defines
+  perf disasm: Add e_machine/e_flags to struct arch
+  perf dwarf-regs: Pass accurate disassembly machine to get_dwarf_regnum
+  perf dwarf-regs: Pass ELF flags to get_dwarf_regstr
+  perf dwarf-regs: Move x86 dwarf-regs out of arch
+  perf arm64: Remove dwarf-regs.c
+  perf arm: Remove dwarf-regs.c
+  perf dwarf-regs: Move csky dwarf-regs out of arch
+  perf loongarch: Remove dwarf-regs.c
+  perf mips: Remove dwarf-regs.c
+  perf dwarf-regs: Move powerpc dwarf-regs out of arch
+  perf riscv: Remove dwarf-regs.c and add dwarf-regs-table.h
+  perf s390: Remove dwarf-regs.c
+  perf sh: Remove dwarf-regs.c
+  perf sparc: Remove dwarf-regs.c
+  perf xtensa: Remove dwarf-regs.c
+  perf dwarf-regs: Remove get_arch_regstr code
+  perf build: Remove PERF_HAVE_DWARF_REGS
+
+ tools/perf/Makefile.config                    |  17 +-
+ tools/perf/arch/arc/annotate/instructions.c   |   2 +
+ tools/perf/arch/arm/Makefile                  |   3 -
+ tools/perf/arch/arm/annotate/instructions.c   |   2 +
+ tools/perf/arch/arm/util/Build                |   2 -
+ tools/perf/arch/arm/util/dwarf-regs.c         |  61 -------
+ tools/perf/arch/arm64/Makefile                |   4 -
+ tools/perf/arch/arm64/annotate/instructions.c |   2 +
+ tools/perf/arch/arm64/util/Build              |   1 -
+ tools/perf/arch/arm64/util/dwarf-regs.c       |  92 -----------
+ tools/perf/arch/csky/Makefile                 |   4 -
+ tools/perf/arch/csky/annotate/instructions.c  |   7 +-
+ tools/perf/arch/csky/util/Build               |   1 -
+ tools/perf/arch/loongarch/Makefile            |   4 -
+ .../arch/loongarch/annotate/instructions.c    |   2 +
+ tools/perf/arch/loongarch/util/Build          |   1 -
+ tools/perf/arch/loongarch/util/dwarf-regs.c   |  44 -----
+ tools/perf/arch/mips/Makefile                 |   4 -
+ tools/perf/arch/mips/annotate/instructions.c  |   2 +
+ tools/perf/arch/mips/util/Build               |   1 -
+ tools/perf/arch/mips/util/dwarf-regs.c        |  38 -----
+ tools/perf/arch/powerpc/Makefile              |   5 -
+ .../perf/arch/powerpc/annotate/instructions.c |   2 +
+ tools/perf/arch/powerpc/util/Build            |   1 -
+ tools/perf/arch/powerpc/util/dwarf-regs.c     | 153 ------------------
+ tools/perf/arch/riscv/Makefile                |   5 +-
+ .../arch/riscv/include/dwarf-regs-table.h     |  42 +++++
+ tools/perf/arch/riscv/util/Build              |   1 -
+ tools/perf/arch/riscv/util/dwarf-regs.c       |  72 ---------
+ .../perf/arch/riscv64/annotate/instructions.c |   2 +
+ tools/perf/arch/s390/Makefile                 |   4 -
+ tools/perf/arch/s390/annotate/instructions.c  |   2 +
+ tools/perf/arch/s390/util/Build               |   1 -
+ tools/perf/arch/s390/util/dwarf-regs.c        |  43 -----
+ tools/perf/arch/sh/Build                      |   1 -
+ tools/perf/arch/sh/Makefile                   |   4 -
+ tools/perf/arch/sh/util/Build                 |   1 -
+ tools/perf/arch/sh/util/dwarf-regs.c          |  41 -----
+ tools/perf/arch/sparc/Build                   |   1 -
+ tools/perf/arch/sparc/Makefile                |   4 -
+ tools/perf/arch/sparc/annotate/instructions.c |   2 +
+ tools/perf/arch/sparc/util/Build              |   1 -
+ tools/perf/arch/sparc/util/dwarf-regs.c       |  39 -----
+ tools/perf/arch/x86/Makefile                  |   4 -
+ tools/perf/arch/x86/annotate/instructions.c   |   3 +-
+ tools/perf/arch/x86/util/Build                |   3 -
+ tools/perf/arch/x86/util/dwarf-regs.c         | 153 ------------------
+ tools/perf/arch/xtensa/Build                  |   1 -
+ tools/perf/arch/xtensa/Makefile               |   4 -
+ tools/perf/arch/xtensa/util/Build             |   1 -
+ tools/perf/arch/xtensa/util/dwarf-regs.c      |  21 ---
+ tools/perf/util/Build                         |   3 +
+ tools/perf/util/annotate.c                    |   6 +-
+ tools/perf/util/bpf-prologue.h                |  37 -----
+ tools/perf/util/disasm.c                      |   1 +
+ tools/perf/util/disasm.h                      |   4 +
+ .../dwarf-regs.c => util/dwarf-regs-csky.c}   |  19 +--
+ tools/perf/util/dwarf-regs-powerpc.c          |  61 +++++++
+ tools/perf/util/dwarf-regs-x86.c              |  50 ++++++
+ tools/perf/util/dwarf-regs.c                  |  38 +++--
+ tools/perf/util/include/dwarf-regs.h          | 120 +++++++++++---
+ tools/perf/util/probe-finder.c                |  13 +-
+ tools/perf/util/probe-finder.h                |   3 +-
+ 63 files changed, 339 insertions(+), 927 deletions(-)
+ delete mode 100644 tools/perf/arch/arm/util/dwarf-regs.c
+ delete mode 100644 tools/perf/arch/arm64/util/dwarf-regs.c
+ delete mode 100644 tools/perf/arch/csky/Makefile
+ delete mode 100644 tools/perf/arch/loongarch/util/dwarf-regs.c
+ delete mode 100644 tools/perf/arch/mips/util/dwarf-regs.c
+ delete mode 100644 tools/perf/arch/powerpc/util/dwarf-regs.c
+ create mode 100644 tools/perf/arch/riscv/include/dwarf-regs-table.h
+ delete mode 100644 tools/perf/arch/riscv/util/dwarf-regs.c
+ delete mode 100644 tools/perf/arch/s390/util/dwarf-regs.c
+ delete mode 100644 tools/perf/arch/sh/Build
+ delete mode 100644 tools/perf/arch/sh/Makefile
+ delete mode 100644 tools/perf/arch/sh/util/Build
+ delete mode 100644 tools/perf/arch/sh/util/dwarf-regs.c
+ delete mode 100644 tools/perf/arch/sparc/Build
+ delete mode 100644 tools/perf/arch/sparc/util/Build
+ delete mode 100644 tools/perf/arch/sparc/util/dwarf-regs.c
+ delete mode 100644 tools/perf/arch/x86/util/dwarf-regs.c
+ delete mode 100644 tools/perf/arch/xtensa/Build
+ delete mode 100644 tools/perf/arch/xtensa/Makefile
+ delete mode 100644 tools/perf/arch/xtensa/util/Build
+ delete mode 100644 tools/perf/arch/xtensa/util/dwarf-regs.c
+ delete mode 100644 tools/perf/util/bpf-prologue.h
+ rename tools/perf/{arch/csky/util/dwarf-regs.c => util/dwarf-regs-csky.c} (74%)
+ create mode 100644 tools/perf/util/dwarf-regs-powerpc.c
+ create mode 100644 tools/perf/util/dwarf-regs-x86.c
+
+-- 
+2.47.0.277.g8800431eea-goog
+
