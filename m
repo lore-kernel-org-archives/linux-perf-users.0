@@ -1,249 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11022088.outbound.protection.outlook.com [40.93.195.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0954FD2FF;
-	Fri,  8 Nov 2024 00:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731024049; cv=none; b=FL23MWuJJDlF+LbjAjJlJXIz9c/4UfbQTyGrg07vysFBOnZrGHuPBkiIJm2NJ3/CFQVMFIdFf2chDU+5uFEyBmXpS0WILAR5e04jo2RkeEWcTRLolpee5jdRBPknOPuRiSCNM6emISKjdhEl0V7J0w3/ic64pCYGP+qU4XPsBD0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731024049; c=relaxed/simple;
-	bh=A1nYBKBjEzWsfHtk4DuraLYhFByKzZ3xxQIgXdcE7YI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=dAAqxubsWrey2eEC9ZsbhioAmF5M5jiS+2TUBLqQD1H4jG5e//b1DlDhikiK6asWlPtvbipmXSgTX6rjGP0L312qQM36bQZfktux08T6PVGk/1nYhMMU3nYuho36X5dmRa2WFcewI396OKt7bkMC5n39ECWdKu7ZgP1PrN+erX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dgK1c0Gx; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D7B1BD9FB;
+	Fri,  8 Nov 2024 01:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731028122; cv=fail; b=PXDql6mCru32/EJ6B5ssAhgbBxwB740GOAXYm1cOZPnoMrkYlh5GmLVsJxZRsf8Wbib4NzviK0CBEdF5QbMFW9PXs22lclVWjjmwYAQkzX5NlwoqzsEiTu3NgTEJCU0M6C5+NFLT4b339dPPaTOSFXt03EZvEMBYaAfnNn49jrs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731028122; c=relaxed/simple;
+	bh=BwhOmKxgoBnQveZN5nj3Dg92h+SXrOtLhGlqjz1BIj8=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Tb+o/oYGRXvnaSp85iSBv3ZkrxW6VJoknst5b4b7xLHOeWhtlnGk3p12qZTq/XSy92+otfRpUI0D2wlCxYmcTylqgdbAo8fC6fz7dPseLIfB4vLDdwu8QkjzEqsZxtk9t1MQdYYYcPK7sxfPc/SgymFM6xT/bwgvGphwoqhUygU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=kV9lJwZI; arc=fail smtp.client-ip=40.93.195.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dgK1c0Gx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75D47C4CECC;
-	Fri,  8 Nov 2024 00:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731024048;
-	bh=A1nYBKBjEzWsfHtk4DuraLYhFByKzZ3xxQIgXdcE7YI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dgK1c0Gx3JpYWiutgr99uTMw0ppxTTMR2JvkRft+iLbbm+nBkVyoMxX9/SUayeOOq
-	 /B5ASGXVaOfZG4Xk2pNHYZVz57FCko1MojjWS6hHDsD/XEuBhwP3M7DVOFdZ2zEFjn
-	 T6kt6y7ivMNeo2Mhg2/dxlYoL3T62gFBnCzabCVEqoB5+hmPraY6InKaGcyPcDGP6q
-	 OcX34Y06SCEtysIq+D20N/6GvPF3s+095pzROJcYQqd7jtn8M5bPERxS/tODNTcGE0
-	 zkbLpazUOSouCV24V6po8NmwVq0CpQitrRu/1IvBUWiRg89D1jk1Tcu+8wO10sR5HN
-	 Kxl9ki5avSVtw==
-Date: Fri, 8 Nov 2024 09:00:40 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Adrian
- Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, James
- Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan
- <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>, Changbin Du
- <changbin.du@huawei.com>, Guilherme Amadio <amadio@gentoo.org>, Yang Jihong
- <yangjihong@bytedance.com>, Aditya Gupta <adityag@linux.ibm.com>, Athira
- Rajeev <atrajeev@linux.vnet.ibm.com>, Masahiro Yamada
- <masahiroy@kernel.org>, Bibo Mao <maobibo@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, Kajol Jain <kjain@linux.ibm.com>, Atish Patra
- <atishp@rivosinc.com>, Shenlin Liang <liangshenlin@eswincomputing.com>,
- Anup Patel <anup@brainfault.org>, Oliver Upton <oliver.upton@linux.dev>,
- "Steinar H. Gunderson" <sesse@google.com>, "Dr. David Alan Gilbert"
- <linux@treblig.org>, Chen Pei <cp0613@linux.alibaba.com>, Dima Kogan
- <dima@secretsauce.net>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Alexander Lobakin
- <aleksander.lobakin@intel.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 00/20] Remove PERF_HAVE_DWARF_REGS
-Message-Id: <20241108090040.463cb3f0820e7ac22d1bb6c2@kernel.org>
-In-Reply-To: <Zy0VHro3wE-ZTKsq@google.com>
-References: <20241017002520.59124-1-irogers@google.com>
-	<Zy0VHro3wE-ZTKsq@google.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="kV9lJwZI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gYBz929lceu5DBJ1SLEyXCtd+thKuIzIAGsJvi7PCFBFtHPkGlD6x5Xll9I1o54G/HmCapUvonGLNT3rBm4HrnZIyqi2P3KJWHyRVWO8rY0IeXwctuFSR1/1r396qj2dlsGvsyTdyN6pytz0Rs7YSou5SI0HG445v+0ZGB+pe8EVKpB9hYkN4zSllnvf2mREmbPlvj06PhruuSI4jGlEGPkj99BJYXHmb3XSoPco2Rk9+QZcB+sQ4UQma2bWLrPtAiDgEjayIdDdVFNO8g29ECGnUa/HA4vrX/bxy4mCVGWjIAJqYgfewy9Y6cpljURzsqNpD2RtfjJBg0YHeuT+JQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=v+cGdrKKlcvWJB57IoT8vuVqy5I75FMKVJmf1j0adbg=;
+ b=w7pne5cFt+t/KwzwriOBVp2Z/5NAGXnpwvdRh87de1FMHr6lNHIheNy5NzLU+CM7a+WDF53b1ZEzZg6q8Vs2euZVydQl2UeLhDKCc9nRb7kBVGk3vsj34DKc5r/Er3C80QrOgwUIiqP+v/Z1YTouuS/3w/HdETJx8AcVd4ekMF9yLssfln/dZMqgjClMlBhH3Mp0Jgpf+p0wWtwXb9NExbTCq9nwhuDhijTMdqDcju2V6X13yVZyA0BCMeYbaVbD6GuI9cCja/J2m0T5n57eUx5x3enuHI1VqTzjdpFUpL4FxTdiUznR2+/rsu5OVGsuC6gS12QY+ErYCPGsbZfZRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v+cGdrKKlcvWJB57IoT8vuVqy5I75FMKVJmf1j0adbg=;
+ b=kV9lJwZIRdSdYTkYc2/4Bv+D+8KH0SM1WXwnReVy1LIhMama/XVl4iu7O64rMcEHOPY2Ay/nth+bhXDVap9miy9i5iR0IUZHABozp4aDPfSGJOa5+NPekHB0533CNMOmr7qFEOO5U9Emc51fpTnXneB/uXgL6ILrNkvXVs7bzTo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from MW4PR01MB6228.prod.exchangelabs.com (2603:10b6:303:76::7) by
+ CO1PR01MB7385.prod.exchangelabs.com (2603:10b6:303:158::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8137.19; Fri, 8 Nov 2024 01:08:37 +0000
+Received: from MW4PR01MB6228.prod.exchangelabs.com
+ ([fe80::13ba:df5b:8558:8bba]) by MW4PR01MB6228.prod.exchangelabs.com
+ ([fe80::13ba:df5b:8558:8bba%3]) with mapi id 15.20.8137.018; Fri, 8 Nov 2024
+ 01:08:36 +0000
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Graham Woodward <graham.woodward@arm.com>
+Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/2] perf arm-spe: Add support for SPE Data Source packet on AmpereOne
+Date: Fri,  8 Nov 2024 01:09:09 +0000
+Message-ID: <20241108010911.58412-1-ilkka@os.amperecomputing.com>
+X-Mailer: git-send-email 2.47.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CH0PR03CA0366.namprd03.prod.outlook.com
+ (2603:10b6:610:119::12) To MW4PR01MB6228.prod.exchangelabs.com
+ (2603:10b6:303:76::7)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR01MB6228:EE_|CO1PR01MB7385:EE_
+X-MS-Office365-Filtering-Correlation-Id: df3ab4b2-4f51-442c-e251-08dcff91df83
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|52116014|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?owpzJ1nYr/b3oprihX5PKdYTwKUZpcpfm+IiqXHgIGioFFZordQ2V26srm09?=
+ =?us-ascii?Q?ptal7sBUUy6BSkzBTDAhuQxs5MQqozpXkr4aB2bu3h8RgCII2XmT0c6hawaE?=
+ =?us-ascii?Q?EEk/IwGt40PdthE83ow6mB+F0/Hqrza+RnR+Hy570IDhdQRmiwiZx6dcKIxf?=
+ =?us-ascii?Q?mqDJqINuZkseT9xWXKPADxXPwsD73WtpQhw/6MpOKwXEeBYh2mtK71c4D4C9?=
+ =?us-ascii?Q?nontfipBoqYCPvl5tZC1BsNL9OvSnjj+HP5wWemDiuCaTJDfAwAIxV83hecc?=
+ =?us-ascii?Q?Jy9bcp7h4W0UVts/OoRZV4dBfRHWrTOGhgfHQiLQmaSDwdUY0yDqDL8BgFig?=
+ =?us-ascii?Q?RCFMME0mxlyCwDXQEZgH0zi16p7RQEpiLz2lzZ1Yq+6ca3/0l3LI+reMj23N?=
+ =?us-ascii?Q?pMP/HFKp0MFzv4qZsh7+TW670Q+27YZW3IyN7jl2p5h5By8H7q/Vhz7OCZbq?=
+ =?us-ascii?Q?9EAYNXSoNbUUBrFibStLXYBK5Mt52Ztx1qbXTQyRv72Zan2ejMyjlY9Q1srR?=
+ =?us-ascii?Q?OICJpLyRrh9kf1kcFkRwNLMnHlEpb4DxIIp/u6K+2hzekgsQy3/8ir+wGK9T?=
+ =?us-ascii?Q?zzkAo2SueVja7ROMD6vic28uac3rQTfS/uAzYVwVcN9BiW5F0B7uNFy9Vu0e?=
+ =?us-ascii?Q?N0inpH+2SWIeKu43V7Nq1DO/+zQFZfXy/S42xKu/FiNesj3jBn2S99z5nBSK?=
+ =?us-ascii?Q?hkI20T5jvxLq1BG1QNjVKONRmkO925BGD9uz8QnCqD/AQZufV3r2nekoecba?=
+ =?us-ascii?Q?J3QUAc6wqfYdOc0V678sWhgO09IJHKqu4ZlUniETHIFYU7EZDfnwOChenUJb?=
+ =?us-ascii?Q?LTt3tXSNrfpRgHKVRulDzU2rPms+gZsA9dWP/VqQOOcEdjpJeTr7mjNptE85?=
+ =?us-ascii?Q?3USJ3iCyIRyJBi9f3u5So8KyiFSmzg4omxf6sDkZq38rmjQ7gak+DWw7RIAb?=
+ =?us-ascii?Q?sWMdcPdCSTeqa4HR78YTNvMnMQcnd+Hnlnua1B4bsH/brVn8MPAKY3dcWowS?=
+ =?us-ascii?Q?c9It9f6Tt+BAIlcdra/NJNo5DvdrtCFJugFAUhjDcY4/vSgn/6i1xEQ2jomZ?=
+ =?us-ascii?Q?/O+L3oCT+rflLdqFkL6fYOG4U0+LNYFQ/NvZezVQ8PdtDia1Hjb8cdLVAN4i?=
+ =?us-ascii?Q?xMiLFu9XenCD19G5x7IZfixvmpuBA7dR7CJuKNOtZe7JPM2z1X9lii5LJkkn?=
+ =?us-ascii?Q?duLwL9dyVkGVcIuQDjcPkKmP09k9/5CDm7KuoFHWXgsyi0ElZ4O+DJQJ1aTc?=
+ =?us-ascii?Q?AUY9S2wU/6ufjUSijRGkgQXKzWagzYCxHu1wvDMtk4WDpVbpBcR22FvcDsxZ?=
+ =?us-ascii?Q?5NH0q92lwjWvrbq7qsXHOpn4ir7aV1wvtfTYWXVtrgl2t+zahr/kQZgVa4Cb?=
+ =?us-ascii?Q?wvwAIL2428V0JTx+MF4KHQGXaCZi?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR01MB6228.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(52116014)(38350700014)(921020);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?omwzgCCmzzEBbOduu7k3oVz+jzXYPfYb5BA/9pH/M77pRu9y+9iG65wd+Ibj?=
+ =?us-ascii?Q?Sbie8RepJxcCgt7j1iqFg6N7/ZXdG5HgZvByJskuPL5/NOYah/fTRhwPLTwW?=
+ =?us-ascii?Q?WGM/JJnTiRVric9IYsLftY8mVF9c0aUoB1SXM/mJvReLiaTotZrL/WY5KP8H?=
+ =?us-ascii?Q?eT0uQ9DxGl1qZ4ZomeHsS0vpwfwan2ur0AhieIHA5E4D7W19UYyUY3LpZnw+?=
+ =?us-ascii?Q?Qn5Jbq6iFObo3DjANpbzkqLPeUuz7YUdU9NRoBzqBNRd+lcFSlEceSWPLG43?=
+ =?us-ascii?Q?DODzxHeAmINeBxoqy7I7tHmtQu/1BUxPal+2PvTWmTVslbu+QCDwc34QoH1B?=
+ =?us-ascii?Q?2lIgug7ymaWYnVvzzvU6S8D9U90aPoQyZ1uASSkjOCAMdtfquFH6TpXEp/cD?=
+ =?us-ascii?Q?uN+gnRRIKHSl98x8jaxnvkakzV9o0K9FtM6BQ/I6ozap1fVGd9srTPSv8lZf?=
+ =?us-ascii?Q?vuCBQBHbASDfjuj89DnEiUrVv4fBbtH8gHqW+sUBcd7fN/UQPygyoh+uaZy5?=
+ =?us-ascii?Q?DrFHSIIfIkB5/YbSz+ihKSzcEdWEs5xKKo7CXEYT7a9bocbXjagy9vGtSJwI?=
+ =?us-ascii?Q?TlxsnkjiN5xxFOU18YQzNhsN8JkazPl7v2JpZPF9iIJB/wQgUmDOB5C+eKfw?=
+ =?us-ascii?Q?CXfLxzneaN47PkDDnpq64J3baANwJRCcNRRQRpbVCw/LuIpYpRvyHkVMoGWY?=
+ =?us-ascii?Q?7YLyAPouoZ9HBgGe+7QM4IuCGSalyKy1g5tfBF+flBAoqgGnsr8/AM/uJYau?=
+ =?us-ascii?Q?JSoCZTF1uVGV1F0+LO7333A2YNGo/HP6BP06TWRRlFNexF670wBD1OXk0Lkd?=
+ =?us-ascii?Q?QFESUklrbIzR9qaIr3jmBiSAk3SO/PeznQGpwehQwzOBE9DxPv4ZBb0F7nb3?=
+ =?us-ascii?Q?AhM+PSTM/cekj3hOQHollL6TZNLhmIuyyxhbViz6iCe6WFvNsokgAxQKqLxe?=
+ =?us-ascii?Q?y5CZER2B8t6sLkzAbEuMyHNDN/nSBz2ryy1eBqQt4iEKb15alTJR5qxR4zsX?=
+ =?us-ascii?Q?pywJeZeTgg3skp8OcfLcoTr5QOWMrd9FMnqWz40FZwu9DcsGJZ5r4aloLJn9?=
+ =?us-ascii?Q?h8I93co7GvXSzFt1GCTMZF/V6PXYE++8o++p8IRq/GwZo6w5Dt928qRzPW0X?=
+ =?us-ascii?Q?7qm4HSbM0faSYAV1z5JTKsPYsi/hKjexMhFihlnNM4NgDiJPrd/Z5LkVZkei?=
+ =?us-ascii?Q?REdyUJm4zruXdh05WPixYy287WwUXJIrJ1PxeWBqYueHKXYz5gkuBbGv4CJn?=
+ =?us-ascii?Q?m1grh4RrTgs5RKIVnyrwpmMhfxFgoOlE6ND2odLa9Ycpnu/pb6D5THEDfhO9?=
+ =?us-ascii?Q?Y6m88HY/K5ET9B9euJdaXc67MhP2upL6GTKywmsR80Ni/k0Ii6nWRFoshzTl?=
+ =?us-ascii?Q?9PZQQ6C/prRVk1AGNsGDNLmiiEwr8+MUT45Dk5njDTUN8aEn2CNI2qTK05ZR?=
+ =?us-ascii?Q?fSqkUf1NfeZoCk2fGAOqk+Qzsk6vbM79L69f/Vmpv3q7eR8K6yt5y9JUz29i?=
+ =?us-ascii?Q?HgWpnczo+mko9s2pDOQUGhB2meiaQC59/odwAwIldxSzh6q+NWDPGD2Hgyeh?=
+ =?us-ascii?Q?8DxrkYkk86i30fItNVmLoXIHdhtENP6O+w8+s315kc9aMFUYOYd+bS8Q7Xsw?=
+ =?us-ascii?Q?/FzdcP+4ZwsS9bZudcQ3d7E=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df3ab4b2-4f51-442c-e251-08dcff91df83
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR01MB6228.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2024 01:08:36.7125
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: irShpgupydn01QypXDi3FkNWvD96d/iyxaysHwLfL42B6K58EKawVqMqfDJx+bPxwbNk0bxNn4BxDVZr39yjjtL/outgvwtzSn3WFbbKTSGGE11U+jCkUNYmdTvePq8Q
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR01MB7385
 
-Hi,
+v1:
+	* https://lore.kernel.org/all/20241024233035.7979-1-ilkka@os.amperecomputing.com/
 
-On Thu, 7 Nov 2024 11:29:34 -0800
-Namhyung Kim <namhyung@kernel.org> wrote:
+v2:
+	* Doesn't use read_cpuid_implementor() anymore as that was broken and
+	  unnecessary.
+	* Convert AmpereOne source field to matching common source fields to
+	  avoid duplicating the code.
+	* Rebased on top of perf-tools-next/perf-tools-next (ba993e5ada1d)
+	* https://lore.kernel.org/all/20241031213533.11148-1-ilkka@os.amperecomputing.com/
 
-> Hi all,
-> 
-> On Wed, Oct 16, 2024 at 05:25:00PM -0700, Ian Rogers wrote:
-> > These changes are on top of:
-> > https://lore.kernel.org/lkml/20241017001354.56973-1-irogers@google.com/
-> > 
-> > Prior to these patches PERF_HAVE_DWARF_REGS indicated the presence of
-> > dwarf-regs.c in the arch directory. dwarf-regs.c provided upto 4
-> > functions:
-> > 
-> > 1) regs_query_register_offset would translate a register name into a
-> > pt_regs offset and was used by BPF prologues. BPF prologues existed
-> > for BPF events and support for these was removed many releases ago.
-> > This code was dead and could be removed.
-> > 
-> > 2) get_arch_regstr duplicated get_dwarf_regstr and so it could be
-> > removed.  The case for csky was a little more complicated as the ABI
-> > controlled the string. The callers of get_dwarf_regstr were updated to
-> > also pass the ELF flags so that on csky the ABI appropriate table
-> > could be used. As the argument is only used on csky this a no-op for
-> > everything else.
-> > 
-> > 3) get_arch_regnum translated a register name back to a dwarf number
-> > and only existed on x86 where "al", "ax", "eax" and "rax" could all
-> > mean register 0. This code was moved to util with similar
-> > machine/flags logic to get_arch_regstr and for consistency with it.
-> > 
-> > 4) get_powerpc_regs a PowerPC specific function used by annotate that
-> > should really be in util.
-> > 
-> > 2 and 3 required the wiring through of the ELF machine and flags in
-> > callers to get_dwarf_regstr and get_dwarf_regnum. When these values
-> > weren't dependent on an ELF file a new EM_HOST and EF_HOST were added
-> > to give the host ELF machine and flags. These 2 #defines got rid of
-> > the existing separate arch files and #ifdefs.
-> > 
-> > v3: These files were separated from the rest of the v2 libdw clean up
-> >     in:
-> > https://lore.kernel.org/lkml/CAP-5=fVZH3L-6y_sxLwSmT8WyMXDMFnuqUksNULdQYJCPNBFYw@mail.gmail.com/
-> > 
-> > Ian Rogers (20):
-> >   perf bpf-prologue: Remove unused file
-> >   perf dwarf-regs: Remove PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET
-> >   perf dwarf-regs: Add EM_HOST and EF_HOST defines
-> >   perf disasm: Add e_machine/e_flags to struct arch
-> >   perf dwarf-regs: Pass accurate disassembly machine to get_dwarf_regnum
-> >   perf dwarf-regs: Pass ELF flags to get_dwarf_regstr
-> >   perf dwarf-regs: Move x86 dwarf-regs out of arch
-> >   perf arm64: Remove dwarf-regs.c
-> >   perf arm: Remove dwarf-regs.c
-> >   perf dwarf-regs: Move csky dwarf-regs out of arch
-> >   perf loongarch: Remove dwarf-regs.c
-> >   perf mips: Remove dwarf-regs.c
-> >   perf dwarf-regs: Move powerpc dwarf-regs out of arch
-> >   perf riscv: Remove dwarf-regs.c and add dwarf-regs-table.h
-> >   perf s390: Remove dwarf-regs.c
-> >   perf sh: Remove dwarf-regs.c
-> >   perf sparc: Remove dwarf-regs.c
-> >   perf xtensa: Remove dwarf-regs.c
-> >   perf dwarf-regs: Remove get_arch_regstr code
-> >   perf build: Remove PERF_HAVE_DWARF_REGS
-> 
-> These look all good and I'm about to apply the series.
-> 
-> Masami, do you have any remaining concerns?  It'd be nice if you can
-> give your Reviewed-by.
+v3:
+	* Changed source mapping to simple switch statement
+	* Dropped is_xyz() stuff
+	* Added table to map midr to data source decoding function
+	* https://lore.kernel.org/all/20241106193740.6159-1-ilkka@os.amperecomputing.com/
 
-I think it looks good to me.
+v4:
+	* Split midr/decoding function table
+	* Made AmpereOne DS decoding function to ignore unknown sources
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Ilkka Koskinen (2):
+  perf arm-spe: Prepare for adding data source packet implementations
+    for other cores
+  perf arm-spe: Add support for SPE Data Source packet on AmpereOne
 
-Thank you,
-
-> 
-> Thanks,
-> Namhyug
-> 
-> > 
-> >  tools/perf/Makefile.config                    |  17 +-
-> >  tools/perf/arch/arc/annotate/instructions.c   |   2 +
-> >  tools/perf/arch/arm/Makefile                  |   3 -
-> >  tools/perf/arch/arm/annotate/instructions.c   |   2 +
-> >  tools/perf/arch/arm/util/Build                |   2 -
-> >  tools/perf/arch/arm/util/dwarf-regs.c         |  61 -------
-> >  tools/perf/arch/arm64/Makefile                |   4 -
-> >  tools/perf/arch/arm64/annotate/instructions.c |   2 +
-> >  tools/perf/arch/arm64/util/Build              |   1 -
-> >  tools/perf/arch/arm64/util/dwarf-regs.c       |  92 -----------
-> >  tools/perf/arch/csky/Makefile                 |   4 -
-> >  tools/perf/arch/csky/annotate/instructions.c  |   7 +-
-> >  tools/perf/arch/csky/util/Build               |   1 -
-> >  tools/perf/arch/loongarch/Makefile            |   4 -
-> >  .../arch/loongarch/annotate/instructions.c    |   2 +
-> >  tools/perf/arch/loongarch/util/Build          |   1 -
-> >  tools/perf/arch/loongarch/util/dwarf-regs.c   |  44 -----
-> >  tools/perf/arch/mips/Makefile                 |   4 -
-> >  tools/perf/arch/mips/annotate/instructions.c  |   2 +
-> >  tools/perf/arch/mips/util/Build               |   1 -
-> >  tools/perf/arch/mips/util/dwarf-regs.c        |  38 -----
-> >  tools/perf/arch/powerpc/Makefile              |   5 -
-> >  .../perf/arch/powerpc/annotate/instructions.c |   2 +
-> >  tools/perf/arch/powerpc/util/Build            |   1 -
-> >  tools/perf/arch/powerpc/util/dwarf-regs.c     | 153 ------------------
-> >  tools/perf/arch/riscv/Makefile                |   5 +-
-> >  .../arch/riscv/include/dwarf-regs-table.h     |  42 +++++
-> >  tools/perf/arch/riscv/util/Build              |   1 -
-> >  tools/perf/arch/riscv/util/dwarf-regs.c       |  72 ---------
-> >  .../perf/arch/riscv64/annotate/instructions.c |   2 +
-> >  tools/perf/arch/s390/Makefile                 |   4 -
-> >  tools/perf/arch/s390/annotate/instructions.c  |   2 +
-> >  tools/perf/arch/s390/util/Build               |   1 -
-> >  tools/perf/arch/s390/util/dwarf-regs.c        |  43 -----
-> >  tools/perf/arch/sh/Build                      |   1 -
-> >  tools/perf/arch/sh/Makefile                   |   4 -
-> >  tools/perf/arch/sh/util/Build                 |   1 -
-> >  tools/perf/arch/sh/util/dwarf-regs.c          |  41 -----
-> >  tools/perf/arch/sparc/Build                   |   1 -
-> >  tools/perf/arch/sparc/Makefile                |   4 -
-> >  tools/perf/arch/sparc/annotate/instructions.c |   2 +
-> >  tools/perf/arch/sparc/util/Build              |   1 -
-> >  tools/perf/arch/sparc/util/dwarf-regs.c       |  39 -----
-> >  tools/perf/arch/x86/Makefile                  |   4 -
-> >  tools/perf/arch/x86/annotate/instructions.c   |   3 +-
-> >  tools/perf/arch/x86/util/Build                |   3 -
-> >  tools/perf/arch/x86/util/dwarf-regs.c         | 153 ------------------
-> >  tools/perf/arch/xtensa/Build                  |   1 -
-> >  tools/perf/arch/xtensa/Makefile               |   4 -
-> >  tools/perf/arch/xtensa/util/Build             |   1 -
-> >  tools/perf/arch/xtensa/util/dwarf-regs.c      |  21 ---
-> >  tools/perf/util/Build                         |   3 +
-> >  tools/perf/util/annotate.c                    |   6 +-
-> >  tools/perf/util/bpf-prologue.h                |  37 -----
-> >  tools/perf/util/disasm.h                      |   4 +
-> >  .../dwarf-regs.c => util/dwarf-regs-csky.c}   |  19 +--
-> >  tools/perf/util/dwarf-regs-powerpc.c          |  61 +++++++
-> >  tools/perf/util/dwarf-regs-x86.c              |  50 ++++++
-> >  tools/perf/util/dwarf-regs.c                  |  38 +++--
-> >  tools/perf/util/include/dwarf-regs.h          | 110 ++++++++++---
-> >  tools/perf/util/probe-finder.c                |  13 +-
-> >  tools/perf/util/probe-finder.h                |   3 +-
-> >  62 files changed, 328 insertions(+), 927 deletions(-)
-> >  delete mode 100644 tools/perf/arch/arm/util/dwarf-regs.c
-> >  delete mode 100644 tools/perf/arch/arm64/util/dwarf-regs.c
-> >  delete mode 100644 tools/perf/arch/csky/Makefile
-> >  delete mode 100644 tools/perf/arch/loongarch/util/dwarf-regs.c
-> >  delete mode 100644 tools/perf/arch/mips/util/dwarf-regs.c
-> >  delete mode 100644 tools/perf/arch/powerpc/util/dwarf-regs.c
-> >  create mode 100644 tools/perf/arch/riscv/include/dwarf-regs-table.h
-> >  delete mode 100644 tools/perf/arch/riscv/util/dwarf-regs.c
-> >  delete mode 100644 tools/perf/arch/s390/util/dwarf-regs.c
-> >  delete mode 100644 tools/perf/arch/sh/Build
-> >  delete mode 100644 tools/perf/arch/sh/Makefile
-> >  delete mode 100644 tools/perf/arch/sh/util/Build
-> >  delete mode 100644 tools/perf/arch/sh/util/dwarf-regs.c
-> >  delete mode 100644 tools/perf/arch/sparc/Build
-> >  delete mode 100644 tools/perf/arch/sparc/util/Build
-> >  delete mode 100644 tools/perf/arch/sparc/util/dwarf-regs.c
-> >  delete mode 100644 tools/perf/arch/x86/util/dwarf-regs.c
-> >  delete mode 100644 tools/perf/arch/xtensa/Build
-> >  delete mode 100644 tools/perf/arch/xtensa/Makefile
-> >  delete mode 100644 tools/perf/arch/xtensa/util/Build
-> >  delete mode 100644 tools/perf/arch/xtensa/util/dwarf-regs.c
-> >  delete mode 100644 tools/perf/util/bpf-prologue.h
-> >  rename tools/perf/{arch/csky/util/dwarf-regs.c => util/dwarf-regs-csky.c} (74%)
-> >  create mode 100644 tools/perf/util/dwarf-regs-powerpc.c
-> >  create mode 100644 tools/perf/util/dwarf-regs-x86.c
-> > 
-> > -- 
-> > 2.47.0.105.g07ac214952-goog
-> > 
-
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  9 ++
+ tools/perf/util/arm-spe.c                     | 86 ++++++++++++++++---
+ 2 files changed, 83 insertions(+), 12 deletions(-)
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.47.0
+
