@@ -1,57 +1,57 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6616B2123E6;
-	Fri,  8 Nov 2024 20:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5674219E29;
+	Fri,  8 Nov 2024 20:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731098519; cv=none; b=Au8bsexCf8gcYJH6hmtNaIEkcdM9PGIFA1Gt5ccmfWcvOJniXmARXcrEiFEbRSCrE/nESK5HqDPa02soviNigQymUUbcnZ7X7TqXkkODHZpnHVsa352vMFqb6SAPqC2iz55Vk552q0m6aq+hkreMKSoTyl7tag/i4PiQ04TdBB0=
+	t=1731098521; cv=none; b=AIOrC9LUN0jTXBz6GOTL2JMfB+inJN3EWmzulLiCTsYr/c5usBAE1z/sgFtHknWr+XT30u4F9EManzs+jmr8DmholM3P4rH+QO4poCDg3aJoQIIWhk0kblGfqHS1lhjnhhqFFWIsVGjpydtfF8zFg4yTRgOID4CQCXwfBbO0iX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731098519; c=relaxed/simple;
-	bh=D4yVMT2FcG4D5LyFEnoiF/UGY7U3Zo7ouqlCO2gU1/8=;
+	s=arc-20240116; t=1731098521; c=relaxed/simple;
+	bh=q4GbxqglWbwouKr8KdSERhNWfS9I5/5YSVXoB2PdQg0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e/fUVsNflopiXaaxqzfO/TP0oq7Voj8nmBWHcfIW/dcqLtNz/L7fs9lvYk5T2QUFlUmtsijBmq8VafnXB7KPXUVGQE4Bn3Maer733EFQYwAJwFhfND2Ff7hhq2SVd/fATvgTx1ey6suCcrBYPu694JASmPQMUyL95e/HzVhnrrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fvcFxtCW; arc=none smtp.client-ip=209.85.210.180
+	 MIME-Version; b=dc2IOOjla9Npzi0fAwh/ihVN4fZEsyrH+W2tio/6I16a+k14wXtNsOEXUIFJ6wbv11nh5LBwY/VQQLL2NggC0lggKi35V8809JKNsjokTwAO5YoKVNQZjjGtx0TwxQ+kX2XrPwVKow6dV/CiJTIZR3mvJmYw6icB3CCYlWZ5bcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IN1U/bm+; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvcFxtCW"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-71ec997ad06so2175178b3a.3;
-        Fri, 08 Nov 2024 12:41:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IN1U/bm+"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-720cb6ac25aso2334370b3a.3;
+        Fri, 08 Nov 2024 12:41:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731098518; x=1731703318; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1731098519; x=1731703319; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E2tyw1tOse2vzSiyEi9SCuAYRS4VzNw6M4PIA6JS/KU=;
-        b=fvcFxtCWzp0LteVgCFmSyo4ebPyKQOfJz8bVOOgtcykWpuHT0SYMeIVduOePjLFr99
-         DHnOSI87Lsdo7YVHMd4Mv7XJPJza0gl+cKgWgqbw74r+RFHHjZU3+xqxTp6X5D5LcH0W
-         J49EHq0EreM2+GKOcjDY+LHXnmenoVO02k56m+gWI29NucA6NbMdjEJqWV1VD6wgBRSJ
-         BrY2j6J2HPXWbcMgnuMvjHu3E3rEvCqq1XjmrasaJvNw8JRzzFgpnzU94K03vRq2QV3y
-         Gkm+xy38Uee/GZN8Yz4g1tn6wANRMqYI97HuZQDwy+21E8X6IrpgSZeDBfVvKWXAXhUK
-         nX7w==
+        bh=s9Lk9CTgyzuah9Ju7zGNf6f0xwTQJZoRr7qB88GnpTw=;
+        b=IN1U/bm+2ajBF9w0NljuYWhOXhw8AgqEV+VbI0dnqNfMBldPRpWrIE1Ye3W2zC5Sis
+         Mdis0QdvRZmDUdz47/T+XMRPo0eRGNGfbSnR35HS4mADCwYvIMrp3PZzMt3apn5UmLoh
+         GIcpB/PkEKUqwJjgFACi9YZd6rPTPGyDmiKUfoSRTcJMXVQgvVnwd32w7h+ojXe6Zces
+         HO24VLTATb5KI02n2d+c8SRLJ44HgZPw6oXcf26XkG1HPnl4BDU0Q8nl5FqjbtrRBEGO
+         uYCqwVmPalZ7Te0vcQ9VcogWryKT99hvB9h3ZSy2fnPOBF2bmvLf+Vexu9a034Ui5JKh
+         6Wow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731098518; x=1731703318;
+        d=1e100.net; s=20230601; t=1731098519; x=1731703319;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=E2tyw1tOse2vzSiyEi9SCuAYRS4VzNw6M4PIA6JS/KU=;
-        b=jKQxymAMMc3b1UM0BTrhbwhTqj/MTKY93sVUhKXuXGNl0RvLCSdJ3zmOH7zwE+Ds7V
-         HwtpBycglqfOBFN81sPB8bGzdKp0kmc/OZPTZo64LCkjqo/ljlUwdN77RuMpfIz1KFKz
-         sNs0H5ODQai0plR5E+T7+V0nEjEAnX62yNR8N02AKGffBLcfjw/2C1smXTGDvuzGAYL0
-         rvB78x9dN12cbllpVj5RKelfbKbLJCzC8cekj5k4CyhMvy1KWlJVl4BA5ONpXkideTIy
-         jw32CENHaSiWkmkTP2dolaUo9ctyebFY/xSXA7lx4POYi4AfLYyotRvnRTckHDu5UdI3
-         o2wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVHLzyV56bO+v2Ykvw0bc6KXNxEtdQ7t+Ggalt4bnDPRC8/A3plZ1kfa0TwKz6USY73eVyKwnk4F1Mz84=@vger.kernel.org, AJvYcCVj4L+YndQlkSNuP5KJFz4kpmfT3+7JBFqpIRjZ1K4q7ofAAzdkzYfjGwkjikjzEeHWsoWu+VvkT3eYue0aucvFOw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9rs4syuu+Gamzv9bxQCjpL1ROcE/73GelBIuq4Y+D2zdyiWWM
-	uWQvKCBBDsSNIHP9e30vTPIT4puYDKGS+NyBiH5f6ymRzVFcYmIA
-X-Google-Smtp-Source: AGHT+IHC5toUl0yKFimGX5HCCwEhUAH5gjmPf0a4kj4mHRrpqamvhXyrJkR2NfYTS3mmkm5BrrJGAw==
-X-Received: by 2002:a05:6a00:14d3:b0:71d:feb7:37f4 with SMTP id d2e1a72fcca58-724132a0015mr6215760b3a.6.1731098517701;
-        Fri, 08 Nov 2024 12:41:57 -0800 (PST)
+        bh=s9Lk9CTgyzuah9Ju7zGNf6f0xwTQJZoRr7qB88GnpTw=;
+        b=oiW3NeXD2x7qHLwbHW7UPzlRWdXvwQu5nNbJtOyO53W22YYKqhAH2TYn8prk4K/gPG
+         JXg4DOR4jTFhcY5VVTLtn+Ha7HF7JaeJRKWj+eqrI+D7WIDlP/3XMLTVLDqsz7MqcMJE
+         soipvgUHkuD+agqgKJq0vvAfGdjHeoCwnR/cWi8RyH+DBky8D+Cr8/7N0yZ5MO+eHa0H
+         7tOS+WdM0wQqU1r75mQ80pe9BZelwzVIsM42rNK9nJ5UOB8bJ6h+Rwsx66YmQNDjDNy0
+         dI1u/ML11ZgLl25jqE3LSg52UEF2icnH6t8TYUwCk3+coKXbEXpHd5VPoFK8RYMmaZrx
+         NmVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7P76gFyBHc8HtpOs5RN2q0gGWyhPIse5fq1c6Dshz2/tKAp/kBaPD7TYPS4udJ1ZXedxXKU7v7YCukubjDXQOTQ==@vger.kernel.org, AJvYcCXs4gNhz+a4GMF3I6gtL2rYdv4CnmfL4TyxFvCSZb0PjXdqfQZwRINpzUhH2Vl1CIyGLyNHeRisR4dxh2U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEthUTG5JM5yqFQP/vqHmIgmPDDOoO2vwd94r6iIiumjMxF1A1
+	XAZCWzHHOQQPadH0XzKCh3XxMzbN+ZlHN8Jyyoa8qMM8ENGAJGJS
+X-Google-Smtp-Source: AGHT+IEsMr5E8h+qnJG/vsq1MKhJingnqkuEUIg4BoJm7eKwa/JP2/THICiKY41oiUTy1y22yTPyag==
+X-Received: by 2002:a05:6a20:8404:b0:1d9:d9a7:dd36 with SMTP id adf61e73a8af0-1dc22b54192mr5234525637.32.1731098519167;
+        Fri, 08 Nov 2024 12:41:59 -0800 (PST)
 Received: from mbp.lan (c-67-174-206-244.hsd1.ca.comcast.net. [67.174.206.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7240785ffe3sm4221945b3a.2.2024.11.08.12.41.56
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7240785ffe3sm4221945b3a.2.2024.11.08.12.41.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2024 12:41:57 -0800 (PST)
+        Fri, 08 Nov 2024 12:41:58 -0800 (PST)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org,
 	peterz@infradead.org
@@ -67,9 +67,9 @@ Cc: namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v7 09/10] perf record --off-cpu: Dump the remaining samples in BPF's stack trace map
-Date: Fri,  8 Nov 2024 12:41:36 -0800
-Message-ID: <20241108204137.2444151-10-howardchu95@gmail.com>
+Subject: [PATCH v7 10/10] perf test: Add direct off-cpu test
+Date: Fri,  8 Nov 2024 12:41:37 -0800
+Message-ID: <20241108204137.2444151-11-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241108204137.2444151-1-howardchu95@gmail.com>
 References: <20241108204137.2444151-1-howardchu95@gmail.com>
@@ -81,131 +81,144 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Dump the remaining samples, as if it is dumping a direct sample.
+Why is there a --off-cpu-thresh 2000000?
 
-Put the stack trace, tid, off-cpu time and cgroup id into the raw_data
-section, just like a direct off-cpu sample coming from BPF's
-bpf_perf_event_output().
+We collect an off-cpu period __ONLY ONCE__, either in direct sample form,
+or in accumulated form (in BPF stack trace map). If I don't add
+--off-cpu-thresh 200000, the sample in the original test goes into the
+ring buffer instead of the BPF stack trace map. Additionally, when using
+-e dummy, the ring buffer is not open, causing us to lose a sample.
 
-This ensures that evsel__parse_sample() correctly parses both direct
-samples and accumulated samples.
-
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- tools/perf/util/bpf_off_cpu.c | 62 +++++++++++++++++++++--------------
- 1 file changed, 38 insertions(+), 24 deletions(-)
+ tools/perf/tests/builtin-test.c         |  1 +
+ tools/perf/tests/shell/record_offcpu.sh | 31 ++++++++++++++++++++++++-
+ tools/perf/tests/tests.h                |  1 +
+ tools/perf/tests/workloads/Build        |  1 +
+ tools/perf/tests/workloads/offcpu.c     | 16 +++++++++++++
+ 5 files changed, 49 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/tests/workloads/offcpu.c
 
-diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-index cfe5b17393e9..f1be354e2fe7 100644
---- a/tools/perf/util/bpf_off_cpu.c
-+++ b/tools/perf/util/bpf_off_cpu.c
-@@ -37,6 +37,8 @@ union off_cpu_data {
- 	u64 array[1024 / sizeof(u64)];
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index d2cabaa8ad92..2228e6064d16 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -145,6 +145,7 @@ static struct test_workload *workloads[] = {
+ 	&workload__brstack,
+ 	&workload__datasym,
+ 	&workload__landlock,
++	&workload__offcpu,
  };
  
-+u64 off_cpu_raw[MAX_STACKS + 5];
+ #define workloads__for_each(workload) \
+diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/shell/record_offcpu.sh
+index 678947fe69ee..fda1c1ad4555 100755
+--- a/tools/perf/tests/shell/record_offcpu.sh
++++ b/tools/perf/tests/shell/record_offcpu.sh
+@@ -6,6 +6,10 @@ set -e
+ 
+ err=0
+ perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++TEST_PROGRAM="perf test -w offcpu"
 +
- static int off_cpu_config(struct evlist *evlist)
- {
- 	char off_cpu_event[64];
-@@ -61,6 +63,9 @@ static int off_cpu_config(struct evlist *evlist)
- static void off_cpu_start(void *arg)
- {
- 	struct evlist *evlist = arg;
-+	struct evsel *evsel;
-+	struct perf_cpu pcpu;
-+	int i, err;
++ts=$(printf "%u" $((~0 << 32))) # OFF_CPU_TIMESTAMP
++dummy_timestamp=${ts%???} # remove the last 3 digits to match perf script
  
- 	/* update task filter for the given workload */
- 	if (skel->rodata->has_task && skel->rodata->uses_tgid &&
-@@ -304,6 +309,7 @@ int off_cpu_write(struct perf_session *session)
- {
- 	int bytes = 0, size;
- 	int fd, stack;
-+	u32 raw_size;
- 	u64 sample_type, val, sid = 0;
- 	struct evsel *evsel;
- 	struct perf_data_file *file = &session->data->file;
-@@ -343,46 +349,54 @@ int off_cpu_write(struct perf_session *session)
+ cleanup() {
+   rm -f ${perfdata}
+@@ -39,7 +43,7 @@ test_offcpu_priv() {
+ test_offcpu_basic() {
+   echo "Basic off-cpu test"
  
- 	while (!bpf_map_get_next_key(fd, &prev, &key)) {
- 		int n = 1;  /* start from perf_event_header */
--		int ip_pos = -1;
+-  if ! perf record --off-cpu -e dummy -o ${perfdata} sleep 1 2> /dev/null
++  if ! perf record --off-cpu --off-cpu-thresh 2000000 -e dummy -o ${perfdata} sleep 1 2> /dev/null
+   then
+     echo "Basic off-cpu test [Failed record]"
+     err=1
+@@ -88,6 +92,27 @@ test_offcpu_child() {
+   echo "Child task off-cpu test [Success]"
+ }
  
- 		bpf_map_lookup_elem(fd, &key, &val);
- 
-+		/* zero-fill some of the fields, will be overwritten by raw_data when parsing */
- 		if (sample_type & PERF_SAMPLE_IDENTIFIER)
- 			data.array[n++] = sid;
--		if (sample_type & PERF_SAMPLE_IP) {
--			ip_pos = n;
-+		if (sample_type & PERF_SAMPLE_IP)
- 			data.array[n++] = 0;  /* will be updated */
--		}
- 		if (sample_type & PERF_SAMPLE_TID)
--			data.array[n++] = (u64)key.pid << 32 | key.tgid;
-+			data.array[n++] = 0;
- 		if (sample_type & PERF_SAMPLE_TIME)
- 			data.array[n++] = tstamp;
--		if (sample_type & PERF_SAMPLE_ID)
--			data.array[n++] = sid;
- 		if (sample_type & PERF_SAMPLE_CPU)
- 			data.array[n++] = 0;
- 		if (sample_type & PERF_SAMPLE_PERIOD)
--			data.array[n++] = val;
--		if (sample_type & PERF_SAMPLE_CALLCHAIN) {
--			int len = 0;
--
--			/* data.array[n] is callchain->nr (updated later) */
--			data.array[n + 1] = PERF_CONTEXT_USER;
--			data.array[n + 2] = 0;
--
--			bpf_map_lookup_elem(stack, &key.stack_id, &data.array[n + 2]);
--			while (data.array[n + 2 + len])
-+			data.array[n++] = 0;
-+		if (sample_type & PERF_SAMPLE_RAW) {
-+			/*
-+			 *  [ size ][ data ]
-+			 *  [     data     ]
-+			 *  [     data     ]
-+			 *  [     data     ]
-+			 *  [ data ][ empty]
-+			 */
-+			int len = 0, i = 0;
-+			void *raw_data = (void *)data.array + n * sizeof(u64);
++test_offcpu_direct() {
++  echo "Direct off-cpu test"
 +
-+			off_cpu_raw[i++] = (u64)key.pid << 32 | key.tgid;
-+			off_cpu_raw[i++] = val;
-+
-+			/* off_cpu_raw[i] is callchain->nr (updated later) */
-+			off_cpu_raw[i + 1] = PERF_CONTEXT_USER;
-+			off_cpu_raw[i + 2] = 0;
-+
-+			bpf_map_lookup_elem(stack, &key.stack_id, &off_cpu_raw[i + 2]);
-+			while (off_cpu_raw[i + 2 + len])
- 				len++;
++  # dump off-cpu samples for task blocked for more than 1.999999s
++  # -D for initial delay, to enable evlist
++  if ! perf record -e dummy -D 500 --off-cpu --off-cpu-thresh 1999999 -o ${perfdata} ${TEST_PROGRAM} 2> /dev/null
++  then
++    echo "Direct off-cpu test [Failed record]"
++    err=1
++    return
++  fi
++  # Direct sample's timestamp should be lower than the dummy_timestamp of the at-the-end sample.
++  if ! perf script -i ${perfdata} -F time,period | sed "s/[\.:]//g" | \
++       awk "{ if (\$1 < ${dummy_timestamp} && \$2 > 1999999999) exit 0; else exit 1; }"
++  then
++    echo "Direct off-cpu test [Failed missing direct sample]"
++    err=1
++    return
++  fi
++  echo "Direct off-cpu test [Success]"
++}
  
--			/* update length of callchain */
--			data.array[n] = len + 1;
-+			off_cpu_raw[i] = len + 1;
-+			i += len + 2;
+ test_offcpu_priv
+ 
+@@ -99,5 +124,9 @@ if [ $err = 0 ]; then
+   test_offcpu_child
+ fi
+ 
++if [ $err = 0 ]; then
++  test_offcpu_direct
++fi
 +
-+			off_cpu_raw[i++] = key.cgroup_id;
+ cleanup
+ exit $err
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index af284dd47e5c..58de36e0edc5 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -216,6 +216,7 @@ DECLARE_WORKLOAD(sqrtloop);
+ DECLARE_WORKLOAD(brstack);
+ DECLARE_WORKLOAD(datasym);
+ DECLARE_WORKLOAD(landlock);
++DECLARE_WORKLOAD(offcpu);
  
--			/* update sample ip with the first callchain entry */
--			if (ip_pos >= 0)
--				data.array[ip_pos] = data.array[n + 2];
-+			raw_size = i * sizeof(u64) + sizeof(u32); /* 4 bytes for alignment */
-+			memcpy(raw_data, &raw_size, sizeof(raw_size));
-+			memcpy(raw_data + sizeof(u32), off_cpu_raw, i * sizeof(u64));
+ extern const char *dso_to_test;
+ extern const char *test_objdump_path;
+diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
+index 5af17206f04d..0e78fd01eaf1 100644
+--- a/tools/perf/tests/workloads/Build
++++ b/tools/perf/tests/workloads/Build
+@@ -7,6 +7,7 @@ perf-test-y += sqrtloop.o
+ perf-test-y += brstack.o
+ perf-test-y += datasym.o
+ perf-test-y += landlock.o
++perf-test-y += offcpu.o
  
--			/* calculate sample callchain data array length */
--			n += len + 2;
-+			n += i + 1;
- 		}
- 		if (sample_type & PERF_SAMPLE_CGROUP)
- 			data.array[n++] = key.cgroup_id;
+ CFLAGS_sqrtloop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer -U_FORTIFY_SOURCE
+diff --git a/tools/perf/tests/workloads/offcpu.c b/tools/perf/tests/workloads/offcpu.c
+new file mode 100644
+index 000000000000..57cee201a4c3
+--- /dev/null
++++ b/tools/perf/tests/workloads/offcpu.c
+@@ -0,0 +1,16 @@
++#include <linux/compiler.h>
++#include <unistd.h>
++#include "../tests.h"
++
++static int offcpu(int argc __maybe_unused, const char **argv __maybe_unused)
++{
++	/* get past the initial delay */
++	sleep(1);
++
++	/* what we want to collect as a direct sample */
++	sleep(2);
++
++	return 0;
++}
++
++DEFINE_WORKLOAD(offcpu);
 -- 
 2.43.0
 
