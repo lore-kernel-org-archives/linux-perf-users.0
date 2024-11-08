@@ -1,171 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2951EABA9;
-	Fri,  8 Nov 2024 13:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CB91EF084;
+	Fri,  8 Nov 2024 13:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731071514; cv=none; b=iMETDf6Px7ZDkCLPmm70fPL9Cejs2Uki0Ql/SF47V/mfSQrgQSRjBqm8S7OFLf89dp+FJPbWTC/V3qBJvBSN/j5e6uhOQLMeYA76UX/7/f4xaL9b+X96OU83M68LjBtONMMfwe5KJF6svZGyfg0rcTux0a+h5T3j1epeziNwXts=
+	t=1731073663; cv=none; b=JvKb6tA4mysWuJCHU3/I62mN08AdaFxC/bCkD0au5J1KGvGrasOyszhFzPVPolifoYHPE1i3qnXsnisAVe6y99grwJSGYWS6NkpoWiqNolX8ZNVOGarOJDuX7Yvtyj8Yetdd1WBWjsoqgQgGe3Hy+7LJaj5ob67yTBmquZuAAXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731071514; c=relaxed/simple;
-	bh=ljQ8Fomc865u7EknG2fR45+zwg9L/eg93/a5wv/rJNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EC1NJrLV08vJwpWmeje2GYU1NV4lKwhwMo0rcCT2rE95UGh0R//i38japso+OrQjSAmrBmYRadjF1QFwRMpuURQG5RBPbqraZfEDEdBPnh7a/BLjHCzXdPFO68WJe4mjI5OWv7r95yNFQvEF9zT5tgf0HAALhQWem+MakMuf3EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rhMQFjSa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731073663; c=relaxed/simple;
+	bh=5tuQIhLYLrmdFUF7osaQlsBi++fNez6g63FsiyDgnHU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BhMDRmjRoYYP1bIogBiPqtgO8JFrOkn7f5FukAzXOlVyP7mJXdvEK8pI1sYk/uD+52TphIW0KCrB5jilAPSzer1hl+PvtT6ZxCi1w24pnuSBgrJX5aS5hrbXjF01pXzsQGW2gxmc9HV4pFNIXddx7LvoB150FbgAek/E+wdYa4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ccwiiFHh; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhMQFjSa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A50C4CECD;
-	Fri,  8 Nov 2024 13:11:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731071513;
-	bh=ljQ8Fomc865u7EknG2fR45+zwg9L/eg93/a5wv/rJNI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rhMQFjSa+imhFT1qNMokMam1Fups8zY4jsTbCDdFpD84/XxvW/INrex3b/eJSo0/Z
-	 FN9lKzTnxvYba7SSkkgZYH9xxFNJfc9xB/rdYLXpi5KSf39q/RrqWQsVnF2mQ8BG+b
-	 2/pvKFzbA/HbMKCCOnvKYGrQwvwBQ0g/4ZySSNqLceJ9/4WEI32hHQvvxAOEVzKlLh
-	 pvcFK2APBiX3Hibq/pPpoqqSrK9CqKw6C3RKgS/HlZXEbeITUf1xKpLp2nEb1EDbGq
-	 aMQ80delcGVVwx+M4IFafpPstBnVBerYJHYivuhBgmwtU+NQzUhYIxDvT21k7s4LPQ
-	 LhRhpqBXJMXfw==
-Date: Fri, 8 Nov 2024 14:11:50 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Oleg Nesterov <oleg@redhat.com>
-Cc: "Lai, Yi" <yi1.lai@linux.intel.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccwiiFHh"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43162cf1eaaso25549825e9.0;
+        Fri, 08 Nov 2024 05:47:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731073660; x=1731678460; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KsIe4tKwDw18rlGzCIKWB3zmvgLSJBWJguSHhwKJcXA=;
+        b=ccwiiFHh1WsPadWzVvvOgJ2CENoXheE6fGzfFGks1X+qkgNGSrTmVFssE8hPZtIOMa
+         y/xKyBXqFumQgDmzWYNO8nyPzqOHYt/A5jw5Ws3Du19w2fpLx+itMuNgxgSyxwLtILgz
+         UwcOt/IZ7wboz6gWqx4utWIIjG0bDXDPSzdwJKsqgsFwM1ibAmaA+VXUAgo6s6bGmfV2
+         K3GICt2VyNh5iotWakOa5pqECnm1ygnrBL7NDhpZDjSmrJGU45Nigjx47d/ZoS9K4RXH
+         TA3iqaQ4qpiWZs9yWICUe07U6jAwOBpLKk4bv829vPZOOGaa/LchS9FpbRSdG6WPvpCG
+         5ljg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731073660; x=1731678460;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KsIe4tKwDw18rlGzCIKWB3zmvgLSJBWJguSHhwKJcXA=;
+        b=mdNRumAjS+MPw1YfXpojIKb0nsrpCrBnWviRRUoLXW4eLZawTuZJxoclRuIp7tRWv9
+         rCNxurAdXYUGAYUci/xFm4bxp9vFZyudYjmE3/15Tk+1cPMaNRBOxtwsZ9McR0jny3xY
+         MwuOYtP9v0UozFehfthuqEBEugEuqXLzX99ajhC3SREGmlaR12t9SN6IDmgk+ZQMOObr
+         25YPjZtZYPEp2jKmd+wtoPUuafzfCFvylLWUTf24hwVZ1erZvbf/N/rdxxdcy10upUHd
+         Y622ejk5X/Wdx0ogAxuo+TRry2GAvaeIsSZTyH2YR4OAudqh0fZCLNYk8jtMo+2zdsjJ
+         2dow==
+X-Forwarded-Encrypted: i=1; AJvYcCXBnmwpGZ0QJEnhmWJteoz3Si3Onx5wKtVqqPOAKc+IVEOAngLF76xcjcjh54oiW3c1/xHoHbzjuzIflNGYOUs=@vger.kernel.org, AJvYcCXKx1g0x4AWV5ghysX2NajEmoY3hW37mXdI1H6w01GHcQ94MBbZlDuKEeH54Tqy3g3L1NUB5XBdE9bP9slS@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgQNbIAH0CRO0rI57L8VxBpbpW0yKgtySr0xu5457FdVonjbWa
+	dKOQoP6nPfqgk1vFeQpzQn3FRKovK6Bcqyq9QNi5fhvWtfTQs0+7
+X-Google-Smtp-Source: AGHT+IGBV/K9g17UrlomSZXt3CV0Ro5BSBwbqEK26k34DyKiySC7XGPzuPWIzwPsTKf4naXH4fjnaw==
+X-Received: by 2002:a05:600c:3b12:b0:431:4b88:d407 with SMTP id 5b1f17b1804b1-432b74fec83mr26576155e9.5.1731073659819;
+        Fri, 08 Nov 2024 05:47:39 -0800 (PST)
+Received: from void.void ([31.210.177.224])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381ed997320sm4974190f8f.47.2024.11.08.05.47.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2024 05:47:39 -0800 (PST)
+From: Andrew Kreimer <algonell@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>, yi1.lai@intel.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
-Message-ID: <Zy4OFlxoRK2jM5zo@localhost.localdomain>
-References: <20240624152732.1231678-1-bigeasy@linutronix.de>
- <20240624152732.1231678-3-bigeasy@linutronix.de>
- <Zx9Losv4YcJowaP/@ly-workstation>
- <Zx-B0wK3xqRQsCOS@localhost.localdomain>
- <20241029172126.5XY8vLBH@linutronix.de>
- <20241030140721.pZzb9D-u@linutronix.de>
- <ZyJUzhzHGDu5CLdi@localhost.localdomain>
- <20241107144617.MjCWysud@linutronix.de>
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Andrew Kreimer <algonell@gmail.com>
+Subject: [PATCH] perf tools: Fix typos Muliplier -> Multiplier
+Date: Fri,  8 Nov 2024 15:47:15 +0200
+Message-ID: <20241108134728.25515-1-algonell@gmail.com>
+X-Mailer: git-send-email 2.47.0.245.gfacbe4f633
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241107144617.MjCWysud@linutronix.de>
 
-+Cc Oleg.
+There are some typos in fprintf messages.
+Fix them via codespell.
 
-Le Thu, Nov 07, 2024 at 03:46:17PM +0100, Sebastian Andrzej Siewior a écrit :
-> On 2024-10-30 16:46:22 [+0100], Frederic Weisbecker wrote:
-> > This needs more thoughts. We must make sure that the parent is put _after_
-> > the child because it's dereferenced on release, for example:
-> …
-> > put_event()
-> >    free_event()
-> >       irq_work_sync(&event->pending_irq);
-> >       ====> IRQ or irq_workd
-> >       perf_event_wakeup()
-> >          ring_buffer_wakeup()
-> > 	    event = event->parent;
-> > 	    rcu_dereference(event->rb);
-> > 
-> > And now after this patch it's possible that this happens after
-> > the parent has been released.
-> > 
-> > We could put the parent from the child's free_event() but some
-> > places (inherit_event()) may call free_event() on a child without
-> > having held a reference to the parent.
-> > 
-> > Also note that with this patch the task may receive late irrelevant
-> > signals after the event is removed. It's probably not that bad but
-> > still... This could be a concern for exec(), is there a missing
-> > task_work_run() there before flush_signal_handlers()?
-> 
-> So if this causes so much pain, what about taking only one item at a
-> item? The following passes the test, too:
-> 
-> diff --git a/kernel/task_work.c b/kernel/task_work.c
-> index c969f1f26be58..fc796ffddfc74 100644
-> --- a/kernel/task_work.c
-> +++ b/kernel/task_work.c
-> @@ -206,7 +206,7 @@ bool task_work_cancel(struct task_struct *task, struct callback_head *cb)
->  void task_work_run(void)
->  {
->  	struct task_struct *task = current;
-> -	struct callback_head *work, *head, *next;
-> +	struct callback_head *work, *head;
->  
->  	for (;;) {
->  		/*
-> @@ -214,17 +214,7 @@ void task_work_run(void)
->  		 * work_exited unless the list is empty.
->  		 */
->  		work = READ_ONCE(task->task_works);
-> -		do {
-> -			head = NULL;
-> -			if (!work) {
-> -				if (task->flags & PF_EXITING)
-> -					head = &work_exited;
-> -				else
-> -					break;
-> -			}
-> -		} while (!try_cmpxchg(&task->task_works, &work, head));
-> -
-> -		if (!work)
-> +		if (!work && !(task->flags & PF_EXITING))
->  			break;
->  		/*
->  		 * Synchronize with task_work_cancel_match(). It can not remove
-> @@ -232,13 +222,24 @@ void task_work_run(void)
->  		 * But it can remove another entry from the ->next list.
->  		 */
->  		raw_spin_lock_irq(&task->pi_lock);
-> +		do {
-> +			head = NULL;
-> +			if (work) {
-> +				head = READ_ONCE(work->next);
-> +			} else {
-> +				if (task->flags & PF_EXITING)
-> +					head = &work_exited;
-> +				else
-> +					break;
-> +			}
-> +		} while (!try_cmpxchg(&task->task_works, &work, head));
->  		raw_spin_unlock_irq(&task->pi_lock);
+Signed-off-by: Andrew Kreimer <algonell@gmail.com>
+---
+ tools/perf/util/intel-bts.c | 2 +-
+ tools/perf/util/intel-pt.c  | 2 +-
+ tools/perf/util/tsc.c       | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-And having more than one task work should be sufficiently rare
-that we don't care about doing the locking + cmpxchg() for each
-of them pending.
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index 3ea82d5e8d2e..a7c589fecb98 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -808,7 +808,7 @@ static int intel_bts_synth_events(struct intel_bts *bts,
+ static const char * const intel_bts_info_fmts[] = {
+ 	[INTEL_BTS_PMU_TYPE]		= "  PMU Type           %"PRId64"\n",
+ 	[INTEL_BTS_TIME_SHIFT]		= "  Time Shift         %"PRIu64"\n",
+-	[INTEL_BTS_TIME_MULT]		= "  Time Muliplier     %"PRIu64"\n",
++	[INTEL_BTS_TIME_MULT]		= "  Time Multiplier    %"PRIu64"\n",
+ 	[INTEL_BTS_TIME_ZERO]		= "  Time Zero          %"PRIu64"\n",
+ 	[INTEL_BTS_CAP_USER_TIME_ZERO]	= "  Cap Time Zero      %"PRId64"\n",
+ 	[INTEL_BTS_SNAPSHOT_MODE]	= "  Snapshot mode      %"PRId64"\n",
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index 3fe67bf652b6..30be6dfe09eb 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -4110,7 +4110,7 @@ static int intel_pt_parse_vm_tm_corr_args(struct intel_pt *pt)
+ static const char * const intel_pt_info_fmts[] = {
+ 	[INTEL_PT_PMU_TYPE]		= "  PMU Type            %"PRId64"\n",
+ 	[INTEL_PT_TIME_SHIFT]		= "  Time Shift          %"PRIu64"\n",
+-	[INTEL_PT_TIME_MULT]		= "  Time Muliplier      %"PRIu64"\n",
++	[INTEL_PT_TIME_MULT]		= "  Time Multiplier     %"PRIu64"\n",
+ 	[INTEL_PT_TIME_ZERO]		= "  Time Zero           %"PRIu64"\n",
+ 	[INTEL_PT_CAP_USER_TIME_ZERO]	= "  Cap Time Zero       %"PRId64"\n",
+ 	[INTEL_PT_TSC_BIT]		= "  TSC bit             %#"PRIx64"\n",
+diff --git a/tools/perf/util/tsc.c b/tools/perf/util/tsc.c
+index 2e33a20e1e1b..511a517ce613 100644
+--- a/tools/perf/util/tsc.c
++++ b/tools/perf/util/tsc.c
+@@ -119,7 +119,7 @@ size_t perf_event__fprintf_time_conv(union perf_event *event, FILE *fp)
+ 	size_t ret;
+ 
+ 	ret  = fprintf(fp, "\n... Time Shift      %" PRI_lu64 "\n", tc->time_shift);
+-	ret += fprintf(fp, "... Time Muliplier  %" PRI_lu64 "\n", tc->time_mult);
++	ret += fprintf(fp, "... Time Multiplier %" PRI_lu64 "\n", tc->time_mult);
+ 	ret += fprintf(fp, "... Time Zero       %" PRI_lu64 "\n", tc->time_zero);
+ 
+ 	/*
+-- 
+2.47.0.245.gfacbe4f633
 
-I like it!
-
-Thanks.
-
->  
-> -		do {
-> -			next = work->next;
-> -			work->func(work);
-> -			work = next;
-> +		if (!work)
-> +			break;
-> +		work->func(work);
-> +
-> +		if (head)
->  			cond_resched();
-> -		} while (work);
->  	}
->  }
-> 
-> Sebastian
