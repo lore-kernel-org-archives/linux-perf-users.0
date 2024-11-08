@@ -1,57 +1,57 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238C81F4268;
-	Fri,  8 Nov 2024 20:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6616B2123E6;
+	Fri,  8 Nov 2024 20:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731098518; cv=none; b=XQja5elqcwd1KBF1v33nq/yQisszeEBapwbWLYOPWxCOAPvZbb3gsxweG5E6P6bgyzLJWHitxqNIP7aajD5KsJLqAUUR85y7ZL+bAWIB2AljCu6P/mLEMx5qjHejNZRyUwGUz5mlply7VTIZbDxxsQ/5L1lgekCrIXgvNFykaJQ=
+	t=1731098519; cv=none; b=Au8bsexCf8gcYJH6hmtNaIEkcdM9PGIFA1Gt5ccmfWcvOJniXmARXcrEiFEbRSCrE/nESK5HqDPa02soviNigQymUUbcnZ7X7TqXkkODHZpnHVsa352vMFqb6SAPqC2iz55Vk552q0m6aq+hkreMKSoTyl7tag/i4PiQ04TdBB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731098518; c=relaxed/simple;
-	bh=12+uD049fjwkxVoV4WCg1PeWhTB94q+vKcGdt8+toqM=;
+	s=arc-20240116; t=1731098519; c=relaxed/simple;
+	bh=D4yVMT2FcG4D5LyFEnoiF/UGY7U3Zo7ouqlCO2gU1/8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PVzVRtEw7M0R0iJhLyoP8Oy18NPZetimH2PmQW6Joy4kpbzyW/ivgpbTJuG05BCx7o3tjaw94ks3GSjXaBIFc4ftZzZ+TNDS/cFxi7jCpY/UFJiivW9iX2Lu0LsSVJtTSsVRnfSj3pYUGCPkKSMNOArQ6X85HYkHz8rPQmn0Cwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VzAUxCUj; arc=none smtp.client-ip=209.85.210.177
+	 MIME-Version; b=e/fUVsNflopiXaaxqzfO/TP0oq7Voj8nmBWHcfIW/dcqLtNz/L7fs9lvYk5T2QUFlUmtsijBmq8VafnXB7KPXUVGQE4Bn3Maer733EFQYwAJwFhfND2Ff7hhq2SVd/fATvgTx1ey6suCcrBYPu694JASmPQMUyL95e/HzVhnrrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fvcFxtCW; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VzAUxCUj"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-71ec997ad06so2175155b3a.3;
-        Fri, 08 Nov 2024 12:41:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvcFxtCW"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-71ec997ad06so2175178b3a.3;
+        Fri, 08 Nov 2024 12:41:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731098516; x=1731703316; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1731098518; x=1731703318; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HOpZE2LcrB80WvS5jTyTSJQgcV7CMCHPdi15yTc4/HU=;
-        b=VzAUxCUj+5b8Il+aaNiaJvrOjlhPHrX4pAVpSPttCnE3oVwJ6GZvyKWcZJGXHOeM5e
-         u7byNqr88VpcXEQIjHROxxyYpN3CMv3LaY+1VkaOm2HPvN0SwHyL2XyxdHTntnMG46t7
-         De7j8wvF7BIIKNErCKoP3zm2YQJwH+ni6LyrJfZd+ouUc/pbiUOSYORcRbnl6PsgDx2P
-         cW4KyZqA7kQNe3XdBH6rEBcclPCBnOk3NCWhiDGcqoB7mjpi+GPRzK/eTeep5wbyu1pN
-         bRv7Y/GmT5oDpXywOph17gCpQey1tNwEyq6nTMZWihnGBzoxajubkbTsZ3KYO5BMRNrX
-         CSTQ==
+        bh=E2tyw1tOse2vzSiyEi9SCuAYRS4VzNw6M4PIA6JS/KU=;
+        b=fvcFxtCWzp0LteVgCFmSyo4ebPyKQOfJz8bVOOgtcykWpuHT0SYMeIVduOePjLFr99
+         DHnOSI87Lsdo7YVHMd4Mv7XJPJza0gl+cKgWgqbw74r+RFHHjZU3+xqxTp6X5D5LcH0W
+         J49EHq0EreM2+GKOcjDY+LHXnmenoVO02k56m+gWI29NucA6NbMdjEJqWV1VD6wgBRSJ
+         BrY2j6J2HPXWbcMgnuMvjHu3E3rEvCqq1XjmrasaJvNw8JRzzFgpnzU94K03vRq2QV3y
+         Gkm+xy38Uee/GZN8Yz4g1tn6wANRMqYI97HuZQDwy+21E8X6IrpgSZeDBfVvKWXAXhUK
+         nX7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731098516; x=1731703316;
+        d=1e100.net; s=20230601; t=1731098518; x=1731703318;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HOpZE2LcrB80WvS5jTyTSJQgcV7CMCHPdi15yTc4/HU=;
-        b=nVrdIM9bwHcPJihbfK7ip9eOHsAqNxNbsry5TSh4XkuuUvnLLZL2IgT60Xy3bO8DZ1
-         6R7czxugGn9IXlFZK1ELlMwiyD/z96db+80LEt2HxmE9A1nMP8NguI7qp9zrpYOtehs7
-         rq50wFrwOQlsJV812KPJaMkF3x+hC9H7aa+x6AFKVx4sIOqHWCVqswxX3UR8G1HZrMCm
-         rSYTtkXoJOqLuKbY9T8MHRgBVe824J8vksz55VP9ywXinN0oVs4NkhahGa5kEt23XSBm
-         6OO+MLk6YEUt0z5NgdT18FxoruAoM0apkzD/D25BvxxMlGvBFGgHCXcq4ZbR95JmzLJh
-         G03g==
-X-Forwarded-Encrypted: i=1; AJvYcCUGqRjROYav1aAhzr60BlfaNeYBledEwcv2K3vFEsimv5HXn7hCscWPpHFUqgYdq9JlT5oicA3fFeNGqSN3jKV2ig==@vger.kernel.org, AJvYcCWOErrvb8PScNPQE5u55FU1R4mMtazfLo3UoEVu4aFiOlPa03OK/x9y0Y41bBRaWJVvqzFpL7NScpX0p/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDbQgqwAlKBaU/VBhFhhevTpn6somEnNTzhroD/7jcZ2hY7ETq
-	EYfQZX/iawtbxU1Mfd/2VXy7hCgULUV8jp4DZJIj5lzZGHm9iX3K
-X-Google-Smtp-Source: AGHT+IFyI4Nd9VSOBU81IqsVewbp5rZ0ZfhujkSQoBbxhadYaZ+78gPGZ+gEZ8z5c7yIg8YifZLL4g==
-X-Received: by 2002:a05:6a20:12d2:b0:1d9:386d:9441 with SMTP id adf61e73a8af0-1dc2292f447mr5839965637.10.1731098516228;
-        Fri, 08 Nov 2024 12:41:56 -0800 (PST)
+        bh=E2tyw1tOse2vzSiyEi9SCuAYRS4VzNw6M4PIA6JS/KU=;
+        b=jKQxymAMMc3b1UM0BTrhbwhTqj/MTKY93sVUhKXuXGNl0RvLCSdJ3zmOH7zwE+Ds7V
+         HwtpBycglqfOBFN81sPB8bGzdKp0kmc/OZPTZo64LCkjqo/ljlUwdN77RuMpfIz1KFKz
+         sNs0H5ODQai0plR5E+T7+V0nEjEAnX62yNR8N02AKGffBLcfjw/2C1smXTGDvuzGAYL0
+         rvB78x9dN12cbllpVj5RKelfbKbLJCzC8cekj5k4CyhMvy1KWlJVl4BA5ONpXkideTIy
+         jw32CENHaSiWkmkTP2dolaUo9ctyebFY/xSXA7lx4POYi4AfLYyotRvnRTckHDu5UdI3
+         o2wQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVHLzyV56bO+v2Ykvw0bc6KXNxEtdQ7t+Ggalt4bnDPRC8/A3plZ1kfa0TwKz6USY73eVyKwnk4F1Mz84=@vger.kernel.org, AJvYcCVj4L+YndQlkSNuP5KJFz4kpmfT3+7JBFqpIRjZ1K4q7ofAAzdkzYfjGwkjikjzEeHWsoWu+VvkT3eYue0aucvFOw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9rs4syuu+Gamzv9bxQCjpL1ROcE/73GelBIuq4Y+D2zdyiWWM
+	uWQvKCBBDsSNIHP9e30vTPIT4puYDKGS+NyBiH5f6ymRzVFcYmIA
+X-Google-Smtp-Source: AGHT+IHC5toUl0yKFimGX5HCCwEhUAH5gjmPf0a4kj4mHRrpqamvhXyrJkR2NfYTS3mmkm5BrrJGAw==
+X-Received: by 2002:a05:6a00:14d3:b0:71d:feb7:37f4 with SMTP id d2e1a72fcca58-724132a0015mr6215760b3a.6.1731098517701;
+        Fri, 08 Nov 2024 12:41:57 -0800 (PST)
 Received: from mbp.lan (c-67-174-206-244.hsd1.ca.comcast.net. [67.174.206.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7240785ffe3sm4221945b3a.2.2024.11.08.12.41.54
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7240785ffe3sm4221945b3a.2.2024.11.08.12.41.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2024 12:41:55 -0800 (PST)
+        Fri, 08 Nov 2024 12:41:57 -0800 (PST)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org,
 	peterz@infradead.org
@@ -67,9 +67,9 @@ Cc: namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v7 08/10] perf script: Display off-cpu samples correctly
-Date: Fri,  8 Nov 2024 12:41:35 -0800
-Message-ID: <20241108204137.2444151-9-howardchu95@gmail.com>
+Subject: [PATCH v7 09/10] perf record --off-cpu: Dump the remaining samples in BPF's stack trace map
+Date: Fri,  8 Nov 2024 12:41:36 -0800
+Message-ID: <20241108204137.2444151-10-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241108204137.2444151-1-howardchu95@gmail.com>
 References: <20241108204137.2444151-1-howardchu95@gmail.com>
@@ -79,62 +79,133 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-No PERF_SAMPLE_CALLCHAIN in sample_type, but I need perf script to
-display a callchain, have to specify manually.
+Dump the remaining samples, as if it is dumping a direct sample.
 
-Also, prefer displaying a callchain:
+Put the stack trace, tid, off-cpu time and cgroup id into the raw_data
+section, just like a direct off-cpu sample coming from BPF's
+bpf_perf_event_output().
 
- gvfs-afc-volume    2267 [001] 3829232.955656: 1001115340 offcpu-time:
-            77f05292603f __pselect+0xbf (/usr/lib/x86_64-linux-gnu/libc.so.6)
-            77f052a1801c [unknown] (/usr/lib/x86_64-linux-gnu/libusbmuxd-2.0.so.6.0.0)
-            77f052a18d45 [unknown] (/usr/lib/x86_64-linux-gnu/libusbmuxd-2.0.so.6.0.0)
-            77f05289ca94 start_thread+0x384 (/usr/lib/x86_64-linux-gnu/libc.so.6)
-            77f052929c3c clone3+0x2c (/usr/lib/x86_64-linux-gnu/libc.so.6)
+This ensures that evsel__parse_sample() correctly parses both direct
+samples and accumulated samples.
 
-to a raw binary BPF output:
-
-BPF output: 0000: dd 08 00 00 db 08 00 00  <DD>...<DB>...
-	  0008: cc ce ab 3b 00 00 00 00  <CC>Ϋ;....
-	  0010: 06 00 00 00 00 00 00 00  ........
-	  0018: 00 fe ff ff ff ff ff ff  .<FE><FF><FF><FF><FF><FF><FF>
-	  0020: 3f 60 92 52 f0 77 00 00  ?`.R<F0>w..
-	  0028: 1c 80 a1 52 f0 77 00 00  ..<A1>R<F0>w..
-	  0030: 45 8d a1 52 f0 77 00 00  E.<A1>R<F0>w..
-	  0038: 94 ca 89 52 f0 77 00 00  .<CA>.R<F0>w..
-	  0040: 3c 9c 92 52 f0 77 00 00  <..R<F0>w..
-	  0048: 00 00 00 00 00 00 00 00  ........
-	  0050: 00 00 00 00              ....
-
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- tools/perf/builtin-script.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/bpf_off_cpu.c | 62 +++++++++++++++++++++--------------
+ 1 file changed, 38 insertions(+), 24 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 6b6d4472db6e..1893d2117aab 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -662,7 +662,7 @@ static int perf_session__check_output_opt(struct perf_session *session)
+diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+index cfe5b17393e9..f1be354e2fe7 100644
+--- a/tools/perf/util/bpf_off_cpu.c
++++ b/tools/perf/util/bpf_off_cpu.c
+@@ -37,6 +37,8 @@ union off_cpu_data {
+ 	u64 array[1024 / sizeof(u64)];
+ };
  
- 		evlist__for_each_entry(session->evlist, evsel) {
- 			not_pipe = true;
--			if (evsel__has_callchain(evsel)) {
-+			if (evsel__has_callchain(evsel) || evsel__is_offcpu_event(evsel)) {
- 				use_callchain = true;
- 				break;
- 			}
-@@ -2353,7 +2353,7 @@ static void process_event(struct perf_script *script,
- 	else if (PRINT_FIELD(BRSTACKOFF))
- 		perf_sample__fprintf_brstackoff(sample, thread, attr, fp);
++u64 off_cpu_raw[MAX_STACKS + 5];
++
+ static int off_cpu_config(struct evlist *evlist)
+ {
+ 	char off_cpu_event[64];
+@@ -61,6 +63,9 @@ static int off_cpu_config(struct evlist *evlist)
+ static void off_cpu_start(void *arg)
+ {
+ 	struct evlist *evlist = arg;
++	struct evsel *evsel;
++	struct perf_cpu pcpu;
++	int i, err;
  
--	if (evsel__is_bpf_output(evsel) && PRINT_FIELD(BPF_OUTPUT))
-+	if (evsel__is_bpf_output(evsel) && !evsel__is_offcpu_event(evsel) && PRINT_FIELD(BPF_OUTPUT))
- 		perf_sample__fprintf_bpf_output(sample, fp);
- 	perf_sample__fprintf_insn(sample, evsel, attr, thread, machine, fp, al);
+ 	/* update task filter for the given workload */
+ 	if (skel->rodata->has_task && skel->rodata->uses_tgid &&
+@@ -304,6 +309,7 @@ int off_cpu_write(struct perf_session *session)
+ {
+ 	int bytes = 0, size;
+ 	int fd, stack;
++	u32 raw_size;
+ 	u64 sample_type, val, sid = 0;
+ 	struct evsel *evsel;
+ 	struct perf_data_file *file = &session->data->file;
+@@ -343,46 +349,54 @@ int off_cpu_write(struct perf_session *session)
  
+ 	while (!bpf_map_get_next_key(fd, &prev, &key)) {
+ 		int n = 1;  /* start from perf_event_header */
+-		int ip_pos = -1;
+ 
+ 		bpf_map_lookup_elem(fd, &key, &val);
+ 
++		/* zero-fill some of the fields, will be overwritten by raw_data when parsing */
+ 		if (sample_type & PERF_SAMPLE_IDENTIFIER)
+ 			data.array[n++] = sid;
+-		if (sample_type & PERF_SAMPLE_IP) {
+-			ip_pos = n;
++		if (sample_type & PERF_SAMPLE_IP)
+ 			data.array[n++] = 0;  /* will be updated */
+-		}
+ 		if (sample_type & PERF_SAMPLE_TID)
+-			data.array[n++] = (u64)key.pid << 32 | key.tgid;
++			data.array[n++] = 0;
+ 		if (sample_type & PERF_SAMPLE_TIME)
+ 			data.array[n++] = tstamp;
+-		if (sample_type & PERF_SAMPLE_ID)
+-			data.array[n++] = sid;
+ 		if (sample_type & PERF_SAMPLE_CPU)
+ 			data.array[n++] = 0;
+ 		if (sample_type & PERF_SAMPLE_PERIOD)
+-			data.array[n++] = val;
+-		if (sample_type & PERF_SAMPLE_CALLCHAIN) {
+-			int len = 0;
+-
+-			/* data.array[n] is callchain->nr (updated later) */
+-			data.array[n + 1] = PERF_CONTEXT_USER;
+-			data.array[n + 2] = 0;
+-
+-			bpf_map_lookup_elem(stack, &key.stack_id, &data.array[n + 2]);
+-			while (data.array[n + 2 + len])
++			data.array[n++] = 0;
++		if (sample_type & PERF_SAMPLE_RAW) {
++			/*
++			 *  [ size ][ data ]
++			 *  [     data     ]
++			 *  [     data     ]
++			 *  [     data     ]
++			 *  [ data ][ empty]
++			 */
++			int len = 0, i = 0;
++			void *raw_data = (void *)data.array + n * sizeof(u64);
++
++			off_cpu_raw[i++] = (u64)key.pid << 32 | key.tgid;
++			off_cpu_raw[i++] = val;
++
++			/* off_cpu_raw[i] is callchain->nr (updated later) */
++			off_cpu_raw[i + 1] = PERF_CONTEXT_USER;
++			off_cpu_raw[i + 2] = 0;
++
++			bpf_map_lookup_elem(stack, &key.stack_id, &off_cpu_raw[i + 2]);
++			while (off_cpu_raw[i + 2 + len])
+ 				len++;
+ 
+-			/* update length of callchain */
+-			data.array[n] = len + 1;
++			off_cpu_raw[i] = len + 1;
++			i += len + 2;
++
++			off_cpu_raw[i++] = key.cgroup_id;
+ 
+-			/* update sample ip with the first callchain entry */
+-			if (ip_pos >= 0)
+-				data.array[ip_pos] = data.array[n + 2];
++			raw_size = i * sizeof(u64) + sizeof(u32); /* 4 bytes for alignment */
++			memcpy(raw_data, &raw_size, sizeof(raw_size));
++			memcpy(raw_data + sizeof(u32), off_cpu_raw, i * sizeof(u64));
+ 
+-			/* calculate sample callchain data array length */
+-			n += len + 2;
++			n += i + 1;
+ 		}
+ 		if (sample_type & PERF_SAMPLE_CGROUP)
+ 			data.array[n++] = key.cgroup_id;
 -- 
 2.43.0
 
