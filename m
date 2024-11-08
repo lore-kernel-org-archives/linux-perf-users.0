@@ -1,46 +1,47 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2049.outbound.protection.outlook.com [40.107.223.49])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2082.outbound.protection.outlook.com [40.107.244.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D361CDFA6;
-	Fri,  8 Nov 2024 09:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5201D3625;
+	Fri,  8 Nov 2024 10:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.82
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731059605; cv=fail; b=e1tlwR8+boFX3GDzHrLZDglRbvyfX9gRUi+bCrQRyw/tehL0lGzDz2H0lB4T7oUVaX0pfnVdAj0bfTZl5hMDfzlxqSxvx1sYEp2nWQFlysBmieIqDUbxSItBPyhoppa7TmMOCFxK5ujUK9tsP4hVtcPqgrpMBtfio2CCrwbFZgI=
+	t=1731060737; cv=fail; b=O7RveKh3jXtMM0e2hNt5UJKRS3EUAfsP5INQCnL4Wi8gF8ekraSZ7sbZEK5WN6gGIga5U+xIZplDUobEH7f+6QlOU+HiwrrFR/uVL8k6k4qLz4kiuBwKhv0NxG7rKEAAZLjgfip/8coD8SLiB1wFeVDHRYOn5krhmlPpub5fFek=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731059605; c=relaxed/simple;
-	bh=nKxcE88Jk7dMcRz6hxHmXAZXurQQkpLhMOK+HlB5YwA=;
+	s=arc-20240116; t=1731060737; c=relaxed/simple;
+	bh=slyJMYd/7m+lkHOh2i8lSU8aTKr3TYKs/Xkvw7heilQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oKwY9dU9QmMps5ckVwPuCqzIcFtImR+y0SFhyG3UjFKW87yPgkUkTbmyzzjNIoDnoNp06aNwbBc2mcDb7QAD7tiUCzXSeD2oY0f8AIOZAoIujD5iDE+X/vctqkA4Kikjb7oGWC4ZN573S/iYECAKXNu++KEGEhM9vlmUOhAYmKg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=R96raZoU; arc=fail smtp.client-ip=40.107.223.49
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WJONm3Ii9bz4utuNFA0ieujTsYPThVZE4+X3wX3jJVArMnT0RXjwcjqnWTH+iUtUx0a1ovX6jy/jnVSFYlK4fqYmft40iit0KXtyRLFER4Jjb3sPGyoRBkBzAx9Sb2S4GcnPtykDZyFhcEMHIwZN06fCDvnqTXuV0N/QE4S0Zk8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tyWIROUF; arc=fail smtp.client-ip=40.107.244.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="R96raZoU"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tyWIROUF"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IXu75GTjxgliyDW+IBgJSLuwKDDQpJYKUUe+6nrldZdqsdE9lf3c0RYtgwCJ8RkaREoJJteaIfxKTcD5ewqGuKwZFWJjMyw2YIJvb7k4POxx4SI2hQMsDShM9ikFh6oidBJ86rg3YE3Sfit2+XjA3FtfLoQp1qdDq0EAYTrl6P1hNDU8EqayDqKPHjpQEWDyFPU//bT1DD1wtT5VVWgX0CCRCuaFogkUwAqkeKi2D1uRV2D99uYhCDN+URnEFuLQbmH2ZEN2MzFrhHehGHHi+y67uHW20XuOQFv6xV58IJ1UMU99/+neHiCPKTRtDR6yMPGFNBHH7wklUKGpzXqUNg==
+ b=ak+5FXP7PB0swLZ0IRpmXYfN/rsyWMFoPfagkRC1/ejjFZABTDxuvT/GbVZFdtGo2beGIp8ZX6kG6Qrx2cPxGR4KBIpP6AsgiyZOGrQpAPf9ym+orOyr0RjMCfJtIGNTb6Z9kbyoAoabuQMKrYJmDzEFyv6U+EQzfS7sQ7EX1o8UpGsiB+tPnEa4rL1crATlH80Wwbpwug9eB09mDNU/2ZVsIjIEmYOGYJ2LHG2ZxIjnrJeQVq/COtqTGPeA182GuyrSL5O/QAvF0nN7mUCNnxgdpoKsJ8LVqcO8IYg1w+lO1wpVpcNuPK3+eD6BTAbTyhoQTZXaQUeBVnaH4hIG4Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DdjzPvX0xslgOpnwUxGZ+Yx2f8qWxhWsEO4trgeybpo=;
- b=m5FgMCiRnsBlVxzZEEbeHufCgAifImdcKSVZilOov9xLwumMaIa1DbyU3O1GEMHUp+2fhW+VU2zocAG2amDqCd1F16lQgqVmlgsR90okE3mp6DsiKJeYIiJzMfYf+k5ZbhGoNsAcl+eZixE1lgy5bhRJGXj6A+R/eBydai6ZURp9J3kjEnFQDAGh0nFuDK2NmMlWDh/tYkXVe0nu1xPQ7M/Lz8eZBIo6v8s0TkiDxr0vS2s02cdCbCFafK3xPztjXHI1NL4YqzUCVFSP/m5CCGqvi0kmK7Relnr1N8OPsYdc3eyiVvLq1zJQulVd1P0XebGLskdgywlShvAepgCOHw==
+ bh=TOX5HKJ5HXpnbGEKbpJSyp4u0pqo2khfXxqxlN/mNB0=;
+ b=KHwftRt6rJfsTfaQubC4D2PtCbEO8WJ9fX0sk6duWmrHGXrUMdPYFCBhMtBNC9Pp28Uj21EAC2fw+HT6YV4pQFnL808KNvCLrki6wF5e7k7FoiLf9jkpP9l9m3ctUAFkfk/o9Dryn7ZbiUsLO4glQYP/0/3G9AQUc6b22l0z+bGxuMFlEUsMMDJNzZjnY3aeyqHeGW6NSa8DuBDnAgmMnjN4J6OeXDw5s+lEO0Cpla5pYeCjnr9K9vVbxKB/SB52KbKkZmCgvRDFg8DnQS1tw0dpljftCsdk1d1Xyl/o3T7OvQ3fX0Q/4wVKBmioTNCi+LaegXMtg7FaQ3y41eVEzQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DdjzPvX0xslgOpnwUxGZ+Yx2f8qWxhWsEO4trgeybpo=;
- b=R96raZoUEHKPjeNTlH1+6PQxMLzCIn0W3HkzywGRB4Ytgk1IHPRlsF+qralrk2ycAvEwRBje8mSBKocpQpW1a2fY35jlt6hFT8JHrDLrkmVc4+Q9c9eti3gbJZYeXpGgfh/2sylRvAGxnsWIq2UoILp6cj690IOrfjgO+IGscGQ=
+ bh=TOX5HKJ5HXpnbGEKbpJSyp4u0pqo2khfXxqxlN/mNB0=;
+ b=tyWIROUF2o50ODWE3Ho7EKrddfjzfTxkRyvWMY7I3mvjJZEsIjyOmudwyrtmnK2cL0XbeKLtNjWcGskD/yhvyxixKD3UYji1M5qllkN6WT+JOHwWW6lm2bwcx6AR6YIjsC+tjmT1GCDI2TUx4prLvL3fvQaXPLUMu3KTg82cDWk=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DS7PR12MB8252.namprd12.prod.outlook.com (2603:10b6:8:ee::7) by
- IA0PR12MB8225.namprd12.prod.outlook.com (2603:10b6:208:408::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8137.21; Fri, 8 Nov 2024 09:53:18 +0000
+ PH7PR12MB7940.namprd12.prod.outlook.com (2603:10b6:510:275::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.18; Fri, 8 Nov
+ 2024 10:12:13 +0000
 Received: from DS7PR12MB8252.namprd12.prod.outlook.com
  ([fe80::2d0c:4206:cb3c:96b7]) by DS7PR12MB8252.namprd12.prod.outlook.com
  ([fe80::2d0c:4206:cb3c:96b7%6]) with mapi id 15.20.8137.019; Fri, 8 Nov 2024
- 09:53:18 +0000
-Date: Fri, 8 Nov 2024 15:22:58 +0530
+ 10:12:13 +0000
+Date: Fri, 8 Nov 2024 15:42:00 +0530
 From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
 To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
 Cc: peterz@infradead.org, mingo@redhat.com, rui.zhang@intel.com,
@@ -51,16 +52,15 @@ Cc: peterz@infradead.org, mingo@redhat.com, rui.zhang@intel.com,
 	dave.hansen@linux.intel.com, ananth.narayan@amd.com,
 	kprateek.nayak@amd.com, ravi.bangoria@amd.com, x86@kernel.org,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 10/10] perf/x86/rapl: Add core energy counter support
- for AMD CPUs
-Message-ID: <Zy3fem1TVYdYJAeF@BLRRASHENOY1.amd.com>
+Subject: Re: [PATCH v6 05/10] perf/x86/rapl: Make rapl_model struct global
+Message-ID: <Zy3j8MsUGp3+g4RJ@BLRRASHENOY1.amd.com>
 References: <20241025111348.3810-1-Dhananjay.Ugwekar@amd.com>
- <20241025111348.3810-11-Dhananjay.Ugwekar@amd.com>
+ <20241025111348.3810-6-Dhananjay.Ugwekar@amd.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241025111348.3810-11-Dhananjay.Ugwekar@amd.com>
-X-ClientProxiedBy: PN1PEPF000067EF.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c04::2b) To DS7PR12MB8252.namprd12.prod.outlook.com
+In-Reply-To: <20241025111348.3810-6-Dhananjay.Ugwekar@amd.com>
+X-ClientProxiedBy: PN3PEPF00000179.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c04::44) To DS7PR12MB8252.namprd12.prod.outlook.com
  (2603:10b6:8:ee::7)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -69,117 +69,89 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB8252:EE_|IA0PR12MB8225:EE_
-X-MS-Office365-Filtering-Correlation-Id: fc791b87-9a40-439b-3c6f-08dcffdb2be1
+X-MS-TrafficTypeDiagnostic: DS7PR12MB8252:EE_|PH7PR12MB7940:EE_
+X-MS-Office365-Filtering-Correlation-Id: e495db6a-d7e5-4253-cb94-08dcffddd05f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?C0HjnbGUs+VPiR8DbYAguoMDaGEABqQTw7hSBFogtDmdBP767rJ7JTIMRe1A?=
- =?us-ascii?Q?G8Vqb+yVgdJV8HZiad7OEirFqrC3hrwgpSs8q9ppw9JD1kwELKtSwj3IFykN?=
- =?us-ascii?Q?RMXia/dUAKt6pXW2o5uH7yxDx/6svdhZio/eXoSI3jyo3EFDq+dJ/rT5t6PR?=
- =?us-ascii?Q?EzAjrwA+9gPr0zzWSkjfxTYwLmqOBw6uLnXhJL/eoLc7Qr1HIlhbExby/GVH?=
- =?us-ascii?Q?ZDc09FB+TW8a2O20i4QX4NjUdFt4w+4vix6jDagsDSRy9gC9caxOUJL5VuUa?=
- =?us-ascii?Q?LM15a7+zEl85tfCIf0KEYUrWHwF24+vGuk8aYqRmVqSF3fUs12A1URE6LqAA?=
- =?us-ascii?Q?TdKkCsrO16z19Xl5RDnf6jQE1bpgu8OOv+ynmltp0ezcBIKKfbAlT7YK093H?=
- =?us-ascii?Q?LrumhS4uaueJy80YtcuoiebKro6gqRQYuNEVktQ0YFNzIIWwv3kH4T9XlovM?=
- =?us-ascii?Q?HBQRgFEOhEoh++gbGMSvH4L1fd/GSgHiQXg0NOzoZxF61B14B4avgAnXW3fO?=
- =?us-ascii?Q?bkULeOjCY1N2G3RhhToV+I+PkDjN49GvN1Y+2K1Vk82jyUwXRfGxmzyRZ+8c?=
- =?us-ascii?Q?0b7un0knV6/Z5NL6A0Xuek4RWccX7TkyA/c5Dxiajv1qstv4gqCEJotH4/sf?=
- =?us-ascii?Q?9HCdlq+ptuSevvA4xE48/yIPEe9ZLxdPgLYFUaVayyWRtJ4B3aGGM80Vg4oK?=
- =?us-ascii?Q?PWVUs3E0Zq1HZseM9zhHAsNCWu6iqdV1wsbZ5bis/RUwCC+YnaRlHAsWfnM+?=
- =?us-ascii?Q?BB2wPHqPgQAjwqcYl1Lb+ibTOgQT7leXF69ayu4OAVN4NA/K4fAc11suT5X1?=
- =?us-ascii?Q?cbL4gL5KaE1onwQwhlsnOdYSZhhtry4D33/luBHrpnNZlKLoaZiGW+zSuzyS?=
- =?us-ascii?Q?UdFHW2Pqtsn4Zn3XqyuYbPfTxuJ19bgC3nF4Zkj2iJ/vJKFbAyjn5p6DDj5h?=
- =?us-ascii?Q?V2tDExW2+alj+tj14JCfIukVU7sdqRFEV5AfBYDvR/Kuc5k9JiBEYUmSBCb9?=
- =?us-ascii?Q?7JmxEonQGL0RMZL/qWGnovhodTP3ADSzdE8saEbDIbEeV/N+ODm4CIT8T7vf?=
- =?us-ascii?Q?XGl0Up3b7+U0S7q3WsGceqaEmeV17S+ibkxRJEaGqu7PsW9cxqqlQgJFDdg9?=
- =?us-ascii?Q?Ns9VChFZDQDodQqq/ZcWaEX8o2AIYI7wR9N3GQEjvn8Uubo7lE/nGSOI+g3I?=
- =?us-ascii?Q?0/q0+Pnk2pXReSDldyxsoaddubzE3c3UyL41kUn6wOgZsQWwIAN2MobXTWOA?=
- =?us-ascii?Q?WlyDkavw+zLmQfVGxxD61CVdwIOm8EYTCE5UGg2feTWPiv+sGt/r/PCNQs3F?=
- =?us-ascii?Q?D5iOk4uW8h8sxTpIHCyP4qJ0?=
+	=?us-ascii?Q?D6xIZ8fubmeVMzA9ygYl5+94iiZQiEdznsJOBsnV8gppTK+cxJiIVsLhHQRE?=
+ =?us-ascii?Q?YFRBaUFyiZLk0r82XrnfEfxTAwNTORsIOQgr7Gq6cuhNEQeHyqGZtqGXCNdO?=
+ =?us-ascii?Q?6Xu9Wru0UAcPcwqczkcDO9lIqSduFMxn4It4z2lEEuRNEBXPGBPFaO977svX?=
+ =?us-ascii?Q?eiFpdSNOWUnRNfKIPsKmK1TcPzzFU0G0O3FyRpMmb00WSWFJ6c218mpEuDpm?=
+ =?us-ascii?Q?3D5Evhl87+i6cxZe6hXTYuKBFcP6PoN3eaYcMyiCrfIwVrDzTbd1RmY/rWTq?=
+ =?us-ascii?Q?Pa3Xt7nNPix8FHPKqpqh6uACENIBsQB+veDmvLUBHuOei2vIJWGOV8+7Ake7?=
+ =?us-ascii?Q?DtmFE6fe035KOuh3hI1HS+eGPOEHv7zkRUEUJyK94O6GAB8aRgIBPIJSe4Vu?=
+ =?us-ascii?Q?AEkW26MUQ8s28su7GNcHGkBGAx2iAMZ1mArcUWk+n4dZYLjp6wM0/U5nw1kr?=
+ =?us-ascii?Q?jy8gGBwOeHyu3AjXGqJnGTYgegYhCi/ErRJu5Q5q1Aj3BOHXxZHKCp+b98WT?=
+ =?us-ascii?Q?Dn0zQV0rRXIbhuv/uDTA25NPMFl9BdZTRd3ZeHFLf6r9F9D/SqurbNQ4RuSA?=
+ =?us-ascii?Q?ftdpM3En2ZSkQhKGznle6pbmCQwn+8UPRHLFnhurqcD9Wddh1OH3o7flVtbK?=
+ =?us-ascii?Q?31JA+/wUeCkSCKX5zWlD40WqDEvSN2bLCPwPLGDJ7Yx4mGlKgkWJaY7qUqIj?=
+ =?us-ascii?Q?vEywxVS3mdHVeDlRLfkvowFunKvUI1NEouTH1B98GBoQwyo7KEJqKTtlIUra?=
+ =?us-ascii?Q?7E0ohbZlJ8gXsA+LDtss2Lk6WejJFbNUmavkjq4Ox47qnfF/Cqx4kw0UfLOD?=
+ =?us-ascii?Q?rRTMvG8coOO4vxIIHpS+UZwmiJrg1wC0lYOgs5QsRzF2YKRhC9T0t/ctQLZ0?=
+ =?us-ascii?Q?hdd4OsAiPmybozLVGg/f+VU1fCwZD7QZGBLi60H+SrIZnrXDZ4B21lLZT814?=
+ =?us-ascii?Q?GvQBt8HvC4OGuWhqxTavKw4j1iG5h14xnd3IrDvyUa1XRHV6v+vH2aQpXzzf?=
+ =?us-ascii?Q?G1KVwUnyjSuo/TKfGmCD4DP6L5/4GLrSYH7adCQbbz8M9a6NPjHamX2orZ3x?=
+ =?us-ascii?Q?VC58RMqtcDvIpCni16bNJ9PqQpZwQn8WvEP2DfEJWJByPWKGQCJAsmll4p0J?=
+ =?us-ascii?Q?NKh3kzREDUO4IxOB93y+y2NCFTSr/riohdmmvZEI9+Lxu1b5TM6EK/8W51TP?=
+ =?us-ascii?Q?sPAI2u9thhRCc5Kpr7r3FnEcfsotLI6zy5q92cTSX4nxGYX9OBOgmkozLteS?=
+ =?us-ascii?Q?kHYLpH2m4X+8gHWKczwI2uEZlUSQPoRIQlUm+VhDNqhLFM95/sxl+sZ7nJ6a?=
+ =?us-ascii?Q?ZrrYv8UQLvMUNjZZ5xGSIuWi?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB8252.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB8252.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Eq3sFRHAQ1omnQ4S1Dcza/bPN1nm5MkN6FEZj9h8HJ8S92c+tORTG811QRT/?=
- =?us-ascii?Q?FApaONHeHlQWdXqA2E3p2gWnDTNd6ClVEKuiOh77vUT8fSHXuDF6sp5G+ZEr?=
- =?us-ascii?Q?UvoV+Hpk3RShc/iVTRohubfeoPkRuI1EiO78+hxug7MPqHMjTMfWrJagMAbP?=
- =?us-ascii?Q?A0gTLi8UZ/25iSYR2+6FZAc13NMU+BRpxGY3QsslteTBAs08TavFenUN1vkM?=
- =?us-ascii?Q?lbY+7dtU2p8DYWk5Kc+PJPLg2cLFVtmRC+vfFM8eLHU3as0eE+7ICXMs/gey?=
- =?us-ascii?Q?hiuislaE6iukFhPijiQg7Ur5zfhWep/jjo45bkP649sr2d1fivnGN4R+B0tF?=
- =?us-ascii?Q?2WhJ5gXAeR3s1qgFxLrEs5hmsDInjKtTjs/GuJReJDi3R5fYtTuHEGAfbuwB?=
- =?us-ascii?Q?YMNqCj5oKnIm58aM6KNhDHJpJVzVho8PpelTwV4ltB1YuNwL10P8FQHYALtJ?=
- =?us-ascii?Q?ZVhMrs+po9Xg1CbBT+0y/3mlt2m8ZClawiUvf7QRq/x8FdOAef5Umm/Qt3XS?=
- =?us-ascii?Q?vgIfRy0xcDdhnOMajD1B50dZIDFPCSTfzDu8Wrx4BdEDVLQQqeZXd1aGTVYF?=
- =?us-ascii?Q?Qi7082vRnkf8Zon93NiQJkPWN0aZKSNbYwKLasKXngWztlELB/K8GW65q9zu?=
- =?us-ascii?Q?Wf7bGEPmx0kZ0RgWimXsPJx+abdMAiepqORdrG8WneitT14BBynSS8DHdiFi?=
- =?us-ascii?Q?t4g8n2z0ZDa5Cq9K/IV2n94uIf97Re//nXusShn6JqudeHXDwg9kx3vlGmCd?=
- =?us-ascii?Q?PQ0blROSij197P5Vh7a3rDNeIZiUKZVjvd2DlSBh5xAlTRNkr69pOBL2u7J/?=
- =?us-ascii?Q?ECYpgss2N7ZmXQa3ks/F+B28c8Atv/KtjxrT1t0/ha2C3VjtZu6+HJQlbF1B?=
- =?us-ascii?Q?EFGJIJhtvvO1P6geIkGHI1AvjIkbMKNbI50T0vwxCumEvfxU75HTh+cw3kw5?=
- =?us-ascii?Q?8rAEsP7WH2RwKvyako1UdTJOh5Zx4TuUfOTwEdgQ5FAXj+ucAcV2ya0bQVuX?=
- =?us-ascii?Q?+MwWIWoCl9GpnR02+NFxVIBUJTwLUesgOFJP9yvsA7thtlUPQx3dFotlUpxw?=
- =?us-ascii?Q?OiAlfX2XSwJrJemEcDbnWU1prtHy3RGu7oRNCIxnHPCjzkWbRltKcE99hcv0?=
- =?us-ascii?Q?+JN+11kQuuiGxN7kEqDa2V76BwrLoLHShy3i39GJMsSoMhr0j/tYjqWjG3e0?=
- =?us-ascii?Q?vLWEJ4vUMju8z4UvuGS0cehMzVTR/1LVWva/Mz8v8rsuOP3mZC2lwtZnIzXB?=
- =?us-ascii?Q?x+dtppNQu1OqeeUkwakVHYxunod367U0cE4zWD4g3WkpR0GqglZCkxeAaPKu?=
- =?us-ascii?Q?Dn0rFevFN4iLAO3AR35NUMdq/MfainB/nZtrd6DxaTZYsDLyg0MrvAJJc02y?=
- =?us-ascii?Q?R5VPOjf+SQTu//cbTymdKE3i1/mii0bxM8z7w020SE3Xo1ebUsOcqn73jpJA?=
- =?us-ascii?Q?go/kAFUfRgPYL8xgcq5sds4Q/Kf8P5kcPshQ8c3nXb2hWSj2ubi+Cr1XSmQZ?=
- =?us-ascii?Q?PZIREaRFrGhUSn4qFCp2NLOYx/d2mjGfMOcyZ62rNoGNz+ablgY2dt4x31a+?=
- =?us-ascii?Q?DWA7+FfffEbO5yF1jmMS8aP++Mt7RLf4cmUohTl2?=
+	=?us-ascii?Q?jFW0+RyoRU+qg9mcrDhLZiN+8QmTQoZhDaIRKGh42wQ9azBNaikyJWCK3NTo?=
+ =?us-ascii?Q?ixudlPI1l53dv6yy+F9DtSaeo0XWKPJZsAqv1hrwROgnnHqFU0NCqbX7IE4m?=
+ =?us-ascii?Q?KPgjO1nXaBGIn053xikvKxcZmz1Ho6XkSvJ2RCD5bL1pQ/GeXCO1hkV1ohqa?=
+ =?us-ascii?Q?0AwethYOVZOm/cizYPPAK7E4rlGJhi8PX1AtjGjspopLAfULyvbAICzaC9ty?=
+ =?us-ascii?Q?K2ZC8ji6qZd8i/7g9UWCsVWgpHD9Op+hlTMtQSaoonRCqvj5YQH1VevTsFfC?=
+ =?us-ascii?Q?AzDlimkf/hwD9inmzyfHxmJghWjvMdaXHfpc89Io8RBsgTqAVFHpJtzNlD3R?=
+ =?us-ascii?Q?LKktXoaSBUtFUbLZ31sM8isnOIeyLhu1hFT4PHv8Z1qIv/mVX0hBNSGrMC5b?=
+ =?us-ascii?Q?JMPctnbMZjy23aWLb13tCH4YbZvWMS5KJ7vp/jRg0MVe98JId/X452N+GTDd?=
+ =?us-ascii?Q?U8M9y4F+O2nprhI53o1PiDSlx3OOe6OdtEBiw52HYKHJdRlBLutiyCGEhPXq?=
+ =?us-ascii?Q?R+nB0JFrUClQF5XPeXBvCaruFoeL6Sd0SUR7vqptqqOUOxqB3FXMe+HrRQPX?=
+ =?us-ascii?Q?ebBeXJ5A6jkcODQskxSxr56UuHuk/4EuFTzcBDxQ5dZ5vy8wp9J7wCTh6Ss3?=
+ =?us-ascii?Q?u6YSXkHzeuBKkHFOAS4hKdfXHXR7o94Eu12llmHeBsFa1vxY+pcce+5GyYz6?=
+ =?us-ascii?Q?o+vRX4wmINc/dV+EgETiSWyev0z+Z5ZcVOzCp3Ppj8ODNeTciNt7D28aXjQx?=
+ =?us-ascii?Q?XRLypvy56RgibBNBXARSZreJ2TC6I515CGP50G3SLfuRUa6FXmsY3uUgpko2?=
+ =?us-ascii?Q?sHJ4qwtR81F9dccMJrEmenKctreh0UW0TPgESwaFNH2WShlr3bQjiZpx8aae?=
+ =?us-ascii?Q?fP5B9H5eoVMViHgqeosIvrxG/kLsU3AgWylOWUm3cq3AUvrh/pnupSJnImxC?=
+ =?us-ascii?Q?T6wS9X4ttnKBpdtcTNtW0Ju4nqcC7uLzZX5vv4sFAP3MoUG3+q3IlWR49MyZ?=
+ =?us-ascii?Q?M+rWhDZxGz80STEaQGr6KfPX5zQxoaccnswktDkdgyDBor63HoBNFIu1vSs5?=
+ =?us-ascii?Q?Sp9Q9FC2zE4Vqs56ZYVIEAYi5faSOOn9sBPvPl2Kz9irj8iXHCrPW0SnVIYu?=
+ =?us-ascii?Q?mAvufSoxwApGhw3YWcDfmE7L1UPBzVpeQAxJM8fEkR0MocrlSdaslUJyiAW9?=
+ =?us-ascii?Q?nVkK7BjYvrTgX+J9QZt9fF7vCaODyicR2bT4jrVDdfLmGdu+d8POg9XyLfni?=
+ =?us-ascii?Q?wMuzZrLIRPsoO8Ycw+nHHlf2xF0EXcL2Bc9HfmGFnrzVVwzf5l0/f4JQrZ10?=
+ =?us-ascii?Q?1kYuGdM784Zg+iF5xeM5I168kp7mp2YUo1watLbxJnHNxp3OOmT8ksffIdhE?=
+ =?us-ascii?Q?Flrv8pnkWUnLGONjU7+jFy/3VFzEjhZaiuUuQuWlbN3vpo96cBAPcUSX6P99?=
+ =?us-ascii?Q?sA3FUU5U4/mnNTXS37s10d74OVILoeZ7294nkGifWcnWCrCqLT7yEl80QMYp?=
+ =?us-ascii?Q?zqgjcBuZrepfjDB7H4FdhyY8SrPehlaSiwWYsYKPDKI3eJkq73XWcIyLs69l?=
+ =?us-ascii?Q?FnrRjsfA+X/5EzFzidrwvSfFIvHsyQM9t2+cEZWQ?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc791b87-9a40-439b-3c6f-08dcffdb2be1
+X-MS-Exchange-CrossTenant-Network-Message-Id: e495db6a-d7e5-4253-cb94-08dcffddd05f
 X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB8252.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2024 09:53:18.0654
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2024 10:12:13.2294
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: D5nhoCL2OskpG2OneBdDlNzts1zG0Sm/CUMkwq63PX+iDwv1+QPlBiS3dMaYcOUMDD2SLFo5DR4v1QkkdFc2QA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8225
+X-MS-Exchange-CrossTenant-UserPrincipalName: O6n+gJHSNayJDC/xHXCbR0IqVICn2eYyihLTcJFnJXyZR26LHKMDr8VtmuBgm8SPjfFXSFidS0wywcKg0oYTIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7940
 
-Hello Dhananjay,
-
-
-On Fri, Oct 25, 2024 at 11:13:48AM +0000, Dhananjay Ugwekar wrote:
-> Add a new "power_core" PMU and "energy-core" event for monitoring 
-> energy consumption by each individual core. The existing energy-cores 
-> event aggregates the energy consumption of CPU cores at the package level. 
-> This new event aligns with the AMD's per-core energy counters.
+On Fri, Oct 25, 2024 at 11:13:43AM +0000, Dhananjay Ugwekar wrote:
+> Prepare for the addition of RAPL core energy counter support.
 > 
-> Tested the package level and core level PMU counters with workloads
-> pinned to different CPUs.
+> As there will always be just one rapl_model variable on a system, make it
+> global, to make it easier to access it from any function.
 > 
-> Results with workload pinned to CPU 4 in core 4 on an AMD Zen4 Genoa
-> machine:
-> 
-> $ sudo perf stat --per-core -e power_core/energy-core/ -- taskset -c 4 stress-ng --matrix 1 --timeout 5s
-> stress-ng: info:  [21250] setting to a 5 second run per stressor
-> stress-ng: info:  [21250] dispatching hogs: 1 matrix
-> stress-ng: info:  [21250] successful run completed in 5.00s
-> 
->  Performance counter stats for 'system wide':
-> 
-> S0-D0-C0              1               0.00 Joules power_core/energy-core/
-> S0-D0-C1              1               0.00 Joules power_core/energy-core/
-> S0-D0-C2              1               0.00 Joules power_core/energy-core/
-> S0-D0-C3              1               0.00 Joules power_core/energy-core/
-> S0-D0-C4              1               8.43 Joules power_core/energy-core/
-> S0-D0-C5              1               0.00 Joules power_core/energy-core/
-> S0-D0-C6              1               0.00 Joules power_core/energy-core/
-> S0-D0-C7              1               0.00 Joules power_core/energy-core/
-> S0-D1-C8              1               0.00 Joules power_core/energy-core/
-> S0-D1-C9              1               0.00 Joules power_core/energy-core/
-> S0-D1-C10             1               0.00 Joules power_core/energy-core/
+> No functional change.
 > 
 > Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
 
-Looks like my response to this patch never made it to the list.
-
-The patch looks good to me.
+LGTM.
 
 Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
 
@@ -187,417 +159,70 @@ Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
 Thanks and Regards
 gautham.
 
-
-
 > ---
-> v6 changes:
-> * Replaced the if-ladder in get_rapl_pmu_idx() with a switch case. (Gautham)
-> * Added the error if condition in init_rapl_pmus().
-> * Modify the PMU name from "power_per_core" to "power_core" and event name
->   from "event_per_core" to "event_core"
-> ---
->  arch/x86/events/rapl.c | 182 +++++++++++++++++++++++++++++++++--------
->  1 file changed, 150 insertions(+), 32 deletions(-)
+>  arch/x86/events/rapl.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 > 
 > diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-> index d3acc70a3d31..57cf15a19b7c 100644
+> index 7387bca95018..447f62caa5f9 100644
 > --- a/arch/x86/events/rapl.c
 > +++ b/arch/x86/events/rapl.c
-> @@ -39,6 +39,10 @@
->   *	  event: rapl_energy_psys
->   *    perf code: 0x5
->   *
-> + *  core counter: consumption of a single physical core
-> + *	  event: rapl_energy_core (power_core PMU)
-> + *    perf code: 0x1
-> + *
->   * We manage those counters as free running (read-only). They may be
->   * use simultaneously by other tools, such as turbostat.
->   *
-> @@ -81,6 +85,10 @@ enum perf_rapl_pkg_events {
->  	NR_RAPL_PKG_DOMAINS = PERF_RAPL_PKG_EVENTS_MAX,
->  };
->  
-> +#define PERF_RAPL_CORE			0		/* single core */
-> +#define PERF_RAPL_CORE_EVENTS_MAX	1
-> +#define NR_RAPL_CORE_DOMAINS		PERF_RAPL_CORE_EVENTS_MAX
-> +
->  static const char *const rapl_pkg_domain_names[NR_RAPL_PKG_DOMAINS] __initconst = {
->  	"pp0-core",
->  	"package",
-> @@ -89,6 +97,8 @@ static const char *const rapl_pkg_domain_names[NR_RAPL_PKG_DOMAINS] __initconst
->  	"psys",
->  };
->  
-> +static const char *const rapl_core_domain_name __initconst = "core";
-> +
->  /*
->   * event code: LSB 8 bits, passed in attr->config
->   * any other bit is reserved
-> @@ -141,14 +151,18 @@ enum rapl_unit_quirk {
->  
->  struct rapl_model {
->  	struct perf_msr *rapl_pkg_msrs;
-> +	struct perf_msr *rapl_core_msrs;
->  	unsigned long	pkg_events;
-> +	unsigned long	core_events;
->  	unsigned int	msr_power_unit;
->  	enum rapl_unit_quirk	unit_quirk;
->  };
->  
->   /* 1/2^hw_unit Joule */
->  static int rapl_pkg_hw_unit[NR_RAPL_PKG_DOMAINS] __read_mostly;
-> +static int rapl_core_hw_unit __read_mostly;
->  static struct rapl_pmus *rapl_pmus_pkg;
-> +static struct rapl_pmus *rapl_pmus_core;
+> @@ -151,6 +151,7 @@ static struct rapl_pmus *rapl_pmus;
+>  static unsigned int rapl_cntr_mask;
 >  static u64 rapl_timer_ms;
->  static struct rapl_model *rapl_model;
+>  static struct perf_msr *rapl_msrs;
+> +static struct rapl_model *rapl_model;
 >  
-> @@ -156,10 +170,18 @@ static struct rapl_model *rapl_model;
+>  /*
 >   * Helper function to get the correct topology id according to the
->   * RAPL PMU scope.
->   */
-> -static inline unsigned int get_rapl_pmu_idx(int cpu)
-> +static inline unsigned int get_rapl_pmu_idx(int cpu, int scope)
->  {
-> -	return rapl_pkg_pmu_is_pkg_scope() ? topology_logical_package_id(cpu) :
-> -					 topology_logical_die_id(cpu);
-> +	switch (scope) {
-> +	case PERF_PMU_SCOPE_PKG:
-> +		return topology_logical_package_id(cpu);
-> +	case PERF_PMU_SCOPE_DIE:
-> +		return topology_logical_die_id(cpu);
-> +	case PERF_PMU_SCOPE_CORE:
-> +		return topology_logical_core_id(cpu);
-> +	default:
-> +		return -EINVAL;
-> +	}
->  }
->  
->  static inline u64 rapl_read_counter(struct perf_event *event)
-> @@ -169,19 +191,20 @@ static inline u64 rapl_read_counter(struct perf_event *event)
->  	return raw;
->  }
->  
-> -static inline u64 rapl_scale(u64 v, int cfg)
-> +static inline u64 rapl_scale(u64 v, struct perf_event *event)
->  {
-> -	if (cfg > NR_RAPL_PKG_DOMAINS) {
-> -		pr_warn("Invalid domain %d, failed to scale data\n", cfg);
-> -		return v;
-> -	}
-> +	int hw_unit = rapl_pkg_hw_unit[event->hw.config - 1];
-> +
-> +	if (event->pmu->scope == PERF_PMU_SCOPE_CORE)
-> +		hw_unit = rapl_core_hw_unit;
-> +
->  	/*
->  	 * scale delta to smallest unit (1/2^32)
->  	 * users must then scale back: count * 1/(1e9*2^32) to get Joules
->  	 * or use ldexp(count, -32).
->  	 * Watts = Joules/Time delta
->  	 */
-> -	return v << (32 - rapl_pkg_hw_unit[cfg - 1]);
-> +	return v << (32 - hw_unit);
->  }
->  
->  static u64 rapl_event_update(struct perf_event *event)
-> @@ -208,7 +231,7 @@ static u64 rapl_event_update(struct perf_event *event)
->  	delta = (new_raw_count << shift) - (prev_raw_count << shift);
->  	delta >>= shift;
->  
-> -	sdelta = rapl_scale(delta, event->hw.config);
-> +	sdelta = rapl_scale(delta, event);
->  
->  	local64_add(sdelta, &event->count);
->  
-> @@ -337,12 +360,13 @@ static void rapl_pmu_event_del(struct perf_event *event, int flags)
->  static int rapl_pmu_event_init(struct perf_event *event)
->  {
->  	u64 cfg = event->attr.config & RAPL_EVENT_MASK;
-> -	int bit, rapl_pmu_idx, ret = 0;
-> +	int bit, rapl_pmus_scope, rapl_pmu_idx, ret = 0;
->  	struct rapl_pmu *rapl_pmu;
-> +	struct rapl_pmus *rapl_pmus;
->  
-> -	/* only look at RAPL events */
-> -	if (event->attr.type != rapl_pmus_pkg->pmu.type)
-> -		return -ENOENT;
-> +	/* unsupported modes and filters */
-> +	if (event->attr.sample_period) /* no sampling */
-> +		return -EINVAL;
->  
->  	/* check only supported bits are set */
->  	if (event->attr.config & ~RAPL_EVENT_MASK)
-> @@ -351,31 +375,49 @@ static int rapl_pmu_event_init(struct perf_event *event)
->  	if (event->cpu < 0)
->  		return -EINVAL;
->  
-> -	if (!cfg || cfg >= NR_RAPL_PKG_DOMAINS + 1)
-> +	rapl_pmus = container_of(event->pmu, struct rapl_pmus, pmu);
-> +	if (!rapl_pmus)
->  		return -EINVAL;
-> -
-> -	cfg = array_index_nospec((long)cfg, NR_RAPL_PKG_DOMAINS + 1);
-> -	bit = cfg - 1;
-> -
-> -	/* check event supported */
-> -	if (!(rapl_pmus_pkg->cntr_mask & (1 << bit)))
-> +	rapl_pmus_scope = rapl_pmus->pmu.scope;
-> +
-> +	if (rapl_pmus_scope == PERF_PMU_SCOPE_PKG || rapl_pmus_scope == PERF_PMU_SCOPE_DIE) {
-> +		/* only look at RAPL package events */
-> +		if (event->attr.type != rapl_pmus_pkg->pmu.type)
-> +			return -ENOENT;
-> +
-> +		cfg = array_index_nospec((long)cfg, NR_RAPL_PKG_DOMAINS + 1);
-> +		if (!cfg || cfg >= NR_RAPL_PKG_DOMAINS + 1)
-> +			return -EINVAL;
-> +
-> +		bit = cfg - 1;
-> +		event->hw.event_base = rapl_model->rapl_pkg_msrs[bit].msr;
-> +	} else if (rapl_pmus_scope == PERF_PMU_SCOPE_CORE) {
-> +		/* only look at RAPL core events */
-> +		if (event->attr.type != rapl_pmus_core->pmu.type)
-> +			return -ENOENT;
-> +
-> +		cfg = array_index_nospec((long)cfg, NR_RAPL_CORE_DOMAINS + 1);
-> +		if (!cfg || cfg >= NR_RAPL_PKG_DOMAINS + 1)
-> +			return -EINVAL;
-> +
-> +		bit = cfg - 1;
-> +		event->hw.event_base = rapl_model->rapl_core_msrs[bit].msr;
-> +	} else
->  		return -EINVAL;
->  
-> -	/* unsupported modes and filters */
-> -	if (event->attr.sample_period) /* no sampling */
-> +	/* check event supported */
-> +	if (!(rapl_pmus->cntr_mask & (1 << bit)))
->  		return -EINVAL;
->  
-> -	rapl_pmu_idx = get_rapl_pmu_idx(event->cpu);
-> -	if (rapl_pmu_idx >= rapl_pmus_pkg->nr_rapl_pmu)
-> +	rapl_pmu_idx = get_rapl_pmu_idx(event->cpu, rapl_pmus_scope);
-> +	if (rapl_pmu_idx >= rapl_pmus->nr_rapl_pmu)
->  		return -EINVAL;
-> -
->  	/* must be done before validate_group */
-> -	rapl_pmu = rapl_pmus_pkg->rapl_pmu[rapl_pmu_idx];
-> +	rapl_pmu = rapl_pmus->rapl_pmu[rapl_pmu_idx];
->  	if (!rapl_pmu)
->  		return -EINVAL;
->  
->  	event->pmu_private = rapl_pmu;
-> -	event->hw.event_base = rapl_model->rapl_pkg_msrs[bit].msr;
->  	event->hw.config = cfg;
->  	event->hw.idx = bit;
->  
-> @@ -392,12 +434,14 @@ RAPL_EVENT_ATTR_STR(energy-pkg  ,   rapl_pkg, "event=0x02");
->  RAPL_EVENT_ATTR_STR(energy-ram  ,   rapl_ram, "event=0x03");
->  RAPL_EVENT_ATTR_STR(energy-gpu  ,   rapl_gpu, "event=0x04");
->  RAPL_EVENT_ATTR_STR(energy-psys,   rapl_psys, "event=0x05");
-> +RAPL_EVENT_ATTR_STR(energy-core,   rapl_core, "event=0x01");
->  
->  RAPL_EVENT_ATTR_STR(energy-cores.unit, rapl_cores_unit, "Joules");
->  RAPL_EVENT_ATTR_STR(energy-pkg.unit  ,   rapl_pkg_unit, "Joules");
->  RAPL_EVENT_ATTR_STR(energy-ram.unit  ,   rapl_ram_unit, "Joules");
->  RAPL_EVENT_ATTR_STR(energy-gpu.unit  ,   rapl_gpu_unit, "Joules");
->  RAPL_EVENT_ATTR_STR(energy-psys.unit,   rapl_psys_unit, "Joules");
-> +RAPL_EVENT_ATTR_STR(energy-core.unit,   rapl_core_unit, "Joules");
->  
->  /*
->   * we compute in 0.23 nJ increments regardless of MSR
-> @@ -407,6 +451,7 @@ RAPL_EVENT_ATTR_STR(energy-pkg.scale,     rapl_pkg_scale, "2.3283064365386962890
->  RAPL_EVENT_ATTR_STR(energy-ram.scale,     rapl_ram_scale, "2.3283064365386962890625e-10");
->  RAPL_EVENT_ATTR_STR(energy-gpu.scale,     rapl_gpu_scale, "2.3283064365386962890625e-10");
->  RAPL_EVENT_ATTR_STR(energy-psys.scale,   rapl_psys_scale, "2.3283064365386962890625e-10");
-> +RAPL_EVENT_ATTR_STR(energy-core.scale,   rapl_core_scale, "2.3283064365386962890625e-10");
->  
->  /*
->   * There are no default events, but we need to create
-> @@ -439,6 +484,12 @@ static const struct attribute_group *rapl_attr_groups[] = {
->  	NULL,
->  };
->  
-> +static const struct attribute_group *rapl_core_attr_groups[] = {
-> +	&rapl_pmu_format_group,
-> +	&rapl_pmu_events_group,
-> +	NULL,
-> +};
-> +
->  static struct attribute *rapl_events_cores[] = {
->  	EVENT_PTR(rapl_cores),
->  	EVENT_PTR(rapl_cores_unit),
-> @@ -499,6 +550,18 @@ static struct attribute_group rapl_events_psys_group = {
->  	.attrs = rapl_events_psys,
->  };
->  
-> +static struct attribute *rapl_events_core[] = {
-> +	EVENT_PTR(rapl_core),
-> +	EVENT_PTR(rapl_core_unit),
-> +	EVENT_PTR(rapl_core_scale),
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group rapl_events_core_group = {
-> +	.name  = "events",
-> +	.attrs = rapl_events_core,
-> +};
-> +
->  static bool test_msr(int idx, void *data)
->  {
->  	return test_bit(idx, (unsigned long *) data);
-> @@ -536,6 +599,11 @@ static struct perf_msr amd_rapl_pkg_msrs[] = {
+> @@ -536,18 +537,18 @@ static struct perf_msr amd_rapl_msrs[] = {
 >  	[PERF_RAPL_PSYS] = { 0, &rapl_events_psys_group,  NULL, false, 0 },
 >  };
 >  
-> +static struct perf_msr amd_rapl_core_msrs[] = {
-> +	[PERF_RAPL_CORE] = { MSR_AMD_CORE_ENERGY_STATUS, &rapl_events_core_group,
-> +				 test_msr, false, RAPL_MSR_MASK },
-> +};
-> +
->  static int rapl_check_hw_unit(void)
+> -static int rapl_check_hw_unit(struct rapl_model *rm)
+> +static int rapl_check_hw_unit(void)
 >  {
 >  	u64 msr_rapl_power_unit_bits;
-> @@ -547,6 +615,8 @@ static int rapl_check_hw_unit(void)
->  	for (i = 0; i < NR_RAPL_PKG_DOMAINS; i++)
->  		rapl_pkg_hw_unit[i] = (msr_rapl_power_unit_bits >> 8) & 0x1FULL;
+>  	int i;
 >  
-> +	rapl_core_hw_unit = (msr_rapl_power_unit_bits >> 8) & 0x1FULL;
-> +
->  	switch (rapl_model->unit_quirk) {
+>  	/* protect rdmsrl() to handle virtualization */
+> -	if (rdmsrl_safe(rm->msr_power_unit, &msr_rapl_power_unit_bits))
+> +	if (rdmsrl_safe(rapl_model->msr_power_unit, &msr_rapl_power_unit_bits))
+>  		return -1;
+>  	for (i = 0; i < NR_RAPL_DOMAINS; i++)
+>  		rapl_hw_unit[i] = (msr_rapl_power_unit_bits >> 8) & 0x1FULL;
+>  
+> -	switch (rm->unit_quirk) {
+> +	switch (rapl_model->unit_quirk) {
 >  	/*
 >  	 * DRAM domain on HSW server and KNL has fixed energy unit which can be
-> @@ -565,7 +635,6 @@ static int rapl_check_hw_unit(void)
->  		break;
->  	}
->  
-> -
->  	/*
->  	 * Calculate the timer rate:
->  	 * Use reference of 200W for scaling the timeout to avoid counter
-> @@ -584,9 +653,13 @@ static int rapl_check_hw_unit(void)
->  static void __init rapl_advertise(void)
+>  	 * different than the unit from power unit MSR. See
+> @@ -792,21 +793,20 @@ MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
+>  static int __init rapl_pmu_init(void)
 >  {
->  	int i;
-> +	int num_counters = hweight32(rapl_pmus_pkg->cntr_mask);
-> +
-> +	if (rapl_pmus_core)
-> +		num_counters += hweight32(rapl_pmus_core->cntr_mask);
+>  	const struct x86_cpu_id *id;
+> -	struct rapl_model *rm;
+>  	int ret;
 >  
->  	pr_info("API unit is 2^-32 Joules, %d fixed counters, %llu ms ovfl timer\n",
-> -		hweight32(rapl_pmus_pkg->cntr_mask), rapl_timer_ms);
-> +		num_counters, rapl_timer_ms);
+>  	id = x86_match_cpu(rapl_model_match);
+>  	if (!id)
+>  		return -ENODEV;
 >  
->  	for (i = 0; i < NR_RAPL_PKG_DOMAINS; i++) {
->  		if (rapl_pmus_pkg->cntr_mask & (1 << i)) {
-> @@ -594,6 +667,10 @@ static void __init rapl_advertise(void)
->  				rapl_pkg_domain_names[i], rapl_pkg_hw_unit[i]);
->  		}
->  	}
-> +
-> +	if (rapl_pmus_core && (rapl_pmus_core->cntr_mask & (1 << PERF_RAPL_CORE)))
-> +		pr_info("hw unit of domain %s 2^-%d Joules\n",
-> +			rapl_core_domain_name, rapl_core_hw_unit);
->  }
+> -	rm = (struct rapl_model *) id->driver_data;
+> +	rapl_model = (struct rapl_model *) id->driver_data;
 >  
->  static void cleanup_rapl_pmus(struct rapl_pmus *rapl_pmus)
-> @@ -614,6 +691,10 @@ static const struct attribute_group *rapl_attr_update[] = {
->  	NULL,
->  };
+> -	rapl_msrs = rm->rapl_msrs;
+> +	rapl_msrs = rapl_model->rapl_msrs;
 >  
-> +static const struct attribute_group *rapl_core_attr_update[] = {
-> +	&rapl_events_core_group,
-> +};
-> +
->  static int __init init_rapl_pmu(struct rapl_pmus *rapl_pmus)
->  {
->  	struct rapl_pmu *rapl_pmu;
-> @@ -640,13 +721,22 @@ static int __init init_rapl_pmu(struct rapl_pmus *rapl_pmus)
->  	return -ENOMEM;
->  }
+>  	rapl_cntr_mask = perf_msr_probe(rapl_msrs, PERF_RAPL_MAX,
+> -					false, (void *) &rm->events);
+> +					false, (void *) &rapl_model->events);
 >  
-> -static int __init init_rapl_pmus(struct rapl_pmus **rapl_pmus_ptr, int rapl_pmu_scope)
-> +static int __init init_rapl_pmus(struct rapl_pmus **rapl_pmus_ptr, int rapl_pmu_scope,
-> +				 const struct attribute_group **rapl_attr_groups,
-> +				 const struct attribute_group **rapl_attr_update)
->  {
->  	int nr_rapl_pmu = topology_max_packages();
->  	struct rapl_pmus *rapl_pmus;
->  
-> +	/*
-> +	 * rapl_pmu_scope must be either PKG, DIE or CORE
-> +	 */
->  	if (rapl_pmu_scope == PERF_PMU_SCOPE_DIE)
->  		nr_rapl_pmu	*= topology_max_dies_per_package();
-> +	else if (rapl_pmu_scope == PERF_PMU_SCOPE_CORE)
-> +		nr_rapl_pmu	*= topology_num_cores_per_package();
-> +	else if (rapl_pmu_scope != PERF_PMU_SCOPE_PKG)
-> +		return -EINVAL;
->  
->  	rapl_pmus = kzalloc(struct_size(rapl_pmus, rapl_pmu, nr_rapl_pmu), GFP_KERNEL);
->  	if (!rapl_pmus)
-> @@ -735,8 +825,10 @@ static struct rapl_model model_spr = {
->  
->  static struct rapl_model model_amd_hygon = {
->  	.pkg_events	= BIT(PERF_RAPL_PKG),
-> +	.core_events	= BIT(PERF_RAPL_CORE),
->  	.msr_power_unit = MSR_AMD_RAPL_POWER_UNIT,
->  	.rapl_pkg_msrs	= amd_rapl_pkg_msrs,
-> +	.rapl_core_msrs	= amd_rapl_core_msrs,
->  };
->  
->  static const struct x86_cpu_id rapl_model_match[] __initconst = {
-> @@ -808,7 +900,8 @@ static int __init rapl_pmu_init(void)
+> -	ret = rapl_check_hw_unit(rm);
+> +	ret = rapl_check_hw_unit();
 >  	if (ret)
 >  		return ret;
 >  
-> -	ret = init_rapl_pmus(&rapl_pmus_pkg, rapl_pkg_pmu_scope);
-> +	ret = init_rapl_pmus(&rapl_pmus_pkg, rapl_pkg_pmu_scope, rapl_attr_groups,
-> +			     rapl_attr_update);
->  	if (ret)
->  		return ret;
->  
-> @@ -820,6 +913,27 @@ static int __init rapl_pmu_init(void)
->  	if (ret)
->  		goto out;
->  
-> +	if (rapl_model->core_events) {
-> +		ret = init_rapl_pmus(&rapl_pmus_core, PERF_PMU_SCOPE_CORE,
-> +				     rapl_core_attr_groups,
-> +				     rapl_core_attr_update);
-> +		if (ret) {
-> +			pr_warn("power-core PMU initialization failed (%d)\n", ret);
-> +			goto core_init_failed;
-> +		}
-> +
-> +		rapl_pmus_core->cntr_mask = perf_msr_probe(rapl_model->rapl_core_msrs,
-> +						     PERF_RAPL_CORE_EVENTS_MAX, false,
-> +						     (void *) &rapl_model->core_events);
-> +
-> +		ret = perf_pmu_register(&rapl_pmus_core->pmu, "power_core", -1);
-> +		if (ret) {
-> +			pr_warn("power-core PMU registration failed (%d)\n", ret);
-> +			cleanup_rapl_pmus(rapl_pmus_core);
-> +		}
-> +	}
-> +
-> +core_init_failed:
->  	rapl_advertise();
->  	return 0;
->  
-> @@ -832,6 +946,10 @@ module_init(rapl_pmu_init);
->  
->  static void __exit intel_rapl_exit(void)
->  {
-> +	if (rapl_pmus_core) {
-> +		perf_pmu_unregister(&rapl_pmus_core->pmu);
-> +		cleanup_rapl_pmus(rapl_pmus_core);
-> +	}
->  	perf_pmu_unregister(&rapl_pmus_pkg->pmu);
->  	cleanup_rapl_pmus(rapl_pmus_pkg);
->  }
 > -- 
 > 2.34.1
 > 
