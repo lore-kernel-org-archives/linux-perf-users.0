@@ -1,308 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45351D63F2;
-	Fri,  8 Nov 2024 06:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53391D52B;
+	Fri,  8 Nov 2024 06:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731046504; cv=none; b=evZEOPwynFKJK8OROx+ICuU3M518x7Q0reb1OEf+aD4C2GwhpJgbKz1btjFTFRMoyzM2TejHI3NV1fKThjzmfbdAphYEQiKzSvupzb6wT0F2mgbO66S9WD/3NQ5eF6MZodS3vmsJozIhG6vqW1dfHqe4jsxMP2xNWHHSZekk08Q=
+	t=1731047311; cv=none; b=HlbL04FJ9n9dIcgMmVsBHcl7W5QoBPwr5F2N+tp6tKUkOQkjNN1XbUxFg6wiR9RMaQeDec5h17EIbTZfF/rS7Afc0wyeeTwsA7kTn4qT0DWrS2Oz23ysrjqsR3iFVDFuBZQbcuwlj86/geKpthy2MFZyYSmNkdf5LATy679lGQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731046504; c=relaxed/simple;
-	bh=XoWu5t7ykXC6lX8IpYZS4R+LySpB+CPYO7R1tC+0r7U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bNDBU6MBvPrWEmgXdDdrL9zSliGx+AEEMYFz+s2iZeLpClCsaR0BDcZzDLIVlLmhW2rDcgwxVvhfSd5axBnd6hPq41tuPfpKonAjPE9IXmuVgtv5XYslnstq/Hc20y7gmkkmXB91m9aj6QPgwuGfhoV95ORSBuizOUKVvKBA+tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKHyKIQa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731047311; c=relaxed/simple;
+	bh=vGpm9c8Go+hIdvjd+ws4rirXLAyvQkMLKioK1vvCGDs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qk25ZM0g90vBOCMMaXedYiNDvIaXwkMuGXtV03vHWuAuhb3Uj4vpAFEb2JCCx54sq1LNZy3QdPdVx0U82M7xFHTCt2EcvCEOvU/d5hLOdFx6DN4qfDvNIYRFrTKUqFA7yf1yqtpWJJnQqLSWVgPldezVVYVS5BmurFvyi6ZQhdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HnSyj1YW; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MKHyKIQa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B73DEC4CECF;
-	Fri,  8 Nov 2024 06:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731046504;
-	bh=XoWu5t7ykXC6lX8IpYZS4R+LySpB+CPYO7R1tC+0r7U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MKHyKIQavGKH+eyeuEelfgTWS12OA7Nxpzw8ww1WAPSmHxzaCdzXz7ZTYrm6YZnxg
-	 1ltz1tUBF8uN4VvkZkQCW9qLFu7SLKJ+7NiOAQiTdYsnkPP/X5WqzeoSJ+SdwAGXv6
-	 BsHzA2p5cmL6dOXnKsegAGscIQzbH1rq6ObgdD2DnFDPcyvnfo+6WhznZ3SgWFIF++
-	 gTMt92/i9HjbsN9ffMVXLHO8gG4v06a/bi/KnNI84nITsrEYhwiUTeKQZUojJJwR8k
-	 ctx+TbslPTKj4tBRQ4ER0F4+6mKBQpUa1zc27K9Sw8HJiUNX3YkltIjRgw3ML5Yb/j
-	 n+aqV6zcTgmtA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Kees Cook <kees@kernel.org>
-Subject: [PATCH v2 4/4] perf lock contention: Handle slab objects in -L/--lock-filter option
-Date: Thu,  7 Nov 2024 22:14:59 -0800
-Message-ID: <20241108061500.2698340-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
-In-Reply-To: <20241108061500.2698340-1-namhyung@kernel.org>
-References: <20241108061500.2698340-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HnSyj1YW"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A869ml9017648;
+	Fri, 8 Nov 2024 06:28:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=5tXKZIc9DzhALNJU+G9X2Cwncncnk8
+	seDhujvMJvhi0=; b=HnSyj1YWGgSlYCHZnnp4jSQBEzp4moliJbfg0QfWpSCFKm
+	KBcE7MTZSvhoLKA+oT9x8w5cD8hZ0PMTuiYjWScFSahV6Hznw2bNcgK0WVdAJZ3F
+	GNLuB9tCn3AbJvWWplhAsIAhc0CuGaqXxsuRUObF7Oz8OUXLHiIf1q3nNEA+WLY+
+	2FYWONCXWgKWSAij7dJAm5PD+oaPR6Y4x25WNQDBEoBV54MTlRqo1OF32s5y+oO6
+	cWUTdpoBjJ2BpWoPAq2NZM7VNUFJ0capqHTYBsxL2VGBZWTGwXsBR2PuIYcIisut
+	pK0EKF5h7varXIlob+WwcL0XAb5oM2IqKaOwAl/g==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42sd4q023m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Nov 2024 06:28:27 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4A86Eera008450;
+	Fri, 8 Nov 2024 06:28:26 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 42nywmek8e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Nov 2024 06:28:25 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4A86SMFZ51577128
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 8 Nov 2024 06:28:22 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3608020043;
+	Fri,  8 Nov 2024 06:28:22 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 152F020040;
+	Fri,  8 Nov 2024 06:28:22 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  8 Nov 2024 06:28:22 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org,
+        sumanthk@linux.ibm.com, agordeev@linux.ibm.com, gor@linux.ibm.com,
+        hca@linux.ibm.com
+Subject: Re: [PATCH] perf/test: fix perf ftrace test on s390
+In-Reply-To: <Zy0X9kz_tmjNue5D@google.com> (Namhyung Kim's message of "Thu, 7
+	Nov 2024 11:41:42 -0800")
+References: <20241107123343.1580616-1-tmricht@linux.ibm.com>
+	<Zy0X9kz_tmjNue5D@google.com>
+Date: Fri, 08 Nov 2024 07:28:21 +0100
+Message-ID: <yt9diksyqlx6.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: S1e0I9GiKZ-_mHN-UeEXEbmae30PounX
+X-Proofpoint-GUID: S1e0I9GiKZ-_mHN-UeEXEbmae30PounX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ spamscore=0 impostorscore=0 bulkscore=0 suspectscore=0 priorityscore=1501
+ clxscore=1011 mlxlogscore=629 phishscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411080051
 
-This is to filter lock contention from specific slab objects only.
-Like in the lock symbol output, we can use '&' prefix to filter slab
-object names.
+Namhyung Kim <namhyung@kernel.org> writes:
 
-  root@virtme-ng:/home/namhyung/project/linux# tools/perf/perf lock con -abl sleep 1
-   contended   total wait     max wait     avg wait            address   symbol
+> On Thu, Nov 07, 2024 at 01:33:43PM +0100, Thomas Richter wrote:
+>> On s390 the perf test case ftrace sometimes fails as follows:
+>> 
+>>   # ./perf test ftrace
+>>   79: perf ftrace tests    : FAILED!
+>>   #
+>> 
+>> The failure depends on the kernel .config file. Some configurarions
+>> always work fine, some do not.
+>
+> Which test do you fail?  ftrace trace or profile?  I don't think it's
+> gonna be a problem for ftrace latency.
 
-           3     14.99 us     14.44 us      5.00 us   ffffffff851c0940   pack_mutex (mutex)
-           2      2.75 us      2.56 us      1.38 us   ffff98d7031fb498   &task_struct (mutex)
-           4      1.42 us       557 ns       355 ns   ffff98d706311400   &kmalloc-cg-512 (mutex)
-           2       953 ns       714 ns       476 ns   ffffffff851c3620   delayed_uprobe_lock (mutex)
-           1       929 ns       929 ns       929 ns   ffff98d7031fb538   &task_struct (mutex)
-           3       561 ns       210 ns       187 ns   ffffffff84a8b3a0   text_mutex (mutex)
-           1       479 ns       479 ns       479 ns   ffffffff851b4cf8   tracepoint_srcu_srcu_usage (mutex)
-           2       320 ns       195 ns       160 ns   ffffffff851cf840   pcpu_alloc_mutex (mutex)
-           1       212 ns       212 ns       212 ns   ffff98d7031784d8   &signal_cache (mutex)
-           1       177 ns       177 ns       177 ns   ffffffff851b4c28   tracepoint_srcu_srcu_usage (mutex)
 
-With the filter, it can show contentions from the task_struct only.
+The ftrace profile test failed, because the ring buffer was not large
+enough, and some lines (especially the interesting ones with nanosleep
+in it) where dropped.
 
-  root@virtme-ng:/home/namhyung/project/linux# tools/perf/perf lock con -abl -L '&task_struct' sleep 1
-   contended   total wait     max wait     avg wait            address   symbol
+>
+>> To achieve success for all our tested kernel configurations, enlarge
+>> the buffer to store the traces complete without wrapping.
+>> The default buffer size is too small  for all kernel configurations.
+>> Set the buffer size of /sys/kernel/tracing/buffer_size_kb to 16 MB
+>
+> Actually you can use -m 16M option for perf ftrace trace and perf ftrace
+> profile.  Then you don't need to care about restoring the original size.
 
-           2      1.97 us      1.71 us       987 ns   ffff98d7032fd658   &task_struct (mutex)
-           1      1.20 us      1.20 us      1.20 us   ffff98d7032fd6f8   &task_struct (mutex)
+Ok, thanks. I leave it to Thomas to decide whether he wants to add this
+option to the CI run.
 
-It can work with other aggregation mode:
-
-  root@virtme-ng:/home/namhyung/project/linux# tools/perf/perf lock con -ab -L '&task_struct' sleep 1
-   contended   total wait     max wait     avg wait         type   caller
-
-           1     25.10 us     25.10 us     25.10 us        mutex   perf_event_exit_task+0x39
-           1     21.60 us     21.60 us     21.60 us        mutex   futex_exit_release+0x21
-           1      5.56 us      5.56 us      5.56 us        mutex   futex_exec_release+0x21
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-lock.c                     | 35 ++++++++++++++++
- tools/perf/util/bpf_lock_contention.c         | 40 ++++++++++++++++++-
- .../perf/util/bpf_skel/lock_contention.bpf.c  | 21 +++++++++-
- tools/perf/util/lock-contention.h             |  2 +
- 4 files changed, 95 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 89ee2a2f78603906..405e95666257b7fe 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1646,6 +1646,12 @@ static void lock_filter_finish(void)
- 
- 	zfree(&filters.cgrps);
- 	filters.nr_cgrps = 0;
-+
-+	for (int i = 0; i < filters.nr_slabs; i++)
-+		free(filters.slabs[i]);
-+
-+	zfree(&filters.slabs);
-+	filters.nr_slabs = 0;
- }
- 
- static void sort_contention_result(void)
-@@ -2412,6 +2418,27 @@ static bool add_lock_sym(char *name)
- 	return true;
- }
- 
-+static bool add_lock_slab(char *name)
-+{
-+	char **tmp;
-+	char *sym = strdup(name);
-+
-+	if (sym == NULL) {
-+		pr_err("Memory allocation failure\n");
-+		return false;
-+	}
-+
-+	tmp = realloc(filters.slabs, (filters.nr_slabs + 1) * sizeof(*filters.slabs));
-+	if (tmp == NULL) {
-+		pr_err("Memory allocation failure\n");
-+		return false;
-+	}
-+
-+	tmp[filters.nr_slabs++] = sym;
-+	filters.slabs = tmp;
-+	return true;
-+}
-+
- static int parse_lock_addr(const struct option *opt __maybe_unused, const char *str,
- 			   int unset __maybe_unused)
- {
-@@ -2435,6 +2462,14 @@ static int parse_lock_addr(const struct option *opt __maybe_unused, const char *
- 			continue;
- 		}
- 
-+		if (*tok == '&') {
-+			if (!add_lock_slab(tok + 1)) {
-+				ret = -1;
-+				break;
-+			}
-+			continue;
-+		}
-+
- 		/*
- 		 * At this moment, we don't have kernel symbols.  Save the symbols
- 		 * in a separate list and resolve them to addresses later.
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index 3f127fc6b95f8326..5ca1c7ffe4ce5073 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -112,7 +112,7 @@ static void exit_slab_cache_iter(void)
- int lock_contention_prepare(struct lock_contention *con)
- {
- 	int i, fd;
--	int ncpus = 1, ntasks = 1, ntypes = 1, naddrs = 1, ncgrps = 1;
-+	int ncpus = 1, ntasks = 1, ntypes = 1, naddrs = 1, ncgrps = 1, nslabs = 1;
- 	struct evlist *evlist = con->evlist;
- 	struct target *target = con->target;
- 
-@@ -201,6 +201,13 @@ int lock_contention_prepare(struct lock_contention *con)
- 
- 	check_slab_cache_iter(con);
- 
-+	if (con->filters->nr_slabs && has_slab_iter) {
-+		skel->rodata->has_slab = 1;
-+		nslabs = con->filters->nr_slabs;
-+	}
-+
-+	bpf_map__set_max_entries(skel->maps.slab_filter, nslabs);
-+
- 	if (lock_contention_bpf__load(skel) < 0) {
- 		pr_err("Failed to load lock-contention BPF skeleton\n");
- 		return -1;
-@@ -271,6 +278,36 @@ int lock_contention_prepare(struct lock_contention *con)
- 	bpf_program__set_autoload(skel->progs.collect_lock_syms, false);
- 
- 	lock_contention_bpf__attach(skel);
-+
-+	/* run the slab iterator after attaching */
-+	run_slab_cache_iter();
-+
-+	if (con->filters->nr_slabs) {
-+		u8 val = 1;
-+		int cache_fd;
-+		long key, *prev_key;
-+
-+		fd = bpf_map__fd(skel->maps.slab_filter);
-+
-+		/* Read the slab cache map and build a hash with its address */
-+		cache_fd = bpf_map__fd(skel->maps.slab_caches);
-+		prev_key = NULL;
-+		while (!bpf_map_get_next_key(cache_fd, prev_key, &key)) {
-+			struct slab_cache_data data;
-+
-+			if (bpf_map_lookup_elem(cache_fd, &key, &data) < 0)
-+				break;
-+
-+			for (i = 0; i < con->filters->nr_slabs; i++) {
-+				if (!strcmp(con->filters->slabs[i], data.name)) {
-+					bpf_map_update_elem(fd, &key, &val, BPF_ANY);
-+					break;
-+				}
-+			}
-+			prev_key = &key;
-+		}
-+	}
-+
- 	return 0;
- }
- 
-@@ -396,7 +433,6 @@ static void account_end_timestamp(struct lock_contention *con)
- 
- int lock_contention_start(void)
- {
--	run_slab_cache_iter();
- 	skel->bss->enabled = 1;
- 	return 0;
- }
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index b5bc37955560a58e..048a04fc3a7fc27d 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -100,6 +100,13 @@ struct {
- 	__uint(max_entries, 1);
- } cgroup_filter SEC(".maps");
- 
-+struct {
-+	__uint(type, BPF_MAP_TYPE_HASH);
-+	__uint(key_size, sizeof(long));
-+	__uint(value_size, sizeof(__u8));
-+	__uint(max_entries, 1);
-+} slab_filter SEC(".maps");
-+
- struct {
- 	__uint(type, BPF_MAP_TYPE_HASH);
- 	__uint(key_size, sizeof(long));
-@@ -131,6 +138,7 @@ const volatile int has_task;
- const volatile int has_type;
- const volatile int has_addr;
- const volatile int has_cgroup;
-+const volatile int has_slab;
- const volatile int needs_callstack;
- const volatile int stack_skip;
- const volatile int lock_owner;
-@@ -213,7 +221,7 @@ static inline int can_record(u64 *ctx)
- 		__u64 addr = ctx[0];
- 
- 		ok = bpf_map_lookup_elem(&addr_filter, &addr);
--		if (!ok)
-+		if (!ok && !has_slab)
- 			return 0;
- 	}
- 
-@@ -226,6 +234,17 @@ static inline int can_record(u64 *ctx)
- 			return 0;
- 	}
- 
-+	if (has_slab && bpf_get_kmem_cache) {
-+		__u8 *ok;
-+		__u64 addr = ctx[0];
-+		long kmem_cache_addr;
-+
-+		kmem_cache_addr = (long)bpf_get_kmem_cache(addr);
-+		ok = bpf_map_lookup_elem(&slab_filter, &kmem_cache_addr);
-+		if (!ok)
-+			return 0;
-+	}
-+
- 	return 1;
- }
- 
-diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-index 1a7248ff388947e1..95331b6ec062410d 100644
---- a/tools/perf/util/lock-contention.h
-+++ b/tools/perf/util/lock-contention.h
-@@ -10,10 +10,12 @@ struct lock_filter {
- 	int			nr_addrs;
- 	int			nr_syms;
- 	int			nr_cgrps;
-+	int			nr_slabs;
- 	unsigned int		*types;
- 	unsigned long		*addrs;
- 	char			**syms;
- 	u64			*cgrps;
-+	char			**slabs;
- };
- 
- struct lock_stat {
--- 
-2.47.0.277.g8800431eea-goog
-
+Thanks!
