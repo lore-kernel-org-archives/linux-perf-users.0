@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361D217A5BE;
-	Fri,  8 Nov 2024 19:39:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1451A9B3C;
+	Fri,  8 Nov 2024 20:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731094758; cv=none; b=U6zR5DyyP2UW1e+O3zPaTFCHYmcYUJMbMt5RperJ9B+F5YVAEzqRP6HZvDSnC4aQQw62zeGZa7iz3nLYUjHbuUxIRqJE/C0Wyu8nyHi/7vOXRCDYiLaklkFZlbmC+NXFT5XLBPwHN6T0xJ5OE1NFO83F511z/lTtPl7Lp3RoqKA=
+	t=1731096186; cv=none; b=tXWmcFb4L+/UT5Rrp0fXQMYSn7O8+L/K5WnF0hEaqN1U9566Bt18UFzgpyR91UbiWhH2D6S3ucBPxVu+89KCgoRTc3A+4vxiZsQl+VWGALR/2E0x7FDI2erUpq6X9sU1dZSr/fcF4EUHq6jnx77fSuFvV3oEfr1D862KkP1wrFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731094758; c=relaxed/simple;
-	bh=pThPIJsXUkpUPpCrFnyjx5/M3JHZPqeVFG47Df9l0Fs=;
+	s=arc-20240116; t=1731096186; c=relaxed/simple;
+	bh=xX7Im2UhKNKgBE416PaOdSNPECSfPWPArQu7YbQODCs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HeTxYPXvTbNwOvVEu7g+XvotQ6tnEShAYvu1L0S7iGGGFYH1NZVxhek3atDWuUMArW9hj+7jdATxs8Z6JpGfmRZK0hXGpe5Ua7Etz1yC/GwMehyCqtGVe6ThmOhjuLT9bH2tuzD1DJjv1THWw1R056WXss7rB7X55mvUSucrBs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7EwJ6gi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IvX6FG3neJ6KmFBDfTH3yWRvPKS+ZaG4G/zfOk8iuKKpSF2hdfHINhCaxYSiluc4a3Y+bLGZIoVmlgCfymv+MRvlCJrTjNyyJmuutUx2x0BpMqfYrj7T1YDoh/lIAO5AqpAeb2p868bhYEEry2bTJzLZ08KXjYOwgSVq/T75+d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epU1fQiN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7EwJ6gi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2373DC4CECD;
-	Fri,  8 Nov 2024 19:39:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epU1fQiN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 430B3C4CECD;
+	Fri,  8 Nov 2024 20:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731094757;
-	bh=pThPIJsXUkpUPpCrFnyjx5/M3JHZPqeVFG47Df9l0Fs=;
+	s=k20201202; t=1731096185;
+	bh=xX7Im2UhKNKgBE416PaOdSNPECSfPWPArQu7YbQODCs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i7EwJ6gijZ52AwltGj31xyMprNMdIgPp/rV+wIjF1RUSJyWHc2m6BJalslbkNMJ2p
-	 qR0ZwBJup/p7OxywmZRpPgCuV0VmkVBE6s0MlcZXMx6kHJ9PKk4yqcujI/7G3uoeHh
-	 L3qhwUZB2kyrxGT3ZqpMymFOSkM/nNkhRsV1LHF7mJrS+vfX9cLTTNLsGmDQeHtYMX
-	 3e4yVbO73lkLL8Jr9fD4DYAu4o2JYrEpBnrq6gd8kLC6LQGQg3pNKPameLmlQdiLlJ
-	 GDSMElJrarBtMxSok1TCRlol8XCKx+iWMiumbKvow+rjrVy/fmUAnI20XuTHo+xwYH
-	 Gz1tv7JkAF6vA==
-Date: Fri, 8 Nov 2024 11:39:15 -0800
+	b=epU1fQiNqfeFZdEM00F7vtSpMYwYfot9P71+GYdehpaxaLPDaCOqbKUsUO44+7y7Q
+	 o3eR0G3nwWjdXG/LjOV4dfBN0fpiBTfQjkBTXyhZBNO+yusM5c1u7BaRCniZhMJtUc
+	 q0LQVTzSXkt/xN//agdroW9fr4YtNwoqFZiNjQEOxO7G8ZsMBpZAqrwC/td1X3yVI6
+	 ZSmmdmmc6CZDt6uatgD6LkqCfjjGv9p4sNMU/5ZgXRHd74jD11SoWcSVHFWVmpVipt
+	 dxHX0hnw/IAilCJN1DmkNfFpwQXnl86vrupoNsuxdPy9xI7tSKuBpkU6HsTpd7/E8B
+	 18HgSp7ZPgyRw==
+Date: Fri, 8 Nov 2024 12:03:02 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -36,21 +36,40 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
 	James Clark <james.clark@linaro.org>,
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-	Howard Chu <howardchu95@gmail.com>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Guo Ren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Changbin Du <changbin.du@huawei.com>,
+	Guilherme Amadio <amadio@gentoo.org>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Kajol Jain <kjain@linux.ibm.com>, Atish Patra <atishp@rivosinc.com>,
+	Shenlin Liang <liangshenlin@eswincomputing.com>,
+	Anup Patel <anup@brainfault.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
-	Changbin Du <changbin.du@huawei.com>, Ze Gao <zegao2021@gmail.com>,
-	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v7 4/7] perf hwmon_pmu: Add a tool PMU exposing events
- from hwmon in sysfs
-Message-ID: <Zy5o46RIEZSvX3uw@google.com>
-References: <20241108174936.262704-1-irogers@google.com>
- <20241108174936.262704-5-irogers@google.com>
+	"Steinar H. Gunderson" <sesse@google.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Chen Pei <cp0613@linux.alibaba.com>,
+	Dima Kogan <dima@secretsauce.net>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v3 10/20] perf dwarf-regs: Move csky dwarf-regs out of
+ arch
+Message-ID: <Zy5udmX6gZAg0wkS@google.com>
+References: <20241017002520.59124-1-irogers@google.com>
+ <20241017002520.59124-11-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,235 +78,157 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241108174936.262704-5-irogers@google.com>
+In-Reply-To: <20241017002520.59124-11-irogers@google.com>
 
-On Fri, Nov 08, 2024 at 09:49:33AM -0800, Ian Rogers wrote:
-> Add a tool PMU for hwmon events but don't enable.
+On Wed, Oct 16, 2024 at 05:25:10PM -0700, Ian Rogers wrote:
+> Move arch/csky/util/dwarf-regs.c to util/dwarf-regs-csky.c and compile
+> in unconditionally. To avoid get_arch_regstr being duplicated, rename
+> to get_csky_regstr and add to get_dwarf_regstr switch.
 > 
-> The hwmon sysfs ABI is defined in
-> Documentation/hwmon/sysfs-interface.rst. Create a PMU that reads the
-> hwmon input and can be used in `perf stat` and metrics much as an
-> uncore PMU can.
-> 
-> For example, when enabled by a later patch, the following shows
-> reading the CPU temperature and 2 fan speeds alongside the uncore
-> frequency:
-> ```
-> $ perf stat -e temp_cpu,fan1,hwmon_thinkpad/fan2/,tool/num_cpus_online/ -M UNCORE_FREQ -I 1000
->      1.001153138              52.00 'C   temp_cpu
->      1.001153138              2,588 rpm  fan1
->      1.001153138              2,482 rpm  hwmon_thinkpad/fan2/
->      1.001153138                  8      tool/num_cpus_online/
->      1.001153138      1,077,101,397      UNC_CLOCK.SOCKET                 #     1.08 UNCORE_FREQ
->      1.001153138      1,012,773,595      duration_time
-> ...
-> ```
-> 
-> The PMUs are named from /sys/class/hwmon/hwmon<num>/name and have an
-> alias of hwmon<num>.
-> 
-> Hwmon data is presented in multiple <type><number>_<item> files. The
-> <type><number> is used to identify the event as is the <type> followed
-> by the contents of the <type>_label file if it exists. The
-> <type><number>_input file gives the data read by perf.
-> 
-> When enabled by a later patch, in `perf list` the other hwmon <item>
-> files are used to give a richer description, for example:
-> ```
-> hwmon:
->   temp1
->        [Temperature in unit acpitz named temp1. Unit: hwmon_acpitz]
->   in0
->        [Voltage in unit bat0 named in0. Unit: hwmon_bat0]
->   temp_core_0 OR temp2
->        [Temperature in unit coretemp named Core 0. crit=100'C,max=100'C crit_alarm=0'C. Unit:
->         hwmon_coretemp]
->   temp_core_1 OR temp3
->        [Temperature in unit coretemp named Core 1. crit=100'C,max=100'C crit_alarm=0'C. Unit:
->         hwmon_coretemp]
-> ...
->   temp_package_id_0 OR temp1
->        [Temperature in unit coretemp named Package id 0. crit=100'C,max=100'C crit_alarm=0'C.
->         Unit: hwmon_coretemp]
->   temp1
->        [Temperature in unit iwlwifi_1 named temp1. Unit: hwmon_iwlwifi_1]
->   temp_composite OR temp1
->        [Temperature in unit nvme named Composite. alarm=0'C,crit=86.85'C,max=75.85'C,
->         min=-273.15'C. Unit: hwmon_nvme]
->   temp_sensor_1 OR temp2
->        [Temperature in unit nvme named Sensor 1. max=65261.8'C,min=-273.15'C. Unit: hwmon_nvme]
->   temp_sensor_2 OR temp3
->        [Temperature in unit nvme named Sensor 2. max=65261.8'C,min=-273.15'C. Unit: hwmon_nvme]
->   fan1
->        [Fan in unit thinkpad named fan1. Unit: hwmon_thinkpad]
->   fan2
->        [Fan in unit thinkpad named fan2. Unit: hwmon_thinkpad]
-> ...
->   temp_cpu OR temp1
->        [Temperature in unit thinkpad named CPU. Unit: hwmon_thinkpad]
->   temp_gpu OR temp2
->        [Temperature in unit thinkpad named GPU. Unit: hwmon_thinkpad]
->   curr1
->        [Current in unit ucsi_source_psy_usbc000_0 named curr1. max=1.5A. Unit:
->         hwmon_ucsi_source_psy_usbc000_0]
->   in0
->        [Voltage in unit ucsi_source_psy_usbc000_0 named in0. max=5V,min=5V. Unit:
->         hwmon_ucsi_source_psy_usbc000_0]
-> ```
-> 
-> As there may be multiple hwmon devices a range of PMU types are
-> reserved for their use and to identify the PMU as belonging to the
-> hwmon types.
+> Update #ifdefs to allow ABI V1 and V2 tables at the same
+> time. Determine the table from the ELF flags.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/hwmon_pmu.c | 683 ++++++++++++++++++++++++++++++++++++
->  tools/perf/util/hwmon_pmu.h |  45 +++
->  tools/perf/util/pmu.h       |   2 +
->  3 files changed, 730 insertions(+)
+>  tools/perf/arch/csky/util/Build               |  1 -
+>  tools/perf/util/Build                         |  1 +
+>  .../dwarf-regs.c => util/dwarf-regs-csky.c}   | 19 ++++++++++---------
+>  tools/perf/util/dwarf-regs.c                  | 11 +++++++----
+>  tools/perf/util/include/dwarf-regs.h          |  2 ++
+>  5 files changed, 20 insertions(+), 14 deletions(-)
+>  rename tools/perf/{arch/csky/util/dwarf-regs.c => util/dwarf-regs-csky.c} (74%)
 > 
-> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-> index f4b7b3b6a052..3f1bf9a9cfdf 100644
-> --- a/tools/perf/util/hwmon_pmu.c
-> +++ b/tools/perf/util/hwmon_pmu.c
-[SNIP]
-> +struct perf_pmu *hwmon_pmu__new(struct list_head *pmus, int hwmon_dir, const char *sysfs_name, const char *name)
-> +{
-> +	char buf[32];
-> +	struct hwmon_pmu *hwm;
-> +
-> +	hwm = zalloc(sizeof(*hwm));
-> +	if (!hwm)
-> +		return NULL;
-> +
-> +
-
-Two blank lines.
-
-
-> +	hwm->hwmon_dir_fd = hwmon_dir;
-> +	hwm->pmu.type = PERF_PMU_TYPE_HWMON_START + strtoul(sysfs_name + 5, NULL, 10);
-> +	if (hwm->pmu.type > PERF_PMU_TYPE_HWMON_END) {
-> +		pr_err("Unable to encode hwmon type from %s in valid PMU type\n", sysfs_name);
-> +		goto err_out;
-> +	}
-> +	snprintf(buf, sizeof(buf), "hwmon_%s", name);
-> +	fix_name(buf + 6);
-> +	hwm->pmu.name = strdup(buf);
-> +	if (!hwm->pmu.name)
-> +		goto err_out;
-> +	hwm->pmu.alias_name = strdup(sysfs_name);
-> +	if (!hwm->pmu.alias_name)
-> +		goto err_out;
-> +	hwm->pmu.cpus = perf_cpu_map__new("0");
-> +	if (!hwm->pmu.cpus)
-> +		goto err_out;
-> +	INIT_LIST_HEAD(&hwm->pmu.format);
-> +	INIT_LIST_HEAD(&hwm->pmu.aliases);
-> +	INIT_LIST_HEAD(&hwm->pmu.caps);
-> +	hashmap__init(&hwm->events, hwmon_pmu__event_hashmap_hash,
-> +		      hwmon_pmu__event_hashmap_equal, /*ctx=*/NULL);
-> +
-> +	list_add_tail(&hwm->pmu.list, pmus);
-> +	return &hwm->pmu;
-> +err_out:
-> +	free((char *)hwm->pmu.name);
-> +	free(hwm->pmu.alias_name);
-> +	free(hwm);
-> +	close(hwmon_dir);
-> +	return NULL;
-> +}
-
-[...]
-> diff --git a/tools/perf/util/hwmon_pmu.h b/tools/perf/util/hwmon_pmu.h
-> index df0ab5ff7534..ebfdfe3b295a 100644
-> --- a/tools/perf/util/hwmon_pmu.h
-> +++ b/tools/perf/util/hwmon_pmu.h
-> @@ -2,8 +2,12 @@
->  #ifndef __HWMON_PMU_H
->  #define __HWMON_PMU_H
+> diff --git a/tools/perf/arch/csky/util/Build b/tools/perf/arch/csky/util/Build
+> index 1325310cab6a..5e6ea82c4202 100644
+> --- a/tools/perf/arch/csky/util/Build
+> +++ b/tools/perf/arch/csky/util/Build
+> @@ -1,4 +1,3 @@
+>  perf-util-y += perf_regs.o
 >  
-> +#include "pmu.h"
->  #include <stdbool.h>
+> -perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+>  perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 4c615611b9d7..99ae4e2802b8 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -203,6 +203,7 @@ endif
+>  perf-util-$(CONFIG_LIBDW) += probe-finder.o
+>  perf-util-$(CONFIG_LIBDW) += dwarf-aux.o
+>  perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+> +perf-util-$(CONFIG_LIBDW) += dwarf-regs-csky.o
+>  perf-util-$(CONFIG_LIBDW) += dwarf-regs-x86.o
+>  perf-util-$(CONFIG_LIBDW) += debuginfo.o
+>  perf-util-$(CONFIG_LIBDW) += annotate-data.o
+> diff --git a/tools/perf/arch/csky/util/dwarf-regs.c b/tools/perf/util/dwarf-regs-csky.c
+> similarity index 74%
+> rename from tools/perf/arch/csky/util/dwarf-regs.c
+> rename to tools/perf/util/dwarf-regs-csky.c
+> index ca86ecaeacbb..d38ef1f07f3e 100644
+> --- a/tools/perf/arch/csky/util/dwarf-regs.c
+> +++ b/tools/perf/util/dwarf-regs-csky.c
+> @@ -5,9 +5,8 @@
+>  #include <stddef.h>
+>  #include <dwarf-regs.h>
 >  
-> +struct list_head;
-> +struct perf_thread_map;
-> +
->  /**
->   * enum hwmon_type:
->   *
-> @@ -87,6 +91,14 @@ enum hwmon_item {
->  	HWMON_ITEM__MAX,
+> -#if defined(__CSKYABIV2__)
+> -#define CSKY_MAX_REGS 73
+> -const char *csky_dwarf_regs_table[CSKY_MAX_REGS] = {
+> +#define CSKY_ABIV2_MAX_REGS 73
+> +const char *csky_dwarf_regs_table_abiv2[CSKY_ABIV2_MAX_REGS] = {
+>  	/* r0 ~ r8 */
+>  	"%a0", "%a1", "%a2", "%a3", "%regs0", "%regs1", "%regs2", "%regs3",
+>  	/* r9 ~ r15 */
+> @@ -26,9 +25,9 @@ const char *csky_dwarf_regs_table[CSKY_MAX_REGS] = {
+>  	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+>  	"%epc",
 >  };
+> -#else
+> -#define CSKY_MAX_REGS 57
+> -const char *csky_dwarf_regs_table[CSKY_MAX_REGS] = {
+> +
+> +#define CSKY_ABIV1_MAX_REGS 57
+> +const char *csky_dwarf_regs_table_abiv1[CSKY_ABIV1_MAX_REGS] = {
+>  	/* r0 ~ r8 */
+>  	"%sp", "%regs9", "%a0", "%a1", "%a2", "%a3", "%regs0", "%regs1",
+>  	/* r9 ~ r15 */
+> @@ -41,9 +40,11 @@ const char *csky_dwarf_regs_table[CSKY_MAX_REGS] = {
+>  	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+>  	"%epc",
+>  };
+> -#endif
 >  
-> +/** Strings that correspond to enum hwmon_type. */
-> +extern const char * const hwmon_type_strs[HWMON_TYPE_MAX];
-> +/** Strings that correspond to enum hwmon_item. */
-> +extern const char * const hwmon_item_strs[HWMON_ITEM__MAX];
+> -const char *get_arch_regstr(unsigned int n)
+> +const char *get_csky_regstr(unsigned int n, unsigned int flags)
+>  {
+> -	return (n < CSKY_MAX_REGS) ? csky_dwarf_regs_table[n] : NULL;
+> +	if (flags & EF_CSKY_ABIV2)
 
-Belongs to the patch2?  But it'd be nice if we can remove them.
+Hmm.. you need it here as well.
+
+
+> +		return (n < CSKY_ABIV2_MAX_REGS) ? csky_dwarf_regs_table_abiv2[n] : NULL;
+> +
+> +	return (n < CSKY_ABIV1_MAX_REGS) ? csky_dwarf_regs_table_abiv1[n] : NULL;
+>  }
+> diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
+> index fd21f9e90e40..9a76f83af62c 100644
+> --- a/tools/perf/util/dwarf-regs.c
+> +++ b/tools/perf/util/dwarf-regs.c
+> @@ -29,17 +29,18 @@
+>  #define __get_dwarf_regstr(tbl, n) (((n) < ARRAY_SIZE(tbl)) ? (tbl)[(n)] : NULL)
+>  
+>  /* Return architecture dependent register string (for kprobe-tracer) */
+> -const char *get_dwarf_regstr(unsigned int n, unsigned int machine,
+> -			     unsigned int flags __maybe_unused)
+> +const char *get_dwarf_regstr(unsigned int n, unsigned int machine, unsigned int flags)
+>  {
+> -#if EM_HOST == EM_X86_64 || EM_HOST == EM_386 || EM_HOST == EM_AARCH64 || EM_HOST == EM_ARM
+> +#if EM_HOST == EM_X86_64 || EM_HOST == EM_386 || EM_HOST == EM_AARCH64 || EM_HOST == EM_ARM \
+> +    || EM_HOST == EM_CSKY
+
+And here too.  It seems you also need a rebase.
+
+At this point, I'm giving up.  Can you please refresh the series with
+a fix?
 
 Thanks,
 Namhyung
 
-> +
-> +bool perf_pmu__is_hwmon(const struct perf_pmu *pmu);
-> +bool evsel__is_hwmon(const struct evsel *evsel);
+
+>  	if (machine == EM_NONE) {
+>  		/* Generic arch - use host arch */
+>  		machine = EM_HOST;
+>  	}
+>  #endif
+>  	switch (machine) {
+> -#if EM_HOST != EM_X86_64 && EM_HOST != EM_386 && EM_HOST != EM_AARCH64 && EM_HOST != EM_ARM
+> +#if EM_HOST != EM_X86_64 && EM_HOST != EM_386 && EM_HOST != EM_AARCH64 && EM_HOST != EM_ARM \
+> +    && EM_HOST != EM_CSKY
+>  	case EM_NONE:	/* Generic arch - use host arch */
+>  		return get_arch_regstr(n);
+>  #endif
+> @@ -51,6 +52,8 @@ const char *get_dwarf_regstr(unsigned int n, unsigned int machine,
+>  		return __get_dwarf_regstr(arm_regstr_tbl, n);
+>  	case EM_AARCH64:
+>  		return __get_dwarf_regstr(aarch64_regstr_tbl, n);
+> +	case EM_CSKY:
+> +		return get_csky_regstr(n, flags);
+>  	case EM_SH:
+>  		return __get_dwarf_regstr(sh_regstr_tbl, n);
+>  	case EM_S390:
+> diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
+> index 0b533409d82a..b72d9d308ce4 100644
+> --- a/tools/perf/util/include/dwarf-regs.h
+> +++ b/tools/perf/util/include/dwarf-regs.h
+> @@ -83,6 +83,8 @@
+>  const char *get_arch_regstr(unsigned int n);
+>  #endif
+>  
+> +const char *get_csky_regstr(unsigned int n, unsigned int flags);
 > +
 >  /**
->   * parse_hwmon_filename() - Parse filename into constituent parts.
->   *
-> @@ -108,4 +120,37 @@ bool parse_hwmon_filename(const char *filename,
->  			  enum hwmon_item *item,
->  			  bool *alarm);
->  
-> +/**
-> + * hwmon_pmu__new() - Allocate and construct a hwmon PMU.
-> + *
-> + * @pmus: The list of PMUs to be added to.
-> + * @hwmon_dir: An O_DIRECTORY file descriptor for a hwmon directory.
-> + * @sysfs_name: Name of the hwmon sysfs directory like hwmon0.
-> + * @name: The contents of the "name" file in the hwmon directory.
-> + *
-> + * Exposed for testing. Regular construction should happen via
-> + * perf_pmus__read_hwmon_pmus.
-> + */
-> +struct perf_pmu *hwmon_pmu__new(struct list_head *pmus, int hwmon_dir,
-> +				const char *sysfs_name, const char *name);
-> +void hwmon_pmu__exit(struct perf_pmu *pmu);
-> +
-> +int hwmon_pmu__for_each_event(struct perf_pmu *pmu, void *state, pmu_event_callback cb);
-> +size_t hwmon_pmu__num_events(struct perf_pmu *pmu);
-> +bool hwmon_pmu__have_event(struct perf_pmu *pmu, const char *name);
-> +int hwmon_pmu__config_terms(const struct perf_pmu *pmu,
-> +			    struct perf_event_attr *attr,
-> +			    struct parse_events_terms *terms,
-> +			    struct parse_events_error *err);
-> +int hwmon_pmu__check_alias(struct parse_events_terms *terms, struct perf_pmu_info *info,
-> +			   struct parse_events_error *err);
-> +
-> +int perf_pmus__read_hwmon_pmus(struct list_head *pmus);
-> +
-> +
-> +int evsel__hwmon_pmu_open(struct evsel *evsel,
-> +			 struct perf_thread_map *threads,
-> +			 int start_cpu_map_idx, int end_cpu_map_idx);
-> +int evsel__hwmon_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread);
-> +
->  #endif /* __HWMON_PMU_H */
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index b86b3c3685a2..d511bf7cc9d0 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -37,6 +37,8 @@ struct perf_pmu_caps {
->  };
->  
->  enum {
-> +	PERF_PMU_TYPE_HWMON_START = 0xFFFF0000,
-> +	PERF_PMU_TYPE_HWMON_END   = 0xFFFFFFFD,
->  	PERF_PMU_TYPE_TOOL = 0xFFFFFFFE,
->  	PERF_PMU_TYPE_FAKE = 0xFFFFFFFF,
->  };
+>   * get_dwarf_regstr() - Returns ftrace register string from DWARF regnum.
+>   * @n: DWARF register number.
 > -- 
-> 2.47.0.277.g8800431eea-goog
+> 2.47.0.105.g07ac214952-goog
 > 
