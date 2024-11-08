@@ -1,186 +1,143 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3C41991BD
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 Nov 2024 16:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F946199E88;
+	Fri,  8 Nov 2024 17:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731085168; cv=none; b=l6HsQC9sqaQGju6vjYMdTIrR7G7C04lPT9hcc0K0QzNQcHE2lzn1spD/qEGqg/0d6I8NjI2um5EudwV1FsQJ8dLptA+yDbuhq322LAUUif+iv3RwHHlBpphEHJK4gG8bahpuxdTQ4hGGui/G09c/UfZRcVfX9TzXVd52wH3iGLA=
+	t=1731086911; cv=none; b=spR6caXRJlhiR8mMfg+DoYBGFVs60LeXttUUm+qvTSEwpO05d3rD/cjpVCi3SBduNZi2N3Vtqn96WiUaCVbhymWICEWbjc0UdVGgwHH9FOI1jtFbrWGwXl6nIw7nwrWKW9c3nC/RS8jFW1pvZajhseryCMVR3ys0C1etLoaIkKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731085168; c=relaxed/simple;
-	bh=FxOwEU7IugwTghyB5emCVNuAEHOm3lbOrlBOS5dvYys=;
+	s=arc-20240116; t=1731086911; c=relaxed/simple;
+	bh=8ea8ddTNBag42apcWveTNKLD6A1GuEKcQTOPIWuuwWY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pi3Lu6P06JOLCsWZNJr44CKM3YeE9Upe6V4dz9mYYkpVQcBorsS49XT2pJuTUz8ET7327H2OiTgzPiB3zNx1ieWAoPzqEQjyfAsRvR3UL73n0jyBYltSXDkZRmJh6WGTUM9y0V5MGoq+WhxdeVboHJJYBUTIi+HDU4YYa6mlTHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com; spf=pass smtp.mailfrom=engflow.com; dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b=eIhBgKF8; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engflow.com
+	 To:Cc:Content-Type; b=HCSsQS3vcHLcBarxOMlAR9Vo2PzS/drZrFIMy4K0oXizO3nZQcaEeMiM27RkouNsbioRz1D1enFvnsKcjUFsHnbPfCebI6xPk9II2UfOxi0UmMBUosLoz3NdAnFeDJN0Q1qGhroGpkie3P0jjpwLi/XnAs43xyMjvxr6jTWfg4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O3JvSxQc; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b="eIhBgKF8"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a9ed7d8c86cso418348866b.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 08:59:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3JvSxQc"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2e2ed59a35eso1993102a91.0;
+        Fri, 08 Nov 2024 09:28:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=engflow.com; s=google; t=1731085163; x=1731689963; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1731086909; x=1731691709; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IgetP3QbjEJJR1PWLs7vPWsjlPdnJzS53NVUV8Nth3g=;
-        b=eIhBgKF8XCS/HR9YuKOb5LQbugUTAAybSlayyGXVqamITOjVd+UpM4NfnUfxviq84F
-         0/yysm61YOFqKgv7O6o5FRBEZ6WCmPbBRCiD8BvNhiX2sd2hZip7Sz1bVC+WCfbmf0x8
-         RddXfPMssrcVs18jX04Q6VI/OWN3HAjJaJWnU=
+        bh=qNHa/iC/trYWdqJBk7pL0FJKOpGxQZoeAEHdfBDty8I=;
+        b=O3JvSxQcAhAHsU1lZknlJFOi83qpFKqzt9V24GhtKjha3jFKR2VsvJBINjmY2qe7UL
+         zA2gsj674+uoNCeE98aJIq3GkG+/lBpqBFW/5yLPh74H1PacMFvgFlmqcomMQfjyfXqh
+         HUPVokGI9/n7QL7XWekp7xgGmQs8M0mMZSINNFZFWIg9kcakT/bCHHgiWEnuljsshf8n
+         HhyV2QQkSSnYjMKieYNWIDEU8Lh7pasyzhHBeDIe9ibQ2AalNdGKv3BvfqosyUWzbsRK
+         1dwZGBi5jCb3zLcXulFbsb3T1dgsosyIqIP1yrEyZ0XZxQ1tI5gkn+FtwH4TW0gv7Wy2
+         HoXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731085163; x=1731689963;
+        d=1e100.net; s=20230601; t=1731086909; x=1731691709;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IgetP3QbjEJJR1PWLs7vPWsjlPdnJzS53NVUV8Nth3g=;
-        b=OaZ2xC6cewysoqKGFSUkvfi6QgDnSkC5zTiRoOP+T0h4JGvtfI9RHN7uvuqvxTN5YV
-         CleNOkbc/Q7dBE8SpyYJpQ9naSoQHN3o1m+H+xI6Oqi0pUWCgobV2vCNYSkdu9shluqz
-         +uJiDXg4MxFhj5TEaAIImpNxodBtUIazFa0dxFMniMJi4ZAbWKqdsfWyYD2eZFiAODI+
-         KNaeckeUSKNSeiB/Js1k8o7tCqtwujyMdpL8Z3wByPfLYYb0osdCbFuleTYyf6ihFvsP
-         FrKy3vP0HN+/YXzZh/Lc5u6GlPXqMQqc+jBw4M4VNAoAFwJtqawLVd0CV5ZvjzwudwaT
-         h0zg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdmGm4DaknRbn4bnoEIpCX7jKtQqHv9dOWvAffJilyZcLg7QNWZqeGnwXhBCbcSCfHRZl5s6WlyEeFxEJV5Rbp@vger.kernel.org
-X-Gm-Message-State: AOJu0YzW6IibPi/NG4K2epdmsmKjUIoV+RiRojB83r2droi6z7/dguOX
-	tQmWFks/eqj58ohHh0Z4zUMK94MCYbmEp9W7uBLymD02cWlMCBxo7WQxx8lWsg5KBoNNikgE9ta
-	b9xyqfoLxwxjeyhSrNMjAEK/1mdfmI+7KMzBPZcDQBEZJbST+JnjgTQ==
-X-Google-Smtp-Source: AGHT+IFuqAeVM5yCf/A+bKTr2dEaXy0Y7y4jGGnzz6A7XL5usbkAt6whB8phaWDQTTN4T1mN8kkHJZVJG1d7rPmZbx4=
-X-Received: by 2002:a17:907:6d07:b0:a99:caf5:c897 with SMTP id
- a640c23a62f3a-a9eefeecb18mr312195366b.20.1731085163199; Fri, 08 Nov 2024
- 08:59:23 -0800 (PST)
+        bh=qNHa/iC/trYWdqJBk7pL0FJKOpGxQZoeAEHdfBDty8I=;
+        b=fABIPvNFvki0kiaooCjn6hr0uuHVyUZnqdqF83OEDu6CdawDwk0hhH3uzeyiAMm3bW
+         eBDqt1oBMkE9abmfl1JpqTDX3jR6x5kiMrSzpyeeQAzDK3t8Qs8ykyCY7UlQNvC3pl8C
+         21zkPxSMebHyAlCBMu8Q4rNoYsuTSlzkDjq2Q2n+gjGNSo4SeOGi6oHhk9k8OIXtVyLl
+         DcSbXAqlBR4vpU8BkUU6v4O5i4vkLy964SvNeUOjIFeqdCI+XuANRBiWL0+U4joaZ60h
+         feZftbap0djEeMBOWpWXigeEUowrrn7tDBYLJc0QbP15q4v1qi8PJ03sKJ+6GkYth0SV
+         etnw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ6lIeZF4LMUPLyUqtr67qZYWneHTIu1PSRU7qoBFERQDTMmlUkxVgwWZa9tLdgb2e2SMjuS2Tl2hKYPU=@vger.kernel.org, AJvYcCWPo5qVyWBO3CRakXwC03uzsC9sllDTQgEXrcVmG1c1kWW/O5WQR+oFsE4OCbcpT2+1AhoJGA4KKS/BhtdSgUCfuKw0@vger.kernel.org, AJvYcCX41Qxz2Qkrx24g50LbHRUEpbXjnlOllOnKsynMhGX45rXBGWiZxG4Gap8MjHQqRW1j341TrSJXwOvvXeReXVHbJw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxodzWgF5kXv1USeHwutPWrz6+ciTX8TasypaN3R204R2HSvdmL
+	MVZQQJoN+YCZMxL54LGjTQlF8nRgcs2ppts9SBHzRzh2SsSnJeh7lClUSagBtMiAhWOgHjYG8Vg
+	OQTj0LI0kkrKx3yInAqu5lAlyiwA=
+X-Google-Smtp-Source: AGHT+IFBM4Xs5aZ6NWdYVIFvrU0Z7K1T3OlTGPD9+u/fGgL8VCEvk9RSLkFHN3NkOcTz+Kkpl0KVNdQlfRPOAaOFivY=
+X-Received: by 2002:a17:90b:4c0f:b0:2e2:c9c1:aacf with SMTP id
+ 98e67ed59e1d1-2e9b177bc3emr4589093a91.29.1731086908772; Fri, 08 Nov 2024
+ 09:28:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241106234518.115234-1-benjamin@engflow.com> <20241106234518.115234-2-benjamin@engflow.com>
- <CAH0uvohtu_XQochZ_nguXN4e65C_m88Chip1mm84uDRLBXagzA@mail.gmail.com>
- <CAEmfU+ud__oG3NyQsVri1xztU-JhqA=WE-y=1STxqibejnuLYA@mail.gmail.com> <CAH0uvojrdxWSEd5r9J_8b39VV6qCTM3j0t1ZAsq8p596LTunqw@mail.gmail.com>
-In-Reply-To: <CAH0uvojrdxWSEd5r9J_8b39VV6qCTM3j0t1ZAsq8p596LTunqw@mail.gmail.com>
-From: Benjamin Peterson <benjamin@engflow.com>
-Date: Fri, 8 Nov 2024 08:59:11 -0800
-Message-ID: <CAEmfU+vfYY8jVD-mLuRBVrk9M8OFCNiptXQjL1Rf+S5XtjiDVg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf tests: add test for trace output loss
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+References: <20241107-rcu_probe-v1-1-0ca8cc2dedfb@debian.org> <20241108090023.GE38786@noisy.programming.kicks-ass.net>
+In-Reply-To: <20241108090023.GE38786@noisy.programming.kicks-ass.net>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 8 Nov 2024 09:28:17 -0800
+Message-ID: <CAEf4BzabO7NuSTZ5fKSb2UBZAxA9EnrXVtO2=J38B1UN5ExBrg@mail.gmail.com>
+Subject: Re: [PATCH] uprobes: get RCU trace lock before list iteration
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Breno Leitao <leitao@debian.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>
+	Andrii Nakryiko <andrii@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	kernel-team@meta.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 8, 2024 at 8:20=E2=80=AFAM Howard Chu <howardchu95@gmail.com> w=
-rote:
+On Fri, Nov 8, 2024 at 1:00=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
+> wrote:
 >
-> Hello Benjamin,
+> On Thu, Nov 07, 2024 at 09:14:45AM -0800, Breno Leitao wrote:
+> > Acquire RCU trace lock in filter_chain() to protect
+> > list_for_each_entry_rcu() iteration, protecting the list iteration in a
+> > RCU read section.
+> >
+> > Prior to this fix, list_for_each_entry_srcu() was called without holdin=
+g
+> > the required lock, triggering warnings when RCU_PROVING is enabled:
+> >
+> >       kernel/events/uprobes.c:937 RCU-list traversed without holding th=
+e required lock!!
+> >
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > Fixes: cc01bd044e6a ("uprobes: travers uprobe's consumer list locklessl=
+y under SRCU protection")
+> > ---
+> >  kernel/events/uprobes.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index fa04b14a7d72353adc440742016b813da6c812d2..afdaa45a43ac3948f798317=
+5eda808c989e8738a 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -1103,11 +1103,13 @@ static bool filter_chain(struct uprobe *uprobe,=
+ struct mm_struct *mm)
+> >       bool ret =3D false;
+> >
+> >       down_read(&uprobe->consumer_rwsem);
+> > +     rcu_read_lock_trace();
+> >       list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_re=
+ad_lock_trace_held()) {
 >
-> On Thu, Nov 7, 2024 at 3:18=E2=80=AFPM Benjamin Peterson <benjamin@engflo=
-w.com> wrote:
-> >
-> > On Thu, Nov 7, 2024 at 2:07=E2=80=AFPM Howard Chu <howardchu95@gmail.co=
-m> wrote:
-> > >
-> > > Hello,
-> > >
-> > > On Wed, Nov 6, 2024 at 3:46=E2=80=AFPM Benjamin Peterson <benjamin@en=
-gflow.com> wrote:
-> > > >
-> > > > Add a test that checks that trace output is not lost to races. This=
- is
-> > > > accomplished by tracing the exit_group syscall of "true" multiple t=
-imes and
-> > > > checking for correct output.
-> > > >
-> > > > Conveniently, this test also serves as a regression test for 5fb8e5=
-6542a3 ("perf
-> > > > trace: avoid garbage when not printing a trace event's arguments") =
-because
-> > > > exit_group triggers the previously buggy printing behavior.
-> > > >
-> > > > Signed-off-by: Benjamin Peterson <benjamin@engflow.com>
-> > > > ---
-> > > >  tools/perf/tests/shell/trace_exit_race.sh | 31 +++++++++++++++++++=
-++++
-> > > >  1 file changed, 31 insertions(+)
-> > > >  create mode 100755 tools/perf/tests/shell/trace_exit_race.sh
-> > > >
-> > > > diff --git a/tools/perf/tests/shell/trace_exit_race.sh b/tools/perf=
-/tests/shell/trace_exit_race.sh
-> > > > new file mode 100755
-> > > > index 000000000000..8b70324bc5b4
-> > > > --- /dev/null
-> > > > +++ b/tools/perf/tests/shell/trace_exit_race.sh
-> > > > @@ -0,0 +1,31 @@
-> > > > +#!/bin/sh
-> > > > +# perf trace exit race
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > +
-> > > > +# Check that the last events of a perf trace'd subprocess are not
-> > > > +# lost. Specifically, trace the exiting syscall of "true" 100 time=
-s and ensure
-> > > > +# the output contains 100 correct lines.
-> > > > +
-> > > > +# shellcheck source=3Dlib/probe.sh
-> > > > +. "$(dirname $0)"/lib/probe.sh
-> > > > +
-> > > > +skip_if_no_perf_trace || exit 2
-> > > > +
-> > > > +trace_shutdown_race() {
-> > > > +       for i in $(seq 100); do
-> > > > +               perf trace -e syscalls:sys_enter_exit_group true 2>=
->$file
-> > > > +       done
-> > > > +       [ $(grep -c -E " +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_=
-enter_exit_group\(\)$" $file) =3D "100" ]
-> > >
-> > > The test failed due to regex mismatched, I think because of this:
-> > >
-> > >      0.000 true/1526046 syscalls:sys_enter_exit_group( )
-> > >      0.000 true/1526212 syscalls:sys_enter_exit_group( )
-> > >      0.000 true/1526383 syscalls:sys_enter_exit_group(SSSSSSSSSSSSSSS=
-S)
-> > >
-> > > Ironically the junk buffer problem you fixed last time, thanks for
-> > > finding another printing problem in perf trace :), I'll figure out th=
-e
-> > > cause of this.
-> >
-> > Thanks, the problem is a parallel issue with trace__fprintf_sys_enter.
-> > I will include a patch for the problem in my spin of this series.
-> >
-> > >
-> > > Another thing is this test takes a long time to finish
-> > >
-> > > perf $ time ./perf test 109
-> > > 109: perf trace exit race                                            =
-: FAILED!
-> > >
-> > > real    0m38.762s
-> > > user    0m15.090s
-> > > sys     0m21.794s
-> > >
-> > > Is it really necessary to run it 100 times? To me it seems to be just
-> > > a wrong handling logic of draining samples, will there be coincidence=
-?
-> >
-> > Yes, it's racy. In my testing, sometimes the correct output would
-> > appear. However, I will reduce the number of iterations to 10.
+> Maybe I'm confused, but isn't uprobe->consumer list protected by
+> uprobe->consumer_rwsem, which we hold for reading?
 >
-> Could you be a bit more specific about this race condition issue?
+> That is, AFAICT this is a false positive and we should be doing this
+> instead, no?
 
-From the code, it's apparent that if the SIGCHLD from the traced
-process is seen before the exit_group trace event, output will be
-lost. If the signal is received after the trace event, the trace event
-will be correctly printed.
+Yep, you are absolutely right. RCU-protected traversal is important
+only for handler_chain() and handle_uretprobe_chain(). Here it's all
+under lock, so no need for RCU protection.
 
-> Could you please tell us how one might emulate and test the scenario
-> you mentioned? I ran the command 1,000 times before and after applying
-> the patch, and each time I got the expected output. Could you please
-> provide more information about your use cases?
+>
+>
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index a76ddc5fc982..a5405e9ef9f5 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1104,7 +1104,7 @@ static bool filter_chain(struct uprobe *uprobe, str=
+uct mm_struct *mm)
+>         bool ret =3D false;
+>
+>         down_read(&uprobe->consumer_rwsem);
+> -       list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_re=
+ad_lock_trace_held()) {
+> +       list_for_each_entry(uc, &uprobe->consumers, cons_node) {
 
-I can see it simply by running the unpatched perf few times in the
-terminal, but it might be helpful for reproduction to create some
-scheduling contention with stress.
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+>                 ret =3D consumer_filter(uc, mm);
+>                 if (ret)
+>                         break;
