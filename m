@@ -1,184 +1,131 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82E2CA6F
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 Nov 2024 05:21:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EB81D0146;
+	Fri,  8 Nov 2024 06:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731043269; cv=none; b=JwSFPo0CoD+ek5WFBJ46pUvN3pqnzn7lXHuMmRw9ZxNlkjbrsfUEtgKyUxU2TPUjxpUYA+hD6dCpunHuibVk7JrXEg9NCw2RL7KmfhRnO1jnrr2IUPkDjad5kbMOCVUoOKc3wMgszgoc/Qgrbk+MiFhyS28pMvlfGutN7Vq0HNA=
+	t=1731046501; cv=none; b=H8ED5vOTt7ZU273r44uX+667dOz6FhnEGxf3er+EbXwrqNFhOn4+sDdISKAzAot9f+zjyUqxL/ZKXZUAIfWxfYwUngLSXefVjTHgd6Qwu2uPG0nveeucokbdTH7r5+XQ73QxA2hJWGbVGnBrW0prosuCVrcD1ZfyT+Gu7icraLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731043269; c=relaxed/simple;
-	bh=zJqXndc4DPjBd/Hn8lJJQYSKN1/ml1HpxsmdPGPT3cc=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=rEjNNitB0XQ12DvRmMfr6FUUcxverytE9bo8025opQYebAHvX4wd/9S0TeUgWA5oMYp+ifKglNyA1hB+yjUHQyiiv9YKjp/+1Dfl3mRuW8UApvulPoXTQcrQo69Kv/15ibpfP4omaSGkmCFdaeYYbudqxQI0fxnnpdeg8D7v3Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IXbHob/D; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1731046501; c=relaxed/simple;
+	bh=eUXmnG82VK1Ao9xpUP1276Kus2acS1r2yCCwIcj0U+E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XMSrurb78mE7gzRqzTFVB5v2pYmMOcUvTfXFAY2PJ0Sh25JGK+mwWfzgvjioZyN550CWk81sUSKpz3+umpSnuhAh65tJwhXSJQMzI0/nmGPRo/KMNIPXeUuJHpJJ81MiziDR8uqh41Pq2B75zRljmcUXZGeh4A5ucmlaP6Y4EHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qcpaop2v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IXbHob/D"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A85AH7U027994;
-	Fri, 8 Nov 2024 05:20:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=26QWjg
-	fJ4XOL74bqWE5qMUmsqsrVeED4dSu0V97QfMk=; b=IXbHob/DUf9rDWMxPc+v16
-	jIpO9AHMgX9qLCdzRfOVZKH6iGfq6VdnMTb/iGliW1IuR9wngax32b5n+xRBBJYA
-	wBjOEmNCd4tGr4EdSo0DSDXHzn1Kt6FQemSieTLqhs2xHtTYxAYZL+pg+v4Vdf+3
-	s5fgcJElHZ/GsTL0szlx8whtkqH+2zmM/CU+DS2wQpn6Op9cg9Nn9TQHz+vjh6lU
-	LpaZF3Xu1wyg1VANZifOGZACw4SwlrkfP3IBvidiW1T0Vjpl0Apz005Xs4rT0OFm
-	Xyl3IxVmvtfsoSiYDtJ8xXC96GmmQvZGZ9IzXKeKjbGHP3G9zk0qor/IvKsNpYmw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42sc8q0103-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Nov 2024 05:20:50 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4A85KojG017473;
-	Fri, 8 Nov 2024 05:20:50 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42sc8q0100-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Nov 2024 05:20:50 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4A7Mk4ML019414;
-	Fri, 8 Nov 2024 05:20:49 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 42p0mj9fr2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Nov 2024 05:20:49 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4A85Kjal34800264
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 8 Nov 2024 05:20:45 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9D4AE20043;
-	Fri,  8 Nov 2024 05:20:45 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 46B8220040;
-	Fri,  8 Nov 2024 05:20:39 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.248.137])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  8 Nov 2024 05:20:38 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qcpaop2v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB7A1C4CECE;
+	Fri,  8 Nov 2024 06:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731046501;
+	bh=eUXmnG82VK1Ao9xpUP1276Kus2acS1r2yCCwIcj0U+E=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qcpaop2vlOf+Mf6MiI0DTcS7oNOTEhJ6BJlHAQx369kVmkDgLBI8kEprmVFj2EKbM
+	 WRaPkQfxhxTHcBbXXb0xcg9riLSr8/mOKrJ7rH9IJh+/aR8s7HBMgx9pz4w6jwg+QT
+	 HCK7ALJIX2lKdVtp5/4eA0yykQNmlcLp4V3mvF0MvwqBYDCOarj+zS5jpn7y4ZSSyT
+	 7GobeXv13yHA8bcwF9vwZiRzYO7B6tlCZyicNKw2ZDuMe+LxlxD5VM9Yx98i7PD9AC
+	 gC6bCiQbSA3pvrChpRsi6b/ksh9HsqLDhamBzKUn0WCu+RRPlkeQM5oLyVGZy9PnG3
+	 hk3A45QAg9YqA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org,
+	Stephane Eranian <eranian@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Kees Cook <kees@kernel.org>
+Subject: [PATCH v2 0/4] perf lock contention: Symbolize locks using slab cache names
+Date: Thu,  7 Nov 2024 22:14:55 -0800
+Message-ID: <20241108061500.2698340-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: Re: [PATCH] tools/perf/tests/expr: Make the system_tsc_freq test only
- for intel
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20241107135606.GA47850@e132581.arm.com>
-Date: Fri, 8 Nov 2024 10:50:10 +0530
-Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@linaro.org>, tmricht@linux.ibm.com,
-        acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0F805B2F-35CC-4E0C-BD2F-84552C4C528E@linux.vnet.ibm.com>
-References: <20241022140156.98854-1-atrajeev@linux.vnet.ibm.com>
- <ZyF2-XNUh38p_5Gg@google.com>
- <B72F330F-2A56-41B0-ABED-FCA7DC9EE711@linux.vnet.ibm.com>
- <CAP-5=fXCYURva6Q8ktRVmnf2QCcsr-E3fPn327k0JRCw_9fn3A@mail.gmail.com>
- <BBF1A4DC-3BD9-4377-BE2F-CBEFE55F0497@linux.vnet.ibm.com>
- <20241107135606.GA47850@e132581.arm.com>
-To: Leo Yan <leo.yan@arm.com>, Ian Rogers <irogers@google.com>
-X-Mailer: Apple Mail (2.3818.100.11.1.3)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: QDYrddTO2FPcgt2vMam0pLapzNz5sSMQ
-X-Proofpoint-GUID: cCNDyp1ll9m6XRiKDnQ44nedagpfl9Q3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 phishscore=0 clxscore=1011 mlxlogscore=999 malwarescore=0
- adultscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411080043
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+Hello,
+
+This is to support symbolization of dynamic locks using slab
+allocator's metadata.  The kernel support is in the bpf-next tree now.
+
+It provides the new "kmem_cache" BPF iterator and "bpf_get_kmem_cache"
+kfunc to get the information from an address.  The feature detection is
+done using BTF type info and it won't have any effect on old kernels.
+
+v2 changes)
+
+ * don't use libbpf_get_error()  (Andrii)
+
+v1) https://lore.kernel.org/linux-perf-users/20241105172635.2463800-1-namhyung@kernel.org
+
+With this change, it can show locks in a slab object like below.  I
+added "&" sign to distinguish them from global locks.
+
+    # perf lock con -abl sleep 1
+     contended   total wait     max wait     avg wait            address   symbol
+    
+             2      1.95 us      1.77 us       975 ns   ffff9d5e852d3498   &task_struct (mutex)
+             1      1.18 us      1.18 us      1.18 us   ffff9d5e852d3538   &task_struct (mutex)
+             4      1.12 us       354 ns       279 ns   ffff9d5e841ca800   &kmalloc-cg-512 (mutex)
+             2       859 ns       617 ns       429 ns   ffffffffa41c3620   delayed_uprobe_lock (mutex)
+             3       691 ns       388 ns       230 ns   ffffffffa41c0940   pack_mutex (mutex)
+             3       421 ns       164 ns       140 ns   ffffffffa3a8b3a0   text_mutex (mutex)
+             1       409 ns       409 ns       409 ns   ffffffffa41b4cf8   tracepoint_srcu_srcu_usage (mutex)
+             2       362 ns       239 ns       181 ns   ffffffffa41cf840   pcpu_alloc_mutex (mutex)
+             1       220 ns       220 ns       220 ns   ffff9d5e82b534d8   &signal_cache (mutex)
+             1       215 ns       215 ns       215 ns   ffffffffa41b4c28   tracepoint_srcu_srcu_usage (mutex)
+
+The first two were from "task_struct" slab cache.  It happened to
+match with the type name of object but there's no guarantee.  We need
+to add type info to slab cache to resolve the lock inside the object.
+Anyway, the third one has no dedicated slab cache and was allocated by
+kmalloc.
+
+Those slab objects can be used to filter specific locks using -L or
+ --lock-filter option.  (It needs quotes to avoid special handling in
+the shell).
+
+    # perf lock con -ab -L '&task_struct' sleep 1
+       contended   total wait     max wait     avg wait         type   caller
+    
+               1     25.10 us     25.10 us     25.10 us        mutex   perf_event_exit_task+0x39
+               1     21.60 us     21.60 us     21.60 us        mutex   futex_exit_release+0x21
+               1      5.56 us      5.56 us      5.56 us        mutex   futex_exec_release+0x21
+
+The code is available at 'perf/lock-slab-v2' branch in my tree
+
+git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
 
 
+Namhyung Kim (4):
+  perf lock contention: Add and use LCB_F_TYPE_MASK
+  perf lock contention: Run BPF slab cache iterator
+  perf lock contention: Resolve slab object name using BPF
+  perf lock contention: Handle slab objects in -L/--lock-filter option
 
-> On 7 Nov 2024, at 7:26=E2=80=AFPM, Leo Yan <leo.yan@arm.com> wrote:
->=20
-> Hi Athira,
->=20
-> On Wed, Nov 06, 2024 at 03:04:57PM +0530, Athira Rajeev wrote:
->=20
-> [...]
->=20
->>> Hi Athira,
->>>=20
->>> sorry for the breakage and thank you for the detailed explanation. =
-As
->>> the code will run on AMD I think your change will break that - . It =
-is
->>> probably safest to keep the ".. else { .." for this case but guard =
-it
->>> in the ifdef.
->>>=20
->>=20
->> Hi Ian
->>=20
->> Thanks for your comments. Does the below change looks good ?
->>=20
->> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
->> index e3aa9d4fcf3a..f5b2d96bb59b 100644
->> --- a/tools/perf/tests/expr.c
->> +++ b/tools/perf/tests/expr.c
->> @@ -74,14 +74,12 @@ static int test__expr(struct test_suite *t =
-__maybe_unused, int subtest __maybe_u
->>    double val, num_cpus_online, num_cpus, num_cores, num_dies, =
-num_packages;
->>    int ret;
->>    struct expr_parse_ctx *ctx;
->> -    bool is_intel =3D false;
->>    char strcmp_cpuid_buf[256];
->>    struct perf_pmu *pmu =3D perf_pmus__find_core_pmu();
->>    char *cpuid =3D perf_pmu__getcpuid(pmu);
->>    char *escaped_cpuid1, *escaped_cpuid2;
->>=20
->>    TEST_ASSERT_VAL("get_cpuid", cpuid);
->> -    is_intel =3D strstr(cpuid, "Intel") !=3D NULL;
->>=20
->>    TEST_ASSERT_EQUAL("ids_union", test_ids_union(), 0);
->>=20
->> @@ -244,11 +242,13 @@ static int test__expr(struct test_suite *t =
-__maybe_unused, int subtest __maybe_u
->>    if (num_dies) // Some platforms do not have CPU die support, for =
-example s390
->>        TEST_ASSERT_VAL("#num_dies >=3D #num_packages", num_dies >=3D =
-num_packages);
->>=20
->> +#if defined(__i386__) && defined(__x86_64__)
->>    TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&val, ctx, =
-"#system_tsc_freq") =3D=3D 0);
->> -    if (is_intel)
->> +    if (strstr(cpuid, "Intel") !=3D NULL)
->>        TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
->>    else
->>        TEST_ASSERT_VAL("#system_tsc_freq =3D=3D 0", fpclassify(val) =
-=3D=3D FP_ZERO);
->> +#endif
->>=20
->>    /*
->>     * Source count returns the number of events aggregating in a =
-leader
->=20
-> I confirmed the change above fixes the failure on Arm64.
->=20
-> Tested-by: Leo Yan <leo.yan@arm.com>
-Thanks Leo Yan for testing.
+ tools/perf/builtin-lock.c                     |  39 ++++-
+ tools/perf/util/bpf_lock_contention.c         | 140 +++++++++++++++++-
+ .../perf/util/bpf_skel/lock_contention.bpf.c  |  70 ++++++++-
+ tools/perf/util/bpf_skel/lock_data.h          |  15 +-
+ tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |   8 +
+ tools/perf/util/lock-contention.h             |   2 +
+ 6 files changed, 267 insertions(+), 7 deletions(-)
 
-Hi Ian,
-
-If the change above looks good, I will post a V2 . Please share your =
-review comments
-
-Thanks
-Athira
+-- 
+2.47.0.277.g8800431eea-goog
 
