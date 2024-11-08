@@ -1,312 +1,231 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109871C1F39
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 Nov 2024 18:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D511A9B49
+	for <linux-perf-users@vger.kernel.org>; Fri,  8 Nov 2024 19:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731091690; cv=none; b=IOR89Jl3KSG/cokrQDzCaRN/MbmqxiiZx88aygupjs+jhhNPS5s+De/LExZmM8v8Yk1UWrQsJecmwdx5HBcO78EKygpJpLzXZgD15hp/quiOgPWTvVZdePv3eRd7vrMunEhnR3Z7ODFk9wUN73CPJkfL2DwNFC/BieBUXBoKZEk=
+	t=1731092414; cv=none; b=ZmDCQusf0mEMHB7OHkgH1ivKgDAFUMnNJUMRrVuc8bUMdeQU9E6O45x/th633fy8sqjJY3cRQS3DfKnlkuUqJaU5WE0VuBlJ6+M4Q9E5ypjfAPwEAl+UnjnAEndA4DAF1jl2bT4c/22DOluPuLnSiDWt2GK7qDvbYLf3g3ZHRVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731091690; c=relaxed/simple;
-	bh=QRhwRrSJyI/kOaWmz0vfruc+Nvc3XqPg7f05ygNW5iY=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=mKGippOXLZxeB7d+L6W2n/k70xDqgOCLicvD/FCjN5IqbIuXvWUwwh6CWpgomh+vegSwLDmg/vgHhGSGSoUfyBmatVqIjVl6Sk3AtsOLD+xsO+y3wcekGtBIqAZT1Yrgby2iHRGje4EMf0qLg0ZF5MtOF+GcEGDQ5zD3KkAv4AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nKXYqXBc; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1731092414; c=relaxed/simple;
+	bh=WqYp6yg5pPwKFS2C+i3dSgKmWNxHXbSzx1xoi1gpdu0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RX5AaG4V/FVmxt+d8aiEQuad+vZOdTuKKwVwr5GtOsUxSwosMGd+KqMGYUQRS7qBkTcfeqfhEtuHcdf8V6MgAlaiuAwOxX5wgQJVLMcovFz6MMHRRiT20U+ueqvFyczxjXh7EUC6tEyaqQQyfAayz9nJj+/Ls6+H25sr5yGB+kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UGq7vzHX; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nKXYqXBc"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e355f1ff4bso53055587b3.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 10:48:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UGq7vzHX"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-20c87b0332cso15165ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 11:00:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731091688; x=1731696488; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Flqrjh5XHYvCPHOJ71U9pEXddkJk6YSG/Cy+AhkddDE=;
-        b=nKXYqXBcFgB7aib/K6ru6tUx8oLc/FS5kjqYwXrzL3G4AtYRE3ytBpPVtuOPQnMLqT
-         qW/yh7SSLxmCHC2yti5xoaKSBRSZton9X64ZO7Riyq7ZfNbYCb0XmK/Rbr0OR1rQX81g
-         2F7tGAUFD6udBOx9NxVOKe87XmlDyk8GC39mRBBqwHL/YLGPu1BC0jQtDrcqIIE39MiZ
-         OUBczzvOHcRXUe7p7PV1hAEY1fptERAWz3IJJPrpjMt3ELiR/U8sy/jhHvTayjoJ1hyO
-         DMs+IPFZqSioG7e0GE2F1SuiB0yGzP6tVMtWOg54x7pqfA2BAggaGGaQs7eHJZsfGeG8
-         SmeQ==
+        d=google.com; s=20230601; t=1731092412; x=1731697212; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KgUoiaIvwmd0dqXDVNwJZBRERye992Iv81OIK7UWxZo=;
+        b=UGq7vzHXLDJoWsP7B5Djcx/Z+CfNjIp5tjpOsgqeIiR0kBgE8FwN72lhCMZhqnKp5y
+         NKVVhnK1BGm7dzleYSOCEzXEu80EXpI3X1R5SC0QcjR8qoe1mxhBSi2+x9x0+4YXEe8J
+         qA8qD4rSHt6iPRDbHUEUQD6Fdt3WUXO+E41B1YbIxY0MGOLJE35Z1o3/vMoNiWITFFiu
+         8mdV8afJg910GxgBmvSrMpUYgT6MT5lAsJjBK2fo5CR4GXZ09aaabvFAzsJNXM0yJy7I
+         ctwI4xDNcwcqD23P7eJLWm9nuX6JJD1S/s430VgJqbkD+J2F1ReQTBb4ZVmSNOBWWg70
+         d7Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731091688; x=1731696488;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Flqrjh5XHYvCPHOJ71U9pEXddkJk6YSG/Cy+AhkddDE=;
-        b=aVoigEbtwtg/Ty3U1Ja9MiFVwEIsN6HcYyWGMPzbKtuKBJzNOFU+nTUNK0HXNpjc6u
-         IRQOyB1nAUYc+daglOtiH5SIw+JfNX7odBX+FNBX+u4+B/99tShBJNmu+OAmwK8tjRSY
-         OcQRZKaL65tD2Ry8o1V0rmy4Tw/3Qv7S/iH95pOmsj1gWDJM/Ae6QPvf7ltI4kKfTMi5
-         qNZ4feKiufDX5RohLMwS53muPGV2a0mflCevTybiOTZ1rpz2KZjVePdpVchoJmtXpp0F
-         ILEHYhwVwwqOulFk7nrrIgRcpSiG80dNICPstskhWk4Zy/jB9eYzAyKtaomenECCvaeZ
-         a2OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ2bpNuCUAr52/TIU49PVnsOHCgJh529nEshWfH6HpeivFoAcbTUPWvvxRosgxBHwU2bb/NsmLC0A4Cxs+IrD6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCXRBVaj2wPWVRtpUqJ/xCc9D3NFn3gBrg0zqIonYn6+APdo7L
-	MhwH3vj6wXsuyVFxoHgbDA+nHPgR82VkQw4KEWNwvsz+EIWwMFcn/qtBHOC1lNWytVhUSt+hUvJ
-	d2dqNUA==
-X-Google-Smtp-Source: AGHT+IHZ1qTghdshfBPUmOFWiF8IM69C3hlHfjzypkVnBZ+XYbcanOCv0+vmPJghWffJ1iwSP5YYk+J+P4Sb
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:6fd2:1e36:6d8c:7c49])
- (user=irogers job=sendgmr) by 2002:a5b:80a:0:b0:e30:dccd:9aaa with SMTP id
- 3f1490d57ef6-e337f8c6c74mr11389276.6.1731091688081; Fri, 08 Nov 2024 10:48:08
- -0800 (PST)
-Date: Fri,  8 Nov 2024 10:47:51 -0800
-In-Reply-To: <20241108184751.359237-1-irogers@google.com>
-Message-Id: <20241108184751.359237-7-irogers@google.com>
+        d=1e100.net; s=20230601; t=1731092412; x=1731697212;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KgUoiaIvwmd0dqXDVNwJZBRERye992Iv81OIK7UWxZo=;
+        b=BQzLyH2+1BM5h31MCxBpIl1Qt3UH0EyT+tegyZEyJ+BfvK9HnwfsFA3ni1dmDLcTqm
+         dC7EQdRn0yJnTRbAecbFGjSE4n0KPTZY64prIhNVI1cLHfD9zK2ljERLa3xLlx5AMRed
+         xGWp65J3EbeZdI1uXEOKZm/oHobUgfU4po8Y/DkoYCve2LDthxLUKjdhjUKgMK/9WCAx
+         9y7AG0K+5QH3jI4YnPgpGGO9QovXkmouvO6c6SO2HPh/zBOfQtyomHXDBgoDoDJ6++sh
+         maK0b72MpZb6QVDqG5Yz9Vt/H8OWtNtad6s8c/GN2uvxwpzvEYumB/iFLUm0MmxSrcLD
+         oX6g==
+X-Forwarded-Encrypted: i=1; AJvYcCV46xy4Np2oaPASYn1WecuK9PTXQw1JmFP/Ygk8l4yuG1j/BeWhs+UC8C10uM1/WSb60TCWvaDVff1wguk1uv76@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxskl28fxchj0FiuW0ceSjW4rZderkHy1H6GleCO/F4QxhNyR7e
+	BJ6+82HsB2Kojos9TZmcMDYfu40UVE1RJninISzwjSDX5M2uKro2JFclIT/yd/vSGJsTNteAWWN
+	Lt5UA+ywVy8NYq48eMo3gOdCV8JkKvB9C0V4o
+X-Gm-Gg: ASbGncusqzOd96iX6/EJUkf4j064KAhuScgEVYUZDAysBIK7Rc6I2kEgNuEdtEtHz9i
+	50xsoxi6lLIuPF6jg2poXBkB0cspPF+KG
+X-Google-Smtp-Source: AGHT+IGbkZj+JMTOqmjdWQBlay0wkfJ4YtvQ+jjTvTX1drjgAdh01rmyeaMVQcVNM/9W5ndlugybvJQ8F6IRVI5txY0=
+X-Received: by 2002:a17:902:f908:b0:20b:b52:3f7c with SMTP id
+ d9443c01a7336-2118df7660fmr108525ad.18.1731092411428; Fri, 08 Nov 2024
+ 11:00:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241108184751.359237-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
-Subject: [PATCH v4 6/6] perf tests: Enable tests disabled due to tracepoint parsing
+MIME-Version: 1.0
+References: <20241026121758.143259-1-irogers@google.com> <CAP-5=fXf9HtqKZyvfXNbKLTB-dL_Ax5Hd0_Gn1J-y0T1SE9wLQ@mail.gmail.com>
+ <78eb729c-7594-460f-9d79-97fb683d8b5e@linaro.org> <CAHBxVyFXWpczMmWJbpWoLUjQ4nfNC2_h1yZqSd7kSr6N8Rvm5Q@mail.gmail.com>
+In-Reply-To: <CAHBxVyFXWpczMmWJbpWoLUjQ4nfNC2_h1yZqSd7kSr6N8Rvm5Q@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+Date: Fri, 8 Nov 2024 10:59:59 -0800
+Message-ID: <CAP-5=fV23r-_yVvGP3n5gjH8uZ2rEXmbZEwxr2wF+bpg=m745A@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] Prefer sysfs/JSON events also when no PMU is provided
+To: Atish Kumar Patra <atishp@rivosinc.com>
+Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Ben Gainey <ben.gainey@arm.com>, 
+	Junhao He <hejunhao3@huawei.com>, linux-riscv@lists.infradead.org, beeman@rivosinc.com, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	James Clark <james.clark@linaro.org>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Yang Li <yang.lee@linux.alibaba.com>, Colin Ian King <colin.i.king@gmail.com>, 
-	Yang Jihong <yangjihong@bytedance.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
 	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Ben Gainey <ben.gainey@arm.com>, zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
-	Zixian Cai <fzczx123@gmail.com>, Andi Kleen <ak@linux.intel.com>, Paran Lee <p4ranlee@gmail.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>
+	Dominique Martinet <asmadeus@codewreck.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tracepoint parsing required libtraceevent but no longer does. Remove
-the Build logic and #ifdefs that caused the tests not to be run. Test
-code that directly uses libtraceevent is still guarded.
+On Fri, Nov 8, 2024 at 10:38=E2=80=AFAM Atish Kumar Patra <atishp@rivosinc.=
+com> wrote:
+>
+> On Fri, Nov 8, 2024 at 4:16=E2=80=AFAM James Clark <james.clark@linaro.or=
+g> wrote:
+> >
+> >
+> >
+> > On 07/11/2024 18:51, Ian Rogers wrote:
+> > > On Sat, Oct 26, 2024 at 5:18=E2=80=AFAM Ian Rogers <irogers@google.co=
+m> wrote:
+> > >>
+> > >> At the RISC-V summit the topic of avoiding event data being in the
+> > >> RISC-V PMU kernel driver came up. There is a preference for sysfs/JS=
+ON
+> > >> events being the priority when no PMU is provided so that legacy
+> > >> events maybe supported via json. Originally Mark Rutland also
+> > >> expressed at LPC 2023 that doing this would resolve bugs on ARM Appl=
+e
+> > >> M? processors, but James Clark more recently tested this and believe=
+s
+> > >> the driver issues there may not have existed or have been resolved. =
+In
+> > >> any case, it is inconsistent that with a PMU event names avoid legac=
+y
+> > >> encodings, but when wildcarding PMUs (ie without a PMU with the even=
+t
+> > >> name) the legacy encodings have priority.
+> > >>
+> > >> The patch doing this work was reverted in a v6.10 release candidate
+> > >> as, even though the patch was posted for weeks and had been on
+> > >> linux-next for weeks without issue, Linus was in the habit of using
+> > >> explicit legacy events with unsupported precision options on his
+> > >> Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
+> > >> where ARM decided to call the events bus_cycles and cycles, the latt=
+er
+> > >> being also a legacy event name. ARM haven't renamed the cycles event
+> > >> to a more consistent cpu_cycles and avoided the problem. With these
+> > >> changes the problematic event will now be skipped, a large warning
+> > >> produced, and perf record will continue for the other PMU events. Th=
+is
+> > >> solution was proposed by Arnaldo.
+> > >>
+> > >> Two minor changes have been added to help with the error message and
+> > >> to work around issues occurring with "perf stat metrics (shadow stat=
+)
+> > >> test".
+> > >>
+> > >> The patches have only been tested on my x86 non-hybrid laptop.
+> > >
+> > > Hi Atish and James,
+> > >
+> > > Could I get your tags for this series?
+> > >
+>
+> Hi Ian,
+> Thanks for your patches. It definitely helps to have a clean slate
+> implementation
+> for the perf tool. However, I have some open questions about other use ca=
+ses
+> that we discussed during the RVI Summit.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/Build          |  6 +++---
- tools/perf/tests/builtin-test.c |  2 --
- tools/perf/tests/parse-events.c | 25 +------------------------
- 3 files changed, 4 insertions(+), 29 deletions(-)
+Thanks Atish, could I get your acked/reviewed/tested tags?
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 01ed9335db4d..f26a668a96df 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -5,10 +5,10 @@ perf-test-y += tests-scripts.o
- perf-test-y += parse-events.o
- perf-test-y += dso-data.o
- perf-test-y += vmlinux-kallsyms.o
--perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall.o
--perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall-all-cpus.o
-+perf-test-y += openat-syscall.o
-+perf-test-y += openat-syscall-all-cpus.o
- perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall-tp-fields.o
--perf-test-$(CONFIG_LIBTRACEEVENT) += mmap-basic.o
-+perf-test-y += mmap-basic.o
- perf-test-y += perf-record.o
- perf-test-y += evsel-roundtrip-name.o
- perf-test-$(CONFIG_LIBTRACEEVENT) += evsel-tp-sched.o
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index d2cabaa8ad92..4c3b622130a9 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -60,11 +60,9 @@ static struct test_suite *arch_tests[] = {
- 
- static struct test_suite *generic_tests[] = {
- 	&suite__vmlinux_matches_kallsyms,
--#ifdef HAVE_LIBTRACEEVENT
- 	&suite__openat_syscall_event,
- 	&suite__openat_syscall_event_on_all_cpus,
- 	&suite__basic_mmap,
--#endif
- 	&suite__mem,
- 	&suite__parse_events,
- 	&suite__expr,
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 82a19674a38f..5ec2e5607987 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -54,8 +54,6 @@ static bool test_perf_config(const struct perf_evsel *evsel, __u64 expected_conf
- 	return (evsel->attr.config & PERF_HW_EVENT_MASK) == expected_config;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
--
- #if defined(__s390x__)
- /* Return true if kvm module is available and loaded. Test this
-  * and return success when trace point kvm_s390_create_vm
-@@ -112,7 +110,6 @@ static int test__checkevent_tracepoint_multi(struct evlist *evlist)
- 	}
- 	return TEST_OK;
- }
--#endif /* HAVE_LIBTRACEEVENT */
- 
- static int test__checkevent_raw(struct evlist *evlist)
- {
-@@ -311,7 +308,6 @@ static int test__checkevent_breakpoint_rw(struct evlist *evlist)
- 	return TEST_OK;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
- static int test__checkevent_tracepoint_modifier(struct evlist *evlist)
- {
- 	struct evsel *evsel = evlist__first(evlist);
-@@ -340,7 +336,6 @@ test__checkevent_tracepoint_multi_modifier(struct evlist *evlist)
- 
- 	return test__checkevent_tracepoint_multi(evlist);
- }
--#endif /* HAVE_LIBTRACEEVENT */
- 
- static int test__checkevent_raw_modifier(struct evlist *evlist)
- {
-@@ -629,7 +624,6 @@ static int test__checkevent_pmu(struct evlist *evlist)
- 	return TEST_OK;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
- static int test__checkevent_list(struct evlist *evlist)
- {
- 	struct evsel *evsel = evlist__first(evlist);
-@@ -671,7 +665,6 @@ static int test__checkevent_list(struct evlist *evlist)
- 
- 	return TEST_OK;
- }
--#endif
- 
- static int test__checkevent_pmu_name(struct evlist *evlist)
- {
-@@ -971,7 +964,6 @@ static int test__group2(struct evlist *evlist)
- 	return TEST_OK;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
- static int test__group3(struct evlist *evlist __maybe_unused)
- {
- 	struct evsel *evsel, *group1_leader = NULL, *group2_leader = NULL;
-@@ -1078,7 +1070,6 @@ static int test__group3(struct evlist *evlist __maybe_unused)
- 	}
- 	return TEST_OK;
- }
--#endif
- 
- static int test__group4(struct evlist *evlist __maybe_unused)
- {
-@@ -1813,7 +1804,6 @@ static int test__term_equal_legacy(struct evlist *evlist)
- 	return TEST_OK;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
- static int count_tracepoints(void)
- {
- 	struct dirent *events_ent;
-@@ -1867,7 +1857,6 @@ static int test__all_tracepoints(struct evlist *evlist)
- 
- 	return test__checkevent_tracepoint_multi(evlist);
- }
--#endif /* HAVE_LIBTRACEVENT */
- 
- struct evlist_test {
- 	const char *name;
-@@ -1876,7 +1865,6 @@ struct evlist_test {
- };
- 
- static const struct evlist_test test__events[] = {
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "syscalls:sys_enter_openat",
- 		.check = test__checkevent_tracepoint,
-@@ -1887,7 +1875,6 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_tracepoint_multi,
- 		/* 1 */
- 	},
--#endif
- 	{
- 		.name  = "r1a",
- 		.check = test__checkevent_raw,
-@@ -1938,7 +1925,6 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_w,
- 		/* 1 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "syscalls:sys_enter_openat:k",
- 		.check = test__checkevent_tracepoint_modifier,
-@@ -1949,7 +1935,6 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_tracepoint_multi_modifier,
- 		/* 3 */
- 	},
--#endif
- 	{
- 		.name  = "r1a:kp",
- 		.check = test__checkevent_raw_modifier,
-@@ -1995,13 +1980,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_w_modifier,
- 		/* 2 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "r1,syscalls:sys_enter_openat:k,1:1:hp",
- 		.check = test__checkevent_list,
- 		/* 3 */
- 	},
--#endif
- 	{
- 		.name  = "instructions:G",
- 		.check = test__checkevent_exclude_host_modifier,
-@@ -2032,13 +2015,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__group2,
- 		/* 9 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "group1{syscalls:sys_enter_openat:H,cycles:kppp},group2{cycles,1:3}:G,instructions:u",
- 		.check = test__group3,
- 		/* 0 */
- 	},
--#endif
- 	{
- 		.name  = "{cycles:u,instructions:kp}:p",
- 		.check = test__group4,
-@@ -2049,13 +2030,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__group5,
- 		/* 2 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "*:*",
- 		.check = test__all_tracepoints,
- 		/* 3 */
- 	},
--#endif
- 	{
- 		.name  = "{cycles,cache-misses:G}:H",
- 		.check = test__group_gh1,
-@@ -2111,7 +2090,7 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_len_rw_modifier,
- 		/* 4 */
- 	},
--#if defined(__s390x__) && defined(HAVE_LIBTRACEEVENT)
-+#if defined(__s390x__)
- 	{
- 		.name  = "kvm-s390:kvm_s390_create_vm",
- 		.check = test__checkevent_tracepoint,
-@@ -2265,13 +2244,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_2_events,
- 		/* 3 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name = "9p:9p_client_req",
- 		.check = test__checkevent_tracepoint,
- 		/* 4 */
- 	},
--#endif
- };
- 
- static const struct evlist_test test__events_pmu[] = {
--- 
-2.47.0.277.g8800431eea-goog
+Ian
 
+> > > The patches were originally motivated by wanting to make the behavior
+> > > of events parsed like "cycles" match that of "cpu/cycles/", the PMU i=
+s
+> > > wildcarded to "cpu" in the first case. This was divergent because of
+> > > ARM we switched from preferring legacy (type =3D PERF_TYPE_HARDWARE,
+> > > config =3D PERF_COUNT_HW_CPU_CYCLES) to sysfs/json (type=3D<core PMU'=
+s
+> > > type>, config=3D<encoding from event>) when a PMU name was given. Thi=
+s
+> > > aligns with RISC-V wanting to use json encodings to avoid complexity
+> > > in the PMU driver.
+> > >
+> >
+> > I couldn't find the thread, but I remember fairly recently it was
+> > mentioned that RISC-V would be supporting the legacy events after all,
+> > maybe it was a comment from Atish? I'm not sure if that changes the
+> > requirements for this or not?
+> >
+> > I still can't really imagine how tooling would work if every tool has t=
+o
+> > maintain the mappings of basic events like instructions and branches.
+> > For example all the perf_event_open tests in ltp use the legacy events.
+> >
+>
+> No it has not changed. While this series helps to avoid clunky vendor
+> specific encodings
+> in the driver for perf tool, I am still unsure how we will manage
+> other applications
+> (directly passing legacy events through perf_event_open or
+> perf_evlist__open) will work.
+>
+> I have only anecdotal data about folks relying perf legacy events
+> directly to profile
+> their application. All of them use mostly cycle/instruction events though=
+.
+> Are there any users who use other legacy events directly without perf too=
+l ?
+>
+> If not, we may have only cycle/instruction mapping in the driver and
+> rely on json for everything else.
+> The other use case is virtualization. I have been playing with these
+> patches to find a clean solution to
+> enable all the use cases. If you have any other ideas, please let me know=
+.
+>
+> > And wouldn't porting existing software to RISC-V would be an issue if i=
+t
+> > doesn't behave in a similar way to what's there already?
+> >
+> > > James, could you show the neoverse with the cmn PMU behavior for perf
+> > > record of "cycles:pp" due to sensitivities there.
+> > >
+> >
+> > Yep I can check this on Monday.
+> >
+> > > Thanks,
+> > > Ian
+> > >
+> >
+> >
+> > >
+> > >
+> > >
+> > >> Ian Rogers (4):
+> > >>    perf evsel: Add pmu_name helper
+> > >>    perf stat: Fix find_stat for mixed legacy/non-legacy events
+> > >>    perf record: Skip don't fail for events that don't open
+> > >>    perf parse-events: Reapply "Prefer sysfs/JSON hardware events ove=
+r
+> > >>      legacy"
+> > >>
+> > >>   tools/perf/builtin-record.c    | 22 +++++++---
+> > >>   tools/perf/util/evsel.c        | 10 +++++
+> > >>   tools/perf/util/evsel.h        |  1 +
+> > >>   tools/perf/util/parse-events.c | 26 +++++++++---
+> > >>   tools/perf/util/parse-events.l | 76 +++++++++++++++++-------------=
+----
+> > >>   tools/perf/util/parse-events.y | 60 ++++++++++++++++++---------
+> > >>   tools/perf/util/pmus.c         | 20 +++++++--
+> > >>   tools/perf/util/stat-shadow.c  |  3 +-
+> > >>   8 files changed, 145 insertions(+), 73 deletions(-)
+> > >>
+> > >> --
+> > >> 2.47.0.163.g1226f6d8fa-goog
+> > >>
