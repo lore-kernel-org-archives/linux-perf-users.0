@@ -1,53 +1,52 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11020138.outbound.protection.outlook.com [52.101.61.138])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2082.outbound.protection.outlook.com [40.107.247.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862067464;
-	Fri,  8 Nov 2024 01:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A8438DE0;
+	Fri,  8 Nov 2024 02:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.82
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731028133; cv=fail; b=ObhEs5G087NeV/DUeDpiCIs2Qj4MO6pEA4c0GsbhBnDyNhYtoGNu7M80ExJ4W8Y/qBgS9IpyEJuFkZ5Z6OoGKovkzIS9fBpwAlQAcIOoLF706I1tJ/28txcdYRymkjwk0qYM4eMUy79gTNIqyiu/91l2D0//v527tbSyO5H9I+k=
+	t=1731034682; cv=fail; b=IgHhlWyMu9oR4HkrO44/4oRpnk7yyic8MQccYY1+K1WvOvFyTwXYOgyQdLmFAI5DEySd+z0gjETny9UANhqzwio03ZNRCUj+tOorjCeNwI83/eqNk9WqkdsZPLXa5raXBGXCERp6w8JmPK9cgypUh+zslokX5i81RY8BlvQ+IOA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731028133; c=relaxed/simple;
-	bh=ekzwYo6IFAabQoqLOCbyJuz/S1yTjzZRX+VXHTu0eS0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=O6SpXpLR915bmhAJnPIA3PEoim+YhA9t6PZNPPhAGJ4AhQ/haRteUMwhMUQjD2jw42JVDmk4pU9UxCgTOg7LheNPeHQZsbapiKsL1XGC4pEDfEB8L12BjaPwVg/edmq5L/cbOOTLd6TT42E7BFtdFZqqVECL8WNhGOW2L0Zob98=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=n/C+C0Og; arc=fail smtp.client-ip=52.101.61.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	s=arc-20240116; t=1731034682; c=relaxed/simple;
+	bh=ouWAKfH0rq28Qm9d2OrHiaTbU0oe96NOxaF05tQY560=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=oYNDwAM0RfhThSUqJBplgFDMwIESSZ5BHnv9g0qabtlGN7wIi96582phzF5lSbCw/J99/sz9UDH+aCqVxIWh/8V3WdiGq3BNrs2WK43DDLQvuKmNgPMSUkLUv2w0zt6mldJ98X2C+pLChgp3L82LDbLO3BTcOqUtGut92VxiXpo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=YRQjpR0x; arc=fail smtp.client-ip=40.107.247.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="n/C+C0Og"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="YRQjpR0x"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=biN7auLD5/Pia1ivi053PsvotFS3hk7M7gOt+pHGPf9qoEOLthWPHbyrfbLVOMsRE0i0DAYiSPdP3BsNFVupWqdiijQs23e2uE69rz/eUESnuqz27NwWc7RAE4H2VECii46uQQozZmVxgT0qEwcB37ZKA6n3y9Kebt3T+fswsv7gM7aAUmZDd0d4L7vGCqFS/x3uwBugGuguwwVo9M+HtaxusBatgNG/zaYZTmXTYxJQQpxEN2OX5rrrTyoxcBxKvvm2fSoRxy4qch5HtfcADzzdklrqW9qQyAfkaIeHkn5HuuTPtI7qmDfZxuMEMqCaVuXmCtR/Bn0yNOKCTiXhaA==
+ b=wz36aIZIPE3uxo/x99lDh2YhRPN+tDv2MCUEdQ/nOVfycQKJj0706Ma4hsLamonl5YJjeIfAzGi3IB6TCNqmUi3y/ECYbfTc3UPAW2Tpd+e8EkrwtnsXY7tG8LRSBzSpyid9b13RX7IrAFJ5rjf51IvNrvR9X/yOEs/y8vl+XYoB9KZj8RErCl0wu36qhxiMWvK5DHr92wdo3khkBdqVCR4kZJXYXY8FhJUysYAZhTNPshwlL6Idkh/4AtpsVGD73GJ9lfgsM0oxlTY5PiMEvVNR1P7aq4H+hAqv7ygH/Q92Nljfge/KvnZOmU155nMSjz2+dSvWGwdFP6XZ4QxYhQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sx4yuVRUqEO4AyisEW0Rb/Ol4PtWENkMerlyl6CPBnw=;
- b=jLWcAAz7ahj3GRrhYNhMCZboPoDD2rr87r+qr1SrXl9nIEnXjWhVGoxs0sn1jqMPyStz+LlYfOIGf+j/py0KOU2PptKBms75N7t8nELgNJGS/cYLU09/o9q1yjTIM05v5dmUZ5ItUVCXegNKflUqDA7lLjA5ZlAnt3n8eAfVUoo1y6iHelhdaEryVxvc1wTs2YBEA/bQDGLUYim0COSAsUKafHA8jP9hb2nhgJQXjCwJ0oh9V7zSWJWEpwH+TsuK1MT+OCFVKZsXUp4HPnNLkHQvcJYaGlo2bqKWXSaO3VrqIrL0Dk2K6ZlwOIgCVUzJVT0farxZMnIHoOiKMyLNgw==
+ bh=oUnubRNN8AuAhGJsvv2vCjimaf0THvxM/+YCUEBpKzw=;
+ b=UkSYKN1gmrPVn1bR5AIfp+uvLwRjSYpMpw9VD+Cu1UCtQ3zOvtwTV3v8M4s0NWm0vSrcDSdfMhItx8/RkpplhSIQXK+tvrZcKdraG+e7Fe3us55/otLaWzBQHgtQD0tyjahgShS+3/6yv+IW97tzpMBvWP/pyhFEygj+CXBS7bzzqFJqn9zLWwLPFzdbjhW30iZq0SPtXcDWGtCBY/E9yguYqoJNFFXpOM9zuyHM2+NbJiH3NGo/1e1KcjgkaTwN5qMWwz9bZo4B2l1HZ5d5fhrr0cfv1XNW5Lc2aPhid2vfa6RSepUdqUU4sl12eiVdQoYuEYa0h0xYdTVX6RacEw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sx4yuVRUqEO4AyisEW0Rb/Ol4PtWENkMerlyl6CPBnw=;
- b=n/C+C0OgQgRS3FIRJTNXO85Djo+3WfJ4vcJ+UCXKl3V4uIhGRQI+dIKQHmHMEE2xPM7a8E3wFMrehCNERjDVdk3o2U9O8TNYRT/Hc7wooQwE/lzlJ74o7kmL15zraQi9xuyZRzG/uKEbJX7E9Q/UKEaARA2bDVFP3iopfg5pNlA=
+ bh=oUnubRNN8AuAhGJsvv2vCjimaf0THvxM/+YCUEBpKzw=;
+ b=YRQjpR0xCv8ZCK0K123pbpPhPTGunNpfV62RnkyNq8eT3KaLxqLVjWG3kmfpk7ZbWBNGAoPl4oq6aagbI7eAgf0F4tr6KCPKSLm7wBpXlA+dXysM8HkGU95fJ/f1srIF7ALg+AyY24WzwJIi2SwSt9jb5zfCB4Q0K5z1XMaSRfMsqQY7CZay6L59SjUFOrrX7bNCFj/yXLt0+eKx8XZIOZM4ghp126lH4T6CJ82xpf1x/zU3v/93rmgQbX2S3kEWBH8iMYtVKlZN5HFSCjKEpoIRP3gmxzjTYTUy7RWdnqN1KC47SkkU6FOZOMfrOSUTYKpZQwYBmCjrOhjGSRvkFg==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from MW4PR01MB6228.prod.exchangelabs.com (2603:10b6:303:76::7) by
- CO1PR01MB7385.prod.exchangelabs.com (2603:10b6:303:158::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8137.19; Fri, 8 Nov 2024 01:08:48 +0000
-Received: from MW4PR01MB6228.prod.exchangelabs.com
- ([fe80::13ba:df5b:8558:8bba]) by MW4PR01MB6228.prod.exchangelabs.com
- ([fe80::13ba:df5b:8558:8bba%3]) with mapi id 15.20.8137.018; Fri, 8 Nov 2024
- 01:08:48 +0000
-From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To: John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
+ by PA4PR04MB7982.eurprd04.prod.outlook.com (2603:10a6:102:c4::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.19; Fri, 8 Nov
+ 2024 02:57:56 +0000
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::4e24:c2c7:bd58:c5c7]) by DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::4e24:c2c7:bd58:c5c7%6]) with mapi id 15.20.8137.019; Fri, 8 Nov 2024
+ 02:57:56 +0000
+Date: Fri, 8 Nov 2024 10:55:35 +0800
+From: Xu Yang <xu.yang_2@nxp.com>
+To: Ian Rogers <irogers@google.com>
+Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
 	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Leo Yan <leo.yan@linux.dev>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -55,25 +54,35 @@ To: John Garry <john.g.garry@oracle.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>
-Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Ben Zong-You Xie <ben717@andestech.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Benjamin Gray <bgray@linux.ibm.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	=?utf-8?Q?Cl=C3=A9ment?= Le Goffic <clement.legoffic@foss.st.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Dima Kogan <dima@secretsauce.net>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
 	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] perf arm-spe: Add support for SPE Data Source packet on AmpereOne
-Date: Fri,  8 Nov 2024 01:09:11 +0000
-Message-ID: <20241108010911.58412-3-ilkka@os.amperecomputing.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241108010911.58412-1-ilkka@os.amperecomputing.com>
-References: <20241108010911.58412-1-ilkka@os.amperecomputing.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CH0PR03CA0366.namprd03.prod.outlook.com
- (2603:10b6:610:119::12) To MW4PR01MB6228.prod.exchangelabs.com
- (2603:10b6:303:76::7)
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 0/8] Refactor cpuid and metric table lookup code
+Message-ID: <20241108025535.wfhke3btch5af4fu@hippo>
+References: <20241107162035.52206-1-irogers@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241107162035.52206-1-irogers@google.com>
+X-ClientProxiedBy: SG2PR02CA0007.apcprd02.prod.outlook.com
+ (2603:1096:3:17::19) To DU2PR04MB8822.eurprd04.prod.outlook.com
+ (2603:10a6:10:2e1::11)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,173 +90,134 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR01MB6228:EE_|CO1PR01MB7385:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2ddda937-3b49-4a32-01a5-08dcff91e6bc
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|PA4PR04MB7982:EE_
+X-MS-Office365-Filtering-Correlation-Id: a719aff7-2811-4cf2-c186-08dcffa12523
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|52116014|38350700014|921020;
+	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|7416014|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9/2aQVweG6X1Ct2+ZhCSQ/kFrP6RBSe6n6ktoUlbq1aSOftnhAn2y67x+KwP?=
- =?us-ascii?Q?AMimueefB+LbSjNnLOXuG9W+3/a787e4/X+AyVXBWEV9ImzhkRyV7qem4pyv?=
- =?us-ascii?Q?lKV+ECIqglu5mi2h4y+HggZKruks/SpgbDanEhlosOYeBtLArIQxQzs3W6MJ?=
- =?us-ascii?Q?3/j0QFFHplZxJiT6pMYWb6h/NIxaexHHvA2FZMMIu8UB2jmM1xVj4z7ymrzA?=
- =?us-ascii?Q?cgurNZqHfFdOJLdoQ+Z1rnIOYA46pNKKxO2Mnez8ZOU5NNUwEYa2+ppJ3A0R?=
- =?us-ascii?Q?aUIAWLIxaG3CDOXrDXQ9Apa6IPxvOuV1UYczMOtyrLGeJ2PNm5hKL92GTxgp?=
- =?us-ascii?Q?5AgwqmG6BQKqLDgeEDem+yvQare1CxdTKEAvMS7C0f3tRolX/DsfIWjHqQ5p?=
- =?us-ascii?Q?h7g4gfg9Y0vJQFB8Hy4W2w87zwT1V3BDOsZqd1ev4M5LwNgiI/mXNhr0aRtL?=
- =?us-ascii?Q?k2znRZLgdkUcyCOXzYlRGn21n+Vlzaf6T9rTcqCA+5kgK2B/NuzXuXKLTg8L?=
- =?us-ascii?Q?FdT6ert3eBiBlMxFb8T7/lyG91cA2f23n3w/lHNTVvZseCvdh6g50qJHyxaH?=
- =?us-ascii?Q?iQhwmFWrsjcfA3d/OoqRotFMcamMAYhM9Q/r6iHqkDSOeFGWC8VivqmIOYBp?=
- =?us-ascii?Q?RTHqybyNMXxFw6DFLm8svK24P2MsFXgMKfXgbcrAbtITAfS/D9kBl/Xk+MWL?=
- =?us-ascii?Q?Cu9VmKIn7v7AAH7tbt84U6A9a2j+iylW/MyqtTKR3elhSRFYai6Yn32L1lGi?=
- =?us-ascii?Q?cepLAhkolHxyps+BxWk++dpRAZYOs2Mo1y4AkhQpIUW4QmUIpC8FXkmfz2+t?=
- =?us-ascii?Q?bY07Jeixhfe2ZW26DWMxT1aJ1H+SjOlsSOadqQ5bnaw6nIJQfJHLNVmeQ7fI?=
- =?us-ascii?Q?L4ltL/52pVByTuk//bl5EPbC8zXY6tdkggO0aZPAQ/wPMUGNm6eGIAlYlScO?=
- =?us-ascii?Q?xokVBY2T7iFbSbwUl4qx1mpy8FCFut6lCsx3YF3VkX2xqJn7TfY8r93wdEGE?=
- =?us-ascii?Q?D0TPxAWbYU2luDhW7KcLd2DnTBCsLIDIZnhdfajmCQWbcFxjOgEMmFqgHwjL?=
- =?us-ascii?Q?RS04G+x7nAm1bAlqvxqaDyQQaUanrEMEPoFDy1eb7SPo3YAG/5+A6S32mLx8?=
- =?us-ascii?Q?ligBKn11UicTWHsEBHvlzNLGleMWItVcj0LQzVaIdJkYPxJreBv4tfnhlp+j?=
- =?us-ascii?Q?6WXqGuk2ZBq/uTKLj5iKcRc+7xrw5rMEAXd32JWgdqAbCd9sb7lujzD9E027?=
- =?us-ascii?Q?x63LSyZBZGm+scOekVyjrj/yjcFup32NEJ0KU1SneEX4Jw7tce4MD7jGoJES?=
- =?us-ascii?Q?ODtB4p0EX+bU/wkGMP13UgJIe7VAmwohAasIuHQk+Jx7g9cO6EnvoH9KYY11?=
- =?us-ascii?Q?9LqPFhTwdhjMS1rmwZ07tJC2mXIp?=
+	=?us-ascii?Q?/D1MRNc0e0Br2OcV6pwZCnoFXwDPjrEdwq0Z8AF5clKgk3yqQ77zRZeCShs/?=
+ =?us-ascii?Q?1VX1SKM7zDrW343ljP9XjlFNrGZnodhP+2TFwg5KDu5dCSX4UnrHcp8nD/Az?=
+ =?us-ascii?Q?nekxUYGjVNfsp+D6QePPikP815dWcjo4TesYZLUaJNmC0di87nI4oydkLjgd?=
+ =?us-ascii?Q?ovosxDabQArXG2JOqYLgSJNGeTkIbu/Ho5nGOC4AORkZM5EarPI2ImqVV5lb?=
+ =?us-ascii?Q?ZEbvPJ2KuPhCyIGwEY0AxkL3lVQt4zj1ZON/PNcA3vQboIAgLJMkihwosZnc?=
+ =?us-ascii?Q?sw6Rl9NwxdPF7DbszJrXf58JStUvWiCNmS8dVyP3Nptduwb8VrFu74sejfHx?=
+ =?us-ascii?Q?12hwH2JQXYtm0ehES4Row5CZ3e4ZdRn1EeXGSJI6DAez1Z4eFPi93iuOiXqm?=
+ =?us-ascii?Q?u2Ug6xhZsuOKQefGeb3iBoOo2yRiGUOR776cg2Ryl1L92mez4Eski8AEi8Ys?=
+ =?us-ascii?Q?9wOu1Qz2aaBpRFVLXyeY/ZJKBg7DMXPyMiP2alOAuyUoWntI5ZanUvfjwtC1?=
+ =?us-ascii?Q?vpJ3ES4wQS4gDGAvhSXRGSBz4XOna/XW07NG12Mb4v0F6r+Od18WD+WZ4YTz?=
+ =?us-ascii?Q?J8BfeAkBm12jsp52Sae/BLCNASJMvlH7zIWP+Ajo27WuqZqV3+C5RIG5YuHm?=
+ =?us-ascii?Q?UUylPKpCANacp+XIE/HpzLDFSMtYEae8DpjnIDOnrZAmxLT1clGpxN6CVTwv?=
+ =?us-ascii?Q?9IH6pRM1HVPOUGvTN8G/3da9c+1LhUqrBfr1L6uTEFIRRj7Su5ir0QqAIvSj?=
+ =?us-ascii?Q?256+n57ruYaWHxEEyefsP6DdA57RK4E2O93zyAk4I76RjE8Z2WkspCY+XiMC?=
+ =?us-ascii?Q?QtCoixNuSKipbbGKsqJvcVTWhLXZjK7jxbaxPm8K3w6nAymUF/XUDaq0gldv?=
+ =?us-ascii?Q?57UYdcB/BaZStyH1eCwi4Kzl513pAJxFu0/icoiyWX56cy/aE+MEKBfBvGdC?=
+ =?us-ascii?Q?k2sFxfRn1J6OA49D6VPRGttkpytXEf+TZq9D472ZuBcVzshvElLBG8AmyMjf?=
+ =?us-ascii?Q?LILc5nv9GzkY6hWUszLR0DCVhtezluwgKmH+eOBI/dqFrlRYVss/+hRfjNHe?=
+ =?us-ascii?Q?A96T+3oA5iJnmSAAj4v2ZxFvB2GWiJja1Gl9nKWkEM7eafnUkjzWvKptwx57?=
+ =?us-ascii?Q?rceQT+TjCfgYHyYbN4c2JEFwb7i4e/yHbJGJ/RKED48NuWl9H01tjn4NRU7N?=
+ =?us-ascii?Q?8A6yt3ymq9S+AACTW6+LLlqsztKiSoMoQZHxEdPrQ1zMJeeCjKPPL4RXQj/o?=
+ =?us-ascii?Q?z1QBMgWlUreYVi1xtbIW1+CKvr6GlY8B43YETnJBu4DzjdLiXhOs5SSm7xBb?=
+ =?us-ascii?Q?tSneVYGSPr1j3Wq8xowUZxYGhix3Vd415+Im2uhSenl4UmMOvXxMWdoyUIOM?=
+ =?us-ascii?Q?YKse6pc=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR01MB6228.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(52116014)(38350700014)(921020);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IXAOS9Xq1sQgLFZetGX28Q4E6g/96UywD7zfVd9cnyNOuJ1sfyx2Q2yDm2JC?=
- =?us-ascii?Q?3F2vYWQU1nxPcgq1YLPRey9aKCVuGVG9jUmbOMklllQ9tOIAZ2on+DpUvagG?=
- =?us-ascii?Q?XHGWKaaElKrFxKay0tCx+4/ag2M6bXfWcwRyTk8M9mzUOgJRSY1oCjBf01Ss?=
- =?us-ascii?Q?HUx3vSqHgcZo+6zrhzTIrDHMEVWlCNx7uxaik+1MbSUVDmIXQxXXMOyyi/Fh?=
- =?us-ascii?Q?AIgnepuob0hkYuNuNxAHXzk3XIig69kHDSVsN6pTLleCVxrBpoPMAUsf4YZF?=
- =?us-ascii?Q?GtEx4uwhLW5PCkQj7Aa+dUdiHGcYI1HeEaDS/Os6recbT0pw6foRzuq7PTf6?=
- =?us-ascii?Q?HDRmSfe6897ZK4rBIhifnFI+U7hqr67azWh09zB/ZNNlEnvqzSYN4Q8a7UgS?=
- =?us-ascii?Q?dKiXm0ozSfLkEodjTXjF1fKAqTzMuQ8Q5UDGyEmEz3GgLYiONGwjI4BmbZCh?=
- =?us-ascii?Q?kxyPKMNYshrGdjrs3seBdRIC5sIoNJpbBCne3nVTGd9VM81SOrExd+aKuBu5?=
- =?us-ascii?Q?Q2Wr7nB+AXeqPvJKNO6Stg4abcAvz8JpWS8+0wDnazZeL86TNvTS/mGQ6TiM?=
- =?us-ascii?Q?QM1CrQ5ygIfICLJsdXcuhkP/n3oVLft8OrXc7Xm6V8pjvY/nkrxEa9576lvY?=
- =?us-ascii?Q?pbk8vIm8a+2n0niXrARgWkHVSNrLA4cOAGOQQhbMwV2ab8Yc6z7A1gIwx6xw?=
- =?us-ascii?Q?B2myhuavnLfz5VdDHxv12pqEE4QOPchAd2R+swh/2ylz/DnIq2Vapi05ghnt?=
- =?us-ascii?Q?wBXm0I6N+SJ5knsB42HMJeNSetY0BjNwkH6FqmDITHnK0Z0UiQuzgXqImiOa?=
- =?us-ascii?Q?jaEVbwcM3TdkPpkWzQqelg5VLxmUwqYhQV8OqoM+3HuksnkGo4ISYsWz8RKo?=
- =?us-ascii?Q?BBX7u+GGCxiWy6SVLC0Sv623sVzmxmcfTR+oti26/5Pio8nvrhYHp6v1VGAF?=
- =?us-ascii?Q?mjBhoDbvFuK5neFdyx0kLVA9zvygMLGVK+T52H1D6Cx7qmd8wDBZDNk+nhzV?=
- =?us-ascii?Q?qL+vrI6Hw3Us7jm4CYyIKkrrm5iharcu1GjwxSr9F4eMRYCu/8/OXF/260sr?=
- =?us-ascii?Q?bmhjSUIhUYm8P16Gv5TR0we0HdA9h7R3de9MUolS4RMDYsoEg0Mg8n9ND4PF?=
- =?us-ascii?Q?zVVAXss2hheqoplujiWXFAH5eFcYpmbdnFEeWyeFM7EgXJ37jhMm76cnITxL?=
- =?us-ascii?Q?ILKyVpAeBOguYFmPCKSUvnCyaGbZY73ETP10jzmek5UfnbsO8+DD0vNVZ02J?=
- =?us-ascii?Q?BEMY+V+syzAgsb78z6WuivDxDMbeYlPLO0czYrlVn6qF5ECwXbZ36v3F5ucU?=
- =?us-ascii?Q?fody0ugadvHsmplWlh0C5sC/SQdxFpaS1kPMO3NYnZuYCcieHsvLIxOZQwyB?=
- =?us-ascii?Q?FA1GO4TrPqgs2QLozUKK5UP35wUb3fAJzXkBT4Syekh7zzdYzYTlu57pcmxm?=
- =?us-ascii?Q?7cU9/SPRe7Y3G4suLfIg2LL+uOjX7tdNLFtX2RIic/38Nz0nBnzmrkCzYouI?=
- =?us-ascii?Q?ttAm4UZtPkn/ejzUIOMlqyCg8a9yjRjIDHU5bwtpMFmgyIHE+qEs+G8OqTOk?=
- =?us-ascii?Q?oWIfZwSEhwKZxx8rE5YOrI8sxJIVodd1TS3fyMuu3PsCcUsvajStH609qJlt?=
- =?us-ascii?Q?+JdJ4sRILDaz8rwp2L404T4=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ddda937-3b49-4a32-01a5-08dcff91e6bc
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR01MB6228.prod.exchangelabs.com
+	=?us-ascii?Q?PSPB6/tTRKhCVoq0ntU2EDvXheywFf7GfHqMZqpMR7FaAZuqCo1/fRmk5W98?=
+ =?us-ascii?Q?xC3PFIGGbnEsEAzonRT1FgL3O0gK+02jHIDB2/grw+HbGD2roZNE44Y3rs5Q?=
+ =?us-ascii?Q?KBdSH6Apq3jftOrMH1jJ57ubKF9iqycOTYfE/HlOIcCYZ0ckew6DzzI07G2e?=
+ =?us-ascii?Q?WlAhqvlW4vDLrytxbY8sw6S6pKcrZEGTW/VpLqZU2kL+5gm12DjXUV+UsAj3?=
+ =?us-ascii?Q?rGOMyeKSFvyZVhVUlPH/IUMOQ73f9JrCFnuVDZKd4S0c60vfSOGNAtMTXkcL?=
+ =?us-ascii?Q?JnmAJa4doDDgMTcavHRudUCpAt4mXxFugmRAZlyuugupoSvK4u9GZPjBfYIN?=
+ =?us-ascii?Q?REFwsY1NGWzRPcknXAP7VPdiVZ+K7Ld24zmuBR8ZbGu0BbPn9McruCjSDhUc?=
+ =?us-ascii?Q?WA9Cq+3/SuJHIqN/wcYeUHxtcsFLh/XoGJKKvdhiVeNYKEwGQJN80Wh21SKV?=
+ =?us-ascii?Q?Ti2NZFNGqBRHDYXltKXmS54mEDKusGDz6DbiyQSbFMYkypwaGe4SKOm8d+L8?=
+ =?us-ascii?Q?uPpd/Mhl5wJNqt3TTgMwetgSR5q/wpX3qEPIbtovpXBlx3h2U0f5NkBkdNfQ?=
+ =?us-ascii?Q?ouEN+lHvbc2K9QHHhW09ef0643AXnIRW/Yk+fegNjqDygRZbZNE1SEeW0FEW?=
+ =?us-ascii?Q?d2VoOYJkF/1NjnHilIqpHeMC6q/ePyJoHaxPv18onJzp68Xm9sQI+GVPNuJt?=
+ =?us-ascii?Q?RMIw1FPd7TPDCu4n8tq54Fnj0GepDbUDVlCYRmFD+A2LwrKB2fCDzqPCVt65?=
+ =?us-ascii?Q?BET/HKrhAk4GI+0SosZNjHmmwy0BH6+cCsMSTPwEOZ5TTA+Tq6TPKqKvHuiU?=
+ =?us-ascii?Q?UGQGfLAdo9BRWQkG3hOh+TryS5yVheZEBZqiEIvqNYpIO06Vprb5Wi0yqI4C?=
+ =?us-ascii?Q?g6pfdvkdgWnZhTVGR1lfIXeIy7aktHU8+TbSVCJ9lS5fllpB60DARV7EPDo7?=
+ =?us-ascii?Q?VdbSKgq/MDO69S2I69Kpqt9ggXTewJacuMMgLG5F5cx6uW6qrUYrwBxzGv4Z?=
+ =?us-ascii?Q?7W2j5ABaFjJZJSImiu00Z0ubxlFc/PDIwMrffDl/hrD2PbiCiW39nfz2hEyx?=
+ =?us-ascii?Q?zlTNBVeRFM2UDxAun4UZuaQlQBwmIkwPQO35dYDK3U8XZ4pUSCgWVvIo2dLU?=
+ =?us-ascii?Q?mw/ta6Vvm2vP/QZW3iFqzOwkofpIRl9wxz1lDdZhKNL3SV8ah3N/b7jlKunF?=
+ =?us-ascii?Q?hsK05liOYl+VWu7n0eGTZOvS8CrIzrkoXPSoEcbaOQDUvP3ZZpvdSbEFry3u?=
+ =?us-ascii?Q?xiOsXctxOS61t22q5Fr70tToPvHTwuS61BwQTFfLRp8SDlpd8DtdrITzk0dL?=
+ =?us-ascii?Q?SYxWacy70Z3vge6zsd+5M6gZdVur3avhEzQrqF/ghOhWvO1lCA51CcjpymDS?=
+ =?us-ascii?Q?GmjLP9jtfd+l74M4M6KDgIchC4rDYHGNCJl/7u9m7A+OjQCeSessDeFUGFNW?=
+ =?us-ascii?Q?4g9FjisqEU6VnW+nq+t34bOKzHAQHde3HiGW0mIxJ5/ycP6uvWHT14lKemck?=
+ =?us-ascii?Q?pauWhyfphYpQbYWE8BUBulsYmxv5lcatREj7SlJSw4Lz2WPxJCBIniieNAif?=
+ =?us-ascii?Q?zfmhAgNbnZ+uF5Grz8E+NIz8CSsM2T81clpQTtKH?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a719aff7-2811-4cf2-c186-08dcffa12523
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2024 01:08:48.8423
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2024 02:57:56.0898
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1Vua2hu1KGj/6jE30bqgQ0FKsgmJm+xPhmUD4CJh2j+pDbg3RsjJsg4xF8Q7sBhnbDoFbavZsO30/nCqu5NlC9HYdZpa6h022QcuyAyGwG96BNDt9Kpnik/zRheuuIjf
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR01MB7385
+X-MS-Exchange-CrossTenant-UserPrincipalName: YOybxuEWfVGcoyuDIDdHOE4UM8R1/wIhDYR3SyDntewoNns/dCG3WzLCby94rNp6tdXvdVa0ae5OToMmayrb2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7982
 
-Decode SPE Data Source packets on AmpereOne. The field is IMPDEF.
+On Thu, Nov 07, 2024 at 08:20:27AM -0800, Ian Rogers wrote:
+> Xu Yang <xu.yang_2@nxp.com> reported issues with the system metric
+> lookup:
+> https://lore.kernel.org/linux-perf-users/20241106085441.3945502-1-xu.yang_2@nxp.com/
+> These patches remove a lot of the logic relating CPUIDs to PMUs so
+> that the PMU isn't part of the question when finding a metric table.
+> For time reasons, it doesn't go as far as allowing system metrics
+> without a metric table as a metric table is needed for metrics to
+> refer to other metrics, and the refactoring of that resolution is a
+> hassle.
 
-Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
----
- .../util/arm-spe-decoder/arm-spe-decoder.h    |  9 ++++
- tools/perf/util/arm-spe.c                     | 44 +++++++++++++++++++
- 2 files changed, 53 insertions(+)
+For this patchset:
+Tested-by: Xu Yang <xu.yang_2@nxp.com>
 
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-index 358c611eeddb..4bcd627e859f 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-@@ -67,6 +67,15 @@ enum arm_spe_common_data_source {
- 	ARM_SPE_COMMON_DS_DRAM		= 0xe,
- };
- 
-+enum arm_spe_ampereone_data_source {
-+	ARM_SPE_AMPEREONE_LOCAL_CHIP_CACHE_OR_DEVICE    = 0x0,
-+	ARM_SPE_AMPEREONE_SLC                           = 0x3,
-+	ARM_SPE_AMPEREONE_REMOTE_CHIP_CACHE             = 0x5,
-+	ARM_SPE_AMPEREONE_DDR                           = 0x7,
-+	ARM_SPE_AMPEREONE_L1D                           = 0x8,
-+	ARM_SPE_AMPEREONE_L2D                           = 0x9,
-+};
-+
- struct arm_spe_record {
- 	enum arm_spe_sample_type type;
- 	int err;
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index dfb0c07cb7fe..df84933b673d 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -455,8 +455,14 @@ static const struct midr_range common_ds_encoding_cpus[] = {
- 	{},
- };
- 
-+static const struct midr_range ampereone_ds_encoding_cpus[] = {
-+	MIDR_ALL_VERSIONS(MIDR_AMPERE1A),
-+	{},
-+};
-+
- static const struct data_source_handle data_source_handles[] = {
- 	DS(common_ds_encoding_cpus, data_source_common),
-+	DS(ampereone_ds_encoding_cpus, data_source_ampereone),
- };
- 
- static void arm_spe__sample_flags(struct arm_spe_queue *speq)
-@@ -548,6 +554,44 @@ static void arm_spe__synth_data_source_common(const struct arm_spe_record *recor
- 	}
- }
- 
-+/*
-+ * Source is IMPDEF. Here we convert the source code used on AmpereOne cores
-+ * to the common (Neoverse, Cortex) to avoid duplicating the decoding code.
-+ */
-+static void arm_spe__synth_data_source_ampereone(const struct arm_spe_record *record,
-+						 union perf_mem_data_src *data_src)
-+{
-+	struct arm_spe_record common_record;
-+
-+	switch (record->source) {
-+	case ARM_SPE_AMPEREONE_LOCAL_CHIP_CACHE_OR_DEVICE:
-+		common_record.source = ARM_SPE_COMMON_DS_PEER_CORE;
-+		break;
-+	case ARM_SPE_AMPEREONE_SLC:
-+		common_record.source = ARM_SPE_COMMON_DS_SYS_CACHE;
-+		break;
-+	case ARM_SPE_AMPEREONE_REMOTE_CHIP_CACHE:
-+		common_record.source = ARM_SPE_COMMON_DS_REMOTE;
-+		break;
-+	case ARM_SPE_AMPEREONE_DDR:
-+		common_record.source = ARM_SPE_COMMON_DS_DRAM;
-+		break;
-+	case ARM_SPE_AMPEREONE_L1D:
-+		common_record.source = ARM_SPE_COMMON_DS_L1D;
-+		break;
-+	case ARM_SPE_AMPEREONE_L2D:
-+		common_record.source = ARM_SPE_COMMON_DS_L2;
-+		break;
-+	default:
-+		pr_warning_once("AmpereOne: Unknown data source (0x%x)\n",
-+				record->source);
-+		return;
-+	}
-+
-+	common_record.op = record->op;
-+	arm_spe__synth_data_source_common(&common_record, data_src);
-+}
-+
- static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
- 					union perf_mem_data_src *data_src)
- {
--- 
-2.47.0
+Thanks,
+Xu Yang
 
+> 
+> Ian Rogers (7):
+>   perf header: Move is_cpu_online to numa bench
+>   perf header: Refactor get_cpuid to take a CPU for ARM
+>   perf arm64 header: Use cpu argument in get_cpuid
+>   perf header: Avoid transitive PMU includes
+>   perf header: Pass a perf_cpu rather than a PMU to get_cpuid_str
+>   perf jevents: Add map_for_cpu
+>   perf pmu: Move pmu_metrics_table__find and remove ARM override
+> 
+> Xu Yang (1):
+>   perf jevents: fix breakage when do perf stat on system metric
+> 
+>  tools/perf/arch/arm64/util/arm-spe.c     | 14 +---
+>  tools/perf/arch/arm64/util/header.c      | 73 ++++++++++-----------
+>  tools/perf/arch/arm64/util/pmu.c         | 20 ------
+>  tools/perf/arch/loongarch/util/header.c  |  4 +-
+>  tools/perf/arch/powerpc/util/header.c    |  4 +-
+>  tools/perf/arch/riscv/util/header.c      |  4 +-
+>  tools/perf/arch/s390/util/header.c       |  6 +-
+>  tools/perf/arch/x86/util/auxtrace.c      |  3 +-
+>  tools/perf/arch/x86/util/header.c        |  5 +-
+>  tools/perf/bench/numa.c                  | 53 +++++++++++++++
+>  tools/perf/builtin-kvm.c                 |  4 +-
+>  tools/perf/pmu-events/empty-pmu-events.c | 39 ++++++-----
+>  tools/perf/pmu-events/jevents.py         | 39 ++++++-----
+>  tools/perf/pmu-events/pmu-events.h       |  2 +-
+>  tools/perf/tests/expr.c                  |  5 +-
+>  tools/perf/util/env.c                    |  4 +-
+>  tools/perf/util/expr.c                   |  6 +-
+>  tools/perf/util/header.c                 | 82 ++++++++----------------
+>  tools/perf/util/header.h                 | 23 +++----
+>  tools/perf/util/pmu.c                    | 25 --------
+>  tools/perf/util/pmu.h                    |  2 -
+>  tools/perf/util/probe-event.c            |  1 +
+>  22 files changed, 189 insertions(+), 229 deletions(-)
+> 
+> -- 
+> 2.47.0.199.ga7371fff76-goog
+> 
