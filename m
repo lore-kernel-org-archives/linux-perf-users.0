@@ -1,57 +1,57 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7A220B7F1;
-	Fri,  8 Nov 2024 20:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A0D20B80C;
+	Fri,  8 Nov 2024 20:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731098512; cv=none; b=KxupFhzDnTJCzsAKvjLt4iPoV8OVRc0scZ5ujJ5YJ3qgG0pj1Zq4XnMD4y0CGVkXF2zDmozKj4s3PKHEB4ukyFIYkFWkn2H0XWS9c4FaI9mmEpnW6UIXqDew+VxmUXzn9rSL1fju22pIHQYszuCsTnreIr5k/sPWFtEmG6fBUxk=
+	t=1731098513; cv=none; b=IfYaDOS8gCgdzKwyRyT95LhXANPHB2OYD2KJHdjn00qZSPZlphbTrC1oXifHWM6GKSd4ERSXoR52ZJu58kvwb+0eaMGAltfy0bEmU6kfa5uVE3dqHHBlDGLJc9r/caL6MXdJZFSSsIHi0F1S0I8ktCbdybxtCH2HXrpkQ8wdps8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731098512; c=relaxed/simple;
-	bh=kU2mz8BbKOcRd2Dn2h3z3TC1djUFPkPBe7wwzIDw8eo=;
+	s=arc-20240116; t=1731098513; c=relaxed/simple;
+	bh=Tl9AyEv3smIY7p3T198j57FdTS4TZIpXoQZrVbxqybY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MuO9QQJE0jHE5X1kxSFKVIYevhYqQgkw9SxHCojXN+AOo+eP2AH8wFWHFv8+a2tp6yRnNYFWsDkhS3NHfKdBbSOI4SIbzzrLCvPw+Y4vuepkNUVGjD+R/cnsv6oUWkPM3FYieDgnZm3My4Lyb62KZRejSS32c0Y2ajS1zjJZ5JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DWXdFCUL; arc=none smtp.client-ip=209.85.210.175
+	 MIME-Version; b=QXWb+7uOqycemoe93xttcYg0n7mJ44tmaw7J7JUs3uPwWMzL19Sxtd/ERT+cQsNG+XuLjRsIjgDgG403rXEPh88Pn+NTSPeiwVd2WhXQY1PTpIzf8XQJhURD9djasP7N6N0DxCIIngW2/1zzVIFuXR0YrNQQm1mcQDri+gLNFZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VIlBZMqp; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWXdFCUL"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-71e61b47c6cso2263311b3a.2;
-        Fri, 08 Nov 2024 12:41:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIlBZMqp"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7eab7622b61so1871743a12.1;
+        Fri, 08 Nov 2024 12:41:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731098510; x=1731703310; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1731098512; x=1731703312; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cHhcbRkHBVYZ1gs3jQbFCFGApL4t6RWueBDb3aZux68=;
-        b=DWXdFCULeyv/QBy/2uMKV4D0rGQMD4UKexDAFMDoDdcADlywgxXu9h07vhGU+lZ2sf
-         oN0eRg6uhaPb7N7WULS10LBez7VpLxz/vFK3MSEqVT9AQerLPWXansd0qIizEwMB7Dl7
-         YYvEhaZP936OvvdSGx1Jx1o2MJxim8sF0qNvrgqEg88brmM9KKKN/ohVkix/PbN56d48
-         23owNMfv6+rSam1p1wAMp82NGiMKfUWlbjFWM6cPzC96RqDBS7AG6DCHbumCu7sI4Zl7
-         OFJLeOOPKlHt5UutZRZrnjyuBPEmAQ/tlkxubOh+pNjLyIihp/GT6dOFdDmCkBAQ7aRV
-         ZfRw==
+        bh=T+BAbUCg60j3RuDc5ntxQHSalyoQVHFsNzlA4CMtOQA=;
+        b=VIlBZMqpnf5YsSZCu1LbWGOFZKr3WXb4lSY841+svwG8BXlSxDpnClltQsBZw8NYwx
+         RyuVQzhqDR6C21jpbtKcPAzMRRJlwHO6eVmSH22ntCQa2Co4M9dfH3q0TigeVqkCRJTv
+         VL3d02DiqU2TSSieUHdQhUon4bW2FloP1rgkiIeT02KHzRJ3EWRgJoZk7CiJMkyZ8rzZ
+         apxGJlnq+0pKrKFyWmJJ4163Uynk6U3UBNG7axQKAgPppCzm2gbtlHbA0IRierqa1WY9
+         rAGdmKzQJ3NOlHc0h1RJTxdRUY9UHXbEjDBGDm3tenXkNHEoNBOrFPAUqPjf+p3L4QkN
+         d1Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731098510; x=1731703310;
+        d=1e100.net; s=20230601; t=1731098512; x=1731703312;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cHhcbRkHBVYZ1gs3jQbFCFGApL4t6RWueBDb3aZux68=;
-        b=HWxxz3NTnFspLWBUzM/ZuUkmWjTbUlSP62vvh8cPxsTeHeBzXVYxFtmg7AvSIa2hKX
-         065i6IkrEb/e5kPnow4kak+cQs4yIgYpKsUHPKNUtfEL1qZnqrHZ4/RV3JGL6VcnnQIJ
-         zkc2O4IqTb/oXfLpxZgAGyroP2MoZDBknQBIgxZxrP2ZL2EsZ+Mp4RWsH3w5ZD5OAGL9
-         24XlL8lmnKloCcKELZ7XDjLjzY5MLD6wD8yWmgQRNQtyMXiQ8y1kpOPjzl/t6RfpDPs4
-         U5PVBE7mmLp0uV6ZWNo/aYBKGT1U1uiTBcGDmIEKql65BWQyRQ5/oMnz0OBq6FMpNuZ0
-         MqAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWhfWeDAqfQoa0Mk4jmarfi7oXX1XoYAgSdnyuSkg6auWxO0tP69TPvDYcSDsu5TU2YJPIzlwHFr2c7Mw=@vger.kernel.org, AJvYcCXtgrqW8uFmMdgUTenQOEz3v1OlOmljrdeByR7wwrf/UqLwxv/vlM///91yVx/J+ACCxDopDo1EKtlaQGgtpzNeyg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YybpZNYINFAs7ZlyxRZt6DvIjvkxx4LGuBUAsruFPfzmeiKrAu2
-	LY2dP2eU2RS6gwokRn/72iY6kqTmeJ2o6DiQ/yBwT6U7nhXWRcWb
-X-Google-Smtp-Source: AGHT+IGXYvt9kIQbrdyodf6HiIih9pJ84IS2nevmoCyS/Yi4NVs04O4lPpnRfGNjPXpnpMqrldUZ/g==
-X-Received: by 2002:a05:6a00:198a:b0:71e:692e:7afb with SMTP id d2e1a72fcca58-7241325f64amr5306390b3a.5.1731098510276;
-        Fri, 08 Nov 2024 12:41:50 -0800 (PST)
+        bh=T+BAbUCg60j3RuDc5ntxQHSalyoQVHFsNzlA4CMtOQA=;
+        b=MbJ6zxRaFKQXfjAqxpe9aq8HEggFvKqG04rTT4XzVTG4uDnzyGExAYtf/pon4vKbX1
+         7tqgqsejAu9V0XMDJ5/eiGV0vkQVmFTWj2kDpb3V+tpyXronigJiXEC/azET7Ed+CzQ1
+         g/77dkg3M9u7+nu3tz5CWO5sZGrbL9YIOSQOa8QUn62pIwI8TP9LQSgWxs89rDQOq1Ev
+         7gKihZYTYrbSErRaAn6JzgTVokq6Sl+jaMubluoEoGfD6xszzWyTrS0KMLcfEQibmRZe
+         WfJDuyvmvnFsY+PUV9r0r98p5rM8Mq7RRsiaFJHN3EyeM+hrsjj1Mgk798D0syp3JHkP
+         T1tA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1yLILn72vt/3WNJPNGZTb9tLvCXFhUKeev+EIqUTV32WM5cha2wfDqtM8lhm5N7Dwbb738cGBXjF2AGw=@vger.kernel.org, AJvYcCWIkshbP72mfyfpp5ziOQPMxJMI/9uBGwqk6DdczBAR6s5URd0O7NokyjT7WEOt3aJTqOlhCmGw4+M4fxBbdExnfw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmZZngodl1xVrr87pitvNTffZhggbjGFNNmQg48s5oKpGNEIhl
+	QtsvjF93YYb+fAcbLu0qhlsAqSgaV4hzBz9dwkmrgan9WKa3GgCG
+X-Google-Smtp-Source: AGHT+IGqmQ4wNgdsf9GSvRWHeQMzuTah+ugDU5ZOuZgYAOIV8zPHcwI5VfsOOSwuOH0m/DDqauyfxA==
+X-Received: by 2002:a05:6a20:8421:b0:1d9:c6e8:60fc with SMTP id adf61e73a8af0-1dc228931b2mr6256266637.6.1731098511794;
+        Fri, 08 Nov 2024 12:41:51 -0800 (PST)
 Received: from mbp.lan (c-67-174-206-244.hsd1.ca.comcast.net. [67.174.206.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7240785ffe3sm4221945b3a.2.2024.11.08.12.41.49
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7240785ffe3sm4221945b3a.2.2024.11.08.12.41.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2024 12:41:50 -0800 (PST)
+        Fri, 08 Nov 2024 12:41:51 -0800 (PST)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org,
 	peterz@infradead.org
@@ -67,9 +67,9 @@ Cc: namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v7 04/10] perf record --off-cpu: Preparation of off-cpu BPF program
-Date: Fri,  8 Nov 2024 12:41:31 -0800
-Message-ID: <20241108204137.2444151-5-howardchu95@gmail.com>
+Subject: [PATCH v7 05/10] perf record --off-cpu: Dump off-cpu samples in BPF
+Date: Fri,  8 Nov 2024 12:41:32 -0800
+Message-ID: <20241108204137.2444151-6-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241108204137.2444151-1-howardchu95@gmail.com>
 References: <20241108204137.2444151-1-howardchu95@gmail.com>
@@ -81,74 +81,146 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Set the perf_event map in BPF for dumping off-cpu samples.
+Collect tid, period, callchain, and cgroup id and dump them when off-cpu
+time threshold is reached.
 
-Set the offcpu_thresh to specify the threshold.
+We don't collect the off-cpu time twice (the delta), it's either in
+direct samples, or accumulated samples that are dumped at the end of
+perf.data.
 
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- tools/perf/util/bpf_off_cpu.c          | 20 ++++++++++++++++++++
- tools/perf/util/bpf_skel/off_cpu.bpf.c |  2 ++
- 2 files changed, 22 insertions(+)
+ tools/perf/util/bpf_skel/off_cpu.bpf.c | 83 ++++++++++++++++++++++++--
+ 1 file changed, 78 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-index 558c5e5c2dc3..cfe5b17393e9 100644
---- a/tools/perf/util/bpf_off_cpu.c
-+++ b/tools/perf/util/bpf_off_cpu.c
-@@ -13,6 +13,7 @@
- #include "util/cgroup.h"
- #include "util/strlist.h"
- #include <bpf/bpf.h>
-+#include <internal/xyarray.h>
- 
- #include "bpf_skel/off_cpu.skel.h"
- 
-@@ -73,6 +74,23 @@ static void off_cpu_start(void *arg)
- 		bpf_map_update_elem(fd, &pid, &val, BPF_ANY);
- 	}
- 
-+	/* update BPF perf_event map */
-+	evsel = evlist__find_evsel_by_str(evlist, OFFCPU_EVENT);
-+	if (evsel == NULL) {
-+		pr_err("%s evsel not found\n", OFFCPU_EVENT);
-+		return;
-+	}
-+
-+	perf_cpu_map__for_each_cpu(pcpu, i, evsel->core.cpus) {
-+		err = bpf_map__update_elem(skel->maps.offcpu_output, &pcpu.cpu, sizeof(__u32),
-+					   xyarray__entry(evsel->core.fd, i, 0),
-+					   sizeof(__u32), BPF_ANY);
-+		if (err) {
-+			pr_err("Failed to update perf event map for direct off-cpu dumping\n");
-+			return;
-+		}
-+	}
-+
- 	skel->bss->enabled = 1;
- }
- 
-@@ -261,6 +279,8 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
- 		}
- 	}
- 
-+	skel->bss->offcpu_thresh = opts->off_cpu_thresh * 1000;
-+
- 	err = off_cpu_bpf__attach(skel);
- 	if (err) {
- 		pr_err("Failed to attach off-cpu BPF skeleton\n");
 diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-index c152116df72f..dc6acafb9353 100644
+index dc6acafb9353..bf652c30b1c9 100644
 --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
 +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-@@ -97,6 +97,8 @@ const volatile bool uses_cgroup_v1 = false;
+@@ -18,10 +18,18 @@
+ #define MAX_STACKS   32
+ #define MAX_ENTRIES  102400
  
- int perf_subsys_id = -1;
- 
-+__u64 offcpu_thresh;
++#define MAX_CPUS  4096
++#define MAX_OFFCPU_LEN 37
 +
- /*
-  * Old kernel used to call it task_struct->state and now it's '__state'.
-  * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
++struct stack {
++	u64 array[MAX_STACKS];
++};
++
+ struct tstamp_data {
+ 	__u32 stack_id;
+ 	__u32 state;
+ 	__u64 timestamp;
++	struct stack stack;
+ };
+ 
+ struct offcpu_key {
+@@ -39,6 +47,24 @@ struct {
+ 	__uint(max_entries, MAX_ENTRIES);
+ } stacks SEC(".maps");
+ 
++struct offcpu_data {
++	u64 array[MAX_OFFCPU_LEN];
++};
++
++struct {
++	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
++	__uint(key_size, sizeof(__u32));
++	__uint(value_size, sizeof(__u32));
++	__uint(max_entries, MAX_CPUS);
++} offcpu_output SEC(".maps");
++
++struct {
++	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
++	__uint(key_size, sizeof(__u32));
++	__uint(value_size, sizeof(struct offcpu_data));
++	__uint(max_entries, 1);
++} offcpu_payload SEC(".maps");
++
+ struct {
+ 	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
+ 	__uint(map_flags, BPF_F_NO_PREALLOC);
+@@ -185,6 +211,39 @@ static inline int can_record(struct task_struct *t, int state)
+ 	return 1;
+ }
+ 
++static inline int copy_stack(struct stack *from, struct offcpu_data *to, int n)
++{
++	int len = 0;
++
++	for (int i = 0; i < MAX_STACKS && from->array[i]; ++i, ++len)
++		to->array[n + 2 + i] = from->array[i];
++
++	return len;
++}
++
++static int off_cpu_dump(void *ctx, struct offcpu_data *data, struct offcpu_key *key,
++			struct stack *stack, __u64 delta, __u64 timestamp)
++{
++	/* dump tid, period, callchain, and cgroup id */
++	int n = 0, len = 0;
++
++	data->array[n++] = (u64)key->tgid << 32 | key->pid;
++	data->array[n++] = delta;
++
++	/* data->array[n] is callchain->nr (updated later) */
++	data->array[n + 1] = PERF_CONTEXT_USER;
++	data->array[n + 2] = 0;
++	len = copy_stack(stack, data, n);
++
++	/* update length of callchain */
++	data->array[n] = len + 1;
++	n += len + 2;
++
++	data->array[n++] = key->cgroup_id;
++
++	return bpf_perf_event_output(ctx, &offcpu_output, BPF_F_CURRENT_CPU, data, n * sizeof(u64));
++}
++
+ static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
+ 			struct task_struct *next, int state)
+ {
+@@ -209,6 +268,12 @@ static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
+ 	pelem->state = state;
+ 	pelem->stack_id = stack_id;
+ 
++	/*
++	 * If stacks are successfully collected by bpf_get_stackid(), collect them once more
++	 * in task_storage for direct off-cpu sample dumping
++	 */
++	if (stack_id > 0 && bpf_get_stack(ctx, &pelem->stack, MAX_STACKS * sizeof(u64), BPF_F_USER_STACK)) {
++	}
++
+ next:
+ 	pelem = bpf_task_storage_get(&tstamp, next, NULL, 0);
+ 
+@@ -223,11 +288,19 @@ static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
+ 		__u64 delta = ts - pelem->timestamp;
+ 		__u64 *total;
+ 
+-		total = bpf_map_lookup_elem(&off_cpu, &key);
+-		if (total)
+-			*total += delta;
+-		else
+-			bpf_map_update_elem(&off_cpu, &key, &delta, BPF_ANY);
++		if (delta >= offcpu_thresh) {
++			int zero = 0;
++			struct offcpu_data *data = bpf_map_lookup_elem(&offcpu_payload, &zero);
++
++			if (data)
++				off_cpu_dump(ctx, data, &key, &pelem->stack, delta, pelem->timestamp);
++		} else {
++			total = bpf_map_lookup_elem(&off_cpu, &key);
++			if (total)
++				*total += delta;
++			else
++				bpf_map_update_elem(&off_cpu, &key, &delta, BPF_ANY);
++		}
+ 
+ 		/* prevent to reuse the timestamp later */
+ 		pelem->timestamp = 0;
 -- 
 2.43.0
 
