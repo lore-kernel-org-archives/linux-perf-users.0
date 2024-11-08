@@ -1,179 +1,171 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8CC1E47C0
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 Nov 2024 12:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2951EABA9;
+	Fri,  8 Nov 2024 13:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731068210; cv=none; b=E3zA2autP+Ab41rfDIq7gsm5FDa225OmL8CLk7VB+Wi0KjadwBzaMuW/vqfWW/JxjFMSE+ukXsrwwyXeGaDc/HlC64Bi3M8/WQkI4UgupVREHbCkjiEKOx/aYJZLfQfIeykwcdzrAPJyO2fD9OzCAYK0ZzT6zdzgOx7MDuTaYsU=
+	t=1731071514; cv=none; b=iMETDf6Px7ZDkCLPmm70fPL9Cejs2Uki0Ql/SF47V/mfSQrgQSRjBqm8S7OFLf89dp+FJPbWTC/V3qBJvBSN/j5e6uhOQLMeYA76UX/7/f4xaL9b+X96OU83M68LjBtONMMfwe5KJF6svZGyfg0rcTux0a+h5T3j1epeziNwXts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731068210; c=relaxed/simple;
-	bh=INR+4hF4QADHM4c27Irlv2yAX6TqyDNccEXTVlS880U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d1JQc7SMdsq65qsMUZ44VVh/TER4kqbFa1I9BfcYj4ASNWmtnv0wj7xVMwcIFm+FuD6O9Gm1UYMo0jrBDNHMC/MC9IH3EwDzBmgB70fKkdJ4Tak/RanV5Wxlv8jxjsIOh3AA1JpxZyN9ZWWyk3WUeKjWq/YthMqNcfl+COnWEg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sLGL7xCd; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1731071514; c=relaxed/simple;
+	bh=ljQ8Fomc865u7EknG2fR45+zwg9L/eg93/a5wv/rJNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EC1NJrLV08vJwpWmeje2GYU1NV4lKwhwMo0rcCT2rE95UGh0R//i38japso+OrQjSAmrBmYRadjF1QFwRMpuURQG5RBPbqraZfEDEdBPnh7a/BLjHCzXdPFO68WJe4mjI5OWv7r95yNFQvEF9zT5tgf0HAALhQWem+MakMuf3EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rhMQFjSa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sLGL7xCd"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-539f7606199so2043741e87.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 04:16:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731068205; x=1731673005; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JZ3fBc9vrdhfjlvvoxQNCflIXe7o6g5VS5PYdFJEVS8=;
-        b=sLGL7xCdskoEI6X77FlWDiMbUvnKFX/bfujjdgCnKm7laZ8Mj0sTOfEhBo4Z8o5ghp
-         MZ9liewtTDRliForMwdw0JM7WoK5uRadAPWDCCH0FRE9m+731eIUuaOIGdxkL55zWy6G
-         ciKm2szcelaMKwhogPK05m2RqZ5XenfSYaB9ZMy1i7mbUi+y5ZA3p+xDiQ0qwximFlCj
-         7WTZhnr6DefJ6VRjT+ebwKzvFhTWmjhf4yjod0TWuJOhfzcSiogmRKXE1kGox7esSSvB
-         Rz0Wor9womsJqPbrBLFNSIDeQGxX7WeRgJuATqxjNOJnfyRnjlyRMFUCEFowgeGnZef7
-         086g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731068205; x=1731673005;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JZ3fBc9vrdhfjlvvoxQNCflIXe7o6g5VS5PYdFJEVS8=;
-        b=G/xo6Y/x8FDuGqYGG88+Rh+8rDg3rUtG7CCWU+v6j8KodLWNU/fQ1W+VDygeWoqdej
-         l32Wz14V88iUDHIDZ/PBvdRTyiKGXdhw3px2RvzYZdKGs6uDOek+dLmvy3YmgYejOzaf
-         xQQdIv4rhoTZNbp47CvO7zbgZ+p2GLwMp7RRHSvXlZOe0kQN6JbcMk4yJzOPdqmsrx+t
-         n6cPPshWnWL/pDIvW0w0yWq6w0gYEOp3k87LOGguwua/VjSK/+6s3/+P5WXpzXZvgpt+
-         EM+2O/6Cw3x0ejV8QW40C/ZLxt3lbXwTecSF+noOB5T5itLHo0yZuOAs43GxiZrhX5y+
-         TOuw==
-X-Forwarded-Encrypted: i=1; AJvYcCXeMEGR9XMP7r0Gp07KXCzk3xHYh8SHq9BvormJxPPs+LrFqILujLP/FI6tmg+ZNOaZVYsZLkSdgadGpSIx37sE@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFd6Vw3QO1PFmb43ffqcLLSzjCDFXXCSqBMwrvxbwk6FRRWD96
-	tCqRklruQijmqGUgzkVbSxr4t3bvI3ACwnc/baNApklC0s9KAAdK4cbPYSUolHk=
-X-Google-Smtp-Source: AGHT+IH1zvqcdZ/LuDqh+mCVw6B8DRN5b7XSyMB+43BYdxRmxl6Kvigd3I21b2SuUwGtr/lV246iLg==
-X-Received: by 2002:a05:6512:3da5:b0:536:7362:5923 with SMTP id 2adb3069b0e04-53d862275c6mr1434785e87.1.1731068205513;
-        Fri, 08 Nov 2024 04:16:45 -0800 (PST)
-Received: from [172.20.144.15] ([89.101.134.25])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432aa523a0esm96371185e9.0.2024.11.08.04.16.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2024 04:16:45 -0800 (PST)
-Message-ID: <78eb729c-7594-460f-9d79-97fb683d8b5e@linaro.org>
-Date: Fri, 8 Nov 2024 12:16:43 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhMQFjSa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A50C4CECD;
+	Fri,  8 Nov 2024 13:11:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731071513;
+	bh=ljQ8Fomc865u7EknG2fR45+zwg9L/eg93/a5wv/rJNI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rhMQFjSa+imhFT1qNMokMam1Fups8zY4jsTbCDdFpD84/XxvW/INrex3b/eJSo0/Z
+	 FN9lKzTnxvYba7SSkkgZYH9xxFNJfc9xB/rdYLXpi5KSf39q/RrqWQsVnF2mQ8BG+b
+	 2/pvKFzbA/HbMKCCOnvKYGrQwvwBQ0g/4ZySSNqLceJ9/4WEI32hHQvvxAOEVzKlLh
+	 pvcFK2APBiX3Hibq/pPpoqqSrK9CqKw6C3RKgS/HlZXEbeITUf1xKpLp2nEb1EDbGq
+	 aMQ80delcGVVwx+M4IFafpPstBnVBerYJHYivuhBgmwtU+NQzUhYIxDvT21k7s4LPQ
+	 LhRhpqBXJMXfw==
+Date: Fri, 8 Nov 2024 14:11:50 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Oleg Nesterov <oleg@redhat.com>
+Cc: "Lai, Yi" <yi1.lai@linux.intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>, yi1.lai@intel.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
+Message-ID: <Zy4OFlxoRK2jM5zo@localhost.localdomain>
+References: <20240624152732.1231678-1-bigeasy@linutronix.de>
+ <20240624152732.1231678-3-bigeasy@linutronix.de>
+ <Zx9Losv4YcJowaP/@ly-workstation>
+ <Zx-B0wK3xqRQsCOS@localhost.localdomain>
+ <20241029172126.5XY8vLBH@linutronix.de>
+ <20241030140721.pZzb9D-u@linutronix.de>
+ <ZyJUzhzHGDu5CLdi@localhost.localdomain>
+ <20241107144617.MjCWysud@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/4] Prefer sysfs/JSON events also when no PMU is
- provided
-To: Ian Rogers <irogers@google.com>, Atish Patra <atishp@rivosinc.com>,
- linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Ben Gainey <ben.gainey@arm.com>,
- Junhao He <hejunhao3@huawei.com>, linux-riscv@lists.infradead.org,
- beeman@rivosinc.com, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>,
- Weilin Wang <weilin.wang@intel.com>,
- Dominique Martinet <asmadeus@codewreck.org>
-References: <20241026121758.143259-1-irogers@google.com>
- <CAP-5=fXf9HtqKZyvfXNbKLTB-dL_Ax5Hd0_Gn1J-y0T1SE9wLQ@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fXf9HtqKZyvfXNbKLTB-dL_Ax5Hd0_Gn1J-y0T1SE9wLQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241107144617.MjCWysud@linutronix.de>
 
++Cc Oleg.
 
-
-On 07/11/2024 18:51, Ian Rogers wrote:
-> On Sat, Oct 26, 2024 at 5:18 AM Ian Rogers <irogers@google.com> wrote:
->>
->> At the RISC-V summit the topic of avoiding event data being in the
->> RISC-V PMU kernel driver came up. There is a preference for sysfs/JSON
->> events being the priority when no PMU is provided so that legacy
->> events maybe supported via json. Originally Mark Rutland also
->> expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
->> M? processors, but James Clark more recently tested this and believes
->> the driver issues there may not have existed or have been resolved. In
->> any case, it is inconsistent that with a PMU event names avoid legacy
->> encodings, but when wildcarding PMUs (ie without a PMU with the event
->> name) the legacy encodings have priority.
->>
->> The patch doing this work was reverted in a v6.10 release candidate
->> as, even though the patch was posted for weeks and had been on
->> linux-next for weeks without issue, Linus was in the habit of using
->> explicit legacy events with unsupported precision options on his
->> Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
->> where ARM decided to call the events bus_cycles and cycles, the latter
->> being also a legacy event name. ARM haven't renamed the cycles event
->> to a more consistent cpu_cycles and avoided the problem. With these
->> changes the problematic event will now be skipped, a large warning
->> produced, and perf record will continue for the other PMU events. This
->> solution was proposed by Arnaldo.
->>
->> Two minor changes have been added to help with the error message and
->> to work around issues occurring with "perf stat metrics (shadow stat)
->> test".
->>
->> The patches have only been tested on my x86 non-hybrid laptop.
+Le Thu, Nov 07, 2024 at 03:46:17PM +0100, Sebastian Andrzej Siewior a écrit :
+> On 2024-10-30 16:46:22 [+0100], Frederic Weisbecker wrote:
+> > This needs more thoughts. We must make sure that the parent is put _after_
+> > the child because it's dereferenced on release, for example:
+> …
+> > put_event()
+> >    free_event()
+> >       irq_work_sync(&event->pending_irq);
+> >       ====> IRQ or irq_workd
+> >       perf_event_wakeup()
+> >          ring_buffer_wakeup()
+> > 	    event = event->parent;
+> > 	    rcu_dereference(event->rb);
+> > 
+> > And now after this patch it's possible that this happens after
+> > the parent has been released.
+> > 
+> > We could put the parent from the child's free_event() but some
+> > places (inherit_event()) may call free_event() on a child without
+> > having held a reference to the parent.
+> > 
+> > Also note that with this patch the task may receive late irrelevant
+> > signals after the event is removed. It's probably not that bad but
+> > still... This could be a concern for exec(), is there a missing
+> > task_work_run() there before flush_signal_handlers()?
 > 
-> Hi Atish and James,
+> So if this causes so much pain, what about taking only one item at a
+> item? The following passes the test, too:
 > 
-> Could I get your tags for this series?
+> diff --git a/kernel/task_work.c b/kernel/task_work.c
+> index c969f1f26be58..fc796ffddfc74 100644
+> --- a/kernel/task_work.c
+> +++ b/kernel/task_work.c
+> @@ -206,7 +206,7 @@ bool task_work_cancel(struct task_struct *task, struct callback_head *cb)
+>  void task_work_run(void)
+>  {
+>  	struct task_struct *task = current;
+> -	struct callback_head *work, *head, *next;
+> +	struct callback_head *work, *head;
+>  
+>  	for (;;) {
+>  		/*
+> @@ -214,17 +214,7 @@ void task_work_run(void)
+>  		 * work_exited unless the list is empty.
+>  		 */
+>  		work = READ_ONCE(task->task_works);
+> -		do {
+> -			head = NULL;
+> -			if (!work) {
+> -				if (task->flags & PF_EXITING)
+> -					head = &work_exited;
+> -				else
+> -					break;
+> -			}
+> -		} while (!try_cmpxchg(&task->task_works, &work, head));
+> -
+> -		if (!work)
+> +		if (!work && !(task->flags & PF_EXITING))
+>  			break;
+>  		/*
+>  		 * Synchronize with task_work_cancel_match(). It can not remove
+> @@ -232,13 +222,24 @@ void task_work_run(void)
+>  		 * But it can remove another entry from the ->next list.
+>  		 */
+>  		raw_spin_lock_irq(&task->pi_lock);
+> +		do {
+> +			head = NULL;
+> +			if (work) {
+> +				head = READ_ONCE(work->next);
+> +			} else {
+> +				if (task->flags & PF_EXITING)
+> +					head = &work_exited;
+> +				else
+> +					break;
+> +			}
+> +		} while (!try_cmpxchg(&task->task_works, &work, head));
+>  		raw_spin_unlock_irq(&task->pi_lock);
+
+And having more than one task work should be sufficiently rare
+that we don't care about doing the locking + cmpxchg() for each
+of them pending.
+
+I like it!
+
+Thanks.
+
+>  
+> -		do {
+> -			next = work->next;
+> -			work->func(work);
+> -			work = next;
+> +		if (!work)
+> +			break;
+> +		work->func(work);
+> +
+> +		if (head)
+>  			cond_resched();
+> -		} while (work);
+>  	}
+>  }
 > 
-> The patches were originally motivated by wanting to make the behavior
-> of events parsed like "cycles" match that of "cpu/cycles/", the PMU is
-> wildcarded to "cpu" in the first case. This was divergent because of
-> ARM we switched from preferring legacy (type = PERF_TYPE_HARDWARE,
-> config = PERF_COUNT_HW_CPU_CYCLES) to sysfs/json (type=<core PMU's
-> type>, config=<encoding from event>) when a PMU name was given. This
-> aligns with RISC-V wanting to use json encodings to avoid complexity
-> in the PMU driver.
-> 
-
-I couldn't find the thread, but I remember fairly recently it was 
-mentioned that RISC-V would be supporting the legacy events after all, 
-maybe it was a comment from Atish? I'm not sure if that changes the 
-requirements for this or not?
-
-I still can't really imagine how tooling would work if every tool has to 
-maintain the mappings of basic events like instructions and branches. 
-For example all the perf_event_open tests in ltp use the legacy events.
-
-And wouldn't porting existing software to RISC-V would be an issue if it 
-doesn't behave in a similar way to what's there already?
-
-> James, could you show the neoverse with the cmn PMU behavior for perf
-> record of "cycles:pp" due to sensitivities there.
-> 
-
-Yep I can check this on Monday.
-
-> Thanks,
-> Ian
-> 
-
-
-> 
-> 
-> 
->> Ian Rogers (4):
->>    perf evsel: Add pmu_name helper
->>    perf stat: Fix find_stat for mixed legacy/non-legacy events
->>    perf record: Skip don't fail for events that don't open
->>    perf parse-events: Reapply "Prefer sysfs/JSON hardware events over
->>      legacy"
->>
->>   tools/perf/builtin-record.c    | 22 +++++++---
->>   tools/perf/util/evsel.c        | 10 +++++
->>   tools/perf/util/evsel.h        |  1 +
->>   tools/perf/util/parse-events.c | 26 +++++++++---
->>   tools/perf/util/parse-events.l | 76 +++++++++++++++++-----------------
->>   tools/perf/util/parse-events.y | 60 ++++++++++++++++++---------
->>   tools/perf/util/pmus.c         | 20 +++++++--
->>   tools/perf/util/stat-shadow.c  |  3 +-
->>   8 files changed, 145 insertions(+), 73 deletions(-)
->>
->> --
->> 2.47.0.163.g1226f6d8fa-goog
->>
+> Sebastian
