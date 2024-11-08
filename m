@@ -1,107 +1,108 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEBB1E0DC0;
-	Fri,  8 Nov 2024 08:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4791F1D0164;
+	Fri,  8 Nov 2024 09:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731054729; cv=none; b=qzTHpQTP7FeTKLS/9k3Zz5GIbS4u1mHVZHdQ8kAvNRyXSWmJ5bkGUhRN/Th8mnK5tfDAqJXuaTHWBgXxk0BcH1dXR5LKE7VdEWL+42My4OrD2S56nev5mV7zmuORyQx6zNXY+Qp3rLgMnj9ieA/1quT7fNWPqw27g6V8xx7BA2A=
+	t=1731056434; cv=none; b=PbJmdvvDglfk5DljqzxBgTzSD8lxYQmGasENN+YOSVDDUcurm0N4MU4Oryrqga+OCsVm4zJ382iNi3J+49eKRCZcp0n2jYqB/7D1VqNU4ueXfkncSkvcfoUkSanhXE/CdKk1kNp+GlD7bRcBRXenNkR49l4apNbEPd+YF01F2To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731054729; c=relaxed/simple;
-	bh=3sJBkEayavAL/421qn0gT4SVknVTqUEE7ecWyEnSIrU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AvQ7xFvaPInf+4+b9VTJ6M7DI2UVs3I9oS+4gy5Lmg6egl76GrbHw4FlO4WzOVd0Lm9pSi5QTxQPwCOIoIDR4czcMxT6And/F+5Vlj/0sNIQZbrDpMId4YPXVpuT95h3ReN66/A+K44wFVQz6q3IPz7XtWEUMji5GWH96AeVG3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=rXBKJ/RC; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1731056434; c=relaxed/simple;
+	bh=CrWKUfftFBZ+wGLTC10F8LpLBdIyBX00HenmHhZlwc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JFEqJb7qXgzOmykKvHMwIwX07NNPlYGIR/lZmPtb/LDGMk8dYHbl7KZG4rvj1EEAvGESkFW83aIrRLMC27e3ITGkHQOi9a9uoeaJWzhC11BYIxSEDu1ri1PdpMn55NdknFO3KJ39pvWromNULrGBdSotmTvv+D9ibPaqqSWiG0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d8lDBsz+; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="rXBKJ/RC"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A87x3Tg006360;
-	Fri, 8 Nov 2024 09:31:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=g5vbFCIwc88VwLAO+iZ3xE
-	3NYbiL6yyK4IunucNImMc=; b=rXBKJ/RCfmEIc24dq4R+1o9ylg43unllI8IhAC
-	67NMl4wSwwQSc9jCJo6F9izUwPmBp2+lglkcFigzKsN9gL5JJeEc5rVkeTwm7jEh
-	tVjUmAJEDUPskBFrmmGFPDmVDrly0E7sIPVI6faSm9/2qbCBZKxzM6hIGBo/FD9p
-	fdioELXwzz/XuirYL7yjpj39KmSvwOUFFou6NSXaG7eOZHe279cE9lJmBo7TBPZR
-	K4I4vqhsAGJBzrhY90TbVFfWO2uYgB7pWdLaKPWfoM813VsvGXTmVaxllfYSPF6v
-	WNvcFySv6+ezc9Fcgd/tZy/H7S/PVZVu4bQF7bTYu5vJPRMA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 42s6g521j7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Nov 2024 09:31:49 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6674740044;
-	Fri,  8 Nov 2024 09:30:34 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 850C7284780;
-	Fri,  8 Nov 2024 09:30:00 +0100 (CET)
-Received: from localhost (10.252.14.62) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Fri, 8 Nov
- 2024 09:29:59 +0100
-From: Jean-Philippe Romain <jean-philippe.romain@foss.st.com>
-To: Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo
-	<acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland
-	<mark.rutland@arm.com>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Liang
- Kan <kan.liang@linux.intel.com>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <fabrice.gasnier@foss.st.com>, <alexandre.torgue@foss.st.com>
-Subject: [PATCH] perf list: fix arguments order issue for events printing
-Date: Fri, 8 Nov 2024 09:29:59 +0100
-Message-ID: <20241108082959.10319-1-jean-philippe.romain@foss.st.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d8lDBsz+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=q0aUDxAYn5YeExddRWD2diDvkGNWUz6lbURBYyNRMws=; b=d8lDBsz+T3r5iY9iWi9iHdiJS/
+	vzyM6gIJSbD8yWA0s2Pq+V1KM7rOb1uTvN05cMFQ6SmM6EpuBqroelhIRqt9B5X/h39XvfgvKaTjN
+	GU0KRleG1AEcgJL+YWeQus5WurpdDX0YqXVlIjvgSxxwmYya11pojSo9M01GTtFQraYsVq/FYrCC0
+	sLB4EnSDYVQI57F2KIvCtYFGP4OJofwY93GXlLW83yPcaiCEHsjdhWXigs7915XeMTtIABOaRT0ds
+	JDQUWB1e+OiRV/JOlHFo4Xu6jYneDSnB3jRiDcvxlpborQ4DBj6s++WzG0uDLKWU0WdfPINOChc4V
+	bMQtGiEw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t9Kqt-00000008awS-2qSz;
+	Fri, 08 Nov 2024 09:00:24 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E2E6230049D; Fri,  8 Nov 2024 10:00:23 +0100 (CET)
+Date: Fri, 8 Nov 2024 10:00:23 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH] uprobes: get RCU trace lock before list iteration
+Message-ID: <20241108090023.GE38786@noisy.programming.kicks-ass.net>
+References: <20241107-rcu_probe-v1-1-0ca8cc2dedfb@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241107-rcu_probe-v1-1-0ca8cc2dedfb@debian.org>
 
-Misalignment of callbacks with print_event:
-- pmu_name and topic arguments to reverse
+On Thu, Nov 07, 2024 at 09:14:45AM -0800, Breno Leitao wrote:
+> Acquire RCU trace lock in filter_chain() to protect
+> list_for_each_entry_rcu() iteration, protecting the list iteration in a
+> RCU read section.
+> 
+> Prior to this fix, list_for_each_entry_srcu() was called without holding
+> the required lock, triggering warnings when RCU_PROVING is enabled:
+> 
+> 	kernel/events/uprobes.c:937 RCU-list traversed without holding the required lock!!
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Fixes: cc01bd044e6a ("uprobes: travers uprobe's consumer list locklessly under SRCU protection")
+> ---
+>  kernel/events/uprobes.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index fa04b14a7d72353adc440742016b813da6c812d2..afdaa45a43ac3948f7983175eda808c989e8738a 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1103,11 +1103,13 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
+>  	bool ret = false;
+>  
+>  	down_read(&uprobe->consumer_rwsem);
+> +	rcu_read_lock_trace();
+>  	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
 
-Signed-off-by: Jean-Philippe ROMAIN <jean-philippe.romain@foss.st.com>
+Maybe I'm confused, but isn't uprobe->consumer list protected by
+uprobe->consumer_rwsem, which we hold for reading?
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 65b8cba324be..c5331721dfee 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -112,7 +112,7 @@ static void wordwrap(FILE *fp, const char *s, int start, int max, int corr)
- 	}
- }
+That is, AFAICT this is a false positive and we should be doing this
+instead, no?
+
+
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index a76ddc5fc982..a5405e9ef9f5 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1104,7 +1104,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
+ 	bool ret = false;
  
--static void default_print_event(void *ps, const char *pmu_name, const char *topic,
-+static void default_print_event(void *ps, const char *topic, const char *pmu_name,
- 				const char *event_name, const char *event_alias,
- 				const char *scale_unit __maybe_unused,
- 				bool deprecated, const char *event_type_desc,
-@@ -353,7 +353,7 @@ static void fix_escape_fprintf(FILE *fp, struct strbuf *buf, const char *fmt, ..
- 	fputs(buf->buf, fp);
- }
- 
--static void json_print_event(void *ps, const char *pmu_name, const char *topic,
-+static void json_print_event(void *ps, const char *topic, const char *pmu_name,
- 			     const char *event_name, const char *event_alias,
- 			     const char *scale_unit,
- 			     bool deprecated, const char *event_type_desc,
--- 
-2.34.1
-
+ 	down_read(&uprobe->consumer_rwsem);
+-	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
++	list_for_each_entry(uc, &uprobe->consumers, cons_node) {
+ 		ret = consumer_filter(uc, mm);
+ 		if (ret)
+ 			break;
