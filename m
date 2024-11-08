@@ -1,240 +1,130 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB36192D7F
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 Nov 2024 18:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510B3192D7F
+	for <linux-perf-users@vger.kernel.org>; Fri,  8 Nov 2024 18:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731091568; cv=none; b=hRTsieHLbH+LXw1xRG5JnrXnrz8hN72qjGe5JfTVzmakg+Zg0cYX2LoBo643JNCgNCFKkr6bhpL1qkN6jdRIl+nMCkwqZOfCYywBwIG2RepAnJWLbB+X3bHML5W5qDqVtYe2vVPGUt1ulJwLumsk/ncZsoBIPdGxFyCm01YAsDg=
+	t=1731091676; cv=none; b=i2lcaklbqrVJ9QqiXPm8U4AoFmMX2+ZLmIkIsxTBnaSVD/MC6Ka30qxl4E/0Db18FcAcbenUq+DeC/7y54oqb/AM4+eE2flkcRPBr/HO3mnJBzWE8KXm9+jmcmgkJSJu/W51Agi2wBNs4LpVqPTNx7iyfxNppxk2JdapEuNtvdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731091568; c=relaxed/simple;
-	bh=/WS+fI5h/o/kkOA1At/6uiAJlBqvU583Dh59ply0Wnw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uHSj1npda0CKYKu4fcgA9tBSbLVh1ZAOTZEnorpJfO+hdVr4+zi8fg21WyJrBGAdrYkrerd7bW4BbVUoysZC0drHI9pf6gko6iqLJirVQ2Jmf6RPLxw6LUdW7iOzZ/E3Z9JeiSGFUDbf3jmlA5gt8Cbsf4f8UtPlwtP6kHXtp/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OMTL2ujF; arc=none smtp.client-ip=209.85.166.172
+	s=arc-20240116; t=1731091676; c=relaxed/simple;
+	bh=6LmbQELXxQKouTzm2dR1ruovpAw+ncobzPbgDcIN/fQ=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=Oj3kTfmBmn79Auzziwh8JLWuv/XYPGJxbwtaiHTfntCMRRLJfkEdpew3zLRDXmX0cnzA5Ojx/HZ/1/EY5VSraDFcS98t/Q44cNLd8VoLrSHqTBQP29+KUobNxiOD8YXDuLUKBLXrfb0ae1j7ix3WKXYVKs+06rmjp1Tl8POLOWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DwWAUdWZ; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OMTL2ujF"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3a3b28ac9a1so4945ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 10:46:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DwWAUdWZ"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ea82a5480fso48458917b3.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 10:47:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731091566; x=1731696366; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Oq7W5H+t/LruxWYJFi93XWxZ+SC0sXDXHOurVmQo/Bw=;
-        b=OMTL2ujFUlNAYv8a1Iw5CJ5sVHI6uTRDeryHxBTA+we+Ib2PcZPtqdeIPN1I45++Jq
-         tRmkmM7Py3KDOgBA4MAhvtYsTeQ0rNg+NGf77OatnlTeXRcvTvObmNpGtACRIfWPx5R1
-         2rAADUKUKcFyDY8xG3HyYTejskc+kM7Ogj9h7SaxU6sq1IbGcNX2xo1wUEMSPzUS93sp
-         I7DKzBUzm1ah7vI6f9YzIHi5+06oNlic/B8Rx9lq9Sh8vCmo1KCULBiuXOnz+K/upR/D
-         a0GLUyirARXFW8ZPn5v8VO87NPwKwshzMGq2/JsCB1zBJ0WDlNVqkS40DddcQImHF6ix
-         SnnA==
+        d=google.com; s=20230601; t=1731091674; x=1731696474; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sYbic6g8fYbYz/lxOerjmFFUp0LautdATerL7NAvkig=;
+        b=DwWAUdWZFR5bEl67z9DStOOqyibAc+SjHtrhhGw8dCSPUFz8Yz4oR4YD+HPQN4dapE
+         mHsFZyxwXYG1PzaFIbP7StVgNNTFTwTiMUWiWkMq5XWIC1wQMiB3YXSCEpTcO3SvWptt
+         AKGCaTtICyTEIazFQt8qyCS5wpCEwEyCd8a2SJbOeOo8Q/9KXfQ0/TTjuesocrzzHEid
+         6KuLCTaE+BMNBCiFY2jOWsKnGhWutd3g5mJEgPdvITCDZI8eBvO7WtT+QBglxYNvd2el
+         o/AimvZEEv+BvUUnqqoOQ+HsfnHKqzQJDAPZFUHh6xOIgkPNkKE+9W2rDE/LJhe6nGSo
+         SAmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731091566; x=1731696366;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Oq7W5H+t/LruxWYJFi93XWxZ+SC0sXDXHOurVmQo/Bw=;
-        b=qQkizls6mf9a8KgRBMbEjgT32X8ESStt1YLWj2H0xdvKN3VSMap3odqiaXM46G2lHW
-         FNHJYrVCLXwDNxczstLtlpF3uoVk8X3F6Cg7PAAe10ITym3DoUAZruU+0IAQoclUjdS0
-         WvuT6zfCDgvDQJcmhwTnf8lzNXYmx1Otbtr7xwgOcuuA9bYmIIeLsaHSC8LOEbMDcsfi
-         zfnkNOYVIOsU6IeVxU1URUmh8jdFUFO21IiobANV8ZCOXK3JZCY6+QQuJw2xLCifGBd9
-         3evgRTAZnqZYBnoilvJ91k76VlkJLL2fWzxopQvwKyUmFCFqfHPagCcN46ubd/bFUe22
-         5syQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXv59xAQKRLRfjsuSVjkNqrsdJbTEyvItBKWA6ir9ooUS2Df02qBCU2fHZNBN1sD2CWhu8A2LqoWOh+g3oQ46A@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmA4APg7AYuylj9DxcRGL2eZvLKfjrwHGMjfgOamGu2NwfB0fj
-	0QInfFTJQ5h+wTL0EU5XP6Mebr+Zi3UMuRtUJwxivWV4NCygyszVPT/JYmM2pbl9ut8G3fSYI9+
-	WRwI73AQVKxpqOOV7tdmTo1gqCFMJXM6YCeu5
-X-Gm-Gg: ASbGnctR7n8A69rj5ctOECcdwuFmGSIN5R3MET8JbgBVZ3fhMIRH1D96WqNUWiFpiNj
-	+OOy8CDEFW7Qll6omSDzkLDAFi/YobvMl
-X-Google-Smtp-Source: AGHT+IHdLRWHy0a2E8ArZqPLt9njQZotEfT+CpO+S5UTw1lpU681rHBzVlJvCzLHGs/O89svRJOnyjbXFrmZAfHjHVI=
-X-Received: by 2002:a05:6e02:1c81:b0:3a6:f43d:a24e with SMTP id
- e9e14a558f8ab-3a6f8a06128mr98245ab.10.1731091565707; Fri, 08 Nov 2024
- 10:46:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1731091674; x=1731696474;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sYbic6g8fYbYz/lxOerjmFFUp0LautdATerL7NAvkig=;
+        b=m+6hMPPJI7K09NSzoDV1vSX7R6jstjAGBDs16GLTnAKYIiRCpyAjuhtAT6KlZZHTPH
+         AQ8mgmiN4KN4EitLyz6h3lncgoaPjm7bRIKLIMXk2gq2S3EqRGxx7ChUqk8PSMhXv3aA
+         7Px+Tgb0whhx9FwMfXc/HhcBpRY5NafwGQEWYmKWOesSUJMZnADvXpYSoix5H6ZVl/2e
+         75IAXQm2cvOTqw131cY9mFphDBdMI+/n0KAXhuxDGPzZMh11w2f8WwwbncQHgzXrrZmR
+         aZ2y0nfas2lNDC2DQKrwj2dF80Ue87LC/FruoWJeTByZaQfDJTQMYl+rlgE2lfOz3Gp7
+         dIHw==
+X-Forwarded-Encrypted: i=1; AJvYcCW79/kJhkpujyKz/XGsm06ZCFHFT0QAgV4/1tg+LCObKB7aV7iia1TNbVcrCvVsVnmOElV4YzlYj3Ud3ycKcOF9@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFqnvznJxwjhkSxc48/Sqa8h01hj4LWL/S3kOWuvHd6d6BkDry
+	LrPHFpujUsM2+ErXbZe+7S0g/zaxh6LQ/rBO8189d/WE7ha8aYpDpic430BkOPKV7v0DMNbJDFE
+	7ecVBIg==
+X-Google-Smtp-Source: AGHT+IFVw3cau2nh6WkJX7tgUmWOKqlA+HW6J4EJ3L5pw0bFMLr6+1Gics50g/HEmg0uDIcINH3fE11rYHA1
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:6fd2:1e36:6d8c:7c49])
+ (user=irogers job=sendgmr) by 2002:a05:690c:288:b0:6e2:1ab6:699a with SMTP id
+ 00721157ae682-6eaddfea2a9mr419297b3.7.1731091674267; Fri, 08 Nov 2024
+ 10:47:54 -0800 (PST)
+Date: Fri,  8 Nov 2024 10:47:45 -0800
+Message-Id: <20241108184751.359237-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241017002520.59124-1-irogers@google.com> <20241017002520.59124-5-irogers@google.com>
- <Zy5Le-xn4gzQ2WLo@google.com> <CAP-5=fXe-gJ6pXwdTgGqScCR+mKS2FBfVDsbih7vL-1kPKAvaA@mail.gmail.com>
- <Zy5aoMnY2nupb7SX@google.com>
-In-Reply-To: <Zy5aoMnY2nupb7SX@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
+Subject: [PATCH v4 0/6] Avoid parsing tracepoint format just for id
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 8 Nov 2024 10:45:54 -0800
-Message-ID: <CAP-5=fW7m0AVVn42XK9s=RFmAs63mh4Mk5QehpLKLFMAGje+9A@mail.gmail.com>
-Subject: Re: [PATCH v3 04/20] perf disasm: Add e_machine/e_flags to struct arch
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Nick Terrell <terrelln@fb.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
-	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Kajol Jain <kjain@linux.ibm.com>, 
-	Atish Patra <atishp@rivosinc.com>, Shenlin Liang <liangshenlin@eswincomputing.com>, 
-	Anup Patel <anup@brainfault.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	"Steinar H. Gunderson" <sesse@google.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Chen Pei <cp0613@linux.alibaba.com>, Dima Kogan <dima@secretsauce.net>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
+	James Clark <james.clark@linaro.org>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Yang Li <yang.lee@linux.alibaba.com>, Colin Ian King <colin.i.king@gmail.com>, 
+	Yang Jihong <yangjihong@bytedance.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Oliver Upton <oliver.upton@linux.dev>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Ben Gainey <ben.gainey@arm.com>, zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
+	Zixian Cai <fzczx123@gmail.com>, Andi Kleen <ak@linux.intel.com>, Paran Lee <p4ranlee@gmail.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 8, 2024 at 10:38=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Fri, Nov 08, 2024 at 10:19:52AM -0800, Ian Rogers wrote:
-> > On Fri, Nov 8, 2024 at 9:33=E2=80=AFAM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > >
-> > > On Wed, Oct 16, 2024 at 05:25:04PM -0700, Ian Rogers wrote:
-> > > > Currently functions like get_dwarf_regnum only work with the host
-> > > > architecture. Carry the elf machine and flags in struct arch so tha=
-t
-> > > > in disassembly these can be used to allow cross platform disassembl=
-y.
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/perf/arch/arc/annotate/instructions.c       | 2 ++
-> > > >  tools/perf/arch/arm/annotate/instructions.c       | 2 ++
-> > > >  tools/perf/arch/arm64/annotate/instructions.c     | 2 ++
-> > > >  tools/perf/arch/csky/annotate/instructions.c      | 7 ++++++-
-> > > >  tools/perf/arch/loongarch/annotate/instructions.c | 2 ++
-> > > >  tools/perf/arch/mips/annotate/instructions.c      | 2 ++
-> > > >  tools/perf/arch/powerpc/annotate/instructions.c   | 2 ++
-> > > >  tools/perf/arch/riscv64/annotate/instructions.c   | 2 ++
-> > > >  tools/perf/arch/s390/annotate/instructions.c      | 2 ++
-> > > >  tools/perf/arch/sparc/annotate/instructions.c     | 2 ++
-> > > >  tools/perf/arch/x86/annotate/instructions.c       | 3 ++-
-> > > >  tools/perf/util/disasm.h                          | 4 ++++
-> > > >  12 files changed, 30 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/arch/arc/annotate/instructions.c b/tools/pe=
-rf/arch/arc/annotate/instructions.c
-> > > > index 2f00e995c7e3..e5619770a1af 100644
-> > > > --- a/tools/perf/arch/arc/annotate/instructions.c
-> > > > +++ b/tools/perf/arch/arc/annotate/instructions.c
-> > > > @@ -5,5 +5,7 @@ static int arc__annotate_init(struct arch *arch, ch=
-ar *cpuid __maybe_unused)
-> > > >  {
-> > > >       arch->initialized =3D true;
-> > > >       arch->objdump.comment_char =3D ';';
-> > > > +     arch->e_machine =3D EM_ARC;
-> > > > +     arch->e_flags =3D 0;
-> > > >       return 0;
-> > > >  }
-> > > > diff --git a/tools/perf/arch/arm/annotate/instructions.c b/tools/pe=
-rf/arch/arm/annotate/instructions.c
-> > > > index 2ff6cedeb9c5..cf91a43362b0 100644
-> > > > --- a/tools/perf/arch/arm/annotate/instructions.c
-> > > > +++ b/tools/perf/arch/arm/annotate/instructions.c
-> > > > @@ -53,6 +53,8 @@ static int arm__annotate_init(struct arch *arch, =
-char *cpuid __maybe_unused)
-> > > >       arch->associate_instruction_ops   =3D arm__associate_instruct=
-ion_ops;
-> > > >       arch->objdump.comment_char        =3D ';';
-> > > >       arch->objdump.skip_functions_char =3D '+';
-> > > > +     arch->e_machine =3D EM_ARM;
-> > > > +     arch->e_flags =3D 0;
-> > > >       return 0;
-> > > >
-> > > >  out_free_call:
-> > > > diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/=
-perf/arch/arm64/annotate/instructions.c
-> > > > index f86d9f4798bd..d465d093e7eb 100644
-> > > > --- a/tools/perf/arch/arm64/annotate/instructions.c
-> > > > +++ b/tools/perf/arch/arm64/annotate/instructions.c
-> > > > @@ -113,6 +113,8 @@ static int arm64__annotate_init(struct arch *ar=
-ch, char *cpuid __maybe_unused)
-> > > >       arch->associate_instruction_ops   =3D arm64__associate_instru=
-ction_ops;
-> > > >       arch->objdump.comment_char        =3D '/';
-> > > >       arch->objdump.skip_functions_char =3D '+';
-> > > > +     arch->e_machine =3D EM_AARCH64;
-> > > > +     arch->e_flags =3D 0;
-> > > >       return 0;
-> > > >
-> > > >  out_free_call:
-> > > > diff --git a/tools/perf/arch/csky/annotate/instructions.c b/tools/p=
-erf/arch/csky/annotate/instructions.c
-> > > > index 5337bfb7d5fc..14270311d215 100644
-> > > > --- a/tools/perf/arch/csky/annotate/instructions.c
-> > > > +++ b/tools/perf/arch/csky/annotate/instructions.c
-> > > > @@ -43,6 +43,11 @@ static int csky__annotate_init(struct arch *arch=
-, char *cpuid __maybe_unused)
-> > > >       arch->initialized =3D true;
-> > > >       arch->objdump.comment_char =3D '/';
-> > > >       arch->associate_instruction_ops =3D csky__associate_ins_ops;
-> > > > -
-> > > > +     arch->e_machine =3D EM_CSKY;
-> > > > +#if defined(__CSKYABIV2__)
-> > > > +     arch->e_flags =3D EF_CSKY_ABIV2;
-> > > > +#else
-> > > > +     arch->e_flags =3D EF_CSKY_ABIV1;
-> > > > +#endif
-> > >
-> > > By moving this into the general code, it should take care of old syst=
-ems
-> > > that doesn't have the macro.
-> > >
-> > >   In file included from util/disasm.c:109:
-> > >   /linux/tools/perf/arch/csky/annotate/instructions.c: In function 'c=
-sky__annotate_init':
-> > >   /linux/tools/perf/arch/csky/annotate/instructions.c:50:25: error: '=
-EF_CSKY_ABIV1' undeclared (first use in this function)
-> > >      50 |         arch->e_flags =3D EF_CSKY_ABIV1;
-> > >         |                         ^~~~~~~~~~~~~
-> > >   /linux/tools/perf/arch/csky/annotate/instructions.c:50:25: note: ea=
-ch undeclared identifier is reported only once for each function it appears=
- in
-> >
-> > EF_CSKY_ABIV1 is defined in elf.h and has been there at least 5 years i=
-n libelf:
-> > https://sourceware.org/git/?p=3Delfutils.git;a=3Dcommit;f=3Dlibelf/elf.=
-h;h=3D9c82942ae7355a3226c53a92c2c73b33193c5e33
-> > I suspected the issue here is missing elf.h include, but the .c file
-> > is included in tools/perf/util/disasm.c and that must have a
-> > transitive dependency given other things are building. Do you want me
-> > to send a patch making this conditional with extra #ifdefs or re-send
-> > the series?
->
-> Yeah, it's unfortunate but I think we can have a small incremental diff
-> here to define them if it's not there.  Then I'll squash it to the
-> patch.
+The tracepoint format isn't needed to open an event, just the id for
+the config value. Refactor the use of evsel->tp_format to use an
+accessor that will lazily construct its value. In evsel__newtp_idx
+read the id so the config value can be set up/used.
 
-Thanks, sgtm. Could you also explicitly include elf.h into disasm.c
-rather than depending on the transitive #include? There's obviously
-tech debt to not have .c files including each other to work around the
-build system.
+This allows tracepoints to be used without libtraceevent in a number
+of tests. Other functionality is enabled without libtracevent, such as
+mapping a tracepoint id back to its name. There may be some
+performance benefit to code using tracepoints but not using the format
+information.
 
-Ian
+v4. Rebase due to conflict with 9ac98662dbd3 ("perf: event: Remove deadcode")
+v3. Whitespace changes, Arnaldo.
+v2. Add additional error checking/handling in evsel__tp_format.
 
-> >
-> > > Also, I think __CSKYABIV2__ is defined only when the host is csky.  S=
-o
-> > > it'll use ABI v1 on cross env.  I'm not sure if it's a problem.  We m=
-ay
-> > > need to save the ABI somewhere in the metadata later.
-> >
-> > Agreed. In general we should read e_machine and e_flags from the ELF
-> > file, so I'm not sure new metadata is needed. This patch is trying to
-> > lay groundwork for that.
->
-> I understand that.  Yeah it should come from the binary.
->
-> Thanks,
-> Namhyung
->
+Ian Rogers (6):
+  tool api fs: Correctly encode errno for read/write open failures
+  perf trace-event: Constify print arguments
+  perf trace-event: Always build trace-event-info.c
+  perf evsel: Add/use accessor for tp_format
+  perf evsel: Allow evsel__newtp without libtraceevent
+  perf tests: Enable tests disabled due to tracepoint parsing
+
+ tools/lib/api/fs/fs.c                         |   6 +-
+ tools/perf/builtin-kmem.c                     |  12 +-
+ tools/perf/builtin-kwork.c                    |   3 +-
+ tools/perf/builtin-record.c                   |   2 -
+ tools/perf/builtin-script.c                   |   9 +-
+ tools/perf/builtin-trace.c                    |  79 +++++++++----
+ tools/perf/tests/Build                        |   6 +-
+ tools/perf/tests/builtin-test.c               |   2 -
+ tools/perf/tests/parse-events.c               |  25 +---
+ tools/perf/util/Build                         |   2 +-
+ tools/perf/util/data-convert-bt.c             |  10 +-
+ tools/perf/util/data-convert-json.c           |   8 +-
+ tools/perf/util/evsel.c                       | 110 +++++++++++++-----
+ tools/perf/util/evsel.h                       |   9 +-
+ tools/perf/util/evsel_fprintf.c               |   4 +-
+ tools/perf/util/parse-events.c                |  16 +--
+ tools/perf/util/perf_event_attr_fprintf.c     |   4 -
+ .../util/scripting-engines/trace-event-perl.c |   3 +-
+ .../scripting-engines/trace-event-python.c    |   3 +-
+ tools/perf/util/sort.c                        |  33 ++++--
+ tools/perf/util/trace-event-parse.c           |   2 +-
+ tools/perf/util/trace-event-scripting.c       |  10 +-
+ tools/perf/util/trace-event.h                 |   2 +-
+ 23 files changed, 214 insertions(+), 146 deletions(-)
+
+-- 
+2.47.0.277.g8800431eea-goog
+
