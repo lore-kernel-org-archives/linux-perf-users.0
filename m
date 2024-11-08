@@ -1,226 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B8B13B29F;
-	Fri,  8 Nov 2024 16:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3C41991BD
+	for <linux-perf-users@vger.kernel.org>; Fri,  8 Nov 2024 16:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731084352; cv=none; b=GyTGYA7fxUuENmRvFaKqiP+ZaDbqHInvcY92MtqO/sxbgwdVYeMr1Huo/g11bYaGebqR1zP4Q1J6EogMJdJ9GPISTJQy1K/OI6FMkr57b2pYkE+wV9Xr4luyD2YscNaUO26lBCD/XWiejf5TGstbix90zp+XBth7B+xLviSzhuY=
+	t=1731085168; cv=none; b=l6HsQC9sqaQGju6vjYMdTIrR7G7C04lPT9hcc0K0QzNQcHE2lzn1spD/qEGqg/0d6I8NjI2um5EudwV1FsQJ8dLptA+yDbuhq322LAUUif+iv3RwHHlBpphEHJK4gG8bahpuxdTQ4hGGui/G09c/UfZRcVfX9TzXVd52wH3iGLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731084352; c=relaxed/simple;
-	bh=xV0OvSUGkDACQ8QqM+fAvuq/njXWamSH+xeskzaIRI4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RKnRC6Qri/p/VZ/D0sD8A7orU6jLWAUYfWVLQxkY2Suea0DUuNK3V99xqEl7nn1j7jiDpFruU6A7cgoArZjYII1XA5qc2qJVU/oVcZLHkQjGTO2mM0mSswaL3WHHkI2EzfzPqqbKqUj85VRovAmKTDnoMPvMcmSav3kO+kz5P4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z3eZivvi; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1731085168; c=relaxed/simple;
+	bh=FxOwEU7IugwTghyB5emCVNuAEHOm3lbOrlBOS5dvYys=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pi3Lu6P06JOLCsWZNJr44CKM3YeE9Upe6V4dz9mYYkpVQcBorsS49XT2pJuTUz8ET7327H2OiTgzPiB3zNx1ieWAoPzqEQjyfAsRvR3UL73n0jyBYltSXDkZRmJh6WGTUM9y0V5MGoq+WhxdeVboHJJYBUTIi+HDU4YYa6mlTHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com; spf=pass smtp.mailfrom=engflow.com; dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b=eIhBgKF8; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engflow.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z3eZivvi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731084350; x=1762620350;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xV0OvSUGkDACQ8QqM+fAvuq/njXWamSH+xeskzaIRI4=;
-  b=Z3eZivvin8Z8jM5ZbE0KGSltSrwjXEoJubLCxUbRU+wxvZKh/bt7nS57
-   Bk9L+tPSB+sItiW1pHIP7w1DQjDTAOF9Fxy9AMy51QpswY9n6W3t49VK4
-   YMdPxrM7JeVzUQdY7hm7sA8Cy/o+sWFuwBAOLHshkejF1KjBPKAHmMK/T
-   N+duG6IpGim7lTTDbaRy3622lhbYXg7lNBmFY4vZeXJuh/aHMQKiPcrFm
-   B+8IbLCeWH/4ldLZR+4L7nQDOznxwyibll3RLVqqlLlzhfML3oZ9Guy9j
-   2A3u6cFm51qLrTZIEnu/NzKwJFJvy4VuquJtei5uedLN1B6o1WTE7qa4E
-   g==;
-X-CSE-ConnectionGUID: FEmRhDIqQD6ftq8gL+bk2A==
-X-CSE-MsgGUID: uZUc4K41RwmOOMJCE5b34Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11250"; a="41592866"
-X-IronPort-AV: E=Sophos;i="6.12,138,1728975600"; 
-   d="scan'208";a="41592866"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2024 08:45:49 -0800
-X-CSE-ConnectionGUID: LkIWXI0ERcG0hFcJBSINmA==
-X-CSE-MsgGUID: hKfx5hMPRf2bVOffPwBT2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,138,1728975600"; 
-   d="scan'208";a="90748742"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2024 08:45:49 -0800
-Received: from [10.212.83.219] (kliang2-mobl1.ccr.corp.intel.com [10.212.83.219])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 0373320B5703;
-	Fri,  8 Nov 2024 08:45:46 -0800 (PST)
-Message-ID: <43548903-b7c8-47c4-b1da-0258293ecbd4@linux.intel.com>
-Date: Fri, 8 Nov 2024 11:45:45 -0500
+	dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b="eIhBgKF8"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a9ed7d8c86cso418348866b.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 08:59:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=engflow.com; s=google; t=1731085163; x=1731689963; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IgetP3QbjEJJR1PWLs7vPWsjlPdnJzS53NVUV8Nth3g=;
+        b=eIhBgKF8XCS/HR9YuKOb5LQbugUTAAybSlayyGXVqamITOjVd+UpM4NfnUfxviq84F
+         0/yysm61YOFqKgv7O6o5FRBEZ6WCmPbBRCiD8BvNhiX2sd2hZip7Sz1bVC+WCfbmf0x8
+         RddXfPMssrcVs18jX04Q6VI/OWN3HAjJaJWnU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731085163; x=1731689963;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IgetP3QbjEJJR1PWLs7vPWsjlPdnJzS53NVUV8Nth3g=;
+        b=OaZ2xC6cewysoqKGFSUkvfi6QgDnSkC5zTiRoOP+T0h4JGvtfI9RHN7uvuqvxTN5YV
+         CleNOkbc/Q7dBE8SpyYJpQ9naSoQHN3o1m+H+xI6Oqi0pUWCgobV2vCNYSkdu9shluqz
+         +uJiDXg4MxFhj5TEaAIImpNxodBtUIazFa0dxFMniMJi4ZAbWKqdsfWyYD2eZFiAODI+
+         KNaeckeUSKNSeiB/Js1k8o7tCqtwujyMdpL8Z3wByPfLYYb0osdCbFuleTYyf6ihFvsP
+         FrKy3vP0HN+/YXzZh/Lc5u6GlPXqMQqc+jBw4M4VNAoAFwJtqawLVd0CV5ZvjzwudwaT
+         h0zg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdmGm4DaknRbn4bnoEIpCX7jKtQqHv9dOWvAffJilyZcLg7QNWZqeGnwXhBCbcSCfHRZl5s6WlyEeFxEJV5Rbp@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW6IibPi/NG4K2epdmsmKjUIoV+RiRojB83r2droi6z7/dguOX
+	tQmWFks/eqj58ohHh0Z4zUMK94MCYbmEp9W7uBLymD02cWlMCBxo7WQxx8lWsg5KBoNNikgE9ta
+	b9xyqfoLxwxjeyhSrNMjAEK/1mdfmI+7KMzBPZcDQBEZJbST+JnjgTQ==
+X-Google-Smtp-Source: AGHT+IFuqAeVM5yCf/A+bKTr2dEaXy0Y7y4jGGnzz6A7XL5usbkAt6whB8phaWDQTTN4T1mN8kkHJZVJG1d7rPmZbx4=
+X-Received: by 2002:a17:907:6d07:b0:a99:caf5:c897 with SMTP id
+ a640c23a62f3a-a9eefeecb18mr312195366b.20.1731085163199; Fri, 08 Nov 2024
+ 08:59:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/22] perf jevents: Add ports metric group giving
- utilization on Intel
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Perry Taylor <perry.taylor@intel.com>, Samantha Alt
- <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>,
- Weilin Wang <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>
-References: <20240926175035.408668-1-irogers@google.com>
- <20240926175035.408668-10-irogers@google.com>
- <0d48bf82-5de2-4928-bd15-1c5abfd4f087@linux.intel.com>
- <CAP-5=fWGGQh_Kwr5mWPQv6RO=o8bk2mmShJ6MjR9i1v42e0Ziw@mail.gmail.com>
- <c48a6f46-5991-40dc-abac-f66f2706c84e@linux.intel.com>
- <CAP-5=fWwts12ucSAXBHW7-Q+Asm1GUnT7tTPZ3_D5xhHMZ-8ig@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fWwts12ucSAXBHW7-Q+Asm1GUnT7tTPZ3_D5xhHMZ-8ig@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20241106234518.115234-1-benjamin@engflow.com> <20241106234518.115234-2-benjamin@engflow.com>
+ <CAH0uvohtu_XQochZ_nguXN4e65C_m88Chip1mm84uDRLBXagzA@mail.gmail.com>
+ <CAEmfU+ud__oG3NyQsVri1xztU-JhqA=WE-y=1STxqibejnuLYA@mail.gmail.com> <CAH0uvojrdxWSEd5r9J_8b39VV6qCTM3j0t1ZAsq8p596LTunqw@mail.gmail.com>
+In-Reply-To: <CAH0uvojrdxWSEd5r9J_8b39VV6qCTM3j0t1ZAsq8p596LTunqw@mail.gmail.com>
+From: Benjamin Peterson <benjamin@engflow.com>
+Date: Fri, 8 Nov 2024 08:59:11 -0800
+Message-ID: <CAEmfU+vfYY8jVD-mLuRBVrk9M8OFCNiptXQjL1Rf+S5XtjiDVg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf tests: add test for trace output loss
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Nov 8, 2024 at 8:20=E2=80=AFAM Howard Chu <howardchu95@gmail.com> w=
+rote:
+>
+> Hello Benjamin,
+>
+> On Thu, Nov 7, 2024 at 3:18=E2=80=AFPM Benjamin Peterson <benjamin@engflo=
+w.com> wrote:
+> >
+> > On Thu, Nov 7, 2024 at 2:07=E2=80=AFPM Howard Chu <howardchu95@gmail.co=
+m> wrote:
+> > >
+> > > Hello,
+> > >
+> > > On Wed, Nov 6, 2024 at 3:46=E2=80=AFPM Benjamin Peterson <benjamin@en=
+gflow.com> wrote:
+> > > >
+> > > > Add a test that checks that trace output is not lost to races. This=
+ is
+> > > > accomplished by tracing the exit_group syscall of "true" multiple t=
+imes and
+> > > > checking for correct output.
+> > > >
+> > > > Conveniently, this test also serves as a regression test for 5fb8e5=
+6542a3 ("perf
+> > > > trace: avoid garbage when not printing a trace event's arguments") =
+because
+> > > > exit_group triggers the previously buggy printing behavior.
+> > > >
+> > > > Signed-off-by: Benjamin Peterson <benjamin@engflow.com>
+> > > > ---
+> > > >  tools/perf/tests/shell/trace_exit_race.sh | 31 +++++++++++++++++++=
+++++
+> > > >  1 file changed, 31 insertions(+)
+> > > >  create mode 100755 tools/perf/tests/shell/trace_exit_race.sh
+> > > >
+> > > > diff --git a/tools/perf/tests/shell/trace_exit_race.sh b/tools/perf=
+/tests/shell/trace_exit_race.sh
+> > > > new file mode 100755
+> > > > index 000000000000..8b70324bc5b4
+> > > > --- /dev/null
+> > > > +++ b/tools/perf/tests/shell/trace_exit_race.sh
+> > > > @@ -0,0 +1,31 @@
+> > > > +#!/bin/sh
+> > > > +# perf trace exit race
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > +
+> > > > +# Check that the last events of a perf trace'd subprocess are not
+> > > > +# lost. Specifically, trace the exiting syscall of "true" 100 time=
+s and ensure
+> > > > +# the output contains 100 correct lines.
+> > > > +
+> > > > +# shellcheck source=3Dlib/probe.sh
+> > > > +. "$(dirname $0)"/lib/probe.sh
+> > > > +
+> > > > +skip_if_no_perf_trace || exit 2
+> > > > +
+> > > > +trace_shutdown_race() {
+> > > > +       for i in $(seq 100); do
+> > > > +               perf trace -e syscalls:sys_enter_exit_group true 2>=
+>$file
+> > > > +       done
+> > > > +       [ $(grep -c -E " +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_=
+enter_exit_group\(\)$" $file) =3D "100" ]
+> > >
+> > > The test failed due to regex mismatched, I think because of this:
+> > >
+> > >      0.000 true/1526046 syscalls:sys_enter_exit_group( )
+> > >      0.000 true/1526212 syscalls:sys_enter_exit_group( )
+> > >      0.000 true/1526383 syscalls:sys_enter_exit_group(SSSSSSSSSSSSSSS=
+S)
+> > >
+> > > Ironically the junk buffer problem you fixed last time, thanks for
+> > > finding another printing problem in perf trace :), I'll figure out th=
+e
+> > > cause of this.
+> >
+> > Thanks, the problem is a parallel issue with trace__fprintf_sys_enter.
+> > I will include a patch for the problem in my spin of this series.
+> >
+> > >
+> > > Another thing is this test takes a long time to finish
+> > >
+> > > perf $ time ./perf test 109
+> > > 109: perf trace exit race                                            =
+: FAILED!
+> > >
+> > > real    0m38.762s
+> > > user    0m15.090s
+> > > sys     0m21.794s
+> > >
+> > > Is it really necessary to run it 100 times? To me it seems to be just
+> > > a wrong handling logic of draining samples, will there be coincidence=
+?
+> >
+> > Yes, it's racy. In my testing, sometimes the correct output would
+> > appear. However, I will reduce the number of iterations to 10.
+>
+> Could you be a bit more specific about this race condition issue?
 
+From the code, it's apparent that if the SIGCHLD from the traced
+process is seen before the exit_group trace event, output will be
+lost. If the signal is received after the trace event, the trace event
+will be correctly printed.
 
-On 2024-11-07 4:00 p.m., Ian Rogers wrote:
-> On Thu, Nov 7, 2024 at 11:36 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->> On 2024-11-07 12:12 p.m., Ian Rogers wrote:
->>> On Thu, Nov 7, 2024 at 7:00 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>>
->>>> On 2024-09-26 1:50 p.m., Ian Rogers wrote:
->>>>> The ports metric group contains a metric for each port giving its
->>>>> utilization as a ratio of cycles. The metrics are created by looking
->>>>> for UOPS_DISPATCHED.PORT events.
->>>>>
->>>>> Signed-off-by: Ian Rogers <irogers@google.com>
->>>>> ---
->>>>>  tools/perf/pmu-events/intel_metrics.py | 33 ++++++++++++++++++++++++--
->>>>>  1 file changed, 31 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
->>>>> index f4707e964f75..3ef4eb868580 100755
->>>>> --- a/tools/perf/pmu-events/intel_metrics.py
->>>>> +++ b/tools/perf/pmu-events/intel_metrics.py
->>>>> @@ -1,12 +1,13 @@
->>>>>  #!/usr/bin/env python3
->>>>>  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
->>>>>  from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
->>>>> -                    JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
->>>>> -                    MetricGroup, MetricRef, Select)
->>>>> +                    JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
->>>>> +                    Metric, MetricGroup, MetricRef, Select)
->>>>>  import argparse
->>>>>  import json
->>>>>  import math
->>>>>  import os
->>>>> +import re
->>>>>  from typing import Optional
->>>>>
->>>>>  # Global command line arguments.
->>>>> @@ -260,6 +261,33 @@ def IntelBr():
->>>>>                       description="breakdown of retired branch instructions")
->>>>>
->>>>>
->>>>> +def IntelPorts() -> Optional[MetricGroup]:
->>>>> +  pipeline_events = json.load(open(f"{_args.events_path}/x86/{_args.model}/pipeline.json"))
->>>>> +
->>>>> +  core_cycles = Event("CPU_CLK_UNHALTED.THREAD_P_ANY",
->>>>> +                      "CPU_CLK_UNHALTED.DISTRIBUTED",
->>>>> +                      "cycles")
->>>>> +  # Number of CPU cycles scaled for SMT.
->>>>> +  smt_cycles = Select(core_cycles / 2, Literal("#smt_on"), core_cycles)
->>>>> +
->>>>> +  metrics = []
->>>>> +  for x in pipeline_events:
->>>>> +    if "EventName" in x and re.search("^UOPS_DISPATCHED.PORT", x["EventName"]):
->>>>> +      name = x["EventName"]
->>>>> +      port = re.search(r"(PORT_[0-9].*)", name).group(0).lower()
->>>>> +      if name.endswith("_CORE"):
->>>>> +        cyc = core_cycles
->>>>> +      else:
->>>>> +        cyc = smt_cycles
->>>>> +      metrics.append(Metric(port, f"{port} utilization (higher is better)",
->>>>> +                            d_ratio(Event(name), cyc), "100%"))
->>>> The generated metric highly depends on the event name, which is very
->>>> fragile. We will probably have the same event in a new generation, but
->>>> with a different name. Long-term maintenance could be a problem.
->>>> Is there an idea regarding how to sync the event names for new generations?
->>> I agree with the idea that it is fragile, it is also strangely robust
->>> as you say, new generations will gain support if they follow the same
->>> naming convention. We have tests that load bearing metrics exists on
->>> our platforms so maybe the appropriate place to test for existence is
->>> in Weilin's metrics test.
->>>
->>>
->>>> Maybe we should improve the event generation script and do an automatic
->>>> check to tell which metrics are missed. Then we may decide if updating
->>>> the new event name, dropping the metric or adding a different metric.
->>> So I'm not sure it is a bug to not have the metric, if it were we
->>> could just throw rather than return None. We're going to run the
->>> script for every model including old models like nehalem, so I've
->>> generally kept it as None. I think doing future work on testing is
->>> probably best. It would also indicate use of the metric if people
->>> notice it missing (not that the script aims for that 🙂 ).
->> The maintenance is still a concern, even if we have a way to test it
->> out. There is already an "official" metric published in GitHub, which is
->> maintained by Intel. To be honest, I don't think there is more energy to
->> maintain these "non-official" metrics.
->>
->> I don't think it should be a bug without these metrics. So it's very
->> likely that the issue will not be addressed right away. If we cannot
->> keep these metrics updated for the future platforms, I couldn't find a
->> reason to have them.
-> So I think there are a few things:
-> 1) I'd like there to be a non-json infrastructure for events that can
-> handle multiple models. Some failings of json are its inability to
-> validate events, long lines, lack of comments, metric expression
-> strings that aren't inherently sound, etc.  I'd like to make it so we
-> can have json metrics for everything, ie remove the hardcoded metrics
-> that play badly with event sharing, etc. Doing this by updating every
-> json would be tedious and excessively noisy.
-> 2) There are "official" metrics from Intel and I've worked for the
-> establishment of that. That doesn't mean every Intel metric is in the
-> official metrics. Servers are better served than client machines. Core
-> TMA metrics are well served but uncore less so.
-> 3) Are perf metrics perfect with some kind of warranty? Well no, as
-> your reviews in this thread have shown SMI cost on hybrid is likely
-> broken. We don't intentionally try to have broken metrics and fix them
-> asap when they come up. GPLv2 has an explicit "no warranty" section.
-> Now Intel have experimental and non-experimental events, we update the
-> comments of metrics using those to highlight that the underlying
-> events are experimental:
-> https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/
-> tools/perf/pmu-events/metric.py#L598
-> If there are bugs in the metrics then open source, sharing and fixing
-> benefits everyone.
-> 4) Am I looking for energy from Intel to maintain these metrics? No.
-> I'm trying to stop carrying the patches just inside of Google's tree.
+> Could you please tell us how one might emulate and test the scenario
+> you mentioned? I ran the command 1,000 times before and after applying
+> the patch, and each time I got the expected output. Could you please
+> provide more information about your use cases?
 
-Got it. Thanks for the clarification.
-
-IIUC, the generated metrics are based on the best knowledge of
-contributors. The initial source is from Google's tree. It should be the
-contributor's responsibility to maintain or update the metrics.
-If so, I agree that it should be a good supplement.
-
-I would have some comments in general.
-- I think we need a way to distinguish these metrics, e.g., add a
-dedicated prefix. I will not be surprised if some customers bring the
-metrics to Intel or other vendor's customer service, and ask why it
-doesn't work on some platforms. I don't think they will get any useful
-information there. The best way is to report any issues here. So we can
-fix and update the metric.
-- All events, no matter whether they are from the JSON file or exposed
-by the kernel, have to be checked before showing the metrics. Because we
-cannot guarantee the availability of an event, even for the
-architectural events. We may introduce a wrapper for the Metric() to
-check all the involved events. So we don't need to add the try: except
-thing in each patch?
-- In the perf test, it's better to ignore the errors from these metrics.
-So it doesn't block things. But we can show a warning from them with
--vvv. The issue can still be found and fixed.
-
-Thanks,
-Kan
+I can see it simply by running the unpatched perf few times in the
+terminal, but it might be helpful for reproduction to create some
+scheduling contention with stress.
