@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85606233D79;
-	Fri,  8 Nov 2024 19:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361D217A5BE;
+	Fri,  8 Nov 2024 19:39:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731094472; cv=none; b=jcKqo0LRd0UTrD4GgQ88Ksg0Jz770OhwVAxgok7zdq2ayF1uAReoEiu1G5iF58aKM/vyAbvoLIWsodKKMHcgE17eCLBp5GWw/C/B9O21YfsLE7OxngFAQw/hG0JUJjZ0KqIw3zCKGK8TcaUamRYDuw+JZmI2Dt7J26lFdYF52yU=
+	t=1731094758; cv=none; b=U6zR5DyyP2UW1e+O3zPaTFCHYmcYUJMbMt5RperJ9B+F5YVAEzqRP6HZvDSnC4aQQw62zeGZa7iz3nLYUjHbuUxIRqJE/C0Wyu8nyHi/7vOXRCDYiLaklkFZlbmC+NXFT5XLBPwHN6T0xJ5OE1NFO83F511z/lTtPl7Lp3RoqKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731094472; c=relaxed/simple;
-	bh=0e23Ceuspj28Gae/pnrt+3bj4sITFQ55jk93TWdRH/g=;
+	s=arc-20240116; t=1731094758; c=relaxed/simple;
+	bh=pThPIJsXUkpUPpCrFnyjx5/M3JHZPqeVFG47Df9l0Fs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KdVBm7C0XrKbnG9bs3K90+VLH9FnIWGP0s1LtK4xGiP5rE01+3cLtAq8fO8kB1A8CMxcdgx0B2m44N6gBVytdShL1m3y6EFBVoUibJawbuhhD4To0sB/0+pOiy8Az+nVTeQys6Gw1fasbihTRIlSadR5PzfaU6lYPSRUIaUFlqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7iUWSLw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HeTxYPXvTbNwOvVEu7g+XvotQ6tnEShAYvu1L0S7iGGGFYH1NZVxhek3atDWuUMArW9hj+7jdATxs8Z6JpGfmRZK0hXGpe5Ua7Etz1yC/GwMehyCqtGVe6ThmOhjuLT9bH2tuzD1DJjv1THWw1R056WXss7rB7X55mvUSucrBs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7EwJ6gi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7iUWSLw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F018C4CECD;
-	Fri,  8 Nov 2024 19:34:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7EwJ6gi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2373DC4CECD;
+	Fri,  8 Nov 2024 19:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731094472;
-	bh=0e23Ceuspj28Gae/pnrt+3bj4sITFQ55jk93TWdRH/g=;
+	s=k20201202; t=1731094757;
+	bh=pThPIJsXUkpUPpCrFnyjx5/M3JHZPqeVFG47Df9l0Fs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a7iUWSLweMPN22JM1RfFEIO39gtlsikA1nmKI5Htn+pyynYFC+WfzIqM4wDseexXB
-	 CjNFjCNLGBwsqUsqXnUk/Wgo2bJmpVSQWWRnejJFvz3wAN/st1ArrZZS+J6NnfKa4V
-	 /GVxjV/S7sbcy8X+aGetXr6cJbO9/2h/pxZRmwmhMi1MTeoVNcNcFJmN/qbquy+V3/
-	 iZck2Bu8hfjvcAmLWzyT1rF2DjDkKOwWDc+0+piCRZ1I9Tum+warnIyosz/bE5YWC4
-	 +sUpe/uNBlGAp4psfzYDhifb2QFiw/0uKz8dwzzdOGJel37mdH6BIsVB2ArpIrriF3
-	 PPIMjdulOCo+A==
-Date: Fri, 8 Nov 2024 11:34:30 -0800
+	b=i7EwJ6gijZ52AwltGj31xyMprNMdIgPp/rV+wIjF1RUSJyWHc2m6BJalslbkNMJ2p
+	 qR0ZwBJup/p7OxywmZRpPgCuV0VmkVBE6s0MlcZXMx6kHJ9PKk4yqcujI/7G3uoeHh
+	 L3qhwUZB2kyrxGT3ZqpMymFOSkM/nNkhRsV1LHF7mJrS+vfX9cLTTNLsGmDQeHtYMX
+	 3e4yVbO73lkLL8Jr9fD4DYAu4o2JYrEpBnrq6gd8kLC6LQGQg3pNKPameLmlQdiLlJ
+	 GDSMElJrarBtMxSok1TCRlol8XCKx+iWMiumbKvow+rjrVy/fmUAnI20XuTHo+xwYH
+	 Gz1tv7JkAF6vA==
+Date: Fri, 8 Nov 2024 11:39:15 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -46,10 +46,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Changbin Du <changbin.du@huawei.com>, Ze Gao <zegao2021@gmail.com>,
 	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v7 3/7] perf test: Add hwmon filename parser test
-Message-ID: <Zy5nxlGZ5cZ69F5G@google.com>
+Subject: Re: [PATCH v7 4/7] perf hwmon_pmu: Add a tool PMU exposing events
+ from hwmon in sysfs
+Message-ID: <Zy5o46RIEZSvX3uw@google.com>
 References: <20241108174936.262704-1-irogers@google.com>
- <20241108174936.262704-4-irogers@google.com>
+ <20241108174936.262704-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,194 +59,235 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241108174936.262704-4-irogers@google.com>
+In-Reply-To: <20241108174936.262704-5-irogers@google.com>
 
-On Fri, Nov 08, 2024 at 09:49:32AM -0800, Ian Rogers wrote:
-> Filename parsing maps a hwmon filename to constituent parts enum/int
-> parts for the hwmon config value. Add a test case for the parsing.
+On Fri, Nov 08, 2024 at 09:49:33AM -0800, Ian Rogers wrote:
+> Add a tool PMU for hwmon events but don't enable.
+> 
+> The hwmon sysfs ABI is defined in
+> Documentation/hwmon/sysfs-interface.rst. Create a PMU that reads the
+> hwmon input and can be used in `perf stat` and metrics much as an
+> uncore PMU can.
+> 
+> For example, when enabled by a later patch, the following shows
+> reading the CPU temperature and 2 fan speeds alongside the uncore
+> frequency:
+> ```
+> $ perf stat -e temp_cpu,fan1,hwmon_thinkpad/fan2/,tool/num_cpus_online/ -M UNCORE_FREQ -I 1000
+>      1.001153138              52.00 'C   temp_cpu
+>      1.001153138              2,588 rpm  fan1
+>      1.001153138              2,482 rpm  hwmon_thinkpad/fan2/
+>      1.001153138                  8      tool/num_cpus_online/
+>      1.001153138      1,077,101,397      UNC_CLOCK.SOCKET                 #     1.08 UNCORE_FREQ
+>      1.001153138      1,012,773,595      duration_time
+> ...
+> ```
+> 
+> The PMUs are named from /sys/class/hwmon/hwmon<num>/name and have an
+> alias of hwmon<num>.
+> 
+> Hwmon data is presented in multiple <type><number>_<item> files. The
+> <type><number> is used to identify the event as is the <type> followed
+> by the contents of the <type>_label file if it exists. The
+> <type><number>_input file gives the data read by perf.
+> 
+> When enabled by a later patch, in `perf list` the other hwmon <item>
+> files are used to give a richer description, for example:
+> ```
+> hwmon:
+>   temp1
+>        [Temperature in unit acpitz named temp1. Unit: hwmon_acpitz]
+>   in0
+>        [Voltage in unit bat0 named in0. Unit: hwmon_bat0]
+>   temp_core_0 OR temp2
+>        [Temperature in unit coretemp named Core 0. crit=100'C,max=100'C crit_alarm=0'C. Unit:
+>         hwmon_coretemp]
+>   temp_core_1 OR temp3
+>        [Temperature in unit coretemp named Core 1. crit=100'C,max=100'C crit_alarm=0'C. Unit:
+>         hwmon_coretemp]
+> ...
+>   temp_package_id_0 OR temp1
+>        [Temperature in unit coretemp named Package id 0. crit=100'C,max=100'C crit_alarm=0'C.
+>         Unit: hwmon_coretemp]
+>   temp1
+>        [Temperature in unit iwlwifi_1 named temp1. Unit: hwmon_iwlwifi_1]
+>   temp_composite OR temp1
+>        [Temperature in unit nvme named Composite. alarm=0'C,crit=86.85'C,max=75.85'C,
+>         min=-273.15'C. Unit: hwmon_nvme]
+>   temp_sensor_1 OR temp2
+>        [Temperature in unit nvme named Sensor 1. max=65261.8'C,min=-273.15'C. Unit: hwmon_nvme]
+>   temp_sensor_2 OR temp3
+>        [Temperature in unit nvme named Sensor 2. max=65261.8'C,min=-273.15'C. Unit: hwmon_nvme]
+>   fan1
+>        [Fan in unit thinkpad named fan1. Unit: hwmon_thinkpad]
+>   fan2
+>        [Fan in unit thinkpad named fan2. Unit: hwmon_thinkpad]
+> ...
+>   temp_cpu OR temp1
+>        [Temperature in unit thinkpad named CPU. Unit: hwmon_thinkpad]
+>   temp_gpu OR temp2
+>        [Temperature in unit thinkpad named GPU. Unit: hwmon_thinkpad]
+>   curr1
+>        [Current in unit ucsi_source_psy_usbc000_0 named curr1. max=1.5A. Unit:
+>         hwmon_ucsi_source_psy_usbc000_0]
+>   in0
+>        [Voltage in unit ucsi_source_psy_usbc000_0 named in0. max=5V,min=5V. Unit:
+>         hwmon_ucsi_source_psy_usbc000_0]
+> ```
+> 
+> As there may be multiple hwmon devices a range of PMU types are
+> reserved for their use and to identify the PMU as belonging to the
+> hwmon types.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/tests/Build          |   1 +
->  tools/perf/tests/builtin-test.c |   1 +
->  tools/perf/tests/hwmon_pmu.c    | 110 ++++++++++++++++++++++++++++++++
->  tools/perf/tests/tests.h        |   1 +
->  tools/perf/util/hwmon_pmu.c     |   2 +-
->  5 files changed, 114 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/tests/hwmon_pmu.c
+>  tools/perf/util/hwmon_pmu.c | 683 ++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/hwmon_pmu.h |  45 +++
+>  tools/perf/util/pmu.h       |   2 +
+>  3 files changed, 730 insertions(+)
 > 
-> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> index 01ed9335db4d..ec4e1f034742 100644
-> --- a/tools/perf/tests/Build
-> +++ b/tools/perf/tests/Build
-> @@ -66,6 +66,7 @@ perf-test-y += sigtrap.o
->  perf-test-y += event_groups.o
->  perf-test-y += symbols.o
->  perf-test-y += util.o
-> +perf-test-y += hwmon_pmu.o
->  perf-test-y += tool_pmu.o
->  
->  ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc))
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index d2cabaa8ad92..8dcf74d3c0a3 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -71,6 +71,7 @@ static struct test_suite *generic_tests[] = {
->  	&suite__PERF_RECORD,
->  	&suite__pmu,
->  	&suite__pmu_events,
-> +	&suite__hwmon_pmu,
->  	&suite__tool_pmu,
->  	&suite__dso_data,
->  	&suite__perf_evsel__roundtrip_name_test,
-> diff --git a/tools/perf/tests/hwmon_pmu.c b/tools/perf/tests/hwmon_pmu.c
-> new file mode 100644
-> index 000000000000..f5b58486d8d3
-> --- /dev/null
-> +++ b/tools/perf/tests/hwmon_pmu.c
-> @@ -0,0 +1,110 @@
-> +// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-> +#include "debug.h"
-> +#include "hwmon_pmu.h"
-> +#include "tests.h"
-> +#include <linux/compiler.h>
-> +#include <linux/kernel.h>
-> +
-> +static int test__parse_hwmon_filename(struct test_suite *test __maybe_unused,
-> +				      int subtest __maybe_unused)
-> +{
-> +	const struct hwmon_parse_test {
-> +		const char *filename;
-> +		enum hwmon_type type;
-> +		int number;
-> +		enum hwmon_item item;
-> +		bool alarm;
-> +		bool parse_ok;
-> +	} tests[] = {
-> +		{
-> +			.filename = "cpu0_accuracy",
-> +			.type = HWMON_TYPE_CPU,
-> +			.number = 0,
-> +			.item = HWMON_ITEM_ACCURACY,
-> +			.alarm = false,
-> +			.parse_ok = true,
-> +		},
-> +		{
-> +			.filename = "temp1_input",
-> +			.type = HWMON_TYPE_TEMP,
-> +			.number = 1,
-> +			.item = HWMON_ITEM_INPUT,
-> +			.alarm = false,
-> +			.parse_ok = true,
-> +		},
-> +		{
-> +			.filename = "fan2_vid",
-> +			.type = HWMON_TYPE_FAN,
-> +			.number = 2,
-> +			.item = HWMON_ITEM_VID,
-> +			.alarm = false,
-> +			.parse_ok = true,
-> +		},
-> +		{
-> +			.filename = "power3_crit_alarm",
-> +			.type = HWMON_TYPE_POWER,
-> +			.number = 3,
-> +			.item = HWMON_ITEM_CRIT,
-> +			.alarm = true,
-> +			.parse_ok = true,
-> +		},
-> +		{
-> +			.filename = "intrusion4_average_interval_min_alarm",
-> +			.type = HWMON_TYPE_INTRUSION,
-> +			.number = 4,
-> +			.item = HWMON_ITEM_AVERAGE_INTERVAL_MIN,
-> +			.alarm = true,
-> +			.parse_ok = true,
-> +		},
-> +		{
-> +			.filename = "badtype5_baditem",
-> +			.type = HWMON_TYPE_NONE,
-> +			.number = 5,
-> +			.item = HWMON_ITEM_NONE,
-> +			.alarm = false,
-> +			.parse_ok = false,
-> +		},
-> +		{
-> +			.filename = "humidity6_baditem",
-> +			.type = HWMON_TYPE_NONE,
-> +			.number = 6,
-> +			.item = HWMON_ITEM_NONE,
-> +			.alarm = false,
-> +			.parse_ok = false,
-> +		},
-> +	};
-> +
-> +	for (size_t i = 0; i < ARRAY_SIZE(tests); i++) {
-> +		enum hwmon_type type;
-> +		int number;
-> +		enum hwmon_item item;
-> +		bool alarm;
-> +
-> +		TEST_ASSERT_EQUAL("parse_hwmon_filename",
-> +				parse_hwmon_filename(
-> +					tests[i].filename,
-> +					&type,
-> +					&number,
-> +					&item,
-> +					&alarm),
-> +				tests[i].parse_ok
-> +			);
-> +		if (tests[i].parse_ok) {
-> +			TEST_ASSERT_EQUAL("parse_hwmon_filename type", type, tests[i].type);
-> +			TEST_ASSERT_EQUAL("parse_hwmon_filename number", number, tests[i].number);
-> +			TEST_ASSERT_EQUAL("parse_hwmon_filename item", item, tests[i].item);
-> +			TEST_ASSERT_EQUAL("parse_hwmon_filename alarm", alarm, tests[i].alarm);
-> +		}
-> +	}
-> +	return TEST_OK;
-> +}
-> +
-> +static struct test_case tests__hwmon_pmu[] = {
-> +	TEST_CASE("Basic parsing test", parse_hwmon_filename),
-> +	{	.name = NULL, }
-> +};
-> +
-> +struct test_suite suite__hwmon_pmu = {
-> +	.desc = "Hwmon PMU",
-> +	.test_cases = tests__hwmon_pmu,
-> +};
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index af284dd47e5c..cb58b43aa063 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -92,6 +92,7 @@ DECLARE_SUITE(perf_evsel__tp_sched_test);
->  DECLARE_SUITE(syscall_openat_tp_fields);
->  DECLARE_SUITE(pmu);
->  DECLARE_SUITE(pmu_events);
-> +DECLARE_SUITE(hwmon_pmu);
->  DECLARE_SUITE(tool_pmu);
->  DECLARE_SUITE(attr);
->  DECLARE_SUITE(dso_data);
 > diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-> index ee5fb1c41da3..f4b7b3b6a052 100644
+> index f4b7b3b6a052..3f1bf9a9cfdf 100644
 > --- a/tools/perf/util/hwmon_pmu.c
 > +++ b/tools/perf/util/hwmon_pmu.c
-> @@ -126,7 +126,7 @@ bool parse_hwmon_filename(const char *filename,
->  	fn_item_len = strlen(fn_item);
->  	if (fn_item_len > 6 && !strcmp(&fn_item[fn_item_len - 6], "_alarm")) {
->  		assert(strlen(LONGEST_HWMON_ITEM_STR) < sizeof(fn_type));
-> -		strlcpy(fn_type, fn_item, fn_item_len - 6);
-> +		strlcpy(fn_type, fn_item, fn_item_len - 5);
+[SNIP]
+> +struct perf_pmu *hwmon_pmu__new(struct list_head *pmus, int hwmon_dir, const char *sysfs_name, const char *name)
+> +{
+> +	char buf[32];
+> +	struct hwmon_pmu *hwm;
+> +
+> +	hwm = zalloc(sizeof(*hwm));
+> +	if (!hwm)
+> +		return NULL;
+> +
+> +
 
-Why is it changed?
+Two blank lines.
+
+
+> +	hwm->hwmon_dir_fd = hwmon_dir;
+> +	hwm->pmu.type = PERF_PMU_TYPE_HWMON_START + strtoul(sysfs_name + 5, NULL, 10);
+> +	if (hwm->pmu.type > PERF_PMU_TYPE_HWMON_END) {
+> +		pr_err("Unable to encode hwmon type from %s in valid PMU type\n", sysfs_name);
+> +		goto err_out;
+> +	}
+> +	snprintf(buf, sizeof(buf), "hwmon_%s", name);
+> +	fix_name(buf + 6);
+> +	hwm->pmu.name = strdup(buf);
+> +	if (!hwm->pmu.name)
+> +		goto err_out;
+> +	hwm->pmu.alias_name = strdup(sysfs_name);
+> +	if (!hwm->pmu.alias_name)
+> +		goto err_out;
+> +	hwm->pmu.cpus = perf_cpu_map__new("0");
+> +	if (!hwm->pmu.cpus)
+> +		goto err_out;
+> +	INIT_LIST_HEAD(&hwm->pmu.format);
+> +	INIT_LIST_HEAD(&hwm->pmu.aliases);
+> +	INIT_LIST_HEAD(&hwm->pmu.caps);
+> +	hashmap__init(&hwm->events, hwmon_pmu__event_hashmap_hash,
+> +		      hwmon_pmu__event_hashmap_equal, /*ctx=*/NULL);
+> +
+> +	list_add_tail(&hwm->pmu.list, pmus);
+> +	return &hwm->pmu;
+> +err_out:
+> +	free((char *)hwm->pmu.name);
+> +	free(hwm->pmu.alias_name);
+> +	free(hwm);
+> +	close(hwmon_dir);
+> +	return NULL;
+> +}
+
+[...]
+> diff --git a/tools/perf/util/hwmon_pmu.h b/tools/perf/util/hwmon_pmu.h
+> index df0ab5ff7534..ebfdfe3b295a 100644
+> --- a/tools/perf/util/hwmon_pmu.h
+> +++ b/tools/perf/util/hwmon_pmu.h
+> @@ -2,8 +2,12 @@
+>  #ifndef __HWMON_PMU_H
+>  #define __HWMON_PMU_H
+>  
+> +#include "pmu.h"
+>  #include <stdbool.h>
+>  
+> +struct list_head;
+> +struct perf_thread_map;
+> +
+>  /**
+>   * enum hwmon_type:
+>   *
+> @@ -87,6 +91,14 @@ enum hwmon_item {
+>  	HWMON_ITEM__MAX,
+>  };
+>  
+> +/** Strings that correspond to enum hwmon_type. */
+> +extern const char * const hwmon_type_strs[HWMON_TYPE_MAX];
+> +/** Strings that correspond to enum hwmon_item. */
+> +extern const char * const hwmon_item_strs[HWMON_ITEM__MAX];
+
+Belongs to the patch2?  But it'd be nice if we can remove them.
 
 Thanks,
 Namhyung
 
-
->  		fn_item = fn_type;
->  		*alarm = true;
->  	}
+> +
+> +bool perf_pmu__is_hwmon(const struct perf_pmu *pmu);
+> +bool evsel__is_hwmon(const struct evsel *evsel);
+> +
+>  /**
+>   * parse_hwmon_filename() - Parse filename into constituent parts.
+>   *
+> @@ -108,4 +120,37 @@ bool parse_hwmon_filename(const char *filename,
+>  			  enum hwmon_item *item,
+>  			  bool *alarm);
+>  
+> +/**
+> + * hwmon_pmu__new() - Allocate and construct a hwmon PMU.
+> + *
+> + * @pmus: The list of PMUs to be added to.
+> + * @hwmon_dir: An O_DIRECTORY file descriptor for a hwmon directory.
+> + * @sysfs_name: Name of the hwmon sysfs directory like hwmon0.
+> + * @name: The contents of the "name" file in the hwmon directory.
+> + *
+> + * Exposed for testing. Regular construction should happen via
+> + * perf_pmus__read_hwmon_pmus.
+> + */
+> +struct perf_pmu *hwmon_pmu__new(struct list_head *pmus, int hwmon_dir,
+> +				const char *sysfs_name, const char *name);
+> +void hwmon_pmu__exit(struct perf_pmu *pmu);
+> +
+> +int hwmon_pmu__for_each_event(struct perf_pmu *pmu, void *state, pmu_event_callback cb);
+> +size_t hwmon_pmu__num_events(struct perf_pmu *pmu);
+> +bool hwmon_pmu__have_event(struct perf_pmu *pmu, const char *name);
+> +int hwmon_pmu__config_terms(const struct perf_pmu *pmu,
+> +			    struct perf_event_attr *attr,
+> +			    struct parse_events_terms *terms,
+> +			    struct parse_events_error *err);
+> +int hwmon_pmu__check_alias(struct parse_events_terms *terms, struct perf_pmu_info *info,
+> +			   struct parse_events_error *err);
+> +
+> +int perf_pmus__read_hwmon_pmus(struct list_head *pmus);
+> +
+> +
+> +int evsel__hwmon_pmu_open(struct evsel *evsel,
+> +			 struct perf_thread_map *threads,
+> +			 int start_cpu_map_idx, int end_cpu_map_idx);
+> +int evsel__hwmon_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread);
+> +
+>  #endif /* __HWMON_PMU_H */
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index b86b3c3685a2..d511bf7cc9d0 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -37,6 +37,8 @@ struct perf_pmu_caps {
+>  };
+>  
+>  enum {
+> +	PERF_PMU_TYPE_HWMON_START = 0xFFFF0000,
+> +	PERF_PMU_TYPE_HWMON_END   = 0xFFFFFFFD,
+>  	PERF_PMU_TYPE_TOOL = 0xFFFFFFFE,
+>  	PERF_PMU_TYPE_FAKE = 0xFFFFFFFF,
+>  };
 > -- 
 > 2.47.0.277.g8800431eea-goog
 > 
