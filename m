@@ -1,114 +1,111 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEC0227BA7
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 Nov 2024 17:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0291A9B5B;
+	Fri,  8 Nov 2024 17:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731088205; cv=none; b=JfWuj7YBRoqNW9ou5bNV5FV8PcuAprb0P2evfJ0v+uhrX5BtfG1nUiU5dpGwB8MXlJnlw5rPlKdeNf/af6Cd9SOCMgX1THY2h+C9TmAkzs5AYXgB2Z0IkpIZzQgPW5WcMy1AK+JTZg1uBRADckJPUWTPUrmUDemXYiY+0qrFpEM=
+	t=1731088236; cv=none; b=ebtRV2AwUQMrVWMQKxEcH07D9cM1wn+S7PH7+KQAB9c2qBiuTKx/ZabysU0DnWGUlMeIHVx9kwCgaDluBOAs833E+7RafVA4qymy1e16wssVw1ZVmdujf5bVG3gY8Zvv/xBL2YmIhFDfuRLP/Ypuycy2LZpItqy16gotm4YUY44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731088205; c=relaxed/simple;
-	bh=rmktKWgkJHRVy/ZdsAA0Vc65puJoSfAalv+s0diLDGY=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=deaCHTWaA0zQM68YLhMakUfcBZ9F5AQs2Kthb4kb3zcXseNpOeWcPqH/rRO07fvmkqR/m2GkMceRauCwp8EBS8X+jTvwARFSUYuUVWs/28MNhNKqhmIy0LU/Pn/jYw3VlGQ9Ey9doonl5cnbnwNeQKkSk0kgKxaWEg04St/5oNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hbg8TK2e; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1731088236; c=relaxed/simple;
+	bh=Vjh4peRHGRK8Ck0N8i5Kou/oF7DnM7DZ7YfjWXGEYTU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d+ioJftolue/x7geaFItgeb2dZpAj/VufHE0VrMtJXKiH5Q658+F1XU0sTh6WkoQMgJlJBMvsAB+5wuG2Vq6+uppKaon0PPMc9pRNqvTl6kvivdSsJEFzlWSvSNWTsCeiifPBWmqBdOAT0AQjOUA2eNAtCayDAjDnzy02S7rH+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orygR1Rp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hbg8TK2e"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e2971589916so3893729276.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 09:50:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731088202; x=1731693002; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vhyKZnJ2eVHPv4loZARCzHZhQlUS4zb1Fka2wyOZYXs=;
-        b=hbg8TK2ekfbl7b7fvBanQiotkExyxCobWs2mC9Q8Q+Z1rqvs48ih7NA9VXbGcZUjCp
-         BJxI9PdavZQtcdTVwosMLdTOlPAv+79BmzHrV8YHKPEvNHs1gzCQwd8DBnN3jE0YWmZV
-         6/XCGLhln11CrZfeOA0dvMu79+krIUIPWec7fkvL0oXY/F1MDFT6Pomg+o1JlkFqc7Hk
-         9L46e1ZajhVLTciJvSC0MFhZeK3LhrgBjrj9XsZHYZmWXYr5MWr9gkey8YNO2Pk9pzpw
-         /jRuZKjj8z3obOmeY2oig1TrRernTbcVHjWbq14fdXdK8bVz2n0HCuJlrhqmnzOrW+zC
-         /R0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731088202; x=1731693002;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vhyKZnJ2eVHPv4loZARCzHZhQlUS4zb1Fka2wyOZYXs=;
-        b=Fx7PVsFVcSZQPNw0OfELiHQnr0Cq0W3ByZLJnfuw7uY7x/CACE2hQx/bae/8pGGQ8U
-         SgGPBVJhn8y40TfBdYAE25Fg3S8C8oDo2opvcX0jneVfAawE9R81sZOagcpUNTcMoHp6
-         U1wxn/+pF7fJHL2fna+O7rK+mu1H7PuLTLamBydIEqV2Jpv+HIFpVyjaGXbrxbfD62Ls
-         SPO7sWCJHfXYnCv1fGe7DhQwQsP44h1giVrgJUxH1zTCmMXvNLkzuelbi9xk18016Slh
-         0cvT2AwJQTBVHAE++HpxvHVTIwie/LNJQWf8Jc/dWEKwaIN37ScGeXWN9hXK6YBWQqqA
-         e4JA==
-X-Forwarded-Encrypted: i=1; AJvYcCUN1zUO26sMtFBEvWG29FBk1Dt6LvbKUIns3BEVHfZP9Ypv2FP8Nyd9bXW+k3nQsRbNDDTWSDGErWMJTqFnqXae@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtymoSNQMC+xo8fLkZ/AgZz/zMid95NIybskccZh5/P5HOSGQo
-	2KB1+9wuI79LxlxkwITaYg2tM0yOSly1k14e5SutAXojw1HkNkcQ+H5L/kxibgtwoGmbvQhPH+0
-	sP9brJg==
-X-Google-Smtp-Source: AGHT+IE6H8CgOpCqJig/S4Vgt0UKfIFpQ/8DXRr9lC+DKXJKn6W/WgeX/rl6HZtxD1DxaonovpxJKCR6AiXA
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:6fd2:1e36:6d8c:7c49])
- (user=irogers job=sendgmr) by 2002:a5b:c09:0:b0:e30:cdd0:fc14 with SMTP id
- 3f1490d57ef6-e337f8ed79emr2910276.9.1731088201981; Fri, 08 Nov 2024 09:50:01
- -0800 (PST)
-Date: Fri,  8 Nov 2024 09:49:36 -0800
-In-Reply-To: <20241108174936.262704-1-irogers@google.com>
-Message-Id: <20241108174936.262704-8-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orygR1Rp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ACD6C4CECD;
+	Fri,  8 Nov 2024 17:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731088235;
+	bh=Vjh4peRHGRK8Ck0N8i5Kou/oF7DnM7DZ7YfjWXGEYTU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=orygR1Rpm6sanpGa3EOIpoL3FwKpR/VGUMSNPqU7PCTRH2T1zuNBL5yKF5ZTifDoc
+	 q/zxybZ0el0KyZjvAekWXCIu8AJwyljuvkvydXdqXpMQQsYEqW/npCO3KxwKQVlsiQ
+	 mmY8gqWG6ef+OVdiJmyw7BcJJLfstlGfxY77msn1wUgZZo8sljFHiY6HAjUda0t4c7
+	 qsiPQ8w5BPgNNn5RJaWjFlodjPEhpJG/yvJEcp3gvZs94yBT5PorPTYCuNVqr+gK5u
+	 4be5K1q9sz3aWuLGaLjBwMu3iWqU6xh7AsYbOernmR4ZYYjpaQhB0rcqgm8iMnaYOw
+	 UTHU+0+qrd16Q==
+Date: Fri, 8 Nov 2024 09:50:34 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>
+Subject: Re: [PATCH v2 3/4] perf test: Don't suppress the libtraceevent
+ tests, skip them
+Message-ID: <Zy5PaqrVxeIlkqBR@google.com>
+References: <20241105142616.761042-1-acme@kernel.org>
+ <20241105142616.761042-4-acme@kernel.org>
+ <CAP-5=fViyn9Khja2jPa3gDZy0onsqVt20Y3H7e584SdiWXQvQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241108174936.262704-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
-Subject: [PATCH v7 7/7] perf docs: Document tool and hwmon events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Yoshihiro Furudera <fj5100bi@fujitsu.com>, 
-	James Clark <james.clark@linaro.org>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	Howard Chu <howardchu95@gmail.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Changbin Du <changbin.du@huawei.com>, Ze Gao <zegao2021@gmail.com>, 
-	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fViyn9Khja2jPa3gDZy0onsqVt20Y3H7e584SdiWXQvQw@mail.gmail.com>
 
-Add a few paragraphs on tool and hwmon events.
+On Tue, Nov 05, 2024 at 07:50:25AM -0800, Ian Rogers wrote:
+> On Tue, Nov 5, 2024 at 6:26 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >
+> > As suggested by Namhyung for the "import perf" python binding test, skip
+> > the tests that require perf being linked with libtraceevent, telling the
+> > reason:
+> >
+> >   $ make -C tools/perf NO_LIBTRACEEVENT=1
+> >   # perf check feature libtraceevent
+> >          libtraceevent: [ OFF ]  # HAVE_LIBTRACEEVENT
+> >   # ldd ~/bin/perf | grep traceevent
+> >   #
+> >   # perf test
+> >     1: vmlinux symtab matches kallsyms                 : Ok
+> >     2: Detect openat syscall event                     : Skip (not linked with libtraceevent)
+> >     3: Detect openat syscall event on all cpus         : Skip (not linked with libtraceevent)
+> >     4: mmap interface tests                            :
+> >     4.1: Read samples using the mmap interface         : Skip (not linked with libtraceevent)
+> >     4.2: User space counter reading of instructions    : Skip (not linked with libtraceevent)
+> >     4.3: User space counter reading of cycles          : Skip (not linked with libtraceevent)
+> > <SNIP>
+> >    14: Parse sched tracepoints fields                  : Skip (not linked with libtraceevent)
+> >    15: syscalls:sys_enter_openat event fields          : Skip (not linked with libtraceevent)
+> > <SNIP>
+> >    32: Track with sched_switch                         : Skip (not linked with libtraceevent)
+> > <SNIP>
+> >
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> > Cc: Howard Chu <howardchu95@gmail.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: James Clark <james.clark@linaro.org>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Leo Yan <leo.yan@linux.dev>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Thomas Richter <tmricht@linux.ibm.com>
+> > Cc: Veronika Molnarova <vmolnaro@redhat.com>
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> This will conflict with:
+> https://lore.kernel.org/lkml/20241102165400.75785-7-irogers@google.com/
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/perf-list.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Let me process that first.
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index 14621f39b375..d0c65fad419a 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -243,6 +243,21 @@ For accessing trace point events perf needs to have read access to
- /sys/kernel/tracing, even when perf_event_paranoid is in a relaxed
- setting.
- 
-+TOOL/HWMON EVENTS
-+-----------------
-+
-+Some events don't have an associated PMU instead reading values
-+available to software without perf_event_open. As these events don't
-+support sampling they can only really be read by tools like perf stat.
-+
-+Tool events provide times and certain system parameters. Examples
-+include duration_time, user_time, system_time and num_cpus_online.
-+
-+Hwmon events provide easy access to hwmon sysfs data typically in
-+/sys/class/hwmon. This information includes temperatures, fan speeds
-+and energy usage.
-+
-+
- TRACING
- -------
- 
--- 
-2.47.0.277.g8800431eea-goog
+Thanks,
+Namhyung
 
