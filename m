@@ -1,121 +1,186 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8821991CA
-	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 06:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B53D233D7D;
+	Sat,  9 Nov 2024 06:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731133154; cv=none; b=UN7kLGGkB/aIeYyDEuu/6rDejFe/G0ZZ0GmZjbhCFKv3Y9mOzGANZAMjqMioREboJTAidl649TAa+A8zF5bHAn7q4NJKc5O9Bdrl5e0xvQ0ODC30YXs8M0nLMgchwdr6L3En+xfnxupZC9PK/2AeEININYtXlxHQTHAOP6PDm/0=
+	t=1731134758; cv=none; b=DcO9EhQyLbFrdlKZz3hlbVtfg9b9TWDcnByDOYxuo48vU+278rqb3m0I66vcp8HWki+2Mx1AK3x5LjiijwONRO0ihQww/og5DYlOemVSmWn5gdTijvQMW8oEN9/1EH6nHYIue5SobxIE/sznf7FSZSCvTfnmBNqXOfYkbVVUlO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731133154; c=relaxed/simple;
-	bh=cdFXS6YbU6dHLZsfKNNJ3CV8t/rR/3/1BmnroI/EmI4=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=bBOHkRp9Dmu7TF/m5TV1AIbWXOf89nsdpS/JlMWQ+YmDnZ2R+dL9dOPpOswXTBnMYhrGMcf7s88zjLf/z9ByPgGPoLiaOddSUhduKyZ3Pq8n4he/+JWDC4VO8FdQYFVQAAdqyk0j7tqmgVcP/ZHBYAVS1GDuGMqH2BDs18z9zns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LINTWF0L; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1731134758; c=relaxed/simple;
+	bh=/2j+lWnKPGb0XCEcsiubcIvwP7dtYhvVDtA61Lbj/aQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sdTP0Kr6AHuv8XikRbrbd3hgefvy7vn5i5LfDUWcBotZ9kv07HJoxiSrf1E7dT2xBMjsHuG/4OkWgFi9xWx4WeDtF++NrZMdRHkQzG2wj3ljaJ3yPLjQvzsHoPpOdvMcz1ylfOB2stfeEMf711xTbvkfucJmrNwaeonm/iCPeMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kXBye0DG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LINTWF0L"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e2b9f2c6559so4456040276.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 22:19:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731133152; x=1731737952; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m24ezova7J3GENnmHxuIJrSil1dVDJzqrtZznCoBSNI=;
-        b=LINTWF0LAIkda7RAlnxKvdOE3C7bfMMXN5ShsIeQUoXQpCo0iqUk8x4o0umNVtMzqc
-         HBCrCrFxfM8N4MD/xVpLflfSujsLaW+BRXmnU3iJao8YYb8+J0KCved325i9xfROA9/v
-         XnFuI6OROMHXm0N7NYvTOtxbNzbP47oC7hX2Dwg3hbMQAEoDgo64Wi1waTBxRmtvF6Ha
-         vIfVm9V90k8vXQ8qutwwUyHGjaC9lOuPwI6PxCYq88mbCUjnzOebf6CBXNPLfrs2X3vn
-         DeiDoKSPHLAgLsX67ZXGnXEwjBFQtkVjYjGcuPQiywIDdW34MYVfd/ncNhwlw6XdpWYH
-         tRKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731133152; x=1731737952;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m24ezova7J3GENnmHxuIJrSil1dVDJzqrtZznCoBSNI=;
-        b=T1oRS9i6hPgDvHR3t2f5sZepd4DZgnNe/d1SZSZQGRHsrYOEcsxiBoxEwfHFMrY3rC
-         DhWQ+epdjQNVG1OEmfiwDKfgRfw4HDdeIzcOvCs9LxXrO3exYZDKUC0FQwLO+yEoBh0U
-         /wrscJ71PNPJJLC29ETfGJhCxXiXGdtgIIMrLpG9YfHrMLbK4LGkB7MrrkU6z+IWqqZ0
-         pNhk8IfE7xpjo5W4cR8TJIySwrKwHItya547NzVfhm3DFNco7SuJyeRiSd55zgLa1RZ2
-         L3yhGkQlpkkppKck1h7l4aciEE1b/VXR+892vyznlaPeYK8IoOa4lOvOcxHUJ2Q5JXIN
-         8bXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVYIJ14KoTfO8qUXxVQxEp5sfE8nkTbUihlJFzi9jAmcWsYWQsq9axovVEFj4xldOy/X1G13d1nZ6k8WVh/UiD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoP2zxicSquRSh+KpNi0j2f3jnhN6iicJgcM1NRiEOKaQ/vGS2
-	jX3oknbOOQYsmB+IXkKpjs0Rh7Ti3XR3fw8X5qC/nmu9f/A3IaxFP6f0KvSaO3ASGEGwbNixwwA
-	U9aWuBw==
-X-Google-Smtp-Source: AGHT+IEjWicK5LpMHUtvdfgpqNM6nhMioZKKQMcNun1xBlhB3GtyO6nVCSa+gmCfKwcqfavz2sH0Ixj1poWJ
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:acc2:d48f:a998:5915])
- (user=irogers job=sendgmr) by 2002:a25:8b81:0:b0:e2e:3031:3f0c with SMTP id
- 3f1490d57ef6-e337f8d41a3mr4031276.7.1731133151533; Fri, 08 Nov 2024 22:19:11
- -0800 (PST)
-Date: Fri,  8 Nov 2024 22:18:09 -0800
-In-Reply-To: <20241109061809.811922-1-irogers@google.com>
-Message-Id: <20241109061809.811922-23-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kXBye0DG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D6F7C4CEC6;
+	Sat,  9 Nov 2024 06:45:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731134758;
+	bh=/2j+lWnKPGb0XCEcsiubcIvwP7dtYhvVDtA61Lbj/aQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kXBye0DGZXYNZVfOxxd1ukijAp5CmK7ZEWSfahHPf5CLTD0zYM8k4hO8In04w5F0s
+	 V52mIRGBbVJO+dVhBjCg/GNL5KbS6GpZxIESIYYnn2ZMORejJBvAt3MtTgLaNk5olN
+	 ZZvoEnX8CM4B1oZW6kyg3ibBdoeKhb3GV8FQ04EPzRNXFocBcxaGathoIMPhovAWzV
+	 LPYa7ka+p+FuJyQ6BgdHmzjfw2/g3eNd6QpLroJmWM7LsxlUZoK3ghsDMlnG//cSV1
+	 dJSW8M8BhwHwKIVfre0ZMElUJs5JS1JlRExEId0FDa49BFNr1k3z4dDK8Z6gDpV3+1
+	 LQVKwCmlm7uKQ==
+Date: Fri, 8 Nov 2024 22:45:54 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+	James Clark <james.clark@linaro.org>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
+	Zixian Cai <fzczx123@gmail.com>, Andi Kleen <ak@linux.intel.com>,
+	Paran Lee <p4ranlee@gmail.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>
+Subject: Re: [PATCH v4 0/6] Avoid parsing tracepoint format just for id
+Message-ID: <Zy8FIt2OMa5-GymZ@google.com>
+References: <20241108184751.359237-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241109061809.811922-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
-Subject: [PATCH v6 22/22] perf python: Correctly throw IndexError
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	Michael Petlan <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Ilya Leoshkevich <iii@linux.ibm.com>, Colin Ian King <colin.i.king@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241108184751.359237-1-irogers@google.com>
 
-Correctly throw IndexError for out-of-bound accesses to evlist:
-```
-Python 3.11.9 (main, Jun 19 2024, 00:38:48) [GCC 13.2.0] on linux
-Type "help", "copyright", "credits" or "license" for more information.
->>> import sys
->>> sys.path.insert(0, '/tmp/perf/python')
->>> import perf
->>> x=perf.parse_events('cycles')
->>> print(x)
-evlist([cycles])
->>> x[2]
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-IndexError: Index out of range
-```
+On Fri, Nov 08, 2024 at 10:47:45AM -0800, Ian Rogers wrote:
+> The tracepoint format isn't needed to open an event, just the id for
+> the config value. Refactor the use of evsel->tp_format to use an
+> accessor that will lazily construct its value. In evsel__newtp_idx
+> read the id so the config value can be set up/used.
+> 
+> This allows tracepoints to be used without libtraceevent in a number
+> of tests. Other functionality is enabled without libtracevent, such as
+> mapping a tracepoint id back to its name. There may be some
+> performance benefit to code using tracepoints but not using the format
+> information.
+> 
+> v4. Rebase due to conflict with 9ac98662dbd3 ("perf: event: Remove deadcode")
+> v3. Whitespace changes, Arnaldo.
+> v2. Add additional error checking/handling in evsel__tp_format.
+> 
+> Ian Rogers (6):
+>   tool api fs: Correctly encode errno for read/write open failures
+>   perf trace-event: Constify print arguments
+>   perf trace-event: Always build trace-event-info.c
+>   perf evsel: Add/use accessor for tp_format
+>   perf evsel: Allow evsel__newtp without libtraceevent
+>   perf tests: Enable tests disabled due to tracepoint parsing
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/python.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+After applying this series, I'm seeing some test failures.  But I don't
+understand why it affects non-tracepoint events though.
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 0d71ec673aa3..25114dcadd21 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -1071,8 +1071,10 @@ static PyObject *pyrf_evlist__item(PyObject *obj, Py_ssize_t i)
- 	struct pyrf_evlist *pevlist = (void *)obj;
- 	struct evsel *pos;
- 
--	if (i >= pevlist->evlist.core.nr_entries)
-+	if (i >= pevlist->evlist.core.nr_entries) {
-+		PyErr_SetString(PyExc_IndexError, "Index out of range");
- 		return NULL;
-+	}
- 
- 	evlist__for_each_entry(&pevlist->evlist, pos) {
- 		if (i-- == 0)
--- 
-2.47.0.277.g8800431eea-goog
+  $ sudo ./perf test -v pipe
+  --- start ---
+  test child forked, pid 3036123
+   1bde35-1bdecc l noploop
+  perf does have symbol 'noploop'
+  
+  Record+report pipe test
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.210 MB - ]
+  [ perf record: Woken up 2 times to write data ]
+  [ perf record: Captured and wrote 0.517 MB - ]
+  [ perf record: Woken up 2 times to write data ]
+  [ perf record: Captured and wrote 0.516 MB - ]
+  Record+report pipe test [Success]
+  
+  Inject -B build-ids test
+  0xa5c [0x17a4]: failed to process type: 80
+  Error:
+  failed to process sample
+  Inject build-ids test [Failed - cannot find noploop function in pipe #1]
+  
+  Inject -b build-ids test
+  0xa5c [0x17a4]: failed to process type: 80
+  Error:
+  failed to process sample
+  Inject build-ids test [Failed - cannot find noploop function in pipe #1]
+  
+  Inject --buildid-all build-ids test
+  0xa5c [0x17a4]: failed to process type: 80
+  Error:
+  failed to process sample
+  Inject build-ids test [Failed - cannot find noploop function in pipe #1]
+  
+  Inject --mmap2-buildid-all build-ids test
+  0xa5c [0x17a4]: failed to process type: 80
+  Error:
+  failed to process sample
+  Inject build-ids test [Failed - cannot find noploop function in pipe #1]
+  ---- end(-1) ----
+   84: perf pipe recording and injection test                          : FAILED!
+  
+  $ sudo ./perf test -v Zstd
+  --- start ---
+  test child forked, pid 3036097
+  Collecting compressed record file:
+  500+0 records in
+  500+0 records out
+  256000 bytes (256 kB, 250 KiB) copied, 0.00169127 s, 151 MB/s
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.032 MB /tmp/perf.data.KBo, compressed (original 0.004 MB, ratio is 3.324) ]
+  Checking compressed events stats:
+  Couldn't decompress data
+  0x7ca8 [0x4f2]: failed to process type: 81 [Operation not permitted]
+  Error:
+  failed to process sample
+  ---- end(-1) ----
+   86: Zstd perf.data compression/decompression                        : FAILED!
 
+Thanks,
+Namhyung
+
+
+> 
+>  tools/lib/api/fs/fs.c                         |   6 +-
+>  tools/perf/builtin-kmem.c                     |  12 +-
+>  tools/perf/builtin-kwork.c                    |   3 +-
+>  tools/perf/builtin-record.c                   |   2 -
+>  tools/perf/builtin-script.c                   |   9 +-
+>  tools/perf/builtin-trace.c                    |  79 +++++++++----
+>  tools/perf/tests/Build                        |   6 +-
+>  tools/perf/tests/builtin-test.c               |   2 -
+>  tools/perf/tests/parse-events.c               |  25 +---
+>  tools/perf/util/Build                         |   2 +-
+>  tools/perf/util/data-convert-bt.c             |  10 +-
+>  tools/perf/util/data-convert-json.c           |   8 +-
+>  tools/perf/util/evsel.c                       | 110 +++++++++++++-----
+>  tools/perf/util/evsel.h                       |   9 +-
+>  tools/perf/util/evsel_fprintf.c               |   4 +-
+>  tools/perf/util/parse-events.c                |  16 +--
+>  tools/perf/util/perf_event_attr_fprintf.c     |   4 -
+>  .../util/scripting-engines/trace-event-perl.c |   3 +-
+>  .../scripting-engines/trace-event-python.c    |   3 +-
+>  tools/perf/util/sort.c                        |  33 ++++--
+>  tools/perf/util/trace-event-parse.c           |   2 +-
+>  tools/perf/util/trace-event-scripting.c       |  10 +-
+>  tools/perf/util/trace-event.h                 |   2 +-
+>  23 files changed, 214 insertions(+), 146 deletions(-)
+> 
+> -- 
+> 2.47.0.277.g8800431eea-goog
+> 
