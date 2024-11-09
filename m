@@ -1,315 +1,209 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1C6154449
-	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 16:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A70819B5A9
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 16:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731168636; cv=none; b=s/URSK3ms8+Qp6TIHQXEy707YBof0W2pM5e7H1PrRMC+v9+8sIDlWSk8yzYmO8Cs+1WKcKTT/+Ke5+1YnElFHqUSXEE6UQDuECaWIRhgJEHAnP1yRPb3SUZStlwrCEZs5HlI09MX7mAjQoILazRpayxWsprwakZ6qOsiAhXF+KE=
+	t=1731169594; cv=none; b=ecROpfFxUa39tWFARAdjWoGeeS7T2xvgf+vjPQSvBK8bApr64yFIWL6iEYyGlKqdgz5a39wagLHpus5iLZcsaVIFk+m8catFADJ1e8xF+yQFjka9i4Y1LTgu8kJKRBWkhn6OFuT75cetoWLXsOMHgdfIpsjyn1ITa28uDjJq2Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731168636; c=relaxed/simple;
-	bh=EjpQSjM560G/O6t1Tb6dej/LCNAFtY2t/dQQ35CPKZw=;
+	s=arc-20240116; t=1731169594; c=relaxed/simple;
+	bh=X6DcOIRSVQ8Nro7YUsDb33yJfvUboXkH+318jBl2QHQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hNmoCoA8JziCkZxju9f1tcmUWshYXZyELVb/tpCaYFvT41qcsuw6wq+6UXDHTcBX96jYT3S1z6iViM/cTQwA3zHaxywSUgDmbRxbT/Yr46L8efjrC5gt58k34S2G7NFzMsvvjmRFxVruQCqHaJJ3U9+zqOlMG7lzYeCHpSwf7Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fvNyVRCh; arc=none smtp.client-ip=209.85.214.181
+	 To:Cc:Content-Type; b=qhxRvbn1EAWM9Yp3qoB1i5bj0Ty0u0wJowmPFGbwHuVSId/rIPGpiQRLHlwDmV/zuG3wJvaJoq8d5DaKmQ8L4yAmkNNLGolm/wE5K4aUJZFeUlBS6FYNau4qiNODh+v364PkLjWYj8P2OucR+NzNcJqvLdrjalYSXg0Kq7ptHsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fBrBWMda; arc=none smtp.client-ip=209.85.166.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fvNyVRCh"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-20c87b0332cso136655ad.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 09 Nov 2024 08:10:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fBrBWMda"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3a4e4776f79so118525ab.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 09 Nov 2024 08:26:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731168634; x=1731773434; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731169591; x=1731774391; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VUsRfOqzk+CxIITEqQ7Cd8HpiWsMwYdkJCFhMtBclG0=;
-        b=fvNyVRChFX/M9696a3tqrXIlC0LRDcBzP2cdLX+Q7ETjxVKAxls9gGVcv/Gk4aRVDu
-         HyyNIa3EfYpoi4r7uiMbLuVMm6mINBjXAM7cBBJPAEKgD2Ry92HZFM8Kjbgka9MZG2QE
-         QZPutZXvy9yX4PbzV8UkhRsqBef0hTNtTtje4p4ghl9nC/EblfTBdDyMrVqy8k7+p+/o
-         l6SKD1ouqhYpSUaHOlymqywd0KwU5p0fEC1x/mxcsUPaZngzh3XlpaMxGH002TlAPFte
-         VAcwLI34TGYJmpvzL9Scj0G3nCqhZv+5Ukyd50d4x5b9c8QRSjUXzkiT59CgYvYAYWBj
-         TqDQ==
+        bh=5yfKzpu2F7oD0EL8nuutwuKfU/qe3AxHeqS/JVcWCfk=;
+        b=fBrBWMdaX389DGv9yj9QDaCQ6BPSiwkxe7d2WGMLy9wd4S4I7z0+Oeph025jSoWSkA
+         eN99eT1Cfn+du6pPZg1gxfF8eXUmQc6jOZ+jh/Rgk+2cU35a1d4RPZt1KsWr1/64GUQf
+         LNy2qDqNnTxhetW5NKjEG4mbeE7iNkPr0+WMgCVs/cjuRA51YovLy7kS9IKn8IqtcnZr
+         Anp9s9X9+amYJTFHDLrG0x8R4z4GtB/DXCRW7aBFSwkLld4JxugaftxNoSzvoHwqTcu4
+         lQvwoJCCa4T5h5EFsvhLs9NQTO/AMzHyNNfvkfAfModOwk2ROVvHQswruxM3e+hzYGRj
+         xgww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731168634; x=1731773434;
+        d=1e100.net; s=20230601; t=1731169591; x=1731774391;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VUsRfOqzk+CxIITEqQ7Cd8HpiWsMwYdkJCFhMtBclG0=;
-        b=hF6qnSweq/Eb0O5zzNTojOX277cKX8QCn9Pz7zEn1oTHX1aWalrCVEJ9KxKFvc8+2g
-         G4b8lC5dkXbpXFfsTgt/tCpsLFNX47a9ZI9CKbsCKkyN2lKMY4PCC248Wd9PPv4BZa82
-         h4YBFH+kf9TKdVieOA7mh3YjuWFqsHiI6HT5yS8XgcxdZ89Rqk+rp3Oo6uM7biO2c9Lr
-         5/fhajzEQh1TXbX9K6tkxbgnVaHZl2CDsHx6iik7cm9b3V3mpP3rSSYJGFkqMVh7on95
-         ijioWl6liwfuI1ezsAKYz7evDAB/FDRR0Vx1/3rUbbXhpycU/x4VXp95+ALYzG8b301Z
-         iApQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0khySUJ4jfBmEsmeuYoitydgdQhgBWoY2ao0cOr0jyzJngpZAxWXlQPQeJQA8ufywkjp1YgV+XRaMAfJr/G2j@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZe5soXKv+6mcB3wxkrjKJdL3Kv4xJPXtzIQYMVJDe3ClUe1wF
-	gnwWTctvuLU0VRQnW2Gp/wxwmgz9qCTUEbxUJ7G41fAA6254uqmMqLa4dgf3a59AuUkdUNxpIlT
-	361cpTDvdJF6eJFb1BQ2XVfPF96fA9Xf2CG3h
-X-Gm-Gg: ASbGncvqo3nyhVxoeiM00zXF7ELijLZzzzzgDz+Y+mL7+4Vknvpq24z/E/usvpZlIER
-	R3gQpXhodzGC5IFR3XeMgRK1LuSyegMjI
-X-Google-Smtp-Source: AGHT+IEFahqbyg4ShZb8bLJQRctx82oVDw24lkFpnx3mxhwv7OQOUeemMadNRPSFS+4YbURaLpoe1k0Z9UZo+0sxOk8=
-X-Received: by 2002:a17:902:d4cb:b0:20b:a6f5:2770 with SMTP id
- d9443c01a7336-2118dea0992mr2205275ad.6.1731168634033; Sat, 09 Nov 2024
- 08:10:34 -0800 (PST)
+        bh=5yfKzpu2F7oD0EL8nuutwuKfU/qe3AxHeqS/JVcWCfk=;
+        b=CZS7HW13o+Nl6fbjdS2rJmewcNknkmAGSA2fd4WDyAhpaNDDwpfgCe7VLvaxCqCwXl
+         7oyJuNXfNK7REsz5qe0ZRIUrhnI/N2jf6oqZzRYva5jU4HqiJtNAq5bHE/mCn0N1Jgt6
+         vI/tiuLoX3ECxFaG020ptEEa+xky2dRyxVEw+NJTtFtphVeY3uuPkfE8dSo6pjRd0Yqz
+         M8OV0DN8/vFAOWhcA8gL4+Fv0cUzUk2okYDWiZnplE3guYDMDvLHOUL3AQP4dR2n6OXw
+         /2QDkFcSGceGTif2Nv1ip30CyvO9kUL4pfiPFdc8fycXJNks45WmillvD17LfOckA9Ks
+         xQ7A==
+X-Forwarded-Encrypted: i=1; AJvYcCW6DX6UOn1f8h3kM5Zw5AugfOCawozGpfdQQQgrQdHQGhyw3fXb3Nhg0+M3NHK1yxuTtJctXCLMe5udCg9aGQCM@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHjmBgp+rsS+76/Ldyw9VN+AQ1B7D8g5rYz4EyLb9llV12QzxM
+	9KBZh8NiW9qhuuNEFlJrmEan7GSMoaTg+dx1XiBZZZCXXUEySTdoT38jQlcIW7fPuOibi3E98n/
+	xL05x7wSWn7IQxbDG40ooHI3Y6BwoKBAx0Y6/
+X-Gm-Gg: ASbGncvVdy8Qdl8z8BMeSHXAgrPNW9HLlnZaxg3jTUcLT1R+68b1limcBANME4Yb/Dm
+	wVvEMj62OIod5Gxvw4aYNZlwarvv+s3GQ
+X-Google-Smtp-Source: AGHT+IFTLfjgOtMiA8ZjbeqDMMeptCT3ndxFl5gYXqrDkdB0BfmvURY07A0sWUPoOKT+AVpjCd5kag/dL8yZs4+4+mE=
+X-Received: by 2002:a05:6e02:1b03:b0:3a0:9f85:d74a with SMTP id
+ e9e14a558f8ab-3a6f8a225d9mr2275915ab.14.1731169591393; Sat, 09 Nov 2024
+ 08:26:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241107162035.52206-1-irogers@google.com> <20241107162035.52206-9-irogers@google.com>
- <5a57de7c-924e-ccd6-8981-b9fddc647465@huawei.com>
-In-Reply-To: <5a57de7c-924e-ccd6-8981-b9fddc647465@huawei.com>
+References: <20241108184751.359237-1-irogers@google.com> <Zy8FIt2OMa5-GymZ@google.com>
+In-Reply-To: <Zy8FIt2OMa5-GymZ@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Sat, 9 Nov 2024 08:10:22 -0800
-Message-ID: <CAP-5=fWw04Qi+3=y7M4uMrhgrFWpnF7mZ09yb4v0P0qFT1Gfnw@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] perf pmu: Move pmu_metrics_table__find and remove
- ARM override
-To: Yicong Yang <yangyicong@huawei.com>
-Cc: Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+Date: Sat, 9 Nov 2024 08:26:20 -0800
+Message-ID: <CAP-5=fXmxhaLk+qvH9nGAV-ByyhyHx=WPhXCFbBaZ3nSySSsMA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] Avoid parsing tracepoint format just for id
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Huacai Chen <chenhuacai@kernel.org>, 
-	Bibo Mao <maobibo@loongson.cn>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Ben Zong-You Xie <ben717@andestech.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Benjamin Gray <bgray@linux.ibm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Dima Kogan <dima@secretsauce.net>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, Junhao He <hejunhao3@huawei.com>
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, James Clark <james.clark@linaro.org>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Yang Li <yang.lee@linux.alibaba.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, Yang Jihong <yangjihong@bytedance.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Ben Gainey <ben.gainey@arm.com>, 
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>, Zixian Cai <fzczx123@gmail.com>, 
+	Andi Kleen <ak@linux.intel.com>, Paran Lee <p4ranlee@gmail.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Nov 9, 2024 at 2:54=E2=80=AFAM Yicong Yang <yangyicong@huawei.com> =
+On Fri, Nov 8, 2024 at 10:45=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
+> On Fri, Nov 08, 2024 at 10:47:45AM -0800, Ian Rogers wrote:
+> > Ian Rogers (6):
+> >   tool api fs: Correctly encode errno for read/write open failures
+> >   perf trace-event: Constify print arguments
+> >   perf trace-event: Always build trace-event-info.c
+> >   perf evsel: Add/use accessor for tp_format
+> >   perf evsel: Allow evsel__newtp without libtraceevent
+> >   perf tests: Enable tests disabled due to tracepoint parsing
 >
-> Hi,
+> After applying this series, I'm seeing some test failures.  But I don't
+> understand why it affects non-tracepoint events though.
 >
-> On 2024/11/8 0:20, Ian Rogers wrote:
-> > Move pmu_metrics_table__find to the jevents.py generated pmu-events.c
-> > and remove indirection override for ARM. The movement removes
-> > perf_pmu__find_metrics_table that exists to enable the ARM
-> > override. The ARM override isn't necessary as just the CPUID, not PMU,
-> > is used in the metric table lookup. On non-ARM the CPU argument is
-> > just ignored for the CPUID, for ARM -1 is passed so that the CPUID for
-> > the first logical CPU is read.
+>   $ sudo ./perf test -v pipe
+>   --- start ---
+>   test child forked, pid 3036123
+>    1bde35-1bdecc l noploop
+>   perf does have symbol 'noploop'
 >
-> Since the logic here's already been touching, is it possible to step it f=
-urther to just
-> ignore the CPUID matching when finding the system metrics/events tables? =
-It's may not be
-> that reasonable for finding a system metrics/events from the CPUID, since=
- one system PMU may
-> exists on different platforms with different CPU types.
+>   Record+report pipe test
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.210 MB - ]
+>   [ perf record: Woken up 2 times to write data ]
+>   [ perf record: Captured and wrote 0.517 MB - ]
+>   [ perf record: Woken up 2 times to write data ]
+>   [ perf record: Captured and wrote 0.516 MB - ]
+>   Record+report pipe test [Success]
+>
+>   Inject -B build-ids test
+>   0xa5c [0x17a4]: failed to process type: 80
+>   Error:
+>   failed to process sample
+>   Inject build-ids test [Failed - cannot find noploop function in pipe #1=
+]
+>
+>   Inject -b build-ids test
+>   0xa5c [0x17a4]: failed to process type: 80
+>   Error:
+>   failed to process sample
+>   Inject build-ids test [Failed - cannot find noploop function in pipe #1=
+]
+>
+>   Inject --buildid-all build-ids test
+>   0xa5c [0x17a4]: failed to process type: 80
+>   Error:
+>   failed to process sample
+>   Inject build-ids test [Failed - cannot find noploop function in pipe #1=
+]
+>
+>   Inject --mmap2-buildid-all build-ids test
+>   0xa5c [0x17a4]: failed to process type: 80
+>   Error:
+>   failed to process sample
+>   Inject build-ids test [Failed - cannot find noploop function in pipe #1=
+]
+>   ---- end(-1) ----
+>    84: perf pipe recording and injection test                          : =
+FAILED!
+>
+>   $ sudo ./perf test -v Zstd
+>   --- start ---
+>   test child forked, pid 3036097
+>   Collecting compressed record file:
+>   500+0 records in
+>   500+0 records out
+>   256000 bytes (256 kB, 250 KiB) copied, 0.00169127 s, 151 MB/s
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.032 MB /tmp/perf.data.KBo, compress=
+ed (original 0.004 MB, ratio is 3.324) ]
+>   Checking compressed events stats:
+>   Couldn't decompress data
+>   0x7ca8 [0x4f2]: failed to process type: 81 [Operation not permitted]
+>   Error:
+>   failed to process sample
+>   ---- end(-1) ----
+>    86: Zstd perf.data compression/decompression                        : =
+FAILED!
+>
+> Thanks,
+> Namhyung
 
-The issue is for conciseness reasons we let metrics and metric
-thresholds refer to other metrics, for example:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json#n78
+I'm not able to reproduce:
 ```
-    {
-        "BriefDescription": "This category represents fraction of
-slots where no uops are being delivered due to a lack of required
-resources for accepting new uops in the Backend",
-        "MetricExpr": "topdown\\-be\\-bound / (topdown\\-fe\\-bound +
-topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 5
-* cpu@INT_MISC.RECOVERY_CYCLES\\,cmask\\=3D1\\,edge@ / tma_info_slots",
-        "MetricGroup": "TmaL1;TopdownL1;tma_L1_group",
-        "MetricName": "tma_backend_bound",
-        "MetricThreshold": "tma_backend_bound > 0.2",
-        "MetricgroupNoGroup": "TopdownL1",
-        "PublicDescription": "This category represents fraction of
-slots where no uops are being delivered due to a lack of required
-resources for accepting new uops in the Backend. Backend is the
-portion of the processor core where the out-of-order scheduler
-dispatches ready uops into their respective execution units; and once
-completed these uops get retired according to program order. For
-example; stalls due to data-cache misses or stalls due to the divider
-unit being overloaded are both categorized under Backend Bound.
-Backend Bound is further divided into two main categories: Memory
-Bound and Core Bound. Sample with: TOPDOWN.BACKEND_BOUND_SLOTS",
-        "ScaleUnit": "100%"
-    },
+$ git log --oneline |head
+a59bca6eb0a6 perf test: Add a runs-per-test flag
+0d0c002eb45c perf tests: Enable tests disabled due to tracepoint parsing
+4b8f5c9dfbda perf evsel: Allow evsel__newtp without libtraceevent
+7f57057c7884 perf evsel: Add/use accessor for tp_format
+c27d357d2d4c perf trace-event: Always build trace-event-info.c
+20bf7a2cd68a perf trace-event: Constify print arguments
+f18b07ee2af1 tool api fs: Correctly encode errno for read/write open failur=
+es
+...
+$ sudo /tmp/perf/perf test -r 10 Zstd pipe -v
+84: perf pipe recording and injection test                          : Ok
+84: perf pipe recording and injection test                          : Ok
+84: perf pipe recording and injection test                          : Ok
+84: perf pipe recording and injection test                          : Ok
+84: perf pipe recording and injection test                          : Ok
+84: perf pipe recording and injection test                          : Ok
+84: perf pipe recording and injection test                          : Ok
+84: perf pipe recording and injection test                          : Ok
+84: perf pipe recording and injection test                          : Ok
+84: perf pipe recording and injection test                          : Ok
+86: Zstd perf.data compression/decompression                        : Ok
+86: Zstd perf.data compression/decompression                        : Ok
+86: Zstd perf.data compression/decompression                        : Ok
+86: Zstd perf.data compression/decompression                        : Ok
+86: Zstd perf.data compression/decompression                        : Ok
+86: Zstd perf.data compression/decompression                        : Ok
+86: Zstd perf.data compression/decompression                        : Ok
+86: Zstd perf.data compression/decompression                        : Ok
+86: Zstd perf.data compression/decompression                        : Ok
+86: Zstd perf.data compression/decompression                        : Ok
 ```
+Similarly not as root or if runs-per-test is 100.
 
-The system metrics were added on top of this and we never rethought
-the design. For a metric to refer to another metric there needs to be
-some kind of place we look up from and for that we use the CPUID
-associated table. Perhaps the easiest thing is that if no CPUID table
-is matched we have an empty table.
-
-> FYI, there's a similiar problem when trying to count the system metrics b=
-ut fails [1].
-> I've tested with this series but the problem still exists.
-
-Not sure what you are asking me for here.
+Agreed that the changes are for tracepoints and these tests aren't for
+tracepoints, so an interaction wouldn't be expected. If you have a
+reliable reproduction perhaps you can bisect it.
 
 Thanks,
 Ian
-
-> [1] https://lore.kernel.org/linux-perf-users/20241010074430.16685-1-hejun=
-hao3@huawei.com/
->
-> Thanks.
->
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/arch/arm64/util/pmu.c         | 20 --------------------
-> >  tools/perf/pmu-events/empty-pmu-events.c | 10 ++++------
-> >  tools/perf/pmu-events/jevents.py         | 10 ++++------
-> >  tools/perf/pmu-events/pmu-events.h       |  2 +-
-> >  tools/perf/util/pmu.c                    |  5 -----
-> >  tools/perf/util/pmu.h                    |  1 -
-> >  6 files changed, 9 insertions(+), 39 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/u=
-til/pmu.c
-> > index a0964b191fcb..895fb0d0610c 100644
-> > --- a/tools/perf/arch/arm64/util/pmu.c
-> > +++ b/tools/perf/arch/arm64/util/pmu.c
-> > @@ -1,29 +1,9 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >
-> > -#include <internal/cpumap.h>
-> > -#include "../../../util/cpumap.h"
-> > -#include "../../../util/header.h"
-> >  #include "../../../util/pmu.h"
-> >  #include "../../../util/pmus.h"
-> >  #include "../../../util/tool_pmu.h"
-> >  #include <api/fs/fs.h>
-> > -#include <math.h>
-> > -
-> > -const struct pmu_metrics_table *pmu_metrics_table__find(void)
-> > -{
-> > -     struct perf_pmu *pmu;
-> > -
-> > -     /* Metrics aren't currently supported on heterogeneous Arm system=
-s */
-> > -     if (perf_pmus__num_core_pmus() > 1)
-> > -             return NULL;
-> > -
-> > -     /* Doesn't matter which one here because they'll all be the same =
-*/
-> > -     pmu =3D perf_pmus__find_core_pmu();
-> > -     if (pmu)
-> > -             return perf_pmu__find_metrics_table(pmu);
-> > -
-> > -     return NULL;
-> > -}
-> >
-> >  u64 tool_pmu__cpu_slots_per_cycle(void)
-> >  {
-> > diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-=
-events/empty-pmu-events.c
-> > index 17306e316a3c..1c7a2cfa321f 100644
-> > --- a/tools/perf/pmu-events/empty-pmu-events.c
-> > +++ b/tools/perf/pmu-events/empty-pmu-events.c
-> > @@ -587,14 +587,12 @@ const struct pmu_events_table *perf_pmu__find_eve=
-nts_table(struct perf_pmu *pmu)
-> >          return NULL;
-> >  }
-> >
-> > -const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct pe=
-rf_pmu *pmu)
-> > +const struct pmu_metrics_table *pmu_metrics_table__find(void)
-> >  {
-> > -        const struct pmu_events_map *map =3D map_for_pmu(pmu);
-> > -
-> > -        if (!map)
-> > -                return NULL;
-> > +        struct perf_cpu cpu =3D {-1};
-> > +        const struct pmu_events_map *map =3D map_for_cpu(cpu);
-> >
-> > -     return &map->metric_table;
-> > +        return map ? &map->metric_table : NULL;
-> >  }
-> >
-> >  const struct pmu_events_table *find_core_events_table(const char *arch=
-, const char *cpuid)
-> > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/j=
-events.py
-> > index e44b72e56ac3..d781a377757a 100755
-> > --- a/tools/perf/pmu-events/jevents.py
-> > +++ b/tools/perf/pmu-events/jevents.py
-> > @@ -1103,14 +1103,12 @@ const struct pmu_events_table *perf_pmu__find_e=
-vents_table(struct perf_pmu *pmu)
-> >          return NULL;
-> >  }
-> >
-> > -const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct pe=
-rf_pmu *pmu)
-> > +const struct pmu_metrics_table *pmu_metrics_table__find(void)
-> >  {
-> > -        const struct pmu_events_map *map =3D map_for_pmu(pmu);
-> > -
-> > -        if (!map)
-> > -                return NULL;
-> > +        struct perf_cpu cpu =3D {-1};
-> > +        const struct pmu_events_map *map =3D map_for_cpu(cpu);
-> >
-> > -     return &map->metric_table;
-> > +        return map ? &map->metric_table : NULL;
-> >  }
-> >
-> >  const struct pmu_events_table *find_core_events_table(const char *arch=
-, const char *cpuid)
-> > diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events=
-/pmu-events.h
-> > index 5435ad92180c..675562e6f770 100644
-> > --- a/tools/perf/pmu-events/pmu-events.h
-> > +++ b/tools/perf/pmu-events/pmu-events.h
-> > @@ -103,7 +103,7 @@ int pmu_metrics_table__for_each_metric(const struct=
- pmu_metrics_table *table, pm
-> >                                    void *data);
-> >
-> >  const struct pmu_events_table *perf_pmu__find_events_table(struct perf=
-_pmu *pmu);
-> > -const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct pe=
-rf_pmu *pmu);
-> > +const struct pmu_metrics_table *pmu_metrics_table__find(void);
-> >  const struct pmu_events_table *find_core_events_table(const char *arch=
-, const char *cpuid);
-> >  const struct pmu_metrics_table *find_core_metrics_table(const char *ar=
-ch, const char *cpuid);
-> >  int pmu_for_each_core_event(pmu_event_iter_fn fn, void *data);
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index 514cb865f57b..45838651b361 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -818,11 +818,6 @@ static int is_sysfs_pmu_core(const char *name)
-> >       return file_available(path);
-> >  }
-> >
-> > -__weak const struct pmu_metrics_table *pmu_metrics_table__find(void)
-> > -{
-> > -     return perf_pmu__find_metrics_table(NULL);
-> > -}
-> > -
-> >  /**
-> >   * Return the length of the PMU name not including the suffix for unco=
-re PMUs.
-> >   *
-> > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> > index fba3fc608b64..7b3e71194e49 100644
-> > --- a/tools/perf/util/pmu.h
-> > +++ b/tools/perf/util/pmu.h
-> > @@ -260,7 +260,6 @@ void perf_pmu__arch_init(struct perf_pmu *pmu);
-> >  void pmu_add_cpu_aliases_table(struct perf_pmu *pmu,
-> >                              const struct pmu_events_table *table);
-> >
-> > -const struct pmu_metrics_table *pmu_metrics_table__find(void);
-> >  bool pmu_uncore_identifier_match(const char *compat, const char *id);
-> >
-> >  int perf_pmu__convert_scale(const char *scale, char **end, double *sva=
-l);
-> >
