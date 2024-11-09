@@ -1,70 +1,71 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550214C9A
-	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 00:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06844256D
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 00:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731112199; cv=none; b=hOZ7mO25zhcqdT5ZMmZxzIsIefed3BWD9JnJ9Ltlh3+XPsiBn8M1KK516t8Jwe0h2q44+LxJjai+z1wv/RNoIv2XLxYk8Qm3GXbINstZ1LNf4n5Oggy4eF71Actrk1CLgriiMUxNWXUHFD9OArkWHPy0ZWW+pxD+g+k/hWGVF58=
+	t=1731112253; cv=none; b=s6pP49y0QQdPOwqpMBRrR+GHj3hkoDRMbrJXjYWkZvaWZbEqwKCjCvjc+ce22ft9yPYVm5JHuErrsVBfXGLKrnWHHhUXrN7XUhyDlVJT1KUYUgZwgLExUGdq1vakbFwL6enEqdFskjLzJtTgk6GA/jAKhi2qNxd7guxHfL6q4fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731112199; c=relaxed/simple;
-	bh=snlNWw1fDPHwUDVwQo1YYrXYfcai/9kZYx0QBsaaUMU=;
+	s=arc-20240116; t=1731112253; c=relaxed/simple;
+	bh=6l31xFWX6keFP8JX4fQLI3fwS0vikRlxLjLQEplSDDg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YyRcPVkzU9U8xYWtRUIGjJletd2AlydSj9R2HRkcek5ui80+PmpEovHv/jHIIk6v1ydUGQ7YZSj5S+XbSEeyyPAsb9dUJE3XkigDyMU9J4iUXcDabnh6QfoOqDBMgYYI4GQN4dH1D5Ce0kBOAOhRhfXiZQoJ5ic2U+wU6UVrr10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XJ7i6TJU; arc=none smtp.client-ip=209.85.166.175
+	 To:Cc:Content-Type; b=KD3445DKkqppjvTWkh9daB6exa1TbdBGLpuWT3ZN0h+6VdcPgZziqex5wXLP+VNflm18cjGhvsGUHJI26suR0VO9Z8A5ApOG4vm8rOL7n/d2dp9e9pO+mMTZHPLhj1KwJx5F+wQgeBcMNFIIbwwa9l9/IqvD/wnmHHDJGJKG4dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KBD0GmBh; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XJ7i6TJU"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3a6c3bdbebcso28925ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 16:29:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KBD0GmBh"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-20ca03687fdso66585ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 16:30:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731112196; x=1731716996; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731112251; x=1731717051; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lmYA8FQqMdwmOynhm+YfrXky1hXgqOQL5xC9uW93CNA=;
-        b=XJ7i6TJULhxTpDd6kh9lFN2WDS81wOxJqYmFMJPsuTsxCS5tnxVgGiqCyS+TRkdYPD
-         ufKDNx7rFIVz0/+WlrjLAo/PDS2eNLHJQuj6cp5YXGzmgsFYZ40/FaawZ3aKvlEzNCHr
-         Mpld2HBhdnIxtGNT6LmtYzfMCkayj3PvhYv44pLve6P+nYzQxBXrS4mDSGAZIy7fLf4n
-         zUW6DmW5vDfLUk5m0Ns2Lwlnx7RAzduARjKsAlhO66w3rIOCXd4rfMZV3kgB0IIh9VYK
-         Mep2GrWkfR7+vczYZ6AAKkyIjfB/lgNn1woLC0B6R/Fr3LNvFdGPFh3SQP1YqIW3ozcF
-         jUYQ==
+        bh=IeiCkt8yGVZ1cm/cyphqL7nTIFzc03PSz7gvdXhOtfQ=;
+        b=KBD0GmBhfflsqOdgOJoiLvYVYUnvgGiv44t8p14FwhDaenuKFXbi7D05tQOhjmWTas
+         24ucV4q8joF3iT5Q5YQrYwfdF1wSFipTE7FXuM7eKVZemGw0KJ8qzt/9z4ZXk2U7t+Xe
+         9PlNHi0MHcX28ZVO9pO0lQXpCSszBOzuy2VBj6kSoKBP7QdHGxtnA23BOxQ+2vg/RTnK
+         hLrR5nBdEC/qzDxwzqMzsSGmjjR2XIQBc9IQVJYki3sR0DYDP6fS8ZlulN84OTSpkuKu
+         yDOnEml6JEARuM5dOAq3cURvPByQiTMs3tPVQAqpCJHgA5vTP0dabQbwSobKZ1kr2NKj
+         f0aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731112196; x=1731716996;
+        d=1e100.net; s=20230601; t=1731112251; x=1731717051;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lmYA8FQqMdwmOynhm+YfrXky1hXgqOQL5xC9uW93CNA=;
-        b=PjGnZY3Y9WHh9t0yMUw59oXlSnUvYR7+jphqbwgqpgnd856ZGJ4FjDwfgmyQ0Gs/yw
-         +/YD+eQvR5GZBiXK67sMzCIPbHhxPwXBXerS6/tJ1EzNfjvI/90GGxIvnUw87E5f+Q/u
-         qPoZWBOlYk7j4/7T5gFw5Tzmg0OPWO1oM18KGLZYf0FegtGUOG7F13YeFrnfl4LBgB/O
-         XGE1nsL8j8Wjem1+VQT+AyP5gRKJzcrO/RwPWrpvp6r/42MMdBRDsFRJX1TgemGKQolh
-         QyLc+QY3/h56+ZKmUoSu1btqymyEKBBwc1m8IJvf5Eo+PY+OcFI9Opvu/jUexnajOcbe
-         m+5w==
-X-Forwarded-Encrypted: i=1; AJvYcCWNL7Wwh11oyoJekujqlO9lR8yuQg+93fUEkkFFLPJBjagiRZhEw8b633bk4267hbzCKyYzudAkE9MFdmjP7Udm@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxbtNOzajx0xDKPaaRzOufap9ygJJVcwZw6t2a612tfBclK+p7
-	trl6Ju/2ai2lN+DMnze4pQklFC0uN1Z0Kd7rZAanZBt13DkhyUyy2z99o+MvXDp9suFgCHNdQC6
-	mNvyXOe88IwAGgo9L3kl1XZ5d8L21k+HzB6VU
-X-Gm-Gg: ASbGncvO862Dtzt1XzA3X7brVtYIePuJfe8MxK+tON6u5QEjpC8acVXuorQGG36aume
-	V/vcu32ZUTLKl0ToJFAkK/6QlV4m+hZGQ
-X-Google-Smtp-Source: AGHT+IGoNJHKoN6x+zWxbMcbjl/b90SVBx7HZ45s8qML+tSlgik8vUmdVMi5WJbPxRi1Q0Ymi0tL4Bt4QFbX5IRzD98=
-X-Received: by 2002:a05:6e02:1c2a:b0:39a:f5a7:50ef with SMTP id
- e9e14a558f8ab-3a6f8a09ba1mr1297405ab.4.1731112196119; Fri, 08 Nov 2024
- 16:29:56 -0800 (PST)
+        bh=IeiCkt8yGVZ1cm/cyphqL7nTIFzc03PSz7gvdXhOtfQ=;
+        b=lKQqfL1wEcFYgUU2cz20nKeZGugTEpadejGlHeyg7cw4Vnup8Q1dlmltVpmBawKJAC
+         Cq8hOmshl5ZVVXl2RS7hBgfTHiU3M1q/mXS+6apXe2QI+Oyx4NfBEogLTj7p0eflrpUV
+         +E20uQm6aJzd9Wqk+ClaInaTKoZTqrt6/RHNHAZ/ebLRPxwXYdfMtepde7wNLUkN5HrM
+         HYfBKcqWXyVSgdBb1Q6o1M38qG5UeJVbFx4y+gd3CrezS8WRMa4OYBZ6qFBreAzmKBoD
+         iJ2kKBKQJBn2sa7aq/SZzCELsg8ntNv79n8pYmLqGTcyGQYkVQc679NbHK/01m/vxxbr
+         RtXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUq1t3Um+VKfre5t4Ih5Jwv/j2hc8ET0rfuTs3+/nacgEPty7OanOw1ZU1HqmphIsqC4j7CPoqyb2zPeMYdVfNB@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHzY1V+TkN0aiUihS/dUxcaf3evvmNII/VXzQv87ONOYZVCQlJ
+	q0h8l4CVh89ZptlBMoDV/m1B6ISBiuDoSFRubH0TRGtjnvDgHY1I8K+GC54tCjAQDB94rq5KSo0
+	iThLjEKmOBxp2NJMVgd4/q2+ZZWbytn/mhWna
+X-Gm-Gg: ASbGncs3ytR2ZWHwVQVFd6tB+l926FY8v62nQ+m8nJDuYKTc+P8tl80i6F3jQvSxs+G
+	ILRMfyZNwZQCDAZfFFUotS4jl6WsLUlhF
+X-Google-Smtp-Source: AGHT+IGtzZApRpWfsQOiUA5wU23LJePmLwYJZ1rd1WeQLwqUmdxWOj2gif2S0uFS+L4qSnEPCxXsiDQejnPC2M+l0mo=
+X-Received: by 2002:a17:903:230e:b0:20c:e8df:2500 with SMTP id
+ d9443c01a7336-2118f0e657cmr513825ad.3.1731112251033; Fri, 08 Nov 2024
+ 16:30:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241108174936.262704-1-irogers@google.com> <20241108174936.262704-3-irogers@google.com>
- <Zy5nfflbnkoG2fGY@google.com>
-In-Reply-To: <Zy5nfflbnkoG2fGY@google.com>
+References: <20241108174936.262704-1-irogers@google.com> <20241108174936.262704-5-irogers@google.com>
+ <Zy5o46RIEZSvX3uw@google.com>
+In-Reply-To: <Zy5o46RIEZSvX3uw@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 8 Nov 2024 16:29:44 -0800
-Message-ID: <CAP-5=fUaSCc6z6C36ce4X02tGF4pthULQ9k6+RFzZi1Z2bRDyg@mail.gmail.com>
-Subject: Re: [PATCH v7 2/7] perf hwmon_pmu: Add hwmon filename parser
+Date: Fri, 8 Nov 2024 16:30:39 -0800
+Message-ID: <CAP-5=fUpwgtLcSs37ab9Hpauf6EwoBVOePFgQoa0HZzd6LRVxQ@mail.gmail.com>
+Subject: Re: [PATCH v7 4/7] perf hwmon_pmu: Add a tool PMU exposing events
+ from hwmon in sysfs
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -79,330 +80,191 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 8, 2024 at 11:33=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+On Fri, Nov 8, 2024 at 11:39=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> On Fri, Nov 08, 2024 at 09:49:31AM -0800, Ian Rogers wrote:
-> > hwmon filenames have a specific encoding that will be used to give a
-> > config value. The encoding is described in:
-> > Documentation/hwmon/sysfs-interface.rst
-> > Add a function to parse the filename into consituent enums/ints that
-> > will then be amenable to config encoding.
+> On Fri, Nov 08, 2024 at 09:49:33AM -0800, Ian Rogers wrote:
+> > Add a tool PMU for hwmon events but don't enable.
 > >
-> > Note, things are done this way to allow mapping names to config and
-> > back without the use of hash/dynamic lookup tables.
+> > The hwmon sysfs ABI is defined in
+> > Documentation/hwmon/sysfs-interface.rst. Create a PMU that reads the
+> > hwmon input and can be used in `perf stat` and metrics much as an
+> > uncore PMU can.
+> >
+> > For example, when enabled by a later patch, the following shows
+> > reading the CPU temperature and 2 fan speeds alongside the uncore
+> > frequency:
+> > ```
+> > $ perf stat -e temp_cpu,fan1,hwmon_thinkpad/fan2/,tool/num_cpus_online/=
+ -M UNCORE_FREQ -I 1000
+> >      1.001153138              52.00 'C   temp_cpu
+> >      1.001153138              2,588 rpm  fan1
+> >      1.001153138              2,482 rpm  hwmon_thinkpad/fan2/
+> >      1.001153138                  8      tool/num_cpus_online/
+> >      1.001153138      1,077,101,397      UNC_CLOCK.SOCKET              =
+   #     1.08 UNCORE_FREQ
+> >      1.001153138      1,012,773,595      duration_time
+> > ...
+> > ```
+> >
+> > The PMUs are named from /sys/class/hwmon/hwmon<num>/name and have an
+> > alias of hwmon<num>.
+> >
+> > Hwmon data is presented in multiple <type><number>_<item> files. The
+> > <type><number> is used to identify the event as is the <type> followed
+> > by the contents of the <type>_label file if it exists. The
+> > <type><number>_input file gives the data read by perf.
+> >
+> > When enabled by a later patch, in `perf list` the other hwmon <item>
+> > files are used to give a richer description, for example:
+> > ```
+> > hwmon:
+> >   temp1
+> >        [Temperature in unit acpitz named temp1. Unit: hwmon_acpitz]
+> >   in0
+> >        [Voltage in unit bat0 named in0. Unit: hwmon_bat0]
+> >   temp_core_0 OR temp2
+> >        [Temperature in unit coretemp named Core 0. crit=3D100'C,max=3D1=
+00'C crit_alarm=3D0'C. Unit:
+> >         hwmon_coretemp]
+> >   temp_core_1 OR temp3
+> >        [Temperature in unit coretemp named Core 1. crit=3D100'C,max=3D1=
+00'C crit_alarm=3D0'C. Unit:
+> >         hwmon_coretemp]
+> > ...
+> >   temp_package_id_0 OR temp1
+> >        [Temperature in unit coretemp named Package id 0. crit=3D100'C,m=
+ax=3D100'C crit_alarm=3D0'C.
+> >         Unit: hwmon_coretemp]
+> >   temp1
+> >        [Temperature in unit iwlwifi_1 named temp1. Unit: hwmon_iwlwifi_=
+1]
+> >   temp_composite OR temp1
+> >        [Temperature in unit nvme named Composite. alarm=3D0'C,crit=3D86=
+.85'C,max=3D75.85'C,
+> >         min=3D-273.15'C. Unit: hwmon_nvme]
+> >   temp_sensor_1 OR temp2
+> >        [Temperature in unit nvme named Sensor 1. max=3D65261.8'C,min=3D=
+-273.15'C. Unit: hwmon_nvme]
+> >   temp_sensor_2 OR temp3
+> >        [Temperature in unit nvme named Sensor 2. max=3D65261.8'C,min=3D=
+-273.15'C. Unit: hwmon_nvme]
+> >   fan1
+> >        [Fan in unit thinkpad named fan1. Unit: hwmon_thinkpad]
+> >   fan2
+> >        [Fan in unit thinkpad named fan2. Unit: hwmon_thinkpad]
+> > ...
+> >   temp_cpu OR temp1
+> >        [Temperature in unit thinkpad named CPU. Unit: hwmon_thinkpad]
+> >   temp_gpu OR temp2
+> >        [Temperature in unit thinkpad named GPU. Unit: hwmon_thinkpad]
+> >   curr1
+> >        [Current in unit ucsi_source_psy_usbc000_0 named curr1. max=3D1.=
+5A. Unit:
+> >         hwmon_ucsi_source_psy_usbc000_0]
+> >   in0
+> >        [Voltage in unit ucsi_source_psy_usbc000_0 named in0. max=3D5V,m=
+in=3D5V. Unit:
+> >         hwmon_ucsi_source_psy_usbc000_0]
+> > ```
+> >
+> > As there may be multiple hwmon devices a range of PMU types are
+> > reserved for their use and to identify the PMU as belonging to the
+> > hwmon types.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/util/Build       |   1 +
-> >  tools/perf/util/hwmon_pmu.c | 142 ++++++++++++++++++++++++++++++++++++
-> >  tools/perf/util/hwmon_pmu.h | 111 ++++++++++++++++++++++++++++
-> >  3 files changed, 254 insertions(+)
-> >  create mode 100644 tools/perf/util/hwmon_pmu.c
-> >  create mode 100644 tools/perf/util/hwmon_pmu.h
+> >  tools/perf/util/hwmon_pmu.c | 683 ++++++++++++++++++++++++++++++++++++
+> >  tools/perf/util/hwmon_pmu.h |  45 +++
+> >  tools/perf/util/pmu.h       |   2 +
+> >  3 files changed, 730 insertions(+)
 > >
-> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > index 1eedead5f2f2..78b990c04f71 100644
-> > --- a/tools/perf/util/Build
-> > +++ b/tools/perf/util/Build
-> > @@ -83,6 +83,7 @@ perf-util-y +=3D pmu.o
-> >  perf-util-y +=3D pmus.o
-> >  perf-util-y +=3D pmu-flex.o
-> >  perf-util-y +=3D pmu-bison.o
-> > +perf-util-y +=3D hwmon_pmu.o
-> >  perf-util-y +=3D tool_pmu.o
-> >  perf-util-y +=3D svghelper.o
-> >  perf-util-$(CONFIG_LIBTRACEEVENT) +=3D trace-event-info.o
 > > diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-> > new file mode 100644
-> > index 000000000000..ee5fb1c41da3
-> > --- /dev/null
+> > index f4b7b3b6a052..3f1bf9a9cfdf 100644
+> > --- a/tools/perf/util/hwmon_pmu.c
 > > +++ b/tools/perf/util/hwmon_pmu.c
-> > @@ -0,0 +1,142 @@
-> > +// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-> > +#include "debug.h"
-> > +#include "hwmon_pmu.h"
-> > +#include <assert.h>
-> > +#include <stddef.h>
-> > +#include <stdlib.h>
-> > +#include <string.h>
-> > +#include <linux/kernel.h>
+> [SNIP]
+> > +struct perf_pmu *hwmon_pmu__new(struct list_head *pmus, int hwmon_dir,=
+ const char *sysfs_name, const char *name)
+> > +{
+> > +     char buf[32];
+> > +     struct hwmon_pmu *hwm;
 > > +
-> > +const char * const hwmon_type_strs[HWMON_TYPE_MAX] =3D {
->
-> Can we make this array static?  I don't think it's used elsewhere.
->
-> > +     NULL,
-> > +     "cpu",
-> > +     "curr",
-> > +     "energy",
-> > +     "fan",
-> > +     "humidity",
-> > +     "in",
-> > +     "intrusion",
-> > +     "power",
-> > +     "pwm",
-> > +     "temp",
-> > +};
-> > +#define LONGEST_HWMON_TYPE_STR "intrusion"
+> > +     hwm =3D zalloc(sizeof(*hwm));
+> > +     if (!hwm)
+> > +             return NULL;
 > > +
-> > +const char * const hwmon_item_strs[HWMON_ITEM__MAX] =3D {
+> > +
 >
-> Ditto.
+> Two blank lines.
 
-Done in v8. The testing no longer uses the values.
+Fixed.
+
+> > +     hwm->hwmon_dir_fd =3D hwmon_dir;
+> > +     hwm->pmu.type =3D PERF_PMU_TYPE_HWMON_START + strtoul(sysfs_name =
++ 5, NULL, 10);
+> > +     if (hwm->pmu.type > PERF_PMU_TYPE_HWMON_END) {
+> > +             pr_err("Unable to encode hwmon type from %s in valid PMU =
+type\n", sysfs_name);
+> > +             goto err_out;
+> > +     }
+> > +     snprintf(buf, sizeof(buf), "hwmon_%s", name);
+> > +     fix_name(buf + 6);
+> > +     hwm->pmu.name =3D strdup(buf);
+> > +     if (!hwm->pmu.name)
+> > +             goto err_out;
+> > +     hwm->pmu.alias_name =3D strdup(sysfs_name);
+> > +     if (!hwm->pmu.alias_name)
+> > +             goto err_out;
+> > +     hwm->pmu.cpus =3D perf_cpu_map__new("0");
+> > +     if (!hwm->pmu.cpus)
+> > +             goto err_out;
+> > +     INIT_LIST_HEAD(&hwm->pmu.format);
+> > +     INIT_LIST_HEAD(&hwm->pmu.aliases);
+> > +     INIT_LIST_HEAD(&hwm->pmu.caps);
+> > +     hashmap__init(&hwm->events, hwmon_pmu__event_hashmap_hash,
+> > +                   hwmon_pmu__event_hashmap_equal, /*ctx=3D*/NULL);
+> > +
+> > +     list_add_tail(&hwm->pmu.list, pmus);
+> > +     return &hwm->pmu;
+> > +err_out:
+> > +     free((char *)hwm->pmu.name);
+> > +     free(hwm->pmu.alias_name);
+> > +     free(hwm);
+> > +     close(hwmon_dir);
+> > +     return NULL;
+> > +}
+>
+> [...]
+> > diff --git a/tools/perf/util/hwmon_pmu.h b/tools/perf/util/hwmon_pmu.h
+> > index df0ab5ff7534..ebfdfe3b295a 100644
+> > --- a/tools/perf/util/hwmon_pmu.h
+> > +++ b/tools/perf/util/hwmon_pmu.h
+> > @@ -2,8 +2,12 @@
+> >  #ifndef __HWMON_PMU_H
+> >  #define __HWMON_PMU_H
+> >
+> > +#include "pmu.h"
+> >  #include <stdbool.h>
+> >
+> > +struct list_head;
+> > +struct perf_thread_map;
+> > +
+> >  /**
+> >   * enum hwmon_type:
+> >   *
+> > @@ -87,6 +91,14 @@ enum hwmon_item {
+> >       HWMON_ITEM__MAX,
+> >  };
+> >
+> > +/** Strings that correspond to enum hwmon_type. */
+> > +extern const char * const hwmon_type_strs[HWMON_TYPE_MAX];
+> > +/** Strings that correspond to enum hwmon_item. */
+> > +extern const char * const hwmon_item_strs[HWMON_ITEM__MAX];
+>
+> Belongs to the patch2?  But it'd be nice if we can remove them.
+
+Made static in v8.
 
 Thanks,
 Ian
-
-> > +     NULL,
-> > +     "accuracy",
-> > +     "alarm",
-> > +     "auto_channels_temp",
-> > +     "average",
-> > +     "average_highest",
-> > +     "average_interval",
-> > +     "average_interval_max",
-> > +     "average_interval_min",
-> > +     "average_lowest",
-> > +     "average_max",
-> > +     "average_min",
-> > +     "beep",
-> > +     "cap",
-> > +     "cap_hyst",
-> > +     "cap_max",
-> > +     "cap_min",
-> > +     "crit",
-> > +     "crit_hyst",
-> > +     "div",
-> > +     "emergency",
-> > +     "emergency_hist",
-> > +     "enable",
-> > +     "fault",
-> > +     "freq",
-> > +     "highest",
-> > +     "input",
-> > +     "label",
-> > +     "lcrit",
-> > +     "lcrit_hyst",
-> > +     "lowest",
-> > +     "max",
-> > +     "max_hyst",
-> > +     "min",
-> > +     "min_hyst",
-> > +     "mod",
-> > +     "offset",
-> > +     "pulses",
-> > +     "rated_max",
-> > +     "rated_min",
-> > +     "reset_history",
-> > +     "target",
-> > +     "type",
-> > +     "vid",
-> > +};
-> > +#define LONGEST_HWMON_ITEM_STR "average_interval_max"
-> > +
-> > +static int hwmon_strcmp(const void *a, const void *b)
-> > +{
-> > +     const char *sa =3D a;
-> > +     const char * const *sb =3D b;
-> > +
-> > +     return strcmp(sa, *sb);
-> > +}
-> > +
-> > +bool parse_hwmon_filename(const char *filename,
-> > +                       enum hwmon_type *type,
-> > +                       int *number,
-> > +                       enum hwmon_item *item,
-> > +                       bool *alarm)
-> > +{
-> > +     char fn_type[24];
-> > +     const char **elem;
-> > +     const char *fn_item =3D NULL;
-> > +     size_t fn_item_len;
-> > +
-> > +     assert(strlen(LONGEST_HWMON_TYPE_STR) < sizeof(fn_type));
-> > +     strlcpy(fn_type, filename, sizeof(fn_type));
-> > +     for (size_t i =3D 0; fn_type[i] !=3D '\0'; i++) {
-> > +             if (fn_type[i] >=3D '0' && fn_type[i] <=3D '9') {
-> > +                     fn_type[i] =3D '\0';
-> > +                     *number =3D strtoul(&filename[i], (char **)&fn_it=
-em, 10);
-> > +                     if (*fn_item =3D=3D '_')
-> > +                             fn_item++;
-> > +                     break;
-> > +             }
-> > +             if (fn_type[i] =3D=3D '_') {
-> > +                     fn_type[i] =3D '\0';
-> > +                     *number =3D -1;
-> > +                     fn_item =3D &filename[i + 1];
-> > +                     break;
-> > +             }
-> > +     }
-> > +     if (fn_item =3D=3D NULL || fn_type[0] =3D=3D '\0' || (item !=3D N=
-ULL && fn_item[0] =3D=3D '\0')) {
-> > +             pr_debug("hwmon_pmu: not a hwmon file '%s'\n", filename);
-> > +             return false;
-> > +     }
-> > +     elem =3D bsearch(&fn_type, hwmon_type_strs + 1, ARRAY_SIZE(hwmon_=
-type_strs) - 1,
-> > +                    sizeof(hwmon_type_strs[0]), hwmon_strcmp);
-> > +     if (!elem) {
-> > +             pr_debug("hwmon_pmu: not a hwmon type '%s' in file name '=
-%s'\n",
-> > +                      fn_type, filename);
-> > +             return false;
-> > +     }
-> > +
-> > +     *type =3D elem - &hwmon_type_strs[0];
-> > +     if (!item)
-> > +             return true;
-> > +
-> > +     *alarm =3D false;
-> > +     fn_item_len =3D strlen(fn_item);
-> > +     if (fn_item_len > 6 && !strcmp(&fn_item[fn_item_len - 6], "_alarm=
-")) {
-> > +             assert(strlen(LONGEST_HWMON_ITEM_STR) < sizeof(fn_type));
-> > +             strlcpy(fn_type, fn_item, fn_item_len - 6);
-> > +             fn_item =3D fn_type;
-> > +             *alarm =3D true;
-> > +     }
-> > +     elem =3D bsearch(fn_item, hwmon_item_strs + 1, ARRAY_SIZE(hwmon_i=
-tem_strs) - 1,
-> > +                    sizeof(hwmon_item_strs[0]), hwmon_strcmp);
-> > +     if (!elem) {
-> > +             pr_debug("hwmon_pmu: not a hwmon item '%s' in file name '=
-%s'\n",
-> > +                      fn_item, filename);
-> > +             return false;
-> > +     }
-> > +     *item =3D elem - &hwmon_item_strs[0];
-> > +     return true;
-> > +}
-> > diff --git a/tools/perf/util/hwmon_pmu.h b/tools/perf/util/hwmon_pmu.h
-> > new file mode 100644
-> > index 000000000000..df0ab5ff7534
-> > --- /dev/null
-> > +++ b/tools/perf/util/hwmon_pmu.h
-> > @@ -0,0 +1,111 @@
-> > +/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-> > +#ifndef __HWMON_PMU_H
-> > +#define __HWMON_PMU_H
-> > +
-> > +#include <stdbool.h>
-> > +
-> > +/**
-> > + * enum hwmon_type:
-> > + *
-> > + * As described in Documentation/hwmon/sysfs-interface.rst hwmon event=
-s are
-> > + * defined over multiple files of the form <type><num>_<item>. This en=
-um
-> > + * captures potential <type> values.
-> > + *
-> > + * This enum is exposed for testing.
-> > + */
-> > +enum hwmon_type {
-> > +     HWMON_TYPE_NONE,
-> > +
-> > +     HWMON_TYPE_CPU,
-> > +     HWMON_TYPE_CURR,
-> > +     HWMON_TYPE_ENERGY,
-> > +     HWMON_TYPE_FAN,
-> > +     HWMON_TYPE_HUMIDITY,
-> > +     HWMON_TYPE_IN,
-> > +     HWMON_TYPE_INTRUSION,
-> > +     HWMON_TYPE_POWER,
-> > +     HWMON_TYPE_PWM,
-> > +     HWMON_TYPE_TEMP,
-> > +
-> > +     HWMON_TYPE_MAX
-> > +};
-> > +
-> > +/**
-> > + * enum hwmon_item:
-> > + *
-> > + * Similar to enum hwmon_type but describes the item part of a a sysfs=
- filename.
-> > + *
-> > + * This enum is exposed for testing.
-> > + */
-> > +enum hwmon_item {
-> > +     HWMON_ITEM_NONE,
-> > +
-> > +     HWMON_ITEM_ACCURACY,
-> > +     HWMON_ITEM_ALARM,
-> > +     HWMON_ITEM_AUTO_CHANNELS_TEMP,
-> > +     HWMON_ITEM_AVERAGE,
-> > +     HWMON_ITEM_AVERAGE_HIGHEST,
-> > +     HWMON_ITEM_AVERAGE_INTERVAL,
-> > +     HWMON_ITEM_AVERAGE_INTERVAL_MAX,
-> > +     HWMON_ITEM_AVERAGE_INTERVAL_MIN,
-> > +     HWMON_ITEM_AVERAGE_LOWEST,
-> > +     HWMON_ITEM_AVERAGE_MAX,
-> > +     HWMON_ITEM_AVERAGE_MIN,
-> > +     HWMON_ITEM_BEEP,
-> > +     HWMON_ITEM_CAP,
-> > +     HWMON_ITEM_CAP_HYST,
-> > +     HWMON_ITEM_CAP_MAX,
-> > +     HWMON_ITEM_CAP_MIN,
-> > +     HWMON_ITEM_CRIT,
-> > +     HWMON_ITEM_CRIT_HYST,
-> > +     HWMON_ITEM_DIV,
-> > +     HWMON_ITEM_EMERGENCY,
-> > +     HWMON_ITEM_EMERGENCY_HIST,
-> > +     HWMON_ITEM_ENABLE,
-> > +     HWMON_ITEM_FAULT,
-> > +     HWMON_ITEM_FREQ,
-> > +     HWMON_ITEM_HIGHEST,
-> > +     HWMON_ITEM_INPUT,
-> > +     HWMON_ITEM_LABEL,
-> > +     HWMON_ITEM_LCRIT,
-> > +     HWMON_ITEM_LCRIT_HYST,
-> > +     HWMON_ITEM_LOWEST,
-> > +     HWMON_ITEM_MAX,
-> > +     HWMON_ITEM_MAX_HYST,
-> > +     HWMON_ITEM_MIN,
-> > +     HWMON_ITEM_MIN_HYST,
-> > +     HWMON_ITEM_MOD,
-> > +     HWMON_ITEM_OFFSET,
-> > +     HWMON_ITEM_PULSES,
-> > +     HWMON_ITEM_RATED_MAX,
-> > +     HWMON_ITEM_RATED_MIN,
-> > +     HWMON_ITEM_RESET_HISTORY,
-> > +     HWMON_ITEM_TARGET,
-> > +     HWMON_ITEM_TYPE,
-> > +     HWMON_ITEM_VID,
-> > +
-> > +     HWMON_ITEM__MAX,
-> > +};
-> > +
-> > +/**
-> > + * parse_hwmon_filename() - Parse filename into constituent parts.
-> > + *
-> > + * @filename: To be parsed, of the form <type><number>_<item>.
-> > + * @type: The type defined from the parsed file name.
-> > + * @number: The number of the type, for example there may be more than=
- 1 fan.
-> > + * @item: A hwmon <type><number> may have multiple associated items.
-> > + * @alarm: Is the filename for an alarm value?
-> > + *
-> > + * An example of a hwmon filename is "temp1_input". The type is temp f=
-or a
-> > + * temperature value. The number is 1. The item within the file is an =
-input
-> > + * value - the temperature itself. This file doesn't contain an alarm =
-value.
-> > + *
-> > + * Exposed for testing.
-> > + */
-> > +bool parse_hwmon_filename(const char *filename,
-> > +                       enum hwmon_type *type,
-> > +                       int *number,
-> > +                       enum hwmon_item *item,
-> > +                       bool *alarm);
-> > +
-> > +#endif /* __HWMON_PMU_H */
-> > --
-> > 2.47.0.277.g8800431eea-goog
-> >
