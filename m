@@ -1,63 +1,66 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401C48C07
-	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 00:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9826613FF5
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 00:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731112686; cv=none; b=MJt+B34m5eqEcmgu1Jz7LSRAmGddCnbTaNC42sepVHIOB0XH7Qzo2vh1UiQVa0NTuD+XgYYf3dDvsoQCK2CZ29Tj+MQjCdUG6M8kCSreKLXc/fCZpNBGoykmSFZa6h+mmVlMqKKwsr4A8sXhywdf/aK+hBbpc+yiNdaj+rlLQe4=
+	t=1731112689; cv=none; b=oUQ1+BODXR5KoyY0D+foeribqMK2+NfZGwszjjDs4WtKCeex/3fwLoicg2binXJ9sYTF6Y2G2jZWUDIX8vUoiRd9c+aKiTHynpGstQmWb0ymhNGtNgC3Bk9vQefY3Vy6+LsvRyMBI3t26CPM11z0EhyVbmEn7qZ3UpavSpQgDh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731112686; c=relaxed/simple;
-	bh=B4kA+7GUwjAG4R8+53+QWlaoUwuf9lQWaPAr36cJj/4=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=uJsKJoVBwtJt8ZQ9AajCup5u7evOAqKLQclHQQbab0ios4nxQ7En2C0yJTvSVlI0pILrcfAJEqCFa9KC7/3i9XyJ2OeUezwSy6QIJrug/H3rHD7gl9S6S9IheA6cGqt2WHx4SrnTo7sr5HSEwx3kRpEa9D9cKSuAI3v4z4eTOaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f0WEzDUT; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1731112689; c=relaxed/simple;
+	bh=JR2W9BY58B7KI+DPucllOVM9yijzERRopT+DlqMeLCU=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=JGYu/ZGnkmHShO/GmNRIENG3eJy8AeThYruUa98o/LcIvWqfJevygCjPm2Fe8/7NwqUW9/gB0cttlcmn119GoRkJ5Ms6NNiVOdVsp9nFYqaVl/hnFGd5xS+Mxx/FoOWhkd85+7kiZ1zMefyTX4GfA4LDWyEdyx3ncgaLbUAMh8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lz9ouNdV; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f0WEzDUT"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ea82a5480fso53507437b3.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 16:38:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lz9ouNdV"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e293b3e014aso4259304276.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 16:38:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731112684; x=1731717484; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pe6eRz+3fgdgh5bLi058upJvXtI0NKQM817+wLnFuFU=;
-        b=f0WEzDUTXktHsKn3EtePI0jvHm6hRdtTtHY7A35grlzSiArWOw0KhMR72xA71HZ+Ch
-         b4joVz3541/dpKF+MjafZIVubIiMFQmdrf+tJFAMVo90984twnmAu+qJdwO3izzugRkr
-         3tlZjc1JFK8Jbp7LOXpwfN1cFpEoIeieNZn1N2KY9cMpDC1z14xuCRL5SNcj7EhLMA0I
-         aD+gOQ9fvliMbO96Yu4WtdB+qt6mVhjhSrsHrqM6/s17I8mjVXF6OFcNeCsTWPW+oM3A
-         SvlYTyp03Ao56CHabqC6v/sE66r2X2GcMJ9P5m71+vZSpJ4RWHMlS+vRurAfAHE73yee
-         uAxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731112684; x=1731717484;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1731112686; x=1731717486; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pe6eRz+3fgdgh5bLi058upJvXtI0NKQM817+wLnFuFU=;
-        b=wUMtsER/dT6xG00bPp3z4nX/P8QO06G55NL63ks76t5zNqgTf9x4jCua0SApKRIAvM
-         bvthWZnLrHRh0RFw4CbHPr3H3Fe7TIhT9xsOB+7rFa/3qlVgxmoh15AFESAnUIl7kXX2
-         3gUtEQpAFeW3IHulSg+79Rt8Qrt8TEJT5odpNsDCEsD2/JnG9uDmlWLFcsTvHF46lSS2
-         1mIrF6dNiZ+32a/dDM4Js0I9VPiJlfYwTVzFpwxpy/19m7O1JA4SVK/cP3Ggj+vxZEIN
-         yeYYii2OZkNWtUuvSz1LNdQpC8Ny9wh1pumFgFUyjJk77OoFjtG/Rh8ypkct/ILc8Nmq
-         CVvg==
-X-Forwarded-Encrypted: i=1; AJvYcCVXzMD7y2bwMOUrU6M5THNRyC9IYcm+jKZoAm7JsdAsdAQcpvs4tO5hOiNt3d9BLo9MTMduLw3vYMjYc+F010im@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8QQ4GsJelECg7IMe5NHM5VTvTvNk/HLx3VbU/Ld77DujHohXy
-	VRGJcSdDE3oLD0daenrRseXAq3p6FDwuExJnq3J0NzjnZ+cbRBHcZJV2lmXcVFigSr6Uv/N3xPh
-	ciaSzQA==
-X-Google-Smtp-Source: AGHT+IELhMnb61ZKjZrUmSDxAHeNKINx9zqlsQVXecD3xsIB+MM/Uy9K/Atalv/Dc7nuNvKnJbL8hr8m9pXq
+        bh=3SPWlc2lPTGFJEvFedKLB5LrjZb1UnFHbKvI0m+mSBo=;
+        b=lz9ouNdVZcv2MhAZ2AalIAGKOMsk4P9C4qOkUYbkkITWMJQ1P+rSia7kf7ZH24/6zJ
+         /VsQIDeyGzgxX5iyDYFjJAUHMehpEZ4W3HckFPZKN4ubOmmDWc8Q8LlocSrrd/9Mtz/Y
+         +vzNYknawpOTxAbknjOOSTYBYIXQwpqqm4b92o47WuakiSGTZ09He5HP95J9sWzHynKZ
+         /i99YdMn9tCNyhyJX8TGMNEFTYBkZPVQy7L3sxXYqY3j9B0AiIsfMjPWlTr4bGqt1+Ak
+         +xAi3FdVYZUS0u84QQLlO0Z7S+WLlOYG6ZKeTIAniSngVm6Xj4dzVm3MgLskv/IwLS+d
+         Jmzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731112686; x=1731717486;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3SPWlc2lPTGFJEvFedKLB5LrjZb1UnFHbKvI0m+mSBo=;
+        b=EZvvtvZQuR1IDi67wWEkGbB3cDXyBuZe0AiPBPyb6wzcfDW9QFtJk75jsby5Dxm/i1
+         d0A/xYJAoDmugzqBaAHOLdPDGYE5o9XFTyS673am35Dy6iyNCfkSZjO6cN86rxhf9hGe
+         GIvXH2CMp4vYtLPnCKprmrDk5Vals7mEmlz1i09blR71nal52zVKKfv/8rFZM+rgqjMN
+         ePqNnNyE0A9Y7CGBIkR+oa2tEOKq4lcuWp0/xU8Z5vBUcs++siIG9vau92/YRT/ifWV6
+         jQzZy53xjSYKkyhW4FDGioFVjMYSiTiGeEZpAvZW8/6sL/k4D05UXLFFh5n6yYoZCqR8
+         JMuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX3W8fE6/wZHILMfXDG0cYJIbQ5JUs3HUAkds7KnZrlVlZbYyRqWRlnLo73Vo+mTYeHHph8wFMKWDIwhubbtLvC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws6aMryYSEgTDE/Im1dQH4PKL5qNTaJzuU6A5rtFcSGuWyaNAH
+	2SPMDuJ7htCuUdESaazWqzc+qZZP8uc9teN3VvjG5m0Bkb0QNO9v1SM7yMxUFaPQ0YeCT06zn9A
+	VmdXJ9A==
+X-Google-Smtp-Source: AGHT+IEbCvuNzznHJpTzjrrAOjr0V/uUsjUwc1//TkW/1cqMa3tVVHph1FyNI7oYtDyjF4CBOn/7+dGxx9S/
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:6fd2:1e36:6d8c:7c49])
- (user=irogers job=sendgmr) by 2002:a05:690c:338e:b0:6dd:fda3:6568 with SMTP
- id 00721157ae682-6eaddf7e61emr380247b3.3.1731112684208; Fri, 08 Nov 2024
- 16:38:04 -0800 (PST)
-Date: Fri,  8 Nov 2024 16:37:52 -0800
-Message-Id: <20241109003759.473460-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:dc4a:0:b0:e25:5cb1:77d8 with SMTP id
+ 3f1490d57ef6-e337f8ed8bbmr2910276.6.1731112686450; Fri, 08 Nov 2024 16:38:06
+ -0800 (PST)
+Date: Fri,  8 Nov 2024 16:37:53 -0800
+In-Reply-To: <20241109003759.473460-1-irogers@google.com>
+Message-Id: <20241109003759.473460-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20241109003759.473460-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
-Subject: [PATCH v9 0/7] Hwmon PMUs
+Subject: [PATCH v9 1/7] tools api io: Ensure line_len_out is always initialized
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,97 +76,26 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Following the convention of the tool PMU, create a hwmon PMU that
-exposes hwmon data for reading. For example, the following shows
-reading the CPU temperature and 2 fan speeds alongside the uncore
-frequency:
-```
-$ perf stat -e temp_cpu,fan1,hwmon_thinkpad/fan2/,tool/num_cpus_online/ -M UNCORE_FREQ -I 1000
-     1.001153138              52.00 'C   temp_cpu
-     1.001153138              2,588 rpm  fan1
-     1.001153138              2,482 rpm  hwmon_thinkpad/fan2/
-     1.001153138                  8      tool/num_cpus_online/
-     1.001153138      1,077,101,397      UNC_CLOCK.SOCKET                 #     1.08 UNCORE_FREQ
-     1.001153138      1,012,773,595      duration_time
-...
-```
+Ensure initialization to avoid compiler warnings about potential use
+of uninitialized variables.
 
-Additional data on the hwmon events is in perf list:
-```
-$ perf list
-...
-hwmon:
-...
-  temp_core_0 OR temp2
-       [Temperature in unit coretemp named Core 0. crit=100'C,max=100'C crit_alarm=0'C. Unit:
-        hwmon_coretemp]
-...
-```
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/lib/api/io.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-v9: Missed saving a file.
-v8: Fix formatting issues and reduce scope of 2 strings reported by
-    Namhyung.
-v7: Try to address feedback from Namhyung wrt size/comprehensibility
-    of the hwmon PMU patch. To better explain the config encoding put
-    the parser into a patch ahead of the PMU patch and add a unit
-    test. This shows how a hwmon filename can be moved back-and-forth
-    with a config value as a single patch (two with the test). The
-    hwmon PMU patch is then putting the wrapping around that for the
-    pmus', parse_event's and evsel reading's benefit.
-    
-    The alternate approach of not caring about the mapping, name to
-    config value, and using the evsel->name wasn't followed. In the
-    tool PMU it was made so we can go back-and-forth between event
-    names and a type+config, this removed the tool enum value from the
-    evsel as now tool events were more 1st class and evsel should
-    really just be a wrapper on a perf_event_attr. Using the
-    evsel->name wasn't doing that and so the approach of mapping
-    filenames and configs, as better highlighted in this series was
-    pursued.
-
-    It is expected future PMUs won't be able to cleanly map fixed
-    strings to config values, in those cases tables would be
-    necessary. Making a hwmon PMU do this and then removing it to
-    follow the parsing/mapping done in patch 2 here, would have been a
-    lot of additional work which then would be removed.
-
-v6: Add string.h #include for issue reported by kernel test robot.
-v5: Fix asan issue in parse_hwmon_filename caught by a TMA metric.
-v4: Drop merged patches 1 to 10. Separate adding the hwmon_pmu from
-    the update to perf_pmu to use it. Try to make source of literal
-    strings clearer via named #defines. Fix a number of GCC warnings.
-v3: Rebase, add Namhyung's acked-by to patches 1 to 10.
-v2: Address Namhyung's review feedback. Rebase dropping 4 patches
-    applied by Arnaldo, fix build breakage reported by Arnaldo.
-
-Ian Rogers (7):
-  tools api io: Ensure line_len_out is always initialized
-  perf hwmon_pmu: Add hwmon filename parser
-  perf test: Add hwmon filename parser test
-  perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs
-  perf pmu: Add calls enabling the hwmon_pmu
-  perf test: Add hwmon "PMU" test
-  perf docs: Document tool and hwmon events
-
- tools/lib/api/io.h                     |   1 +
- tools/perf/Documentation/perf-list.txt |  15 +
- tools/perf/tests/Build                 |   1 +
- tools/perf/tests/builtin-test.c        |   1 +
- tools/perf/tests/hwmon_pmu.c           | 340 ++++++++++
- tools/perf/tests/tests.h               |   1 +
- tools/perf/util/Build                  |   1 +
- tools/perf/util/evsel.c                |   9 +
- tools/perf/util/hwmon_pmu.c            | 826 +++++++++++++++++++++++++
- tools/perf/util/hwmon_pmu.h            | 151 +++++
- tools/perf/util/pmu.c                  |  20 +
- tools/perf/util/pmu.h                  |   2 +
- tools/perf/util/pmus.c                 |   9 +
- tools/perf/util/pmus.h                 |   3 +
- 14 files changed, 1380 insertions(+)
- create mode 100644 tools/perf/tests/hwmon_pmu.c
- create mode 100644 tools/perf/util/hwmon_pmu.c
- create mode 100644 tools/perf/util/hwmon_pmu.h
-
+diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+index d3eb04d1bc89..1731996b2c32 100644
+--- a/tools/lib/api/io.h
++++ b/tools/lib/api/io.h
+@@ -189,6 +189,7 @@ static inline ssize_t io__getdelim(struct io *io, char **line_out, size_t *line_
+ err_out:
+ 	free(line);
+ 	*line_out = NULL;
++	*line_len_out = 0;
+ 	return -ENOMEM;
+ }
+ 
 -- 
 2.47.0.277.g8800431eea-goog
 
