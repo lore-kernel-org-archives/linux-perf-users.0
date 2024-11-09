@@ -1,224 +1,155 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E210F13D600;
-	Sat,  9 Nov 2024 10:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53161547C5
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 16:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731149676; cv=none; b=sEByoK5dcu3+g1hB7Isi8XX8nYz6JPLRBt7h2jkJhmPF4dw7aU03PzJvvZh3qiT93gP6uzgNh+evQ4N7IA9bhRiQc5v+7aIzPMWwjOJYjbetu2IhKMFUg9ftp7p4UmGkXjyS3fMyvB9VcEZojTo8VMoRZ22QcIx/9U4VJoa+Ixs=
+	t=1731168146; cv=none; b=r6Zl0IRV255m4YawNBnOkM3mcKiRlj2R6WUFDK2l22SrSftgILH127uCJd0YzJBftobzXcZeQ61Mv+EeD5GBRDZuF6bRZBVmwkrURWr13jrJ/lyJ4bI+g7o0opnVMqp1H8Ui8lg5jy88mhETa7GGCZ5XKY653LJtPoFyKmnjBbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731149676; c=relaxed/simple;
-	bh=dr8Hb0VmbzBIun02OEGfa8NqNGx7SRABzvlnXkGU9Ak=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=XUnoSnyjyzu9dRZV9f9LuLpMlfywYwFVAQ9msdMTMPzRqLNxIQq1LRoLsRlyjKXZqtLYR7zo98w3V1U2/Ow0+V2rMnHUxRmopwLsXbwvVXG8FthCq+K+aql9xlz2v25DXR45RF50zssAqi9T3j7hTfMzSssHKBeuQGWG92/aaug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Xlt1l0RCNz2Fb3N;
-	Sat,  9 Nov 2024 18:52:43 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id EEC931400DA;
-	Sat,  9 Nov 2024 18:54:27 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Sat, 9 Nov 2024 18:54:26 +0800
-Subject: Re: [PATCH v2 8/8] perf pmu: Move pmu_metrics_table__find and remove
- ARM override
-To: Ian Rogers <irogers@google.com>, Xu Yang <xu.yang_2@nxp.com>
-References: <20241107162035.52206-1-irogers@google.com>
- <20241107162035.52206-9-irogers@google.com>
-CC: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, James
- Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan
-	<leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
-	<mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang
-	<kan.liang@linux.intel.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Huacai Chen
-	<chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>, Athira Rajeev
-	<atrajeev@linux.vnet.ibm.com>, Ben Zong-You Xie <ben717@andestech.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>, Sandipan Das
-	<sandipan.das@amd.com>, Benjamin Gray <bgray@linux.ibm.com>, Ravi Bangoria
-	<ravi.bangoria@amd.com>, =?UTF-8?Q?Cl=c3=a9ment_Le_Goffic?=
-	<clement.legoffic@foss.st.com>, Yicong Yang <yangyicong@hisilicon.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Dima Kogan
-	<dima@secretsauce.net>, "Dr. David Alan Gilbert" <linux@treblig.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>, Junhao He
-	<hejunhao3@huawei.com>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <5a57de7c-924e-ccd6-8981-b9fddc647465@huawei.com>
-Date: Sat, 9 Nov 2024 18:54:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1731168146; c=relaxed/simple;
+	bh=J/G+GK5A6r/3LWlVQx8WCEHZt004alpDLzh/cC/43kw=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=AvWfO54iLkCouJ7JssGvTEzRUsPs7XKc2J8eEzVEJwn8uFZaR3XvWsAw/2rRmiw0NUSK3K0y/P5q96QZo580b7Z+svSJ9NjAy+zPUtGGGxQv2+MBrGJUzxR+9fGHNdU+jeXriflxeDg/REy0FmKzHIsanbaJXFt3kzSaVMhsL+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sNRGJLZ0; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sNRGJLZ0"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e293b3e014aso4855909276.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 09 Nov 2024 08:02:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1731168143; x=1731772943; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=myihIh0U0JAwI6hYWqHsU4WyoIg2aePskZq+v84soew=;
+        b=sNRGJLZ0UPaYZ9qp4CeHnLUBbkLSiAeNLt/JeUEB1iDWbTF7kiCagd0eOM86U7n/dP
+         vCOWoBMhNk2fX8m17E0jdVnr7/mKV4rUgHfih4MWgoTn/c9OfY+4jpZrAmkDSaG8JLWy
+         3+Qu9B2r9AvohQp0Qkw1S814x5bpUGGlHgBPlGC1FfMMGj2CIrT334j2SPqC4h6BayFp
+         giNbsJVYiOVeyAQZ7oS/o/IZMTxqi5mrO+rtalomqQhG2A0SU5RwI9YYCHvuWtXs7yh7
+         2MrWYpongT2XM5cfRO2/OKoD91n0A8X0UZgTflM26aYGdeaXm/FVSDmrP/7iTU69ayuh
+         IV0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731168143; x=1731772943;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=myihIh0U0JAwI6hYWqHsU4WyoIg2aePskZq+v84soew=;
+        b=X3l1D8GWWt1W0nFqBTl/3ZZrDdp/BgXmPBvGkOoXbn3C2mslxJMG7xqbtbkKV52wSq
+         zJaFMiOwOEgk8yp+XqTZnjR5jDIgiM7sMtvDgq5nHXP7FiUjeEYzkDo9PotfapkLcp72
+         XyufAh303i8SjwO6uozqKozETlT0H9OigYt0c9VAJjs+wwLGfQJUEDcyNwzxO5gRKcr3
+         FZl4xw5T5sF4VySo+Z/l7t3Va+FRD0ysBYWVD3UEhjW+s67/c88Xwfb3FAcT7Dj8U2Gr
+         hz39PJg3FPUfTu5QHFM/rg4UEezPvkRE1K2prmwsHa/GMfV5JPeLdVA3+BWFNqrky/rx
+         +22g==
+X-Forwarded-Encrypted: i=1; AJvYcCUk/kU9x8XGbuTR1jTlYTgTDdhE81wt7KxlzDpvuh6QmPlSlEXPj2CyFQ6UUhu1fnDBWC/YcORIzChgoQEaXH/O@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF8intbBlSpGXdZO4ZqLNA0VmR7ZNjSzi+Ls43rCl/4DDoQoYH
+	nWLX4yJnCVMXIxkTjRODC76jiqhACGz0FYKMrjw38foFaMuDXUhKObeV2CM+KLMbb5s5fRnGZr7
+	XO+uZiw==
+X-Google-Smtp-Source: AGHT+IHYzZ5I9NuvOBIJjrVSWWfMoguJtT9xedtPSduE1h6lWzS33Fs7ybK99uBj+p3In+hAcavMeoyMLczH
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:acc2:d48f:a998:5915])
+ (user=irogers job=sendgmr) by 2002:a25:dc4a:0:b0:e25:5cb1:77d8 with SMTP id
+ 3f1490d57ef6-e337f8ed8bbmr4583276.6.1731168143667; Sat, 09 Nov 2024 08:02:23
+ -0800 (PST)
+Date: Sat,  9 Nov 2024 08:02:18 -0800
+Message-Id: <20241109160219.49976-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20241107162035.52206-9-irogers@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
+Subject: [PATCH v1] perf test: Add a runs-per-test flag
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+To detect flakes it is useful to run tests more than once. Add a
+runs-per-test flag that will run each test multiple times.
 
-On 2024/11/8 0:20, Ian Rogers wrote:
-> Move pmu_metrics_table__find to the jevents.py generated pmu-events.c
-> and remove indirection override for ARM. The movement removes
-> perf_pmu__find_metrics_table that exists to enable the ARM
-> override. The ARM override isn't necessary as just the CPUID, not PMU,
-> is used in the metric table lookup. On non-ARM the CPU argument is
-> just ignored for the CPUID, for ARM -1 is passed so that the CPUID for
-> the first logical CPU is read.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/builtin-test.c | 38 ++++++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 15 deletions(-)
 
-Since the logic here's already been touching, is it possible to step it further to just
-ignore the CPUID matching when finding the system metrics/events tables? It's may not be
-that reasonable for finding a system metrics/events from the CPUID, since one system PMU may
-exists on different platforms with different CPU types.
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index d2cabaa8ad92..574fbd5caff0 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -42,6 +42,8 @@
+ static bool dont_fork;
+ /* Fork the tests in parallel and wait for their completion. */
+ static bool sequential;
++/* Numer of times each test is run. */
++static unsigned int runs_per_test = 1;
+ const char *dso_to_test;
+ const char *test_objdump_path = "objdump";
+ 
+@@ -490,10 +492,10 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+ 				len = strlen(test_description(*t, subi));
+ 				if (width < len)
+ 					width = len;
+-				num_tests++;
++				num_tests += runs_per_test;
+ 			}
+ 		} else {
+-			num_tests++;
++			num_tests += runs_per_test;
+ 		}
+ 	}
+ 	child_tests = calloc(num_tests, sizeof(*child_tests));
+@@ -556,21 +558,25 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+ 			}
+ 
+ 			if (!has_subtests(*t)) {
+-				err = start_test(*t, curr, -1, &child_tests[child_test_num++],
+-						 width, pass);
+-				if (err)
+-					goto err_out;
++				for (unsigned int run = 0; run < runs_per_test; run++) {
++					err = start_test(*t, curr, -1, &child_tests[child_test_num++],
++							width, pass);
++					if (err)
++						goto err_out;
++				}
+ 				continue;
+ 			}
+-			for (int subi = 0, subn = num_subtests(*t); subi < subn; subi++) {
+-				if (!perf_test__matches(test_description(*t, subi),
+-							curr, argc, argv))
+-					continue;
+-
+-				err = start_test(*t, curr, subi, &child_tests[child_test_num++],
+-						 width, pass);
+-				if (err)
+-					goto err_out;
++			for (unsigned int run = 0; run < runs_per_test; run++) {
++				for (int subi = 0, subn = num_subtests(*t); subi < subn; subi++) {
++					if (!perf_test__matches(test_description(*t, subi),
++									curr, argc, argv))
++						continue;
++
++					err = start_test(*t, curr, subi, &child_tests[child_test_num++],
++							width, pass);
++					if (err)
++						goto err_out;
++				}
+ 			}
+ 		}
+ 		if (!sequential) {
+@@ -714,6 +720,8 @@ int cmd_test(int argc, const char **argv)
+ 		    "Do not fork for testcase"),
+ 	OPT_BOOLEAN('S', "sequential", &sequential,
+ 		    "Run the tests one after another rather than in parallel"),
++	OPT_UINTEGER('r', "runs-per-test", &runs_per_test,
++		     "Run each test the given number of times, default 1"),
+ 	OPT_STRING('w', "workload", &workload, "work", "workload to run for testing, use '--list-workloads' to list the available ones."),
+ 	OPT_BOOLEAN(0, "list-workloads", &list_workloads, "List the available builtin workloads to use with -w/--workload"),
+ 	OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
+-- 
+2.47.0.277.g8800431eea-goog
 
-FYI, there's a similiar problem when trying to count the system metrics but fails [1].
-I've tested with this series but the problem still exists.
-
-[1] https://lore.kernel.org/linux-perf-users/20241010074430.16685-1-hejunhao3@huawei.com/
-
-Thanks.
-
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/arch/arm64/util/pmu.c         | 20 --------------------
->  tools/perf/pmu-events/empty-pmu-events.c | 10 ++++------
->  tools/perf/pmu-events/jevents.py         | 10 ++++------
->  tools/perf/pmu-events/pmu-events.h       |  2 +-
->  tools/perf/util/pmu.c                    |  5 -----
->  tools/perf/util/pmu.h                    |  1 -
->  6 files changed, 9 insertions(+), 39 deletions(-)
-> 
-> diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
-> index a0964b191fcb..895fb0d0610c 100644
-> --- a/tools/perf/arch/arm64/util/pmu.c
-> +++ b/tools/perf/arch/arm64/util/pmu.c
-> @@ -1,29 +1,9 @@
->  // SPDX-License-Identifier: GPL-2.0
->  
-> -#include <internal/cpumap.h>
-> -#include "../../../util/cpumap.h"
-> -#include "../../../util/header.h"
->  #include "../../../util/pmu.h"
->  #include "../../../util/pmus.h"
->  #include "../../../util/tool_pmu.h"
->  #include <api/fs/fs.h>
-> -#include <math.h>
-> -
-> -const struct pmu_metrics_table *pmu_metrics_table__find(void)
-> -{
-> -	struct perf_pmu *pmu;
-> -
-> -	/* Metrics aren't currently supported on heterogeneous Arm systems */
-> -	if (perf_pmus__num_core_pmus() > 1)
-> -		return NULL;
-> -
-> -	/* Doesn't matter which one here because they'll all be the same */
-> -	pmu = perf_pmus__find_core_pmu();
-> -	if (pmu)
-> -		return perf_pmu__find_metrics_table(pmu);
-> -
-> -	return NULL;
-> -}
->  
->  u64 tool_pmu__cpu_slots_per_cycle(void)
->  {
-> diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
-> index 17306e316a3c..1c7a2cfa321f 100644
-> --- a/tools/perf/pmu-events/empty-pmu-events.c
-> +++ b/tools/perf/pmu-events/empty-pmu-events.c
-> @@ -587,14 +587,12 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
->          return NULL;
->  }
->  
-> -const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct perf_pmu *pmu)
-> +const struct pmu_metrics_table *pmu_metrics_table__find(void)
->  {
-> -        const struct pmu_events_map *map = map_for_pmu(pmu);
-> -
-> -        if (!map)
-> -                return NULL;
-> +        struct perf_cpu cpu = {-1};
-> +        const struct pmu_events_map *map = map_for_cpu(cpu);
->  
-> -	return &map->metric_table;
-> +        return map ? &map->metric_table : NULL;
->  }
->  
->  const struct pmu_events_table *find_core_events_table(const char *arch, const char *cpuid)
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> index e44b72e56ac3..d781a377757a 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -1103,14 +1103,12 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
->          return NULL;
->  }
->  
-> -const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct perf_pmu *pmu)
-> +const struct pmu_metrics_table *pmu_metrics_table__find(void)
->  {
-> -        const struct pmu_events_map *map = map_for_pmu(pmu);
-> -
-> -        if (!map)
-> -                return NULL;
-> +        struct perf_cpu cpu = {-1};
-> +        const struct pmu_events_map *map = map_for_cpu(cpu);
->  
-> -	return &map->metric_table;
-> +        return map ? &map->metric_table : NULL;
->  }
->  
->  const struct pmu_events_table *find_core_events_table(const char *arch, const char *cpuid)
-> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-> index 5435ad92180c..675562e6f770 100644
-> --- a/tools/perf/pmu-events/pmu-events.h
-> +++ b/tools/perf/pmu-events/pmu-events.h
-> @@ -103,7 +103,7 @@ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table, pm
->  				     void *data);
->  
->  const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu);
-> -const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct perf_pmu *pmu);
-> +const struct pmu_metrics_table *pmu_metrics_table__find(void);
->  const struct pmu_events_table *find_core_events_table(const char *arch, const char *cpuid);
->  const struct pmu_metrics_table *find_core_metrics_table(const char *arch, const char *cpuid);
->  int pmu_for_each_core_event(pmu_event_iter_fn fn, void *data);
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 514cb865f57b..45838651b361 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -818,11 +818,6 @@ static int is_sysfs_pmu_core(const char *name)
->  	return file_available(path);
->  }
->  
-> -__weak const struct pmu_metrics_table *pmu_metrics_table__find(void)
-> -{
-> -	return perf_pmu__find_metrics_table(NULL);
-> -}
-> -
->  /**
->   * Return the length of the PMU name not including the suffix for uncore PMUs.
->   *
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index fba3fc608b64..7b3e71194e49 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -260,7 +260,6 @@ void perf_pmu__arch_init(struct perf_pmu *pmu);
->  void pmu_add_cpu_aliases_table(struct perf_pmu *pmu,
->  			       const struct pmu_events_table *table);
->  
-> -const struct pmu_metrics_table *pmu_metrics_table__find(void);
->  bool pmu_uncore_identifier_match(const char *compat, const char *id);
->  
->  int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
-> 
