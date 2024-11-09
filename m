@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADAD146A87
-	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 06:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8821991CA
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 06:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731133152; cv=none; b=hMtiOHD0MMcn+9nBgxE9WkNDzBN5A5S/+kX6fMUSkg5vMoUBFmfhxbpiXIb8THrFZFGTa/n3jES9A/H4L/oy/AF4/2HSL615e89FfHi4wSMI4STpBVk7KJiC0uJcNzJElEYn8QXEPxHA3Ek3NyA7RGXxB47zFUcz+9tjHM+p1JI=
+	t=1731133154; cv=none; b=UN7kLGGkB/aIeYyDEuu/6rDejFe/G0ZZ0GmZjbhCFKv3Y9mOzGANZAMjqMioREboJTAidl649TAa+A8zF5bHAn7q4NJKc5O9Bdrl5e0xvQ0ODC30YXs8M0nLMgchwdr6L3En+xfnxupZC9PK/2AeEININYtXlxHQTHAOP6PDm/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731133152; c=relaxed/simple;
-	bh=MCTzfXp2410npPWMxPnIy//KFfI1FnSlwqErfN8AdVw=;
+	s=arc-20240116; t=1731133154; c=relaxed/simple;
+	bh=cdFXS6YbU6dHLZsfKNNJ3CV8t/rR/3/1BmnroI/EmI4=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=nQFZzC9R5PVUTJ2ee8XCijlnnY9rfSqkpn3i0XDtNiXTLNpW0YkcpUT/7fw1N9salOrWnuIZjZKe2eXyHgw1NdH33D2qsNVJ2NsxFM8KZV+gHQ2EpJDHzAHblDUiEO5SEZfUvs3W7Wj/FOxuHaqGYt9Rd0lacDMpJpnAVHLyaJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Vlwx+UF6; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=bBOHkRp9Dmu7TF/m5TV1AIbWXOf89nsdpS/JlMWQ+YmDnZ2R+dL9dOPpOswXTBnMYhrGMcf7s88zjLf/z9ByPgGPoLiaOddSUhduKyZ3Pq8n4he/+JWDC4VO8FdQYFVQAAdqyk0j7tqmgVcP/ZHBYAVS1GDuGMqH2BDs18z9zns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LINTWF0L; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vlwx+UF6"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e376aa4586so58279727b3.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 22:19:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LINTWF0L"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e2b9f2c6559so4456040276.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 22:19:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731133149; x=1731737949; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731133152; x=1731737952; darn=vger.kernel.org;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wQC+nYVZnsSIPtVomujUJB9/ZDMtc8fpB8iG7KWs9rs=;
-        b=Vlwx+UF6Og1P1ohXLNFHkKtMyIAUHT79LeNk9pPckNTWLiwPqXCfe64X/WrIyhHp1x
-         M3OIIaQyFCT7jKM9GcW5EuAL3JqoWteU2D98/4wIpBsg3D4FuIxDnffjUVlq0bJpkAGw
-         +QWZArYxdJlFOxDgzpG0OEv1GU1wowea/4WRp6ltcyTTcqbo9tB24n7nJNz47zzEM49z
-         ZHP+YhpjyGz9GQwLiMgvcFU0uHNbglWXL4D6vRt7MgxjFunlqvXCDplQa4sfhMY/iYaU
-         xRuDaHSnmCGU+GKem+KeKRJrJ30hCbb8nHzXE+m5gxqH//FcPbklIGwGnTyMAgXu8MQW
-         5fmA==
+        bh=m24ezova7J3GENnmHxuIJrSil1dVDJzqrtZznCoBSNI=;
+        b=LINTWF0LAIkda7RAlnxKvdOE3C7bfMMXN5ShsIeQUoXQpCo0iqUk8x4o0umNVtMzqc
+         HBCrCrFxfM8N4MD/xVpLflfSujsLaW+BRXmnU3iJao8YYb8+J0KCved325i9xfROA9/v
+         XnFuI6OROMHXm0N7NYvTOtxbNzbP47oC7hX2Dwg3hbMQAEoDgo64Wi1waTBxRmtvF6Ha
+         vIfVm9V90k8vXQ8qutwwUyHGjaC9lOuPwI6PxCYq88mbCUjnzOebf6CBXNPLfrs2X3vn
+         DeiDoKSPHLAgLsX67ZXGnXEwjBFQtkVjYjGcuPQiywIDdW34MYVfd/ncNhwlw6XdpWYH
+         tRKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731133149; x=1731737949;
+        d=1e100.net; s=20230601; t=1731133152; x=1731737952;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wQC+nYVZnsSIPtVomujUJB9/ZDMtc8fpB8iG7KWs9rs=;
-        b=JGCJNfvQL0BfoNl1Y5RVSp7vxjVTrw9Zf3FXGaL5ZQ4NhI721pO2Pjf+gnp6w1zNLE
-         NbrTK4rVQ6HtYUEPCKIm+NMWDiFGTpZTJqP5bEnj7+TH1b+10e8MdOsJRSXK6TM3OZFD
-         YWchs7dICI1d2F12A+jdyI4r+pkQ9hUTNvEwFZSNoGVd/0+gIE5qj8GfKArSlYv+PODF
-         CBLzkfiAB5Ru6NxKZqKXHWX8LJDroEEFHrxjLWMzaDAdoiGsRPSBR/8LSNgMXkNe87Y0
-         O770W4AcktYN9Ohn15lrcJd30IY+We3+G30lRK+odrld3KS/mxa9WZihIcKHne5Gj5Ak
-         NeCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWBwvENoGLkIi2eVfdw7FP1Dq1LFeIw+MLnL5ptoyt95LmL5xW0/VkXtwUhCbLxE6y6avERDIbuPrczO/7pwi/K@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN49Ot/YyIl7EZXipkilX8BFoWoxqlGblqzM3zcvHj5RUMdZqG
-	Qw6P6wgvRu8p9R8GL4SJ01zNtEmV2PzRGS41xmSkUaWJ1N3QJ08YrTXkEbw59Uzww6hlL9FT/cW
-	bj34hhw==
-X-Google-Smtp-Source: AGHT+IG2J8xhYT2nRn4RChEQkkMF8wDYoMqfx5nMQX1zyrXP8KIbZkwthsd8g0UJFa4g+kK5T8mO25tIMjc9
+        bh=m24ezova7J3GENnmHxuIJrSil1dVDJzqrtZznCoBSNI=;
+        b=T1oRS9i6hPgDvHR3t2f5sZepd4DZgnNe/d1SZSZQGRHsrYOEcsxiBoxEwfHFMrY3rC
+         DhWQ+epdjQNVG1OEmfiwDKfgRfw4HDdeIzcOvCs9LxXrO3exYZDKUC0FQwLO+yEoBh0U
+         /wrscJ71PNPJJLC29ETfGJhCxXiXGdtgIIMrLpG9YfHrMLbK4LGkB7MrrkU6z+IWqqZ0
+         pNhk8IfE7xpjo5W4cR8TJIySwrKwHItya547NzVfhm3DFNco7SuJyeRiSd55zgLa1RZ2
+         L3yhGkQlpkkppKck1h7l4aciEE1b/VXR+892vyznlaPeYK8IoOa4lOvOcxHUJ2Q5JXIN
+         8bXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVVYIJ14KoTfO8qUXxVQxEp5sfE8nkTbUihlJFzi9jAmcWsYWQsq9axovVEFj4xldOy/X1G13d1nZ6k8WVh/UiD@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoP2zxicSquRSh+KpNi0j2f3jnhN6iicJgcM1NRiEOKaQ/vGS2
+	jX3oknbOOQYsmB+IXkKpjs0Rh7Ti3XR3fw8X5qC/nmu9f/A3IaxFP6f0KvSaO3ASGEGwbNixwwA
+	U9aWuBw==
+X-Google-Smtp-Source: AGHT+IEjWicK5LpMHUtvdfgpqNM6nhMioZKKQMcNun1xBlhB3GtyO6nVCSa+gmCfKwcqfavz2sH0Ixj1poWJ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:acc2:d48f:a998:5915])
- (user=irogers job=sendgmr) by 2002:a05:690c:620a:b0:6ea:e559:d69c with SMTP
- id 00721157ae682-6eae559d710mr212777b3.5.1731133149313; Fri, 08 Nov 2024
- 22:19:09 -0800 (PST)
-Date: Fri,  8 Nov 2024 22:18:08 -0800
+ (user=irogers job=sendgmr) by 2002:a25:8b81:0:b0:e2e:3031:3f0c with SMTP id
+ 3f1490d57ef6-e337f8d41a3mr4031276.7.1731133151533; Fri, 08 Nov 2024 22:19:11
+ -0800 (PST)
+Date: Fri,  8 Nov 2024 22:18:09 -0800
 In-Reply-To: <20241109061809.811922-1-irogers@google.com>
-Message-Id: <20241109061809.811922-22-irogers@google.com>
+Message-Id: <20241109061809.811922-23-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241109061809.811922-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
-Subject: [PATCH v6 21/22] perf python: Add __str__ and __repr__ functions to evsel
+Subject: [PATCH v6 22/22] perf python: Correctly throw IndexError
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -78,61 +78,44 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-This allows evsel to be shown in the REPL like:
+Correctly throw IndexError for out-of-bound accesses to evlist:
 ```
 Python 3.11.9 (main, Jun 19 2024, 00:38:48) [GCC 13.2.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import sys
 >>> sys.path.insert(0, '/tmp/perf/python')
 >>> import perf
->>> x=perf.parse_events('cycles,data_read')
+>>> x=perf.parse_events('cycles')
 >>> print(x)
-evlist([cycles,uncore_imc_free_running_0/data_read/,uncore_imc_free_running_1/data_read/])
->>> x[0]
-evsel(cycles)
->>> x[1]
-evsel(uncore_imc_free_running_0/data_read/)
+evlist([cycles])
 >>> x[2]
-evsel(uncore_imc_free_running_1/data_read/)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: Index out of range
 ```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/python.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ tools/perf/util/python.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index a71bad3418da..0d71ec673aa3 100644
+index 0d71ec673aa3..25114dcadd21 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -781,6 +781,17 @@ static PyObject *pyrf_evsel__open(struct pyrf_evsel *pevsel,
- 	return Py_None;
- }
+@@ -1071,8 +1071,10 @@ static PyObject *pyrf_evlist__item(PyObject *obj, Py_ssize_t i)
+ 	struct pyrf_evlist *pevlist = (void *)obj;
+ 	struct evsel *pos;
  
-+static PyObject *pyrf_evsel__str(PyObject *self)
-+{
-+	struct pyrf_evsel *pevsel = (void *)self;
-+	struct evsel *evsel = &pevsel->evsel;
-+
-+	if (!evsel->pmu)
-+		return PyUnicode_FromFormat("evsel(%s)", evsel__name(evsel));
-+
-+	return PyUnicode_FromFormat("evsel(%s/%s/)", evsel->pmu->name, evsel__name(evsel));
-+}
-+
- static PyMethodDef pyrf_evsel__methods[] = {
- 	{
- 		.ml_name  = "open",
-@@ -802,6 +813,8 @@ static PyTypeObject pyrf_evsel__type = {
- 	.tp_doc		= pyrf_evsel__doc,
- 	.tp_methods	= pyrf_evsel__methods,
- 	.tp_init	= (initproc)pyrf_evsel__init,
-+	.tp_str         = pyrf_evsel__str,
-+	.tp_repr        = pyrf_evsel__str,
- };
+-	if (i >= pevlist->evlist.core.nr_entries)
++	if (i >= pevlist->evlist.core.nr_entries) {
++		PyErr_SetString(PyExc_IndexError, "Index out of range");
+ 		return NULL;
++	}
  
- static int pyrf_evsel__setup_types(void)
+ 	evlist__for_each_entry(&pevlist->evlist, pos) {
+ 		if (i-- == 0)
 -- 
 2.47.0.277.g8800431eea-goog
 
