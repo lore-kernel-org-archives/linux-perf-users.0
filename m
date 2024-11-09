@@ -1,270 +1,168 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06844256D
-	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 00:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7B08F49
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 00:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731112253; cv=none; b=s6pP49y0QQdPOwqpMBRrR+GHj3hkoDRMbrJXjYWkZvaWZbEqwKCjCvjc+ce22ft9yPYVm5JHuErrsVBfXGLKrnWHHhUXrN7XUhyDlVJT1KUYUgZwgLExUGdq1vakbFwL6enEqdFskjLzJtTgk6GA/jAKhi2qNxd7guxHfL6q4fI=
+	t=1731112444; cv=none; b=YlEajMQ68IBQwLNCWRlotHgLw6bOKorfZIf2hkHaiAVEC1GSjyQ87JN6n1KJzqzHKhFz1TR/mxDzSpIj0JYVQI9/jJOHCB+3t/zJ0j57L0au3Os2CelaSCmWYxuqmWXpDHCC57v37+IPtxbAQAy5v+Pr3NQaJcojoj5uYvCvyG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731112253; c=relaxed/simple;
-	bh=6l31xFWX6keFP8JX4fQLI3fwS0vikRlxLjLQEplSDDg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KD3445DKkqppjvTWkh9daB6exa1TbdBGLpuWT3ZN0h+6VdcPgZziqex5wXLP+VNflm18cjGhvsGUHJI26suR0VO9Z8A5ApOG4vm8rOL7n/d2dp9e9pO+mMTZHPLhj1KwJx5F+wQgeBcMNFIIbwwa9l9/IqvD/wnmHHDJGJKG4dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KBD0GmBh; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1731112444; c=relaxed/simple;
+	bh=V47dQdQkQL22+HC7w9YeCiv6RI21vZ8y6uGJAjPcFqE=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=WOCZGVIBhBiPYt8YgRYhH3bLpApAa6IZcViwEte6VvhlEOBcrgeWdxHnhnPzplDHAbKXFeb7qOF/R0hIYP3NsPgv8dPnir61H7vgq1d9OgBO6s/Md+tCqIPL/sFw/FhCncaBbI/wVC/ai6L8+FYCbOCRKQLtNSVwmeXpg+MjMus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kX1AoFgo; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KBD0GmBh"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-20ca03687fdso66585ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 16:30:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kX1AoFgo"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e29205f6063so4593304276.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 16:34:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731112251; x=1731717051; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IeiCkt8yGVZ1cm/cyphqL7nTIFzc03PSz7gvdXhOtfQ=;
-        b=KBD0GmBhfflsqOdgOJoiLvYVYUnvgGiv44t8p14FwhDaenuKFXbi7D05tQOhjmWTas
-         24ucV4q8joF3iT5Q5YQrYwfdF1wSFipTE7FXuM7eKVZemGw0KJ8qzt/9z4ZXk2U7t+Xe
-         9PlNHi0MHcX28ZVO9pO0lQXpCSszBOzuy2VBj6kSoKBP7QdHGxtnA23BOxQ+2vg/RTnK
-         hLrR5nBdEC/qzDxwzqMzsSGmjjR2XIQBc9IQVJYki3sR0DYDP6fS8ZlulN84OTSpkuKu
-         yDOnEml6JEARuM5dOAq3cURvPByQiTMs3tPVQAqpCJHgA5vTP0dabQbwSobKZ1kr2NKj
-         f0aA==
+        d=google.com; s=20230601; t=1731112442; x=1731717242; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2ZEDYkxzsG0qUhyE9JYNgXfUbc0ZpS2I+xfFPhpZ/t0=;
+        b=kX1AoFgo7L1T40YeDmg428jpA0R0DJlMUBBGOLF5yWCw6eG7caYDPL7m5mzC6u+x1b
+         x8gTidsn1lPIdw626uNs/iPwWjC8hZS+bsEUtMfQcPmcCvIFx+Jd5DqmCCWDEvwy2/BV
+         EF0zXH0Tjb9+5Wo5Y5j70SRrNkEap9N3nNKADMWu4G6/3W/1jG++9erqgswiT94nWK/T
+         8k4aXKWL0eeewwnL4U/6Czg06Uhh9qECHbo5aVCzA1bfrC4xDroYFkY7R6UohUzMktWO
+         MaG6nO6T2ODObYpl56M2tvQSNqfWVUidGy6/q+qpu92UQG7Rfj+7eDyKKuIVLAl9Kann
+         zSyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731112251; x=1731717051;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IeiCkt8yGVZ1cm/cyphqL7nTIFzc03PSz7gvdXhOtfQ=;
-        b=lKQqfL1wEcFYgUU2cz20nKeZGugTEpadejGlHeyg7cw4Vnup8Q1dlmltVpmBawKJAC
-         Cq8hOmshl5ZVVXl2RS7hBgfTHiU3M1q/mXS+6apXe2QI+Oyx4NfBEogLTj7p0eflrpUV
-         +E20uQm6aJzd9Wqk+ClaInaTKoZTqrt6/RHNHAZ/ebLRPxwXYdfMtepde7wNLUkN5HrM
-         HYfBKcqWXyVSgdBb1Q6o1M38qG5UeJVbFx4y+gd3CrezS8WRMa4OYBZ6qFBreAzmKBoD
-         iJ2kKBKQJBn2sa7aq/SZzCELsg8ntNv79n8pYmLqGTcyGQYkVQc679NbHK/01m/vxxbr
-         RtXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUq1t3Um+VKfre5t4Ih5Jwv/j2hc8ET0rfuTs3+/nacgEPty7OanOw1ZU1HqmphIsqC4j7CPoqyb2zPeMYdVfNB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHzY1V+TkN0aiUihS/dUxcaf3evvmNII/VXzQv87ONOYZVCQlJ
-	q0h8l4CVh89ZptlBMoDV/m1B6ISBiuDoSFRubH0TRGtjnvDgHY1I8K+GC54tCjAQDB94rq5KSo0
-	iThLjEKmOBxp2NJMVgd4/q2+ZZWbytn/mhWna
-X-Gm-Gg: ASbGncs3ytR2ZWHwVQVFd6tB+l926FY8v62nQ+m8nJDuYKTc+P8tl80i6F3jQvSxs+G
-	ILRMfyZNwZQCDAZfFFUotS4jl6WsLUlhF
-X-Google-Smtp-Source: AGHT+IGtzZApRpWfsQOiUA5wU23LJePmLwYJZ1rd1WeQLwqUmdxWOj2gif2S0uFS+L4qSnEPCxXsiDQejnPC2M+l0mo=
-X-Received: by 2002:a17:903:230e:b0:20c:e8df:2500 with SMTP id
- d9443c01a7336-2118f0e657cmr513825ad.3.1731112251033; Fri, 08 Nov 2024
- 16:30:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1731112442; x=1731717242;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2ZEDYkxzsG0qUhyE9JYNgXfUbc0ZpS2I+xfFPhpZ/t0=;
+        b=uSaZWcA7uJotMFhs/PGNBiO1BSH8WYuUnBYLEnoCiaPOikPblq0pNxszqrwVriwJhA
+         L4bHmeZ0I17hJL96Re7/iccJInBITQ8LGXQ622tzncI489vdWx3uAxxXWMMQHnxWfT/b
+         lreZ96qLntTCn2NqJRHiNeFkg7XM6j1N2UC18yXEY8T9vHssOMGeDg+RsZ2fEHC0coua
+         mIqbvtEOHgHhwmqrVZF0Ed3ppH9OTV7k2VhsdYoTu4eA3ebPN9VJiILsDv7GBfV4+ItM
+         wVrPEmKyCEh8zjhNGujrXlhv53r66l6VRCeGRc8CeCV+P3l91DdGP9n5SxrMo47ahA1q
+         7+zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBIX9nVvDtS3gcoTzdmt8EhpBwD8EIxdQP93rC3eiqxLCC0BDpyW0LMgbdp6EQNLiLkjxLoaXD/xPCJZ2f09cF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4Fb7ordCknKaII5yKIAqXGhnoTmv1RsBuo+EMDfmhPTQWaRrp
+	1jRDV5lDRQHiMRh/acQQRaI/dMQrcAW0N8e80U02CP0kFJH5AKuq5guX6VK5iiNWvGoAETPyXaW
+	dIK0BZA==
+X-Google-Smtp-Source: AGHT+IGqdbWcUfasjGel99/viEVPGvhC8W4vacrG9Ai+t4388gVHqj3i/Sz9pa2KAfoWC9PzJ/JUopGKrcH5
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:6fd2:1e36:6d8c:7c49])
+ (user=irogers job=sendgmr) by 2002:a25:d8d1:0:b0:e29:1893:f461 with SMTP id
+ 3f1490d57ef6-e337f78051fmr12617276.0.1731112442088; Fri, 08 Nov 2024 16:34:02
+ -0800 (PST)
+Date: Fri,  8 Nov 2024 16:33:51 -0800
+Message-Id: <20241109003358.461437-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241108174936.262704-1-irogers@google.com> <20241108174936.262704-5-irogers@google.com>
- <Zy5o46RIEZSvX3uw@google.com>
-In-Reply-To: <Zy5o46RIEZSvX3uw@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
+Subject: [PATCH v8 0/7] Hwmon PMUs
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 8 Nov 2024 16:30:39 -0800
-Message-ID: <CAP-5=fUpwgtLcSs37ab9Hpauf6EwoBVOePFgQoa0HZzd6LRVxQ@mail.gmail.com>
-Subject: Re: [PATCH v7 4/7] perf hwmon_pmu: Add a tool PMU exposing events
- from hwmon in sysfs
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>, James Clark <james.clark@linaro.org>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Howard Chu <howardchu95@gmail.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Changbin Du <changbin.du@huawei.com>, 
-	Ze Gao <zegao2021@gmail.com>, Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Yoshihiro Furudera <fj5100bi@fujitsu.com>, 
+	James Clark <james.clark@linaro.org>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
+	Howard Chu <howardchu95@gmail.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Changbin Du <changbin.du@huawei.com>, Ze Gao <zegao2021@gmail.com>, 
+	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 8, 2024 at 11:39=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Fri, Nov 08, 2024 at 09:49:33AM -0800, Ian Rogers wrote:
-> > Add a tool PMU for hwmon events but don't enable.
-> >
-> > The hwmon sysfs ABI is defined in
-> > Documentation/hwmon/sysfs-interface.rst. Create a PMU that reads the
-> > hwmon input and can be used in `perf stat` and metrics much as an
-> > uncore PMU can.
-> >
-> > For example, when enabled by a later patch, the following shows
-> > reading the CPU temperature and 2 fan speeds alongside the uncore
-> > frequency:
-> > ```
-> > $ perf stat -e temp_cpu,fan1,hwmon_thinkpad/fan2/,tool/num_cpus_online/=
- -M UNCORE_FREQ -I 1000
-> >      1.001153138              52.00 'C   temp_cpu
-> >      1.001153138              2,588 rpm  fan1
-> >      1.001153138              2,482 rpm  hwmon_thinkpad/fan2/
-> >      1.001153138                  8      tool/num_cpus_online/
-> >      1.001153138      1,077,101,397      UNC_CLOCK.SOCKET              =
-   #     1.08 UNCORE_FREQ
-> >      1.001153138      1,012,773,595      duration_time
-> > ...
-> > ```
-> >
-> > The PMUs are named from /sys/class/hwmon/hwmon<num>/name and have an
-> > alias of hwmon<num>.
-> >
-> > Hwmon data is presented in multiple <type><number>_<item> files. The
-> > <type><number> is used to identify the event as is the <type> followed
-> > by the contents of the <type>_label file if it exists. The
-> > <type><number>_input file gives the data read by perf.
-> >
-> > When enabled by a later patch, in `perf list` the other hwmon <item>
-> > files are used to give a richer description, for example:
-> > ```
-> > hwmon:
-> >   temp1
-> >        [Temperature in unit acpitz named temp1. Unit: hwmon_acpitz]
-> >   in0
-> >        [Voltage in unit bat0 named in0. Unit: hwmon_bat0]
-> >   temp_core_0 OR temp2
-> >        [Temperature in unit coretemp named Core 0. crit=3D100'C,max=3D1=
-00'C crit_alarm=3D0'C. Unit:
-> >         hwmon_coretemp]
-> >   temp_core_1 OR temp3
-> >        [Temperature in unit coretemp named Core 1. crit=3D100'C,max=3D1=
-00'C crit_alarm=3D0'C. Unit:
-> >         hwmon_coretemp]
-> > ...
-> >   temp_package_id_0 OR temp1
-> >        [Temperature in unit coretemp named Package id 0. crit=3D100'C,m=
-ax=3D100'C crit_alarm=3D0'C.
-> >         Unit: hwmon_coretemp]
-> >   temp1
-> >        [Temperature in unit iwlwifi_1 named temp1. Unit: hwmon_iwlwifi_=
-1]
-> >   temp_composite OR temp1
-> >        [Temperature in unit nvme named Composite. alarm=3D0'C,crit=3D86=
-.85'C,max=3D75.85'C,
-> >         min=3D-273.15'C. Unit: hwmon_nvme]
-> >   temp_sensor_1 OR temp2
-> >        [Temperature in unit nvme named Sensor 1. max=3D65261.8'C,min=3D=
--273.15'C. Unit: hwmon_nvme]
-> >   temp_sensor_2 OR temp3
-> >        [Temperature in unit nvme named Sensor 2. max=3D65261.8'C,min=3D=
--273.15'C. Unit: hwmon_nvme]
-> >   fan1
-> >        [Fan in unit thinkpad named fan1. Unit: hwmon_thinkpad]
-> >   fan2
-> >        [Fan in unit thinkpad named fan2. Unit: hwmon_thinkpad]
-> > ...
-> >   temp_cpu OR temp1
-> >        [Temperature in unit thinkpad named CPU. Unit: hwmon_thinkpad]
-> >   temp_gpu OR temp2
-> >        [Temperature in unit thinkpad named GPU. Unit: hwmon_thinkpad]
-> >   curr1
-> >        [Current in unit ucsi_source_psy_usbc000_0 named curr1. max=3D1.=
-5A. Unit:
-> >         hwmon_ucsi_source_psy_usbc000_0]
-> >   in0
-> >        [Voltage in unit ucsi_source_psy_usbc000_0 named in0. max=3D5V,m=
-in=3D5V. Unit:
-> >         hwmon_ucsi_source_psy_usbc000_0]
-> > ```
-> >
-> > As there may be multiple hwmon devices a range of PMU types are
-> > reserved for their use and to identify the PMU as belonging to the
-> > hwmon types.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/hwmon_pmu.c | 683 ++++++++++++++++++++++++++++++++++++
-> >  tools/perf/util/hwmon_pmu.h |  45 +++
-> >  tools/perf/util/pmu.h       |   2 +
-> >  3 files changed, 730 insertions(+)
-> >
-> > diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-> > index f4b7b3b6a052..3f1bf9a9cfdf 100644
-> > --- a/tools/perf/util/hwmon_pmu.c
-> > +++ b/tools/perf/util/hwmon_pmu.c
-> [SNIP]
-> > +struct perf_pmu *hwmon_pmu__new(struct list_head *pmus, int hwmon_dir,=
- const char *sysfs_name, const char *name)
-> > +{
-> > +     char buf[32];
-> > +     struct hwmon_pmu *hwm;
-> > +
-> > +     hwm =3D zalloc(sizeof(*hwm));
-> > +     if (!hwm)
-> > +             return NULL;
-> > +
-> > +
->
-> Two blank lines.
+Following the convention of the tool PMU, create a hwmon PMU that
+exposes hwmon data for reading. For example, the following shows
+reading the CPU temperature and 2 fan speeds alongside the uncore
+frequency:
+```
+$ perf stat -e temp_cpu,fan1,hwmon_thinkpad/fan2/,tool/num_cpus_online/ -M UNCORE_FREQ -I 1000
+     1.001153138              52.00 'C   temp_cpu
+     1.001153138              2,588 rpm  fan1
+     1.001153138              2,482 rpm  hwmon_thinkpad/fan2/
+     1.001153138                  8      tool/num_cpus_online/
+     1.001153138      1,077,101,397      UNC_CLOCK.SOCKET                 #     1.08 UNCORE_FREQ
+     1.001153138      1,012,773,595      duration_time
+...
+```
 
-Fixed.
+Additional data on the hwmon events is in perf list:
+```
+$ perf list
+...
+hwmon:
+...
+  temp_core_0 OR temp2
+       [Temperature in unit coretemp named Core 0. crit=100'C,max=100'C crit_alarm=0'C. Unit:
+        hwmon_coretemp]
+...
+```
 
-> > +     hwm->hwmon_dir_fd =3D hwmon_dir;
-> > +     hwm->pmu.type =3D PERF_PMU_TYPE_HWMON_START + strtoul(sysfs_name =
-+ 5, NULL, 10);
-> > +     if (hwm->pmu.type > PERF_PMU_TYPE_HWMON_END) {
-> > +             pr_err("Unable to encode hwmon type from %s in valid PMU =
-type\n", sysfs_name);
-> > +             goto err_out;
-> > +     }
-> > +     snprintf(buf, sizeof(buf), "hwmon_%s", name);
-> > +     fix_name(buf + 6);
-> > +     hwm->pmu.name =3D strdup(buf);
-> > +     if (!hwm->pmu.name)
-> > +             goto err_out;
-> > +     hwm->pmu.alias_name =3D strdup(sysfs_name);
-> > +     if (!hwm->pmu.alias_name)
-> > +             goto err_out;
-> > +     hwm->pmu.cpus =3D perf_cpu_map__new("0");
-> > +     if (!hwm->pmu.cpus)
-> > +             goto err_out;
-> > +     INIT_LIST_HEAD(&hwm->pmu.format);
-> > +     INIT_LIST_HEAD(&hwm->pmu.aliases);
-> > +     INIT_LIST_HEAD(&hwm->pmu.caps);
-> > +     hashmap__init(&hwm->events, hwmon_pmu__event_hashmap_hash,
-> > +                   hwmon_pmu__event_hashmap_equal, /*ctx=3D*/NULL);
-> > +
-> > +     list_add_tail(&hwm->pmu.list, pmus);
-> > +     return &hwm->pmu;
-> > +err_out:
-> > +     free((char *)hwm->pmu.name);
-> > +     free(hwm->pmu.alias_name);
-> > +     free(hwm);
-> > +     close(hwmon_dir);
-> > +     return NULL;
-> > +}
->
-> [...]
-> > diff --git a/tools/perf/util/hwmon_pmu.h b/tools/perf/util/hwmon_pmu.h
-> > index df0ab5ff7534..ebfdfe3b295a 100644
-> > --- a/tools/perf/util/hwmon_pmu.h
-> > +++ b/tools/perf/util/hwmon_pmu.h
-> > @@ -2,8 +2,12 @@
-> >  #ifndef __HWMON_PMU_H
-> >  #define __HWMON_PMU_H
-> >
-> > +#include "pmu.h"
-> >  #include <stdbool.h>
-> >
-> > +struct list_head;
-> > +struct perf_thread_map;
-> > +
-> >  /**
-> >   * enum hwmon_type:
-> >   *
-> > @@ -87,6 +91,14 @@ enum hwmon_item {
-> >       HWMON_ITEM__MAX,
-> >  };
-> >
-> > +/** Strings that correspond to enum hwmon_type. */
-> > +extern const char * const hwmon_type_strs[HWMON_TYPE_MAX];
-> > +/** Strings that correspond to enum hwmon_item. */
-> > +extern const char * const hwmon_item_strs[HWMON_ITEM__MAX];
->
-> Belongs to the patch2?  But it'd be nice if we can remove them.
+v8: Fix formatting issues and reduce scope of 2 strings reported by
+    Namhyung.
+v7: Try to address feedback from Namhyung wrt size/comprehensibility
+    of the hwmon PMU patch. To better explain the config encoding put
+    the parser into a patch ahead of the PMU patch and add a unit
+    test. This shows how a hwmon filename can be moved back-and-forth
+    with a config value as a single patch (two with the test). The
+    hwmon PMU patch is then putting the wrapping around that for the
+    pmus', parse_event's and evsel reading's benefit.
+    
+    The alternate approach of not caring about the mapping, name to
+    config value, and using the evsel->name wasn't followed. In the
+    tool PMU it was made so we can go back-and-forth between event
+    names and a type+config, this removed the tool enum value from the
+    evsel as now tool events were more 1st class and evsel should
+    really just be a wrapper on a perf_event_attr. Using the
+    evsel->name wasn't doing that and so the approach of mapping
+    filenames and configs, as better highlighted in this series was
+    pursued.
 
-Made static in v8.
+    It is expected future PMUs won't be able to cleanly map fixed
+    strings to config values, in those cases tables would be
+    necessary. Making a hwmon PMU do this and then removing it to
+    follow the parsing/mapping done in patch 2 here, would have been a
+    lot of additional work which then would be removed.
 
-Thanks,
-Ian
+v6: Add string.h #include for issue reported by kernel test robot.
+v5: Fix asan issue in parse_hwmon_filename caught by a TMA metric.
+v4: Drop merged patches 1 to 10. Separate adding the hwmon_pmu from
+    the update to perf_pmu to use it. Try to make source of literal
+    strings clearer via named #defines. Fix a number of GCC warnings.
+v3: Rebase, add Namhyung's acked-by to patches 1 to 10.
+v2: Address Namhyung's review feedback. Rebase dropping 4 patches
+    applied by Arnaldo, fix build breakage reported by Arnaldo.
+
+Ian Rogers (7):
+  tools api io: Ensure line_len_out is always initialized
+  perf hwmon_pmu: Add hwmon filename parser
+  perf test: Add hwmon filename parser test
+  perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs
+  perf pmu: Add calls enabling the hwmon_pmu
+  perf test: Add hwmon "PMU" test
+  perf docs: Document tool and hwmon events
+
+ tools/lib/api/io.h                     |   1 +
+ tools/perf/Documentation/perf-list.txt |  15 +
+ tools/perf/tests/Build                 |   1 +
+ tools/perf/tests/builtin-test.c        |   1 +
+ tools/perf/tests/hwmon_pmu.c           | 340 ++++++++++
+ tools/perf/tests/tests.h               |   1 +
+ tools/perf/util/Build                  |   1 +
+ tools/perf/util/evsel.c                |   9 +
+ tools/perf/util/hwmon_pmu.c            | 826 +++++++++++++++++++++++++
+ tools/perf/util/hwmon_pmu.h            | 156 +++++
+ tools/perf/util/pmu.c                  |  20 +
+ tools/perf/util/pmu.h                  |   2 +
+ tools/perf/util/pmus.c                 |   9 +
+ tools/perf/util/pmus.h                 |   3 +
+ 14 files changed, 1385 insertions(+)
+ create mode 100644 tools/perf/tests/hwmon_pmu.c
+ create mode 100644 tools/perf/util/hwmon_pmu.c
+ create mode 100644 tools/perf/util/hwmon_pmu.h
+
+-- 
+2.47.0.277.g8800431eea-goog
+
