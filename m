@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9826613FF5
-	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 00:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666C01DFED
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 00:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731112689; cv=none; b=oUQ1+BODXR5KoyY0D+foeribqMK2+NfZGwszjjDs4WtKCeex/3fwLoicg2binXJ9sYTF6Y2G2jZWUDIX8vUoiRd9c+aKiTHynpGstQmWb0ymhNGtNgC3Bk9vQefY3Vy6+LsvRyMBI3t26CPM11z0EhyVbmEn7qZ3UpavSpQgDh8=
+	t=1731112691; cv=none; b=MlohR3nEKpRMidWsIjuKu1fuOfTq9eaUwqGL+djUss/HJ3RDfxI0JKLrtSlUYWTO2rcrD/g6qOscUOOarbZQSjH/G1tfF0bQxcZz3PQdRe6xV6/g46bNN2rdYm4N1Dwa5UWN8xh2tUiXX0DYiux8k+ic6ztPkjZb9YNfu0p1U9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731112689; c=relaxed/simple;
-	bh=JR2W9BY58B7KI+DPucllOVM9yijzERRopT+DlqMeLCU=;
+	s=arc-20240116; t=1731112691; c=relaxed/simple;
+	bh=EPHABW4Dal5OoWmB5VB9qYe0tkW5pDWGRMOxZWg45/8=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=JGYu/ZGnkmHShO/GmNRIENG3eJy8AeThYruUa98o/LcIvWqfJevygCjPm2Fe8/7NwqUW9/gB0cttlcmn119GoRkJ5Ms6NNiVOdVsp9nFYqaVl/hnFGd5xS+Mxx/FoOWhkd85+7kiZ1zMefyTX4GfA4LDWyEdyx3ncgaLbUAMh8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lz9ouNdV; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=DP/Px553wCk62acETzBsVZL9GCUy5Orf6jDcXgmeSJcC+WyeyoP/QDDp+aErY/R8IY28twKCfq/tYszeFpoNUxMmlZGRf1Mqbw5vlpKbjpbtevsEXmcf/BAPgCyG5ibhz17MkSWvOXGk+58QIGPDjli58B8aSpBaIXMB4dx1yYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vMp71Gqw; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lz9ouNdV"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e293b3e014aso4259304276.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 16:38:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vMp71Gqw"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6ea86f1df79so52116437b3.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 16:38:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731112686; x=1731717486; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731112688; x=1731717488; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=3SPWlc2lPTGFJEvFedKLB5LrjZb1UnFHbKvI0m+mSBo=;
-        b=lz9ouNdVZcv2MhAZ2AalIAGKOMsk4P9C4qOkUYbkkITWMJQ1P+rSia7kf7ZH24/6zJ
-         /VsQIDeyGzgxX5iyDYFjJAUHMehpEZ4W3HckFPZKN4ubOmmDWc8Q8LlocSrrd/9Mtz/Y
-         +vzNYknawpOTxAbknjOOSTYBYIXQwpqqm4b92o47WuakiSGTZ09He5HP95J9sWzHynKZ
-         /i99YdMn9tCNyhyJX8TGMNEFTYBkZPVQy7L3sxXYqY3j9B0AiIsfMjPWlTr4bGqt1+Ak
-         +xAi3FdVYZUS0u84QQLlO0Z7S+WLlOYG6ZKeTIAniSngVm6Xj4dzVm3MgLskv/IwLS+d
-         Jmzg==
+        bh=HTiUHf6g81o8sTIu2Q+yefZ91ahAjUlTz9BdmD6fp2A=;
+        b=vMp71GqwHoSgPpYbGo0okBqH1jkJtEmB4GlVq3fF59EcKSmamAbQvaTzim9mQrGWXT
+         ypB8ooE1Tc2st4HB4WkQJuB+Jo4EnkpuTdmabSxIdmh+gNYPRwa9lVNbZjNzJjE6Pj3C
+         tHzNaW8xrAVYb45UTFvR6q0c6e+C2v+Q02DTsrgdNV8ErTtBTMyzAsYYf/YHgJFxC1jR
+         nysiXyuLytTQnmLof0YRRujTCCYaPdhHL6WtWKRYZKRibe/zGwo07aE3AQ15qU5SDazC
+         rL4bwAjXL5xL84dwVGKf2qoz6ysfGDMrOX6UWsTv/fKURM7yG5Ep8pr4eRztOc6ksQWA
+         vMdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731112686; x=1731717486;
+        d=1e100.net; s=20230601; t=1731112688; x=1731717488;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3SPWlc2lPTGFJEvFedKLB5LrjZb1UnFHbKvI0m+mSBo=;
-        b=EZvvtvZQuR1IDi67wWEkGbB3cDXyBuZe0AiPBPyb6wzcfDW9QFtJk75jsby5Dxm/i1
-         d0A/xYJAoDmugzqBaAHOLdPDGYE5o9XFTyS673am35Dy6iyNCfkSZjO6cN86rxhf9hGe
-         GIvXH2CMp4vYtLPnCKprmrDk5Vals7mEmlz1i09blR71nal52zVKKfv/8rFZM+rgqjMN
-         ePqNnNyE0A9Y7CGBIkR+oa2tEOKq4lcuWp0/xU8Z5vBUcs++siIG9vau92/YRT/ifWV6
-         jQzZy53xjSYKkyhW4FDGioFVjMYSiTiGeEZpAvZW8/6sL/k4D05UXLFFh5n6yYoZCqR8
-         JMuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX3W8fE6/wZHILMfXDG0cYJIbQ5JUs3HUAkds7KnZrlVlZbYyRqWRlnLo73Vo+mTYeHHph8wFMKWDIwhubbtLvC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yws6aMryYSEgTDE/Im1dQH4PKL5qNTaJzuU6A5rtFcSGuWyaNAH
-	2SPMDuJ7htCuUdESaazWqzc+qZZP8uc9teN3VvjG5m0Bkb0QNO9v1SM7yMxUFaPQ0YeCT06zn9A
-	VmdXJ9A==
-X-Google-Smtp-Source: AGHT+IEbCvuNzznHJpTzjrrAOjr0V/uUsjUwc1//TkW/1cqMa3tVVHph1FyNI7oYtDyjF4CBOn/7+dGxx9S/
+        bh=HTiUHf6g81o8sTIu2Q+yefZ91ahAjUlTz9BdmD6fp2A=;
+        b=NBpZBFBj5C/zOkiSPiS+N3Dm94L0W42td6B62ezhWXyNsh66AM1rVla07z3J8jEpBK
+         epkZsUuJHhop9FQ6wq3Il3IwKoGPyzixTHsmasXlxeLB3LC+PgcVlLtOBIk0Enen2dIg
+         dR5IXfinFh6KjV3R1wxkRYSwNozPrK6bpMZ1SiE6+Td3P3O5hgIEAZOXXOEr3AnLmSIU
+         1GeQDcpRP0qDhMv4ERk82rw1cZ8nN+Wl4vdWZlUq4kU2o7LXRHP7+pMBoAcN83BhADNG
+         VPOTQmsIbwBpP+EHQfVoQIdXoNvJQmRBqKv9NCxQZnJ8uGPdhDinI5vBOP/F+PqJV8oa
+         SdnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJbLl+ZregPBu5+iVOQT309kDgFf8MZIhlVPWhW7It2cAEE7UWzBBUyP3aCsRisXy572omOjNDA3G2N7PI+ktC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH7HGJoqSYo7/rwVZasz+oWJ2pTAdhykrDhqluJJKq5lcF2aWa
+	ItPE9vo6kZXZmPR3bWpxHaeeUPKE/k50HjW6GsHogiWzh5fpQBIzLppVOytrnGN2excr4NodT8O
+	GCLXDdg==
+X-Google-Smtp-Source: AGHT+IF6gQvvK5Lil5+ng0LPpg9X8rdu8LgEF9SDR8ig2x/8mDlSkvbT3HqLAYHEhF+R6ExZ4n87L1KB3LEL
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:6fd2:1e36:6d8c:7c49])
- (user=irogers job=sendgmr) by 2002:a25:dc4a:0:b0:e25:5cb1:77d8 with SMTP id
- 3f1490d57ef6-e337f8ed8bbmr2910276.6.1731112686450; Fri, 08 Nov 2024 16:38:06
- -0800 (PST)
-Date: Fri,  8 Nov 2024 16:37:53 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:200f:b0:6ea:34c3:742b with SMTP
+ id 00721157ae682-6eaddfad76amr477787b3.6.1731112688654; Fri, 08 Nov 2024
+ 16:38:08 -0800 (PST)
+Date: Fri,  8 Nov 2024 16:37:54 -0800
 In-Reply-To: <20241109003759.473460-1-irogers@google.com>
-Message-Id: <20241109003759.473460-2-irogers@google.com>
+Message-Id: <20241109003759.473460-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241109003759.473460-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
-Subject: [PATCH v9 1/7] tools api io: Ensure line_len_out is always initialized
+Subject: [PATCH v9 2/7] perf hwmon_pmu: Add hwmon filename parser
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,26 +76,303 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Ensure initialization to avoid compiler warnings about potential use
-of uninitialized variables.
+hwmon filenames have a specific encoding that will be used to give a
+config value. The encoding is described in:
+Documentation/hwmon/sysfs-interface.rst
+Add a function to parse the filename into consituent enums/ints that
+will then be amenable to config encoding.
+
+Note, things are done this way to allow mapping names to config and
+back without the use of hash/dynamic lookup tables.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/io.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/Build       |   1 +
+ tools/perf/util/hwmon_pmu.c | 144 ++++++++++++++++++++++++++++++++++++
+ tools/perf/util/hwmon_pmu.h | 111 +++++++++++++++++++++++++++
+ 3 files changed, 256 insertions(+)
+ create mode 100644 tools/perf/util/hwmon_pmu.c
+ create mode 100644 tools/perf/util/hwmon_pmu.h
 
-diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
-index d3eb04d1bc89..1731996b2c32 100644
---- a/tools/lib/api/io.h
-+++ b/tools/lib/api/io.h
-@@ -189,6 +189,7 @@ static inline ssize_t io__getdelim(struct io *io, char **line_out, size_t *line_
- err_out:
- 	free(line);
- 	*line_out = NULL;
-+	*line_len_out = 0;
- 	return -ENOMEM;
- }
- 
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 1eedead5f2f2..78b990c04f71 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -83,6 +83,7 @@ perf-util-y += pmu.o
+ perf-util-y += pmus.o
+ perf-util-y += pmu-flex.o
+ perf-util-y += pmu-bison.o
++perf-util-y += hwmon_pmu.o
+ perf-util-y += tool_pmu.o
+ perf-util-y += svghelper.o
+ perf-util-$(CONFIG_LIBTRACEEVENT) += trace-event-info.o
+diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+new file mode 100644
+index 000000000000..8791e55097dc
+--- /dev/null
++++ b/tools/perf/util/hwmon_pmu.c
+@@ -0,0 +1,144 @@
++// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++#include "debug.h"
++#include "hwmon_pmu.h"
++#include <assert.h>
++#include <stddef.h>
++#include <stdlib.h>
++#include <string.h>
++#include <linux/kernel.h>
++
++/** Strings that correspond to enum hwmon_type. */
++static const char * const hwmon_type_strs[HWMON_TYPE_MAX] = {
++	NULL,
++	"cpu",
++	"curr",
++	"energy",
++	"fan",
++	"humidity",
++	"in",
++	"intrusion",
++	"power",
++	"pwm",
++	"temp",
++};
++#define LONGEST_HWMON_TYPE_STR "intrusion"
++
++/** Strings that correspond to enum hwmon_item. */
++static const char * const hwmon_item_strs[HWMON_ITEM__MAX] = {
++	NULL,
++	"accuracy",
++	"alarm",
++	"auto_channels_temp",
++	"average",
++	"average_highest",
++	"average_interval",
++	"average_interval_max",
++	"average_interval_min",
++	"average_lowest",
++	"average_max",
++	"average_min",
++	"beep",
++	"cap",
++	"cap_hyst",
++	"cap_max",
++	"cap_min",
++	"crit",
++	"crit_hyst",
++	"div",
++	"emergency",
++	"emergency_hist",
++	"enable",
++	"fault",
++	"freq",
++	"highest",
++	"input",
++	"label",
++	"lcrit",
++	"lcrit_hyst",
++	"lowest",
++	"max",
++	"max_hyst",
++	"min",
++	"min_hyst",
++	"mod",
++	"offset",
++	"pulses",
++	"rated_max",
++	"rated_min",
++	"reset_history",
++	"target",
++	"type",
++	"vid",
++};
++#define LONGEST_HWMON_ITEM_STR "average_interval_max"
++
++static int hwmon_strcmp(const void *a, const void *b)
++{
++	const char *sa = a;
++	const char * const *sb = b;
++
++	return strcmp(sa, *sb);
++}
++
++bool parse_hwmon_filename(const char *filename,
++			  enum hwmon_type *type,
++			  int *number,
++			  enum hwmon_item *item,
++			  bool *alarm)
++{
++	char fn_type[24];
++	const char **elem;
++	const char *fn_item = NULL;
++	size_t fn_item_len;
++
++	assert(strlen(LONGEST_HWMON_TYPE_STR) < sizeof(fn_type));
++	strlcpy(fn_type, filename, sizeof(fn_type));
++	for (size_t i = 0; fn_type[i] != '\0'; i++) {
++		if (fn_type[i] >= '0' && fn_type[i] <= '9') {
++			fn_type[i] = '\0';
++			*number = strtoul(&filename[i], (char **)&fn_item, 10);
++			if (*fn_item == '_')
++				fn_item++;
++			break;
++		}
++		if (fn_type[i] == '_') {
++			fn_type[i] = '\0';
++			*number = -1;
++			fn_item = &filename[i + 1];
++			break;
++		}
++	}
++	if (fn_item == NULL || fn_type[0] == '\0' || (item != NULL && fn_item[0] == '\0')) {
++		pr_debug("hwmon_pmu: not a hwmon file '%s'\n", filename);
++		return false;
++	}
++	elem = bsearch(&fn_type, hwmon_type_strs + 1, ARRAY_SIZE(hwmon_type_strs) - 1,
++		       sizeof(hwmon_type_strs[0]), hwmon_strcmp);
++	if (!elem) {
++		pr_debug("hwmon_pmu: not a hwmon type '%s' in file name '%s'\n",
++			 fn_type, filename);
++		return false;
++	}
++
++	*type = elem - &hwmon_type_strs[0];
++	if (!item)
++		return true;
++
++	*alarm = false;
++	fn_item_len = strlen(fn_item);
++	if (fn_item_len > 6 && !strcmp(&fn_item[fn_item_len - 6], "_alarm")) {
++		assert(strlen(LONGEST_HWMON_ITEM_STR) < sizeof(fn_type));
++		strlcpy(fn_type, fn_item, fn_item_len - 5);
++		fn_item = fn_type;
++		*alarm = true;
++	}
++	elem = bsearch(fn_item, hwmon_item_strs + 1, ARRAY_SIZE(hwmon_item_strs) - 1,
++		       sizeof(hwmon_item_strs[0]), hwmon_strcmp);
++	if (!elem) {
++		pr_debug("hwmon_pmu: not a hwmon item '%s' in file name '%s'\n",
++			 fn_item, filename);
++		return false;
++	}
++	*item = elem - &hwmon_item_strs[0];
++	return true;
++}
+diff --git a/tools/perf/util/hwmon_pmu.h b/tools/perf/util/hwmon_pmu.h
+new file mode 100644
+index 000000000000..df0ab5ff7534
+--- /dev/null
++++ b/tools/perf/util/hwmon_pmu.h
+@@ -0,0 +1,111 @@
++/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
++#ifndef __HWMON_PMU_H
++#define __HWMON_PMU_H
++
++#include <stdbool.h>
++
++/**
++ * enum hwmon_type:
++ *
++ * As described in Documentation/hwmon/sysfs-interface.rst hwmon events are
++ * defined over multiple files of the form <type><num>_<item>. This enum
++ * captures potential <type> values.
++ *
++ * This enum is exposed for testing.
++ */
++enum hwmon_type {
++	HWMON_TYPE_NONE,
++
++	HWMON_TYPE_CPU,
++	HWMON_TYPE_CURR,
++	HWMON_TYPE_ENERGY,
++	HWMON_TYPE_FAN,
++	HWMON_TYPE_HUMIDITY,
++	HWMON_TYPE_IN,
++	HWMON_TYPE_INTRUSION,
++	HWMON_TYPE_POWER,
++	HWMON_TYPE_PWM,
++	HWMON_TYPE_TEMP,
++
++	HWMON_TYPE_MAX
++};
++
++/**
++ * enum hwmon_item:
++ *
++ * Similar to enum hwmon_type but describes the item part of a a sysfs filename.
++ *
++ * This enum is exposed for testing.
++ */
++enum hwmon_item {
++	HWMON_ITEM_NONE,
++
++	HWMON_ITEM_ACCURACY,
++	HWMON_ITEM_ALARM,
++	HWMON_ITEM_AUTO_CHANNELS_TEMP,
++	HWMON_ITEM_AVERAGE,
++	HWMON_ITEM_AVERAGE_HIGHEST,
++	HWMON_ITEM_AVERAGE_INTERVAL,
++	HWMON_ITEM_AVERAGE_INTERVAL_MAX,
++	HWMON_ITEM_AVERAGE_INTERVAL_MIN,
++	HWMON_ITEM_AVERAGE_LOWEST,
++	HWMON_ITEM_AVERAGE_MAX,
++	HWMON_ITEM_AVERAGE_MIN,
++	HWMON_ITEM_BEEP,
++	HWMON_ITEM_CAP,
++	HWMON_ITEM_CAP_HYST,
++	HWMON_ITEM_CAP_MAX,
++	HWMON_ITEM_CAP_MIN,
++	HWMON_ITEM_CRIT,
++	HWMON_ITEM_CRIT_HYST,
++	HWMON_ITEM_DIV,
++	HWMON_ITEM_EMERGENCY,
++	HWMON_ITEM_EMERGENCY_HIST,
++	HWMON_ITEM_ENABLE,
++	HWMON_ITEM_FAULT,
++	HWMON_ITEM_FREQ,
++	HWMON_ITEM_HIGHEST,
++	HWMON_ITEM_INPUT,
++	HWMON_ITEM_LABEL,
++	HWMON_ITEM_LCRIT,
++	HWMON_ITEM_LCRIT_HYST,
++	HWMON_ITEM_LOWEST,
++	HWMON_ITEM_MAX,
++	HWMON_ITEM_MAX_HYST,
++	HWMON_ITEM_MIN,
++	HWMON_ITEM_MIN_HYST,
++	HWMON_ITEM_MOD,
++	HWMON_ITEM_OFFSET,
++	HWMON_ITEM_PULSES,
++	HWMON_ITEM_RATED_MAX,
++	HWMON_ITEM_RATED_MIN,
++	HWMON_ITEM_RESET_HISTORY,
++	HWMON_ITEM_TARGET,
++	HWMON_ITEM_TYPE,
++	HWMON_ITEM_VID,
++
++	HWMON_ITEM__MAX,
++};
++
++/**
++ * parse_hwmon_filename() - Parse filename into constituent parts.
++ *
++ * @filename: To be parsed, of the form <type><number>_<item>.
++ * @type: The type defined from the parsed file name.
++ * @number: The number of the type, for example there may be more than 1 fan.
++ * @item: A hwmon <type><number> may have multiple associated items.
++ * @alarm: Is the filename for an alarm value?
++ *
++ * An example of a hwmon filename is "temp1_input". The type is temp for a
++ * temperature value. The number is 1. The item within the file is an input
++ * value - the temperature itself. This file doesn't contain an alarm value.
++ *
++ * Exposed for testing.
++ */
++bool parse_hwmon_filename(const char *filename,
++			  enum hwmon_type *type,
++			  int *number,
++			  enum hwmon_item *item,
++			  bool *alarm);
++
++#endif /* __HWMON_PMU_H */
 -- 
 2.47.0.277.g8800431eea-goog
 
