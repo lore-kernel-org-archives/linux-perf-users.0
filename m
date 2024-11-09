@@ -1,114 +1,112 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341C381745
-	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 00:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DD82E628
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 Nov 2024 02:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731112702; cv=none; b=oUOuKjfDXCndxsRq3MoItnqeyaALsPvDTseEWGT6+H/FgypviEDuOS071moAd+WWaNOghLCxuWze7kpCq/DeQdEIzbP4WcaND+/u2F/yixx2Z0KfCix7zYIARdC072HsaPRoSGOoXjh2fV6f0J0DekYagGA454F6lPFSRlnwzjM=
+	t=1731119273; cv=none; b=TGyQZVfDha3BUWwm77tLA71/bLDRgbiEQaATA3YdgCEJ4/PbvWCCfPQ9oFDvDZkaS7tyGGyRemmAuwZ9aT5awIjqc0Re3IiDADzNXmXeMc8APN197Vyf839Fa2SIroUrfSjUUnihrASpBiPOKNIPizsK+rDVhpz9mwt+VFU2lds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731112702; c=relaxed/simple;
-	bh=rmktKWgkJHRVy/ZdsAA0Vc65puJoSfAalv+s0diLDGY=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Xk65zetr6xs6CgNPSm6Wb9ZfF8u9xJXDIHVQfOYafi/WqO83pHEFE93eIwnb8DXJF0Kxm08NaN50wpzYkm7HXV7kaUYWEVh7ba6dIUASU4703Jdx+xCFD8RcSqs4wF093+swm8DcgfBoL1kcb0Z7AdpPlN/qrVoVTWNxx8nm8gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JAxdo2XH; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1731119273; c=relaxed/simple;
+	bh=r4II/EOANpjkik7gih8wrK4svfpWdxsNcpftzmVUHSQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vFA0gshBRSBWhHu1AgB9YYFV1+EUlOhfvzkas9Wx0gEEk4yrHgyQR73yivdSp9sOYBmwNxnlW3qVfsuu1Kq5PRMaHM0TH9RHsVb00AKQjzTaPgxwHsLBUXnaiObMn/OqifHLJVWGQYgdEcu9wsIdJOqKb0jRE9JedqW/+bG8gjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b5YBpNbN; arc=none smtp.client-ip=209.85.166.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JAxdo2XH"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e0b8fa94718so4946684276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 16:38:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b5YBpNbN"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a4e4776f79so51115ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Nov 2024 18:27:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731112699; x=1731717499; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vhyKZnJ2eVHPv4loZARCzHZhQlUS4zb1Fka2wyOZYXs=;
-        b=JAxdo2XHJkmVnZVU2H5VwO7b7u1regk0rH6zIPJ/I0U1gfpKypxEQkzdsfI47jcj0U
-         tU0jS8+m/CTIP3z9vQRURr7cdusyNVcsQMSTXbr7ARjR7qnX6oBPdivKIvnilvm/X8V+
-         HAp7NRlKQ2e9V+wPw1cWwzefQVLLD0E/DrN4psrqFO+1YfI7sp2Q+HqGrL+xe030y4Lo
-         +SWAxSUkHbSheDj5QF5QbpbdimE8f6RY0qz+q8lC6o3qIItnPBPPbvX0EB4BX3GIZGeB
-         iey+sp0csCQF1wDCc126gjCHjP9Ptw3+yWxeFII+cChCwX23fVOblU5oRP0p3iUE6hJW
-         3iZQ==
+        d=google.com; s=20230601; t=1731119271; x=1731724071; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IbrhjKf7R7Vkeazhqp6cKcRj3efB5Nxd6q1xKyiiDUU=;
+        b=b5YBpNbN23yFRwSPoh5HO3ArXLO0YZrKH6GJj+bF61MFJIfCZSi/LRhRQ/ZEGlJUsZ
+         p4BDOLj548gS3SEmCkOGhkqm958gjCD5AapodY22mKDHpd15kwPzxU5Uly2RonDUMcek
+         SeyNv2KEzhsQHc5d5hukWZCKMLTlokFYZFfCHi0MjKOHKohzpijrewff3pZr6/99F1Su
+         yxpiWl8ZZiOmUF8Fniqz4MaBOybk/AEKA8ZsG8gOk+2WamMloWjB02FSLN9Hlsa+LHeX
+         fr4JGnK26z9GKtlURPfnsl+mdaa8xwM+jIHzNQKtKheI74S/euDopGQCeXNujON1dRiJ
+         IEQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731112699; x=1731717499;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vhyKZnJ2eVHPv4loZARCzHZhQlUS4zb1Fka2wyOZYXs=;
-        b=WZvajSfcDx2BmPdOFnyL63PkwIq4Tlw3Sg69TJMalTRLG0zI2xA09OoHqMJxb5QbLw
-         uEJulVG60qEDUTvFFgJydA4zAeqGxhRuwpeQnjjctKN4kfC2cdhFDp7YIxd7i6AvnMop
-         G+QtDzcgzVckBDjdVtAvlgnU3CN1DWIAJ0ypYnHDoom2TeAU6Pyiz2rVIblrHh1CB39T
-         Y1Pf8QFHnEaQu7xRUBw8aDO+3gl6/d61NlUirYXChq5YdXlSe1I5lNWmefDVlJw7+zaf
-         3KtSf3D2x/XrvOGWN7pBddHgNGjgx3wb2RYjCSJftPKftbCWSuzixZKrOijgYx/iaMm/
-         BbPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHJG/BdWtlOqjSC0IKyNsh6gwT241+yJtVlUwzfITx2zkX1y1KQSFs/O1y3zqfuFUsQa2ugQvOfcfC1G2Y9Hcr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxN/3IQhFS/ONgDEwhu1T8v6gSei3+JIjP2yTzD4GW8q2M3GmVq
-	Jv/0mDSnENg7wU1JsmOJkIoQvedm0a9qQYOMP11GvA2gPFo2RrM6M/9LJQ04INvhLtPJHkWZ7+s
-	NnORWgQ==
-X-Google-Smtp-Source: AGHT+IEqdC8t660cmhTSYdvMHvoW2c5074g9eAsdYu18qhy97ttYT1601rGIQiMK2FsGOX+Uk2p9iv9SY39p
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:6fd2:1e36:6d8c:7c49])
- (user=irogers job=sendgmr) by 2002:a5b:80a:0:b0:e30:dccd:9aaa with SMTP id
- 3f1490d57ef6-e337f8c6c74mr13337276.6.1731112699203; Fri, 08 Nov 2024 16:38:19
- -0800 (PST)
-Date: Fri,  8 Nov 2024 16:37:59 -0800
-In-Reply-To: <20241109003759.473460-1-irogers@google.com>
-Message-Id: <20241109003759.473460-8-irogers@google.com>
+        d=1e100.net; s=20230601; t=1731119271; x=1731724071;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IbrhjKf7R7Vkeazhqp6cKcRj3efB5Nxd6q1xKyiiDUU=;
+        b=t9I55hFHhx/f8sL7h0a7Ym7UziuQ8zRwnYdxybtZ1jd2ql1/ifnDSIPEMr5kysVWcn
+         FbaIFyolL0l3R6jm4oKu55MZDoxzp1PbaE70oSr2/e9PdpgpEKmpWH43xBXrOUL/X2Xc
+         1sXwDPM004nybrdy2hojRIYMVwxL2Wy64qYuQrdIw2mWUReo6LsgZ8aUG49e/di5S90L
+         M+15GmCRBUr6jvR4jSZRRlPw7xsRMW3XKv7lhNWJdjwBejl3VPd1tbDUJlS8huRds+lN
+         KE7IohoGl84ma9iAD+6fRGwVr0C4PBwdq2w44KIb2nTJ6tmghJ9oGTWo8yF9nr7rAnML
+         YQng==
+X-Forwarded-Encrypted: i=1; AJvYcCVOidQNjVDxOHNHC8NdCPzmjkQGrfQeBfHJBHu+n9UML/NI+/IrrwtCR4Y4xSkQxsrwA+/XPgHMRR6baangqK7X@vger.kernel.org
+X-Gm-Message-State: AOJu0YypPDCUbqAmgwNUgX98K5FKQJ2X/apgGy6C9POpja5sVujvxhMt
+	cCx987Flm1D+x/bGm46J2S0nieqFbuqxlLEq29QawK7lud2bcxOGfHoGQeHXPh2Zi33lQ2m2yBC
+	xSac5E9e30OQ91F9nm5lBDigu6Et4DprChxfK
+X-Gm-Gg: ASbGncsUhDVotZjFCw7/iaosuyNJ+alJ4r/LCBgDJbxGxOpW64Aq6vn/FX/KfZmc2O7
+	5IJLKD4ko7BN2GBc7ADsqp8VPE8p0SwOl
+X-Google-Smtp-Source: AGHT+IE4bPofVUDUJBBK0UGhNtwd4D19IvoNAsJlrxj640cp/4ut4uqLD0BeAyhWjUdYgVRiqXg0l2Ob2aHkx9Zi4wQ=
+X-Received: by 2002:a05:6e02:1605:b0:3a6:b0a3:540b with SMTP id
+ e9e14a558f8ab-3a6f8a97e8fmr1188605ab.20.1731119271162; Fri, 08 Nov 2024
+ 18:27:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241109003759.473460-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
-Subject: [PATCH v9 7/7] perf docs: Document tool and hwmon events
+MIME-Version: 1.0
+References: <20241108082959.10319-1-jean-philippe.romain@foss.st.com>
+In-Reply-To: <20241108082959.10319-1-jean-philippe.romain@foss.st.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+Date: Fri, 8 Nov 2024 18:27:39 -0800
+Message-ID: <CAP-5=fXd_J29XZchia52Bxch3h0Tz0k37DOemLLYdK7u8LBADw@mail.gmail.com>
+Subject: Re: [PATCH] perf list: fix arguments order issue for events printing
+To: Jean-Philippe Romain <jean-philippe.romain@foss.st.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Yoshihiro Furudera <fj5100bi@fujitsu.com>, 
-	James Clark <james.clark@linaro.org>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	Howard Chu <howardchu95@gmail.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Changbin Du <changbin.du@huawei.com>, Ze Gao <zegao2021@gmail.com>, 
-	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	fabrice.gasnier@foss.st.com, alexandre.torgue@foss.st.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a few paragraphs on tool and hwmon events.
+On Fri, Nov 8, 2024 at 12:31=E2=80=AFAM Jean-Philippe Romain
+<jean-philippe.romain@foss.st.com> wrote:
+>
+> Misalignment of callbacks with print_event:
+> - pmu_name and topic arguments to reverse
+>
+> Signed-off-by: Jean-Philippe ROMAIN <jean-philippe.romain@foss.st.com>
+>
+> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> index 65b8cba324be..c5331721dfee 100644
+> --- a/tools/perf/builtin-list.c
+> +++ b/tools/perf/builtin-list.c
+> @@ -112,7 +112,7 @@ static void wordwrap(FILE *fp, const char *s, int sta=
+rt, int max, int corr)
+>         }
+>  }
+>
+> -static void default_print_event(void *ps, const char *pmu_name, const ch=
+ar *topic,
+> +static void default_print_event(void *ps, const char *topic, const char =
+*pmu_name,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/perf-list.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+So it looks like the call sites are doing this wrong too:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/pmus.c?h=3Dperf-tools-next#n504
+```
+...
+print_cb->print_event(print_state,
+aliases[j].pmu_name,
+aliases[j].topic,
+...
+```
+I'll review the call-sites and send a bigger change.
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index 14621f39b375..d0c65fad419a 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -243,6 +243,21 @@ For accessing trace point events perf needs to have read access to
- /sys/kernel/tracing, even when perf_event_paranoid is in a relaxed
- setting.
- 
-+TOOL/HWMON EVENTS
-+-----------------
-+
-+Some events don't have an associated PMU instead reading values
-+available to software without perf_event_open. As these events don't
-+support sampling they can only really be read by tools like perf stat.
-+
-+Tool events provide times and certain system parameters. Examples
-+include duration_time, user_time, system_time and num_cpus_online.
-+
-+Hwmon events provide easy access to hwmon sysfs data typically in
-+/sys/class/hwmon. This information includes temperatures, fan speeds
-+and energy usage.
-+
-+
- TRACING
- -------
- 
--- 
-2.47.0.277.g8800431eea-goog
-
+Thanks,
+Ian
