@@ -1,187 +1,344 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E53B12CD96
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 10:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DB717C227;
+	Mon, 11 Nov 2024 12:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731321920; cv=none; b=cGKHElF9oDp0cEm5c35Zng6R+Mmm2+fR27jZO32AseiWgNzMNsWdKAEC9PsIWN/HKCvin5qZzRc9TX6Wx986ZjpI1jWxrw5gLztYrpcixqWCzEGmq1oOBlxSyGEbPMOyLzaueCdyewOKXYXlztwwwlxzM1sHE7bdC7DUnCnCm2k=
+	t=1731326763; cv=none; b=e/o0Lw86RHglDl89LP9DsSIh9WPM8Hq3pgKrrBpu+ubj1Tspf4L9oOP4X+jvX2VJeE0IAuqeijXCUUIottigNpQioBWsAls5RLUHYIFc0hI0VImCMNkBAR09xSAW4SuOxu2iyHzV86zw1xx7+dDBfrU9vboihKtnFGslTuLZy74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731321920; c=relaxed/simple;
-	bh=V7eDzomyG2wbZJW2GZeYX1VviYt30rqJ90VV+jRG/Zs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a5d3XNjy1DxewUHbOGGUHoGSbzzgKEachTVnD+sxPuHfEHMZMm6SO3YVukslYZ4QxK0VBc1+Y9pT3/wvBpBvERS/qsb5wlYiZYnU6rbnp/OOkZfFOYbQDa73tl+lwWytWwpfaDaH7WYxGfR/4dn3wAqodh9CAq7MQ3RiMoCxWn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pmwZQXuH; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1731326763; c=relaxed/simple;
+	bh=UCW7BqmixN2pLlJElKI1Xe0+wYaHXT8NUMauyfANU4E=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=eoosgzwSJZ81Q8+7t/AxeoNuWGkFGQNOC17D8udYVB6bOxKPyN1C7fwHU+zr3hc0VRhDspfiVyXr1sMCSoUFhUViZtCd9HnASKKhJpc2Z/W0uE7Dp2nb7HJXhjcO79EynGGlQzTXQTmpMGyeeVh1mpev7zr45D60zOkoJRRNFDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K0awGXRA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pmwZQXuH"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4316a44d1bbso35214465e9.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 02:45:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731321917; x=1731926717; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vkcwa4qxyt5fJEDceQ9OcHMtoLSfOU/SlGySwxlpX90=;
-        b=pmwZQXuHY0C5XN6/HG8a/Znp02CtMirkgt/gmZUvn2pgtAGtOOPRSeMhDAKzzwZC6w
-         RMfICb2gAyj6n6VqWnjBdS3QRnqKxAGsqiu+6lp5m4FrZ+hxLeu49mDL90XudnV3rAnP
-         XiiS9SaAb8eFapSjYFn0/JUdLzr1d3ZRZPImGjnCkHUtnISp6kc77ozRpgf8V9x4R/xO
-         I2rGSXJ4n9t/tTk54wZEhrJ7bSppr5RYdTPxuPeT4fuT1pkEUR2729vntZlyMVkdp8UT
-         EAG+uuVzhAlPp9vZEcnF5ETm1tFDsrert/MFRy8UcfOoo1EjW7dkw2K/F67p1tjQXWon
-         qgaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731321917; x=1731926717;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vkcwa4qxyt5fJEDceQ9OcHMtoLSfOU/SlGySwxlpX90=;
-        b=QX/vdZpW/9lhS0h5/tXNOyqlVKv0G0dil72cQJW7sZJ4lRPzAdPO50g+m1YV48E6Ix
-         S/2oMs9ewNNIkFgkyG/HqpT/wD6RUT3LTbhKlNcGZZGU7qATF6GsTFZLEEzsYCk2Af5e
-         nNADR8xFj/CJpHeb3L7NPaa3NzegJN2hdXQe3VmAQZWuWUniq3OnPRHQYLLzmcYaCCYS
-         IHId2idRwIm38uTezAkJxzmziqPGr7/0EeXLC52CsNihlhR4ZnZ/8+MWrZGPx7EfRyqH
-         ee+lGmLtmljnn6JrbC0sM+J+yJuitUORIemI7sYY+PGlnH/X3PSUnj+Qi2hZyI0ia/Rg
-         3wZg==
-X-Gm-Message-State: AOJu0YxcWe5cDnPlp3LXsg/8DxPaU1sIttic93xOLi1iMvkD7GIrVoOv
-	G0h7Pce9tMSsUSRYbZ8HG6P0KggR2jksTtBoNJyrf58gKq1sBqluMlhzqpokwAs=
-X-Google-Smtp-Source: AGHT+IEb5YEM4IHTW47uj3GCrDsg6lFCD+yW156W1Y2eOGScCTJOLJ+vRIrE7CeEoirSjK/dQhpA8g==
-X-Received: by 2002:a05:600c:a04:b0:431:40ca:ce5d with SMTP id 5b1f17b1804b1-432b75172d6mr94146055e9.23.1731321917388;
-        Mon, 11 Nov 2024 02:45:17 -0800 (PST)
-Received: from [192.168.68.163] ([145.224.90.214])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432aa70a1f8sm213572885e9.30.2024.11.11.02.45.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2024 02:45:17 -0800 (PST)
-Message-ID: <d9bfd75a-003a-4f65-abba-b8bcaad13682@linaro.org>
-Date: Mon, 11 Nov 2024 10:45:14 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K0awGXRA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ACC8C4CECF;
+	Mon, 11 Nov 2024 12:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731326763;
+	bh=UCW7BqmixN2pLlJElKI1Xe0+wYaHXT8NUMauyfANU4E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=K0awGXRAjm/hwCIGgDmDjnNMNbKcPwy6i3JGvltnhZHkwbSW7OldpO+oZQ1l2AsF7
+	 ue+7wF8gm9BOykFpbHegoh3BBEWvv/nZsbeK3cHeDkKe10zt8HljGvqwAJ2wDTDYv1
+	 PnuKur1yOaoX4df0Ulmzg3pMJ+HJu5Ue3cTY1di7jh/awesU0HkrRg3G8zCzhM7Ndj
+	 bd8kBzNVNe65PqzswH/J99xV7/ki2FVba+aUs2j2n7za4xgeJeDMaF1xGQu6A+bnhi
+	 9PHGVGfQiO/nRKHW4+EtojYQKeu4jhEqZ6c3ifkfN38K9v4QNm04ooz6sFlPqdOnEC
+	 xFLgQVGXzplmw==
+Date: Mon, 11 Nov 2024 21:05:59 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Li Huafei <lihuafei1@huawei.com>, Masami Hiramatsu (Google)
+ <mhiramat@kernel.org>
+Cc: <acme@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+ <namhyung@kernel.org>, <mark.rutland@arm.com>,
+ <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+ <irogers@google.com>, <adrian.hunter@intel.com>,
+ <kan.liang@linux.intel.com>, <dima@secretsauce.net>,
+ <aleksander.lobakin@intel.com>, <linux-perf-users@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] perf probe: Fix the incorrect line number display
+ in 'perf probe -l'
+Message-Id: <20241111210559.055c990dc94e95666f6464a2@kernel.org>
+In-Reply-To: <20241111170549.e4d1ba7b65aee3d890889277@kernel.org>
+References: <20241108181909.3515716-1-lihuafei1@huawei.com>
+	<20241108181909.3515716-2-lihuafei1@huawei.com>
+	<20241111170549.e4d1ba7b65aee3d890889277@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/4] Prefer sysfs/JSON events also when no PMU is
- provided
-To: Atish Kumar Patra <atishp@rivosinc.com>, Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Ben Gainey <ben.gainey@arm.com>, Junhao He <hejunhao3@huawei.com>,
- linux-riscv@lists.infradead.org, beeman@rivosinc.com,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>,
- Weilin Wang <weilin.wang@intel.com>,
- Dominique Martinet <asmadeus@codewreck.org>
-References: <20241026121758.143259-1-irogers@google.com>
- <CAP-5=fXf9HtqKZyvfXNbKLTB-dL_Ax5Hd0_Gn1J-y0T1SE9wLQ@mail.gmail.com>
- <78eb729c-7594-460f-9d79-97fb683d8b5e@linaro.org>
- <CAHBxVyFXWpczMmWJbpWoLUjQ4nfNC2_h1yZqSd7kSr6N8Rvm5Q@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAHBxVyFXWpczMmWJbpWoLUjQ4nfNC2_h1yZqSd7kSr6N8Rvm5Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+Hi Li,
 
+On Mon, 11 Nov 2024 17:05:49 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-On 08/11/2024 6:37 pm, Atish Kumar Patra wrote:
-> On Fri, Nov 8, 2024 at 4:16 AM James Clark <james.clark@linaro.org> wrote:
->>
->>
->>
->> On 07/11/2024 18:51, Ian Rogers wrote:
->>> On Sat, Oct 26, 2024 at 5:18 AM Ian Rogers <irogers@google.com> wrote:
->>>>
->>>> At the RISC-V summit the topic of avoiding event data being in the
->>>> RISC-V PMU kernel driver came up. There is a preference for sysfs/JSON
->>>> events being the priority when no PMU is provided so that legacy
->>>> events maybe supported via json. Originally Mark Rutland also
->>>> expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
->>>> M? processors, but James Clark more recently tested this and believes
->>>> the driver issues there may not have existed or have been resolved. In
->>>> any case, it is inconsistent that with a PMU event names avoid legacy
->>>> encodings, but when wildcarding PMUs (ie without a PMU with the event
->>>> name) the legacy encodings have priority.
->>>>
->>>> The patch doing this work was reverted in a v6.10 release candidate
->>>> as, even though the patch was posted for weeks and had been on
->>>> linux-next for weeks without issue, Linus was in the habit of using
->>>> explicit legacy events with unsupported precision options on his
->>>> Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
->>>> where ARM decided to call the events bus_cycles and cycles, the latter
->>>> being also a legacy event name. ARM haven't renamed the cycles event
->>>> to a more consistent cpu_cycles and avoided the problem. With these
->>>> changes the problematic event will now be skipped, a large warning
->>>> produced, and perf record will continue for the other PMU events. This
->>>> solution was proposed by Arnaldo.
->>>>
->>>> Two minor changes have been added to help with the error message and
->>>> to work around issues occurring with "perf stat metrics (shadow stat)
->>>> test".
->>>>
->>>> The patches have only been tested on my x86 non-hybrid laptop.
->>>
->>> Hi Atish and James,
->>>
->>> Could I get your tags for this series?
->>>
+> Currently debuginfo__find_probe_point() does
 > 
-> Hi Ian,
-> Thanks for your patches. It definitely helps to have a clean slate
-> implementation
-> for the perf tool. However, I have some open questions about other use cases
-> that we discussed during the RVI Summit.
+>  (1) Get the line and file from CU's lineinfo
+>  (2) Get the real function(function instance) of the address
+>      (use this function's decl_line/decl_file as basement)
+>  (2-1) Search the inlined function scope in the real function
+>      for the given address.
+>  (2-2) if there is inlined function, update basement line/file.
+>  (2-3) verify the filename is same as basement filename.
+>  (3) calculate the relative line number from basement.
 > 
->>> The patches were originally motivated by wanting to make the behavior
->>> of events parsed like "cycles" match that of "cpu/cycles/", the PMU is
->>> wildcarded to "cpu" in the first case. This was divergent because of
->>> ARM we switched from preferring legacy (type = PERF_TYPE_HARDWARE,
->>> config = PERF_COUNT_HW_CPU_CYCLES) to sysfs/json (type=<core PMU's
->>> type>, config=<encoding from event>) when a PMU name was given. This
->>> aligns with RISC-V wanting to use json encodings to avoid complexity
->>> in the PMU driver.
->>>
->>
->> I couldn't find the thread, but I remember fairly recently it was
->> mentioned that RISC-V would be supporting the legacy events after all,
->> maybe it was a comment from Atish? I'm not sure if that changes the
->> requirements for this or not?
->>
->> I still can't really imagine how tooling would work if every tool has to
->> maintain the mappings of basic events like instructions and branches.
->> For example all the perf_event_open tests in ltp use the legacy events.
->>
+> The problem is in (1). Since we have no basement file/line info,
+> we can not verify that the file/line info from CU's lineinfo.
+> As Li shown above, the lineinfo may have several different lines
+> for one address. We need to find most appropriate one based on
+> the basement file/line.
 > 
-> No it has not changed. While this series helps to avoid clunky vendor
-> specific encodings
-> in the driver for perf tool, I am still unsure how we will manage
-> other applications
-> (directly passing legacy events through perf_event_open or
-> perf_evlist__open) will work.
+> Thus what we need are
 > 
-> I have only anecdotal data about folks relying perf legacy events
-> directly to profile
-> their application. All of them use mostly cycle/instruction events though.
-> Are there any users who use other legacy events directly without perf tool ?
-> 
-> If not, we may have only cycle/instruction mapping in the driver and
-> rely on json for everything else.
-> The other use case is virtualization. I have been playing with these
-> patches to find a clean solution to
-> enable all the use cases. If you have any other ideas, please let me know.
+>  - Introduce cu_find_lineinfo_at() which gives basement file/line
+>    information so that it can choose correct one. (hopefully)
+>  - Swap the order of (1) and (2*) so that we can pass the basement
+>    file/line when searching lineinfo. (Also, (2-3) should be right
+>    before (3))
 > 
 
-Yeah I would expect it's mostly cycles and instructions. I searched a 
-bit for PERF_COUNT_HW_BRANCH_MISSES and only found tool/developer type 
-usages, which I suppose we could expect to have to handle the mappings 
-like perf. Although it's not the easiest thing to search for and 
-obviously that only includes open source.
+Can you check below change fixes your issue?
 
-Usages do exist though, there are people posting on stack overflow using 
-it, and other various bug tracker listings. So you would expect those 
-same users to have to use raw event codes and some switch statement to 
-pick the right one for their hardware, or use Perf.
+Thank you,
+
+From 3027c4d3c8be874a7c84a98e73fe0837fd135129 Mon Sep 17 00:00:00 2001
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Date: Mon, 11 Nov 2024 20:56:00 +0900
+Subject: [PATCH] perf-probe: Fix --line option to show correct offset line
+ number from function
+
+Fix --line option to show correct offset if the DWARF line info of the
+probe address has the statement lines in differnt functions.
+
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ tools/perf/util/dwarf-aux.c    | 78 ++++++++++++++++++++++++++++------
+ tools/perf/util/dwarf-aux.h    |  7 +++
+ tools/perf/util/probe-finder.c | 44 +++++++++++++------
+ 3 files changed, 105 insertions(+), 24 deletions(-)
+
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 92eb9c8dc3e5..0bffec6962b8 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -60,14 +60,33 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die)
+ 	return dwarf_formstring(&attr);
+ }
+ 
++static Dwarf_Line *get_next_statement_line(Dwarf_Lines *lines, size_t *idx, Dwarf_Addr addr)
++{
++	bool is_statement = false;
++	Dwarf_Line *line;
++	Dwarf_Addr laddr;
++	size_t l = *idx;
++
++	while (!is_statement) {
++		line = dwarf_onesrcline(lines, ++l);
++		if (!line || dwarf_lineaddr(line, &laddr) != 0 ||
++			dwarf_linebeginstatement(line, &is_statement) != 0)
++				return NULL;
++		if (laddr > addr)
++			return NULL;
++	}
++	*idx = l;
++	return line;
++}
++
+ /* Unlike dwarf_getsrc_die(), cu_getsrc_die() only returns statement line */
+-static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
++static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr,
++								 Dwarf_Lines **lines_p, size_t *idx)
+ {
+ 	Dwarf_Addr laddr;
+ 	Dwarf_Lines *lines;
+ 	Dwarf_Line *line;
+ 	size_t nlines, l, u, n;
+-	bool flag;
+ 
+ 	if (dwarf_getsrclines(cu_die, &lines, &nlines) != 0 ||
+ 	    nlines == 0)
+@@ -91,16 +110,14 @@ static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
+ 		if (!line || dwarf_lineaddr(line, &laddr) != 0)
+ 			return NULL;
+ 	} while (laddr == addr);
+-	l++;
+ 	/* Going forward to find the statement line */
+-	do {
+-		line = dwarf_onesrcline(lines, l++);
+-		if (!line || dwarf_lineaddr(line, &laddr) != 0 ||
+-		    dwarf_linebeginstatement(line, &flag) != 0)
+-			return NULL;
+-		if (laddr > addr)
+-			return NULL;
+-	} while (!flag);
++	line = get_next_statement_line(lines, &l, addr);
++	if (!line)
++		return NULL;
++	if (lines_p)
++		*lines_p = lines;
++	if (idx)
++		*idx = l;
+ 
+ 	return line;
+ }
+@@ -129,7 +146,7 @@ int cu_find_lineinfo(Dwarf_Die *cu_die, Dwarf_Addr addr,
+ 		goto out;
+ 	}
+ 
+-	line = cu_getsrc_die(cu_die, addr);
++	line = cu_getsrc_die(cu_die, addr, NULL, NULL);
+ 	if (line && dwarf_lineno(line, lineno) == 0) {
+ 		*fname = dwarf_linesrc(line, NULL, NULL);
+ 		if (!*fname)
+@@ -141,6 +158,43 @@ int cu_find_lineinfo(Dwarf_Die *cu_die, Dwarf_Addr addr,
+ 	return (*lineno && *fname) ? *lineno : -ENOENT;
+ }
+ 
++/**
++ * cu_find_lineinfo_after - Get a line number after file:line for given address
++ * @cu_die: a CU DIE
++ * @addr: An address
++ * @lineno: a pointer which returns the line number
++ * @fname: the filename where searching the line
++ * @baseline: the basement line number
++ *
++ * Find a line number after @baseline in @fname for @addr in @cu_die.
++ * Return the found line number, or -ENOENT if not found.
++ */
++int cu_find_lineinfo_after(Dwarf_Die *cu_die, Dwarf_Addr addr,
++					int *lineno, const char *fname, int baseline)
++{
++	const char *line_fname;
++	Dwarf_Lines *lines;
++	Dwarf_Line *line;
++	size_t idx = 0;
++
++	if (cu_find_lineinfo(cu_die, addr, &line_fname, lineno) < 0)
++		return -ENOENT;
++
++	if (!strcmp(line_fname, fname) && baseline <= *lineno)
++		return *lineno;
++
++	line = cu_getsrc_die(cu_die, addr, &lines, &idx);
++
++	while (line && dwarf_lineno(line, lineno) == 0) {
++		line_fname = dwarf_linesrc(line, NULL, NULL);
++		if (line_fname && !strcmp(line_fname, fname) && baseline <= *lineno)
++			return *lineno;
++		line = get_next_statement_line(lines, &idx, addr);
++	}
++
++	return -ENOENT;
++}
++
+ static int __die_find_inline_cb(Dwarf_Die *die_mem, void *data);
+ 
+ /**
+diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+index bd7505812569..19edf21e2f78 100644
+--- a/tools/perf/util/dwarf-aux.h
++++ b/tools/perf/util/dwarf-aux.h
+@@ -23,6 +23,13 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die);
+ int cu_find_lineinfo(Dwarf_Die *cudie, Dwarf_Addr addr,
+ 		     const char **fname, int *lineno);
+ 
++/*
++ * Get the most likely line number for given address in given filename
++ * and basement line number.
++ */
++int cu_find_lineinfo_after(Dwarf_Die *cudie, Dwarf_Addr addr,
++					int *lineno, const char *fname, int baseline);
++
+ /* Walk on functions at given address */
+ int cu_walk_functions_at(Dwarf_Die *cu_die, Dwarf_Addr addr,
+ 			 int (*callback)(Dwarf_Die *, void *), void *data);
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 13ff45d3d6a4..efcacb5568e5 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1578,7 +1578,8 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
+ {
+ 	Dwarf_Die cudie, spdie, indie;
+ 	Dwarf_Addr _addr = 0, baseaddr = 0;
+-	const char *fname = NULL, *func = NULL, *basefunc = NULL, *tmp;
++	const char *fname = NULL, *func = NULL, *basefunc = NULL;
++	const char *basefname = NULL, *tmp;
+ 	int baseline = 0, lineno = 0, ret = 0;
+ 
+ 	/* We always need to relocate the address for aranges */
+@@ -1592,11 +1593,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
+ 		goto end;
+ 	}
+ 
+-	/* Find a corresponding line (filename and lineno) */
+-	cu_find_lineinfo(&cudie, (Dwarf_Addr)addr, &fname, &lineno);
+-	/* Don't care whether it failed or not */
+-
+-	/* Find a corresponding function (name, baseline and baseaddr) */
++	/* Find the basement function (name, baseline and baseaddr) */
+ 	if (die_find_realfunc(&cudie, (Dwarf_Addr)addr, &spdie)) {
+ 		/* Get function entry information */
+ 		func = basefunc = dwarf_diename(&spdie);
+@@ -1607,10 +1604,16 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
+ 			goto post;
+ 		}
+ 
+-		fname = die_get_decl_file(&spdie);
++		basefname = die_get_decl_file(&spdie);
++		if (!basefname) {
++			lineno = 0;
++			goto post;
++		}
++
+ 		if (addr == baseaddr) {
+ 			/* Function entry - Relative line number is 0 */
+ 			lineno = baseline;
++			fname = basefname;
+ 			goto post;
+ 		}
+ 
+@@ -1627,7 +1630,9 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
+ 				 */
+ 				lineno = die_get_call_lineno(&indie);
+ 				fname = die_get_call_file(&indie);
+-				break;
++				if (!fname || strcmp(fname, basefname))
++					lineno = 0;
++				goto post;
+ 			} else {
+ 				/*
+ 				 * addr is in an inline function body.
+@@ -1636,20 +1641,35 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
+ 				 * be the entry line of the inline function.
+ 				 */
+ 				tmp = dwarf_diename(&indie);
+-				if (!tmp ||
+-				    dwarf_decl_line(&indie, &baseline) != 0)
+-					break;
++				basefname = die_get_decl_file(&indie);
++				if (!tmp || !basefname ||
++				    dwarf_decl_line(&indie, &baseline) != 0) {
++					lineno = 0;
++					goto post;
++				}
+ 				func = tmp;
+ 				spdie = indie;
+ 			}
+ 		}
++	}
++
++	if (!lineno) {
++		/* Find a corresponding line (filename and lineno) */
++		if (cu_find_lineinfo_after(&cudie, (Dwarf_Addr)addr, &lineno,
++								   basefname, baseline) < 0)
++			lineno = 0;
++		else
++			fname = basefname;
++	}
++
++post:
++	if (lineno) {
+ 		/* Verify the lineno and baseline are in a same file */
+ 		tmp = die_get_decl_file(&spdie);
+ 		if (!tmp || (fname && strcmp(tmp, fname) != 0))
+ 			lineno = 0;
+ 	}
+ 
+-post:
+ 	/* Make a relative line number or an offset */
+ 	if (lineno)
+ 		ppt->line = lineno - baseline;
+-- 
+2.47.0.277.g8800431eea-goog
 
 
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
