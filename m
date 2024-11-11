@@ -1,291 +1,268 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A341A7066
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 18:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1A01A2567
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 18:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731348676; cv=none; b=RelBBj4aXGMbEy1h4l4FaONvjVT2UY3LOgWNfUIZyy3vPGrg+OVMUr8hjmKkLK++Ph/Nlzmqt5Yh/6UFvFrQjp2wbWBxsgCrdufAsrR8q60xcqyLX8oqJnim30fMnIKH8FTnNdyDhszrHz14DiM48YZouajrl5W261KraA2p4c0=
+	t=1731349232; cv=none; b=MZtyxNqrG36zQvjWvU611kTQ5VBxS/zrw97Rl6CdKTVjvlBSQGYEDr7JL8ZwQ7TGFh2nsN5xFY9C+kUuguajPt62FGX06VLZQ0x0RfghggPLe4qhH9G+UtO0zNp87oUasauox1zCvZagod6chs7v4xj177vMjR/ahF+NWgExWhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731348676; c=relaxed/simple;
-	bh=C8xKwoGQoMQK9ZgUsMPcEh0TUdId4YbQ9YGMzarKLKg=;
+	s=arc-20240116; t=1731349232; c=relaxed/simple;
+	bh=BjBfjJdldjSvoJiOX4p+lvkjb82Phfr9vuxzVSaa6Y4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TTsGcorlV6pAZv0rvb83PqE6jWao/D7P6cxA8QLKrA8mqM68j0w49w/Y1HnLa8yM2B4543paAeH7d22w3kOYaK+4yjiWCioNny8xSI+pZJgkbej2QMFjWvZgJZfrq7IcZUlihDkn16wNVJ2iSTPp4h58NtUBGH0bvpJlMdYhou8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QujB9rwJ; arc=none smtp.client-ip=209.85.160.182
+	 To:Cc:Content-Type; b=sOt9S093lasGJ765OPZq/2ZTceBS/vxOIzOQ8LyDKmPSxhjvVEttr8FyaExmEteWJjBpWEzKTDnzljW4XqtMrMHLBr2eOerReLvTTorgE798wMeBU9wGZserCERWa4a0/RrsmFR5k4IL6UoXsRuCkbA8BiONYPyM1PvJ/McEkbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NBZl4qAW; arc=none smtp.client-ip=209.85.166.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QujB9rwJ"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4608dddaa35so16281cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 10:11:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NBZl4qAW"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a4e4776f79so7545ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 10:20:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731348672; x=1731953472; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731349229; x=1731954029; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qLeUScaZOLp4AS2pmDqoo02DY+qDAt8yb7nGV4VChPc=;
-        b=QujB9rwJf1vbXBMYn3vi/bjbbadYHe/Dfe5A9UVF1zz0MUjMKZZMPVy3Ob2814JBid
-         UGwq5NZPYMHwNuORkf9A9X1WOtVoAUfZnVnBTYmLCO1k6miKMY07F3Vqat9EvqK4BXcw
-         Zdumrsvyu7V6nwAjDzn5ciDMNIMkUv7kQ6IK9YySuRzINqoWGh4onwxM6UF2ktM8cCJv
-         PAARij9/mnQR0tH2cCwPfD+H8mKGeY6W9IJamXnN8QtZvRN3kgmMqkScIEiSfRRAMMv6
-         nnfbhkcbgfIgsGwZF0u7O5Vc+ksFW8V/OXKgLf0l1zpDcMW4l7KnIS5hWqx14wMh9xWE
-         WEPA==
+        bh=h3sA5IBP5XfCzOqDGRj5yXsIlkQEa9Ya5EuikdBBSd8=;
+        b=NBZl4qAWDIbK3jylnwZ96f2EEgC1GI7sivkrnhqHX0qp49ffyGKyuNRadKYvQGvHGq
+         dX6bfUOvAj1k58IZx0xc4I44xc9wr65z/Nt1QsRGfl7pZPlz7U5BKzBMfo2wLmSUrcMb
+         l6GhX4dCnn/zkCQxZs6IJhP7Cv2Gx0jmuJV7pm/Q34gNYjvV+u4xTUByh6T35hLuFDi7
+         +hHD01L9KY64D3Hr43fA/XLYWlvOMM2fOylcHSuWRYm5duBfj5oaXcsGtgnFct2eoins
+         5M8bGRJK2k50VQvR7Tc5zeO8u9RQ8S5dUfCKuqzy1wRAe20piWdxKBCXOECrIfrRcSJk
+         Usdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731348672; x=1731953472;
+        d=1e100.net; s=20230601; t=1731349229; x=1731954029;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qLeUScaZOLp4AS2pmDqoo02DY+qDAt8yb7nGV4VChPc=;
-        b=UJWxwWOOYQE6BMgq2E0dn0nzOeUU58/1a4jeej+d2vF97wpvgJ6MDbtGBODcitGVwm
-         fcN0q9DQgIsTY1SoY5QXOSUqLR4J+DzTHsq4FjcGvj6PZGLQGT+0T4puRf9g4Cfljvii
-         0qziyuSO+rTm8NtWWhAhF3Ao0X9itMDCYq0pnJlpg75v36IDOaJZoFNmdSu/nQmfXBVq
-         53fGbxWdsVF3nQODl7gBQz+4uxAdBhUis2kuMxRaHQHpqZiyzLkHmC7pLen3W/o1AobJ
-         XDrTU08xVZMbucOg6M1phcmoEprmk7E9IhtBG1inJ7cQPWp9c+a4gJcoPK3rU7lGVmUi
-         cKig==
-X-Forwarded-Encrypted: i=1; AJvYcCV9bWdrDK1e60mytMJGWvt6Lqx/Cvf/V6WDwO/agrE46TrzkUPbVURMib2OcCK1QpS/KU3UPEzBmB+Q9eGsp9Ws@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAZgUypoO63yspNwSuifbVTQRtYFD7wm9PGjFI0ldfBsuZYogy
-	eMdh9QRM5fh2rYy5iZ7Gzw9qKPpqFXvtvPfexIO6n+weGjqOcQcKFrj1ExzKvhzFs7Tybu4nqZV
-	/3nMN9/2m0UgE3X+/FZFG5M04KTrvT3+9UsSO
-X-Gm-Gg: ASbGncu6TdebNbht2ml92hNrfM2eX+whCh4xQI6SDnppSNVxOpBSeVMEzV/ii9aM4hi
-	CkGuDL4IqVcdZVp1FaLbEduWbjx1vvy7mgUEVWNXcgibQZT9rkFvoOU8RsBImX7g=
-X-Google-Smtp-Source: AGHT+IFzpXd9zGmGA+nX7CLwsyojNd+rl5R+mn5ACPkmw1xt2toSBXUTHR+DciUmrkBHeWjJboxHHcNAxN+MryXdOps=
-X-Received: by 2002:a05:622a:1813:b0:460:491e:d2a2 with SMTP id
- d75a77b69052e-46317e2f552mr5075631cf.17.1731348672277; Mon, 11 Nov 2024
- 10:11:12 -0800 (PST)
+        bh=h3sA5IBP5XfCzOqDGRj5yXsIlkQEa9Ya5EuikdBBSd8=;
+        b=csS0i9XAZknD3wvxw2pHnSFxKzJxriW/tVGSBbCjkiJQTey7SAOY6Qjofm+Rhad360
+         uX0d6npr44gwSTEp1hpghK9wAoO1WgVc1mewZ4X61E43ZoEGPreTKjIy0OvYptEXisqO
+         BXPFNEYHqRVr+UaW8Y4/AlmpHP2+TlT9NdNtBxoOv+BlSP+koSUzKhW56rR5yZxJWyuL
+         gSdGzeMmE5Yt8uiCEfQ3kqgNPJrQfc5Jeavif3iExWZaBBEJxkqKRmpu2HtDk8eoZSPH
+         StdlImXtgqmIg+c47sexOrB+Q382xmsG89HKiGbTO+r3I1EM6IZflKNK/pFbyOqgXiWp
+         0d/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUHPaFqMon4yNqKrRpU3BiMRsZtNNXJYq1ASNzKHQAf7VQztmM2h0joSJFlZC8sf3DOEO+Qv+dYrXlK+EpBjRD2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG3YCExlivVLb9LfgUS6KuSvOUEskiZTeDYGIu9oa8kPjZfP92
+	vCNJphPmGbaWycGgy1roOJRaStwIeI0sR/w5kf59adnEvZ4SPmx4PsK0uLcHmxKT8sp9VZUYL6h
+	Aty3rYGDjScuQhwCi5c6fRpUqYAMCK+XKzaSd
+X-Gm-Gg: ASbGncsQYNEmRurJ7lZvRV5KcCoIPaKfZixsNoBEKZcv5CbiS4ZcKifskMPqJrA8awX
+	/XaC48ZmmRlK1vi0Aq10i5GtesDtVbYz9hJ1yjPV/Aqt5GQfRreHAu+BvCfBfhB8=
+X-Google-Smtp-Source: AGHT+IE6rUjryIlk/oYvovqa8d72bal0qewnNOnb64tZJbTtsQ71iPHXvuK4GcoX5nuQMqeVgHtcmzmOzdXp+73DabY=
+X-Received: by 2002:a05:6e02:1605:b0:3a6:b0a3:540b with SMTP id
+ e9e14a558f8ab-3a6f8a97e8fmr7719985ab.20.1731349229254; Mon, 11 Nov 2024
+ 10:20:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241108204137.2444151-1-howardchu95@gmail.com>
- <20241108204137.2444151-6-howardchu95@gmail.com> <CAP-5=fXDd2MUvukB6NVMN962wxjPN6_F-AxOxOUUb-uj5BVV0A@mail.gmail.com>
- <CAH0uvogkoUW+hA7V8TgyUT-PrGx6JajKZDMj9-w9z25QVT5O4Q@mail.gmail.com>
-In-Reply-To: <CAH0uvogkoUW+hA7V8TgyUT-PrGx6JajKZDMj9-w9z25QVT5O4Q@mail.gmail.com>
+References: <20241109025801.560378-1-irogers@google.com> <7676a058-e7ae-4c6b-a9f8-be450b64f5e1@linux.intel.com>
+ <ZzJAQeHqFT_Z9JiW@x1>
+In-Reply-To: <ZzJAQeHqFT_Z9JiW@x1>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 11 Nov 2024 10:11:01 -0800
-Message-ID: <CAP-5=fVXgQjAh1OFDN7DMp=xw5cAHRaO8j8UQfe4CZHrZc8uFg@mail.gmail.com>
-Subject: Re: [PATCH v7 05/10] perf record --off-cpu: Dump off-cpu samples in BPF
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, peterz@infradead.org, namhyung@kernel.org, 
-	mingo@redhat.com, mark.rutland@arm.com, james.clark@linaro.org, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Mon, 11 Nov 2024 10:20:18 -0800
+Message-ID: <CAP-5=fXEe+O+pctnO-MhCLrX071uvkLzA-L9AWP=LR81YKYG6Q@mail.gmail.com>
+Subject: Re: [PATCH v1] perf list: Fix topic and pmu_name argument order
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 11, 2024 at 10:05=E2=80=AFAM Howard Chu <howardchu95@gmail.com>=
- wrote:
+On Mon, Nov 11, 2024 at 9:35=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Hi Ian,
->
-> On Mon, Nov 11, 2024 at 9:54=E2=80=AFAM Ian Rogers <irogers@google.com> w=
-rote:
+> On Mon, Nov 11, 2024 at 09:48:41AM -0500, Liang, Kan wrote:
 > >
-> > On Fri, Nov 8, 2024 at 12:41=E2=80=AFPM Howard Chu <howardchu95@gmail.c=
-om> wrote:
+> >
+> > On 2024-11-08 9:58 p.m., Ian Rogers wrote:
+> > > From: Jean-Philippe Romain <jean-philippe.romain@foss.st.com>
 > > >
-> > > Collect tid, period, callchain, and cgroup id and dump them when off-=
-cpu
-> > > time threshold is reached.
+> > > Fix function definitions to match header file declaration. Fix two
+> > > callers to pass the arguments in the right order.
 > > >
-> > > We don't collect the off-cpu time twice (the delta), it's either in
-> > > direct samples, or accumulated samples that are dumped at the end of
-> > > perf.data.
+> > > On Intel Tigerlake, before:
+> > > ```
+> > > $ perf list -j|grep "\"Topic\""|sort|uniq
+> > >         "Topic": "cache",
+> > >         "Topic": "cpu",
+> > >         "Topic": "floating point",
+> > >         "Topic": "frontend",
+> > >         "Topic": "memory",
+> > >         "Topic": "other",
+> > >         "Topic": "pfm icl",
+> > >         "Topic": "pfm ix86arch",
+> > >         "Topic": "pfm perf_raw",
+> > >         "Topic": "pipeline",
+> > >         "Topic": "tool",
+> > >         "Topic": "uncore interconnect",
+> > >         "Topic": "uncore memory",
+> > >         "Topic": "uncore other",
+> > >         "Topic": "virtual memory",
+> > > $ perf list -j|grep "\"Unit\""|sort|uniq
+> > >         "Unit": "cache",
+> > >         "Unit": "cpu",
+> > >         "Unit": "cstate_core",
+> > >         "Unit": "cstate_pkg",
+> > >         "Unit": "i915",
+> > >         "Unit": "icl",
+> > >         "Unit": "intel_bts",
+> > >         "Unit": "intel_pt",
+> > >         "Unit": "ix86arch",
+> > >         "Unit": "msr",
+> > >         "Unit": "perf_raw",
+> > >         "Unit": "power",
+> > >         "Unit": "tool",
+> > >         "Unit": "uncore_arb",
+> > >         "Unit": "uncore_clock",
+> > >         "Unit": "uncore_imc_free_running_0",
+> > >         "Unit": "uncore_imc_free_running_1",
+> > > ```
 > > >
-> > > Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> > > Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> > > After:
+> > > ```
+> > > $ perf list -j|grep "\"Topic\""|sort|uniq
+> > >         "Topic": "cache",
+> > >         "Topic": "floating point",
+> > >         "Topic": "frontend",
+> > >         "Topic": "memory",
+> > >         "Topic": "other",
+> > >         "Topic": "pfm icl",
+> > >         "Topic": "pfm ix86arch",
+> > >         "Topic": "pfm perf_raw",
+> > >         "Topic": "pipeline",
+> > >         "Topic": "tool",
+> > >         "Topic": "uncore interconnect",
+> > >         "Topic": "uncore memory",
+> > >         "Topic": "uncore other",
+> > >         "Topic": "virtual memory",
+> > > $ perf list -j|grep "\"Unit\""|sort|uniq
+> > >         "Unit": "cpu",
+> > >         "Unit": "cstate_core",
+> > >         "Unit": "cstate_pkg",
+> > >         "Unit": "i915",
+> > >         "Unit": "icl",
+> > >         "Unit": "intel_bts",
+> > >         "Unit": "intel_pt",
+> > >         "Unit": "ix86arch",
+> > >         "Unit": "msr",
+> > >         "Unit": "perf_raw",
+> > >         "Unit": "power",
+> > >         "Unit": "tool",
+> > >         "Unit": "uncore_arb",
+> > >         "Unit": "uncore_clock",
+> > >         "Unit": "uncore_imc_free_running_0",
+> > >         "Unit": "uncore_imc_free_running_1",
+> > > ```
+> > >
+> > > Fixes: e5c6109f4813 ("perf list: Reorganize to use callbacks to allow=
+ honouring command line options")
+> > > Signed-off-by: Jean-Philippe Romain <jean-philippe.romain@foss.st.com=
+>
+> > > Tested-by: Ian Rogers <irogers@google.com>
+> >
+> > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+>
 > > > ---
-> > >  tools/perf/util/bpf_skel/off_cpu.bpf.c | 83 ++++++++++++++++++++++++=
---
-> > >  1 file changed, 78 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util=
-/bpf_skel/off_cpu.bpf.c
-> > > index dc6acafb9353..bf652c30b1c9 100644
-> > > --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> > > +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> > > @@ -18,10 +18,18 @@
-> > >  #define MAX_STACKS   32
-> > >  #define MAX_ENTRIES  102400
-> > >
-> > > +#define MAX_CPUS  4096
-> > > +#define MAX_OFFCPU_LEN 37
-> > > +
-> > > +struct stack {
-> > > +       u64 array[MAX_STACKS];
-> > > +};
-> > > +
-> > >  struct tstamp_data {
-> > >         __u32 stack_id;
-> > >         __u32 state;
-> > >         __u64 timestamp;
-> > > +       struct stack stack;
-> > >  };
-> > >
-> > >  struct offcpu_key {
-> > > @@ -39,6 +47,24 @@ struct {
-> > >         __uint(max_entries, MAX_ENTRIES);
-> > >  } stacks SEC(".maps");
-> > >
-> > > +struct offcpu_data {
-> > > +       u64 array[MAX_OFFCPU_LEN];
-> > > +};
-> > > +
-> > > +struct {
-> > > +       __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-> > > +       __uint(key_size, sizeof(__u32));
-> > > +       __uint(value_size, sizeof(__u32));
-> > > +       __uint(max_entries, MAX_CPUS);
-> > > +} offcpu_output SEC(".maps");
-> >
-> > Does patch 4 build without this definition? (we're in patch 5 here). I
-> > think this should be in patch 4.
+> > > Note from Ian, I fixed the two callers and added it to
+> > > Jean-Phillippe's original change.
 >
-> Okay sure thanks :)
+> I think that in this case we need:
 >
-> >
-> > > +
-> > > +struct {
-> > > +       __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
-> > > +       __uint(key_size, sizeof(__u32));
-> > > +       __uint(value_size, sizeof(struct offcpu_data));
-> > > +       __uint(max_entries, 1);
-> > > +} offcpu_payload SEC(".maps");
-> > > +
-> > >  struct {
-> > >         __uint(type, BPF_MAP_TYPE_TASK_STORAGE);
-> > >         __uint(map_flags, BPF_F_NO_PREALLOC);
-> > > @@ -185,6 +211,39 @@ static inline int can_record(struct task_struct =
-*t, int state)
-> > >         return 1;
-> > >  }
-> > >
-> > > +static inline int copy_stack(struct stack *from, struct offcpu_data =
-*to, int n)
-> > > +{
-> > > +       int len =3D 0;
-> > > +
-> > > +       for (int i =3D 0; i < MAX_STACKS && from->array[i]; ++i, ++le=
-n)
-> > > +               to->array[n + 2 + i] =3D from->array[i];
-> > > +
-> > > +       return len;
-> > > +}
-> > > +
-> >
-> > Dump is something of a generic name. Could you kernel-doc this
-> > function to describe the behavior?
+> [ I fixed the two callers and added it to Jean-Phillippe's original chang=
+e. ]
+> Signed-off-by: Ian Rogers <irogers@google.com>
 >
-> Sure.
->
-> >
-> > > +static int off_cpu_dump(void *ctx, struct offcpu_data *data, struct =
-offcpu_key *key,
-> > > +                       struct stack *stack, __u64 delta, __u64 times=
-tamp)
-> > > +{
-> > > +       /* dump tid, period, callchain, and cgroup id */
-> > > +       int n =3D 0, len =3D 0;
-> > > +
-> > > +       data->array[n++] =3D (u64)key->tgid << 32 | key->pid;
-> > > +       data->array[n++] =3D delta;
-> > > +
-> > > +       /* data->array[n] is callchain->nr (updated later) */
-> > > +       data->array[n + 1] =3D PERF_CONTEXT_USER;
-> > > +       data->array[n + 2] =3D 0;
-> > > +       len =3D copy_stack(stack, data, n);
-> > > +
-> > > +       /* update length of callchain */
-> > > +       data->array[n] =3D len + 1;
-> > > +       n +=3D len + 2;
-> > > +
-> > > +       data->array[n++] =3D key->cgroup_id;
-> > > +
-> > > +       return bpf_perf_event_output(ctx, &offcpu_output, BPF_F_CURRE=
-NT_CPU, data, n * sizeof(u64));
-> > > +}
-> > > +
-> > >  static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
-> > >                         struct task_struct *next, int state)
-> > >  {
-> > > @@ -209,6 +268,12 @@ static int off_cpu_stat(u64 *ctx, struct task_st=
-ruct *prev,
-> > >         pelem->state =3D state;
-> > >         pelem->stack_id =3D stack_id;
-> > >
-> > > +       /*
-> > > +        * If stacks are successfully collected by bpf_get_stackid(),=
- collect them once more
-> > > +        * in task_storage for direct off-cpu sample dumping
-> > > +        */
-> > > +       if (stack_id > 0 && bpf_get_stack(ctx, &pelem->stack, MAX_STA=
-CKS * sizeof(u64), BPF_F_USER_STACK)) {
-> > > +       }
-> >
-> > Why the empty if?
->
-> Forgot to say in the commit message, bpf_get_stack() has a return
-> value and if I don't use it I'll get result unused warning from clang,
-> so either this or:
->     int __attribute__((unused)) len;
->     len =3D bpf_get_stack(ctx, stack_p->array, MAX_STACKS * sizeof(u64),
->
-> We don't need error handling, it goes to "next:" naturally, there's no
-> code in between.
+> Ok?
 
-Perhaps capture that as a comment in the `if` and/or add a continue,
-just to show that the code doesn't care about errors.
+Sgtm.
 
 Thanks,
 Ian
 
-> >
-> > > +
-> > >  next:
-> > >         pelem =3D bpf_task_storage_get(&tstamp, next, NULL, 0);
+> > > ---
+> > >  tools/perf/builtin-list.c | 4 ++--
+> > >  tools/perf/util/pfm.c     | 4 ++--
+> > >  tools/perf/util/pmus.c    | 2 +-
+> > >  3 files changed, 5 insertions(+), 5 deletions(-)
 > > >
-> > > @@ -223,11 +288,19 @@ static int off_cpu_stat(u64 *ctx, struct task_s=
-truct *prev,
-> > >                 __u64 delta =3D ts - pelem->timestamp;
-> > >                 __u64 *total;
+> > > diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> > > index b8378ba18c28..9e7fdfcdd7ff 100644
+> > > --- a/tools/perf/builtin-list.c
+> > > +++ b/tools/perf/builtin-list.c
+> > > @@ -113,7 +113,7 @@ static void wordwrap(FILE *fp, const char *s, int=
+ start, int max, int corr)
+> > >     }
+> > >  }
 > > >
-> > > -               total =3D bpf_map_lookup_elem(&off_cpu, &key);
-> > > -               if (total)
-> > > -                       *total +=3D delta;
-> > > -               else
-> > > -                       bpf_map_update_elem(&off_cpu, &key, &delta, B=
-PF_ANY);
-> > > +               if (delta >=3D offcpu_thresh) {
-> > > +                       int zero =3D 0;
-> > > +                       struct offcpu_data *data =3D bpf_map_lookup_e=
-lem(&offcpu_payload, &zero);
-> > > +
-> > > +                       if (data)
-> > > +                               off_cpu_dump(ctx, data, &key, &pelem-=
->stack, delta, pelem->timestamp);
-> > > +               } else {
-> > > +                       total =3D bpf_map_lookup_elem(&off_cpu, &key)=
-;
-> > > +                       if (total)
-> > > +                               *total +=3D delta;
-> > > +                       else
-> > > +                               bpf_map_update_elem(&off_cpu, &key, &=
-delta, BPF_ANY);
-> > > +               }
-> >
-> > Looks good! :-)
-> >
-> > Thanks,
-> > Ian
-> >
+> > > -static void default_print_event(void *ps, const char *pmu_name, cons=
+t char *topic,
+> > > +static void default_print_event(void *ps, const char *topic, const c=
+har *pmu_name,
+> > >                             const char *event_name, const char *event=
+_alias,
+> > >                             const char *scale_unit __maybe_unused,
+> > >                             bool deprecated, const char *event_type_d=
+esc,
+> > > @@ -354,7 +354,7 @@ static void fix_escape_fprintf(FILE *fp, struct s=
+trbuf *buf, const char *fmt, ..
+> > >     fputs(buf->buf, fp);
+> > >  }
 > > >
-> > >                 /* prevent to reuse the timestamp later */
-> > >                 pelem->timestamp =3D 0;
-> > > --
-> > > 2.43.0
+> > > -static void json_print_event(void *ps, const char *pmu_name, const c=
+har *topic,
+> > > +static void json_print_event(void *ps, const char *topic, const char=
+ *pmu_name,
+> > >                          const char *event_name, const char *event_al=
+ias,
+> > >                          const char *scale_unit,
+> > >                          bool deprecated, const char *event_type_desc=
+,
+> > > diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
+> > > index 5ccfe4b64cdf..0dacc133ed39 100644
+> > > --- a/tools/perf/util/pfm.c
+> > > +++ b/tools/perf/util/pfm.c
+> > > @@ -233,7 +233,7 @@ print_libpfm_event(const struct print_callbacks *=
+print_cb, void *print_state,
+> > >     }
 > > >
->
-> Thanks,
-> Howard
+> > >     if (is_libpfm_event_supported(name, cpus, threads)) {
+> > > -           print_cb->print_event(print_state, pinfo->name, topic,
+> > > +           print_cb->print_event(print_state, topic, pinfo->name,
+> > >                                   name, info->equiv,
+> > >                                   /*scale_unit=3D*/NULL,
+> > >                                   /*deprecated=3D*/NULL, "PFM event",
+> > > @@ -267,8 +267,8 @@ print_libpfm_event(const struct print_callbacks *=
+print_cb, void *print_state,
+> > >                             continue;
+> > >
+> > >                     print_cb->print_event(print_state,
+> > > -                                   pinfo->name,
+> > >                                     topic,
+> > > +                                   pinfo->name,
+> > >                                     name, /*alias=3D*/NULL,
+> > >                                     /*scale_unit=3D*/NULL,
+> > >                                     /*deprecated=3D*/NULL, "PFM event=
+",
+> > > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > > index 107de86c2637..6d4c7c9ecf3a 100644
+> > > --- a/tools/perf/util/pmus.c
+> > > +++ b/tools/perf/util/pmus.c
+> > > @@ -501,8 +501,8 @@ void perf_pmus__print_pmu_events(const struct pri=
+nt_callbacks *print_cb, void *p
+> > >                     goto free;
+> > >
+> > >             print_cb->print_event(print_state,
+> > > -                           aliases[j].pmu_name,
+> > >                             aliases[j].topic,
+> > > +                           aliases[j].pmu_name,
+> > >                             aliases[j].name,
+> > >                             aliases[j].alias,
+> > >                             aliases[j].scale_unit,
