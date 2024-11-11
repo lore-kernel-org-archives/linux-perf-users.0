@@ -1,115 +1,160 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237AD55C29;
-	Mon, 11 Nov 2024 12:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6682219F47E;
+	Mon, 11 Nov 2024 12:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731326944; cv=none; b=su8vLMnSUtSaoygFJXJ0Cb6s7oKEGy3LUzt2pZNtPW6mdUeo+o7zZKeEzNiSs/ZAkBvAUpn/63AZqXVprUlDz1RG8IODO4Fa0MeTjf31ouxLYn4ja6uBXcJsZyXVEv9gGHB46ZtcZzlrloSDoBl4lHTyj7YSSGnzDY6dVAa7xsE=
+	t=1731329756; cv=none; b=FnB/xG+GHaGD8yANOWJOZYfN6AHfIRim+eS0k8YVy8w/YyV/RE3dYBHHJ/U4f/zbHgB8byE7Zd1S8j6PDEnyBffxoxM+CYQg/0Mzg1fShX1PniQI1JfO+6hWs6mKwX10p7kfmrvHC0pwUEuCR4Qms5WiHQXpOZcpYfic4pM+90Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731326944; c=relaxed/simple;
-	bh=DIW+TkZZltCh8IP3a/tVKlRlRPbJzpnZ2XEG15Z1scQ=;
+	s=arc-20240116; t=1731329756; c=relaxed/simple;
+	bh=qhkVxFOMf1xxZ2nYYbWGmBKmSZ/u0vQh+1FH4lvbdN8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qJyAQCwcMZbW0fmviB1FFpgcxwrEF9QjKEX13JZH6i+L1qzxVxJuoV+LY2kpnJ9NQCVuQsdbkTg64W+A+Lr6GSMVWMq30HdJa+BFypuatPzmDC+7fsLrwMENwBsEf8NkWp7/ScsZq8JKLRmm0cofxzMvGUUIb0XDLDpT/cHJbFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QRyBUeiD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zp8Py/Tm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QRyBUeiD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zp8Py/Tm"
-Date: Mon, 11 Nov 2024 13:08:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1731326939;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o3pctUoeQeEvpMMz5ZcdubkrOFvovsPeScLjbuDtiBg=;
-	b=QRyBUeiDvrOUOnA7E9x0julKW7aSepRPTIxTVI0mnvkGAR0qNd/rDkk8hCMgrH7e5nZvNP
-	1RYx7KE5fE0veS5U8Z30z+GkPCZlD6U8EmB6r2IIXhYJS1Is0xN26TivyJ6LJrw/cFWf4Q
-	QClugEX0BeNo29Zl7D55v1/1AjqCGwVVJURK/IhURzlmLNdWo0Bs7hcPBL+PNRfqZLR5hi
-	SYUTJNevr2mj9nZ24BEXDRtXiNISUpl4FRVwlDfTzAA5PLYCEyhDbxzYWliVqonlW5foHT
-	37kI/1dsihoe2hrrtNMTrcMBP2g0lqfEo2B41rF3i9eYvDQ2o3AKIg1+2i0FCA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1731326939;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o3pctUoeQeEvpMMz5ZcdubkrOFvovsPeScLjbuDtiBg=;
-	b=Zp8Py/TmNxj6NnPmjLwu+NcM/Z5ohQx8TShaoX3UfLzf6DiEJgP5dus2s//5TkFEGn1JV3
-	j+CPdnF9OceQ+JBg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, "Lai, Yi" <yi1.lai@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=VMMaFHjelsYpFSNg8CSbBrjBDiScqxQgewfomEcgAO2iCUAvdnhrZ/iGA+Ua/4rd8IVAtlYcCB2rtpeKKd6yuDO5QwO8ZBEHcmF3WQoQt9pkpoLbix+Yji+Q4K0KceWGANRFq1GGg0ZIwnI+CBbpAhCcjg4p7L1VDbTj9AyZ+lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 496AD1CE0;
+	Mon, 11 Nov 2024 04:56:22 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B01C3F66E;
+	Mon, 11 Nov 2024 04:55:51 -0800 (PST)
+Date: Mon, 11 Nov 2024 12:55:50 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>, yi1.lai@intel.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
-Message-ID: <20241111120857.5cWFpNkJ@linutronix.de>
-References: <20240624152732.1231678-3-bigeasy@linutronix.de>
- <Zx9Losv4YcJowaP/@ly-workstation>
- <Zx-B0wK3xqRQsCOS@localhost.localdomain>
- <20241029172126.5XY8vLBH@linutronix.de>
- <20241030140721.pZzb9D-u@linutronix.de>
- <ZyJUzhzHGDu5CLdi@localhost.localdomain>
- <20241107144617.MjCWysud@linutronix.de>
- <Zy4OFlxoRK2jM5zo@localhost.localdomain>
- <20241108190835.GA11231@redhat.com>
- <Zy6QHHakztIXvudC@pavilion.home>
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] perf arm-spe: Prepare for adding data source
+ packet implementations for other cores
+Message-ID: <20241111125550.GA350698@e132581.arm.com>
+References: <20241108202946.16835-1-ilkka@os.amperecomputing.com>
+ <20241108202946.16835-2-ilkka@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zy6QHHakztIXvudC@pavilion.home>
+In-Reply-To: <20241108202946.16835-2-ilkka@os.amperecomputing.com>
 
-On 2024-11-08 23:26:36 [+0100], Frederic Weisbecker wrote:
-> > Please see
-> > https://lore.kernel.org/all/1440816150.8932.123.camel@edumazet-glaptop2.roam.corp.google.com/
-> > and the whole thread.
-
-Thank you for this Oleg.
-
-> > I don't think raw_spin_lock_irq + cmpxchg for each work is a good
-> > idea, but quite possibly I misunderstood this change.
+On Fri, Nov 08, 2024 at 08:29:45PM +0000, Ilkka Koskinen wrote:
 > 
-> I did not realize there could be gazillion files released in a row. So there
-> could be noticeable performance issues I guess...
+> Split Data Source Packet handling to prepare adding support for
+> other implementations.
+> 
+> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 
-I made a testcase to open 2M (2 *10^6) files and then exit. This led
-task_work_run() run 2M + 3 callbacks (+ stdin/out/err) for the task.
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 
-Running 70 samples on the "orig" kernel:
-- avg callback time 1.156.470,3 us
-- 63 samples are starting with 11 (1,1 sec) avg: 1.128.046,7 us
-- 6 samples are starting with 14 (1,4 sec) avg: 1.435.294,8us
-
-Running 70 samples on the "patched" kernel:
-- avg callback time 1.278.938,8 us
-- 59 samples are starting with 12 (1,2 sec) avg: 1.230.189,1 us
-- 10 samples are starting with 15 (1,5sec) avg: 1.555.934,5 us
-
-With the extra lock the task_work_run() runtime extends by approximately
-~122ms for the 2M invoked callbacks. 
-The spike 1,1sec -> 1,4sec or 1,2sec -> 1,5 sec is due to context
-switching (there are few cond_resched()/ might_sleep()).
-
-It is not that bad, is it?
-
-> Thanks.
-> > 
-> > Oleg.
-
-Sebastian
+> ---
+>  tools/perf/util/arm-spe.c | 42 ++++++++++++++++++++++++++++-----------
+>  1 file changed, 30 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index dbf13f47879c..3064c3f22806 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -103,6 +103,18 @@ struct arm_spe_queue {
+>         u32                             flags;
+>  };
+> 
+> +struct data_source_handle {
+> +       const struct midr_range *midr_ranges;
+> +       void (*ds_synth)(const struct arm_spe_record *record,
+> +                        union perf_mem_data_src *data_src);
+> +};
+> +
+> +#define DS(range, func)                                        \
+> +       {                                               \
+> +               .midr_ranges = range,                   \
+> +               .ds_synth = arm_spe__synth_##func,      \
+> +       }
+> +
+>  static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
+>                          unsigned char *buf, size_t len)
+>  {
+> @@ -532,6 +544,10 @@ static void arm_spe__synth_data_source_common(const struct arm_spe_record *recor
+>         }
+>  }
+> 
+> +static const struct data_source_handle data_source_handles[] = {
+> +       DS(common_ds_encoding_cpus, data_source_common),
+> +};
+> +
+>  static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+>                                         union perf_mem_data_src *data_src)
+>  {
+> @@ -555,12 +571,14 @@ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+>                 data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
+>  }
+> 
+> -static bool arm_spe__is_common_ds_encoding(struct arm_spe_queue *speq)
+> +static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
+> +                             const struct arm_spe_record *record,
+> +                             union perf_mem_data_src *data_src)
+>  {
+>         struct arm_spe *spe = speq->spe;
+> -       bool is_in_cpu_list;
+>         u64 *metadata = NULL;
+> -       u64 midr = 0;
+> +       u64 midr;
+> +       unsigned int i;
+> 
+>         /* Metadata version 1 assumes all CPUs are the same (old behavior) */
+>         if (spe->metadata_ver == 1) {
+> @@ -592,18 +610,20 @@ static bool arm_spe__is_common_ds_encoding(struct arm_spe_queue *speq)
+>                 midr = metadata[ARM_SPE_CPU_MIDR];
+>         }
+> 
+> -       is_in_cpu_list = is_midr_in_range_list(midr, common_ds_encoding_cpus);
+> -       if (is_in_cpu_list)
+> -               return true;
+> -       else
+> -               return false;
+> +       for (i = 0; i < ARRAY_SIZE(data_source_handles); i++) {
+> +               if (is_midr_in_range_list(midr, data_source_handles[i].midr_ranges)) {
+> +                       data_source_handles[i].ds_synth(record, data_src);
+> +                       return true;
+> +               }
+> +       }
+> +
+> +       return false;
+>  }
+> 
+>  static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
+>                                       const struct arm_spe_record *record)
+>  {
+>         union perf_mem_data_src data_src = { .mem_op = PERF_MEM_OP_NA };
+> -       bool is_common = arm_spe__is_common_ds_encoding(speq);
+> 
+>         if (record->op & ARM_SPE_OP_LD)
+>                 data_src.mem_op = PERF_MEM_OP_LOAD;
+> @@ -612,9 +632,7 @@ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
+>         else
+>                 return 0;
+> 
+> -       if (is_common)
+> -               arm_spe__synth_data_source_common(record, &data_src);
+> -       else
+> +       if (!arm_spe__synth_ds(speq, record, &data_src))
+>                 arm_spe__synth_memory_level(record, &data_src);
+> 
+>         if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
+> --
+> 2.47.0
+> 
+> 
