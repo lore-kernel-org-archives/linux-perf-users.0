@@ -1,268 +1,181 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1A01A2567
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 18:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2BA1482F2
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 19:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731349232; cv=none; b=MZtyxNqrG36zQvjWvU611kTQ5VBxS/zrw97Rl6CdKTVjvlBSQGYEDr7JL8ZwQ7TGFh2nsN5xFY9C+kUuguajPt62FGX06VLZQ0x0RfghggPLe4qhH9G+UtO0zNp87oUasauox1zCvZagod6chs7v4xj177vMjR/ahF+NWgExWhY=
+	t=1731354410; cv=none; b=lmmsNnizTx8tBIb2bQmhPiAmj++X+tiOukiNxYu2Eq+0uAKI+nqLHi+8DnS4tfQeFCFg32Zf9YalB9fL6PCXz9zBV+EpqwMPZP6w4p1sjvJ4NWRPU6hmknDpvWTYFvpW/uRDkQsxA+mNyR1wCkR0bD34KLUDAdx9FrztsW9DZFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731349232; c=relaxed/simple;
-	bh=BjBfjJdldjSvoJiOX4p+lvkjb82Phfr9vuxzVSaa6Y4=;
+	s=arc-20240116; t=1731354410; c=relaxed/simple;
+	bh=SVD/D1neY/VMzCUafgxPxYWWoSXIv9EEnzkncaGe/f8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sOt9S093lasGJ765OPZq/2ZTceBS/vxOIzOQ8LyDKmPSxhjvVEttr8FyaExmEteWJjBpWEzKTDnzljW4XqtMrMHLBr2eOerReLvTTorgE798wMeBU9wGZserCERWa4a0/RrsmFR5k4IL6UoXsRuCkbA8BiONYPyM1PvJ/McEkbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NBZl4qAW; arc=none smtp.client-ip=209.85.166.181
+	 To:Cc:Content-Type; b=Nt6cyUaP9mg3aisYnYIFuC/Bads2zcsjr/A9ZjLalpYIsV/m13jyNcIo2Op5BAVpERgMqaHDFJB7cMIPkTT8InUUnpIAPT9U9VCTjXfiHbA6DkRcG+WvIStPTSxg13WCFQD8oVO7n8xrfrLMp7j7r/0rePrSYNZkztLqrjOH62w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MwSCkS3g; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NBZl4qAW"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a4e4776f79so7545ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 10:20:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MwSCkS3g"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-20c8ac50b79so27315ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 11:46:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731349229; x=1731954029; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731354408; x=1731959208; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h3sA5IBP5XfCzOqDGRj5yXsIlkQEa9Ya5EuikdBBSd8=;
-        b=NBZl4qAWDIbK3jylnwZ96f2EEgC1GI7sivkrnhqHX0qp49ffyGKyuNRadKYvQGvHGq
-         dX6bfUOvAj1k58IZx0xc4I44xc9wr65z/Nt1QsRGfl7pZPlz7U5BKzBMfo2wLmSUrcMb
-         l6GhX4dCnn/zkCQxZs6IJhP7Cv2Gx0jmuJV7pm/Q34gNYjvV+u4xTUByh6T35hLuFDi7
-         +hHD01L9KY64D3Hr43fA/XLYWlvOMM2fOylcHSuWRYm5duBfj5oaXcsGtgnFct2eoins
-         5M8bGRJK2k50VQvR7Tc5zeO8u9RQ8S5dUfCKuqzy1wRAe20piWdxKBCXOECrIfrRcSJk
-         Usdg==
+        bh=Yb/lRtOScrkbHEVqeEiNru9i+NEX9M9BCRiwMog+ERw=;
+        b=MwSCkS3gWyEZWgTrC0O8WdnNURPdIQN+4foMKL5wkrt7g8uh5KUB0Ew0LFrmy787Tz
+         4P1YMXL1+tbU8XIQFZT73RcNGk6Cl9OxvkfwehpdWQ8+EtcaAVwc5hbqjGwxB3BDXyPE
+         +tmrlgvgaloHgwdpQB9zhpxK3GBri/7DyjV4U/o3yL2fby2t6SSpjkkaGgoyB1rmtrWC
+         cu3dfQjHWPTi182oaARP3xGr2NW/8Yt0AUW5PRL5gNNszq4wFyg24HhwJGA8ukGf4DiT
+         6UypoFodUDAy+Bo4S24O+HGluFj7qVWQuVwflWpGy38rpMcltnP1YcT1ZC85YPsji5IU
+         qNLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731349229; x=1731954029;
+        d=1e100.net; s=20230601; t=1731354408; x=1731959208;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h3sA5IBP5XfCzOqDGRj5yXsIlkQEa9Ya5EuikdBBSd8=;
-        b=csS0i9XAZknD3wvxw2pHnSFxKzJxriW/tVGSBbCjkiJQTey7SAOY6Qjofm+Rhad360
-         uX0d6npr44gwSTEp1hpghK9wAoO1WgVc1mewZ4X61E43ZoEGPreTKjIy0OvYptEXisqO
-         BXPFNEYHqRVr+UaW8Y4/AlmpHP2+TlT9NdNtBxoOv+BlSP+koSUzKhW56rR5yZxJWyuL
-         gSdGzeMmE5Yt8uiCEfQ3kqgNPJrQfc5Jeavif3iExWZaBBEJxkqKRmpu2HtDk8eoZSPH
-         StdlImXtgqmIg+c47sexOrB+Q382xmsG89HKiGbTO+r3I1EM6IZflKNK/pFbyOqgXiWp
-         0d/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUHPaFqMon4yNqKrRpU3BiMRsZtNNXJYq1ASNzKHQAf7VQztmM2h0joSJFlZC8sf3DOEO+Qv+dYrXlK+EpBjRD2@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG3YCExlivVLb9LfgUS6KuSvOUEskiZTeDYGIu9oa8kPjZfP92
-	vCNJphPmGbaWycGgy1roOJRaStwIeI0sR/w5kf59adnEvZ4SPmx4PsK0uLcHmxKT8sp9VZUYL6h
-	Aty3rYGDjScuQhwCi5c6fRpUqYAMCK+XKzaSd
-X-Gm-Gg: ASbGncsQYNEmRurJ7lZvRV5KcCoIPaKfZixsNoBEKZcv5CbiS4ZcKifskMPqJrA8awX
-	/XaC48ZmmRlK1vi0Aq10i5GtesDtVbYz9hJ1yjPV/Aqt5GQfRreHAu+BvCfBfhB8=
-X-Google-Smtp-Source: AGHT+IE6rUjryIlk/oYvovqa8d72bal0qewnNOnb64tZJbTtsQ71iPHXvuK4GcoX5nuQMqeVgHtcmzmOzdXp+73DabY=
-X-Received: by 2002:a05:6e02:1605:b0:3a6:b0a3:540b with SMTP id
- e9e14a558f8ab-3a6f8a97e8fmr7719985ab.20.1731349229254; Mon, 11 Nov 2024
- 10:20:29 -0800 (PST)
+        bh=Yb/lRtOScrkbHEVqeEiNru9i+NEX9M9BCRiwMog+ERw=;
+        b=UDLqlURmKDcIO7d5uPaVhvHRJ1trkLdPcKoE2ZpmrhE3bMjzdWsJsvAgQLNltKoc+F
+         saiuMq4BuNhxHqjqSlakS77Rb7PziG/IfsC2c6MOa+7pVYvtxgUbGDXcNQxHHUJTe3lr
+         tjO76Pr+l93YU2SUr1m2lUUeH12cWmG3LAU99XwhIrtrbUQwSWGkk5phQn4T4pI/q/3Z
+         QyUCPzyKbelntC6crI4ipgPASYn4+HUhHUbP0XPlrgpABseCtvj9GCg3uD8ydMBtxZYp
+         k9BXRHQCvTS6GBX1li8eQVxFf5hKF+f7fM0Jyh8yGbCZltRi8Nmt4vU2KNfM+RhBe2eG
+         zsHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX729AMq44ItGy9eSQ4HNzjcW5x9L6uGo4rVKb4zDEpcsJyC56dQ9YsSYc52mMayEYjPEJz+IQ7p6U4M3tkjrkz@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZJl67S3cMRZyWJQ+15Hj7HUWxl9gwd4MrHxNyk7NVjsPMQ84L
+	gVtMAmRC5w9py7zqhbmb9u3eeX4f2JokLkubVo/wEJacsxNfgwC05YQSB+cXpmowfV6l5oAYmjn
+	UIb6OPsXP3wD80uunK03yBh1KRCzGjLKfu4bc
+X-Gm-Gg: ASbGncvFmE3HB5GGKeDAFmr7pluhT9j2OMU77s3HP5/QSXBmGZ0BZm3kEJJJn8PDLYD
+	XAPc6B1QXARWVdijae3NHePumBm0ttnQbiGXJTZseSgiK0wLV/W4vZ21DT04xolo=
+X-Google-Smtp-Source: AGHT+IG3Voeoea9hH7MagKOMnVkHeysRZ87ScGQtbCyWe5pD36B+XNBUQSB/AHysZ4FWUFGnwuCGsdWTmHyzBa4M8Q4=
+X-Received: by 2002:a17:902:e541:b0:20c:79f1:fee2 with SMTP id
+ d9443c01a7336-211ab6fd382mr58045ad.10.1731354408310; Mon, 11 Nov 2024
+ 11:46:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241109025801.560378-1-irogers@google.com> <7676a058-e7ae-4c6b-a9f8-be450b64f5e1@linux.intel.com>
- <ZzJAQeHqFT_Z9JiW@x1>
-In-Reply-To: <ZzJAQeHqFT_Z9JiW@x1>
+References: <20241108061500.2698340-1-namhyung@kernel.org>
+In-Reply-To: <20241108061500.2698340-1-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 11 Nov 2024 10:20:18 -0800
-Message-ID: <CAP-5=fXEe+O+pctnO-MhCLrX071uvkLzA-L9AWP=LR81YKYG6Q@mail.gmail.com>
-Subject: Re: [PATCH v1] perf list: Fix topic and pmu_name argument order
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 11 Nov 2024 11:46:37 -0800
+Message-ID: <CAP-5=fWqE6bM=MVQy7P0tTSWW-ZBXY4in_bfQYFK-C4h6L-Ykw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] perf lock contention: Symbolize locks using slab
+ cache names
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	Kees Cook <kees@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 11, 2024 at 9:35=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Thu, Nov 7, 2024 at 10:15=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> On Mon, Nov 11, 2024 at 09:48:41AM -0500, Liang, Kan wrote:
-> >
-> >
-> > On 2024-11-08 9:58 p.m., Ian Rogers wrote:
-> > > From: Jean-Philippe Romain <jean-philippe.romain@foss.st.com>
-> > >
-> > > Fix function definitions to match header file declaration. Fix two
-> > > callers to pass the arguments in the right order.
-> > >
-> > > On Intel Tigerlake, before:
-> > > ```
-> > > $ perf list -j|grep "\"Topic\""|sort|uniq
-> > >         "Topic": "cache",
-> > >         "Topic": "cpu",
-> > >         "Topic": "floating point",
-> > >         "Topic": "frontend",
-> > >         "Topic": "memory",
-> > >         "Topic": "other",
-> > >         "Topic": "pfm icl",
-> > >         "Topic": "pfm ix86arch",
-> > >         "Topic": "pfm perf_raw",
-> > >         "Topic": "pipeline",
-> > >         "Topic": "tool",
-> > >         "Topic": "uncore interconnect",
-> > >         "Topic": "uncore memory",
-> > >         "Topic": "uncore other",
-> > >         "Topic": "virtual memory",
-> > > $ perf list -j|grep "\"Unit\""|sort|uniq
-> > >         "Unit": "cache",
-> > >         "Unit": "cpu",
-> > >         "Unit": "cstate_core",
-> > >         "Unit": "cstate_pkg",
-> > >         "Unit": "i915",
-> > >         "Unit": "icl",
-> > >         "Unit": "intel_bts",
-> > >         "Unit": "intel_pt",
-> > >         "Unit": "ix86arch",
-> > >         "Unit": "msr",
-> > >         "Unit": "perf_raw",
-> > >         "Unit": "power",
-> > >         "Unit": "tool",
-> > >         "Unit": "uncore_arb",
-> > >         "Unit": "uncore_clock",
-> > >         "Unit": "uncore_imc_free_running_0",
-> > >         "Unit": "uncore_imc_free_running_1",
-> > > ```
-> > >
-> > > After:
-> > > ```
-> > > $ perf list -j|grep "\"Topic\""|sort|uniq
-> > >         "Topic": "cache",
-> > >         "Topic": "floating point",
-> > >         "Topic": "frontend",
-> > >         "Topic": "memory",
-> > >         "Topic": "other",
-> > >         "Topic": "pfm icl",
-> > >         "Topic": "pfm ix86arch",
-> > >         "Topic": "pfm perf_raw",
-> > >         "Topic": "pipeline",
-> > >         "Topic": "tool",
-> > >         "Topic": "uncore interconnect",
-> > >         "Topic": "uncore memory",
-> > >         "Topic": "uncore other",
-> > >         "Topic": "virtual memory",
-> > > $ perf list -j|grep "\"Unit\""|sort|uniq
-> > >         "Unit": "cpu",
-> > >         "Unit": "cstate_core",
-> > >         "Unit": "cstate_pkg",
-> > >         "Unit": "i915",
-> > >         "Unit": "icl",
-> > >         "Unit": "intel_bts",
-> > >         "Unit": "intel_pt",
-> > >         "Unit": "ix86arch",
-> > >         "Unit": "msr",
-> > >         "Unit": "perf_raw",
-> > >         "Unit": "power",
-> > >         "Unit": "tool",
-> > >         "Unit": "uncore_arb",
-> > >         "Unit": "uncore_clock",
-> > >         "Unit": "uncore_imc_free_running_0",
-> > >         "Unit": "uncore_imc_free_running_1",
-> > > ```
-> > >
-> > > Fixes: e5c6109f4813 ("perf list: Reorganize to use callbacks to allow=
- honouring command line options")
-> > > Signed-off-by: Jean-Philippe Romain <jean-philippe.romain@foss.st.com=
+> Hello,
 >
-> > > Tested-by: Ian Rogers <irogers@google.com>
-> >
-> > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> This is to support symbolization of dynamic locks using slab
+> allocator's metadata.  The kernel support is in the bpf-next tree now.
 >
-> > > ---
-> > > Note from Ian, I fixed the two callers and added it to
-> > > Jean-Phillippe's original change.
+> It provides the new "kmem_cache" BPF iterator and "bpf_get_kmem_cache"
+> kfunc to get the information from an address.  The feature detection is
+> done using BTF type info and it won't have any effect on old kernels.
 >
-> I think that in this case we need:
+> v2 changes)
 >
-> [ I fixed the two callers and added it to Jean-Phillippe's original chang=
-e. ]
-> Signed-off-by: Ian Rogers <irogers@google.com>
+>  * don't use libbpf_get_error()  (Andrii)
 >
-> Ok?
+> v1) https://lore.kernel.org/linux-perf-users/20241105172635.2463800-1-nam=
+hyung@kernel.org
+>
+> With this change, it can show locks in a slab object like below.  I
+> added "&" sign to distinguish them from global locks.
 
-Sgtm.
+I know the & is intentional but I worry it could later complicate
+parsing of filters. Perhaps @ is a viable alternative. Other than
+that:
+
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> > > ---
-> > >  tools/perf/builtin-list.c | 4 ++--
-> > >  tools/perf/util/pfm.c     | 4 ++--
-> > >  tools/perf/util/pmus.c    | 2 +-
-> > >  3 files changed, 5 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> > > index b8378ba18c28..9e7fdfcdd7ff 100644
-> > > --- a/tools/perf/builtin-list.c
-> > > +++ b/tools/perf/builtin-list.c
-> > > @@ -113,7 +113,7 @@ static void wordwrap(FILE *fp, const char *s, int=
- start, int max, int corr)
-> > >     }
-> > >  }
-> > >
-> > > -static void default_print_event(void *ps, const char *pmu_name, cons=
-t char *topic,
-> > > +static void default_print_event(void *ps, const char *topic, const c=
-har *pmu_name,
-> > >                             const char *event_name, const char *event=
-_alias,
-> > >                             const char *scale_unit __maybe_unused,
-> > >                             bool deprecated, const char *event_type_d=
-esc,
-> > > @@ -354,7 +354,7 @@ static void fix_escape_fprintf(FILE *fp, struct s=
-trbuf *buf, const char *fmt, ..
-> > >     fputs(buf->buf, fp);
-> > >  }
-> > >
-> > > -static void json_print_event(void *ps, const char *pmu_name, const c=
-har *topic,
-> > > +static void json_print_event(void *ps, const char *topic, const char=
- *pmu_name,
-> > >                          const char *event_name, const char *event_al=
-ias,
-> > >                          const char *scale_unit,
-> > >                          bool deprecated, const char *event_type_desc=
-,
-> > > diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
-> > > index 5ccfe4b64cdf..0dacc133ed39 100644
-> > > --- a/tools/perf/util/pfm.c
-> > > +++ b/tools/perf/util/pfm.c
-> > > @@ -233,7 +233,7 @@ print_libpfm_event(const struct print_callbacks *=
-print_cb, void *print_state,
-> > >     }
-> > >
-> > >     if (is_libpfm_event_supported(name, cpus, threads)) {
-> > > -           print_cb->print_event(print_state, pinfo->name, topic,
-> > > +           print_cb->print_event(print_state, topic, pinfo->name,
-> > >                                   name, info->equiv,
-> > >                                   /*scale_unit=3D*/NULL,
-> > >                                   /*deprecated=3D*/NULL, "PFM event",
-> > > @@ -267,8 +267,8 @@ print_libpfm_event(const struct print_callbacks *=
-print_cb, void *print_state,
-> > >                             continue;
-> > >
-> > >                     print_cb->print_event(print_state,
-> > > -                                   pinfo->name,
-> > >                                     topic,
-> > > +                                   pinfo->name,
-> > >                                     name, /*alias=3D*/NULL,
-> > >                                     /*scale_unit=3D*/NULL,
-> > >                                     /*deprecated=3D*/NULL, "PFM event=
-",
-> > > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> > > index 107de86c2637..6d4c7c9ecf3a 100644
-> > > --- a/tools/perf/util/pmus.c
-> > > +++ b/tools/perf/util/pmus.c
-> > > @@ -501,8 +501,8 @@ void perf_pmus__print_pmu_events(const struct pri=
-nt_callbacks *print_cb, void *p
-> > >                     goto free;
-> > >
-> > >             print_cb->print_event(print_state,
-> > > -                           aliases[j].pmu_name,
-> > >                             aliases[j].topic,
-> > > +                           aliases[j].pmu_name,
-> > >                             aliases[j].name,
-> > >                             aliases[j].alias,
-> > >                             aliases[j].scale_unit,
+>     # perf lock con -abl sleep 1
+>      contended   total wait     max wait     avg wait            address =
+  symbol
+>
+>              2      1.95 us      1.77 us       975 ns   ffff9d5e852d3498 =
+  &task_struct (mutex)
+>              1      1.18 us      1.18 us      1.18 us   ffff9d5e852d3538 =
+  &task_struct (mutex)
+>              4      1.12 us       354 ns       279 ns   ffff9d5e841ca800 =
+  &kmalloc-cg-512 (mutex)
+>              2       859 ns       617 ns       429 ns   ffffffffa41c3620 =
+  delayed_uprobe_lock (mutex)
+>              3       691 ns       388 ns       230 ns   ffffffffa41c0940 =
+  pack_mutex (mutex)
+>              3       421 ns       164 ns       140 ns   ffffffffa3a8b3a0 =
+  text_mutex (mutex)
+>              1       409 ns       409 ns       409 ns   ffffffffa41b4cf8 =
+  tracepoint_srcu_srcu_usage (mutex)
+>              2       362 ns       239 ns       181 ns   ffffffffa41cf840 =
+  pcpu_alloc_mutex (mutex)
+>              1       220 ns       220 ns       220 ns   ffff9d5e82b534d8 =
+  &signal_cache (mutex)
+>              1       215 ns       215 ns       215 ns   ffffffffa41b4c28 =
+  tracepoint_srcu_srcu_usage (mutex)
+>
+> The first two were from "task_struct" slab cache.  It happened to
+> match with the type name of object but there's no guarantee.  We need
+> to add type info to slab cache to resolve the lock inside the object.
+> Anyway, the third one has no dedicated slab cache and was allocated by
+> kmalloc.
+>
+> Those slab objects can be used to filter specific locks using -L or
+>  --lock-filter option.  (It needs quotes to avoid special handling in
+> the shell).
+>
+>     # perf lock con -ab -L '&task_struct' sleep 1
+>        contended   total wait     max wait     avg wait         type   ca=
+ller
+>
+>                1     25.10 us     25.10 us     25.10 us        mutex   pe=
+rf_event_exit_task+0x39
+>                1     21.60 us     21.60 us     21.60 us        mutex   fu=
+tex_exit_release+0x21
+>                1      5.56 us      5.56 us      5.56 us        mutex   fu=
+tex_exec_release+0x21
+>
+> The code is available at 'perf/lock-slab-v2' branch in my tree
+>
+> git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+>
+> Thanks,
+> Namhyung
+>
+>
+> Namhyung Kim (4):
+>   perf lock contention: Add and use LCB_F_TYPE_MASK
+>   perf lock contention: Run BPF slab cache iterator
+>   perf lock contention: Resolve slab object name using BPF
+>   perf lock contention: Handle slab objects in -L/--lock-filter option
+>
+>  tools/perf/builtin-lock.c                     |  39 ++++-
+>  tools/perf/util/bpf_lock_contention.c         | 140 +++++++++++++++++-
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  |  70 ++++++++-
+>  tools/perf/util/bpf_skel/lock_data.h          |  15 +-
+>  tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |   8 +
+>  tools/perf/util/lock-contention.h             |   2 +
+>  6 files changed, 267 insertions(+), 7 deletions(-)
+>
+> --
+> 2.47.0.277.g8800431eea-goog
+>
