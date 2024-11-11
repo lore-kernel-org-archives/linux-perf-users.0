@@ -1,69 +1,69 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B6619F113
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 17:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A081A704C
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 17:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731347759; cv=none; b=mT0pzX/LyxfR24RnhuAkxm1cihfUMteliuke4W3TVvVNuL1YgigAfEGJ5fvkjwJPBlRQQ8INAGqih8hxUxlsAWTZ+0dCbodULzTReo0bVQXmoo647j8Pb/V6nWVOouJyWlTHlskUIrsKvnOtOVcAxTWbSNkMOBLE9SLkAmsI1is=
+	t=1731347826; cv=none; b=X8MNxuB3h36Hn84B3BpVflYRZESDJdcvw5w09k2u6ZA8C9F2uBa350BnFFeCG8gSh4wDY+nGKuhzBpTEKwdzF4XkdWsJTY0z5dfbeSQhKzcjHuoCR+65KlOqYqpSiY1I6tGnMVBeL3MmorWKVxLLaFoTq9C5ph8K6yWaKbCZpr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731347759; c=relaxed/simple;
-	bh=Gk3Bd65cbPXkb67tabSPVYvDafMdc4UaLcN1JZUm3MY=;
+	s=arc-20240116; t=1731347826; c=relaxed/simple;
+	bh=Ab1oytO8ZVmWhP5fgvNeeofaU0GDgKs6R1o9YfWvfhI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GpNnAjyOZMw6MSAkMBnfhwnfbOAtzwLlcnJpwD3dXjvWBusZdxzaWJjwofPp9S2PnBy992K19T3VD5XHITj0PABxi5onBwtevb0d5lmgoTPsol++fDnZM83i2X97eu1gtrFolL/eRXvvjt9zx02Bt6n512RgmmaHf6tJN3sVxKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ABfWiFW4; arc=none smtp.client-ip=209.85.166.178
+	 To:Cc:Content-Type; b=j6wRx0qL79Y1a7dmBs8VcZRmkVf3h5hJCpjr4T81ytikc/tSYSsdCNjS2QkL93BOEATo2JEtqapwfvmpcnI67ZRrgiZbg27AFoz4IRMWvMcHHDSAt2nDPbQnYwNvL9yeGaAGZfK++QpX1TUS5aGb4CWhlCgvhfJ0z8bD0A33vaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DHOij0+X; arc=none smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ABfWiFW4"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3a4e4776f79so3515ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 09:55:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DHOij0+X"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4608dddaa35so9131cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 09:57:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731347758; x=1731952558; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731347824; x=1731952624; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hWCEpVzPP2C567p2YX+zooGp6OPXofG6vmEFnRTKNhU=;
-        b=ABfWiFW4gYDdLyXDhWJfnQF3j0Tnfg9+xjmYm3e1p3ip5lQHh7km/3r77EynbDIyYT
-         LgJDMJQZ6tkWXFTNRtZ9JlylGESTW5idOB9L1Gi+K09P0I39+1k+MPQ//QI9rSKGns12
-         2i8tAGyPv4xRYPRs0MjaM2Ho+hgfgxUPtHtOEFuepffZE2LK+7i7Tozi+DEMkFu6nasG
-         A6F6oPBybmBtbPkEnioppQewtouc8C+OnnuGAwLxowj0IFZXK9sWpSMg5WWfmiwwet3n
-         1Dg8dHS9SdEtm1rGnzZ5nUF741bsJXLzupE1XC965Pcmiztf0i8QMWh7UQ2vtGO/Bor1
-         0vLw==
+        bh=nhlfklFJzcq9yoGsneqDg/hSgWWKzA1mzsvO36qciE4=;
+        b=DHOij0+XumRMmSNDmBPhSCLsdQjEDo1726bm4x43a6KnrlO2+UxrJw+e0ZRZMkIEuG
+         FDxNcP1TGUUFelAa04h4f4aiZ+uStljBuWvmyIOAboRc/RqngY/zogBkULDVx6oi/3Su
+         861GnRvtNFkE1ZR9nHPg4xcJHKnimgWkdPKNwAkN7hDclJyo/AvBdRzh+7SwRDTFVb9N
+         Kh7ZRFdVWFXeyRtI6xwnaAZZuSC6+IhGNN3c8jdJFW19hYnrpkP+M/2hUPtmqbR1tDSk
+         X8wXF9ZDwDVYfutiRzpNPon9AbGFRcJaT4UKZ7vK3YXw9UFaiGve0ibVBN7LMuIc1juE
+         EoDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731347758; x=1731952558;
+        d=1e100.net; s=20230601; t=1731347824; x=1731952624;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hWCEpVzPP2C567p2YX+zooGp6OPXofG6vmEFnRTKNhU=;
-        b=hoWnOBLtu0r55ZSBGvQIQxrH8YB25HbypWr8CYZxdCVlidTXifIh9uY7rfDKlROJzN
-         FVIFAI/Q9MTrM1mHD2Q29DBfNTVLE2/C9Ggb9r3HS7cHXLTXdRTJAZGF2u1reSh3Fl8a
-         kipBGVqSbcYIrSLquogz8sWGPkMti3fWtPDJlJqmPO5X/5bFgMLu7RxIzHUafE1aKeIC
-         IQR9rofq7Q9jFkOU7YolcUnydwvjUITBHhPLiGACGUhXVcsI9TcCQd2cCgTvlyvMfHul
-         xQS9DVxCdV7cQOa8DZkhQQCUkFi2I6QnyYdRiQ7MOuqVJG8hyaz6Pje0JbFf7sBsNGl7
-         bPLg==
-X-Forwarded-Encrypted: i=1; AJvYcCWrxvanVZKE0MzB7EfE+K5rdOPiTYi2gy+stHH4Qp43foPOdpWrGHnAmI/VDMtOYrPhQaiFLTT0+r+1kxhvqby+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9hPgEEEg27YsnmKbh7Otv+XHjea0nopswJYQ4SD429gvQ+HDk
-	5TCaL11MBSDr2vJLcI7acPNLED133A0eruhsNDLOdenfHPVL+nlUfjR/QsQJ5sGW0KmsnMN8AEK
-	KyKibBGv4Yd6zgrZibEKANjZ9yrBXcFeon8ER
-X-Gm-Gg: ASbGncu1xK41gCvfXpbTL3qeznvcZKnhY9ezy9g5H//nYgVjMDZYFHewZxBcXRq9LgU
-	Gtvh9hWIT7M65bWK7Drvwa1kbaTIACwELJNxSFflHHDTuHOn6gGGdSTzh+ygNAnE=
-X-Google-Smtp-Source: AGHT+IFhSYq0STb5lF6oh/lN0IEV8ozrjpzp1B9XixwyORRQYQpKjw+W9mCRekpu31DkLDY6hY5cBsmbP4Hr0C2pjdg=
-X-Received: by 2002:a05:6e02:1605:b0:3a6:b0a3:540b with SMTP id
- e9e14a558f8ab-3a6f8a97e8fmr7613755ab.20.1731347757481; Mon, 11 Nov 2024
- 09:55:57 -0800 (PST)
+        bh=nhlfklFJzcq9yoGsneqDg/hSgWWKzA1mzsvO36qciE4=;
+        b=vcIFT45g0Z1bEn4TDiNeogoMqnmZbrZ9yhsH4LYOO2FRHGBlj+QtGRqDuPtgOKhnEg
+         jofou+t6q0ixf84SrXkN4NC0S1racpyDeWrVX8cBTRIqe9yzbRR5ngOjt4Hp0GBIWIIw
+         wgBtm6G8Oe/agh9bTtlMuKgPMtUUFAkBiJczogXqbJWOG9kb9220rvKZDmMvpMyi6N9F
+         Vyv342kK4KcvRNvqWl8md9lg2RaX3ky4w6BSsweCWr4AE76rgg5hDu6LQLSEd10R0pLn
+         Gn6xNOLCkM0/ZftLF/TCBG0HheGv9QeXHYh+AAQTGZz9gKmBlQlzc6MMuA2WYbv/HTTF
+         hPKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVa025yC692xWN44mdpZwA/O+GH1MiNAzE+nvamUizcuKAF7y1FJNhcrwmrw75t2lhsxX9wTTW0vSTiB1ti+lGJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqQ6ff61t13RHlJ3+RFWsHnXoWyzbaos6bqT6lyrEuIZTJazrl
+	7KASEPPP68cBkzzHCwxjhcjHqkOhJKortM7Se7K5qhpVpD9MwzYBWgdefEZYnQCHpBalbE4pqAw
+	yB4pDPFnNFM5SAQJ7AJ+tdGBOfRg+iqsqgShp
+X-Gm-Gg: ASbGnct6BysPkhNlXx8+7QfUBuY8i/EHyHh9H7/vb3sFzF4nryAWHudoUwfNw3n2RW3
+	9G6TQ4lk/1afetYHtvFk18AQATTq+EexBnc6s7q03dTs4I0gQvpjbcCIUncpyx7o=
+X-Google-Smtp-Source: AGHT+IEu0GW0f3agX+5M8QSU8zfX5ZE8V/0IIfsBmBIY7tz78CEqDSH6OxDkACRTgK6mdAynWf2/DPiX8gol8lD3ylM=
+X-Received: by 2002:a05:622a:1816:b0:461:358e:d635 with SMTP id
+ d75a77b69052e-46316a1e46bmr5608461cf.18.1731347823697; Mon, 11 Nov 2024
+ 09:57:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241108204137.2444151-1-howardchu95@gmail.com> <20241108204137.2444151-7-howardchu95@gmail.com>
-In-Reply-To: <20241108204137.2444151-7-howardchu95@gmail.com>
+References: <20241108204137.2444151-1-howardchu95@gmail.com> <20241108204137.2444151-9-howardchu95@gmail.com>
+In-Reply-To: <20241108204137.2444151-9-howardchu95@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 11 Nov 2024 09:55:46 -0800
-Message-ID: <CAP-5=fU8DC+-bS0E+=8UwNtjch8MUNJOx8TshhjcPD+-NMGKNA@mail.gmail.com>
-Subject: Re: [PATCH v7 06/10] perf evsel: Assemble offcpu samples
+Date: Mon, 11 Nov 2024 09:56:52 -0800
+Message-ID: <CAP-5=fW-y3KOCDs4WMHXj03x7s1CkUC-zvx7LmHq6Fh-O9+fCw@mail.gmail.com>
+Subject: Re: [PATCH v7 08/10] perf script: Display off-cpu samples correctly
 To: Howard Chu <howardchu95@gmail.com>
 Cc: acme@kernel.org, peterz@infradead.org, namhyung@kernel.org, 
 	mingo@redhat.com, mark.rutland@arm.com, james.clark@linaro.org, 
@@ -76,9 +76,37 @@ Content-Transfer-Encoding: quoted-printable
 On Fri, Nov 8, 2024 at 12:41=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
 wrote:
 >
-> Use the data in bpf-output samples, to assemble offcpu samples.
+> No PERF_SAMPLE_CALLCHAIN in sample_type, but I need perf script to
+> display a callchain, have to specify manually.
 >
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> Also, prefer displaying a callchain:
+>
+>  gvfs-afc-volume    2267 [001] 3829232.955656: 1001115340 offcpu-time:
+>             77f05292603f __pselect+0xbf (/usr/lib/x86_64-linux-gnu/libc.s=
+o.6)
+>             77f052a1801c [unknown] (/usr/lib/x86_64-linux-gnu/libusbmuxd-=
+2.0.so.6.0.0)
+>             77f052a18d45 [unknown] (/usr/lib/x86_64-linux-gnu/libusbmuxd-=
+2.0.so.6.0.0)
+>             77f05289ca94 start_thread+0x384 (/usr/lib/x86_64-linux-gnu/li=
+bc.so.6)
+>             77f052929c3c clone3+0x2c (/usr/lib/x86_64-linux-gnu/libc.so.6=
+)
+>
+> to a raw binary BPF output:
+>
+> BPF output: 0000: dd 08 00 00 db 08 00 00  <DD>...<DB>...
+>           0008: cc ce ab 3b 00 00 00 00  <CC>=CE=AB;....
+>           0010: 06 00 00 00 00 00 00 00  ........
+>           0018: 00 fe ff ff ff ff ff ff  .<FE><FF><FF><FF><FF><FF><FF>
+>           0020: 3f 60 92 52 f0 77 00 00  ?`.R<F0>w..
+>           0028: 1c 80 a1 52 f0 77 00 00  ..<A1>R<F0>w..
+>           0030: 45 8d a1 52 f0 77 00 00  E.<A1>R<F0>w..
+>           0038: 94 ca 89 52 f0 77 00 00  .<CA>.R<F0>w..
+>           0040: 3c 9c 92 52 f0 77 00 00  <..R<F0>w..
+>           0048: 00 00 00 00 00 00 00 00  ........
+>           0050: 00 00 00 00              ....
+>
 > Signed-off-by: Howard Chu <howardchu95@gmail.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
@@ -87,61 +115,36 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/util/evsel.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+>  tools/perf/builtin-script.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 695f831b463d..20f07597fac1 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2783,6 +2783,35 @@ static inline bool evsel__has_branch_counters(cons=
-t struct evsel *evsel)
->         return false;
->  }
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 6b6d4472db6e..1893d2117aab 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -662,7 +662,7 @@ static int perf_session__check_output_opt(struct perf=
+_session *session)
 >
-> +static int __set_offcpu_sample(struct perf_sample *data)
-> +{
-> +       u64 *array =3D data->raw_data;
-> +       u32 max_size =3D data->raw_size, *p32;
-> +       const void *endp =3D (void *)array + max_size;
-> +
-> +       if (array =3D=3D NULL)
-> +               return -EFAULT;
-> +
-> +       OVERFLOW_CHECK_u64(array);
-> +       p32 =3D (void *)array++;
-> +       data->pid =3D p32[0];
-> +       data->tid =3D p32[1];
-> +
-> +       OVERFLOW_CHECK_u64(array);
-> +       data->period =3D *array++;
-> +
-> +       OVERFLOW_CHECK_u64(array);
-> +       data->callchain =3D (struct ip_callchain *)array++;
-> +       OVERFLOW_CHECK(array, data->callchain->nr * sizeof(u64), max_size=
-);
-> +       data->ip =3D data->callchain->ips[1];
-> +       array +=3D data->callchain->nr;
-> +
-> +       OVERFLOW_CHECK_u64(array);
-> +       data->cgroup =3D *array;
-> +
-> +       return 0;
-> +}
-> +
->  int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
->                         struct perf_sample *data)
->  {
-> @@ -3134,6 +3163,9 @@ int evsel__parse_sample(struct evsel *evsel, union =
-perf_event *event,
->                 array =3D (void *)array + sz;
->         }
+>                 evlist__for_each_entry(session->evlist, evsel) {
+>                         not_pipe =3D true;
+> -                       if (evsel__has_callchain(evsel)) {
+> +                       if (evsel__has_callchain(evsel) || evsel__is_offc=
+pu_event(evsel)) {
+>                                 use_callchain =3D true;
+>                                 break;
+>                         }
+> @@ -2353,7 +2353,7 @@ static void process_event(struct perf_script *scrip=
+t,
+>         else if (PRINT_FIELD(BRSTACKOFF))
+>                 perf_sample__fprintf_brstackoff(sample, thread, attr, fp)=
+;
 >
-> +       if (evsel__is_offcpu_event(evsel))
-> +               return __set_offcpu_sample(data);
-> +
->         return 0;
->  }
+> -       if (evsel__is_bpf_output(evsel) && PRINT_FIELD(BPF_OUTPUT))
+> +       if (evsel__is_bpf_output(evsel) && !evsel__is_offcpu_event(evsel)=
+ && PRINT_FIELD(BPF_OUTPUT))
+>                 perf_sample__fprintf_bpf_output(sample, fp);
+>         perf_sample__fprintf_insn(sample, evsel, attr, thread, machine, f=
+p, al);
 >
 > --
 > 2.43.0
