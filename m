@@ -1,249 +1,364 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9DE1A2643
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 16:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B86C19CC17
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 16:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731341431; cv=none; b=YNhgoTeTkaCNSqShuz7G6QjeDk5ZYLIbor9ZmzfN9qekMI2j+jFqyjxrTckBtkh8pRPZHhwhkO9adaAQ29ZVZqG/M8k0fJfo5Kkx+ByaorYQFVpCsR6ISWwvYn1ZDOTmZ5IURNbt4sF4z6hJRf3SAW5iD8M/b2i24SBpwtDESiI=
+	t=1731341768; cv=none; b=WhPkwuRy0nvZ+w5uuUJIClzmlog0gauCf3z9FC2XcYGT1TmieRbw4YXE3YT7IX8V/+4e4ckaburX/K2LY7o7e2lDPwcKcH3v5WWrpi8O5bzwXypx7oeeQXcRdyoL3N7tKMLeevx6O7wRcmKVObO5Z2cdyCIkZcz94fP/rZZRZos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731341431; c=relaxed/simple;
-	bh=e7iaHqt/EwDBLBLJCozYGUGnS0CDSgQ11Uen7CkIPr4=;
+	s=arc-20240116; t=1731341768; c=relaxed/simple;
+	bh=bc4KAQgTO/LpNZDhBvbFp6qGF1a90shX6G5VP3QrCVU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HykQ95/dzJcTe/yxGLV+Rl5OgGPtVqZy6B8sA8m6mSTH2SXXgl+uKaPtdkJE03Ow1idxKVSVqRaTzEF0U031HcOuen1qxdEGb5n87nTBxG0+/0SY2TgiJU8f9u2P9lWoAAQkYEFpXITrwJSs2pgSiqxXoq9ZKNoC7N34IU7WCSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sAS8TiFY; arc=none smtp.client-ip=209.85.166.179
+	 To:Cc:Content-Type; b=haXOpGJiq23Lrah+ImkJJJ622LEFBDfRkkXFM/dlMlHpx9kUEczNrA87veqxh45KFQDZoAKimL1reGp1tsgzHZ5jwc6lss1uGx1L8CwZYFH6t8ndWX+4gc0fpWZ5EmHNPII07mUlHtJ9HA+Pd+Cy24M3g4O0VaSBj9geAw+VY2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MBsW7vSb; arc=none smtp.client-ip=209.85.166.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sAS8TiFY"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a6c3bdbebcso611725ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 08:10:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MBsW7vSb"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a6c3bdbebcso612945ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 08:16:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731341427; x=1731946227; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731341765; x=1731946565; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ikffGFv9vfeGkXMvxoClTn0ciNkxNsHM/SDnKUO1+ao=;
-        b=sAS8TiFYha92PbgsLvlEWnX5Gq7CwYM0HQAwSfUS8lAqWAePspfM52+jvLareXdeAX
-         x9I7+PhJq/ZEeoDEl8Qf30Q74eYVv9DALDxtfim8uu4LhjSE2sGeEjsRw1iz4yrfOI9W
-         +xlrBh+F9BkzqDVx8Cl7EzTBjoa3iz4DfxMApRoPt4U8EWW+LB/+CWC3mxFN72Vgbgat
-         7MdktETnx+TgP8Gpla3um9QTOrIM8YBxVY9kezaQqore0qX7Nmo6N4eMI8s6vAgjCJE8
-         YF4kz+erzi/nk9R5pxO0Fl6jCijTESachq5Qvy9xcp0zmV0iQvVN0EqhagBUh3ByxKiK
-         5NmQ==
+        bh=W7An62prIT0mx4+wHQH6g2p+dtTcsG620N4i8weLcLo=;
+        b=MBsW7vSbsn0kbc9qfJ5QBwKBjgrXI/GD2wEoVJ4H3YbGMthgA6Fv1CflHlKVVhTRmL
+         iiTonyPzWpN/+WZdNSbqWTqZcqKqZqizsKlLS/i6KWfZJWuIz0flpYglvYRmTipZhuFa
+         d0MVvEkhEb7ue4oe8KpTGtJGJYrwaj5eBBdy3jkS1aRhgzftbIxfUdnZ+qgjzjhSmavQ
+         dlofCrXzbCfULJmTFwIc9Q4r4YOCx+YOp96AwU58YzzVh7XdKyNV8sKXKM3kSMYMhDa0
+         Y3O4HD2iX7RIT17AS21rJ2tlYkWDo3JuGzOTWDWFmttNVmyBRqjkKBi1kMR31lyx6Qyj
+         AqLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731341427; x=1731946227;
+        d=1e100.net; s=20230601; t=1731341765; x=1731946565;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ikffGFv9vfeGkXMvxoClTn0ciNkxNsHM/SDnKUO1+ao=;
-        b=gqnBU7ht3tKlYDqWMmtKctzla7hzy11nstozAKGTyoS2DHNKBJgWqvDDHYvpED3nLE
-         LXCK9uzDw115+GlGaDTXoi4uQ527nplaKu/fLeaGvzByqPyu21GkxAEse6ehTIJ9LTTM
-         DJsQRuG6KHrwSRXaEHvahauTnLtzuT31FRtBLPxMt2z+WYw7E/c9EhUCP7Rynsv9Gwtg
-         HRPuQbJG52eaW3cT7PQ1iIe2P4A9zggaMb2I+UAhCRpuobvmO8NugyKuyDRtFvbo1Veu
-         oGuob1hgjM8iONTcXIO1dNKLgG3qBAvyTvfKuD2BhRr/J3K8roXCFkIRa32UZWkshBs/
-         yLBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX5Fia4ZmWfbo+w4//KRBO+X8/O5Va8ei3AfNhexpEE/3mG8pe3MJv5TFSJ/8Y4+0yyRoze0tBIu+nK+uRkc4NK@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGwLEfGRw1AmXVLKWWWrYGmVaEcfMM9t7g2ktw4KnY6nV9ny2z
-	bmDqDL1Wya4NEoN4CLTOVALhgnSJzc8I5cKwnpwnX/ER0U/Xafn4yfcfnK3xZADWgJnuC8pNGBx
-	QPStPjFpxeGaxW5Moo1BiSVhtxOPFJK1vxqkh
-X-Gm-Gg: ASbGncuxHwp5ZrFDg/J3fPoUCNbenVgawLC7kVpp0dS+49bOjWr1ogPwmbdS9Yr97pm
-	Ixk0rtZp5ufEJVYWkqi8DS5PY58sKCf/8rEinuI6id/xvM+mqbarwX9f77263y88=
-X-Google-Smtp-Source: AGHT+IESn27j6H0P/bztSq05yiNWLa9YDDhZOVMUkRhXMtov7HP8xPwzz2i5bc2f1ZIQneV7+bvEsp8r6rXVXFIg6RM=
-X-Received: by 2002:a05:6e02:1aa5:b0:3a6:b3b0:5696 with SMTP id
- e9e14a558f8ab-3a6f9539f08mr7856935ab.7.1731341427022; Mon, 11 Nov 2024
- 08:10:27 -0800 (PST)
+        bh=W7An62prIT0mx4+wHQH6g2p+dtTcsG620N4i8weLcLo=;
+        b=ncUPLlb2RqMgmjWo0Qk6ErgxjqKxe4f+fHNH8UQkY/TYerZiSN+9Q4Ygq+MbcYDDYJ
+         TeDwv7kpZzCMTcG5w4JV4wqOELUAQvPtnNyyHwUN6FJPnFHCUwHXiCYZ0CouWqWTmc5p
+         LoC6EfEF/mmq1dUZvEF6OfhAVXZRgZJ7TRrv8CbBxHzD/XFtYh1U/nERwtuYmi5e5fzZ
+         HiIPuP9Yj2T1RzxnmsfeQz2ik1j3TQq5fraWGHjFbnQHQ5qMSoGRpg/TGkxD4tBxhMrI
+         qnzKXUFBT/SA0/cKkQ/58fa6KFSAa7JUAV22of2BW8ot6btkV0l+yx0erZ0HMoV3cDrp
+         dIFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOuA1161J4CVOUwhsHrpNnTLf4OvRG3Km75IZ+AMCrUApDVndsQzaLDmYdXihLQgK5TYJbtyiVogG0jhX1SFeY@vger.kernel.org
+X-Gm-Message-State: AOJu0YynxlvXBnKbqaC0FXcit6uJ6mHL0/dQnQuKDCAHk0wx3gqv14tB
+	jEkPVVHPPtdc+6dR6h117R0zbeVjg06TxQYh3VZ851nZGO8grYAIP73L5a+S4JUNx6SYQsKhQUQ
+	4fyB/RE0y6tOOUEtR75VVrAlyybTYlWypNlkH
+X-Gm-Gg: ASbGncsglpsNuw6oi4PlCskyPS0DMFoshvbI+GcCLSv1NeIAIbi+3HAfUeVeE0dvQnb
+	ys5nGbwUYa0TaKRCartiERxYPNk/YYLqjNXQCUUoUxkMnXIF3R1UVR/sqBuOobpM=
+X-Google-Smtp-Source: AGHT+IHWCPReyu3goMc7v/I2utHhizkuzvgKH/WebrIaU7sxzP5C7tYELPhfV952bZmJDSIJPwFxgpFMd2ZQiSjChCs=
+X-Received: by 2002:a92:c546:0:b0:3a5:e506:162b with SMTP id
+ e9e14a558f8ab-3a6f95396a3mr8100635ab.11.1731341765453; Mon, 11 Nov 2024
+ 08:16:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241109160219.49976-1-irogers@google.com> <bfba7266-1903-41ca-9961-aa449f982912@linux.intel.com>
-In-Reply-To: <bfba7266-1903-41ca-9961-aa449f982912@linux.intel.com>
+References: <20241111151734.1018476-1-acme@kernel.org> <20241111151734.1018476-2-acme@kernel.org>
+In-Reply-To: <20241111151734.1018476-2-acme@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 11 Nov 2024 08:10:14 -0800
-Message-ID: <CAP-5=fWxMzCDQ7v1W_gMN-Yaz4yiam=5vOc8+bter0vF4cbV+Q@mail.gmail.com>
-Subject: Re: [PATCH v1] perf test: Add a runs-per-test flag
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 11 Nov 2024 08:15:53 -0800
+Message-ID: <CAP-5=fXxwf2wJf-JN7p5F_-V7WdDt_s9jk+Mz5YMkH+9gkpJUg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf disasm: Introduce symbol__disassemble_objdump()
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 11, 2024 at 7:52=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
+On Mon, Nov 11, 2024 at 7:17=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
+> With the first disassemble method in perf, the parsing of objdump
+> output, just like we have for llvm and capstone.
 >
-> On 2024-11-09 11:02 a.m., Ian Rogers wrote:
-> > To detect flakes it is useful to run tests more than once. Add a
-> > runs-per-test flag that will run each test multiple times.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/tests/builtin-test.c | 38 ++++++++++++++++++++-------------
-> >  1 file changed, 23 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin=
--test.c
-> > index d2cabaa8ad92..574fbd5caff0 100644
-> > --- a/tools/perf/tests/builtin-test.c
-> > +++ b/tools/perf/tests/builtin-test.c
-> > @@ -42,6 +42,8 @@
-> >  static bool dont_fork;
-> >  /* Fork the tests in parallel and wait for their completion. */
-> >  static bool sequential;
-> > +/* Numer of times each test is run. */
-> > +static unsigned int runs_per_test =3D 1;
-> >  const char *dso_to_test;
-> >  const char *test_objdump_path =3D "objdump";
-> >
-> > @@ -490,10 +492,10 @@ static int __cmd_test(struct test_suite **suites,=
- int argc, const char *argv[],
-> >                               len =3D strlen(test_description(*t, subi)=
-);
-> >                               if (width < len)
-> >                                       width =3D len;
-> > -                             num_tests++;
-> > +                             num_tests +=3D runs_per_test;
-> >                       }
-> >               } else {
-> > -                     num_tests++;
-> > +                     num_tests +=3D runs_per_test;
-> >               }
-> >       }
+> This paves the way to allow the user to specify what disassemblers are
+> preferred and to also to at some point allow building without the
+> objdump method.
 >
-> Seems we just need to calculate the num_tests once at the end for each
-> loop. Something as below may works. (not tested)
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Steinar H. Gunderson <sesse@google.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Acked-by: Ian Rogers <irogers@google.com>
+
+Nit below relating to a pre-existing condition in the code.
+
+> ---
+>  tools/perf/util/disasm.c | 168 ++++++++++++++++++++-------------------
+>  1 file changed, 88 insertions(+), 80 deletions(-)
 >
-> @@ -482,20 +490,19 @@ static int __cmd_test(struct test_suite **suites,
-> int argc, const char *argv[],
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index a525b80b934fdb5f..36cf61602c17fe69 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+> @@ -2045,17 +2045,14 @@ static char *expand_tabs(char *line, char **stora=
+ge, size_t *storage_len)
+>         return new_line;
+>  }
 >
->         for (struct test_suite **t =3D suites; *t; t++) {
->                 int len =3D strlen(test_description(*t, -1));
-> +               int subi =3D 0, subn =3D 1;
+> -int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+> +static int symbol__disassemble_objdump(const char *filename, struct symb=
+ol *sym,
+> +                                      struct annotate_args *args)
+>  {
+>         struct annotation_options *opts =3D &annotate_opts;
+>         struct map *map =3D args->ms.map;
+>         struct dso *dso =3D map__dso(map);
+>         char *command;
+>         FILE *file;
+> -       char symfs_filename[PATH_MAX];
+> -       struct kcore_extract kce;
+> -       bool delete_extract =3D false;
+> -       bool decomp =3D false;
+>         int lineno =3D 0;
+>         char *fileloc =3D NULL;
+>         int nline;
+> @@ -2070,77 +2067,7 @@ int symbol__disassemble(struct symbol *sym, struct=
+ annotate_args *args)
+>                 NULL,
+>         };
+>         struct child_process objdump_process;
+> -       int err =3D dso__disassemble_filename(dso, symfs_filename, sizeof=
+(symfs_filename));
+> -
+> -       if (err)
+> -               return err;
+> -
+> -       pr_debug("%s: filename=3D%s, sym=3D%s, start=3D%#" PRIx64 ", end=
+=3D%#" PRIx64 "\n", __func__,
+> -                symfs_filename, sym->name, map__unmap_ip(map, sym->start=
+),
+> -                map__unmap_ip(map, sym->end));
+> -
+> -       pr_debug("annotating [%p] %30s : [%p] %30s\n",
+> -                dso, dso__long_name(dso), sym, sym->name);
+> -
+> -       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_PROG_INFO) =
+{
+> -               return symbol__disassemble_bpf(sym, args);
+> -       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_IMAG=
+E) {
+> -               return symbol__disassemble_bpf_image(sym, args);
+> -       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUN=
+D) {
+> -               return -1;
+> -       } else if (dso__is_kcore(dso)) {
+> -               kce.kcore_filename =3D symfs_filename;
+> -               kce.addr =3D map__rip_2objdump(map, sym->start);
+> -               kce.offs =3D sym->start;
+> -               kce.len =3D sym->end - sym->start;
+> -               if (!kcore_extract__create(&kce)) {
+> -                       delete_extract =3D true;
+> -                       strlcpy(symfs_filename, kce.extract_filename,
+> -                               sizeof(symfs_filename));
+> -               }
+> -       } else if (dso__needs_decompress(dso)) {
+> -               char tmp[KMOD_DECOMP_LEN];
+> -
+> -               if (dso__decompress_kmodule_path(dso, symfs_filename,
+> -                                                tmp, sizeof(tmp)) < 0)
+> -                       return -1;
+> -
+> -               decomp =3D true;
+> -               strcpy(symfs_filename, tmp);
+> -       }
+> -
+> -       /*
+> -        * For powerpc data type profiling, use the dso__data_read_offset
+> -        * to read raw instruction directly and interpret the binary code
+> -        * to understand instructions and register fields. For sort keys =
+as
+> -        * type and typeoff, disassemble to mnemonic notation is
+> -        * not required in case of powerpc.
+> -        */
+> -       if (arch__is(args->arch, "powerpc")) {
+> -               extern const char *sort_order;
+> -
+> -               if (sort_order && !strstr(sort_order, "sym")) {
+> -                       err =3D symbol__disassemble_raw(symfs_filename, s=
+ym, args);
+> -                       if (err =3D=3D 0)
+> -                               goto out_remove_tmp;
+> -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> -                       err =3D symbol__disassemble_capstone_powerpc(symf=
+s_filename, sym, args);
+> -                       if (err =3D=3D 0)
+> -                               goto out_remove_tmp;
+> -#endif
+> -               }
+> -       }
+> -
+> -#ifdef HAVE_LIBLLVM_SUPPORT
+> -       err =3D symbol__disassemble_llvm(symfs_filename, sym, args);
+> -       if (err =3D=3D 0)
+> -               goto out_remove_tmp;
+> -#endif
+> -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> -       err =3D symbol__disassemble_capstone(symfs_filename, sym, args);
+> -       if (err =3D=3D 0)
+> -               goto out_remove_tmp;
+> -#endif
+> +       int err;
 >
->                 if (width < len)
->                         width =3D len;
+>         err =3D asprintf(&command,
+>                  "%s %s%s --start-address=3D0x%016" PRIx64
+> @@ -2163,13 +2090,13 @@ int symbol__disassemble(struct symbol *sym, struc=
+t annotate_args *args)
 >
->                 if (has_subtests(*t)) {
-> -                       for (int subi =3D 0, subn =3D num_subtests(*t); s=
-ubi
-> < subn; subi++) {
-> +                       for (subn =3D num_subtests(*t); subi < subn; subi=
-++) {
->                                 len =3D strlen(test_description(*t, subi)=
-);
->                                 if (width < len)
->                                         width =3D len;
-> -                               num_tests++;
->                         }
-> -               } else {
-> -                       num_tests++;
->                 }
-> +               num_tests +=3D subn * runs_per_test;
+>         if (err < 0) {
+>                 pr_err("Failure allocating memory for the command to run\=
+n");
+> -               goto out_remove_tmp;
+> +               return err;
 >         }
->         child_tests =3D calloc(num_tests, sizeof(*child_tests));
->         if (!child_tests)
-
-It's basically the same thing, instead of doing increments and then
-multiplying by runs_per_test you just add on runs_per_test and avoid
-the multiply.
-
-> >       child_tests =3D calloc(num_tests, sizeof(*child_tests));
-> > @@ -556,21 +558,25 @@ static int __cmd_test(struct test_suite **suites,=
- int argc, const char *argv[],
-> >                       }
-> >
-> >                       if (!has_subtests(*t)) {
-> > -                             err =3D start_test(*t, curr, -1, &child_t=
-ests[child_test_num++],
-> > -                                              width, pass);
-> > -                             if (err)
-> > -                                     goto err_out;
-> > +                             for (unsigned int run =3D 0; run < runs_p=
-er_test; run++) {
-> > +                                     err =3D start_test(*t, curr, -1, =
-&child_tests[child_test_num++],
-> > +                                                     width, pass);
-> > +                                     if (err)
-> > +                                             goto err_out;
-> > +                             }
-> >                               continue;
-> >                       }
-> > -                     for (int subi =3D 0, subn =3D num_subtests(*t); s=
-ubi < subn; subi++) {
-> > -                             if (!perf_test__matches(test_description(=
-*t, subi),
-> > -                                                     curr, argc, argv)=
-)
-> > -                                     continue;
-> > -
-> > -                             err =3D start_test(*t, curr, subi, &child=
-_tests[child_test_num++],
-> > -                                              width, pass);
-> > -                             if (err)
-> > -                                     goto err_out;
-> > +                     for (unsigned int run =3D 0; run < runs_per_test;=
- run++) {
-> > +                             for (int subi =3D 0, subn =3D num_subtest=
-s(*t); subi < subn; subi++) {
-> > +                                     if (!perf_test__matches(test_desc=
-ription(*t, subi),
-> > +                                                                     c=
-urr, argc, argv))
-> > +                                             continue;
-> > +
-> > +                                     err =3D start_test(*t, curr, subi=
-, &child_tests[child_test_num++],
-> > +                                                     width, pass);
-> > +                                     if (err)
-> > +                                             goto err_out;
-> > +                             }
 >
-> Can we add a wrapper for the start_test()? Something similar to below?
-> It avoids adding the loop for every places using the start_test.
+>         pr_debug("Executing: %s\n", command);
 >
-> +static int start_test(struct test_suite *test, int i, int subi, struct
-> child_test **child,
-> +               int width, int pass)
-> +{
-> +       for (unsigned int run =3D 0; run < runs_per_test; run++) {
-> +               __start_test();
-> +       }
+>         objdump_argv[2] =3D command;
+> -       objdump_argv[4] =3D symfs_filename;
+> +       objdump_argv[4] =3D filename;
+>
+>         /* Create a pipe to read from for stdout */
+>         memset(&objdump_process, 0, sizeof(objdump_process));
+> @@ -2207,8 +2134,8 @@ int symbol__disassemble(struct symbol *sym, struct =
+annotate_args *args)
+>                         break;
+>
+>                 /* Skip lines containing "filename:" */
+> -               match =3D strstr(line, symfs_filename);
+> -               if (match && match[strlen(symfs_filename)] =3D=3D ':')
+> +               match =3D strstr(line, filename);
+> +               if (match && match[strlen(filename)] =3D=3D ':')
+>                         continue;
+>
+>                 expanded_line =3D strim(line);
+> @@ -2253,6 +2180,87 @@ int symbol__disassemble(struct symbol *sym, struct=
+ annotate_args *args)
+>
+>  out_free_command:
+>         free(command);
+> +       return err;
 > +}
+> +
+> +int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+> +{
+> +       struct map *map =3D args->ms.map;
+> +       struct dso *dso =3D map__dso(map);
+> +       char symfs_filename[PATH_MAX];
+> +       bool delete_extract =3D false;
+> +       struct kcore_extract kce;
+> +       bool decomp =3D false;
+> +       int err =3D dso__disassemble_filename(dso, symfs_filename, sizeof=
+(symfs_filename));
+> +
+> +       if (err)
+> +               return err;
+> +
+> +       pr_debug("%s: filename=3D%s, sym=3D%s, start=3D%#" PRIx64 ", end=
+=3D%#" PRIx64 "\n", __func__,
+> +                symfs_filename, sym->name, map__unmap_ip(map, sym->start=
+),
+> +                map__unmap_ip(map, sym->end));
+> +
+> +       pr_debug("annotating [%p] %30s : [%p] %30s\n", dso, dso__long_nam=
+e(dso), sym, sym->name);
+> +
+> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_PROG_INFO) =
+{
+> +               return symbol__disassemble_bpf(sym, args);
+> +       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_IMAG=
+E) {
+> +               return symbol__disassemble_bpf_image(sym, args);
+> +       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUN=
+D) {
+> +               return -1;
+> +       } else if (dso__is_kcore(dso)) {
+> +               kce.addr =3D map__rip_2objdump(map, sym->start);
+> +               kce.kcore_filename =3D symfs_filename;
+> +               kce.len =3D sym->end - sym->start;
+> +               kce.offs =3D sym->start;
+> +
+> +               if (!kcore_extract__create(&kce)) {
+> +                       delete_extract =3D true;
+> +                       strlcpy(symfs_filename, kce.extract_filename, siz=
+eof(symfs_filename));
+> +               }
+> +       } else if (dso__needs_decompress(dso)) {
+> +               char tmp[KMOD_DECOMP_LEN];
+> +
+> +               if (dso__decompress_kmodule_path(dso, symfs_filename, tmp=
+, sizeof(tmp)) < 0)
+> +                       return -1;
+> +
+> +               decomp =3D true;
+> +               strcpy(symfs_filename, tmp);
+> +       }
+> +
+> +       /*
+> +        * For powerpc data type profiling, use the dso__data_read_offset=
+ to
+> +        * read raw instruction directly and interpret the binary code to
+> +        * understand instructions and register fields. For sort keys as =
+type
+> +        * and typeoff, disassemble to mnemonic notation is not required =
+in
+> +        * case of powerpc.
+> +        */
+> +       if (arch__is(args->arch, "powerpc")) {
+> +               extern const char *sort_order;
+> +
+> +               if (sort_order && !strstr(sort_order, "sym")) {
+> +                       err =3D symbol__disassemble_raw(symfs_filename, s=
+ym, args);
+> +                       if (err =3D=3D 0)
+> +                               goto out_remove_tmp;
+> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> +                       err =3D symbol__disassemble_capstone_powerpc(symf=
+s_filename, sym, args);
+> +                       if (err =3D=3D 0)
+> +                               goto out_remove_tmp;
+> +#endif
+> +               }
+> +       }
+> +
+> +#ifdef HAVE_LIBLLVM_SUPPORT
+> +       err =3D symbol__disassemble_llvm(symfs_filename, sym, args);
+> +       if (err =3D=3D 0)
+> +               goto out_remove_tmp;
+> +#endif
+> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> +       err =3D symbol__disassemble_capstone(symfs_filename, sym, args);
+> +       if (err =3D=3D 0)
+> +               goto out_remove_tmp;
+> +#endif
+> +       err =3D symbol__disassemble_objdump(symfs_filename, sym, args);
 
-I think the issue is the code has become overly indented. Having a
-start_test function that starts some number of tests feels less than
-intention revealing. Perhaps (in the future I'd like to tackle other
-things for now, such as new TMAs :-) ) we can create all the child
-tests in one pass, then just have start_test and finish_test work with
-the child tests. (Off topic) Something else I'd like is to move the
-slower running tests to the end of the list of tests so you can see
-the earlier results while waiting.
+This sure does read like the symbol will be disassembled 3 times if
+those ifdefs are defined. Is there anyway to make the code look more
+intuitive?
 
 Thanks,
 Ian
 
-
-> >                       }
-> >               }
-> >               if (!sequential) {
-> > @@ -714,6 +720,8 @@ int cmd_test(int argc, const char **argv)
-> >                   "Do not fork for testcase"),
-> >       OPT_BOOLEAN('S', "sequential", &sequential,
-> >                   "Run the tests one after another rather than in paral=
-lel"),
-> > +     OPT_UINTEGER('r', "runs-per-test", &runs_per_test,
-> > +                  "Run each test the given number of times, default 1"=
-),
-> >       OPT_STRING('w', "workload", &workload, "work", "workload to run f=
-or testing, use '--list-workloads' to list the available ones."),
-> >       OPT_BOOLEAN(0, "list-workloads", &list_workloads, "List the avail=
-able builtin workloads to use with -w/--workload"),
-> >       OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
+>
+>  out_remove_tmp:
+>         if (decomp)
+> --
+> 2.47.0
 >
