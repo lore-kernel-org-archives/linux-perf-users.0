@@ -1,258 +1,111 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2402003AE;
-	Tue, 12 Nov 2024 15:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD44420262A
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 Nov 2024 16:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731425246; cv=none; b=RpsigfZA9UHPUgpgcUP/2/axjIQVByIzn8obV3bbyWUB7h8ei/El1x7Jx4HOMtJ5k+CDTnu0z7+wD1j9pLqYEH7zs0lp15qb2Og25U9o8e/kw2ZKTL0Jte/5qjVYL6fbwPXQHpLG7fharKhLHpN7E5hlS8ek9cN8wZOWWUe8HcE=
+	t=1731427270; cv=none; b=AnfYSB0HU+RXYrkTEnkYQKSu93D1yJNKWlqfK3vMrl6Nx57wAGSJs+tBGSohcOkDn9URZ2DPYFuIdKshz+cjE3tecnoQFk5neOP+tWbLJpWDP8HPk7X1EX0HylRFiEeNcHx8f6dWWTtWgsZXfxg5fLnUP5Pn8xarHia69FoodgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731425246; c=relaxed/simple;
-	bh=vhCCncqYGmUdJ7NTEzYzq4itwiEnrYNxZG/mvhBCWH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=odbqTB2sY9mBpzQkHtFrYrRC/MfA3haB1zFQ881eBk1b+RGJYZ9PtDV45Yfdo4tfM9tTPYUJm4FqkQkIfAEndRI+9JoS3M29XvKqEw54dcqzNf040puhcmckZBdYBzvZEEaK5U2tVAM/puSUpKldkM35Ajhy2QDOykfxdnc+Hls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=1NYh8DoK; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1731427270; c=relaxed/simple;
+	bh=UAcGazzCp6/O/W5MzKvdpcujovBvjqAvNrpyKPtJrfk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cAIhV7TP1WTdDvD9IHsTad+BL6YM3Q9zNCxBmHe2aN2kAO2gCYHsw6nXRP1c0oaWRdGdNIrf6FZ1micMDc6XzVv+PluTAKmi/oHtaxem/6rnrU3fkwq6WUiNhoSIkx3o4uWf+rdQHy/9GaFuZcB65fzUbZGspPc7zjXngBJC8g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=smRvCkBx; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="1NYh8DoK"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4ACCtRHK004345;
-	Tue, 12 Nov 2024 16:26:47 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	9C5jRymTu4hAN9ZEjiTRkIi2mPHYWLZOhaiYPKeGVbM=; b=1NYh8DoKIs8pyMQ9
-	Q0o4Fg5BT9nUzH8SEr+auHwRZErZiEcEpwVAp7oAQiSyKvRU+3k99Uh8ibSRaROC
-	G2er62hfn/8eCaY4+4NIDYO5DxDLdSs1xJI9JtrfOvH6NKmF7eBO9xzPjV6LeFVV
-	WwyembtjC9snEsz9U86/rd6OAAxVbVTE+GLqKVBgSP8VFywDV0A9g4mfAanYS0+d
-	6rukitQNlWKEyFL4CQWk2Ygi/2xk8hFHyiZwqxSoXFaTt/VksCCuB+xxj7/1uoWb
-	J3JxpVtigxsp8AWcGbIuAGIacCL+sFCoF99+8qH+rzzr1g7f0qJHiU1DIaIzRvVW
-	4YFW3w==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 42syggmu2b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Nov 2024 16:26:47 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1E2EB4004A;
-	Tue, 12 Nov 2024 16:25:20 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BA2A22BEF8D;
-	Tue, 12 Nov 2024 16:24:26 +0100 (CET)
-Received: from [10.48.87.2] (10.48.87.2) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Tue, 12 Nov
- 2024 16:24:25 +0100
-Message-ID: <3ccc6d4d-cfbc-49ba-8d7a-5ef867fa0f37@foss.st.com>
-Date: Tue, 12 Nov 2024 16:24:17 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="smRvCkBx"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5c937b5169cso2528849a12.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Nov 2024 08:01:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1731427267; x=1732032067; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nOEI8UezSMAVzR/zNgR5LZjC5DnJu/D/ladTewPTC3U=;
+        b=smRvCkBx2EbvbhaiGiZ+XqJy/17grEqFfxRI/NJ/FkaShRSsS36QK/46MxON58zCAp
+         vlJWru4j5J+voyFyLXTTBjYseI16ThByhl4MVmtrR5r6EgOmbOE2EFH1JwHodfF1qgBI
+         rD8BpdWF3x7UNx8ZTMZ9rIM1PRSpAogDvGLJDZYYwxqWxzZDKiyFS/dv7lkg10u1BbEE
+         GXPMWNPvQMP6xSIMDkWYEcZZs5g3y5ghaGBbz81l1rwOpKrIl1GZeKYOFEGHijQf8k03
+         Us49INxr8jg1lCmReVRIVPUtm4KZPDUwsy1MoX9hnDAXrIRb9KVnW/e9J3fZ1o2L1T+C
+         bA7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731427267; x=1732032067;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nOEI8UezSMAVzR/zNgR5LZjC5DnJu/D/ladTewPTC3U=;
+        b=jgLzrxGbBYMPICrN3zrHvYXgqucY85PvtHVfIKpSGYV3EerddFbEg7kOacIdO+Zhnb
+         bzosevBJutqoCcCK7lMfyr1MRT0f33RFRBvmPNzzQn8ymTVTkVyNHciQ+k35OLZAhlZE
+         UHWKBayfuCOrzsTOhA8UaMAYtiz5nRWW1COgqbjBxjYXOXnqxzjBtwm37dfKbsfNfKBK
+         oRbvjSZMHrrqoYYH65y1zrf+SCcnILDnxN+UlREfShMRoJXf25qvhIZZK88/j+He0K8p
+         JGY+I68nkUyV8qiUDorrQMM+D/w18zdbuQ5GwkhbPwzkvG93ISzU3uk9VtvgKLysu/AN
+         AlOQ==
+X-Gm-Message-State: AOJu0YzLXbWqXgtVLM5E5RPGXlzCA8McUkWK1v1QCnt4mgzsi4NSEoSY
+	RONsMKvra1Tv1mZJRSYYbwMWBDqRgDQ2AOual/cABCiTN/DeKlOkij0n5jLn7QwZR2dtrmcmR3s
+	Rj9w=
+X-Google-Smtp-Source: AGHT+IH+CZ2kdawDB1g8i2yUpqSeBIFmuQev+NUGYW0XZmJCMTwAMWirfE2v1Z0EXkcL3is4/Zg/4A==
+X-Received: by 2002:a05:6402:4021:b0:5cf:1214:8146 with SMTP id 4fb4d7f45d1cf-5cf12148226mr17482294a12.4.1731427266960;
+        Tue, 12 Nov 2024 08:01:06 -0800 (PST)
+Received: from pop-os.. ([145.224.90.214])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cf03bb760fsm6148172a12.47.2024.11.12.08.01.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2024 08:01:06 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	tim.c.chen@linux.intel.com
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/5] perf stat: Fix trailing comma when there is no metric unit
+Date: Tue, 12 Nov 2024 16:00:40 +0000
+Message-Id: <20241112160048.951213-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf list: Fix topic and pmu_name argument order
-To: Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo
-	<acme@kernel.org>
-CC: "Liang, Kan" <kan.liang@linux.intel.com>,
-        Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim
-	<namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander
- Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Junhao He <hejunhao3@huawei.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20241109025801.560378-1-irogers@google.com>
- <7676a058-e7ae-4c6b-a9f8-be450b64f5e1@linux.intel.com> <ZzJAQeHqFT_Z9JiW@x1>
- <CAP-5=fXEe+O+pctnO-MhCLrX071uvkLzA-L9AWP=LR81YKYG6Q@mail.gmail.com>
-Content-Language: en-US
-From: Jean-philippe ROMAIN <jean-philippe.romain@foss.st.com>
-In-Reply-To: <CAP-5=fXEe+O+pctnO-MhCLrX071uvkLzA-L9AWP=LR81YKYG6Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
+The first commit is failing on Arm and I think the fix should stop more
+trailing comma issues which keep happening.
 
-On 11/11/24 19:20, Ian Rogers wrote:
-> On Mon, Nov 11, 2024 at 9:35 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
->> On Mon, Nov 11, 2024 at 09:48:41AM -0500, Liang, Kan wrote:
->>>
->>> On 2024-11-08 9:58 p.m., Ian Rogers wrote:
->>>> From: Jean-Philippe Romain <jean-philippe.romain@foss.st.com>
->>>>
->>>> Fix function definitions to match header file declaration. Fix two
->>>> callers to pass the arguments in the right order.
->>>>
->>>> On Intel Tigerlake, before:
->>>> ```
->>>> $ perf list -j|grep "\"Topic\""|sort|uniq
->>>>          "Topic": "cache",
->>>>          "Topic": "cpu",
->>>>          "Topic": "floating point",
->>>>          "Topic": "frontend",
->>>>          "Topic": "memory",
->>>>          "Topic": "other",
->>>>          "Topic": "pfm icl",
->>>>          "Topic": "pfm ix86arch",
->>>>          "Topic": "pfm perf_raw",
->>>>          "Topic": "pipeline",
->>>>          "Topic": "tool",
->>>>          "Topic": "uncore interconnect",
->>>>          "Topic": "uncore memory",
->>>>          "Topic": "uncore other",
->>>>          "Topic": "virtual memory",
->>>> $ perf list -j|grep "\"Unit\""|sort|uniq
->>>>          "Unit": "cache",
->>>>          "Unit": "cpu",
->>>>          "Unit": "cstate_core",
->>>>          "Unit": "cstate_pkg",
->>>>          "Unit": "i915",
->>>>          "Unit": "icl",
->>>>          "Unit": "intel_bts",
->>>>          "Unit": "intel_pt",
->>>>          "Unit": "ix86arch",
->>>>          "Unit": "msr",
->>>>          "Unit": "perf_raw",
->>>>          "Unit": "power",
->>>>          "Unit": "tool",
->>>>          "Unit": "uncore_arb",
->>>>          "Unit": "uncore_clock",
->>>>          "Unit": "uncore_imc_free_running_0",
->>>>          "Unit": "uncore_imc_free_running_1",
->>>> ```
->>>>
->>>> After:
->>>> ```
->>>> $ perf list -j|grep "\"Topic\""|sort|uniq
->>>>          "Topic": "cache",
->>>>          "Topic": "floating point",
->>>>          "Topic": "frontend",
->>>>          "Topic": "memory",
->>>>          "Topic": "other",
->>>>          "Topic": "pfm icl",
->>>>          "Topic": "pfm ix86arch",
->>>>          "Topic": "pfm perf_raw",
->>>>          "Topic": "pipeline",
->>>>          "Topic": "tool",
->>>>          "Topic": "uncore interconnect",
->>>>          "Topic": "uncore memory",
->>>>          "Topic": "uncore other",
->>>>          "Topic": "virtual memory",
->>>> $ perf list -j|grep "\"Unit\""|sort|uniq
->>>>          "Unit": "cpu",
->>>>          "Unit": "cstate_core",
->>>>          "Unit": "cstate_pkg",
->>>>          "Unit": "i915",
->>>>          "Unit": "icl",
->>>>          "Unit": "intel_bts",
->>>>          "Unit": "intel_pt",
->>>>          "Unit": "ix86arch",
->>>>          "Unit": "msr",
->>>>          "Unit": "perf_raw",
->>>>          "Unit": "power",
->>>>          "Unit": "tool",
->>>>          "Unit": "uncore_arb",
->>>>          "Unit": "uncore_clock",
->>>>          "Unit": "uncore_imc_free_running_0",
->>>>          "Unit": "uncore_imc_free_running_1",
->>>> ```
->>>>
->>>> Fixes: e5c6109f4813 ("perf list: Reorganize to use callbacks to allow honouring command line options")
->>>> Signed-off-by: Jean-Philippe Romain <jean-philippe.romain@foss.st.com>
->>>> Tested-by: Ian Rogers <irogers@google.com>
->>> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
->>>> ---
->>>> Note from Ian, I fixed the two callers and added it to
->>>> Jean-Phillippe's original change.
->> I think that in this case we need:
->>
->> [ I fixed the two callers and added it to Jean-Phillippe's original change. ]
->> Signed-off-by: Ian Rogers <irogers@google.com>
->>
->> Ok?
-> Sgtm.
->
-> Thanks,
-> Ian
->
+The second one I just noticed when looking at it. I don't feel strongly
+about it so not sure if we should do it or not, but seems like the empty
+metric-units exclusion from the JSON should be consistent if we're going
+to have it at all.
 
-Reviewed-by: Jean-Philippe Romain <jean-philippe.romain@foss.st.com>
+Changes since v2:
+  * Do more documentation and tidyups around struct outstate
 
-Many thanks,
-Jean-Philippe
+Changes since v1:
+  * Don't skip printing when the metric-unit string is empty but pass
+    NULL instead of an empty string.
 
->>>> ---
->>>>   tools/perf/builtin-list.c | 4 ++--
->>>>   tools/perf/util/pfm.c     | 4 ++--
->>>>   tools/perf/util/pmus.c    | 2 +-
->>>>   3 files changed, 5 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
->>>> index b8378ba18c28..9e7fdfcdd7ff 100644
->>>> --- a/tools/perf/builtin-list.c
->>>> +++ b/tools/perf/builtin-list.c
->>>> @@ -113,7 +113,7 @@ static void wordwrap(FILE *fp, const char *s, int start, int max, int corr)
->>>>      }
->>>>   }
->>>>
->>>> -static void default_print_event(void *ps, const char *pmu_name, const char *topic,
->>>> +static void default_print_event(void *ps, const char *topic, const char *pmu_name,
->>>>                              const char *event_name, const char *event_alias,
->>>>                              const char *scale_unit __maybe_unused,
->>>>                              bool deprecated, const char *event_type_desc,
->>>> @@ -354,7 +354,7 @@ static void fix_escape_fprintf(FILE *fp, struct strbuf *buf, const char *fmt, ..
->>>>      fputs(buf->buf, fp);
->>>>   }
->>>>
->>>> -static void json_print_event(void *ps, const char *pmu_name, const char *topic,
->>>> +static void json_print_event(void *ps, const char *topic, const char *pmu_name,
->>>>                           const char *event_name, const char *event_alias,
->>>>                           const char *scale_unit,
->>>>                           bool deprecated, const char *event_type_desc,
->>>> diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
->>>> index 5ccfe4b64cdf..0dacc133ed39 100644
->>>> --- a/tools/perf/util/pfm.c
->>>> +++ b/tools/perf/util/pfm.c
->>>> @@ -233,7 +233,7 @@ print_libpfm_event(const struct print_callbacks *print_cb, void *print_state,
->>>>      }
->>>>
->>>>      if (is_libpfm_event_supported(name, cpus, threads)) {
->>>> -           print_cb->print_event(print_state, pinfo->name, topic,
->>>> +           print_cb->print_event(print_state, topic, pinfo->name,
->>>>                                    name, info->equiv,
->>>>                                    /*scale_unit=*/NULL,
->>>>                                    /*deprecated=*/NULL, "PFM event",
->>>> @@ -267,8 +267,8 @@ print_libpfm_event(const struct print_callbacks *print_cb, void *print_state,
->>>>                              continue;
->>>>
->>>>                      print_cb->print_event(print_state,
->>>> -                                   pinfo->name,
->>>>                                      topic,
->>>> +                                   pinfo->name,
->>>>                                      name, /*alias=*/NULL,
->>>>                                      /*scale_unit=*/NULL,
->>>>                                      /*deprecated=*/NULL, "PFM event",
->>>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
->>>> index 107de86c2637..6d4c7c9ecf3a 100644
->>>> --- a/tools/perf/util/pmus.c
->>>> +++ b/tools/perf/util/pmus.c
->>>> @@ -501,8 +501,8 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
->>>>                      goto free;
->>>>
->>>>              print_cb->print_event(print_state,
->>>> -                           aliases[j].pmu_name,
->>>>                              aliases[j].topic,
->>>> +                           aliases[j].pmu_name,
->>>>                              aliases[j].name,
->>>>                              aliases[j].alias,
->>>>                              aliases[j].scale_unit,
+James Clark (5):
+  perf stat: Fix trailing comma when there is no metric unit
+  perf stat: Also hide metric-units from JSON when event didn't run
+  perf stat: Remove empty new_line_metric function
+  perf stat: Document and simplify interval timestamps
+  perf stat: Document and clarify outstate members
+
+ tools/perf/arch/x86/util/iostat.c             |   4 +
+ .../tests/shell/lib/perf_json_output_lint.py  |  14 +-
+ tools/perf/util/stat-display.c                | 242 ++++++++++--------
+ tools/perf/util/stat-shadow.c                 |   5 +-
+ 4 files changed, 147 insertions(+), 118 deletions(-)
+
+-- 
+2.34.1
+
