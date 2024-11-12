@@ -1,251 +1,232 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE6B20604B;
-	Tue, 12 Nov 2024 21:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AE421A4D4
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 Nov 2024 22:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731447643; cv=none; b=EIFJSYeo2KF4igbkstOOFvie0QHx1xNju0C5wmYDFRdgRKir+f2A247AE0/ORYLfHp9YDIXbO2BvXC7O+W/Jxj4+a/bfW0I9BPItmfn8qCAUJFE1kg/SLxTo4+WPf8o1fgC/UoMILfmx+qj5JD3D3Cmj0xAseyI/wNAlsvoXrzs=
+	t=1731450268; cv=none; b=M3V2ht8b6rkMoLUetm0thBLQWWFhFpd+03gBz0WH1S+GLaF8SB02Y1yNnhTK1RDOaHc16MrMt3t1UsMg9+7hsxyWzaiNJCgvrC5qlKPXGIt7avfG5agSKKPqtBZsuW+zkz7KKcLVgWrajZm+JxlmSF6T0k1b7Lpmy7NSg5kWqpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731447643; c=relaxed/simple;
-	bh=edoAyla8Rqv0rNa7JGF9aon7gJr5YK26ByGNMwLc/Es=;
+	s=arc-20240116; t=1731450268; c=relaxed/simple;
+	bh=/wlansXT8ic1VdGrktjv6oyEADi9JxkCX7zQgwP+2Lg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=toEmsfgxlWU5ytZNSVBCIDKFQrpuOmcDNgoqgEFP+Bkgo0nHD2xqwZ2jWS8ktsuf2qY2ILbgEiz8ne3m1ni7bbPcrosGXFrBCeA1LI77agi8SGJHYOIemZMX3Ap782hptH5WP8PhUoXapxKURqNWuzFq0CUj9RLVJFkNm7+xQo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V1XnnVC6; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=rSCEoLMPINqZBZIFbHPhTRGtY63RQny+eKVnw5EUpfJx8J3EOyRb6jajQGdJbMJtr3lZihYmQ9hG3WWTWxwv9nfmv4MGHVftC/04g/7rW7NmJi2Jh8l3RSST4BDfeD/oBocQbx2MZJewWX3tsYaAgpUVkdTpyIHXKZ5i9DD1XV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wQcviIGh; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V1XnnVC6"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e290e857d56so5895292276.1;
-        Tue, 12 Nov 2024 13:40:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wQcviIGh"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20ca4877690so20015ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Nov 2024 14:24:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731447641; x=1732052441; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731450266; x=1732055066; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ra+hu73Jn9BLF/9oZjXy+Xnf5EDq8HGwgu7FojceqVg=;
-        b=V1XnnVC6boMAdaU8Sqd1R0PK9uSwJOtZN4rhNEinfYpSUGbX049O3knszdZkzNEsHN
-         EjmkPAj15nJRya3aOdCTLG3CuIzxfOktSNjAJjlnVF4oiMYalVTUPOz+o1rRab+ssitH
-         aaqRRp3+671nd13VKtVcuqztCU4nl8+A5FnmII0vRUQQt1tTnngHTmv4FDtOWC5Tl0VO
-         wYoJwFLXC7F9MAcCKwr9Bb+6651/ACSAd5RwPNSEdTYRd4MNdJPFaO3uIPcGHQ+PGZWL
-         92NgZvZkVgvyMpP8SnWTPQ/9u4rtpWETedCRtruuk28B+37subJdp/0DlIy3nDVOmM/S
-         1HDg==
+        bh=XrbUWlz/10HI8HCWywPHxZR9oOzLRJKPdLGJRk3v8wY=;
+        b=wQcviIGhyMH7BttYPzkOspFSDnDLhfdZR6TXRGgyTRUTuxp6ILrQir0hzaFrGR1i+3
+         Hf6RiUqIRV72eZNDya/IDhaySuCC28epWyYD0nr5FBi4FdJVb4IPigYRaNH45SkJa3Av
+         zGvJrkemAzmZHy6VWbeEl6xxGvNB0sEmp9spo2HI6G8llbv5aJVy/2d0piHM5bsEg8lG
+         7wyPl9KxffDqx6PxQZQ8Nimli7IB7DTnpSuQd0R/fQjtbg8BPEeYjBrGq4XXNVUPJPUp
+         UIUOH6ZAdaXQknS8Ar7XVmw4/n+EM//qhYULysXjDGOxWCfEXsiq/MNfFXamqo4cdRSB
+         Va5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731447641; x=1732052441;
+        d=1e100.net; s=20230601; t=1731450266; x=1732055066;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ra+hu73Jn9BLF/9oZjXy+Xnf5EDq8HGwgu7FojceqVg=;
-        b=jvMl+1Ut4rGrquGSiBVrg/iPUm+lNlfeDggydpzbKxxwf3Y3CalA2vzMzZX/h+8VrF
-         iOmY9jdVsdJVX7YprQnSNZMPQNR47x54Jk7hTqfWLcRS7ZtWR7/mETItkbHbJ3hU/71f
-         Iqvy6VphKVXOHM7P/hXf741h5q9R28eWAfx20K/3ottRd5SGhEilMmFwJjTAUh/FDzrN
-         FV+YSSkJBGcEWHjDaVIVy9Fo/Uwcj5vfn//kx8/s7Fqf5DkQIvL8vLaTJGYGzPVsDnak
-         WMQfc9/0E9bYCkNEgD5Rs3oK7YthvSwTPTgijiXe6gGY8gHmb7zG5JUTAWfddd8XKzax
-         ooRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVwsv3P2VjsXszbR1gw3P7R12vclaYOsgMbZZxB+O4aWz9PY/90OcUmC7L3QH/S+qZjSn+BTt7uzZ3EeJs=@vger.kernel.org, AJvYcCXEBLCkWe7mVhTHGs6csVBbkxtNZSMb1PshMK6LC3uQ4cV9pecIsU1IBv1ebnjaekmCZlmodhSl7KZV3CVpuZB/Xw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXUCzeu47cLR1VbkRQbqxxdrO1aJxKs0EqUZ6kGHXdKI+tdnSI
-	vsE6r9v4R9T6ySzgeUjbjntXaMy3qIvCQGNq9LygFj5IwFiDqHPgq4cRJl+CzNr67C0vee2TWVw
-	+QZXdNXswRvyx2wwiSIRAVyAS6EU=
-X-Google-Smtp-Source: AGHT+IHbkkvhmT5jB1Iw/RfnrsZdesYrAU6+6bsibexySVnZzYJ+X09a4MVvrqvtiBACJ17tbPpFcwmArNAg+2sVOhY=
-X-Received: by 2002:a05:6902:a04:b0:e33:1014:2d9c with SMTP id
- 3f1490d57ef6-e337f8d3c6amr15832778276.50.1731447640783; Tue, 12 Nov 2024
- 13:40:40 -0800 (PST)
+        bh=XrbUWlz/10HI8HCWywPHxZR9oOzLRJKPdLGJRk3v8wY=;
+        b=QfskjrnIDCIH/S04awG6iV/U7NI2AqHHJrHbnsHr5/v3kGOOPZ3+tdmSlBftM8lhPR
+         it8+YhN973+ggtIZRgehtHvn9dgKigYxC+16WtgZb8QFtX3a2+mEvPSkByAvSpNnlA9R
+         xasR7+TovfXtqW2+OLBO2H4NwPWwIz+Z/8WW2G0r//mL77/tbz32TtpV7dv0iHWXX4HM
+         02KZDHIzDcN//I/1rKMmjnhavDKdAk5yi6z/9aztz4PsBU52QUGsCOVIa/jU8nyqRyhD
+         K8+lpXZysYjkdhWbiH7ZmjHIxJ+AweIlhTzIDI8JLgWSnnVSbnhjnXml0hJRFYq7kCDT
+         t+9w==
+X-Forwarded-Encrypted: i=1; AJvYcCW4flThWE+kgxEsvqIBBc9YrPedyzY9N+J78cUA8+9ZYddmHoVqneNdjqZDaLWuSZx2GNU86116uPjAXi/iEp4v@vger.kernel.org
+X-Gm-Message-State: AOJu0YzySqvDdh1oJ0SJ8BVNuvnUIgauWfDgIKZfslK0vTjzZIlLo04a
+	5aKIO0nhefXCxmxgMFWjwuo4wHNgIkHkCPZeLawcS2tcc8vMqmikHHYGmQ6DbOoUnptxpItDVBZ
+	ytSDezPc+Wl+GfIoccSHCdEium2bwSyNxuidN
+X-Gm-Gg: ASbGncvCDU6HV2oEkn0yYZUHsAy/Nqdst8yTIwazB00iTX3Hi6qmWNpItTKJYnkzHRO
+	9yrZPfizEjLqCpDzse1mURBmBlhHqVTa7UY/WIH+8yLqkcOesrXtbUVcX0AsqoKk=
+X-Google-Smtp-Source: AGHT+IHVjOXDPek3bTfzpcjqhyl6dO+VgXJqAYZyQMTiOm5YzMnjDVAcfOTw1GP054zeGixwaVYPsd6ThcCJdKkbUoY=
+X-Received: by 2002:a17:903:2449:b0:20b:81bb:4a81 with SMTP id
+ d9443c01a7336-211b70725d1mr132885ad.7.1731450266232; Tue, 12 Nov 2024
+ 14:24:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241108204137.2444151-1-howardchu95@gmail.com>
- <20241108204137.2444151-10-howardchu95@gmail.com> <CAP-5=fX-+bcovrhgW585xZZEZv=bx+=w-Aw5Y8ONR3Q0dORA5Q@mail.gmail.com>
-In-Reply-To: <CAP-5=fX-+bcovrhgW585xZZEZv=bx+=w-Aw5Y8ONR3Q0dORA5Q@mail.gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Tue, 12 Nov 2024 13:40:30 -0800
-Message-ID: <CAH0uvoh76QH8OjBfrs_nRYHEirwDb+=hxbvJTRJQhY5DZKvLEw@mail.gmail.com>
-Subject: Re: [PATCH v7 09/10] perf record --off-cpu: Dump the remaining
- samples in BPF's stack trace map
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, peterz@infradead.org, namhyung@kernel.org, 
-	mingo@redhat.com, mark.rutland@arm.com, james.clark@linaro.org, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20241026121758.143259-1-irogers@google.com> <20241026121758.143259-4-irogers@google.com>
+ <20241112195343.GA404636@e132581.arm.com>
+In-Reply-To: <20241112195343.GA404636@e132581.arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 12 Nov 2024 14:24:15 -0800
+Message-ID: <CAP-5=fXuyZbn3Jiq=RQaLTqybgji50Ko8jrpsinFqo+OOPBeRw@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] perf record: Skip don't fail for events that don't open
+To: Leo Yan <leo.yan@arm.com>
+Cc: Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org, 
+	beeman@rivosinc.com, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Ben Gainey <ben.gainey@arm.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Ian,
+On Tue, Nov 12, 2024 at 11:53=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> On Sat, Oct 26, 2024 at 05:17:57AM -0700, Ian Rogers wrote:
+> >
+> > Whilst for many tools it is an expected behavior that failure to open
+> > a perf event is a failure, ARM decided to name PMU events the same as
+> > legacy events and then failed to rename such events on a server uncore
+> > SLC PMU. As perf's default behavior when no PMU is specified is to
+> > open the event on all PMUs that advertise/"have" the event, this
+> > yielded failures when trying to make the priority of legacy and
+> > sysfs/json events uniform - something requested by RISC-V and ARM. A
+> > legacy event user on ARM hardware may find their event opened on an
+> > uncore PMU which for perf record will fail. Arnaldo suggested skipping
+> > such events which this patch implements. Rather than have the skipping
+> > conditional on running on ARM, the skipping is done on all
+> > architectures as such a fundamental behavioral difference could lead
+> > to problems with tools built/depending on perf.
+> >
+> > An example of perf record failing to open events on x86 is:
+> > ```
+> > $ perf record -e data_read,cycles,LLC-prefetch-read -a sleep 0.1
+> > Error:
+> > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0' wh=
+ich will be removed.
+> > The sys_perf_event_open() syscall returned with 22 (Invalid argument) f=
+or event (data_read).
+> > "dmesg | grep -i perf" may provide additional information.
+> >
+> > Error:
+> > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1' wh=
+ich will be removed.
+> > The sys_perf_event_open() syscall returned with 22 (Invalid argument) f=
+or event (data_read).
+> > "dmesg | grep -i perf" may provide additional information.
+> >
+> > Error:
+> > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be re=
+moved.
+> > The LLC-prefetch-read event is not supported.
+> > [ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 2.188 MB perf.data (87 samples) ]
+> >
+> > $ perf report --stats
+> > Aggregated stats:
+> >                TOTAL events:      17255
+> >                 MMAP events:        284  ( 1.6%)
+> >                 COMM events:       1961  (11.4%)
+> >                 EXIT events:          1  ( 0.0%)
+> >                 FORK events:       1960  (11.4%)
+> >               SAMPLE events:         87  ( 0.5%)
+> >                MMAP2 events:      12836  (74.4%)
+> >              KSYMBOL events:         83  ( 0.5%)
+> >            BPF_EVENT events:         36  ( 0.2%)
+> >       FINISHED_ROUND events:          2  ( 0.0%)
+> >             ID_INDEX events:          1  ( 0.0%)
+> >           THREAD_MAP events:          1  ( 0.0%)
+> >              CPU_MAP events:          1  ( 0.0%)
+> >            TIME_CONV events:          1  ( 0.0%)
+> >        FINISHED_INIT events:          1  ( 0.0%)
+> > cycles stats:
+> >               SAMPLE events:         87
+> > ```
+>
+> Thanks for James reminding me.  Tested on AVA platform:
+>
+> # tree /sys/bus/event_source/devices/arm_dsu_*/events
+>   ...
+>   /sys/bus/event_source/devices/arm_dsu_9/events
+>   =E2=94=9C=E2=94=80=E2=94=80 bus_access
+>   =E2=94=9C=E2=94=80=E2=94=80 bus_cycles
+>   =E2=94=9C=E2=94=80=E2=94=80 cycles
+>   =E2=94=9C=E2=94=80=E2=94=80 l3d_cache
+>   =E2=94=9C=E2=94=80=E2=94=80 l3d_cache_allocate
+>   =E2=94=9C=E2=94=80=E2=94=80 l3d_cache_refill
+>   =E2=94=9C=E2=94=80=E2=94=80 l3d_cache_wb
+>   =E2=94=94=E2=94=80=E2=94=80 memory_error
+>
+> # ./perf record -- sleep 0.1
+>  Error:
+>  Failure to open event 'cycles:PH' on PMU 'arm_dsu_0' which will be
+>  removed.
+>  cycles:PH: PMU Hardware doesn't support sampling/overflow-interrupts.
+>  Try 'perf stat'
+>  Error:
+>  Failure to open event 'cycles:PH' on PMU 'arm_dsu_1' which will be
+>  removed.
+>  cycles:PH: PMU Hardware doesn't support sampling/overflow-interrupts.
+>  Try 'perf stat'
+>  ...
+>  Error:
+>  Failure to open event 'cycles:PH' on PMU 'arm_dsu_15' which will be
+>  removed.
+>  cycles:PH: PMU Hardware doesn't support sampling/overflow-interrupts.
+>  Try 'perf stat'
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.008 MB perf.data (8 samples) ]
+>
+> # ./perf report --stats
+>
+>  Aggregated stats:
+>                 TOTAL events:         67
+>                  MMAP events:         40  (59.7%)
+>                  COMM events:          1  ( 1.5%)
+>                SAMPLE events:          8  (11.9%)
+>               KSYMBOL events:          6  ( 9.0%)
+>             BPF_EVENT events:          6  ( 9.0%)
+>        FINISHED_ROUND events:          1  ( 1.5%)
+>              ID_INDEX events:          1  ( 1.5%)
+>            THREAD_MAP events:          1  ( 1.5%)
+>               CPU_MAP events:          1  ( 1.5%)
+>             TIME_CONV events:          1  ( 1.5%)
+>         FINISHED_INIT events:          1  ( 1.5%)
+>  cycles:P stats:
+>                SAMPLE events:          8
+>
+> # ./perf stat -- sleep 0.1
+>
+>  Performance counter stats for 'sleep 0.1':
+>
+>               0.87 msec task-clock                       #    0.009 CPUs =
+utilized
+>                  1      context-switches                 #    1.148 K/sec
+>                  0      cpu-migrations                   #    0.000 /sec
+>                 52      page-faults                      #   59.685 K/sec
+>            877,835      instructions                     #    1.14  insn =
+per cycle
+>                                                   #    0.25  stalled cycl=
+es per insn
+>            772,102      cycles                           #  886.210 M/sec
+>            191,914      stalled-cycles-frontend          #   24.86% front=
+end cycles idle
+>            219,183      stalled-cycles-backend           #   28.39% backe=
+nd cycles idle
+>            184,099      branches                         #  211.307 M/sec
+>              8,548      branch-misses                    #    4.64% of al=
+l branches
+>
+>        0.101623529 seconds time elapsed
+>
+>        0.001645000 seconds user
+>        0.000000000 seconds sys
+>
+> Tested-by: Leo Yan <leo.yan@arm.com>
 
-On Mon, Nov 11, 2024 at 10:07=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On Fri, Nov 8, 2024 at 12:41=E2=80=AFPM Howard Chu <howardchu95@gmail.com=
-> wrote:
-> >
-> > Dump the remaining samples, as if it is dumping a direct sample.
-> >
-> > Put the stack trace, tid, off-cpu time and cgroup id into the raw_data
-> > section, just like a direct off-cpu sample coming from BPF's
-> > bpf_perf_event_output().
-> >
-> > This ensures that evsel__parse_sample() correctly parses both direct
-> > samples and accumulated samples.
->
-> Nice, hopefully this should mean we can get rid of the logic holding
-> all threads live for the sake of off-CPU, as off-CPU events were being
-> "sampled" after threads had terminated
-> (symbol_conf.keep_exited_threads). An example of this logic is:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
-tree/tools/perf/builtin-report.c?h=3Dperf-tools-next#n1484
-> Perhaps there is a follow up to dump exiting processes with a BPF
-> program on `tp/sched/sched_process_exit`. If the exited process is
-> already "dumped" then its map entry can be removed which may lower
-> overhead if off-CPU is running for a long time system wide.
-
-Thanks for the advice, that's actually a great idea. IIUC, when a task
-exits, dump its off-cpu time regardless of the threshold, and delete
-the map entry to save space for other tasks.
-
->
->
-> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
->
-> Reviewed-by: Ian Rogers <irogers@google.com>
->
-> Thanks,
-> Ian
->
-> > ---
-> >  tools/perf/util/bpf_off_cpu.c | 62 +++++++++++++++++++++--------------
-> >  1 file changed, 38 insertions(+), 24 deletions(-)
-> >
-> > diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cp=
-u.c
-> > index cfe5b17393e9..f1be354e2fe7 100644
-> > --- a/tools/perf/util/bpf_off_cpu.c
-> > +++ b/tools/perf/util/bpf_off_cpu.c
-> > @@ -37,6 +37,8 @@ union off_cpu_data {
-> >         u64 array[1024 / sizeof(u64)];
-> >  };
-> >
-> > +u64 off_cpu_raw[MAX_STACKS + 5];
-> > +
-> >  static int off_cpu_config(struct evlist *evlist)
-> >  {
-> >         char off_cpu_event[64];
-> > @@ -61,6 +63,9 @@ static int off_cpu_config(struct evlist *evlist)
-> >  static void off_cpu_start(void *arg)
-> >  {
-> >         struct evlist *evlist =3D arg;
-> > +       struct evsel *evsel;
-> > +       struct perf_cpu pcpu;
-> > +       int i, err;
-> >
-> >         /* update task filter for the given workload */
-> >         if (skel->rodata->has_task && skel->rodata->uses_tgid &&
-> > @@ -304,6 +309,7 @@ int off_cpu_write(struct perf_session *session)
-> >  {
-> >         int bytes =3D 0, size;
-> >         int fd, stack;
-> > +       u32 raw_size;
-> >         u64 sample_type, val, sid =3D 0;
-> >         struct evsel *evsel;
-> >         struct perf_data_file *file =3D &session->data->file;
-> > @@ -343,46 +349,54 @@ int off_cpu_write(struct perf_session *session)
-> >
-> >         while (!bpf_map_get_next_key(fd, &prev, &key)) {
-> >                 int n =3D 1;  /* start from perf_event_header */
-> > -               int ip_pos =3D -1;
-> >
-> >                 bpf_map_lookup_elem(fd, &key, &val);
-> >
-> > +               /* zero-fill some of the fields, will be overwritten by=
- raw_data when parsing */
-> >                 if (sample_type & PERF_SAMPLE_IDENTIFIER)
-> >                         data.array[n++] =3D sid;
-> > -               if (sample_type & PERF_SAMPLE_IP) {
-> > -                       ip_pos =3D n;
-> > +               if (sample_type & PERF_SAMPLE_IP)
-> >                         data.array[n++] =3D 0;  /* will be updated */
-> > -               }
-> >                 if (sample_type & PERF_SAMPLE_TID)
-> > -                       data.array[n++] =3D (u64)key.pid << 32 | key.tg=
-id;
-> > +                       data.array[n++] =3D 0;
-> >                 if (sample_type & PERF_SAMPLE_TIME)
-> >                         data.array[n++] =3D tstamp;
-> > -               if (sample_type & PERF_SAMPLE_ID)
-> > -                       data.array[n++] =3D sid;
-> >                 if (sample_type & PERF_SAMPLE_CPU)
-> >                         data.array[n++] =3D 0;
-> >                 if (sample_type & PERF_SAMPLE_PERIOD)
-> > -                       data.array[n++] =3D val;
-> > -               if (sample_type & PERF_SAMPLE_CALLCHAIN) {
-> > -                       int len =3D 0;
-> > -
-> > -                       /* data.array[n] is callchain->nr (updated late=
-r) */
-> > -                       data.array[n + 1] =3D PERF_CONTEXT_USER;
-> > -                       data.array[n + 2] =3D 0;
-> > -
-> > -                       bpf_map_lookup_elem(stack, &key.stack_id, &data=
-.array[n + 2]);
-> > -                       while (data.array[n + 2 + len])
-> > +                       data.array[n++] =3D 0;
-> > +               if (sample_type & PERF_SAMPLE_RAW) {
-> > +                       /*
-> > +                        *  [ size ][ data ]
-> > +                        *  [     data     ]
-> > +                        *  [     data     ]
-> > +                        *  [     data     ]
-> > +                        *  [ data ][ empty]
-> > +                        */
-> > +                       int len =3D 0, i =3D 0;
-> > +                       void *raw_data =3D (void *)data.array + n * siz=
-eof(u64);
-> > +
-> > +                       off_cpu_raw[i++] =3D (u64)key.pid << 32 | key.t=
-gid;
-> > +                       off_cpu_raw[i++] =3D val;
-> > +
-> > +                       /* off_cpu_raw[i] is callchain->nr (updated lat=
-er) */
-> > +                       off_cpu_raw[i + 1] =3D PERF_CONTEXT_USER;
-> > +                       off_cpu_raw[i + 2] =3D 0;
-> > +
-> > +                       bpf_map_lookup_elem(stack, &key.stack_id, &off_=
-cpu_raw[i + 2]);
-> > +                       while (off_cpu_raw[i + 2 + len])
-> >                                 len++;
-> >
-> > -                       /* update length of callchain */
-> > -                       data.array[n] =3D len + 1;
-> > +                       off_cpu_raw[i] =3D len + 1;
-> > +                       i +=3D len + 2;
-> > +
-> > +                       off_cpu_raw[i++] =3D key.cgroup_id;
-> >
-> > -                       /* update sample ip with the first callchain en=
-try */
-> > -                       if (ip_pos >=3D 0)
-> > -                               data.array[ip_pos] =3D data.array[n + 2=
-];
-> > +                       raw_size =3D i * sizeof(u64) + sizeof(u32); /* =
-4 bytes for alignment */
-> > +                       memcpy(raw_data, &raw_size, sizeof(raw_size));
-> > +                       memcpy(raw_data + sizeof(u32), off_cpu_raw, i *=
- sizeof(u64));
-> >
-> > -                       /* calculate sample callchain data array length=
- */
-> > -                       n +=3D len + 2;
-> > +                       n +=3D i + 1;
-> >                 }
-> >                 if (sample_type & PERF_SAMPLE_CGROUP)
-> >                         data.array[n++] =3D key.cgroup_id;
-> > --
-> > 2.43.0
-> >
+Thanks Leo! As the Tested-by makes sense only if you've applied all 4
+patches, which your testing and James' testing shows you've both done,
+I'll add the tags to all 4 patches. I'll do likewise with Atish,
+rebase and resend the patches.
 
 Thanks,
-Howard
+Ian
