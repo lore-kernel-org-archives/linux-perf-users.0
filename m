@@ -1,59 +1,58 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34321FBF75
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Nov 2024 14:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DB77F477
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 Nov 2024 14:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731420782; cv=none; b=MUqV9Ufry3WYvbu73f7+LMlSFEAZDAGQTI4yJKYVypak+71gyJXin1zvb7yw2gXV+oiYRslBMD23DPgXO8u7GxhP8s7D0INVUjsgEDH3nlwdK83nWfdS9/8EXNM1BrBgnRVYfNPUuaPUgbJY2+VX08a17yGSRxGU6FlQXl9KZa4=
+	t=1731421325; cv=none; b=NRek/UsH/5R3mvKmbs8LJDJdxblC5MXt7uxiRo6VqXZWQLgXEcVpq0lNAr5W5oL2Qv6r3Ob5/qaFJYrlrFQ3FzOhDqvZI5gD4VfPYhNalqToax9VoDO6dW8VhoNfeT2lNEAOPUKoQEOznn4PEL2Ib4Uc23ep3yBx0F5p1ckqNv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731420782; c=relaxed/simple;
-	bh=r9ulrn9W3iGqmUr28uMK/tpmBF/i8YyPFp6ATPxVgyY=;
+	s=arc-20240116; t=1731421325; c=relaxed/simple;
+	bh=lDuxJWHUECOGu4iQOy08f4vLoe6c1BG43n3js22eo1U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=drFmYgNs8sGrY4LOHYGupTQCN8L3/yUD4c7yWkcd/A2rFVPRrq4AUTwyQsvNVNA8dmey2WZRIL0AM+PwRHjp9IMALYIB8xeYR474eHzj/F9uM3Wo94o1mczxRLlVUQaBzHGkR88aC5SKwNVgAH+hqM2/fos1IQdDS4oLW8JGI8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c/aObiAN; arc=none smtp.client-ip=209.85.208.50
+	 In-Reply-To:Content-Type; b=Bl64qJ9FvBrk+oG/TKsbK89dJpJF8d91/P1zCtvgm3dTodRzzGxUlQ/zMfReoZ+cUgf0r3aUSVx9cfzsofattWQr+IPJOBCLKRSfWB32uGxz6AGVfDeeo6aK6HmYGA7zMiwsUZe8kSFwDeVXtLfehxcEfD3j6BbEFbOWCFlSeCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uVADMHq0; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c/aObiAN"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5c96b2a10e1so8674388a12.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Nov 2024 06:12:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uVADMHq0"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a9a4031f69fso938630766b.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Nov 2024 06:22:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731420777; x=1732025577; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1731421322; x=1732026122; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Kimy/1TnQyXFgX3XhWARxQaAButHmRKH6ok4ewImjsE=;
-        b=c/aObiANj5BbJC1gyLsO7SAm3+3t1qDARAN7MHlmSs3HoleeQXRguF0alnbjFGNOqr
-         5AKuQzbxyGzIwZTFL3GGZQw926jzyq3hEQeaVqSJjooWNHizdLgeKqwL094f9IQJPw+C
-         4oR33hfEiuWBbx4yNPqNme1FVZirKV9Sw3X5JM1T/vIl0zHL1TXSz+4TL8nmR2zkrzHS
-         Obk0Bp3Yf/hFyBrNJ8TiQZgSFbG9qkcRQEaGETid6/lGjGNMswJGN9kw58Y71lUgkFnd
-         WxZ28534VwZanMed2WU2Cshh82x6gA4BgOQfOGGhwJkxZ9KS7IAgZR6VbvhmSJRUIsQ/
-         RD2g==
+        bh=49JuiSy/r9JLkYwGyXAh5iEnbRjgdRPZ+au2eZbNRrI=;
+        b=uVADMHq0/JMfwYFY2RayQhvHGdseR/rWCSKrfkG/NTmr8NMQkWOI2OTli/gHrqmHOh
+         DeCxm7IxpY2kH2HyV/L5XtjRcZhTFb4NyqigHjJ6eKgmje32AS0fs9ZGSUs/qNS4tXSb
+         8y3RzEEVoKpNKMOsR73jOW4QRepfS21CqAGmdINFf1/pmUCRx/KCoHOo2/BIDN5Iu212
+         pu54uWz7jvLDGeDG5K0Soyhh65zgLh/+YKYHU2OIKjMMQCw+p1kbfn21msaFlXqvBf14
+         CCbIe2tTftWmxiHYIiVJr1uVbphrHy9+yEN0y6Nien4kINiEmpgIsuITMS4H8MLvcOfh
+         OU+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731420777; x=1732025577;
+        d=1e100.net; s=20230601; t=1731421322; x=1732026122;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kimy/1TnQyXFgX3XhWARxQaAButHmRKH6ok4ewImjsE=;
-        b=Q4dKNlqvee1dFBJgREVmYuC+qzIUdNAvsMhRhzA3OuB/zN1RkazAgXDOrJwAPhHw++
-         pGBiJih4AlCSf++7+TFxDeV1wExX1r5QRlXDQ+oluxzb3lfAdUfT9cEFvMjAObs5EWIr
-         mNLq1rUiPR2dSqVacVpbvjk03ooIfWjy+7FhUI2hm8tXnR+hvYMLPSg0ICCM7LUmwXCW
-         tBtNutRL9+gWF0Vege+tuLCmhuqXiEuzqhBzY5cp2fYJMwgIK42CB+oduY9SCrOv+wrA
-         plecmsp3Q3snQLAjAttWMrb1PlaMJlb+/SDALD1uHMtbt/pCrYor1EmvVK2yYqeCo+M8
-         g7zw==
-X-Forwarded-Encrypted: i=1; AJvYcCXenoinCYom5C/GNtvjuYvc48K0EcZt+qPaJgJ+CigSwB/WP7BG4XEyiUoM2s0wG9CTuXAQkGkJZbkK/s+WPTC/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqIDFrTUDVEP/TF2SrwE+0aDlE+X93AT914l7f5I6eFBMLhF4I
-	GIo7yQ6WC4cYSv7vym0Wx4C2Ox4dw0zoNoioSZwyDLs5qHPZ8MYznUKniNMSlQc=
-X-Google-Smtp-Source: AGHT+IF8ZzFJGC2+9TmxkXCX8DpTdCc5s5/9wXaiXhqnbIR1gmuegK2IEMW1ZFA9x1EGQeWGSRbTvQ==
-X-Received: by 2002:a17:907:d13:b0:a99:ffef:aec5 with SMTP id a640c23a62f3a-a9eeff0e434mr1778281966b.23.1731420777187;
-        Tue, 12 Nov 2024 06:12:57 -0800 (PST)
+        bh=49JuiSy/r9JLkYwGyXAh5iEnbRjgdRPZ+au2eZbNRrI=;
+        b=fhxxIhmDa4uh4FuZ9jztE1nLbA0lOCVA2UY0a7E6jU4BSWj1vBimz8fsaD37swuSqL
+         mjrXSZheuvdoRkQjNv0GmLCYhkMnBWsOWH5MdFaVkwki1kBvWkR8WPe9qZfUft8Wp0sk
+         ql7U6HskMQoe4dzoruGPN5JANFrwBEVts7l0BDqqe/NFncL/ko/3ons3h87nM5Bku5FU
+         lGe+4YRSJ6Eea2eYdC8JTD7QaSGOqGgyebfp26WQO6bk4Wpzac1+G2CFGD9FjsuGNAlW
+         o0v3Qz+pPqZbLhhJeUzmHXsj2+Y7cRGsMbqIthriaazLzkeI+a2pNQnQSJY3IMsyDWyT
+         pcrw==
+X-Gm-Message-State: AOJu0Yz9g1ItivPlbsd+B1Q3Pwyaitjjz1yOSy0XReJPSZCMjAgAUcgz
+	Y7eNlagzFPhe5v07GWdNX66qmfgu4fa7pgJKF2GYWieUlzGo1FtjCjRtp/aVRic=
+X-Google-Smtp-Source: AGHT+IETG01+m8sMSTYwKq7b6sSqzvzRvRFfCsmVZ8PvUWed37xWW7mS4gNJ68o4jFFPFcrEK3vkmw==
+X-Received: by 2002:a17:907:7f28:b0:a9a:825:4c39 with SMTP id a640c23a62f3a-a9eeff0daacmr1578407566b.20.1731421321912;
+        Tue, 12 Nov 2024 06:22:01 -0800 (PST)
 Received: from [192.168.68.163] ([145.224.90.214])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0ad2f76sm717111766b.89.2024.11.12.06.12.53
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0a18539sm734101166b.27.2024.11.12.06.22.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2024 06:12:56 -0800 (PST)
-Message-ID: <9bfdc5a0-ed1d-40f6-8a72-6129e1587ca7@linaro.org>
-Date: Tue, 12 Nov 2024 14:12:52 +0000
+        Tue, 12 Nov 2024 06:22:01 -0800 (PST)
+Message-ID: <ccac5d65-b01f-4624-97cd-e350ce6de840@linaro.org>
+Date: Tue, 12 Nov 2024 14:21:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,268 +60,186 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/4] perf record: Skip don't fail for events that don't
- open
-To: Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@arm.com>
-Cc: Atish Patra <atishp@rivosinc.com>, Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, linux-riscv@lists.infradead.org,
- beeman@rivosinc.com, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+Subject: Re: [PATCH v1 0/4] Prefer sysfs/JSON events also when no PMU is
+ provided
+To: Ian Rogers <irogers@google.com>, Atish Kumar Patra <atishp@rivosinc.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Ben Gainey <ben.gainey@arm.com>, Junhao He <hejunhao3@huawei.com>,
+ linux-riscv@lists.infradead.org, beeman@rivosinc.com,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
  Kan Liang <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>,
- Weilin Wang <weilin.wang@intel.com>, Ben Gainey <ben.gainey@arm.com>,
- Dominique Martinet <asmadeus@codewreck.org>, Junhao He
- <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
+ Weilin Wang <weilin.wang@intel.com>,
+ Dominique Martinet <asmadeus@codewreck.org>
 References: <20241026121758.143259-1-irogers@google.com>
- <20241026121758.143259-4-irogers@google.com>
- <7c1a0bbf-12fd-46ef-9db2-183dfa70a334@linaro.org>
- <CAP-5=fVODgnWgfCpA7x3B8JFQhkt_unUeTjhWWdSDpKECdTSYg@mail.gmail.com>
+ <CAP-5=fXf9HtqKZyvfXNbKLTB-dL_Ax5Hd0_Gn1J-y0T1SE9wLQ@mail.gmail.com>
+ <78eb729c-7594-460f-9d79-97fb683d8b5e@linaro.org>
+ <CAHBxVyFXWpczMmWJbpWoLUjQ4nfNC2_h1yZqSd7kSr6N8Rvm5Q@mail.gmail.com>
+ <d9bfd75a-003a-4f65-abba-b8bcaad13682@linaro.org>
+ <CAP-5=fUHjxL5QbsyQQU-3EYiVhiO6wt=F5MfSfDcAffKP7WWAg@mail.gmail.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fVODgnWgfCpA7x3B8JFQhkt_unUeTjhWWdSDpKECdTSYg@mail.gmail.com>
+In-Reply-To: <CAP-5=fUHjxL5QbsyQQU-3EYiVhiO6wt=F5MfSfDcAffKP7WWAg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
-On 11/11/2024 5:00 pm, Ian Rogers wrote:
-> On Mon, Nov 11, 2024 at 7:49 AM James Clark <james.clark@linaro.org> wrote:
+On 11/11/2024 5:19 pm, Ian Rogers wrote:
+> On Mon, Nov 11, 2024 at 2:45 AM James Clark <james.clark@linaro.org> wrote:
 >>
 >>
 >>
->> On 26/10/2024 1:17 pm, Ian Rogers wrote:
->>> Whilst for many tools it is an expected behavior that failure to open
->>> a perf event is a failure, ARM decided to name PMU events the same as
->>> legacy events and then failed to rename such events on a server uncore
->>> SLC PMU. As perf's default behavior when no PMU is specified is to
->>> open the event on all PMUs that advertise/"have" the event, this
->>> yielded failures when trying to make the priority of legacy and
->>> sysfs/json events uniform - something requested by RISC-V and ARM. A
->>> legacy event user on ARM hardware may find their event opened on an
->>> uncore PMU which for perf record will fail. Arnaldo suggested skipping
->>> such events which this patch implements. Rather than have the skipping
->>> conditional on running on ARM, the skipping is done on all
->>> architectures as such a fundamental behavioral difference could lead
->>> to problems with tools built/depending on perf.
+>> On 08/11/2024 6:37 pm, Atish Kumar Patra wrote:
+>>> On Fri, Nov 8, 2024 at 4:16 AM James Clark <james.clark@linaro.org> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 07/11/2024 18:51, Ian Rogers wrote:
+>>>>> On Sat, Oct 26, 2024 at 5:18 AM Ian Rogers <irogers@google.com> wrote:
+>>>>>>
+>>>>>> At the RISC-V summit the topic of avoiding event data being in the
+>>>>>> RISC-V PMU kernel driver came up. There is a preference for sysfs/JSON
+>>>>>> events being the priority when no PMU is provided so that legacy
+>>>>>> events maybe supported via json. Originally Mark Rutland also
+>>>>>> expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
+>>>>>> M? processors, but James Clark more recently tested this and believes
+>>>>>> the driver issues there may not have existed or have been resolved. In
+>>>>>> any case, it is inconsistent that with a PMU event names avoid legacy
+>>>>>> encodings, but when wildcarding PMUs (ie without a PMU with the event
+>>>>>> name) the legacy encodings have priority.
+>>>>>>
+>>>>>> The patch doing this work was reverted in a v6.10 release candidate
+>>>>>> as, even though the patch was posted for weeks and had been on
+>>>>>> linux-next for weeks without issue, Linus was in the habit of using
+>>>>>> explicit legacy events with unsupported precision options on his
+>>>>>> Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
+>>>>>> where ARM decided to call the events bus_cycles and cycles, the latter
+>>>>>> being also a legacy event name. ARM haven't renamed the cycles event
+>>>>>> to a more consistent cpu_cycles and avoided the problem. With these
+>>>>>> changes the problematic event will now be skipped, a large warning
+>>>>>> produced, and perf record will continue for the other PMU events. This
+>>>>>> solution was proposed by Arnaldo.
+>>>>>>
+>>>>>> Two minor changes have been added to help with the error message and
+>>>>>> to work around issues occurring with "perf stat metrics (shadow stat)
+>>>>>> test".
+>>>>>>
+>>>>>> The patches have only been tested on my x86 non-hybrid laptop.
+>>>>>
+>>>>> Hi Atish and James,
+>>>>>
+>>>>> Could I get your tags for this series?
+>>>>>
 >>>
->>> An example of perf record failing to open events on x86 is:
->>> ```
->>> $ perf record -e data_read,cycles,LLC-prefetch-read -a sleep 0.1
->>> Error:
->>> Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0' which will be removed.
->>> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
->>> "dmesg | grep -i perf" may provide additional information.
+>>> Hi Ian,
+>>> Thanks for your patches. It definitely helps to have a clean slate
+>>> implementation
+>>> for the perf tool. However, I have some open questions about other use cases
+>>> that we discussed during the RVI Summit.
 >>>
->>> Error:
->>> Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1' which will be removed.
->>> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
->>> "dmesg | grep -i perf" may provide additional information.
+>>>>> The patches were originally motivated by wanting to make the behavior
+>>>>> of events parsed like "cycles" match that of "cpu/cycles/", the PMU is
+>>>>> wildcarded to "cpu" in the first case. This was divergent because of
+>>>>> ARM we switched from preferring legacy (type = PERF_TYPE_HARDWARE,
+>>>>> config = PERF_COUNT_HW_CPU_CYCLES) to sysfs/json (type=<core PMU's
+>>>>> type>, config=<encoding from event>) when a PMU name was given. This
+>>>>> aligns with RISC-V wanting to use json encodings to avoid complexity
+>>>>> in the PMU driver.
+>>>>>
+>>>>
+>>>> I couldn't find the thread, but I remember fairly recently it was
+>>>> mentioned that RISC-V would be supporting the legacy events after all,
+>>>> maybe it was a comment from Atish? I'm not sure if that changes the
+>>>> requirements for this or not?
+>>>>
+>>>> I still can't really imagine how tooling would work if every tool has to
+>>>> maintain the mappings of basic events like instructions and branches.
+>>>> For example all the perf_event_open tests in ltp use the legacy events.
+>>>>
+>>>
+>>> No it has not changed. While this series helps to avoid clunky vendor
+>>> specific encodings
+>>> in the driver for perf tool, I am still unsure how we will manage
+>>> other applications
+>>> (directly passing legacy events through perf_event_open or
+>>> perf_evlist__open) will work.
+>>>
+>>> I have only anecdotal data about folks relying perf legacy events
+>>> directly to profile
+>>> their application. All of them use mostly cycle/instruction events though.
+>>> Are there any users who use other legacy events directly without perf tool ?
+>>>
+>>> If not, we may have only cycle/instruction mapping in the driver and
+>>> rely on json for everything else.
+>>> The other use case is virtualization. I have been playing with these
+>>> patches to find a clean solution to
+>>> enable all the use cases. If you have any other ideas, please let me know.
 >>>
 >>
->> This makes me wonder if this message was overly wordy to begin with.
->> This line is fine:
+>> Yeah I would expect it's mostly cycles and instructions. I searched a
+>> bit for PERF_COUNT_HW_BRANCH_MISSES and only found tool/developer type
+>> usages, which I suppose we could expect to have to handle the mappings
+>> like perf. Although it's not the easiest thing to search for and
+>> obviously that only includes open source.
 >>
->>    Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0'
->>    which will be removed.
->>
->> The next bit about the syscall just repeats. The exit code could be
->> included on the previous line. And the dmesg bit is general advice that
->> could possibly be printed once at the end.
+>> Usages do exist though, there are people posting on stack overflow using
+>> it, and other various bug tracker listings. So you would expect those
+>> same users to have to use raw event codes and some switch statement to
+>> pick the right one for their hardware, or use Perf.
 > 
-> Thanks for the time spent investigating this!
+> I don't have any magic to solve this. My thoughts:
 > 
-> I agree on this. I wonder if we should have short and long messages,
-> or message+help like we do for parse events. One patch series like
-> this is improving EBUSY:
-> https://lore.kernel.org/lkml/20241106003007.2112584-1-ctshao@google.com/
-> The issue with printing at the end is knowing where/when the end is.
-> Printing once is easy enough.
+> 1) I thought legacy events were just going to hang around forever,
+> although the name hinting they'd kind of been deprecated. At LPC '23
+> Atish and Mark Rutland originally asked for the sysfs/json to be the
+> preference. I thought Kan was going to push back given the upheaval,
+> especially updating every test expectation. It went through but we're
+> in this weird state where wildcard events are encoded using legacy and
+> PMU specifying events aren't. What this series hopes to solve.
 > 
->>> Error:
->>> Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
->>> The LLC-prefetch-read event is not supported.
->>> [ perf record: Woken up 1 times to write data ]
->>> [ perf record: Captured and wrote 2.188 MB perf.data (87 samples) ]
->>>
->>> $ perf report --stats
->>> Aggregated stats:
->>>                  TOTAL events:      17255
->>>                   MMAP events:        284  ( 1.6%)
->>>                   COMM events:       1961  (11.4%)
->>>                   EXIT events:          1  ( 0.0%)
->>>                   FORK events:       1960  (11.4%)
->>>                 SAMPLE events:         87  ( 0.5%)
->>>                  MMAP2 events:      12836  (74.4%)
->>>                KSYMBOL events:         83  ( 0.5%)
->>>              BPF_EVENT events:         36  ( 0.2%)
->>>         FINISHED_ROUND events:          2  ( 0.0%)
->>>               ID_INDEX events:          1  ( 0.0%)
->>>             THREAD_MAP events:          1  ( 0.0%)
->>>                CPU_MAP events:          1  ( 0.0%)
->>>              TIME_CONV events:          1  ( 0.0%)
->>>          FINISHED_INIT events:          1  ( 0.0%)
->>> cycles stats:
->>>                 SAMPLE events:         87
->>> ```
->>>
->>> Note, if all events fail to open then the data file will contain no
->>> samples. This is deliberate as at the point the events are opened
->>> there are other events, such as the dummy event for sideband data, and
->>> these events will succeed in opening even if the user specified ones
->>
->> Is a file with only sideband events useful? Is it possible to fail the
->> record command if the event doesn't open anywhere?
->>
->> I noticed this leads to some different behavior and a libperf warning
->> when you have paranoid=3:
->>
->>     $ perf record -e cycles -C 0 -- true
->>
->>     Error:
->>     Failure to open event 'cpu_atom/cycles/u' on PMU 'cpu_atom' which will
->>     be removed.
->>     ...
->>     Consider adjusting /proc/sys/kernel/perf_event_paranoid setting
->>     ...
->>     libperf: Miscounted nr_mmaps 0 vs 28
->>     WARNING: No sample_id_all support, falling back to unordered
->>     processing
->>     [ perf record: Woken up 1 times to write data ]
->>     [ perf record: Captured and wrote 0.021 MB perf.data ]
+> 2) I think it is important that perf tool be a reference
+> implementation where others can look (strace, etc.) to base their
+> implementation. Moving perf to sysfs/json is 1 step closer to legacy
+> event deprecation. Please yell if deprecation isn't what is wanted as
+> personally other than cleanliness I don't mind. If we do decide not to
+> have sysfs/json be the priority then I think it sensible to revert the
+> changes making it the priority for events that specify a PMU. I'd like
+> some level of consistency.
+
+Personally this change feels like it's encouraging fragmentation, the 
+cleanest would be if RISC-V supports the legacy events like the other 
+platforms. It's not a huge set of events anyway, and then existing 
+software continues to work in addition to Perf continuing to work.
+
+If we're still thinking that RISC-V will support the legacy events 
+anyway in the future, then it weakens the argument to change this and 
+risk any breakages that fall out of it.
+
+I'm also not sure whether they really are legacy or just a common base 
+set of events. Since the extended type thing was added even the legacy 
+events support hybrid, so it's not like they expired from lack of 
+features. Even if we claim they're legacy, is that really ever going to 
+make them go away?
+
+Although I admit nobody has come out with a definitive use case that 
+doesn't use either the cycles or instructions events, so maybe its all fine.
+
 > 
-> So paranoid=3 is a Debian extension that Peter Z doesn't agree with
-> and so isn't enabled in regular kernels. So we're dealing with cycles,
-> which we'd expect to open or fall-back to a software event like
-> task-clock. It feels like things could happen better here but that's
-> not necessarily the fault of this patch.
+> 3) I'd like event parsing to be a library that is as easy to link
+> against as libbpf (i.e. not a viral license). Event parsing is really
+> just mapping an event name to 1 or more perf_event_attr. The PMU
+> abstraction is tied into the event parsing, but this has only been
+> more true recently. The evsel/evlist is tied into event parsing but
+> that feels separable. As most json isn't distributed under a viral
+> license this feels achievable, then I suspect most tools can use this
+> library rather than have to reinvent a wheel.
 > 
-
-paranoid=3 is a bit of a red-herring. I actually meant any paranoid 
-value other than -1. The important part is "-C 0" because only root is 
-allowed to open on a CPU. Or "-a" also causes the issue.
-
-Previously you got the command failure and the hint about the paranoid 
-value, but now you get the libperf error too and it still makes the file.
-
-I still don't think a file with only sideband events is useful, I don't 
-think there's even a commandline that you can run currently that results 
-in that? You always need at least one event to open for it to succeed 
-and I'm thinking we could keep that.
-
-It would be nice to fix the libperf warning too because it's warning 
-about something that was already warned about.
-
->>> don't. Having a mix of open and broken events leads to a problem of
->>> identifying different sources of events.
->>   >
->>
->> In my basic test I saw that the opened event was identified correctly in
->> perf report, unless you have an example that you encountered that we
->> should fix?
+> Still looking for tags :-)
 > 
-> I didn't find any but we also don't tend to test failing to open
-> events. I could imagine things failing in `perf test` on neoverse
-> testing given the l3 advertising the cycles event.
-> 
->> One place I saw an issue was with auxtrace events. If there's an event
->> name clash then you're likely to not be able to open the file afterwards
->> because the auxtrace code can't handle an event that didn't open. But I
->> don't know of any name clashes there (I just faked one for testing), and
->> maybe that could be fixed up later in the auxtrace code if there is ever
->> a real one.
->>
->> Other than the above it does seem to work ok.
-> 
-> Cool, can this be taken as a Tested-by?
-> 
-
-Yep, although with a caveat that I faked the second cycles PMU that 
-wouldn't open, but I don't think that should make a difference:
-
-Tested-by: James Clark <james.clark@linaro.org>
-
-I can also test with the real thing if you like but would take a bit 
-longer as I have to borrow it off Leo.
-
 > Thanks,
 > Ian
-> 
->>> The issue with legacy events is that on RISC-V they want the driver to
->>> not have mappings from legacy to non-legacy config encodings for each
->>> vendor/model due to size, complexity and difficulty to update. It was
->>> reported that on ARM Apple-M? CPUs the legacy mapping in the driver
->>> was broken and the sysfs/json events should always take precedent,
->>> however, it isn't clear this is still the case. It is the case that
->>> without working around this issue a legacy event like cycles without a
->>> PMU can encode differently than when specified with a PMU - the
->>> non-PMU version favoring legacy encodings, the PMU one avoiding legacy
->>> encodings.
->>>
->>> The patch removes events and then adjusts the idx value for each
->>> evsel. This is done so that the dense xyarrays used for file
->>> descriptors, etc. don't contain broken entries. As event opening
->>> happens relatively late in the record process, use of the idx value
->>> before the open will have become corrupted, so it is expected there
->>> are latent bugs hidden behind this change - the change is best
->>> effort. As the only vendor that has broken event names is ARM, this
->>> will principally effect ARM users. They will also experience warning
->>> messages like those above because of the uncore PMU advertising legacy
->>> event names.
->>
->>
->>
->>>
->>> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>    tools/perf/builtin-record.c | 22 +++++++++++++++++-----
->>>    1 file changed, 17 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->>> index f83252472921..7e99743f7e42 100644
->>> --- a/tools/perf/builtin-record.c
->>> +++ b/tools/perf/builtin-record.c
->>> @@ -1364,6 +1364,7 @@ static int record__open(struct record *rec)
->>>        struct perf_session *session = rec->session;
->>>        struct record_opts *opts = &rec->opts;
->>>        int rc = 0;
->>> +     bool skipped = false;
->>>
->>>        evlist__for_each_entry(evlist, pos) {
->>>    try_again:
->>> @@ -1379,15 +1380,26 @@ static int record__open(struct record *rec)
->>>                                pos = evlist__reset_weak_group(evlist, pos, true);
->>>                                goto try_again;
->>>                        }
->>> -                     rc = -errno;
->>>                        evsel__open_strerror(pos, &opts->target, errno, msg, sizeof(msg));
->>> -                     ui__error("%s\n", msg);
->>> -                     goto out;
->>> +                     ui__error("Failure to open event '%s' on PMU '%s' which will be removed.\n%s\n",
->>> +                               evsel__name(pos), evsel__pmu_name(pos), msg);
->>> +                     pos->skippable = true;
->>> +                     skipped = true;
->>> +             } else {
->>> +                     pos->supported = true;
->>>                }
->>> -
->>> -             pos->supported = true;
->>>        }
->>>
->>> +     if (skipped) {
->>> +             struct evsel *tmp;
->>> +             int idx = 0;
->>> +
->>> +             evlist__for_each_entry_safe(evlist, tmp, pos) {
->>> +                     if (pos->skippable)
->>> +                             evlist__remove(evlist, pos);
->>> +                     pos->core.idx = idx++;
->>> +             }
->>> +     }
->>>        if (symbol_conf.kptr_restrict && !evlist__exclude_kernel(evlist)) {
->>>                pr_warning(
->>>    "WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,\n"
->>
 
