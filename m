@@ -1,29 +1,29 @@
-Received: from cmccmta3.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53C6A1A0AFE;
-	Tue, 12 Nov 2024 06:01:17 +0000 (UTC)
+Received: from cmccmta1.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92FF320A5D0;
+	Tue, 12 Nov 2024 06:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731391285; cv=none; b=raazxSBXhI4Q6dz1tDKtzI7tEbPtYlzOImBU3EVVOYh/1aj6pwhzJYEt5iyPP9IPuMS1ohesaQlFWPgHXawTsjeyqIMZn31trAeRetYxJxFUIKg8R6qbTtaWCAq7FPga8Te/tY64Ohvo8Klr7q97CpxAG+AuJyoYV10quYQ6nHE=
+	t=1731394032; cv=none; b=X5ANeTcE57MLYp87f+deAW9fKT4ZF6xoig/U96Mc+Mp2lB24GqEAtvH4XOeCwJ5BB9CrKCJA0dj48kKyRPfxnny6lAv2s106PM3KlLBv3s11JlmRZ1l9FWcDF5p79yJKlPuFFmPdDY2dxR1uzuBFR8dZuMqBCR7mXuDfUBY94Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731391285; c=relaxed/simple;
-	bh=66qUZLgWuxj88U/ojOcgZSc3hCJottpI1ddRUJ5yBmg=;
+	s=arc-20240116; t=1731394032; c=relaxed/simple;
+	bh=obaMSikP1Ug9P5SplvLqE/5n90n4UBuBKkSTUDIDwuM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LbqLUraH9qnHu4bjHthA/Olrow59GUZQK0xc7J7v3xL+ce+Xtr9FD26eiWGbvNEXHyOSXbMIj/Q4RGGmgIraxAy+wYDcipYR7Mw/7Q/AzhgD0Jxg9kBsif06tEI/48Cn9sWu4YsFZH2UJltlP31WQmg4mXlsL/OMJgVPprXRrHU=
+	 MIME-Version; b=q1cu6kBgOknTuOJwZKv0T8HGzWSWH1piafL37NGKH1P3yxPHc0oyNdI3SGRa/BEwbNjKfxzH/YUrffstgSQ4eh6rzTKXaxc7+zlWQHk4WymoTtMVroSGp5HVzwARUZ9cyfDibNqF2PLmF6ElKgcHi22bXcw6pMGNu+lMWyoEOfg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
 X-RM-TagInfo: emlType=0                                       
 X-RM-SPAM-FLAG:00000000
 Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee96732ef2b026-1203b;
-	Tue, 12 Nov 2024 14:01:15 +0800 (CST)
-X-RM-TRANSID:2ee96732ef2b026-1203b
+	by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee16732f9e6803-dd118;
+	Tue, 12 Nov 2024 14:47:05 +0800 (CST)
+X-RM-TRANSID:2ee16732f9e6803-dd118
 X-RM-TagInfo: emlType=0                                       
 X-RM-SPAM-FLAG:00000000
 Received:from localhost.localdomain (unknown[223.108.79.103])
-	by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee96732ef2aaab-46f56;
-	Tue, 12 Nov 2024 14:01:15 +0800 (CST)
-X-RM-TRANSID:2ee96732ef2aaab-46f56
+	by rmsmtp-syy-appsvr02-12002 (RichMail) with SMTP id 2ee26732f9e8e55-4f732;
+	Tue, 12 Nov 2024 14:47:05 +0800 (CST)
+X-RM-TRANSID:2ee26732f9e8e55-4f732
 From: Luo Yifan <luoyifan@cmss.chinamobile.com>
 To: acme@kernel.org
 Cc: adrian.hunter@intel.com,
@@ -33,70 +33,26 @@ Cc: adrian.hunter@intel.com,
 	kan.liang@linux.intel.com,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	luoyifan@cmss.chinamobile.com,
 	mark.rutland@arm.com,
 	mingo@redhat.com,
 	namhyung@kernel.org,
 	peterz@infradead.org
-Subject: [PATCH] perf jvmti: Remove unnecessary ret variable in jvmti_write_code
-Date: Tue, 12 Nov 2024 14:01:03 +0800
-Message-Id: <20241112060103.282531-1-luoyifan@cmss.chinamobile.com>
+Subject: Re: [PATCH] perf jvmti: Remove unnecessary ret variable in jvmti_write_code
+Date: Tue, 12 Nov 2024 14:47:04 +0800
+Message-Id: <20241112064704.282702-1-luoyifan@cmss.chinamobile.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <ZzJErOTawAelWAQd@x1>
-References: <ZzJErOTawAelWAQd@x1>
+In-Reply-To: <20241112060103.282531-1-luoyifan@cmss.chinamobile.com>
+References: <20241112060103.282531-1-luoyifan@cmss.chinamobile.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Following the approach in the jvmti_write_debug_info function, just
-remove the ret variable from jvmti_write_code function. It's safe since
-we don’t really care about the return value of fwrite_unlocked. This
-change makes the code cleaner and more compiler-friendly.
-
-Signed-off-by: Luo Yifan <luoyifan@cmss.chinamobile.com>
----
- tools/perf/jvmti/jvmti_agent.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
-index 526dcaf9f..9b49a880b 100644
---- a/tools/perf/jvmti/jvmti_agent.c
-+++ b/tools/perf/jvmti/jvmti_agent.c
-@@ -363,7 +363,6 @@ jvmti_write_code(void *agent, char const *sym,
- 	struct jr_code_load rec;
- 	size_t sym_len;
- 	FILE *fp = agent;
--	int ret = -1;
- 
- 	/* don't care about 0 length function, no samples */
- 	if (size == 0)
-@@ -400,7 +399,7 @@ jvmti_write_code(void *agent, char const *sym,
- 	 */
- 	rec.code_index = code_generation++;
- 
--	ret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
-+	fwrite_unlocked(&rec, sizeof(rec), 1, fp);
- 	fwrite_unlocked(sym, sym_len, 1, fp);
- 
- 	if (code)
-@@ -408,9 +407,7 @@ jvmti_write_code(void *agent, char const *sym,
- 
- 	funlockfile(fp);
- 
--	ret = 0;
--
--	return ret;
-+	return 0;
- }
- 
- int
--- 
-2.27.0
-
+I've rechecked the code and found that removing the ret variable is
+not a good solution. Please ignore this patch, I'll submit a final
+version to fix it properly.
 
 
