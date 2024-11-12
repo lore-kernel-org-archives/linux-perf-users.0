@@ -1,57 +1,57 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8044B203714
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Nov 2024 16:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1F92038B3
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 Nov 2024 16:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731427283; cv=none; b=rY5kKbqS2ce2cr2T37I3st2G+Sy3ftv+3O8BBu3d3oGqkziXqYkzsb23m2wvfK51ivv8WiK04ZVb9GUaMvK+xbvgbx1eS3eRvUNX8h/FUxXQVfHEbGspKhe521MtGJQETnZPWQ7v/UMl+rZ257BHpjvjSU9EAzFTh+mnqtPJFGA=
+	t=1731427289; cv=none; b=p7h2QFObr6BcezPrsxzVYDxyWFjyn+7pk57/uUiVTOB6vZIfnbWAGDGpjGJtMsC5lucznT862AEHTnrHc8BQ06ZzMabG+v5EToRNVyY+CUjuLa4VycY35zRGC/P+9Q0i1zFtbBib+Cw2NH8RseNnLapLpRx3FBu64jzTM4wmbDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731427283; c=relaxed/simple;
-	bh=X11z4nP5ntnwRF1ZolXpN7FUrcu0tKB9xT6gGdibvic=;
+	s=arc-20240116; t=1731427289; c=relaxed/simple;
+	bh=1rzp7Xl7P06k2CmvvFaVmBBb4PRTEjX38R5QLmMlCTA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Gd0NR2owaYfQOJaLcNTckH+cWtggwzkDHXqUnVnGWnS4U/0fMOg6mkYbtP4HJZReRWyr0A9tXrAZHJ01hSUleNV4f2xNVUizvJq+Qn2zVye9kIQQLkzJWZT134Qlqd+upu94cdxfn5EAKci3q5lurzTmsGYYxRklr+vXDTrZdZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pCfGX1eF; arc=none smtp.client-ip=209.85.167.52
+	 MIME-Version; b=BQsLPphI9KV66zTbMu3Gsu25CDkE99cjCfkMCf8/TivnywCqgLuZSu+v04ADV5aaA8N/Unjg+V/biHxpOdQ3AYBbWn8uaOPEIyhfZO3dqRdvrPaSVYbsUZCjMKoBG0/a7RVqvZw15gZ94aHCTzFClx+YODp0uSokFVIxYMEbfV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SQcPztln; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pCfGX1eF"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-539ebb5a20aso6447327e87.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Nov 2024 08:01:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SQcPztln"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2fb5111747cso51811221fa.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Nov 2024 08:01:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731427280; x=1732032080; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1731427284; x=1732032084; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NGPOgTfEx0zJge0MarOgxWQ/d+55clu7muVrKzy61Ic=;
-        b=pCfGX1eFWD8Y995zSqxy9F/Hdu9tNUCDIt4ufs/icWCfyvkw3WjrVJhgmpRii70THx
-         NVfjkZrbcIYDxJmtBdAktXeMurxe0DOXHPXNQD9LiVqhXDa+j+AQKQb+tLj4ElgZsP4v
-         P2Zabv9DhDx/pXl072/JqGTOAFI7oq+K39U30+dV6BZ5CxnCjBrGR/17n/4nyA2C/kyS
-         yFkfDOMHjCBGM1+coNFWYMUbXMIqTMvz1Q9C/C/zeeWHZsRFIVxetkAe+Vt92GRJRKJU
-         mnx6sBM/KWb8jeqj6Kzt5eyKrlDFsHx6QqJtzUUcQr+YKEv5ycCZJuXdU7RRmeitzRhx
-         KFNQ==
+        bh=ISx4HBtk0wLWMcNI0N/GFnJvPZUjZ9eymzjpVwEnOrg=;
+        b=SQcPztlnbSGOMkTrOcZ0d/HVkF0rrOVzVjmkdcQRAyqErhqfukMj0KyDH64JVw2gmB
+         NZDLubopxO9Y7ecxgtga9BGSy5TajHHc2h+LUyxQ//MaeuP8C4wiM3QCP1McrEI3FIcb
+         vleF1PFp5LFE+CT7ZjoH+ZD9Mkmn1kWrUn6llyP08DG6JwDlENtzxwJz8WPzFRX2I1QQ
+         8pq8Z5m4FZd/ivtYw3bsX5Jeg0VDDBkxvH4Gd1Xv+i0hCOWKd4ZGwuECzrdcfD6cJaaC
+         70bJCmjIheYLmkn0WljPSRvNbv6rbSFaT9qhEmcPka2KlvrGEL6puycATPAsEvTAUDcs
+         oDAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731427280; x=1732032080;
+        d=1e100.net; s=20230601; t=1731427284; x=1732032084;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NGPOgTfEx0zJge0MarOgxWQ/d+55clu7muVrKzy61Ic=;
-        b=c0ixvWYCxgk8ER1jvnSvzErb60Ek9vELRGMaJgM4bvgozZiromnWoRGk44xTUCsaJ0
-         3R3zDF5adtRk/SxWN10zdPGmyKnLBqoawa496krGv8tUX01yeJ12L6uX73MIFlCBH2j6
-         0WaVFaoEuzl1uhtuJs2hGqLWMS4PNm34UZVPmlX1crBKxbNc3mSjqp793HLXTDEDto6d
-         xjMmtcMlnaTZpsY71oLTrqdSME6NQ4Rg+N0xK8l73X3G1g+VkMIgqxOT+nudHHe9ijtr
-         GjY1OCCw+psWPSHOENQCANtTNzKDZWJHnYAkGM6aZJLYlI497m4gR01ogxQDdG81ly8M
-         fZTQ==
-X-Gm-Message-State: AOJu0YyuV+nqfHOFHkBE/mG/OxCPX6zBxwMfK10BjsxPA25mwhKZRdA4
-	KT0rRToj4vjDiywhvuIYxfUcMXE8xo/I3As3/aYqOqD4jVgLAebU0TnRCDBNTNWXUwK0QY9nqxu
-	0z6c=
-X-Google-Smtp-Source: AGHT+IEdng9Cf3uldN4S+XjdS7jJypPc3Cm092Iw1cAx9FuZf73d96gc+rFbb9O++UlTz/UpP50Bzw==
-X-Received: by 2002:a05:6512:3a82:b0:539:918c:5124 with SMTP id 2adb3069b0e04-53d862e3283mr8220628e87.31.1731427278787;
-        Tue, 12 Nov 2024 08:01:18 -0800 (PST)
+        bh=ISx4HBtk0wLWMcNI0N/GFnJvPZUjZ9eymzjpVwEnOrg=;
+        b=Ymg6YUTMzqbRTpRQOzz3NRBPiiAl7/k/LaSMfahXnFGUroBbd846v5ebp1EEp36oS5
+         h9DfEqJW1VwJwHKsfbWozemduedyza2lmZsuur80Qi4prUZFG+wv7rmCBQvR5SZIkjgy
+         dsl5LbXprfyFQIhGy4mxzzKD6dcLT03WLOtR4fM4pgcJ3u8W+iQ1GmA46t8ipFsj1Mu9
+         3j3+okYcEo5Q/REGi5AUGhS8rpIoAWv/tMY1KLjeyBTGaazI0I+HTN/2sVOxpuF+90XH
+         PxFRkUltA5tkZrIYPP4VnFgmLBJc0pN1R5zO4MS1x/C93eURnnioqAsaZ8Ax7e8UTA3W
+         XNkQ==
+X-Gm-Message-State: AOJu0Yx3rexQn8rGK8sx6Yyh7RidbjZ5MuTiL1gY6IIuf5X2yWzxoBeV
+	KKgfD+S8svohV+xZBqZHTs5EPKeQDdCwyGuvEFYYrAPC2t9UfOfUZxLN2/VWWQv8SWmBE3vEnj3
+	w9NM=
+X-Google-Smtp-Source: AGHT+IHgpDbdyzkDT/BkZIl2yFqZeTww3F6522828HUJTjSk4nrZ91f4e8V+Rz4bFuQLgoFWQ6mAHg==
+X-Received: by 2002:a05:651c:881:b0:2fb:628c:2580 with SMTP id 38308e7fff4ca-2ff201e6d03mr90939261fa.2.1731427283738;
+        Tue, 12 Nov 2024 08:01:23 -0800 (PST)
 Received: from pop-os.. ([145.224.90.214])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cf03bb760fsm6148172a12.47.2024.11.12.08.01.15
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cf03bb760fsm6148172a12.47.2024.11.12.08.01.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2024 08:01:17 -0800 (PST)
+        Tue, 12 Nov 2024 08:01:23 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
 To: linux-perf-users@vger.kernel.org,
 	acme@kernel.org,
@@ -68,9 +68,9 @@ Cc: James Clark <james.clark@linaro.org>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	Yicong Yang <yangyicong@hisilicon.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/5] perf stat: Also hide metric-units from JSON when event didn't run
-Date: Tue, 12 Nov 2024 16:00:42 +0000
-Message-Id: <20241112160048.951213-3-james.clark@linaro.org>
+Subject: [PATCH v3 3/5] perf stat: Remove empty new_line_metric function
+Date: Tue, 12 Nov 2024 16:00:43 +0000
+Message-Id: <20241112160048.951213-4-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241112160048.951213-1-james.clark@linaro.org>
 References: <20241112160048.951213-1-james.clark@linaro.org>
@@ -82,57 +82,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We decided to hide NULL metric-units rather than showing it as "(null)"
-when a dependent event for a metric doesn't exist. But on hybrid systems
-if the process doesn't hit a PMU you get an empty string metric unit
-instead. To make it consistent change all empty strings to NULL.
+Despite the name new_line_metric doesn't make a new line, it actually
+does nothing. Change it to NULL to avoid confusion.
 
-Note that metric-threshold is already hidden in this case without this
-change.
-
-Where a process only runs on cpu_core and never hits cpu_atom:
-Before:
- $ perf stat -j -- true
- ...
- {"counter-value" : "<not counted>", "unit" : "", "event" : "cpu_atom/branch-misses/", "event-runtime" : 0, "pcnt-running" : 0.00, "metric-value" : "0.000000", "metric-unit" : ""}
- {"counter-value" : "6326.000000", "unit" : "", "event" : "cpu_core/branch-misses/", "event-runtime" : 293786, "pcnt-running" : 100.00, "metric-value" : "3.553394", "metric-unit" : "of all branches", "metric-threshold" : "good"}
- ...
-
-After:
- ...
- {"counter-value" : "<not counted>", "unit" : "", "event" : "cpu_atom/branch-misses/", "event-runtime" : 0, "pcnt-running" : 0.00}
- {"counter-value" : "5778.000000", "unit" : "", "event" : "cpu_core/branch-misses/", "event-runtime" : 282240, "pcnt-running" : 100.00, "metric-value" : "3.226797", "metric-unit" : "of all branches", "metric-threshold" : "good"}
- ...
-
-Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/stat-display.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/util/stat-display.c | 13 ++++---------
+ tools/perf/util/stat-shadow.c  |  5 +++--
+ 2 files changed, 7 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index a5d72f4a515c..0e16eecfbad8 100644
+index 0e16eecfbad8..aa74543ae298 100644
 --- a/tools/perf/util/stat-display.c
 +++ b/tools/perf/util/stat-display.c
-@@ -854,7 +854,8 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
+@@ -673,11 +673,6 @@ static void print_metric_only_json(struct perf_stat_config *config __maybe_unuse
+ 	json_out(os, "\"%s\" : \"%s\"", unit, vals);
+ }
  
- 	if (run == 0 || ena == 0 || counter->counts->scaled == -1) {
- 		if (config->metric_only) {
--			pm(config, os, METRIC_THRESHOLD_UNKNOWN, "", "", 0);
-+			pm(config, os, METRIC_THRESHOLD_UNKNOWN, /*format=*/NULL,
-+			   /*unit=*/NULL, /*val=*/0);
- 			return;
- 		}
+-static void new_line_metric(struct perf_stat_config *config __maybe_unused,
+-			    void *ctx __maybe_unused)
+-{
+-}
+-
+ static void print_metric_header(struct perf_stat_config *config,
+ 				void *ctx,
+ 				enum metric_threshold_classify thresh __maybe_unused,
+@@ -839,16 +834,16 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
  
-@@ -909,7 +910,7 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
- 			perf_stat__print_shadow_stats(config, counter, uval, aggr_idx,
- 						      &out, &config->metric_events);
+ 	if (config->csv_output) {
+ 		pm = config->metric_only ? print_metric_only_csv : print_metric_csv;
+-		nl = config->metric_only ? new_line_metric : new_line_csv;
++		nl = config->metric_only ? NULL : new_line_csv;
+ 		pmh = print_metricgroup_header_csv;
+ 		os->nfields = 4 + (counter->cgrp ? 1 : 0);
+ 	} else if (config->json_output) {
+ 		pm = config->metric_only ? print_metric_only_json : print_metric_json;
+-		nl = config->metric_only ? new_line_metric : new_line_json;
++		nl = config->metric_only ? NULL : new_line_json;
+ 		pmh = print_metricgroup_header_json;
  	} else {
--		pm(config, os, METRIC_THRESHOLD_UNKNOWN, /*format=*/NULL, /*unit=*/"", /*val=*/0);
-+		pm(config, os, METRIC_THRESHOLD_UNKNOWN, /*format=*/NULL, /*unit=*/NULL, /*val=*/0);
+ 		pm = config->metric_only ? print_metric_only : print_metric_std;
+-		nl = config->metric_only ? new_line_metric : new_line_std;
++		nl = config->metric_only ? NULL : new_line_std;
+ 		pmh = print_metricgroup_header_std;
  	}
  
- 	if (!config->metric_only) {
+@@ -1319,7 +1314,7 @@ static void print_metric_headers(struct perf_stat_config *config,
+ 	struct perf_stat_output_ctx out = {
+ 		.ctx = &os,
+ 		.print_metric = print_metric_header,
+-		.new_line = new_line_metric,
++		.new_line = NULL,
+ 		.force_header = true,
+ 	};
+ 
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 47718610d5d8..fa8b2a1048ff 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -327,7 +327,8 @@ static void print_instructions(struct perf_stat_config *config,
+ 			     "insn per cycle", 0);
+ 	}
+ 	if (max_stalled && instructions) {
+-		out->new_line(config, ctxp);
++		if (out->new_line)
++			out->new_line(config, ctxp);
+ 		print_metric(config, ctxp, METRIC_THRESHOLD_UNKNOWN, "%7.2f ",
+ 			     "stalled cycles per insn", max_stalled / instructions);
+ 	}
+@@ -670,7 +671,7 @@ void *perf_stat__print_shadow_stats_metricgroup(struct perf_stat_config *config,
+ 			}
+ 		}
+ 
+-		if ((*num)++ > 0)
++		if ((*num)++ > 0 && out->new_line)
+ 			out->new_line(config, ctxp);
+ 		generic_metric(config, mexp, evsel, aggr_idx, out);
+ 	}
 -- 
 2.34.1
 
