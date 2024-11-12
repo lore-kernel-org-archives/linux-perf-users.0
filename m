@@ -1,268 +1,149 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0524B38F83
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 23:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC992AF06;
+	Tue, 12 Nov 2024 01:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731368337; cv=none; b=dLocT6n85HlBvd14U2SAJHVNlPzpkLQVehCdHf+QnKI+Q0A+cbVStOajFx1TQP6+ZN3fLaA9t0Zg36+PsszyWxoQj05x/uOCYehz0GKzafcohOeVjmw2zIjGIiK0/jTQV2CcffPKiXO84ufGh6It1bLRA7eXMBGctV8dhVwFZGQ=
+	t=1731376037; cv=none; b=n3uKOICC39nZd7RM9mwAZpQKGbOSH+N6eDBqt9C9+jtb8NvZNuV5vF+WbbzdanLuvHqHYt1qvR6OaLPfC0FKGH65fx29OHZu5ABcd8ibDWKgKMBcBKdnVl9cjpzAH5qn3e6cMMZXCbTeigwuBQC49KY5a7uvdfbZ1bzsZnRNhXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731368337; c=relaxed/simple;
-	bh=dm/hQwp5MqqL2oSDhczxwDhJHWAhtjMwN4dvDZXDm3k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WCH+hHFkTtIPy6ZPNXSngx2y27iTsREH8PRrh9qv4IerQ1rHRSWICIrRcMDtpBnzlSyNFI0ti80/D1eLsx+RyYIo9K5DoU68xnFVPW6j4haiFieEy9c9hIaDxBd4RMQ/EJZN+w5uzR0iZeph4fvJ8GAZFw2x0VPdOMO0kO3Sy0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=aOgucyH7; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="aOgucyH7"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-71e5130832aso3879897b3a.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Nov 2024 15:38:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1731368335; x=1731973135; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S8yRTg2gxlhT6ZNwbfYt7zd1cKOPlVMlYaS9QEirCAw=;
-        b=aOgucyH7DwXbYQa15nQ4/ja5xGyVVXpAEo7+RpM+XhALxF52V07id3teD9KQHov6mL
-         HgpbwKHm0mj4aU0zswZkoqaI5ddtuoI67CZpKwHhgDP0q1lbOzrorGu2ozncHriwJjZJ
-         JJxNjRWACO3j7kkHRQP+nFhNJEgj1hDtrcsTAuYt1gmHW0gbxCEuyyg9VrzK9x+F5+3v
-         T1MWt5SOLt/mxEw42oTCXTJdjAYuCioz4OoA6LPxTbAy6AsAihpa69JNE5LMC+pmNLE4
-         UY6L03hBhn4pJMeHTa+41M88jgcinVEU0FFKy2rLOVILj7lfPPgcsdrUnK2Qs11vmqf7
-         MPBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731368335; x=1731973135;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S8yRTg2gxlhT6ZNwbfYt7zd1cKOPlVMlYaS9QEirCAw=;
-        b=vkL4WzwXH0InUZGjSqsfH8qVacqBdpuUan3J4hdTgsax6iTVNFg85peZKEgK5UXiHe
-         tVg68v17crbONtcpua2Z2t2R4kqDwlyx8TsPBC06pBpb6DJHd3rrVA7MiWKyoZg1AxPm
-         SIh823GAtWl9jSITO9Hmoz8UjRSUL7FskWHSIU+O6lnXtjxVhXssEAgA1/Fk8qbG+fCR
-         ScVE0lzqap9YzjSehrwyU/25K3e9TOeWKYaRj0dZmM+maRV2EEV5cTHm3Iif/pI7iFG1
-         sUa0zpdKjcmfuqYs8dhMyQf93sjAyavIvIGonBf8fy1nNZeFepb/A+69jTx29yTRdbTk
-         P/pA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXeTN+U+Ki6qQle+rm9UTQu0V5SZ+mLpcSfeVdHDDaTi8wBA0QW2aY9VNRqPKWiuhkNwPOwFIFL95sZnWZmCNv@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3unYhfflzZDX3G2nvu9zxkLfVI66t/PZX6tcfOfl1nx95C9D0
-	2CZttpA5HZ+S/0kh0RF299uT+hnAbLpzqfjSuZnChGLbySzm4hwxCXE99fZfDaJieskrq1/u/iE
-	awEvwcDkEMjvIHPzxZzQDkAMHIoDWYdrjAbyZOA==
-X-Google-Smtp-Source: AGHT+IE7Fl9EIALn9TNMMttpcoLk+6DrI6/tnerMLnKoCya+sFZ3cL8WdxplP2tFW3MXI3WJLzJVeJrxjnhCy963cl4=
-X-Received: by 2002:a05:6a00:3925:b0:71d:f15e:d026 with SMTP id
- d2e1a72fcca58-7241326dd7emr19203123b3a.3.1731368335086; Mon, 11 Nov 2024
- 15:38:55 -0800 (PST)
+	s=arc-20240116; t=1731376037; c=relaxed/simple;
+	bh=t2riWp8iVz5vagodm+20WB+hhuSzF3Z8aqzuVOor10Q=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=LrrftKLOerzIBLFF2wmnk1qQtoaFz2gKIIn9tzepToXUpV/jyxaDU/6JmCuaWkMmWh4zc5NzCgBSeOD3BNE1I02HuMQoJSDYm5JiTN+kdMzAnnIw3E8ZNuHWnxgdSQSJ4S+ZfpSVOxwRevlzq+MvjdWSfqhVzbwa/fapmjj2WGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4XnTk32tJZz10Qsg;
+	Tue, 12 Nov 2024 09:44:43 +0800 (CST)
+Received: from kwepemf500004.china.huawei.com (unknown [7.202.181.242])
+	by mail.maildlp.com (Postfix) with ESMTPS id ECC7B140157;
+	Tue, 12 Nov 2024 09:47:10 +0800 (CST)
+Received: from [10.67.110.237] (10.67.110.237) by
+ kwepemf500004.china.huawei.com (7.202.181.242) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 12 Nov 2024 09:47:10 +0800
+Subject: Re: [PATCH 1/2] perf probe: Reset old content before processing the
+ next event string
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+CC: <acme@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<dima@secretsauce.net>, <aleksander.lobakin@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20241108181909.3515716-1-lihuafei1@huawei.com>
+ <20241111134705.021f73408c0aff41918ab2a5@kernel.org>
+From: Li Huafei <lihuafei1@huawei.com>
+Message-ID: <24c76d15-43d1-3612-be61-44d34fb3ac9e@huawei.com>
+Date: Tue, 12 Nov 2024 09:47:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241026121758.143259-1-irogers@google.com> <CAP-5=fXf9HtqKZyvfXNbKLTB-dL_Ax5Hd0_Gn1J-y0T1SE9wLQ@mail.gmail.com>
- <78eb729c-7594-460f-9d79-97fb683d8b5e@linaro.org> <CAHBxVyFXWpczMmWJbpWoLUjQ4nfNC2_h1yZqSd7kSr6N8Rvm5Q@mail.gmail.com>
- <d9bfd75a-003a-4f65-abba-b8bcaad13682@linaro.org> <CAP-5=fUHjxL5QbsyQQU-3EYiVhiO6wt=F5MfSfDcAffKP7WWAg@mail.gmail.com>
-In-Reply-To: <CAP-5=fUHjxL5QbsyQQU-3EYiVhiO6wt=F5MfSfDcAffKP7WWAg@mail.gmail.com>
-From: Atish Kumar Patra <atishp@rivosinc.com>
-Date: Mon, 11 Nov 2024 15:38:44 -0800
-Message-ID: <CAHBxVyFVsKy+PKvyffOfOw6fU7BGa9+cm6d3uYzSG-8GY2jhxA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] Prefer sysfs/JSON events also when no PMU is provided
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Ben Gainey <ben.gainey@arm.com>, 
-	Junhao He <hejunhao3@huawei.com>, linux-riscv@lists.infradead.org, beeman@rivosinc.com, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20241111134705.021f73408c0aff41918ab2a5@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemf500004.china.huawei.com (7.202.181.242)
 
-On Mon, Nov 11, 2024 at 9:19=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Mon, Nov 11, 2024 at 2:45=E2=80=AFAM James Clark <james.clark@linaro.o=
-rg> wrote:
-> >
-> >
-> >
-> > On 08/11/2024 6:37 pm, Atish Kumar Patra wrote:
-> > > On Fri, Nov 8, 2024 at 4:16=E2=80=AFAM James Clark <james.clark@linar=
-o.org> wrote:
-> > >>
-> > >>
-> > >>
-> > >> On 07/11/2024 18:51, Ian Rogers wrote:
-> > >>> On Sat, Oct 26, 2024 at 5:18=E2=80=AFAM Ian Rogers <irogers@google.=
-com> wrote:
-> > >>>>
-> > >>>> At the RISC-V summit the topic of avoiding event data being in the
-> > >>>> RISC-V PMU kernel driver came up. There is a preference for sysfs/=
-JSON
-> > >>>> events being the priority when no PMU is provided so that legacy
-> > >>>> events maybe supported via json. Originally Mark Rutland also
-> > >>>> expressed at LPC 2023 that doing this would resolve bugs on ARM Ap=
-ple
-> > >>>> M? processors, but James Clark more recently tested this and belie=
-ves
-> > >>>> the driver issues there may not have existed or have been resolved=
-. In
-> > >>>> any case, it is inconsistent that with a PMU event names avoid leg=
-acy
-> > >>>> encodings, but when wildcarding PMUs (ie without a PMU with the ev=
-ent
-> > >>>> name) the legacy encodings have priority.
-> > >>>>
-> > >>>> The patch doing this work was reverted in a v6.10 release candidat=
-e
-> > >>>> as, even though the patch was posted for weeks and had been on
-> > >>>> linux-next for weeks without issue, Linus was in the habit of usin=
-g
-> > >>>> explicit legacy events with unsupported precision options on his
-> > >>>> Neoverse-N1. This machine has SLC PMU events for bus and CPU cycle=
-s
-> > >>>> where ARM decided to call the events bus_cycles and cycles, the la=
-tter
-> > >>>> being also a legacy event name. ARM haven't renamed the cycles eve=
-nt
-> > >>>> to a more consistent cpu_cycles and avoided the problem. With thes=
-e
-> > >>>> changes the problematic event will now be skipped, a large warning
-> > >>>> produced, and perf record will continue for the other PMU events. =
-This
-> > >>>> solution was proposed by Arnaldo.
-> > >>>>
-> > >>>> Two minor changes have been added to help with the error message a=
-nd
-> > >>>> to work around issues occurring with "perf stat metrics (shadow st=
-at)
-> > >>>> test".
-> > >>>>
-> > >>>> The patches have only been tested on my x86 non-hybrid laptop.
-> > >>>
-> > >>> Hi Atish and James,
-> > >>>
-> > >>> Could I get your tags for this series?
-> > >>>
-> > >
-> > > Hi Ian,
-> > > Thanks for your patches. It definitely helps to have a clean slate
-> > > implementation
-> > > for the perf tool. However, I have some open questions about other us=
-e cases
-> > > that we discussed during the RVI Summit.
-> > >
-> > >>> The patches were originally motivated by wanting to make the behavi=
-or
-> > >>> of events parsed like "cycles" match that of "cpu/cycles/", the PMU=
- is
-> > >>> wildcarded to "cpu" in the first case. This was divergent because o=
-f
-> > >>> ARM we switched from preferring legacy (type =3D PERF_TYPE_HARDWARE=
-,
-> > >>> config =3D PERF_COUNT_HW_CPU_CYCLES) to sysfs/json (type=3D<core PM=
-U's
-> > >>> type>, config=3D<encoding from event>) when a PMU name was given. T=
-his
-> > >>> aligns with RISC-V wanting to use json encodings to avoid complexit=
-y
-> > >>> in the PMU driver.
-> > >>>
-> > >>
-> > >> I couldn't find the thread, but I remember fairly recently it was
-> > >> mentioned that RISC-V would be supporting the legacy events after al=
-l,
-> > >> maybe it was a comment from Atish? I'm not sure if that changes the
-> > >> requirements for this or not?
-> > >>
-> > >> I still can't really imagine how tooling would work if every tool ha=
-s to
-> > >> maintain the mappings of basic events like instructions and branches=
-.
-> > >> For example all the perf_event_open tests in ltp use the legacy even=
-ts.
-> > >>
-> > >
-> > > No it has not changed. While this series helps to avoid clunky vendor
-> > > specific encodings
-> > > in the driver for perf tool, I am still unsure how we will manage
-> > > other applications
-> > > (directly passing legacy events through perf_event_open or
-> > > perf_evlist__open) will work.
-> > >
-> > > I have only anecdotal data about folks relying perf legacy events
-> > > directly to profile
-> > > their application. All of them use mostly cycle/instruction events th=
-ough.
-> > > Are there any users who use other legacy events directly without perf=
- tool ?
-> > >
-> > > If not, we may have only cycle/instruction mapping in the driver and
-> > > rely on json for everything else.
-> > > The other use case is virtualization. I have been playing with these
-> > > patches to find a clean solution to
-> > > enable all the use cases. If you have any other ideas, please let me =
-know.
-> > >
-> >
-> > Yeah I would expect it's mostly cycles and instructions. I searched a
-> > bit for PERF_COUNT_HW_BRANCH_MISSES and only found tool/developer type
-> > usages, which I suppose we could expect to have to handle the mappings
-> > like perf. Although it's not the easiest thing to search for and
-> > obviously that only includes open source.
-> >
-> > Usages do exist though, there are people posting on stack overflow usin=
-g
-> > it, and other various bug tracker listings. So you would expect those
-> > same users to have to use raw event codes and some switch statement to
-> > pick the right one for their hardware, or use Perf.
->
-> I don't have any magic to solve this. My thoughts:
->
-> 1) I thought legacy events were just going to hang around forever,
-> although the name hinting they'd kind of been deprecated. At LPC '23
-> Atish and Mark Rutland originally asked for the sysfs/json to be the
-> preference. I thought Kan was going to push back given the upheaval,
-> especially updating every test expectation. It went through but we're
-> in this weird state where wildcard events are encoded using legacy and
-> PMU specifying events aren't. What this series hopes to solve.
->
-> 2) I think it is important that perf tool be a reference
-> implementation where others can look (strace, etc.) to base their
-> implementation. Moving perf to sysfs/json is 1 step closer to legacy
-> event deprecation. Please yell if deprecation isn't what is wanted as
-> personally other than cleanliness I don't mind. If we do decide not to
-> have sysfs/json be the priority then I think it sensible to revert the
-> changes making it the priority for events that specify a PMU. I'd like
-> some level of consistency.
->
-> 3) I'd like event parsing to be a library that is as easy to link
-> against as libbpf (i.e. not a viral license). Event parsing is really
-> just mapping an event name to 1 or more perf_event_attr. The PMU
-> abstraction is tied into the event parsing, but this has only been
-> more true recently. The evsel/evlist is tied into event parsing but
-> that feels separable. As most json isn't distributed under a viral
-> license this feels achievable, then I suspect most tools can use this
-> library rather than have to reinvent a wheel.
 
-That would be the ideal solution IMHO for any other tools.
 
-For virtualization, the guest OS would pass the event attribute as RAW
-if the matching json
-file is present. The hypervisor would simply program that in mhpmevent CSR.
+On 2024/11/11 12:47, Masami Hiramatsu (Google) wrote:
+> On Sat, 9 Nov 2024 02:19:08 +0800
+> Li Huafei <lihuafei1@huawei.com> wrote:
+> 
+>> I added two probe events:
+>>
+>>   # perf probe -f -a schedule+8
+>>   Added new event:
+>>     probe:schedule       (on schedule+8)
+>>
+>>   You can now use it in all perf tools, such as:
+>>
+>>           perf record -e probe:schedule -aR sleep 1
+>>
+>>   # perf probe -f -a schedule+20
+>>   Added new event:
+>>     probe:schedule_1     (on schedule+20)
+>>
+>>   You can now use it in all perf tools, such as:
+>>
+>>           perf record -e probe:schedule_1 -aR sleep 1
+>>
+>> However, 'perf probe -l' shows the same offset:
+>>
+>>   # perf probe -l
+>>     probe:schedule       (on schedule+8@kernel/sched/core.c)
+>>     probe:schedule_1     (on schedule+8@kernel/sched/core.c)
+>>
+>> __show_perf_probe_events() does not clean up the 'pev' content when
+>> parsing the rawlist. If the 'pev->offset' is not set while processing
+>> the next probe event string, the offset value of the previous event will
+>> be used.  After adding debug information, it was found that indeed there
+>> was line number information when processing 'probe:schedule_1', so the
+>> offset was not set and used the offset from 'probe:schedule'.
+>>
+>> To fix this, in the loop that parses the rawlist, reset the contents of
+>> 'tev' and 'pev' to ensure it does not affect the next parsing.
+>>
+>> After the modification,  'perf probe -l' shows the following:
+>>
+>>   # perf probe -l
+>>     probe:schedule       (on schedule+8@kernel/sched/core.c)
+>>     probe:schedule_1     (on schedule:-6751@kernel/sched/core.c)
+>>
+>> Note that 'probe:schedule_1' is displayed with line number, but the line
+>> number seem to be incorrect. This issue is independent of the problem
+>> fixed by the current patch and will be addressed in the next patch.
+>>
+> 
+> Good catch! But we should do the cleanup in clear_perf_probe_event()
+> and clear_probe_trace_event().
+> 
+>> Fixes: d8f9da240495 ("perf tools: Use zfree() where applicable")
+> 
+> What we need is to revert this change for above 2 functions, because
+> without that, it "clear"s the structure correctly. Current code
+> releases allocated fields, but not clear all fields. This can lead
+> another bug.
 
-In absence of the json file, guest OS would pass the legacy event
-encoding which must be
-mapped to a vendor specific encoding present in the driver. Hopefully,
-this can be removed
-in the future once legacy events are deprecated.  Thoughts ?
 
->
-> Still looking for tags :-)
->
+Right, I will make this change in the next version.
 
-Done. Sorry for the delay. Just wanted to ensure that this solutions
-works properly
-for all the above cases I mentioned.
+Thanks，
+Huafei
 
-> Thanks,
-> Ian
+> 
+> Thank you,
+> 
+>> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+>> ---
+>>  tools/perf/util/probe-event.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+>> index a17c9b8a7a79..ec0b11f8d881 100644
+>> --- a/tools/perf/util/probe-event.c
+>> +++ b/tools/perf/util/probe-event.c
+>> @@ -2695,6 +2695,8 @@ static int __show_perf_probe_events(int fd, bool is_kprobe,
+>>  next:
+>>  		clear_perf_probe_event(&pev);
+>>  		clear_probe_trace_event(&tev);
+>> +		memset(&tev, 0, sizeof(tev));
+>> +		memset(&pev, 0, sizeof(pev));
+>>  		if (ret < 0)
+>>  			break;
+>>  	}
+>> -- 
+>> 2.25.1
+>>
+>>
+> 
+> 
