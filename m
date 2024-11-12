@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B96201270;
-	Tue, 12 Nov 2024 18:12:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7B1201270;
+	Tue, 12 Nov 2024 18:12:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731435144; cv=none; b=aWQH5leeHw9UJ7caOCzoynq9mW4npUQi1Q78WwAJUXC/4SjNT+PnrLp0o67vpg0gD2V4VqOObORfirbCC8oiKcdvMQwVEATk8qmu2O28joqaB9s0KyDNGtcrtzoF+QT2hdGOzm8BbSIvIjt6VvMh8Bv2rzFW7Sz2UiRPyL3Ktd8=
+	t=1731435151; cv=none; b=Qvwr3uRXzGcr0NPAPGptLP5xEDDuTLCSUKtYy9OJAZ8sH+hwNfpmMXTXOQ927kdlW1Skc4Uti9VTcmZk6d8IKrm+Q80GH8zylVDKqg+ONu1a5i5Iy2G27Qvpp39wsx3BHnyFQlNAHYpvB0V0eXQtXklKCiwyMLkSdNPn4TiMk/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731435144; c=relaxed/simple;
-	bh=Lm1xjLW35WsQTLsZUoaGcjfhiQHCoyf859qtnUvVfn8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PEGHBB2vq/FTD+Vk3OBry3WCkvaovwsBnJamxI2TgkSIEYu1/nwTsEXNxDOUnceOiw1HMe2wskX32SWFdCXo7gKTdkTW22YIDQQAKeNGW1idpl09qrk1DOAhqv9yT6g5U+2gwAYWeR2FO4ACe1r0Ge+TpSutWTROE3a1idAq53g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X1ih57+f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731435151; c=relaxed/simple;
+	bh=mnFCwIumAaetpb3TtoRkP+X2pbNFYvGrJF9fQc2iPcY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=StOtWGS4ycz8PF3Rk9NSBwgrk+i/LgbtBzpvrVNYyg7+e8PughEMvT6V5EY81Ja/UYvggCmFRDhl0HD2KOIz7WEPHcts3XR3TPvkVmUXesgLcSKAqejmJk+Vvo4zJnMXkZ1Q5nLg5L1SlCdJT53ABcoIKpLmzvpLh6cg+bSGYos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DFj21LSh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X1ih57+f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94C2FC4CECD;
-	Tue, 12 Nov 2024 18:12:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DFj21LSh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38563C4CED5;
+	Tue, 12 Nov 2024 18:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731435144;
-	bh=Lm1xjLW35WsQTLsZUoaGcjfhiQHCoyf859qtnUvVfn8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=X1ih57+fmbW8/cqm8eh5/pZfRXgsw/BHvK+HnAt5OqoZbaFhDenaNOMmg2uu1tUcl
-	 08z3kRPF/4awZmo7bfcVZVIZcvr1ZUPqiYLOeYjDZfQnwWuhPhHvwkMz9y0NbmMUeL
-	 KY10X4ALGu8eD99mMJVFF2qzdnaxGTpF+cQSE7YIfXXCzKKi+ZG1XvZfmh8TEIiEdQ
-	 4zkY2zHlmHMlw3A/zF4gpWcVV7RjB75AnwGUDOE4n8SPxSUghPjmhwN70cfOTFB1Tw
-	 AY79/Frb3neDVx6T6zAg708tHfKk7CzDgtl98ZqMcl5yYR5Cxeq1NpRZ0SMa6blDxy
-	 b1So3V/imuuvg==
+	s=k20201202; t=1731435150;
+	bh=mnFCwIumAaetpb3TtoRkP+X2pbNFYvGrJF9fQc2iPcY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=DFj21LSh98rfceCXLmFHSSZMufnMUQxT7Gkr5cKMmUSKnAZUvBkyv8uN8TqG5oFxc
+	 NuO5eCZ/tLZEU8hdXUzbqbm770BwvkuFuUvAcFo2DmsjzVOiYlNrkuX0/FOpBTcaHR
+	 PZRfiB6tlrfGurHwo0Dg4T5DfqeHNF8pC+poHOr4D+lhG75oZfk17679PLnJlaswlK
+	 igwYSazv/0E1ugTWlpreLtPTQHzqHO3sEursAxGBvzdLQEnBmCVhVksPTWqaCSgM46
+	 YlkyX4uEStd8fVROUHN9IFHYj008vjvo3Jngvb+Tkhdd8mCtOufHfAPHKuTzy9cFPW
+	 4cissFAz06nog==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,10 +39,12 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH 0/4 perf-tools-next] perf ftrace latency linear buckets
-Date: Tue, 12 Nov 2024 15:12:10 -0300
-Message-ID: <20241112181214.1171244-1-acme@kernel.org>
+Subject: [PATCH 1/4] perf ftrace latency: Pass ftrace pointer to histogram routines to pass more args
+Date: Tue, 12 Nov 2024 15:12:11 -0300
+Message-ID: <20241112181214.1171244-2-acme@kernel.org>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241112181214.1171244-1-acme@kernel.org>
+References: <20241112181214.1171244-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,32 +55,83 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Hi,
+The ftrace->use_nsec arg is being passed to both make_historgram() and
+display_histogram(), since another ftrace field will be passed to those
+functions in a followup patch, make them look like other functions in
+this codebase that receive the 'struct perf_ftrace' pointer.
 
-	Gabriele has been using 'perf ftrace latency' in some
-investigations at work and wanted to have an alternative way of
-populating the buckets, so we came up with this series, please take a
-look at the examples provided in the changesets.
+No change in logic.
 
-Thanks,
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-ftrace.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-- Arnaldo
-
-Arnaldo Carvalho de Melo (3):
-  perf ftrace latency: Pass ftrace pointer to histogram routines to pass more args
-  perf ftrace latency: Introduce --bucket-range to ask for linear bucketing
-  perf ftrace latency: Introduce --min-latency to narrow down into a latency range
-
-Gabriele Monaco (1):
-  perf ftrace latency: Add --max-latency option
-
- tools/perf/Documentation/perf-ftrace.txt    |  11 ++
- tools/perf/builtin-ftrace.c                 | 131 ++++++++++++++++----
- tools/perf/util/bpf_ftrace.c                |   3 +
- tools/perf/util/bpf_skel/func_latency.bpf.c |  26 +++-
- tools/perf/util/ftrace.h                    |   3 +
- 5 files changed, 150 insertions(+), 24 deletions(-)
-
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 272d3c70810e7dc3..88b9f0597b925c69 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -726,8 +726,8 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+ 	return (done && !workload_exec_errno) ? 0 : -1;
+ }
+ 
+-static void make_histogram(int buckets[], char *buf, size_t len, char *linebuf,
+-			   bool use_nsec)
++static void make_histogram(struct perf_ftrace *ftrace, int buckets[],
++			   char *buf, size_t len, char *linebuf)
+ {
+ 	char *p, *q;
+ 	char *unit;
+@@ -774,7 +774,7 @@ static void make_histogram(int buckets[], char *buf, size_t len, char *linebuf,
+ 		if (!unit || strncmp(unit, " us", 3))
+ 			goto next;
+ 
+-		if (use_nsec)
++		if (ftrace->use_nsec)
+ 			num *= 1000;
+ 
+ 		i = log2(num);
+@@ -794,8 +794,9 @@ static void make_histogram(int buckets[], char *buf, size_t len, char *linebuf,
+ 	strcat(linebuf, p);
+ }
+ 
+-static void display_histogram(int buckets[], bool use_nsec)
++static void display_histogram(struct perf_ftrace *ftrace, int buckets[])
+ {
++	bool use_nsec = ftrace->use_nsec;
+ 	int i;
+ 	int total = 0;
+ 	int bar_total = 46;  /* to fit in 80 column */
+@@ -951,7 +952,7 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
+ 			if (n < 0)
+ 				break;
+ 
+-			make_histogram(buckets, buf, n, line, ftrace->use_nsec);
++			make_histogram(ftrace, buckets, buf, n, line);
+ 		}
+ 	}
+ 
+@@ -968,12 +969,12 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
+ 		int n = read(trace_fd, buf, sizeof(buf) - 1);
+ 		if (n <= 0)
+ 			break;
+-		make_histogram(buckets, buf, n, line, ftrace->use_nsec);
++		make_histogram(ftrace, buckets, buf, n, line);
+ 	}
+ 
+ 	read_func_latency(ftrace, buckets);
+ 
+-	display_histogram(buckets, ftrace->use_nsec);
++	display_histogram(ftrace, buckets);
+ 
+ out:
+ 	close(trace_fd);
 -- 
 2.47.0
 
