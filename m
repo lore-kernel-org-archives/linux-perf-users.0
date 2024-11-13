@@ -1,122 +1,102 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B32E249EB
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Nov 2024 16:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5FA14F114
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 Nov 2024 16:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731514388; cv=none; b=EdLPzY4g/47cQIfKvAI8y/Fpl6zi3oDhEwcSwgx1HJ0zfnsxeoWRdoJ+MTIfklsIgmRuYJk1LW/bgrJsJhAn2JnuRXpmif3SjvrKMrRMwRoNWd7jmNwZrJ/WUXw3Bu4BB7E3Mip9XSkTx8B7wPN4pSDu4cYpgt5o6tDoRN8L+vc=
+	t=1731516964; cv=none; b=fnycdk/nBJ5Gowto6FEOHaNHoTxa4pKALpK48IzIFTHd+E6v+sFjm6EB4/P0vXR63PPcf/SkRDmAfO3PAK9oem0l1F8e2fEX8igwyjOswoFz1tHgq76jjP1JwkqtH/Dq3nTP7IwnrIY4U+Q/s5oMEFJ7SXbDPEEs0ex67+Y9No4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731514388; c=relaxed/simple;
-	bh=/70UgeSPQ4hOl+81apBVxeqoPl9OH4tSaQJnk7qPHtA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SjOxYAfypxaue8hIUVeBic2i6rcw0Zyj5pxi8jlz563P4OSOTTcpAEuul31kCSkaFQPxu8OkOqrcRnanJtKCbyFj8gI//f3AM/aWZzCnjfHLncnlnqORw2exiRY9SXSAD8UVs/wauTNu9fjORYBJHG6DPNfatjRBG9lHp2UVA6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jLU0J3P7; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1731516964; c=relaxed/simple;
+	bh=KhrrPKe7vIHE0T1AZ9VXSsNl1IkVw8BKbNVwlgzjjoQ=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=mNKGq2Xqf1sOGmOwM46IYs8abl63bd4r6DigXeTyLVgST1G+l+d/lKdATXrOwwy9G1tgJDqnSzcE5MylHJiBX/lEACnq2qDaP3npVzVgPXejb/YiUXI13bgI7O3Qv+q6RweHRDj1UJMBI0y9ZDsBYpkxdJCeg/zs0hu46DCw5Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uVr+GHjt; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jLU0J3P7"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a9a68480164so988316966b.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Nov 2024 08:13:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uVr+GHjt"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3805bc9c43so671303276.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Nov 2024 08:56:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731514384; x=1732119184; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SPCRSYoPSHpwTYrkQfPBw1+Y7qPSaun9UleVAf6DtlE=;
-        b=jLU0J3P7WEhai6a6IlExZ8K/QosOAtqVYJ5ft6XqIiq2e27BiqYA5P8RAUKoOtMch8
-         fUp1Ch7NlbNPXI7NB1m3iy3tUPMhR64O+vcRWRz0lCnjdw92FDhRns6o7oecA79kv9KA
-         7GrAf7EbwN5+rw7OE6AnJfhlqUqcAsT52sSkuGapdNxEjNYzo8z5/nNNyKh+mn82gTIw
-         gEqLTHHdoR2+9AfGSo15UPnefoBt8TuZhjd3fF8cWQGo82g3qxj8cKni0AZe2fdcLrGj
-         jVzgGrNYtM8wti4sF6u/1lhyX8YG0kibLTg28t9Hv4ivcK6KkGBC9kJWqdrZ3i+dnYeK
-         HrHg==
+        d=google.com; s=20230601; t=1731516962; x=1732121762; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=L+V0k3XPAXmnG43u3p674HXKA6KoBO29C9FYM4hkixQ=;
+        b=uVr+GHjtAtj/2xp52uanYsGfYzbhbWVEWbXLjO2Vmq8yOXxe1/V/RrKf2UE6Cnzbnw
+         w7q/EWHq/2Pjwh64Q3q8s9lplfuLj34Hz6n+9cw1xsqySoAvyEgYBPJ7K9kDAibLLtGK
+         anFgpWFGCDg3Pd9L/sCYfFKo1RUy9jCEJ+FGEAo6zkF7vlRKVpFylCNu2OXXO+OSLxrC
+         IlPfd0B1syF/75APuWnW97Thyb9BzCKi3ODS/SDybZ0bx4ySKRvk6UNIHfryhCD1gWcw
+         0cXe1lynIbFAuC5fvwnYJcA5IYT2OlS88F8O6+X71wiTP8IOxR7ZnkcCQyqkDITDT2bG
+         j3Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731514384; x=1732119184;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SPCRSYoPSHpwTYrkQfPBw1+Y7qPSaun9UleVAf6DtlE=;
-        b=I1YTFOSbnGw3j7+7AMKhDRs8BPi9nbPcLy6Up7WhtT/O192A1hKqqGUORopZcHtfcf
-         M4zOq9ayTwIUPaKw28zMYXpq5h+yc3eRI6rs2bR3Rm9ygW4KOLLgPvLIkMaTxLGOFvSu
-         Lib44228azKja+SkH/hWaz5xbQeoRlg/oHZi2UHQ+sk4AZ5LZcl8/qbdOy0mXXE1WRTl
-         a6avnRzGC4BlZrITzdN0s25LSnV8L1m0toBIAWTvqF+GSAGbsenzsJ2YmbMIHpsHAFad
-         1p9Intf2vzPJZfL534L0yFAcf261jT5rSSniwgeloLFnR425fbQ0mhvq+hZ8wJfY1D6c
-         fHAA==
-X-Gm-Message-State: AOJu0Yx8F29zhW349l8ucFZEHxKsOMk69uSvbd79PROD7EK1omspfaej
-	ErZM/bykiydIN2kti+AxyYlco4ULw8UpSdJiUksnCshSZQ75In5Hr29/ZUUxYcA=
-X-Google-Smtp-Source: AGHT+IFjZsCHovOOd6p/6Y6Rm1a3D613g06b2tt4FLhBkNEK/HNzyPsLILrVS2Y3DIliqWTK31ytdQ==
-X-Received: by 2002:a17:907:a4b:b0:a99:fc3d:7c76 with SMTP id a640c23a62f3a-a9ef001915amr2144913766b.37.1731514383858;
-        Wed, 13 Nov 2024 08:13:03 -0800 (PST)
-Received: from [192.168.68.163] ([145.224.90.214])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0e2eb28sm877229166b.197.2024.11.13.08.13.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2024 08:13:03 -0800 (PST)
-Message-ID: <c03b1604-cc41-4746-be3a-fc326152d556@linaro.org>
-Date: Wed, 13 Nov 2024 16:13:01 +0000
+        d=1e100.net; s=20230601; t=1731516962; x=1732121762;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L+V0k3XPAXmnG43u3p674HXKA6KoBO29C9FYM4hkixQ=;
+        b=EE2PnBhjGT3rUsbTR9f+YYkiH+uXtYT+9C0Mdio4BxJbtlgwOno0+exbvbKV/mgSTp
+         EjnVIBPhsUji+tAZzxYQyFbLJRI0lnwlS18Hfvh9DA2eCNaU+FdCxxPdJEXYGVNktIzc
+         hHPQxH4eI9lqh/3G2MyzHy/mC340WwPIaSjM5zy1KzqmZRGsgOSDiLpjAm5fJUivQ4GJ
+         ouf9uhqYCHoLmqu7aVNBbpPmnhYte1UuMvFXeeRIHz2/EtI1g4sNzf1qzpAlRkBokoOe
+         iuVjMhoHovcxWVcV4ReIGzBKJzFqh3Wawb0x5qKnInVdS+78eaPjGZ/JMuUZXWhEKA3T
+         4hjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwe8KDB7fvXaCsyQHBx1zV98hy5+DogN1zOpy0fxI2IebXCtSsaH+0G/APNzoJwipNJrmig0kfRJMQ/VNiiw/V@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxssa9/opsXejb2KfghL1e9CRV0SuLyum+ihydQJpnJnRROZK43
+	Oe0aQkgG5xa7JGsN444+ly6rFxsZNsvCVU/oT06HA/eMzmD8Y2gaWMVoNKp1+kJXeit0thyaZ5p
+	zJ3YSwg==
+X-Google-Smtp-Source: AGHT+IGvQ+kdAce1NUAauszdwhpxP1WrhuGqEC/mW/M0hscdCrhGUXjO2u2QURd78mtp7VKccYIOr8ZSDXW5
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ba3:1d9a:12e0:c4af])
+ (user=irogers job=sendgmr) by 2002:a25:9004:0:b0:e24:a28e:9399 with SMTP id
+ 3f1490d57ef6-e337f85ef60mr16884276.4.1731516962118; Wed, 13 Nov 2024 08:56:02
+ -0800 (PST)
+Date: Wed, 13 Nov 2024 08:55:58 -0800
+Message-Id: <20241113165558.628856-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] perf/util: initialize is_test value in
- expr__ctx_new()
-To: Levi Yun <yeoreum.yun@arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- nd@arm.com, namhyung@kernel.org, mark.rutland@arm.com, irogers@google.com,
- james.clark2@arm.com
-References: <20241108143424.819126-1-yeoreum.yun@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241108143424.819126-1-yeoreum.yun@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
+Subject: [PATCH v1] perf jevents: Fix build issue in '*/' in event descriptions
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Xu Yang <xu.yang_2@nxp.com>, 
+	Benjamin Gray <bgray@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+For big string offsets we output comments for what string the offset
+is for. If the string contains a '*/' as seen in Intel Arrowlake event
+descriptions, then this causes C parsing issues for the generated
+pmu-events.c. Catch such '*/' values and escape to avoid this.
 
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/jevents.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-On 08/11/2024 2:34 pm, Levi Yun wrote:
-> when expr_parse_ctx is allocated by expr_ctx_new(),
-> expr_scanner_ctx->is_test isn't initialize, so it has garbage value.
-> this can affects the result of expr__parse() return when it parses
-> non-exist event literal according to garbage value.
-> 
-> use calloc instead of malloc in expr_ctx_new() to fix this.
-> 
-> Fixes: 3340a08354ac ("perf pmu-events: Fix testing with JEVENTS_ARCH=all")
-> Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
-> ---
->   tools/perf/util/expr.c | 5 +----
->   1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index 5e3732bc2fa5..bc119501f091 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -285,7 +285,7 @@ struct expr_parse_ctx *expr__ctx_new(void)
->   {
->   	struct expr_parse_ctx *ctx;
-> 
-> -	ctx = malloc(sizeof(struct expr_parse_ctx));
-> +	ctx = calloc(1, sizeof(struct expr_parse_ctx));
->   	if (!ctx)
->   		return NULL;
-> 
-> @@ -294,9 +294,6 @@ struct expr_parse_ctx *expr__ctx_new(void)
->   		free(ctx);
->   		return NULL;
->   	}
-> -	ctx->sctx.user_requested_cpu_list = NULL;
-> -	ctx->sctx.runtime = 0;
-> -	ctx->sctx.system_wide = false;
-> 
->   	return ctx;
->   }
-> --
-> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
-> 
-> 
-
-Reviewed-by: James Clark <james.clark@linaro.org>
-
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 6e71b09dbc2a..028cf3c43881 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -430,8 +430,11 @@ class JsonEvent:
+   def to_c_string(self, metric: bool) -> str:
+     """Representation of the event as a C struct initializer."""
+ 
++    def fix_comment(s: str) -> str:
++        return s.replace('*/', '\*\/')
++
+     s = self.build_c_string(metric)
+-    return f'{{ { _bcs.offsets[s] } }}, /* {s} */\n'
++    return f'{{ { _bcs.offsets[s] } }}, /* {fix_comment(s)} */\n'
+ 
+ 
+ @lru_cache(maxsize=None)
+-- 
+2.47.0.277.g8800431eea-goog
 
