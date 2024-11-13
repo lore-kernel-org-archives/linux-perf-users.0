@@ -1,238 +1,289 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA05200123
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Nov 2024 17:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E101FEFA0
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 Nov 2024 18:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731517722; cv=none; b=AshRx+tWGDdImh05FBrvtDhlWehloJF2NHCzl4BC6j8A7QLisS/Qf+XjgA6ZlJviMl/Ld707SEeNh3xj5Z4PVhhq5jWyvWXddBK60uyDPvf9EQPRiojB6/81N3v4JiFUqQ9LuQ63OqGf1X+HOqTQTFodu7Wk3MZpz2+AcaKzWyw=
+	t=1731521188; cv=none; b=tX4USfNMQnyoaw0RpnFn6UzsDt2Ql/ZuHN15k3i2n0MdDQbFeLroJWHud1ZblHNVcNuUTT0Zld9jHHC9oJQi7E46bwBCfRLJGXSzEvkEmYqM0QvEriyJ3AFlvEv/znKQ5yb17RyUo+1kDn2vmpgKnR3XKh920s9oQSMsDuXCTxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731517722; c=relaxed/simple;
-	bh=cQsGTZcrOBBUd6hSph+IuA54uYan2S+TEuuXq3VP3Fs=;
+	s=arc-20240116; t=1731521188; c=relaxed/simple;
+	bh=CJHUxmxs25a6vYzm94NNhSGlj8Opdn3ElqKMIEc/7jM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eLr5kgIxJxaB+K/28bhiM2M5/3TKP/Gl9tu8teDFfunQyrcFgAIty6WmyRNXca9WtjrbIJ3wkBNLdu/aWWh9LcRZjIVeeBi2TJ1GHkDPdoZXGGxSaE/Mb026rSznyB1KZKVQ3YVKA/xU2Cnpzw7bGQb2Y/VlEvmH8Y4oewbOEOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nSciTCvF; arc=none smtp.client-ip=209.85.166.177
+	 To:Cc:Content-Type; b=L8XKG0uqp1BffUnntFPJvv4F2km6c9KHNEXWebB+OHlxbGAyLxm3YyNopGt1EjiPLolSWmdQe3TaJHfCBPK4jXkI3ZMKR+rrki3Vc4UxzlV7N0//9kP6BVz7c52R6xaceB0gY+me5gQN7g9OHhrpAPacs2pbJdU+KTP63jHarUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ig1324Ga; arc=none smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nSciTCvF"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3a716d74c28so205675ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Nov 2024 09:08:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ig1324Ga"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-460969c49f2so346861cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Nov 2024 10:06:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731517718; x=1732122518; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731521185; x=1732125985; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=efPx/rLhNWT0p7ckeK3W5qQ7h3QoMhdds0m323Mk+cg=;
-        b=nSciTCvFF+DkbT9enNXgtMigcejg74P7K2Fj/n8xzPxzSqQlut4e3n/VrqB6mDRYtr
-         oQRkTN0GsWGObU9WqvShEymLM6EMqlNgv3J2PAkrvuIfOyFCRQXvihwEqzNpamExjcfp
-         Zwnc2t1f4jZhokUpInlV7QjU/Pdkp5Eb//PjfZTy5q2i6veykU5rYgHliAepL938Kxj/
-         eLriH+FfGMsKdRNQxMKF8VR8WRsMjF47faJ6gUHVOh9IH78hZ2LevC0DPnfatyfBZYkj
-         ShvLTVGCdLjs/aZ1ochmaoVnXNMhy3IhebOQZvm69WJ6vVfFVOAFstFHtW2x9xCBtUdH
-         uD9Q==
+        bh=ugjfi/VEHgJeZuf11dqY5h/VxsS8rTgi4t/EU9nFi7Q=;
+        b=Ig1324GabuFxG+GHcHd4K0ZKetuPTU7q7TLViV7+/F6F3gAhWx6e7ZFTOnU9UfhYhd
+         4uYuwi6XAXvTbXlk2oiN7gtb4YvcJjV7V58wb5HqjbDaOwgmbVlY4VMPFvLcfDkubywQ
+         JnbBBp4p/kK6BqYz7P7MXTFSInXe16rtoU+fix/G4RE6xOMTdIxA5OM/3kpEHLxyHBz0
+         9RuIdgaQvsMg64Odc6swF0VpP1mVcEdmR32KmIZ2Y+1eOEuHRrM80yiDHNqF9b4I6hu8
+         HweKrlbsyNRhhsSbA2I+uNuk/fzA0TIiG5w3VvvWOvWdVDD1QYzx53ggz5JCdqyNZMjj
+         e75w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731517718; x=1732122518;
+        d=1e100.net; s=20230601; t=1731521185; x=1732125985;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=efPx/rLhNWT0p7ckeK3W5qQ7h3QoMhdds0m323Mk+cg=;
-        b=ZIUAGpOBJCbj0S2ehgUpBN2oOaTUojm4z+45Pe8D5lXDVX9KuLIyicDOUBnS5+LhNN
-         h/X+vrltse6BQq2xSQBxdN0MaYpf4rJoct2Drb/ZyQQaZ1DNbbChOGz/J2TLR6uTI3mG
-         SPVWilaf80EBhEUVAMMWgvjgySeyfb+xcgDnuJrXZEyHkJPMq/UTmrLcUk7Ny9hV9WJL
-         t6mIP9BSdmKAa4uCHrP17+xzgxVcBaUhcBZPFzaOrhbaEWTFN2PkQg4aI5XGX+/amr57
-         9PeF2CP6RKnF80cKo1UKQeG8/Fji5oWubQYgvVuGv4fKJEeRbMq+n909wkIux2y/Ade3
-         IHYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWjHUmVTqM5+68x8hPEuFEBCq3qxvyW6Qlmqh30wYcNp1qHx40/wNOVJOQRR1d+5Uj+NJKIj18RvtTGtdVyZj7k@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3YTaigW7bFxYywhN0UJJE/v31zBy0FuuUMp3Bpk1K6k/qxufR
-	TLd9taXMIJNmEhwnds8Vjxha0chKIM3lkAhtsAVev3+Qf21B4UkypnPr3Fc30Xyne2nCLtOiOsU
-	OgQLkwSdEc+n5XmnolwGSBmGfft6XlDmAzu4J
-X-Gm-Gg: ASbGnctJNr0W4aeqvt6hfMRdPDm9I7xud+ESFb/Z2YSLUm17KQLfOc6F6nGzUvtT44X
-	AyBLXM80fJNPyBZiTdIJlL4Qtb/wKV++FCPTFoc6F+7TvL9rKfxUUIZkGIZX/0w==
-X-Google-Smtp-Source: AGHT+IENl/HhrSGg6ayb+SYQqQWEcvFTpM6KWv4E3CK00xq+RLT7X9+gY3HQZkVKedGyMwAxWPCNdzPB3i88SqunoAE=
-X-Received: by 2002:a05:6e02:188c:b0:39a:fa27:f25 with SMTP id
- e9e14a558f8ab-3a715be708cmr4612425ab.22.1731517718370; Wed, 13 Nov 2024
- 09:08:38 -0800 (PST)
+        bh=ugjfi/VEHgJeZuf11dqY5h/VxsS8rTgi4t/EU9nFi7Q=;
+        b=orUgCyJfcvd995ha6mk2Z49UfaodhyfPj+kh2q7saVB/feKTGOxn3Ip39RoeZEHVjV
+         5XP5H14a6W+yG9RatMaUhFVJwIlSgaWtsIOrjgabrjC8wIl0FJfR0ZDKItv+8RwmZFnI
+         JXwOkpF3nGzNYcosonbTdlZe9jprm0OlAgvuK5UWr/WcwbP83g6QS+BAaM11RfVG8RqH
+         sO+ywoHOc6W5E91IthpqnCWi5DnBh79WbNcB8x0h2xp1EDreTRI5W+Zg/TyoQ6/Eu6tq
+         ASavl15nKxmrertOvDcbHtcpTTUPrxa14KJQwXN6NPRODhicfaj5tKnj7N8K4cK3Pon+
+         n79Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWSRSw9X+ptCtPTM+MsqPazDoIHj13zyP9ahATCrFSe5wxD6gTu5uDQLj336z2hxn7yjYAyBMy/LPCjWJ5zEDPa@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRVlvLxwKYIJEw4A3Z75aKpruuFgfc3SUqjkCk9OUf3UVtOPpq
+	cMZzrC5o+l4Gi6b2Qnbno4T4m1MZLi8rLATnyiv5GX7EgxK6cQjkIt1QRiU8FaUbBr7BZfdATF8
+	o8RE5vGWVwZimZDXjaWDWKidtkWovYw1xEvTs
+X-Gm-Gg: ASbGncsELmN/FR7y5IYAJW793e/cqe0iJ3QcrdExX46q2RzqKSXVH1B/SGiCX/mc2Z4
+	5aZKv5kC1HSaUkcwfuVPA7G8NEQ6kJkxUry7EWfDSZsjDNVwYvVzeDRY0DjFOSA==
+X-Google-Smtp-Source: AGHT+IENJEKkQ3TcmVD/lLqFfFIWVicBo3ZaDNnGZr04R67YSdyWqn8ysI4VGM57mnodiUoh+vVIWrMeiScSz9fKfLA=
+X-Received: by 2002:ac8:58d4:0:b0:447:e59b:54eb with SMTP id
+ d75a77b69052e-4634bca2317mr4283231cf.26.1731521184814; Wed, 13 Nov 2024
+ 10:06:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241113002818.3578645-1-howardchu95@gmail.com>
-In-Reply-To: <20241113002818.3578645-1-howardchu95@gmail.com>
+References: <20241108184751.359237-1-irogers@google.com> <Zy8FIt2OMa5-GymZ@google.com>
+ <CAP-5=fXmxhaLk+qvH9nGAV-ByyhyHx=WPhXCFbBaZ3nSySSsMA@mail.gmail.com> <Zy-WM779rMwczlj_@google.com>
+In-Reply-To: <Zy-WM779rMwczlj_@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 13 Nov 2024 09:08:25 -0800
-Message-ID: <CAP-5=fXCxSKgbe141mgo--taFa=-L=Oe9o7hHrjC4rj-eAP57w@mail.gmail.com>
-Subject: Re: [PATCH v8 00/10] perf record --off-cpu: Dump off-cpu samples directly
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, peterz@infradead.org, namhyung@kernel.org, 
-	mingo@redhat.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Wed, 13 Nov 2024 10:06:13 -0800
+Message-ID: <CAP-5=fVKvDLUMw_HXBoRLK3FyPvUCWGOZNECer6_fyhbTZTM6A@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] Avoid parsing tracepoint format just for id
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, James Clark <james.clark@linaro.org>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Yang Li <yang.lee@linux.alibaba.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, Yang Jihong <yangjihong@bytedance.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Ben Gainey <ben.gainey@arm.com>, 
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>, Zixian Cai <fzczx123@gmail.com>, 
+	Andi Kleen <ak@linux.intel.com>, Paran Lee <p4ranlee@gmail.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 12, 2024 at 4:28=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
-wrote:
+On Sat, Nov 9, 2024 at 9:04=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
+rote:
 >
-> Changes in v8:
->  - Make this series bisectable
->  - Rename off_cpu_thresh to off_cpu_thresh_us and offcpu_thresh (in BPF)
->    to offcpu_thresh_ns for clarity.
->  - Add commit messages to 'perf evsel: Expose evsel__is_offcpu_event()
->    for future use' commit
->  - Correct spelling mistakes in the commit message (s/is should be/should=
- be/)
->  - Add kernel-doc comments to off_cpu_dump(), and comments to the empty
->    if block
->  - Add some comments to off-cpu test
->  - Delete an unused variable 'timestamp' in off_cpu_dump()
+> On Sat, Nov 09, 2024 at 08:26:20AM -0800, Ian Rogers wrote:
+> > On Fri, Nov 8, 2024 at 10:45=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > > On Fri, Nov 08, 2024 at 10:47:45AM -0800, Ian Rogers wrote:
+> > > > Ian Rogers (6):
+> > > >   tool api fs: Correctly encode errno for read/write open failures
+> > > >   perf trace-event: Constify print arguments
+> > > >   perf trace-event: Always build trace-event-info.c
+> > > >   perf evsel: Add/use accessor for tp_format
+> > > >   perf evsel: Allow evsel__newtp without libtraceevent
+> > > >   perf tests: Enable tests disabled due to tracepoint parsing
+> > >
+> > > After applying this series, I'm seeing some test failures.  But I don=
+'t
+> > > understand why it affects non-tracepoint events though.
+> > >
+> > >   $ sudo ./perf test -v pipe
+> > >   --- start ---
+> > >   test child forked, pid 3036123
+> > >    1bde35-1bdecc l noploop
+> > >   perf does have symbol 'noploop'
+> > >
+> > >   Record+report pipe test
+> > >   [ perf record: Woken up 1 times to write data ]
+> > >   [ perf record: Captured and wrote 0.210 MB - ]
+> > >   [ perf record: Woken up 2 times to write data ]
+> > >   [ perf record: Captured and wrote 0.517 MB - ]
+> > >   [ perf record: Woken up 2 times to write data ]
+> > >   [ perf record: Captured and wrote 0.516 MB - ]
+> > >   Record+report pipe test [Success]
+> > >
+> > >   Inject -B build-ids test
+> > >   0xa5c [0x17a4]: failed to process type: 80
+> > >   Error:
+> > >   failed to process sample
+> > >   Inject build-ids test [Failed - cannot find noploop function in pip=
+e #1]
+> > >
+> > >   Inject -b build-ids test
+> > >   0xa5c [0x17a4]: failed to process type: 80
+> > >   Error:
+> > >   failed to process sample
+> > >   Inject build-ids test [Failed - cannot find noploop function in pip=
+e #1]
+> > >
+> > >   Inject --buildid-all build-ids test
+> > >   0xa5c [0x17a4]: failed to process type: 80
+> > >   Error:
+> > >   failed to process sample
+> > >   Inject build-ids test [Failed - cannot find noploop function in pip=
+e #1]
+> > >
+> > >   Inject --mmap2-buildid-all build-ids test
+> > >   0xa5c [0x17a4]: failed to process type: 80
+> > >   Error:
+> > >   failed to process sample
+> > >   Inject build-ids test [Failed - cannot find noploop function in pip=
+e #1]
+> > >   ---- end(-1) ----
+> > >    84: perf pipe recording and injection test                        =
+  : FAILED!
+> > >
+> > >   $ sudo ./perf test -v Zstd
+> > >   --- start ---
+> > >   test child forked, pid 3036097
+> > >   Collecting compressed record file:
+> > >   500+0 records in
+> > >   500+0 records out
+> > >   256000 bytes (256 kB, 250 KiB) copied, 0.00169127 s, 151 MB/s
+> > >   [ perf record: Woken up 1 times to write data ]
+> > >   [ perf record: Captured and wrote 0.032 MB /tmp/perf.data.KBo, comp=
+ressed (original 0.004 MB, ratio is 3.324) ]
+> > >   Checking compressed events stats:
+> > >   Couldn't decompress data
+> > >   0x7ca8 [0x4f2]: failed to process type: 81 [Operation not permitted=
+]
+> > >   Error:
+> > >   failed to process sample
+> > >   ---- end(-1) ----
+> > >    86: Zstd perf.data compression/decompression                      =
+  : FAILED!
+> > >
+> > > Thanks,
+> > > Namhyung
+> >
+> > I'm not able to reproduce:
+> > ```
+> > $ git log --oneline |head
+> > a59bca6eb0a6 perf test: Add a runs-per-test flag
+> > 0d0c002eb45c perf tests: Enable tests disabled due to tracepoint parsin=
+g
+> > 4b8f5c9dfbda perf evsel: Allow evsel__newtp without libtraceevent
+> > 7f57057c7884 perf evsel: Add/use accessor for tp_format
+> > c27d357d2d4c perf trace-event: Always build trace-event-info.c
+> > 20bf7a2cd68a perf trace-event: Constify print arguments
+> > f18b07ee2af1 tool api fs: Correctly encode errno for read/write open fa=
+ilures
+> > ...
+> > $ sudo /tmp/perf/perf test -r 10 Zstd pipe -v
+> > 84: perf pipe recording and injection test                          : O=
+k
+> > 84: perf pipe recording and injection test                          : O=
+k
+> > 84: perf pipe recording and injection test                          : O=
+k
+> > 84: perf pipe recording and injection test                          : O=
+k
+> > 84: perf pipe recording and injection test                          : O=
+k
+> > 84: perf pipe recording and injection test                          : O=
+k
+> > 84: perf pipe recording and injection test                          : O=
+k
+> > 84: perf pipe recording and injection test                          : O=
+k
+> > 84: perf pipe recording and injection test                          : O=
+k
+> > 84: perf pipe recording and injection test                          : O=
+k
+> > 86: Zstd perf.data compression/decompression                        : O=
+k
+> > 86: Zstd perf.data compression/decompression                        : O=
+k
+> > 86: Zstd perf.data compression/decompression                        : O=
+k
+> > 86: Zstd perf.data compression/decompression                        : O=
+k
+> > 86: Zstd perf.data compression/decompression                        : O=
+k
+> > 86: Zstd perf.data compression/decompression                        : O=
+k
+> > 86: Zstd perf.data compression/decompression                        : O=
+k
+> > 86: Zstd perf.data compression/decompression                        : O=
+k
+> > 86: Zstd perf.data compression/decompression                        : O=
+k
+> > 86: Zstd perf.data compression/decompression                        : O=
+k
+> > ```
+> > Similarly not as root or if runs-per-test is 100.
+> >
+> > Agreed that the changes are for tracepoints and these tests aren't for
+> > tracepoints, so an interaction wouldn't be expected. If you have a
+> > reliable reproduction perhaps you can bisect it.
+>
+> it says:
+>
+> 9c10de391840a35ab095b65e9a5c4fad0ac52068 is the first bad commit
+> commit 9c10de391840a35ab095b65e9a5c4fad0ac52068 (HEAD)
+> Author: Ian Rogers <irogers@google.com>
+> Date:   Fri Nov 8 10:47:46 2024 -0800
+>
+>     tool api fs: Correctly encode errno for read/write open failures
+>
+>     Switch from returning -1 to -errno so that callers can determine type=
+s
+>     of failure.
+>
+>     Signed-off-by: Ian Rogers <irogers@google.com>
+>     Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+>  tools/lib/api/fs/fs.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-I spotted a few issues in v7, but v8 looks good to me.
+So I tried to eye-ball/grep all callers to spot assumptions on the
+return value like:
+```
+err =3D ...__read_int
+if (err =3D=3D -1)
+```
+Didn't spot anything.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+It seems in the test log the record is failing so I ran this under
+gdb, set breakpoints on the 3 modified functions and then looked up
+the call stack to spot bad return value assumptions. Everything looks
+good.
+I then tried inject and report, the only file read by these functions
+is /proc/sys/kernel/perf_event_paranoid as part of symbol
+initialization (nit, this should probably be read lazily and the
+restriction should really come from the perf.data file, not the
+running system) and those calls look good.
+
+The change is small and not critical for the series. It improves the
+error message when reading the tracepoint id fails. So we could move
+forward with the rest of the series, but that could be annoying for
+tracepoint users.
+
+If I had a reproducer I'd revert the 1 line change on each function to
+find out which is causing the regression. Once you have that then you
+can binary search to find the bad call by using some global counter
+where the first 'n' calls use the new return value and the later use
+the old value. You can then vary 'n' to binary search and find the bad
+caller.
+
+Is there any chance you can help diagnose this or help me to find the
+reproducer?
 
 Thanks,
 Ian
-
-> Changes in v7:
->  - Make off-cpu event system-wide
->  - Use strtoull instead of strtoul
->  - Delete unused variable such as sample_id, and sample_type
->  - Use i as index to update BPF perf_event map
->  - MAX_OFFCPU_LEN 128 is too big, make it smaller.
->  - Delete some bound check as it's always guaranteed
->  - Do not set ip_pos in BPF
->  - Add a new field for storing stack traces in the tstamp map
->  - Dump the off-cpu sample directly or save it in the off_cpu map, not bo=
-th
->  - Delete the sample_type_off_cpu check
->  - Use __set_off_cpu_sample() to parse samples instead of a two-pass pars=
-ing
->
-> Changes in v6:
->  - Make patches bisectable
->
-> Changes in v5:
->  - Delete unnecessary copy in BPF program
->  - Remove sample_embed from perf header, hard code off-cpu stuff instead
->  - Move evsel__is_offcpu_event() to evsel.h
->  - Minor changes to the test
->  - Edit some comments
->
-> Changes in v4:
->  - Minimize the size of data output by perf_event_output()
->  - Keep only one off-cpu event
->  - Change off-cpu threshold's unit to microseconds
->  - Set a default off-cpu threshold
->  - Print the correct error message for the field 'embed' in perf data hea=
-der
->
-> Changes in v3:
->  - Add off-cpu-thresh argument
->  - Process direct off-cpu samples in post
->
-> Changes in v2:
->  - Remove unnecessary comments.
->  - Rename function off_cpu_change_type to off_cpu_prepare_parse
->
-> v1:
->
-> As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=3D207323
->
-> Currently, off-cpu samples are dumped when perf record is exiting. This
-> results in off-cpu samples being after the regular samples. This patch
-> series makes possible dumping off-cpu samples on-the-fly, directly into
-> perf ring buffer. And it dispatches those samples to the correct format
-> for perf.data consumers.
->
-> Before:
-> ```
->      migration/0      21 [000] 27981.041319: 2944637851    cycles:P:  fff=
-fffff90d2e8aa record_times+0xa ([kernel.kallsyms])
->             perf  770116 [001] 27981.041375:          1    cycles:P:  fff=
-fffff90ee4960 event_function+0xf0 ([kernel.kallsyms])
->             perf  770116 [001] 27981.041377:          1    cycles:P:  fff=
-fffff90c184b1 intel_bts_enable_local+0x31 ([kernel.kallsyms])
->             perf  770116 [001] 27981.041379:      51611    cycles:P:  fff=
-fffff91a160b0 native_sched_clock+0x30 ([kernel.kallsyms])
->      migration/1      26 [001] 27981.041400: 4227682775    cycles:P:  fff=
-fffff90d06a74 wakeup_preempt+0x44 ([kernel.kallsyms])
->      migration/2      32 [002] 27981.041477: 4159401534    cycles:P:  fff=
-fffff90d11993 update_load_avg+0x63 ([kernel.kallsyms])
->
-> sshd  708098 [000] 18446744069.414584:     286392 offcpu-time:
->             79a864f1c8bb ppoll+0x4b (/usr/lib/libc.so.6)
->             585690935cca [unknown] (/usr/bin/sshd)
-> ```
->
-> After:
-> ```
->             perf  774767 [003] 28178.033444:        497           cycles:=
-P:  ffffffff91a160c3 native_sched_clock+0x43 ([kernel.kallsyms])
->             perf  774767 [003] 28178.033445:     399440           cycles:=
-P:  ffffffff91c01f8d nmi_restore+0x25 ([kernel.kallsyms])
->          swapper       0 [001] 28178.036639:  376650973           cycles:=
-P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
->          swapper       0 [003] 28178.182921:  348779378           cycles:=
-P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
->     blueman-tray    1355 [000] 28178.627906:  100184571 offcpu-time:
->             7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
->             7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
->             7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-=
-2.0.so.0.8000.2)
->             7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.=
-0.8000.2)
->             7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
->             7fff24e862d8 [unknown] ([unknown])
->
->
->     blueman-tray    1355 [000] 28178.728137:  100187539 offcpu-time:
->             7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
->             7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
->             7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-=
-2.0.so.0.8000.2)
->             7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.=
-0.8000.2)
->             7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
->             7fff24e862d8 [unknown] ([unknown])
->
->
->          swapper       0 [000] 28178.463253:  195945410           cycles:=
-P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
->      dbus-broker     412 [002] 28178.464855:  376737008           cycles:=
-P:  ffffffff91c000a0 entry_SYSCALL_64+0x20 ([kernel.kallsyms])
-> ```
->
-> Howard Chu (10):
->   perf record --off-cpu: Add --off-cpu-thresh option
->   perf evsel: Expose evsel__is_offcpu_event() for future use
->   perf record --off-cpu: Parse off-cpu event
->   perf record --off-cpu: Preparation of off-cpu BPF program
->   perf record --off-cpu: Dump off-cpu samples in BPF
->   perf evsel: Assemble offcpu samples
->   perf record --off-cpu: Disable perf_event's callchain collection
->   perf script: Display off-cpu samples correctly
->   perf record --off-cpu: Dump the remaining samples in BPF's stack trace
->     map
->   perf test: Add direct off-cpu test
->
->  tools/perf/builtin-record.c             |  26 ++++++
->  tools/perf/builtin-script.c             |   4 +-
->  tools/perf/tests/builtin-test.c         |   1 +
->  tools/perf/tests/shell/record_offcpu.sh |  35 ++++++-
->  tools/perf/tests/tests.h                |   1 +
->  tools/perf/tests/workloads/Build        |   1 +
->  tools/perf/tests/workloads/offcpu.c     |  16 ++++
->  tools/perf/util/bpf_off_cpu.c           | 117 ++++++++++++++----------
->  tools/perf/util/bpf_skel/off_cpu.bpf.c  |  97 +++++++++++++++++++-
->  tools/perf/util/evsel.c                 |  34 ++++++-
->  tools/perf/util/evsel.h                 |   2 +
->  tools/perf/util/off_cpu.h               |   3 +-
->  tools/perf/util/record.h                |   1 +
->  13 files changed, 282 insertions(+), 56 deletions(-)
->  create mode 100644 tools/perf/tests/workloads/offcpu.c
->
-> --
-> 2.43.0
->
