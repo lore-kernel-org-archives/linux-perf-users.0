@@ -1,114 +1,333 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0E418A6CC;
-	Wed, 13 Nov 2024 22:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B072518BB84;
+	Wed, 13 Nov 2024 22:50:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731536719; cv=none; b=Mu5dY53AlZBtjLGSv57+X8I3n2MLJMfT3xN8BMv3kSmZdkSsByFewD90BMArhMXE0rwQWX3ytN2MunAPOJQO3+QssvMvawN+aZ9Xdyrnby51J8uxLoYekN2RsR/qScT2KPCPtjOC8JRjBfpG49iTbrd0aw+HuI4sAA2AxLZ5g88=
+	t=1731538219; cv=none; b=eyGf0XuLoHkqDbD/nn3hAFR2/YbGTG2tnqmHvhfDwYKxE2EKtb1RPIBDYmwChTRMifbjgkLMoiYnBRKM+vUiwhp1mws6qRovDEBX8cFd8UrVLmLTwRKaMUcKlcZRSxd9jIL7bHUq6OUqGfIgySCSBly23z/unhaUBXBAUmzAXQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731536719; c=relaxed/simple;
-	bh=1dafTU3Arp/csBfvx15CA6zVMhj2igN4Giir7HUNKdA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Wz+iorY1/loQ1jmCqlLRFH/J/6Sv9oQL8lyqX96b1K4tb7/HytE9y2L7bfPi5yJQ+L2Ww1q5nIrPNJmqWCA51QB9zl8lOCqA8u0ZVhCRUXg5Izayp92al5NKVqSKVTWi50uQ7ZOdA09XGBYQEt/kcCx3nVKoDO9nfq6adQjAghs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7F4DC4CEC3;
-	Wed, 13 Nov 2024 22:25:15 +0000 (UTC)
-Date: Wed, 13 Nov 2024 17:25:35 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Jens Remus <jremus@linux.ibm.com>, x86@kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, Indu Bhagat
- <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
- <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
- linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
- James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Florian Weimer <fweimer@redhat.com>, Andy
- Lutomirski <luto@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
-Message-ID: <20241113172535.7af07f61@gandalf.local.home>
-In-Reply-To: <20241113172118.6db57c42@gandalf.local.home>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
-	<42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
-	<1f83be89-b816-48a3-a7ee-9b72f07b558e@linux.ibm.com>
-	<20241113155040.6a9a1bed@gandalf.local.home>
-	<20241113211535.ghnw52wkgudkjvgv@jpoimboe>
-	<20241113171326.6d1ddc83@gandalf.local.home>
-	<20241113172118.6db57c42@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1731538219; c=relaxed/simple;
+	bh=cxpxSXBuCEx/21qxfPKUlSPRl62W4RleSGj9yzpAbUI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nig7BRlIWGV9TNJSV/kmZ8rlYr8MaT1Ts5lQueKJxDp7u772UUjqEfWlA21hOcsKif2ItkQhdeyHBV08fshiW3WCyxQw9dScBzpSeY/9VfD9rUEn3dHZyplS8ZfIRjquyBQ/HPA/jYF/H7Xwn8ga8A2DF02bdunqK+pbyfXpSnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OVdgvrWR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OVdgvrWR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86104C4CEC3;
+	Wed, 13 Nov 2024 22:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731538219;
+	bh=cxpxSXBuCEx/21qxfPKUlSPRl62W4RleSGj9yzpAbUI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OVdgvrWRlZCKgPquKxPpwNO7taKPpghTVf60FaueYm4PPfTIBKQO1Z5rXmBOjNbI/
+	 ryz1kuJSL909VAd6OGgqgV9VXeazXW1KcJlRr5nJp+7fDBZ9SDQitYTfMPyfwHCE9n
+	 brOPVQW01oxb2SnRgtWKzOD3RrAvz5I+Ephqjuts/M2g+EEH8tDgCWFUJlFRY7WbjR
+	 PeqJMHaKdWLvCVkNhELLW5xojMyIJqsMf3lHJ0kUbjHTmTSspStR0OnLzBMODGRnRm
+	 PP33lv6MKFNAdn+pfit5yiyT9a66h/EH9Xwxv4/FbbHzaD8sls7IgPw2IlwunHZ0IQ
+	 g+2Kk4IcFql9A==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Li Huafei <lihuafei1@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf-probe: Fix --line option to show correct offset line number from function
+Date: Thu, 14 Nov 2024 07:50:14 +0900
+Message-ID:  <173153821454.2776880.582308516721515492.stgit@mhiramat.roam.corp.google.com>
+X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 13 Nov 2024 17:21:18 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> > index 434c548f0837..64cc3c1188ca 100644
-> > --- a/fs/binfmt_elf.c
-> > +++ b/fs/binfmt_elf.c
-> > @@ -842,7 +842,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
-> >  	int first_pt_load = 1;
-> >  	unsigned long error;
-> >  	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
-> > -	struct elf_phdr *elf_property_phdata = NULL, *sframe_phdr = NULL;
-> > +	struct elf_phdr *elf_property_phdata = NULL;
-> > +	unsigned long sframe_vaddr = 0;  
-> 
-> Could not just save the pointer to the sframe phd, as it gets freed before we need it.
-                                                ^^^
-                                                phdr
+Fix --line option to show correct offset if the DWARF line info of the
+probe address has the statement lines in differnt functions.
+Currently debuginfo__find_probe_point() does
 
+ (1) Get the line and file from CU's lineinfo
+ (2) Get the real function(function instance) of the address
+     (use this function's decl_line/decl_file as basement)
+ (2-1) Search the inlined function scope in the real function
+     for the given address.
+ (2-2) if there is inlined function, update basement line/file.
+ (2-3) verify the filename is same as basement filename.
+ (3) calculate the relative line number from basement.
 
-> > diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-> > index 933e47696e29..ca4ef0b72772 100644
-> > --- a/kernel/unwind/sframe.c
-> > +++ b/kernel/unwind/sframe.c
-> > @@ -73,15 +73,15 @@ static int find_fde(struct sframe_section *sec, unsigned long ip,
-> >  		    struct sframe_fde *fde)
-> >  {
-> >  	struct sframe_fde __user *first, *last, *found = NULL;
-> > -	u32 ip_off, func_off_low = 0, func_off_high = -1;
-> > +	s32 ip_off, func_off_low = INT_MIN, func_off_high = INT_MAX;  
-> 
-> The ip_off is a signed it. I wrote a program to dump out the sframe section
-                         ^^
-                         int
+The problem is in (1). Since we have no basement file/line info,
+we can not verify that the file/line info from CU's lineinfo.
+Li Huafei reported[1], the lineinfo may have several different lines
+for one address. We need to find most appropriate one based on
+the basement file/line.
 
+[1] https://lore.kernel.org/all/20241108181909.3515716-2-lihuafei1@huawei.com/
 
-> of files, and I had:
-> 
-> 	ffffed88: (1020) size:      16 off:     146 num:       2 info: 1 rep:16
-> 	ffffed98: (1030) size:     336 off:     154 num:       2 info:17 rep:16
-> 	ffffefe1: (1279) size:     113 off:       0 num:       4 info: 0 rep: 0
-> 	fffff052: (12ea) size:      54 off:      15 num:       3 info: 0 rep: 0
-> 	fffff088: (1320) size:     167 off:      26 num:       3 info: 0 rep: 0
-> 	fffff12f: (13c7) size:     167 off:      37 num:       4 info: 0 rep: 0
-> 	fffff1d6: (146e) size:     167 off:      52 num:       4 info: 0 rep: 0
-> 	fffff27d: (1515) size:      22 off:      67 num:       4 info: 0 rep: 0
-> 	fffff293: (152b) size:     141 off:      82 num:       4 info: 0 rep: 0
-> 	fffff320: (15b8) size:      81 off:      97 num:       4 info: 0 rep: 0
-> 	fffff371: (1609) size:     671 off:     112 num:       4 info: 1 rep: 0
-> 	fffff610: (18a8) size:     171 off:     131 num:       4 info: 0 rep: 0
-> 
-> The above turns was created by a loop of:
-            ^^^^^^^^^
-            items were
+This basically does
 
-No idea why I typed that :-p
+ - Introduce cu_find_lineinfo_after() which find the line after the
+   basement file/line information so that it can choose correct one.
+ - Swap the order of (1) and (2) so that we can pass the basement
+   file/line when searching lineinfo.
 
+Reported-by: Li Huafei <lihuafei1@huawei.com>
+Closes: https://lore.kernel.org/all/20241108181909.3515716-2-lihuafei1@huawei.com/
+Fixes: 57f95bf5f882 ("perf probe: Show correct statement line number by perf probe -l")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ tools/perf/util/dwarf-aux.c    |   78 ++++++++++++++++++++++++++++++++++------
+ tools/perf/util/dwarf-aux.h    |    7 ++++
+ tools/perf/util/probe-finder.c |   44 ++++++++++++++++-------
+ 3 files changed, 105 insertions(+), 24 deletions(-)
 
-I can't blame jetlag anymore.
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 92eb9c8dc3e5..4e3bf41746c1 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -60,14 +60,33 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die)
+ 	return dwarf_formstring(&attr);
+ }
+ 
++static Dwarf_Line *get_next_statement_line(Dwarf_Lines *lines, size_t *idx, Dwarf_Addr addr)
++{
++	bool is_statement = false;
++	Dwarf_Line *line;
++	Dwarf_Addr laddr;
++	size_t l = *idx;
++
++	while (!is_statement) {
++		line = dwarf_onesrcline(lines, ++l);
++		if (!line || dwarf_lineaddr(line, &laddr) != 0 ||
++		    dwarf_linebeginstatement(line, &is_statement) != 0)
++			return NULL;
++		if (laddr > addr)
++			return NULL;
++	}
++	*idx = l;
++	return line;
++}
++
+ /* Unlike dwarf_getsrc_die(), cu_getsrc_die() only returns statement line */
+-static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
++static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr,
++								 Dwarf_Lines **lines_p, size_t *idx)
+ {
+ 	Dwarf_Addr laddr;
+ 	Dwarf_Lines *lines;
+ 	Dwarf_Line *line;
+ 	size_t nlines, l, u, n;
+-	bool flag;
+ 
+ 	if (dwarf_getsrclines(cu_die, &lines, &nlines) != 0 ||
+ 	    nlines == 0)
+@@ -91,16 +110,14 @@ static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
+ 		if (!line || dwarf_lineaddr(line, &laddr) != 0)
+ 			return NULL;
+ 	} while (laddr == addr);
+-	l++;
+ 	/* Going forward to find the statement line */
+-	do {
+-		line = dwarf_onesrcline(lines, l++);
+-		if (!line || dwarf_lineaddr(line, &laddr) != 0 ||
+-		    dwarf_linebeginstatement(line, &flag) != 0)
+-			return NULL;
+-		if (laddr > addr)
+-			return NULL;
+-	} while (!flag);
++	line = get_next_statement_line(lines, &l, addr);
++	if (!line)
++		return NULL;
++	if (lines_p)
++		*lines_p = lines;
++	if (idx)
++		*idx = l;
+ 
+ 	return line;
+ }
+@@ -129,7 +146,7 @@ int cu_find_lineinfo(Dwarf_Die *cu_die, Dwarf_Addr addr,
+ 		goto out;
+ 	}
+ 
+-	line = cu_getsrc_die(cu_die, addr);
++	line = cu_getsrc_die(cu_die, addr, NULL, NULL);
+ 	if (line && dwarf_lineno(line, lineno) == 0) {
+ 		*fname = dwarf_linesrc(line, NULL, NULL);
+ 		if (!*fname)
+@@ -141,6 +158,43 @@ int cu_find_lineinfo(Dwarf_Die *cu_die, Dwarf_Addr addr,
+ 	return (*lineno && *fname) ? *lineno : -ENOENT;
+ }
+ 
++/**
++ * cu_find_lineinfo_after - Get a line number after file:line for given address
++ * @cu_die: a CU DIE
++ * @addr: An address
++ * @lineno: a pointer which returns the line number
++ * @fname: the filename where searching the line
++ * @baseline: the basement line number
++ *
++ * Find a line number after @baseline in @fname for @addr in @cu_die.
++ * Return the found line number, or -ENOENT if not found.
++ */
++int cu_find_lineinfo_after(Dwarf_Die *cu_die, Dwarf_Addr addr,
++					int *lineno, const char *fname, int baseline)
++{
++	const char *line_fname;
++	Dwarf_Lines *lines;
++	Dwarf_Line *line;
++	size_t idx = 0;
++
++	if (cu_find_lineinfo(cu_die, addr, &line_fname, lineno) < 0)
++		return -ENOENT;
++
++	if (!strcmp(line_fname, fname) && baseline <= *lineno)
++		return *lineno;
++
++	line = cu_getsrc_die(cu_die, addr, &lines, &idx);
++
++	while (line && dwarf_lineno(line, lineno) == 0) {
++		line_fname = dwarf_linesrc(line, NULL, NULL);
++		if (line_fname && !strcmp(line_fname, fname) && baseline <= *lineno)
++			return *lineno;
++		line = get_next_statement_line(lines, &idx, addr);
++	}
++
++	return -ENOENT;
++}
++
+ static int __die_find_inline_cb(Dwarf_Die *die_mem, void *data);
+ 
+ /**
+diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+index bd7505812569..19edf21e2f78 100644
+--- a/tools/perf/util/dwarf-aux.h
++++ b/tools/perf/util/dwarf-aux.h
+@@ -23,6 +23,13 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die);
+ int cu_find_lineinfo(Dwarf_Die *cudie, Dwarf_Addr addr,
+ 		     const char **fname, int *lineno);
+ 
++/*
++ * Get the most likely line number for given address in given filename
++ * and basement line number.
++ */
++int cu_find_lineinfo_after(Dwarf_Die *cudie, Dwarf_Addr addr,
++					int *lineno, const char *fname, int baseline);
++
+ /* Walk on functions at given address */
+ int cu_walk_functions_at(Dwarf_Die *cu_die, Dwarf_Addr addr,
+ 			 int (*callback)(Dwarf_Die *, void *), void *data);
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 13ff45d3d6a4..efcacb5568e5 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1578,7 +1578,8 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
+ {
+ 	Dwarf_Die cudie, spdie, indie;
+ 	Dwarf_Addr _addr = 0, baseaddr = 0;
+-	const char *fname = NULL, *func = NULL, *basefunc = NULL, *tmp;
++	const char *fname = NULL, *func = NULL, *basefunc = NULL;
++	const char *basefname = NULL, *tmp;
+ 	int baseline = 0, lineno = 0, ret = 0;
+ 
+ 	/* We always need to relocate the address for aranges */
+@@ -1592,11 +1593,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
+ 		goto end;
+ 	}
+ 
+-	/* Find a corresponding line (filename and lineno) */
+-	cu_find_lineinfo(&cudie, (Dwarf_Addr)addr, &fname, &lineno);
+-	/* Don't care whether it failed or not */
+-
+-	/* Find a corresponding function (name, baseline and baseaddr) */
++	/* Find the basement function (name, baseline and baseaddr) */
+ 	if (die_find_realfunc(&cudie, (Dwarf_Addr)addr, &spdie)) {
+ 		/* Get function entry information */
+ 		func = basefunc = dwarf_diename(&spdie);
+@@ -1607,10 +1604,16 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
+ 			goto post;
+ 		}
+ 
+-		fname = die_get_decl_file(&spdie);
++		basefname = die_get_decl_file(&spdie);
++		if (!basefname) {
++			lineno = 0;
++			goto post;
++		}
++
+ 		if (addr == baseaddr) {
+ 			/* Function entry - Relative line number is 0 */
+ 			lineno = baseline;
++			fname = basefname;
+ 			goto post;
+ 		}
+ 
+@@ -1627,7 +1630,9 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
+ 				 */
+ 				lineno = die_get_call_lineno(&indie);
+ 				fname = die_get_call_file(&indie);
+-				break;
++				if (!fname || strcmp(fname, basefname))
++					lineno = 0;
++				goto post;
+ 			} else {
+ 				/*
+ 				 * addr is in an inline function body.
+@@ -1636,20 +1641,35 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
+ 				 * be the entry line of the inline function.
+ 				 */
+ 				tmp = dwarf_diename(&indie);
+-				if (!tmp ||
+-				    dwarf_decl_line(&indie, &baseline) != 0)
+-					break;
++				basefname = die_get_decl_file(&indie);
++				if (!tmp || !basefname ||
++				    dwarf_decl_line(&indie, &baseline) != 0) {
++					lineno = 0;
++					goto post;
++				}
+ 				func = tmp;
+ 				spdie = indie;
+ 			}
+ 		}
++	}
++
++	if (!lineno) {
++		/* Find a corresponding line (filename and lineno) */
++		if (cu_find_lineinfo_after(&cudie, (Dwarf_Addr)addr, &lineno,
++								   basefname, baseline) < 0)
++			lineno = 0;
++		else
++			fname = basefname;
++	}
++
++post:
++	if (lineno) {
+ 		/* Verify the lineno and baseline are in a same file */
+ 		tmp = die_get_decl_file(&spdie);
+ 		if (!tmp || (fname && strcmp(tmp, fname) != 0))
+ 			lineno = 0;
+ 	}
+ 
+-post:
+ 	/* Make a relative line number or an offset */
+ 	if (lineno)
+ 		ppt->line = lineno - baseline;
 
--- Steve
