@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A90193403;
-	Wed, 13 Nov 2024 21:13:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15BE71667DA;
+	Wed, 13 Nov 2024 21:15:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731532414; cv=none; b=ZutC0CHVjAxDuncYwE+9E5DV540MjTeebp6mjkxU2pdzbuo2EqJX9t63JQdnkyouZjSC+WsePW/h4XHaeSY4ldsc7Itpxv3taGdK/qT7SchWi+CI8ywZIPNcZFCDcGhuDBweLRJsrY21AoFqQ8hgRfmQsQIZ4mw43nHK8dH6AIk=
+	t=1731532538; cv=none; b=L/kBi992FLXvwJjtRxTbLdqbcXAMpZxkgE6tAd5y8+cL3Kz/7XzXJ69jWBZs1+wypkCD443B5OrRYW/eSiyIjtKHcB73FlTRqzxsRUp1YjP+CgvITKMPIrX/yJxN0iWJZ5QOzzEKYTg9eh2GymTMUh9y65ZPN7CSKfCBMAxb6Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731532414; c=relaxed/simple;
-	bh=dG+PWrpTh9WN4IYnpLuD9zRtuskgLR0icJKXpnnEhY0=;
+	s=arc-20240116; t=1731532538; c=relaxed/simple;
+	bh=t2R8Ex3j4lee5VTlTR5A719plwgG3aS/+QFBe3U7xFw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ibb0EGp2noi3DWUZgSggWPV5gujiNCP3Ys+rjZQhr+8bAQvZgwZOrkkC/rlsF+a81Ln9mbwE4kcEYBMuoFos45drzl+UZd1EpQbEW4/PyhsLmYVBZ0+FReXETAxegoJGRN423CB8q/afiYeOWR5Klbvtwzfm3ao43xv4l8U3x4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7Gzp2bK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mLpaHtqr/efgMtDGtjsKP40uhKvyXiLOlEqYgGMtZvHzPXmWPpcU560gF4m3+jo+hXBfmGqzfrAJFqyZKng9ao0SNW7j19/gSmNzEvemC7kVgT8RGmlk1LMy6Md0R5Ehhg7sUIP7U65KSmET5jkjkx+r6v3EuRChZWhiiV6XNBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gxH7PTJ/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7Gzp2bK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C5BFC4CEC3;
-	Wed, 13 Nov 2024 21:13:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gxH7PTJ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4FCC4CECF;
+	Wed, 13 Nov 2024 21:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731532413;
-	bh=dG+PWrpTh9WN4IYnpLuD9zRtuskgLR0icJKXpnnEhY0=;
+	s=k20201202; t=1731532537;
+	bh=t2R8Ex3j4lee5VTlTR5A719plwgG3aS/+QFBe3U7xFw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E7Gzp2bKIK61ytzweNtCxVXe/37znZrYThr4tiAZn47QpSaFDZnKcdlDynCR1XfOh
-	 X8WlpfgFxAUodaD1Y2PVW/xXCbX3YF21IxmbUfoIAPDdEAxYjEjSbfjyZK76XXMQH5
-	 R2SQSrblMNgagk1ULT7KdZrwjdyRb4M0lwofYZt3eqJ+r9g/LzPi5eoJ02LNwo4GVM
-	 86gMkHbUWmY61IbsrAsJYyqDCfeiQseUUAtjTBSSKARcl3ZAnHABnkQ66OH/jz7gql
-	 /HqywYujV6RqkGAH58IvUeq4Stt06Fx37/Ewk8CVB61sYanZpNCJznfinEL8MYSkOd
-	 SiTVc7Jlezm+Q==
-Date: Wed, 13 Nov 2024 13:13:30 -0800
+	b=gxH7PTJ/Un4Jg69bGOhhLuuBE3zGM4GazaIDNoEfCmmCmO41SzOmggeDcjpKIMYtu
+	 DoUUD9O7yVGpx3cD2oSatrIsaLk7rAe+IfmTf9WVjcG8OpAon/XrjDHrn2auVuESIZ
+	 s6g3JMh1y4w54LRX8m1RGZatEyLY1WMaKmfQ/Jw1WRRUJ5d+M1NNbORKwREBIE+oqz
+	 RIuMpf0PX3COabowVNAdYm0CiPAUFEUvBX8inH5A7HMXqVUgP/m5aFjLxBrk2OlVls
+	 wEfBODfS+NDMLfHQUC2OKtCfP8rTHyf1UZcLpIMyX+uX6OQS6ki8YocJ0nqiI+Cz6O
+	 nkl7wSdrBvg5Q==
+Date: Wed, 13 Nov 2024 13:15:35 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Jens Remus <jremus@linux.ibm.com>, x86@kernel.org,
@@ -45,13 +45,15 @@ Cc: Jens Remus <jremus@linux.ibm.com>, x86@kernel.org,
 	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>
+	Andy Lutomirski <luto@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>
 Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
-Message-ID: <20241113211330.hd6y32gfy4hbwqfm@jpoimboe>
+Message-ID: <20241113211535.ghnw52wkgudkjvgv@jpoimboe>
 References: <cover.1730150953.git.jpoimboe@kernel.org>
  <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
- <23ff3782-c192-43eb-99c2-fe2746da7d4c@linux.ibm.com>
- <20241113155058.5b15ea58@gandalf.local.home>
+ <1f83be89-b816-48a3-a7ee-9b72f07b558e@linux.ibm.com>
+ <20241113155040.6a9a1bed@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,32 +62,34 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241113155058.5b15ea58@gandalf.local.home>
+In-Reply-To: <20241113155040.6a9a1bed@gandalf.local.home>
 
-On Wed, Nov 13, 2024 at 03:50:58PM -0500, Steven Rostedt wrote:
-> On Wed, 13 Nov 2024 16:56:25 +0100
+On Wed, Nov 13, 2024 at 03:50:40PM -0500, Steven Rostedt wrote:
+> On Thu, 7 Nov 2024 17:59:08 +0100
 > Jens Remus <jremus@linux.ibm.com> wrote:
 > 
 > > On 28.10.2024 22:47, Josh Poimboeuf wrote:
+> > ...
+> > > diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c  
+> > ...
+> > > +static int find_fde(struct sframe_section *sec, unsigned long ip,
+> > > +		    struct sframe_fde *fde)
+> > > +{
+> > > +	struct sframe_fde __user *first, *last, *found = NULL;
+> > > +	u32 ip_off, func_off_low = 0, func_off_high = -1;
+> > > +
+> > > +	ip_off = ip - sec->sframe_addr;
+> > > +
+> > > +	first = (void __user *)sec->fdes_addr;
+> > > +	last = first + sec->fdes_nr;  
 > > 
-> > > diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c  
+> > Could it be that this needs to be:
 > > 
-> > > @@ -68,7 +83,12 @@ int unwind_user_start(struct unwind_user_state *state)
-> > >   		return -EINVAL;
-> > >   	}
-> > >   
-> > > -	state->type = UNWIND_USER_TYPE_FP;
-> > > +	if (current_has_sframe())
-> > > +		state->type = UNWIND_USER_TYPE_SFRAME;
-> > > +	else if (IS_ENABLED(CONFIG_UNWIND_USER_FP))  
-> > 
-> > The test must be for CONFIG_HAVE_UNWIND_USER_FP. :-)
+> > 	last = first + sec->fdes_nr - 1;
 > 
-> Yep, that too.
+> Yep, I discovered the same issue.
 
-I also found this one, so that makes three of us!
-
-It's too bad IS_ENABLED() doesn't catch typos.
+Indeed, thanks.
 
 -- 
 Josh
