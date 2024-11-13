@@ -1,59 +1,59 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486FE1FAC56
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Nov 2024 10:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5A41FBC9E
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 Nov 2024 10:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731492043; cv=none; b=KWK4GortZNU9JyCGh/K0YPpxLq903MtDw/upSlTr62uDvmlmoJhPN/ghH7OOTyWLxeT1BQnN8KWFUa3+OKLd1mH2BzVUq/YNaBgMCJhzIhUUyBNFBMzSZPqAsh+KVzO/rkH4I0eWseeEBYW4lvejWEbgwzz3XJevqFEK4QLYZvU=
+	t=1731494530; cv=none; b=OcAc9mtatTrHzYsX6Wx+khaInZUXIPjf52omwbDBWKj5WxhBuOiR4lh/TKRMeBaVk01U9WS4h2/V30u7wT4BD1Za8RQSxth1ILWoVyOW/LXI1eEnI1wjvPevSXiXvfiUtsDIdhGWXDfpXkXjA5OaKkf+8gwD2DnnfhcSN5MMnGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731492043; c=relaxed/simple;
-	bh=KQyypn11QfmaUdPq9znBrvj/Mm8NiWbp/Ld82JhNGa8=;
+	s=arc-20240116; t=1731494530; c=relaxed/simple;
+	bh=AqumPSQGax77GBO9IatO8rErpe6+RT+R0gHdz967x50=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qrtPINCzJFdQcrjLrlqYmQFtpKNCW2Lciu73B0c+msGdbC9aryKIz2yP5ZlbQhkVR2JavMeq1NJdaNMOvA8ZuYq3MNLCOtpvCaVMDWw8Me07gR+8S+wl3x4vH4Tvj/i/M39D1e10F98NWO2sKwiHaLULaNpwmpxb48louK1k8+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vkaGKKQJ; arc=none smtp.client-ip=209.85.218.52
+	 In-Reply-To:Content-Type; b=ftx9sCkgMlwUod6xf6IC2VhaJ37vTcAcuJ8rtgOrF0gmb6f9QGFYjUzSHStfaLdvgIkiH1O5jMUbnxoYnRxMPKnvo0eFeYEupgXj3EUlQXXk6PLeB9yXMvuRUoMS6VgyQ8N3EY3QGnK89CS0I5zTcLqqnpoHIuOS+C6nuFNQlkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yBgvYHlZ; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vkaGKKQJ"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a9a68480164so940622766b.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Nov 2024 02:00:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yBgvYHlZ"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a9ed7d8c86cso1195703766b.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Nov 2024 02:42:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731492039; x=1732096839; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1731494527; x=1732099327; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MW7KPVnVNr5FD5G+DQH0BUzbgVMNYEdIujB7YLFl0RE=;
-        b=vkaGKKQJSfzOFJ377YJIFO5uN5IxtHC1+cXFk4QRjyvIHtp1/RxmEoprW851k45iN1
-         IhdKDgCUocwKezrgM1CgSv1x9wRrGht1wQgOCqsAX9OktHHwVnr2Y32VGAt1NsRMkKXA
-         /iInWvsts0UD7d2sIEP8ZXSn7Q9ucteuMxJQrjmeFO2tlLmRBbTLFX5EALKyBszEh56o
-         qiOzocIRytcPuKY2QP9hhHSeQi4EoNKw9oscQ30FRFagzn/JKz2fVs+/5gEE4VTVLvD4
-         53sev7mLGnXoAb7EJqm/rqLn8RtAhgcL+o6sjXReWfUFEEW30v21xhenHHo0teAOfdx/
-         lFzw==
+        bh=BpKNnFSJuu8mX4fv2nmuYeZ5VRhQuVqxMggvr0piqwA=;
+        b=yBgvYHlZK7BcsecRjQVL4tytSpec52M5qxXtTaU99IMgh8Y9zKgRCoZ1LdT4IpYDUo
+         xlLlUqnU+jSxVxprqUEXFcE3mPq3jBKBYX90m8BIVnJL9CrsZR9sxxhjxYrQGbkM4E7q
+         3+irDhnmChnQUi85TY9e/hoUTs8SOn0yNOGBuPNSADAKTv255b5y0IznZSphCXNc4oUB
+         B8SdMTzwFFTyVRt+yh614rhCVPOzl+akzy6h+FxknM4HbI961zHv+VOYIRs8xV35OlpZ
+         PmNqayNaED4J/cl9X4usPflGhrH03yFL6oVZP6wmD0wrWI2wvdpLCr7RIIHF4+zF4I4V
+         JnEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731492039; x=1732096839;
+        d=1e100.net; s=20230601; t=1731494527; x=1732099327;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MW7KPVnVNr5FD5G+DQH0BUzbgVMNYEdIujB7YLFl0RE=;
-        b=TIFXV5zWn2J7j4DpMNUGPI+KqLQrrlqyh+Cywgw5K1t3upj0bfZPE8hWahnIIpB5eg
-         yZTkNNnTd5SEdpslRmJ/DHw5jEts/DUXDgQ1PTQNqb83dmVHM1h0ksE9Fi3sEde1VG2/
-         TMIYegFuU/vIrTcm3oxkaMDI76ZEIsrmISsN0yLDMV13TmUKYGvR2Kwo65/mcuke+9IW
-         W8lURLVGwiBPr4nFaVYk1kaKQ46Of2QjJzV7QOD5AyFLSdmqK595AaMqs6Owi6diyEab
-         gLcT8nWdzSLjGsmBWlVWV2VmBNGokOCUUww2a4JEE4C5VS2C5dCCSlpCwJVOSNIAIqAM
-         FJuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUr4d2Ls8Mf+daieVP7V0vFKQIW07HamLIYSz4AQ45zMaiGJclgOfNY3eo8oafGFNDSOphJJLn/fiO+5jpae/1y@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4GlZsjdHIqH9+BSjav3ThGKrywsozqGh5AI+JCMG/C05gPx4Z
-	ip2wr2X/oBCuwY39Sco1VlcQitfmmCA8e6nqL/leZ1adguN3u4hxwufvEYE1Jgw=
-X-Google-Smtp-Source: AGHT+IHv9nZHtlDz14UBGAVIklvxBfY2kCgIEnK88nypjRiMHPCpE4YZloV915vQIZ4YH2V9q3fBNw==
-X-Received: by 2002:a17:906:c007:b0:aa1:f73b:be43 with SMTP id a640c23a62f3a-aa1f73bbf94mr176807366b.32.1731492039416;
-        Wed, 13 Nov 2024 02:00:39 -0800 (PST)
+        bh=BpKNnFSJuu8mX4fv2nmuYeZ5VRhQuVqxMggvr0piqwA=;
+        b=d7FR3uW7grdlixc0aMJ98LLrtKBJeceC1WmSVTnS3TyaiMT1dFlh7xoDVAi93wZ3s0
+         oQTkZrVM2cl9YY6LI8Duxe4AWP6co6YMD9jUij8z5PNlWY5NlcrVjTcua+fxPs6/XKOE
+         hxKtL1YXnmofzDBbjUWANc7w14F1ePolb8Y57mYSfkHOe5Hmu4tKdIPR5jByx6LmP+kn
+         /3xLsBULfAgvpZc8eQy7G7Pmaw8DvdqpMM4hplDNDDWha11gYQGS+hby+g63nKGoRE88
+         xUW4pNFL4fXjy6NFTGNXIZi30bZE5wg8JyBLbdOoncIm9gqD+dkzzxj5e/u1aHJvSI8c
+         U/Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCX4xTYL1zGopvjhhGXRWyRoe+NDPQMWEIhcW7q3S7OFrj2JpijlJueMnGF4AM8uHxoUV3qQGfosxLEXqsWGNlKe@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMop4548HDhS+Ksp5FLVGPpS4wmb0KwbKEYNOynJTih2+0Ny+E
+	zzCFYVkdu4UPqSvOrbCdzGI9ApXp8/FgCie5OlC3hFnckKzQ9DYLwZWEVx6O0BI=
+X-Google-Smtp-Source: AGHT+IGkvSzEORJMBip4kLqyw4g2XZQP9hZKEvJR8NJ1wbFa9hcYRPzrgSUKiBVjVht7VAmBjdnAUQ==
+X-Received: by 2002:a17:907:5ca:b0:a99:ee1c:f62f with SMTP id a640c23a62f3a-aa1f8075b6amr218093766b.34.1731494525232;
+        Wed, 13 Nov 2024 02:42:05 -0800 (PST)
 Received: from [192.168.68.163] ([145.224.90.214])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0e2e41bsm842658666b.191.2024.11.13.02.00.37
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0a4a452sm845869366b.51.2024.11.13.02.42.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2024 02:00:38 -0800 (PST)
-Message-ID: <f762f404-626a-430f-b307-33c9da756ac3@linaro.org>
-Date: Wed, 13 Nov 2024 10:00:36 +0000
+        Wed, 13 Nov 2024 02:42:04 -0800 (PST)
+Message-ID: <e81bcabd-11fc-45f7-abfd-05b569b1c18f@linaro.org>
+Date: Wed, 13 Nov 2024 10:42:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,172 +61,65 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/4] perf record: Skip don't fail for events that don't
- open
-To: Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@arm.com>
-Cc: Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org,
- beeman@rivosinc.com, Peter Zijlstra <peterz@infradead.org>,
+Subject: Re: [PATCH v5 0/2] [PATCH v4 0/2] perf arm-spe: Add support for SPE
+ Data Source packet on AmpereOne
+To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
  Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>,
- Weilin Wang <weilin.wang@intel.com>, Ben Gainey <ben.gainey@arm.com>,
- Dominique Martinet <asmadeus@codewreck.org>, Junhao He
- <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241026121758.143259-1-irogers@google.com>
- <20241026121758.143259-4-irogers@google.com>
- <20241112195343.GA404636@e132581.arm.com>
- <CAP-5=fXuyZbn3Jiq=RQaLTqybgji50Ko8jrpsinFqo+OOPBeRw@mail.gmail.com>
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Graham Woodward <graham.woodward@arm.com>
+References: <20241108202946.16835-1-ilkka@os.amperecomputing.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fXuyZbn3Jiq=RQaLTqybgji50Ko8jrpsinFqo+OOPBeRw@mail.gmail.com>
+In-Reply-To: <20241108202946.16835-1-ilkka@os.amperecomputing.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 12/11/2024 10:24 pm, Ian Rogers wrote:
-> On Tue, Nov 12, 2024 at 11:53 AM Leo Yan <leo.yan@arm.com> wrote:
->>
->> On Sat, Oct 26, 2024 at 05:17:57AM -0700, Ian Rogers wrote:
->>>
->>> Whilst for many tools it is an expected behavior that failure to open
->>> a perf event is a failure, ARM decided to name PMU events the same as
->>> legacy events and then failed to rename such events on a server uncore
->>> SLC PMU. As perf's default behavior when no PMU is specified is to
->>> open the event on all PMUs that advertise/"have" the event, this
->>> yielded failures when trying to make the priority of legacy and
->>> sysfs/json events uniform - something requested by RISC-V and ARM. A
->>> legacy event user on ARM hardware may find their event opened on an
->>> uncore PMU which for perf record will fail. Arnaldo suggested skipping
->>> such events which this patch implements. Rather than have the skipping
->>> conditional on running on ARM, the skipping is done on all
->>> architectures as such a fundamental behavioral difference could lead
->>> to problems with tools built/depending on perf.
->>>
->>> An example of perf record failing to open events on x86 is:
->>> ```
->>> $ perf record -e data_read,cycles,LLC-prefetch-read -a sleep 0.1
->>> Error:
->>> Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0' which will be removed.
->>> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
->>> "dmesg | grep -i perf" may provide additional information.
->>>
->>> Error:
->>> Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1' which will be removed.
->>> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
->>> "dmesg | grep -i perf" may provide additional information.
->>>
->>> Error:
->>> Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
->>> The LLC-prefetch-read event is not supported.
->>> [ perf record: Woken up 1 times to write data ]
->>> [ perf record: Captured and wrote 2.188 MB perf.data (87 samples) ]
->>>
->>> $ perf report --stats
->>> Aggregated stats:
->>>                 TOTAL events:      17255
->>>                  MMAP events:        284  ( 1.6%)
->>>                  COMM events:       1961  (11.4%)
->>>                  EXIT events:          1  ( 0.0%)
->>>                  FORK events:       1960  (11.4%)
->>>                SAMPLE events:         87  ( 0.5%)
->>>                 MMAP2 events:      12836  (74.4%)
->>>               KSYMBOL events:         83  ( 0.5%)
->>>             BPF_EVENT events:         36  ( 0.2%)
->>>        FINISHED_ROUND events:          2  ( 0.0%)
->>>              ID_INDEX events:          1  ( 0.0%)
->>>            THREAD_MAP events:          1  ( 0.0%)
->>>               CPU_MAP events:          1  ( 0.0%)
->>>             TIME_CONV events:          1  ( 0.0%)
->>>         FINISHED_INIT events:          1  ( 0.0%)
->>> cycles stats:
->>>                SAMPLE events:         87
->>> ```
->>
->> Thanks for James reminding me.  Tested on AVA platform:
->>
->> # tree /sys/bus/event_source/devices/arm_dsu_*/events
->>    ...
->>    /sys/bus/event_source/devices/arm_dsu_9/events
->>    ├── bus_access
->>    ├── bus_cycles
->>    ├── cycles
->>    ├── l3d_cache
->>    ├── l3d_cache_allocate
->>    ├── l3d_cache_refill
->>    ├── l3d_cache_wb
->>    └── memory_error
->>
->> # ./perf record -- sleep 0.1
->>   Error:
->>   Failure to open event 'cycles:PH' on PMU 'arm_dsu_0' which will be
->>   removed.
->>   cycles:PH: PMU Hardware doesn't support sampling/overflow-interrupts.
->>   Try 'perf stat'
->>   Error:
->>   Failure to open event 'cycles:PH' on PMU 'arm_dsu_1' which will be
->>   removed.
->>   cycles:PH: PMU Hardware doesn't support sampling/overflow-interrupts.
->>   Try 'perf stat'
->>   ...
->>   Error:
->>   Failure to open event 'cycles:PH' on PMU 'arm_dsu_15' which will be
->>   removed.
->>   cycles:PH: PMU Hardware doesn't support sampling/overflow-interrupts.
->>   Try 'perf stat'
->>   [ perf record: Woken up 1 times to write data ]
->>   [ perf record: Captured and wrote 0.008 MB perf.data (8 samples) ]
->>
->> # ./perf report --stats
->>
->>   Aggregated stats:
->>                  TOTAL events:         67
->>                   MMAP events:         40  (59.7%)
->>                   COMM events:          1  ( 1.5%)
->>                 SAMPLE events:          8  (11.9%)
->>                KSYMBOL events:          6  ( 9.0%)
->>              BPF_EVENT events:          6  ( 9.0%)
->>         FINISHED_ROUND events:          1  ( 1.5%)
->>               ID_INDEX events:          1  ( 1.5%)
->>             THREAD_MAP events:          1  ( 1.5%)
->>                CPU_MAP events:          1  ( 1.5%)
->>              TIME_CONV events:          1  ( 1.5%)
->>          FINISHED_INIT events:          1  ( 1.5%)
->>   cycles:P stats:
->>                 SAMPLE events:          8
->>
->> # ./perf stat -- sleep 0.1
->>
->>   Performance counter stats for 'sleep 0.1':
->>
->>                0.87 msec task-clock                       #    0.009 CPUs utilized
->>                   1      context-switches                 #    1.148 K/sec
->>                   0      cpu-migrations                   #    0.000 /sec
->>                  52      page-faults                      #   59.685 K/sec
->>             877,835      instructions                     #    1.14  insn per cycle
->>                                                    #    0.25  stalled cycles per insn
->>             772,102      cycles                           #  886.210 M/sec
->>             191,914      stalled-cycles-frontend          #   24.86% frontend cycles idle
->>             219,183      stalled-cycles-backend           #   28.39% backend cycles idle
->>             184,099      branches                         #  211.307 M/sec
->>               8,548      branch-misses                    #    4.64% of all branches
->>
->>         0.101623529 seconds time elapsed
->>
->>         0.001645000 seconds user
->>         0.000000000 seconds sys
->>
->> Tested-by: Leo Yan <leo.yan@arm.com>
+On 08/11/2024 8:29 pm, Ilkka Koskinen wrote:
+> v1:
+> 	* https://lore.kernel.org/all/20241024233035.7979-1-ilkka@os.amperecomputing.com/
 > 
-> Thanks Leo! As the Tested-by makes sense only if you've applied all 4
-> patches, which your testing and James' testing shows you've both done,
-> I'll add the tags to all 4 patches. I'll do likewise with Atish,
-> rebase and resend the patches.
+> v2:
+> 	* Doesn't use read_cpuid_implementor() anymore as that was broken and
+> 	  unnecessary.
+> 	* Convert AmpereOne source field to matching common source fields to
+> 	  avoid duplicating the code.
+> 	* Rebased on top of perf-tools-next/perf-tools-next (ba993e5ada1d)
+> 	* https://lore.kernel.org/all/20241031213533.11148-1-ilkka@os.amperecomputing.com/
 > 
-> Thanks,
-> Ian
+> v3:
+> 	* Changed source mapping to simple switch statement
+> 	* Dropped is_xyz() stuff
+> 	* Added table to map midr to data source decoding function
+> 	* https://lore.kernel.org/all/20241106193740.6159-1-ilkka@os.amperecomputing.com/
+> 
+> v4:
+> 	* Split midr/decoding function table
+> 	* Made AmpereOne DS decoding function to ignore unknown sources
+> 	* https://lore.kernel.org/all/20241108010911.58412-1-ilkka@os.amperecomputing.com/
+> 
+> v5:
+> 	* Moved data_source_handles[] to fix the build issue
+> 
+> Ilkka Koskinen (2):
+>    perf arm-spe: Prepare for adding data source packet implementations
+>      for other cores
+>    perf arm-spe: Add support for SPE Data Source packet on AmpereOne
+> 
+>   .../util/arm-spe-decoder/arm-spe-decoder.h    |  9 ++
+>   tools/perf/util/arm-spe.c                     | 86 ++++++++++++++++---
+>   2 files changed, 83 insertions(+), 12 deletions(-)
+> 
 
-Yep makes sense
+Reviewed-by: James Clark <james.clark@linaro.org>
+
+
