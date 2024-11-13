@@ -1,118 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB0014D718;
-	Wed, 13 Nov 2024 15:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A831E00A0;
+	Wed, 13 Nov 2024 15:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731512714; cv=none; b=D+rc2m7LgreI6EyJIuVauEZo5mzFUr1C75ShvlH7F4WspTBieDsx7aOu20AAn2ILtld0jBi2s0rTZnDh07bQ705TAABWdA+BB1+44OxxukM4AVhug1JCSSVqsP2XsNs+Kbh2fTl8WUs6xOMSUk84Qixo2Qpu2CovBEh2hxBLS6Y=
+	t=1731513418; cv=none; b=SaBZtjihVR27bVWsvDwUPy0+Q6ROTTR7XuS6HgvVs3EmEKNeuPLehiIdk9PlH7kb00E8hhyeWsjgLuG7uP7sVkyLRE7tG52L67dFmmO1LuYLUsEKvEZKR3M3eycygfr2Tat5sQ57ffWZb9ot5euOXPwJToaERGEj50lE8jMDDZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731512714; c=relaxed/simple;
-	bh=2aeh3GySezuvY6aMxghlfwNJN1O5v37onB/vdckq5pk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=iNtxdLaFhBYDu5yf+wq1UryCFNO0T50fCEAbJeRHRiV3h8uXJjsW2KYbfa3Lfth/zT+xoeS6uU8ZbfYq2AIpY7djcLuk4qePBoFTkx++az2jalyBeRjbx28XaVW2SJvMnlHaGcxb8WYt881O5quj0/W/WreX2dxi3pMQ/Cwz/X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QtrqN5pQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731513418; c=relaxed/simple;
+	bh=5lpp9rExTTYt02p7tdymSALmkbgwkqVm/qZGlFE/iR0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IO6NGLj6G86MFS4wIQHNx+vtoZuNQRCDmGx3/geXSGGZhV96tNOpSgmp1jT9+YtkHEOa5L2yVv+fdHm4CKlpXoXT+bfHlReJQnk7VZLXg10S8FItPjUD8A2s1VKfj/9QikHvEVjYLJnqsAT2L4lTA2StHlboFdiyiTc/mp07LXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aYeJyucz; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QtrqN5pQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC986C4CEC3;
-	Wed, 13 Nov 2024 15:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731512714;
-	bh=2aeh3GySezuvY6aMxghlfwNJN1O5v37onB/vdckq5pk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QtrqN5pQ2tZhuNfgQu4v4vGrh1alauIdodXY5K4iS4piaKkAJ9AmiTB1XBeuXSuqS
-	 PoAdwQr155+FnDdUb1KBw/4kNyP866SR2T16ctChHZh9KUvilx4T/qJihrO83jU0Am
-	 SPJyB/7Gs31WO8YTy4xM4CcJ6T1pnJZsziWahcXbgEf15GxSmh3GN2VO/+RNjjpNSl
-	 zugWQ0ykb/yeu9qR6bS/65z2vmGRKEeLtqZyctk4LrqZaSabvoezKR6VwZZ7svcjMG
-	 VTTKN8Ynn4vnBf5d1SuBdoDAhX9W1zDCiF1yZHPi715489jCytefS5Gy9gI6y4D98U
-	 OW02ZLIlVypZQ==
-Date: Thu, 14 Nov 2024 00:45:08 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Li Huafei <lihuafei1@huawei.com>
-Cc: <acme@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
- <namhyung@kernel.org>, <mark.rutland@arm.com>,
- <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
- <irogers@google.com>, <adrian.hunter@intel.com>,
- <kan.liang@linux.intel.com>, <dima@secretsauce.net>,
- <aleksander.lobakin@intel.com>, <linux-perf-users@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] perf probe: Fix the incorrect line number display
- in 'perf probe -l'
-Message-Id: <20241114004508.cdafc33a99e3a02d5b5a714e@kernel.org>
-In-Reply-To: <fa59a868-b7cc-5402-9379-4f7f931e5813@huawei.com>
-References: <20241108181909.3515716-1-lihuafei1@huawei.com>
-	<20241108181909.3515716-2-lihuafei1@huawei.com>
-	<20241111170549.e4d1ba7b65aee3d890889277@kernel.org>
-	<20241111210559.055c990dc94e95666f6464a2@kernel.org>
-	<4751058c-62e3-4b99-9568-283fdf52b055@huawei.com>
-	<fa59a868-b7cc-5402-9379-4f7f931e5813@huawei.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aYeJyucz"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4ADFeEe8022320;
+	Wed, 13 Nov 2024 15:56:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=n+TVq1
+	pD+9x2QU1nafM68IWIYyIXtJOw0KJ82x9nZjE=; b=aYeJyuczJd6T6yeCisZmX4
+	tDSHNu1bbQzbVpKQgGXuB7H4EFb6AoFR6zS622aubrwoDrPeeXSdwW/RS9KlC4Nw
+	VVK5vGQBbUCZv5BuCm7CB3OW7QtUmoWwh2fWFVChReOLw8w/rDXjakpMfnTk8GTa
+	3q+ZbFi4o8woZVdVi1wWK1+S0mr+73TsSG6oX3FDpfwm6+uuq8cWzewE7UX6R1aO
+	bVzM2LRM8pKs9QvzVLTEfpZuBJtv3G76kDlGyVjz6wQE9z8t/WWER8k0Eim8hk1x
+	6wpWNUxChWcH9VkchsmGqBcj282fTmBbG4CkFqTB5x8pHEyPhzLOwOy7sxu+0tow
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42vxxxg283-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Nov 2024 15:56:29 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4ADFuSo0027279;
+	Wed, 13 Nov 2024 15:56:28 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42vxxxg280-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Nov 2024 15:56:28 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4ADEpHG8029707;
+	Wed, 13 Nov 2024 15:56:27 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 42tkjm5myk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Nov 2024 15:56:27 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4ADFuPhu55247346
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 13 Nov 2024 15:56:25 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8EE4F20043;
+	Wed, 13 Nov 2024 15:56:25 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2971520040;
+	Wed, 13 Nov 2024 15:56:25 +0000 (GMT)
+Received: from [9.152.222.93] (unknown [9.152.222.93])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 13 Nov 2024 15:56:25 +0000 (GMT)
+Message-ID: <23ff3782-c192-43eb-99c2-fe2746da7d4c@linux.ibm.com>
+Date: Wed, 13 Nov 2024 16:56:25 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
+To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>
+References: <cover.1730150953.git.jpoimboe@kernel.org>
+ <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
+From: Jens Remus <jremus@linux.ibm.com>
+Content-Language: en-US
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: BcTPWjRTduHIgWCEk-kqeckBMorC6Sek
+X-Proofpoint-GUID: M-DQ_R7AEyiEdfgszaYIg-2XjMWIKiNA
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411130131
 
-Hi Li,
+On 28.10.2024 22:47, Josh Poimboeuf wrote:
 
-On Wed, 13 Nov 2024 16:39:54 +0800
-Li Huafei <lihuafei1@huawei.com> wrote:
+> diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
 
-> 
-> 
-> On 2024/11/12 11:09, Li Huafei wrote:
-> > Hi Masami,
-> > 
-> > On 2024/11/11 20:05, Masami Hiramatsu (Google) wrote:
-> >> Hi Li,
-> >>
-> >> On Mon, 11 Nov 2024 17:05:49 +0900
-> >> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> >>
-> >>> Currently debuginfo__find_probe_point() does
-> >>>
-> >>>  (1) Get the line and file from CU's lineinfo
-> >>>  (2) Get the real function(function instance) of the address
-> >>>      (use this function's decl_line/decl_file as basement)
-> >>>  (2-1) Search the inlined function scope in the real function
-> >>>      for the given address.
-> >>>  (2-2) if there is inlined function, update basement line/file.
-> >>>  (2-3) verify the filename is same as basement filename.
-> >>>  (3) calculate the relative line number from basement.
-> >>>
-> >>> The problem is in (1). Since we have no basement file/line info,
-> >>> we can not verify that the file/line info from CU's lineinfo.
-> >>> As Li shown above, the lineinfo may have several different lines
-> >>> for one address. We need to find most appropriate one based on
-> >>> the basement file/line.
-> >>>
-> >>> Thus what we need are
-> >>>
-> >>>  - Introduce cu_find_lineinfo_at() which gives basement file/line
-> >>>    information so that it can choose correct one. (hopefully)
-> >>>  - Swap the order of (1) and (2*) so that we can pass the basement
-> >>>    file/line when searching lineinfo. (Also, (2-3) should be right
-> >>>    before (3))
-> >>>
-> >>
-> >> Can you check below change fixes your issue?
-> >>
-> > 
-> > Thank you for the detailed explanation in your previous email. I tested
-> > your patch, and the results are as follows:
-> > 
-> >   # perf probe -l
-> >     probe:schedule       (on schedule:5@kernel/sched/core.c)
-> > 
-> 
-> Sorry, I made a mistake. 5 is the offset from the function entry, not
-> the line number. So your patch is ok.
+> @@ -68,7 +83,12 @@ int unwind_user_start(struct unwind_user_state *state)
+>   		return -EINVAL;
+>   	}
+>   
+> -	state->type = UNWIND_USER_TYPE_FP;
+> +	if (current_has_sframe())
+> +		state->type = UNWIND_USER_TYPE_SFRAME;
+> +	else if (IS_ENABLED(CONFIG_UNWIND_USER_FP))
 
-Thanks for testing! OK, let me cleanup the patch.
+The test must be for CONFIG_HAVE_UNWIND_USER_FP. :-)
 
+> +		state->type = UNWIND_USER_TYPE_FP;
+> +	else
+> +		state->type = UNWIND_USER_TYPE_NONE;
+>   
+>   	state->sp = user_stack_pointer(regs);
+>   	state->ip = instruction_pointer(regs);
 
+Regards,
+Jens
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Jens Remus
+Linux on Z Development (D3303) and z/VSE Support
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des 
+Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der 
+Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
