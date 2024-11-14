@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535771FCF5B;
-	Thu, 14 Nov 2024 10:17:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF421FDF9E;
+	Thu, 14 Nov 2024 10:17:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731579457; cv=none; b=eduJARzTilgDe3PgTg/OUc8GHSvbdhfHEE6o/JU/uYAp9rqW8C4raFVSP7fSTadAt+EwF9WP7VWGKxrz9NXUDKl98xDEdXORelEf52H8aPCEEzjYhlKrXIe/NmFXn3HOYz3xqYls6Y51SQvVhXQuTxC7U+GrFEI6kYSLj9yR3/k=
+	t=1731579460; cv=none; b=fRnSuxkdkPeYfm0ZnxqcENKvNmrLHGfzALVHCc/EmE0/SAYyKNdjHfQYrkIz5Ju2Of+NPte2/ltzyyvbSUhGr08mulER3jFOGBKFt4WPbowCI37MzkSyz1sH/vDJ0VJYL/8xfI9PH3NEyHLEP5AhYSltePGvuew43xy5l7SLnhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731579457; c=relaxed/simple;
-	bh=RYQmAW0/WxNKlis/R8jRVnI3QK9po7ymrTybzUTjbYo=;
+	s=arc-20240116; t=1731579460; c=relaxed/simple;
+	bh=UGHpIc3jIe0I0zLDA7Mgwix0ULySZkjyWewX2UZidZ0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=heGECo/eyCTPMCOo9wUPdvmHRNOExhN7NDPbPKnENalgw1qftjPx2UhCyKkpO50cXzYP0nw9e1NFvTh25pdfEg009zxAbWQSuKMd2psYu9L/G6icHlUSbzoFGCnwQNFgdWFOO4VG7A5Nhsl9PWScKWwi+i0K1R8jMRaGy+jGNBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j9BnGuzL; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version; b=OajtQSSd3s+J5qHQfEmzpIwnXV20hXMM9L2zVTONyJ2zWso1tRzCgdJaE/i7pjOGVGIamynBRuPbvvrVrEglLdOJOBmaLJ6jsNvRWM4clm2sPWJWzcKVGY39/ah4e5xtb6+F4lxLQltEjLwTzs98I5gMySXfVF9AwrNGDBOA8is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HXUhKDa2; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j9BnGuzL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HXUhKDa2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731579456; x=1763115456;
+  t=1731579459; x=1763115459;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=RYQmAW0/WxNKlis/R8jRVnI3QK9po7ymrTybzUTjbYo=;
-  b=j9BnGuzLl8OPhLNbD5d+AIO+tLMOzYEpDx4hqWKKjpkqItK5peVFujQh
-   PLmqw7Tl0d0dzGo1dG1AMINs6x8e32rV0giFBlvW43x+fZaEAmWlzgUD/
-   GaU7D8oooz2BTX+oreoZP3WzcU+VBxXaYivbk/87P7o345+eN38231A+E
-   Cdjy1WH8y22orq7FCGurjyTkBWNw9LDkM3dTF5Ob+X4OTFv98SLiYY48D
-   9R4+i2LKoRhg/mp5LfbsnGxhBP9JW65LWP554LWuB0+ijWrMg8xLMD2iE
-   1j53ep6K+8GE9yRtoDVRQn5Qx3CxPh4RY0c7sUS9OaP9Pv/J2pjM6ORZ3
+  bh=UGHpIc3jIe0I0zLDA7Mgwix0ULySZkjyWewX2UZidZ0=;
+  b=HXUhKDa2KPKknpczGTj4Xt//FiELlmY95kmO79nE5YVtt2phAorGKM+u
+   rMoO7Ybmw5cyew0VSy04e2OvilrKPAXFjkyxk3Xhwlb6nTEOOB+fMO5nc
+   GY+x6gZguD0sUf6wwQhzCYMsKy8hUCWywjwHrs+0E0RuwXOLdloIrcqVK
+   V2a+JO3M3wh85t3QRv/RK93akF7nx5smMDWJWmCK12PosNEGAWGiLIbFR
+   /lrUVbfTs+zHdrXxM9UlAFdX606O6Kdas9IfFB9rImVCubf7gXNJWD9bJ
+   Ue0TS7Di7XukMl21avZTFOGD7x+8eLnzIyRUr0uIsOBjKiogT0AtL1G5D
    w==;
-X-CSE-ConnectionGUID: m44T3l4IR9Kgx8zMoD90rA==
-X-CSE-MsgGUID: 0JNYPLZ1T169nhwg73NqYQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="31290514"
+X-CSE-ConnectionGUID: pn/tQAigSxyL912tST5zgQ==
+X-CSE-MsgGUID: JUWpHm0qS0q6DoLJSyayrQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="31290529"
 X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="31290514"
+   d="scan'208";a="31290529"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 02:17:36 -0800
-X-CSE-ConnectionGUID: e0nX0VxyQuiTL3oe0GaZuQ==
-X-CSE-MsgGUID: Kr5YYi0ZTbW1Or3UA3//LA==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 02:17:39 -0800
+X-CSE-ConnectionGUID: Ur4xgTBeR8ObComI7eo5Dw==
+X-CSE-MsgGUID: xhlEjJlXS2WrkPTS1SFCMQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,153,1728975600"; 
-   d="scan'208";a="88588008"
+   d="scan'208";a="88588019"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.ger.corp.intel.com) ([10.245.99.46])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 02:17:32 -0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 02:17:35 -0800
 From: Adrian Hunter <adrian.hunter@intel.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>
@@ -52,9 +52,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Leo Yan <leo.yan@arm.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH V15 3/7] perf tools: Parse aux-action
-Date: Thu, 14 Nov 2024 12:17:06 +0200
-Message-ID: <20241114101711.34987-4-adrian.hunter@intel.com>
+Subject: [PATCH V15 4/7] perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
+Date: Thu, 14 Nov 2024 12:17:07 +0200
+Message-ID: <20241114101711.34987-5-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241114101711.34987-1-adrian.hunter@intel.com>
 References: <20241114101711.34987-1-adrian.hunter@intel.com>
@@ -67,189 +67,238 @@ MIME-Version: 1.0
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-Add parsing for aux-action to accept "pause", "resume" or "start-paused"
-values.
-
-"start-paused" is valid only for AUX area events.
-
-"pause" and "resume" are valid only for events grouped with an AUX area
-event as the group leader.  However, like with aux-output, the events
-will be automatically grouped if they are not currently in a group, and
-the AUX area event precedes the other events.
+Display "feature is not supported" error message if aux_start_paused,
+aux_pause or aux_resume result in a perf_event_open() error.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
 ---
 
 
-Changes in V8:
-	Fix clang warning:
-	     util/auxtrace.c:821:7: error: missing field 'aux_action' initializer [-Werror,-Wmissing-field-initializers]
-	     821 |         {NULL},
-	         |              ^
+Changes in V15:
+	Re-base on new API probe method of missing feature detection
+	and add probe for aux_action.
+
+Changes in V13:
+	Add error message also in EOPNOTSUPP case (Leo)
 
 
- tools/perf/Documentation/perf-record.txt |  4 ++
- tools/perf/builtin-record.c              |  4 +-
- tools/perf/util/auxtrace.c               | 67 ++++++++++++++++++++++--
- tools/perf/util/auxtrace.h               |  6 ++-
- tools/perf/util/evsel.c                  |  1 +
- 5 files changed, 74 insertions(+), 8 deletions(-)
+ tools/perf/util/evsel.c | 98 ++++++++++++++++++++++++++++++++++++-----
+ tools/perf/util/evsel.h |  1 +
+ 2 files changed, 87 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 242223240a08..80686d590de2 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -68,6 +68,10 @@ OPTIONS
- 		    like this: name=\'CPU_CLK_UNHALTED.THREAD:cmask=0x1\'.
- 	  - 'aux-output': Generate AUX records instead of events. This requires
- 			  that an AUX area event is also provided.
-+	  - 'aux-action': "pause" or "resume" to pause or resume an AUX
-+			  area event (the group leader) when this event occurs.
-+			  "start-paused" on an AUX area event itself, will
-+			  start in a paused state.
- 	  - 'aux-sample-size': Set sample size for AUX area sampling. If the
- 	  '--aux-sample' option has been used, set aux-sample-size=0 to disable
- 	  AUX area sampling for the event.
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index f83252472921..49361c5b2251 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -860,7 +860,9 @@ static int record__auxtrace_init(struct record *rec)
- 	if (err)
- 		return err;
- 
--	auxtrace_regroup_aux_output(rec->evlist);
-+	err = auxtrace_parse_aux_action(rec->evlist);
-+	if (err)
-+		return err;
- 
- 	return auxtrace_parse_filters(rec->evlist);
- }
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index ca8682966fae..4d1633d87eff 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -810,19 +810,76 @@ int auxtrace_parse_sample_options(struct auxtrace_record *itr,
- 	return auxtrace_validate_aux_sample_size(evlist, opts);
- }
- 
--void auxtrace_regroup_aux_output(struct evlist *evlist)
-+static struct aux_action_opt {
-+	const char *str;
-+	u32 aux_action;
-+	bool aux_event_opt;
-+} aux_action_opts[] = {
-+	{"start-paused", BIT(0), true},
-+	{"pause",        BIT(1), false},
-+	{"resume",       BIT(2), false},
-+	{.str = NULL},
-+};
-+
-+static const struct aux_action_opt *auxtrace_parse_aux_action_str(const char *str)
-+{
-+	const struct aux_action_opt *opt;
-+
-+	if (!str)
-+		return NULL;
-+
-+	for (opt = aux_action_opts; opt->str; opt++)
-+		if (!strcmp(str, opt->str))
-+			return opt;
-+
-+	return NULL;
-+}
-+
-+int auxtrace_parse_aux_action(struct evlist *evlist)
- {
--	struct evsel *evsel, *aux_evsel = NULL;
- 	struct evsel_config_term *term;
-+	struct evsel *aux_evsel = NULL;
-+	struct evsel *evsel;
- 
- 	evlist__for_each_entry(evlist, evsel) {
--		if (evsel__is_aux_event(evsel))
-+		bool is_aux_event = evsel__is_aux_event(evsel);
-+		const struct aux_action_opt *opt;
-+
-+		if (is_aux_event)
- 			aux_evsel = evsel;
--		term = evsel__get_config_term(evsel, AUX_OUTPUT);
-+		term = evsel__get_config_term(evsel, AUX_ACTION);
-+		if (!term) {
-+			if (evsel__get_config_term(evsel, AUX_OUTPUT))
-+				goto regroup;
-+			continue;
-+		}
-+		opt = auxtrace_parse_aux_action_str(term->val.str);
-+		if (!opt) {
-+			pr_err("Bad aux-action '%s'\n", term->val.str);
-+			return -EINVAL;
-+		}
-+		if (opt->aux_event_opt && !is_aux_event) {
-+			pr_err("aux-action '%s' can only be used with AUX area event\n",
-+			       term->val.str);
-+			return -EINVAL;
-+		}
-+		if (!opt->aux_event_opt && is_aux_event) {
-+			pr_err("aux-action '%s' cannot be used for AUX area event itself\n",
-+			       term->val.str);
-+			return -EINVAL;
-+		}
-+		evsel->core.attr.aux_action = opt->aux_action;
-+regroup:
- 		/* If possible, group with the AUX event */
--		if (term && aux_evsel)
-+		if (aux_evsel)
- 			evlist__regroup(evlist, aux_evsel, evsel);
-+		if (!evsel__is_aux_event(evsel__leader(evsel))) {
-+			pr_err("Events with aux-action must have AUX area event group leader\n");
-+			return -EINVAL;
-+		}
- 	}
-+
-+	return 0;
- }
- 
- struct auxtrace_record *__weak
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index dddaf4f3ffed..b0db84d27b25 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -578,7 +578,7 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
- int auxtrace_parse_sample_options(struct auxtrace_record *itr,
- 				  struct evlist *evlist,
- 				  struct record_opts *opts, const char *str);
--void auxtrace_regroup_aux_output(struct evlist *evlist);
-+int auxtrace_parse_aux_action(struct evlist *evlist);
- int auxtrace_record__options(struct auxtrace_record *itr,
- 			     struct evlist *evlist,
- 			     struct record_opts *opts);
-@@ -799,8 +799,10 @@ int auxtrace_parse_sample_options(struct auxtrace_record *itr __maybe_unused,
- }
- 
- static inline
--void auxtrace_regroup_aux_output(struct evlist *evlist __maybe_unused)
-+int auxtrace_parse_aux_action(struct evlist *evlist __maybe_unused)
- {
-+	pr_err("AUX area tracing not supported\n");
-+	return -EINVAL;
- }
- 
- static inline
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 531987cfd14a..bda1b7994df8 100644
+index bda1b7994df8..f6a5284ed5f9 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -1104,6 +1104,7 @@ static void evsel__apply_config_terms(struct evsel *evsel,
- 			attr->aux_output = term->val.aux_output ? 1 : 0;
- 			break;
- 		case EVSEL__CONFIG_TERM_AUX_ACTION:
-+			/* Already applied by auxtrace */
- 			break;
- 		case EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE:
- 			/* Already applied by auxtrace */
+@@ -2093,16 +2093,17 @@ int evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	return err;
+ }
+ 
+-static bool has_attr_feature(struct perf_event_attr *attr, unsigned long flags)
++static bool __has_attr_feature(struct perf_event_attr *attr,
++			       struct perf_cpu cpu, unsigned long flags)
+ {
+-	int fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
++	int fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
+ 			 /*group_fd=*/-1, flags);
+ 	close(fd);
+ 
+ 	if (fd < 0) {
+ 		attr->exclude_kernel = 1;
+ 
+-		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
++		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
+ 			     /*group_fd=*/-1, flags);
+ 		close(fd);
+ 	}
+@@ -2110,7 +2111,7 @@ static bool has_attr_feature(struct perf_event_attr *attr, unsigned long flags)
+ 	if (fd < 0) {
+ 		attr->exclude_hv = 1;
+ 
+-		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
++		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
+ 			     /*group_fd=*/-1, flags);
+ 		close(fd);
+ 	}
+@@ -2118,7 +2119,7 @@ static bool has_attr_feature(struct perf_event_attr *attr, unsigned long flags)
+ 	if (fd < 0) {
+ 		attr->exclude_guest = 1;
+ 
+-		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
++		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
+ 			     /*group_fd=*/-1, flags);
+ 		close(fd);
+ 	}
+@@ -2130,6 +2131,13 @@ static bool has_attr_feature(struct perf_event_attr *attr, unsigned long flags)
+ 	return fd >= 0;
+ }
+ 
++static bool has_attr_feature(struct perf_event_attr *attr, unsigned long flags)
++{
++	struct perf_cpu cpu = {.cpu = -1};
++
++	return __has_attr_feature(attr, cpu, flags);
++}
++
+ static void evsel__detect_missing_pmu_features(struct evsel *evsel)
+ {
+ 	struct perf_event_attr attr = {
+@@ -2218,7 +2226,65 @@ static void evsel__detect_missing_brstack_features(struct evsel *evsel)
+ 	errno = old_errno;
+ }
+ 
+-static bool evsel__detect_missing_features(struct evsel *evsel)
++static bool evsel__probe_aux_action(struct evsel *evsel, struct perf_cpu cpu)
++{
++	struct perf_event_attr attr = evsel->core.attr;
++	int old_errno = errno;
++
++	attr.disabled = 1;
++	attr.aux_start_paused = 1;
++
++	if (__has_attr_feature(&attr, cpu, /*flags=*/0)) {
++		errno = old_errno;
++		return true;
++	}
++
++	/*
++	 * EOPNOTSUPP means the kernel supports the feature but the PMU does
++	 * not, so keep that distinction if possible.
++	 */
++	if (errno != EOPNOTSUPP)
++		errno = old_errno;
++
++	return false;
++}
++
++static void evsel__detect_missing_aux_action_feature(struct evsel *evsel, struct perf_cpu cpu)
++{
++	static bool detection_done;
++	struct evsel *leader;
++
++	/*
++	 * Don't bother probing aux_action if it is not being used or has been
++	 * probed before.
++	 */
++	if (!evsel->core.attr.aux_action || detection_done)
++		return;
++
++	detection_done = true;
++
++	/*
++	 * The leader is an AUX area event. If it has failed, assume the feature
++	 * is not supported.
++	 */
++	leader = evsel__leader(evsel);
++	if (evsel == leader) {
++		perf_missing_features.aux_action = true;
++		return;
++	}
++
++	/*
++	 * AUX area event with aux_action must have been opened successfully
++	 * already, so feature is supported.
++	 */
++	if (leader->core.attr.aux_action)
++		return;
++
++	if (!evsel__probe_aux_action(leader, cpu))
++		perf_missing_features.aux_action = true;
++}
++
++static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu cpu)
+ {
+ 	static bool detection_done = false;
+ 	struct perf_event_attr attr = {
+@@ -2228,6 +2294,8 @@ static bool evsel__detect_missing_features(struct evsel *evsel)
+ 	};
+ 	int old_errno;
+ 
++	evsel__detect_missing_aux_action_feature(evsel, cpu);
++
+ 	evsel__detect_missing_pmu_features(evsel);
+ 
+ 	if (evsel__has_br_stack(evsel))
+@@ -2442,6 +2510,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	int idx, thread, nthreads;
+ 	int pid = -1, err, old_errno;
+ 	enum rlimit_action set_rlimit = NO_CHANGE;
++	struct perf_cpu cpu;
+ 
+ 	if (evsel__is_retire_lat(evsel))
+ 		return tpebs_start(evsel->evlist);
+@@ -2479,6 +2548,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	}
+ 
+ 	for (idx = start_cpu_map_idx; idx < end_cpu_map_idx; idx++) {
++		cpu = perf_cpu_map__cpu(cpus, idx);
+ 
+ 		for (thread = 0; thread < nthreads; thread++) {
+ 			int fd, group_fd;
+@@ -2499,10 +2569,9 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 
+ 			/* Debug message used by test scripts */
+ 			pr_debug2_peo("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
+-				pid, perf_cpu_map__cpu(cpus, idx).cpu, group_fd, evsel->open_flags);
++				pid, cpu.cpu, group_fd, evsel->open_flags);
+ 
+-			fd = sys_perf_event_open(&evsel->core.attr, pid,
+-						perf_cpu_map__cpu(cpus, idx).cpu,
++			fd = sys_perf_event_open(&evsel->core.attr, pid, cpu.cpu,
+ 						group_fd, evsel->open_flags);
+ 
+ 			FD(evsel, idx, thread) = fd;
+@@ -2518,8 +2587,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 			bpf_counter__install_pe(evsel, idx, fd);
+ 
+ 			if (unlikely(test_attr__enabled())) {
+-				test_attr__open(&evsel->core.attr, pid,
+-						perf_cpu_map__cpu(cpus, idx),
++				test_attr__open(&evsel->core.attr, pid, cpu,
+ 						fd, group_fd, evsel->open_flags);
+ 			}
+ 
+@@ -2577,7 +2645,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	if (err == -EOPNOTSUPP && evsel__precise_ip_fallback(evsel))
+ 		goto retry_open;
+ 
+-	if (err == -EINVAL && evsel__detect_missing_features(evsel))
++	if (err == -EINVAL && evsel__detect_missing_features(evsel, cpu))
+ 		goto fallback_missing_features;
+ 
+ 	if (evsel__handle_error_quirks(evsel, err))
+@@ -3529,6 +3597,10 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 			return scnprintf(msg, size,
+ 	"%s: PMU Hardware doesn't support 'aux_output' feature",
+ 					 evsel__name(evsel));
++		if (evsel->core.attr.aux_action)
++			return scnprintf(msg, size,
++	"%s: PMU Hardware doesn't support 'aux_action' feature",
++					evsel__name(evsel));
+ 		if (evsel->core.attr.sample_period != 0)
+ 			return scnprintf(msg, size,
+ 	"%s: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'",
+@@ -3559,6 +3631,8 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 			return scnprintf(msg, size, "clockid feature not supported.");
+ 		if (perf_missing_features.clockid_wrong)
+ 			return scnprintf(msg, size, "wrong clockid (%d).", clockid);
++		if (perf_missing_features.aux_action)
++			return scnprintf(msg, size, "The 'aux_action' feature is not supported, update the kernel.");
+ 		if (perf_missing_features.aux_output)
+ 			return scnprintf(msg, size, "The 'aux_output' feature is not supported, update the kernel.");
+ 		if (!target__has_cpu(target))
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 04934a7af174..d703157268dc 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -205,6 +205,7 @@ struct perf_missing_features {
+ 	bool weight_struct;
+ 	bool read_lost;
+ 	bool branch_counters;
++	bool aux_action;
+ 	bool inherit_sample_read;
+ };
+ 
 -- 
 2.43.0
 
