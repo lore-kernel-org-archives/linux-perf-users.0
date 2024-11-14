@@ -1,239 +1,167 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9860A175D5D
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 16:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1C4185924
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 16:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731600479; cv=none; b=IVeTlNwleE8polnz9J9891/Y9pSih0D8d6qjyoBWva+W0HVVbiP5FTQEoWFvbSUczUCTk7iB5hKZzzj+z/PeEuyIR3DXjtZ/p1H0dzFhWSz1mLwMZr69B5HdD174AB621zPdmo2wJdeQY1TrWmYQy7Lol2BHaHMubzBqr2Zaklw=
+	t=1731602317; cv=none; b=uz7qTD3qIZrgb2eOM+bmpIss+sMruFQcnNsv15PdDCgcPn4cjqpjUFniQq2pLRkd/HHgqbPGwUQKiL/b0Ba9pbpTubEtlyJr8CEIYsboVKIT2IghpFUmVLrEe/BU4zkdNwlf+OSZ5fnUNsoRvxSMfwN5/jLm8TM2Q4whEiCRF/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731600479; c=relaxed/simple;
-	bh=vox/7I9HXy64CSs6t4vNkMQC1vHy0/BtTjz+mYyu0w4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CTzSChkHhZHSENjTIC+TdDG7cfsUISQPDc4eg6EyJQEIdYnPiLk53u+dqUg0skPqnBY105eslFBW3Jm+ss6zk20ecxqG6v1YAqyaJ2Dyep1618ibmYGd07Iw/oXCSGVjubokbo9PfoIJUwc6dZjiFFKy2FJZP4qpeFguasr1GsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zXBqGA9Q; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1731602317; c=relaxed/simple;
+	bh=VTRlQxRj7LYxmFU7Jtca8GrrDwS78cpWXvTH3RtiYVg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bLt7tgJb+T0ZwIXj29w+lbQrbdxUYIsXljZc9mH6grW45fDOayQDeg14t8kjygG5zLsW/toI7flHqHUD2N5WS+kNhJ8KfSkYcGboVfxiiz+ILz+2281vf9Pfh3HAoaJHAXQLsWN/5GDXJmjR5jdQUI/OUQSVmF9ec1vD/Cpw1uM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q46xspvX; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zXBqGA9Q"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a9a6b4ca29bso111115166b.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 08:07:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q46xspvX"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3a71ef98bc4so128395ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 08:38:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731600476; x=1732205276; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1731602315; x=1732207115; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YZIDmacdaeoxrMctjHNzYY2IWDwMQUUPmHl/BySCTPM=;
-        b=zXBqGA9QOJLZrUX7PKLi9Zt/3fDXdf+MaXH5ZzAa8X+8GbmUmW9SOzmI6PK5p2Kl/O
-         NOqOw6Cz2DPsIzQKwn9V1Z6G/jGGfkVibxNWv9YSeOQq+4vUCk0thY5GcZLme9OG5ajs
-         go2NMRW+8NCVI5o/3LYSGxSfmBk6TcMD8TjRPGp2R7NEthwj20uhx304n7cpHxa8LBrS
-         DsnD54uH37mDwwtoejq4ejkOEKbqyARmiv26aB/wpgeFN0SI6VYsIx9wdFL7UKHoSZ6D
-         5XGUd2U4j46PRHXNmtcahI2X/o+L10ySN7h2W97NIQhgZfK8t7zZkltOre9Dq7cypvau
-         GR8g==
+        bh=71YOuq/AgbGzHQ8jYFrNXs1E+A1uKSuz/fYvkMEzSiA=;
+        b=Q46xspvXsK0vx42AF0nJ/Bo7zM2FUBUbEriBk4Pb/g8LZ5PNiYVX0qVXWZuyewdmtL
+         rrrTtKq7/xvC7er6e2j3RASwXVDWbVawrGwgWqw19bRUiGu6Wm71DFDEA9ouSIeZ+coo
+         Wby2YoUIXm9cyQsy/bxL06HcxSSM1uhqCB06XhOGFedH1KE14TPXqFKekrQaz3UIN+Eh
+         /4R6VvcW6yLRJUPaNHLezOjIaHFe09+RQi9nFZxYBPPwMYjQET7NRHlHA7sj8YUIdm0e
+         dxGPBqdBUKLNAgt3OKgkbedDIzdpoXXBNFe+v2iMbCbuDP6NUMOtkT6LxJiZKFjwLE/P
+         bE4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731600476; x=1732205276;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1731602315; x=1732207115;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YZIDmacdaeoxrMctjHNzYY2IWDwMQUUPmHl/BySCTPM=;
-        b=XwLNXA5+t6YwWmfTGJfQBR2vgYKMCoyMlzpcRPIAKtJHrDcY5H63knWI3R0i491u6+
-         +al6oAUiQsrmxxrpl3C8rMgSd5r5kPEAvraUUHdk1xBe2/Xevkk9O/EcuKCZKlmgasd3
-         DLDHBOU4lcPZ6b108MIGxi9IFfk1hO0BuH1DKR94PeSdZbw5szM80CbRQGubRqk+LOK4
-         jo/XWWeh5FAyrXuar9LzxMwk65Ab+c/ScC9e/gja58Wx9lfethEAI0ElVaGwiKAg/9/B
-         EQaM3siQOfAw/v6lz9J6YGFI6Y7MfGPLwWfm/cBLQBr+SUaAXf1jdNRC/9DWZpyUBqqm
-         WvVg==
-X-Gm-Message-State: AOJu0Yyl1nQfLTfmjgBN1q1i3vr3kgLWKJl792UHao+kuUdsOTM8lX4/
-	wI0Xc/GDxx/DvpQaNJr6IR+bdIWvS10uRwkRIRJHBjjDuoFJ/CytnMhQ47nxW4jMbhLIsSL8Jmb
-	wWLc=
-X-Google-Smtp-Source: AGHT+IEf9e1HGnaMlTOrKHVcGTf+ARYIkun1J3c+M5cnt+i+oOvgSy7pGBonSAWnf2OYE1vCdHAj9Q==
-X-Received: by 2002:a17:907:9302:b0:a9a:3f9d:62f8 with SMTP id a640c23a62f3a-aa1f805d27bmr731019566b.19.1731600475958;
-        Thu, 14 Nov 2024 08:07:55 -0800 (PST)
-Received: from pop-os.. ([145.224.90.214])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa20e046d76sm77456366b.165.2024.11.14.08.07.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2024 08:07:54 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-To: linux-perf-users@vger.kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	thomas.falcon@intel.com
-Cc: James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] libperf: evlist: Keep evsel idx contiguous on removal
-Date: Thu, 14 Nov 2024 16:04:49 +0000
-Message-Id: <20241114160450.295844-3-james.clark@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241114160450.295844-1-james.clark@linaro.org>
-References: <20241114160450.295844-1-james.clark@linaro.org>
+        bh=71YOuq/AgbGzHQ8jYFrNXs1E+A1uKSuz/fYvkMEzSiA=;
+        b=FtcVJKI66C8tneBx8YS3OnwaclUybouuqg1xjsiZTOTHQYPKD96u+61IRjn8qCZlJo
+         5R0KEv8kJadrLEMlg9P4Wjsph3KLAFdxBXbKF64ZsrAI82ux4FXsSUvDAYLsh78FE06K
+         XYMQEjAB5Apdj5szCJVb8j5cx1QN0atWQnN1cbY+CleEHeJ0V2HpjgTZXa0koli2W5/9
+         alG0l9bZIDaOjiYSIWdk2Saz3uYbKtU0QnSTf6JlwRtARaGiVSBlFEZh8QiFxtMpDPPy
+         G4H0FhxKnJAF+skaujyAdVKvjzexyi/MvfDwG3BjQcD+c0ECHkVA5+TRoVOvOsiR7oIw
+         XIgQ==
+X-Gm-Message-State: AOJu0YznsBG3mKE5b9+KuV+7KxyBvMpgTpPmqgD+pKmglhWb9CSvnsS8
+	DOKtpXRqyYn+05BdCXYkrUtkcC5UldQMAO7yl0d2LiveeDgmvmLXpesDuNL6ZCdNsc/iQUjyZc0
+	LQnR3sjyo8+s7fv+eFiGnOycIS8ceTe00+RFFPF36RsYj74jkUlTqVE4=
+X-Gm-Gg: ASbGnculWN5JWq4riMXLzvKfa84siHrauTrb6iSlCwVfewwGaJw7Zo1SHdKpyTbVLDE
+	OuhK2xRXXQrWCy1383QuupUN/wgFBzBTT2ORRMYSIPqQGwNN5kHZwVjimZaYywmc=
+X-Google-Smtp-Source: AGHT+IEGFQG9tW5hZfV/4zAjTGlOTJGId/53jtN3FTuvZQHJw39b4AUd/9Rtb8DEjdYYYb8hHlhySzmd1C8dA1Cl+vc=
+X-Received: by 2002:a05:6e02:1909:b0:3a6:e960:ef97 with SMTP id
+ e9e14a558f8ab-3a71f76ba59mr3210055ab.23.1731602314972; Thu, 14 Nov 2024
+ 08:38:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1731300662-5325-mlmmj-28e386a1@vger.kernel.org> <CACvH6ToqaADXOrJh8UpapnGtVkn3W+HYQ7kHK8ByQgin4jnFBg@mail.gmail.com>
+In-Reply-To: <CACvH6ToqaADXOrJh8UpapnGtVkn3W+HYQ7kHK8ByQgin4jnFBg@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 14 Nov 2024 08:38:23 -0800
+Message-ID: <CAP-5=fUACPpVUGunmADUd0OccamKAO=kDv4eb6u9q4XRCFwZdA@mail.gmail.com>
+Subject: Re: HTML message rejected: Building perf from source, with changes in
+ source code
+To: Deva Narayana Babu <dnb.ranjikaa@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The only two places where evsels are removed end up fixing up the index.
-Move it into libperf so that it's always done.
+On Thu, Nov 14, 2024 at 8:00=E2=80=AFAM Deva Narayana Babu
+<dnb.ranjikaa@gmail.com> wrote:
+>
+> Subject: Building perf from source, with changes in source code
+>
+> I use kernel `6.6.55` so when I tried to build perf from source, I was
+> getting the following error, and when I changed some code(diff output
+> given below) the build happened. Is this a bug?
+> =E2=9E=9C  perf make
+>             [....]
+>   CC      util/synthetic-events.o
+>   CC      util/data.o
+> util/thread.c: In function =E2=80=98thread__free_stitch_list=E2=80=99:
+> util/thread.c:481:17: error: implicit declaration of function
+> =E2=80=98map_symbol__exit=E2=80=99; did you mean =E2=80=98symbol__exit=E2=
+=80=99?
+> [-Werror=3Dimplicit-function-declaration]
+>   481 |                 map_symbol__exit(&pos->cursor.ms);
+>       |                 ^~~~~~~~~~~~~~~~
+>       |                 symbol__exit
+> util/machine.c: In function =E2=80=98save_lbr_cursor_node=E2=80=99:
+> util/machine.c:2540:9: error: implicit declaration of function
+> =E2=80=98map_symbol__exit=E2=80=99; did you mean =E2=80=98symbol__exit=E2=
+=80=99?
+> [-Werror=3Dimplicit-function-declaration]
+>  2540 |         map_symbol__exit(&lbr_stitch->prev_lbr_cursor[idx].ms);
+>       |         ^~~~~~~~~~~~~~~~
+>       |         symbol__exit
+>   CC      util/tsc.o
+>   CC      util/cloexec.o
+>   CC      util/call-path.o
+>   CC      util/rwsem.o
+>   CC      util/thread-stack.o
+>   CC      util/spark.o
+> cc1: all warnings being treated as errors
+>   CC      util/topdown.o
+> make[4]: *** [/home/dmacs/Downloads/linux-6.6.55/tools/build/Makefile.bui=
+ld:98:
+> util/thread.o] Error 1
+> make[4]: *** Waiting for unfinished jobs....
+> cc1: all warnings being treated as errors
+> make[4]: *** [/home/dmacs/Downloads/linux-6.6.55/tools/build/Makefile.bui=
+ld:97:
+> util/machine.o] Error 1
+> make[3]: *** [/home/dmacs/Downloads/linux-6.6.55/tools/build/Makefile.bui=
+ld:150:
+> util] Error 2
+> make[2]: *** [Makefile.perf:666: perf-in.o] Error 2
+> make[1]: *** [Makefile.perf:242: sub-make] Error 2
+> make: *** [Makefile:70: all] Error 2
+>
+>
+>  On inspection I found that the function/macro has been used but has
+> not been defined anywhere so I followed the compiler's directive and I
+> changed the function name to what was mentioned and `perf` got built.
+> The diff is given below:
+>
+> =E2=9E=9C  tools diff -r /home/dmacs/src/linux-6.6.55/tools/perf/ ./perf
+> Binary files /home/dmacs/src/linux-6.6.55/tools/perf/pmu-events/__pycache=
+__/metric.cpython-310.pyc
+> and ./perf/pmu-events/__pycache__/metric.cpython-310.pyc differ
+> diff --color -r /home/dmacs/src/linux-6.6.55/tools/perf/util/machine.c
+> ./perf/util/machine.c
+> 2540c2540
+> < symbol__exit();
+> ---
+> > map_symbol__exit(&lbr_stitch->prev_lbr_cursor[idx].ms);
+> 2841c2841
+> < symbol__exit();
+> ---
+> > map_symbol__exit(&stitch_node->cursor.ms);
+> diff --color -r /home/dmacs/src/linux-6.6.55/tools/perf/util/thread.c
+> ./perf/util/thread.c
+> 481c481
+> < symbol__exit();
+> ---
+> > map_symbol__exit(&pos->cursor.ms);
+> 492c492
+> < symbol__exit();
+> ---
+> > map_symbol__exit(&lbr_stitch->prev_lbr_cursor[i].ms);
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/lib/perf/evlist.c            | 17 +++++++------
- tools/lib/perf/tests/test-evlist.c | 41 ++++++++++++++++++++++++++++++
- tools/perf/builtin-record.c        | 18 +++----------
- 3 files changed, 53 insertions(+), 23 deletions(-)
+These errors are usually the result of a header file not being
+included. Perhaps you have an unusual build configuration that is
+causing the #include to be missed due to #ifdefs. This is a bug but I
+can't see why it would happen from your output. Which branch are you
+building? Development is happening in the perf-tools-next branch here:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/
+It would be nice to see the feature detection part of the build log.
 
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index 83c43dc13313..ffa1a28fb14f 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -52,15 +52,8 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
- 		 * Empty cpu lists would eventually get opened as "any" so remove
- 		 * genuinely empty ones before they're opened in the wrong place.
- 		 */
--		if (perf_cpu_map__is_empty(evsel->cpus)) {
--			struct perf_evsel *next = perf_evlist__next(evlist, evsel);
--
-+		if (perf_cpu_map__is_empty(evsel->cpus))
- 			perf_evlist__remove(evlist, evsel);
--			/* Keep idx contiguous */
--			if (next)
--				list_for_each_entry_from(next, &evlist->entries, node)
--					next->idx--;
--		}
- 	} else if (!evsel->own_cpus || evlist->has_user_cpus ||
- 		(!evsel->requires_cpu && perf_cpu_map__has_any_cpu(evlist->user_requested_cpus))) {
- 		/*
-@@ -116,8 +109,16 @@ void perf_evlist__add(struct perf_evlist *evlist,
- void perf_evlist__remove(struct perf_evlist *evlist,
- 			 struct perf_evsel *evsel)
- {
-+	struct perf_evsel *next = perf_evlist__next(evlist, evsel);
-+
- 	list_del_init(&evsel->node);
- 	evlist->nr_entries -= 1;
-+
-+	/* Keep idx contiguous */
-+	if (!next)
-+		return;
-+	list_for_each_entry_from(next, &evlist->entries, node)
-+		next->idx--;
- }
- 
- struct perf_evlist *perf_evlist__new(void)
-diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
-index 10f70cb41ff1..06153820f408 100644
---- a/tools/lib/perf/tests/test-evlist.c
-+++ b/tools/lib/perf/tests/test-evlist.c
-@@ -571,6 +571,46 @@ static int test_stat_multiplexing(void)
- 	return 0;
- }
- 
-+static int test_list_remove(void)
-+{
-+	struct perf_evlist *evlist;
-+	struct perf_evsel *evsel, *evsel0, *evsel1, *evsel2;
-+	struct perf_event_attr attr = {};
-+	int idx = 0;
-+
-+	evlist = perf_evlist__new();
-+	__T("failed to create evlist", evlist);
-+
-+	evsel0 = perf_evsel__new(&attr);
-+	__T("failed to create evsel", evsel0);
-+	evsel1 = perf_evsel__new(&attr);
-+	__T("failed to create evsel", evsel1);
-+	evsel2 = perf_evsel__new(&attr);
-+	__T("failed to create evsel", evsel2);
-+
-+	perf_evlist__add(evlist, evsel0);
-+	perf_evlist__add(evlist, evsel1);
-+	perf_evlist__add(evlist, evsel2);
-+
-+	idx = 0;
-+	perf_evlist__for_each_evsel(evlist, evsel)
-+		__T("idx isn't contiguous", evsel->idx == idx++);
-+
-+	/* Test removing middle */
-+	perf_evlist__remove(evlist, evsel1);
-+	idx = 0;
-+	perf_evlist__for_each_evsel(evlist, evsel)
-+		__T("idx isn't contiguous", evsel->idx == idx++);
-+
-+	/* Test removing end */
-+	perf_evlist__remove(evlist, evsel2);
-+	idx = 0;
-+	perf_evlist__for_each_evsel(evlist, evsel)
-+		__T("idx isn't contiguous", evsel->idx == idx++);
-+
-+	return 0;
-+}
-+
- int test_evlist(int argc, char **argv)
- {
- 	__T_START;
-@@ -583,6 +623,7 @@ int test_evlist(int argc, char **argv)
- 	test_mmap_thread();
- 	test_mmap_cpus();
- 	test_stat_multiplexing();
-+	test_list_remove();
- 
- 	__T_END;
- 	return tests_failed == 0 ? 0 : -1;
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 7e99743f7e42..2ebbb0fd0064 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1359,14 +1359,13 @@ static int record__mmap(struct record *rec)
- static int record__open(struct record *rec)
- {
- 	char msg[BUFSIZ];
--	struct evsel *pos;
-+	struct evsel *pos, *tmp;
- 	struct evlist *evlist = rec->evlist;
- 	struct perf_session *session = rec->session;
- 	struct record_opts *opts = &rec->opts;
- 	int rc = 0;
--	bool skipped = false;
- 
--	evlist__for_each_entry(evlist, pos) {
-+	evlist__for_each_entry_safe(evlist, tmp, pos) {
- try_again:
- 		if (evsel__open(pos, pos->core.cpus, pos->core.threads) < 0) {
- 			if (evsel__fallback(pos, &opts->target, errno, msg, sizeof(msg))) {
-@@ -1383,23 +1382,12 @@ static int record__open(struct record *rec)
- 			evsel__open_strerror(pos, &opts->target, errno, msg, sizeof(msg));
- 			ui__error("Failure to open event '%s' on PMU '%s' which will be removed.\n%s\n",
- 				  evsel__name(pos), evsel__pmu_name(pos), msg);
--			pos->skippable = true;
--			skipped = true;
-+			evlist__remove(evlist, pos);
- 		} else {
- 			pos->supported = true;
- 		}
- 	}
- 
--	if (skipped) {
--		struct evsel *tmp;
--		int idx = 0;
--
--		evlist__for_each_entry_safe(evlist, tmp, pos) {
--			if (pos->skippable)
--				evlist__remove(evlist, pos);
--			pos->core.idx = idx++;
--		}
--	}
- 	if (symbol_conf.kptr_restrict && !evlist__exclude_kernel(evlist)) {
- 		pr_warning(
- "WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,\n"
--- 
-2.34.1
+I remember Howard Chu creating docs covering topics like this. We
+should link them into the wiki:
+https://perfwiki.github.io/main/
 
+Thanks,
+Ian
