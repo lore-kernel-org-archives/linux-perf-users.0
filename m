@@ -1,69 +1,69 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC771714D0
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 15:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4245018C015
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 15:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731599400; cv=none; b=FqHDwawgjoCYD/Zc5+H8WQwqIh+SIU8Wge0fZnTJ8d4A6N2Z7QxjCatKamHrBQx/RY6/CmY13YfqccIBz/7ppKSGRcz3a0oq3LKo8dqR/cgrrfjMJgi31vv65rqcl+XRfuOQ5B0tgpQonU+UgyR+Aj0zwHS/Ui5/3+AVsy8IxcY=
+	t=1731599534; cv=none; b=bcaj8ANajgNOl77TBMNYTFvQEcO6b8kXUGumGeLxh+LPplCyU89VhGMixNaq3mJiDpIqyt6AdJZJ5z0+uKxfX3DRdj2sGHaL9QBiaz7OSGzzWked/G0cFuE8kQ1QzwT+bbCBQcqxVgL+yMijqZoRiAi2KUrGnXPW66HlDk3w7AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731599400; c=relaxed/simple;
-	bh=ITP3dgO8v27WCLg+TdnhRJ+qx1xnVDzTEpIAdi4ehqk=;
+	s=arc-20240116; t=1731599534; c=relaxed/simple;
+	bh=v1RiomMiWVqeQ0xSIyrfA4rsENMHKQjxihGO/VInIns=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sXKeOoCHA4/hAqVoLdEGiGCjoN6EZVAt3sOg47HobQ6Webua+GYSC7DW4UxiN//XizNT73+QLcFyLERV1WPZMtXha5C7PHMIaoJf2snxPz1W39x5RHeGTCog0Gv9DyKyOQMHMGG9aklozVrxdNpn8qgiQ3uVEjV7eVjpxbPfzPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=znFBGdVW; arc=none smtp.client-ip=209.85.160.179
+	 To:Cc:Content-Type; b=Ff/bQjHcCO+a2VIOPKTkuNn7hoiPo87TAQAvrUQVA2BRXWhExzPHW3xXf7L0wFjMzRfCEGQpPZX0pJo/uvq2wv8mbFPCWIiPJlORACCHV1K+g73XpfYWMIRvJ7nJdtvhhjduOUnzfDlyuWm/mre/2ZwKHnkTxw886s8z/K7rnew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n/uIc2Pu; arc=none smtp.client-ip=209.85.166.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="znFBGdVW"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-460969c49f2so257061cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 07:49:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n/uIc2Pu"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3a71ef98bc4so119455ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 07:52:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731599398; x=1732204198; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731599532; x=1732204332; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vzQOPO2gNiSOZfK9AM7O4nwO0nS7weWvcXidNlheCbc=;
-        b=znFBGdVWqpcyuK9ch/AtVeb9OaYr1i9hKqTpXKIsYgCdVRTqmyjK0dCH1Yyuuafvv5
-         DjEPEZh+3Bzyv2taP7PmBgEoeIjvM+SNmzDsv5N+2Ouy1nmkLzIN4nBnA1OZOPP2gxqP
-         r1dJcf3g2UQXyYt2UlXLuR1PPGsaTpnSWTybBJITcDCHKxZvYIXnLR5UmBeDEvxSfmZq
-         TwqMb9BuDDFAwVWvJtWQyEQZiycZ1Dii2Mroy5bB01zqTNQPUxF1BivZJ2nLh0jJVnna
-         rPS8fBjkzd69fZq2M2mT5UmF5fwEdgjmxnXsvnabp0NB+8Lc1XJFztih7GKPwfPA69nt
-         YlRg==
+        bh=ktgKdwX1j+4Opkivi2DSjE8sDLzSzC2KukaMkHYqosU=;
+        b=n/uIc2Pu6r/An4+qHX9t3Epor5bPFhvMcohHxnZf3E9AJ2Rg+QHyVSx7LCbhrwtB+x
+         r1A5fH2Te7jHlnodjykwyoOoaRet/i+jC+K8DHBKmAD0Hi6C9xpCLaWRGVqAhS5/lfHT
+         8tc4EF/2iA5GVcZYc+RpPj/u8+P+WVoxtoYHFW3ygrCtYdt0q+q184OdY1ijc7QQrvrN
+         t8xdnuz0ZR2bvjh7Q9yVZyhslQ8irTkolG0v/aDZtfOSrrPNpou8ilMJMOXMD4Cd5UGR
+         s6r60LdS8I1jZ4tdBK1B7AL97aBbRP0Tqb/jFHfcWcPYoMG5GTPR28YJqKvTQkiEAsXi
+         aASA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731599398; x=1732204198;
+        d=1e100.net; s=20230601; t=1731599532; x=1732204332;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vzQOPO2gNiSOZfK9AM7O4nwO0nS7weWvcXidNlheCbc=;
-        b=SN1zBTjCArTPtldHNTkvzz1vsaCKslLjyVqlC+XDQ7EEWgWGWfeLAZE7XsQPwS9EJ6
-         e2XOxIYF+/98CHIhDnI0bogFsUCUBjQl+UCDYbulzE06fC/H7gpFra17vrtj6jzLBvmi
-         hYs0WskEE8rUUoGbjh/t8WsQuInCQ7IypcgmORRTlUutTbFl7/whZAiuOfpLmTp5FDxB
-         Y6BiBbGGc7GDR69SFHDR1yqZkhf/QBUKl6mfnSjQqn8qrnRZwF8FLfLyFxdkf3dSmQkA
-         OUeTtouTOcQRNJOT1fVsr92o9fN2lBE+VHMEMkWnNbKAElbk9wZmaXbb7kmUwuVY0HqV
-         0lHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ6XzkyCH4IHOUHpnLwUU4m/TzDPRM4Zfaa+cnJfuLFEZGeDjB4SjFkph2qoVoQkiIiL7sPYsZTz2zrA7tb80x@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAABoTJOkW/TIg/9v8hIxCAowhGNfH2xSnpDniyrbrunLZY9Xt
-	4j2EDr65mpZsjgVsLCQgyHSmDq6D9viS4G+mpU6rVhjM29sw1AgeSAEW1vLssV9Ciitqkm3I5gK
-	Q9uqLcIUX08HpL44rDNUoCwtw/UXKMVFx+xyY
-X-Gm-Gg: ASbGncuIclXra16k22hG4S2OD+gkOcOp1Sfk3k6dNKDTDNVGKayNEqln4haEGPUsFtE
-	pNxC6FnHvwRowRBB+UtQfk3BW4K0MomPVkAsmiLymqkwKEkb7ceR++AnzsDER0B4=
-X-Google-Smtp-Source: AGHT+IG8vzd2WmRoXFEByvRRV4+tnhHmetbB8+jZZkCQhdzcVBJdCXZzk1XXejD85yLGOm5zcfK2v8k+0BiMQYw0vYA=
-X-Received: by 2002:a05:622a:598a:b0:460:8444:d017 with SMTP id
- d75a77b69052e-4635f3c0097mr1169501cf.27.1731599397890; Thu, 14 Nov 2024
- 07:49:57 -0800 (PST)
+        bh=ktgKdwX1j+4Opkivi2DSjE8sDLzSzC2KukaMkHYqosU=;
+        b=g+CVzWhhjVR1GvPjGk1hIP+xm6fspiq1oDQR8IaeOHyyawQrxiKns+6h5FR/ss9bFm
+         PmvajgEl/Od+AMM4GeMs2HVwh3u5w99tx4oiL0Aq79GTlEMT8ao68nS4+KULAKmia4Gv
+         heSnhofuqhbVsWOTOoAClK6Y8rRjxHEqfFl8pSG8WV/9LTnMqTUpqRJSa4R+meroHKyh
+         qgitfAlQmpCo2/mn+7FmtFtZSt9TF7pZVRHVGWm38Do1fCxEK/6TzcgOeTsw4HxHbldE
+         aQAyQ/8Ug3XgrK4Ym1mSUWStVbKOWamtqhJQTDovY8WLu4dwSq+6JgiDyxXJCJwTP/h+
+         m2wA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqD6l9StO2f5oB0vmXcoQT9Yijz3aslr4u2aGFvISpQP6ZU3gtcP8HoIqoZ24KPeWhaX0fL2wFyJFT3EDdTDhz@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrrGf3QqCsE3xqOSpvEM1HRADkN0quPRjgoEISK4ATM3v3tiqh
+	E/vyUGxk8bDBqEFlgMpnyYW3Yr2miRR9rIy66FbeOt/QkBN0W8nWWA/eR59hXridKC2wdkiuDl/
+	Us0CCFXDk02ykzKGCD5dzYvgmgHOzTdWNe7hk
+X-Gm-Gg: ASbGncu+eQVPCuK5wMf67Q5dpen4J9qwGuHRgEIpMw9gbl5z5URafC4vY6MfLLTP0Jg
+	1sFsj/ccwYtZDTz4HV7j5Z3TPE8iz0qLZlprgWCs/3T2YvDEYLaiaQWkeK6Furb0=
+X-Google-Smtp-Source: AGHT+IE8ou8Ygo56/ExTa5P+XtsMh75yKL6Jwd6AM/SdzEaQiK9oNtsAvUaqrHkm2YT+XDF+hFAsSS+8xs5Ra6Kd4hA=
+X-Received: by 2002:a05:6e02:219b:b0:3a6:f43d:a24e with SMTP id
+ e9e14a558f8ab-3a71e6e2cb2mr4141345ab.10.1731599532040; Thu, 14 Nov 2024
+ 07:52:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241106003007.2112584-1-ctshao@google.com> <20241106003007.2112584-2-ctshao@google.com>
-In-Reply-To: <20241106003007.2112584-2-ctshao@google.com>
+References: <20241106003007.2112584-1-ctshao@google.com> <20241106003007.2112584-3-ctshao@google.com>
+In-Reply-To: <20241106003007.2112584-3-ctshao@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 14 Nov 2024 07:49:44 -0800
-Message-ID: <CAP-5=fUc0YttVUMB9oAit3u5hzVGuK5rTLnP_dXD0kqt7QcO5g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] perf: Reveal PMU type in fdinfo
+Date: Thu, 14 Nov 2024 07:51:59 -0800
+Message-ID: <CAP-5=fUk7ZSpHwwN98_YVFbKxGQSSbe+kLsCTiuS6mKkS+c3tA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] perf evsel: Find process with busy PMUs for EBUSY
 To: Chun-Tse Shao <ctshao@google.com>
 Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -78,84 +78,177 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, Nov 5, 2024 at 4:30=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> wr=
 ote:
 >
-> It gives useful info on knowing which PMUs are reserved by this process.
-> Also add config which would be useful.
-> Testing cycles:
+> It parses fdinfo with PMU type, comparing with the event which failed to
+> open, and report the processes causing EBUSY error.
+>
+> Testing cycles and intel_pt//
 >
 >   $ ./perf stat -e cycles &
->   $ cat /proc/`pidof perf`/fdinfo/3
->   pos:    0
->   flags:  02000002
->   mnt_id: 16
->   ino:    3081
->   perf_event_attr.type:   0
->   perf_event_attr.config: 0
+>   [1] 55569
+>   $ ./perf stat -e intel_pt// &
+>   [2] 55683
+>   $ ./perf stat -e intel_pt//
+>   Error:
+>   The PMU intel_pt counters are busy and in use by another process.
+>   Possible processes:
+>   55683 ./perf stat -e intel_pt//
 >
-> Testing L1-dcache-load-misses:
->
->   $ ./perf stat -e L1-dcache-load-misses &
->   $ cat /proc/`pidof perf`/fdinfo/3
->   pos:    0
->   flags:  02000002
->   mnt_id: 16
->   ino:    1072
->   perf_event_attr.type:   3
->   perf_event_attr.config: 65536
->
+> Only perf with intel_pt was reported.
+
+I think this looks really nice!
+
 > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
-> Change-Id: Ibea5618aaf00bae6f48a9b2a6e7798ab2b7f23ce
-> ---
->  kernel/events/core.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index cdd09769e6c56..398cac8b208b9 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -55,6 +55,7 @@
->  #include <linux/pgtable.h>
->  #include <linux/buildid.h>
->  #include <linux/task_work.h>
-> +#include <linux/seq_file.h>
->
->  #include "internal.h"
->
-> @@ -6820,6 +6821,14 @@ static int perf_fasync(int fd, struct file *filp, =
-int on)
->         return 0;
->  }
->
-> +static void perf_show_fdinfo(struct seq_file *m, struct file *f)
-> +{
-> +       struct perf_event *event =3D f->private_data;
-> +
-> +       seq_printf(m, "perf_event_attr.type:\t%u\n", event->orig_type);
-> +       seq_printf(m, "perf_event_attr.config:\t%llu\n", (unsigned long l=
-ong)event->attr.config);
-
-nit: is the cast necessary? I don't see __u64 listed on:
-https://www.kernel.org/doc/Documentation/printk-formats.txt
-so I'm unsure.
-
 Thanks,
 Ian
 
-> +}
-> +
->  static const struct file_operations perf_fops =3D {
->         .release                =3D perf_release,
->         .read                   =3D perf_read,
-> @@ -6828,6 +6837,7 @@ static const struct file_operations perf_fops =3D {
->         .compat_ioctl           =3D perf_compat_ioctl,
->         .mmap                   =3D perf_mmap,
->         .fasync                 =3D perf_fasync,
-> +       .show_fdinfo            =3D perf_show_fdinfo,
->  };
+> Change-Id: Ic51a36ea3b2fd245663d7db78f35496bb4199d73
+> ---
+>  tools/perf/util/evsel.c | 79 +++++++++++++++++++++++++++++------------
+>  1 file changed, 57 insertions(+), 22 deletions(-)
 >
->  /*
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index d001ecfa26bf7..5400b795d9233 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -3286,7 +3286,8 @@ static bool find_process(const char *name)
+>         return ret ? false : true;
+>  }
+>
+> -static int dump_perf_event_processes(char *msg, size_t size)
+> +static int dump_perf_event_processes(const struct perf_event_attr *faile=
+d_attr,
+> +                                    char *msg, size_t size)
+>  {
+>         DIR *proc_dir;
+>         struct dirent *proc_entry;
+> @@ -3327,29 +3328,61 @@ static int dump_perf_event_processes(char *msg, s=
+ize_t size)
+>                                 continue;
+>                         /* Take care as readlink doesn't null terminate t=
+he string. */
+>                         if (!strncmp(buf, "anon_inode:[perf_event]", link=
+_size)) {
+> -                               int cmdline_fd;
+> -                               ssize_t cmdline_size;
+> -
+> -                               scnprintf(buf, sizeof(buf), "%s/cmdline",=
+ proc_entry->d_name);
+> -                               cmdline_fd =3D openat(dirfd(proc_dir), bu=
+f, O_RDONLY);
+> -                               if (cmdline_fd =3D=3D -1)
+> -                                       continue;
+> -                               cmdline_size =3D read(cmdline_fd, buf, si=
+zeof(buf) - 1);
+> -                               close(cmdline_fd);
+> -                               if (cmdline_size < 0)
+> +                               int fdinfo_fd;
+> +                               ssize_t fdinfo_size;
+> +                               char *line;
+> +                               u32 perf_event_type =3D UINT32_MAX;
+> +
+> +                               /* Let's check the PMU type reserved by t=
+his process */
+> +                               scnprintf(buf, sizeof(buf), "%s/fdinfo/%s=
+",
+> +                                         proc_entry->d_name, fd_entry->d=
+_name);
+> +                               fdinfo_fd =3D openat(dirfd(proc_dir), buf=
+, O_RDONLY);
+> +                               fdinfo_size =3D read(fdinfo_fd, buf, size=
+of(buf) - 1);
+> +                               if (fdinfo_size < 0)
+>                                         continue;
+> -                               buf[cmdline_size] =3D '\0';
+> -                               for (ssize_t i =3D 0; i < cmdline_size; i=
+++) {
+> -                                       if (buf[i] =3D=3D '\0')
+> -                                               buf[i] =3D ' ';
+> +                               buf[fdinfo_size] =3D '\0';
+> +
+> +                               line =3D strtok(buf, "\n");
+> +                               while (line !=3D NULL) {
+> +                                       if (sscanf(line,
+> +                                                  "perf_event_attr.type:=
+\t%u",
+> +                                                  &perf_event_type) =3D=
+=3D 1)
+> +                                               break;
+> +                                       line =3D strtok(NULL, "\n");
+>                                 }
+>
+> -                               if (printed =3D=3D 0)
+> -                                       printed +=3D scnprintf(msg, size,=
+ "Possible processes:\n");
+> -
+> -                               printed +=3D scnprintf(msg + printed, siz=
+e - printed,
+> -                                               "%s %s\n", proc_entry->d_=
+name, buf);
+> -                               break;
+> +                               /* Report the process which reserves the =
+conflicted PMU. */
+> +                               /* If fdinfo does not contain PMU type, r=
+eport it too. */
+> +                               if (perf_event_type =3D=3D failed_attr->t=
+ype ||
+> +                                   perf_event_type =3D=3D UINT32_MAX) {
+> +                                       int cmdline_fd;
+> +                                       ssize_t cmdline_size;
+> +
+> +                                       scnprintf(buf, sizeof(buf),
+> +                                                 "%s/cmdline",
+> +                                                 proc_entry->d_name);
+> +                                       cmdline_fd =3D openat(dirfd(proc_=
+dir), buf, O_RDONLY);
+> +                                       if (cmdline_fd =3D=3D -1)
+> +                                               continue;
+> +                                       cmdline_size =3D read(cmdline_fd,=
+ buf, sizeof(buf) - 1);
+> +                                       close(cmdline_fd);
+> +                                       if (cmdline_size < 0)
+> +                                               continue;
+> +                                       buf[cmdline_size] =3D '\0';
+> +                                       for (ssize_t i =3D 0; i < cmdline=
+_size; i++) {
+> +                                               if (buf[i] =3D=3D '\0')
+> +                                                       buf[i] =3D ' ';
+> +                                       }
+> +
+> +                                       if (printed =3D=3D 0)
+> +                                               printed +=3D scnprintf(
+> +                                                       msg, size,
+> +                                                       "Possible process=
+es:\n");
+> +
+> +                                       printed +=3D scnprintf(msg + prin=
+ted, size - printed,
+> +                                                       "%s %s\n", proc_e=
+ntry->d_name, buf);
+> +                                       break;
+> +                               }
+>                         }
+>                 }
+>                 closedir(fd_dir);
+> @@ -3458,7 +3491,9 @@ int evsel__open_strerror(struct evsel *evsel, struc=
+t target *target,
+>                         msg, size,
+>                         "The PMU %s counters are busy and in use by anoth=
+er process.\n",
+>                         evsel->pmu ? evsel->pmu->name : "");
+> -               return printed + dump_perf_event_processes(msg + printed,=
+ size - printed);
+> +               return printed + dump_perf_event_processes(&evsel->core.a=
+ttr,
+> +                                                          msg + printed,
+> +                                                          size - printed=
+);
+>                 break;
+>         case EINVAL:
+>                 if (evsel->core.attr.sample_type & PERF_SAMPLE_CODE_PAGE_=
+SIZE && perf_missing_features.code_page_size)
 > --
 > 2.47.0.199.ga7371fff76-goog
 >
