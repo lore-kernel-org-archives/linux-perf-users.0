@@ -1,59 +1,56 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF341D9664
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 11:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364EBF9E4
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 14:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731582574; cv=none; b=C/Wp3oK80H0caMJMEKdbg2vDy3OKSkbmpDLW/0dUXcbUJlRpU69LzM7yeIaC6UWWIulLVTO4RWS4UUpJaDZPN6H0kxQmTxmpCUmxN6R/vHIy14W1ei5xUxi/SzKzkGJ75u2LmLTflDsxr2SuED/coXWtGdx9cF7dWmo6tzqnixM=
+	t=1731594742; cv=none; b=AOKwa88iOfVJlbZNg9AKS8mYNpbDIJWs1Z/uW2Q4yXmg9tk90UA5EnvvSv5DYcYboSOlWE2gybAj1TRWBqRtbyGD79RKZtaMSS89mPvUi3w42OHODUoBMKRuM/oib9SUJmqjZVZWMP4TEjDSMLv47ZYXOzWY5n8ApRI7huxwYgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731582574; c=relaxed/simple;
-	bh=tosTpACMBr90iqiDKF/YON69YfCEcBco4UivdlsdubU=;
+	s=arc-20240116; t=1731594742; c=relaxed/simple;
+	bh=T7r75LGtlVoLBkdRmSOT4C//Bff+94oQE48Owlsp16g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fk620KiRBhG5S/olPGKn8B4KKeJLX+xc1h7zmObZFf2r+l0wVl6qX1bSkt9PCBbHoo2yUsQgqDnaWeb0JOQ4AIZIsmgOGW2ojH/zv2Ma27DVLkBsx+I7LMJQwBHHzfiaxfqj10+rz06rlbCJ+5SrCFyaBKGbStN0gF8cgbds41Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ttkSUlFt; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=ghVJ981Et2vHJMRJBbZYMUtdMOF3Ywb2Fx+snara6aBS8V7F0BWYoXB/2lA1WBU3Fvi5k5nTc8avnFmHoo02p8s0zYgMidXmTeQOEUtTP15W27B10xCi2EiV5Sdq3mN7aShJUTRyIvqJxnWTK1s/bxQfxJNF5F3c1aYd35UzSGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ome3RNvq; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ttkSUlFt"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5cece886771so873027a12.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 03:09:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731582571; x=1732187371; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4B/6kX8Dv1v0x61K7KnGVF200oD26dvfXr9yaw5UIdA=;
-        b=ttkSUlFtI6IMMxHtMq/dbGF6NwPyQcgiu/xyNbf/d7lYYoKS+h9dbnjo8xjw9esYVp
-         NxnDwGUxR+tJmWTSpqZcmeth900MjXpGob0zG5QB1QZhE2YE1pUb8Jkk8RT5lTpNZuCt
-         VPYIGLazhPfVfJSxfQ5g+F1kKgcCd9ULX9xO4qCkVsFB1NKEqQqEW2DZf1WyVgoRLVwJ
-         HPiYw6eDft8DxatA17WiwTG6np/HJVXKW2hRMH3Xubj917EXbhCAr7mmG5oJgp/E3qRU
-         8HMKtTpQQIfL4enX9T/IfZAdMhEREktfnxHPG5OtEfQA9xon77FCvoHkC418JqOnSmML
-         yHbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731582571; x=1732187371;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4B/6kX8Dv1v0x61K7KnGVF200oD26dvfXr9yaw5UIdA=;
-        b=hIM9d3e2YYZvEWt0i8lBqDahAEjHOZdoCsfSNBvfe2gcDITZx3OFKNAjXa26tiRFAA
-         RGh0lDSMb0AbQl8llTaDvJdR0Hmde07vB2tb+bPfA2eQKyQtu6MT1RPcmelLNMxoJvD9
-         uuolFHyArxp5eBkSzZT/Zb1YsrE0rCI1h7TQ0SqI6Mkh2rGHQF42p5C7NSWkyK8qty99
-         wocB11eQ7peJsFOx4FTUaW/T1WserS7UgSFH1KglGQFbrXuyLk09MiY8/OCwfW7M6kb7
-         7FPjwIYj/yaKxsiVwBPzwcB5ya1EL6fYf7SSyXKC2sXC/h9VnuCfxhxQHCMF+GRjc3Wj
-         cDNg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUIwZYLFOBla9BkeTjsvpsHYZ/ee7ZiTfCjTqxn3tjSbJ20p5VURneFuQvCHLBsvB9rwp0xaq/WxWBGqXbqwWi@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUQnRlyMKESBIhzhOTFfHvaLPUxc7Z3iXEXx0fueK1uBYzV9ik
-	XOwAJKE/WJpdv90Nat6BoyESWNp62ITBfEqy87XnjZs50vftQBxMT9xTThXKVao=
-X-Google-Smtp-Source: AGHT+IF2C+FExDVfDs7XP69Gi5qTPDO/xl7y4YZmBo3xSaFOop1jpkIHKM5PZ6uedcT0B056R4IB4g==
-X-Received: by 2002:a05:6402:43cd:b0:5cf:a27:c87e with SMTP id 4fb4d7f45d1cf-5cf75512e6cmr2581823a12.10.1731582571024;
-        Thu, 14 Nov 2024 03:09:31 -0800 (PST)
-Received: from [192.168.68.163] ([145.224.90.214])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cf79c1de36sm458723a12.84.2024.11.14.03.09.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2024 03:09:30 -0800 (PST)
-Message-ID: <b107d9a6-48b7-468d-b36e-da9c587b7953@linaro.org>
-Date: Thu, 14 Nov 2024 11:09:27 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ome3RNvq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731594740; x=1763130740;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=T7r75LGtlVoLBkdRmSOT4C//Bff+94oQE48Owlsp16g=;
+  b=Ome3RNvqPFiUlDITD96pN+pyjThjuu78DsIJEn8MbuTOM+4aNWM8HTPj
+   yoe5gp0D84aPkFLdpO7gfU2qVm7GK22aEuZ59KofpBaiabi+CDjZ1hCl6
+   c/253oHRiz8En/WeNzYSpUMtxYGNwyD/vEpcrDij9sTsClpIWtxWhMY3S
+   o6SaHDpLwJ8lP9Wr2quFc/XdMveIDxT+mKTH63Lc4LASncQm4esoWYvWI
+   0CjF9hQOb3uNqIjPPGF5oE6k8c26OKDWcfczpWEEUkQ4TsP5wofWf8CsI
+   EswVeDW4gQ72pwbHJGAGxfMccS6Tn1OOE17ScEXeniXleTbU7AvG11AWF
+   g==;
+X-CSE-ConnectionGUID: fRuTDYqBQuS6f7gFk+ZZxw==
+X-CSE-MsgGUID: 8BD7eLBBRCafn+/CJEPIXw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11256"; a="19148449"
+X-IronPort-AV: E=Sophos;i="6.12,154,1728975600"; 
+   d="scan'208";a="19148449"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 06:32:16 -0800
+X-CSE-ConnectionGUID: xZR4clhCSXSgCE9iDjJZLQ==
+X-CSE-MsgGUID: VNTJA191SS6P6OMtJH/H5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,154,1728975600"; 
+   d="scan'208";a="88643034"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 06:32:16 -0800
+Received: from [10.246.136.4] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.4])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 7C30D20B5703;
+	Thu, 14 Nov 2024 06:32:15 -0800 (PST)
+Message-ID: <e37d7c6b-91c7-4fd7-831b-98f0dca5d46c@linux.intel.com>
+Date: Thu, 14 Nov 2024 09:32:14 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,87 +58,79 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PING PATCH] perf/test: fix perf ftrace test on s390
-To: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
- svens@linux.ibm.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
- hca@linux.ibm.com
-References: <20241114090149.1489811-1-tmricht@linux.ibm.com>
+Subject: Re: Intel Arrowlake and hwcache events
+To: Michael Petlan <mpetlan@redhat.com>, alexander.shishkin@linux.intel.com,
+ adrian.hunter@intel.com, linux-perf-users@vger.kernel.org
+Cc: qzhao@redhat.com, vmolnaro@redhat.com
+References: <ea7b2c27-7512-f412-32c0-3a247fd930f9@redhat.com>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241114090149.1489811-1-tmricht@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <ea7b2c27-7512-f412-32c0-3a247fd930f9@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 14/11/2024 9:01 am, Thomas Richter wrote:
-> On s390 the perf test case ftrace sometimes fails as follows:
+On 2024-11-14 4:54 a.m., Michael Petlan wrote:
+> Hello!
 > 
->    # ./perf test ftrace
->    79: perf ftrace tests    : FAILED!
->    #
-> 
-> The failure depends on the kernel .config file. Some configurarions
-> always work fine, some do not.  The ftrace profile test mostly fails,
-> because the ring buffer was not large enough, and some lines
-> (especially the interesting ones with nanosleep in it) where dropped.
-> 
-> To achieve success for all our tested kernel configurations, enlarge
-> the buffer to store the traces complete without wrapping.
-> The default buffer size is too small  for all kernel configurations.
-> Set the buffer size of /sys/kernel/tracing/buffer_size_kb to 16 MB
-> 
-> 
-> Output after:
->    # ./perf test ftrace
->    79: perf ftrace tests     : Ok
->    #
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Suggested-by: Sven Schnelle <svens@linux.ibm.com>
-> ---
->   tools/perf/tests/shell/ftrace.sh | 11 +++++++++++
->   1 file changed, 11 insertions(+)
-> 
-> diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
-> index a6ee740f0d7e..742d6b8f34d3 100755
-> --- a/tools/perf/tests/shell/ftrace.sh
-> +++ b/tools/perf/tests/shell/ftrace.sh
-> @@ -80,10 +80,21 @@ test_ftrace_profile() {
->       echo "perf ftrace profile test  [Success]"
->   }
->   
-> +if [ "$(uname -m)" = "s390x" ]
-> +then
-> +	ftrace_size=$(cat /sys/kernel/tracing/buffer_size_kb)
-> +	echo 16384 > /sys/kernel/tracing/buffer_size_kb
-> +fi
-> +
+> Qiao Zhao (CC'd) has found out that there are no hwcache events available
+> on an Arrowlake system he was testing perf on. 
 
-It probably wouldn't be terrible to do this for all platforms to reduce 
-fragmentation. It doesn't do any harm and it only added a few seconds to 
-the test time even on a small Arm box, maybe it will prevent flakes 
-everywhere else in the future. But I don't feel too strongly about this one.
+There are several variants for Arrowlake.
+#define INTEL_ARROWLAKE_H		IFM(6, 0xC5)
+#define INTEL_ARROWLAKE			IFM(6, 0xC6)
+#define INTEL_ARROWLAKE_U		IFM(6, 0xB5)
 
->   test_ftrace_list
->   test_ftrace_trace
->   test_ftrace_latency
->   test_ftrace_profile
->   
-> +if [ "$(uname -m)" = "s390x" ]
-> +then
-> +	echo $ftrace_size > /sys/kernel/tracing/buffer_size_kb
-> +fi
-> +
+The INTEL_ARROWLAKE should be supported in 6.10 and later.
+The INTEL_ARROWLAKE_H was just merged and should be available in the
+upcoming 6.13-rc.
+https://lore.kernel.org/lkml/20240808140210.1666783-1-dapeng1.mi@linux.intel.com/
 
-Restoring the value should be in cleanup() so it works on interrupt too.
+The patch to support INTEL_ARROWLAKE_U hasn't been posted yet.
 
-With that:
+Which system were you testing?
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+> We have found out that it
+> does not work even on 6.12.0-rc6+. Are there still drivers that haven't
+> been merged yet?
+> 
+> Happens that nothing matches in this loop:
 
->   cleanup
->   exit 0
+The HW cache events are usually model specific events. You cannot see it
+unless there is specific support.
+
+You may also get more clues via dmesg | grep PMU.
+If you see "generic architected perfmon", it means the specific support
+isn't ready in the kernel.
+
+Thanks,
+Kan
+> 
+> int print_hwcache_events(const struct print_callbacks *print_cb, void *print_state)
+> [...]
+> 305		for (int type = 0; type < PERF_COUNT_HW_CACHE_MAX; type++) {
+> 306 		for (int op = 0; op < PERF_COUNT_HW_CACHE_OP_MAX; op++) {
+> 307  	 		/* skip invalid cache type */
+> 308 			if (!evsel__is_cache_op_valid(type, op))
+> 309					continue;
+> 310
+> 311			for (int res = 0; res < PERF_COUNT_HW_CACHE_RESULT_MAX; res++) {
+> 312 			char name[64];
+> 313				char alias_name[128];
+> 314				__u64 config;
+> 315				int ret;
+> 316
+> 317				__evsel__hw_cache_type_op_res_name(type, op, res,
+> 318													name, sizeof(name));
+> 319
+> 320				ret = parse_events__decode_legacy_cache(name, pmu->type,
+> 321													&config);
+> 322				if (ret || !is_event_supported(PERF_TYPE_HW_CACHE, config))
+> 323					continue;
+> 
+> Thanks,
+> Michael
+> 
+> 
 
