@@ -1,129 +1,157 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DEC7DA93;
-	Thu, 14 Nov 2024 15:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA502C859;
+	Thu, 14 Nov 2024 15:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731596526; cv=none; b=kcHim58z8vGPAVaz8xqzARnTMm4pdsUWyohVQEU8Q/NcsTXiYNDgyYwpb/xJhAytF9l6e+9SQBT5zXo+B+dVEywoIxESny1XeaAr4FNAl5W+WAokSy9al7vMMXzhFMf3Z6HaZeDvL2Hu+bPG6uJ/Bwi5eb9wgDR2r7XjmRqgJ/k=
+	t=1731598049; cv=none; b=dji6MI66ai1mz//RctRAfg8aLFIT+6iMGoQ+6Pw4w7u28hNoseY7rovT10bvy5zT0bynj8OokRFRaTnHXrugkRG0Jodalv4c/mlKbIMBeH1sGO90Ht2qH0wt4fOAyb5pkyxRd/nR5/UkC2N4rhPaeov18IzARlCrKiMe2MPkvhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731596526; c=relaxed/simple;
-	bh=BrpgHeZZUBGGE/4npmemVXo9LQmjuTH144fIxM1YZAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EDRHqKARbtSOiKNFL/RuEMvAupacNTaRaQZHrrT2Uo4x4/NG5AGTo3OLprdqBFcijIu90/LDVE1u4scwYXYalLlNk+wGrI8aNhu6wpP5aHyTd4SLJqYKY9DnRREEaelBRgHSBe3HiCzR7y55pW8VytGtRWLOmf9i5vDxw9j8pIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n2xkHdT1; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1731598049; c=relaxed/simple;
+	bh=AlrJiZZOyYgTIyh3xiaPHspbKmDJnPiNHoinUQL7L1Q=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=agDEYSIFecrhvuaCpcFLP9boGe63FRay6AztSh3KFoWueZj6JRKxX0yDJH+EDF0tLT4ioCwI03T7GMi2iUWYSj6B8Dyll8SYq3DKMBLCxAeWDUhgdqD3L8t+yUT/UrkbqARFgYxi8PSDlxfk+JH/EqsMrL5EKaRty37ty/Z8QhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=h1s8dlpx; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n2xkHdT1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=KVl4h5R6rnhw6YUf9IrDWsXYnzegGCj/KhuQEleNVkg=; b=n2xkHdT1HWMG3UPYX8L66GnioC
-	9sZRphIee2ajkU+LPtbpX5CE9MIOoSsqtUh1uDWgEAwLlU+a0yJG/qf55YVfVYuz3ac1thP+B/8ww
-	e8wtORX2Dyew/ckDq8nvfhXoayao12i1iinsE+R7gTy9ynsQwbCY+JmzkgWPG5BqQv7QqmD1Sx8Zb
-	4nNqABqm9+73dAdbJVBmWYYNcKgnTg/BSSGuH477e5jkruwIIDfrGH/hLcbTCON2wvBYz0Pb0LKWK
-	u1qA/SGgiq9rIOy8VIRRfSJ5KSQrGyps7gipayt101UsD7HxuN1Z0JkbjsP5ui2/VdmQyWrv2iBeQ
-	Bd/6zqBg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tBbM1-0000000033t-3CHr;
-	Thu, 14 Nov 2024 15:01:54 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1FB58300446; Thu, 14 Nov 2024 16:01:53 +0100 (CET)
-Date: Thu, 14 Nov 2024 16:01:52 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Deepak Surti <deepak.surti@arm.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.barnett@arm.com, ben.gainey@arm.com, ak@linux.intel.com,
-	will@kernel.org, james.clark@arm.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 1/4] perf: Allow periodic events to alternate between
- two sample periods
-Message-ID: <20241114150152.GC39245@noisy.programming.kicks-ass.net>
-References: <20241107160721.1401614-1-deepak.surti@arm.com>
- <20241107160721.1401614-2-deepak.surti@arm.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="h1s8dlpx"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AEEAUeh016507;
+	Thu, 14 Nov 2024 15:27:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=qWzriA
+	jXB4q5NSkWXUx0bVViLmGjPmLT8Bq1oELXIQs=; b=h1s8dlpxqUMwhOugdDIU2A
+	WabGaArQssp100QhFqjRPH1ChQ7XyG42NSAUz3MMeVJXnkT5wId5iLui45KoHPXL
+	6zyQY8cYLuwwL8cptRgjOnZsvbDmung95+ZHo7+E/IT6AQLMWhVYyPoCIjeoxMoa
+	1bd9RQp356j53y2GQ6rj+Ci4C9uFdY6zpk1I5PbR/L2k8815PNLmDKVz9Itv6bNd
+	3fHxLh9bAPBkS/0gseTGxApid+kh8B6CSUgVrxrsgJ2m85CE9zLkhcBugNnTXVdz
+	UFBWl0/PiD2yArk6JraBytOiti1tStBF7Ykg6YkTm0Znl2qPu19KGd5FbOwf10Ww
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42wjqrgb38-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Nov 2024 15:27:17 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4AEFOmVf021989;
+	Thu, 14 Nov 2024 15:27:17 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42wjqrgb33-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Nov 2024 15:27:16 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4AEAtOY7010521;
+	Thu, 14 Nov 2024 15:27:16 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 42tj2s8krb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Nov 2024 15:27:16 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4AEFRE4S29557494
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 14 Nov 2024 15:27:14 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7F28220043;
+	Thu, 14 Nov 2024 15:27:14 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4D6A620040;
+	Thu, 14 Nov 2024 15:27:14 +0000 (GMT)
+Received: from [9.152.222.93] (unknown [9.152.222.93])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 14 Nov 2024 15:27:14 +0000 (GMT)
+Message-ID: <8eb7e7d2-6fd6-4f3f-a3ca-265639adc61c@linux.ibm.com>
+Date: Thu, 14 Nov 2024 16:27:13 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: perf report: fix off-by-one for non-activation frames
+To: Milian Wolff <milian.wolff@kdab.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jan Kratochvil <jan.kratochvil@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <Linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        David Ahern <dsahern@gmail.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Yao Jin <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Thomas Richter <tmricht@linux.ibm.com>
+References: <20170515150444.6841-1-milian.wolff@kdab.com>
+ <1916323.ygRLzu1ryd@agathebauer> <20170619185939.GA2170@redhat.com>
+ <1729469.05pq3V20xn@milian-kdab2>
+From: Jens Remus <jremus@linux.ibm.com>
+Content-Language: en-US
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <1729469.05pq3V20xn@milian-kdab2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: zDrQ29wDvZryIbrmCKcN7E3NOvqQQJn-
+X-Proofpoint-GUID: NdkQDcVZhV_yExKTemOuLAf2KPIhtRIZ
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241107160721.1401614-2-deepak.surti@arm.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ priorityscore=1501 spamscore=0 mlxlogscore=999 suspectscore=0 mlxscore=0
+ clxscore=1011 malwarescore=0 phishscore=0 adultscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2409260000
+ definitions=main-2411140114
 
-On Thu, Nov 07, 2024 at 04:07:18PM +0000, Deepak Surti wrote:
-> From: Ben Gainey <ben.gainey@arm.com>
+On 04.07.2017 09:59, Milian Wolff wrote:
+> On Monday, June 19, 2017 8:59:39 PM CEST Arnaldo Carvalho de Melo wrote:
+>> Em Sat, Jun 17, 2017 at 01:13:11PM +0200, Milian Wolff escreveu:
+>>> On Samstag, 17. Juni 2017 10:04:02 CEST Jan Kratochvil wrote:
+>>>> On Sat, 17 Jun 2017 09:56:57 +0200, Namhyung Kim wrote:
+>>>>> Not sure whether it needs be fixed or not.  If we fix it, srcline and
+>>>>> address would not match so it can give its own confusion to users.
+>>>>> Ideally it should display an addressof the instruction before the
+>>>>> address IMHO.
+>>>>
+>>>> One can figure million ways how it can behave and each one has its pros
+>>>> and
+>>>> cons.  I was just describing the current behavior of GDB and LLDB which
+>>>> people are used to already.
+>>>
+>>> Personally, I agree with Jan that we should mimick existing tool's
+>>> behavior. I just fear that it's not trivial to do it with the current
+>>> code base...
+>> But we agree it is a worthwhile change (have backtraces in perf match
+>> what gdb, etc show), right?
+>>
+>> If you can, please try to do this, your attempt will help us understand
+>> more the extent of the changes needed and perhaps someonw can come up
+>> with simplifications...
 > 
-> This change modifies perf_event_attr to add a second, alternative
-> sample period field, and modifies the core perf overflow handling
-> such that when specified an event will alternate between two sample
-> periods.
-> 
-> Currently, perf does not provide a  mechanism for decoupling the period
-> over which counters are counted from the period between samples. This is
-> problematic for building a tool to measure per-function metrics derived
-> from a sampled counter group. Ideally such a tool wants a very small
-> sample window in order to correctly attribute the metrics to a given
-> function, but prefers a larger sample period that provides representative
-> coverage without excessive probe effect, triggering throttling, or
-> generating excessive amounts of data.
-> 
-> By alternating between a long and short sample_period and subsequently
-> discarding the long samples, tools may decouple the period between
-> samples that the tool cares about from the window of time over which
-> interesting counts are collected.
+> Sorry for the (long) delay, but I'm sadly busy on other things right now. I
+> have this on my radar and will try to find time to look into it. But it
+> probably won't happen before end of July. If this is urgent, maybe someone
+> else needs to look into it before me.
 
-Do you have a link to a paper or something that explains this method?
+I ran into the odd "decremented by one" IPs (and function offsets) on
+s390, which requires instructions to be aligned on 2 byte boundary, and
+ended up debugging the code to learn that this is actually on purpose
+and why.
 
+If it cannot easily be "fixed" in the output, could it at least be
+documented?
 
-> +	/*
-> +	 * Indicates that the alternative_sample_period is used
-> +	 */
-> +	bool				using_alternative_sample_period;
+Thanks and regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303) and z/VSE Support
++49-7031-16-1128 Office
+jremus@de.ibm.com
 
-I typically prefer variables names that are shorter.
+IBM
 
-
-> @@ -9822,6 +9825,26 @@ static int __perf_event_overflow(struct perf_event *event,
->  	    !bpf_overflow_handler(event, data, regs))
->  		return ret;
->  
-> +	/*
-> +	 * Swap the sample period to the alternative period
-> +	 */
-> +	if (event->attr.alternative_sample_period) {
-> +		bool using_alt = hwc->using_alternative_sample_period;
-> +		u64 sample_period = (using_alt ? event->attr.sample_period
-> +					       : event->attr.alternative_sample_period);
-> +
-> +		hwc->sample_period = sample_period;
-> +		hwc->using_alternative_sample_period = !using_alt;
-> +
-> +		if (local64_read(&hwc->period_left) > 0) {
-> +			event->pmu->stop(event, PERF_EF_UPDATE);
-> +
-> +			local64_set(&hwc->period_left, 0);
-> +
-> +			event->pmu->start(event, PERF_EF_RELOAD);
-> +		}
-
-This is quite terrible :-(
-
-Getting here means we just went through the effort of programming the
-period and you'll pretty much always hit that 'period_left > 0' case.
-
-Why do we need this case at all? If you don't do this, then the next
-overflow will pick the period you just wrote to hwc->sample_period
-(although you might want to audit all arch implementations).
-
-Looking at it again, that truncation to 0 is just plain wrong -- always.
-Why are you doing this?
-
-
+IBM Deutschland Research & Development GmbH; Vorsitzender des 
+Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der 
+Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
