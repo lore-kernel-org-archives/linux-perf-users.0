@@ -1,159 +1,100 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7603819E7FA;
-	Thu, 14 Nov 2024 21:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9531AD3F5
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 23:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731619173; cv=none; b=NLRCv7Y+Nbnd8s0R1EhnViYyEvczAi8dKIbH/RUIzTK9KOt/jsQ52Vi3w+NSgG5iCyudLvPYEcGkDq01e9DXuEO5jl6XLq7RCo9UJPhFbJmL3t52PBOutikFz/PxTeS1fvkY+elFyECCc+/BzHM4aH9wm9HAUuMSslykk6blFBw=
+	t=1731625640; cv=none; b=HSKzpmP/U/45o+RNyDq4TZ9Wht1pGWkKcVebKIzUmlKQKeAIMKw25/C/M1EechfAUDm/FPutwqYGjAkx79dCp4RbaWf0roVawVntGOdoZliY0kiLL9G7bZQYIFiAWYpUatu5DwzmvBRwY/7XkesqKhPyreLsvIK0v0L/RD3cMvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731619173; c=relaxed/simple;
-	bh=kHLqa/Cx6RVfy8mdFeRqSbn6D5NW9Lp53z8PaU35d8A=;
-	h=From:Date:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=cB7TOyAk1PaqDPFU4s5AWFrHEMgBmydyEkSTzSikscnuEU4XeD6bxA6ahd7EUvUAzmdlpbWlQD+YbupvjFQVA3WNHp5sJSiWyCWVYnwEpKKdbDRtYGhvmsZ7EVBW1oYdPGsQkQEoXn/CqIr/DKHsDMBHWTj0GiN7xEjzlCSju3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a0X1Rmv3; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1731625640; c=relaxed/simple;
+	bh=Dp15DIVEEmSIdD9NNVgWjs1O/f/At8X6WEz0SMIxKZY=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=NYlxAF0qIGo5GLA8lvDDOYxzk9Qo8tW1wY1Prn7k5nTvg99ssxNDSYmzftpHLNQt8GjZWbU+skyA5BjTjcyisN3yFa2N5b5XODXrupSQI+YD38YxpXsvoJJUeirzb1NyhMKzIbJ+C2XIq1hD5w2GjULc4FkOqG71Mhc3wqONcDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YI8NIcXX; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0X1Rmv3"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7240d93fffdso60950b3a.2;
-        Thu, 14 Nov 2024 13:19:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YI8NIcXX"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3810bac8a7so1960324276.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 15:07:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731619171; x=1732223971; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TO5ZQGzBbv1u/y921AyibJwoL8Fnkl/A45hiTfl+ZEU=;
-        b=a0X1Rmv3GQ5AHx0W0hybfbB4SBG28o7DH9KkVTKT5tx5uFahfBGVo2/JMh3Q43Ubff
-         SOP3KJ/CWq7FdnBQy/JdLjmREnz1ZD/oEiyk1hN0AJKO4U8K2+K2ypJ6V5TmMIR1W8iX
-         Zo/h0xFDvC4xRQiRWVNf8uZmOpUQ5QBfkyXonmryuj0zaPUBigJDCSfn5SWa4hILShc0
-         +6UZFNBuO0bx153Xnq3ErsPw4c+ipmXUfshGILYujjgsRCYsjDbFjAITbGwkJg2xYIGs
-         b13tlJVQqX51YXt3u3T7cKE0FGiEDY0AR/L6J2vTJuXRkPgQeIHyDeqonBEs6GsxwP0G
-         +w/w==
+        d=google.com; s=20230601; t=1731625638; x=1732230438; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3ll/vUW8S45nGRGrDIOMcD0GkJeApUvNMCuJ2LReRko=;
+        b=YI8NIcXXRnD6H8gtDf7YKoBIMSn8+p5vvd4wSrv1z+2rE9PA3+Sr0zqkK/zlN8WjiW
+         RwmmkKnvGW3qxCE6Zel6H9Qx7L1hjp4mXwNRvOk8L/6Ue3kJsojxuwTr3T6A3OsEnmSi
+         PDRjWea5WJGb7KvSK6WG5ambN7vFn+Y1VG2D0tnxf/aK9OCNIPO1GW/kwU6UxyHcZu3S
+         w798pOBoVZ94d45AD5hGQdBafYzBwad4xevb4SM3/AszeJVZhqmLzxM3RIImh7YEJsXL
+         UNkG6BkDYaFMxV4fuOutrKIov/qRAcT0haNZ/xLMkSJk+HLUJ5BIIdBwCNFC17UgkYZk
+         MB8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731619171; x=1732223971;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TO5ZQGzBbv1u/y921AyibJwoL8Fnkl/A45hiTfl+ZEU=;
-        b=QZKMFL48Rv7K+FvdEXYSG1zxDuFIFIXfmIFFW240REWB0KDSAgEGXzOEBHhG+Nqqt9
-         gyWXGOS6i0CiU/3ElQMoUa1GMhJQxy1SAqrm2qs+IXu3d6LHND5JK/D+He5v+pvN77tY
-         GM5eP4TajAj1i7IMBy+71qjm9iPJU3aBUND0FcpWX/oGmu3JSyd2IjYfcKWVQ0o2QFk6
-         nw3KRYSv1robI/Us3IL/vVSpHWnPOiv2Dj/k7qS9ylNlIsOMk6nNm4YlMKXiVxEqB9/l
-         x8JZuZJB1R1pvmMvk5m+DxZXq4KDYNW6b53kqKm8Do4qfCZ0EAVnmzHUJc8j+dZBBLJ/
-         n76A==
-X-Forwarded-Encrypted: i=1; AJvYcCUB/taxRb6t/IwVnu5dlQNRhHO9aqVVM91S+Q/UAH7CmvWTcbsKgXum7u2WohIAq5iBlx52ccrOFUvENcJlii/GiA==@vger.kernel.org, AJvYcCXa/WDidW3ztgFjmbjD9dEk3w79bMXrOs0nsS6VXu0mvye7cMb76cN0loQ8+5n7V0R15RE/OEPiOr/OP2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybvGC06ZorpCdSSfSRsK/O3bbNWFJmij5onKcNY82CtXxLg6Pv
-	pcbnrr6/3M9LJy3o6bvHbGkX/epkxl36lQ8E2G6UDWo3r2Qw+TOg
-X-Google-Smtp-Source: AGHT+IEvbqDE5Yxi5kCm1JMoV9uvOJQS8YTA5qVJAMNHTm2nGv5LjhMdvvm9k+7wPKpRXfIYlm/U9g==
-X-Received: by 2002:a17:90b:5282:b0:2da:7536:2b8c with SMTP id 98e67ed59e1d1-2ea1559d064mr372974a91.36.1731619171439;
-        Thu, 14 Nov 2024 13:19:31 -0800 (PST)
-Received: from localhost ([187.19.172.213])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ea024b82aasm1745322a91.33.2024.11.14.13.19.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2024 13:19:30 -0800 (PST)
-From: arnaldo.melo@gmail.com
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Thu, 14 Nov 2024 18:19:27 -0300
-To: Benjamin Peterson <benjamin@engflow.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] perf tests shell trace_exit_race: Show what went wrong
- in verbose mode
-Message-ID: <ZzZpX5O053UsHmsV@x1>
+        d=1e100.net; s=20230601; t=1731625638; x=1732230438;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3ll/vUW8S45nGRGrDIOMcD0GkJeApUvNMCuJ2LReRko=;
+        b=ccK2UhWc0/Ft5v/eRnYZDVDFDGsczvQNbux8BbMR2Zf04fMvb4jcOC1XLTucRupQ/R
+         uXQvblG3jx9NIZe2shmLt2Tl9bzHdsEFFFMpTLYsJKkJpnH65sbsyQMWsO3Qxj6G4dD4
+         AQu0DL0nSye28Zk4FpSniOP54+zSXYFtsiKhyKofVWOmDs7UqjnhvcCJOoyPf7by7At5
+         o4jYVIG1vYXt+wCueMJJkljTY8fZAg3j+jHcgxUIPkiHeaEIYXT8A2hBpIRpA6PwDmg0
+         RRUdO6kqKLVtr9K/YIdufbFWgURiHxcwY7dFHdP0Z+XpveruZfE0Cm2GNw0u9SKjCrYk
+         9k0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV8+yyFryILQKvZcfzNtzPiPGicYVEIcYF/mm5Vcd82T0noOyTwUh3w/NzQF+kpzvbYGjg1rrsukZN7CdzUP1Lb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJsYNhpGA+wiyrA2jCDvfkYl5zMuITPdjAbJEo0ptJKSJ+Cogo
+	C+N1FC71T45t8zVd2QmVOfOgkmGZT54F6L2VBD/f8zvjBuWTXdNaF1kfwJzmk32YQh9UooUKga8
+	EbFOjnQ==
+X-Google-Smtp-Source: AGHT+IHFF9XsruTHygct2BUmMIVXMOfzIFG3QuYDLL+UaiMJSCi+DbVqlHtkgUqfQV2zEFhqf5nETeSphKtp
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:7595:be86:b969:ac41])
+ (user=irogers job=sendgmr) by 2002:a25:a28e:0:b0:e38:10a7:808e with SMTP id
+ 3f1490d57ef6-e3825bd1b6dmr10359276.0.1731625638147; Thu, 14 Nov 2024 15:07:18
+ -0800 (PST)
+Date: Thu, 14 Nov 2024 15:07:10 -0800
+Message-Id: <20241114230713.330701-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
+Subject: [PATCH v1 0/3] Prefer evsel over evsel->core.idx
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	"=?UTF-8?q?Ahelenia=20Ziemia=C5=84ska?=" <nabijaczleweli@nabijaczleweli.xyz>, Chen Ni <nichen@iscas.ac.cn>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-This is in the tmp.perf-tools-next  branch at:
+James Clark's patches fixing evsel->core.idx [1] reminded me that we
+pass the int value around unnecessarily. Passing the evsel avoids
+issues if the evlist is reordered but paired with sanitizers we can
+also know when something is used when it shouldn't be. These patches
+do some initial work reducing the use of evsel->core.idx or reducing
+the API to pass evsels and not their interior index.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
+[1] https://lore.kernel.org/lkml/20241114160450.295844-2-james.clark@linaro.org/
 
-I'll later add another patch adding the --no-comm to the 'perf trace'
-command line and will adjust the regexp.
+Ian Rogers (3):
+  perf stream: Use evsel rather than evsel->idx
+  perf values: Use evsel rather than evsel->idx
+  perf annotate: Prefer passing evsel to evsel->core.idx
 
-- Arnaldo
+ tools/perf/builtin-diff.c         |   4 +-
+ tools/perf/builtin-report.c       |   4 +-
+ tools/perf/builtin-top.c          |   4 +-
+ tools/perf/ui/browsers/annotate.c |   2 +-
+ tools/perf/util/annotate.c        |  32 +++++----
+ tools/perf/util/annotate.h        |  20 +++---
+ tools/perf/util/stream.c          |   7 +-
+ tools/perf/util/stream.h          |  10 +--
+ tools/perf/util/values.c          | 106 +++++++++++++-----------------
+ tools/perf/util/values.h          |   9 +--
+ 10 files changed, 90 insertions(+), 108 deletions(-)
 
----
-
-If it fails we need to check what was the reason, what were the lines
-that didn't match the expected format, so:
-
-  root@number:~# perf test -v "trace exit race"
-  --- start ---
-  test child forked, pid 2028724
-  Lines not matching the expected regexp: ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$':
-       0.000 :2028750/2028750 syscalls:sys_enter_exit_group()
-  ---- end(-1) ----
-  110: perf trace exit race                                            : FAILED!
-  root@number:~#
-
-In this case we're not resolving the process COMM for some reason and
-fallback to printing just the pid/tid, this will be fixed in a followup
-patch.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Howard Chu <howardchu95@gmail.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-To: Benjamin Peterson <benjamin@engflow.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/shell/trace_exit_race.sh | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/trace_exit_race.sh b/tools/perf/tests/shell/trace_exit_race.sh
-index 3cf2d71a5c3b9278..ce05d4e6e7133cd1 100755
---- a/tools/perf/tests/shell/trace_exit_race.sh
-+++ b/tools/perf/tests/shell/trace_exit_race.sh
-@@ -11,11 +11,17 @@
- 
- skip_if_no_perf_trace || exit 2
- 
-+if [ "$1" = "-v" ]; then
-+	verbose="1"
-+fi
-+
-+regexp=" +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$"
-+
- trace_shutdown_race() {
- 	for _ in $(seq 10); do
- 		perf trace -e syscalls:sys_enter_exit_group true 2>>$file
- 	done
--	[ "$(grep -c -E ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$' $file)" = "10" ]
-+	[ "$(grep -c -E '$regexp' $file)" = "10" ]
- }
- 
- 
-@@ -27,5 +33,11 @@ export PERF_CONFIG=/dev/null
- 
- trace_shutdown_race
- err=$?
-+
-+if [ $err != 0 ] && [ "${verbose}" = "1" ]; then
-+	echo "Lines not matching the expected regexp: '$regexp':"
-+	grep -v -E "$regexp" $file
-+fi
-+
- rm -f ${file}
- exit $err
 -- 
-2.47.0
+2.47.0.338.g60cca15819-goog
 
