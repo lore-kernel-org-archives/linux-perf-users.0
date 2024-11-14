@@ -1,112 +1,119 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B905B6F307;
-	Thu, 14 Nov 2024 17:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927014CB36
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 17:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731604279; cv=none; b=m7J36oBulRPz3QlIS8yU+ix07N3KtLclSSYbShs5d1Yoj+7Lj3FP/vnRLLcCknpLltTif4Q7lJW4Depg6YIItIGAxiqgY7qTz1MtXFJqQgaDQI3JrwZwPd+RwsVrxouiGAgFO5utne3tWJDBz4uLlrRZPitwNjetLUbXzVUq48A=
+	t=1731604998; cv=none; b=gdX+ww4FVwvLMC/Y/aIOE9lAQCGlsBcjbEZarZ45pYMtSTAUmFfXms+Egz0xvBr7cmeZQRXjpeo5kD0bIm1ETgVXGZiq7ymwbP9u9ians55VZ8ZzEtJ5my1ggGEb20nxKuVFxGsnl1OzvcyyaWjFB4javTwEqdpXeb9rzfYviWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731604279; c=relaxed/simple;
-	bh=CeDDin3Oyaoqz6NCTA0YQmQXis0jvldAADGnlBUP2So=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Xt5ap/q0H47vd/Mxf4cF7/NE71cXRdRewIewhljTSb+Z5Yg3Ldo1wQTnAoJ3L5S7K8QnLuFJs94waVr1uf87htytCl8hp/8HRgot4a1MpGaI6oY/6b/x5UNubsq+7mPa8j5P6b/0JDquO0fxQl0Xi1LGlqLjDDbGnaBwWbiU2pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 902831474;
-	Thu, 14 Nov 2024 09:11:45 -0800 (PST)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0DA043F6A8;
-	Thu, 14 Nov 2024 09:11:13 -0800 (PST)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH] perf: buildid: Print error for creating folder failure
-Date: Thu, 14 Nov 2024 17:10:52 +0000
-Message-Id: <20241114171053.3112521-1-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1731604998; c=relaxed/simple;
+	bh=ko2Y5hL0e2UtOm6NPkx3iyMACXarcDuUvdA8EJXyZho=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=QGJtUtkz/vvPELOdpe5f58bGtlCS/c4HVxQlZXED0VgCRxzyFzxp/ZSZ8ZJxJGJDNhkKf2DZHAt6xSyoU2pryfhKyq2bMgtIw3plZK9jZrmwxH+fXUy2FietEz1fqN91/yrMTSk+1O7OCM77uSgPkjsHmxpfyV/CoSkk+j5bdbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FZEVpWje; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FZEVpWje"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e35e9d36da3so1455317276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 09:23:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1731604995; x=1732209795; darn=vger.kernel.org;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tplORWF4lB1kFcLT2S9umn6jTJHAtpwJjn+q05Tpaww=;
+        b=FZEVpWjeAB5Jx0BO47tt0DcGaM5gvYFwJLwIJw/8gYcVvVacMSjOejCFJ2s+z1VZRW
+         QphzPOcDO5Xr8oWJsrh17onjmQy1jMuBBwOKfjZy35eJAH4yLSn61PCcgTZpJAIFGvgw
+         5NTQIJ+0ct5vh1ruoxD2/QQNDfCnn2BCFYUnf+6OcyalVHbwpfzWh29b3dEgF0HvPos4
+         TD3OyFS5Kw24xBhEp0i3HlPN7cDURw5a5PfN2/AsvPKBokfuGpnIQ4vTByZU0JR8CVwL
+         O/Pto3NM52BIDG9g5CtztoBhbAKSELiIEKGMu5Lu0nNVe/1jc+RvsHzqZAIyjBLmgLqC
+         MZSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731604995; x=1732209795;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tplORWF4lB1kFcLT2S9umn6jTJHAtpwJjn+q05Tpaww=;
+        b=rVp+kFBvI6KxyvwHiUqglCr+DNSw0llf9mYqdg7uPZWrPtbHphCLlNjBNo0Jm2NZs+
+         16/oljuE6eOC2RqnF7QFJHCT55ZEoVeGJxcn84RKc9JIFbc2eQnpZVZ1phfFeUHcUeWt
+         Xdl5Riw72tMU/boDBrPA47DAGPpu5uEwlJ1yVuKB9dOXNz+FnPHmaJFeL6+m5sWLl3Jn
+         ZcyGsQfx3Z8Fjt6erjXXsfmPstGGwz2qV4I7VTLEd97xb8gPu1GcIQYO/I2B/fcABPhN
+         QeM0n6rsNuSOrCDqhMIinqRxVBs6n9vDJOXm2+POBoVMuG9WybsTc3LJBj101oTdoGn3
+         oMRg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6rCESXqJsSDX6nEfiXDsn0y3S9FUJl2uLip047BlxkxUZlmMSMVj7QAkjsRBiidIll1rdRmDIzxXLBE2UNEXg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzSdiLIVysEI60Yn6Ii8AiFsIb+lLTlLErYesE5lvcS+ubU0Lh
+	0azda+IusXFaKgMExC/UZygUsUTjWlWh4PIVl4hI1mUGkQuN/VKuTid+pnQktK0P3oF90b10Sg0
+	glykYFg==
+X-Google-Smtp-Source: AGHT+IHTg382ptONqMV1SS8JKIAl4lNuXyiud6OAb4kDx+ibv6p/sZ9M05mTWNZeCCMRd2M3fgfap7YNawpF
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:7595:be86:b969:ac41])
+ (user=irogers job=sendgmr) by 2002:a25:5846:0:b0:e28:f35b:c719 with SMTP id
+ 3f1490d57ef6-e337f8cadb7mr183397276.6.1731604995674; Thu, 14 Nov 2024
+ 09:23:15 -0800 (PST)
+Date: Thu, 14 Nov 2024 09:23:09 -0800
+Message-Id: <20241114172309.840241-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
+Subject: [PATCH v1] perf jevents: Provide better path information for broken json
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Benjamin Gray <bgray@linux.ibm.com>, Xu Yang <xu.yang_2@nxp.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The mkdir_p() function will fail to create a buildid cache folder if the
-folder name is not an absolute path.  As a result, the cache folder is
-empty after recording.
+If the json input to jevents.py is broken it can be problematic to
+work out which particular json file is broken. When processing files
+catch exceptions that occur that re-raise the exception with path
+details added.
 
-Print an error to remind users to use an absolute path name or check
-permissions.  Update the documentation to reflect the requirement of
-using an absolute path name.
-
-After:
-
-  # perf --buildid-dir debug_dir record -- test_program
-    ...
-    Failed to create build_id cache folder: debug_dir/[kernel.kallsyms]/5c81911cab18f69bab96f8a1fae64a9f1d83b104.
-      Use an absolute path name or check permissions.
-
-Signed-off-by: Leo Yan <leo.yan@arm.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/perf-config.txt | 2 ++
- tools/perf/Documentation/perf.txt        | 4 ++--
- tools/perf/util/build-id.c               | 6 +++++-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ tools/perf/pmu-events/jevents.py | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 379f9d7a8ab1..26d9b1dd2e8c 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -236,6 +236,8 @@ buildid.*::
- 		cache location, or to disable it altogether. If you want to disable it,
- 		set buildid.dir to /dev/null. The default is $HOME/.debug
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 6e71b09dbc2a..caeddd939cfe 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -461,12 +461,16 @@ def preprocess_arch_std_files(archpath: str) -> None:
+   """Read in all architecture standard events."""
+   global _arch_std_events
+   for item in os.scandir(archpath):
+-    if item.is_file() and item.name.endswith('.json'):
++    if not item.is_file() or not item.name.endswith('.json'):
++      continue
++    try:
+       for event in read_json_events(item.path, topic=''):
+         if event.name:
+           _arch_std_events[event.name.lower()] = event
+         if event.metric_name:
+           _arch_std_events[event.metric_name.lower()] = event
++    except Exception as e:
++        raise RuntimeError(f'Failure processing \'{item.name}\' in \'{archpath}\'') from e
  
-+		This option must be an absolute path name.
-+
- buildid-cache.*::
- 	buildid-cache.debuginfod=URLs
- 		Specify debuginfod URLs to be used when retrieving perf.data binaries,
-diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
-index cbcc2e4d557e..14c79bd7820a 100644
---- a/tools/perf/Documentation/perf.txt
-+++ b/tools/perf/Documentation/perf.txt
-@@ -37,8 +37,8 @@ OPTIONS
-         Do not set pager.
  
- --buildid-dir::
--        Setup buildid cache directory. It has higher priority
--        than buildid.dir config file option.
-+        Setup buildid cache directory with an absolute path name.
-+        It has higher priority than buildid.dir config file option.
+ def add_events_table_entries(item: os.DirEntry, topic: str) -> None:
+@@ -1255,7 +1259,10 @@ def main() -> None:
+           item_path = '/'.join(parents) + ('/' if len(parents) > 0 else '') + item.name
+           if 'test' not in item_path and 'common' not in item_path and item_path not in _args.model.split(','):
+             continue
+-      action(parents, item)
++      try:
++        action(parents, item)
++      except Exception as e:
++        raise RuntimeError(f'Action failure for \'{item.name}\' in {parents}') from e
+       if item.is_dir():
+         ftw(item.path, parents + [item.name], action)
  
- --list-cmds::
-         List the most commonly used perf commands.
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 8982f68e7230..a05d45ac1c87 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -637,8 +637,12 @@ build_id_cache__add(const char *sbuild_id, const char *name, const char *realnam
- 		if (unlink(dir_name))
- 			goto out_free;
- 
--	if (mkdir_p(dir_name, 0755))
-+	if (mkdir_p(dir_name, 0755)) {
-+		pr_err("Failed to create build_id cache folder: %s.\n"
-+		       "  Use an absolute path name or check permissions.\n",
-+		       dir_name);
- 		goto out_free;
-+	}
- 
- 	/* Save the allocated buildid dirname */
- 	if (asprintf(&filename, "%s/%s", dir_name,
 -- 
-2.25.1
+2.47.0.338.g60cca15819-goog
 
