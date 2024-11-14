@@ -1,146 +1,105 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286C115CD78
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 15:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892071487CD
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 16:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731599805; cv=none; b=Y+L/hjvSTzwhU5bgQt20299O1jSJSf4GlwgMINnDoOHjPWAy39goRGTWjYxemx8w2kwCCjooK2dcNmzYAKEGAYcAzPpe9S5L8T1dl8uIp/A3N9WpaGlXmjRnmavt8omIBOEtvWqFpN+rSeduUgqFkTlQ3YZqN66XfFTHDAE7uFI=
+	t=1731600473; cv=none; b=SBqMJZ//oF/Q2EmDyJdKEz42VmYdja63iNLpnrv19GRIpd2xYueMQSTNHlO9Lin7TW6zseAmIjOQIGAXTYy5e224tQxt/8g69Km3UxmchPsrkN8pw1uH/5VVMjlm7R1mKpsIlpkyu7cX4Z6AnLh9fjwdYyq9jaAjOeqVouZAD8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731599805; c=relaxed/simple;
-	bh=l8y2CQFdyP+z6rFm3Bis63v74Yhiu4caCti+3hdBAEg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=j5LYFVoyye7HAgjVSDqoXKNbivDMTviqAE8ZSoFhIYUlj6wCwFyeW9f87HWJDXFGX9lj0R9pwryRr0tXJReWj2HCFEkQietZTCWopq65J/+cG4kVlNZP1u8xqvrNW6/4rk/vd0bFcvRRuB48z4MclVV1rBj04Aw1Mv3owG+tW+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cN6uAeGP; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1731600473; c=relaxed/simple;
+	bh=LaIas9FSnGgWYVjxyQw6wf0CKP1JRSq0bfjicuu8DW0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PdgED3sfk37dyniFxSNWdKFY0+SydwvWYxXLrYjmG/j5YhFMZAXeO3vZiJ4h4hqBt4lGWW1GQvWBCra1AKI07Vqgg2GSiiHeJoYGoisWh+BAniYDI507Pb7gALksyuPykaclBWzPOl47w6hUuX3fjboX09nULUKrt8GA0bPiUYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SlECpmlo; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cN6uAeGP"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-46101120e70so5424431cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 07:56:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SlECpmlo"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-539fb49c64aso1235499e87.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 08:07:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731599802; x=1732204602; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=81AR0nqANMN6aMq5KrYugXy1j3gTSrVRBRaPA29VnBo=;
-        b=cN6uAeGPx0qrxr8QjDF5hFKuzyAq1RRiE0PKwppoe3miyHUmwxEvTCs5xW96aydtZ2
-         Byz6zAESubaVTbZIBFqwDA/uzYNnsw2PkDPMGm4K92grf42JibhFQK6etUOcO8iGESzF
-         0ssJzmrWTVt5RTd0jjgrG+Sk4isjah56/qkhkYTL49loP2d9CNWjFbaEMJNEhtyHSPZ5
-         k2YjvVtgZ6dprwG/aAqEyjzwuD6G57nMIt43dfEi2a1iz9rsQJ/g7LvcuXgCnyvnViGV
-         F/uBOGwG5Wv3AWCJLbCPmyOf5NV6H8d56B6vb1pbMughgOLo4IYr9bHtW3niYkA/iE11
-         TFtw==
+        d=linaro.org; s=google; t=1731600469; x=1732205269; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EcWPxoJGK5ekQBUtJfy6k9Gqm5y5BvssQlwASAQE/eI=;
+        b=SlECpmlosLan42iy8OJJecMC5uhNoBE8MdCkIjwWkheU1gypXox/EFJfSzuq2v1Jx0
+         dZ0iZpWU5Q/pV4F/6ci6m5xmH3mhP53jSo3ljEYRdNz661pk+sbjzJbTIbG1fMwOAFBv
+         KP84k/WqILX9CcJqVen/56mn9xgDOdSmhw29mzV1FrDzMUrqNsJ0LBKYJ5RoZv9dC1lS
+         pl+9Aal8Pg6WhrfCS9uxZkI5y9fexoCjuGe5A+tWWJjRP2dcNvPhHbFKMskM4KPrKazL
+         VpWJ7L1IOc5x/apAmuAUF2gW7iZORVcAMtttVVCCLBv/UFdDiDtYD6wGjvKRtjPeKUNK
+         YOUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731599802; x=1732204602;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=81AR0nqANMN6aMq5KrYugXy1j3gTSrVRBRaPA29VnBo=;
-        b=kpb/Fp/gLRqBrYgtPxZN/67LBrOP1Ue+5r5V2hGcWXGtSOLAq8gWC7z2mS85u9VlBj
-         0vUaqrp27ADngmtPaVCCFIFmkSGlHJWxGzxPLNwxB6M0fBOOq7/GEngNNIvxQpPIIXRH
-         r8fogyArfxeRa047d8qwLWSeFPjig0bqht3I06h30TTVig+/jdZAaMf8pTv0pbtbPsyx
-         tfWPLkiyhirtlnbweGgtVeQYI0vYJyKS8+LHD3GFsu0KgnH1zC1T06daTPtQzP6/Ydxo
-         giKgfI+ga41fBEB3yVwQxjMSj3iqmE8w0EzB8oTYhp+2lN8xWbhNLXvblwm+OrAtSrzZ
-         uBDw==
-X-Gm-Message-State: AOJu0Yzlqxhn1kKBQN77Wnfcyr9TOoSUj2gvqcCe48c5pw+b1iVTvWth
-	2QguWXqzlekol+z9FGNSEKQue5jMWnqQ61P8r+BEdq4dOWUvNSMsuDblE+cWJajSj/3zx2SXXVv
-	KDppzHPyOLFhRARpx2L/RbH3bj3xWAw==
-X-Google-Smtp-Source: AGHT+IH/gimkAIlOg4tC702ULlhnRCfmnW5+jhpBJ9UYlAde6bFL4Z8aUGixknokqS0seO/lsHDuHImCsiSWBadow0E=
-X-Received: by 2002:a05:6214:3bc6:b0:6ce:d6c:499b with SMTP id
- 6a1803df08f44-6d3d03a9575mr155014796d6.42.1731599802531; Thu, 14 Nov 2024
- 07:56:42 -0800 (PST)
+        d=1e100.net; s=20230601; t=1731600469; x=1732205269;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EcWPxoJGK5ekQBUtJfy6k9Gqm5y5BvssQlwASAQE/eI=;
+        b=nON62YRqN78vxMNNu7Nrmbi8XYWjSfZ5bQ+YI/hOluShaL4AwlZkc4xkU6NeD3xw++
+         R9bpp6gBu/JohQn7BgMZJ0P55LITn95Pzdo+8fq9jKsds45fm3HvsNQoVnU6kf5Oh30d
+         mjgkL09yuPQdvjKLUze8wE8RhtbTX9jWlSjb6T2ysyJm4p2MTOnFli+xB7RLHeDm+7FQ
+         +QkzGOJv9H7sw06rTTLzjmyEdVN/gs3+jeE5/Xl01zzbD+unSngNHaHWUjGkVkvw1+lk
+         HXlNAIBn3n3KTzAgjqDTEPggfNY655ffN5jQFMn4ESVQ+TnWUc2XWImhnHRFKtw0Y2FF
+         OiaA==
+X-Gm-Message-State: AOJu0Yy46bbukwQublPKCwIa2SykFJuHhPknCF4LdSJCn9hp3sEtzTKu
+	yGkdGbv7npMCUJc0a+CVMWcWsmiwCpsCAPCWIIhm7ermg3znT6Rgp4jiMPQfPe2E8wlxTCozBOm
+	8Tg4=
+X-Google-Smtp-Source: AGHT+IHfVg9qbrSi/omD8dytmJcpkiNEK4jvQJsDZhyhdppyBpWQDWz4ozBdP6AaTQUxqgZSxkmUhg==
+X-Received: by 2002:a05:6512:3d0f:b0:52c:9ae0:beed with SMTP id 2adb3069b0e04-53da5c863ecmr2468698e87.52.1731600469476;
+        Thu, 14 Nov 2024 08:07:49 -0800 (PST)
+Received: from pop-os.. ([145.224.90.214])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa20e046d76sm77456366b.165.2024.11.14.08.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2024 08:07:49 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	thomas.falcon@intel.com
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] libperf: evlist: Fix --cpu argument on hybrid platform
+Date: Thu, 14 Nov 2024 16:04:47 +0000
+Message-Id: <20241114160450.295844-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1731300662-5325-mlmmj-28e386a1@vger.kernel.org>
-In-Reply-To: <1731300662-5325-mlmmj-28e386a1@vger.kernel.org>
-From: Deva Narayana Babu <dnb.ranjikaa@gmail.com>
-Date: Thu, 14 Nov 2024 21:26:05 +0530
-Message-ID: <CACvH6ToqaADXOrJh8UpapnGtVkn3W+HYQ7kHK8ByQgin4jnFBg@mail.gmail.com>
-Subject: Fwd: HTML message rejected: Building perf from source, with changes
- in source code
-To: linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Subject: Building perf from source, with changes in source code
+Since [1] this isn't strictly required anymore, because the failures
+due to opening extended type events on 'any' CPU are now skipped.
 
-I use kernel `6.6.55` so when I tried to build perf from source, I was
-getting the following error, and when I changed some code(diff output
-given below) the build happened. Is this a bug?
-=E2=9E=9C  perf make
-            [....]
-  CC      util/synthetic-events.o
-  CC      util/data.o
-util/thread.c: In function =E2=80=98thread__free_stitch_list=E2=80=99:
-util/thread.c:481:17: error: implicit declaration of function
-=E2=80=98map_symbol__exit=E2=80=99; did you mean =E2=80=98symbol__exit=E2=
-=80=99?
-[-Werror=3Dimplicit-function-declaration]
-  481 |                 map_symbol__exit(&pos->cursor.ms);
-      |                 ^~~~~~~~~~~~~~~~
-      |                 symbol__exit
-util/machine.c: In function =E2=80=98save_lbr_cursor_node=E2=80=99:
-util/machine.c:2540:9: error: implicit declaration of function
-=E2=80=98map_symbol__exit=E2=80=99; did you mean =E2=80=98symbol__exit=E2=
-=80=99?
-[-Werror=3Dimplicit-function-declaration]
- 2540 |         map_symbol__exit(&lbr_stitch->prev_lbr_cursor[idx].ms);
-      |         ^~~~~~~~~~~~~~~~
-      |         symbol__exit
-  CC      util/tsc.o
-  CC      util/cloexec.o
-  CC      util/call-path.o
-  CC      util/rwsem.o
-  CC      util/thread-stack.o
-  CC      util/spark.o
-cc1: all warnings being treated as errors
-  CC      util/topdown.o
-make[4]: *** [/home/dmacs/Downloads/linux-6.6.55/tools/build/Makefile.build=
-:98:
-util/thread.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-cc1: all warnings being treated as errors
-make[4]: *** [/home/dmacs/Downloads/linux-6.6.55/tools/build/Makefile.build=
-:97:
-util/machine.o] Error 1
-make[3]: *** [/home/dmacs/Downloads/linux-6.6.55/tools/build/Makefile.build=
-:150:
-util] Error 2
-make[2]: *** [Makefile.perf:666: perf-in.o] Error 2
-make[1]: *** [Makefile.perf:242: sub-make] Error 2
-make: *** [Makefile:70: all] Error 2
+However, it does reduce quite a few spurious warnings from all the skips
+so I think we should still include it.
 
+Separated into two parts so that the first is backportable and the
+second is a cleanup. Also if the first one is backported then it will
+fix stable Perfs that might not get [1].
 
- On inspection I found that the function/macro has been used but has
-not been defined anywhere so I followed the compiler's directive and I
-changed the function name to what was mentioned and `perf` got built.
-The diff is given below:
+Applies on [1].
 
-=E2=9E=9C  tools diff -r /home/dmacs/src/linux-6.6.55/tools/perf/ ./perf
-Binary files /home/dmacs/src/linux-6.6.55/tools/perf/pmu-events/__pycache__=
-/metric.cpython-310.pyc
-and ./perf/pmu-events/__pycache__/metric.cpython-310.pyc differ
-diff --color -r /home/dmacs/src/linux-6.6.55/tools/perf/util/machine.c
-./perf/util/machine.c
-2540c2540
-< symbol__exit();
----
-> map_symbol__exit(&lbr_stitch->prev_lbr_cursor[idx].ms);
-2841c2841
-< symbol__exit();
----
-> map_symbol__exit(&stitch_node->cursor.ms);
-diff --color -r /home/dmacs/src/linux-6.6.55/tools/perf/util/thread.c
-./perf/util/thread.c
-481c481
-< symbol__exit();
----
-> map_symbol__exit(&pos->cursor.ms);
-492c492
-< symbol__exit();
----
-> map_symbol__exit(&lbr_stitch->prev_lbr_cursor[i].ms);
+[1]: https://lore.kernel.org/linux-perf-users/20241113011956.402096-1-irogers@google.com/T/#t
+
+James Clark (2):
+  libperf: evlist: Fix --cpu argument on hybrid platform
+  libperf: evlist: Keep evsel idx contiguous on removal
+
+ tools/lib/perf/evlist.c            | 19 ++++++++++++--
+ tools/lib/perf/tests/test-evlist.c | 41 ++++++++++++++++++++++++++++++
+ tools/perf/builtin-record.c        | 18 +++----------
+ 3 files changed, 61 insertions(+), 17 deletions(-)
+
+-- 
+2.34.1
+
