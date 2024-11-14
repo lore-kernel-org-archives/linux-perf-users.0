@@ -1,162 +1,188 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBA21F9414;
-	Thu, 14 Nov 2024 09:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B762414EC47
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 Nov 2024 10:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731578259; cv=none; b=dnWFQ6YV1w2I/+S6g03hM6SmIQ6A0hSTE3GvI11RxIt2VVmZUCo+cID1/MeTb8/Lq7gY84cO6waV0KViYPwiEitrpEoUc80XD6pJMr+HLiPHRQA9c+f2iyRfEflZkxPPQ1Ta0z621OYkh5aJBibaiohwNuCAgh57ZoMive5eowM=
+	t=1731578751; cv=none; b=XVh4M4fy9o3JnKv9dPHNsLKhKMgZDZhJGKNiKNvuGe2S2ZmKQVmOqf5Hr4rBr6lHwvjLos0PVdhXcBA2kB8rCjZhfZWPcBVeLUFWfjxrMQsxmTCNHuO1Nh+1+WOgQ6PVX/cPHNxbQ4mNB/GEKXN80AFFTzPzIZC84mPkiv9Yk/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731578259; c=relaxed/simple;
-	bh=LuJ9RFxfvwF9poxtJ6oisMDfJ6bol6LPs82/2DnPlrg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KdVZt5Zr/3736G4Wh8Us4ofolptUu6YnHbbJs53YlCUQpqsUZO9NgPpRldMHaXWKTu1GcEnbJrp4W3neTFe/3pGpMOMCyNbJcGbjv1pYMKj2vFm+v1HGcDKFaSBsazShWKKIqTDU2IH3YATo3SagtH8rV5vNKY1t5zR/y0Xk8XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mFWsnrD2; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1731578751; c=relaxed/simple;
+	bh=FgiEHCoQJ7ShE2yWB2ERyRL589Yo2BSrEg7bSboynBQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Gf7YzI0j27eGKXBfd4HDuef5mHARpa7L4Ozm7gO1MvpE9wz1AqYbC/9cdHAQ0wP41n3WH86wZkW9PB20wNg8Sl8BPsJuVU3Uqyw+LvC0bKnXR/HSv7hT8TGFY9VyAga4wwAsBqEHWKoUOGvPR1vlGq2du7m8ZNpdBJmEFKX3qmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MiJGOT4i; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mFWsnrD2"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AE8ALVO021771;
-	Thu, 14 Nov 2024 09:57:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=7az27h
-	/CNlQ8K2lsBhNTnLMlP/cCbq3ALIRSFw5uDZI=; b=mFWsnrD2wBFKSP19XZbjD+
-	ndBUaxkBLcRH26Vid/E59y4RoIdnwsxdxJBfLZs/mvc89wPniKZFgLxwn2M6HQBz
-	GgI/+IJUlKldEI+V0UAFKDZLfUXpyvqJUb3jl4t2ZE3Spl09eDvwewuSipLnN/Es
-	sLDLYhtS+xbfWMeTZtEeGwVOV0UCF1uP1pITUe7lCVVevqgKnyzi+5I3iGC32bz/
-	+0G7uVZhYA9s6HhYReu+dLlBwDI5Gq5MVTxZIU2eamGwBJPK1pfQ+Afnuh2OMxFM
-	TvnWtUy/WBwGfa7lqUaR2mYXOEhWhqaXuocogCHVDPDVzplFkIWZwPJhEF5L1IqQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42wdf00mu6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Nov 2024 09:57:09 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4AE9v8J1016643;
-	Thu, 14 Nov 2024 09:57:08 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42wdf00mu2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Nov 2024 09:57:08 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4AE0FehL017519;
-	Thu, 14 Nov 2024 09:57:07 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 42tk2n03ch-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Nov 2024 09:57:07 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4AE9v3rH16318764
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 14 Nov 2024 09:57:03 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9281A20115;
-	Thu, 14 Nov 2024 09:57:03 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 15D302010F;
-	Thu, 14 Nov 2024 09:57:03 +0000 (GMT)
-Received: from [9.152.222.93] (unknown [9.152.222.93])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 14 Nov 2024 09:57:03 +0000 (GMT)
-Message-ID: <8f5f5278-bad2-42e0-862d-55f285f5bd67@linux.ibm.com>
-Date: Thu, 14 Nov 2024 10:57:02 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
-To: Steven Rostedt <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
- <42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
- <1f83be89-b816-48a3-a7ee-9b72f07b558e@linux.ibm.com>
- <20241113155040.6a9a1bed@gandalf.local.home>
- <20241113211535.ghnw52wkgudkjvgv@jpoimboe>
- <20241113171326.6d1ddc83@gandalf.local.home>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20241113171326.6d1ddc83@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: _xcw2Sm9TRgD4Bgx1V7y4IKtB4jiTYyL
-X-Proofpoint-ORIG-GUID: PNE2pZeHvfUBfc6fAQGZvjQLaqf9Bi3V
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MiJGOT4i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731578748;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2Aczb8xlsdyYMxnrkmwTQQ3EUumWpfFrMZHGUDqIlVk=;
+	b=MiJGOT4ipNB9mMbTBokUbST/dV41LJzT6nHbn3l53kAK+Ke8p0lZ8uouFPOtU23ZQ4mEt0
+	krs83198D8gjJ9MjwSxWSoYfmRql0qdIP0zV4dH6xqX6Fx9+ECRO6hX/zLa7RJ8n+JvjhZ
+	kBgdhklBlhmQooSr1oRzlgxfFsACOX4=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-663-WNfiqp02OVqwPwjSVYwiGg-1; Thu,
+ 14 Nov 2024 05:05:45 -0500
+X-MC-Unique: WNfiqp02OVqwPwjSVYwiGg-1
+X-Mimecast-MFC-AGG-ID: WNfiqp02OVqwPwjSVYwiGg
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A6F49195395A;
+	Thu, 14 Nov 2024 10:05:43 +0000 (UTC)
+Received: from Carbon (unknown [10.39.208.40])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6CE6019560A3;
+	Thu, 14 Nov 2024 10:05:38 +0000 (UTC)
+Date: Thu, 14 Nov 2024 11:05:34 +0100 (CET)
+From: Michael Petlan <mpetlan@redhat.com>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
+    irogers@google.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org, 
+    linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com, maddy@linux.ibm.com, 
+    kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
+Subject: Re: [PATCH] tools/perf/tests/base_probe: Fix check for the count of
+ existing probes in test_adding_kernel
+In-Reply-To: <0FEA83FD-BBC9-4E83-82D6-044141E86F76@linux.vnet.ibm.com>
+Message-ID: <1da9544-1e17-3830-49f9-6a6d78439e71@redhat.com>
+References: <20241014153910.85536-1-atrajeev@linux.vnet.ibm.com> <941c3d6a-fc2-3fcf-5ab2-597dcf712c16@redhat.com> <0FEA83FD-BBC9-4E83-82D6-044141E86F76@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 phishscore=0
- suspectscore=0 bulkscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2409260000 definitions=main-2411140073
+Content-Type: multipart/mixed; boundary="-1463776256-1326094925-1731578743=:9263"
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 13.11.2024 23:13, Steven Rostedt wrote:
-> On Wed, 13 Nov 2024 13:15:35 -0800
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> BTW, the following changes were needed to make it work for me:
+---1463776256-1326094925-1731578743=:9263
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-> index 933e47696e29..ca4ef0b72772 100644
-> --- a/kernel/unwind/sframe.c
-> +++ b/kernel/unwind/sframe.c
-> @@ -73,15 +73,15 @@ static int find_fde(struct sframe_section *sec, unsigned long ip,
->   		    struct sframe_fde *fde)
->   {
->   	struct sframe_fde __user *first, *last, *found = NULL;
-> -	u32 ip_off, func_off_low = 0, func_off_high = -1;
-> +	s32 ip_off, func_off_low = INT_MIN, func_off_high = INT_MAX;
+On Sun, 3 Nov 2024, Athira Rajeev wrote:
+> > On 17 Oct 2024, at 3:44 PM, Michael Petlan <mpetlan@redhat.com> wrote:
+> > 
+> > On Mon, 14 Oct 2024, Athira Rajeev wrote:
+[...]
+> > 
+> > I am wondering how it could happen that there were other
+> > probes in the system?
+> 
+> Hi Michael,
+>
+Hello Athira.
 
-Coincidentally I was experimenting with exactly the same changes, except 
-that I used S32_MIN and S32_MAX.  Any preference?
+> Sorry for the late response.
+> 
+> Yes, there are uprobes listed as part of “perf probe” in the environment where I saw the test needing this change. Sharing the result below from perf probe: 
+> 
+> # ./perf probe -l
+>   uprobes:p_uprobe_dns_events_osquery4026531841 (on getaddrinfo in XX)
+>   uprobes:p_uprobe_dns_events_osquery4026532336 (on 0x129a60 in XX)
+>   uprobes:p_uprobe_dns_events_osquery4026532344 (on 0x129a60 in XX)
+>   uprobes:p_uprobe_ebpf_compat_check_osquery (on __GI___backtrace in XX)
+>   uprobes:p_uprobe_sys_hook_osquery (on backtrace_symbols in XX)
+> 
+> These can’t be removed.
+> 
+> # ./perf probe -d uprobes:p_uprobe_dns_events_osquery4026531841
+> Removed event: uprobes:p_uprobe_dns_events_osquery4026531841
+> Failed to delete event: Device or resource busy
+>   Error: Failed to delete events.
+>
 
->   
->   	ip_off = ip - sec->sframe_addr;
->   
->   	first = (void __user *)sec->fdes_addr;
-> -	last = first + sec->fdes_nr;
-> +	last = first + sec->fdes_nr - 1;
->   	while (first <= last) {
->   		struct sframe_fde __user *mid;
-> -		u32 func_off;
-> +		s32 func_off;
->   
->   		mid = first + ((last - first) / 2);
->   
+Ah, this is interesting, I have never hit that. However, it makes sense,
+if the resource is busy.
 
-Thanks and regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303) and z/VSE Support
-+49-7031-16-1128 Office
-jremus@de.ibm.com
+However, in that case it comes to my mind that in general, these tests
+should not be run in any production environment, where one could rely on
+some probes will exist, etc. In case some of the probes above was not
+busy, it'd be probably cleaned up by the testcase, which might be unexpected
+by the creator/user of the uprobes... Maybe we should get rid of the
+probe cleaning for that cases, but I'd prefer to keep it.
 
-IBM
+> Considering above scenario, patch here takes the probe count using:
+> NO_OF_PROBES=`$CMD_PERF probe -l $TEST_PROBE| wc -l`
+> 
+> Also similarly looks for TEST_PROBE in result log in case of probe —del as well
+> 
+> Any comments Michael ?
+>
+Yes, we probably should tweak it as you suggest.
 
-IBM Deutschland Research & Development GmbH; Vorsitzender des 
-Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der 
-Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+Thanks,
+Michael
+
+
+> Thanks
+> Athira
+> 
+> > 
+> > Cheers,
+> > 
+> > Michael
+> > 
+> >> 
+> >> Example, in the system where this failed, already some
+> >> probes were default added. So count became 10
+> >>  ./perf probe -l | wc -l
+> >>  10
+> >> 
+> >> So to be specific for "inode_permission", restrict the
+> >> probe count check to that probe point alone using :
+> >> NO_OF_PROBES=`$CMD_PERF probe -l $TEST_PROBE| wc -l`
+> >> 
+> >> Similarly while removing the probe using "probe --del *",
+> >> ( removing all probes ), check uses:
+> >> 
+> >> ../common/check_all_lines_matched.pl "Removed event: probe:$TEST_PROBE"
+> >> 
+> >> But if there are other probes in the system, the log will
+> >> contain reference to other existing probe too. Hence change
+> >> usage of check_all_lines_matched.pl to check_all_patterns_found.pl
+> >> This will make sure expecting string comes in the result
+> >> 
+> >> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> >> ---
+> >> tools/perf/tests/shell/base_probe/test_adding_kernel.sh | 4 ++--
+> >> 1 file changed, 2 insertions(+), 2 deletions(-)
+> >> 
+> >> diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+> >> index d541ffd44a93..f8b5f096d0d7 100755
+> >> --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+> >> +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+> >> @@ -169,7 +169,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "force-adding probes :: second pr
+> >> (( TEST_RESULT += $? ))
+> >> 
+> >> # adding existing probe with '--force' should pass
+> >> -NO_OF_PROBES=`$CMD_PERF probe -l | wc -l`
+> >> +NO_OF_PROBES=`$CMD_PERF probe -l $TEST_PROBE| wc -l`
+> >> $CMD_PERF probe --force --add $TEST_PROBE 2> $LOGS_DIR/adding_kernel_forceadd_03.err
+> >> PERF_EXIT_CODE=$?
+> >> 
+> >> @@ -205,7 +205,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using doubled probe"
+> >> $CMD_PERF probe --del \* 2> $LOGS_DIR/adding_kernel_removing_wildcard.err
+> >> PERF_EXIT_CODE=$?
+> >> 
+> >> -../common/check_all_lines_matched.pl "Removed event: probe:$TEST_PROBE" "Removed event: probe:${TEST_PROBE}_1" < $LOGS_DIR/adding_kernel_removing_wildcard.err
+> >> +../common/check_all_patterns_found.pl "Removed event: probe:$TEST_PROBE" "Removed event: probe:${TEST_PROBE}_1" < $LOGS_DIR/adding_kernel_removing_wildcard.err
+> >> CHECK_EXIT_CODE=$?
+> >> 
+> >> print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "removing multiple probes"
+> >> -- 
+> >> 2.43.5
+> 
+> 
+> 
+---1463776256-1326094925-1731578743=:9263--
 
