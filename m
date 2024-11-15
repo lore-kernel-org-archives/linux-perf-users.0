@@ -1,147 +1,194 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6171B85EC
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 Nov 2024 13:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F7F1CC898
+	for <linux-perf-users@vger.kernel.org>; Fri, 15 Nov 2024 13:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731677122; cv=none; b=Txw6H/9U9PqADlEShD2lJNyrdXnDDh2/3Uxkt0aR2etctNHKsEAIkxpEHjAs74P9GjYSR2jEvHtEgLEjzWDIjJok6n69097HaJqLchlOKDyCVoYodUxIoCvEZzY7WS2OghErEB7WA9yM/+JuUUCX8BTWSt0GNOjsB//KCYx5J90=
+	t=1731677819; cv=none; b=LmvPXtrDtOOhgEo/7pKnelFZFpe8buQ2pawQiQDZKpIxWSvZsEFAfwqkXxFPLCmaLviVnXlNwSoJOs3mKmpP9NF0OWOdGghQ3C9t+aTMzFyGOWisuRyGw2UHBspvEE6qJpT2G3AHFvyPhNx4TRdgsIhOIl5l9tW1BkcY5yQGF7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731677122; c=relaxed/simple;
-	bh=aVtH8GKvNB4hotlvO9ZD/QPTN/0jxawpj33QBA46sQc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=gfw8viiQPVSj28AC/mx2Y7PZFCp/vHu4c13emBdabcMLFAut0iwG01q5KAjHXCVXR7cibYUJkg7/RTFrbd5U8YngukZpWiZrKK02HfblipXjv6IDAKiKWzVMy7X5lWi9qNtQVCu8KJZPRx2dbiPZTC97FM4VSHXUM+HkkvUzeG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Guq2qqqG; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1731677819; c=relaxed/simple;
+	bh=fgtlRXZ2dy97wSJztOlQu9tvL1DKpnFjcdfdzMxJHVo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Uh67WIvMMdLQlSInsJCHz+U15SZs7qxCAGwnk9kj1ol5UlrB27VeMm2LPzMhO+iNa0Z2OrLUH7vSDT9nPE+m0P6BYo4Ay0quPTbIG59Vcqe4Igz6r/hMdKGVOMOGp2bDBATe1o84veQ/GdZ+uDU8j4yGJFvtNpTvyDqHHOuiwhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QeCjIsU8; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Guq2qqqG"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-856ed9e5413so62339241.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Nov 2024 05:25:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731677119; x=1732281919; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OXYAb6PLHFnX5ddiFPzuGuSWsu4V6JIF0+6sI4IJYrc=;
-        b=Guq2qqqGCUv9HdR5AhDAc6Q8DU4pJvMpC68WoJo8V4EvyePum7hjYM9s02CPQmfJ4A
-         M4pUT7/muAMDNpB3RR5aYwNu3mwh/nLCBbrOO5hYVKusQ6tnGeP/gA3i6bb36ZsI9kdQ
-         dSN8DIFjXGZvVkedbKgg1inmv9PoB/CtsAqwJWrqGBXkUckgO4z4QxIQj/2jm3eOTovG
-         Py6Sbln78grSIU4rHcj2FTDdc95OwRP01verkIEqM+iYv4Bl9wuKg0SS1Uq/1i8Ez1o7
-         30CUlCTdESXaQU6hHoVnHnYPVP6kZFDDEy7cCONMTN8qP99w8nHIP84xcJoGj6KCCMIN
-         7VKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731677119; x=1732281919;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OXYAb6PLHFnX5ddiFPzuGuSWsu4V6JIF0+6sI4IJYrc=;
-        b=ZSjVw0NanBWgSH427jQiwhFOTmB2GAogZmewoWJ6Hggw9NgI94NKJZ52WpDv0+R8Uz
-         lHX1ITfwA+LjiUpb/Zatlb84UluieQuOl1YcvkOSkF8mS9z77iK2Y8u32NRM2HdfRy1x
-         VRhqQP/Ct1n4UvgDithvlEAEZmeA9dPJ19sowdYyujskCcO1C9foHewV64Wl02adyuhq
-         Nba3oCT4NPjUkRIBcAl3WjKqNYbBuYVsaS9daOceUjIQ4a45PQDmIsuFwXzu8b9DLh0f
-         KVoJ9qjS+e7d7LtkKV570J6TwauGjHKWgndjftIbcnpV601fjvnPmlwHgY3jlYiRjo0g
-         6HEQ==
-X-Gm-Message-State: AOJu0YyHDBoFGorN3mZ4WpG/v1MpCgIPa8fSMJICniS67lmlyq7Thd5e
-	9qW2Ozsezi3iW30Y7sI8M2ZO+E77KpY2VMONM4ttGkI2ik3+NogQ9ulJt4CeHePrJvVe8EEZSP+
-	k+RU/RutBQhW+vhlDPzYgzVS30/x/5lHoQtScAMT20bFz9s5kgKY=
-X-Google-Smtp-Source: AGHT+IHP9qntYDPkv8gz3RyGGvJS5CGBuoRgWcRvYQNEWDKJ0JaS2OYT0qdnUSe+4HP41XhcqjGcI8JG9uxcwd0IfNU=
-X-Received: by 2002:a05:6122:1787:b0:50d:85d7:d94b with SMTP id
- 71dfb90a1353d-514786d3b56mr2773887e0c.11.1731677119052; Fri, 15 Nov 2024
- 05:25:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QeCjIsU8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731677818; x=1763213818;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fgtlRXZ2dy97wSJztOlQu9tvL1DKpnFjcdfdzMxJHVo=;
+  b=QeCjIsU8+fhsXhmIRm3orQM9ImMRuCh2rSe6EoWJjYR2i/ebn4woHQ1R
+   1ZW4iRVh06oDefXi6+2ImXpdZnAcPWchLfTMdEubaUvhiywwB/FX/OnG3
+   jXlwmr9KhujuqE4SUrggY4QaNZ7y3doStxlyl2py3fGFWoEFn3UDVnWPh
+   gSrmmUDE1b7bsOMcrk4wh1KgNnOdk0LE70auLYSXYFnnhZ0b9UYYZx9x7
+   +MQ9gJ59mfP5jWZ5+ftto9y1ZSDaeDZlVGYyvJDsWFUcipDL151WB6Zfk
+   TxkRVt/U9spGc6wF0zX6x+m9+Owi9VLkjNp0v+geeZ6gfWvBbk6W1IQjG
+   g==;
+X-CSE-ConnectionGUID: yTuBLV7gSpyjbvsoLrtUFw==
+X-CSE-MsgGUID: 1E/NgGswROy1Jk/tuULNKw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11257"; a="49211682"
+X-IronPort-AV: E=Sophos;i="6.12,156,1728975600"; 
+   d="scan'208";a="49211682"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 05:36:58 -0800
+X-CSE-ConnectionGUID: jnhTbF2MSwqwAiwelDFEQA==
+X-CSE-MsgGUID: Q4AoZWP3S+m8Ij/s9rfhAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,156,1728975600"; 
+   d="scan'208";a="111856651"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 05:36:57 -0800
+Received: from [10.125.32.174] (kliang2-mobl1.ccr.corp.intel.com [10.125.32.174])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 2F3D620B5703;
+	Fri, 15 Nov 2024 05:36:56 -0800 (PST)
+Message-ID: <d3fffe92-8e64-423d-8ab7-075dfaa8a0dd@linux.intel.com>
+Date: Fri, 15 Nov 2024 08:36:55 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 15 Nov 2024 18:55:08 +0530
-Message-ID: <CA+G9fYv=qPeZKkF+ntWxUXbAKjz4gXnBM8y60C4F=YHv+jgZZw@mail.gmail.com>
-Subject: riscv: include/linux/perf_event.h:1679:84: error: macro
- "perf_misc_flags" passed 2 arguments, but takes just 1
-To: linux-perf-users@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	coltonlewis@google.com
-Content-Type: text/plain; charset="UTF-8"
-
-The following builds failed with clang-19 and gcc-13 on the
- Linux next-20241115 tags on riscv architecture.
-
-First seen on Linux next-20241115 tag.
-  Good: next-20241114
-  Bad:  next-20241115
-
-build:
-  * clang-13-lkftconfig
-  * clang-19-lkftconfig
-  * clang-nightly-lkftconfig
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Build log:
----------
-In file included from include/linux/perf/riscv_pmu.h:12,
-                 from arch/riscv/include/asm/kvm_vcpu_pmu.h:12,
-                 from arch/riscv/include/asm/kvm_host.h:23,
-                 from arch/riscv/kernel/asm-offsets.c:12:
-include/linux/perf_event.h:1679:84: error: macro "perf_misc_flags"
-passed 2 arguments, but takes just 1
- 1679 | extern unsigned long perf_misc_flags(struct perf_event *event,
-struct pt_regs *regs);
-      |
-                    ^
-In file included from include/linux/perf_event.h:25:
-arch/riscv/include/asm/perf_event.h:15: note: macro "perf_misc_flags"
-defined here
-   15 | #define perf_misc_flags(regs) perf_misc_flags(regs)
-      |
-include/linux/perf_event.h:1679:22: error: 'perf_misc_flags'
-redeclared as different kind of symbol
- 1679 | extern unsigned long perf_misc_flags(struct perf_event *event,
-struct pt_regs *regs);
-      |                      ^~~~~~~~~~~~~~~
-arch/riscv/include/asm/perf_event.h:14:22: note: previous declaration
-of 'perf_misc_flags' with type 'long unsigned int(struct pt_regs *)'
-   14 | extern unsigned long perf_misc_flags(struct pt_regs *regs);
-      |                      ^~~~~~~~~~~~~~~
-include/linux/perf_event.h:1680:22: error: conflicting types for
-'perf_instruction_pointer'; have 'long unsigned int(struct perf_event
-*, struct pt_regs *)'
- 1680 | extern unsigned long perf_instruction_pointer(struct perf_event *event,
-      |                      ^~~~~~~~~~~~~~~~~~~~~~~~
-arch/riscv/include/asm/perf_event.h:13:22: note: previous declaration
-of 'perf_instruction_pointer' with type 'long unsigned int(struct
-pt_regs *)'
-   13 | extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
-      |                      ^~~~~~~~~~~~~~~~~~~~~~~~
-make[3]: *** [scripts/Makefile.build:102:
-arch/riscv/kernel/asm-offsets.s] Error 1
+User-Agent: Mozilla Thunderbird
+Subject: Re: Intel Arrowlake and hwcache events
+To: Qiao Zhao <qzhao@redhat.com>
+Cc: Michael Petlan <mpetlan@redhat.com>, alexander.shishkin@linux.intel.com,
+ adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+ vmolnaro@redhat.com
+References: <ea7b2c27-7512-f412-32c0-3a247fd930f9@redhat.com>
+ <e37d7c6b-91c7-4fd7-831b-98f0dca5d46c@linux.intel.com>
+ <CAATMXfkt28rjB03xFEcYzvhWsgtCe9Fp6eaFgDMEJq3c8_2hAQ@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAATMXfkt28rjB03xFEcYzvhWsgtCe9Fp6eaFgDMEJq3c8_2hAQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-Build image:
------------
-- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241115/testrun/25823358/suite/build/test/gcc-13-defconfig/details/
-- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241115/testrun/25823358/suite/build/test/gcc-13-defconfig/log
-- https://storage.tuxsuite.com/public/linaro/lkft/builds/2osJj2d60yO8ruYvm0gjhi4YHS5/
 
-Steps to reproduce:
-------------
-- tuxmake --runtime podman --target-arch riscv --toolchain gcc-13
---kconfig defconfig
+On 2024-11-15 12:43 a.m., Qiao Zhao wrote:
+> On Thu, Nov 14, 2024 at 10:33 PM Liang, Kan <kan.liang@linux.intel.com>
+> wrote:
+> 
+>>
+>>
+>> On 2024-11-14 4:54 a.m., Michael Petlan wrote:
+>>> Hello!
+>>>
+>>> Qiao Zhao (CC'd) has found out that there are no hwcache events available
+>>> on an Arrowlake system he was testing perf on.
+>>
+>> There are several variants for Arrowlake.
+>> #define INTEL_ARROWLAKE_H               IFM(6, 0xC5)
+>> #define INTEL_ARROWLAKE                 IFM(6, 0xC6)
+>> #define INTEL_ARROWLAKE_U               IFM(6, 0xB5)
+>>
+>> The INTEL_ARROWLAKE should be supported in 6.10 and later.
+>> The INTEL_ARROWLAKE_H was just merged and should be available in the
+>> upcoming 6.13-rc.
+>>
+>> https://lore.kernel.org/lkml/20240808140210.1666783-1-dapeng1.mi@linux.intel.com/
+>>
+>> The patch to support INTEL_ARROWLAKE_U hasn't been posted yet.
+>>
+>> Which system were you testing?
+>>
+> 
+> Hi Kan, thank you for explaining this. I checked my testing history, and I
+> happened to use Arrow Lake-U for testing.
 
-metadata:
-----
-  git describe: next-20241115
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  git sha: 744cf71b8bdfcdd77aaf58395e068b7457634b2c
-  kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2osJj2d60yO8ruYvm0gjhi4YHS5/config
-  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2osJj2d60yO8ruYvm0gjhi4YHS5/
-  toolchain: clang-19 and gcc-13
-  config: lkftconfig
-  arch: riscv
+Thanks for the confirmation.
+I will find a machine and post a patch to fix it ASAP.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+Thanks,
+Kan
+
+> # lscpu
+> Architecture:             x86_64
+>   CPU op-mode(s):         32-bit, 64-bit
+>   Address sizes:          46 bits physical, 48 bits virtual
+>   Byte Order:             Little Endian
+> CPU(s):                   14
+>   On-line CPU(s) list:    0-13
+> Vendor ID:                GenuineIntel
+>   BIOS Vendor ID:         Intel(R) Corporation
+>   Model name:             Genuine Intel(R) 0000
+>     BIOS Model name:      Genuine Intel(R) 0000
+>     CPU family:           6
+>     Model:                197
+>     Thread(s) per core:   1
+>     Core(s) per socket:   14
+>     Socket(s):            1
+>     Stepping:             2
+> 
+> 
+>>
+>>> We have found out that it
+>>> does not work even on 6.12.0-rc6+. Are there still drivers that haven't
+>>> been merged yet?
+>>>
+>>> Happens that nothing matches in this loop:
+>>
+>> The HW cache events are usually model specific events. You cannot see it
+>> unless there is specific support.
+>>
+>> You may also get more clues via dmesg | grep PMU.
+>> If you see "generic architected perfmon", it means the specific support
+>> isn't ready in the kernel.
+>>
+> 
+> Understand! Thank you Ken.
+> 
+> - Qiao
+> 
+> 
+>>
+>> Thanks,
+>> Kan
+>>>
+>>> int print_hwcache_events(const struct print_callbacks *print_cb, void
+>> *print_state)
+>>> [...]
+>>> 305           for (int type = 0; type < PERF_COUNT_HW_CACHE_MAX; type++)
+>> {
+>>> 306           for (int op = 0; op < PERF_COUNT_HW_CACHE_OP_MAX; op++) {
+>>> 307                   /* skip invalid cache type */
+>>> 308                   if (!evsel__is_cache_op_valid(type, op))
+>>> 309                                   continue;
+>>> 310
+>>> 311                   for (int res = 0; res <
+>> PERF_COUNT_HW_CACHE_RESULT_MAX; res++) {
+>>> 312                   char name[64];
+>>> 313                           char alias_name[128];
+>>> 314                           __u64 config;
+>>> 315                           int ret;
+>>> 316
+>>> 317                           __evsel__hw_cache_type_op_res_name(type,
+>> op, res,
+>>> 318
+>>                              name, sizeof(name));
+>>> 319
+>>> 320                           ret =
+>> parse_events__decode_legacy_cache(name, pmu->type,
+>>> 321
+>>                              &config);
+>>> 322                           if (ret ||
+>> !is_event_supported(PERF_TYPE_HW_CACHE, config))
+>>> 323                                   continue;
+>>>
+>>> Thanks,
+>>> Michael
+>>>
+>>>
+>>
+>>
+> 
+
