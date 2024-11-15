@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088541E571C;
-	Fri, 15 Nov 2024 15:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9721E571C;
+	Fri, 15 Nov 2024 15:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731685011; cv=none; b=PD5U2OD1kiUi5ziiMmRK+SqWVVRqTG3zMYwvavs4dSVKk6OdZ/SkL9D60ua7OUsG9Bsfi8ApT5wNi0minIpuAvRzdrq5EIpgz9wYFClsIjuHPMKMaVhDwytliAWROjxR8lLmFXy+3ytudP7yJQxsWybyWUGqNtxuI4vXt5M/5/M=
+	t=1731685015; cv=none; b=Vt+9y5jAmlkS3uh/fr6yAdgtoeZHjLfKKPobjzOby70Gj3Vl4cpdnZ+uRU5OWX3jkXFKwDy3jfM7YhjL0mtUhXT9Yqg+H/7gU5h55jPeobLlsz6G777aYt6kZ1QotDjhKC3LBU58GeLMomybBG+HAXEkBxoqpj/Eumu9AhI4X0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731685011; c=relaxed/simple;
-	bh=HOki/LfePS3SL52MFsIPT+CWL2mahyk6mf98mYQcV+4=;
+	s=arc-20240116; t=1731685015; c=relaxed/simple;
+	bh=sPivoQA+PBNweizbL3Q8DLYK7FpWRO7exlwdr/7WVFM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NCHwHPpRKfoZqnMq4dlR8i55GoDcUYj7ULiNCR63uokdOutmrY75CT60/jsldXzK385tOqE0u5+ElG856hKxDSMbHmMmLAGV/LEu3ez0lqYDc2F3nzANofsiv/BX5YJ0DYSShHU437neY/ppmH8VslFhJwcjOXvE3yEpr0dsBDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mV4Lb9aE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Dd+ZCthTCNj7DGcFVZVYUBgd1pNNANnhzluJBDd4/U4pLF/SIQ6XmeI6Zw3oeCmbLq+V5yR4cBT+9dydymSL1TeJ9fnkNI+F88635kb/ybRKDrLHKdxub3PZvVAninTb6z1Etgtql2gNSzcCMtURKqWzdJrXunqgckhSBJM+/3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqZv7Vrt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mV4Lb9aE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B2C8C4CED6;
-	Fri, 15 Nov 2024 15:36:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqZv7Vrt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5599DC4CED5;
+	Fri, 15 Nov 2024 15:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731685010;
-	bh=HOki/LfePS3SL52MFsIPT+CWL2mahyk6mf98mYQcV+4=;
+	s=k20201202; t=1731685015;
+	bh=sPivoQA+PBNweizbL3Q8DLYK7FpWRO7exlwdr/7WVFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mV4Lb9aEKxDO9Twvwo1jYR2QfQKJqCpBXGAhw0xy/9UF3Ba4QITB7C7b83fiNr1ZB
-	 9EM5LJobEMSOIrObeUI13kblNB6QgAblJC3KMC4Yal4LZJzoAI78zYBvi9UxT23rdb
-	 Hvn55x2u76nVxeWvd68dbtdDycCFylInHX+tuNFhCodIpqUxzJDgAlXbQklf8sPCSK
-	 6eY07wbbAUYtU4nzeTt+UDojSGLK0hoAUWhD/ATYVOavmFNk0J3UhImW887DWsddts
-	 MCJPqOe1cBZ7yt36MMsMtQR4IPad7CI+NAPxHB80GBk6WgFrhZS2WUx+f91w6phbuf
-	 b0VNUt68UjVeA==
+	b=qqZv7VrtIOzYfdUAYAAE2oXbvnQFr9SsU9/Lk+jIOV9nTFRBtSNUTBGiyJMTaczQM
+	 LOoqBAKwUJweARgSIOhLI3Sgcio6mHtgMd40M0tiF4YW5R1NhJRTSnqIzPGcTqpYNg
+	 NkGryPxCDSwQKsoOhKuBQhkgIkdrCrHf9biG3ybbiRmTPhzefpjNw2YhoI31jxeja9
+	 psATW9WOI6qV9zEHVnlSKtj29RTrJ/PDHL/0Tn9IqmmQ0JLjxArVi46cYZHrV1ma3K
+	 EFwWYOzPP7Jfpz9eSEQoclzNn9KPg9ticIMgG/C0oj2xsNA9s8U+eHjqpPYZHq6lzj
+	 O7V79MZHRxf0A==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Benjamin Peterson <benjamin@engflow.com>,
 	Howard Chu <howardchu95@gmail.com>
@@ -44,9 +44,9 @@ Cc: Namhyung Kim <namhyung@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 1/2] perf test shell trace_exit_race: Show what went wrong in verbose mode
-Date: Fri, 15 Nov 2024 12:36:33 -0300
-Message-ID: <20241115153634.314742-2-acme@kernel.org>
+Subject: [PATCH 2/2] perf test shell trace_exit_race: Use --no-comm to avoid cases where COMM isn't resolved
+Date: Fri, 15 Nov 2024 12:36:34 -0300
+Message-ID: <20241115153634.314742-3-acme@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241115153634.314742-1-acme@kernel.org>
 References: <20241115153634.314742-1-acme@kernel.org>
@@ -60,36 +60,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-If it fails we need to check what was the reason, what were the lines
-that didn't match the expected format, so:
+The purpose of this test is to test for races in the exit of 'perf
+trace' missing the last events, it was failing when the COMM wasn't
+resolved either because we missed some PERF_RECORD_COMM or somehow
+raced on getting it from procfs.
 
+Add --no-comm to the 'perf trace' command line so that we get a
+consistent, pid only output, which allows the test to achieve its goal.
+
+This is the output from
+'perf trace --no-comm -e syscalls:sys_enter_exit_group':
+
+     0.000 21953 syscalls:sys_enter_exit_group()
+     0.000 21955 syscalls:sys_enter_exit_group()
+     0.000 21957 syscalls:sys_enter_exit_group()
+     0.000 21959 syscalls:sys_enter_exit_group()
+     0.000 21961 syscalls:sys_enter_exit_group()
+     0.000 21963 syscalls:sys_enter_exit_group()
+     0.000 21965 syscalls:sys_enter_exit_group()
+     0.000 21967 syscalls:sys_enter_exit_group()
+     0.000 21969 syscalls:sys_enter_exit_group()
+     0.000 21971 syscalls:sys_enter_exit_group()
+
+Now it passes:
+
+  root@number:~# perf test "trace exit race"
+  110: perf trace exit race                                            : Ok
+  root@number:~#
+  root@number:~# perf test -v "trace exit race"
+  110: perf trace exit race                                            : Ok
+  root@number:~#
+
+If we artificially make it run just 9 times instead of the 10 it runs,
+i.e. by manually doing:
+
+	trace_shutdown_race() {
+		for _ in $(seq 9); do
+
+that 9 is $iter, 10 in the patch, we get:
+
+  root@number:~# vim ~acme/libexec/perf-core/tests/shell/trace_exit_race.sh
   root@number:~# perf test -v "trace exit race"
   --- start ---
-  test child forked, pid 2028724
-  Lines not matching the expected regexp: ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$':
-       0.000 :2028750/2028750 syscalls:sys_enter_exit_group()
+  test child forked, pid 24629
+  Missing output, expected 10 but only got 9
   ---- end(-1) ----
   110: perf trace exit race                                            : FAILED!
   root@number:~#
 
-In this case we're not resolving the process COMM for some reason and
-fallback to printing just the pid/tid, this will be fixed in a followup
-patch.
+I.e. 9 'perf trace' calls produced the expected output, the inverse grep
+didn't show anything, so the patch provided by Howard for the previous
+patch kicks in and shows a more informative message.
 
-Howard Chu spotted a problem with single code surrounding a regexp, that
-made the test always fail, but since there were some failures when I
-tested (COMM not being resolved in some of the results) the end inverse
-grep would show some lines and thus didn't notice the single quote
-problem.
-
-He also provided a patch to test if less than the number of expected
-matches took place but all of them with the expected output, in which
-case the inverse grep wouldn't show anything, confusing the tester.
-
-Reviewed-by: Howard Chu <howardchu95@gmail.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Benjamin Peterson <benjamin@engflow.com>
+Cc: Howard Chu <howardchu95@gmail.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
@@ -100,53 +126,27 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Link: https://lore.kernel.org/lkml/ZzdknoHqrJbojb6P@x1
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/trace_exit_race.sh | 24 +++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ tools/perf/tests/shell/trace_exit_race.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/tests/shell/trace_exit_race.sh b/tools/perf/tests/shell/trace_exit_race.sh
-index 3cf2d71a5c3b9278..8ea24f4256bc8f5e 100755
+index 8ea24f4256bc8f5e..fbb0adc33a889516 100755
 --- a/tools/perf/tests/shell/trace_exit_race.sh
 +++ b/tools/perf/tests/shell/trace_exit_race.sh
-@@ -11,11 +11,19 @@
+@@ -16,11 +16,11 @@ if [ "$1" = "-v" ]; then
+ fi
  
- skip_if_no_perf_trace || exit 2
+ iter=10
+-regexp=" +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$"
++regexp=" +[0-9]+\.[0-9]+ [0-9]+ syscalls:sys_enter_exit_group\(\)$"
  
-+if [ "$1" = "-v" ]; then
-+	verbose="1"
-+fi
-+
-+iter=10
-+regexp=" +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$"
-+
  trace_shutdown_race() {
--	for _ in $(seq 10); do
-+	for _ in $(seq $iter); do
- 		perf trace -e syscalls:sys_enter_exit_group true 2>>$file
+ 	for _ in $(seq $iter); do
+-		perf trace -e syscalls:sys_enter_exit_group true 2>>$file
++		perf trace --no-comm -e syscalls:sys_enter_exit_group true 2>>$file
  	done
--	[ "$(grep -c -E ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$' $file)" = "10" ]
-+	result="$(grep -c -E "$regexp" $file)"
-+	[ $result = $iter ]
- }
- 
- 
-@@ -27,5 +35,17 @@ export PERF_CONFIG=/dev/null
- 
- trace_shutdown_race
- err=$?
-+
-+if [ $err != 0 ] && [ "${verbose}" = "1" ]; then
-+	lines_not_matching=$(mktemp /tmp/temporary_file.XXXXX)
-+	if grep -v -E "$regexp" $file > $lines_not_matching ; then
-+		echo "Lines not matching the expected regexp: '$regexp':"
-+		cat $lines_not_matching
-+	else
-+		echo "Missing output, expected $iter but only got $result"
-+	fi
-+	rm -f $lines_not_matching
-+fi
-+
- rm -f ${file}
- exit $err
+ 	result="$(grep -c -E "$regexp" $file)"
+ 	[ $result = $iter ]
 -- 
 2.47.0
 
