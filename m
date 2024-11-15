@@ -1,194 +1,336 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F7F1CC898
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 Nov 2024 13:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764A91B395F;
+	Fri, 15 Nov 2024 15:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731677819; cv=none; b=LmvPXtrDtOOhgEo/7pKnelFZFpe8buQ2pawQiQDZKpIxWSvZsEFAfwqkXxFPLCmaLviVnXlNwSoJOs3mKmpP9NF0OWOdGghQ3C9t+aTMzFyGOWisuRyGw2UHBspvEE6qJpT2G3AHFvyPhNx4TRdgsIhOIl5l9tW1BkcY5yQGF7Y=
+	t=1731683489; cv=none; b=rpmVVhoCHIhdfWwcIe7ATkdkTpnevKSG6039h9reUa+g0iXurbHjbeujuOees4nh5yUGrUA2Tlto8zSW3ALp2W5Q6wjb7GM1J5yvqUix8T7k1sZAjOKPzjhpbzxuCYYmcrQZi45NEbaCl405cg6J7Qu2/JOOecOKJulRj08d5yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731677819; c=relaxed/simple;
-	bh=fgtlRXZ2dy97wSJztOlQu9tvL1DKpnFjcdfdzMxJHVo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Uh67WIvMMdLQlSInsJCHz+U15SZs7qxCAGwnk9kj1ol5UlrB27VeMm2LPzMhO+iNa0Z2OrLUH7vSDT9nPE+m0P6BYo4Ay0quPTbIG59Vcqe4Igz6r/hMdKGVOMOGp2bDBATe1o84veQ/GdZ+uDU8j4yGJFvtNpTvyDqHHOuiwhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QeCjIsU8; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1731683489; c=relaxed/simple;
+	bh=if44ysNZmw/vKZZ6rIpvWKZdiZAVyyynGblPrzRYVCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MmQpicc28LwmMVAuTjbZnqV5vR53DMhxY5i8FA539DT0EhGXq7wgVvKWotsCrhUTcHRTadqWngZzITpBWVnBdbpvINL2r8vDPKiFFcUbupXxqV5zsxIsgYnH0aPOI1wXfMAb42GWPt/wZ8JjzDe2DNPkpN8Zf0L9ZfpqldgF+9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgazKs+q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QeCjIsU8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731677818; x=1763213818;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fgtlRXZ2dy97wSJztOlQu9tvL1DKpnFjcdfdzMxJHVo=;
-  b=QeCjIsU8+fhsXhmIRm3orQM9ImMRuCh2rSe6EoWJjYR2i/ebn4woHQ1R
-   1ZW4iRVh06oDefXi6+2ImXpdZnAcPWchLfTMdEubaUvhiywwB/FX/OnG3
-   jXlwmr9KhujuqE4SUrggY4QaNZ7y3doStxlyl2py3fGFWoEFn3UDVnWPh
-   gSrmmUDE1b7bsOMcrk4wh1KgNnOdk0LE70auLYSXYFnnhZ0b9UYYZx9x7
-   +MQ9gJ59mfP5jWZ5+ftto9y1ZSDaeDZlVGYyvJDsWFUcipDL151WB6Zfk
-   TxkRVt/U9spGc6wF0zX6x+m9+Owi9VLkjNp0v+geeZ6gfWvBbk6W1IQjG
-   g==;
-X-CSE-ConnectionGUID: yTuBLV7gSpyjbvsoLrtUFw==
-X-CSE-MsgGUID: 1E/NgGswROy1Jk/tuULNKw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11257"; a="49211682"
-X-IronPort-AV: E=Sophos;i="6.12,156,1728975600"; 
-   d="scan'208";a="49211682"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 05:36:58 -0800
-X-CSE-ConnectionGUID: jnhTbF2MSwqwAiwelDFEQA==
-X-CSE-MsgGUID: Q4AoZWP3S+m8Ij/s9rfhAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,156,1728975600"; 
-   d="scan'208";a="111856651"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 05:36:57 -0800
-Received: from [10.125.32.174] (kliang2-mobl1.ccr.corp.intel.com [10.125.32.174])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 2F3D620B5703;
-	Fri, 15 Nov 2024 05:36:56 -0800 (PST)
-Message-ID: <d3fffe92-8e64-423d-8ab7-075dfaa8a0dd@linux.intel.com>
-Date: Fri, 15 Nov 2024 08:36:55 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgazKs+q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E99C4CECF;
+	Fri, 15 Nov 2024 15:11:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731683489;
+	bh=if44ysNZmw/vKZZ6rIpvWKZdiZAVyyynGblPrzRYVCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PgazKs+q4c9f+hlscvjGUrCPlJYGHUU37ZQZb8YDgjCzdHEVdARJHgTfXJHXba8b5
+	 EXfO4OMsQTMW/hQY9Mx8vJTHkt+VnkBFEO88YHFNtc9AESB+b/bJXAiFCA7mPlCaCP
+	 8hHsEVbSP9mEMeBQcAghetLwunk3sg1LTkrA+5HGIBePQJMUQzkO52YUBkTxyyh3sL
+	 9+DXfI8aIRoGj9X67jIB9l+o+p2laKmfdVpPDbYU8gc0vaZADlT8Cl/UHNYS4KJt92
+	 cYGaKOrSiONSrC2HHBrvI9SxUbrxm/4Q340Sv8+lf7r3DE1q73d6fNVZljSrePw095
+	 r52aL1IkaB4hA==
+Date: Fri, 15 Nov 2024 12:11:26 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Benjamin Peterson <benjamin@engflow.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf tests shell trace_exit_race: Show what went
+ wrong in verbose mode
+Message-ID: <ZzdknoHqrJbojb6P@x1>
+References: <ZzZpX5O053UsHmsV@x1>
+ <CAH0uvohi_8_itv+jDjCEvrprakhp5w7=GvWw+hJG4gTLwJQjog@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Intel Arrowlake and hwcache events
-To: Qiao Zhao <qzhao@redhat.com>
-Cc: Michael Petlan <mpetlan@redhat.com>, alexander.shishkin@linux.intel.com,
- adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
- vmolnaro@redhat.com
-References: <ea7b2c27-7512-f412-32c0-3a247fd930f9@redhat.com>
- <e37d7c6b-91c7-4fd7-831b-98f0dca5d46c@linux.intel.com>
- <CAATMXfkt28rjB03xFEcYzvhWsgtCe9Fp6eaFgDMEJq3c8_2hAQ@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAATMXfkt28rjB03xFEcYzvhWsgtCe9Fp6eaFgDMEJq3c8_2hAQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH0uvohi_8_itv+jDjCEvrprakhp5w7=GvWw+hJG4gTLwJQjog@mail.gmail.com>
 
+On Fri, Nov 15, 2024 at 01:32:15AM -0800, Howard Chu wrote:
+> On Thu, Nov 14, 2024 at 1:19 PM <arnaldo.melo@gmail.com> wrote:
+> > This is in the tmp.perf-tools-next  branch at:
 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
 
-On 2024-11-15 12:43 a.m., Qiao Zhao wrote:
-> On Thu, Nov 14, 2024 at 10:33 PM Liang, Kan <kan.liang@linux.intel.com>
-> wrote:
-> 
->>
->>
->> On 2024-11-14 4:54 a.m., Michael Petlan wrote:
->>> Hello!
->>>
->>> Qiao Zhao (CC'd) has found out that there are no hwcache events available
->>> on an Arrowlake system he was testing perf on.
->>
->> There are several variants for Arrowlake.
->> #define INTEL_ARROWLAKE_H               IFM(6, 0xC5)
->> #define INTEL_ARROWLAKE                 IFM(6, 0xC6)
->> #define INTEL_ARROWLAKE_U               IFM(6, 0xB5)
->>
->> The INTEL_ARROWLAKE should be supported in 6.10 and later.
->> The INTEL_ARROWLAKE_H was just merged and should be available in the
->> upcoming 6.13-rc.
->>
->> https://lore.kernel.org/lkml/20240808140210.1666783-1-dapeng1.mi@linux.intel.com/
->>
->> The patch to support INTEL_ARROWLAKE_U hasn't been posted yet.
->>
->> Which system were you testing?
->>
-> 
-> Hi Kan, thank you for explaining this. I checked my testing history, and I
-> happened to use Arrow Lake-U for testing.
+> > I'll later add another patch adding the --no-comm to the 'perf trace'
+> > command line and will adjust the regexp.
 
-Thanks for the confirmation.
-I will find a machine and post a patch to fix it ASAP.
+> > If it fails we need to check what was the reason, what were the lines
+> > that didn't match the expected format, so:
+> >
+> >   root@number:~# perf test -v "trace exit race"
+> >   --- start ---
+> >   test child forked, pid 2028724
+> >   Lines not matching the expected regexp: ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$':
+> >        0.000 :2028750/2028750 syscalls:sys_enter_exit_group()
+ 
+> This output looks good but I got an empty grep -v:
+ 
+> perf $ ./perf test 110 -v
+> 110: perf trace exit race                                            :
+> Running (1
+> --- start ---
+> test child forked, pid 3865874
+> Lines not matching the expected regexp: ' +[0-9]+\.[0-9]+ +true/[0-9]+
+> syscalls:sys_enter_exit_group\(\)$':
+> ---- end(-1) ----
+> 110: perf trace exit race                                            : FAILED!
+ 
+> In temp file:
+> 0.000 true/3867219 syscalls:sys_enter_exit_group()
+> 0.000 true/3867221 syscalls:sys_enter_exit_group()
+> 0.000 true/3867223 syscalls:sys_enter_exit_group()
+> 0.000 true/3867226 syscalls:sys_enter_exit_group()
+> 0.000 true/3867250 syscalls:sys_enter_exit_group()
+> 0.000 true/3867252 syscalls:sys_enter_exit_group()
+> 0.000 true/3867255 syscalls:sys_enter_exit_group()
+> 0.000 true/3867257 syscalls:sys_enter_exit_group()
+> 0.000 true/3867259 syscalls:sys_enter_exit_group()
+> 0.000 true/3867262 syscalls:sys_enter_exit_group()
+> 
+> There are 10 lines of output which match the regex (I got the comm
+> instead of pid), but it still falls into error, and inverse regex got
+> nothing because they are all right.
 
-Thanks,
-Kan
+You're right, I got confused with the other problem, namely in my case
+some failures due to non-COMM resolution which ended up showing a few
+that are not matching, so I thought it was about that.
 
-> # lscpu
-> Architecture:             x86_64
->   CPU op-mode(s):         32-bit, 64-bit
->   Address sizes:          46 bits physical, 48 bits virtual
->   Byte Order:             Little Endian
-> CPU(s):                   14
->   On-line CPU(s) list:    0-13
-> Vendor ID:                GenuineIntel
->   BIOS Vendor ID:         Intel(R) Corporation
->   Model name:             Genuine Intel(R) 0000
->     BIOS Model name:      Genuine Intel(R) 0000
->     CPU family:           6
->     Model:                197
->     Thread(s) per core:   1
->     Core(s) per socket:   14
->     Socket(s):            1
->     Stepping:             2
+Also at some point ShellCheck complained about some quoting and I ended
+up adding that thinko, well spotted!
+
+So with:
+
+⬢ [acme@toolbox perf-tools-next]$ git diff
+diff --git a/tools/perf/tests/shell/trace_exit_race.sh b/tools/perf/tests/shell/trace_exit_race.sh
+index ce05d4e6e7133cd1..2e5581f550c50d16 100755
+--- a/tools/perf/tests/shell/trace_exit_race.sh
++++ b/tools/perf/tests/shell/trace_exit_race.sh
+@@ -21,7 +21,7 @@ trace_shutdown_race() {
+        for _ in $(seq 10); do
+                perf trace -e syscalls:sys_enter_exit_group true 2>>$file
+        done
+-       [ "$(grep -c -E '$regexp' $file)" = "10" ]
++       [ "$(grep -c -E "$regexp" $file)" = "10" ]
+ }
+ 
+ 
+@@ -39,5 +39,5 @@ if [ $err != 0 ] && [ "${verbose}" = "1" ]; then
+        grep -v -E "$regexp" $file
+ fi
+ 
+-rm -f ${file}
++echo rm -f ${file}
+ exit $err
+⬢ [acme@toolbox perf-tools-next]$
+
+I'm getting what you're getting:
+
+root@number:~# perf test -v "trace exit race"
+--- start ---
+test child forked, pid 12139
+Lines not matching the expected regexp: ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$':
+     0.000 :12161/12161 syscalls:sys_enter_exit_group()
+     0.000 :12167/12167 syscalls:sys_enter_exit_group()
+rm -f /tmp/temporary_file.v7REF
+---- end(-1) ----
+110: perf trace exit race                                            : FAILED!
+root@number:~# cat /tmp/temporary_file.v7REF
+     0.000 true/12147 syscalls:sys_enter_exit_group()
+     0.000 true/12151 syscalls:sys_enter_exit_group()
+     0.000 true/12153 syscalls:sys_enter_exit_group()
+     0.000 true/12155 syscalls:sys_enter_exit_group()
+     0.000 true/12157 syscalls:sys_enter_exit_group()
+     0.000 true/12159 syscalls:sys_enter_exit_group()
+     0.000 :12161/12161 syscalls:sys_enter_exit_group()
+     0.000 true/12163 syscalls:sys_enter_exit_group()
+     0.000 true/12165 syscalls:sys_enter_exit_group()
+     0.000 :12167/12167 syscalls:sys_enter_exit_group()
+root@number:~# grep -E ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$' /tmp/temporary_file.v7REF
+     0.000 true/12147 syscalls:sys_enter_exit_group()
+     0.000 true/12151 syscalls:sys_enter_exit_group()
+     0.000 true/12153 syscalls:sys_enter_exit_group()
+     0.000 true/12155 syscalls:sys_enter_exit_group()
+     0.000 true/12157 syscalls:sys_enter_exit_group()
+     0.000 true/12159 syscalls:sys_enter_exit_group()
+     0.000 true/12163 syscalls:sys_enter_exit_group()
+     0.000 true/12165 syscalls:sys_enter_exit_group()
+root@number:~# grep -v -E ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$' /tmp/temporary_file.v7REF
+     0.000 :12161/12161 syscalls:sys_enter_exit_group()
+     0.000 :12167/12167 syscalls:sys_enter_exit_group()
+root@number:~# git difroot@number:~# perf test -v "trace exit race"
+--- start ---
+test child forked, pid 12139
+Lines not matching the expected regexp: ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$':
+     0.000 :12161/12161 syscalls:sys_enter_exit_group()
+     0.000 :12167/12167 syscalls:sys_enter_exit_group()
+rm -f /tmp/temporary_file.v7REF
+---- end(-1) ----
+110: perf trace exit race                                            : FAILED!
+root@number:~# cat /tmp/temporary_file.v7REF
+     0.000 true/12147 syscalls:sys_enter_exit_group()
+     0.000 true/12151 syscalls:sys_enter_exit_group()
+     0.000 true/12153 syscalls:sys_enter_exit_group()
+     0.000 true/12155 syscalls:sys_enter_exit_group()
+     0.000 true/12157 syscalls:sys_enter_exit_group()
+     0.000 true/12159 syscalls:sys_enter_exit_group()
+     0.000 :12161/12161 syscalls:sys_enter_exit_group()
+     0.000 true/12163 syscalls:sys_enter_exit_group()
+     0.000 true/12165 syscalls:sys_enter_exit_group()
+     0.000 :12167/12167 syscalls:sys_enter_exit_group()
+root@number:~# grep -E ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$' /tmp/temporary_file.v7REF
+     0.000 true/12147 syscalls:sys_enter_exit_group()
+     0.000 true/12151 syscalls:sys_enter_exit_group()
+     0.000 true/12153 syscalls:sys_enter_exit_group()
+     0.000 true/12155 syscalls:sys_enter_exit_group()
+     0.000 true/12157 syscalls:sys_enter_exit_group()
+     0.000 true/12159 syscalls:sys_enter_exit_group()
+     0.000 true/12163 syscalls:sys_enter_exit_group()
+     0.000 true/12165 syscalls:sys_enter_exit_group()
+root@number:~# grep -v -E ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$' /tmp/temporary_file.v7REF
+     0.000 :12161/12161 syscalls:sys_enter_exit_group()
+     0.000 :12167/12167 syscalls:sys_enter_exit_group()
+root@number:~# git diff
+ 
+> >   ---- end(-1) ----
+> >   110: perf trace exit race                                            : FAILED!
+> >   root@number:~#
+> >
+> > In this case we're not resolving the process COMM for some reason and
+> > fallback to printing just the pid/tid, this will be fixed in a followup
+> > patch.
+> > -       [ "$(grep -c -E ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$' $file)" = "10" ]
+> > +       [ "$(grep -c -E '$regexp' $file)" = "10" ]
+> 
+> shouldn't this be
+> [ "$(grep -c -E "$regexp" $file)" = "10" ]
+> ?
+> 
+> In shell script single quote doesn't interpolate, in this case you are
+> literally grepping the string "$regexp". After changing this to double
+> quotes it works for me.
+
+Right, see above.
+ 
+> >  err=$?
+> > +
+> > +if [ $err != 0 ] && [ "${verbose}" = "1" ]; then
+> > +       echo "Lines not matching the expected regexp: '$regexp':"
+ 
+> Also, I think there is a case, where $err != 0 can come from not
+> having 10 matches, say 4 (because of racing), and these 4 can all be
+> correct, the inverse grep -v won't match anything, results in an empty
+> output as above:
+
+Right again,
+ 
+> Lines not matching the expected regexp: ' +[0-9]+\.[0-9]+ +true/[0-9]+
+> syscalls:sys_enter_exit_group\(\)$':
+> ---- end(-1) ----
+> 
+> > +       grep -v -E "$regexp" $file
+> > +fi
+> > +
+> >  rm -f ${file}
+> >  exit $err
+> > --
+> > 2.47.0
+> >
+> 
+> Maybe this? (based on your test)
+> 
+> +++ b/tools/perf/tests/shell/trace_exit_race.sh
+> @@ -16,12 +16,15 @@ if [ "$1" = "-v" ]; then
+>  fi
+> 
+>  regexp=" +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$"
+> +iter=15
+> 
+>  trace_shutdown_race() {
+> -        for _ in $(seq 10); do
+> +        for _ in $(seq $iter); do
+>                  perf trace -e syscalls:sys_enter_exit_group true 2>>$file
+>          done
+> -        [ "$(grep -c -E '$regexp' $file)" = "10" ]
+> +
+> +        result="$(grep -c -E "$regexp" $file)"
+> +        [ $result = $iter ]
+>  }
 > 
 > 
->>
->>> We have found out that it
->>> does not work even on 6.12.0-rc6+. Are there still drivers that haven't
->>> been merged yet?
->>>
->>> Happens that nothing matches in this loop:
->>
->> The HW cache events are usually model specific events. You cannot see it
->> unless there is specific support.
->>
->> You may also get more clues via dmesg | grep PMU.
->> If you see "generic architected perfmon", it means the specific support
->> isn't ready in the kernel.
->>
+> @@ -35,8 +38,12 @@ trace_shutdown_race
+>  err=$?
 > 
-> Understand! Thank you Ken.
+>  if [ $err != 0 ] && [ "${verbose}" = "1" ]; then
+> -        echo "Lines not matching the expected regexp: '$regexp':"
+> -        grep -v -E "$regexp" $file
+> +        if grep -q -v -E "$regexp" $file; then
+> +                echo "Lines not matching the expected regexp: '$regexp':"
+> +                grep -v -E "$regexp" $file
+> +        else
+> +                echo "Missing output, expected $iter but only got $result"
+> +        fi
+>  fi
 > 
-> - Qiao
+>  rm -f ${file}
 > 
-> 
->>
->> Thanks,
->> Kan
->>>
->>> int print_hwcache_events(const struct print_callbacks *print_cb, void
->> *print_state)
->>> [...]
->>> 305           for (int type = 0; type < PERF_COUNT_HW_CACHE_MAX; type++)
->> {
->>> 306           for (int op = 0; op < PERF_COUNT_HW_CACHE_OP_MAX; op++) {
->>> 307                   /* skip invalid cache type */
->>> 308                   if (!evsel__is_cache_op_valid(type, op))
->>> 309                                   continue;
->>> 310
->>> 311                   for (int res = 0; res <
->> PERF_COUNT_HW_CACHE_RESULT_MAX; res++) {
->>> 312                   char name[64];
->>> 313                           char alias_name[128];
->>> 314                           __u64 config;
->>> 315                           int ret;
->>> 316
->>> 317                           __evsel__hw_cache_type_op_res_name(type,
->> op, res,
->>> 318
->>                              name, sizeof(name));
->>> 319
->>> 320                           ret =
->> parse_events__decode_legacy_cache(name, pmu->type,
->>> 321
->>                              &config);
->>> 322                           if (ret ||
->> !is_event_supported(PERF_TYPE_HW_CACHE, config))
->>> 323                                   continue;
->>>
->>> Thanks,
->>> Michael
->>>
->>>
->>
->>
-> 
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+
+Please see if you keep it, I ended up applying the slight variation
+below, to avoid an repeating the last inverse grep.
+
+Thanks a lot for reviewing and spotting that st00pid problem and
+suggesting the improvement for the inverse grep!
+
+- Arnaldo
+
+diff --git a/tools/perf/tests/shell/trace_exit_race.sh b/tools/perf/tests/shell/trace_exit_race.sh
+index ce05d4e6e7133cd1..8ea24f4256bc8f5e 100755
+--- a/tools/perf/tests/shell/trace_exit_race.sh
++++ b/tools/perf/tests/shell/trace_exit_race.sh
+@@ -15,13 +15,15 @@ if [ "$1" = "-v" ]; then
+ 	verbose="1"
+ fi
+ 
++iter=10
+ regexp=" +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\)$"
+ 
+ trace_shutdown_race() {
+-	for _ in $(seq 10); do
++	for _ in $(seq $iter); do
+ 		perf trace -e syscalls:sys_enter_exit_group true 2>>$file
+ 	done
+-	[ "$(grep -c -E '$regexp' $file)" = "10" ]
++	result="$(grep -c -E "$regexp" $file)"
++	[ $result = $iter ]
+ }
+ 
+ 
+@@ -35,8 +37,14 @@ trace_shutdown_race
+ err=$?
+ 
+ if [ $err != 0 ] && [ "${verbose}" = "1" ]; then
+-	echo "Lines not matching the expected regexp: '$regexp':"
+-	grep -v -E "$regexp" $file
++	lines_not_matching=$(mktemp /tmp/temporary_file.XXXXX)
++	if grep -v -E "$regexp" $file > $lines_not_matching ; then
++		echo "Lines not matching the expected regexp: '$regexp':"
++		cat $lines_not_matching
++	else
++		echo "Missing output, expected $iter but only got $result"
++	fi
++	rm -f $lines_not_matching
+ fi
+ 
+ rm -f ${file}
+
 
