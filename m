@@ -1,247 +1,186 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C101D61A3
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 Nov 2024 17:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBE31D90BC;
+	Fri, 15 Nov 2024 18:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731693310; cv=none; b=n8DgOOifQMmVP8HDsaFE8m8FYD6BVDwB58jAx1dNYOchL+YsKN79Omwa01gdYx2viWHEtwutc51WS2Ht067KOnkDWDfT6HQkkvZWDMVOYD45xfz7O/7d1F76mt5e5AhWMp7mOqMkoYGFZC+5/ZM3YkO9XZI9hZrkGxq/fTffxVM=
+	t=1731695226; cv=none; b=lNF6KkYrc80at/mL5a2jdDXYSyvFQWDo2ItE6s9Ax63fSApYYMg7No/Qi3rF8IspGjf/GrYGm94AspXxZ7/11TkKPb24ia8l+gYl5VwTXOIowNSq0+E/adUUOsfgeo8HLpuFvD2EdrVEIDjI3bBX+SfNuHFj1FHrhZeudIwbLBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731693310; c=relaxed/simple;
-	bh=Dc/5CWn5I9oj0IhCuyvb47QZKddMSwNPrXDwm06esJ0=;
+	s=arc-20240116; t=1731695226; c=relaxed/simple;
+	bh=37wDxptUd4/5yVaP03X+reMs49cFNg7VOoxmxhutuLg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sFmBNkK2TxUzyyIuBTJ/PCB+tYbYPUQBtAA1tpdWbi6x4ukF5oXqSoR1TCkyuehX8lb/hMVMALFVBGmnwYlIcz0cWzyKkKF5SqwS5AoDEEGF3vDV5N0JfMIdcYrh44moeSlcLasSsEeCuE3lcgX5KReLfNDGucLfpBnW3u2Gtso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dvehh1DR; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=FdoPLnuhIXzp9+87cfgjhP5rKZf/h7Kr1awvmKSscc+OCY8CdvQx5txZ1k3X3XFkNDbObEyXgmzykGTGlhpLWZABa/EVodK7HCpkLvFIAH5Qr0lbuGCJ2L4xv6q+zkvTEJfIIYjuTNTApffMdGyeeO+IAApiNZXM+lz2OsnIr7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JwhQsNJB; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dvehh1DR"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3a4e4776f79so137075ab.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Nov 2024 09:55:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwhQsNJB"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6ea85f7f445so9749187b3.0;
+        Fri, 15 Nov 2024 10:27:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731693308; x=1732298108; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1731695224; x=1732300024; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hnHS6ipKNUUpXk/6JmH9J/OJBc1PBR+N05vgPQHYS08=;
-        b=dvehh1DR0/Di6XWMW+AmghMfE2Fk/Se9bNDiGSmgRjO16FUideu/VZKrJNKvxCgYKz
-         0RPB+0SslcB9C9IQuhYsg/Q0lK1sYXw0DkvR2RVAqwjEkGK5u3BLE7NHN7OPyN40IcDh
-         moMNd+v+v0uyVcnM3rKb6JyIN0Wp1JOR8EgmoE4jHcm0WN4ljT78XFPA1zjMvYea599t
-         FvVvuukHCeiXAStKphDMgjW538oVpQKQ3fxk5NHOlHO+s3aztNJlMaYa0vwRI6RrBjEy
-         sGHdQMcahXZQuFW4tR736xzcLwg8vs35OXZ87hA0a5nVdEXKBroL1p+h6heJ077ApVT1
-         DDbw==
+        bh=RiFolGHX93uFm2SRwMrirsYWIk5SIP9OdqEWi3N6o54=;
+        b=JwhQsNJBPJV62HT969cTrfL52E55QsCY6nyjteSmTjd1R4oYe8jk3z31QolYluXS/6
+         U2M/sc/TTPhSTQYM/DFQktopHM0hlhLpLORhCOU4XDO4M9R5k/h2nufLkjVDRrp11hKw
+         FG1y1ubOlZ/p1+9aFOQSB/cbPMovwqXfEy5xlQOFcmtLKwsq2J3S1pVkXpFaxC9B1DSM
+         t8L2YHXdQ5uYanxc+NOYr4kn8nhKNbMYsiDhQZvFJkqv2uVyD6rRw+LK8aW7Jt9wxeul
+         rzZfKSdUjzKmaFtwomYu0kk++shmVe4Q2EmCnif+s+5WyTnpkHrxlRyAuwZ2wpDqdGMV
+         2EDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731693308; x=1732298108;
+        d=1e100.net; s=20230601; t=1731695224; x=1732300024;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hnHS6ipKNUUpXk/6JmH9J/OJBc1PBR+N05vgPQHYS08=;
-        b=sg6J4bqb55Qk1UTjvbJqO9XtZbDU0CCnTAU13hDgjOUm9vabGzRnUXK+vF/W4dd6Tm
-         7zNLb1C8gKvEaGLbAStm1z8vn4tuijEXDNaWip8/dkxGUbC7m3ZwBDabq03AbMdaMsWv
-         2jvLgYstwnfcGBQX+YyqZllHuS3krJZcFBm3to+oLh+WIYGTKXj1UWJ5LOuC73O9wDGZ
-         u2BvGf91TdnnXNlIFEl8xOX97sTOXQmUj/qVv+Rn6TGPA4HYPmknevXrYl8zC+EpecmL
-         2FAWZwFDMyVIqy4oFStWgBIn6Y+25KnHmzV6GrzyZHpqq2r2iwf07bZc3OyJ+L8etcOZ
-         8v4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWnJpPI0I51/zud8FY3/zvQjMs/U7uKN+Eua91ZvF0n9q09c4HQUgUCAnxDTnCYr9LV1gBnt4ld9hVSX8d+qZ53@vger.kernel.org
-X-Gm-Message-State: AOJu0YzATZ+tcHpmHIV+CgHQ0UV1jRP28UARR7Zrh6pBOBCiXaEx4Ypc
-	qq16C62Oei4thOUkR7P/OjdXQ8BZ3qbkRv9eVHPFjVhhU37DIWEA++/QT1mY46VwHmN5wj/Ukz8
-	Rq+Pv27LPH8k71BGqhEaMl7M1oe5gz0yORcCW
-X-Gm-Gg: ASbGncv8hJlv2mXQO1qzDuP3di7vgvkYpqS24zK7da7aB+hYfOIGGAdAIDtK4RF2xkV
-	qs+O+6Jm+FYaHF2+2KypOkuGwkoQxZuh4
-X-Google-Smtp-Source: AGHT+IGFQN2nBXFYab64aGS4JtOZbQ+HWAGUOdHNwbOsju2UCSDpdaV9yh5k0nEy6/NghsRYHkioIry2Xz7RaFY58EI=
-X-Received: by 2002:a05:6e02:1a0a:b0:3a7:319f:e486 with SMTP id
- e9e14a558f8ab-3a74f776eefmr581795ab.7.1731693308209; Fri, 15 Nov 2024
- 09:55:08 -0800 (PST)
+        bh=RiFolGHX93uFm2SRwMrirsYWIk5SIP9OdqEWi3N6o54=;
+        b=pI0feZoZm56/1bQptdgImF903HnGrq1Q5X54yN/H2e+ltQTM+2HpUbDq5Z5qIkLskB
+         v5Y8qr5zUq3kJ7Gd7+FPNXeeG8vc8w47O2eavTeZSUICoJCZm80Qrkcj9V+mHPUIPeN9
+         l9e3uYra1TRDrrI/nzmjw0IRF+Ocv+DxS/7cqw/Vt7AG7ZYQyvb8flJR/cdorERhU4eu
+         knkKmlWgVT06DFK2ARl+jc672gQMYZZZypAp7Mln/3myl+c710fhnRaVqoXScUaWnokX
+         vt2WkQtQojFiDmW7pDLTeOs4cwT+V4vDaMERFOb7C8aFtAyk0XYePJCNNx7dW+wOsbsO
+         TsJg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhi2ynb39qeO1Hv/wYO9n6eS2x+9aF1OMRSVTPzGy/LgFk4NWkg3/1rog9IIwWnstXmpjTzOtCZtEBDpBU+HV8BQ==@vger.kernel.org, AJvYcCXqeWs/AsfPrm29YVU2uy1L9PDABvxeqN8sAjU0NL7iGNLWceg44cq52mNZIxHIsR9D0vCne4IL8gx1gJ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDBqwMhp8evwg3XS2bRl0ZI3z+wRj3Wxqyvi8hUKPek+Aeqplr
+	700APJvU04xBP7bnfYc+HpNzcreZOZopGtLjZrQzbvWPRCeipiQnfYDUhmzcuN9buQAbm56cCfN
+	Aq9I08evOqTvWDpJWKMc2fvHvXho=
+X-Google-Smtp-Source: AGHT+IG59upkrBsEgAbt+Sw3jAsNFe/t7cthDEippLl83w3JOZckc4vMpWvy7h3S3AocZVh1PRnmMyDMXFJZ7WvnnpI=
+X-Received: by 2002:a05:690c:7013:b0:6e2:5d2:3421 with SMTP id
+ 00721157ae682-6ee55a628aemr44973617b3.10.1731695224049; Fri, 15 Nov 2024
+ 10:27:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zzdtj0PEWEX3ATwL@x1>
-In-Reply-To: <Zzdtj0PEWEX3ATwL@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 15 Nov 2024 09:54:56 -0800
-Message-ID: <CAP-5=fX7JZNmiaNDezExqGk9FMXdHihxvLNmnD8HHB3YCehemg@mail.gmail.com>
-Subject: Re: perf test failures with tmp.perf-tools-next
+References: <20241115153634.314742-1-acme@kernel.org> <20241115153634.314742-2-acme@kernel.org>
+In-Reply-To: <20241115153634.314742-2-acme@kernel.org>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Fri, 15 Nov 2024 10:26:53 -0800
+Message-ID: <CAH0uvog__5b4PC8MEk_GL2Ek0pYU7fJ1XfdHyDiwFTBYN0tuxw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf test shell trace_exit_race: Show what went wrong
+ in verbose mode
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	James Clark <james.clark@linaro.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Cc: Benjamin Peterson <benjamin@engflow.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 15, 2024 at 7:49=E2=80=AFAM Arnaldo Carvalho de Melo
+Hello Arnaldo,
+
+On Fri, Nov 15, 2024 at 7:36=E2=80=AFAM Arnaldo Carvalho de Melo
 <acme@kernel.org> wrote:
 >
-> With what is in tmp.perf-tools-next I'm getting:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
->  11: Hwmon PMU                                                       :
->  11.1: Basic parsing test                                            : Ok
->  11.2: Parsing without PMU name                                      : FA=
-ILED!
->  11.3: Parsing with PMU name                                         : FA=
-ILED!
->  84: perftool-testsuite_probe                                        : FA=
-ILED!
->  86: probe libc's inet_pton & backtrace it with ping                 : FA=
-ILED!
->  96: perf stat tests                                                 : FA=
-ILED!
->  97: perf all metricgroups test                                      : FA=
-ILED!
->  98: perf all metrics test                                           : FA=
-ILED!
-> 117: perftool-testsuite_report                                       : FA=
-ILED!
-> 118: Add vfs_getname probe to get syscall args filenames             : FA=
-ILED!
-> 119: Use vfs_getname probe to get syscall args filenames             : FA=
-ILED!
-> 120: perf record tests                                               : FA=
-ILED!
-> 121: perf record LBR tests                                           : FA=
-ILED!
-> 128: Test data symbol                                                : FA=
-ILED!
+> If it fails we need to check what was the reason, what were the lines
+> that didn't match the expected format, so:
 >
-> root@x1:~# perf test -vv 11
->  11: Hwmon PMU                                                       :
->  11.1: Basic parsing test:
-> --- start ---
-> test child forked, pid 391389
-> hwmon_pmu: not a hwmon type 'badtype' in file name 'badtype5_baditem'
-> hwmon_pmu: not a hwmon item 'baditem' in file name 'humidity6_baditem'
-> ---- end(0) ----
->  11.1: Basic parsing test                                            : Ok
->  11.2: Parsing without PMU name:
-> --- start ---
-> test child forked, pid 391390
-> Testing 'temp_test_hwmon_event1'
-> Using CPUID GenuineIntel-6-BA-3
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'pwm1'
-> Not a hwmon file 'pwm1'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: removing event 'pwm1' that has no input file
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> FAILED tests/hwmon_pmu.c:160 failed to parse event 'temp_test_hwmon_event=
-1', err 1
-> event syntax error: 'temp_test_hwmon_event1'
->                      \___ Bad event name
+>   root@number:~# perf test -v "trace exit race"
+>   --- start ---
+>   test child forked, pid 2028724
+>   Lines not matching the expected regexp: ' +[0-9]+\.[0-9]+ +true/[0-9]+ =
+syscalls:sys_enter_exit_group\(\)$':
+>        0.000 :2028750/2028750 syscalls:sys_enter_exit_group()
+>   ---- end(-1) ----
+>   110: perf trace exit race                                            : =
+FAILED!
+>   root@number:~#
 >
-> Unable to find event on a PMU of 'temp_test_hwmon_event1'
-> free(): invalid pointer
+> In this case we're not resolving the process COMM for some reason and
+> fallback to printing just the pid/tid, this will be fixed in a followup
+> patch.
 >
-> ---- unexpected signal (6) ----
->  11.2: Parsing without PMU name                                      : FA=
-ILED!
->  11.3: Parsing with PMU name:
-> --- start ---
-> test child forked, pid 391391
-> Testing 'temp_test_hwmon_event1'
-> Using CPUID GenuineIntel-6-BA-3
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'pwm1'
-> Not a hwmon file 'pwm1'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: removing event 'pwm1' that has no input file
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> hwmon_pmu: not a hwmon file 'uevent'
-> Not a hwmon file 'uevent'
-> hwmon_pmu: not a hwmon file 'name'
-> Not a hwmon file 'name'
-> FAILED tests/hwmon_pmu.c:160 failed to parse event 'temp_test_hwmon_event=
-1', err 1
-> event syntax error: 'temp_test_hwmon_event1'
->                      \___ Bad event name
+> Howard Chu spotted a problem with single code surrounding a regexp, that
+> made the test always fail, but since there were some failures when I
+> tested (COMM not being resolved in some of the results) the end inverse
+> grep would show some lines and thus didn't notice the single quote
+> problem.
 >
-> Unable to find event on a PMU of 'temp_test_hwmon_event1'
+> He also provided a patch to test if less than the number of expected
+> matches took place but all of them with the expected output, in which
+> case the inverse grep wouldn't show anything, confusing the tester.
 >
-> ---- unexpected signal (11) ----
->  11.3: Parsing with PMU name                                         : FA=
-ILED!
-> root@x1:~#
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Benjamin Peterson <benjamin@engflow.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Link: https://lore.kernel.org/lkml/ZzdknoHqrJbojb6P@x1
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/tests/shell/trace_exit_race.sh | 24 +++++++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/trace_exit_race.sh b/tools/perf/tests=
+/shell/trace_exit_race.sh
+> index 3cf2d71a5c3b9278..8ea24f4256bc8f5e 100755
+> --- a/tools/perf/tests/shell/trace_exit_race.sh
+> +++ b/tools/perf/tests/shell/trace_exit_race.sh
+> @@ -11,11 +11,19 @@
+>
+>  skip_if_no_perf_trace || exit 2
+>
+> +if [ "$1" =3D "-v" ]; then
+> +       verbose=3D"1"
+> +fi
+> +
+> +iter=3D10
+> +regexp=3D" +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter_exit_group\(\=
+)$"
+> +
+>  trace_shutdown_race() {
+> -       for _ in $(seq 10); do
+> +       for _ in $(seq $iter); do
+>                 perf trace -e syscalls:sys_enter_exit_group true 2>>$file
+>         done
+> -       [ "$(grep -c -E ' +[0-9]+\.[0-9]+ +true/[0-9]+ syscalls:sys_enter=
+_exit_group\(\)$' $file)" =3D "10" ]
+> +       result=3D"$(grep -c -E "$regexp" $file)"
+> +       [ $result =3D $iter ]
+>  }
 >
 >
+> @@ -27,5 +35,17 @@ export PERF_CONFIG=3D/dev/null
 >
-> I'm working on removing the vfs_getname code from 'perf trace' so those
-> will go away, probably there are patches fixing some of the other ones,
-> I'll try and look after those, but probably later today I'll push what I
-> have so that it gets exposure on linux-next.
+>  trace_shutdown_race
+>  err=3D$?
+> +
+> +if [ $err !=3D 0 ] && [ "${verbose}" =3D "1" ]; then
+> +       lines_not_matching=3D$(mktemp /tmp/temporary_file.XXXXX)
+> +       if grep -v -E "$regexp" $file > $lines_not_matching ; then
+> +               echo "Lines not matching the expected regexp: '$regexp':"
+> +               cat $lines_not_matching
+> +       else
+> +               echo "Missing output, expected $iter but only got $result=
+"
+> +       fi
+> +       rm -f $lines_not_matching
+> +fi
+> +
+>  rm -f ${file}
+>  exit $err
 
-I'm trying to repro the hwmon issue on tmp.perf-tools-next, with asan
-root/non-root I get:
-```
- 11: Hwmon PMU                                                       :
-11.1: Basic parsing test                                            : Ok
-11.2: Parsing without PMU name                                      : Ok
-11.3: Parsing with PMU name                                         : Ok
-```
-I'm trying more machines to try to get a reproduction.
+LGTM.
 
 Thanks,
-Ian
+Howard
+
+> --
+> 2.47.0
+>
