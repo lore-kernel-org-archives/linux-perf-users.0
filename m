@@ -1,78 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E92C1891AA;
-	Fri, 15 Nov 2024 19:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAF517C219
+	for <linux-perf-users@vger.kernel.org>; Fri, 15 Nov 2024 20:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731699020; cv=none; b=CaegxA2oHe9yV0zmscoSApZWT6kuAis/5aDq7kudj0OdBq/YRrAzFaMpZPkrbrlXNQ8C+IzayYNulA3Ms5a7QDwBPLdsNV8Hufargm4EUn7MRYC2V9jtaK2seEuoeLTjCIbPzS6k4X8lgDHm0W47Ygj9yO+UNjQqdXbV49DXw38=
+	t=1731701585; cv=none; b=rC9NlcugdQuVncvl4mezfUwzwDFl8roIrAv9Yp9zCEo706ZPW12BSNwQr5ILe60IggkPB/rqycLcWu040NrSCvaZBdHjXffsoRFT0xOyVQv7Y2sT569k9gioZjK/QVuMzkGWUJsLH3en4bpspklE9ipmLcDq6Ops0M4N335/Z8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731699020; c=relaxed/simple;
-	bh=R0TFQLdk+C4vkQbH+5pNDmvTjVa5SxUpwjya5XVkzX4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=NEPZgDxRtG5AzJiI76pyYkz2TGx9ksPmUOaJCMEoLo52ATqJmJlPbz8abw6UhB0R8YAtQSLnUMKCqAl7b1yMDZyrajSG//TmC3hL8gwYuUkEMqBs+RIzNGBapcLByyg8a4yJRmpC+CX4FCoxE0+rXQL/O7P3vTxj4luHC6UGbIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UzA4Hm1Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731701585; c=relaxed/simple;
+	bh=m+eHtXIYesv3NRRKMiKERalJo0Iwm0wUOlfkAFkwgwY=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=YY4wGws0E2AB4sZukgDaZvaqL9KO6n6Ysn1JmdLz6uxbX9ZKCjdczj0z3RuSLHKRCGIwO9vVQdGXq51Ud/lBB+8Zd1N2XkiqAc34ew53i04FEw5WI+aidN0C5F/gHDBhfXS7FFe9ZvLC+diMItb1PTnhfMkxtDbN4h90243njgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iawZBEvo; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UzA4Hm1Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B472DC4CECF;
-	Fri, 15 Nov 2024 19:30:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731699019;
-	bh=R0TFQLdk+C4vkQbH+5pNDmvTjVa5SxUpwjya5XVkzX4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=UzA4Hm1Q6lT7Fxu0QMwOYPI7zZsFqZrIaSW9GC4wYJGL5VUvnjTyo/M7NBhWxYjSh
-	 sAz8wCHpHwk/e2slSrjxdprzVeadJ15XwAALhKchiSKkaG21VbOFKlMKzUTiqTjTit
-	 bATbLx+gc/7mDjnm/r1vsegrlvtS3KO9mXiLK0uU8vdftwUPZouHD4a6kGndXi6E3W
-	 yYea9aC0oOKbJgurZ0K8HBlk2ma6uAxundqvrGA1s+MltbDuJgCiljykKcxPfGweRf
-	 WZWcM2J3K41/oELrb+uE4uBDSWkrQ8SFsMpDxhY2Gagu7uHKrC42odIOvlfhu7vrsQ
-	 7pN/gkxht+PRw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE2743809A80;
-	Fri, 15 Nov 2024 19:30:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iawZBEvo"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e35199eb2bso43886177b3.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Nov 2024 12:13:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1731701583; x=1732306383; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y7jHK+GbETyp0OO2qXYbTg1usBpehhjzisVMru6QF1g=;
+        b=iawZBEvoKXe9bUJHdvxc9Nu9q8fzczw7GS9JP9TwpJIUf+oU44Q9gQxtWC++fsWxEv
+         ibPD1e2bQ5nVZrf0lNbwAeMKUrXzTbREBIQwX9aNyDC/LMW6hq05+StfzGaj3BCAfUSg
+         O1FiLQyvtOm0l21cGGmQPA+1+vsC/+tUEEgsHfWfq6KxOwaZ9m9OvaHyffLD87DqU3DM
+         IqdSNc1mhC7tt/3jN9i5EXsdXONOH+lWhHvsxl9ltF2aeIrESBK1RnX0rC2CWEqxtkMx
+         mUGH1D4PzeS3t8mz2lk/h7EnqGz8m4NFBtO9XtWdC0DYN8wk2aXxwPy+YRmOvkX/c2qi
+         VINw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731701583; x=1732306383;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y7jHK+GbETyp0OO2qXYbTg1usBpehhjzisVMru6QF1g=;
+        b=j28sBl+12J/ZnAFFQAhHgRb3tLwgYRfUUQUE6juwd8Rtal8mpi0sOZdpKEEzDqY5ut
+         2mYihZmHahyCpdqkuSq8AOdHYYH/q/wGi1HoEEVvlqLX2JzLnQz5DvWKyM2swXbRIvuR
+         NaGtqxKwb1Ik8pYUZSVj6wk78f3fcVbem1eV4NYm92G88rnC12hftWjn532/yrZnE/VD
+         GL/t+2skW3dhFmFCOjJU6k0nWM64gBWStVduxtlHtHQ0YjWMSSwYo6YYJ3sdcta84mAY
+         7Ezx7X6Os5TuA6bSMwEWvYSuH/sauM7i3P8IqR3DeMEch67edCXIhZXN+W1QrQY56a8q
+         Eq5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWDgpzud+VA1aMYuLn9MVblD/uvnzaFkh8GUhVBUico+JlUgEdIzfttNX6VwRW5a67J5rOZgqnYgwvFgIulj+FD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRo94t4US1WtALe0HeBgnoYjENg9RGxav3JMrtaUk8XiEyIQy1
+	iH3JGVBkndx0p2vycnceP47caS60L5+Eg05nTHyZIDpMmgY/JuXY4bXtQqj8EZHUPETFBeQ2iSa
+	9EaohKg==
+X-Google-Smtp-Source: AGHT+IGbA4tPec7D04ekbvWRX3ylNEsk5f4b15tsIirX/ilzfd3WQGhYbnxgN37YxuJ3mxH3LoIA4miKdtWe
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:126f:8a1a:a007:1ce6])
+ (user=irogers job=sendgmr) by 2002:a05:690c:5b4f:b0:6e3:1f46:77a6 with SMTP
+ id 00721157ae682-6ee55b8356bmr630007b3.2.1731701583288; Fri, 15 Nov 2024
+ 12:13:03 -0800 (PST)
+Date: Fri, 15 Nov 2024 12:12:58 -0800
+Message-Id: <20241115201258.509477-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next] libbpf: Fix memory leak in
- bpf_program__attach_uprobe_multi
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173169903051.2693789.11550576117876256024.git-patchwork-notify@kernel.org>
-Date: Fri, 15 Nov 2024 19:30:30 +0000
-References: <20241115115843.694337-1-jolsa@kernel.org>
-In-Reply-To: <20241115115843.694337-1-jolsa@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, kafai@fb.com,
- songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
- kpsingh@chromium.org, sdf@fomichev.me, haoluo@google.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
+Subject: [PATCH v1] perf test: Add missing __exit calls in tool/hwmon tests
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
+Address sanitizer flagged the missing parse_events_error__exit when
+testing on ARM.
 
-This patch was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/hwmon_pmu.c | 1 +
+ tools/perf/tests/tool_pmu.c  | 1 +
+ 2 files changed, 2 insertions(+)
 
-On Fri, 15 Nov 2024 12:58:43 +0100 you wrote:
-> Andrii reported memory leak detected by Coverity on error path
-> in bpf_program__attach_uprobe_multi. Fixing that by moving
-> the check earlier before the offsets allocations.
-> 
-> Reported-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> [...]
-
-Here is the summary with links:
-  - [bpf-next] libbpf: Fix memory leak in bpf_program__attach_uprobe_multi
-    https://git.kernel.org/bpf/bpf-next/c/fab974e64874
-
-You are awesome, thank you!
+diff --git a/tools/perf/tests/hwmon_pmu.c b/tools/perf/tests/hwmon_pmu.c
+index 5c4114354c65..9f44093f18df 100644
+--- a/tools/perf/tests/hwmon_pmu.c
++++ b/tools/perf/tests/hwmon_pmu.c
+@@ -194,6 +194,7 @@ static int do_test(size_t i, bool with_pmu, bool with_alias)
+ 	}
+ 
+ out:
++	parse_events_error__exit(&err);
+ 	evlist__delete(evlist);
+ 	return ret;
+ }
+diff --git a/tools/perf/tests/tool_pmu.c b/tools/perf/tests/tool_pmu.c
+index 46896b485abf..187942b749b7 100644
+--- a/tools/perf/tests/tool_pmu.c
++++ b/tools/perf/tests/tool_pmu.c
+@@ -66,6 +66,7 @@ static int do_test(enum tool_pmu_event ev, bool with_pmu)
+ 	}
+ 
+ out:
++	parse_events_error__exit(&err);
+ 	evlist__delete(evlist);
+ 	return ret;
+ }
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.47.0.338.g60cca15819-goog
 
