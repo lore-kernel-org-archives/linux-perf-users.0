@@ -1,190 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C031DFDB1;
-	Fri, 15 Nov 2024 15:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC99D155C97
+	for <linux-perf-users@vger.kernel.org>; Fri, 15 Nov 2024 16:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731685779; cv=none; b=ExUnv/Q88vE2KsqvTXhAzoRxi8Eul8r68IacMML4ebl/LhAmNKoq3jsUf9Js2AkHkTjY1L/eCfFvgIZohpPlu3rSlk4l2ZtRHiTUZ9rOI90CUFjdz8UErcfNPFxtR24FhGTVim8HJZgQypT9nXh1UAz7UI12QpQBn7QWOZaQ/sE=
+	t=1731687384; cv=none; b=lwctsCSctlEFCLOMnr1NEX22khECrMJ3/nZMo2WvH5kNvaVWuRX1Pt3+F0hE8NcL9kjalSpveJBSTivyzophr6FPFct7QO3SzwBXfSPRiwVmbhxvMV//KHAyD4Y6RhtbeZ1AD70vSHQ6d3a58H/+8TuaEsN2hLLYFzFGgQ2jx2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731685779; c=relaxed/simple;
-	bh=tU1xmk3+Nnc7sUGOBXAWq/oVW6HP8BYPHD2LHmlMFlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=AewLu0nes2CDKauGRH6FhvCJP4uVUnLmq7IMoBKKBk7g8bdcKpHaTDCrAdhxl5BEZ65ex27LAsxpr+CLcTWXfg301pPPvdQ0eTNtStgxovz4yrau24ZnqBYHSa5AOnu7Y/zCtOlU1xN3C0ipOCZ3JH4087akfoI7MWGhjcP9qpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/PmF3X+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731687384; c=relaxed/simple;
+	bh=DoyBadK94IVEd2EyxL+LuuK2g4kFW6i5sGsr9EH83yg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OW/AbMqbE7Ui3DHjAwo5ATwpEjczEZPE7uf+yEf53VcUhapahZogQxnHyyBxyLOlsjSyBKwFGFgCEt5PCB2D5YrUKEr3hVvy24V0uG3DCyh2xkHj6e+mBwJARIj916eYVFhILUtI2ygj+5iw28GzanNRoXmwuOU2JyWTd2wQ/V0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A5YYNqMe; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/PmF3X+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29A6FC4CECF;
-	Fri, 15 Nov 2024 15:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731685778;
-	bh=tU1xmk3+Nnc7sUGOBXAWq/oVW6HP8BYPHD2LHmlMFlg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=n/PmF3X+8OaXb/wUpoKWolBP3m9/tbsXE4I/bbeMUiwxgMmepJ4/VuEDuKUfpaL01
-	 zcC3GWDpzU2OjV6r1TcFAofKZntJ3axaE/2O/lj/kQltKsY12HPcmkg+LBEIT6sB/3
-	 OSuE5O4rSk2BDgj8a3MH+jYwy6TYmkvoTgkRMvS6Ph2x47vo3Zh9hmghADRJoyCudm
-	 bAS7+0KrqGLbWhG/fjkqKOY7D7YXeV7akn3H9x86aX5e8Wsp7qGBIK0Pea5bgGonoK
-	 YFNtndsIfxhaOXSS+KSb5pG/d5x9JvDa0xozC+f8zhZmkFLbYu4UtbI8kbb7zJep6e
-	 oIs3q2G0lK+Kg==
-Date: Fri, 15 Nov 2024 12:49:35 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A5YYNqMe"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5cf7b79c6a6so2869299a12.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Nov 2024 08:16:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1731687381; x=1732292181; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NaNxMZvsegnXXio0/4jhhJ1ie7TFQifYHp2u96oS77k=;
+        b=A5YYNqMeOzQJ9BJ0b7aoESEGCFjicOYZlekzscM1UgQc0iRK6R5+oCB7FPXSBhKiOB
+         BEfkUozr8Q6Wv5tys43t7mnl9GczkjgaxZiDgoozi085CoVf7oPtR4ukqsHSPcjkuZtF
+         4u2COXqKDnk3taMpEUNv8X3Sq2EXYHRcsCg2AOiJc02L4iTJDJD9b1zhiS66mrT3T33u
+         ozMc3y8SqU57VsXIRe0/L4LSJEaAgm9ndrZGxYWhx3N59Z7rQztC6IGb0s48Yydq3HE5
+         BDCbN55Zz/vebnn5jerSaK+7665Xqdvb6ba87KP4UVe6jOT5dZWVVXUOwPZTEyNAgzwV
+         MuhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731687381; x=1732292181;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NaNxMZvsegnXXio0/4jhhJ1ie7TFQifYHp2u96oS77k=;
+        b=MG/uwatVifLYg/iwlHGeT/hdjaCeSFBbDZqbAKIjL5sl4xQkn2wq5NbkqrD5MN26Jj
+         0Fo42AAnqZP0y1N+6ZdsOPwSYhY0ayKHNj2luFNjz2GdzSTbRB7Dmj2aS68++6a9xnTr
+         IQ+dtkNF15w2B5wEBWiI909abriRzxS8nzKtYBb22Yam6biBmCcRU54FrfZjgL3vJEaC
+         YRvSgdZTRIc+t3cGqMX0cHIu602YCxPdCGFUoOc4RnneXxJ0pE6TQa1hWXKAMROtIXIz
+         mgtNPCNOUhZKgbRk6DR1hh8KBiuibJueFP0w4s2DLAQ6l9RT1ptlAbdWxZGo+Alhp7KV
+         uxgQ==
+X-Gm-Message-State: AOJu0Yzv0p+dwijvkS2Xy29qS4JLsn9iixt0raFqPe4gMOfOIVGJmsC1
+	apTtAm7joN6eRb5cuMW7/0/Tdc4OVb/wSFm34nE37r5NxvRfgCsNOq/Quvlmw53HFiwTw3ilSCH
+	0VBY=
+X-Google-Smtp-Source: AGHT+IEb2MxQ+ESPxXT+VbVeIP/Bp6JeRV85ENyZPvnZtnTC/9zndfunvetaEScWX3xjPKU5h5ORng==
+X-Received: by 2002:a17:907:a07:b0:a9a:f19:8c2a with SMTP id a640c23a62f3a-aa20763b09amr749741466b.6.1731687380993;
+        Fri, 15 Nov 2024 08:16:20 -0800 (PST)
+Received: from pop-os.. ([145.224.90.111])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa20e0452a0sm192151066b.148.2024.11.15.08.16.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2024 08:16:20 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: perf test failures with tmp.perf-tools-next
-Message-ID: <Zzdtj0PEWEX3ATwL@x1>
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf tests: Make leader sampling test work without branch event
+Date: Fri, 15 Nov 2024 16:15:59 +0000
+Message-Id: <20241115161600.228994-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-With what is in tmp.perf-tools-next I'm getting:
+Arm a57 only has speculative branch events so this test fails there. The
+test doesn't depend on branch instructions so change it to instructions
+which is pretty much guaranteed to be everywhere. The
+test_branch_counter() test above already tests for the existence of the
+branches event and skips if its not present.
 
- 11: Hwmon PMU                                                       :
- 11.1: Basic parsing test                                            : Ok
- 11.2: Parsing without PMU name                                      : FAILED!
- 11.3: Parsing with PMU name                                         : FAILED!
- 84: perftool-testsuite_probe                                        : FAILED!
- 86: probe libc's inet_pton & backtrace it with ping                 : FAILED!
- 96: perf stat tests                                                 : FAILED!
- 97: perf all metricgroups test                                      : FAILED!
- 98: perf all metrics test                                           : FAILED!
-117: perftool-testsuite_report                                       : FAILED!
-118: Add vfs_getname probe to get syscall args filenames             : FAILED!
-119: Use vfs_getname probe to get syscall args filenames             : FAILED!
-120: perf record tests                                               : FAILED!
-121: perf record LBR tests                                           : FAILED!
-128: Test data symbol                                                : FAILED!
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/perf/tests/shell/record.sh | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-root@x1:~# perf test -vv 11
- 11: Hwmon PMU                                                       :
- 11.1: Basic parsing test:
---- start ---
-test child forked, pid 391389
-hwmon_pmu: not a hwmon type 'badtype' in file name 'badtype5_baditem'
-hwmon_pmu: not a hwmon item 'baditem' in file name 'humidity6_baditem'
----- end(0) ----
- 11.1: Basic parsing test                                            : Ok
- 11.2: Parsing without PMU name:
---- start ---
-test child forked, pid 391390
-Testing 'temp_test_hwmon_event1'
-Using CPUID GenuineIntel-6-BA-3
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'pwm1'
-Not a hwmon file 'pwm1'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: removing event 'pwm1' that has no input file
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-FAILED tests/hwmon_pmu.c:160 failed to parse event 'temp_test_hwmon_event1', err 1
-event syntax error: 'temp_test_hwmon_event1'
-                     \___ Bad event name
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 85d512f5a126..0fc7a909ae9b 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -231,7 +231,8 @@ test_cgroup() {
+ 
+ test_leader_sampling() {
+   echo "Basic leader sampling test"
+-  if ! perf record -o "${perfdata}" -e "{branches,branches}:Su" perf test -w brstack 2> /dev/null
++  if ! perf record -o "${perfdata}" -e "{instructions,instructions}:Su" -- \
++    perf test -w brstack 2> /dev/null
+   then
+     echo "Leader sampling [Failed record]"
+     err=1
+@@ -241,16 +242,16 @@ test_leader_sampling() {
+   perf script -i "${perfdata}" > $script_output
+   while IFS= read -r line
+   do
+-    # Check if the two branches counts are equal in each record
+-    branches=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="branches:") print $(i-1)}')
+-    if [ $(($index%2)) -ne 0 ] && [ ${branches}x != ${prev_branches}x ]
++    # Check if the two instruction counts are equal in each record
++    instructions=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="instructions:") print $(i-1)}')
++    if [ $(($index%2)) -ne 0 ] && [ ${instructions}x != ${prev_instructions}x ]
+     then
+-      echo "Leader sampling [Failed inconsistent branches count]"
++      echo "Leader sampling [Failed inconsistent instructions count]"
+       err=1
+       return
+     fi
+     index=$(($index+1))
+-    prev_branches=$branches
++    prev_instructions=$instructions
+   done < $script_output
+   echo "Basic leader sampling test [Success]"
+ }
+-- 
+2.34.1
 
-Unable to find event on a PMU of 'temp_test_hwmon_event1'
-free(): invalid pointer
-
----- unexpected signal (6) ----
- 11.2: Parsing without PMU name                                      : FAILED!
- 11.3: Parsing with PMU name:
---- start ---
-test child forked, pid 391391
-Testing 'temp_test_hwmon_event1'
-Using CPUID GenuineIntel-6-BA-3
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'pwm1'
-Not a hwmon file 'pwm1'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: removing event 'pwm1' that has no input file
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-FAILED tests/hwmon_pmu.c:160 failed to parse event 'temp_test_hwmon_event1', err 1
-event syntax error: 'temp_test_hwmon_event1'
-                     \___ Bad event name
-
-Unable to find event on a PMU of 'temp_test_hwmon_event1'
-
----- unexpected signal (11) ----
- 11.3: Parsing with PMU name                                         : FAILED!
-root@x1:~# 
-
-
-
-I'm working on removing the vfs_getname code from 'perf trace' so those
-will go away, probably there are patches fixing some of the other ones,
-I'll try and look after those, but probably later today I'll push what I
-have so that it gets exposure on linux-next.
-
-- Arnaldo
