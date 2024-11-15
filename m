@@ -1,142 +1,278 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01E815FD13;
-	Fri, 15 Nov 2024 06:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654E82B9B9;
+	Fri, 15 Nov 2024 08:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731653925; cv=none; b=ffsByuZxR2HC5HNyMCd/bcBK+LcjS0AuX8Fyt7q8KiyufwL1LtAwjgz4QDQaxOM3NnpZDyEUinPfI7OYD5nxRgmDBFoR2bR3kIZVaaxc3GRa4QUA7FUupMswUxztHgh919+qZWzX6cEdMBBch9LI3lmaMJEBKVJQO6i6eZwv/c4=
+	t=1731659930; cv=none; b=mGPFa6NbK70UOgVOBME7sOeaizm4i71r3WIlxqC97ymwbsCCmbaqbtkft+52haOoz7UIarLSpr3nD6klpmueveWbFD1/PXB0QVfUopKe3tBETZ9KAowcWO41MNktkQF2c3FMKvnUazkH7frHbazRIlhAHYpey4dljPe6wpYf3vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731653925; c=relaxed/simple;
-	bh=10du59C/TjTMek/wJqaaitNg65N/1xTl/sv46eFN7Wo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NvYpkD1v5Ci2MQUmfAF/EwWLgYL7mXOwpQp5EGD8M6SNbV4UKIoQH6BfTM0GcFJ7o/VxvTSPvMwsmiUjG9wcZK07Pdn3bkMrrjArQwaSO6CkgK0bCDzkFc15+0u4qK12vDQnMjDneQAY0mr8b302VPHTrPaT46ywys+zH3KX9xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tONJMBVo; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1731659930; c=relaxed/simple;
+	bh=Tn9VJuRMe2xlv96wKod4QuzhvPY8JAA97LpI/hU7H1U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=WG1M3M+p1LDYuSo0EU3FNIR0FVahgYGzXthFnAODonMs5tB/4VmFskPqwEhw95dapQZI7+MhKfAnDQZlZDdm8kntb0H9zJ4fIwpryKB37LGyesI6Jy13VnQ7vzLixIUvHSirhcKFpVrlnNMJ4fFvM5fxCHCFvMZLHIGKgmqEYys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IrfZjzEl; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tONJMBVo"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AF0knSc024160;
-	Fri, 15 Nov 2024 06:58:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=Xm88JJ/2BqYNLX0CZsa3yZ+pb86eV5BH3J808h1F8
-	7A=; b=tONJMBVoXU4TOtMIIwda/+QbZCW56Ez1BYknIuXa6MhROfkZ5vtWXF74D
-	SboH4tazHttsozH94WiLxPnHTiBzU41uMVGLL+NEDRqs+aO8qfQGbCyl761Baz7G
-	pfVtIsOtDqhwkEeDfDPHpY5rj6/8FvT3hkg2oXRMZQqdnpKPFVyzcMLKpd5wc9zH
-	simts9srMbjy/mLyD5DnUnh1SSN25MXYEcBsRBhEXk4sIbrS6QhmQeSsoe3pNVxG
-	ykwm3HIbGZAukhlAlq08oOVApdP2lMu2TqLxbTTEY6c4yiSeeLuQ+9hxcVFFZbA+
-	vOrPEolGfTyPq9+YkkOevilRCe78Q==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42wu2vsm7h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Nov 2024 06:58:39 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4AF5C7pZ029689;
-	Fri, 15 Nov 2024 06:58:38 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 42tkjmq83v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Nov 2024 06:58:38 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4AF6wYJS34013702
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 15 Nov 2024 06:58:34 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5E16220043;
-	Fri, 15 Nov 2024 06:58:34 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2ECDB20040;
-	Fri, 15 Nov 2024 06:58:34 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 15 Nov 2024 06:58:34 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, namhyung@kernel.org, james.clark@linaro.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: [PATCH v2] perf/test: fix perf ftrace test on s390
-Date: Fri, 15 Nov 2024 07:57:35 +0100
-Message-ID: <20241115065735.2753032-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IrfZjzEl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731659928; x=1763195928;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=Tn9VJuRMe2xlv96wKod4QuzhvPY8JAA97LpI/hU7H1U=;
+  b=IrfZjzElpPPSLKkl+2k1ZHU1A6utFDcAjIpze+PlTteQ/EbFT+5ZQltn
+   WKiFE/cZbMn5n+xxZj7jzTdBa7wtERBjDNinypWTi/Hm2XZTV8T1Bn4aa
+   342O8bMo5NlTOTyf5zHlkm5KTAnEDpjz3m7G2PvWAk90GJjwq5oruZXqC
+   1/B9S2YzQeWblvgVqJdGted2SQHyAf+8k+H3/4BEftWQEceOo0em7EKOT
+   WxozFzPSMVymvmetMFGXBGdiboUwAjUBtpZ6eeemYXRzp/HsL1J4qKLfk
+   TWUtiAp3WXR99+W9Zp+EkOB+W8t1e8/6cdI5H7YPrsDLKt8T3WqQLT0KK
+   Q==;
+X-CSE-ConnectionGUID: I3ztPHXfQXWiLDKBiCviLA==
+X-CSE-MsgGUID: aHiDu4CLT8aneG2Ts7mcDQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11256"; a="19268729"
+X-IronPort-AV: E=Sophos;i="6.12,156,1728975600"; 
+   d="scan'208";a="19268729"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 00:38:24 -0800
+X-CSE-ConnectionGUID: k40xVWqFTwyCyYHhCW1H+A==
+X-CSE-MsgGUID: JDixOTL5QsuiG6FuyZ+j0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,156,1728975600"; 
+   d="scan'208";a="119428133"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.16.81])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 00:38:15 -0800
+Message-ID: <d133fc97-e4d7-4970-933f-2762c25ae50e@intel.com>
+Date: Fri, 15 Nov 2024 10:38:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: xzeUxkdyVjJP3Lf_7IMC0yZOOLbPUvoL
-X-Proofpoint-GUID: xzeUxkdyVjJP3Lf_7IMC0yZOOLbPUvoL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=668 impostorscore=0
- malwarescore=0 mlxscore=0 clxscore=1015 adultscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411150054
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] libperf cpumap: Refactor perf_cpu_map__merge()
+To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, "Liang, Kan" <kan.liang@linux.intel.com>,
+ James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20241107125308.41226-1-leo.yan@arm.com>
+ <20241107125308.41226-2-leo.yan@arm.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20241107125308.41226-2-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On s390 the perf test case ftrace sometimes fails as follows:
+On 7/11/24 14:53, Leo Yan wrote:
+> The perf_cpu_map__merge() function has two arguments, 'orig' and
+> 'other'.  The function definition might cause confusion as it could give
+> the impression that the CPU maps in the two arguments are copied into a
+> new allocated structure, which is then returned as the result.
+> 
+> The purpose of the function is to merge the CPU map 'other' into the CPU
+> map 'orig'.  This commit changes the 'orig' argument to a pointer to
+> pointer, so the new result will be updated into 'orig'.
+> 
+> The return value is changed to an int type, as an error number or 0 for
+> success.
+> 
+> Update callers and tests for the new function definition.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-  # ./perf test ftrace
-  79: perf ftrace tests    : FAILED!
-  #
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-The failure depends on the kernel .config file. Some configurarions
-always work fine, some do not.  The ftrace profile test mostly fails,
-because the ring buffer was not large enough, and some lines
-(especially the interesting ones with nanosleep in it) where dropped.
-
-To achieve success for all our tested kernel configurations, enlarge
-the buffer to store the traces complete without wrapping.
-The default buffer size is too small  for all kernel configurations.
-Set the buffer size of /sys/kernel/tracing/buffer_size_kb to 16 MB
-
-Output after:
-  # ./perf test ftrace
-  79: perf ftrace tests     : Ok
-  #
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Suggested-by: Sven Schnelle <svens@linux.ibm.com>
-Reviewed-by: James Clark <james.clark@linaro.org>
----
- tools/perf/tests/shell/ftrace.sh | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
-index a6ee740f0d7e..6161a8bdc251 100755
---- a/tools/perf/tests/shell/ftrace.sh
-+++ b/tools/perf/tests/shell/ftrace.sh
-@@ -14,6 +14,11 @@ output=$(mktemp /tmp/__perf_test.ftrace.XXXXXX)
- 
- cleanup() {
-   rm -f "${output}"
-+  if [ "$(uname -m)" = "s390x" ]
-+  then
-+	echo $ftrace_size > /sys/kernel/tracing/buffer_size_kb
-+  fi
-+
- 
-   trap - EXIT TERM INT
- }
-@@ -80,6 +85,12 @@ test_ftrace_profile() {
-     echo "perf ftrace profile test  [Success]"
- }
- 
-+if [ "$(uname -m)" = "s390x" ]
-+then
-+	ftrace_size=$(cat /sys/kernel/tracing/buffer_size_kb)
-+	echo 16384 > /sys/kernel/tracing/buffer_size_kb
-+fi
-+
- test_ftrace_list
- test_ftrace_trace
- test_ftrace_latency
--- 
-2.47.0
+> ---
+>  tools/lib/perf/cpumap.c              | 49 +++++++++++++++-------------
+>  tools/lib/perf/evlist.c              |  2 +-
+>  tools/lib/perf/include/perf/cpumap.h |  4 +--
+>  tools/perf/tests/cpumap.c            | 13 ++++----
+>  tools/perf/util/mem-events.c         |  5 ++-
+>  5 files changed, 40 insertions(+), 33 deletions(-)
+> 
+> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> index cae799ad44e1..a36e90d38142 100644
+> --- a/tools/lib/perf/cpumap.c
+> +++ b/tools/lib/perf/cpumap.c
+> @@ -1,4 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+> +#include <errno.h>
+>  #include <perf/cpumap.h>
+>  #include <stdlib.h>
+>  #include <linux/refcount.h>
+> @@ -436,46 +437,49 @@ bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu
+>  }
+>  
+>  /*
+> - * Merge two cpumaps
+> + * Merge two cpumaps.
+>   *
+> - * orig either gets freed and replaced with a new map, or reused
+> - * with no reference count change (similar to "realloc")
+> - * other has its reference count increased.
+> + * If 'other' is subset of '*orig', '*orig' keeps itself with no reference count
+> + * change (similar to "realloc").
+> + *
+> + * If '*orig' is subset of 'other', '*orig' reuses 'other' with its reference
+> + * count increased.
+> + *
+> + * Otherwise, '*orig' gets freed and replaced with a new map.
+>   */
+> -
+> -struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+> -					 struct perf_cpu_map *other)
+> +int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
+>  {
+>  	struct perf_cpu *tmp_cpus;
+>  	int tmp_len;
+>  	int i, j, k;
+>  	struct perf_cpu_map *merged;
+>  
+> -	if (perf_cpu_map__is_subset(orig, other))
+> -		return orig;
+> -	if (perf_cpu_map__is_subset(other, orig)) {
+> -		perf_cpu_map__put(orig);
+> -		return perf_cpu_map__get(other);
+> +	if (perf_cpu_map__is_subset(*orig, other))
+> +		return 0;
+> +	if (perf_cpu_map__is_subset(other, *orig)) {
+> +		perf_cpu_map__put(*orig);
+> +		*orig = perf_cpu_map__get(other);
+> +		return 0;
+>  	}
+>  
+> -	tmp_len = __perf_cpu_map__nr(orig) + __perf_cpu_map__nr(other);
+> +	tmp_len = __perf_cpu_map__nr(*orig) + __perf_cpu_map__nr(other);
+>  	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
+>  	if (!tmp_cpus)
+> -		return NULL;
+> +		return -ENOMEM;
+>  
+>  	/* Standard merge algorithm from wikipedia */
+>  	i = j = k = 0;
+> -	while (i < __perf_cpu_map__nr(orig) && j < __perf_cpu_map__nr(other)) {
+> -		if (__perf_cpu_map__cpu(orig, i).cpu <= __perf_cpu_map__cpu(other, j).cpu) {
+> -			if (__perf_cpu_map__cpu(orig, i).cpu == __perf_cpu_map__cpu(other, j).cpu)
+> +	while (i < __perf_cpu_map__nr(*orig) && j < __perf_cpu_map__nr(other)) {
+> +		if (__perf_cpu_map__cpu(*orig, i).cpu <= __perf_cpu_map__cpu(other, j).cpu) {
+> +			if (__perf_cpu_map__cpu(*orig, i).cpu == __perf_cpu_map__cpu(other, j).cpu)
+>  				j++;
+> -			tmp_cpus[k++] = __perf_cpu_map__cpu(orig, i++);
+> +			tmp_cpus[k++] = __perf_cpu_map__cpu(*orig, i++);
+>  		} else
+>  			tmp_cpus[k++] = __perf_cpu_map__cpu(other, j++);
+>  	}
+>  
+> -	while (i < __perf_cpu_map__nr(orig))
+> -		tmp_cpus[k++] = __perf_cpu_map__cpu(orig, i++);
+> +	while (i < __perf_cpu_map__nr(*orig))
+> +		tmp_cpus[k++] = __perf_cpu_map__cpu(*orig, i++);
+>  
+>  	while (j < __perf_cpu_map__nr(other))
+>  		tmp_cpus[k++] = __perf_cpu_map__cpu(other, j++);
+> @@ -483,8 +487,9 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+>  
+>  	merged = cpu_map__trim_new(k, tmp_cpus);
+>  	free(tmp_cpus);
+> -	perf_cpu_map__put(orig);
+> -	return merged;
+> +	perf_cpu_map__put(*orig);
+> +	*orig = merged;
+> +	return 0;
+>  }
+>  
+>  struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *orig,
+> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> index c6d67fc9e57e..94b7369f3efe 100644
+> --- a/tools/lib/perf/evlist.c
+> +++ b/tools/lib/perf/evlist.c
+> @@ -75,7 +75,7 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+>  		evsel->threads = perf_thread_map__get(evlist->threads);
+>  	}
+>  
+> -	evlist->all_cpus = perf_cpu_map__merge(evlist->all_cpus, evsel->cpus);
+> +	perf_cpu_map__merge(&evlist->all_cpus, evsel->cpus);
+>  }
+>  
+>  static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
+> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+> index 90457d17fb2f..c83bfb2c36ff 100644
+> --- a/tools/lib/perf/include/perf/cpumap.h
+> +++ b/tools/lib/perf/include/perf/cpumap.h
+> @@ -39,8 +39,8 @@ LIBPERF_API struct perf_cpu_map *perf_cpu_map__new_online_cpus(void);
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__read(FILE *file);
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
+> -LIBPERF_API struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+> -						     struct perf_cpu_map *other);
+> +LIBPERF_API int perf_cpu_map__merge(struct perf_cpu_map **orig,
+> +				    struct perf_cpu_map *other);
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *orig,
+>  							 struct perf_cpu_map *other);
+>  LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
+> diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+> index 2f0168b2a5a9..7f189d57232f 100644
+> --- a/tools/perf/tests/cpumap.c
+> +++ b/tools/perf/tests/cpumap.c
+> @@ -160,14 +160,14 @@ static int test__cpu_map_merge(struct test_suite *test __maybe_unused, int subte
+>  {
+>  	struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
+>  	struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
+> -	struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
+>  	char buf[100];
+>  
+> -	TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(c) == 5);
+> -	cpu_map__snprint(c, buf, sizeof(buf));
+> +	perf_cpu_map__merge(&a, b);
+> +	TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(a) == 5);
+> +	cpu_map__snprint(a, buf, sizeof(buf));
+>  	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
+>  	perf_cpu_map__put(b);
+> -	perf_cpu_map__put(c);
+> +	perf_cpu_map__put(a);
+>  	return 0;
+>  }
+>  
+> @@ -233,9 +233,8 @@ static int test__cpu_map_equal(struct test_suite *test __maybe_unused, int subte
+>  	}
+>  
+>  	/* Maps equal made maps. */
+> -	tmp = perf_cpu_map__merge(perf_cpu_map__get(one), two);
+> -	TEST_ASSERT_VAL("pair", perf_cpu_map__equal(pair, tmp));
+> -	perf_cpu_map__put(tmp);
+> +	perf_cpu_map__merge(&two, one);
+> +	TEST_ASSERT_VAL("pair", perf_cpu_map__equal(pair, two));
+>  
+>  	tmp = perf_cpu_map__intersect(pair, one);
+>  	TEST_ASSERT_VAL("one", perf_cpu_map__equal(one, tmp));
+> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+> index bf5090f5220b..3692e988c86e 100644
+> --- a/tools/perf/util/mem-events.c
+> +++ b/tools/perf/util/mem-events.c
+> @@ -258,6 +258,7 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr)
+>  	const char *s;
+>  	char *copy;
+>  	struct perf_cpu_map *cpu_map = NULL;
+> +	int ret;
+>  
+>  	while ((pmu = perf_pmus__scan_mem(pmu)) != NULL) {
+>  		for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+> @@ -283,7 +284,9 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr)
+>  			rec_argv[i++] = "-e";
+>  			rec_argv[i++] = copy;
+>  
+> -			cpu_map = perf_cpu_map__merge(cpu_map, pmu->cpus);
+> +			ret = perf_cpu_map__merge(&cpu_map, pmu->cpus);
+> +			if (ret < 0)
+> +				return ret;
+>  		}
+>  	}
+>  
 
