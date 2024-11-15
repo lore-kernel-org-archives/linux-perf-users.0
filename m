@@ -1,53 +1,47 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE83C1A3035;
-	Fri, 15 Nov 2024 11:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362863BB22;
+	Fri, 15 Nov 2024 11:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731669558; cv=none; b=I0G0yGZZl3b2dxNB+LdvpJ6oSzsCFGs5HSj9QXAG/39Bv/wkjYJaoULKGYVJeEYnMKTmDtemUj3QgeAKfEksBdD4nkUybiNVAwa3LCZc2YBxr7wMIfhYxkVa9GoymkhsPk3IzFy44MuMrj5vEo23EJcJrWSki9dt9XXlV+NiUzQ=
+	t=1731671929; cv=none; b=LersPsRFA4wHTSR2+F8LfRgXucIs/PT9AYn+Tkdlxsf65FCO9+4650Idr8o68Xhw783epY/NOV4eNazuU8934T/rPg6VRVKWAdq3KUsyJlqdli0o1MAtH+VyHiJLUAkqn6i0q7kFiLTc2ZkJdVIkwkzNoA/dvZ0s2RZD9dlaJRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731669558; c=relaxed/simple;
-	bh=QVKpv5zpxOUM8qARMacSmN6G9pusrdKjXlUohyWSA38=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T7WzAdPIo+h7q/v3HIdEiDSIz/iFp+fkMjn1XVyHPmIPB0LHUkFmqUuLtjnPbsGi5jKDdPmK51+j6V44z4rVF7+yhlHNwbu0c5LKoXOi1MOUIR8aGmHqRqQ+ZCuzdmwg1T3CJuvXKIdZ1HxdAUuW3Z0NVLd/rQ3YZt/FSeEzzZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.12,156,1728918000"; 
-   d="scan'208";a="228956408"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 15 Nov 2024 20:14:05 +0900
-Received: from Ubuntu-22.. (unknown [10.226.92.40])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id B25304007549;
-	Fri, 15 Nov 2024 20:13:48 +0900 (JST)
-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Colton Lewis <coltonlewis@google.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: [PATCH] riscv: perf: Drop defining `perf_instruction_pointer()` and `perf_misc_flags()`
-Date: Fri, 15 Nov 2024 11:13:45 +0000
-Message-ID: <20241115111345.17750-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1731671929; c=relaxed/simple;
+	bh=Z8EbVt263fTad/Uqu0XqI8o0kXZ0ahr5VzZjUIbf1IQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iHs9Npmy2XTmjZQ9swReF6kou8+xZIFBXvGiaO/s2X4D7PU0H3d17LAyVkVvkQKuv3h7C228eujkMiPIY02uBMx9CaO05ZzUEmImWk/Ls/CpYGyRNZ7ZwSm7cxyY9A6MwTjois3aImrQ9DUM2Lb3K9wJqP05zNO8mPT+Hc6fMrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwjTuT3V; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwjTuT3V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77992C4CECF;
+	Fri, 15 Nov 2024 11:58:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731671928;
+	bh=Z8EbVt263fTad/Uqu0XqI8o0kXZ0ahr5VzZjUIbf1IQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cwjTuT3VEw/HEr4MB0KVnqK6hZ3e1nzhzwXCT93eipxTT3+PJ+2qRsL5wdviVY7GM
+	 xiP0fj8p8AdDs0HRd5XthvtYPFP50tPS9lDhl/aAWWS9o5TqRgwuF5ZWu9t2Fbsfy0
+	 0zhP4XKNIwDAUqRPtjVip0MPF609uMKfrn38RIjD1EyE88kvkx+YIWbpltQ88AqZ77
+	 DG+ZBZJcS4aWSgQgT4iKfjD/FZDHTUFtQq+8b7LnHdimgMl5bnLpXJAWW6w82/I1oF
+	 90EDgwcUkRLVgTspbECOu8219K67Hbn2EUt4scGh04EV6f9DAzlJyyk7CK8rszkd2b
+	 0m5IRXojBZbjw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>
+Subject: [PATCH bpf-next] libbpf: Fix memory leak in bpf_program__attach_uprobe_multi
+Date: Fri, 15 Nov 2024 12:58:43 +0100
+Message-ID: <20241115115843.694337-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,75 +50,52 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Andrii reported memory leak detected by Coverity on error path
+in bpf_program__attach_uprobe_multi. Fixing that by moving
+the check earlier before the offsets allocations.
 
-With commit 2c47e7a74f44 ("perf/core: Correct perf sampling with guest
-VMs"), the perf core now handles the functionality previously requiring
-arch-specific definitions of `perf_instruction_pointer()` and
-`perf_misc_flags()`. As these definitions are no longer necessary for
-RISC-V, this patch removes their implementation and declarations.
-
-This cleanup aligns the RISC-V architecture with the updated perf core
-mechanism, reducing code redundancy and improving maintainability.
-
-Fixes: 2c47e7a74f44 ("perf/core: Correct perf sampling with guest VMs")
-Reported-by: Chris Paterson <Chris.Paterson2@renesas.com>
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reported-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- arch/riscv/include/asm/perf_event.h |  3 ---
- arch/riscv/kernel/perf_callchain.c  | 28 ----------------------------
- 2 files changed, 31 deletions(-)
+ tools/lib/bpf/libbpf.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
-index 38926b4a902d..bcc928fd3785 100644
---- a/arch/riscv/include/asm/perf_event.h
-+++ b/arch/riscv/include/asm/perf_event.h
-@@ -10,9 +10,6 @@
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 07d5de81dd38..66173ddb5a2d 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -12006,6 +12006,8 @@ bpf_program__attach_uprobe_multi(const struct bpf_program *prog,
+ 	ref_ctr_offsets = OPTS_GET(opts, ref_ctr_offsets, NULL);
+ 	cookies = OPTS_GET(opts, cookies, NULL);
+ 	cnt = OPTS_GET(opts, cnt, 0);
++	retprobe = OPTS_GET(opts, retprobe, false);
++	session  = OPTS_GET(opts, session, false);
  
- #ifdef CONFIG_PERF_EVENTS
- #include <linux/perf_event.h>
--extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
--extern unsigned long perf_misc_flags(struct pt_regs *regs);
--#define perf_misc_flags(regs) perf_misc_flags(regs)
- #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
+ 	/*
+ 	 * User can specify 2 mutually exclusive set of inputs:
+@@ -12034,6 +12036,9 @@ bpf_program__attach_uprobe_multi(const struct bpf_program *prog,
+ 			return libbpf_err_ptr(-EINVAL);
+ 	}
  
- #define perf_arch_fetch_caller_regs(regs, __ip) { \
-diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
-index c2c81a80f816..b465bc9eb870 100644
---- a/arch/riscv/kernel/perf_callchain.c
-+++ b/arch/riscv/kernel/perf_callchain.c
-@@ -46,31 +46,3 @@ void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
++	if (retprobe && session)
++		return libbpf_err_ptr(-EINVAL);
++
+ 	if (func_pattern) {
+ 		if (!strchr(path, '/')) {
+ 			err = resolve_full_path(path, full_path, sizeof(full_path));
+@@ -12057,12 +12062,6 @@ bpf_program__attach_uprobe_multi(const struct bpf_program *prog,
+ 		offsets = resolved_offsets;
+ 	}
  
- 	walk_stackframe(NULL, regs, fill_callchain, entry);
- }
+-	retprobe = OPTS_GET(opts, retprobe, false);
+-	session  = OPTS_GET(opts, session, false);
 -
--unsigned long perf_instruction_pointer(struct pt_regs *regs)
--{
--	if (perf_guest_state())
--		return perf_guest_get_ip();
+-	if (retprobe && session)
+-		return libbpf_err_ptr(-EINVAL);
 -
--	return instruction_pointer(regs);
--}
--
--unsigned long perf_misc_flags(struct pt_regs *regs)
--{
--	unsigned int guest_state = perf_guest_state();
--	unsigned long misc = 0;
--
--	if (guest_state) {
--		if (guest_state & PERF_GUEST_USER)
--			misc |= PERF_RECORD_MISC_GUEST_USER;
--		else
--			misc |= PERF_RECORD_MISC_GUEST_KERNEL;
--	} else {
--		if (user_mode(regs))
--			misc |= PERF_RECORD_MISC_USER;
--		else
--			misc |= PERF_RECORD_MISC_KERNEL;
--	}
--
--	return misc;
--}
+ 	attach_type = session ? BPF_TRACE_UPROBE_SESSION : BPF_TRACE_UPROBE_MULTI;
+ 
+ 	lopts.uprobe_multi.path = path;
 -- 
-2.25.1
+2.47.0
 
