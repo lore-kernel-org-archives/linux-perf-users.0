@@ -1,51 +1,54 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1645F18052;
-	Sat, 16 Nov 2024 15:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7D48372;
+	Sat, 16 Nov 2024 16:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731772748; cv=none; b=VzrTzI7vzqxzvcpUoN8EaYQvNt2m3ysHx5fPmGwBQFqECPpgpnnR0zgpo9B1KrUwz8zgpy2gKAVSwqTZuimNrS6nIz4hG32rE1INnpbcu/kkTd0NBkGAeNUdsAlfXEWCndmtpJWQ6Tvvmm3dbETOHXc9GVPv0XNnzxvJUlButrs=
+	t=1731773138; cv=none; b=eeFEjCxlTm0nPkkGfZTebCAV6Gbp+qAtvAB70UTng0/a8HePda/I7hCcbYV/IfCPD1mvdsuJZykJNYhPsKj+GBUzvCOF0UeTMA4JDCtYH0PMSgtzHooDLEUWz6dtdrmiUMiHlNTF9mwmWmitX6nOyZZjf6UlP02MQXmUuaRqKZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731772748; c=relaxed/simple;
-	bh=R05vFOPyXSmK6aZ7AW65ol+f0LJtiZt+DUZUc+g3kzw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g+HmobUCDXVt8tWmfYC/wGIScPcOrHcqMPvE4VPaT+WzYtFlW8yTL4HLhWvzYe3oM9V6uTfgSEqiBOUbSbysPCg7nP2s+4us1jh2NqrAU+hIZ5tR5+7yYlMPELHfIqYwmfeo1/tDcikJoQyl8rjHbGC8j9nAbBfW53JGavM5Lew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=N3tDMao+; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="N3tDMao+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=y+Gjvmm+1/UVOH6BaJco0VpfVNGA24+a0m8sbQTS3XY=; b=N3tDMao+T2U2QYfP
-	6IE2Zs1PXjHGzRZFWsDoGvbB/eWDojWUHbiCLI0VhJbtIHm4p3gVRGDst+/qqjvtErDBG5FiFffVN
-	YRHVwG+anG9yXGe1sFTF/Py0PSYwW67/JVmroy8XXlJ72YYX6h07Yv3PaUFl4OFDHbJEomOX2RZ3D
-	eJDYoCbe1KjgnJRd7CC95H3RIwCmbtxR3YirxA8rLbzccNTqaAIQzjMP8lvy1wU3nD1KAigouFwSV
-	Y/PN7OQB5trfNaceew3apd/Qs4YOvvfYEvvYwlWuI8HZ6KDu3snNU+6gXFbtcqAE/Xc+vniBtJt+R
-	VCsJKQ5OVqOtzNeP5w==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1tCLCF-000IdT-2w;
-	Sat, 16 Nov 2024 15:58:51 +0000
-From: linux@treblig.org
-To: irogers@google.com,
-	namhyung@kernel.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] perf util: Remove kernel version deadcode
-Date: Sat, 16 Nov 2024 15:58:50 +0000
-Message-ID: <20241116155850.113129-1-linux@treblig.org>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1731773138; c=relaxed/simple;
+	bh=8E9fdTPH4z1JWEfAFPme5sq66UKNxpppxxaOanqA25I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FXZX6lsjbqccUAHIINj8WBnvS57cw403OoYUY4x8vha0uB2TkHLdqF1YN7utSHBO0g7T+ULMyIFxcxqmy178sRMJHdKVzoiG2bsjTNdfhG4bXpAVTlMRrDTgFubfrD+q6uDmwc88ZwQYqLhWSWckXwpnG64KzRAbFI/ZVUVDiwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.12,160,1728918000"; 
+   d="scan'208";a="225039180"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 17 Nov 2024 01:05:34 +0900
+Received: from Ubuntu-22.. (unknown [10.226.92.19])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 37BE54012505;
+	Sun, 17 Nov 2024 01:05:16 +0900 (JST)
+From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Colton Lewis <coltonlewis@google.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Chris Paterson <Chris.Paterson2@renesas.com>,
+	Andrew Jones <ajones@ventanamicro.com>
+Subject: [PATCH v2] riscv: perf: Drop defining `perf_instruction_pointer()` and `perf_misc_flags()`
+Date: Sat, 16 Nov 2024 16:05:06 +0000
+Message-ID: <20241116160506.5324-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,137 +57,89 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-fetch_kernel_version() has been unused since Ian's 2013
-commit 3d6dfae88917 ("perf parse-events: Remove BPF event support")
+With commit 2c47e7a74f44 ("perf/core: Correct perf sampling with guest
+VMs"), the perf core now handles the functionality previously requiring
+arch-specific definitions of `perf_instruction_pointer()` and
+`perf_misc_flags()`. As these definitions are no longer necessary for
+RISC-V, this patch removes their implementation and declarations.
 
-Remove it, and it's helpers.
-I noticed there are a bunch of kernel-version macros that are also
-unused nearby.
-Also remove them.
+This change also fixes the following build issue on RISC-V:
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+    ./include/linux/perf_event.h:1679:84: error: macro "perf_misc_flags" passed 2 arguments, but takes just 1
+    ./include/linux/perf_event.h:1679:22: error: 'perf_misc_flags' redeclared as different kind of symbol
+    ./include/linux/perf_event.h:1680:22: error: conflicting types for 'perf_instruction_pointer'; have 'long unsigned int(struct perf_event *, struct pt_regs *)'
+
+The above errors arise from conflicts between the core definitions in
+`linux/perf_event.h` and the RISC-V-specific definitions in
+`arch/riscv/include/asm/perf_event.h`. Removing the RISC-V-specific
+definitions resolves these issues and aligns the architecture with the
+updated perf core.
+
+Fixes: 2c47e7a74f44 ("perf/core: Correct perf sampling with guest VMs")
+Reported-by: Chris Paterson <Chris.Paterson2@renesas.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 ---
- tools/perf/util/util.c | 85 ------------------------------------------
- tools/perf/util/util.h |  8 ----
- 2 files changed, 93 deletions(-)
+v1->v2
+- Update commit message to say it fixes build issue
+- Included RB tag from Andrew
+---
+ arch/riscv/include/asm/perf_event.h |  3 ---
+ arch/riscv/kernel/perf_callchain.c  | 28 ----------------------------
+ 2 files changed, 31 deletions(-)
 
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 9d55a13787ce..855aac5150a0 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -336,91 +336,6 @@ bool perf_event_paranoid_check(int max_level)
- 	return perf_event_paranoid() <= max_level;
+diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
+index 38926b4a902d..bcc928fd3785 100644
+--- a/arch/riscv/include/asm/perf_event.h
++++ b/arch/riscv/include/asm/perf_event.h
+@@ -10,9 +10,6 @@
+ 
+ #ifdef CONFIG_PERF_EVENTS
+ #include <linux/perf_event.h>
+-extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+-extern unsigned long perf_misc_flags(struct pt_regs *regs);
+-#define perf_misc_flags(regs) perf_misc_flags(regs)
+ #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
+ 
+ #define perf_arch_fetch_caller_regs(regs, __ip) { \
+diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
+index c2c81a80f816..b465bc9eb870 100644
+--- a/arch/riscv/kernel/perf_callchain.c
++++ b/arch/riscv/kernel/perf_callchain.c
+@@ -46,31 +46,3 @@ void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
+ 
+ 	walk_stackframe(NULL, regs, fill_callchain, entry);
  }
- 
--static int
--fetch_ubuntu_kernel_version(unsigned int *puint)
+-
+-unsigned long perf_instruction_pointer(struct pt_regs *regs)
 -{
--	ssize_t len;
--	size_t line_len = 0;
--	char *ptr, *line = NULL;
--	int version, patchlevel, sublevel, err;
--	FILE *vsig;
+-	if (perf_guest_state())
+-		return perf_guest_get_ip();
 -
--	if (!puint)
--		return 0;
--
--	vsig = fopen("/proc/version_signature", "r");
--	if (!vsig) {
--		pr_debug("Open /proc/version_signature failed: %s\n",
--			 strerror(errno));
--		return -1;
--	}
--
--	len = getline(&line, &line_len, vsig);
--	fclose(vsig);
--	err = -1;
--	if (len <= 0) {
--		pr_debug("Reading from /proc/version_signature failed: %s\n",
--			 strerror(errno));
--		goto errout;
--	}
--
--	ptr = strrchr(line, ' ');
--	if (!ptr) {
--		pr_debug("Parsing /proc/version_signature failed: %s\n", line);
--		goto errout;
--	}
--
--	err = sscanf(ptr + 1, "%d.%d.%d",
--		     &version, &patchlevel, &sublevel);
--	if (err != 3) {
--		pr_debug("Unable to get kernel version from /proc/version_signature '%s'\n",
--			 line);
--		goto errout;
--	}
--
--	*puint = (version << 16) + (patchlevel << 8) + sublevel;
--	err = 0;
--errout:
--	free(line);
--	return err;
+-	return instruction_pointer(regs);
 -}
 -
--int
--fetch_kernel_version(unsigned int *puint, char *str,
--		     size_t str_size)
+-unsigned long perf_misc_flags(struct pt_regs *regs)
 -{
--	struct utsname utsname;
--	int version, patchlevel, sublevel, err;
--	bool int_ver_ready = false;
+-	unsigned int guest_state = perf_guest_state();
+-	unsigned long misc = 0;
 -
--	if (access("/proc/version_signature", R_OK) == 0)
--		if (!fetch_ubuntu_kernel_version(puint))
--			int_ver_ready = true;
--
--	if (uname(&utsname))
--		return -1;
--
--	if (str && str_size) {
--		strncpy(str, utsname.release, str_size);
--		str[str_size - 1] = '\0';
+-	if (guest_state) {
+-		if (guest_state & PERF_GUEST_USER)
+-			misc |= PERF_RECORD_MISC_GUEST_USER;
+-		else
+-			misc |= PERF_RECORD_MISC_GUEST_KERNEL;
+-	} else {
+-		if (user_mode(regs))
+-			misc |= PERF_RECORD_MISC_USER;
+-		else
+-			misc |= PERF_RECORD_MISC_KERNEL;
 -	}
 -
--	if (!puint || int_ver_ready)
--		return 0;
--
--	err = sscanf(utsname.release, "%d.%d.%d",
--		     &version, &patchlevel, &sublevel);
--
--	if (err != 3) {
--		pr_debug("Unable to get kernel version from uname '%s'\n",
--			 utsname.release);
--		return -1;
--	}
--
--	*puint = (version << 16) + (patchlevel << 8) + sublevel;
--	return 0;
+-	return misc;
 -}
--
- int perf_tip(char **strp, const char *dirpath)
- {
- 	struct strlist *tips;
-diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index 9966c21aaf04..b5e7becfc803 100644
---- a/tools/perf/util/util.h
-+++ b/tools/perf/util/util.h
-@@ -43,14 +43,6 @@ int sysctl__max_stack(void);
- 
- bool sysctl__nmi_watchdog_enabled(void);
- 
--int fetch_kernel_version(unsigned int *puint,
--			 char *str, size_t str_sz);
--#define KVER_VERSION(x)		(((x) >> 16) & 0xff)
--#define KVER_PATCHLEVEL(x)	(((x) >> 8) & 0xff)
--#define KVER_SUBLEVEL(x)	((x) & 0xff)
--#define KVER_FMT	"%d.%d.%d"
--#define KVER_PARAM(x)	KVER_VERSION(x), KVER_PATCHLEVEL(x), KVER_SUBLEVEL(x)
--
- int perf_tip(char **strp, const char *dirpath);
- 
- #ifndef HAVE_SCHED_GETCPU_SUPPORT
 -- 
-2.47.0
+2.25.1
 
