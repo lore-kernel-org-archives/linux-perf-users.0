@@ -1,312 +1,213 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838B81EF086
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 22:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC99D153BE4;
+	Mon, 18 Nov 2024 23:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731970487; cv=none; b=VmAa1Evx4ZWIt4M+DPcBlrs5pwq2tDsa2CZVU4HyVx2wpqvwROzaogb3DUMaS/Ie3etZrYErjDMFHUsc5F+lZnjjL6sUcZ+TOISMZhCGBgNJ6Gh8a8fZa7VBzPf2h5oS3hWnpCcOqvfBZA7QJpmyQBCaLI6uHkwmrsP+9PxqZyI=
+	t=1731971035; cv=none; b=YOfPfEAyxPCKbhulxR/O7dT910ZYMqowaqIIoJohEZCkDRa1B4/ATFM47YWD9orDJvPlGTxEJ6/iV4rQcxcDSG+5Tp2ClWLEitu2HTZO+Ha8nr3S9Gql9//O9P9eTmTqgSJbMt+vqmmV5IiwRC6gDQFryE2Ei+O6p5CAZU0QrsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731970487; c=relaxed/simple;
-	bh=6p59fnGhg3R8WxuGSRydhk66jb7GPNK67Y0Q+xJOfHU=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=PLsy/12wfzbjrWxRCCr2IDmd+wv+rLZzMoXAQMvW9uHlWG8Zixlzt9KN8JElU43Y4JLmCA7rWxT1YR/+1Q0D2/WkFrXzog9PQ1JQn8xLSJzbCVkhM4XGaMVt+ZUqdMOJk5bpK33P0ThlYw5g2LzkY1pj3OWkCL2LqbyLm4dQKWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AM92ePW3; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1731971035; c=relaxed/simple;
+	bh=y5eJvZEKw6c/vP8EEPZ+YKx54VlZZ2cyAkOZGSc85ss=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hXtqf6ktFxlSNSd6PPWhWJhvac4gmHXL6hCokzJ0TKutOEQcIDkOrO6ovLF8onUUpQCnux3w5vH/ioIVFuzuG+B+JdmRDm8nwgW16KbzWm9UJ3PLQOcaIWCAOUD1GLTMLjlll26i3bj7wSfdkSeW9hxUqTPnJdlVapO2ZvYNjAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VlbRViDy; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AM92ePW3"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ee57ae1133so38726227b3.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 14:54:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VlbRViDy"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6e9f8dec3daso3442747b3.0;
+        Mon, 18 Nov 2024 15:03:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731970484; x=1732575284; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mD5jCks16HgKMtJGIMozMf0vz7aQdcDKdJJkobIuclw=;
-        b=AM92ePW37BYp3sik6DEYF8wHVlto9NN4Si+D/1pmJFmYCh1Z6H5wBhzVfubqyG0oyQ
-         hBQbpL87qD3+fsihXK2uShYl0Ru0yWWYnnU2ejcXnCzCh0Ws9gv0pqNFWdhs1G1ALfiA
-         5cmFO1msPz9icM31VQV6vNUK4mhZtBGdyBbVBhwU6ypFARlxHYncymILJNv9LaWnHWqL
-         YqtuOUpNfaIroZeDZzDsz8VCOmSnjcEppUxQ03Pp0MNuyhyKoQIkj9LFesU3jycZSXOP
-         JqoIgzAGZLzQqpp3E+Wetg3euTLUSWcXFTweQATsgxCPs3LLTQ7VbS+mC/g35U2mhz4g
-         YP1w==
+        d=gmail.com; s=20230601; t=1731971033; x=1732575833; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BLGOlEVr1tSmo5mAOsdbIqpFPwvL8S5zsKZlb2YOAjE=;
+        b=VlbRViDybb1ipThoDkUhyCPFFY0v4n2SaA+sKKE8nson9LsrAWX9tlk/vlflseaL6V
+         LI8PH+7rlR28hKhvFAxGSJtkElDR/q9kjIDcNVg9mVMh5ThmuWRxuIQgLqHqW/fsWAVu
+         LCP7TzS9Ky3xrN9rr4lYwXLCV1KDyb+RyuwblxhqynV/8DZhzeYd6dncM6MlRWMC7d3F
+         2vhVD+oFSCLJ5pX64z8K9GcKqqYMZS3wIl7YrPwQvs4K/jimDB6u+aTgM0OskzpvsFzs
+         uY91WPTjFFocYaPSrmQOX/FEJtOopCqNJ40NeqUgxwtRwQs+GCyVBpr/2k4KAgYb+adX
+         lvyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731970484; x=1732575284;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mD5jCks16HgKMtJGIMozMf0vz7aQdcDKdJJkobIuclw=;
-        b=LEP1eKjRuoet92e1PdrTFmMd4AIOGVFKGlN2eGMV/B84ipTEPqkSy9Hx7QNT59YbX8
-         2Rj8SipT/oAuvH7pUbYKPlmHlfBGsIF6Tj9e77qqhg6J94euov3MC6WsE8WRR05/eIaY
-         1i509hJYokyEy/R9zNcHOqoyFgPL3c375h8QDmyhiiEu5s7rseUKRa9O/muJoAghLw6x
-         miZ3S6TzWLbJhWworKcggy7ryn/v0le808Gr2TtubY6isTq44DbOQHZ8qaMCZhkKVFH6
-         Mw31bUG67TvNhuKtgVcRhXXwz2KIPPA6xFc2JmrAFWKuBa2aJA8th4MdnjL/ksE8hGwd
-         Xa5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXMOddlEv5zgPn2x8UfwV1AR1e/TX9SSasN55TWcOa0KaggTZmsBROUD1SobBTRbzE9zrrtQ4tYMWHcM3BpHzOH@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqHzcwG8WJ0dBljL27K++KEroGLYBiShvyKIR8XGQewfVnx7dI
-	hQiCRlK1qkGjrmVQyScdgW2iTOcyXDjlT0JRt+5yNm3ToiieIUz3av29qhhfj/6tM5OfjQBEnuD
-	zr4b5yQ==
-X-Google-Smtp-Source: AGHT+IGuX9TenwXB6zRWjhv+Zw88XIC0zVlyiSRcC9mseqOdSWcEQUv3ttxqHj2nG4fp9lkaeBfIfZttkCLY
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:22a4:ded5:5c37:fcc7])
- (user=irogers job=sendgmr) by 2002:a81:d101:0:b0:6ea:fa4:a365 with SMTP id
- 00721157ae682-6ee55ce4770mr1223427b3.8.1731970484513; Mon, 18 Nov 2024
- 14:54:44 -0800 (PST)
-Date: Mon, 18 Nov 2024 14:53:45 -0800
-In-Reply-To: <20241118225345.889810-1-irogers@google.com>
-Message-Id: <20241118225345.889810-8-irogers@google.com>
+        d=1e100.net; s=20230601; t=1731971033; x=1732575833;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BLGOlEVr1tSmo5mAOsdbIqpFPwvL8S5zsKZlb2YOAjE=;
+        b=af914IEclIUa7dboKviVWCO1NrWG+87K/sW2KRBPw+Rw4FldwrHHkG7A2q8MyGweKS
+         f7e5s0kvh4D/m33fAxWu8YCTrXVC11oQ40a2RoL5g0ZNnJ2fc6DGMR2jXCk8tTdnvuZj
+         yPz7ZsMsfaKRQ0JCjMo4p/oB6exdRcAw34BEcSwd0YjC2YeRk3OsnmZsS0StvuViXn+b
+         7gtdlANTGY0tSVsEF4Qft7Vgl9V/gHOUG1P6Gd8TUOchfK2+TUBzxU0WAjHkEJEIj8Mt
+         Joihn8hsMREg0G8vVVrFVw5I0S5U/VLraNy2q64doFz3CAXuMjZNuwayUNudpeRpNq3j
+         avOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVk3yk6bMM6HKzqSlpf5O1MCMbyYtJKD1hoMMiSw5LqX7uqRM3Wc99iG2wijQIS+PYSntSnV5/fyRYr7TecEzeixw==@vger.kernel.org, AJvYcCW+fL9bKhI72YDfLbgoOfWxE0/MYnShdIy3lfcK2V1HKiq1V7s0pDbEop8uebPlQJCs5bpfxX7Yuz/UI5s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNhPblQeSx+X2/lPyp7sxdgMYEBycnsbUE/SEwamQFAzVbe7HC
+	sKnrJkoe8eDKm5nEJsl4wn8zSahvi8yoTOCs3KzwTBR7uRh3J+H/QRmkJSGkb33iX40sacZJGLH
+	cZrGcoOkQCFbt5T9oJnD1BviJEvQEiR/0
+X-Google-Smtp-Source: AGHT+IHKoqBVmNRIWiniQcXlArtto7smxYj78UZGvMfwkUBqetj7kPVtOb/o3T5992XSQF0rv9XkQAjmm4QjQMOBL9w=
+X-Received: by 2002:a05:690c:62c7:b0:6ea:8dad:c3cf with SMTP id
+ 00721157ae682-6ee55a77fbcmr141106937b3.20.1731971032786; Mon, 18 Nov 2024
+ 15:03:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241118225345.889810-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Subject: [PATCH v5 7/7] perf tests: Enable tests disabled due to tracepoint parsing
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	James Clark <james.clark@linaro.org>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Yang Li <yang.lee@linux.alibaba.com>, Colin Ian King <colin.i.king@gmail.com>, 
-	Yang Jihong <yangjihong@bytedance.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Ben Gainey <ben.gainey@arm.com>, zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
-	Zixian Cai <fzczx123@gmail.com>, Andi Kleen <ak@linux.intel.com>, Paran Lee <p4ranlee@gmail.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>
+MIME-Version: 1.0
+References: <20241113002818.3578645-1-howardchu95@gmail.com>
+ <20241113002818.3578645-2-howardchu95@gmail.com> <ZzutCSbEU-5UZXc3@google.com>
+In-Reply-To: <ZzutCSbEU-5UZXc3@google.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Mon, 18 Nov 2024 15:03:41 -0800
+Message-ID: <CAH0uvoj5EY3mkgtduKV7VY8iTWCrhokCtuZimy=N7=3Ah9gGgw@mail.gmail.com>
+Subject: Re: [PATCH v8 01/10] perf record --off-cpu: Add --off-cpu-thresh option
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, peterz@infradead.org, irogers@google.com, 
+	mingo@redhat.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tracepoint parsing required libtraceevent but no longer does. Remove
-the Build logic and #ifdefs that caused the tests not to be run. Test
-code that directly uses libtraceevent is still guarded.
+Hello Namhyung,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/Build          |  6 +++---
- tools/perf/tests/builtin-test.c |  2 --
- tools/perf/tests/parse-events.c | 25 +------------------------
- 3 files changed, 4 insertions(+), 29 deletions(-)
+On Mon, Nov 18, 2024 at 1:09=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hello Howard,
+>
+> On Tue, Nov 12, 2024 at 04:28:09PM -0800, Howard Chu wrote:
+> > Specify the threshold for dumping offcpu samples with --off-cpu-thresh,
+> > the unit is us (microsecond). Default value is 500000us (500ms, 0.5s).
+>
+> I think it's better to add an option after you implemented the feature.
+> Before that you may hardcode the threshold if necessary.
+>
+> Also it'd be a good practice to add an example for the option in the
+> commit message.
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index ec4e1f034742..4bf8d3f5eae7 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -5,10 +5,10 @@ perf-test-y += tests-scripts.o
- perf-test-y += parse-events.o
- perf-test-y += dso-data.o
- perf-test-y += vmlinux-kallsyms.o
--perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall.o
--perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall-all-cpus.o
-+perf-test-y += openat-syscall.o
-+perf-test-y += openat-syscall-all-cpus.o
- perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall-tp-fields.o
--perf-test-$(CONFIG_LIBTRACEEVENT) += mmap-basic.o
-+perf-test-y += mmap-basic.o
- perf-test-y += perf-record.o
- perf-test-y += evsel-roundtrip-name.o
- perf-test-$(CONFIG_LIBTRACEEVENT) += evsel-tp-sched.o
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 8dcf74d3c0a3..738ad32b2c8a 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -60,11 +60,9 @@ static struct test_suite *arch_tests[] = {
- 
- static struct test_suite *generic_tests[] = {
- 	&suite__vmlinux_matches_kallsyms,
--#ifdef HAVE_LIBTRACEEVENT
- 	&suite__openat_syscall_event,
- 	&suite__openat_syscall_event_on_all_cpus,
- 	&suite__basic_mmap,
--#endif
- 	&suite__mem,
- 	&suite__parse_events,
- 	&suite__expr,
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 82a19674a38f..5ec2e5607987 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -54,8 +54,6 @@ static bool test_perf_config(const struct perf_evsel *evsel, __u64 expected_conf
- 	return (evsel->attr.config & PERF_HW_EVENT_MASK) == expected_config;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
--
- #if defined(__s390x__)
- /* Return true if kvm module is available and loaded. Test this
-  * and return success when trace point kvm_s390_create_vm
-@@ -112,7 +110,6 @@ static int test__checkevent_tracepoint_multi(struct evlist *evlist)
- 	}
- 	return TEST_OK;
- }
--#endif /* HAVE_LIBTRACEEVENT */
- 
- static int test__checkevent_raw(struct evlist *evlist)
- {
-@@ -311,7 +308,6 @@ static int test__checkevent_breakpoint_rw(struct evlist *evlist)
- 	return TEST_OK;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
- static int test__checkevent_tracepoint_modifier(struct evlist *evlist)
- {
- 	struct evsel *evsel = evlist__first(evlist);
-@@ -340,7 +336,6 @@ test__checkevent_tracepoint_multi_modifier(struct evlist *evlist)
- 
- 	return test__checkevent_tracepoint_multi(evlist);
- }
--#endif /* HAVE_LIBTRACEEVENT */
- 
- static int test__checkevent_raw_modifier(struct evlist *evlist)
- {
-@@ -629,7 +624,6 @@ static int test__checkevent_pmu(struct evlist *evlist)
- 	return TEST_OK;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
- static int test__checkevent_list(struct evlist *evlist)
- {
- 	struct evsel *evsel = evlist__first(evlist);
-@@ -671,7 +665,6 @@ static int test__checkevent_list(struct evlist *evlist)
- 
- 	return TEST_OK;
- }
--#endif
- 
- static int test__checkevent_pmu_name(struct evlist *evlist)
- {
-@@ -971,7 +964,6 @@ static int test__group2(struct evlist *evlist)
- 	return TEST_OK;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
- static int test__group3(struct evlist *evlist __maybe_unused)
- {
- 	struct evsel *evsel, *group1_leader = NULL, *group2_leader = NULL;
-@@ -1078,7 +1070,6 @@ static int test__group3(struct evlist *evlist __maybe_unused)
- 	}
- 	return TEST_OK;
- }
--#endif
- 
- static int test__group4(struct evlist *evlist __maybe_unused)
- {
-@@ -1813,7 +1804,6 @@ static int test__term_equal_legacy(struct evlist *evlist)
- 	return TEST_OK;
- }
- 
--#ifdef HAVE_LIBTRACEEVENT
- static int count_tracepoints(void)
- {
- 	struct dirent *events_ent;
-@@ -1867,7 +1857,6 @@ static int test__all_tracepoints(struct evlist *evlist)
- 
- 	return test__checkevent_tracepoint_multi(evlist);
- }
--#endif /* HAVE_LIBTRACEVENT */
- 
- struct evlist_test {
- 	const char *name;
-@@ -1876,7 +1865,6 @@ struct evlist_test {
- };
- 
- static const struct evlist_test test__events[] = {
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "syscalls:sys_enter_openat",
- 		.check = test__checkevent_tracepoint,
-@@ -1887,7 +1875,6 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_tracepoint_multi,
- 		/* 1 */
- 	},
--#endif
- 	{
- 		.name  = "r1a",
- 		.check = test__checkevent_raw,
-@@ -1938,7 +1925,6 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_w,
- 		/* 1 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "syscalls:sys_enter_openat:k",
- 		.check = test__checkevent_tracepoint_modifier,
-@@ -1949,7 +1935,6 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_tracepoint_multi_modifier,
- 		/* 3 */
- 	},
--#endif
- 	{
- 		.name  = "r1a:kp",
- 		.check = test__checkevent_raw_modifier,
-@@ -1995,13 +1980,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_w_modifier,
- 		/* 2 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "r1,syscalls:sys_enter_openat:k,1:1:hp",
- 		.check = test__checkevent_list,
- 		/* 3 */
- 	},
--#endif
- 	{
- 		.name  = "instructions:G",
- 		.check = test__checkevent_exclude_host_modifier,
-@@ -2032,13 +2015,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__group2,
- 		/* 9 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "group1{syscalls:sys_enter_openat:H,cycles:kppp},group2{cycles,1:3}:G,instructions:u",
- 		.check = test__group3,
- 		/* 0 */
- 	},
--#endif
- 	{
- 		.name  = "{cycles:u,instructions:kp}:p",
- 		.check = test__group4,
-@@ -2049,13 +2030,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__group5,
- 		/* 2 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name  = "*:*",
- 		.check = test__all_tracepoints,
- 		/* 3 */
- 	},
--#endif
- 	{
- 		.name  = "{cycles,cache-misses:G}:H",
- 		.check = test__group_gh1,
-@@ -2111,7 +2090,7 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_len_rw_modifier,
- 		/* 4 */
- 	},
--#if defined(__s390x__) && defined(HAVE_LIBTRACEEVENT)
-+#if defined(__s390x__)
- 	{
- 		.name  = "kvm-s390:kvm_s390_create_vm",
- 		.check = test__checkevent_tracepoint,
-@@ -2265,13 +2244,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_2_events,
- 		/* 3 */
- 	},
--#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name = "9p:9p_client_req",
- 		.check = test__checkevent_tracepoint,
- 		/* 4 */
- 	},
--#endif
- };
- 
- static const struct evlist_test test__events_pmu[] = {
--- 
-2.47.0.338.g60cca15819-goog
+Sure.
 
+>
+> >
+> > Suggested-by: Ian Rogers <irogers@google.com>
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: James Clark <james.clark@linaro.org>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Link: https://lore.kernel.org/r/20241108204137.2444151-2-howardchu95@gm=
+ail.com
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/builtin-record.c | 26 ++++++++++++++++++++++++++
+> >  tools/perf/util/off_cpu.h   |  1 +
+> >  tools/perf/util/record.h    |  1 +
+>
+> Please update the documentation if you add a new option.
+
+Ok sure.
+
+Thanks,
+Howard
+>
+> Thanks,
+> Namhyung
+>
+>
+> >  3 files changed, 28 insertions(+)
+> >
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index f83252472921..c069000efe5c 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -3149,6 +3149,28 @@ static int record__parse_mmap_pages(const struct=
+ option *opt,
+> >       return ret;
+> >  }
+> >
+> > +static int record__parse_off_cpu_thresh(const struct option *opt,
+> > +                                     const char *str,
+> > +                                     int unset __maybe_unused)
+> > +{
+> > +     struct record_opts *opts =3D opt->value;
+> > +     char *endptr;
+> > +     u64 off_cpu_thresh_us;
+> > +
+> > +     if (!str)
+> > +             return -EINVAL;
+> > +
+> > +     off_cpu_thresh_us =3D strtoull(str, &endptr, 10);
+> > +
+> > +     /* threshold isn't string "0", yet strtoull() returns 0, parsing =
+failed */
+> > +     if (*endptr || (off_cpu_thresh_us =3D=3D 0 && strcmp(str, "0")))
+> > +             return -EINVAL;
+> > +     else
+> > +             opts->off_cpu_thresh_us =3D off_cpu_thresh_us;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  void __weak arch__add_leaf_frame_record_opts(struct record_opts *opts =
+__maybe_unused)
+> >  {
+> >  }
+> > @@ -3342,6 +3364,7 @@ static struct record record =3D {
+> >               .ctl_fd              =3D -1,
+> >               .ctl_fd_ack          =3D -1,
+> >               .synth               =3D PERF_SYNTH_ALL,
+> > +             .off_cpu_thresh_us   =3D OFFCPU_THRESH,
+> >       },
+> >  };
+> >
+> > @@ -3564,6 +3587,9 @@ static struct option __record_options[] =3D {
+> >       OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analys=
+is"),
+> >       OPT_STRING(0, "setup-filter", &record.filter_action, "pin|unpin",
+> >                  "BPF filter action"),
+> > +     OPT_CALLBACK(0, "off-cpu-thresh", &record.opts, "us",
+> > +                  "Dump off-cpu samples if off-cpu time reaches this t=
+hreshold. The unit is microsecond (default: 500000)",
+> > +                  record__parse_off_cpu_thresh),
+> >       OPT_END()
+> >  };
+> >
+> > diff --git a/tools/perf/util/off_cpu.h b/tools/perf/util/off_cpu.h
+> > index 2dd67c60f211..c6edc0f7c40d 100644
+> > --- a/tools/perf/util/off_cpu.h
+> > +++ b/tools/perf/util/off_cpu.h
+> > @@ -16,6 +16,7 @@ struct record_opts;
+> >                             PERF_SAMPLE_PERIOD | PERF_SAMPLE_CALLCHAIN =
+| \
+> >                             PERF_SAMPLE_CGROUP)
+> >
+> > +#define OFFCPU_THRESH 500000ull
+> >
+> >  #ifdef HAVE_BPF_SKEL
+> >  int off_cpu_prepare(struct evlist *evlist, struct target *target,
+> > diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+> > index a6566134e09e..2ca74add26c0 100644
+> > --- a/tools/perf/util/record.h
+> > +++ b/tools/perf/util/record.h
+> > @@ -79,6 +79,7 @@ struct record_opts {
+> >       int           synth;
+> >       int           threads_spec;
+> >       const char    *threads_user_spec;
+> > +     u64           off_cpu_thresh_us;
+> >  };
+> >
+> >  extern const char * const *record_usage;
+> > --
+> > 2.43.0
+> >
