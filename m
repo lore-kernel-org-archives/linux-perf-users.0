@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FEE17BA3;
-	Mon, 18 Nov 2024 21:09:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D321E7674;
+	Mon, 18 Nov 2024 21:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731964172; cv=none; b=VFmU6XinNdwAujYh/T5wOv0pZ2jI8uvIjNJ7E8DKHiElWIcFGofEEpoVfpdRIaJmDedj1sKzvI8TozbWgO/oejSjHsyErWZQXIarSSEDNE7Z+6V5eCpsIDCAlJ6MbFMjc3JFDPB9kz8uCvud0bBI7GQfVC3IKfVX0b75yd87ysk=
+	t=1731964630; cv=none; b=O/SY7TS5w9YsJa7lJIgEtUkGctFXhAqNPWryFHEm5CcYcIiXB4DIxJPSce74mr+5w2u6lje8lH7S0KljhWkS2YPFoVHXMukcQzO8eStI/9hme9JXw5V17tJXW+29YCg4HVYa4oLWX2GJ4tkHUzpIwvrJ92c6HOPhGgqBsXRp22o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731964172; c=relaxed/simple;
-	bh=dzd5GAnO2vMvLhfVZwgpxhH6Zqx4+TRRGuxsgsdTjvY=;
+	s=arc-20240116; t=1731964630; c=relaxed/simple;
+	bh=9TBxA42ZTn5iyvXFYCgi43nTdVs128UxQ3PPtNhVW0U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k+04TN0B9EjwsuXAMXej6TSBCH0CH+n0WGIjMcwVcrvcWeYyHVH0e88KaTp5UTYfIS9J7eIw059WiCZHDyBHNc3v9L7mHutOE/r5IUJuakZnJFhtoqUbNwv+vOGHXDrb9PsY6IheBmKeKt+QSpltOGDzPGvNaJU49EIY2o5AwtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hn/pm4/P; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=R7HmY3U5XgX8/eVth/G7GUNanDn30HLIcRzDwe2wu7FHj9LY8QnAE9lfu0ySiopEzxJ7aAzA3PlWgcwM3EVOcIf2oaIWZ7LDTGUJkbrHqyVO4+dCbsBO1AlHJe2rP6TeFJ8AEuc+2GNvX692+1nEtfjMYDpaWbhoQibWHJYChYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFWfgJjk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hn/pm4/P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB8DC4CED0;
-	Mon, 18 Nov 2024 21:09:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFWfgJjk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BC1EC4CED7;
+	Mon, 18 Nov 2024 21:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731964171;
-	bh=dzd5GAnO2vMvLhfVZwgpxhH6Zqx4+TRRGuxsgsdTjvY=;
+	s=k20201202; t=1731964629;
+	bh=9TBxA42ZTn5iyvXFYCgi43nTdVs128UxQ3PPtNhVW0U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hn/pm4/PAyIB4SHOQyI112PSqeZxTEyC4OpNOtMWrMYjAEA12aVwYA6MAULkmCJ+y
-	 D/Rvwy533KxTcFXH06we5HT+IJgua5ce2rnWW1v+d0wzhxBBb1bBjqTDoOmqYo7eXZ
-	 4S+P0yXP51Mb/cGofBT6Ts4AwqGwpI9gNptQMj95PpFO2+16lJZcOyQDzJk+++SS+s
-	 0I8RyXRehu0gunl4SntPOv8xywIa/sTWG8qdYINWRTRsG9p0fAXG1o3tylUXl5BKnJ
-	 n6NrVvxRnzo7uvZg5ZV+3RENHxxBbXrGj9OrW22klAHKLhEB0z8Vyf/7RoESlTlpe9
-	 8GRYhgXthtHzA==
-Date: Mon, 18 Nov 2024 13:09:29 -0800
+	b=YFWfgJjkJUQ+OP98HTM7UPtE6PwDOeExCIjKKGH8Df5l43b2tLak/hTFl+1WLxYu9
+	 wrP+TVgiegF2Hos7ZHj0iRYOQ0tb8usBqtg0q8YwwIZOt3+jYE8KdGZnyu3L+V7Gzm
+	 nkI9zqe1hrj8BFfq+ZpLBhkLaIP8FRbmfRUMbJLfpXemRG9tITRA30I7C1JVN8UnZ7
+	 VGf/Qvt1p8jqGGCgWAksbvVy3vWgJoS+Bg0ezWSWi0rnhhXMbZBN8lXDAfW2UpXVKw
+	 I0MAMD4Dje5OX4d4WFA0wXHHqERgTwHba4+uBFFq0GOGAkbFxHnrPaQokd9hKwO/la
+	 89o1C/ZUnE57w==
+Date: Mon, 18 Nov 2024 13:17:07 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Howard Chu <howardchu95@gmail.com>
 Cc: acme@kernel.org, peterz@infradead.org, irogers@google.com,
@@ -37,11 +37,10 @@ Cc: acme@kernel.org, peterz@infradead.org, irogers@google.com,
 	James Clark <james.clark@linaro.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v8 01/10] perf record --off-cpu: Add --off-cpu-thresh
- option
-Message-ID: <ZzutCSbEU-5UZXc3@google.com>
+Subject: Re: [PATCH v8 03/10] perf record --off-cpu: Parse off-cpu event
+Message-ID: <Zzuu06ybvy8IpH5m@google.com>
 References: <20241113002818.3578645-1-howardchu95@gmail.com>
- <20241113002818.3578645-2-howardchu95@gmail.com>
+ <20241113002818.3578645-4-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,22 +49,62 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241113002818.3578645-2-howardchu95@gmail.com>
+In-Reply-To: <20241113002818.3578645-4-howardchu95@gmail.com>
 
-Hello Howard,
+On Tue, Nov 12, 2024 at 04:28:11PM -0800, Howard Chu wrote:
+> Parse the off-cpu event using parse_event(), as bpf-output.
+> 
+> no-inherit should be set to 1, here's the reason:
+> 
+> We update the BPF perf_event map for direct off-cpu sample dumping (in
+> following patches), it executes as follows:
+> 
+> bpf_map_update_value()
+>  bpf_fd_array_map_update_elem()
+>   perf_event_fd_array_get_ptr()
+>    perf_event_read_local()
+> 
+> In perf_event_read_local(), there is:
+> 
+> int perf_event_read_local(struct perf_event *event, u64 *value,
+> 			  u64 *enabled, u64 *running)
+> {
+> ...
+> 	/*
+> 	 * It must not be an event with inherit set, we cannot read
+> 	 * all child counters from atomic context.
+> 	 */
+> 	if (event->attr.inherit) {
+> 		ret = -EOPNOTSUPP;
+> 		goto out;
+> 	}
+> 
+> Which means no-inherit has to be true for updating the BPF perf_event
+> map.
+> 
+> Moreover, for bpf-output events, we primarily want a system-wide event
+> instead of a per-task event.
+> 
+> The reason is that in BPF's bpf_perf_event_output(), BPF uses the CPU
+> index to retrieve the perf_event file descriptor it outputs to.
+> 
+> Making a bpf-output event system-wide naturally satisfies this
+> requirement by mapping CPU appropriately.
 
-On Tue, Nov 12, 2024 at 04:28:09PM -0800, Howard Chu wrote:
-> Specify the threshold for dumping offcpu samples with --off-cpu-thresh,
-> the unit is us (microsecond). Default value is 500000us (500ms, 0.5s).
+I'm afraid the inherit attribute would be updated later:
 
-I think it's better to add an option after you implemented the feature.
-Before that you may hardcode the threshold if necessary.
+  __cmd_record()
+    evlist__config()
+      evsel__config()
 
-Also it'd be a good practice to add an example for the option in the
-commit message.
+You can add a logic to check the config term when setting the inherit
+value.
+
+Thanks,
+Namhyung
 
 > 
-> Suggested-by: Ian Rogers <irogers@google.com>
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
 > Reviewed-by: Ian Rogers <irogers@google.com>
 > Signed-off-by: Howard Chu <howardchu95@gmail.com>
 > Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -75,98 +114,61 @@ commit message.
 > Cc: Jiri Olsa <jolsa@kernel.org>
 > Cc: Kan Liang <kan.liang@linux.intel.com>
 > Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
 > Cc: Peter Zijlstra <peterz@infradead.org>
-> Link: https://lore.kernel.org/r/20241108204137.2444151-2-howardchu95@gmail.com
+> Link: https://lore.kernel.org/r/20241108204137.2444151-4-howardchu95@gmail.com
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
->  tools/perf/builtin-record.c | 26 ++++++++++++++++++++++++++
->  tools/perf/util/off_cpu.h   |  1 +
->  tools/perf/util/record.h    |  1 +
-
-Please update the documentation if you add a new option.
-
-Thanks,
-Namhyung
-
-
->  3 files changed, 28 insertions(+)
+>  tools/perf/util/bpf_off_cpu.c | 33 +++++++++++----------------------
+>  1 file changed, 11 insertions(+), 22 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index f83252472921..c069000efe5c 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -3149,6 +3149,28 @@ static int record__parse_mmap_pages(const struct option *opt,
->  	return ret;
->  }
+> diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+> index a590a8ac1f9d..558c5e5c2dc3 100644
+> --- a/tools/perf/util/bpf_off_cpu.c
+> +++ b/tools/perf/util/bpf_off_cpu.c
+> @@ -38,32 +38,21 @@ union off_cpu_data {
 >  
-> +static int record__parse_off_cpu_thresh(const struct option *opt,
-> +					const char *str,
-> +					int unset __maybe_unused)
-> +{
-> +	struct record_opts *opts = opt->value;
-> +	char *endptr;
-> +	u64 off_cpu_thresh_us;
-> +
-> +	if (!str)
-> +		return -EINVAL;
-> +
-> +	off_cpu_thresh_us = strtoull(str, &endptr, 10);
-> +
-> +	/* threshold isn't string "0", yet strtoull() returns 0, parsing failed */
-> +	if (*endptr || (off_cpu_thresh_us == 0 && strcmp(str, "0")))
-> +		return -EINVAL;
-> +	else
-> +		opts->off_cpu_thresh_us = off_cpu_thresh_us;
-> +
-> +	return 0;
-> +}
-> +
->  void __weak arch__add_leaf_frame_record_opts(struct record_opts *opts __maybe_unused)
+>  static int off_cpu_config(struct evlist *evlist)
 >  {
+> +	char off_cpu_event[64];
+>  	struct evsel *evsel;
+> -	struct perf_event_attr attr = {
+> -		.type	= PERF_TYPE_SOFTWARE,
+> -		.config = PERF_COUNT_SW_BPF_OUTPUT,
+> -		.size	= sizeof(attr), /* to capture ABI version */
+> -	};
+> -	char *evname = strdup(OFFCPU_EVENT);
+> -
+> -	if (evname == NULL)
+> -		return -ENOMEM;
+>  
+> -	evsel = evsel__new(&attr);
+> -	if (!evsel) {
+> -		free(evname);
+> -		return -ENOMEM;
+> +	scnprintf(off_cpu_event, sizeof(off_cpu_event), "bpf-output/no-inherit=1,name=%s/", OFFCPU_EVENT);
+> +	if (parse_event(evlist, off_cpu_event)) {
+> +		pr_err("Failed to open off-cpu event\n");
+> +		return -1;
+>  	}
+>  
+> -	evsel->core.attr.freq = 1;
+> -	evsel->core.attr.sample_period = 1;
+> -	/* off-cpu analysis depends on stack trace */
+> -	evsel->core.attr.sample_type = PERF_SAMPLE_CALLCHAIN;
+> -
+> -	evlist__add(evlist, evsel);
+> -
+> -	free(evsel->name);
+> -	evsel->name = evname;
+> +	evlist__for_each_entry(evlist, evsel) {
+> +		if (evsel__is_offcpu_event(evsel)) {
+> +			evsel->core.system_wide = true;
+> +			break;
+> +		}
+> +	}
+>  
+>  	return 0;
 >  }
-> @@ -3342,6 +3364,7 @@ static struct record record = {
->  		.ctl_fd              = -1,
->  		.ctl_fd_ack          = -1,
->  		.synth               = PERF_SYNTH_ALL,
-> +		.off_cpu_thresh_us   = OFFCPU_THRESH,
->  	},
->  };
->  
-> @@ -3564,6 +3587,9 @@ static struct option __record_options[] = {
->  	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
->  	OPT_STRING(0, "setup-filter", &record.filter_action, "pin|unpin",
->  		   "BPF filter action"),
-> +	OPT_CALLBACK(0, "off-cpu-thresh", &record.opts, "us",
-> +		     "Dump off-cpu samples if off-cpu time reaches this threshold. The unit is microsecond (default: 500000)",
-> +		     record__parse_off_cpu_thresh),
->  	OPT_END()
->  };
->  
-> diff --git a/tools/perf/util/off_cpu.h b/tools/perf/util/off_cpu.h
-> index 2dd67c60f211..c6edc0f7c40d 100644
-> --- a/tools/perf/util/off_cpu.h
-> +++ b/tools/perf/util/off_cpu.h
-> @@ -16,6 +16,7 @@ struct record_opts;
->  			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_CALLCHAIN | \
->  			      PERF_SAMPLE_CGROUP)
->  
-> +#define OFFCPU_THRESH 500000ull
->  
->  #ifdef HAVE_BPF_SKEL
->  int off_cpu_prepare(struct evlist *evlist, struct target *target,
-> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-> index a6566134e09e..2ca74add26c0 100644
-> --- a/tools/perf/util/record.h
-> +++ b/tools/perf/util/record.h
-> @@ -79,6 +79,7 @@ struct record_opts {
->  	int	      synth;
->  	int	      threads_spec;
->  	const char    *threads_user_spec;
-> +	u64	      off_cpu_thresh_us;
->  };
->  
->  extern const char * const *record_usage;
 > -- 
 > 2.43.0
 > 
