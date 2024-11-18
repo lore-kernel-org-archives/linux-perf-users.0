@@ -1,35 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971441DFD90;
-	Mon, 18 Nov 2024 18:35:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FFD1E102E;
+	Mon, 18 Nov 2024 18:45:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731954945; cv=none; b=e3+A+y7tjY0Nj9mEMDCAXgvkTLiRVJBzVoHk55d/17MsELQkZgmrZg/90YLQozVpAxyS6qn2+8djKAr6QVlGyykR3rQSzWW/atW2JOW/xO6j4fGL1Yaw8FAHpuaHAEm9Qivr7ih/I+xuhr9O/QvZyNy1QuJbOxwDf/O8UqqRN+g=
+	t=1731955533; cv=none; b=ddgf9K/JdYjFqFTByPdPijA90v6ah758DARZUt1biVmH53OBhBaY6Wux9HUqwmMGy6H/ldjJBzh0v0TYRaHcyS7rnDde4iMBAiyG46W1BjsH65DBGGGVu8Zm/Vl/KsM8LmbFB49KG9H9JA8T0eUblYpO1qUBJdM9D6z8h6P8WTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731954945; c=relaxed/simple;
-	bh=J10+qtzOq0u5Tyf00UAPhHE+lr2XkJlRQct4kFIls4U=;
+	s=arc-20240116; t=1731955533; c=relaxed/simple;
+	bh=pTpgbEQ2v4xOlxmRjIKhSkuxO6OUIO3GQ62UFcCIbLY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XUekMKLVQykyHaod/wb5TW4TdqirjSwrLhgtuEo16Zvt4XtaqLKTx+3cJjqEbu0R94xYdgWzI5dE5CCY48/E6+ROm/ciLSb79xQGROQBkvfaAIGw2hUCRBD7hZtuvCiqwNHuJLw/As3i3HHlH+qzo37pNBCbgQPPwSkDqFBYlPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sgY+VPmO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jwyP9NiRd7AJADvQdMkppRdhnBBEnfbYsb1LYrkDhg1DoiWVjjj/A8l08s1lsMPmBVHAdmVszL4wgXh6unRldVlxz5G/xSjlt7k4uolAj0kNbfj9firMpkgGHdyba5vjF9LgqElOeYU+bPsh4o9O97SFVZ8pp3M/jDV7QZZthDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BRUiChqv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sgY+VPmO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943C9C4CECC;
-	Mon, 18 Nov 2024 18:35:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BRUiChqv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3CA0C4CECC;
+	Mon, 18 Nov 2024 18:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731954945;
-	bh=J10+qtzOq0u5Tyf00UAPhHE+lr2XkJlRQct4kFIls4U=;
+	s=k20201202; t=1731955532;
+	bh=pTpgbEQ2v4xOlxmRjIKhSkuxO6OUIO3GQ62UFcCIbLY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sgY+VPmOa8tNjb0F9PWaYywwwXt5OjGKyvLq3p1vNR+RIwqN+MEN963e603ESgfnB
-	 p56tvxHPcl2IaF+Vvyi5GS+Kdql5vq7GZk06tU3V80+Sge+ANKS5qaC9fQwYX6cLO2
-	 wtvNsLTjrBngMEPs6I1kW32Ati5ReYQBc/DAJpfUeIH6xwoM9dyG8ZZVR12/3ewzEA
-	 U/6SKJuJiT7KUK84W1739uHftj4r3dTb8Smp/FkQ9ks3IdaXDwmvEn4fRbMmhbqCXX
-	 UQ1zNXb8PJTjUOOq5YD7B2+CK9eMllTPU6z77JgmfxCeKkaLBPNVzDsBvZT7m2pzX1
-	 Y651wyUCQn97g==
-Date: Mon, 18 Nov 2024 10:35:43 -0800
+	b=BRUiChqvD9wUkB+adJ+j8Xum+Z5bFMu7qqMilBlF5myMtJpFm+ezFJJycgSZgRlk4
+	 nrIeUmu9p+u6KR7wQEZR5mDtx1a8iiN6wTIZfl9kujk/gidgH2lP1mjNrnoxr45PLX
+	 WjyL1x/RYudJqea+GmyXXBKiW4zVDF/G1p0lMHiAe8dzi+eSQVI/wcmfTYlrZBkOal
+	 3FaitVSX+TMZHTvEEHoTHrvlKucmCcZxE7No5iutEhyoi3U5ifmMxt/HKGzBpxZy6n
+	 s3GWwbfYFeIbfCmmGPoYxbezl6CrHAeswrA3Eyfqfw7w3U/stkp4P29+oul4GbqOXP
+	 6V3ZY2RPwRaOw==
+Date: Mon, 18 Nov 2024 10:45:30 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
+To: Vlastimil Babka <vbabka@suse.cz>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -37,14 +38,16 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
 	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
 	Roman Gushchin <roman.gushchin@linux.dev>,
 	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH v2 0/4] perf lock contention: Symbolize locks using slab
- cache names
-Message-ID: <ZzuI_08huDfK0Vvu@google.com>
+Subject: Re: [PATCH v2 3/4] perf lock contention: Resolve slab object name
+ using BPF
+Message-ID: <ZzuLSkThfgkA_8hT@google.com>
 References: <20241108061500.2698340-1-namhyung@kernel.org>
- <CAP-5=fWqE6bM=MVQy7P0tTSWW-ZBXY4in_bfQYFK-C4h6L-Ykw@mail.gmail.com>
+ <20241108061500.2698340-4-namhyung@kernel.org>
+ <5f95c0d7-01a4-485d-a9d7-1a39acf9c680@suse.cz>
+ <ZzNrIdiHCxTy1QId@x1>
+ <00aa92be-85db-4163-9576-dfc71eafb415@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,101 +56,56 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWqE6bM=MVQy7P0tTSWW-ZBXY4in_bfQYFK-C4h6L-Ykw@mail.gmail.com>
+In-Reply-To: <00aa92be-85db-4163-9576-dfc71eafb415@suse.cz>
 
-On Mon, Nov 11, 2024 at 11:46:37AM -0800, Ian Rogers wrote:
-> On Thu, Nov 7, 2024 at 10:15 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hello,
-> >
-> > This is to support symbolization of dynamic locks using slab
-> > allocator's metadata.  The kernel support is in the bpf-next tree now.
-> >
-> > It provides the new "kmem_cache" BPF iterator and "bpf_get_kmem_cache"
-> > kfunc to get the information from an address.  The feature detection is
-> > done using BTF type info and it won't have any effect on old kernels.
-> >
-> > v2 changes)
-> >
-> >  * don't use libbpf_get_error()  (Andrii)
-> >
-> > v1) https://lore.kernel.org/linux-perf-users/20241105172635.2463800-1-namhyung@kernel.org
-> >
-> > With this change, it can show locks in a slab object like below.  I
-> > added "&" sign to distinguish them from global locks.
+Hello,
+
+On Wed, Nov 13, 2024 at 03:20:43PM +0100, Vlastimil Babka wrote:
+> On 11/12/24 15:50, Arnaldo Carvalho de Melo wrote:
+> > On Tue, Nov 12, 2024 at 12:09:24PM +0100, Vlastimil Babka wrote:
+> > +               /* look slab_hash for dynamic locks in a slab object */
+> > +               if (hashmap__find(&slab_hash, flags & LCB_F_SLAB_ID_MASK, &slab_data)) {
+> > +                       snprintf(name_buf, sizeof(name_buf), "&%s", slab_data->name);
+> > +                       return name_buf;
+> > +        	}
+> > 
+> > He wants to avoid storing 64 bytes (the slab cache pointer, 's'), instead
+> > he wants to store a shorter 'id' and encode it in the upper bits of the
+> > 'struct contention_data' 'flags' field.
+> > 
+> > The iterator, at the beggining of the session attributes this id,
+> > starting from zero, to each of the slab caches, so it needs to map it
+> > back from the address at contention_end tracepoint.
+> > 
+> > At post processing time it converts the id back to the name of the slab
+> > cache.
+> > 
+> > I hope this helps,
+
+Thanks Analdo for the explanation!
+
 > 
-> I know the & is intentional but I worry it could later complicate
-> parsing of filters. Perhaps @ is a viable alternative. Other than
-> that:
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
+> Thanks a lot, if it's a tradeoff to do a bit more work in order to store
+> less data, then it makes sense to me.
 
-Thanks for the review!
-
-I don't think it clashes with BPF sample filters which works on sample
-data generated from a perf_event.  Technically this command doesn't use
-perf_event and just attaches the BPF program to tracepoint directly.
-
-Also sample filters don't use '&' symbol in the syntax as of now. :)
+Right, I don't want to increase the data size for this as we have some
+unused bits in the flags.  It'd call one more bpf hashmap lookup during
+record but I don't think it's gonna be a problem.
 
 Thanks,
 Namhyung
 
+> > 
+> >> - if it's postprocessing, it would be too late for bpf_get_kmem_cache() as
+> >> the object might be gone already?
+> >> 
+> >> The second alternative would be worse as it could miss the cache or
+> >> misattribute (in case page is reallocated by another cache), the first is
+> >> just less efficient than possible.
+> >> 
+> >> > +			}
+> >> > +		}
+> >> >  
+> >> >  		err = bpf_map_update_elem(&lock_stat, &key, &first, BPF_NOEXIST);
+> >> >  		if (err < 0) {
 > 
-> >     # perf lock con -abl sleep 1
-> >      contended   total wait     max wait     avg wait            address   symbol
-> >
-> >              2      1.95 us      1.77 us       975 ns   ffff9d5e852d3498   &task_struct (mutex)
-> >              1      1.18 us      1.18 us      1.18 us   ffff9d5e852d3538   &task_struct (mutex)
-> >              4      1.12 us       354 ns       279 ns   ffff9d5e841ca800   &kmalloc-cg-512 (mutex)
-> >              2       859 ns       617 ns       429 ns   ffffffffa41c3620   delayed_uprobe_lock (mutex)
-> >              3       691 ns       388 ns       230 ns   ffffffffa41c0940   pack_mutex (mutex)
-> >              3       421 ns       164 ns       140 ns   ffffffffa3a8b3a0   text_mutex (mutex)
-> >              1       409 ns       409 ns       409 ns   ffffffffa41b4cf8   tracepoint_srcu_srcu_usage (mutex)
-> >              2       362 ns       239 ns       181 ns   ffffffffa41cf840   pcpu_alloc_mutex (mutex)
-> >              1       220 ns       220 ns       220 ns   ffff9d5e82b534d8   &signal_cache (mutex)
-> >              1       215 ns       215 ns       215 ns   ffffffffa41b4c28   tracepoint_srcu_srcu_usage (mutex)
-> >
-> > The first two were from "task_struct" slab cache.  It happened to
-> > match with the type name of object but there's no guarantee.  We need
-> > to add type info to slab cache to resolve the lock inside the object.
-> > Anyway, the third one has no dedicated slab cache and was allocated by
-> > kmalloc.
-> >
-> > Those slab objects can be used to filter specific locks using -L or
-> >  --lock-filter option.  (It needs quotes to avoid special handling in
-> > the shell).
-> >
-> >     # perf lock con -ab -L '&task_struct' sleep 1
-> >        contended   total wait     max wait     avg wait         type   caller
-> >
-> >                1     25.10 us     25.10 us     25.10 us        mutex   perf_event_exit_task+0x39
-> >                1     21.60 us     21.60 us     21.60 us        mutex   futex_exit_release+0x21
-> >                1      5.56 us      5.56 us      5.56 us        mutex   futex_exec_release+0x21
-> >
-> > The code is available at 'perf/lock-slab-v2' branch in my tree
-> >
-> > git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> >
-> > Thanks,
-> > Namhyung
-> >
-> >
-> > Namhyung Kim (4):
-> >   perf lock contention: Add and use LCB_F_TYPE_MASK
-> >   perf lock contention: Run BPF slab cache iterator
-> >   perf lock contention: Resolve slab object name using BPF
-> >   perf lock contention: Handle slab objects in -L/--lock-filter option
-> >
-> >  tools/perf/builtin-lock.c                     |  39 ++++-
-> >  tools/perf/util/bpf_lock_contention.c         | 140 +++++++++++++++++-
-> >  .../perf/util/bpf_skel/lock_contention.bpf.c  |  70 ++++++++-
-> >  tools/perf/util/bpf_skel/lock_data.h          |  15 +-
-> >  tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |   8 +
-> >  tools/perf/util/lock-contention.h             |   2 +
-> >  6 files changed, 267 insertions(+), 7 deletions(-)
-> >
-> > --
-> > 2.47.0.277.g8800431eea-goog
-> >
