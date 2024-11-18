@@ -1,85 +1,94 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0605191F91;
-	Sat, 16 Nov 2024 20:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FF713C69E
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 05:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731787874; cv=none; b=UoW2mZGkpLsV0t+gb75Yb4I8dXBPo00d6itcckNxvEDAMRxoV3T1pNgKMwC41aM831i4EeBd1UhDPf8vFMazO+HLyL9nIXA4vds2pClfLuCZXuIwjJZrCfuB5NN9BH+7kL2gold4Pcx2AFTenyeFMYxVdPMe3dwNu1stBIhCMBU=
+	t=1731907608; cv=none; b=g7pXv+Wpa5OhhTT0tnhpyuN2kWBZkxZ3WRjYxJnXL1hOYgtXgOsHPai1WUqrhGemwqcXeQNGLjQqJs3pKlDhybF91188eMa9xj3KeH7BAuxx0QBRLo5MZ0FjqoW+ZV1WOsw9egBWdz1dFMdahGfYSGYBOb6nSUKBWo6FD28AoUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731787874; c=relaxed/simple;
-	bh=EeWzMrWdfD/HxxinqMu5HNzCaz3avaGlrsyOzZ0EeUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iAm2Y3kVnZgoDpT7ypfnjLQQpquAw7M1SnjwXSjxLmooOXiFrSto7DexvVsu54wFEBTZxno5rzOn/eAICJqv7NTb68Aq6Lzt4+q8nLsDkiJdYCpG1mjDUVinstb4LFXYY4NcdPPNo+ARR274Pb5zAGNRYodYqXgOdQM7yxzP69A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=WCcBLXUI; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1731907608; c=relaxed/simple;
+	bh=FSLgf7jIU8Cg5GPZ/xlTi5EV3FppM+GFoz/qkNa3AC4=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=gLiQy9lu5NBalW1T2JPuk8aDaeq5clMq/FQ/5SxuZ39OWrwAkMd7xCWU8wpClOrytvaBQbh6FmSXMhn072DAyHnCWLVk1cwgQDuFdb/JRoekcwZxQbbTM/yZpom/KNBIcxJrXhYmb0sxV7sNbCKi0RhPJwWiHysIXsws4HmHnt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Xpam8uL; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="WCcBLXUI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=TizVYUSUbAB7nwIteA1ejCNMb9z7MQUcwEoVieNbuEY=; b=WCcBLXUInIt9QudM
-	H+j7dd2kokoDTm3am/ARR4s6bb9yGVR2HekYXjXiWtvd02/GukMvS0lQ1BiyvZxY4SC9czIqTHG6s
-	nublnIj7oBDc2tZXsLC9gfG4SGqzz7omYC//j6U+tgzILcISeCCFmlZaE4hCfIubkC6B06qQ4/Gnk
-	fjtweYciJfiktdqERgGDxyICJTidx5dhhLi687Ia0sPok15LA49n39ayIRxqZniPkjxW+O62+f5V6
-	5BP3bU9BQMUWVBLpFXXPBMMcBU48PLdt+w+J7Q1FHiEN2uq4+cpuy6OfGPVYtXYS6uHbrotN9tzvL
-	uwHSw+d7asPsYrFV3A==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1tCP8I-000Jjn-0j;
-	Sat, 16 Nov 2024 20:11:02 +0000
-Date: Sat, 16 Nov 2024 20:11:02 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, namhyung@kernel.org,
-	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf util: Remove kernel version deadcode
-Message-ID: <Zzj8ViF6Q3NZu0-e@gallifrey>
-References: <20241116155850.113129-1-linux@treblig.org>
- <CAP-5=fXqig=qHAa26d5-8pHPCtS0ZyCNs4FJGr4c4BSjFe+-eg@mail.gmail.com>
- <ZzjxxCnicVIwAF5N@x1>
- <Zzj3y2BN_GcnRKbK@gallifrey>
- <Zzj79IHk9ylwvfiJ@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Xpam8uL"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6ea8a5e862eso49682667b3.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 Nov 2024 21:26:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1731907606; x=1732512406; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2CVj7EzOpLkXZaUuUsXzkWLUL7uv5LaSWkn156n2FLk=;
+        b=1Xpam8uL7oFyzGeogbGlv2QSrhbmee3+568or/J8PiYsNOTq08arxd7sC6/aBfmxdn
+         l5288fhl0vCXPA851vMsT+7v9z8wED4a64tchdkcW9Biiy1BIuRjKbGNViSG0nAi04m9
+         6oc4DgEOaQpZ3lgxEHsjcKDUXroX128rFHoWsmsx97YvdF8vOs6tf31QnRQ66vUmQ7d8
+         1gbBUeAiqEk9hkciTalJXrFkO4+Sg7R3jPxwmG567zKiadSRmkQ+gmWrHfqFDTnbF14B
+         9EGTBEHWReNFZrlp41sAebKxHgBrpbaS2WK2YmHdGRRvkErz53teqSyEFXuWSkCNPBrv
+         bPLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731907606; x=1732512406;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2CVj7EzOpLkXZaUuUsXzkWLUL7uv5LaSWkn156n2FLk=;
+        b=lfWUPPtUdayGigi3iFQ+9eO/6DlVXYsmwsxWfbVzneCkV5BaDwG9U42vKLx91OImbo
+         qp77nc+YKq2UgPf0ibAqvoK6VRhfyPO+iiRRw6w93kSd4jbV1hxVcM3jbparYcUAcnhC
+         tjp0ZrrRBQT6VULMjKGzDUvrWFbkErQr7WfEy7q+s4Yd1nVyf5+d4jr5plyvuMGiM1rN
+         hCLDjp3f3PmsQyDJY2ZfBWp6NfYB255r2kK0IDo8ev2BBWoGE4L7pbp6nCUOGIyuMcNA
+         ePez99QOuvRpu7Eo2/qbiy3EoLopPSddb5EWA+Y77KjCw4NjuLN+pP/zdsU7lSLe0ALy
+         CVLg==
+X-Forwarded-Encrypted: i=1; AJvYcCXHw1uSFStZ855sh8HpK2Nbfk9xWno7DPar9CFB2gROqZpqMPiNg4LFdr6vv2LO1Ult9aN+efY5wKZcFMgHqqcz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7znNOU8/t8H8MuhBAq6qtE84VCdugWag6cgzy2En5SoGCuiYS
+	FIqxBigAEEF/pF1IT7C+fk9z60gN/mo4HHUeicJFyK4wjO71LQmHfv8633acZzcEVXMZECwsQPE
+	ZsC5eFA==
+X-Google-Smtp-Source: AGHT+IHf9gDi0FbO73XCSlPlQ/bLknfcP/3i0HYD/A5A/j05+tMO0q8TKgNoFaLVu9gsGgks76Xnz9DM59wc
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:22a4:ded5:5c37:fcc7])
+ (user=irogers job=sendgmr) by 2002:a05:690c:7241:b0:6ee:6f60:e564 with SMTP
+ id 00721157ae682-6ee6f60e67cmr250187b3.3.1731907605851; Sun, 17 Nov 2024
+ 21:26:45 -0800 (PST)
+Date: Sun, 17 Nov 2024 21:26:38 -0800
+Message-Id: <20241118052638.754981-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <Zzj79IHk9ylwvfiJ@x1>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 20:10:47 up 192 days,  7:24,  1 user,  load average: 0.12, 0.05,
- 0.02
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
+Subject: [PATCH v1] perf test: Correct hwmon test PMU detection
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-* Arnaldo Carvalho de Melo (acme@kernel.org) wrote:
-> On Sat, Nov 16, 2024 at 07:51:39PM +0000, Dr. David Alan Gilbert wrote:
-> > * Arnaldo Carvalho de Melo (acme@kernel.org) wrote:
-> > > Thanks, applied to perf-tools-next,
->  
-> > Thanks!
-> > Have you got:
-> >   [PATCH] perf: Remove unused del_perf_probe_events
-> >   https://lore.kernel.org/all/20241022002940.302946-1-linux@treblig.org/
->  
-> > from a few weeks back in there?   I don't think I've had an email
-> > response to that one.
-> 
-> Done now and pushed out, thanks for cleaning up the perf tools codebase!
+Use name to avoid potential other hwmon PMUs.
 
-Thanks!
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/hwmon_pmu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Dave
-
-> - Arnaldo
+diff --git a/tools/perf/tests/hwmon_pmu.c b/tools/perf/tests/hwmon_pmu.c
+index 9f44093f18df..1e5f93aaaf5f 100644
+--- a/tools/perf/tests/hwmon_pmu.c
++++ b/tools/perf/tests/hwmon_pmu.c
+@@ -173,7 +173,8 @@ static int do_test(size_t i, bool with_pmu, bool with_alias)
+ 	}
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+-		if (!perf_pmu__is_hwmon(evsel->pmu))
++		if (!evsel->pmu || !evsel->pmu->name ||
++		    strcmp(evsel->pmu->name, "hwmon_a_test_hwmon_pmu"))
+ 			continue;
+ 
+ 		if (evsel->core.attr.config != (u64)test_events[i].config) {
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+2.47.0.338.g60cca15819-goog
+
