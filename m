@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FD71EB9F1
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 22:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C961EC001
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 22:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731970472; cv=none; b=cpTXejLHvDclbpQg+zxjKDdzl9W7fxGYBOdRq2uGl7daxPutyYZTyvEbtY6Oj/ckMP3t9WWllCVVcx9Ei0Whk7hM+CsioHXrIJ0s+ykd8A5Zng7jgGOM75eHfaP9Hq4j/5ifRD4B/HogU7IFA8Izsu1exzrtFjhwAXIAbcQIYfY=
+	t=1731970477; cv=none; b=CWYZoMFlB64rJY2WbQH/ZHs6F6e5DD9Dve7nkQz3fllCdtBh2xF3vuSl5eRPvDoHr3Io2Fia6U3CKzsk6/NO4nKbgDkzvNug78467X9ym4OfDbPWuj31Ny4qKooABxOHqXbrDzNrawH3pqLClxNZJUJ5FFtn9WEe+WhphPKfjZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731970472; c=relaxed/simple;
-	bh=vA5wDZ8FL6MLUmxSvynTx1BhyBJedSIPLTdOMqvm9LU=;
+	s=arc-20240116; t=1731970477; c=relaxed/simple;
+	bh=jLMv6psh26jQg+qmfgIhNouYWgAxBlI8CM4lBpCniiI=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=jbIugOkLBrAoA95TWbDOtO4sgMSCT7nZ6KxJrt5H8P5X5833X7o9ZoCMWzc2VP3xgGF4VvcvyD0vbrAtkiXgXje157dilIoaJLUMSrKnYIz/5k1SUn2TVu5wmWbRFdRxGoZBWSefzAgIQ8giPn1zRD3AToAO/ypb+mT4Z1RMgh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Myh8Isev; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=Uh3JpzsEO/jsjeKV83L9X8NkxL2iIQGVTmAlcyp34AkEunZjd1DM/JZ0GVJe83oZFB9yrAk1M3IiqEghVUziYWumwbEsPiZyJq0lVQ/PQgBrV76e7Pw3mjNkwaSS1LjwOC2+XTE1wRiVBMbd+ZP5vm9rapRILXr+DkG/NKZtZ2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d/qE3qxY; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Myh8Isev"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e381f195051so533779276.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 14:54:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d/qE3qxY"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3884e5e828so3351475276.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 14:54:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731970470; x=1732575270; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731970475; x=1732575275; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=55WiVKsndQFaxxZ4QGA42VCMnpZnpnS70BqjVyyPtNw=;
-        b=Myh8IsevvdAU5pnEEY32Bi17LrAQApSh+W/j03qsmboTu2rVyd1f8RyuZFY2Hwz0+0
-         tUVW5d8HIv2CsdRuXcnKdteiplgCmHnqxs/jl28dF23qen0gdhwvcDTGaAuJHVanaWwM
-         JQnvVkJIoDF9dhSbiUXu0xX/p8JurNnt+GIDcWEvcMY06w+VIn9kGV5BsPTqGTNN5VgW
-         o4mt9a1favgmtEI7bfiSwTLcLVjdyQAO5tpn4f0z18yx6zigow67hTGv8PHLL8p1h/2f
-         /kvE69rsFNF3V7F0mne0HWkvvabN3YRouO35gwvYefUBw9WwxsU0oi1PI1ZnKCl7bjBS
-         y+VQ==
+        bh=FG3Sh83F7FOGs8gw5xePFCnagv+uNMSUGfyFfbaEqMQ=;
+        b=d/qE3qxYvq0s3SEdOaqjJUJbxxCqff56nE8M5v2GZzkTynKSP0TOMHF9CH+/0/OMVc
+         be0Xg8W+zuERWtviR1l8VK035m+lSLbb4UzQoE63+/hVNHHOj5rMFy8z0eeo1g8eOqZs
+         QN1xpNkB8MNXrTc3WjP1FsP5MD/1FUpd5KZ8fB8kB4Mr6OPd8Gt4bLwQejsIURERx/zV
+         5exjcs0ztjwtxFg4QnGiSIC/U8+MevsxtR1wNA0xcLztxRH/vC+lG6G/1Q6JbRVKvFZj
+         494FSegvlkQB36X/OsX+9T2ScFAS+kk8IovzdP5zscZDCnQblmwsfPEh09II6FCYZm+h
+         1RPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731970470; x=1732575270;
+        d=1e100.net; s=20230601; t=1731970475; x=1732575275;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=55WiVKsndQFaxxZ4QGA42VCMnpZnpnS70BqjVyyPtNw=;
-        b=M9intjwLO+LPhPUMb6+lERiAm2snXGKTmsGObg+WNWMbHlp+P8Lf49aKwkEGzXJruL
-         UuQEZ3LgIIjujfrAsyLXZdenKxrCEUF1Bi67ixEb5I5oKTsbNpM/FuA7ENELXQykfRQC
-         CVmG/9o2/13uQjjRMQqgakROj7vDvnFtokaqQfTpQtGQsq23Mnm7DYoYF49+YAC/UBnE
-         N9GhxjwG1EmRM5kCTKRlgoko0ycGdZf/q8vnZyz0INkwZgNC1XZaXYt1c9LFDuOQxF8q
-         RDQ6UpWUe+Yo2c399zFP1b0G9rXcXD5JAGJJvj8qCEawt+gsz4Zyxtw0n/VsJsDNtu54
-         Ed3A==
-X-Forwarded-Encrypted: i=1; AJvYcCW3kAX3iIcqnT5rXOA9A8FBoogNv48rhiy3Nyf7XlW1LichdcqetN9QqQE083GnH3dL16c4dEhHcwmyJW5J+gLd@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqdoabgR7ooKNjJMDWO1fbay29YvtWUApw4U2ebOegw3m3QQ9g
-	nqhQRmPYVjh5L+FI19jYsze3VQ6/C2tjvFPJ+7fI/x3Et0keSBYWmKGvtkLX9JpUlpQbtBcqaTy
-	A2nah8Q==
-X-Google-Smtp-Source: AGHT+IEnzfOOnKnsl2wElo/yWtr4ZvRaQdLFyQfunTe1jiNtXAdPQKfXDrXow9PDuQmLSZJD3ZO4Ga/aIc2+
+        bh=FG3Sh83F7FOGs8gw5xePFCnagv+uNMSUGfyFfbaEqMQ=;
+        b=GtCecagmB669UVzFOnQprvxp78Rs8SvyISEEsU6CUi3v57Qp7uqEPdQLEuDDPVNsRF
+         5q2ReTqMRuIhwQp6sbSU97NV2QDXd/d4DT9zH6W7LLtfEmht+CZhzUy28lXMQBrAUXxG
+         i3ns0fzEYJMG1DRz0Z58Xmjk6eZrvL3xaKfNy1zehQbuWD79eo3eDCkBoH1cX+8RRJCP
+         TF9GLkxeecrfUaFjUOsabYmMKy0NxVA5GPKliYvsA/wpXpueVMT6gJruEOvHLfLOU0ep
+         buP2J/uVswaOcMyKwuSRP9U6vjWd35K1vPWxSuECl0os0lBCIuwpPSdF500G18kep685
+         1Wdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgDZciCrT/jzDm0ZzHegQCRaSpmPiSSejmOIs8ftTNb0ZXbYffFXLDvbqMFD8pTMGMkNTmGAcJsLUJugN8wFmy@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMWysG8U+UmNA/HCYtqzUwA+4gZ4pRiVxWwMw080aDrSaeqBF0
+	PAnAQshtWh6qJXnhhgHst3OJ2S7HvgRBpi8DEus/BOeZK/1RhTjrq3ILUniIe9N1mSEaDEPpUdx
+	FDLABTA==
+X-Google-Smtp-Source: AGHT+IGl1aqGhFtUZ1apRuwVVnoRAl8J4uAIA9T+sYV7QTDRk/6WeLhJGKOFjO0Kn4m5EaYRZcmrmTJNmUYv
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:22a4:ded5:5c37:fcc7])
- (user=irogers job=sendgmr) by 2002:a25:df87:0:b0:e38:7793:62b4 with SMTP id
- 3f1490d57ef6-e38779367b8mr151863276.10.1731970470161; Mon, 18 Nov 2024
- 14:54:30 -0800 (PST)
-Date: Mon, 18 Nov 2024 14:53:41 -0800
+ (user=irogers job=sendgmr) by 2002:a25:e0c5:0:b0:e38:22d8:e5f3 with SMTP id
+ 3f1490d57ef6-e3825d27591mr174594276.2.1731970474602; Mon, 18 Nov 2024
+ 14:54:34 -0800 (PST)
+Date: Mon, 18 Nov 2024 14:53:42 -0800
 In-Reply-To: <20241118225345.889810-1-irogers@google.com>
-Message-Id: <20241118225345.889810-4-irogers@google.com>
+Message-Id: <20241118225345.889810-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241118225345.889810-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Subject: [PATCH v5 3/7] perf trace-event: Constify print arguments
+Subject: [PATCH v5 4/7] perf trace-event: Always build trace-event-info.c
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,40 +80,74 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	"Steven Rostedt (Google)" <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Capture that these functions don't mutate their input.
+trace-event-info.c has no libtraceevent depdendencies, always build it
+and use it in builtin-record and perf_event_attr printing.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/trace-event-parse.c | 2 +-
- tools/perf/util/trace-event.h       | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-record.c               | 2 --
+ tools/perf/util/Build                     | 2 +-
+ tools/perf/util/perf_event_attr_fprintf.c | 4 ----
+ 3 files changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-index 41d53e1b43e7..9c015fc2bcfb 100644
---- a/tools/perf/util/trace-event-parse.c
-+++ b/tools/perf/util/trace-event-parse.c
-@@ -99,7 +99,7 @@ unsigned long long read_size(struct tep_event *event, void *ptr, int size)
- 	return tep_read_number(event->tep, ptr, size);
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index f83252472921..0b637cea4850 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1748,10 +1748,8 @@ static void record__init_features(struct record *rec)
+ 	if (rec->no_buildid)
+ 		perf_header__clear_feat(&session->header, HEADER_BUILD_ID);
+ 
+-#ifdef HAVE_LIBTRACEEVENT
+ 	if (!have_tracepoints(&rec->evlist->core.entries))
+ 		perf_header__clear_feat(&session->header, HEADER_TRACING_DATA);
+-#endif
+ 
+ 	if (!rec->opts.branch_stack)
+ 		perf_header__clear_feat(&session->header, HEADER_BRANCH_STACK);
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index c06d2ee9024c..47522612484e 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -86,7 +86,7 @@ perf-util-y += pmu-bison.o
+ perf-util-y += hwmon_pmu.o
+ perf-util-y += tool_pmu.o
+ perf-util-y += svghelper.o
+-perf-util-$(CONFIG_LIBTRACEEVENT) += trace-event-info.o
++perf-util-y += trace-event-info.o
+ perf-util-y += trace-event-scripting.o
+ perf-util-$(CONFIG_LIBTRACEEVENT) += trace-event.o
+ perf-util-$(CONFIG_LIBTRACEEVENT) += trace-event-parse.o
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index 59fbbba79697..a73c74b99a3b 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -212,7 +212,6 @@ static void __p_config_hw_cache_id(char *buf, size_t size, u64 value)
+ 	}
  }
  
--void event_format__fprintf(struct tep_event *event,
-+void event_format__fprintf(const struct tep_event *event,
- 			   int cpu, void *data, int size, FILE *fp)
+-#ifdef HAVE_LIBTRACEEVENT
+ static void __p_config_tracepoint_id(char *buf, size_t size, u64 value)
  {
- 	struct tep_record record;
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index 79b939f947dd..2543bf969fdd 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -39,7 +39,7 @@ trace_event__tp_format(const char *sys, const char *name);
+ 	char *str = tracepoint_id_to_name(value);
+@@ -220,7 +219,6 @@ static void __p_config_tracepoint_id(char *buf, size_t size, u64 value)
+ 	print_id_hex(str);
+ 	free(str);
+ }
+-#endif
  
- struct tep_event *trace_event__tp_format_id(int id);
- 
--void event_format__fprintf(struct tep_event *event,
-+void event_format__fprintf(const struct tep_event *event,
- 			   int cpu, void *data, int size, FILE *fp);
- 
- int parse_ftrace_file(struct tep_handle *pevent, char *buf, unsigned long size);
+ static void __p_config_id(struct perf_pmu *pmu, char *buf, size_t size, u32 type, u64 value)
+ {
+@@ -238,9 +236,7 @@ static void __p_config_id(struct perf_pmu *pmu, char *buf, size_t size, u32 type
+ 	case PERF_TYPE_HW_CACHE:
+ 		return __p_config_hw_cache_id(buf, size, value);
+ 	case PERF_TYPE_TRACEPOINT:
+-#ifdef HAVE_LIBTRACEEVENT
+ 		return __p_config_tracepoint_id(buf, size, value);
+-#endif
+ 	case PERF_TYPE_RAW:
+ 	case PERF_TYPE_BREAKPOINT:
+ 	default:
 -- 
 2.47.0.338.g60cca15819-goog
 
