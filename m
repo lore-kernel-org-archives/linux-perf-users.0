@@ -1,179 +1,264 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BDD1C1F14;
-	Mon, 18 Nov 2024 17:30:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0004C1E0E05;
+	Mon, 18 Nov 2024 18:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731951003; cv=none; b=nzXMq3xi525lXwR4/meRgl1eS/+wF7rH2HpxYNaU1Gduiozf3eeJa08vlbQZIhHwpCSIXTCE84k9CQYSHD7K0INUNCmyWSMQQv9rOyTiHcymbRLNJ6WJ2++getcRac6QobggMfCDguk/FFRw/TLGMLbAlSPCwV8Ai0k+s38gDqs=
+	t=1731954688; cv=none; b=ePFC0GygY/F64OgWCA/GLtjY4jWlYEGguDNtQEgdp6iSsdnXpodRHodUGfRSSIowUBr8/qIWE3gQ87TuZx0lFlrk0X8dUCVN1ZMDbFarzBEvJK9Ul4w4GoatoOhtSPwvI4wDQbRmLl1chrlcTTYF97b7tXUQULfcLIA9af3FvvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731951003; c=relaxed/simple;
-	bh=AAOwy+5Dxmw1BsBJE62bzHW+0ABCsWiqj+yUUpz71cs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=V0un6KEeSk6pf+PPYQ0DLCsjz5m3zH8uWJFklXhVG+IJ2fULFWWsd8bx4+FWcowXBXBZDVxIEx1JIFw5rIrFNY8XtfGBz9WgyK/JmreBvZ/R2NxR3hk0WgGU55MBOamvNYxiEuA1W02pof788ktk5sXe4+Mv612qeEWh9N+FHDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nnV0rmH0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731954688; c=relaxed/simple;
+	bh=ODFF1vZkxzzl6Pl9S+uIViP7A7u4Wh+K6FpCqLaabj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SuKaa9eA6q+2ZYDIEyWjhFUKeco5hwIO4YaKT1V1JZD75p12ZQiTez5Ye6sAAtblWaG1tWUtzfxD5iNd1bt29Z3mhXv2RLC/klB5jceurl0CpLwqyxsIeeDGTXClvaweMDgoohd7I79FPze5eqzAap+QklxLVBm7HO2NoZ0XvWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DdCaD8nL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nnV0rmH0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D2DAC4CECC;
-	Mon, 18 Nov 2024 17:30:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DdCaD8nL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770F9C4CECC;
+	Mon, 18 Nov 2024 18:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731951002;
-	bh=AAOwy+5Dxmw1BsBJE62bzHW+0ABCsWiqj+yUUpz71cs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=nnV0rmH0kWgH9s7PawZS1vOlsLqs9gcgtYKSh1V06ZapPSX69z5YJDIH9hRbK9cp6
-	 RY8D1mktBYfXWC2Qf7zPHdw2WXp1ICFFWGHp16aMba1RPlyxnsWSb80T9ruS+bQ0Br
-	 EaWAs9ooDGCAerPVU5Lt3fuT8C+n5MonfVgG+WpSv9F+GGhtuKr0utfUOPP1XcprDj
-	 R570nFvO+hQtgXKfGzfXH/FOyTf+/wEbhbM00mV1wMKnjNXIEA/aMEKv1LcmuJm/AO
-	 i2P8Mkt53YVekKzpFHv8gsLRs7b7tm+hm0HPAq63nb3fmPVD+gg15BVx0waIGv7x9y
-	 fxl3sO7MDpSQg==
-Date: Mon, 18 Nov 2024 18:29:57 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	s=k20201202; t=1731954687;
+	bh=ODFF1vZkxzzl6Pl9S+uIViP7A7u4Wh+K6FpCqLaabj8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DdCaD8nLHxYdVe987eyOYrUm5vexLMvThktP20akhWDhl/lSllEQoUVqYi2NLypnO
+	 z+VWl3aio3vt1FFJqya8PETOvsT3nAn25+nBsiDyyTFyAcfGatc5cc37xTh17fhMLj
+	 vqnI9khFwEA1EFGuAfY7udBBzx8O8DIZEAV6N51k7OsB6P5MToao533VPdSH41XJ4U
+	 L+2nti2Z9E78AnWJkBRuVyIS/gGhruMrKuX6sqFmdToJr/NEjJ9u6LFNjBp+trzGdg
+	 JoLNnM8we32gIJDK2YvnilK9bvXIFq/FqHpdWb/KAzdIxhMIrnTNY7EXEeyhpXKNSa
+	 NTrOatiq3FDdQ==
+Date: Mon, 18 Nov 2024 10:31:23 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [GIT PULL] Performance events changes for v6.13
-Message-ID: <Zzt5lYZGF8IOrgpB@gmail.com>
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+	James Clark <james.clark@linaro.org>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
+	Zixian Cai <fzczx123@gmail.com>, Andi Kleen <ak@linux.intel.com>,
+	Paran Lee <p4ranlee@gmail.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>
+Subject: Re: [PATCH v4 0/6] Avoid parsing tracepoint format just for id
+Message-ID: <ZzuH-8ZCa7BVt3ef@google.com>
+References: <20241108184751.359237-1-irogers@google.com>
+ <Zy8FIt2OMa5-GymZ@google.com>
+ <CAP-5=fXmxhaLk+qvH9nGAV-ByyhyHx=WPhXCFbBaZ3nSySSsMA@mail.gmail.com>
+ <Zy-WM779rMwczlj_@google.com>
+ <CAP-5=fVKvDLUMw_HXBoRLK3FyPvUCWGOZNECer6_fyhbTZTM6A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVKvDLUMw_HXBoRLK3FyPvUCWGOZNECer6_fyhbTZTM6A@mail.gmail.com>
 
-Linus,
+On Wed, Nov 13, 2024 at 10:06:13AM -0800, Ian Rogers wrote:
+> On Sat, Nov 9, 2024 at 9:04 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Sat, Nov 09, 2024 at 08:26:20AM -0800, Ian Rogers wrote:
+> > > On Fri, Nov 8, 2024 at 10:45 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > On Fri, Nov 08, 2024 at 10:47:45AM -0800, Ian Rogers wrote:
+> > > > > Ian Rogers (6):
+> > > > >   tool api fs: Correctly encode errno for read/write open failures
+> > > > >   perf trace-event: Constify print arguments
+> > > > >   perf trace-event: Always build trace-event-info.c
+> > > > >   perf evsel: Add/use accessor for tp_format
+> > > > >   perf evsel: Allow evsel__newtp without libtraceevent
+> > > > >   perf tests: Enable tests disabled due to tracepoint parsing
+> > > >
+> > > > After applying this series, I'm seeing some test failures.  But I don't
+> > > > understand why it affects non-tracepoint events though.
+> > > >
+> > > >   $ sudo ./perf test -v pipe
+> > > >   --- start ---
+> > > >   test child forked, pid 3036123
+> > > >    1bde35-1bdecc l noploop
+> > > >   perf does have symbol 'noploop'
+> > > >
+> > > >   Record+report pipe test
+> > > >   [ perf record: Woken up 1 times to write data ]
+> > > >   [ perf record: Captured and wrote 0.210 MB - ]
+> > > >   [ perf record: Woken up 2 times to write data ]
+> > > >   [ perf record: Captured and wrote 0.517 MB - ]
+> > > >   [ perf record: Woken up 2 times to write data ]
+> > > >   [ perf record: Captured and wrote 0.516 MB - ]
+> > > >   Record+report pipe test [Success]
+> > > >
+> > > >   Inject -B build-ids test
+> > > >   0xa5c [0x17a4]: failed to process type: 80
+> > > >   Error:
+> > > >   failed to process sample
+> > > >   Inject build-ids test [Failed - cannot find noploop function in pipe #1]
+> > > >
+> > > >   Inject -b build-ids test
+> > > >   0xa5c [0x17a4]: failed to process type: 80
+> > > >   Error:
+> > > >   failed to process sample
+> > > >   Inject build-ids test [Failed - cannot find noploop function in pipe #1]
+> > > >
+> > > >   Inject --buildid-all build-ids test
+> > > >   0xa5c [0x17a4]: failed to process type: 80
+> > > >   Error:
+> > > >   failed to process sample
+> > > >   Inject build-ids test [Failed - cannot find noploop function in pipe #1]
+> > > >
+> > > >   Inject --mmap2-buildid-all build-ids test
+> > > >   0xa5c [0x17a4]: failed to process type: 80
+> > > >   Error:
+> > > >   failed to process sample
+> > > >   Inject build-ids test [Failed - cannot find noploop function in pipe #1]
+> > > >   ---- end(-1) ----
+> > > >    84: perf pipe recording and injection test                          : FAILED!
+> > > >
+> > > >   $ sudo ./perf test -v Zstd
+> > > >   --- start ---
+> > > >   test child forked, pid 3036097
+> > > >   Collecting compressed record file:
+> > > >   500+0 records in
+> > > >   500+0 records out
+> > > >   256000 bytes (256 kB, 250 KiB) copied, 0.00169127 s, 151 MB/s
+> > > >   [ perf record: Woken up 1 times to write data ]
+> > > >   [ perf record: Captured and wrote 0.032 MB /tmp/perf.data.KBo, compressed (original 0.004 MB, ratio is 3.324) ]
+> > > >   Checking compressed events stats:
+> > > >   Couldn't decompress data
+> > > >   0x7ca8 [0x4f2]: failed to process type: 81 [Operation not permitted]
+> > > >   Error:
+> > > >   failed to process sample
+> > > >   ---- end(-1) ----
+> > > >    86: Zstd perf.data compression/decompression                        : FAILED!
+> > > >
+> > > > Thanks,
+> > > > Namhyung
+> > >
+> > > I'm not able to reproduce:
+> > > ```
+> > > $ git log --oneline |head
+> > > a59bca6eb0a6 perf test: Add a runs-per-test flag
+> > > 0d0c002eb45c perf tests: Enable tests disabled due to tracepoint parsing
+> > > 4b8f5c9dfbda perf evsel: Allow evsel__newtp without libtraceevent
+> > > 7f57057c7884 perf evsel: Add/use accessor for tp_format
+> > > c27d357d2d4c perf trace-event: Always build trace-event-info.c
+> > > 20bf7a2cd68a perf trace-event: Constify print arguments
+> > > f18b07ee2af1 tool api fs: Correctly encode errno for read/write open failures
+> > > ...
+> > > $ sudo /tmp/perf/perf test -r 10 Zstd pipe -v
+> > > 84: perf pipe recording and injection test                          : Ok
+> > > 84: perf pipe recording and injection test                          : Ok
+> > > 84: perf pipe recording and injection test                          : Ok
+> > > 84: perf pipe recording and injection test                          : Ok
+> > > 84: perf pipe recording and injection test                          : Ok
+> > > 84: perf pipe recording and injection test                          : Ok
+> > > 84: perf pipe recording and injection test                          : Ok
+> > > 84: perf pipe recording and injection test                          : Ok
+> > > 84: perf pipe recording and injection test                          : Ok
+> > > 84: perf pipe recording and injection test                          : Ok
+> > > 86: Zstd perf.data compression/decompression                        : Ok
+> > > 86: Zstd perf.data compression/decompression                        : Ok
+> > > 86: Zstd perf.data compression/decompression                        : Ok
+> > > 86: Zstd perf.data compression/decompression                        : Ok
+> > > 86: Zstd perf.data compression/decompression                        : Ok
+> > > 86: Zstd perf.data compression/decompression                        : Ok
+> > > 86: Zstd perf.data compression/decompression                        : Ok
+> > > 86: Zstd perf.data compression/decompression                        : Ok
+> > > 86: Zstd perf.data compression/decompression                        : Ok
+> > > 86: Zstd perf.data compression/decompression                        : Ok
+> > > ```
+> > > Similarly not as root or if runs-per-test is 100.
+> > >
+> > > Agreed that the changes are for tracepoints and these tests aren't for
+> > > tracepoints, so an interaction wouldn't be expected. If you have a
+> > > reliable reproduction perhaps you can bisect it.
+> >
+> > it says:
+> >
+> > 9c10de391840a35ab095b65e9a5c4fad0ac52068 is the first bad commit
+> > commit 9c10de391840a35ab095b65e9a5c4fad0ac52068 (HEAD)
+> > Author: Ian Rogers <irogers@google.com>
+> > Date:   Fri Nov 8 10:47:46 2024 -0800
+> >
+> >     tool api fs: Correctly encode errno for read/write open failures
+> >
+> >     Switch from returning -1 to -errno so that callers can determine types
+> >     of failure.
+> >
+> >     Signed-off-by: Ian Rogers <irogers@google.com>
+> >     Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >
+> >  tools/lib/api/fs/fs.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> So I tried to eye-ball/grep all callers to spot assumptions on the
+> return value like:
+> ```
+> err = ...__read_int
+> if (err == -1)
+> ```
+> Didn't spot anything.
+> 
+> It seems in the test log the record is failing so I ran this under
+> gdb, set breakpoints on the 3 modified functions and then looked up
+> the call stack to spot bad return value assumptions. Everything looks
+> good.
+> I then tried inject and report, the only file read by these functions
+> is /proc/sys/kernel/perf_event_paranoid as part of symbol
+> initialization (nit, this should probably be read lazily and the
+> restriction should really come from the perf.data file, not the
+> running system) and those calls look good.
+> 
+> The change is small and not critical for the series. It improves the
+> error message when reading the tracepoint id fails. So we could move
+> forward with the rest of the series, but that could be annoying for
+> tracepoint users.
+> 
+> If I had a reproducer I'd revert the 1 line change on each function to
+> find out which is causing the regression. Once you have that then you
+> can binary search to find the bad call by using some global counter
+> where the first 'n' calls use the new return value and the later use
+> the old value. You can then vary 'n' to binary search and find the bad
+> caller.
+> 
+> Is there any chance you can help diagnose this or help me to find the
+> reproducer?
 
-Please pull the latest perf/core Git tree from:
+I think this depends on the system configuration.  I've debugged it
+failed when it gets cpu topology:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2024-11-18
+  ...
+  read int failed: /sys/devices/system/cpu/cpu112/topology/core_id (errno=2)
+  read int failed: /sys/devices/system/cpu/cpu112/topology/physical_package_id (errno=2)
+  read int failed: /sys/devices/system/cpu/cpu112/topology/die_id (errno=2)
+  ...
 
-   # HEAD: 2c47e7a74f445426d156278e339b7abb259e50de perf/core: Correct perf sampling with guest VMs
+Maybe it's because # online CPUs != # possible CPUs.
 
-Performance events changes for v6.13:
+  $ cat /sys/devices/system/cpu/online 
+  0-63
+  $ cat /sys/devices/system/cpu/possible 
+  0-127
 
- - Uprobes:
-    - Add BPF session support (Jiri Olsa)
-    - Switch to RCU Tasks Trace flavor for better performance (Andrii Nakryiko)
-    - Massively increase uretprobe SMP scalability by SRCU-protecting
-      the uretprobe lifetime (Andrii Nakryiko)
-    - Kill xol_area->slot_count (Oleg Nesterov)
+There's a code like cpu__get_socket_id() to use the return value of
+sysfs__read_int() directly.  And it saves the value to aggr_cpu_id which
+requires exact match like in aggr_cpu_id__equal().
 
- - Core facilities:
-    - Implement targeted high-frequency profiling by adding the ability
-      for an event to "pause" or "resume" AUX area tracing (Adrian Hunter)
+Thanks,
+Namhyung
 
- - VM profiling/sampling:
-    - Correct perf sampling with guest VMs (Colton Lewis)
-
- - New hardware support:
-    - x86/intel: Add PMU support for Intel ArrowLake-H CPUs (Dapeng Mi)
-
- - Misc fixes and enhancements:
-    - x86/intel/pt: Fix buffer full but size is 0 case (Adrian Hunter)
-    - x86/amd: Warn only on new bits set (Breno Leitao)
-    - x86/amd/uncore: Avoid a false positive warning about snprintf
-                      truncation in amd_uncore_umc_ctx_init (Jean Delvare)
-    - uprobes: Re-order struct uprobe_task to save some space (Christophe JAILLET)
-    - x86/rapl: Move the pmu allocation out of CPU hotplug (Kan Liang)
-    - x86/rapl: Clean up cpumask and hotplug (Kan Liang)
-    - uprobes: Deuglify xol_get_insn_slot/xol_free_insn_slot paths (Oleg Nesterov)
-
- Thanks,
-
-	Ingo
-
------------------->
-Adrian Hunter (4):
-      perf/x86/intel/pt: Fix buffer full but size is 0 case
-      perf/core: Add aux_pause, aux_resume, aux_start_paused
-      perf/x86/intel/pt: Add support for pause / resume
-      perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
-
-Andrii Nakryiko (3):
-      uprobes: switch to RCU Tasks Trace flavor for better performance
-      uprobes: allow put_uprobe() from non-sleepable softirq context
-      uprobes: SRCU-protect uretprobe lifetime (with timeout)
-
-Breno Leitao (1):
-      perf/x86/amd: Warn only on new bits set
-
-Christophe JAILLET (1):
-      uprobes: Re-order struct uprobe_task to save some space
-
-Colton Lewis (5):
-      perf/arm: Drop unused functions
-      perf/core: Hoist perf_instruction_pointer() and perf_misc_flags()
-      perf/powerpc: Use perf_arch_instruction_pointer()
-      perf/x86: Refactor misc flag assignments
-      perf/core: Correct perf sampling with guest VMs
-
-Dapeng Mi (4):
-      perf/x86: Refine hybrid_pmu_type defination
-      x86/cpu/intel: Define helper to get CPU core native ID
-      perf/x86/intel: Support hybrid PMU with multiple atom uarchs
-      perf/x86/intel: Add PMU support for ArrowLake-H
-
-Jean Delvare (1):
-      perf/x86/amd/uncore: Avoid a false positive warning about snprintf truncation in amd_uncore_umc_ctx_init
-
-Jiri Olsa (2):
-      uprobe: Add data pointer to consumer handlers
-      uprobe: Add support for session consumer
-
-Kan Liang (2):
-      perf/x86/rapl: Move the pmu allocation out of CPU hotplug
-      perf/x86/rapl: Clean up cpumask and hotplug
-
-Oleg Nesterov (9):
-      uprobes: don't abuse get_utask() in pre_ssout() and prepare_uretprobe()
-      uprobes: sanitiize xol_free_insn_slot()
-      uprobes: kill the unnecessary put_uprobe/xol_free_insn_slot in uprobe_free_utask()
-      uprobes: simplify xol_take_insn_slot() and its caller
-      uprobes: move the initialization of utask->xol_vaddr from pre_ssout() to xol_get_insn_slot()
-      uprobes: pass utask to xol_get_insn_slot() and xol_free_insn_slot()
-      uprobes: deny mremap(xol_vma)
-      uprobes: kill xol_area->slot_count
-      uprobes: fold xol_take_insn_slot() into xol_get_insn_slot()
-
-
- arch/Kconfig                                       |   1 +
- arch/arm/include/asm/perf_event.h                  |   7 -
- arch/arm/kernel/perf_callchain.c                   |  17 -
- arch/arm64/include/asm/perf_event.h                |   4 -
- arch/arm64/kernel/perf_callchain.c                 |  28 -
- arch/powerpc/include/asm/perf_event_server.h       |   6 +-
- arch/powerpc/perf/callchain.c                      |   2 +-
- arch/powerpc/perf/callchain_32.c                   |   2 +-
- arch/powerpc/perf/callchain_64.c                   |   2 +-
- arch/powerpc/perf/core-book3s.c                    |   4 +-
- arch/s390/include/asm/perf_event.h                 |   6 +-
- arch/s390/kernel/perf_event.c                      |   4 +-
- arch/x86/events/amd/core.c                         |  10 +-
- arch/x86/events/amd/uncore.c                       |   5 +-
- arch/x86/events/core.c                             |  64 ++-
- arch/x86/events/intel/core.c                       | 137 ++++-
- arch/x86/events/intel/ds.c                         |  21 +
- arch/x86/events/intel/pt.c                         |  84 ++-
- arch/x86/events/intel/pt.h                         |   6 +
- arch/x86/events/perf_event.h                       |  34 +-
- arch/x86/events/rapl.c                             | 130 ++---
- arch/x86/include/asm/cpu.h                         |   6 +
- arch/x86/include/asm/perf_event.h                  |  12 +-
- arch/x86/kernel/cpu/intel.c                        |  15 +
- include/linux/cpuhotplug.h                         |   1 -
- include/linux/perf_event.h                         |  54 +-
- include/linux/uprobes.h                            |  83 ++-
- include/uapi/linux/perf_event.h                    |  11 +-
- kernel/events/core.c                               | 102 +++-
- kernel/events/internal.h                           |   1 +
- kernel/events/uprobes.c                            | 608 +++++++++++++++------
- kernel/trace/bpf_trace.c                           |   6 +-
- kernel/trace/trace_uprobe.c                        |  12 +-
- .../selftests/bpf/bpf_testmod/bpf_testmod.c        |   2 +-
- 34 files changed, 1069 insertions(+), 418 deletions(-)
