@@ -1,135 +1,109 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB441F941
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 01:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE082563
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 03:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731980801; cv=none; b=ipC3htjlvH6nyzBNE+jDNDJROBVx04/jdQUFsPagLbaYd7t9RzevA+CAnRvY1+kU/rOTbbBoBq6AtC9Atl1V+wCUxYfnJaw8GP54wnLaOjjGu4A6F6PYXcFWG9s3Md0/QoBSvwnmmBBR9SncGxVdQKsdlwphmoXV0EnoeSISdEk=
+	t=1731986280; cv=none; b=NJwGO9Up2/oH8DaNqOEgWutPvmRKDKkPvAghSMFpm/JGpO+4FGKNo1YhdTVjmRu2xWwbksdOdrN4xz6whyaCjn99icR3h1XIR3fpieu4/d3phjRXgn7LORAA4Mio1Rai8MFP3Ee53YwtWBRuKrp+GlCR7HxWinG0d6NMolsAJT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731980801; c=relaxed/simple;
-	bh=E3d+OEbP3yMOILCnS9+hFYuwOyXhhrnM8bXkOY1xVrg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cfPmLe3MOaUNUkxyOGvQ2/9aH4CgB60kWgPN9RVru1ozclmePe2ypFUx5C6MjXh8UO2w8269h19y9WBn6nq2vDZwWrdJ5HY2M/spUsEM9DLc13ph/YG+3P82ZvE4hMheCpXA18pgZ6E8STf+idq7I4EXogP+S3YzOGbOi08Un3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cjNDM81x; arc=none smtp.client-ip=209.85.215.201
+	s=arc-20240116; t=1731986280; c=relaxed/simple;
+	bh=j6j/QSrHuZ9HgIm5nspdgUSPYCy/jyVLxft6qIl05Sg=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=j0NRQPeDygP0vFh03f9KM8mMj3LDF4VhJkHYXl6exk08C/A0CtUcE6X6c4NFKsQd0Xpdg66gua8V5GM1XPJD42trVF6W16juIt4/YUy211DFXwwhe/LkZrtKrCJG2G5YWofH7ihtqqEeMFzhMlmJMsbtpZXXcegcF34YRo2pO/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CkcS5hAi; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cjNDM81x"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-7fb966ee0cdso164908a12.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 17:46:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CkcS5hAi"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e3877744e45so4940604276.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 19:17:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731980799; x=1732585599; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GT1zL1Urke9HJNtThpCY9mwLIe9gpw5HbnqMkgZMySc=;
-        b=cjNDM81x4AfKtSlCtHlJLFSW33ii/dZwEIjsRl0zWGLdzfijwG5eLsyd2IIhHLyT6T
-         TNuCJiDQrobj2qNH9WrD2aiVgNooO11d+68LcBJ6E7sQR3Ow23kfx/+T0oEXjp1U/5sp
-         ulrADf3XSuvMcbgV6aZYONGlZttcAGmdiNNbsqoe+dn1NEU0vjVdcHwijl44sGRbqzYA
-         u7U+ppkQaJmc5f3N/TnI1X941QqvcSHX+zfgME0XLHPUoh78Nh6l5lz7d/3WPFL8EW/u
-         /LyCF/anjUxQMRUb3eOsUDZtR4imQjzEtGgGtWjrtT1qpsTgFRMc5p77qjO/VMoHYf9H
-         3z8w==
+        d=google.com; s=20230601; t=1731986277; x=1732591077; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1RCuIlrxYD8lSNZlNv4U8SFaDpGnr+ycFJLytVXPQ34=;
+        b=CkcS5hAiskQBZnoQ929cgRtSP18GyCR7ePAG3s4yEqhswtlVr0MckwApgXSygmoAWm
+         wsvgD3XnAnZkt4ECRBCVd+ytK3EC9XcpksbB2Rk4lLM+g/4qO2NHg6iFR1ekyNTg51g9
+         or03GdL1gjzjJwE1uRTrEMErNNcJ4ffJ+7pxIKf3mslElrhM13FcV6p4pYxLC2vlB9A6
+         1/9YcOAxZ1PcDbgDQDNkXGts3VEtvg4nCbYb2QJn7LcJUsdjwo5Zo2BnDw7+Fry9CWZD
+         oxUgp7G1psR6bS9TwRSJE32aVBAzYV24JuAOOK+Vz4sYCQuzdHAKFaix5V6eSU3JO0fn
+         qdnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731980799; x=1732585599;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GT1zL1Urke9HJNtThpCY9mwLIe9gpw5HbnqMkgZMySc=;
-        b=nvBpkQIdaLcDPBPGGKy9+qk7UAqda2I/f9kEKbo8vCXhkD1VvttrhAU8pjkOxJT6E/
-         PoqOUJv1KWTAp8DoDlL0ko4rYLJVsX3BEg1omCaxalxxREvYNnjA+f1xVL1jDSs7h3QC
-         GAZSOutmdsLYMe2Rvlo5nLRPu3/DexynYhKtPP+OPiOxwJ4TPUXF9EkSz5yEcCen9VPE
-         +q/6S0YYxVeJz22pJJctai4wG2NhQKYJj5HZLZCHdnxJeFfaNFe8J+cJV5mtAMOttoAE
-         zPyDENZnp2ya6s8XLZALtB5yci+dVYXSxvmVDUVZT4MsMixIeZqjfxK2T1xxgblSDmxp
-         l6xw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZNykysSqCba+c2Q0bM//ghqU5w2EY0PxsNp8FW2xkJkPBhZtQ2JGB4UjJktXUG3xWXw6nKE/4ZxVb8ITBQ29m@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCxrWSaWfFuLO42Hkls1alQ3QiF+TAcrCzUf+3JbCuJRTg69O7
-	anbBOLC3xvjcFbSH5R1b2EJvImlBWvihMIjaJz9xFCM8yPMBh8YBTEDx3nFQKetaHxfCxiQQUwA
-	erw==
-X-Google-Smtp-Source: AGHT+IFyAMUt271Gd1mpsf5l1hRbbPI4yGCXbfh1zdsuqozjfDlwn6H+U1HYbzeXnhb/CkuByt2bxALOXYQ=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a63:7352:0:b0:7ea:8c4c:d07c with SMTP id
- 41be03b00d2f7-7fb92f3a224mr2388a12.3.1731980799107; Mon, 18 Nov 2024 17:46:39
- -0800 (PST)
-Date: Mon, 18 Nov 2024 17:46:37 -0800
-In-Reply-To: <c21d02a3-4315-41f4-b873-bf28041a0d82@linux.intel.com>
+        d=1e100.net; s=20230601; t=1731986277; x=1732591077;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1RCuIlrxYD8lSNZlNv4U8SFaDpGnr+ycFJLytVXPQ34=;
+        b=a3s/XUfH5zSV6lpX8MDzIz41VMdPIMLuJS/i+1ex0xTELRqAl68V29svhEUxg0sPNE
+         LcoBoewPcWpsZfpD5ezm8bqkbstKW68yxMJzgvmZVwW0lQoARIavngW4g0pypNsdT3ut
+         x5IwNkYGB7H3BHL+t3Xk5r5HjzI0dejDQocfxBH1GTZrsAexeh6Yx0OnZv2M6nNfw6xA
+         VSOifBu+IpmSQzABTPJ9vkNOwSvdM8IEHpr+lIcq3wrwHAjdbF9EBuoIXKJUKcn37adJ
+         0xCn+lzRdxK2i2Sgd7Nl4bMIsJ48EEgIjR1+bQcRY9Uz9H1jKB05T0ME2Bmbq3wTfpMV
+         belQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWi8bn/VBpNXHjG8bJErV11tLceDcbGTpDT4lvsPkYob3BOycJPASQ2/xEPW21SpKWNDSm2XghdQIJdimDiPEaH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9ml2D1Jl5FE+qJ172JeD2UlOkjNAsY6P2PGkoqQdPHOwUXBtp
+	AGyagJHqRM+mh200kuNVAWnU/+sg5Dpduf/5d11Qy7C2qDDgNWZhZ3xUHEpfcWmgHGMn4OTbXzo
+	Zuu6LAg==
+X-Google-Smtp-Source: AGHT+IEGdsKxODGCbPwfMgUpN0LavElnl1I0LvvCVh1DqytQ5PcbMn6WRMgJN2ZuWmUjHZqKx/WA+JUBzKF1
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:22a4:ded5:5c37:fcc7])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1346:b0:e38:b45e:b192 with SMTP
+ id 3f1490d57ef6-e38b45ec2f1mr1265276.8.1731986277572; Mon, 18 Nov 2024
+ 19:17:57 -0800 (PST)
+Date: Mon, 18 Nov 2024 19:17:54 -0800
+Message-Id: <20241119031754.1021858-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-38-mizhang@google.com>
- <5309ec1b-edc6-4e59-af88-b223dbf2a455@intel.com> <c21d02a3-4315-41f4-b873-bf28041a0d82@linux.intel.com>
-Message-ID: <Zzvt_fNw0U34I9bJ@google.com>
-Subject: Re: [RFC PATCH v3 37/58] KVM: x86/pmu: Switch IA32_PERF_GLOBAL_CTRL
- at VM boundary
-From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Zide Chen <zide.chen@intel.com>, Mingwei Zhang <mizhang@google.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>, 
-	Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>, 
-	Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>, 
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
-	gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>, 
-	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>, 
-	Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
+Subject: [PATCH v1] perf symbol-elf: Avoid a weak cxx_demangle_sym function
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Oct 25, 2024, Dapeng Mi wrote:
-> 
-> On 10/25/2024 4:26 AM, Chen, Zide wrote:
-> >
-> > On 7/31/2024 9:58 PM, Mingwei Zhang wrote:
-> >
-> >> @@ -7295,6 +7299,46 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
-> >>  					msrs[i].host, false);
-> >>  }
-> >>  
-> >> +static void save_perf_global_ctrl_in_passthrough_pmu(struct vcpu_vmx *vmx)
-> >> +{
-> >> +	struct kvm_pmu *pmu = vcpu_to_pmu(&vmx->vcpu);
-> >> +	int i;
-> >> +
-> >> +	if (vm_exit_controls_get(vmx) & VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL) {
-> >> +		pmu->global_ctrl = vmcs_read64(GUEST_IA32_PERF_GLOBAL_CTRL);
-> > As commented in patch 26, compared with MSR auto save/store area
-> > approach, the exec control way needs one relatively expensive VMCS read
-> > on every VM exit.
-> 
-> Anyway, let us have a evaluation and data speaks.
+cxx_demangle_sym is weak in case demangle-cxx.c replaces the
+definition in symbol-elf.c. When demangle-cxx.c is built
+HAVE_CXA_DEMANGLE_SUPPORT is defined, as such the define can be used
+to avoid a weak symbol. As weak symbols are outside of the C standard
+their use can lead to strange behaviors, in particular with LTO, as
+well as causing issues to be hidden at link time.
 
-No, drop the unconditional VMREAD and VMWRITE, one way or another.  No benchmark
-will notice ~50 extra cycles, but if we write poor code for every feature, those
-50 cycles per feature add up.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/symbol-elf.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Furthermore, checking to see if the CPU supports the load/save VMCS controls at
-runtime beyond ridiculous.  The mediated PMU requires ***VERSION 4***; if a CPU
-supports PMU version 4 and doesn't support the VMCS controls, KVM should yell and
-disable the passthrough PMU.  The amount of complexity added here to support a
-CPU that should never exist is silly.
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index e398abfd13a0..66fd1249660a 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -287,8 +287,9 @@ static bool want_demangle(bool is_kernel_sym)
+  * Demangle C++ function signature, typically replaced by demangle-cxx.cpp
+  * version.
+  */
+-__weak char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unused,
+-			      bool modifiers __maybe_unused)
++#ifndef HAVE_CXA_DEMANGLE_SUPPORT
++char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unused,
++		       bool modifiers __maybe_unused)
+ {
+ #ifdef HAVE_LIBBFD_SUPPORT
+ 	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
+@@ -302,6 +303,7 @@ __weak char *cxx_demangle_sym(const char *str __maybe_unused, bool params __mayb
+ 	return NULL;
+ #endif
+ }
++#endif /* !HAVE_CXA_DEMANGLE_SUPPORT */
+ 
+ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+ {
+-- 
+2.47.0.338.g60cca15819-goog
 
-> >> +static void load_perf_global_ctrl_in_passthrough_pmu(struct vcpu_vmx *vmx)
-> >> +{
-> >> +	struct kvm_pmu *pmu = vcpu_to_pmu(&vmx->vcpu);
-> >> +	u64 global_ctrl = pmu->global_ctrl;
-> >> +	int i;
-> >> +
-> >> +	if (vm_entry_controls_get(vmx) & VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL) {
-> >> +		vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL, global_ctrl);
-> > ditto.
-> >
-> > We may optimize it by introducing a new flag pmu->global_ctrl_dirty and
-> > update GUEST_IA32_PERF_GLOBAL_CTRL only when it's needed.  But this
-> > makes the code even more complicated.
-
-I haven't looked at surrounding code too much, but I guarantee there's _zero_
-reason to eat a VMWRITE+VMREAD on every transition.  If, emphasis on *if*, KVM
-accesses PERF_GLOBAL_CTRL frequently, e.g. on most exits, then add a VCPU_EXREG_XXX
-and let KVM's caching infrastructure do the heavy lifting.  Don't reinvent the
-wheel.  But first, convince the world that KVM actually accesses the MSR somewhat
-frequently.
-
-I'll do a more thorough review of this series in the coming weeks (days?).  I
-singled out this one because I happened to stumble across the code when digging
-into something else.
