@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C297155C83
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 01:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762B5158553
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 01:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731979099; cv=none; b=YCStLPKpJVNX5HAhTn1df/qm8H6zY4552AZP+OGTxyAIQ0MP4qe4YkYjgijyL4bced3EcuPU/bCIDYpoJBJQjj+HcIfXWCFghephB/s3ZGipNz+Zvn3fZqyBCaPbG2KTINiSQR9pN65Ms2RqRpDFyKUQA76PVAXxf9Z8ZXvSFXE=
+	t=1731979103; cv=none; b=E92TZk5U7m7g8E9q3po6yCyNSfRZJ+h1Y61qOMFfDSRUAoSUgz+6gaUbCslXa9ZA+bl5AeCA+QZhaLPVq0iARGZR5asgpV5DirbsLfozbuQQEv+CyZESGV7qI8p4myYiFq4LklIdZg9OiPgtadWNUKSA49s8VEdiTHNGYFl5Wu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731979099; c=relaxed/simple;
-	bh=xvU4oEkRZu7oYlW7Ww69Sq84Htql0bu+vZScAWVdL6I=;
+	s=arc-20240116; t=1731979103; c=relaxed/simple;
+	bh=ccbfQ/FCxM0ajSqCRBtrUPwSJY3+AGZURkp9AUtPPf0=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=GjIZEurX7Yl+dhrgZDLiAsGc0H4x2vicj+OmuQxMVy/Oo2CE75ineQXZP3WWY7wpp52oEmih5VFEpFzd/pthencbkCV2DxY/EqpYdgr0523/9GjaGjOq4rJicpPNvRzqcWrqRKAgEQhhDygaoA4hB0SmuQkQx3LsRIen3GKUw24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xy1RZK0D; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=tXaA8jdOp5NJOigNJ7eMqganAlPNE7jjL8r+HJ43bFX00yx0DHVTPkbSes6qY/+pp2N6KtNbmZeJV9SOKjaOJDVegawr1LcRWa0MhDQw3sE7eWAzAlO4k+uWshW3063cQWKdBHSe8GGetLMM+MMv02wP2JiFFyVj1A743TAkfbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HE7JfFF6; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xy1RZK0D"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e384d715e96so3226032276.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 17:18:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HE7JfFF6"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6eeab4be015so7930077b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 17:18:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731979096; x=1732583896; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/5CKH6QHuu2NcbrgRcRCJGUOGGvnBJyqKU+TkUSirYM=;
-        b=xy1RZK0DMnXTMVF8kJYFxp5qvEGK6B+vZ4/JH7ZArhauqd8jU9RgLhzjz0dj0P84aj
-         R7mTH5Otb8qDQdvmJQF/+u78NWhb7OIm3RsBsjSB/lIVY0Msu4vZpQVXpQgTm3tkx/RZ
-         C4zKVzP0spZFPcPTYD3LTBmA6Y+8XOrPMwSMLqy4sPSwtxW7O5+xli8iaQxHRCONsK4h
-         SypGA766fTD1hyygENE+wSxnvVuaahIFUTSpjqWCok0rXW4KFhOoCi32QFNsYepQ68eJ
-         bHo/T6NW0lHE13rm6FNbxYQc6RprysfIyiY0lSg9XoFbs96wq1NoxZmAEZEVQ1Sp44Dy
-         hD0w==
+        d=google.com; s=20230601; t=1731979101; x=1732583901; darn=vger.kernel.org;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=frFU6vDMiuKwKS8oNBs9ivnCPNnXTA0sYwftgRN+B6Y=;
+        b=HE7JfFF6eNF6eOmOwIZ6dAB4bQ6JSc5dKLDXox9CNchlsr3dzNGIUSfyXD3Wrs4/KY
+         ZvcE7HY05DMPYMRjG9OzB8VVIXoecp/5mlzaV4pgu0ooeDJGwTvl81GKBz+9X2rEFRh9
+         QieFT8cbq7cRU7/b57hvwAgcr0JuiqLQWwgfYLY5bk4xa/UJwILuXl7pezXa0qqv1zsL
+         LFONE4ljye9Wsilr9iZV9Wv1pk657f4GA0rHKnwTUyzIFVk7eHDcLkqWsDgtf/0OCtTP
+         bdhP2cMn2ED/Z45PGZjIf6wujAuXaWR1lP8BccFc3V8b+WwIqmMTyVIF3wZFLqsvzjAf
+         QL+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731979096; x=1732583896;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/5CKH6QHuu2NcbrgRcRCJGUOGGvnBJyqKU+TkUSirYM=;
-        b=oGK5teaopXp9NGUybIkyrIgVU89nbrKywJ6j1cZU/3gWCPFvCrEgC2z1hXP2c4gbJ6
-         30bhowYcQyJdlGjYTg+1ebUMn60b0kB/2pNvh809kknBjy78QwXTyaDTfzTgEyjaoDAn
-         9FsFEHZIMzTg4BuSmot7ittA3FL+2idPhLriyyXU/NZUPN5lJNmdlmtH2gu8SPXTiH9m
-         iFuQ1khoy4kkDfM0OPtyh7eng0n1vzcRYSvwT2iQ7GG6gt0nTVIhDfgYzayQBisFM6vd
-         P5NjJ8Q8S7+ZTFeVpXUR31qBUcaVcg0csYAe5vRuuimDULGv6pBWscfvhsLpvMLwV3po
-         aOoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvSINoQpvqQPInb3s904CthqBOw2iiLEpgyqJidDHVK3/9yOjBB7LcOgJRyo7OOl1ghMxB+lBuskGPLbtfj6e8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHvqFx+9phWeLQki9+AiVnhz82nFXBQB4k8Kps2jCAcDApst8Q
-	VqXTmeDFG9Pm4WTeArAJRg1475wNW4suN0nnF7YkkRIATHNjbw51pCSEwSQQBzfSiJHqSJqJG7k
-	nnWBxKg==
-X-Google-Smtp-Source: AGHT+IHfTA/+jlwQTYlf7NK8NSpShGCqN6NFIWxAxS33V7PS6uUzm2/q1MYOcgMQJqFrx6yl4FJ4vqULXI3g
+        d=1e100.net; s=20230601; t=1731979101; x=1732583901;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=frFU6vDMiuKwKS8oNBs9ivnCPNnXTA0sYwftgRN+B6Y=;
+        b=MdxIVYdgUdF5R0t6mj2ATOa8kycnDyc+nLLzzhXu04chZ/+31kdG/CPk3qXrr34QK0
+         t28OiG2L3JTvi1CwWnwG4sDUt8njph/29jX5sjMHmn/G5C37kgwyPjAqIskatIrMcHnQ
+         u7MGNd40xm720n0GsF3OicOBYHybOG2B506xHmanJDjVeuHqKls7ZeEAFB+td9U4kqN4
+         X25ITZ7+3ar+XhPEVSQnuDpvpelyUF2FcaMo/1KUsOcwXIEw8a1ODRcoffORmW4cyTjc
+         AV1IXPf/ffHY4rLhouoamdMTMCXAMjmc6QYaRZIwuvWuA47C6WBFOVBIxM4F+GMGgyPz
+         7gOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXpTrQGuZ5ZANnzMlw01u0s4w8Jc4Eg3G3dzyolx6S4E0rXYAh5FzQXQr7boeh7q4g/6D9udP2nzO8cNvSRQlHO@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAKudV2esFJ6hQXIOX+G8eoJxNcS+0BnLf7A3ffw48nrt7dq70
+	fJS0/KQIqeS9FH5CsXeRSA5f3XsBY6HMN8uzXUYONChsiZG1ayO7G1SMVdG5RcDGOEIz3CHrHhU
+	Em0lNEA==
+X-Google-Smtp-Source: AGHT+IEH6bm8HluA7jd0r6+9Cueqt8y2KXSiPCe2m7BpnNOtq6aGwuTd2RlX5z6Bdg0V8iHN7DjhyAg0Oq7b
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:22a4:ded5:5c37:fcc7])
- (user=irogers job=sendgmr) by 2002:a25:b19d:0:b0:e30:d61e:b110 with SMTP id
- 3f1490d57ef6-e382638437cmr197260276.5.1731979096311; Mon, 18 Nov 2024
- 17:18:16 -0800 (PST)
-Date: Mon, 18 Nov 2024 17:16:39 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:296:b0:6ee:aedd:bfaf with SMTP id
+ 00721157ae682-6eeaeddbfe8mr7587b3.2.1731979101174; Mon, 18 Nov 2024 17:18:21
+ -0800 (PST)
+Date: Mon, 18 Nov 2024 17:16:40 -0800
 In-Reply-To: <20241119011644.971342-1-irogers@google.com>
-Message-Id: <20241119011644.971342-18-irogers@google.com>
+Message-Id: <20241119011644.971342-19-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241119011644.971342-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Subject: [PATCH v7 17/22] perf kwork: Make perf_kwork_add_work a callback
+Subject: [PATCH v7 18/22] perf build: Remove test library from python shared object
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,118 +75,36 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>, 
 	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-perf_kwork_add_work is declared in builtin-kwork, whereas much kwork
-code is in util. To avoid needing to stub perf_kwork_add_work in
-python.c, add a callback to struct perf_kwork and initialize it in
-builtin-kwork to perf_kwork_add_work - this is the only struct
-perf_kwork. This removes the need for the stub in python.c.
+With the attr.c code moved to a shell test, there is no need to link
+the test code into the python dso to avoid a missing reference to
+test_attr__open. Drop the test code from the python library.
+
+With the bench and test code removed from the python library on my x86
+debian derived laptop the python library is reduced in size by 508,712
+bytes or nearly 5%.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-kwork.c      |  3 ++-
- tools/perf/util/bpf_kwork.c     |  2 +-
- tools/perf/util/bpf_kwork_top.c |  2 +-
- tools/perf/util/kwork.h         |  6 ++++--
- tools/perf/util/python.c        | 12 ------------
- 5 files changed, 8 insertions(+), 17 deletions(-)
+ tools/perf/Makefile.perf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index 8234410cba4c..43239850256b 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -1846,7 +1846,7 @@ static void process_skipped_events(struct perf_kwork *kwork,
- 	}
- }
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index cbcb698cea38..adbc7ab325c7 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -487,7 +487,7 @@ endif
+ EXTLIBS := $(call filter-out,$(EXCLUDE_EXTLIBS),$(EXTLIBS))
+ LIBS = -Wl,--whole-archive $(PERFLIBS) $(EXTRA_PERFLIBS) -Wl,--no-whole-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
  
--struct kwork_work *perf_kwork_add_work(struct perf_kwork *kwork,
-+static struct kwork_work *perf_kwork_add_work(struct perf_kwork *kwork,
- 				       struct kwork_class *class,
- 				       struct kwork_work *key)
- {
-@@ -2344,6 +2344,7 @@ int cmd_kwork(int argc, const char **argv)
- 		.all_runtime         = 0,
- 		.all_count           = 0,
- 		.nr_skipped_events   = { 0 },
-+		.add_work            = perf_kwork_add_work,
- 	};
- 	static const char default_report_sort_order[] = "runtime, max, count";
- 	static const char default_latency_sort_order[] = "avg, max, count";
-diff --git a/tools/perf/util/bpf_kwork.c b/tools/perf/util/bpf_kwork.c
-index 6c7126b7670d..5cff755c71fa 100644
---- a/tools/perf/util/bpf_kwork.c
-+++ b/tools/perf/util/bpf_kwork.c
-@@ -285,7 +285,7 @@ static int add_work(struct perf_kwork *kwork,
- 	    (bpf_trace->get_work_name(key, &tmp.name)))
- 		return -1;
+-PERFLIBS_PY := $(call filter-out,$(LIBPERF_BENCH),$(PERFLIBS))
++PERFLIBS_PY := $(call filter-out,$(LIBPERF_BENCH) $(LIBPERF_TEST),$(PERFLIBS))
+ LIBS_PY = -Wl,--whole-archive $(PERFLIBS_PY) $(EXTRA_PERFLIBS) -Wl,--no-whole-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
  
--	work = perf_kwork_add_work(kwork, tmp.class, &tmp);
-+	work = kwork->add_work(kwork, tmp.class, &tmp);
- 	if (work == NULL)
- 		return -1;
- 
-diff --git a/tools/perf/util/bpf_kwork_top.c b/tools/perf/util/bpf_kwork_top.c
-index 7261cad43468..b6f187dd9136 100644
---- a/tools/perf/util/bpf_kwork_top.c
-+++ b/tools/perf/util/bpf_kwork_top.c
-@@ -255,7 +255,7 @@ static int add_work(struct perf_kwork *kwork, struct work_key *key,
- 	bpf_trace = kwork_class_bpf_supported_list[type];
- 	tmp.class = bpf_trace->class;
- 
--	work = perf_kwork_add_work(kwork, tmp.class, &tmp);
-+	work = kwork->add_work(kwork, tmp.class, &tmp);
- 	if (!work)
- 		return -1;
- 
-diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
-index 76fe2a821bcf..29352ca1d497 100644
---- a/tools/perf/util/kwork.h
-+++ b/tools/perf/util/kwork.h
-@@ -251,12 +251,14 @@ struct perf_kwork {
- 	 * perf kwork top data
- 	 */
- 	struct kwork_top_stat top_stat;
--};
- 
--struct kwork_work *perf_kwork_add_work(struct perf_kwork *kwork,
-+	/* Add work callback. */
-+	struct kwork_work *(*add_work)(struct perf_kwork *kwork,
- 				       struct kwork_class *class,
- 				       struct kwork_work *key);
- 
-+};
-+
- #ifdef HAVE_BPF_SKEL
- 
- int perf_kwork__trace_prepare_bpf(struct perf_kwork *kwork);
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 5e6db4b143a1..3e32a502a41c 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -16,7 +16,6 @@
- #include "thread_map.h"
- #include "trace-event.h"
- #include "mmap.h"
--#include "util/kwork.h"
- #include "util/sample.h"
- #include <internal/lib.h>
- 
-@@ -1297,14 +1296,3 @@ PyMODINIT_FUNC PyInit_perf(void)
- 		PyErr_SetString(PyExc_ImportError, "perf: Init failed!");
- 	return module;
- }
--
--
--/* The following are stubs to avoid dragging in builtin-* objects. */
--/* TODO: move the code out of the builtin-* file into util. */
--
--struct kwork_work *perf_kwork_add_work(struct perf_kwork *kwork __maybe_unused,
--				       struct kwork_class *class __maybe_unused,
--				       struct kwork_work *key  __maybe_unused)
--{
--	return NULL;
--}
+ export INSTALL SHELL_PATH
 -- 
 2.47.0.338.g60cca15819-goog
 
