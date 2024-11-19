@@ -1,211 +1,124 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAC11D0E14
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 16:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E00B1D1F56;
+	Tue, 19 Nov 2024 17:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732033928; cv=none; b=Q64HuvWx4aArwp/1BQNeezJnmqXLKSIpMelVSqsIcsbpNKKn8celaUGhjsOda+Xy90L6NGi7bKq7zHdD38soH6S2hE8Y2QN8dKCHTDLofFn7BoEfHBCEIfvgFFfkNQDRTjQk82t2KLtyR8qVxLO7kjdH9BTzqeMl+yNxXreDKX0=
+	t=1732035606; cv=none; b=cIdRGN10X3yEIrMWea+igoeM7G1Yibl568QL136CVrtHKa9nQb07osAERwAOmoqzCZzVzYceyGToAJ+VJXiUX0IcTTLx5bJ0s5VVQACeCKxVbRMyWFIX1OR13lKgz+w8n485/Q5y3kmLQiLXfzINVmZuhjsctUbTYQz+ZGSaJkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732033928; c=relaxed/simple;
-	bh=2ekSIgrAzzeYMbHqvayaK6X9jApON1Mrqm4gAr1xfuc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BiEtiYpzggLT78YoG0b6eplxkRMnQaQlwnNg24qHVz94wyM+MGvjzG2ruXZ8y+9uKqnfr0K9QcystjOBGJQIMvxfVA4cXvS7u8xNOYUTd1+c9Rjzz93xwyRWX5Q6f3Cnqa9vaoGeVT/HCcafnD87f8gXinfyyNH+YuERtixhPTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zsx18bgV; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1732035606; c=relaxed/simple;
+	bh=nUKampE6m1Pc/cw92xoigRyF6ZA7CefrzrLuE5I65ic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OFnTXR4CbrFVWY67nVBpiBWE2IHGOTxej/bOWYPOfxcfwRrN7q5x0kW3RPww8SfmiXADIi1Qkiq9pqyeqLFD+gnmKBP7DYERd2tVPcZocOH6a+n2jtHBSRvNt2yVYoxE6uJfT7bb7CVMcoq5ao0pIgxprhC181Z/6PNl4q6A5gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnfjGVqt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zsx18bgV"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2122b6cadb1so20476755ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 08:32:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732033925; x=1732638725; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TNbKX5TNOs33VCY6qePAD5uOIqkp/me0ayOtaNKA/No=;
-        b=Zsx18bgVO7bkns/T1bdF4o8hwm4HvGQ8K1njUTD4dTXju86ClsCpINQqIWpGIFTQKB
-         e6LHXGXZj58Aljcko4CXtyhKWQF0yK2DFGNyOzVW0cqUfb0OBPJwmvdt91XIAWFTIuqN
-         TIWgfTJGzEuY4McD0XEnaIHAK9foqqASgCE1MftAhb4xDILZ8YoBisNLcY6BrNEt6Ak/
-         IfFrMfLcASkDlOulcA8dQZy+rNDsGyUJKevl2EGxlLy4S7W14LO+32nHQgYueNlER7yZ
-         +HPJP4DhPq5/KNm7IeX+xKotS6DRYeStV2FIKNsR4OCQvjivgD6S6x7xBeVFM1YR/u+A
-         YZug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732033925; x=1732638725;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TNbKX5TNOs33VCY6qePAD5uOIqkp/me0ayOtaNKA/No=;
-        b=xGNSV0Bhkw98choZMKAbDkbI4mjvi9ApkoYYIvBbeb8cgbBndmaEtkvhX/lYwXRica
-         cayeP40wI0lPHcsc5g7foFdiGGufJfVTwR+PcQGYp8Vu9P3fjoJRVmSV/sWVDUTkm+bI
-         lE0yTj0p3d9qmlpLUaIyIH47e6xgJxESudo6uk0doVx06Ejqs2uYLsXuS+1BsGvUv7PX
-         E8YstVNzQqCdXjFoKa77gXz4i1s2npCcJ2XPGs+FBIQRWD5J3QhxXBX9DgV23Ja2dYwN
-         rLXActlJV6Ni3BL4OcxO0ci4Jh3xcsO7h7kX10gDGSauIjNeXadPD34yxOxYCaIEeXR3
-         /POQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWU7vY/pxzgA4afW9HtRZ4lQO2g7jmStPLQep4KiPWgcZzprmchxTXyu7pbXsyUVigEMNfZCzO/FGTk1uwXCwwW@vger.kernel.org
-X-Gm-Message-State: AOJu0YylNYpz6JJgW9tM1bWfoL5mkTU2nH16saC8CLXmrImQL4HZgLUA
-	Z3Lt/ftYYPrW3K+WDF8FEgfS6gnyX8a1NifQx5YL5uccmVfBZKhDfjHS8xxUBl4RlTP3bBDNchq
-	VZA==
-X-Google-Smtp-Source: AGHT+IHsgdDVo1GLilnJsRb44nsrNpagX5eSv1Mr8vSstq32Le09fOxuyDrall8LHgWMDjvlpZV4/rkUUOc=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a17:903:2350:b0:212:6342:b592 with SMTP id
- d9443c01a7336-2126342b73amr9395ad.8.1732033925225; Tue, 19 Nov 2024 08:32:05
- -0800 (PST)
-Date: Tue, 19 Nov 2024 08:32:03 -0800
-In-Reply-To: <20240801045907.4010984-24-mizhang@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnfjGVqt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E12C4CECF;
+	Tue, 19 Nov 2024 17:00:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732035606;
+	bh=nUKampE6m1Pc/cw92xoigRyF6ZA7CefrzrLuE5I65ic=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AnfjGVqtLUnglyQYOpMNi8Ywk63ZEZrg2wN8WMQs0ugvxrgnSrvCZQ1Y74cGlPBwC
+	 x766ZFEqnGrj4INHVto8hZyzHMxuIfDMDNoKmYDexAOb0NPXNbcDmFPw/KXhWuktlM
+	 uLGZKBxNg377UHGnP+SaHhrMW4XeqHz4Bg6blkIuB5RdVembYSq8Kuy+an09QbrOJI
+	 vbf9BDlJh8/SeXMv+1VIUc0gM2PxRoAEv8998SnMxu6uSw+Imk7ukEhvYHXDt4SXyh
+	 sVyJ/sFEpfF0VVvxCdU/mFtmpiHp/cAME5ZfEbAcQsjXW97poarU4JErHiiFiTfVER
+	 cW1EjER9GpbZQ==
+Date: Tue, 19 Nov 2024 09:00:03 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v6 15/22] perf lock: Move common lock contention code to
+ new file
+Message-ID: <ZzzEE_kAjmXnvwtj@google.com>
+References: <20241109061809.811922-1-irogers@google.com>
+ <20241109061809.811922-16-irogers@google.com>
+ <Zzvac4IeX9nDDitm@google.com>
+ <CAP-5=fUPksNCJ-NqUbJMDpfS7kkmXGsCVhvALkts8HDv42NUyg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-24-mizhang@google.com>
-Message-ID: <Zzy9gz9boGIzZlsQ@google.com>
-Subject: Re: [RFC PATCH v3 23/58] KVM: x86/pmu: Allow RDPMC pass through when
- all counters exposed to guest
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>, 
-	Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla <manali.shukla@amd.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Jim Mattson <jmattson@google.com>, 
-	Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, 
-	Namhyung Kim <namhyung@kernel.org>, gce-passthrou-pmu-dev@google.com, 
-	Samantha Alt <samantha.alt@intel.com>, Zhiyuan Lv <zhiyuan.lv@intel.com>, 
-	Yanfei Xu <yanfei.xu@intel.com>, Like Xu <like.xu.linux@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUPksNCJ-NqUbJMDpfS7kkmXGsCVhvALkts8HDv42NUyg@mail.gmail.com>
 
-On Thu, Aug 01, 2024, Mingwei Zhang wrote:
-> Clear RDPMC_EXITING in vmcs when all counters on the host side are exposed
-> to guest VM. This gives performance to passthrough PMU. However, when guest
-> does not get all counters, intercept RDPMC to prevent access to unexposed
-> counters. Make decision in vmx_vcpu_after_set_cpuid() when guest enables
-> PMU and passthrough PMU is enabled.
+On Mon, Nov 18, 2024 at 05:03:41PM -0800, Ian Rogers wrote:
+> On Mon, Nov 18, 2024 at 4:23 PM Namhyung Kim <namhyung@kernel.org> wrote:
+[SNIP]
+> > On Fri, Nov 08, 2024 at 10:18:02PM -0800, Ian Rogers wrote:
+> > > +#ifndef HAVE_BPF_SKEL
+> > > +int lock_contention_prepare(struct lock_contention *con __maybe_unused)
+> > > +{
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +int lock_contention_start(void)
+> > > +{
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +int lock_contention_stop(void)
+> > > +{
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +int lock_contention_finish(struct lock_contention *con __maybe_unused)
+> > > +{
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +int lock_contention_read(struct lock_contention *con __maybe_unused)
+> > > +{
+> > > +     return 0;
+> > > +}
+> > > +#endif  /* !HAVE_BPF_SKEL */
+> >
+> > I still think it's the convention to have them in a header file as
+> > static inline functions and reduce the #ifdef in the .c file.
 > 
-> Co-developed-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
-> ---
->  arch/x86/kvm/pmu.c     | 16 ++++++++++++++++
->  arch/x86/kvm/pmu.h     |  1 +
->  arch/x86/kvm/vmx/vmx.c |  5 +++++
->  3 files changed, 22 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index e656f72fdace..19104e16a986 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -96,6 +96,22 @@ void kvm_pmu_ops_update(const struct kvm_pmu_ops *pmu_ops)
->  #undef __KVM_X86_PMU_OP
->  }
->  
-> +bool kvm_pmu_check_rdpmc_passthrough(struct kvm_vcpu *vcpu)
+> Shouldn't minimizing ifdefs, and associated cognitive load, in header
+> files be the priority given they are #included many times while the .c
+> file is only compiled once?
+> Shouldn't a goal of the header file be to abstract away things like
+> HAVE_BPF_SKEL?
+> I'm not clear what the goal of having the functions in the header
+> files is, performance? The code isn't going to run anyway. I feel
+> lock_contention.h is smaller and easier to read like this but I also
+> don't care enough to fight. I did this change here as
+> lock_contention.h was being brought into python.c for the sake of
+> stubbing out functions that the header file was also subbing out for
+> !BPF_HAVE_SKEL. A single stub felt like progress.
 
-As suggested earlier, kvm_rdpmc_in_guest().
+I think it may have the empty functions in the binary if we keep the
+functions in the .c file whereas compilers would optimize away them if
+they are static inline functions.
 
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +
-> +	if (is_passthrough_pmu_enabled(vcpu) &&
-> +	    !enable_vmware_backdoor &&
+Thanks,
+Namhyung
 
-Please add a comment about the VMware backdoor, I doubt most folks know about
-VMware's tweaks to RDPMC behavior.  It's somewhat obvious from the code and
-comment in check_rdpmc(), but I think it's worth calling out here too.
-
-> +	    pmu->nr_arch_gp_counters == kvm_pmu_cap.num_counters_gp &&
-> +	    pmu->nr_arch_fixed_counters == kvm_pmu_cap.num_counters_fixed &&
-> +	    pmu->counter_bitmask[KVM_PMC_GP] == (((u64)1 << kvm_pmu_cap.bit_width_gp) - 1) &&
-> +	    pmu->counter_bitmask[KVM_PMC_FIXED] == (((u64)1 << kvm_pmu_cap.bit_width_fixed)  - 1))
-
-BIT_ULL?  GENMASK_ULL?
-
-> +		return true;
-> +
-> +	return false;
-
-Do this:
-
-
-	return <true>;
-
-not:
-
-	if (<true>)
-		return true;
-
-	return false;
-
-Short-circuiting on certain cases is fine, and I would probably vote for that so
-it's easier to add comments, but that's obviously not what's done here.  E.g. either
-
-	if (!enable_mediated_pmu)
-		return false;
-
-	/* comment goes here */
-	if (enable_vmware_backdoor)
-		return false;
-
-	return <counters checks>;
-
-or
-
-	return <massive combined check>;
-
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_pmu_check_rdpmc_passthrough);
-
-Maybe just make this an inline in a header?  enable_vmware_backdoor is exported,
-and presumably enable_mediated_pmu will be too.
-
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 4d60a8cf2dd1..339742350b7a 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7911,6 +7911,11 @@ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
->  		vmx->msr_ia32_feature_control_valid_bits &=
->  			~FEAT_CTL_SGX_LC_ENABLED;
->  
-> +	if (kvm_pmu_check_rdpmc_passthrough(&vmx->vcpu))
-
-No need to follow vmx->vcpu, @vcpu is readily available.
-
-> +		exec_controls_clearbit(vmx, CPU_BASED_RDPMC_EXITING);
-> +	else
-> +		exec_controls_setbit(vmx, CPU_BASED_RDPMC_EXITING);
-
-I wonder if it makes sense to add a helper to change a bit.  IIRC, the only reason
-I didn't add one along with the set/clear helpers was because there weren't many
-users and I couldn't think of good alternative to "set".
-
-I still don't have a good name, but I think we're reaching the point where it's
-worth forcing the issue to avoid common goofs, e.g. handling only the "clear"
-case and no the "set" case.
-
-Maybe changebit?  E.g.
-
-static __always_inline void lname##_controls_changebit(struct vcpu_vmx *vmx, u##bits val,	\
-						       bool set)				\
-{												\
-	if (set)										\
-		lname##_controls_setbit(vmx, val);						\
-	else											\
-		lname##_controls_clearbit(vmx, val);						\
-}
-
-
-and then vmx_refresh_apicv_exec_ctrl() can be:
-
-	secondary_exec_controls_changebit(vmx,
-					  SECONDARY_EXEC_APIC_REGISTER_VIRT |
-					  SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY,
-					  kvm_vcpu_apicv_active(vcpu));
-	tertiary_exec_controls_changebit(vmx, TERTIARY_EXEC_IPI_VIRT,
-					 kvm_vcpu_apicv_active(vcpu) && enable_ipiv);
-
-and this can be:
-
-	exec_controls_changebit(vmx, CPU_BASED_RDPMC_EXITING,
-				!kvm_rdpmc_in_guest(vcpu));
