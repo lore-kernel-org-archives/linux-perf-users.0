@@ -1,66 +1,66 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F3D1AC43E
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 14:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667581D0157
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 15:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732028061; cv=none; b=LjAX96ddHz63sFJEhj2Ks8xK3sGgNAA59q0IyO18uBGS/0bLMjZ2gUU5YVZxenPzJPc2s74LcjVeIXOZ/O3yzkpSboJMbj1n/QysOLCcovwvfLDmimE2pNFGrn/wp6cUyUADgJYuGFcmjgsnGw88x45E7dIeZd+U8I49dY4cpHk=
+	t=1732030680; cv=none; b=ippffzFHYmrgXWwSH4qO0UY7HqoFmQQDsJAnJn/sZVTUW0FXw/mL3hTLxHQ3kpAjNN/8EB49Ar/rqg9aQxBQDPKsqyU+4Zoicr/oroqRrNIsLha3inFhyhkcJC0xoDHQ5xjqudp5PDHs1DUiEiXv88B01TS+JCrguom6S3GXPos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732028061; c=relaxed/simple;
-	bh=9128xCGIuXvaU49NjF1mWOVwIXLIuhSsSSvvDia+hRM=;
+	s=arc-20240116; t=1732030680; c=relaxed/simple;
+	bh=cTwjzGqKUpqGH8nA7SsQ+OktimoPQfVv87Z1DfG8K7c=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BJhCVKtGyuM3aW+wRSen8/gEET0n0hdnGGWYlhc+Wg8ZQX3Jk91igIE3krc3qHQREpU/L/CZyLaVCWsGmtR07GxiN4mwszLZPAJX+X46I7Vkli+GIJgm4lRJgHRqTtT23j6joAY0pGdwU5wzRoWdSU3CHiIB+iE3bvof20GdxAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oHjRfWxE; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=bZFTd8Y+Lh9p30l+gtA8uDuZfl4SK5lLpt/7PUW4Y3Bhx4IvPUV/5EW3iF3VaNXUVoUrF2rgAvN7BJFS7ItjEY1I/KrzqzW/3menR/R8Xa472/1ADM+w+JaBuJ5zYdMfbOJ9QVi0zJK0AviIAxwRI3gKb6qhBJtXxKpag9AuydM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pqaDuSKN; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oHjRfWxE"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e38100afa78so1601938276.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 06:54:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pqaDuSKN"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ea4291c177so2813780a91.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 07:37:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732028059; x=1732632859; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1732030679; x=1732635479; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ng0ADcAUF9BEyC9uJKl/YJ6KNTlUn/uj3eRa3WTv12c=;
-        b=oHjRfWxErSqPwtqb12j0vCL79W1CkdyjN1yCvKdrGJ9qRw+EoqDkxLRyfA7mQjujqy
-         1Buv15KL3HAvGer7XOwxTbgn8dw6o6ed022FmLvrFmHKM7h1mFi5x0YqGj7TMQapfZxd
-         0nvB352crXsBCuQ61G840u76kyImV3deMwbEG3WC/MJ2t+s+CawbsZZV2+tl8yKFCk+k
-         3KnIdMQLjObrEnxnJsY39ODdixwnHNpA2snI5g7CacDE32R6fGEhHJQ3epbKfVu1waMa
-         1HNM0QZe/wvA5qvErjMmBVdrLGbHkzoOj2bmmK/qYBfUEkdiglhs3LST2b6Cx+Alt3Ha
-         IRpw==
+        bh=fPN8/Su0I+qo2YHY6QxpzBdT5jWaWm8vD60kZIe4g6A=;
+        b=pqaDuSKN/2LOomFpubFz5IR5F12zaNa+Xn69+SH2CXi97ITGCzXakkZHX3zxJHC6d1
+         zSD3t6KGhFJnT6cHMd85Gk3p0+Z4pdu//3/pg8RoiPUuF0Ps0G92cSkjrO1T4n64hO0l
+         Hqzv39baIouKwPOmx0H/vPfo+jBfvJgFI8JfWtBmveaxFFE1PyHIpuoqkH0eb3K2omyF
+         KhU9oyRW1isyGNemA/t/Q0OqLkVeIIjZ3w+vG08N6pvBSceqNuXr6M/asvFBiDPQcQat
+         qQfs8hcs7uE9NWE4jV+f0WPFPesURikRbsoLvu65dDoRoR6+zVpAnLQbILd0o0mCck8p
+         N0ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732028059; x=1732632859;
+        d=1e100.net; s=20230601; t=1732030679; x=1732635479;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ng0ADcAUF9BEyC9uJKl/YJ6KNTlUn/uj3eRa3WTv12c=;
-        b=CEDhARZ9GN1ER38k+3j9+Ow1DX89Vau4gkoCkC9d8hKyYEdZgJKo+2Vcr4zf4aAHQz
-         NOdmtjSNm5gRJW34BRtUV74FQM3Ms4kSAUbFokEqskw4bLwTr5EYjOCqzAST0dpGFLBK
-         DRaEkVwmAjfZzkawIxNv5/3fBE6ALEKCeSKh9OI7n6MzabT1PPh9paF/mPbFGeWPI57v
-         Dtknhk8UUr1XpBmV6Vf4ocrhRbeRhzxxPxg8sVBiguRgJtHZmSy2om4Hug+8W2WkzJT4
-         kdGThJlNMvAhw5ICpveo9cuelBXPn+mX9Nfzas4KbB7WrLKpLDTOEFz7+nNDeWl4LGxB
-         DpCw==
-X-Forwarded-Encrypted: i=1; AJvYcCXMHnJoRhjh782gIotHyh5XTYxw1y9jPAX4dKI/Fv4sYhft6fqnB/CR+ewPeQUykEYRlA80OR3XDK5nS7EKmXe8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwPP5UiNIvrQdL8rM8BxdD0IXkGZbk8BsFKeD7MTn6Ldl0lZOP
-	zxq7RhXA3oLg/r7ZkYGWgH7uVfuZnAFWpp3PTlZ5uKIb1ctPF4HCIFQMNOjgM5Acd1c+K8i9HQ4
-	y3w==
-X-Google-Smtp-Source: AGHT+IHiBjarvPBtAHSxJkTUMY7pwcio1/kissXeruut+bT10tYNA48Ju6CocKcSJ83LEgeAx93OLOCj1yQ=
+        bh=fPN8/Su0I+qo2YHY6QxpzBdT5jWaWm8vD60kZIe4g6A=;
+        b=jfFuYL/NvK40NUeSrOtn7ueT3OxNAlePSD+Ckg6SLABPxEPhq3HFJufsT4MKKJjZLU
+         LNj/MY/XBFExDuCXskquaicTT9tyekK1HmVzzxjiXKvVkVHpcU1rwz1fMJ/jdoDG8tgl
+         Y6pG9mHMOS4wxKQOdVBCD2t6NILr33JPtMgN7oEAEANXCw42KIOZ3Oraf7g+WH/KXxMG
+         s/LiwmQQjRPPpyCg42+muJm06sMBhHVsw+bnBBl1Uug4IY0qEaN0sEyiQsGBWTYOBar4
+         VAKYLPZreIy4ne6kIH8uHJKNDcGP6QZv7x0J1PcCDbwsckribEcGtnHDUTGXPpVeMeFQ
+         9Mig==
+X-Forwarded-Encrypted: i=1; AJvYcCXdjvDwWsULicLLkVx4BC2y+7eEYCOILNTw+/oqTA+HY0/V4UmeuTo/CDW4kM04nvg+h5tH+cX6UCa/XMu1hp2w@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPcz+PQ5jTprd52TCdfD398SOl5j4MUN31pKiAeM0CEOF8rPec
+	Aa8qDz9509wawzh+2rS11Z5zEMB2T7RJzZpQSXG+tNQCyewl7L/Jex5hajC2HBAdioT2t8uRsks
+	a4w==
+X-Google-Smtp-Source: AGHT+IEtTpRNnYoRrw3+3gI3YR2Wbbv0fwFuzSmYLC46Hb5WA9M4JELz/5AzVoE3pfqrSuz8dF5FBhgy5Dg=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a25:acd3:0:b0:e38:c43:3002 with SMTP id
- 3f1490d57ef6-e38263d33ddmr171019276.10.1732028058911; Tue, 19 Nov 2024
- 06:54:18 -0800 (PST)
-Date: Tue, 19 Nov 2024 06:54:17 -0800
-In-Reply-To: <20240801045907.4010984-20-mizhang@google.com>
+ (user=seanjc job=sendgmr) by 2002:a17:90a:8d0a:b0:2ea:31f3:d646 with SMTP id
+ 98e67ed59e1d1-2ea31f3d76amr20660a91.7.1732030678733; Tue, 19 Nov 2024
+ 07:37:58 -0800 (PST)
+Date: Tue, 19 Nov 2024 07:37:57 -0800
+In-Reply-To: <20240801045907.4010984-21-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-20-mizhang@google.com>
-Message-ID: <ZzymmUKlPk7gHtup@google.com>
-Subject: Re: [RFC PATCH v3 19/58] KVM: x86/pmu: Plumb through pass-through PMU
- to vcpu for Intel CPUs
+References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-21-mizhang@google.com>
+Message-ID: <Zzyw1UyapXDNpc-c@google.com>
+Subject: Re: [RFC PATCH v3 20/58] KVM: x86/pmu: Always set global enable bits
+ in passthrough mode
 From: Sean Christopherson <seanjc@google.com>
 To: Mingwei Zhang <mizhang@google.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>, 
@@ -76,16 +76,69 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
 Content-Type: text/plain; charset="us-ascii"
 
 On Thu, Aug 01, 2024, Mingwei Zhang wrote:
-> Plumb through pass-through PMU setting from kvm->arch into kvm_pmu on each
-> vcpu created. Note that enabling PMU is decided by VMM when it sets the
-> CPUID bits exposed to guest VM. So plumb through the enabling for each pmu
-> in intel_pmu_refresh().
+> From: Sandipan Das <sandipan.das@amd.com>
+> 
+> Currently, the global control bits for a vcpu are restored to the reset
+> state only if the guest PMU version is less than 2. This works for
+> emulated PMU as the MSRs are intercepted and backing events are created
+> for and managed by the host PMU [1].
+> 
+> If such a guest in run with passthrough PMU, the counters no longer work
+> because the global enable bits are cleared. Hence, set the global enable
+> bits to their reset state if passthrough PMU is used.
+> 
+> A passthrough-capable host may not necessarily support PMU version 2 and
+> it can choose to restore or save the global control state from struct
+> kvm_pmu in the PMU context save and restore helpers depending on the
+> availability of the global control register.
+> 
+> [1] 7b46b733bdb4 ("KVM: x86/pmu: Set enable bits for GP counters in PERF_GLOBAL_CTRL at "RESET"");
+> 
+> Reported-by: Mingwei Zhang <mizhang@google.com>
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> [removed the fixes tag]
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> ---
+>  arch/x86/kvm/pmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index 5768ea2935e9..e656f72fdace 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -787,7 +787,7 @@ void kvm_pmu_refresh(struct kvm_vcpu *vcpu)
+>  	 * in the global controls).  Emulate that behavior when refreshing the
+>  	 * PMU so that userspace doesn't need to manually set PERF_GLOBAL_CTRL.
+>  	 */
+> -	if (kvm_pmu_has_perf_global_ctrl(pmu) && pmu->nr_arch_gp_counters)
+> +	if ((pmu->passthrough || kvm_pmu_has_perf_global_ctrl(pmu)) && pmu->nr_arch_gp_counters)
+>  		pmu->global_ctrl = GENMASK_ULL(pmu->nr_arch_gp_counters - 1, 0);
 
-Why?  As with the per-VM snapshot, I see zero reason for this to exist, it's
-simply:
+This is wrong and confusing.  From the guest's perspective, and therefore from
+host userspace's perspective, PERF_GLOBAL_CTRL does not exist.  Therefore, the
+value that is tracked for the guest must be '0'.
 
-  kvm->arch.enable_pmu && enable_mediated_pmu && pmu->version;
+I see that intel_passthrough_pmu_msrs() and amd_passthrough_pmu_msrs() intercept
+accesses to PERF_GLOBAL_CTRL if "pmu->version > 1" (which, by the by, needs to be
+kvm_pmu_has_perf_global_ctrl()), so there's no weirdness with the guest being able
+to access MSRs that shouldn't exist.
 
-And in literally every correct usage of pmu->passthrough, kvm->arch.enable_pmu
-and pmu->version have been checked (though implicitly), i.e. KVM can check
-enable_mediated_pmu and nothing else.
+But KVM shouldn't stuff pmu->global_ctrl, and doing so is a symptom of another
+flaw.  Unless I'm missing something, KVM stuffs pmu->global_ctrl so that the
+correct value is loaded on VM-Enter, but loading and saving PERF_GLOBAL_CTRL on
+entry/exit is unnecessary and confusing, as is loading the associated MSRs when
+restoring (loading) the guest context.
+
+For PERF_GLOBAL_CTRL on Intel, KVM needs to ensure all GP counters are enabled in
+VMCS.GUEST_IA32_PERF_GLOBAL_CTRL, but that's a "set once and forget" operation,
+not something that needs to be done on every entry and exit.  Of course, loading
+and saving PERF_GLOBAL_CTRL on every entry/exit is unnecessary for other reasons,
+but that's largely orthogonal.
+
+On AMD, amd_restore_pmu_context()[*] needs to enable a maximal value for
+PERF_GLOBAL_CTRL, but I don't think there's any need to load the other MSRs,
+and the maximal value should come from the above logic, not pmu->global_ctrl.
+
+[*] Side topic, in case I forget later, that API should be "load", not "restore".
+    There is no assumption or guarantee that KVM is exactly restoring anything,
+    e.g. if PERF_GLOBAL_CTRL doesn't exist in the guest PMU and on the first load.
