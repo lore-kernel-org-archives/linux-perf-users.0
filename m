@@ -1,340 +1,276 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2001D27B4
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 18:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9807D1D0438
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 18:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732039297; cv=none; b=gSMw5NDowsPygCShYlmLf30l//J7WGIdmVRzxpahrJc2KQkoTkpMBQ0jrwkbHjPWRtMTDhLpA5wnPpl7CaChYk68OPGe4UdKkFdJLwIo/MtNH68okR3W2rhZ9ZaiAsqIPnK0Xa3i/lGh/DukZolX6lp9tPl0Tbc+FFhGaIrrFVA=
+	t=1732040204; cv=none; b=saRKpQ2XobTTPPEP9ei/AgRnGBjhz+6Sa38WmD1tkZOy8DQAO6VvzZ1mV0Dl9F0058N/P7dRR0q/45yCqkAs1QwqhrzMahL5fxWKAU9oPuvds/BJd4E7o8/rE5jUIfrDhhwfRYaIRY+IanGOPQRd3LOP5r/RadleRcYi+wVO9Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732039297; c=relaxed/simple;
-	bh=FRCD0mklqsM8YzYKgxccyE8kvTxTAZqJyW2FOK9fwEU=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=Ia6EObg4Ew5s0pzbx2yUtgsZV8s9LlMbhXKzIUS/1tcGOqMlfd7VPsVRC0JY2xAjqCU88dagpsc8/j3SvZ6YfBfbodabkhmtNQIMzReQ6wxhfii1Hz+EOZKRvZzdJdU+W6Ahnh+GvQomdr6qjFW7E4hCccxr4yOETKgae42IA/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mDxLJvKl; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1732040204; c=relaxed/simple;
+	bh=S6qePynJfvFNjGTiJCMXdcd4gjx5A5flHSQM0Yu8a90=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kbZdK2XxKB7wrQAoL8eRKE22CZL8C0oCuh/ynYWwGmhL/Am5E5IT0L6/GDnZ8xTQDJoYSUOAzkL5zeuU4VkaLqa2IP3h2jtrvacVCAo0CgWs5ZTAlDQZ0NQfIDdGXaMVgyniEUQHVLoAdfd20JJn1/9PZvof5qNjPRk4KUAzNn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WmEwY0uU; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mDxLJvKl"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ee6a218044so58462977b3.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 10:01:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WmEwY0uU"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e9d6636498so74818937b3.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 10:16:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732039294; x=1732644094; darn=vger.kernel.org;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TQFCW5HyokM6GPCpSGZP+kz1l/ptP37eeUF9xzXvHb0=;
-        b=mDxLJvKlRVvGJrydo4xi2l7efx1WLQdpGZ1g3a9gpZHD6ESGF7Mb6bMDIb9ljZETgH
-         4zO57Jlu/+w0CO5A/0J0mPA9+Luqm4Tv1C6LMM59x/0/awq6vjwIBWX3LACuaVwBeA+B
-         r7SLcAeLib39Ag4zy+qWsaFaJC/UEEVqZ8dlYd91AUEZ5hifpZwJ9v7sYJ1bCJar78y/
-         pFzbt8aALg4bRD4omusDd6Zg/fDgi77+fih32Nn5V9+Z/ZltomI9r6uHOFoqVtWJwOmv
-         sP4nbbAiBZ6kkIQKl6DwxLyKMxGMyo8bD6TEi8CafxP0va39wRSyyCjxVbMrV9RppiFX
-         mqFg==
+        d=google.com; s=20230601; t=1732040200; x=1732645000; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=idomr3Hl2BFFWSsWPJ0RzB0j8mo/mnxNDTGRrypBjvI=;
+        b=WmEwY0uU4XI9qAA9KlpIeyZSCJF7mwzpmPMOxC7lOjrJ8ypA4VikJC8DX4g/QCwErK
+         hf1A0Riq6Ktsj9hBn3ddLWTsSN5DAtM5JNO0Mkxbi51XlXcSd/eXjCmsumQQFOEmQfyf
+         oph/YLIWpgtFu0UgWm1wkqR8puS4GVd9XokCUiZ6OliJdacIyQ6NZgcqjrZgVs8LAJqx
+         JbDD8lkS9vCVFCpFDT8rQmOgN6+JWp/P1xXcTx1Jzk8/h9aK0AlEgzd3ULvjH+Py83Oa
+         UFZAbpDNeHs+SNqF15KUBQShSGEFY/SBav76SRjcD5TlHnNapsFgcJh9tTJo4zMCtIsQ
+         q3HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732039294; x=1732644094;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TQFCW5HyokM6GPCpSGZP+kz1l/ptP37eeUF9xzXvHb0=;
-        b=vHCSH9Az63BAcg4HCnvvCOXmXFF2tPRJz9kVqSAx3Ee7vYxxjt6H9aMfOn5fqhI2bX
-         i5LbTd56/i5M4a7Kgf48Co9UeQiif0jZ1UpfEbcOyvawoXB1g0ClTQdohDsTh4sDbrGh
-         gT6urAorFg3XxYFrr1ndmkBvVteDlFC1nX0PMQ09XPH+RXVffEXlT5oGwBsqj9W1g7s5
-         4dkEwJcXysK4rUJ5XdLnAW2i22CZZex1ee+NOwjMYAKApPmTD4rXGWND4ZWcTnPSU6Jl
-         8+m51YoIDSSt2R6DYWWLPuCRd8Ye720wMCnHAycdJklxP7YqFkMqjDkCaPlIHOU2yItu
-         zk8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUJWu2JKE4KkHKGieb2V56dahE01gQnKwgoBBMY0Y792sgX4lHneLK/6atGRwlwyZMPaQsdx2kKgPRyDUtWhLkL@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyftrXMoFu0Y0uioWpRts1zSb7cnDzrdxgHYXhGVH1UnOHj/GJ
-	xl6FzApcmc4o+L4yZdr/2lSTzhTou7LM3fAexCjxhHWqn2Z1OAownXQ0YCe1HMPfBg5ORKoOIOL
-	puV70nA==
-X-Google-Smtp-Source: AGHT+IEaamOMz7Fi+3YLgkkmVXxvJJt7gmHsMBKdyAI1rOlv3UWwoAKvdNTU/6CyNZsrYp71LWCKSZKKZmJq
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:89d:ee73:740b:dfb3])
- (user=irogers job=sendgmr) by 2002:a05:690c:8c1b:b0:6e3:1702:b3e6 with SMTP
- id 00721157ae682-6ee55c8cf88mr588147b3.4.1732039294050; Tue, 19 Nov 2024
- 10:01:34 -0800 (PST)
-Date: Tue, 19 Nov 2024 10:01:30 -0800
-Message-Id: <20241119180130.19160-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1732040200; x=1732645000;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=idomr3Hl2BFFWSsWPJ0RzB0j8mo/mnxNDTGRrypBjvI=;
+        b=LCkdhB70mAwyP8RajPMYMEbdiimPbjm0ao1ql002nbb7SALUyFleaOcLeDxvdOlmiG
+         ovBRSMiShMRHEnLIcLi+QKhrRHPM9ei3G5l7mJt13rBA07kIvE0bZ7bGn/QGEMXK3Zox
+         s3l+0n0kD9L5hWhj5/4PquK7BuJdabPDAmtXtdrZUJE4qit84e89dYUpEWSksVpOMOh6
+         Jq707Sq0avaJGipt8Ecps/VIacXLqsxOtUofEs5aQRHFOhuQhEVGeuRxUZjXmM+AR9Jw
+         8iM6TLhI3jHNoF2/ObiOhAP5AQJxxMRi8Qw4WwZk3Dcw6jF87YUmCunZ0uXsGEjGjBMN
+         OYvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUG0YliXhZs5g7iBeqIVofYB+M+6U4GcI6hKbRHMzjOgPGLszUoclwdFMLAu3XLi30RaaaLvriO4D11tPMPynVV@vger.kernel.org
+X-Gm-Message-State: AOJu0YykhYBS8tMCq36bbzK+5My+UV5KJVs7fHz7ohbtAboVBr+7Ntc6
+	9SaO6MvIty+dfQPClCUFDzWAQWdNZtV6Qo9kK8sQX7rtwSoHEx/oO0o94edKCRwhgNIcb/6cmwl
+	Z7Q==
+X-Google-Smtp-Source: AGHT+IFSmG4m0oHH/q7gNwHuQzmdwSVvXHtPSlKJsyH+VTHZK8FkxYqujncC6c7x+AQQzhLIhNCFQZtFCrU=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
+ (user=seanjc job=sendgmr) by 2002:a05:690c:3102:b0:6ea:1f5b:1f5e with SMTP id
+ 00721157ae682-6ee55c95b39mr983367b3.4.1732040200274; Tue, 19 Nov 2024
+ 10:16:40 -0800 (PST)
+Date: Tue, 19 Nov 2024 10:16:38 -0800
+In-Reply-To: <20240801045907.4010984-27-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.47.0.371.ga323438b13-goog
-Subject: [PATCH v1] perf script python: Improve physical mem type resolution
-From: Ian Rogers <irogers@google.com>
-To: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-27-mizhang@google.com>
+Message-ID: <ZzzWBoCg-2B5p9bN@google.com>
+Subject: Re: [RFC PATCH v3 26/58] KVM: x86/pmu: Manage MSR interception for IA32_PERF_GLOBAL_CTRL
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla <manali.shukla@amd.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Jim Mattson <jmattson@google.com>, 
+	Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, 
+	Namhyung Kim <namhyung@kernel.org>, gce-passthrou-pmu-dev@google.com, 
+	Samantha Alt <samantha.alt@intel.com>, Zhiyuan Lv <zhiyuan.lv@intel.com>, 
+	Yanfei Xu <yanfei.xu@intel.com>, Like Xu <like.xu.linux@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Previously system RAM and persistent memory were hard code matched,
-change so that the label of the memory region is just read from
-/proc/iomem. This avoids frequent N/A samples.
+On Thu, Aug 01, 2024, Mingwei Zhang wrote:
+> ---
+>  arch/x86/include/asm/vmx.h |   1 +
+>  arch/x86/kvm/vmx/vmx.c     | 117 +++++++++++++++++++++++++++++++------
+>  arch/x86/kvm/vmx/vmx.h     |   3 +-
+>  3 files changed, 103 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+> index d77a31039f24..5ed89a099533 100644
+> --- a/arch/x86/include/asm/vmx.h
+> +++ b/arch/x86/include/asm/vmx.h
+> @@ -106,6 +106,7 @@
+>  #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
+>  #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
+>  #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
+> +#define VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL      0x40000000
 
-Change the /proc/iomem reading, event processing and output so that
-nested entries appear and their counts count toward their parent. As
-labels may be repeated, include the memory ranges in the output to
-make it clear why, for example, "System RAM" appears twice.
+Please add a helper in capabilities.h:
 
-Before:
-```
-Event: mem_inst_retired.all_loads:P
-Memory type                                    count  percentage
-----------------------------------------  ----------  ----------
-System RAM                                      9460        96.5%
-N/A                                              998         3.5%
-```
+static inline bool cpu_has_save_perf_global_ctrl(void)
+{
+	return vmcs_config.vmexit_ctrl & VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL;
+}
 
-After:
-```
-Event: mem_inst_retired.all_loads:P
-Memory type                                    count  percentage
-----------------------------------------  ----------  ----------
-100000000-105f7fffff : System RAM              36741        96.5
-  841400000-8416599ff : Kernel data               89         0.2
-  840800000-8412a6fff : Kernel rodata             60         0.2
-  841ebe000-8423fffff : Kernel bss                34         0.1
-0-fff : Reserved                                1345         3.5
-100000-89dd9fff : System RAM                       2         0.0
-```
 
-Before:
-```
-Event: mem_inst_retired.any:P
-Memory type                                    count  percentage
-----------------------------------------  -----------  -----------
-System RAM                                      9460        90.5%
-N/A                                              998         9.5%
-```
+>  #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
+>  
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 339742350b7a..34a420fa98c5 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -4394,6 +4394,97 @@ static u32 vmx_pin_based_exec_ctrl(struct vcpu_vmx *vmx)
+>  	return pin_based_exec_ctrl;
+>  }
+>  
+> +static void vmx_set_perf_global_ctrl(struct vcpu_vmx *vmx)
 
-After:
-```
-Event: mem_inst_retired.any:P
-Memory type                                    count  percentage
-----------------------------------------  ----------  ----------
-100000000-105f7fffff : System RAM               9460        90.5
-  841400000-8416599ff : Kernel data               45         0.4
-  840800000-8412a6fff : Kernel rodata             19         0.2
-  841ebe000-8423fffff : Kernel bss                12         0.1
-0-fff : Reserved                                 998         9.5
-```
+This is a misleading and inaccurate name.  It does far more than "set" PERF_GLOBAL_CTRL,
+it arguably doesn't ever "set" the MSR, and it gets the VMWRITE for the guest field
+wrong too.
 
-The code has been updated to python 3 with type hints and resolving
-issues reported by mypy and pylint. Tabs are swapped to spaces as
-preferred in PEP8, because most lines of code were modified (of this
-small file) and this makes pylint significantly less noisy.
+> +{
+> +	u32 vmentry_ctrl = vm_entry_controls_get(vmx);
+> +	u32 vmexit_ctrl = vm_exit_controls_get(vmx);
+> +	struct vmx_msrs *m;
+> +	int i;
+> +
+> +	if (cpu_has_perf_global_ctrl_bug() ||
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/scripts/python/mem-phys-addr.py | 177 ++++++++++++---------
- 1 file changed, 102 insertions(+), 75 deletions(-)
+Note, cpu_has_perf_global_ctrl_bug() broken and needs to be purged:
+https://lore.kernel.org/all/20241119011433.1797921-1-seanjc@google.com
 
-diff --git a/tools/perf/scripts/python/mem-phys-addr.py b/tools/perf/scripts/python/mem-phys-addr.py
-index 1f332e72b9b0..5e237a5a5f1b 100644
---- a/tools/perf/scripts/python/mem-phys-addr.py
-+++ b/tools/perf/scripts/python/mem-phys-addr.py
-@@ -3,98 +3,125 @@
- #
- # Copyright (c) 2018, Intel Corporation.
- 
--from __future__ import division
--from __future__ import print_function
--
- import os
- import sys
--import struct
- import re
- import bisect
- import collections
-+from dataclasses import dataclass
-+from typing import (Dict, Optional)
- 
- sys.path.append(os.environ['PERF_EXEC_PATH'] + \
--	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
-+    '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
-+
-+@dataclass(frozen=True)
-+class IomemEntry:
-+    """Read from a line in /proc/iomem"""
-+    begin: int
-+    end: int
-+    indent: int
-+    label: str
- 
--#physical address ranges for System RAM
--system_ram = []
--#physical address ranges for Persistent Memory
--pmem = []
--#file object for proc iomem
--f = None
--#Count for each type of memory
--load_mem_type_cnt = collections.Counter()
--#perf event name
--event_name = None
-+# Physical memory layout from /proc/iomem. Key is the indent and then
-+# a list of ranges.
-+iomem: Dict[int, list[IomemEntry]] = collections.defaultdict(list)
-+# Child nodes from the iomem parent.
-+children: Dict[IomemEntry, set[IomemEntry]] = collections.defaultdict(set)
-+# Maximum indent seen before an entry in the iomem file.
-+max_indent: int = 0
-+# Count for each range of memory.
-+load_mem_type_cnt: Dict[IomemEntry, int] = collections.Counter()
-+# Perf event name set from the first sample in the data.
-+event_name: Optional[str] = None
- 
- def parse_iomem():
--	global f
--	f = open('/proc/iomem', 'r')
--	for i, j in enumerate(f):
--		m = re.split('-|:',j,2)
--		if m[2].strip() == 'System RAM':
--			system_ram.append(int(m[0], 16))
--			system_ram.append(int(m[1], 16))
--		if m[2].strip() == 'Persistent Memory':
--			pmem.append(int(m[0], 16))
--			pmem.append(int(m[1], 16))
-+    """Populate iomem from /proc/iomem file"""
-+    global iomem
-+    global max_indent
-+    global children
-+    with open('/proc/iomem', 'r', encoding='ascii') as f:
-+        for line in f:
-+            indent = 0
-+            while line[indent] == ' ':
-+                indent += 1
-+            if indent > max_indent:
-+                max_indent = indent
-+            m = re.split('-|:', line, 2)
-+            begin = int(m[0], 16)
-+            end = int(m[1], 16)
-+            label = m[2].strip()
-+            entry = IomemEntry(begin, end, indent, label)
-+            # Before adding entry, search for a parent node using its begin.
-+            if indent > 0:
-+                parent = find_memory_type(begin)
-+                assert parent, f"Given indent expected a parent for {label}"
-+                children[parent].add(entry)
-+            iomem[indent].append(entry)
- 
--def print_memory_type():
--	print("Event: %s" % (event_name))
--	print("%-40s  %10s  %10s\n" % ("Memory type", "count", "percentage"), end='')
--	print("%-40s  %10s  %10s\n" % ("----------------------------------------",
--					"-----------", "-----------"),
--					end='');
--	total = sum(load_mem_type_cnt.values())
--	for mem_type, count in sorted(load_mem_type_cnt.most_common(), \
--					key = lambda kv: (kv[1], kv[0]), reverse = True):
--		print("%-40s  %10d  %10.1f%%\n" %
--			(mem_type, count, 100 * count / total),
--			end='')
-+def find_memory_type(phys_addr) -> Optional[IomemEntry]:
-+    """Search iomem for the range containing phys_addr with the maximum indent"""
-+    for i in range(max_indent, -1, -1):
-+        if i not in iomem:
-+            continue
-+        position = bisect.bisect_right(iomem[i], phys_addr,
-+                                       key=lambda entry: entry.begin)
-+        if position is None:
-+            continue
-+        iomem_entry = iomem[i][position-1]
-+        if  iomem_entry.begin <= phys_addr <= iomem_entry.end:
-+            return iomem_entry
-+    print(f"Didn't find {phys_addr}")
-+    return None
- 
--def trace_begin():
--	parse_iomem()
-+def print_memory_type():
-+    print(f"Event: {event_name}")
-+    print(f"{'Memory type':<40}  {'count':>10}  {'percentage':>10}")
-+    print(f"{'-' * 40:<40}  {'-' * 10:>10}  {'-' * 10:>10}")
-+    total = sum(load_mem_type_cnt.values())
-+    # Add count from children into the parent.
-+    for i in range(max_indent, -1, -1):
-+        if i not in iomem:
-+            continue
-+        for entry in iomem[i]:
-+            global children
-+            for child in children[entry]:
-+                if load_mem_type_cnt[child] > 0:
-+                    load_mem_type_cnt[entry] += load_mem_type_cnt[child]
- 
--def trace_end():
--	print_memory_type()
--	f.close()
-+    def print_entries(entries):
-+        """Print counts from parents down to their children"""
-+        global children
-+        for entry in sorted(entries,
-+                            key = lambda entry: load_mem_type_cnt[entry],
-+                            reverse = True):
-+            count = load_mem_type_cnt[entry]
-+            if count > 0:
-+                mem_type = ' ' * entry.indent + f"{entry.begin:x}-{entry.end:x} : {entry.label}"
-+                percent = 100 * count / total
-+                print(f"{mem_type:<40}  {count:>10}  {percent:>10.1f}")
-+                print_entries(children[entry])
- 
--def is_system_ram(phys_addr):
--	#/proc/iomem is sorted
--	position = bisect.bisect(system_ram, phys_addr)
--	if position % 2 == 0:
--		return False
--	return True
-+    print_entries(iomem[0])
- 
--def is_persistent_mem(phys_addr):
--	position = bisect.bisect(pmem, phys_addr)
--	if position % 2 == 0:
--		return False
--	return True
-+def trace_begin():
-+    parse_iomem()
- 
--def find_memory_type(phys_addr):
--	if phys_addr == 0:
--		return "N/A"
--	if is_system_ram(phys_addr):
--		return "System RAM"
-+def trace_end():
-+    print_memory_type()
- 
--	if is_persistent_mem(phys_addr):
--		return "Persistent Memory"
-+def process_event(param_dict):
-+    if "sample" not in param_dict:
-+        return
- 
--	#slow path, search all
--	f.seek(0, 0)
--	for j in f:
--		m = re.split('-|:',j,2)
--		if int(m[0], 16) <= phys_addr <= int(m[1], 16):
--			return m[2]
--	return "N/A"
-+    sample = param_dict["sample"]
-+    if "phys_addr" not in sample:
-+        return
- 
--def process_event(param_dict):
--	name       = param_dict["ev_name"]
--	sample     = param_dict["sample"]
--	phys_addr  = sample["phys_addr"]
-+    phys_addr  = sample["phys_addr"]
-+    entry = find_memory_type(phys_addr)
-+    if entry:
-+        load_mem_type_cnt[entry] += 1
- 
--	global event_name
--	if event_name == None:
--		event_name = name
--	load_mem_type_cnt[find_memory_type(phys_addr)] += 1
-+    global event_name
-+    if event_name is None:
-+        event_name  = param_dict["ev_name"]
--- 
-2.47.0.338.g60cca15819-goog
+Note #2, as mentioned earlier, the mediated PMU should take a hard depenency on
+the load/save controls.
 
+On to this code, it fails to enable the load/save controls, e.g. if userspace
+does KVM_SET_CPUID2 without a PMU, then KVM_SET_CPUID2 with a PMU.  In that case,
+KVM will fail to set the control bits, and will fallback to the slow MSR load/save
+lists.
+
+With all of the above and other ideas combined, something like so:
+
+	bool set = enable_mediated_pmu && kvm_pmu_has_perf_global_ctrl();
+
+	vm_entry_controls_changebit(vmx, VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL, set);
+	vm_exit_controls_changebit(vmx,
+				   VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
+				   VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL, set);
+
+
+And I vote to put this in intel_pmu_refresh(); that avoids needing to figure out
+a name for the helper, while giving more flexibililty on the local variable name.
+
+Oh!  Definitely put it in intel_pmu_refresh(), because the RDPMC and MSR
+interception logic needs to be there.  E.g. toggling CPU_BASED_RDPMC_EXITING
+based solely on CPUID won't do the right thing if KVM ends up making the behavior
+depend on PERF_CAPABILITIES.
+
+Ditto for MSRs.  Though until my patch/series that drops kvm_pmu_refresh() from
+kvm_pmu_init() lands[*], trying to update MSR intercepts during refresh() will hit
+a NULL pointer deref as it's currently called before vmcs01 is allocated :-/
+
+I expect to land that series before mediated PMU, but I don't think it makes sense
+to take an explicit dependency for this series.  To fudge around the issue, maybe
+do this for the next version?
+
+static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+{
+	__intel_pmu_refresh(vcpu);
+
+	/*
+	 * FIXME: Drop the MSR bitmap check if/when kvm_pmu_init() no longer
+	 *        calls kvm_pmu_refresh(), i.e. when KVM refreshes the PMU only
+	 *        after vmcs01 is allocated.
+	 */
+	if (to_vmx(vcpu)->vmcs01.msr_bitmap)
+		intel_update_msr_intercepts(vcpu);
+
+	vm_entry_controls_changebit(vmx, VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL,
+				    enable_mediated_pmu && kvm_pmu_has_perf_global_ctrl());
+
+	vm_exit_controls_changebit(vmx,
+				   VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
+				   VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL,
+				   enable_mediated_pmu && kvm_pmu_has_perf_global_ctrl());
+}
+
+or with a local variable for "enable_mediated_pmu && kvm_pmu_has_perf_global_ctrl()".
+I can't come up with a decent name. :-)
+
+[*] https://lore.kernel.org/all/20240517173926.965351-10-seanjc@google.com
+
+> +	    !is_passthrough_pmu_enabled(&vmx->vcpu)) {
+> +		vmentry_ctrl &= ~VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL;
+> +		vmexit_ctrl &= ~VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL;
+> +		vmexit_ctrl &= ~VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL;
+> +	}
+> +
+> +	if (is_passthrough_pmu_enabled(&vmx->vcpu)) {
+> +		/*
+> +		 * Setup auto restore guest PERF_GLOBAL_CTRL MSR at vm entry.
+> +		 */
+> +		if (vmentry_ctrl & VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL) {
+> +			vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL, 0);
+
+This incorrectly clobbers the guest's value.  A simple way to handle this is to
+always propagate writes to PERF_GLOBAL_CTRL to the VMCS, if the write is allowed
+and enable_mediated_pmu.  I.e. ensure GUEST_IA32_PERF_GLOBAL_CTRL is up-to-date
+regardless of whether or not it's configured to be loaded.  Then there's no need
+to write it here.
+
+> +		} else {
+> +			m = &vmx->msr_autoload.guest;
+> +			i = vmx_find_loadstore_msr_slot(m, MSR_CORE_PERF_GLOBAL_CTRL);
+> +			if (i < 0) {
+> +				i = m->nr++;
+> +				vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT, m->nr);
+> +			}
+> +			m->val[i].index = MSR_CORE_PERF_GLOBAL_CTRL;
+> +			m->val[i].value = 0;
+> +		}
+> +		/*
+> +		 * Setup auto clear host PERF_GLOBAL_CTRL msr at vm exit.
+> +		 */
+> +		if (vmexit_ctrl & VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL) {
+> +			vmcs_write64(HOST_IA32_PERF_GLOBAL_CTRL, 0);
+
+This should be unnecessary.  KVM should clear HOST_IA32_PERF_GLOBAL_CTRL in
+vmx_set_constant_host_state() if enable_mediated_pmu is true.  Arguably, it might
+make sense to clear it unconditionally, but with a comment explaining that it's
+only actually constant for the mediated PMU.
+
+And if the mediated PMU requires the VMCS knobs, then all of the load/store list
+complexity goes away.
+
+>  static u32 vmx_vmentry_ctrl(void)
+>  {
+>  	u32 vmentry_ctrl = vmcs_config.vmentry_ctrl;
+> @@ -4401,17 +4492,10 @@ static u32 vmx_vmentry_ctrl(void)
+>  	if (vmx_pt_mode_is_system())
+>  		vmentry_ctrl &= ~(VM_ENTRY_PT_CONCEAL_PIP |
+>  				  VM_ENTRY_LOAD_IA32_RTIT_CTL);
+> -	/*
+> -	 * IA32e mode, and loading of EFER and PERF_GLOBAL_CTRL are toggled dynamically.
+> -	 */
+> -	vmentry_ctrl &= ~(VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL |
+> -			  VM_ENTRY_LOAD_IA32_EFER |
+> -			  VM_ENTRY_IA32E_MODE);
+> -
+> -	if (cpu_has_perf_global_ctrl_bug())
+> -		vmentry_ctrl &= ~VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL;
+> -
+> -	return vmentry_ctrl;
+> +	 /*
+> +	  * IA32e mode, and loading of EFER is toggled dynamically.
+> +	  */
+> +	return vmentry_ctrl &= ~(VM_ENTRY_LOAD_IA32_EFER | VM_ENTRY_IA32E_MODE);
+
+With my above suggestion, these changes are unnecessary.  If enable_mediated_pmu
+is false, or the vCPU doesn't have a PMU, clearing the controls is correct.  And
+when the vCPU is gifted a PMU, KVM will explicitly enabled the controls.
+
+To discourage incorrect usage of these helpers maybe rename them to
+vmx_get_initial_{vmentry,vmexit}_ctrl()?
+
+>  }
+>  
+>  static u32 vmx_vmexit_ctrl(void)
+> @@ -4429,12 +4513,8 @@ static u32 vmx_vmexit_ctrl(void)
+>  		vmexit_ctrl &= ~(VM_EXIT_PT_CONCEAL_PIP |
+>  				 VM_EXIT_CLEAR_IA32_RTIT_CTL);
+>  
+> -	if (cpu_has_perf_global_ctrl_bug())
+> -		vmexit_ctrl &= ~VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL;
+> -
+> -	/* Loading of EFER and PERF_GLOBAL_CTRL are toggled dynamically */
+> -	return vmexit_ctrl &
+> -		~(VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL | VM_EXIT_LOAD_IA32_EFER);
+
+But this code needs to *add* clearing of VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL.
