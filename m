@@ -1,57 +1,57 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965E013B58F
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 01:17:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF315672
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 01:17:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731979049; cv=none; b=A8YcSbWn0bt8GqRKC+whVWx772t42EbtsF+jmTWhS8Qtt6tA9a3H3Q5FX/5IeNs34+rSbyT7OEIvVzGPz7ElAl6z2FxuPS64Yo6X3FLGZQfX8ONcqOTd/mevN9fW1xxy4+f6NGdOkPN6yi7zBb8Cx1I+EycRWYTPS1Rb5lbqSNQ=
+	t=1731979054; cv=none; b=OKKuRGVkq2/CgrMTvFgB0Eh6/yFEhfPWQeL7ryPzxVQddpKmnyr/M+zO5rCrmKUUrEzyNZ3wPZ2DYlt9XpJreHeQLisqMSdlrSnNycYPxRPhL453gpu3qrai9TgoefeVodIhKLIXNQXOa4cKiQPYtXusUADw6KBM1tmT/dqRPiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731979049; c=relaxed/simple;
-	bh=/CbhJo0NIgUB0KCfbS3Ow1Hrm07M2ACCA+WmmfLTdk8=;
+	s=arc-20240116; t=1731979054; c=relaxed/simple;
+	bh=rHwHHBC1gblY1Eotv4xOB/p4hXgB658TOIe86c0QPHY=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=QKTUbiioPJHQVz2vE1Ma4jcvaaV33ZePOteAisbtZg3XU5IrhXETU8tdB+gDdAD9aLZqsXSUHHw5OwJCyJh5PCOfO28u/5rDVP0wO0Eroh7Cjn9G7HSH949H4hF/ZqacAP0ThAp4Fk1gVTQ++vi1c2eJPOQQvSQSi+ZBzVZAwuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p0RqEjdJ; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=V6Ss7pHGyG3/jCSED8dLoHN1Akf0KlZekvYeu7dE9PGuibqvyHYNDs4IfG4S+1HFxKt0iIr7bpo1xH+H1ICaH7gsLbw0E1fRj81tHY/9BFqWmSNl9MDsP9svmEp4yHPwaydU548pGJgIg0S2btsgu7k5xamBke9vF1EUyzuF24k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uEWMLPKS; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p0RqEjdJ"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ee426e3414so64360537b3.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 17:17:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uEWMLPKS"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ee51558e90so67606167b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 17:17:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731979046; x=1732583846; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731979051; x=1732583851; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=isAY0YfEtXbULouihI9XfHEkMTzWUigK0hJ8gnm8q9k=;
-        b=p0RqEjdJ46evA/Uh7bKlxORrcu1zvfoJQQAFC98bsbDp6w4UIiVcZEpSwhvqHTQjMp
-         FYyMTd62UGCTBPY/qosGnQRtVE5EKbjSSbwYBK/falJg+qH4zWlrZRXpa/J8e0OIrMB6
-         7LiE+04fssqlAwxP8z2eAUgY8os4VHEMDKCVydKrTaeB/F+W+9CFO9woMw54D5QM5qZ6
-         TYy8l4kPr1lSloAhZaj2u7R8ogarZoAZ+WwEFalMEj5Grlm2Iq6Slr8G2tfDsAgbiCSK
-         IFATpiU4ynoB1t3/G9/9ZhwA0f4k0IOwM2OH8Zel9MgPDEF/4yA2G1i7NI2j3gAy7bZm
-         6ZTg==
+        bh=S6d3NnEtZrqDPZDd85+OpARaP/oSw/tn+LnVNwTbe+g=;
+        b=uEWMLPKS8nUp4TsZ8gM1JJq3KErnIN5H9yLwfcYrCtZ9uv27VgXfYAESzup9jUTANb
+         I1k7llMOaNygdKr/GWIsxdsZ5B5mJUEbCebtDVFTyIw/h+29bE8va2iCGI7L0jCWyMa4
+         5f0+hBSOKoN475QMbKg8LJXyPmW+usju93CdQ6I0ZSw+MhExkOVvsaWzVKqNwylT01/T
+         iMiZna0t6tpucfkz0l6nTNAwMqBJgjaiCzdTHS5aFHyeP/3rvK4SeYvgn3N3/7FHcZLG
+         qdY1QcTNZRFY32h6I3VWZaVPpKL38CuwEDeBAT9bNfwX6/N5Nqk2e01pUucomN0Eh/lz
+         oA2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731979046; x=1732583846;
+        d=1e100.net; s=20230601; t=1731979051; x=1732583851;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=isAY0YfEtXbULouihI9XfHEkMTzWUigK0hJ8gnm8q9k=;
-        b=ngs/adxeu8201kI8UPXBWwoUNkhP3F7iDMkAk9p65IdIxHme/yKSuWvdUU8jIzbmga
-         u3ijODIYCBC2z+hl8PMsfCouzLoCposM514v5Z5q+FIQceLWD7FRQ+DBb1ooMU+Up1fG
-         G+G5ckbDknAfN4UEQXmLOLKX1GjGdzuGIfT9/nV4qxtjsaaZNGoZBB26uCIpQF/w/kln
-         FAJ2JsGB01Pd/1xJ/te8i+utma0Pi+q1TzZITqddOuxpI5MELY2wm1HIknVjqHn5w/r6
-         oGQFb6J4UPpLzUvQfZjaKCBITTUhgKHwwrmYkx0a1mXcs0+9091ctJtqNuFxdMlf/zuK
-         gffA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxh6ZEOpwh8kPtOb9yCRV4oMc3DkUL2lEnO43yyw8QmaOeMl5iOzl5sd/RAgKAaZWBEOEV7R6r2w8vHNfWW+Ou@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvvtNO8hC9Rot4mq19tHGZUnzYK1yln2z2ph9HT9oWhQDE6rHn
-	i6AEKHxb8pw+gcH9GnlUlp+h6qqeCCLB5APGuSDVMUjy9ItDx+h/qLfyq0qlUDYTqHXidygGXdo
-	bMTyovw==
-X-Google-Smtp-Source: AGHT+IHZX+7Jb+2d4opeVjrsbxJXniCxR+KBCLpT/d/Kur/EzCUs9u2aJWg9HoZ3agM9btcjLB8/iGdTa753
+        bh=S6d3NnEtZrqDPZDd85+OpARaP/oSw/tn+LnVNwTbe+g=;
+        b=ZdUNx+Vg/k2+4OIYucTNR+vPtYk/RBmRraJqhHi0Ynkd8npvr8nqO6PpKttn0/rfPj
+         97mjTJ62149hjmXSsSNwrhCENrjCATXB4AJkKSKixHaC0YFnjET3AyXO1314xlw2pnSg
+         bbXBSFJxaJZZShN8i/D42S+KVdjz9kKf5df8Pfs0D3Uaz9hx4msxGelqU8Mr3KNCQtjG
+         8tXPEr/KDlGLS098McqHea2vVFWaXIMhSKCiVmBvP5O38v7HBlMZYhzjicnKebRy89Qb
+         6p+YCuwvuEF+1nqZplwMgTKZepCHBjUJypL8wmEA6Gh9CTAC+Vx5FZ1iFMGBdAUV4iY0
+         qHpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXV95YHBVPhU+UKU8n1X09iL2CqgC/G31UD1PokA+GCrhnqssdAHLdlrcftuw0Qz20GDcxjxWTnMuBeZWtAIOTB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw1Exn7nVTSrR5zKlailQFkTdgl3Ua2YaIgtYnYY5Ys9BjGu4M
+	1GZx6gG/I+DAyhFkJ//bwYKEHpD58vXvJ/mTC1quC1yjIz3KbtHdX74aaHh9om7BQ76q2YE4dGt
+	4BoWTEg==
+X-Google-Smtp-Source: AGHT+IFZaHT2CJkG0agrDJb6LQCa/4cj+2AVXZD5gCLi1DBVTctbyMVHzwR7j8PooCS7GDEJe/WVAPAnengW
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:22a4:ded5:5c37:fcc7])
- (user=irogers job=sendgmr) by 2002:a05:690c:3348:b0:6ea:8395:9af9 with SMTP
- id 00721157ae682-6ee55cb5a1cmr2057947b3.6.1731979046564; Mon, 18 Nov 2024
- 17:17:26 -0800 (PST)
-Date: Mon, 18 Nov 2024 17:16:28 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:39f:b0:6ec:b74d:9c59 with SMTP id
+ 00721157ae682-6ee55bc4b7bmr1981227b3.2.1731979051315; Mon, 18 Nov 2024
+ 17:17:31 -0800 (PST)
+Date: Mon, 18 Nov 2024 17:16:29 -0800
 In-Reply-To: <20241119011644.971342-1-irogers@google.com>
-Message-Id: <20241119011644.971342-7-irogers@google.com>
+Message-Id: <20241119011644.971342-8-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241119011644.971342-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Subject: [PATCH v7 06/22] perf script: Use openat for directory iteration
+Subject: [PATCH v7 07/22] perf script: Move find_scripts to browser/scripts.c
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,45 +77,270 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Rewrite the directory iteration to use openat so that large character
-arrays aren't needed. The arrays are warned about potential buffer
-overflows by GCC when the code exists in a single C file.
+The only use of find_scripts is in browser/scripts.c but the
+definition in builtin causes linking problems requiring a stub in
+python.c. Move the function to allow the stub to be removed.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-script.c | 87 +++++++++++++++++++++++++------------
- tools/perf/util/path.c      | 10 +++++
- tools/perf/util/path.h      |  1 +
- 3 files changed, 71 insertions(+), 27 deletions(-)
+ tools/perf/builtin-script.c      | 171 -----------------------------
+ tools/perf/builtin.h             |   6 --
+ tools/perf/ui/browsers/scripts.c | 177 ++++++++++++++++++++++++++++++-
+ tools/perf/util/python.c         |   6 --
+ 4 files changed, 175 insertions(+), 185 deletions(-)
 
 diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 2a7e704c0a54..ebf9ac7a97b1 100644
+index ebf9ac7a97b1..33f50a17338a 100644
 --- a/tools/perf/builtin-script.c
 +++ b/tools/perf/builtin-script.c
-@@ -3530,27 +3530,35 @@ static void free_dlarg(void)
-  * which is covered well now. And new parsing code should be added to
-  * cover the future complex formats like event groups etc.
-  */
--static int check_ev_match(char *dir_name, char *scriptname,
--			struct perf_session *session)
-+static int check_ev_match(int dir_fd, const char *scriptname, struct perf_session *session)
- {
--	char filename[MAXPATHLEN], evname[128];
--	char line[BUFSIZ], *p;
--	struct evsel *pos;
--	int match, len;
-+	char line[BUFSIZ];
- 	FILE *fp;
+@@ -3521,177 +3521,6 @@ static void free_dlarg(void)
+ 	free(dlargv);
+ }
  
--	scnprintf(filename, MAXPATHLEN, "%s/bin/%s-record", dir_name, scriptname);
+-/*
+- * Some scripts specify the required events in their "xxx-record" file,
+- * this function will check if the events in perf.data match those
+- * mentioned in the "xxx-record".
+- *
+- * Fixme: All existing "xxx-record" are all in good formats "-e event ",
+- * which is covered well now. And new parsing code should be added to
+- * cover the future complex formats like event groups etc.
+- */
+-static int check_ev_match(int dir_fd, const char *scriptname, struct perf_session *session)
+-{
+-	char line[BUFSIZ];
+-	FILE *fp;
+-
+-	{
+-		char filename[FILENAME_MAX + 5];
+-		int fd;
+-
+-		scnprintf(filename, sizeof(filename), "bin/%s-record", scriptname);
+-		fd = openat(dir_fd, filename, O_RDONLY);
+-		if (fd == -1)
+-			return -1;
+-		fp = fdopen(fd, "r");
+-		if (!fp)
+-			return -1;
+-	}
+-
+-	while (fgets(line, sizeof(line), fp)) {
+-		char *p = skip_spaces(line);
+-
+-		if (*p == '#')
+-			continue;
+-
+-		while (strlen(p)) {
+-			int match, len;
+-			struct evsel *pos;
+-			char evname[128];
+-
+-			p = strstr(p, "-e");
+-			if (!p)
+-				break;
+-
+-			p += 2;
+-			p = skip_spaces(p);
+-			len = strcspn(p, " \t");
+-			if (!len)
+-				break;
+-
+-			snprintf(evname, len + 1, "%s", p);
+-
+-			match = 0;
+-			evlist__for_each_entry(session->evlist, pos) {
+-				if (evsel__name_is(pos, evname)) {
+-					match = 1;
+-					break;
+-				}
+-			}
+-
+-			if (!match) {
+-				fclose(fp);
+-				return -1;
+-			}
+-		}
+-	}
+-
+-	fclose(fp);
+-	return 0;
+-}
+-
+-/*
+- * Return -1 if none is found, otherwise the actual scripts number.
+- *
+- * Currently the only user of this function is the script browser, which
+- * will list all statically runnable scripts, select one, execute it and
+- * show the output in a perf browser.
+- */
+-int find_scripts(char **scripts_array, char **scripts_path_array, int num,
+-		 int pathlen)
+-{
+-	struct dirent *script_dirent, *lang_dirent;
+-	int scripts_dir_fd, lang_dir_fd;
+-	DIR *scripts_dir, *lang_dir;
+-	struct perf_session *session;
+-	struct perf_data data = {
+-		.path = input_name,
+-		.mode = PERF_DATA_MODE_READ,
+-	};
+-	char *temp;
+-	int i = 0;
+-	const char *exec_path = get_argv_exec_path();
+-
+-	session = perf_session__new(&data, NULL);
+-	if (IS_ERR(session))
+-		return PTR_ERR(session);
+-
+-	{
+-		char scripts_path[PATH_MAX];
+-
+-		snprintf(scripts_path, sizeof(scripts_path), "%s/scripts", exec_path);
+-		scripts_dir_fd = open(scripts_path, O_DIRECTORY);
+-		pr_err("Failed to open directory '%s'", scripts_path);
+-		if (scripts_dir_fd == -1) {
+-			perf_session__delete(session);
+-			return -1;
+-		}
+-	}
+-	scripts_dir = fdopendir(scripts_dir_fd);
+-	if (!scripts_dir) {
+-		close(scripts_dir_fd);
+-		perf_session__delete(session);
+-		return -1;
+-	}
+-
+-	while ((lang_dirent = readdir(scripts_dir)) != NULL) {
+-		if (lang_dirent->d_type != DT_DIR &&
+-		    (lang_dirent->d_type == DT_UNKNOWN &&
+-		     !is_directory_at(scripts_dir_fd, lang_dirent->d_name)))
+-			continue;
+-		if (!strcmp(lang_dirent->d_name, ".") || !strcmp(lang_dirent->d_name, ".."))
+-			continue;
+-
+-#ifndef HAVE_LIBPERL_SUPPORT
+-		if (strstr(lang_dirent->d_name, "perl"))
+-			continue;
+-#endif
+-#ifndef HAVE_LIBPYTHON_SUPPORT
+-		if (strstr(lang_dirent->d_name, "python"))
+-			continue;
+-#endif
+-
+-		lang_dir_fd = openat(scripts_dir_fd, lang_dirent->d_name, O_DIRECTORY);
+-		if (lang_dir_fd == -1)
+-			continue;
+-		lang_dir = fdopendir(lang_dir_fd);
+-		if (!lang_dir) {
+-			close(lang_dir_fd);
+-			continue;
+-		}
+-		while ((script_dirent = readdir(lang_dir)) != NULL) {
+-			if (script_dirent->d_type == DT_DIR)
+-				continue;
+-			if (script_dirent->d_type == DT_UNKNOWN &&
+-			    is_directory_at(lang_dir_fd, script_dirent->d_name))
+-				continue;
+-			/* Skip those real time scripts: xxxtop.p[yl] */
+-			if (strstr(script_dirent->d_name, "top."))
+-				continue;
+-			if (i >= num)
+-				break;
+-			scnprintf(scripts_path_array[i], pathlen, "%s/scripts/%s/%s",
+-				exec_path,
+-				lang_dirent->d_name,
+-				script_dirent->d_name);
+-			temp = strchr(script_dirent->d_name, '.');
+-			snprintf(scripts_array[i],
+-				(temp - script_dirent->d_name) + 1,
+-				"%s", script_dirent->d_name);
+-
+-			if (check_ev_match(lang_dir_fd, scripts_array[i], session))
+-				continue;
+-
+-			i++;
+-		}
+-		closedir(lang_dir);
+-	}
+-
+-	closedir(scripts_dir);
+-	perf_session__delete(session);
+-	return i;
+-}
+-
+ static char *get_script_path(const char *script_root, const char *suffix)
+ {
+ 	struct dirent *script_dirent, *lang_dirent;
+diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+index 94f4b3769bf7..a07e93c53848 100644
+--- a/tools/perf/builtin.h
++++ b/tools/perf/builtin.h
+@@ -2,10 +2,6 @@
+ #ifndef BUILTIN_H
+ #define BUILTIN_H
+ 
+-#include <stddef.h>
+-#include <linux/compiler.h>
+-#include <tools/config.h>
+-
+ struct feature_status {
+ 	const char *name;
+ 	const char *macro;
+@@ -56,6 +52,4 @@ int cmd_ftrace(int argc, const char **argv);
+ int cmd_daemon(int argc, const char **argv);
+ int cmd_kwork(int argc, const char **argv);
+ 
+-int find_scripts(char **scripts_array, char **scripts_path_array, int num,
+-		 int pathlen);
+ #endif
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index e437d7889de6..2d04ece833aa 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -1,16 +1,18 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include "../../builtin.h"
+-#include "../../perf.h"
+ #include "../../util/util.h" // perf_exe()
+ #include "../util.h"
++#include "../../util/evlist.h"
+ #include "../../util/hist.h"
+ #include "../../util/debug.h"
++#include "../../util/session.h"
+ #include "../../util/symbol.h"
+ #include "../browser.h"
+ #include "../libslang.h"
+ #include "config.h"
++#include <linux/err.h>
+ #include <linux/string.h>
+ #include <linux/zalloc.h>
++#include <subcmd/exec-cmd.h>
+ #include <stdlib.h>
+ 
+ #define SCRIPT_NAMELEN	128
+@@ -77,6 +79,177 @@ static int scripts_config(const char *var, const char *value, void *data)
+ 	return 0;
+ }
+ 
++/*
++ * Some scripts specify the required events in their "xxx-record" file,
++ * this function will check if the events in perf.data match those
++ * mentioned in the "xxx-record".
++ *
++ * Fixme: All existing "xxx-record" are all in good formats "-e event ",
++ * which is covered well now. And new parsing code should be added to
++ * cover the future complex formats like event groups etc.
++ */
++static int check_ev_match(int dir_fd, const char *scriptname, struct perf_session *session)
++{
++	char line[BUFSIZ];
++	FILE *fp;
++
 +	{
 +		char filename[FILENAME_MAX + 5];
 +		int fd;
- 
--	fp = fopen(filename, "r");
--	if (!fp)
--		return -1;
++
 +		scnprintf(filename, sizeof(filename), "bin/%s-record", scriptname);
 +		fd = openat(dir_fd, filename, O_RDONLY);
 +		if (fd == -1)
@@ -124,46 +349,78 @@ index 2a7e704c0a54..ebf9ac7a97b1 100644
 +		if (!fp)
 +			return -1;
 +	}
- 
- 	while (fgets(line, sizeof(line), fp)) {
--		p = skip_spaces(line);
++
++	while (fgets(line, sizeof(line), fp)) {
 +		char *p = skip_spaces(line);
 +
- 		if (*p == '#')
- 			continue;
- 
- 		while (strlen(p)) {
++		if (*p == '#')
++			continue;
++
++		while (strlen(p)) {
 +			int match, len;
 +			struct evsel *pos;
 +			char evname[128];
 +
- 			p = strstr(p, "-e");
- 			if (!p)
- 				break;
-@@ -3593,7 +3601,7 @@ int find_scripts(char **scripts_array, char **scripts_path_array, int num,
- 		 int pathlen)
- {
- 	struct dirent *script_dirent, *lang_dirent;
--	char scripts_path[MAXPATHLEN], lang_path[MAXPATHLEN];
++			p = strstr(p, "-e");
++			if (!p)
++				break;
++
++			p += 2;
++			p = skip_spaces(p);
++			len = strcspn(p, " \t");
++			if (!len)
++				break;
++
++			snprintf(evname, len + 1, "%s", p);
++
++			match = 0;
++			evlist__for_each_entry(session->evlist, pos) {
++				if (evsel__name_is(pos, evname)) {
++					match = 1;
++					break;
++				}
++			}
++
++			if (!match) {
++				fclose(fp);
++				return -1;
++			}
++		}
++	}
++
++	fclose(fp);
++	return 0;
++}
++
++/*
++ * Return -1 if none is found, otherwise the actual scripts number.
++ *
++ * Currently the only user of this function is the script browser, which
++ * will list all statically runnable scripts, select one, execute it and
++ * show the output in a perf browser.
++ */
++static int find_scripts(char **scripts_array, char **scripts_path_array, int num,
++		 int pathlen)
++{
++	struct dirent *script_dirent, *lang_dirent;
 +	int scripts_dir_fd, lang_dir_fd;
- 	DIR *scripts_dir, *lang_dir;
- 	struct perf_session *session;
- 	struct perf_data data = {
-@@ -3602,51 +3610,76 @@ int find_scripts(char **scripts_array, char **scripts_path_array, int num,
- 	};
- 	char *temp;
- 	int i = 0;
++	DIR *scripts_dir, *lang_dir;
++	struct perf_session *session;
++	struct perf_data data = {
++		.path = input_name,
++		.mode = PERF_DATA_MODE_READ,
++	};
++	char *temp;
++	int i = 0;
 +	const char *exec_path = get_argv_exec_path();
- 
- 	session = perf_session__new(&data, NULL);
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
- 
--	snprintf(scripts_path, MAXPATHLEN, "%s/scripts", get_argv_exec_path());
++
++	session = perf_session__new(&data, NULL);
++	if (IS_ERR(session))
++		return PTR_ERR(session);
++
 +	{
 +		char scripts_path[PATH_MAX];
- 
--	scripts_dir = opendir(scripts_path);
++
 +		snprintf(scripts_path, sizeof(scripts_path), "%s/scripts", exec_path);
 +		scripts_dir_fd = open(scripts_path, O_DIRECTORY);
 +		pr_err("Failed to open directory '%s'", scripts_path);
@@ -173,15 +430,12 @@ index 2a7e704c0a54..ebf9ac7a97b1 100644
 +		}
 +	}
 +	scripts_dir = fdopendir(scripts_dir_fd);
- 	if (!scripts_dir) {
++	if (!scripts_dir) {
 +		close(scripts_dir_fd);
- 		perf_session__delete(session);
- 		return -1;
- 	}
- 
--	for_each_lang(scripts_path, scripts_dir, lang_dirent) {
--		scnprintf(lang_path, MAXPATHLEN, "%s/%s", scripts_path,
--			  lang_dirent->d_name);
++		perf_session__delete(session);
++		return -1;
++	}
++
 +	while ((lang_dirent = readdir(scripts_dir)) != NULL) {
 +		if (lang_dirent->d_type != DT_DIR &&
 +		    (lang_dirent->d_type == DT_UNKNOWN &&
@@ -190,24 +444,18 @@ index 2a7e704c0a54..ebf9ac7a97b1 100644
 +		if (!strcmp(lang_dirent->d_name, ".") || !strcmp(lang_dirent->d_name, ".."))
 +			continue;
 +
- #ifndef HAVE_LIBPERL_SUPPORT
--		if (strstr(lang_path, "perl"))
++#ifndef HAVE_LIBPERL_SUPPORT
 +		if (strstr(lang_dirent->d_name, "perl"))
- 			continue;
- #endif
- #ifndef HAVE_LIBPYTHON_SUPPORT
--		if (strstr(lang_path, "python"))
++			continue;
++#endif
++#ifndef HAVE_LIBPYTHON_SUPPORT
 +		if (strstr(lang_dirent->d_name, "python"))
- 			continue;
- #endif
- 
--		lang_dir = opendir(lang_path);
--		if (!lang_dir)
++			continue;
++#endif
++
 +		lang_dir_fd = openat(scripts_dir_fd, lang_dirent->d_name, O_DIRECTORY);
 +		if (lang_dir_fd == -1)
- 			continue;
--
--		for_each_script(lang_path, lang_dir, script_dirent) {
++			continue;
 +		lang_dir = fdopendir(lang_dir_fd);
 +		if (!lang_dir) {
 +			close(lang_dir_fd);
@@ -219,61 +467,53 @@ index 2a7e704c0a54..ebf9ac7a97b1 100644
 +			if (script_dirent->d_type == DT_UNKNOWN &&
 +			    is_directory_at(lang_dir_fd, script_dirent->d_name))
 +				continue;
- 			/* Skip those real time scripts: xxxtop.p[yl] */
- 			if (strstr(script_dirent->d_name, "top."))
- 				continue;
- 			if (i >= num)
- 				break;
--			snprintf(scripts_path_array[i], pathlen, "%s/%s",
--				lang_path,
++			/* Skip those real time scripts: xxxtop.p[yl] */
++			if (strstr(script_dirent->d_name, "top."))
++				continue;
++			if (i >= num)
++				break;
 +			scnprintf(scripts_path_array[i], pathlen, "%s/scripts/%s/%s",
 +				exec_path,
 +				lang_dirent->d_name,
- 				script_dirent->d_name);
- 			temp = strchr(script_dirent->d_name, '.');
- 			snprintf(scripts_array[i],
- 				(temp - script_dirent->d_name) + 1,
- 				"%s", script_dirent->d_name);
- 
--			if (check_ev_match(lang_path,
--					scripts_array[i], session))
++				script_dirent->d_name);
++			temp = strchr(script_dirent->d_name, '.');
++			snprintf(scripts_array[i],
++				(temp - script_dirent->d_name) + 1,
++				"%s", script_dirent->d_name);
++
 +			if (check_ev_match(lang_dir_fd, scripts_array[i], session))
- 				continue;
- 
- 			i++;
-diff --git a/tools/perf/util/path.c b/tools/perf/util/path.c
-index 00adf872bf00..9712466c51e2 100644
---- a/tools/perf/util/path.c
-+++ b/tools/perf/util/path.c
-@@ -68,6 +68,16 @@ bool is_directory(const char *base_path, const struct dirent *dent)
- 	return S_ISDIR(st.st_mode);
- }
- 
-+bool is_directory_at(int dir_fd, const char *path)
-+{
-+	struct stat st;
++				continue;
 +
-+	if (fstatat(dir_fd, path, &st, /*flags=*/0))
-+		return false;
++			i++;
++		}
++		closedir(lang_dir);
++	}
 +
-+	return S_ISDIR(st.st_mode);
++	closedir(scripts_dir);
++	perf_session__delete(session);
++	return i;
 +}
 +
- bool is_executable_file(const char *base_path, const struct dirent *dent)
+ /*
+  * When success, will copy the full path of the selected script
+  * into  the buffer pointed by script_name, and return 0.
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index f8b291143884..4593c937febb 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -1307,12 +1307,6 @@ PyMODINIT_FUNC PyInit_perf(void)
+ /* The following are stubs to avoid dragging in builtin-* objects. */
+ /* TODO: move the code out of the builtin-* file into util. */
+ 
+-int find_scripts(char **scripts_array  __maybe_unused, char **scripts_path_array  __maybe_unused,
+-		int num  __maybe_unused, int pathlen __maybe_unused)
+-{
+-	return -1;
+-}
+-
+ void perf_stat__set_no_csv_summary(int set __maybe_unused)
  {
- 	char path[PATH_MAX];
-diff --git a/tools/perf/util/path.h b/tools/perf/util/path.h
-index d94902c22222..fbafbe7015dd 100644
---- a/tools/perf/util/path.h
-+++ b/tools/perf/util/path.h
-@@ -12,6 +12,7 @@ int path__join3(char *bf, size_t size, const char *path1, const char *path2, con
- 
- bool is_regular_file(const char *file);
- bool is_directory(const char *base_path, const struct dirent *dent);
-+bool is_directory_at(int dir_fd, const char *path);
- bool is_executable_file(const char *base_path, const struct dirent *dent);
- 
- #endif /* _PERF_PATH_H */
+ }
 -- 
 2.47.0.338.g60cca15819-goog
 
