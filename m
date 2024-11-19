@@ -1,66 +1,66 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F41C1CC8AC
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 14:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F3D1AC43E
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 14:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732026628; cv=none; b=t91DtaLbsiwdYh8BEGy3uMa+gSPHkjRltDd0VqQVY3J6WsRFjLKbLtbI3/vt28lKBpdPHgyimChpLmpky6pj4tpYB1iIeHdIV1WI8quD/g5rmRQXcZ/o5f/ux6THTvYSfYHgFCh5JWkiV6V/eXe3XoxXG9LP/BXIB1SnLMXBPwM=
+	t=1732028061; cv=none; b=LjAX96ddHz63sFJEhj2Ks8xK3sGgNAA59q0IyO18uBGS/0bLMjZ2gUU5YVZxenPzJPc2s74LcjVeIXOZ/O3yzkpSboJMbj1n/QysOLCcovwvfLDmimE2pNFGrn/wp6cUyUADgJYuGFcmjgsnGw88x45E7dIeZd+U8I49dY4cpHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732026628; c=relaxed/simple;
-	bh=cBj12CA8mrU4sApMYhK3MpH1+4gVXA2iaiLQX195AbY=;
+	s=arc-20240116; t=1732028061; c=relaxed/simple;
+	bh=9128xCGIuXvaU49NjF1mWOVwIXLIuhSsSSvvDia+hRM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mW2U//lMzVDFpJVDP5fiT3t5VdfcpuibvSPE5bQfCr6x55Q14bVXf8jgcLmwg7RPWYEBxUILWW+JXmYz7k35ZP57fDFKXi5QSXc+NnTyY275yt9uVWlCzC98d7jDKWcTjIwFVGdQaz85JdR+tRGa7Vb4MLRjpAUGtL50zUdbMKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ThYW/AZd; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=BJhCVKtGyuM3aW+wRSen8/gEET0n0hdnGGWYlhc+Wg8ZQX3Jk91igIE3krc3qHQREpU/L/CZyLaVCWsGmtR07GxiN4mwszLZPAJX+X46I7Vkli+GIJgm4lRJgHRqTtT23j6joAY0pGdwU5wzRoWdSU3CHiIB+iE3bvof20GdxAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oHjRfWxE; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ThYW/AZd"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-72459f94af7so3432995b3a.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 06:30:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oHjRfWxE"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e38100afa78so1601938276.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 06:54:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732026625; x=1732631425; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1732028059; x=1732632859; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eBmU3ogPN1nxwBPSih6RQ5kXht81z5LpAS8pZkFAwGM=;
-        b=ThYW/AZd7pZNBeR91yL3x8keDOLKgEF9Ovq3A0vK3wbFEhFaOX6Zq1Zbn3ZBEqUTzS
-         YQIw4Jvnc0ln0yqY88tUTtDon7opfNBccIEXCw9hsbXWbq6F5yYz8c33uhUv3ZcnIVR6
-         HuB2CmP5zeZZD46HmiPOZRNzoGhg/JCYMh4VeYaX3BixOgTVWAkfTpyxFSI4hR+kzB0D
-         zvpRv+kYYBb6m7+srrLw8x/KDB330v69zT1f10wtX9CJ0yLjYedfTRl/oLVe8eslfwIg
-         pURKpJcTXNSpUthJlvBadXBDUxyhr9zsB4F65Bl7r+2yol4yW7H7PeRId49rh6aoKlGm
-         JPBQ==
+        bh=ng0ADcAUF9BEyC9uJKl/YJ6KNTlUn/uj3eRa3WTv12c=;
+        b=oHjRfWxErSqPwtqb12j0vCL79W1CkdyjN1yCvKdrGJ9qRw+EoqDkxLRyfA7mQjujqy
+         1Buv15KL3HAvGer7XOwxTbgn8dw6o6ed022FmLvrFmHKM7h1mFi5x0YqGj7TMQapfZxd
+         0nvB352crXsBCuQ61G840u76kyImV3deMwbEG3WC/MJ2t+s+CawbsZZV2+tl8yKFCk+k
+         3KnIdMQLjObrEnxnJsY39ODdixwnHNpA2snI5g7CacDE32R6fGEhHJQ3epbKfVu1waMa
+         1HNM0QZe/wvA5qvErjMmBVdrLGbHkzoOj2bmmK/qYBfUEkdiglhs3LST2b6Cx+Alt3Ha
+         IRpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732026625; x=1732631425;
+        d=1e100.net; s=20230601; t=1732028059; x=1732632859;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eBmU3ogPN1nxwBPSih6RQ5kXht81z5LpAS8pZkFAwGM=;
-        b=ZF8GOJKkRZOQP6gt7YW0BP1gWnN4jweWinDmcFMk9F71SmB8jQPySDYftH5UHHKEX1
-         D4sPI2IDYEY7ZDxC+Gy9sKStR9awxtcQIwZXKIkD9xSVRMnca7PUs11BWmIjEPBxvwDY
-         PZk4U9iIHlYNOOOFT/pv/LXSADj1b28scgNi5Pu5T25q3ty8IJTqAfr6Smb6mksnLf4Z
-         e9gFQMZOhBToqZiTrzX6+OJrLqXrtn3KS4T6gAjRhZaVojJ65O8pgnlysoH4grd04ccv
-         jzSdVQKRImv3YSqe0z/+8gtwIKMRTqoEE2JvZqCflivagj+McOKOBk6BrEfrhadK6sv0
-         wZDw==
-X-Forwarded-Encrypted: i=1; AJvYcCWIMFiYVWn8eu2kQAtvwJo5cOVot8L6ypTPBBejHrRdTFi7QmCqOPyX9t4CA/f178yEbxfhq0Dck+DPU9hnZ4lW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr5yGPhoVDAwODb7GgxN8gXp/mACWqaBeoEOZOiBO5JVucyNMX
-	i5F37nRmtX5yLxW8uuubiJ5XdWWrWL8mmYb7oM+O3kBOTDapkUxVmcI0RRIAx0+ceLCb3xSjQCz
-	l/w==
-X-Google-Smtp-Source: AGHT+IHT3kKjacRiRpiv3CWULp/80BF6XEK8gCyH5cMjMZy/c+E3fRI2E1HVKQbbygUtQ/31heyObakmVxs=
+        bh=ng0ADcAUF9BEyC9uJKl/YJ6KNTlUn/uj3eRa3WTv12c=;
+        b=CEDhARZ9GN1ER38k+3j9+Ow1DX89Vau4gkoCkC9d8hKyYEdZgJKo+2Vcr4zf4aAHQz
+         NOdmtjSNm5gRJW34BRtUV74FQM3Ms4kSAUbFokEqskw4bLwTr5EYjOCqzAST0dpGFLBK
+         DRaEkVwmAjfZzkawIxNv5/3fBE6ALEKCeSKh9OI7n6MzabT1PPh9paF/mPbFGeWPI57v
+         Dtknhk8UUr1XpBmV6Vf4ocrhRbeRhzxxPxg8sVBiguRgJtHZmSy2om4Hug+8W2WkzJT4
+         kdGThJlNMvAhw5ICpveo9cuelBXPn+mX9Nfzas4KbB7WrLKpLDTOEFz7+nNDeWl4LGxB
+         DpCw==
+X-Forwarded-Encrypted: i=1; AJvYcCXMHnJoRhjh782gIotHyh5XTYxw1y9jPAX4dKI/Fv4sYhft6fqnB/CR+ewPeQUykEYRlA80OR3XDK5nS7EKmXe8@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwPP5UiNIvrQdL8rM8BxdD0IXkGZbk8BsFKeD7MTn6Ldl0lZOP
+	zxq7RhXA3oLg/r7ZkYGWgH7uVfuZnAFWpp3PTlZ5uKIb1ctPF4HCIFQMNOjgM5Acd1c+K8i9HQ4
+	y3w==
+X-Google-Smtp-Source: AGHT+IHiBjarvPBtAHSxJkTUMY7pwcio1/kissXeruut+bT10tYNA48Ju6CocKcSJ83LEgeAx93OLOCj1yQ=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:aa7:88c9:0:b0:71e:5e50:755e with SMTP id
- d2e1a72fcca58-72477110770mr80679b3a.6.1732026625375; Tue, 19 Nov 2024
- 06:30:25 -0800 (PST)
-Date: Tue, 19 Nov 2024 06:30:23 -0800
-In-Reply-To: <20240801045907.4010984-19-mizhang@google.com>
+ (user=seanjc job=sendgmr) by 2002:a25:acd3:0:b0:e38:c43:3002 with SMTP id
+ 3f1490d57ef6-e38263d33ddmr171019276.10.1732028058911; Tue, 19 Nov 2024
+ 06:54:18 -0800 (PST)
+Date: Tue, 19 Nov 2024 06:54:17 -0800
+In-Reply-To: <20240801045907.4010984-20-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-19-mizhang@google.com>
-Message-ID: <Zzyg_0ACKwHGLC7w@google.com>
-Subject: Re: [RFC PATCH v3 18/58] KVM: x86/pmu: Introduce enable_passthrough_pmu
- module parameter
+References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-20-mizhang@google.com>
+Message-ID: <ZzymmUKlPk7gHtup@google.com>
+Subject: Re: [RFC PATCH v3 19/58] KVM: x86/pmu: Plumb through pass-through PMU
+ to vcpu for Intel CPUs
 From: Sean Christopherson <seanjc@google.com>
 To: Mingwei Zhang <mizhang@google.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>, 
@@ -75,197 +75,17 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="us-ascii"
 
-As per my feedback in the initial RFC[*]:
-
- 2. The module param absolutely must not be exposed to userspace until all patches
-    are in place.  The easiest way to do that without creating dependency hell is
-    to simply not create the module param.
-
-[*] https://lore.kernel.org/all/ZhhQBHQ6V7Zcb8Ve@google.com
-
 On Thu, Aug 01, 2024, Mingwei Zhang wrote:
-> Introduce enable_passthrough_pmu as a RO KVM kernel module parameter. This
-> variable is true only when the following conditions satisfies:
->  - set to true when module loaded.
->  - enable_pmu is true.
->  - is running on Intel CPU.
->  - supports PerfMon v4.
->  - host PMU supports passthrough mode.
-> 
-> The value is always read-only because passthrough PMU currently does not
-> support features like LBR and PEBS, while emualted PMU does. This will end
-> up with two different values for kvm_cap.supported_perf_cap, which is
-> initialized at module load time. Maintaining two different perf
-> capabilities will add complexity. Further, there is not enough motivation
-> to support running two types of PMU implementations at the same time,
-> although it is possible/feasible in reality.
-> 
-> Finally, always propagate enable_passthrough_pmu and perf_capabilities into
-> kvm->arch for each KVM instance.
-> 
-> Co-developed-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |  1 +
->  arch/x86/kvm/pmu.h              | 14 ++++++++++++++
->  arch/x86/kvm/vmx/vmx.c          |  7 +++++--
->  arch/x86/kvm/x86.c              |  8 ++++++++
->  arch/x86/kvm/x86.h              |  1 +
->  5 files changed, 29 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index f8ca74e7678f..a15c783f20b9 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1406,6 +1406,7 @@ struct kvm_arch {
->  
->  	bool bus_lock_detection_enabled;
->  	bool enable_pmu;
-> +	bool enable_passthrough_pmu;
+> Plumb through pass-through PMU setting from kvm->arch into kvm_pmu on each
+> vcpu created. Note that enabling PMU is decided by VMM when it sets the
+> CPUID bits exposed to guest VM. So plumb through the enabling for each pmu
+> in intel_pmu_refresh().
 
-Again, as I suggested/requested in the initial RFC[*], drop the per-VM flag as well
-as kvm_pmu.passthrough.  There is zero reason to cache the module param.  KVM
-should always query kvm->arch.enable_pmu prior to checking if the mediated PMU
-is enabled, so I doubt we even need a helper to check both.
+Why?  As with the per-VM snapshot, I see zero reason for this to exist, it's
+simply:
 
-[*] https://lore.kernel.org/all/ZhhOEDAl6k-NzOkM@google.com
+  kvm->arch.enable_pmu && enable_mediated_pmu && pmu->version;
 
->  
->  	u32 notify_window;
->  	u32 notify_vmexit_flags;
-> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-> index 4d52b0b539ba..cf93be5e7359 100644
-> --- a/arch/x86/kvm/pmu.h
-> +++ b/arch/x86/kvm/pmu.h
-> @@ -208,6 +208,20 @@ static inline void kvm_init_pmu_capability(const struct kvm_pmu_ops *pmu_ops)
->  			enable_pmu = false;
->  	}
->  
-> +	/* Pass-through vPMU is only supported in Intel CPUs. */
-> +	if (!is_intel)
-> +		enable_passthrough_pmu = false;
-> +
-> +	/*
-> +	 * Pass-through vPMU requires at least PerfMon version 4 because the
-> +	 * implementation requires the usage of MSR_CORE_PERF_GLOBAL_STATUS_SET
-> +	 * for counter emulation as well as PMU context switch.  In addition, it
-> +	 * requires host PMU support on passthrough mode. Disable pass-through
-> +	 * vPMU if any condition fails.
-> +	 */
-> +	if (!enable_pmu || kvm_pmu_cap.version < 4 || !kvm_pmu_cap.passthrough)
-
-As is quite obvious by the end of the series, the v4 requirement is specific to
-Intel.
-
-	if (!enable_pmu || !kvm_pmu_cap.passthrough ||
-	    (is_intel && kvm_pmu_cap.version < 4) ||
-	    (is_amd && kvm_pmu_cap.version < 2))
-		enable_passthrough_pmu = false;
-
-Furthermore, there is zero reason to explicitly and manually check the vendor,
-kvm_init_pmu_capability() takes kvm_pmu_ops.  Adding a callback is somewhat
-undesirable as it would lead to duplicate code, but we can still provide separation
-of concerns by adding const variables to kvm_pmu_ops, a la MAX_NR_GP_COUNTERS.
-
-E.g.
-
-	if (enable_pmu) {
-		perf_get_x86_pmu_capability(&kvm_pmu_cap);
-
-		/*
-		 * WARN if perf did NOT disable hardware PMU if the number of
-		 * architecturally required GP counters aren't present, i.e. if
-		 * there are a non-zero number of counters, but fewer than what
-		 * is architecturally required.
-		 */
-		if (!kvm_pmu_cap.num_counters_gp ||
-		    WARN_ON_ONCE(kvm_pmu_cap.num_counters_gp < min_nr_gp_ctrs))
-			enable_pmu = false;
-		else if (pmu_ops->MIN_PMU_VERSION > kvm_pmu_cap.version)
-			enable_pmu = false;
-	}
-
-	if (!enable_pmu || !kvm_pmu_cap.passthrough ||
-	    pmu_ops->MIN_MEDIATED_PMU_VERSION > kvm_pmu_cap.version)
-		enable_mediated_pmu = false;
-
-> +		enable_passthrough_pmu = false;
-> +
->  	if (!enable_pmu) {
->  		memset(&kvm_pmu_cap, 0, sizeof(kvm_pmu_cap));
->  		return;
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index ad465881b043..2ad122995f11 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -146,6 +146,8 @@ module_param_named(preemption_timer, enable_preemption_timer, bool, S_IRUGO);
->  extern bool __read_mostly allow_smaller_maxphyaddr;
->  module_param(allow_smaller_maxphyaddr, bool, S_IRUGO);
->  
-> +module_param(enable_passthrough_pmu, bool, 0444);
-
-Hmm, we either need to put this param in kvm.ko, or move enable_pmu to vendor
-modules (or duplicate it there if we need to for backwards compatibility?).
-
-There are advantages to putting params in vendor modules, when it's safe to do so,
-e.g. it allows toggling the param when (re)loading a vendor module, so I think I'm
-supportive of having the param live in vendor code.  I just don't want to split
-the two PMU knobs.
-
->  #define KVM_VM_CR0_ALWAYS_OFF (X86_CR0_NW | X86_CR0_CD)
->  #define KVM_VM_CR0_ALWAYS_ON_UNRESTRICTED_GUEST X86_CR0_NE
->  #define KVM_VM_CR0_ALWAYS_ON				\
-> @@ -7924,7 +7926,8 @@ static __init u64 vmx_get_perf_capabilities(void)
->  	if (boot_cpu_has(X86_FEATURE_PDCM))
->  		rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
->  
-> -	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR)) {
-> +	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR) &&
-> +	    !enable_passthrough_pmu) {
->  		x86_perf_get_lbr(&vmx_lbr_caps);
->  
->  		/*
-> @@ -7938,7 +7941,7 @@ static __init u64 vmx_get_perf_capabilities(void)
->  			perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
->  	}
->  
-> -	if (vmx_pebs_supported()) {
-> +	if (vmx_pebs_supported() && !enable_passthrough_pmu) {
-
-Checking enable_mediated_pmu belongs in vmx_pebs_supported(), not in here,
-otherwise KVM will incorrectly advertise support to userspace:
-
-	if (vmx_pebs_supported()) {
-		kvm_cpu_cap_check_and_set(X86_FEATURE_DS);
-		kvm_cpu_cap_check_and_set(X86_FEATURE_DTES64);
-	}
-
->  		perf_cap |= host_perf_cap & PERF_CAP_PEBS_MASK;
->  		/*
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index f1d589c07068..0c40f551130e 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -187,6 +187,10 @@ bool __read_mostly enable_pmu = true;
->  EXPORT_SYMBOL_GPL(enable_pmu);
->  module_param(enable_pmu, bool, 0444);
->  
-> +/* Enable/disable mediated passthrough PMU virtualization */
-> +bool __read_mostly enable_passthrough_pmu;
-> +EXPORT_SYMBOL_GPL(enable_passthrough_pmu);
-> +
->  bool __read_mostly eager_page_split = true;
->  module_param(eager_page_split, bool, 0644);
->  
-> @@ -6682,6 +6686,9 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->  		mutex_lock(&kvm->lock);
->  		if (!kvm->created_vcpus) {
->  			kvm->arch.enable_pmu = !(cap->args[0] & KVM_PMU_CAP_DISABLE);
-> +			/* Disable passthrough PMU if enable_pmu is false. */
-> +			if (!kvm->arch.enable_pmu)
-> +				kvm->arch.enable_passthrough_pmu = false;
-
-And this code obviously goes away if the per-VM snapshot is removed.
+And in literally every correct usage of pmu->passthrough, kvm->arch.enable_pmu
+and pmu->version have been checked (though implicitly), i.e. KVM can check
+enable_mediated_pmu and nothing else.
