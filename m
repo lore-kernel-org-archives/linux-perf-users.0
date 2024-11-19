@@ -1,267 +1,136 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD17C3F9CC
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 13:44:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D841CDA0D
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 14:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732023853; cv=none; b=PGPJ0zqj75X/PsTCP8ffBBMD5kWorB8Mr9nSnWi28V2G3HjKUwS9mmTrEBfkl5Xj+Qb+lkG8HZDzIynPovD/nc0l0O4Lx847qrXQVRnKy/w6giIIRevbMV/dapxFFCJMdco/L5XN5woSADDJj+DBO6hfJYNWKnvdgoGpl1hzXO0=
+	t=1732024817; cv=none; b=BMn8p2obLBrA9bIl2hd26MJiuj6J3u5zfruvVnjXQR5yGC9kYTam4VA8DON3ef9P3qicGC6Xpj59OS0mXoCX+mgLYA14mhzaLoECMESwDP1m1UNPMK7gg5gJ4i3SXd2vxbWmB2x4RxXkJkWrjTnbr8R7kzF45thAjTn4RJ+PXTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732023853; c=relaxed/simple;
-	bh=u06XGTZbxb3oXJKlyll3G+tbzotpOuuYrSpxrl9DZQw=;
+	s=arc-20240116; t=1732024817; c=relaxed/simple;
+	bh=NNmtEzPeJrsLehi1WhmNqlBFpj9Ip1FKTLN9uY9VKy8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gX64tr/4yC4Yg/Kpy0GpnrqbxbOVbY4Wn0XgU1JahiLyha6uN/9AA2O+YqvBISuZrd/E1BP+amxNYucXM2si94aKXFDSEAgRPttyINhathspf7uIu+E5QdD5D/tDugsm0VDj4BNfduhzQVAoeV71rPJWjFCZtDej6wEZCbImkXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mmiKvVhn; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=Dt3mdjq0hCVRNAHaSed48C+yYe4GNYTuFvkynCV1WedfNkf1ilSMkH+Zd2kxbrSPFN6PHltxdGVBBgQYZfbqkVYZsnMtogGpsujjyyZjF7PPQYemTymakbPds+2bdhAtPm+CPH+pGu7bTm0yPYQ4lKo5fzFvCuXCtAnZcrwX3hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LN+rsl3Y; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mmiKvVhn"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e3890bc5ec6so4385207276.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 05:44:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LN+rsl3Y"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ea8a5e862eso70760617b3.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 06:00:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732023851; x=1732628651; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5CkBUuaeP2+eh+1nuZsk4/gpv7iDku/8q2+t4vG3IRg=;
-        b=mmiKvVhnRI4CxfmNEtrqVRcBSBgcVXP76T4PDrwP5YQfhBkhsCdKtLcd+zjsr/NWVj
-         Vx93AJQ9SQldUOHGh0EQzYcIX3e7pade7FRZYktTXz6lFTaE9Dg4qGh+u9YyWnEtT/0C
-         i6oQQOV/kolR016B9Q/ilPqFARLr7P105LPgl5l4+aj76hLVAMPQ1CDrjIBNu/z4ZlE+
-         UFtKsyzTYFKmwjcwNo0+IvDmuHmv/5kZ4/S0jhQ9Z6Af4Ie2/ZwVDfVVhJ2A3OYqbFM+
-         8jpsYJLEhd3ytZtIPQe0A27Pw7T7wUMQKNMOwv6WRhbRyp46SzQzxgb/tDbtkZgZIuPN
-         9i5w==
+        d=google.com; s=20230601; t=1732024815; x=1732629615; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AOXHJiJ+SXG98Hij2HNzlC3M3lEHF7DmQUkB5bHSfGg=;
+        b=LN+rsl3YfrD7jub0g9i8zCtO75raMuZ8fZoJ65yh01Z8d+Us5eC+GK0qJ2npCXhp0W
+         TSsQkReELxkRagA9kf0f3mKz+dcHXsT4EsjhfkpUa3BnuAisaCaSEu/F5Mgxqd2i29+3
+         nNt4TFvlcBQL0ZEDnrs+onSFhWR0mFP/fyQNUYdSxE9+MYdCATa0jxkob4gIe6LC/umD
+         +0v+06800fnvUpLONY603olu6U7d8asCOaPRV2ltYmwmR0oecZ1sC9WXTSDtio4kwyn4
+         ZN+WJ6gDh4giqmR1Rmyq7xs2gDhP+nyr5QuuveoMdqIHgswRgr1k5O+EtPw1xEUIFnxn
+         DjGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732023851; x=1732628651;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5CkBUuaeP2+eh+1nuZsk4/gpv7iDku/8q2+t4vG3IRg=;
-        b=ih0cnfoj3ZN053qQxhj1ggZWpskWWNqjOdl0AxDi72RINxJ8vacOfIAJN//J8+1UD4
-         9QdbwCEX1zN7KwD66fHWm1vBL7MjDGZOgfkYVSpt18hQQgfSOO82UPdoi2r61F+mb8nM
-         AB/Nsh43aS5pWwwFFo8SIBa0zPRylTjI+fgBw2ptusnWX2+JceK7W0T3tBw76Uz3brX8
-         QrUqWxG4lnVkgdm6glZfMoXKfviLBvLhWwLG0harsx0Sga312Bqw6CCLjXt3k+vy4Poi
-         LwPhOoXpjnvjHPXhh5HGPKuVthuEmqld1yVt0yAcoK9TQBREscyJ8+VDuf5aPPgyRuxG
-         HSFw==
-X-Forwarded-Encrypted: i=1; AJvYcCX49UgghHf9ka9NZho2DzJyRAzrYfn/rzIHgHnoFQ7feyAPGaEjzXtPVezh3zUGmwHBSxm6HymuToOm4EOUYi7z@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhO+OvRffW+MZOewr0OcffXubT1pQpS9WdAUpXbocFJavevXWI
-	/6nYQnXOg5kjeSnuw1T7TN9WGQ34qbHvbLcvw2XWdDLnEuVgV4SXUFyan05OOMtddLnBYYe5cV2
-	EzQ==
-X-Google-Smtp-Source: AGHT+IHpDGRiUSA5RDravQEdPZmbfx93BH1B54BaMEZPvlDiKyKrhIp1+KFD17MAnezPh1tiOHFxtBw3iEM=
+        d=1e100.net; s=20230601; t=1732024815; x=1732629615;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AOXHJiJ+SXG98Hij2HNzlC3M3lEHF7DmQUkB5bHSfGg=;
+        b=wVt6kFs0yfaCCCXhyeC2P+FReOdI6wvYNlyVFeRCjFJcuUjs4E4Q1jgase4DcVnW0J
+         rHgENFIZAxtMUXoTCQIZKmrcwYA38C/OiMt5FeLjzRoLBHjRlRPOtJqkXq3l2jiINPdL
+         9sFbTFEfx2MliimDmr0C4ix1YG/B9g32WHaPuSDztJ15AjUK1hxFVa3rrfK9qHzJHfE0
+         510wFgc3LWYTGmaUHpSfgqyN1GDxiEx3W8pbg3QLefioztJ3RZZhA3F1qYlEuepYc4ta
+         Q1IsAF6MO4mrpcfeC5T+yAWCn5aEgOyb+JA4QNl25ZEvNpURox/Ii0TZV0UC1zcpNHoF
+         RBuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXurdJjegnXAKMLewmbbjCpikojxrBC47ckhCcUjxL3fS3yJ6rE8gHVFwyN/CGrXnB9dN+rAXq6+s8arqvoQcU9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyxsq3F7R+ry9qcnChIbmjlHSDyOb0Rw7JJT+6XwO9X1Ezdo2bb
+	Obe0IDSEtdkBfR+r4Gqeh5feMACGWiJQcX/QDW31c5LsvLI5XcOPSo6L0updD3VpRR0bxCa8LCT
+	nNQ==
+X-Google-Smtp-Source: AGHT+IF84+tXqMFcYD1nE5UAQFaK7SulZziKQGYlSvVLsWe37f0ou2CMMA7A5s+Ie0wwJEMH08XgyMK5H9I=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a25:c5c3:0:b0:e25:5cb1:77cd with SMTP id
- 3f1490d57ef6-e3826612092mr243804276.10.1732023850425; Tue, 19 Nov 2024
- 05:44:10 -0800 (PST)
-Date: Tue, 19 Nov 2024 05:44:09 -0800
-In-Reply-To: <67013550-9739-4943-812f-4ba6f01e4fb4@linux.intel.com>
+ (user=seanjc job=sendgmr) by 2002:a05:690c:4512:b0:620:32ea:e1d4 with SMTP id
+ 00721157ae682-6eeaa0028f4mr1943287b3.0.1732024814819; Tue, 19 Nov 2024
+ 06:00:14 -0800 (PST)
+Date: Tue, 19 Nov 2024 06:00:13 -0800
+In-Reply-To: <20240801045907.4010984-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-38-mizhang@google.com>
- <5309ec1b-edc6-4e59-af88-b223dbf2a455@intel.com> <c21d02a3-4315-41f4-b873-bf28041a0d82@linux.intel.com>
- <Zzvt_fNw0U34I9bJ@google.com> <67013550-9739-4943-812f-4ba6f01e4fb4@linux.intel.com>
-Message-ID: <ZzyWKTMdNi5YjvEM@google.com>
-Subject: Re: [RFC PATCH v3 37/58] KVM: x86/pmu: Switch IA32_PERF_GLOBAL_CTRL
- at VM boundary
+References: <20240801045907.4010984-1-mizhang@google.com>
+Message-ID: <ZzyZ7U9C3EZyudz7@google.com>
+Subject: Re: [RFC PATCH v3 00/58] Mediated Passthrough vPMU 3.0 for x86
 From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Zide Chen <zide.chen@intel.com>, Mingwei Zhang <mizhang@google.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>, 
-	Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>, 
-	Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>, 
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
-	gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>, 
-	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>, 
-	Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla <manali.shukla@amd.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Jim Mattson <jmattson@google.com>, 
+	Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, 
+	Namhyung Kim <namhyung@kernel.org>, gce-passthrou-pmu-dev@google.com, 
+	Samantha Alt <samantha.alt@intel.com>, Zhiyuan Lv <zhiyuan.lv@intel.com>, 
+	Yanfei Xu <yanfei.xu@intel.com>, Like Xu <like.xu.linux@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Nov 19, 2024, Dapeng Mi wrote:
->=20
-> On 11/19/2024 9:46 AM, Sean Christopherson wrote:
-> > On Fri, Oct 25, 2024, Dapeng Mi wrote:
-> >> On 10/25/2024 4:26 AM, Chen, Zide wrote:
-> >>> On 7/31/2024 9:58 PM, Mingwei Zhang wrote:
-> >>>
-> >>>> @@ -7295,6 +7299,46 @@ static void atomic_switch_perf_msrs(struct vc=
-pu_vmx *vmx)
-> >>>>  					msrs[i].host, false);
-> >>>>  }
-> >>>> =20
-> >>>> +static void save_perf_global_ctrl_in_passthrough_pmu(struct vcpu_vm=
-x *vmx)
-> >>>> +{
-> >>>> +	struct kvm_pmu *pmu =3D vcpu_to_pmu(&vmx->vcpu);
-> >>>> +	int i;
-> >>>> +
-> >>>> +	if (vm_exit_controls_get(vmx) & VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL=
-) {
-> >>>> +		pmu->global_ctrl =3D vmcs_read64(GUEST_IA32_PERF_GLOBAL_CTRL);
-> >>> As commented in patch 26, compared with MSR auto save/store area
-> >>> approach, the exec control way needs one relatively expensive VMCS re=
-ad
-> >>> on every VM exit.
-> >> Anyway, let us have a evaluation and data speaks.
-> > No, drop the unconditional VMREAD and VMWRITE, one way or another.  No =
-benchmark
-> > will notice ~50 extra cycles, but if we write poor code for every featu=
-re, those
-> > 50 cycles per feature add up.
-> >
-> > Furthermore, checking to see if the CPU supports the load/save VMCS con=
-trols at
-> > runtime beyond ridiculous.  The mediated PMU requires ***VERSION 4***; =
-if a CPU
-> > supports PMU version 4 and doesn't support the VMCS controls, KVM shoul=
-d yell and
-> > disable the passthrough PMU.  The amount of complexity added here to su=
-pport a
-> > CPU that should never exist is silly.
-> >
-> >>>> +static void load_perf_global_ctrl_in_passthrough_pmu(struct vcpu_vm=
-x *vmx)
-> >>>> +{
-> >>>> +	struct kvm_pmu *pmu =3D vcpu_to_pmu(&vmx->vcpu);
-> >>>> +	u64 global_ctrl =3D pmu->global_ctrl;
-> >>>> +	int i;
-> >>>> +
-> >>>> +	if (vm_entry_controls_get(vmx) & VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CT=
-RL) {
-> >>>> +		vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL, global_ctrl);
-> >>> ditto.
-> >>>
-> >>> We may optimize it by introducing a new flag pmu->global_ctrl_dirty a=
-nd
-> >>> update GUEST_IA32_PERF_GLOBAL_CTRL only when it's needed.  But this
-> >>> makes the code even more complicated.
-> > I haven't looked at surrounding code too much, but I guarantee there's =
-_zero_
-> > reason to eat a VMWRITE+VMREAD on every transition.  If, emphasis on *i=
-f*, KVM
-> > accesses PERF_GLOBAL_CTRL frequently, e.g. on most exits, then add a VC=
-PU_EXREG_XXX
-> > and let KVM's caching infrastructure do the heavy lifting.  Don't reinv=
-ent the
-> > wheel.  But first, convince the world that KVM actually accesses the MS=
-R somewhat
-> > frequently.
->=20
-> Sean, let me give more background here.
->=20
-> VMX supports two ways to save/restore PERF_GLOBAL_CTRL MSR, one is to
-> leverage VMCS_EXIT_CTRL/VMCS_ENTRY_CTRL to save/restore guest
-> PERF_GLOBAL_CTRL value to/from VMCS guest state. The other is to use the
-> VMCS MSR auto-load/restore bitmap to save/restore guest PERF_GLOBAL_CTRL.=
-=C2=A0
+On Thu, Aug 01, 2024, Mingwei Zhang wrote:
+> This series contains perf interface improvements to address Peter's
+> comments. In addition, fix several bugs for v2. This version is based on
+> 6.10-rc4. The main changes are:
+> 
+>  - Use atomics to replace refcounts to track the nr_mediated_pmu_vms.
+>  - Use the generic ctx_sched_{in,out}() to switch PMU resources when a
+>    guest is entering and exiting.
+>  - Add a new EVENT_GUEST flag to indicate the context switch case of
+>    entering and exiting a guest. Updates the generic ctx_sched_{in,out}
+>    to specifically handle this case, especially for time management.
+>  - Switch PMI vector in perf_guest_{enter,exit}() as well. Add a new
+>    driver-specific interface to facilitate the switch.
+>  - Remove the PMU_FL_PASSTHROUGH flag and uses the PASSTHROUGH pmu
+>    capability instead.
+>  - Adjust commit sequence in PERF and KVM PMI interrupt functions.
+>  - Use pmc_is_globally_enabled() check in emulated counter increment [1]
+>  - Fix PMU context switch [2] by using rdpmc() instead of rdmsr().
+> 
+> AMD fixes:
+>  - Add support for legacy PMU MSRs in MSR interception.
+>  - Make MSR usage consistent if PerfMonV2 is available.
+>  - Avoid enabling passthrough vPMU when local APIC is not in kernel.
+>  - increment counters in emulation mode.
+> 
+> This series is organized in the following order:
+> 
+> Patches 1-3:
+>  - Immediate bug fixes that can be applied to Linux tip.
+>  - Note: will put immediate fixes ahead in the future. These patches
+>    might be duplicated with existing posts.
+>  - Note: patches 1-2 are needed for AMD when host kernel enables
+>    preemption. Otherwise, guest will suffer from softlockup.
+> 
+> Patches 4-17:
+>  - Perf side changes, infra changes in core pmu with API for KVM.
+> 
+> Patches 18-48:
+>  - KVM mediated passthrough vPMU framework + Intel CPU implementation.
+> 
+> Patches 49-58:
+>  - AMD CPU implementation for vPMU.
 
-I know.
+Please rename everything in KVM to drop "passthrough" and simply use "mediated"
+for the overall concept.  This is not a passthrough setup by any stretch of the
+word.  I realize it's a ton of renaming, but calling this "passthrough" is very
+misleading and actively harmful for unsuspecting readers.
 
-> Currently we prefer to use the former way to save/restore guest
-> PERF_GLOBAL_CTRL as long as HW supports it. There is a limitation on the
-> MSR auto-load/restore feature. When there are multiple MSRs, the MSRs are
-> saved/restored in the order of MSR index. As the suggestion of SDM,
-> PERF_GLOBAL_CTRL should always be written at last after all other PMU MSR=
-s
-> are manipulated. So if there are some PMU MSRs whose index is larger than
-> PERF_GLOBAL_CTRL (It would be true in archPerfmon v6+, all PMU MSRs in th=
-e
-> new MSR range have larger index than PERF_GLOBAL_CTRL),
+For helpers and/or comments that deal with intercepting (or not) MSRs, use
+"intercept" and appropriate variations.  E.g. intel_pmu_update_msr_intercepts().
 
-No, the entries in the load/store lists are processed in sequential order a=
-s they
-appear in the lists.  Ordering them based on their MSR index would be insan=
-e and
-would make the lists useless.
+And for RDPMC, maybe kvm_rdpmc_in_guest() to follow kvm_{hlt,mwait,pause,cstate_in_guest()?
+I don't love the terminology, but there's a lot of value in being consistent
+throughout KVM.
 
-  VM entries may load MSRs from the VM-entry MSR-load area (see Section 25.=
-8.2).
-  Specifically each entry in that area (up to the number specified in the V=
-M-entry
-  MSR-load count) is processed in order by loading the MSR indexed by bits =
-31:0
-  with the contents of bits 127:64 as they would be written by WRMSR.1
+I am not willing to budge on this, at all.
 
-> these PMU MSRs would be restored after PERF_GLOBAL_CTRL. That would break=
- the
-> rule. Of course, it's good to save/restore PERF_GLOBAL_CTRL right now wit=
-h
-> the VMCS VMCS MSR auto-load/restore bitmap feature since only one PMU MSR
-> PERF_GLOBAL_CTRL is saved/restored in current implementation.
-
-No, it's never good to use the load/store lists.  They're slow as mud, beca=
-use
-they're essentially just wrappers to the standard WRMSR/RDMSR ucode.  Where=
-as
-dedicated VMCS fields have dedicated, streamlined ucode to make loads and s=
-tores
-as fast as possible.
-
-I haven't measured PERF_GLOBAL_CTRL specifically, at least not in recent me=
-mory,
-but generally speaking using a load/store entry is 100+ cycles, whereas usi=
-ng a
-dedicated VMCS field is <20 cyles (often far less).
-
-So what I am saying is that the mediated PMU should _require_ support for l=
-oading
-and saving PERF_GLOBAL_CTRL via dedicated fields, and WARN if a CPU with a =
-v4+
-PMU doesn't support said fields.  E.g.
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a4b2b0b69a68..cab8305e7bf0 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -8620,6 +8620,15 @@ __init int vmx_hardware_setup(void)
-                enable_sgx =3D false;
- #endif
-=20
-+       /*
-+        * All CPUs that support a mediated PMU are expected to support loa=
-ding
-+        * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
-+        */
-+       if (enable_passthrough_pmu &&
-+           (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
-+                         !cpu_has_save_perf_global_ctrl())))
-+               enable_passthrough_pmu =3D false;
-+
-        /*
-         * set_apic_access_page_addr() is used to reload apic access
-         * page upon invalidation.  No need to do anything if not
-
-That will provide better, more consistent performance, and will eliminate a=
- big
-pile of non-trivial code.
-
-> PERF_GLOBAL_CTRL MSR could be frequently accessed by perf/pmu driver, e.g=
-.
-> on each task switch, so PERF_GLOBAL_CTRL MSR is configured to passthrough
-> to reduce the performance impact in mediated vPMU proposal if guest own a=
-ll
-> PMU HW resource. But if guest only owns part of PMU HW resource,
-> PERF_GLOBAL_CTRL would be set to interception mode.
-
-Again, I know.  What I am saying is that propagating PERF_GLOBAL_CTRL to/fr=
-om the
-VMCS on every entry and exit is extremely wasteful and completely unnecessa=
-ry.
-
-> I suppose KVM doesn't need access PERF_GLOBAL_CTRL in passthrough mode.
-> This piece of code is intently just for PERF_GLOBAL_CTRL interception mod=
-e,
-
-No, it's even more useless if PERF_GLOBAL_CTRL is intercepted, because in t=
-hat
-case the _only_ time KVM needs move the guest's value to/from the VMCS is w=
-hen
-the guest (or host userspace) is explicitly accessing the field.
-
-> but think twice it looks unnecessary to save/restore PERF_GLOBAL_CTRL via
-> VMCS as KVM would always maintain the guest=C2=A0PERF_GLOBAL_CTRL value? =
-Anyway,
-> this part of code can be optimized.
+I'm ok with the perf side of things using "passthrough" if "mediated" feels weird
+in that context and we can't come up with a better option, but for the KVM side,
+"passthrough" is simply wrong.
