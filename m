@@ -1,63 +1,66 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA542B9A6
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 01:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A79770827
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 01:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731979021; cv=none; b=P+sllgIP6DG0kAToXnaIODsOVkQvhruI4ChYifyGRtZfEz75qf///d+jSmeupdbyao9bnnDvxncbanXbLZAluafOOBba46HtJIARwg/ScyC/oIaqzyPo7BhA4NkZX8Rlf7DoIm/XylMRhetUMiPjsD4lEY0CTsqNJjk/vknfzR4=
+	t=1731979027; cv=none; b=sUrHYmWghS8BfuMI9RODdzSB6iCW5HSi3utCiLEHqxNnUXGmLXUUGEISs4HucRC5B8XC9KWMTS9ifFKAfFf946bKc0PnuKjQYbGrdRBAl87y3zdzHY2ymDgAFJ483/D9xrBkqW5D16ZOxUjcqaUYMMAEVFFr8AxHozXkvkagsOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731979021; c=relaxed/simple;
-	bh=mj1TYlGjypzaRKv/9Vs2oJsosaO5OMaz3VltVuBhe70=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=YxVRBLMW0NBrPVt65tJhUrOXf0JQJh2CSqkBK9kHHJd/Rfa2c90D1WRjb+5Vva71CfSmH+Uudq1JgaJ2sIl7CnjwmZxrMZHY+z3CNM/dPb1lgSvHhK0GMZ8KdHPIAi0U7/Nc9Ut/HrRm0DHkq1OZMeAxbirmjzXcl+acWfyswdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=psGxRtxU; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1731979027; c=relaxed/simple;
+	bh=TRzdyrr83yFOHaaZp1XKONQ1u8411y5W18H7l2Lixew=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Cc:Content-Type; b=qkogcaRwNd8OOxZ4tz+FU6h39QIUPARt4hFiYhVY0yqQVhh4JvLJKqvb42+OowrxUpsOyTEWMhkkQ0hKeVy9jQwx6599hPNL1O010Jun2TBZo3AkyO/v0tNBFnzmWddg+rH3X+gqfR6jK/Ushb1+e7xlPDIuziZSnX+tdsGjD7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wpMvXUCi; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="psGxRtxU"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e2971589916so4989388276.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 17:16:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wpMvXUCi"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ee51558e90so67598577b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Nov 2024 17:17:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731979019; x=1732583819; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TTxXth8FKid7MsnWj6zjsfoXRJdOxSAT4OWD8juj9rE=;
-        b=psGxRtxUPi131m/+RaDuNYLdhQvSUiFbzt7fpTbRIjXQDyj0dyWzOEhlG6Z89DnpTP
-         Hbz2VoPvhTXaa8inQBcv4euZ9XSQg/qL4Z3njXqf/vAqYSoeAiyL58ek+IZlvASOGj9J
-         kfdNulxPiT2Q6Cwo6wZ/lnvpCPFXvRBdpfDaMRDe09DsVTUMnGqMpIvj3zw94/XNgDGW
-         CJtjTujiYo2tGrMaXgliOkUSEE25ypPhxyci25wSTTSo7jfgXOKGy1oVrM1qKacYn//7
-         YBoG+P+YPFyAovoxbMGFkWbJrE3iMKBhOWH7ljGnS+X5x8tnP+N76O1BJeHx99VAShfc
-         jXXg==
+        d=google.com; s=20230601; t=1731979023; x=1732583823; darn=vger.kernel.org;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=e5R7N5m+a9zmfRArLdBFQ3oPGXQCBbIT9nqOcsc0Xic=;
+        b=wpMvXUCikEG8xPXAfP6G/hg+WYfCfr9d/zAmn+SVUcIrHWi/Nz3s3okgYdbe2d6Kwe
+         aTlN0sotq25bfUoxWoqU0AmgJzi5SKWbhOKd5znX/PvKPzsvYflLmDnka6YvlkgnsNkq
+         eM25Lp9+6NENYmy7pfrs5cxNCdtvN+0Q15qmoajCNjpcOx+e1GdlwK03zq+0C/ulzSR0
+         43aUWpJPKJqbBtBqtowdu5yH9k+0l6sW5zJR2k3Nqq/S3Nxwoqp/JKLLj2i/oWKaa4x4
+         wJxm7r5KtMihnGBUmcrdDvwEEDxXVOgG1I6OlrlQKEIHvnS8nKfXvl7omff0Xhwf/ni8
+         DSDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731979019; x=1732583819;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TTxXth8FKid7MsnWj6zjsfoXRJdOxSAT4OWD8juj9rE=;
-        b=lX3F4Cdpjz3xjiIhys9RrE4AonYgqsrNm13vf97KFNOdoD0KpafeqzMu5VWu7CEQAC
-         7PG0OeXUqzKxSe1d/j3NZ+kBPW9BCYhgAhzyocVPXqQ3/loIaguiAURwGzMI+dMQHBsg
-         0aKfIyIVj269WBCh0bRXDRrMO4MB01KvvknJvUPS9DFko/GEPGf/IkvDnostYEab3OJL
-         QDUfIKG2cVaYM6gv6EGs0n8hvfE3bhKAFYfhs2mbEYKJW+0p97Mmhgr1WillzLKbDsYW
-         +4CvTedHhbnnvxkeKUSLmJFUUDvuflz6Yi4EKiSbEr+wZB67DXRSl4E1kv4PH6k2xKDF
-         L/7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUU4rjPNoR+uDpMiJCPTImAQb3m2rBSU85sl3Nxtmgm/maXfaEnJGh3QzYRK0//btxlQV8JUEEbzuHP11AKaToU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy071Mnb0yZOkKprkDIdPlMpFU39MplulucuhXpee4agb16iMqo
-	1lu8yjFeMvckpDgv6DaM67ei+5Ey7uhtnCoW++jShCyb7n/h3cEXPRb1DjymJPgb2imNQmI8lLc
-	0vbl36A==
-X-Google-Smtp-Source: AGHT+IFHHSibZqFSeR6+HwN+6MBqNs0wYmg/0yrHVPgwi8PTrRXbLClCpeBKmwMxyg4SU13Se1Hyqu1HQK0E
+        d=1e100.net; s=20230601; t=1731979023; x=1732583823;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e5R7N5m+a9zmfRArLdBFQ3oPGXQCBbIT9nqOcsc0Xic=;
+        b=V+maUMW6mBfkXALIifHxyIq6o1KLMThK8IKFIoN5Ea1yolJaw2HLxBlQz5EKrOsrm+
+         LhTV5kKfWZGtck+Wk056l6UJff0gzmfYrqpGH+Lz/w6Q61BmLcVNMCg0zRjK+iJCaL2e
+         s3y5HFKc2ilalAbcbYM6RBdTXAXXxM+YpPWXVj+zfkTuiW4GVVW/x+9R6cQCUM1bEaIX
+         Leba9CNoik03US0ZW+ASZJ/oswFoI26Uro96Jt0hAC3F79i/T3GWQCmD4DoMfjiWmAQS
+         zjKW5Obq4nec2GWNw5Jg/e1PJt5S8Lv35odEnJtrbeOuNgfmAbow6+36v2qQkETO55VS
+         h43A==
+X-Forwarded-Encrypted: i=1; AJvYcCWeTWU5y9+aW18K7uQs5L2oVhKCJlW9R/W4olQRxzGhkKdEv5stCJhiVOmxeo7NWJMhzDJizq5qLThit1p3c8rc@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyRsujpY2lnMq/iHS67cFTlg7BdptbN241pjrFwp5BIhad68aB
+	TeDswR0tqmeYKzQ4/NV91ns4uRO/D4oSGJInpOl8XCHGD9LFdcYFFhKjBBs/tH3JOkEc2QS2YE3
+	lxkOS8A==
+X-Google-Smtp-Source: AGHT+IEVB+QEv1B58NiPQwBfZyIOt1tj2t1pVEM3PPvhzdzHVO4jhLeP34Iu6kgscgaXruipXnyyh0ugXJnn
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:22a4:ded5:5c37:fcc7])
- (user=irogers job=sendgmr) by 2002:a05:6902:1370:b0:e2b:cd55:11b3 with SMTP
- id 3f1490d57ef6-e3826386bbamr10463276.5.1731979018593; Mon, 18 Nov 2024
- 17:16:58 -0800 (PST)
-Date: Mon, 18 Nov 2024 17:16:22 -0800
-Message-Id: <20241119011644.971342-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:8110:b0:6ee:3f5e:1c1b with SMTP
+ id 00721157ae682-6ee558f3375mr446637b3.0.1731979023191; Mon, 18 Nov 2024
+ 17:17:03 -0800 (PST)
+Date: Mon, 18 Nov 2024 17:16:23 -0800
+In-Reply-To: <20241119011644.971342-1-irogers@google.com>
+Message-Id: <20241119011644.971342-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20241119011644.971342-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Subject: [PATCH v7 00/22] Python module cleanup
+Subject: [PATCH v7 01/22] perf python: Remove python 2 scripting support
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,102 +75,404 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>, 
 	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-This patch:
- - removes workarounds for Python 2 module support due to long
-   deprecation and challenges in developing new code;
- - constifies variables and parameters to functions;
- - removes python.c stub code which existed due to missing functions
-   that are defined in the builtin-* files, in general the builtin-*
-   code is moved into util;
- - remove bench and test perf C code from the python module;
- - adds parse_events to the python perf module.
- - improves upon some of the existing python perf module functins.
+Python2 was deprecated 4 years ago, remove support and workarounds.
 
-v7. Move ifdef-ed function stubs into header file for Namhyung.
-v6. Rebase. When moving find_scripts, separate the switch to using
-    is_directory_at into a patch before moving the function,
-    Arnaldo/Namhyung. Add acked/tested tags from Arnaldo and Adrian.
-v5. Rebase. Fix NO_LIBBPF and NO_AUXTRACE related build failures
-    caught by Arnaldo and the build-test. Fix NO_AUXTRACE x86
-    arch_fetch_insn in the process, which was incorrectly using an
-    empty weak symbol stub.
-v4. Rebase. Fix the parse events evsel to be embedded in a
-    pyrf_evsel. Add __str__/__repr__ functions to evlist and
-    evsel. Throw an exception for a bad evlist index.
-v3. Move is_directory_at to patch 6 rather than patch 7, respond to
-    review feedback on the list from Namhyung.
-v2. Add the bottom 4 bullet points - 13 more patches.
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ .../scripts/python/Perf-Trace-Util/Context.c  | 18 -----
+ tools/perf/util/python.c                      | 73 +++----------------
+ .../scripting-engines/trace-event-python.c    | 63 +---------------
+ 3 files changed, 15 insertions(+), 139 deletions(-)
 
-Ian Rogers (22):
-  perf python: Remove python 2 scripting support
-  perf python: Constify variables and parameters
-  perf python: Remove unused #include
-  perf script: Move scripting_max_stack out of builtin
-  perf kvm: Move functions used in util out of builtin
-  perf script: Use openat for directory iteration
-  perf script: Move find_scripts to browser/scripts.c
-  perf stat: Move stat_config into config.c
-  perf script: Move script_spec code to trace-event-scripting.c
-  perf script: Move script_fetch_insn to trace-event-scripting.c
-  perf script: Move perf_sample__sprintf_flags to
-    trace-event-scripting.c
-  perf x86: Define arch_fetch_insn in NO_AUXTRACE builds
-  perf intel-pt: Remove stale build comment
-  perf env: Move arch errno function to only use in env
-  perf lock: Move common lock contention code to new file
-  perf bench: Remove reference to cmd_inject
-  perf kwork: Make perf_kwork_add_work a callback
-  perf build: Remove test library from python shared object
-  perf python: Add parse_events function
-  perf python: Add __str__ and __repr__ functions to evlist
-  perf python: Add __str__ and __repr__ functions to evsel
-  perf python: Correctly throw IndexError
-
- tools/perf/Makefile.perf                      |   7 +-
- tools/perf/arch/x86/util/Build                |   2 +-
- tools/perf/bench/inject-buildid.c             |  13 +-
- tools/perf/builtin-kvm.c                      |  61 ----
- tools/perf/builtin-kwork.c                    |   3 +-
- tools/perf/builtin-lock.c                     | 137 +------
- tools/perf/builtin-script.c                   | 304 +---------------
- tools/perf/builtin-stat.c                     |  27 --
- tools/perf/builtin-trace.c                    |   1 -
- tools/perf/builtin.h                          |   6 -
- .../scripts/python/Perf-Trace-Util/Context.c  |  20 +-
- tools/perf/tests/stat.c                       |  16 +-
- tools/perf/trace/beauty/arch_errno_names.sh   |   3 +-
- tools/perf/ui/browsers/scripts.c              | 177 ++++++++-
- tools/perf/util/Build                         |   4 +-
- tools/perf/util/bpf_kwork.c                   |   2 +-
- tools/perf/util/bpf_kwork_top.c               |   2 +-
- tools/perf/util/bpf_lock_contention.c         |   2 +-
- tools/perf/util/cgroup.c                      |   2 +-
- tools/perf/util/config.c                      |  27 ++
- tools/perf/util/dlfilter.c                    |   3 +-
- tools/perf/util/env.c                         |   4 +
- tools/perf/util/env.h                         |   2 -
- tools/perf/util/evsel.c                       |  19 +-
- tools/perf/util/evsel.h                       |   2 +-
- tools/perf/util/intel-pt-decoder/Build        |  18 +-
- .../intel-pt-decoder/intel-pt-insn-decoder.c  |   3 -
- tools/perf/util/kvm-stat.c                    |  70 ++++
- tools/perf/util/kvm-stat.h                    |   3 +
- tools/perf/util/kwork.h                       |   6 +-
- tools/perf/util/lock-contention.c             | 143 ++++++++
- tools/perf/util/lock-contention.h             |  18 +-
- tools/perf/util/path.c                        |  10 +
- tools/perf/util/path.h                        |   1 +
- tools/perf/util/python.c                      | 341 ++++++++----------
- .../scripting-engines/trace-event-python.c    |  63 +---
- tools/perf/util/stat.h                        |   3 +-
- tools/perf/util/trace-event-scripting.c       | 177 +++++++++
- tools/perf/util/trace-event.h                 |   5 +-
- 39 files changed, 847 insertions(+), 860 deletions(-)
- create mode 100644 tools/perf/util/kvm-stat.c
- create mode 100644 tools/perf/util/lock-contention.c
-
+diff --git a/tools/perf/scripts/python/Perf-Trace-Util/Context.c b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
+index 01f54d6724a5..d742daaa5d5a 100644
+--- a/tools/perf/scripts/python/Perf-Trace-Util/Context.c
++++ b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
+@@ -24,16 +24,6 @@
+ #include "../../../util/srcline.h"
+ #include "../../../util/srccode.h"
+ 
+-#if PY_MAJOR_VERSION < 3
+-#define _PyCapsule_GetPointer(arg1, arg2) \
+-  PyCObject_AsVoidPtr(arg1)
+-#define _PyBytes_FromStringAndSize(arg1, arg2) \
+-  PyString_FromStringAndSize((arg1), (arg2))
+-#define _PyUnicode_AsUTF8(arg) \
+-  PyString_AsString(arg)
+-
+-PyMODINIT_FUNC initperf_trace_context(void);
+-#else
+ #define _PyCapsule_GetPointer(arg1, arg2) \
+   PyCapsule_GetPointer((arg1), (arg2))
+ #define _PyBytes_FromStringAndSize(arg1, arg2) \
+@@ -42,7 +32,6 @@ PyMODINIT_FUNC initperf_trace_context(void);
+   PyUnicode_AsUTF8(arg)
+ 
+ PyMODINIT_FUNC PyInit_perf_trace_context(void);
+-#endif
+ 
+ static struct scripting_context *get_args(PyObject *args, const char *name, PyObject **arg2)
+ {
+@@ -213,12 +202,6 @@ static PyMethodDef ContextMethods[] = {
+ 	{ NULL, NULL, 0, NULL}
+ };
+ 
+-#if PY_MAJOR_VERSION < 3
+-PyMODINIT_FUNC initperf_trace_context(void)
+-{
+-	(void) Py_InitModule("perf_trace_context", ContextMethods);
+-}
+-#else
+ PyMODINIT_FUNC PyInit_perf_trace_context(void)
+ {
+ 	static struct PyModuleDef moduledef = {
+@@ -240,4 +223,3 @@ PyMODINIT_FUNC PyInit_perf_trace_context(void)
+ 
+ 	return mod;
+ }
+-#endif
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 2096cdbaa53b..ea6dbe6e4317 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -26,40 +26,14 @@
+ #include <internal/lib.h>
+ #include "../builtin.h"
+ 
+-#if PY_MAJOR_VERSION < 3
+-#define _PyUnicode_FromString(arg) \
+-  PyString_FromString(arg)
+-#define _PyUnicode_AsString(arg) \
+-  PyString_AsString(arg)
+-#define _PyUnicode_FromFormat(...) \
+-  PyString_FromFormat(__VA_ARGS__)
+-#define _PyLong_FromLong(arg) \
+-  PyInt_FromLong(arg)
+-
+-#else
+-
+ #define _PyUnicode_FromString(arg) \
+   PyUnicode_FromString(arg)
+ #define _PyUnicode_FromFormat(...) \
+   PyUnicode_FromFormat(__VA_ARGS__)
+ #define _PyLong_FromLong(arg) \
+   PyLong_FromLong(arg)
+-#endif
+ 
+-#ifndef Py_TYPE
+-#define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
+-#endif
+-
+-/* Define PyVarObject_HEAD_INIT for python 2.5 */
+-#ifndef PyVarObject_HEAD_INIT
+-# define PyVarObject_HEAD_INIT(type, size) PyObject_HEAD_INIT(type) size,
+-#endif
+-
+-#if PY_MAJOR_VERSION < 3
+-PyMODINIT_FUNC initperf(void);
+-#else
+ PyMODINIT_FUNC PyInit_perf(void);
+-#endif
+ 
+ #define member_def(type, member, ptype, help) \
+ 	{ #member, ptype, \
+@@ -117,7 +91,7 @@ static PyObject *pyrf_mmap_event__repr(struct pyrf_event *pevent)
+ 		     pevent->event.mmap.pgoff, pevent->event.mmap.filename) < 0) {
+ 		ret = PyErr_NoMemory();
+ 	} else {
+-		ret = _PyUnicode_FromString(s);
++		ret = PyUnicode_FromString(s);
+ 		free(s);
+ 	}
+ 	return ret;
+@@ -148,7 +122,7 @@ static PyMemberDef pyrf_task_event__members[] = {
+ 
+ static PyObject *pyrf_task_event__repr(struct pyrf_event *pevent)
+ {
+-	return _PyUnicode_FromFormat("{ type: %s, pid: %u, ppid: %u, tid: %u, "
++	return PyUnicode_FromFormat("{ type: %s, pid: %u, ppid: %u, tid: %u, "
+ 				   "ptid: %u, time: %" PRI_lu64 "}",
+ 				   pevent->event.header.type == PERF_RECORD_FORK ? "fork" : "exit",
+ 				   pevent->event.fork.pid,
+@@ -181,7 +155,7 @@ static PyMemberDef pyrf_comm_event__members[] = {
+ 
+ static PyObject *pyrf_comm_event__repr(struct pyrf_event *pevent)
+ {
+-	return _PyUnicode_FromFormat("{ type: comm, pid: %u, tid: %u, comm: %s }",
++	return PyUnicode_FromFormat("{ type: comm, pid: %u, tid: %u, comm: %s }",
+ 				   pevent->event.comm.pid,
+ 				   pevent->event.comm.tid,
+ 				   pevent->event.comm.comm);
+@@ -212,7 +186,7 @@ static PyObject *pyrf_throttle_event__repr(struct pyrf_event *pevent)
+ {
+ 	struct perf_record_throttle *te = (struct perf_record_throttle *)(&pevent->event.header + 1);
+ 
+-	return _PyUnicode_FromFormat("{ type: %sthrottle, time: %" PRI_lu64 ", id: %" PRI_lu64
++	return PyUnicode_FromFormat("{ type: %sthrottle, time: %" PRI_lu64 ", id: %" PRI_lu64
+ 				   ", stream_id: %" PRI_lu64 " }",
+ 				   pevent->event.header.type == PERF_RECORD_THROTTLE ? "" : "un",
+ 				   te->time, te->id, te->stream_id);
+@@ -247,7 +221,7 @@ static PyObject *pyrf_lost_event__repr(struct pyrf_event *pevent)
+ 		     pevent->event.lost.id, pevent->event.lost.lost) < 0) {
+ 		ret = PyErr_NoMemory();
+ 	} else {
+-		ret = _PyUnicode_FromString(s);
++		ret = PyUnicode_FromString(s);
+ 		free(s);
+ 	}
+ 	return ret;
+@@ -274,7 +248,7 @@ static PyMemberDef pyrf_read_event__members[] = {
+ 
+ static PyObject *pyrf_read_event__repr(struct pyrf_event *pevent)
+ {
+-	return _PyUnicode_FromFormat("{ type: read, pid: %u, tid: %u }",
++	return PyUnicode_FromFormat("{ type: read, pid: %u, tid: %u }",
+ 				   pevent->event.read.pid,
+ 				   pevent->event.read.tid);
+ 	/*
+@@ -309,7 +283,7 @@ static PyObject *pyrf_sample_event__repr(struct pyrf_event *pevent)
+ 	if (asprintf(&s, "{ type: sample }") < 0) {
+ 		ret = PyErr_NoMemory();
+ 	} else {
+-		ret = _PyUnicode_FromString(s);
++		ret = PyUnicode_FromString(s);
+ 		free(s);
+ 	}
+ 	return ret;
+@@ -343,7 +317,7 @@ tracepoint_field(struct pyrf_event *pe, struct tep_format_field *field)
+ 		}
+ 		if (field->flags & TEP_FIELD_IS_STRING &&
+ 		    is_printable_array(data + offset, len)) {
+-			ret = _PyUnicode_FromString((char *)data + offset);
++			ret = PyUnicode_FromString((char *)data + offset);
+ 		} else {
+ 			ret = PyByteArray_FromStringAndSize((const char *) data + offset, len);
+ 			field->flags &= ~TEP_FIELD_IS_STRING;
+@@ -432,7 +406,7 @@ static PyObject *pyrf_context_switch_event__repr(struct pyrf_event *pevent)
+ 		     !!(pevent->event.header.misc & PERF_RECORD_MISC_SWITCH_OUT)) < 0) {
+ 		ret = PyErr_NoMemory();
+ 	} else {
+-		ret = _PyUnicode_FromString(s);
++		ret = PyUnicode_FromString(s);
+ 		free(s);
+ 	}
+ 	return ret;
+@@ -918,17 +892,8 @@ static PyObject *pyrf_evlist__get_pollfd(struct pyrf_evlist *pevlist,
+ 
+ 	for (i = 0; i < evlist->core.pollfd.nr; ++i) {
+ 		PyObject *file;
+-#if PY_MAJOR_VERSION < 3
+-		FILE *fp = fdopen(evlist->core.pollfd.entries[i].fd, "r");
+-
+-		if (fp == NULL)
+-			goto free_list;
+-
+-		file = PyFile_FromFile(fp, "perf", "r", NULL);
+-#else
+ 		file = PyFile_FromFd(evlist->core.pollfd.entries[i].fd, "perf", "r", -1,
+ 				     NULL, NULL, NULL, 0);
+-#endif
+ 		if (file == NULL)
+ 			goto free_list;
+ 
+@@ -1234,9 +1199,9 @@ static PyObject *pyrf__tracepoint(struct pyrf_evsel *pevsel,
+ 
+ 	tp_format = trace_event__tp_format(sys, name);
+ 	if (IS_ERR(tp_format))
+-		return _PyLong_FromLong(-1);
++		return PyLong_FromLong(-1);
+ 
+-	return _PyLong_FromLong(tp_format->id);
++	return PyLong_FromLong(tp_format->id);
+ #endif // HAVE_LIBTRACEEVENT
+ }
+ 
+@@ -1250,18 +1215,11 @@ static PyMethodDef perf__methods[] = {
+ 	{ .ml_name = NULL, }
+ };
+ 
+-#if PY_MAJOR_VERSION < 3
+-PyMODINIT_FUNC initperf(void)
+-#else
+ PyMODINIT_FUNC PyInit_perf(void)
+-#endif
+ {
+ 	PyObject *obj;
+ 	int i;
+ 	PyObject *dict;
+-#if PY_MAJOR_VERSION < 3
+-	PyObject *module = Py_InitModule("perf", perf__methods);
+-#else
+ 	static struct PyModuleDef moduledef = {
+ 		PyModuleDef_HEAD_INIT,
+ 		"perf",			/* m_name */
+@@ -1274,7 +1232,6 @@ PyMODINIT_FUNC PyInit_perf(void)
+ 		NULL,			/* m_free */
+ 	};
+ 	PyObject *module = PyModule_Create(&moduledef);
+-#endif
+ 
+ 	if (module == NULL ||
+ 	    pyrf_event__setup_types() < 0 ||
+@@ -1282,11 +1239,7 @@ PyMODINIT_FUNC PyInit_perf(void)
+ 	    pyrf_evsel__setup_types() < 0 ||
+ 	    pyrf_thread_map__setup_types() < 0 ||
+ 	    pyrf_cpu_map__setup_types() < 0)
+-#if PY_MAJOR_VERSION < 3
+-		return;
+-#else
+ 		return module;
+-#endif
+ 
+ 	/* The page_size is placed in util object. */
+ 	page_size = sysconf(_SC_PAGE_SIZE);
+@@ -1335,7 +1288,7 @@ PyMODINIT_FUNC PyInit_perf(void)
+ 		goto error;
+ 
+ 	for (i = 0; perf__constants[i].name != NULL; i++) {
+-		obj = _PyLong_FromLong(perf__constants[i].value);
++		obj = PyLong_FromLong(perf__constants[i].value);
+ 		if (obj == NULL)
+ 			goto error;
+ 		PyDict_SetItemString(dict, perf__constants[i].name, obj);
+@@ -1345,9 +1298,7 @@ PyMODINIT_FUNC PyInit_perf(void)
+ error:
+ 	if (PyErr_Occurred())
+ 		PyErr_SetString(PyExc_ImportError, "perf: Init failed!");
+-#if PY_MAJOR_VERSION >= 3
+ 	return module;
+-#endif
+ }
+ 
+ 
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 8bdae066e839..19eadce50ca1 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -58,22 +58,6 @@
+ #include "mem-events.h"
+ #include "util/perf_regs.h"
+ 
+-#if PY_MAJOR_VERSION < 3
+-#define _PyUnicode_FromString(arg) \
+-  PyString_FromString(arg)
+-#define _PyUnicode_FromStringAndSize(arg1, arg2) \
+-  PyString_FromStringAndSize((arg1), (arg2))
+-#define _PyBytes_FromStringAndSize(arg1, arg2) \
+-  PyString_FromStringAndSize((arg1), (arg2))
+-#define _PyLong_FromLong(arg) \
+-  PyInt_FromLong(arg)
+-#define _PyLong_AsLong(arg) \
+-  PyInt_AsLong(arg)
+-#define _PyCapsule_New(arg1, arg2, arg3) \
+-  PyCObject_FromVoidPtr((arg1), (arg2))
+-
+-PyMODINIT_FUNC initperf_trace_context(void);
+-#else
+ #define _PyUnicode_FromString(arg) \
+   PyUnicode_FromString(arg)
+ #define _PyUnicode_FromStringAndSize(arg1, arg2) \
+@@ -88,7 +72,6 @@ PyMODINIT_FUNC initperf_trace_context(void);
+   PyCapsule_New((arg1), (arg2), (arg3))
+ 
+ PyMODINIT_FUNC PyInit_perf_trace_context(void);
+-#endif
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+ #define TRACE_EVENT_TYPE_MAX				\
+@@ -181,17 +164,7 @@ static int get_argument_count(PyObject *handler)
+ {
+ 	int arg_count = 0;
+ 
+-	/*
+-	 * The attribute for the code object is func_code in Python 2,
+-	 * whereas it is __code__ in Python 3.0+.
+-	 */
+-	PyObject *code_obj = PyObject_GetAttrString(handler,
+-		"func_code");
+-	if (PyErr_Occurred()) {
+-		PyErr_Clear();
+-		code_obj = PyObject_GetAttrString(handler,
+-			"__code__");
+-	}
++	PyObject *code_obj = code_obj = PyObject_GetAttrString(handler, "__code__");
+ 	PyErr_Clear();
+ 	if (code_obj) {
+ 		PyObject *arg_count_obj = PyObject_GetAttrString(code_obj,
+@@ -1902,12 +1875,6 @@ static void set_table_handlers(struct tables *tables)
+ 	tables->synth_handler = get_handler("synth_data");
+ }
+ 
+-#if PY_MAJOR_VERSION < 3
+-static void _free_command_line(const char **command_line, int num)
+-{
+-	free(command_line);
+-}
+-#else
+ static void _free_command_line(wchar_t **command_line, int num)
+ {
+ 	int i;
+@@ -1915,7 +1882,6 @@ static void _free_command_line(wchar_t **command_line, int num)
+ 		PyMem_RawFree(command_line[i]);
+ 	free(command_line);
+ }
+-#endif
+ 
+ 
+ /*
+@@ -1925,30 +1891,12 @@ static int python_start_script(const char *script, int argc, const char **argv,
+ 			       struct perf_session *session)
+ {
+ 	struct tables *tables = &tables_global;
+-#if PY_MAJOR_VERSION < 3
+-	const char **command_line;
+-#else
+ 	wchar_t **command_line;
+-#endif
+-	/*
+-	 * Use a non-const name variable to cope with python 2.6's
+-	 * PyImport_AppendInittab prototype
+-	 */
+-	char buf[PATH_MAX], name[19] = "perf_trace_context";
++	char buf[PATH_MAX];
+ 	int i, err = 0;
+ 	FILE *fp;
+ 
+ 	scripting_context->session = session;
+-#if PY_MAJOR_VERSION < 3
+-	command_line = malloc((argc + 1) * sizeof(const char *));
+-	if (!command_line)
+-		return -1;
+-
+-	command_line[0] = script;
+-	for (i = 1; i < argc + 1; i++)
+-		command_line[i] = argv[i - 1];
+-	PyImport_AppendInittab(name, initperf_trace_context);
+-#else
+ 	command_line = malloc((argc + 1) * sizeof(wchar_t *));
+ 	if (!command_line)
+ 		return -1;
+@@ -1956,15 +1904,10 @@ static int python_start_script(const char *script, int argc, const char **argv,
+ 	command_line[0] = Py_DecodeLocale(script, NULL);
+ 	for (i = 1; i < argc + 1; i++)
+ 		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
+-	PyImport_AppendInittab(name, PyInit_perf_trace_context);
+-#endif
++	PyImport_AppendInittab("perf_trace_context", PyInit_perf_trace_context);
+ 	Py_Initialize();
+ 
+-#if PY_MAJOR_VERSION < 3
+-	PySys_SetArgv(argc + 1, (char **)command_line);
+-#else
+ 	PySys_SetArgv(argc + 1, command_line);
+-#endif
+ 
+ 	fp = fopen(script, "r");
+ 	if (!fp) {
 -- 
 2.47.0.338.g60cca15819-goog
 
