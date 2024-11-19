@@ -1,124 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E00B1D1F56;
-	Tue, 19 Nov 2024 17:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03731CCB4E
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 17:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732035606; cv=none; b=cIdRGN10X3yEIrMWea+igoeM7G1Yibl568QL136CVrtHKa9nQb07osAERwAOmoqzCZzVzYceyGToAJ+VJXiUX0IcTTLx5bJ0s5VVQACeCKxVbRMyWFIX1OR13lKgz+w8n485/Q5y3kmLQiLXfzINVmZuhjsctUbTYQz+ZGSaJkk=
+	t=1732035843; cv=none; b=gdzAzdeueLemK0XhdBpwMIbTWtuI6vSsfI8UxXIv7+Jx/pvo5u07+LM+cx6jyrZw4FJNUItxhRc3EDuikKufiONWcUGwHPPYtyiktMnouAOBK/zaJtgQnet6Alfl23Z4qVZuAk88dWNPp5dJOjSns24xevOYHWKdL2t4o1wyOOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732035606; c=relaxed/simple;
-	bh=nUKampE6m1Pc/cw92xoigRyF6ZA7CefrzrLuE5I65ic=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OFnTXR4CbrFVWY67nVBpiBWE2IHGOTxej/bOWYPOfxcfwRrN7q5x0kW3RPww8SfmiXADIi1Qkiq9pqyeqLFD+gnmKBP7DYERd2tVPcZocOH6a+n2jtHBSRvNt2yVYoxE6uJfT7bb7CVMcoq5ao0pIgxprhC181Z/6PNl4q6A5gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnfjGVqt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732035843; c=relaxed/simple;
+	bh=U54ia5oSk8AQ9Q9yAoVWnEJ65wAHZPeLYyLnyOV2sZo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=MagFUUu0FJ7A/TcQc5+bHT/nsnr390iQbQqqrjjH93/J/q1FxptQ2diSLMDowCKxh9YpANxexQvz1eUHjS+teytHXtNGqF6ly+V32dKWr8IhTOT64MV7TdGn1umSXZWj3xgXgVcJI+MnTIC6LzbXPt2vDyECQKPTIk3if4Qkqd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fR0q9DjD; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnfjGVqt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E12C4CECF;
-	Tue, 19 Nov 2024 17:00:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732035606;
-	bh=nUKampE6m1Pc/cw92xoigRyF6ZA7CefrzrLuE5I65ic=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AnfjGVqtLUnglyQYOpMNi8Ywk63ZEZrg2wN8WMQs0ugvxrgnSrvCZQ1Y74cGlPBwC
-	 x766ZFEqnGrj4INHVto8hZyzHMxuIfDMDNoKmYDexAOb0NPXNbcDmFPw/KXhWuktlM
-	 uLGZKBxNg377UHGnP+SaHhrMW4XeqHz4Bg6blkIuB5RdVembYSq8Kuy+an09QbrOJI
-	 vbf9BDlJh8/SeXMv+1VIUc0gM2PxRoAEv8998SnMxu6uSw+Imk7ukEhvYHXDt4SXyh
-	 sVyJ/sFEpfF0VVvxCdU/mFtmpiHp/cAME5ZfEbAcQsjXW97poarU4JErHiiFiTfVER
-	 cW1EjER9GpbZQ==
-Date: Tue, 19 Nov 2024 09:00:03 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v6 15/22] perf lock: Move common lock contention code to
- new file
-Message-ID: <ZzzEE_kAjmXnvwtj@google.com>
-References: <20241109061809.811922-1-irogers@google.com>
- <20241109061809.811922-16-irogers@google.com>
- <Zzvac4IeX9nDDitm@google.com>
- <CAP-5=fUPksNCJ-NqUbJMDpfS7kkmXGsCVhvALkts8HDv42NUyg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fR0q9DjD"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e381f9e1395so5171127276.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 09:04:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1732035840; x=1732640640; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pvxmItvmiUYh43bZlZBFfMUnWthWQF/PcFodKRvz7CA=;
+        b=fR0q9DjDNT6EB3KPKf8MeuFfpp2IWIOhw17EbeNH5vkavP16eEBL4E6W/nu25z77e9
+         l977Q1znOv8oKt35y8RvgABsTh3wakyn8DeCLYn5YELR8IooXOwrLgUgur/iMxWk51E9
+         nSAZ2SAmPRXxvbC6G952dtWCTzRAmkKKAewuqXl8izuMZawkbagdHYs8inBIqkb37NxL
+         alyM9aNH7KtKpnyodsiiPDhGgBiY96C85YuKSjV34eWSIyMlNY5xlpq1Tfe6i3kIl3Oe
+         byebziRx4goBPbUnQZGRl3OntT+hEj+C4SvGs3aOmW8W26wtLXRkGwpS1w0dCMdDr8O2
+         38vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732035840; x=1732640640;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pvxmItvmiUYh43bZlZBFfMUnWthWQF/PcFodKRvz7CA=;
+        b=JpPerEXn1LIqr3kAIR8dEDDvroq2wdFGTWwYEt2gDWITqkfRazoyyC+Z4cYzmn7H+p
+         cNde90Q3x91hNSTg5iXzHGDMAv7ZqDs7US3CYr3liTKEu9WyjJu+WszrGDdJZ8UC1sna
+         AfZfd1jhFXA2ky/mZe85mHMJOYf/BRE4LEXxk4mi2FtJf21AQWzEvLtVZ3p7eZ3K3tyB
+         xFAesfxB200S1sbAsNHm8i4fPOXIMvBqUjPL8xaVggqi/ENdF0elWEmC/il1AX0ONeHp
+         wLQ4AlkLJBG5MG0XOvJ3KYGsLsRyZFN54D98DvmjFoarQQvLGJfb7XpjRvRjFmlTpdEQ
+         cjOg==
+X-Forwarded-Encrypted: i=1; AJvYcCX2A2qqlQigSiTKkwnkwoO6zPAVfecTkLz4Dud3u8ofByUunjYR3S06IibEB9JbmJC9Y8+cKZp6/7Jyn9vYZ1u7@vger.kernel.org
+X-Gm-Message-State: AOJu0YymgRwoA7O6tS2Hh9jHF2N3BdR0n64qkDRUkNp6rZTdeTcodawM
+	HMl8E4Z9elY/aAckCl3A8eFWKaM0G4PwpVYBdV0jCFTcMWYYtCxYphyB/FmdBc9Ex/fZ1qnj96I
+	lIw==
+X-Google-Smtp-Source: AGHT+IFr9FloVnBcyn0OfNahrmO7SUDeVY3cuyo62UFJEZZiaYhD1FzNdug9Chl6LRH66ZqPEafnvLNQGos=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
+ (user=seanjc job=sendgmr) by 2002:a25:ab90:0:b0:e38:c40:380f with SMTP id
+ 3f1490d57ef6-e3826125c12mr328138276.3.1732035840694; Tue, 19 Nov 2024
+ 09:04:00 -0800 (PST)
+Date: Tue, 19 Nov 2024 09:03:59 -0800
+In-Reply-To: <20240801045907.4010984-25-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUPksNCJ-NqUbJMDpfS7kkmXGsCVhvALkts8HDv42NUyg@mail.gmail.com>
+Mime-Version: 1.0
+References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-25-mizhang@google.com>
+Message-ID: <ZzzE_z5x7D_trxnq@google.com>
+Subject: Re: [RFC PATCH v3 24/58] KVM: x86/pmu: Introduce macro PMU_CAP_PERF_METRICS
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla <manali.shukla@amd.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Jim Mattson <jmattson@google.com>, 
+	Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, 
+	Namhyung Kim <namhyung@kernel.org>, gce-passthrou-pmu-dev@google.com, 
+	Samantha Alt <samantha.alt@intel.com>, Zhiyuan Lv <zhiyuan.lv@intel.com>, 
+	Yanfei Xu <yanfei.xu@intel.com>, Like Xu <like.xu.linux@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Nov 18, 2024 at 05:03:41PM -0800, Ian Rogers wrote:
-> On Mon, Nov 18, 2024 at 4:23 PM Namhyung Kim <namhyung@kernel.org> wrote:
-[SNIP]
-> > On Fri, Nov 08, 2024 at 10:18:02PM -0800, Ian Rogers wrote:
-> > > +#ifndef HAVE_BPF_SKEL
-> > > +int lock_contention_prepare(struct lock_contention *con __maybe_unused)
-> > > +{
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +int lock_contention_start(void)
-> > > +{
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +int lock_contention_stop(void)
-> > > +{
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +int lock_contention_finish(struct lock_contention *con __maybe_unused)
-> > > +{
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +int lock_contention_read(struct lock_contention *con __maybe_unused)
-> > > +{
-> > > +     return 0;
-> > > +}
-> > > +#endif  /* !HAVE_BPF_SKEL */
-> >
-> > I still think it's the convention to have them in a header file as
-> > static inline functions and reduce the #ifdef in the .c file.
+On Thu, Aug 01, 2024, Mingwei Zhang wrote:
+> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > 
-> Shouldn't minimizing ifdefs, and associated cognitive load, in header
-> files be the priority given they are #included many times while the .c
-> file is only compiled once?
-> Shouldn't a goal of the header file be to abstract away things like
-> HAVE_BPF_SKEL?
-> I'm not clear what the goal of having the functions in the header
-> files is, performance? The code isn't going to run anyway. I feel
-> lock_contention.h is smaller and easier to read like this but I also
-> don't care enough to fight. I did this change here as
-> lock_contention.h was being brought into python.c for the sake of
-> stubbing out functions that the header file was also subbing out for
-> !BPF_HAVE_SKEL. A single stub felt like progress.
+> Define macro PMU_CAP_PERF_METRICS to represent bit[15] of
+> MSR_IA32_PERF_CAPABILITIES MSR. This bit is used to represent whether
+> perf metrics feature is enabled.
+> 
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> ---
+>  arch/x86/kvm/vmx/capabilities.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+> index 41a4533f9989..d8317552b634 100644
+> --- a/arch/x86/kvm/vmx/capabilities.h
+> +++ b/arch/x86/kvm/vmx/capabilities.h
+> @@ -22,6 +22,7 @@ extern int __read_mostly pt_mode;
+>  #define PT_MODE_HOST_GUEST	1
+>  
+>  #define PMU_CAP_FW_WRITES	(1ULL << 13)
+> +#define PMU_CAP_PERF_METRICS	BIT_ULL(15)
 
-I think it may have the empty functions in the binary if we keep the
-functions in the .c file whereas compilers would optimize away them if
-they are static inline functions.
+BIT() should suffice.  The 1ULL used for FW_WRITES is unnecessary.  Speaking of
+which, can you update the other #defines while you're at it?  The mix of styles
+annoys me :-)
 
-Thanks,
-Namhyung
+#define PMU_CAP_FW_WRITES	BIT(13)
+#define PMU_CAP_PERF_METRICS	BIT(15)
+#define PMU_CAP_LBR_FMT		GENMASK(5, 0)
 
+>  #define PMU_CAP_LBR_FMT		0x3f
+>  
+>  struct nested_vmx_msrs {
+> -- 
+> 2.46.0.rc1.232.g9752f9e123-goog
+> 
