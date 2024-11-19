@@ -1,66 +1,66 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226181CDFCA
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 18:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C02B15443F
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 18:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732040662; cv=none; b=nQwAuMXPWNFWgf28sS1eUfTGvrRpvQye9wsnt73+H46+QcxafK5H0iXVztozzMEkT8klwdiPTuc7UMxIzwa019oRGJxJkU7UGFFBHOJ2adgPWM+magiN/d5lY+xfDkw32d4r12pO5z3Ru1/8OsmHrf3lOMtJ/uLSKVPG6uAD1rc=
+	t=1732042692; cv=none; b=UM6x4DBcxo0Zy5A+6jKW1ZFVmmLBvX917o+W6iJCBBE4FaVo25yblDSkndq+OjGmbycbdFBngAAm8TNEgOncOGtXgToroU2oQVHJbTFhArqugl/mnjxHe8MScF9kIF1gTOHYgyxB51YYIdBEgbh/fWPyWNdzoEQOOVOsCud6q1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732040662; c=relaxed/simple;
-	bh=2w2r5mX58G/SkIa8ZUR/jP1ySgvHIbm+VbG8tiRb4Qs=;
+	s=arc-20240116; t=1732042692; c=relaxed/simple;
+	bh=CaYHRLlMx9K3LpAcOJBVj9TCZ1ssxrlQJHunKlqrLME=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Fkk7LyxSu79Rrmwg7hcNqnrsrzdGLRt9bVRfuTK3Fn21SWlkydD1xg/1MDFeGL1byu2oIst+zU5GPstR7vcu4Qoo5/RAF4NyTYDBPAPw6F6dkiGM6v8T+6r3f2m3zusLbg4Bq/Nfrjd7S5L4IcPwFmHXZdDgevxYDRziN8xqMiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ysl38w15; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=C5F2e13n0PJEqfszslCaxsCTaEPwxMwjhk4xBSP5yO2Qjzom7iHtNDPPfGC0FQ6EH1WHFukqNZMCVBEzDpE7Yfnba2WJL1JJ6l5Ce0yJyEDt5/Z7oUq7dphi0nAmh4pCg8O0oFkfrwyR4izZ3hWd27QSkJNMytMf3WLvO8IFODk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EXMYaDS8; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ysl38w15"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6eae6aba72fso61625927b3.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 10:24:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EXMYaDS8"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7202dfaa53fso5827390b3a.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 10:58:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732040660; x=1732645460; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1732042691; x=1732647491; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2czk0g24fqh6fFWu59+40RUcjXlxOd2UBqJsJwV4SVg=;
-        b=Ysl38w15GQHixQrXKcuF4UkcrhyfzJxfqvs/BLw2SO6ZpvobF6wdctXOX4bvZY1Dj9
-         XDJozY0FC/JwQ/fjCr1DPyhz/coGS2d9vpHHyyXM2Q8mlb2cVnMWlS7M7uN87Z5ZF22E
-         QB9l3tA9OpboqKeq4ItXnF3Xry7wmugtg+8GKC9JyjYBb2llDvYINFis8faZebuv0YxL
-         VOkLJXtMXq3N8pOqVcO2rjBB5D9Jskfuyfzxxh6CSMuljimYVZAdWwSQ18gzsFqL38Mn
-         TPe1rUci4o04feDAUJzYqV/0JeNV4GN71HxqVZEoCg5gTWcWJYhbEFYeGYc+Y00Wtmyr
-         WO8Q==
+        bh=JG7IW976n3LuBX649AhgR5w6x9Lne3c1qlRCMTLNQN4=;
+        b=EXMYaDS8IIljAcsoUxuHJEMhkoS190+ofWY82ilvULcC0b1VNuQTFo1C6At5VhSXhx
+         kvTa1EDgTlQ2Cm5tct5o4IX6sBdJKzxP6iUs2bXrBt1yQn3/vlaGHCvMNxE+dCqucidW
+         d53sTI9WIzZWGYkhR9HjIC0QMuSzHKRfGjQ5slvDn3pEMS2xxb2fYHtluoyFj19dvfj0
+         tAeKQDqGpCF/FThwCRoQwPYY9aY3n4Ck13Drc0rHjL5G5WPnbfAUZNmHnDpC9CqC1Kqn
+         vBEiaeH+muRa62vzwgeaMD9HRX01JQQGC96pItWY7/D66A3xN1S+91oFujsDZSCAcfCT
+         fwpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732040660; x=1732645460;
+        d=1e100.net; s=20230601; t=1732042691; x=1732647491;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2czk0g24fqh6fFWu59+40RUcjXlxOd2UBqJsJwV4SVg=;
-        b=sJoztrSzhDBaYrHtq5GrEH7cjIzuSliN6K7A0gm8u7vufLHQUL4JiZT7OdZuF8xyJo
-         8g2+Qscx7EDU6uadgZ2uBdI4oj9j/0Ci4A9rn5paFt+4eUTO4axpGrCAWlTV8R9X5ev4
-         pg7V2/CqEYbHnF16CnQEbz0pV/iHor7wfj1QYojtIJYRaoXP/q4rov+lgQO2qZSmWn8g
-         XiHiAZebK0vGZAo6wSq3n0WWKEq+6vEF/JXzlc5+9wv4g+BLOxS+Ke0dRmpd0v2hFWOc
-         RGIgy3JwLEv6Sx3aRYML4i45QKI5zd02XvSNXhE3EqgpMVVuvBYFLrG+c2xtTujqEyG+
-         Jweg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPu6lVWHERNdnFCXw3q9bhoSmpIm+qEmQn4RxA2WQtNxAEH7USN+6ds9bEoTu+5jee5o7nBdqYh4D6EhZKf18s@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxLJScIYJXk9JseyDXY9Os3BJCCfFWxcA/nhMhk5hKPsiYYYuW
-	wUDOla0YW1GAyITsd8do8veh2z+2nAX3FbB3u0xzZD0j5CrWvSPVxNWiRzxfY9rTNGSwAGZjcZQ
-	2QQ==
-X-Google-Smtp-Source: AGHT+IEXjFdtIZQjMzEZj5GVW2GxK32GN4holf/tRhKSvsOMczUYTZAngrjleLyHus8zXo0KfAuJPOR/waA=
+        bh=JG7IW976n3LuBX649AhgR5w6x9Lne3c1qlRCMTLNQN4=;
+        b=aPNvBeNVTiSofzh71R72BJjN1NZGDp9p/Nz93OpIPS4ReZfiBRVU68cO5yazfIKvlt
+         asvpQt8JB/rMkJO67HRg8UPw7YQf9Z9O5ZF3dNe8OQQIo+CAaVfFKaxURdfIH8RCf/GG
+         Ot0yHAAJeh7N1hsk3c3RtU6mjxBQ1AOK7x65nsj5a/ztgPjWuP8eCcKM1WPcNwvo8rFK
+         P6YwB46k7anSZHJovgoMqt4qXfjKavzUM0Y093557Akk2Qa0bW6mJZZHtDvbZj5WUQ7Z
+         /snGAn9v1GSKrUpDfPmzrFc/0UAHiz6OMK6L0/oEAXWdDYhHl/D34J9v0BCuDpaSNSco
+         UJ9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUht/CabEpehj0XenFLioULWOiImZlseLl48gyKhUDy+dZfSfn5Hool17UjuRp9iN9i7r+/zuuiHGQEwgtWRS2u@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv5OAg5IdAPYDwXYZE/gPX2rxpqF5kcezUpCkwOfejhME35JC6
+	H4CK4ISAONBGFbFLw3yJKf6E4zDH++Bt5CukFIMiSMjGEbv7lXXu5FGdE1ny4zpLj0Du4poSVr5
+	G1w==
+X-Google-Smtp-Source: AGHT+IGh3uwc4FqgofMvnZ95XtOkh7u8u7xHwAaxoNHCP5bZH7ShLaMyJ8JrAlCfywT8H8d0O+ZA7pn99Tg=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a05:690c:d19:b0:6dd:fda3:6568 with SMTP id
- 00721157ae682-6ee55c8eca3mr4986707b3.3.1732040660209; Tue, 19 Nov 2024
- 10:24:20 -0800 (PST)
-Date: Tue, 19 Nov 2024 10:24:18 -0800
-In-Reply-To: <20240801045907.4010984-29-mizhang@google.com>
+ (user=seanjc job=sendgmr) by 2002:a17:903:2311:b0:212:475e:2e8f with SMTP id
+ d9443c01a7336-212475e37camr121295ad.9.1732042690706; Tue, 19 Nov 2024
+ 10:58:10 -0800 (PST)
+Date: Tue, 19 Nov 2024 10:58:09 -0800
+In-Reply-To: <20240801045907.4010984-32-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-29-mizhang@google.com>
-Message-ID: <ZzzX0g0LtF_qHggI@google.com>
-Subject: Re: [RFC PATCH v3 28/58] KVM: x86/pmu: Add intel_passthrough_pmu_msrs()
- to pass-through PMU MSRs
+References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-32-mizhang@google.com>
+Message-ID: <ZzzfwXefHP7SG-Vy@google.com>
+Subject: Re: [RFC PATCH v3 31/58] KVM: x86/pmu: Add counter MSR and selector
+ MSR index into struct kvm_pmc
 From: Sean Christopherson <seanjc@google.com>
 To: Mingwei Zhang <mizhang@google.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>, 
@@ -75,106 +75,78 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="us-ascii"
 
+Please squash this with the patch that does the actual save/load.  Hmm, maybe it
+should be put/load, now that I think about it more?  That's more consitent with
+existing KVM terminology.
+
+Anyways, please squash them together, it's very difficult to review them separately.
+
 On Thu, Aug 01, 2024, Mingwei Zhang wrote:
-> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-> index 02c9019c6f85..737de5bf1eee 100644
-> --- a/arch/x86/kvm/vmx/pmu_intel.c
-> +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> @@ -740,6 +740,52 @@ static bool intel_is_rdpmc_passthru_allowed(struct kvm_vcpu *vcpu)
->  	return true;
->  }
->  
-> +/*
-> + * Setup PMU MSR interception for both mediated passthrough vPMU and legacy
-> + * emulated vPMU. Note that this function is called after each time userspace
-> + * set CPUID.
-> + */
-> +static void intel_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
-
-Function verb is misleading.  This doesn't always "passthrough" MSRs, it's also
-responsible for enabling interception as needed.  intel_pmu_update_msr_intercepts()?
-
-> +{
-> +	bool msr_intercept = !is_passthrough_pmu_enabled(vcpu);
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	int i;
-> +
-> +	/*
-> +	 * Unexposed PMU MSRs are intercepted by default. However,
-> +	 * KVM_SET_CPUID{,2} may be invoked multiple times. To ensure MSR
-> +	 * interception is correct after each call of setting CPUID, explicitly
-> +	 * touch msr bitmap for each PMU MSR.
-> +	 */
-> +	for (i = 0; i < kvm_pmu_cap.num_counters_gp; i++) {
-> +		if (i >= pmu->nr_arch_gp_counters)
-> +			msr_intercept = true;
-
-Hmm, I like the idea and that y'all remembered to intercept unsupported MSRs, but
-it's way, way too easy to clobber msr_intercept and fail to re-initialize across
-for-loops.
-
-Rather than update the variable mid-loop, how about this?
-
-	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
-		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PERFCTR0 + i, MSR_TYPE_RW, intercept);
-		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PMC0 + i, MSR_TYPE_RW,
-					  intercept || !fw_writes_is_enabled(vcpu));
-	}
-	for ( ; i < kvm_pmu_cap.num_counters_gp; i++) {
-		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PERFCTR0 + i, MSR_TYPE_RW, true);
-		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PMC0 + i, MSR_TYPE_RW, true);
-	}
-
-	for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
-		vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_FIXED_CTR0 + i, MSR_TYPE_RW, intercept);
-	for ( ; i < kvm_pmu_cap.num_counters_fixed; i++)
-		vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_FIXED_CTR0 + i, MSR_TYPE_RW, true);
-
-
-> +		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PERFCTR0 + i, MSR_TYPE_RW, msr_intercept);
-> +		if (fw_writes_is_enabled(vcpu))
-> +			vmx_set_intercept_for_msr(vcpu, MSR_IA32_PMC0 + i, MSR_TYPE_RW, msr_intercept);
-> +		else
-> +			vmx_set_intercept_for_msr(vcpu, MSR_IA32_PMC0 + i, MSR_TYPE_RW, true);
-> +	}
-> +
-> +	msr_intercept = !is_passthrough_pmu_enabled(vcpu);
-> +	for (i = 0; i < kvm_pmu_cap.num_counters_fixed; i++) {
-> +		if (i >= pmu->nr_arch_fixed_counters)
-> +			msr_intercept = true;
-> +		vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_FIXED_CTR0 + i, MSR_TYPE_RW, msr_intercept);
-> +	}
-> +
-> +	if (pmu->version > 1 && is_passthrough_pmu_enabled(vcpu) &&
-
-Don't open code kvm_pmu_has_perf_global_ctrl().
-
-> +	    pmu->nr_arch_gp_counters == kvm_pmu_cap.num_counters_gp &&
-> +	    pmu->nr_arch_fixed_counters == kvm_pmu_cap.num_counters_fixed)
-> +		msr_intercept = false;
-> +	else
-> +		msr_intercept = true;
-
-This reinforces that checking PERF_CAPABILITIES for PERF_METRICS is likely doomed
-to fail, because doesn't PERF_GLOBAL_CTRL need to be intercepted, strictly speaking,
-to prevent setting EN_PERF_METRICS?
-
-> +	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_STATUS, MSR_TYPE_RW, msr_intercept);
-> +	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_CTRL, MSR_TYPE_RW, msr_intercept);
-> +	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_OVF_CTRL, MSR_TYPE_RW, msr_intercept);
-> +}
-> +
->  struct kvm_pmu_ops intel_pmu_ops __initdata = {
->  	.rdpmc_ecx_to_pmc = intel_rdpmc_ecx_to_pmc,
->  	.msr_idx_to_pmc = intel_msr_idx_to_pmc,
-> @@ -752,6 +798,7 @@ struct kvm_pmu_ops intel_pmu_ops __initdata = {
->  	.deliver_pmi = intel_pmu_deliver_pmi,
->  	.cleanup = intel_pmu_cleanup,
->  	.is_rdpmc_passthru_allowed = intel_is_rdpmc_passthru_allowed,
-> +	.passthrough_pmu_msrs = intel_passthrough_pmu_msrs,
->  	.EVENTSEL_EVENT = ARCH_PERFMON_EVENTSEL_EVENT,
->  	.MAX_NR_GP_COUNTERS = KVM_INTEL_PMC_MAX_GENERIC,
->  	.MIN_NR_GP_COUNTERS = 1,
-> -- 
-> 2.46.0.rc1.232.g9752f9e123-goog
+> Add the MSR indices for both selector and counter in each kvm_pmc. Giving
+> convenience to mediated passthrough vPMU in scenarios of querying MSR from
+> a given pmc. Note that legacy vPMU does not need this because it never
+> directly accesses PMU MSRs, instead each kvm_pmc is bound to a perf_event.
 > 
+> For actual Zen 4 and later hardware, it will never be the case that the
+> PerfMonV2 CPUID bit is set but the PerfCtrCore bit is not. However, a
+> guest can be booted with PerfMonV2 enabled and PerfCtrCore disabled.
+> KVM does not clear the PerfMonV2 bit from guest CPUID as long as the
+> host has the PerfCtrCore capability.
+> 
+> In this case, passthrough mode will use the K7 legacy MSRs to program
+> events but with the incorrect assumption that there are 6 such counters
+> instead of 4 as advertised by CPUID leaf 0x80000022 EBX. The host kernel
+> will also report unchecked MSR accesses for the absent counters while
+> saving or restoring guest PMU contexts.
+> 
+> Ensure that K7 legacy MSRs are not used as long as the guest CPUID has
+> either PerfCtrCore or PerfMonV2 set.
+> 
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  2 ++
+>  arch/x86/kvm/svm/pmu.c          | 13 +++++++++++++
+>  arch/x86/kvm/vmx/pmu_intel.c    | 13 +++++++++++++
+>  3 files changed, 28 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 4b3ce6194bdb..603727312f9c 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -522,6 +522,8 @@ struct kvm_pmc {
+>  	 */
+>  	u64 emulated_counter;
+>  	u64 eventsel;
+> +	u64 msr_counter;
+> +	u64 msr_eventsel;
+
+There's no need to track these per PMC, the tracking can be per PMU, e.g.
+
+	u64 gp_eventsel_base;
+	u64 gp_counter_base;
+	u64 gp_shift;
+	u64 fixed_base;
+
+Actually, there's no need for a per-PMU fixed base, as that can be shoved into
+kvm_pmu_ops.  LOL, and the upcoming patch hardcodes INTEL_PMC_FIXED_RDPMC_BASE.
+Naughty, naughty ;-)
+
+It's not pretty, but 16 bytes per PMC isn't trivial. 
+
+Hmm, actually, scratch all that.  A better alternative would be to provide a
+helper to put/load counter/selector MSRs, and call that from vendor code.  Ooh,
+I think there's a bug here.  On AMD, the guest event selector MSRs need to be
+loaded _before_ PERF_GLOBAL_CTRL, no?  I.e. enable the guest's counters only
+after all selectors have been switched AMD64_EVENTSEL_GUESTONLY.  Otherwise there
+would be a brief window where KVM could incorrectly enable counters in the host.
+And the reverse that for put().
+
+But Intel has the opposite ordering, because MSR_CORE_PERF_GLOBAL_CTRL needs to
+be cleared before changing event selectors.
+
+And so trying to handle this entirely in common code, while noble, is at best
+fragile and at worst buggy.
+
+The common helper can take the bases and shift, and if we want to have it handle
+fixed counters, the base for that too.
