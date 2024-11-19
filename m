@@ -1,66 +1,66 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B6C1CF7DB
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 15:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAC11D0E14
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 16:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732030993; cv=none; b=tdHIPEmyRTo5RSsryceS1ULK94FuMIz9W70ttDCbPi7RO4qrhVivY6mD1yvHDc71M5IlSsRNBCSdMaFwEJKVLhfOHfAp9xf69K/7inhWcgLabha1u8UCtDo1kmDjfo9KfmTTtJJMZt6wq2U1kxi7sHqvimUAgn+VXh4hakjFo9s=
+	t=1732033928; cv=none; b=Q64HuvWx4aArwp/1BQNeezJnmqXLKSIpMelVSqsIcsbpNKKn8celaUGhjsOda+Xy90L6NGi7bKq7zHdD38soH6S2hE8Y2QN8dKCHTDLofFn7BoEfHBCEIfvgFFfkNQDRTjQk82t2KLtyR8qVxLO7kjdH9BTzqeMl+yNxXreDKX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732030993; c=relaxed/simple;
-	bh=KjKAUisPP4PTwPSuoMZH56lWV/0EBojMgOmHPXphLGE=;
+	s=arc-20240116; t=1732033928; c=relaxed/simple;
+	bh=2ekSIgrAzzeYMbHqvayaK6X9jApON1Mrqm4gAr1xfuc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lBCmhaJZrIHF996BOaJSDxLUS8F02y8tjheYuXb/ydWX0F3+Zu2vNQDNwBq3GWoN7ehcf7bKvd1RuLL9JY3kyqcWk7NBTtQM192q4v8BnQZ7NDy2U5HQFujsphjOzzPHzAANc9ocju5wdvttHgk4m1cS2iRoGzLB+A4HcKf1tKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mULPKh8e; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=BiEtiYpzggLT78YoG0b6eplxkRMnQaQlwnNg24qHVz94wyM+MGvjzG2ruXZ8y+9uKqnfr0K9QcystjOBGJQIMvxfVA4cXvS7u8xNOYUTd1+c9Rjzz93xwyRWX5Q6f3Cnqa9vaoGeVT/HCcafnD87f8gXinfyyNH+YuERtixhPTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zsx18bgV; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mULPKh8e"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ee86f21b2cso19289257b3.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 07:43:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zsx18bgV"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2122b6cadb1so20476755ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Nov 2024 08:32:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732030990; x=1732635790; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1732033925; x=1732638725; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rHYzDNeBKakJG8hRVBgbLBhXsiM23myvHWLb6lBUBoU=;
-        b=mULPKh8eQiesuEd2kTFpxz6W1Vy5fWohVEJ6QOBsOAtUNGhS7m7P00yd1HcdxWWiPp
-         5lPvx3/RZDTbjkVUWKgjrxmrxtkqrKrOauhcWHQAOsqGJ13X71InDlUFwScGJYy6ACQY
-         9no4jjJ2m767vXZWWebvJ+Dy4AU1/OLh4NPhGkJHul9rjA6pv91YXET0UzP18I1frMGM
-         WITQUEFrWknTqQ4c0fXOxSW3PmMppfDVpACaYkRvAdZHaEUlK+/ffxd+xJbAK+uewK8c
-         cO8wNs7p04Uxvf5PFyafHcs69IRIIJqZBOuy6VT08lQtiVuannsqr9Kh81O2hS8BZ8pH
-         rgjQ==
+        bh=TNbKX5TNOs33VCY6qePAD5uOIqkp/me0ayOtaNKA/No=;
+        b=Zsx18bgVO7bkns/T1bdF4o8hwm4HvGQ8K1njUTD4dTXju86ClsCpINQqIWpGIFTQKB
+         e6LHXGXZj58Aljcko4CXtyhKWQF0yK2DFGNyOzVW0cqUfb0OBPJwmvdt91XIAWFTIuqN
+         TIWgfTJGzEuY4McD0XEnaIHAK9foqqASgCE1MftAhb4xDILZ8YoBisNLcY6BrNEt6Ak/
+         IfFrMfLcASkDlOulcA8dQZy+rNDsGyUJKevl2EGxlLy4S7W14LO+32nHQgYueNlER7yZ
+         +HPJP4DhPq5/KNm7IeX+xKotS6DRYeStV2FIKNsR4OCQvjivgD6S6x7xBeVFM1YR/u+A
+         YZug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732030990; x=1732635790;
+        d=1e100.net; s=20230601; t=1732033925; x=1732638725;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rHYzDNeBKakJG8hRVBgbLBhXsiM23myvHWLb6lBUBoU=;
-        b=cJgnPnd9x3iIO2wHA5JOc8nuYElahnahGbe9tadpmkkF9UbO6zmVDLuuUCE1vjAv5G
-         U6bZveRncy2o4DErHuKZq266uOM1mXTZuE1Y58adl1/Y5vbwR8db2dkUWqIlVdH08WJj
-         Au3Vz4rIZ6/0MPx+mFtHA24CYRAK9ZlXHwbtmP4BwCzWlj7bAYw/0DvgVck5bHERDFTP
-         RpYsiK5lc1lmpSIL1kw4kP8fRwtMPCzRZaKGY3+16wiuQcEAhsxX1vYhoSaVwFNCGBBM
-         ywz79zWNUQPg6w7Tb8WRJr6z4sUHBgGvSxDwMb7uPRGSbbwQuAz2aTWKw9mzaVHmD88N
-         D2gQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFc6lZpfkFQr4s2MoS9xv0ZoYz8iiDHchxmmUsJiTNcf0D/ZjR33MVnipdyClGwho20eXWFRne60yphXyPbPLo@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfNSrz33496GY/RVVMTEInpDU4pIxkTRpLjcjwnkHzHlOeiBIX
-	pymi3jvq6U/K7wWnz3iXd2GJoadMCO0pQfWOSsFieo3Adhw/4yaFkO9G+xhhihToYNX7bM7UJ3P
-	fNw==
-X-Google-Smtp-Source: AGHT+IGqou6Wkgd/f8arnHNLYAjcsv42Bk6ENu0WspAXb1XpNYseCu3msu9X2fK8hbCplo8+EwidHJLGx0s=
+        bh=TNbKX5TNOs33VCY6qePAD5uOIqkp/me0ayOtaNKA/No=;
+        b=xGNSV0Bhkw98choZMKAbDkbI4mjvi9ApkoYYIvBbeb8cgbBndmaEtkvhX/lYwXRica
+         cayeP40wI0lPHcsc5g7foFdiGGufJfVTwR+PcQGYp8Vu9P3fjoJRVmSV/sWVDUTkm+bI
+         lE0yTj0p3d9qmlpLUaIyIH47e6xgJxESudo6uk0doVx06Ejqs2uYLsXuS+1BsGvUv7PX
+         E8YstVNzQqCdXjFoKa77gXz4i1s2npCcJ2XPGs+FBIQRWD5J3QhxXBX9DgV23Ja2dYwN
+         rLXActlJV6Ni3BL4OcxO0ci4Jh3xcsO7h7kX10gDGSauIjNeXadPD34yxOxYCaIEeXR3
+         /POQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWU7vY/pxzgA4afW9HtRZ4lQO2g7jmStPLQep4KiPWgcZzprmchxTXyu7pbXsyUVigEMNfZCzO/FGTk1uwXCwwW@vger.kernel.org
+X-Gm-Message-State: AOJu0YylNYpz6JJgW9tM1bWfoL5mkTU2nH16saC8CLXmrImQL4HZgLUA
+	Z3Lt/ftYYPrW3K+WDF8FEgfS6gnyX8a1NifQx5YL5uccmVfBZKhDfjHS8xxUBl4RlTP3bBDNchq
+	VZA==
+X-Google-Smtp-Source: AGHT+IHsgdDVo1GLilnJsRb44nsrNpagX5eSv1Mr8vSstq32Le09fOxuyDrall8LHgWMDjvlpZV4/rkUUOc=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a05:6902:e84:b0:e38:7c92:33b0 with SMTP id
- 3f1490d57ef6-e387c9234d7mr42958276.9.1732030989964; Tue, 19 Nov 2024 07:43:09
+ (user=seanjc job=sendgmr) by 2002:a17:903:2350:b0:212:6342:b592 with SMTP id
+ d9443c01a7336-2126342b73amr9395ad.8.1732033925225; Tue, 19 Nov 2024 08:32:05
  -0800 (PST)
-Date: Tue, 19 Nov 2024 07:43:08 -0800
-In-Reply-To: <20240801045907.4010984-23-mizhang@google.com>
+Date: Tue, 19 Nov 2024 08:32:03 -0800
+In-Reply-To: <20240801045907.4010984-24-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-23-mizhang@google.com>
-Message-ID: <ZzyyDC7nh_5XGaHa@google.com>
-Subject: Re: [RFC PATCH v3 22/58] KVM: x86/pmu: Add host_perf_cap and
- initialize it in kvm_x86_vendor_init()
+References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-24-mizhang@google.com>
+Message-ID: <Zzy9gz9boGIzZlsQ@google.com>
+Subject: Re: [RFC PATCH v3 23/58] KVM: x86/pmu: Allow RDPMC pass through when
+ all counters exposed to guest
 From: Sean Christopherson <seanjc@google.com>
 To: Mingwei Zhang <mizhang@google.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>, 
@@ -76,33 +76,136 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
 Content-Type: text/plain; charset="us-ascii"
 
 On Thu, Aug 01, 2024, Mingwei Zhang wrote:
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 0c40f551130e..6db4dc496d2b 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -239,6 +239,9 @@ EXPORT_SYMBOL_GPL(host_xss);
->  u64 __read_mostly host_arch_capabilities;
->  EXPORT_SYMBOL_GPL(host_arch_capabilities);
->  
-> +u64 __read_mostly host_perf_cap;
-> +EXPORT_SYMBOL_GPL(host_perf_cap);
-
-In case you don't get a conflict on rebase, this should go in "struct kvm_host_values"
-as "perf_capabilities".
-
->  const struct _kvm_stats_desc kvm_vm_stats_desc[] = {
->  	KVM_GENERIC_VM_STATS(),
->  	STATS_DESC_COUNTER(VM, mmu_shadow_zapped),
-> @@ -9793,6 +9796,9 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
->  	if (boot_cpu_has(X86_FEATURE_ARCH_CAPABILITIES))
->  		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, host_arch_capabilities);
->  
-> +	if (boot_cpu_has(X86_FEATURE_PDCM))
-> +		rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
-> +
->  	r = ops->hardware_setup();
->  	if (r != 0)
->  		goto out_mmu_exit;
-> -- 
-> 2.46.0.rc1.232.g9752f9e123-goog
+> Clear RDPMC_EXITING in vmcs when all counters on the host side are exposed
+> to guest VM. This gives performance to passthrough PMU. However, when guest
+> does not get all counters, intercept RDPMC to prevent access to unexposed
+> counters. Make decision in vmx_vcpu_after_set_cpuid() when guest enables
+> PMU and passthrough PMU is enabled.
 > 
+> Co-developed-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
+> ---
+>  arch/x86/kvm/pmu.c     | 16 ++++++++++++++++
+>  arch/x86/kvm/pmu.h     |  1 +
+>  arch/x86/kvm/vmx/vmx.c |  5 +++++
+>  3 files changed, 22 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index e656f72fdace..19104e16a986 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -96,6 +96,22 @@ void kvm_pmu_ops_update(const struct kvm_pmu_ops *pmu_ops)
+>  #undef __KVM_X86_PMU_OP
+>  }
+>  
+> +bool kvm_pmu_check_rdpmc_passthrough(struct kvm_vcpu *vcpu)
+
+As suggested earlier, kvm_rdpmc_in_guest().
+
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +
+> +	if (is_passthrough_pmu_enabled(vcpu) &&
+> +	    !enable_vmware_backdoor &&
+
+Please add a comment about the VMware backdoor, I doubt most folks know about
+VMware's tweaks to RDPMC behavior.  It's somewhat obvious from the code and
+comment in check_rdpmc(), but I think it's worth calling out here too.
+
+> +	    pmu->nr_arch_gp_counters == kvm_pmu_cap.num_counters_gp &&
+> +	    pmu->nr_arch_fixed_counters == kvm_pmu_cap.num_counters_fixed &&
+> +	    pmu->counter_bitmask[KVM_PMC_GP] == (((u64)1 << kvm_pmu_cap.bit_width_gp) - 1) &&
+> +	    pmu->counter_bitmask[KVM_PMC_FIXED] == (((u64)1 << kvm_pmu_cap.bit_width_fixed)  - 1))
+
+BIT_ULL?  GENMASK_ULL?
+
+> +		return true;
+> +
+> +	return false;
+
+Do this:
+
+
+	return <true>;
+
+not:
+
+	if (<true>)
+		return true;
+
+	return false;
+
+Short-circuiting on certain cases is fine, and I would probably vote for that so
+it's easier to add comments, but that's obviously not what's done here.  E.g. either
+
+	if (!enable_mediated_pmu)
+		return false;
+
+	/* comment goes here */
+	if (enable_vmware_backdoor)
+		return false;
+
+	return <counters checks>;
+
+or
+
+	return <massive combined check>;
+
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_pmu_check_rdpmc_passthrough);
+
+Maybe just make this an inline in a header?  enable_vmware_backdoor is exported,
+and presumably enable_mediated_pmu will be too.
+
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 4d60a8cf2dd1..339742350b7a 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7911,6 +7911,11 @@ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+>  		vmx->msr_ia32_feature_control_valid_bits &=
+>  			~FEAT_CTL_SGX_LC_ENABLED;
+>  
+> +	if (kvm_pmu_check_rdpmc_passthrough(&vmx->vcpu))
+
+No need to follow vmx->vcpu, @vcpu is readily available.
+
+> +		exec_controls_clearbit(vmx, CPU_BASED_RDPMC_EXITING);
+> +	else
+> +		exec_controls_setbit(vmx, CPU_BASED_RDPMC_EXITING);
+
+I wonder if it makes sense to add a helper to change a bit.  IIRC, the only reason
+I didn't add one along with the set/clear helpers was because there weren't many
+users and I couldn't think of good alternative to "set".
+
+I still don't have a good name, but I think we're reaching the point where it's
+worth forcing the issue to avoid common goofs, e.g. handling only the "clear"
+case and no the "set" case.
+
+Maybe changebit?  E.g.
+
+static __always_inline void lname##_controls_changebit(struct vcpu_vmx *vmx, u##bits val,	\
+						       bool set)				\
+{												\
+	if (set)										\
+		lname##_controls_setbit(vmx, val);						\
+	else											\
+		lname##_controls_clearbit(vmx, val);						\
+}
+
+
+and then vmx_refresh_apicv_exec_ctrl() can be:
+
+	secondary_exec_controls_changebit(vmx,
+					  SECONDARY_EXEC_APIC_REGISTER_VIRT |
+					  SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY,
+					  kvm_vcpu_apicv_active(vcpu));
+	tertiary_exec_controls_changebit(vmx, TERTIARY_EXEC_IPI_VIRT,
+					 kvm_vcpu_apicv_active(vcpu) && enable_ipiv);
+
+and this can be:
+
+	exec_controls_changebit(vmx, CPU_BASED_RDPMC_EXITING,
+				!kvm_rdpmc_in_guest(vcpu));
