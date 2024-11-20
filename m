@@ -1,93 +1,94 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A1814A0A3
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 18:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56CF155742
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 18:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732128394; cv=none; b=E6gbZd7XSR1NSshty95iJwDS7CC5hcgXmNJLH43LH3X6Snsi05QG4zwa/YWRgDHyUNi46rZ3eYqgli/W0MsaDmqaWep/39jLm2wDrpIdkv0WvnTPQppB3Sq5dDJ9JpN7G+oZEl7Ss0K4BhfZBVtDVpUyAo31YAh4v7XMlYxpWRs=
+	t=1732128493; cv=none; b=e5m3NtR6bYM8M6EZYTjea7977xO65fWzpwo7wFWdn6+iBfdGaqf4PCJ4oKR3p9zI3/6xnLhFfrZa2NCBW7fy5hiwZ7cd/Ypehb+8x7rr+SZc+uiFkLdHhmKFKm9yvWbJJAVDA1PfRK5Q7MQuALaeSaSS+otOm1SF0Gckmfjdsf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732128394; c=relaxed/simple;
-	bh=bz7OpvOpy6atS7GrkuQ8mLzLRHkVDfHP67FoEXcJdv8=;
+	s=arc-20240116; t=1732128493; c=relaxed/simple;
+	bh=SptbHGtr8HQe1kBejn+wyMTkN3CjsxNTQWkZROmQDYU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lXH2kT1HEdRdNBvPucuIUfuv64K1GPmeqBkhXx2/0UzEhcfBePsPl0zGAxSLMb5yckdHnzZMQLNUVzclsgN43eB2F+gKVhJQcs42caAdCCAaZhSrYKCRtcfHdgwjPcSRkJwMUTyatDqQVyJhna+u5ie0u80hzu1w6sfdkeZrmrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DYHtIMoZ; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=NiOSImpKX1UeKvCZ1kL8yxiuaPw3cg8qgPwTL6m+iKqQKClGnMzJQzWFFstiYsMJXGqtToRy6vEoyqlQ/hJxyEshzUbMDSn3iB/+4S7eyY72VPkzfmzUASSOXoR3oli96Z4BT0sGw9K26Ip8i+Ww8D4Poq0fJ31ZG8/tgyXCCcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gXAFhMOg; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DYHtIMoZ"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-211fd7cfc4eso168235ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 10:46:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gXAFhMOg"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ea8901dff1so92747347b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 10:48:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732128392; x=1732733192; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1732128491; x=1732733291; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Os80MhRhGqXp5ke/1Vxt/rcMZ16KsE7OPEZ8dzr9R8=;
-        b=DYHtIMoZN4xFoWpRvwXz7GJ85mr5Irs9xkyVitPxt7/taPMZLHSpRek3MbQuHrdFPw
-         /LhdCDCdqUyS80xhA+cbPVe5BAkpyCJxBkyLiuTDHVcxQzXUK6b/i6c0Q8fhvmHJdFJR
-         fRe9SRxskFzP8uBNceeT4IBjkpluqvh4E7cJUieOEqgaZKGuEwaHBOn6BruI4CvjzRtB
-         3L/nQbTzrtMy798AJIVxQ46QO637PQuzLoI9jl0IzOUo/+KDXJEVBrUMNUzwUW32DW9w
-         RQ732V5HzTkl1XB2x29ni92xC7hMWj0v6YrDXACJx578nNXZ47knYN8DIu43W1hUXPw7
-         dzzw==
+        bh=y3HR4g/sjzpAPcTclN1zbnC2rewykA7Pmn4Mi3H0FG4=;
+        b=gXAFhMOg0blkWSWcwI1bM7VDXm03qOP7iChrf83B1rCf3m63OXhbZkYFae8SKpGqDi
+         c0DILG74vmEM/9leJo7L6nA+ArVliwitEGbSHChI2uOdE3yvI63bZN2haiHOQ0BXAWye
+         mI78bCwPLF/J+iUpmYh7Kk7rnFcTcmsakn5PyCG1zqF5WV6sTCeLXzejIrP4H3plxyU5
+         kBae+x51sxX7PcwY8Qq2G2KxgeawKyXChP8F9SbJ1lkFHQfjBsnDOr4gHkL7cwJ1mouD
+         QWPrg+ZBNYzX1YHkdo8oOthedAUVJh/k5wLSvaLw92neJT4YIYZC4MpJEA6bDpBqGPiz
+         1wCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732128392; x=1732733192;
+        d=1e100.net; s=20230601; t=1732128491; x=1732733291;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Os80MhRhGqXp5ke/1Vxt/rcMZ16KsE7OPEZ8dzr9R8=;
-        b=RcQqisF8ZRZaG295I/BdrWbLR+G1HS0uwD86b/BdsbjhVg51Nzsq8Esj6M5CtM7FCh
-         aWzicrakVA9hFz35SpnbaLDzc0et2djpTvIp4Ay8JeCs2XaY+GcrsXndVylCJssDsIgS
-         YteUM9kSoLP+174707WsCpHKKV6ydC3nm8fvK2SGWAVa5iBv69L1zVAYR7BSh+Tfs+I7
-         6PRE9+ExSdVRQKcWeK1jSrldG2JrEXHDhCm/dl6exSHRa42gzxwAze10/c4i2/Xdr7Fx
-         GUcSa4ewHrU7G+rXQnBXZgmTBqjBH3ihKMAibNtcbzShQRZVcpnExIRCRy+oj2GrXNzP
-         C2LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsrxrezh4XzDY/ynKvi5o6K3E0dcDOX6UP2vLazp85ydY5ByIYr0UgdIjXbs/+8eJtAzSLYrmk730tbw/LdzjG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz32uD7Aq6JT7enEXugW2kPnJAhrQW4xxldrdJlEHeYny4CoRjX
-	TlU1IoNlFibYm633LFENzh3l0dAhRM9ohS/BEfKXbx3pmcby7CGbwKFsPdeSnB6KcgVGi+N0Sb4
-	bgA==
-X-Google-Smtp-Source: AGHT+IFJzrweiSMHDQwuusG00tZ0L3OBUwopKy6Nr208yDx/fXeQeozBoXUMG6gBsgZPojGUxMGBmM72sP8=
+        bh=y3HR4g/sjzpAPcTclN1zbnC2rewykA7Pmn4Mi3H0FG4=;
+        b=cX8ibRqWspGMGa46re/nJtH7iEg4aNjnHmE/+DtwQv3bYK/1uQ3wp2fLE8GbpIX+Fh
+         3chzXTkn0H7/m6aAF74agxRVtwLWLJkfvOB4GHkfDxMT6TL7IMc45bzj4+dIilwOuLoM
+         do6ligMgspeyG1SHiil2GueLqPp2pcYq/a9wCLK+Z4fe5/OFk1E+rVZegxuRJysb1bl5
+         VL33xwp2Uz6PpdRN+ptdIFE78geM/qVl3sOCDOIZDHQPla9NWstmrt2h8Mf1QhUHBNbl
+         d9mqKaQn9FgAovHJinxaiIO5cxBi6OKrAq03wKTpLvRcvzUsayb7DCzHGRIEJ3Rd8sUo
+         dZ+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXFsV6uV35iDvTWxticueRndmGe3R+v+FQs9ivOm7iAksJWd0bwPu4kRVO8peo1Wki4ldZhX9HijKS9LPBOUcrc@vger.kernel.org
+X-Gm-Message-State: AOJu0YxumRf0nlAvcXkvPA1GdVZpAuuRmSNVeMNXZsv7ixdK9K3FRyhB
+	msdccoTQOfJ+gNsr115+1Nn2uWOz5hLMOoPYGtu+UvxUBz/64fAiKztmit8Kurmz1QPOUp1sgbn
+	x4w==
+X-Google-Smtp-Source: AGHT+IG1zJqbsPNNDJARQI6xoVNz95KgV4mE/AQmuyzu6CtgFyAtoag2o81vxx34sHHpDEQYWV+wCNJl0vE=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a17:903:788:b0:212:f64:de11 with SMTP id
- d9443c01a7336-2126a336564mr12995ad.2.1732128391948; Wed, 20 Nov 2024 10:46:31
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1b04:b0:e38:840d:3a9e with SMTP id
+ 3f1490d57ef6-e38cb60a27fmr24897276.7.1732128491003; Wed, 20 Nov 2024 10:48:11
  -0800 (PST)
-Date: Wed, 20 Nov 2024 10:46:30 -0800
-In-Reply-To: <20240801045907.4010984-41-mizhang@google.com>
+Date: Wed, 20 Nov 2024 10:48:09 -0800
+In-Reply-To: <d0d8a945-1623-448a-b08a-8877464a4531@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-41-mizhang@google.com>
-Message-ID: <Zz4uhmuPcZl9vJVr@google.com>
-Subject: Re: [RFC PATCH v3 40/58] KVM: x86/pmu: Grab x86 core PMU for
- passthrough PMU VM
+References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-44-mizhang@google.com>
+ <d0d8a945-1623-448a-b08a-8877464a4531@intel.com>
+Message-ID: <Zz4u6ThdAZ9M83wf@google.com>
+Subject: Re: [RFC PATCH v3 43/58] KVM: x86/pmu: Introduce PMU operator for
+ setting counter overflow
 From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>, 
-	Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla <manali.shukla@amd.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Jim Mattson <jmattson@google.com>, 
-	Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, 
-	Namhyung Kim <namhyung@kernel.org>, gce-passthrou-pmu-dev@google.com, 
-	Samantha Alt <samantha.alt@intel.com>, Zhiyuan Lv <zhiyuan.lv@intel.com>, 
-	Yanfei Xu <yanfei.xu@intel.com>, Like Xu <like.xu.linux@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+To: Zide Chen <zide.chen@intel.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Xiong Zhang <xiong.y.zhang@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>, 
+	Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>, 
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
+	gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>, 
+	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>, 
+	Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Aug 01, 2024, Mingwei Zhang wrote:
-> From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+On Fri, Oct 25, 2024, Zide Chen wrote:
 > 
-> When passthrough PMU is enabled by kvm and perf, KVM call
-> perf_get_mediated_pmu() to exclusive own x86 core PMU at VM creation, KVM
-> call perf_put_mediated_pmu() to return x86 core PMU to host perf at VM
-> destroy.
 > 
-> When perf_get_mediated_pmu() fail, the host has system wide perf events
-> without exclude_guest = 1 which must be disabled to enable VM with
-> passthrough PMU.
+> On 7/31/2024 9:58 PM, Mingwei Zhang wrote:
+> > Introduce PMU operator for setting counter overflow. When emulating counter
+> > increment, multiple counters could overflow at the same time, i.e., during
+> > the execution of the same instruction. In passthrough PMU, having an PMU
+> > operator provides convenience to update the PMU global status in one shot
+> > with details hidden behind the vendor specific implementation.
+> 
+> Since neither Intel nor AMD does implement this API, this patch should
+> be dropped.
 
-I still much prefer my idea of making the mediated PMU opt-in.  I haven't seen
-any argument against that approach.
-
-https://lore.kernel.org/all/ZiFGRFb45oZrmqnJ@google.com
+For all of these small APIs, please introduce and use the API in the same patch.
+That avoids goofs like this, where something is never used, and makes the patches
+far easier to review.
