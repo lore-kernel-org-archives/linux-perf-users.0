@@ -1,94 +1,274 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56CF155742
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 18:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E6D155726;
+	Wed, 20 Nov 2024 19:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732128493; cv=none; b=e5m3NtR6bYM8M6EZYTjea7977xO65fWzpwo7wFWdn6+iBfdGaqf4PCJ4oKR3p9zI3/6xnLhFfrZa2NCBW7fy5hiwZ7cd/Ypehb+8x7rr+SZc+uiFkLdHhmKFKm9yvWbJJAVDA1PfRK5Q7MQuALaeSaSS+otOm1SF0Gckmfjdsf0=
+	t=1732132005; cv=none; b=JCt8ZcrIdOQO2HYQaBNV7OdqdyY9NuLmZB2FQOa52rlAgfz8O8xXz8ZRpqop/u9wNINxIqQuo11z6TXL/GA7gD0cuPqnCnI9e7QAm59YTrhAae2Y1HvkRcLlxu1zUoywYQPVPfmkxHdq5I4IKtx/OizAkpcak0AP1cjINyiOe4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732128493; c=relaxed/simple;
-	bh=SptbHGtr8HQe1kBejn+wyMTkN3CjsxNTQWkZROmQDYU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NiOSImpKX1UeKvCZ1kL8yxiuaPw3cg8qgPwTL6m+iKqQKClGnMzJQzWFFstiYsMJXGqtToRy6vEoyqlQ/hJxyEshzUbMDSn3iB/+4S7eyY72VPkzfmzUASSOXoR3oli96Z4BT0sGw9K26Ip8i+Ww8D4Poq0fJ31ZG8/tgyXCCcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gXAFhMOg; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1732132005; c=relaxed/simple;
+	bh=jGUXEYLqw6Lz5FHAyBAxGLRTYlfPM+WXhaKtUtCjwDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N+COxEpiVkKGPYhNSb+YZr+fRoVAIRUS10E9D7fQvQJb8tlBCNRRtTusk8yqB5gvK0ZFXyNG7O7JF1J5I182YRILvl+PjtDTD2SA9hdLkR7ehqdRVPqkhkwMo2ei771ItLpIXXSzVxKoKQty0zqupCvtDh8eeFBTt/e8emUyJJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrGj8osm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gXAFhMOg"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ea8901dff1so92747347b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 10:48:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732128491; x=1732733291; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=y3HR4g/sjzpAPcTclN1zbnC2rewykA7Pmn4Mi3H0FG4=;
-        b=gXAFhMOg0blkWSWcwI1bM7VDXm03qOP7iChrf83B1rCf3m63OXhbZkYFae8SKpGqDi
-         c0DILG74vmEM/9leJo7L6nA+ArVliwitEGbSHChI2uOdE3yvI63bZN2haiHOQ0BXAWye
-         mI78bCwPLF/J+iUpmYh7Kk7rnFcTcmsakn5PyCG1zqF5WV6sTCeLXzejIrP4H3plxyU5
-         kBae+x51sxX7PcwY8Qq2G2KxgeawKyXChP8F9SbJ1lkFHQfjBsnDOr4gHkL7cwJ1mouD
-         QWPrg+ZBNYzX1YHkdo8oOthedAUVJh/k5wLSvaLw92neJT4YIYZC4MpJEA6bDpBqGPiz
-         1wCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732128491; x=1732733291;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y3HR4g/sjzpAPcTclN1zbnC2rewykA7Pmn4Mi3H0FG4=;
-        b=cX8ibRqWspGMGa46re/nJtH7iEg4aNjnHmE/+DtwQv3bYK/1uQ3wp2fLE8GbpIX+Fh
-         3chzXTkn0H7/m6aAF74agxRVtwLWLJkfvOB4GHkfDxMT6TL7IMc45bzj4+dIilwOuLoM
-         do6ligMgspeyG1SHiil2GueLqPp2pcYq/a9wCLK+Z4fe5/OFk1E+rVZegxuRJysb1bl5
-         VL33xwp2Uz6PpdRN+ptdIFE78geM/qVl3sOCDOIZDHQPla9NWstmrt2h8Mf1QhUHBNbl
-         d9mqKaQn9FgAovHJinxaiIO5cxBi6OKrAq03wKTpLvRcvzUsayb7DCzHGRIEJ3Rd8sUo
-         dZ+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXFsV6uV35iDvTWxticueRndmGe3R+v+FQs9ivOm7iAksJWd0bwPu4kRVO8peo1Wki4ldZhX9HijKS9LPBOUcrc@vger.kernel.org
-X-Gm-Message-State: AOJu0YxumRf0nlAvcXkvPA1GdVZpAuuRmSNVeMNXZsv7ixdK9K3FRyhB
-	msdccoTQOfJ+gNsr115+1Nn2uWOz5hLMOoPYGtu+UvxUBz/64fAiKztmit8Kurmz1QPOUp1sgbn
-	x4w==
-X-Google-Smtp-Source: AGHT+IG1zJqbsPNNDJARQI6xoVNz95KgV4mE/AQmuyzu6CtgFyAtoag2o81vxx34sHHpDEQYWV+wCNJl0vE=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1b04:b0:e38:840d:3a9e with SMTP id
- 3f1490d57ef6-e38cb60a27fmr24897276.7.1732128491003; Wed, 20 Nov 2024 10:48:11
- -0800 (PST)
-Date: Wed, 20 Nov 2024 10:48:09 -0800
-In-Reply-To: <d0d8a945-1623-448a-b08a-8877464a4531@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrGj8osm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EABAEC4CECD;
+	Wed, 20 Nov 2024 19:46:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732132005;
+	bh=jGUXEYLqw6Lz5FHAyBAxGLRTYlfPM+WXhaKtUtCjwDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LrGj8osmwjyYDEHFsjl9x8YCKCk30UE4FOuqRfUwULbBv4JFycPwihF6YApCwTO+F
+	 LH7c5tDn2N1ip2J2J7f+ZrqiqHadvVR/Y0eA6e5rgcxdZrMCRROLsN2JY9Lv/GF+h9
+	 iY4vu1dRvM7uA20mUU8uJ2Pzq8m2pC36UKaGgwIRI/8cvCm19ljDcJeONwXhvXMq+y
+	 P3aFskqgpxqHXwhJuyagLwSCmm9666IjlL4cBkEU7d5aHnMbE8sBhOcdu2Wfnsc/Ml
+	 HJ/YZL4PI5r/bbSBRYvl6JKwvc613kjZGSNgkceOLIibVIwzhmYJbbaIExs8hZ3nZG
+	 oQrKFPLabD/BA==
+Date: Wed, 20 Nov 2024 16:46:42 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf hwmon_pmu: Ensure hwmon key union is zeroed
+ before use
+Message-ID: <Zz48orOYgt1UDe9_@x1>
+References: <20241119230033.115369-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-44-mizhang@google.com>
- <d0d8a945-1623-448a-b08a-8877464a4531@intel.com>
-Message-ID: <Zz4u6ThdAZ9M83wf@google.com>
-Subject: Re: [RFC PATCH v3 43/58] KVM: x86/pmu: Introduce PMU operator for
- setting counter overflow
-From: Sean Christopherson <seanjc@google.com>
-To: Zide Chen <zide.chen@intel.com>
-Cc: Mingwei Zhang <mizhang@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Xiong Zhang <xiong.y.zhang@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>, 
-	Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>, 
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
-	gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>, 
-	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>, 
-	Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241119230033.115369-1-irogers@google.com>
 
-On Fri, Oct 25, 2024, Zide Chen wrote:
-> 
-> 
-> On 7/31/2024 9:58 PM, Mingwei Zhang wrote:
-> > Introduce PMU operator for setting counter overflow. When emulating counter
-> > increment, multiple counters could overflow at the same time, i.e., during
-> > the execution of the same instruction. In passthrough PMU, having an PMU
-> > operator provides convenience to update the PMU global status in one shot
-> > with details hidden behind the vendor specific implementation.
-> 
-> Since neither Intel nor AMD does implement this API, this patch should
-> be dropped.
+On Tue, Nov 19, 2024 at 03:00:33PM -0800, Ian Rogers wrote:
+> Non-zero values led to mismatches in testing. This was reproducible
+> with -fsanitize=undefined.
 
-For all of these small APIs, please introduce and use the API in the same patch.
-That avoids goofs like this, where something is never used, and makes the patches
-far easier to review.
+Unfortunately, not yet, see below, I'll have some meetings and will try
+to get back at this, to try and take advantage I went thru the code
+yesterday.
+
+- Arnaldo
+
+⬢ [acme@toolbox perf-tools-next]$ git log --oneline -5
+9ae6c7a4bd02acbd (HEAD -> perf-tools-next) perf hwmon_pmu: Ensure hwmon key union is zeroed before use
+3e37de098af38179 perf tests hwmon_pmu: Remove double evlist__delete()
+0565017a0ac824c2 perf test: Correct hwmon test PMU detection
+85c60a01b85ee956 (perf-tools-next/tmp.perf-tools-next, perf-tools-next/perf-tools-next, perf-tools-next.korg/tmp.perf-tools-next, perf-tools-next.korg/perf-tools-next, acme/tmp.perf-tools-next, acme/perf-tools-next, acme.korg/tmp.perf-tools-next, acme.korg/perf-tools-next) perf: Remove unused del_perf_probe_events()
+8f997865ee9e7328 perf pmu: Move pmu_metrics_table__find and remove ARM override
+⬢ [acme@toolbox perf-tools-next]$
+
+⬢ [acme@toolbox perf-tools-next]$ perf test 11
+ 11: Hwmon PMU                                                       :
+ 11.1: Basic parsing test                                            : Ok
+ 11.2: Parsing without PMU name                                      : FAILED!
+ 11.3: Parsing with PMU name                                         : FAILED!
+⬢ [acme@toolbox perf-tools-next]$ perf -v
+perf version 6.12.rc6.g9ae6c7a4bd02
+⬢ [acme@toolbox perf-tools-next]$
+
+root@x1:~# perf -vv
+perf version 6.12.rc6.g9ae6c7a4bd02
+                   aio: [ on  ]  # HAVE_AIO_SUPPORT
+                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+         bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
+            debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
+                 dwarf: [ on  ]  # HAVE_LIBDW_SUPPORT
+    dwarf_getlocations: [ on  ]  # HAVE_LIBDW_SUPPORT
+          dwarf-unwind: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
+              auxtrace: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+              libaudit: [ OFF ]  # HAVE_LIBAUDIT_SUPPORT
+                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
+           libcapstone: [ on  ]  # HAVE_LIBCAPSTONE_SUPPORT
+             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+    libdw-dwarf-unwind: [ on  ]  # HAVE_LIBDW_SUPPORT
+                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+            libopencsd: [ on  ]  # HAVE_CSTRACE_SUPPORT
+               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+               libpfm4: [ on  ]  # HAVE_LIBPFM
+             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+             libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT
+                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+root@x1:~# perf test 11
+ 11: Hwmon PMU                                                       :
+ 11.1: Basic parsing test                                            : Ok
+ 11.2: Parsing without PMU name                                      : FAILED!
+ 11.3: Parsing with PMU name                                         : FAILED!
+root@x1:~# perf test -vv 11
+ 11: Hwmon PMU                                                       :
+ 11.1: Basic parsing test:
+--- start ---
+test child forked, pid 152385
+hwmon_pmu: not a hwmon type 'badtype' in file name 'badtype5_baditem'
+hwmon_pmu: not a hwmon item 'baditem' in file name 'humidity6_baditem'
+---- end(0) ----
+ 11.1: Basic parsing test                                            : Ok
+ 11.2: Parsing without PMU name:
+--- start ---
+test child forked, pid 152386
+Testing 'temp_test_hwmon_event1'
+Using CPUID GenuineIntel-6-BA-3
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'pwm1'
+Not a hwmon file 'pwm1'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: removing event 'pwm1' that has no input file
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+FAILED tests/hwmon_pmu.c:158 failed to parse event 'temp_test_hwmon_event1', err 1
+event syntax error: 'temp_test_hwmon_event1'
+                     \___ Bad event name
+
+Unable to find event on a PMU of 'temp_test_hwmon_event1'
+---- end(-1) ----
+ 11.2: Parsing without PMU name                                      : FAILED!
+ 11.3: Parsing with PMU name:
+--- start ---
+test child forked, pid 152387
+Testing 'temp_test_hwmon_event1'
+Using CPUID GenuineIntel-6-BA-3
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'pwm1'
+Not a hwmon file 'pwm1'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: removing event 'pwm1' that has no input file
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+hwmon_pmu: not a hwmon file 'uevent'
+Not a hwmon file 'uevent'
+hwmon_pmu: not a hwmon file 'name'
+Not a hwmon file 'name'
+FAILED tests/hwmon_pmu.c:158 failed to parse event 'temp_test_hwmon_event1', err 1
+event syntax error: 'temp_test_hwmon_event1'
+                     \___ Bad event name
+
+Unable to find event on a PMU of 'temp_test_hwmon_event1'
+---- end(-1) ----
+ 11.3: Parsing with PMU name                                         : FAILED!
+root@x1:~#
+ 
+> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Closes: https://lore.kernel.org/lkml/Zzdtj0PEWEX3ATwL@x1/
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/hwmon_pmu.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+> index ac2245acdc6d..4d9d6f405434 100644
+> --- a/tools/perf/util/hwmon_pmu.c
+> +++ b/tools/perf/util/hwmon_pmu.c
+> @@ -274,7 +274,7 @@ static int hwmon_pmu__read_events(struct hwmon_pmu *pmu)
+>  		int number;
+>  		enum hwmon_item item;
+>  		bool alarm;
+> -		union hwmon_pmu_event_key key = {};
+> +		union hwmon_pmu_event_key key = { .type_and_num = 0 };
+>  		struct hwmon_pmu_event_value *value;
+>  
+>  		if (ent->d_type != DT_REG)
+> @@ -560,7 +560,7 @@ bool hwmon_pmu__have_event(struct perf_pmu *pmu, const char *name)
+>  	struct hwmon_pmu *hwm = container_of(pmu, struct hwmon_pmu, pmu);
+>  	enum hwmon_type type;
+>  	int number;
+> -	union hwmon_pmu_event_key key = {};
+> +	union hwmon_pmu_event_key key = { .type_and_num = 0 };
+>  	struct hashmap_entry *cur;
+>  	size_t bkt;
+>  
+> @@ -623,10 +623,11 @@ static int hwmon_pmu__config_term(const struct hwmon_pmu *hwm,
+>  					return -EINVAL;
+>  			} else {
+>  				union hwmon_pmu_event_key key = {
+> -					.type = type,
+> -					.num = number,
+> +					.type_and_num = 0,
+>  				};
+>  
+> +				key.type = type;
+> +				key.num = number;
+>  				attr->config = key.type_and_num;
+>  			}
+>  			return 0;
+> -- 
+> 2.47.0.371.ga323438b13-goog
+> 
