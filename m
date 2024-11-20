@@ -1,274 +1,260 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E6D155726;
-	Wed, 20 Nov 2024 19:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDEA1B85C1
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 20:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732132005; cv=none; b=JCt8ZcrIdOQO2HYQaBNV7OdqdyY9NuLmZB2FQOa52rlAgfz8O8xXz8ZRpqop/u9wNINxIqQuo11z6TXL/GA7gD0cuPqnCnI9e7QAm59YTrhAae2Y1HvkRcLlxu1zUoywYQPVPfmkxHdq5I4IKtx/OizAkpcak0AP1cjINyiOe4o=
+	t=1732133642; cv=none; b=H0UqYah66/WiQJ/K25xeO7zZWSqLtPeeRaY/O9pxtf/b+n75SBpJlt3NEleV0L+hP9c9jjYSgfKiJY/L+vPE04yBXjlCVG0uT9swl2orsC60d9kMM3hTzln2506cRV+XZRVeH6ejnl6ScAoLFzQ1/ehlAPcMfiwcraz3Prnjp+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732132005; c=relaxed/simple;
-	bh=jGUXEYLqw6Lz5FHAyBAxGLRTYlfPM+WXhaKtUtCjwDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N+COxEpiVkKGPYhNSb+YZr+fRoVAIRUS10E9D7fQvQJb8tlBCNRRtTusk8yqB5gvK0ZFXyNG7O7JF1J5I182YRILvl+PjtDTD2SA9hdLkR7ehqdRVPqkhkwMo2ei771ItLpIXXSzVxKoKQty0zqupCvtDh8eeFBTt/e8emUyJJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrGj8osm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732133642; c=relaxed/simple;
+	bh=7/tmP2qjKgFF20QZwVEwP4ZEW9Xxx0bIlFbiNjdoJDY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=fp/GXomsFgd7Y2axqmZ6GMCjPpJN6f9PATKcPOqihP5+bmtmEeTuLmbDRN3C6YmKzK1aRbsPEAcT67ESfWXpUl1wxV4AcKbB+rGUSd42wRfVd6LLy90Nl4o7yTGK4PLUi4jBcDz5MnqQmbc7MsMM1sQwMIR6QErSpCavmWoCppE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=umxLZAEy; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrGj8osm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EABAEC4CECD;
-	Wed, 20 Nov 2024 19:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732132005;
-	bh=jGUXEYLqw6Lz5FHAyBAxGLRTYlfPM+WXhaKtUtCjwDs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LrGj8osmwjyYDEHFsjl9x8YCKCk30UE4FOuqRfUwULbBv4JFycPwihF6YApCwTO+F
-	 LH7c5tDn2N1ip2J2J7f+ZrqiqHadvVR/Y0eA6e5rgcxdZrMCRROLsN2JY9Lv/GF+h9
-	 iY4vu1dRvM7uA20mUU8uJ2Pzq8m2pC36UKaGgwIRI/8cvCm19ljDcJeONwXhvXMq+y
-	 P3aFskqgpxqHXwhJuyagLwSCmm9666IjlL4cBkEU7d5aHnMbE8sBhOcdu2Wfnsc/Ml
-	 HJ/YZL4PI5r/bbSBRYvl6JKwvc613kjZGSNgkceOLIibVIwzhmYJbbaIExs8hZ3nZG
-	 oQrKFPLabD/BA==
-Date: Wed, 20 Nov 2024 16:46:42 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf hwmon_pmu: Ensure hwmon key union is zeroed
- before use
-Message-ID: <Zz48orOYgt1UDe9_@x1>
-References: <20241119230033.115369-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="umxLZAEy"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e30df8dbfd4so197641276.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 12:14:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1732133639; x=1732738439; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fQXhlcI+fX2VZsDVWRBG4zypgR5vJIisUrtk//M1xtk=;
+        b=umxLZAEynYZLq/yc36Zl16KylsjDoQZW67WHw8bu/HLBZ+bFKbcpPCpdfneDK8khEQ
+         3WFOoc9xX7+NpAE36GEKid1uURlfgRDpJdGpD5pLjpqlzaaaVuPVPPMj20izqH1U4dtt
+         8bCwlrIWjSYmgjTCvILmgiPLNorikj1cZFHk/gG3U0AXcawNavO1oSGxpOOWkSgXS5c1
+         SO+GRt3UKHjn6mlnVqf7ZTyoOUS5D7qmCtxrYFItmiQCsJII2BrdouOmV7CQx7Qk/AHx
+         CG+Q592kGNkD6ut0+9akUgIY3PXXAbicanjmynPhG3etYteH40bnWaUkmj9DqpxfJKp7
+         60VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732133639; x=1732738439;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fQXhlcI+fX2VZsDVWRBG4zypgR5vJIisUrtk//M1xtk=;
+        b=Y3EGkaVAnLbp11xRNjNStjhtue6Y9B0OOrAqhDKy1WkgtZtYoyTkYBfjsKwEdOR1k6
+         pKLLyuZNsQDeDYPiC7uljw4TygQAO2xsHVIUu1SBCC1X2huf+7aDyJ6v4zDovtfYlr7D
+         CJJ3C8UnwpQ4Si2F7d65Rn8isiJR4aMTiMaDGdE3GAXdT22bFq8x2vT1U17aQrvm7cmp
+         pRVA6W454aec9xpeHnLA6awZFhM8XqSUZNAt4us7xK984/YKavOgjoaxHCg7bDLKOiTp
+         /Mom1IWVLv5N1oG2ah2l87OLq5MRX/1gYJ7nz7vY2WCIjwfzVVrDKRzqA+u/Oji6ofue
+         dNag==
+X-Forwarded-Encrypted: i=1; AJvYcCX7i48+AZy+eDCNlfuSdK5KSnV+G4ijpCM/jOySJC6lOhp++cDY0XJ9ogzxeQ7O+2H6gwFQrmax38FK4w527trL@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0yRcDF7OnxeBoqy/U3xzqE4jTPDKJ/ypbAl44xoRGR+c2FuHY
+	GZRmu0LFr2D3pAXcsSw7GoY4/JtEdILD7/U6Nl4gSNjyop1YCG2tVIAPsDoOWEKMr2ARmG6WUdG
+	Pig==
+X-Google-Smtp-Source: AGHT+IFGnuTWPc8YjcN2pYJHZ/jB6q9wO8qkwId5OwEDOjE8XIZ7lJt6bN1DeWDPUL38suZBHVzP2a9nBeQ=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
+ (user=seanjc job=sendgmr) by 2002:a25:d647:0:b0:e38:20b8:29 with SMTP id
+ 3f1490d57ef6-e38cb601a03mr2998276.6.1732133639355; Wed, 20 Nov 2024 12:13:59
+ -0800 (PST)
+Date: Wed, 20 Nov 2024 12:13:57 -0800
+In-Reply-To: <20240801045907.4010984-45-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241119230033.115369-1-irogers@google.com>
+Mime-Version: 1.0
+References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-45-mizhang@google.com>
+Message-ID: <Zz5DBddNFb-gZra1@google.com>
+Subject: Re: [RFC PATCH v3 44/58] KVM: x86/pmu: Implement emulated counter
+ increment for passthrough PMU
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla <manali.shukla@amd.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Jim Mattson <jmattson@google.com>, 
+	Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, 
+	Namhyung Kim <namhyung@kernel.org>, gce-passthrou-pmu-dev@google.com, 
+	Samantha Alt <samantha.alt@intel.com>, Zhiyuan Lv <zhiyuan.lv@intel.com>, 
+	Yanfei Xu <yanfei.xu@intel.com>, Like Xu <like.xu.linux@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Nov 19, 2024 at 03:00:33PM -0800, Ian Rogers wrote:
-> Non-zero values led to mismatches in testing. This was reproducible
-> with -fsanitize=undefined.
-
-Unfortunately, not yet, see below, I'll have some meetings and will try
-to get back at this, to try and take advantage I went thru the code
-yesterday.
-
-- Arnaldo
-
-⬢ [acme@toolbox perf-tools-next]$ git log --oneline -5
-9ae6c7a4bd02acbd (HEAD -> perf-tools-next) perf hwmon_pmu: Ensure hwmon key union is zeroed before use
-3e37de098af38179 perf tests hwmon_pmu: Remove double evlist__delete()
-0565017a0ac824c2 perf test: Correct hwmon test PMU detection
-85c60a01b85ee956 (perf-tools-next/tmp.perf-tools-next, perf-tools-next/perf-tools-next, perf-tools-next.korg/tmp.perf-tools-next, perf-tools-next.korg/perf-tools-next, acme/tmp.perf-tools-next, acme/perf-tools-next, acme.korg/tmp.perf-tools-next, acme.korg/perf-tools-next) perf: Remove unused del_perf_probe_events()
-8f997865ee9e7328 perf pmu: Move pmu_metrics_table__find and remove ARM override
-⬢ [acme@toolbox perf-tools-next]$
-
-⬢ [acme@toolbox perf-tools-next]$ perf test 11
- 11: Hwmon PMU                                                       :
- 11.1: Basic parsing test                                            : Ok
- 11.2: Parsing without PMU name                                      : FAILED!
- 11.3: Parsing with PMU name                                         : FAILED!
-⬢ [acme@toolbox perf-tools-next]$ perf -v
-perf version 6.12.rc6.g9ae6c7a4bd02
-⬢ [acme@toolbox perf-tools-next]$
-
-root@x1:~# perf -vv
-perf version 6.12.rc6.g9ae6c7a4bd02
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-         bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
-            debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
-                 dwarf: [ on  ]  # HAVE_LIBDW_SUPPORT
-    dwarf_getlocations: [ on  ]  # HAVE_LIBDW_SUPPORT
-          dwarf-unwind: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
-              auxtrace: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-              libaudit: [ OFF ]  # HAVE_LIBAUDIT_SUPPORT
-                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
-           libcapstone: [ on  ]  # HAVE_LIBCAPSTONE_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_LIBDW_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-            libopencsd: [ on  ]  # HAVE_CSTRACE_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-               libpfm4: [ on  ]  # HAVE_LIBPFM
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-             libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-root@x1:~# perf test 11
- 11: Hwmon PMU                                                       :
- 11.1: Basic parsing test                                            : Ok
- 11.2: Parsing without PMU name                                      : FAILED!
- 11.3: Parsing with PMU name                                         : FAILED!
-root@x1:~# perf test -vv 11
- 11: Hwmon PMU                                                       :
- 11.1: Basic parsing test:
---- start ---
-test child forked, pid 152385
-hwmon_pmu: not a hwmon type 'badtype' in file name 'badtype5_baditem'
-hwmon_pmu: not a hwmon item 'baditem' in file name 'humidity6_baditem'
----- end(0) ----
- 11.1: Basic parsing test                                            : Ok
- 11.2: Parsing without PMU name:
---- start ---
-test child forked, pid 152386
-Testing 'temp_test_hwmon_event1'
-Using CPUID GenuineIntel-6-BA-3
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'pwm1'
-Not a hwmon file 'pwm1'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: removing event 'pwm1' that has no input file
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-FAILED tests/hwmon_pmu.c:158 failed to parse event 'temp_test_hwmon_event1', err 1
-event syntax error: 'temp_test_hwmon_event1'
-                     \___ Bad event name
-
-Unable to find event on a PMU of 'temp_test_hwmon_event1'
----- end(-1) ----
- 11.2: Parsing without PMU name                                      : FAILED!
- 11.3: Parsing with PMU name:
---- start ---
-test child forked, pid 152387
-Testing 'temp_test_hwmon_event1'
-Using CPUID GenuineIntel-6-BA-3
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'pwm1'
-Not a hwmon file 'pwm1'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: removing event 'pwm1' that has no input file
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-hwmon_pmu: not a hwmon file 'uevent'
-Not a hwmon file 'uevent'
-hwmon_pmu: not a hwmon file 'name'
-Not a hwmon file 'name'
-FAILED tests/hwmon_pmu.c:158 failed to parse event 'temp_test_hwmon_event1', err 1
-event syntax error: 'temp_test_hwmon_event1'
-                     \___ Bad event name
-
-Unable to find event on a PMU of 'temp_test_hwmon_event1'
----- end(-1) ----
- 11.3: Parsing with PMU name                                         : FAILED!
-root@x1:~#
- 
-> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Closes: https://lore.kernel.org/lkml/Zzdtj0PEWEX3ATwL@x1/
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Thu, Aug 01, 2024, Mingwei Zhang wrote:
+> Implement emulated counter increment for passthrough PMU under KVM_REQ_PMU.
+> Defer the counter increment to KVM_REQ_PMU handler because counter
+> increment requests come from kvm_pmu_trigger_event() which can be triggered
+> within the KVM_RUN inner loop or outside of the inner loop. This means the
+> counter increment could happen before or after PMU context switch.
+> 
+> So process counter increment in one place makes the implementation simple.
+> 
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > ---
->  tools/perf/util/hwmon_pmu.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+>  arch/x86/kvm/pmu.c | 41 +++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 39 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-> index ac2245acdc6d..4d9d6f405434 100644
-> --- a/tools/perf/util/hwmon_pmu.c
-> +++ b/tools/perf/util/hwmon_pmu.c
-> @@ -274,7 +274,7 @@ static int hwmon_pmu__read_events(struct hwmon_pmu *pmu)
->  		int number;
->  		enum hwmon_item item;
->  		bool alarm;
-> -		union hwmon_pmu_event_key key = {};
-> +		union hwmon_pmu_event_key key = { .type_and_num = 0 };
->  		struct hwmon_pmu_event_value *value;
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index 5cc539bdcc7e..41057d0122bd 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -510,6 +510,18 @@ static int reprogram_counter(struct kvm_pmc *pmc)
+>  				     eventsel & ARCH_PERFMON_EVENTSEL_INT);
+>  }
 >  
->  		if (ent->d_type != DT_REG)
-> @@ -560,7 +560,7 @@ bool hwmon_pmu__have_event(struct perf_pmu *pmu, const char *name)
->  	struct hwmon_pmu *hwm = container_of(pmu, struct hwmon_pmu, pmu);
->  	enum hwmon_type type;
->  	int number;
-> -	union hwmon_pmu_event_key key = {};
-> +	union hwmon_pmu_event_key key = { .type_and_num = 0 };
->  	struct hashmap_entry *cur;
->  	size_t bkt;
+> +static void kvm_pmu_handle_event_in_passthrough_pmu(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +
+> +	static_call_cond(kvm_x86_pmu_set_overflow)(vcpu);
+> +
+> +	if (atomic64_read(&pmu->__reprogram_pmi)) {
+> +		kvm_make_request(KVM_REQ_PMI, vcpu);
+> +		atomic64_set(&pmu->__reprogram_pmi, 0ull);
+> +	}
+> +}
+> +
+>  void kvm_pmu_handle_event(struct kvm_vcpu *vcpu)
+>  {
+>  	DECLARE_BITMAP(bitmap, X86_PMC_IDX_MAX);
+> @@ -517,6 +529,9 @@ void kvm_pmu_handle_event(struct kvm_vcpu *vcpu)
+>  	struct kvm_pmc *pmc;
+>  	int bit;
 >  
-> @@ -623,10 +623,11 @@ static int hwmon_pmu__config_term(const struct hwmon_pmu *hwm,
->  					return -EINVAL;
->  			} else {
->  				union hwmon_pmu_event_key key = {
-> -					.type = type,
-> -					.num = number,
-> +					.type_and_num = 0,
->  				};
+> +	if (is_passthrough_pmu_enabled(vcpu))
+> +		return kvm_pmu_handle_event_in_passthrough_pmu(vcpu);
+> +
+>  	bitmap_copy(bitmap, pmu->reprogram_pmi, X86_PMC_IDX_MAX);
 >  
-> +				key.type = type;
-> +				key.num = number;
->  				attr->config = key.type_and_num;
->  			}
->  			return 0;
-> -- 
-> 2.47.0.371.ga323438b13-goog
-> 
+>  	/*
+> @@ -848,6 +863,17 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu)
+>  	kvm_pmu_reset(vcpu);
+>  }
+>  
+> +static void kvm_passthrough_pmu_incr_counter(struct kvm_vcpu *vcpu, struct kvm_pmc *pmc)
+> +{
+> +	if (static_call(kvm_x86_pmu_incr_counter)(pmc)) {
+
+This is absurd.  It's the same ugly code in both Intel and AMD.
+
+static bool intel_incr_counter(struct kvm_pmc *pmc)
+{
+	pmc->counter += 1;
+	pmc->counter &= pmc_bitmask(pmc);
+
+	if (!pmc->counter)
+		return true;
+
+	return false;
+}
+
+static bool amd_incr_counter(struct kvm_pmc *pmc)
+{
+	pmc->counter += 1;
+	pmc->counter &= pmc_bitmask(pmc);
+
+	if (!pmc->counter)
+		return true;
+
+	return false;
+}
+
+> +		__set_bit(pmc->idx, (unsigned long *)&pmc_to_pmu(pmc)->global_status);
+
+Using __set_bit() is unnecessary, ugly, and dangerous.  KVM uses set_bit(), no
+underscores, for things like reprogram_pmi because the updates need to be atomic.
+
+The downside of __set_bit() and friends is that if pmc->idx is garbage, KVM will
+clobber memory, whereas BIT_ULL(pmc->idx) is "just" undefined behavior.  But
+dropping the update is far better than clobbering memory, and can be detected by
+UBSAN (though I doubt anyone is hitting this code with UBSAN).
+
+For this code, a regular ol' bitwise-OR will suffice.  
+
+> +		kvm_make_request(KVM_REQ_PMU, vcpu);
+> +
+> +		if (pmc->eventsel & ARCH_PERFMON_EVENTSEL_INT)
+> +			set_bit(pmc->idx, (unsigned long *)&pmc_to_pmu(pmc)->reprogram_pmi);
+
+This is badly in need of a comment, and the ordering is unnecessarily weird.
+Set bits in reprogram_pmi *before* making the request.  It doesn't matter here
+since this is all on the same vCPU, but it's good practice since KVM_REQ_XXX
+provides the necessary barriers to allow for safe, correct cross-CPU updates.
+
+That said, why on earth is the mediated PMU using KVM_REQ_PMU?  Set global_status
+and KVM_REQ_PMI, done.
+
+> +	}
+> +}
+> +
+>  static void kvm_pmu_incr_counter(struct kvm_pmc *pmc)
+>  {
+>  	pmc->emulated_counter++;
+> @@ -880,7 +906,8 @@ static inline bool cpl_is_matched(struct kvm_pmc *pmc)
+>  	return (static_call(kvm_x86_get_cpl)(pmc->vcpu) == 0) ? select_os : select_user;
+>  }
+>  
+> -void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel)
+> +static void __kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel,
+> +				    bool is_passthrough)
+>  {
+>  	DECLARE_BITMAP(bitmap, X86_PMC_IDX_MAX);
+>  	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> @@ -914,9 +941,19 @@ void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel)
+>  		    !pmc_event_is_allowed(pmc) || !cpl_is_matched(pmc))
+>  			continue;
+>  
+> -		kvm_pmu_incr_counter(pmc);
+> +		if (is_passthrough)
+> +			kvm_passthrough_pmu_incr_counter(vcpu, pmc);
+> +		else
+> +			kvm_pmu_incr_counter(pmc);
+>  	}
+>  }
+> +
+> +void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel)
+> +{
+> +	bool is_passthrough = is_passthrough_pmu_enabled(vcpu);
+> +
+> +	__kvm_pmu_trigger_event(vcpu, eventsel, is_passthrough);
+
+Using an inner helper for this is silly, even if the mediated information were
+snapshot per-vCPU.  Just grab the snapshot in a local variable.  Using a param
+adds no value and unnecessarily obfuscates the code.
+
+That's all a moot point though, because (a) KVM can check enable_mediated_pmu
+directy and (b) pivoting on behavior belongs in kvm_pmu_incr_counter(), not here.
+
+And I am leaning towards having the mediated vs. perf-based code live in the same
+function, unless one or both is "huge", so that it's easier to understand and
+appreciate the differences in the implementations.
+
+Not an action item for y'all, but this is also a great time to add comments, which
+are sorely lacking in the code.  I am more than happy to do that, as it helps me
+understand (and thus review) the code.  I'll throw in suggestions here and there
+as I review.
+
+Anyways, this?
+
+static void kvm_pmu_incr_counter(struct kvm_pmc *pmc)
+{
+	/*
+	 * For perf-based PMUs, accumulate software-emulated events separately
+	 * from pmc->counter, as pmc->counter is offset by the count of the
+	 * associated perf event.  Request reprogramming, which will consult
+	 * both emulated and hardware-generated events to detect overflow.
+	 */
+	if (!enable_mediated_pmu) {
+		pmc->emulated_counter++;
+		kvm_pmu_request_counter_reprogram(pmc);
+		return;
+	}
+
+	/*
+	 * For mediated PMUs, pmc->counter is updated when the vCPU's PMU is
+	 * put, and will be loaded into hardware when the PMU is loaded.  Simply
+	 * increment the counter and signal overflow if it wraps to zero.
+	 */
+	pmc->counter = (pmc->counter + 1) & pmc_bitmask(pmc);
+	if (!pmc->counter) {
+		pmc_to_pmu(pmc)->global_status) |= BIT_ULL(pmc->idx);
+		kvm_make_request(KVM_REQ_PMI, vcpu);
+	}
+}
