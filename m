@@ -1,99 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C91923CB;
-	Wed, 20 Nov 2024 03:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA5F1876;
+	Wed, 20 Nov 2024 04:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732074434; cv=none; b=k9ptjO+77kmpynFn9Endg3bi3O1tSBTO/0QmqNZRvEDbjtfae66RwX1wKE1o5RcZGJPbYHTKVDw+NgsrQT9Pqi2tCxm/lyvlFz3A/Nelk13NH92HI4jiDlGnOEQCjzKBs+yH7XBRw8lpggiYOYIvSnicHbxHVlD15+T+Vdpbd0E=
+	t=1732077314; cv=none; b=Dz8ANj5H4ipgzM9H9clo258GaPYtWl4wnMRCE7HEd37IVFINj9r1oFwgl6At8nqC5UXVlj/LELjBOfXK/uzTdyEexeFu46A17FJcbeG02eIlann0X4J/g22h0U+Rf4WI8WSs8ZlWa3ONwllewgcrdDSAOcqPywVvjEkimZlGufE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732074434; c=relaxed/simple;
-	bh=qp7oiJVWePocJ8ehFvr5nyYc9+knRNZXVCM4f4tX6Es=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OXzptaQKN1vFnKrvt9E5YjV/HqvTw6k9CTPQ460iInoUE9AsTVCen9qnHL1G+Rysdr+ghQQLH74Ha/Qwg9ICW7qTFxJc+Sclf5U04k3DOsXVcv3VGNz+iAVfukKkWur6bjx2U4XcywwW1D0lJgeE9HuzTDq67Ufqe8+/z6HV5fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EGNd4uFL; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1732077314; c=relaxed/simple;
+	bh=bZAs2EVXv9Su66OJydigyuUajfozB0GMQir1n5AvD7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LqSLIKjdze5s9HevPPCxfJ0EpZJI0a+1HraRVKBlW3fMwmhSTOzxBb8y5J/UwQm1WlvIe/0f8e7gDB1b2/bH9sTcbIHQhMF+prRf1yeOphZiAy8qTkFj5fnBwbUuZbovAwnWkpZzIdbD9Il3wjH4a2j3BqvaP19uY0s6ecTYFwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U6AopNYA; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EGNd4uFL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732074433; x=1763610433;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qp7oiJVWePocJ8ehFvr5nyYc9+knRNZXVCM4f4tX6Es=;
-  b=EGNd4uFL9WTRmb6Cm/Mv3O+AmBnqKX28YoZanUOaryx3yq5Xp/x8errd
-   qwgDkv/GLkiTKHukqC+NOK9Z6qD/+likLh1yyiuwcPYw5qMEKq9Ytg2XO
-   +hyzB7n6NkqHLyIeqlUVcbT7F9VNKodocj8N+73MAXO4klFHCgeoVYgFg
-   qlP3yi41DT8t6bk0uHL/kjB91tGdN3NC2sYhnSIm1kh/H0eKBKt8U3jBp
-   +shfM0XZjSkH3+p2+nJhs+gkKz1MDs9ZCKWrndSbxyo1CuAdaAQs1EZwC
-   zSmb5dzwpEAX11UJw+/mcShwdRAl6yZx91SDub+cr4EcFadXZ4/C1PmfE
-   w==;
-X-CSE-ConnectionGUID: LwIxxuSmQ1C4VvGF+Mn2fg==
-X-CSE-MsgGUID: lpUgG5q1QzmTFRLls6o+Qw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11261"; a="36023233"
-X-IronPort-AV: E=Sophos;i="6.12,168,1728975600"; 
-   d="scan'208";a="36023233"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2024 19:47:12 -0800
-X-CSE-ConnectionGUID: ReiTJJn8RKSgk/FWNNDP2Q==
-X-CSE-MsgGUID: zikWLQy0T0KBG/th0XRuFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,168,1728975600"; 
-   d="scan'208";a="89931950"
-Received: from unknown (HELO [10.238.2.170]) ([10.238.2.170])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2024 19:47:08 -0800
-Message-ID: <2ec98cd1-e96e-4f17-a615-a5eac54a7004@linux.intel.com>
-Date: Wed, 20 Nov 2024 11:47:06 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6AopNYA"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-7f3da2c2cb5so1257665a12.2;
+        Tue, 19 Nov 2024 20:35:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732077312; x=1732682112; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xxMql+EXW4DPQoth97/kk9YkFQwiIfg08Y1zFSpXPXQ=;
+        b=U6AopNYA1mDbjlHFqYrQwV/ECtoGY1SdZpPvUGqe+BOrSz7lV1V1/fwwoYKEvvbE27
+         Ywp0rexasl8IAXnEWiUzIn4Nuevl7qppp7abVacPrNVeb5SxQgLcy4RMhJ/kbCnSmKWx
+         You1qxy5309YOYk1+AdgR899xSTKLSG+eHOA5640cpFg7bmJS9eLuDYo/ad4W5aN8rdg
+         +gSBdCsfkgIL8p9YuEjK2C9DANl47AHz9MQxv+Yy2TWWfwG2CuIEDiAta2qZVJFSTjhk
+         Q7rucAcur1TCYLv3I4viduHG+6djd1y4/PedWRk+7qwHSafoAVucb23Ym7rf9zpmf8Oy
+         dQTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732077312; x=1732682112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xxMql+EXW4DPQoth97/kk9YkFQwiIfg08Y1zFSpXPXQ=;
+        b=ViRCZL5MCupnK/T2c6eg+dnWXuYygz9tA/55P0X+3hEEIaYXKuSRe6my5TSH+mW1s7
+         2tt1dzqzjC0wc0uUbHqLwHKd+KcP79+4KjJBu9sZ8X522tyoA1CJfRrWHRnKoP4k1bb/
+         LEpJtEK7MJ1WGjCuKhDHAQXVbdCGO1UgUybyl0wgeS5W82viY64y9syEZz5g4HQjZI2w
+         sPbtAH+4Z01sUfMaBLxuR2WT/s3Ylv/yKczj3D2W4q5usx2CsHIDtLpvqvFl459j6Bzo
+         SSOcP4YriuW7Nvcg++FvYJ88PPveYQxoYrWMpEBVE1ub7M2inyKzLRy6tM3Fmu7Zj+FV
+         5c4w==
+X-Forwarded-Encrypted: i=1; AJvYcCU5dBmiORIouscsCjCEZNCoEL5ZlTlVwuSE3VT5wlmbMYmN1GvBNujPvq+Hw3D3UXYjSgDxqlmV1v65czoaiUu7/Q==@vger.kernel.org, AJvYcCUFF9NQUpkMsrjHAmx4WEFc5AS8DzuS3TuNjrHw85eSk15Sg0keqx2y1pV4GddEvH3q4qBg+lr+mDaWoDE=@vger.kernel.org, AJvYcCUTGxJPUiolf9mbGpEMjAhMdhR6WWOTvsXe08NnyA72G5mZNkYL6qI0e87y9N1a3QhNmGUJR2eDwfIF0oqzQf92HwUqs+e7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY3w1muyqxBalRFo/kFZ0f+qqe1kQjvdRCpBL3tr+yVtpvM9Ur
+	HnAazKT6144Jdppw6oSh3sYE/Cza6Ut4ry6TLUZOahYY43Za2lEQ
+X-Gm-Gg: ASbGncvX3H5DWDY+YKkHE6xL4nDSFxXmCMFPCK3e185f4aOJHxgd5LIh0kQ5qxsZU84
+	Z6sE5QsrJ0JQJiuIVDD5QBDxE9prG7vgnM4l7lW9sy4M3DZFnjPj0jsGmZaYFlkv/TdfmT8Voyg
+	IbMLg1hASziNUMOOUZSQPCS1fyNvFFBctGcW5/dTB/AF9iIIs80ROFArwvK9b6tsleOIDo5wMHf
+	JBs+0DIBla7EgJQSD0occd3PKwgKPj59Sux8/oZX24r3JkLiVRAJSwI2VC1x7QsijSLGU9uGIrj
+	5cISmM7M
+X-Google-Smtp-Source: AGHT+IF2e5SqwajlnuBsTj62Xa5V/Apcube6pHNVtVTxDSBcA53ruVxeMk0QcMoLSUEu3J/vZfKlvQ==
+X-Received: by 2002:a05:6a20:12ce:b0:1db:f732:d177 with SMTP id adf61e73a8af0-1ddaedcbf4fmr2613009637.25.1732077312310;
+        Tue, 19 Nov 2024 20:35:12 -0800 (PST)
+Received: from localhost.localdomain ([175.112.156.113])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724befeb5bcsm593061b3a.181.2024.11.19.20.35.08
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 19 Nov 2024 20:35:12 -0800 (PST)
+From: Ruffalo Lavoisier <ruffalolavoisier@gmail.com>
+X-Google-Original-From: Ruffalo Lavoisier <RuffaloLavoisier@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>
+Cc: Ruffalo Lavoisier <RuffaloLavoisier@gmail.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: [PATCH] perf test: remove duplicate word
+Date: Wed, 20 Nov 2024 13:35:02 +0900
+Message-ID: <20241120043503.80530-1-RuffaloLavoisier@gmail.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 19/58] KVM: x86/pmu: Plumb through pass-through PMU
- to vcpu for Intel CPUs
-To: Sean Christopherson <seanjc@google.com>,
- Mingwei Zhang <mizhang@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang
- <xiong.y.zhang@intel.com>, Kan Liang <kan.liang@intel.com>,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
- <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>,
- Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-20-mizhang@google.com> <ZzymmUKlPk7gHtup@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <ZzymmUKlPk7gHtup@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+- Remove duplicate word, 'the'.
+---
+ tools/perf/tests/workloads/landlock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 11/19/2024 10:54 PM, Sean Christopherson wrote:
-> On Thu, Aug 01, 2024, Mingwei Zhang wrote:
->> Plumb through pass-through PMU setting from kvm->arch into kvm_pmu on each
->> vcpu created. Note that enabling PMU is decided by VMM when it sets the
->> CPUID bits exposed to guest VM. So plumb through the enabling for each pmu
->> in intel_pmu_refresh().
-> Why?  As with the per-VM snapshot, I see zero reason for this to exist, it's
-> simply:
->
->   kvm->arch.enable_pmu && enable_mediated_pmu && pmu->version;
->
-> And in literally every correct usage of pmu->passthrough, kvm->arch.enable_pmu
-> and pmu->version have been checked (though implicitly), i.e. KVM can check
-> enable_mediated_pmu and nothing else.
-
-Ok, too many passthrough_pmu flags indeed confuse readers. Besides these
-dependencies, mediated vPMU also depends on lapic_in_kernel(). We need to
-set enable_mediated_pmu to false as well if lapic_in_kernel() returns false.
-
-
+diff --git a/tools/perf/tests/workloads/landlock.c b/tools/perf/tests/workloads/landlock.c
+index e2b5ef647c09..1f285b7b6236 100644
+--- a/tools/perf/tests/workloads/landlock.c
++++ b/tools/perf/tests/workloads/landlock.c
+@@ -10,7 +10,7 @@
+  * 'perf test' workload) we just add the required types and defines here instead
+  * of including linux/landlock, that isn't available in older systems.
+  *
+- * We are not interested in the the result of the syscall, just in intercepting
++ * We are not interested in the result of the syscall, just in intercepting
+  * its arguments.
+  */
+ 
+-- 
+2.46.1
 
