@@ -1,68 +1,67 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA6812BF02
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 17:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB6113B58A
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 17:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732123291; cv=none; b=ECOi9LsRqwrO/J/8wXaXiEKEYJ60s8lszLSkxkayO82bJUmJ3yrkgaR9bey12gjHSYreegQV8f7+2ky7WCsIvkyMSI1dnPlWobTe9zqm4A+XEdonz+yUbqwMgxYs6QfLWuxqX7kjYnHThhq0cbuKiuQP7zqaVrcQcxt2t7GYKVw=
+	t=1732123838; cv=none; b=Paw7UE0T3xhof3awRdqPGiaqyiIgXoW70Gxh4/angj7dmDhN5JJDu4ssrrqz9k1l36w/KF9hYXXMa6a3I6sc0DYfcXMxVWS1k7FVzQDo7DICMZSKqRp+Q31cho6rsBxF1MPNFRw4MkwEgeQOaTseSQKyoVBGyTlfe6BvJvsO0fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732123291; c=relaxed/simple;
-	bh=CJop96nqHatEPlDl540FRcn9W9BaV0zzMn5/xJ3Vb7Q=;
+	s=arc-20240116; t=1732123838; c=relaxed/simple;
+	bh=TG0dlCFUSN4cnij7g01n4dBy7QEzuUOjv1gkitQFLnc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Way2ls1VKgJcy2VScygMIGwh9Hqo54/jONdY/7al22sq+Ume9/39Y/0tpuPDluvY7HQhkxHXvI1oD7qU14pimrihmdbRobL/uOpZ0jHGRo8LlJIHCXsOrf870bvWX0NDoxxfQCVfmBAenkpPTRblYntpanTSky/dgZjwBIm+f9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OegT9nIc; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=Fk6kbPNvCNwDRdVoo5g7UPMEH4+8Hnam42+bjiJJ5FZYwn3WGNrp47V+VTnGK3fu9JsgnEAzK7wXnuQXk+6uxcqOgVUhybsTwmNx52NRI8TrU57EOvxzUxdWfWcVX8Q95DlZ6sU7r1bVSzLrb+Fbi9aaOEQhEdTlGh5W0exXnnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=peEDogQw; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OegT9nIc"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2e5a60d8af1so32551a91.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 09:21:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="peEDogQw"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e38100afa78so4188502276.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 09:30:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732123289; x=1732728089; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QYm1+/DifmKIs47tY/E+e2Kkbg+hWFuHiR3gJIBG9So=;
-        b=OegT9nIcel8NzVP/VKHkc/8AV49Kk8Av7ctR3ZkpilhArlZAoEO9Lve7q2nqx+aPcW
-         w82P6NC6Z2yMDNPfQvpvHu24MsY8wEwbnuAIa9gBnL5lIAJxVkCJDjk+rPWUcNHbrf2X
-         PJVYUuwE/PXI/Ik6F6c8wcSIRGEW1PW6HIvA2hsBf2cCsmEPIQDsWMChcpLes+W8Zamb
-         VprLo+vV9sZW4YDPLfnE9NN9wlMCfcwSCjG2UEJmcI9HT+97p/cUIU0yqA49Zq4ILxq2
-         b+nwGvgwGPT0od6vMzJHOUndHC/GuIoIYacE3kBaFmujR5UVnvrId3bhDxbyZSCCLNtX
-         i3rg==
+        d=google.com; s=20230601; t=1732123835; x=1732728635; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rKWW5QzZwmE/Mi4Elyfcq3cgERVzaGEbfYDFGjWzMI8=;
+        b=peEDogQwcXUAP+m34K5livHmhFiAA/iKXngd+5cBOmVhQ74QK6xtsgQkY1Ao2MUyax
+         pXN+Qp4XJvdSqDvil/rSpja7g8b61RVakhrxwYbi/knVac1qOMHLds5ilAQLLPnU079A
+         VcV9L3IPtuFwxKpRL03tcfSP3Vth4jBZsOJyZonFX3teNeyoAEYFW0XwZNSUyQEQ7tcw
+         OtKXr5g/TyJ+aPhJXezEtF0v7kHXzn6l4koUvWEQeijXZQI95g3xQlKOlH9fGhLJSfQt
+         uSFa9L8MsBSVmPJwF4xuTHXo8y6zXXb+PL0KkgN95IRz+CKswjaHb/6AIwd5LEaKK7yQ
+         BY2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732123289; x=1732728089;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QYm1+/DifmKIs47tY/E+e2Kkbg+hWFuHiR3gJIBG9So=;
-        b=eEzJcDmN6F9Qlkj3aAOuxVtSk4mA1CKeCqgGavJEjYzY71UjlkrU5j9smiq9VLXvA4
-         6dp0dRucR57ukKyNsL4w6bu9DfrYWR0XHUXJPtjjQgyuMHd/Yr6Ivqcw1yGJvGVvcgEW
-         RNA94z77zhIYnY6ZQTZwiM180exTrynlP3g+AFyMUZS0DlvmNVbJs6QXlfpZUP+G/ZMm
-         c4h59/cgTzL0w8I18X/Q2TgsVX2gfTWYRP8aneZ12LKpf3SWdRplaegPKZO2OngGv/06
-         7IY82SavnXbZvDcf2qr1NDrm++5VcJw51xxUyCYdVF//ywhI7IKjikqyA1M9OXev70i5
-         9/zA==
-X-Forwarded-Encrypted: i=1; AJvYcCUeEK6UJDCbLqaxd6oYSufKlL7/4yoBkg1baBAvedhY+9XLd1Shemql0j2Lv6WCrGrTSpAegetnjKe4BXkyn64n@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB1EEJUNwkeM5eESiuHVEImq1brdtg2D2Mi17bzFitjQueqO5I
-	aVX38RFtnCEw/mH1OHbEPDbsiVjxaXcRDdDEheGMRRzpKkxGbm/I2cd4EwDUIxywS7aYwVMYoWg
-	vYw==
-X-Google-Smtp-Source: AGHT+IFjM0AHV5w/pbVAw/W0N+Azm1Wcmv5XEOjBbMHF+D0N9N9UFx2xjFQJDpvv+DaYVc55A5nUDXwA2wg=
+        d=1e100.net; s=20230601; t=1732123835; x=1732728635;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rKWW5QzZwmE/Mi4Elyfcq3cgERVzaGEbfYDFGjWzMI8=;
+        b=OpO9wLQNYh1pXmmOgdAE3814e+8ge8Pj2a5YKOKu/Ni+LyCp1sdXDy070DYpGNBrBw
+         Fxnpk2zJong7whTa/Ixf7IpieUZkdftBQ0OPh0mcP80EnfXKxAVQTIU9wnZZw/4RvQ1N
+         q7/VtkzD66VFJ9pxS5EYesdiKPKd7tDZJNWMJchlJ1eedmnMh/NDLdow6KFI1+ezy/pf
+         KnMUugmFZ0h8H7rGb6IQfA/euiUqBmAFQsCQ5tLmbAbRd5sXUVXxIDJw128b0vp0FWhU
+         WLCACGU0ZuRjkBjjqcmc8l96PWaxuyr8FvXKtBtOWBca29WGi0S2JtYjo+UfmiuggfYV
+         JY9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU+kQXvoYPKxF9/EKpwW6TdbwaUAEmSMXBvlOlvOtliFKWb6jhCdYt9rniRM4mnU4qZCg7oj6KIRzHcot/lw86B@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNsPsFFJRxarjaCs0cPhUaTz2jiZg+lTDGgCefELvIUV7dQERK
+	T5bc7v2msnlEE2WqAAp1v1XBXZxUCJf4wDTQVQ5eDjsS7/y5VhyAJb0nE/4jfBuhb+sNqpCQyDj
+	GzQ==
+X-Google-Smtp-Source: AGHT+IFQrscPnIPzw9XKs9NYl+H6VDRxDA+r6yWqcphM0I3a+4bD6VZIBrqslhYOxvzvI3Hd4UFJ1+s3X6A=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a17:90b:2389:b0:2ea:9ae0:6374 with SMTP id
- 98e67ed59e1d1-2eaca7db47fmr1930a91.6.1732123288237; Wed, 20 Nov 2024 09:21:28
+ (user=seanjc job=sendgmr) by 2002:a25:ae8f:0:b0:e30:cee4:1922 with SMTP id
+ 3f1490d57ef6-e38cb5f8c07mr4899276.7.1732123834965; Wed, 20 Nov 2024 09:30:34
  -0800 (PST)
-Date: Wed, 20 Nov 2024 09:21:26 -0800
-In-Reply-To: <e0e402d8-de8b-40fa-9d1f-270d8033d33c@linux.intel.com>
+Date: Wed, 20 Nov 2024 09:30:33 -0800
+In-Reply-To: <01b6dc80-8cb6-4b13-9d0f-db3a07672532@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-25-mizhang@google.com>
- <ZzzE_z5x7D_trxnq@google.com> <e0e402d8-de8b-40fa-9d1f-270d8033d33c@linux.intel.com>
-Message-ID: <Zz4alrnDbQhqtkGl@google.com>
-Subject: Re: [RFC PATCH v3 24/58] KVM: x86/pmu: Introduce macro PMU_CAP_PERF_METRICS
+References: <20240801045907.4010984-1-mizhang@google.com> <20240801045907.4010984-32-mizhang@google.com>
+ <ZzzfwXefHP7SG-Vy@google.com> <01b6dc80-8cb6-4b13-9d0f-db3a07672532@linux.intel.com>
+Message-ID: <Zz4cuXfFtXzRAWvC@google.com>
+Subject: Re: [RFC PATCH v3 31/58] KVM: x86/pmu: Add counter MSR and selector
+ MSR index into struct kvm_pmc
 From: Sean Christopherson <seanjc@google.com>
 To: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: Mingwei Zhang <mizhang@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
@@ -75,47 +74,106 @@ Cc: Mingwei Zhang <mizhang@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
 	Yanfei Xu <yanfei.xu@intel.com>, Like Xu <like.xu.linux@gmail.com>, 
 	Peter Zijlstra <peterz@infradead.org>, Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
 On Wed, Nov 20, 2024, Dapeng Mi wrote:
->=20
-> On 11/20/2024 1:03 AM, Sean Christopherson wrote:
-> > On Thu, Aug 01, 2024, Mingwei Zhang wrote:
-> >> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >>
-> >> Define macro PMU_CAP_PERF_METRICS to represent bit[15] of
-> >> MSR_IA32_PERF_CAPABILITIES MSR. This bit is used to represent whether
-> >> perf metrics feature is enabled.
-> >>
-> >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> >> ---
-> >>  arch/x86/kvm/vmx/capabilities.h | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabi=
-lities.h
-> >> index 41a4533f9989..d8317552b634 100644
-> >> --- a/arch/x86/kvm/vmx/capabilities.h
-> >> +++ b/arch/x86/kvm/vmx/capabilities.h
-> >> @@ -22,6 +22,7 @@ extern int __read_mostly pt_mode;
-> >>  #define PT_MODE_HOST_GUEST	1
-> >> =20
-> >>  #define PMU_CAP_FW_WRITES	(1ULL << 13)
-> >> +#define PMU_CAP_PERF_METRICS	BIT_ULL(15)
-> > BIT() should suffice.  The 1ULL used for FW_WRITES is unnecessary.  Spe=
-aking of
-> > which, can you update the other #defines while you're at it?  The mix o=
-f styles
-> > annoys me :-)
-> >
-> > #define PMU_CAP_FW_WRITES	BIT(13)
-> > #define PMU_CAP_PERF_METRICS	BIT(15)
-> > #define PMU_CAP_LBR_FMT		GENMASK(5, 0)
->=20
-> Sure.=C2=A0 Could we further move all these=C2=A0 PERF_CAPBILITIES macros=
- into
-> arch/x86/include/asm/msr-index.h?
+> 
+> On 11/20/2024 2:58 AM, Sean Christopherson wrote:
+> > Please squash this with the patch that does the actual save/load.  Hmm, maybe it
+> > should be put/load, now that I think about it more?  That's more consitent with
+> > existing KVM terminology.
+> 
+> Sure. I ever noticed that this in-consistence, but "put" seem not so
+> intuitionistic as "save", so didn't change it.
 
-Yes, definitely.  I didn't even realize this was KVM code.
+Yeah, "put" isn't perfect, but neither is "save", because the save/put path also
+purges hardware state.
+
+> >> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> >> index 4b3ce6194bdb..603727312f9c 100644
+> >> --- a/arch/x86/include/asm/kvm_host.h
+> >> +++ b/arch/x86/include/asm/kvm_host.h
+> >> @@ -522,6 +522,8 @@ struct kvm_pmc {
+> >>  	 */
+> >>  	u64 emulated_counter;
+> >>  	u64 eventsel;
+> >> +	u64 msr_counter;
+> >> +	u64 msr_eventsel;
+> > There's no need to track these per PMC, the tracking can be per PMU, e.g.
+> >
+> > 	u64 gp_eventsel_base;
+> > 	u64 gp_counter_base;
+> > 	u64 gp_shift;
+> > 	u64 fixed_base;
+> >
+> > Actually, there's no need for a per-PMU fixed base, as that can be shoved into
+> > kvm_pmu_ops.  LOL, and the upcoming patch hardcodes INTEL_PMC_FIXED_RDPMC_BASE.
+> > Naughty, naughty ;-)
+> >
+> > It's not pretty, but 16 bytes per PMC isn't trivial. 
+> >
+> > Hmm, actually, scratch all that.  A better alternative would be to provide a
+> > helper to put/load counter/selector MSRs, and call that from vendor code.  Ooh,
+> > I think there's a bug here.  On AMD, the guest event selector MSRs need to be
+> > loaded _before_ PERF_GLOBAL_CTRL, no?  I.e. enable the guest's counters only
+> > after all selectors have been switched AMD64_EVENTSEL_GUESTONLY.  Otherwise there
+> > would be a brief window where KVM could incorrectly enable counters in the host.
+> > And the reverse that for put().
+> >
+> > But Intel has the opposite ordering, because MSR_CORE_PERF_GLOBAL_CTRL needs to
+> > be cleared before changing event selectors.
+> 
+> Not quite sure about AMD platforms, but it seems both Intel and AMD
+> platforms follow below sequence to manipulated PMU MSRs.
+> 
+> disable PERF_GLOBAL_CTRL MSR
+> 
+> manipulate counter-level PMU MSR
+> 
+> enable PERF_GLOBAL_CTRL MSR
+
+Nope.  kvm_pmu_restore_pmu_context() does:
+
+	static_call_cond(kvm_x86_pmu_restore_pmu_context)(vcpu);
+
+
+	/*
+	 * No need to zero out unexposed GP/fixed counters/selectors since RDPMC
+	 * in this case will be intercepted. Accessing to these counters and
+	 * selectors will cause #GP in the guest.
+	 */
+	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
+		pmc = &pmu->gp_counters[i];
+		wrmsrl(pmc->msr_counter, pmc->counter);
+		wrmsrl(pmc->msr_eventsel, pmu->gp_counters[i].eventsel_hw);
+	}
+
+	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+		pmc = &pmu->fixed_counters[i];
+		wrmsrl(pmc->msr_counter, pmc->counter);
+	}
+
+And amd_restore_pmu_context() does:
+
+	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, 0);
+	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, global_status);
+
+	/* Clear host global_status MSR if non-zero. */
+	if (global_status)
+		wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, global_status);
+
+	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_SET, pmu->global_status);
+
+	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, pmu->global_ctrl);
+
+So the sequence on AMD is currently:
+
+  disable PERF_GLOBAL_CTRL
+
+  save host PERF_GLOBAL_STATUS 
+
+  load guest PERF_GLOBAL_STATUS (clear+set)
+
+  load guest PERF_GLOBAL_CTRL
+
+  load guest per-counter MSRs
