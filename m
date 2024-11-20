@@ -1,48 +1,49 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E2E149C42;
-	Wed, 20 Nov 2024 09:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE1A1A38C4;
+	Wed, 20 Nov 2024 09:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732093950; cv=none; b=gHkbsk9NCMeZ1KKcQ80/NRupjJUSpGC6QaDLImk5VtmHBeARUoT4xjMOwO5iVthqh7x8zjxA8X97wSFhcc6JEZRja/h+BNPNAaKB0+zxAV2HL6C6Y/PCUR/QvVxeeKMyIE+cnAnnues5rzAiXR9DQVqEP6jLL8V9l1+qv+dFOxw=
+	t=1732094193; cv=none; b=bjvlHWPcwZgXvYlPSRN1jgxFVTPCcDzZGcx3TGd354wTLEzgt/SLnFx/SFbAbCwXefl5OdsZmmtxwaTwuemcxg8AsA1IwVLcvbbmniTFFWGw4cW/3F3T5G6fnaFuQ44S+JfWZPnOVK8jU3RIWrKNdimnckKAT50MzyxGlL1BUZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732093950; c=relaxed/simple;
-	bh=+h6qn39iKYBYkjnAfwM2WCW/3rG7h0rqZ0p706MqXQ4=;
+	s=arc-20240116; t=1732094193; c=relaxed/simple;
+	bh=8rkAk6517qJEPINzF88RnP6yO3yUFF8kqGgo301aGEk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hm1ytdShERBFcrRONzxE7HrbMLF6BXN+uwym7nj9fvNUUCoB5HCGNuTqK0uN/wYCAD5QY6+XoBX/f9Oz84khwqDKM6+DC1a2TSA7gNEPnce6gf4v6pypWnfzj0hpHXTz773ym+vMl6cFQIvDy1bZ9mYAHIPB+3pbf36AXCN4fVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SX6OTBOU; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=dlFaPNPJ/j/HS9ZATWNWBZNewSg9ihLzyrvht8jlsYk9/C+1BrP9j1JCBktdAFEAmPNnU6yK4YtSAbw9S3ScC4e/tCaeVbP+yqUh9Sso0YmJtANWyfQ18Q7BsIt4OK9nzuPLV3tizWDORx9nhT3S60pKKVm57zr6MBHhQNoGYiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Mm5PEFGZ; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SX6OTBOU"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mm5PEFGZ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=wk2X3+PQpTfNDXktHKx5N1reY89npk+liD3n+j6xvIo=; b=SX6OTBOUcOh239e6zpRF5e6Hjm
-	aaczC8p43ZAau+BKYgPoqAbCP9M5KkaIAj+d6y/X1UKWi4VYa+a1sczzexsjpluoqdbeEx1UteHqZ
-	cJi5wTJExX6f3YSWkdJVE8MzwNXOH1kerEpzyhMvN1aCWYHLt6SlFNSY5k65FnfakSBiP8nV46rfo
-	1iuXpxL+K2dAoLL4R/W8+sGyL1RxaIZty9JUI0I5CyPHB96tTJjhT0RHK0egn83d7WgRabpZTntnP
-	tWvxSadGig7B4I34GoLq1EGGmupmazf6Nvko+pS2UyN9k7NiBF+SKXO+GjXObiJfxVXd0o/lDIbun
-	iOofmCpw==;
+	bh=UDm71AFXSdTff/t8s7y05X99dVFpiReRtYTVywv5MPk=; b=Mm5PEFGZDwqjzN3Qgn95E1oG2m
+	F53CDaKKhifYOhXO3gAfXQP4272WwkoUiYufHaiSyAug6dTltQMEFXRWc6ySj/0f/LEVl3FmmZxxS
+	POC0mST34oim0dhaCYHpuMr0M7pw4nzEWhoDWNiYOFqRKOpLjTHGmF0C4jHXnixr5xfXBFoCadzBb
+	wwGPN6VGYdsmF72BaEibC9TI8iAmHpcwLLzeZsND+fzAk8QGQ3M+HbNKvDMzJ6d9u+eC0NrO2xE0I
+	524Qt4pORkwLb888WHoPJidC8vOABONKuNObAtNnJ/W4ecZvRZmIlwLnb3KhFbnf72o5PQZTEdPYy
+	Af8lLePA==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tDgkx-00000000SXp-3ptr;
-	Wed, 20 Nov 2024 09:12:16 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tDgov-000000054H4-34Kx;
+	Wed, 20 Nov 2024 09:16:23 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8CA523006AB; Wed, 20 Nov 2024 10:12:15 +0100 (CET)
-Date: Wed, 20 Nov 2024 10:12:15 +0100
+	id 95311300230; Wed, 20 Nov 2024 10:16:22 +0100 (CET)
+Date: Wed, 20 Nov 2024 10:16:22 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: Ran Xiaokai <ranxiaokai627@163.com>
 Cc: juri.lelli@redhat.com, vincent.guittot@linaro.org, mingo@redhat.com,
 	pshelar@ovn.org, davem@davemloft.net, linux-kernel@vger.kernel.org,
 	ran.xiaokai@zte.com.cn, linux-perf-users@vger.kernel.org,
-	netdev@vger.kernel.org, dev@openvswitch.org
+	netdev@vger.kernel.org
 Subject: Re: [PATCH 2/4] perf/core: convert call_rcu(free_ctx) to kfree_rcu()
-Message-ID: <20241120091215.GK39245@noisy.programming.kicks-ass.net>
+Message-ID: <20241120091622.GK38972@noisy.programming.kicks-ass.net>
 References: <20241120064716.3361211-1-ranxiaokai627@163.com>
  <20241120064716.3361211-3-ranxiaokai627@163.com>
+ <20241120091215.GK39245@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,50 +52,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241120064716.3361211-3-ranxiaokai627@163.com>
+In-Reply-To: <20241120091215.GK39245@noisy.programming.kicks-ass.net>
 
-On Wed, Nov 20, 2024 at 06:47:14AM +0000, Ran Xiaokai wrote:
-> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+On Wed, Nov 20, 2024 at 10:12:15AM +0100, Peter Zijlstra wrote:
+> On Wed, Nov 20, 2024 at 06:47:14AM +0000, Ran Xiaokai wrote:
+> > From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+> > 
+> > The rcu callback free_ctx() simply calls kfree().
+> > It's better to directly call kfree_rcu().
 > 
-> The rcu callback free_ctx() simply calls kfree().
-> It's better to directly call kfree_rcu().
+> Why is it better? 
 
-Why is it better? 
-
-> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
-> ---
->  kernel/events/core.c | 10 +---------
->  1 file changed, 1 insertion(+), 9 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 065f9188b44a..7f4cc9c41bbe 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -1210,14 +1210,6 @@ static void free_task_ctx_data(struct pmu *pmu, void *task_ctx_data)
->  		kmem_cache_free(pmu->task_ctx_cache, task_ctx_data);
->  }
->  
-> -static void free_ctx(struct rcu_head *head)
-> -{
-> -	struct perf_event_context *ctx;
-> -
-> -	ctx = container_of(head, struct perf_event_context, rcu_head);
-> -	kfree(ctx);
-> -}
-> -
->  static void put_ctx(struct perf_event_context *ctx)
->  {
->  	if (refcount_dec_and_test(&ctx->refcount)) {
-> @@ -1225,7 +1217,7 @@ static void put_ctx(struct perf_event_context *ctx)
->  			put_ctx(ctx->parent_ctx);
->  		if (ctx->task && ctx->task != TASK_TOMBSTONE)
->  			put_task_struct(ctx->task);
-> -		call_rcu(&ctx->rcu_head, free_ctx);
-> +		kfree_rcu(ctx, rcu_head);
->  	}
->  }
->  
-> -- 
-> 2.17.1
-> 
-> 
+*sigh*, also please don't cross post with a moderated list :-(
