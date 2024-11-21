@@ -1,90 +1,45 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DAF145B18
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 Nov 2024 04:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04CB126F1E;
+	Thu, 21 Nov 2024 05:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732162949; cv=none; b=I2yAUsdFPA9jDv7T6iTTfFuwkpVYk/V+e8PoA0AbhsBqT6qp2I9jgfMNXS5bggRfuy5L0F2gU3UoC3XJZqkMRoTA7EmI8zuwZYMY5HmooLe5IAbsJ64XVCuQ5wd/lZlRpNNkmNAGL0CXu7uL9bDCtXpYKR3zuJW9FGkqf1c/sPU=
+	t=1732168195; cv=none; b=QPESoW0WQhfPNa/2iopnPHaasbXCjugva6yrQk1rhSQjGpKblXoTbzyGMhyB8pVLgfIsTJoaEBcMGyXNmj3Ttc1Fd8bybodm30GyDSZjyVr0TND30mwDHgQ8lsKrOiRdHAWaNh+vy9DFxZahgk/xJt9eMP0tc0NBTEDUiqXKM1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732162949; c=relaxed/simple;
-	bh=SpAAQo3l0wT/aBxSUBDG8LR2a69OhY7lZutFyWBoaSI=;
+	s=arc-20240116; t=1732168195; c=relaxed/simple;
+	bh=ftB/0JAA7nn+qWIsDHXXMq9e0XJWTR9zvGVDhuL+05s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HX7FpLHgw2R/mYEGWnGCwKvS4JEy7gm81cxGutOmwHLy05WUpEiCwItDUq0aeS99ArvgXEbae2glNzVjU627q4kAWhij4mtmOfq1vEgXr/27ceDqxr+0JKhi7kNt3moNo0arAQUPUI/gZ7mIchbXIMiV79moX0v2YOTJAz170Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=lJ5xHgVr; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=q3hLjZiXpdF9ezHJe5NrEcFSgZku2HrwLbBkWWg2n1BWlTWfBOb853r7AlTVzVRFlXsxi08fSwgN7hVbGJ89JK6kKcIOFDj+XXyIDt+603ojmya0JnTExrMoG3Eg/EHu0Ki5Z8rRQ5XKEzeoYTjBTRjtnwZzqMTyru2EH1yNYZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zv8ersnr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="lJ5xHgVr"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6ee8e894deeso4214677b3.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 20:22:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1732162947; x=1732767747; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cP3Um0hz7Gv16Gtk91dL7DlYT6sIqAVCB2yrXnpMevM=;
-        b=lJ5xHgVrpeJelHGu3h+m+kpP+CpJio03F91Rbvepr+CWIi+9zzppZNlKGNpp8Ygsm3
-         Sjn3pfi0iup6FCY6VRUX/gvK0tToQVNp0Q1qdmUuwb3oyNDO0x+aTkFXUbPDPq2+uMYV
-         6Kkw1xQI1Og8AGiNWJdTkgrqygfd4mt9dNclhjlQwoslCkM4OjYkdA0dHkCZnDnLbXxN
-         1nxctHciljQ+3LXCJ/9o80XgWTNvdelIrPEluX+jd/rnZxIX0fjubBWinpxABfVVzOI3
-         0bzGibPw4zzKvqUUMZGV+0LajHL2/tYGbJNQKduNU2tQl84HB9kxxSB40UKEfbU5hHC1
-         Fthg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732162947; x=1732767747;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cP3Um0hz7Gv16Gtk91dL7DlYT6sIqAVCB2yrXnpMevM=;
-        b=gYA4eUyiT9KOLsTjr4U8UwJcxgsNfzxpMcWQeyWbrVWR8C5aZ9IxcMcxC+lD7U7UXE
-         MpcBeg82gLU3Cd3CPwig31pWeltP7sI1Lvj1gsAb6OeGR9njlFwQJYGlS//LwFRxjBgM
-         B4JR94jumZXryURWgbhII+EiTXsz+jRt/yhL+HipkR1tele7VQDuhu5DEWwHjB001fjr
-         3heNg71fSBYc2C52NZIgpwW+3tFGbIeFM9EZojYt5OhwIWa75XXYoZvgTyA+cdjBfrCb
-         Y8JiPPMSEtIoysm32e5LskEroqhC1qdjvskxAJ/wl/r+k5l0xZYVQPS1qBzTwA8L5erv
-         R2Nw==
-X-Forwarded-Encrypted: i=1; AJvYcCU98JywJkYNalOnRmsI4DPZRMPIggVuCBTDyF4PuGR436iC8eEsAVgnqRP8FEvgcNIEnsJrd8aolKywa8iXnyRe@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsFcMdg5oIbEbrFpLypeXW4oS/95QSIH84ZmNN4aJInkFJJfWv
-	/Wli/SbYcxqQVnQlDcn0PVZx3HND1rrCOxXYE6tCLFXD9SSWZvyBXE0eSChkCEU=
-X-Google-Smtp-Source: AGHT+IFG/0lmdLf+PuJVUiUVDthedJQkU+yi8kvRYeLAcyp/RSQ9OGzeQL0b0Fr9yTqYmM0khQUKNg==
-X-Received: by 2002:a05:690c:5a15:b0:6ee:5068:7510 with SMTP id 00721157ae682-6eecc57b073mr20304047b3.26.1732162946630;
-        Wed, 20 Nov 2024 20:22:26 -0800 (PST)
-Received: from ghost ([50.146.0.9])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6ee71341e4dsm25749277b3.90.2024.11.20.20.22.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2024 20:22:25 -0800 (PST)
-Date: Wed, 20 Nov 2024 20:22:23 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zv8ersnr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AEBAC4CECC;
+	Thu, 21 Nov 2024 05:49:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732168195;
+	bh=ftB/0JAA7nn+qWIsDHXXMq9e0XJWTR9zvGVDhuL+05s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zv8ersnrqqB0CgVGSt3xV+p+q4ohPQ1MAugTrbtGk+1bm4Ew9X0o/OK65baXjRyZS
+	 xHuetImwtSznEDZD0+97ll/BzwLFYcW8kOWIw/zj1zV/6/izrONB0lF3aObPWWRD85
+	 8wyUkt04ESLm1l6eDzxfL6CCUiId9py6Or1QdjIiXR/nJAeoJeoKzhEY+WI0CxRS6k
+	 qah1zEZt/FYSpRoi3ZntcGRCvh3ZYzQ1m4lYDTw2TZRPrfxdWTc4c0KMnUNHZElGha
+	 diwoAg5P8GfqMhIhKMTAgQV7JcYew6950blgCSpSthojvZDsuwq1800PCN2bJ6a/82
+	 XRoxuGRp0jYFQ==
+Date: Wed, 20 Nov 2024 21:49:52 -0800
+From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-	Christian Brauner <brauner@kernel.org>, guoren <guoren@kernel.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH RFT 00/16] perf tools: Use generic syscall scripts for
- all archs
-Message-ID: <Zz61f02p8s52G6ba@ghost>
-References: <20241104-perf_syscalltbl-v1-0-9adae5c761ef@rivosinc.com>
- <3b56fc50-4c6c-4520-adba-461797a3b5ec@app.fastmail.com>
- <Zyk9hX8CB_2rbWsi@ghost>
- <CAP-5=fUdZRbCp+2ghEUdp+qJ1BuMDuTtw9R+dFAaom+3oqQV_g@mail.gmail.com>
- <ZylaRaMqEsEjYjs6@ghost>
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf tests: Fix hwmon parsing with PMU name test
+Message-ID: <Zz7KAAG2pHhCg-Dx@google.com>
+References: <20241121000955.536930-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -93,77 +48,112 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZylaRaMqEsEjYjs6@ghost>
+In-Reply-To: <20241121000955.536930-1-irogers@google.com>
 
-On Mon, Nov 04, 2024 at 03:35:33PM -0800, Charlie Jenkins wrote:
-> On Mon, Nov 04, 2024 at 02:03:28PM -0800, Ian Rogers wrote:
-> > On Mon, Nov 4, 2024 at 1:32 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> > >
-> > > On Mon, Nov 04, 2024 at 10:13:18PM +0100, Arnd Bergmann wrote:
-> > > > On Mon, Nov 4, 2024, at 22:06, Charlie Jenkins wrote:
-> > > > > Standardize the generation of syscall headers around syscall tables.
-> > > > > Previously each architecture independently selected how syscall headers
-> > > > > would be generated, or would not define a way and fallback onto
-> > > > > libaudit. Convert all architectures to use a standard syscall header
-> > > > > generation script and allow each architecture to override the syscall
-> > > > > table to use if they do not use the generic table.
-> > > > >
-> > > > > As a result of these changes, no architecture will require libaudit, and
-> > > > > so the fallback case of using libaudit is removed by this series.
-> > > > >
-> > > > > Testing:
-> > > > >
-> > > > > I have tested that the syscall mappings of id to name generation works
-> > > > > as expected for every architecture, but I have only validated that perf
-> > > > > trace compiles and runs as expected on riscv, arm64, and x86_64.
-> > > > >
-> > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > > >
-> > > > Thanks for doing this, I had plans to do this myself, but hadn't
-> > > > completed that bit so far. I'm travelling at the moment, so I'm
-> > > > not sure I have time to look at it in enough detail this week.
-> > > >
-> > > > One problem I ran into doing this previously was the incompatible
-> > > > format of the tables for x86 and s390, which have conflicting
-> > > > interpretations of what the '-' character means. It's possible
-> > > > that this is only really relevant for the in-kernel table,
-> > > > not the version in tools.
-> > > >
-> > >
-> > > I don't think that is an issue for this usecase because the only
-> > > information that is taken from the syscall table is the number and the
-> > > name of the syscall. '-' doesn't appear in either of these columns!
-> > 
-> > This is cool stuff. An area that may not be immediately apparent for
-> > improvement is that the x86-64 build only has access to the 64-bit
-> > syscall table. Perhaps all the syscall tables should always be built
-> > and then at runtime the architecture of the perf.data file, etc. used
-> > to choose the appropriate one. The cleanup to add an ELF host #define
-> > could help with this:
-> > https://lore.kernel.org/linux-perf-users/20241017002520.59124-1-irogers@google.com/
+On Wed, Nov 20, 2024 at 04:09:55PM -0800, Ian Rogers wrote:
+> Incorrectly the hwmon with PMU name test didn't pass "true". Fix and
+> address issue with hwmon_pmu__config_terms needing to load events - a
+> load bearing assert fired. Also fix missing list deletion when putting
+> the hwmon test PMU and lower some debug warnings to make the hwmon PMU
+> less spammy in verbose mode.
 > 
-> Oh that's a great idea! I think these changes will make it more seamless
-> to make that a reality.
-> 
-> > 
-> > Ultimately I'd like to see less arch code as it inherently makes cross
-> > platform worker harder. That doesn't impact this work which I'm happy
-> > to review.
-> 
-> Yeah I agree. Reducing arch code was the motivation for this change.
-> There was the issue a couple weeks ago that caused all architectures
-> that used libaudit to break from commit 7a2fb5619cc1fb53 ("perf trace:
-> Fix iteration of syscall ids in syscalltbl->entries"), so this change
-> will eliminate that source of difference between architectures.
-> 
-> - Charlie
-> 
-> > 
-> > Thanks,
-> > Ian
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Let me know if you have any feedback on this series!
+Tested-by: Namhyung Kim <namhyung@kernel.org>
 
-- Charlie
+Thanks,
+Namhyung
 
+> ---
+>  tools/perf/tests/hwmon_pmu.c |  5 +++--
+>  tools/perf/util/hwmon_pmu.c  | 16 ++++++++++------
+>  2 files changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/perf/tests/hwmon_pmu.c b/tools/perf/tests/hwmon_pmu.c
+> index d8bc71b51599..b4656529146e 100644
+> --- a/tools/perf/tests/hwmon_pmu.c
+> +++ b/tools/perf/tests/hwmon_pmu.c
+> @@ -41,6 +41,7 @@ static int test_pmu_put(const char *dir, struct perf_pmu *hwm)
+>  	if (ret)
+>  		pr_err("Failure to \"%s\"\n", buf);
+>  
+> +	list_del(&hwm->list);
+>  	perf_pmu__delete(hwm);
+>  	return ret;
+>  }
+> @@ -147,7 +148,7 @@ static int do_test(size_t i, bool with_pmu, bool with_alias)
+>  	}
+>  
+>  	if (with_pmu)
+> -		snprintf(str, sizeof(str), "/%s/", test_event);
+> +		snprintf(str, sizeof(str), "hwmon_a_test_hwmon_pmu/%s/", test_event);
+>  	else
+>  		strlcpy(str, test_event, sizeof(str));
+>  
+> @@ -230,7 +231,7 @@ static int test__hwmon_pmu_without_pmu(struct test_suite *test __maybe_unused,
+>  static int test__hwmon_pmu_with_pmu(struct test_suite *test __maybe_unused,
+>  				   int subtest __maybe_unused)
+>  {
+> -	return test__hwmon_pmu(/*with_pmu=*/false);
+> +	return test__hwmon_pmu(/*with_pmu=*/true);
+>  }
+>  
+>  static int test__parse_hwmon_filename(struct test_suite *test __maybe_unused,
+> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+> index 4d9d6f405434..e61429b38ba7 100644
+> --- a/tools/perf/util/hwmon_pmu.c
+> +++ b/tools/perf/util/hwmon_pmu.c
+> @@ -197,13 +197,13 @@ bool parse_hwmon_filename(const char *filename,
+>  		}
+>  	}
+>  	if (fn_item == NULL || fn_type[0] == '\0' || (item != NULL && fn_item[0] == '\0')) {
+> -		pr_debug("hwmon_pmu: not a hwmon file '%s'\n", filename);
+> +		pr_debug3("hwmon_pmu: not a hwmon file '%s'\n", filename);
+>  		return false;
+>  	}
+>  	elem = bsearch(&fn_type, hwmon_type_strs + 1, ARRAY_SIZE(hwmon_type_strs) - 1,
+>  		       sizeof(hwmon_type_strs[0]), hwmon_strcmp);
+>  	if (!elem) {
+> -		pr_debug("hwmon_pmu: not a hwmon type '%s' in file name '%s'\n",
+> +		pr_debug3("hwmon_pmu: not a hwmon type '%s' in file name '%s'\n",
+>  			 fn_type, filename);
+>  		return false;
+>  	}
+> @@ -223,7 +223,7 @@ bool parse_hwmon_filename(const char *filename,
+>  	elem = bsearch(fn_item, hwmon_item_strs + 1, ARRAY_SIZE(hwmon_item_strs) - 1,
+>  		       sizeof(hwmon_item_strs[0]), hwmon_strcmp);
+>  	if (!elem) {
+> -		pr_debug("hwmon_pmu: not a hwmon item '%s' in file name '%s'\n",
+> +		pr_debug3("hwmon_pmu: not a hwmon item '%s' in file name '%s'\n",
+>  			 fn_item, filename);
+>  		return false;
+>  	}
+> @@ -281,7 +281,7 @@ static int hwmon_pmu__read_events(struct hwmon_pmu *pmu)
+>  			continue;
+>  
+>  		if (!parse_hwmon_filename(ent->d_name, &type, &number, &item, &alarm)) {
+> -			pr_debug("Not a hwmon file '%s'\n", ent->d_name);
+> +			pr_debug3("Not a hwmon file '%s'\n", ent->d_name);
+>  			continue;
+>  		}
+>  		key.num = number;
+> @@ -653,10 +653,14 @@ int hwmon_pmu__config_terms(const struct perf_pmu *pmu,
+>  			    struct parse_events_terms *terms,
+>  			    struct parse_events_error *err)
+>  {
+> -	const struct hwmon_pmu *hwm = container_of(pmu, struct hwmon_pmu, pmu);
+> +	struct hwmon_pmu *hwm = container_of(pmu, struct hwmon_pmu, pmu);
+>  	struct parse_events_term *term;
+> +	int ret;
+> +
+> +	ret = hwmon_pmu__read_events(hwm);
+> +	if (ret)
+> +		return ret;
+>  
+> -	assert(pmu->sysfs_aliases_loaded);
+>  	list_for_each_entry(term, &terms->terms, list) {
+>  		if (hwmon_pmu__config_term(hwm, attr, term, err))
+>  			return -EINVAL;
+> -- 
+> 2.47.0.371.ga323438b13-goog
+> 
