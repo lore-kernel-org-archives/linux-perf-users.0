@@ -1,28 +1,28 @@
-Received: from cmccmta2.chinamobile.com (cmccmta2.chinamobile.com [111.22.67.135])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 429AC1E52D;
-	Thu, 21 Nov 2024 11:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.135
+Received: from cmccmta1.chinamobile.com (cmccmta4.chinamobile.com [111.22.67.137])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA66915ADB4;
+	Thu, 21 Nov 2024 12:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732188935; cv=none; b=eosp+0hWf4KNXfr6pYvDixodX+fUdnJQrwCCbE4t8xpRwIaFIS1iFSAqVPvYj+cjpS/S37cX/EAYqk8nPipaGV0s4sZ6HlaTAhu9XhzCUo1JqUItAYFhnjnPKTFEALufXIlDaQi5MWWCbhvr36Pqq2q15ulePXZMpq0lOWms2i0=
+	t=1732192601; cv=none; b=ejtY/ny2pfEDf6w/PJcIWTLXycPpFzWPQKE47B8MR6S+YPTFowx56p8VEzWTMKT0Vh5/E/W5NIVgDDVPJLmXAzs/W30+D7IAViR4L+NhgNHg9w9CPDuOeUngT3oyN6M8dYlwILBXWDlWvynYM56dmveRUNdub8v3cxmD+zySUDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732188935; c=relaxed/simple;
-	bh=zQDFJpwMhtjgBx4tIIuBR+nJJDKCECfbdIBAqwkGf8A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O0dRXYOvEnrSm1lKwD2LHPjhCYoVKQHkZXIORZceBBXeCYdvoLsGlLBpsA+Ig/FePnGuduWOjgY8qfAD7h0PVvNcB2SZutKodW1L4N5oJSgQTmMgT50Jc1Yh2uKfPiIfzvGWUPYy3n0n+x5qJrL/GGhFKff3J6sznah6cOfFasE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.135
+	s=arc-20240116; t=1732192601; c=relaxed/simple;
+	bh=Fk+4Ys5HM6Xi/65FH8+mZ2tifyhK6thhfMK7TlPEBFw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z76GwuGkj0vsrCV/UsqNcrz4AODBUWc6E8oT4VRWH3N+jC8Yf8T0YgSZ7FkvaOKDCarHMw3mb+fKnSTCYM6uIEK5hGCw6/ue/FKyXwA4nnbNgEPg/GC1EZsLncbcE1MLsMTdNyLonvYYTh+ORJoimGUvY4pHPV4e7F4ossBKOhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.137
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
 X-RM-TagInfo: emlType=0                                       
 X-RM-SPAM-FLAG:00000000
 Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app07-12007 (RichMail) with SMTP id 2ee7673f1afe2a1-5f2be;
-	Thu, 21 Nov 2024 19:35:29 +0800 (CST)
-X-RM-TRANSID:2ee7673f1afe2a1-5f2be
+	by rmmx-syy-dmz-app04-12004 (RichMail) with SMTP id 2ee4673f2953da1-306ab;
+	Thu, 21 Nov 2024 20:36:35 +0800 (CST)
+X-RM-TRANSID:2ee4673f2953da1-306ab
 X-RM-TagInfo: emlType=0                                       
 X-RM-SPAM-FLAG:00000000
 Received:from localhost.localdomain (unknown[10.55.1.69])
-	by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee8673f1b00d7a-cffa7;
-	Thu, 21 Nov 2024 19:35:28 +0800 (CST)
-X-RM-TRANSID:2ee8673f1b00d7a-cffa7
+	by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee1673f29522cb-d7016;
+	Thu, 21 Nov 2024 20:36:35 +0800 (CST)
+X-RM-TRANSID:2ee1673f29522cb-d7016
 From: liujing <liujing@cmss.chinamobile.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -37,9 +37,9 @@ To: peterz@infradead.org,
 Cc: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	liujing <liujing@cmss.chinamobile.com>
-Subject: [PATCH] perf bench: Fix the wrong format specifier
-Date: Thu, 21 Nov 2024 19:34:21 +0800
-Message-Id: <20241121113421.4817-1-liujing@cmss.chinamobile.com>
+Subject: [PATCH] perf intel-pt: Fix variable duplicate check
+Date: Thu, 21 Nov 2024 20:36:33 +0800
+Message-Id: <20241121123633.5805-1-liujing@cmss.chinamobile.com>
 X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -49,24 +49,24 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-These three variables inner_iterations, iterations, set_bits,
-and num_bits have the type of unsigned int, so the output should be in the format of %u.
+Identical condition 'data->from_mtc', second condition is always false,
+so duplicate checks are eliminated.
 
 Signed-off-by: liujing <liujing@cmss.chinamobile.com>
 
-diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
-index 7e25b0e413f6..06edfd463eb2 100644
---- a/tools/perf/bench/find-bit-bench.c
-+++ b/tools/perf/bench/find-bit-bench.c
-@@ -104,7 +104,7 @@ static int do_for_each_set_bit(unsigned int num_bits)
- 			update_stats(&tb_time_stats, runtime_us);
- 		}
- 
--		printf("%d operations %d bits set of %d bits\n",
-+		printf("%u operations %u bits set of %u bits\n",
- 			inner_iterations, set_bits, num_bits);
- 		time_average = avg_stats(&fb_time_stats);
- 		time_stddev = stddev_stats(&fb_time_stats);
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+index e733f6b1f7ac..9fde2c49f8b5 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -883,7 +883,7 @@ static int intel_pt_calc_cyc_cb(struct intel_pt_pkt_info *pkt_info)
+ 			return 1;
+ 		timestamp = pkt_info->packet.payload |
+ 			    (data->timestamp & (0xffULL << 56));
+-		if (data->from_mtc && timestamp < data->timestamp &&
++		if (timestamp < data->timestamp &&
+ 		    data->timestamp - timestamp < decoder->tsc_slip)
+ 			return 1;
+ 		if (timestamp < data->timestamp)
 -- 
 2.27.0
 
