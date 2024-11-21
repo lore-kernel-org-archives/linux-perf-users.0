@@ -1,108 +1,205 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C8F1CD1E2;
-	Thu, 21 Nov 2024 10:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F091D0E00;
+	Thu, 21 Nov 2024 10:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732184312; cv=none; b=TZ836h9qSRJIH+wnz9iOo1Lx7hFS1D8OHAVxe4/5k69AO7lCYMM+NNyI35EI0iK6vC6JF0/9dyOCIt8mxNqStOkSTnicVtZtIOoNfeq9smEu9o+nlnn6zwYd5NKiI6Nod8rLltSZ/VeKqz/B1TBWhM5SZHU/8QyAYL0DzUaLTBI=
+	t=1732184339; cv=none; b=CAnDlOISQ8oWd5GIhlVhQrkBUR73Tp/z2Q8v08d6Suha11iVKXPCMqqnqlmuQKC51uiHgcUIIzJi2l+DrVHhbBuXyR7XRBF+qyUde8EYDK4bfNP9iBSwlzrQXFHZEgAtHz5pZB3BuvYyRuEpmqanD2K9bMHZ9zZwDdQNNTsTK98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732184312; c=relaxed/simple;
-	bh=wlCC9KYBfvH6f8bzXyZMsbzrX7ITXIMK+pupeDh0eI4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MVg/uNC8HqpCDUPHTfJUGrw+eTFwH3Q4yXYTws9DU7gDU/98JH8nZf2s2YiGuFrTk880B/mttf2DeAutDYx742bmfqYrF11Kx6aXLbH51HPtqaB+QwxonfIj7jLMgsdem6ptNR1VcU+8BJbqMgJlLW2U4/rGMNteKug06qMnaPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JLNV5SWX; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JLNV5SWX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732184311; x=1763720311;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wlCC9KYBfvH6f8bzXyZMsbzrX7ITXIMK+pupeDh0eI4=;
-  b=JLNV5SWXJ8oCnCR4naK03x+oq5p1LKqywJIASGSmSdblf3E9aFMi/HIb
-   4ah8y/P7N7TMGB+L4cxWAYamxuqOA5d6V0fL0xwVryQtfPTzkURcpi5r8
-   xJw31+dzXFC/lQb+/Mpw/IA3cHTJUWipkYby54+V/H0C31nIo970xXBim
-   tdZvFXnTt193juF9TAWFfhMJkI8Z4nfPwhakkggydYQOiD5m1Z7Z9A/jA
-   zwZB11pv/y51E7yxbwExX03yA0SJeyUKQLa3ippS1AWS5lTJJF+Wi+wZI
-   G2Tlp1m9Qi8Q0broy0QdmUkwJaDCrgZ0kDBLbdw/mz0SpKYN4oiBqvXga
-   Q==;
-X-CSE-ConnectionGUID: Gtyww8w+Q2OqLECQQ7gKPQ==
-X-CSE-MsgGUID: TnyBuehxR6etIpUH33Yjbg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11262"; a="42906117"
-X-IronPort-AV: E=Sophos;i="6.12,172,1728975600"; 
-   d="scan'208";a="42906117"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 02:18:30 -0800
-X-CSE-ConnectionGUID: t+ofQvoHSCaTxbTYyifiUg==
-X-CSE-MsgGUID: wYW50nb5R6aJW8g5XoOi8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,172,1728975600"; 
-   d="scan'208";a="90615268"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.16.81])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 02:18:25 -0800
-Message-ID: <820e9b6b-16eb-446a-b524-adc8129726ec@intel.com>
-Date: Thu, 21 Nov 2024 12:18:18 +0200
+	s=arc-20240116; t=1732184339; c=relaxed/simple;
+	bh=UTiwnatRcmow/TKEAUjy5NMRcM2d9cuIpujHrnkOFdo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MzfyMge6bYU4WT2mZnd3giPEpPCIoS1mrr15rDkfMrtdj7xlRa0gHHtEks3HzSPRuea2sCBYX7bBRDTCAEV5upOci3kmUi6UHjltiZTP/fd9q1O0D25SyVgG/wsa99Z7/5P6ppj20GNBKmu3g+DjRaoVDDk1KROXgl1Cv98sSXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvDcx48K9z6K6CQ;
+	Thu, 21 Nov 2024 18:15:13 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C0276140A86;
+	Thu, 21 Nov 2024 18:18:47 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 21 Nov 2024 11:18:46 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <linuxarm@huawei.com>, <tongtiangen@huawei.com>, Yicong Yang
+	<yangyicong@huawei.com>, Niyas Sait <niyas.sait@huawei.com>,
+	<ajayjoshi@micron.com>, Vandana Salve <vsalve@micron.com>, Davidlohr Bueso
+	<dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Gregory Price <gourry@gourry.net>, Huang
+ Ying <ying.huang@intel.com>
+Subject: [RFC PATCH 0/4] CXL Hotness Monitoring Unit perf driver
+Date: Thu, 21 Nov 2024 10:18:41 +0000
+Message-ID: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf intel-pt: cleanup unneeded return variable in
- intel_pt_text_poke()
-To: guanjing <guanjing@cmss.chinamobile.com>, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, algonell@gmail.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241121100047.25318-1-guanjing@cmss.chinamobile.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20241121100047.25318-1-guanjing@cmss.chinamobile.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 21/11/24 12:00, guanjing wrote:
-> Removed Unneeded variable: "ret"
-> 
-> Fixes: 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions")
+The CXL specification release 3.2 is now available under a click through at
+https://computeexpresslink.org/cxl-specification/ and it brings new
+shiny toys.
 
-A Fixes tag is not for patches that don't fix some functionality.
+RFC reason
+- Whilst trace capture with a particular configuration is potentially useful
+  the intent is that CXL HMU units will be used to drive various forms of
+  hotpage migration for memory tiering setups. This driver doesn't do this
+  (yet), but rather provides data capture etc for experimentation and
+  for working out how to mostly put the allocations in the right place to
+  start with by tuning applications.
 
-> Signed-off-by: guanjing <guanjing@cmss.chinamobile.com>
-> ---
->  tools/perf/util/intel-pt.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> index 30be6dfe09eb..6c0234acc669 100644
-> --- a/tools/perf/util/intel-pt.c
-> +++ b/tools/perf/util/intel-pt.c
-> @@ -3402,7 +3402,6 @@ static int intel_pt_text_poke(struct intel_pt *pt, union perf_event *event)
->  	struct machine *machine = pt->machine;
->  	struct intel_pt_cache_entry *e;
->  	u64 offset;
-> -	int ret = 0;
->  
->  	addr_location__init(&al);
->  	if (!event->text_poke.new_len)
-> @@ -3443,7 +3442,7 @@ static int intel_pt_text_poke(struct intel_pt *pt, union perf_event *event)
->  	}
->  out:
->  	addr_location__exit(&al);
-> -	return ret;
-> +	return 0;
+CXL r3.2 introduces a CXL Hotness Monitoring Unit definition. The intent
+of this is to provide a way to establish which units of memory (typically
+pages or larger) in CXL attached memory are hot. The implementation details
+and algorithm are all implementation defined. The specification simply
+describes the 'interface' which takes the form of ring buffer of hotness
+records in a PCI BAR and defined capability, configuration and status
+registers.
 
-Should just drop the return value entirely, since it is
-always zero.
+The hardware may have constraints on what it can track, granularity etc
+and on how accurately it tracks (e.g. counter exhaustion, inaccurate
+trackers). Some of these constraints are discoverable from the hardware
+registers, others such as loss of accuracy have no universally accepted
+measures as they are typically access pattern dependent. Sadly it is
+very unlikely any hardware will implement a truly precise tracker given
+the large resource requirements for tracking at a useful granularity.
 
->  }
->  
->  static int intel_pt_process_event(struct perf_session *session,
+There are two fundamental operation modes:
+
+* Epoch based. Counters are checked after a period of time (Epoch) and
+  if over a threshold added to the hotlist.
+* Always on. Counters run until a threshold is reached, after that the
+  hot unit is added to the hotlist and the counter released.
+
+Counting can be filtered on:
+
+* Region of CXL DPA space (256MiB per bit in a bitmap).
+* Type of access - Trusted and non trusted or non trusted only, R/W/RW
+
+Sampling can be modified by:
+
+* Downsampling including potentially randomized downsampling.
+
+The driver presented here is intended to be useful in its own right but
+also to act as the first step of a possible path towards hotness monitoring
+based hot page migration. Those steps might look like.
+
+1. Gather data - drivers provide telemetry like solutions to get that
+   data. May be enhanced, for example in this driver by providing the
+   HPA address rather than DPA Unit Address. Userspace can access enough
+   information to do this so maybe not.
+2. Userspace algorithm development, possibly combined with userspace
+   triggered migration by PA. Working out how to use different levels
+   of constrained hardware resources will be challenging.
+3. Move those algorithms in kernel. Will require generalization across
+   different hotpage trackers etc.
+
+So far this driver just gives access to the raw data. I will probably kick
+of a longer discussion on how to do adaptive sampling needed to actually
+use these units for tiering etc, sometime soon (if no one one else beats
+me too it).  There is a follow up topic of how to virtualize this stuff
+for memory stranding cases (VM gets a fixed mixture of fast and slow
+memory and should do it's own tiering).
+
+More details in the Documentation patch but typical commands are:
+
+$perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
+ hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,\
+ range_size=1024,randomized_downsampling=0,downsampling_factor=32,\
+ hotness_granual=12
+
+$perf report --dump-raw-traces
+
+Example output.  With a counter_width of 16 (0x10) the least significant
+4 bytes are the counter value and the unit index is bits 16-63.
+Here all units are over the threshold and the indexes are 0,1,2 etc.
+
+. ... CXL_HMU data: size 33512 bytes
+Header 0: units: 29c counter_width 10
+Header 1 : deadbeef
+0000000000000283
+0000000000010364
+0000000000020366
+000000000003033c
+0000000000040343
+00000000000502ff
+000000000006030d
+000000000007031a
+
+Which will produce a list of hotness entries.
+Bits[N-1:0] counter value
+Bits[63:N] Unit ID (combine with unit size and DPA base + HDM decoder
+  config to get to a Host Physical Address)
+
+Specific RFC questions.
+- What should be in the header added to the aux buffer.
+  Currently just the minimum is provided. Number of records
+  and the counter width needed to decode them.
+- Should we reset the counters when doing sampling "-F X"
+  If the frequency is higher than the epoch we never see any hot units.
+  If so, when should we reset them?
+
+Note testing has been light and on emulation only + as perf tool is
+a pain to build on a striped back VM,  build testing has all be on
+arm64 so far.  The driver loads though on both arm64 and x86 so
+any problems are likely in the perf tool arch specific code
+which is build tested (on wrong machine)
+
+The QEMU emulation needs some cleanup, but I should be able to post
+that shortly to let people actually play with this.  There are lots
+of open questions there on how 'right' we want the emulation to be
+and what counting uarch to emulate.
+
+Jonathan Cameron (4):
+  cxl: Register devices for CXL Hotness Monitoring Units (CHMU)
+  cxl: Hotness Monitoring Unit via a Perf AUX Buffer.
+  perf: Add support for CXL Hotness Monitoring Units (CHMU)
+  hwtrace: Document CXL Hotness Monitoring Unit driver
+
+ Documentation/trace/cxl-hmu.rst     | 197 +++++++
+ Documentation/trace/index.rst       |   1 +
+ drivers/cxl/Kconfig                 |   6 +
+ drivers/cxl/Makefile                |   3 +
+ drivers/cxl/core/Makefile           |   1 +
+ drivers/cxl/core/core.h             |   1 +
+ drivers/cxl/core/hmu.c              |  64 ++
+ drivers/cxl/core/port.c             |   2 +
+ drivers/cxl/core/regs.c             |  14 +
+ drivers/cxl/cxl.h                   |   5 +
+ drivers/cxl/cxlpci.h                |   1 +
+ drivers/cxl/hmu.c                   | 880 ++++++++++++++++++++++++++++
+ drivers/cxl/hmu.h                   |  23 +
+ drivers/cxl/pci.c                   |  26 +-
+ tools/perf/arch/arm/util/auxtrace.c |  58 ++
+ tools/perf/arch/x86/util/auxtrace.c |  76 +++
+ tools/perf/util/Build               |   1 +
+ tools/perf/util/auxtrace.c          |   4 +
+ tools/perf/util/auxtrace.h          |   1 +
+ tools/perf/util/cxl-hmu.c           | 367 ++++++++++++
+ tools/perf/util/cxl-hmu.h           |  18 +
+ 21 files changed, 1748 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/trace/cxl-hmu.rst
+ create mode 100644 drivers/cxl/core/hmu.c
+ create mode 100644 drivers/cxl/hmu.c
+ create mode 100644 drivers/cxl/hmu.h
+ create mode 100644 tools/perf/util/cxl-hmu.c
+ create mode 100644 tools/perf/util/cxl-hmu.h
+
+-- 
+2.43.0
 
