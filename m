@@ -1,46 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD0A80027;
-	Thu, 21 Nov 2024 05:51:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF901CA84;
+	Thu, 21 Nov 2024 06:04:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732168306; cv=none; b=pT9JCYzvLUYDTBwLQkDFB5PtuHhNK3hk8fsvQ4bV9HAII0x7ubTgGEc4r8totXiq2jF71s/hDlM7TT2LZzUnEwdcJpj3GY5K5fkz9HEgSqtQThMxp9LXwUm6fEWpjZk0ioEGODTBHX4fU4K2Xvdxe8SZA2Go/PrrJQ6uHeyEj6M=
+	t=1732169095; cv=none; b=cfGLBOaSL5Agut1WAMRp+lT+g6Ainiw5XNzOPOk1lQjhuc3SYNijfEeM2rl8jthYrdOQPnANfJXlmlqAGZTx9yBONenuqCvN1+yReMVqnm9tiS9Ov7FuIiV5HqkQOVAc4fCfo8HTzaA7WUtMw85gE7LUOG7rHElWBL2cJjlH4oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732168306; c=relaxed/simple;
-	bh=DxQR1KU3nwgD5oqVrb9iLNpDjjvqkVgAJIiZ4WuSFeA=;
+	s=arc-20240116; t=1732169095; c=relaxed/simple;
+	bh=5SzfSvmW6/EPTP4rQKZCAGqAdZ0pvivToAjN8Y2m9VA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NSQWCbUenolCTsqxP6lRuQUQ7txrQoV95kCv5/zI07eeOpe7lVTAoX77Kwlvt1Rt09um5JKOXWDjgflmSCWnYR1+vOGp0CMlY4hiJEghioRX5pdWXOEO33rqqY6aNTAyZiWq8DRO7enksCAgdnccJ7b2hpofUjburwu5dvdjJxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+zVwTyY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=L2PkPWHhjyUnSKaT696ety0i7OT5aFB0GMQve6db3lIDPo/INeEKyHqHNernVaSN70c4WOtEm9PRx8TQR1lgVyPC8DZCdqm857X+wHvf+Mn/UPDEcLowDIMoYZSnH5Hcagd7Ueigsw6xqNuA8CBMnYVgirPfo6YqyjiRr5PvT9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HNTLZfFQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+zVwTyY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24947C4CECC;
-	Thu, 21 Nov 2024 05:51:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HNTLZfFQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4073BC4CECC;
+	Thu, 21 Nov 2024 06:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732168305;
-	bh=DxQR1KU3nwgD5oqVrb9iLNpDjjvqkVgAJIiZ4WuSFeA=;
+	s=k20201202; t=1732169094;
+	bh=5SzfSvmW6/EPTP4rQKZCAGqAdZ0pvivToAjN8Y2m9VA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y+zVwTyYHwsozbXhmyi+B4AduUkqK6IOqOoZXY7HIjfUToeMGUQLudCPx7xjWSIAA
-	 xl/0nOw+IYiplx+Fo6bylmsENvaM14yKgt25iLVHP9lmbZmJQdqP0TSLnIzGM0Ek4n
-	 Fn68QxklLjACwYJuXU57ALpP9hzVuIUvTHMtPch2OpLlGIRRgbavbl5t6aqD/KB7gT
-	 rwK9ryUzvWsSocladRZPcwz0OR5KZOf2GmFKvsMlr39VaFlhr9xUBO8VB3uAGxh1Z8
-	 2cps2JzpgJek8ja6y2h9gVgr/xI0SVcVC9fkZXPCgKSMiUhOvRV7+yr4AS0tI1PHQ2
-	 spK4Sdte8BWhw==
-Date: Wed, 20 Nov 2024 21:51:42 -0800
+	b=HNTLZfFQdJoBGLUj/Pf2GLZJL1xjs3lT6zJqK68EcV/k1VghZ12lSCUsvVmtpqfkP
+	 2vCJXXlH+JFp6qJOxbtoJ1yfY+gXOccwgKWHlo+Tc3KNksHIEUwMDSzrduOqSOxitA
+	 /4wwoIV/n4bv4srSwtqkk3//3gXk1ej5lW8qno7wls9MiJkjkpAempHg/VSOZEovc3
+	 2+64hp3/lyiYj0ZcIRB5dr5ZcaAsAVNxu6PP+TeEGRAyQWgzgtl94iGePzfGM0v+BZ
+	 O1dI2gYBUkCAuVeBHFzC1sksj6Qep33n+ymFBqWN6ZlWCnqs0sUJB5yY1I8+CAE+Pb
+	 XPrYDrJfPhQkA==
+Date: Wed, 20 Nov 2024 22:04:51 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf hwmon_pmu: Ensure hwmon key union is zeroed
- before use
-Message-ID: <Zz7Kbp_XIu9f02Xj@google.com>
-References: <20241119230033.115369-1-irogers@google.com>
+To: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Quentin Monnet <qmo@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	David Abdurachmanov <davidlt@rivosinc.com>
+Subject: Re: [PATCH] tools: Override makefile ARCH variable if defined, but
+ empty
+Message-ID: <Zz7Ng9CzrF_ciAz-@google.com>
+References: <20241106193208.290067-1-bjorn@kernel.org>
+ <87r076nikd.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,65 +53,49 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241119230033.115369-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87r076nikd.fsf@all.your.base.are.belong.to.us>
 
-On Tue, Nov 19, 2024 at 03:00:33PM -0800, Ian Rogers wrote:
-> Non-zero values led to mismatches in testing. This was reproducible
-> with -fsanitize=undefined.
+On Wed, Nov 20, 2024 at 02:25:22PM +0100, Björn Töpel wrote:
+> Björn Töpel <bjorn@kernel.org> writes:
+> 
+> > From: Björn Töpel <bjorn@rivosinc.com>
+> >
+> > There are a number of tools (bpftool, selftests), that require a
+> > "bootstrap" build. Here, a bootstrap build is a build host variant of
+> > a target. E.g., assume that you're performing a bpftool cross-build on
+> > x86 to riscv, a bootstrap build would then be an x86 variant of
+> > bpftool. The typical way to perform the host build variant, is to pass
+> > "ARCH=" in a sub-make. However, if a variable has been set with a
+> > command argument, then ordinary assignments in the makefile are
+> > ignored.
+> >
+> > This side-effect results in that ARCH, and variables depending on ARCH
+> > are not set.
+> >
+> > Workaround by overriding ARCH to the host arch, if ARCH is empty.
+> >
+> > Fixes: 8859b0da5aac ("tools/bpftool: Fix cross-build")
+> > Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
 
-It's sad the compiler didn't initialize all the members if it has
-members with different size.
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
 > 
-> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Closes: https://lore.kernel.org/lkml/Zzdtj0PEWEX3ATwL@x1/
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Arnaldo/Palmer/Quentin:
+> 
+> A bit unsure what tree this patch should go. It's very important for the
+> RISC-V builds, so maybe via Palmer's RISC-V tree?
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+I think it'd be best to route this through the bpf tree as it seems the
+main target is bpftool.  But given the size and the scope of the change,
+it should be fine with perf-tools or RISC-V tree.
 
 Thanks,
 Namhyung
 
-> ---
->  tools/perf/util/hwmon_pmu.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
-> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-> index ac2245acdc6d..4d9d6f405434 100644
-> --- a/tools/perf/util/hwmon_pmu.c
-> +++ b/tools/perf/util/hwmon_pmu.c
-> @@ -274,7 +274,7 @@ static int hwmon_pmu__read_events(struct hwmon_pmu *pmu)
->  		int number;
->  		enum hwmon_item item;
->  		bool alarm;
-> -		union hwmon_pmu_event_key key = {};
-> +		union hwmon_pmu_event_key key = { .type_and_num = 0 };
->  		struct hwmon_pmu_event_value *value;
->  
->  		if (ent->d_type != DT_REG)
-> @@ -560,7 +560,7 @@ bool hwmon_pmu__have_event(struct perf_pmu *pmu, const char *name)
->  	struct hwmon_pmu *hwm = container_of(pmu, struct hwmon_pmu, pmu);
->  	enum hwmon_type type;
->  	int number;
-> -	union hwmon_pmu_event_key key = {};
-> +	union hwmon_pmu_event_key key = { .type_and_num = 0 };
->  	struct hashmap_entry *cur;
->  	size_t bkt;
->  
-> @@ -623,10 +623,11 @@ static int hwmon_pmu__config_term(const struct hwmon_pmu *hwm,
->  					return -EINVAL;
->  			} else {
->  				union hwmon_pmu_event_key key = {
-> -					.type = type,
-> -					.num = number,
-> +					.type_and_num = 0,
->  				};
->  
-> +				key.type = type;
-> +				key.num = number;
->  				attr->config = key.type_and_num;
->  			}
->  			return 0;
-> -- 
-> 2.47.0.371.ga323438b13-goog
+> Opinions? Just want to make sure it doesn't fall between any chairs!
+> :-)
 > 
+> 
+> Björn
