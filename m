@@ -1,125 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EBF1C1F3A;
-	Thu, 21 Nov 2024 03:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DAF145B18
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Nov 2024 04:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732159770; cv=none; b=H8IyZRk4CgCMC+SfaorM1FW274+h2/MVNv3K3XRGio6Rj0juMvIg313UvrEoCEsXXYMG8877kaFQbl0hL4U774HMWrJqEBynwblcje+VDtH9pH6kxnJjQz3BPiLLajcxokfDf7PXmPZgOmJwDxaXkwJWXEihQN1s2uiYPUneU/A=
+	t=1732162949; cv=none; b=I2yAUsdFPA9jDv7T6iTTfFuwkpVYk/V+e8PoA0AbhsBqT6qp2I9jgfMNXS5bggRfuy5L0F2gU3UoC3XJZqkMRoTA7EmI8zuwZYMY5HmooLe5IAbsJ64XVCuQ5wd/lZlRpNNkmNAGL0CXu7uL9bDCtXpYKR3zuJW9FGkqf1c/sPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732159770; c=relaxed/simple;
-	bh=RHoVzwWXjt4caPv+g3UeTiU+/R+dvmY/yBmiV0cWZE8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZuyX5TTs7ftH9qxFDxmQXGFE5xJbBBFysritwKsGU2BlCC+FTS19SzSi8Z8SN4twZDYyq10uXM+EgqsgpDzjedzYtuxRakn012JoxBfaGo/pOVdt/pJJrTeALOEw5y32J/WLBUXUt+ZExQ1Mw9LWazUVmfUbNHXorlCXAFslucA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TSGGDCrR; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1732162949; c=relaxed/simple;
+	bh=SpAAQo3l0wT/aBxSUBDG8LR2a69OhY7lZutFyWBoaSI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HX7FpLHgw2R/mYEGWnGCwKvS4JEy7gm81cxGutOmwHLy05WUpEiCwItDUq0aeS99ArvgXEbae2glNzVjU627q4kAWhij4mtmOfq1vEgXr/27ceDqxr+0JKhi7kNt3moNo0arAQUPUI/gZ7mIchbXIMiV79moX0v2YOTJAz170Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=lJ5xHgVr; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TSGGDCrR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732159769; x=1763695769;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=RHoVzwWXjt4caPv+g3UeTiU+/R+dvmY/yBmiV0cWZE8=;
-  b=TSGGDCrRKOqbnKeAo/badN0sl2Say10q6YRj4hOZnpHJOxw3NzTBJc0+
-   gx3VPKFNcpLy2ZoRzJSBzfpa585oRswkzzt6sAalyKNtzjCD4Atw3Q/O4
-   G8PqC9UK0rhk/yX/qM5x38aIks9d9G1kSaoe38wmnCNgLJHaHKue19SxO
-   h2ZXtbd5vs2T8gqcPSHkzmIng3pxDN1+Y8ch3huK/gOt/1+m23yhJNguP
-   cSzaPEscdE7XLfLsB6DUfz3i7VIZ2EB55M7dhptNKc+jhLf+JHAFIoCTj
-   REQiJCKI6DD03sVngLIcdrRvQQr2Vif946P0eUYbo1yqA95D1EmqUXzIu
-   Q==;
-X-CSE-ConnectionGUID: hkDmgSuYTmacLSgULGc8cA==
-X-CSE-MsgGUID: w7qdJ+JvTfmEEp9ZNvVRlw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11262"; a="31616603"
-X-IronPort-AV: E=Sophos;i="6.12,171,1728975600"; 
-   d="scan'208";a="31616603"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 19:29:27 -0800
-X-CSE-ConnectionGUID: hDd+q5yrSAKHs8G2FW7PIw==
-X-CSE-MsgGUID: Kcrmj1ABRBWlJGGQ//X+oA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,171,1728975600"; 
-   d="scan'208";a="90516447"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 19:29:23 -0800
-Message-ID: <5eac39c5-4e53-457e-b6b1-4101135595ce@linux.intel.com>
-Date: Thu, 21 Nov 2024 11:29:18 +0800
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="lJ5xHgVr"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6ee8e894deeso4214677b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Nov 2024 20:22:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1732162947; x=1732767747; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cP3Um0hz7Gv16Gtk91dL7DlYT6sIqAVCB2yrXnpMevM=;
+        b=lJ5xHgVrpeJelHGu3h+m+kpP+CpJio03F91Rbvepr+CWIi+9zzppZNlKGNpp8Ygsm3
+         Sjn3pfi0iup6FCY6VRUX/gvK0tToQVNp0Q1qdmUuwb3oyNDO0x+aTkFXUbPDPq2+uMYV
+         6Kkw1xQI1Og8AGiNWJdTkgrqygfd4mt9dNclhjlQwoslCkM4OjYkdA0dHkCZnDnLbXxN
+         1nxctHciljQ+3LXCJ/9o80XgWTNvdelIrPEluX+jd/rnZxIX0fjubBWinpxABfVVzOI3
+         0bzGibPw4zzKvqUUMZGV+0LajHL2/tYGbJNQKduNU2tQl84HB9kxxSB40UKEfbU5hHC1
+         Fthg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732162947; x=1732767747;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cP3Um0hz7Gv16Gtk91dL7DlYT6sIqAVCB2yrXnpMevM=;
+        b=gYA4eUyiT9KOLsTjr4U8UwJcxgsNfzxpMcWQeyWbrVWR8C5aZ9IxcMcxC+lD7U7UXE
+         MpcBeg82gLU3Cd3CPwig31pWeltP7sI1Lvj1gsAb6OeGR9njlFwQJYGlS//LwFRxjBgM
+         B4JR94jumZXryURWgbhII+EiTXsz+jRt/yhL+HipkR1tele7VQDuhu5DEWwHjB001fjr
+         3heNg71fSBYc2C52NZIgpwW+3tFGbIeFM9EZojYt5OhwIWa75XXYoZvgTyA+cdjBfrCb
+         Y8JiPPMSEtIoysm32e5LskEroqhC1qdjvskxAJ/wl/r+k5l0xZYVQPS1qBzTwA8L5erv
+         R2Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCU98JywJkYNalOnRmsI4DPZRMPIggVuCBTDyF4PuGR436iC8eEsAVgnqRP8FEvgcNIEnsJrd8aolKywa8iXnyRe@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsFcMdg5oIbEbrFpLypeXW4oS/95QSIH84ZmNN4aJInkFJJfWv
+	/Wli/SbYcxqQVnQlDcn0PVZx3HND1rrCOxXYE6tCLFXD9SSWZvyBXE0eSChkCEU=
+X-Google-Smtp-Source: AGHT+IFG/0lmdLf+PuJVUiUVDthedJQkU+yi8kvRYeLAcyp/RSQ9OGzeQL0b0Fr9yTqYmM0khQUKNg==
+X-Received: by 2002:a05:690c:5a15:b0:6ee:5068:7510 with SMTP id 00721157ae682-6eecc57b073mr20304047b3.26.1732162946630;
+        Wed, 20 Nov 2024 20:22:26 -0800 (PST)
+Received: from ghost ([50.146.0.9])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6ee71341e4dsm25749277b3.90.2024.11.20.20.22.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2024 20:22:25 -0800 (PST)
+Date: Wed, 20 Nov 2024 20:22:23 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Christian Brauner <brauner@kernel.org>, guoren <guoren@kernel.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH RFT 00/16] perf tools: Use generic syscall scripts for
+ all archs
+Message-ID: <Zz61f02p8s52G6ba@ghost>
+References: <20241104-perf_syscalltbl-v1-0-9adae5c761ef@rivosinc.com>
+ <3b56fc50-4c6c-4520-adba-461797a3b5ec@app.fastmail.com>
+ <Zyk9hX8CB_2rbWsi@ghost>
+ <CAP-5=fUdZRbCp+2ghEUdp+qJ1BuMDuTtw9R+dFAaom+3oqQV_g@mail.gmail.com>
+ <ZylaRaMqEsEjYjs6@ghost>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 56/58] KVM: x86/pmu/svm: Wire up PMU filtering
- functionality for passthrough PMU
-To: Sean Christopherson <seanjc@google.com>,
- Mingwei Zhang <mizhang@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang
- <xiong.y.zhang@intel.com>, Kan Liang <kan.liang@intel.com>,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
- <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>,
- Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-57-mizhang@google.com> <Zz5XEDX8NqnrHhj3@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <Zz5XEDX8NqnrHhj3@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZylaRaMqEsEjYjs6@ghost>
 
+On Mon, Nov 04, 2024 at 03:35:33PM -0800, Charlie Jenkins wrote:
+> On Mon, Nov 04, 2024 at 02:03:28PM -0800, Ian Rogers wrote:
+> > On Mon, Nov 4, 2024 at 1:32 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > >
+> > > On Mon, Nov 04, 2024 at 10:13:18PM +0100, Arnd Bergmann wrote:
+> > > > On Mon, Nov 4, 2024, at 22:06, Charlie Jenkins wrote:
+> > > > > Standardize the generation of syscall headers around syscall tables.
+> > > > > Previously each architecture independently selected how syscall headers
+> > > > > would be generated, or would not define a way and fallback onto
+> > > > > libaudit. Convert all architectures to use a standard syscall header
+> > > > > generation script and allow each architecture to override the syscall
+> > > > > table to use if they do not use the generic table.
+> > > > >
+> > > > > As a result of these changes, no architecture will require libaudit, and
+> > > > > so the fallback case of using libaudit is removed by this series.
+> > > > >
+> > > > > Testing:
+> > > > >
+> > > > > I have tested that the syscall mappings of id to name generation works
+> > > > > as expected for every architecture, but I have only validated that perf
+> > > > > trace compiles and runs as expected on riscv, arm64, and x86_64.
+> > > > >
+> > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > >
+> > > > Thanks for doing this, I had plans to do this myself, but hadn't
+> > > > completed that bit so far. I'm travelling at the moment, so I'm
+> > > > not sure I have time to look at it in enough detail this week.
+> > > >
+> > > > One problem I ran into doing this previously was the incompatible
+> > > > format of the tables for x86 and s390, which have conflicting
+> > > > interpretations of what the '-' character means. It's possible
+> > > > that this is only really relevant for the in-kernel table,
+> > > > not the version in tools.
+> > > >
+> > >
+> > > I don't think that is an issue for this usecase because the only
+> > > information that is taken from the syscall table is the number and the
+> > > name of the syscall. '-' doesn't appear in either of these columns!
+> > 
+> > This is cool stuff. An area that may not be immediately apparent for
+> > improvement is that the x86-64 build only has access to the 64-bit
+> > syscall table. Perhaps all the syscall tables should always be built
+> > and then at runtime the architecture of the perf.data file, etc. used
+> > to choose the appropriate one. The cleanup to add an ELF host #define
+> > could help with this:
+> > https://lore.kernel.org/linux-perf-users/20241017002520.59124-1-irogers@google.com/
+> 
+> Oh that's a great idea! I think these changes will make it more seamless
+> to make that a reality.
+> 
+> > 
+> > Ultimately I'd like to see less arch code as it inherently makes cross
+> > platform worker harder. That doesn't impact this work which I'm happy
+> > to review.
+> 
+> Yeah I agree. Reducing arch code was the motivation for this change.
+> There was the issue a couple weeks ago that caused all architectures
+> that used libaudit to break from commit 7a2fb5619cc1fb53 ("perf trace:
+> Fix iteration of syscall ids in syscalltbl->entries"), so this change
+> will eliminate that source of difference between architectures.
+> 
+> - Charlie
+> 
+> > 
+> > Thanks,
+> > Ian
 
-On 11/21/2024 5:39 AM, Sean Christopherson wrote:
-> On Thu, Aug 01, 2024, Mingwei Zhang wrote:
->> From: Manali Shukla <manali.shukla@amd.com>
->>
->> With the Passthrough PMU enabled, the PERF_CTLx MSRs (event selectors) are
->> always intercepted and the event filter checking can be directly done
->> inside amd_pmu_set_msr().
->>
->> Add a check to allow writing to event selector for GP counters if and only
->> if the event is allowed in filter.
-> This belongs in the patch that adds AMD support for setting pmc->eventsel_hw.
-> E.g. reverting just this patch would leave KVM in a very broken state.  And it's
-> unnecessarily difficult to review.
+Let me know if you have any feedback on this series!
 
-Sure. would merge them into one.
+- Charlie
 
-
->
->> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
->> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->> ---
->>  arch/x86/kvm/svm/pmu.c | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
->> index 86818da66bbe..9f3e910ee453 100644
->> --- a/arch/x86/kvm/svm/pmu.c
->> +++ b/arch/x86/kvm/svm/pmu.c
->> @@ -166,6 +166,15 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>  		if (data != pmc->eventsel) {
->>  			pmc->eventsel = data;
->>  			if (is_passthrough_pmu_enabled(vcpu)) {
->> +				if (!check_pmu_event_filter(pmc)) {
->> +					/*
->> +					 * When guest request an invalid event,
->> +					 * stop the counter by clearing the
->> +					 * event selector MSR.
->> +					 */
->> +					pmc->eventsel_hw = 0;
->> +					return 0;
->> +				}
->>  				data &= ~AMD64_EVENTSEL_HOSTONLY;
->>  				pmc->eventsel_hw = data | AMD64_EVENTSEL_GUESTONLY;
->>  			} else {
->> -- 
->> 2.46.0.rc1.232.g9752f9e123-goog
->>
