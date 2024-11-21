@@ -1,74 +1,84 @@
-Received: from cmccmta1.chinamobile.com (cmccmta4.chinamobile.com [111.22.67.137])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA66915ADB4;
-	Thu, 21 Nov 2024 12:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.137
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A6D1D88AD
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Nov 2024 13:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732192601; cv=none; b=ejtY/ny2pfEDf6w/PJcIWTLXycPpFzWPQKE47B8MR6S+YPTFowx56p8VEzWTMKT0Vh5/E/W5NIVgDDVPJLmXAzs/W30+D7IAViR4L+NhgNHg9w9CPDuOeUngT3oyN6M8dYlwILBXWDlWvynYM56dmveRUNdub8v3cxmD+zySUDI=
+	t=1732194808; cv=none; b=ZJeskl6Cc+dBOASRxbXfB+kdswRFfU7xlW8HSqR45JIGFSvF5JV+dfoQEbzXAZmyI74TwlwLvKcByo6a/THrVhAWBa6WZyXfvlMlPPdiNIDwumvbnLi1VfKQjeTfGVUCPIDPkbLCpws7I9BdD2Mp5/OHfGygB+GYBPaIECDr4Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732192601; c=relaxed/simple;
-	bh=Fk+4Ys5HM6Xi/65FH8+mZ2tifyhK6thhfMK7TlPEBFw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z76GwuGkj0vsrCV/UsqNcrz4AODBUWc6E8oT4VRWH3N+jC8Yf8T0YgSZ7FkvaOKDCarHMw3mb+fKnSTCYM6uIEK5hGCw6/ue/FKyXwA4nnbNgEPg/GC1EZsLncbcE1MLsMTdNyLonvYYTh+ORJoimGUvY4pHPV4e7F4ossBKOhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app04-12004 (RichMail) with SMTP id 2ee4673f2953da1-306ab;
-	Thu, 21 Nov 2024 20:36:35 +0800 (CST)
-X-RM-TRANSID:2ee4673f2953da1-306ab
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from localhost.localdomain (unknown[10.55.1.69])
-	by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee1673f29522cb-d7016;
-	Thu, 21 Nov 2024 20:36:35 +0800 (CST)
-X-RM-TRANSID:2ee1673f29522cb-d7016
-From: liujing <liujing@cmss.chinamobile.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	liujing <liujing@cmss.chinamobile.com>
-Subject: [PATCH] perf intel-pt: Fix variable duplicate check
-Date: Thu, 21 Nov 2024 20:36:33 +0800
-Message-Id: <20241121123633.5805-1-liujing@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1732194808; c=relaxed/simple;
+	bh=mlh0bylkAm0ifIvx1L8aJUhGU24UbG3qrWP5TY+9Vos=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=exxVEVQnwVQrwMdOSBoLh8gzsbnjaFDMxgwYCXov4giCnIHSpIMe/qK4DqjWk7fpArmthSB+pS42Eo5RymsUNDnqBhzgBeZs7Ps/wx6iOFDBTsPdcZhA0xgCU7meYzgXs/WhfwCH9/WKY/MBhsy/SeU/l4YZ/7hboUj0hRBWpvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3a79558c659so3161805ab.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 Nov 2024 05:13:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732194806; x=1732799606;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KOWHR+6cZm9nrsSvHH6bPy3TZe9GkM6yhS+PqixliyA=;
+        b=bJsGCac/EzQ3sBUG6NBgzRCCI88ji3so/aKhP1qP9zLH6KGDXqT8CyKD4+clKXhCCt
+         eM7Gc6Eglfoh8dMB/g1scXudRwV8zv+0xfwif2CSrZb0U8ngKXmfCwqZrMENOwcF68H/
+         uXvMFC68aaJxCORZwEmTKOVo8bA9abY2hdRITKlILHY0QL8eCm4nZ7GRJbs63kv4YKG4
+         x/Z4iRgAOMizSbnwiermtpooWz95CkW6DxopXHzDn01dA+93WDTb/gAeR2RcKZDgOi6u
+         3umogTn7Ag/V5Je0ItPYqfc09HemnVSmbIZb2STGWFhKalrBbk2oWkJUrMwjy7VomssN
+         sXqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgAnwWVIF/trdbvLefIxDcNg3WLquUSlj1uYbd947myHvfjFqwqsbbaNVD26v6sJPJL0us9SKRH7poLOswI/qd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3WV5aZ3Ubqv+5vdCse0Uu8++nPeM8ue/yzIhQY3F+F1yhWaMW
+	OF1GuZbkf0DYyO1z0FOHCmsxmutJ0i3bAeXJI9pn8yJMShoLnhutQJ6RSyV3sZ+RRKermpqFLiX
+	55zzqn/AHi80OfCvzRv+GGySTvAXylfAouBReDt9Y0iTdQvSkhgAO+eo=
+X-Google-Smtp-Source: AGHT+IGFEBt3e/K+uovLH/gxLg2jsIfyHVP3nAy08FHlw1Fj9XF7+NFLkATQ9PZtp3iRlVkadJUOPFwpB1vNiLG1ojoIGCMIsx/K
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:ca0d:0:b0:3a7:7124:bd2c with SMTP id
+ e9e14a558f8ab-3a7865814dfmr75048325ab.19.1732194806328; Thu, 21 Nov 2024
+ 05:13:26 -0800 (PST)
+Date: Thu, 21 Nov 2024 05:13:26 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <673f31f6.050a0220.3c9d61.0172.GAE@google.com>
+Subject: [syzbot] Monthly perf report (Nov 2024)
+From: syzbot <syzbot+list5bde034aa3d7a5a8ec4d@syzkaller.appspotmail.com>
+To: acme@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, namhyung@kernel.org, 
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Identical condition 'data->from_mtc', second condition is always false,
-so duplicate checks are eliminated.
+Hello perf maintainers/developers,
 
-Signed-off-by: liujing <liujing@cmss.chinamobile.com>
+This is a 31-day syzbot report for the perf subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/perf
 
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index e733f6b1f7ac..9fde2c49f8b5 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -883,7 +883,7 @@ static int intel_pt_calc_cyc_cb(struct intel_pt_pkt_info *pkt_info)
- 			return 1;
- 		timestamp = pkt_info->packet.payload |
- 			    (data->timestamp & (0xffULL << 56));
--		if (data->from_mtc && timestamp < data->timestamp &&
-+		if (timestamp < data->timestamp &&
- 		    data->timestamp - timestamp < decoder->tsc_slip)
- 			return 1;
- 		if (timestamp < data->timestamp)
--- 
-2.27.0
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 4 issues are still open and 23 have already been fixed.
 
+Some of the still happening issues:
 
+Ref Crashes Repro Title
+<1> 3720    Yes   WARNING: suspicious RCU usage in get_callchain_entry
+                  https://syzkaller.appspot.com/bug?extid=72a43cdb78469f7fbad1
+<2> 5       No    KCSAN: data-race in _free_event / perf_pending_task (2)
+                  https://syzkaller.appspot.com/bug?extid=e75157f5b04f8ff40e17
+<3> 1       Yes   INFO: task hung in _free_event
+                  https://syzkaller.appspot.com/bug?extid=3c4321e10eea460eb606
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
