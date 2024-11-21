@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130261D3578;
-	Thu, 21 Nov 2024 10:19:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D5B1CD202;
+	Thu, 21 Nov 2024 10:20:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732184396; cv=none; b=uJ2SgyFjmAzdxQbHUg3z9tLyw0IDkFmmro0xNUZRBEbFxXuq92cchZMIc+GppFonmTr/de5tu6Cy6NHJxJap2OpwR1jiPVdZEhDL4lylrx+3a23/zZl9zPkfjCWMDPf8UyV6t608Y4aS/0H6ZdiM3/43wskUcevUbXld8yO2Nl4=
+	t=1732184426; cv=none; b=LD/SrYJw4K+4fHFhS6efl0UYPj+6w2HbPK0k7sZn+MVBkFWuOaYP3M6u2JkwDRBY5TDzzAVp5oYsncAA8Pj3/grfQv9ut8AASYNzDiaLtsAN84QoYU+M7uCqpaaPhLz6QRuuCChjKxU64LqWiCO0K3Ebqi9bVNTE9a086nJUvRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732184396; c=relaxed/simple;
-	bh=/dgLtp6plOXqlLg/+jswb7FJ1agJK9BKMK3SydCZl/0=;
+	s=arc-20240116; t=1732184426; c=relaxed/simple;
+	bh=wET4jVx2tdalfskgRlTBrhP5cfdwuvk8NCiNoM2i+Uw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NNWsscsl9zwwh+iGk0dZsCHX8LZu9Z173IB14ebctB0j/s+O+8f8RLUYkYsPuNci2hizq6VCktYtQen7qi2RXhBK+CNY1Q6BByJ6StEhlyFkAs83ypzQrQ5QCZkYvwgJRWLyfbbs0T7lWm8mQvfYJzUGOpe1vDxR+9ArJ6eMWTw=
+	 MIME-Version:Content-Type; b=mec+IWymKtogHJr5rDR05Up2TumdidaEsCHCuXhSSFWotlQd8sA1t/7tMze8pSBxLLV4OE0uhUpHSY5GAlAbkvP6GmnY5x0hQyY4KQakrkLCfWTNjZqGEASxsGaYVZhHyi9lyZX5Zxff+tQKOmG/2r2CiTfjbD4USX+iK0BmBlw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvDgZ6l8Cz6K5nd;
-	Thu, 21 Nov 2024 18:17:30 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvDkP70XHz6L74P;
+	Thu, 21 Nov 2024 18:19:57 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7FC70140133;
-	Thu, 21 Nov 2024 18:19:50 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id CBE59140A86;
+	Thu, 21 Nov 2024 18:20:21 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
  frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 21 Nov 2024 11:19:49 +0100
+ 15.1.2507.39; Thu, 21 Nov 2024 11:20:20 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
 	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
@@ -37,9 +37,9 @@ CC: <linuxarm@huawei.com>, <tongtiangen@huawei.com>, Yicong Yang
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>, Gregory Price <gourry@gourry.net>, Huang
  Ying <ying.huang@intel.com>
-Subject: [RFC PATCH 2/4] cxl: Hotness Monitoring Unit via a Perf AUX Buffer.
-Date: Thu, 21 Nov 2024 10:18:43 +0000
-Message-ID: <20241121101845.1815660-3-Jonathan.Cameron@huawei.com>
+Subject: [RFC PATCH 3/4] perf: Add support for CXL Hotness Monitoring Units (CHMU)
+Date: Thu, 21 Nov 2024 10:18:44 +0000
+Message-ID: <20241121101845.1815660-4-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
 References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
@@ -54,998 +54,713 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-There are many ways that support for the new CXL hotness monitoring unit
-could be enabled.
+Based closely on existing support for hisi_ptt.
+Provides basic record and report --dump-raw-traces support.
 
-The existing infrastructure of perf + auxiliary buffers is used for the
-similar activity of trace capture.
+Example output.  With a counter_width of 16 (0x10) the least significant
+4 bytes are the counter value and the unit index is bits 16-63.
+Here all units are over the threshold and the indexes are 0,1,2 etc.
 
-This driver is based on the existing hisi_ptt (PCI trace and tune) driver
-and the CXL PMU driver.  Testing was done against QEMU emulation of
-the feature but it's early days and lots more testing is needed as
-this is a flexible specification with many corner cases.
+. ... CXL_HMU data: size 33512 bytes
+Header 0: units: 29c counter_width 10
+Header 1 : deadbeef
+0000000000000283
+0000000000010364
+0000000000020366
+000000000003033c
+0000000000040343
+00000000000502ff
+000000000006030d
+000000000007031a
 
-The raw hotlist elements cannot be interpreted without knowing
-the counter width. This is unfortunately dependent in an implementation
-defined way on the unit size used for monitoring.
-As such, store this and a count of new hotlist entrees in a header
-that is inserted at the start of each set of records added to the auxiliary
-buffer.
-
-TODO: Add capabilities to expose what can be set for at least some
-of these parameters.
+Note this is definitely RFC quality code. Before merging should reduce
+the code duplication that already exists and this code makes sorse.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/cxl/Kconfig     |   6 +
- drivers/cxl/Makefile    |   3 +
- drivers/cxl/core/core.h |   1 +
- drivers/cxl/core/port.c |   2 +
- drivers/cxl/cxl.h       |   1 +
- drivers/cxl/hmu.c       | 880 ++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 893 insertions(+)
+ tools/perf/arch/arm/util/auxtrace.c |  58 +++++
+ tools/perf/arch/x86/util/auxtrace.c |  76 ++++++
+ tools/perf/util/Build               |   1 +
+ tools/perf/util/auxtrace.c          |   4 +
+ tools/perf/util/auxtrace.h          |   1 +
+ tools/perf/util/cxl-hmu.c           | 367 ++++++++++++++++++++++++++++
+ tools/perf/util/cxl-hmu.h           |  18 ++
+ 7 files changed, 525 insertions(+)
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 876469e23f7a..c420f828fe20 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -146,4 +146,10 @@ config CXL_REGION_INVALIDATION_TEST
- 	  If unsure, or if this kernel is meant for production environments,
- 	  say N.
+diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+index 3b8eca0ffb17..07ff41800808 100644
+--- a/tools/perf/arch/arm/util/auxtrace.c
++++ b/tools/perf/arch/arm/util/auxtrace.c
+@@ -18,6 +18,7 @@
+ #include "cs-etm.h"
+ #include "arm-spe.h"
+ #include "hisi-ptt.h"
++#include "cxl-hmu.h"
  
-+config CXL_HMU
-+       tristate "CXL: Hotness Monitoring Unit Driver"
-+       depends on PERF_EVENTS
-+       help
-+	 Read data out from the CXL hotness units and provide it to userspace
-+	 via the perf auxbuffer framework.
- endif
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index 2caa90fa4bf2..b678aa927298 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -7,15 +7,18 @@
- # - 'mem' and 'pmem' before endpoint drivers so that memdevs are
- #   immediately enabled
- # - 'pci' last, also mirrors the hardware enumeration hierarchy
-+# - 'hmu' doesn't matter for now.
- obj-y += core/
- obj-$(CONFIG_CXL_PORT) += cxl_port.o
- obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
- obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
- obj-$(CONFIG_CXL_MEM) += cxl_mem.o
- obj-$(CONFIG_CXL_PCI) += cxl_pci.o
-+obj-$(CONFIG_CXL_HMU) += cxl_hmu.o
- 
- cxl_port-y := port.o
- cxl_acpi-y := acpi.o
- cxl_pmem-y := pmem.o security.o
- cxl_mem-y := mem.o
- cxl_pci-y := pci.o
-+cxl_hmu-y := hmu.o
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 0c62b4069ba0..88c673a4d950 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -6,6 +6,7 @@
- 
- extern const struct device_type cxl_nvdimm_bridge_type;
- extern const struct device_type cxl_nvdimm_type;
-+extern const struct device_type cxl_hmu_type;
- extern const struct device_type cxl_pmu_type;
- 
- extern struct attribute_group cxl_base_attribute_group;
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index af92c67bc954..a91712757830 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -74,6 +74,8 @@ static int cxl_device_id(const struct device *dev)
- 		return CXL_DEVICE_REGION;
- 	if (dev->type == &cxl_pmu_type)
- 		return CXL_DEVICE_PMU;
-+	if (dev->type == &cxl_hmu_type)
-+		return CXL_DEVICE_HMU;
- 	return 0;
+ static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
+ {
+@@ -99,6 +100,49 @@ static struct perf_pmu **find_all_hisi_ptt_pmus(int *nr_ptts, int *err)
+ 	return hisi_ptt_pmus;
  }
  
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 8172bc1f7a8d..bd190e2baa1d 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -850,6 +850,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
- #define CXL_DEVICE_PMEM_REGION		7
- #define CXL_DEVICE_DAX_REGION		8
- #define CXL_DEVICE_PMU			9
-+#define CXL_DEVICE_HMU			10
++static struct perf_pmu **find_all_cxl_hmu_pmus(int *nr_hmus, int *err)
++{
++	struct perf_pmu **cxl_hmu_pmus = NULL;
++	struct dirent *dent;
++	char path[PATH_MAX];
++	DIR *dir = NULL;
++	int idx = 0;
++
++	perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
++	dir = opendir(path);
++	if (!dir) {
++		*err = -EINVAL;
++		return NULL;
++	}
++
++	while ((dent = readdir(dir))) {
++		if (strstr(dent->d_name, "cxl_hmu"))
++			(*nr_hmus)++;
++	}
++
++	if (!(*nr_hmus))
++		goto out;
++
++	cxl_hmu_pmus = zalloc(sizeof(struct perf_pmu *) * (*nr_hmus));
++	if (!cxl_hmu_pmus) {
++		*err = -ENOMEM;
++		goto out;
++	}
++
++	rewinddir(dir);
++	while ((dent = readdir(dir))) {
++		if (strstr(dent->d_name, "cxl_hmu") && idx < *nr_hmus) {
++			cxl_hmu_pmus[idx] = perf_pmus__find(dent->d_name);
++			if (cxl_hmu_pmus[idx])
++				idx++;
++		}
++	}
++
++out:
++	closedir(dir);
++	return cxl_hmu_pmus;
++}
++
+ static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
+ 					   int pmu_nr, struct evsel *evsel)
+ {
+@@ -121,13 +165,16 @@ struct auxtrace_record
+ 	struct perf_pmu	*cs_etm_pmu = NULL;
+ 	struct perf_pmu **arm_spe_pmus = NULL;
+ 	struct perf_pmu **hisi_ptt_pmus = NULL;
++	struct perf_pmu **chmu_pmus = NULL;
+ 	struct evsel *evsel;
+ 	struct perf_pmu *found_etm = NULL;
+ 	struct perf_pmu *found_spe = NULL;
+ 	struct perf_pmu *found_ptt = NULL;
++	struct perf_pmu *found_chmu = NULL;
+ 	int auxtrace_event_cnt = 0;
+ 	int nr_spes = 0;
+ 	int nr_ptts = 0;
++	int nr_chmus = 0;
  
- #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
- #define CXL_MODALIAS_FMT "cxl:t%d"
-diff --git a/drivers/cxl/hmu.c b/drivers/cxl/hmu.c
-new file mode 100644
-index 000000000000..9f5947afbb4b
---- /dev/null
-+++ b/drivers/cxl/hmu.c
-@@ -0,0 +1,880 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for CXL Hotness Monitoring unit
-+ *
-+ * Based on hisi_ptt.c (Author Yicong Yang <yangyicong@hisilicon.com>)
-+ * Copyright (c) 2022-2024 HiSilicon Technologies Co., Ltd.
-+ *
-+ * TODO:
-+ * - Add capabilities attributes to help userspace know what can be set.
-+ * - Find out if timeouts are appropriate for real hardware. Currently
-+ *   assuming 0.1 seconds is enough for anything.
-+ */
-+#include <linux/dev_printk.h>
-+#include <linux/perf_event.h>
-+#include <linux/bitfield.h>
-+#include <linux/spinlock.h>
-+#include <linux/cleanup.h>
-+#include <linux/vmalloc.h>
-+#include <linux/device.h>
-+#include <linux/iopoll.h>
-+#include <linux/delay.h>
-+#include <linux/list.h>
-+#include <linux/math.h>
-+#include <linux/pci.h>
+ 	if (!evlist)
+ 		return NULL;
+@@ -135,6 +182,7 @@ struct auxtrace_record
+ 	cs_etm_pmu = perf_pmus__find(CORESIGHT_ETM_PMU_NAME);
+ 	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+ 	hisi_ptt_pmus = find_all_hisi_ptt_pmus(&nr_ptts, err);
++	chmu_pmus = find_all_cxl_hmu_pmus(&nr_chmus, err);
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+ 		if (cs_etm_pmu && !found_etm)
+@@ -145,10 +193,14 @@ struct auxtrace_record
+ 
+ 		if (hisi_ptt_pmus && !found_ptt)
+ 			found_ptt = find_pmu_for_event(hisi_ptt_pmus, nr_ptts, evsel);
 +
-+#include "cxlpci.h"
-+#include "cxl.h"
-+#include "hmu.h"
++		if (chmu_pmus && !found_chmu)
++			found_chmu = find_pmu_for_event(chmu_pmus, nr_chmus, evsel);
+ 	}
+ 
+ 	free(arm_spe_pmus);
+ 	free(hisi_ptt_pmus);
++	free(chmu_pmus);
+ 
+ 	if (found_etm)
+ 		auxtrace_event_cnt++;
+@@ -159,6 +211,9 @@ struct auxtrace_record
+ 	if (found_ptt)
+ 		auxtrace_event_cnt++;
+ 
++	if (found_chmu)
++		auxtrace_event_cnt++;
 +
-+#define CHMU_COMMON_CAP0_REG				0x00
-+#define   CHMU_COMMON_CAP0_VER_MSK			GENMASK(3, 0)
-+#define   CHMU_COMMON_CAP0_NUMINST_MSK			GENMASK(15, 8)
-+#define CHMU_COMMON_CAP1_REG				0x08
-+#define   CHMU_COMMON_CAP1_INSTLEN_MSK			GENMASK(15, 0)
+ 	if (auxtrace_event_cnt > 1) {
+ 		pr_err("Concurrent AUX trace operation not currently supported\n");
+ 		*err = -EOPNOTSUPP;
+@@ -174,6 +229,9 @@ struct auxtrace_record
+ 
+ 	if (found_ptt)
+ 		return hisi_ptt_recording_init(err, found_ptt);
 +
-+/* Register offsets within instance */
-+#define CHMU_INST0_CAP0_REG				0x00
-+#define   CHMU_INST0_CAP0_MSI_N_MSK			GENMASK(3, 0)
-+#define   CHMU_INST0_CAP0_OVRFLW_CAP			BIT(4)
-+#define   CHMU_INST0_CAP0_FILLTHRESH_CAP		BIT(5)
-+#define   CHMU_INST0_CAP0_EPOCH_TYPE_MSK		GENMASK(7, 6)
-+#define     CHMU_INST0_CAP0_EPOCH_TYPE_GLOBAL		0
-+#define     CHMU_INST0_CAP0_EPOCH_TYPE_PERCNT		1
-+#define   CHMU_INST0_CAP0_TRACK_NONTEE_R		BIT(8)
-+#define   CHMU_INST0_CAP0_TRACK_NONTEE_W		BIT(9)
-+#define   CHMU_INST0_CAP0_TRACK_NONTEE_RW		BIT(10)
-+#define   CHMU_INST0_CAP0_TRACK_R			BIT(11)
-+#define   CHMU_INST0_CAP0_TRACK_W			BIT(12)
-+#define   CHMU_INST0_CAP0_TRACK_RW			BIT(13)
-+/* Epoch defined as scale * multiplier */
-+#define   CHMU_INST0_CAP0_EPOCH_MAX_SCALE_MSK		GENMASK(19, 16)
-+#define     CHMU_EPOCH_SCALE_100US			1
-+#define     CHMU_EPOCH_SCALE_1MS			2
-+#define     CHMU_INST0_SCALE_10MS			3
-+#define     CHMU_INST0_SCALE_100MS			4
-+#define     CHMU_INST0_SCALE_1US			5
-+#define   CHMU_INST0_CAP0_EPOCH_MAX_MULT_MSK		GENMASK(31, 20)
-+#define   CHMU_INST0_CAP0_EPOCH_MIN_SCALE_MSK		GENMASK_ULL(35, 32)
-+#define   CHMU_INST0_CAP0_EPOCH_MIN_MULT_MSK		GENMASK_ULL(47, 36)
-+#define   CHMU_INST0_CAP0_HOTLIST_SIZE_MSK		GENMASK_ULL(63, 48)
-+#define CHMU_INST0_CAP1_REG				0x08
-+/* Power of 2 * 256 bits */
-+#define   CHMU_INST0_CAP1_UNIT_SIZE_MSK			GENMASK(31, 0)
-+/* Power of 2 */
-+#define   CHMU_INST0_CAP1_DOWNSAMP_MSK			GENMASK_ULL(47, 32)
-+#define   CHMU_INST0_CAP1_EPOCH_SUP			BIT_ULL(48)
-+#define   CHMU_INST0_CAP1_ALWAYS_ON_SUP			BIT_ULL(49)
-+#define   CHMU_INST0_CAP1_RAND_DOWNSAMP_SUP		BIT_ULL(50)
-+#define   CHMU_INST0_CAP1_ADDR_OVERLAP_SUP		BIT_ULL(51)
-+#define   CHMU_INST0_CAP1_POSTPONED_ON_OVRFLOW_SUP	BIT_ULL(52)
-+
-+/*
-+ * In CXL r3.2 all defined as part of single giant CAP register.
-+ * Where a whole 64 bits is in one field just name after the field.
-+ */
-+#define CHMU_INST0_RANGE_BITMAP_OFFSET_REG		0x10
-+#define CHMU_INST0_HOTLIST_OFFSET_REG			0x18
-+
-+#define CHMU_INST0_CFG0_REG				0x40
-+#define   CHMU_INST0_CFG0_WHAT_MSK			GENMASK(7, 0)
-+#define      CHMU_INST0_CFG0_WHAT_NONTEE_R		1
-+#define      CHMU_INST0_CFG0_WHAT_NONTEE_W		2
-+#define      CHMU_INST0_CFG0_WHAT_NONTEE_RW		3
-+#define      CHMU_INST0_CFG0_WHAT_R			4
-+#define      CHMU_INST0_CFG0_WHAT_W			5
-+#define      CHMU_INST0_CFG0_WHAT_RW			6
-+#define   CHMU_INST0_CFG0_RAND_DOWNSAMP_EN		BIT(8)
-+#define   CHMU_INST0_CFG0_OVRFLW_INT_EN			BIT(9)
-+#define   CHMU_INST0_CFG0_FILLTHRESH_INT_EN		BIT(10)
-+#define   CHMU_INST0_CFG0_ENABLE			BIT(16)
-+#define   CHMU_INST0_CFG0_RESET_COUNTERS		BIT(17)
-+#define   CHMU_INST0_CFG0_HOTNESS_THRESH_MSK		GENMASK_ULL(63, 32)
-+#define CHMU_INST0_CFG1_REG				0x48
-+#define   CHMU_INST0_CFG1_UNIT_SIZE_MSK			GENMASK(31, 0)
-+#define   CHMU_INST0_CFG1_DS_FACTOR_MSK			GENMASK(35, 32)
-+#define   CHMU_INST0_CFG1_MODE_MSK			GENMASK_ULL(47, 40)
-+#define   CHMU_INST0_CFG1_EPOCH_SCALE_MSK		GENMASK_ULL(51, 48)
-+#define   CHMU_INST0_CFG1_EPOCH_MULT_MSK		GENMASK_ULL(63, 52)
-+#define CHMU_INST0_CFG2_REG				0x50
-+#define   CHMU_INST0_CFG2_FILLTHRESH_THRESHOLD_MSK	GENMASK(15, 0)
-+
-+#define CHMU_INST0_STATUS_REG				0x60
-+#define   CHMU_INST0_STATUS_ENABLED			BIT(0)
-+#define   CHMU_INST0_STATUS_OP_INPROG_MSK		GENMASK(31, 16)
-+#define     CHMU_INST0_STATUS_OP_INPROG_NONE		0
-+#define     CHMU_INST0_STATUS_OP_INPROG_ENABLE		1
-+#define     CHMU_INST0_STATUS_OP_INPROG_DISABLE		2
-+#define     CHMU_INST0_STATUS_OP_INPROG_RESET		3
-+#define   CHMU_INST0_STATUS_COUNTER_WIDTH_MSK		GENMASK_ULL(39, 32)
-+#define   CHMU_INST0_STATUS_OVRFLW			BIT_ULL(40)
-+#define   CHMU_INST0_STATUS_FILLTHRESH			BIT_ULL(41)
-+
-+/* 2 byte registers */
-+#define CHMU_INST0_HEAD_REG				0x68
-+#define CHMU_INST0_TAIL_REG				0x6A
-+
-+/* CFG attribute bit mappings */
-+#define CXL_HMU_ATTR_CONFIG_EPOCH_TYPE_MASK GENMASK(1, 0)
-+#define CXL_HMU_ATTR_CONFIG_ACCESS_TYPE_MASK GENMASK(9, 2)
-+#define CXL_HMU_ATTR_CONFIG_EPOCH_SCALE_MASK GENMASK(13, 10)
-+#define CXL_HMU_ATTR_CONFIG_EPOCH_MULT_MASK GENMASK(25, 14)
-+#define CXL_HMU_ATTR_CONFIG_RANDOM_DS_MASK BIT(26)
-+#define CXL_HMU_ATTR_CONFIG_DS_FACTOR_MASK GENMASK_ULL(34, 27)
-+
-+#define CXL_HMU_ATTR_CONFIG1_HOTNESS_THRESH_MASK GENMASK(31, 0)
-+#define CXL_HMU_ATTR_CONFIG1_HOTNESS_GRANUAL_MASK GENMASK_ULL(63, 32)
-+
-+/* In multiples of 256MiB */
-+#define CXL_HMU_ATTR_CONFIG2_DPA_BASE_MASK GENMASK(31, 0)
-+#define CXL_HMU_ATTR_CONFIG2_DPA_SIZE_MASK GENMASK_ULL(63, 32)
-+
-+/* Range bitmap registers at offset 0x10 + Range Config Bitmap offset */
-+/* Hotlist registers at offset 0x10 + Hotlist Register offset */
-+static int cxl_hmu_cpuhp_state_num;
-+
-+enum cxl_hmu_reporting_mode {
-+	CHMU_MODE_EPOCH = 0,
-+	CHMU_MODE_ALWAYS_ON = 1,
-+};
-+
-+struct cxl_hmu_info {
-+	struct pmu pmu;
-+	struct perf_output_handle handle;
-+	void __iomem *base;
-+	struct hlist_node node;
-+	int irq;
-+	int on_cpu;
-+	u32 hot_thresh;
-+	u32 hot_gran; /* power of 2, 256 to 2 GiB */
-+	/* For now use a range rather than a bitmap, chunks of 256MiB */
-+	u32 range_base;
-+	u32 range_num;
-+	enum cxl_hmu_reporting_mode reporting_mode;
-+	u8 m2s_requests_to_track;
-+	u8 ds_factor_pow2;
-+	u8 epoch_scale;
-+	u16 epoch_mult;
-+	bool randomized_ds;
-+
-+	/* Protect both the device state for RMW and the pmu state */
-+	spinlock_t lock;
-+};
-+
-+#define pmu_to_cxl_hmu(p) container_of(p, struct cxl_hmu_info, pmu)
-+
-+/* destriptor for the aux buffer */
-+struct cxl_hmu_buf {
-+	size_t length;
-+	int nr_pages;
-+	void *base;
-+	long pos;
-+};
-+
-+static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
-+			    char *buf)
++	if (found_chmu)
++		return chmu_recording_init(err, found_chmu);
+ #endif
+ 
+ 	/*
+diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
+index 354780ff1605..30d84ce41394 100644
+--- a/tools/perf/arch/x86/util/auxtrace.c
++++ b/tools/perf/arch/x86/util/auxtrace.c
+@@ -4,6 +4,7 @@
+  * Copyright (c) 2013-2014, Intel Corporation.
+  */
+ 
++#include <dirent.h>
+ #include <errno.h>
+ #include <stdbool.h>
+ 
+@@ -14,6 +15,7 @@
+ #include "../../../util/auxtrace.h"
+ #include "../../../util/intel-pt.h"
+ #include "../../../util/intel-bts.h"
++#include "../../../util/cxl-hmu.h"
+ #include "../../../util/evlist.h"
+ 
+ static
+@@ -51,14 +53,88 @@ struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
+ 	return NULL;
+ }
+ 
++static struct perf_pmu **find_all_cxl_hmu_pmus(int *nr_hmus, int *err)
 +{
-+	struct cxl_hmu_info *hmu = dev_get_drvdata(dev);
++	struct perf_pmu **cxl_hmu_pmus = NULL;
++	struct dirent *dent;
++	char path[PATH_MAX];
++	DIR *dir = NULL;
++	int idx = 0;
 +
-+	return cpumap_print_to_pagebuf(true, buf, cpumask_of(hmu->on_cpu));
-+}
-+static DEVICE_ATTR_RO(cpumask);
-+
-+static struct attribute *cxl_hmu_cpumask_attrs[] = {
-+	&dev_attr_cpumask.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group cxl_hmu_cpumask_attr_group = {
-+	.attrs = cxl_hmu_cpumask_attrs,
-+};
-+
-+/* Sized fields to future proof based on space in spec */
-+PMU_FORMAT_ATTR(epoch_type, "config:0-1"); /* 2 bits to future proof */
-+PMU_FORMAT_ATTR(access_type, "config:2-9");
-+PMU_FORMAT_ATTR(epoch_scale, "config:10-13");
-+PMU_FORMAT_ATTR(epoch_multiplier, "config:14-25");
-+PMU_FORMAT_ATTR(randomized_downsampling, "config:26-26");
-+PMU_FORMAT_ATTR(downsampling_factor, "config:27-34");
-+
-+PMU_FORMAT_ATTR(hotness_threshold, "config1:0-31");
-+PMU_FORMAT_ATTR(hotness_granual, "config1:32-63");
-+
-+/* RFC this is a bitmap can we control it better? */
-+PMU_FORMAT_ATTR(range_base, "config2:0-31");
-+PMU_FORMAT_ATTR(range_size, "config2:32-63");
-+static struct attribute *cxl_hmu_format_attrs[] = {
-+	&format_attr_epoch_type.attr,
-+	&format_attr_access_type.attr,
-+	&format_attr_epoch_scale.attr,
-+	&format_attr_epoch_multiplier.attr,
-+	&format_attr_randomized_downsampling.attr,
-+	&format_attr_downsampling_factor.attr,
-+	&format_attr_hotness_threshold.attr,
-+	&format_attr_hotness_granual.attr,
-+	&format_attr_range_base.attr,
-+	&format_attr_range_size.attr,
-+	NULL
-+};
-+
-+static struct attribute_group cxl_hmu_format_attr_group = {
-+	.name = "format",
-+	.attrs = cxl_hmu_format_attrs,
-+};
-+
-+static const struct attribute_group *cxl_hmu_groups[] = {
-+	&cxl_hmu_cpumask_attr_group,
-+	&cxl_hmu_format_attr_group,
-+	NULL
-+};
-+
-+static int cxl_hmu_event_init(struct perf_event *event)
-+{
-+	struct cxl_hmu_info *hmu = pmu_to_cxl_hmu(event->pmu);
-+	struct device *dev = event->pmu->dev;
-+	u32 gran_sup;
-+	u16 ds_sup;
-+	u64 cap0, cap1;
-+	u64 epoch_min, epoch_max, epoch;
-+	u64 hotlist_offset = readq(hmu->base + CHMU_INST0_HOTLIST_OFFSET_REG);
-+	u64 bitmap_offset = readq(hmu->base + CHMU_INST0_RANGE_BITMAP_OFFSET_REG);
-+
-+	if (event->attr.type != hmu->pmu.type)
-+		return -ENOENT;
-+
-+	if (event->cpu < 0) {
-+		dev_info(dev, "Per-task mode not supported\n");
-+		return -EOPNOTSUPP;
++	perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
++	dir = opendir(path);
++	if (!dir) {
++		*err = -EINVAL;
++		return NULL;
 +	}
 +
-+	if (event->attach_state & PERF_ATTACH_TASK)
-+		return -EOPNOTSUPP;
-+
-+	cap0 = readq(hmu->base + CHMU_INST0_CAP0_REG);
-+	cap1 = readq(hmu->base + CHMU_INST0_CAP1_REG);
-+
-+	switch (FIELD_GET(CXL_HMU_ATTR_CONFIG_EPOCH_TYPE_MASK,
-+		event->attr.config)) {
-+	case 0:
-+		if (!FIELD_GET(CHMU_INST0_CAP1_EPOCH_SUP, cap1))
-+			return -EOPNOTSUPP;
-+		hmu->reporting_mode = CHMU_MODE_EPOCH;
-+		break;
-+	case 1:
-+		if (!FIELD_GET(CHMU_INST0_CAP1_ALWAYS_ON_SUP, cap1))
-+			return -EOPNOTSUPP;
-+		hmu->reporting_mode = CHMU_MODE_ALWAYS_ON;
-+		break;
-+	default:
-+		dev_dbg(dev, "Tried for a non existent type\n");
-+		return -EINVAL;
-+	}
-+	hmu->randomized_ds = FIELD_GET(CXL_HMU_ATTR_CONFIG_RANDOM_DS_MASK,
-+				      event->attr.config);
-+	if (hmu->randomized_ds && !FIELD_GET(CHMU_INST0_CAP1_RAND_DOWNSAMP_SUP, cap1)) {
-+		dev_info(dev, "Randomized downsampling not supported\n");
-+		return -EOPNOTSUPP;
++	while ((dent = readdir(dir))) {
++		if (strstr(dent->d_name, "cxl_hmu"))
++			(*nr_hmus)++;
 +	}
 +
-+	/* RFC: sanity check against currently defined or not? */
-+	hmu->m2s_requests_to_track = FIELD_GET(CXL_HMU_ATTR_CONFIG_ACCESS_TYPE_MASK,
-+					       event->attr.config);
-+	if (hmu->m2s_requests_to_track < CHMU_INST0_CFG0_WHAT_NONTEE_R ||
-+	    hmu->m2s_requests_to_track > CHMU_INST0_CFG0_WHAT_RW) {
-+		dev_dbg(dev, "Requested a reserved type to track\n");
-+		return -EINVAL;
++	if (!(*nr_hmus))
++		goto out;
++
++	cxl_hmu_pmus = zalloc(sizeof(struct perf_pmu *) * (*nr_hmus));
++	if (!cxl_hmu_pmus) {
++		*err = -ENOMEM;
++		goto out;
 +	}
 +
-+	hmu->hot_thresh = FIELD_GET(CXL_HMU_ATTR_CONFIG1_HOTNESS_THRESH_MASK,
-+					   event->attr.config1);
-+
-+	hmu->hot_gran = FIELD_GET(CXL_HMU_ATTR_CONFIG1_HOTNESS_GRANUAL_MASK,
-+					 event->attr.config1);
-+
-+	gran_sup = FIELD_GET(CHMU_INST0_CAP1_UNIT_SIZE_MSK, cap1);
-+	/* Default to smallest granual if not specified */
-+	if (hmu->hot_gran == 0 && gran_sup)
-+		hmu->hot_gran = 8 + ffs(gran_sup);
-+
-+	if (hmu->hot_gran < 8) {
-+		dev_dbg(dev, "Granual less than 256 bytes, not valid in CXL 3.2\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!((1 << (hmu->hot_gran - 8)) & gran_sup)) {
-+		dev_dbg(dev, "Granual %d not supported, supported mask %x\n",
-+			hmu->hot_gran - 8, gran_sup);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	ds_sup = FIELD_GET(CHMU_INST0_CAP1_DOWNSAMP_MSK, cap1);
-+	hmu->ds_factor_pow2 = FIELD_GET(CXL_HMU_ATTR_CONFIG_DS_FACTOR_MASK,
-+					event->attr.config);
-+	if (!((1 << hmu->ds_factor_pow2) & ds_sup)) {
-+		/* Special case default of 0 if not supported as smallest DS possibe */
-+		if (hmu->ds_factor_pow2 == 0 && ds_sup) {
-+			hmu->ds_factor_pow2 = ffs(ds_sup);
-+			dev_dbg(dev, "Downsampling set to default min of %d\n",
-+				hmu->ds_factor_pow2);
-+		} else {
-+			dev_dbg(dev, "Downsampling %d no supported, supported mask %x\n",
-+				hmu->ds_factor_pow2, ds_sup);
-+			return -EOPNOTSUPP;
++	rewinddir(dir);
++	while ((dent = readdir(dir))) {
++		if (strstr(dent->d_name, "cxl_hmu") && idx < *nr_hmus) {
++			cxl_hmu_pmus[idx] = perf_pmus__find(dent->d_name);
++			if (cxl_hmu_pmus[idx])
++				idx++;
 +		}
 +	}
 +
-+	hmu->epoch_scale = FIELD_GET(CXL_HMU_ATTR_CONFIG_EPOCH_SCALE_MASK,
-+				     event->attr.config);
-+
-+	hmu->epoch_mult = FIELD_GET(CXL_HMU_ATTR_CONFIG_EPOCH_MULT_MASK,
-+				    event->attr.config);
-+
-+	/* Default to what? */
-+	if (hmu->epoch_mult == 0 && hmu->epoch_scale == 0) {
-+		hmu->epoch_scale = FIELD_GET(CHMU_INST0_CAP0_EPOCH_MIN_SCALE_MSK, cap0);
-+		hmu->epoch_mult = FIELD_GET(CHMU_INST0_CAP0_EPOCH_MIN_MULT_MSK, cap0);
-+	}
-+	if (hmu->epoch_mult == 0)
-+		return -EINVAL;
-+
-+	/* Units of 100ms */
-+	epoch_min = int_pow(10, FIELD_GET(CHMU_INST0_CAP0_EPOCH_MIN_SCALE_MSK, cap0)) *
-+		(u64)FIELD_GET(CHMU_INST0_CAP0_EPOCH_MIN_MULT_MSK, cap0);
-+	epoch_max = int_pow(10, FIELD_GET(CHMU_INST0_CAP0_EPOCH_MAX_SCALE_MSK, cap0)) *
-+		(u64)FIELD_GET(CHMU_INST0_CAP0_EPOCH_MAX_MULT_MSK, cap0);
-+	epoch = int_pow(10, hmu->epoch_scale) * (u64)hmu->epoch_mult;
-+
-+	if (epoch > epoch_max || epoch < epoch_min) {
-+		dev_dbg(dev, "out of range %llu %llu %llu\n",
-+			epoch, epoch_max, epoch_min);
-+		return -EINVAL;
-+	}
-+
-+	hmu->range_base = FIELD_GET(CXL_HMU_ATTR_CONFIG2_DPA_BASE_MASK,
-+				    event->attr.config2);
-+	hmu->range_num = FIELD_GET(CXL_HMU_ATTR_CONFIG2_DPA_SIZE_MASK,
-+				   event->attr.config2);
-+
-+	if (hmu->range_num == 0) {
-+		/* Set a default of 'everything' */
-+		hmu->range_num = (hotlist_offset - bitmap_offset) * 8;
-+	}
-+	/* TODO - pass in better DPA range info from parent driver */
-+	if ((u64)hmu->range_base + hmu->range_num >
-+	    (hotlist_offset - bitmap_offset) * 8) {
-+		dev_dbg(dev, "Requested range that this HMU can't track Can track 0x%llx, asked for 0x%x to 0x%x\n",
-+			(hotlist_offset - bitmap_offset) * 8,
-+			hmu->range_base, hmu->range_base + hmu->range_num);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
++out:
++	closedir(dir);
++	return cxl_hmu_pmus;
 +}
 +
-+static int cxl_hmu_update_aux(struct cxl_hmu_info *hmu, bool stop)
-+{
-+	struct perf_output_handle *handle = &hmu->handle;
-+	struct cxl_hmu_buf *buf = perf_get_aux(handle);
-+	struct perf_event *event = handle->event;
-+	size_t size = 0;
-+	size_t tocopy, tocopy2;
-+
-+	u64 offset = readq(hmu->base + CHMU_INST0_HOTLIST_OFFSET_REG);
-+	u16 head = readw(hmu->base + CHMU_INST0_HEAD_REG);
-+	u16 tail = readw(hmu->base + CHMU_INST0_TAIL_REG);
-+	u8 count_width = FIELD_GET(CHMU_INST0_STATUS_COUNTER_WIDTH_MSK,
-+				   readq(hmu->base + CHMU_INST0_STATUS_REG));
-+	u16 top = FIELD_GET(CHMU_INST0_CAP0_HOTLIST_SIZE_MSK,
-+			    readq(hmu->base + CHMU_INST0_CAP0_REG));
-+	/* 16 bytes of header - arbitrary choice! */
-+#define CHMU_HEADER0_SIZE_MASK GENMASK(15, 0)
-+#define CHMU_HEADER0_COUNT_WIDTH GENMASK(23, 16)
-+	u64 header[2];
-+
-+	if (tail > head) {
-+		tocopy = min_t(size_t, (tail - head) * 8,
-+			       buf->length - buf->pos - sizeof(header));
-+		header[0] = FIELD_PREP(CHMU_HEADER0_SIZE_MASK, tocopy / 8) |
-+			    FIELD_PREP(CHMU_HEADER0_COUNT_WIDTH, count_width);
-+		header[1] = 0xDEADBEEF;
-+		if (tocopy) {
-+			memcpy(buf->base + buf->pos, header, sizeof(header));
-+			size += sizeof(header);
-+			buf->pos += sizeof(header);
-+			memcpy_fromio(buf->base + buf->pos,
-+				      hmu->base + offset + head * 8, tocopy);
-+			size += tocopy;
-+			buf->pos += tocopy;
-+		}
-+
-+	} else if (tail < head) { /* wrap around */
-+		tocopy = min_t(size_t, (top - head) * 8,
-+			       buf->length - buf->pos - sizeof(header));
-+		tocopy2 = min_t(size_t, tail * 8,
-+				buf->length - buf->pos - tocopy - sizeof(header));
-+		header[0] = FIELD_PREP(CHMU_HEADER0_SIZE_MASK, (tocopy + tocopy2) / 8) |
-+			    FIELD_PREP(CHMU_HEADER0_COUNT_WIDTH, count_width);
-+		header[1] = 0xDEADBEEF;
-+		if (tocopy) {
-+			memcpy(buf->base + buf->pos, header, sizeof(header));
-+			size += sizeof(header);
-+			buf->pos += sizeof(header);
-+			memcpy_fromio(buf->base + buf->pos,
-+				      hmu->base + offset + head * 8, tocopy);
-+			size += tocopy;
-+			buf->pos += tocopy;
-+
-+		}
-+
-+		if (tocopy2) {
-+			memcpy_fromio(buf->base + buf->pos,
-+				      hmu->base + offset, tocopy2);
-+			size += tocopy2;
-+			buf->pos += tocopy2;
-+		}
-+	} /* may be no data */
-+
-+	perf_aux_output_end(handle, size);
-+	if (buf->pos == buf->length)
-+		return -EINVAL; /* FULL */
-+
-+	/* Do this after the space check, so the buffer on device will not overwrite */
-+	writew(tail, hmu->base + CHMU_INST0_HEAD_REG);
-+
-+	if (!stop) {
-+		buf = perf_aux_output_begin(handle, event);
-+		if (!buf)
-+			return -EINVAL;
-+		buf->pos = handle->head % buf->length;
-+	}
-+	return 0;
-+}
-+
-+static int __cxl_hmu_start(struct perf_event *event, int flags)
-+{
-+	struct cxl_hmu_info *hmu = pmu_to_cxl_hmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct device *dev = event->pmu->dev;
-+	struct cxl_hmu_buf *buf;
-+	int cpu = event->cpu;
-+	u64 val, status, bitmap_base;
-+	int ret, i;
-+	u16 list_len = FIELD_GET(CHMU_INST0_CAP0_HOTLIST_SIZE_MSK,
-+				 readq(hmu->base + CHMU_INST0_CAP0_REG));
-+
-+	hwc->state = 0;
-+	status = readq(hmu->base + CHMU_INST0_STATUS_REG);
-+	if (FIELD_GET(CHMU_INST0_STATUS_ENABLED, status)) {
-+		dev_dbg(dev, "trace already started\n");
-+		return -EBUSY;
-+	}
-+	/* TODO: Figure out what to do as very likely this is shared
-+	 *  - Hopefully only with other HMU instances
-+	 */
-+	ret = irq_set_affinity(hmu->irq, cpumask_of(cpu));
-+	if (ret)
-+		dev_warn(dev, "failed to affinity of HMU interrupt\n");
-+
-+	hmu->on_cpu = cpu;
-+
-+	buf = perf_aux_output_begin(&hmu->handle, event);
-+	if (!buf) {
-+		dev_dbg(event->pmu->dev, "aux output begin failed\n");
-+		return -EINVAL;
-+	}
-+
-+	buf->pos = hmu->handle.head % buf->length;
-+	/* Reset here disrupts samping with -F, should we avoid doing so? */
-+	writeq(FIELD_PREP(CHMU_INST0_CFG0_RESET_COUNTERS, 1),
-+		hmu->base + CHMU_INST0_CFG0_REG);
-+
-+	ret = readq_poll_timeout_atomic(hmu->base + CHMU_INST0_STATUS_REG, status,
-+		(FIELD_GET(CHMU_INST0_STATUS_OP_INPROG_MSK, status) == 0),
-+		10, 100000);
-+	if (ret) {
-+		dev_dbg(event->pmu->dev, "Reset timed out\n");
-+		return ret;
-+	}
-+	/* Setup what is being capured */
-+	/* Type of capture, granularity etc */
-+
-+	val = FIELD_PREP(CHMU_INST0_CFG1_UNIT_SIZE_MSK, hmu->hot_gran) |
-+		FIELD_PREP(CHMU_INST0_CFG1_DS_FACTOR_MSK, hmu->ds_factor_pow2) |
-+		FIELD_PREP(CHMU_INST0_CFG1_MODE_MSK, hmu->reporting_mode) |
-+		FIELD_PREP(CHMU_INST0_CFG1_EPOCH_SCALE_MSK, hmu->epoch_scale) |
-+		FIELD_PREP(CHMU_INST0_CFG1_EPOCH_MULT_MSK, hmu->epoch_mult);
-+	writeq(val, hmu->base + CHMU_INST0_CFG1_REG);
-+
-+	val = 0;
-+	bitmap_base = readq(hmu->base + CHMU_INST0_RANGE_BITMAP_OFFSET_REG);
-+	for (i = hmu->range_base; i < hmu->range_base + hmu->range_num; i++) {
-+		val |= BIT(i % 64);
-+		if (i % 64 == 63) {
-+			writeq(val, hmu->base + bitmap_base + (i / 64) * 8);
-+			val = 0;
-+		}
-+	}
-+	/* Potential duplicate write that doesn't matter */
-+	writeq(val, hmu->base + bitmap_base + (i / 64) * 8);
-+
-+	/* Set notificaiton threshold to half of buffer */
-+	val = FIELD_PREP(CHMU_INST0_CFG2_FILLTHRESH_THRESHOLD_MSK,
-+			 list_len / 2);
-+	writeq(val, hmu->base + CHMU_INST0_CFG2_REG);
-+
-+	/*
-+	 * RFC: Only after granual is set can the width be known - so can only check here,
-+	 * or program granual size earlier just to see if it will work here.
-+	 */
-+	status = readq(hmu->base + CHMU_INST0_STATUS_REG);
-+	if (hmu->hot_thresh >= (1 << (64 - FIELD_GET(CHMU_INST0_STATUS_COUNTER_WIDTH_MSK, status))))
-+		return -EINVAL;
-+	/* Start the unit up */
-+	val = FIELD_PREP(CHMU_INST0_CFG0_WHAT_MSK, hmu->m2s_requests_to_track) |
-+		FIELD_PREP(CHMU_INST0_CFG0_RAND_DOWNSAMP_EN,
-+			   hmu->randomized_ds ? 1 : 0) |
-+		FIELD_PREP(CHMU_INST0_CFG0_OVRFLW_INT_EN, 1) |
-+		FIELD_PREP(CHMU_INST0_CFG0_FILLTHRESH_INT_EN, 1) |
-+		FIELD_PREP(CHMU_INST0_CFG0_ENABLE, 1) |
-+		FIELD_PREP(CHMU_INST0_CFG0_HOTNESS_THRESH_MSK, hmu->hot_thresh);
-+	writeq(val, hmu->base + CHMU_INST0_CFG0_REG);
-+
-+	/* Poll status register for enablement to complete */
-+	ret = readq_poll_timeout_atomic(hmu->base + CHMU_INST0_STATUS_REG, status,
-+		(FIELD_GET(CHMU_INST0_STATUS_OP_INPROG_MSK, status) == 0),
-+		10, 100000);
-+	if (ret) {
-+		dev_info(event->pmu->dev, "Enable timed out\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void cxl_hmu_start(struct perf_event *event, int flags)
-+{
-+	struct cxl_hmu_info *hmu = pmu_to_cxl_hmu(event->pmu);
-+	int ret;
-+
-+	guard(spinlock)(&hmu->lock);
-+
-+	ret = __cxl_hmu_start(event, flags);
-+	if (ret)
-+		event->hw.state |= PERF_HES_STOPPED;
-+}
-+
-+static void cxl_hmu_stop(struct perf_event *event, int flags)
-+{
-+	struct cxl_hmu_info *hmu = pmu_to_cxl_hmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	u64 status, val;
-+	int ret;
-+
-+	if (hwc->state & PERF_HES_STOPPED)
-+		return;
-+
-+	guard(spinlock)(&hmu->lock);
-+	status = readq(hmu->base + CHMU_INST0_STATUS_REG);
-+	if (FIELD_GET(CHMU_INST0_STATUS_ENABLED, status)) {
-+		/* Stop the HMU instance */
-+		val = readq(hmu->base + CHMU_INST0_CFG0_REG);
-+		val &= ~CHMU_INST0_CFG0_ENABLE;
-+		writeq(val, hmu->base + CHMU_INST0_CFG0_REG);
-+
-+		ret = readq_poll_timeout_atomic(hmu->base + CHMU_INST0_STATUS_REG, status,
-+			(FIELD_GET(CHMU_INST0_STATUS_OP_INPROG_MSK, status) == 0),
-+			10, 100000);
-+		if (ret) {
-+			dev_info(event->pmu->dev, "Disable timed out\n");
-+			return;
-+		}
-+
-+		cxl_hmu_update_aux(hmu, true);
-+	}
-+
-+}
-+static void cxl_hmu_read(struct perf_event *event)
-+{
-+	/* Nothing to do */
-+}
-+
-+static int cxl_hmu_add(struct perf_event *event, int flags)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
-+	if (flags & PERF_EF_START) {
-+		cxl_hmu_start(event, PERF_EF_RELOAD);
-+		if (hwc->state & PERF_HES_STOPPED)
-+			return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * There is a lot to do in here, but using a thread is not
-+ * currently possible for a perf PMU driver.
-+ */
-+static irqreturn_t cxl_hmu_irq(int irq, void *data)
-+{
-+	struct cxl_hmu_info *info = data;
-+	u64 status;
-+	int ret;
-+
-+	status = readq(info->base + CHMU_INST0_STATUS_REG);
-+	if (!FIELD_GET(CHMU_INST0_STATUS_OVRFLW, status) &&
-+	    !FIELD_GET(CHMU_INST0_STATUS_FILLTHRESH, status))
-+		return IRQ_NONE;
-+
-+	ret = cxl_hmu_update_aux(info, false);
-+	if (ret)
-+		dev_err(info->pmu.dev, "interrupt update failed\n");
-+
-+	/*
-+	 * They are level interrupts so should trigger on next fill
-+	 * hence should be no problem with races.
-+	 */
-+	writeq(status, info->base + CHMU_INST0_STATUS_REG);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void cxl_hmu_del(struct perf_event *event, int flags)
-+{
-+	cxl_hmu_stop(event, PERF_EF_UPDATE);
-+}
-+
-+static void *cxl_hmu_setup_aux(struct perf_event *event, void **pages,
-+			int nr_pages, bool overwrite)
++static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
++					   int pmu_nr, struct evsel *evsel)
 +{
 +	int i;
 +
-+	if (overwrite) {
-+		dev_warn(event->pmu->dev, "Overwrite mode is not supported\n");
++	if (!pmus)
 +		return NULL;
++
++	for (i = 0; i < pmu_nr; i++) {
++		if (evsel->core.attr.type == pmus[i]->type)
++			return pmus[i];
 +	}
 +
-+	if (nr_pages < 1)
-+		return NULL;
-+
-+	struct cxl_hmu_buf *buf __free(kfree) =
-+		kzalloc(sizeof(*buf), GFP_KERNEL);
-+	if (!buf)
-+		return NULL;
-+
-+	struct page **pagelist __free(kfree) =
-+		kcalloc(nr_pages, sizeof(*pagelist), GFP_KERNEL);
-+	if (!pagelist)
-+		return NULL;
-+
-+	for (i = 0; i < nr_pages; i++)
-+		pagelist[i] = virt_to_page(pages[i]);
-+
-+	buf->base = vmap(pagelist, nr_pages, VM_MAP, PAGE_KERNEL);
-+	if (!buf->base)
-+		return NULL;
-+
-+	buf->nr_pages = nr_pages;
-+	buf->length = nr_pages * PAGE_SIZE;
-+	buf->pos = 0;
-+
-+	return_ptr(buf);
++	return NULL;
 +}
 +
-+static void cxl_hmu_free_aux(void *aux)
-+{
-+	struct cxl_hmu_buf *buf = aux;
+ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
+ 					      int *err)
+ {
+ 	char buffer[64];
+ 	int ret;
++	struct perf_pmu **chmu_pmus = NULL;
++	struct perf_pmu *found_chmu = NULL;
++	struct evsel *evsel;
++	int nr_chmus = 0;
+ 
+ 	*err = 0;
+ 
++	chmu_pmus = find_all_cxl_hmu_pmus(&nr_chmus, err);
 +
-+	vunmap(buf->base);
-+	kfree(buf);
-+}
-+
-+static void cxl_hmu_perf_unregister(void *_info)
-+{
-+	struct cxl_hmu_info *info = _info;
-+
-+	perf_pmu_unregister(&info->pmu);
-+}
-+
-+static void cxl_hmu_cpuhp_remove(void *_info)
-+{
-+	struct cxl_hmu_info *info = _info;
-+
-+	cpuhp_state_remove_instance_nocalls(cxl_hmu_cpuhp_state_num,
-+					    &info->node);
-+}
-+
-+static int cxl_hmu_probe(struct device *dev)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev->parent);
-+	struct cxl_hmu *hmu = to_cxl_hmu(dev);
-+	int i, rc;
-+
-+	int num_inst = FIELD_GET(CHMU_COMMON_CAP0_NUMINST_MSK,
-+				 readq(hmu->base + CHMU_COMMON_CAP0_REG));
-+	int inst_len = FIELD_GET(CHMU_COMMON_CAP1_INSTLEN_MSK,
-+				 readq(hmu->base + CHMU_COMMON_CAP1_REG));
-+
-+	for (i = 0; i < num_inst; i++) {
-+		struct cxl_hmu_info *info;
-+		char *pmu_name;
-+		int msg_num;
-+		u64 val;
-+
-+		info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-+		if (!info)
-+			return -ENOMEM;
-+
-+		dev_set_drvdata(dev, info);
-+		info->on_cpu = -1;
-+		info->base = hmu->base + 0x10 + inst_len * i;
-+
-+		val = readq(info->base + CHMU_INST0_CAP0_REG);
-+		msg_num = FIELD_GET(CHMU_INST0_CAP0_MSI_N_MSK, val);
-+
-+		/* TODO add polling support - for now require threshold */
-+		if (!FIELD_GET(CHMU_INST0_CAP0_FILLTHRESH_CAP, val)) {
-+			devm_kfree(dev, info);
-+			continue;
-+		}
-+
-+		spin_lock_init(&info->lock);
-+
-+		pmu_name = devm_kasprintf(dev, GFP_KERNEL,
-+					  "cxl_hmu_mem%d.%d.%d",
-+					  hmu->assoc_id, hmu->index, i);
-+		if (!pmu_name)
-+			return -ENOMEM;
-+
-+		info->pmu = (struct pmu) {
-+			.name = pmu_name,
-+			.parent = dev,
-+			.module = THIS_MODULE,
-+			.capabilities = PERF_PMU_CAP_EXCLUSIVE |
-+					PERF_PMU_CAP_NO_EXCLUDE,
-+			.task_ctx_nr = perf_sw_context,
-+			.attr_groups = cxl_hmu_groups,
-+			.event_init = cxl_hmu_event_init,
-+			.setup_aux = cxl_hmu_setup_aux,
-+			.free_aux = cxl_hmu_free_aux,
-+			.start = cxl_hmu_start,
-+			.stop = cxl_hmu_stop,
-+			.add = cxl_hmu_add,
-+			.del = cxl_hmu_del,
-+			.read = cxl_hmu_read,
-+		};
-+		rc = pci_irq_vector(pdev, msg_num);
-+		if (rc < 0)
-+			return rc;
-+		info->irq = rc;
-+
-+		/*
-+		 * Whilst there is a 'strong' recomendation that the interrupt
-+		 * should not be shared it is not a requirement.
-+		 * Can we support IRQF_SHARED on a PMU?
-+		 */
-+		rc = devm_request_irq(dev, info->irq, cxl_hmu_irq,
-+				      IRQF_NO_THREAD | IRQF_NOBALANCING,
-+				      pmu_name, info);
-+		if (rc)
-+			return rc;
-+
-+		rc = cpuhp_state_add_instance(cxl_hmu_cpuhp_state_num,
-+					      &info->node);
-+		if (rc)
-+			return rc;
-+
-+		rc = devm_add_action_or_reset(dev, cxl_hmu_cpuhp_remove, info);
-+		if (rc)
-+			return rc;
-+
-+		rc = perf_pmu_register(&info->pmu, info->pmu.name, -1);
-+		if (rc)
-+			return rc;
-+
-+		rc = devm_add_action_or_reset(dev, cxl_hmu_perf_unregister,
-+					      info);
-+		if (rc)
-+			return rc;
++	evlist__for_each_entry(evlist, evsel) {
++		if (chmu_pmus && !found_chmu)
++			found_chmu = find_pmu_for_event(chmu_pmus, nr_chmus, evsel);
 +	}
-+	return 0;
-+}
++	free(chmu_pmus);
 +
-+static struct cxl_driver cxl_hmu_driver = {
-+	.name = "cxl_hmu",
-+	.probe = cxl_hmu_probe,
-+	.id = CXL_DEVICE_HMU,
++	if (found_chmu)
++		return chmu_recording_init(err, found_chmu);
++
+ 	ret = get_cpuid(buffer, sizeof(buffer));
+ 	if (ret) {
+ 		*err = ret;
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index dc616292b2dd..40c645fd0cb3 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -127,6 +127,7 @@ perf-util-$(CONFIG_AUXTRACE) += arm-spe.o
+ perf-util-$(CONFIG_AUXTRACE) += arm-spe-decoder/
+ perf-util-$(CONFIG_AUXTRACE) += hisi-ptt.o
+ perf-util-$(CONFIG_AUXTRACE) += hisi-ptt-decoder/
++perf-util-$(CONFIG_AUXTRACE) += cxl-hmu.o
+ perf-util-$(CONFIG_AUXTRACE) += s390-cpumsf.o
+ 
+ ifdef CONFIG_LIBOPENCSD
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index ca8682966fae..0efc15732a03 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -53,6 +53,7 @@
+ #include "intel-bts.h"
+ #include "arm-spe.h"
+ #include "hisi-ptt.h"
++#include "cxl-hmu.h"
+ #include "s390-cpumsf.h"
+ #include "util/mmap.h"
+ 
+@@ -1333,6 +1334,9 @@ int perf_event__process_auxtrace_info(struct perf_session *session,
+ 	case PERF_AUXTRACE_HISI_PTT:
+ 		err = hisi_ptt_process_auxtrace_info(event, session);
+ 		break;
++	case PERF_AUXTRACE_CXL_HMU:
++		err = cxl_hmu_process_auxtrace_info(event, session);
++		break;
+ 	case PERF_AUXTRACE_UNKNOWN:
+ 	default:
+ 		return -EINVAL;
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index a1895a4f530b..8a7a5b7dc2d6 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -49,6 +49,7 @@ enum auxtrace_type {
+ 	PERF_AUXTRACE_ARM_SPE,
+ 	PERF_AUXTRACE_S390_CPUMSF,
+ 	PERF_AUXTRACE_HISI_PTT,
++	PERF_AUXTRACE_CXL_HMU,
+ };
+ 
+ enum itrace_period_type {
+diff --git a/tools/perf/util/cxl-hmu.c b/tools/perf/util/cxl-hmu.c
+new file mode 100644
+index 000000000000..31844f16e4f9
+--- /dev/null
++++ b/tools/perf/util/cxl-hmu.c
+@@ -0,0 +1,367 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * CXL HMU support
++ * Copyright (c) 2024 Huawei
++ *
++ * Based on:
++ * HiSilicon PCIe Trace and Tuning (PTT) support
++ * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
++ */
++
++#include <byteswap.h>
++#include <endian.h>
++#include <errno.h>
++#include <inttypes.h>
++#include <linux/bitops.h>
++#include <linux/kernel.h>
++#include <linux/log2.h>
++#include <linux/types.h>
++#include <linux/zalloc.h>
++#include <stdlib.h>
++#include <unistd.h>
++
++#include "auxtrace.h"
++#include "color.h"
++#include "debug.h"
++#include "evlist.h"
++#include "evsel.h"
++#include "cxl-hmu.h"
++#include "machine.h"
++#include "record.h"
++#include "session.h"
++#include "tool.h"
++#include "tsc.h"
++#include <internal/lib.h>
++
++#define KiB(x) ((x) * 1024)
++#define MiB(x) ((x) * 1024 * 1024)
++
++struct chmu_recording {
++	struct auxtrace_record	itr;
++	struct perf_pmu *chmu_pmu;
++	struct evlist *evlist;
 +};
 +
-+static int cxl_hmu_online_cpu(unsigned int cpu, struct hlist_node *node)
++static size_t
++chmu_info_priv_size(struct auxtrace_record *itr __maybe_unused,
++			struct evlist *evlist __maybe_unused)
 +{
-+	struct cxl_hmu_info *info =
-+		hlist_entry_safe(node, struct cxl_hmu_info, node);
++	return CXL_HMU_AUXTRACE_PRIV_SIZE;
++}
 +
-+	if (info->on_cpu != -1)
-+		return 0;
++static int chmu_info_fill(struct auxtrace_record *itr,
++			      struct perf_session *session,
++			      struct perf_record_auxtrace_info *auxtrace_info,
++			      size_t priv_size)
++{
++	struct chmu_recording *pttr =
++			container_of(itr, struct chmu_recording, itr);
++	struct perf_pmu *chmu_pmu = pttr->chmu_pmu;
 +
-+	info->on_cpu = cpu;
++	if (priv_size != CXL_HMU_AUXTRACE_PRIV_SIZE)
++		return -EINVAL;
 +
-+	WARN_ON(irq_set_affinity(info->irq, cpumask_of(cpu)));
++	if (!session->evlist->core.nr_mmaps)
++		return -EINVAL;
++
++	auxtrace_info->type = PERF_AUXTRACE_CXL_HMU;
++	auxtrace_info->priv[0] = chmu_pmu->type;
 +
 +	return 0;
 +}
 +
-+static int cxl_hmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
++static int chmu_set_auxtrace_mmap_page(struct record_opts *opts)
 +{
-+	struct cxl_hmu_info *info =
-+		hlist_entry_safe(node, struct cxl_hmu_info, node);
-+	unsigned int target;
++	bool privileged = perf_event_paranoid_check(-1);
 +
-+	if (info->on_cpu != cpu)
++	if (!opts->full_auxtrace)
 +		return 0;
 +
-+	info->on_cpu = -1;
-+	target = cpumask_any_but(cpu_online_mask, cpu);
-+	if (target >= nr_cpu_ids) {
-+		dev_err(info->pmu.dev, "Unable to find a suitable CPU\n");
-+		return 0;
++	if (opts->full_auxtrace && !opts->auxtrace_mmap_pages) {
++		if (privileged) {
++			opts->auxtrace_mmap_pages = MiB(16) / page_size;
++		} else {
++			opts->auxtrace_mmap_pages = KiB(128) / page_size;
++			if (opts->mmap_pages == UINT_MAX)
++				opts->mmap_pages = KiB(256) / page_size;
++		}
 +	}
 +
-+	perf_pmu_migrate_context(&info->pmu, cpu, target);
-+	info->on_cpu = target;
-+	/*
-+	 * CPU HP lock is held so we should be guaranteed that this CPU hasn't
-+	 * yet gone away.
-+	 */
-+	WARN_ON(irq_set_affinity(info->irq, cpumask_of(target)));
++	/* Validate auxtrace_mmap_pages */
++	if (opts->auxtrace_mmap_pages) {
++		size_t sz = opts->auxtrace_mmap_pages * (size_t)page_size;
++		size_t min_sz = KiB(8);
++
++		if (sz < min_sz || !is_power_of_2(sz)) {
++			pr_err("Invalid mmap size for CXL_HMU: must be at least %zuKiB and a power of 2\n",
++			       min_sz / 1024);
++			return -EINVAL;
++		}
++	}
++
 +	return 0;
 +}
 +
-+static __init int cxl_hmu_init(void)
++static int chmu_recording_options(struct auxtrace_record *itr,
++				      struct evlist *evlist,
++				      struct record_opts *opts)
 +{
-+	int rc;
++	struct chmu_recording *pttr =
++			container_of(itr, struct chmu_recording, itr);
++	struct perf_pmu *chmu_pmu = pttr->chmu_pmu;
++	struct evsel *evsel, *chmu_evsel = NULL;
++	struct evsel *tracking_evsel;
++	int err;
 +
-+	rc = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
-+				     "AP_PERF_CXL_HMU_ONLINE",
-+				     cxl_hmu_online_cpu, cxl_hmu_offline_cpu);
-+	if (rc < 0)
-+		return rc;
-+	cxl_hmu_cpuhp_state_num = rc;
++	pttr->evlist = evlist;
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel->core.attr.type == chmu_pmu->type) {
++			if (chmu_evsel) {
++				pr_err("There may be only one cxl_hmu x event\n");
++				return -EINVAL;
++			}
++			evsel->core.attr.freq = 0;
++			evsel->core.attr.sample_period = 1;
++			evsel->needs_auxtrace_mmap = true;
++			chmu_evsel = evsel;
++			opts->full_auxtrace = true;
++		}
++	}
 +
-+	rc = cxl_driver_register(&cxl_hmu_driver);
-+	if (rc)
-+		cpuhp_remove_multi_state(cxl_hmu_cpuhp_state_num);
++	err = chmu_set_auxtrace_mmap_page(opts);
++	if (err)
++		return err;
++	/*
++	 * To obtain the auxtrace buffer file descriptor, the auxtrace event
++	 * must come first.
++	 */
++	evlist__to_front(evlist, chmu_evsel);
++	evsel__set_sample_bit(chmu_evsel, TIME);
 +
-+	return rc;
++	/* Add dummy event to keep tracking */
++	err = parse_event(evlist, "dummy:u");
++	if (err)
++		return err;
++
++	tracking_evsel = evlist__last(evlist);
++	evlist__set_tracking_event(evlist, tracking_evsel);
++
++	tracking_evsel->core.attr.freq = 0;
++	tracking_evsel->core.attr.sample_period = 1;
++	evsel__set_sample_bit(tracking_evsel, TIME);
++
++	return 0;
 +}
 +
-+static __exit void cxl_hmu_exit(void)
++static u64 chmu_reference(struct auxtrace_record *itr __maybe_unused)
 +{
-+	cxl_driver_unregister(&cxl_hmu_driver);
-+	cpuhp_remove_multi_state(cxl_hmu_cpuhp_state_num);
++	return rdtsc();
 +}
 +
-+MODULE_AUTHOR("Jonathan Cameron <Jonathan.Cameron@huawei.com>");
-+MODULE_DESCRIPTION("CXL Hotness Monitor Driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(CXL);
-+module_init(cxl_hmu_init);
-+module_exit(cxl_hmu_exit);
-+MODULE_ALIAS_CXL(CXL_DEVICE_HMU);
++static void chmu_recording_free(struct auxtrace_record *itr)
++{
++	struct chmu_recording *pttr =
++	  container_of(itr, struct chmu_recording, itr);
++
++	free(pttr);
++}
++
++struct auxtrace_record *chmu_recording_init(int *err,
++						struct perf_pmu *chmu_pmu)
++{
++	struct chmu_recording *pttr;
++
++	if (!chmu_pmu) {
++		*err = -ENODEV;
++		return NULL;
++	}
++
++	pttr = zalloc(sizeof(*pttr));
++	if (!pttr) {
++		*err = -ENOMEM;
++		return NULL;
++	}
++
++	pttr->chmu_pmu = chmu_pmu;
++	pttr->itr.recording_options = chmu_recording_options;
++	pttr->itr.info_priv_size = chmu_info_priv_size;
++	pttr->itr.info_fill = chmu_info_fill;
++	pttr->itr.free = chmu_recording_free;
++	pttr->itr.reference = chmu_reference;
++	pttr->itr.read_finish = auxtrace_record__read_finish;
++	pttr->itr.alignment = 0;
++
++	*err = 0;
++	return &pttr->itr;
++}
++
++struct cxl_hmu {
++	struct auxtrace auxtrace;
++	u32 auxtrace_type;
++	struct perf_session *session;
++	struct machine *machine;
++	u32 pmu_type;
++};
++
++struct cxl_hmu_queue {
++	struct cxl_hmu *hmu;
++	struct auxtrace_buffer *buffer;
++};
++
++static void cxl_hmu_dump(struct cxl_hmu *hmu __maybe_unused,
++			  unsigned char *buf, size_t len)
++{
++	const char *color = PERF_COLOR_BLUE;
++	size_t pos = 0;
++	size_t packet_offset = 0, hotlist_entries_in_packet;
++
++	len = round_down(len, 8);
++	color_fprintf(stdout, color, ". ... CXL_HMU data: size %zu bytes\n",
++		      len);
++
++	while (len > 0) {
++		if (!packet_offset) {
++			hotlist_entries_in_packet = ((uint64_t *)(buf + pos))[0] & 0xFFFF;
++			color_fprintf(stdout, PERF_COLOR_BLUE,
++				      "Header 0: units: %x counter_width %x\n",
++				      hotlist_entries_in_packet,
++				      (((uint64_t *)(buf + pos))[0] >> 16) & 0xFF);
++		} else if (packet_offset == 1) {
++			color_fprintf(stdout, PERF_COLOR_BLUE,
++				      "Header 1 : %lx\n", ((uint64_t *)(buf + pos))[0]);
++		} else {
++			color_fprintf(stdout, PERF_COLOR_BLUE,
++				      "%016lx\n", ((uint64_t *)(buf + pos))[0]);
++		}
++		pos += 8;
++		len -= 8;
++		packet_offset++;
++		if (packet_offset == hotlist_entries_in_packet + 2)
++			packet_offset = 0;
++	}
++}
++
++static void cxl_hmu_dump_event(struct cxl_hmu *hmu, unsigned char *buf,
++			       size_t len)
++{
++	printf(".\n");
++
++	cxl_hmu_dump(hmu, buf, len);
++}
++
++static int cxl_hmu_process_event(struct perf_session *session __maybe_unused,
++				  union perf_event *event __maybe_unused,
++				  struct perf_sample *sample __maybe_unused,
++				  const struct perf_tool *tool __maybe_unused)
++{
++	return 0;
++}
++
++static int cxl_hmu_process_auxtrace_event(struct perf_session *session,
++					  union perf_event *event,
++					  const struct perf_tool *tool __maybe_unused)
++{
++	struct cxl_hmu *hmu = container_of(session->auxtrace, struct cxl_hmu,
++					    auxtrace);
++	int fd = perf_data__fd(session->data);
++	int size = event->auxtrace.size;
++	void *data = malloc(size);
++	off_t data_offset;
++	int err;
++
++	if (!data) {
++		printf("no data\n");
++		return -errno;
++	}
++
++	if (perf_data__is_pipe(session->data)) {
++		data_offset = 0;
++	} else {
++		data_offset = lseek(fd, 0, SEEK_CUR);
++		if (data_offset == -1) {
++			free(data);
++			printf("failed to seek\n");
++			return -errno;
++		}
++	}
++
++	err = readn(fd, data, size);
++	if (err != (ssize_t)size) {
++		free(data);
++		printf("failed to rread\n");
++		return -errno;
++	}
++
++	if (dump_trace)
++		cxl_hmu_dump_event(hmu, data, size);
++
++	free(data);
++	return 0;
++}
++
++static int cxl_hmu_flush(struct perf_session *session __maybe_unused,
++			 const struct perf_tool *tool __maybe_unused)
++{
++	return 0;
++}
++
++static void cxl_hmu_free_events(struct perf_session *session __maybe_unused)
++{
++}
++
++static void cxl_hmu_free(struct perf_session *session)
++{
++	struct cxl_hmu *hmu = container_of(session->auxtrace, struct cxl_hmu,
++					    auxtrace);
++
++	session->auxtrace = NULL;
++	free(hmu);
++}
++
++static bool cxl_hmu_evsel_is_auxtrace(struct perf_session *session,
++				       struct evsel *evsel)
++{
++	struct cxl_hmu *hmu = container_of(session->auxtrace, struct cxl_hmu, auxtrace);
++
++	return evsel->core.attr.type == hmu->pmu_type;
++}
++
++static void cxl_hmu_print_info(__u64 type)
++{
++	if (!dump_trace)
++		return;
++
++	fprintf(stdout, "  PMU Type           %" PRId64 "\n", (s64) type);
++}
++
++int cxl_hmu_process_auxtrace_info(union perf_event *event,
++				   struct perf_session *session)
++{
++	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
++	struct cxl_hmu *hmu;
++
++	if (auxtrace_info->header.size < CXL_HMU_AUXTRACE_PRIV_SIZE +
++				sizeof(struct perf_record_auxtrace_info))
++		return -EINVAL;
++
++	hmu = zalloc(sizeof(*hmu));
++	if (!hmu)
++		return -ENOMEM;
++
++	hmu->session = session;
++	hmu->machine = &session->machines.host; /* No kvm support */
++	hmu->auxtrace_type = auxtrace_info->type;
++	hmu->pmu_type = auxtrace_info->priv[0];
++
++	hmu->auxtrace.process_event = cxl_hmu_process_event;
++	hmu->auxtrace.process_auxtrace_event = cxl_hmu_process_auxtrace_event;
++	hmu->auxtrace.flush_events = cxl_hmu_flush;
++	hmu->auxtrace.free_events = cxl_hmu_free_events;
++	hmu->auxtrace.free = cxl_hmu_free;
++	hmu->auxtrace.evsel_is_auxtrace = cxl_hmu_evsel_is_auxtrace;
++	session->auxtrace = &hmu->auxtrace;
++
++	cxl_hmu_print_info(auxtrace_info->priv[0]);
++
++	return 0;
++}
+diff --git a/tools/perf/util/cxl-hmu.h b/tools/perf/util/cxl-hmu.h
+new file mode 100644
+index 000000000000..9b4d83219711
+--- /dev/null
++++ b/tools/perf/util/cxl-hmu.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * CXL Hotness Monitoring Unit Support
++ */
++
++#ifndef INCLUDE__PERF_CXL_HMU_H__
++#define INCLUDE__PERF_CXL_HMU_H__
++
++#define CXL_HMU_PMU_NAME		"cxl_hmu"
++#define CXL_HMU_AUXTRACE_PRIV_SIZE	sizeof(u64)
++
++struct auxtrace_record *chmu_recording_init(int *err,
++					       struct perf_pmu *cxl_hmu_pmu);
++
++int cxl_hmu_process_auxtrace_info(union perf_event *event,
++				   struct perf_session *session);
++
++#endif
 -- 
 2.43.0
 
