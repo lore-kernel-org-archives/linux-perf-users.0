@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA8810A3E;
-	Thu, 21 Nov 2024 17:04:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6562055C29;
+	Thu, 21 Nov 2024 17:22:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732208685; cv=none; b=Mb9bmOwnlVgjxY4mGOs0tunNy1qckR3Ygp3DzXm/GG9trpYTbCdjzoD4+fN5DRMhqxoNdQ/xYoj/tu7El1hwXhsULsFkZO/x9PQjxN9ZuLS9EeWjAy9r3qA3cMg+oiqNSwF6MN8g+mphYgikirKiQADM1vNQzBs0jlaVKZRnIU0=
+	t=1732209775; cv=none; b=iJsZzwCQ8tH68QWEEilTVS2LuvFa8x2pldsk4s4fILz6AkoH17PvlNYCL9E8BIaLT+rVDQSaaqgowFaSv7GOVM0BoaEQlcmfSZncHnrX1r3K3376ZUfun5Y/izwS1qnPOBvwEuHheEtW72yVZS3cAZQgLyZVhw1nCYnhQ0X2wzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732208685; c=relaxed/simple;
-	bh=aZGpUzKzmNNoZNO+kAOuEPARwds35ZIR3tETVKuSnKo=;
+	s=arc-20240116; t=1732209775; c=relaxed/simple;
+	bh=vrLtc+wqTM3wm53I5eqfMyii4DXjb/vnZwhmFtWYOT8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U4s4C5d7EkhjX07mlRCpZ61/URUb0K+D5rdl1+yytYo87W1dYMp7DPVxVpaHOOIUh56KG18wW/Z0Itax8D02heYbkXTyWL+78xcFl1RZeg+hHfihN9XsHiXgPlYlVqe0S5mPQxnHA291FA7qLsDaJ+2te4LznNMPlf3zvse5kRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OuWh3fr9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XUiuTgkhBox2wxQ5D0bbXxrKJP1xY2Jmq96MNS7QmXSch6I+AxHotnZ2xcrgzHtc1x76lAPCCIc0D7rdRmkqxFGHENH7AkKOkTS6r+2jgy30ecjiAA3KSzxiJmon2BSYISmqLWuD/YxMpUf9WafqYnto4ttYdfn7zBIaGmR5OlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WubPOd1B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OuWh3fr9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368FBC4CECC;
-	Thu, 21 Nov 2024 17:04:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WubPOd1B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAEFBC4CECC;
+	Thu, 21 Nov 2024 17:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732208684;
-	bh=aZGpUzKzmNNoZNO+kAOuEPARwds35ZIR3tETVKuSnKo=;
+	s=k20201202; t=1732209775;
+	bh=vrLtc+wqTM3wm53I5eqfMyii4DXjb/vnZwhmFtWYOT8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OuWh3fr9p904cw9e1mc8O2m6lKvKAi2Q4W7mb0LRf/sRvlgauQfqFPaed6rwfJ8YK
-	 qM+Czf8d2QD0FwOJjRc9zbZAsowK4TO0GlPR0kTj9yr+pQrkczIzB5YMLOWu5yV62X
-	 zrbvsglrFK+K6oWhUpyAUQvr7h35onXHuD1ji6yShqfYV+iOrV/Q1VhGH17Kqh02yD
-	 mPukHVH9AZim+1EQrqg3Ey6X0URZGtS4CLwZdyUOATXbHhidPW9pPiD0VFwmZyEdnQ
-	 YowMbfYElZn5sMsKxNSTzdKWt/IVLV+O9GTHKupSLLrTnq81ICP1SdxN4CV49VDkms
-	 3/VBQZ5QuoMTA==
-Date: Thu, 21 Nov 2024 14:04:41 -0300
+	b=WubPOd1Bf8Jsekq7KXCQSjLDwlcWXnnwtH3EL8QkB+xEZ4/3kiY38djMdNOQQBH2M
+	 9Bg55BXdLpYo+I3nQhFal2yG+BWW7Anuqor8yJcWlbjDcxQ23dVgbJGXKxgJ7dI9SO
+	 Lk+UKiphlpcE8fD/Q1virarRxZiq3GZi4ePuFW/wMvSJTG7pgBg0iXdVmTWk1yfBBB
+	 qygE8oBAYqJfd5eU+RTs+iXzh+Nyr0QCgkXQv34QutgrVEfNFcQn88WxwE2sP/99NV
+	 sNdjY4vp4Id4lXnL8OVT+KojOm0XrjlhvlivC2Lz7OusQ1sJGPQXZBlW6cElkyrBlq
+	 mSXQ++N42oiDg==
+Date: Thu, 21 Nov 2024 14:22:52 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -38,8 +38,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v1] perf tests: Fix hwmon parsing with PMU name test
-Message-ID: <Zz9oKR3goFPP9_a9@x1>
+Message-ID: <Zz9sbNAuRsYjclAi@x1>
 References: <20241121000955.536930-1-irogers@google.com>
+ <Zz9oKR3goFPP9_a9@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,95 +50,102 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241121000955.536930-1-irogers@google.com>
+In-Reply-To: <Zz9oKR3goFPP9_a9@x1>
 
-On Wed, Nov 20, 2024 at 04:09:55PM -0800, Ian Rogers wrote:
-> Incorrectly the hwmon with PMU name test didn't pass "true". Fix and
-> address issue with hwmon_pmu__config_terms needing to load events - a
-> load bearing assert fired. Also fix missing list deletion when putting
-> the hwmon test PMU and lower some debug warnings to make the hwmon PMU
-> less spammy in verbose mode.
+On Thu, Nov 21, 2024 at 02:04:45PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Nov 20, 2024 at 04:09:55PM -0800, Ian Rogers wrote:
+> > Incorrectly the hwmon with PMU name test didn't pass "true". Fix and
+> > address issue with hwmon_pmu__config_terms needing to load events - a
+> > load bearing assert fired. Also fix missing list deletion when putting
+> > the hwmon test PMU and lower some debug warnings to make the hwmon PMU
+> > less spammy in verbose mode.
+ 
+> After applying this, with this series of patches on a Fedora 40 system,
+> I get output from -v where before I needed, IIRC, to use -vv:
+> 
+> f8244bb9bfa66f79 (HEAD -> perf-tools-next, x1/perf-tools-next) perf tests: Fix hwmon parsing with PMU name test
+> 9ae6c7a4bd02acbd perf hwmon_pmu: Ensure hwmon key union is zeroed before use
+> 3e37de098af38179 perf tests hwmon_pmu: Remove double evlist__delete()
+> 0565017a0ac824c2 perf test: Correct hwmon test PMU detection
+> 85c60a01b85ee956 (perf-tools-next/tmp.perf-tools-next, perf-tools-next/perf-tools-next) perf: Remove unused del_perf_probe_events()
+> ⬢ [acme@toolbox perf-tools-next]$
 
-After applying this, with this series of patches on a Fedora 40 system,
-I get output from -v where before I needed, IIRC, to use -vv:
+<SNIP>
 
-f8244bb9bfa66f79 (HEAD -> perf-tools-next, x1/perf-tools-next) perf tests: Fix hwmon parsing with PMU name test
-9ae6c7a4bd02acbd perf hwmon_pmu: Ensure hwmon key union is zeroed before use
-3e37de098af38179 perf tests hwmon_pmu: Remove double evlist__delete()
-0565017a0ac824c2 perf test: Correct hwmon test PMU detection
-85c60a01b85ee956 (perf-tools-next/tmp.perf-tools-next, perf-tools-next/perf-tools-next) perf: Remove unused del_perf_probe_events()
-⬢ [acme@toolbox perf-tools-next]$
+> root@number:~# perf test -v 11
+>  11: Hwmon PMU                                                       :
+>  11.1: Basic parsing test                                            : Ok
+> --- start ---
+> test child forked, pid 1823259
+> Testing 'temp_test_hwmon_event1'
+> Using CPUID GenuineIntel-6-B7-1
+> FAILED tests/hwmon_pmu.c:159 failed to parse event 'temp_test_hwmon_event1', err 1
+> event syntax error: 'temp_test_hwmon_event1'
+>                      \___ Bad event name
+> 
+> Unable to find event on a PMU of 'temp_test_hwmon_event1'
 
-root@number:~# perf -vv
-perf version 6.12.rc6.gf8244bb9bfa6
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-         bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
-            debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
-                 dwarf: [ on  ]  # HAVE_LIBDW_SUPPORT
-    dwarf_getlocations: [ on  ]  # HAVE_LIBDW_SUPPORT
-          dwarf-unwind: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
-              auxtrace: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-              libaudit: [ OFF ]  # HAVE_LIBAUDIT_SUPPORT
-                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
-           libcapstone: [ on  ]  # HAVE_LIBCAPSTONE_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_LIBDW_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-            libopencsd: [ on  ]  # HAVE_CSTRACE_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-               libpfm4: [ on  ]  # HAVE_LIBPFM
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-             libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-root@number:~# 
+In gdb it fails on the first call to do_test() from the first test__hwmon_pmu()
 
-root@number:~# perf test -v 11
- 11: Hwmon PMU                                                       :
+Starting program: /root/bin/perf test -F -vv 11
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+--- start ---
+---- end ----
  11.1: Basic parsing test                                            : Ok
 --- start ---
-test child forked, pid 1823259
+
+Breakpoint 1, test__hwmon_pmu (with_pmu=false) at tests/hwmon_pmu.c:203
+203	{
+(gdb) n
+205		struct perf_pmu *pmu = test_pmu_get(dir, sizeof(dir));
+(gdb) n
+206		int ret = TEST_OK;
+(gdb) p pmu
+$2 = (struct perf_pmu *) 0xf50450
+(gdb) p *pmu
+$3 = {name = 0xf50ac0 "hwmon_a_test_hwmon_pmu", alias_name = 0xf50aa0 "hwmon1234", id = 0x0, type = 4294902994, selectable = false, is_core = false, is_uncore = false, auxtrace = false, 
+  formats_checked = false, config_masks_present = false, config_masks_computed = false, max_precise = 0, perf_event_attr_init_default = 0x0, cpus = 0xf4fbf0, format = {next = 0xf50488, 
+    prev = 0xf50488}, aliases = {next = 0xf50498, prev = 0xf50498}, events_table = 0x0, sysfs_aliases = 0, cpu_json_aliases = 0, sys_json_aliases = 0, sysfs_aliases_loaded = false, 
+  cpu_aliases_added = false, caps_initialized = false, nr_caps = 0, caps = {next = 0xf504c8, prev = 0xf504c8}, list = {next = 0xedc090 <other_pmus>, prev = 0xedc090 <other_pmus>}, 
+  config_masks = {0, 0, 0, 0}, missing_features = {exclude_guest = false, checked = false}, mem_events = 0x0}
+(gdb) s
+208		if (!pmu)
+(gdb) s
+211		for (size_t i = 0; i < ARRAY_SIZE(test_events); i++) {
+(gdb) s
+212			ret = do_test(i, with_pmu, /*with_alias=*/false);
+(gdb) s
+do_test (i=0, with_pmu=false, with_alias=false) at tests/hwmon_pmu.c:136
+136	{
+(gdb) n
+137		const char *test_event = with_alias ? test_events[i].alias : test_events[i].name;
+(gdb) n
+138		struct evlist *evlist = evlist__new();
+(gdb) n
+143		bool found = false;
+(gdb) n
+145		if (!evlist) {
+(gdb) n
+150		if (with_pmu)
+(gdb) n
+153			strlcpy(str, test_event, sizeof(str));
+(gdb) n
+155		pr_debug("Testing '%s'\n", str);
+(gdb) p str
+$4 = "temp_test_hwmon_event1\000\000\004\000\000\000\000\000\000\000\274\204z\000\000\000\000\000΄z\000\000\000\000\000\021\000\000\000\000\000\000\000 \305\377\377\377\177\000\000߄z\000\000\000\000\000\353\204z\000\000\000\000\000\376\204z\000\000\000\000\000\n\205z\000\000\000\000\000\021\205z\000\000\000\000\000\035\205z\000\000\000\000\0000\205z\000\000\000\000\000<\205z\000\000\000\000"
+(gdb) n
 Testing 'temp_test_hwmon_event1'
+156		parse_events_error__init(&err);
+(gdb) n
+157		ret = parse_events(evlist, str, &err);
+(gdb) n
 Using CPUID GenuineIntel-6-B7-1
-FAILED tests/hwmon_pmu.c:159 failed to parse event 'temp_test_hwmon_event1', err 1
-event syntax error: 'temp_test_hwmon_event1'
-                     \___ Bad event name
+158		if (ret) {
+(gdb) p ret
+$5 = 1
+(gdb) n
+159			pr_debug("FAILED %s:%d failed to parse event '%s', err %d\n",
+(gdb) 
 
-Unable to find event on a PMU of 'temp_test_hwmon_event1'
----- end(-1) ----
- 11.2: Parsing without PMU name                                      : FAILED!
---- start ---
-test child forked, pid 1823260
-Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
-Using CPUID GenuineIntel-6-B7-1
-FAILED tests/hwmon_pmu.c:159 failed to parse event 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/', err 1
-event syntax error: 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
-                     \___ Bad event or PMU
 
-Unable to find PMU or event on a PMU of 'hwmon_a_test_hwmon_pmu'
----- end(-1) ----
- 11.3: Parsing with PMU name                                         : FAILED!
-root@number:~#
-
-⬢ [acme@toolbox perf-tools-next]$ ls -la /sys/class/hwmon/
-total 0
-drwxr-xr-x.  2 nobody nobody 0 Nov 21 14:03 .
-drwxr-xr-x. 80 nobody nobody 0 Nov 15 11:43 ..
-lrwxrwxrwx.  1 nobody nobody 0 Nov 15 11:43 hwmon0 -> ../../devices/virtual/thermal/thermal_zone0/hwmon0
-lrwxrwxrwx.  1 nobody nobody 0 Nov 15 11:43 hwmon1 -> ../../devices/pci0000:00/0000:00:06.0/0000:02:00.0/nvme/nvme0/hwmon1
-lrwxrwxrwx.  1 nobody nobody 0 Nov 20 16:36 hwmon2 -> ../../devices/platform/PNP0C14:02/wmi_bus/wmi_bus-PNP0C14:02/DEADBEEF-2001-0000-00A0-C90629100000/hwmon/hwmon2
-lrwxrwxrwx.  1 nobody nobody 0 Nov 20 16:36 hwmon3 -> ../../devices/pci0000:00/0000:00:1f.4/i2c-16/16-0053/hwmon/hwmon3
-lrwxrwxrwx.  1 nobody nobody 0 Nov 20 16:36 hwmon4 -> ../../devices/platform/coretemp.0/hwmon/hwmon4
-⬢ [acme@toolbox perf-tools-next]$
-⬢ [acme@toolbox perf-tools-next]$ uname -a
-Linux toolbox 6.11.7-200.fc40.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Nov  8 19:21:57 UTC 2024 x86_64 GNU/Linux
-⬢ [acme@toolbox perf-tools-next]$ 
-
-- Arnaldo
