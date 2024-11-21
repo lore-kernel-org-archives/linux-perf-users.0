@@ -1,426 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A600145A03;
-	Thu, 21 Nov 2024 21:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9DD13C3D6
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Nov 2024 21:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732223298; cv=none; b=GJk9MmUla4dZidA3NqT76vCniDdkBVqNf91u4oaBIclER8wBdjGGrqyPaw7Lyq2c7x0TH5cSQTeaFWZS8dT2HfYkiNc5Ws46JFpLLfw51Xrl+pQkgGYIcRCvcGBl/sQIfQQ1L6ie9YTFlOXjlcAYyxXfdil4BxzaxZExbWOF/7M=
+	t=1732223949; cv=none; b=RfMSuf2WG3vl9TGK0P/t+0Q80emd+A4okGatHtUm1jPiAslmjR543I1fm79YXRz58H9xKypdLXBChwC0IQT2wYRRSdjZRLOzykM+lXcvHKIiUrw/D7XXTIPh9DQmrbDAfgm5nj3c3FEtwptfPq22kQfdp2MmIfEkNug/PMhMIH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732223298; c=relaxed/simple;
-	bh=fXt8OxKD9XX5qaiVShNhnVnQCT5t1Ne8v6HujS5jMVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l9hT18y307WDV6BTTNnYfYY/9vHAAdQaU3fajQmyydR8BQ+tq2Wi2Fab1HRL5x/nA9yLjKvZ3EEaxvJcUgD+FKwBt1h6LdzCmu1cTEg851T7HMqX7jci+1P1q+ND0CBjwghF9hhKSuyGvpUAgbEFjXomt1iVykAlNfbH5ATLysc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qz+C2QVT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732223949; c=relaxed/simple;
+	bh=8lz2cEj5C1DwnLcZiEsku1DUpI7PthbBD35+zvvXCgI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gVqsRe74mFdWpRspOQO3fIhqT2SWFf3cIXVbwzF443nN+bls7Tkwn77LVuCgAdg/Jl3rN9BfiSMkBILAM7VGcRtFldZj43pMHOmRhayjACkYvS8jj4e3AGNXtEqmBkePJNP3E0d+ieXTIQUCAojkwFrGE7Z2u1rFat1GRr4Ia0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jVR6EOEg; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qz+C2QVT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 284D3C4CECC;
-	Thu, 21 Nov 2024 21:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732223297;
-	bh=fXt8OxKD9XX5qaiVShNhnVnQCT5t1Ne8v6HujS5jMVQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qz+C2QVTzAuv07xeo7NfDGTUpe22VVE87opo3nmV7QIeSMhgz0WnzCYAuMVQfME2Y
-	 Z+X+L8SzHZgtzL0SHtIlaHZRi2DfX7o8RVM/aRHx4loPcZyFgInRHs48dL2r8QZdT+
-	 Oj/bnwqDxuMN5i+uRYIyrtoJLxJW9jVAvYowsmrdsVqa35A8vZaHWmXIj5DGHnJ57e
-	 lwXu0Ltb39W3f8Qy0PbjZ4he+7IO5glzXYg9ObW83CKAvsfORjeENkjmdF4AsJ4i8s
-	 DIZSA4Y7AEz6LU4S0IuetnBmTzF/0Skw2snVMy1lp4xHQRYd9pptSkob6FU62ifIsh
-	 6fwtQskaAl1jg==
-Date: Thu, 21 Nov 2024 18:08:14 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf tests: Fix hwmon parsing with PMU name test
-Message-ID: <Zz-hPtbuqzDd7t00@x1>
-References: <20241121000955.536930-1-irogers@google.com>
- <Zz9oKR3goFPP9_a9@x1>
- <Zz9sbNAuRsYjclAi@x1>
- <CAP-5=fXAitSZuRPppAjH=38Ua6BFyhou0sSj7xmfNakqPUQqPw@mail.gmail.com>
- <Zz-e4fMLIJmufgyl@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jVR6EOEg"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38242abf421so959873f8f.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 Nov 2024 13:19:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1732223946; x=1732828746; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pX8XiRlPufvUoMxM7Ycxdc9sn9Rz/VdbbgNK2el4cX4=;
+        b=jVR6EOEgv+c0M86upHz1qUDt9LCRyHTk4RuQx0H6rRnvrMj2IVVAS1Q7dlpU6G/+gp
+         IPGqdTNmrDsR+zRWSVQ+UJBqSRdUG86rWqOowI4R7vDYkL+9GK1JpLE0U5Z4dpQHIY6l
+         JuWKcY5TbVEbL0D0SdEtNM7indfKuh36NCYD451sqEVmNvuSihXRXsJNRS9QXpufo575
+         3+CSVkG8s6kYN0ihsqfbDrIORobpVAgBm8VdjDbWV/9sz92ISR4+tySPR8GxIEDU2Day
+         9QJ89yqsrtSCrQRE7v/Mwpek4gSPNibRCSPbruFM8BA5bZCpTRQ+lnL9//Nyr0hZEsF7
+         H5Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732223946; x=1732828746;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pX8XiRlPufvUoMxM7Ycxdc9sn9Rz/VdbbgNK2el4cX4=;
+        b=Nz3ODOiLp8Jn23nrmzX3fXVnMVNHvCOnJingO+0asdS1YOCC6buHu/l2EyKyfCZHUu
+         1x4WV2FPHWkjDerdppvqzr7yeRA8NuaElJNdnkqrnqQo9OXDpDQsFks/wbPysF0EADQl
+         T4jvyPYmwoFicH7listal+SLdG176eOtbZ5BNfvVG2K15wQI2vB9B+ULrq3zFADCRZEH
+         fX27koCuV6fchwE0aghROxAXhVKod38OaSToX7dZqzsQP6gQ1gxMM9J7ITj4O7BAOmW0
+         ZCVxW3wAPD79CUhqxw8Rl5l9Xpps/4vadzFFfedKRAtdc/J8jFZx13+YzeKZ/0jCnY9J
+         2AKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYXv7GWnB6ETZhlc3DDg9WmoiaWhqLWs2rFsODTDxyLT+4at+VLdLQVJhUQLdONyT/WGZz6Q3IhK5kjji1Ecu2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTDK7wKthB3ZDAB3zTYwxmgwVVtawgfu5yabxJAjLcnbAcR8mJ
+	f++SVwjMAQed2pcmVY7yt/lDowmgWGt87lBERivJc1Rx+DpfIyQSfv6r+lWGqcpw+AkRrQr3RmU
+	266Coc7uJ2FHjGAFXA+0cR0i5mZgJfDLG/AIW
+X-Gm-Gg: ASbGncvoULhyYG7F5ZWUuToDRyVLWr5nf2KQ1qHIZRBsMMGSnNROzR+7GCx5EEPuxkz
+	8eaZE+xQUu6ukhitQtjM86c8ElNZ0qfsileB06z4jGBZBjg72gcAdKfbQow==
+X-Google-Smtp-Source: AGHT+IET7ArKCoKeGbFTTH20elE2gMMjwLV5I6kbsX+Bkm1lKqx9xUfkwH4I55PZwpmn2XHoSWKx/W+grWluAK6DwkQ=
+X-Received: by 2002:a5d:5f47:0:b0:382:464e:1ab4 with SMTP id
+ ffacd0b85a97d-38260b45526mr432608f8f.3.1732223945901; Thu, 21 Nov 2024
+ 13:19:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zz-e4fMLIJmufgyl@x1>
+References: <20241106003007.2112584-1-ctshao@google.com> <20241106003007.2112584-2-ctshao@google.com>
+ <CAP-5=fUc0YttVUMB9oAit3u5hzVGuK5rTLnP_dXD0kqt7QcO5g@mail.gmail.com> <CAJpZYjW0evv8SmPMwymjcFQExy+zVHe_6XW79bB_ErRXCwgzfA@mail.gmail.com>
+In-Reply-To: <CAJpZYjW0evv8SmPMwymjcFQExy+zVHe_6XW79bB_ErRXCwgzfA@mail.gmail.com>
+From: Chun-Tse Shao <ctshao@google.com>
+Date: Thu, 21 Nov 2024 13:18:54 -0800
+Message-ID: <CAJpZYjUEn-Cr-YWfA68iN8jnR7BdSPhg3DxXsQq7OwA93bDpOg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] perf: Reveal PMU type in fdinfo
+To: Ian Rogers <irogers@google.com>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 21, 2024 at 05:58:09PM -0300, Arnaldo Carvalho de Melo wrote:
-> root@number:~# perf probe -x ~/bin/perf -L hwmon_pmu__have_event
-> <hwmon_pmu__have_event@/home/acme/git/perf-tools-next/tools/perf/util/hwmon_pmu.c:0>
->       0  bool hwmon_pmu__have_event(struct perf_pmu *pmu, const char *name)
->       1  {
->       2         struct hwmon_pmu *hwm = container_of(pmu, struct hwmon_pmu, pmu);
->                 enum hwmon_type type;
->                 int number;
->       5         union hwmon_pmu_event_key key = { .type_and_num = 0 };
->                 struct hashmap_entry *cur;
->                 size_t bkt;
->          
->       9         if (!parse_hwmon_filename(name, &type, &number, /*item=*/NULL, /*is_alarm=*/NULL))
->      10                 return false;
->          
->      12         if (hwmon_pmu__read_events(hwm))
->      13                 return false;
->          
->      15         key.type = type;
->      16         key.num = number;
->      17         if (hashmap_find(&hwm->events, key.type_and_num, /*value=*/NULL))
->      18                 return true;
->      19         if (key.num != -1)
->      20                 return false;
->                 /* Item is of form <type>_ which means we should match <type>_<label>. */
->      22         hashmap__for_each_entry((&hwm->events), cur, bkt) {
->      23                 struct hwmon_pmu_event_value *value = cur->pvalue;
->          
->      25                 key.type_and_num = cur->key;
->      26                 if (key.type == type && value->name && !strcasecmp(name, value->name))
->      27                         return true;
->                 }
->      29         return false;
->      30  }
+Hi, just a friendly ping for review, in case anyone missed this.
 
-To read all the values it looks for in the hashmap:
+Thanks,
+CT
 
-root@number:~# perf probe -x ~/bin/perf hwmon_pmu__have_event:25 'value->name:string'
-Added new events:
-  probe_perf:hwmon_pmu__have_event_L25 (on hwmon_pmu__have_event:25 in /home/acme/bin/perf with name=value->name:string)
-  probe_perf:hwmon_pmu__have_event_L25 (on hwmon_pmu__have_event:25 in /home/acme/bin/perf with name=value->name:string)
-
-You can now use it in all perf tools, such as:
-
-	perf record -e probe_perf:hwmon_pmu__have_event_L25 -aR sleep 1
-
-root@number:~#
-
-root@number:~# perf trace --libtrace -e probe_perf:* perf test -F 11
- 11.1: Basic parsing test                                            : Ok
-     0.000 :147400/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="cpu0_accuracy")
-     0.044 :147400/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_input")
-     0.054 :147400/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="fan2_vid")
-     0.062 :147400/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="power3_crit_alarm")
-     0.069 :147400/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="intrusion4_average_interval_min_alarm")
-     0.076 :147400/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="badtype5_baditem")
-     0.083 :147400/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="humidity6_baditem")
-     1.936 perf/147400 probe_perf:hwmon_pmu__have_event((6611f1) name_string="temp_test_hwmon_event1")
-     1.938 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp_test_hwmon_event1")
-     1.942 perf/147400 probe_perf:hwmon_pmu__have_event_L29((66135d))
-     1.944 perf/147400 probe_perf:hwmon_pmu__have_event((6611f1) name_string="temp_test_hwmon_event1")
-     1.945 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp_test_hwmon_event1")
-     1.949 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="uevent")
-     1.950 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_input")
-     1.952 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="name")
-     1.954 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp2_input")
-     1.957 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="")
-     1.959 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="")
-     1.961 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="")
-     1.962 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="")
-     1.964 perf/147400 probe_perf:hwmon_pmu__have_event_L29((66135d))
-     1.965 perf/147400 probe_perf:hwmon_pmu__have_event((6611f1) name_string="temp_test_hwmon_event1")
-     1.966 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp_test_hwmon_event1")
-     1.991 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp42_input")
-     1.993 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp26_input")
-     1.994 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="uevent")
-     1.996 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp10_crit_alarm")
-     1.997 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp35_crit_alarm")
-     1.999 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp37_max")
-     2.001 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp30_label")
-     2.005 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp34_crit")
-     2.006 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp14_label")
-     2.010 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp36_input")
-     2.011 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp40_max")
-     2.013 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp6_input")
-     2.014 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp22_crit")
-     2.016 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp40_label")
-     2.019 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp44_max")
-     2.021 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp2_crit_alarm")
-     2.023 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp44_crit_alarm")
-     2.024 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp10_crit")
-     2.026 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp34_label")
-     2.029 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp18_label")
-     2.032 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp45_crit")
-     2.034 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp2_crit")
-     2.035 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp2_max")
-     2.037 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp44_label")
-     2.040 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp6_max")
-     2.041 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp30_max")
-     2.042 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp38_crit_alarm")
-     2.044 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp34_max")
-     2.045 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp39_crit")
-     2.047 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp38_label")
-     2.050 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp43_input")
-     2.051 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp18_crit_alarm")
-     2.053 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp38_max")
-     2.054 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp42_crit_alarm")
-     2.056 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp10_input")
-     2.057 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp44_crit")
-     2.059 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_label")
-     2.063 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp41_max")
-     2.064 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp22_crit_alarm")
-     2.066 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_crit")
-     2.067 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp37_input")
-     2.069 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp45_max")
-     2.070 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp41_label")
-     2.074 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp30_input")
-     2.075 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp14_input")
-     2.077 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp38_crit")
-     2.078 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp35_label")
-     2.081 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp36_crit_alarm")
-     2.083 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp26_crit")
-     2.084 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp40_input")
-     2.085 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp40_crit_alarm")
-     2.087 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp43_crit")
-     2.088 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp45_label")
-     2.092 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp14_crit")
-     2.093 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp34_input")
-     2.094 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp45_crit_alarm")
-     2.096 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp35_max")
-     2.097 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp18_input")
-     2.099 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp10_max")
-     2.100 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp39_label")
-     2.103 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp22_label")
-     2.106 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp6_crit")
-     2.108 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp39_max")
-     2.109 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp44_input")
-     2.111 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp14_max")
-     2.112 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp37_crit")
-     2.114 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp42_max")
-     2.115 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp2_label")
-     2.123 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp18_max")
-     2.124 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp38_input")
-     2.125 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp34_crit_alarm")
-     2.127 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp42_crit")
-     2.128 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp42_label")
-     2.131 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp26_label")
-     2.134 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp14_crit_alarm")
-     2.136 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp39_crit_alarm")
-     2.137 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp30_crit")
-     2.138 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_input")
-     2.140 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_crit_alarm")
-     2.141 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp43_crit_alarm")
-     2.143 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp36_label")
-     2.146 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp6_label")
-     2.149 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp36_crit")
-     2.151 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp41_input")
-     2.152 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp6_crit_alarm")
-     2.153 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp36_max")
-     2.155 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp35_input")
-     2.156 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp41_crit")
-     2.158 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp45_input")
-     2.159 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp43_max")
-     2.160 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp37_crit_alarm")
-     2.162 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp18_crit")
-     2.163 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp41_crit_alarm")
-     2.165 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp35_crit")
-     2.166 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp22_max")
-     2.168 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp39_input")
-     2.169 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp22_input")
-     2.170 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_max")
-     2.172 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp43_label")
-     2.175 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp26_max")
-     2.177 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp10_label")
-     2.180 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp40_crit")
-     2.181 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="name")
-     2.183 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp26_crit_alarm")
-     2.184 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp2_input")
-     2.186 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp37_label")
-     2.189 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp30_crit_alarm")
-     2.191 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_34")
-     2.192 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_34")
-     2.194 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_39")
-     2.195 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_39")
-     2.197 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_36")
-     2.198 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_36")
-     2.199 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_28")
-     2.201 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_28")
-     2.202 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_41")
-     2.203 perf/147400 event syntax error: 'temp_test_hwmon_event1'
-probe_perf:hwmon_pmu__have_event_L25(                     \___ Bad event name
-(6612ef) name="temp_core_41"
-Unable to find event on a PMU of 'temp_test_hwmon_event1'
-)
-     2.205 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_package_id_0")
-     2.206 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_package_id_0")
-     2.208 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_20")
-     2.209 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_20")
-     2.210 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_33")
-     2.212 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_33")
-     2.213 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_12")
-     2.215 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_12")
-     2.216 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_4")
-     2.217 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_4")
-     2.219 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_38")
-     2.220 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_38")
-     2.221 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_43")
-     2.223 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_43")
-     2.224 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_35")
-     2.226 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_35")
-     2.227 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_40")
-     2.228 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_40")
-     2.230 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_32")
-     2.231 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_32")
-     2.233 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_24")
-     2.234 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_24")
-     2.235 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_37")
-     2.237 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_37")
-     2.238 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_16")
-     2.239 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_16")
-     2.241 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_8")
-     2.242 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_8")
-     2.244 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_42")
-     2.245 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_42")
-     2.246 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_core_0")
-     2.248 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_core_0")
-     2.249 perf/147400 probe_perf:hwmon_pmu__have_event_L29((66135d))
-     2.251 perf/147400 probe_perf:hwmon_pmu__have_event((6611f1) name_string="temp_test_hwmon_event1")
-     2.252 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp_test_hwmon_event1")
-     2.256 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="uevent")
-     2.258 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp6_input")
-     2.259 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp3_input")
-     2.261 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp4_input")
-     2.262 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_input")
-     2.264 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp5_input")
-     2.265 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="name")
-     2.267 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp2_input")
-     2.269 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="")
-     2.270 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="")
-     2.272 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="")
-     2.273 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="")
-     2.275 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="")
-     2.277 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="")
-     2.278 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="")
-     2.280 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="")
-     2.281 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="")
-     2.283 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="")
-     2.285 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="")
-     2.286 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="")
-     2.287 perf/147400 probe_perf:hwmon_pmu__have_event_L29((66135d))
-     2.289 perf/147400 probe_perf:hwmon_pmu__have_event((6611f1) name_string="temp_test_hwmon_event1")
-     2.290 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp_test_hwmon_event1")
-     2.294 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="uevent")
-     2.295 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_label")
-     2.299 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_crit")
-     2.301 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_alarm")
-     2.302 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_input")
-     2.303 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_min")
-     2.305 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_max")
-     2.306 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="name")
-     2.308 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="temp_composite")
-     2.309 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="temp_composite")
-     2.311 perf/147400 probe_perf:hwmon_pmu__have_event_L29((66135d))
-     2.312 perf/147400 probe_perf:hwmon_pmu__have_event((6611f1) name_string="temp_test_hwmon_event1")
-     2.313 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp_test_hwmon_event1")
-     2.317 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="uevent")
-     2.319 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_lcrit_alarm")
-     2.320 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_enable")
-     2.322 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_crit")
-     2.323 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_lcrit")
-     2.325 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_min_alarm")
-     2.326 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_input")
-     2.328 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_crit_alarm")
-     2.329 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_min")
-     2.331 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_max_alarm")
-     2.332 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp1_max")
-     2.334 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="name")
-     2.335 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612e8) name="")
-     2.337 perf/147400 probe_perf:hwmon_pmu__have_event_L25((6612ef) name="")
-     2.338 perf/147400 probe_perf:hwmon_pmu__have_event_L29((66135d))
- 11.2: Parsing without PMU name                                      : FAILED!
-     6.499 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp_test_hwmon_event1")
-     6.517 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp_test_hwmon_event1")
-     6.526 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp_test_hwmon_event1")
-     6.530 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="temp_test_hwmon_event1")
-     6.596 perf/147400 probe_perf:hwmon_pmu__have_event((6611f1) name_string="hwmon_a_test_hwmon_pmu")
-     6.599 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="hwmon_a_test_hwmon_pmu")
-     6.602 perf/147400 probe_perf:hwmon_pmu__have_event_L10((66123e))
-     6.606 perf/147400 probe_perf:hwmon_pmu__have_event((6611f1) name_string="hwmon_a_test_hwmon_pmu")
-     6.609 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="hwmon_a_test_hwmon_pmu")
-     6.612 perf/147400 probe_perf:hwmon_pmu__have_event_L10((66123e))
-     6.615 perf/147400 probe_perf:hwmon_pmu__have_event((6611f1) name_string="hwmon_a_test_hwmon_pmu")
-     6.618 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="hwmon_a_test_hwmon_pmu")
-     6.621 perf/147400 probe_perf:hwmon_pmu__have_event_L10((66123e))
-     6.624 perf/147400 probe_perf:hwmon_pmu__have_event((6611f1) name_string="hwmon_a_test_hwmon_pmu")
-     6.627 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="hwmon_a_test_hwmon_pmu")
-     6.630 perf/147400 probe_perf:hwmon_pmu__have_event_L10((66123e))
-     6.633 perf/147400 probe_perf:hwmon_pmu__have_event((6611f1) name_string="hwmon_a_test_hwmon_pmu")
-     6.636 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="hwmon_a_test_hwmon_pmu")
-     6.638 perf/147400 probe_perf:hwmon_pmu__have_event_L10((66123e))
-event syntax error: 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
-                     \___ Bad event or PMU
-
-Unable to find PMU or event on a PMU of 'hwmon_a_test_hwmon_pmu'
-     6.895 perf/147400 probe_perf:hwmon_pmu__have_event((6611f1) name_string="hwmon_a_test_hwmon_pmu")
-     6.900 perf/147400 probe_perf:parse_hwmon_filename((65fd14) filename_string="hwmon_a_test_hwmon_pmu")
-     6.904 perf/147400 probe_perf:hwmon_pmu__have_event_L10((66123e))
- 11.3: Parsing with PMU name                                         : FAILED!
-root@number:~# 
-
-And before the hashmap__find() at line 17:
-
->      15         key.type = type;
->      16         key.num = number;
->      17         if (hashmap_find(&hwm->events, key.type_and_num, /*value=*/NULL))
->      18                 return true;
-
-
-root@number:~# perf probe -x ~/bin/perf hwmon_pmu__have_event:17 type number
-Added new events:
-  probe_perf:hwmon_pmu__have_event_L17 (on hwmon_pmu__have_event:17 in /home/acme/bin/perf with type number)
-  probe_perf:hwmon_pmu__have_event_L17 (on hwmon_pmu__have_event:17 in /home/acme/bin/perf with type number)
-  probe_perf:hwmon_pmu__have_event_L17 (on hwmon_pmu__have_event:17 in /home/acme/bin/perf with type number)
-  probe_perf:hwmon_pmu__have_event_L17 (on hwmon_pmu__have_event:17 in /home/acme/bin/perf with type number)
-
-You can now use it in all perf tools, such as:
-
-	perf record -e probe_perf:hwmon_pmu__have_event_L17 -aR sleep 1
-
-root@number:~#
-
-root@number:~# perf trace --libtrace -e probe_perf:hwmon_pmu__have_event_L17 perf test -F 11
- 11.1: Basic parsing test                                            : Ok
-     0.000 :147579/147579 probe_perf:hwmon_pmu__have_event_L17((66126f) type=0xa number=-1)
-     0.011 :147579/147579 probe_perf:hwmon_pmu__have_event_L17((661273) type=0xa number=-1)
-     0.013 :147579/147579 probe_perf:hwmon_pmu__have_event_L17((66127e) type=0xa number=-1)
-     0.015 :147579/147579 probe_perf:hwmon_pmu__have_event_L17((66128e) type=0xa number=-1)
-     0.021 :147579/147579 probe_perf:hwmon_pmu__have_event_L17((66126f) type=0xa number=-1)
-     0.022 :147579/147579 probe_perf:hwmon_pmu__have_event_L17((661273) type=0xa number=-1)
-     0.023 :147579/147579 probe_perf:hwmon_pmu__have_event_L17((66127e) type=0xa number=-1)
-     0.024 :147579/147579 probe_perf:hwmon_pmu__have_event_L17((66128e) type=0xa number=-1)
-event syntax error: 'temp_test_hwmon_event1'
-                     \___ Bad event name
-
-Unable to find event on a PMU of 'temp_test_hwmon_event1'
-     0.160 perf/147579 probe_perf:hwmon_pmu__have_event_L17((66126f) type=0xa number=-1)
-     0.162 perf/147579 probe_perf:hwmon_pmu__have_event_L17((661273) type=0xa number=-1)
-     0.163 perf/147579 probe_perf:hwmon_pmu__have_event_L17((66127e) type=0xa number=-1)
-     0.165 perf/147579 probe_perf:hwmon_pmu__have_event_L17((66128e) type=0xa number=-1)
-     0.172 perf/147579 probe_perf:hwmon_pmu__have_event_L17((66126f) type=0xa number=-1)
-     0.173 perf/147579 probe_perf:hwmon_pmu__have_event_L17((661273) type=0xa number=-1)
-     0.174 perf/147579 probe_perf:hwmon_pmu__have_event_L17((66127e) type=0xa number=-1)
-     0.175 perf/147579 probe_perf:hwmon_pmu__have_event_L17((66128e) type=0xa number=-1)
-     0.185 perf/147579 probe_perf:hwmon_pmu__have_event_L17((66126f) type=0xa number=-1)
-     0.186 perf/147579 probe_perf:hwmon_pmu__have_event_L17((661273) type=0xa number=-1)
-     0.187 perf/147579 probe_perf:hwmon_pmu__have_event_L17((66127e) type=0xa number=-1)
-     0.189 perf/147579 probe_perf:hwmon_pmu__have_event_L17((66128e) type=0xa number=-1)
-     0.213 perf/147579 probe_perf:hwmon_pmu__have_event_L17((66126f) type=0xa number=-1)
-     0.214 perf/147579 probe_perf:hwmon_pmu__have_event_L17((661273) type=0xa number=-1)
-     0.216 perf/147579 probe_perf:hwmon_pmu__have_event_L17((66127e) type=0xa number=-1)
-     0.217 perf/147579 probe_perf:hwmon_pmu__have_event_L17((66128e) type=0xa number=-1)
- 11.2: Parsing without PMU name                                      : FAILED!
-event syntax error: 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
-                     \___ Bad event or PMU
-
-Unable to find PMU or event on a PMU of 'hwmon_a_test_hwmon_pmu'
- 11.3: Parsing with PMU name                                         : FAILED!
-root@number:~#
-
-- Arnaldo
+On Thu, Nov 14, 2024 at 10:30=E2=80=AFAM Chun-Tse Shao <ctshao@google.com> =
+wrote:
+>
+> Hi Ian,
+>
+> On Thu, Nov 14, 2024 at 7:49=E2=80=AFAM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Tue, Nov 5, 2024 at 4:30=E2=80=AFPM Chun-Tse Shao <ctshao@google.com=
+> wrote:
+> > >
+> > > It gives useful info on knowing which PMUs are reserved by this proce=
+szs.
+> > > Also add config which would be useful.
+> > > Testing cycles:
+> > >
+> > >   $ ./perf stat -e cycles &
+> > >   $ cat /proc/`pidof perf`/fdinfo/3
+> > >   pos:    0
+> > >   flags:  02000002
+> > >   mnt_id: 16
+> > >   ino:    3081
+> > >   perf_event_attr.type:   0
+> > >   perf_event_attr.config: 0
+> > >
+> > > Testing L1-dcache-load-misses:
+> > >
+> > >   $ ./perf stat -e L1-dcache-load-misses &
+> > >   $ cat /proc/`pidof perf`/fdinfo/3
+> > >   pos:    0
+> > >   flags:  02000002
+> > >   mnt_id: 16
+> > >   ino:    1072
+> > >   perf_event_attr.type:   3
+> > >   perf_event_attr.config: 65536
+> > >
+> > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> >
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+> >
+> > > Change-Id: Ibea5618aaf00bae6f48a9b2a6e7798ab2b7f23ce
+> > > ---
+> > >  kernel/events/core.c | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >
+> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > index cdd09769e6c56..398cac8b208b9 100644
+> > > --- a/kernel/events/core.c
+> > > +++ b/kernel/events/core.c
+> > > @@ -55,6 +55,7 @@
+> > >  #include <linux/pgtable.h>
+> > >  #include <linux/buildid.h>
+> > >  #include <linux/task_work.h>
+> > > +#include <linux/seq_file.h>
+> > >
+> > >  #include "internal.h"
+> > >
+> > > @@ -6820,6 +6821,14 @@ static int perf_fasync(int fd, struct file *fi=
+lp, int on)
+> > >         return 0;
+> > >  }
+> > >
+> > > +static void perf_show_fdinfo(struct seq_file *m, struct file *f)
+> > > +{
+> > > +       struct perf_event *event =3D f->private_data;
+> > > +
+> > > +       seq_printf(m, "perf_event_attr.type:\t%u\n", event->orig_type=
+);
+> > > +       seq_printf(m, "perf_event_attr.config:\t%llu\n", (unsigned lo=
+ng long)event->attr.config);
+> >
+> > nit: is the cast necessary? I don't see __u64 listed on:
+> > https://www.kernel.org/doc/Documentation/printk-formats.txt
+> > so I'm unsure.
+> >
+>
+> In this case I think it is safer to cast it to `unsigned long long`,
+> since I don't know if any architecture would have an exception on
+> __u64.
+>
+> Thanks,
+> CT
+>
+> > Thanks,
+> > Ian
+> >
+> > > +}
+> > > +
+> > >  static const struct file_operations perf_fops =3D {
+> > >         .release                =3D perf_release,
+> > >         .read                   =3D perf_read,
+> > > @@ -6828,6 +6837,7 @@ static const struct file_operations perf_fops =
+=3D {
+> > >         .compat_ioctl           =3D perf_compat_ioctl,
+> > >         .mmap                   =3D perf_mmap,
+> > >         .fasync                 =3D perf_fasync,
+> > > +       .show_fdinfo            =3D perf_show_fdinfo,
+> > >  };
+> > >
+> > >  /*
+> > > --
+> > > 2.47.0.199.ga7371fff76-goog
+> > >
