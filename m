@@ -1,194 +1,251 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2058.outbound.protection.outlook.com [40.107.92.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28F813AA38
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 Nov 2024 15:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732204181; cv=none; b=FwsULD0V4OiVxQpeaTrwuj8+a7Fywbli434D0FDQWoELQfQtp/JZTGp+vMKZydQH6B0p6Kvvhj8fpveBkgAwYsJUGTu759KVpj+UAq+rkY9gsjMZphNBDqvNTv5qw7IctBD61x55MJiP4nYk+sOnAs7FKw4uLq9nUTS9srAR0vM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732204181; c=relaxed/simple;
-	bh=Oh2BfdcHy7OE0x9WaESMJI4AmM1rSdTVvNsNt0TS0t4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tFz5QwntF+DyHihBNw7Qv4Qlf6WGpCmbFueMLLbk3YurvOb0BqrwgUIdRsWoZ5uuco1vnkDQjkuI2x6cV+U2mOlKdyMBPeQwhIslMOL16ClGnR2t9pZ39wG4elmOlo9ltWQ3kUXxfqCv5DGbtAtGzldoi3scDW1qloyUZabvHzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=CrIN55H9; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB38132122;
+	Thu, 21 Nov 2024 15:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732204724; cv=fail; b=Mg9djYaWe6QlGt0aI++sVVB4oYg1cSC1IkOiqSFmomLJdm2GCdZm2MrAYDeCiWP+HW9Qd36yPIXO6lH4V9hPMv3DV9HTg7NBIHglPL7UtAA6Hfpr/B880I0JTnGWkON6hwKxw32BWyiy2vOiDojGCOjWKcHrNljEiREgXhk+ioE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732204724; c=relaxed/simple;
+	bh=cgGkN2kD2NOxHe1eTsM1Gk8swvwrHrj7M+V0UnWthHw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fAtSGzL848WwFO0q2pokTDjUKu8/ESLrGRxrOHTL8eUb00BoBD+plA/xZgN1qkL+CzomfZwDgaFefL0uCKRB4Jx7un7YXKlXYsznOmS71rkiRFcRjo9+xbRvS4kj0P/37G9atOn0c3CTHb9J4R2r3FDMl4if8yTLlqGU7lCQHrc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iuMXEbBy; arc=fail smtp.client-ip=40.107.92.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="CrIN55H9"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-46375ac25fbso7079271cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 Nov 2024 07:49:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1732204178; x=1732808978; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=imGyslVzf4MtAURe8zmBJ1AT4ZR15AATmZm1LrrG9KI=;
-        b=CrIN55H94xdEe9kJWFTcz441z2u0l5Wh4dT4fecty+AV2No8cMQMfZ6D4CUvO8gYcR
-         +OyojOtqcasfP6TsYpSfMruF1KQFi0ppqRkeQgCc6NIRnzTO5H0w9a53esovD3fJ6VRH
-         48WCU4T85NlU2636kTnsTtfOm6tAWDTXIkynAQeDGs3+JYdAD6CfC6MbPaDlYIBdiXtv
-         73XOIugaLbV/O34A/SXJjhoUyL3kErbJkXbo/2FDL/kl57GEPMLd/ejJEeA9ZGyoDQBr
-         15mZWMXA6mU6vXlF2ySLziRZpHYqk8fT+3jVkdTyNduQlYTR+p1+VUiUVCG42LTPTFpG
-         0oHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732204178; x=1732808978;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=imGyslVzf4MtAURe8zmBJ1AT4ZR15AATmZm1LrrG9KI=;
-        b=Su2dZE3jcnV5jhkbVD61xsc9JA27HfNm4txTTm7dhpu1PRvxPcyWEHAiTYd4PIHTFa
-         cpi14aK94P0pfFSqGBYU/Gr9BFUlpKNKvXZcp4uSuoSnYByzPvPzzOFupSv6Xk9Dl+Q/
-         ygUGmV+CeW6XSyxjZhq+BfMJpBYpzuATfjaSIa1AmhJ9zz0OVFRlocDcQrVAAIucwU59
-         KCo+JJ6j3QtM5D7CZmVfF3beycgV7PR+Zo7g76UpNPcHEt7FTnEr0bKgelVrFE71bKoe
-         0LtOMa3WQHcVgTD0S0//MzXmIeo4cCQUuvw05MISZCHgDeXD6i7s+ffGC/BFNqUiKpAY
-         hbtw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSn1/fyl/Qk1EREOVWaseyvV5E7joR6gFeviUr25TPhxLMWECu4/I0/J2X7v/Z9jhSd0ouVDFtX4NGVGejpDvS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrbQ0eGV3nzycwfokDfE0XPSF2lRBiR2bZD8g8YBp4J5Lr5m7Q
-	B+MxcGccobiFnVy2+8JO4f+8MHrvEQEKrX1G0D61AOYim0yihELQOrwgo10Gve0=
-X-Gm-Gg: ASbGncthCEQitOCnMumhSDlW1Bu/ClGYIgjbCL3o0SAzble+xcwcKa3HaQV2osd1FIg
-	zXYktigM6bMqmUYek2ItLivOdoOC7Orda4larZvtQ4ZVdjeqMsc1f0LK5dZU8OXWxnDhXJ5vdoN
-	775x/OBvmcpoOCx2B48hqPe0MKzwe/PmfSAzurFkCNuufeNrtRzcmXpcxsnpuNuq2db8wbaCq5U
-	EfMXkJ6PRAl7lKit9k+2oGzfm7zV0EemY0EOhCpXaU0MzJDlYHSDd6mT9dk3M+eAdsMvsHqs4Ou
-	7Xa3oWmdeHPlPpCmh8hKFWGnxF+ngG3EvsE=
-X-Google-Smtp-Source: AGHT+IHfa6uG1/ElJG3c1ctd03gnOTTo/GnY7T0aRJbPucnRyYeXTT/g4/UhflcfSiPSDaYXjPo35A==
-X-Received: by 2002:ac8:5e4d:0:b0:460:a730:3176 with SMTP id d75a77b69052e-464777e23f3mr93728941cf.11.1732204178485;
-        Thu, 21 Nov 2024 07:49:38 -0800 (PST)
-Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4646a63da08sm23720671cf.63.2024.11.21.07.49.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2024 07:49:37 -0800 (PST)
-Date: Thu, 21 Nov 2024 10:49:29 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxarm@huawei.com, tongtiangen@huawei.com,
-	Yicong Yang <yangyicong@huawei.com>,
-	Niyas Sait <niyas.sait@huawei.com>, ajayjoshi@micron.com,
-	Vandana Salve <vsalve@micron.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Huang Ying <ying.huang@intel.com>
-Subject: Re: [RFC PATCH 0/4] CXL Hotness Monitoring Unit perf driver
-Message-ID: <Zz9WiVaT8vMaHeTW@PC2K9PVX.TheFacebook.com>
-References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
- <Zz9Cq4CPStYGZyt7@PC2K9PVX.TheFacebook.com>
- <20241121145852.00000460@huawei.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iuMXEbBy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=B8osqMNhz7ZvO8aQVXldnBZY9GH2h7xqUss/UlJ5f1NffrCvWaQpPZiqqrL6A8kvk8aQizHJxc4h3AYXChQkcVmGAIgMNW6NZikMBp5Ib3u/86og6xKGC5hQ+7P2xBWFNcNLBsippSEcYB+fVOHQjvQcZg9bcbTYi9W6TIi+6iKn3yteK0ZKDLpTg3f9tso5Am57ZUZNDIKukIW444Zgfr7eolT2gt7vOwZ085SFYYhsvjkJq7n4TxQNehoxzZ5F73iZbEIgSAw2wI2XYpgqsMmUiFeKCsK+LDthh/3K/l2i+42P4gfgtkcI5U5uEaPq/t+V3+U3ho5wNSFx8c7+hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=axj0BIITLzkBK++GG6kG4MmVrPK9ZAelxfsbh54KeJA=;
+ b=W2XFjb0l3BE3Aa/JVyUIzEkEwtpbWFS8yUbOAeiuIIEJqOumvOSJ4A+VHLd0XYmM4dplfKCHWNwxF8RjA/KuWuX6d3ID78YLGo5aXS2Fd5eb+KkjvRBZ4fCerJqpD98cu2eDSbXxkrsi6yPb4WW0sYjLdUf4hDwBwCXMiVgHcGM0fxdDLhjcFYtnqYSc0uN+J2ezTKxnyUMLNOYpUfYhZvM07i4TEtmnXndNlNdsHT2CixT03VZWnNHbfNth2CqldgeMipOC/OPXt/acIQm5GDLGdJevfrFUcQH3n0gOGgOkMmbX9qVruEEcOMJUsusiXfE4Z9A2RzvPYQ7MlU9NYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=axj0BIITLzkBK++GG6kG4MmVrPK9ZAelxfsbh54KeJA=;
+ b=iuMXEbByeC/5pAu4N9CmtGnVKosTd7/ykEZJ4nhq0wrKfBAN9/QUfjoiPl89+sw301goyWVF+hKimk5HxJhtSC9BzVyleAQzn3024PnBt4EsQ43O9GcU4ni8yLeogLWFFf8iVFaguziNc4EUOl2b4+okGp87KSkdl76F8dAof28=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
+ by IA0PR12MB7675.namprd12.prod.outlook.com (2603:10b6:208:433::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.24; Thu, 21 Nov
+ 2024 15:58:37 +0000
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9%3]) with mapi id 15.20.8158.023; Thu, 21 Nov 2024
+ 15:58:37 +0000
+Message-ID: <76af0bc2-fecf-4f5b-8c52-924f49ac9b7a@amd.com>
+Date: Thu, 21 Nov 2024 21:28:29 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 10/10] perf/x86/rapl: Add core energy counter support
+ for AMD CPUs
+To: Peter Jung <ptr1337@cachyos.org>, peterz@infradead.org, mingo@redhat.com,
+ rui.zhang@intel.com, irogers@google.com, kan.liang@linux.intel.com,
+ tglx@linutronix.de, bp@alien8.dei, gautham.shenoy@amd.com
+Cc: kprateek.nayak@amd.com, ravi.bangoria@amd.com, x86@kernel.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241115060805.447565-1-Dhananjay.Ugwekar@amd.com>
+ <20241115060805.447565-11-Dhananjay.Ugwekar@amd.com>
+ <a7159bad-92a1-47e8-b892-2ae0dd9a94f6@cachyos.org>
+ <7eaf557d-7e85-4fd3-abee-f84ac01d92c1@amd.com>
+ <f90ee4f3-704d-4776-99e7-04f30969d93e@cachyos.org>
+Content-Language: en-US
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+In-Reply-To: <f90ee4f3-704d-4776-99e7-04f30969d93e@cachyos.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2PEPF000001AA.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c04::10) To LV8PR12MB9207.namprd12.prod.outlook.com
+ (2603:10b6:408:187::15)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241121145852.00000460@huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|IA0PR12MB7675:EE_
+X-MS-Office365-Filtering-Correlation-Id: f36a0ee7-a298-4a38-406f-08dd0a455c4b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eUNXdlhsd0pjTm9VOW5kQ09BY3g4RmV3K3hMd3IzbHczODlRSGI4NDNyRm9h?=
+ =?utf-8?B?emF0ZDlZaWJGSGJvYys0RVdna0hBTVZ1L0MvVVFSWE8xelhGd1BsdnF2R2RJ?=
+ =?utf-8?B?TFZTeHdVLzBoUmV5V2dtWVpzUy9wYjZuWFg0UGJVS2w3MXdNenJCMDlFSHI0?=
+ =?utf-8?B?TEgyaFh3V3hiMGIrUTJ2WXVhNjUzclAxYVV1Qy95TVBRQUdLMzduU1FKWjFO?=
+ =?utf-8?B?Z1MyL3ZJTXhaTWxJNUdMTUZrVW0zR1pSYVhPc1RndEVXVklPVWUrVE1ONjNY?=
+ =?utf-8?B?RmVpWTNBZk5XVGU5eGUvaUlBdDBNRDM5L1AyU3lWUTg5R2ZZaVFPMVRJbjdh?=
+ =?utf-8?B?b3FXQkVUQUd4SGxwbklrWVpXLzBEZkR4WU0zVlh1RlFqS21RTjFuNjVmVnlE?=
+ =?utf-8?B?UjdsaXd0QnFLNElCaGhuY04xNEwrcXlzSW1jeG90bFJHb2F3L2JiTE5PLzEv?=
+ =?utf-8?B?R3ZRT01ZY1N0dGtRTzhicDh4d2Z3NERMSzg0ZkhHUS9xQVF0WkdnWDFBMG1p?=
+ =?utf-8?B?THM4ZmE3NklaRGdHYjRFMlh2ZWFMTStvNmozWnpvdmI5c2ZNV2xBNDFzazR0?=
+ =?utf-8?B?dE5OaFcwcWNqTU45REw1MllOdWp5MUQ2SkNPNkJFc01rdFJDbU5nSzc0T0Fq?=
+ =?utf-8?B?RVdZcUNrYXk3ZWRDckwzZ1BQU1lFYjFQSjNVSHAwcGhhZ3NQVDFvdXd6MjlN?=
+ =?utf-8?B?SzlHNDIvSDVmOWNCS0czQXNGZnhpdmdXcTg1dkxWaVl2WnNaYnBlVGVLc3Ix?=
+ =?utf-8?B?T1I0REw1dUNnSlpIZnl3YkhRTWZLZkJGbE4vbFRhK0h4WFZiSVIveFgwbjhh?=
+ =?utf-8?B?d296eE1vU1pCcWR0UkNKUDB3c3c0cjd5SmtQbG5LanZSL2FudjdGdjZRUGxE?=
+ =?utf-8?B?bldubG52UDNVTkpqcjRXQzUrYnI4d05HRk9UcUd3cFNkVWlOVnZjcjVaRGVt?=
+ =?utf-8?B?eWVrS1VRSHY4elRWNWVjVUFtNTdrQi9QWjNwVTFtQUliWjY3eFIxemVYZkY4?=
+ =?utf-8?B?NzFJTXlEeG56allpZ1hRM29XMDVad3BsR3g5RlQ0Skw2bTZzVFgxcU5nWThq?=
+ =?utf-8?B?YlNRSVR2cUNLZnlvL0phTG5sdWx3aUpYZldjYTBMUStDcXhNYmY5a0dxUHkr?=
+ =?utf-8?B?dTcreEZlL2dTd0EvVUhYbmlFWWMrcmVzVmFWRGFDREtLcnl5eWhuSnNZM21x?=
+ =?utf-8?B?OEV6Vm0zZytoZjVZWjk5azFiZUpwZUk0NmhDK1QyaDg1K1lhR0ZvbzB4S2ZC?=
+ =?utf-8?B?S2R4VzVtTnlxZUUxQ0grN3IwQ0JiVEpJaFR5SXFmMVdYZ05yMkk4SVduaWNG?=
+ =?utf-8?B?bC90VVNZMThPQm1JZ01QQmRQKy9ZNi9jTXJ4YjNHejJvZDM4cUdQVzZJbkZN?=
+ =?utf-8?B?REMzSjQyWGR1RG05VWJEdldYNjZpT0t5Ry8wWkVGdUVEa2dib1NaTUoxVlRr?=
+ =?utf-8?B?VGRUYzdyQUlCODNuWS85N2dtVVdRY3BIblVKWkdLb3RaNWNZTksvb200aFV0?=
+ =?utf-8?B?WnVqamN2QVRpOWhjczZzMVE3Ukk3cHUzSlpGdEs0V2EvWmNuZXhYSWJpcTNU?=
+ =?utf-8?B?VkZLNGNuUmNTanhYVkMwNkRLSGZpU2VMaHBlUERLMm5MWUVzbU12azBaSUFX?=
+ =?utf-8?B?SVhlVS9rSzVnTnV4c3E4bkFPQ2JJVXdjS3J2cnVrdkFHVThjTlkyL2txWW5n?=
+ =?utf-8?B?UkE4SHVhWVczdlFUSGlPcUVjbXlVSURva1FvMmhDenRmeTZjSVA2L24xdlRC?=
+ =?utf-8?Q?WVDYDZgAAYMcal2UbK1vpYFLqdYPmVrublNdFtF?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?S2ovNjE5OGZqQ1dNNmdyVVlqK3l0MGNlQjdERFlWWkpCTmpPUVZNVlBCZ1dQ?=
+ =?utf-8?B?RzRUaVVEaGZwWitRYk9SN1AxSUZOV3ZENURLZ1JIczBMdldDeHc5QWR1dEQ2?=
+ =?utf-8?B?MWd5QnhTMkYvb0ptR2dKYXEwOXhVTWFXbE9lYXc5MzhrT3puaXlDVVhqdnIw?=
+ =?utf-8?B?OHMzN0ZTeUQySEROOUl0M1lEV1pyNTV3NzVXMnB5RmJXZWY4bmlBaFBoVHdB?=
+ =?utf-8?B?RHZIdjVDR2lka3JaT2htQ25zUzQ2TEgvcGlNaFBIVC82TGdRdmRuejdtb2Iv?=
+ =?utf-8?B?dWdoZVlIYk95dkdZazUyUGo4L1JXcFlFeDJyWlFSY0xBY2ZkSmd3d1VsTlVu?=
+ =?utf-8?B?dkVVUndkcjU1YjhoZXlMOGtzWFRia2hwMjNhS3NWK0FqRWlIb1dZT1hRbUt3?=
+ =?utf-8?B?clluUHF0dG5yUkhHQWJaT1BNdUcrbkY3TTV1dWw0MnJpSnpXMHJoRUpjdS82?=
+ =?utf-8?B?Y2Z5RDhNSE1iM2Y2VlhDKzRJdGlkam5VUXVJcEt0NERtYnN3N1JlVUlFbEtl?=
+ =?utf-8?B?cXBFQVRKYnBDS0tpRmVUeDliRStZK3BOOE9kTFhMOWw2aEdtYUJERFB6dVps?=
+ =?utf-8?B?WVlvQkhlM3JYSDZDTzRQYndmTTB3MGJuWEJaUnpGbDBHUlVyeDVmNStBUG5L?=
+ =?utf-8?B?Tmd4MFhVd2Y3OWtkazd2ZWhDeEVPNHlyZGV4d2o1dlFxeG5WYVdwSXpBL3cr?=
+ =?utf-8?B?U1R3OC81WGQzZXh0Yzg4UFhyVEpHOWErZnN6a2k2TzFibjA4R2RuY0c2UUNL?=
+ =?utf-8?B?WkJDbDhhMTBBOGxDaHJ2c01RTERxaHJLdDlJdVJsb2p2NjNWUmRHc2NObVd4?=
+ =?utf-8?B?UGJzeHFTQzdKVmU5bTlyMk5KWm5aTHB5Skt4RUVaVDJqOVV4T0hydVBoR044?=
+ =?utf-8?B?QldrZFRnS3JWQ29HVkZaQW1GNlM4WS8wOVFnQTJlN0FJK2NmaGNBRjZLWjEv?=
+ =?utf-8?B?TkRCaGVNa1BSRlhlUVcxQmF3ajhiWmNRSFQrMXRETmRPSzdmaTgrUGF0S2U1?=
+ =?utf-8?B?QU4zZGpydUE1eWdOYWJleDh0YWFkTWNtZXZheGt4U3huTUx4M3lkeTQyMVNi?=
+ =?utf-8?B?dDBydGxxdmdmOFVIT0VrclFIMDQ5TkpJVXRxZExIVnZ3Y0NheUVIRkpLRUtX?=
+ =?utf-8?B?UEJFM2FtOWJ1S0V4QnlJbHQwVGZhNGpsc3FzMVovMG5lc1Jyc0ZjcG1mVW9v?=
+ =?utf-8?B?ZTJpTStTODJNQWxkYTRxRU9QT0ZMNFpPUUc5aEpPM24vK3VFL0NSbnQwclhD?=
+ =?utf-8?B?cFlMUGx0YVdzV09NRDV0YkR4SUhwQWwxOXZKblZsZ29wbEhCVjAzWCsxdWh0?=
+ =?utf-8?B?NWE2VGs4TVNTYTV3ZEZ3Y1VTdEFKb2hvL0VEYmdPOHB3SG85WXhaMXlKN1F6?=
+ =?utf-8?B?Q0JPVlJRY3lzZHZWZGVxRjZTVWN3TkhRWXdsamdaZjc2cHdvemxBVExEbGNy?=
+ =?utf-8?B?dTFFNUxxSmFzK3U2dzJkbUE2cWJDWHp0bzBqbzR6dU5SWExSWTJxUlh1RmFI?=
+ =?utf-8?B?NjZDTitlY0UwRDNRMloxQTNHeDhUU1VCcUl3amxNMHFlbGlUS0lEd2M5cUxr?=
+ =?utf-8?B?UnVjeG00Z0V3dDBaaTlvdXFuelhPU0pqanZ2eVYyMW5QSHNQWU5WdC9jSjJU?=
+ =?utf-8?B?M25Pay8zd3dLZVVUbUoxSVZsSzBCaEozdHVHbDNyanFvaDhFVTJ4V0NDMFlj?=
+ =?utf-8?B?MEFZRDNxRHM5SVJsRjJkMkdvYXRDOEVSektpczdJWUxjWEFGTDhLNzJkdU9X?=
+ =?utf-8?B?MlpwWXl1cWdhN09TNU1nQUtTL2lDMjRtdGpnT0JWSEgwMEVLOXR3MkpKSHg4?=
+ =?utf-8?B?S1I5SjRWVS92aDFlMjBsVlBnUW50R0xBNFhXTXdlN3ltcGpmdzQralFGdENP?=
+ =?utf-8?B?QnllbXY4eFo4Y2NMc1A3Q05za0pWV2ZVRUtIc1RjS0NhaFNDR0VZN1ZaWDdM?=
+ =?utf-8?B?RGwxQUxmRjhhcHVFeDlNWGtZSkFlOWJiTm5wNk1zZGJQSTFUVzZIelFndzdr?=
+ =?utf-8?B?UUJZVDlTUjhJa3lDZi9NSXVPNFUvQVBUblNkcEJBeko3WG1TaDkvMDMxVUth?=
+ =?utf-8?B?TmpkdUVyTUtyVzlpQ1YwWDhTZEd2cEhjUlJkYU1kMEVYNEdzRHM4c3UwaVJC?=
+ =?utf-8?Q?vox8ihQ1bi9W/QZDIj8eCN/Yj?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f36a0ee7-a298-4a38-406f-08dd0a455c4b
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2024 15:58:37.7389
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OnBdit4ISGSBvXdDVFlqbTiZb+JiUWj5uAI2GEAYOdgZQLTNDmvmvlig8t01t/2+q0kqvfGCFzRJFyctKQdo/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7675
 
-On Thu, Nov 21, 2024 at 02:58:52PM +0000, Jonathan Cameron wrote:
-> On Thu, 21 Nov 2024 09:24:43 -0500
-> Gregory Price <gourry@gourry.net> wrote:
-> 
-> > On Thu, Nov 21, 2024 at 10:18:41AM +0000, Jonathan Cameron wrote:
-> > > The CXL specification release 3.2 is now available under a click through at
-> > > https://computeexpresslink.org/cxl-specification/ and it brings new
-> > > shiny toys.
-> > > 
-> > > RFC reason
-> > > - Whilst trace capture with a particular configuration is potentially useful
-> > >   the intent is that CXL HMU units will be used to drive various forms of
-> > >   hotpage migration for memory tiering setups. This driver doesn't do this
-> > >   (yet), but rather provides data capture etc for experimentation and
-> > >   for working out how to mostly put the allocations in the right place to
-> > >   start with by tuning applications.
-> > > 
-> > > CXL r3.2 introduces a CXL Hotness Monitoring Unit definition. The intent
-> > > of this is to provide a way to establish which units of memory (typically
-> > > pages or larger) in CXL attached memory are hot. The implementation details
-> > > and algorithm are all implementation defined. The specification simply
-> > > describes the 'interface' which takes the form of ring buffer of hotness
-> > > records in a PCI BAR and defined capability, configuration and status
-> > > registers.
-> > > 
-> > > The hardware may have constraints on what it can track, granularity etc
-> > > and on how accurately it tracks (e.g. counter exhaustion, inaccurate
-> > > trackers). Some of these constraints are discoverable from the hardware
-> > > registers, others such as loss of accuracy have no universally accepted
-> > > measures as they are typically access pattern dependent. Sadly it is
-> > > very unlikely any hardware will implement a truly precise tracker given
-> > > the large resource requirements for tracking at a useful granularity.
-> > > 
-> > > There are two fundamental operation modes:
-> > > 
-> > > * Epoch based. Counters are checked after a period of time (Epoch) and
-> > >   if over a threshold added to the hotlist.
-> > > * Always on. Counters run until a threshold is reached, after that the
-> > >   hot unit is added to the hotlist and the counter released.
-> > > 
-> > > Counting can be filtered on:
-> > > 
-> > > * Region of CXL DPA space (256MiB per bit in a bitmap).
-> > > * Type of access - Trusted and non trusted or non trusted only, R/W/RW
-> > > 
-> > > Sampling can be modified by:
-> > > 
-> > > * Downsampling including potentially randomized downsampling.
-> > > 
-> > > The driver presented here is intended to be useful in its own right but
-> > > also to act as the first step of a possible path towards hotness monitoring
-> > > based hot page migration. Those steps might look like.
-> > > 
-> > > 1. Gather data - drivers provide telemetry like solutions to get that
-> > >    data. May be enhanced, for example in this driver by providing the
-> > >    HPA address rather than DPA Unit Address. Userspace can access enough
-> > >    information to do this so maybe not.
-> > > 2. Userspace algorithm development, possibly combined with userspace
-> > >    triggered migration by PA. Working out how to use different levels
-> > >    of constrained hardware resources will be challenging.  
-> > 
-> > FWIW this is what i was thinking about for this extension:
-> > 
-> > https://lore.kernel.org/all/20240319172609.332900-1-gregory.price@memverge.com/
-> 
-> Yup. I had that in mind. Forgot to actually add a link.
-> 
-> > 
-> > At least for testing CHMU stuff. So if anyone is poking at testing such
-> > things, they can feel free to use that for prototyping. However, I think
-> > there is general discomfort around userspace handling HPA/DPA.
-> > 
-> > So it might look more like
-> > 
-> > echo nr_pages > /sys/.../tiering/nodeN/promote_pages
-> > 
-> > rather than handling the raw data from the CHMU to make decisions.
-> 
-> Agreed, but I think we are far away from a point where we can implement that.
-> 
-> Just working out how to tune the hardware to grab useful data is going
-> to take a while to figure out, let alone doing anything much with it.
-> 
-> Without care you won't get a meaningful signal for what is actually
-> hot out of the box. Lots of reasons why including:
-> a) Exhaustion of tracking resources, due to looking at too large a window
->    or for too long.  Will probably need some form of auto updating of
->    what is being scanning (coarse to fine might work though I'm doubtful,
->    scanning across small regions maybe).
-> b) Threshold too high, no detections.
-> c) Threshold too low, everything hot.
-> d) Wrong timescales. Hot is not a well defined thing.
-> e) Hardware that won't do tracking at fine enough granularity.
-> 
 
-f) How does this even work with interleaving on larger pools :B
-   It's pretend-addressing all the way down :D
 
-Lots of conceptually complex and fun questions here.
+On 11/20/2024 8:00 PM, Peter Jung wrote:
+> Hi Dhananjay,
+> 
+> On 20.11.24 14:58, Dhananjay Ugwekar wrote:
+>> Hello Peter Jung,
+>>
+>> Thanks for trying out the patchset,
+>>
+>> On 11/20/2024 1:28 PM, Peter Jung wrote:
+>>> Hi together,
+>>>
+>>> This patch seems to crash the kernel  and results into a not bootable system.
+>>>
+>>>
+>>> The patch has been applied on base 6.12.rc7 - I have not tested it yet on linux-next.
+>>>
+>>> I was able to reproduce this issue also on the v6 and the only "good" version was the v4.
+>>> This has been reproduced on several zen3+ machines and also on my 9950X.
+>>>
+>>> Bisect log:
+>>> ```
+>>> git bisect start
+>>> # status: waiting for both good and bad commits
+>>> # good: [2d5404caa8c7bb5c4e0435f94b28834ae5456623] Linux 6.12-rc7
+>>> git bisect good 2d5404caa8c7bb5c4e0435f94b28834ae5456623
+>>> # status: waiting for bad commit, 1 good commit known
+>>> # bad: [372e95a40e04ae6ebe69300b76566af6455ba84e] perf/x86/rapl: Add core energy counter support for AMD CPUs
+>>> git bisect bad 372e95a40e04ae6ebe69300b76566af6455ba84e
+>>> # good: [fd3c84b2fc8a50030e8c7d91983f50539035ec3a] perf/x86/rapl: Rename rapl_pmu variables
+>>> git bisect good fd3c84b2fc8a50030e8c7d91983f50539035ec3a
+>>> # good: [96673b2c940e71fde50a54311ecdce00ff7a8e0b] perf/x86/rapl: Modify the generic variable names to *_pkg*
+>>> git bisect good 96673b2c940e71fde50a54311ecdce00ff7a8e0b
+>>> # good: [68b214c92635f0b24a3f3074873b77f4f1a82b80] perf/x86/rapl: Move the cntr_mask to rapl_pmus struct
+>>> git bisect good 68b214c92635f0b24a3f3074873b77f4f1a82b80
+>>> # first bad commit: [372e95a40e04ae6ebe69300b76566af6455ba84e] perf/x86/rapl: Add core energy counter support for AMD CPUs
+>>> ```
+>>>
+>>> Nov 17 12:17:37 varvalian kernel: RIP: 0010:internal_create_group+0x9a/0x4e0
+>>> Nov 17 12:17:37 varvalian kernel: Code: 7b 20 00 0f 84 cb 00 00 00 48 8d 74 24 1c 48 8d 54 24 18 4c 89 ff e8 15 8a 99 00 48 83 3b 00 74 59 48 8b 43 18 48 85 c0 74 11 <48> 8b 30 48 85 f6 74 09 4c 8b 5b 08 4d 85 db 75 1a 48 8b 43 20 48
+>>> Nov 17 12:17:37 varvalian kernel: RSP: 0018:ffffaa5281fe7868 EFLAGS: 00010202
+>>> Nov 17 12:17:37 varvalian kernel: RAX: 796772656e650073 RBX: ffffffffc2a642aa RCX: f781ec27a963db00
+>>> Nov 17 12:17:37 varvalian kernel: RDX: ffffaa5281fe7880 RSI: ffffaa5281fe7884 RDI: ffff90c611dc8400
+>>> Nov 17 12:17:37 varvalian kernel: RBP: 000000000000000f R08: 0000000000000000 R09: 0000000000000001
+>>> Nov 17 12:17:37 varvalian kernel: R10: 0000000002000001 R11: ffffffff8e86ee00 R12: 0000000000000000
+>>> Nov 17 12:17:37 varvalian kernel: R13: ffff90c6038469c0 R14: ffff90c611dc8400 R15: ffff90c611dc8400
+>>> Nov 17 12:17:37 varvalian kernel: FS:  00007163efc54880(0000) GS:ffff90c8efe00000(0000) knlGS:0000000000000000
+>>> Nov 17 12:17:37 varvalian kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> Nov 17 12:17:37 varvalian kernel: CR2: 00005c1834b98298 CR3: 0000000121298000 CR4: 0000000000f50ef0
+>>> Nov 17 12:17:37 varvalian kernel: PKRU: 55555554
+>>> Nov 17 12:17:47 varvalian kernel: ------------[ cut here ]------------
+>>> ```
+>>>
+>>> Ill do on the weekend some additonal tests based on the latest linux-next snapshot and provide some more logs.
+>> Can you please try with the below diff once,
+>>
+>> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+>> index e9be1f31163d..d3bb3865c1b1 100644
+>> --- a/arch/x86/events/rapl.c
+>> +++ b/arch/x86/events/rapl.c
+>> @@ -699,6 +699,7 @@ static const struct attribute_group *rapl_attr_update[] = {
+>>
+>>   static const struct attribute_group *rapl_core_attr_update[] = {
+>>          &rapl_events_core_group,
+>> +       NULL,
+>>   };
+>>
+>>   static int __init init_rapl_pmu(struct rapl_pmus *rapl_pmus)
+>>
+>> Regards,
+>> Dhananjay
+>>
+> 
+> 
+> Thanks! This patch appears to fix the issue, when the kernel is built with clang. Thanks for providing such fast fix! :)
 
-~Gregory
+Great!, Thanks for the confirmation.
+
+Regards,
+Dhananjay
+
+> 
+> Peter
+> 
+> 
+>>> Regards,
+>>>
+>>> Peter
+> 
