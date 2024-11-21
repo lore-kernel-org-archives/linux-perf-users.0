@@ -1,28 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F091D0E00;
-	Thu, 21 Nov 2024 10:18:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6701D279D;
+	Thu, 21 Nov 2024 10:19:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732184339; cv=none; b=CAnDlOISQ8oWd5GIhlVhQrkBUR73Tp/z2Q8v08d6Suha11iVKXPCMqqnqlmuQKC51uiHgcUIIzJi2l+DrVHhbBuXyR7XRBF+qyUde8EYDK4bfNP9iBSwlzrQXFHZEgAtHz5pZB3BuvYyRuEpmqanD2K9bMHZ9zZwDdQNNTsTK98=
+	t=1732184365; cv=none; b=hvQ9NxvHX7i5aCKj6VwUrxFzi50fdYOVq2KAvaCzAth9dRUbtP7K1mxQCHhCECsd3fIFjWIKTaClR2TWWsYfbVJzQemPVGv4iQCq00gfIlk3uo8avftjGlnuwc2lgb8RKWXkPM2yyVKzNCfyv3+1/BNVnZljn3eqJw8Lrtx5EGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732184339; c=relaxed/simple;
-	bh=UTiwnatRcmow/TKEAUjy5NMRcM2d9cuIpujHrnkOFdo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MzfyMge6bYU4WT2mZnd3giPEpPCIoS1mrr15rDkfMrtdj7xlRa0gHHtEks3HzSPRuea2sCBYX7bBRDTCAEV5upOci3kmUi6UHjltiZTP/fd9q1O0D25SyVgG/wsa99Z7/5P6ppj20GNBKmu3g+DjRaoVDDk1KROXgl1Cv98sSXc=
+	s=arc-20240116; t=1732184365; c=relaxed/simple;
+	bh=TQhKGdns8i2TCFG83ZPwfMERNwy4IVlHhhxiOHTkbV8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jwRFoTanNYtTYUnjFw9Kv2e6n5eEVtISKCZY0ZNyrHymCj6bzLAmV/+KMPxSfBPRq15oIvz62UnxxZC7aML/rSg4TIv4E1qc+t+cLtqe4VGjNzUqo4mG2vOwp7yg/Z6okU/XCc5ey0+WDT1t803/EgzhSPDUt32Jvk6c01h4DBQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvDcx48K9z6K6CQ;
-	Thu, 21 Nov 2024 18:15:13 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvDdX6kKWz6K6Vd;
+	Thu, 21 Nov 2024 18:15:44 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C0276140A86;
-	Thu, 21 Nov 2024 18:18:47 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 25ABD140AB8;
+	Thu, 21 Nov 2024 18:19:19 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
  frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 21 Nov 2024 11:18:46 +0100
+ 15.1.2507.39; Thu, 21 Nov 2024 11:19:18 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
 	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
@@ -36,10 +37,12 @@ CC: <linuxarm@huawei.com>, <tongtiangen@huawei.com>, Yicong Yang
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>, Gregory Price <gourry@gourry.net>, Huang
  Ying <ying.huang@intel.com>
-Subject: [RFC PATCH 0/4] CXL Hotness Monitoring Unit perf driver
-Date: Thu, 21 Nov 2024 10:18:41 +0000
-Message-ID: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
+Subject: [RFC PATCH 1/4] cxl: Register devices for CXL Hotness Monitoring Units (CHMU)
+Date: Thu, 21 Nov 2024 10:18:42 +0000
+Message-ID: <20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
+References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,155 +54,241 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-The CXL specification release 3.2 is now available under a click through at
-https://computeexpresslink.org/cxl-specification/ and it brings new
-shiny toys.
+Basic registration using similar approach to how the CPMUs
+are registered.
 
-RFC reason
-- Whilst trace capture with a particular configuration is potentially useful
-  the intent is that CXL HMU units will be used to drive various forms of
-  hotpage migration for memory tiering setups. This driver doesn't do this
-  (yet), but rather provides data capture etc for experimentation and
-  for working out how to mostly put the allocations in the right place to
-  start with by tuning applications.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/cxl/core/Makefile |  1 +
+ drivers/cxl/core/hmu.c    | 64 +++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/regs.c   | 14 +++++++++
+ drivers/cxl/cxl.h         |  4 +++
+ drivers/cxl/cxlpci.h      |  1 +
+ drivers/cxl/hmu.h         | 23 ++++++++++++++
+ drivers/cxl/pci.c         | 26 +++++++++++++++-
+ 7 files changed, 132 insertions(+), 1 deletion(-)
 
-CXL r3.2 introduces a CXL Hotness Monitoring Unit definition. The intent
-of this is to provide a way to establish which units of memory (typically
-pages or larger) in CXL attached memory are hot. The implementation details
-and algorithm are all implementation defined. The specification simply
-describes the 'interface' which takes the form of ring buffer of hotness
-records in a PCI BAR and defined capability, configuration and status
-registers.
-
-The hardware may have constraints on what it can track, granularity etc
-and on how accurately it tracks (e.g. counter exhaustion, inaccurate
-trackers). Some of these constraints are discoverable from the hardware
-registers, others such as loss of accuracy have no universally accepted
-measures as they are typically access pattern dependent. Sadly it is
-very unlikely any hardware will implement a truly precise tracker given
-the large resource requirements for tracking at a useful granularity.
-
-There are two fundamental operation modes:
-
-* Epoch based. Counters are checked after a period of time (Epoch) and
-  if over a threshold added to the hotlist.
-* Always on. Counters run until a threshold is reached, after that the
-  hot unit is added to the hotlist and the counter released.
-
-Counting can be filtered on:
-
-* Region of CXL DPA space (256MiB per bit in a bitmap).
-* Type of access - Trusted and non trusted or non trusted only, R/W/RW
-
-Sampling can be modified by:
-
-* Downsampling including potentially randomized downsampling.
-
-The driver presented here is intended to be useful in its own right but
-also to act as the first step of a possible path towards hotness monitoring
-based hot page migration. Those steps might look like.
-
-1. Gather data - drivers provide telemetry like solutions to get that
-   data. May be enhanced, for example in this driver by providing the
-   HPA address rather than DPA Unit Address. Userspace can access enough
-   information to do this so maybe not.
-2. Userspace algorithm development, possibly combined with userspace
-   triggered migration by PA. Working out how to use different levels
-   of constrained hardware resources will be challenging.
-3. Move those algorithms in kernel. Will require generalization across
-   different hotpage trackers etc.
-
-So far this driver just gives access to the raw data. I will probably kick
-of a longer discussion on how to do adaptive sampling needed to actually
-use these units for tiering etc, sometime soon (if no one one else beats
-me too it).  There is a follow up topic of how to virtualize this stuff
-for memory stranding cases (VM gets a fixed mixture of fast and slow
-memory and should do it's own tiering).
-
-More details in the Documentation patch but typical commands are:
-
-$perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
- hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,\
- range_size=1024,randomized_downsampling=0,downsampling_factor=32,\
- hotness_granual=12
-
-$perf report --dump-raw-traces
-
-Example output.  With a counter_width of 16 (0x10) the least significant
-4 bytes are the counter value and the unit index is bits 16-63.
-Here all units are over the threshold and the indexes are 0,1,2 etc.
-
-. ... CXL_HMU data: size 33512 bytes
-Header 0: units: 29c counter_width 10
-Header 1 : deadbeef
-0000000000000283
-0000000000010364
-0000000000020366
-000000000003033c
-0000000000040343
-00000000000502ff
-000000000006030d
-000000000007031a
-
-Which will produce a list of hotness entries.
-Bits[N-1:0] counter value
-Bits[63:N] Unit ID (combine with unit size and DPA base + HDM decoder
-  config to get to a Host Physical Address)
-
-Specific RFC questions.
-- What should be in the header added to the aux buffer.
-  Currently just the minimum is provided. Number of records
-  and the counter width needed to decode them.
-- Should we reset the counters when doing sampling "-F X"
-  If the frequency is higher than the epoch we never see any hot units.
-  If so, when should we reset them?
-
-Note testing has been light and on emulation only + as perf tool is
-a pain to build on a striped back VM,  build testing has all be on
-arm64 so far.  The driver loads though on both arm64 and x86 so
-any problems are likely in the perf tool arch specific code
-which is build tested (on wrong machine)
-
-The QEMU emulation needs some cleanup, but I should be able to post
-that shortly to let people actually play with this.  There are lots
-of open questions there on how 'right' we want the emulation to be
-and what counting uarch to emulate.
-
-Jonathan Cameron (4):
-  cxl: Register devices for CXL Hotness Monitoring Units (CHMU)
-  cxl: Hotness Monitoring Unit via a Perf AUX Buffer.
-  perf: Add support for CXL Hotness Monitoring Units (CHMU)
-  hwtrace: Document CXL Hotness Monitoring Unit driver
-
- Documentation/trace/cxl-hmu.rst     | 197 +++++++
- Documentation/trace/index.rst       |   1 +
- drivers/cxl/Kconfig                 |   6 +
- drivers/cxl/Makefile                |   3 +
- drivers/cxl/core/Makefile           |   1 +
- drivers/cxl/core/core.h             |   1 +
- drivers/cxl/core/hmu.c              |  64 ++
- drivers/cxl/core/port.c             |   2 +
- drivers/cxl/core/regs.c             |  14 +
- drivers/cxl/cxl.h                   |   5 +
- drivers/cxl/cxlpci.h                |   1 +
- drivers/cxl/hmu.c                   | 880 ++++++++++++++++++++++++++++
- drivers/cxl/hmu.h                   |  23 +
- drivers/cxl/pci.c                   |  26 +-
- tools/perf/arch/arm/util/auxtrace.c |  58 ++
- tools/perf/arch/x86/util/auxtrace.c |  76 +++
- tools/perf/util/Build               |   1 +
- tools/perf/util/auxtrace.c          |   4 +
- tools/perf/util/auxtrace.h          |   1 +
- tools/perf/util/cxl-hmu.c           | 367 ++++++++++++
- tools/perf/util/cxl-hmu.h           |  18 +
- 21 files changed, 1748 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/trace/cxl-hmu.rst
- create mode 100644 drivers/cxl/core/hmu.c
- create mode 100644 drivers/cxl/hmu.c
- create mode 100644 drivers/cxl/hmu.h
- create mode 100644 tools/perf/util/cxl-hmu.c
- create mode 100644 tools/perf/util/cxl-hmu.h
-
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 9259bcc6773c..d060abb773ae 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -12,6 +12,7 @@ cxl_core-y += memdev.o
+ cxl_core-y += mbox.o
+ cxl_core-y += pci.o
+ cxl_core-y += hdm.o
++cxl_core-y += hmu.o
+ cxl_core-y += pmu.o
+ cxl_core-y += cdat.o
+ cxl_core-$(CONFIG_TRACING) += trace.o
+diff --git a/drivers/cxl/core/hmu.c b/drivers/cxl/core/hmu.c
+new file mode 100644
+index 000000000000..3ee938bb6c05
+--- /dev/null
++++ b/drivers/cxl/core/hmu.c
+@@ -0,0 +1,64 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2024 Huawei. All rights reserved. */
++
++#include <linux/device.h>
++#include <linux/slab.h>
++#include <linux/idr.h>
++#include <cxlmem.h>
++#include <hmu.h>
++#include <cxl.h>
++#include "core.h"
++
++static void cxl_hmu_release(struct device *dev)
++{
++	struct cxl_hmu *hmu = to_cxl_hmu(dev);
++
++	kfree(hmu);
++}
++
++const struct device_type cxl_hmu_type = {
++	.name = "cxl_hmu",
++	.release = cxl_hmu_release,
++};
++
++static void remove_dev(void *dev)
++{
++	device_unregister(dev);
++}
++
++int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
++		     int assoc_id, int index)
++{
++	struct cxl_hmu *hmu;
++	struct device *dev;
++	int rc;
++
++	hmu = kzalloc(sizeof(*hmu), GFP_KERNEL);
++	if (!hmu)
++		return -ENOMEM;
++
++	hmu->assoc_id = assoc_id;
++	hmu->index = index;
++	hmu->base = regs->hmu;
++	dev = &hmu->dev;
++	device_initialize(dev);
++	device_set_pm_not_required(dev);
++	dev->parent = parent;
++	dev->bus = &cxl_bus_type;
++	dev->type = &cxl_hmu_type;
++	rc = dev_set_name(dev, "hmu_mem%d.%d", assoc_id, index);
++	if (rc)
++		goto err;
++
++	rc = device_add(dev);
++	if (rc)
++		goto err;
++
++	return devm_add_action_or_reset(parent, remove_dev, dev);
++
++err:
++	put_device(&hmu->dev);
++	return rc;
++}
++EXPORT_SYMBOL_NS_GPL(devm_cxl_hmu_add, CXL);
++
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index e1082e749c69..c12afaa6ef98 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -401,6 +401,20 @@ int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_map_pmu_regs, CXL);
+ 
++int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *regs)
++{
++	struct device *dev = map->host;
++	resource_size_t phys_addr;
++
++	phys_addr = map->resource;
++	regs->hmu = devm_cxl_iomap_block(dev, phys_addr, map->max_size);
++	if (!regs->hmu)
++		return -ENOMEM;
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_map_hmu_regs, CXL);
++
+ static int cxl_map_regblock(struct cxl_register_map *map)
+ {
+ 	struct device *host = map->host;
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 5406e3ab3d4a..8172bc1f7a8d 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -227,6 +227,9 @@ struct cxl_regs {
+ 	struct_group_tagged(cxl_pmu_regs, pmu_regs,
+ 		void __iomem *pmu;
+ 	);
++	struct_group_tagged(cxl_hmu_regs, hmu_regs,
++		void __iomem *hmu;
++	);
+ 
+ 	/*
+ 	 * RCH downstream port specific RAS register
+@@ -292,6 +295,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+ 			   unsigned long map_mask);
+ int cxl_map_device_regs(const struct cxl_register_map *map,
+ 			struct cxl_device_regs *regs);
++int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *regs);
+ int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
+ 
+ enum cxl_regloc_type;
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 4da07727ab9c..71f5e9620137 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -67,6 +67,7 @@ enum cxl_regloc_type {
+ 	CXL_REGLOC_RBI_VIRT,
+ 	CXL_REGLOC_RBI_MEMDEV,
+ 	CXL_REGLOC_RBI_PMU,
++	CXL_REGLOC_RBI_HMU,
+ 	CXL_REGLOC_RBI_TYPES
+ };
+ 
+diff --git a/drivers/cxl/hmu.h b/drivers/cxl/hmu.h
+new file mode 100644
+index 000000000000..c4798ed9764b
+--- /dev/null
++++ b/drivers/cxl/hmu.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright(c) 2024 Huawei
++ * CXL Specification rev 3.2 Setion 8.2.8 (CHMU Register Interface)
++ */
++#ifndef CXL_HMU_H
++#define CXL_HMU_H
++#include <linux/device.h>
++
++#define CXL_HMU_REGMAP_SIZE 0xe00 /* Table 8-32 CXL 3.0 specification */
++struct cxl_hmu {
++	struct device dev;
++	void __iomem *base;
++	int assoc_id;
++	int index;
++};
++
++#define to_cxl_hmu(dev) container_of(dev, struct cxl_hmu, dev)
++struct cxl_hmu_regs;
++int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
++		     int assoc_id, int idx);
++
++#endif
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 188412d45e0d..e89ea9d3f007 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -15,6 +15,7 @@
+ #include "cxlmem.h"
+ #include "cxlpci.h"
+ #include "cxl.h"
++#include "hmu.h"
+ #include "pmu.h"
+ 
+ /**
+@@ -814,7 +815,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	struct cxl_dev_state *cxlds;
+ 	struct cxl_register_map map;
+ 	struct cxl_memdev *cxlmd;
+-	int i, rc, pmu_count;
++	int i, rc, hmu_count, pmu_count;
+ 	bool irq_avail;
+ 
+ 	/*
+@@ -938,6 +939,29 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		}
+ 	}
+ 
++	hmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_HMU);
++	for (i = 0; i < hmu_count; i++) {
++		struct cxl_hmu_regs hmu_regs;
++
++		rc = cxl_find_regblock_instance(pdev, CXL_REGLOC_RBI_HMU, &map, i);
++		if (rc) {
++			dev_dbg(&pdev->dev, "Could not find HMU regblock\n");
++			break;
++		}
++
++		rc = cxl_map_hmu_regs(&map, &hmu_regs);
++		if (rc) {
++			dev_dbg(&pdev->dev, "Could not map HMU regs\n");
++			break;
++		}
++
++		rc = devm_cxl_hmu_add(cxlds->dev, &hmu_regs, cxlmd->id, i);
++		if (rc) {
++			dev_dbg(&pdev->dev, "Could not add HMU instance\n");
++			break;
++		}
++	}
++
+ 	rc = cxl_event_config(host_bridge, mds, irq_avail);
+ 	if (rc)
+ 		return rc;
 -- 
 2.43.0
 
