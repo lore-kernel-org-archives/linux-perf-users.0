@@ -1,216 +1,153 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946CE74068;
-	Thu, 21 Nov 2024 13:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D791CCB26
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Nov 2024 13:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732196879; cv=none; b=SUVGhLPWWhzZG1iwzgQ/iSxTAY3Sqp1l3Ot/JbIPjZz+yrUzJiOtQZokeT9sR3ZRS9XTD0z7YXNRsCZTmY0pHKjsFdcV1fKhWjX/+MoNPoRXILx6mfA9AMOLRW3dmq0m9FxSV95rY2m33UqqNc+DYV4LE1MhQ8y61fT2rB6Y3Rs=
+	t=1732197279; cv=none; b=mH/DFIcwFSVqAQdj804yJGegKYemsHhVteqodhkaKxpBjLHlByjonVGlVVT0lStNGwwDr+BpDm0JTxhJuG9DBeUMdxzXH848nbMVwc4/lerZKwj1twxkddxzZ8m5cdT++cGGHW7OJc57OCJDezGtcEor3C591SF+wfYpzIE4DEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732196879; c=relaxed/simple;
-	bh=7xcPRh5jKXLkkMxq50QsiUeH8XvFnUNF4Y4WDRQIKMQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BbQShITpva3wxZ+VeX7i1irvVGPlKvbFyzBPRfE3kxWuQ384UpZJeQ/n79y3ll01NWldI68TOcXAFD3cqgcDFPF41jAQ0oIq3+P7Pjt/1cG8gGiJqAvCv+23oQwzrn+xpiXbV1FJGpg9VY/QyLH+8NA3tSGwnbhSFF18ItPDCow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvKKs6FsHz6K7JS;
-	Thu, 21 Nov 2024 21:47:29 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E52A1140133;
-	Thu, 21 Nov 2024 21:47:53 +0800 (CST)
-Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 21 Nov
- 2024 14:47:52 +0100
-Date: Thu, 21 Nov 2024 13:47:51 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <linuxarm@huawei.com>, <tongtiangen@huawei.com>, Yicong Yang
-	<yangyicong@huawei.com>, Niyas Sait <niyas.sait@huawei.com>,
-	<ajayjoshi@micron.com>, Vandana Salve <vsalve@micron.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Gregory Price <gourry@gourry.net>, Huang
- Ying <ying.huang@intel.com>
-Subject: Re: [RFC PATCH 0/4] CXL Hotness Monitoring Unit perf driver
-Message-ID: <20241121134751.00006e26@huawei.com>
-In-Reply-To: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
-References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1732197279; c=relaxed/simple;
+	bh=ckGDtWQ7xnPCKX7UWVOjOwW90B8HXxkyhckrW2lzimM=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=mvwcSoNANH1qQpsPA7/zAUc/8VBehBY7wTqhOyDwqvFeiu/1EmRPfDN9B8hTEpb5+p2c687fy3CAZaq8FqAtJeqLsnVEYLFN6gDfZGCYrB/F43muuUU7H1V0I/EFwKX5wYlyFjNN25PthPJolg3bRBgHGT814fCKySjXP7kWJXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MrYtNzp1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MrYtNzp1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732197275;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=admXrOyUiaUIuKv1h91NOlEOC+GPwsnY8taZxlBKTEk=;
+	b=MrYtNzp1VbAOqqICA/xsUdDOGGtjoGW6FIXRIn/eGO1PvAWy80k68F6KxLrqn4s2IhMP+E
+	+QBF1ktgZTDJMy0QtGhmdFxAArqcZEr62eYGHzJu8FlnE9V0Pmiajt1umLKodtqzVWQolY
+	R1GTC5zPRLlphOjZW6/gW9HvWvy0A60=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-328-20J9uDJhP9GULz7y-FRaog-1; Thu,
+ 21 Nov 2024 08:54:32 -0500
+X-MC-Unique: 20J9uDJhP9GULz7y-FRaog-1
+X-Mimecast-MFC-AGG-ID: 20J9uDJhP9GULz7y-FRaog
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7ED091955E88;
+	Thu, 21 Nov 2024 13:54:30 +0000 (UTC)
+Received: from Carbon (unknown [10.39.208.40])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 08AB819560A3;
+	Thu, 21 Nov 2024 13:54:28 +0000 (UTC)
+Date: Thu, 21 Nov 2024 14:54:25 +0100 (CET)
+From: Michael Petlan <mpetlan@redhat.com>
+To: rostedt@goodmis.org
+cc: vmolnaro@redhat.com, linux-perf-users@vger.kernel.org
+Subject: perf kmem --page stat and gpf_flags translation
+Message-ID: <87be5f7c-1a0-dad-daa0-54e342efaea7@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Thu, 21 Nov 2024 10:18:41 +0000
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+Hello Steve and others,
 
-> The CXL specification release 3.2 is now available under a click through at
-> https://computeexpresslink.org/cxl-specification/ and it brings new
-> shiny toys.
-> 
-> RFC reason
-> - Whilst trace capture with a particular configuration is potentially useful
->   the intent is that CXL HMU units will be used to drive various forms of
->   hotpage migration for memory tiering setups. This driver doesn't do this
->   (yet), but rather provides data capture etc for experimentation and
->   for working out how to mostly put the allocations in the right place to
->   start with by tuning applications.
-> 
-> CXL r3.2 introduces a CXL Hotness Monitoring Unit definition. The intent
-> of this is to provide a way to establish which units of memory (typically
-> pages or larger) in CXL attached memory are hot. The implementation details
-> and algorithm are all implementation defined. The specification simply
-> describes the 'interface' which takes the form of ring buffer of hotness
-> records in a PCI BAR and defined capability, configuration and status
-> registers.
-> 
-> The hardware may have constraints on what it can track, granularity etc
-> and on how accurately it tracks (e.g. counter exhaustion, inaccurate
-> trackers). Some of these constraints are discoverable from the hardware
-> registers, others such as loss of accuracy have no universally accepted
-> measures as they are typically access pattern dependent. Sadly it is
-> very unlikely any hardware will implement a truly precise tracker given
-> the large resource requirements for tracking at a useful granularity.
-> 
-> There are two fundamental operation modes:
-> 
-> * Epoch based. Counters are checked after a period of time (Epoch) and
->   if over a threshold added to the hotlist.
-> * Always on. Counters run until a threshold is reached, after that the
->   hot unit is added to the hotlist and the counter released.
-> 
-> Counting can be filtered on:
-> 
-> * Region of CXL DPA space (256MiB per bit in a bitmap).
-> * Type of access - Trusted and non trusted or non trusted only, R/W/RW
-> 
-> Sampling can be modified by:
-> 
-> * Downsampling including potentially randomized downsampling.
-> 
-> The driver presented here is intended to be useful in its own right but
-> also to act as the first step of a possible path towards hotness monitoring
-> based hot page migration. Those steps might look like.
-> 
-> 1. Gather data - drivers provide telemetry like solutions to get that
->    data. May be enhanced, for example in this driver by providing the
->    HPA address rather than DPA Unit Address. Userspace can access enough
->    information to do this so maybe not.
-> 2. Userspace algorithm development, possibly combined with userspace
->    triggered migration by PA. Working out how to use different levels
->    of constrained hardware resources will be challenging.
-> 3. Move those algorithms in kernel. Will require generalization across
->    different hotpage trackers etc.
-> 
-> So far this driver just gives access to the raw data. I will probably kick
-> of a longer discussion on how to do adaptive sampling needed to actually
-> use these units for tiering etc, sometime soon (if no one one else beats
-> me too it).  There is a follow up topic of how to virtualize this stuff
-> for memory stranding cases (VM gets a fixed mixture of fast and slow
-> memory and should do it's own tiering).
-> 
-> More details in the Documentation patch but typical commands are:
-> 
-> $perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
->  hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,\
->  range_size=1024,randomized_downsampling=0,downsampling_factor=32,\
->  hotness_granual=12
-> 
-> $perf report --dump-raw-traces
-> 
-> Example output.  With a counter_width of 16 (0x10) the least significant
-> 4 bytes are the counter value and the unit index is bits 16-63.
-> Here all units are over the threshold and the indexes are 0,1,2 etc.
-> 
-> . ... CXL_HMU data: size 33512 bytes
-> Header 0: units: 29c counter_width 10
-> Header 1 : deadbeef
-> 0000000000000283
-> 0000000000010364
-> 0000000000020366
-> 000000000003033c
-> 0000000000040343
-> 00000000000502ff
-> 000000000006030d
-> 000000000007031a
-> 
-> Which will produce a list of hotness entries.
-> Bits[N-1:0] counter value
-> Bits[63:N] Unit ID (combine with unit size and DPA base + HDM decoder
->   config to get to a Host Physical Address)
-> 
-> Specific RFC questions.
-> - What should be in the header added to the aux buffer.
->   Currently just the minimum is provided. Number of records
->   and the counter width needed to decode them.
-> - Should we reset the counters when doing sampling "-F X"
->   If the frequency is higher than the epoch we never see any hot units.
->   If so, when should we reset them?
-> 
-> Note testing has been light and on emulation only + as perf tool is
-> a pain to build on a striped back VM,  build testing has all be on
-> arm64 so far.  The driver loads though on both arm64 and x86 so
-> any problems are likely in the perf tool arch specific code
-> which is build tested (on wrong machine)
+We have found out that perf kmem --page stat sometimes fails like the
+following:
 
-FWIW, runs on x86. However, it triggers a lockdep warning in
-both start and stop due to the spin lock. Something to tidy up for
-RFCv2.
+# perf kmem --page stat
+0x2aa28 [0x8]: failed to process type: 68 [Operation not permitted]
+error during process events: -1
 
-J
+This seem to happen on s390x KVM machines.
 
-> 
-> The QEMU emulation needs some cleanup, but I should be able to post
-> that shortly to let people actually play with this.  There are lots
-> of open questions there on how 'right' we want the emulation to be
-> and what counting uarch to emulate.
-> 
-> Jonathan Cameron (4):
->   cxl: Register devices for CXL Hotness Monitoring Units (CHMU)
->   cxl: Hotness Monitoring Unit via a Perf AUX Buffer.
->   perf: Add support for CXL Hotness Monitoring Units (CHMU)
->   hwtrace: Document CXL Hotness Monitoring Unit driver
-> 
->  Documentation/trace/cxl-hmu.rst     | 197 +++++++
->  Documentation/trace/index.rst       |   1 +
->  drivers/cxl/Kconfig                 |   6 +
->  drivers/cxl/Makefile                |   3 +
->  drivers/cxl/core/Makefile           |   1 +
->  drivers/cxl/core/core.h             |   1 +
->  drivers/cxl/core/hmu.c              |  64 ++
->  drivers/cxl/core/port.c             |   2 +
->  drivers/cxl/core/regs.c             |  14 +
->  drivers/cxl/cxl.h                   |   5 +
->  drivers/cxl/cxlpci.h                |   1 +
->  drivers/cxl/hmu.c                   | 880 ++++++++++++++++++++++++++++
->  drivers/cxl/hmu.h                   |  23 +
->  drivers/cxl/pci.c                   |  26 +-
->  tools/perf/arch/arm/util/auxtrace.c |  58 ++
->  tools/perf/arch/x86/util/auxtrace.c |  76 +++
->  tools/perf/util/Build               |   1 +
->  tools/perf/util/auxtrace.c          |   4 +
->  tools/perf/util/auxtrace.h          |   1 +
->  tools/perf/util/cxl-hmu.c           | 367 ++++++++++++
->  tools/perf/util/cxl-hmu.h           |  18 +
->  21 files changed, 1748 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/trace/cxl-hmu.rst
->  create mode 100644 drivers/cxl/core/hmu.c
->  create mode 100644 drivers/cxl/hmu.c
->  create mode 100644 drivers/cxl/hmu.h
->  create mode 100644 tools/perf/util/cxl-hmu.c
->  create mode 100644 tools/perf/util/cxl-hmu.h
-> 
+When we tried to investigate for the reasons, it seems that the problem
+is caused by incorrect/unexpected translation of gpf_flags for event
+kmem:mm_page_alloc.
+
+# perf script
+perf   96553 [003] 100299.663963: kmem:mm_page_alloc: page=0x1a8f9 pfn=0x1a8f9 order=0 migratetype=0 gfp_flags=0x500cc2
+perf   96553 [003] 100299.663995: kmem:mm_page_alloc: page=0x1bc3f pfn=0x1bc3f order=0 migratetype=0 gfp_flags=0x40cc0
+perf   96553 [003] 100299.664001: kmem:mm_page_alloc: page=0x1a9d9 pfn=0x1a9d9 order=0 migratetype=0 gfp_flags=0x40cc0
+perf   96553 [003] 100299.664011: kmem:mm_page_alloc: page=0x1788b pfn=0x1788b order=0 migratetype=0 gfp_flags=0x40cc0
+perf   96553 [003] 100299.664023: kmem:mm_page_alloc: page=0x17993 pfn=0x17993 order=0 migratetype=0 gfp_flags=0xcc0
+
+On another machine to be compared against, we get the gfp_flags
+translated as following:
+
+[...]
+perf 1440545 [007] 37432230.091272: kmem:mm_page_alloc: page=0x10d876 pfn=0x10d876 order=0 migratetype=0 gfp_flags=GFP_HIGHUSER|__GFP_ACCOUNT
+[...]
+
+When we dig into the translation process, we get into libtraceevent (which
+we have in 1.8.2 version), we get into:
+
+     4796 static void print_str_arg(struct trace_seq *s, void *data, int size,
+     4797                           struct tep_event *event, const char *format,
+     4798                           int len_arg, struct tep_print_arg *arg)
+     4799 {
+[...]
+     4876         case TEP_PRINT_FLAGS:
+     4877                 val = eval_num_arg(data, size, event, arg->flags.field);
+     4878                 print = 0;
+B+   4879                 for (flag = arg->flags.flags; flag; flag = flag->next) {
+     4880                         fval = eval_flag(flag->value);
+  >  4881                         if (!val && fval < 0) {
+     4882                                 print_str_to_seq(s, format, len_arg, flag->str);
+     4883                                 break;
+     4884                         }
+     4885                         if (fval > 0 && (val & fval) == fval) {
+b+   4886                                 if (print && arg->flags.delim)
+     4887                                         trace_seq_puts(s, arg->flags.delim);
+     4888                                 print_str_to_seq(s, format, len_arg, flag->str);
+     4889                                 print = 1;
+     4890                                 val &= ~fval;
+     4891                         }
+     4892                 }
+b+   4893                 if (val) {
+     4894                         if (print && arg->flags.delim)
+     4895                                 trace_seq_puts(s, arg->flags.delim);
+     4896                         trace_seq_printf(s, "0x%llx", val);
+     4897                 }
+     4898                 break;
+
+Here in the for loop, we try to apply all the known GFP flags to the
+value and if it matches, the flag name is added to the resulting string.
+If it does not match (line 4885), finally a fallback solution is used
+and the hex number is printed (line 4896).
+
+The reason why it does not match any GPF flag is because the values seem
+to be incorrect, so while val == 0x500cc2, the values in flags are 0 or 1:
+
+(gdb) p *flag
+$53 = {next = 0x15c3020, value = 0x15c34a0 "1", str = 0x15c2dd0 "GFP_HIGHUSER"}
+(gdb) p *flag->next
+$54 = {next = 0x15c3ce0, value = 0x15c3740 "1", str = 0x15c3c20 "GFP_USER"}
+(gdb) p *flag->next->next
+$55 = {next = 0x15c32c0, value = 0x15c2e30 "1", str = 0x15c3800 "GFP_KERNEL_ACCOUNT"}
+[...]
+
+which is obviously wrong. On the other machine the values made more sense:
+
+(gdb) p *flag->next->next->next
+$133 = {next = 0xee5630, value = 0xee57b0 "1051842", str = 0xee5930 "GFP_HIGHUSER"}
+(gdb) p *flag->next->next->next->next
+$134 = {next = 0xee5c90, value = 0xee5690 "1051840", str = 0xee62d0 "GFP_USER"}
+(gdb) p *flag->next->next->next->next->next
+$135 = {next = 0xee5990, value = 0xee5270 "4197568", str = 0xee60f0 "GFP_KERNEL_ACCOUNT"}
+
+...
+
+I am wondering where these values come from and where they are possibly
+incorrectly set.
+
+Any ideas?
+
+Thanks!
+
+Michael
 
