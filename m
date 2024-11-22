@@ -1,422 +1,469 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2051.outbound.protection.outlook.com [40.107.220.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB69D165F17
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Nov 2024 06:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732258799; cv=none; b=rjn75XEbA23GvCV60RgTKJLFTdvRUuqwrwq+MP+SNU7Slk1rteAP20CiH8D8ooGt3zhbOPUva660QnsUf3YYi2MxFpcSGTStPbI/8c2xlh4jg61BaIB9vk2ojyrk19EI9ZOBZ77Og/YpdNGJnGZLPiJoBlBW19QidVWaeoOQ2hs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732258799; c=relaxed/simple;
-	bh=WkpwOMRy/XgsMV9wQ7PG8nx+9yo8XnDPBxdg7rRQrU0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oCxrYnKCxC9O8abr+0DYWMAvBKKZBVNpiUm/eaLB2CfrvMmI3RuGURqJIAZNe9ZyRGB5Goptv86vQuSJqxgJC3OLSpcth3MaZShzkldoAbW+1kW45GUyMjF9ezdQT2HeTMjym6eA93Qxgm541/Zy4aW2RbyB8F0r3jgs0Y1P0IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3sZ+fdNo; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6638718C023;
+	Fri, 22 Nov 2024 08:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732265139; cv=fail; b=bE5ZvDvo27tlCYA6kpRxF/BOIiPVKyF84ZzZEwH52lb+S7998wGmOVlFlkD3sGp5uPPxLXbSD49dNjvEnYE5IF2OJ/iQLLX5fvxTA63BNN7IF7oVM6jyQzBAc6L5a2js51UDpRkPSIDovnJhJ8Enn92gjMHEpO82d+HP1VBNGrk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732265139; c=relaxed/simple;
+	bh=eSTb0C9ZlcqJ6HBv8P+MIDz0hNgrSZqBAv+zVQITsHA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iWBRpSJLQ/h5lTJg2xvspgGVl1BE6HnJTYqx1qq7iGYGqEyq9dd09qi942qkVBL70PdSYMJuheQhbcE3PMPTVeg8eAWs1Jlk7GEG+NuZsK0p+2K9w6jIXgtNqFkHeER7tT70vpZKUnHIeO+KZOjWO6uGFojiNcWk8O/tPzPRgng=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LrGUt69L; arc=fail smtp.client-ip=40.107.220.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3sZ+fdNo"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a781e908a7so115525ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 Nov 2024 22:59:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732258797; x=1732863597; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=248h8jTi5EiAlVYfxE9YjppYaI7J9lpk6fDXU7wm0KY=;
-        b=3sZ+fdNoYhKchVBj7+2ZtTAWLLU6+sbLn40AbbQkNGUTMxbNf4OUAuaruGyoqwIrfJ
-         7ZTRjtAytybz9fFnKjXMyLZI8VwMTVzbnMFhdMoldpPHxVdLxNbxPj2DQlCghBMc/jCs
-         xQvBhVyhwB2zQ8fz98RZOwFrUc7opsz9Gt+Bv8uRVIPLz836ZbIiDt15SGCc25YznGlJ
-         O9xNNYTXci4NYADC19zV7Jv3LxJjHAeOzOiu5yyVJgG4qYD6ovVFXUq+8rZ1C9SWwxbl
-         M6pZu4gRHyigj8i9Gh+NQezedqmSr7vaC+pol40hrvRCpldnC0w36voRzEgv8zR0ytSN
-         oudg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732258797; x=1732863597;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=248h8jTi5EiAlVYfxE9YjppYaI7J9lpk6fDXU7wm0KY=;
-        b=juKxEsJGJEK/LzCAMnWYkdEI5P5sNO2kF1dbn8kZy+0GfWVmfnnzI/weLTnadCn/+d
-         ymI1kT174z9I41CdstrJKUDETGoZiXb6mGtsa4oJO39PKpCYHq/LtGRtR6OvdUBDoKQr
-         GEOFF7noCgb1j0RhH3/TDLDQ5qjXK/vwrYz3FF7jeE2qWPq/b9w5ljKF5gDF327ViraY
-         KKctRn5twguYodHizqpNGPHMvUWf8KDkr6vGv1dQ8IHKuA4RtGgZ7gZBPfXjiRdeE0C0
-         PuB2Uzx2JZWZjwOLkSf3u09ZREOAmYVCSwcIuQzqRXUNeEK6R2j9R+Lil9z6xqI8uhA9
-         kRTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVaFv9Uad69kCWYSWOzz0jijWAqPo1DjAiF7gm9fBeT14S7QZGqnl8JSDxYyB2JNa5q6b14TEiEsdtHsDikQLgE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUoK2b/hUyoIXFrEIR5UHaOU3qReAk4aQKuC647GBAzD9+ZbHZ
-	XE+1twHJ41VSVyq5VJ0X48nJ82gnJlpBcx/V4G4jULlcsRqSqeT9auhO9WaS0VArL41PhvUK3cv
-	JUPYSb+fbO+h3qCX8rcYbcGWPUC2d+NN3zxd0
-X-Gm-Gg: ASbGncuwTM3as8PZDrhnb2UNFxyit0V0n6S6o2qGnZNqY3KuzI51Flv28NeQHtOd8tf
-	chcMKSctLsbtWXwmG8KYa4T3TERDfNU4Z
-X-Google-Smtp-Source: AGHT+IFoL6sO8RkBSx3tj9bnAuVMZ+2/WNdHfooynGlQqT5wLOvDeSC88aSPZxscC8i+J6SjdUYzf2sEU5Q9wW8agyQ=
-X-Received: by 2002:a05:6e02:3708:b0:3a7:75b2:1f9e with SMTP id
- e9e14a558f8ab-3a79b20ca02mr2668165ab.8.1732258796748; Thu, 21 Nov 2024
- 22:59:56 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LrGUt69L"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QGRyMeaDnP2qZDFzAHXGF/USs0OYs8Y7Qyf8cYskfE3RkPXfsBaYV9DlPeINzQbjb5C2F3MEqUeIGpBr/opcmG86wGxY5/c4ZPJ7ed+IzChkqsLGqhhUpCLVtUHrTOd5V9HopIuTjfneTIGssoXicvCycjhEdn/PyPdl4IQ+ymnYFr71PRAnLFK/JcEutxMUc6c2JYInave1P6tVNMsOaT2cqlIVX8ZfP4RD5dyDlvryepofIcDeQUmBqqTI/UC3grhhp7E4q0uxRuAJ4GPmH8vuY9rAL+PE8bp+updx19U3ESh/84wTq8cHR8rnKEDTQkgii8lmL+FMiNgfzFLRUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5gVdS3aKNaUOSU0Pnfksx2ESQI5SfeDcqiJMBzYuTrs=;
+ b=adS7/aO/jKgKmIudYy2cL7f8UpVKI9JwSA09WhvUb9R74yShqx6ul0ny4Qe+ruqSE07LSHOcAIm6NNX1LS8JhzsmqtbNWfFhvvXSLTTarpNbOD9HC/chmwgbPXbcSUZ4USPMQKT4YSLGQM2XiNfwaGfCBjaKIlPWJqCT6oz3NkW7yqHFOoIO4xDR9WfHfqMMDZOYileYXr9tTnjwBM4xrgC/ldEowWLLRaKfwjjeYs3WM1YESUHfJbfecGD76LuNZ0Gdr5WKF66bC6KvmtBjb2k5uJM3b9h6c5Vrn36mGttlxGMl0+l/cDvZm+LASLlVDR72GtOb7iJzm/DqZYQ2qA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.12) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5gVdS3aKNaUOSU0Pnfksx2ESQI5SfeDcqiJMBzYuTrs=;
+ b=LrGUt69LnHRkxopMNsKR/ipaFs8Ei4RsSN3RhtcWjApAbidwWWVuxvI3NuxGNUSZyPCn+RiSbcPVZUMsvN9NrzdBNMGj1NBSdHsVt38V417u4Id35RsD/cOFiEuXS8WQsVBTKiSQxMKIr/Ik0ve2BXwZ2uS/vj1bnVpxSJS+re8=
+Received: from BN8PR03CA0035.namprd03.prod.outlook.com (2603:10b6:408:94::48)
+ by DM6PR12MB4252.namprd12.prod.outlook.com (2603:10b6:5:211::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.27; Fri, 22 Nov
+ 2024 08:45:31 +0000
+Received: from BN3PEPF0000B06C.namprd21.prod.outlook.com
+ (2603:10b6:408:94:cafe::d5) by BN8PR03CA0035.outlook.office365.com
+ (2603:10b6:408:94::48) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8158.24 via Frontend Transport; Fri,
+ 22 Nov 2024 08:45:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.12)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.12 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.12; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.12) by
+ BN3PEPF0000B06C.mail.protection.outlook.com (10.167.243.71) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8207.0 via Frontend Transport; Fri, 22 Nov 2024 08:45:31 +0000
+Received: from tapi.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 22 Nov
+ 2024 02:45:23 -0600
+From: Swapnil Sapkal <swapnil.sapkal@amd.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <irogers@google.com>, <james.clark@arm.com>
+CC: <ravi.bangoria@amd.com>, <yu.c.chen@intel.com>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
+	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
+	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
+	<vineethr@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <santosh.shukla@amd.com>,
+	<ananth.narayan@amd.com>, <sandipan.das@amd.com>, Swapnil Sapkal
+	<swapnil.sapkal@amd.com>
+Subject: [PATCH v2 0/6] perf sched: Introduce stats tool
+Date: Fri, 22 Nov 2024 08:44:46 +0000
+Message-ID: <20241122084452.1064968-1-swapnil.sapkal@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241121000955.536930-1-irogers@google.com> <Zz9oKR3goFPP9_a9@x1>
- <Zz9sbNAuRsYjclAi@x1> <CAP-5=fXAitSZuRPppAjH=38Ua6BFyhou0sSj7xmfNakqPUQqPw@mail.gmail.com>
- <Zz-e4fMLIJmufgyl@x1>
-In-Reply-To: <Zz-e4fMLIJmufgyl@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 21 Nov 2024 22:59:45 -0800
-Message-ID: <CAP-5=fWE7VhNWm4Vo2EngQ3is7arfMq-m4MJEJZBGjd1p3m5Qg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf tests: Fix hwmon parsing with PMU name test
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06C:EE_|DM6PR12MB4252:EE_
+X-MS-Office365-Filtering-Correlation-Id: dcef6b80-a3ce-424f-2aca-08dd0ad205e0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?hm+TmkrlawDA88kczysnXlgou+GmN0kyhGrbXdmS2X2TCcO2Qg9tnxyrv+5r?=
+ =?us-ascii?Q?xQ+iR9AVeQHMSq/hJPSkM4Y1LyyGkULunJF93ul9FegQ612G3vkjChMolSJj?=
+ =?us-ascii?Q?H/eNPNxCcPaSLvfNAUmekS/yi8fJD4a/pqy2V2Novv6ZCKcpERmbLeeIukgH?=
+ =?us-ascii?Q?GHqX75X7pRconwmiZnoJVjww23Cgr8v5OEZDqkDLrqTRH4aeD8aCMMA03q1o?=
+ =?us-ascii?Q?FM7sw+5Oe2LHCQX/ioO3x/+iXckiNl3R3joNsf6pnSWJWFsAe58Iy6ywwP9A?=
+ =?us-ascii?Q?bp6eUJsqb7F04aG7qD0+NyOB3frf6hjAKuIrBbsOgm7e4u6Zn4SbfSN+hptM?=
+ =?us-ascii?Q?ErtPEp/AOKIemkdlBZieeOw4iGIjHTbOzm6yBJID4OD9Iz+j3o9j+PuhvsZz?=
+ =?us-ascii?Q?5r+0lbo3d5d5vrXHsUCCyBgkPyvtCwJACcAk9dEv7uEzmlthrK9sGg/7sxVZ?=
+ =?us-ascii?Q?F0MEKtnCcp/wWFyw1k02FmxgZ2k+Yk1VZx5HyupGtEBlCKjJZP4uRIVCLnH8?=
+ =?us-ascii?Q?1rDVuWPxrKCf48xn/0FTCSc+HaCWJ9PweZJKNWPinJykOGvIlOy0uHRKzucp?=
+ =?us-ascii?Q?PFAMam0KpYtcUokyHKP/6BODFU31nO6QLiFd3QohvaCvGHQg3MkppeOsQlH3?=
+ =?us-ascii?Q?aoLDqWFNye3EWArGeCRgmykjXp7270CL6zluwBuxsNJ6M63qZ/Ns4VGiXGDY?=
+ =?us-ascii?Q?qDuuElK4Itp6Mq8EmsC+vQiglB9kJwslZ3WofAGcqaUrT9nGd43bGshR14WL?=
+ =?us-ascii?Q?/9VBkZy2D9Lm/RHyfaSe6giZtw4VJ3IRqc3DKDLDZs3tDzI9lKZoTFstFUsj?=
+ =?us-ascii?Q?W740ekm8gEjyS990FH3kiGvBHjo1nzX9VHFBm34hN5qvmMYMUGIvaHUj7PRV?=
+ =?us-ascii?Q?eApay0yrfLjlUouook/WyoMycBQV7pF0U9LwjUUWhQrH/z/KTMZcGb+dXaj/?=
+ =?us-ascii?Q?m/FwASbBTXsc9NLLQHzBHGbo6xu5wlv/KmllsxWVjT+FNLUI6kZzNrRWR7XI?=
+ =?us-ascii?Q?OFjiNIMIUzujgQG2ChT/WXmTttnpr5h9/FNQc2JJPKbeX4S+qE2HGSnYK6VJ?=
+ =?us-ascii?Q?jgTGZz9g+bGY8ajrrkeZYwe42s8IJ6KKfoWseMZycXa97wukmU8JFlVzOJN0?=
+ =?us-ascii?Q?QgfftJLZOj+nFzjzcVa7GPoSx3qvlcQx3htlLpEuRlCF8gS+JHCo7pfhvOFQ?=
+ =?us-ascii?Q?tmtC2WKvikadRk9gLFhBBg7nMJ5ZUSfi48KUUOOsf0RqlHzbouSyUPvP8Td0?=
+ =?us-ascii?Q?sQQyTb5bwNX59g45SI7AoQjt8nb9uIncu26bLCTy/ibVc8wC8w6blR7NWTzp?=
+ =?us-ascii?Q?gTZNktsyuZmlPi8k2fz0YoRCU75Yo8jlYIB4KU0gck9gucZjDaMOs2V3ahH1?=
+ =?us-ascii?Q?Rqg4sGw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.12;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:atlvpn-bp.amd.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2024 08:45:31.3840
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dcef6b80-a3ce-424f-2aca-08dd0ad205e0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.12];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B06C.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4252
 
-On Thu, Nov 21, 2024 at 12:58=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Thu, Nov 21, 2024 at 10:55:00AM -0800, Ian Rogers wrote:
-> > On Thu, Nov 21, 2024 at 9:22=E2=80=AFAM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Thu, Nov 21, 2024 at 02:04:45PM -0300, Arnaldo Carvalho de Melo wr=
-ote:
-> > > > On Wed, Nov 20, 2024 at 04:09:55PM -0800, Ian Rogers wrote:
-> > > > > Incorrectly the hwmon with PMU name test didn't pass "true". Fix =
-and
-> > > > > address issue with hwmon_pmu__config_terms needing to load events=
- - a
-> > > > > load bearing assert fired. Also fix missing list deletion when pu=
-tting
-> > > > > the hwmon test PMU and lower some debug warnings to make the hwmo=
-n PMU
-> > > > > less spammy in verbose mode.
-> > >
-> > > > After applying this, with this series of patches on a Fedora 40 sys=
-tem,
-> > > > I get output from -v where before I needed, IIRC, to use -vv:
-> > > >
-> > > > f8244bb9bfa66f79 (HEAD -> perf-tools-next, x1/perf-tools-next) perf=
- tests: Fix hwmon parsing with PMU name test
-> > > > 9ae6c7a4bd02acbd perf hwmon_pmu: Ensure hwmon key union is zeroed b=
-efore use
-> > > > 3e37de098af38179 perf tests hwmon_pmu: Remove double evlist__delete=
-()
-> > > > 0565017a0ac824c2 perf test: Correct hwmon test PMU detection
-> > > > 85c60a01b85ee956 (perf-tools-next/tmp.perf-tools-next, perf-tools-n=
-ext/perf-tools-next) perf: Remove unused del_perf_probe_events()
-> > > > =E2=AC=A2 [acme@toolbox perf-tools-next]$
-> > >
-> > > <SNIP>
-> > >
-> > > > root@number:~# perf test -v 11
-> > > >  11: Hwmon PMU                                                     =
-  :
-> > > >  11.1: Basic parsing test                                          =
-  : Ok
-> > > > --- start ---
-> > > > test child forked, pid 1823259
-> > > > Testing 'temp_test_hwmon_event1'
-> > > > Using CPUID GenuineIntel-6-B7-1
-> > > > FAILED tests/hwmon_pmu.c:159 failed to parse event 'temp_test_hwmon=
-_event1', err 1
-> > > > event syntax error: 'temp_test_hwmon_event1'
-> > > >                      \___ Bad event name
-> > > >
-> > > > Unable to find event on a PMU of 'temp_test_hwmon_event1'
-> > >
-> > > In gdb it fails on the first call to do_test() from the first test__h=
-wmon_pmu()
-> > >
-> > > Starting program: /root/bin/perf test -F -vv 11
-> > > [Thread debugging using libthread_db enabled]
-> > > Using host libthread_db library "/lib64/libthread_db.so.1".
-> > > --- start ---
-> > > ---- end ----
-> > >  11.1: Basic parsing test                                            =
-: Ok
-> > > --- start ---
-> > >
-> > > Breakpoint 1, test__hwmon_pmu (with_pmu=3Dfalse) at tests/hwmon_pmu.c=
-:203
-> > > 203     {
-> > > (gdb) n
-> > > 205             struct perf_pmu *pmu =3D test_pmu_get(dir, sizeof(dir=
-));
-> > > (gdb) n
-> > > 206             int ret =3D TEST_OK;
-> > > (gdb) p pmu
-> > > $2 =3D (struct perf_pmu *) 0xf50450
-> > > (gdb) p *pmu
-> > > $3 =3D {name =3D 0xf50ac0 "hwmon_a_test_hwmon_pmu", alias_name =3D 0x=
-f50aa0 "hwmon1234", id =3D 0x0, type =3D 4294902994, selectable =3D false, =
-is_core =3D false, is_uncore =3D false, auxtrace =3D false,
-> > >   formats_checked =3D false, config_masks_present =3D false, config_m=
-asks_computed =3D false, max_precise =3D 0, perf_event_attr_init_default =
-=3D 0x0, cpus =3D 0xf4fbf0, format =3D {next =3D 0xf50488,
-> > >     prev =3D 0xf50488}, aliases =3D {next =3D 0xf50498, prev =3D 0xf5=
-0498}, events_table =3D 0x0, sysfs_aliases =3D 0, cpu_json_aliases =3D 0, s=
-ys_json_aliases =3D 0, sysfs_aliases_loaded =3D false,
-> > >   cpu_aliases_added =3D false, caps_initialized =3D false, nr_caps =
-=3D 0, caps =3D {next =3D 0xf504c8, prev =3D 0xf504c8}, list =3D {next =3D =
-0xedc090 <other_pmus>, prev =3D 0xedc090 <other_pmus>},
-> > >   config_masks =3D {0, 0, 0, 0}, missing_features =3D {exclude_guest =
-=3D false, checked =3D false}, mem_events =3D 0x0}
-> >
-> > Thanks for helping, I'm not able to repro this, so extra debugging
-> > would be useful for me. Here sysfs_aliases_loaded is false as we'll
-> > load the PMU aliases when there is a request to pmu__have_event. This
-> > looks pretty ordinary.
-> >
-> > > (gdb) s
-> > > 208             if (!pmu)
-> > > (gdb) s
-> > > 211             for (size_t i =3D 0; i < ARRAY_SIZE(test_events); i++=
-) {
-> > > (gdb) s
-> > > 212                     ret =3D do_test(i, with_pmu, /*with_alias=3D*=
-/false);
-> > > (gdb) s
-> > > do_test (i=3D0, with_pmu=3Dfalse, with_alias=3Dfalse) at tests/hwmon_=
-pmu.c:136
-> > > 136     {
-> > > (gdb) n
-> > > 137             const char *test_event =3D with_alias ? test_events[i=
-].alias : test_events[i].name;
-> > > (gdb) n
-> > > 138             struct evlist *evlist =3D evlist__new();
-> > > (gdb) n
-> > > 143             bool found =3D false;
-> > > (gdb) n
-> > > 145             if (!evlist) {
-> > > (gdb) n
-> > > 150             if (with_pmu)
-> > > (gdb) n
-> > > 153                     strlcpy(str, test_event, sizeof(str));
-> > > (gdb) n
-> > > 155             pr_debug("Testing '%s'\n", str);
-> > > (gdb) p str
-> > > $4 =3D "temp_test_hwmon_event1\000\000\004\000\000\000\000\000\000\00=
-0\274\204z\000\000\000\000\000=CE=84z\000\000\000\000\000\021\000\000\000\0=
-00\000\000\000 \305\377\377\377\177\000\000=DF=84z\000\000\000\000\000\353\=
-204z\000\000\000\000\000\376\204z\000\000\000\000\000\n\205z\000\000\000\00=
-0\000\021\205z\000\000\000\000\000\035\205z\000\000\000\000\0000\205z\000\0=
-00\000\000\000<\205z\000\000\000\000"
-> > > (gdb) n
-> > > Testing 'temp_test_hwmon_event1'
-> > > 156             parse_events_error__init(&err);
-> >
-> > So there was no parse event output like the expected:
-> > ```
-> > Attempt to add: hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/
-> > ..after resolving event: hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/
-> > ```
-> > The wildcard PMU lookup will call perf_pmu__have_event trying to find
-> > a PMU with the event:
-> > ```
-> > Breakpoint 1, perf_pmu__have_event (pmu=3D0x555556157f90,
-> >    name=3D0x5555560ce470 "temp_test_hwmon_event1") at util/pmu.c:1816
-> > 1816    {
-> > (gdb) bt
-> > #0  perf_pmu__have_event (pmu=3D0x555556157f90, name=3D0x5555560ce470
-> > "temp_test_hwmon_event1")
-> >    at util/pmu.c:1816
-> > #1  0x00005555557ab143 in parse_events_multi_pmu_add
-> > (parse_state=3D0x7fffffffbf00,
-> >    event_name=3D0x5555560ce470 "temp_test_hwmon_event1", hw_config=3D10=
-,
-> > const_parsed_terms=3D0x0,
-> >    listp=3D0x7fffffffa270, loc_=3D0x7fffffffb120) at util/parse-events.=
-c:1592
-> > #2  0x00005555558108cc in parse_events_parse
-> > (_parse_state=3D0x7fffffffbf00, scanner=3D0x555556138aa0)
-> >    at util/parse-events.y:293
-> > #3  0x00005555557abdc2 in parse_events__scanner (str=3D0x7fffffffc000
-> > "temp_test_hwmon_event1",
-> >    input=3D0x0, parse_state=3D0x7fffffffbf00) at util/parse-events.c:18=
-70
-> > #4  0x00005555557ac735 in __parse_events (evlist=3D0x55555613ca40,
-> >    str=3D0x7fffffffc000 "temp_test_hwmon_event1", pmu_filter=3D0x0,
-> > err=3D0x7fffffffbff0,
-> >    fake_pmu=3Dfalse, warn_if_reordered=3Dtrue, fake_tp=3Dfalse) at
-> > util/parse-events.c:2139
-> > #5  0x00005555557448ca in parse_events (evlist=3D0x55555613ca40,
-> >    str=3D0x7fffffffc000 "temp_test_hwmon_event1", err=3D0x7fffffffbff0)
-> >    at /home/irogers/kernel.org2/tools/perf/util/parse-events.h:41
-> > #6  0x0000555555744f6e in do_test (i=3D0, with_pmu=3Dfalse,
-> > with_alias=3Dfalse) at tests/hwmon_pmu.c:156
-> > #7  0x00005555557452dd in test__hwmon_pmu (with_pmu=3Dfalse) at
-> > tests/hwmon_pmu.c:212
-> > #8  0x000055555574538d in test__hwmon_pmu_without_pmu
-> > (test=3D0x5555560a3740 <suite.hwmon_pmu>,
-> >    subtest=3D1) at tests/hwmon_pmu.c:229
-> > #9  0x00005555556fc935 in start_test (test=3D0x5555560a3740
-> > <suite.hwmon_pmu>, i=3D10, subi=3D1,
-> >    child=3D0x55555613c528, width=3D64, pass=3D1) at tests/builtin-test.=
-c:424
-> > #10 0x00005555556fd014 in __cmd_test (suites=3D0x55555613c0f0, argc=3D1=
-,
-> > argv=3D0x7fffffffd9c0,
-> >    skiplist=3D0x0) at tests/builtin-test.c:571
-> > #11 0x00005555556fdb29 in cmd_test (argc=3D1, argv=3D0x7fffffffd9c0) at
-> > tests/builtin-test.c:773
-> > #12 0x000055555568043a in run_builtin (p=3D0x55555608f950 <commands+624=
->, argc=3D4,
-> >    argv=3D0x7fffffffd9c0) at perf.c:351
-> > #13 0x00005555556806e1 in handle_internal_command (argc=3D4,
-> > argv=3D0x7fffffffd9c0) at perf.c:404
-> > #14 0x000055555568083a in run_argv (argcp=3D0x7fffffffd7bc,
-> > argv=3D0x7fffffffd7b0) at perf.c:448
-> > #15 0x0000555555680b83 in main (argc=3D4, argv=3D0x7fffffffd9c0) at per=
-f.c:560
-> > (gdb) p pmu->name
-> > $1 =3D 0x5555560ce940 "cpu"
-> > ```
-> > Repeating this the test hwmon_a_test_hwmon_pmu test PMU should be teste=
-d:
-> > ```
-> > (gdb) c
-> > Continuing.
-> >
-> > (gdb) p pmu->name
-> > $2 =3D 0x5555560d6b20 "breakpoint"
-> > (gdb) c
-> > Continuing.
-> >
-> > Breakpoint 1, perf_pmu__have_event (pmu=3D0x555556158060,
-> >    name=3D0x5555560ce470 "temp_test_hwmon_event1") at util/pmu.c:1816
-> > 1816    {
-> > (gdb) p pmu->name
-> > $3 =3D 0x5555560d7ec0 "cstate_core"
-> > (gdb) c
-> > Continuing.
-> >
-> > Breakpoint 1, perf_pmu__have_event (pmu=3D0x555556158610,
-> >    name=3D0x5555560ce470 "temp_test_hwmon_event1") at util/pmu.c:1816
-> > 1816    {
-> > (gdb) p pmu->name
-> > $4 =3D 0x5555560c84b0 "cstate_pkg"
-> > (gdb) c
-> > Continuing.
-> >
-> > Breakpoint 1, perf_pmu__have_event (pmu=3D0x5555561360b0,
-> >    name=3D0x5555560ce470 "temp_test_hwmon_event1") at util/pmu.c:1816
-> > 1816    {
-> > (gdb) p pmu->name
-> > $5 =3D 0x5555560d46a0 "hwmon_a_test_hwmon_pmu"
-> > ```
-> > which should then go into the hwmon_pmu__have_event:
-> > ```
-> > (gdb) n
-> > 1817            if (!name)
-> > (gdb)
-> > 1819            if (perf_pmu__is_tool(pmu) && tool_pmu__skip_event(name=
-))
-> > (gdb)
-> > 1821            if (perf_pmu__is_hwmon(pmu))
-> > (gdb) n
-> > 1822                    return hwmon_pmu__have_event(pmu, name);
-> > (gdb) s
-> > hwmon_pmu__have_event (pmu=3D0x5555561360b0, name=3D0x5555560ce470
-> > "temp_test_hwmon_event1")
-> >    at util/hwmon_pmu.c:559
-> > ```
-> > hwmon_pmu__have_event should return true but it is either not getting
-> > called in your case or it is returning false. Not getting called I
-> > find hard to understand as your output shows the test PMU was created.
-> > It seems more likely reading the "events" and then doing the hashmap
-> > lookup in hwmon_pmu__have_event fails. This was failing for me with
-> > undefined behavior sanitizer because of the under initialized unions.
-> > But that should be fixed by: "perf hwmon_pmu: Ensure hwmon key union
-> > is zeroed before use". The particular event "temp_test_hwmon_event1"
-> > is going to search all events as it uses the "label" name, so that
-> > makes me think the bug is here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/hwmon_pmu.c?h=3Dperf-tools-next#n584
-> > but I can't eye ball an issue and the test works for me even when
-> > trying to be aggressive with sanitizers. If you could help me look I'd
-> > appreciate it.
->
-> Where is that "temp_test_hwmon_event1" added?
+MOTIVATION
+----------
 
-test_pmu_get creates the directory for the test PMU. The file
-temp1_label will be created with the contents "test hwmon event1",
-there is also a fake "input" file:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/tests/hwmon_pmu.c?h=3Dperf-tools-next#n62
-```
-{ "temp1_label", "test hwmon event1\n", },
-{ "temp1_input", "40000\n", },
-```
-So we will have an event called temp1 based on the type and number.
-Because we have a label there will be an alias of
-"temp_test_hwmon_event1" where temp is the type from the filename,
-"test_hwmon_event1" is the contents of the file "fixed" by removing
-escapes, spaces, etc. and making them underscores:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/hwmon_pmu.c?h=3Dperf-tools-next#n234
+Existing `perf sched` is quite exhaustive and provides lot of insights
+into scheduler behavior but it quickly becomes impractical to use for
+long running or scheduler intensive workload. For ex, `perf sched record`
+has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
+on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
+generates huge 56G perf.data for which perf takes ~137 mins to prepare
+and write it to disk [1].
 
-These files are read and stored in a hashmap where the key is the
-type, so temp, and the number, so 1:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/hwmon_pmu.c?h=3Dperf-tools-next#n287
-The value associated with the key is just a bitmap saying what kinds
-of hwmon items (files) there are for this type+number as well as a
-cache of reading the file event's label file and of its "fixed" name
-to aid searching:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/hwmon_pmu.c?h=3Dperf-tools-next#n125
-The key is numeric but the failing event is a string and requires the
-whole map searching to check for presence by matching what is the name
-computed from the label file:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/hwmon_pmu.c?h=3Dperf-tools-next#n579
+Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
+and generates samples on a tracepoint hit, `perf sched stats record` takes
+snapshot of the /proc/schedstat file before and after the workload, i.e.
+there is almost zero interference on workload run. Also, it takes very
+minimal time to parse /proc/schedstat, convert it into perf samples and
+save those samples into perf.data file. Result perf.data file is much
+smaller. So, overall `perf sched stats record` is much more light weight
+compare to `perf sched record`.
 
-```
-Breakpoint 1, hwmon_pmu__have_event (pmu=3D0x555556147f40,
-   name=3D0x5555560d8470 "temp_test_hwmon_event1") at util/hwmon_pmu.c:559
-559     {
-(gdb) n
-560             struct hwmon_pmu *hwm =3D container_of(pmu, struct
-hwmon_pmu, pmu);
-(gdb)
-563             union hwmon_pmu_event_key key =3D {};
-(gdb)
-567             if (!parse_hwmon_filename(name, &type, &number,
-/*item=3D*/NULL, /*is_alarm=3D*/NULL))
-(gdb)
-570             if (hwmon_pmu__read_events(hwm))
-(gdb)
-573             key.type =3D type;
-(gdb)
-574             key.num =3D number;
-(gdb)
-575             if (hashmap_find(&hwm->events, key.type_and_num,
-/*value=3D*/NULL))
-(gdb)
-577             if (key.num !=3D -1)
-(gdb)
-580             hashmap__for_each_entry((&hwm->events), cur, bkt) {
-(gdb) n
-581                     struct hwmon_pmu_event_value *value =3D cur->pvalue=
-;
-(gdb)
-583                     key.type_and_num =3D cur->key;
-(gdb)
-584                     if (key.type =3D=3D type && value->name &&
-!strcasecmp(name, value->name))
-(gdb) p value->name
-$1 =3D 0x5555560d0680 "temp_test_hwmon_event1"
-(gdb) n
-585                             return true;
-```
-The if here must be failing for you, but I fail to see why. I don't
-see the strcasecmp in your output and what we care about is why either
-the type is wrong or value->name is wrong, if you could help to log
-these it would be great.
+We, internally at AMD, have been using this (a variant of this, known as
+"sched-scoreboard"[2]) and found it to be very useful to analyse impact
+of any scheduler code changes[3][4].
 
-Thanks,
-Ian
+Please note that, this is not a replacement of perf sched record/report.
+The intended users of the new tool are scheduler developers, not regular
+users.
+
+USAGE
+-----
+
+  # perf sched stats record
+  # perf sched stats report
+  # perf sched stats diff
+
+Note: Although `perf sched stats` tool supports workload profiling syntax
+(i.e. -- <workload> ), the recorded profile is still systemwide since the
+/proc/schedstat is a systemwide file.
+
+HOW TO INTERPRET THE REPORT
+---------------------------
+
+The `perf sched stats report` starts with description of the columns
+present in the report. These column names are gievn before cpu and
+domain stats to improve the readability of the report.
+
+  ----------------------------------------------------------------------------------------------------
+  DESC                    -> Description of the field
+  COUNT                   -> Value of the field
+  PCT_CHANGE              -> Percent change with corresponding base value
+  AVG_JIFFIES             -> Avg time in jiffies between two consecutive occurrence of event
+  ----------------------------------------------------------------------------------------------------
+
+Next is the total profiling time in terms of jiffies:
+
+  ----------------------------------------------------------------------------------------------------
+  Time elapsed (in jiffies)                                   :       24537
+  ----------------------------------------------------------------------------------------------------
+
+Next is CPU scheduling statistics. These are simple diffs of
+/proc/schedstat CPU lines along with description. The report also
+prints % relative to base stat.
+
+In the example below, schedule() left the CPU0 idle 98.19% of the time.
+16.54% of total try_to_wake_up() was to wakeup local CPU. And, the total
+waittime by tasks on CPU0 is 0.49% of the total runtime by tasks on the
+same CPU.
+
+  ----------------------------------------------------------------------------------------------------
+  CPU 0
+  ----------------------------------------------------------------------------------------------------
+  DESC                                                                COUNT  PCT_CHANGE
+  ----------------------------------------------------------------------------------------------------
+  sched_yield() count                                         :           0
+  Legacy counter can be ignored                               :           0
+  schedule() called                                           :       17138
+  schedule() left the processor idle                          :       16827  (  98.19% )
+  try_to_wake_up() was called                                 :         508
+  try_to_wake_up() was called to wake up the local cpu        :          84  (  16.54% )
+  total runtime by tasks on this processor (in jiffies)       :  2408959243
+  total waittime by tasks on this processor (in jiffies)      :    11731825  (  0.49% )
+  total timeslices run on this cpu                            :         311
+  ----------------------------------------------------------------------------------------------------
+
+Next is load balancing statistics. For each of the sched domains
+(eg: `SMT`, `MC`, `DIE`...), the scheduler computes statistics under
+the following three categories:
+
+  1) Idle Load Balance: Load balancing performed on behalf of a long
+                        idling CPU by some other CPU.
+  2) Busy Load Balance: Load balancing performed when the CPU was busy.
+  3) New Idle Balance : Load balancing performed when a CPU just became
+                        idle.
+
+Under each of these three categories, sched stats report provides
+different load balancing statistics. Along with direct stats, the
+report also contains derived metrics prefixed with *. Example:
+
+  ----------------------------------------------------------------------------------------------------
+  CPU 0 DOMAIN SMT CPUS <0, 64>
+  ----------------------------------------------------------------------------------------------------
+  DESC                                                                     COUNT     AVG_JIFFIES
+  ----------------------------------------- <Category idle> ------------------------------------------
+  load_balance() count on cpu idle                                 :          50   $      490.74 $
+  load_balance() found balanced on cpu idle                        :          42   $      584.21 $
+  load_balance() move task failed on cpu idle                      :           8   $     3067.12 $
+  imbalance sum on cpu idle                                        :           8
+  pull_task() count on cpu idle                                    :           0
+  pull_task() when target task was cache-hot on cpu idle           :           0
+  load_balance() failed to find busier queue on cpu idle           :           0   $        0.00 $
+  load_balance() failed to find busier group on cpu idle           :          42   $      584.21 $
+  *load_balance() success count on cpu idle                        :           0
+  *avg task pulled per successful lb attempt (cpu idle)            :        0.00
+  ----------------------------------------- <Category busy> ------------------------------------------
+  load_balance() count on cpu busy                                 :           2   $    12268.50 $
+  load_balance() found balanced on cpu busy                        :           2   $    12268.50 $
+  load_balance() move task failed on cpu busy                      :           0   $        0.00 $
+  imbalance sum on cpu busy                                        :           0
+  pull_task() count on cpu busy                                    :           0
+  pull_task() when target task was cache-hot on cpu busy           :           0
+  load_balance() failed to find busier queue on cpu busy           :           0   $        0.00 $
+  load_balance() failed to find busier group on cpu busy           :           1   $    24537.00 $
+  *load_balance() success count on cpu busy                        :           0
+  *avg task pulled per successful lb attempt (cpu busy)            :        0.00
+  ---------------------------------------- <Category newidle> ----------------------------------------
+  load_balance() count on cpu newly idle                           :         427   $       57.46 $
+  load_balance() found balanced on cpu newly idle                  :         382   $       64.23 $
+  load_balance() move task failed on cpu newly idle                :          45   $      545.27 $
+  imbalance sum on cpu newly idle                                  :          48
+  pull_task() count on cpu newly idle                              :           0
+  pull_task() when target task was cache-hot on cpu newly idle     :           0
+  load_balance() failed to find busier queue on cpu newly idle     :           0   $        0.00 $
+  load_balance() failed to find busier group on cpu newly idle     :         382   $       64.23 $
+  *load_balance() success count on cpu newly idle                  :           0
+  *avg task pulled per successful lb attempt (cpu newly idle)      :        0.00
+  ----------------------------------------------------------------------------------------------------
+
+Consider following line:
+
+  load_balance() found balanced on cpu newly idle                  :         382    $      64.23 $
+
+While profiling was active, the load-balancer found 382 times the load
+needs to be balanced on a newly idle CPU 0. Following value encapsulated
+inside $ is average jiffies between two events (24537 / 382 = 64.23).
+
+Next are active_load_balance() stats. alb did not trigger while the
+profiling was active, hence it's all 0s.
+
+  --------------------------------- <Category active_load_balance()> ---------------------------------
+  active_load_balance() count                                      :           0
+  active_load_balance() move task failed                           :           0
+  active_load_balance() successfully moved a task                  :           0
+  ----------------------------------------------------------------------------------------------------
+
+Next are sched_balance_exec() and sched_balance_fork() stats. They are
+not used but we kept it in RFC just for legacy purpose. Unless opposed,
+we plan to remove them in next revision.
+
+Next are wakeup statistics. For every domain, the report also shows
+task-wakeup statistics. Example:
+
+  ------------------------------------------- <Wakeup Info> ------------------------------------------
+  try_to_wake_up() awoke a task that last ran on a diff cpu       :       12070
+  try_to_wake_up() moved task because cache-cold on own cpu       :        3324
+  try_to_wake_up() started passive balancing                      :           0
+  ----------------------------------------------------------------------------------------------------
+
+Same set of stats are reported for each CPU and each domain level.
+
+HOW TO INTERPRET THE DIFF
+-------------------------
+
+The `perf sched stats diff` will also start with explaining the columns
+present in the diff. Then it will show the diff in time in terms of
+jiffies. The order of the values depends on the order of input data
+files. Example:
+
+  ----------------------------------------------------------------------------------------------------
+  Time elapsed (in jiffies)                                        :        2009,       2001
+  ----------------------------------------------------------------------------------------------------
+
+Below is the sample representing the difference in cpu and domain stats of
+two runs. Here third column or the values enclosed in `|...|` shows the
+percent change between the two. Second and fourth columns shows the
+side-by-side representions of the corresponding fields from `perf sched
+stats report`.
+
+  ----------------------------------------------------------------------------------------------------
+  CPU 0
+  ----------------------------------------------------------------------------------------------------
+  DESC                                                                    COUNT1      COUNT2  PCT_CHANGE  PCT_CHANGE1 PCT_CHANGE2
+  ----------------------------------------------------------------------------------------------------
+  sched_yield() count                                              :           0,          0  |    0.00% |
+  Legacy counter can be ignored                                    :           0,          0  |    0.00% |
+  schedule() called                                                :      442939,     447305  |    0.99% |
+  schedule() left the processor idle                               :      154012,     174657  |   13.40% |  (   34.77,      39.05 )
+  try_to_wake_up() was called                                      :      306810,     258076  |  -15.88% |
+  try_to_wake_up() was called to wake up the local cpu             :       21313,      14130  |  -33.70% |  (    6.95,       5.48 )
+  total runtime by tasks on this processor (in jiffies)            :  6235330010, 5463133934  |  -12.38% |
+  total waittime by tasks on this processor (in jiffies)           :  8349785693, 5755097654  |  -31.07% |  (  133.91,     105.34 )
+  total timeslices run on this cpu                                 :      288869,     272599  |   -5.63% |
+  ----------------------------------------------------------------------------------------------------
+
+Below is the sample of domain stats diff:
+
+  ----------------------------------------------------------------------------------------------------
+  CPU 0, DOMAIN SMT CPUS <0, 64>
+  ----------------------------------------------------------------------------------------------------
+  DESC                                                                    COUNT1      COUNT2  PCT_CHANGE     AVG_JIFFIES1  AVG_JIFFIES2
+  ----------------------------------------- <Category busy> ------------------------------------------
+  load_balance() count on cpu busy                                 :         154,         80  |  -48.05% |  $       13.05,       25.01 $
+  load_balance() found balanced on cpu busy                        :         120,         66  |  -45.00% |  $       16.74,       30.32 $
+  load_balance() move task failed on cpu busy                      :           0,          4  |    0.00% |  $        0.00,      500.25 $
+  imbalance sum on cpu busy                                        :        1640,        299  |  -81.77% |
+  pull_task() count on cpu busy                                    :          55,         18  |  -67.27% |
+  pull_task() when target task was cache-hot on cpu busy           :           0,          0  |    0.00% |
+  load_balance() failed to find busier queue on cpu busy           :           0,          0  |    0.00% |  $        0.00,        0.00 $
+  load_balance() failed to find busier group on cpu busy           :         120,         66  |  -45.00% |  $       16.74,       30.32 $
+  *load_balance() success count on cpu busy                        :          34,         10  |  -70.59% |
+  *avg task pulled per successful lb attempt (cpu busy)            :        1.62,       1.80  |   11.27% |
+  ----------------------------------------- <Category idle> ------------------------------------------
+  load_balance() count on cpu idle                                 :         299,        481  |   60.87% |  $        6.72,        4.16 $
+  load_balance() found balanced on cpu idle                        :         197,        331  |   68.02% |  $       10.20,        6.05 $
+  load_balance() move task failed on cpu idle                      :           1,          2  |  100.00% |  $     2009.00,     1000.50 $
+  imbalance sum on cpu idle                                        :         145,        222  |   53.10% |
+  pull_task() count on cpu idle                                    :         133,        199  |   49.62% |
+  pull_task() when target task was cache-hot on cpu idle           :           0,          0  |    0.00% |
+  load_balance() failed to find busier queue on cpu idle           :           0,          0  |    0.00% |  $        0.00,        0.00 $
+  load_balance() failed to find busier group on cpu idle           :         197,        331  |   68.02% |  $       10.20,        6.05 $
+  *load_balance() success count on cpu idle                        :         101,        148  |   46.53% |
+  *avg task pulled per successful lb attempt (cpu idle)            :        1.32,       1.34  |    2.11% |
+  ---------------------------------------- <Category newidle> ----------------------------------------
+  load_balance() count on cpu newly idle                           :       21791,      15976  |  -26.69% |  $        0.09,        0.13 $
+  load_balance() found balanced on cpu newly idle                  :       16226,      12125  |  -25.27% |  $        0.12,        0.17 $
+  load_balance() move task failed on cpu newly idle                :         236,         88  |  -62.71% |  $        8.51,       22.74 $
+  imbalance sum on cpu newly idle                                  :        6655,       4628  |  -30.46% |
+  pull_task() count on cpu newly idle                              :        5329,       3763  |  -29.39% |
+  pull_task() when target task was cache-hot on cpu newly idle     :           0,          0  |    0.00% |
+  load_balance() failed to find busier queue on cpu newly idle     :           0,          0  |    0.00% |  $        0.00,        0.00 $
+  load_balance() failed to find busier group on cpu newly idle     :       12649,       9914  |  -21.62% |  $        0.16,        0.20 $
+  *load_balance() success count on cpu newly idle                  :        5329,       3763  |  -29.39% |
+  *avg task pulled per successful lb attempt (cpu newly idle)      :        1.00,       1.00  |    0.00% |
+  --------------------------------- <Category active_load_balance()> ---------------------------------
+  active_load_balance() count                                      :           0,          0  |    0.00% |
+  active_load_balance() move task failed                           :           0,          0  |    0.00% |
+  active_load_balance() successfully moved a task                  :           0,          0  |    0.00% |
+  --------------------------------- <Category sched_balance_exec()> ----------------------------------
+  sbe_count is not used                                            :           0,          0  |    0.00% |
+  sbe_balanced is not used                                         :           0,          0  |    0.00% |
+  sbe_pushed is not used                                           :           0,          0  |    0.00% |
+  --------------------------------- <Category sched_balance_fork()> ----------------------------------
+  sbf_count is not used                                            :           0,          0  |    0.00% |
+  sbf_balanced is not used                                         :           0,          0  |    0.00% |
+  sbf_pushed is not used                                           :           0,          0  |    0.00% |
+  ------------------------------------------ <Wakeup Info> -------------------------------------------
+  try_to_wake_up() awoke a task that last ran on a diff cpu        :       16606,      10214  |  -38.49% |
+  try_to_wake_up() moved task because cache-cold on own cpu        :        3184,       2534  |  -20.41% |
+  try_to_wake_up() started passive balancing                       :           0,          0  |    0.00% |
+  ----------------------------------------------------------------------------------------------------
+
+v1: https://lore.kernel.org/lkml/20240916164722.1838-1-ravi.bangoria@amd.com
+v1->v2
+ - Add the support for `perf sched stats diff`
+ - Add column header in report for better readability. Use
+   procfs__mountpoint for consistency. Add hint for enabling
+   CONFIG_SCHEDSTAT if disabled. [James Clark]
+ - Use a single header file for both cpu and domain fileds. Change
+   the layout of structs to minimise the padding. I tried changing
+   `v15` to `15` in the header files but it was not giving any
+   benefits so drop the idea. [Namhyung Kim]
+ - Add tested-by.
+
+RFC: https://lore.kernel.org/r/20240508060427.417-1-ravi.bangoria@amd.com
+RFC->v1:
+ - [Kernel] Print domain name along with domain number in /proc/schedstat
+   file.
+ - s/schedstat/stats/ for the subcommand.
+ - Record domain name and cpumask details, also show them in report.
+ - Add CPU filtering capability at record and report time.
+ - Add /proc/schedstat v16 support.
+ - Live mode support. Similar to perf stat command, live mode prints the
+   sched stats on the stdout.
+ - Add pager support in `perf sched stats report` for better scrolling.
+ - Some minor cosmetic changes in report output to improve readability.
+ - Rebase to latest perf-tools-next/perf-tools-next (1de5b5dcb835).
+
+TODO:
+ - Add perf unit tests to test basic sched stats functionalities
+ - Describe new tool, it's usage and interpretation of report data in the
+   perf-sched man page.
+ - perf sched stats records /proc/schedstat which is a CPU and domain
+   level scheduler statistic. We are planning to add taskstat tool which
+   reads task stats from procfs and generate scheduler statistic report
+   at task granularity. this will probably a standalone tool, something
+   like `perf sched taskstat record/report`.
+ - Except pre-processor related checkpatch warnings, we have addressed
+   most of the other possible warnings.
+
+Patches are prepared on v6.12 (adc218676eef).
+
+[1] https://youtu.be/lg-9aG2ajA0?t=283
+[2] https://github.com/AMDESE/sched-scoreboard
+[3] https://lore.kernel.org/lkml/c50bdbfe-02ce-c1bc-c761-c95f8e216ca0@amd.com/
+[4] https://lore.kernel.org/lkml/3e32bec6-5e59-c66a-7676-7d15df2c961c@amd.com/
+
+
+K Prateek Nayak (1):
+  sched/stats: Print domain name in /proc/schedstat
+
+Swapnil Sapkal (5):
+  perf sched stats: Add record and rawdump support
+  perf sched stats: Add schedstat v16 support
+  perf sched stats: Add support for report subcommand
+  perf sched stats: Add support for live mode
+  perf sched stats: Add support for diff subcommand
+
+ Documentation/scheduler/sched-stats.rst     |   8 +-
+ kernel/sched/stats.c                        |   6 +-
+ tools/lib/perf/Documentation/libperf.txt    |   2 +
+ tools/lib/perf/Makefile                     |   2 +-
+ tools/lib/perf/include/perf/event.h         |  56 ++
+ tools/lib/perf/include/perf/schedstat-v15.h | 142 +++
+ tools/lib/perf/include/perf/schedstat-v16.h | 143 +++
+ tools/perf/builtin-inject.c                 |   2 +
+ tools/perf/builtin-sched.c                  | 965 +++++++++++++++++++-
+ tools/perf/util/event.c                     | 104 +++
+ tools/perf/util/event.h                     |   2 +
+ tools/perf/util/session.c                   |  20 +
+ tools/perf/util/synthetic-events.c          | 256 ++++++
+ tools/perf/util/synthetic-events.h          |   3 +
+ tools/perf/util/tool.c                      |  20 +
+ tools/perf/util/tool.h                      |   4 +-
+ 16 files changed, 1729 insertions(+), 6 deletions(-)
+ create mode 100644 tools/lib/perf/include/perf/schedstat-v15.h
+ create mode 100644 tools/lib/perf/include/perf/schedstat-v16.h
+
+-- 
+2.43.0
+
