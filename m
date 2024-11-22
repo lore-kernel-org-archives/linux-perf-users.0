@@ -1,194 +1,422 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2085.outbound.protection.outlook.com [40.107.100.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE52230999;
-	Fri, 22 Nov 2024 06:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732257280; cv=fail; b=nf0Zkg2MBqqw5juFVzs57US5LYwmQy36w8a0xyU58wv2unoKKtyUtdJRQ/E2eE6nveUA84A8DXsHo6VA8tlvsEENyH5W8urHuvVQvxClwuYotEdjUxQm0XI30BW/4a0sumHllQmajzdOvZm5qUUjiwiSu1sAQbzEOR3XHU2LSCI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732257280; c=relaxed/simple;
-	bh=8r7D2zJTGUXrI+q9fI3k5pLm+Cw4xTgKLGTs0ERKgX0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TPJnLUNKEIdOUrURS8fzer2VxkJgTejYqB7xPcTfUhJofEx9TjHDWPgcpRW8YhDlkkGOFhEY4ObMas5n6Npn3FLh1rZ0ddGd5IMolDy0Eo/vPe/K5GTgKR7HHhlgFeub5WveHH2FIap9cKZ2gZ/dEAUUfzc5jnz4VIsFfV92Rvk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Nt6KiKZD; arc=fail smtp.client-ip=40.107.100.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB69D165F17
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Nov 2024 06:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732258799; cv=none; b=rjn75XEbA23GvCV60RgTKJLFTdvRUuqwrwq+MP+SNU7Slk1rteAP20CiH8D8ooGt3zhbOPUva660QnsUf3YYi2MxFpcSGTStPbI/8c2xlh4jg61BaIB9vk2ojyrk19EI9ZOBZ77Og/YpdNGJnGZLPiJoBlBW19QidVWaeoOQ2hs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732258799; c=relaxed/simple;
+	bh=WkpwOMRy/XgsMV9wQ7PG8nx+9yo8XnDPBxdg7rRQrU0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oCxrYnKCxC9O8abr+0DYWMAvBKKZBVNpiUm/eaLB2CfrvMmI3RuGURqJIAZNe9ZyRGB5Goptv86vQuSJqxgJC3OLSpcth3MaZShzkldoAbW+1kW45GUyMjF9ezdQT2HeTMjym6eA93Qxgm541/Zy4aW2RbyB8F0r3jgs0Y1P0IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3sZ+fdNo; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Nt6KiKZD"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ep8aXgkLXmdcKKm5N/Pf+dC3VL0xI9nA9lUb9kcTI1PGnpIEwJr45FJDD0Ds7lrweCdxIv7So9RFbEmjjnM9in+NraAyL8VJWTFGy5I4YjQoTQN6nv0uoF2/yuHC95CeEHCnNzhQuB1QrI0FWPl25a88XTlYaeJo3SCMVFFJVYhlRPZ85mvqnB4aDPsiYhAu7aS9UMszhP/i+pw1u5plZp5hWSeJ3PY3K5CkMZPOcJiQDZFto8qUP43JBL40sDhyXSnGN2bKuX0HSBrePzH6YSt1t5kl21RDIz84tPZaFzamjL4WIUrrO+32A517zIK7nBkIWQsj10KHPgaqNJiPfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S/kUfXb+yd04MHWtqX+SGtfRkM/ZjIhVQDfYvUUiz3M=;
- b=QyQuFzAcXdNekJv6t9E773gBjtazfBksy4sDtb4/GMULhENBMQ/5hozcJskoCdFkhIdRicOgPoaYcQ+/BBVIx/L9Gf0Od/No5sjL1Te4YuvvRUDFp2YKz4EGA7w93LEPj7X+yOAcu5j/R97mSM/ZBWNugTKgekvZmIBncVdfEmjXz/BQey9j3ZyMXFz+qqFYXWiQWb1qkhEng5GleGYkI/elabgIq9hOgcnRa6GuDk76Ex/rlFYuR5is1qNRqr9E+5AMAP6a3iupcy5zA65jT4QrF0M/QBosK5/V0jWA8l6Ki4eLPiQR1UhyAfQGhUHmvVmBBBszu5hN7P6ITngXzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S/kUfXb+yd04MHWtqX+SGtfRkM/ZjIhVQDfYvUUiz3M=;
- b=Nt6KiKZDxT0zoPumwYJdgC4Cu7EcNmG0exrv/nlUrSIN2EHbOgjQ7MVOUABRNr+nm1lmEdxO8V80lRMBCs4ruRFTsr1CyBKh5IqQU4FTD0YbqKH5U2a/9TZ57nI0ryZNvAqmxQwZVsloldT0YzEBpsMVhOvr3a9idSuvSRQRmvo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
- by IA1PR12MB8466.namprd12.prod.outlook.com (2603:10b6:208:44b::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.24; Fri, 22 Nov
- 2024 06:34:35 +0000
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9%3]) with mapi id 15.20.8158.023; Fri, 22 Nov 2024
- 06:34:35 +0000
-Message-ID: <e4a2c5f3-4bd3-4ce9-a872-d9e3d7b58f54@amd.com>
-Date: Fri, 22 Nov 2024 12:04:25 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/10] Add RAPL core energy counter support for AMD
- CPUs
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, rui.zhang@intel.com, irogers@google.com,
- kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.dei,
- gautham.shenoy@amd.com, kprateek.nayak@amd.com, ravi.bangoria@amd.com,
- x86@kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241115060805.447565-1-Dhananjay.Ugwekar@amd.com>
- <20241119122021.GE2328@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-In-Reply-To: <20241119122021.GE2328@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR04CA0181.apcprd04.prod.outlook.com
- (2603:1096:4:14::19) To LV8PR12MB9207.namprd12.prod.outlook.com
- (2603:10b6:408:187::15)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3sZ+fdNo"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a781e908a7so115525ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 Nov 2024 22:59:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1732258797; x=1732863597; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=248h8jTi5EiAlVYfxE9YjppYaI7J9lpk6fDXU7wm0KY=;
+        b=3sZ+fdNoYhKchVBj7+2ZtTAWLLU6+sbLn40AbbQkNGUTMxbNf4OUAuaruGyoqwIrfJ
+         7ZTRjtAytybz9fFnKjXMyLZI8VwMTVzbnMFhdMoldpPHxVdLxNbxPj2DQlCghBMc/jCs
+         xQvBhVyhwB2zQ8fz98RZOwFrUc7opsz9Gt+Bv8uRVIPLz836ZbIiDt15SGCc25YznGlJ
+         O9xNNYTXci4NYADC19zV7Jv3LxJjHAeOzOiu5yyVJgG4qYD6ovVFXUq+8rZ1C9SWwxbl
+         M6pZu4gRHyigj8i9Gh+NQezedqmSr7vaC+pol40hrvRCpldnC0w36voRzEgv8zR0ytSN
+         oudg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732258797; x=1732863597;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=248h8jTi5EiAlVYfxE9YjppYaI7J9lpk6fDXU7wm0KY=;
+        b=juKxEsJGJEK/LzCAMnWYkdEI5P5sNO2kF1dbn8kZy+0GfWVmfnnzI/weLTnadCn/+d
+         ymI1kT174z9I41CdstrJKUDETGoZiXb6mGtsa4oJO39PKpCYHq/LtGRtR6OvdUBDoKQr
+         GEOFF7noCgb1j0RhH3/TDLDQ5qjXK/vwrYz3FF7jeE2qWPq/b9w5ljKF5gDF327ViraY
+         KKctRn5twguYodHizqpNGPHMvUWf8KDkr6vGv1dQ8IHKuA4RtGgZ7gZBPfXjiRdeE0C0
+         PuB2Uzx2JZWZjwOLkSf3u09ZREOAmYVCSwcIuQzqRXUNeEK6R2j9R+Lil9z6xqI8uhA9
+         kRTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVaFv9Uad69kCWYSWOzz0jijWAqPo1DjAiF7gm9fBeT14S7QZGqnl8JSDxYyB2JNa5q6b14TEiEsdtHsDikQLgE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUoK2b/hUyoIXFrEIR5UHaOU3qReAk4aQKuC647GBAzD9+ZbHZ
+	XE+1twHJ41VSVyq5VJ0X48nJ82gnJlpBcx/V4G4jULlcsRqSqeT9auhO9WaS0VArL41PhvUK3cv
+	JUPYSb+fbO+h3qCX8rcYbcGWPUC2d+NN3zxd0
+X-Gm-Gg: ASbGncuwTM3as8PZDrhnb2UNFxyit0V0n6S6o2qGnZNqY3KuzI51Flv28NeQHtOd8tf
+	chcMKSctLsbtWXwmG8KYa4T3TERDfNU4Z
+X-Google-Smtp-Source: AGHT+IFoL6sO8RkBSx3tj9bnAuVMZ+2/WNdHfooynGlQqT5wLOvDeSC88aSPZxscC8i+J6SjdUYzf2sEU5Q9wW8agyQ=
+X-Received: by 2002:a05:6e02:3708:b0:3a7:75b2:1f9e with SMTP id
+ e9e14a558f8ab-3a79b20ca02mr2668165ab.8.1732258796748; Thu, 21 Nov 2024
+ 22:59:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|IA1PR12MB8466:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6e3a167a-6d6d-4dfb-4dc8-08dd0abfbb2c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Ujc5N3d5SzBOUWluR1M0ZEZyNEl3UDVPS3J5Vkx0QnZROXNFRTR5RXFwWitR?=
- =?utf-8?B?WTNack03THNJdjlxUDlONEJiVUFOVDFWZmdNQnlEUUtPKytSUjFDbXNQTEpG?=
- =?utf-8?B?K3F2MWJIZGRUVTlEUTgrTTBpNGUvSHhDMjVEeGtyUktWcUFXVUI2aDQ5ZytQ?=
- =?utf-8?B?a3kyNmdwWGJyeTBvQUxENHZXUldJbVpmTGlUSThJWEpFaWpPdTZWUEFkZnpr?=
- =?utf-8?B?U1hycnFjQ092MURESjFXRFdiQXBXTE5TN0JGWThVNGhYSnFWSGhTRFkxYkFY?=
- =?utf-8?B?ZE5mc2dwc0xSYzR3VEJRY1QwQjIwbEkzSWwzRVNLQWVnbUQ5akhyYWh4ZUFN?=
- =?utf-8?B?UEl2bzdLN28rczl3MEN4UjBBUmV3cllQaGRMaUtzT0tKZDYrU2phelJEdVhF?=
- =?utf-8?B?MzYzVEhXQVUxNkFmeTZQNjlEYUdqOVUxalpmN21lZ0VqZGdpNTNVV2dBNnda?=
- =?utf-8?B?Mk9ZU1ppNEJSYnRRbzVIMXhoellkK3ZLQzNwc0ZnbGlmRFVBd2V2WFRJTHdm?=
- =?utf-8?B?dDQxazlyTzlhVXVjUXdla2wybW5uZHRGQ0t6WUVwWFRwNVZBNC9SeCs1UDlz?=
- =?utf-8?B?SndUWHlnMU5oRmR3WitTbk13ZnVoN0JSeE56dittSHU0RGwxU293YzQzUUNQ?=
- =?utf-8?B?Q2hIdlF4UFF6N0phVm5hTjB5ZHJ6cnFPNDBaTlN0Szl1VDBvS2E0bm43N3RG?=
- =?utf-8?B?c29jS1BUZG9uT3VFTkVwZ2xSZmhwM09LV1NsODZaSXp1djhISXlSYnlxd1Mr?=
- =?utf-8?B?WUJOSEVQZVBOY0o2cGVSb1pCdTgzUERyeHdZcVhHcHBlRlZKMlNSa3FWcENV?=
- =?utf-8?B?NW5UWW1hbG9iaWRlOXBOVm9DelozeGpaWFFMYkF4Z3B5d0Fwekp3R3JsQTU3?=
- =?utf-8?B?UHFmQlcwbyt4Ny8za0QvSHpDSVRMRy9mZDRJQmpxdC95NDlSSEpmUFc2S3g3?=
- =?utf-8?B?YWh5NWltWHM5WjNpbVBTYWs2S0k3dElGYjBuaHhKdXJOYk1aK1l5dkFsbVI5?=
- =?utf-8?B?T2RkUnptbmpQZlA0MEhDZUJvOCtVZXJGVHZOQlpmNHB0UCszVmpnUWF6UDlp?=
- =?utf-8?B?QTQwa1hyOWd2OTBMMVFxYzhpR0dPQVpMbklPQ3F3aitqNEdHaW52bStvNnA1?=
- =?utf-8?B?WHNOMkVJdnNMSktzWTh3SHBGZVZmZXkvZDVCOS9vQ1NOZnhkSmFRZTZSNXBF?=
- =?utf-8?B?NkM5MGRrUkJkeWtCWkhzRlNXb09JNUNzSCt1a1J6cTkwbzBKR3J2ZjAzMWhC?=
- =?utf-8?B?M2paMVlocnlqMTNuejVRdzNkaW5CZ2NTcU5FQUFTcWh3V2RlUkJhV01PL3Ro?=
- =?utf-8?B?ampZMzU2UmE1aG9WTm1NaHJGMHF3VTQwOEdOKzRRRXJ1Q2NCTzUrRFZROWl2?=
- =?utf-8?B?Z3BsanpGdE1hSnFDZFBvbjRPM1F3dVBvMHQ5RWhnT1NhVXo0VnExVURFZ3VL?=
- =?utf-8?B?bzh2bVJUaUwxcHJWUXpmTHZuTURSN1NQL1RhVVU4eUlSRGpHbDd0NjYrdUo2?=
- =?utf-8?B?TlJjYVpBMGthZld3OWhsK1hKMTI1TkxKNFJacXJjelRYNFAzc2pTQk81amF3?=
- =?utf-8?B?MW12TE1nYUtuZ2F2bkEra1pTQnpjSjBoUHRjYmN0YUVsYk1BUnRRbVNOOVg1?=
- =?utf-8?B?c3JPSmhURmZBSENCOWExaGU0YzZVd2ltYjEzS1dpLzdmS0h2d3g4R2xQNW0v?=
- =?utf-8?B?VTN1ZEJ5Z3NocDFpOWNPQlg3d0xLR01WRXpNMHhSM1RhMFlkZXU5d25ZK3da?=
- =?utf-8?B?UFB3MDFDa3RKcG5SMCtPNVRJOFZqNnFHRnlRZ005WmxtNHBibk5QVjlFSHFE?=
- =?utf-8?B?dXdGc1d2WXZzaXRNUEFrZz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R09zZ3pUTEM4QXRzMnlpOHpNYmlEcFJIb20xR1lDYjluOTJ0UDRhdWsvUVJl?=
- =?utf-8?B?S2xCeHYyRVozRkQrSEpHRnlLYzFwNUFUeUkxVGtaclVHWllFOXNGV2p3aFRU?=
- =?utf-8?B?VlJEbEZGUStYajB2NGtTYm5KNUx0U2ZRb0hYbUUzdWtKUkdSQ05pS2xBbGtj?=
- =?utf-8?B?UGt5emM4bVV1eUVkWCtqc0RVdVZIN1NhdVV5TWUvTURSaHJjalY0dEZ1bStL?=
- =?utf-8?B?dFlDV3A5R3JUanhIL05qOHJDbE8zbjhRZ3BoRWc0T3RXeUZiUFNqTy8zNUd5?=
- =?utf-8?B?RlBUUWMyWHcwaU9Rb2lPNkVTTyt1dFRuYVBURHdWNTlxYndiR1Z1ZTBreWUy?=
- =?utf-8?B?MWJMZm1sMld3YVJiNXdmaEgwTjZaMjNYUFVYZUllUnBIR1llYlUwNXVSRkpV?=
- =?utf-8?B?Qkk1OEVCNVZqajh4WUZMdHN4WndlSDR5UFEyTjFrOU1lcUhtWm5vVEdtQUwr?=
- =?utf-8?B?UXBpM0g0VU9NZCtXOVNvN3NMdDhoQUhja2M5YlJGcE1tblI5ZGhzVGNPdkNL?=
- =?utf-8?B?cDQxd2s2SXlEVUZKcm1vVWVhdk1WcGx4WlIxQytHZ05lczZoUVdOWXU4bENa?=
- =?utf-8?B?ZGlZQ3l4dVBrdVk2V3ZXd1UvaGJwTittUVZsRzFCSFlrMXJZWDByaFZuV3Zs?=
- =?utf-8?B?ZDh6YWcrWVBsQXBGZkl1MVdHV3pvcVhoOXJrN01SZjV5U3AyVTM3RkVzcmNp?=
- =?utf-8?B?cncwcHNBOUtFMlRDMXhpSnZMcVRiWXcrTEJhM3k5R0ljc21ORWRFcEFtRGwz?=
- =?utf-8?B?VEFITk4rU05GS0V2Um9OalZHdjlEdlBKeU5UUWRRbi9XeUY0TGJvSCt2SnRR?=
- =?utf-8?B?MGs5cHVOYXlqODlmc2FES3BiU1NxT2lxQ2N6eEZtSDdqdkNuMlpoOFkxK2sr?=
- =?utf-8?B?ZyszdjgxMlRDRHFZT0F6WC9EMlZmdEVxZWsyTUxVV3J3cmR6V25mcGc5RUFs?=
- =?utf-8?B?Z1o1a1FXY1BZYjhLeWNpb2NGQ0ozVk9VcVRGYlo2YmlZMy9ySHJpNGE3RG9Y?=
- =?utf-8?B?aEI0UytoT0R6VVRXWTJGcWdMNWp2ZFQ3NmxVWlRLZitQaVBiQjF3VXlYZkEv?=
- =?utf-8?B?akcwQkcrbzRvR0pIZENGc0wrSHZicENtK2c1N3lEWkJoWFVKRThzRlBOZkw3?=
- =?utf-8?B?Mmd6UUt1aFBleDhwdHRibllLRDlxd01Sc25ZMnVsVVdNVDFZRXlkTHEwek9u?=
- =?utf-8?B?aEtjNkNlR05sSncra29PYUJmK2tHTEhOL09BZ0czSG9xRDNabXN6VFNkN2dX?=
- =?utf-8?B?Mm0ra2VSeENXNk5lMCtWZEhaVFRKUXI3K09aRU51bGsyRVFYUC9WckQraVZw?=
- =?utf-8?B?WDJObGhZUE1rN01kRWdla216dzU4TUZOUGM0UjlzNUlnOTdOZzZpT0NtdjJ6?=
- =?utf-8?B?OVJrZ0ROWkxCaytwYTVBSThJMk9UcExVQWRzRkJvaE5KOThIMGZkUDIxL0Zj?=
- =?utf-8?B?cEFWSU1VSC9NNENIdE5UUnZ5d0V6NTBOdmlVbWtXS1gzaG82RTJxWVdORjlL?=
- =?utf-8?B?Wlh6TjgwUTAwdTZkWDZHWmt3NXJoOTZ2Mnk5cHBSeGNTMTBSUExlTEJoSUZN?=
- =?utf-8?B?dHJaNWlUOGZWUUVXa3JhQTJmcmk3YVd2aEwrQUNEcTFkdWJ0RndiSzhFeDRS?=
- =?utf-8?B?aTZ5b1pUU0NIU1k4U1k1dGxxam1WZWJmZmNNSUVtb0czdHNlTUp6SGZKcXp5?=
- =?utf-8?B?Unc4YnEyNUJuNEROV0xJU2g1Q2xnK2xuRUF1WjBvd0dRM3AvbTMxVkFJUXVB?=
- =?utf-8?B?cFNtLzhQSVE3UTFpd1dOSXRUMEZWNnJCbS9BWWloc0kzOTFlMlQ1ZVNVb0VY?=
- =?utf-8?B?KzJTeUpjREhnZ0pjaWEyeWtrREpQMjBEUWpPOWs2Zk9Zc0pTZjJnYmRsYVY1?=
- =?utf-8?B?eUtEY2g3d2tKMzl3WVhLUmlCVHhZNi9jYjRPcWY5eFpNcWNGL3VxYmRvb2xU?=
- =?utf-8?B?ZXplb1Z5UW90Q01JRndMZXFEbTYrZnM2MHNQSkJNeWpYOTBDbTVhRXpGZU14?=
- =?utf-8?B?ODQ4ZnJhcnVHQU91UHRJSHk4bzZaY1dxd1ZkOVM4ZDg3ZVlnY283S21FN3pw?=
- =?utf-8?B?a0thU3pTK3R2RFNUMzdBeUdlR2ljQnRpL2xQMHpERS9tNG9VK3FwcVQydmlp?=
- =?utf-8?Q?GbfHYkC8MLcCJqA6PaD740EiG?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e3a167a-6d6d-4dfb-4dc8-08dd0abfbb2c
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2024 06:34:35.5300
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: I5465NhD/BSMojWbVefSNBVZEQLgmDRSZqNsRiWSoWFrlRmLUmL/BrfL1V5U/vCKr8mowe86O9h8DIdHq7laYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8466
+References: <20241121000955.536930-1-irogers@google.com> <Zz9oKR3goFPP9_a9@x1>
+ <Zz9sbNAuRsYjclAi@x1> <CAP-5=fXAitSZuRPppAjH=38Ua6BFyhou0sSj7xmfNakqPUQqPw@mail.gmail.com>
+ <Zz-e4fMLIJmufgyl@x1>
+In-Reply-To: <Zz-e4fMLIJmufgyl@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 21 Nov 2024 22:59:45 -0800
+Message-ID: <CAP-5=fWE7VhNWm4Vo2EngQ3is7arfMq-m4MJEJZBGjd1p3m5Qg@mail.gmail.com>
+Subject: Re: [PATCH v1] perf tests: Fix hwmon parsing with PMU name test
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/19/2024 5:50 PM, Peter Zijlstra wrote:
-> On Fri, Nov 15, 2024 at 06:07:56AM +0000, Dhananjay Ugwekar wrote:
->>
->> Dhananjay Ugwekar (9):
->>   perf/x86/rapl: Remove the unused get_rapl_pmu_cpumask() function
->>   perf/x86/rapl: Remove the cpu_to_rapl_pmu() function
->>   perf/x86/rapl: Rename rapl_pmu variables
->>   perf/x86/rapl: Make rapl_model struct global
->>   perf/x86/rapl: Add arguments to the init and cleanup functions
->>   perf/x86/rapl: Modify the generic variable names to *_pkg*
->>   perf/x86/rapl: Remove the global variable rapl_msrs
->>   perf/x86/rapl: Move the cntr_mask to rapl_pmus struct
->>   perf/x86/rapl: Add core energy counter support for AMD CPUs
->>
->> K Prateek Nayak (1):
->>   x86/topology: Introduce topology_logical_core_id()
->>
->>  Documentation/arch/x86/topology.rst   |   4 +
->>  arch/x86/events/rapl.c                | 414 ++++++++++++++++----------
->>  arch/x86/include/asm/processor.h      |   1 +
->>  arch/x86/include/asm/topology.h       |   1 +
->>  arch/x86/kernel/cpu/debugfs.c         |   1 +
->>  arch/x86/kernel/cpu/topology_common.c |   1 +
->>  6 files changed, 272 insertions(+), 150 deletions(-)
-> 
-> Thanks, I'll stick them in a tree post -rc1.
+On Thu, Nov 21, 2024 at 12:58=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Thu, Nov 21, 2024 at 10:55:00AM -0800, Ian Rogers wrote:
+> > On Thu, Nov 21, 2024 at 9:22=E2=80=AFAM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > >
+> > > On Thu, Nov 21, 2024 at 02:04:45PM -0300, Arnaldo Carvalho de Melo wr=
+ote:
+> > > > On Wed, Nov 20, 2024 at 04:09:55PM -0800, Ian Rogers wrote:
+> > > > > Incorrectly the hwmon with PMU name test didn't pass "true". Fix =
+and
+> > > > > address issue with hwmon_pmu__config_terms needing to load events=
+ - a
+> > > > > load bearing assert fired. Also fix missing list deletion when pu=
+tting
+> > > > > the hwmon test PMU and lower some debug warnings to make the hwmo=
+n PMU
+> > > > > less spammy in verbose mode.
+> > >
+> > > > After applying this, with this series of patches on a Fedora 40 sys=
+tem,
+> > > > I get output from -v where before I needed, IIRC, to use -vv:
+> > > >
+> > > > f8244bb9bfa66f79 (HEAD -> perf-tools-next, x1/perf-tools-next) perf=
+ tests: Fix hwmon parsing with PMU name test
+> > > > 9ae6c7a4bd02acbd perf hwmon_pmu: Ensure hwmon key union is zeroed b=
+efore use
+> > > > 3e37de098af38179 perf tests hwmon_pmu: Remove double evlist__delete=
+()
+> > > > 0565017a0ac824c2 perf test: Correct hwmon test PMU detection
+> > > > 85c60a01b85ee956 (perf-tools-next/tmp.perf-tools-next, perf-tools-n=
+ext/perf-tools-next) perf: Remove unused del_perf_probe_events()
+> > > > =E2=AC=A2 [acme@toolbox perf-tools-next]$
+> > >
+> > > <SNIP>
+> > >
+> > > > root@number:~# perf test -v 11
+> > > >  11: Hwmon PMU                                                     =
+  :
+> > > >  11.1: Basic parsing test                                          =
+  : Ok
+> > > > --- start ---
+> > > > test child forked, pid 1823259
+> > > > Testing 'temp_test_hwmon_event1'
+> > > > Using CPUID GenuineIntel-6-B7-1
+> > > > FAILED tests/hwmon_pmu.c:159 failed to parse event 'temp_test_hwmon=
+_event1', err 1
+> > > > event syntax error: 'temp_test_hwmon_event1'
+> > > >                      \___ Bad event name
+> > > >
+> > > > Unable to find event on a PMU of 'temp_test_hwmon_event1'
+> > >
+> > > In gdb it fails on the first call to do_test() from the first test__h=
+wmon_pmu()
+> > >
+> > > Starting program: /root/bin/perf test -F -vv 11
+> > > [Thread debugging using libthread_db enabled]
+> > > Using host libthread_db library "/lib64/libthread_db.so.1".
+> > > --- start ---
+> > > ---- end ----
+> > >  11.1: Basic parsing test                                            =
+: Ok
+> > > --- start ---
+> > >
+> > > Breakpoint 1, test__hwmon_pmu (with_pmu=3Dfalse) at tests/hwmon_pmu.c=
+:203
+> > > 203     {
+> > > (gdb) n
+> > > 205             struct perf_pmu *pmu =3D test_pmu_get(dir, sizeof(dir=
+));
+> > > (gdb) n
+> > > 206             int ret =3D TEST_OK;
+> > > (gdb) p pmu
+> > > $2 =3D (struct perf_pmu *) 0xf50450
+> > > (gdb) p *pmu
+> > > $3 =3D {name =3D 0xf50ac0 "hwmon_a_test_hwmon_pmu", alias_name =3D 0x=
+f50aa0 "hwmon1234", id =3D 0x0, type =3D 4294902994, selectable =3D false, =
+is_core =3D false, is_uncore =3D false, auxtrace =3D false,
+> > >   formats_checked =3D false, config_masks_present =3D false, config_m=
+asks_computed =3D false, max_precise =3D 0, perf_event_attr_init_default =
+=3D 0x0, cpus =3D 0xf4fbf0, format =3D {next =3D 0xf50488,
+> > >     prev =3D 0xf50488}, aliases =3D {next =3D 0xf50498, prev =3D 0xf5=
+0498}, events_table =3D 0x0, sysfs_aliases =3D 0, cpu_json_aliases =3D 0, s=
+ys_json_aliases =3D 0, sysfs_aliases_loaded =3D false,
+> > >   cpu_aliases_added =3D false, caps_initialized =3D false, nr_caps =
+=3D 0, caps =3D {next =3D 0xf504c8, prev =3D 0xf504c8}, list =3D {next =3D =
+0xedc090 <other_pmus>, prev =3D 0xedc090 <other_pmus>},
+> > >   config_masks =3D {0, 0, 0, 0}, missing_features =3D {exclude_guest =
+=3D false, checked =3D false}, mem_events =3D 0x0}
+> >
+> > Thanks for helping, I'm not able to repro this, so extra debugging
+> > would be useful for me. Here sysfs_aliases_loaded is false as we'll
+> > load the PMU aliases when there is a request to pmu__have_event. This
+> > looks pretty ordinary.
+> >
+> > > (gdb) s
+> > > 208             if (!pmu)
+> > > (gdb) s
+> > > 211             for (size_t i =3D 0; i < ARRAY_SIZE(test_events); i++=
+) {
+> > > (gdb) s
+> > > 212                     ret =3D do_test(i, with_pmu, /*with_alias=3D*=
+/false);
+> > > (gdb) s
+> > > do_test (i=3D0, with_pmu=3Dfalse, with_alias=3Dfalse) at tests/hwmon_=
+pmu.c:136
+> > > 136     {
+> > > (gdb) n
+> > > 137             const char *test_event =3D with_alias ? test_events[i=
+].alias : test_events[i].name;
+> > > (gdb) n
+> > > 138             struct evlist *evlist =3D evlist__new();
+> > > (gdb) n
+> > > 143             bool found =3D false;
+> > > (gdb) n
+> > > 145             if (!evlist) {
+> > > (gdb) n
+> > > 150             if (with_pmu)
+> > > (gdb) n
+> > > 153                     strlcpy(str, test_event, sizeof(str));
+> > > (gdb) n
+> > > 155             pr_debug("Testing '%s'\n", str);
+> > > (gdb) p str
+> > > $4 =3D "temp_test_hwmon_event1\000\000\004\000\000\000\000\000\000\00=
+0\274\204z\000\000\000\000\000=CE=84z\000\000\000\000\000\021\000\000\000\0=
+00\000\000\000 \305\377\377\377\177\000\000=DF=84z\000\000\000\000\000\353\=
+204z\000\000\000\000\000\376\204z\000\000\000\000\000\n\205z\000\000\000\00=
+0\000\021\205z\000\000\000\000\000\035\205z\000\000\000\000\0000\205z\000\0=
+00\000\000\000<\205z\000\000\000\000"
+> > > (gdb) n
+> > > Testing 'temp_test_hwmon_event1'
+> > > 156             parse_events_error__init(&err);
+> >
+> > So there was no parse event output like the expected:
+> > ```
+> > Attempt to add: hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/
+> > ..after resolving event: hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/
+> > ```
+> > The wildcard PMU lookup will call perf_pmu__have_event trying to find
+> > a PMU with the event:
+> > ```
+> > Breakpoint 1, perf_pmu__have_event (pmu=3D0x555556157f90,
+> >    name=3D0x5555560ce470 "temp_test_hwmon_event1") at util/pmu.c:1816
+> > 1816    {
+> > (gdb) bt
+> > #0  perf_pmu__have_event (pmu=3D0x555556157f90, name=3D0x5555560ce470
+> > "temp_test_hwmon_event1")
+> >    at util/pmu.c:1816
+> > #1  0x00005555557ab143 in parse_events_multi_pmu_add
+> > (parse_state=3D0x7fffffffbf00,
+> >    event_name=3D0x5555560ce470 "temp_test_hwmon_event1", hw_config=3D10=
+,
+> > const_parsed_terms=3D0x0,
+> >    listp=3D0x7fffffffa270, loc_=3D0x7fffffffb120) at util/parse-events.=
+c:1592
+> > #2  0x00005555558108cc in parse_events_parse
+> > (_parse_state=3D0x7fffffffbf00, scanner=3D0x555556138aa0)
+> >    at util/parse-events.y:293
+> > #3  0x00005555557abdc2 in parse_events__scanner (str=3D0x7fffffffc000
+> > "temp_test_hwmon_event1",
+> >    input=3D0x0, parse_state=3D0x7fffffffbf00) at util/parse-events.c:18=
+70
+> > #4  0x00005555557ac735 in __parse_events (evlist=3D0x55555613ca40,
+> >    str=3D0x7fffffffc000 "temp_test_hwmon_event1", pmu_filter=3D0x0,
+> > err=3D0x7fffffffbff0,
+> >    fake_pmu=3Dfalse, warn_if_reordered=3Dtrue, fake_tp=3Dfalse) at
+> > util/parse-events.c:2139
+> > #5  0x00005555557448ca in parse_events (evlist=3D0x55555613ca40,
+> >    str=3D0x7fffffffc000 "temp_test_hwmon_event1", err=3D0x7fffffffbff0)
+> >    at /home/irogers/kernel.org2/tools/perf/util/parse-events.h:41
+> > #6  0x0000555555744f6e in do_test (i=3D0, with_pmu=3Dfalse,
+> > with_alias=3Dfalse) at tests/hwmon_pmu.c:156
+> > #7  0x00005555557452dd in test__hwmon_pmu (with_pmu=3Dfalse) at
+> > tests/hwmon_pmu.c:212
+> > #8  0x000055555574538d in test__hwmon_pmu_without_pmu
+> > (test=3D0x5555560a3740 <suite.hwmon_pmu>,
+> >    subtest=3D1) at tests/hwmon_pmu.c:229
+> > #9  0x00005555556fc935 in start_test (test=3D0x5555560a3740
+> > <suite.hwmon_pmu>, i=3D10, subi=3D1,
+> >    child=3D0x55555613c528, width=3D64, pass=3D1) at tests/builtin-test.=
+c:424
+> > #10 0x00005555556fd014 in __cmd_test (suites=3D0x55555613c0f0, argc=3D1=
+,
+> > argv=3D0x7fffffffd9c0,
+> >    skiplist=3D0x0) at tests/builtin-test.c:571
+> > #11 0x00005555556fdb29 in cmd_test (argc=3D1, argv=3D0x7fffffffd9c0) at
+> > tests/builtin-test.c:773
+> > #12 0x000055555568043a in run_builtin (p=3D0x55555608f950 <commands+624=
+>, argc=3D4,
+> >    argv=3D0x7fffffffd9c0) at perf.c:351
+> > #13 0x00005555556806e1 in handle_internal_command (argc=3D4,
+> > argv=3D0x7fffffffd9c0) at perf.c:404
+> > #14 0x000055555568083a in run_argv (argcp=3D0x7fffffffd7bc,
+> > argv=3D0x7fffffffd7b0) at perf.c:448
+> > #15 0x0000555555680b83 in main (argc=3D4, argv=3D0x7fffffffd9c0) at per=
+f.c:560
+> > (gdb) p pmu->name
+> > $1 =3D 0x5555560ce940 "cpu"
+> > ```
+> > Repeating this the test hwmon_a_test_hwmon_pmu test PMU should be teste=
+d:
+> > ```
+> > (gdb) c
+> > Continuing.
+> >
+> > (gdb) p pmu->name
+> > $2 =3D 0x5555560d6b20 "breakpoint"
+> > (gdb) c
+> > Continuing.
+> >
+> > Breakpoint 1, perf_pmu__have_event (pmu=3D0x555556158060,
+> >    name=3D0x5555560ce470 "temp_test_hwmon_event1") at util/pmu.c:1816
+> > 1816    {
+> > (gdb) p pmu->name
+> > $3 =3D 0x5555560d7ec0 "cstate_core"
+> > (gdb) c
+> > Continuing.
+> >
+> > Breakpoint 1, perf_pmu__have_event (pmu=3D0x555556158610,
+> >    name=3D0x5555560ce470 "temp_test_hwmon_event1") at util/pmu.c:1816
+> > 1816    {
+> > (gdb) p pmu->name
+> > $4 =3D 0x5555560c84b0 "cstate_pkg"
+> > (gdb) c
+> > Continuing.
+> >
+> > Breakpoint 1, perf_pmu__have_event (pmu=3D0x5555561360b0,
+> >    name=3D0x5555560ce470 "temp_test_hwmon_event1") at util/pmu.c:1816
+> > 1816    {
+> > (gdb) p pmu->name
+> > $5 =3D 0x5555560d46a0 "hwmon_a_test_hwmon_pmu"
+> > ```
+> > which should then go into the hwmon_pmu__have_event:
+> > ```
+> > (gdb) n
+> > 1817            if (!name)
+> > (gdb)
+> > 1819            if (perf_pmu__is_tool(pmu) && tool_pmu__skip_event(name=
+))
+> > (gdb)
+> > 1821            if (perf_pmu__is_hwmon(pmu))
+> > (gdb) n
+> > 1822                    return hwmon_pmu__have_event(pmu, name);
+> > (gdb) s
+> > hwmon_pmu__have_event (pmu=3D0x5555561360b0, name=3D0x5555560ce470
+> > "temp_test_hwmon_event1")
+> >    at util/hwmon_pmu.c:559
+> > ```
+> > hwmon_pmu__have_event should return true but it is either not getting
+> > called in your case or it is returning false. Not getting called I
+> > find hard to understand as your output shows the test PMU was created.
+> > It seems more likely reading the "events" and then doing the hashmap
+> > lookup in hwmon_pmu__have_event fails. This was failing for me with
+> > undefined behavior sanitizer because of the under initialized unions.
+> > But that should be fixed by: "perf hwmon_pmu: Ensure hwmon key union
+> > is zeroed before use". The particular event "temp_test_hwmon_event1"
+> > is going to search all events as it uses the "label" name, so that
+> > makes me think the bug is here:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/hwmon_pmu.c?h=3Dperf-tools-next#n584
+> > but I can't eye ball an issue and the test works for me even when
+> > trying to be aggressive with sanitizers. If you could help me look I'd
+> > appreciate it.
+>
+> Where is that "temp_test_hwmon_event1" added?
 
-Thanks Peter!, there was a bug reported by Peter Jung, it is fixed by a diff that 
-I posted as a reply, could you please squash the diff into the last patch of the 
-series before merging or let me know if you prefer me to post the squashed patch 
-separately.
+test_pmu_get creates the directory for the test PMU. The file
+temp1_label will be created with the contents "test hwmon event1",
+there is also a fake "input" file:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/tests/hwmon_pmu.c?h=3Dperf-tools-next#n62
+```
+{ "temp1_label", "test hwmon event1\n", },
+{ "temp1_input", "40000\n", },
+```
+So we will have an event called temp1 based on the type and number.
+Because we have a label there will be an alias of
+"temp_test_hwmon_event1" where temp is the type from the filename,
+"test_hwmon_event1" is the contents of the file "fixed" by removing
+escapes, spaces, etc. and making them underscores:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/hwmon_pmu.c?h=3Dperf-tools-next#n234
 
-Regards,
-Dhananjay
+These files are read and stored in a hashmap where the key is the
+type, so temp, and the number, so 1:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/hwmon_pmu.c?h=3Dperf-tools-next#n287
+The value associated with the key is just a bitmap saying what kinds
+of hwmon items (files) there are for this type+number as well as a
+cache of reading the file event's label file and of its "fixed" name
+to aid searching:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/hwmon_pmu.c?h=3Dperf-tools-next#n125
+The key is numeric but the failing event is a string and requires the
+whole map searching to check for presence by matching what is the name
+computed from the label file:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/hwmon_pmu.c?h=3Dperf-tools-next#n579
+
+```
+Breakpoint 1, hwmon_pmu__have_event (pmu=3D0x555556147f40,
+   name=3D0x5555560d8470 "temp_test_hwmon_event1") at util/hwmon_pmu.c:559
+559     {
+(gdb) n
+560             struct hwmon_pmu *hwm =3D container_of(pmu, struct
+hwmon_pmu, pmu);
+(gdb)
+563             union hwmon_pmu_event_key key =3D {};
+(gdb)
+567             if (!parse_hwmon_filename(name, &type, &number,
+/*item=3D*/NULL, /*is_alarm=3D*/NULL))
+(gdb)
+570             if (hwmon_pmu__read_events(hwm))
+(gdb)
+573             key.type =3D type;
+(gdb)
+574             key.num =3D number;
+(gdb)
+575             if (hashmap_find(&hwm->events, key.type_and_num,
+/*value=3D*/NULL))
+(gdb)
+577             if (key.num !=3D -1)
+(gdb)
+580             hashmap__for_each_entry((&hwm->events), cur, bkt) {
+(gdb) n
+581                     struct hwmon_pmu_event_value *value =3D cur->pvalue=
+;
+(gdb)
+583                     key.type_and_num =3D cur->key;
+(gdb)
+584                     if (key.type =3D=3D type && value->name &&
+!strcasecmp(name, value->name))
+(gdb) p value->name
+$1 =3D 0x5555560d0680 "temp_test_hwmon_event1"
+(gdb) n
+585                             return true;
+```
+The if here must be failing for you, but I fail to see why. I don't
+see the strcasecmp in your output and what we care about is why either
+the type is wrong or value->name is wrong, if you could help to log
+these it would be great.
+
+Thanks,
+Ian
