@@ -1,45 +1,46 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2051.outbound.protection.outlook.com [40.107.220.51])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2043.outbound.protection.outlook.com [40.107.223.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6638718C023;
-	Fri, 22 Nov 2024 08:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1990B18B47B;
+	Fri, 22 Nov 2024 08:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732265139; cv=fail; b=bE5ZvDvo27tlCYA6kpRxF/BOIiPVKyF84ZzZEwH52lb+S7998wGmOVlFlkD3sGp5uPPxLXbSD49dNjvEnYE5IF2OJ/iQLLX5fvxTA63BNN7IF7oVM6jyQzBAc6L5a2js51UDpRkPSIDovnJhJ8Enn92gjMHEpO82d+HP1VBNGrk=
+	t=1732265166; cv=fail; b=bG2sFJzy4G5RwDLNCy6Ad1fV/7f6X3Lxh6h6ko4MjZhDfYmpQHMWyN1uaWckl5WtLi55UkFxdFLqg+W54y5S8rq7GXXoCLoV216gnDXFB9SKcKSPz3aeLUY0E2deqidUwgyh0KI3HT/yxa9V3oIjBy9EKghdaXvbCBKecaNXOto=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732265139; c=relaxed/simple;
-	bh=eSTb0C9ZlcqJ6HBv8P+MIDz0hNgrSZqBAv+zVQITsHA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iWBRpSJLQ/h5lTJg2xvspgGVl1BE6HnJTYqx1qq7iGYGqEyq9dd09qi942qkVBL70PdSYMJuheQhbcE3PMPTVeg8eAWs1Jlk7GEG+NuZsK0p+2K9w6jIXgtNqFkHeER7tT70vpZKUnHIeO+KZOjWO6uGFojiNcWk8O/tPzPRgng=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LrGUt69L; arc=fail smtp.client-ip=40.107.220.51
+	s=arc-20240116; t=1732265166; c=relaxed/simple;
+	bh=P1nWv8z/IOls01vQg/NC6fLMvX7VZStc7AFmDwKJHEo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u058wQPzfUCbhLpqseAhz6/YdbywfPzHTbXT1Nmmc4OtcPW2fJcYoz95Iu/gdta2Dq18zmCVEvLN0016p9w/sHsBy9+gLUduGJxnJl26DP3JlzYSQKm1ZWNDFlL7GGHI/UmP+Zf9p724vA0BQvnP59AtLKdrOAEPdDCK0admF4I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bgZIEpDF; arc=fail smtp.client-ip=40.107.223.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LrGUt69L"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bgZIEpDF"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QGRyMeaDnP2qZDFzAHXGF/USs0OYs8Y7Qyf8cYskfE3RkPXfsBaYV9DlPeINzQbjb5C2F3MEqUeIGpBr/opcmG86wGxY5/c4ZPJ7ed+IzChkqsLGqhhUpCLVtUHrTOd5V9HopIuTjfneTIGssoXicvCycjhEdn/PyPdl4IQ+ymnYFr71PRAnLFK/JcEutxMUc6c2JYInave1P6tVNMsOaT2cqlIVX8ZfP4RD5dyDlvryepofIcDeQUmBqqTI/UC3grhhp7E4q0uxRuAJ4GPmH8vuY9rAL+PE8bp+updx19U3ESh/84wTq8cHR8rnKEDTQkgii8lmL+FMiNgfzFLRUQ==
+ b=PiScKEo4Y0SDitcnjZdVcNgmMcfC87m6U7XeOGGlyGDGxzUPRxevaGyvuOYPAMW7kKqy57QHomm5qPth9gN8bUQGjuSzz+d7NefjSg7gBdZlygwjWXi0NbnlLw1iZKBzRxDQRnD3Xt+LNqMfl5P/zkInMMt1N3pFEUmQ6c/4a+nMV2qWm+G7c3LeMNdyFx3LSB5QaEcaXXOf11L86RH3WZuRgzQJjCEMzhA2IiXaQ7jy+JsQJwIACAYlTwJD4/E8yzzgdlKSa6+6eZOKHFTB2mVKcXgdZ0aSq9l5wRd8qgS3mi3JF6tnkHDJjSPpshgAGIV/4DNWJNONM3ogB3yOtA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5gVdS3aKNaUOSU0Pnfksx2ESQI5SfeDcqiJMBzYuTrs=;
- b=adS7/aO/jKgKmIudYy2cL7f8UpVKI9JwSA09WhvUb9R74yShqx6ul0ny4Qe+ruqSE07LSHOcAIm6NNX1LS8JhzsmqtbNWfFhvvXSLTTarpNbOD9HC/chmwgbPXbcSUZ4USPMQKT4YSLGQM2XiNfwaGfCBjaKIlPWJqCT6oz3NkW7yqHFOoIO4xDR9WfHfqMMDZOYileYXr9tTnjwBM4xrgC/ldEowWLLRaKfwjjeYs3WM1YESUHfJbfecGD76LuNZ0Gdr5WKF66bC6KvmtBjb2k5uJM3b9h6c5Vrn36mGttlxGMl0+l/cDvZm+LASLlVDR72GtOb7iJzm/DqZYQ2qA==
+ bh=2/DI0PVVpXpBtH/awXTgRanKvguZmxyb83QDf7ygUuU=;
+ b=pe1V682sw1sKBLS2LUL3Ffnxs+REyzDxv+bluXo6fgqbKHfCFHHr3grVay0b4MIL5nv5rnRwkBmwbIFaHhsciSXRwgNcLfp0JpurzjV3BrOsyx8/ZQ4eDkGIfKUK4lOuOpVcvHq1pw0eWSCAKKYPTzlRpOpwv9ZHSKyauu6PX55yhp0KTMdGvwijNJ/gTy0xXRk63jB7iYFMi4XDyMN6f5anllIJteeuZKgVyjtnYdXEtvPoZjX5NAJ9v+ebWkHpbTmHhwDMqO4OEzEa7jvSF0PhwMTOJCGOoWPlIQLsE8Xtq4ywXESWYZzmVk/5zuHYDm5aVu9gmjUhf3QMsBzLyg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.12) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5gVdS3aKNaUOSU0Pnfksx2ESQI5SfeDcqiJMBzYuTrs=;
- b=LrGUt69LnHRkxopMNsKR/ipaFs8Ei4RsSN3RhtcWjApAbidwWWVuxvI3NuxGNUSZyPCn+RiSbcPVZUMsvN9NrzdBNMGj1NBSdHsVt38V417u4Id35RsD/cOFiEuXS8WQsVBTKiSQxMKIr/Ik0ve2BXwZ2uS/vj1bnVpxSJS+re8=
-Received: from BN8PR03CA0035.namprd03.prod.outlook.com (2603:10b6:408:94::48)
- by DM6PR12MB4252.namprd12.prod.outlook.com (2603:10b6:5:211::17) with
+ bh=2/DI0PVVpXpBtH/awXTgRanKvguZmxyb83QDf7ygUuU=;
+ b=bgZIEpDF6Gnpm+KoGvTYfhYNCwPP1s2i9RKOhZhrph/DErODYXwFfnP5SPMkNxvK4kTn9Al+8UHXdqFO8AR6WqjJMh6dRR042ZvkyoKAjnFg17mD03JU0HZYiUErsd6488BX7wqOdW7fNUsLwvPEvJJZ7Df92Gq/WEz+hxMTndI=
+Received: from BN9PR03CA0466.namprd03.prod.outlook.com (2603:10b6:408:139::21)
+ by CH2PR12MB4166.namprd12.prod.outlook.com (2603:10b6:610:78::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.27; Fri, 22 Nov
- 2024 08:45:31 +0000
-Received: from BN3PEPF0000B06C.namprd21.prod.outlook.com
- (2603:10b6:408:94:cafe::d5) by BN8PR03CA0035.outlook.office365.com
- (2603:10b6:408:94::48) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8158.24 via Frontend Transport; Fri,
- 22 Nov 2024 08:45:31 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.18; Fri, 22 Nov
+ 2024 08:45:56 +0000
+Received: from BN3PEPF0000B06B.namprd21.prod.outlook.com
+ (2603:10b6:408:139:cafe::4e) by BN9PR03CA0466.outlook.office365.com
+ (2603:10b6:408:139::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8158.23 via Frontend Transport; Fri,
+ 22 Nov 2024 08:45:55 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.12)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.12 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.12; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.12) by
- BN3PEPF0000B06C.mail.protection.outlook.com (10.167.243.71) with Microsoft
+ BN3PEPF0000B06B.mail.protection.outlook.com (10.167.243.70) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8207.0 via Frontend Transport; Fri, 22 Nov 2024 08:45:31 +0000
+ 15.20.8207.0 via Frontend Transport; Fri, 22 Nov 2024 08:45:55 +0000
 Received: from tapi.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 22 Nov
- 2024 02:45:23 -0600
+ 2024 02:45:47 -0600
 From: Swapnil Sapkal <swapnil.sapkal@amd.com>
 To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 	<namhyung@kernel.org>, <irogers@google.com>, <james.clark@arm.com>
@@ -65,12 +66,14 @@ CC: <ravi.bangoria@amd.com>, <yu.c.chen@intel.com>, <mark.rutland@arm.com>,
 	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
 	<vineethr@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
 	<linux-perf-users@vger.kernel.org>, <santosh.shukla@amd.com>,
-	<ananth.narayan@amd.com>, <sandipan.das@amd.com>, Swapnil Sapkal
-	<swapnil.sapkal@amd.com>
-Subject: [PATCH v2 0/6] perf sched: Introduce stats tool
-Date: Fri, 22 Nov 2024 08:44:46 +0000
-Message-ID: <20241122084452.1064968-1-swapnil.sapkal@amd.com>
+	<ananth.narayan@amd.com>, <sandipan.das@amd.com>, James Clark
+	<james.clark@linaro.org>
+Subject: [PATCH v2 1/6] sched/stats: Print domain name in /proc/schedstat
+Date: Fri, 22 Nov 2024 08:44:47 +0000
+Message-ID: <20241122084452.1064968-2-swapnil.sapkal@amd.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241122084452.1064968-1-swapnil.sapkal@amd.com>
+References: <20241122084452.1064968-1-swapnil.sapkal@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -83,387 +86,141 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06C:EE_|DM6PR12MB4252:EE_
-X-MS-Office365-Filtering-Correlation-Id: dcef6b80-a3ce-424f-2aca-08dd0ad205e0
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06B:EE_|CH2PR12MB4166:EE_
+X-MS-Office365-Filtering-Correlation-Id: 35b6efe8-4388-43c5-d09e-08dd0ad21453
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024;
+	BCL:0;ARA:13230040|1800799024|36860700013|7416014|376014|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hm+TmkrlawDA88kczysnXlgou+GmN0kyhGrbXdmS2X2TCcO2Qg9tnxyrv+5r?=
- =?us-ascii?Q?xQ+iR9AVeQHMSq/hJPSkM4Y1LyyGkULunJF93ul9FegQ612G3vkjChMolSJj?=
- =?us-ascii?Q?H/eNPNxCcPaSLvfNAUmekS/yi8fJD4a/pqy2V2Novv6ZCKcpERmbLeeIukgH?=
- =?us-ascii?Q?GHqX75X7pRconwmiZnoJVjww23Cgr8v5OEZDqkDLrqTRH4aeD8aCMMA03q1o?=
- =?us-ascii?Q?FM7sw+5Oe2LHCQX/ioO3x/+iXckiNl3R3joNsf6pnSWJWFsAe58Iy6ywwP9A?=
- =?us-ascii?Q?bp6eUJsqb7F04aG7qD0+NyOB3frf6hjAKuIrBbsOgm7e4u6Zn4SbfSN+hptM?=
- =?us-ascii?Q?ErtPEp/AOKIemkdlBZieeOw4iGIjHTbOzm6yBJID4OD9Iz+j3o9j+PuhvsZz?=
- =?us-ascii?Q?5r+0lbo3d5d5vrXHsUCCyBgkPyvtCwJACcAk9dEv7uEzmlthrK9sGg/7sxVZ?=
- =?us-ascii?Q?F0MEKtnCcp/wWFyw1k02FmxgZ2k+Yk1VZx5HyupGtEBlCKjJZP4uRIVCLnH8?=
- =?us-ascii?Q?1rDVuWPxrKCf48xn/0FTCSc+HaCWJ9PweZJKNWPinJykOGvIlOy0uHRKzucp?=
- =?us-ascii?Q?PFAMam0KpYtcUokyHKP/6BODFU31nO6QLiFd3QohvaCvGHQg3MkppeOsQlH3?=
- =?us-ascii?Q?aoLDqWFNye3EWArGeCRgmykjXp7270CL6zluwBuxsNJ6M63qZ/Ns4VGiXGDY?=
- =?us-ascii?Q?qDuuElK4Itp6Mq8EmsC+vQiglB9kJwslZ3WofAGcqaUrT9nGd43bGshR14WL?=
- =?us-ascii?Q?/9VBkZy2D9Lm/RHyfaSe6giZtw4VJ3IRqc3DKDLDZs3tDzI9lKZoTFstFUsj?=
- =?us-ascii?Q?W740ekm8gEjyS990FH3kiGvBHjo1nzX9VHFBm34hN5qvmMYMUGIvaHUj7PRV?=
- =?us-ascii?Q?eApay0yrfLjlUouook/WyoMycBQV7pF0U9LwjUUWhQrH/z/KTMZcGb+dXaj/?=
- =?us-ascii?Q?m/FwASbBTXsc9NLLQHzBHGbo6xu5wlv/KmllsxWVjT+FNLUI6kZzNrRWR7XI?=
- =?us-ascii?Q?OFjiNIMIUzujgQG2ChT/WXmTttnpr5h9/FNQc2JJPKbeX4S+qE2HGSnYK6VJ?=
- =?us-ascii?Q?jgTGZz9g+bGY8ajrrkeZYwe42s8IJ6KKfoWseMZycXa97wukmU8JFlVzOJN0?=
- =?us-ascii?Q?QgfftJLZOj+nFzjzcVa7GPoSx3qvlcQx3htlLpEuRlCF8gS+JHCo7pfhvOFQ?=
- =?us-ascii?Q?tmtC2WKvikadRk9gLFhBBg7nMJ5ZUSfi48KUUOOsf0RqlHzbouSyUPvP8Td0?=
- =?us-ascii?Q?sQQyTb5bwNX59g45SI7AoQjt8nb9uIncu26bLCTy/ibVc8wC8w6blR7NWTzp?=
- =?us-ascii?Q?gTZNktsyuZmlPi8k2fz0YoRCU75Yo8jlYIB4KU0gck9gucZjDaMOs2V3ahH1?=
- =?us-ascii?Q?Rqg4sGw=3D?=
+	=?us-ascii?Q?aVd1jGJ9iGN4AIB0HNJW3wBaF8KCK9yHmJ5eHjKlg8iZwUXbj2ExtM+Vm4HD?=
+ =?us-ascii?Q?Et/DG4j8lpPgYtb6V70M5DpBM2Pe8FURL6MttIbNdH5Tbn+4+eP7psWX/9vo?=
+ =?us-ascii?Q?ZrWUM2xAXNtjKRM9w/NDkhQ50svw1Is+UajQ7zRos2ozDG/LFgK5OFa8AfQI?=
+ =?us-ascii?Q?hlGlkh1TKSVWSI8mgGuCRkcTAlG2gTWShZcHGqlEvEPIctuQSEXBFjgpOlXi?=
+ =?us-ascii?Q?7Y1OfShsQs1iijIOaKrwtwp4xT3gwtjPtvH9MdiiQXC20ok83cE06WZpSC1X?=
+ =?us-ascii?Q?Vlndtnc3K87l6ujnKtJ/OocU6j8Gf4kM9qJdTtyvjK3uqfXIjQhEXo0JE076?=
+ =?us-ascii?Q?xNsABEIge13Xk4kjUAVU+grPcQ98bRZ50Z6cauJXk5PjmCQdb/g99xUJ4TAB?=
+ =?us-ascii?Q?k+3C7SG8llppkfDZO4CBILJOKWVj3r6O828E6LV5jhB0m2IcVFGOHG+8C+PJ?=
+ =?us-ascii?Q?6cekDuqgj3FL+I0UZ21WnKhdxtSq2S7yEKxn4/YvRKwahRmovEbY2rP+ISkm?=
+ =?us-ascii?Q?ziNc+N2S5cHcYEgDB9h5dPJHtHHyww8DUVYCqahGrj5ODdNFVLQtnRvrDyK2?=
+ =?us-ascii?Q?asImIwKUph7LjhRgBYV9V40ar4tmCg+Gy+maRfVMPzCK9QyDOmPdk8II7ldz?=
+ =?us-ascii?Q?G0QZV/sVgYRgQHUyMh8XRRPv5JabMU49PuKYqMqJ1gcr4sfFIfVCSQnQGfkW?=
+ =?us-ascii?Q?pJILLM7pahIyRahueI/GM/8dbog+BkAv0ARz/rp5bWbPSgTTvPSizr42fnoU?=
+ =?us-ascii?Q?w4FYW1hUHGeXs0SD1928tOESfJj9d+g2y05SOkQkRZ0FpR4yLa1TilbFZqYI?=
+ =?us-ascii?Q?B+a4G20nWOmZfH0htThSz0SS3vFj216+WriYhyWNiTnqdesn0CqQqvlCNpmo?=
+ =?us-ascii?Q?mOixlEA/pIDserdV6zDucR1BEYkhYQvmyYv9a/+X/OQ33SZzXOX2aVipF6WR?=
+ =?us-ascii?Q?xquEroJCtXz5gtFVQU3A33/fFsEjx7wb3qY4UEscU6D6DvynoqDO2E3UjXPx?=
+ =?us-ascii?Q?nC/kCiUB1yQ/i3MoOJa31TL+bOOcZxspYn+gup/7ZI+rwSg3LO+XVx4mDjSi?=
+ =?us-ascii?Q?JqLMnziur3d0Q1iS2Tc9h+loSkN6oSz5RPZQhKwdSwCbUHH8PL7O3ja/xkNR?=
+ =?us-ascii?Q?4olxUQJ73nIc8mm0jgJ32h7zrXCRPXGvdL2iIJ1dQcNzdj5BlhvNylz+FbFN?=
+ =?us-ascii?Q?zcdDaAIEPET03t7fl4yGkOAHb97X4gXhS0IU3ZkPheDp0csSP18yi9yeFiLa?=
+ =?us-ascii?Q?a0fH3XEvajG4uahbj/CJs2THUk1roPArxQPxuigPPE7fEnfW7nXNgZySFACD?=
+ =?us-ascii?Q?l32wqFX6LPAIyQA9JRDp9+Xltzfe9H7rQgps9HDq4vHtYzfzRXIUYxGRFX5J?=
+ =?us-ascii?Q?cfbn+awnwu9WsxZyWCov7IC68SGLBQCttNoGjr91RigQ/UlCpQ=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.12;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:atlvpn-bp.amd.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.12;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:atlvpn-bp.amd.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(7416014)(376014)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2024 08:45:31.3840
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2024 08:45:55.6144
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcef6b80-a3ce-424f-2aca-08dd0ad205e0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35b6efe8-4388-43c5-d09e-08dd0ad21453
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.12];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B06C.namprd21.prod.outlook.com
+	BN3PEPF0000B06B.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4252
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4166
 
-MOTIVATION
-----------
+From: K Prateek Nayak <kprateek.nayak@amd.com>
 
-Existing `perf sched` is quite exhaustive and provides lot of insights
-into scheduler behavior but it quickly becomes impractical to use for
-long running or scheduler intensive workload. For ex, `perf sched record`
-has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
-on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
-generates huge 56G perf.data for which perf takes ~137 mins to prepare
-and write it to disk [1].
+Currently, there does not exist a straightforward way to extract the
+names of the sched domains and match them to the per-cpu domain entry in
+/proc/schedstat other than looking at the debugfs files which are only
+visible after enabling "verbose" debug after commit 34320745dfc9
+("sched/debug: Put sched/domains files under the verbose flag")
 
-Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
-and generates samples on a tracepoint hit, `perf sched stats record` takes
-snapshot of the /proc/schedstat file before and after the workload, i.e.
-there is almost zero interference on workload run. Also, it takes very
-minimal time to parse /proc/schedstat, convert it into perf samples and
-save those samples into perf.data file. Result perf.data file is much
-smaller. So, overall `perf sched stats record` is much more light weight
-compare to `perf sched record`.
+Since tools like `perf sched schedstat` require displaying per-domain
+information in user friendly manner, display the names of sched domain,
+alongside their level in /proc/schedstat if CONFIG_SCHED_DEBUG is enabled.
 
-We, internally at AMD, have been using this (a variant of this, known as
-"sched-scoreboard"[2]) and found it to be very useful to analyse impact
-of any scheduler code changes[3][4].
+Domain names also makes the /proc/schedstat data unambiguous when some
+of the cpus are offline. For example, on a 128 cpus AMD Zen3 machine
+where CPU0 and CPU64 are SMT siblings and CPU64 is offline:
 
-Please note that, this is not a replacement of perf sched record/report.
-The intended users of the new tool are scheduler developers, not regular
-users.
+Before:
+    cpu0 ...
+    domain0 ...
+    domain1 ...
+    cpu1 ...
+    domain0 ...
+    domain1 ...
+    domain2 ...
 
-USAGE
------
+After:
+    cpu0 ...
+    domain0:MC ...
+    domain1:PKG ...
+    cpu1 ...
+    domain0:SMT ...
+    domain1:MC ...
+    domain2:PKG ...
 
-  # perf sched stats record
-  # perf sched stats report
-  # perf sched stats diff
+schedstat version has not been updated since this change merely adds
+additional information to the domain name field and does not add a new
+field altogether.
 
-Note: Although `perf sched stats` tool supports workload profiling syntax
-(i.e. -- <workload> ), the recorded profile is still systemwide since the
-/proc/schedstat is a systemwide file.
+Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Tested-by: James Clark <james.clark@linaro.org>
+---
+ Documentation/scheduler/sched-stats.rst | 8 ++++++--
+ kernel/sched/stats.c                    | 6 +++++-
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-HOW TO INTERPRET THE REPORT
----------------------------
-
-The `perf sched stats report` starts with description of the columns
-present in the report. These column names are gievn before cpu and
-domain stats to improve the readability of the report.
-
-  ----------------------------------------------------------------------------------------------------
-  DESC                    -> Description of the field
-  COUNT                   -> Value of the field
-  PCT_CHANGE              -> Percent change with corresponding base value
-  AVG_JIFFIES             -> Avg time in jiffies between two consecutive occurrence of event
-  ----------------------------------------------------------------------------------------------------
-
-Next is the total profiling time in terms of jiffies:
-
-  ----------------------------------------------------------------------------------------------------
-  Time elapsed (in jiffies)                                   :       24537
-  ----------------------------------------------------------------------------------------------------
-
-Next is CPU scheduling statistics. These are simple diffs of
-/proc/schedstat CPU lines along with description. The report also
-prints % relative to base stat.
-
-In the example below, schedule() left the CPU0 idle 98.19% of the time.
-16.54% of total try_to_wake_up() was to wakeup local CPU. And, the total
-waittime by tasks on CPU0 is 0.49% of the total runtime by tasks on the
-same CPU.
-
-  ----------------------------------------------------------------------------------------------------
-  CPU 0
-  ----------------------------------------------------------------------------------------------------
-  DESC                                                                COUNT  PCT_CHANGE
-  ----------------------------------------------------------------------------------------------------
-  sched_yield() count                                         :           0
-  Legacy counter can be ignored                               :           0
-  schedule() called                                           :       17138
-  schedule() left the processor idle                          :       16827  (  98.19% )
-  try_to_wake_up() was called                                 :         508
-  try_to_wake_up() was called to wake up the local cpu        :          84  (  16.54% )
-  total runtime by tasks on this processor (in jiffies)       :  2408959243
-  total waittime by tasks on this processor (in jiffies)      :    11731825  (  0.49% )
-  total timeslices run on this cpu                            :         311
-  ----------------------------------------------------------------------------------------------------
-
-Next is load balancing statistics. For each of the sched domains
-(eg: `SMT`, `MC`, `DIE`...), the scheduler computes statistics under
-the following three categories:
-
-  1) Idle Load Balance: Load balancing performed on behalf of a long
-                        idling CPU by some other CPU.
-  2) Busy Load Balance: Load balancing performed when the CPU was busy.
-  3) New Idle Balance : Load balancing performed when a CPU just became
-                        idle.
-
-Under each of these three categories, sched stats report provides
-different load balancing statistics. Along with direct stats, the
-report also contains derived metrics prefixed with *. Example:
-
-  ----------------------------------------------------------------------------------------------------
-  CPU 0 DOMAIN SMT CPUS <0, 64>
-  ----------------------------------------------------------------------------------------------------
-  DESC                                                                     COUNT     AVG_JIFFIES
-  ----------------------------------------- <Category idle> ------------------------------------------
-  load_balance() count on cpu idle                                 :          50   $      490.74 $
-  load_balance() found balanced on cpu idle                        :          42   $      584.21 $
-  load_balance() move task failed on cpu idle                      :           8   $     3067.12 $
-  imbalance sum on cpu idle                                        :           8
-  pull_task() count on cpu idle                                    :           0
-  pull_task() when target task was cache-hot on cpu idle           :           0
-  load_balance() failed to find busier queue on cpu idle           :           0   $        0.00 $
-  load_balance() failed to find busier group on cpu idle           :          42   $      584.21 $
-  *load_balance() success count on cpu idle                        :           0
-  *avg task pulled per successful lb attempt (cpu idle)            :        0.00
-  ----------------------------------------- <Category busy> ------------------------------------------
-  load_balance() count on cpu busy                                 :           2   $    12268.50 $
-  load_balance() found balanced on cpu busy                        :           2   $    12268.50 $
-  load_balance() move task failed on cpu busy                      :           0   $        0.00 $
-  imbalance sum on cpu busy                                        :           0
-  pull_task() count on cpu busy                                    :           0
-  pull_task() when target task was cache-hot on cpu busy           :           0
-  load_balance() failed to find busier queue on cpu busy           :           0   $        0.00 $
-  load_balance() failed to find busier group on cpu busy           :           1   $    24537.00 $
-  *load_balance() success count on cpu busy                        :           0
-  *avg task pulled per successful lb attempt (cpu busy)            :        0.00
-  ---------------------------------------- <Category newidle> ----------------------------------------
-  load_balance() count on cpu newly idle                           :         427   $       57.46 $
-  load_balance() found balanced on cpu newly idle                  :         382   $       64.23 $
-  load_balance() move task failed on cpu newly idle                :          45   $      545.27 $
-  imbalance sum on cpu newly idle                                  :          48
-  pull_task() count on cpu newly idle                              :           0
-  pull_task() when target task was cache-hot on cpu newly idle     :           0
-  load_balance() failed to find busier queue on cpu newly idle     :           0   $        0.00 $
-  load_balance() failed to find busier group on cpu newly idle     :         382   $       64.23 $
-  *load_balance() success count on cpu newly idle                  :           0
-  *avg task pulled per successful lb attempt (cpu newly idle)      :        0.00
-  ----------------------------------------------------------------------------------------------------
-
-Consider following line:
-
-  load_balance() found balanced on cpu newly idle                  :         382    $      64.23 $
-
-While profiling was active, the load-balancer found 382 times the load
-needs to be balanced on a newly idle CPU 0. Following value encapsulated
-inside $ is average jiffies between two events (24537 / 382 = 64.23).
-
-Next are active_load_balance() stats. alb did not trigger while the
-profiling was active, hence it's all 0s.
-
-  --------------------------------- <Category active_load_balance()> ---------------------------------
-  active_load_balance() count                                      :           0
-  active_load_balance() move task failed                           :           0
-  active_load_balance() successfully moved a task                  :           0
-  ----------------------------------------------------------------------------------------------------
-
-Next are sched_balance_exec() and sched_balance_fork() stats. They are
-not used but we kept it in RFC just for legacy purpose. Unless opposed,
-we plan to remove them in next revision.
-
-Next are wakeup statistics. For every domain, the report also shows
-task-wakeup statistics. Example:
-
-  ------------------------------------------- <Wakeup Info> ------------------------------------------
-  try_to_wake_up() awoke a task that last ran on a diff cpu       :       12070
-  try_to_wake_up() moved task because cache-cold on own cpu       :        3324
-  try_to_wake_up() started passive balancing                      :           0
-  ----------------------------------------------------------------------------------------------------
-
-Same set of stats are reported for each CPU and each domain level.
-
-HOW TO INTERPRET THE DIFF
--------------------------
-
-The `perf sched stats diff` will also start with explaining the columns
-present in the diff. Then it will show the diff in time in terms of
-jiffies. The order of the values depends on the order of input data
-files. Example:
-
-  ----------------------------------------------------------------------------------------------------
-  Time elapsed (in jiffies)                                        :        2009,       2001
-  ----------------------------------------------------------------------------------------------------
-
-Below is the sample representing the difference in cpu and domain stats of
-two runs. Here third column or the values enclosed in `|...|` shows the
-percent change between the two. Second and fourth columns shows the
-side-by-side representions of the corresponding fields from `perf sched
-stats report`.
-
-  ----------------------------------------------------------------------------------------------------
-  CPU 0
-  ----------------------------------------------------------------------------------------------------
-  DESC                                                                    COUNT1      COUNT2  PCT_CHANGE  PCT_CHANGE1 PCT_CHANGE2
-  ----------------------------------------------------------------------------------------------------
-  sched_yield() count                                              :           0,          0  |    0.00% |
-  Legacy counter can be ignored                                    :           0,          0  |    0.00% |
-  schedule() called                                                :      442939,     447305  |    0.99% |
-  schedule() left the processor idle                               :      154012,     174657  |   13.40% |  (   34.77,      39.05 )
-  try_to_wake_up() was called                                      :      306810,     258076  |  -15.88% |
-  try_to_wake_up() was called to wake up the local cpu             :       21313,      14130  |  -33.70% |  (    6.95,       5.48 )
-  total runtime by tasks on this processor (in jiffies)            :  6235330010, 5463133934  |  -12.38% |
-  total waittime by tasks on this processor (in jiffies)           :  8349785693, 5755097654  |  -31.07% |  (  133.91,     105.34 )
-  total timeslices run on this cpu                                 :      288869,     272599  |   -5.63% |
-  ----------------------------------------------------------------------------------------------------
-
-Below is the sample of domain stats diff:
-
-  ----------------------------------------------------------------------------------------------------
-  CPU 0, DOMAIN SMT CPUS <0, 64>
-  ----------------------------------------------------------------------------------------------------
-  DESC                                                                    COUNT1      COUNT2  PCT_CHANGE     AVG_JIFFIES1  AVG_JIFFIES2
-  ----------------------------------------- <Category busy> ------------------------------------------
-  load_balance() count on cpu busy                                 :         154,         80  |  -48.05% |  $       13.05,       25.01 $
-  load_balance() found balanced on cpu busy                        :         120,         66  |  -45.00% |  $       16.74,       30.32 $
-  load_balance() move task failed on cpu busy                      :           0,          4  |    0.00% |  $        0.00,      500.25 $
-  imbalance sum on cpu busy                                        :        1640,        299  |  -81.77% |
-  pull_task() count on cpu busy                                    :          55,         18  |  -67.27% |
-  pull_task() when target task was cache-hot on cpu busy           :           0,          0  |    0.00% |
-  load_balance() failed to find busier queue on cpu busy           :           0,          0  |    0.00% |  $        0.00,        0.00 $
-  load_balance() failed to find busier group on cpu busy           :         120,         66  |  -45.00% |  $       16.74,       30.32 $
-  *load_balance() success count on cpu busy                        :          34,         10  |  -70.59% |
-  *avg task pulled per successful lb attempt (cpu busy)            :        1.62,       1.80  |   11.27% |
-  ----------------------------------------- <Category idle> ------------------------------------------
-  load_balance() count on cpu idle                                 :         299,        481  |   60.87% |  $        6.72,        4.16 $
-  load_balance() found balanced on cpu idle                        :         197,        331  |   68.02% |  $       10.20,        6.05 $
-  load_balance() move task failed on cpu idle                      :           1,          2  |  100.00% |  $     2009.00,     1000.50 $
-  imbalance sum on cpu idle                                        :         145,        222  |   53.10% |
-  pull_task() count on cpu idle                                    :         133,        199  |   49.62% |
-  pull_task() when target task was cache-hot on cpu idle           :           0,          0  |    0.00% |
-  load_balance() failed to find busier queue on cpu idle           :           0,          0  |    0.00% |  $        0.00,        0.00 $
-  load_balance() failed to find busier group on cpu idle           :         197,        331  |   68.02% |  $       10.20,        6.05 $
-  *load_balance() success count on cpu idle                        :         101,        148  |   46.53% |
-  *avg task pulled per successful lb attempt (cpu idle)            :        1.32,       1.34  |    2.11% |
-  ---------------------------------------- <Category newidle> ----------------------------------------
-  load_balance() count on cpu newly idle                           :       21791,      15976  |  -26.69% |  $        0.09,        0.13 $
-  load_balance() found balanced on cpu newly idle                  :       16226,      12125  |  -25.27% |  $        0.12,        0.17 $
-  load_balance() move task failed on cpu newly idle                :         236,         88  |  -62.71% |  $        8.51,       22.74 $
-  imbalance sum on cpu newly idle                                  :        6655,       4628  |  -30.46% |
-  pull_task() count on cpu newly idle                              :        5329,       3763  |  -29.39% |
-  pull_task() when target task was cache-hot on cpu newly idle     :           0,          0  |    0.00% |
-  load_balance() failed to find busier queue on cpu newly idle     :           0,          0  |    0.00% |  $        0.00,        0.00 $
-  load_balance() failed to find busier group on cpu newly idle     :       12649,       9914  |  -21.62% |  $        0.16,        0.20 $
-  *load_balance() success count on cpu newly idle                  :        5329,       3763  |  -29.39% |
-  *avg task pulled per successful lb attempt (cpu newly idle)      :        1.00,       1.00  |    0.00% |
-  --------------------------------- <Category active_load_balance()> ---------------------------------
-  active_load_balance() count                                      :           0,          0  |    0.00% |
-  active_load_balance() move task failed                           :           0,          0  |    0.00% |
-  active_load_balance() successfully moved a task                  :           0,          0  |    0.00% |
-  --------------------------------- <Category sched_balance_exec()> ----------------------------------
-  sbe_count is not used                                            :           0,          0  |    0.00% |
-  sbe_balanced is not used                                         :           0,          0  |    0.00% |
-  sbe_pushed is not used                                           :           0,          0  |    0.00% |
-  --------------------------------- <Category sched_balance_fork()> ----------------------------------
-  sbf_count is not used                                            :           0,          0  |    0.00% |
-  sbf_balanced is not used                                         :           0,          0  |    0.00% |
-  sbf_pushed is not used                                           :           0,          0  |    0.00% |
-  ------------------------------------------ <Wakeup Info> -------------------------------------------
-  try_to_wake_up() awoke a task that last ran on a diff cpu        :       16606,      10214  |  -38.49% |
-  try_to_wake_up() moved task because cache-cold on own cpu        :        3184,       2534  |  -20.41% |
-  try_to_wake_up() started passive balancing                       :           0,          0  |    0.00% |
-  ----------------------------------------------------------------------------------------------------
-
-v1: https://lore.kernel.org/lkml/20240916164722.1838-1-ravi.bangoria@amd.com
-v1->v2
- - Add the support for `perf sched stats diff`
- - Add column header in report for better readability. Use
-   procfs__mountpoint for consistency. Add hint for enabling
-   CONFIG_SCHEDSTAT if disabled. [James Clark]
- - Use a single header file for both cpu and domain fileds. Change
-   the layout of structs to minimise the padding. I tried changing
-   `v15` to `15` in the header files but it was not giving any
-   benefits so drop the idea. [Namhyung Kim]
- - Add tested-by.
-
-RFC: https://lore.kernel.org/r/20240508060427.417-1-ravi.bangoria@amd.com
-RFC->v1:
- - [Kernel] Print domain name along with domain number in /proc/schedstat
-   file.
- - s/schedstat/stats/ for the subcommand.
- - Record domain name and cpumask details, also show them in report.
- - Add CPU filtering capability at record and report time.
- - Add /proc/schedstat v16 support.
- - Live mode support. Similar to perf stat command, live mode prints the
-   sched stats on the stdout.
- - Add pager support in `perf sched stats report` for better scrolling.
- - Some minor cosmetic changes in report output to improve readability.
- - Rebase to latest perf-tools-next/perf-tools-next (1de5b5dcb835).
-
-TODO:
- - Add perf unit tests to test basic sched stats functionalities
- - Describe new tool, it's usage and interpretation of report data in the
-   perf-sched man page.
- - perf sched stats records /proc/schedstat which is a CPU and domain
-   level scheduler statistic. We are planning to add taskstat tool which
-   reads task stats from procfs and generate scheduler statistic report
-   at task granularity. this will probably a standalone tool, something
-   like `perf sched taskstat record/report`.
- - Except pre-processor related checkpatch warnings, we have addressed
-   most of the other possible warnings.
-
-Patches are prepared on v6.12 (adc218676eef).
-
-[1] https://youtu.be/lg-9aG2ajA0?t=283
-[2] https://github.com/AMDESE/sched-scoreboard
-[3] https://lore.kernel.org/lkml/c50bdbfe-02ce-c1bc-c761-c95f8e216ca0@amd.com/
-[4] https://lore.kernel.org/lkml/3e32bec6-5e59-c66a-7676-7d15df2c961c@amd.com/
-
-
-K Prateek Nayak (1):
-  sched/stats: Print domain name in /proc/schedstat
-
-Swapnil Sapkal (5):
-  perf sched stats: Add record and rawdump support
-  perf sched stats: Add schedstat v16 support
-  perf sched stats: Add support for report subcommand
-  perf sched stats: Add support for live mode
-  perf sched stats: Add support for diff subcommand
-
- Documentation/scheduler/sched-stats.rst     |   8 +-
- kernel/sched/stats.c                        |   6 +-
- tools/lib/perf/Documentation/libperf.txt    |   2 +
- tools/lib/perf/Makefile                     |   2 +-
- tools/lib/perf/include/perf/event.h         |  56 ++
- tools/lib/perf/include/perf/schedstat-v15.h | 142 +++
- tools/lib/perf/include/perf/schedstat-v16.h | 143 +++
- tools/perf/builtin-inject.c                 |   2 +
- tools/perf/builtin-sched.c                  | 965 +++++++++++++++++++-
- tools/perf/util/event.c                     | 104 +++
- tools/perf/util/event.h                     |   2 +
- tools/perf/util/session.c                   |  20 +
- tools/perf/util/synthetic-events.c          | 256 ++++++
- tools/perf/util/synthetic-events.h          |   3 +
- tools/perf/util/tool.c                      |  20 +
- tools/perf/util/tool.h                      |   4 +-
- 16 files changed, 1729 insertions(+), 6 deletions(-)
- create mode 100644 tools/lib/perf/include/perf/schedstat-v15.h
- create mode 100644 tools/lib/perf/include/perf/schedstat-v16.h
-
+diff --git a/Documentation/scheduler/sched-stats.rst b/Documentation/scheduler/sched-stats.rst
+index 7c2b16c4729d..b60a3e7bc108 100644
+--- a/Documentation/scheduler/sched-stats.rst
++++ b/Documentation/scheduler/sched-stats.rst
+@@ -6,6 +6,8 @@ Version 16 of schedstats changed the order of definitions within
+ 'enum cpu_idle_type', which changed the order of [CPU_MAX_IDLE_TYPES]
+ columns in show_schedstat(). In particular the position of CPU_IDLE
+ and __CPU_NOT_IDLE changed places. The size of the array is unchanged.
++With CONFIG_SCHED_DEBUG enabled, the domain field can also print the
++name of the corresponding sched domain.
+ 
+ Version 15 of schedstats dropped counters for some sched_yield:
+ yld_exp_empty, yld_act_empty and yld_both_empty. Otherwise, it is
+@@ -71,9 +73,11 @@ Domain statistics
+ -----------------
+ One of these is produced per domain for each cpu described. (Note that if
+ CONFIG_SMP is not defined, *no* domains are utilized and these lines
+-will not appear in the output.)
++will not appear in the output. [:<name>] is an optional extension to the domain
++field that prints the name of the corresponding sched domain. It can appear in
++schedstat version 16 and above, and requires CONFIG_SCHED_DEBUG.)
+ 
+-domain<N> <cpumask> 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36
++domain<N>[:<name>] <cpumask> 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36
+ 
+ The first field is a bit mask indicating what cpus this domain operates over.
+ 
+diff --git a/kernel/sched/stats.c b/kernel/sched/stats.c
+index eb0cdcd4d921..bd4ed737e894 100644
+--- a/kernel/sched/stats.c
++++ b/kernel/sched/stats.c
+@@ -138,7 +138,11 @@ static int show_schedstat(struct seq_file *seq, void *v)
+ 		for_each_domain(cpu, sd) {
+ 			enum cpu_idle_type itype;
+ 
+-			seq_printf(seq, "domain%d %*pb", dcount++,
++			seq_printf(seq, "domain%d", dcount++);
++#ifdef CONFIG_SCHED_DEBUG
++			seq_printf(seq, ":%s", sd->name);
++#endif
++			seq_printf(seq, " %*pb",
+ 				   cpumask_pr_args(sched_domain_span(sd)));
+ 			for (itype = 0; itype < CPU_MAX_IDLE_TYPES; itype++) {
+ 				seq_printf(seq, " %u %u %u %u %u %u %u %u",
 -- 
 2.43.0
 
