@@ -1,85 +1,62 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F71917D341
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Nov 2024 21:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726AE15ADA6;
+	Fri, 22 Nov 2024 22:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732312178; cv=none; b=n289fMIfNvLgEjTLoWRw4XPyMDhtjcz9kmaLMqLAU9v3axCxNGfLfeEelmlx8rZDLLKsdmk/v1RHJsjBp4cmm0wyPe2xMonZgIz/OJ7WPsP+Y3p99zfVkr2+vA5kydjRurzQ5F4pqBl4hvR5BG5F9cSjWF4JQUJbY4JoBexrozo=
+	t=1732313869; cv=none; b=ZUmjK/yj54g+/7yrvspM80uYxf3vLuHhDIJJdZ1f6+ly8IA8kCv43w5iE+OvAkaS7QIVLVysfhMcJtDqUuKaHYXhGmCe6hYlSf0vp6XkNOGxtSmmRfKigsAk00kv4Sw2j9D4vSQZpWYYpAjCrTxym00k+JQIZEHjIJKQsh52REE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732312178; c=relaxed/simple;
-	bh=z+PZpRYo1PgPvK7J+qRWn9xr1nExt8DtKPQZThC9BDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=DaTD5IPq3Vp9MsSxp3+7WAv0FI77XP3yqb162CdDQlK0fsfcAtvArCuCYwcw8WExoHfxQPjs34o7KslwoFGsUsfA8GLOMZJvZk+9kM8KUnfHCe4yrpzMsbKzvoQh7bUqyz+KDDkFycCZt00u8bYDRZlr6eOZGh5qCOxs82l8SK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Date: Fri, 22 Nov 2024 22:49:31 +0100
-From: Guilherme Amadio <amadio@gentoo.org>
-To: linux-perf-users@vger.kernel.org
-Cc: acme@kernel.org, namhyung@kernel.org, irogers@google.com
-Subject: SIGSEGV on perf's 'Basic parsing test'
-Message-ID: <Z0D8a10VE1oIucuZ@gentoo.org>
+	s=arc-20240116; t=1732313869; c=relaxed/simple;
+	bh=YoTyYNBTwd5oFShK70a7bXiii0fT5kU01Am5pDUenj0=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=GhU3T4o0yOvEakvQUHWiV3Y7PU5dE4t3m08Tju/9pP3Fdg2jC163gg372pJW8NbFZWsVZNweduD8ainPVjlvML68SKk5iwmkuEJqIUImb6wZBBCMW2VkjbQUCLBwvsvQjEDcfY7FsFLeM71rK1PbzvBNcJT4E8eI7AL5w5f8inw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWGYwhWR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWGYwhWR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3140C4CECE;
+	Fri, 22 Nov 2024 22:17:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732313869;
+	bh=YoTyYNBTwd5oFShK70a7bXiii0fT5kU01Am5pDUenj0=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=fWGYwhWR2JNy0dzVswENeCidVsQ59sZ7owljYhxnXojpWWuUBuqJ+IKlfiRKGwape
+	 j0cO1O02d3N/HLOCraxZDq/h40kS+ahu+oFzuGlNA6vNovbxoRDMmIjyj8y0paJvHS
+	 J2GReEznqZ5lJAuZ7zKffUV3qi9akt6tPMrJGNj8g50Trpq7FX4DMs1SSoMSHqsu0a
+	 OmH1+YMXzNBtqjZdsruduTBAr1PEB3lfJVBpI/imd66mN9aUyQcDPBqV/f5IANwf75
+	 LdTCR9VkeDHMqbXJqzggO+ZL7BgHSbIZMGSXEOoFEmJNiBF0cCR4EkG3zIMuLla2Py
+	 mnhZsuozvfKjw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
+In-Reply-To: <20241118052638.754981-1-irogers@google.com>
+References: <20241118052638.754981-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf test: Correct hwmon test PMU detection
+Message-Id: <173231386873.85365.16380200855751649106.b4-ty@kernel.org>
+Date: Fri, 22 Nov 2024 14:17:48 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-Dear Arnaldo, Namhyung, Ian,
+On Sun, 17 Nov 2024 21:26:38 -0800, Ian Rogers wrote:
 
-I noticed that on perf-tools-next, some new tests fail on my machine
-with a segmentation fault. I am on perf-tools-next at the following
-commit: 85c60a01b85ee956adf8d46c253fc50f75363e8f.
+> Use name to avoid potential other hwmon PMUs.
+> 
+> 
 
-After compiling perf with DEBUG=1 and running the test on gdb, this is
-the stack trace that I get from the crash:
-
-Reading symbols from ./perf...
-(gdb) run
-Starting program: /home/amadio/src/linux/tools/perf/perf test -F 11
-[Thread debugging using libthread_db enabled]
-Using host libthread_db library "/usr/lib64/libthread_db.so.1".
- 11.1: Basic parsing test                                            : Ok
-event syntax error: 'temp_test_hwmon_event1'
-                     \___ Bad event name
-
-Unable to find event on a PMU of 'temp_test_hwmon_event1'
-
-Program received signal SIGSEGV, Segmentation fault.
-__GI___libc_free (mem=0x1c0b4908070c0a7a) at malloc.c:3375
-3375      if (chunk_is_mmapped (p))                       /* release mmapped memory. */
-(gdb) bt
-#0  __GI___libc_free (mem=0x1c0b4908070c0a7a) at malloc.c:3375
-#1  0x000055555564fbc8 in __zfree (ptr=0x7ffff6c00031) at ../../lib/zalloc.c:13
-#2  0x000055555581997c in evsel__free_stat_priv (evsel=0x5555560d8ca0) at util/stat.c:148
-#3  0x0000555555819c90 in evlist__free_stats (evlist=0x5555560d7d30) at util/stat.c:215
-#4  0x000055555575d0dc in evlist__delete (evlist=0x5555560d7d30) at util/evlist.c:187
-#5  0x00005555557124d9 in do_test (i=0, with_pmu=false, with_alias=false) at tests/hwmon_pmu.c:198
-#6  0x0000555555712587 in test__hwmon_pmu (with_pmu=false) at tests/hwmon_pmu.c:212
-#7  0x000055555571263b in test__hwmon_pmu_without_pmu (test=0x55555605ae40 <suite.hwmon_pmu>, subtest=1) at tests/hwmon_pmu.c:229
-#8  0x00005555556c8e9d in start_test (test=0x55555605ae40 <suite.hwmon_pmu>, i=10, subi=1, child=0x5555560d7818, width=64, pass=1) at tests/builtin-test.c:424
-#9  0x00005555556c9588 in __cmd_test (suites=0x5555560d73e0, argc=1, argv=0x7fffffffe200, skiplist=0x0) at tests/builtin-test.c:571
-#10 0x00005555556ca0b5 in cmd_test (argc=1, argv=0x7fffffffe200) at tests/builtin-test.c:773
-#11 0x0000555555645459 in run_builtin (p=0x555556047050 <commands+624>, argc=3, argv=0x7fffffffe200) at perf.c:351
-#12 0x0000555555645704 in handle_internal_command (argc=3, argv=0x7fffffffe200) at perf.c:404
-#13 0x0000555555645865 in run_argv (argcp=0x7fffffffe00c, argv=0x7fffffffe000) at perf.c:448
-#14 0x0000555555645bb6 in main (argc=3, argv=0x7fffffffe200) at perf.c:560
-(gdb) quit
-
-
-Please let me know what other information you'd like to have from my system.
-The CPU is an AMD 3950X and the motherboard is an ASUS Pro WS X570-ACE if that
-helps.
-
-$ uname -a
-Linux gentoo.cern.ch 6.12.0-gentoo #1 SMP PREEMPT_DYNAMIC Mon Nov 18 16:50:03 CET 2024 x86_64 AMD Ryzen 9 3950X 16-Core Processor AuthenticAMD GNU/Linux
-$ dmesg | sed -ne '/DMI/{p; q}'
-[    0.000000] DMI: ASUS System Product Name/Pro WS X570-ACE, BIOS 4902 08/29/2024
+Applied to perf-tools-next, thanks!
 
 Best regards,
--Guilherme
+Namhyung
 
