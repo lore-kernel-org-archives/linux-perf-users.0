@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726AE15ADA6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4EF1C5799;
 	Fri, 22 Nov 2024 22:17:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732313869; cv=none; b=ZUmjK/yj54g+/7yrvspM80uYxf3vLuHhDIJJdZ1f6+ly8IA8kCv43w5iE+OvAkaS7QIVLVysfhMcJtDqUuKaHYXhGmCe6hYlSf0vp6XkNOGxtSmmRfKigsAk00kv4Sw2j9D4vSQZpWYYpAjCrTxym00k+JQIZEHjIJKQsh52REE=
+	t=1732313870; cv=none; b=Y0BNzlSNAcyx/8izA/f+jJ1dqEtRIPX/jlUYzQ9zYEucNhE6pvuqOOXsCNgvRNXHo/DUFVsFcAoXUdZuAH4KmDVrT9B5aYXiIcuTAuuAuMj/lksmQUk+Jinu51lilazfjMeriRott/rMPs4qfUKDExtuXg3cn7Y8jSuvtrKArqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732313869; c=relaxed/simple;
-	bh=YoTyYNBTwd5oFShK70a7bXiii0fT5kU01Am5pDUenj0=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GhU3T4o0yOvEakvQUHWiV3Y7PU5dE4t3m08Tju/9pP3Fdg2jC163gg372pJW8NbFZWsVZNweduD8ainPVjlvML68SKk5iwmkuEJqIUImb6wZBBCMW2VkjbQUCLBwvsvQjEDcfY7FsFLeM71rK1PbzvBNcJT4E8eI7AL5w5f8inw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWGYwhWR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732313870; c=relaxed/simple;
+	bh=9KLPixWlyoIEAo3UX5SmGomASPN/KNoEJb7Ng39Mcpk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=tvt9yXTpIlsq+n2+rWMI7lTKDlOJFSFlJfL+3Q+3Q4xn2pzRfgaGmUqUnuZ1Jwi9DjPhIjld5XeOKWkz+XD/I/ZXpSMyRa8PBRfOELhf4cyiQvq7RGacNYSYMjzUqCvapeLEpgN10r+fS2x8Pb7qxEFfJwoJKfIktA88vrQ4VN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJRxYAVw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWGYwhWR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3140C4CECE;
-	Fri, 22 Nov 2024 22:17:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJRxYAVw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 471A0C4CED0;
+	Fri, 22 Nov 2024 22:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1732313869;
-	bh=YoTyYNBTwd5oFShK70a7bXiii0fT5kU01Am5pDUenj0=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=fWGYwhWR2JNy0dzVswENeCidVsQ59sZ7owljYhxnXojpWWuUBuqJ+IKlfiRKGwape
-	 j0cO1O02d3N/HLOCraxZDq/h40kS+ahu+oFzuGlNA6vNovbxoRDMmIjyj8y0paJvHS
-	 J2GReEznqZ5lJAuZ7zKffUV3qi9akt6tPMrJGNj8g50Trpq7FX4DMs1SSoMSHqsu0a
-	 OmH1+YMXzNBtqjZdsruduTBAr1PEB3lfJVBpI/imd66mN9aUyQcDPBqV/f5IANwf75
-	 LdTCR9VkeDHMqbXJqzggO+ZL7BgHSbIZMGSXEOoFEmJNiBF0cCR4EkG3zIMuLla2Py
-	 mnhZsuozvfKjw==
+	bh=9KLPixWlyoIEAo3UX5SmGomASPN/KNoEJb7Ng39Mcpk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=lJRxYAVw8m3SjtJLm0q/kFVSERR2e/LErZyjcNecPu7prbuP69hTiWgDsDnT68uQ6
+	 l1/NCDIaVQbUsWSB27BUHx4hrDGmg/zV5dUw7zbvdImDJWGLSkgAxEpc1X5F85u+yY
+	 i7IbwyrMbbu/zZUR6NNnfLlKAq2jO3A37HaBeueYByLfuzH7WfbIhtLgNFSJtZJcva
+	 Dhi1eMXem1v5H2jBt3TUUxUKQsACu86Zs2T00a2dzG1jBoyaLt0kpbDXmmXgcB7yfQ
+	 5Sx1gB3xxf8RP0JAbm2ZdRcUqvYpRuLNJBnOCEc6Vu9VTTjiO3NjwJcpvJVmDr9iiW
+	 /A0wRpMjEYOYg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
-In-Reply-To: <20241118052638.754981-1-irogers@google.com>
-References: <20241118052638.754981-1-irogers@google.com>
-Subject: Re: [PATCH v1] perf test: Correct hwmon test PMU detection
-Message-Id: <173231386873.85365.16380200855751649106.b4-ty@kernel.org>
-Date: Fri, 22 Nov 2024 14:17:48 -0800
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+ Hao Ge <hao.ge@linux.dev>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, Hao Ge <gehao@kylinos.cn>
+In-Reply-To: <20241113030537.26732-1-hao.ge@linux.dev>
+References: <ZzOJOEpyAc92462-@x1> <20241113030537.26732-1-hao.ge@linux.dev>
+Subject: Re: [PATCH v2] perf bpf-filter: Return -ENOMEM directly when pfi
+ allocation fails
+Message-Id: <173231386925.85365.8829270554421454686.b4-ty@kernel.org>
+Date: Fri, 22 Nov 2024 14:17:49 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,9 +49,10 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Sun, 17 Nov 2024 21:26:38 -0800, Ian Rogers wrote:
+On Wed, 13 Nov 2024 11:05:37 +0800, Hao Ge wrote:
 
-> Use name to avoid potential other hwmon PMUs.
+> Directly return -ENOMEM when pfi allocation fails,
+> instead of performing other operations on pfi.
 > 
 > 
 
