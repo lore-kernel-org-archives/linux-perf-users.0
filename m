@@ -1,62 +1,78 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D79189B86
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Nov 2024 23:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA7A29A1;
+	Sat, 23 Nov 2024 00:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732317180; cv=none; b=keyjuDRvzg3Rp0XS0g6c7nJySq9mUmdYvQGF4gjoMRm7S1Nkr8eDYh7OXoiww2dfcarGQq/GZWNUYpT8TkMELjtYjskcCBEErfBsdZ35+OYAkRYjOQchOtuWXPdnbM9PDMdRAFB3ZGWKZAmHjgPtfWV5/OUEk5QIWurSqyBdd6s=
+	t=1732323317; cv=none; b=DeYASt/UaRMqwCRgCX9qvNvhCNVd0JhVVqCTn12RPh6k4/0oDG9mVavnL3jg4NZBCJshAxZjR9HcDlLJ8mpC1OlfqtGimb1F/mI/vgd/PqoR2qJ17MTTOLDIwRppswyd5nBUoAEOn8qhtkAmYgIa6O6RkwhxRkITFiARH45+0zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732317180; c=relaxed/simple;
-	bh=oOqSCd5kirULqarfn/9f95V9HrFmc10PARZxt+L033k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O5TI9BJD5H42gD5gj/pShvMFoNMnDoiZqsFDDw/mc04bg3JtJKZF/iMJGK3RBb5nsV37LMf077aI1+wuDz3/9H9+fQoM4HY6RtMuJyXCqljF4c5FfU7iXbVrcl8wwxXJUWf9IGsTKV2nAAYSrF+6SeIVepAheeAi7dl/YAXGiPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E+WdueV2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1732323317; c=relaxed/simple;
+	bh=iDERunhSu03m5vAyZ4GljsZGsCR+M5m9RkipDCEHfU8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uBRaRdJWCGM3lqjIufl0Nrtl8GJNFQUwRQcxyueVrosUfkCiT0q+Rq8GzvJ2zcyzJwqmsqxhsA/ZsCEBdpSLYuDePh1ojX5BoMdbmuumW/GsSwHA3ik9vOgrJcUlUySDyb/m/89NecYk75gx6BTJ0cwqcVGKclFi9ND5JmpeWDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bqqP6ihl; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E+WdueV2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732317177;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wNS8twpURPIKU9vfxq6MLh9LGT/n455rgMBOQje9fMU=;
-	b=E+WdueV2V/e2ZlQrK98xKozv2aW5QyNpzrK+STkmYR1kPTVkQQ5G2p2iM4JTC3c/i97W8W
-	YjleLv3suaDMKiMey8EI7LR1rLL9P5bZ0Iflqcrdqom/mwT8epCDD9OuHyvdCnc3OwTTvU
-	FQmQ9omWlrn9kkLdgSEj5vy8oAjw2LQ=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-586-dvXW-7HHPtW-waJB9RRgdg-1; Fri,
- 22 Nov 2024 18:12:54 -0500
-X-MC-Unique: dvXW-7HHPtW-waJB9RRgdg-1
-X-Mimecast-MFC-AGG-ID: dvXW-7HHPtW-waJB9RRgdg
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AC7E41956048;
-	Fri, 22 Nov 2024 23:12:51 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.224.26])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5EF7A30000DF;
-	Fri, 22 Nov 2024 23:12:46 +0000 (UTC)
-From: vmolnaro@redhat.com
-To: linux-perf-users@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqqP6ihl"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7ee6edc47abso2097113a12.3;
+        Fri, 22 Nov 2024 16:55:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732323316; x=1732928116; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wzZqsNFKcBl3d8anhqvd72az0uxGft7JpQJj7xlzeOM=;
+        b=bqqP6ihlCBIWy+epQmM0MoAxIrMwPYbH5AbyJZ/ImnCbSVkYQnsdOL6QGH0bkfBXmE
+         pEKlMJ5BRTQfS4206JNw5yMEuJu/s5J0ZAPKfoby2ObdITwRAOGJ3SVSIrRzNqpaBKHR
+         /lrJtrYrP5PFHAPZSfNnrmmA2Ub31Pau8krxvV0avFxSqUW7/iaKewsOzmau4x1CrFi+
+         kBD2qU1kr0q3GCNo/L0RGe74W9BSa5VhdIuJGub2ZIdcn9wHDqNCESB0Wy34IGPFx03C
+         j7pPkP6p5cLAMywMK9zbQbcKtFR+w/eqFOoIn+gMrOjOxXciNQ4gjZTW7QDuUs8CsQ5t
+         Ym/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732323316; x=1732928116;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wzZqsNFKcBl3d8anhqvd72az0uxGft7JpQJj7xlzeOM=;
+        b=nkW9ahZfHjLOMThYYH9VajprP//otwmv6KnhSHQmRhurXEpegdipmHFY4IyApbPYpb
+         55CkoIU8GtWDace3UTuUZLiaTDHkGyEzY1YR4rYQ+2RnoNIS1K0pNJ/TKm/m9/+MXte/
+         UJYM3zxWV+3PQKYVYahHFm0VhHslEWVO4+hCbQyYIS1OXxzLuoXup3h80fheE1oxiDmh
+         ddChd9MYgiQH+vNVZXuws226zKjtzS+NEfaNm51LgLGlIRJfNb7W6JuOGJaxHvqfP1ql
+         C1zJZB3pXVGyh4DsIDgpw1Q73FbQ8EGSryjQ7SlbEgNf6otsUS7bipprHof4DjEdKYfa
+         R5RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUO6XK1Po8mQJU9DrMhWAwQEEOOFAL15y9yWtPVffbRnfdLq8x1lHuT03+p9nXdbzi+JWSqJ30Ym/SBl2g=@vger.kernel.org, AJvYcCX7cPcF8nv8mJ4oZ/pkyo72/l5aArwfXhUY4t6SniSj+fXWiTUg5h6mJ/AMLEQQcYICIxohihiJbk6seZgD9N9EKA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDwNdagOm2Kfp9bUi2Wgb1wBDb9Qg1wivsB4OaCr2NGWD2xyq2
+	Dyh388cYSJqqHrZVSbyrKXo7+gbO0Zxm7dO+ZQcdu+cN7GZv91zI
+X-Gm-Gg: ASbGncvjomuhsDogDYC3lmN0KsUgxWmWv5x4YjIKdKlT3+QQUuGAZNfp0/vPQrBQMm4
+	7QTt4KVjiAWEp1GHDtZ9MUk8ucx2DY01/aLRQbEvb9g+dhy8Sw5I126BwMr4qYS2DS8oEW/N688
+	fPUEXgJLLGKJxYPyoFpa3MVqVbbNCLmYtyGbGkjWRMFkwVabFCwCwGJ1l++MXpyDtE2rdj83dIY
+	Te93H8BiKYkcV/elptVWqlkukZIlGrARtJYpwwP+A3L8GY2aO/2+Z48sw0Kzaq31dfQlAw6Ol9h
+	o9y1H46aTEY=
+X-Google-Smtp-Source: AGHT+IGgMXBR/fvbeNT5SZ8Ap4QH0+jFyiXo0foPjEy+Mgs7o6Ma+k9AlxhTMFDvYp5aDK+kNhSmgw==
+X-Received: by 2002:a05:6a20:a107:b0:1db:e509:c0a8 with SMTP id adf61e73a8af0-1e09e4575a1mr7038827637.21.1732323315536;
+        Fri, 22 Nov 2024 16:55:15 -0800 (PST)
+Received: from mbp.lan (c-67-174-206-244.hsd1.ca.comcast.net. [67.174.206.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724e0fca304sm2082867b3a.175.2024.11.22.16.55.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2024 16:55:15 -0800 (PST)
+From: Howard Chu <howardchu95@gmail.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
 	acme@kernel.org,
-	acme@redhat.com,
-	irogers@google.com
-Cc: mpetlan@redhat.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
 	namhyung@kernel.org,
 	mark.rutland@arm.com,
 	alexander.shishkin@linux.intel.com,
 	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
 	kan.liang@linux.intel.com,
-	qzhao@redhat.com
-Subject: [PATCH] perf test stat_all_pmu.sh: Correctly check 'perf stat' result
-Date: Sat, 23 Nov 2024 00:12:33 +0100
-Message-ID: <20241122231233.79509-1-vmolnaro@redhat.com>
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v1 0/2] perf trace: Add tests for BTF general augmentation
+Date: Fri, 22 Nov 2024 16:55:09 -0800
+Message-ID: <20241123005512.342079-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,120 +80,26 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
+The previous version of the perf trace BTF general augmentation tests
+didn't pass Shellcheck (thanks to Arnaldo Carvalho de Melo
+<acme@kernel.org> for pointing this out), this version uses bash instead
+of POSIX shell to pass Shellcheck.
 
-Test case "stat_all_pmu.sh" is not correctly checking 'perf stat' output
-due to a poor design. Firstly, having the 'set -e' option with a trap
-catching the sigexit causes the shell to exit immediately if 'perf stat' ends
-with any non-zero value, which is then caught by the trap reporting an
-unexpected signal. This causes events that should be parsed by the if-else
-statement to be caught by the trap handler and are reported as errors:
+This patch series also adds documentation for the new option
+--force-btf, which is used in the tests.
 
-    $ perf test -vv "perf all pmu"
-    Testing i915/actual-frequency/
-    Unexpected signal in main
-    Error:
-    Access to performance monitoring and observability operations is limited.
+Link: https://lore.kernel.org/linux-perf-users/Zt9yiQq-n-W6I274@x1/
 
-Secondly, the if-else branches are not exclusive as the checking if the
-event is present in the output log covers also the "<not supported>"
-events, which should be accepted, and also the "Bad name events", which
-should be rejected.
+Howard Chu (2):
+  perf trace: Add tests for BTF general augmentation
+  perf docs: Add documentation for --force-btf option
 
-Remove the "set -e" option from the test case, correctly parse the
-"perf stat" output log and check its return value. Add the missing
-outputs for the 'perf stat' result and also add logs messages to
-report the branch that parsed the event for more info.
+ tools/perf/Documentation/perf-trace.txt     |  3 +
+ tools/perf/tests/shell/trace_btf_general.sh | 68 +++++++++++++++++++++
+ 2 files changed, 71 insertions(+)
+ create mode 100755 tools/perf/tests/shell/trace_btf_general.sh
 
-Fixes: 7e73ea40295620e7 ("perf test: Ignore security failures in all PMU test")
-Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
----
- tools/perf/tests/shell/stat_all_pmu.sh | 48 ++++++++++++++++++--------
- 1 file changed, 34 insertions(+), 14 deletions(-)
-
-diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
-index 8b148b300be1131e..9c466c0efa857fc2 100755
---- a/tools/perf/tests/shell/stat_all_pmu.sh
-+++ b/tools/perf/tests/shell/stat_all_pmu.sh
-@@ -2,7 +2,6 @@
- # perf all PMU test (exclusive)
- # SPDX-License-Identifier: GPL-2.0
- 
--set -e
- err=0
- result=""
- 
-@@ -16,34 +15,55 @@ trap trap_cleanup EXIT TERM INT
- # Test all PMU events; however exclude parameterized ones (name contains '?')
- for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g')
- do
--  echo "Testing $p"
--  result=$(perf stat -e "$p" true 2>&1)
--  if echo "$result" | grep -q "$p"
-+  echo -n "Testing $p -- "
-+  output=$(perf stat -e "$p" true 2>&1)
-+  stat_result=$?
-+  if echo "$output" | grep -q "$p"
-   then
-     # Event seen in output.
--    continue
--  fi
--  if echo "$result" | grep -q "<not supported>"
--  then
--    # Event not supported, so ignore.
--    continue
-+    if [ $stat_result -eq 0 ] && ! echo "$output" | grep -q "<not supported>"
-+    then
-+      # Event supported.
-+      echo "supported"
-+      continue
-+    elif echo "$output" | grep -q "<not supported>"
-+    then
-+      # Event not supported, so ignore.
-+      echo "not supported"
-+      continue
-+    elif echo "$output" | grep -q "No permission to enable"
-+    then
-+      # No permissions, so ignore.
-+      echo "no permission to enable"
-+      continue
-+    elif echo "$output" | grep -q "Bad event name"
-+    then
-+      # Non-existent event.
-+      echo "Error: Bad event name"
-+      echo "$output"
-+      err=1
-+      continue
-+    fi
-   fi
--  if echo "$result" | grep -q "Access to performance monitoring and observability operations is limited."
-+
-+  if echo "$output" | grep -q "Access to performance monitoring and observability operations is limited."
-   then
-     # Access is limited, so ignore.
-+    echo "access limited"
-     continue
-   fi
- 
-   # We failed to see the event and it is supported. Possibly the workload was
-   # too small so retry with something longer.
--  result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
--  if echo "$result" | grep -q "$p"
-+  output=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
-+  if echo "$output" | grep -q "$p"
-   then
-     # Event seen in output.
-+    echo "supported"
-     continue
-   fi
-   echo "Error: event '$p' not printed in:"
--  echo "$result"
-+  echo "$output"
-   err=1
- done
- 
 -- 
 2.43.0
 
