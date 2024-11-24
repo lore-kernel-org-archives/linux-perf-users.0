@@ -1,116 +1,129 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1AC818785D
-	for <linux-perf-users@vger.kernel.org>; Sun, 24 Nov 2024 10:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C503D1BBBEE;
+	Sun, 24 Nov 2024 12:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732445468; cv=none; b=XFv4zKWuVmmLXiU0NkVljratiy85GSWctqjuiclAVKYGu2eZsTMFXF0TzH3eE2r+m5ZbiQNSatQPU7TWcsGhLwKOGY+BWtjQyVwbLKyQrfzQcysyOsHNBMQPSnNMS2EbJ2B+jlNUk6KNjkCrKRxguJfoEK4NMourB8bsuRZeQDg=
+	t=1732452386; cv=none; b=gEh9CZpSDEXlG4qFzlUk1ai9CbJtnfwGCSwMHjj6J452pOFqUXqCjwIVWUIclHFlcOKrCyNHJJSQ3tsjW4nxHXj2/P82coW0S6l+YSMRyvvPA0kVubMoT6Z3qiHN7RwlDsmy5jrt29h7sHRd44AH7cF7o+VAz2BSBy9C40TGtF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732445468; c=relaxed/simple;
-	bh=psJEf+m22acucC3woMg9+j7IJ+o0KH2DyDdbijEyQ64=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CflcswOVKTUYXYKw/JeJ1MI/SNRv1f0oLDUkxaReOlCDgUAP8Avrx4LbsmTIP19ymeEMmZB+FMgF0HOhLpncDd0AuX7Vg8RNdf8PnmCgthCr0lFo5UUldH0gH+aeGMr/d2TSaLvX9m+06goXILBcAatu63GynisuxBrU7Mp3v+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB4B7152B;
-	Sun, 24 Nov 2024 02:51:29 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FDC53F5A1;
-	Sun, 24 Nov 2024 02:50:59 -0800 (PST)
-Date: Sun, 24 Nov 2024 10:50:53 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Guilherme Amadio <amadio@gentoo.org>
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
-Subject: Re: perf test for inet_pton probe fails to match stacktrace
-Message-ID: <20241124105053.GA812108@e132581.arm.com>
-References: <Z0D5FDu/sErQ0V/2@gentoo.org>
+	s=arc-20240116; t=1732452386; c=relaxed/simple;
+	bh=sA9g5Eu8ASeFls4iVRs/Rqrj0T7ijfTMFjnwdbEAiSM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r76KKXn5NHZFCQspKAf5/HNLDD/LIpp5BwnjNyr178JKEmyZD11+vVWtU/zK8pLdDAQN7EP/OMjCy2cGCAGZSObETt5uHiud0vH8s6Wm85xnu4RBpFFEesEqk0ATOK3y4qMPJHSe2LY3XxceH+LdOllY94wJE7nCEG0FGsm6r6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rifF6LT6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rifF6LT6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FEC9C4CECC;
+	Sun, 24 Nov 2024 12:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732452386;
+	bh=sA9g5Eu8ASeFls4iVRs/Rqrj0T7ijfTMFjnwdbEAiSM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rifF6LT63qSJKtKTKu5fQiJ+/8fOXmx6BFYqzai65XPBTzRrnvMRhfSmpZnLEk+mJ
+	 b4IYWHp7Rd2EQrMrFO43/bASN0toEqrD5/2fyjMiza57E0W1QrcHxZvJEOulDyzy7N
+	 p4Rji9lPkbx5/jl6g1StrnmkOSb4KWgF7A0c2ES4ijJWtHaTf3zd9XMPXEVvrzyC2k
+	 s/ZJe/Wy876Pz5TK/D3t/S+DORFtMOE6OGYyfGEf/Ri1kQs7hMr5IgiQNYGFkmLCXd
+	 3BSnTT/QB3dsaXTdjc6avUvD6My588oAiUCglXHWrrT1KhR23mqAzDvCPm3w73mhng
+	 tbmSuq2OsTV0Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mhiramat@kernel.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 1/5] uprobes: sanitiize xol_free_insn_slot()
+Date: Sun, 24 Nov 2024 07:46:13 -0500
+Message-ID: <20241124124623.3337983-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z0D5FDu/sErQ0V/2@gentoo.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.1
+Content-Transfer-Encoding: 8bit
 
-Hi Guilherme,
+From: Oleg Nesterov <oleg@redhat.com>
 
-On Fri, Nov 22, 2024 at 10:35:16PM +0100, Guilherme Amadio wrote:
+[ Upstream commit c7b4133c48445dde789ed30b19ccb0448c7593f7 ]
 
-[...]
+1. Clear utask->xol_vaddr unconditionally, even if this addr is not valid,
+   xol_free_insn_slot() should never return with utask->xol_vaddr != NULL.
 
-> Hi Arnaldo, Namhyung,
-> 
-> I've had this test fail for me since a while, so I'm reporting below
-> in case we can find a good solution to fix it on my system without
-> breaking other OSs. The test that fails is this:
-> 
-> gentoo ~ # perf test -vF inet_pton
-> --- start ---
-> ping 303105 [029] 47754.974977: probe_libc:inet_pton: (7f70ca48feb7)
-> 7f70ca48feb7 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-> 7f70ca4a2517 gaih_inet+0x112 (/usr/lib64/libc.so.6)
-> FAIL: expected backtrace entry ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" got "7f70ca4a2517 gaih_inet+0x112 (/usr/lib64/libc.so.6)"
-> ---- end ----
->  92: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-> gentoo ~ # perf version
-> perf version 6.12
-> 
-> Here's why it fails. My stack traces has more than the test expects:
-> 
-> gentoo ~ # perf script | tac | sed -e /^ping/q | tac
-> ping  267392 [010] 42482.886216: probe_libc:inet_pton: (7f168d9b4eb7)
->             7f168d9b4eb7 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
->             7f168d9c7517 gaih_inet+0x112 (/usr/lib64/libc.so.6)
->             7f168d9c8b73 getaddrinfo+0x133 (/usr/lib64/libc.so.6)
->             55947171a518 [unknown] (/usr/bin/ping)
->             7f168d8d6a72 __libc_start_call_main+0x7a (/usr/lib64/libc.so.6)
->             7f168d8d6b29 __libc_start_main@@GLIBC_2.34+0x84 (/usr/lib64/libc.so.6)
->             55947171ac55 [unknown] (/usr/bin/ping)
-> 
-> Likely this is due to how I compile glibc:
-> gentoo ~ # cat /var/db/pkg/sys-libs/glibc-2.40-r5/CFLAGS
-> -Og -march=native -Wl,--build-id -gdwarf-4 -fno-builtin-strlen -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer
+2. Add a comment to explain why do we need to validate slot_addr.
 
-This is not the first reported failure on this case, see [1] for
-previous one.
+3. Simplify the validation above. We can simply check offset < PAGE_SIZE,
+   unsigned underflows are fine, it should work if slot_addr < area->vaddr.
 
-I assume you are working on x86_64 machine.  Could you confirm if the
-change below can fix your issue?  If yes, I will send a formal patch.
+4. Kill the unnecessary "slot_nr >= UINSNS_PER_PAGE" check, slot_nr must
+   be valid if offset < PAGE_SIZE.
 
-Thanks,
-Leo
+The next patches will cleanup this function even more.
 
----8<--
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20240929144235.GA9471@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/events/uprobes.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 47a26f25db9f..5a2d641bf166 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -54,6 +54,15 @@ trace_libc_inet_pton_backtrace() {
-                ;;
-        *)
-                eventattr='max-stack=3'
-+               # Add gaih_inet to expected backtrace only if it is part of libc.
-+               if nm -D $libc | grep -F -q gaih_inet; then
-+                       echo "gaih_inet\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
-+               fi
-+               # The new version libc (e.g. libc 2.36) contains symbol getaddrinfo@@GLIBC_2.17
-+               # which is not used. Do strict checking for 'getaddrinfo' without any suffix.
-+               if nm -D $libc | grep -q 'getaddrinfo$'; then
-+                       echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
-+               fi
-                echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-                ;;
-        esac
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 4b52cb2ae6d62..cc605df73d72f 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1683,8 +1683,8 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
+ static void xol_free_insn_slot(struct task_struct *tsk)
+ {
+ 	struct xol_area *area;
+-	unsigned long vma_end;
+ 	unsigned long slot_addr;
++	unsigned long offset;
+ 
+ 	if (!tsk->mm || !tsk->mm->uprobes_state.xol_area || !tsk->utask)
+ 		return;
+@@ -1693,24 +1693,21 @@ static void xol_free_insn_slot(struct task_struct *tsk)
+ 	if (unlikely(!slot_addr))
+ 		return;
+ 
++	tsk->utask->xol_vaddr = 0;
+ 	area = tsk->mm->uprobes_state.xol_area;
+-	vma_end = area->vaddr + PAGE_SIZE;
+-	if (area->vaddr <= slot_addr && slot_addr < vma_end) {
+-		unsigned long offset;
+-		int slot_nr;
+-
+-		offset = slot_addr - area->vaddr;
+-		slot_nr = offset / UPROBE_XOL_SLOT_BYTES;
+-		if (slot_nr >= UINSNS_PER_PAGE)
+-			return;
++	offset = slot_addr - area->vaddr;
++	/*
++	 * slot_addr must fit into [area->vaddr, area->vaddr + PAGE_SIZE).
++	 * This check can only fail if the "[uprobes]" vma was mremap'ed.
++	 */
++	if (offset < PAGE_SIZE) {
++		int slot_nr = offset / UPROBE_XOL_SLOT_BYTES;
+ 
+ 		clear_bit(slot_nr, area->bitmap);
+ 		atomic_dec(&area->slot_count);
+ 		smp_mb__after_atomic(); /* pairs with prepare_to_wait() */
+ 		if (waitqueue_active(&area->wq))
+ 			wake_up(&area->wq);
+-
+-		tsk->utask->xol_vaddr = 0;
+ 	}
+ }
+ 
+-- 
+2.43.0
 
-[1] https://lore.kernel.org/linux-perf-users/20241025132021.GB359792@e132581.arm.com/
-
-> If you could suggest a way to fix this, I'd appreciate it.
-> 
-> Best regards,
-> -Guilherme
-> 
-> 
