@@ -1,129 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0581613B288;
-	Sat, 23 Nov 2024 21:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1AC818785D
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 Nov 2024 10:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732397356; cv=none; b=sRptkTLq1Jgi0XByrXB+mXowp1i98VwCHgX+uV5bZ4I0TkyS/gu10jODl5yz1HeVxjjFiZhFeZ/Ne97AS77HyFVCTbgBERHy3ZuNudzUmOV6XtCI5MQ3LT+S0ieNukLCs1kwV6Se4znUOpBsrWfikVVbrSIijER+JixbgUN9PdI=
+	t=1732445468; cv=none; b=XFv4zKWuVmmLXiU0NkVljratiy85GSWctqjuiclAVKYGu2eZsTMFXF0TzH3eE2r+m5ZbiQNSatQPU7TWcsGhLwKOGY+BWtjQyVwbLKyQrfzQcysyOsHNBMQPSnNMS2EbJ2B+jlNUk6KNjkCrKRxguJfoEK4NMourB8bsuRZeQDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732397356; c=relaxed/simple;
-	bh=PTwERjgygIA7LX618qzOJbGfSA3CjamE/iXMi4e4UDs=;
+	s=arc-20240116; t=1732445468; c=relaxed/simple;
+	bh=psJEf+m22acucC3woMg9+j7IJ+o0KH2DyDdbijEyQ64=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XLP1j2iIKW+p83jvDj3AVcDRAr92Rtq2r05XS5gQ7ggS6zNnD8yCoWZYlwh+tmFDAwgxVbjHIKrpJC9L8+6x4ZgVgXuSmdk8uoPm8kvgMt47kbPnBngx4XyTa2A+FRlgMRr+ximiq2x9KNJgw0F2ckkxQaPD1rMGMgyjpgGz7ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+0wEiMx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+0wEiMx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6125C4CECD;
-	Sat, 23 Nov 2024 21:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732397355;
-	bh=PTwERjgygIA7LX618qzOJbGfSA3CjamE/iXMi4e4UDs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d+0wEiMxYQhLXlP9yc76/rRgiG5fWjKQGrwvCM9MxnEoPgivmciDHNlYhb8OZN/2m
-	 bWnyLoY9GTTC7YEbeId7sHLozaIHcsFJb1uQA6KtSEJxfWBR4cUX6Xxuze7MirlB5+
-	 TiZ1yqHXpFjepZ6lNnTz9bqZd766AWaGvqXiy/nzxoiB4LwMWkFZOpsEtpnX8qooZX
-	 l8GsuaQy2U6w87Btdm/VxjAcxQB6VMJEzOAS8nne7ySTDkZIQcjpDrpAD0OJXob0q5
-	 VCAryesJUdEnmSoWYbcbIo38/zaOxL75QWF8oskEIyghGIE44c6LuwafFb9QEWO0TT
-	 LnmZgmeYuMCiQ==
-Date: Sat, 23 Nov 2024 22:29:12 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: =?utf-8?B?TWlrb8WCYWogS2/FgmVr?= <kolek.mikolaj@gmail.com>
-Cc: linux-man@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: perf_event_open.2: mmap ring buffer requirement for receiving
- overflow notifications
-Message-ID: <20241123212912.dyxnou6rbns7xqu7@devuan>
-References: <CAHGiy68y37n-y_b0gR-dArxFRzYOAr93dCw_6bvkNReNWQ37Hw@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CflcswOVKTUYXYKw/JeJ1MI/SNRv1f0oLDUkxaReOlCDgUAP8Avrx4LbsmTIP19ymeEMmZB+FMgF0HOhLpncDd0AuX7Vg8RNdf8PnmCgthCr0lFo5UUldH0gH+aeGMr/d2TSaLvX9m+06goXILBcAatu63GynisuxBrU7Mp3v+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB4B7152B;
+	Sun, 24 Nov 2024 02:51:29 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FDC53F5A1;
+	Sun, 24 Nov 2024 02:50:59 -0800 (PST)
+Date: Sun, 24 Nov 2024 10:50:53 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Guilherme Amadio <amadio@gentoo.org>
+Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
+Subject: Re: perf test for inet_pton probe fails to match stacktrace
+Message-ID: <20241124105053.GA812108@e132581.arm.com>
+References: <Z0D5FDu/sErQ0V/2@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="laoimxkcyt2mzmka"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHGiy68y37n-y_b0gR-dArxFRzYOAr93dCw_6bvkNReNWQ37Hw@mail.gmail.com>
+In-Reply-To: <Z0D5FDu/sErQ0V/2@gentoo.org>
 
+Hi Guilherme,
 
---laoimxkcyt2mzmka
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: perf_event_open.2: mmap ring buffer requirement for receiving
- overflow notifications
-MIME-Version: 1.0
+On Fri, Nov 22, 2024 at 10:35:16PM +0100, Guilherme Amadio wrote:
 
-Hi Miko=C5=82aj,
+[...]
 
-On Sat, Nov 23, 2024 at 09:49:40PM +0100, Miko=C5=82aj Ko=C5=82ek wrote:
-> I have found that when monitoring a file descriptor returned by
-> perf_event_open() with poll(), it is required to allocate an mmap ring
-> buffer to properly receive overflow notifications. If this is not
-> done, poll() keeps continuously returning POLLHUP, even when an
-> overflow notification should not be raised. Notably, this behavior is
-> different from listening for overflow notifications by setting the
-> O_ASYNC flag on the file descriptor - in that case, creating the mmap
-> ring buffer is not required to receive the SIGIO signal delivered
-> after the file descriptor becomes available for reading. I attach code
-> showcasing this behavior (the functionality is explained in the
-> comments).
->=20
-> This behavior by itself is not a problem, however, in the current
-> state of the perf_event_open man page, it's not documented, and in
-> fact, there are confusing statements that seem to contradict my
-> findings. In the MMAP layout section of the page, you can find this
-> sentence:
-> Before Linux 2.6.39, there is a bug that means you must allocate
-> an mmap ring buffer when sampling even if you do not plan to
-> access it.
-> Unless I'm somehow misunderstanding it, this statement does not seem
-> to be well worded, or alternatively this bug does not seem to be
-> fixed. I would not call simply using poll() on the file descriptor
-> intent to access the ring buffer (unless it's meant to be understood
-> that way, in which case, in my opinion, it's quite confusing).
-> Additionally, I cannot find any change in Linux 2.6.39 that would fit
-> this description (however, that is likely just due to my lack of
-> experience searching through the kernel changelogs and commits).
->=20
-> I would like to receive clarification on whether this current behavior
-> of perf_event_open is intentional and desired (that is why I cc'd
-> linux-perf-users). If it is, I could also create a patch to the man
-> page that lays out the requirements more clearly. In that case, it
-> would also be helpful to further clarify the wording of the sentence
-> mentioning the Linux 2.6.39 change, however I don't know if I'm
-> qualified to do that, because as I have previously stated, I am unable
-> to find what changes that sentence actually refers to.
+> Hi Arnaldo, Namhyung,
+> 
+> I've had this test fail for me since a while, so I'm reporting below
+> in case we can find a good solution to fix it on my system without
+> breaking other OSs. The test that fails is this:
+> 
+> gentoo ~ # perf test -vF inet_pton
+> --- start ---
+> ping 303105 [029] 47754.974977: probe_libc:inet_pton: (7f70ca48feb7)
+> 7f70ca48feb7 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
+> 7f70ca4a2517 gaih_inet+0x112 (/usr/lib64/libc.so.6)
+> FAIL: expected backtrace entry ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" got "7f70ca4a2517 gaih_inet+0x112 (/usr/lib64/libc.so.6)"
+> ---- end ----
+>  92: probe libc's inet_pton & backtrace it with ping                 : FAILED!
+> gentoo ~ # perf version
+> perf version 6.12
+> 
+> Here's why it fails. My stack traces has more than the test expects:
+> 
+> gentoo ~ # perf script | tac | sed -e /^ping/q | tac
+> ping  267392 [010] 42482.886216: probe_libc:inet_pton: (7f168d9b4eb7)
+>             7f168d9b4eb7 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
+>             7f168d9c7517 gaih_inet+0x112 (/usr/lib64/libc.so.6)
+>             7f168d9c8b73 getaddrinfo+0x133 (/usr/lib64/libc.so.6)
+>             55947171a518 [unknown] (/usr/bin/ping)
+>             7f168d8d6a72 __libc_start_call_main+0x7a (/usr/lib64/libc.so.6)
+>             7f168d8d6b29 __libc_start_main@@GLIBC_2.34+0x84 (/usr/lib64/libc.so.6)
+>             55947171ac55 [unknown] (/usr/bin/ping)
+> 
+> Likely this is due to how I compile glibc:
+> gentoo ~ # cat /var/db/pkg/sys-libs/glibc-2.40-r5/CFLAGS
+> -Og -march=native -Wl,--build-id -gdwarf-4 -fno-builtin-strlen -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer
 
-I don't know.  Kernel maintainers may be able to respond much better
-than me.  I see you've CCed their list, so they'll hopefully answer.
+This is not the first reported failure on this case, see [1] for
+previous one.
 
-Have a lovely night!
-Alex
+I assume you are working on x86_64 machine.  Could you confirm if the
+change below can fix your issue?  If yes, I will send a formal patch.
 
+Thanks,
+Leo
 
+---8<--
 
---=20
-<https://www.alejandro-colomar.es/>
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index 47a26f25db9f..5a2d641bf166 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -54,6 +54,15 @@ trace_libc_inet_pton_backtrace() {
+                ;;
+        *)
+                eventattr='max-stack=3'
++               # Add gaih_inet to expected backtrace only if it is part of libc.
++               if nm -D $libc | grep -F -q gaih_inet; then
++                       echo "gaih_inet\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
++               fi
++               # The new version libc (e.g. libc 2.36) contains symbol getaddrinfo@@GLIBC_2.17
++               # which is not used. Do strict checking for 'getaddrinfo' without any suffix.
++               if nm -D $libc | grep -q 'getaddrinfo$'; then
++                       echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
++               fi
+                echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+                ;;
+        esac
 
---laoimxkcyt2mzmka
-Content-Type: application/pgp-signature; name="signature.asc"
+[1] https://lore.kernel.org/linux-perf-users/20241025132021.GB359792@e132581.arm.com/
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmdCSSgACgkQnowa+77/
-2zL12g/9Egi1aAjqXE5qJDyPcNBfU10R0cLkz2sFXseSsXTJchb5sJV8m0HUcoS9
-UYDzhzX1x6FBzESLDT2VdERUvfuxrNQs9W3FrpAd/h2ZQUNsG2DY3TpWa7k+kis7
-5YSAuXw1urK9IZc9CuithTwnl08b7OKe2g3jWnQ3jkGc2jrCRNGkgG9DEEIhLih2
-5F4wC7qemwlBVN/ZzYoKf7Cktw1WYZoKuiana5gA4QTVmuZML9ICwsAio88lFF8y
-O7p8ZdM4EGcApX0eanWGGPVKujtbliIhzDdP3ggSLaAP8zQTYf83oNe8k6LwzRNi
-XwLtQ5UOO0aNC/jvoTfFsRVUnI93Kw81WWGz6c+YLQH30zNbr8bJZ3IRgr6Hohnu
-SZ2fhSmaI8fYy8hVCz0jtvKreyPYnfdhm0S9Xl8ZvAReVwxbqq9EjBJQAMvry8xY
-mhQAz2KN1EhwOXBPEnGRMbP0lNtFwwTqXjaxFZtFdvLfyCsSv0Iza7wZyIo/TPqH
-3mihFVn+cQGUDw1E0t01dC2NaKLntyhSla+iZeg+SZxk0N16ni6bq5ecM5eFjdW0
-grfP8wU10lyVZUQ+km5J50lpY0x0yTs5EXmJKtAoeeMJ9KBIFk9E2I7AM2INqYNj
-UI0kA29Y+j0f2w1ZPRsppS2DB/n24FPipflJ9HiKg0ya6ymcmUk=
-=qH3Q
------END PGP SIGNATURE-----
-
---laoimxkcyt2mzmka--
+> If you could suggest a way to fix this, I'd appreciate it.
+> 
+> Best regards,
+> -Guilherme
+> 
+> 
