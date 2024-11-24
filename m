@@ -1,152 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7038A18C900
-	for <linux-perf-users@vger.kernel.org>; Sun, 24 Nov 2024 13:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7C536C;
+	Sun, 24 Nov 2024 14:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732454071; cv=none; b=UW13edT8ivf3MOd81vnWoHFhPv3Z5aXNtyHjyd/n+jfGMZ5mAqUywp/f3mqqUzuE2eC1JHL+ieGgFjew3nDsaLxbLHg8nqhxu3GYgFDkwtpmbfAbJxykKkOUQeNjNIC2MseDX17vvkeKBd1+3Xgf+JQz7FLIUOG2kJg+vRUvVIQ=
+	t=1732457758; cv=none; b=nD7B5YLQDEmf3Zp1mL0M3HqqxBgLzVoARP9b/K1+SMF2ElwLOXj/KC+3v5aLtED7FptVwt0EvYgfiygRS3+nfjVBjIG5Q3LfbQ3h8IW+MeDp/W1CTZ0zC9YUGdbkMGKPvRrlGw+D2XlUOVS4RukvPULAAoXDFPzxlFsNFpnJnFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732454071; c=relaxed/simple;
-	bh=aaf6mgxiFIZ4KUt3qR5b9Zp2zfPeoHch/KAwVeYdx5Y=;
+	s=arc-20240116; t=1732457758; c=relaxed/simple;
+	bh=qu9OZBkktSo6lsEwmjZAR4uzevcMXIWHEGBoICmrueQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AdG+ymDYVKy/8jbit8clO9Orllh/X+OjeDeWQ+jLcb1qA5QLxwfaI3qe6ZjM4vQ1li8mtLSUMkbZE1QkeCoEPSc0mV992GmRIWalok1eWck474On499+ZrAS1tNUT4nFGHSzZl52o7dwFXLOm0aOICC4zn+iQC6ECUPKXy39ZW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aPMsCNqT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cyFx3B3eP9RQRst0I7jYxzgik0NyK/G83B/SUwVYWtqbBxHRYtI5SzfuG38jL5lBJAEVeT+y/gRkhRi5GERFgAY7Na51Y+DcoH5kRvJCU3EuizhyzMyyahGcUA5kNyzPNMdHMmyuNruWGuwOZehzIQ993iB0l+cVQ9ex75ktMag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SShQRmDY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aPMsCNqT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732454068;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eQYCp4g/idPG8DYRDVHAD0jqFgBNqHKqLtG7vbr7Lm8=;
-	b=aPMsCNqTEF00j2n3nq2nkDM8NXlAn4rObML0LSIut+i0AGFLJAffBNuZZDQh9B9p+50Sc9
-	A5IMz8i3G0GUBAVbrjDtBNUobTF42/P0YRH3fOTYf6jJ9XPsLwJuCOH/ldfLPpp45Av5d2
-	C6LcL86HHKeSb346h3SPU7SZqrk8HsA=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-412-c-_t-oEQNh-5KC7aPSDk0Q-1; Sun,
- 24 Nov 2024 08:14:24 -0500
-X-MC-Unique: c-_t-oEQNh-5KC7aPSDk0Q-1
-X-Mimecast-MFC-AGG-ID: c-_t-oEQNh-5KC7aPSDk0Q
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 631761956089;
-	Sun, 24 Nov 2024 13:14:22 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.44])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 993331955F43;
-	Sun, 24 Nov 2024 13:14:18 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 24 Nov 2024 14:14:02 +0100 (CET)
-Date: Sun, 24 Nov 2024 14:13:57 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sasha Levin <sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SShQRmDY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BCF0C4CECC;
+	Sun, 24 Nov 2024 14:15:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732457758;
+	bh=qu9OZBkktSo6lsEwmjZAR4uzevcMXIWHEGBoICmrueQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SShQRmDYG7ZehdsMz3/DkZtXUK9iHbCdxmsyj/iK/qQgWzOCN5ctveT7NULnCNvVd
+	 XDNe5J1rsNNf5C42VpMEG15qO1upsOU8TCyDyXxy/Jt3eWPSa5aoTGOMvxhM7/Pn5u
+	 Fk161jKz96c/wxk4WJ9l1OIew6/6MHmrzH+s7NN5dAGRQBjOhZKEaSK9yWaSqPV/vz
+	 3b6ez3RVHs/ICe2SmL7SIyviGHhzBy3m640K3qWkqByLMW4+t2mL5LH84mtqQHnQzy
+	 E5hLKrd4Py0c65wh1wqAxs68SEoMlmUxBRbojWI0XuSnMYERXX7vszqRYFA7HyfvHz
+	 YtEzHIhqC07ow==
+Date: Sun, 24 Nov 2024 09:15:56 -0500
+From: Sasha Levin <sashal@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
 Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
 	Peter Zijlstra <peterz@infradead.org>, mhiramat@kernel.org,
 	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH AUTOSEL 6.12 1/5] uprobes: sanitiize xol_free_insn_slot()
-Message-ID: <20241124131357.GA28360@redhat.com>
+Message-ID: <Z0M1HLLE_ufLcGMO@sashalap>
 References: <20241124124623.3337983-1-sashal@kernel.org>
+ <20241124131357.GA28360@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20241124124623.3337983-1-sashal@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20241124131357.GA28360@redhat.com>
 
-Hi Sasha,
+On Sun, Nov 24, 2024 at 02:13:57PM +0100, Oleg Nesterov wrote:
+>Hi Sasha,
+>
+>but why do you think it makes sense to backport these "uprobes" cleanups?
 
-but why do you think it makes sense to backport these "uprobes" cleanups?
+If it doesn't, I'm happy to drop them. This commit was selected mostly
+because of:
 
-Oleg.
+>> 1. Clear utask->xol_vaddr unconditionally, even if this addr is not valid,
+>>    xol_free_insn_slot() should never return with utask->xol_vaddr != NULL.
 
-On 11/24, Sasha Levin wrote:
->
-> From: Oleg Nesterov <oleg@redhat.com>
->
-> [ Upstream commit c7b4133c48445dde789ed30b19ccb0448c7593f7 ]
->
-> 1. Clear utask->xol_vaddr unconditionally, even if this addr is not valid,
->    xol_free_insn_slot() should never return with utask->xol_vaddr != NULL.
->
-> 2. Add a comment to explain why do we need to validate slot_addr.
->
-> 3. Simplify the validation above. We can simply check offset < PAGE_SIZE,
->    unsigned underflows are fine, it should work if slot_addr < area->vaddr.
->
-> 4. Kill the unnecessary "slot_nr >= UINSNS_PER_PAGE" check, slot_nr must
->    be valid if offset < PAGE_SIZE.
->
-> The next patches will cleanup this function even more.
->
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Link: https://lore.kernel.org/r/20240929144235.GA9471@redhat.com
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  kernel/events/uprobes.c | 21 +++++++++------------
->  1 file changed, 9 insertions(+), 12 deletions(-)
->
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 4b52cb2ae6d62..cc605df73d72f 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1683,8 +1683,8 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
->  static void xol_free_insn_slot(struct task_struct *tsk)
->  {
->  	struct xol_area *area;
-> -	unsigned long vma_end;
->  	unsigned long slot_addr;
-> +	unsigned long offset;
->
->  	if (!tsk->mm || !tsk->mm->uprobes_state.xol_area || !tsk->utask)
->  		return;
-> @@ -1693,24 +1693,21 @@ static void xol_free_insn_slot(struct task_struct *tsk)
->  	if (unlikely(!slot_addr))
->  		return;
->
-> +	tsk->utask->xol_vaddr = 0;
->  	area = tsk->mm->uprobes_state.xol_area;
-> -	vma_end = area->vaddr + PAGE_SIZE;
-> -	if (area->vaddr <= slot_addr && slot_addr < vma_end) {
-> -		unsigned long offset;
-> -		int slot_nr;
-> -
-> -		offset = slot_addr - area->vaddr;
-> -		slot_nr = offset / UPROBE_XOL_SLOT_BYTES;
-> -		if (slot_nr >= UINSNS_PER_PAGE)
-> -			return;
-> +	offset = slot_addr - area->vaddr;
-> +	/*
-> +	 * slot_addr must fit into [area->vaddr, area->vaddr + PAGE_SIZE).
-> +	 * This check can only fail if the "[uprobes]" vma was mremap'ed.
-> +	 */
-> +	if (offset < PAGE_SIZE) {
-> +		int slot_nr = offset / UPROBE_XOL_SLOT_BYTES;
->
->  		clear_bit(slot_nr, area->bitmap);
->  		atomic_dec(&area->slot_count);
->  		smp_mb__after_atomic(); /* pairs with prepare_to_wait() */
->  		if (waitqueue_active(&area->wq))
->  			wake_up(&area->wq);
-> -
-> -		tsk->utask->xol_vaddr = 0;
->  	}
->  }
->
-> --
-> 2.43.0
->
+Which sounded to me like more than a cleanup.
 
+-- 
+Thanks,
+Sasha
