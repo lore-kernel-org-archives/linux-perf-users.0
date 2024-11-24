@@ -1,53 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAE41E25E3;
-	Sun, 24 Nov 2024 12:46:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF131CD1FD;
+	Sun, 24 Nov 2024 12:47:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732452408; cv=none; b=eXg8k+bZiQPa5bnUZzFWYVWJRbnar5jMfjZ7j8HPQ2x86SWHzdf0zNSWt2/uh0XoAU/4oSGqOR3Fo/7mGDEcdJAZja5rWHsrhxe9A2nIbNLMGz6n+7qgi2ypj6E73q+bV/RBGJox/SDDEGe/YGYazhZ2bcxmNR06hfqoAvj/6W8=
+	t=1732452425; cv=none; b=iAdZrfLm+2twyYalP7lTraMJGRkUVdkNxlyLOgUuEVTEfq2Ap5dKFfWlK9b/yulPFHp0msnAJC5cM6lX3mayFV3bO3gO8FwtWozfOyuIKh8J/Kv8g+A4n6qHLLaC6ANnIhmQYlcC57qc7DjIKMC4CJwPgWtrMVQii3g1ztdXOYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732452408; c=relaxed/simple;
-	bh=Wl5bXFmQtF7SQ2tzqRaZpOWv1XiK8C4Y/d0nvQmMmvA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TesWEqELnEQU2GBHkRSXVe+5VD8ViuXDogKzMSiWlYOOWNs6N7wLNZZJWDqM0cMMznPKm+ikormcBxbmE8mvu+ELY9T0gSEL1dEm0t6wSySyxD41pWSHUcuqAuiSLLOEdzaiWI4TDojSJlbHOeloL2yNg66rCPsaw9iVMqUe4SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qEtqozV/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732452425; c=relaxed/simple;
+	bh=exgUNf/LyWxz+SMN/oI2NpM2ZuA78RSYFimIkgE9aOM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s9DgU84E+MdXGnNnGeMw/ftkAcOq8KgEHWa9FS52+MnaMmVHBu4hlhFnRoDudbBBDZotUl684s3FKhsgJEHL8pUhjBMsdRfts+QnwDcpiBt+KbvUhVGO7QRjtm1xpX76tukdtOJbDy2b3KoBkGA8K3kYImYHpIIveOaLeSSlkKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVdqnDld; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qEtqozV/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9F5FC4CECC;
-	Sun, 24 Nov 2024 12:46:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVdqnDld"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 237ADC4CECC;
+	Sun, 24 Nov 2024 12:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732452408;
-	bh=Wl5bXFmQtF7SQ2tzqRaZpOWv1XiK8C4Y/d0nvQmMmvA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qEtqozV/J0UhKp0bfKexBZf5RrKOmTTPJ01QzcIEVohR8LWVlEi4GQ3mgwuA3Zwvq
-	 I7kKeFkuS9/kzR3mnN/WQXS5iEBiHlCA/U68dy9BuZDdR7fTLLtUlozGzFAtgZDnmq
-	 yq0uhr0prcwn/LSPJe3zW/299PktAN20tttUe89BB45qhV00aoV8271b29z1YROBVR
-	 uQ03ZNjUe3RwGUH/gQ6fmBsDpRpf2s/Ve6QqiHSuvDpamN12we6DLin6FBO6SZmLup
-	 IoVzCFq5WRqyKHLhqU6rvxE1SYm+Ze5DJYpaFXQCAVvDfWats7TzFCjl/XYUhBSVpI
-	 +lcm5IGbbbyDA==
+	s=k20201202; t=1732452425;
+	bh=exgUNf/LyWxz+SMN/oI2NpM2ZuA78RSYFimIkgE9aOM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YVdqnDldaxm2SWZTrbEXmkFszlmLarcKiG/TE6tPE7TS7kUX+WhWaK42ETl7hda3C
+	 +CDeaD1VQti2I1ISqPOAhY2rVRlpyr82CAa2ZtKAjwMkmiF6LXPmbkJK42ZL9y9beT
+	 2dhfTv/bt7pTr8l6JIlR40broFmyyazSslluTa5hWThtFPshsFhORQTaKIP+7bv5iv
+	 O4UcYdlLf14Dw3PvgVZdybw8TSaKnqYDVJj/8D0xKmEwIbUz9GrzwSFfvcXFGhY+0R
+	 bqt/sY2Rkx0WP9QLPKjLLuCw+1dzzCV1vPpeeZjkw9NYBGj4/FQ81vJ8OsQZ8p+b0O
+	 ESkN7PEDobdYQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Breno Leitao <leitao@debian.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
+Cc: Oleg Nesterov <oleg@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Sandipan Das <sandipan.das@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
+	mhiramat@kernel.org,
 	mingo@redhat.com,
 	acme@kernel.org,
 	namhyung@kernel.org,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.11 2/5] perf/x86/amd: Warn only on new bits set
-Date: Sun, 24 Nov 2024 07:46:35 -0500
-Message-ID: <20241124124643.3338173-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 1/4] uprobes: sanitiize xol_free_insn_slot()
+Date: Sun, 24 Nov 2024 07:46:55 -0500
+Message-ID: <20241124124702.3338309-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241124124643.3338173-1-sashal@kernel.org>
-References: <20241124124643.3338173-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,71 +49,81 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.11.10
+X-stable-base: Linux 6.6.63
 Content-Transfer-Encoding: 8bit
 
-From: Breno Leitao <leitao@debian.org>
+From: Oleg Nesterov <oleg@redhat.com>
 
-[ Upstream commit de20037e1b3c2f2ca97b8c12b8c7bca8abd509a7 ]
+[ Upstream commit c7b4133c48445dde789ed30b19ccb0448c7593f7 ]
 
-Warning at every leaking bits can cause a flood of message, triggering
-various stall-warning mechanisms to fire, including CSD locks, which
-makes the machine to be unusable.
+1. Clear utask->xol_vaddr unconditionally, even if this addr is not valid,
+   xol_free_insn_slot() should never return with utask->xol_vaddr != NULL.
 
-Track the bits that are being leaked, and only warn when a new bit is
-set.
+2. Add a comment to explain why do we need to validate slot_addr.
 
-That said, this patch will help with the following issues:
+3. Simplify the validation above. We can simply check offset < PAGE_SIZE,
+   unsigned underflows are fine, it should work if slot_addr < area->vaddr.
 
-1) It will tell us which bits are being set, so, it is easy to
-   communicate it back to vendor, and to do a root-cause analyzes.
+4. Kill the unnecessary "slot_nr >= UINSNS_PER_PAGE" check, slot_nr must
+   be valid if offset < PAGE_SIZE.
 
-2) It avoid the machine to be unusable, because, worst case
-   scenario, the user gets less than 60 WARNs (one per unhandled bit).
+The next patches will cleanup this function even more.
 
-Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Sandipan Das <sandipan.das@amd.com>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Link: https://lkml.kernel.org/r/20241001141020.2620361-1-leitao@debian.org
+Link: https://lore.kernel.org/r/20240929144235.GA9471@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/core.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ kernel/events/uprobes.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 920e3a640cadd..b4a1a2576510e 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -943,11 +943,12 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
- static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 6dac0b5798213..5ce3d189e33c2 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1629,8 +1629,8 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
+ static void xol_free_insn_slot(struct task_struct *tsk)
  {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	static atomic64_t status_warned = ATOMIC64_INIT(0);
-+	u64 reserved, status, mask, new_bits, prev_bits;
- 	struct perf_sample_data data;
- 	struct hw_perf_event *hwc;
- 	struct perf_event *event;
- 	int handled = 0, idx;
--	u64 reserved, status, mask;
- 	bool pmu_enabled;
+ 	struct xol_area *area;
+-	unsigned long vma_end;
+ 	unsigned long slot_addr;
++	unsigned long offset;
  
- 	/*
-@@ -1012,7 +1013,12 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
- 	 * the corresponding PMCs are expected to be inactive according to the
- 	 * active_mask
- 	 */
--	WARN_ON(status > 0);
-+	if (status > 0) {
-+		prev_bits = atomic64_fetch_or(status, &status_warned);
-+		// A new bit was set for the very first time.
-+		new_bits = status & ~prev_bits;
-+		WARN(new_bits, "New overflows for inactive PMCs: %llx\n", new_bits);
-+	}
+ 	if (!tsk->mm || !tsk->mm->uprobes_state.xol_area || !tsk->utask)
+ 		return;
+@@ -1639,24 +1639,21 @@ static void xol_free_insn_slot(struct task_struct *tsk)
+ 	if (unlikely(!slot_addr))
+ 		return;
  
- 	/* Clear overflow and freeze bits */
- 	amd_pmu_ack_global_status(~status);
++	tsk->utask->xol_vaddr = 0;
+ 	area = tsk->mm->uprobes_state.xol_area;
+-	vma_end = area->vaddr + PAGE_SIZE;
+-	if (area->vaddr <= slot_addr && slot_addr < vma_end) {
+-		unsigned long offset;
+-		int slot_nr;
+-
+-		offset = slot_addr - area->vaddr;
+-		slot_nr = offset / UPROBE_XOL_SLOT_BYTES;
+-		if (slot_nr >= UINSNS_PER_PAGE)
+-			return;
++	offset = slot_addr - area->vaddr;
++	/*
++	 * slot_addr must fit into [area->vaddr, area->vaddr + PAGE_SIZE).
++	 * This check can only fail if the "[uprobes]" vma was mremap'ed.
++	 */
++	if (offset < PAGE_SIZE) {
++		int slot_nr = offset / UPROBE_XOL_SLOT_BYTES;
+ 
+ 		clear_bit(slot_nr, area->bitmap);
+ 		atomic_dec(&area->slot_count);
+ 		smp_mb__after_atomic(); /* pairs with prepare_to_wait() */
+ 		if (waitqueue_active(&area->wq))
+ 			wake_up(&area->wq);
+-
+-		tsk->utask->xol_vaddr = 0;
+ 	}
+ }
+ 
 -- 
 2.43.0
 
