@@ -1,168 +1,206 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2051.outbound.protection.outlook.com [40.107.223.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C3817A597
-	for <linux-perf-users@vger.kernel.org>; Sun, 24 Nov 2024 22:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732488564; cv=none; b=lRMhHa2N17b1ilJSsIGtTMXYdpDDU5Tz3RpQH5Aux8uVNn8eYVMeTUUC8iIIXNCD7o9LfY+T7T+VTcW1no4ok8axsbArSuJstWWe4GbtPLdOoxXEFqfV/CuAWnSSxigSHVw08eKBQ771Hn9wWut/T1QlztTQefbSdRIPFgSM42s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732488564; c=relaxed/simple;
-	bh=gfnHJjwfgdKmCRW2N48UfWJk5ORO21VNu9CS8MFAIjI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HKWObaTtxsNtox1SykAPk9lg2twgZNnuzlnk4oIKbhfFE2UA7xTvqUeez0/XlJECVHHP0tc8/E7bjJj2kA9MW2Z/alwqW5a3WJ8e+Hn/k7GWGo0TpbN3nB3pxwr0K5yPw4OUKGgCvzBleYCYQc7htcw7hIevid3/svCGRzfkntE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q9aku3O8; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDA67FD;
+	Mon, 25 Nov 2024 03:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732506556; cv=fail; b=m22+aZnbgmyJ424JSBbwEvxekAlFlX3ZNVMb5NjNbJeB5nrBvwLqwnwie9OVPoMAIrA2yajQWlwWGuU18EGOnWpR8qYPfb40z89Rp7os8nr+gzs6lnD9jBLWPOutw7uSDCj2w8lHbpZ1iNfGTIr5EUB0njytwXIBIJBDzwhHvoQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732506556; c=relaxed/simple;
+	bh=CB9vTufXjeL2HLP/GyIbkyRAx+kZVah92Cg458BY8rY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=f6czmuQbR8bvldFy4CfyD+RKG7pMv6N2EkcR+jrsNSR+LApzxuHbX97w1dF56XaDd8A5YwyQ32ZPf5fmYifAbTVI2CF0bISECWgtLkyO2Guwv9EJvOZeZFCA9XSNSDCk/BF6UfcfLB+XUpkt+T+5PpNrqLA0TxXwzNMHmAehRfs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2htSCWkY; arc=fail smtp.client-ip=40.107.223.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q9aku3O8"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-724e5fb3f9dso1818942b3a.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 24 Nov 2024 14:49:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732488562; x=1733093362; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zX0nE7NDEdfGZrNZGwPLqU9rN5UAwEYfOh7fGJZubFM=;
-        b=q9aku3O8wNEEExJX+0bVdDkXZuHby/dpXe7BjFBdPHNRLd0xFeEzybjNuRDHtiNGu/
-         3z+qqLSeBJjyqYUfbcUOjIucPGIIXSETKCn1IMacN3XTA+HS0Z/orqTx8BJbzCn027F4
-         GS1GFB1zaho+b3SZb1+blK/sudbiElFVSOQOwP9q1jRF/z5DwDmfH8SRinZsANRoiPd9
-         Ke1kePLih0prfBJ6JDGKzQGrF/amubh0eP1tgvRL1nOA+pXpwS8/dUhUuXmEqWnervr7
-         4DL7EQc8y3bQLaGF34mQZM8pE6z1IZpxCATxHS6l5TvpatIiDc7KlrKOgrzVD/sJ1RC2
-         8mAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732488562; x=1733093362;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zX0nE7NDEdfGZrNZGwPLqU9rN5UAwEYfOh7fGJZubFM=;
-        b=LG8DbnW8V7Uh8uU7wPgS6Px4GLLx8eT/raB+xEXvZa/tsrPnAt29yzrtHp2mIwB0hT
-         qRxBi+drrdh9xmEuVcRWHx8sL4T4/WjSUwWjEsBidK5CboYI0Yp7vfinEi5bBQVkMUvE
-         DoOLOVioKPTnLoNfXcZ0sUq1xdeCz9vt/l33dLdq/iszwh2F3RGFOOW+G7r/I2+390fC
-         hak56iyUWZK0UscPXJ12mb25lUJ34yiZEaPbdYzeZNNMta4Gce9ItKV+mQPT9xLAJ5fl
-         AgpXqpvR7/Q9XHZ3m9QTF9pe2oO7rFciTvbwEYzClc/WlBfMNHciaod8+ywj18UndJQi
-         TfeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtvTaSBnviyRgMeFv1nd2YptHuGgwLAvmvBt4GL/4sqofOBtpdhDg54efv7dTf7818KfQFNfSz3rx0xr0NLY5x@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfY0MqFEjUdh5IhuSFvP0jNezbZMdQMQ/AwnFM62WCKucqkOlG
-	403gD+hx8BXxbcLp/RMurRkp87FgPyJurve5k3Glc+mfBMXZAP66YmwDn/q9UREa3VYC/wqkVDr
-	al9Bywdi+4O39SGwb6Q+Xp+teaQTFD4yFGgqf
-X-Gm-Gg: ASbGncvuCQVR/7bpHI/X+l5CM/DdlVUIX0myQjNkHHg/mnH2HOisMPkNLxUJ2SeBDlt
-	mQxMj1yrrzp7ru8VoCZKdtwLF4Bqm39rIY4AmvMZfBAeXV/u2kPYs0Pt+RzAVde8=
-X-Google-Smtp-Source: AGHT+IGly1+z6aeNBztEpVOsbXsN+8Ek9BfoSxWOu5bkpC+Sbuna4B2/9T9dhULWPlo4Oyv5U12MRtr3xKrQOEwO3aE=
-X-Received: by 2002:a05:6a00:c81:b0:720:36c5:b548 with SMTP id
- d2e1a72fcca58-724df684b57mr13854174b3a.16.1732488562364; Sun, 24 Nov 2024
- 14:49:22 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2htSCWkY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vCw2u1rOUsXdZea82+fdUiP2tuPVY80Trj0gBavBB6u3A28pvwM6QnHu6by6Qijp1Rl/XSOTzbSOy7GJddyFdV18ND+jEDBxnIBPHwbuBQjNGNvkxkdtfRzg0Uj7ApQib8jU/HgVuSvvy3RCvD4M5GQVeE+6XaM7nYdklhV7V+C2MDozTHen/K1oyZrJaCi0xPIzOE6KxIqbpgTo+2vZL+ug4LBNRZXyTdapkWZrx/KKErVTIYmGmGi57kUe8K0YRLaBsRnD+Zxick46iR0aTcX6cd9EK56jNfUYSNoo3z/D4fmcC9vX6Ic++jtfgLEXpMSXXOghbD/GC8skY0mHjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=muSTnc86zl4XOUwTXzoDD3yX18LOlL+yA7ntXogKrJc=;
+ b=vkXufznuKWEP0A6pfUEKUH9kLwNLCbLh5JFPdft8DRC5mYZ1Brb84FC95FGa2UMFM6Ips/hvRNpm6ow9mQ29DrGPNfUYyeEL5P938KiWYuBkNm81SlvAQ5K04p4wt+DbE2o4TdU/6speA86Nvewi8TZxFXvQ8ceQiScm3JjRd464d97cMmZvBxg1KjCw4SBy8Te7ay7aq1/R9r97sQzegZhJ7wrMjQAxdLhhQbs8Jt9NkqlITLBjGDcvjIY4QC+fRVr5aRo4dUhQV1OCAiAM85A+NY08cOr1c6eRizt0OUqNpwIXLt/GNFR8RCedoJ7CkhF+ieh2FLeodJL1pCQCPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=muSTnc86zl4XOUwTXzoDD3yX18LOlL+yA7ntXogKrJc=;
+ b=2htSCWkY41Nbw/OS/g9ujlFFsiQ7NzPgWSv68RGsyUO7AkQKfiv4zu/4GldKZ/GFHSnRvZ05z2Hx5Wf0jHWSoBxxem3Llf9ariPs4e2lAuuHyX/EUexTMNjZTA571hr6qDA54qKi0/PqCMby69GVM+Nonuf/54mQldYJywwlHAE=
+Received: from SA1PR03CA0023.namprd03.prod.outlook.com (2603:10b6:806:2d3::28)
+ by SJ2PR12MB9209.namprd12.prod.outlook.com (2603:10b6:a03:558::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.18; Mon, 25 Nov
+ 2024 03:49:10 +0000
+Received: from SA2PEPF00003F61.namprd04.prod.outlook.com
+ (2603:10b6:806:2d3:cafe::2d) by SA1PR03CA0023.outlook.office365.com
+ (2603:10b6:806:2d3::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.20 via Frontend
+ Transport; Mon, 25 Nov 2024 03:49:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF00003F61.mail.protection.outlook.com (10.167.248.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8182.16 via Frontend Transport; Mon, 25 Nov 2024 03:49:09 +0000
+Received: from [10.252.195.191] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 24 Nov
+ 2024 21:47:56 -0600
+Message-ID: <94d6c785-d79d-4055-bdcd-76076eae899a@amd.com>
+Date: Mon, 25 Nov 2024 09:17:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6743acf4.050a0220.1cc393.004d.GAE@google.com>
-In-Reply-To: <6743acf4.050a0220.1cc393.004d.GAE@google.com>
-From: Marco Elver <elver@google.com>
-Date: Sun, 24 Nov 2024 23:48:46 +0100
-Message-ID: <CANpmjNMQ7ZVG0i9j1K7J0yKrtfrFfHi6kXaA7FLKmX5T4yWXTw@mail.gmail.com>
-Subject: Re: [syzbot] [perf?] [trace?] KCSAN: assert: race in srcu_gp_start_if_needed
-To: syzbot <syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mark.rutland@arm.com, mhiramat@kernel.org, mingo@redhat.com, 
-	namhyung@kernel.org, oleg@redhat.com, peterz@infradead.org, 
-	syzkaller-bugs@googlegroups.com, RCU <rcu@vger.kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [sos-linux-ext-patches] [PATCH v2 1/6] sched/stats: Print domain
+ name in /proc/schedstat
+To: Peter Zijlstra <peterz@infradead.org>
+CC: <mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
+	<irogers@google.com>, <james.clark@arm.com>, <ravi.bangoria@amd.com>,
+	<yu.c.chen@intel.com>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
+	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
+	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
+	<vineethr@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <santosh.shukla@amd.com>,
+	<ananth.narayan@amd.com>, <sandipan.das@amd.com>, James Clark
+	<james.clark@linaro.org>
+References: <20241122084452.1064968-1-swapnil.sapkal@amd.com>
+ <20241122084452.1064968-2-swapnil.sapkal@amd.com>
+ <12995871-3186-4265-b1f5-520252b9757f@amd.com>
+ <20241122110853.GQ24774@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
+In-Reply-To: <20241122110853.GQ24774@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003F61:EE_|SJ2PR12MB9209:EE_
+X-MS-Office365-Filtering-Correlation-Id: 449aa44c-594a-489e-0cbd-08dd0d041e8d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bDJraDFubk1WakN3dkJjQzN2dHFRR2FNNmprS3o2OU0vOE1kcWo0SEQwblJ6?=
+ =?utf-8?B?djY0L3JpUUU1R285cStvOEJLaFBxTEtVckxzcUZEVFNmWjBTZE82T25sRVFG?=
+ =?utf-8?B?eE1lbmFpeXlKbWhORTh0T2J0Rno4Qkl1V3FyMlY1M0V5WmZ1WDVGeW00SGRo?=
+ =?utf-8?B?enJub2lmUGhZeVNuZ2xhWnVjK2V5UWpyQVNNNTF5SVpvcnpHdndNQml0YlJo?=
+ =?utf-8?B?bGlyRTRFRldNdXptMVJTS0tsK2lPWGtScG1LL1EwLzlXNmVFY3lWM3B5YjhL?=
+ =?utf-8?B?RjB3RExXUDYrMHo4bkJDdFdDak1WNXh1QVZvYThTMTBQRzNYVStGMHROWnlp?=
+ =?utf-8?B?K2ZTeDBOTldJYllSNkc1cmc0NDF1emkyWWdhQWVscUw1YWtIR0RFSERZTUwz?=
+ =?utf-8?B?czFRZ1NEQjNWUldBT09lQ0tOZ3JkZ2VpaWVuL0l2V1pCUElGL0d5Mkd1SVdh?=
+ =?utf-8?B?aXMyQ1ZpdWk4cnVucjNSdXVUTkRDK1pTZGpyRE5HS1pBNEQ1dklDZUJZb0cz?=
+ =?utf-8?B?aWdTVnA0Yjd3SDdZZFBsR09LYzh0TTl4ME1mZmlCbDlWQzNzQkVMOG9aUXFG?=
+ =?utf-8?B?NmRGL0FyaWpTeGE3M0lINkFocXJnSmJCM05VK3dTTllsdFBrd01uN2sybTNr?=
+ =?utf-8?B?TG1JdW0yQzFDczduc1FGZGFxUStLeWlvelFOV2l4QU5jdEliczdUWVdLanlq?=
+ =?utf-8?B?QWFveTVabkVuYkV1c0pjVE9iVUxGRjBNdGYvY0c5Z1VxdzJCSGZBOTRyWlpa?=
+ =?utf-8?B?QXhXWlB6OG1xdTgzbEdONlpKeWlMR2FWRy9wYmt2T3FwbEJFNVg4cURsdW0v?=
+ =?utf-8?B?SU50MVZKbzNxWHJPOWlabGYwV2g1di9peFVFS096SGVtMnpzMU1DTEJzQjc2?=
+ =?utf-8?B?bm9FRjRRbEJGeS9Ja3cvZFpsNGxhYjRRSjhlYm5DcW1CWmZDWHBVY0YzWXdF?=
+ =?utf-8?B?azBrMndqbjVxN3pyT1pEcW5Fdi9VS3hrdjVIeTNQbWh1dnJFZzN2VXNUNVFN?=
+ =?utf-8?B?OUVpVEdra0RybVRhWjdHWUpyYmZEVitNRTh4SG5lTGdackE1aDJwUllSaTNo?=
+ =?utf-8?B?OFhVaThVL0g1TEhhMjVjSlFKV2F3VDAxeVdSTUIwRE5ZeW5kTUxSSWVqRGF4?=
+ =?utf-8?B?WGhDN3JYRlhwN1F3Ymxha3JXdmx6aGthcmlpRnlUbVhqd0Qwa0d4T1hnbGpN?=
+ =?utf-8?B?dzJJVEE5SmtMdm9oYXhpNmkrMGdJanRJTjY4QTN4b0RkV0E4MDlKOGpTUFlo?=
+ =?utf-8?B?NGJZcEdNcTVOOGYwNEpaY0YrUGNuTWU0dk8vYXFEWVI1cFFZWE1RY2cyVThq?=
+ =?utf-8?B?MTAxL0gzdmYxV3Zpd0JNQk1vUmQ2ZmFpNXlHdnpZUUpPOXkwdVdnTGxRTnl2?=
+ =?utf-8?B?WW9oK0RrRjhBeHBGbVBIaHAreENMWEdVUmxMN1ZNamR0aWhCcnAyNktIMUpM?=
+ =?utf-8?B?czM5dGdLSGtWeE9OZnB3LzVUR2xyeGE3eVlna05sU2RQOWNiSEp6ZFAzUXV2?=
+ =?utf-8?B?SnVsOXd6ZFp4MlVIUE5qY3JxNEg3L0sxRUpDVVRlVU4rWVFuOU9WU2FiTGVn?=
+ =?utf-8?B?QWlPNGJxb0tyZDJmdmRhSTRSNVR1QnpnRm5lV3F0SGNVY2tvZVdXSXpFY0Ns?=
+ =?utf-8?B?UzltRjAzeVljQlpaWVEzT21NbWVXcFc4SnpqMFlxWGNaQWQwTkw0WGErTHo5?=
+ =?utf-8?B?NDZiTFdVQkNtSlRqb09aNkxsNTZRVWZLV2F0RlJBZTl5TnlSNGI3eGtKQ0Vi?=
+ =?utf-8?B?QnMxazRzeit4S25PZlZacW9HdzVIODlJSVUvNjlxRHVraHFrT2htMmVRdHlm?=
+ =?utf-8?B?KzAxeTQxVXVuNzZEQUZnVitPRHdtRmVER3N0dWoxR011TXpZWnVadlVXUVNU?=
+ =?utf-8?B?aFd3bzVxOWtnQlRnc01wUk5nckRINzJzTmt2OUxwNXBqOFdPOWZEWFJ6RnVp?=
+ =?utf-8?Q?Viv2rHaw6vjqeCn1mvv18yMu7rb8i1as?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2024 03:49:09.9287
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 449aa44c-594a-489e-0cbd-08dd0d041e8d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00003F61.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9209
 
-+Cc RCU
+Hi Peter,
 
-On Sun, 24 Nov 2024 at 23:47, syzbot
-<syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    42d9e8b7ccdd Merge tag 'powerpc-6.13-1' of git://git.kerne..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10a00778580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3d7fd5be0e73b8b
-> dashboard link: https://syzkaller.appspot.com/bug?extid=16a19b06125a2963eaee
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
->
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/ef231513adc7/disk-42d9e8b7.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/54caaac5960b/vmlinux-42d9e8b7.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/85b5a6566143/bzImage-42d9e8b7.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KCSAN: assert: race in srcu_get_delay kernel/rcu/srcutree.c:658 [inline]
-> BUG: KCSAN: assert: race in srcu_funnel_gp_start kernel/rcu/srcutree.c:1089 [inline]
-> BUG: KCSAN: assert: race in srcu_gp_start_if_needed+0x808/0x9f0 kernel/rcu/srcutree.c:1339
->
-> race at unknown origin, with assert no writes to 0xffffffff8676ffc8 of 8 bytes by task 6285 on cpu 0:
->  srcu_get_delay kernel/rcu/srcutree.c:658 [inline]
->  srcu_funnel_gp_start kernel/rcu/srcutree.c:1089 [inline]
->  srcu_gp_start_if_needed+0x808/0x9f0 kernel/rcu/srcutree.c:1339
->  __call_srcu kernel/rcu/srcutree.c:1384 [inline]
->  __synchronize_srcu+0x114/0x150 kernel/rcu/srcutree.c:1432
->  synchronize_srcu+0x1ae/0x1d0
->  uprobe_unregister_sync+0x1a/0x20 kernel/events/uprobes.c:1328
->  __probe_event_disable kernel/trace/trace_uprobe.c:1138 [inline]
->  probe_event_disable+0x1f5/0x240 kernel/trace/trace_uprobe.c:1222
->  trace_uprobe_register+0xbb/0x3c0 kernel/trace/trace_uprobe.c:1512
->  perf_trace_event_unreg+0x6c/0x1a0 kernel/trace/trace_event_perf.c:162
->  perf_uprobe_destroy+0x6a/0xf0 kernel/trace/trace_event_perf.c:345
->  _free_event+0x7ca/0xa10 kernel/events/core.c:5357
->  put_event kernel/events/core.c:5454 [inline]
->  perf_event_release_kernel+0x61a/0x670 kernel/events/core.c:5579
->  perf_release+0x1f/0x30 kernel/events/core.c:5589
->  __fput+0x17a/0x6d0 fs/file_table.c:450
->  ____fput+0x1c/0x30 fs/file_table.c:478
->  task_work_run+0x13a/0x1a0 kernel/task_work.c:239
->  resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
->  exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
->  exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
->  __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
->  syscall_exit_to_user_mode+0xa8/0x120 kernel/entry/common.c:218
->  do_syscall_64+0xd6/0x1c0 arch/x86/entry/common.c:89
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> value changed: 0x0000000000000000 -> 0x0000000000000001
->
-> Reported by Kernel Concurrency Sanitizer on:
-> CPU: 0 UID: 0 PID: 6285 Comm: syz.1.1056 Not tainted 6.12.0-syzkaller-08756-g42d9e8b7ccdd #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-> ==================================================================
->
->
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->
-> If you want to undo deduplication, reply with:
-> #syz undup
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion visit https://groups.google.com/d/msgid/syzkaller-bugs/6743acf4.050a0220.1cc393.004d.GAE%40google.com.
+On 11/22/2024 4:38 PM, Peter Zijlstra wrote:
+> On Fri, Nov 22, 2024 at 02:25:22PM +0530, Sapkal, Swapnil wrote:
+>> On 11/22/2024 2:14 PM, Swapnil Sapkal wrote:
+>>> From: K Prateek Nayak <kprateek.nayak@amd.com>
+>>>
+>>> Currently, there does not exist a straightforward way to extract the
+>>> names of the sched domains and match them to the per-cpu domain entry in
+>>> /proc/schedstat other than looking at the debugfs files which are only
+>>> visible after enabling "verbose" debug after commit 34320745dfc9
+>>> ("sched/debug: Put sched/domains files under the verbose flag")
+>>>
+>>> Since tools like `perf sched schedstat` require displaying per-domain
+>>> information in user friendly manner, display the names of sched domain,
+>>> alongside their level in /proc/schedstat if CONFIG_SCHED_DEBUG is enabled.
+>>>
+>>> Domain names also makes the /proc/schedstat data unambiguous when some
+>>> of the cpus are offline. For example, on a 128 cpus AMD Zen3 machine
+>>> where CPU0 and CPU64 are SMT siblings and CPU64 is offline:
+>>>
+>>> Before:
+>>>       cpu0 ...
+>>>       domain0 ...
+>>>       domain1 ...
+>>>       cpu1 ...
+>>>       domain0 ...
+>>>       domain1 ...
+>>>       domain2 ...
+>>>
+>>> After:
+>>>       cpu0 ...
+>>>       domain0:MC ...
+>>>       domain1:PKG ...
+>>>       cpu1 ...
+>>>       domain0:SMT ...
+>>>       domain1:MC ...
+>>>       domain2:PKG ...
+>>>
+>>> schedstat version has not been updated since this change merely adds
+>>> additional information to the domain name field and does not add a new
+>>> field altogether.
+>>>
+>>> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+>>> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+>>> Tested-by: James Clark <james.clark@linaro.org>
+>>
+>> Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
+> 
+> Surely you mean either acked-by or reviewed-by ? Otherwise I suggest you
+> re-read the documentation on tags.
+
+I took over the series from Ravi but forgot to add my S-o-b. I will make 
+sure to include it from next time onward.
+
+--
+Thanks and Regards,
+Swapnil
