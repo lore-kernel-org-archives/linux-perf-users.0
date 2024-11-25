@@ -1,204 +1,101 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A921AC453
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Nov 2024 17:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF90E1B87E3
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Nov 2024 18:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732555514; cv=none; b=fYCeYu9qH8Lv3Bw2BgW3cJVSxpp92q6kzuQuW3jZ85WLKznlvVBRZLMwPgq59CqqgATFjofz5K4RmgJ/1M0YcJxEcsbSKtO1+CdJB5cC45cMJb/U5hQz2vL9nOKv9bUpoohjWfGXXEplnRPEbqJpxE7woUSE4uaCjwRbXPdpsoI=
+	t=1732558122; cv=none; b=RhjmsjH6GHQghdTkuY4d14eMqhD+82kPZOh6ahwdOYqgPwhgE5qAHC6pfxlqGgHf0QSl5r1NQAurUmkTwmDBpH3hfVcyAOjiW5udY5WOJmL0tpC2R1TFILVRO2nKpcIjKIYjAdLdL7UVUS1n9PXc0NgfmFPG8HB/mxwpSsrWxRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732555514; c=relaxed/simple;
-	bh=cXXDgeSD+jw2KeY52OCLTmje8zKuhvYJUpZ0cZ7dS6Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ft6E4hm/saGo/CoTysOiWDR6lu5VGLaGxTWbQ031/dCIIDhqQPuRe4ge/gu2uQCThc2h8TGSexpfMxuxNfffPDUyxcee4qypGjR9A3Kiha9aUwT6i7LRI/SSdkxgDFQJMHia9lc2OTdMUplsdQkOIsMMn7cJ9IKiTRjP0yJGKxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Yi58SlaA; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1732558122; c=relaxed/simple;
+	bh=11zjLNQRBrRqXz8Fdnz4HA4WTCkdXVIGkEO5YqTF+ek=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Hi9uCgJOZegMZYsmoqWNjM3GTB87V/gXzK9bLwvgtAbTbCMEpUdvSvi0DeqvEM+BerHuI/NUY+Orcd+Fd9gLKef8DvDdmJP7kc9BALG/9k2f5fm7AgKqClf1EqvpWRfbRuUZGF+NAp5bvTZucRczEI2rhi9N+D38AHW0ZL7dves=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name; spf=pass smtp.mailfrom=michel-slm.name; dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b=P8DDlp0i; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michel-slm.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Yi58SlaA"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A91ECC0004;
-	Mon, 25 Nov 2024 17:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1732555509;
+	dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b="P8DDlp0i"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4XxtxD5QLWz9srv
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Nov 2024 19:08:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michel-slm.name;
+	s=MBO0001; t=1732558112;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mKKtIUCM+nujwXWpeqVUGKqdJOI1jPhgTplYDzhZXLs=;
-	b=Yi58SlaAPjSPmUfOjKPZcePHEC/Q5W2sUupTltLX19URNueBsn8nhALKdDBAPiQOIUAjMg
-	0gG8uKMnpBR6c3x/uAIH5qSXknEbs8uCqsZSlHfbl452ivk3qo0TPHvoxWUH+619+oPdwC
-	HRSgiPuGym7Un5x9Yst+X+DhsoFI35S0ykRmL6LQ/ODaoWo3AYkGdAY57c/RQMLI1B4di3
-	6NhQwKURe2WW4AwJlqqtj0STmkcypYjDFyiDOMSqLrsADKgOQgQd/njowFDJ04uAVmy62I
-	2SOQE5qugup/1m9sUXmU7Y0/FScqtlY3F6v+uGCK1cwzgz0I9EWOFYqlq7opXg==
-Date: Mon, 25 Nov 2024 18:25:06 +0100
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Andi Kleen <ak@linux.intel.com>
-Cc: namhyung@kernel.org, linux-perf-users@vger.kernel.org, "Yann E. MORIN"
- <yann.morin.1998@free.fr>, "buildroot@buildroot.org"
- <buildroot@buildroot.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v9 1/4] Create source symlink in perf object dir
-Message-ID: <20241125182506.38af9907@booty>
-In-Reply-To: <20240807231823.898979-1-ak@linux.intel.com>
-References: <20240807231823.898979-1-ak@linux.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=ybUIq0RCMI2RaKcEEe3I0eR8zUY7n212T8NIt88xDsA=;
+	b=P8DDlp0iQJ/s+teanXjQ5R3AoQFQ1L5yiJlCf+RGrEYrWhDW1+JAF4ZGsEKHInmAfGsHD7
+	zylT8JJwD/7fp9082j2GvE8DlqcycJVNqniLea2TH9xWtUmKgQzW7Djcddf2/lQ+g4SARk
+	y0m2k8hoyDFtgGRJsN8VDOK/jyF4yxZauJ/bFXm3F2KbNFjv487Ik5Drm3zqvLCawPuaAH
+	XYSNOKlne5TLwXoUQLI5+WaAou9+VWE7nv5pdYzh1IcIZEDdgZYuK09VwxJqBab6QqYxFJ
+	oc7QmH7mP7wR9z9lnSBEgbKk+H6Lyl9JvYx+ztBI4EsMBwuBtz7cilMi2YRPNw==
+Date: Mon, 25 Nov 2024 12:08:28 -0600
+From: Michel Lind <michel@michel-slm.name>
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Recent tarballs missing some files
+Message-ID: <Z0S9HCQ0Z2d/I+Uh@hyperscale.parallels>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="RgzxVy1xX82dH90t"
+Content-Disposition: inline
+X-Rspamd-Queue-Id: 4XxtxD5QLWz9srv
 
-Hello Andi,
 
-+cc Yann and the Buildroot mailing list (see the end of this report).
+--RgzxVy1xX82dH90t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed,  7 Aug 2024 16:18:20 -0700
-Andi Kleen <ak@linux.intel.com> wrote:
+Hello all,
 
-> Create a source symlink to the original source in the objdir.
-> This is similar to what the main kernel build script does.
-> 
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> ---
->  tools/perf/Makefile.perf | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 175e4c7898f0..d46892d8223b 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -163,6 +163,8 @@ ifneq ($(OUTPUT),)
->  # for flex/bison parsers.
->  VPATH += $(OUTPUT)
->  export VPATH
-> +# create symlink to the original source
-> +SOURCE := $(shell ln -sf $(srctree)/tools/perf $(OUTPUT)/source)
+Per discussions with acme back at LPC, I'm working on packaging a
+standalone perf RPM, initially for the CentOS Hyperscale SIG and
+potentially for Fedora later on.
 
-I found that since this patch got applied in 890a1961c812 (v6.12-rc1)
-building perf fails silently in some cases.
+I noticed that, while perf 6.9.0 builds fine from the source tarball,
+more recent versions (at least 6.11 and 6.12) fails due to a missing
+header:
 
-The cases I have tested:
- - make <FLAGS> -C tools/perf                       -> OK
- - make <FLAGS> -C tools/perf O=/my/out/of/tree/dir -> OK
- - make <FLAGS> -C tools/perf O=tools/perf          -> fails
+```
+In file included from /builddir/build/BUILD/perf-6.12.0/tools/include/uapi/=
+linux/bpf_perf_event.h:11,
+                 from libbpf.c:36:
+/builddir/build/BUILD/perf-6.12.0/tools/include/uapi/asm/bpf_perf_event.h:2=
+:10: fatal error: ../../arch/arm64/include/uapi/asm/bpf_perf_event.h: No su=
+ch file or directory
+    2 | #include "../../arch/arm64/include/uapi/asm/bpf_perf_event.h"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+```
 
-The failure in the third case is silent: make exits with a return value
-of 0, but there is no perf executable created.
+I can submit a patch to fix this (and any other missing files), if
+someone could point me to where the script is that generates the perf
+tarballs.
 
-Even 'make <FLAGS> -C tools/perf install' exits returning 0, but no
-executable is installed. However the following lines are output during
-'make install', which are a sign of this issue happening:
+Thanks,
 
-  install: omitting directory '/home/murray/w/bootlin/linux/tools/perf/perf'
-  ln: failed to access '/tmp/aaa/usr/bin/perf': No such file or directory
+--=20
+ _o) Michel Lind
+_( ) identities: https://keyoxide.org/5dce2e7e9c3b1cffd335c1d78b229d2f7ccc0=
+4f2
 
-I realize 'O=tools/perf' is "useless" in the sense that the same result
-would be obtained by not setting 'O' at all. However I also believe it
-is expected that O=tools/perf should work equally to not setting 'O',
-and as such there is a regression.
+--RgzxVy1xX82dH90t
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Also, right now the Buildroot embedded Linux build system builds perf
-by always passing O=$(LINUX_DIR)/tools/perf/, thus it is currently
-broken for kernels 6.12-rc1 and later.
+-----BEGIN PGP SIGNATURE-----
 
-Below is the test script I wrote to automate my testing. It is a bit
-more complex than expected because it needs to hide a different bug,
-which would otherwise mask the one being reported here. A slightly
-different version of this script was used to automate 'git bisect'.
+iHUEABYKAB0WIQRdzi5+nDsc/9M1wdeLIp0vfMwE8gUCZ0S9HAAKCRCLIp0vfMwE
+8peCAP9DwTdrEujcB5ilzdegzy04y/b6Ye+LHQXSM0JgblGtigEA5TY13/197nX+
+UwMuMXYH1tcSymvzqEpa/vvjz1sU9QM=
+=4QBi
+-----END PGP SIGNATURE-----
 
--------------------------8<-------------------------
-
-#!/bin/sh
-
-# Usage:
-#   build-perf-report          Build with O=tools/perf
-#   build-perf-report <DIR>    Build with O=<DIR>
-
-set -eu
-
-# Default to O=tools/perf
-OUT_DIR=${1:-tools/perf}
-
-echo "Output dir: ${OUT_DIR}"
-
-# This is the toolchain I initially used to reproduce the issue:
-# https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64/tarballs/aarch64--glibc--stable-2024.02-1.tar.bz2
-#
-# However commenting the two lines for a native build is equally
-# reproducing the problem on my x86_64 Ubuntu 22.04 host
-export ARCH=arm64
-export CROSS_COMPILE="ccache ${HOME}/x-tools/aarch64--glibc--stable-2024.02-1/bin/aarch64-linux-"
-
-LINUX_MAKE_FLAGS="\
-    GIT_DIR=. \
-    KCFLAGS=-Wno-attribute-alias \
-    WERROR=0 \
-    REGENERATE_PARSERS=1 \
-    DESTDIR=/tmp/aaa \
-    prefix=/usr \
-    NO_GTK2=1 \
-    NO_LIBPERL=1 \
-    NO_LIBPYTHON=1 \
-    NO_LIBBIONIC=1 \
-    NO_LIBTRACEEVENT=1 \
-    NO_NEWT=1 \
-    NO_SLANG=1 \
-    NO_LIBAUDIT=1 \
-    NO_LIBUNWIND=1 \
-    NO_LIBNUMA=1 \
-    NO_LIBELF=1 \
-    NO_DWARF=1 \
-    NO_DEMANGLE=1 \
-    NO_LIBCRYPTO=1 \
-    NO_ZLIB=1 \
-    NO_LZMA=1 \
-    -C tools/perf O=${OUT_DIR}
-"
-
-echo "Kernel version: $(git describe)"
-
-# Revert (without committing) 13d675aea6cac5bb4619ef9e3fdd90129fe6d139
-# which introduces a different build failure (fixed by a later commit)
-# masking the issue being examined
-git checkout -- .
-git show 13d675aea6cac5bb4619ef9e3fdd90129fe6d139 | git apply || :
-
-# Clean the DESTDIR
-rm -fr /tmp/aaa/
-
-git clean -xdfq
-make defconfig
-
-# If building out of tree, create an empty build dir
-if [ ${OUT_DIR} != "tools/perf" ]; then
-    rm -fr ${OUT_DIR}
-    mkdir -p ${OUT_DIR}
-fi
-
-make ${LINUX_MAKE_FLAGS}
-make ${LINUX_MAKE_FLAGS} install
-
-# remove the fix added above
-git checkout -- .
-
-echo "-------------------------------------------------------"
-echo "perf files in O (${OUT_DIR}):"
-find ${OUT_DIR} -name perf -not -type d  | xargs file
-echo "-------------------------------------------------------"
-echo "perf executable in DESTDIR:"
-find /tmp/aaa/ -name perf -not -type d | xargs file | grep 'executable'
-echo "-------------------------------------------------------"
-
--------------------------8<-------------------------
-
-Best regards,
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--RgzxVy1xX82dH90t--
