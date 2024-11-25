@@ -1,153 +1,95 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5236418D625
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Nov 2024 13:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62F918872F;
+	Mon, 25 Nov 2024 13:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732540369; cv=none; b=V4szd5v4NBZDSS6g7smEXF0gCbh675nnhPlUqOrepU57NV+S4WE6OqGoEfakpEheXe+5WBcd0gsRK0IHOz+EEvx2aVayS1QlLAwYnHhcCsLbwZ0JOOVV7a+tUG2AVJDlgs01Nmigi4apOsaJ/vr725iAsPSupraHZ9QCwbE6Du0=
+	t=1732542096; cv=none; b=Q8JGkBpVFk9idxWRZvZIu4QCIHe+vf1rXl0bNr+xf8U6uAgnMyJh78/Zh83Jexoz7wu2yXCf3IkpWVyJHOB2P30PsT8HmXrH0pUIFasM07oCAdccgWGmiaGbykkwGjDqelp6g+f/tzT1FDOGMTIND0u5Xs2Stax+auxxSUvH7mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732540369; c=relaxed/simple;
-	bh=5ooC9SRR8wfj/xsB/tqu9Q40s95lynM1BbZz9VthDRo=;
+	s=arc-20240116; t=1732542096; c=relaxed/simple;
+	bh=gmh8u5fmTOhVEwnQk+QVm4d4/vdvrfXAcKp9kKoQHJY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s64xhjAR5BDmJHFl6AQxX3foktcTlrHIpqYwKz5VEtjCQxa3CYVFqRJmoCXIGuZO0xbc8vwD4pXJqzG9zz0oXAV2DSJ2h2Q85uvbijvIldjDzL6+67+axhQmgiCbh8JwQfwzwGaJJAYvwNKMcnxwi3X9urVN6vjhI9biq9bP06Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Date: Mon, 25 Nov 2024 14:12:41 +0100
-From: Guilherme Amadio <amadio@gentoo.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
-Subject: Re: perf test for inet_pton probe fails to match stacktrace
-Message-ID: <Z0R3ySrb8iZQd17O@gentoo.org>
-References: <Z0D5FDu/sErQ0V/2@gentoo.org>
- <20241124105053.GA812108@e132581.arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=B9AKrMjGIlzS6jFsF6qjaDmkOSj0ZQd8iQvrF5KVDWNVhiLxwo5iU7glzTksvs/Lmxqj6EOSDSnI6tvVI1xjpgUKH8PCyPlz4F27TEHk9zrXRBzAaA6bRNAcQUIi3JzuBkO566LWXmmTdBKTZjfe4Tj11g+GL6QSea70/xFRzbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DIGJmEUB; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DIGJmEUB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=NUza1fQdfVZ8WT0a3jXWk6XdwOIL6+LMHU1LXuCQ2E8=; b=DIGJmEUBW9wfo3TGgFrwNniyDc
+	YxCoxwxp/98UxAgbPSDVZ4m9tVxkSmJ6fvkEOEPQWEktlc5hoj4EAM50mW2ytEoEN0bg7kLpCKJBh
+	QNhhIZ/Jb3M+WcXkROyK/DH895TIhf+3LY/tvcPTH9jTShOiPOFWcMJsgvye1koC2MKQ6zuhYVq9T
+	viF/N9+dyE9dc0xf5Zr3y4As4IHEF8f2lfxl2n4uZ+IDQnhu0sgzfRvY5aOxf/xTYiP8PdWzr2+RU
+	R3S4dWB9FQS6jkHlyEVOLO99VpAR3yYH8krG75NGIWd1nAf1GXGEyr7p0jSCC0jyhMmOcnQVVbCVW
+	aLnMhiHQ==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tFZL0-0000000BvUW-24RM;
+	Mon, 25 Nov 2024 13:41:15 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1B76430026A; Mon, 25 Nov 2024 14:41:15 +0100 (CET)
+Date: Mon, 25 Nov 2024 14:41:15 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	irogers@google.com, james.clark@arm.com, ravi.bangoria@amd.com,
+	yu.c.chen@intel.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	rostedt@goodmis.org, vincent.guittot@linaro.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	gautham.shenoy@amd.com, kprateek.nayak@amd.com,
+	juri.lelli@redhat.com, yangjihong@bytedance.com, void@manifault.com,
+	tj@kernel.org, vineethr@linux.ibm.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, santosh.shukla@amd.com,
+	ananth.narayan@amd.com, sandipan.das@amd.com,
+	James Clark <james.clark@linaro.org>
+Subject: Re: [PATCH v2 1/6] sched/stats: Print domain name in /proc/schedstat
+Message-ID: <20241125134115.GB38837@noisy.programming.kicks-ass.net>
+References: <20241122084452.1064968-1-swapnil.sapkal@amd.com>
+ <20241122084452.1064968-2-swapnil.sapkal@amd.com>
+ <20241122111253.GR24774@noisy.programming.kicks-ass.net>
+ <fcefeb4d-3acb-462d-9c9b-3df8d927e522@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241124105053.GA812108@e132581.arm.com>
+In-Reply-To: <fcefeb4d-3acb-462d-9c9b-3df8d927e522@amd.com>
 
-Dear Leo,
-
-On Sun, Nov 24, 2024 at 10:50:53AM +0000, Leo Yan wrote:
-> Hi Guilherme,
+On Mon, Nov 25, 2024 at 06:01:16PM +0530, Sapkal, Swapnil wrote:
+> Hello Peter,
 > 
-> On Fri, Nov 22, 2024 at 10:35:16PM +0100, Guilherme Amadio wrote:
-> 
-> [...]
-> > [...]
-> 
-> This is not the first reported failure on this case, see [1] for
-> previous one.
-> 
-> I assume you are working on x86_64 machine.  Could you confirm if the
-> change below can fix your issue?  If yes, I will send a formal patch.
-
-Indeed, I am working on an AMD 3950X, and have glibc 2.40 installed.
-The patch you sent didn't work out of the box, but with minor modifications
-I could fix it. I just needed to replace nm -D $libc with nm $libc for it work.
-The reason is that gaih_inet doesn't show with nm -D for my glibc:
-
-$ nm -D /usr/lib64/libc.so.6 | grep getaddrinfo
-0000000000116a40 T getaddrinfo@@GLIBC_2.2.5
-000000000010c140 T getaddrinfo_a@GLIBC_2.2.5
-000000000010c140 T getaddrinfo_a@@GLIBC_2.34
-$ nm /usr/lib64/libc.so.6 | grep getaddrinfo
-0000000000116a40 t __GI_getaddrinfo
-000000000010c140 t __getaddrinfo_a
-0000000000115e53 t __libc_getaddrinfo_freemem
-0000000000116a40 T getaddrinfo
-000000000010c140 T getaddrinfo_a@@GLIBC_2.34
-000000000010c140 T getaddrinfo_a@GLIBC_2.2.5
-
-$ nm -D /usr/lib64/libc.so.6 | grep gaih_inet
-$ nm /usr/lib64/libc.so.6 | grep gaih_inet
-0000000000115405 t gaih_inet
-00000000001139b2 t gaih_inet_serv
-0000000000177780 r gaih_inet_typeproto
-
-Using nm $libc in both cases, and increasing max-stack to 4 allows the test to pass:
-
-$ sudo ./perf test -vF pton
---- start ---
-ping 1237113 [000] 18561.204983: probe_libc:inet_pton: (7f7c34d38eb7)
-7f7c34d38eb7 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-7f7c34d4b517 gaih_inet+0x112 (/usr/lib64/libc.so.6)
-7f7c34d4cb73 getaddrinfo+0x133 (/usr/lib64/libc.so.6)
-55680ac46518 [unknown] (/usr/bin/ping)
----- end ----
- 86: probe libc's inet_pton & backtrace it with ping                 : Ok
-
-
-The final patch I had to apply is below:
-
-perf $ git diff
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 47a26f25db9f..18274e1c315c 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -53,7 +53,16 @@ trace_libc_inet_pton_backtrace() {
-                echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-                ;;
-        *)
--               eventattr='max-stack=3'
-+               eventattr='max-stack=4'
-+               # Add gaih_inet to expected backtrace only if it is part of libc.
-+               if nm $libc | grep -F -q gaih_inet; then
-+                       echo "gaih_inet\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
-+               fi
-+               # The new version libc (e.g. libc 2.36) contains symbol getaddrinfo@@GLIBC_2.17
-+               # which is not used. Do strict checking for 'getaddrinfo' without any suffix.
-+               if nm $libc | grep -q 'getaddrinfo$'; then
-+                       echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
-+               fi
-                echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-                ;;
-        esac
-
-Please feel free to add Tested-by: and/or Reviewed-by: Guilherme Amadio <amadio@gentoo.org> 
-to the final patch as you see fit. Thank you!
-
-Best regards,
--Guilherme
-
-> 
-> Thanks,
-> Leo
-> 
-> ---8<--
-> 
-> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> index 47a26f25db9f..5a2d641bf166 100755
-> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> @@ -54,6 +54,15 @@ trace_libc_inet_pton_backtrace() {
->                 ;;
->         *)
->                 eventattr='max-stack=3'
-> +               # Add gaih_inet to expected backtrace only if it is part of libc.
-> +               if nm -D $libc | grep -F -q gaih_inet; then
-> +                       echo "gaih_inet\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
-> +               fi
-> +               # The new version libc (e.g. libc 2.36) contains symbol getaddrinfo@@GLIBC_2.17
-> +               # which is not used. Do strict checking for 'getaddrinfo' without any suffix.
-> +               if nm -D $libc | grep -q 'getaddrinfo$'; then
-> +                       echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
-> +               fi
->                 echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
->                 ;;
->         esac
-> 
-> [1] https://lore.kernel.org/linux-perf-users/20241025132021.GB359792@e132581.arm.com/
-> 
-> > If you could suggest a way to fix this, I'd appreciate it.
+> On 11/22/2024 4:42 PM, Peter Zijlstra wrote:
+> > On Fri, Nov 22, 2024 at 08:44:47AM +0000, Swapnil Sapkal wrote:
 > > 
-> > Best regards,
-> > -Guilherme
+> > > schedstat version has not been updated since this change merely adds
+> > > additional information to the domain name field and does not add a new
+> > > field altogether.
 > > 
-> > 
+> > So I don't care much either way, but if an existing tool is trying to
+> > parse the domain number, it might now get confused by the extra
+> > characters. I know of no such tool, just being pedantic.
+> 
+> I will change the schedstat version so that it will not break any existing
+> tools.
+> 
+> However the domain name is under CONFIG_SCHED_DEBUG and thus incrementing
+> the schedstats version is not sufficient when this config option is
+> disabled. Is it okay for you to move domain name out of CONFIG_SCHED_DEBUG?
+
+I suppose so..
+
+> Previously, I sent couple of patches to change the schedstat layout for
+> * Correctly accounting the different types of imbalances [1]
+> * Accurately computing the task hot migrations [2] (This was your patch)
+> I would like to include these two patches that better helps justify the
+> version change. Is that okay by you?
+
+Yeah, sure.
