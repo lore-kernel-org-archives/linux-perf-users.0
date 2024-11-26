@@ -1,37 +1,45 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD2D7E782
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 18:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CA816F0E8;
+	Tue, 26 Nov 2024 19:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732646183; cv=none; b=j/qQUgbNsm3VZ0ZVHXGdGHJiMHzG5vb2GLZUhA/aK8PW+fykETR9dLtX8wXpzf8N+huUA/xCuPo8POMbIFY7FwHk/FSViBsWBaH6hdAy42ubPI4NqNXz3d4SJ6qL8IjEKYSn/dA5kJvCAn/BXrUhnvp4LXIxagTN/Y2lyQlceto=
+	t=1732647905; cv=none; b=qVXou1tO64OWIKNi9yCYue7H6QTMTgwoyLgZRbcldDJ7Ecdx17zyRktgxJiJmllLXRqGfjvkvlV/rlq5mAKSNIQvYRIyMrr5umo/dZVCSe7q8VHSQiAEg+sqw9/BDEHG+MrBza0uu6k8/nKHyZT46kH0IfbHwibOkdIuPLV1klM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732646183; c=relaxed/simple;
-	bh=5NoTwEvyzM55AxuEzd4NK/mKY+JTjZvjmkBthHN41RA=;
+	s=arc-20240116; t=1732647905; c=relaxed/simple;
+	bh=pEIGDwnyL7MiIoKNvEGS/cLLg78Itlh+7g3BTqwGbLs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RJndnQVv1Fe+s29QeL05X852rU76aIdgcieXwuvtMPgll1huyGImAgoCR0UV6mIv4iwUU0GCAwLe2CH2FTjSvKO2cGkcTd3TUfVh6v9H15aH/ciEEq/Mtn3ODfwKnZtNonQnPOpMYWEHig/XwhYrmXDzYtkuCBO1pSSvJU7/VHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1761153B;
-	Tue, 26 Nov 2024 10:28:05 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C6003F66E;
-	Tue, 26 Nov 2024 10:27:35 -0800 (PST)
-Date: Tue, 26 Nov 2024 18:27:34 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Guilherme Amadio <amadio@gentoo.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: perf test for inet_pton probe fails to match stacktrace
-Message-ID: <20241126182734.GB15252@e132581.arm.com>
-References: <Z0D5FDu/sErQ0V/2@gentoo.org>
- <20241124105053.GA812108@e132581.arm.com>
- <Z0R3ySrb8iZQd17O@gentoo.org>
- <Z0VXvySyHm4q4r2c@google.com>
- <20241126102705.GA15252@e132581.arm.com>
- <Z0X5y-1ZiE-_FnbY@x1>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sC+YOCI/VDzZ04OvYddiO7cnX83g+d0sN7Kw4bvEyQIcx01tkpBOVCee0RTWXTCQAsVU6gBvWNMrwuHK+E2K+5BlCJ6fuk7zZkHRxp6a6vtHySbqVj71PZWt1pflskT2k9Ccq0BpQek4YUforsiuz5akwZJOZZ22wcNezdU2IMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XnuGWi41; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XnuGWi41"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4274C4CECF;
+	Tue, 26 Nov 2024 19:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732647905;
+	bh=pEIGDwnyL7MiIoKNvEGS/cLLg78Itlh+7g3BTqwGbLs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XnuGWi41ZKX9U/C3+WDiKp2Ar+a1up1qv1dUONEb/Z/uGEJzO+C526Cigte6ISpYA
+	 OvMU1lSaHnlm44V+dz2TRAuj/dEfhIyC49UYZ3q8OomoK/aGcapuOB3hbLMoMlJAv1
+	 hK4M3uMep3TgCUunD+SR59Ew/qvFgEUHA++wIwKLgQksR1VhycHT4Yl7JftS7fJu+W
+	 c8fXNT1zzbS9ObZqMGr/TcWzcxuUzfZ+qttDsum0aeA8hQRwzI5oqyvGvAj59sI3yK
+	 xq0IMnhA+UjxWrTpZn9Mka6w4DN4AbGrundzDS5A1tkaeFSqopdcHWOg/FHqVKZ/kS
+	 t27hDpveOoTzA==
+Date: Tue, 26 Nov 2024 16:05:02 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V15 0/7] perf/core: Add ability for an event to "pause"
+ or "resume" AUX area tracing
+Message-ID: <Z0Yb3r6GjUZck77r@x1>
+References: <20241114101711.34987-1-adrian.hunter@intel.com>
+ <9bb112f8-0af1-4517-a4b8-bd2edacce07c@intel.com>
+ <Z0YChjympWOZeu1e@x1>
+ <bb2821b7-4440-4ecc-925e-4d78ba60fef8@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,71 +48,29 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z0X5y-1ZiE-_FnbY@x1>
+In-Reply-To: <bb2821b7-4440-4ecc-925e-4d78ba60fef8@intel.com>
 
-Hi Arnaldo,
+On Tue, Nov 26, 2024 at 07:56:12PM +0200, Adrian Hunter wrote:
+> On 26/11/24 19:16, Arnaldo Carvalho de Melo wrote:
+> > On Tue, Nov 26, 2024 at 02:59:02PM +0200, Adrian Hunter wrote:
+> >> On 14/11/24 12:17, Adrian Hunter wrote:
+> >>> Note for V15:
+> >>> 	Same as V14 but without kernel patches because they have been
+> >>> 	applied, and updated "missing_features" patch for the new way
+> >>> 	of detecting missing features.
 
-On Tue, Nov 26, 2024 at 01:39:39PM -0300, Arnaldo Carvalho de Melo wrote:
+> >> Still apply
+ 
+> > So the kernel part is in, I'll go over this after getting a machine with
+> > a kernel with those features so that I can test it all together.
+ 
+> To be clear, this is just a software feature, so any machine
+> with Intel PT will do. Kernel can be from mainline tree or tip.
 
-[...]
+Thanks for the clarification, the way I wrote it was ambiguous, maybe
+somebody would think I needed some specific machine with some
+special/new hardware feature (some new Intel PT feature, that is), but I
+understood that this is purely a software/kernel feature, needing only a
+machine with "regular" Intel PT.
 
-> Seems to work:
-> 
-> Before, on a:
-> 
-> root@number:~# grep -m1 'model name' /proc/cpuinfo
-> model name      : Intel(R) Core(TM) i7-14700K
-> root@number:~#
-> 
-> root@number:~# perf test -vF pton
-> --- start ---
-> ping 229025 [017] 34027.968348: probe_libc:inet_pton: (7fc4542c10d0)
-> 7fc4542c10d0 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-> 7fc4542d5a55 getaddrinfo+0xcf5 (/usr/lib64/libc.so.6)
-> FAIL: expected backtrace entry ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" got "7fc4542d5a55 getaddrinfo+0xcf5 (/usr/lib64/libc.so.6)"
-> ---- end ----
->  86: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-> root@number:~#
-> 
-> With your patch:
-> 
-> root@number:~# perf test -vF pton
-> --- start ---
-> pattern: ping[][0-9 \.:]+probe_libc:inet_pton: \([[:xdigit:]]+\)
-> line: ping  231118 [023] 34089.948542: probe_libc:inet_pton: (7f635297f0d0)
-> found=0
-> pattern: .*inet_pton\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/libc.so.6|inlined\)$
-> line: ping  231118 [023] 34089.948542: probe_libc:inet_pton: (7f635297f0d0)
-> found=1
-> line: 7f635297f0d0 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-> found=0
-> pattern: .*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$
-> line: ping  231118 [023] 34089.948542: probe_libc:inet_pton: (7f635297f0d0)
-> found=1
-> line: 7f635297f0d0 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-> found=1
-> line: 7f6352993a55 getaddrinfo+0xcf5 (/usr/lib64/libc.so.6)
-> found=1
-> line: 55ae71919969 [unknown] (/usr/bin/ping)
-> found=0
-> ---- end ----
->  86: probe libc's inet_pton & backtrace it with ping                 : Ok
-> root@number:~#
-> 
-> Replace that "unfound" with "Didn't find the"
-
-Will do.
-
-> And using 'found' as a variable name that when zero means "Ok, found"
-> and when 1 (grep failed to find the regexp) means "Didn't find" looks
-> confusing.
-
-Indeed.  Will refine this.
-
-> General idea seems to make the test resilient to the differences while
-> still testing the backtrace in uprobes events for expected entries.
-
-Will send formal patch.
-
-Thanks a lot for the testing,
-Leo
+- Arnaldo
