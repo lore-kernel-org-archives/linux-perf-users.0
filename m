@@ -1,330 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614951D4169;
-	Tue, 26 Nov 2024 12:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7525B1CBEA4
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 13:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732625955; cv=none; b=N8+yPb2M9DAjHNvQX0qXwv/n+W/++hsdIzhhMqcCs/m3XBDrsHPlKo82ixDZHKV5Y1rii0EYjaKvoGupS0GxNLYOXS95XNDhBfKN9sXgZclwGMwFa7W2Y/mG3j+NICmOpYoswMNaY2e6X3+rFdJfyMQdt7GamQabeAVaHUsT7oE=
+	t=1732626520; cv=none; b=Zw0zdHI7Hq5Kz6Wepbc9heiXtEnAQtN42dQAtZEIRBMHbWJSnB/ymyrKe9TdZ54GWsljugRzgTtNINhxLFcuaEwo0nCZD6uMiGkFEHTP9ji3swm6XeZ4TKicFB0xeyqMek7mEU77OJ4SHTORxqMVM4gBx26C7/HguUKR/vFnS68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732625955; c=relaxed/simple;
-	bh=fsaOC/+JPOgtwlDwpkvd9NvolL4P4q4NK24BU2LbZrc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MEK4BKcdKMVd3SHUNUq/jImiJu83Kdi7umIt34lsfEktVegQ3f1GUdp9R/U8e5KVPcAAObgGnYMDjSwcK6ZM38JGvbU0wtB8WwSQASd67A/kDdivS4K52MvNX2TU/Vy/hGcUxcKVb7dfdIABUE9I4n39g+ERL1FqqV4WlZkyVPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SM8e16LO; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SM8e16LO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732625953; x=1764161953;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=fsaOC/+JPOgtwlDwpkvd9NvolL4P4q4NK24BU2LbZrc=;
-  b=SM8e16LOKYZiFN97pP4stRyOGLG3sbgQFrARU9MB2H5NFhGV0B6B+qAO
-   5ygx6zYbwS3ElNeZtoJUM+dhl05yMfaGR/HTw1gSdYHOwgZs5+mHLwTCW
-   h1bWzXPBMGcw2OI/KplFZko0TyMJXfikaZrVzqVcXntHRbLP6UwND7l1A
-   n4f3W7x6EhpAhQyPsIJpDMvuZAaZuqethPlyRS6fd229Ln56dhgGuNikQ
-   ke30s/v4cE/BZI1onLHYNUzCJetwac8p9uzRw7JEx8sl9BIy8yRdcTlCh
-   MVzBaRckUN6hXDYlHnOo/xIUAyQAZraYfvLqCIaqS66aKYWuCnyc1QHX1
-   w==;
-X-CSE-ConnectionGUID: cXWb1p6rRnqnHLMUwO4MuA==
-X-CSE-MsgGUID: WlELuNg7QRGyKr8RxN3DBw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11268"; a="36445304"
-X-IronPort-AV: E=Sophos;i="6.12,186,1728975600"; 
-   d="scan'208";a="36445304"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2024 04:59:12 -0800
-X-CSE-ConnectionGUID: BW970He9TCSnX/PnepyHog==
-X-CSE-MsgGUID: vRXzaO8rTvaYkN2mZeVxrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,186,1728975600"; 
-   d="scan'208";a="92079702"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.16.81])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2024 04:59:10 -0800
-Message-ID: <9bb112f8-0af1-4517-a4b8-bd2edacce07c@intel.com>
-Date: Tue, 26 Nov 2024 14:59:02 +0200
+	s=arc-20240116; t=1732626520; c=relaxed/simple;
+	bh=bLpl3tYuDEt9O5K0IWIBOVcOMOWV3eCaOMMHky+xf+I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E/UnQoovxHcoh6Wz2AWsKmniK72mcHtOJ+lezqBC1lneoaE1+/FsKGqtlAUxCfBoVirEGNyaoaoYQSjeLkVF1AzlFyttpGstwsFgQDgZ/zCROQGr2DGvCBcm3+Q6iOCmo5y90ZTAa4SPNveombuBOcDSGbRgEH7h2SNMH+1lMAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Date: Tue, 26 Nov 2024 14:08:32 +0100
+From: Guilherme Amadio <amadio@gentoo.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, irogers@google.com
+Subject: Re: SIGSEGV on perf's 'Basic parsing test'
+Message-ID: <Z0XIUP4PK064Rdue@gentoo.org>
+References: <Z0D8a10VE1oIucuZ@gentoo.org>
+ <Z0VgyFKPCo-Ync8E@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V15 0/7] perf/core: Add ability for an event to "pause" or
- "resume" AUX area tracing
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20241114101711.34987-1-adrian.hunter@intel.com>
-Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20241114101711.34987-1-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z0VgyFKPCo-Ync8E@google.com>
 
-On 14/11/24 12:17, Adrian Hunter wrote:
-> Hi
-> 
-> Note for V15:
-> 	Same as V14 but without kernel patches because they have been
-> 	applied, and updated "missing_features" patch for the new way
-> 	of detecting missing features.
+Dear Namhyung, Ian,
 
-Still apply
+On Mon, Nov 25, 2024 at 09:46:48PM -0800, Namhyung Kim wrote:
+> On Fri, Nov 22, 2024 at 10:49:31PM +0100, Guilherme Amadio wrote:
+> > Dear Arnaldo, Namhyung, Ian,
+> > 
+> > I noticed that on perf-tools-next, some new tests fail on my machine
+> > with a segmentation fault. I am on perf-tools-next at the following
+> > commit: 85c60a01b85ee956adf8d46c253fc50f75363e8f.
+> 
+> I've added a couple of fixes for the HWMON tests.  Can you please test
+> it again with the latest branch?
 
-> 
-> Hardware traces, such as instruction traces, can produce a vast amount of
-> trace data, so being able to reduce tracing to more specific circumstances
-> can be useful.
-> 
-> The ability to pause or resume tracing when another event happens, can do
-> that.
-> 
-> These patches add such a facilty and show how it would work for Intel
-> Processor Trace.
-> 
-> Maintainers of other AUX area tracing implementations are requested to
-> consider if this is something they might employ and then whether or not
-> the ABI would work for them.  Note, thank you to James Clark (ARM) for
-> evaluating the API for Coresight.  Suzuki K Poulose (ARM) also responded
-> positively to the RFC.
-> 
-> Changes to perf tools are now (since V4) fleshed out.
-> 
-> Please note, Intel® Architecture Instruction Set Extensions and Future
-> Features Programming Reference March 2024 319433-052, currently:
-> 
-> 	https://cdrdv2.intel.com/v1/dl/getContent/671368
-> 
-> introduces hardware pause / resume for Intel PT in a feature named
-> Intel PT Trigger Tracing.
-> 
-> For that more fields in perf_event_attr will be necessary.  The main
-> differences are:
-> 	- it can be applied not just to overflows, but optionally to
-> 	every event
-> 	- a packet is emitted into the trace, optionally with IP
-> 	information
-> 	- no PMI
-> 	- works with PMC and DR (breakpoint) events only
-> 
-> Here are the proposed additions to perf_event_attr, please comment:
-> 
-> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-> index 0c557f0a17b3..05dcc43f11bb 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -369,6 +369,22 @@ enum perf_event_read_format {
->  	PERF_FORMAT_MAX = 1U << 5,		/* non-ABI */
->  };
->  
-> +enum {
-> +	PERF_AUX_ACTION_START_PAUSED		=   1U << 0,
-> +	PERF_AUX_ACTION_PAUSE			=   1U << 1,
-> +	PERF_AUX_ACTION_RESUME			=   1U << 2,
-> +	PERF_AUX_ACTION_EMIT			=   1U << 3,
-> +	PERF_AUX_ACTION_NR			= 0x1f << 4,
-> +	PERF_AUX_ACTION_NO_IP			=   1U << 9,
-> +	PERF_AUX_ACTION_PAUSE_ON_EVT		=   1U << 10,
-> +	PERF_AUX_ACTION_RESUME_ON_EVT		=   1U << 11,
-> +	PERF_AUX_ACTION_EMIT_ON_EVT		=   1U << 12,
-> +	PERF_AUX_ACTION_NR_ON_EVT		= 0x1f << 13,
-> +	PERF_AUX_ACTION_NO_IP_ON_EVT		=   1U << 18,
-> +	PERF_AUX_ACTION_MASK			= ~PERF_AUX_ACTION_START_PAUSED,
-> +	PERF_AUX_PAUSE_RESUME_MASK		= PERF_AUX_ACTION_PAUSE | PERF_AUX_ACTION_RESUME,
-> +};
-> +
->  #define PERF_ATTR_SIZE_VER0	64	/* sizeof first published struct */
->  #define PERF_ATTR_SIZE_VER1	72	/* add: config2 */
->  #define PERF_ATTR_SIZE_VER2	80	/* add: branch_sample_type */
-> @@ -515,10 +531,19 @@ struct perf_event_attr {
->  	union {
->  		__u32	aux_action;
->  		struct {
-> -			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
-> -				aux_pause        :  1, /* on overflow, pause AUX area tracing */
-> -				aux_resume       :  1, /* on overflow, resume AUX area tracing */
-> -				__reserved_3     : 29;
-> +			__u32	aux_start_paused  :  1, /* start AUX area tracing paused */
-> +				aux_pause         :  1, /* on overflow, pause AUX area tracing */
-> +				aux_resume        :  1, /* on overflow, resume AUX area tracing */
-> +				aux_emit          :  1, /* generate AUX records instead of events */
-> +				aux_nr            :  5, /* AUX area tracing reference number */
-> +				aux_no_ip         :  1, /* suppress IP in AUX records */
-> +				/* Following apply to event occurrence not overflows */
-> +				aux_pause_on_evt  :  1, /* on event, pause AUX area tracing */
-> +				aux_resume_on_evt :  1, /* on event, resume AUX area tracing */
-> +				aux_emit_on_evt   :  1, /* generate AUX records instead of events */
-> +				aux_nr_on_evt     :  5, /* AUX area tracing reference number */
-> +				aux_no_ip_on_evt  :  1, /* suppress IP in AUX records */
-> +				__reserved_3      : 13;
->  		};
->  	};
-> 
-> 
-> Changes in V15:
->       perf/x86/intel/pt: Fix buffer full but size is 0 case
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
->       perf/x86/intel/pt: Add support for pause / resume
->       perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
-> 	Dropped kernel patches because they have been applied
-> 
->       perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
-> 	Re-base on new API probe method of missing feature detection
-> 	and add probe for aux_action.
-> 
-> Changes in V14:
->       Dropped KVM patches
-> 
->       perf/x86/intel/pt: Add support for pause / resume
-> 	Set pt->handle_nmi after configuration is completed instead of during
-> 
-> Changes in V13:
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Do aux_resume at the end of __perf_event_overflow() so as to trace
-> 	less of perf itself
-> 
->       perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
-> 	Add error message also in EOPNOTSUPP case (Leo)
-> 
-> Changes in V12:
-> 	Add previously sent patch "perf/x86/intel/pt: Fix buffer full
-> 	but size is 0 case"
-> 
-> 	Add previously sent patch set "KVM: x86: Fix Intel PT Host/Guest
-> 	mode when host tracing"
-> 
-> 	Rebase on current tip plus patch set "KVM: x86: Fix Intel PT Host/Guest
-> 	mode when host tracing"
-> 
-> Changes in V11:
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Make assignment to event->hw.aux_paused conditional on
-> 	(pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE).
-> 
->       perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
-> 	Remove definition of has_aux_action() because it has
-> 	already been added as an inline function.
-> 
->       perf/x86/intel/pt: Fix sampling synchronization
->       perf tools: Enable evsel__is_aux_event() to work for ARM/ARM64
->       perf tools: Enable evsel__is_aux_event() to work for S390_CPUMSF
-> 	Dropped because they have already been applied
-> 
-> Changes in V10:
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Move aux_paused into a union within struct hw_perf_event.
-> 	Additional comment wrt PERF_EF_PAUSE/PERF_EF_RESUME.
-> 	Factor out has_aux_action() as an inline function.
-> 	Use scoped_guard for irqsave.
-> 	Move calls of perf_event_aux_pause() from __perf_event_output()
-> 	to __perf_event_overflow().
-> 
-> Changes in V9:
->       perf/x86/intel/pt: Fix sampling synchronization
-> 	New patch
-> 
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Move aux_paused to struct hw_perf_event
-> 
->       perf/x86/intel/pt: Add support for pause / resume
-> 	Add more comments and barriers for resume_allowed and
-> 	pause_allowed
-> 	Always use WRITE_ONCE with resume_allowed
-> 
-> 
-> Changes in V8:
-> 
->       perf tools: Parse aux-action
-> 	Fix clang warning:
-> 	     util/auxtrace.c:821:7: error: missing field 'aux_action' initializer [-Werror,-Wmissing-field-initializers]
-> 	     821 |         {NULL},
-> 	         |              ^
-> 
-> Changes in V7:
-> 
-> 	Add Andi's Reviewed-by for patches 2-12
-> 	Re-base
-> 
-> Changes in V6:
-> 
->       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Removed READ/WRITE_ONCE from __perf_event_aux_pause()
-> 	Expanded comment about guarding against NMI
-> 
-> Changes in V5:
-> 
->     perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Added James' Ack
-> 
->     perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
-> 	New patch
-> 
->     perf tools
-> 	Added Ian's Ack
-> 
-> Changes in V4:
-> 
->     perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Rename aux_output_cfg -> aux_action
-> 	Reorder aux_action bits from:
-> 		aux_pause, aux_resume, aux_start_paused
-> 	to:
-> 		aux_start_paused, aux_pause, aux_resume
-> 	Fix aux_action bits __u64 -> __u32
-> 
->     coresight: Have a stab at support for pause / resume
-> 	Dropped
-> 
->     perf tools
-> 	All new patches
-> 
-> Changes in RFC V3:
-> 
->     coresight: Have a stab at support for pause / resume
-> 	'mode' -> 'flags' so it at least compiles
-> 
-> Changes in RFC V2:
-> 
-> 	Use ->stop() / ->start() instead of ->pause_resume()
-> 	Move aux_start_paused bit into aux_output_cfg
-> 	Tighten up when Intel PT pause / resume is allowed
-> 	Add an example of how it might work for CoreSight
-> 
-> 
-> Adrian Hunter (7):
->       perf tools: Add aux_start_paused, aux_pause and aux_resume
->       perf tools: Add aux-action config term
->       perf tools: Parse aux-action
->       perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
->       perf intel-pt: Improve man page format
->       perf intel-pt: Add documentation for pause / resume
->       perf intel-pt: Add a test for pause / resume
-> 
->  tools/include/uapi/linux/perf_event.h      |  11 +-
->  tools/perf/Documentation/perf-intel-pt.txt | 596 ++++++++++++++++++-----------
->  tools/perf/Documentation/perf-record.txt   |   4 +
->  tools/perf/builtin-record.c                |   4 +-
->  tools/perf/tests/shell/test_intel_pt.sh    |  28 ++
->  tools/perf/util/auxtrace.c                 |  67 +++-
->  tools/perf/util/auxtrace.h                 |   6 +-
->  tools/perf/util/evsel.c                    | 101 ++++-
->  tools/perf/util/evsel.h                    |   1 +
->  tools/perf/util/evsel_config.h             |   1 +
->  tools/perf/util/parse-events.c             |  10 +
->  tools/perf/util/parse-events.h             |   1 +
->  tools/perf/util/parse-events.l             |   1 +
->  tools/perf/util/perf_event_attr_fprintf.c  |   3 +
->  tools/perf/util/pmu.c                      |   1 +
->  15 files changed, 594 insertions(+), 241 deletions(-)
-> 
-> 
-> Regards
-> Adrian
+Thank you. The test no longer crashes, which is good. However, it still
+fails as shown below:
 
+gentoo perf $ sudo ./perf test 11
+ 11: Hwmon PMU                                                       :
+ 11.1: Basic parsing test                                            : Ok
+ 11.2: Parsing without PMU name                                      : FAILED!
+ 11.3: Parsing with PMU name                                         : FAILED!
+gentoo perf $ sudo ./perf test -vF 11
+--- start ---
+---- end ----
+ 11.1: Basic parsing test                                            : Ok
+--- start ---
+Testing 'temp_test_hwmon_event1'
+Using CPUID AuthenticAMD-23-71-0
+hwmon_pmu: removing event 'pwm3' that has no input file
+hwmon_pmu: removing event 'intrusion0' that has no input file
+hwmon_pmu: removing event 'pwm5' that has no input file
+hwmon_pmu: removing event 'pwm2' that has no input file
+hwmon_pmu: removing event 'pwm7' that has no input file
+hwmon_pmu: removing event 'pwm4' that has no input file
+hwmon_pmu: removing event 'pwm1' that has no input file
+hwmon_pmu: removing event 'intrusion1' that has no input file
+hwmon_pmu: removing event 'fan5' that has no input file
+FAILED tests/hwmon_pmu.c:159 failed to parse event 'temp_test_hwmon_event1', err 1
+event syntax error: 'temp_test_hwmon_event1'
+                     \___ Bad event name
+
+Unable to find event on a PMU of 'temp_test_hwmon_event1'
+---- end ----
+ 11.2: Parsing without PMU name                                      : FAILED!
+--- start ---
+Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
+FAILED tests/hwmon_pmu.c:159 failed to parse event 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/', err 1
+event syntax error: 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
+                     \___ Bad event or PMU
+
+Unable to find PMU or event on a PMU of 'hwmon_a_test_hwmon_pmu'
+---- end ----
+ 11.3: Parsing with PMU name                                         : FAILED!
+
+Best regards,
+-Guilherme
+
+> Thanks,
+> Namhyung
+> 
+> > 
+> > After compiling perf with DEBUG=1 and running the test on gdb, this is
+> > the stack trace that I get from the crash:
+> > 
+> > Reading symbols from ./perf...
+> > (gdb) run
+> > Starting program: /home/amadio/src/linux/tools/perf/perf test -F 11
+> > [Thread debugging using libthread_db enabled]
+> > Using host libthread_db library "/usr/lib64/libthread_db.so.1".
+> >  11.1: Basic parsing test                                            : Ok
+> > event syntax error: 'temp_test_hwmon_event1'
+> >                      \___ Bad event name
+> > 
+> > Unable to find event on a PMU of 'temp_test_hwmon_event1'
+> > 
+> > Program received signal SIGSEGV, Segmentation fault.
+> > __GI___libc_free (mem=0x1c0b4908070c0a7a) at malloc.c:3375
+> > 3375      if (chunk_is_mmapped (p))                       /* release mmapped memory. */
+> > (gdb) bt
+> > #0  __GI___libc_free (mem=0x1c0b4908070c0a7a) at malloc.c:3375
+> > #1  0x000055555564fbc8 in __zfree (ptr=0x7ffff6c00031) at ../../lib/zalloc.c:13
+> > #2  0x000055555581997c in evsel__free_stat_priv (evsel=0x5555560d8ca0) at util/stat.c:148
+> > #3  0x0000555555819c90 in evlist__free_stats (evlist=0x5555560d7d30) at util/stat.c:215
+> > #4  0x000055555575d0dc in evlist__delete (evlist=0x5555560d7d30) at util/evlist.c:187
+> > #5  0x00005555557124d9 in do_test (i=0, with_pmu=false, with_alias=false) at tests/hwmon_pmu.c:198
+> > #6  0x0000555555712587 in test__hwmon_pmu (with_pmu=false) at tests/hwmon_pmu.c:212
+> > #7  0x000055555571263b in test__hwmon_pmu_without_pmu (test=0x55555605ae40 <suite.hwmon_pmu>, subtest=1) at tests/hwmon_pmu.c:229
+> > #8  0x00005555556c8e9d in start_test (test=0x55555605ae40 <suite.hwmon_pmu>, i=10, subi=1, child=0x5555560d7818, width=64, pass=1) at tests/builtin-test.c:424
+> > #9  0x00005555556c9588 in __cmd_test (suites=0x5555560d73e0, argc=1, argv=0x7fffffffe200, skiplist=0x0) at tests/builtin-test.c:571
+> > #10 0x00005555556ca0b5 in cmd_test (argc=1, argv=0x7fffffffe200) at tests/builtin-test.c:773
+> > #11 0x0000555555645459 in run_builtin (p=0x555556047050 <commands+624>, argc=3, argv=0x7fffffffe200) at perf.c:351
+> > #12 0x0000555555645704 in handle_internal_command (argc=3, argv=0x7fffffffe200) at perf.c:404
+> > #13 0x0000555555645865 in run_argv (argcp=0x7fffffffe00c, argv=0x7fffffffe000) at perf.c:448
+> > #14 0x0000555555645bb6 in main (argc=3, argv=0x7fffffffe200) at perf.c:560
+> > (gdb) quit
+> > 
+> > 
+> > Please let me know what other information you'd like to have from my system.
+> > The CPU is an AMD 3950X and the motherboard is an ASUS Pro WS X570-ACE if that
+> > helps.
+> > 
+> > $ uname -a
+> > Linux gentoo.cern.ch 6.12.0-gentoo #1 SMP PREEMPT_DYNAMIC Mon Nov 18 16:50:03 CET 2024 x86_64 AMD Ryzen 9 3950X 16-Core Processor AuthenticAMD GNU/Linux
+> > $ dmesg | sed -ne '/DMI/{p; q}'
+> > [    0.000000] DMI: ASUS System Product Name/Pro WS X570-ACE, BIOS 4902 08/29/2024
+> > 
+> > Best regards,
+> > -Guilherme
+> > 
