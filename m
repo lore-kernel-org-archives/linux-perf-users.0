@@ -1,162 +1,112 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26DE1DEFC2
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 21:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027BB8831
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 22:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732657010; cv=none; b=DfopStd2t4ooe3hhp04lFQys4f7tBPHxgEs/Egrb3WhHRqLUD0hce8+jZE7PkNm0adcBlE5KJrSAmSXw0X+k6hyNd0pVNawg1VsfYHRKV05SSKlFIZgGx2V/YWwhqiaZ9yg9kn8Q/zx3Js2aDWJJd4a6PvnVYhynbeMB9mvahWE=
+	t=1732659230; cv=none; b=g+DFZvwmWoRNXXMorEGpiYaTsaf59RRHN2Y8rqM7WwQB/pAdYu4ZtwVHZthVKMuRGtS0Vn130WVGxKi/uz+6l1r5KjjMlfsVW6OM5CE1Wwwa/7HJqDgW5Boo3Zig5jRbQJoCieyaN4HuWTiiVmAAucsg74NqLdF1Jw3ClTb9tbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732657010; c=relaxed/simple;
-	bh=v/GairsYwJ78tOGQPrHiE3P7/qShDg8uD4VwxNeY0XA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q84CMc92oymkDvKrlf2rxcHmKH9nqNAsG//tREhybRiQZYhL7VI7+5P4la03jorK9Lcofz0TW8YxI26VsDrC41oEaKFL56Joi2lgqBHMaiTtjGiaqRN7QlrQglDqYtY12nVReB0LJiBjO45fteYB/wJaFCe35gryTQGTGcqNSEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=3euBkT/9; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1732659230; c=relaxed/simple;
+	bh=taiOxPz4auFfF9OuAUGHYzdv/sSg5fLP6wEISmFWhPo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Q8dOun55jba4/ADX/Xe6lqh+mXA2lXVqPECK0rYLJa+hYV88WrbtiTX9Ir4gdtZ2Lbaryua8J2IoqgwQwzUZodLDo7b4lyBpXTGqHOkkG73EyArVpohey2d3DXADGVbbSRod3pFOyDJ/Q+ey/qlDI6/pX+ZuqqkIXS97y4bio1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=cWLHgMtw; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="3euBkT/9"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21288ce11d7so48183595ad.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 13:36:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="cWLHgMtw"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-46690cbec70so20387501cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 14:13:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1732657007; x=1733261807; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uHRhjsfKN6Al5TNnmTyBOiKcGX/jb5roHjFGenSaZE0=;
-        b=3euBkT/9yDCBQ4M6YgNbBkE/21YhGBRGwUwhyRU3mneFx4Df7yKDBv9M/Tv9WZUm8D
-         9Bq0qaMfjyiwpgDjgLJMUMXQrc92r0y7lLlc34DpPY2BG88EaOcDMIxukR0VPuBvhtdW
-         NbCsRDtXXTz8f7w7KBeG7L8a/kYIWoIBcB3mLl0bvybTO7GKXY0XudcxEH6oe2sTM2KK
-         rCkMvcBAzsUdUonZ8EH/vXsu6Uqup8lO+7Fwqlw0Bf+iClzcusdThv5mMXac6PsJuoAu
-         8m5GKCRyt68q45u4Rxl3VkhTO8U+Lg+JIPW6JMfzaBYLfsP94m/7ymOs8u85dafm/KLr
-         1lmA==
+        d=maine.edu; s=google; t=1732659228; x=1733264028; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n8vnet+jZUHVtbZiOVIfYJ+cqQVDEOSc7i4QhcykLOs=;
+        b=cWLHgMtw2ZV+pIwXIG29W20tEgSm/6X236saPpvMJjnVSQusXq9fVixgljgKshWurG
+         vmMOToJ8vWZPgP5AxUrLSdxspVdm7G3RyzSP0tsrGMD176GqUXLaPk1q3RNYwBi0YuBO
+         4qKdQz9ki8LP14RoExZekXrXOaiyIvaa7JNAg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732657007; x=1733261807;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uHRhjsfKN6Al5TNnmTyBOiKcGX/jb5roHjFGenSaZE0=;
-        b=gXGYYHvT5NARTngS4BFhGjjDIOOaJJSaATnkCutPPzRPvCWWwA+/WkSNKiO/v2rxZJ
-         /omOXfuA9m7FOw+WXO3oEc3I83fMx2HLIKUEq70ZpAv4Zw78REMl6ihhNklCa4syZaCa
-         OimubK1P6fuSrhggPJet6zfDK82JdD6M+RD4OVUornkwWEb6STorz8VMOYNrwXPeCZ7R
-         vynt74NPi67C5Ans3h3iXWusAjiuPXB6xJ3fzk2C6aJRcUmB3Ud4+k+/COSCrnhZTnn7
-         8bFlmJwHaJeM3WStF1u5giz4PKsvZx9kp4IRz5GbbKxqcytT01h6smPAJLDNme4n6oxT
-         tm8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWQWj8oxaqBI9mUq/TGdbORQ3zWneUBLknhpARd9TASPfsnINBYOR69iq7bVZY3YMaHdgfBArqd6Aowr/0qMAUb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzdb0n2GB4peIT8D/pJ3JBEeqMsHVmv7ORJ48a7aHGHhRfc1ZLp
-	vdISzvaGbPJ670ROaMw50DePuqDhHu+BZcd9/ZmR4S28OUi/ZJDwR10ufa/KjWA=
-X-Gm-Gg: ASbGncu+dOVjVsDOmjSAdtUPOOxvsJ6PtpAjhFAbUwVEPWBKV97mVrmZwUdESJenoG8
-	wPX909bqcqYnoKxiy01s+1NZk+dWZeIFta49Q7pY1ACNuEcY8H+z9zkphuSfkt0nXO+dS131Dxr
-	p/Buor23f+YmyAwvidE5nnvCnToP/8Obg1YavO78T8hsIgMaaOp0qo7MxWlM6ucuSMvGN93zOEm
-	Yeksxo7lwW9XmJ+Nh0C22AoYbmlaWbDkJRqv6XJvOGj
-X-Google-Smtp-Source: AGHT+IE6PiHzCBpFxf6nqtggtGSAKLH3Svgn7LxrahHubJPvHJeZhuEaDwLks+UyVbr6RS0/jAAVqw==
-X-Received: by 2002:a17:903:2441:b0:212:67a5:ab24 with SMTP id d9443c01a7336-21501e5c1ffmr6937425ad.41.1732657007184;
-        Tue, 26 Nov 2024 13:36:47 -0800 (PST)
-Received: from ghost ([2601:647:6700:64d0:15f:6df4:c303:cfc3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2129dc207bbsm89082475ad.228.2024.11.26.13.36.46
+        d=1e100.net; s=20230601; t=1732659228; x=1733264028;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n8vnet+jZUHVtbZiOVIfYJ+cqQVDEOSc7i4QhcykLOs=;
+        b=PUld8APWn2yHjmtQ8rVLU966v78ArOif9/tZe1T93vZrbnMILYlWpKRuPod4vyAt+v
+         jlVwU60QRzUbSvmfC4dpkvPlOMd0u3TPoKopmfDaCjryhWY3/UFt8cOH/c6zoGBaeo3W
+         PmjEXqe/FJaF57Njbbl31QDWA1uGUsSHUeqG1j10twwBEufjRm1qm/RV1JfXYG6iyu5s
+         aybW2Y18HXkRPAc8HTKL7md4i+olAHqa/nBhgfillfhz3UEYPUL9ETqa6YBLprth0Dnn
+         sOI61x8QGByhMBW4BnucKFXdD5xXvgl6SeXnoDS8fd4QV/EwNPFIKLRQGX7K3QyUdkez
+         RE3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWCi4Xupm88SUcUP+jQQ77bMco/NWNO09kTAc2SnOo4bCN93Km79lcP2GdJu+1DpRHm0/QQeqNHBxLuJDxikqyr@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSTBJzAmP7BYEf9qAZgsjvozzYh2t0oqLta8pwCFGcuFHv86my
+	MjlHWdj35OupF2wnoHgvOR/NH4d09gw8Catr6PshJVXBovlp/tTaLvDkCWBj8g==
+X-Gm-Gg: ASbGnctaOhG6W5req2JDxPZP1A9qa9Fs5PhHfr6q+0JQPH0yQREf8U8xD3MFyTHK/td
+	Tm+e/4OaiMpMMBWXnsbX4tewKWQqRv/1JJ6V8TVTbHpNMGPIKaOspfSPuBCNn+nRIdUR11LBt0m
+	oFfTddzWK9sRhW1gyrkbh9nGFLUJAHKmqL8esVKaIc6lvMfoeIatKnsR1KlFOpCUR1vKyXuS9vv
+	Tr0wF46tUS3OLqqZiKC+MyzPH9H8kGVKG4C1F0yIwN+bV0tl4D5GyaBi2yAebAMYAi8O1W4
+X-Google-Smtp-Source: AGHT+IFB8EjeCvd8p/S9ybtXlr5lQgvIArr8w8e4rrRFHmsDecOakZA0PqppF8gLye0+x0vQpZ7ADw==
+X-Received: by 2002:ac8:5d54:0:b0:460:e593:45aa with SMTP id d75a77b69052e-466b357ce9dmr11812211cf.33.1732659227830;
+        Tue, 26 Nov 2024 14:13:47 -0800 (PST)
+Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46693dfe536sm29682951cf.8.2024.11.26.14.13.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2024 13:36:46 -0800 (PST)
-Date: Tue, 26 Nov 2024 13:36:44 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1 perf-tools] tools riscv: Include fence.h from the
- same directory barrier.h lives
-Message-ID: <Z0Y_bC42dufBNE4L@ghost>
-References: <Z0Y8XQMBXT5JdOAG@x1>
+        Tue, 26 Nov 2024 14:13:46 -0800 (PST)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Tue, 26 Nov 2024 17:13:45 -0500 (EST)
+To: =?ISO-8859-2?Q?Miko=B3aj_Ko=B3ek?= <kolek.mikolaj@gmail.com>
+cc: Alejandro Colomar <alx@kernel.org>, linux-man@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org
+Subject: Re: perf_event_open.2: mmap ring buffer requirement for receiving
+ overflow notifications
+In-Reply-To: <CAHGiy68y37n-y_b0gR-dArxFRzYOAr93dCw_6bvkNReNWQ37Hw@mail.gmail.com>
+Message-ID: <00910b8e-fdaf-45ae-8dcc-8c926d7fce65@maine.edu>
+References: <CAHGiy68y37n-y_b0gR-dArxFRzYOAr93dCw_6bvkNReNWQ37Hw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z0Y8XQMBXT5JdOAG@x1>
+Content-Type: multipart/mixed; boundary="-1463802360-1841494558-1732659226=:2159556"
 
-On Tue, Nov 26, 2024 at 06:23:41PM -0300, Arnaldo Carvalho de Melo wrote:
-> When cross building perf to riscv I noticed that it isn't finding the
-> asm/fence.h file included from tools/arch/riscv/include/asm/barrier.h,
-> since both live in the same directory, load it from there instead of
-> from asm/fence.h, fixing the libbpf build in such environment:
-> 
->   perfbuilder@number:~$ time dm ubuntu:22.04-x-riscv64
->      1     4.32 ubuntu:22.04-x-riscv64        : FAIL gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04)
->                        from mmap.c:7:
->       /git/perf-6.12.0-rc6/tools/include/asm/../../arch/riscv/include/asm/barrier.h:13:10: fatal error: asm/fence.h: No such file or directory
->          13 | #include <asm/fence.h>
->             |          ^~~~~~~~~~~~~
->       compilation terminated.
->   <SNIP other similar errors>
-> 
-> This probably should work in other systems where the right asm/fence.h
-> is available, but in the above scenario, it fails. Probably we should
-> fix the perf build system to find it in tools/arch/riscv/include/asm/,
-> but this one-liner should be a stop gap solution till we get there.
-> 
-> Testing it:
-> 
->   perfbuilder@number:~$ time dm ubuntu:22.04-x-riscv64
->      1    21.65 ubuntu:22.04-x-riscv64        : Ok   riscv64-linux-gnu-gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0  flex 2.6.4
->   BUILD_TARBALL_HEAD=800d169e2d39e4e81ade326d73ae7c4343c12b45
->   $ git log --oneline -1 800d169e2d39e4e81ade326d73ae7c4343c12b45
->   800d169e2d39e4e8 tools riscv: Include fence.h from the same directory barrier.h lives
->   toolsbuilder@number:~/perf-6.12.0-rc6$ ls -la /tmp/build/perf/perf
->   -rwxr-xr-x. 1 toolsbuilder toolsbuilder 3278728 Nov 26 21:12 /tmp/build/perf/perf
->   toolsbuilder@number:~/perf-6.12.0-rc6$ file /tmp/build/perf/perf
->   /tmp/build/perf/perf: ELF 64-bit LSB pie executable, UCB RISC-V, RVC, double-float ABI, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-riscv64-lp64d.so.1, BuildID[sha1]=9b77bbf51da74cee24c6d5fc5814343cc7e9a652, for GNU/Linux 4.15.0, with debug_info, not stripped
->   toolsbuilder@number:~/perf-6.12.0-rc6$
->   toolsbuilder@number:~/perf-6.12.0-rc6$ readelf -d /tmp/build/perf/perf | head
->   Dynamic section at offset 0x242db0 contains 33 entries:
->     Tag        Type                         Name/Value
->    0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]
->    0x0000000000000001 (NEEDED)             Shared library: [libz.so.1]
->    0x0000000000000001 (NEEDED)             Shared library: [libelf.so.1]
->    0x0000000000000001 (NEEDED)             Shared library: [libdw.so.1]
->    0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
->    0x0000000000000001 (NEEDED)             Shared library: [ld-linux-riscv64-lp64d.so.1]
->    0x0000000000000020 (PREINIT_ARRAY)      0x238740
->   toolsbuilder@number:~/perf-6.12.0-rc6$
-> 
-> Fixes: 6d74d178fe6eaf61 ("tools: Add riscv barrier implementation")
-> Cc: Charlie Jenkins <charlie@rivosinc.com>
-> Cc: Palmer Dabbelt <palmer@rivosinc.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/arch/riscv/include/asm/barrier.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/arch/riscv/include/asm/barrier.h b/tools/arch/riscv/include/asm/barrier.h
-> index 6997f197086ddf61..e78241632e2f1301 100644
-> --- a/tools/arch/riscv/include/asm/barrier.h
-> +++ b/tools/arch/riscv/include/asm/barrier.h
-> @@ -10,7 +10,7 @@
->  #ifndef _TOOLS_LINUX_ASM_RISCV_BARRIER_H
->  #define _TOOLS_LINUX_ASM_RISCV_BARRIER_H
->  
-> -#include <asm/fence.h>
-> +#include "fence.h"
->  #include <linux/compiler.h>
->  
->  /* These barriers need to enforce ordering on both devices and memory. */
-> -- 
-> 2.47.0
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-We have been trying to get this resolved with a different patch [1], but
-getting it picked up was painfully slow and it wasn't picked up into
-6.12 for some reason... It is on master now, but it hasn't been
-backported yet, I don't know why not. There was another fix here [2]
-that is similar to what you have, but [1] was selected instead of it.
+---1463802360-1841494558-1732659226=:2159556
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-[1] https://lore.kernel.org/linux-riscv/172835823300.66789.3704854116445399222.git-patchwork-notify@kernel.org/
-[2] https://lore.kernel.org/linux-riscv/mvm5xq44bqh.fsf@suse.de/
+On Sat, 23 Nov 2024, Mikołaj Kołek wrote:
 
-- Charlie
+> findings. In the MMAP layout section of the page, you can find this
+> sentence:
+> Before Linux 2.6.39, there is a bug that means you must allocate
+> an mmap ring buffer when sampling even if you do not plan to
+> access it.
+> Unless I'm somehow misunderstanding it, this statement does not seem
+> to be well worded, or alternatively this bug does not seem to be
+> fixed.
 
+That text was probably written by me.
+
+I tried looking at the 2.6.39 code, my perf_tests, and also PAPI which was 
+where the problem was probably noticed but I can't find a firm reference 
+for how the issue was fixed.
+
+If I recall, the problem was if you were trying to create a sampling event 
+without mmap (say you want to get a signal every 100,000 retired 
+instructions, but you don't actually want any sample data).  I think 
+before 2.6.39 if you tried setting that up you'd get some sort of error 
+(an EINVAL?) when trying to start(?) the event.
+
+It is possible this wasn't fixed.  I tried to be pretty good 
+about putting relevant git commits as comments in the manpage but there 
+doesn't seem to be one for that part of the text.  I'm guessing it was 
+PeterZ doing the work on this so maybe he remembers.
+
+Vince Weaver
+vincent.weaver@maine.edu
+
+
+---1463802360-1841494558-1732659226=:2159556--
