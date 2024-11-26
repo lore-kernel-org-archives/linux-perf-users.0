@@ -1,89 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DBB1DC046;
-	Tue, 26 Nov 2024 17:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD2D7E782
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 18:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732643788; cv=none; b=YmDCf6wasc5IDGqsxghEfgBZx6KibTswT4JgMmPhDcUcINCKvtNPbjnLTYEY5WK5mf/ZKbKxDVwT1kwQiENc1vih7P/EnrkemvZZ1UJhfvCHHr0l4NfGDWU2U/8s/cbYdd39o79cubHprQwMvJ59anE2ui14NULOM4f82+GPLME=
+	t=1732646183; cv=none; b=j/qQUgbNsm3VZ0ZVHXGdGHJiMHzG5vb2GLZUhA/aK8PW+fykETR9dLtX8wXpzf8N+huUA/xCuPo8POMbIFY7FwHk/FSViBsWBaH6hdAy42ubPI4NqNXz3d4SJ6qL8IjEKYSn/dA5kJvCAn/BXrUhnvp4LXIxagTN/Y2lyQlceto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732643788; c=relaxed/simple;
-	bh=b2EMFKYbCQrL3zVfpm5cObA15cEJOuCZKP2zA64gpdo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qIl85d2cxPSMYjDphFHL38c3sI4BTBC9HL0xs4yrLNoW+JyRCF5jpguESh/un5ZRmXu2nLCBxU7ycMKi9uPW/Nf/z/CKtwgwlQiIvtpdkqtjlD/8lzmusifH1KcO+a5GjEtQZNWi5rotbdRz5I7aW3XfMkzlF/dGoxyeop1gBHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NsjMCTZw; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NsjMCTZw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732643787; x=1764179787;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=b2EMFKYbCQrL3zVfpm5cObA15cEJOuCZKP2zA64gpdo=;
-  b=NsjMCTZwLbIPbisznIzhY49n1XjDP6eNtUDFtiYsKlSbLyKsk/hLQ/kT
-   lfGg0n6tTBWp0hozzQx2oC3UzOtD46sQy2r7m6+Ujem2ycy5Owgs4H1c1
-   18/Ltlzm5rWNUMupufqbAUvVGn+Jib+qVVc945HUqU8d63n2Lj5EFfxYU
-   R3KZ9+8uYSjM32iaQBriMcvd0aw/X/s+2LT/g7yEGzkwtF8YmdwKiYkhm
-   rGldFmjLDhqAn5eyGZvSrafglga1Nd4Gketf0lasQTvC1o79aXr4dR9uJ
-   RFD9PWqCD78vKjNsvoOd+MH0PKEm/ZX8Q84Wt/nU4G2sA/HacpEFUIYPD
-   A==;
-X-CSE-ConnectionGUID: YzoqKSaSSd2biRXskXqs/w==
-X-CSE-MsgGUID: ZQFzZG+zSLa78Hu4tntzxg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11268"; a="36746238"
-X-IronPort-AV: E=Sophos;i="6.12,186,1728975600"; 
-   d="scan'208";a="36746238"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2024 09:56:24 -0800
-X-CSE-ConnectionGUID: 4bgwMG+zTxe7MRZj0TGgVQ==
-X-CSE-MsgGUID: vMtMr6fuQEisSPZw7JAX+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,186,1728975600"; 
-   d="scan'208";a="95762381"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.16.81])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2024 09:56:20 -0800
-Message-ID: <bb2821b7-4440-4ecc-925e-4d78ba60fef8@intel.com>
-Date: Tue, 26 Nov 2024 19:56:12 +0200
+	s=arc-20240116; t=1732646183; c=relaxed/simple;
+	bh=5NoTwEvyzM55AxuEzd4NK/mKY+JTjZvjmkBthHN41RA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RJndnQVv1Fe+s29QeL05X852rU76aIdgcieXwuvtMPgll1huyGImAgoCR0UV6mIv4iwUU0GCAwLe2CH2FTjSvKO2cGkcTd3TUfVh6v9H15aH/ciEEq/Mtn3ODfwKnZtNonQnPOpMYWEHig/XwhYrmXDzYtkuCBO1pSSvJU7/VHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1761153B;
+	Tue, 26 Nov 2024 10:28:05 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C6003F66E;
+	Tue, 26 Nov 2024 10:27:35 -0800 (PST)
+Date: Tue, 26 Nov 2024 18:27:34 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Guilherme Amadio <amadio@gentoo.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: perf test for inet_pton probe fails to match stacktrace
+Message-ID: <20241126182734.GB15252@e132581.arm.com>
+References: <Z0D5FDu/sErQ0V/2@gentoo.org>
+ <20241124105053.GA812108@e132581.arm.com>
+ <Z0R3ySrb8iZQd17O@gentoo.org>
+ <Z0VXvySyHm4q4r2c@google.com>
+ <20241126102705.GA15252@e132581.arm.com>
+ <Z0X5y-1ZiE-_FnbY@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V15 0/7] perf/core: Add ability for an event to "pause" or
- "resume" AUX area tracing
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
- Leo Yan <leo.yan@arm.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20241114101711.34987-1-adrian.hunter@intel.com>
- <9bb112f8-0af1-4517-a4b8-bd2edacce07c@intel.com> <Z0YChjympWOZeu1e@x1>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <Z0YChjympWOZeu1e@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z0X5y-1ZiE-_FnbY@x1>
 
-On 26/11/24 19:16, Arnaldo Carvalho de Melo wrote:
-> On Tue, Nov 26, 2024 at 02:59:02PM +0200, Adrian Hunter wrote:
->> On 14/11/24 12:17, Adrian Hunter wrote:
->>> Hi
->>>
->>> Note for V15:
->>> 	Same as V14 but without kernel patches because they have been
->>> 	applied, and updated "missing_features" patch for the new way
->>> 	of detecting missing features.
->>
->> Still apply
+Hi Arnaldo,
+
+On Tue, Nov 26, 2024 at 01:39:39PM -0300, Arnaldo Carvalho de Melo wrote:
+
+[...]
+
+> Seems to work:
 > 
-> So the kernel part is in, I'll go over this after getting a machine with
-> a kernel with those features so that I can test it all together.
+> Before, on a:
+> 
+> root@number:~# grep -m1 'model name' /proc/cpuinfo
+> model name      : Intel(R) Core(TM) i7-14700K
+> root@number:~#
+> 
+> root@number:~# perf test -vF pton
+> --- start ---
+> ping 229025 [017] 34027.968348: probe_libc:inet_pton: (7fc4542c10d0)
+> 7fc4542c10d0 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
+> 7fc4542d5a55 getaddrinfo+0xcf5 (/usr/lib64/libc.so.6)
+> FAIL: expected backtrace entry ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" got "7fc4542d5a55 getaddrinfo+0xcf5 (/usr/lib64/libc.so.6)"
+> ---- end ----
+>  86: probe libc's inet_pton & backtrace it with ping                 : FAILED!
+> root@number:~#
+> 
+> With your patch:
+> 
+> root@number:~# perf test -vF pton
+> --- start ---
+> pattern: ping[][0-9 \.:]+probe_libc:inet_pton: \([[:xdigit:]]+\)
+> line: ping  231118 [023] 34089.948542: probe_libc:inet_pton: (7f635297f0d0)
+> found=0
+> pattern: .*inet_pton\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/libc.so.6|inlined\)$
+> line: ping  231118 [023] 34089.948542: probe_libc:inet_pton: (7f635297f0d0)
+> found=1
+> line: 7f635297f0d0 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
+> found=0
+> pattern: .*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$
+> line: ping  231118 [023] 34089.948542: probe_libc:inet_pton: (7f635297f0d0)
+> found=1
+> line: 7f635297f0d0 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
+> found=1
+> line: 7f6352993a55 getaddrinfo+0xcf5 (/usr/lib64/libc.so.6)
+> found=1
+> line: 55ae71919969 [unknown] (/usr/bin/ping)
+> found=0
+> ---- end ----
+>  86: probe libc's inet_pton & backtrace it with ping                 : Ok
+> root@number:~#
+> 
+> Replace that "unfound" with "Didn't find the"
 
-To be clear, this is just a software feature, so any machine
-with Intel PT will do. Kernel can be from mainline tree or tip.
+Will do.
 
+> And using 'found' as a variable name that when zero means "Ok, found"
+> and when 1 (grep failed to find the regexp) means "Didn't find" looks
+> confusing.
+
+Indeed.  Will refine this.
+
+> General idea seems to make the test resilient to the differences while
+> still testing the backtrace in uprobes events for expected entries.
+
+Will send formal patch.
+
+Thanks a lot for the testing,
+Leo
