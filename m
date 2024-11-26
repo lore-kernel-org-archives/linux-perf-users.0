@@ -1,123 +1,93 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E527CA35
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Nov 2024 23:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD10D26D;
+	Tue, 26 Nov 2024 02:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732578644; cv=none; b=my6czC0wRSalJlI3l29kc0vLcvIKyr26N4exUJ2rleRfZpp5994tkjEXz7CfQSolWe+j51zJINWseynsVigaPCPdBenn0DkjUuldW4rPYNV1UYv0nXOx+/5xESxn2cvU6m9B2/cpUVOXSHZSxV+yTmetmh/f6kymhUavQg3vvl0=
+	t=1732589584; cv=none; b=KRLidAaXDb0oXJRqVxbVBxH+Umou/tP37N+F67g1dkFi2rKBaneeuANXV9OLDV2trusNtwC3P22lSktZ/Wlt1ltOrvVEH+BiiKTfi+8U9OZPK7qm/UK0FErN7UM/4fZHNUd+6rdta0i+4DI2dc50halHEYVD+d1sMMnljGWhYX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732578644; c=relaxed/simple;
-	bh=9BkJm0rwPC+SuURjmQNoGI8a6NPd2Rj/iAsViHxTO9c=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OXBCd+9dnY1bqjcg6saMkSuw6oXfl7W+04GLAjBrorkB7VITyNT/gr+u2fSiPBYDUtrCs5xffFuhED53KIwXq+xri+yIMvN0eefV9UczOMYx/c1A0YpfVCQXXVDog0aTV1+4VeiwzlYYr9ZeWqpgQOBEV5yLeC9z9VU+cL09Oq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name; spf=pass smtp.mailfrom=michel-slm.name; dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b=rhyy1U4s; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michel-slm.name
+	s=arc-20240116; t=1732589584; c=relaxed/simple;
+	bh=1bIygSuurKVJrm+y5RfLrB2t6e7qykl+uo3eNRNLbjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kI6qpLFft2YfJ+Ip1F1xdgK+1kCgQ88BJ9R9W8sZXgJ/mCScGyKVIadOEZH0n41M2TOPNc+TuLu48cXaMo/A/FpwZiS4X8EusqCn0AiJB398pIx16eDnmt7gD7dhuOduWQJP6sOzvYHdZ8xte34HKLjN7rcSbXF/n0IiQKqtqYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K3rTNPXV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b="rhyy1U4s"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Xy2Wr1SFlz9smB
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 00:50:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michel-slm.name;
-	s=MBO0001; t=1732578632;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5fmi5F6Y+vG9noplfTh4EAeBCgBT1OYeytV7ek6lnNU=;
-	b=rhyy1U4sKEmkwTneLi5teBNFokIovJCXIAbTfumgzoLwD2KPeg+NVGjmX5jDmCrWqy8ZiM
-	MRCb6PgSCbyBfYZvmszVF6Ik+5rUHt9LkQKhSvltb3Zuf+Stl6DLQHAQsi1mDh82OSN7RT
-	JuvZ4SweoBskAPASatzGyRH8UWxGW2JOFSLFS2kPyq5CfiCNkk272RvRSvpWBBU2f8KTy9
-	Jz4nMZEFW9JD8yPOpYIc4aO9kqyLqoRVJFpcHY6t4dJevn3YwW/WY3UM6a207itezRlbiP
-	M2+Yxk7/V/HbV3nyES3jLgADI2715ItTR+Jmqa0s7uYMPhaiEW5kgHrDQnRRHg==
-Date: Mon, 25 Nov 2024 17:50:28 -0600
-From: Michel Lind <michel@michel-slm.name>
-To: linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: Recent tarballs missing some files
-Message-ID: <Z0UNRCRYKunbDYxP@hyperscale.parallels>
-References: <Z0S9HCQ0Z2d/I+Uh@hyperscale.parallels>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K3rTNPXV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC569C4CECE;
+	Tue, 26 Nov 2024 02:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732589584;
+	bh=1bIygSuurKVJrm+y5RfLrB2t6e7qykl+uo3eNRNLbjo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K3rTNPXVnGRB6NrRGj/9gkVo+mcDS3GtlW6Am6UPKohLNg3+SHII5ytecyO/WB8ZJ
+	 5B+UPqXvNfRRiNqlKsa0wOx8fWSKFNXY4pl6y4q8J6e/HbY8UGqL2gwfk7iRVqFW5n
+	 TC6AGbURM8lb3A3iubF/b7XXLE1yZJyBBreKYFior488W2zp0G1L+cqHKh7N86jjIM
+	 AL9T94JIY6ratimMkTdxotxIkn8XtIfXpjh6No0TZx5QYwhXN8TRXexescIFhmGRFI
+	 A2nFU7u+1Blj9p5oJvz27ujfColVv2jk1+Twvq/V4d64XDO6M+k0/5riSTsjm/LFzu
+	 jzXkEdQeLKHSw==
+Date: Mon, 25 Nov 2024 18:53:02 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [GIT PULL] perf-tools changes for v6.13
+Message-ID: <Z0U4Dk_W30x4JSXG@google.com>
+References: <20241125071653.1350621-1-namhyung@kernel.org>
+ <Z0TK9aqrQO1PremH@sashalap>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="KXUFu5kL7Z0KgGI3"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z0S9HCQ0Z2d/I+Uh@hyperscale.parallels>
-X-Rspamd-Queue-Id: 4Xy2Wr1SFlz9smB
+In-Reply-To: <Z0TK9aqrQO1PremH@sashalap>
 
+Hello,
 
---KXUFu5kL7Z0KgGI3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Nov 25, 2024 at 02:07:33PM -0500, Sasha Levin wrote:
+> On Sun, Nov 24, 2024 at 11:16:53PM -0800, Namhyung Kim wrote:
+> > Hi Linus,
+> > 
+> > Please consider pulling the following changes in perf tools for v6.13.
+> > 
+> > Thanks,
+> > Namhyung
+> > 
+> > 
+> > The following changes since commit 59b723cd2adbac2a34fc8e12c74ae26ae45bf230:
+> > 
+> >  Linux 6.12-rc6 (2024-11-03 14:05:52 -1000)
+> > 
+> > are available in the Git repository at:
+> > 
+> >  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.13-2024-11-24
+> 
+> Hey Namhyung,
+> 
+> After merging this PR into linus-next, the "Simple expression parser"
+> test has started failing:
+> 
+> --- start ---
+> test child forked, pid 292
+> Using CPUID GenuineIntel-6-1A-3
+> division by zero
+> syntax error
+> Failed to find TSC frequency in /proc/cpuinfo
+> FAILED tests/expr.c:250 #system_tsc_freq > 0
+> ---- end(-1) ----
+>   7: Simple expression parser                         : FAILED!
+> 
+> Here's a full log of the run: https://qa-reports.linaro.org/lkft/sashal-linus-next/build/v6.11-24716-gab16e9af2ff9/testrun/26045681/suite/perf/test/_7_Simple_expression_parser/log
 
-On Mon, Nov 25, 2024 at 12:08:28PM -0600, Michel Lind wrote:
-> Hello all,
->=20
-> Per discussions with acme back at LPC, I'm working on packaging a
-> standalone perf RPM, initially for the CentOS Hyperscale SIG and
-> potentially for Fedora later on.
->=20
-> I noticed that, while perf 6.9.0 builds fine from the source tarball,
-> more recent versions (at least 6.11 and 6.12) fails due to a missing
-> header:
->=20
-> ```
-> In file included from /builddir/build/BUILD/perf-6.12.0/tools/include/uap=
-i/linux/bpf_perf_event.h:11,
->                  from libbpf.c:36:
-> /builddir/build/BUILD/perf-6.12.0/tools/include/uapi/asm/bpf_perf_event.h=
-:2:10: fatal error: ../../arch/arm64/include/uapi/asm/bpf_perf_event.h: No =
-such file or directory
->     2 | #include "../../arch/arm64/include/uapi/asm/bpf_perf_event.h"
->       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> ```
->=20
-> I can submit a patch to fix this (and any other missing files), if
-> someone could point me to where the script is that generates the perf
-> tarballs.
->=20
-Update - on digging in this only happens on aarch64 (probably why this
-was not caught earlier). And it also affects 6.9.0. In all cases the
-alternatives are either copying in that one header *or* passing
-NO_LIBBPF=3D1
+Thanks for the report, I'll take a look.
 
-Once I know which script to update, the other thing I want to do is make
-it bundle a copy of the COPYING file, since we ideally have that for
-standalone distribution
+Namhyung
 
-perf now built for Hyperscale experimental and facebook repos - the only
-difference is the facebook build has Perl support disabled
-
-https://cbs.centos.org/koji/packageinfo?packageID=3D11475
-
-I'll promote it to an official Hyperscale package once I figure out how
-to build with the standard optimization flags in addition to the ones
-perf overrides.
-
-Best regards,
-
---=20
- _o) Michel Lind
-_( ) identities: https://keyoxide.org/5dce2e7e9c3b1cffd335c1d78b229d2f7ccc0=
-4f2
-
---KXUFu5kL7Z0KgGI3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRdzi5+nDsc/9M1wdeLIp0vfMwE8gUCZ0UNPwAKCRCLIp0vfMwE
-8m1XAQCdxdYe3tBkttBUhEWH3MxQII2tWsKK5WK/278dQiQXLQD/c7qGLUQCY9oz
-GXVd7ZZrWHoVYOWsIB2RYjpGSLtxgQA=
-=ZHYs
------END PGP SIGNATURE-----
-
---KXUFu5kL7Z0KgGI3--
