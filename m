@@ -1,206 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C9E1DA619
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 16:39:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCF11DD0D4;
+	Tue, 26 Nov 2024 16:41:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732639182; cv=none; b=JW4gGeP5zyud+luWQ4JTd0G5pFKFeVc2/QJWBV6QQsq4D/C62P0WbAiR6tsuNaSvEHevQktw18NKYdQaqc2oYweV1MWLoooGj5t5n8+Term3+AoGCxOJrtBb2QpDYNROhjNnp8H9ipJ92/z55F3z3WuD1g48euQDX24tjueqQYY=
+	t=1732639292; cv=none; b=dcPSb/vg/PAa01XHN+WnE/BQvRi50HaTM0zv0vcRaNDGo9XOwOTzj1gBe3sWkC2wiMkHjL58kywSQXkQ47aNm2Rd7Ag6tS6kXS2YcjM3RTWfMEVWv5rD7x1IUTF+U3qxPQk0fHCTPN9s+9nm93NsoHvUWUFE7E3smJCF+ZEs2/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732639182; c=relaxed/simple;
-	bh=SyE2gnrOG6nWWHL4RupTjWF0VX7sMCYZbtDepkw4eO0=;
+	s=arc-20240116; t=1732639292; c=relaxed/simple;
+	bh=oKW7VgwpjCE+pqhHdDGaMLxz+CglQ45JWptkt0Up+RM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nWWs2TTLSjOY7ftmxSzFXF7kKqNeSv4Cz1fqBSH04YaY9HjvKp1KM3IB98T0U5NyygkIn8VKffTADgyJhik3ETxxyNJxFCMazOWVx800dXLjbYiCtKkwkiJte3axlaSV3KQXHl3sSdycjT+WqOI2txBPRXaQ5q6B5F+6B90XrLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRO38w3F; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=B36Sa/eh8eJiVDFkZWmBBjBu3dHXSrjbXKkQrNj5D0ivnlSHLsplFbU18goSNwIFrB4rnM0UBn8hNEJdsRbB9x7JTbGccWP3k1hGwWwyZL/X3xGgxCYmQ6mXgJ+ITlQ7M3ZoC97oWR11L74BCYxqZ2INMkwOG+B2S5qOgqh3osk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCSso/Uz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRO38w3F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1A2EC4CECF;
-	Tue, 26 Nov 2024 16:39:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCSso/Uz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C2B8C4CECF;
+	Tue, 26 Nov 2024 16:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732639182;
-	bh=SyE2gnrOG6nWWHL4RupTjWF0VX7sMCYZbtDepkw4eO0=;
+	s=k20201202; t=1732639291;
+	bh=oKW7VgwpjCE+pqhHdDGaMLxz+CglQ45JWptkt0Up+RM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NRO38w3F0HSLadCDbUf0Rwov6xvNTuBWEV6HQYsER59XhM/lkNUbqc+Y5OA1peeSz
-	 fh1aKfI1yVmuLZ2tqDzdTF/DoRykgHEtSRIR8n8rTYOyrl+eBnZ3mg6aSioXO8X9Sl
-	 +qDLGd8tYCVieAml32aHgzeQqBiiCjVuGdfdeVn2LVuF8o1PoJF0xXEP56pePpzZ8g
-	 /J8uGBbD3+TsfZYVHTJC3XDMAVaoBBqzy/zK7qwRmbJuHDnNyrXM0RhPGP+KECpNvi
-	 HerXSzs0G7gLVLAze3xKpOk8q9BjhNKp8E1zdsp9An/I0LMT2HKTVruTLIx6/DAXOc
-	 t42bpFQ6OVxEg==
-Date: Tue, 26 Nov 2024 13:39:39 -0300
+	b=bCSso/UzJsnV9+MCDkXJwXjo0iQXxCTWTdU6YhVEVuD6b7R8P/yeXHwWJx6sS/jOR
+	 +M8MzvDUJqrj3ahEhSeYnuaLRgURJ0HAQO79PMKA9irK2IHvbseA6FMpLh2a4m758z
+	 wHNzcn33D6hpxw3kzTOhxEQ3niAUqrIsyA427MtokJKbGZVN+zrT4589L+U6N9v82Y
+	 FsnRAvf6cwuDatKgGowEjB83aEAfRS68g2rlmiIcqczD88/aaXG9GvDhOVY8KxWc64
+	 wNqGUNSLe09UYyMg0zzEqNvc/tHgXdGx5S5Xvuu5TEBX9D7CQm2zwMNl/k2lZOmFi/
+	 FTVeNe2bRXROw==
+Date: Tue, 26 Nov 2024 13:41:29 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Guilherme Amadio <amadio@gentoo.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: perf test for inet_pton probe fails to match stacktrace
-Message-ID: <Z0X5y-1ZiE-_FnbY@x1>
-References: <Z0D5FDu/sErQ0V/2@gentoo.org>
- <20241124105053.GA812108@e132581.arm.com>
- <Z0R3ySrb8iZQd17O@gentoo.org>
- <Z0VXvySyHm4q4r2c@google.com>
- <20241126102705.GA15252@e132581.arm.com>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf trace: Add tests for BTF general augmentation
+Message-ID: <Z0X6OTPsWOHgmvMr@x1>
+References: <20241123005512.342079-1-howardchu95@gmail.com>
+ <20241123005512.342079-2-howardchu95@gmail.com>
+ <CAH0uvojmPp4-0xb6sObr8Tcw=ujysLMBeebpwON0Ygy=LH63Zg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241126102705.GA15252@e132581.arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH0uvojmPp4-0xb6sObr8Tcw=ujysLMBeebpwON0Ygy=LH63Zg@mail.gmail.com>
 
-On Tue, Nov 26, 2024 at 10:27:05AM +0000, Leo Yan wrote:
-> On Mon, Nov 25, 2024 at 09:08:15PM -0800, Namhyung Kim wrote:
+On Fri, Nov 22, 2024 at 04:58:00PM -0800, Howard Chu wrote:
+> For the first patch, there is:
 > 
-> [...]
 > 
-> > > Using nm $libc in both cases, and increasing max-stack to 4 allows the test to pass:
-> > >
-> > > $ sudo ./perf test -vF pton
-> > > --- start ---
-> > > ping 1237113 [000] 18561.204983: probe_libc:inet_pton: (7f7c34d38eb7)
-> > > 7f7c34d38eb7 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-> > > 7f7c34d4b517 gaih_inet+0x112 (/usr/lib64/libc.so.6)
-> > > 7f7c34d4cb73 getaddrinfo+0x133 (/usr/lib64/libc.so.6)
-> > > 55680ac46518 [unknown] (/usr/bin/ping)
-> > > ---- end ----
-> > >  86: probe libc's inet_pton & backtrace it with ping                 : Ok
-> > 
-> > I think it's very fragile as it depends on specific entries in the call
-> > stack.  As we want to test if perf probe (for uprobes) and perf record
-> > working correctly, maybe it can just check the number of samples only.
-> > 
-> > Arnaldo, what do you think?
-> 
-> Though this question is asking Arnaldo, I have a different idea for
-> fixing the test ;)
-> 
-> The middle entries in the callchain are varied on different archs and
-> distro.  E.g. Guilherme reported back the '-D' option is not needed but
-> at my side it is required on Arm64 machine with Ubuntu distro.
-> 
-> However, the three entries in the callchain are existed consistently:
-> 
->   ping 1237113 [000] 18561.204983: probe_libc:inet_pton: (7f7c34d38eb7)
->   7f7c34d38eb7 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
->   ...
->   55680ac46518 [unknown] (/usr/bin/ping)
-> 
-> We can change the code to only matching these three entries.  The
-> change is as below.  We can consolidate the code for all archs
-> (I am not 100% sure for x390x so I leave it).
-> 
-> Please let me know if this makes sense for you?
-> 
-> Thanks,
-> Leo
+> Suggested-by: Ian Rogers <irogers@google.com>
 
-Seems to work:
+b4 somehow didn't like parts of this process:
 
-Before, on a:
-
-root@number:~# grep -m1 'model name' /proc/cpuinfo 
-model name	: Intel(R) Core(TM) i7-14700K
-root@number:~#
-
-root@number:~# perf test -vF pton
---- start ---
-ping 229025 [017] 34027.968348: probe_libc:inet_pton: (7fc4542c10d0)
-7fc4542c10d0 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-7fc4542d5a55 getaddrinfo+0xcf5 (/usr/lib64/libc.so.6)
-FAIL: expected backtrace entry ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" got "7fc4542d5a55 getaddrinfo+0xcf5 (/usr/lib64/libc.so.6)"
----- end ----
- 86: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-root@number:~# 
-
-With your patch:
-
-root@number:~# perf test -vF pton
---- start ---
-pattern: ping[][0-9 \.:]+probe_libc:inet_pton: \([[:xdigit:]]+\)
-line: ping  231118 [023] 34089.948542: probe_libc:inet_pton: (7f635297f0d0)
-found=0
-pattern: .*inet_pton\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/libc.so.6|inlined\)$
-line: ping  231118 [023] 34089.948542: probe_libc:inet_pton: (7f635297f0d0)
-found=1
-line: 7f635297f0d0 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-found=0
-pattern: .*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$
-line: ping  231118 [023] 34089.948542: probe_libc:inet_pton: (7f635297f0d0)
-found=1
-line: 7f635297f0d0 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-found=1
-line: 7f6352993a55 getaddrinfo+0xcf5 (/usr/lib64/libc.so.6)
-found=1
-line: 55ae71919969 [unknown] (/usr/bin/ping)
-found=0
----- end ----
- 86: probe libc's inet_pton & backtrace it with ping                 : Ok
-root@number:~#
-
-Replace that "unfound" with "Didn't find the"
-
-And using 'found' as a variable name that when zero means "Ok, found"
-and when 1 (grep failed to find the regexp) means "Didn't find" looks
-confusing.
-
-General idea seems to make the test resilient to the differences while
-still testing the backtrace in uprobes events for expected entries.
-
-- Arnaldo
- 
-> ---8<---
-> 
-> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> index 47a26f25db9f..6ef58aedf2d8 100755
-> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> @@ -43,17 +43,8 @@ trace_libc_inet_pton_backtrace() {
->  		echo "((__GI_)?getaddrinfo|text_to_binary_address)\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
->  		echo "(gaih_inet|main)\+0x[[:xdigit:]]+[[:space:]]\(inlined|.*/bin/ping.*\)$" >> $expected
->  		;;
-> -	ppc64|ppc64le)
-> -		eventattr='max-stack=4'
-> -		# Add gaih_inet to expected backtrace only if it is part of libc.
-> -		if nm $libc | grep -F -q gaih_inet.; then
-> -			echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
-> -		fi
-> -		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
-> -		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-> -		;;
->  	*)
-> -		eventattr='max-stack=3'
-> +		eventattr='max-stack=4'
->  		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
->  		;;
->  	esac
-> @@ -76,14 +67,23 @@ trace_libc_inet_pton_backtrace() {
->  	fi
->  	perf script -i $perf_data | tac | grep -m1 ^ping -B9 | tac > $perf_script
->  
-> -	exec 3<$perf_script
->  	exec 4<$expected
-> -	while read line <&3 && read -r pattern <&4; do
-> +	while read -r pattern <&4; do
-> +		echo "pattern: $pattern"
->  		[ -z "$pattern" ] && break
-> -		echo $line
-> -		echo "$line" | grep -E -q "$pattern"
-> -		if [ $? -ne 0 ] ; then
-> -			printf "FAIL: expected backtrace entry \"%s\" got \"%s\"\n" "$pattern" "$line"
-> +
-> +		exec 3<$perf_script
-> +		while read line <&3; do
-> +			[ -z "$line" ] && break
-> +			echo "line: $line"
-> +			echo "$line" | grep -E -q "$pattern"
-> +			found=$?
-> +			echo "found=$found"
-> +			[ $found -eq 0 ] && break
-> +		done
-> +
-> +		if [ $found -ne 0 ] ; then
-> +			printf "FAIL: unfound the expected backtrace entry \"%s\"\n" "$pattern"
->  			return 1
->  		fi
->  	done
+⬢ [acme@toolbox perf-tools-next]$ b4 am -ctsl --cc-trailers 20241123005512.342079-1-howardchu95@gmail.com
+Grabbing thread from lore.kernel.org/all/20241123005512.342079-1-howardchu95@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Checking attestation on all messages, may take a moment...
+---
+  ✓ [PATCH v1 1/2] perf trace: Add tests for BTF general augmentation
+    + Link: https://lore.kernel.org/r/20241123005512.342079-2-howardchu95@gmail.com
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  ✓ [PATCH v1 2/2] perf docs: Add documentation for --force-btf option
+    + Link: https://lore.kernel.org/r/20241123005512.342079-3-howardchu95@gmail.com
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  ---
+  ✓ Signed: DKIM/gmail.com
+---
+Total patches: 2
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Suggested-by: Ian Rogers <irogers@google.com>
+     Msg From: Howard Chu <howardchu95@gmail.com>
+NOTE: Rerun with -S to apply them anyway
+---
+Cover: ./20241122_howardchu95_perf_trace_add_tests_for_btf_general_augmentation.cover
+ Link: https://lore.kernel.org/r/20241123005512.342079-1-howardchu95@gmail.com
+ Base: applies clean to current tree
+       git checkout -b 20241122_howardchu95_gmail_com HEAD
+       git am ./20241122_howardchu95_perf_trace_add_tests_for_btf_general_augmentation.mbx
+⬢ [acme@toolbox perf-tools-next]$
