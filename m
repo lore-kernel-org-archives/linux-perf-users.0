@@ -1,74 +1,63 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899F1189B94
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 23:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6388189B94;
+	Tue, 26 Nov 2024 23:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732664355; cv=none; b=JZVShWmNYa4B8k633eg/GLfLY0/7xfil/rKuo9Dr0+0+toTKSIfpW7Sl7ASJ8BMIz3aHCsfK9KGDADMToPa50Qvv/KOiBey3DL/qKxlXYDXuJaGBuu+FsvwIZhnAP/RHbS9uZDftcVZ6cZZwRZnDT1t69ree8Xs+UKSHwDbqpAY=
+	t=1732664440; cv=none; b=NiRsd6cy2W8oesW0URxdaGBr1w5e4pwAnaTfm4RUGMv2HrIxEGCSSPgkGSHd8Rfv/h+DRwWAZipcDvTcR3bgffvtxhxffa6o5JSd7ncgz517bdcvAHdqkX+0mGS3FX7nsuWG82HFvCobk/ibhiG55JeFC3p6yyim12BniRhO/20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732664355; c=relaxed/simple;
-	bh=liHqjDLQhFyftWAMkULSYdCycOr3/L4o7hVwGI1o6pM=;
-	h=Date:From:To:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QBn4X9MnLQiXrOZJkhzRaP7KyOiaVXUngbH68pyqfaRrXBffBDEx5Gky1lA6+pDvzx2sAyJgnwoyHEzU+oQOCt1edTLS84q1rqWFHjY56eXmI2rUQhty585bzkzSrj1xRzUF4cWOqX4dWD8bIqBB8Nu+g9nTvfJs+EG4t4eyTR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name; spf=pass smtp.mailfrom=michel-slm.name; dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b=Jbi7xYjY; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michel-slm.name
+	s=arc-20240116; t=1732664440; c=relaxed/simple;
+	bh=qdexSSwbLKi2XHGC1Sgn/ZBTleNGY2F6rtMn7iUYhXQ=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=m1WYyXIwP8Ns2aUwhieZPxdls6pFLaq6OZ/WvyVHsjkJmzwTgCm7NWN8iZ23BmsNtu+JcuB+HI1xMsRGme+7msXfKcl+9xB4ybIdp881PeTgoAViRIUesrGrbL9g0DTXTK38rwSDuqTiRAoRUYB4XVu/wz7CRfnt5SrAzZmFso0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PD1JmL+T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b="Jbi7xYjY"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4XyfDF63Lbz9t4B
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Nov 2024 00:39:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michel-slm.name;
-	s=MBO0001; t=1732664349;
-	h=from:from:reply-to:subject:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=CHs3S9xcHOKrcvMBWJcL0uZBykTDYrm0PPEPZkh8EPc=;
-	b=Jbi7xYjY/K+c+yPaMRzPpAmu6OfGgLdobELl1UxAUDPk/l5H2D/qzAXzLqTBVZ3Sav3MMG
-	Q2Iez7lk6HVut7b0zOseN0JsWju191YkYMbIBDIcRSELM3BrZlUzHqjCVjQlyjEuevliPz
-	ghammgQjuRYq9/lj4VxoRG2Z3b1jPRO2S3Tt3nJP8bhUL1aQdrhgd3Bf8Y9tJ7WaoN+oU9
-	NUQgJ+2KwGCdfPj28a38OxjIVLtRRZLYwxWj6seWuchhw/pQ8IoxYeMVEk7O620BHqsL1u
-	c1bCCtg+nq7oMDJ8GeyYYKKsYbwJtZtDx3OjZRcB6kuq8Q8SDo7XVeCVTZ13kA==
-Date: Tue, 26 Nov 2024 17:39:07 -0600
-From: Michel Lind <michel@michel-slm.name>
-To: linux-perf-users@vger.kernel.org
-Message-ID: <Z0ZcG2Zn/1/iGTFA@hyperscale.parallels>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PD1JmL+T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6986C4CECF;
+	Tue, 26 Nov 2024 23:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732664439;
+	bh=qdexSSwbLKi2XHGC1Sgn/ZBTleNGY2F6rtMn7iUYhXQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=PD1JmL+TZ2mPLyl+7gq7z5INVkHxzI4no+60pdvhVwcXJ0HayWB85xJUS3lwpKcWL
+	 uj/wLk7Go2X1PYKG3AgcOX+hWx6rE/Yxqyz+4HF1z188UchdAcw3YByPZHswwDbIn4
+	 vL0YSJc/9F6TKDKm1Mb8fgJiwnLbFx4nN1muTr2/+0s6ozAVAkE1b9NDfPfYek0LDO
+	 /e/MvxxM/NgO5Nq3xoRk8Mh/8MjDIpxMMah6fU1TD0TrYAvFWywypR/NpeSBuGyPvb
+	 H/MjR+/bigVOI6Dou09eX3aVc+KvEUlizejIF0G94qStJYbp/TBb4kL5vOHvhG4/Y1
+	 1Su2KzlFCrZig==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ED9133809A00;
+	Tue, 26 Nov 2024 23:40:53 +0000 (UTC)
+Subject: Re: [GIT PULL] perf-tools changes for v6.13
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20241125071653.1350621-1-namhyung@kernel.org>
+References: <20241125071653.1350621-1-namhyung@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20241125071653.1350621-1-namhyung@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.13-2024-11-24
+X-PR-Tracked-Commit-Id: 6d78089da9805787a72e52604ad4b2ed7380be3f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b50ecc5aca4d18f1f0c4942f5c797bc85edef144
+Message-Id: <173266445244.577215.10853513841530631756.pr-tracker-bot@kernel.org>
+Date: Tue, 26 Nov 2024 23:40:52 +0000
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Rspamd-Queue-Id: 4XyfDF63Lbz9t4B
 
-From ab2bdf2e20a99b8d0298435328055daa59d2b640 Mon Sep 17 00:00:00 2001
-From: Michel Lind <salimma@fedoraproject.org>
-Date: Tue, 26 Nov 2024 17:37:44 -0600
-Subject: [PATCH] perf MANIFEST: add license files
+The pull request you sent on Sun, 24 Nov 2024 23:16:53 -0800:
 
-The standalone tarballs should include the license files - both the
-COPYING declaration as well as the text of GPLv2.
+> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.13-2024-11-24
 
-Signed-off-by: Michel Lind <michel@michel-slm.name>
----
- tools/perf/MANIFEST | 2 ++
- 1 file changed, 2 insertions(+)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b50ecc5aca4d18f1f0c4942f5c797bc85edef144
 
-diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-index dc42de1785ce..47b7a12f5780 100644
---- a/tools/perf/MANIFEST
-+++ b/tools/perf/MANIFEST
-@@ -1,3 +1,5 @@
-+COPYING
-+LICENSES/preferred/GPL-2.0
- arch/arm64/tools/gen-sysreg.awk
- arch/arm64/tools/sysreg
- tools/perf
+Thank you!
+
 -- 
-2.47.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
