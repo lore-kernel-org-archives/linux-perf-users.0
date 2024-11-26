@@ -1,114 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAC9170A13;
-	Tue, 26 Nov 2024 10:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 683BB1C4A24
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 10:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732616129; cv=none; b=oVUQ683YW9vxiVX6f6oGSrY0ruV1+7rd/1LiMd7pYLBD6X3hKq6LSzdOHgySuSefQHdw9iEWMKgSjgCMAl2HSTKEgXyehgaE02jScqcWbyfKd5BUwxLDp3U71GJnR/327kBhJ+nkI7pkZv524XVc8no9ji/+hSuVjeqEZ15PH/c=
+	t=1732616833; cv=none; b=ua+Ayz/FcKAq5L72WNG4wCq0hXwF6ACBJUW6BKcCPbmE3L37mHssrxD3CKmL1ZzvuaW312PuUOGUOyPaOS/9oK7CT31q8d3O4QCYdtZkozdw7OaD0kmvhU4PG7ygptfnrrwBYdTXcJWeBP9F9FKwq8Qcl+u6V+7ebUHRGIfsKu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732616129; c=relaxed/simple;
-	bh=CTBzW7SvB+7qRzMehEkzANw3zSIXVQA59DR4zRNCFIs=;
+	s=arc-20240116; t=1732616833; c=relaxed/simple;
+	bh=QaHMZOneZvuEekxDd5TsDcU5RysywBnrTy6tjSM4YEQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P2LD1lzRzr4LX7pOXLF9WNN4Pb3GxRC+tsVkJSumGJTnS+YfgBz5MknHQNnD5CE0RxIYVvTbiv3+A+G2SX6WfQmxMPjWD84K5dsQ1P0BkYPD7NyWIyfv0RqNnAOBc7I9aZetEN+LWkF6vXVeaJahJ3cDQ5robAZ30bVAjMH53BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jr4QDxMa; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jr4QDxMa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6DE4C4CECF;
-	Tue, 26 Nov 2024 10:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732616128;
-	bh=CTBzW7SvB+7qRzMehEkzANw3zSIXVQA59DR4zRNCFIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jr4QDxMaDKOcIKGsBdrR1S0OtSu86W2S1Lyrhly6z16OAx0VX/XQ17O0UNNoU4WTJ
-	 X1useA2XOxTU4zxij8gAMGguh7JiM/RJ4xGwPbKEscOZz0KVIUSGTxuxF90bKfL0U7
-	 k1/6ObF82MY+WQQLmKXWXizs8KaVhprECVyHBG02o4W8RnxPcTZzQ1WWT6qcXNtr6p
-	 FFPkyPbCUt7lfIAyDX4g22lQyC9fpTK8rfdSjuVXlQXfNc+6wij5hVkUM4aNRw7ucH
-	 mbvmnQoqSgKSJM8YGhy81YNgEaR8KzPNKetGxo0NFnxbOXijpWP53PnJBF4pcFpaTd
-	 BztAI1TD2f/gA==
-Date: Tue, 26 Nov 2024 11:15:25 +0100
-From: Alejandro Colomar <alx@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pbdiLdwy41Xrf4qDr+ZqX7MJbSPJ2feVfCaW2jDH1L2qkNo9QPuq551l/4WzqGkQvOxPEmY7IrZ9y5jnAOlQEyoRx6d6sJ7K467/Q57SNOEfxKNJMCVO+SMDvSHSPovIwUkvcLtlNtr3Dg3lnseRipmrtVhPNUY/Uu5401cnRcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B78931682;
+	Tue, 26 Nov 2024 02:27:40 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5973C3F5A1;
+	Tue, 26 Nov 2024 02:27:10 -0800 (PST)
+Date: Tue, 26 Nov 2024 10:27:05 +0000
+From: Leo Yan <leo.yan@arm.com>
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: =?utf-8?B?TWlrb8WCYWogS2/FgmVr?= <kolek.mikolaj@gmail.com>,
-	linux-man@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: perf_event_open.2: mmap ring buffer requirement for receiving
- overflow notifications
-Message-ID: <20241126101525.scvaunb3fwyv7tun@devuan>
-References: <CAHGiy68y37n-y_b0gR-dArxFRzYOAr93dCw_6bvkNReNWQ37Hw@mail.gmail.com>
- <Z0Vf3lrTUsbE_4NP@google.com>
+Cc: Guilherme Amadio <amadio@gentoo.org>, acme@kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: perf test for inet_pton probe fails to match stacktrace
+Message-ID: <20241126102705.GA15252@e132581.arm.com>
+References: <Z0D5FDu/sErQ0V/2@gentoo.org>
+ <20241124105053.GA812108@e132581.arm.com>
+ <Z0R3ySrb8iZQd17O@gentoo.org>
+ <Z0VXvySyHm4q4r2c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qbhkr4qy6k24dey3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z0Vf3lrTUsbE_4NP@google.com>
+In-Reply-To: <Z0VXvySyHm4q4r2c@google.com>
 
+On Mon, Nov 25, 2024 at 09:08:15PM -0800, Namhyung Kim wrote:
 
---qbhkr4qy6k24dey3
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: perf_event_open.2: mmap ring buffer requirement for receiving
- overflow notifications
-MIME-Version: 1.0
+[...]
 
-Hi Namhyung,
+> > Using nm $libc in both cases, and increasing max-stack to 4 allows the test to pass:
+> >
+> > $ sudo ./perf test -vF pton
+> > --- start ---
+> > ping 1237113 [000] 18561.204983: probe_libc:inet_pton: (7f7c34d38eb7)
+> > 7f7c34d38eb7 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
+> > 7f7c34d4b517 gaih_inet+0x112 (/usr/lib64/libc.so.6)
+> > 7f7c34d4cb73 getaddrinfo+0x133 (/usr/lib64/libc.so.6)
+> > 55680ac46518 [unknown] (/usr/bin/ping)
+> > ---- end ----
+> >  86: probe libc's inet_pton & backtrace it with ping                 : Ok
+> 
+> I think it's very fragile as it depends on specific entries in the call
+> stack.  As we want to test if perf probe (for uprobes) and perf record
+> working correctly, maybe it can just check the number of samples only.
+> 
+> Arnaldo, what do you think?
 
-On Mon, Nov 25, 2024 at 09:42:54PM -0800, Namhyung Kim wrote:
-> Thanks for the report and the test code.  I agree that the current man
-> page is a little confusing about the overflow notification.  I can see
-> the following sentences in the "overflow handling" section.
->=20
->   There are two ways to generate overflow notifications.
->=20
->   The  first is to set a wakeup_events or wakeup_watermark value that
->   will trigger if a certain number of samples or bytes have been
->   written to the mmap ring buffer.  In this case, POLL_IN is indicated.
->=20
->   The other way is by use of the PERF_EVENT_IOC_REFRESH ioctl.  This
->   ioctl adds to a counter that decrements each  time  the  event
->   overflows.  When nonzero, POLL_IN is indicated, but once the counter
->   reaches 0 POLL_HUP is indicated and the underlying event is disabled.
->=20
-> I think the first and the default way uses the ring buffer to determine
-> overflow condition so it should be allocated before calling poll(2) or
-> similar.  The second way doesn't seem to require ring buffers, but I
-> haven't tested it actually.
->=20
-> Maybe we can add something like this to the first section:
->=20
->   If the ring buffer is not allocated, POLL_HUP is indicated.
+Though this question is asking Arnaldo, I have a different idea for
+fixing the test ;)
 
-Thanks!  Would you mind sending a patch?
+The middle entries in the callchain are varied on different archs and
+distro.  E.g. Guilherme reported back the '-D' option is not needed but
+at my side it is required on Arm64 machine with Ubuntu distro.
 
-Have a lovely day!
-Alex
+However, the three entries in the callchain are existed consistently:
 
---=20
-<https://www.alejandro-colomar.es/>
+  ping 1237113 [000] 18561.204983: probe_libc:inet_pton: (7f7c34d38eb7)
+  7f7c34d38eb7 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
+  ...
+  55680ac46518 [unknown] (/usr/bin/ping)
 
---qbhkr4qy6k24dey3
-Content-Type: application/pgp-signature; name="signature.asc"
+We can change the code to only matching these three entries.  The
+change is as below.  We can consolidate the code for all archs
+(I am not 100% sure for x390x so I leave it).
 
------BEGIN PGP SIGNATURE-----
+Please let me know if this makes sense for you?
 
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmdFn70ACgkQnowa+77/
-2zJTFQ/9GQhnFK07lSmxpkg4XhR+RngD2pbJfRms4vjfoePMBW0RszuNBPSJwFVx
-CdVOEM0YmSTYOXkOGfONw5p76HmGFVP8lXdyDBaJhcYvwzwZKG73CJ5e9LHpA85b
-pa5IJDjWU9cKZUf5Zk+IccdaqNiYaoLYzr8VO/IKlU2FxObupE2Nu/eFOwXrSlY8
-iL9zygKurdCSNer6DKpEvyzUm7VU3GHp9vS2dtVSoox2Zaqb4Z8bncjW3MeMa86t
-rH+34+9Ks65fx48xsHjugwSdhxcHhhPUK7JQL5yB6/UJmmvVTNXpsIqgd1jwN98F
-v/6sCrQYmx/ScC6xH/titoLpdwDuwt18ugUp0ikjAD8FvwiXvAjS/DMJVEDFyzKB
-MEnIlG4+GOm0/y0MYFVdQr1PQnw1sHLsZw6N2p52KeWHMQ4N18VAQxi+TiB8PAd1
-swhvl7glB1LlMW3akDzI4ledYVZzeBf30RL5mrHgiLDX8Xvf1iHQVz2VhJN68zr0
-Gr4n8K4kpd7gbhBR5QgFNKN4uXWrL0JOB0rrJl0hW8xMO/U5p6pP8j44tqkyb53j
-SJaG1LONhljy0CzgjirnaLavQAs5i0gfOUZzTBZdzqrydo972FEiQh6yvMlVv+ju
-YsFsdiKU0CtzdmfNvHZ59mHfxI2vDNIWgV+hjOLi7GzTCY5XshY=
-=fzzu
------END PGP SIGNATURE-----
+Thanks,
+Leo
 
---qbhkr4qy6k24dey3--
+---8<---
+
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index 47a26f25db9f..6ef58aedf2d8 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -43,17 +43,8 @@ trace_libc_inet_pton_backtrace() {
+ 		echo "((__GI_)?getaddrinfo|text_to_binary_address)\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
+ 		echo "(gaih_inet|main)\+0x[[:xdigit:]]+[[:space:]]\(inlined|.*/bin/ping.*\)$" >> $expected
+ 		;;
+-	ppc64|ppc64le)
+-		eventattr='max-stack=4'
+-		# Add gaih_inet to expected backtrace only if it is part of libc.
+-		if nm $libc | grep -F -q gaih_inet.; then
+-			echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+-		fi
+-		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+-		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+-		;;
+ 	*)
+-		eventattr='max-stack=3'
++		eventattr='max-stack=4'
+ 		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+ 		;;
+ 	esac
+@@ -76,14 +67,23 @@ trace_libc_inet_pton_backtrace() {
+ 	fi
+ 	perf script -i $perf_data | tac | grep -m1 ^ping -B9 | tac > $perf_script
+ 
+-	exec 3<$perf_script
+ 	exec 4<$expected
+-	while read line <&3 && read -r pattern <&4; do
++	while read -r pattern <&4; do
++		echo "pattern: $pattern"
+ 		[ -z "$pattern" ] && break
+-		echo $line
+-		echo "$line" | grep -E -q "$pattern"
+-		if [ $? -ne 0 ] ; then
+-			printf "FAIL: expected backtrace entry \"%s\" got \"%s\"\n" "$pattern" "$line"
++
++		exec 3<$perf_script
++		while read line <&3; do
++			[ -z "$line" ] && break
++			echo "line: $line"
++			echo "$line" | grep -E -q "$pattern"
++			found=$?
++			echo "found=$found"
++			[ $found -eq 0 ] && break
++		done
++
++		if [ $found -ne 0 ] ; then
++			printf "FAIL: unfound the expected backtrace entry \"%s\"\n" "$pattern"
+ 			return 1
+ 		fi
+ 	done
