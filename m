@@ -1,112 +1,105 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027BB8831
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 22:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6371211185;
+	Tue, 26 Nov 2024 22:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732659230; cv=none; b=g+DFZvwmWoRNXXMorEGpiYaTsaf59RRHN2Y8rqM7WwQB/pAdYu4ZtwVHZthVKMuRGtS0Vn130WVGxKi/uz+6l1r5KjjMlfsVW6OM5CE1Wwwa/7HJqDgW5Boo3Zig5jRbQJoCieyaN4HuWTiiVmAAucsg74NqLdF1Jw3ClTb9tbw=
+	t=1732660382; cv=none; b=Xz9Jdtna98y5XLboKdfMFzdFoUx+ePg3FfoAaOSXcvB2YZXSMTQWcaeQ77JZorNP6HglcwcPVeOLGhbWWnv1XZvV6MC824m6x8/nxC+EeuHAUOg3zYJ2J6RJsGjJFBNlop/Ci9fkiIGrCaYQ/qcDzP+Zzs4Z85WOmnDo+ry6lFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732659230; c=relaxed/simple;
-	bh=taiOxPz4auFfF9OuAUGHYzdv/sSg5fLP6wEISmFWhPo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Q8dOun55jba4/ADX/Xe6lqh+mXA2lXVqPECK0rYLJa+hYV88WrbtiTX9Ir4gdtZ2Lbaryua8J2IoqgwQwzUZodLDo7b4lyBpXTGqHOkkG73EyArVpohey2d3DXADGVbbSRod3pFOyDJ/Q+ey/qlDI6/pX+ZuqqkIXS97y4bio1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=cWLHgMtw; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1732660382; c=relaxed/simple;
+	bh=RDPvd1tGqygeGMLEHUH8GGp91x7Kngt8zbj5S35GxsM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uoBoFEFrzgWgtp2lf7dCoUPIwK+su5rjVohwcnkqSBJbB6r6CFZIOvWcCif1wZ+KHFp5SmtWVXcMTTiHsrHWLSteNzmkfyNYEXltdG//ytmcuu/zeIpp8ERGbTyw8Igxr7eDGik5b2BGHx4o97eTmydw67a7F2fmWy5MImWWyKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dkv84y+c; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="cWLHgMtw"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-46690cbec70so20387501cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 14:13:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkv84y+c"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-724e1742d0dso4120513b3a.0;
+        Tue, 26 Nov 2024 14:33:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1732659228; x=1733264028; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=n8vnet+jZUHVtbZiOVIfYJ+cqQVDEOSc7i4QhcykLOs=;
-        b=cWLHgMtw2ZV+pIwXIG29W20tEgSm/6X236saPpvMJjnVSQusXq9fVixgljgKshWurG
-         vmMOToJ8vWZPgP5AxUrLSdxspVdm7G3RyzSP0tsrGMD176GqUXLaPk1q3RNYwBi0YuBO
-         4qKdQz9ki8LP14RoExZekXrXOaiyIvaa7JNAg=
+        d=gmail.com; s=20230601; t=1732660381; x=1733265181; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bI6xDS+WUzZjIbowtDV378qMXfDoLJd2A2/NdsRd/I0=;
+        b=dkv84y+c0ikKI17Zx7aF2GIOYepzWJBKbrKUlDcrqLJjQPaknzsU0gxJ12uONIp8gE
+         oaWJiH6Hd0YldUhCZuuCLHoGTmqOOGFQbPvzVIMyw0cvnOByMK2F2Lamjw7krDwV90ND
+         AaKaKQVt8ZMiBb7TBMpRo4cRVOGjSj6kQBKtRqV4tAYNVZiDXHBYQ5EXW/6fi3xgJkzx
+         4/saFqUkNNaFwyHWjJpkhK2QyFQ2/j/Yv2f+Ob0n5FL0uVmqP31kUjN8YT6QhE0gaJI7
+         YTajsgQs66vhxTd6D02P3xcxBReKb27G/W4p7MAacq+ek0XeheLlocAEkj2A4R4Dc8Nm
+         EADQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732659228; x=1733264028;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n8vnet+jZUHVtbZiOVIfYJ+cqQVDEOSc7i4QhcykLOs=;
-        b=PUld8APWn2yHjmtQ8rVLU966v78ArOif9/tZe1T93vZrbnMILYlWpKRuPod4vyAt+v
-         jlVwU60QRzUbSvmfC4dpkvPlOMd0u3TPoKopmfDaCjryhWY3/UFt8cOH/c6zoGBaeo3W
-         PmjEXqe/FJaF57Njbbl31QDWA1uGUsSHUeqG1j10twwBEufjRm1qm/RV1JfXYG6iyu5s
-         aybW2Y18HXkRPAc8HTKL7md4i+olAHqa/nBhgfillfhz3UEYPUL9ETqa6YBLprth0Dnn
-         sOI61x8QGByhMBW4BnucKFXdD5xXvgl6SeXnoDS8fd4QV/EwNPFIKLRQGX7K3QyUdkez
-         RE3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWCi4Xupm88SUcUP+jQQ77bMco/NWNO09kTAc2SnOo4bCN93Km79lcP2GdJu+1DpRHm0/QQeqNHBxLuJDxikqyr@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSTBJzAmP7BYEf9qAZgsjvozzYh2t0oqLta8pwCFGcuFHv86my
-	MjlHWdj35OupF2wnoHgvOR/NH4d09gw8Catr6PshJVXBovlp/tTaLvDkCWBj8g==
-X-Gm-Gg: ASbGnctaOhG6W5req2JDxPZP1A9qa9Fs5PhHfr6q+0JQPH0yQREf8U8xD3MFyTHK/td
-	Tm+e/4OaiMpMMBWXnsbX4tewKWQqRv/1JJ6V8TVTbHpNMGPIKaOspfSPuBCNn+nRIdUR11LBt0m
-	oFfTddzWK9sRhW1gyrkbh9nGFLUJAHKmqL8esVKaIc6lvMfoeIatKnsR1KlFOpCUR1vKyXuS9vv
-	Tr0wF46tUS3OLqqZiKC+MyzPH9H8kGVKG4C1F0yIwN+bV0tl4D5GyaBi2yAebAMYAi8O1W4
-X-Google-Smtp-Source: AGHT+IFB8EjeCvd8p/S9ybtXlr5lQgvIArr8w8e4rrRFHmsDecOakZA0PqppF8gLye0+x0vQpZ7ADw==
-X-Received: by 2002:ac8:5d54:0:b0:460:e593:45aa with SMTP id d75a77b69052e-466b357ce9dmr11812211cf.33.1732659227830;
-        Tue, 26 Nov 2024 14:13:47 -0800 (PST)
-Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46693dfe536sm29682951cf.8.2024.11.26.14.13.46
+        d=1e100.net; s=20230601; t=1732660381; x=1733265181;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bI6xDS+WUzZjIbowtDV378qMXfDoLJd2A2/NdsRd/I0=;
+        b=Bv2f2Pu4X8Jn9iScDKWbDAGPiXNaWYMnBkPE4hW4dhsKGjKIpC88SNhtvti1PKw+LA
+         nHzjY6a+mB705qy7aIRR4pmkgLZarPiyWk3gEKV18h2M76Z8a5yUXMzOi/AnWNJs4abu
+         TDzAl8fye5R2duY58NIy96QV3wkVcVBgIeUIac5pQSP5crIj/Y+oGK/IkXM5xmNNYA8W
+         VfSWpdlzf3gfMfcTbff6JJ5jcEpmGNjhRZCBzg6OQn9uIQhJi6z+Vn72W/rdWX6P5Pst
+         hzWf/3pSp4QXtxOIDhT0eLMuFSGi0PRU2LPoDnCRxGrHLir7N38mLnOZ4hQqQzTeYop3
+         39jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVn3D1tzq0Zgjho9jFxaTooY0RzTHrafN9kifG8Ztsxx4xYjss1AvJlIsQV1PhSwmZa4Bfc5630pSJayV7U+HVi4g==@vger.kernel.org, AJvYcCX6l3ugsz91tH6Q7z56Ksr/GDQybho5FmKBZ9o8J459NIokQCaJekR0GYfiDj+p8VhJ8wv7/ti3ST/zImI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNZ0/7c/nqaB9+L8eb2aF0pncDAGW5dz0osaMiI16dw3/K24r7
+	SnHlCiIy2VGYWavgbvn0qmk3GzPJczjE2z5KE44ZwExB68jcSaZg
+X-Gm-Gg: ASbGncuReLgMLBaSdC2XAsjG4olGHj0Yjs3q8cHnOCbdtp8AZfAkrTaxLG+FzPeEpBb
+	HbnmTbHcEdMOTfv0EBFtt9zveghY6doc5/fb/cTafOxN+xjiCSD+hYJTxjbFejz9qz08U0Hzgk8
+	G8obKmj+7AnLHwBgsTUTvh9O0JvrXiSlryo90JMwIHhEj6kT+bcZQ0YO3Or+tTsgz3Rs8fUbRkJ
+	Zk8DJdXNToRGwXyrSVIFHE8LjEZ/wuTB3Hm7q92kEW6yec1F8KEXPVkCKu5hR6wyRVfHf5jHsXj
+	URJMCrgtrOo=
+X-Google-Smtp-Source: AGHT+IEvkl8b121Oy2EbR9pWVKg0XmpXwfOCaayi8B23Kl593VNXYmXYy8f6bZaEcIi8x0156KOAHg==
+X-Received: by 2002:a05:6a00:3d47:b0:71e:4ba:f389 with SMTP id d2e1a72fcca58-7253005632cmr981330b3a.10.1732660380612;
+        Tue, 26 Nov 2024 14:33:00 -0800 (PST)
+Received: from mbp.. (157-131-33-111.fiber.dynamic.sonic.net. [157.131.33.111])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fbcc406de3sm7948861a12.81.2024.11.26.14.32.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2024 14:13:46 -0800 (PST)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Tue, 26 Nov 2024 17:13:45 -0500 (EST)
-To: =?ISO-8859-2?Q?Miko=B3aj_Ko=B3ek?= <kolek.mikolaj@gmail.com>
-cc: Alejandro Colomar <alx@kernel.org>, linux-man@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org
-Subject: Re: perf_event_open.2: mmap ring buffer requirement for receiving
- overflow notifications
-In-Reply-To: <CAHGiy68y37n-y_b0gR-dArxFRzYOAr93dCw_6bvkNReNWQ37Hw@mail.gmail.com>
-Message-ID: <00910b8e-fdaf-45ae-8dcc-8c926d7fce65@maine.edu>
-References: <CAHGiy68y37n-y_b0gR-dArxFRzYOAr93dCw_6bvkNReNWQ37Hw@mail.gmail.com>
+        Tue, 26 Nov 2024 14:33:00 -0800 (PST)
+From: Howard Chu <howardchu95@gmail.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v2 0/2] perf trace: Add tests for BTF general augmentation
+Date: Tue, 26 Nov 2024 14:32:55 -0800
+Message-ID: <20241126223257.22465-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463802360-1841494558-1732659226=:2159556"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The previous version of the perf trace BTF general augmentation tests
+didn't pass Shellcheck (thanks to Arnaldo Carvalho de Melo
+<acme@kernel.org> for pointing this out), this version uses bash instead
+of POSIX shell to pass Shellcheck.
 
----1463802360-1841494558-1732659226=:2159556
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+This patch series also adds documentation for the new option
+--force-btf, which is used in the tests.
 
-On Sat, 23 Nov 2024, Mikołaj Kołek wrote:
+Link: https://lore.kernel.org/linux-perf-users/Zt9yiQq-n-W6I274@x1/
 
-> findings. In the MMAP layout section of the page, you can find this
-> sentence:
-> Before Linux 2.6.39, there is a bug that means you must allocate
-> an mmap ring buffer when sampling even if you do not plan to
-> access it.
-> Unless I'm somehow misunderstanding it, this statement does not seem
-> to be well worded, or alternatively this bug does not seem to be
-> fixed.
+Howard Chu (2):
+  perf trace: Add tests for BTF general augmentation
+  perf docs: Add documentation for --force-btf option
 
-That text was probably written by me.
+ tools/perf/Documentation/perf-trace.txt     |  5 ++
+ tools/perf/tests/shell/trace_btf_general.sh | 81 +++++++++++++++++++++
+ 2 files changed, 86 insertions(+)
+ create mode 100755 tools/perf/tests/shell/trace_btf_general.sh
 
-I tried looking at the 2.6.39 code, my perf_tests, and also PAPI which was 
-where the problem was probably noticed but I can't find a firm reference 
-for how the issue was fixed.
+-- 
+2.43.0
 
-If I recall, the problem was if you were trying to create a sampling event 
-without mmap (say you want to get a signal every 100,000 retired 
-instructions, but you don't actually want any sample data).  I think 
-before 2.6.39 if you tried setting that up you'd get some sort of error 
-(an EINVAL?) when trying to start(?) the event.
-
-It is possible this wasn't fixed.  I tried to be pretty good 
-about putting relevant git commits as comments in the manpage but there 
-doesn't seem to be one for that part of the text.  I'm guessing it was 
-PeterZ doing the work on this so maybe he remembers.
-
-Vince Weaver
-vincent.weaver@maine.edu
-
-
----1463802360-1841494558-1732659226=:2159556--
