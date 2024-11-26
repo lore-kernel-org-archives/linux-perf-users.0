@@ -1,124 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF438831;
-	Tue, 26 Nov 2024 20:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155391BBBC9
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 21:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732653801; cv=none; b=fABbry36qR65nQCcxBRZZo5Dsk6XCcd9IC6a3WFsVGzmcz6obBCl/zG+jmJKoCz3AT+KwdQ21zdO4siPGRWA0JDYmqwHS2fqkVTBN6llUA8GsI1dTJn9GXHSglypFyk1TrbX6aH/DdtxKG0YVlUrBA8GJuS9fcE8BI1UI5ENdqc=
+	t=1732656180; cv=none; b=iuq4Y9lPX7RGaQDDEbI/Ei6N/FgNzbIiqIzevQsVDZDl4uEz/Q7VLmCz4Ax0n6glygGQsiK60hhL+X4Bm52oRvnbCrvpDKlke7xgPwxouev7AIsYuHNPiBkevdJB0fDZn/Fy51Ogwn0a2grcyk1SDD/o3GauNqk2YzpgeDvaN1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732653801; c=relaxed/simple;
-	bh=/M6nrZ8/zOV0HJkhNSsy+3xCar9R3UKeeL0bjP0pyQI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=HELuYiz+Dq/gFJ6JOYoYZ5P8UwkbmIO4J2q+LKH31CMTldkHraUcZAU7laW1pckT4vhrS2vxwQCsLy+kSvM2XR7BJ0KzsYgdYykTzwao8uIXBbAy5CktG49ndJerZRr93fb8LNiUS2DfwavrFssAXusnoWiN7mFVuy4eSLUTJ+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=doXOCRiu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732656180; c=relaxed/simple;
+	bh=HvvnpaGaFRoljBjelMH95duoMXY8SYF6uMx4mRgL0jg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=EQ6xtM+Z4dbnAGYwDj3KF6gjsG+xww+AB4F88N6JtZPQ0v3oeGtf5A+e8kUMUi+v23cCWws16O7m8iSE2YD4B58OgLUXmYpZ3cHXTKCP4rxiJPFQkKH71EyABb/0wr43qnFaeGgTxtJv8dPZBzjDRX6akYVD6K8dxvLOF5O2+YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uwDrUzt7; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="doXOCRiu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C280AC4CECF;
-	Tue, 26 Nov 2024 20:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732653801;
-	bh=/M6nrZ8/zOV0HJkhNSsy+3xCar9R3UKeeL0bjP0pyQI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=doXOCRiu/Zjf30f5FKqcQba6vTE1T8OradgNvFa48alLNp1h4wzMOYV/5j3+8yPm9
-	 NcTBALs1ozS3SW4lm5HCGDtWLhxTaB9y4wLXz6IRbc9BaZlqMhRRvuTwsUGlbAdi2c
-	 Hrcr3LIuwsnnguj0aUsoGyyZHi07QQ6d+nUiVjhMhN4PLesr3Uyp1jlBAt/Ol6kg+K
-	 gjrnEgMusW5WvXH1y4evhozML33+owJsW9AGkW06PblNeUsOOPJy/6ebkl/6KLg1/y
-	 YxPQfVZUpI1MfWTWEIJq/UBXeJXNJHyV/vQiCheF8psmKJM4hWYQZl0qZ0ggqDm5iT
-	 VVRiWGpz5qXHw==
-Date: Tue, 26 Nov 2024 17:43:18 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Michel Lind <michel@michel-slm.name>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1 perf-tools] perf MANIFEST: Add
- arch/*/include/uapi/asm/bpf_perf_event.h to the perf tarball
-Message-ID: <Z0Yy5u42Q1hWoEzz@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uwDrUzt7"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ea5447561bso5784262a91.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 13:22:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1732656178; x=1733260978; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=e1SOqFacUzIyRzz4HVCOwpRa3L+4M0gEaauHwyt1g2A=;
+        b=uwDrUzt7X/LjbuEm5o4gKJzexEfJIuit46NhbuS731HerOwbd9EZURtBf5qx5oS0B7
+         LON/2rK69sB+Ly/EkqjKardFd+Eq6go4tNnUaCMw7l7KCDaA/D2EX+1MpSxixvnkU5Sm
+         rAG4CPhsAs7FAOQQyL42yZYc2hWCNBv01neXPVeTUOOl7mYt1p+vPQRo1kwxuZkb4GNR
+         pi4Qw/m3DeVRY+dfGB/KFUcOjA1teXXfO7IaOtYqEQI5Vsj1Ofuw7ye/cH1RN7sE5PJW
+         Njh5rS66VMpD9NYagcP32U/+x1KPD2D2RqtmI9wb8q6YeFpBYMY/14ftwINZ/gw/IA8R
+         kANA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732656178; x=1733260978;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e1SOqFacUzIyRzz4HVCOwpRa3L+4M0gEaauHwyt1g2A=;
+        b=V1PYe81MltVACdt6vNFin6zhtHAJrpPnJ9v/yws6AeAbYdKrQLewVjmFx87lzBmfqy
+         00qb7Hy9AjkzysNDxwGIGNzsARYCfkEWCK9/A4jej/31XaASzRCine67d0LSHku6lWfu
+         dyKViLvM+dmMet8atyJF+RRhVkplU97wklDnm7JvUEcYH7xQBP3xpuPaXEjoeGRwPZCJ
+         vp0JLeSZxUbAF7nGquGJBw1T6lbr+hdHG3n6aap6vjezuQcvCbOSd75WQANurqnNm451
+         0PVXEYsnPGPDzX17IcFkwQBwBYHOIuHztqmlymy96uws6i/RL6RkLNkIiqpjrTWFJFF6
+         My6A==
+X-Forwarded-Encrypted: i=1; AJvYcCV0viGnJqv+YWkP3Y3AhQmGKN5nm3j+DCAxUK56ccDAzd0nQsf/LLGxJp3oxgRRTVomJ3XSkjOqu/DUgYYr9xlM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0s3LXtmhRGsHRk+Ma3vcXwuO57Zlx81AsJRO4RhcaTog7cpxv
+	nVIr4ugN0iN7zMhnKaly+Dmlpr84jLWheWrBWw2gMWGbprxq2b9ml4h++2igJWWTUyoW+5Mnvti
+	0rg==
+X-Google-Smtp-Source: AGHT+IH+bifWG7gRrLb93vmRF3BXdhy2Uec4UHi2abgi0cDfMB8YHgtZ//Ipl7Y53dO1XEiLhaZeY3s1w5s=
+X-Received: from pjbnd17.prod.google.com ([2002:a17:90b:4cd1:b0:2e7:6ea5:ab67])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e7cf:b0:2ea:98f1:c172
+ with SMTP id 98e67ed59e1d1-2ee08e9bd16mr1041897a91.7.1732656178293; Tue, 26
+ Nov 2024 13:22:58 -0800 (PST)
+Date: Tue, 26 Nov 2024 13:22:53 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
+Message-ID: <20241126212255.3793822-1-ctshao@google.com>
+Subject: [PATCH v3 1/2] perf lock: Rename fields in lock_type_table
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Needed to build tools/lib/bpf/ on various arches other than x86_64,
-notably arm64 when using the perf tarballs generated by:
+`lock_type_table` contains `name` and `str` which can be confusing.
+Rename them to `flags_name` and `lock_name` and add descriptions to
+enhance understanding.
+Tested by building perf for x86.
 
-  $ make help | grep perf-
-    perf-tar-src-pkg    - Build the perf source tarball with no compression
-    perf-targz-src-pkg  - Build the perf source tarball with gzip compression
-    perf-tarbz2-src-pkg - Build the perf source tarball with bz2 compression
-    perf-tarxz-src-pkg  - Build the perf source tarball with xz compression
-    perf-tarzst-src-pkg - Build the perf source tarball with zst compression
-  $
-
-Building with BPF support was opt-in in perf for a long time, and
-testing it via the tarball main kernel Makefile targets in an
-architecture other than x86_64 was an odd case.
-
-I had noticed this at some point earlier this year while cross building
-perf to some arches, including arm64, but it fell thru the cracks, see
-the Link tag below.
-
-Fix it now by adding those arch/*/include/uapi/asm/bpf_perf_event.h
-files to the MANIFEST file used in building the perf source tarball.
-
-Tested with:
-
-  perfbuilder@number:~$ time dm debian:experimental-x-arm64
-     1    21.60 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 14.1.0-5) 14.1.0  flex 2.6.4
-  BUILD_TARBALL_HEAD=d31a974f6edc576f84c35be9526fec549a3b3520
-  $
-  $ git log --oneline -1 d31a974f6edc576f84c35be9526fec549a3b3520
-  d31a974f6edc576f (HEAD -> perf-tools-next) perf MANIFEST: Add arch/*/include/uapi/asm/bpf_perf_event.h to the perf tarball
-  $
-
-That was previously failing:
-
-  perfbuilder@number:~$ grep debian:experimental-x-arm64 dm.log.old/summary
-  19     4.80 debian:experimental-x-arm64   : FAIL gcc version 14.1.0 (Debian 14.1.0-5)
-  $
-  perfbuilder@number:~$ grep -B6 'Error 1' dm.log.old/debian:experimental-x-arm64
-  In file included from /git/perf-6.12.0-rc6/tools/include/uapi/linux/bpf_perf_event.h:11,
-                   from libbpf.c:36:
-  /git/perf-6.12.0-rc6/tools/include/uapi/asm/bpf_perf_event.h:2:10: fatal error: ../../arch/arm64/include/uapi/asm/bpf_perf_event.h: No such file or directory
-      2 | #include "../../arch/arm64/include/uapi/asm/bpf_perf_event.h"
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  compilation terminated.
-  make[4]: *** [/git/perf-6.12.0-rc6/tools/build/Makefile.build:105: /tmp/build/perf/libbpf/staticobjs/libbpf.o] Error 1
-  perfbuilder@number:~$
-
-Fixes: 9eea8fafe33eb708 ("libbpf: fix __arg_ctx type enforcement for perf_event programs")
-Closes: https://lore.kernel.org/all/Z0UNRCRYKunbDYxP@hyperscale.parallels
-Reported-by: Michel Lind <michel@michel-slm.name>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Link: https://lore.kernel.org/bpf/ZfyEgoG3JFiOs2Fs@x1/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 ---
- tools/perf/MANIFEST | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-lock.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-index dc42de1785cee715..908165fcec7de3c4 100644
---- a/tools/perf/MANIFEST
-+++ b/tools/perf/MANIFEST
-@@ -1,5 +1,6 @@
- arch/arm64/tools/gen-sysreg.awk
- arch/arm64/tools/sysreg
-+arch/*/include/uapi/asm/bpf_perf_event.h
- tools/perf
- tools/arch
- tools/scripts
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 062e2b56a2ab..c528aff1c9d5 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -1575,8 +1575,13 @@ static void sort_result(void)
+ 
+ static const struct {
+ 	unsigned int flags;
+-	const char *str;
+-	const char *name;
++	/*
++	 * Name of the lock flags (access), with delimeter ':'.
++	 * For example, rwsem:R of rwsem:W.
++	 */
++	const char *flags_name;
++	/* Name of the lock (type), for example, rwlock or rwsem. */
++	const char *lock_name;
+ } lock_type_table[] = {
+ 	{ 0,				"semaphore",	"semaphore" },
+ 	{ LCB_F_SPIN,			"spinlock",	"spinlock" },
+@@ -1595,24 +1600,24 @@ static const struct {
+ 	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex-spin",	"mutex" },
+ };
+ 
+-static const char *get_type_str(unsigned int flags)
++static const char *get_type_flags_name(unsigned int flags)
+ {
+ 	flags &= LCB_F_MAX_FLAGS - 1;
+ 
+ 	for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
+ 		if (lock_type_table[i].flags == flags)
+-			return lock_type_table[i].str;
++			return lock_type_table[i].flags_name;
+ 	}
+ 	return "unknown";
+ }
+ 
+-static const char *get_type_name(unsigned int flags)
++static const char *get_type_lock_name(unsigned int flags)
+ {
+ 	flags &= LCB_F_MAX_FLAGS - 1;
+ 
+ 	for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
+ 		if (lock_type_table[i].flags == flags)
+-			return lock_type_table[i].name;
++			return lock_type_table[i].lock_name;
+ 	}
+ 	return "unknown";
+ }
+@@ -1620,11 +1625,11 @@ static const char *get_type_name(unsigned int flags)
+ static unsigned int get_type_flag(const char *str)
+ {
+ 	for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
+-		if (!strcmp(lock_type_table[i].name, str))
++		if (!strcmp(lock_type_table[i].flags_name, str))
+ 			return lock_type_table[i].flags;
+ 	}
+ 	for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
+-		if (!strcmp(lock_type_table[i].str, str))
++		if (!strcmp(lock_type_table[i].lock_name, str))
+ 			return lock_type_table[i].flags;
+ 	}
+ 	return UINT_MAX;
+@@ -1732,7 +1737,7 @@ static void print_lock_stat_stdio(struct lock_contention *con, struct lock_stat
+ 
+ 	switch (aggr_mode) {
+ 	case LOCK_AGGR_CALLER:
+-		fprintf(lock_output, "  %10s   %s\n", get_type_str(st->flags), st->name);
++		fprintf(lock_output, "  %10s   %s\n", get_type_flags_name(st->flags), st->name);
+ 		break;
+ 	case LOCK_AGGR_TASK:
+ 		pid = st->addr;
+@@ -1742,7 +1747,7 @@ static void print_lock_stat_stdio(struct lock_contention *con, struct lock_stat
+ 		break;
+ 	case LOCK_AGGR_ADDR:
+ 		fprintf(lock_output, "  %016llx   %s (%s)\n", (unsigned long long)st->addr,
+-			st->name, get_type_name(st->flags));
++			st->name, get_type_lock_name(st->flags));
+ 		break;
+ 	case LOCK_AGGR_CGROUP:
+ 		fprintf(lock_output, "  %s\n", st->name);
+@@ -1783,7 +1788,8 @@ static void print_lock_stat_csv(struct lock_contention *con, struct lock_stat *s
+ 
+ 	switch (aggr_mode) {
+ 	case LOCK_AGGR_CALLER:
+-		fprintf(lock_output, "%s%s %s", get_type_str(st->flags), sep, st->name);
++		fprintf(lock_output, "%s%s %s",
++			get_type_flags_name(st->flags), sep, st->name);
+ 		if (verbose <= 0)
+ 			fprintf(lock_output, "\n");
+ 		break;
+@@ -1795,7 +1801,7 @@ static void print_lock_stat_csv(struct lock_contention *con, struct lock_stat *s
+ 		break;
+ 	case LOCK_AGGR_ADDR:
+ 		fprintf(lock_output, "%llx%s %s%s %s\n", (unsigned long long)st->addr, sep,
+-			st->name, sep, get_type_name(st->flags));
++			st->name, sep, get_type_lock_name(st->flags));
+ 		break;
+ 	case LOCK_AGGR_CGROUP:
+ 		fprintf(lock_output, "%s\n",st->name);
 -- 
-2.47.0
+2.47.0.338.g60cca15819-goog
 
