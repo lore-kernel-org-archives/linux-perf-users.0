@@ -1,107 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8D78831
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 05:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41434193425
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 07:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732600010; cv=none; b=TrsuBBKjlImkHeq9hYk3bo+F4PjR5uBku3Wc0Za4VPVoKwBR62c5e4L/2EgwfHSjIk2xCRZVWGRJwC5z3mLPu4wvYXWx7nomvShk3DDfSQpugUlNVO7ErdF85pgyuDVSumG6MxAI01D3NI7yhaLeymBeTxQkZFq07BvBOY7DiGs=
+	t=1732606472; cv=none; b=KwZhvwvF46ZAnsd8pXG026nfdTY9m6A+wx42uGH4zy1wO9BevfZwYFov8EUc4GEc+4LorLiiz3ixY0qPcvB9eDRL4VzTr3uZAEH23nXsTyiKCmKT9xq8xUZ3nWGEfEkaqeB+jtBgVkpexgB7n6B5M1dL+zVDbiynmm0uy1YV0HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732600010; c=relaxed/simple;
-	bh=WiXnmHqXp/DmGCZaQxA7MXweFtzFEm7/od9teO7wrec=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O8ygv0W6oZAF3OUyCjBpQM4wJsoPdbdcLd4vL4aOiYqGIjj/XyKcoV6l+my1q8ICXwGkKF6g/B0WoHSOaj8L+CM9kdyL/L+UGmpcugWrN2APegQdum1M+s5vFaxVlrRWeaqBbSLqM3jdlyFP0+y5stEaBfS00eY/kbuJjUm2FFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DOPvUNrd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732606472; c=relaxed/simple;
+	bh=PiI8RDTnl0VVSARmgX/7a9HouH8vYFUEaT/rYTdhTAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UK4o1sSLO1VW+p/S0kZXTmElrG1tt4Mrp+ARQiGuJ/dD2yO5H3D/NBOq6lFnne2glN1EYlAr8YTSbYGme4EKODk2vtWonewhkDVv4sTlvHCUiC1Wx3LC8Z4An8SlDrNSnQyd3diWSwqGkYnu7TP5HzFmSp29JggNh35/4zhoymU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=J/KpQY64; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOPvUNrd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC4C7C4CECF;
-	Tue, 26 Nov 2024 05:46:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732600010;
-	bh=WiXnmHqXp/DmGCZaQxA7MXweFtzFEm7/od9teO7wrec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DOPvUNrdcSt93bRmTBKhFoVuSlPH+h/b8ig4tW7hKivYf/W0h0p1NsOlSNzytZcwJ
-	 L3JGo6GRcfAiynsRAQodLaDiQnZbscWSPmaWlkSb2xkai6R/x8BYVKpePcD1nQWvJ1
-	 JKpcmW6HIFBmIpWxoKvRae+oh89lmq4XUHvpYL1wYLgITdNsNTDwlZ4vm/fWooXR0l
-	 1WGeLTyJ2pbTW8hcYqZD47Z9PtN3bKpdnKnsok6GY4n7AUapcEwmVut1HgJBU943Aq
-	 LgHfIk1dNIPwoiRQeeBpuOHE8DF9HWRP0aujGL0HIyyZBlCLyVcmrOi+u3tC8kwCmq
-	 uh+a4wE8rq4yA==
-Date: Mon, 25 Nov 2024 21:46:48 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Guilherme Amadio <amadio@gentoo.org>
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, irogers@google.com
-Subject: Re: SIGSEGV on perf's 'Basic parsing test'
-Message-ID: <Z0VgyFKPCo-Ync8E@google.com>
-References: <Z0D8a10VE1oIucuZ@gentoo.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="J/KpQY64"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D44D520003;
+	Tue, 26 Nov 2024 07:34:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1732606465;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4HIxDoTWJQXA0J35F6Ojzfhf71LHJ+sjxbgJWCPbHVc=;
+	b=J/KpQY64fsA0ZcOXa0Vrkco0yhyoKINq9n+JpvATaDt6nF37sSWYV9bT9aPkt3r/1puEgJ
+	L7BuSNiMEoiVjTALt2aoAn/jlfkoOkpxY8eWHpyYi2XjEns5M1nqgpFnHE5Ngg+QOUliCL
+	u+KZ7em04AcRvOAHZNFgyMf+yStAGMzO/31XSMX0jGnjP70Uk7cISqw/Zgz3KqnyQEE6py
+	nMUjfS8Tlt3EKjw9hPl0G+A3C718lH7oJnYK5UGe8Vr5SHemaQD54vbKdiq2IFZ7Q+TMEp
+	DOsoRn881fKzNPRdot+Lf98CveS4Uyxo97neiBU7kNawx7FkPcPXQ8mqzzAftQ==
+Date: Tue, 26 Nov 2024 08:34:23 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: namhyung@kernel.org, linux-perf-users@vger.kernel.org, "Yann E. MORIN"
+ <yann.morin.1998@free.fr>, "buildroot@buildroot.org"
+ <buildroot@buildroot.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v9 1/4] Create source symlink in perf object dir
+Message-ID: <20241126083423.63591cbf@booty>
+In-Reply-To: <Z0TMMouXlvhyk6j3@tassilo>
+References: <20240807231823.898979-1-ak@linux.intel.com>
+	<20241125182506.38af9907@booty>
+	<Z0TMMouXlvhyk6j3@tassilo>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z0D8a10VE1oIucuZ@gentoo.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Fri, Nov 22, 2024 at 10:49:31PM +0100, Guilherme Amadio wrote:
-> Dear Arnaldo, Namhyung, Ian,
-> 
-> I noticed that on perf-tools-next, some new tests fail on my machine
-> with a segmentation fault. I am on perf-tools-next at the following
-> commit: 85c60a01b85ee956adf8d46c253fc50f75363e8f.
+Hello Andi,
 
-I've added a couple of fixes for the HWMON tests.  Can you please test
-it again with the latest branch?
+thanks for the feedback.
 
-Thanks,
-Namhyung
+On Mon, 25 Nov 2024 11:12:50 -0800
+Andi Kleen <ak@linux.intel.com> wrote:
 
+> On Mon, Nov 25, 2024 at 06:25:06PM +0100, Luca Ceresoli wrote:
+> > Hello Andi,
+> > 
+> > +cc Yann and the Buildroot mailing list (see the end of this report).
+> > 
+> > On Wed,  7 Aug 2024 16:18:20 -0700
+> > Andi Kleen <ak@linux.intel.com> wrote:
+> >   
+> > > Create a source symlink to the original source in the objdir.
+> > > This is similar to what the main kernel build script does.
+> > > 
+> > > Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> > > ---
+> > >  tools/perf/Makefile.perf | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > > index 175e4c7898f0..d46892d8223b 100644
+> > > --- a/tools/perf/Makefile.perf
+> > > +++ b/tools/perf/Makefile.perf
+> > > @@ -163,6 +163,8 @@ ifneq ($(OUTPUT),)
+> > >  # for flex/bison parsers.
+> > >  VPATH += $(OUTPUT)
+> > >  export VPATH
+> > > +# create symlink to the original source
+> > > +SOURCE := $(shell ln -sf $(srctree)/tools/perf $(OUTPUT)/source)  
+> > 
+> > I found that since this patch got applied in 890a1961c812 (v6.12-rc1)
+> > building perf fails silently in some cases.
+> > 
+> > The cases I have tested:
+> >  - make <FLAGS> -C tools/perf                       -> OK
+> >  - make <FLAGS> -C tools/perf O=/my/out/of/tree/dir -> OK
+> >  - make <FLAGS> -C tools/perf O=tools/perf          -> fails
+> > 
+> > The failure in the third case is silent: make exits with a return value
+> > of 0, but there is no perf executable created.  
 > 
-> After compiling perf with DEBUG=1 and running the test on gdb, this is
-> the stack trace that I get from the crash:
+> The failing case is incorrect arguments because the O= is relative to -C 
+> and there is no tools/perf/tools/perf
+
+OK. However I get the same result even with O=$(pwd)/tools/perf, which
+is precisely what Buildroot does:
+https://git.buildroot.net/buildroot/tree/package/linux-tools/linux-tool-perf.mk.in#n170
+
+> But yes a error message would be good.
+
+Sure, as well as a non-zero return value.
+
+> Could just ignore the linking error, so that you hopefully get a better
+> error message later.
 > 
-> Reading symbols from ./perf...
-> (gdb) run
-> Starting program: /home/amadio/src/linux/tools/perf/perf test -F 11
-> [Thread debugging using libthread_db enabled]
-> Using host libthread_db library "/usr/lib64/libthread_db.so.1".
->  11.1: Basic parsing test                                            : Ok
-> event syntax error: 'temp_test_hwmon_event1'
->                      \___ Bad event name
-> 
-> Unable to find event on a PMU of 'temp_test_hwmon_event1'
-> 
-> Program received signal SIGSEGV, Segmentation fault.
-> __GI___libc_free (mem=0x1c0b4908070c0a7a) at malloc.c:3375
-> 3375      if (chunk_is_mmapped (p))                       /* release mmapped memory. */
-> (gdb) bt
-> #0  __GI___libc_free (mem=0x1c0b4908070c0a7a) at malloc.c:3375
-> #1  0x000055555564fbc8 in __zfree (ptr=0x7ffff6c00031) at ../../lib/zalloc.c:13
-> #2  0x000055555581997c in evsel__free_stat_priv (evsel=0x5555560d8ca0) at util/stat.c:148
-> #3  0x0000555555819c90 in evlist__free_stats (evlist=0x5555560d7d30) at util/stat.c:215
-> #4  0x000055555575d0dc in evlist__delete (evlist=0x5555560d7d30) at util/evlist.c:187
-> #5  0x00005555557124d9 in do_test (i=0, with_pmu=false, with_alias=false) at tests/hwmon_pmu.c:198
-> #6  0x0000555555712587 in test__hwmon_pmu (with_pmu=false) at tests/hwmon_pmu.c:212
-> #7  0x000055555571263b in test__hwmon_pmu_without_pmu (test=0x55555605ae40 <suite.hwmon_pmu>, subtest=1) at tests/hwmon_pmu.c:229
-> #8  0x00005555556c8e9d in start_test (test=0x55555605ae40 <suite.hwmon_pmu>, i=10, subi=1, child=0x5555560d7818, width=64, pass=1) at tests/builtin-test.c:424
-> #9  0x00005555556c9588 in __cmd_test (suites=0x5555560d73e0, argc=1, argv=0x7fffffffe200, skiplist=0x0) at tests/builtin-test.c:571
-> #10 0x00005555556ca0b5 in cmd_test (argc=1, argv=0x7fffffffe200) at tests/builtin-test.c:773
-> #11 0x0000555555645459 in run_builtin (p=0x555556047050 <commands+624>, argc=3, argv=0x7fffffffe200) at perf.c:351
-> #12 0x0000555555645704 in handle_internal_command (argc=3, argv=0x7fffffffe200) at perf.c:404
-> #13 0x0000555555645865 in run_argv (argcp=0x7fffffffe00c, argv=0x7fffffffe000) at perf.c:448
-> #14 0x0000555555645bb6 in main (argc=3, argv=0x7fffffffe200) at perf.c:560
-> (gdb) quit
-> 
-> 
-> Please let me know what other information you'd like to have from my system.
-> The CPU is an AMD 3950X and the motherboard is an ASUS Pro WS X570-ACE if that
-> helps.
-> 
-> $ uname -a
-> Linux gentoo.cern.ch 6.12.0-gentoo #1 SMP PREEMPT_DYNAMIC Mon Nov 18 16:50:03 CET 2024 x86_64 AMD Ryzen 9 3950X 16-Core Processor AuthenticAMD GNU/Linux
-> $ dmesg | sed -ne '/DMI/{p; q}'
-> [    0.000000] DMI: ASUS System Product Name/Pro WS X570-ACE, BIOS 4902 08/29/2024
-> 
-> Best regards,
-> -Guilherme
-> 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 9dd2e8d3f3c9..18f639ec853b 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -164,7 +164,7 @@ ifneq ($(OUTPUT),)
+>  VPATH += $(OUTPUT)
+>  export VPATH
+>  # create symlink to the original source
+> -SOURCE := $(shell ln -sf $(srctree)/tools/perf $(OUTPUT)/source)
+> +SOURCE := $(shell ln -sf $(srctree)/tools/perf $(OUTPUT)/source || true)
+
+I tried this but I don't see any difference. What is the change you
+would have expected in the build output?
+
+I'm afraid I don't understand what the SOURCE variable is supposed to
+do so I can hardly follow the logic.
+
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
