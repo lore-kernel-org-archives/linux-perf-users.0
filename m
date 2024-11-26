@@ -1,316 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1261DA0ED;
-	Tue, 26 Nov 2024 17:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA60182BC;
+	Tue, 26 Nov 2024 17:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732641417; cv=none; b=YmBIi9nJPb+aDlKp7h41K6ghPXnhbsFbpVOgHTWYjCx123D/iSQyQxAY7JrlH84B4R5zyRSJ0F8kyMAfgto5U7a0jQRhgadIL3AjxWKzaLkEF8DwoWBpH4dDvD5aE+Fe36dHaLknlr2Z9R8ddaBq8KZtVqJIeArl00fA1aNcAH0=
+	t=1732643161; cv=none; b=MNcXwyy1Tk2Oawlya9f0yAXBslvoLjgUpcjWIe1AogVaDO7RLFMiBxK34RKht1OhQ/s7XjkYsi+bkqmlr9Fhak+rs6QhlwRJmpHxOmeb1UAhKv4XJGpo7gKsyFOavaPjdJvWWqwv14eG8sI3uendw8JuHhR90Hg03huTnS/aORw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732641417; c=relaxed/simple;
-	bh=BoFX0DFtyDhgk1jysACLSTIFLU8ZzZ2tVfhovrAqrK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eFpTj/KeD91C43WximcEUG824oRBYz83LlVibaNA7UO8TyAcTihPxmhqC+SjPHO28J9aW3GnesGONFmFhae/4o7YEwTnQi9l+nUJTsVFLvc3nHcDteiu6zSiHr9nmHhDWV0YKSor62VCoulVGEANR1t8GEvjwT7wiUMiqJ2ZYIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GpRy+KKo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732643161; c=relaxed/simple;
+	bh=mY03VpsJJqMELHECKen20IGCRx/WgeuV9DS5VVd2Kmo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QA5l5xj6+Jt7NRlMU2UZr7Gg9xVoahbhOx1MqQJ6pm3TJvWNwVMC6Hfoi8lOetpMWHU5q/euN4bksf1my2XAqJyFRxaTtLYVsRFCMGBUT4STY/+AuVqm490+Pg9pKAajVDSYkr6ttPozujmr3/PWBgiugRoywa1Bl03xC99r/7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FC1QMaIc; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GpRy+KKo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73616C4CED0;
-	Tue, 26 Nov 2024 17:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732641417;
-	bh=BoFX0DFtyDhgk1jysACLSTIFLU8ZzZ2tVfhovrAqrK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GpRy+KKoH57jcDK9OWxgUTm7iqspxILcnn7ZMW2GOsVOhQRuVzVm5hpUA5oi88LGv
-	 9sKoBZr6xXI90G1YQRku4DtE42qmJGeECJr55ALsIa0QXfVumHtwIcjbDmmDMhp1AE
-	 +P13OHuulF6MV/uU+16u8kCA/7BynarB32nwJAPm6XfoW/STSpTw2SNtTBc53g5YP/
-	 ak9ZTBOy1DKRW2J5/kGkoaXtpuGL9+EXct9oKweQqcfWHDMyTecwL/qiNpDBYls5gC
-	 ZuYBgR5InrN5hAr1v/BmFBJ8lub4sbFjByscr6Jn9pk1+wMQx4Dx0pknxBejIp7GAC
-	 Q4KKiPM5AOmMg==
-Date: Tue, 26 Nov 2024 14:16:54 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V15 0/7] perf/core: Add ability for an event to "pause"
- or "resume" AUX area tracing
-Message-ID: <Z0YChjympWOZeu1e@x1>
-References: <20241114101711.34987-1-adrian.hunter@intel.com>
- <9bb112f8-0af1-4517-a4b8-bd2edacce07c@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FC1QMaIc"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6ee79e82361so57911087b3.1;
+        Tue, 26 Nov 2024 09:45:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732643158; x=1733247958; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fDFaDoaUbU0YDEV8A2N95UPpOXgvTMECrJUgSiq7MTo=;
+        b=FC1QMaIc8lfvlFqW9H/tHiTRn+xt5Yg9ESgyyyvD86ptHsHNE5RPtPnzqzXsYhGrZ+
+         0lzJSv6+FSJrB/8SjfzHEaayexqsLBBP2h/JqmCObf8mkLAl+N0Ia7i0v49ZyeGtDwC5
+         BPTAqPtcNT6+kYbh0SJAkUgwEcEU0zt+UoF8Pfb1NYk8tImgakHHQk7ZjH5AdKc1UXzE
+         lAD2Ou81WMz3byF9oVJ0+C3iDIQ8GRnSFbDi5qluYTA1MMdIvu7FYKOLT6gVZ/S6hErQ
+         KCf5BDoxpvO5e++LwVLIAq54eGkBtxEzNb14pdkas2BvX+wBG7gaX7zMHK1X3m3TzGey
+         Tfkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732643158; x=1733247958;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fDFaDoaUbU0YDEV8A2N95UPpOXgvTMECrJUgSiq7MTo=;
+        b=egjFThA0ZYzV5ggq17wTwRl7OQypst1/qDg9YrjK3yE/IS055ATK4pIpbTZ72mta3F
+         hpi+dVmN/XBDfclcg1HHITIiortmMZH9inCBB6+enPnbPRE22imrr21nH1UUNXwaPuMR
+         8RjY7a1sjoP4yOEJ++HcUXWAPJJixYh347NmB1xQrOK4EN8Q1TPd+L9ynB0S1XUSiXER
+         KTI0NVjfj/PzoWxaycBMc82opedIjj2BpyOWfQDzPhrJN7rLT/sqDFLceWYaJ+Q879ex
+         U4Do71thQjauoq9Jcn5cp/I4y8RvhUAFR6GjVLr6Xfg5V6WINx6D37FnPiOBsJtdRZMZ
+         7DQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTUQbG7St7CavjOAhWyaPjmCdK7+cQteDi67ebm/i5EZlrWRVqToOOShPP8Kmsg14FT6FsugSQt17reMg=@vger.kernel.org, AJvYcCXv/2aI7wlHMUB9EDwhcAOlYxt2X/EpgRETgaXlwle5Mj++Q2XZyY4qDrsi62Yq4tusjGRBACzPEn0yN9f1d3rlCA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvVTRq4AbYJZUbVQQHKDQV9B9jISUWfJjhA51IXkYS+X7dvJqm
+	89Lwr8RQqRHQwa7AlYtgjMpm713XkCuwYr6min2YsH+pAlnMWFBiWEuBb5OOHsNd9k6ShC3Bh7d
+	aZxUSFxoBtvzRG/2KAAGmKO8zHAU=
+X-Gm-Gg: ASbGncuj5+nalu+z+IRNZB/YvZ5WmgHV6ASTJstXJ4SzlB1ISE0KOM4c62AyJhI2NQT
+	wg4ZzyYgrOUkRLs1zEOewBM4SzIlpVlr/
+X-Google-Smtp-Source: AGHT+IH5Mbh/SMLM2wJi9RWhj0dwkJbVOV3z/saPgVQM+PC70Knl18Y/CK9eMOdmqxyHeWEx6a4Kd2hfazmGPktIC9I=
+X-Received: by 2002:a05:690c:380a:b0:6ee:4855:45de with SMTP id
+ 00721157ae682-6ef23dcfa06mr38894167b3.9.1732643158464; Tue, 26 Nov 2024
+ 09:45:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9bb112f8-0af1-4517-a4b8-bd2edacce07c@intel.com>
+References: <20241123005512.342079-1-howardchu95@gmail.com>
+ <20241123005512.342079-2-howardchu95@gmail.com> <Z0X8KJd5LYrgUJUh@x1> <Z0YBiu9XdstHmjWr@x1>
+In-Reply-To: <Z0YBiu9XdstHmjWr@x1>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Tue, 26 Nov 2024 09:45:47 -0800
+Message-ID: <CAH0uvojGDUwSzMmf2FE8He9DB59H0R0p2bHKGJRDs9eJjRXFhw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf trace: Add tests for BTF general augmentation
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 26, 2024 at 02:59:02PM +0200, Adrian Hunter wrote:
-> On 14/11/24 12:17, Adrian Hunter wrote:
-> > Hi
-> > 
-> > Note for V15:
-> > 	Same as V14 but without kernel patches because they have been
-> > 	applied, and updated "missing_features" patch for the new way
-> > 	of detecting missing features.
-> 
-> Still apply
+Hello Arnaldo,
 
-So the kernel part is in, I'll go over this after getting a machine with
-a kernel with those features so that I can test it all together.
+On Tue, Nov 26, 2024 at 9:12=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Tue, Nov 26, 2024 at 01:49:44PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Fri, Nov 22, 2024 at 04:55:10PM -0800, Howard Chu wrote:
+> > > Currently, we only have perf trace augmentation tests for enum
+> > > arguments. This patch adds tests for more general syscall arguments,
+> > > such as struct pointers, strings, and buffers.
+> >
+> > scripts/checkpatch.pl has some warnings here I think we can address
+> > easily, some not so much, like the SPDX that we need to add logic to
+> > 'perf test' to noticed its the SPDX and skip it, looking at the next
+> > line for the test description.
+> >
+> >
+> > The long lines we can just make them multiple lines with the first ones
+> > ending in \
 
-- Arnaldo
- 
-> > Hardware traces, such as instruction traces, can produce a vast amount of
-> > trace data, so being able to reduce tracing to more specific circumstances
-> > can be useful.
-> > 
-> > The ability to pause or resume tracing when another event happens, can do
-> > that.
-> > 
-> > These patches add such a facilty and show how it would work for Intel
-> > Processor Trace.
-> > 
-> > Maintainers of other AUX area tracing implementations are requested to
-> > consider if this is something they might employ and then whether or not
-> > the ABI would work for them.  Note, thank you to James Clark (ARM) for
-> > evaluating the API for Coresight.  Suzuki K Poulose (ARM) also responded
-> > positively to the RFC.
-> > 
-> > Changes to perf tools are now (since V4) fleshed out.
-> > 
-> > Please note, Intel® Architecture Instruction Set Extensions and Future
-> > Features Programming Reference March 2024 319433-052, currently:
-> > 
-> > 	https://cdrdv2.intel.com/v1/dl/getContent/671368
-> > 
-> > introduces hardware pause / resume for Intel PT in a feature named
-> > Intel PT Trigger Tracing.
-> > 
-> > For that more fields in perf_event_attr will be necessary.  The main
-> > differences are:
-> > 	- it can be applied not just to overflows, but optionally to
-> > 	every event
-> > 	- a packet is emitted into the trace, optionally with IP
-> > 	information
-> > 	- no PMI
-> > 	- works with PMC and DR (breakpoint) events only
-> > 
-> > Here are the proposed additions to perf_event_attr, please comment:
-> > 
-> > diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-> > index 0c557f0a17b3..05dcc43f11bb 100644
-> > --- a/tools/include/uapi/linux/perf_event.h
-> > +++ b/tools/include/uapi/linux/perf_event.h
-> > @@ -369,6 +369,22 @@ enum perf_event_read_format {
-> >  	PERF_FORMAT_MAX = 1U << 5,		/* non-ABI */
-> >  };
-> >  
-> > +enum {
-> > +	PERF_AUX_ACTION_START_PAUSED		=   1U << 0,
-> > +	PERF_AUX_ACTION_PAUSE			=   1U << 1,
-> > +	PERF_AUX_ACTION_RESUME			=   1U << 2,
-> > +	PERF_AUX_ACTION_EMIT			=   1U << 3,
-> > +	PERF_AUX_ACTION_NR			= 0x1f << 4,
-> > +	PERF_AUX_ACTION_NO_IP			=   1U << 9,
-> > +	PERF_AUX_ACTION_PAUSE_ON_EVT		=   1U << 10,
-> > +	PERF_AUX_ACTION_RESUME_ON_EVT		=   1U << 11,
-> > +	PERF_AUX_ACTION_EMIT_ON_EVT		=   1U << 12,
-> > +	PERF_AUX_ACTION_NR_ON_EVT		= 0x1f << 13,
-> > +	PERF_AUX_ACTION_NO_IP_ON_EVT		=   1U << 18,
-> > +	PERF_AUX_ACTION_MASK			= ~PERF_AUX_ACTION_START_PAUSED,
-> > +	PERF_AUX_PAUSE_RESUME_MASK		= PERF_AUX_ACTION_PAUSE | PERF_AUX_ACTION_RESUME,
-> > +};
-> > +
-> >  #define PERF_ATTR_SIZE_VER0	64	/* sizeof first published struct */
-> >  #define PERF_ATTR_SIZE_VER1	72	/* add: config2 */
-> >  #define PERF_ATTR_SIZE_VER2	80	/* add: branch_sample_type */
-> > @@ -515,10 +531,19 @@ struct perf_event_attr {
-> >  	union {
-> >  		__u32	aux_action;
-> >  		struct {
-> > -			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
-> > -				aux_pause        :  1, /* on overflow, pause AUX area tracing */
-> > -				aux_resume       :  1, /* on overflow, resume AUX area tracing */
-> > -				__reserved_3     : 29;
-> > +			__u32	aux_start_paused  :  1, /* start AUX area tracing paused */
-> > +				aux_pause         :  1, /* on overflow, pause AUX area tracing */
-> > +				aux_resume        :  1, /* on overflow, resume AUX area tracing */
-> > +				aux_emit          :  1, /* generate AUX records instead of events */
-> > +				aux_nr            :  5, /* AUX area tracing reference number */
-> > +				aux_no_ip         :  1, /* suppress IP in AUX records */
-> > +				/* Following apply to event occurrence not overflows */
-> > +				aux_pause_on_evt  :  1, /* on event, pause AUX area tracing */
-> > +				aux_resume_on_evt :  1, /* on event, resume AUX area tracing */
-> > +				aux_emit_on_evt   :  1, /* generate AUX records instead of events */
-> > +				aux_nr_on_evt     :  5, /* AUX area tracing reference number */
-> > +				aux_no_ip_on_evt  :  1, /* suppress IP in AUX records */
-> > +				__reserved_3      : 13;
-> >  		};
-> >  	};
-> > 
-> > 
-> > Changes in V15:
-> >       perf/x86/intel/pt: Fix buffer full but size is 0 case
-> >       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> >       perf/x86/intel/pt: Add support for pause / resume
-> >       perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
-> > 	Dropped kernel patches because they have been applied
-> > 
-> >       perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
-> > 	Re-base on new API probe method of missing feature detection
-> > 	and add probe for aux_action.
-> > 
-> > Changes in V14:
-> >       Dropped KVM patches
-> > 
-> >       perf/x86/intel/pt: Add support for pause / resume
-> > 	Set pt->handle_nmi after configuration is completed instead of during
-> > 
-> > Changes in V13:
-> >       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> > 	Do aux_resume at the end of __perf_event_overflow() so as to trace
-> > 	less of perf itself
-> > 
-> >       perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
-> > 	Add error message also in EOPNOTSUPP case (Leo)
-> > 
-> > Changes in V12:
-> > 	Add previously sent patch "perf/x86/intel/pt: Fix buffer full
-> > 	but size is 0 case"
-> > 
-> > 	Add previously sent patch set "KVM: x86: Fix Intel PT Host/Guest
-> > 	mode when host tracing"
-> > 
-> > 	Rebase on current tip plus patch set "KVM: x86: Fix Intel PT Host/Guest
-> > 	mode when host tracing"
-> > 
-> > Changes in V11:
-> >       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> > 	Make assignment to event->hw.aux_paused conditional on
-> > 	(pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE).
-> > 
-> >       perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
-> > 	Remove definition of has_aux_action() because it has
-> > 	already been added as an inline function.
-> > 
-> >       perf/x86/intel/pt: Fix sampling synchronization
-> >       perf tools: Enable evsel__is_aux_event() to work for ARM/ARM64
-> >       perf tools: Enable evsel__is_aux_event() to work for S390_CPUMSF
-> > 	Dropped because they have already been applied
-> > 
-> > Changes in V10:
-> >       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> > 	Move aux_paused into a union within struct hw_perf_event.
-> > 	Additional comment wrt PERF_EF_PAUSE/PERF_EF_RESUME.
-> > 	Factor out has_aux_action() as an inline function.
-> > 	Use scoped_guard for irqsave.
-> > 	Move calls of perf_event_aux_pause() from __perf_event_output()
-> > 	to __perf_event_overflow().
-> > 
-> > Changes in V9:
-> >       perf/x86/intel/pt: Fix sampling synchronization
-> > 	New patch
-> > 
-> >       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> > 	Move aux_paused to struct hw_perf_event
-> > 
-> >       perf/x86/intel/pt: Add support for pause / resume
-> > 	Add more comments and barriers for resume_allowed and
-> > 	pause_allowed
-> > 	Always use WRITE_ONCE with resume_allowed
-> > 
-> > 
-> > Changes in V8:
-> > 
-> >       perf tools: Parse aux-action
-> > 	Fix clang warning:
-> > 	     util/auxtrace.c:821:7: error: missing field 'aux_action' initializer [-Werror,-Wmissing-field-initializers]
-> > 	     821 |         {NULL},
-> > 	         |              ^
-> > 
-> > Changes in V7:
-> > 
-> > 	Add Andi's Reviewed-by for patches 2-12
-> > 	Re-base
-> > 
-> > Changes in V6:
-> > 
-> >       perf/core: Add aux_pause, aux_resume, aux_start_paused
-> > 	Removed READ/WRITE_ONCE from __perf_event_aux_pause()
-> > 	Expanded comment about guarding against NMI
-> > 
-> > Changes in V5:
-> > 
-> >     perf/core: Add aux_pause, aux_resume, aux_start_paused
-> > 	Added James' Ack
-> > 
-> >     perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
-> > 	New patch
-> > 
-> >     perf tools
-> > 	Added Ian's Ack
-> > 
-> > Changes in V4:
-> > 
-> >     perf/core: Add aux_pause, aux_resume, aux_start_paused
-> > 	Rename aux_output_cfg -> aux_action
-> > 	Reorder aux_action bits from:
-> > 		aux_pause, aux_resume, aux_start_paused
-> > 	to:
-> > 		aux_start_paused, aux_pause, aux_resume
-> > 	Fix aux_action bits __u64 -> __u32
-> > 
-> >     coresight: Have a stab at support for pause / resume
-> > 	Dropped
-> > 
-> >     perf tools
-> > 	All new patches
-> > 
-> > Changes in RFC V3:
-> > 
-> >     coresight: Have a stab at support for pause / resume
-> > 	'mode' -> 'flags' so it at least compiles
-> > 
-> > Changes in RFC V2:
-> > 
-> > 	Use ->stop() / ->start() instead of ->pause_resume()
-> > 	Move aux_start_paused bit into aux_output_cfg
-> > 	Tighten up when Intel PT pause / resume is allowed
-> > 	Add an example of how it might work for CoreSight
-> > 
-> > 
-> > Adrian Hunter (7):
-> >       perf tools: Add aux_start_paused, aux_pause and aux_resume
-> >       perf tools: Add aux-action config term
-> >       perf tools: Parse aux-action
-> >       perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
-> >       perf intel-pt: Improve man page format
-> >       perf intel-pt: Add documentation for pause / resume
-> >       perf intel-pt: Add a test for pause / resume
-> > 
-> >  tools/include/uapi/linux/perf_event.h      |  11 +-
-> >  tools/perf/Documentation/perf-intel-pt.txt | 596 ++++++++++++++++++-----------
-> >  tools/perf/Documentation/perf-record.txt   |   4 +
-> >  tools/perf/builtin-record.c                |   4 +-
-> >  tools/perf/tests/shell/test_intel_pt.sh    |  28 ++
-> >  tools/perf/util/auxtrace.c                 |  67 +++-
-> >  tools/perf/util/auxtrace.h                 |   6 +-
-> >  tools/perf/util/evsel.c                    | 101 ++++-
-> >  tools/perf/util/evsel.h                    |   1 +
-> >  tools/perf/util/evsel_config.h             |   1 +
-> >  tools/perf/util/parse-events.c             |  10 +
-> >  tools/perf/util/parse-events.h             |   1 +
-> >  tools/perf/util/parse-events.l             |   1 +
-> >  tools/perf/util/perf_event_attr_fprintf.c  |   3 +
-> >  tools/perf/util/pmu.c                      |   1 +
-> >  15 files changed, 594 insertions(+), 241 deletions(-)
-> > 
-> > 
-> > Regards
-> > Adrian
-> 
+Sure, thanks.
+
+>
+> And while testing it with -vv:
+>
+> root@number:~# perf test -vv btf
+> 110: perf trace BTF general tests:
+> --- start ---
+> test child forked, pid 242944
+> Testing perf trace's string augmentation
+> grep: warning: stray \ before /
+> Testing perf trace's buffer augmentation
+> grep: warning: stray \ before /
+> Testing perf trace's struct augmentation
+> grep: warning: stray \ before /
+> ---- end(0) ----
+> 110: perf trace BTF general tests                                    : Ok
+> root@number:~#
+>
+> The long lines can be solved like:
+>
+> +++ b/tools/perf/tests/shell/trace_btf_general.sh
+> @@ -17,7 +17,8 @@ trap cleanup EXIT TERM INT HUP
+>
+>  trace_test_string() {
+>    echo "Testing perf trace's string augmentation"
+> -  if ! perf trace -e renameat* --max-events=3D1 -- mv ${file1} ${file2} =
+2>&1 | grep -q -E " +[0-9]+\.[0-9]+ +\( *[0-9]+\.[0-9]+ ms\): +mv\/[0-9]+ r=
+enameat(2)?\(olddfd: .*, oldname: \"${file1}\", newdfd: .*, newname: \"${fi=
+le2}\", flags: .*\) +=3D +[0-9]+$"
+> +  if ! perf trace -e renameat* --max-events=3D1 -- mv ${file1} ${file2} =
+2>&1 | \
+> +     grep -q -E " +[0-9]+\.[0-9]+ +\( *[0-9]+\.[0-9]+ ms\): +mv\/[0-9]+ =
+renameat(2)?\(olddfd: .*, oldname: \"${file1}\", newdfd: .*, newname: \"${f=
+ile2}\", flags: .*\) +=3D +[0-9]+$"
+>    then
+>      echo "String augmentation test failed"
+>      err=3D1
+>
+> And that " +[0-9]+\.[0-9]+ +\( *[0-9]+\.[0-9]+ ms\): +mv\/[0-9]+ : +"
+>
+> part is common to several such greps, so you could have it as:
+>
+> prefix=3D" +[0-9]+\.[0-9]+ +\( *[0-9]+\.[0-9]+ ms\): +mv\/[0-9]+ : +"
+>
+> And then use
+>
+> grep -q -E "%{prefix}mv\/[0-9]+ renameat(2)?\(olddfd: .*, oldname: \"${fi=
+le1}\", newdfd: .*, newname: \"${file2}\", flags: .*\) +=3D +[0-9]+$"
+>
+> Or, since this part isn't interesting for what this test checks, BPF
+> augmentation, we could make it all more compact, i.e.:
+>
+> From the default that is:
+>
+> root@number:~# rm -f before after ; touch before ; perf trace -e renameat=
+2 mv before after
+>      0.000 ( 0.037 ms): mv/243278 renameat2(olddfd: CWD, oldname: "before=
+", newdfd: CWD, newname: "after", flags: NOREPLACE) =3D 0
+> root@number:~#
+>
+> We point perf to a temporary config file, using mktemp, then tell it to
+> not output the stuff we don't need while test BPF augmentation, making
+> the output more compact and thus the regexps in the perf test shorter.
+
+Sure I'll do that.
+
+Thanks,
+Howard
