@@ -1,82 +1,46 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F26D48CFC;
-	Wed, 27 Nov 2024 02:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1871A11713;
+	Wed, 27 Nov 2024 03:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732676383; cv=none; b=qKRJDXleVcWWpgxZ5cNv9hnCGUu50QoVZQ/RZwHudVbRTJz26jB6gVrAQ4uJCKLyFwXL8qPjZfBxVPNkJ6WiE3EdvcK8FVvk2ua0G/uK8VN0ETZLQWz6VBnQb5aipLonSgGEGUA3NhxYpAVnmQFyOQqkDcRClBCXoLbO2FOlF8Q=
+	t=1732677911; cv=none; b=iIphFed1ZMNwC+N3xOwfu/NbEbvv9Tacqkn+dFWawljwixGWdldML4QBj6fBYceTg+7KBO7xhgoG0ZKroqsJ0boC5yXeULKRwIYPlgr4rXQ8rVogZvbS3CRKvzafrvfSz6Kp9if5QM0r4IixwvSWyzuN1bw+haykH4ZfvkIPqJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732676383; c=relaxed/simple;
-	bh=UWmMiGZqLwobInZyxFH3bSZUtPpteFtRWw6WLfPhbAs=;
+	s=arc-20240116; t=1732677911; c=relaxed/simple;
+	bh=Nt+qRwBre/tMaFXQVXIA1hP+U+Vo7L3Jk/R7KRL6iII=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SdTKRpewiQyTOWUtUh3nbGhbVnmA1lWn+s10ccryQYwtNCQ/1wQdmMhYwSJEmfLaXaW6oR+suqa5lv3PCK3yWJeIU24XRwkaJajICLJjhLV5t9pe624niMyTL2tyLQESJJIF+yS8/8PJ2+c6NGFX8+TfWg3a6EUCGig+DIeAUi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DDt5o1uP; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=dmwmx2dC99rRy2oDptk2SsiZxBBJdhpj/J8r7xT/W+YOsvFeA1xJrXmo8RfzcHddao2+woR9jw7TH/GR7uUETOTd3fNqXJhCiFf9oXjHKxmDoP2ujQ7seiEuQG5lcEzmShUPSQi7s0zlS1mRXtmU0P2UxQiACsbNE2+n4FyFL0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qWrmdKks; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDt5o1uP"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7252fba4de1so422120b3a.0;
-        Tue, 26 Nov 2024 18:59:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732676381; x=1733281181; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vDren5ADtiyyuDojahly2+sSPvL0WRct0w89l8MBRc4=;
-        b=DDt5o1uPa0slHN7y90e0+yWLE5nGk2+X0GKpsY1VtlPA9iB2eXtfaCd/zJzC0wQkHp
-         8vwHm2lTGbFnTj5FS/mqdOtiBYM31GzVa3j/Yrt3h3LF59xrgxWEFYL+xjbRZc2nNapN
-         G/RunpAAUj3t8FhdpOqAmR5HAbE15Y2jcYmAw8T17HSpqT6Jyue0AXmWHo4MbsPDClCV
-         KRHXBlolFsMNMu1mfVG56E+inoQbKswLNcI3hgHbF/gOqIKzBAB4kGY4gXcjmsUU8Yes
-         vPmT/xLShMIhyzy/VIkv51Vj5GZjQe/Fe/XbaNdVb4bRI3F2ndiMfm/nnegtguc8Hiig
-         WHKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732676381; x=1733281181;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vDren5ADtiyyuDojahly2+sSPvL0WRct0w89l8MBRc4=;
-        b=dB4oRNU9Tdkq1oQL47E7vAUaAbLafOkHOyAJaQA7WO/xUbrEnPjZEphbVv2j1Zr+Wr
-         Xg0X0AQZjzURRnTn1Rn430/DM8gzaY5O5mXYhmxwjQbsn4HDOkJbrEyFWF+1YryxceWw
-         AsGQj4J1KSa37JNpX4Z82GaYCW8J5xMLW7r8HcVUwN9/HY06IpiD3RlTL+LrcyVG+XeC
-         MsIl3ERfKyPbeWJzgg99oFeyEoOQbIJt/9yj2yfyt25+fj5UeP3o9YUesr1ptZvD9S30
-         EEvfgUaNRACxYlGnZj5uevKcFuRrnEh6O2tZ3FT9sERJ4oRySmbOokit+b3k4vnbvMTA
-         NHCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjCtcTdUhwjPTKOUOJRXDtNSWBN14ZbgH1AH0hnAtqFM6LBKGD7TOSXyhxD1X8v99gmSd0sUnE5POS4Y9EQN1icg==@vger.kernel.org, AJvYcCVJKm/OQ+Ra7fxS9Y5iMuGvV1XIQfBzgXDG1OVKBO2MbopBRn0P7gW0UY8LRTckZ6JyDVpKoM/6vQjE@vger.kernel.org, AJvYcCVdT7LcwQ14N124yuJs4PHI/FIF88taSxDys7BbXqMYYuEJTcuw5GXXx9c2Jo4ywbsuUeRkunWeF3sTwSiz3oQ=@vger.kernel.org, AJvYcCVrZ+kwkfs27aqNvgm6G9hEUWHQmf8qzJR+TQv/cs18WUzCHMkvThxo1IM7j4K62p43VsosDuSqDyQ3PEYFhPxW@vger.kernel.org, AJvYcCW0ouRepxq3CcucvysfMlZ5DP4Mghdhl2xpd0xlOFrSOZnKoIJG8g1HAxJZDsiLuPf9DZ9xc/4mcQX1ZIM=@vger.kernel.org, AJvYcCX4f1gHc5XSANOmfWTM00Kl6NiipvgC00tag6TWsqv6c1c6nLgw5ErcKWnqM6zX+humNlIV38aNWxntXrYj@vger.kernel.org
-X-Gm-Message-State: AOJu0YyO0dR6TfWi2MBh0gLfRq1PZt9Pv/erHH1LgO7e1xw2AzKcPogi
-	2MjCrj8GGEmtDtXVKXZawwWsDhdI4D+SUxZKvAarBGhZV7dk5K8c
-X-Gm-Gg: ASbGncuSaQY2TwiMlFvnDLFoBEigNj/fQjZhqaI2cyyfJLHeQpK+y9m4bfyVEmDiNIk
-	9GluJ7V4fmv7WaTIWEAvZbGHwcwV7ETqHJ6sP2o+vs+D+zRHhH4E4tuVkfbthpC9Wm4e+RDL/0Y
-	NtpaKGglE/uW0ck1vYKkCKoc+Tw+U7b95LrT8/BeRCEtSgR4xAWeNVQ4AcR09ASibyzBLWxpcZO
-	HcRDRRf0Je8AWFnRk3FeFX/Q31N4q1eaMWrx+i4zDR7mQRIs4jbTtadHrqpWhtEaKPVz+B3fyJZ
-	aA==
-X-Google-Smtp-Source: AGHT+IFYiHisxMljvlFNcELzBIZNtvqA9E+SoH+TzdKr80+88ifldFSahzOnnXPVC3c2OejQpqXMZw==
-X-Received: by 2002:a05:6a00:1da1:b0:725:3305:1a7e with SMTP id d2e1a72fcca58-72533051bb8mr723576b3a.9.1732676380691;
-        Tue, 26 Nov 2024 18:59:40 -0800 (PST)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fbcc40143esm9471790a12.80.2024.11.26.18.59.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2024 18:59:40 -0800 (PST)
-Date: Wed, 27 Nov 2024 10:59:34 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
-	corbet@lwn.net, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, namhyung@kernel.org, akpm@linux-foundation.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, willy@infradead.org,
-	jserv@ccns.ncku.edu.tw, linux-kernel@vger.kernel.org,
-	linux-bcache@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v2 01/10] lib/min_heap: Introduce non-inline versions of
- min heap API functions
-Message-ID: <Z0aLFidHu/msXbXq@visitorckw-System-Product-Name>
-References: <20241020040200.939973-1-visitorckw@gmail.com>
- <20241020040200.939973-2-visitorckw@gmail.com>
- <CAMuHMdVO5DPuD9HYWBFqKDHphx7+0BEhreUxtVC40A=8p6VAhQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qWrmdKks"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1C7C4CECF;
+	Wed, 27 Nov 2024 03:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732677910;
+	bh=Nt+qRwBre/tMaFXQVXIA1hP+U+Vo7L3Jk/R7KRL6iII=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qWrmdKksgGgUszP44bpY5I2DLDfmJYSeFtDdEddnq+SEUBOBzrU9y6PZcYGRHbni3
+	 U5W4EIM8H7le/ynWyo9HRBgYOgeXpu3YtVINuujPMclR21fKZBIG/GjVSeBCvRwyKZ
+	 PUr16qXqbODtBStv1zPHgzaygjhQAeE0mgN3mvLo7kOJxmfAgZQ0gBsHZmuxsUQDZw
+	 yAcSDyIHyudbCQYDMiEErwP0pjSBnuP7tSJJcAdsHcpW16Y72F0G1dTGNbwFyAhTYc
+	 NezsSbGRnj/6WoRbcTY7KNGhrVd5IfCfDRreyHHAyVCyXfUgSQ8pmzGxPqU9cvXitT
+	 +pnSAwTD9OqPA==
+Date: Tue, 26 Nov 2024 19:25:08 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [GIT PULL] perf-tools changes for v6.13
+Message-ID: <Z0aRFFW9xMh3mqKB@google.com>
+References: <20241125071653.1350621-1-namhyung@kernel.org>
+ <CAHk-=whQ_yeRDh_zZjhz-4q8G=vu5Ypb-Y3f=efHQSwd5Kas3w@mail.gmail.com>
+ <Z0ZhDHXxHKoE2Nrl@google.com>
+ <Z0ZvAB0vcL-D-a6f@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -85,163 +49,165 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdVO5DPuD9HYWBFqKDHphx7+0BEhreUxtVC40A=8p6VAhQ@mail.gmail.com>
+In-Reply-To: <Z0ZvAB0vcL-D-a6f@x1>
 
-Hi Geert,
+On Tue, Nov 26, 2024 at 09:59:44PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Nov 26, 2024 at 04:00:12PM -0800, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > On Tue, Nov 26, 2024 at 03:33:10PM -0800, Linus Torvalds wrote:
+> > > On Sun, 24 Nov 2024 at 23:17, Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > Please consider pulling the following changes in perf tools for v6.13.
+> > > 
+> > > Hmm. Has the default search path for the vmlinux image changed?
+> > 
+> > I don't think so.
+>  
+> > > Doing profiling with this, I get
+> > > 
+> > >     openat(AT_FDCWD, "vmlinux", O_RDONLY)   = 5
+> > > 
+> > > which is very very wrong for my kernel build - it basically picks up
+> > > the vmlinux image from the build directory, which has absolutely
+> > > *nothign* to do with the image that is being run at the moment.
+> > 
+> > Sure, at least it should match the build-id before use.
+> 
+> I tried it here and at first I reproduced Linus results, which I found
+> very strange, then I tried to bisect it, and all the previous versions
+> were producing this:
+> 
+> root@number:/home/acme/git/perf-tools# perf -v ; perf report -vv |& grep -A5 "^Looking at the vmlinux_path"
+> perf version 6.12.gb50ecc5aca4d
+> Looking at the vmlinux_path (8 entries long)
+> symsrc__init: build id mismatch for vmlinux.
+> symsrc__init: cannot get elf header.
+> overlapping maps:
+>  ffffffffc034b75c-ffffffffc034b89b 0 bpf_prog_40ddf486530245f5_sd_devices
+>  ffffffffc0000000-ffffffffff000000 7fffc0004000 vmlinux
+> root@number:/home/acme/git/perf-tools#
+> 
+> Which is what I got from the perf-tools branch you asked him to pull.
+> 
+> The algorithm in perf is similar to the one in pahole (that stole it
+> from perf):
+> 
+> root@number:/home/acme/git/perf-tools# strace -e openat pahole --running_kernel_vmlinux |& tail -12
+> openat(AT_FDCWD, "/sys/kernel/notes", O_RDONLY) = 3
+> openat(AT_FDCWD, "vmlinux", O_RDONLY)   = 3
+> openat(AT_FDCWD, "/boot/vmlinux", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/boot/vmlinux-6.11.8-200.fc40.x86_64", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/usr/lib/debug/boot/vmlinux-6.11.8-200.fc40.x86_64", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/lib/modules/6.11.8-200.fc40.x86_64/build/vmlinux", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/usr/lib/debug/lib/modules/6.11.8-200.fc40.x86_64/vmlinux", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/usr/lib/debug/boot/vmlinux-6.11.8-200.fc40.x86_64.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/root/.cache/debuginfod_client/55152ddca5da77ca62deb3dd0db105e82b3711e0/debuginfo", O_RDONLY) = -1 ENOENT (No such file or directory)
+> pahole: couldn't find a vmlinux that matches the running kernel
+> HINT: Maybe you're inside a container or missing a debuginfo package?
+> +++ exited with 1 +++
+> root@number:/home/acme/git/perf-tools#
+> 
+> The one in perf does very much the same:
+> 
+> root@number:/home/acme/git/perf-tools# perf -v ; strace -e openat -o /tmp/strace.output perf report -vv |& grep -A5 "^Looking at the vmlinux_path" ; grep '"vmlinux"' -B1 -A10 /tmp/strace.output 
+> perf version 6.12.gb50ecc5aca4d
+> Looking at the vmlinux_path (8 entries long)
+> symsrc__init: build id mismatch for vmlinux.
+> symsrc__init: cannot get elf header.
+> overlapping maps:
+>  ffffffffc034b75c-ffffffffc034b89b 0 bpf_prog_40ddf486530245f5_sd_devices
+>  ffffffffc0000000-ffffffffff000000 7fffc0004000 vmlinux
+> openat(AT_FDCWD, "/root/.debug/.build-id/55/152ddca5da77ca62deb3dd0db105e82b3711e0/elf", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "vmlinux", O_RDONLY)   = 142
+> openat(AT_FDCWD, "/boot/vmlinux", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/boot/vmlinux-6.11.8-200.fc40.x86_64", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/usr/lib/debug/boot/vmlinux-6.11.8-200.fc40.x86_64", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/lib/modules/6.11.8-200.fc40.x86_64/build/vmlinux", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/usr/lib/debug/lib/modules/6.11.8-200.fc40.x86_64/vmlinux", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/usr/lib/debug/boot/vmlinux-6.11.8-200.fc40.x86_64.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/root/.debug/.build-id/55/152ddca5da77ca62deb3dd0db105e82b3711e0/kallsyms", O_RDONLY) = 142
+> openat(AT_FDCWD, "/sys/kernel/notes", O_RDONLY) = 142
+> openat(AT_FDCWD, "/proc/kcore", O_RDONLY) = 142
+> openat(AT_FDCWD, "/proc/kallsyms", O_RDONLY) = 142
+> root@number:/home/acme/git/perf-tools# 
+> root@number:/home/acme/git/perf-tools# perf buildid-list -h -k
+> 
+>  Usage: perf buildid-list [<options>]
+> 
+>     -k, --kernel          Show current kernel build id
+> 
+> root@number:/home/acme/git/perf-tools# perf buildid-list -k
+> 55152ddca5da77ca62deb3dd0db105e82b3711e0
+> root@number:/home/acme/git/perf-tools# file vmlinux 
+> vmlinux: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=e86cad482822bd4b4caabb01e7cd00161fd51a38, with debug_info, not stripped
+> root@number:/home/acme/git/perf-tools#
+> 
+> And it ends up using /proc/kallsyms
+> 
+> Today I did some bisects, etc, but even with at first reproducing what
+> Linus described, i.e. it used the non-matching vmlinux in the current
+> directory to resolve symbols, I couldn't reproduce it after trying to
+> bisect it :-\
+>  
+> > > So now I need to point "perf report" at the actual image, which I
+> > > didn't need to do before.
+> > 
+> > Ok, I'll try to reproduce it and take a look.
+> 
+> Hope you root cause this, late in this part of the world, going AFK now.
 
-On Tue, Nov 26, 2024 at 02:27:09PM +0100, Geert Uytterhoeven wrote:
-> Hi Kuan-Wei,
-> 
-> On Sun, Oct 20, 2024 at 6:02 AM Kuan-Wei Chiu <visitorckw@gmail.com> wrote:
-> > All current min heap API functions are marked with '__always_inline'.
-> > However, as the number of users increases, inlining these functions
-> > everywhere leads to a increase in kernel size.
-> >
-> > In performance-critical paths, such as when perf events are enabled and
-> > min heap functions are called on every context switch, it is important
-> > to retain the inline versions for optimal performance. To balance this,
-> > the original inline functions are kept, and additional non-inline
-> > versions of the functions have been added in lib/min_heap.c.
-> >
-> > Link: https://lore.kernel.org/20240522161048.8d8bbc7b153b4ecd92c50666@linux-foundation.org
-> > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-> 
-> Thanks for your patch, which is now commit 92a8b224b833e82d
-> ("lib/min_heap: introduce non-inline versions of min heap API
-> functions") upstream.
-> 
-> > --- a/include/linux/min_heap.h
-> > +++ b/include/linux/min_heap.h
-> 
-> > @@ -50,33 +50,33 @@ void __min_heap_init(min_heap_char *heap, void *data, int size)
-> >                 heap->data = heap->preallocated;
-> >  }
-> >
-> > -#define min_heap_init(_heap, _data, _size)     \
-> > -       __min_heap_init((min_heap_char *)_heap, _data, _size)
-> > +#define min_heap_init_inline(_heap, _data, _size)      \
-> > +       __min_heap_init_inline((min_heap_char *)_heap, _data, _size)
-> 
-> Casting macro parameters without any further checks prevents the
-> compiler from detecting silly mistakes.  Would it be possible to
-> add safety-nets here and below, using e.g. container_of() or typeof()
-> checks?
+I think it's a bug in perf record since v6.12.  I found the build-id
+event in the header area is broken.  Can you verify if this works?
 
-IIUC, the concern is that passing a pointer that is not of type
-min_heap might lead to compiler errors being missed. To address this,
-one possible solution could be to expand the members of struct min_heap
-into individual parameters for the function.
+Thanks,
+Namhyung
 
-diff --git a/include/linux/min_heap.h b/include/linux/min_heap.h
-index e781727c8916..ebd577003f0b 100644
---- a/include/linux/min_heap.h
-+++ b/include/linux/min_heap.h
-@@ -207,18 +207,20 @@ static size_t parent(size_t i, unsigned int lsbit, size_t size)
+---8<---
+From 62ebc7de4c306d99f39af847bee4a2aab05b0f93 Mon Sep 17 00:00:00 2001
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 26 Nov 2024 19:13:31 -0800
+Subject: [PATCH] perf tools: Fix build-id event recording
 
- /* Initialize a min-heap. */
- static __always_inline
--void __min_heap_init_inline(min_heap_char *heap, void *data, int size)
-+void __min_heap_init_inline(int *heap_nr, int *heap_size, void **heap_data,
-+			    void *heap_preallocated, void *data, int size)
- {
--	heap->nr = 0;
--	heap->size = size;
-+	*heap_nr = 0;
-+	*heap_size = size;
- 	if (data)
--		heap->data = data;
-+		*heap_data = data;
- 	else
--		heap->data = heap->preallocated;
-+		*heap_data = heap_preallocated;
- }
+The build-id events written at the end of the record session are broken
+due to unexpected data.  The write_buildid() writes the fixed length
+event first and then variable length filename.
 
- #define min_heap_init_inline(_heap, _data, _size)	\
--	__min_heap_init_inline((min_heap_char *)_heap, _data, _size)
-+	__min_heap_init_inline(&(_heap)->nr, &(_heap)->size, (void**)&(_heap)->data,	\
-+			       &(_heap)->preallocated, _data, _size)
+But a recent change made it write more data in the padding area
+accidentally.  So readers of the event see zero-filled data for the
+next entry and treat it incorrectly.   This resulted in wrong kernel
+symbols because the kernel DSO loaded a random vmlinux image in the
+path as it didn't have a valid build-id.
 
- /* Get the minimum element from the heap. */
- static __always_inline
+Fixes: ae39ba16554e ("perf inject: Fix build ID injection")
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/build-id.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Alternatively, we could use container_of() for type safety.
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index 8982f68e7230cd64..e763e8d99a4367d7 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -277,7 +277,7 @@ static int write_buildid(const char *name, size_t name_len, struct build_id *bid
+ 	struct perf_record_header_build_id b;
+ 	size_t len;
+ 
+-	len = sizeof(b) + name_len + 1;
++	len = name_len + 1;
+ 	len = PERF_ALIGN(len, sizeof(u64));
+ 
+ 	memset(&b, 0, sizeof(b));
+@@ -286,7 +286,7 @@ static int write_buildid(const char *name, size_t name_len, struct build_id *bid
+ 	misc |= PERF_RECORD_MISC_BUILD_ID_SIZE;
+ 	b.pid = pid;
+ 	b.header.misc = misc;
+-	b.header.size = len;
++	b.header.size = sizeof(b) + len;
+ 
+ 	err = do_write(fd, &b, sizeof(b));
+ 	if (err < 0)
+-- 
+2.47.0.338.g60cca15819-goog
 
-diff --git a/include/linux/min_heap.h b/include/linux/min_heap.h
-index e781727c8916..fb96b1b82fb0 100644
---- a/include/linux/min_heap.h
-+++ b/include/linux/min_heap.h
-@@ -218,7 +218,7 @@ void __min_heap_init_inline(min_heap_char *heap, void *data, int size)
- }
-
- #define min_heap_init_inline(_heap, _data, _size)	\
--	__min_heap_init_inline((min_heap_char *)_heap, _data, _size)
-+	__min_heap_init_inline(container_of(&(_heap)->nr, min_heap_char, nr), _data, _size)
-
- /* Get the minimum element from the heap. */
- static __always_inline
-
-The first approach has better readability, while the second minimizes
-the changes needed. Please let me know your thoughts.
-> 
-> > --- a/lib/Kconfig
-> > +++ b/lib/Kconfig
-> > @@ -777,3 +777,6 @@ config POLYNOMIAL
-> >
-> >  config FIRMWARE_TABLE
-> >         bool
-> > +
-> > +config MIN_HEAP
-> > +       bool
-> 
-> Perhaps tristate? See also below.
-> 
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -2279,6 +2279,7 @@ config TEST_LIST_SORT
-> >  config TEST_MIN_HEAP
-> >         tristate "Min heap test"
-> >         depends on DEBUG_KERNEL || m
-> > +       select MIN_HEAP
-> 
-> Ideally, tests should not select functionality, to prevent increasing the
-> attack vector by merely enabling (modular) tests.
-> 
-Makes sense. Thanks for catching this.
-
-> In this particular case, just using "depends on MIN_HEAP" is not an
-> option, as MIN_HEAP is not user-visible, and thus cannot be enabled
-> by the user on its own.  However, making MIN_HEAP tristate could be
-> a first step for the modular case.
-> 
-> The builtin case is harder to fix, as e.g.
-> 
->         depends on MIN_HEAP || COMPILE_TEST
->         select MIN_HEAP if COMPILE_TEST
-> 
-> would still trigger a recursive dependency error.
-> 
-> Alternatively, the test could just keep on using the inline variants,
-> unless CONFIG_MIN_HEAP=y? Or event test both for the latter?
-> 
-I think that having min_heap_test continue using the inline variants
-might be the simplest solution?
-
-Regards,
-Kuan-Wei
-
-> >         help
-> >           Enable this to turn on min heap function tests. This test is
-> >           executed only once during system boot (so affects only boot time),
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
