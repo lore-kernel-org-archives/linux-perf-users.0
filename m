@@ -1,292 +1,339 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5018B1FBE96;
-	Wed, 27 Nov 2024 12:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.158.5
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732711016; cv=fail; b=Wii9bNgS4nGHSI3fGmc2uzU4vltPJpcI7/+7IFctsSIqSWqz8NcjaB04XrBduL7MeUwxRDDk+aYQmaPRP85O9CXG3k1bRSKUxEUbgB5eg67zXZZV84E8IrZhn/SmQ9T2Xey5t7oIa0a7CZuoFeSHV71s5q55CKjvJKjRk/0Js9E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732711016; c=relaxed/simple;
-	bh=LG1YZXTdyMkxieFN6hvuzqtPkAMAavJRrJOOZTHPw/Y=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ak3wWiLM+eDCe1e6BbJ2g17VPsNxLL8NMpDczqpbbu2SJ2GCc4RiJlIjwo+5BM43jPX9+H8RqmghCPGcO4JeEcAl90JiTGnsecwnIlw4coOStzrtRhdzI/hccobdqn9y87EIoPNSC3853hoPDGRGJOxwkHsLHf6jpD8KqvrEvj4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com; spf=pass smtp.mailfrom=ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=N/xPqDX3; arc=fail smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764541F9EDA;
+	Wed, 27 Nov 2024 13:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732713133; cv=none; b=m3Qsy87TlqusBJ/aWD0iFYKKcKbfVCxVb89ExSR+l80OBqWiVKTmwx9duYPFlvSkoaBxJAWzHdBys2z6W5ER+sSmmbvbIwU5R2ZK52yUeuogxBhDRGvJizZ9GLIRYxwCfpQmcQiesHM1oEF6P3MzEkSLPm5fqbFeHnEuYnohgDY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732713133; c=relaxed/simple;
+	bh=dYrm+k6RGObVK84t+jbDB2M2YlrWnTGkz9T+js20HG4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RZfq68u4l0pIlvbh7TX8DfQPjErG2/7WOkcRagm087KXuLORAJHKo2rGT8IgrxTjYPlVQJ6WwI9OFQtbqPOH4OhoQxcnnMYc43ww+fzLkw7pWiWPBLJ7q5kvqRYBgqxPwdFj9YkY5KYXBesoHOxY5oBEk6jEGj7pQ5/ahT2vk0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M6oSX/RG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="N/xPqDX3"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AR1h8Xf004248;
-	Wed, 27 Nov 2024 12:36:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-id:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	pp1; bh=LG1YZXTdyMkxieFN6hvuzqtPkAMAavJRrJOOZTHPw/Y=; b=N/xPqDX3
-	xb5LC3kiMUmMyVegdXcuWEaLUFnCh1aizafUvmLELXbQVh6f5aNX8IhvsclVBzdI
-	uG2bB73pUh/A9ttWxSKHXsGwri5UZYYI2+gHCtnBr7MOOGcH/CRxrBzO25pCIfd+
-	DhoP2RgBkUdAie9xE11ufeOKj5+1ysnsNb/OaV23wAzdmYLCDDtpfGHmq8iKwARl
-	H9wXTENGUhRudFADSe/S/mOUUAeevwZqPgM5RYm/Cb5GtCVv21w4omgaFs541/od
-	/rFgmMtJwHl0e7HMu9u2U5xXE9xP53fVFtU/QyFcjeNQhOKmrnc019TXLG7qq71C
-	4Foyw+ec7RayBA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4350rhs4tx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Nov 2024 12:36:24 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4ARCQwPe001146;
-	Wed, 27 Nov 2024 12:36:23 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2177.outbound.protection.outlook.com [104.47.56.177])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4350rhs4tr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Nov 2024 12:36:23 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iTiGy435Rxl5Mm+N4GHzWXkS07dUvc+AXoQIkZ8UZix/v8RDXSnNfxL2D0uY9MVQRn0GVkIMg+hgzMomaZjfcCgrV6qO6a88FvifdbK0zv6F73gkkJR2rf3Zn1rOGMgGZDPmvGxc+rzKHStBlMnLJ4HKig6Dtup9tnhtF4TXnDDVEEGjYA4hB1jhsT6tcd7p7bkDan5lcCEoJyyeWDAto+XIr7/8yoEGxeoO51aOp3U0SiLZsZpSADpQPWnx+ofNlJ5484wSqV/XIO3FeyWIEvLN8KK9UpX5mFR7V8AHLIELQj1Q5CgAcuK9J2D/q68hlTVeZrBEL1be5JeKbk6l8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LG1YZXTdyMkxieFN6hvuzqtPkAMAavJRrJOOZTHPw/Y=;
- b=uvAskbralbsZ0nMzjU8HhAYH6jlu1+b+9T13XfX+TLQOUI97zhZvlrlQHIXAMEOprDtKiEhxpzJQV2tfNo9KQ5rgJiv2Mz6R++aR06ZVQ8hfoWk46DeYDr+IuP2VtRST57f1i5s+qoUsNrHexoZid+A6KGa9UeU6ArUQIxsUCX06I/eeUEP9JHwPsltXNp/O0IYtwwVywtGAtbx3+RZvnXeEAvN0SPN8+aJEmlammrQbQp6NQSpJ5lYXq0oinbxGGGHxcIhorDnfWMDavYY0VTdpIp18r9DIVJF3bAHYToMgOM2a8KfjKL1gO341zC8AKJ3A3P13ege6XY6mjhPMMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ibm.com; dmarc=pass action=none header.from=ibm.com; dkim=pass
- header.d=ibm.com; arc=none
-Received: from SA1PR15MB4839.namprd15.prod.outlook.com (2603:10b6:806:1e2::11)
- by LV2PR15MB5359.namprd15.prod.outlook.com (2603:10b6:408:17c::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.13; Wed, 27 Nov
- 2024 12:36:20 +0000
-Received: from SA1PR15MB4839.namprd15.prod.outlook.com
- ([fe80::c3e4:66da:7486:d945]) by SA1PR15MB4839.namprd15.prod.outlook.com
- ([fe80::c3e4:66da:7486:d945%6]) with mapi id 15.20.8182.019; Wed, 27 Nov 2024
- 12:36:20 +0000
-From: Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>
-To: Ian Rogers <irogers@google.com>
-CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim
-	<namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander
- Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang
-	<kan.liang@linux.intel.com>,
-        James Clark <james.clark@linaro.org>, Ze Gao
-	<zegao2021@gmail.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Dominique
- Martinet <asmadeus@codewreck.org>,
-        Junhao He <hejunhao3@huawei.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: [PATCH v2 0/4] Prefer sysfs/JSON events also when no PMU is
- provided
-Thread-Topic: [PATCH v2 0/4] Prefer sysfs/JSON events also when no PMU is
- provided
-Thread-Index: AQHbQMj2cK6c12zAU0aCkkSHoXc3sQ==
-Date: Wed, 27 Nov 2024 12:36:20 +0000
-Message-ID: <0ED8731D-B183-49A5-86C3-7048D190774F@ibm.com>
-References: <20241113011956.402096-1-irogers@google.com>
-In-Reply-To: <20241113011956.402096-1-irogers@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR15MB4839:EE_|LV2PR15MB5359:EE_
-x-ms-office365-filtering-correlation-id: 282fa445-f6ea-4aa1-e636-08dd0ee018b2
-x-ld-processed: fcf67057-50c9-4ad4-98f3-ffca64add9e9,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?WGVJY0lWK1RSeHZGNGl4d203YWhjNUZNeWprSzV0ZGlWcERYOFRiRGM2OXgw?=
- =?utf-8?B?UDZsekMvOHlKeG8vWjZjcGFnR0QwdlhLMnJDQXJBTlhSem5SUElwWXNKQTVZ?=
- =?utf-8?B?NnFTelU2OHFCT3g1SkJxRHJUZEdFREt4Q2tLaW5NTVdrcEZacm1XVHY1SVhz?=
- =?utf-8?B?N2U0TkVRcjU0L1FhQURLWFh4UUs0ditqeVJPRWF1UTNOaVh4TjBPV1VMTkNT?=
- =?utf-8?B?Vm1yRlJVT2IxYlZ0aHJDMEFabXJIZXJNcHJXejByeUpHMGZTQnFOYW5JUE9U?=
- =?utf-8?B?K1BHQTc2QmJGaFdSZmZRdUZjelI5dng5VXJDK2JlYlEyc2h0Nlp2aVp4Q1lk?=
- =?utf-8?B?cENTWFY2MHAvckRMOWhYUVNVL0hkOEZGMzVKQVM5cFlVeGFjWG1Bc2Q3WkpR?=
- =?utf-8?B?ZXdhWDVvMEJxV2Ewb3JhR3dUTmwwK2dra1FiUUgraG4zZVlkZTdDTDdvM3RK?=
- =?utf-8?B?NEhxdm5IaTVyV2lQcmlXNVZmeUVHZW8rOVB3OHdnZEgxV0g2c0VkYWNCalhr?=
- =?utf-8?B?L3h5OW5ZSXdYUE0xU1ZPYUV3dzhVVWd0Zjh2ZklTb3lZMUI5VWp6VjRvSjg3?=
- =?utf-8?B?bS9abnM2Q0QxdndXdnNFNDltREdDU002R2o3aWpSUUhmRmd2dmErb1VhdDhx?=
- =?utf-8?B?QnB2cDJTRmltZ0tpU2k5Wi9Rem5IczJiMFpaZ1Y4REFTVElPL2VpTHZobTVy?=
- =?utf-8?B?TjUwejRERktBUWdCYjVFMkhhdGYzVGo0ZVd4MjZHVUl4d1dscFFqUklCWTRw?=
- =?utf-8?B?SzZNT2tsRzMyc3oyamQ4eld3KzBuUzNPZys5M1pBK3ZDRmRuUGxBUDJyL1Zi?=
- =?utf-8?B?eXVyU2ZUZ2cvbHBrQ3hnY2JMOVJkSDhXMFNqeTZCeEFaWFhGZ0diVmFiTCtr?=
- =?utf-8?B?KzRuWm5xRXlMcUt5ZlBUMEFPaXFZVnZUR0tKSldDVlJNQUNrOUYrZWQxUEk3?=
- =?utf-8?B?VkFhT053RjM2VFMyb0o4TDljZW1iZEtRNUEyRm9qb21XUGJueDlTRHkzVUhR?=
- =?utf-8?B?MDRsZ04zNmEvRGEyTnJDTS9VRWF2cU5haHV6eS81VlR5WHR4ZXpwbmFxVnU5?=
- =?utf-8?B?OHVIOFdXZTFxM05yNVJFNWJZWFh1a0Q2eVRRcm5YVVVabDN2UnJFMWJuMEd1?=
- =?utf-8?B?cFdrd1V6N05ZWnNNQ0NTSU40SS9IaXNRYlc4N3F2b2xNelJ2dFdZRDVoZldZ?=
- =?utf-8?B?Z2YvT09GbyswMExvSDBaUXBiaC9UWDZ4TUVPOWVMa2ZlcUhhbk1USkljdUF0?=
- =?utf-8?B?TjNzSW1xWEtqZXJtbnpQMkhWRWJVVGN3THNGMHViWFJHQysvazdJYVhQcHdU?=
- =?utf-8?B?eEE0V2VEUnFGNjRUV0RoS1NnLzlrVE82ZmV6eVdubUpWQ0VyTThmdUxjS0Uw?=
- =?utf-8?B?QnZIb1VTMC9xOEpkSnVObHRtVEVkSXRwY1lRSVl3dE5STktmYjJzYzd1ZUdS?=
- =?utf-8?B?aXZ5SVo3U1hiaHBTbnlFQ3FWZVcxTUZrQW91SVNSMjNTZ3BCaDlXcXlkR3Vq?=
- =?utf-8?B?ZlQ2NkFHU0FuVWdxREJhQWxoOTBXckRDM0xFKytZRHdVNWg0VEhjZUFSZWF6?=
- =?utf-8?B?RnluWU5TanZlYzdQTS9FM3NpWnhtWktleVN0OVlnZlpKemtLMGdmVEltajlF?=
- =?utf-8?B?MXgwdkFpMDMwM1RlU3dFODh0VkFLdzN6WmhqZUIxd1FLZ2VDQjJJOEV5MXly?=
- =?utf-8?B?M21OY20xOStYaDhoMDVjVXA0dmZaVUpkRWxzdzVDcVpqb3RVUEY1REFRMWNq?=
- =?utf-8?B?ek93TnRsYWNTNGJMZTZFcGN6U2M3cFVFc3M0WVhWQTIxdUljeENZREZQS05W?=
- =?utf-8?B?SFdrMlNyNmVGQ1Y4RGlmZnhMazR4cnFhY2dlNDB0ekh2VmJBNWxSUFJSSldB?=
- =?utf-8?B?aGFSTE1NcS9xbTN6eFlpcE9ZNFBnK20yemV5OStGUHNFVWc9PQ==?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR15MB4839.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?ckxSZmpiV2x4S0U1QlBZYW1pcFVaVm1ReHlVNFFqYkRnM0IvYmxleWlnVTQy?=
- =?utf-8?B?ckpuN1NmWVpCUGVDdlBOcmY3ZVVNa3J2dk9lUDZmalRkTi9ndEZVM1J2dmRQ?=
- =?utf-8?B?dlpVSjZJRnVKUXEzYVp2RVVuMk5RL1R5MzF3WTFNdWI0K284U0EvTVNCRm1F?=
- =?utf-8?B?bThHVDUrT0RZc2d6YUxxK05PT045OVhTWUJzVG5tekJiWmNua1B3SDJEVVFK?=
- =?utf-8?B?d202N3BaZ2lSeWRUVDRGL2xSWkNmbEZjV3YyWHAwWmQ4NmY3QVpHbjIvUmxv?=
- =?utf-8?B?VVBJNTNlU3BTS0dPZTEwK0pORFR2QjdJN3gxKzFBaWRHUVFQS0FNYzlpUWpY?=
- =?utf-8?B?WUNTcXIyWm5Ib1FkSXJVRy9yQ1YyYVYyczV3WXJWUmx6dGNCWXQ3a3JycUVy?=
- =?utf-8?B?QU01MUF4QSt5VFEzTXJTeXdvOXBXb0g2VkEzbGRKMEEyY3V2bENOazVpQ1U2?=
- =?utf-8?B?c1I4V1p5SnEzNUlLM09HY2JwSlREVUk1Zm9Xd2drbEN6Y0RIOVZ4aGlKTmtq?=
- =?utf-8?B?ZjVHbTN5S1EyS3MxbXB6UW9YVmFydzJzaXEwU3VQUGtlQUl1aERRbllZbFpZ?=
- =?utf-8?B?YXd3TTluZWVtUFJuZUl5SXlHMFBNakZ5aFRiN0JaK3VZWS9WYyszMEtSUWhM?=
- =?utf-8?B?QjhZejJnWVJWNCtCb0JDSG5yVklJTkovYi91UGRRNmMrUFRIZXEvTkFKR1RU?=
- =?utf-8?B?SzZCUU1CWTJ0Z25sNEVXWk91b29Wb0YwamlEclVzcG90NjVCOEk2S2pVRG9C?=
- =?utf-8?B?TWpTQmM4SnVidVBmSDRyUHMzelJQMHZQR2xRNnFxVzRucEhqRFFJbGZvUnN3?=
- =?utf-8?B?S2FwenNqNFJQbHkvOTkyRllkYUtXMHMwUXJpZkxFSldTUmhNcmJ0QlBMNWtV?=
- =?utf-8?B?TWd1eWg3ek43ZUtNRGJCR3pkRDkzNHVOaVBPNG9sbnFqRXE2MDBtaXBtdlVX?=
- =?utf-8?B?M2tOTTdxOEl0b1NFS2hFMWljazY1aytjOS94dWxSRDlVRkdxZDJyVmJXL2JX?=
- =?utf-8?B?dDBoWlA0NVZUYlpDQXpIK2pBdmVRUitHVUJUVjIycXpyMnVDMU13Wk1nYkF0?=
- =?utf-8?B?NTBBbGVxYzVKVVRHYU1EM2dvSVMrY0NCZmN1dzIzZ2N1elQ3cGlzMmVLQzJS?=
- =?utf-8?B?L2UzMGZEMmxGVGhEcU1weWlhMjZxNC9WTUVySXZ5TEdSUlpkaWNIeHlqY2Nt?=
- =?utf-8?B?UTBKNDVlU1hkakJTbkNkcHZpcnlwZWlMUk5IbGkwRmRHaXVueHZRdDZkZGxl?=
- =?utf-8?B?UDJKVDd0SndVRVNUUmRBbmx0bC83UG9xajQwMmU4bzRyc1EzZWJKdDFzK1ZV?=
- =?utf-8?B?QXZuaFNLQkxhWDRReUxZcklubnF3ektMRWxMUmRIK2IrOEdNTjhGSmF3dTMv?=
- =?utf-8?B?Sm5JV3JtSTBTQUhRS0MxZDZ0Tndid1g0bnREVEk5Tk43OUY5L0krMVYrdWRG?=
- =?utf-8?B?azVQemRvUTFwdWI4NGNTWWIxa3IxOUlTdDBlaDlKbXJrSThwVTNUeGJyblNQ?=
- =?utf-8?B?aHpETjB3SWpGZGw5UzhyOURlVVlYdGtOakVReElkUFltSXpscFFsemF3OWFI?=
- =?utf-8?B?TkZKTUZSRWdUcWxGSVhPOHZlQXZFUFhCSGNlWjEvR1NQZGpXT1I1eG9iKzBU?=
- =?utf-8?B?eitIblRVb3I0OE5MYlZZSzVUVDc0SWhSdGtLREE4REZNQkhsSGNtMUh1dSt3?=
- =?utf-8?B?L3J3TTcxdCt3REFaZWhWczJQeVlyWjk0bnArUk1BZDNsQStNVU02ZEtwa1pK?=
- =?utf-8?B?NWczTWFXbFpJd3IzWVZlUEdBR2pyY0F1N1FYUlFkSTNobk03UDRoSmJmSEYy?=
- =?utf-8?B?YVJuL01UNEg0Q0pSc1A5a1pTMGgzbk5YR0srdU5XVXIxZkRJa3R5UW9oc3Vw?=
- =?utf-8?B?RnFCOXFVOGVNL21PMlFiTzdsVnZUUXZwc2RYQk5scjd2WEN2Q0dWUURMTFRp?=
- =?utf-8?B?RmpnRTJPd1pEb0tJSzBiSmhEekk1SmdUdWJTYW9IcE5NeVdyOFNvWmRyc0dQ?=
- =?utf-8?B?eDZndXpiR211d2t6OUlxenp2dWRpUm8rZnpPSXRFUmhjZkt0bW5aeDBKY3Nl?=
- =?utf-8?B?b0lCUDFiZDYvVU5WYlF5VTRUTW5BU081ckJiRUo4YUhscGQxYmdQQ3lzaWVq?=
- =?utf-8?B?VFJGVzVlR3ViTXFqWUxoWklzTWlkaHM0eks1VnllNXlNL0FGelRjRm9vdzQr?=
- =?utf-8?B?Qmc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F0D6014F5098D84BBA8759DCF89582FB@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M6oSX/RG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D03AC4CECC;
+	Wed, 27 Nov 2024 13:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732713133;
+	bh=dYrm+k6RGObVK84t+jbDB2M2YlrWnTGkz9T+js20HG4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M6oSX/RGEFU+12UfwH+viEY0izVbsqPN5u1xG45EDY0Z/jjnjxKijaBCnSdibOrrz
+	 8pf9ZTWzNdMIYvwCJ/0yEEhQY1AIJ0izCGP9ix81GjGPEkKC8Ow5lKPX9DeCI7L6py
+	 ABTDlKxIBA14a8+hqPV2eHCs9jpAePDk4DKU/zVw7x5KX3kizD4CSS23jNk6ho7AUd
+	 g0PrOoGkWWhXOXGA8lYMuZ7F8TUgwJcvlAWK3t9KF48tMG8SmN7gVE3o0W0GSIQqd+
+	 OvqmjsxEhO43O9u32QrrHduIZbxRGZJKL2jp8ueJ+B2dYfM8R6DUWtv3/RZFkiCyHP
+	 6KiVwbZeZlYUw==
+Date: Wed, 27 Nov 2024 10:12:10 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [GIT PULL] perf-tools changes for v6.13
+Message-ID: <Z0caqvFFmkL9I6lk@x1>
+References: <20241125071653.1350621-1-namhyung@kernel.org>
+ <CAHk-=whQ_yeRDh_zZjhz-4q8G=vu5Ypb-Y3f=efHQSwd5Kas3w@mail.gmail.com>
+ <Z0ZhDHXxHKoE2Nrl@google.com>
+ <Z0ZvAB0vcL-D-a6f@x1>
+ <Z0aRFFW9xMh3mqKB@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: ibm.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR15MB4839.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 282fa445-f6ea-4aa1-e636-08dd0ee018b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2024 12:36:20.5840
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fcf67057-50c9-4ad4-98f3-ffca64add9e9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6dsECuRglhatluiL3FKUD+CmH7zZu0j6V4xA7qM4wSljbP/na3GWlghcQqBbem5h87pAJ42JIvzItBiIPlQqIw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR15MB5359
-X-Proofpoint-GUID: Fg6YIjFSnt9Lbg898QPpRF39pIl-Kxpd
-X-Proofpoint-ORIG-GUID: EsmiokvqZkR3fBBaT4NS6zm00FUO3Lvr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
- spamscore=0 impostorscore=0 mlxscore=0 suspectscore=0 malwarescore=0
- adultscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411270101
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z0aRFFW9xMh3mqKB@google.com>
 
-DQoNCj4gT24gMTMgTm92IDIwMjQsIGF0IDY6NDnigK9BTSwgSWFuIFJvZ2VycyA8aXJvZ2Vyc0Bn
-b29nbGUuY29tPiB3cm90ZToNCj4gDQo+IEF0IHRoZSBSSVNDLVYgc3VtbWl0IHRoZSB0b3BpYyBv
-ZiBhdm9pZGluZyBldmVudCBkYXRhIGJlaW5nIGluIHRoZQ0KPiBSSVNDLVYgUE1VIGtlcm5lbCBk
-cml2ZXIgY2FtZSB1cC4gVGhlcmUgaXMgYSBwcmVmZXJlbmNlIGZvciBzeXNmcy9KU09ODQo+IGV2
-ZW50cyBiZWluZyB0aGUgcHJpb3JpdHkgd2hlbiBubyBQTVUgaXMgcHJvdmlkZWQgc28gdGhhdCBs
-ZWdhY3kNCj4gZXZlbnRzIG1heWJlIHN1cHBvcnRlZCB2aWEganNvbi4gT3JpZ2luYWxseSBNYXJr
-IFJ1dGxhbmQgYWxzbw0KPiBleHByZXNzZWQgYXQgTFBDIDIwMjMgdGhhdCBkb2luZyB0aGlzIHdv
-dWxkIHJlc29sdmUgYnVncyBvbiBBUk0gQXBwbGUNCj4gTT8gcHJvY2Vzc29ycywgYnV0IEphbWVz
-IENsYXJrIG1vcmUgcmVjZW50bHkgdGVzdGVkIHRoaXMgYW5kIGJlbGlldmVzDQo+IHRoZSBkcml2
-ZXIgaXNzdWVzIHRoZXJlIG1heSBub3QgaGF2ZSBleGlzdGVkIG9yIGhhdmUgYmVlbiByZXNvbHZl
-ZC4gSW4NCj4gYW55IGNhc2UsIGl0IGlzIGluY29uc2lzdGVudCB0aGF0IHdpdGggYSBQTVUgZXZl
-bnQgbmFtZXMgYXZvaWQgbGVnYWN5DQo+IGVuY29kaW5ncywgYnV0IHdoZW4gd2lsZGNhcmRpbmcg
-UE1VcyAoaWUgd2l0aG91dCBhIFBNVSB3aXRoIHRoZSBldmVudA0KPiBuYW1lKSB0aGUgbGVnYWN5
-IGVuY29kaW5ncyBoYXZlIHByaW9yaXR5Lg0KPiANCj4gVGhlIHBhdGNoIGRvaW5nIHRoaXMgd29y
-ayB3YXMgcmV2ZXJ0ZWQgaW4gYSB2Ni4xMCByZWxlYXNlIGNhbmRpZGF0ZQ0KPiBhcywgZXZlbiB0
-aG91Z2ggdGhlIHBhdGNoIHdhcyBwb3N0ZWQgZm9yIHdlZWtzIGFuZCBoYWQgYmVlbiBvbg0KPiBs
-aW51eC1uZXh0IGZvciB3ZWVrcyB3aXRob3V0IGlzc3VlLCBMaW51cyB3YXMgaW4gdGhlIGhhYml0
-IG9mIHVzaW5nDQo+IGV4cGxpY2l0IGxlZ2FjeSBldmVudHMgd2l0aCB1bnN1cHBvcnRlZCBwcmVj
-aXNpb24gb3B0aW9ucyBvbiBoaXMNCj4gTmVvdmVyc2UtTjEuIFRoaXMgbWFjaGluZSBoYXMgU0xD
-IFBNVSBldmVudHMgZm9yIGJ1cyBhbmQgQ1BVIGN5Y2xlcw0KPiB3aGVyZSBBUk0gZGVjaWRlZCB0
-byBjYWxsIHRoZSBldmVudHMgYnVzX2N5Y2xlcyBhbmQgY3ljbGVzLCB0aGUgbGF0dGVyDQo+IGJl
-aW5nIGFsc28gYSBsZWdhY3kgZXZlbnQgbmFtZS4gQVJNIGhhdmVuJ3QgcmVuYW1lZCB0aGUgY3lj
-bGVzIGV2ZW50DQo+IHRvIGEgbW9yZSBjb25zaXN0ZW50IGNwdV9jeWNsZXMgYW5kIGF2b2lkZWQg
-dGhlIHByb2JsZW0uIFdpdGggdGhlc2UNCj4gY2hhbmdlcyB0aGUgcHJvYmxlbWF0aWMgZXZlbnQg
-d2lsbCBub3cgYmUgc2tpcHBlZCwgYSBsYXJnZSB3YXJuaW5nDQo+IHByb2R1Y2VkLCBhbmQgcGVy
-ZiByZWNvcmQgd2lsbCBjb250aW51ZSBmb3IgdGhlIG90aGVyIFBNVSBldmVudHMuIFRoaXMNCj4g
-c29sdXRpb24gd2FzIHByb3Bvc2VkIGJ5IEFybmFsZG8uDQo+IA0KPiBUd28gbWlub3IgY2hhbmdl
-cyBoYXZlIGJlZW4gYWRkZWQgdG8gaGVscCB3aXRoIHRoZSBlcnJvciBtZXNzYWdlIGFuZA0KPiB0
-byB3b3JrIGFyb3VuZCBpc3N1ZXMgb2NjdXJyaW5nIHdpdGggInBlcmYgc3RhdCBtZXRyaWNzIChz
-aGFkb3cgc3RhdCkNCj4gdGVzdCIuDQo+IA0KPiBUaGUgcGF0Y2hlcyBoYXZlIG9ubHkgYmVlbiB0
-ZXN0ZWQgb24gbXkgeDg2IG5vbi1oeWJyaWQgbGFwdG9wLg0KDQpIaSwNCkFmdGVyIGFwcGx5aW5n
-IHRoaXMgcGF0Y2ggc2VyaWVzLHdlIG9ic2VydmVkIGEgcmVncmVzc2lvbiB3aGlsZSBydW5uaW5n
-IHRoZSBwZXJmIHRlc3Qgc3VpdGUgb24gcG93ZXJwYyBzeXN0ZW0uIFNwZWNpZmljYWxseSwgdGVz
-dCBjYXNlIGZvciAiQ2hlY2sgYnJhbmNoIHN0YWNrIHNhbXBsaW5nIiBub3cgZmFpbHMuDQpVcG9u
-IGludmVzdGlnYXRpb24sIGlkZW50aWZpZWQgdGhhdCBwYXRjaCAicGVyZiByZWNvcmQ6IFNraXAg
-ZG9uJ3QgZmFpbCBmb3IgZXZlbnRzIHRoYXQgZG9uJ3Qgb3BlbiIgIGlzIGNhdXNpbmcgdGhlIGJy
-ZWFrYWdlLiBUaGlzIHRlc3QgY2FzZSB1c2VzIGJyYW5jaC1maWx0ZXIgYXMgInNhdmVfdHlwZSIg
-YW5kIGl0IGlzIHN1cHBvc2VkIHRvIGJlIHNraXBwZWQgaW4gcG93ZXJwYy4gDQpTbmlwcGV0IG9m
-IGNvZGU6DQoNCnNraXAgdGhlIHRlc3QgaWYgdGhlIGhhcmR3YXJlIGRvZXNuJ3Qgc3VwcG9ydCBi
-cmFuY2ggc3RhY2sgc2FtcGxpbmcNCiBhbmQgaWYgdGhlIGFyY2hpdGVjdHVyZSBkb2Vzbid0IHN1
-cHBvcnQgZmlsdGVyIHR5cGVzOiBhbnksc2F2ZV90eXBlLHUNCmlmICEgcGVyZiByZWNvcmQgLW8t
-IC0tbm8tYnVpbGRpZCAtLWJyYW5jaC1maWx0ZXIgYW55LHNhdmVfdHlwZSx1IC0tIHRydWUgPiAv
-ZGV2L251bGwgMj4mMSA7IHRoZW4NCiAgICBlY2hvICJza2lwOiBzeXN0ZW0gZG9lc24ndCBzdXBw
-b3J0IGZpbHRlciB0eXBlczogYW55LHNhdmVfdHlwZSx1Ig0KICAgIGV4aXQgMg0KZmkNCg0KQmVm
-b3JlIGFwcGx5aW5nIHRoZSBwYXRjaCwgcnVubmluZyB0aGUgY29tbWFuZDoNCi4vcGVyZiByZWNv
-cmQgLW8tIC0tbm8tYnVpbGRpZCAtLWJyYW5jaC1maWx0ZXIgYW55LHNhdmVfdHlwZSx1IC0tIHRy
-dWUgIA0KY3ljbGVzOlBIOiBQTVUgSGFyZHdhcmUgb3IgZXZlbnQgdHlwZSBkb2Vzbid0IHN1cHBv
-cnQgYnJhbmNoIHN0YWNrIHNhbXBsaW5nLiAgDQojIGVjaG8gJD8gIA0KMjU1ICANCg0Kd291bGQg
-cmV0dXJuIDI1NSAoaW5kaWNhdGluZyBub3Qgc3VwcG9ydGVkKSB3aXRoIHRoZSBlcnJvci4NCkFm
-dGVyIGFwcGx5aW5nIHRoZSBwYXRjaCwgdGhlIHNhbWUgY29tbWFuZCBub3cgcmV0dXJucyAwLCB3
-aGljaCBpcyBpbmNvcnJlY3QuIFRoZSBvdXRwdXQgaXMgYXMgZm9sbG93czoNCg0KIyAuL3BlcmYg
-cmVjb3JkIC1vLSAtLW5vLWJ1aWxkaWQgLS1icmFuY2gtZmlsdGVyIGFueSxzYXZlX3R5cGUsdSAt
-LSB0cnVlICANCkxvd2VyaW5nIGRlZmF1bHQgZnJlcXVlbmN5IHJhdGUgZnJvbSA0MDAwIHRvIDIw
-MDAuICANClBsZWFzZSBjb25zaWRlciB0d2Vha2luZyAvcHJvYy9zeXMva2VybmVsL3BlcmZfZXZl
-bnRfbWF4X3NhbXBsZV9yYXRlLiAgDQpFcnJvcjogIA0KRmFpbHVyZSB0byBvcGVuIGV2ZW50ICdj
-eWNsZXM6UEgnIG9uIFBNVSAnY3B1JyB3aGljaCB3aWxsIGJlIHJlbW92ZWQuICANCmN5Y2xlczpQ
-SDogUE1VIEhhcmR3YXJlIG9yIGV2ZW50IHR5cGUgZG9lc24ndCBzdXBwb3J0IGJyYW5jaCBzdGFj
-ayBzYW1wbGluZy4gIA0KbGlicGVyZjogTWlzY291bnRlZCBucl9tbWFwcyAwIHZzIDggIA0KV0FS
-TklORzogTm8gc2FtcGxlX2lkX2FsbCBzdXBwb3J0LCBmYWxsaW5nIGJhY2sgdG8gdW5vcmRlcmVk
-IHByb2Nlc3NpbmcgIA0KWyBwZXJmIHJlY29yZDogV29rZW4gdXAgMSB0aW1lcyB0byB3cml0ZSBk
-YXRhIF0gIA0KWyBwZXJmIHJlY29yZDogQ2FwdHVyZWQgYW5kIHdyb3RlIDAuMDA4IE1CIC0gXSAg
-DQojIGVjaG8gJD8gIA0KMCAgDQoNCkFsc28gdGhlcmUgd2VyZSBzb21lIGp1bmsgcmVzdWx0IGlu
-IHRoZSBvdXRwdXQgd2hpY2ggSSBoYXZlIHNraXBwZWQgaW4gYWJvdmUgcmVzdWx0LiBUaGUgcGF0
-Y2ggYXBwZWFycyB0byBhbHRlciBiZWhhdmlvciBzdWNoIHRoYXQgdGhlIHVuc3VwcG9ydGVkIG9y
-IGZhaWxlZCBldmVudCBvcGVuIHN0aWxsIHByb2NlZWRzIGFuZCBsZWFkaW5nIHRvIHRoaXMuIA0K
-DQpJYW4gLA0KSXMgdGhpcyBiZWhhdmlvdXIgZXhwZWN0ZWQgPw0KDQpUaGFuayB5b3UsDQpBZGl0
-eWENCj4gDQo+IHYyOiBSZWJhc2UgYW5kIGFkZCB0ZXN0ZWQtYnkgdGFncyBmcm9tIEphbWVzIENs
-YXJrLCBMZW8gWWFuIGFuZCBBdGlzaA0KPiAgICBQYXRyYSB3aG8gaGF2ZSB0ZXN0ZWQgb24gUklT
-Qy1WIGFuZCBBUk0gQ1BVcywgaW5jbHVkaW5nIHRoZQ0KPiAgICBwcm9ibGVtIGNhc2UgZnJvbSBi
-ZWZvcmUuDQo+IA0KPiBJYW4gUm9nZXJzICg0KToNCj4gIHBlcmYgZXZzZWw6IEFkZCBwbXVfbmFt
-ZSBoZWxwZXINCj4gIHBlcmYgc3RhdDogRml4IGZpbmRfc3RhdCBmb3IgbWl4ZWQgbGVnYWN5L25v
-bi1sZWdhY3kgZXZlbnRzDQo+ICBwZXJmIHJlY29yZDogU2tpcCBkb24ndCBmYWlsIGZvciBldmVu
-dHMgdGhhdCBkb24ndCBvcGVuDQo+ICBwZXJmIHBhcnNlLWV2ZW50czogUmVhcHBseSAiUHJlZmVy
-IHN5c2ZzL0pTT04gaGFyZHdhcmUgZXZlbnRzIG92ZXINCj4gICAgbGVnYWN5Ig0KPiANCj4gdG9v
-bHMvcGVyZi9idWlsdGluLXJlY29yZC5jICAgIHwgMjIgKysrKysrKy0tLQ0KPiB0b29scy9wZXJm
-L3V0aWwvZXZzZWwuYyAgICAgICAgfCAxMCArKysrKw0KPiB0b29scy9wZXJmL3V0aWwvZXZzZWwu
-aCAgICAgICAgfCAgMSArDQo+IHRvb2xzL3BlcmYvdXRpbC9wYXJzZS1ldmVudHMuYyB8IDI2ICsr
-KysrKysrKy0tLQ0KPiB0b29scy9wZXJmL3V0aWwvcGFyc2UtZXZlbnRzLmwgfCA3NiArKysrKysr
-KysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tDQo+IHRvb2xzL3BlcmYvdXRpbC9wYXJzZS1ldmVu
-dHMueSB8IDYwICsrKysrKysrKysrKysrKysrKy0tLS0tLS0tLQ0KPiB0b29scy9wZXJmL3V0aWwv
-cG11cy5jICAgICAgICAgfCAyMCArKysrKysrLS0NCj4gdG9vbHMvcGVyZi91dGlsL3N0YXQtc2hh
-ZG93LmMgIHwgIDMgKy0NCj4gOCBmaWxlcyBjaGFuZ2VkLCAxNDUgaW5zZXJ0aW9ucygrKSwgNzMg
-ZGVsZXRpb25zKC0pDQo+IA0KPiAtLSANCj4gMi40Ny4wLjI3Ny5nODgwMDQzMWVlYS1nb29nDQo+
-IA0KPiANCg0K
+On Tue, Nov 26, 2024 at 07:25:08PM -0800, Namhyung Kim wrote:
+> On Tue, Nov 26, 2024 at 09:59:44PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Tue, Nov 26, 2024 at 04:00:12PM -0800, Namhyung Kim wrote:
+> > > On Tue, Nov 26, 2024 at 03:33:10PM -0800, Linus Torvalds wrote:
+> > > > Hmm. Has the default search path for the vmlinux image changed?
+
+> > > I don't think so.
+
+> > > > Doing profiling with this, I get
+
+> > > >     openat(AT_FDCWD, "vmlinux", O_RDONLY)   = 5
+
+> > > > which is very very wrong for my kernel build - it basically picks up
+> > > > the vmlinux image from the build directory, which has absolutely
+> > > > *nothign* to do with the image that is being run at the moment.
+
+> > > Sure, at least it should match the build-id before use.
+
+> > I tried it here and at first I reproduced Linus results, which I found
+
+I understand it now, first, when I tried to reproduce Linus case I did a
+'perf record' with the most recent code, the one failing for Linus, but
+then when I tried to test it with v6.1, trying to bisect it, perf v6.1
+couldn't process the perf.data file generated "in the future", by
+v6.12-rc6 + perf-tools:
+
+# perf report -v
+file uses a more recent and unsupported ABI (8 bytes extra)
+incompatible file format (rerun with -v to learn more)
+#
+
+So I did another 'perf record' and used that perf.data, that had no
+problems all the way to v6.12-rc6, it works, the bug was introduced
+recently making it not able to checking the build-id in the vmlinux
+file, as there is nothing to compare it with, no build-id in the
+perf.data file.
+
+root@number:/home/acme/git/perf-tools# perf -v
+perf version 6.12.gb50ecc5aca4d
+root@number:/home/acme/git/perf-tools# perf record -a sleep 2s
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 2.442 MB perf.data (8953 samples) ]
+root@number:/home/acme/git/perf-tools# perf -v ; strace -e openat -o /tmp/strace.output perf report -vv |& grep -A5 "^Looking at the vmlinux_path" ; grep '"vmlinux"' -B1 -A10 /tmp/strace.output 
+perf version 6.12.gb50ecc5aca4d
+Looking at the vmlinux_path (8 entries long)
+Using vmlinux for symbols
+<SNIP>
+root@number:/home/acme/git/perf-tools#
+
+So I redid the bisection, this time doing a fresh perf record at each
+step and got to:
+
+⬢ [acme@toolbox linux]$ git bisect bad
+ae39ba16554eb4a2d97f752847e93aa428438912 is the first bad commit
+commit ae39ba16554eb4a2d97f752847e93aa428438912 (HEAD)
+Author: Ian Rogers <irogers@google.com>
+Date:   Mon Sep 9 13:37:37 2024 -0700
+
+    perf inject: Fix build ID injection
+    
+    Build ID injection wasn't inserting a sample ID and aligning events to
+    64 bytes rather than 8. No sample ID means events are unordered and two
+    different build_id events for the same path, as happens when a file is
+    replaced, can't be differentiated.
+    
+    Add in sample ID insertion for the build_id events alongside some
+    refactoring. The refactoring better aligns the function arguments for
+    different use cases, such as synthesizing build_id events without
+    needing to have a dso. The misc bits are explicitly passed as with
+    callchains the maps/dsos may span user and kernel land, so using
+    sample->cpumode isn't good enough.
+    
+    Signed-off-by: Ian Rogers <irogers@google.com>
+    Acked-by: Namhyung Kim <namhyung@kernel.org>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    Cc: Anne Macedo <retpolanne@posteo.net>
+    Cc: Casey Chen <cachen@purestorage.com>
+    Cc: Colin Ian King <colin.i.king@gmail.com>
+    Cc: Ingo Molnar <mingo@redhat.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Kan Liang <kan.liang@linux.intel.com>
+    Cc: Mark Rutland <mark.rutland@arm.com>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Sun Haiyong <sunhaiyong@loongson.cn>
+    Link: https://lore.kernel.org/r/20240909203740.143492-2-irogers@google.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+⬢ [acme@toolbox linux]$ git tag --contains ae39ba16554eb4a2d97f752847e93aa428438912 | grep ^v6.
+v6.12
+v6.12-rc1
+v6.12-rc2
+v6.12-rc3
+v6.12-rc4
+v6.12-rc5
+v6.12-rc6
+v6.12-rc7
+⬢ [acme@toolbox linux]$
+
+Which matches what Namhyung found. A plain revert doesn't work,
+Namhyung's patch below fixes it for me, with it:
+
+# perf -v ; perf record -a sleep 2s ; perf buildid-list | grep 'vmlinux\|kallsyms' ; perf report -vv |& grep -A2 "^Looking at the vmlinux_path"
+perf version 6.12.g25425b03a8d7
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 2.095 MB perf.data (3738 samples) ]
+55152ddca5da77ca62deb3dd0db105e82b3711e0 [kernel.kallsyms]
+Looking at the vmlinux_path (8 entries long)
+symsrc__init: build id mismatch for vmlinux.
+symsrc__init: cannot get elf header.
+#
+
+It refuses that bogus "vmlinux" in the current directory, and since my
+machine has no matching vmlinux, it fallbacks to recording the running
+kernel build id as "[kernel.kallsyms]" and will use it for resolving
+symbols.
+
+If I install the matching vmlinux using 'dnf debuginfo-install kernel':
+
+# perf -v ; perf record -a sleep 2s ; perf report -vv |& grep -A2 "^Looking at the vmlinux_path"
+perf version 6.12.g25425b03a8d7
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 2.116 MB perf.data (4278 samples) ]
+Looking at the vmlinux_path (8 entries long)
+symsrc__init: build id mismatch for vmlinux.
+Using /usr/lib/debug/lib/modules/6.11.8-200.fc40.x86_64/vmlinux for symbols
+# file /usr/lib/debug/lib/modules/6.11.8-200.fc40.x86_64/vmlinux
+/usr/lib/debug/lib/modules/6.11.8-200.fc40.x86_64/vmlinux: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=55152ddca5da77ca62deb3dd0db105e82b3711e0, with debug_info, not stripped
+# perf buildid-list -h -k
+
+ Usage: perf buildid-list [<options>]
+
+    -k, --kernel          Show current kernel build id
+
+root@number:/home/acme/git/perf-tools# perf buildid-list -k
+55152ddca5da77ca62deb3dd0db105e82b3711e0
+root@number:/home/acme/git/perf-tools#
+
+It will find the right file and use it.
+
+So, for Namhyung's patch below:
+
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Now to write another 'perf test' to cover this...
+
+- Arnaldo
+
+> > very strange, then I tried to bisect it, and all the previous versions
+> > were producing this:
+> > 
+> > root@number:/home/acme/git/perf-tools# perf -v ; perf report -vv |& grep -A5 "^Looking at the vmlinux_path"
+> > perf version 6.12.gb50ecc5aca4d
+> > Looking at the vmlinux_path (8 entries long)
+> > symsrc__init: build id mismatch for vmlinux.
+> > symsrc__init: cannot get elf header.
+> > overlapping maps:
+> >  ffffffffc034b75c-ffffffffc034b89b 0 bpf_prog_40ddf486530245f5_sd_devices
+> >  ffffffffc0000000-ffffffffff000000 7fffc0004000 vmlinux
+> > root@number:/home/acme/git/perf-tools#
+> > 
+> > Which is what I got from the perf-tools branch you asked him to pull.
+> > 
+> > The algorithm in perf is similar to the one in pahole (that stole it
+> > from perf):
+> > 
+> > root@number:/home/acme/git/perf-tools# strace -e openat pahole --running_kernel_vmlinux |& tail -12
+> > openat(AT_FDCWD, "/sys/kernel/notes", O_RDONLY) = 3
+> > openat(AT_FDCWD, "vmlinux", O_RDONLY)   = 3
+> > openat(AT_FDCWD, "/boot/vmlinux", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "/boot/vmlinux-6.11.8-200.fc40.x86_64", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "/usr/lib/debug/boot/vmlinux-6.11.8-200.fc40.x86_64", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "/lib/modules/6.11.8-200.fc40.x86_64/build/vmlinux", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "/usr/lib/debug/lib/modules/6.11.8-200.fc40.x86_64/vmlinux", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "/usr/lib/debug/boot/vmlinux-6.11.8-200.fc40.x86_64.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "/root/.cache/debuginfod_client/55152ddca5da77ca62deb3dd0db105e82b3711e0/debuginfo", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > pahole: couldn't find a vmlinux that matches the running kernel
+> > HINT: Maybe you're inside a container or missing a debuginfo package?
+> > +++ exited with 1 +++
+> > root@number:/home/acme/git/perf-tools#
+> > 
+> > The one in perf does very much the same:
+> > 
+> > root@number:/home/acme/git/perf-tools# perf -v ; strace -e openat -o /tmp/strace.output perf report -vv |& grep -A5 "^Looking at the vmlinux_path" ; grep '"vmlinux"' -B1 -A10 /tmp/strace.output 
+> > perf version 6.12.gb50ecc5aca4d
+> > Looking at the vmlinux_path (8 entries long)
+> > symsrc__init: build id mismatch for vmlinux.
+> > symsrc__init: cannot get elf header.
+> > overlapping maps:
+> >  ffffffffc034b75c-ffffffffc034b89b 0 bpf_prog_40ddf486530245f5_sd_devices
+> >  ffffffffc0000000-ffffffffff000000 7fffc0004000 vmlinux
+> > openat(AT_FDCWD, "/root/.debug/.build-id/55/152ddca5da77ca62deb3dd0db105e82b3711e0/elf", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "vmlinux", O_RDONLY)   = 142
+> > openat(AT_FDCWD, "/boot/vmlinux", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "/boot/vmlinux-6.11.8-200.fc40.x86_64", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "/usr/lib/debug/boot/vmlinux-6.11.8-200.fc40.x86_64", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "/lib/modules/6.11.8-200.fc40.x86_64/build/vmlinux", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "/usr/lib/debug/lib/modules/6.11.8-200.fc40.x86_64/vmlinux", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "/usr/lib/debug/boot/vmlinux-6.11.8-200.fc40.x86_64.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
+> > openat(AT_FDCWD, "/root/.debug/.build-id/55/152ddca5da77ca62deb3dd0db105e82b3711e0/kallsyms", O_RDONLY) = 142
+> > openat(AT_FDCWD, "/sys/kernel/notes", O_RDONLY) = 142
+> > openat(AT_FDCWD, "/proc/kcore", O_RDONLY) = 142
+> > openat(AT_FDCWD, "/proc/kallsyms", O_RDONLY) = 142
+> > root@number:/home/acme/git/perf-tools# 
+> > root@number:/home/acme/git/perf-tools# perf buildid-list -h -k
+> > 
+> >  Usage: perf buildid-list [<options>]
+> > 
+> >     -k, --kernel          Show current kernel build id
+> > 
+> > root@number:/home/acme/git/perf-tools# perf buildid-list -k
+> > 55152ddca5da77ca62deb3dd0db105e82b3711e0
+> > root@number:/home/acme/git/perf-tools# file vmlinux 
+> > vmlinux: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=e86cad482822bd4b4caabb01e7cd00161fd51a38, with debug_info, not stripped
+> > root@number:/home/acme/git/perf-tools#
+> > 
+> > And it ends up using /proc/kallsyms
+> > 
+> > Today I did some bisects, etc, but even with at first reproducing what
+> > Linus described, i.e. it used the non-matching vmlinux in the current
+> > directory to resolve symbols, I couldn't reproduce it after trying to
+> > bisect it :-\
+> >  
+> > > > So now I need to point "perf report" at the actual image, which I
+> > > > didn't need to do before.
+> > > 
+> > > Ok, I'll try to reproduce it and take a look.
+> > 
+> > Hope you root cause this, late in this part of the world, going AFK now.
+> 
+> I think it's a bug in perf record since v6.12.  I found the build-id
+> event in the header area is broken.  Can you verify if this works?
+> 
+> Thanks,
+> Namhyung
+> 
+> ---8<---
+> >From 62ebc7de4c306d99f39af847bee4a2aab05b0f93 Mon Sep 17 00:00:00 2001
+> From: Namhyung Kim <namhyung@kernel.org>
+> Date: Tue, 26 Nov 2024 19:13:31 -0800
+> Subject: [PATCH] perf tools: Fix build-id event recording
+> 
+> The build-id events written at the end of the record session are broken
+> due to unexpected data.  The write_buildid() writes the fixed length
+> event first and then variable length filename.
+> 
+> But a recent change made it write more data in the padding area
+> accidentally.  So readers of the event see zero-filled data for the
+> next entry and treat it incorrectly.   This resulted in wrong kernel
+> symbols because the kernel DSO loaded a random vmlinux image in the
+> path as it didn't have a valid build-id.
+> 
+> Fixes: ae39ba16554e ("perf inject: Fix build ID injection")
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/build-id.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+> index 8982f68e7230cd64..e763e8d99a4367d7 100644
+> --- a/tools/perf/util/build-id.c
+> +++ b/tools/perf/util/build-id.c
+> @@ -277,7 +277,7 @@ static int write_buildid(const char *name, size_t name_len, struct build_id *bid
+>  	struct perf_record_header_build_id b;
+>  	size_t len;
+>  
+> -	len = sizeof(b) + name_len + 1;
+> +	len = name_len + 1;
+>  	len = PERF_ALIGN(len, sizeof(u64));
+>  
+>  	memset(&b, 0, sizeof(b));
+> @@ -286,7 +286,7 @@ static int write_buildid(const char *name, size_t name_len, struct build_id *bid
+>  	misc |= PERF_RECORD_MISC_BUILD_ID_SIZE;
+>  	b.pid = pid;
+>  	b.header.misc = misc;
+> -	b.header.size = len;
+> +	b.header.size = sizeof(b) + len;
+>  
+>  	err = do_write(fd, &b, sizeof(b));
+>  	if (err < 0)
+> -- 
+> 2.47.0.338.g60cca15819-goog
+> 
