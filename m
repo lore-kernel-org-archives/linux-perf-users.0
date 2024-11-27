@@ -1,89 +1,82 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03985189B94
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Nov 2024 23:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AE910E6;
+	Wed, 27 Nov 2024 00:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732664580; cv=none; b=WtXvfzdtlvAinNXO0t7blCnmPMztwtYbQGHU4XDBeR/hfECyj8BENj1tp7SWi/U3ki1nhNhyNubMxpsfK25ZgRQBtBVS8MIsWZvIyOTa40nGCoicpnPzj55ZKp0l9cenW2edJVoZhc4iyct/ZrdUIA22vGRxBXDSaAuTmRdxySo=
+	t=1732665614; cv=none; b=OVoWO4Ue/xb2lwYEeHgb4o3wYOjhwu20WUPIKKa1fQldNz+OVe+fPiCJ7Ivp0Ze+NXrcPBT0aldsbvcvcMCDF1CIg8/dIGoUoUoeoTvP24+2g9g8b6MxuMQTxJ2DgBfCl/juPSZ5iMqTYLfPWJ5Vr/A1wKFRrISOQps3wCQwa80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732664580; c=relaxed/simple;
-	bh=gX5dz9ZBK+KQNYqJzszi+HN7WWipt0WV9bMM4bdefQI=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L4LomL5lZHU4LQL1LScHH6CkrHrHHtiGhCI9CtOG00jaEFnQa/ae5zvD03qjvfeh2MyRO89Q8Pc5eIQ0eqhAwvETO8mOevR6lJF/38KLvbzG1ixdRABNHR7OuYsJzhUZaGUp6wazDqvG4wsoVNmqB1FWmI4oAHAhLj/mND3LtCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name; spf=pass smtp.mailfrom=michel-slm.name; dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b=iCVN4Uox; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michel-slm.name
+	s=arc-20240116; t=1732665614; c=relaxed/simple;
+	bh=lY4JbojFl0Wtgggf+UCXczVKuazezpJRQrQLFYXIWfw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pzhr3ruyGi9TsIo8ySIwST5m3f38ZNR1dUfg0LJYlF6fP0TP8EMOj7B2yo/erIHOmMkT//Gz6Ns9Q5wjLzKiMqsWKF7svkizKRRymhQVzFKD7i9h0mbPb8TAIh2kLN4HD/jO+K8yrNWpZ0vE2ib23E1/B3IMCL3AI88j3/Gj3G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u/kF94SA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b="iCVN4Uox"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4XyfJZ0WMQz9spj
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Nov 2024 00:42:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michel-slm.name;
-	s=MBO0001; t=1732664574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gX5dz9ZBK+KQNYqJzszi+HN7WWipt0WV9bMM4bdefQI=;
-	b=iCVN4Uoxyx+DN4jRNumpQTDZcNHPBbRx15wXtSMGoxITlCpbe+RlE7sb23UwsLLJtk4rE1
-	rYH3lPbVhwJVZNQail4SQErUXUbB6uX5INWU9kAy6/i38sLZpfVuRUE7o+IRIH+2Czj3fj
-	XgoNFSJnt2dkQ2Q4OYBOke3yU8BLxlxPD/v8bh//kPRr2zwZAsKjqUo9HwwyPF5l0bmp5s
-	DgDlN0Qh2EJA5RuYLYvTB5gIvcYKq9J+byNCczK+kz7HEmeRKZHOqe5crVYVKqqmcjGiRl
-	6BADHeaq0yTkEPBYHvU4GpEDUQQqZ6Lx3PzI4MIxE37zC4dSlxbucKIRkbvVgw==
-Date: Tue, 26 Nov 2024 17:42:51 -0600
-From: Michel Lind <michel@michel-slm.name>
-To: linux-perf-users@vger.kernel.org
-Subject: Apologies for the misformatted patch email Re:
-Message-ID: <Z0Zc+9SGQ9rbqRRT@hyperscale.parallels>
-References: <Z0ZcG2Zn/1/iGTFA@hyperscale.parallels>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u/kF94SA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB3AC4CECF;
+	Wed, 27 Nov 2024 00:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732665614;
+	bh=lY4JbojFl0Wtgggf+UCXczVKuazezpJRQrQLFYXIWfw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=u/kF94SAxZtKbu2g9Phy4/m0r7WnMqVQdyn8yW5sDaHFgXPjVeitJ3l1+DPt5kBLQ
+	 hRl9MhyEGAAZ0d9mYImqOblTC/2ekdXCnRk/y9l7782/gQsDbFm1vzaZmcObCBMXMa
+	 r7yqmg4yA9NiW+2PwO37qmDQZHmlKSkgjtguOpWFGFtiQiXHrK76iGYtDLhxra++PX
+	 mQKfJnaAb6CexeX+h19XcZ0gHsPVruGrCymZQTXfj7a6uwXvdV/auvM+NF72gFeVLf
+	 luSgFK0mKJs7EwgT+jpnoboHxR5g1/cEWBCBT3PWrPY78cyOt+7Oa36AmmrCeU0N9e
+	 905VYDFiWXzBQ==
+Date: Tue, 26 Nov 2024 16:00:12 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [GIT PULL] perf-tools changes for v6.13
+Message-ID: <Z0ZhDHXxHKoE2Nrl@google.com>
+References: <20241125071653.1350621-1-namhyung@kernel.org>
+ <CAHk-=whQ_yeRDh_zZjhz-4q8G=vu5Ypb-Y3f=efHQSwd5Kas3w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="UxnTkjWw7aKIPsa0"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z0ZcG2Zn/1/iGTFA@hyperscale.parallels>
-X-Rspamd-Queue-Id: 4XyfJZ0WMQz9spj
+In-Reply-To: <CAHk-=whQ_yeRDh_zZjhz-4q8G=vu5Ypb-Y3f=efHQSwd5Kas3w@mail.gmail.com>
 
+Hello,
 
---UxnTkjWw7aKIPsa0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Nov 26, 2024 at 03:33:10PM -0800, Linus Torvalds wrote:
+> On Sun, 24 Nov 2024 at 23:17, Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Please consider pulling the following changes in perf tools for v6.13.
+> 
+> Hmm. Has the default search path for the vmlinux image changed?
 
-On Tue, Nov 26, 2024 at 05:39:07PM -0600, Michel Lind wrote:
-> From ab2bdf2e20a99b8d0298435328055daa59d2b640 Mon Sep 17 00:00:00 2001
-> From: Michel Lind <salimma@fedoraproject.org>
-> Date: Tue, 26 Nov 2024 17:37:44 -0600
-> Subject: [PATCH] perf MANIFEST: add license files
->=20
-> The standalone tarballs should include the license files - both the
-> COPYING declaration as well as the text of GPLv2.
->=20
-I've resent it with a proper subject line
+I don't think so.
 
-Best regards,
+> 
+> Doing profiling with this, I get
+> 
+>     openat(AT_FDCWD, "vmlinux", O_RDONLY)   = 5
+> 
+> which is very very wrong for my kernel build - it basically picks up
+> the vmlinux image from the build directory, which has absolutely
+> *nothign* to do with the image that is being run at the moment.
 
---=20
- _o) Michel Lind
-_( ) identities: https://keyoxide.org/5dce2e7e9c3b1cffd335c1d78b229d2f7ccc0=
-4f2
+Sure, at least it should match the build-id before use.
 
---UxnTkjWw7aKIPsa0
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> So now I need to point "perf report" at the actual image, which I
+> didn't need to do before.
 
------BEGIN PGP SIGNATURE-----
+Ok, I'll try to reproduce it and take a look.
 
-iHUEABYKAB0WIQRdzi5+nDsc/9M1wdeLIp0vfMwE8gUCZ0Zc+wAKCRCLIp0vfMwE
-8r0mAQD9pDDAQixBewtUBsunDf+3cE4D780oCJG8kENd/h/PsgEAiiwFqd08uljM
-VvzJc7HxLtdOHf9FIQz9nVhpzU7KBQM=
-=GHy6
------END PGP SIGNATURE-----
+Thanks,
+Namhyung
 
---UxnTkjWw7aKIPsa0--
