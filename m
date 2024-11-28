@@ -1,61 +1,61 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D251B0F1C
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 13:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0C21B373A
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 13:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732801032; cv=none; b=HLhNcTVUmsqaenf03Z9SWL5JD38+9S1qD1AQ+L8e2QSKMkDwBK1sCbxWNrMkiY37P56KVvq/1nIaGg71HNLPH025Rp4sCjZaIzMZAhU07n7cjB7ree+hY5O1WzOn1iAbRAlPRMFsHTDxFBi9iD5oIsmzSTnoL8H+W8qWK8c7d/E=
+	t=1732801039; cv=none; b=nGYc9wWs/8vJBAfNlX3Ua+6Z9O0/9q2d2bXfX5KAcAaifEAvGRCzwJqRFJYIbi7BVDlsJSPR52Vr7ZydFlqSkgBQJBDvtIK56Of+t5bq+iOC/8J7+Cr3RgqpsINSI6YceEePdZT5akaQcPtGBK16GwmGktOVcazf9w/0Xr1purs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732801032; c=relaxed/simple;
-	bh=DiJVAYAQcrZJd8gKJAcZ/lxvrshliSd5sO0F5CaEIj0=;
+	s=arc-20240116; t=1732801039; c=relaxed/simple;
+	bh=aCJwLOVVtyE/8Zq+i3p+hR8TjcyJ97yAVt7uvU+jGmY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QPGZcL/9UIjYWJ/uF5xA9l6ddupPnprcYsl8dN2tp3zBXhfJeNApPFMJB1LX40FdzwZHFUxOmsuiUFhBnulcb/W/3lPbq/vyY68LV0DIn76c2U7NkM2IjtqILYVvvzvdVW1BixCQ1AbU0rLbSr92VTmujRQEbREFuq4XmmqzAh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=KovYsLmz; arc=none smtp.client-ip=209.85.214.181
+	 MIME-Version; b=JunHIJcXRYHYH3RnPalaaoAWM99s94aSmWz41Rxz1BmSY4niJys3qgg7gifZEqeEkv1+SijIHqpyZ5ioG0WYB9PSNIQVG6qMEQP/gI4tIZFs56sYk/a3sTjKHenW/+gxqtjGe29lbof7kUisxlomq8OidpnfWZ1ApfsmypZy62k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=CohC4Icn; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="KovYsLmz"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21285c1b196so7813025ad.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 05:37:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="CohC4Icn"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21532055aebso2299405ad.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 05:37:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1732801030; x=1733405830; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1732801037; x=1733405837; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IH0bZMOBu3riqiEWEU9vnXR7lOK6GZQof6s3qx/MtSI=;
-        b=KovYsLmzDKLKMvmdSk+pRmZhIUWiDnOqf8mRPW/NkGaVncYwHbPIvNlDuqGE6mDjUT
-         8mLYcY4r5iP/QFtWtaI6qXl7AZT+1KcwZK/PGccukd/YxNqWKiFVzkZOMNUpJjZLUlOs
-         9UkyI1LFTVIh+jCxB0v8BzCj+jrzgNOjkAAVSs5tRmzfQogWGOFyGLiksSlq5qjXeedZ
-         rpg4HGHqBp4SPD+NgSUsfJKF6SuoCyISAX5M/+eJUH4+/JlGQF7o6GWOzE/gV05fU3cv
-         Ll5RU4mOnLpHZsx9QE3Fi37jCMOMdvmRhYPE3Yk1bzJxMfwlmcz0ONqK6lMxWh4H4Nxe
-         FFcQ==
+        bh=NwyLyxXascgIdIFuCrV9bXavAvFUrbiIh9Has6iaSvs=;
+        b=CohC4IcnixUqUkvaXmr/sm4/HHjvCSfGL/bl6QusaaXUReAq0t1+N1DLX5p5fboexf
+         Lox3EI51amleRMfWKticatlr+uvu2zq87QSrge4S2GrNi46g8oEMDed0/Qn4E0JM9Eis
+         weCmF1pDVKOBQ54zalfAXAaLXakaWt61pIeUKk3qY4nDOS2F9fsx0npbqONBWTwJRaGk
+         6jgGl7gkYbCr7MBlcdWYOYmaC/jWM8YZU4yxQfvMSH67iVxohYpZukYJ68EbE12dMl7b
+         qAt9e+Mspy49ctKroMXyAW7CRfdBYJc/zzQ6DQZxLVmjbJ+Jg1p48vMkO9N7MCaEQKXP
+         TXxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732801030; x=1733405830;
+        d=1e100.net; s=20230601; t=1732801037; x=1733405837;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IH0bZMOBu3riqiEWEU9vnXR7lOK6GZQof6s3qx/MtSI=;
-        b=p+3E++TXahgsPVevpKpmHeF/WZZ1TGUjbJ7/2wF1ihniVoLpqITVJvf5KNOpfMqSKV
-         19YnUPpaF+b8we2iMvBoIjXtg+b+i6ZWoumI2AdoWW/OFftuNZgqsJxexKY3xWiLMSKB
-         OzAIgUJa5SbtXQ9ee6cCJsig0LpDLOWuUsinVge/0P1XproJAL9BhVnosPjthCR+SXMj
-         frthUFi+Hh/sfi9ClO7JcFD3DHwsDdcJXtEPn4Nn8V2jhDO5e8SWkz2ho/lO93lP7GeW
-         WoZcjv1JAFUC5q0wU6gWbQ6jEDpf46NJGkLV2c+i4bwujdvsOwI37pFuiawTlUvCaEcB
-         CsYg==
-X-Forwarded-Encrypted: i=1; AJvYcCW71cP/fTt/d/C9/Dm4BrwAKPqoDnEYomichKrulN8YGCf0rtlwhxJCNlTAHHGPbz2Ph3ktf5NpfQfWBTxnxX/l@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4S5baJNbvlFPwKCpnivnLI7CXVz33rFMbmhUY9LMW6KNYiyYo
-	6AhM7362xXBz+tXpmZFePCxpoYPzWQlWqnvDT8ghN73R9+AxOv9zIp/ySgyxJSs=
-X-Gm-Gg: ASbGnctD3q/xFXRFtt9qfYKr8COrrVhB8yNl0bFFTFwBq0nFdh18B/WcFpmCiuLVKzp
-	PFOO/3H673K+w5TchcqQt6PNIlBdNIC3E5/nQ022YW+7SocJfKp2CmJJzLrUpmXlmKvDKXi02Be
-	iucJjpmTHUKzkf6J0BzcjkK7xnsxDV/SlZG03kwREs2VFtplk57ZVnCHEVeVNad4v67G3F+Z7NO
-	vFuKtaqOOpyZxaVr5kl9d6uRDvvR6/tws7MBNRiN/kNOf8uG/dTMHzqtQ==
-X-Google-Smtp-Source: AGHT+IHRR/nnxlLBQ0K72YvBnIQpQxBM2gsi0t+qZpJP/RxQa0B53I/b7kFI4jpJBRiClaBbUkYt4Q==
-X-Received: by 2002:a17:902:da92:b0:207:1675:6709 with SMTP id d9443c01a7336-21500fee592mr91980655ad.0.1732801029815;
-        Thu, 28 Nov 2024 05:37:09 -0800 (PST)
+        bh=NwyLyxXascgIdIFuCrV9bXavAvFUrbiIh9Has6iaSvs=;
+        b=N1NOHoqdLRFj2um+O36dFVBATTrp1ecIdYJYfD5Md4h1hYaLD4vJ8U0mV2QRasYXaY
+         7c49vJTZu1hwTQHf4psmHtFDRp4mFmZO01V2GnB8bXMb5nzbJJcYrmnUbzmk9ELrdpfv
+         cYodJME5cPLOawAdXHtl8d5LzEsn62BjFeuVbaY+P6ojJjUAtB62Hnk9lDHNjPAR1g6l
+         5/FJGV24sfYDWbGfBg34XhCCnAw8Fscz3aBljSpDNoUJzpime2Zp3unEPabA/xgcdDjK
+         QXrwvDpMnG/gh6Wt5sBj0BevlT1T+SMu8l5vQyAN31v86/vfpyYDd2C8NGTarY98z86J
+         mujA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmEiynR896kjLs+5T6lsoOTMrY9pWwgUZvs524Z9cV8FrMgAjhSMkSSK3NIVCzfbVbVePtxzy3p9+7we90btfk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2tftRf8hSvfJ9unOvV+EaOc66yxwjCXIATC02Fge8bULllihY
+	JOO2iD8YBUgJqflBP9lSSRsLHD+AZAxQbJVCU63+KQfztkxVg4nTXRy6eHSoNe4=
+X-Gm-Gg: ASbGncuazZ+tovaXRI0PP4xOcDgbq7nq9/ieN+kn72ydU5RKv7WknvQ+sfQnTULhKmy
+	k9HtDUlGvPrpSJgrJzV/3Ltiu05E+MeOLe0Z8hcfEuO1QQy5aNcT2nVhZsGoJ+PWdNe6wel8jBW
+	Cjw1Dvnufs5JcxilNHcZdhIIDPZS7H+wpd0BC3DOad29isoq/rWrue4IvKlCYQ8mUb8WWCBiU95
+	kLqCRposWAEY7ukm3Qu+IxZOGsY0VDWr7qJVRsfbWAtdgIzgTBJqBbyng==
+X-Google-Smtp-Source: AGHT+IE4a3HwlWMVvu8/IkbUqmVlhEIwHVCXNf6Xu3znJAzuSXsDK+/mKFwZPq9Fisvr4knYX9PbVQ==
+X-Received: by 2002:a17:902:ce88:b0:20c:c9db:7c45 with SMTP id d9443c01a7336-215010921d9mr72930415ad.20.1732801037414;
+        Thu, 28 Nov 2024 05:37:17 -0800 (PST)
 Received: from ubuntu20.04 ([139.177.225.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21521985632sm12952975ad.206.2024.11.28.05.37.04
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21521985632sm12952975ad.206.2024.11.28.05.37.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2024 05:37:09 -0800 (PST)
+        Thu, 28 Nov 2024 05:37:14 -0800 (PST)
 From: Yang Jihong <yangjihong@bytedance.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -71,9 +71,9 @@ To: peterz@infradead.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: yangjihong@bytedance.com
-Subject: [RFC 10/12] perf event action: Add parsing builtin tid expr support
-Date: Thu, 28 Nov 2024 21:35:51 +0800
-Message-Id: <20241128133553.823722-11-yangjihong@bytedance.com>
+Subject: [RFC 11/12] perf event action: Add parsing builtin comm expr support
+Date: Thu, 28 Nov 2024 21:35:52 +0800
+Message-Id: <20241128133553.823722-12-yangjihong@bytedance.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20241128133553.823722-1-yangjihong@bytedance.com>
 References: <20241128133553.823722-1-yangjihong@bytedance.com>
@@ -85,127 +85,126 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Support parsing of builtin tid expression.
+Support parsing of builtin comm expression.
 
 Testcase:
-  # perf record -e sched:sched_switch --action 'print("tid = %d\n", tid)' true
-  tid = 134891
-  tid = 0
-  tid = 134891
-  tid = 0
-  tid = 0
-  tid = 134891
-  tid = 132778
-  tid = 134891
-  tid = 132778
-  tid = 134891
-  tid = 132778
-  tid = 134891
-  tid = 132778
-  tid = 134891
-  tid = 132778
+  # perf record -e sched:sched_switch --action 'print("comm = %s\n", comm)' true
+  comm = perf
+  comm = swapper/7
+  comm = perf
+  comm = swapper/7
+  comm = swapper/1
+  comm = perf
+  comm = kworker/u40:0
+  comm = perf
+  comm = kworker/u40:0
   ...
 Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 ---
  tools/perf/util/bpf_skel/bpf_record_action.h |  1 +
- tools/perf/util/bpf_skel/record_action.bpf.c | 14 ++++++++++++++
+ tools/perf/util/bpf_skel/record_action.bpf.c | 19 +++++++++++++++++++
  tools/perf/util/parse-action.c               |  1 +
  tools/perf/util/parse-action.h               |  1 +
  tools/perf/util/parse-action.l               |  1 +
  tools/perf/util/record_action.c              |  4 ++++
- 6 files changed, 22 insertions(+)
+ 6 files changed, 27 insertions(+)
 
 diff --git a/tools/perf/util/bpf_skel/bpf_record_action.h b/tools/perf/util/bpf_skel/bpf_record_action.h
-index a4817d62bce8..1d2ffa3c260f 100644
+index 1d2ffa3c260f..325964b7aac9 100644
 --- a/tools/perf/util/bpf_skel/bpf_record_action.h
 +++ b/tools/perf/util/bpf_skel/bpf_record_action.h
-@@ -9,6 +9,7 @@
- enum __output_format_type {
+@@ -10,6 +10,7 @@ enum __output_format_type {
  	__OUTPUT_FORMAT_TYPE_CPU,
  	__OUTPUT_FORMAT_TYPE_PID,
-+	__OUTPUT_FORMAT_TYPE_TID,
+ 	__OUTPUT_FORMAT_TYPE_TID,
++	__OUTPUT_FORMAT_TYPE_COMM,
  	__OUTPUT_FORMAT_TYPE_MAX,
  };
  
 diff --git a/tools/perf/util/bpf_skel/record_action.bpf.c b/tools/perf/util/bpf_skel/record_action.bpf.c
-index fd44bb3da663..b6049b9af055 100644
+index b6049b9af055..f809305b16be 100644
 --- a/tools/perf/util/bpf_skel/record_action.bpf.c
 +++ b/tools/perf/util/bpf_skel/record_action.bpf.c
-@@ -57,6 +57,17 @@ static inline int output_pid(__u8 *data, int size)
+@@ -68,6 +68,22 @@ static inline int output_tid(__u8 *data, int size)
  	return sizeof(__u32);
  }
  
-+static inline int output_tid(__u8 *data, int size)
++static inline int output_comm(__u8 *data, int size)
 +{
-+	__u32 *pid = (__u32 *)data;
++	struct task_struct *task = (struct task_struct *)bpf_get_current_task();
 +
-+	if (size < sizeof(__u32))
++	if (!task) {
++		data[0] = '\0';
++		return 0;
++	}
++
++	if (size < __TASK_COMM_MAX_SIZE)
 +		return -1;
 +
-+	*pid = bpf_get_current_pid_tgid() & 0xffffffff;
-+	return sizeof(__u32);
++	bpf_core_read_str(data, __TASK_COMM_MAX_SIZE, &task->comm);
++	return __TASK_COMM_MAX_SIZE;
 +}
 +
  SEC("xxx")
  int sample_output(u64 *ctx)
  {
-@@ -82,6 +93,9 @@ int sample_output(u64 *ctx)
- 		case __OUTPUT_FORMAT_TYPE_PID:
- 			ret = output_pid(data + total, __OUTPUT_DATA_MAX_SIZE - total);
+@@ -96,6 +112,9 @@ int sample_output(u64 *ctx)
+ 		case __OUTPUT_FORMAT_TYPE_TID:
+ 			ret = output_tid(data + total, __OUTPUT_DATA_MAX_SIZE - total);
  			break;
-+		case __OUTPUT_FORMAT_TYPE_TID:
-+			ret = output_tid(data + total, __OUTPUT_DATA_MAX_SIZE - total);
++		case __OUTPUT_FORMAT_TYPE_COMM:
++			ret = output_comm(data + total, __OUTPUT_DATA_MAX_SIZE - total);
 +			break;
  		default:
  			ret = -1;
  			break;
 diff --git a/tools/perf/util/parse-action.c b/tools/perf/util/parse-action.c
-index 0ae998a5d286..6928990c9106 100644
+index 6928990c9106..8bc1646abe27 100644
 --- a/tools/perf/util/parse-action.c
 +++ b/tools/perf/util/parse-action.c
-@@ -14,6 +14,7 @@
-  *   - builtin:
+@@ -15,6 +15,7 @@
   *     - cpu
   *     - pid
-+ *     - tid
+  *     - tid
++ *     - comm
   */
  
  #include <regex.h>
 diff --git a/tools/perf/util/parse-action.h b/tools/perf/util/parse-action.h
-index e74d3b4e5de8..817e2c4213e0 100644
+index 817e2c4213e0..39fb521f3193 100644
 --- a/tools/perf/util/parse-action.h
 +++ b/tools/perf/util/parse-action.h
-@@ -29,6 +29,7 @@ enum evtact_expr_call_type {
- enum evtact_expr_builtin_type {
+@@ -30,6 +30,7 @@ enum evtact_expr_builtin_type {
  	EVTACT_EXPR_BUILTIN_TYPE_CPU,
  	EVTACT_EXPR_BUILTIN_TYPE_PID,
-+	EVTACT_EXPR_BUILTIN_TYPE_TID,
+ 	EVTACT_EXPR_BUILTIN_TYPE_TID,
++	EVTACT_EXPR_BUILTIN_TYPE_COMM,
  	EVTACT_EXPR_BUILTIN_TYPE_MAX,
  };
  
 diff --git a/tools/perf/util/parse-action.l b/tools/perf/util/parse-action.l
-index 5a5bbe3e1f94..2ada6b4bf091 100644
+index 2ada6b4bf091..ddac305c1ca4 100644
 --- a/tools/perf/util/parse-action.l
 +++ b/tools/perf/util/parse-action.l
-@@ -105,6 +105,7 @@ ident		[_a-zA-Z][_a-zA-Z0-9]*
- 
+@@ -106,6 +106,7 @@ ident		[_a-zA-Z][_a-zA-Z0-9]*
  cpu		{ return builtin(EVTACT_EXPR_BUILTIN_TYPE_CPU);  }
  pid		{ return builtin(EVTACT_EXPR_BUILTIN_TYPE_PID);  }
-+tid		{ return builtin(EVTACT_EXPR_BUILTIN_TYPE_TID);  }
+ tid		{ return builtin(EVTACT_EXPR_BUILTIN_TYPE_TID);  }
++comm		{ return builtin(EVTACT_EXPR_BUILTIN_TYPE_COMM); }
  
  print		{ return call(EVTACT_EXPR_CALL_TYPE_PRINT); }
  
 diff --git a/tools/perf/util/record_action.c b/tools/perf/util/record_action.c
-index 1d7b603713d1..f4db98b7df4d 100644
+index f4db98b7df4d..ead7eeffb7cc 100644
 --- a/tools/perf/util/record_action.c
 +++ b/tools/perf/util/record_action.c
-@@ -100,6 +100,10 @@ static int set_expr_builtin_output_format(struct evtact_expr *expr,
- 		*format = __OUTPUT_FORMAT_TYPE_PID;
+@@ -104,6 +104,10 @@ static int set_expr_builtin_output_format(struct evtact_expr *expr,
+ 		*format = __OUTPUT_FORMAT_TYPE_TID;
  		size = sizeof(u32);
  		break;
-+	case EVTACT_EXPR_BUILTIN_TYPE_TID:
-+		*format = __OUTPUT_FORMAT_TYPE_TID;
-+		size = sizeof(u32);
++	case EVTACT_EXPR_BUILTIN_TYPE_COMM:
++		*format = __OUTPUT_FORMAT_TYPE_COMM;
++		size = __TASK_COMM_MAX_SIZE;
 +		break;
  	default:
  		pr_err("set expr builtin output format unknown opcode: %u\n", opcode);
