@@ -1,61 +1,61 @@
 Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341BC1AA1F9
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 13:36:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C76E1AAE23
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 13:36:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732801005; cv=none; b=bILIm26neqwKglYB2QVwYr0AmF1KlDgwuqK5m7mju2mUbbRrT0zy2QKizna8FuFvYxCCArhYXha4BL0WmceHdDw8A1peBMFHUzMPtZ5k/r2bi37C4sCJi1T9+p/OR/nxEzUcktwbBTSjiyetTPsSif7UnFo10YAgAa4y2gBZfgs=
+	t=1732801009; cv=none; b=rcbTDA8CqEzGOkbbIgMWXtW4n3Wo9CbfqslRjip9g0ijpOtP+jw7+OYuDRrQ3/u4wYIxrOdXRZeAM+bAi4jQJthczbzMwBd9fuTldRH78QEhD/eOGeV45I8kQVn02L4bs+KKOBQuIMUrxRGKym558E7yDIjvZuHWqrIJH8c6K5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732801005; c=relaxed/simple;
-	bh=iQPmTqPMgE6CGRqj3c3+Z0ssTDESghTFmM14erJ5bzk=;
+	s=arc-20240116; t=1732801009; c=relaxed/simple;
+	bh=+LNZpBhiaOxnH+Ezhfur1Zzi2CJqROuf+YAka+RZ568=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C4YtTCqJc3x2qqEZbR9HseN+MjJ6fRYy4C9V7CiEIwXaOvHOS1QiiZYDvvBCZv/LjmlcgNCO2xOJvGSCOavwZbyTy94npvqo45lStUoVeFsh0FGUFot0zSPcoQmstfGoaH9SYfEjxPMWJtex48XRVyweF3mIiu+BrBwklAcLLMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EEyIEgsN; arc=none smtp.client-ip=209.85.214.175
+	 MIME-Version; b=YthqeClzcveWFpMmsbdBj+2D/+I1Z8klkgBBidCIUSAsBIDKjbBdYBACfxTTGLOj1Bg5wtC1bBPMgkL/80fett6N7UL/tBMJMlYHlMjkGREWdx2WYBQgQ84T2BSqprCAkUGk/rPtQymg/4fZNJohsBRbLLBu0zIf0uSihW2dV3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=VPTI5Pyu; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EEyIEgsN"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2124ccf03edso7713465ad.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 05:36:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="VPTI5Pyu"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21210eaa803so7289015ad.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 05:36:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1732801001; x=1733405801; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1732801007; x=1733405807; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ug7s3apMrIYGbjn2T08D5A19MS2gdifOXUiskaMTdCU=;
-        b=EEyIEgsNWoy1AvJemyzu998JPt9rGQ7cNwcsV3Dyl/NwXx9Do3zD+RVD/SQbAKwKr8
-         0Sq/lnGz9HooMDjhTSwxBJT8Gq0ne2WyLk9uamtKOwSG52DH4u01SxDjPrBOQlpXMVZV
-         sduAshMINnui/FLQrDlRj4UIOuEkFAC/WMmO9anb3uyxmsWl09uud0XNveOu4O0ufT0j
-         m/lZsOn0QpSyewZUQ7hI09QmpMIOL9oZja23KKRgVaqwvxMPgRjmAf+9dSpxfYYxrUKs
-         LkRtY9hfeV8VFZin8cyXLXm3kUBP9K9HyzQgMFD3cYqTCUMkSeCRnDwZswJ/Mx5f5NoK
-         AAKg==
+        bh=zqQaIVC+j9LhZ/TRorXPn9tvoBLETViH2KLqmtwG9as=;
+        b=VPTI5PyuE73XIkTENBetZEkw5CAs938qyDVUgM49iravWX08cGBA6CUYpDm2M8C6L8
+         5YNLb9+h0RPdR4gy9HDN77bvZIw0mPcqRrBEhkf7CsIULMdvtak55RLj0bRXg57j45Yk
+         N9uEHqR6xR/l8S/AQgsuO0AhYJwy4ZEsFw1sVnvr6OEBORVmbWWqcXzgD8HLAsgYqUO+
+         QiRrtevP8u7Bq9gW1y593BRwzVaLDVABGLky/WdYvVnZcDrPyGqeKgBSq8ZwZluWXDVx
+         iYUj36vZaRGsVwO1ve8tFpP+xnu7vA4g+BIGjUy8mC4FZX/4MoYQJdhjD4847Xeii5Un
+         cnlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732801001; x=1733405801;
+        d=1e100.net; s=20230601; t=1732801007; x=1733405807;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ug7s3apMrIYGbjn2T08D5A19MS2gdifOXUiskaMTdCU=;
-        b=gIRbOVAj4rlNanXMn9B5Z5YIeffCvBASn9yV8L3xV9IbT7vE4BdiBFtYEdktRnWI+/
-         2XIo+OprF90fzQ0TCqOrB9ZUtDHtRG+SnThskhK0cU6B0kBTRmLGTAQ1bYPW+Bd5w2Fy
-         /Jl5NjPlyL8abvuNH4nMtfa8oPL+P8CRNd4av4lit456p2w/HUu6ajJAdc1Jd4P8B99s
-         kPo61xEo7Te68N8vtzRXWNpDWXjJRdpZ9cGVAwZGNR0Ojuzk1YQD1NGsZvjvuWdvwOji
-         1eZXEO9whxX3OHhmlfFgeOBSfN8PzPqVufTOdviAn8prAH4lwleyjMTPF2Zvx11mMOUY
-         Mbyg==
-X-Forwarded-Encrypted: i=1; AJvYcCXsLD+nDxisB4po0JJK2JgFPiRUTSaBjt/QX/Doom6eK01ELJcth5v4iInP2rbPGaJ6GyH0Onrk6zaj3GMxgA97@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqXhfy9k6sIrX+wTTf30gcplY2vi+Eju9DEGVCVCXR4buVTHFb
-	H5d2qpJ7roKdvb3lzCxJbqSmCjeYAPxysGOkhtNxMu73wWS58ERb9sWQTuoNugM=
-X-Gm-Gg: ASbGncuWiyGxsxpCl75pcQeKhfGygMvL7h8TaUJs5+af5J5fxWU7+v4cPTWAa/q2Kzw
-	93nvibbqucPiVrmo37Sy0JSdGZV/dKAIQKiA8zluA0L+0g789lCspyLcouFmKeNGu+92H2GmR+z
-	VBVUwwxWUe+lGG2FUuYKR3tjnLbaN6aqQp5U0qzkyAjCYUlfXNP+WbyjFDa3+wO+9di1FJyXvvQ
-	PlnluaKyKv/iOgIvw4xKPaEWxZ9AvyBWLQRkmouub7QVMGwsI5PEzulYw==
-X-Google-Smtp-Source: AGHT+IEP3FPHTpJbDgEXCPECoTzgQwWMYfxD2So6kaGKpGJn6BnqrIL/OjhQuLz8v4pXQAubpuPN7Q==
-X-Received: by 2002:a17:902:d48a:b0:20c:9821:6998 with SMTP id d9443c01a7336-21501086e3bmr82419485ad.10.1732801001570;
-        Thu, 28 Nov 2024 05:36:41 -0800 (PST)
+        bh=zqQaIVC+j9LhZ/TRorXPn9tvoBLETViH2KLqmtwG9as=;
+        b=j2gWSpQT+Pd+5n/qbNVv2M/g3Tr/H+TzGiB3nM6ecU7rGwDutQmc/4itovhxjualVG
+         P+aasWkwnRAWfV2Gi3516SGb5JcjXpzWzHFJCHX42b+QZs5saYuA5MiVpoaJRHjwlkvS
+         gnDXtUugPCZJZPFOjtPBJRHBETIjxkMWa3OMAE6h5NfAi7GdgwErH1aiK5wZACOaeXnX
+         K2aDno90MutC8KDgjAwX8d4/FS51swzR3IUvIGZF7AurCxthgm2soQEEd3WIFLdKgqJm
+         fZaczqv6UAnm0U/2bGvAs2NxAp1CDDZmUyh+tolr7afPACrEqgSG82qMtaSQhm+FU7hR
+         TRaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXSlk2rQlilZyhUEWRnQSf2bCMN/CcnsUSmXx96JxVAPXGtZy/hPvdJY3JgkjpLLcoUObvQKsaq90pQIu0UFDtn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3Kzud5Y2vku/N5CN0VZGL/XACYA1u4wySrrxpMslWs6PGMuTq
+	n3s50Ncf0WaImNP2sQGygr7B1zFiak7NZbObZyFXSAd3CyJzAMx+b4zLQ0JP4Yw=
+X-Gm-Gg: ASbGncunre+0iC4zZaIRngjjjGfpn2WgNIn/CTatCKb9TnipPmdYb7s3oXLpov+htfN
+	e+qEu+XMpB6HwqZkitbI2Eg97iTBQaR/nA6dWI9kS6/uz3YHFZuUblfgR2kCUgeQ1dEhPr6MlgC
+	2O6d1HY4pe5mV21wrYp48e/3ZPYpOtm1oIBXn4p/8gnIexAIX3eFyc2Y1AmnrQNBi6bsFSLRPbv
+	DoBXQyY27Si+rgECHXnbyfds00u2QcDrb4Lq0nu8Y/sK7p5Bq6bWBsdJA==
+X-Google-Smtp-Source: AGHT+IF3rwvUZnobMrf3bzrwFLm6Hr8ohxbpugrVFikYQUJ5h78RZPldvuutj+6JrOe0I8HRAp8V9Q==
+X-Received: by 2002:a17:903:1ce:b0:211:18bc:e74b with SMTP id d9443c01a7336-21501083ab6mr108542035ad.1.1732801007302;
+        Thu, 28 Nov 2024 05:36:47 -0800 (PST)
 Received: from ubuntu20.04 ([139.177.225.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21521985632sm12952975ad.206.2024.11.28.05.36.36
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21521985632sm12952975ad.206.2024.11.28.05.36.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2024 05:36:40 -0800 (PST)
+        Thu, 28 Nov 2024 05:36:46 -0800 (PST)
 From: Yang Jihong <yangjihong@bytedance.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -71,9 +71,9 @@ To: peterz@infradead.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: yangjihong@bytedance.com
-Subject: [RFC 05/12] perf event action: Add parsing call expr support
-Date: Thu, 28 Nov 2024 21:35:46 +0800
-Message-Id: <20241128133553.823722-6-yangjihong@bytedance.com>
+Subject: [RFC 06/12] perf event action: Add parsing print() call expr support
+Date: Thu, 28 Nov 2024 21:35:47 +0800
+Message-Id: <20241128133553.823722-7-yangjihong@bytedance.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20241128133553.823722-1-yangjihong@bytedance.com>
 References: <20241128133553.823722-1-yangjihong@bytedance.com>
@@ -85,184 +85,415 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for parsing function call expression, the format is similar to
-C language function call, with parameters specified after function name,
-inside the parentheses and separated with a comma.
+Add support for parsing print() function calls, the parameter format is
+similar to C's printf(), the first parameter is a string format,
+and format specifiers support %c, %d, %d, %o, %u, %x, %X, %s.
+Currently, it simply checks whether the number of arguments matches
+the number of format specifiers.
 
 Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 ---
- tools/perf/util/parse-action.c | 25 +++++++++++++++
- tools/perf/util/parse-action.h |  5 +++
- tools/perf/util/parse-action.l |  3 ++
- tools/perf/util/parse-action.y | 56 +++++++++++++++++++++++++++++++---
- 4 files changed, 85 insertions(+), 4 deletions(-)
+ tools/perf/util/parse-action.c | 329 +++++++++++++++++++++++++++++++++
+ tools/perf/util/parse-action.h |   1 +
+ tools/perf/util/parse-action.l |   9 +
+ 3 files changed, 339 insertions(+)
 
 diff --git a/tools/perf/util/parse-action.c b/tools/perf/util/parse-action.c
-index 7e5ca889d5b9..40e7c8aad7be 100644
+index 40e7c8aad7be..95c06cc071ad 100644
 --- a/tools/perf/util/parse-action.c
 +++ b/tools/perf/util/parse-action.c
-@@ -9,6 +9,7 @@
-  *   - constant:
+@@ -10,8 +10,11 @@
   *     - integer
   *     - string
-+ *   - call:
+  *   - call:
++ *     - print
   */
  
++#include <regex.h>
++
  #include "util/debug.h"
-@@ -232,8 +233,32 @@ static struct evtact_expr_class expr_const = {
+ #include "util/parse-action.h"
+ #include "util/parse-action-flex.h"
+@@ -171,6 +174,12 @@ static struct evtact_expr_ops expr_const_int_ops = {
+ 	.eval = expr_const_int_eval,
+ };
+ 
++static bool is_const_str_expr(struct evtact_expr *expr)
++{
++	return expr->id == evtact_expr_id_encode(EVTACT_EXPR_TYPE_CONST,
++						 EVTACT_EXPR_CONST_TYPE_STR);
++}
++
+ static int expr_const_str_new(struct evtact_expr *expr,
+ 			      void *data, int size __maybe_unused)
+ {
+@@ -233,7 +242,327 @@ static struct evtact_expr_class expr_const = {
  	.set_ops = expr_const_set_ops,
  };
  
-+static struct evtact_expr_ops *expr_call_ops_list[EVTACT_EXPR_CALL_TYPE_MAX] = {
++enum print_fmt_spec_len {
++	PRINT_FMT_SPEC_LEN_INT,
++	PRINT_FMT_SPEC_LEN_LONG,
++	PRINT_FMT_SPEC_LEN_LONG_LONG,
 +};
 +
-+static int expr_call_set_ops(struct evtact_expr *expr, u32 opcode)
++enum print_fmt_spec_type {
++	PRINT_FMT_SPEC_TYPE_VOID,
++	PRINT_FMT_SPEC_TYPE_INT,
++	PRINT_FMT_SPEC_TYPE_STRING,
++};
++
++struct print_fmt_spec {
++	struct list_head list;
++	enum print_fmt_spec_type type;
++	enum print_fmt_spec_len len;
++	char *str;
++};
++
++#define PRINT_OUT_BUF_DEFAULT_LEN 64
++struct print_expr_priv {
++	struct list_head fmt_specs;
++	int fmt_spec_num;
++	int args_num;
++	char *out;
++	int out_len;
++};
++
++static int print_fmt_add_spec(struct print_expr_priv *priv, char *s,
++			      regoff_t len, enum print_fmt_spec_len spec_len,
++			      enum print_fmt_spec_type spec_type)
 +{
-+	if (opcode >= EVTACT_EXPR_CALL_TYPE_MAX) {
-+		pr_err("expr_call opcode invalid: %u\n", opcode);
-+		return -EINVAL;
++	struct print_fmt_spec *spec;
++
++	spec = malloc(sizeof(*spec));
++	if (spec == NULL) {
++		pr_err("call print fmt spec malloc failed\n");
++		return -ENOMEM;
 +	}
 +
-+	if (expr_call_ops_list[opcode] == NULL) {
-+		pr_err("expr_call opcode not supported: %u\n", opcode);
-+		return -ENOTSUP;
++	spec->str = strndup(s, len);
++	if (spec->str == NULL) {
++		pr_err("call print fmt spec strndup failed\n");
++		free(spec);
++		return -ENOMEM;
 +	}
 +
-+	expr->ops = expr_call_ops_list[opcode];
++	spec->len = spec_len;
++	spec->type = spec_type;
++	list_add_tail(&spec->list, &priv->fmt_specs);
 +	return 0;
 +}
 +
-+static struct evtact_expr_class expr_call = {
-+	.set_ops = expr_call_set_ops,
++static int print_fmt_spec_get_len(char *s, regoff_t len)
++{
++	if (len == 1 && !strncmp(s, "l", len))
++		return PRINT_FMT_SPEC_LEN_LONG;
++	else if (len == 2 && !strncmp(s, "ll", len))
++		return PRINT_FMT_SPEC_LEN_LONG_LONG;
++
++	return PRINT_FMT_SPEC_LEN_INT;
++}
++
++static int print_fmt_spec_get_type(char *s)
++{
++	switch (s[0]) {
++	case 'c':
++	case 'd':
++	case 'o':
++	case 'u':
++	case 'x':
++	case 'X':
++		return PRINT_FMT_SPEC_TYPE_INT;
++	case 's':
++		return PRINT_FMT_SPEC_TYPE_STRING;
++	default:
++		break;
++	}
++
++	return PRINT_FMT_SPEC_TYPE_VOID;
++}
++
++static int print_fmt_get_string(struct evtact_expr *expr, char **fmt)
++{
++	int ret, fmt_len;
++	struct evtact_expr *fmt_expr;
++
++	fmt_expr = list_first_entry_or_null(&expr->opnds, struct evtact_expr, list);
++	if (fmt_expr == NULL) {
++		pr_err("print() requires at least one argument\n");
++		return -EINVAL;
++	} else if (!is_const_str_expr(fmt_expr)) {
++		pr_err("print() first argument expected to be string\n");
++		return -EINVAL;
++	}
++
++	if (fmt_expr->ops->eval != NULL) {
++		ret = fmt_expr->ops->eval(fmt_expr, NULL, 0, (void **)fmt, &fmt_len);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static void print_fmt_free_specs(struct print_expr_priv *priv)
++{
++	struct print_fmt_spec *spec, *tmp;
++
++	if (priv == NULL)
++		return;
++
++	list_for_each_entry_safe(spec, tmp, &priv->fmt_specs, list) {
++		list_del(&spec->list);
++		free(spec->str);
++		free(spec);
++	}
++}
++
++static int print_fmt_split(struct evtact_expr *expr, struct print_expr_priv *priv)
++{
++	int i, ret;
++	char *s, *fmt;
++	regex_t regex;
++	regmatch_t pmatch[6];
++	int spec_len, spec_type;
++	const char *const re = "%(-?)([0-9]*)(\\.[0-9]+)?(ll|l)?([cdosuxX])";
++
++	ret = print_fmt_get_string(expr, &fmt);
++	if (ret)
++		return ret;
++
++	if (regcomp(&regex, re, REG_EXTENDED)) {
++		pr_err("expr call print fmt regcomp failed\n");
++		return -1;
++	}
++
++	s = fmt;
++	for (i = 0;; i++) {
++		if (regexec(&regex, s, ARRAY_SIZE(pmatch), pmatch, 0))
++			break;
++
++		spec_len = print_fmt_spec_get_len(s + pmatch[4].rm_so,
++						  pmatch[4].rm_eo - pmatch[4].rm_so);
++		spec_type = print_fmt_spec_get_type(s + pmatch[5].rm_so);
++
++		ret = print_fmt_add_spec(priv, s, pmatch[0].rm_eo, spec_len, spec_type);
++		if (ret)
++			goto out_free_specs;
++
++		s += pmatch[0].rm_eo;
++	}
++
++	if ((size_t)(s - fmt) < strlen(fmt)) {
++		ret = print_fmt_add_spec(priv, s, strlen(fmt) - (s - fmt),
++					 PRINT_FMT_SPEC_LEN_INT, PRINT_FMT_SPEC_TYPE_VOID);
++		if (ret)
++			goto out_free_specs;
++	}
++
++	priv->fmt_spec_num = i;
++	return 0;
++
++out_free_specs:
++	print_fmt_free_specs(priv);
++	return ret;
++}
++
++static int print_check_args(struct evtact_expr *expr, struct print_expr_priv *priv)
++{
++	struct evtact_expr *arg;
++
++	priv->args_num = 0;
++	list_for_each_entry(arg, &expr->opnds, list)
++		priv->args_num++;
++
++	/* do not count format string argument */
++	priv->args_num--;
++
++	if (priv->args_num != priv->fmt_spec_num) {
++		pr_err("print() arguments number for format string mismatch: %d expected, %d provided\n",
++		       priv->fmt_spec_num, priv->args_num);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int expr_call_print_new(struct evtact_expr *expr,
++			       void *data __maybe_unused, int size __maybe_unused)
++{
++	int ret;
++	struct print_expr_priv *priv;
++
++	priv = malloc(sizeof(struct print_expr_priv));
++	if (priv == NULL)
++		return -ENOMEM;
++
++	priv->out = malloc(PRINT_OUT_BUF_DEFAULT_LEN);
++	if (priv->out == NULL) {
++		ret = -ENOMEM;
++		goto out_free_priv;
++	}
++	priv->out_len = PRINT_OUT_BUF_DEFAULT_LEN;
++
++	INIT_LIST_HEAD(&priv->fmt_specs);
++	ret = print_fmt_split(expr, priv);
++	if (ret)
++		goto out_free_out_buf;
++
++	ret = print_check_args(expr, priv);
++	if (ret)
++		goto out_free_specs;
++
++	expr->priv = priv;
++	return 0;
++
++out_free_specs:
++	print_fmt_free_specs(priv);
++out_free_out_buf:
++	free(priv->out);
++	priv->out_len = 0;
++out_free_priv:
++	free(priv);
++	return ret;
++}
++
++static void expr_call_print_free(struct evtact_expr *expr)
++{
++	struct print_expr_priv *priv;
++
++	priv = expr->priv;
++	if (priv == NULL)
++		return;
++
++	print_fmt_free_specs(expr->priv);
++	zfree(&priv->out);
++	priv->out_len = 0;
++	zfree(&expr->priv);
++}
++
++static int expr_call_print_eval(struct evtact_expr *expr,
++				void *in, int in_size,
++				void **out __maybe_unused, int *out_size __maybe_unused)
++{
++	int ret, len;
++	char *buf_out;
++	int arg_val_size;
++	unsigned long long *arg_val;
++	struct evtact_expr *arg;
++	struct print_fmt_spec *spec;
++	struct print_expr_priv *priv = expr->priv;
++
++retry:
++	len = 0;
++	priv->out[0] = '\0';
++	arg = list_first_entry(&expr->opnds, struct evtact_expr, list);
++	list_for_each_entry(spec, &priv->fmt_specs, list) {
++		if (spec->type == PRINT_FMT_SPEC_TYPE_VOID) {
++			len += snprintf(priv->out + len, priv->out_len - len, "%s", spec->str);
++		} else {
++			arg = list_next_entry(arg, list);
++			if (arg == NULL) {
++				pr_err("expr call print arguments are empty\n");
++				return -EINVAL;
++			}
++
++			ret = arg->ops->eval(arg, in, in_size, (void **)&arg_val, &arg_val_size);
++			if (ret) {
++				pr_err("expr call print eval argument failed %d\n", ret);
++				return ret;
++			}
++
++			if (spec->type == PRINT_FMT_SPEC_TYPE_STRING) {
++				len += snprintf(priv->out + len, priv->out_len - len,
++						spec->str, arg_val);
++			} else if (spec->type == PRINT_FMT_SPEC_TYPE_INT) {
++				switch (spec->len) {
++				case PRINT_FMT_SPEC_LEN_INT:
++					len += snprintf(priv->out + len, priv->out_len - len,
++							spec->str, *(unsigned int *)arg_val);
++					break;
++				case PRINT_FMT_SPEC_LEN_LONG:
++					len += snprintf(priv->out + len, priv->out_len - len,
++							spec->str, *(unsigned long *)arg_val);
++					break;
++				case PRINT_FMT_SPEC_LEN_LONG_LONG:
++					len += snprintf(priv->out + len, priv->out_len - len,
++							spec->str, *(unsigned long long *)arg_val);
++					break;
++				default:
++					break;
++				}
++			}
++		}
++
++		if (len >= priv->out_len) {
++			buf_out = realloc(priv->out, priv->out_len << 1);
++			if (buf_out != NULL) {
++				priv->out = buf_out;
++				priv->out_len <<= 1;
++				goto retry;
++			}
++		}
++
++		if (len >= priv->out_len)
++			break;
++	}
++
++	printf("%s", priv->out);
++	return 0;
++}
++
++static struct evtact_expr_ops expr_call_print_ops = {
++	.new  = expr_call_print_new,
++	.free = expr_call_print_free,
++	.eval = expr_call_print_eval,
 +};
 +
- static struct evtact_expr_class *expr_class_list[EVTACT_EXPR_TYPE_MAX] = {
- 	[EVTACT_EXPR_TYPE_CONST]   = &expr_const,
-+	[EVTACT_EXPR_TYPE_CALL]    = &expr_call,
+ static struct evtact_expr_ops *expr_call_ops_list[EVTACT_EXPR_CALL_TYPE_MAX] = {
++	[EVTACT_EXPR_CALL_TYPE_PRINT] = &expr_call_print_ops,
  };
  
- int parse_action_expr__set_class(enum evtact_expr_type type,
+ static int expr_call_set_ops(struct evtact_expr *expr, u32 opcode)
 diff --git a/tools/perf/util/parse-action.h b/tools/perf/util/parse-action.h
-index ec422f8a05a7..30c2fd6e81d0 100644
+index 30c2fd6e81d0..f8aece601a84 100644
 --- a/tools/perf/util/parse-action.h
 +++ b/tools/perf/util/parse-action.h
-@@ -10,6 +10,7 @@
- 
- enum evtact_expr_type {
- 	EVTACT_EXPR_TYPE_CONST,
-+	EVTACT_EXPR_TYPE_CALL,
- 	EVTACT_EXPR_TYPE_MAX,
+@@ -21,6 +21,7 @@ enum evtact_expr_const_type {
  };
  
-@@ -19,6 +20,10 @@ enum evtact_expr_const_type {
- 	EVTACT_EXPR_CONST_TYPE_MAX,
+ enum evtact_expr_call_type {
++	EVTACT_EXPR_CALL_TYPE_PRINT,
+ 	EVTACT_EXPR_CALL_TYPE_MAX,
  };
  
-+enum evtact_expr_call_type {
-+	EVTACT_EXPR_CALL_TYPE_MAX,
-+};
-+
- struct evtact_expr;
- struct evtact_expr_ops {
- 	int (*new)(struct evtact_expr *expr, void *data, int size);
 diff --git a/tools/perf/util/parse-action.l b/tools/perf/util/parse-action.l
-index f76240276b61..189f73dfc3b1 100644
+index 189f73dfc3b1..5e75383ba3e7 100644
 --- a/tools/perf/util/parse-action.l
 +++ b/tools/perf/util/parse-action.l
-@@ -92,6 +92,9 @@ ident		[_a-zA-Z][_a-zA-Z0-9]*
+@@ -76,6 +76,12 @@ static int str_end(void)
+ 	return STRING;
+ }
+ 
++static int call(u32 opcode)
++{
++	parse_action_lval.opcode = opcode;
++	return CALL;
++}
++
+ %}
+ 
+ num_dec		[0-9]+
+@@ -91,6 +97,9 @@ ident		[_a-zA-Z][_a-zA-Z0-9]*
+ {num_hex}	{ return value(16); }
  {space}		{ }
  
++
++print		{ return call(EVTACT_EXPR_CALL_TYPE_PRINT); }
++
  ";"		{ return SEMI; }
-+"("		{ return LP;   }
-+")"		{ return RP;   }
-+","		{ return COM;  }
- 
- \"		{
- 			int ret;
-diff --git a/tools/perf/util/parse-action.y b/tools/perf/util/parse-action.y
-index 4922b2d94aee..1b162c694218 100644
---- a/tools/perf/util/parse-action.y
-+++ b/tools/perf/util/parse-action.y
-@@ -35,15 +35,18 @@ static void parse_action_error(struct list_head *expr __maybe_unused,
- 	struct evtact_expr *expr;
- 	struct list_head *list;
- 	unsigned long long num;
-+	u32 opcode;
- }
- 
--%token IDENT ERROR NUMBER STRING
--%token SEMI
--%type <expr> action_term expr_term
-+%token IDENT ERROR NUMBER STRING CALL
-+%token SEMI LP RP COM
-+%type <expr> action_term expr_term expr_call_term
- %destructor { parse_action_expr__free($$); } <expr>
- %type <str> IDENT
- %type <num> NUMBER
- %type <str> STRING
-+%type <opcode> CALL
-+%type <list> opnds
- 
- %%
- 
-@@ -64,11 +67,56 @@ action_term
- }
- 
- action_term:
--expr_term
-+expr_call_term
- {
- 	$$ = $1;
- }
- 
-+expr_call_term:
-+CALL LP RP
-+{
-+	$$ = parse_action_expr__new(evtact_expr_id_encode(EVTACT_EXPR_TYPE_CALL, $1), NULL, NULL, 0);
-+	if ($$ == NULL)
-+		YYERROR;
-+}
-+|
-+CALL LP opnds RP
-+{
-+	$$ = parse_action_expr__new(evtact_expr_id_encode(EVTACT_EXPR_TYPE_CALL, $1), $3, NULL, 0);
-+	if ($$ == NULL)
-+		YYERROR;
-+}
-+|
-+IDENT LP RP
-+{
-+	$$ = NULL;
-+	pr_err("unknown function '%s()'\n", $1);
-+	free($1);
-+	YYERROR;
-+}
-+|
-+IDENT LP opnds RP
-+{
-+	$$ = NULL;
-+	pr_err("unknown function '%s()'\n", $1);
-+	parse_action_expr__free_opnds($3);
-+	free($1);
-+	YYERROR;
-+}
-+
-+opnds:
-+opnds COM expr_term
-+{
-+	list_add_tail(&$3->list, $1);
-+	$$ = $1;
-+}
-+|
-+expr_term
-+{
-+	INIT_LIST_HEAD(&$1->list);
-+	$$ = &$1->list;
-+}
-+
- expr_term:
- NUMBER
- {
+ "("		{ return LP;   }
+ ")"		{ return RP;   }
 -- 
 2.25.1
 
