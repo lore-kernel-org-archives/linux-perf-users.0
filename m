@@ -1,61 +1,61 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C76E1AAE23
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 13:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931921BBBCC
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 13:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732801009; cv=none; b=rcbTDA8CqEzGOkbbIgMWXtW4n3Wo9CbfqslRjip9g0ijpOtP+jw7+OYuDRrQ3/u4wYIxrOdXRZeAM+bAi4jQJthczbzMwBd9fuTldRH78QEhD/eOGeV45I8kQVn02L4bs+KKOBQuIMUrxRGKym558E7yDIjvZuHWqrIJH8c6K5Y=
+	t=1732801015; cv=none; b=MvGrS7qUKhuNlZirifPadiCRo29plxEez+vclaZPxYEqEZXVCCJsXeln0Zx0HfYQ+cton3MdECVmUnCJ2yQR3jGrBvNrZEFcwcwO+5Y2Zkj+Grc1gEVsMsGSrPW1e5aVrHnEd63Qv3ch0r3gxyl2PRGewkOYTgXR13lnPqyvKnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732801009; c=relaxed/simple;
-	bh=+LNZpBhiaOxnH+Ezhfur1Zzi2CJqROuf+YAka+RZ568=;
+	s=arc-20240116; t=1732801015; c=relaxed/simple;
+	bh=LWzk7LsEir8pNmymF4y7WFSgVSAN9W9Dot8AfN2IGYA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YthqeClzcveWFpMmsbdBj+2D/+I1Z8klkgBBidCIUSAsBIDKjbBdYBACfxTTGLOj1Bg5wtC1bBPMgkL/80fett6N7UL/tBMJMlYHlMjkGREWdx2WYBQgQ84T2BSqprCAkUGk/rPtQymg/4fZNJohsBRbLLBu0zIf0uSihW2dV3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=VPTI5Pyu; arc=none smtp.client-ip=209.85.214.175
+	 MIME-Version; b=cl5a0hrwD2ZKBXQDY9FwljkKTAQEoQaM7mV7Lku8VH+F8AeZ9f1yu+iG6ak0ThDuV/iTSHnksqjkvDSMnSgdLPMCPHot2ze1vxnyOEMJ5GeLqtvoOopEyQ24+xF7y0/sIxaxXYMEsUYfFNF83FzsXvZg4rz3bB5pBskWzoJsyCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=FQ1Ll09+; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="VPTI5Pyu"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21210eaa803so7289015ad.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 05:36:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="FQ1Ll09+"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-724e7d5d5b2so829870b3a.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 05:36:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1732801007; x=1733405807; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1732801013; x=1733405813; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zqQaIVC+j9LhZ/TRorXPn9tvoBLETViH2KLqmtwG9as=;
-        b=VPTI5PyuE73XIkTENBetZEkw5CAs938qyDVUgM49iravWX08cGBA6CUYpDm2M8C6L8
-         5YNLb9+h0RPdR4gy9HDN77bvZIw0mPcqRrBEhkf7CsIULMdvtak55RLj0bRXg57j45Yk
-         N9uEHqR6xR/l8S/AQgsuO0AhYJwy4ZEsFw1sVnvr6OEBORVmbWWqcXzgD8HLAsgYqUO+
-         QiRrtevP8u7Bq9gW1y593BRwzVaLDVABGLky/WdYvVnZcDrPyGqeKgBSq8ZwZluWXDVx
-         iYUj36vZaRGsVwO1ve8tFpP+xnu7vA4g+BIGjUy8mC4FZX/4MoYQJdhjD4847Xeii5Un
-         cnlA==
+        bh=+pF/gTcrGXSS4/ort4kcDDgWrRYgYOYuykRq88RGJ3I=;
+        b=FQ1Ll09+VXIQKop+iIudWEH40bI3x3pTChkTYXZE6r0KggrborSitune/nCsAiLNkB
+         CSsC7RYqLGy4X4nTvQAfY9W+6BgvOhMBJGwQYvuH+YzY/BqToLurxB9xEun4bbLXSwcN
+         05NZVq654omiTkWLzEROSQo1UZ26Fh0QhhGln5vz3RB1exq+VRA3PNSzL5JBePgUuquk
+         GoMmRT2uwl7F1BOQZSuNwi22U4gFo7ty9psvOt/cPtWY7enjEvaR6cFNU+MeZuhdKXGX
+         oA7XyVofATzOZT5gI4gvTvIQewVHqe51aQbPPOhU5/KwpqKMOtHHfmhqmD//JlJGLIXs
+         SD/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732801007; x=1733405807;
+        d=1e100.net; s=20230601; t=1732801013; x=1733405813;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zqQaIVC+j9LhZ/TRorXPn9tvoBLETViH2KLqmtwG9as=;
-        b=j2gWSpQT+Pd+5n/qbNVv2M/g3Tr/H+TzGiB3nM6ecU7rGwDutQmc/4itovhxjualVG
-         P+aasWkwnRAWfV2Gi3516SGb5JcjXpzWzHFJCHX42b+QZs5saYuA5MiVpoaJRHjwlkvS
-         gnDXtUugPCZJZPFOjtPBJRHBETIjxkMWa3OMAE6h5NfAi7GdgwErH1aiK5wZACOaeXnX
-         K2aDno90MutC8KDgjAwX8d4/FS51swzR3IUvIGZF7AurCxthgm2soQEEd3WIFLdKgqJm
-         fZaczqv6UAnm0U/2bGvAs2NxAp1CDDZmUyh+tolr7afPACrEqgSG82qMtaSQhm+FU7hR
-         TRaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSlk2rQlilZyhUEWRnQSf2bCMN/CcnsUSmXx96JxVAPXGtZy/hPvdJY3JgkjpLLcoUObvQKsaq90pQIu0UFDtn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3Kzud5Y2vku/N5CN0VZGL/XACYA1u4wySrrxpMslWs6PGMuTq
-	n3s50Ncf0WaImNP2sQGygr7B1zFiak7NZbObZyFXSAd3CyJzAMx+b4zLQ0JP4Yw=
-X-Gm-Gg: ASbGncunre+0iC4zZaIRngjjjGfpn2WgNIn/CTatCKb9TnipPmdYb7s3oXLpov+htfN
-	e+qEu+XMpB6HwqZkitbI2Eg97iTBQaR/nA6dWI9kS6/uz3YHFZuUblfgR2kCUgeQ1dEhPr6MlgC
-	2O6d1HY4pe5mV21wrYp48e/3ZPYpOtm1oIBXn4p/8gnIexAIX3eFyc2Y1AmnrQNBi6bsFSLRPbv
-	DoBXQyY27Si+rgECHXnbyfds00u2QcDrb4Lq0nu8Y/sK7p5Bq6bWBsdJA==
-X-Google-Smtp-Source: AGHT+IF3rwvUZnobMrf3bzrwFLm6Hr8ohxbpugrVFikYQUJ5h78RZPldvuutj+6JrOe0I8HRAp8V9Q==
-X-Received: by 2002:a17:903:1ce:b0:211:18bc:e74b with SMTP id d9443c01a7336-21501083ab6mr108542035ad.1.1732801007302;
-        Thu, 28 Nov 2024 05:36:47 -0800 (PST)
+        bh=+pF/gTcrGXSS4/ort4kcDDgWrRYgYOYuykRq88RGJ3I=;
+        b=BAWF6ObY+WNVj3NK5V3RvoVIsnlbFp46NvawO/9Pag/Guj6g/HAbISEW0vdqrpfHkW
+         r4AWZXdcj12XmQiZ5amQepZczTXaaXjWlRaA6PBCtcQfFabGrENxOgA++vuFIs6IUIH/
+         z5E6TEFU3mfQ8CpGUbmk8bAAXxRFVGXd41Ba/ostKbkFGYSsKWiPUAE0oB4dQFFObHKh
+         sJMUF+cT+qcZVQBMDMPzgnmKgP3cH7hCgyXoKR0OBmL0bP9D9tP7Zh4YkD4zPIxk71ER
+         yb5noQ5FQAJXvab7ohii/HX7hfDk9/+bwjmS3XRNaSaAHmHFQSG3sya/0ohnEOFXVpNT
+         oLaA==
+X-Forwarded-Encrypted: i=1; AJvYcCWbKKQt1L1ABsRnAApu+cRXoNviIBtmcdvz2DFsbb0dDGcW7lT8rikmW6SNvXHE3nSWOm80x4nr7iH95+5sGZWq@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZaiM/pUBo0PjPropmYppPx+cQpHMiTNkWQM/R8O7H7s9Dp1Cc
+	M61FfBCXRQzSRP5MinIAQl9Mz1bluJwC1op0z17S4t/2gjP9eB62xDkpA3IIJLI=
+X-Gm-Gg: ASbGncvuYgzUeZRWoM3q82al+FwXEhUxhQRQcfLh6UeV2EAdsUbdgGgKpvluJUWA9cu
+	3l+1cxCryI/ltQHQGd+vNqsYXqgddMUJ4PVoLeXQltEQhPlGMkIBTmCFSeLvxkffnjP5THGuEoV
+	o0cdfb2psgQAaybmhynmLjEiCst17DYlvzLqOBuD2XJ73cfPjrgpsZs/2xmJpihSs0rHwxmdHUz
+	cbp9b9Vv2j+mA85QjzB9ec4c8RtgsVrw9xN7wNLwWHyQrDCXrT65PivNQ==
+X-Google-Smtp-Source: AGHT+IHIMHJ67LGq/eKXuEzSHfGZ3n5mOwtZ6W1GG7x7VI5A2fu//2XROxW0PWDTJEFBPPaWxmGEEQ==
+X-Received: by 2002:a17:902:ecd0:b0:205:3e6d:9949 with SMTP id d9443c01a7336-21501f63bebmr73513465ad.52.1732801012880;
+        Thu, 28 Nov 2024 05:36:52 -0800 (PST)
 Received: from ubuntu20.04 ([139.177.225.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21521985632sm12952975ad.206.2024.11.28.05.36.42
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21521985632sm12952975ad.206.2024.11.28.05.36.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2024 05:36:46 -0800 (PST)
+        Thu, 28 Nov 2024 05:36:52 -0800 (PST)
 From: Yang Jihong <yangjihong@bytedance.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -71,9 +71,9 @@ To: peterz@infradead.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: yangjihong@bytedance.com
-Subject: [RFC 06/12] perf event action: Add parsing print() call expr support
-Date: Thu, 28 Nov 2024 21:35:47 +0800
-Message-Id: <20241128133553.823722-7-yangjihong@bytedance.com>
+Subject: [RFC 07/12] perf event action: Add parsing builtin expr support
+Date: Thu, 28 Nov 2024 21:35:48 +0800
+Message-Id: <20241128133553.823722-8-yangjihong@bytedance.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20241128133553.823722-1-yangjihong@bytedance.com>
 References: <20241128133553.823722-1-yangjihong@bytedance.com>
@@ -85,150 +85,450 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for parsing print() function calls, the parameter format is
-similar to C's printf(), the first parameter is a string format,
-and format specifiers support %c, %d, %d, %o, %u, %x, %X, %s.
-Currently, it simply checks whether the number of arguments matches
-the number of format specifiers.
+builtin exprs are some built-in special variables (such as cpu, tid, pid).
+The bpf program attaches to corresponding event, saves sample data to bpf
+perf_event ringuffer in handler, perf-tool read data and run actions.
 
 Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 ---
- tools/perf/util/parse-action.c | 329 +++++++++++++++++++++++++++++++++
- tools/perf/util/parse-action.h |   1 +
- tools/perf/util/parse-action.l |   9 +
- 3 files changed, 339 insertions(+)
+ tools/perf/Makefile.perf                     |   1 +
+ tools/perf/util/bpf_skel/bpf_record_action.h |  19 +
+ tools/perf/util/bpf_skel/record_action.bpf.c |  74 ++++
+ tools/perf/util/parse-action.c               |  22 ++
+ tools/perf/util/parse-action.h               |   5 +
+ tools/perf/util/parse-action.l               |   6 +
+ tools/perf/util/parse-action.y               |  11 +-
+ tools/perf/util/record_action.c              | 352 ++++++++++++++++++-
+ tools/perf/util/record_action.h              |   8 +-
+ 9 files changed, 492 insertions(+), 6 deletions(-)
+ create mode 100644 tools/perf/util/bpf_skel/bpf_record_action.h
+ create mode 100644 tools/perf/util/bpf_skel/record_action.bpf.c
 
-diff --git a/tools/perf/util/parse-action.c b/tools/perf/util/parse-action.c
-index 40e7c8aad7be..95c06cc071ad 100644
---- a/tools/perf/util/parse-action.c
-+++ b/tools/perf/util/parse-action.c
-@@ -10,8 +10,11 @@
-  *     - integer
-  *     - string
-  *   - call:
-+ *     - print
-  */
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index d74241a15131..07bc2f8e2565 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1173,6 +1173,7 @@ SKELETONS += $(SKEL_OUT)/kwork_trace.skel.h $(SKEL_OUT)/sample_filter.skel.h
+ SKELETONS += $(SKEL_OUT)/kwork_top.skel.h
+ SKELETONS += $(SKEL_OUT)/bench_uprobe.skel.h
+ SKELETONS += $(SKEL_OUT)/augmented_raw_syscalls.skel.h
++SKELETONS += $(SKEL_OUT)/record_action.skel.h
  
-+#include <regex.h>
+ $(SKEL_TMP_OUT) $(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_OUTPUT) $(LIBSYMBOL_OUTPUT):
+ 	$(Q)$(MKDIR) -p $@
+diff --git a/tools/perf/util/bpf_skel/bpf_record_action.h b/tools/perf/util/bpf_skel/bpf_record_action.h
+new file mode 100644
+index 000000000000..ee4d03848e58
+--- /dev/null
++++ b/tools/perf/util/bpf_skel/bpf_record_action.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __PERF_UTIL_BPF_SKEL_BPF_RECORD_ACTION_H_
++#define __PERF_UTIL_BPF_SKEL_BPF_RECORD_ACTION_H_
 +
- #include "util/debug.h"
- #include "util/parse-action.h"
- #include "util/parse-action-flex.h"
-@@ -171,6 +174,12 @@ static struct evtact_expr_ops expr_const_int_ops = {
- 	.eval = expr_const_int_eval,
- };
- 
-+static bool is_const_str_expr(struct evtact_expr *expr)
++#define __TASK_COMM_MAX_SIZE 16
++
++#define __OUTPUT_FORMATS_MAX_NUM 8
++
++enum __output_format_type {
++	__OUTPUT_FORMAT_TYPE_MAX,
++};
++
++#define __OUTPUT_DATA_MAX_SIZE 256
++struct __output_data_payload {
++	__u32 __size;
++	__u8 __data[__OUTPUT_DATA_MAX_SIZE];
++};
++
++#endif /* __PERF_UTIL_BPF_SKEL_BPF_RECORD_ACTION_H_ */
+diff --git a/tools/perf/util/bpf_skel/record_action.bpf.c b/tools/perf/util/bpf_skel/record_action.bpf.c
+new file mode 100644
+index 000000000000..424fa8c3e6f1
+--- /dev/null
++++ b/tools/perf/util/bpf_skel/record_action.bpf.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_tracing.h>
++#include <bpf/bpf_core_read.h>
++
++#include "bpf_record_action.h"
++
++int output_formats[__OUTPUT_FORMATS_MAX_NUM] = { 0 };
++int output_format_num = 0;
++int enabled = 0;
++
++#define MAX_CPUS  1024
++
++/* bpf-output associated map */
++struct __sample_data__ {
++	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
++	__type(key, int);
++	__type(value, __u32);
++	__uint(max_entries, MAX_CPUS);
++} __sample_data__ SEC(".maps");
++
++struct sample_data_tmp {
++	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
++	__type(key, int);
++	__type(value, struct __output_data_payload);
++	__uint(max_entries, 1);
++} sample_data_tmp SEC(".maps");
++
++static inline struct __output_data_payload *sample_data_payload(void)
 +{
-+	return expr->id == evtact_expr_id_encode(EVTACT_EXPR_TYPE_CONST,
-+						 EVTACT_EXPR_CONST_TYPE_STR);
++	int key = 0;
++
++	return bpf_map_lookup_elem(&sample_data_tmp, &key);
 +}
 +
- static int expr_const_str_new(struct evtact_expr *expr,
- 			      void *data, int size __maybe_unused)
- {
-@@ -233,7 +242,327 @@ static struct evtact_expr_class expr_const = {
- 	.set_ops = expr_const_set_ops,
- };
- 
-+enum print_fmt_spec_len {
-+	PRINT_FMT_SPEC_LEN_INT,
-+	PRINT_FMT_SPEC_LEN_LONG,
-+	PRINT_FMT_SPEC_LEN_LONG_LONG,
-+};
-+
-+enum print_fmt_spec_type {
-+	PRINT_FMT_SPEC_TYPE_VOID,
-+	PRINT_FMT_SPEC_TYPE_INT,
-+	PRINT_FMT_SPEC_TYPE_STRING,
-+};
-+
-+struct print_fmt_spec {
-+	struct list_head list;
-+	enum print_fmt_spec_type type;
-+	enum print_fmt_spec_len len;
-+	char *str;
-+};
-+
-+#define PRINT_OUT_BUF_DEFAULT_LEN 64
-+struct print_expr_priv {
-+	struct list_head fmt_specs;
-+	int fmt_spec_num;
-+	int args_num;
-+	char *out;
-+	int out_len;
-+};
-+
-+static int print_fmt_add_spec(struct print_expr_priv *priv, char *s,
-+			      regoff_t len, enum print_fmt_spec_len spec_len,
-+			      enum print_fmt_spec_type spec_type)
++SEC("xxx")
++int sample_output(u64 *ctx)
 +{
-+	struct print_fmt_spec *spec;
++	struct __output_data_payload *sample;
++	int i;
++	int total = 0;
++	int ret = 0;
 +
-+	spec = malloc(sizeof(*spec));
-+	if (spec == NULL) {
-+		pr_err("call print fmt spec malloc failed\n");
-+		return -ENOMEM;
++	if (!enabled)
++		return 0;
++
++	sample = sample_data_payload();
++	if (!sample)
++		return 0;
++
++	for (i = 0; i < output_format_num && i < __OUTPUT_FORMATS_MAX_NUM; i++) {
++		switch (output_formats[i]) {
++		default:
++			ret = -1;
++			break;
++		}
++
++		if (ret < 0)
++			return 0;
++
++		total += ret;
++		if (total > __OUTPUT_DATA_MAX_SIZE)
++			return 0;
 +	}
 +
-+	spec->str = strndup(s, len);
-+	if (spec->str == NULL) {
-+		pr_err("call print fmt spec strndup failed\n");
-+		free(spec);
-+		return -ENOMEM;
-+	}
-+
-+	spec->len = spec_len;
-+	spec->type = spec_type;
-+	list_add_tail(&spec->list, &priv->fmt_specs);
++	sample->__size = total;
++	bpf_perf_event_output(ctx, &__sample_data__, BPF_F_CURRENT_CPU,
++			      sample, sizeof(__u32) + total);
 +	return 0;
 +}
 +
-+static int print_fmt_spec_get_len(char *s, regoff_t len)
++char _license[] SEC("license") = "GPL";
+diff --git a/tools/perf/util/parse-action.c b/tools/perf/util/parse-action.c
+index 95c06cc071ad..e6299de99bc5 100644
+--- a/tools/perf/util/parse-action.c
++++ b/tools/perf/util/parse-action.c
+@@ -11,6 +11,7 @@
+  *     - string
+  *   - call:
+  *     - print
++ *   - builtin:
+  */
+ 
+ #include <regex.h>
+@@ -19,6 +20,7 @@
+ #include "util/parse-action.h"
+ #include "util/parse-action-flex.h"
+ #include "util/parse-action-bison.h"
++#include "util/record_action.h"
+ 
+ static struct list_head actions_head = LIST_HEAD_INIT(actions_head);
+ 
+@@ -90,10 +92,30 @@ static int parse_action_option(const char *str)
+ 	return ret;
+ }
+ 
++static bool initialized = false;
++static int parse_action_init(void)
 +{
-+	if (len == 1 && !strncmp(s, "l", len))
-+		return PRINT_FMT_SPEC_LEN_LONG;
-+	else if (len == 2 && !strncmp(s, "ll", len))
-+		return PRINT_FMT_SPEC_LEN_LONG_LONG;
++	int ret;
 +
-+	return PRINT_FMT_SPEC_LEN_INT;
++	if (initialized)
++		return 0;
++
++	ret = bpf_perf_record_init();
++	if (ret)
++		return ret;
++
++	initialized = true;
++	return 0;
 +}
 +
-+static int print_fmt_spec_get_type(char *s)
+ int parse_record_action(struct evlist *evlist, const char *str)
+ {
+ 	int ret;
+ 
++	ret = parse_action_init();
++	if (ret)
++		return ret;
++
+ 	if (evlist == NULL) {
+ 		pr_err("--action option should follow a tracer option\n");
+ 		return -1;
+diff --git a/tools/perf/util/parse-action.h b/tools/perf/util/parse-action.h
+index f8aece601a84..b1a33a77c558 100644
+--- a/tools/perf/util/parse-action.h
++++ b/tools/perf/util/parse-action.h
+@@ -11,6 +11,7 @@
+ enum evtact_expr_type {
+ 	EVTACT_EXPR_TYPE_CONST,
+ 	EVTACT_EXPR_TYPE_CALL,
++	EVTACT_EXPR_TYPE_BUILTIN,
+ 	EVTACT_EXPR_TYPE_MAX,
+ };
+ 
+@@ -25,6 +26,10 @@ enum evtact_expr_call_type {
+ 	EVTACT_EXPR_CALL_TYPE_MAX,
+ };
+ 
++enum evtact_expr_builtin_type {
++	EVTACT_EXPR_BUILTIN_TYPE_MAX,
++};
++
+ struct evtact_expr;
+ struct evtact_expr_ops {
+ 	int (*new)(struct evtact_expr *expr, void *data, int size);
+diff --git a/tools/perf/util/parse-action.l b/tools/perf/util/parse-action.l
+index 5e75383ba3e7..1c729b7a0248 100644
+--- a/tools/perf/util/parse-action.l
++++ b/tools/perf/util/parse-action.l
+@@ -82,6 +82,12 @@ static int call(u32 opcode)
+ 	return CALL;
+ }
+ 
++static int builtin(u32 opcode)
 +{
-+	switch (s[0]) {
-+	case 'c':
-+	case 'd':
-+	case 'o':
-+	case 'u':
-+	case 'x':
-+	case 'X':
-+		return PRINT_FMT_SPEC_TYPE_INT;
-+	case 's':
-+		return PRINT_FMT_SPEC_TYPE_STRING;
++	parse_action_lval.opcode = opcode;
++	return BUILTIN;
++}
++
+ %}
+ 
+ num_dec		[0-9]+
+diff --git a/tools/perf/util/parse-action.y b/tools/perf/util/parse-action.y
+index 1b162c694218..78a15f146ade 100644
+--- a/tools/perf/util/parse-action.y
++++ b/tools/perf/util/parse-action.y
+@@ -38,14 +38,14 @@ static void parse_action_error(struct list_head *expr __maybe_unused,
+ 	u32 opcode;
+ }
+ 
+-%token IDENT ERROR NUMBER STRING CALL
++%token IDENT ERROR NUMBER STRING CALL BUILTIN
+ %token SEMI LP RP COM
+ %type <expr> action_term expr_term expr_call_term
+ %destructor { parse_action_expr__free($$); } <expr>
+ %type <str> IDENT
+ %type <num> NUMBER
+ %type <str> STRING
+-%type <opcode> CALL
++%type <opcode> CALL BUILTIN
+ %type <list> opnds
+ 
+ %%
+@@ -132,6 +132,13 @@ STRING
+ 		YYERROR;
+ }
+ |
++BUILTIN
++{
++	$$ = parse_action_expr__new(evtact_expr_id_encode(EVTACT_EXPR_TYPE_BUILTIN, $1), NULL, NULL, 0);
++	if ($$ == NULL)
++		YYERROR;
++}
++|
+ IDENT
+ {
+ 	$$ = NULL;
+diff --git a/tools/perf/util/record_action.c b/tools/perf/util/record_action.c
+index 44789e0d4678..634d6b199bae 100644
+--- a/tools/perf/util/record_action.c
++++ b/tools/perf/util/record_action.c
+@@ -1,15 +1,361 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /**
+- * Read event sample data and execute the specified actions.
++ * Read perf event output sample data and execute the specified actions.
+  */
+ 
++#include <errno.h>
++#include <signal.h>
++#include <sys/wait.h>
++#include <linux/err.h>
++
+ #include "util/debug.h"
++#include "util/target.h"
+ #include "util/parse-action.h"
+ #include "util/record_action.h"
+ 
+-int bpf_perf_record(struct evlist *evlist __maybe_unused,
+-		    int argc __maybe_unused, const char **argv __maybe_unused)
++#include "util/bpf_counter.h"
++#include "util/bpf_skel/bpf_record_action.h"
++#include "util/bpf_skel/record_action.skel.h"
++
++static struct perf_buffer *pb;
++static struct record_action_bpf *skel;
++
++struct expr_builtin_output_priv {
++	int offset;
++	int size;
++};
++
++static int bpf_expr_builtin_new(struct evtact_expr *expr,
++				void *data __maybe_unused, int size __maybe_unused)
++{
++	struct expr_builtin_output_priv *priv;
++
++	priv = malloc(sizeof(*priv));
++	if (priv == NULL) {
++		pr_err("bpf expr builtin priv malloc failed\n");
++		return -ENOMEM;
++	}
++
++	expr->priv = priv;
++	return 0;
++}
++
++static void bpf_expr_builtin_free(struct evtact_expr *expr)
++{
++	zfree(&expr->priv);
++}
++
++static int bpf_expr_builtin_eval(struct evtact_expr *expr,
++				 void *in, int in_size, void **out, int *out_size)
++{
++	struct expr_builtin_output_priv *priv = expr->priv;
++
++	if (in_size < priv->size)
++		return -EINVAL;
++
++	*out = (u8 *)in + priv->offset;
++	*out_size = priv->size;
++	return 0;
++}
++
++static struct evtact_expr_ops bpf_expr_builtin_common = {
++	.new  = bpf_expr_builtin_new,
++	.free = bpf_expr_builtin_free,
++	.eval = bpf_expr_builtin_eval,
++};
++
++static int bpf_expr_builtin_set_ops(struct evtact_expr *expr, u32 opcode)
++{
++	if (opcode >= EVTACT_EXPR_BUILTIN_TYPE_MAX) {
++		pr_err("bpf expr_builtin opcode invalid: %u\n", opcode);
++		return -EINVAL;
++	}
++
++	expr->ops = &bpf_expr_builtin_common;
++	return 0;
++}
++
++static struct evtact_expr_class bpf_expr_builtin = {
++	.set_ops = bpf_expr_builtin_set_ops,
++};
++
++int bpf_perf_record_init(void)
++{
++	return parse_action_expr__set_class(EVTACT_EXPR_TYPE_BUILTIN,
++					    &bpf_expr_builtin);
++}
++
++static int set_expr_builtin_output_format(struct evtact_expr *expr,
++					  u32 opcode, int *offset,
++					  int *format __maybe_unused)
++{
++	int size = 0;
++	struct expr_builtin_output_priv *priv = expr->priv;
++
++	switch (opcode) {
 +	default:
-+		break;
++		pr_err("set expr builtin output format unknown opcode: %u\n", opcode);
++		return -1;
 +	}
 +
-+	return PRINT_FMT_SPEC_TYPE_VOID;
++	priv->offset = *offset;
++	priv->size = size;
++	*offset += size;
++	return 0;
 +}
 +
-+static int print_fmt_get_string(struct evtact_expr *expr, char **fmt)
-+{
-+	int ret, fmt_len;
-+	struct evtact_expr *fmt_expr;
++struct output_args {
++	int *num;
++	int *offset;
++	int *formats;
++};
 +
-+	fmt_expr = list_first_entry_or_null(&expr->opnds, struct evtact_expr, list);
-+	if (fmt_expr == NULL) {
-+		pr_err("print() requires at least one argument\n");
-+		return -EINVAL;
-+	} else if (!is_const_str_expr(fmt_expr)) {
-+		pr_err("print() first argument expected to be string\n");
-+		return -EINVAL;
++static int do_set_output_format(struct evtact_expr *expr, void *data)
++{
++	int ret;
++	u32 type, opcode;
++	struct output_args *args = data;
++	int num = *(args->num);
++
++	evtact_expr_id_decode(expr->id, &type, &opcode);
++	if (type == EVTACT_EXPR_TYPE_BUILTIN) {
++		if (num >= __OUTPUT_FORMATS_MAX_NUM) {
++			pr_err("bpf record action output formats too many\n");
++			return -1;
++		}
++
++		ret = set_expr_builtin_output_format(expr, opcode, args->offset,
++						     args->formats + num);
++		if (ret)
++			return ret;
++		num++;
 +	}
 +
-+	if (fmt_expr->ops->eval != NULL) {
-+		ret = fmt_expr->ops->eval(fmt_expr, NULL, 0, (void **)fmt, &fmt_len);
++	*(args->num) = num;
++	return 0;
++}
++
++static int bpf_set_output_format(int *formats)
++{
++	int ret;
++	int offset = 0;
++	int num = 0;
++	struct output_args args = {
++		.num     = &num,
++		.offset  = &offset,
++		.formats = formats,
++	};
++
++	ret = event_actions__for_each_expr(do_set_output_format, &args, true);
++	if (ret)
++		return ret;
++
++	if (offset > __OUTPUT_DATA_MAX_SIZE) {
++		pr_err("bpf record action output too large\n");
++		return -1;
++	}
++
++	skel->bss->output_format_num = num;
++	return 0;
++}
++
++
++struct eval_args {
++	void *data;
++	__u32 size;
++};
++
++static int do_sample_handler(struct evtact_expr *expr, void *data)
++{
++	int ret;
++	struct eval_args *args = data;
++
++	if (expr != NULL && expr->ops->eval != NULL) {
++		ret = expr->ops->eval(expr, args->data, args->size, NULL, NULL);
 +		if (ret)
 +			return ret;
 +	}
@@ -236,264 +536,213 @@ index 40e7c8aad7be..95c06cc071ad 100644
 +	return 0;
 +}
 +
-+static void print_fmt_free_specs(struct print_expr_priv *priv)
++static void sample_callback(void *ctx __maybe_unused, int cpu __maybe_unused,
++			    void *data, __u32 size __maybe_unused)
 +{
-+	struct print_fmt_spec *spec, *tmp;
-+
-+	if (priv == NULL)
-+		return;
-+
-+	list_for_each_entry_safe(spec, tmp, &priv->fmt_specs, list) {
-+		list_del(&spec->list);
-+		free(spec->str);
-+		free(spec);
-+	}
++	struct __output_data_payload *sample_data = data;
++	struct eval_args args = {
++		.data = sample_data->__data,
++		.size = sample_data->__size,
++	};
++	(void)event_actions__for_each_expr(do_sample_handler, &args, false);
 +}
 +
-+static int print_fmt_split(struct evtact_expr *expr, struct print_expr_priv *priv)
++static void lost_callback(void *ctx __maybe_unused, int cpu, __u64 cnt)
 +{
-+	int i, ret;
-+	char *s, *fmt;
-+	regex_t regex;
-+	regmatch_t pmatch[6];
-+	int spec_len, spec_type;
-+	const char *const re = "%(-?)([0-9]*)(\\.[0-9]+)?(ll|l)?([cdosuxX])";
++	fprintf(stderr, "Lost %llu events on CPU #%d\n", cnt, cpu);
++}
 +
-+	ret = print_fmt_get_string(expr, &fmt);
-+	if (ret)
-+		return ret;
++static int bpf_record_prepare(const char *subsystem, const char *event_name)
++{
++	int ret, map_fd;
 +
-+	if (regcomp(&regex, re, REG_EXTENDED)) {
-+		pr_err("expr call print fmt regcomp failed\n");
++	skel = record_action_bpf__open();
++	if (!skel) {
++		pr_err("open record-action BPF skeleton failed\n");
 +		return -1;
 +	}
 +
-+	s = fmt;
-+	for (i = 0;; i++) {
-+		if (regexec(&regex, s, ARRAY_SIZE(pmatch), pmatch, 0))
-+			break;
++	set_max_rlimit();
 +
-+		spec_len = print_fmt_spec_get_len(s + pmatch[4].rm_so,
-+						  pmatch[4].rm_eo - pmatch[4].rm_so);
-+		spec_type = print_fmt_spec_get_type(s + pmatch[5].rm_so);
-+
-+		ret = print_fmt_add_spec(priv, s, pmatch[0].rm_eo, spec_len, spec_type);
-+		if (ret)
-+			goto out_free_specs;
-+
-+		s += pmatch[0].rm_eo;
++	ret = bpf_program__set_type(skel->progs.sample_output, BPF_PROG_TYPE_TRACEPOINT);
++	if (ret) {
++		pr_err("set type record-action BPF skeleton failed\n");
++		goto out;
 +	}
 +
-+	if ((size_t)(s - fmt) < strlen(fmt)) {
-+		ret = print_fmt_add_spec(priv, s, strlen(fmt) - (s - fmt),
-+					 PRINT_FMT_SPEC_LEN_INT, PRINT_FMT_SPEC_TYPE_VOID);
-+		if (ret)
-+			goto out_free_specs;
++	ret = record_action_bpf__load(skel);
++	if (ret) {
++		pr_err("load record-action BPF skeleton failed\n");
++		goto out;
 +	}
 +
-+	priv->fmt_spec_num = i;
++	ret = bpf_set_output_format(skel->bss->output_formats);
++	if (ret)
++		goto out;
++
++	map_fd = bpf_map__fd(skel->maps.__sample_data__);
++	if (map_fd < 0) {
++		pr_err("map fd record-action BPF skeleton failed\n");
++		goto out;
++	}
++
++	skel->links.sample_output = bpf_program__attach_tracepoint(
++		skel->progs.sample_output, subsystem, event_name);
++	if (IS_ERR(skel->links.sample_output)) {
++		pr_err("attach record-action BPF skeleton failed\n");
++		goto out;
++	}
++
++	pb = perf_buffer__new(map_fd, 8, sample_callback,
++			      lost_callback, NULL, NULL);
++	ret = libbpf_get_error(pb);
++	if (ret) {
++		pr_err("setup record-action perf_buffer failed: %d\n", ret);
++		goto out;
++	}
++
 +	return 0;
 +
-+out_free_specs:
-+	print_fmt_free_specs(priv);
-+	return ret;
++out:
++	record_action_bpf__destroy(skel);
++	return -1;
 +}
 +
-+static int print_check_args(struct evtact_expr *expr, struct print_expr_priv *priv)
++static inline void bpf_record_start(void)
 +{
-+	struct evtact_expr *arg;
-+
-+	priv->args_num = 0;
-+	list_for_each_entry(arg, &expr->opnds, list)
-+		priv->args_num++;
-+
-+	/* do not count format string argument */
-+	priv->args_num--;
-+
-+	if (priv->args_num != priv->fmt_spec_num) {
-+		pr_err("print() arguments number for format string mismatch: %d expected, %d provided\n",
-+		       priv->fmt_spec_num, priv->args_num);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
++	skel->bss->enabled = 1;
 +}
 +
-+static int expr_call_print_new(struct evtact_expr *expr,
-+			       void *data __maybe_unused, int size __maybe_unused)
++static inline void bpf_record_stop(void)
+ {
++	skel->bss->enabled = 0;
++}
++
++static volatile int done;
++static volatile sig_atomic_t child_finished;
++static void sig_handler(int sig)
++{
++	if (sig == SIGCHLD)
++		child_finished = 1;
++
++	done = 1;
++}
++
++static bool is_bpf_record_supported(struct evlist *evlist,
++				    char **subsystem, char **event_name)
++{
++	struct evsel *evsel;
++
++	if (evlist == NULL) {
++		pr_err("--action option should follow a tracer option\n");
++		return false;
++	}
++
++	/* only one fixed bpf prog and can only be attached to one event. */
++	if (evlist->core.nr_entries > 1) {
++		pr_err("too many events for specified action\n");
++		return false;
++	}
++
++	evsel = evlist__last(evlist);
++	if (evsel == NULL) {
++		pr_err("evlist for bpf record action is empty\n");
++		return false;
++	}
++
++	if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT) {
++		pr_err("bpf record action only supports specifying for tracepoint tracer\n");
++		return false;
++	}
++
++	*subsystem = strtok_r(evsel->name, ":", event_name);
++	if (*subsystem == NULL || event_name == NULL) {
++		pr_err("bpf record action tracepoint name format incorrect\n");
++		return false;
++	}
++
++	return true;
++}
++
++int bpf_perf_record(struct evlist *evlist, int argc, const char **argv)
 +{
 +	int ret;
-+	struct print_expr_priv *priv;
++	char *subsystem, *event_name;
++	struct target target = {
++		.system_wide = true,
++	};
 +
-+	priv = malloc(sizeof(struct print_expr_priv));
-+	if (priv == NULL)
-+		return -ENOMEM;
++	if (!is_bpf_record_supported(evlist, &subsystem, &event_name))
++		goto out_free_event_actions;
 +
-+	priv->out = malloc(PRINT_OUT_BUF_DEFAULT_LEN);
-+	if (priv->out == NULL) {
-+		ret = -ENOMEM;
-+		goto out_free_priv;
++	ret = bpf_record_prepare(subsystem, event_name);
++	if (ret)
++		goto out_free_event_actions;
++
++	signal(SIGINT, sig_handler);
++	signal(SIGTERM, sig_handler);
++	signal(SIGCHLD, sig_handler);
++
++	if (argc > 0) {
++		ret = evlist__prepare_workload(evlist, &target, argv, false, NULL);
++		if (ret < 0) {
++			pr_err("evlist workload create failed\n");
++			goto out_destroy_record_action_bpf;
++		}
 +	}
-+	priv->out_len = PRINT_OUT_BUF_DEFAULT_LEN;
 +
-+	INIT_LIST_HEAD(&priv->fmt_specs);
-+	ret = print_fmt_split(expr, priv);
-+	if (ret)
-+		goto out_free_out_buf;
++	bpf_record_start();
++	evlist__start_workload(evlist);
 +
-+	ret = print_check_args(expr, priv);
-+	if (ret)
-+		goto out_free_specs;
-+
-+	expr->priv = priv;
-+	return 0;
-+
-+out_free_specs:
-+	print_fmt_free_specs(priv);
-+out_free_out_buf:
-+	free(priv->out);
-+	priv->out_len = 0;
-+out_free_priv:
-+	free(priv);
-+	return ret;
-+}
-+
-+static void expr_call_print_free(struct evtact_expr *expr)
-+{
-+	struct print_expr_priv *priv;
-+
-+	priv = expr->priv;
-+	if (priv == NULL)
-+		return;
-+
-+	print_fmt_free_specs(expr->priv);
-+	zfree(&priv->out);
-+	priv->out_len = 0;
-+	zfree(&expr->priv);
-+}
-+
-+static int expr_call_print_eval(struct evtact_expr *expr,
-+				void *in, int in_size,
-+				void **out __maybe_unused, int *out_size __maybe_unused)
-+{
-+	int ret, len;
-+	char *buf_out;
-+	int arg_val_size;
-+	unsigned long long *arg_val;
-+	struct evtact_expr *arg;
-+	struct print_fmt_spec *spec;
-+	struct print_expr_priv *priv = expr->priv;
-+
-+retry:
-+	len = 0;
-+	priv->out[0] = '\0';
-+	arg = list_first_entry(&expr->opnds, struct evtact_expr, list);
-+	list_for_each_entry(spec, &priv->fmt_specs, list) {
-+		if (spec->type == PRINT_FMT_SPEC_TYPE_VOID) {
-+			len += snprintf(priv->out + len, priv->out_len - len, "%s", spec->str);
-+		} else {
-+			arg = list_next_entry(arg, list);
-+			if (arg == NULL) {
-+				pr_err("expr call print arguments are empty\n");
-+				return -EINVAL;
-+			}
-+
-+			ret = arg->ops->eval(arg, in, in_size, (void **)&arg_val, &arg_val_size);
-+			if (ret) {
-+				pr_err("expr call print eval argument failed %d\n", ret);
-+				return ret;
-+			}
-+
-+			if (spec->type == PRINT_FMT_SPEC_TYPE_STRING) {
-+				len += snprintf(priv->out + len, priv->out_len - len,
-+						spec->str, arg_val);
-+			} else if (spec->type == PRINT_FMT_SPEC_TYPE_INT) {
-+				switch (spec->len) {
-+				case PRINT_FMT_SPEC_LEN_INT:
-+					len += snprintf(priv->out + len, priv->out_len - len,
-+							spec->str, *(unsigned int *)arg_val);
-+					break;
-+				case PRINT_FMT_SPEC_LEN_LONG:
-+					len += snprintf(priv->out + len, priv->out_len - len,
-+							spec->str, *(unsigned long *)arg_val);
-+					break;
-+				case PRINT_FMT_SPEC_LEN_LONG_LONG:
-+					len += snprintf(priv->out + len, priv->out_len - len,
-+							spec->str, *(unsigned long long *)arg_val);
-+					break;
-+				default:
-+					break;
-+				}
-+			}
-+		}
-+
-+		if (len >= priv->out_len) {
-+			buf_out = realloc(priv->out, priv->out_len << 1);
-+			if (buf_out != NULL) {
-+				priv->out = buf_out;
-+				priv->out_len <<= 1;
-+				goto retry;
-+			}
-+		}
-+
-+		if (len >= priv->out_len)
++	while ((ret = perf_buffer__poll(pb, 1000)) >= 0) {
++		if (done == 1)
 +			break;
 +	}
 +
-+	printf("%s", priv->out);
++	bpf_record_stop();
++
++	if (argc > 0) {
++		int exit_status;
++
++		if (!child_finished)
++			kill(evlist->workload.pid, SIGTERM);
++
++		wait(&exit_status);
++	}
++
++out_destroy_record_action_bpf:
++	record_action_bpf__destroy(skel);
++out_free_event_actions:
+ 	event_actions__free();
+ 	return 0;
+ }
+diff --git a/tools/perf/util/record_action.h b/tools/perf/util/record_action.h
+index 289be4befa97..6cd578af2ccb 100644
+--- a/tools/perf/util/record_action.h
++++ b/tools/perf/util/record_action.h
+@@ -7,8 +7,9 @@
+ 
+ #ifdef HAVE_BPF_SKEL
+ 
+-int bpf_perf_record(struct evlist *evlist, int argc, const char **argv);
++int bpf_perf_record_init(void);
+ 
++int bpf_perf_record(struct evlist *evlist, int argc, const char **argv);
+ 
+ #else /* !HAVE_BPF_SKEL */
+ 
+@@ -19,6 +20,11 @@ static inline int bpf_perf_record(struct evlist *evlist __maybe_unused,
+ 	return -EOPNOTSUPP;
+ }
+ 
++static inline int bpf_perf_record_init(void)
++{
 +	return 0;
 +}
 +
-+static struct evtact_expr_ops expr_call_print_ops = {
-+	.new  = expr_call_print_new,
-+	.free = expr_call_print_free,
-+	.eval = expr_call_print_eval,
-+};
-+
- static struct evtact_expr_ops *expr_call_ops_list[EVTACT_EXPR_CALL_TYPE_MAX] = {
-+	[EVTACT_EXPR_CALL_TYPE_PRINT] = &expr_call_print_ops,
- };
+ #endif /* !HAVE_BPF_SKEL */
  
- static int expr_call_set_ops(struct evtact_expr *expr, u32 opcode)
-diff --git a/tools/perf/util/parse-action.h b/tools/perf/util/parse-action.h
-index 30c2fd6e81d0..f8aece601a84 100644
---- a/tools/perf/util/parse-action.h
-+++ b/tools/perf/util/parse-action.h
-@@ -21,6 +21,7 @@ enum evtact_expr_const_type {
- };
- 
- enum evtact_expr_call_type {
-+	EVTACT_EXPR_CALL_TYPE_PRINT,
- 	EVTACT_EXPR_CALL_TYPE_MAX,
- };
- 
-diff --git a/tools/perf/util/parse-action.l b/tools/perf/util/parse-action.l
-index 189f73dfc3b1..5e75383ba3e7 100644
---- a/tools/perf/util/parse-action.l
-+++ b/tools/perf/util/parse-action.l
-@@ -76,6 +76,12 @@ static int str_end(void)
- 	return STRING;
- }
- 
-+static int call(u32 opcode)
-+{
-+	parse_action_lval.opcode = opcode;
-+	return CALL;
-+}
-+
- %}
- 
- num_dec		[0-9]+
-@@ -91,6 +97,9 @@ ident		[_a-zA-Z][_a-zA-Z0-9]*
- {num_hex}	{ return value(16); }
- {space}		{ }
- 
-+
-+print		{ return call(EVTACT_EXPR_CALL_TYPE_PRINT); }
-+
- ";"		{ return SEMI; }
- "("		{ return LP;   }
- ")"		{ return RP;   }
+ #endif /* __PERF_UTIL_RECORD_ACTION_H_ */
 -- 
 2.25.1
 
