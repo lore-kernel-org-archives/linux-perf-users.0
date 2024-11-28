@@ -1,129 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97971B0F01;
-	Thu, 28 Nov 2024 14:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BCA145323;
+	Thu, 28 Nov 2024 20:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732805996; cv=none; b=m1aa8omR/os6Kj4Np8AF9rdeMNgILTTS7ADvSginhrmNtMOCfsrq3KGOAAtJaSwl62qGq9y1i/sA0Stjkj41npV+oEeORatGqlP/ZAlK2eCF+zqxPsPKmr1zTNVs0oKWWXEFn9tdAl/WbQgez98nSBWZZ2jK3ivhNV4W0MAHVs0=
+	t=1732824899; cv=none; b=N1jxEP/F9PU3WlHbIp7dwbIdSTSJBu5ooyhijWnrlS8vzH+rBbM0Xm86R8POIBtntLXfAlGumWkjEDvQGLtDXC0rp3xFi2+e/LH6H5I1qx0ZvSXlJNG67TNHmGkBzpCOmySoGe4KcBSQ3gX00DJBElX/vstjyszOXeJy5KIC97A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732805996; c=relaxed/simple;
-	bh=6f6MLMpau+B/8Ci0FW+Nc7bb32EL3D9jNH6aMfLE/X0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rJgSty+rGM+wUDFlcZ2vcuep6GuYJsvEmISGrb/zWwydFEg+WR8qk+Xf8pwz4boHdZIgd+IWZ1nXML86NPJLfP/TPArw2Ch4F6behCXZILYMyHBliTweQBtNUQNBWysFeREynznsOOUmHfIUB8ER1XuEy3LGYqeiyaS8yceWRtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T3IdE1Q9; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1732824899; c=relaxed/simple;
+	bh=tI+JVpAQUt0m0tYcgKDep0iXAw2bTIA9tCjj3R9bNO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ezCvOy6JPGufkxNM4eLtmGrBeOQcmYZYBxH3re/nbgqsLKTZ6L6lmRCEpaHV641zXwAUa8mP/+kFRsllHINxGRRjCdnF4fNtmfNr7tESK1zmjAArBRqSWQWU665JO1IZtNnnAOp9j+gbWNSIyqPsdRy3+CRHcIENjcK9P9hWdc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+o5oymb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T3IdE1Q9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732805995; x=1764341995;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6f6MLMpau+B/8Ci0FW+Nc7bb32EL3D9jNH6aMfLE/X0=;
-  b=T3IdE1Q9yK97Zhd8Fhq/y2D7bsYyL7AyhMK/NxI66G4B6a81Rq8AHrgP
-   mdrjr52JDtkRL35FQUT9RaEqYSuM61pV9goXQ5h64KXIwoKKjfGPD1C1w
-   xQSx+cRQUkvExxIoIcfcvO5AUU8FZvz9CxxXsXkphwChBVvKgCRwpx7s3
-   ZapOxzwcvOdh8UY3aV9YvgZW4xvdvNgDaDg3wREah2DbUDyoFb+B0rTCO
-   3nW+0CV+x2IDRwm4G4Dn0GX2q6XM7em7NAtbrllYFa1cIMFn0Hi3s04gR
-   cqa3cJs5vNjrJkMrS/J8oaZyWXZsvIcKEN7rmwD2bm9kr3pIm15qtQ7q9
-   w==;
-X-CSE-ConnectionGUID: lZxUBYxVRQyR9+34shixdw==
-X-CSE-MsgGUID: FOQikDf/RO+oeFDHgDZU1w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11270"; a="43530728"
-X-IronPort-AV: E=Sophos;i="6.12,192,1728975600"; 
-   d="scan'208";a="43530728"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2024 06:59:54 -0800
-X-CSE-ConnectionGUID: HOXG+o28SF6UECOTsGN/Gw==
-X-CSE-MsgGUID: lKZo8xPgRq2k7se68ERlwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,192,1728975600"; 
-   d="scan'208";a="97016246"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2024 06:59:54 -0800
-Received: from [10.246.136.4] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.4])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id C831F20B5705;
-	Thu, 28 Nov 2024 06:59:52 -0800 (PST)
-Message-ID: <d40c6d0e-3755-4cfa-bb9e-e2aa520edb0f@linux.intel.com>
-Date: Thu, 28 Nov 2024 09:59:51 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+o5oymb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE18AC4CECE;
+	Thu, 28 Nov 2024 20:14:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732824897;
+	bh=tI+JVpAQUt0m0tYcgKDep0iXAw2bTIA9tCjj3R9bNO8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e+o5oymbNAtvn0TcQNrA77Ig7Jj6quqgyWDE+1BuFHkWv37B2hprbWWgUQJe/3vus
+	 S1ztMyNxDq4aGlZDljzxFYHEqiRwmzWtgDirl6hOyrGbKON44UdwmIRgbXVhptIWaL
+	 FXPZQ2RBOUIWlrs3xkagzo/qtKDAaq+I+QqUMZZxvrpjulQmVOmAMl+aSfXNnHKu4t
+	 1sOSm71skmAs/+FEfx+kVJZW1deHPD2TmhIS80yneBq4+DZ5Dtnzx0T3+7OhL0Btxo
+	 qbQSXTAGYtYvoZTgrGuRv5iZVk1uGMLjqoGUhGWovrvWxDrWphIXF/F5gIwZmkDJs4
+	 eOSHbju1CCebQ==
+Date: Thu, 28 Nov 2024 17:14:53 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Yang Jihong <yangjihong@bytedance.com>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, james.clark@arm.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 00/12] perf record: Add event action support
+Message-ID: <Z0jPPRA8JXSrwyaC@x1>
+References: <20241128133553.823722-1-yangjihong@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf tools: Avoid unaligned pointer operations
-To: Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-References: <20241128010325.946897-1-namhyung@kernel.org>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20241128010325.946897-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241128133553.823722-1-yangjihong@bytedance.com>
 
+On Thu, Nov 28, 2024 at 09:35:41PM +0800, Yang Jihong wrote:
+> In perf-record, when an event is triggered, default behavior is to
+> save sample data to perf.data. Sometimes, we may just want to do
+> some lightweight actions, such as printing a log.
 
+> Based on this requirement, add the --action option to the event to
+> specify the behavior when the event occurs.
 
-On 2024-11-27 8:03 p.m., Namhyung Kim wrote:
-> The sample data is 64-bit aligned basically but raw data starts with
-> 32-bit length field and data follows.  In perf_event__synthesize_sample
-> it treats the sample data as a 64-bit array.  And it needs some trick
-> to update the raw data properly.
+'perf record' is centered on saving data to disk without processing
+events, while it has sideband events for some needs, like processing BPF
+related events (PERF_RECORD_BPF_EVENT to catch PERF_BPF_EVENT_PROG_LOAD
+and UNLOAD), doing things in a "live" way as your patchkit does seems
+more appropriate to do in 'perf trace' :-)
+
+I'll take a look at the rest of the patch series.
+
+- Arnaldo
+ 
+> This patchset uses bpf prog to attach to tracepoint event, and save sample
+> to bpf perf_event ringbuffer in handler. perf-tool read the data and run actions.
 > 
-> But it seems some compilers are not happy with this and the program dies
-> siliently.  I found the sample parsing test failed without any messages
-> on affected systems.
+> Currently only one call is supported, that is, print(),
+> and some commonly used builtin variables are also supported.
 > 
-> Let's update the code to use a 32-bit pointer directly and make sure the
-> result is 64-bit aligned again.  No functional changes intended.
+> For example:
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-
-Thanks,
-Kan
-
-> ---
-> v2) use '%' instead of '/' to check alignment
+>   # perf record -e sched:sched_switch --action 'print("[%03d][%llu]comm=%s, pid=%d, tid=%d\n", cpu, time, comm, pid, tid)' true
+>   [003][795464100275136]comm=perf, pid=141580, tid=141580
+>   [003][795464100278234]comm=swapper/3, pid=0, tid=0
+>   [003][795464100288984]comm=perf, pid=141580, tid=141580
+>   [003][795464100457865]comm=swapper/3, pid=0, tid=0
+>   [003][795464100485547]comm=perf, pid=141580, tid=141580
+>   [003][795464100491398]comm=kworker/u36:1, pid=139834, tid=139834
+>   [003][795464100493647]comm=perf, pid=141580, tid=141580
+>   [003][795464100494967]comm=kworker/u36:1, pid=139834, tid=139834
+>   [003][795464100498146]comm=perf, pid=141580, tid=141580
+>   ...
 > 
->  tools/perf/util/synthetic-events.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
+>   # perf record -e cycles --action 'print("test\n");' true
+>   bpf record action only supports specifying for tracepoint tracer
 > 
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> index a58444c4aed1f1ea..6923b0d5efede4a7 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -1686,12 +1686,16 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
->  	}
->  
->  	if (type & PERF_SAMPLE_RAW) {
-> -		u.val32[0] = sample->raw_size;
-> -		*array = u.val64;
-> -		array = (void *)array + sizeof(u32);
-> +		u32 *array32 = (void *)array;
-> +
-> +		*array32 = sample->raw_size;
-> +		array32++;
-> +
-> +		memcpy(array32, sample->raw_data, sample->raw_size);
-> +		array = (void *)(array32 + (sample->raw_size / sizeof(u32)));
->  
-> -		memcpy(array, sample->raw_data, sample->raw_size);
-> -		array = (void *)array + sample->raw_size;
-> +		/* make sure the array is 64-bit aligned */
-> +		BUG_ON(((long)array) % sizeof(u64));
->  	}
->  
->  	if (type & PERF_SAMPLE_BRANCH_STACK) {
-
+>   # perf record -e sched:sched_switch --action 'print("[%llu]comm=%s, cpu=%d, pid=%d, tid=%d\n", time, comm, cpu, pid)' true
+>   print() arguments number for format string mismatch: 5 expected, 4 provided
+>   parse action option failed
+> 
+>    Usage: perf record [<options>] [<command>]
+>       or: perf record [<options>] -- <command> [<options>]
+> 
+>           --action <action>
+>                             event action
+> 
+>   # perf record -e sched:sched_switch --action 'print("test\n");' true
+>   test
+>   test
+>   test
+>   test
+>   test
+>   test
+>   test
+>   test
+>   test
+>   test
+>   ...
+> 
+> This patchset implements simple features and can be extended as needed.
+> 
+> TODO LIST:
+> 1. Support common operations such as logical operations and bit operations
+> 2. Support other calls such as dumpstack(), count()
+> 3. Support specify actions for kprobe events
+> 4. For builds that disable bpf_skel, support real-time parsing of perf record mmap ringbuffer data (similar to perf top)
+> 5. Link libllvm to support dynamic generation of bpf progs
+> 
+> Yang Jihong (12):
+>   perf record: Add event action support
+>   perf event action: Add parsing const expr support
+>   perf event action: Add parsing const integer expr support
+>   perf event action: Add parsing const string expr support
+>   perf event action: Add parsing call expr support
+>   perf event action: Add parsing print() call expr support
+>   perf event action: Add parsing builtin expr support
+>   perf event action: Add parsing builtin cpu expr support
+>   perf event action: Add parsing builtin pid expr support
+>   perf event action: Add parsing builtin tid expr support
+>   perf event action: Add parsing builtin comm expr support
+>   perf event action: Add parsing builtin time expr support
+> 
+>  tools/perf/Documentation/perf-record.txt     |   8 +
+>  tools/perf/Makefile.perf                     |   1 +
+>  tools/perf/builtin-record.c                  |  31 +
+>  tools/perf/util/Build                        |  18 +
+>  tools/perf/util/bpf_skel/bpf_record_action.h |  24 +
+>  tools/perf/util/bpf_skel/record_action.bpf.c | 151 ++++
+>  tools/perf/util/parse-action.c               | 729 +++++++++++++++++++
+>  tools/perf/util/parse-action.h               |  98 +++
+>  tools/perf/util/parse-action.l               | 190 +++++
+>  tools/perf/util/parse-action.y               | 156 ++++
+>  tools/perf/util/record_action.c              | 380 ++++++++++
+>  tools/perf/util/record_action.h              |  30 +
+>  12 files changed, 1816 insertions(+)
+>  create mode 100644 tools/perf/util/bpf_skel/bpf_record_action.h
+>  create mode 100644 tools/perf/util/bpf_skel/record_action.bpf.c
+>  create mode 100644 tools/perf/util/parse-action.c
+>  create mode 100644 tools/perf/util/parse-action.h
+>  create mode 100644 tools/perf/util/parse-action.l
+>  create mode 100644 tools/perf/util/parse-action.y
+>  create mode 100644 tools/perf/util/record_action.c
+>  create mode 100644 tools/perf/util/record_action.h
+> 
+> -- 
+> 2.25.1
