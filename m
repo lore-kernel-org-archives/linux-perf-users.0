@@ -1,61 +1,61 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34861AA1D9
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 13:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A771A9B52
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 13:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732800982; cv=none; b=QWtWRQ57NevXHkjcARFS7+oYCZBg9gAAz2CbMg6d8AkTlytIGu8Mxb4zkBbQvVUUaHuQZIFQ2PUJ9wzdaMu4d71dF9spPinIGVP2QLCS9DeFT2INrszOYLF+TO5zWoKkFLRN9r32SkTKnY2V3VT/PxLaDm6v2skhm4DvmaS5KB8=
+	t=1732800986; cv=none; b=Uf2RmjP8AVIwAVlLWcgsdjeXJEuUnbjpBtKC/DbF94BMKhjsrDdgcpfvduBIA/s52RrSq9pltgP+DTrzmrvfvxi5AItmK1h3Hk3xmRtjmJrJCxcJryG5f6LEWYtLorxpGef6kW+d6M+VOX5g9iX7CIwEtzrsi/zdJiEsrUo+82A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732800982; c=relaxed/simple;
-	bh=nDvvicLumv7EtNvS5GruBIHrJOOqtlAQ1xL9L19APP0=;
+	s=arc-20240116; t=1732800986; c=relaxed/simple;
+	bh=6ThYDcVZyhY//Fe+U3aUG3hZA7Q+8SD/azeS/VR6mWo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DL9JT1nVVjnSUxiNKP4dOK1IfYXmjjO21MQEBDqxIGYlmex20nFqZLRLo2PW7rZFZT70X2VBnIdZWlSdgXZkuuXBDs2uyyBtPa/0j/RgVDqkZ5BGjlwitywXBE4Tl+H8ZONaMMBhzmjtEmmdrLqn5k8hgLpKikU2keRAN5fv9i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EFV91fgj; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=CkUkf6zcmLmImBHFEaTJdDgqLOaaUbe4wwmYDI6ShJsccTL9b5CTqllfjFk9FYzF1wId7CosOG/4JocnJtCzROQ0nQJfi+pRkaFHNuOuyIXRNTrs7l+2kBcjVKghUNJRwkskjxByL+r7o8/iwHDIH0NTihdQQx9GJHj6FnFL314=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=GAF4kq84; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EFV91fgj"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-212776d6449so7830355ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 05:36:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="GAF4kq84"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-215348d1977so1998405ad.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Nov 2024 05:36:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1732800979; x=1733405779; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1732800984; x=1733405784; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HcU2ut98rpKpyOZJT3GpoD2fKQDnhCpCbslumGtWhKQ=;
-        b=EFV91fgjVaf6GoiZA4KPwfYm3PQcD1fakdpWnCshh0xL44I7gcxkNSfCo1Y7x8b0rB
-         ua5qyMnUK6jwll5fNw5pka+J7M8jbVoGk1TvkNW07IGPoMyutTYUUZfZ/PSOysrk2IxM
-         5p5mggz/vAgGSCsQNgPCn1/jZItsGdDtdcYwJQQs98uMwm8s3ZbHtDERRfeqquisbzV/
-         SLPZBEf55DMeBb5U7RlMZJHeiPcNFVkA+gjfUaTFfcGtUbkeIWy5mQrBfQy40F0SM8d8
-         Cvay/2Jjdrwsx5i+/VdqdouHme0BPX5AQ5eF5yOE3yGjJglz/g6N55CuBSWG4eDMjyAP
-         I8Kg==
+        bh=lYHGwytb9blVTqG0sujztYOJv09yetn3wc+93NLrAqc=;
+        b=GAF4kq84hXqUkeXOFGS4csKZCo6myvBXcbo9zStRgw6zuFcRhk2JXDIfBfnzaJj139
+         /S/E5as7csUoSzIzWJ0Tm5fx+7Gh7RLlubehKeUTALmqEfVNHnro8IyPh73umCYCxBnx
+         Z6m+pqa0TD7tA7fOP76Vjx/GPg2pBbDThrOO+/0aPHUfnIdHkoPNr9JMIFyEizLZ2o51
+         cbpNsWeFevsXjOOFSqMk0C+6DccXATwx+b8Zg8MbPEqx/7/4DNRnVZ6Yuzox4s+HwS3d
+         ypgR6P5i7H/ZXvaa8+nKgqMDtyXSMtrP+8CShAU7I6xIqTXc4UqlghtNoAPWKRZPx5Ci
+         An9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732800979; x=1733405779;
+        d=1e100.net; s=20230601; t=1732800984; x=1733405784;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HcU2ut98rpKpyOZJT3GpoD2fKQDnhCpCbslumGtWhKQ=;
-        b=ArdCfMeXZRJg2f/H6IP7BfhoPU0Ag831RudV0Z8g7Yt0jH1MulW34KJG5NkjW9/ryA
-         tYcuCY9S93RFe61xLhurx70SJ7+acxUBsGNL+wzO0NKpYCEBfjT5fwTNJ8IRayrtcO7Z
-         EO/HMht/muM7CK19kGmMFuOufAPypZ8qo2RSU0Q5ju/BbLRP4u/JB20lwqAT108SqvAe
-         t7M7aU6ITuVAqzCfy3/FMmfW4sgJSEkO3AwCccq0gjfmFY7MNMCUEnp44jA9rgP+kIFW
-         PBGuyWpc5SMv/Alun/mFZwd1SgKLhuQZFAzUZmwrSWXn2m42lGrcd6lKyFC3ADOmBaO9
-         u76w==
-X-Forwarded-Encrypted: i=1; AJvYcCXAJXPZWEhmhAqyqftHkSTsjZj+wS+IIGKLJszf67nyfBvFna4UdU1eqm/57CNN0u9n897uhk016YEwwJbWhw5y@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfUYIyd8AFF4J7Ons3J6lnoLWzPb4vKeoF1O3oHrEibcLMQ3ZN
-	ebryOZQS7l0QL71LwJnFIQYhhezgX5+p9nY5l5mS2OFIp3TZUyDCAgG5inLfz1U=
-X-Gm-Gg: ASbGncvncCVkxikLX/EIC1GlJW9nq/aRXocWE5a6br/z4HMHf3tlLSYnmb4TYcAbU5E
-	0NwNNhtNTV2pL6br3OIO210jhpgePztxMk7CTwu5jSftGqLjrfgtfpWO73wAGaYNOi6uQhzK5op
-	T1hlCrHZ0Lc+qI8nuaYKB+LFaNL1iVZbGOG2C3DY4cKeEDLdMaDSmaJ4L+kJJqScVL/hmTKYHxm
-	bXbvNhTxuFlpEuzCDA7/3zXpvXXoktOWwvEAjY9KoBDxm1C59oWve7BRA==
-X-Google-Smtp-Source: AGHT+IGXKXpqj6vJl7YkVSjkabWL+8zZNuS1RTCfG2jC3Ds6bcGG/wUkZQPL9fTcY/v0XBWMriNiDQ==
-X-Received: by 2002:a17:902:e5c7:b0:212:5814:8916 with SMTP id d9443c01a7336-21501b5a330mr69771825ad.45.1732800979052;
-        Thu, 28 Nov 2024 05:36:19 -0800 (PST)
+        bh=lYHGwytb9blVTqG0sujztYOJv09yetn3wc+93NLrAqc=;
+        b=FcxzwQbXen6PITCZCRLVby66xvcg/OuGz7HoDIKuDOo8XA99ywDAIDd30W0D4m0j88
+         RhQTw+4ulENH2J6PQGUwcYp3RgJYFYsgcNkR0EWATyJZOMFNZ+7icWRv+NUYPZwHC3aI
+         flDrlJwejIwSTIA3fhO6Qk6I2rEuK5xvZ6H45p75BKN/Ydwr2AhS7xbgqqPO6tM8T/aY
+         aFRm/y9amrF03h3sgDRcNzJTi+2tomi1Isr0ZNSLm1ptElgO7zdnCmPIkOSBgDzaaZUh
+         KCe3rQgmQy0qNlpQZ1aoojgVqLkBUMbnX5z4tnCMq4cMnaF7Z8uNtLBOuZE9mnittRs3
+         WcGg==
+X-Forwarded-Encrypted: i=1; AJvYcCWtNVpFhVSCCIAtXRRr/JnstH5dpLRnuTg4ICLhmaEvmkug+YcRnxGQ9FFvVFgFj1IGzKP97yPbnhRAizGFOD4b@vger.kernel.org
+X-Gm-Message-State: AOJu0YxF8oZKRxMkcz0948Q3zbdNHx4r6ZGnpl1+qBmHbjSYUMlRExG0
+	7TbqFLNxM+XBvjk4adqAG6X7AMPqDsW27ePHi2gmgUYLk7DkLWR1ZN/BozD1ZwU=
+X-Gm-Gg: ASbGncsjpyRb3rnr2gl+PaO0gZeFi4GHyOKMd+DpbzsFQAHlKLqKV3WbE+5gsynrHXo
+	SHemzCKCJ4nG8QexDkPKAH+2BguHqqYXwxEua+t8vTjOzGg8tsURJafF4TH3bP6bfWcf7T2wXGZ
+	iW+Vfv8c2alZSWPMsi76lbr0lmm30kIkLfxZdmw8J1yZQzb32mP5x7zs4SinpskGKa5BVC8dHxg
+	WUNQ6UQ4Be7dfw8HesNlqeWBHYJ/fOtk3cpn/KUEZ5oO9yVWUmy06U8EA==
+X-Google-Smtp-Source: AGHT+IHwW1lu2icW5S94cwvi35KNqg+f7Y0zASnP7MGOuqwai4HXVUNxxnO6Ug/jGgQJijx2DPpjYw==
+X-Received: by 2002:a17:902:e747:b0:20c:ab33:f8b8 with SMTP id d9443c01a7336-21501381499mr100226835ad.15.1732800984649;
+        Thu, 28 Nov 2024 05:36:24 -0800 (PST)
 Received: from ubuntu20.04 ([139.177.225.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21521985632sm12952975ad.206.2024.11.28.05.36.13
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21521985632sm12952975ad.206.2024.11.28.05.36.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2024 05:36:18 -0800 (PST)
+        Thu, 28 Nov 2024 05:36:24 -0800 (PST)
 From: Yang Jihong <yangjihong@bytedance.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -71,9 +71,9 @@ To: peterz@infradead.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: yangjihong@bytedance.com
-Subject: [RFC 01/12] perf record: Add event action support
-Date: Thu, 28 Nov 2024 21:35:42 +0800
-Message-Id: <20241128133553.823722-2-yangjihong@bytedance.com>
+Subject: [RFC 02/12] perf event action: Add parsing const expr support
+Date: Thu, 28 Nov 2024 21:35:43 +0800
+Message-Id: <20241128133553.823722-3-yangjihong@bytedance.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20241128133553.823722-1-yangjihong@bytedance.com>
 References: <20241128133553.823722-1-yangjihong@bytedance.com>
@@ -85,671 +85,80 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In perf-record, when an event is triggered, default behavior is to
-save sample data to perf.data. Sometimes, we may just want to do
-some lightweight actions, such as printing a log.
-
-Based on this requirement, add the --action option to the event to
-specify the behavior when the event occurs.
+Event action requires constant expression parsing support,
+which include constant integer and constant string.
 
 Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 ---
- tools/perf/Documentation/perf-record.txt |   8 +
- tools/perf/builtin-record.c              |  31 +++
- tools/perf/util/Build                    |  18 ++
- tools/perf/util/parse-action.c           | 230 +++++++++++++++++++++++
- tools/perf/util/parse-action.h           |  75 ++++++++
- tools/perf/util/parse-action.l           |  40 ++++
- tools/perf/util/parse-action.y           |  82 ++++++++
- tools/perf/util/record_action.c          |  15 ++
- tools/perf/util/record_action.h          |  24 +++
- 9 files changed, 523 insertions(+)
- create mode 100644 tools/perf/util/parse-action.c
- create mode 100644 tools/perf/util/parse-action.h
- create mode 100644 tools/perf/util/parse-action.l
- create mode 100644 tools/perf/util/parse-action.y
- create mode 100644 tools/perf/util/record_action.c
- create mode 100644 tools/perf/util/record_action.h
+ tools/perf/util/parse-action.c | 27 +++++++++++++++++++++++++++
+ tools/perf/util/parse-action.h |  5 +++++
+ 2 files changed, 32 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 242223240a08..d0d9e0f69f3d 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -833,6 +833,14 @@ filtered through the mask provided by -C option.
- 	Prepare BPF filter to be used by regular users.  The action should be
- 	either "pin" or "unpin".  The filter can be used after it's pinned.
+diff --git a/tools/perf/util/parse-action.c b/tools/perf/util/parse-action.c
+index 01c8c7fdea59..391546bf3d73 100644
+--- a/tools/perf/util/parse-action.c
++++ b/tools/perf/util/parse-action.c
+@@ -4,6 +4,9 @@
+  * Actions are the programs that run when the sampling event is triggered.
+  * The action is a list of expressions separated by semicolons (;).
+  * Each action is an expression, added to actions_head node as list_head node.
++ *
++ * Supported expressions:
++ *   - constant:
+  */
  
-+--action=<action>::
-+	Actions are the programs that run when the sampling event is triggered.
-+	The action is a list of expressions separated by semicolons (;).
-+	The sample data is saved by bpf prog attached by the event.
-+	The call currently supported is print(); some commonly used built-in special
-+	variables are also supported
-+	For example:
-+	  # perf record -e sched:sched_switch --action 'print("[%llu]comm=%s, cpu=%d, pid=%d, tid=%d\n", time, comm, cpu, pid, tid)' true
- 
- include::intel-hybrid.txt[]
- 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index f83252472921..108d98706873 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -51,6 +51,10 @@
- #include "util/clockid.h"
- #include "util/off_cpu.h"
- #include "util/bpf-filter.h"
-+#ifdef HAVE_BPF_SKEL
-+#include "util/parse-action.h"
-+#include "util/record_action.h"
-+#endif
- #include "asm/bug.h"
- #include "perf.h"
- #include "cputopo.h"
-@@ -182,6 +186,7 @@ struct record {
- 	struct pollfd_index_map	*index_map;
- 	size_t			index_map_sz;
- 	size_t			index_map_cnt;
-+	bool			custom_action;
- };
- 
- static volatile int done;
-@@ -3316,6 +3321,23 @@ static int parse_record_synth_option(const struct option *opt,
- 	return 0;
+ #include "util/debug.h"
+@@ -115,7 +118,31 @@ void event_actions__free(void)
+ 	(void)event_actions__for_each_expr_safe(do_action_free, NULL, false);
  }
  
-+#ifdef HAVE_BPF_SKEL
-+static int parse_record_action_option(const struct option *opt,
-+				      const char *str,
-+				      int unset __maybe_unused)
-+{
-+	int ret;
-+	struct record *rec = (struct record *)opt->value;
-+
-+	ret = parse_record_action(rec->evlist, str);
-+	if (ret)
-+		return ret;
-+
-+	rec->custom_action = true;
-+	return 0;
-+}
-+#endif
-+
- /*
-  * XXX Ideally would be local to cmd_record() and passed to a record__new
-  * because we need to have access to it in record__exit, that is called
-@@ -3564,6 +3586,9 @@ static struct option __record_options[] = {
- 	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
- 	OPT_STRING(0, "setup-filter", &record.filter_action, "pin|unpin",
- 		   "BPF filter action"),
-+#ifdef HAVE_BPF_SKEL
-+	OPT_CALLBACK(0, "action", &record, "action", "event action", parse_record_action_option),
-+#endif
- 	OPT_END()
- };
- 
-@@ -4001,6 +4026,12 @@ int cmd_record(int argc, const char **argv)
- 	if (quiet)
- 		perf_quiet_option();
- 
-+#ifdef HAVE_BPF_SKEL
-+	/* Currently, event actions only supported using bpf prog. */
-+	if (rec->custom_action)
-+		return bpf_perf_record(rec->evlist, argc, argv);
-+#endif
-+
- 	err = symbol__validate_sym_arguments();
- 	if (err)
- 		return err;
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index c06d2ee9024c..db4c4cabc5f8 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -249,6 +249,12 @@ perf-util-$(CONFIG_LIBBPF) += bpf-utils.o
- 
- perf-util-$(CONFIG_LIBPFM4) += pfm.o
- 
-+# perf record event action
-+perf-util-$(CONFIG_PERF_BPF_SKEL) += parse-action.o
-+perf-util-$(CONFIG_PERF_BPF_SKEL) += parse-action-flex.o
-+perf-util-$(CONFIG_PERF_BPF_SKEL) += parse-action-bison.o
-+perf-util-$(CONFIG_PERF_BPF_SKEL) += record_action.o
-+
- CFLAGS_config.o   += -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
- 
- # avoid compiler warnings in 32-bit mode
-@@ -294,6 +300,16 @@ $(OUTPUT)util/bpf-filter-bison.c $(OUTPUT)util/bpf-filter-bison.h: util/bpf-filt
- 	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) $(BISON_FILE_PREFIX_MAP) \
- 		-o $(OUTPUT)util/bpf-filter-bison.c -p perf_bpf_filter_
- 
-+$(OUTPUT)util/parse-action-flex.c $(OUTPUT)util/parse-action-flex.h: util/parse-action.l $(OUTPUT)util/parse-action-bison.c util/parse-action.h
-+	$(call rule_mkdir)
-+	$(Q)$(call echo-cmd,flex)$(FLEX) -o $(OUTPUT)util/parse-action-flex.c \
-+		--header-file=$(OUTPUT)util/parse-action-flex.h $(PARSER_DEBUG_FLEX) $<
-+
-+$(OUTPUT)util/parse-action.c $(OUTPUT)util/parse-action-bison.h: util/parse-action.y util/parse-action.h
-+	$(call rule_mkdir)
-+	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) $(BISON_FILE_PREFIX_MAP) \
-+		-o $(OUTPUT)util/parse-action-bison.c -p parse_action_
-+
- FLEX_VERSION := $(shell $(FLEX) --version | cut -d' ' -f2)
- 
- FLEX_GE_260 := $(call version-ge3,$(FLEX_VERSION),2.6.0)
-@@ -345,11 +361,13 @@ CFLAGS_parse-events-flex.o  += $(flex_flags) -Wno-unused-label
- CFLAGS_pmu-flex.o           += $(flex_flags)
- CFLAGS_expr-flex.o          += $(flex_flags)
- CFLAGS_bpf-filter-flex.o    += $(flex_flags)
-+CFLAGS_parse-action-flex.o  += $(flex_flags)
- 
- CFLAGS_parse-events-bison.o += $(bison_flags)
- CFLAGS_pmu-bison.o          += -DYYLTYPE_IS_TRIVIAL=0 $(bison_flags)
- CFLAGS_expr-bison.o         += -DYYLTYPE_IS_TRIVIAL=0 $(bison_flags)
- CFLAGS_bpf-filter-bison.o   += -DYYLTYPE_IS_TRIVIAL=0 $(bison_flags)
-+CFLAGS_parse-action-bison.o += -DYYLTYPE_IS_TRIVIAL=0 $(bison_flags)
- 
- $(OUTPUT)util/parse-events.o: $(OUTPUT)util/parse-events-flex.c $(OUTPUT)util/parse-events-bison.c
- $(OUTPUT)util/pmu.o: $(OUTPUT)util/pmu-flex.c $(OUTPUT)util/pmu-bison.c
-diff --git a/tools/perf/util/parse-action.c b/tools/perf/util/parse-action.c
-new file mode 100644
-index 000000000000..01c8c7fdea59
---- /dev/null
-+++ b/tools/perf/util/parse-action.c
-@@ -0,0 +1,230 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * Generic actions for sampling events
-+ * Actions are the programs that run when the sampling event is triggered.
-+ * The action is a list of expressions separated by semicolons (;).
-+ * Each action is an expression, added to actions_head node as list_head node.
-+ */
-+
-+#include "util/debug.h"
-+#include "util/parse-action.h"
-+#include "util/parse-action-flex.h"
-+#include "util/parse-action-bison.h"
-+
-+static struct list_head actions_head = LIST_HEAD_INIT(actions_head);
-+
-+int event_actions__for_each_expr(int (*func)(struct evtact_expr *, void *arg),
-+				 void *arg, bool recursive)
-+{
-+	int ret;
-+	struct evtact_expr *expr, *opnd;
-+
-+	if (list_empty(&actions_head))
-+		return (*func)(NULL, arg);
-+
-+	list_for_each_entry(expr, &actions_head, list) {
-+		ret = (*func)(expr, arg);
-+		if (ret)
-+			return ret;
-+
-+		if (recursive && !list_empty(&expr->opnds)) {
-+			list_for_each_entry(opnd, &expr->opnds, list) {
-+				ret = (*func)(opnd, arg);
-+				if (ret)
-+					return ret;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+int event_actions__for_each_expr_safe(int (*func)(struct evtact_expr *, void *arg),
-+				      void *arg, bool recursive)
-+{
-+	int ret;
-+	struct evtact_expr *expr, *tmp;
-+	struct evtact_expr *opnd, *opnd_tmp;
-+
-+	if (list_empty(&actions_head))
-+		return (*func)(NULL, arg);
-+
-+	list_for_each_entry_safe(expr, tmp, &actions_head, list) {
-+		ret = (*func)(expr, arg);
-+		if (ret)
-+			return ret;
-+
-+		if (recursive && !list_empty(&expr->opnds)) {
-+			list_for_each_entry_safe(opnd, opnd_tmp, &expr->opnds, list) {
-+				ret = (*func)(opnd, arg);
-+				if (ret)
-+					return ret;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int parse_action_option(const char *str)
-+{
-+	int ret;
-+	YY_BUFFER_STATE buffer;
-+
-+	buffer = parse_action__scan_string(str);
-+	ret = parse_action_parse(&actions_head);
-+
-+	parse_action__flush_buffer(buffer);
-+	parse_action__delete_buffer(buffer);
-+	parse_action_lex_destroy();
-+
-+	return ret;
-+}
-+
-+int parse_record_action(struct evlist *evlist, const char *str)
-+{
-+	int ret;
-+
-+	if (evlist == NULL) {
-+		pr_err("--action option should follow a tracer option\n");
-+		return -1;
-+	}
-+
-+	ret = parse_action_option(str);
-+	if (ret) {
-+		event_actions__free();
-+		pr_err("parse action option failed\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int do_action_free(struct evtact_expr *action, void *data __maybe_unused)
-+{
-+	if (action == NULL)
-+		return 0;
-+
-+	list_del(&action->list);
-+	parse_action_expr__free(action);
-+	return 0;
-+}
-+
-+void event_actions__free(void)
-+{
-+	(void)event_actions__for_each_expr_safe(do_action_free, NULL, false);
-+}
-+
-+static struct evtact_expr_class *expr_class_list[EVTACT_EXPR_TYPE_MAX] = {
++static struct evtact_expr_ops *expr_const_ops_list[EVTACT_EXPR_CONST_TYPE_MAX] = {
 +};
 +
-+int parse_action_expr__set_class(enum evtact_expr_type type,
-+				 struct evtact_expr_class *class)
++static int expr_const_set_ops(struct evtact_expr *expr, u32 opcode)
 +{
-+	if (type >= EVTACT_EXPR_TYPE_MAX) {
-+		pr_err("action expr set class ops type invalid\n");
++	if (opcode >= EVTACT_EXPR_CONST_TYPE_MAX) {
++		pr_err("expr_const opcode invalid: %u\n", opcode);
 +		return -EINVAL;
 +	}
 +
-+	if (expr_class_list[type] != NULL) {
-+		pr_err("action expr set class ops type already exists\n");
-+		return -EEXIST;
-+	}
-+
-+	expr_class_list[type] = class;
-+	return 0;
-+}
-+
-+static int expr_set_type(struct evtact_expr *expr)
-+{
-+	u64 id;
-+	int ret;
-+	u32 type, opcode;
-+	struct evtact_expr_class *class;
-+
-+	id = expr->id;
-+	evtact_expr_id_decode(id, &type, &opcode);
-+
-+	if (type >= EVTACT_EXPR_TYPE_MAX) {
-+		pr_err("parse_action_expr type invalid: %u\n", type);
-+		return -EINVAL;
-+	}
-+
-+	class = expr_class_list[type];
-+	if (class == NULL) {
-+		pr_err("parse_action_expr class not supported: %u\n", type);
++	if (expr_const_ops_list[opcode] == NULL) {
++		pr_err("expr_const opcode not supported: %u\n", opcode);
 +		return -ENOTSUP;
 +	}
 +
-+	if (class->set_ops != NULL) {
-+		ret = class->set_ops(expr, opcode);
-+		if (ret)
-+			return ret;
-+	}
-+
++	expr->ops = expr_const_ops_list[opcode];
 +	return 0;
 +}
 +
-+struct evtact_expr *parse_action_expr__new(u64 id, struct list_head *opnds,
-+					   void *data, int size)
-+{
-+	int ret;
-+	struct evtact_expr *expr;
++static struct evtact_expr_class expr_const = {
++	.set_ops = expr_const_set_ops,
++};
 +
-+	expr = malloc(sizeof(*expr));
-+	if (expr == NULL) {
-+		pr_err("parse_action_expr malloc failed\n");
-+		goto out_free_opnds;
-+	}
-+	expr->id = id;
-+
-+	if (opnds != NULL)
-+		list_add_tail(&expr->opnds, opnds);
-+	else
-+		INIT_LIST_HEAD(&expr->opnds);
-+
-+	ret = expr_set_type(expr);
-+	if (ret)
-+		goto out_list_del_opnds;
-+
-+	if (expr->ops->new != NULL) {
-+		ret = expr->ops->new(expr, data, size);
-+		if (ret)
-+			goto out_free_expr;
-+	}
-+
-+	return expr;
-+
-+out_free_expr:
-+	free(expr);
-+out_list_del_opnds:
-+	list_del(&expr->opnds);
-+out_free_opnds:
-+	parse_action_expr__free_opnds(opnds);
-+
-+	return NULL;
-+}
-+
-+void parse_action_expr__free_opnds(struct list_head *opnds)
-+{
-+	struct evtact_expr *opnd, *tmp;
-+
-+	if (opnds != NULL && !list_empty(opnds)) {
-+		list_for_each_entry_safe(opnd, tmp, opnds, list) {
-+			list_del(&opnd->list);
-+			parse_action_expr__free(opnd);
-+		}
-+	}
-+}
-+
-+void parse_action_expr__free(struct evtact_expr *expr)
-+{
-+	if (expr == NULL)
-+		return;
-+
-+	if (expr->ops->free != NULL)
-+		expr->ops->free(expr);
-+
-+	parse_action_expr__free_opnds(&expr->opnds);
-+	free(expr);
-+}
+ static struct evtact_expr_class *expr_class_list[EVTACT_EXPR_TYPE_MAX] = {
++	[EVTACT_EXPR_TYPE_CONST]   = &expr_const,
+ };
+ 
+ int parse_action_expr__set_class(enum evtact_expr_type type,
 diff --git a/tools/perf/util/parse-action.h b/tools/perf/util/parse-action.h
-new file mode 100644
-index 000000000000..71a0a166959e
---- /dev/null
+index 71a0a166959e..47bd75264dee 100644
+--- a/tools/perf/util/parse-action.h
 +++ b/tools/perf/util/parse-action.h
-@@ -0,0 +1,75 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_UTIL_PARSE_ACTION_H_
-+#define __PERF_UTIL_PARSE_ACTION_H_
-+
-+#include <linux/types.h>
-+
-+#include <subcmd/parse-options.h>
-+
-+#include "evlist.h"
-+
-+enum evtact_expr_type {
-+	EVTACT_EXPR_TYPE_MAX,
+@@ -9,9 +9,14 @@
+ #include "evlist.h"
+ 
+ enum evtact_expr_type {
++	EVTACT_EXPR_TYPE_CONST,
+ 	EVTACT_EXPR_TYPE_MAX,
+ };
+ 
++enum evtact_expr_const_type {
++	EVTACT_EXPR_CONST_TYPE_MAX,
 +};
 +
-+struct evtact_expr;
-+struct evtact_expr_ops {
-+	int (*new)(struct evtact_expr *expr, void *data, int size);
-+	int (*eval)(struct evtact_expr *expr,
-+		    void *in, int in_size, void **out, int *out_size);
-+	void (*free)(struct evtact_expr *expr);
-+};
-+
-+struct evtact_expr_class {
-+	int (*set_ops)(struct evtact_expr *expr, u32 opcode);
-+};
-+
-+struct evtact_expr {
-+	struct list_head list;
-+	u64 id;
-+	struct evtact_expr_ops *ops;
-+	struct list_head opnds;
-+	void *priv;
-+};
-+
-+/*
-+ * The expr id contains two fileds:
-+ * |--------------|----------------|
-+ * |     type     |     opcode     |
-+ * |--------------|----------------|
-+ *      32-bit           32-bit
-+ */
-+#define EVTACT_EXPR_ID_TYPE_BITS_SHIFT 32
-+static inline u64 evtact_expr_id_encode(u32 type, u32 opcode)
-+{
-+	return (u64)type << EVTACT_EXPR_ID_TYPE_BITS_SHIFT | opcode;
-+}
-+
-+static inline void evtact_expr_id_decode(u64 id, u32 *type, u32 *opcode)
-+{
-+	if (type != NULL)
-+		*type = id >> EVTACT_EXPR_ID_TYPE_BITS_SHIFT;
-+
-+	if (opcode != NULL)
-+		*opcode = id & GENMASK(EVTACT_EXPR_ID_TYPE_BITS_SHIFT, 0);
-+}
-+
-+int parse_record_action(struct evlist *evlist, const char *str);
-+void event_actions__free(void);
-+
-+int event_actions__for_each_expr(int (*func)(struct evtact_expr *, void *arg),
-+				 void *arg, bool recursive);
-+
-+int event_actions__for_each_expr_safe(int (*func)(struct evtact_expr *, void *arg),
-+				      void *arg, bool recursive);
-+
-+struct evtact_expr *parse_action_expr__new(u64 id, struct list_head *opnds,
-+					   void *data, int size);
-+
-+void parse_action_expr__free_opnds(struct list_head *opnds);
-+void parse_action_expr__free(struct evtact_expr *expr);
-+
-+int parse_action_expr__set_class(enum evtact_expr_type type,
-+				 struct evtact_expr_class *ops);
-+
-+#endif /* __PERF_UTIL_PARSE_ACTION_H_ */
-diff --git a/tools/perf/util/parse-action.l b/tools/perf/util/parse-action.l
-new file mode 100644
-index 000000000000..3cb72de50372
---- /dev/null
-+++ b/tools/perf/util/parse-action.l
-@@ -0,0 +1,40 @@
-+%option prefix="parse_action_"
-+%option noyywrap
-+%option stack
-+
-+%{
-+
-+#include <errno.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+
-+#include "util/debug.h"
-+
-+#include "parse-action.h"
-+#include "parse-action-bison.h"
-+
-+%}
-+
-+space		[ \t]
-+ident		[_a-zA-Z][_a-zA-Z0-9]*
-+
-+%%
-+
-+{space}		{ }
-+
-+";"		{ return SEMI; }
-+
-+{ident}		{
-+			parse_action_lval.str = strdup(parse_action_text);
-+			if (parse_action_lval.str == NULL) {
-+				pr_err("parse_action malloc ident string failed\n");
-+				return ERROR;
-+			}
-+			return IDENT;
-+		}
-+.		{
-+			pr_err("invalid character: '%s'\n", parse_action_text);
-+			return ERROR;
-+		}
-+
-+%%
-diff --git a/tools/perf/util/parse-action.y b/tools/perf/util/parse-action.y
-new file mode 100644
-index 000000000000..fade9d093d4a
---- /dev/null
-+++ b/tools/perf/util/parse-action.y
-@@ -0,0 +1,82 @@
-+%parse-param {struct list_head *actions_head}
-+%define parse.error verbose
-+
-+%{
-+
-+#ifndef NDEBUG
-+#define YYDEBUG 1
-+#endif
-+
-+#include <errno.h>
-+#include <stdio.h>
-+#include <string.h>
-+
-+#include <linux/compiler.h>
-+#include <linux/list.h>
-+
-+#include "util/debug.h"
-+#include "util/parse-action.h"
-+
-+int parse_action_lex(void);
-+
-+static void parse_action_error(struct list_head *expr __maybe_unused,
-+			       char const *msg)
-+{
-+	pr_err("parse_action: %s\n", msg);
-+}
-+
-+%}
-+
-+%union
-+{
-+	char *str;
-+	struct evtact_expr *expr;
-+	struct list_head *list;
-+}
-+
-+%token IDENT ERROR
-+%token SEMI
-+%type <expr> action_term expr_term
-+%destructor { parse_action_expr__free($$); } <expr>
-+%type <str> IDENT
-+
-+%%
-+
-+actions:
-+action_term SEMI actions
-+{
-+	list_add(&$1->list, actions_head);
-+}
-+|
-+action_term SEMI
-+{
-+	list_add(&$1->list, actions_head);
-+}
-+|
-+action_term
-+{
-+	list_add(&$1->list, actions_head);
-+}
-+
-+action_term:
-+expr_term
-+{
-+	$$ = $1;
-+}
-+
-+expr_term:
-+IDENT
-+{
-+	$$ = NULL;
-+	pr_err("unsupported ident: '%s'\n", $1);
-+	free($1);
-+	YYERROR;
-+}
-+|
-+ERROR
-+{
-+	$$ = NULL;
-+	YYERROR;
-+}
-+
-+%%
-diff --git a/tools/perf/util/record_action.c b/tools/perf/util/record_action.c
-new file mode 100644
-index 000000000000..44789e0d4678
---- /dev/null
-+++ b/tools/perf/util/record_action.c
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * Read event sample data and execute the specified actions.
-+ */
-+
-+#include "util/debug.h"
-+#include "util/parse-action.h"
-+#include "util/record_action.h"
-+
-+int bpf_perf_record(struct evlist *evlist __maybe_unused,
-+		    int argc __maybe_unused, const char **argv __maybe_unused)
-+{
-+	event_actions__free();
-+	return 0;
-+}
-diff --git a/tools/perf/util/record_action.h b/tools/perf/util/record_action.h
-new file mode 100644
-index 000000000000..289be4befa97
---- /dev/null
-+++ b/tools/perf/util/record_action.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_UTIL_RECORD_ACTION_H_
-+#define __PERF_UTIL_RECORD_ACTION_H_
-+
-+#include <errno.h>
-+#include "evlist.h"
-+
-+#ifdef HAVE_BPF_SKEL
-+
-+int bpf_perf_record(struct evlist *evlist, int argc, const char **argv);
-+
-+
-+#else /* !HAVE_BPF_SKEL */
-+
-+static inline int bpf_perf_record(struct evlist *evlist __maybe_unused,
-+				  int argc __maybe_unused,
-+				  const char **argv __maybe_unused)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+#endif /* !HAVE_BPF_SKEL */
-+
-+#endif /* __PERF_UTIL_RECORD_ACTION_H_ */
+ struct evtact_expr;
+ struct evtact_expr_ops {
+ 	int (*new)(struct evtact_expr *expr, void *data, int size);
 -- 
 2.25.1
 
