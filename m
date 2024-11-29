@@ -1,74 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8F519CC36
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Nov 2024 13:11:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF188156991
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Nov 2024 13:12:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732885912; cv=none; b=i/R5OKym4/9Yfsbwjq5oxAfFHIEZSCezVX1glyf+MqqbHPorxlJpn8qygbHbP3Pr/2Vy2Kq4qejXWEN7VlVkJJuj7rggbf5ULmvjBM46gaQQzi5Vd2vdAD8bpiW7u+wkfd8cClAZJTVD5X4D4hIZPs0rQRuWOXbGlffR/AxQKlM=
+	t=1732885959; cv=none; b=Lj3HgnbSGUt9Up2eJC/So7W9/gvUUgUPooSTdtSUNwadnnI0efQm6Ru4HknCCUqJIfvysmL4MIAI8EVbBBxbLcJvI8FQg0xlgPisLphBh4Lx6/P+rMmiLKxBPwHXnXMByGIh8ygN0MyZHZKYW7EHp7SPvSuEkjXAF5mSenLfL7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732885912; c=relaxed/simple;
-	bh=YnJzF9KYRCS2bZhD8BFhUI1QeJMyl7hozeHKO1WcYL8=;
+	s=arc-20240116; t=1732885959; c=relaxed/simple;
+	bh=jeExHsTopGg3lPs7vDqTygzkFIo/Hh0Ypi4h74FHzCM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u/RUxq0qWUkw5jTTxhpickugrlbf6AA8rmhqM6xeYvh6v589iCuxYaBV0uekp9ZONpQvxwNOKuWnKFLGWqH1sgWnjsk8YK7BJm92uDyvpMq2Jt7kr9XT/hCmArdySzOvV7bO90bT1gS0Lq62cq4jcXIxkreL1hv7NM4ONcYI/Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fygCOOgD; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=K+AwE2y2oIoSAvlSnc3zjL0sgT+fsC+SITwidnS0spwtjc/ag4/syu0d60DLhqix7Z9/3YnNMo9MoDwaM0YSG4S4HB/cOPAMz6pCrZVr5Sf8EP6GNA3Og39IuaZPYygF+QX8XFlbwHs5JMxGGo8/Yf2F131EW/r8o9r7lqyz15o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eayOEJqn; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fygCOOgD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eayOEJqn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732885909;
+	s=mimecast20190719; t=1732885956;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7/lsbs4eMAFpBMNNwe7aa+EDadcLAy15/Z7Xw2L/Pw8=;
-	b=fygCOOgDBfjR0FeQXPINP8xJ9OVFOHbJhVxZUwMISzKmS2iy/3DrciaO6uC31UyBNyAN9a
-	D8LYCrDgb2BjIKDkHKCa4gsKQBpxXP4oeWmioZ2hjKM2vxPL8lnJ3zZ9L7Z8GnDJjUEU9j
-	qnJy9nsBAUCwMXprSS5CgRbG8Vc1f5M=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=/hwYR3GugWMMQOPEFk6JjTcCSdLv4Wb1R0aJ/cKX0Rk=;
+	b=eayOEJqnBqdYxYhT5ohT/VgRivzniSg6OqqApAuPLMsy1bsFC7HHYD2+9CH9Ci2StZbzsZ
+	Lh7pur1jSE+pBrz76K2My5VUtplYCIixGRqFoIuByKcSces/gA8fYAuwMRnO6fzvxjTHKh
+	8JO6jzbZTVgqiUag7CEJJL16XfTxmKg=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-164-ImPc7IsYO1q644m1VfLgWg-1; Fri, 29 Nov 2024 08:11:48 -0500
-X-MC-Unique: ImPc7IsYO1q644m1VfLgWg-1
-X-Mimecast-MFC-AGG-ID: ImPc7IsYO1q644m1VfLgWg
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4349df2d87dso16832285e9.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Nov 2024 05:11:48 -0800 (PST)
+ us-mta-108-dz2t6nVBMF-rC1sdJ5RN9A-1; Fri, 29 Nov 2024 08:12:35 -0500
+X-MC-Unique: dz2t6nVBMF-rC1sdJ5RN9A-1
+X-Mimecast-MFC-AGG-ID: dz2t6nVBMF-rC1sdJ5RN9A
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-385dfa9b758so248900f8f.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Nov 2024 05:12:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732885907; x=1733490707;
+        d=1e100.net; s=20230601; t=1732885954; x=1733490754;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=7/lsbs4eMAFpBMNNwe7aa+EDadcLAy15/Z7Xw2L/Pw8=;
-        b=pb7XD28Hr5pfqWDvNvllRhyzNI9oZ81hrZ2IprXnOckGkLWjGKr441VUrkc9iNN1f1
-         kWoZfCuN47snZ6KAuwp7dPNii2bnobRFTA70kYfqifH1R8uOGYKE0Fxddo/DbHYsaDQV
-         E9RRy+UFHLZHztDUmIEMWVZxZw2LouA1q6TXz3v2u7pZG+w3vjimZZnG7mXcFWBV+1U+
-         wkF1zlWhIPrmZO27YDBAReuIKLlnakbg+Py9RqX8GvmzrHuq05d0L5SBMem/l7fJ3Kie
-         ari4KiheVSwL1BDSu/m8ePhKDWLuu43wLVzg2XqsfWgS8Qg1OgmkzPKo+Q730j56QLZx
-         EQ+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVUOjbpxhONWR1Zr5S0M1uSbugbr8mvPBi72j3WGXMIU+ScPyIg+JjkaZSFg++xfcAVF7gGoEKARJQVKCYVAM+z@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2r2ZeGPLIf+pEXbptBtxxsSLhhLSqtIrExp2BPZ4Kc/gljWsK
-	Rj300aWupgcI1A/kXMZg6of8JLAyzlf6m13WI3YtHJZx8h6uQdrvSd02F9tieLpjeCWMt8tT0Fq
-	3q7vq+R16s7r+NQyRqIrj5UqrUKpUpPsnHUX1W9aFynF3zJbyf1pDfhupr0MtRlEvZGc19qkCs+
-	O14w==
-X-Gm-Gg: ASbGncsohwAmMDZkj8eUgxgijggNUIZyaWxFDZZTd3xuwP5c5qn5lts8y3nN4zW+I+Z
-	v5Jx4w1bVQ4J1g/O6Dmkit+U5Zxbdcxw5Z0vPZ2yKI892Lp/t57iea5A1hqqJUFC/KS+ZB/woZL
-	Y2FVjNqnZAvJAckgncaVcvRkugxCfn9Veo+IptGWBdgwKyAoLvy998QdlqmWKMg2Wm90BzIyyy8
-	y630ti9Xi2AzeQ8seSLalYiJavPyDhldOBX4nVRjav5kWWSWgO5Fi4v/MzzQP7i4TE6GxdY/RRu
-	+Pz8Kh8xfubVWbxWSQF1uOa0Bt6FvFPpD/LL1/Fe76GnlQepNWxOL2ywkng0V8+Zqla5b/7gBVF
-	T9g==
-X-Received: by 2002:a05:6000:1f8b:b0:385:e176:43e8 with SMTP id ffacd0b85a97d-385e17644c1mr262920f8f.33.1732885907101;
-        Fri, 29 Nov 2024 05:11:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHOir4XnE0JlO93OYdRaExLw6gTrk+WtrxLfp0VTyXJDHkBmEzbXxU+gtV/8YndlL6HVGYuZg==
-X-Received: by 2002:a05:6000:1f8b:b0:385:e176:43e8 with SMTP id ffacd0b85a97d-385e17644c1mr259702f8f.33.1732885885041;
-        Fri, 29 Nov 2024 05:11:25 -0800 (PST)
+        bh=/hwYR3GugWMMQOPEFk6JjTcCSdLv4Wb1R0aJ/cKX0Rk=;
+        b=Nbva13E7G7/JRYtY0BFT1vZy8DLGmCGq/A9+tZTXQJ8maSk1UUISuftqRxcCp0yh9H
+         6tgqCRHnY8dWBjlNk8li0IcukwYwpUdc1SqEw/8xOzGHLNTfiT88g3KtYZNzTqUeOnhM
+         nYpmB+JV+AP0tW9XS+cqNetr6y8eCTCUo7yq3gU/eC/irRmqZ9QzPygX89LEBqdT6AsK
+         Scl/yeq9XnWCSqXxCT8X1aPq3SV8nSSqxIAvBFz3Z9rJfULqSdaZnoojS4qY8p39ZIIy
+         UdcTR4VqXE5E+A2h3VZyI65Z+Pff98Z/y0piFBsIaX8e8HGmYakMdGguWxxDudInIeIW
+         pCVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV8sTUDm+I0m2OLgQogK8HxQNBy+cWvk68jTYMx5Lt5ButG+/k7cKopoX0ftYzfEvIJwXZSE38IPUKktSAW+OtF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxv3CWdd8chIJFjp4sOu1MZQHz7pdwc8K4iSYgJIhRB9TxB+zeO
+	KZl3Yxfu6WapeQ3Mv7uh4KatBwxaIKDW8OB89p1V52TZlZFvUQxb9yyXIJ/m6FhpFse+CTD49EJ
+	lRUxqsgCYaphjySeqO2C/BNDagqiyFral5GSfPap2Az9dGqVCF1txuHHLP43uhpaHgDA=
+X-Gm-Gg: ASbGncsEH5IXuADh8iLuMIPtN9xMeVtcj5Bt+S5eYCpfQlxzstgixXHI5iHwwEAOun+
+	EVuMgt1KTBwujBVKWphGaSGppuejnvhX6ZRa6fbK5oU/k2Sy5RSvcG7+kEHtQaRU1F1M7UNuDpd
+	51vQGelSboetwFp1w78coo5RWrj3EvvtlmrpCsttHHaA5CVeqPXmf3gY+Nj9e2xyIBQ7ocOA4xG
+	7Fo/bUkPPQxwO+HYu5PvnpcltMRfhMZZB04sXYHlleq0LuRxrsRx2HntfAgTBjipRziVq2h4Uh1
+	cghG8ViJnfks2eggPY12FJl84sy1odXT2sHIKhePXBI4zIK+jvWQT5nqFU3YFfJcQDgV8PG4XzD
+	Nsw==
+X-Received: by 2002:a05:6000:156c:b0:382:22f4:7773 with SMTP id ffacd0b85a97d-385c6baa5e6mr10230029f8f.0.1732885953631;
+        Fri, 29 Nov 2024 05:12:33 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IExEsoo67CVLNXO6FfxW8tgx24WlQQ/AN54SY+SW6f+rWspF1wsgU4wFEKp8G3gjjeOVuSyCw==
+X-Received: by 2002:a05:6000:156c:b0:382:22f4:7773 with SMTP id ffacd0b85a97d-385c6baa5e6mr10229012f8f.0.1732885945142;
+        Fri, 29 Nov 2024 05:12:25 -0800 (PST)
 Received: from ?IPV6:2003:cb:c71c:a700:bba7:849a:ecf1:5404? (p200300cbc71ca700bba7849aecf15404.dip0.t-ipconnect.de. [2003:cb:c71c:a700:bba7:849a:ecf1:5404])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434aa76a8e0sm84214255e9.15.2024.11.29.05.11.16
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434aa74f2c7sm85744075e9.2.2024.11.29.05.12.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Nov 2024 05:11:18 -0800 (PST)
-Message-ID: <8376a446-1e8d-4359-ac69-626790ebcd97@redhat.com>
-Date: Fri, 29 Nov 2024 14:11:16 +0100
+        Fri, 29 Nov 2024 05:12:24 -0800 (PST)
+Message-ID: <c8ecd378-c197-4e06-94ef-e03b5ee28616@redhat.com>
+Date: Fri, 29 Nov 2024 14:12:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -93,7 +92,11 @@ References: <20241128113714.492474-1-lorenzo.stoakes@oracle.com>
  <926b3829-784f-47b8-9903-ea7b9ad484ac@redhat.com>
  <31e8202d-f3db-4dcd-a988-2f531b14e40f@lucifer.local>
  <84fed269-3f82-47f7-89cb-671fcee5a23a@redhat.com>
- <03f654d5-424a-4d23-828e-323aff46fa61@lucifer.local>
+ <20241129122624.GH24400@noisy.programming.kicks-ass.net>
+ <74be541b-22ad-42b5-b3c5-79b201e28f04@redhat.com>
+ <e97dba32-b5a8-43b1-9bea-e42daf6078c1@lucifer.local>
+ <9d6be5bd-ffb9-4a27-b56d-521cf6b7486e@redhat.com>
+ <6cab3e8a-dff7-41d1-af22-f18b8f2820dc@lucifer.local>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -141,39 +144,53 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <03f654d5-424a-4d23-828e-323aff46fa61@lucifer.local>
+In-Reply-To: <6cab3e8a-dff7-41d1-af22-f18b8f2820dc@lucifer.local>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 29.11.24 13:48, Lorenzo Stoakes wrote:
-> Will reply inline also but to be clear - we should differentiate between
-> ongoing discussion about how best to tackle these things going forward
-> vs. whether _this patch_ is OK :)
+On 29.11.24 14:02, Lorenzo Stoakes wrote:
+> On Fri, Nov 29, 2024 at 01:59:01PM +0100, David Hildenbrand wrote:
+>> On 29.11.24 13:55, Lorenzo Stoakes wrote:
+>>> On Fri, Nov 29, 2024 at 01:45:42PM +0100, David Hildenbrand wrote:
+>>>> On 29.11.24 13:26, Peter Zijlstra wrote:
+>>>>> On Fri, Nov 29, 2024 at 01:12:57PM +0100, David Hildenbrand wrote:
+>>>>>
+>>>>>> Well, I think we simply will want vm_insert_pages_prot() that stops treating
+>>>>>> these things like folios :) . *likely*  we'd want a distinct memdesc/type.
+>>>>>>
+>>>>>> We could start that work right now by making some user (iouring,
+>>>>>> ring_buffer) set a new page->_type, and checking that in
+>>>>>> vm_insert_pages_prot() + vm_normal_page(). If set, don't touch the refcount
+>>>>>> and the mapcount.
+>>>>>>
+>>>>>> Because then, we can just make all the relevant drivers set the type, refuse
+>>>>>> in vm_insert_pages_prot() anything that doesn't have the type set, and
+>>>>>> refuse in vm_normal_page() any pages with this memdesc.
+>>>>>>
+>>>>>> Maybe we'd have to teach CoW to copy from such pages, maybe not. GUP of
+>>>>>> these things will stop working, I hope that is not a problem.
+>>>>>
+>>>>> Well... perf-tool likes to call write() upon these pages in order to
+>>>>> write out the data from the mmap() into a file.
+>>>
+>>> I'm confused about what you mean, write() using the fd should work fine, how
+>>> would they interact with the mmap? I mean be making a silly mistake here
+>>
+>> write() to file from the mmap()'ed address range to *some* file.
+>>
 > 
-> I don't think you're objecting to the patch as such, just disappointed
-> about VM_PFNMAP and wanting to discuss this more generally?
-
-Well, a bit of both :)
-
+> Yeah sorry my brain melted down briefly, for some reason was thinking of read()
+> writing into the buffer...
 > 
-> As I say below, we can't use VM_MIXEDMAP as it's broken for our case (we
-> have to use page->mapping if there's a struct page), so I think _right now_
-> this is the only sane solution.
+>> This will GUP the pages you inserted.
+>>
+>> GUP does not work on PFNMAP.
+> 
+> Well it _does_ if struct page **pages is set to NULL :)
 
-I'm not so sure ...
+Hm? :)
 
-I've also been wondering whether this particular user really wants to 
-allocate and work on folios for the time being :/
-
-
-Putting aside the remainder of what we discuss further below for now, 
-I've just been wondering if we could somehow have two mappings with two 
-separate ops. The one for the single R/W page, the other for the R/O 
-pages ...
-
-... but I'm not sure yet if that would completely help.
-
-... still trying to grasp all the details here, and how to keep GUP working.
+check_vma_flags() unconditionally refuses VM_PFNMAP.
 
 -- 
 Cheers,
