@@ -1,118 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB5E17C7CE;
-	Mon,  2 Dec 2024 18:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A771DE8A6
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Dec 2024 19:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733164117; cv=none; b=lUBlHW1aywlesDNn6aXRwPVv/mf0TWJF38mcGFvUqPV6NKBll1le1zca9CMb45USHfgDCMeUh89LPCKEGauGNnLKJek9ZvzZDrfXD1nsrGoqrxx6Me4COt2LyiUVxY161u97eenvxzMmZvICeVtvE2XKojUhlGlghC3tAGJ7TWE=
+	t=1733168500; cv=none; b=P2GN9iDTuINljrw2Lam66864WeBJVq1SnPKDY56XHsOVEFLhsmYmfsLUXEUTn7UZrPFD3l64CHzUJXGhjJ6XO2Z76SPHE+OrjxUcrlPHkjLXyV86TzeaniKZ/x0xrOPqbfp+5ssTnDEt5oJYGRtTzwJWZJMe/mG8r9q/tdipp6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733164117; c=relaxed/simple;
-	bh=OJJyk1FEEwO3mui+E9YAyMAY34U2B8d/7bsCtYORUxM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BtzxveRY0gcvib9JNntG6bfwk1hNoaC4BTCtIa8DDA0PfVLVLVPQ6li2wyyzLh5tL5/52YFyvn3kvD9tBsMfubgmKshJjo6FRgjxbG2gx3XMJU4rHfdU82Ef8YIlvqrCOVf1A+orzj55WYpYHs5wUoJQIRSyHQJw2660DNise8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xampav+9; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1733168500; c=relaxed/simple;
+	bh=As/FOErKvBYbGJn88WHC2HsCL7lbQfLVl4/Hjnx2LNo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rI5+F8X6nuApAb8Mfyw7mOzg7WGLiKv/D2evCdXxtEAvYs8Ps9JbE6hgLsS9tezIpFayfmPzCd2FA6XkFIzm729tYdmG/D1PuQ8ZwcD7extzhq5teMDJZ5Mrh8scdUfdIeudwia2QNFmi5U56QNtc38AUFgSKRM6j3oXGaBD3ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4v7PmnEg; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xampav+9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733164116; x=1764700116;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=OJJyk1FEEwO3mui+E9YAyMAY34U2B8d/7bsCtYORUxM=;
-  b=Xampav+9bNI3vSMPgdeDgulPd/V5IeY+YNDD8vZrnpUntxeGjUIGV9qI
-   K+DZrwNSLijRsm7lPQa1HA8s36qJJR5wYnhYOAsdSm78326/fXWO1U4/g
-   BQj5115UJ4XuN9NTGimC2JGYL2Zryt4+fVpUptQlwo7xjb7MT32ppr8tu
-   P1J4rWIfw7lIYoRj8qrJKD6U9r/Kere9m4FYucMAi6s1Ey9N29u5z2ilX
-   jeX4tFb2xff8kFy3qQyeT8WNQWB9cQ5iBzeEgAUHU6h15xjRrXpRHPySQ
-   WeFJor9f4yJIcwS6/y1X7QxLi61SDEomfPCeZeRvPnVQZI9rLkYzuNrgE
-   g==;
-X-CSE-ConnectionGUID: kLArtikKTimpYiY2vAbxKA==
-X-CSE-MsgGUID: 1JUNsRIcS/ihXCS4B0s8rA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="33409350"
-X-IronPort-AV: E=Sophos;i="6.12,203,1728975600"; 
-   d="scan'208";a="33409350"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 10:28:35 -0800
-X-CSE-ConnectionGUID: YPTsmHxzQfmpt9NNMSlPew==
-X-CSE-MsgGUID: p8wmKMfOTqKFXeceUDbjNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,203,1728975600"; 
-   d="scan'208";a="93278767"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 02 Dec 2024 10:28:30 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 91DDD31C; Mon, 02 Dec 2024 20:28:28 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] pref/x86/rapl: Remove unused function
-Date: Mon,  2 Dec 2024 20:28:15 +0200
-Message-ID: <20241202182815.639124-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4v7PmnEg"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3a7bc2d7608so598035ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Dec 2024 11:41:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733168498; x=1733773298; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H0iSdNhnjULIPyo2eRYyGtVtHmGQVMsGxnXK3XxUefU=;
+        b=4v7PmnEgO76Oqv7CSwIa5OIOZF7CMTMoF6cFQKPycSPV3a2nlxdA1PjevLQRwaNSxg
+         8Ml18Sf5t7fQnuL2hEax/dLTh+QdCcrHGhgb1GxzPovn3rknByHv357aNHh0IyXeXCQx
+         57l+VhfR7GClwHI/rKrGw2bOXG3J37kKcOGUWfDmAGE25eYYomitQ173wYWsE3cAKTqo
+         fH8h4Ljp+92NXn8ne/qDsA2ootssard2pm9LL2Wi79dcbmPGVLd4Ri0RI5N5DQaLxvIn
+         Q6KjPMyLFqR0hZFzkauC7JwFq9Nl3fue+mirMMAS4NfsD9Nuwiz3ff06r39eJejkOBc3
+         RwwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733168498; x=1733773298;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H0iSdNhnjULIPyo2eRYyGtVtHmGQVMsGxnXK3XxUefU=;
+        b=PSbkcOPQqm7ybRwq51Db6zBLmBE7hMGiUK9ObcHNqFZ5QnyromT8DhvsfALDoNMcjB
+         tczE/580pu478gp2LIHFQXK2I7lbaC9Rtgx+ALC+Jcg2y4IT1lckFulvFBl3JEIMnTgf
+         fwN1LXtxIRGSeAXH6+5DnnGVsLhCJvMRVsK8n+pViAsXwz2Lo6pp8Hogqyb3iPa5xnHh
+         V+PipBAkxxioGj9T1wOLYPA+ZeCWwWjOkVZeGlBUrpGuNTTwT9/IJBfhxZ/Kon+ayF5o
+         2fAawRaJPC7Lx679xX+s8MMOvFUFH7WNOxnLBUIx/I/1xsFUIHMi4yfoKdhOfltrf4NX
+         RaLA==
+X-Gm-Message-State: AOJu0YyzYDehFWYxivRlvxw+5MTpQTq/nHaKIGyts+yFUo39I+SmisO1
+	cEsEMcpX6f++QLX8RmLKORlLC01KeTygCM+rdKihMF8ww/GC/MvA2kUMoEj004imolstP8Nrm2H
+	cC3xIaJuuEhoKfe+ZHbFt/4AhNbIgY6MjbOSp
+X-Gm-Gg: ASbGncs9xtHpiehUfaTmybRQCU5bZ0GY5j7clP58sDLEPBkFf1Vjq+x/QXLY/Ii3B1v
+	G5+MKinws7aeZX1MBmU1LSyPR/j+ukYdB
+X-Google-Smtp-Source: AGHT+IF4vCGxTeBduPcSx0FlsZVC4RXwdR4sgnRQ2tIfTGKloCqxfN7XIU8iOIPKkOQpfhJQtWNVMsYNCOtxj5lET1M=
+X-Received: by 2002:a05:6e02:320b:b0:3a5:e506:162b with SMTP id
+ e9e14a558f8ab-3a7cd11fcfcmr10676225ab.11.1733168498253; Mon, 02 Dec 2024
+ 11:41:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241129151948.3199732-1-james.clark@linaro.org>
+In-Reply-To: <20241129151948.3199732-1-james.clark@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 2 Dec 2024 11:41:27 -0800
+Message-ID: <CAP-5=fWvxxZzxuFjiPCfNgY0uTLo+VL-az-Wig6mmi-H4hs4uQ@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Don't signal all processes on system when
+ interrupting tests
+To: James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-get_rapl_pmu_cpumask() is unused, it prevents kernel builds
-with clang, `make W=1` and CONFIG_WERROR=y:
+On Fri, Nov 29, 2024 at 7:20=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+> This signal handler loops over all tests on ctrl-C, but it's active
+> while the test list is being constructed. process.pid is 0, then -1,
+> then finally set to the child pid on fork. If the Ctrl-C is received
+> during this point a kill(-1, SIGINT) can be sent which affects all
+> processes.
+>
+> Make sure the child has forked first before forwarding the signal. This
+> can be reproduced with ctrl-C immediately after launching perf test
+> which terminates the ssh connection.
+>
+> Fixes: 553d5efeb341 ("perf test: Add a signal handler to kill forked chil=
+d processes")
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-  arch/x86/events/rapl.c:165:37: error: unused function 'get_rapl_pmu_cpumask' [-Werror,-Wunused-function]
+(Resend as plain text)
 
-Fix this by removing unused function.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-See also commit 6863f5643dd7 ("kbuild: allow Clang to find unused static
-inline functions for W=1 build").
+Sorry for the lost ssh connections :-)
 
-Fixes: 9e9af8bbb5f9 ("perf/x86/rapl: Clean up cpumask and hotplug")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- arch/x86/events/rapl.c | 6 ------
- 1 file changed, 6 deletions(-)
+Thanks,
+Ian
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index a8defc813c36..3ed5ea2aa867 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -162,12 +162,6 @@ static inline unsigned int get_rapl_pmu_idx(int cpu)
- 					 topology_logical_die_id(cpu);
- }
- 
--static inline const struct cpumask *get_rapl_pmu_cpumask(int cpu)
--{
--	return rapl_pmu_is_pkg_scope() ? topology_core_cpumask(cpu) :
--					 topology_die_cpumask(cpu);
--}
--
- static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
- {
- 	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
--- 
-2.43.0.rc1.1336.g36b5255a03ac
-
+>
+> ---
+>  tools/perf/tests/builtin-test.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index 8dcf74d3c0a3..4751dd3c6f67 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -508,7 +508,7 @@ static int __cmd_test(struct test_suite **suites, int=
+ argc, const char *argv[],
+>                 for (size_t x =3D 0; x < num_tests; x++) {
+>                         struct child_test *child_test =3D child_tests[x];
+>
+> -                       if (!child_test)
+> +                       if (!child_test || child_test->process.pid <=3D 0=
+)
+>                                 continue;
+>
+>                         pr_debug3("Killing %d pid %d\n",
+> --
+> 2.34.1
+>
