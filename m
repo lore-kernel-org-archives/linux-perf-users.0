@@ -1,147 +1,123 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCE811FCFE7;
-	Mon,  2 Dec 2024 11:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4FC33F6;
+	Mon,  2 Dec 2024 13:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733138413; cv=none; b=F8FEnRVOfac99y1M3inhMehNFY4JatUCL9gEaWXoiH1wBG195gw4wwmI9uyR6FiqkfGL76BCFh8Op3tXUil2H82TFNSbqCRXEPsnCOFQlwmKvvy6G382PDac5ntfkeol3pjlGlC+fRaxQ041X5fuZoa9NMLBRY/COVlddPzAqXE=
+	t=1733147306; cv=none; b=EiCiYHyvhzEQoAB1X6tGmtw8rhAZ4IamP9Sn9HXzi2h8dV2mwI490/c4VRq490+8Yaz0RMRHjyb8gxLHqF8I2Da6O+fKz6OF2XCzyaTyphTFwFcdkV1uHv8+vY+YcSa4N7oqrpnIQELzwEwa21MmXn/xyxz5sECUvg1oSPm0XxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733138413; c=relaxed/simple;
-	bh=kd6W06N/AFB8/6eSvxw+YEuTby5eDyhs4z8FLM2F1Bg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LyP5DLYb+PIB9lm5nH5n0S8MkTuPglFfu0bNurEBmWgLhdNA4m99N52S9hi/ggnA3qJCruPXZINY2FGovo1zVeH79GCEu1yMewFN1t5lnxwGkLBSCIP/eFI1cAFBybokLb/JypoBYpZ0MBailbxmU8XoNEb6dyS3nT6HpFB7Mxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 538EE1063;
-	Mon,  2 Dec 2024 03:20:38 -0800 (PST)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AA4F83F71E;
-	Mon,  2 Dec 2024 03:20:07 -0800 (PST)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>,
-	Jing Zhang <renyu.zj@linux.alibaba.com>,
-	Guilherme Amadio <amadio@gentoo.org>
-Subject: [PATCH v2] perf test record+probe_libc_inet_pton: Make test resilient
-Date: Mon,  2 Dec 2024 11:19:58 +0000
-Message-Id: <20241202111958.553403-1-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1733147306; c=relaxed/simple;
+	bh=yRFF5Cn9hYJ5NxNNwgBFZ18HfvfvKPMofL1WAQo1+F4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bWwzByUOkDMxSXC6MhdVLqWMndC+gk24jCJ5uEMTjn8emUZgANsWGqu8UGLMuP/k0CGiijucEzRNRcNZ+t3FE6IqzvRXEqrHBZv2ldpwGqah74WSnVJUspR4GgU+6TOtxH7TdeyGCzwHE7EH5o1RM1yNSLVoiOBCMy3vhDe+I3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C/qhtRXq; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C/qhtRXq"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B28vMNk008687;
+	Mon, 2 Dec 2024 13:48:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=rqNlJL
+	dkxznHHoNexL0Ceqcdh2TqPu6ZQPu6UIy4HYs=; b=C/qhtRXqXQW9WXvEsIYLjW
+	hNFKgO2PE43GndzSJIq2IbinLmEIJTzQEb47QZopU4zu2cnzW2Pst31199Fe7sFC
+	yE2jgnseoB3Pgmw+l85d9J+J0CSH9cuvozKpjOgdgs4tjNuGgQaohqWyY7j8cOCk
+	UpXCFcmBCBLAiEVpdc+40qhipcg2td9h5cgSnuC5hkKtTyT6B9WYPL/X3fJjIsxB
+	uJHAKDvu0NnJ1rLG3dCMNqrLWwLiRmMw1h/83TtutR9fhWM8EdM4jxd1t1HTOuQw
+	Q53LR2nPwur84WvDR0FPjAA4F5RY0LSRHuuOO+f87l2GrGI66biuRnP/LqyGiR3A
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 437te8sj4w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 02 Dec 2024 13:48:05 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4B2DgHJF010973;
+	Mon, 2 Dec 2024 13:48:05 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 437te8sj4t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 02 Dec 2024 13:48:05 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4B26GUkT020536;
+	Mon, 2 Dec 2024 13:48:04 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 438d1s2g69-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 02 Dec 2024 13:48:04 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4B2Dm2wY65798614
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 2 Dec 2024 13:48:02 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 67A1D2006A;
+	Mon,  2 Dec 2024 13:48:02 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BEC2C20074;
+	Mon,  2 Dec 2024 13:48:01 +0000 (GMT)
+Received: from [9.171.14.28] (unknown [9.171.14.28])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  2 Dec 2024 13:48:01 +0000 (GMT)
+Message-ID: <2b3bc88a-e435-4ccc-a543-c8f8566dd306@linux.ibm.com>
+Date: Mon, 2 Dec 2024 14:48:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf test record+probe_libc_inet_pton: Make test
+ resilient
+To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Guilherme Amadio <amadio@gentoo.org>
+References: <20241202111958.553403-1-leo.yan@arm.com>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20241202111958.553403-1-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 384liJLtZORsnI_2gW8-8CeKyVM7eI1X
+X-Proofpoint-ORIG-GUID: VIzwQ9x8qYuswBlnADDWHSPxs_OkP4uX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 mlxlogscore=884 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 phishscore=0 adultscore=0 clxscore=1011 spamscore=0
+ malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412020117
 
-The test failed back and forth due to the call chain being heavily
-impacted by the libc, which varies across different architectures and
-distros.
+On 12/2/24 12:19, Leo Yan wrote:
+> The test failed back and forth due to the call chain being heavily
+> impacted by the libc, which varies across different architectures and
+> distros.
+> 
 
-The libc contains the symbols for "gaih_inet" and "getaddrinfo" in some
-cases, but not always.  Moreover, these symbols can be either normal
-symbols or dynamic symbols, making it difficult to decide the call chain
-entries due to the symbols are inconsistent.
+For s390 using 6.13.0.rc1
 
-To fix the issue, this commit identifies three call chain entries are
-always present.  These entries are matched by iterating through the
-lines in the "perf script" result.  The recording attribute max-stack is
-set to 4 for the possible maximum call chain depth.
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
 
-After:
-
-  # perf test -vF pton
-  --- start ---
-  Pattern: ping[][0-9 \.:]+probe_libc:inet_pton: \([[:xdigit:]]+\)
-    Matching: ping  285058 [025] 1219802.466939: probe_libc:inet_pton: (ffffa14b7cf0)
-  Pattern: .*inet_pton\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib/aarch64-linux-gnu/libc-2.31.so|inlined\)$
-    Matching: ping  285058 [025] 1219802.466939: probe_libc:inet_pton: (ffffa14b7cf0)
-    Matching: ffffa14b7cf0 __GI___inet_pton+0x0 (/usr/lib/aarch64-linux-gnu/libc-2.31.so)
-  Pattern: .*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$
-    Matching: ping  285058 [025] 1219802.466939: probe_libc:inet_pton: (ffffa14b7cf0)
-    Matching: ffffa14b7cf0 __GI___inet_pton+0x0 (/usr/lib/aarch64-linux-gnu/libc-2.31.so)
-    Matching: ffffa1488040 getaddrinfo+0xe8 (/usr/lib/aarch64-linux-gnu/libc-2.31.so)
-    Matching: aaaab8672da4 [unknown] (/usr/bin/ping)
-  ---- end ----
-   82: probe libc's inet_pton & backtrace it with ping                 : Ok
-
-Reported-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-Closes: https://lore.kernel.org/linux-perf-users/1728978807-81116-1-git-send-email-renyu.zj@linux.alibaba.com/
-Reported-by: Guilherme Amadio <amadio@gentoo.org>
-Closes: https://lore.kernel.org/linux-perf-users/Z0X3AYUWkAgfPpWj@x1/T/#m57327e135b156047e37d214a0d453af6ae1e02be
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
-Changes from v1: Fixed a typo s/Seatch/Search.
-
- .../shell/record+probe_libc_inet_pton.sh      | 34 ++++++++++---------
- 1 file changed, 18 insertions(+), 16 deletions(-)
-
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 47a26f25db9f..3fbc7a7409af 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -43,17 +43,8 @@ trace_libc_inet_pton_backtrace() {
- 		echo "((__GI_)?getaddrinfo|text_to_binary_address)\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
- 		echo "(gaih_inet|main)\+0x[[:xdigit:]]+[[:space:]]\(inlined|.*/bin/ping.*\)$" >> $expected
- 		;;
--	ppc64|ppc64le)
--		eventattr='max-stack=4'
--		# Add gaih_inet to expected backtrace only if it is part of libc.
--		if nm $libc | grep -F -q gaih_inet.; then
--			echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
--		fi
--		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
--		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
--		;;
- 	*)
--		eventattr='max-stack=3'
-+		eventattr='max-stack=4'
- 		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
- 		;;
- 	esac
-@@ -76,14 +67,25 @@ trace_libc_inet_pton_backtrace() {
- 	fi
- 	perf script -i $perf_data | tac | grep -m1 ^ping -B9 | tac > $perf_script
- 
--	exec 3<$perf_script
- 	exec 4<$expected
--	while read line <&3 && read -r pattern <&4; do
-+	while read -r pattern <&4; do
-+		echo "Pattern: $pattern"
- 		[ -z "$pattern" ] && break
--		echo $line
--		echo "$line" | grep -E -q "$pattern"
--		if [ $? -ne 0 ] ; then
--			printf "FAIL: expected backtrace entry \"%s\" got \"%s\"\n" "$pattern" "$line"
-+
-+		found=0
-+
-+		# Search lines in the perf script result
-+		exec 3<$perf_script
-+		while read line <&3; do
-+			[ -z "$line" ] && break
-+			echo "  Matching: $line"
-+			! echo "$line" | grep -E -q "$pattern"
-+			found=$?
-+			[ $found -eq 1 ] && break
-+		done
-+
-+		if [ $found -ne 1 ] ; then
-+			printf "FAIL: Didn't find the expected backtrace entry \"%s\"\n" "$pattern"
- 			return 1
- 		fi
- 	done
 -- 
-2.34.1
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
