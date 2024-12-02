@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7104C85;
-	Mon,  2 Dec 2024 21:46:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA641DA103;
+	Mon,  2 Dec 2024 22:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733175963; cv=none; b=KswM9cpRAVExWmLJuAqrp5iBLftWac2POmL96pjw0Ov/IBjGKXB6/Qud9SvlM1biMBqQFBZM/ABeDlShq+kX7pwmKTDoLcjxJecGE+XSsTYPE7M55h5B/RZgMuw/e/i0XRRKCKZwx9p/x4VFDF+/Vh5GlwMrXwTNIbNajnMBDAs=
+	t=1733176939; cv=none; b=Nddd7B5pNR5ddRJyyx+C82aP4/P2QOgs4HKCLsWhL6m/ZKe4lefRd2zza4bHtbVPIAbEVsR1gVWl7Cka3IcCi6f23yzGrf7esxzeeBanMBQwNqZyzyebinzotPyGl8ceqgKaZng33miIFdQfYM9VKpF2WUs0uN6gfxMWOcAxCwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733175963; c=relaxed/simple;
-	bh=8Q6ANYSxDAHATAOCzAvprE5Rt+lzIaYf8FcBmFRnvX0=;
+	s=arc-20240116; t=1733176939; c=relaxed/simple;
+	bh=BgRpjY7BC7q4xN3V+4faL6OopzCSu02L2UVZ++G5pL4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cK2g2O+SYsQw6Ke9PBNVHK9fVufx0IyYZTuIW5Rzj/hdfhZJoXB+kBhaXhko52E6mbppKGjbYrQqmnjIuStNWkf+LbNFkU4MvceDWI6T3lmEVO8jI/WiD5f3cGM1E8DA4Si4CW6LqIAO3TMUE7ZHye68L5mPK5DwgGoX/LRQENY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W9W/QsDb; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HQiLdyYCY469BOCKSpe7JMdZzIpC6lHAuu4tqZXfYZhsKrP7nEKBSWCWf6VUoU3rYjuXgcjUwLPqhmI8qXVuVgIVgt+4rUmTpsRgav6iKGsQKXPxTD1y077c89PoJkqgem55GiYPTUB1QoxQr0WOCHV/LurYHMWruMZUnstBI+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXcBzXPX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W9W/QsDb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4652CC4CED1;
-	Mon,  2 Dec 2024 21:46:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXcBzXPX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BF0DC4CED1;
+	Mon,  2 Dec 2024 22:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733175962;
-	bh=8Q6ANYSxDAHATAOCzAvprE5Rt+lzIaYf8FcBmFRnvX0=;
+	s=k20201202; t=1733176939;
+	bh=BgRpjY7BC7q4xN3V+4faL6OopzCSu02L2UVZ++G5pL4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W9W/QsDb1Sux3YFFTUJ7fL7y0wtvuMWrruwZ/hUIVdiRz9rSABimNxGqJaeb1nNhc
-	 aHlaXPoz4vJRy8SNLz9afj5jhJDKLGZHXA/A3uwjSMWz0XEkslXuEcIFJhNB4F+dcB
-	 larF8bakhJKsOK7RA8orhv05NwfPjzPB6GVHgG4PrCGFhVIcB1KRdRy8MKZv5g1E1e
-	 EOQjU0dxWncUVdVSmufK1laH0RE0haRw8qUL7uqQQ0F0gtwiYXZAIExZQMRZhvI7+W
-	 sNK/XAZNp7pP0as4/6OYfEN7NoHz87QPDUPnFun4Jd/tHwEtBYPHY/I3Jzj3xl1SS2
-	 AyaldKvaB2rPg==
-Date: Mon, 2 Dec 2024 13:46:00 -0800
+	b=mXcBzXPXkMrEi7/qxQ92iL8uL9zfW4Zul0hYwlTceeWq6SmcioR0UbW7QlQgpYk0o
+	 /ChsC72XdqUxD7IUNgApSmwsm3S4HEcZ3bqyZ8woSSjQzRy/PaG06Tp3xcqfiWl/gb
+	 yEmG4zybtiuzhZRGbpQTNglK1Idm9BLJOIEDisiM32eoYnXiedADIqvLjYQ+PiEo1L
+	 go4MLjuMgQwXtwu5ghoThHe0K4k3VKCYaB979TQrf5I50mlcXs8kbvcz/xfHHCDM8/
+	 CdI6Jrreh3tQXZRG5Av0OM7x45MC1jC60h6d1A6WS+6zP/CGIUWGf+hdDW7Y/mLWGr
+	 NzubDmrw7mIcA==
+Date: Mon, 2 Dec 2024 14:02:17 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Yang Jihong <yangjihong@bytedance.com>, peterz@infradead.org,
-	mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, james.clark@arm.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 00/12] perf record: Add event action support
-Message-ID: <Z04qmNnt86zcGE5Q@google.com>
-References: <20241128133553.823722-1-yangjihong@bytedance.com>
- <Z0jPPRA8JXSrwyaC@x1>
+To: Zhongqiu Han <quic_zhonhan@quicinc.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, james.clark@linaro.org,
+	yangyicong@hisilicon.com, song@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH 3/3] perf bpf: Fix two memory leakages when calling
+ perf_env__insert_bpf_prog_info()
+Message-ID: <Z04uaWQxI3LXfAtg@google.com>
+References: <20241128125432.2748981-1-quic_zhonhan@quicinc.com>
+ <20241128125432.2748981-4-quic_zhonhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,28 +49,96 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z0jPPRA8JXSrwyaC@x1>
+In-Reply-To: <20241128125432.2748981-4-quic_zhonhan@quicinc.com>
 
 Hello,
 
-On Thu, Nov 28, 2024 at 05:14:53PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, Nov 28, 2024 at 09:35:41PM +0800, Yang Jihong wrote:
-> > In perf-record, when an event is triggered, default behavior is to
-> > save sample data to perf.data. Sometimes, we may just want to do
-> > some lightweight actions, such as printing a log.
+On Thu, Nov 28, 2024 at 08:54:32PM +0800, Zhongqiu Han wrote:
+> If perf_env__insert_bpf_prog_info() returns false due to a duplicate bpf
+> prog info node insertion, the temporary info_node and info_linear memory
+> will leak. Add a check to ensure the memory is freed if the function
+> returns false.
 > 
-> > Based on this requirement, add the --action option to the event to
-> > specify the behavior when the event occurs.
+> Fixes: 9c51f8788b5d ("perf env: Avoid recursively taking env->bpf_progs.lock")
+> Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
+> ---
+>  tools/perf/util/bpf-event.c | 10 ++++++++--
+>  tools/perf/util/env.c       |  7 +++++--
+>  tools/perf/util/env.h       |  2 +-
+>  3 files changed, 14 insertions(+), 5 deletions(-)
 > 
-> 'perf record' is centered on saving data to disk without processing
-> events, while it has sideband events for some needs, like processing BPF
-> related events (PERF_RECORD_BPF_EVENT to catch PERF_BPF_EVENT_PROG_LOAD
-> and UNLOAD), doing things in a "live" way as your patchkit does seems
-> more appropriate to do in 'perf trace' :-)
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index 13608237c50e..c81444059ad0 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+> @@ -289,7 +289,10 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
+>  		}
+>  
+>  		info_node->info_linear = info_linear;
+> -		perf_env__insert_bpf_prog_info(env, info_node);
+> +		if (!perf_env__insert_bpf_prog_info(env, info_node)) {
+> +			free(info_linear);
+> +			free(info_node);
+> +		}
+>  		info_linear = NULL;
+>  
+>  		/*
+> @@ -480,7 +483,10 @@ static void perf_env__add_bpf_info(struct perf_env *env, u32 id)
+>  	info_node = malloc(sizeof(struct bpf_prog_info_node));
+>  	if (info_node) {
+>  		info_node->info_linear = info_linear;
+> -		perf_env__insert_bpf_prog_info(env, info_node);
+> +		if (!perf_env__insert_bpf_prog_info(env, info_node)) {
+> +			free(info_linear);
+> +			free(info_node);
+> +		}
+>  	} else
+>  		free(info_linear);
+>  
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index d7865ae5f8f5..38401a289c24 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -24,12 +24,15 @@ struct perf_env perf_env;
+>  #include "bpf-utils.h"
+>  #include <bpf/libbpf.h>
+>  
+> -void perf_env__insert_bpf_prog_info(struct perf_env *env,
+> +bool perf_env__insert_bpf_prog_info(struct perf_env *env,
+>  				    struct bpf_prog_info_node *info_node)
+>  {
+> +	bool ret = true;
 
-Agreed, 'perf trace' looks like a better place as you seem to target
-tracepoint events mostly.
+Please add a blank line between declaration and the other statements.
+Also I think you can just use the return value of the internal function
+instead of initializaing it to true.
 
 Thanks,
 Namhyung
 
+
+>  	down_write(&env->bpf_progs.lock);
+> -	__perf_env__insert_bpf_prog_info(env, info_node);
+> +	if (!__perf_env__insert_bpf_prog_info(env, info_node))
+> +		ret = false;
+>  	up_write(&env->bpf_progs.lock);
+> +	return ret;
+>  }
+>  
+>  bool __perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_prog_info_node *info_node)
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index 9db2e5a625ed..da11add761d0 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
+> @@ -178,7 +178,7 @@ int perf_env__nr_cpus_avail(struct perf_env *env);
+>  void perf_env__init(struct perf_env *env);
+>  bool __perf_env__insert_bpf_prog_info(struct perf_env *env,
+>  				      struct bpf_prog_info_node *info_node);
+> -void perf_env__insert_bpf_prog_info(struct perf_env *env,
+> +bool perf_env__insert_bpf_prog_info(struct perf_env *env,
+>  				    struct bpf_prog_info_node *info_node);
+>  struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+>  							__u32 prog_id);
+> -- 
+> 2.25.1
+> 
