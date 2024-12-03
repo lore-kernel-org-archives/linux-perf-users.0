@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFEA17995E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AB817BEB7;
 	Tue,  3 Dec 2024 03:53:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733198034; cv=none; b=ivbVZt2m7OmZ2gfFH3+C8G6GzYNv0rwnJNd2V8g3Pz88RHQfh5W2swat6CyWBHNlbntvx/VPzv1d8Hrl8fUp1MT0gRR+pP//qxD7tgKivKd/L5l2PS1HdOf8CUkiMc1a2/zDbSZl4A6LhV6pdi6AedKYq/rcdwymGKw7btM5688=
+	t=1733198034; cv=none; b=ZajmtPtLw5VHWrkTkxi1v03Pp6E78/AoM6cnqY+J37gouwc9aH+ti4FG+w8Axo0iUuOy+8Kq/QyYaJP5AnI43yGKfENri3lu1hFG8O09cL8Jt/RbsM5Z1M2whM/AN6zEqMMMwZBGEbHRk075z84v0eHwDe8eKu4YKpuJhx8u+Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1733198034; c=relaxed/simple;
-	bh=O1RWkaeULx9ZPpdPzg3sbjMLr7t24XttgegNRluRTnY=;
+	bh=tiwTL8knJ9/lrpjwCPKYVq4WT5/OioYslIWbXCg5OG0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VhsEsnRTJeOjYiBSGlWwoMwLyf8asLWO9KLO9qi2SMcuhGbWVtcFWTWuFruhPT+WKjZaCpzANAUThZ2ckrwfs5DVZz0RiAqJI/ZJB0LKQszf3PEf2qSK3ps2D3VsPzqa/knewARAYSthe6bhmzFmhzesd3U7/YoBazKSsc+Bwg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6/hE7Ig; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=h1Kqcii4/mHcTfSQbPXyhkwcs3EB4kSTOxyov15ZEV0XRfe+znn43jz4EpWPgfCmcSciFI39hL1XpHlQjUG2FrvwPSk+RRpsquidDs7T4nx1OzCSc4ENtgNK4eplzIKa1LweQf7Ybh6tijrQIyctyQzYYns6+kmlXbza6nvTeZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7PeW/Gt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6/hE7Ig"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12A4C4CED6;
-	Tue,  3 Dec 2024 03:53:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7PeW/Gt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F18CC4CED8;
+	Tue,  3 Dec 2024 03:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1733198033;
-	bh=O1RWkaeULx9ZPpdPzg3sbjMLr7t24XttgegNRluRTnY=;
+	bh=tiwTL8knJ9/lrpjwCPKYVq4WT5/OioYslIWbXCg5OG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E6/hE7Ig4WEjC7Mj78y+e2UHlJFg02WpUMgIRzashRP8vLlsnpd+Rd1GvbD1he76n
-	 rTIKmb1TGuOUW2tjamnsZVOWJdcJUt+uZAsC06FVa4vkKq3dt5rL28QJeWBU8a2/4p
-	 JYCXLvg53BpaIUtFOnJnsNPgESVWI4+69E2onyWqtFzhHOwnZeSfdtT5PoLZGtHHNl
-	 JV68rWUx9HKb4wJWI5lIK1hrWaKQepeHYvw9gEMsRQ8OBwGOJv+bYgwJTBogOWA956
-	 Ihm2i7DMdgCCMs3y4MsSlWtsuEOiA32pK7u/d5w8zuFXwvYgRH91e24kTs4z9B5JBJ
-	 t5KEMOnioLSkQ==
+	b=o7PeW/GtL8/W8v8LZJI7Sj3AucD0sOgsSvbAK0rzGR3nf5Pev53gXPlzEX2L++gDM
+	 ZHZ/7E7NIyf5FO6sCXYST/S3ZsnA4p0z5dLlO5HopR/u2zUQ5z0Sfp0i/mPmpsFqzW
+	 jCew6t+FWyADMFUio7lIGUnNXVx1U+HKuPyz0rx66dsCZ4Ig6PsCuiFVOBO15jOgAn
+	 gOSy7t5R8ZDRYmOenfx6V7WSOd/7+0dRcZ9MEArzViduGvK7X9+pSC7n5PB8zEjCQ9
+	 KuKsn2cPTG7MHDRsI6kazGbp6nOORvRIXCfmdaq3UX2I79NnnbbDUtkqFVbX8rK/Pr
+	 5/M6l7RDPE6tg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -34,16 +34,10 @@ Cc: Ian Rogers <irogers@google.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH 01/11] tools headers: Sync uapi/drm/drm.h with the kernel sources
-Date: Mon,  2 Dec 2024 19:53:39 -0800
-Message-ID: <20241203035349.1901262-2-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 02/11] tools headers: Sync uapi/linux/perf_event.h with the kernel sources
+Date: Mon,  2 Dec 2024 19:53:40 -0800
+Message-ID: <20241203035349.1901262-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
 In-Reply-To: <20241203035349.1901262-1-namhyung@kernel.org>
 References: <20241203035349.1901262-1-namhyung@kernel.org>
@@ -57,61 +51,43 @@ Content-Transfer-Encoding: 8bit
 
 To pick up the changes in this cset:
 
-  56c594d8df64e726 ("drm: add DRM_SET_CLIENT_NAME ioctl")
+  18d92bb57c39504d ("perf/core: Add aux_pause, aux_resume, aux_start_paused")
 
 This addresses these perf build warnings:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/include/uapi/drm/drm.h include/uapi/drm/drm.h
+    diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
 
 Please see tools/include/uapi/README for further details.
 
-Cc: David Airlie <airlied@gmail.com>
-Cc: Simona Vetter <simona@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: dri-devel@lists.freedesktop.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/include/uapi/drm/drm.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ tools/include/uapi/linux/perf_event.h | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/tools/include/uapi/drm/drm.h b/tools/include/uapi/drm/drm.h
-index 16122819edfeff87..7fba37b94401a6d5 100644
---- a/tools/include/uapi/drm/drm.h
-+++ b/tools/include/uapi/drm/drm.h
-@@ -1024,6 +1024,13 @@ struct drm_crtc_queue_sequence {
- 	__u64 user_data;	/* user data passed to event */
- };
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index 4842c36fdf801996..0524d541d4e3d501 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -511,7 +511,16 @@ struct perf_event_attr {
+ 	__u16	sample_max_stack;
+ 	__u16	__reserved_2;
+ 	__u32	aux_sample_size;
+-	__u32	__reserved_3;
++
++	union {
++		__u32	aux_action;
++		struct {
++			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
++				aux_pause        :  1, /* on overflow, pause AUX area tracing */
++				aux_resume       :  1, /* on overflow, resume AUX area tracing */
++				__reserved_3     : 29;
++		};
++	};
  
-+#define DRM_CLIENT_NAME_MAX_LEN		64
-+struct drm_set_client_name {
-+	__u64 name_len;
-+	__u64 name;
-+};
-+
-+
- #if defined(__cplusplus)
- }
- #endif
-@@ -1288,6 +1295,16 @@ extern "C" {
-  */
- #define DRM_IOCTL_MODE_CLOSEFB		DRM_IOWR(0xD0, struct drm_mode_closefb)
- 
-+/**
-+ * DRM_IOCTL_SET_CLIENT_NAME - Attach a name to a drm_file
-+ *
-+ * Having a name allows for easier tracking and debugging.
-+ * The length of the name (without null ending char) must be
-+ * <= DRM_CLIENT_NAME_MAX_LEN.
-+ * The call will fail if the name contains whitespaces or non-printable chars.
-+ */
-+#define DRM_IOCTL_SET_CLIENT_NAME	DRM_IOWR(0xD1, struct drm_set_client_name)
-+
- /*
-  * Device specific ioctls should only be in their respective headers
-  * The device specific ioctl range is from 0x40 to 0x9f.
+ 	/*
+ 	 * User provided data if sigtrap=1, passed back to user via
 -- 
 2.47.0.338.g60cca15819-goog
 
