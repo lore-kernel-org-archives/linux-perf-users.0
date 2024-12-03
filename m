@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DE61B3959;
-	Tue,  3 Dec 2024 03:53:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D5B1CD205;
+	Tue,  3 Dec 2024 03:53:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733198037; cv=none; b=Cjxny0RTTkBENYooWqEKzM7Q3TgVussMuXCXzjCeTfFc0zTJiXYIRAoQilSQYCbaHAfOObFQ2i5O+L1Ex3MELMqnigbp7WJyQdXFmLH910zToa3M1Zs24GX9beYncvHaR8FQBEdESmY1lhO7QhvwQqTtFjJVKPtoOkU2wKr5IAo=
+	t=1733198038; cv=none; b=SzS0NKn3s95hQaEgW/pVHFnY7Mmlf/LKLA9AwJ9AZdNm4hRPHMxBJXKDCIvLrvAPr+W6FEbulGlzd50AbmqNR8o/ArIy7tz54+BHobNCt4eFkgV9lDe4P+AD5TvYTn0mRFzbX2n/r8OWR1Eux+u3NSryAEagA+UD3r4daChjhaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733198037; c=relaxed/simple;
-	bh=BQm/1aP/K8xvjEddkH1/orrgM/dsPMVCSgObmtMyX8s=;
+	s=arc-20240116; t=1733198038; c=relaxed/simple;
+	bh=VL9ywmhYUUjMMzUQwvCNc1TEisl1SHebjEVkVrkBfTo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mTMhQL9eFkrMAgfkek0YkgKWO6Pu8FWoRNMb+3RsVoFw+DJqTvEFnDswUNkydB2Tl1EumC/JxdT7erDHNDLKJwgET7cuSUDzFZPyl4/DnBYQ9eGv9ViDRfizamrMES0zRyey/SF9PNeSUHtvm3mKVqGjGy5/wvJUo6QKmoFxKU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IPQS33jM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=UaxSTWe8pnhHrp0fOgbR+2MzjZM7EoEnAAwkIJoqCVFA47xrNOOeWs8CblD+s18HAgkQqn7hwy5MQl7nnxNJSaMgMWxwvQ/2zHllZm6hBHHpPguSTrYFeA85eOVoFMPQZ5ocneya/3W4Unfi4iOzCwcOVm7B3V96apambQthLvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/ZbTYd7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IPQS33jM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2521DC4CEE3;
-	Tue,  3 Dec 2024 03:53:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/ZbTYd7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F180C4CED6;
+	Tue,  3 Dec 2024 03:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733198037;
-	bh=BQm/1aP/K8xvjEddkH1/orrgM/dsPMVCSgObmtMyX8s=;
+	s=k20201202; t=1733198038;
+	bh=VL9ywmhYUUjMMzUQwvCNc1TEisl1SHebjEVkVrkBfTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IPQS33jM0NIJL+o45Z8vwy4uo23P0YfyCHf+fV/dkterpOJglAFiJZ0VIUWd0fMHT
-	 8Nz1JsMVOq+jXyKCamqLy90zKm1LAwd7sU1Qu+jMCg7pK94nALz2jYr0LrNc+1V6uv
-	 fsSRyZ+PxY3LMUKpqQuHrd9D6ppdq/NOrI5WAqf/UWAmceFtw9jIijUexEv2/dlDDE
-	 pSNcQxpcI4ou2vMBppcEHZjilroM+DWBjXN89McaVYq02xkCP5g2s4pFrYWZNExGtK
-	 mXQXj4XeWBEjpCU36r2vP0iZP5kRaI4l5M5TCFr42MAD/rlB2UrSLHn3WFuoSckhvF
-	 m+Zb7Uz2GdNGQ==
+	b=h/ZbTYd7e+gykDGFKEpfGbbf1uzl31vFKMZ4WSzWNb5j1spAKxy03Sa8NSi96lSZU
+	 Rh2KWmxITH00aD0lQ/JC+yvXgXR9ypBt6jmWz4509DS0HzrFuvV3Hb2esY7MDQi58r
+	 j2bnmNR8uyP0IxBvjI8z0/hw/kI+UIodqv/6Svo0isatJRPPrlvJ9FdUhJeJFwqxs4
+	 Kq70xCPJuICSyrjpLMxFB3JQ7pZevj0IYu3Ly55GXLTYHsFFeu96w1nkMCUzPet4Kc
+	 FvwVlSx1NUQl5IHMGkJHRWk9rQh4HFS+ApMUEwIrV5/QUkIKVXQPXN2cvt4ZglwZ4k
+	 gcCciDC1n6pNA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -34,13 +34,10 @@ Cc: Ian Rogers <irogers@google.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 09/11] tools headers: Sync uapi/linux/mount.h with the kernel sources
-Date: Mon,  2 Dec 2024 19:53:47 -0800
-Message-ID: <20241203035349.1901262-10-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 11/11] perf tools: Fix build error on generated/fs_at_flags_array.c
+Date: Mon,  2 Dec 2024 19:53:49 -0800
+Message-ID: <20241203035349.1901262-12-namhyung@kernel.org>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
 In-Reply-To: <20241203035349.1901262-1-namhyung@kernel.org>
 References: <20241203035349.1901262-1-namhyung@kernel.org>
@@ -50,69 +47,45 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-To pick up the changes in this cset:
+It should only have generic flags in the array but the recent header
+sync brought a new flags to fcntl.h and caused a build error.  Let's
+update the shell script to exclude flags specific to name_to_handle_at().
 
-  aefff51e1c2986e1 statmount: retrieve security mount options
-  2f4d4503e9e5ab76 statmount: add flag to retrieve unescaped options
-  44010543fc8bedad fs: add the ability for statmount() to report the sb_source
-  ed9d95f691c29748 fs: add the ability for statmount() to report the fs_subtype
+    CC      trace/beauty/fs_at_flags.o
+  In file included from trace/beauty/fs_at_flags.c:21:
+  tools/perf/trace/beauty/generated/fs_at_flags_array.c:13:30: error: initialized field overwritten [-Werror=override-init]
+     13 |         [ilog2(0x002) + 1] = "HANDLE_CONNECTABLE",
+        |                              ^~~~~~~~~~~~~~~~~~~~
+  tools/perf/trace/beauty/generated/fs_at_flags_array.c:13:30: note: (near initialization for ‘fs_at_flags[2]’)
 
-This addresses these perf build warnings:
-
-  Warning: Kernel ABI header differences:
-    diff -u tools/perf/trace/beauty/include/uapi/linux/mount.h include/uapi/linux/mount.h
-
-Please see tools/include/uapi/README for further details.
-
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel@vger.kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/trace/beauty/include/uapi/linux/mount.h | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ tools/perf/trace/beauty/fs_at_flags.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/trace/beauty/include/uapi/linux/mount.h b/tools/perf/trace/beauty/include/uapi/linux/mount.h
-index 225bc366ffcbf031..c07008816acae89c 100644
---- a/tools/perf/trace/beauty/include/uapi/linux/mount.h
-+++ b/tools/perf/trace/beauty/include/uapi/linux/mount.h
-@@ -154,7 +154,7 @@ struct mount_attr {
-  */
- struct statmount {
- 	__u32 size;		/* Total size, including strings */
--	__u32 mnt_opts;		/* [str] Mount options of the mount */
-+	__u32 mnt_opts;		/* [str] Options (comma separated, escaped) */
- 	__u64 mask;		/* What results were written */
- 	__u32 sb_dev_major;	/* Device ID */
- 	__u32 sb_dev_minor;
-@@ -173,7 +173,13 @@ struct statmount {
- 	__u32 mnt_root;		/* [str] Root of mount relative to root of fs */
- 	__u32 mnt_point;	/* [str] Mountpoint relative to current root */
- 	__u64 mnt_ns_id;	/* ID of the mount namespace */
--	__u64 __spare2[49];
-+	__u32 fs_subtype;	/* [str] Subtype of fs_type (if any) */
-+	__u32 sb_source;	/* [str] Source string of the mount */
-+	__u32 opt_num;		/* Number of fs options */
-+	__u32 opt_array;	/* [str] Array of nul terminated fs options */
-+	__u32 opt_sec_num;	/* Number of security options */
-+	__u32 opt_sec_array;	/* [str] Array of nul terminated security options */
-+	__u64 __spare2[46];
- 	char str[];		/* Variable size part containing strings */
- };
- 
-@@ -207,6 +213,10 @@ struct mnt_id_req {
- #define STATMOUNT_FS_TYPE		0x00000020U	/* Want/got fs_type */
- #define STATMOUNT_MNT_NS_ID		0x00000040U	/* Want/got mnt_ns_id */
- #define STATMOUNT_MNT_OPTS		0x00000080U	/* Want/got mnt_opts */
-+#define STATMOUNT_FS_SUBTYPE		0x00000100U	/* Want/got fs_subtype */
-+#define STATMOUNT_SB_SOURCE		0x00000200U	/* Want/got sb_source */
-+#define STATMOUNT_OPT_ARRAY		0x00000400U	/* Want/got opt_... */
-+#define STATMOUNT_OPT_SEC_ARRAY		0x00000800U	/* Want/got opt_sec... */
- 
- /*
-  * Special @mnt_id values that can be passed to listmount
+diff --git a/tools/perf/trace/beauty/fs_at_flags.sh b/tools/perf/trace/beauty/fs_at_flags.sh
+index e3f13f96a27c227c..fac4d0c049fcc89f 100755
+--- a/tools/perf/trace/beauty/fs_at_flags.sh
++++ b/tools/perf/trace/beauty/fs_at_flags.sh
+@@ -13,13 +13,14 @@ printf "static const char *fs_at_flags[] = {\n"
+ regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+AT_([^_]+[[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+ # AT_EACCESS is only meaningful to faccessat, so we will special case it there...
+ # AT_STATX_SYNC_TYPE is not a bit, its a mask of AT_STATX_SYNC_AS_STAT, AT_STATX_FORCE_SYNC and AT_STATX_DONT_SYNC
+-# AT_HANDLE_FID and AT_HANDLE_MNT_ID_UNIQUE are reusing values and are valid only for name_to_handle_at()
++# AT_HANDLE_FID, AT_HANDLE_MNT_ID_UNIQUE and AT_HANDLE_CONNECTABLE are reusing values and are valid only for name_to_handle_at()
+ # AT_RENAME_NOREPLACE reuses 0x1 and is valid only for renameat2()
+ grep -E $regex ${linux_fcntl} | \
+ 	grep -v AT_EACCESS | \
+ 	grep -v AT_STATX_SYNC_TYPE | \
+ 	grep -v AT_HANDLE_FID | \
+ 	grep -v AT_HANDLE_MNT_ID_UNIQUE | \
++	grep -v AT_HANDLE_CONNECTABLE | \
+ 	grep -v AT_RENAME_NOREPLACE | \
+ 	sed -r "s/$regex/\2 \1/g"	| \
+ 	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n"
 -- 
 2.47.0.338.g60cca15819-goog
 
