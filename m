@@ -1,48 +1,63 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B3A1E25EC;
-	Tue,  3 Dec 2024 10:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BF11F706B
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Dec 2024 14:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733222773; cv=none; b=VIL4YlgycEx2yQI1fGEHkIJmdk696v06oX7F4zrBOivzUxt0MN9ZbApIZJbsZH96w6ymU+6hIWsv6RC9sgC+ETq0hehzt6ED3WKj3voKBLxv2pIVLg0b0XZFr6b6Y7MgDrZMfqZIfVw38Mk2Qsw5W7qysxyIRJ/p6HM5QChJn/c=
+	t=1733236625; cv=none; b=L3f9BX8rxhIO2nuWFQZtB+P5P3UnM4AAA9e4Djxn/BgdaqA/v0zEjXidvTKH5q0U+YdxiOgebwfEMwU8XRtvAU6BYbXJ28jh3iUiUvfwV2TERAqMGHB4uOV5vHy0a7up9WeSj0+u9jOpNzhzdnLbwusS0ru2+pJ9kbkCCQllYfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733222773; c=relaxed/simple;
-	bh=P51bhc3HZ3o911SSeg8+stkV+cAHvwFIJ068zwsw+4A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AzwRkmni5Te1EBZ/R5u3W8R0YUH76RMBB9AOeo3K7PT8iKKc34VIID2ARdj9lFpYtR9z0zrLm3t4qZ4JwSNxNh4fCzJd0RRT/JxESlFu/qes1PeZlpWhSmx2tlErrxKxAAPjpqSS+zbgcqENGxbf5dRws/hLN1a+b7IrdL5l/1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UKnCqHRr; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1733236625; c=relaxed/simple;
+	bh=bpRIxTujv7Q2Gp3OWlV89fp/ycxERqxYMWMleI8UkMc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=djJBWbGMEDOwMUSiOp3exGFTppUbjwLkm2HJePmScin09+WJUjBKDUIRVFdoqKdq2tSnOBa8oJJort+bjV1PCN7Yo4YsW2iKmZJGS0WGOdoREliNIKlvyynylB2UMw3i+n6aI+XLiTZ2K02JTxlA/r9v5r6k9R5AcvVhYoN4imI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ykvZ4U0u; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UKnCqHRr"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B362c2m027841;
-	Tue, 3 Dec 2024 10:45:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UN0XSC5qycfF5izJMc2/kTr5aNMxSwmq9lk/LJNJHAE=; b=UKnCqHRr6h7c9L+G
-	SOUED9IjML+F6Wq4l6MVo+/n63ONsACHcyNcKpfdwX+DOuhJYPM4inCAazjGwrTM
-	UrcLm9UbC5vyB60B481/9B4Sr6PxifDtM+Joiah0cviayC3ka41Sxh28rrYkZZUG
-	yWxWdH6ZKGs66aUuZPkSu5LusPAOeuhx6dsIYMVBGLdu2kRfniujuHLWs23w3gBM
-	sGw5MhkxrFDuzR2V2IiW+Ffm7fEhJrxwxnmG8zyJWJL8FF8r7RVwLdCwZegVUhvQ
-	80Ol5DE4OqUOZTapI4HIeYJ8JLey107dMHwIF44EBEL+IA2X1f567YNZcByhX5be
-	DWTXzw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 439vcegqwy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Dec 2024 10:45:52 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B3AjpEI023835
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 3 Dec 2024 10:45:51 GMT
-Received: from [10.239.133.66] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 3 Dec 2024
- 02:45:47 -0800
-Message-ID: <de297c20-8a91-48b5-96bd-e59019a780ef@quicinc.com>
-Date: Tue, 3 Dec 2024 18:45:45 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ykvZ4U0u"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aa545dc7105so874159166b.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Dec 2024 06:37:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733236621; x=1733841421; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cBs2bqNxoIZaAZ+QacZkhFhyWnJZa9yQ3yMuyWrLncQ=;
+        b=ykvZ4U0uq96p/NeSE7FnvhiHlb/rNhj5meCsLoUljrq5n1YESKc0EZya9EHSJmtubz
+         cVkxB7cIhN11srGYVc5daLZ/0MUQmUCnEAsrI1wohUzUWZa2kdxGZsMw+W6tyoy7cEWi
+         LUGevnAMKhp4HZtJvUksfvW/cKZY0506N41wtmeP/1qU6J9c+LfQFlyxg96L6P0XhWUI
+         2hUozs7B50JUt4nKUemrBQBzc1sFOd8V92qlUBkHkESY9CXvmz3pr2Ra8u2KGBayshT1
+         KbICRg6C/TK38oBPWQhTLhPXtBv9bpVJz0s8Dky9L/WNx6CBVMF9aMRLDAhe+cqfwvmJ
+         YZAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733236621; x=1733841421;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cBs2bqNxoIZaAZ+QacZkhFhyWnJZa9yQ3yMuyWrLncQ=;
+        b=TXj9a1zY2bIpZZE9LjZZwNZjLWsvfifyDqUOqkY5iiH2xSzcfU8O8rjnk/Swn96f6Z
+         tlu4ZF1zgSZJ2DWxgoWqLlnBdr/uus5g803r4j4ybAJi1cdsQ+GOCeMx4hfSJ1wwiMyH
+         zeEgZbS7JePm22o55wSKkMbM6GT9io370ak7BaAvWxVlcifiCCmvuqBSOp5yfryrJWWL
+         It4gxKkFPAf9eoDyVjEuQsdZC+IKyuCVVIl6x/effrnWTjKgWh0OHDT1a+RetJIPqgqK
+         +Cw3Cfp6/YHGv2LReMG5xPHsSOvislewOpZjN1emuPMkTv9E8C3P5g3056TNY9mMuls2
+         B8dg==
+X-Forwarded-Encrypted: i=1; AJvYcCUayhGuZ1c2e16D+4gcsedHCTpc1irc+AyjbYAWU8pTZqxNh6IZShW7L4LLF3ZbOlmXd6UVz6M5kADksXj5Ylts@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO2XzWeq/9vTTV/28D+53yXKlP3cN191OcVlsEGZ2MI+FMRCMk
+	LXdAZaq1UG1a9q1rkxYqzNUx/SAOsX37vEMPpVDMU4JCi2zzHIWcG1Rp5L5LYxs=
+X-Gm-Gg: ASbGncso/K3uj1tOjEmTxKf6ARz/vGJxlXVJ2tiQ0b05NTznQxWdhr9IoGKw0OgCAQW
+	F3DEl3oB7wwdnXeDXGPoj0+ix8N1oP54LfxnhZuRQudGSdK4U0YoTrUis1u3RR7NVQaEbgmthU2
+	R+eCozj5oraioST18rPCzZZdMH2nyFx0GGRv7ieYgqf2BgC1hYntV3OhYa6XaYfQZ5YK5EWH4wM
+	+I+R+bfY6LrllWyB5PwTFO/Cy0wXjb1Zw7fSaxXXJadzqVGt9uRTqJee6PM
+X-Google-Smtp-Source: AGHT+IFWFXisc3O0IBOI5cxiXdMDO/YH4vVbsBolwektVRaIz+49XfjW5X6tzAj6IAAVLBD7MYDeoA==
+X-Received: by 2002:a17:907:7854:b0:aa5:358c:72a7 with SMTP id a640c23a62f3a-aa5f7d4f3bfmr241397966b.21.1733236621435;
+        Tue, 03 Dec 2024 06:37:01 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.200])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa5997d55fdsm616522766b.55.2024.12.03.06.37.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Dec 2024 06:37:01 -0800 (PST)
+Message-ID: <8d6d43d1-51be-4412-829a-ef5875321f5b@linaro.org>
+Date: Tue, 3 Dec 2024 14:37:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,155 +65,98 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] perf bpf: Fix two memory leakages when calling
- perf_env__insert_bpf_prog_info()
-To: Namhyung Kim <namhyung@kernel.org>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-        <kan.liang@linux.intel.com>, <james.clark@linaro.org>,
-        <yangyicong@hisilicon.com>, <song@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bpf@vger.kernel.org>
-References: <20241128125432.2748981-1-quic_zhonhan@quicinc.com>
- <20241128125432.2748981-4-quic_zhonhan@quicinc.com>
- <Z04uaWQxI3LXfAtg@google.com>
+Subject: Re: Perf test 7 fails on s390 since 6.12.0
+To: Thomas Richter <tmricht@linux.ibm.com>, Ian Rogers <irogers@google.com>,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Leo Yan <leo.yan@arm.com>
+Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>
+References: <12338ec9-51a0-44ef-b2e6-4a95d3bf0e4d@linux.ibm.com>
 Content-Language: en-US
-From: Zhongqiu Han <quic_zhonhan@quicinc.com>
-In-Reply-To: <Z04uaWQxI3LXfAtg@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <12338ec9-51a0-44ef-b2e6-4a95d3bf0e4d@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: sw8Ejl0PTIlAF3LzMLtkVf2tQuYRTu8e
-X-Proofpoint-ORIG-GUID: sw8Ejl0PTIlAF3LzMLtkVf2tQuYRTu8e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=999 adultscore=0 suspectscore=0 spamscore=0
- impostorscore=0 phishscore=0 mlxscore=0 malwarescore=0 clxscore=1011
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412030092
 
-On 12/3/2024 6:02 AM, Namhyung Kim wrote:
-> Hello,
+
+
+On 02/12/2024 2:53 pm, Thomas Richter wrote:
+> I just downloaded the latest kernel tree 6.13.0rc1 and observed several
+> failures of the perf test suite.
 > 
-> On Thu, Nov 28, 2024 at 08:54:32PM +0800, Zhongqiu Han wrote:
->> If perf_env__insert_bpf_prog_info() returns false due to a duplicate bpf
->> prog info node insertion, the temporary info_node and info_linear memory
->> will leak. Add a check to ensure the memory is freed if the function
->> returns false.
->>
->> Fixes: 9c51f8788b5d ("perf env: Avoid recursively taking env->bpf_progs.lock")
->> Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
->> ---
->>   tools/perf/util/bpf-event.c | 10 ++++++++--
->>   tools/perf/util/env.c       |  7 +++++--
->>   tools/perf/util/env.h       |  2 +-
->>   3 files changed, 14 insertions(+), 5 deletions(-)
->>
->> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
->> index 13608237c50e..c81444059ad0 100644
->> --- a/tools/perf/util/bpf-event.c
->> +++ b/tools/perf/util/bpf-event.c
->> @@ -289,7 +289,10 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
->>   		}
->>   
->>   		info_node->info_linear = info_linear;
->> -		perf_env__insert_bpf_prog_info(env, info_node);
->> +		if (!perf_env__insert_bpf_prog_info(env, info_node)) {
->> +			free(info_linear);
->> +			free(info_node);
->> +		}
->>   		info_linear = NULL;
->>   
->>   		/*
->> @@ -480,7 +483,10 @@ static void perf_env__add_bpf_info(struct perf_env *env, u32 id)
->>   	info_node = malloc(sizeof(struct bpf_prog_info_node));
->>   	if (info_node) {
->>   		info_node->info_linear = info_linear;
->> -		perf_env__insert_bpf_prog_info(env, info_node);
->> +		if (!perf_env__insert_bpf_prog_info(env, info_node)) {
->> +			free(info_linear);
->> +			free(info_node);
->> +		}
->>   	} else
->>   		free(info_linear);
->>   
->> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
->> index d7865ae5f8f5..38401a289c24 100644
->> --- a/tools/perf/util/env.c
->> +++ b/tools/perf/util/env.c
->> @@ -24,12 +24,15 @@ struct perf_env perf_env;
->>   #include "bpf-utils.h"
->>   #include <bpf/libbpf.h>
->>   
->> -void perf_env__insert_bpf_prog_info(struct perf_env *env,
->> +bool perf_env__insert_bpf_prog_info(struct perf_env *env,
->>   				    struct bpf_prog_info_node *info_node)
->>   {
->> +	bool ret = true;
+> This test case is the first one:
+> # ./perf test -F 7
+> Unrecognized literal '#system_tsc_freq'  7: Simple expression parser  : FAILED!
+> #
+
+Hi Thomas,
+
+Did you see this thread: 
+https://lore.kernel.org/linux-perf-users/0F805B2F-35CC-4E0C-BD2F-84552C4C528E@linux.vnet.ibm.com/
+
+Is that related to your issue? I looked but I couldn't find a V2 from 
+Athira.
+
+The same test was also mentioned on "[GIT PULL] perf-tools changes for 
+v6.13", but I can't tell if it's the same type of failure or not.
+
+James
+
+
+
 > 
-> Please add a blank line between declaration and the other statements.
-> Also I think you can just use the return value of the internal function
-> instead of initializaing it to true.
+> # ./perf test -Fvv 7
+> --- start ---
+> Using CPUID IBM,9175,705,ME1,3.8,002f
+> parsing metric: 1+1
+> parsing metric: FOO+BAR
+> lookup(FOO): val 1.000000
+> lookup(BAR): val 2.000000
+> ...
 > 
-> Thanks,
-> Namhyung
+> parsing metric: #num_cpus
+> literal: #num_cpus = 8.000000
+> parsing metric: #num_cores
+> literal: #num_cores = 4.000000
+> parsing metric: #num_dies
+> literal: #num_dies = 0.000000
+> parsing metric: #num_packages
+> literal: #num_packages = 1.000000
+> parsing metric: #system_tsc_freq
+> Unrecognized literal '#system_tsc_freq'literal: #system_tsc_freq = nan
+> FAILED tests/expr.c:252 #system_tsc_freq == 0
+> ---- end ----
+>    7: Simple expression parser         : FAILED!
+> [root@b83lp65 perf]#
+> 
+> I bisectred this to
+> 
+> # git bisect good
+> 609aa2667f67c1588d4e741110265f74b7713177 is the first bad commit
+> commit 609aa2667f67c1588d4e741110265f74b7713177
+> Author: Ian Rogers <irogers@google.com>
+> Date:   Tue Oct 1 20:20:12 2024 -0700
+> 
+>      perf tool_pmu: Switch to standard pmu functions and json descriptions
+>      
+>      Use the regular PMU approaches with tool json events to reduce the
+>      amount of special tool_pmu code - tool_pmu__config_terms and
+>      tool_pmu__for_each_event_cb are removed. Some functions remain, like
+>      tool_pmu__str_to_event, as conveniences to metricgroups. Add
+>      tool_pmu__skip_event/tool_pmu__num_skip_events to handle the case that
+>      tool json events shouldn't appear on certain architectures. This isn't
+>      done in jevents.py due to complexity in the empty-pmu-events.c and
+>      when all vendor json is built into the tool.
+>      
+>      Signed-off-by: Ian Rogers <irogers@google.com>
+>      Acked-by: Namhyung Kim <namhyung@kernel.org>
+>      Link: https://lore.kernel.org/r/20241002032016.333748-10-irogers@google.com
+>      Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
 > 
+> Note this test used to work before on s390.
+> It now also fails on the 6.13.0-rc1.
+> 
+> Any hints on how to fix this? Thanks.
+> 
 
-Hi Namhyung,
-Thanks for your review~
-
-I will add a blank line between the declaration and the other
-statements, and optimize it as below:
-
-
-+bool perf_env__insert_bpf_prog_info(struct perf_env *env,
-  				    struct bpf_prog_info_node
-*info_node)
-  {
-+	bool ret;
-+
-  	down_write(&env->bpf_progs.lock);
--	__perf_env__insert_bpf_prog_info(env, info_node);
-+	ret = __perf_env__insert_bpf_prog_info(env, info_node);
-  	up_write(&env->bpf_progs.lock);
-+	return ret;
-  }
-
-
->>   	down_write(&env->bpf_progs.lock);
->> -	__perf_env__insert_bpf_prog_info(env, info_node);
->> +	if (!__perf_env__insert_bpf_prog_info(env, info_node))
->> +		ret = false;
->>   	up_write(&env->bpf_progs.lock);
->> +	return ret;
->>   }
->>   
->>   bool __perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_prog_info_node *info_node)
->> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
->> index 9db2e5a625ed..da11add761d0 100644
->> --- a/tools/perf/util/env.h
->> +++ b/tools/perf/util/env.h
->> @@ -178,7 +178,7 @@ int perf_env__nr_cpus_avail(struct perf_env *env);
->>   void perf_env__init(struct perf_env *env);
->>   bool __perf_env__insert_bpf_prog_info(struct perf_env *env,
->>   				      struct bpf_prog_info_node *info_node);
->> -void perf_env__insert_bpf_prog_info(struct perf_env *env,
->> +bool perf_env__insert_bpf_prog_info(struct perf_env *env,
->>   				    struct bpf_prog_info_node *info_node);
->>   struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
->>   							__u32 prog_id);
->> -- 
->> 2.25.1
->>
-
-
--- 
-Thx and BRs,
-Zhongqiu Han
