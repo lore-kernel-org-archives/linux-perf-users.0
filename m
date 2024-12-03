@@ -1,179 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185C02A1B8
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Dec 2024 10:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A651E22E9;
+	Tue,  3 Dec 2024 10:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733221391; cv=none; b=mu5QeZeL6ic7HysORDiZAZX8m47hDbN1Ok09tKxPi0/1sQ9ctHHGrxoy7JRBx2USd6QghUL7VH3SgOTS4RmZi7dBRO7l0XBwuQug2YnnwGnDD7MquSSKtmEBzmS4ztQXQ3IJ1soHCXjwD9/qvs0rlSRbm/n4PjgA1vJjn0gLo7M=
+	t=1733222548; cv=none; b=KICGQUblVElLZwIBwKoK0yF+CB1KQ0CNOwMUhuJJDwj7KJwfp+o4HmMN6b/CaDJWI+oaLE2DbXebuRU6AqlJ3uM6svOuoaIulXCVhdEXXBleaDEo2YzGuC9iEmFcjwunVgzRlQUN1cEteFnzYkG0OoYZTlSpiv7DXZAXmFsYBsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733221391; c=relaxed/simple;
-	bh=jC5ZZXGG+us+dzjalSTOJFS55SAMDRx2a0gCJW9ylj8=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=O1cG9twdkHdhxdy1nSqc+LKCuY8UGCHtfvxiasnrrxrf7rFZ5W43UBYDqnwbckQAEnlvKJeHzjfbZznzUNB3sD3sZhMhX/g/R59/9hwJDYVTGFtkx2QdH3ebbyt2EbbhOhok6JNjronzMgXFYPbp5zfQKsFK8JNsi3yrVf+fm3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=he0KfaDI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1733222548; c=relaxed/simple;
+	bh=huDWne30J5ob4zsS1bNSlBR9Y1rYCh2kjshpdpHvoIs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oj+DbM9J7sNWzCpHyAuzJWReYWezhCSyHCy4uIqKMSWhGLPRWK7TWV7SkAPjfLS2BjoJ2YHDb1E6w+ok49xSCEBZXiV6WLxv3HcExTVcTEhW2TL7rLmfT13POX5I8KvZDwZsFsPcTfHVPTBnP3ZrjxRPFZ788cr0fLvmI2LFlqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=haOnfxa0; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="he0KfaDI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733221389;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dddZCBtsII5/kRzmFSAxen5JYlgw9qIJINUCkyKnNps=;
-	b=he0KfaDIfrMn9cwSFpD2UBQONBkSgTGPqau4g1Ca2fTnA9cg3+zPQNIUBrLESurEOpHCf1
-	PPJr1ltpjYUF0WdHt7QgjXahvQqIZwf1UZ1TB6dv5KA0dW+JuLXLN/cqBlXOHnmAJrLKiO
-	IbpPtl0pvFji7QO/XVPXX6/gBlubNRM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-77-yvLrJ-61P5yiZ2B2Qb2IoQ-1; Tue,
- 03 Dec 2024 05:23:05 -0500
-X-MC-Unique: yvLrJ-61P5yiZ2B2Qb2IoQ-1
-X-Mimecast-MFC-AGG-ID: yvLrJ-61P5yiZ2B2Qb2IoQ
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 139591955D83;
-	Tue,  3 Dec 2024 10:23:04 +0000 (UTC)
-Received: from Carbon (unknown [10.39.208.30])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2EB7419560A3;
-	Tue,  3 Dec 2024 10:22:59 +0000 (UTC)
-Date: Tue, 3 Dec 2024 11:22:56 +0100 (CET)
-From: Michael Petlan <mpetlan@redhat.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-cc: Namhyung Kim <namhyung@kernel.org>, 
-    Veronika Molnarova <vmolnaro@redhat.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, 
-    James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
-    Kan Liang <kan.liang@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, 
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-    linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1 perf-tools] perf machine: Initialize machine->env to
- address a segfault
-In-Reply-To: <Z0XffUgNSv_9OjOi@x1>
-Message-ID: <18126ef4-e5a0-4c17-2d2-ea4c451a9e@redhat.com>
-References: <Z0XffUgNSv_9OjOi@x1>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="haOnfxa0"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B38JfKY027880;
+	Tue, 3 Dec 2024 10:42:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	eCQE5jN00zJcuauOCTLwZrT7GsJeMG7eyAEO1hGFE8Y=; b=haOnfxa0PVsqapGn
+	v0iAlk29s23mXpU918TYooJmvQrUr5pQwlgPYXO1q1pr/yDe3MIfLU2ebvYBn1pw
+	FEI0E3AWv6xE0AE+bhwCS/dnxkEk6o3Y5yfFrGS5tFa8w8ZZC3ob/KB+BRPfXas+
+	tOhhSimPXV2QvgzbArCEKwyRYPNlllHBzyxWQmx0dOfS65XwfiCdFEg9MN5a3jHz
+	J7sRr+rizZp2D1vBRoN3ZFcEBN4++mJyeplqDXNYOSMUa8EV9Ryyb+0Yr5WDW8Cp
+	9v495IZ7EJxFiyAedBCtJPkh6ztreZ35L41cUYY117+rdAKgpisAuBHkoR4K11ct
+	YzzgWg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 437tstfsk5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Dec 2024 10:42:05 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B3Ag4RW013842
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 3 Dec 2024 10:42:04 GMT
+Received: from [10.239.133.66] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 3 Dec 2024
+ 02:42:00 -0800
+Message-ID: <577fb7ea-f540-4ca0-9569-3bd5bee87df8@quicinc.com>
+Date: Tue, 3 Dec 2024 18:41:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] perf tool: Fix multiple memory leakages
+To: Namhyung Kim <namhyung@kernel.org>
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+        <kan.liang@linux.intel.com>, <james.clark@linaro.org>,
+        <yangyicong@hisilicon.com>, <song@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bpf@vger.kernel.org>
+References: <20241128125432.2748981-1-quic_zhonhan@quicinc.com>
+ <Z04u-7DQr5w9daS5@google.com>
+Content-Language: en-US
+From: Zhongqiu Han <quic_zhonhan@quicinc.com>
+In-Reply-To: <Z04u-7DQr5w9daS5@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: djibvdknjQX8f7VbEhxQnJS14VM8ZfqT
+X-Proofpoint-GUID: djibvdknjQX8f7VbEhxQnJS14VM8ZfqT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 spamscore=0 impostorscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 adultscore=0 clxscore=1011
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412030091
 
-On Tue, 26 Nov 2024, Arnaldo Carvalho de Melo wrote:
-> Its used from trace__run(), for the 'perf trace' live mode, i.e. its
-> strace-like, non-perf.data file processing mode, the most common one.
+On 12/3/2024 6:04 AM, Namhyung Kim wrote:
+> On Thu, Nov 28, 2024 at 08:54:29PM +0800, Zhongqiu Han wrote:
+>> Fix memory leakages when btf_node or bpf_prog_info_node is duplicated
+>> during insertion into perf_env.
+>>
+>> Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
+>> ---
+>> Zhongqiu Han (3):
+>>    perf header: Fix one memory leakage in process_bpf_btf()
+>>    perf header: Fix one memory leakage in process_bpf_prog_info()
+>>    perf bpf: Fix two memory leakages when calling
+>>      perf_env__insert_bpf_prog_info()
 > 
-> The trace__run() function will set trace->host using machine__new_host()
-> that is supposed to give a machine instance representing the running
-> machine, and since we'll use perf_env__arch_strerrno() to get the right
-> errno -> string table, we need to use machine->env, so initialize it in
-> machine__new_host().
+> Although I have a nitpick in the patch 3, it looks good otherwise.
 > 
-> Before the patch:
+> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 > 
->   (gdb) run trace --errno-summary -a sleep 1
->   <SNIP>
->    Summary of events:
-> 
->    gvfs-afc-volume (3187), 2 events, 0.0%
-> 
->      syscall            calls  errors  total       min       avg       max       stddev
->                                        (msec)    (msec)    (msec)    (msec)        (%)
->      --------------- --------  ------ -------- --------- --------- ---------     ------
->      pselect6               1      0     0.000     0.000     0.000     0.000      0.00%
-> 
->    GUsbEventThread (3519), 2 events, 0.0%
-> 
->      syscall            calls  errors  total       min       avg       max       stddev
->                                        (msec)    (msec)    (msec)    (msec)        (%)
->      --------------- --------  ------ -------- --------- --------- ---------     ------
->      poll                   1      0     0.000     0.000     0.000     0.000      0.00%
->   <SNIP>
->   Program received signal SIGSEGV, Segmentation fault.
->   0x00000000005caba0 in perf_env__arch_strerrno (env=0x0, err=110) at util/env.c:478
->   478		if (env->arch_strerrno == NULL)
->   (gdb) bt
->   #0  0x00000000005caba0 in perf_env__arch_strerrno (env=0x0, err=110) at util/env.c:478
->   #1  0x00000000004b75d2 in thread__dump_stats (ttrace=0x14f58f0, trace=0x7fffffffa5b0, fp=0x7ffff6ff74e0 <_IO_2_1_stderr_>) at builtin-trace.c:4673
->   #2  0x00000000004b78bf in trace__fprintf_thread (fp=0x7ffff6ff74e0 <_IO_2_1_stderr_>, thread=0x10fa0b0, trace=0x7fffffffa5b0) at builtin-trace.c:4708
->   #3  0x00000000004b7ad9 in trace__fprintf_thread_summary (trace=0x7fffffffa5b0, fp=0x7ffff6ff74e0 <_IO_2_1_stderr_>) at builtin-trace.c:4747
->   #4  0x00000000004b656e in trace__run (trace=0x7fffffffa5b0, argc=2, argv=0x7fffffffde60) at builtin-trace.c:4456
->   #5  0x00000000004ba43e in cmd_trace (argc=2, argv=0x7fffffffde60) at builtin-trace.c:5487
->   #6  0x00000000004c0414 in run_builtin (p=0xec3068 <commands+648>, argc=5, argv=0x7fffffffde60) at perf.c:351
->   #7  0x00000000004c06bb in handle_internal_command (argc=5, argv=0x7fffffffde60) at perf.c:404
->   #8  0x00000000004c0814 in run_argv (argcp=0x7fffffffdc4c, argv=0x7fffffffdc40) at perf.c:448
->   #9  0x00000000004c0b5d in main (argc=5, argv=0x7fffffffde60) at perf.c:560
->   (gdb)
-> 
-> After:
-> 
->   root@number:~# perf trace -a --errno-summary sleep 1
->   <SNIP>
->      pw-data-loop (2685), 1410 events, 16.0%
-> 
->      syscall            calls  errors  total       min       avg       max       stddev
->                                        (msec)    (msec)    (msec)    (msec)        (%)
->      --------------- --------  ------ -------- --------- --------- ---------     ------
->      epoll_wait           188      0   983.428     0.000     5.231    15.595      8.68%
->      ioctl                 94      0     0.811     0.004     0.009     0.016      2.82%
->      read                 188      0     0.322     0.001     0.002     0.006      5.15%
->      write                141      0     0.280     0.001     0.002     0.018      8.39%
->      timerfd_settime       94      0     0.138     0.001     0.001     0.007      6.47%
-> 
->    gnome-control-c (179406), 1848 events, 20.9%
-> 
->      syscall            calls  errors  total       min       avg       max       stddev
->                                        (msec)    (msec)    (msec)    (msec)        (%)
->      --------------- --------  ------ -------- --------- --------- ---------     ------
->      poll                 222      0   959.577     0.000     4.322    21.414     11.40%
->      recvmsg              150      0     0.539     0.001     0.004     0.013      5.12%
->      write                300      0     0.442     0.001     0.001     0.007      3.29%
->      read                 150      0     0.183     0.001     0.001     0.009      5.53%
->      getpid               102      0     0.101     0.000     0.001     0.008      7.82%
-> 
->   root@number:~#
-> 
-> Fixes: 54373b5d53c1f6aa ("perf env: Introduce perf_env__arch_strerrno()")
-> Reported-by: Veronika Molnarova <vmolnaro@redhat.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Michael Petlan <mpetlan@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Hi Namhyung,
+Thanks for your review~
+I will arise the V2 to optimize patch 3.
 
-Thanks for fixing the segfault!
-
-Acked-by: Michael Petlan <mpetlan@redhat.com>
-Tested-by: Michael Petlan <mpetlan@redhat.com>
-
-> ---
->  tools/perf/util/machine.c | 2 ++
->  1 file changed, 2 insertions(+)
+> And I don't think the Fixes tags are correct, but it won't apply before
+> the change it points to.  So for practical reason, I'm ok with that.
 > 
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 4f0ac998b0ccfd7a..27d5345d2b307a97 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -134,6 +134,8 @@ struct machine *machine__new_host(void)
->  
->  		if (machine__create_kernel_maps(machine) < 0)
->  			goto out_delete;
-> +
-> +		machine->env = &perf_env;
->  	}
->  
->  	return machine;
-> -- 
-> 2.47.0
-> 
+> Thanks,
+> Namhyung
 > 
 
+I will fix the Fixes tag as follows on V2:
+
+[PATCH 1/3] perf header: Fix one memory leakage in process_bpf_btf()
+Fixes: a70a1123174a ("perf bpf: Save BTF information as headers to
+perf.data")
+
+[PATCH 2/3] perf header: Fix one memory leakage in
+process_bpf_prog_info()
+Fixes: 606f972b1361 ("perf bpf: Save bpf_prog_info information as
+headers to perf.data")
+
+
+[PATCH 3/3] perf bpf: Fix two memory leakages when calling
+perf_env__insert_bpf_prog_info()
+Fixes: e4378f0cb90b ("perf bpf: Save bpf_prog_info in a rbtree in
+perf_env")
+Fixes: d56354dc4909 ("perf tools: Save bpf_prog_info and BTF of new BPF
+programs")
+
+
+>>
+>>   tools/perf/util/bpf-event.c | 10 ++++++++--
+>>   tools/perf/util/env.c       | 12 ++++++++----
+>>   tools/perf/util/env.h       |  4 ++--
+>>   tools/perf/util/header.c    |  8 ++++++--
+>>   4 files changed, 24 insertions(+), 10 deletions(-)
+>>
+>>
+>> base-commit: f486c8aa16b8172f63bddc70116a0c897a7f3f02
+>> -- 
+>> 2.25.1
+>>
+
+
+-- 
+Thx and BRs,
+Zhongqiu Han
