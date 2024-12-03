@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AB817BEB7;
-	Tue,  3 Dec 2024 03:53:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6DD18732E;
+	Tue,  3 Dec 2024 03:53:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733198034; cv=none; b=ZajmtPtLw5VHWrkTkxi1v03Pp6E78/AoM6cnqY+J37gouwc9aH+ti4FG+w8Axo0iUuOy+8Kq/QyYaJP5AnI43yGKfENri3lu1hFG8O09cL8Jt/RbsM5Z1M2whM/AN6zEqMMMwZBGEbHRk075z84v0eHwDe8eKu4YKpuJhx8u+Oc=
+	t=1733198034; cv=none; b=qlw0pAE0+BqmkLs9RPESYCeuyFACtmM7ZLmcmN2Dp7JBFyq5M5B65HyWdeWbcDFf6AkYIpgdRe2a3LlqOuflUWxSI0Wm9f2Ge+akwEuwaCQ9SyRPGWE5rTvqtjlBPKuRR2ICIwUIkMKM8jIweZWmaMuY2PX+ts/ELT2LNMfcJf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1733198034; c=relaxed/simple;
-	bh=tiwTL8knJ9/lrpjwCPKYVq4WT5/OioYslIWbXCg5OG0=;
+	bh=n1Bo+ocWIwX2RhTBAyNb+AZLF714cNwghYqi2l+mTVM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h1Kqcii4/mHcTfSQbPXyhkwcs3EB4kSTOxyov15ZEV0XRfe+znn43jz4EpWPgfCmcSciFI39hL1XpHlQjUG2FrvwPSk+RRpsquidDs7T4nx1OzCSc4ENtgNK4eplzIKa1LweQf7Ybh6tijrQIyctyQzYYns6+kmlXbza6nvTeZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7PeW/Gt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jy2dwrjgHSK5VX/AOukMkRDFJAo0aFCVtsNwgLZwAfIGsO4dJXCgM8XCdRxD3N7oNC36VXSbhr3kMwS4+ZdFmhn4FZdVOeetY+BZFGK8ybKyxdtHn/+DXULAB0i2KeNzgtN+BGvGhPDGiJrfl5oKA6B1XiNvakFGz7ryy75LX6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gy9S3RL2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7PeW/Gt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F18CC4CED8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gy9S3RL2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA509C4CEDA;
 	Tue,  3 Dec 2024 03:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733198033;
-	bh=tiwTL8knJ9/lrpjwCPKYVq4WT5/OioYslIWbXCg5OG0=;
+	s=k20201202; t=1733198034;
+	bh=n1Bo+ocWIwX2RhTBAyNb+AZLF714cNwghYqi2l+mTVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o7PeW/GtL8/W8v8LZJI7Sj3AucD0sOgsSvbAK0rzGR3nf5Pev53gXPlzEX2L++gDM
-	 ZHZ/7E7NIyf5FO6sCXYST/S3ZsnA4p0z5dLlO5HopR/u2zUQ5z0Sfp0i/mPmpsFqzW
-	 jCew6t+FWyADMFUio7lIGUnNXVx1U+HKuPyz0rx66dsCZ4Ig6PsCuiFVOBO15jOgAn
-	 gOSy7t5R8ZDRYmOenfx6V7WSOd/7+0dRcZ9MEArzViduGvK7X9+pSC7n5PB8zEjCQ9
-	 KuKsn2cPTG7MHDRsI6kazGbp6nOORvRIXCfmdaq3UX2I79NnnbbDUtkqFVbX8rK/Pr
-	 5/M6l7RDPE6tg==
+	b=Gy9S3RL2jbXs5lN0+59rRTYfG8GwAUFBJ3blkB3cnwOBw1NQeCIqlFqdCkGarUauX
+	 l3uyE38YjJegWJ2L882c3RNZCiWXv+agbL6bBNc5FOyAXGM0PENTPaJTXWUTllFjE/
+	 gw0LUACVN0AI1PxIHABMfCzTWMPTjzWq5HVnxm0gPUK1K4wBk0HivrieyGJaG+OXsW
+	 wq6BYtGIraelkVsFG94vIFnDbK/FPsJQUMv/jFz0cCHSmdJnqZv1rw5hyXak0Mq3A+
+	 Rv36KwiidNjwHg/UyZR19cja4fMTnXUT0X50Efas/iiG2WBykiaN+Rp5EnnFd/G0p6
+	 F8SLQbG4Fo5CQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -34,10 +34,17 @@ Cc: Ian Rogers <irogers@google.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 02/11] tools headers: Sync uapi/linux/perf_event.h with the kernel sources
-Date: Mon,  2 Dec 2024 19:53:40 -0800
-Message-ID: <20241203035349.1901262-3-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH 03/11] tools headers: Sync uapi/linux/kvm.h with the kernel sources
+Date: Mon,  2 Dec 2024 19:53:41 -0800
+Message-ID: <20241203035349.1901262-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
 In-Reply-To: <20241203035349.1901262-1-namhyung@kernel.org>
 References: <20241203035349.1901262-1-namhyung@kernel.org>
@@ -51,43 +58,49 @@ Content-Transfer-Encoding: 8bit
 
 To pick up the changes in this cset:
 
-  18d92bb57c39504d ("perf/core: Add aux_pause, aux_resume, aux_start_paused")
+  e785dfacf7e7fe94 ("LoongArch: KVM: Add PCHPIC device support")
+  2e8b9df82631e714 ("LoongArch: KVM: Add EIOINTC device support")
+  c532de5a67a70f85 ("LoongArch: KVM: Add IPI device support")
 
 This addresses these perf build warnings:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
+    diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
 
 Please see tools/include/uapi/README for further details.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: Bibo Mao <maobibo@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: kvm@vger.kernel.org
+Cc: loongarch@lists.linux.dev
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/include/uapi/linux/perf_event.h | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ tools/include/uapi/linux/kvm.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 4842c36fdf801996..0524d541d4e3d501 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -511,7 +511,16 @@ struct perf_event_attr {
- 	__u16	sample_max_stack;
- 	__u16	__reserved_2;
- 	__u32	aux_sample_size;
--	__u32	__reserved_3;
+diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+index 637efc05514534ca..502ea63b5d2e7371 100644
+--- a/tools/include/uapi/linux/kvm.h
++++ b/tools/include/uapi/linux/kvm.h
+@@ -1158,7 +1158,15 @@ enum kvm_device_type {
+ #define KVM_DEV_TYPE_ARM_PV_TIME	KVM_DEV_TYPE_ARM_PV_TIME
+ 	KVM_DEV_TYPE_RISCV_AIA,
+ #define KVM_DEV_TYPE_RISCV_AIA		KVM_DEV_TYPE_RISCV_AIA
++	KVM_DEV_TYPE_LOONGARCH_IPI,
++#define KVM_DEV_TYPE_LOONGARCH_IPI	KVM_DEV_TYPE_LOONGARCH_IPI
++	KVM_DEV_TYPE_LOONGARCH_EIOINTC,
++#define KVM_DEV_TYPE_LOONGARCH_EIOINTC	KVM_DEV_TYPE_LOONGARCH_EIOINTC
++	KVM_DEV_TYPE_LOONGARCH_PCHPIC,
++#define KVM_DEV_TYPE_LOONGARCH_PCHPIC	KVM_DEV_TYPE_LOONGARCH_PCHPIC
 +
-+	union {
-+		__u32	aux_action;
-+		struct {
-+			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
-+				aux_pause        :  1, /* on overflow, pause AUX area tracing */
-+				aux_resume       :  1, /* on overflow, resume AUX area tracing */
-+				__reserved_3     : 29;
-+		};
-+	};
+ 	KVM_DEV_TYPE_MAX,
++
+ };
  
- 	/*
- 	 * User provided data if sigtrap=1, passed back to user via
+ struct kvm_vfio_spapr_tce {
 -- 
 2.47.0.338.g60cca15819-goog
 
