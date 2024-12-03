@@ -1,47 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5291E868;
-	Tue,  3 Dec 2024 18:34:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0B41EF081
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Dec 2024 18:42:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733250840; cv=none; b=i4XfvMJVIzOXZUCixbrhu43yzlFpHgHCHIUDPvJFtff+k92T6i2fM0NNKdStDzVp23C5Jl2zlV9uuAuoNwNk8Jla0UOJcvR+aersMFtMfDp+wCsgDc8Iekyf7W1BRr80Sz8yLGih89bmi20qKioryCBt1oXNpsVXzkV9Q/UmjuM=
+	t=1733251368; cv=none; b=gB3SZ1arMl9WpkUW8EJWPW4uJGyRLYI0lZR/Nxc2xj+9oshbrG2eiBt8srxyZ8BgrD3Rvom+8eqNPm2OLGpnVdyYPEVXhVhPTv18EheDhm+JCXiS9fZOzdlB+gdOfbKnzrjj4wA377/LwI/zlgc/lXTE46Lf5leVCql41e55M1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733250840; c=relaxed/simple;
-	bh=qL82kdN/VnAc1eWZA5QGGREouW8YZfGqE11v9lnfWOA=;
+	s=arc-20240116; t=1733251368; c=relaxed/simple;
+	bh=IE/QB8ecP1kkb8KyuAoQXlcTO6A7S0zskyQTSpqhqXM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VfJkmAj/YfXRr75j0hL+AQH2MAgXKxS2jjGZTrYA9CUZrQmuKYjYMdmbfAloUzBUnMzJD6800ukUS6y9UVy7IvgZwg23HafJM7+z4UckHLB3c4PMq37Ax8zJSpR2u8TbiWKTLJV/YQA4/1poGeEU0/WNBoNe0kFMAT8+N66MlxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWlKnfbY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DY8L4fvxoJWkTdHs3kflPgK7jMHTIUn1Gsli86UMiJcDk8cu8KA5IT6StFZgWmBH+lpZqfMAsp4pv2gH5n3+d2H7hyFEjBFvXVsf3SpsDhAaK8jtUbPZ8TKsviyeID8Q7YenEa6B/ybMsnjDg69OswJJwpC6VTrI+PM+ca6I3vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mzJJqEqb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWlKnfbY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0BAEC4CED6;
-	Tue,  3 Dec 2024 18:33:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mzJJqEqb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F2ADC4CECF;
+	Tue,  3 Dec 2024 18:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733250840;
-	bh=qL82kdN/VnAc1eWZA5QGGREouW8YZfGqE11v9lnfWOA=;
+	s=k20201202; t=1733251367;
+	bh=IE/QB8ecP1kkb8KyuAoQXlcTO6A7S0zskyQTSpqhqXM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pWlKnfbY7zWnVJJBLncHaEwQ1q1nJW8AReXGzlx8w48tgIXG6nHc1V8TT22KsL/cZ
-	 FPOcPa2PN3Dxb2PaIX2TbFVK5gYfImrj6T9EjIltMfBMmBWVGvfqWInFWqFAVzrWPh
-	 WgVkHRBYmXR61discBStT41744KOoi/5u9rRLOiE1gQ/8/8syeycMh0FXia54tlRcj
-	 dSnPlJJG01r4zIlsJfx2mgigqHYO0luAut5yQDtua9pXzc0qkqIFWOJK50DZikFCK9
-	 tUH2n1I1oCabWUIIFCj5cz2e/cf7VVe074X2OeUCuNaJw5oWC6LIKXVD3EamyK5Ddz
-	 wpDCqTKZlU2uw==
-Date: Tue, 3 Dec 2024 10:33:58 -0800
+	b=mzJJqEqbKT6h0rEo44OZpG6soedWaZUYOqxRXJDOb5C/kTUBWIpJAbKpEUxE6/JhD
+	 OEEasR9x7Rl/PMncXsa2i9ZK04bRex7jpp1sFEIYhLMLZFecofT5IZqc1kLM3KJETP
+	 Ci+04CkRrp/XSMGEcH3/cC2e9V5MYDu8/i41BXDqcSqr0SCx/VSrY5T1Qbo7q5zjim
+	 JHPokyf5xd1MriPF1Ur+DgRohouo1ESNBghOpEuplpo149hJDPr4wOnWAcq9H/zt6K
+	 AbMtr8gKlU9MHfifYjYAkRfrz6mFp6Ezid0ZDU98TwiXA1EX3DQbdrKUzQxJxq3QZF
+	 Z3XsF451iOkzQ==
+Date: Tue, 3 Dec 2024 10:42:45 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Sasha Levin <sashal@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [GIT PULL] perf-tools changes for v6.13
-Message-ID: <Z09PFr3iEoa-oJg0@google.com>
-References: <20241125071653.1350621-1-namhyung@kernel.org>
- <Z0TK9aqrQO1PremH@sashalap>
- <Z0U4Dk_W30x4JSXG@google.com>
- <CAP-5=fVE4VTtB23CHF2rSwm=0RM4Y=iVEJJYiYD9OLJLQQfaVg@mail.gmail.com>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Leo Yan <leo.yan@arm.com>, Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, tmricht@linux.ibm.com,
+	acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com,
+	Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH] tools/perf/tests/expr: Make the system_tsc_freq test
+ only for intel
+Message-ID: <Z09RJbpmHzc4b1D6@google.com>
+References: <20241022140156.98854-1-atrajeev@linux.vnet.ibm.com>
+ <ZyF2-XNUh38p_5Gg@google.com>
+ <B72F330F-2A56-41B0-ABED-FCA7DC9EE711@linux.vnet.ibm.com>
+ <CAP-5=fXCYURva6Q8ktRVmnf2QCcsr-E3fPn327k0JRCw_9fn3A@mail.gmail.com>
+ <BBF1A4DC-3BD9-4377-BE2F-CBEFE55F0497@linux.vnet.ibm.com>
+ <20241107135606.GA47850@e132581.arm.com>
+ <0F805B2F-35CC-4E0C-BD2F-84552C4C528E@linux.vnet.ibm.com>
+ <Z09K5orKhWbeOGLV@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,83 +56,127 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVE4VTtB23CHF2rSwm=0RM4Y=iVEJJYiYD9OLJLQQfaVg@mail.gmail.com>
+In-Reply-To: <Z09K5orKhWbeOGLV@google.com>
 
-On Mon, Nov 25, 2024 at 11:36:37PM -0800, Ian Rogers wrote:
-> On Mon, Nov 25, 2024 at 6:53 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hello,
-> >
-> > On Mon, Nov 25, 2024 at 02:07:33PM -0500, Sasha Levin wrote:
-> > > On Sun, Nov 24, 2024 at 11:16:53PM -0800, Namhyung Kim wrote:
-> > > > Hi Linus,
-> > > >
-> > > > Please consider pulling the following changes in perf tools for v6.13.
-> > > >
-> > > > Thanks,
-> > > > Namhyung
-> > > >
-> > > >
-> > > > The following changes since commit 59b723cd2adbac2a34fc8e12c74ae26ae45bf230:
-> > > >
-> > > >  Linux 6.12-rc6 (2024-11-03 14:05:52 -1000)
-> > > >
-> > > > are available in the Git repository at:
-> > > >
-> > > >  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.13-2024-11-24
-> > >
-> > > Hey Namhyung,
-> > >
-> > > After merging this PR into linus-next, the "Simple expression parser"
-> > > test has started failing:
-> > >
-> > > --- start ---
-> > > test child forked, pid 292
-> > > Using CPUID GenuineIntel-6-1A-3
-> > > division by zero
-> > > syntax error
-> > > Failed to find TSC frequency in /proc/cpuinfo
-> > > FAILED tests/expr.c:250 #system_tsc_freq > 0
-> > > ---- end(-1) ----
-> > >   7: Simple expression parser                         : FAILED!
-> > >
-> > > Here's a full log of the run: https://qa-reports.linaro.org/lkft/sashal-linus-next/build/v6.11-24716-gab16e9af2ff9/testrun/26045681/suite/perf/test/_7_Simple_expression_parser/log
-> >
-> > Thanks for the report, I'll take a look.
-
-Sorry about the delay.  But I cannot see the log unfornately.
-
+On Tue, Dec 03, 2024 at 10:16:06AM -0800, Namhyung Kim wrote:
+> Hello,
 > 
-> I suspect this is a side effect of the tool PMU refactoring where the
-> expr double values were changed to u64 counter like values:
-> https://lore.kernel.org/lkml/20241002032016.333748-8-irogers@google.com/
+> On Fri, Nov 08, 2024 at 10:50:10AM +0530, Athira Rajeev wrote:
+> > 
+> > 
+> > > On 7 Nov 2024, at 7:26 PM, Leo Yan <leo.yan@arm.com> wrote:
+> > > 
+> > > Hi Athira,
+> > > 
+> > > On Wed, Nov 06, 2024 at 03:04:57PM +0530, Athira Rajeev wrote:
+> > > 
+> > > [...]
+> > > 
+> > >>> Hi Athira,
+> > >>> 
+> > >>> sorry for the breakage and thank you for the detailed explanation. As
+> > >>> the code will run on AMD I think your change will break that - . It is
+> > >>> probably safest to keep the ".. else { .." for this case but guard it
+> > >>> in the ifdef.
+> > >>> 
+> > >> 
+> > >> Hi Ian
+> > >> 
+> > >> Thanks for your comments. Does the below change looks good ?
+> > >> 
+> > >> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+> > >> index e3aa9d4fcf3a..f5b2d96bb59b 100644
+> > >> --- a/tools/perf/tests/expr.c
+> > >> +++ b/tools/perf/tests/expr.c
+> > >> @@ -74,14 +74,12 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+> > >>    double val, num_cpus_online, num_cpus, num_cores, num_dies, num_packages;
+> > >>    int ret;
+> > >>    struct expr_parse_ctx *ctx;
+> > >> -    bool is_intel = false;
+> > >>    char strcmp_cpuid_buf[256];
+> > >>    struct perf_pmu *pmu = perf_pmus__find_core_pmu();
+> > >>    char *cpuid = perf_pmu__getcpuid(pmu);
+> > >>    char *escaped_cpuid1, *escaped_cpuid2;
+> > >> 
+> > >>    TEST_ASSERT_VAL("get_cpuid", cpuid);
+> > >> -    is_intel = strstr(cpuid, "Intel") != NULL;
+> > >> 
+> > >>    TEST_ASSERT_EQUAL("ids_union", test_ids_union(), 0);
+> > >> 
+> > >> @@ -244,11 +242,13 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+> > >>    if (num_dies) // Some platforms do not have CPU die support, for example s390
+> > >>        TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
+> > >> 
+> > >> +#if defined(__i386__) && defined(__x86_64__)
+> > >>    TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&val, ctx, "#system_tsc_freq") == 0);
+> > >> -    if (is_intel)
+> > >> +    if (strstr(cpuid, "Intel") != NULL)
+> > >>        TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
+> > >>    else
+> > >>        TEST_ASSERT_VAL("#system_tsc_freq == 0", fpclassify(val) == FP_ZERO);
+> > >> +#endif
+> > >> 
+> > >>    /*
+> > >>     * Source count returns the number of events aggregating in a leader
+> > > 
+> > > I confirmed the change above fixes the failure on Arm64.
+> > > 
+> > > Tested-by: Leo Yan <leo.yan@arm.com>
+> > Thanks Leo Yan for testing.
+> > 
+> > Hi Ian,
+> > 
+> > If the change above looks good, I will post a V2 . Please share your review comments
 > 
-> The CPU model matches nehalemep:
+> Sorry for the delay, it looks good to me.  Can you please send the v2?
 
-Oh, it's an Intel machine.  Then it should have the #system_tsc_freq.
-
-
-> ```
-> $ python tools/perf/pmu-events/models.py x86  GenuineIntel-6-1A-3
-> tools/perf/pmu-events/arch/
-> nehalemep
-> ```
-> so the tsc frequency should be determined via /proc/cpuinfo looking
-> for  "model name ... @ %lfGHz":
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/arch/x86/util/tsc.c?h=perf-tools-next#n44
-> 
-> The logs make the machine look like an emulator (reference to bochs)
-> so I wonder if the cpuinfo is incorrect. Why the switch from double to
-> u64 would show this problem I'm not sure, perhaps a latent bug was
-> exposed in the test as previously NaN would be returned which does
-> interesting things with comparisons. The test is expecting on an Intel
-> x86 it should be able to compute the TSC frequency and assuming the
-> cpuinfo is lacking the "@ ...GHz" then the test could be working as
-> intended.
-
-Right, we may change the test code not to assume TSC frequency is always
-available on Intel machines.
+After looking at another report, I think we need to check the value of
+TSC freq, not just the vendor.  Can you please test this?
 
 Thanks,
 Namhyung
 
+
+---8<---
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index 41ff1affdfcdf31c..45151696e7b76308 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -5,6 +5,7 @@
+ #include "util/hashmap.h"
+ #include "util/header.h"
+ #include "util/smt.h"
++#include "util/tsc.h"
+ #include "tests.h"
+ #include <perf/cpumap.h>
+ #include <math.h>
+@@ -75,14 +76,12 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+ 	double val, num_cpus_online, num_cpus, num_cores, num_dies, num_packages;
+ 	int ret;
+ 	struct expr_parse_ctx *ctx;
+-	bool is_intel = false;
+ 	char strcmp_cpuid_buf[256];
+ 	struct perf_cpu cpu = {-1};
+ 	char *cpuid = get_cpuid_allow_env_override(cpu);
+ 	char *escaped_cpuid1, *escaped_cpuid2;
+ 
+ 	TEST_ASSERT_VAL("get_cpuid", cpuid);
+-	is_intel = strstr(cpuid, "Intel") != NULL;
+ 
+ 	TEST_ASSERT_EQUAL("ids_union", test_ids_union(), 0);
+ 
+@@ -246,10 +245,10 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+ 		TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
+ 
+ 	TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&val, ctx, "#system_tsc_freq") == 0);
+-	if (is_intel)
+-		TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
+-	else
+-		TEST_ASSERT_VAL("#system_tsc_freq == 0", fpclassify(val) == FP_ZERO);
++	if (val > 0) {
++		TEST_ASSERT_VAL("#system_tsc_freq == arch_get_tsc_freq()",
++				val == arch_get_tsc_freq());
++	}
+ 
+ 	/*
+ 	 * Source count returns the number of events aggregating in a leader
