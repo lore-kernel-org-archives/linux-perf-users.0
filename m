@@ -1,280 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8101FF7CF;
-	Tue,  3 Dec 2024 21:08:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB2E1F75AB;
+	Tue,  3 Dec 2024 21:20:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733260115; cv=none; b=p3BO08I1peTb0J61gW/CmAxiVoR9eJsVvQjz52opKg1RGBMgBlbsoktxqgv/5NG9dW7J6tnq0AaHz1qrpZ5m6SLq8oNvY/GbgOfo5Es7regoTphC6pTYmbH8AJpQzfCvntN5miBihHkTI10R+bXH7zqbRpPZYjaUV5J8e+u/wHc=
+	t=1733260818; cv=none; b=p7/BrShKT1OCV5W/EGq3f9WiBEXhzQeErrcnhgpaqq7hjTKLazTuocqdH8XlQI43NBiJuWmvRJSzP2ikNqhGJ3XkZntbfXLECGEliyhXfKmujDDX2Ap0ik8uxtmL/BDTi8nIvJ8lDW9pL6l6bd2xFcJvcVE5GEjulF0l9TY/r+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733260115; c=relaxed/simple;
-	bh=4fxsKITTX+Rs/Yqy21qGGSmQwsfRopyu1pynG7Pre7s=;
+	s=arc-20240116; t=1733260818; c=relaxed/simple;
+	bh=cPMvh73fw4oUAnM1Wq+H1USVK8TY/X6SMWmynwXaBOs=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pa3ctXTY1XmAc/+eSNpl1KnbbJJW2qTuMb71ENOQjG5tYdTgCgVDKJ8nWbXjRX8E/6ZW+C8xov+pfn8ir6wBa/ye72y56RQDZvuEs9kOKE/vafwd5Je4FVLhOxf+TFRkO8BQvgEpUf5wDqcXgB6HznqAy8BbO3Ak4zlCZZ0sn4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MlMepYra; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=ZFrV7tuWkffUwwTMQLeUU8mn4YVHRjoXCMEH4KCwY39zFslBRMNv0GqO+fZpntcj4E3OB6EiV3NhwT5GN7mMVUBGBftEhXDKyRNRZI/9QKEW78vg4To1y3g8bcOya61EoZ7R800o6496VDt6aGg75dlvKAbWEK4/U/RDnZ9/eAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxLnzLW7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MlMepYra"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 230FAC4CECF;
-	Tue,  3 Dec 2024 21:08:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxLnzLW7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC84BC4CED6;
+	Tue,  3 Dec 2024 21:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733260114;
-	bh=4fxsKITTX+Rs/Yqy21qGGSmQwsfRopyu1pynG7Pre7s=;
+	s=k20201202; t=1733260818;
+	bh=cPMvh73fw4oUAnM1Wq+H1USVK8TY/X6SMWmynwXaBOs=;
 	h=Date:From:To:Cc:Subject:From;
-	b=MlMepYrazVueV581SKGBYMlGSLbQLbidhR9aw3p59N0xzu8n86Nsj2s2lt5+u7PGm
-	 bND1MnpFeZSNSAvgRFnk9krlr1Um6FJ2TBGUctxRynT5TwtqkaAOyHPix/D8Oewqy1
-	 y2V3uHFch1jahajBUBnacKlYueY/lbM6PKdLx9eSHO+L6sA5cgBnndYEd3IloUkUwB
-	 tnBfDJiX0cMhmfxz29LEZCuABPxspjTkALIYozvLU8w+ABZ5tFXRO7xlYL6aqFwlcF
-	 twRMgxgPYa0y2FkCeSaY1qOuONVxwwVl+S63HjlwaG5g+fON/y5C3XNe9f8jWmCCe3
-	 FXH1EoukIkG4Q==
-Date: Tue, 3 Dec 2024 18:08:31 -0300
+	b=jxLnzLW7XynIWEPw3g5CrlrLVAQB9SoUm+2eskatKdG8jIjDwX0OX/XzhhFwFXvVF
+	 QVrMht1NYZGGvAhwKGHyW6e8JjsFg/F7y0k/ZswnyxTQePrfeVxXYaPAm1inCw/mem
+	 I5eWi4j3glKpufK36cZDgqHfNs4MtZeJ/4MAXZxYjV9+sy3QNwaO/Nt9OpUqgntY5t
+	 15j7X3uYRxDkpxtIg5OAcOdMQxPxYuLpO7X5rmNmftO8qQusopa7EeD7/584cXqKzo
+	 OCctSxtROby+F3D1oqCg9UcI7bsICP/0ykpP0SrdCX/PR1Ug6gEj7mh54QhegWKlJD
+	 zfmAsoc6q0/SQ==
+Date: Tue, 3 Dec 2024 18:20:15 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
+Cc: Francesco Nigro <fnigro@redhat.com>, Ilan Green <igreen@redhat.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	Ian Rogers <irogers@google.com>,
 	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
 	Kan Liang <kan.liang@linux.intel.com>,
 	Namhyung Kim <namhyung@kernel.org>,
+	Stephane Eranian <eranian@google.com>,
+	Yonatan Goldschmidt <yonatan.goldschmidt@granulate.io>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1 perf-tools-next] tools features: Don't check for
- libunwind devel files by default
-Message-ID: <Z09zTztD8X8qIWCX@x1>
+Subject: [PATCH 1/1 perf-tools-next] perf disasm: Return a proper error when
+ not determining the file type
+Message-ID: <Z092D9-r_iOgwIWM@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Since 13e17c9ff49119aa ("perf build: Make libunwind opt-in rather than
-opt-out"), so we shouldn't by default be testing for its availability at
-build time in tools/build/features/test-all.c.
+Before:
 
-That test was designed to test the features we expect to be the most
-common ones in most builds, so if we test build just that file, then we
-assume the features there are present and will not test one by one.
+  ⬢ [acme@toolbox a]$ perf annotate --stdio2 -i acme-perf-injected.data 'java.lang.String com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer.findSymbol(char[], int, int, int)'
+  Error:
+  Couldn't annotate java.lang.String com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer.findSymbol(char[], int, int, int):
+  Internal error: Invalid -1 error code
+  ⬢ [acme@toolbox a]$
 
-Removing it from test-all.c gets rid of the first impediment for
-test-all.c to build successfully:
+After:
 
-  $ cat /tmp/build/perf-tools-next/feature/test-all.make.output
-  In file included from test-all.c:62:
-  test-libunwind.c:2:10: fatal error: libunwind.h: No such file or directory
-      2 | #include <libunwind.h>
-        |          ^~~~~~~~~~~~~
-  compilation terminated.
-  $
+  ⬢ [acme@toolbox a]$ perf annotate --stdio2 -i acme-perf-injected.data 'java.lang.String com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer.findSymbol(char[], int, int, int)'
+  Error:
+  Couldn't annotate java.lang.String com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer.findSymbol(char[], int, int, int):
+  Couldn't determine the file /tmp/perf-3308868.map type.
+  ⬢ [acme@toolbox a]$
 
-We then get to:
-
-  $ cat /tmp/build/perf-tools-next/feature/test-all.make.output
-  /usr/bin/ld: cannot find -lunwind-x86_64: No such file or directory
-  /usr/bin/ld: cannot find -lunwind: No such file or directory
-  collect2: error: ld returned 1 exit status
-  $
-
-So make all the logic related to setting CFLAGS, LDFLAGS, etc for
-libunwind to be conditional on NO_LIBWUNWIND=1, which is now the
-default, now we get a faster build:
-
-  $ cat /tmp/build/perf-tools-next/feature/test-all.make.output
-  $ ldd /tmp/build/perf-tools-next/feature/test-all.bin
-  	linux-vdso.so.1 (0x00007fef04cde000)
-  	libdw.so.1 => /lib64/libdw.so.1 (0x00007fef04a49000)
-  	libpython3.12.so.1.0 => /lib64/libpython3.12.so.1.0 (0x00007fef04478000)
-  	libm.so.6 => /lib64/libm.so.6 (0x00007fef04394000)
-  	libtraceevent.so.1 => /lib64/libtraceevent.so.1 (0x00007fef0436c000)
-  	libtracefs.so.1 => /lib64/libtracefs.so.1 (0x00007fef04345000)
-  	libcrypto.so.3 => /lib64/libcrypto.so.3 (0x00007fef03e95000)
-  	libz.so.1 => /lib64/libz.so.1 (0x00007fef03e72000)
-  	libelf.so.1 => /lib64/libelf.so.1 (0x00007fef03e56000)
-  	libnuma.so.1 => /lib64/libnuma.so.1 (0x00007fef03e48000)
-  	libslang.so.2 => /lib64/libslang.so.2 (0x00007fef03b65000)
-  	libperl.so.5.38 => /lib64/libperl.so.5.38 (0x00007fef037c6000)
-  	libc.so.6 => /lib64/libc.so.6 (0x00007fef035d5000)
-  	liblzma.so.5 => /lib64/liblzma.so.5 (0x00007fef035a0000)
-  	libzstd.so.1 => /lib64/libzstd.so.1 (0x00007fef034e1000)
-  	libbz2.so.1 => /lib64/libbz2.so.1 (0x00007fef034cd000)
-  	/lib64/ld-linux-x86-64.so.2 (0x00007fef04ce0000)
-  	libcrypt.so.2 => /lib64/libcrypt.so.2 (0x00007fef03495000)
-  $
-
-Fixes: 13e17c9ff49119aa ("perf build: Make libunwind opt-in rather than opt-out")
+Reported-by: Francesco Nigro <fnigro@redhat.com>
+Reported-by: Ilan Green <igreen@redhat.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: James Clark <james.clark@linaro.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Yonatan Goldschmidt <yonatan.goldschmidt@granulate.io>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/feature/test-all.c |  5 --
- tools/perf/Makefile.config     | 83 ++++++++++++++++++++--------------
- 2 files changed, 49 insertions(+), 39 deletions(-)
+ tools/perf/util/annotate.h | 1 +
+ tools/perf/util/disasm.c   | 5 ++++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 59ef3d7fe6a4e771..80ac297f81967171 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -58,10 +58,6 @@
- # include "test-libelf-getshdrstrndx.c"
- #undef main
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 194a05cbc506e4da..c6a59aaefdb8b3a1 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -441,6 +441,7 @@ enum symbol_disassemble_errno {
+ 	SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_REGEXP,
+ 	SYMBOL_ANNOTATE_ERRNO__BPF_INVALID_FILE,
+ 	SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF,
++	SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE,
  
--#define main main_test_libunwind
--# include "test-libunwind.c"
--#undef main
--
- #define main main_test_libslang
- # include "test-libslang.c"
- #undef main
-@@ -184,7 +180,6 @@ int main(int argc, char *argv[])
- 	main_test_libelf_getphdrnum();
- 	main_test_libelf_gelf_getnote();
- 	main_test_libelf_getshdrstrndx();
--	main_test_libunwind();
- 	main_test_libslang();
- 	main_test_libbfd();
- 	main_test_libbfd_buildid();
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 2916d59c88cd08b2..0e4f6a860ae25339 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -43,7 +43,9 @@ endif
- # Additional ARCH settings for ppc
- ifeq ($(SRCARCH),powerpc)
-   CFLAGS += -I$(OUTPUT)arch/powerpc/include/generated
--  LIBUNWIND_LIBS := -lunwind -lunwind-ppc64
-+  ifndef NO_LIBUNWIND
-+    LIBUNWIND_LIBS := -lunwind -lunwind-ppc64
-+  endif
- endif
- 
- # Additional ARCH settings for x86
-@@ -53,25 +55,35 @@ ifeq ($(SRCARCH),x86)
-   ifeq (${IS_64_BIT}, 1)
-     CFLAGS += -DHAVE_ARCH_X86_64_SUPPORT
-     ARCH_INCLUDE = ../../arch/x86/lib/memcpy_64.S ../../arch/x86/lib/memset_64.S
--    LIBUNWIND_LIBS = -lunwind-x86_64 -lunwind -llzma
-+    ifndef NO_LIBUNWIND
-+      LIBUNWIND_LIBS = -lunwind-x86_64 -lunwind -llzma
-+    endif
-     $(call detected,CONFIG_X86_64)
-   else
--    LIBUNWIND_LIBS = -lunwind-x86 -llzma -lunwind
-+    ifndef NO_LIBUNWIND
-+      LIBUNWIND_LIBS = -lunwind-x86 -llzma -lunwind
-+    endif
-   endif
- endif
- 
- ifeq ($(SRCARCH),arm)
--  LIBUNWIND_LIBS = -lunwind -lunwind-arm
-+  ifndef NO_LIBUNWIND
-+    LIBUNWIND_LIBS = -lunwind -lunwind-arm
-+  endif
- endif
- 
- ifeq ($(SRCARCH),arm64)
-   CFLAGS += -I$(OUTPUT)arch/arm64/include/generated
--  LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
-+  ifndef NO_LIBUNWIND
-+    LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
-+  endif
- endif
- 
- ifeq ($(SRCARCH),loongarch)
-   CFLAGS += -I$(OUTPUT)arch/loongarch/include/generated
--  LIBUNWIND_LIBS = -lunwind -lunwind-loongarch64
-+  ifndef NO_LIBUNWIND
-+    LIBUNWIND_LIBS = -lunwind -lunwind-loongarch64
-+  endif
- endif
- 
- ifeq ($(ARCH),s390)
-@@ -80,7 +92,9 @@ endif
- 
- ifeq ($(ARCH),mips)
-   CFLAGS += -I$(OUTPUT)arch/mips/include/generated
--  LIBUNWIND_LIBS = -lunwind -lunwind-mips
-+  ifndef NO_LIBUNWIND
-+    LIBUNWIND_LIBS = -lunwind -lunwind-mips
-+  endif
- endif
- 
- ifeq ($(ARCH),riscv)
-@@ -121,16 +135,18 @@ ifdef LIBUNWIND_DIR
-   $(foreach libunwind_arch,$(LIBUNWIND_ARCHS),$(call libunwind_arch_set_flags,$(libunwind_arch)))
- endif
- 
--# Set per-feature check compilation flags
--FEATURE_CHECK_CFLAGS-libunwind = $(LIBUNWIND_CFLAGS)
--FEATURE_CHECK_LDFLAGS-libunwind = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
--FEATURE_CHECK_CFLAGS-libunwind-debug-frame = $(LIBUNWIND_CFLAGS)
--FEATURE_CHECK_LDFLAGS-libunwind-debug-frame = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
--
--FEATURE_CHECK_LDFLAGS-libunwind-arm += -lunwind -lunwind-arm
--FEATURE_CHECK_LDFLAGS-libunwind-aarch64 += -lunwind -lunwind-aarch64
--FEATURE_CHECK_LDFLAGS-libunwind-x86 += -lunwind -llzma -lunwind-x86
--FEATURE_CHECK_LDFLAGS-libunwind-x86_64 += -lunwind -llzma -lunwind-x86_64
-+ifndef NO_LIBUNWIND
-+  # Set per-feature check compilation flags
-+  FEATURE_CHECK_CFLAGS-libunwind = $(LIBUNWIND_CFLAGS)
-+  FEATURE_CHECK_LDFLAGS-libunwind = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
-+  FEATURE_CHECK_CFLAGS-libunwind-debug-frame = $(LIBUNWIND_CFLAGS)
-+  FEATURE_CHECK_LDFLAGS-libunwind-debug-frame = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
-+  
-+  FEATURE_CHECK_LDFLAGS-libunwind-arm += -lunwind -lunwind-arm
-+  FEATURE_CHECK_LDFLAGS-libunwind-aarch64 += -lunwind -lunwind-aarch64
-+  FEATURE_CHECK_LDFLAGS-libunwind-x86 += -lunwind -llzma -lunwind-x86
-+  FEATURE_CHECK_LDFLAGS-libunwind-x86_64 += -lunwind -llzma -lunwind-x86_64
-+endif
- 
- FEATURE_CHECK_LDFLAGS-libcrypto = -lcrypto
- 
-@@ -734,26 +750,25 @@ ifeq ($(dwarf-post-unwind),1)
-   $(call detected,CONFIG_DWARF_UNWIND)
- endif
- 
--ifndef NO_LOCAL_LIBUNWIND
--  ifeq ($(SRCARCH),$(filter $(SRCARCH),arm arm64))
--    $(call feature_check,libunwind-debug-frame)
--    ifneq ($(feature-libunwind-debug-frame), 1)
--      $(warning No debug_frame support found in libunwind)
-+ifndef NO_LIBUNWIND
-+  ifndef NO_LOCAL_LIBUNWIND
-+    ifeq ($(SRCARCH),$(filter $(SRCARCH),arm arm64))
-+      $(call feature_check,libunwind-debug-frame)
-+      ifneq ($(feature-libunwind-debug-frame), 1)
-+        $(warning No debug_frame support found in libunwind)
-+        CFLAGS += -DNO_LIBUNWIND_DEBUG_FRAME
-+      endif
-+    else
-+      # non-ARM has no dwarf_find_debug_frame() function:
-       CFLAGS += -DNO_LIBUNWIND_DEBUG_FRAME
-     endif
--  else
--    # non-ARM has no dwarf_find_debug_frame() function:
--    CFLAGS += -DNO_LIBUNWIND_DEBUG_FRAME
-+    EXTLIBS += $(LIBUNWIND_LIBS)
-+    LDFLAGS += $(LIBUNWIND_LIBS)
-+  endif
-+  ifeq ($(findstring -static,${LDFLAGS}),-static)
-+    # gcc -static links libgcc_eh which contans piece of libunwind
-+    LIBUNWIND_LDFLAGS += -Wl,--allow-multiple-definition
-   endif
--  EXTLIBS += $(LIBUNWIND_LIBS)
--  LDFLAGS += $(LIBUNWIND_LIBS)
--endif
--ifeq ($(findstring -static,${LDFLAGS}),-static)
--  # gcc -static links libgcc_eh which contans piece of libunwind
--  LIBUNWIND_LDFLAGS += -Wl,--allow-multiple-definition
--endif
--
--ifndef NO_LIBUNWIND
-   CFLAGS  += -DHAVE_LIBUNWIND_SUPPORT
-   CFLAGS  += $(LIBUNWIND_CFLAGS)
-   LDFLAGS += $(LIBUNWIND_LDFLAGS)
+ 	__SYMBOL_ANNOTATE_ERRNO__END,
+ };
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 41a2b08670dc5b0e..b7de4d9fd0045d71 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -1245,6 +1245,9 @@ int symbol__strerror_disassemble(struct map_symbol *ms, int errnum, char *buf, s
+ 		scnprintf(buf, buflen, "The %s BPF file has no BTF section, compile with -g or use pahole -J.",
+ 			  dso__long_name(dso));
+ 		break;
++	case SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE:
++		scnprintf(buf, buflen, "Couldn't determine the file %s type.", dso__long_name(dso));
++		break;
+ 	default:
+ 		scnprintf(buf, buflen, "Internal error: Invalid %d error code\n", errnum);
+ 		break;
+@@ -2289,7 +2292,7 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 	} else if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_IMAGE) {
+ 		return symbol__disassemble_bpf_image(sym, args);
+ 	} else if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND) {
+-		return -1;
++		return SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE;
+ 	} else if (dso__is_kcore(dso)) {
+ 		kce.addr = map__rip_2objdump(map, sym->start);
+ 		kce.kcore_filename = symfs_filename;
 -- 
 2.47.0
 
