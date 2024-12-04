@@ -1,49 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE362391AA;
-	Wed,  4 Dec 2024 19:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4E22391B3;
+	Wed,  4 Dec 2024 19:30:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733340258; cv=none; b=h6h4N19HG/5NH6ZwWm0xYjLD3xG4ruwn8iR7GItEzKxnKepzfF+onrVTlzoK/DBPeTgIFSU2ZU7UZipkI/FrWchGlp2J6sVZ2JTW81w3ppKVYphC0MwViaoer7uKZpAc5PTsSqXKlUZJZNk75EwF53isBic2pWYCU2FZnV7+hdY=
+	t=1733340633; cv=none; b=DQ6JPY0wjnKzT4n/WrpyHzgJSdBkJ0gQ5xIIhGaflcHr6Jpu4UAM3Hw2VQPEghiN4Si10OWb9xPNUGVY02R0qq/+9Ajv6G7Ysu4WOSPHiORfZdGq+qdBurKvMABsa13xVoDk20anU/OXB3RnTGv41cwO8mxV+glEqAKAaccUf7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733340258; c=relaxed/simple;
-	bh=7Nz7Fmk1v8MZPUXucg959qe8Vj0xy0XnrVAGLmjOadM=;
+	s=arc-20240116; t=1733340633; c=relaxed/simple;
+	bh=y2zEuzzfPZtxvj5HcANzLaXKKAioU2vXxN59jG0dXZw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XN4MImQxAKlFaGPPqnlRhNB+EhQdAFotDrkwKOEQ1mmSuNUi1kX335/APwG6pdPMS4Yd0KArr3FdTB4ZRSMCi7fDvztj4IGG0CDSBs19b0YxeT0W7ZF55EL77qB/JysfIFNwIPBIDEd3zhcoTj9eeteiouvgWV0MzghYoR5sWBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jilvUodB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=OV3hH+z4qbW9vh3SjmFboY3K6xY5FrokEz0HkkYWIwLz1L8WKXgq7Je8UnXSveN1AsHrIPlkiYB4LykC+dCX8NXbdFA92nzfq2/QguIiBoUL9SySSZjjPl5FzKaSg+xbCsvW8clcaOcMmavvzzoyetMSeZNKN/A6fsmP5cVnSoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VlnvRrPS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jilvUodB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37E47C4CECD;
-	Wed,  4 Dec 2024 19:24:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VlnvRrPS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD0B4C4CED1;
+	Wed,  4 Dec 2024 19:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733340257;
-	bh=7Nz7Fmk1v8MZPUXucg959qe8Vj0xy0XnrVAGLmjOadM=;
+	s=k20201202; t=1733340632;
+	bh=y2zEuzzfPZtxvj5HcANzLaXKKAioU2vXxN59jG0dXZw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jilvUodBBXvpy7uZs90jylcs939jMLElAtL5N2rCxsdXZL+ruqpViv3Qs9G1zoBu5
-	 pYc7AYinwE68/JBySCEmCwHnJOJZVIqQo8KMmROLNbt4AUREUEdYpJISGfRm3OscIo
-	 dVPg6NY3tt4hVLTZogUofA2q6m/qGC1wbc/P9swbbFADyO4/tLcgosoS6lEXtcZGHc
-	 rvuvc0YFyX80RtU7BAK6jiwH6PYVwcxroNHCpCogZbHfnm5cQZFMCMEdodmThCv+hu
-	 lzjY6br9ijStQR8jT+GIt+AsfcrS8zFFvJopV+SwTruREJXQgLE7Cz+V3303aCihD2
-	 L2jnITPmmC85Q==
-Date: Wed, 4 Dec 2024 11:24:15 -0800
+	b=VlnvRrPSyBb4+p3NFdJmS8uTKaIUQMrPYgYZx2ILR+8rXCVIN48X9p7uHOkFkLy3w
+	 w/viwRimzByQ4lg1+5x3C1DQFs+HUl/7GZW3GrFUEv5Q9vErq7Pg7s/jaZ5EDGG8eh
+	 nodS9vswPtgR3vkS4V6jAwICWMTpDQLA62s1CL0GqNemhbH2uJrGxJORHPbT8Z1Lb5
+	 K823rEdgT0tT3TFh31vh9x0UXpwQPBZ7B94lgaabZvwQj4CerVodzUq42u0wwIkbHB
+	 qAjgklG0YOck1noDt6scmlWWZ+ScpM/5nU52nJp1AV2jze+A5riEDbLmrxdTPZTGmi
+	 c6zyj+dqVfJzw==
+Date: Wed, 4 Dec 2024 11:30:30 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: James Clark <james.clark@linaro.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Mingwei Zhang <mizhang@google.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Vince Weaver <vincent.weaver@maine.edu>,
+	=?utf-8?B?TWlrb8WCYWogS2/FgmVr?= <kolek.mikolaj@gmail.com>,
+	Alejandro Colomar <alx@kernel.org>, linux-man@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [REGRESSION] 'perf mem record' on a Intel hybrid system broken
-Message-ID: <Z1CsX3n5U_q5ehRp@google.com>
-References: <Z1CVTJ5jzIyNiB1R@x1>
+Subject: Re: perf_event_open.2: mmap ring buffer requirement for receiving
+ overflow notifications
+Message-ID: <Z1Ct1nAdC7IPEpAN@google.com>
+References: <CAHGiy68y37n-y_b0gR-dArxFRzYOAr93dCw_6bvkNReNWQ37Hw@mail.gmail.com>
+ <00910b8e-fdaf-45ae-8dcc-8c926d7fce65@maine.edu>
+ <Z04eZN4Cpbqw4Rpe@google.com>
+ <20241204122801.GK35539@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,110 +49,70 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z1CVTJ5jzIyNiB1R@x1>
+In-Reply-To: <20241204122801.GK35539@noisy.programming.kicks-ass.net>
 
-Hi Arnaldo,
+On Wed, Dec 04, 2024 at 01:28:01PM +0100, Peter Zijlstra wrote:
+> On Mon, Dec 02, 2024 at 12:53:56PM -0800, Namhyung Kim wrote:
+> > Hi Peter and Ingo,
+> > 
+> > On Tue, Nov 26, 2024 at 05:13:45PM -0500, Vince Weaver wrote:
+> > > On Sat, 23 Nov 2024, Mikołaj Kołek wrote:
+> > > 
+> > > > findings. In the MMAP layout section of the page, you can find this
+> > > > sentence:
+> > > > Before Linux 2.6.39, there is a bug that means you must allocate
+> > > > an mmap ring buffer when sampling even if you do not plan to
+> > > > access it.
+> > > > Unless I'm somehow misunderstanding it, this statement does not seem
+> > > > to be well worded, or alternatively this bug does not seem to be
+> > > > fixed.
+> > > 
+> > > That text was probably written by me.
+> > > 
+> > > I tried looking at the 2.6.39 code, my perf_tests, and also PAPI which was 
+> > > where the problem was probably noticed but I can't find a firm reference 
+> > > for how the issue was fixed.
+> > > 
+> > > If I recall, the problem was if you were trying to create a sampling event 
+> > > without mmap (say you want to get a signal every 100,000 retired 
+> > > instructions, but you don't actually want any sample data).  I think 
+> > > before 2.6.39 if you tried setting that up you'd get some sort of error 
+> > > (an EINVAL?) when trying to start(?) the event.
+> > > 
+> > > It is possible this wasn't fixed.  I tried to be pretty good 
+> > > about putting relevant git commits as comments in the manpage but there 
+> > > doesn't seem to be one for that part of the text.  I'm guessing it was 
+> > > PeterZ doing the work on this so maybe he remembers.
+> > 
+> > Do you remember what was the issue exactly on sampling events w/o mmap?
+> 
+> I can barely remember last release :/ But looking at the code, I don't
+> see a reason that wouldn't work today.
+> 
+> Only the overflow handler should care about there being a buffer, and
+> that just NOPs out if there isn't -- expensively, if this is a common
+> thing, this could perhaps be optimized a little.
+> 
+> 
+> ---
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4c6f6c286b2d..190b5c3cec10 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -8117,6 +8117,8 @@ __perf_event_output(struct perf_event *event,
+>  
+>  	/* protect the callchain buffers */
+>  	rcu_read_lock();
+> +	if (unlikely(!event->rb))
+> +		goto exit;
 
-On Wed, Dec 04, 2024 at 02:45:48PM -0300, Arnaldo Carvalho de Melo wrote:
-> Hi Namhyung,
-> 
-> root@number:/tmp# perf mem record -a sleep 1s
-> Error:
-> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cpu_core/mem-loads,ldlat=30/).
-> "dmesg | grep -i perf" may provide additional information.
-> 
-> root@number:/tmp# dmesg | tail
-> [18865.729882] ixgbe 0000:05:00.0 enp5s0: NIC Link is Up 10 Gbps, Flow Control: RX/TX
-> [18865.848172] mlx5_core 0000:01:00.0 enp1s0f0np0: Link down
-> [18866.057990] mlx5_core 0000:01:00.1 enp1s0f1np1: Link down
-> [19066.396215] input: JBL RACE TWS (AVRCP) as /devices/virtual/input/input27
-> [19078.378477] usb 2-3: current rate 16000 is different from the runtime rate 48000
-> [21158.375680] usb 2-3: current rate 16000 is different from the runtime rate 48000
-> [31386.186675] input: JBL RACE TWS (AVRCP) as /devices/virtual/input/input28
-> [31409.098352] usb 2-3: current rate 16000 is different from the runtime rate 48000
-> [36409.737615] sysrq: Emergency Sync
-> [36409.742619] Emergency Sync complete
-> root@number:/tmp#
-> 
-> 	That I bisected down to:
-> 
-> ⬢ [acme@toolbox perf-tools-next]$ git bisect good 
-> af954f76eea56453713ae657f6812d4063f9bc57 is the first bad commit
-> commit af954f76eea56453713ae657f6812d4063f9bc57
-> Author: Namhyung Kim <namhyung@kernel.org>
-> Date:   Tue Oct 15 23:23:57 2024 -0700
-> 
->     perf tools: Check fallback error and order
->     
->     The perf_event_open might fail due to various reasons, so blindly
->     reducing precise_ip level might not be the best way to deal with it.
->     
->     It seems the kernel return -EOPNOTSUPP when PMU doesn't support the
->     given precise level.  Let's try again with the correct error code.
->     
->     This caused a problem on AMD, as it stops on precise_ip of 2 for IBS but
->     user events with exclude_kernel=1 cannot make progress.  Let's add the
->     evsel__handle_error_quirks() to this case specially.  I plan to work on
->     the kernel side to improve this situation but it'd still need some
->     special handling for IBS.
->     
->     Reviewed-by: James Clark <james.clark@linaro.org>
->     Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
->     Acked-by: Kan Liang <kan.liang@linux.intel.com>
->     Cc: James Clark <james.clark@arm.com>
->     Cc: Atish Patra <atishp@atishpatra.org>
->     Cc: Mingwei Zhang <mizhang@google.com>
->     Cc: Kajol Jain <kjain@linux.ibm.com>
->     Cc: Thomas Richter <tmricht@linux.ibm.com>
->     Cc: Palmer Dabbelt <palmer@rivosinc.com>
->     Link: https://lore.kernel.org/r/20241016062359.264929-8-namhyung@kernel.org
->     Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> If I revert that patch:
-> 
-> ⬢ [acme@toolbox perf-tools-next]$ git log --oneline -5
-> 9a9f2d6da1ea5ef5 (HEAD -> perf-tools-next) Revert "perf tools: Check fallback error and order"
-> d12d4cfc5033cd8c perf script python: Improve physical mem type resolution
-> 3f79d822e331022f perf disasm: Return a proper error when not determining the file type
-> 1a5b914261f0ebee tools features: Don't check for libunwind devel files by default
-> 40384c840ea1944d (tag: v6.13-rc1, perf-tools/perf-tools) Linux 6.13-rc1
-> ⬢ [acme@toolbox perf-tools-next]$
-> 
-> And rebuild, it works again:
-> 
-> root@number:/tmp# perf mem record -a sleep 1s
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 13.014 MB perf.data (10316 samples) ]
-> root@number:/tmp# perf evlist
-> cpu_atom/mem-loads,ldlat=30/P
-> cpu_atom/mem-stores/P
-> cpu_core/mem-loads-aux/
-> cpu_core/mem-loads,ldlat=30/
-> cpu_core/mem-stores/P
-> dummy:u
-> # Tip: use 'perf evlist -g' to show group information
-> root@number:/tmp# perf evlist -v
-> cpu_atom/mem-loads,ldlat=30/P: type: 10 (cpu_atom), size: 136, config: 0x5d0 (mem-loads), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1, { bp_addr, config1 }: 0x1f
-> cpu_atom/mem-stores/P: type: 10 (cpu_atom), size: 136, config: 0x6d0 (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1
-> cpu_core/mem-loads-aux/: type: 4 (cpu_core), size: 136, config: 0x8203 (mem-loads-aux), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1
-> cpu_core/mem-loads,ldlat=30/: type: 4 (cpu_core), size: 136, config: 0x1cd (mem-loads), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, freq: 1, precise_ip: 2, sample_id_all: 1, { bp_addr, config1 }: 0x1f
-> cpu_core/mem-stores/P: type: 4 (cpu_core), size: 136, config: 0x2cd (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1
-> dummy:u: type: 1 (software), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|ADDR|CPU|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, mmap_data: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-> # Tip: use 'perf evlist -g' to show group information
-> root@number:/tmp# perf evlist -g
-> cpu_atom/mem-loads,ldlat=30/P
-> cpu_atom/mem-stores/P
-> {cpu_core/mem-loads-aux/,cpu_core/mem-loads,ldlat=30/}
-> cpu_core/mem-stores/P
-> dummy:u
-> root@number:/tmp#
-> 
-> Now trying to investigate this,
-
-I think I got a related report from the kernel test robot but it was a
-Sapphire Rapids machine.  I don't have a Intel hybrid machine in hand.
-I'll try to take a look at it on Sapphire Rapids.
+We have a similar logic in __perf_output_begin() and it checks with the
+parent event due to inheritance.  But doing it here would save some
+cycles for preparing samples to be dropped.
 
 Thanks,
 Namhyung
 
+>  
+>  	perf_prepare_sample(data, event, regs);
+>  	perf_prepare_header(&header, data, event, regs);
