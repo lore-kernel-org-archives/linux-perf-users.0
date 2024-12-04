@@ -1,109 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FDD239186;
-	Wed,  4 Dec 2024 21:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EF618B460
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Dec 2024 21:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733346886; cv=none; b=RKc8DYQSuy4+UnWfd7tAR2ZZOmo9pudKJLH7jX4MBcR2rmTcHGSmhU9+YGUg1E8cEuqYZx1Vw6/jAwlUiHs0BGuZpooAZBA/LVOWmeunN9bfdbjG3JXG9p6ocnE685Ato81WpPiQsbUAH50wkpWiUhh/CD+dkpNcN2ZG9/nPKpQ=
+	t=1733347229; cv=none; b=FKwqudqcQ/NoOhL2ln6n4X0ZuWh6nF2nlrneemA9EQtSn175jwi+Hy7b3LP83dBeRipIivI+HXq0W8PJ/oLX3V8ulQ9LpK3oeR6Fd1YdlPRGFTH673pZAmJ9C5qo/zKF3ZiaxZGSceXQFQBgrRe4TkaW+WplvuobCz14IJWJgC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733346886; c=relaxed/simple;
-	bh=v8j3BUCG88ijthg2mICcvqP+ZMewN+fTTSM8Zj9u2sI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nw1gxKofMLViRAiSAEP5+ux7M9k5J+ZoAlUFdB8MRpyj+dBkfDXtvHoMvmJT8Fy3vuhFcaPtLWPlRN9se+P86a9J5H9ocEoVVpDvP8sH4fmzTAaF52EeM8wFkx2fYo+nJo6e63RAT3FKZklUwaO2iADu5itmXhdW0QlHV8XQMtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6Iv8K+J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733347229; c=relaxed/simple;
+	bh=t5qwkMzTBR23XN5UHNJ/o9i4SyG0qdSAoujZ77pjNcg=;
+	h=From:Date:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=G7zDUpVcxVU4y6u5rujdasfC3JUrQ1xDlZv5IEhBA5PSOlbX6QCK7ApzRLn5XnRxYoEjbNi3LmKAiNHyRK5N9fwLu1V41+1gZUFo/jlssUvWOFbwPQ5K5e15EOtqzsHq+YoaxuYrIOtNluXaJ5qhgCo4iYaGsDk+V2GDgrKUTm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=E8VLhuzD; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6Iv8K+J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C79AEC4CECD;
-	Wed,  4 Dec 2024 21:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733346886;
-	bh=v8j3BUCG88ijthg2mICcvqP+ZMewN+fTTSM8Zj9u2sI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C6Iv8K+JNDAJ0uGpvWu0kZoHvBvoyUwgZx31Eu8iVQdpBNmjvqob2j5z5y5/pjT3z
-	 ZjHKcNuKr2ygXvwvYo79P5xsiaDG8bx95yv/cYRB5h1484jW9xTORD/rQL2UkIVHHo
-	 nuUqPI2P58XFz0/CxUEPUaP0PL95Ysz/9qFshh5vzSLidmtdZxkr/m6zhuvQr1K0DQ
-	 CYW3kmunNlno/XrT+ZINfJmNr9lqbseQnl74jtPE6TFt6/gauxz+mUKYfciqvhKoat
-	 aOgdMGF62mZxyA48i20q+KypQQo0QrYSA2SM4KMR2DeHm+w0DHhC2NnauqlECqNQO+
-	 511sbfEnFKpBQ==
-Date: Wed, 4 Dec 2024 18:14:42 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf script python: Improve physical mem type
- resolution
-Message-ID: <Z1DGQp_ahnYFcF6J@x1>
-References: <20241119180130.19160-1-irogers@google.com>
- <9fe0616a-edfa-4e51-9649-f19fb1d44821@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="E8VLhuzD"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-46695dd02e8so1696671cf.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Dec 2024 13:20:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google; t=1733347225; x=1733952025; darn=vger.kernel.org;
+        h=mime-version:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8RI6e6ymEr+T+k00/PjhRJ9Ai2Sgn+nQvuCprmberG8=;
+        b=E8VLhuzDjeCD/HtceO/cS4HODqYH8iYMviVkYp4hJb4cOyzXe4sE8K+U3JNKo+uSY9
+         UVaX8VxoVBzbAmo8cuslIIsXddJFQn3fM86XTulhdLNamIsfPaOS1ljz5+x6/Kq5nXgv
+         W4LCyemjSok40ulxDZHdmDwmFJqfkC2Tl4nGQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733347225; x=1733952025;
+        h=mime-version:message-id:subject:cc:to:date:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8RI6e6ymEr+T+k00/PjhRJ9Ai2Sgn+nQvuCprmberG8=;
+        b=DeJqssVviy9Lvcb5np7c7ww1FB/sz59N47nVZZ56oDhqrPO42UnEtMke5mnzzt3gz9
+         SyKSdfJIMtRBYpS/FEUyGFPbS8HRmcjQakDOapqstYp9+/dq7EwIMSt7OI2KN29R8hi6
+         xOX/VUmNvbCMYl+sOHVQlZcAJNiXnobWqNAQTXGW86Dlg+s175ejPCUUzZDDT72qCiqI
+         5dk+SZUms3cl3DLT5BrcYIgoy3Dor0MIbyY7of2Vw+kaLJD2v8j0LPm1yJVwa46MD8se
+         Bw6e1Ctv68SswvGVdWtg8msxIrXEPNTUZeaOlUqgVluZKFR0rqcD/6B+5nPB+96VWTUB
+         6lTw==
+X-Gm-Message-State: AOJu0YyOb3ws1bn43cdrRFLARRvaWgjMiahiRlFT+ZSSjammbLHn/rQY
+	xnQpFtWPoRtOMpC2MlQYH1yWApdijPdNBxQMHXlJvFbSHMhoY2O/uMMq0VmYlo4JEC8pNP/c2zI
+	=
+X-Gm-Gg: ASbGncvfrBHFiPKYWZC9dE1r4Vzl49/sj+8Xf/6x+pmKbsDHyJ6iOyld2t7cMiCnzDz
+	4LkY43oZd2GXMdvr9rD2nZDKCN+USBChOsDT1yj6iYfXhejiLWO0qnqzHG4dpctZbTMEwIq8P3N
+	GR2Xa/m3Xuv1M84KlgPFbPLbX0jXZniA+1XpS/D6q+xea9GPQTm5jbsBOe3MmI0bXnLTwNfmKW0
+	UImW+4B5Rl2AgxgCq/ncG4NJVMvtaEj+2czeEj+KykNDJfV4/dHDz/ZCmH91gdrDwxAAzyI
+X-Google-Smtp-Source: AGHT+IGFkkNxj7UuyfHtQW9V/6DpdnAkW+U2fAxDduuIoam8LQbflccP2c9AaLfIMJ9gS76+a3dgsQ==
+X-Received: by 2002:ac8:7f11:0:b0:461:9d9:15c2 with SMTP id d75a77b69052e-46717c1a692mr92423571cf.1.1733347225527;
+        Wed, 04 Dec 2024 13:20:25 -0800 (PST)
+Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-467296efea0sm234591cf.37.2024.12.04.13.20.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2024 13:20:25 -0800 (PST)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Wed, 4 Dec 2024 16:20:23 -0500 (EST)
+To: linux-perf-users@vger.kernel.org
+cc: Peter Zijlstra <peterz@infradead.org>
+Subject: perf_event: avoiding gpf on rdpmc for top-down-events on hybrid
+Message-ID: <b0b0ae91-785e-64f6-348a-ca6edd448b74@maine.edu>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9fe0616a-edfa-4e51-9649-f19fb1d44821@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Nov 19, 2024 at 03:05:41PM -0500, Liang, Kan wrote:
-> On 2024-11-19 1:01 p.m., Ian Rogers wrote:
-> > After:
-> > ```
-> > Event: mem_inst_retired.any:P
-> > Memory type                                    count  percentage
-> > ----------------------------------------  ----------  ----------
-> > 100000000-105f7fffff : System RAM               9460        90.5
-> >   841400000-8416599ff : Kernel data               45         0.4
-> >   840800000-8412a6fff : Kernel rodata             19         0.2
-> >   841ebe000-8423fffff : Kernel bss                12         0.1
-> > 0-fff : Reserved                                 998         9.5
-> > ```
+Hello
 
-> > The code has been updated to python 3 with type hints and resolving
-> > issues reported by mypy and pylint. Tabs are swapped to spaces as
-> > preferred in PEP8, because most lines of code were modified (of this
-> > small file) and this makes pylint significantly less noisy.
- 
-> Thanks Ian. A very nice improvement!
- 
-> Acked-by: Kan Liang <kan.liang@linux.intel.com>
+so the PAPI team is working on trying to get Intel top-down event support
+working.
 
-Thanks, tested on a:
+We ran into a problem where on hybrid machines (Alder/Raptor Lake) topdown 
+events are only supported on P-cores but not E-cores.
 
-  root@number:/tmp# grep -m1 "model name" /proc/cpuinfo 
-  model name	: Intel(R) Core(TM) i7-14700K
-  root@number:/tmp#
+So you have code that is happily using rdpmc to read the data on P-cores 
+but if you have bad luck and get rescheduled to an E-core then the rdpmc 
+instruction will segfault/gpf the whole program.
 
-and applied to perf-tools-next:
+Is there any way, short of setting up a complex segfault signal handler, 
+to avoid this happening?
 
-      root@number:/tmp# perf script mem-phys-addr -a find /
-      <SNIP>
-      /bin
-      /lib
-      /lib64
-      /sbin
-      Warning:
-      744 out of order events recorded.
-      Event: cpu_core/mem_inst_retired.all_loads/P
-      Memory type                                    count  percentage
-      ----------------------------------------  ----------  ----------
-      100000000-8bfbfffff : System RAM              364561        76.5
-        621400000-6223a6fff : Kernel rodata          10474         2.2
-        622400000-62283d4bf : Kernel data             4828         1.0
-        623304000-6237fffff : Kernel bss              1063         0.2
-        620000000-6213fffff : Kernel code               98         0.0
-      0-fff : Reserved                              111480        23.4
-      100000-2b0ca017 : System RAM                     337         0.1
-      2fbad000-30d92fff : System RAM                    44         0.0
-      2c79d000-2fbabfff : System RAM                    30         0.0
-      30d94000-316d5fff : System RAM                    16         0.0
-      2b131a58-2c71dfff : System RAM                     7         0.0
-      root@number:/tmp#
+In theory you could try to check what core type you are on before doing 
+the rdpmc but there's a race there if you get rescheduled after the check 
+but before the actual rdpmc instruction.
 
-- Arnaldo
+Vince Weaver
+vincent.weaver@maine.edu
