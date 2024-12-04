@@ -1,179 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E093FC1D;
-	Wed,  4 Dec 2024 03:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FC413D281
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Dec 2024 08:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733281390; cv=none; b=IOxHF6k7TohVcOSod4pgK2RIS/QxaSSs1kXtMF9TqE246XSLW73SKosooRrf+xLw0b2qc6F9116EThmDkPWcw07hjFl5u+D1mk3g5PzeV71s08bi0kCPGNxEZy9O9A4L48KTa23UVnUvjhHmINtbBdCzd6ISlWRsSnFejNyXNik=
+	t=1733299678; cv=none; b=B5hrf/m5Ka2D3XWmjCm/PsHqfqXjIxgma2CnEZDRPjB5Be9SnlMClmlSffSCdTBdRwlaGD2iPVysgAaq9KwaKTrUH/53bkkU7UaMOVllNzht53BY0oxAc3E6n3rBtV2tr/UEyr9DgCMk9vYgrkI6a6TVRtPkQ0WA++v34gQlrKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733281390; c=relaxed/simple;
-	bh=wM3rnMtVYlDzgaChpi1A+d29F5+aqVNfsXHz1k3njhs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YVd5fj8bmJj9p7xwpHXc4NSM5l8zUpie4+/8u4zahaViihRKsBupkFJvOaGLnTyXVdZp7ef3pd3Mk2w5Cl6c8MIP6YUVnb2QLXuBdr/09iJQQyWUa5N3/SFgX71OHSNVN/X1nQT9xTc4V7pVzNzfJOUgMqNnvfOd1eIfiaadcmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gC7JBtun; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1733299678; c=relaxed/simple;
+	bh=aGXnP4As4Q8D2YGCYpvDboUqA/0JV/QAU1GfLgG0/js=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JAzl83MpNn6/I7Ml7/CCUtI+tB5EMEu1CMYMF6kXezMY2QbXYGUqnqvCflajc54yG+gJ2MozSJaIaA62dVh5EDAvcZ5jYW8dNZrQ0ipU02kB7bWFtDIPGDxyQuwF2XLVoAGhr1+/6cmtJrGXY9gZ9tJiWOtU0N02HkZrt0bexa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ZQtaeQkJ; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gC7JBtun"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733281389; x=1764817389;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wM3rnMtVYlDzgaChpi1A+d29F5+aqVNfsXHz1k3njhs=;
-  b=gC7JBtun0Htq/1tQ7JcIn6wBUGoBRGs/dVMZKQIM/KBD4stCuK3qfySC
-   gucjYcsAGvTxUcsb66VZEBxByGq7AZSUem2/7gd5luPUDniXGxTqpTrba
-   +sWTppl/r990Dp6X6a79ZtigPUrq8noVASenaP1tuQGR02rR/t3P/cYvJ
-   i8SeOuXVbpaBkQYsyE99IJPLCSIh4CsskR/zsB1J/6JWjd1cRwzTHDm8p
-   duTwwZc+YxiigxLhnh7fCAxt3tmjSHwtiVueSsECteJIrS7bGRcM6FZBA
-   W5yfgP+u+V2ZbrVCyKF4pBn7HutXIbWoFpjKWuAVY4vW+zhU+xS1EarKO
-   g==;
-X-CSE-ConnectionGUID: 4ETQAe1KQCmajPZkLe9Dbg==
-X-CSE-MsgGUID: av4oM8ImTNOYwt3vcSBA/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="32888717"
-X-IronPort-AV: E=Sophos;i="6.12,206,1728975600"; 
-   d="scan'208";a="32888717"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 19:03:07 -0800
-X-CSE-ConnectionGUID: hrlQTglPSgCi4doORQoFeg==
-X-CSE-MsgGUID: +lXEcFqVRY26Pe0YhoQDaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,206,1728975600"; 
-   d="scan'208";a="94459135"
-Received: from ly-workstation.sh.intel.com (HELO ly-workstation) ([10.239.161.23])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 19:03:02 -0800
-Date: Wed, 4 Dec 2024 11:02:28 +0800
-From: "Lai, Yi" <yi1.lai@linux.intel.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>, yi1.lai@intel.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
-Message-ID: <Z0/GRGpARFh89rVh@ly-workstation>
-References: <Zx9Losv4YcJowaP/@ly-workstation>
- <Zx-B0wK3xqRQsCOS@localhost.localdomain>
- <20241029172126.5XY8vLBH@linutronix.de>
- <20241030140721.pZzb9D-u@linutronix.de>
- <ZyJUzhzHGDu5CLdi@localhost.localdomain>
- <20241107144617.MjCWysud@linutronix.de>
- <Zy4OFlxoRK2jM5zo@localhost.localdomain>
- <20241108190835.GA11231@redhat.com>
- <Zy6QHHakztIXvudC@pavilion.home>
- <20241111120857.5cWFpNkJ@linutronix.de>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ZQtaeQkJ"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-215c54e5f24so14351185ad.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Dec 2024 00:07:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1733299676; x=1733904476; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TQLyVjn39GB0RJ5Jlf6NdEbky8z1gaSlOm3YTv1PuzM=;
+        b=ZQtaeQkJNYl38GkKvQZkMZYtLm0PDXzAxpCJ2GFzSpjxsv2EwG8mghaIw11jVavdBx
+         QynO6Qe8bLsrgxlJFExiYKU9Qu35BTHKGv/oUuh2z6N5qfjp5XmC+i8h44ql98UU4pgu
+         by7rQkozY+SEvBUXFgudHS1U/cmnAkMXlBd+RPuvTMetGAVEug7Go2FkBuf6s0PEhYwf
+         soE/mnCU8X1xinyzOvwVqRiScHkOCT8YRKfjWblDURm84NRhg003qKKzD6hhZEYKzAbW
+         PQoexN8xMySa5wK8luf/oGde7tKtX9ZtVn5THoqYie1WpGScMo+vr8BeHTtY8wIptwVr
+         6Gzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733299676; x=1733904476;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TQLyVjn39GB0RJ5Jlf6NdEbky8z1gaSlOm3YTv1PuzM=;
+        b=n9RJ8nstZ5wDuwl6sC4zUQJgfcEbIa9tt4fzt7ZrkXt3F3nqjnweCYEBtkxQww45Ma
+         TPdm6MtoNsLTWjdI3Bn0tzxGgFKZobHTwLZ21DZPDDJxrIufBl6GDBPaQ/suCPAndN7J
+         lEC+4HLYCxFLNlzlsJpS6+kzYzLLvszQhBw0iPybjQiLnU3prCLFYkVQnl1cROO0uTOe
+         /hvdR24mCFIypId9Zt1f5CC4SyDqUrzJWV/XoS0VQSV6kWHLejHfwtnQRmR1FZvYdN05
+         ElFQKSGEV2G4fQp1E6M5kcglcP7xBkbtf3iwxOqwbm0Z1659MMeeklIbtTI0iU/BvUoI
+         5BnA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsDM3lEUt+8vfgUYvOccFkiS77BN/IWEeG6nLHvG8oDTlUCUf6kFf+X05lR/E9zMwsG6eEOTtUH6OrOLsww5M1@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCLZ00TnAGo5h94W1GmEJT/R8RgaLGR47q9ksTcojV22IU5D//
+	ZgL8BITmKNIT7odsVbROpZ7D/Tk5Fb64wbid4evsVQGOxYZxnSGeKuh6ZuylKkA=
+X-Gm-Gg: ASbGnctxclCVPwviOKcozI+SsEMNNa9K7uJ07DKQfy+7WJQyLoi+fAe/VN9nWk8272+
+	9iErG9JZwp6oBo6CiI5snwCdGY+4f4AEv2ocwy29uPvXAxw8BdZswBKqSJmonxJ1uo3msw7SVkG
+	AdQBxjZg8jA0Gqd8jwYxMWki52E3hV+H4bR+xJZVhcJ1pmnDW6xSi/0oLHVvKQewVG1YPA5A+x9
+	r++xNPFNm/w2Q8n2fcJYdpGb37+IawyLEERZVjF9X0KXhsxLrYi9mf6ePekIq0=
+X-Google-Smtp-Source: AGHT+IF17paEdGmDWae3eRLQCC4EhulVdZUuMeuv9MrhWfCyVw4yz9GlI8P8MlT5HDOyMkqNyPv4iA==
+X-Received: by 2002:a17:902:e84c:b0:215:9642:4d6d with SMTP id d9443c01a7336-215bd0c4b0bmr63970865ad.17.1733299676332;
+        Wed, 04 Dec 2024 00:07:56 -0800 (PST)
+Received: from [10.255.194.25] ([139.177.225.238])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-215411c3530sm89475575ad.54.2024.12.04.00.07.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2024 00:07:55 -0800 (PST)
+Message-ID: <663c3133-12ea-4bc8-b30c-c925d7e86bf6@bytedance.com>
+Date: Wed, 4 Dec 2024 16:07:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241111120857.5cWFpNkJ@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [External] Re: [RFC 00/12] perf record: Add event action support
+Content-Language: en-US
+To: Adrian Hunter <adrian.hunter@intel.com>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, kan.liang@linux.intel.com, james.clark@arm.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241128133553.823722-1-yangjihong@bytedance.com>
+ <0aecb442-ede7-44ce-824e-6fc0271207b7@intel.com>
+From: Yang Jihong <yangjihong@bytedance.com>
+In-Reply-To: <0aecb442-ede7-44ce-824e-6fc0271207b7@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 11, 2024 at 01:08:57PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2024-11-08 23:26:36 [+0100], Frederic Weisbecker wrote:
-> > > Please see
-> > > https://lore.kernel.org/all/1440816150.8932.123.camel@edumazet-glaptop2.roam.corp.google.com/
-> > > and the whole thread.
-> 
-> Thank you for this Oleg.
-> 
-> > > I don't think raw_spin_lock_irq + cmpxchg for each work is a good
-> > > idea, but quite possibly I misunderstood this change.
-> > 
-> > I did not realize there could be gazillion files released in a row. So there
-> > could be noticeable performance issues I guess...
-> 
-> I made a testcase to open 2M (2 *10^6) files and then exit. This led
-> task_work_run() run 2M + 3 callbacks (+ stdin/out/err) for the task.
-> 
-> Running 70 samples on the "orig" kernel:
-> - avg callback time 1.156.470,3 us
-> - 63 samples are starting with 11 (1,1 sec) avg: 1.128.046,7 us
-> - 6 samples are starting with 14 (1,4 sec) avg: 1.435.294,8us
-> 
-> Running 70 samples on the "patched" kernel:
-> - avg callback time 1.278.938,8 us
-> - 59 samples are starting with 12 (1,2 sec) avg: 1.230.189,1 us
-> - 10 samples are starting with 15 (1,5sec) avg: 1.555.934,5 us
-> 
-> With the extra lock the task_work_run() runtime extends by approximately
-> ~122ms for the 2M invoked callbacks. 
-> The spike 1,1sec -> 1,4sec or 1,2sec -> 1,5 sec is due to context
-> switching (there are few cond_resched()/ might_sleep()).
-> 
-> It is not that bad, is it?
->
+Hello,
 
-Hi,
-
-Do we reach consensus about the fix? The issue can still be reproduced
-using v6.13-rc1 kernel. Call trace:
-
-[  300.429498]  ? lock_acquire+0x80/0xb0
-[  300.429695]  ? schedule+0x216/0x3f0
-[  300.429888]  schedule+0xf6/0x3f0
-[  300.430068]  _free_event+0x531/0x14c0
-[  300.430277]  perf_event_release_kernel+0x648/0x870
-[  300.430680]  ? __pfx_perf_event_release_kernel+0x10/0x10
-[  300.430969]  ? __this_cpu_preempt_check+0x21/0x30
-[  300.431228]  ? __sanitizer_cov_trace_const_cmp2+0x1c/0x30
-[  300.431519]  ? __pfx_perf_release+0x10/0x10
-[  300.431746]  perf_release+0x3a/0x50
-[  300.431940]  __fput+0x414/0xb60
-[  300.432127]  ____fput+0x22/0x30
-[  300.432303]  task_work_run+0x19c/0x2b0
-[  300.432518]  ? __pfx_task_work_run+0x10/0x10
-[  300.432752]  ? __sanitizer_cov_trace_const_cmp4+0x1a/0x20
-[  300.433038]  ? switch_task_namespaces+0xc6/0x110
-[  300.433295]  do_exit+0xb19/0x2a30
-[  300.433484]  ? lockdep_hardirqs_on+0x89/0x110
-[  300.433728]  ? __pfx_do_exit+0x10/0x10
-[  300.433942]  do_group_exit+0xe4/0x2c0
-[  300.434147]  get_signal+0x2279/0x24c0
-[  300.434360]  ? __pfx_get_signal+0x10/0x10
-[  300.434601]  ? __might_fault+0xf1/0x1b0
-[  300.434824]  arch_do_signal_or_restart+0x8e/0x7d0
-[  300.435083]  ? __pfx_arch_do_signal_or_restart+0x10/0x10
-[  300.435375]  ? __this_cpu_preempt_check+0x21/0x30
-[  300.435629]  ? syscall_exit_to_user_mode+0x10f/0x200
-[  300.435901]  syscall_exit_to_user_mode+0x144/0x200
-[  300.436161]  do_syscall_64+0x79/0x140
-[  300.436366]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[  300.436643] RIP: 0033:0x7f5add83ee5d
-[  300.436843] RSP: 002b:00007fff21a70e68 EFLAGS: 00000206 ORIG_RAX: 000000000000012a
-[  300.437240] RAX: 0000000000000003 RBX: 0000000000000000 RCX: 00007f5add83ee5d
-[  300.437610] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000080
-[  300.437969] RBP: 00007fff21a70e70 R08: 000000000000000b R09: 00007fff21a70ea0
-[  300.438329] R10: 00000000ffffffff R11: 0000000000000206 R12: 00007fff21a70fc8
-[  300.438703] R13: 0000000000401b4f R14: 0000000000403e08 R15: 00007f5addc0e000
-[  300.439075]  </TASK>
-[  300.439197]
-[  300.439197] Showing all locks held in the system:
-[  300.439513] 1 lock held by khungtaskd/33:
-[  300.439723]  #0: ffffffff8705ca40 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x73/0x3c0
-[  300.440199]
-[  300.440288] =============================================
-[  300.440288]
-
-Regards,
-Yi Lai
-
-> > Thanks.
-> > > 
-> > > Oleg.
+On 11/28/24 21:53, Adrian Hunter wrote:
+> On 28/11/24 15:35, Yang Jihong wrote:
+>> In perf-record, when an event is triggered, default behavior is to
+>> save sample data to perf.data. Sometimes, we may just want to do
+>> some lightweight actions, such as printing a log.
 > 
-> Sebastian
+> Why not just pipe 'perf record' to 'perf script'?
+> 
+> # perf record -e sched:sched_switch | perf script | head
+>              perf  768231 [000] 2318380.474267: sched:sched_switch: perf:768231 [120] R ==> migration/0:18 [0]
+>       migration/0      18 [000] 2318380.474294: sched:sched_switch: migration/0:18 [0] S ==> swapper/0:0 [120]
+>              perf  768231 [001] 2318380.474353: sched:sched_switch: perf:768231 [120] R ==> migration/1:23 [0]
+>       migration/1      23 [001] 2318380.474382: sched:sched_switch: migration/1:23 [0] S ==> swapper/1:0 [120]
+>              perf  768231 [002] 2318380.474477: sched:sched_switch: perf:768231 [120] R ==> migration/2:29 [0]
+>       migration/2      29 [002] 2318380.474503: sched:sched_switch: migration/2:29 [0] S ==> swapper/2:0 [120]
+>              perf  768231 [003] 2318380.474513: sched:sched_switch: perf:768231 [120] R ==> migration/3:35 [0]
+>       migration/3      35 [003] 2318380.474523: sched:sched_switch: migration/3:35 [0] S ==> swapper/3:0 [120]
+>              perf  768231 [004] 2318380.474534: sched:sched_switch: perf:768231 [120] R ==> migration/4:41 [0]
+>       migration/4      41 [004] 2318380.474541: sched:sched_switch: migration/4:41 [0] S ==> swapper/4:0 [120]
+
+pipe 'perf record' to 'perf script' has limited extensions.
+We can use bpf prog to do more (such as saving user-defined data (such 
+as registers, function parameters), and customizing the format of 
+user-printed logs).
+
+Now we only implement a simple print() call, and we can support more 
+calls later.
+
+Thanks,
+Yang
