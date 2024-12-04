@@ -1,63 +1,63 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E48192D7E
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Dec 2024 08:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC29192D6B
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Dec 2024 08:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733300697; cv=none; b=WAQ2tDOqNQmJ2GPuYADohRnM4Ajq0dMtOzEWBcfM7g64XcKTGv2uQDlbcNidHSfEj/cGu0MWG41mb7CsUIy8pSX02y3DBo28pXdkzD1AaDYS4QGNg1ocERS25cK1LNMFtMRPlKm5FFLHHiDJEgs1i0P9vwvucZ5crn+dca4504E=
+	t=1733300959; cv=none; b=sNRvXifCOU23UhYEu9VGxX76C+KmchCTZdawFL9SJzrvIoRccyGDNAEXk11PJpaNrr4agw+yAaIvTE2qmdssXYvuyyOHmnh7Ff8UjZkMR0LTENc878V9PcFTcVvsNmwbJJh7Qnq20rpIeFcJBjRC1GcW5nhq1sOBsOkSKUWgyjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733300697; c=relaxed/simple;
-	bh=e9tRk85WV4aAL6kjg/kGyhEydAR1rXS8kbUjxEXXP60=;
+	s=arc-20240116; t=1733300959; c=relaxed/simple;
+	bh=TwY4nk/icnPo5syvDmlSy9YNyfE46kU0gZdmNxEOv8A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pwozoSlwjXX1qK/QckKT8oB905rQJLhbVvKKEUhU7fidl2bHiIKyr+bHSrqCPWoKc7KO+kj005912wxpxMAr4SqiELREQdcczM8MrR0liploe6M+SHeV/Iryx2Gg+OWBp+BHjFmeZnkweu2kyWJbhFVJZdcIL3ZaPWoq4NizLf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EurIbj+3; arc=none smtp.client-ip=209.85.214.178
+	 In-Reply-To:Content-Type; b=ZSDfByHhdsGHXgICnJ4EevEhVjW7wc0LtW8BulfopPiqj5HhE5YLB+A5k+dbrKkTi3mM6SSliHpBGiXflxMwCLSNdVJcG4+3TNU123wmoQEnZgy2HeqUHaASbuGrE2hjxGDR8WQIJWuOdGjc9DCNIKI3ERjxmC0Z6MXHORovBr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fKsLc0jm; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EurIbj+3"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20cf3e36a76so60716545ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Dec 2024 00:24:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fKsLc0jm"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7e9e38dd5f1so5206209a12.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Dec 2024 00:29:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1733300694; x=1733905494; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1733300956; x=1733905756; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q1UFD+46MuBiqXRl46YpGOAZ33mlvvrjXgngl4fM9t0=;
-        b=EurIbj+36iGpbc7553twTQjoOIW+Fg4m8ZMmPmV5t4KyTH5MdQH1PDBFbUXv/tZMYY
-         bbTv97jRMkX3fPeNjFhQmazLLq5g83iZ443bSnczIEcWNBnFb3ug1zlc10VJSU/qVQ8b
-         MCOsiZL47QP6C/e/xDxdyKbiWnBAFWmc8MnfOJrlra/Zf1YW55Ht7fx7p5AMNqFU/mk+
-         DdxnkS7UwPN///UwKc43WiH/aFbRAsiFUXmHetlMAZyd/Vs5ubYynTTqHGj5l1CrzIZd
-         5mpNQ+vADfot3H3NRTZjRdbdaxjFk7j22XVlA6n8N5bVdDXe86ck1iQlngzLNSj9wBMQ
-         MAHw==
+        bh=TLZSORcwDNCNRYfWTU+SMc0cTgQxpYSn4AIBkHM7H/Y=;
+        b=fKsLc0jmrg4jovcOe13gTNq8gObfMT75mYsbjOHelZhi7mdoHw00T3DMqtDLdCO4Oj
+         iOjNki18B4IPSNvSV9w2CnKHsQpIdYQZlhSNfITCiFigcz/ys/9TyAJdYdON1oERVcQK
+         Ur4RyN2pHzGWBiznb32cJeamf0o+pe41Fb2GWfA+TUL+H6tkbj/NiTQ+cAnu2u4+zsAs
+         piR9Jh8xkhy8dL5wASKroHohucMXvP/iKyHW6KdbKXNQofsQxAgoUId5b7uw2HPWgC5B
+         GRBw3tFF2i/wB0JoxwCzGvY1r/MetztyFha1YVVZVfDnRQ3ckVZ20ydSb0IsKIyITzka
+         xj+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733300694; x=1733905494;
+        d=1e100.net; s=20230601; t=1733300956; x=1733905756;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q1UFD+46MuBiqXRl46YpGOAZ33mlvvrjXgngl4fM9t0=;
-        b=UpY/857Yn7E2LI7MpIQ+zsX5wGMB9IY9sPzgvoNsz1kBr33WdcSfQpGOCt40CJxn5O
-         A4RkwlyGmfC0L1UqVBMvgNs1taUxTOSU8N12TULBBdRyExBbZ9Xetuk+FE2y0O9ut9iW
-         dQ9VYC1rUQOangTHbX/JWriFceRX9yGlJCtnHzChatCrg02UJ7hOn0IQBLAIXbjYu8X+
-         /09u/HcTHl0Df3JQprEsfOehUoK+j9Wz5NILfwMMGXzQD5ytSiYw1yA0H8MPN6yvqgBv
-         GxOTjCAH1NNyOm+wvjmXW7KGBPXswqgOmAZcweMqEt4xj36FEV+SDBvgbePVRFEP/fdM
-         GUgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVBdfoHfh6aURlDhFz6V2klqtS8YZToM6jDJbSbn4u8BgqhTE4jsjZRNINEvx2IA56Isw+lXJzz4FcohArWAtF@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoNNAa8asvZIUXyuxbkBhEzHdSafXmlRuizqnKfVsjyV71OM3k
-	y8CkGjuVeRsBpDha2ksEIvyp0XRreNRwOmiTG2dE9T0XLupVfLc5FV9q7ZROw20=
-X-Gm-Gg: ASbGnctnpiwyCFanMUuqKGUGE+xBWQj8e8DRnJMva1QZqR358SS/odZJ/rFakY5QR2V
-	zCqcaIYufoZmKlYpbAm28uBSw8+/fHZOTNTQqQ+vz2TgBnpnbficy9TYIGCCKWpdTjOoLvNQ8QI
-	nFmK+3pYNFyrZgG/aPOFq6oLj7uH0OXMRCrY0jQFbtT2XiF/9+f9606687jvvnmdtDbRFNHjsER
-	Lt+1ACyzSSXUyCBiNrBuE7UsQDBC/J3VtKm4v75Dn/cdklUkEzM4ruvVAgmohU=
-X-Google-Smtp-Source: AGHT+IHerA5k+FXrjuEQ+gtAhpCKKVjzpxM3rClxP/nhHtSLOgcnOx9LrKmupbZ8P8lwzyuUhRn3Cw==
-X-Received: by 2002:a17:902:cec6:b0:215:a172:5fb9 with SMTP id d9443c01a7336-215bd14189fmr91694895ad.48.1733300694302;
-        Wed, 04 Dec 2024 00:24:54 -0800 (PST)
+        bh=TLZSORcwDNCNRYfWTU+SMc0cTgQxpYSn4AIBkHM7H/Y=;
+        b=qur6Mr5Tyy3/LjHWzXm5iUT7yjdOk5bKLN7IIQQiEkNJvZr8vre14+T9oqUI+RJUuw
+         QlcTaYNe8gluJvd0y4gDmnrAtpqZccVMeuveXl/wm3KS8FIdqnRhZjK8Ku8Nq/5G2P8g
+         SVaAJch6ZKixqs9GMJ+6YAU2kfPpYr+fhPUQ4S/A1L0qIELo27JwgXUrwO313uzs0k16
+         2MfUH4ksKQIRNZNvzAZ7ulmpcQ65xefcvimjt8BDcAzy95AswE0+a1AikK+mBSlWNYF3
+         cHgUGjzkkODFqosuIXqkUytwMfz9P2NqsrElRkU1haWlXG+wiHG54Yl1WVy41tOUwfVE
+         CPGA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKUs/a1cGvzJ/Cg9gvQYK7OezDP6Vww37Y2TEjABu+507fN+mmZ+lPwAHZBuoskcUzIZ2cwIB/3irNKfyBGFIN@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhWpWJ7zB6KgzoaERv7Mhm0HCZPch9pyjiZUDLWVs5/c68Lk2m
+	rlufVmLcb/1RWuMmtW3OkXaMOUF/zGceVMYuCVX3sWnCm0uFmEd41aPEm0MrKOs=
+X-Gm-Gg: ASbGncuHiLnHugpN6xqrkrFAyVnurhqnTvROmDdNNDSzueuQIB/lkAXzC32TBd78rX5
+	8AkuAnh+Uofy7+zlcwAcczqkiQRB/2l3Ub1nDZ5FPe2tzPlfDtocHZNTx3pd02d0o5H7lxh8iP0
+	zbgoAwx45Mazmj1L+T9RJfPAAqIEEoQhbq50kGblEcx3IJ6R99DbGYToian5uFUbJDZcr9PHZpq
+	0c3TFQ171Y/zW8cAD7YcKDiMkX9ag76nZPjUGegqmrWz9Nw3o/6KynhLst8/2o=
+X-Google-Smtp-Source: AGHT+IFfgyaV96mN6xSeoeVIL1qafBJc5PoZjODqeGEj7WEjbfKFLPUhTR9DWnVpffrfk4EUWg3uig==
+X-Received: by 2002:a05:6a20:cfa9:b0:1e0:c9a9:a950 with SMTP id adf61e73a8af0-1e1654110a3mr8712061637.39.1733300956545;
+        Wed, 04 Dec 2024 00:29:16 -0800 (PST)
 Received: from [10.255.194.25] ([139.177.225.238])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-725417fbfdesm11784559b3a.99.2024.12.04.00.24.48
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fc9c2f7802sm10853498a12.27.2024.12.04.00.29.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2024 00:24:53 -0800 (PST)
-Message-ID: <2f3938f6-41c7-46f8-a8f0-a3792fb21e96@bytedance.com>
-Date: Wed, 4 Dec 2024 16:24:47 +0800
+        Wed, 04 Dec 2024 00:29:15 -0800 (PST)
+Message-ID: <bbeba4c6-6c46-4708-9ce9-ff6037fe6449@bytedance.com>
+Date: Wed, 4 Dec 2024 16:29:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,7 +65,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [External] Re: [RFC 01/12] perf record: Add event action support
+Subject: Re: [External] Re: [RFC 02/12] perf event action: Add parsing const
+ expr support
 Content-Language: en-US
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
@@ -74,68 +75,74 @@ Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
  james.clark@arm.com, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20241128133553.823722-1-yangjihong@bytedance.com>
- <20241128133553.823722-2-yangjihong@bytedance.com> <Z0jQXPF-tLXRh-Mt@x1>
+ <20241128133553.823722-3-yangjihong@bytedance.com> <Z0jROJ7JPTjmeZly@x1>
 From: Yang Jihong <yangjihong@bytedance.com>
-In-Reply-To: <Z0jQXPF-tLXRh-Mt@x1>
+In-Reply-To: <Z0jROJ7JPTjmeZly@x1>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Hello,
 
-On 11/29/24 04:19, Arnaldo Carvalho de Melo wrote:
-> On Thu, Nov 28, 2024 at 09:35:42PM +0800, Yang Jihong wrote:
->> In perf-record, when an event is triggered, default behavior is to
->> save sample data to perf.data. Sometimes, we may just want to do
->> some lightweight actions, such as printing a log.
->>
->> Based on this requirement, add the --action option to the event to
->> specify the behavior when the event occurs.
+On 11/29/24 04:23, Arnaldo Carvalho de Melo wrote:
+> On Thu, Nov 28, 2024 at 09:35:43PM +0800, Yang Jihong wrote:
+>> Event action requires constant expression parsing support,
+>> which include constant integer and constant string.
 >>
 >> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 >> ---
->>   tools/perf/Documentation/perf-record.txt |   8 +
->>   tools/perf/builtin-record.c              |  31 +++
->>   tools/perf/util/Build                    |  18 ++
->>   tools/perf/util/parse-action.c           | 230 +++++++++++++++++++++++
->>   tools/perf/util/parse-action.h           |  75 ++++++++
->>   tools/perf/util/parse-action.l           |  40 ++++
->>   tools/perf/util/parse-action.y           |  82 ++++++++
->>   tools/perf/util/record_action.c          |  15 ++
->>   tools/perf/util/record_action.h          |  24 +++
->>   9 files changed, 523 insertions(+)
->>   create mode 100644 tools/perf/util/parse-action.c
->>   create mode 100644 tools/perf/util/parse-action.h
->>   create mode 100644 tools/perf/util/parse-action.l
->>   create mode 100644 tools/perf/util/parse-action.y
->>   create mode 100644 tools/perf/util/record_action.c
->>   create mode 100644 tools/perf/util/record_action.h
+>>   tools/perf/util/parse-action.c | 27 +++++++++++++++++++++++++++
+>>   tools/perf/util/parse-action.h |  5 +++++
+>>   2 files changed, 32 insertions(+)
 >>
->> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
->> index 242223240a08..d0d9e0f69f3d 100644
->> --- a/tools/perf/Documentation/perf-record.txt
->> +++ b/tools/perf/Documentation/perf-record.txt
->> @@ -833,6 +833,14 @@ filtered through the mask provided by -C option.
->>   	Prepare BPF filter to be used by regular users.  The action should be
->>   	either "pin" or "unpin".  The filter can be used after it's pinned.
+>> diff --git a/tools/perf/util/parse-action.c b/tools/perf/util/parse-action.c
+>> index 01c8c7fdea59..391546bf3d73 100644
+>> --- a/tools/perf/util/parse-action.c
+>> +++ b/tools/perf/util/parse-action.c
+>> @@ -4,6 +4,9 @@
+>>    * Actions are the programs that run when the sampling event is triggered.
+>>    * The action is a list of expressions separated by semicolons (;).
+>>    * Each action is an expression, added to actions_head node as list_head node.
+>> + *
+>> + * Supported expressions:
+>> + *   - constant:
+> 
+> This seems incomplete, what should come after the :?
+> 
+> the patch description, at the beginning of this message has more details
+> than here.
+This patch only implements a general constant expression category. The 
+next patch will support parsing of specific string constant expressions 
+and integer constant expressions.
+
+
+> 
+>>    */
 >>   
->> +--action=<action>::
->> +	Actions are the programs that run when the sampling event is triggered.
->> +	The action is a list of expressions separated by semicolons (;).
->> +	The sample data is saved by bpf prog attached by the event.
->> +	The call currently supported is print(); some commonly used built-in special
->> +	variables are also supported
->> +	For example:
->> +	  # perf record -e sched:sched_switch --action 'print("[%llu]comm=%s, cpu=%d, pid=%d, tid=%d\n", time, comm, cpu, pid, tid)' true
+>>   #include "util/debug.h"
+>> @@ -115,7 +118,31 @@ void event_actions__free(void)
+>>   	(void)event_actions__for_each_expr_safe(do_action_free, NULL, false);
+>>   }
+>>   
+>> +static struct evtact_expr_ops *expr_const_ops_list[EVTACT_EXPR_CONST_TYPE_MAX] = {
+>> +};
+>> +
+>> +static int expr_const_set_ops(struct evtact_expr *expr, u32 opcode)
+>> +{
+>> +	if (opcode >= EVTACT_EXPR_CONST_TYPE_MAX) {
+>> +		pr_err("expr_const opcode invalid: %u\n", opcode);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (expr_const_ops_list[opcode] == NULL) {
+>> +		pr_err("expr_const opcode not supported: %u\n", opcode);
+>> +		return -ENOTSUP;
+>> +	}
 > 
-> But at this point in the series this isn't available, right?
+> Since expr_const_ops_list[EVTACT_EXPR_TYPE_CONST] is NULL, this will
+> always fail?
 > 
-> I.e. when testing this specific patch I can't follow what the
-> documentation above says and expect anything, right? It will just fail?
-
-Yes, The entire patchset needs to be applied to fully support this feature.
-
-This patch simply implements the data organization structure.
+Yes, this patch does not support specific constant expressions, so it is 
+empty.
 
 Thanks,
-Yang
-
+Yang.
