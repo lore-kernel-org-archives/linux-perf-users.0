@@ -1,63 +1,63 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8F21AB52F
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Dec 2024 09:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C451AA7A2
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Dec 2024 10:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733306392; cv=none; b=MmVIQ8ActptUFAbpcdFbP9SybWx5jBS0rcJu5g/GQy+ZC94Lhtr2TcHipmj2830xywfapJ1Q0Rv6IflVA2/BwpshrhVNXqFYi2GE/p8rp28ffsXppEyJxZItykTxHBErZh1dIoPyiYSuDSHV5L7SVeKy6cBtK6urfC5b3+UruHo=
+	t=1733306418; cv=none; b=B2DLAVyrFLmjvNyiE1PnIyAcWth7K9+miOdmZYXrbm5V5/qkRZXlAvLbl60DOguAH/+Pn0MelbVT+Li0fe42jVo6vm45zvS2MMNym9LkNCXZhplWoQZuaMcvbPJ6+T+nUaNL4ZCcwKQDYXXMnGVZ3R6lxDjq5V2jWmsQmyUgWTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733306392; c=relaxed/simple;
-	bh=byZXgeZ2ivwY8dQMLRKWWL+jQ2EnfPchXyu1tYJxbc8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=e8wwbT6lJkvZ1cGFgbUV8RUBoWmihq9xzIsfVpASqnWVcISpCycUX8q9FvrF7ix5J2bwvcCcvFJsl6Be/yWAeiKCzBjAa4SnIJMkyowCE0ozrL4tS08iWrurfhuOsm9mxkaoJNbV5mWh2r9YT2pUa2MR/ZV3pJf1NXlivViJTQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I8VuUgo5; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1733306418; c=relaxed/simple;
+	bh=gmTWp42uVpMYzw60S7pepILZWkU0vYie0Bkl0Evppjc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CLWOICpM8t8qkga3CIPQw0gjlUDoPKU0+mytW/H/xWFjZ3MhHHBuvz3vQUR6sdUKL2wLGI3rZTRuLvk8oN+nhbjgVEC0SvrBQU1miUAu2f793bpQumH/PQKP9ZyeWoww0rdzgdillueVvY2fsioxVUOucQqisFEM9MUmQ3OTJ/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bkNNj1kJ; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I8VuUgo5"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-432d86a3085so55636915e9.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Dec 2024 01:59:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bkNNj1kJ"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-385e3621518so3470647f8f.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Dec 2024 02:00:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733306388; x=1733911188; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3JAePphPcnp1eAgPvdLOuOSkuEbV5V4trB4aVsssHkQ=;
-        b=I8VuUgo506MxsZSw1aQZcoEpgJ1oZZJBOqM+faHYmNIf44lpwD+NUdFFKdj02bNsTB
-         pcEb/sKZT1JlkLRFTNRM7/HtEbM0mHy/iSZBL1yW+8Ij4Al48UKEOsWk7MvsdKS1WBUx
-         NI6mkbOcjVnCIENUEIbe6Q7KiH8DdB5PGVw2oNUYdlGVk34lxxgIeZP46duNs6mhsakU
-         FZeEytOyzY4CX8vcCSDDqunz7D/+moCuSrZjXCiDLQn/SuWRt5u3GfexSx+xy6jyVM2c
-         je9B0d2q/tTeVBPwx9MvLLKcnPatih1RgKu85CQgvn3cr8EwR5qSDhNHFneu1Kgf4wTL
-         Itpw==
+        d=linaro.org; s=google; t=1733306415; x=1733911215; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ct6TiWILSfI4o4NLd8e+Uh155SuDdxolQSAG0h83St8=;
+        b=bkNNj1kJ7Hyev2lAS0sGbRDA5mQGkWyDjOOxhoU1rUz7megc5lq3BBO4O5dCcBFjJ/
+         C2UlOlJHLh66GU5G46eyX6rP8+DG2ynOfT9ryYlI04a3XLd43rxcmS2fKvD6ki7t/0jX
+         ezZqihIDfNf7w7qQdrZxub7o122DqnAzz7fC7IBqV24z2zLH8r3x5OmT1nMnl6VOhkzi
+         rUPhSzesB8DZi5mU3rQRiM+RySIUzGi90ohz9SOV8zRnQKUTGQaC/wZtkJvquk3/siFE
+         nkcV86SvPdT80moFwuPPQ0BSbIjf/4PkrZVlIQoLaj81PaXDy+ZgraQbkaiLwTDy9R3L
+         zVVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733306388; x=1733911188;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1733306415; x=1733911215;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3JAePphPcnp1eAgPvdLOuOSkuEbV5V4trB4aVsssHkQ=;
-        b=aHwL+1w9msW/kmxN3JzZu5qHZegDMc0pznd3/sU6/NdHI/ylDeTpNBoSclUTsuVVRI
-         aXaXkSnvqSS/OV9sDKWls9X75F+OoiyUBffhBOvKa0lBxw4UQ2SRe2/kso8GCaVGlQ7d
-         +WjUjRP6D8cO4s+tnCzz+KIDDS9SvAP0AIzxXN+a/Biu593poUabKy2Or/sQyMRUEEvg
-         HVLUhQCC0b0u5kXg7fFDGvPJNib06reKgbPlB+yDo4oWFo8oWi6XJ8T8UDVBKLw81I92
-         tbpk7Td1YmbUaUsFpJHhwVPmwReJ8uEcD4Zf9GtHzOCEPUiy5QCL9QGD06R/29wDdjD8
-         kUFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUo+BJC11mhqEorxLmHjnW8r/HIyDJsXpiQKMkKXZn5wM6rysTkVDZnz+PDnHXS3rnzvuzX0l8PPTJ7ywvQvw+C@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuSGrz54grq5t7CAKMIizQ6dSGadhsc1yjbxZmlxnB5LTmnv7n
-	a5A6bpqQnDM4C9JwgZJATJ8XLCCc95R1ZJLsGB6mkq89c/eJ68ebojWHEGccGUE=
-X-Gm-Gg: ASbGncu/NslPV6sif5YgjqTwRfBt3vfyS88NXJFsuJjG3NFlW6bZ++KNZJJ5dzSZdJu
-	F5juNXTtFiNx8u47Yo7cVxtsTzV3NbehFQdQJtbnkZwdhkf2+46IXrfebnxsBI1mY/jhXA26Tbx
-	5UxXxlfoXZwZGeiAg4P0sxaEg/SyuZ4RFLFKpYCdr5f4GPiglYsXZg147+RQkqgFwe2by9z6gso
-	aPazb93CJMP/Z7eL3+F6vxfZnivgtALm0jVmROQo3yuiRycIxKXEtU6VKkT2w==
-X-Google-Smtp-Source: AGHT+IGidQDLyHMD3KI1jIdL4LmanrH/fT/0s6EUXalZdsQ7+VfmdI1b9R90aH/W7GH8cFt9sBHQTQ==
-X-Received: by 2002:a5d:588f:0:b0:385:f062:c2df with SMTP id ffacd0b85a97d-385fd3ccda2mr5610676f8f.11.1733306388380;
-        Wed, 04 Dec 2024 01:59:48 -0800 (PST)
+        bh=Ct6TiWILSfI4o4NLd8e+Uh155SuDdxolQSAG0h83St8=;
+        b=X+95sk1+9h1G6oHnghDwd5LirLBFKLQpxH0leYnBA7IHO23XH60G5X6pOQluGugJ2n
+         lWfiOgT4FaMwL/ixx1tiWW49ncCIUyQLXWj2lNUuSx5Yi6TJtjfvBMR0PvNOefAJl0Rd
+         tKgqpNpzxro8b6Y2whQcEUp2HJBRBvkSNxr5ALt5qIfh/Ucn0U1jqDJYsBm8LnuWeOm7
+         cuzUsCW5z3CtCsr6eTjQ421fv4GNHEEdb5uFzhshuRbMqZ6fyvFCcf0zoG/YvNiwE0VD
+         01bNXot8mvYcSf1fYYP+wREzExIA82G1hzjC34LWs/WCGBukalCK+VqTafCFPv59xdnw
+         Sf+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVuGG8uYPFX1jdOmzrDXzkCSSE3UG1kvYrutb1YkBIo161+xnSYgu+6cu4mpQF7SaALNpeVNtj7mQZiNjCiy3BP@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZgjpoTaDUKLZilOhc53usVCTcYbCcLS3/3DlBsQX4vKFAHnlS
+	wB3ZPb4gbEumBbP8AeFegS0IBhUUyuJZy63fxclG1EWXPrexKZcl3TJ49Dg9tAo=
+X-Gm-Gg: ASbGnctHXaAZuQpV2XyOer7j40FeKp8lPBNsuOIefFkMipBdrQ7IFjm0Sp18mrFhqvG
+	Xw+JD6ALbNkKho7BKRYWPyD9El3Tk/fiIM4SRgxovzwNAJRx3FNSzY9PnFvwXi+/eunbYkQi7tA
+	bY4J+bp1AqixPxIDM/QzZWdllVCfZ9O4/MS8qJsUE65zeswt1HvaEmIJEV91kGmpkF9Sq1+QpcE
+	DrluJIGUkDrMqfmqwUDbw4qs+3v9Xjcxg//vdWb/JuU7Zio4Tau1PAvsZnOeg==
+X-Google-Smtp-Source: AGHT+IEcals9cWAl+b1w3YqlYSBEmA1VjlSI88V7L5ie0gT9yHjt9N2Z8yNkC7HYy7dX+eZU577mMA==
+X-Received: by 2002:a5d:47cb:0:b0:385:fc32:1ec6 with SMTP id ffacd0b85a97d-385fd54d75emr4238048f8f.50.1733306415065;
+        Wed, 04 Dec 2024 02:00:15 -0800 (PST)
 Received: from [192.168.68.163] ([209.198.129.154])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385ea17f78esm10836309f8f.64.2024.12.04.01.59.47
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385d97ab259sm16081204f8f.95.2024.12.04.02.00.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2024 01:59:47 -0800 (PST)
-Message-ID: <38205401-3fdc-4b3d-a018-bb5a569fdc12@linaro.org>
-Date: Wed, 4 Dec 2024 09:59:46 +0000
+        Wed, 04 Dec 2024 02:00:14 -0800 (PST)
+Message-ID: <c470d6a9-8717-44ad-a713-70cf39ff87df@linaro.org>
+Date: Wed, 4 Dec 2024 10:00:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,106 +65,67 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] perf tools: Fix build error on
- generated/fs_at_flags_array.c
-From: James Clark <james.clark@linaro.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+Subject: Re: [PATCHSET 00/11] perf tools: Sync tools and kernel headers for
+ v6.13
+To: Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
  Adrian Hunter <adrian.hunter@intel.com>,
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
  LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 References: <20241203035349.1901262-1-namhyung@kernel.org>
- <20241203035349.1901262-12-namhyung@kernel.org>
- <981436ce-2d41-4c3e-b77e-63e4c200cd0e@linaro.org>
- <Z09-GGWh87_wrslp@google.com>
- <3fae886d-baa6-4670-8418-a57c02572f78@linaro.org>
 Content-Language: en-US
-In-Reply-To: <3fae886d-baa6-4670-8418-a57c02572f78@linaro.org>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20241203035349.1901262-1-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 04/12/2024 9:39 am, James Clark wrote:
+On 03/12/2024 3:53 am, Namhyung Kim wrote:
+> Hello,
+> 
+> I'll carry these changes on the perf tools tree to update perf tools to
+> understand new syscalls and parameters.  You can refer to README file in
+> the tools/include/uapi directory why it's needed.
+> 
+> Thanks,
+> Namhyung
 > 
 > 
-> On 03/12/2024 9:54 pm, Namhyung Kim wrote:
->> Hello,
->>
->> On Tue, Dec 03, 2024 at 04:43:44PM +0000, James Clark wrote:
->>>
->>>
->>> On 03/12/2024 3:53 am, Namhyung Kim wrote:
->>>> It should only have generic flags in the array but the recent header
->>>> sync brought a new flags to fcntl.h and caused a build error.  Let's
->>>> update the shell script to exclude flags specific to 
->>>> name_to_handle_at().
->>>>
->>>>       CC      trace/beauty/fs_at_flags.o
->>>>     In file included from trace/beauty/fs_at_flags.c:21:
->>>>     tools/perf/trace/beauty/generated/fs_at_flags_array.c:13:30: 
->>>> error: initialized field overwritten [-Werror=override-init]
->>>>        13 |         [ilog2(0x002) + 1] = "HANDLE_CONNECTABLE",
->>>>           |                              ^~~~~~~~~~~~~~~~~~~~
->>>>     tools/perf/trace/beauty/generated/fs_at_flags_array.c:13:30: 
->>>> note: (near initialization for ‘fs_at_flags[2]’)
->>>>
->>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->>>
->>> Hi Namhyung,
->>>
->>> Is it possible to fix this before the updates to keep it buildable? 
->>> Maybe
->>> it's not feasible, I didn't check.
->>>
->>> I did notice a build issue in the kvm tests after this update:
->>>
->>> $ make O=../build/local/ summary=1 TARGETS=kvm kselftest
->>>
->>> In file included from aarch64/aarch32_id_regs.c:14:
->>> include/aarch64/processor.h:15:10: fatal error: asm/brk-imm.h: No 
->>> such file
->>> or directory
->>>     15 | #include <asm/brk-imm.h>
->>>
->>> But I tried the same on v6.13-rc1 and got a different error, so I 
->>> don't know
->>> if it's any worse.
->>
->> I suspect it's an unrelated issue.  This fix is about generating
->> descriptions of the flags for perf trace beautifier.
->>
->> The below is the only change I made in this series for arm64.
->>
->> Thanks,
->> Namhyung
->>
-> 
-> I'll take a look
-> 
 
-Looked like some kind of stale build issue. A clean fixed it but I 
-wasn't able to reproduce it.
+Reviewed-by: James Clark <james.clark@linaro.org>
 
->>
->> ---8<---
->> diff --git a/tools/arch/arm64/include/uapi/asm/kvm.h b/tools/arch/ 
->> arm64/include/uapi/asm/kvm.h
->> index 964df31da9751c96..66736ff04011e0fa 100644
->> --- a/tools/arch/arm64/include/uapi/asm/kvm.h
->> +++ b/tools/arch/arm64/include/uapi/asm/kvm.h
->> @@ -484,6 +484,12 @@ enum {
->>    */
->>   #define KVM_SYSTEM_EVENT_RESET_FLAG_PSCI_RESET2        (1ULL << 0)
->> +/*
->> + * Shutdown caused by a PSCI v1.3 SYSTEM_OFF2 call.
->> + * Valid only when the system event has a type of 
->> KVM_SYSTEM_EVENT_SHUTDOWN.
->> + */
->> +#define KVM_SYSTEM_EVENT_SHUTDOWN_FLAG_PSCI_OFF2       (1ULL << 0)
->> +
->>   /* run->fail_entry.hardware_entry_failure_reason codes. */
->>   #define KVM_EXIT_FAIL_ENTRY_CPU_UNSUPPORTED    (1ULL << 0)
+> Namhyung Kim (11):
+>    tools headers: Sync uapi/drm/drm.h with the kernel sources
+>    tools headers: Sync uapi/linux/perf_event.h with the kernel sources
+>    tools headers: Sync uapi/linux/kvm.h with the kernel sources
+>    tools headers: Sync x86 kvm and cpufeature headers with the kernel
+>    tools headers: Sync arm64 kvm header with the kernel sources
+>    tools headers: Sync *xattrat syscall changes with the kernel sources
+>    tools headers: Sync uapi/asm-generic/mman.h with the kernel sources
+>    tools headers: Sync uapi/linux/fcntl.h with the kernel sources
+>    tools headers: Sync uapi/linux/mount.h with the kernel sources
+>    tools headers: Sync uapi/linux/prctl.h with the kernel sources
+>    perf tools: Fix build error on generated/fs_at_flags_array.c
+> 
+>   tools/arch/arm64/include/uapi/asm/kvm.h       |  6 +++++
+>   tools/arch/x86/include/asm/cpufeatures.h      | 11 ++++++--
+>   tools/arch/x86/include/uapi/asm/kvm.h         |  1 +
+>   tools/include/uapi/asm-generic/mman.h         |  4 +++
+>   tools/include/uapi/asm-generic/unistd.h       | 11 +++++++-
+>   tools/include/uapi/drm/drm.h                  | 17 ++++++++++++
+>   tools/include/uapi/linux/kvm.h                |  8 ++++++
+>   tools/include/uapi/linux/perf_event.h         | 11 +++++++-
+>   .../arch/mips/entry/syscalls/syscall_n64.tbl  |  4 +++
+>   .../arch/powerpc/entry/syscalls/syscall.tbl   |  4 +++
+>   .../perf/arch/s390/entry/syscalls/syscall.tbl |  4 +++
+>   .../arch/x86/entry/syscalls/syscall_32.tbl    |  4 +++
+>   .../arch/x86/entry/syscalls/syscall_64.tbl    |  4 +++
+>   tools/perf/trace/beauty/fs_at_flags.sh        |  3 ++-
+>   .../trace/beauty/include/uapi/linux/fcntl.h   |  5 +---
+>   .../trace/beauty/include/uapi/linux/mount.h   | 14 ++++++++--
+>   .../trace/beauty/include/uapi/linux/prctl.h   | 27 ++++++++++++++++++-
+>   17 files changed, 126 insertions(+), 12 deletions(-)
 > 
 
