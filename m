@@ -1,155 +1,162 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FFB2391AD;
-	Wed,  4 Dec 2024 17:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE362391AA;
+	Wed,  4 Dec 2024 19:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733335003; cv=none; b=l6VWyhwuiblJI5nvOp57jZ+ptP7el8RtpHuttBDWg5YqTJ01vqP6+uvN0MQyvDGDX74lAvStSS8FxactWoslx8KjmwGENTLWnu5cM/hMCT1ZvX2HBT5OAMl6xaycUtKag8knv3Jlp4eARrLmzNxMSDzV2gLQeAXlQtZRmTc/aLM=
+	t=1733340258; cv=none; b=h6h4N19HG/5NH6ZwWm0xYjLD3xG4ruwn8iR7GItEzKxnKepzfF+onrVTlzoK/DBPeTgIFSU2ZU7UZipkI/FrWchGlp2J6sVZ2JTW81w3ppKVYphC0MwViaoer7uKZpAc5PTsSqXKlUZJZNk75EwF53isBic2pWYCU2FZnV7+hdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733335003; c=relaxed/simple;
-	bh=eqMyNIsN1uT5Xpv2zdcqbksS85BUsOtJ32KdNLU1I0U=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=oMfRAexDJhbF8ohsQKMMLKG2fglTQZ39GfddJHf7gj8hbPEjRbIhAQhO2QYstyeBwqfCcouJzfk0hvZmv0WVPrGXJZo0Mi7m/Zxjl6jNNoECT0zMmZRnI1Hd3yj0lQ6PPvXQs0eSMfG262RAoOdkKMK06ERZ6GHxJHADf2haTrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=EdNz09I5; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1733340258; c=relaxed/simple;
+	bh=7Nz7Fmk1v8MZPUXucg959qe8Vj0xy0XnrVAGLmjOadM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XN4MImQxAKlFaGPPqnlRhNB+EhQdAFotDrkwKOEQ1mmSuNUi1kX335/APwG6pdPMS4Yd0KArr3FdTB4ZRSMCi7fDvztj4IGG0CDSBs19b0YxeT0W7ZF55EL77qB/JysfIFNwIPBIDEd3zhcoTj9eeteiouvgWV0MzghYoR5sWBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jilvUodB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="EdNz09I5"
-Received: from [192.168.7.205] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 4B4Hu3u71144059
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 4 Dec 2024 09:56:04 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 4B4Hu3u71144059
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024111601; t=1733334965;
-	bh=fSeKtgNwkCpt2FTgB9H0vrQNEgwFumN/S7wiZwtuQ+Y=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=EdNz09I5sLH7fW5kPPKAD247aZDUOBUyGT2Su2dVsBmPC1bNO4c5Rd8lrqXYzNkUI
-	 mE2QCgM+ARHlxSp+NlGLtLZTl0Z/4aF8bygTRcpiDSGNEau7skDUXw9XZfzvdoRDHp
-	 RdDFkFEQd/BQj6DaUiocpEw6qHuIM7fy24VpBMqIUDQHYHhxiiJa5G/vR8nxyUX4HC
-	 wSIIjThDlQRzR+MIAljT7S8fU02HdDNGfrqlI4GLmRnUETHToYxk2mUQ6/m1Dv6Fcw
-	 W2vO3KFsQAbZGg6WL5tbr+rPDv+tZPRr3PY/OHRVQKMfpDKXePAph4Kw8vU5y6JbD2
-	 bEy2YRBbaNA0Q==
-Message-ID: <308cddef-9efa-47ab-b499-34c52480dd09@zytor.com>
-Date: Wed, 4 Dec 2024 09:56:02 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jilvUodB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37E47C4CECD;
+	Wed,  4 Dec 2024 19:24:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733340257;
+	bh=7Nz7Fmk1v8MZPUXucg959qe8Vj0xy0XnrVAGLmjOadM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jilvUodBBXvpy7uZs90jylcs939jMLElAtL5N2rCxsdXZL+ruqpViv3Qs9G1zoBu5
+	 pYc7AYinwE68/JBySCEmCwHnJOJZVIqQo8KMmROLNbt4AUREUEdYpJISGfRm3OscIo
+	 dVPg6NY3tt4hVLTZogUofA2q6m/qGC1wbc/P9swbbFADyO4/tLcgosoS6lEXtcZGHc
+	 rvuvc0YFyX80RtU7BAK6jiwH6PYVwcxroNHCpCogZbHfnm5cQZFMCMEdodmThCv+hu
+	 lzjY6br9ijStQR8jT+GIt+AsfcrS8zFFvJopV+SwTruREJXQgLE7Cz+V3303aCihD2
+	 L2jnITPmmC85Q==
+Date: Wed, 4 Dec 2024 11:24:15 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: James Clark <james.clark@linaro.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Mingwei Zhang <mizhang@google.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [REGRESSION] 'perf mem record' on a Intel hybrid system broken
+Message-ID: <Z1CsX3n5U_q5ehRp@google.com>
+References: <Z1CVTJ5jzIyNiB1R@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/4] x86/cpufeatures: Automatically generate required
- and disabled feature masks
-From: Xin Li <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        will@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-        acme@kernel.org, namhyung@kernel.org, brgerst@gmail.com,
-        andrew.cooper3@citrix.com, nik.borisov@suse.com
-References: <20240628174544.3118826-1-xin@zytor.com>
- <23b9e88b-9d3b-4c34-a243-232ca2f53527@zytor.com>
-Content-Language: en-US
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <23b9e88b-9d3b-4c34-a243-232ca2f53527@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z1CVTJ5jzIyNiB1R@x1>
 
-On 8/19/2024 11:25 PM, Xin Li wrote:
-> On 6/28/2024 10:45 AM, Xin Li (Intel) wrote:
->> The x86 build process first generates required and disabled feature
->> masks based on current build config, and then uses these generated
->> masks to compile the source code. When a CPU feature is not enabled
->> in a build config, e.g., when CONFIG_X86_FRED=n, its feature disable
->> flag, i.e., DISABLE_FRED, needs to be properly defined and added to
->> a specific disabled CPU features mask in <asm/disabled-features.h>,
->> as the following patch does:
->> https://lore.kernel.org/all/20231205105030.8698-8-xin3.li@intel.com/.
->> As a result, the FRED feature bit is surely cleared in the generated
->> kernel binary when CONFIG_X86_FRED=n.
->>
->> Recently there is another case to repeat the same exercise for the
->> AMD SEV-SNP CPU feature:
->> https://lore.kernel.org/all/20240126041126.1927228-2- 
->> michael.roth@amd.com/.
->> https://lore.kernel.org/all/20240126041126.1927228-23- 
->> michael.roth@amd.com/.
->>
->> It was one thing when there were four of CPU feature masks, but with
->> over 20 it is going to cause mistakes, e.g.,
->> https://lore.kernel.org/lkml/aaed79d5-d683-d1bc-7ba1- 
->> b33c8d6db618@suse.com/.
->>
->> We want to eliminate the stupidly repeated exercise to manually assign
->> features to CPU feature words through introducing an AWK script to
->> automatically generate a header with required and disabled CPU feature
->> masks based on current build config, and this patch set does that.
->>
->> Link to v3:
->> https://lore.kernel.org/lkml/20240622171435.3725548-1-xin@zytor.com/
->>
->> Changes since v3:
->> * Add a few high-level comments to the AWK script (Nikolay Borisov).
->> * Use '1U' instead of '1' in feature mask shifting (Andrew Cooper).
->> * Checking NCAPINTS isn't necessary anymore.  It was needed when these
->>    macros had to be manually updated, but now if cpufeatures.h changes
->>    this header will be regenerated (Brian Gerst).
->> * Enforce CPU feature mask values to be unsigned.
->>
->> Changes since v2:
->> * Remove AWK code that generates extra debugging comments (Brian Gerst).
->> * Move SSE_MASK to verify_cpu.S, the only place it is used (Brian Gerst).
->> * Add a patch to generate macros {REQUIRED|DISABLED}_MASK_BIT_SET in the
->>    new AWK script (Brian Gerst).
->>
->> Changes since v1:
->> * Keep the X86_{REQUIRED,DISABLED}_FEATURE_ prefixes solely in
->>    arch/x86/Kconfig.cpufeatures (Borislav Petkov).
->> * Explain how config option names X86_{REQUIRED,DISABLED}_FEATURE_<name>
->>    are formed (Borislav Petkov).
->> * Remove code generating unused macros {REQUIRED,DISABLED}_FEATURE(x)
->>    to tell if a CPU feature, e.g., X86_FEATURE_FRED, is a required or
->>    disabled feature for this particular compile-time configuration.
->>
-> 
-> A gentle ping...
-> 
+Hi Arnaldo,
 
-Another ping!
+On Wed, Dec 04, 2024 at 02:45:48PM -0300, Arnaldo Carvalho de Melo wrote:
+> Hi Namhyung,
+> 
+> root@number:/tmp# perf mem record -a sleep 1s
+> Error:
+> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cpu_core/mem-loads,ldlat=30/).
+> "dmesg | grep -i perf" may provide additional information.
+> 
+> root@number:/tmp# dmesg | tail
+> [18865.729882] ixgbe 0000:05:00.0 enp5s0: NIC Link is Up 10 Gbps, Flow Control: RX/TX
+> [18865.848172] mlx5_core 0000:01:00.0 enp1s0f0np0: Link down
+> [18866.057990] mlx5_core 0000:01:00.1 enp1s0f1np1: Link down
+> [19066.396215] input: JBL RACE TWS (AVRCP) as /devices/virtual/input/input27
+> [19078.378477] usb 2-3: current rate 16000 is different from the runtime rate 48000
+> [21158.375680] usb 2-3: current rate 16000 is different from the runtime rate 48000
+> [31386.186675] input: JBL RACE TWS (AVRCP) as /devices/virtual/input/input28
+> [31409.098352] usb 2-3: current rate 16000 is different from the runtime rate 48000
+> [36409.737615] sysrq: Emergency Sync
+> [36409.742619] Emergency Sync complete
+> root@number:/tmp#
+> 
+> 	That I bisected down to:
+> 
+> ⬢ [acme@toolbox perf-tools-next]$ git bisect good 
+> af954f76eea56453713ae657f6812d4063f9bc57 is the first bad commit
+> commit af954f76eea56453713ae657f6812d4063f9bc57
+> Author: Namhyung Kim <namhyung@kernel.org>
+> Date:   Tue Oct 15 23:23:57 2024 -0700
+> 
+>     perf tools: Check fallback error and order
+>     
+>     The perf_event_open might fail due to various reasons, so blindly
+>     reducing precise_ip level might not be the best way to deal with it.
+>     
+>     It seems the kernel return -EOPNOTSUPP when PMU doesn't support the
+>     given precise level.  Let's try again with the correct error code.
+>     
+>     This caused a problem on AMD, as it stops on precise_ip of 2 for IBS but
+>     user events with exclude_kernel=1 cannot make progress.  Let's add the
+>     evsel__handle_error_quirks() to this case specially.  I plan to work on
+>     the kernel side to improve this situation but it'd still need some
+>     special handling for IBS.
+>     
+>     Reviewed-by: James Clark <james.clark@linaro.org>
+>     Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
+>     Acked-by: Kan Liang <kan.liang@linux.intel.com>
+>     Cc: James Clark <james.clark@arm.com>
+>     Cc: Atish Patra <atishp@atishpatra.org>
+>     Cc: Mingwei Zhang <mizhang@google.com>
+>     Cc: Kajol Jain <kjain@linux.ibm.com>
+>     Cc: Thomas Richter <tmricht@linux.ibm.com>
+>     Cc: Palmer Dabbelt <palmer@rivosinc.com>
+>     Link: https://lore.kernel.org/r/20241016062359.264929-8-namhyung@kernel.org
+>     Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> If I revert that patch:
+> 
+> ⬢ [acme@toolbox perf-tools-next]$ git log --oneline -5
+> 9a9f2d6da1ea5ef5 (HEAD -> perf-tools-next) Revert "perf tools: Check fallback error and order"
+> d12d4cfc5033cd8c perf script python: Improve physical mem type resolution
+> 3f79d822e331022f perf disasm: Return a proper error when not determining the file type
+> 1a5b914261f0ebee tools features: Don't check for libunwind devel files by default
+> 40384c840ea1944d (tag: v6.13-rc1, perf-tools/perf-tools) Linux 6.13-rc1
+> ⬢ [acme@toolbox perf-tools-next]$
+> 
+> And rebuild, it works again:
+> 
+> root@number:/tmp# perf mem record -a sleep 1s
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 13.014 MB perf.data (10316 samples) ]
+> root@number:/tmp# perf evlist
+> cpu_atom/mem-loads,ldlat=30/P
+> cpu_atom/mem-stores/P
+> cpu_core/mem-loads-aux/
+> cpu_core/mem-loads,ldlat=30/
+> cpu_core/mem-stores/P
+> dummy:u
+> # Tip: use 'perf evlist -g' to show group information
+> root@number:/tmp# perf evlist -v
+> cpu_atom/mem-loads,ldlat=30/P: type: 10 (cpu_atom), size: 136, config: 0x5d0 (mem-loads), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1, { bp_addr, config1 }: 0x1f
+> cpu_atom/mem-stores/P: type: 10 (cpu_atom), size: 136, config: 0x6d0 (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1
+> cpu_core/mem-loads-aux/: type: 4 (cpu_core), size: 136, config: 0x8203 (mem-loads-aux), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1
+> cpu_core/mem-loads,ldlat=30/: type: 4 (cpu_core), size: 136, config: 0x1cd (mem-loads), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, freq: 1, precise_ip: 2, sample_id_all: 1, { bp_addr, config1 }: 0x1f
+> cpu_core/mem-stores/P: type: 4 (cpu_core), size: 136, config: 0x2cd (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1
+> dummy:u: type: 1 (software), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|ADDR|CPU|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, mmap_data: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
+> # Tip: use 'perf evlist -g' to show group information
+> root@number:/tmp# perf evlist -g
+> cpu_atom/mem-loads,ldlat=30/P
+> cpu_atom/mem-stores/P
+> {cpu_core/mem-loads-aux/,cpu_core/mem-loads,ldlat=30/}
+> cpu_core/mem-stores/P
+> dummy:u
+> root@number:/tmp#
+> 
+> Now trying to investigate this,
+
+I think I got a related report from the kernel test robot but it was a
+Sapphire Rapids machine.  I don't have a Intel hybrid machine in hand.
+I'll try to take a look at it on Sapphire Rapids.
+
+Thanks,
+Namhyung
 
