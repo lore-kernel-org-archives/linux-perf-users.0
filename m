@@ -1,48 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBF91922D7;
-	Wed,  4 Dec 2024 21:36:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F662119;
+	Wed,  4 Dec 2024 21:44:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733348196; cv=none; b=XqKzF7nqgWsPvAXCJmjGMAyz36sBnJElLuN64wcx0YMsOzP+hUlIvxr9txkKPjzKL+84wqeeG5TFjg04RqDXcG9RPPVO7ro4aYPh+Bp4jvXjq2wHFfzI/V63ZtURZrk7D94vY3whwSxakthBx3+Qk0ULgVDUA7C8PwhA0zZJ9j0=
+	t=1733348649; cv=none; b=Im/GfhkYYLrKnEIbrYx59CqXE1KNxpjiLVoCUWWbM5yBI6L4crWxtb5Zhd1C+VuXew1iO9H8Y/td9XKQ8XMP+ImcRWFNzDbZZJRPBAghMue3bkoHYlulZwivzXFiwWAtG2j1ArhFZ05HYL0UxtbhndIWQZe9eUdBHTGy+BeXGGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733348196; c=relaxed/simple;
-	bh=jlmY/d16hd2yWGESz2d7BSfN+1MNllSvrARNdqx6DgU=;
+	s=arc-20240116; t=1733348649; c=relaxed/simple;
+	bh=stKQ7fcojg34li0rOLarPjl4Anxwtj3iQSIz+P329ns=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WbwCJeDuz2uAg+RlVqKE+tkYBlTGchFaRI9tUSsXuixnAJxhijW4uUUvBGZ1JfGRuxERICyA/JcfQpIu0tlorwVp3OXUqO34lX2RLxpgRkKkyHDWkr33MZoCuEZZnYMABAJcEK91zgVAL5Kr6Z/z+lJ9sFhhQcL7dQJ/LqT2U50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZrllgIX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=u2tQnq8sot2/jzENJaBO92LhASVdOzUF9r9cbMOAd1XelH96ejuL9QzV5q1H4XkdYxxB7+0B31ENVy/2j0zzvVl4gLsWsSkvRcdooLBXbOSYuJtKlUJsaV0GAuci21T2h+oKe8LxD/rFx4BZBCucFmlBDBT5yiWAjEjVnxLOLwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=juZMzVzY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZrllgIX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D631DC4CECD;
-	Wed,  4 Dec 2024 21:36:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="juZMzVzY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E79DDC4CED1;
+	Wed,  4 Dec 2024 21:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733348194;
-	bh=jlmY/d16hd2yWGESz2d7BSfN+1MNllSvrARNdqx6DgU=;
+	s=k20201202; t=1733348648;
+	bh=stKQ7fcojg34li0rOLarPjl4Anxwtj3iQSIz+P329ns=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nZrllgIX/Vem/uL/kq3DDs8xYZdu654Fi063fFBOj4ZsSRtkzbmSbxT3V75Vs3ccu
-	 lweZO86ljseuuqIcXmSK0D50Q/ZbaZ8Xw4TEjDd3dqdnmZjakCRc8z5vhNHXiFRgCA
-	 6M0PBUC3m/uiBT7gwJYeZGBnuPqsrHDeUim1QgTaz6OhkZT8CCvDJKHg9gAGzpGFcC
-	 XdPpLrJUmrdwALFGZIc4ZTlOXWgJosJRLmEeYaesAJCQznOOQgJNUL9sGQZC9ALolo
-	 nOcWezv49+yDjXfbi9LJx2RzLOJ0nRJgIj/Mav4/H0Cs6v36QkEy2mqgENCSO8rqYy
-	 1oAzHQvG4+l5w==
-Date: Wed, 4 Dec 2024 13:36:32 -0800
+	b=juZMzVzYnSVSBGCqozInVaum7QWNhmhTIs1HSUyguByEg0TQqqmcZYk5r8/GIzAp1
+	 YGLN15PpwDo5FxmxHTpFJqmeJafuYKGELsGZ/4XgUI+R3a+08G+LGYRqXlpAJM0IK6
+	 gbfR9goh7UquxzPm7YfgoPm6PWlFSeI4c8/kXs4L9FMRC71e222I1UP3TsKJ0wFqSW
+	 8qpDSDkUEjXhIhGXz3KoPpm3brd3WyrcWzpRH/C1wbAvdfJU2eIsyeI9ONEH/CIrJh
+	 rspKsq6NNokLMVOTHP7NoiOZAjXxdnf2XYknCjJDFDjC9mkSosSqItE68gWR16ksTy
+	 XxDIirpMCMhaA==
+Date: Wed, 4 Dec 2024 13:44:06 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Quentin Monnet <qmo@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Nick Terrell <terrelln@fb.com>, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bpftool: Fix failure with static linkage
-Message-ID: <Z1DLYCha0-o1RWkF@google.com>
-References: <20241204213059.2792453-1-leo.yan@arm.com>
+To: Oliver Sang <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+	James Clark <james.clark@linaro.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Mingwei Zhang <mizhang@google.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [linus:master] [perf tools]  af954f76ee:
+ perf-sanity-tests.Test_data_symbol.fail
+Message-ID: <Z1DNJpDzCIBFrIZT@google.com>
+References: <202411301431.799e5531-lkp@intel.com>
+ <Z04ZUHaGdsBapIEL@google.com>
+ <Z1BhfpYWpUQ0p+qR@xsang-OptiPlex-9020>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,71 +54,119 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241204213059.2792453-1-leo.yan@arm.com>
+In-Reply-To: <Z1BhfpYWpUQ0p+qR@xsang-OptiPlex-9020>
 
-Hi Leo,
+On Wed, Dec 04, 2024 at 10:04:46PM +0800, Oliver Sang wrote:
+> hi, Namhyung Kim,
+> 
+> On Mon, Dec 02, 2024 at 12:32:16PM -0800, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > On Sat, Nov 30, 2024 at 03:03:10PM +0800, kernel test robot wrote:
+> > > 
+> > > 
+> > > Hello,
+> > > 
+> > > kernel test robot noticed "perf-sanity-tests.Test_data_symbol.fail" on:
+> > > 
+> > > commit: af954f76eea56453713ae657f6812d4063f9bc57 ("perf tools: Check fallback error and order")
+> > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > > 
+> > > [test failed on linus/master      7af08b57bcb9ebf78675c50069c54125c0a8b795]
+> > > [test failed on linux-next/master f486c8aa16b8172f63bddc70116a0c897a7f3f02]
+> > > 
+> > > in testcase: perf-sanity-tests
+> > > version: 
+> > > with following parameters:
+> > > 
+> > > 	perf_compiler: gcc
+> > > 
+> > > 
+> > > 
+> > > config: x86_64-rhel-8.3-bpf
+> > > compiler: gcc-12
+> > > test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapphire Rapids) with 256G memory
+> > > 
+> > > (please refer to attached dmesg/kmsg for entire log/backtrace)
+> > > 
+> > > 
+> > > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > > the same patch/commit), kindly add following tags
+> > > | Reported-by: kernel test robot <oliver.sang@intel.com>
+> > > | Closes: https://lore.kernel.org/oe-lkp/202411301431.799e5531-lkp@intel.com
+> > > 
+> > > 
+> > > 
+> > > 2024-11-28 08:31:19 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-af954f76eea56453713ae657f6812d4063f9bc57/tools/perf/perf test 121
+> > > 121: Test data symbol                                                : FAILED!
+> > 
+> > Thanks for the report.  But I have a request.
+> > 
+> > Can you please run the perf test with -v option so that we can see the
+> > detailed error messages when it failed?
+> 
+> below is the log with '-v'
+> 
+> 2024-12-03 11:20:32 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-af954f76eea56453713ae657f6812d4063f9bc57/tools/perf/perf test 121 -v
+> 121: Test data symbol:
+> --- start ---
+> test child forked, pid 143127
+>  294e400-294e439 l buf1
+> perf does have symbol 'buf1'
+> Recording workload...
+> Waiting for "perf record has started" message
+> /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-af954f76eea56453713ae657f6812d4063f9bc57/tools/perf/tests/shell/test_data_symbol.sh: line 74: kill: (143139) - No such process
+> Cleaning up files...
+> ---- end(-1) ----
+> 121: Test data symbol                                                : FAILED!
 
-On Wed, Dec 04, 2024 at 09:30:59PM +0000, Leo Yan wrote:
-> When building perf with static linkage:
-> 
->   make O=/build LDFLAGS="-static" -C tools/perf VF=1 DEBUG=1
->   ...
->   LINK    /build/util/bpf_skel/.tmp/bootstrap/bpftool
->   /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libelf.a(elf_compress.o): in function `__libelf_compress':
->   (.text+0x113): undefined reference to `ZSTD_createCCtx'
->   /usr/bin/ld: (.text+0x2a9): undefined reference to `ZSTD_compressStream2'
->   /usr/bin/ld: (.text+0x2b4): undefined reference to `ZSTD_isError'
->   /usr/bin/ld: (.text+0x2db): undefined reference to `ZSTD_freeCCtx'
->   /usr/bin/ld: (.text+0x5a0): undefined reference to `ZSTD_compressStream2'
->   /usr/bin/ld: (.text+0x5ab): undefined reference to `ZSTD_isError'
->   /usr/bin/ld: (.text+0x6b9): undefined reference to `ZSTD_freeCCtx'
->   /usr/bin/ld: (.text+0x835): undefined reference to `ZSTD_freeCCtx'
->   /usr/bin/ld: (.text+0x86f): undefined reference to `ZSTD_freeCCtx'
->   /usr/bin/ld: (.text+0x91b): undefined reference to `ZSTD_freeCCtx'
->   /usr/bin/ld: (.text+0xa12): undefined reference to `ZSTD_freeCCtx'
->   /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libelf.a(elf_compress.o): in function `__libelf_decompress':
->   (.text+0xbfc): undefined reference to `ZSTD_decompress'
->   /usr/bin/ld: (.text+0xc04): undefined reference to `ZSTD_isError'
->   /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libelf.a(elf_compress.o): in function `__libelf_decompress_elf':
->   (.text+0xd45): undefined reference to `ZSTD_decompress'
->   /usr/bin/ld: (.text+0xd4d): undefined reference to `ZSTD_isError'
->   collect2: error: ld returned 1 exit status
-> 
-> Building bpftool with static linkage also fails with the same errors:
-> 
->   make O=/build -C tools/bpf/bpftool/ V=1
-> 
-> To fix the issue, explicitly link libzstd.
+Thanks for the log.  I think it failed to run perf mem record at all.
 
-I was about to report exactly the same. :)
+I've set up a Sapphire Rapids and run the test.  It said:
 
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+  # perf mem record -avv -C0 true
+  DEBUGINFOD_URLS=
+  nr_cblocks: 0
+  affinity: SYS
+  mmap flush: 1
+  comp level: 0
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4 (cpu)
+    size                             136
+    config                           0x8203 (mem-loads-aux)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT
+    read_format                      ID|LOST
+    disabled                         1
+    freq                             1
+    precise_ip                       3
+    sample_id_all                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4 (cpu)
+    size                             136
+    config                           0x1cd (mem-loads)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT
+    read_format                      ID|LOST
+    freq                             1
+    precise_ip                       3
+    sample_id_all                    1
+    { bp_addr, config1 }             0x1f
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
+  sys_perf_event_open failed, error -22
+  Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.
+  Error:
+  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cpu/mem-loads,ldlat=30/).
+  "dmesg | grep -i perf" may provide additional information.
 
-Tested-by: Namhyung Kim <namhyung@kernel.org>
+There's an issue with fallback on the inherit bit with the sample read.
+I'll take a look.
 
 Thanks,
 Namhyung
 
-> ---
->  tools/bpf/bpftool/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-> index a4263dfb5e03..65b2671941e0 100644
-> --- a/tools/bpf/bpftool/Makefile
-> +++ b/tools/bpf/bpftool/Makefile
-> @@ -130,8 +130,8 @@ include $(FEATURES_DUMP)
->  endif
->  endif
->  
-> -LIBS = $(LIBBPF) -lelf -lz
-> -LIBS_BOOTSTRAP = $(LIBBPF_BOOTSTRAP) -lelf -lz
-> +LIBS = $(LIBBPF) -lelf -lz -lzstd
-> +LIBS_BOOTSTRAP = $(LIBBPF_BOOTSTRAP) -lelf -lz -lzstd
->  ifeq ($(feature-libcap), 1)
->  CFLAGS += -DUSE_LIBCAP
->  LIBS += -lcap
-> -- 
-> 2.34.1
-> 
