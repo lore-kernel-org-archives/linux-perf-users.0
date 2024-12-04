@@ -1,131 +1,114 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C451AA7A2
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Dec 2024 10:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D12F1B6CE7;
+	Wed,  4 Dec 2024 12:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733306418; cv=none; b=B2DLAVyrFLmjvNyiE1PnIyAcWth7K9+miOdmZYXrbm5V5/qkRZXlAvLbl60DOguAH/+Pn0MelbVT+Li0fe42jVo6vm45zvS2MMNym9LkNCXZhplWoQZuaMcvbPJ6+T+nUaNL4ZCcwKQDYXXMnGVZ3R6lxDjq5V2jWmsQmyUgWTA=
+	t=1733315287; cv=none; b=W7wibehAeLyh5L/npmiOjSyaWtPBt1D2tOk7jVqxL24VIOnaXAE47C/JboqrYr2EnZOUhOYfEetmmacA5GQ2poKxB9QbqGrSSA4yyuappj0jUSarny06ZQcJu3yAm5T2ojCO1HS6iPh9tm+CtdL7uMnUlspyQ+KLMSvf6Eu0XC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733306418; c=relaxed/simple;
-	bh=gmTWp42uVpMYzw60S7pepILZWkU0vYie0Bkl0Evppjc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CLWOICpM8t8qkga3CIPQw0gjlUDoPKU0+mytW/H/xWFjZ3MhHHBuvz3vQUR6sdUKL2wLGI3rZTRuLvk8oN+nhbjgVEC0SvrBQU1miUAu2f793bpQumH/PQKP9ZyeWoww0rdzgdillueVvY2fsioxVUOucQqisFEM9MUmQ3OTJ/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bkNNj1kJ; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1733315287; c=relaxed/simple;
+	bh=o6CqpoCUEeWNAIPLPWWteXgaMXwpJuUNzpX7qxLKQTU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qhfswCz+is97fZ/NbxBHf2dM80SXKHYoh383Aywg7qOQRLeh71oujgdMJuU64MjxaJFi77pGMQFSyybMCZiwCwrQbgsLAzhSvF1v2EAvwUsx5pveii1sb9FaKT6HzcEoYZiILVuF96SAiPLWtBiz3bNE4jjHnHabDDQKLPAX2dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IvOuysUc; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bkNNj1kJ"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-385e3621518so3470647f8f.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Dec 2024 02:00:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733306415; x=1733911215; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ct6TiWILSfI4o4NLd8e+Uh155SuDdxolQSAG0h83St8=;
-        b=bkNNj1kJ7Hyev2lAS0sGbRDA5mQGkWyDjOOxhoU1rUz7megc5lq3BBO4O5dCcBFjJ/
-         C2UlOlJHLh66GU5G46eyX6rP8+DG2ynOfT9ryYlI04a3XLd43rxcmS2fKvD6ki7t/0jX
-         ezZqihIDfNf7w7qQdrZxub7o122DqnAzz7fC7IBqV24z2zLH8r3x5OmT1nMnl6VOhkzi
-         rUPhSzesB8DZi5mU3rQRiM+RySIUzGi90ohz9SOV8zRnQKUTGQaC/wZtkJvquk3/siFE
-         nkcV86SvPdT80moFwuPPQ0BSbIjf/4PkrZVlIQoLaj81PaXDy+ZgraQbkaiLwTDy9R3L
-         zVVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733306415; x=1733911215;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ct6TiWILSfI4o4NLd8e+Uh155SuDdxolQSAG0h83St8=;
-        b=X+95sk1+9h1G6oHnghDwd5LirLBFKLQpxH0leYnBA7IHO23XH60G5X6pOQluGugJ2n
-         lWfiOgT4FaMwL/ixx1tiWW49ncCIUyQLXWj2lNUuSx5Yi6TJtjfvBMR0PvNOefAJl0Rd
-         tKgqpNpzxro8b6Y2whQcEUp2HJBRBvkSNxr5ALt5qIfh/Ucn0U1jqDJYsBm8LnuWeOm7
-         cuzUsCW5z3CtCsr6eTjQ421fv4GNHEEdb5uFzhshuRbMqZ6fyvFCcf0zoG/YvNiwE0VD
-         01bNXot8mvYcSf1fYYP+wREzExIA82G1hzjC34LWs/WCGBukalCK+VqTafCFPv59xdnw
-         Sf+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVuGG8uYPFX1jdOmzrDXzkCSSE3UG1kvYrutb1YkBIo161+xnSYgu+6cu4mpQF7SaALNpeVNtj7mQZiNjCiy3BP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZgjpoTaDUKLZilOhc53usVCTcYbCcLS3/3DlBsQX4vKFAHnlS
-	wB3ZPb4gbEumBbP8AeFegS0IBhUUyuJZy63fxclG1EWXPrexKZcl3TJ49Dg9tAo=
-X-Gm-Gg: ASbGnctHXaAZuQpV2XyOer7j40FeKp8lPBNsuOIefFkMipBdrQ7IFjm0Sp18mrFhqvG
-	Xw+JD6ALbNkKho7BKRYWPyD9El3Tk/fiIM4SRgxovzwNAJRx3FNSzY9PnFvwXi+/eunbYkQi7tA
-	bY4J+bp1AqixPxIDM/QzZWdllVCfZ9O4/MS8qJsUE65zeswt1HvaEmIJEV91kGmpkF9Sq1+QpcE
-	DrluJIGUkDrMqfmqwUDbw4qs+3v9Xjcxg//vdWb/JuU7Zio4Tau1PAvsZnOeg==
-X-Google-Smtp-Source: AGHT+IEcals9cWAl+b1w3YqlYSBEmA1VjlSI88V7L5ie0gT9yHjt9N2Z8yNkC7HYy7dX+eZU577mMA==
-X-Received: by 2002:a5d:47cb:0:b0:385:fc32:1ec6 with SMTP id ffacd0b85a97d-385fd54d75emr4238048f8f.50.1733306415065;
-        Wed, 04 Dec 2024 02:00:15 -0800 (PST)
-Received: from [192.168.68.163] ([209.198.129.154])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385d97ab259sm16081204f8f.95.2024.12.04.02.00.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2024 02:00:14 -0800 (PST)
-Message-ID: <c470d6a9-8717-44ad-a713-70cf39ff87df@linaro.org>
-Date: Wed, 4 Dec 2024 10:00:13 +0000
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IvOuysUc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=Co9zNkLnEIMnet5VgPk4dK0LN+6wi7qa5XUeATqzPKE=; b=IvOuysUcO383y3W2WWAXJuWRiG
+	hJdieqCeIq5YY0rhuyBFYzxH/Gn4/Kwm7r/05YQQrO3NdElClANi8UB/1y02xKgbRn+zSJ40pvU6i
+	t1PT3OOujr2qZ0xMMzMkrrfwuna6EN0MNolxy2vyXNhUVjqCFblZvEYJSMu95tTfC+o5tP8HQb02M
+	0burRLYfDA5Y2yOYv62Af73IByUrXwmn20XWGwZvAVYc7snfAXcSQDeOVDD4gXvfvqOr3W15FfcKN
+	dXdvmYIU3zY+80KIeoMBivpS/rHY6kUQTUgI3gNaUkh0Nir8B9nwYQmYL43S9JqU6tgJ5som5heOf
+	SlF7n5Kw==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tIoU4-0000000BLfb-3sui;
+	Wed, 04 Dec 2024 12:28:02 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 610BB30020F; Wed,  4 Dec 2024 13:28:01 +0100 (CET)
+Date: Wed, 4 Dec 2024 13:28:01 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Vince Weaver <vincent.weaver@maine.edu>,
+	=?utf-8?B?TWlrb8WCYWogS2/FgmVr?= <kolek.mikolaj@gmail.com>,
+	Alejandro Colomar <alx@kernel.org>, linux-man@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: perf_event_open.2: mmap ring buffer requirement for receiving
+ overflow notifications
+Message-ID: <20241204122801.GK35539@noisy.programming.kicks-ass.net>
+References: <CAHGiy68y37n-y_b0gR-dArxFRzYOAr93dCw_6bvkNReNWQ37Hw@mail.gmail.com>
+ <00910b8e-fdaf-45ae-8dcc-8c926d7fce65@maine.edu>
+ <Z04eZN4Cpbqw4Rpe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHSET 00/11] perf tools: Sync tools and kernel headers for
- v6.13
-To: Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-References: <20241203035349.1901262-1-namhyung@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241203035349.1901262-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z04eZN4Cpbqw4Rpe@google.com>
+
+On Mon, Dec 02, 2024 at 12:53:56PM -0800, Namhyung Kim wrote:
+> Hi Peter and Ingo,
+> 
+> On Tue, Nov 26, 2024 at 05:13:45PM -0500, Vince Weaver wrote:
+> > On Sat, 23 Nov 2024, Mikołaj Kołek wrote:
+> > 
+> > > findings. In the MMAP layout section of the page, you can find this
+> > > sentence:
+> > > Before Linux 2.6.39, there is a bug that means you must allocate
+> > > an mmap ring buffer when sampling even if you do not plan to
+> > > access it.
+> > > Unless I'm somehow misunderstanding it, this statement does not seem
+> > > to be well worded, or alternatively this bug does not seem to be
+> > > fixed.
+> > 
+> > That text was probably written by me.
+> > 
+> > I tried looking at the 2.6.39 code, my perf_tests, and also PAPI which was 
+> > where the problem was probably noticed but I can't find a firm reference 
+> > for how the issue was fixed.
+> > 
+> > If I recall, the problem was if you were trying to create a sampling event 
+> > without mmap (say you want to get a signal every 100,000 retired 
+> > instructions, but you don't actually want any sample data).  I think 
+> > before 2.6.39 if you tried setting that up you'd get some sort of error 
+> > (an EINVAL?) when trying to start(?) the event.
+> > 
+> > It is possible this wasn't fixed.  I tried to be pretty good 
+> > about putting relevant git commits as comments in the manpage but there 
+> > doesn't seem to be one for that part of the text.  I'm guessing it was 
+> > PeterZ doing the work on this so maybe he remembers.
+> 
+> Do you remember what was the issue exactly on sampling events w/o mmap?
+
+I can barely remember last release :/ But looking at the code, I don't
+see a reason that wouldn't work today.
+
+Only the overflow handler should care about there being a buffer, and
+that just NOPs out if there isn't -- expensively, if this is a common
+thing, this could perhaps be optimized a little.
 
 
-
-On 03/12/2024 3:53 am, Namhyung Kim wrote:
-> Hello,
-> 
-> I'll carry these changes on the perf tools tree to update perf tools to
-> understand new syscalls and parameters.  You can refer to README file in
-> the tools/include/uapi directory why it's needed.
-> 
-> Thanks,
-> Namhyung
-> 
-> 
-
-Reviewed-by: James Clark <james.clark@linaro.org>
-
-> Namhyung Kim (11):
->    tools headers: Sync uapi/drm/drm.h with the kernel sources
->    tools headers: Sync uapi/linux/perf_event.h with the kernel sources
->    tools headers: Sync uapi/linux/kvm.h with the kernel sources
->    tools headers: Sync x86 kvm and cpufeature headers with the kernel
->    tools headers: Sync arm64 kvm header with the kernel sources
->    tools headers: Sync *xattrat syscall changes with the kernel sources
->    tools headers: Sync uapi/asm-generic/mman.h with the kernel sources
->    tools headers: Sync uapi/linux/fcntl.h with the kernel sources
->    tools headers: Sync uapi/linux/mount.h with the kernel sources
->    tools headers: Sync uapi/linux/prctl.h with the kernel sources
->    perf tools: Fix build error on generated/fs_at_flags_array.c
-> 
->   tools/arch/arm64/include/uapi/asm/kvm.h       |  6 +++++
->   tools/arch/x86/include/asm/cpufeatures.h      | 11 ++++++--
->   tools/arch/x86/include/uapi/asm/kvm.h         |  1 +
->   tools/include/uapi/asm-generic/mman.h         |  4 +++
->   tools/include/uapi/asm-generic/unistd.h       | 11 +++++++-
->   tools/include/uapi/drm/drm.h                  | 17 ++++++++++++
->   tools/include/uapi/linux/kvm.h                |  8 ++++++
->   tools/include/uapi/linux/perf_event.h         | 11 +++++++-
->   .../arch/mips/entry/syscalls/syscall_n64.tbl  |  4 +++
->   .../arch/powerpc/entry/syscalls/syscall.tbl   |  4 +++
->   .../perf/arch/s390/entry/syscalls/syscall.tbl |  4 +++
->   .../arch/x86/entry/syscalls/syscall_32.tbl    |  4 +++
->   .../arch/x86/entry/syscalls/syscall_64.tbl    |  4 +++
->   tools/perf/trace/beauty/fs_at_flags.sh        |  3 ++-
->   .../trace/beauty/include/uapi/linux/fcntl.h   |  5 +---
->   .../trace/beauty/include/uapi/linux/mount.h   | 14 ++++++++--
->   .../trace/beauty/include/uapi/linux/prctl.h   | 27 ++++++++++++++++++-
->   17 files changed, 126 insertions(+), 12 deletions(-)
-> 
-
+---
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4c6f6c286b2d..190b5c3cec10 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -8117,6 +8117,8 @@ __perf_event_output(struct perf_event *event,
+ 
+ 	/* protect the callchain buffers */
+ 	rcu_read_lock();
++	if (unlikely(!event->rb))
++		goto exit;
+ 
+ 	perf_prepare_sample(data, event, regs);
+ 	perf_prepare_header(&header, data, event, regs);
