@@ -1,172 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F662119;
-	Wed,  4 Dec 2024 21:44:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A31194C94;
+	Wed,  4 Dec 2024 22:08:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733348649; cv=none; b=Im/GfhkYYLrKnEIbrYx59CqXE1KNxpjiLVoCUWWbM5yBI6L4crWxtb5Zhd1C+VuXew1iO9H8Y/td9XKQ8XMP+ImcRWFNzDbZZJRPBAghMue3bkoHYlulZwivzXFiwWAtG2j1ArhFZ05HYL0UxtbhndIWQZe9eUdBHTGy+BeXGGM=
+	t=1733350102; cv=none; b=mVnXHnGSo5MpOHgrgBro3P2LWznKztMHSgSN6pql1aN+L32i+n70v3j26Q1xhpbG8x6rpOFpL97U5MxCMExdg9QRkKLgYquHG2ZlXe1KeQKW6Xet82vctJNaRk1pAMhvgmqEv7O8X5q7qRROPqFuMYowUMIZbeG5AvWDJnAOPzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733348649; c=relaxed/simple;
-	bh=stKQ7fcojg34li0rOLarPjl4Anxwtj3iQSIz+P329ns=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u2tQnq8sot2/jzENJaBO92LhASVdOzUF9r9cbMOAd1XelH96ejuL9QzV5q1H4XkdYxxB7+0B31ENVy/2j0zzvVl4gLsWsSkvRcdooLBXbOSYuJtKlUJsaV0GAuci21T2h+oKe8LxD/rFx4BZBCucFmlBDBT5yiWAjEjVnxLOLwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=juZMzVzY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733350102; c=relaxed/simple;
+	bh=dDeGdNCjF74KwY0MX07HSBQzSKPMdTi2G/auzevOK+I=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rZS1bUPIRRCbkdzP7QvAZ0AHQDVEfWXUqsiIr0yQPLaMgHK2cVimPmSCcl+YOqQHev7XFAON7QWdOEK0IqMbWrga5za89b860w5Im/E7kfyp0nRwlfCr1rHrd0dP36Ly25ZEQN1c37hbd+zaiVM4OCjaJ9NXub81MeHF8+GC67U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cusyRzWA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="juZMzVzY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E79DDC4CED1;
-	Wed,  4 Dec 2024 21:44:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cusyRzWA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99EA5C4CECD;
+	Wed,  4 Dec 2024 22:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733348648;
-	bh=stKQ7fcojg34li0rOLarPjl4Anxwtj3iQSIz+P329ns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=juZMzVzYnSVSBGCqozInVaum7QWNhmhTIs1HSUyguByEg0TQqqmcZYk5r8/GIzAp1
-	 YGLN15PpwDo5FxmxHTpFJqmeJafuYKGELsGZ/4XgUI+R3a+08G+LGYRqXlpAJM0IK6
-	 gbfR9goh7UquxzPm7YfgoPm6PWlFSeI4c8/kXs4L9FMRC71e222I1UP3TsKJ0wFqSW
-	 8qpDSDkUEjXhIhGXz3KoPpm3brd3WyrcWzpRH/C1wbAvdfJU2eIsyeI9ONEH/CIrJh
-	 rspKsq6NNokLMVOTHP7NoiOZAjXxdnf2XYknCjJDFDjC9mkSosSqItE68gWR16ksTy
-	 XxDIirpMCMhaA==
-Date: Wed, 4 Dec 2024 13:44:06 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Oliver Sang <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
-	James Clark <james.clark@linaro.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@arm.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Mingwei Zhang <mizhang@google.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [linus:master] [perf tools]  af954f76ee:
- perf-sanity-tests.Test_data_symbol.fail
-Message-ID: <Z1DNJpDzCIBFrIZT@google.com>
-References: <202411301431.799e5531-lkp@intel.com>
- <Z04ZUHaGdsBapIEL@google.com>
- <Z1BhfpYWpUQ0p+qR@xsang-OptiPlex-9020>
+	s=k20201202; t=1733350101;
+	bh=dDeGdNCjF74KwY0MX07HSBQzSKPMdTi2G/auzevOK+I=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=cusyRzWAIEmcpZ0qfrqMrrm1qz6iXPcNDcbx73p+i6CtBHrI4DDRGy1/3gG4zXL5Q
+	 vsmIpPlXA8BLXIQ7PcYu4+bJqpvR8tAy49YlL7Zvfec0PPEYiBWIjpfe4Kk7D0Ekeq
+	 PB87JtdeC8/vbWFfuAo0N2SNzLz5BHCW4H35QtRoKqB5Kr3OPeipbkDdZT55X43Mdd
+	 IP/viasKusOA8tVgh48TfLJp/VUHgOwg8dJFo8wjW8uKBVfM+YUbDoQv2ZI+UjhkGS
+	 piq2q0Op1SsG96oGaM3wN4Odq8hQRGJTlE/Dh3ldECmrCrk/CapdHH8shup78eV9D0
+	 mEBKVj1MJcHtg==
+Message-ID: <bf5da4d3-c317-4616-ac68-0d49bb5815c2@kernel.org>
+Date: Wed, 4 Dec 2024 22:08:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z1BhfpYWpUQ0p+qR@xsang-OptiPlex-9020>
+User-Agent: Mozilla Thunderbird
+From: Quentin Monnet <qmo@kernel.org>
+Subject: Re: [PATCH] bpftool: Fix failure with static linkage
+To: Namhyung Kim <namhyung@kernel.org>, Leo Yan <leo.yan@arm.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Nick Terrell <terrelln@fb.com>,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Mahe Tardy <mahe.tardy@gmail.com>
+References: <20241204213059.2792453-1-leo.yan@arm.com>
+ <Z1DLYCha0-o1RWkF@google.com>
+Content-Language: en-GB
+In-Reply-To: <Z1DLYCha0-o1RWkF@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 04, 2024 at 10:04:46PM +0800, Oliver Sang wrote:
-> hi, Namhyung Kim,
+2024-12-04 13:36 UTC-0800 ~ Namhyung Kim <namhyung@kernel.org>
+> Hi Leo,
 > 
-> On Mon, Dec 02, 2024 at 12:32:16PM -0800, Namhyung Kim wrote:
-> > Hello,
-> > 
-> > On Sat, Nov 30, 2024 at 03:03:10PM +0800, kernel test robot wrote:
-> > > 
-> > > 
-> > > Hello,
-> > > 
-> > > kernel test robot noticed "perf-sanity-tests.Test_data_symbol.fail" on:
-> > > 
-> > > commit: af954f76eea56453713ae657f6812d4063f9bc57 ("perf tools: Check fallback error and order")
-> > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> > > 
-> > > [test failed on linus/master      7af08b57bcb9ebf78675c50069c54125c0a8b795]
-> > > [test failed on linux-next/master f486c8aa16b8172f63bddc70116a0c897a7f3f02]
-> > > 
-> > > in testcase: perf-sanity-tests
-> > > version: 
-> > > with following parameters:
-> > > 
-> > > 	perf_compiler: gcc
-> > > 
-> > > 
-> > > 
-> > > config: x86_64-rhel-8.3-bpf
-> > > compiler: gcc-12
-> > > test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapphire Rapids) with 256G memory
-> > > 
-> > > (please refer to attached dmesg/kmsg for entire log/backtrace)
-> > > 
-> > > 
-> > > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > > the same patch/commit), kindly add following tags
-> > > | Reported-by: kernel test robot <oliver.sang@intel.com>
-> > > | Closes: https://lore.kernel.org/oe-lkp/202411301431.799e5531-lkp@intel.com
-> > > 
-> > > 
-> > > 
-> > > 2024-11-28 08:31:19 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-af954f76eea56453713ae657f6812d4063f9bc57/tools/perf/perf test 121
-> > > 121: Test data symbol                                                : FAILED!
-> > 
-> > Thanks for the report.  But I have a request.
-> > 
-> > Can you please run the perf test with -v option so that we can see the
-> > detailed error messages when it failed?
+> On Wed, Dec 04, 2024 at 09:30:59PM +0000, Leo Yan wrote:
+>> When building perf with static linkage:
+>>
+>>   make O=/build LDFLAGS="-static" -C tools/perf VF=1 DEBUG=1
+>>   ...
+>>   LINK    /build/util/bpf_skel/.tmp/bootstrap/bpftool
+>>   /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libelf.a(elf_compress.o): in function `__libelf_compress':
+>>   (.text+0x113): undefined reference to `ZSTD_createCCtx'
+>>   /usr/bin/ld: (.text+0x2a9): undefined reference to `ZSTD_compressStream2'
+>>   /usr/bin/ld: (.text+0x2b4): undefined reference to `ZSTD_isError'
+>>   /usr/bin/ld: (.text+0x2db): undefined reference to `ZSTD_freeCCtx'
+>>   /usr/bin/ld: (.text+0x5a0): undefined reference to `ZSTD_compressStream2'
+>>   /usr/bin/ld: (.text+0x5ab): undefined reference to `ZSTD_isError'
+>>   /usr/bin/ld: (.text+0x6b9): undefined reference to `ZSTD_freeCCtx'
+>>   /usr/bin/ld: (.text+0x835): undefined reference to `ZSTD_freeCCtx'
+>>   /usr/bin/ld: (.text+0x86f): undefined reference to `ZSTD_freeCCtx'
+>>   /usr/bin/ld: (.text+0x91b): undefined reference to `ZSTD_freeCCtx'
+>>   /usr/bin/ld: (.text+0xa12): undefined reference to `ZSTD_freeCCtx'
+>>   /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libelf.a(elf_compress.o): in function `__libelf_decompress':
+>>   (.text+0xbfc): undefined reference to `ZSTD_decompress'
+>>   /usr/bin/ld: (.text+0xc04): undefined reference to `ZSTD_isError'
+>>   /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libelf.a(elf_compress.o): in function `__libelf_decompress_elf':
+>>   (.text+0xd45): undefined reference to `ZSTD_decompress'
+>>   /usr/bin/ld: (.text+0xd4d): undefined reference to `ZSTD_isError'
+>>   collect2: error: ld returned 1 exit status
+>>
+>> Building bpftool with static linkage also fails with the same errors:
+>>
+>>   make O=/build -C tools/bpf/bpftool/ V=1
+>>
+>> To fix the issue, explicitly link libzstd.
 > 
-> below is the log with '-v'
-> 
-> 2024-12-03 11:20:32 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-af954f76eea56453713ae657f6812d4063f9bc57/tools/perf/perf test 121 -v
-> 121: Test data symbol:
-> --- start ---
-> test child forked, pid 143127
->  294e400-294e439 l buf1
-> perf does have symbol 'buf1'
-> Recording workload...
-> Waiting for "perf record has started" message
-> /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-af954f76eea56453713ae657f6812d4063f9bc57/tools/perf/tests/shell/test_data_symbol.sh: line 74: kill: (143139) - No such process
-> Cleaning up files...
-> ---- end(-1) ----
-> 121: Test data symbol                                                : FAILED!
+> I was about to report exactly the same. :)
 
-Thanks for the log.  I think it failed to run perf mem record at all.
+Thank you both. This has been reported before [0] but I didn't find the
+time to look into a proper fix.
 
-I've set up a Sapphire Rapids and run the test.  It said:
-
-  # perf mem record -avv -C0 true
-  DEBUGINFOD_URLS=
-  nr_cblocks: 0
-  affinity: SYS
-  mmap flush: 1
-  comp level: 0
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             4 (cpu)
-    size                             136
-    config                           0x8203 (mem-loads-aux)
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT
-    read_format                      ID|LOST
-    disabled                         1
-    freq                             1
-    precise_ip                       3
-    sample_id_all                    1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             4 (cpu)
-    size                             136
-    config                           0x1cd (mem-loads)
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT
-    read_format                      ID|LOST
-    freq                             1
-    precise_ip                       3
-    sample_id_all                    1
-    { bp_addr, config1 }             0x1f
-  ------------------------------------------------------------
-  sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
-  sys_perf_event_open failed, error -22
-  Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.
-  Error:
-  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cpu/mem-loads,ldlat=30/).
-  "dmesg | grep -i perf" may provide additional information.
-
-There's an issue with fallback on the inherit bit with the sample read.
-I'll take a look.
+The tricky part is that static linkage works well without libzstd for
+older versions of elfutils [1], but newer versions now require this
+library. Which means that we don't want to link against libzstd
+unconditionally, or users trying to build bpftool may have to install
+unnecessary dependencies. Instead we should add a new probe under
+tools/build/feature (Note that we already have several combinations in
+there, libbfd, libbfd-liberty, libbfd-liberty-z, and I'm not sure what's
+the best approach in terms of new combinations).
 
 Thanks,
-Namhyung
+Quentin
 
+
+[0] https://github.com/libbpf/bpftool/issues/152
+[1] https://github.com/libbpf/bpftool/issues/152#issuecomment-2343131810
