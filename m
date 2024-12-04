@@ -1,256 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF3E14884D;
-	Wed,  4 Dec 2024 14:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733321108; cv=fail; b=LzHDZ88J9Zi/nI8v/HyG1m9YaL/19HAeT+AZ9OWCMt6+v9Dh8I1n+l5P6cPGSdek+A0gLMcMhbb372SjLhnnL8iNTCq+6BPeJuGBL0u0NCoZTHa9vni1oyphNCXktsYhsn6ZFChXmWAiQ8bXhDF4qnSvu0WpXvI05VDDhe2fHJs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733321108; c=relaxed/simple;
-	bh=hjDcEmM4QjVjLt811jNm+rBv84NE3TU9jYsz8J5LwWo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=LfxoO0518UqCtwe+eTt65uWcUHEEctK+BAuwLOIjBPJemXrKMC7xQVpMgsk72tRMcZHqUGTOuLleSP9Ky42CgLwa0yfEV7aIUhbcbLXBC0CbvyGM0OWOY5ug6t+sm0AckUjJSrTRysl6KNCr3NJSuDyUjipX72LUVsO1azAngn8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ne6F9bMk; arc=fail smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BD81A8F9C;
+	Wed,  4 Dec 2024 17:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733334352; cv=none; b=Pi7LTQLXDeLLNpMKU0cKinc0xJvikf7oavLvUw4itSMaSLed/KMU8uIq6TUwlcsfWxoCpQjkf/35IfqwaXM6u9FoA+ZNvwD1CKY6OOg6EBH8GxxmHwbxB/MD+3Mg47KgF5ZO57Y4URcq9vzWH9inM/thhLiYDztpKj0HqEtT/oM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733334352; c=relaxed/simple;
+	bh=p2OSfFRQ9Wh94bKbN2s0n+Ia+MCVZjyKqKQNDfzMkuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=FbW78P7mdnETJBvYvLTR4hHACPyAnST9WLQI+hrLwsjOV4KmS9KEBajm4o+WITA636QPMIKYfyNYzqTa/X3hODSuwtyCsuCaaxDoHizzjaVwiiJ3/L1J2GR6+lxkeT57Foahq5SEv3IDJlz3Jx6VaZsypTKpZ3OnjFV1kYfWN5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CcUH48bU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ne6F9bMk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733321107; x=1764857107;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=hjDcEmM4QjVjLt811jNm+rBv84NE3TU9jYsz8J5LwWo=;
-  b=ne6F9bMk61Bi/oGHm75kYeexVIB+a95iD+dUDPFWZ1fX+4BHhrL8BK41
-   veV3TcILwDBplIAwl8dpGHI+s8B8Z7iGaaGOHZD1xQC50XfuRoDYaj1i2
-   IoZf9UpLmpVksArf9JRrzZttrqwiU4xo1CqsjeflicqW9joIcYfgWTqkN
-   EKk2l7dUmvwbbQ59A23iUVcdwSaHYLG6coe1bt3MY13D32+JCJKemZMXB
-   6oX6yTUacq1YX+dILelIw3JnX5a2MFyzxQ94MID0jE8ybL1jijTw1l3Ba
-   0+9KJ+ZgIMf6fDNzNUh3xZ3Er+VKFyK5BuUKd7fk/tudr4h33KUekKzFi
-   w==;
-X-CSE-ConnectionGUID: 6g55oDUaT5SnJ09SqV17Lw==
-X-CSE-MsgGUID: x6jd//ksTRCij9ecqFNa7w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="44964107"
-X-IronPort-AV: E=Sophos;i="6.12,207,1728975600"; 
-   d="scan'208";a="44964107"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 06:05:06 -0800
-X-CSE-ConnectionGUID: R1gLFXVIRT6fpt0/7I5mEA==
-X-CSE-MsgGUID: sKNZWabVTxyRbXkUTJrl3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,207,1728975600"; 
-   d="scan'208";a="98844278"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Dec 2024 06:05:06 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 4 Dec 2024 06:05:05 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Wed, 4 Dec 2024 06:05:05 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.49) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 4 Dec 2024 06:05:05 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=t/6zzehLeY/6wdU98Eb/rPOxdjKkr2RaCQDPqpv9Qhn4K9Vbx2C6XMU3/25kRP0RyoTesIeuDoknIzxYMcKg/oJR2gB3sZ0AApcL9iVP6p4UGEgw5Qm/jmzE1wbhXDA6C6qsjaKv9NbUZRmHgiB24TYauvZAJeK/uA7KraKjPXT+qhRFE50AYNlCMCSoicc7Qu5aCNVKfT9BHSKDU+CpzrVcB2mdR9LmnOFmJ5IlCrTmngx40uRzMXpdonac/f7bjg3Xp085uQqtWRJl4kgge0YV1PxjalqwpsuGSmtpWZYbvUnQFWeqjefpxRNTXrC6oUyIV08SbD4IzInTwFwKNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BuqH8EPAr6B2rnp8VHBiWhbrDJvfmsW3cCkwIHyWj/E=;
- b=U/Yw0eZhCjmVH8k/0T6KI45rpeFQnUn+7Aq3t+F3cvIHVwcNZlB6du7Uwx+6nfGL0XJqNK1llsW+MV5hEXk+y8D/BChehFxnlMSH88lnCd9bxcvfGwuO3BRMm23UUSiSvww0qMy6gHkROGZz9ZGuoBLfNuWiTqPC4pHp0hRAQYCR1TCiTYDC1ON30uvbEUw9QccoY+OSLO0n3Veu29Nu7sR7+iN+QFSH6LtvSkBmjFKC2LoT1f7RLfSWTtOCYZbmrVWsksZp+k/ZSs4AzAdTRP5PSk8tPMG6IxMJkCgdTPFMavUExMQeneZufDvDooMwEx1Lm4zQzBAWVoGaYiQWbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by SJ0PR11MB8294.namprd11.prod.outlook.com (2603:10b6:a03:478::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.19; Wed, 4 Dec
- 2024 14:04:58 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%6]) with mapi id 15.20.8207.017; Wed, 4 Dec 2024
- 14:04:58 +0000
-Date: Wed, 4 Dec 2024 22:04:46 +0800
-From: Oliver Sang <oliver.sang@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CcUH48bU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B868DC4CECD;
+	Wed,  4 Dec 2024 17:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733334352;
+	bh=p2OSfFRQ9Wh94bKbN2s0n+Ia+MCVZjyKqKQNDfzMkuA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=CcUH48bUARBLcnmje9oXN/LYDfaUVnFiQYQ2rG409x9bzcbeNLfNDMlsi/SFLOVhI
+	 EkzKRp7ASMxm3vcVA1U4O9kWiuOHCAhDvmweED7DTt49LLm85MSdzQA4yRG2GjTvPc
+	 h8Gq/yGzxCXAQhfQ5EMm9kuJC4g9j4mUMDJxC9OaSnB/yDo79mUyZcHSNS+YMB3PTl
+	 i4xDd2f5TgQfl+zg8PmgNLu+JREtLeO8s2BduLxvu8YstfuJkwvcqw7XoOxR8KV1qZ
+	 tBhzSLYg3HBFcUadKeeM3mrnBzIz9nW0QKOcmVkeZoyCZQiJYZCPlZ6DYoN7qGySA+
+	 maqGzmsLvOSVg==
+Date: Wed, 4 Dec 2024 14:45:48 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	James Clark <james.clark@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>,
-	Atish Patra <atishp@atishpatra.org>, Mingwei Zhang <mizhang@google.com>,
-	Kajol Jain <kjain@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>, <linux-perf-users@vger.kernel.org>,
-	<oliver.sang@intel.com>
-Subject: Re: [linus:master] [perf tools]  af954f76ee:
- perf-sanity-tests.Test_data_symbol.fail
-Message-ID: <Z1BhfpYWpUQ0p+qR@xsang-OptiPlex-9020>
-References: <202411301431.799e5531-lkp@intel.com>
- <Z04ZUHaGdsBapIEL@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Z04ZUHaGdsBapIEL@google.com>
-X-ClientProxiedBy: SI2P153CA0031.APCP153.PROD.OUTLOOK.COM (2603:1096:4:190::7)
- To LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+Cc: James Clark <james.clark@linaro.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Mingwei Zhang <mizhang@google.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [REGRESSION] 'perf mem record' on a Intel hybrid system broken
+Message-ID: <Z1CVTJ5jzIyNiB1R@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|SJ0PR11MB8294:EE_
-X-MS-Office365-Filtering-Correlation-Id: 36c16756-3e64-46ec-d9c2-08dd146ca2ed
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?ACUmyr8yu+Zg7xTpDzxKYRv+tg4bXz3eD1iwIprSRA3atR7Mae7tCooqo8HK?=
- =?us-ascii?Q?+LZIp8FTlgTfkGV2jymbW/bHGIIsuv1St2HBtP0TN3stUTpRfHSVtVQ/+pm/?=
- =?us-ascii?Q?rMDeQ7GFM5yaOeN1K9AmHWkT70uzHNOVT4xmD9wLSDohuI/YJURhZx+yiHKZ?=
- =?us-ascii?Q?Q/NiT508t4B7ej2PvMHXxegFMZTKDgesmZ5p/tJzTRlZA0nttBf/p/syP7LX?=
- =?us-ascii?Q?UNgeZS0vLTlU7C1RY8F9VA30Gfqpa6fLH4l5C0/2+sAMOfU2AVcNe7qcVI4y?=
- =?us-ascii?Q?4E/11gYMEPWdCeEzidHhQ86P248OxQdTgQdlxeaLCf/j8XYhLArbBnyV5dHI?=
- =?us-ascii?Q?he+k+eMjDl1vwhOoX+kuyKjI2XWzfr0peuIPsjSNhbqC4PBAL9yBQmaCtnB0?=
- =?us-ascii?Q?iosBIcDMO5czKAc3h9qQMemn4wv5zTknpRBJo3+DnS9zOA1l5i2HRu9URz8V?=
- =?us-ascii?Q?5/hBtcRv2sIa0YoLCmdwgJ1dgLpHXrbRn31i/gkLWRzrspU45UQ+bvxVh75c?=
- =?us-ascii?Q?ukoTsrL/4sm8q+73cHaUR1qL4xkWSVSF6QQry56T3V363EPsvMA9QO6F0tuB?=
- =?us-ascii?Q?f10kATcwo5RNxS2knHZoQmh0JR/71BQqpQN6jscWBvb2kTeHvJcNccHL0+FR?=
- =?us-ascii?Q?goNSY9nlx9qHP/dhNmluQPRyCyqBJKfkLB/wOSKvBLULrQTYldGQD2oqHXrU?=
- =?us-ascii?Q?uCsrycVmygYzMGoFG7s+ExS1qfpFFQphO1wohDXjcmymQNHAOhlfVaJkxHOK?=
- =?us-ascii?Q?Agi2JEsnpGRPxhp8Lc3UhGoks6dbkK9LR+zEohAGRZiVcXcEGGQrXlEcAGnH?=
- =?us-ascii?Q?2CMNBtgV2Wy39BaOuB0gNjBzY9MfhtHofu8rzdcb7InSlqvhTrBUvqaXo5Z/?=
- =?us-ascii?Q?xxl9QkS0ZyFuuSOuw6wLuT5hEmvlP3r5a02jROpiEv7A7UVcrSdpqWrIu8Sd?=
- =?us-ascii?Q?0/dMzsqHF5ZGcPaCXIMbfrDCvpOFVOpRhuy0eae4BeEXHyShpRCHxdQ34DeD?=
- =?us-ascii?Q?CqcdyvU6X1Kv5CQKgG/jXl4Vt+sV7mEFYk1iXCtqRyPRW6uZNlH1+vHpKOTD?=
- =?us-ascii?Q?T2CwfOBaTtadudiy6SEqIb2KtSwfA1+U/Xsyp9fZxAZi4fRTYP9mrI+++E36?=
- =?us-ascii?Q?zzz8Wf8rnoN8rRZ/FvIfdlRGDdznHceAAPOJV3hypzxMcSzjgOwBBZoFi7zC?=
- =?us-ascii?Q?oTCS81AMlCYkwBP+etkBqL7lLa++8gSky9RmHmevaoCAUofcC+8YQUlSn6ro?=
- =?us-ascii?Q?YX7757IeBgMpXB9unDU7xR5J8ZxA7+OT01DWaZhm+6yEtB5aL5Mpq8cjefir?=
- =?us-ascii?Q?di1tWRU2sspImOMoyjYs2naS?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bjYv+k7AX44ATf/baWzSdDFDqTyAj0B1arb26TN6b9GeCCWMWoOEpGeyisWU?=
- =?us-ascii?Q?P+nKinghVVF/HIyribaLynuzqA8wFMl2qG6S078bDmv4iwtouyp8KfKJyb+0?=
- =?us-ascii?Q?VxOzYUm7DkuEYP32rJN0nktaN99Op0+h+7/78ckgVTyupg+tlAZftrFJury+?=
- =?us-ascii?Q?du8zNdz1iiP3Ty4VqWX1TgMijn6B51GBI3WjsWNg6w4vOhk5C7YLmANGTat3?=
- =?us-ascii?Q?LfFn6k0jJ+2KrihcBUqzaISnpdm0lxvY6msqExRIgUEr1I8nya7bbrmI8Drk?=
- =?us-ascii?Q?NzlWHeam7Gr4hsbT9GUNWpyi/Njjw8bJZOvSZspt1hX903VoINqdRyWYax6f?=
- =?us-ascii?Q?RAzuAMtAtIdsbDXRew5gHCMi2rFuHWXj7cYQ1zGnnJCtt8o5DfM7LosUDW/9?=
- =?us-ascii?Q?fDvcpkPGRJOIgeCvcu5uUdM4d7dhHcFFlrxsmLb+JNT/GwDMKB8enyVMxbQo?=
- =?us-ascii?Q?gDz1cF5tM8bGK7xb/TXGrUQKU8k3NWG1RrT0TDEDNrBfRxFih3TxnBAoGy39?=
- =?us-ascii?Q?Q241Y+yZ2ujwLQEmeDkoAIvcihdmglL3tPw+OVCj3E/8FlupomXqt9/DiDtt?=
- =?us-ascii?Q?Zc5Oh6qj7cON6YlpyzFBG9mlZA1GoRNNfHNaS/oIQtO6A2fgHhrrD208KcS1?=
- =?us-ascii?Q?AkbVpmcmZ62TCUGIkKmdUof5I5pKMdCcUUHJ4hLZnXnYKS9KYADiRip98p2T?=
- =?us-ascii?Q?eNVson8L//Tcxx3Dgy163FbGO7v4zubLuTQyL9KY7BVKCfcdN9zpfk/1gNU0?=
- =?us-ascii?Q?VoJQIlUQUllQuOd4iSeH8lgeqmRk0T9NicBIFA+3X7gC6cMv5AcuKW0fyYBG?=
- =?us-ascii?Q?IkDK6hlQSSKdOT3DVyO/6FrfBctofGqrqnTBWChFf5sb5a7ReyrjQuqY3qyW?=
- =?us-ascii?Q?FJCczI3Y9AbZUFlCWtv4HjJD9kNZUqaS0oK1r+IVUwmKlT1eEnoZFcaLD/BY?=
- =?us-ascii?Q?jufU6sjezufBqc4NP9gl+b3PBQvrjF/Vk8zNwBqQYv8XjCqVqdwb8XKzHP8I?=
- =?us-ascii?Q?mvHtbu5tG71ndIs5XSCEaEo0neM0fwq+o3fYFc8k9Buu+LdvoCKkerDdpGL7?=
- =?us-ascii?Q?uLZihMvSn8zOEvUmkP7O8TTi0cXPhTkXz/pVQArQNvBfpXuaS0Ru6AQ97JXw?=
- =?us-ascii?Q?MNMdmf9sDPotztzMhcK6STxezs+hoJBSuCLfxmXU4lUn315uvfcu3jHYSA66?=
- =?us-ascii?Q?8c54GJtN15T3D1PzWA/Jjw/FMWA2AQh6LdH37Ceq1+3LaAckk6IKriETgN8W?=
- =?us-ascii?Q?y9YGK/cKzVfAzUokN1dpcp8KeGQsExonRtRkYDm3BpwuCwV9/fmBaO5ddgCs?=
- =?us-ascii?Q?wkLx5OLwtNCu0XybsKEP0ByRoSnU9fWB3/XH+wsFMM5zWfz+zaog0E/HfuWV?=
- =?us-ascii?Q?HCvSxgWt8+6RdHmLbK4r/GN6yxNkWWp+GCpvUe3X/Ag5KOOZKPBRYPJ5j7/A?=
- =?us-ascii?Q?dJ30V0pAogn8nluVs37G2bGxce6dIJOen68m+y/XqNFNkXnh2Y/zC9jA9LUZ?=
- =?us-ascii?Q?d8KpCbfZE0gMcL3JgyJX6k5wgK0ILk8UUWh4rKTEMdGojMAbpokVEo4XOaFQ?=
- =?us-ascii?Q?It3s1TIG0ecl0S8TdlNNSylkH7TZ393M56G70WH52kPBxaO8AcOSMxvSVJ3o?=
- =?us-ascii?Q?Lg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36c16756-3e64-46ec-d9c2-08dd146ca2ed
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2024 14:04:58.0620
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +91CuBFITod15+itCmJlio7ntyPT0pYDAWkJ3tzgn9L4qpiq3xkH1+uAiC07u6GsxNLoatNcavWwS9PspBJfhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB8294
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-hi, Namhyung Kim,
+Hi Namhyung,
 
-On Mon, Dec 02, 2024 at 12:32:16PM -0800, Namhyung Kim wrote:
-> Hello,
-> 
-> On Sat, Nov 30, 2024 at 03:03:10PM +0800, kernel test robot wrote:
-> > 
-> > 
-> > Hello,
-> > 
-> > kernel test robot noticed "perf-sanity-tests.Test_data_symbol.fail" on:
-> > 
-> > commit: af954f76eea56453713ae657f6812d4063f9bc57 ("perf tools: Check fallback error and order")
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> > 
-> > [test failed on linus/master      7af08b57bcb9ebf78675c50069c54125c0a8b795]
-> > [test failed on linux-next/master f486c8aa16b8172f63bddc70116a0c897a7f3f02]
-> > 
-> > in testcase: perf-sanity-tests
-> > version: 
-> > with following parameters:
-> > 
-> > 	perf_compiler: gcc
-> > 
-> > 
-> > 
-> > config: x86_64-rhel-8.3-bpf
-> > compiler: gcc-12
-> > test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapphire Rapids) with 256G memory
-> > 
-> > (please refer to attached dmesg/kmsg for entire log/backtrace)
-> > 
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <oliver.sang@intel.com>
-> > | Closes: https://lore.kernel.org/oe-lkp/202411301431.799e5531-lkp@intel.com
-> > 
-> > 
-> > 
-> > 2024-11-28 08:31:19 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-af954f76eea56453713ae657f6812d4063f9bc57/tools/perf/perf test 121
-> > 121: Test data symbol                                                : FAILED!
-> 
-> Thanks for the report.  But I have a request.
-> 
-> Can you please run the perf test with -v option so that we can see the
-> detailed error messages when it failed?
+root@number:/tmp# perf mem record -a sleep 1s
+Error:
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cpu_core/mem-loads,ldlat=30/).
+"dmesg | grep -i perf" may provide additional information.
 
-below is the log with '-v'
+root@number:/tmp# dmesg | tail
+[18865.729882] ixgbe 0000:05:00.0 enp5s0: NIC Link is Up 10 Gbps, Flow Control: RX/TX
+[18865.848172] mlx5_core 0000:01:00.0 enp1s0f0np0: Link down
+[18866.057990] mlx5_core 0000:01:00.1 enp1s0f1np1: Link down
+[19066.396215] input: JBL RACE TWS (AVRCP) as /devices/virtual/input/input27
+[19078.378477] usb 2-3: current rate 16000 is different from the runtime rate 48000
+[21158.375680] usb 2-3: current rate 16000 is different from the runtime rate 48000
+[31386.186675] input: JBL RACE TWS (AVRCP) as /devices/virtual/input/input28
+[31409.098352] usb 2-3: current rate 16000 is different from the runtime rate 48000
+[36409.737615] sysrq: Emergency Sync
+[36409.742619] Emergency Sync complete
+root@number:/tmp#
 
-2024-12-03 11:20:32 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-af954f76eea56453713ae657f6812d4063f9bc57/tools/perf/perf test 121 -v
-121: Test data symbol:
---- start ---
-test child forked, pid 143127
- 294e400-294e439 l buf1
-perf does have symbol 'buf1'
-Recording workload...
-Waiting for "perf record has started" message
-/usr/src/perf_selftests-x86_64-rhel-8.3-bpf-af954f76eea56453713ae657f6812d4063f9bc57/tools/perf/tests/shell/test_data_symbol.sh: line 74: kill: (143139) - No such process
-Cleaning up files...
----- end(-1) ----
-121: Test data symbol                                                : FAILED!
+	That I bisected down to:
 
+⬢ [acme@toolbox perf-tools-next]$ git bisect good 
+af954f76eea56453713ae657f6812d4063f9bc57 is the first bad commit
+commit af954f76eea56453713ae657f6812d4063f9bc57
+Author: Namhyung Kim <namhyung@kernel.org>
+Date:   Tue Oct 15 23:23:57 2024 -0700
 
-> 
-> Thanks,
-> Namhyung
-> 
-> > 
-> > 
-> > 
-> > The kernel config and materials to reproduce are available at:
-> > https://download.01.org/0day-ci/archive/20241130/202411301431.799e5531-lkp@intel.com
-> > 
-> > 
-> > 
-> > -- 
-> > 0-DAY CI Kernel Test Service
-> > https://github.com/intel/lkp-tests/wiki
-> > 
+    perf tools: Check fallback error and order
+    
+    The perf_event_open might fail due to various reasons, so blindly
+    reducing precise_ip level might not be the best way to deal with it.
+    
+    It seems the kernel return -EOPNOTSUPP when PMU doesn't support the
+    given precise level.  Let's try again with the correct error code.
+    
+    This caused a problem on AMD, as it stops on precise_ip of 2 for IBS but
+    user events with exclude_kernel=1 cannot make progress.  Let's add the
+    evsel__handle_error_quirks() to this case specially.  I plan to work on
+    the kernel side to improve this situation but it'd still need some
+    special handling for IBS.
+    
+    Reviewed-by: James Clark <james.clark@linaro.org>
+    Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
+    Acked-by: Kan Liang <kan.liang@linux.intel.com>
+    Cc: James Clark <james.clark@arm.com>
+    Cc: Atish Patra <atishp@atishpatra.org>
+    Cc: Mingwei Zhang <mizhang@google.com>
+    Cc: Kajol Jain <kjain@linux.ibm.com>
+    Cc: Thomas Richter <tmricht@linux.ibm.com>
+    Cc: Palmer Dabbelt <palmer@rivosinc.com>
+    Link: https://lore.kernel.org/r/20241016062359.264929-8-namhyung@kernel.org
+    Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+If I revert that patch:
+
+⬢ [acme@toolbox perf-tools-next]$ git log --oneline -5
+9a9f2d6da1ea5ef5 (HEAD -> perf-tools-next) Revert "perf tools: Check fallback error and order"
+d12d4cfc5033cd8c perf script python: Improve physical mem type resolution
+3f79d822e331022f perf disasm: Return a proper error when not determining the file type
+1a5b914261f0ebee tools features: Don't check for libunwind devel files by default
+40384c840ea1944d (tag: v6.13-rc1, perf-tools/perf-tools) Linux 6.13-rc1
+⬢ [acme@toolbox perf-tools-next]$
+
+And rebuild, it works again:
+
+root@number:/tmp# perf mem record -a sleep 1s
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 13.014 MB perf.data (10316 samples) ]
+root@number:/tmp# perf evlist
+cpu_atom/mem-loads,ldlat=30/P
+cpu_atom/mem-stores/P
+cpu_core/mem-loads-aux/
+cpu_core/mem-loads,ldlat=30/
+cpu_core/mem-stores/P
+dummy:u
+# Tip: use 'perf evlist -g' to show group information
+root@number:/tmp# perf evlist -v
+cpu_atom/mem-loads,ldlat=30/P: type: 10 (cpu_atom), size: 136, config: 0x5d0 (mem-loads), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1, { bp_addr, config1 }: 0x1f
+cpu_atom/mem-stores/P: type: 10 (cpu_atom), size: 136, config: 0x6d0 (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1
+cpu_core/mem-loads-aux/: type: 4 (cpu_core), size: 136, config: 0x8203 (mem-loads-aux), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1
+cpu_core/mem-loads,ldlat=30/: type: 4 (cpu_core), size: 136, config: 0x1cd (mem-loads), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, freq: 1, precise_ip: 2, sample_id_all: 1, { bp_addr, config1 }: 0x1f
+cpu_core/mem-stores/P: type: 4 (cpu_core), size: 136, config: 0x2cd (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1
+dummy:u: type: 1 (software), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|ADDR|CPU|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, mmap_data: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
+# Tip: use 'perf evlist -g' to show group information
+root@number:/tmp# perf evlist -g
+cpu_atom/mem-loads,ldlat=30/P
+cpu_atom/mem-stores/P
+{cpu_core/mem-loads-aux/,cpu_core/mem-loads,ldlat=30/}
+cpu_core/mem-stores/P
+dummy:u
+root@number:/tmp#
+
+Now trying to investigate this,
+
+- Arnaldo
