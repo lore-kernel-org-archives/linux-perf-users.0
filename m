@@ -1,119 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F8223919B;
-	Thu,  5 Dec 2024 00:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E2A1F5FA
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Dec 2024 00:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733357996; cv=none; b=PBCny87OCWfDp0j+igL05DM1xSxOP0PnX7WUWphmn8Hj9UTGAvVjk2sfNYSVAS/Kr/etj/PA7uzBpGsSgx+m6zO8N1isyNgfg3VlKsyMkchFrlnni5lK4htDseQyDsBvKKXyn/nPknhDdORX6NJ4iRm3/zFR7jRCwyIO4RA49os=
+	t=1733360256; cv=none; b=Dm4OHzqck3nAs0kLBI/xHxwFi3xxgZ5imJMKmi2hr6tsp55ftJ4ohsiQ7GaWffIX8f3gDsbVbURhwAfIuEQvqROQlYg5nLTAqpWF6lsKp3Cdtq+VrOA93W0aUpevF8T9VCLO/oeA/vbzb9AKM/XeZyRd7Zz8IsVNsbAApKr83CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733357996; c=relaxed/simple;
-	bh=bDwVXjL1nLB5xNln02V1wcdgJI0W3tE7fBM1SgIGJoE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iugd4qLcJEbug3LLACDEYm4VKPXXP6mFxq0b/renAX96mIjoiZ0DqMlL72ez2bbOPuz0GyF2PLDRotnSuT8I2OtztEwZyH414Uwn3nHbV1WiryANV7p1XCMX/uFFBLWn1DmJhsKpfkYbnNL5aWHDCBbcw5simPRBhu5hMHKT/Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WRVXkQuc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733360256; c=relaxed/simple;
+	bh=tvW8G9XUS5PrRQV0BFwRykuF8YFYEBlIxGfEIOMfZ04=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mNbPLU+iZd8gZJRMRE+d/kCyrcwgMOM/R1fn7+mUsNQ5giOhiCLjIt6DAnfbCkSg6LkKWsVx7QAT4nU2IeWRWW0c6A+dxkBofFUCrqVp0ypl5kPapb0cLccgU7PSDthKs1nGZIWRhNgfrPf7wLNYxXnOlgDEN8OOm6HQxHN5x/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b04sxVL9; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WRVXkQuc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 296E1C4CECD;
-	Thu,  5 Dec 2024 00:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733357995;
-	bh=bDwVXjL1nLB5xNln02V1wcdgJI0W3tE7fBM1SgIGJoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WRVXkQucNnK9Gv7JgKoc6q0rbmwQincsCivco+TtyCz1ExK/jL4o4FkutUNyh8guL
-	 7Frtua1JGWKAXVE5zZVhsLVw2j6fjDQfjMNpCAiXStbLdOQllgV0ZxqLR/8VRrkfbV
-	 ud3cMHUmqqXm0Cx6dKvpX2cM0iqfxNo1Oed9XmuE4yyXTyR8aC3wXgT5TBKw1w4OK8
-	 x6LSqMhjt3+nYUjK2GgBFiXA5OV/Ge//EgigJlV4ZDn41O8mU2MCFTkZwOxyQJKQig
-	 m+03j2rpvVZj+/gkAF/dL/Ij4BR6PwpsQaSBMDGVb6hgl5Km8aKVKWn0/rEropnGai
-	 oyyekV2gnGftg==
-Date: Thu, 5 Dec 2024 01:19:52 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"Lai, Yi" <yi1.lai@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>, yi1.lai@intel.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
-Message-ID: <Z1DxqJlGM_I8irVQ@pavilion.home>
-References: <Zx-B0wK3xqRQsCOS@localhost.localdomain>
- <20241029172126.5XY8vLBH@linutronix.de>
- <20241030140721.pZzb9D-u@linutronix.de>
- <ZyJUzhzHGDu5CLdi@localhost.localdomain>
- <20241107144617.MjCWysud@linutronix.de>
- <Zy4OFlxoRK2jM5zo@localhost.localdomain>
- <20241108190835.GA11231@redhat.com>
- <Zy6QHHakztIXvudC@pavilion.home>
- <20241111120857.5cWFpNkJ@linutronix.de>
- <20241204134826.GA923@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b04sxVL9"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso32445ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Dec 2024 16:57:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733360253; x=1733965053; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tvW8G9XUS5PrRQV0BFwRykuF8YFYEBlIxGfEIOMfZ04=;
+        b=b04sxVL9riYtfaMEPRMXAg+Sqmz4jB3p7qMivQfRGWKrgUb/2BvLl8QioPCeic0r+R
+         PNhIr2HgIcveGxTTOkUGM1KjfDj9yuvKMIl+CMkG4uZ1z/aAXDdXSXwYwy6kixjcA2Z7
+         Oq5Cs2UX9jNh3Q8DL0tPjVGVfsGehxnO180zlaGRzzIGEz6dTG4YNPyqMQYuebzUR8D0
+         6wMJmdeKEBybNGRaWgCZCLuVFVnps7vXl8F+HsiW4J74kWJSZEb27tbZrJuznGOXr96H
+         rEETKLISMbLGQc/XKnwn5cgn1pt2T5ibTggNrJo/0kUrZHEUrE1IdQxpIm71p6/Al/2d
+         1+pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733360253; x=1733965053;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tvW8G9XUS5PrRQV0BFwRykuF8YFYEBlIxGfEIOMfZ04=;
+        b=ZNO+wnMM5UgnaipfpkxHArE+EyDeSffJcnZnHPosc2T6bzXriRl4rlZRTZ3s4gIT8+
+         Eo4DBl2e8qP5ZWv6d8Ii06tD7cmOEj9fPnl8IeBF92dmLddn1OZbYlaojQUBeGVtKwsj
+         g+TsMoMSOJG9vDvoBIYCeoRPoqVnhQfMJrCg3O3E7gBwMAID96J8ANfQ/jmz9RG2i5YU
+         Z9wZU2ugNZ/nQKTNPqubATAFHWLlskkUC1wHlodNJffyBiC0nY8H0I9CJeVfc8fWKysm
+         ttfEcwhkHUWbOpui2dKAlwL1Th7vuweRwjyr4eTF4sO+jg/icSAuQqgAmefuuRZC+9eP
+         3Hhg==
+X-Gm-Message-State: AOJu0YzkFM55MvIxlG2YhtIyD3z2glVUfTORaaxuSXUWmUAfEnZDn9Vk
+	JkPmKzE46QclmaGUxeOtoVxZLDwO/+knTNS0spfDyGbmSkRtiYZTgwqVLZsjpCQghsk+gmpW/Je
+	ckr85SI79MSWWnDaByGlkgs5XnFBMrKdSgGZn
+X-Gm-Gg: ASbGncvJaskIHLrjmG7rxFLPkh5Df9kcFj4H1neT1mjHRSL8EECfAnsO0AU04vRqs2N
+	Z6YDGbqyp5xLO5LYQOlq6lnvOg2arSdK7
+X-Google-Smtp-Source: AGHT+IHFHxoXNbMc2rj/mBfZ9mhOg7BdRw6phAQZ/DS+WC2hrk70KdU4HwysjDmNM3NgiXRqfvJ8ZFuTmpuaucxLuuw=
+X-Received: by 2002:a05:6e02:3f86:b0:3a7:c733:1c63 with SMTP id
+ e9e14a558f8ab-3a80901b9acmr797465ab.5.1733360253226; Wed, 04 Dec 2024
+ 16:57:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241204134826.GA923@redhat.com>
+References: <b0b0ae91-785e-64f6-348a-ca6edd448b74@maine.edu>
+In-Reply-To: <b0b0ae91-785e-64f6-348a-ca6edd448b74@maine.edu>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 4 Dec 2024 16:57:22 -0800
+Message-ID: <CAP-5=fVivxz-TPVap6-+6U=ueU9W9fdZSH3w5F7e-h=uN--8kA@mail.gmail.com>
+Subject: Re: perf_event: avoiding gpf on rdpmc for top-down-events on hybrid
+To: Vince Weaver <vincent.weaver@maine.edu>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le Wed, Dec 04, 2024 at 02:48:27PM +0100, Oleg Nesterov a écrit :
-> On 11/11, Sebastian Andrzej Siewior wrote:
-> Not that bad, but I personally dislike this patch for other reasons.
-> But lets forget it for the moment.
-> 
-> The numbers in
-> 
-> 	PATCH] task_work: remove fifo ordering guarantee
-> 	https://lore.kernel.org/all/1440816150.8932.123.camel@edumazet-glaptop2.roam.corp.google.com/
-> 
-> didn't look too bad too, yet they convinced Linus and other reviewers.
-> 
-> I still think that fifo makes much more sense. The main (only?) offender
-> is fput(), so perhaps we can do something like
-> https://lore.kernel.org/all/20150907134924.GA24254@redhat.com/
-> but when I look at this change now I see it is racy.
-> 
-> Stupid question. What if we revert this "task_work: remove fifo ordering guarantee"
-> patch above? Can this help?
-> 
-> I don't understand this code and the problem. But when I (try to) read the
-> previous discussion on lore.kernel.org it seems that perf_pending_task_sync()
-> fails to cancel event->pending_task because it is called from task_work_run()
-> and then rcuwait_wait_event() obviously hangs.
-> 
-> Your patch can only help if task_work_add(current, &event->pending_task) was
-> called before fput()->task_work_add(task, &file->f_task_work(), right?
+On Wed, Dec 4, 2024 at 2:06=E2=80=AFPM Vince Weaver <vincent.weaver@maine.e=
+du> wrote:
+>
+> Hello
+>
+> so the PAPI team is working on trying to get Intel top-down event support
+> working.
+>
+> We ran into a problem where on hybrid machines (Alder/Raptor Lake) topdow=
+n
+> events are only supported on P-cores but not E-cores.
+>
+> So you have code that is happily using rdpmc to read the data on P-cores
+> but if you have bad luck and get rescheduled to an E-core then the rdpmc
+> instruction will segfault/gpf the whole program.
+>
+> Is there any way, short of setting up a complex segfault signal handler,
+> to avoid this happening?
+>
+> In theory you could try to check what core type you are on before doing
+> the rdpmc but there's a race there if you get rescheduled after the check
+> but before the actual rdpmc instruction.
 
-Right, IIUC if &event->pending_task was added after then perf_pending_task()
-would be called before perf_release() and we wouldn't have the problem.
+Perhaps this is a use-case for restartable sequences? The current
+logic in libperf doesn't handle this, nor hybrid:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/lib/perf/tests/test-evsel.c?h=3Dperf-tools-next#n127
+which is a shame.
 
-> So perhaps, if we restore the fifo ordering, we can rely on the fact that
-> current should call perf_pending_task() before it calls perf_release/free_event ?
-
-Hmm but a perf event can still fire between the task_work_add() on fput and the
-actual call to task_work_run() that will run the queue. So &event->pending_task
-can be set either before or after. And then whether fifo or lifo, that would
-still be buggy. Or am I missing something?
-
-Looking at task_work, it seems that most enqueues happen to the current task.
-AFAICT, only io_uring() does remote enqueue. Would it make sense to have a light
-version of task_work that is only ever used by current? This would be a very
-simple flavour with easy queue and cancellation without locking/atomics/RmW
-operations. We would just need to be extra careful about NMIs. And cancellation
-on the current queue would be more deterministic...
-
-Of course we would then lose the advantage of a solution that works for both
-remote and current enqueue...
-
-Thanks.
+Thanks,
+Ian
