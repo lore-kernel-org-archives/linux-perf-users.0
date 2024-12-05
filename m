@@ -1,188 +1,221 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4309A1A28D
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Dec 2024 14:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4522E14F9D9;
+	Thu,  5 Dec 2024 15:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733407281; cv=none; b=I6owEH06QJAFly8eQigZInSKLmPVYshyDt/NL7PalbuxlesrrgmmrutL6QDOnZ5nD6puTolAdb9Qpd/PFSzUwOSMkRSMB+BYNxdWAgYogpcPIq6xbCNxdR736FdBVg0F+l4zFLwh+e2f8PbyvgNID8Y7SNf+4QFtTe+EbZfzKZc=
+	t=1733412622; cv=none; b=IkaIwXPaMWxAbdNX8ULdRc86yokEeLk+aF0qFJehVLM2yRCGjWa35QcHF+LLz2KJchlYwOPlO3cG410YZZuDeCndcNJ/edxYTzchT/DF6Nw5MX3NWPdGuwrPiLnviTbDTJsJeLkZHty8E2DzlKA4Hxo6pKHgVMZOQWkJ1lS20is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733407281; c=relaxed/simple;
-	bh=6Asccw/pBvXBRTex0yHdpkL0o/gqh4BKdYKv5u5n7Iw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m8r2rhdmPmBbAt6fggPR6f9neTDwKfxWcHJKU67P+M15/u29qs0Qgq8KEY2Ho8Lgq3RFXMstDwOA56ygTp/QMAU4dx0xOSIJ0YHtsfw7j41EE3p5m30ovp2TCttyxyF2KPBlhKiKXq75fUZiIm8oyRrPqETzorh4FOnc3hCbhKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ByvkqnoU; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1733412622; c=relaxed/simple;
+	bh=HCPxOaQ+npddRCDh/RvayeJVIVFaUr6mRkUu+ikZw/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jyijN4qv3j6DQuuqolcS86/Ch/jH9Nf4WARPtO+apHCryqrY9YCmIvDpBkFv4PzeOM7PUlzUuqarvG4S6gVeydFY6Ft3ozA+tqMVkmRn8QplsCZ1YiArhbvvmnMJl0amWOZWces5exdVWJ1I5hc+mYNP6yTYVDWrWqE45zwvhJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTFOAup4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ByvkqnoU"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-724f74d6457so1076010b3a.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Dec 2024 06:01:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1733407277; x=1734012077; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vpRORDlOSyyK0TIPTg7jGlq72w4s19iZ1HiN79ixu8Y=;
-        b=ByvkqnoUWoS/W7FnIdS1rxZZKoOSsU6WB8enJkhUudKSlw4X5lEBekJI9MgggHKcuf
-         ARjdKd5hEWx9Q/jHevMK+OGGXWZmmtRBrHwqGvaGzTdQmTIYYYp8JNRClNblQyKX73Bf
-         rzzlje1Rkunqgte/1gctdt+c/La/aGKdu1CyHjjQfAcKjyh4eY+bgVXiiC1PN/CDQj96
-         OqfcBM6onnJO3EXG9pB/Oe6+51jdchAx2gYQw+bWahcANsOx5SBzKsi/pG5HO1x+ftm8
-         3P5JajWnd4miUcSny+aZNprOuIwaXrNqSioSDKULP2GpzAxGVHwnIX2W7bHDqyTW8cNR
-         fkNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733407277; x=1734012077;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vpRORDlOSyyK0TIPTg7jGlq72w4s19iZ1HiN79ixu8Y=;
-        b=q5T8/57hrn3zalee2z2Fgc50Nb1/P/N30MFn2VYk+OBfbxEt2idaKyKDep0puVfEKV
-         Ca7vojKkpyrlenmXla5rqH9M++Nt/8EECBBfBCEKYxEuUVrf3CqAnHU5p4rguqY1cZRN
-         Iyss8dBEsS7LowKpUHsP9wCMJSdx4X/sV77RkKAuo2u7yP8o/fyy/xDUdwpDNbT8Ilj1
-         HRh3yL8MGS5P5RRGqKvdeASvRHD55WORUVR2vVS2kKexM8Lhr11+mb1fA1s7qU0iu5gL
-         tHHvNW1dDVuMEHUkeFwl5giFUhmmOE8DswAtqhLsGAkISIHgLiW9hpxXWHwQbqxA9mVL
-         p+9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUmM3yyREtLanEH3EYUUj69y/1jWsclPIPZtjfiGw0aNGxjqHzkEksloMnKozXyeNPYBMPXMPyp2XKF3XpL9HSx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2hmWEd9hq0Ya3iHf6wZjXcpYXMNppd/M1gxKNo2cZBb/qauxN
-	zyhRdxnzqJgLo6enztHFpZKMojKKx9wuPHC6F84DD7sBVQRfSl3BLsTvdeT9Pqc=
-X-Gm-Gg: ASbGncv1N8xcVlD9bSNMbaL7BK20VORgbOHNNroN9RvejdS8LWcQoh146AD/ZmjB0Rp
-	MbCiRbKRyHjv1Yh8be9itSNKBsYS/m7zNuo+XcTxLdi+E/JQCcJTz5H9puH6nqFJSw2MAWGiDlA
-	BbQ/b1XQ0ebDOqFUojuGitcQclyGTqiA8geyM+Yxe7b5W1DurDIBaXCI+TqsNt1pn+Ks7IStTx5
-	GmQoFUSXu5aAQ5QQv4OC5jUtI8zghGRrZadM+x52GoBm2Of3rxAnI7MZz+FZRc=
-X-Google-Smtp-Source: AGHT+IH92ckWqdHzNoS5FeUm7rB/Ewh7sQxaVePWUF8KGCELq4PdI0tWd7UGDqOxQ3hhCkHlFxiYZQ==
-X-Received: by 2002:a17:903:22cb:b0:215:94eb:ada8 with SMTP id d9443c01a7336-215bd26a30amr140967095ad.51.1733407277491;
-        Thu, 05 Dec 2024 06:01:17 -0800 (PST)
-Received: from [10.255.194.25] ([139.177.225.238])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-215f8ef9f8bsm12480755ad.124.2024.12.05.06.01.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2024 06:01:16 -0800 (PST)
-Message-ID: <73c70244-8dd8-4a5d-a132-1074e6205d37@bytedance.com>
-Date: Thu, 5 Dec 2024 22:01:10 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTFOAup4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 352A8C4CED1;
+	Thu,  5 Dec 2024 15:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733412621;
+	bh=HCPxOaQ+npddRCDh/RvayeJVIVFaUr6mRkUu+ikZw/Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OTFOAup4zn+Tkr5GIgMLSRENRP3N4wVEks8nX9Ns8sgjuhHPSkeSaNoSlkxJPYRHt
+	 YeL1RWXQwUunTHUDpG2Yc986m2JZnGfLOUURxuEehpKJJOw09IPDvcNO4vq2PjyTyQ
+	 0kcmzmIW9n+o0cytDxT6XKhO2GQNT/o+GOxQ35I2dOxKTJzIYt9qFtpYgYL4wMnQOk
+	 6wBcI//rlrF3QbXuGtkA4GiX2x5NLkbZW31tEEmcNYeqwPTNG6Vp/dX1qHG5zVNFyN
+	 isoWXVA0tr0zX4dddXl08mML7XcKG+31/N5DToOQyKVt40oqWBRIC66rR0sqC7wmqm
+	 pjWpESM1k3i1Q==
+Date: Thu, 5 Dec 2024 12:30:18 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Oliver Sang <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+	lkp@intel.com, linux-kernel@vger.kernel.org,
+	James Clark <james.clark@linaro.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Mingwei Zhang <mizhang@google.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [linus:master] [perf tools]  af954f76ee:
+ perf-sanity-tests.Test_data_symbol.fail
+Message-ID: <Z1HHClaOwjJnR5gr@x1>
+References: <202411301431.799e5531-lkp@intel.com>
+ <Z04ZUHaGdsBapIEL@google.com>
+ <Z1BhfpYWpUQ0p+qR@xsang-OptiPlex-9020>
+ <Z1DNJpDzCIBFrIZT@google.com>
+ <Z1DV0lN8qHSysX7f@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] Re: [RFC 00/12] perf record: Add event action support
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, james.clark@arm.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241128133553.823722-1-yangjihong@bytedance.com>
- <Z0jPPRA8JXSrwyaC@x1> <Z04qmNnt86zcGE5Q@google.com>
- <ff9bc82e-669b-44b7-a02c-f5c704c0cd9b@bytedance.com>
- <CAP-5=fVocYqEbv6P=UP7rQCUhZHSmJZ3GGE08koTMG2rWWumgA@mail.gmail.com>
-From: Yang Jihong <yangjihong@bytedance.com>
-In-Reply-To: <CAP-5=fVocYqEbv6P=UP7rQCUhZHSmJZ3GGE08koTMG2rWWumgA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z1DV0lN8qHSysX7f@google.com>
 
-Hello,
-
-On 12/5/24 03:54, Ian Rogers wrote:
-> On Wed, Dec 4, 2024 at 12:35 AM Yang Jihong <yangjihong@bytedance.com> wrote:
->>
->> Hello,
->>
->> On 12/3/24 05:46, Namhyung Kim wrote:
->>> Hello,
->>>
->>> On Thu, Nov 28, 2024 at 05:14:53PM -0300, Arnaldo Carvalho de Melo wrote:
->>>> On Thu, Nov 28, 2024 at 09:35:41PM +0800, Yang Jihong wrote:
->>>>> In perf-record, when an event is triggered, default behavior is to
->>>>> save sample data to perf.data. Sometimes, we may just want to do
->>>>> some lightweight actions, such as printing a log.
->>>>
->>>>> Based on this requirement, add the --action option to the event to
->>>>> specify the behavior when the event occurs.
->>>>
->>>> 'perf record' is centered on saving data to disk without processing
->>>> events, while it has sideband events for some needs, like processing BPF
->>>> related events (PERF_RECORD_BPF_EVENT to catch PERF_BPF_EVENT_PROG_LOAD
->>>> and UNLOAD), doing things in a "live" way as your patchkit does seems
->>>> more appropriate to do in 'perf trace' :-)
->>>
->>> Agreed, 'perf trace' looks like a better place as you seem to target
->>> tracepoint events mostly.
->>>
->> Okay, will do it in 'perf trace'.
->>
->> Attaching to a kprobe events will also be supported in the future.
+On Wed, Dec 04, 2024 at 02:21:06PM -0800, Namhyung Kim wrote:
+> On Wed, Dec 04, 2024 at 01:44:06PM -0800, Namhyung Kim wrote:
+> [SNIP]
+> >   perf_event_attr:
+> >     type                             4 (cpu)
+> >     size                             136
+> >     config                           0x1cd (mem-loads)
+> >     { sample_period, sample_freq }   4000
+> >     sample_type                      IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT
+> >     read_format                      ID|LOST
+> >     freq                             1
+> >     precise_ip                       3
+> >     sample_id_all                    1
+> >     { bp_addr, config1 }             0x1f
+> >   ------------------------------------------------------------
+> >   sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
+> >   sys_perf_event_open failed, error -22
+> >   Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.
+> >   Error:
+> >   The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cpu/mem-loads,ldlat=30/).
+> >   "dmesg | grep -i perf" may provide additional information.
+> > 
+> > There's an issue with fallback on the inherit bit with the sample read.
+> > I'll take a look.
 > 
-> Hi Yang,
+> Hmm, no.  It doesn't have neight SAMPLE_READ nor inherit.  So the error
+> message was misleading.  Maybe it should be printed when it actually
+> clears the bits.
 > 
-> Just some extra information in case it is useful on python scripting,
-> which could be reused to avoid writing a new interpreter as in this
-> series. There are quite a few perf script examples here:
+> Anyway, I've tested with the old code and realzed that it might be due
+> to precise_ip being 3.  I expected it'd return EOPNOTSUPP for the case
+> but it seems to return EINVAL sometimes.  Then it should check it after
+> the missing features like below.  Can you please test?
 
-Thanks for your suggestion. I think using python scripting, similar to 
-bcc, is more suitable for scenarios with complex requirements.
-For some simple and lightweight scenarios, such as just printing some 
-information in real time, one-line command (similar to dtrace)may be 
-more suitable to implement user-defined sample.
-This is just my idea, hope to discuss to improve the usability of 
-perf-tool. :-)
+Before:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/scripts/python?h=perf-tools-next
-> There are also standalone scripts here including for tracepoints:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/python?h=perf-tools-next
-> One of the things missing for standalone scripts was being able to
-> conveniently parse events - you'd need to manually determine PMU type
-> and config values. That is fixed in this reviewed but not merged
-> series:
-> https://lore.kernel.org/lkml/20241119011644.971342-1-irogers@google.com/
+root@number:/tmp# perf mem record -a sleep 1s
+Error:
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cpu_core/mem-loads,ldlat=30/).
+"dmesg | grep -i perf" may provide additional information.
+
+root@number:/tmp# 
+
+With your patch:
+
+root@number:/tmp# perf mem record -a sleep 1s
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 11.211 MB perf.data (14616 samples) ]
+root@number:/tmp# perf evlist
+cpu_atom/mem-loads,ldlat=30/P
+cpu_atom/mem-stores/P
+cpu_core/mem-loads-aux/
+cpu_core/mem-loads,ldlat=30/
+cpu_core/mem-stores/P
+dummy:u
+# Tip: use 'perf evlist -g' to show group information
+root@number:/tmp# perf evlist -v
+cpu_atom/mem-loads,ldlat=30/P: type: 10 (cpu_atom), size: 136, config: 0x5d0 (mem-loads), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1, { bp_addr, config1 }: 0x1f
+cpu_atom/mem-stores/P: type: 10 (cpu_atom), size: 136, config: 0x6d0 (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1
+cpu_core/mem-loads-aux/: type: 4 (cpu_core), size: 136, config: 0x8203 (mem-loads-aux), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1
+cpu_core/mem-loads,ldlat=30/: type: 4 (cpu_core), size: 136, config: 0x1cd (mem-loads), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, freq: 1, precise_ip: 2, sample_id_all: 1, { bp_addr, config1 }: 0x1f
+cpu_core/mem-stores/P: type: 4 (cpu_core), size: 136, config: 0x2cd (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 3, sample_id_all: 1
+dummy:u: type: 1 (software), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|ADDR|CPU|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, mmap_data: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
+# Tip: use 'perf evlist -g' to show group information
+root@number:/tmp#
+
+But there is something strange, 'cpu_core/mem-loads-aux/' doesn't have
+/P, i.e. shouldn't try to set precise_ip to 3, but according to 'perf
+evlist -v' it is setting it to 3.
+
+I thought maybe it could be related to groups, but:
+
+root@number:/tmp# perf evlist -g
+cpu_atom/mem-loads,ldlat=30/P
+cpu_atom/mem-stores/P
+{cpu_core/mem-loads-aux/,cpu_core/mem-loads,ldlat=30/}
+cpu_core/mem-stores/P
+dummy:u
+root@number:/tmp# 
+
+But then, in tools/perf/arch/x86/util/mem-events.c
+
+struct perf_mem_event perf_mem_events_intel[PERF_MEM_EVENTS__MAX] = {
+        E("ldlat-loads",        "%s/mem-loads,ldlat=%u/P",      "mem-loads",    true,   0),
+        E("ldlat-stores",       "%s/mem-stores/P",              "mem-stores",   false,  0),
+        E(NULL,                 NULL,                           NULL,           false,  0),
+};
+
+struct perf_mem_event perf_mem_events_intel_aux[PERF_MEM_EVENTS__MAX] = {
+        E("ldlat-loads",        "{%s/mem-loads-aux/,%s/mem-loads,ldlat=%u/}:P", "mem-loads",    true,   MEM_LOADS_AUX),
+        E("ldlat-stores",       "%s/mem-stores/P",              "mem-stores",   false,  0),
+        E(NULL,                 NULL,                           NULL,           false,  0),
+};
+
+It has the :P for that group, maybe that is going to fallback?
+
+I tried:
+
+Breakpoint 1, evsel__precise_ip_fallback (evsel=0xf4a260) at util/evsel.c:1969
+1969	{
+(gdb) bt
+#0  evsel__precise_ip_fallback (evsel=0xf4a260) at util/evsel.c:1969
+#1  0x00000000005dfb09 in evsel__open_cpu (evsel=0xf4a260, cpus=0xf53840, threads=0xf5bfa0, start_cpu_map_idx=0, end_cpu_map_idx=16) at util/evsel.c:2577
+#2  0x00000000005dfc54 in evsel__open (evsel=0xf4a260, cpus=0xf53840, threads=0xf5bfa0) at util/evsel.c:2603
+#3  0x000000000042cbea in record__open (rec=0xec2ce0 <record>) at builtin-record.c:1370
+#4  0x00000000004304a1 in __cmd_record (rec=0xec2ce0 <record>, argc=2, argv=0xf58180) at builtin-record.c:2489
+#5  0x0000000000434840 in cmd_record (argc=2, argv=0xf58180) at builtin-record.c:4260
+#6  0x0000000000469e93 in __cmd_record (argc=3, argv=0x7fffffffde20, mem=0x7fffffffd260, options=0x7fffffffd080) at builtin-mem.c:170
+#7  0x000000000046b2f3 in cmd_mem (argc=4, argv=0x7fffffffde20) at builtin-mem.c:538
+#8  0x00000000004c0414 in run_builtin (p=0xec6098 <commands+696>, argc=5, argv=0x7fffffffde20) at perf.c:351
+#9  0x00000000004c06bb in handle_internal_command (argc=5, argv=0x7fffffffde20) at perf.c:404
+#10 0x00000000004c0814 in run_argv (argcp=0x7fffffffdc0c, argv=0x7fffffffdc00) at perf.c:448
+#11 0x00000000004c0b5d in main (argc=5, argv=0x7fffffffde20) at perf.c:560
+(gdb) print evsel__name(evsel)
+$1 = 0xf529b0 "cpu_core/mem-loads,ldlat=30/"
+(gdb) p evsel->core.attr.precise_ip 
+$2 = 3
+(gdb) p evsel->precise_max
+$3 = true
+(gdb)
+
+And it fell back to precise_ip=2, the previous attempt at opening with 3
+resulted in EINVAL.
+
+It should have that precise level reflected in the evsel name :-\
+
+Ran out of time, hope the above helps.
+
+Apart from that, from a purely regression fix, your patch gets the
+previous behaviour, from this isolated test I made, so:
+
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+- Arnaldo
+
+> Thanks,
+> Namhyung
 > 
-> I'd like to see the python code improved as it allows quicker command
-> creation like your example. Another example I'd recently tweaked is:
-> https://lore.kernel.org/lkml/20241119180130.19160-1-irogers@google.com/
-> Ultimately I think it would be nice to be creating tools using UIs
-> like textualize:
-> https://www.textualize.io/
-> and our Gecko Google summer-of-code project was an improvement here:
-> https://lore.kernel.org/lkml/ZOrsiZA+C0zbWEQS@yoga/
 > 
-> Other than basic functionality, perf's python support could be
-> improved in a number of ways that we've discussed in office hours or
-> on the list. Some things that come to mind:
-> 1) The perf script callback mechanism doesn't feel particularly
-> pythonic, generators or coroutines could be better.
-> 2) We should probably have more library python code rather than adding
-> new functions to `tools/perf/util/python.c` - I may do this to add
-> type hints for mypy. If we could have a subset that works without the
-> C code then it could be a basis for `perf.data` file analysis not tied
-> to Linux, or `pip install`-able. There is a similar library with
-> simpleperf, but shipping something with the perf codebase means we can
-> keep the file format and library synchronized.
-> 3) We'd like to reduce the number of dependencies `perf` as a command
-> has, and libpython is a big one. Something `uftrace` did was dlopen
-> libpython to avoid needing to link against it. A project similarly
-> rethinking python binding with C code is HPy.
-> 
-Yes, we can greatly simplify the development work by using python.
-In the end, if we can allow users to import perf python library and use 
-a few simple codes to implement a customized data collection, it will be 
-of great help to improve the usability of the perf tool.
-
-
-Actually, I think perf-tool has a lot of functions and is very helpful 
-for performance optimization, but the threshold is relatively high for 
-beginners. (I don’t know if this is appropriate :-))
-
-I have some considerations in improving the usability of the tool, but I 
-don’t know if it is appropriate:
-1. Provide rich prompt information, such as perf-help can provide some 
-user requirements in an interactive way, provide common perf commands 
-and usage methods; or provide some usage cases through keywords
-2. Use some graphical interfaces as the backend so that users can use it 
-in an easy-to-understand way
-3. Based on the python you mentioned above, I think it is a good way to 
-allow some developers to customize sampling data more easily.
-
-
-Thanks,
-Yang.
+> ---8<---
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index f745723d486ba962..d22c5df1701eccc5 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -2571,12 +2571,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  	if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
+>  		goto retry_open;
+>  
+> -	if (err == -EOPNOTSUPP && evsel__precise_ip_fallback(evsel))
+> -		goto retry_open;
+> -
+>  	if (err == -EINVAL && evsel__detect_missing_features(evsel))
+>  		goto fallback_missing_features;
+>  
+> +	if (evsel__precise_ip_fallback(evsel))
+> +		goto retry_open;
+> +
+>  	if (evsel__handle_error_quirks(evsel, err))
+>  		goto retry_open;
+>  
