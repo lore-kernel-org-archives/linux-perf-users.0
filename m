@@ -1,89 +1,141 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 982551DF971;
-	Thu,  5 Dec 2024 10:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA291D5CCC
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Dec 2024 10:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733394201; cv=none; b=JtphxhoDOPJj4f8rUYZgo34NPTpwCVDqF/1Z3flg33VHz7COngazjn545rxBaRr3PtovTnYSixntIs7qDamgwXIdUQxjE/7RDJmRTjMVUUJRXwfMhl4WZVr/yv2soP7g+PDV2S4L2/ol/AsgBiEuYFJu6EFUYqzjUi4kjpwhE14=
+	t=1733394565; cv=none; b=B9gpQKKWfQMXdZweoDpIb/ezfbyCYkMAk5OtKghEwhX5IwO+M3KHJst4DcI+M75TAEK3ShuvkC/ZJuGcrn3y9z0fz1dzH1PSBEsYW+QlaJLIGEGSaieWpPb5cqpnVoEjHy2Qhg4vDoxCavx7POMTfJHnN/oWdWED3iMjyFZFZSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733394201; c=relaxed/simple;
-	bh=0XpPuK5VtPAblHD4SHKTto1uJ3DNZ6f5fRxYExWotbI=;
+	s=arc-20240116; t=1733394565; c=relaxed/simple;
+	bh=ckoXV8Prl50yqnQscf2+2cQw4ett0hPrVvf/PZvKTTo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=USSFG0xboOwSPFHoPkhE3ay5vHH3tMVlrlkXiLoEsu0lhJWSA9OI8lm5vDvrD8m3ToJ4PTmsHcCn+bQCDU4wZobyooq26ulqTEKX3VmbMIACmXYRl+fEmvi88HVfnRd9r0sKW3ze4Wl+lOtS0vIC+dLIf1siR7A2o9ub8nEoSwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11BB7FEC;
-	Thu,  5 Dec 2024 02:23:41 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 93A703F5A1;
-	Thu,  5 Dec 2024 02:23:12 -0800 (PST)
-Date: Thu, 5 Dec 2024 10:23:10 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Quentin Monnet <qmo@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Nick Terrell <terrelln@fb.com>, bpf@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=R30rVhZig3gv618w5KuLQXIWKPEJN3nu7SVyQbJNqn5QHk9AisepNlRJ31jlWErpeOUVgWKIkl9cn4QAPI+muO2VP7hRu9AjLIb7ZCQFnd8Ky6hzM1cbEj8syk6MEE9DlSgi8jBpwtomfp+JYczNXun9ccfAfezmmkADzB0EGOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ve/a5myx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ve/a5myx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733394560;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+S9yWB2Q2Ddgi8hcXxZfGZkEo9PsHmW3vje2XLGt+RY=;
+	b=Ve/a5myx6jk/p5ws8TYlvflMwxhaOqX5mgbPJBwOm1PApwk33+MJnk+38XoTJvuE5Dl6xZ
+	zLTA4V6jb6GFIl/JRd/bY+enWwEZQCJrDt+L/03wBQWzYpeVV88PeXuQGu+LI/ty0Oljcb
+	/jPB3+wk93XoUE6R9G9cPxvxdyiui0w=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-473-sxWkNQCgOMSuIBUsFbyaGg-1; Thu,
+ 05 Dec 2024 05:29:15 -0500
+X-MC-Unique: sxWkNQCgOMSuIBUsFbyaGg-1
+X-Mimecast-MFC-AGG-ID: sxWkNQCgOMSuIBUsFbyaGg
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1E039193EF56;
+	Thu,  5 Dec 2024 10:29:12 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.213])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 780751954200;
+	Thu,  5 Dec 2024 10:29:04 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu,  5 Dec 2024 11:28:50 +0100 (CET)
+Date: Thu, 5 Dec 2024 11:28:41 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"Lai, Yi" <yi1.lai@linux.intel.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mahe Tardy <mahe.tardy@gmail.com>
-Subject: Re: [PATCH] bpftool: Fix failure with static linkage
-Message-ID: <20241205102310.GA2899345@e132581.arm.com>
-References: <20241204213059.2792453-1-leo.yan@arm.com>
- <Z1DLYCha0-o1RWkF@google.com>
- <bf5da4d3-c317-4616-ac68-0d49bb5815c2@kernel.org>
- <Z1DW1aJ4rYlMI6S1@google.com>
- <d4d5e80d-1a95-4ef7-a83f-1303563a91eb@kernel.org>
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>, yi1.lai@intel.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
+Message-ID: <20241205102840.GB8673@redhat.com>
+References: <ZyJUzhzHGDu5CLdi@localhost.localdomain>
+ <20241107144617.MjCWysud@linutronix.de>
+ <Zy4OFlxoRK2jM5zo@localhost.localdomain>
+ <20241108190835.GA11231@redhat.com>
+ <Zy6QHHakztIXvudC@pavilion.home>
+ <20241111120857.5cWFpNkJ@linutronix.de>
+ <20241204134826.GA923@redhat.com>
+ <Z1DxqJlGM_I8irVQ@pavilion.home>
+ <20241205092015.GA8673@redhat.com>
+ <Z1F6_cC4bRvcN56T@pavilion.home>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <d4d5e80d-1a95-4ef7-a83f-1303563a91eb@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z1F6_cC4bRvcN56T@pavilion.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Wed, Dec 04, 2024 at 10:55:32PM +0000, Quentin Monnet wrote:
-
-[...]
-
-> >>> I was about to report exactly the same. :)
-> >>
-> >> Thank you both. This has been reported before [0] but I didn't find the
-> >> time to look into a proper fix.
-> >>
-> >> The tricky part is that static linkage works well without libzstd for
-> >> older versions of elfutils [1], but newer versions now require this
-> >> library. Which means that we don't want to link against libzstd
-> >> unconditionally, or users trying to build bpftool may have to install
-> >> unnecessary dependencies. Instead we should add a new probe under
-> >> tools/build/feature (Note that we already have several combinations in
-> >> there, libbfd, libbfd-liberty, libbfd-liberty-z, and I'm not sure what's
-> >> the best approach in terms of new combinations).
+On 12/05, Frederic Weisbecker wrote:
+>
+> Le Thu, Dec 05, 2024 at 10:20:16AM +0100, Oleg Nesterov a écrit :
+>
+> > > Looking at task_work, it seems that most enqueues happen to the current task.
+> > > AFAICT, only io_uring() does remote enqueue. Would it make sense to have a light
+> > > version of task_work that is only ever used by current? This would be a very
+> > > simple flavour with easy queue and cancellation without locking/atomics/RmW
+> > > operations.
 > >
-> > I think you can use pkg-config if available.
+> > Perhaps, but we also need to avoid the races with task_work_cancel() from
+> > another task. I mean, if a task T does task_work_add_light(work), it can race
+> > with task_work_cancel(T, ...) which can change T->task_works on another CPU.
+>
+> I was thinking about two different lists.
+
+OK... but this needs more thinking/discussion.
+
+> Another alternative is to maintain another head that points to the
+> head of the executing list. This way we can have task_work_cancel_current()
+> that completely cancels the work. That was my initial proposal here and it
+> avoids the lock/xchg for each work:
+>
+> https://lore.kernel.org/all/Zx-B0wK3xqRQsCOS@localhost.localdomain/
+
+Thanks... Heh, I thought about something like this too ;) Although I thought
+that we need a bit more to implement task_work_cancel_sync(). But this is
+another story.
+
+> > Hmm. I just noticed that task_work_run() needs a simple fix:
 > >
-> >   $ pkg-config --static --libs libelf
-> >   -lelf -lz -lzstd -pthread
-> 
-> That's another dependency that I'd like to avoid if I can :)
+> > 	--- x/kernel/task_work.c
+> > 	+++ x/kernel/task_work.c
+> > 	@@ -235,7 +235,7 @@
+> > 			raw_spin_unlock_irq(&task->pi_lock);
+> >
+> > 			do {
+> > 	-			next = work->next;
+> > 	+			next = READ_ONCE(work->next);
+> > 				work->func(work);
+> > 				work = next;
+> > 				cond_resched();
+> >
+> > Perhaps it makes sense before the patch from Sebastian even if that patch
+> > removes this do/while loop ?
+>
+> Hmm, can work->next be modified concurrently here?
 
-Seems to me, pkg-config is the right tool for doing such kind thing -
-not only it is nature for local building, it is also friendly for build
-system (e.g. buildroot, OpenEmbedded / Yocto).  Though I have no deep
-knowledge for building.
+work->func(work) can, say, do kfree(work) or do another task_work_add(X, work).
 
-I am a bit confused why this issue is related to build features libbfd,
-libbfd-liberty, libbfd-liberty-z.  Should not the issue is related to
-libelf?  build/feature has several libelf checking, maybe we can add new
-one libelf-zstd?
+Oleg.
 
-Thanks,
-Leo
