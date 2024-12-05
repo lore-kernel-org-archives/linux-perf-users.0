@@ -1,251 +1,195 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB8D224AF8
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Dec 2024 17:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C08221461;
+	Thu,  5 Dec 2024 18:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733420819; cv=none; b=T4WqguH2mzc+Jx7kgl1Qvm2Gv0kLCS8bvTKxpb6tiU11lk6geyfcokNPy/h6ex003LdV1jxmCGldQYHMqBNuHHVv4rBtrILljOfZ2HfXQPdHLNgacSZMYgXjMpjo4yH0N39Dmm/xgGF9kkFsVDXS8BhTrzCpmIOMyibKd3T8eFg=
+	t=1733423037; cv=none; b=W7iX+118kWBaU3GaGJgXjQZDATSMIMolzWk5gkKhBDuHTLf05ZWRIMYrlm0FRwyDVR9oJrnBQ2jbdG0fDG4YkR2km1kFKw/Q4gqjOt/hCFfEupcTs4MS87j1C+uR3pNWlqbbfAEbspmXQwiS0PLXzzQa2Y2moY5pI6o0CnWVczw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733420819; c=relaxed/simple;
-	bh=C/p2xJRvVZ9us+tcZTn/AoPnN/k5wxiZkXpR7l25fYE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=GMk54fCjJiDgJ+fVxJ5M4ATGUlux43Or2rwjpMYngGsPVXYoavGpaR522QjeBG+VPUEEMSBZam5KjyietnKoNb0ZhdnEN7gMwHT2atLTPvSzDuvAGp+yJpCyph4s4TazZpDdCXvpSUgnmoyHDQKCkTqage9L7t0A0Jh1s1fwtcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DjQ8egvF; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1733423037; c=relaxed/simple;
+	bh=7MIvOXpQRwWgNGJBKXXgJfGLLuz2ziCk05E11zLyLBA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hrv8I46QoPl3EdhCEiFbW6uZwbXTVYUMaX/DYEBNt9rNe8muHsJBomKcSBm2D1KpqDgIlPUiaUowfiESge4aJCiscGaCigBUvbYiq3EzIPqYTnHwm29hp8DJtVla+50tVLac6Sa9QtxrI1nqxmWDEwljO1GmrLMPTaUrCuwavoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGGfBYP5; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DjQ8egvF"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B5FesFv031219;
-	Thu, 5 Dec 2024 17:46:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=lYSYoi
-	hjG2eFL1YIoKOt6+AplEmbyKBmWaTidd4eHvQ=; b=DjQ8egvFKwggmfDfF8/Xcr
-	6SI+FoPAKpfLENHIvdaruT8ZL7L5LaXLTDIKraidg5kPyBd++xzFAsBaqBVFHZM0
-	htrsy6L6M3/U9FrU0vqeGhmKBXCfxfEXjFdBvw8zcC8kIFiEVZT7E7xDM5O2u8gg
-	N5Fky0xMdxmXy7VHXsWyxKrkKUbeDN1/reaIRTjgBY1X/hvWMZPeuZtx4fDW6+B2
-	bo/59Qf7QZJuDiqsA/R6lWIai8eo6S30z2P4Hq7L/+GLaRvYHkkKWsL9inrLVXoB
-	bgQZjbKrQ0GDTV37HdskPFixyxHbu9EJZnBx9kSnjyYl1jk6AdhsOshL4DBqRgRg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43b6hb3hxu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Dec 2024 17:46:48 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4B5Hi6Rs025568;
-	Thu, 5 Dec 2024 17:46:47 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43b6hb3hxt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Dec 2024 17:46:47 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4B5GAq9Z007467;
-	Thu, 5 Dec 2024 17:46:46 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 438f8jtvqj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Dec 2024 17:46:46 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4B5HkgEf34669168
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 5 Dec 2024 17:46:42 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6963420043;
-	Thu,  5 Dec 2024 17:46:42 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E7F3A20040;
-	Thu,  5 Dec 2024 17:46:36 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.245.236])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu,  5 Dec 2024 17:46:36 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGGfBYP5"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7fd21e4aa2eso324271a12.2;
+        Thu, 05 Dec 2024 10:23:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733423034; x=1734027834; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V6vYqS8Uyw6PERcNHV3WQMwZ3bQaTaY3sWZxipW8AOs=;
+        b=TGGfBYP5XfX8+1k2/Dr4qCUPxFwSyPE135RbvnWci8NIz1vfDVMb3qC1stw6SE8X2x
+         F9KwuxJMu3dCxDg+GvecYHhpQfrXGMpUyuvVR5McDeGR75viYHA9ABq0JVu7u1Avwwkz
+         jBBDfITOD2E2kDDvKwan4X5AeCIT/AvnnEiqlvmk8NWmco6BYGCykLNUMjew3rb1y/Y5
+         yHminiU4I5ct/j3FCaVpeBdsT3tgMyuLnWq0PprZdDikI90ldkYbDNHnxYt3NE2Yi7Uq
+         GIpSuWO0g2rFY3N0XavuLp2hMrb/lgIGua7IiiykR7bDp+v3ObzXYfFwWoTfXvslP4J3
+         EjPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733423034; x=1734027834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V6vYqS8Uyw6PERcNHV3WQMwZ3bQaTaY3sWZxipW8AOs=;
+        b=ZH+cRIgU5LdaLrJlEIivSPBZ3Km1mT10nmHCs4Cj6DtKRzzjXu6W7pKbHIc1bGH1KH
+         tG0TjaIhCvncMF5Se9TE94+u4+qaycQ5nxKvtutSSB74I3BjUIPuWaWmNkO0ylhuO7Tq
+         wVBVZ0MyTLepzTry363oNuS6KZMNHMiptCmJXWofwtWUGXH2Y0byMCPTFMzUv66Pe7j/
+         0lQz2K8VbL2qxim9ydVkK/FFV5rK/tZvvPwDIXZOaJLx1Iy8Ma7DwRsvJKKzUiaCFuMv
+         oSrnot6hMXdL6PSvGVu87AM75lA/IL/HssOEwEcDcoJCU6Jyw1ES4vCyBoU1L7DOmqE7
+         JoSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNn53yWwQVwkzj4NSHLi9hOdHQNJUjdfJdbmMz+7yviFaOgXBZEM+LdtlupLDfOdYsGoGuE3pRDJUZyj5IAy+nq5AV@vger.kernel.org, AJvYcCV9Akgat/pMTCmq5ppiEc0vur7HyGDpE7nV7DyW7Yq0n8hRvzvpC4pyvqGfgmXK/+qLXUc=@vger.kernel.org, AJvYcCWAqgPLI1J1Orgn1dGAHtpO6gMKYDILF834iKW5tbQsQaTyCU5eXV85ZV/K4UHGWWuofifSAHNAD6S4dso2@vger.kernel.org, AJvYcCWwPYnY/PU6JWm7SDxv2R/FtKUUyngykjY+tEnTPREjWbWVZLA8Tyfqo9eXx1Rcv4P5aVEBVG0S8Ltkl+I8ZVCljg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXdQLYfJoJ75Flao2sBQs8qVbNgCOL7xuDOBbhvAnO0lZEiH4S
+	61xOBJvR7kqcPjyJ+apNrmURJDkka2Yt+wPn/XqSsZ42xZZrcyqOM47FTgQgM25vN9xYeGaKhoi
+	DZfn9Kr2z8mlXTGwyKAxzxMBhBV4=
+X-Gm-Gg: ASbGncttcis3LjJljm9AEBfABXWUGcnx8BPpr77xgdiOEjoKKRhTShk7bubf9+G/VHn
+	RT6PdOJ/zG9OYU9ojXNkLoy2W6VKoCLd8F66McLo0UwmmZTA=
+X-Google-Smtp-Source: AGHT+IG02vwYnNGUnRdTtdLBBLBjtBWHIEK/29fwZCfadVa3BPrhggnUUP4hwsu2IUQT6N/MVYql0aoQrx3C2F9Pu5o=
+X-Received: by 2002:a17:90b:520b:b0:2ee:b6c5:1def with SMTP id
+ 98e67ed59e1d1-2ef6955f713mr269512a91.8.1733423034015; Thu, 05 Dec 2024
+ 10:23:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: Re: [PATCH] tools/perf/tests/base_probe: Fix check for the count of
- existing probes in test_adding_kernel
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <1da9544-1e17-3830-49f9-6a6d78439e71@redhat.com>
-Date: Thu, 5 Dec 2024 23:16:23 +0530
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        hbathini@linux.ibm.com
+MIME-Version: 1.0
+References: <20241022073141.3291245-1-liaochang1@huawei.com> <CAEf4BzY-0Eu27jyT_s2kRO1UuUPOkE9_SRrBOqu2gJfmxsv+3A@mail.gmail.com>
+In-Reply-To: <CAEf4BzY-0Eu27jyT_s2kRO1UuUPOkE9_SRrBOqu2gJfmxsv+3A@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 5 Dec 2024 10:23:42 -0800
+Message-ID: <CAEf4BzaRzHFs-gyC5FGsbh4EX4=-QP4_i7A5ts++-J0JPaOb1g@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] uprobes: Improve scalability by reducing the
+ contention on siglock
+To: Liao Chang <liaochang1@huawei.com>
+Cc: mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org, 
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <1A1D31B9-6555-4550-BB8F-171402C6D88A@linux.vnet.ibm.com>
-References: <20241014153910.85536-1-atrajeev@linux.vnet.ibm.com>
- <941c3d6a-fc2-3fcf-5ab2-597dcf712c16@redhat.com>
- <0FEA83FD-BBC9-4E83-82D6-044141E86F76@linux.vnet.ibm.com>
- <1da9544-1e17-3830-49f9-6a6d78439e71@redhat.com>
-To: Michael Petlan <mpetlan@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>
-X-Mailer: Apple Mail (2.3818.100.11.1.3)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: l7XD6oizhTv72z-fWJmvemkVeWFZXl3o
-X-Proofpoint-GUID: TLi-ki336M_jxNZCz-7B6k28BOdSNTWA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- adultscore=0 suspectscore=0 mlxlogscore=999 clxscore=1015 impostorscore=0
- malwarescore=0 bulkscore=0 lowpriorityscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412050128
 
+On Tue, Nov 5, 2024 at 6:07=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Tue, Oct 22, 2024 at 12:42=E2=80=AFAM Liao Chang <liaochang1@huawei.co=
+m> wrote:
+> >
+> > The profiling result of BPF selftest on ARM64 platform reveals the
+> > significant contention on the current->sighand->siglock is the
+> > scalability bottleneck. The reason is also very straightforward that al=
+l
+> > producer threads of benchmark have to contend the spinlock mentioned to
+> > resume the TIF_SIGPENDING bit in thread_info that might be removed in
+> > uprobe_deny_signal().
+> >
+> > The contention on current->sighand->siglock is unnecessary, this series
+> > remove them thoroughly. I've use the script developed by Andrii in [1]
+> > to run benchmark. The CPU used was Kunpeng916 (Hi1616), 4 NUMA nodes,
+> > 64 cores@2.4GHz running the kernel on next tree + the optimization in
+> > [2] for get_xol_insn_slot().
+> >
+> > before-opt
+> > ----------
+> > uprobe-nop      ( 1 cpus):    0.907 =C2=B1 0.003M/s  (  0.907M/s/cpu)
+> > uprobe-nop      ( 2 cpus):    1.676 =C2=B1 0.008M/s  (  0.838M/s/cpu)
+> > uprobe-nop      ( 4 cpus):    3.210 =C2=B1 0.003M/s  (  0.802M/s/cpu)
+> > uprobe-nop      ( 8 cpus):    4.457 =C2=B1 0.003M/s  (  0.557M/s/cpu)
+> > uprobe-nop      (16 cpus):    3.724 =C2=B1 0.011M/s  (  0.233M/s/cpu)
+> > uprobe-nop      (32 cpus):    2.761 =C2=B1 0.003M/s  (  0.086M/s/cpu)
+> > uprobe-nop      (64 cpus):    1.293 =C2=B1 0.015M/s  (  0.020M/s/cpu)
+> >
+> > uprobe-push     ( 1 cpus):    0.883 =C2=B1 0.001M/s  (  0.883M/s/cpu)
+> > uprobe-push     ( 2 cpus):    1.642 =C2=B1 0.005M/s  (  0.821M/s/cpu)
+> > uprobe-push     ( 4 cpus):    3.086 =C2=B1 0.002M/s  (  0.771M/s/cpu)
+> > uprobe-push     ( 8 cpus):    3.390 =C2=B1 0.003M/s  (  0.424M/s/cpu)
+> > uprobe-push     (16 cpus):    2.652 =C2=B1 0.005M/s  (  0.166M/s/cpu)
+> > uprobe-push     (32 cpus):    2.713 =C2=B1 0.005M/s  (  0.085M/s/cpu)
+> > uprobe-push     (64 cpus):    1.313 =C2=B1 0.009M/s  (  0.021M/s/cpu)
+> >
+> > uprobe-ret      ( 1 cpus):    1.774 =C2=B1 0.000M/s  (  1.774M/s/cpu)
+> > uprobe-ret      ( 2 cpus):    3.350 =C2=B1 0.001M/s  (  1.675M/s/cpu)
+> > uprobe-ret      ( 4 cpus):    6.604 =C2=B1 0.000M/s  (  1.651M/s/cpu)
+> > uprobe-ret      ( 8 cpus):    6.706 =C2=B1 0.005M/s  (  0.838M/s/cpu)
+> > uprobe-ret      (16 cpus):    5.231 =C2=B1 0.001M/s  (  0.327M/s/cpu)
+> > uprobe-ret      (32 cpus):    5.743 =C2=B1 0.003M/s  (  0.179M/s/cpu)
+> > uprobe-ret      (64 cpus):    4.726 =C2=B1 0.016M/s  (  0.074M/s/cpu)
+> >
+> > after-opt
+> > ---------
+> > uprobe-nop      ( 1 cpus):    0.985 =C2=B1 0.002M/s  (  0.985M/s/cpu)
+> > uprobe-nop      ( 2 cpus):    1.773 =C2=B1 0.005M/s  (  0.887M/s/cpu)
+> > uprobe-nop      ( 4 cpus):    3.304 =C2=B1 0.001M/s  (  0.826M/s/cpu)
+> > uprobe-nop      ( 8 cpus):    5.328 =C2=B1 0.002M/s  (  0.666M/s/cpu)
+> > uprobe-nop      (16 cpus):    6.475 =C2=B1 0.002M/s  (  0.405M/s/cpu)
+> > uprobe-nop      (32 cpus):    4.831 =C2=B1 0.082M/s  (  0.151M/s/cpu)
+> > uprobe-nop      (64 cpus):    2.564 =C2=B1 0.053M/s  (  0.040M/s/cpu)
+> >
+> > uprobe-push     ( 1 cpus):    0.964 =C2=B1 0.001M/s  (  0.964M/s/cpu)
+> > uprobe-push     ( 2 cpus):    1.766 =C2=B1 0.002M/s  (  0.883M/s/cpu)
+> > uprobe-push     ( 4 cpus):    3.290 =C2=B1 0.009M/s  (  0.823M/s/cpu)
+> > uprobe-push     ( 8 cpus):    4.670 =C2=B1 0.002M/s  (  0.584M/s/cpu)
+> > uprobe-push     (16 cpus):    5.197 =C2=B1 0.004M/s  (  0.325M/s/cpu)
+> > uprobe-push     (32 cpus):    5.068 =C2=B1 0.161M/s  (  0.158M/s/cpu)
+> > uprobe-push     (64 cpus):    2.605 =C2=B1 0.026M/s  (  0.041M/s/cpu)
+> >
+> > uprobe-ret      ( 1 cpus):    1.833 =C2=B1 0.001M/s  (  1.833M/s/cpu)
+> > uprobe-ret      ( 2 cpus):    3.384 =C2=B1 0.003M/s  (  1.692M/s/cpu)
+> > uprobe-ret      ( 4 cpus):    6.677 =C2=B1 0.004M/s  (  1.669M/s/cpu)
+> > uprobe-ret      ( 8 cpus):    6.854 =C2=B1 0.005M/s  (  0.857M/s/cpu)
+> > uprobe-ret      (16 cpus):    6.508 =C2=B1 0.006M/s  (  0.407M/s/cpu)
+> > uprobe-ret      (32 cpus):    5.793 =C2=B1 0.009M/s  (  0.181M/s/cpu)
+> > uprobe-ret      (64 cpus):    4.743 =C2=B1 0.016M/s  (  0.074M/s/cpu)
+> >
+> > Above benchmark results demonstrates a obivious improvement in the
+> > scalability of trig-uprobe-nop and trig-uprobe-push, the peak throughpu=
+t
+> > of which are from 4.5M/s to 6.4M/s and 3.3M/s to 5.1M/s individually.
+> >
+> > v4->v3:
+> > 1. Rebase v3 [3] to the lateset tip/perf/core.
+> > 2. Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 3. Acked-by: Oleg Nesterov <oleg@redhat.com>
+> >
+> > v3->v2:
+> > Renaming the flag in [2/2], s/deny_signal/signal_denied/g.
+> >
+> > v2->v1:
+> > Oleg pointed out the _DENY_SIGNAL will be replaced by _ACK upon the
+> > completion of singlestep which leads to handle_singlestep() has no
+> > chance to restore the removed TIF_SIGPENDING [3] and some case in
+> > question. So this revision proposes to use a flag in uprobe_task to
+> > track the denied TIF_SIGPENDING instead of new UPROBE_SSTEP state.
+> >
+> > [1] https://lore.kernel.org/all/20240731214256.3588718-1-andrii@kernel.=
+org
+> > [2] https://lore.kernel.org/all/20240727094405.1362496-1-liaochang1@hua=
+wei.com
+> > [3] https://lore.kernel.org/all/20240815014629.2685155-1-liaochang1@hua=
+wei.com/
+> >
+> > Liao Chang (2):
+> >   uprobes: Remove redundant spinlock in uprobe_deny_signal()
+> >   uprobes: Remove the spinlock within handle_singlestep()
+> >
+> >  include/linux/uprobes.h |  1 +
+> >  kernel/events/uprobes.c | 10 +++++-----
+> >  2 files changed, 6 insertions(+), 5 deletions(-)
+> >
+> > --
+> > 2.34.1
+> >
+>
+> This patch set has been ready for a long while, can we please apply it
+> to perf/core as well? Thank you!
 
+Liao,
 
-> On 14 Nov 2024, at 3:35=E2=80=AFPM, Michael Petlan =
-<mpetlan@redhat.com> wrote:
->=20
-> On Sun, 3 Nov 2024, Athira Rajeev wrote:
->>> On 17 Oct 2024, at 3:44=E2=80=AFPM, Michael Petlan =
-<mpetlan@redhat.com> wrote:
->>>=20
->>> On Mon, 14 Oct 2024, Athira Rajeev wrote:
-> [...]
->>>=20
->>> I am wondering how it could happen that there were other
->>> probes in the system?
->>=20
->> Hi Michael,
->>=20
-> Hello Athira.
->=20
->> Sorry for the late response.
->>=20
->> Yes, there are uprobes listed as part of =E2=80=9Cperf probe=E2=80=9D =
-in the environment where I saw the test needing this change. Sharing the =
-result below from perf probe:=20
->>=20
->> # ./perf probe -l
->>  uprobes:p_uprobe_dns_events_osquery4026531841 (on getaddrinfo in XX)
->>  uprobes:p_uprobe_dns_events_osquery4026532336 (on 0x129a60 in XX)
->>  uprobes:p_uprobe_dns_events_osquery4026532344 (on 0x129a60 in XX)
->>  uprobes:p_uprobe_ebpf_compat_check_osquery (on __GI___backtrace in =
-XX)
->>  uprobes:p_uprobe_sys_hook_osquery (on backtrace_symbols in XX)
->>=20
->> These can=E2=80=99t be removed.
->>=20
->> # ./perf probe -d uprobes:p_uprobe_dns_events_osquery4026531841
->> Removed event: uprobes:p_uprobe_dns_events_osquery4026531841
->> Failed to delete event: Device or resource busy
->>  Error: Failed to delete events.
->>=20
->=20
-> Ah, this is interesting, I have never hit that. However, it makes =
-sense,
-> if the resource is busy.
->=20
-> However, in that case it comes to my mind that in general, these tests
-> should not be run in any production environment, where one could rely =
-on
-> some probes will exist, etc. In case some of the probes above was not
-> busy, it'd be probably cleaned up by the testcase, which might be =
-unexpected
-> by the creator/user of the uprobes... Maybe we should get rid of the
-> probe cleaning for that cases, but I'd prefer to keep it.
->=20
->> Considering above scenario, patch here takes the probe count using:
->> NO_OF_PROBES=3D`$CMD_PERF probe -l $TEST_PROBE| wc -l`
->>=20
->> Also similarly looks for TEST_PROBE in result log in case of probe =
-=E2=80=94del as well
->>=20
->> Any comments Michael ?
->>=20
-> Yes, we probably should tweak it as you suggest.
-
-Hi,
-
-Thanks for checking Michael.
-
-If the patch looks good, can we please get this pulled in ?
-
-Thanks
-Athira
->=20
-> Thanks,
-> Michael
->=20
->=20
->> Thanks
->> Athira
->>=20
->>>=20
->>> Cheers,
->>>=20
->>> Michael
->>>=20
->>>>=20
->>>> Example, in the system where this failed, already some
->>>> probes were default added. So count became 10
->>>> ./perf probe -l | wc -l
->>>> 10
->>>>=20
->>>> So to be specific for "inode_permission", restrict the
->>>> probe count check to that probe point alone using :
->>>> NO_OF_PROBES=3D`$CMD_PERF probe -l $TEST_PROBE| wc -l`
->>>>=20
->>>> Similarly while removing the probe using "probe --del *",
->>>> ( removing all probes ), check uses:
->>>>=20
->>>> ../common/check_all_lines_matched.pl "Removed event: =
-probe:$TEST_PROBE"
->>>>=20
->>>> But if there are other probes in the system, the log will
->>>> contain reference to other existing probe too. Hence change
->>>> usage of check_all_lines_matched.pl to check_all_patterns_found.pl
->>>> This will make sure expecting string comes in the result
->>>>=20
->>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>>> ---
->>>> tools/perf/tests/shell/base_probe/test_adding_kernel.sh | 4 ++--
->>>> 1 file changed, 2 insertions(+), 2 deletions(-)
->>>>=20
->>>> diff --git =
-a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh =
-b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
->>>> index d541ffd44a93..f8b5f096d0d7 100755
->>>> --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
->>>> +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
->>>> @@ -169,7 +169,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE =
-"force-adding probes :: second pr
->>>> (( TEST_RESULT +=3D $? ))
->>>>=20
->>>> # adding existing probe with '--force' should pass
->>>> -NO_OF_PROBES=3D`$CMD_PERF probe -l | wc -l`
->>>> +NO_OF_PROBES=3D`$CMD_PERF probe -l $TEST_PROBE| wc -l`
->>>> $CMD_PERF probe --force --add $TEST_PROBE 2> =
-$LOGS_DIR/adding_kernel_forceadd_03.err
->>>> PERF_EXIT_CODE=3D$?
->>>>=20
->>>> @@ -205,7 +205,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE =
-"using doubled probe"
->>>> $CMD_PERF probe --del \* 2> =
-$LOGS_DIR/adding_kernel_removing_wildcard.err
->>>> PERF_EXIT_CODE=3D$?
->>>>=20
->>>> -../common/check_all_lines_matched.pl "Removed event: =
-probe:$TEST_PROBE" "Removed event: probe:${TEST_PROBE}_1" < =
-$LOGS_DIR/adding_kernel_removing_wildcard.err
->>>> +../common/check_all_patterns_found.pl "Removed event: =
-probe:$TEST_PROBE" "Removed event: probe:${TEST_PROBE}_1" < =
-$LOGS_DIR/adding_kernel_removing_wildcard.err
->>>> CHECK_EXIT_CODE=3D$?
->>>>=20
->>>> print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "removing multiple =
-probes"
->>>> --=20
->>>> 2.43.5
->>=20
->>=20
-
+This patch set doesn't apply cleanly to perf/core anymore, can you
+please rebase one more time and resend? Thanks!
