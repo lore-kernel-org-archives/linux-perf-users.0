@@ -1,139 +1,115 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0361ABEBB
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Dec 2024 07:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CB41B4123;
+	Thu,  5 Dec 2024 07:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733382604; cv=none; b=AP+clRvPO4C2uvzmjOGbMO7hZyLsViTdKbwAtdLuCqKozXzKCaXZoUTZHo9p5zeMvnfuAFV9LJOn0VI17nmjolXWg0fZU8xOa2Ifm7DQ9s13PtNHKYjDL33cRGCQ+4OMIiXdAW5OaaTJMP7iQMT0C8Qb+TNyGJ66gr+9MjZkhHU=
+	t=1733384707; cv=none; b=gOfWFUXaq6SeIVyNFE8gvNFINRHtD1TIOABRt2IlxSHJ5Cdkb+SW11sF2dSvTLbQIW6z36uSqNpM+T3JUKHq832g83IXyEolOsLBSyzovYtVpEQlTHymQLzWCERfR/ksEyZURO8dY+1rthnpewF9qsZAgHpOFukXSGwOghDV0us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733382604; c=relaxed/simple;
-	bh=m9PAgqLMEdONGInteiZwMJWeLAyp9JtTMil42/JBwso=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V19dlzXWxDvoxpoEgByTcfnbsNSRsqX+srBuuJOPb+Q7F5s1qNtbofz28tPOH/e77kBCSko+bRUL+Ue4PTASVxGtMrm8o4MW4R1gKGf1YslGmw9zx2KgWF+fvCP7F0aSjvBhvNVegoEhdfd7N0c0aJdoFdtfzzU4BTKDb296YpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uo9d5HUd; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1733384707; c=relaxed/simple;
+	bh=97hThSuPVWzZ9pr/MZVasityF+cJQ+fGhUX+4hk4DEY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UmU9GbRC83ahroY0kdO9QtNx+P9C0dh35SsR2bavFKELEqfFDE1Wq91QLPW4U4BbciMftlMViFpDPARh4czgsqgBxVEt8K/d/gMfwpS9QigXaCbUwBV+ymvfCBWpCXqGQBKXpdr8AVjEEVXz8RNKUSgvx/3NwBuJPNwrquaqPnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uer+sSHL; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uo9d5HUd"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3a7bc2d7608so65215ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Dec 2024 23:10:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733382602; x=1733987402; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RPDL9SY/CBHi33tr/kgPHOHPuPtSjT4Zve0V9QYVUns=;
-        b=Uo9d5HUdM2Jwlp2Jwa90/00PTltNjViX3HKNiq/XXKqHg3qk2Ms/bzFQu0rOSUjR6X
-         1Z/URjpSyYGQCTaDE/7vSr34zJ9f8EYC13MugLblnGHRDM78oUCwnf8WF/QGiz6pgxXN
-         Gx9guUVAcua5lh2scu0vFdSqabmHmgxBrdMvrVmQ1iqQcqLkELuLRiYLb36zzlbDPuAv
-         HWoD/5Uxq9K1ngrIc07tF5ijI2sJymYsk1jSBnYH9eyXg71bJs02Bjq3HhzQU2j/rQU4
-         vW6Xs1uctGfs+jBC59gsKbuui3uU1b//bLMsmbJ8skjt8gyijJ18FAucwPKq7poKk4Lc
-         en9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733382602; x=1733987402;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RPDL9SY/CBHi33tr/kgPHOHPuPtSjT4Zve0V9QYVUns=;
-        b=WFisLOAkI67VhoPb6nmmnL1m5odWYdx0nM5xA2Lq4BnZjWhA3Ey7r1CypzBu0quLdk
-         hivBWnrSmVYs8i3K0DadQkFddzdLHE1oFVZbhjOS9+jIflBYDigyiEnoRIQA5z+ypHq7
-         egirYtuvld35YpQgoAaEd4R56WD93c0qOv6JKLP4uPKUtI1j5TUhb90zF8k+jk67+TfJ
-         1nQlpUAVzItEreQ7h7WB5MVEBV3H3JWh1Zko3e1Ahz7SvHv0M7umert0Fgbg3w94ql3Z
-         UxMCjMiJkeA4A1EolB628XgHvnnpKnjF2erQU1INkctWOllGzsVpHI5r0m35mIKwniPj
-         SnsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYxCUVkpwuxFlzZs7eO8/pSQoTtHfxKnPbSv0bpmW1gpWrkhqaidnhVYrKwi7VALq1F2yWigsiG9RpfunjCIu6@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbNSSeEC1HX8wa0xkWnZxIK0+iIQ8Tj3OYiZc7wytkctXZcO57
-	jAH2sq+Il0xsRewyVLemCoCIh7Vvq23P5ZqxCeViScBEE7i4o5H1MJaF15hYLuGLHKjWh4ccREH
-	VY2FBBwt00Gu9nldQC0osIPM7q9c4Dt+IoES7
-X-Gm-Gg: ASbGncvS6eWSUd1gbPVL8uifvYd5L+Zyajpwz5nmsONwrOth1LbE4zliNjti63bhTyX
-	gwcBJ3FPvO6f5o4M7f1zrrHMsUKxjBDnN
-X-Google-Smtp-Source: AGHT+IECZqE5fteXnXhm7vixb8m+w0qLbQKrsGI/zvrm/ngsLjVg0yiBWZCYVxgp2gk/sSWgzMEK1Gc+/gr5yc7ZgNU=
-X-Received: by 2002:a05:6e02:3710:b0:3a5:e506:162b with SMTP id
- e9e14a558f8ab-3a80933eb2emr1476435ab.11.1733382601610; Wed, 04 Dec 2024
- 23:10:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uer+sSHL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733384706; x=1764920706;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=97hThSuPVWzZ9pr/MZVasityF+cJQ+fGhUX+4hk4DEY=;
+  b=Uer+sSHLN2W1Myq8e45jkGKnc03OXx2bup6E+8K8oS2g1ysxvWCnflqz
+   NiwzfKFMpiihbbY7yRl2QgvUkxM02dXGGJCCVe30uTZ5I4nEq1bHrWH7d
+   VJPQjZIjJhBSGf1jKyaPsUTNe6kislkUWMuGpQu/qQ9osbhzWq8MNtnze
+   1aVcR2RhXLAfrWMkr15TgUreObw1tvRMleF6zO/n6WK0PEzlXvuu4tY9O
+   QXuY43XJBVkDJppyiLR/8U+vpEJPbU2lVwtZkGY7XHIJL3D/Bf0uTJvuj
+   pCvQmI0RLyfoDmiPiSZKM2u52cenz0iFk2fnIAmF7UA+KKxTvsTjGSU1G
+   Q==;
+X-CSE-ConnectionGUID: uqfQmuKuTzGN72UaTXthYQ==
+X-CSE-MsgGUID: 5NKcSkzWQo69AKprp09ZfQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="51215323"
+X-IronPort-AV: E=Sophos;i="6.12,209,1728975600"; 
+   d="scan'208";a="51215323"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 23:45:05 -0800
+X-CSE-ConnectionGUID: 0TcOPYQKR5W0L5QBkVXADA==
+X-CSE-MsgGUID: jX684qnHQEKA759rclA1NA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,209,1728975600"; 
+   d="scan'208";a="98466092"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 23:45:00 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tJ6Xf-0000000411f-28rf;
+	Thu, 05 Dec 2024 09:44:55 +0200
+Date: Thu, 5 Dec 2024 09:44:55 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v1 1/1] pref/x86/rapl: Remove unused function
+Message-ID: <Z1FZ97Jxngcxyb7N@smile.fi.intel.com>
+References: <20241202182815.639124-1-andriy.shevchenko@linux.intel.com>
+ <CAP-5=fXbjvsmuKrNe1uAOYLV0k5U9OBuHV+drSs_5JyUuXQ9SQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241205022305.158202-1-irogers@google.com> <Z1E-WHWSPAezVF4f@google.com>
- <CAP-5=fVPw5wJtVR0fxU-7drXg34vNrBsEzurfcLLvC+wFPMAAg@mail.gmail.com>
-In-Reply-To: <CAP-5=fVPw5wJtVR0fxU-7drXg34vNrBsEzurfcLLvC+wFPMAAg@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 4 Dec 2024 23:09:50 -0800
-Message-ID: <CAP-5=fV6s0=X-+8i2+1O_ZKERTL8+S9S-nyZC8rJPNU_nQpbyg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf test expr: Fix system_tsc_freq for only x86
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	akanksha@linux.ibm.com, maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, 
-	kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXbjvsmuKrNe1uAOYLV0k5U9OBuHV+drSs_5JyUuXQ9SQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Dec 4, 2024 at 10:33=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Wed, Dec 4, 2024 at 9:47=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
+On Wed, Dec 04, 2024 at 03:56:03PM -0800, Ian Rogers wrote:
+> On Mon, Dec 2, 2024 at 10:28 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > >
-> > Hi Ian,
+> > get_rapl_pmu_cpumask() is unused, it prevents kernel builds
+> > with clang, `make W=1` and CONFIG_WERROR=y:
 > >
-> > On Wed, Dec 04, 2024 at 06:23:05PM -0800, Ian Rogers wrote:
-> > > The refactoring of tool PMU events to have a PMU then adding the expr
-> > > literals to the tool PMU made it so that the literal system_tsc_freq
-> > > was only supported on x86. Update the test expectations to match -
-> > > namely the parsing is x86 specific and only yields a non-zero value o=
-n
-> > > Intel.
-> > >
-> > > Fixes: 609aa2667f67 ("perf tool_pmu: Switch to standard pmu functions=
- and json descriptions")
-> > > Reported-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> > > Closes: https://lore.kernel.org/linux-perf-users/20241022140156.98854=
--1-atrajeev@linux.vnet.ibm.com/
-> > > Co-developed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> >   arch/x86/events/rapl.c:165:37: error: unused function 'get_rapl_pmu_cpumask' [-Werror,-Wunused-function]
 > >
-> > It failed on my VM.
+> > Fix this by removing unused function.
 > >
-> >   root@arm64-vm:~/build# ./perf test -v 7
-> >   --- start ---
-> >   test child forked, pid 2096
-> >   Using CPUID 0x00000000000f0510
-> >   division by zero
-> >   syntax error
-> >   Unrecognized literal '#system_tsc_freq'FAILED tests/expr.c:253 #syste=
-m_tsc_freq =3D=3D 0
-> >   ---- end(-1) ----
-> >     7: Simple expression parser                                        =
-: FAILED!
->
-> I'll need to check this. The test is looking for parsing failures, so
-> it's confusing to me expr__parse is returning 0. I was testing on x86
-> but disabling the literal in the tool PMU.
+> > See also commit 6863f5643dd7 ("kbuild: allow Clang to find unused static
+> > inline functions for W=1 build").
+> >
+> > Fixes: 9e9af8bbb5f9 ("perf/x86/rapl: Clean up cpumask and hotplug")
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> nit: s/pref/perf/ in the commit message title
 
-Hmm.. perhaps you had a similar issue to me and that b4 silently
-failed as git user.email/user.name weren't configured? When I test on
-a raspberry pi 5:
-```
-$ uname -a
-Linux raspberrypi 6.6.51+rpt-rpi-2712 #1 SMP PREEMPT Debian
-1:6.6.51-1+rpt3 (2024-10-08) aarch64 GNU/Linux
-$ git log -1 --oneline
-94733a0e50fd (HEAD -> ptn-expr-test) perf test expr: Fix
-system_tsc_freq for only x86
-$ /tmp/perf/perf test expr -v
-Couldn't bump rlimit(MEMLOCK), failures may take place when creating
-BPF maps, etc
-  7: Simple expression parser                                        : Ok
-```
+Thanks, the analogue change is already in the perf tree. Just hadn't made the
+rc1.
 
-Thanks,
-Ian
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
