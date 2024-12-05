@@ -1,195 +1,148 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C08221461;
-	Thu,  5 Dec 2024 18:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A94E221461;
+	Thu,  5 Dec 2024 18:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733423037; cv=none; b=W7iX+118kWBaU3GaGJgXjQZDATSMIMolzWk5gkKhBDuHTLf05ZWRIMYrlm0FRwyDVR9oJrnBQ2jbdG0fDG4YkR2km1kFKw/Q4gqjOt/hCFfEupcTs4MS87j1C+uR3pNWlqbbfAEbspmXQwiS0PLXzzQa2Y2moY5pI6o0CnWVczw=
+	t=1733424256; cv=none; b=C5ESc6y1aZ49VFqCTCkz7VAhcPBnQeqmWQ21nW5wr76YxS0zAD0+2felkNToVPrAqJ42YzD9QBTRZjQCZQ9Wo/ATQ8cu3amsFXoNZHbRHk0yNP82oyrieJxdLvDRwkdIsn9q8Zn+T8J5tXLVdRYcwhREbnQ/b//msTGZyKXxfls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733423037; c=relaxed/simple;
-	bh=7MIvOXpQRwWgNGJBKXXgJfGLLuz2ziCk05E11zLyLBA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hrv8I46QoPl3EdhCEiFbW6uZwbXTVYUMaX/DYEBNt9rNe8muHsJBomKcSBm2D1KpqDgIlPUiaUowfiESge4aJCiscGaCigBUvbYiq3EzIPqYTnHwm29hp8DJtVla+50tVLac6Sa9QtxrI1nqxmWDEwljO1GmrLMPTaUrCuwavoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGGfBYP5; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733424256; c=relaxed/simple;
+	bh=rhyRws2RvyWwmmlvymd4NvI6X/QYo5gUNBZJxdn0cr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jKEiypyrSfySoN5M+1qnBal+jlpNrWmc2Pwd/S2lXKoBLmB8i0diDEfgAw7eQXsCTEFNd0jcyRwbd9hToj0y6yP6DtoT7i0+6xywMKI/WehZMpcrTG5ylJ+0HO/ZtuCV6YBMRRQLN3Nm0DunlpT6wimY+iTKgwJWL5ofwK38NV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=mu08w1mU; arc=none smtp.client-ip=148.163.143.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGGfBYP5"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7fd21e4aa2eso324271a12.2;
-        Thu, 05 Dec 2024 10:23:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733423034; x=1734027834; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V6vYqS8Uyw6PERcNHV3WQMwZ3bQaTaY3sWZxipW8AOs=;
-        b=TGGfBYP5XfX8+1k2/Dr4qCUPxFwSyPE135RbvnWci8NIz1vfDVMb3qC1stw6SE8X2x
-         F9KwuxJMu3dCxDg+GvecYHhpQfrXGMpUyuvVR5McDeGR75viYHA9ABq0JVu7u1Avwwkz
-         jBBDfITOD2E2kDDvKwan4X5AeCIT/AvnnEiqlvmk8NWmco6BYGCykLNUMjew3rb1y/Y5
-         yHminiU4I5ct/j3FCaVpeBdsT3tgMyuLnWq0PprZdDikI90ldkYbDNHnxYt3NE2Yi7Uq
-         GIpSuWO0g2rFY3N0XavuLp2hMrb/lgIGua7IiiykR7bDp+v3ObzXYfFwWoTfXvslP4J3
-         EjPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733423034; x=1734027834;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V6vYqS8Uyw6PERcNHV3WQMwZ3bQaTaY3sWZxipW8AOs=;
-        b=ZH+cRIgU5LdaLrJlEIivSPBZ3Km1mT10nmHCs4Cj6DtKRzzjXu6W7pKbHIc1bGH1KH
-         tG0TjaIhCvncMF5Se9TE94+u4+qaycQ5nxKvtutSSB74I3BjUIPuWaWmNkO0ylhuO7Tq
-         wVBVZ0MyTLepzTry363oNuS6KZMNHMiptCmJXWofwtWUGXH2Y0byMCPTFMzUv66Pe7j/
-         0lQz2K8VbL2qxim9ydVkK/FFV5rK/tZvvPwDIXZOaJLx1Iy8Ma7DwRsvJKKzUiaCFuMv
-         oSrnot6hMXdL6PSvGVu87AM75lA/IL/HssOEwEcDcoJCU6Jyw1ES4vCyBoU1L7DOmqE7
-         JoSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNn53yWwQVwkzj4NSHLi9hOdHQNJUjdfJdbmMz+7yviFaOgXBZEM+LdtlupLDfOdYsGoGuE3pRDJUZyj5IAy+nq5AV@vger.kernel.org, AJvYcCV9Akgat/pMTCmq5ppiEc0vur7HyGDpE7nV7DyW7Yq0n8hRvzvpC4pyvqGfgmXK/+qLXUc=@vger.kernel.org, AJvYcCWAqgPLI1J1Orgn1dGAHtpO6gMKYDILF834iKW5tbQsQaTyCU5eXV85ZV/K4UHGWWuofifSAHNAD6S4dso2@vger.kernel.org, AJvYcCWwPYnY/PU6JWm7SDxv2R/FtKUUyngykjY+tEnTPREjWbWVZLA8Tyfqo9eXx1Rcv4P5aVEBVG0S8Ltkl+I8ZVCljg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXdQLYfJoJ75Flao2sBQs8qVbNgCOL7xuDOBbhvAnO0lZEiH4S
-	61xOBJvR7kqcPjyJ+apNrmURJDkka2Yt+wPn/XqSsZ42xZZrcyqOM47FTgQgM25vN9xYeGaKhoi
-	DZfn9Kr2z8mlXTGwyKAxzxMBhBV4=
-X-Gm-Gg: ASbGncttcis3LjJljm9AEBfABXWUGcnx8BPpr77xgdiOEjoKKRhTShk7bubf9+G/VHn
-	RT6PdOJ/zG9OYU9ojXNkLoy2W6VKoCLd8F66McLo0UwmmZTA=
-X-Google-Smtp-Source: AGHT+IG02vwYnNGUnRdTtdLBBLBjtBWHIEK/29fwZCfadVa3BPrhggnUUP4hwsu2IUQT6N/MVYql0aoQrx3C2F9Pu5o=
-X-Received: by 2002:a17:90b:520b:b0:2ee:b6c5:1def with SMTP id
- 98e67ed59e1d1-2ef6955f713mr269512a91.8.1733423034015; Thu, 05 Dec 2024
- 10:23:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="mu08w1mU"
+Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B5HhmRj017980;
+	Thu, 5 Dec 2024 18:02:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pps0720; bh=YE
+	A+a4VeBZqyZzyZ1JUkJu7XAw0Og0L1SG6vVFY10fs=; b=mu08w1mUyuJkNJWyGG
+	Shvl51kHQQF0MBCZQWbvqFaOwZv8FxyVGkSrws3SSLWO6dYMsegazV/H/WEnE7C1
+	IYXIVtRR5rtkVut3eFXFCJucyTPFC3g+ikNFqbVLr+iGotU3RUrg/y4F7677wLmU
+	gR8blKV4HlKsKTplQQmQj+zgBHKPfNi1v2B5NUjqsqEm4sORLbMnD9QXzcb0qWUj
+	pbQhwtyamoFFLrzYM3w2L/8UJT2KLs2utk3Jia6Nwo5KQSZl3DgRL5ONRNs1I1Tz
+	BIzx2BqUIh0KInDoO9yli1gK9mIu2AEbgyKYELluUZFJ6PIS7NAg4Q1d5R1yUioH
+	Kr/g==
+Received: from p1lg14880.it.hpe.com ([16.230.97.201])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 43bgtmr67p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Dec 2024 18:02:08 +0000 (GMT)
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 18E19801610;
+	Thu,  5 Dec 2024 18:02:08 +0000 (UTC)
+Received: from DESKTOP-V47QP3F. (unknown [16.231.227.39])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id E4AAA801092;
+	Thu,  5 Dec 2024 18:02:05 +0000 (UTC)
+Date: Thu, 5 Dec 2024 12:02:05 -0600
+From: Kyle Meyer <kyle.meyer@hpe.com>
+To: Ian Rogers <irogers@google.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: Increase MAX_NR_CPUS to 4096
+Message-ID: <Z1HqnTwKNvWucrEd@hpe.com>
+References: <20241205165118.153148-1-kyle.meyer@hpe.com>
+ <CAP-5=fXu2Ye22EAOp8jNEaVHmmNSx4gJXNL521ViH5x6w-bLBQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241022073141.3291245-1-liaochang1@huawei.com> <CAEf4BzY-0Eu27jyT_s2kRO1UuUPOkE9_SRrBOqu2gJfmxsv+3A@mail.gmail.com>
-In-Reply-To: <CAEf4BzY-0Eu27jyT_s2kRO1UuUPOkE9_SRrBOqu2gJfmxsv+3A@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 5 Dec 2024 10:23:42 -0800
-Message-ID: <CAEf4BzaRzHFs-gyC5FGsbh4EX4=-QP4_i7A5ts++-J0JPaOb1g@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] uprobes: Improve scalability by reducing the
- contention on siglock
-To: Liao Chang <liaochang1@huawei.com>
-Cc: mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXu2Ye22EAOp8jNEaVHmmNSx4gJXNL521ViH5x6w-bLBQ@mail.gmail.com>
+X-Proofpoint-GUID: xjQA8USmAoiHaT-vXbatMwMapcI6ijBd
+X-Proofpoint-ORIG-GUID: xjQA8USmAoiHaT-vXbatMwMapcI6ijBd
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-05_02,2024-10-04_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 malwarescore=0 adultscore=0 lowpriorityscore=0 spamscore=0
+ mlxscore=0 clxscore=1011 phishscore=0 bulkscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412050131
 
-On Tue, Nov 5, 2024 at 6:07=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Tue, Oct 22, 2024 at 12:42=E2=80=AFAM Liao Chang <liaochang1@huawei.co=
-m> wrote:
+On Thu, Dec 05, 2024 at 09:36:07AM -0800, Ian Rogers wrote:
+> On Thu, Dec 5, 2024 at 9:01 AM Kyle Meyer <kyle.meyer@hpe.com> wrote:
 > >
-> > The profiling result of BPF selftest on ARM64 platform reveals the
-> > significant contention on the current->sighand->siglock is the
-> > scalability bottleneck. The reason is also very straightforward that al=
-l
-> > producer threads of benchmark have to contend the spinlock mentioned to
-> > resume the TIF_SIGPENDING bit in thread_info that might be removed in
-> > uprobe_deny_signal().
+> > Systems have surpassed 2048 CPUs. Increase MAX_NR_CPUS to 4096.
 > >
-> > The contention on current->sighand->siglock is unnecessary, this series
-> > remove them thoroughly. I've use the script developed by Andrii in [1]
-> > to run benchmark. The CPU used was Kunpeng916 (Hi1616), 4 NUMA nodes,
-> > 64 cores@2.4GHz running the kernel on next tree + the optimization in
-> > [2] for get_xol_insn_slot().
+> > Bitmaps declared with MAX_NR_CPUS bits will increase from 256B to 512B,
+> > and cpus_runtime will increase from 81960B to 163880B.
 > >
-> > before-opt
-> > ----------
-> > uprobe-nop      ( 1 cpus):    0.907 =C2=B1 0.003M/s  (  0.907M/s/cpu)
-> > uprobe-nop      ( 2 cpus):    1.676 =C2=B1 0.008M/s  (  0.838M/s/cpu)
-> > uprobe-nop      ( 4 cpus):    3.210 =C2=B1 0.003M/s  (  0.802M/s/cpu)
-> > uprobe-nop      ( 8 cpus):    4.457 =C2=B1 0.003M/s  (  0.557M/s/cpu)
-> > uprobe-nop      (16 cpus):    3.724 =C2=B1 0.011M/s  (  0.233M/s/cpu)
-> > uprobe-nop      (32 cpus):    2.761 =C2=B1 0.003M/s  (  0.086M/s/cpu)
-> > uprobe-nop      (64 cpus):    1.293 =C2=B1 0.015M/s  (  0.020M/s/cpu)
+> > Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+> 
+> This is very interesting, thanks Kyle! Just noting, having the same
+> #define in many places is clearly error prone and there are other
+> redefinitions of this value:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/bpf_skel/kwork_top.bpf.c?h=perf-tools-next#n21
+> 
+> I wonder I can refactor `tools/lib/perf/cpumap.c` to get rid of that
+> constant as it is only used when parsing from a file/string.
+> 
+> Could the kwork developers perhaps look at their many uses? The other
+> uses in the tool may be removable too.
+> 
+> Wrt this change, perhaps bump
+> `tools/perf/util/bpf_skel/kwork_top.bpf.c` too and then we merge that
+> while trying to remove other uses.
+
+Sure, that sounds good to me. I'll send a second version.
+
+Thanks,
+Kyle Meyer
+
+> > ---
 > >
-> > uprobe-push     ( 1 cpus):    0.883 =C2=B1 0.001M/s  (  0.883M/s/cpu)
-> > uprobe-push     ( 2 cpus):    1.642 =C2=B1 0.005M/s  (  0.821M/s/cpu)
-> > uprobe-push     ( 4 cpus):    3.086 =C2=B1 0.002M/s  (  0.771M/s/cpu)
-> > uprobe-push     ( 8 cpus):    3.390 =C2=B1 0.003M/s  (  0.424M/s/cpu)
-> > uprobe-push     (16 cpus):    2.652 =C2=B1 0.005M/s  (  0.166M/s/cpu)
-> > uprobe-push     (32 cpus):    2.713 =C2=B1 0.005M/s  (  0.085M/s/cpu)
-> > uprobe-push     (64 cpus):    1.313 =C2=B1 0.009M/s  (  0.021M/s/cpu)
+> > Tested on a 32 socket Sapphire Rapids system with 3840 CPUs.
 > >
-> > uprobe-ret      ( 1 cpus):    1.774 =C2=B1 0.000M/s  (  1.774M/s/cpu)
-> > uprobe-ret      ( 2 cpus):    3.350 =C2=B1 0.001M/s  (  1.675M/s/cpu)
-> > uprobe-ret      ( 4 cpus):    6.604 =C2=B1 0.000M/s  (  1.651M/s/cpu)
-> > uprobe-ret      ( 8 cpus):    6.706 =C2=B1 0.005M/s  (  0.838M/s/cpu)
-> > uprobe-ret      (16 cpus):    5.231 =C2=B1 0.001M/s  (  0.327M/s/cpu)
-> > uprobe-ret      (32 cpus):    5.743 =C2=B1 0.003M/s  (  0.179M/s/cpu)
-> > uprobe-ret      (64 cpus):    4.726 =C2=B1 0.016M/s  (  0.074M/s/cpu)
+> >  tools/lib/perf/include/internal/cpumap.h | 2 +-
+> >  tools/perf/perf.h                        | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
 > >
-> > after-opt
-> > ---------
-> > uprobe-nop      ( 1 cpus):    0.985 =C2=B1 0.002M/s  (  0.985M/s/cpu)
-> > uprobe-nop      ( 2 cpus):    1.773 =C2=B1 0.005M/s  (  0.887M/s/cpu)
-> > uprobe-nop      ( 4 cpus):    3.304 =C2=B1 0.001M/s  (  0.826M/s/cpu)
-> > uprobe-nop      ( 8 cpus):    5.328 =C2=B1 0.002M/s  (  0.666M/s/cpu)
-> > uprobe-nop      (16 cpus):    6.475 =C2=B1 0.002M/s  (  0.405M/s/cpu)
-> > uprobe-nop      (32 cpus):    4.831 =C2=B1 0.082M/s  (  0.151M/s/cpu)
-> > uprobe-nop      (64 cpus):    2.564 =C2=B1 0.053M/s  (  0.040M/s/cpu)
+> > diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
+> > index 49649eb51ce4..3cf28522004e 100644
+> > --- a/tools/lib/perf/include/internal/cpumap.h
+> > +++ b/tools/lib/perf/include/internal/cpumap.h
+> > @@ -22,7 +22,7 @@ DECLARE_RC_STRUCT(perf_cpu_map) {
+> >  };
 > >
-> > uprobe-push     ( 1 cpus):    0.964 =C2=B1 0.001M/s  (  0.964M/s/cpu)
-> > uprobe-push     ( 2 cpus):    1.766 =C2=B1 0.002M/s  (  0.883M/s/cpu)
-> > uprobe-push     ( 4 cpus):    3.290 =C2=B1 0.009M/s  (  0.823M/s/cpu)
-> > uprobe-push     ( 8 cpus):    4.670 =C2=B1 0.002M/s  (  0.584M/s/cpu)
-> > uprobe-push     (16 cpus):    5.197 =C2=B1 0.004M/s  (  0.325M/s/cpu)
-> > uprobe-push     (32 cpus):    5.068 =C2=B1 0.161M/s  (  0.158M/s/cpu)
-> > uprobe-push     (64 cpus):    2.605 =C2=B1 0.026M/s  (  0.041M/s/cpu)
+> >  #ifndef MAX_NR_CPUS
+> > -#define MAX_NR_CPUS    2048
+> > +#define MAX_NR_CPUS    4096
+> >  #endif
 > >
-> > uprobe-ret      ( 1 cpus):    1.833 =C2=B1 0.001M/s  (  1.833M/s/cpu)
-> > uprobe-ret      ( 2 cpus):    3.384 =C2=B1 0.003M/s  (  1.692M/s/cpu)
-> > uprobe-ret      ( 4 cpus):    6.677 =C2=B1 0.004M/s  (  1.669M/s/cpu)
-> > uprobe-ret      ( 8 cpus):    6.854 =C2=B1 0.005M/s  (  0.857M/s/cpu)
-> > uprobe-ret      (16 cpus):    6.508 =C2=B1 0.006M/s  (  0.407M/s/cpu)
-> > uprobe-ret      (32 cpus):    5.793 =C2=B1 0.009M/s  (  0.181M/s/cpu)
-> > uprobe-ret      (64 cpus):    4.743 =C2=B1 0.016M/s  (  0.074M/s/cpu)
+> >  struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus);
+> > diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+> > index c004dd4e65a3..3cb40965549f 100644
+> > --- a/tools/perf/perf.h
+> > +++ b/tools/perf/perf.h
+> > @@ -3,7 +3,7 @@
+> >  #define _PERF_PERF_H
 > >
-> > Above benchmark results demonstrates a obivious improvement in the
-> > scalability of trig-uprobe-nop and trig-uprobe-push, the peak throughpu=
-t
-> > of which are from 4.5M/s to 6.4M/s and 3.3M/s to 5.1M/s individually.
+> >  #ifndef MAX_NR_CPUS
+> > -#define MAX_NR_CPUS                    2048
+> > +#define MAX_NR_CPUS                    4096
+> >  #endif
 > >
-> > v4->v3:
-> > 1. Rebase v3 [3] to the lateset tip/perf/core.
-> > 2. Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 3. Acked-by: Oleg Nesterov <oleg@redhat.com>
-> >
-> > v3->v2:
-> > Renaming the flag in [2/2], s/deny_signal/signal_denied/g.
-> >
-> > v2->v1:
-> > Oleg pointed out the _DENY_SIGNAL will be replaced by _ACK upon the
-> > completion of singlestep which leads to handle_singlestep() has no
-> > chance to restore the removed TIF_SIGPENDING [3] and some case in
-> > question. So this revision proposes to use a flag in uprobe_task to
-> > track the denied TIF_SIGPENDING instead of new UPROBE_SSTEP state.
-> >
-> > [1] https://lore.kernel.org/all/20240731214256.3588718-1-andrii@kernel.=
-org
-> > [2] https://lore.kernel.org/all/20240727094405.1362496-1-liaochang1@hua=
-wei.com
-> > [3] https://lore.kernel.org/all/20240815014629.2685155-1-liaochang1@hua=
-wei.com/
-> >
-> > Liao Chang (2):
-> >   uprobes: Remove redundant spinlock in uprobe_deny_signal()
-> >   uprobes: Remove the spinlock within handle_singlestep()
-> >
-> >  include/linux/uprobes.h |  1 +
-> >  kernel/events/uprobes.c | 10 +++++-----
-> >  2 files changed, 6 insertions(+), 5 deletions(-)
-> >
+> >  enum perf_affinity {
 > > --
-> > 2.34.1
+> > 2.47.1
 > >
->
-> This patch set has been ready for a long while, can we please apply it
-> to perf/core as well? Thank you!
-
-Liao,
-
-This patch set doesn't apply cleanly to perf/core anymore, can you
-please rebase one more time and resend? Thanks!
