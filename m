@@ -1,144 +1,137 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27B2224B0F;
-	Thu,  5 Dec 2024 19:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7921BC9E6;
+	Thu,  5 Dec 2024 21:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733426688; cv=none; b=E6176EEotUks7rQ0VNs3D9WpvcAFW4+RP9RFKkOukjDvkb9o/ECXycG8digBypwnRfoXhk4I/LfefnDGIZOqLcZPc2NOf4pRr8ysQm4Ph50e/TMucChryqeQXEP6oGOKJNZPObeXxtMAQb1FZd+Vya/hyV5QzqvbIDZ9rdd6vFA=
+	t=1733432885; cv=none; b=SR2NXdbTkXZqfGyOhKKHPgYCbysWL2cEjjhTmgd+nBc7XpzCZKGc1Mi45Tx3Vybnt3vQUcBjTheoX7AT41FCAEWTXACKeHgAz+ZNUXAZsIi8n96rX4h2FM/sKJWKrTJdjj7ZVMFMs4kjMjvUQvZkcecKQn/gNjRYTWSgySi3Usc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733426688; c=relaxed/simple;
-	bh=l+RkMx/mt1XUfqn55LLYS4opSUma14BDXGFBSwLsUBQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CwivJ/QK0glYAJOjr2yCF2Mic9z3DGW0kAR7kPV+y4X1jQPJzFQ1mdL/uuBZiWp4R6ianhfCiiBZxt7aFwGrTbEPCcxjkAixO3Wt0mJ4ZGu1pZzyjQZERkoP4YzKIv74rJUFfsJCZlEJEMMw/LW2cbLAF2D2H8qJ18v4mel+LNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LCavIfJc; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733432885; c=relaxed/simple;
+	bh=tCUOmXVTpbr3ET1gv/NLvDF/lIGUV2cRX+9cn2TabeA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dTi+XOlOzwXR5HSUY+xJOZ3bQoXkrKHxfoC091YWdGKOHesVCoZdDrkKGu0kQdxGu5XmCl7dbAvvX94OyEygdWwiNXR6E/f+C6Ihc9oD6MBAk246oipPULe7FvuwlVTJwbclRW489/R9DfuFERq6IvjFZT7ce8kI94iOcUCHRik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=S3QFfenO; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCavIfJc"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7258ed68cedso1291474b3a.1;
-        Thu, 05 Dec 2024 11:24:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733426685; x=1734031485; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mRE/vWdS/sITcvJvFYmfWqYzfyCATymJHAuKTqgkqno=;
-        b=LCavIfJca+fIq+GpC7K//992yhxVmnS8wYIq9sqY59zbpo5CC+NPXzFEG44UPk1uEB
-         ZbwIpinAixqaF9w+ddZ1F2XahrkyrTZ9Rw2AiPp2xwVvKhkNKNWVWd4MBCYOQalnPZMG
-         E3zP/R8aPAwu+XnuiAH9jSwwxW8BPMXTERIlAgfMHgD6cuMhljRZrm7yUpPZmrFO6w7J
-         TuBQ5+ds2L2rFYK8xnI0aZMMmmNXWyY/+dLN2Xz/COx8jD49LxewJqIb9vtQIgPRbSce
-         l3L++uIDaemKbd4wjWWLSH1N4oX9l4qMqyXYGmffyqllJYz6kFL+nt0fgiYyGPmVnT9j
-         nadw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733426685; x=1734031485;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mRE/vWdS/sITcvJvFYmfWqYzfyCATymJHAuKTqgkqno=;
-        b=EfB3Qp/OsLV4PFJnKIHU3JJ5pMGQHY4nxP9CyW+BCcwwX2yJK82V2OkpJTikFq0SL2
-         nsPARfzAEVw7Y17EywVoYu8lBi+jph0KzJ0MBmfnnHDUBZ59s5bGYhATdT0TiO0Upkzm
-         ODwmy0DeGpigZ3jc1WU/zlHv8IphL3buniau+8iysgh5+24J6mGNiY8b4Dh6K75RkWVj
-         DVszeojK39UrN63axJn2isUhLnUyXbhVhrtaVx7wBP8CDkmfE//Mu4pEcnJROMF7SZmY
-         yWRj3Q/KVTugvVpjjiU1kuvYXcpJ82+CTs8sp0/by8D2Ul2CzgDqmnuo2AGRqfkuh5Du
-         mL+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVqJO4BpyCmvxwaEYxZhxft88OVqF21IOuc24WlIIlK+imWDc5LF26Gz/cBMW6XS9YWJ+k=@vger.kernel.org, AJvYcCWToTTAcf5OZ6HRW0Qt+TcnMarDDnzD4R+y9TTI43pw5T4R0/HbKAQ52BmTdS/pvikNxoW8ymGIBVmvAs4g@vger.kernel.org, AJvYcCXXwnyWArx6GksqawCLq4kDE7qOpwl5b74RzUYcbfJ8QozWnt/DbolxYjreqimmxxZMkCfnTSYUDqbcHI0A7FHiHg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyddBcR9j1o8YMenhn7w0uIaPfEjl9+Q/FtPVZBNYTU6OhPfns4
-	N1h+a6c4qNMBgqWavzXwNP5xqKKNwL++09gqfxhh/it05qAum+4=
-X-Gm-Gg: ASbGnctN3DntD5HgbXIeVVshHtOu7AekcTSd3ot17GMaadKzP5BjsuspgVxxLCb852d
-	32iA0FVkFECKMYe5PmiS+u8TjLoVs1D8l+7R04lxxPnX23QK3aDs7mXGAPUoMY8zHtoeQmI+iyw
-	C5uEwEUeKpKFSI4tU9WxGPNclxmijyj6GiDBw5JBeswzyoHdzkm8DoC22QxBC2dqsb5scxN/H+k
-	GJkeljCWNYOkfh5jKpTLVlqGE6MeDYrSPbicuy9vPFe9kQCFA==
-X-Google-Smtp-Source: AGHT+IEzCAH8rLJ0RnV8vk4K1vZD/GPkH620EnuCRv2+8uXr1ofdsYqkiy80sCazZwd6Gwc+d/9pvw==
-X-Received: by 2002:a05:6a00:189c:b0:725:8c57:5969 with SMTP id d2e1a72fcca58-725b8178a9emr589258b3a.19.1733426684801;
-        Thu, 05 Dec 2024 11:24:44 -0800 (PST)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-725a29c5719sm1648755b3a.27.2024.12.05.11.24.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2024 11:24:44 -0800 (PST)
-Date: Thu, 5 Dec 2024 11:24:43 -0800
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Quentin Monnet <qmo@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Nick Terrell <terrelln@fb.com>, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bpftool: Fix failure with static linkage
-Message-ID: <Z1H9-9xrWM4FBbNI@mini-arch>
-References: <20241204213059.2792453-1-leo.yan@arm.com>
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="S3QFfenO"
+Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
+	by mx0a-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B5KSAa0025348;
+	Thu, 5 Dec 2024 21:07:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pps0720; bh=rQ/Sooz6gQjqta7E+P2ay5WmTnEqQNkXQ73GB
+	cBPjcU=; b=S3QFfenO2tlW7ZbEZkaqhSt3MZOD0F9/mprdGC1Z7ISf48jHEZvDe
+	/PTk05CPmiWYSLu/R1u4edDPWqCMQ51vNeujFJNWmYWjqq+SSDzm8OIuy9lFxEmS
+	mCftDd477jwgWr9/vpo2ThlPrsPOR68iu3teCnJBbRcde8rb3reGSss+c46iQLTX
+	hap+1vZJSjS7BobLP3NKKWpmnoKUOaMExsifU/oSTbKpHkcTyEQrsuNNCVlPWjmK
+	Sx2EoULH5ISFtEVdKsBxKfFmKf71JiVrH0eYWsqjOuMKPxK1Y88ot8mJqnv7OxRa
+	lEQnHF84oKOD1Sf0HlPXt4hxDxzjQxb3g==
+Received: from p1lg14881.it.hpe.com ([16.230.97.202])
+	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 43bk82gaf0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Dec 2024 21:07:44 +0000 (GMT)
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id 41186806B72;
+	Thu,  5 Dec 2024 21:07:42 +0000 (UTC)
+Received: from cat.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
+	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 8448D80EA31;
+	Thu,  5 Dec 2024 21:07:41 +0000 (UTC)
+Received: by cat.eag.rdlabs.hpecorp.net (Postfix, from userid 48777)
+	id 80903B4907; Thu,  5 Dec 2024 15:07:40 -0600 (CST)
+From: Kyle Meyer <kyle.meyer@hpe.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Kyle Meyer <kyle.meyer@hpe.com>
+Subject: [PATCH v2] perf: Increase MAX_NR_CPUS to 4096
+Date: Thu,  5 Dec 2024 15:04:44 -0600
+Message-Id: <20241205210444.84894-1-kyle.meyer@hpe.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241204213059.2792453-1-leo.yan@arm.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: JiPcFjzpInRQd5PvI-m2IeWzsdkhMYbw
+X-Proofpoint-GUID: JiPcFjzpInRQd5PvI-m2IeWzsdkhMYbw
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-05_02,2024-10-04_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ mlxscore=0 phishscore=0 clxscore=1011 suspectscore=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412050157
 
-On 12/04, Leo Yan wrote:
-> When building perf with static linkage:
-> 
->   make O=/build LDFLAGS="-static" -C tools/perf VF=1 DEBUG=1
->   ...
->   LINK    /build/util/bpf_skel/.tmp/bootstrap/bpftool
->   /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libelf.a(elf_compress.o): in function `__libelf_compress':
->   (.text+0x113): undefined reference to `ZSTD_createCCtx'
->   /usr/bin/ld: (.text+0x2a9): undefined reference to `ZSTD_compressStream2'
->   /usr/bin/ld: (.text+0x2b4): undefined reference to `ZSTD_isError'
->   /usr/bin/ld: (.text+0x2db): undefined reference to `ZSTD_freeCCtx'
->   /usr/bin/ld: (.text+0x5a0): undefined reference to `ZSTD_compressStream2'
->   /usr/bin/ld: (.text+0x5ab): undefined reference to `ZSTD_isError'
->   /usr/bin/ld: (.text+0x6b9): undefined reference to `ZSTD_freeCCtx'
->   /usr/bin/ld: (.text+0x835): undefined reference to `ZSTD_freeCCtx'
->   /usr/bin/ld: (.text+0x86f): undefined reference to `ZSTD_freeCCtx'
->   /usr/bin/ld: (.text+0x91b): undefined reference to `ZSTD_freeCCtx'
->   /usr/bin/ld: (.text+0xa12): undefined reference to `ZSTD_freeCCtx'
->   /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libelf.a(elf_compress.o): in function `__libelf_decompress':
->   (.text+0xbfc): undefined reference to `ZSTD_decompress'
->   /usr/bin/ld: (.text+0xc04): undefined reference to `ZSTD_isError'
->   /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libelf.a(elf_compress.o): in function `__libelf_decompress_elf':
->   (.text+0xd45): undefined reference to `ZSTD_decompress'
->   /usr/bin/ld: (.text+0xd4d): undefined reference to `ZSTD_isError'
->   collect2: error: ld returned 1 exit status
-> 
-> Building bpftool with static linkage also fails with the same errors:
-> 
->   make O=/build -C tools/bpf/bpftool/ V=1
-> 
-> To fix the issue, explicitly link libzstd.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  tools/bpf/bpftool/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-> index a4263dfb5e03..65b2671941e0 100644
-> --- a/tools/bpf/bpftool/Makefile
-> +++ b/tools/bpf/bpftool/Makefile
-> @@ -130,8 +130,8 @@ include $(FEATURES_DUMP)
->  endif
->  endif
->  
-> -LIBS = $(LIBBPF) -lelf -lz
-> -LIBS_BOOTSTRAP = $(LIBBPF_BOOTSTRAP) -lelf -lz
-> +LIBS = $(LIBBPF) -lelf -lz -lzstd
-> +LIBS_BOOTSTRAP = $(LIBBPF_BOOTSTRAP) -lelf -lz -lzstd
->  ifeq ($(feature-libcap), 1)
->  CFLAGS += -DUSE_LIBCAP
->  LIBS += -lcap
-> -- 
-> 2.34.1
-> 
+Systems have surpassed 2048 CPUs. Increase MAX_NR_CPUS to 4096.
 
-I'm not sure we 'offically' support -static builds, but this seems to be
-ok. Tangential: maybe time to switch to pkg-config for bpftool? IIRC,
-there is some flag to query for static lib dependencies... Will leave
-it up to Quentin.
+Bitmaps declared with MAX_NR_CPUS bits will increase from 256B to 512B,
+cpus_runtime will increase from 81960B to 163880B, and max_entries will
+increase from 8192B to 16384B.
+
+Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+---
+
+v1 -> v2:
+  * Increase MAX_NR_CPUS in tools/perf/util/bpf_skel/kwork_top.bpf.c, as
+    suggested by Ian Rogers.
+  * https://lore.kernel.org/all/20241205165118.153148-1-kyle.meyer@hpe.com/
+
+ tools/lib/perf/include/internal/cpumap.h | 2 +-
+ tools/perf/perf.h                        | 2 +-
+ tools/perf/util/bpf_skel/kwork_top.bpf.c | 4 +++-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
+index 49649eb51ce4..3cf28522004e 100644
+--- a/tools/lib/perf/include/internal/cpumap.h
++++ b/tools/lib/perf/include/internal/cpumap.h
+@@ -22,7 +22,7 @@ DECLARE_RC_STRUCT(perf_cpu_map) {
+ };
+ 
+ #ifndef MAX_NR_CPUS
+-#define MAX_NR_CPUS	2048
++#define MAX_NR_CPUS	4096
+ #endif
+ 
+ struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus);
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index c004dd4e65a3..3cb40965549f 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -3,7 +3,7 @@
+ #define _PERF_PERF_H
+ 
+ #ifndef MAX_NR_CPUS
+-#define MAX_NR_CPUS			2048
++#define MAX_NR_CPUS			4096
+ #endif
+ 
+ enum perf_affinity {
+diff --git a/tools/perf/util/bpf_skel/kwork_top.bpf.c b/tools/perf/util/bpf_skel/kwork_top.bpf.c
+index 594da91965a2..73e32e063030 100644
+--- a/tools/perf/util/bpf_skel/kwork_top.bpf.c
++++ b/tools/perf/util/bpf_skel/kwork_top.bpf.c
+@@ -18,7 +18,9 @@ enum kwork_class_type {
+ };
+ 
+ #define MAX_ENTRIES     102400
+-#define MAX_NR_CPUS     2048
++#ifndef MAX_NR_CPUS
++#define MAX_NR_CPUS     4096
++#endif
+ #define PF_KTHREAD      0x00200000
+ #define MAX_COMMAND_LEN 16
+ 
+-- 
+2.35.3
+
