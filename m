@@ -1,58 +1,38 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7921BC9E6;
-	Thu,  5 Dec 2024 21:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F113728FD
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Dec 2024 00:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733432885; cv=none; b=SR2NXdbTkXZqfGyOhKKHPgYCbysWL2cEjjhTmgd+nBc7XpzCZKGc1Mi45Tx3Vybnt3vQUcBjTheoX7AT41FCAEWTXACKeHgAz+ZNUXAZsIi8n96rX4h2FM/sKJWKrTJdjj7ZVMFMs4kjMjvUQvZkcecKQn/gNjRYTWSgySi3Usc=
+	t=1733444078; cv=none; b=qSSbQD6keKSpbsnXHx8v4BMa3i4yNwwebZy4xxM7l+7/EZNIrJV8Khz6SiQi35/s9D5ofHAI4t3AfBvB4XP5y8l/ZFMf1tV76nlQbOrKnt0iUOikALMm+b/uod4dgcOHQjEO6p+ShsHOg1QSVXAoipvCtdxhCEU1dYl3W4U7sVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733432885; c=relaxed/simple;
-	bh=tCUOmXVTpbr3ET1gv/NLvDF/lIGUV2cRX+9cn2TabeA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dTi+XOlOzwXR5HSUY+xJOZ3bQoXkrKHxfoC091YWdGKOHesVCoZdDrkKGu0kQdxGu5XmCl7dbAvvX94OyEygdWwiNXR6E/f+C6Ihc9oD6MBAk246oipPULe7FvuwlVTJwbclRW489/R9DfuFERq6IvjFZT7ce8kI94iOcUCHRik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=S3QFfenO; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1733444078; c=relaxed/simple;
+	bh=fXX8jxovVy8UhuUNkpLzZi+RefrdRHaoNOfPZ9eC5eA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LqbSOBIHJ1T15AweFPkxqv9WwAGgvFo0udBwN68MRS0IO8zA30jPGZRO9NzNbjRGDzUsBVHripOuqewIy23ebcSIoFflKM76+xpgUVnmwgbRIdQ//OPsrbBnIkT5PmkSTCdO7AcZ7FQGMqNWq+lftA8v0d0XYI5ugeIWrfLUhKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bI8dDfQL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="S3QFfenO"
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B5KSAa0025348;
-	Thu, 5 Dec 2024 21:07:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pps0720; bh=rQ/Sooz6gQjqta7E+P2ay5WmTnEqQNkXQ73GB
-	cBPjcU=; b=S3QFfenO2tlW7ZbEZkaqhSt3MZOD0F9/mprdGC1Z7ISf48jHEZvDe
-	/PTk05CPmiWYSLu/R1u4edDPWqCMQ51vNeujFJNWmYWjqq+SSDzm8OIuy9lFxEmS
-	mCftDd477jwgWr9/vpo2ThlPrsPOR68iu3teCnJBbRcde8rb3reGSss+c46iQLTX
-	hap+1vZJSjS7BobLP3NKKWpmnoKUOaMExsifU/oSTbKpHkcTyEQrsuNNCVlPWjmK
-	Sx2EoULH5ISFtEVdKsBxKfFmKf71JiVrH0eYWsqjOuMKPxK1Y88ot8mJqnv7OxRa
-	lEQnHF84oKOD1Sf0HlPXt4hxDxzjQxb3g==
-Received: from p1lg14881.it.hpe.com ([16.230.97.202])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 43bk82gaf0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Dec 2024 21:07:44 +0000 (GMT)
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id 41186806B72;
-	Thu,  5 Dec 2024 21:07:42 +0000 (UTC)
-Received: from cat.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 8448D80EA31;
-	Thu,  5 Dec 2024 21:07:41 +0000 (UTC)
-Received: by cat.eag.rdlabs.hpecorp.net (Postfix, from userid 48777)
-	id 80903B4907; Thu,  5 Dec 2024 15:07:40 -0600 (CST)
-From: Kyle Meyer <kyle.meyer@hpe.com>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kyle Meyer <kyle.meyer@hpe.com>
-Subject: [PATCH v2] perf: Increase MAX_NR_CPUS to 4096
-Date: Thu,  5 Dec 2024 15:04:44 -0600
-Message-Id: <20241205210444.84894-1-kyle.meyer@hpe.com>
-X-Mailer: git-send-email 2.35.3
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bI8dDfQL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6273DC4CED1;
+	Fri,  6 Dec 2024 00:14:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733444077;
+	bh=fXX8jxovVy8UhuUNkpLzZi+RefrdRHaoNOfPZ9eC5eA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bI8dDfQL9eOZA6DCy4bZ1QLcXYmZrRG0XCFIOwEbSDiveWxIROLyKjPUvKur7ahWu
+	 QxB5CxL14kQI0mge5viwdM057lCmGPVOZ1gunPYhaQxtXYpzTUT1wQF4ldLXw+xK8x
+	 891/z3onJfnXs4Mh2J67XM9FpuKBJRT5EnpDx1IGZsQQ7LQbDcFDFjpgpzmkICrDLH
+	 yVOQ6a2U5JAQTDzZ0Gb2Ie273ahDg+k0bPL6v/+8W2cpHRlpOxkseesH9q1AGRAkrC
+	 07XOkClRrUx84ZHYLZuJRiFUlPVAB59TphMFfUg0t6Pxrpnsx96IqUxfq/BXQFjq9x
+	 DTKii9bBfLafA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Howard Chu <howardchu95@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+Subject: [BUG] perf trace: failed to load -E2BIG
+Date: Thu,  5 Dec 2024 16:14:36 -0800
+Message-ID: <20241206001436.1947528-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,78 +40,71 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: JiPcFjzpInRQd5PvI-m2IeWzsdkhMYbw
-X-Proofpoint-GUID: JiPcFjzpInRQd5PvI-m2IeWzsdkhMYbw
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-05_02,2024-10-04_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- mlxscore=0 phishscore=0 clxscore=1011 suspectscore=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412050157
 
-Systems have surpassed 2048 CPUs. Increase MAX_NR_CPUS to 4096.
+Hello,
 
-Bitmaps declared with MAX_NR_CPUS bits will increase from 256B to 512B,
-cpus_runtime will increase from 81960B to 163880B, and max_entries will
-increase from 8192B to 16384B.
+I'm seeing the following error in the current perf-tools[-next].
+Do you see you the same?
 
-Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
----
+  $ sudo ./perf trace -a sleep 1
+  libbpf: prog 'sys_enter': BPF program load failed: -E2BIG
+  libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
+  0: R1=ctx() R10=fp0
+  ; int sys_enter(struct syscall_enter_args *args) @ augmented_raw_syscalls.bpf.c:527
+  0: (bf) r7 = r1                       ; R1=ctx() R7_w=ctx()
+  ; return bpf_get_current_pid_tgid(); @ augmented_raw_syscalls.bpf.c:423
+  1: (85) call bpf_get_current_pid_tgid#14      ; R0_w=scalar()
+  2: (63) *(u32 *)(r10 -4) = r0         ; R0_w=scalar() R10=fp0 fp-8=mmmm????
+  3: (bf) r2 = r10                      ; R2_w=fp0 R10=fp0
+  ;  @ augmented_raw_syscalls.bpf.c:0
+  4: (07) r2 += -4                      ; R2_w=fp-4
+  ; return bpf_map_lookup_elem(pids, &pid) != NULL; @ augmented_raw_syscalls.bpf.c:428
+  ...
+  140: (79) r7 = *(u64 *)(r10 -48)      ; R7_w=ctx() R10=fp0 fp-48=ctx()
+  141: (79) r0 = *(u64 *)(r10 -56)
+  BPF program is too large. Processed 1000001 insn
+  processed 1000001 insns (limit 1000000) max_states_per_insn 28 total_states 37670 peak_states 330 mark_read 16
+  -- END PROG LOAD LOG --
+  libbpf: prog 'sys_enter': failed to load: -E2BIG
+  libbpf: failed to load object 'augmented_raw_syscalls_bpf'
+  libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -E2BIG
+  libbpf: map '__augmented_syscalls__': can't use BPF map without FD (was it created?)
+  libbpf: map '__augmented_syscalls__': can't use BPF map without FD (was it created?)
+  libbpf: map '__augmented_syscalls__': can't use BPF map without FD (was it created?)
+  libbpf: map '__augmented_syscalls__': can't use BPF map without FD (was it created?)
+  Not enough memory to run!
 
-v1 -> v2:
-  * Increase MAX_NR_CPUS in tools/perf/util/bpf_skel/kwork_top.bpf.c, as
-    suggested by Ian Rogers.
-  * https://lore.kernel.org/all/20241205165118.153148-1-kyle.meyer@hpe.com/
+The git bisect found this but I couldn't find anything suspicious.
 
- tools/lib/perf/include/internal/cpumap.h | 2 +-
- tools/perf/perf.h                        | 2 +-
- tools/perf/util/bpf_skel/kwork_top.bpf.c | 4 +++-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+395d38419f1853decab84acc16176b3fa5c96690 is the first bad commit
+commit 395d38419f1853decab84acc16176b3fa5c96690
+Author: Howard Chu <howardchu95@gmail.com>
+Date:   Thu Oct 10 19:14:02 2024 -0700
 
-diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
-index 49649eb51ce4..3cf28522004e 100644
---- a/tools/lib/perf/include/internal/cpumap.h
-+++ b/tools/lib/perf/include/internal/cpumap.h
-@@ -22,7 +22,7 @@ DECLARE_RC_STRUCT(perf_cpu_map) {
- };
- 
- #ifndef MAX_NR_CPUS
--#define MAX_NR_CPUS	2048
-+#define MAX_NR_CPUS	4096
- #endif
- 
- struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus);
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index c004dd4e65a3..3cb40965549f 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -3,7 +3,7 @@
- #define _PERF_PERF_H
- 
- #ifndef MAX_NR_CPUS
--#define MAX_NR_CPUS			2048
-+#define MAX_NR_CPUS			4096
- #endif
- 
- enum perf_affinity {
-diff --git a/tools/perf/util/bpf_skel/kwork_top.bpf.c b/tools/perf/util/bpf_skel/kwork_top.bpf.c
-index 594da91965a2..73e32e063030 100644
---- a/tools/perf/util/bpf_skel/kwork_top.bpf.c
-+++ b/tools/perf/util/bpf_skel/kwork_top.bpf.c
-@@ -18,7 +18,9 @@ enum kwork_class_type {
- };
- 
- #define MAX_ENTRIES     102400
--#define MAX_NR_CPUS     2048
-+#ifndef MAX_NR_CPUS
-+#define MAX_NR_CPUS     4096
-+#endif
- #define PF_KTHREAD      0x00200000
- #define MAX_COMMAND_LEN 16
- 
--- 
-2.35.3
+    perf trace augmented_raw_syscalls: Add more checks to pass the verifier
+    
+    Add some more checks to pass the verifier in more kernels.
+    
+    Signed-off-by: Howard Chu <howardchu95@gmail.com>
+    Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Alan Maguire <alan.maguire@oracle.com>
+    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    Cc: Ian Rogers <irogers@google.com>
+    Cc: Ingo Molnar <mingo@redhat.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Kan Liang <kan.liang@linux.intel.com>
+    Cc: Mark Rutland <mark.rutland@arm.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Link: https://lore.kernel.org/r/20241011021403.4089793-3-howardchu95@gmail.com
+    [ Reduced the patch removing things that can be done later ]
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+ .../perf/util/bpf_skel/augmented_raw_syscalls.bpf.c  | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+bisect found first bad commit
+
+Thanks,
+Namhyung
 
