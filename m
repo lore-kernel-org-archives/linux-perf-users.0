@@ -1,250 +1,256 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C4A13BAC6;
-	Fri,  6 Dec 2024 02:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733451024; cv=fail; b=fbLoOJlFcvBtitGxAYFKVu/16MFnkrvRo+kYzNCsngDfu7Dep1T32zgmSWdPo4GWmcGwXOSropmMCEjBIVPU3i8y+XH+Mi3km8fTXKzDyGV9bWfKGBsqNg+LI01AuIyycaI/TYfUnJOYHTo9mkbztfadgVZ++HlR2AY42bu3f5o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733451024; c=relaxed/simple;
-	bh=fj6tILbkFmiKrIvKcZIgTSG0ArTKcGpu1sU9Uc8f/aw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZX2Xrgw9gmLSeIARyg1TPOo/Y10HEnioyLAc9HGYmD7t6j7v1wq/mfzUXjzMC77pouWwekqzsu5mvQ1AU2v7K11EGrvbr3nTosAlK6sI5z02SL4q4DxZ+pjDBAKERcA7zf729QLKHN/fKeEdr2MlGa7bGEn/ozEoDTp+kJSn0qw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YTJhMeeR; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B1812FB0A
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Dec 2024 03:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733455545; cv=none; b=U6lOjG097hdBlCXkKD6b+WuEKUr5vnEgD0UXJwsAE2OgsepRBrcgnEHJ0YYtzgaaVMf+fl94ZtTCwChKBlGuoyDrl0I4v4egaW1ifgfQjdIQHJvw9GtLpI++NQpHvxSxohHe2EFfLD42KsCzwLTb/wSnIjx2Iw4BFkx0eicuxmo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733455545; c=relaxed/simple;
+	bh=UIwZ2F5iro57qftdeiVmKApmuIYElsbzdKtYtNYZUXg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CFodbyMMVjKWC0qr/Qe2qCqp9zcVd2WzsL4wovXOAz0oMsoE1lUaWkc1HIeIZ0eSHj2pVtucv15UwrWqqx16qSdGltguLbxmuSVbW9wLxMx4QSmfNB6ZKv21Yp+oQb0/X2vBGHpK3UU/UHJJ3OLeuPGISAbehD3Ux4E2lfxj8HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Raxf2T/k; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YTJhMeeR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733451023; x=1764987023;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=fj6tILbkFmiKrIvKcZIgTSG0ArTKcGpu1sU9Uc8f/aw=;
-  b=YTJhMeeRZPDYXhgf8ORS9+Z4GT5VL9KoP4m969Fn9FoAy97Jbo1nr8GE
-   4G1xtA6ACgAZUToKDo2+RQSocc1833xJgVfg5CJA6eu6ULVhMg1sMQ3ke
-   GcxTc+DDtU7OFh1VjmFegF9l3aEHlkxUNPUc3rkMfbV8XQAD975GSGbhv
-   LqxWpJEAv9yxH0wD55E3IARbl4hCK4GKe3zBGPd/lQKD46IMeHb3GvHcU
-   KyA0lj4o2ZNv36TbnmzAh2o9SBwSFdbqOZGG7en823d2N3yOI3xMLDg6i
-   XR1Yr4bgVzhV8RvpUxBqYa/D5CYXOIrLnDvkdnPYbbFwvTRckJwMIMhu5
-   g==;
-X-CSE-ConnectionGUID: qEvLJ//yQWWjeWdKVKk5TQ==
-X-CSE-MsgGUID: MJS6uqNRRLeguzYUpJQHOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11277"; a="33847598"
-X-IronPort-AV: E=Sophos;i="6.12,212,1728975600"; 
-   d="scan'208";a="33847598"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 18:10:22 -0800
-X-CSE-ConnectionGUID: wYyKwrhKQXqG3X8qI+1L3Q==
-X-CSE-MsgGUID: JX+LNutUSemXj/N7hFjjBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="99310290"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Dec 2024 18:10:23 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 5 Dec 2024 18:10:21 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 5 Dec 2024 18:10:21 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.49) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 5 Dec 2024 18:10:21 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nU19Tndw255qiDf1euqQ23oVd46bh+VCrImS/aLz0sEMpVi1kTuxCE5Vk0OHk5qA3hKkr/g0HzSUEJAYxxQ7HbnkqdboqbdeiXuxWV8MDJkadDmL5rhTUzlaOOCqBfgvgRpxKmbs7FQG3trf8vD9TGOLJvRrLGtZ8foiUU+i0pazWFrqmgaUs1PVKPnkFfs/r9ZqssIdzeEdtfD0BPjl66faPaxhCH57gZcKzgL4EA62dvFpXgIl3WqK+MyhG96xuN+I4/TqMXGntQvmJi0l/BfjOToRcWWG+DCoXamNslcewACAazUQn7BGKFQVDZLMoY/s+uQUv8SwxktWn3Woew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GJjnPewc4wAoDqkEUXKa0kymKmqd5w50X2yWVybtEN8=;
- b=hJWa79LOlMJ5xuUaO21ybuWvfXh8rpto/G3o60oyCSvWSjN81SBn45qU/LFZLrQHXleqwgSpQoPErF29P+lXN97q/O0nMVbwmQM+NWFyFDAcqFvm1/XzOUPB6Yt+uu9UIgUZkgkVu4nB2Rh+p6IQlhK/IBK74PgzqIliFDGwZvaVYD5EST885dTElKhx2WUQJCIdu6xrlEd0r2M8tacpuU6tQ/z2SM8PQciAi8ivW+2yS22QLyoWPaP/WhfuDc80wW1ZK0kqvedc9+hVmVyMq4SL1KJiDAasIGdEN1+DyuTOWXi75a9pKE79KO2j4et9XZqOFhQ4xeU5Xpw9nEitjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by SN7PR11MB7604.namprd11.prod.outlook.com (2603:10b6:806:343::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.11; Fri, 6 Dec
- 2024 02:10:18 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%6]) with mapi id 15.20.8230.010; Fri, 6 Dec 2024
- 02:10:18 +0000
-Date: Fri, 6 Dec 2024 10:10:07 +0800
-From: Oliver Sang <oliver.sang@intel.com>
-To: Namhyung Kim <namhyung@kernel.org>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark
-	<james.clark@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Kan Liang
-	<kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, Atish Patra
-	<atishp@atishpatra.org>, Mingwei Zhang <mizhang@google.com>, Kajol Jain
-	<kjain@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>, Palmer Dabbelt
-	<palmer@rivosinc.com>, <linux-perf-users@vger.kernel.org>,
-	<oliver.sang@intel.com>
-Subject: Re: [linus:master] [perf tools]  af954f76ee:
- perf-sanity-tests.Test_data_symbol.fail
-Message-ID: <Z1Jc/wZk5kSd+2Qc@xsang-OptiPlex-9020>
-References: <202411301431.799e5531-lkp@intel.com>
- <Z04ZUHaGdsBapIEL@google.com>
- <Z1BhfpYWpUQ0p+qR@xsang-OptiPlex-9020>
- <Z1DNJpDzCIBFrIZT@google.com>
- <Z1DV0lN8qHSysX7f@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Z1DV0lN8qHSysX7f@google.com>
-X-ClientProxiedBy: SG2PR01CA0185.apcprd01.prod.exchangelabs.com
- (2603:1096:4:189::19) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Raxf2T/k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733455541;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5ub3CBm+ARKvN52RKC1y+FOhT8x6wq6Pz/QR1gLGlmM=;
+	b=Raxf2T/kfe5jv/ZYYoA/odd5x2UO2grngsH7iJfkD1jOXK0u/yFmSE6xWzWx4wwOF5pDCY
+	1KqTyGAnEuIrKv/kmld0kl4mzLq5BgS/PELyCpNaftvWhNJMH0cBRhqVONsQML3eiJp4Qw
+	qcavXFScpf143iJcFU5BQllqGN+nRHs=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-30-SyZqk99QOvexdMZ-gplSyQ-1; Thu, 05 Dec 2024 22:25:39 -0500
+X-MC-Unique: SyZqk99QOvexdMZ-gplSyQ-1
+X-Mimecast-MFC-AGG-ID: SyZqk99QOvexdMZ-gplSyQ
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-21575ca0754so24051785ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Dec 2024 19:25:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733455538; x=1734060338;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5ub3CBm+ARKvN52RKC1y+FOhT8x6wq6Pz/QR1gLGlmM=;
+        b=U5YM5xuE+zPmuLErwqiZUcmCgM0rCoUxI+Nuru5rUGRb0xLbvZQ3tYomqfXvXv5hyo
+         PhYVmNx34Z7J2RBRC4tm9L3t5leoBoxQUre4l6QGJs65IhzDeC0XFi0vI9G9WDTV46uw
+         H7N0H9ufRnp/qxhX/hQypIhKmK2oqoNnDJs3Oi09i36obrjX2IEvy178QJV+l4gDtj2n
+         SsZwmtOGzeLgcenDjhzVO9P8chxoQhQVTD2tO0sTjofDeIP9exAArGRXWB1ejLwNtDjv
+         iQkUd6wZ0d7qLGhJ3Rqew2OhLg6ySSH9TWjOXSQG22VtC2yEoUVe/5bsufwwHNsisu+n
+         g8EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVslkJTzWGVyoqH2DdFgVC+kGzg2lCPHNGqRLv2tbo95aHVYIrs/SsI5CGr9a63LbKbnmdOXu/DLYrjOfnsFMLI@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1wjEVNRXl3jQKdLH+IcFAVmrQEOwzq1dpkuOi6pIdbwbmzoqu
+	MVU4uTULG/LxWlu/lKg7VPNcBJXIJTQaaCTzGVXxnCavQiQOhtCVRtAgRM1QjGKjLjR53levYj0
+	gqm0PDwQ8dX+J7Rwb+LG8LslsCwQrdq2wS4W/SWAM+iBJRa5Tdgkc1Ige7AllPWGWgj1S6nIseA
+	DCgjnj2ve9mWXWASoueykP5V8THSQYcd5WC39Np2Z4Ag==
+X-Gm-Gg: ASbGncsex2K92VlN1Lul3o9fkUrCBp01fTOsw/2/VIXsOTfFxq2puNvaP1d5ppXXXzZ
+	2dwNS0Q79ZYe434EZWWpkWl3Qy6jN2yrV
+X-Received: by 2002:a17:902:e5c2:b0:215:94eb:adb6 with SMTP id d9443c01a7336-21614df13bcmr18294845ad.40.1733455538300;
+        Thu, 05 Dec 2024 19:25:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFiYrBXQUNFqhbE55OV0KdX6ql8a4fPJgEuA8t4s5BWqmnsk6BiY0PiiOwfupv3hIZpQhEcsPkIwfeXtLu+Sos=
+X-Received: by 2002:a17:902:e5c2:b0:215:94eb:adb6 with SMTP id
+ d9443c01a7336-21614df13bcmr18294285ad.40.1733455537591; Thu, 05 Dec 2024
+ 19:25:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|SN7PR11MB7604:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9fc2aa16-1513-4ac6-3b42-08dd159b2195
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?7Sm9KA10VNHsPRIhqqXoSrtZV4Qq7F9nBrjGqfgKBQJp7X3YhAZo7qES39V5?=
- =?us-ascii?Q?Cn/RD5AkhkKMFvTPI4UjKh2wEA601ybe1aZheXm2Nmd1xslHkgQp3V2H4AXS?=
- =?us-ascii?Q?wjpCULrMQbzqMkz/JK/8mSJHgDQUb8jToB9huVmc0LlG7Nh9DHAid1CavN0N?=
- =?us-ascii?Q?hdHHb40Gea1Vi8GTxSh2oyJH7z/VDcid/BTSSBq+41MFK7dhE6Ne2ssIyqVp?=
- =?us-ascii?Q?eB0rxOIBD23vOMqyErGrXmfwd0r6mIxzEdmfCL4bpkkLsLauOJu3P5cmOWb4?=
- =?us-ascii?Q?rcaTkWw7ySQm2HQXt7ScrlbKGmT3W35rMVk5a2eQ7xJAD8GcL6BQZD34qPLC?=
- =?us-ascii?Q?82DO6IugvyLXC21ce4K/Zmva2DhY8sP9KN479Hhmrxn7FY0o5/cQ2SMDO5zI?=
- =?us-ascii?Q?xRBx/TBCXxqdSoBhhStay8//QHpS21cipNMAft7CNwndajj+MFXGWfQld5Nw?=
- =?us-ascii?Q?7RZDmgGNgPSsvNUiXxrTtGiiMB0+vL5gdeZc3JjPTceWxS2B4tO3otmqEOY4?=
- =?us-ascii?Q?Z0jC6uTNfXZJWIGJOQhGu55dV+plLq72i8+J/BD5gKf8ivPVcxPHBMqrql6L?=
- =?us-ascii?Q?028L3Crt+OJe7OoC1Op/v7tAEO2688lcYkt9gtXwRhBENPfa1K+5SrtKNFoL?=
- =?us-ascii?Q?SZ7gHi7a7jrCxwts5afw5eEmJLB/8cjlwy2o3tLVCxDgBvbGjTdWOLm74VW3?=
- =?us-ascii?Q?+FhdczOZvLo6m+pLE+pbli+mijjL0QA8YO9XxC8JztRjmTzVmYJkY/ndP2Uh?=
- =?us-ascii?Q?lNSgrSqiTW6PG/FCHi4KzUbYFql9PZ8G4olEI8UXil1mWiiz6gHQEIRIE0lI?=
- =?us-ascii?Q?B1J3yr05P9nTQg6vnzWn7xPV3+uZd7+NeVmoKumtwMYp2Rra+dUZYE9QTzcF?=
- =?us-ascii?Q?80axKN1ZRkA2aHZrcVx2Xq2UJ5TupHYHkJeWqVDCXTZE99XtUqtte8G2aCSa?=
- =?us-ascii?Q?xBn9uZBe6N5rS1Hkbi0HueXe8aklf6KyUexOzA7L4+r0XrtIW7Q4FEp5PZT/?=
- =?us-ascii?Q?Z/pguZTUHSx2tIe3cKJIOZoMDZZqYp9A5vCjzhLJ/VYVvKIUOtM9c4by4SKl?=
- =?us-ascii?Q?SZdHEiiAtVm9/B7GmI217nmuCexuJQCyw7Nmm6OcpQbWM4gVs1r970FYeZ1x?=
- =?us-ascii?Q?68702lG38IY3bqLfqLJXq0jUJRv013h4ow7dczNyBT9rZ7SZSwlBTpzthRlu?=
- =?us-ascii?Q?2X3dlIPy7BdtKGNObSZjXRZjZbktE0DF10VANpsbzlCQwIntuMqj536M2hve?=
- =?us-ascii?Q?V/xf1ovMoJ3Zb0c6JlX8kpOoaaDD8ueQsZfejpT+yEOnCXc9DKvfLOgwbf/C?=
- =?us-ascii?Q?nPaBBdTPYnQnRVzsFZbOt7Q6DDblG45GbnxxG7x1szDzAw=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?cmmTT4C84gTwWuwa7OtYtTimi/q4HWndnmW/FFr1MSDmPc1J26y+m1K0mKp5?=
- =?us-ascii?Q?pBE+nhgxZTd4Esi1lawQF7B6BNWGN4jlb/32HB6uxyFRNeW38kZmcKf/d4tR?=
- =?us-ascii?Q?5GyYOhN6LO3gGUcnrFQT7k4DZiOUpeRxrFCpm32jXYq8BwQCeakIPpnFWea+?=
- =?us-ascii?Q?YAiAyct9ykHSckXGnP1rDZI6tBVvuYms1/uSa9cPPqdaoXQKRsAulGhQED0t?=
- =?us-ascii?Q?YsfQxWDLoz+WWlOsOyZkrVt0hZ36gGGcrCliKPC5OUyNbguIIUv6RQcr3bcp?=
- =?us-ascii?Q?NDxNDDZ5xEmHa+Jx3zx44N+4lNvJAoDhj1OCNdBaKflvrwd5utBwvJ2XlbVG?=
- =?us-ascii?Q?YVhj/B3NG+HsMkWqih4rVSaacsc2heRkO4/clQepH456Ib27NEO/FYYAvV9P?=
- =?us-ascii?Q?ewxinTe00KTXQBLoWYpuvqyaNxDBLo4D1P+gyEvWQ8HNk7Vr5j29IewWKJX1?=
- =?us-ascii?Q?XgyGIhJQLsOc+tyM5/m8ylyBJXPEeLA4H9HygmP/UCStmcphD6s/UaU/Rxt6?=
- =?us-ascii?Q?k0/QTd3En7EXBxdJ5rpJ2YFk3EeTcICwrGB1zqdYm06di1d/3EZWUcCDjyhA?=
- =?us-ascii?Q?E1nwZC0X21nFhzk8WcXy+0cLr9ziz5S6idLmGx8rWMFcHmECxXlHDEM8891f?=
- =?us-ascii?Q?3t/o98euo7j2gboH+4dSF0BNlDY9wIvV4x6mtYqs6UdDZ9hXVO5NfektePc4?=
- =?us-ascii?Q?5D/CCqAXXceThJHmxrzed3ZedZkAt9TJPkYNUL+NS8/kmTJCeimEbQakkp44?=
- =?us-ascii?Q?8WAoF0ZYdZ+732d2TF9W/rL0zeCUFYuwx12DwXnPN//PVevJ4WIRf+QG1+SF?=
- =?us-ascii?Q?in3CtcaiYVx7GOlf4hqL5CxWR5pL77yNK02XERvP5cJDArMGvhlLRzcRS3v5?=
- =?us-ascii?Q?F9ekMqkGEE8tK0wbZ3ev0agHjOUUTucYQUzeg/HhPOhOk2+haK3NrmQn8Ago?=
- =?us-ascii?Q?269wkpDYrwyuJAn8JDf6/B72nvBcv/NU10FDhlWQveD2V4791Y9VBtj1wuba?=
- =?us-ascii?Q?HNSCBUj1ByaM4crhXn4MAgTHbyIGNPwNWnGYlgYpHjxok+XD0QgurZ7pB28/?=
- =?us-ascii?Q?owXAQkqRhtL6T56i/LSuagQX3t81HhxN8hN837GNAyx/P1XO78SnI5Drsso2?=
- =?us-ascii?Q?ZPJIObWcLToUgLRaELp6zqW3dO9kFyr/V5yICtN+trug7/Tp0N09ATq3Ep/f?=
- =?us-ascii?Q?4hCjOJvzTVsIvNFpOMT4TdHHkSslHGnCUugNxDhXT0hQu0K2icOVIPJqwzru?=
- =?us-ascii?Q?znCsYaFgBTiDvkl7Fq6K7WJYlg9lAzEbv4gkzSvn9PnL6nHETlg7bZPUNORC?=
- =?us-ascii?Q?9ehUqv6rGVGa93SrKq/E6OjGkwzAtOYb4S3yvkeILu89iv/34W2/22TwPYcE?=
- =?us-ascii?Q?aCbT2w1NNcZG3uXa+Wut3m6EGwbiBr6qfakZzttj7aDSCMSN+b0oRjfXTqb9?=
- =?us-ascii?Q?bLakh35V3zh+TgUnWQb55jVfR/Jom8SVY8kMevtPfATAly0W4KbB5eFaG9/a?=
- =?us-ascii?Q?oxuH/5nyXJ9VmFVVpBROQ2O8ksQsfPUSGnTnCL5lyc67tCzOVfS+brL6AasT?=
- =?us-ascii?Q?xHh70kLBSI4u2wRkhEtUAQzzUVstx58YrkU57IgoYdX7VkEsfSIQ46xWEgGy?=
- =?us-ascii?Q?jQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9fc2aa16-1513-4ac6-3b42-08dd159b2195
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2024 02:10:18.5082
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sSKkM/Rg/XyY0Ljpx4vFk4Ue2CmmUR1OaM8a9obBAoc5r613zTiq/IQ/DDkBJgAxYbkIXmOcVkszbb/Saa33BA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7604
-X-OriginatorOrg: intel.com
+References: <20241206001436.1947528-1-namhyung@kernel.org> <CA+JHD90D86YC=Kn3P_B1xLamxKS9+_zOxmKxXMWyTDQGwGnNsQ@mail.gmail.com>
+ <CAM9d7ciJjat3fSFEy8PpAa2Q+1=FfkoOFW=5cneAWeS5-e_1Qw@mail.gmail.com>
+In-Reply-To: <CAM9d7ciJjat3fSFEy8PpAa2Q+1=FfkoOFW=5cneAWeS5-e_1Qw@mail.gmail.com>
+From: Qiao Zhao <qzhao@redhat.com>
+Date: Fri, 6 Dec 2024 11:25:25 +0800
+Message-ID: <CAATMXfkk4VHyrzwdKfFiRaQbgPN=-EJ5-gf3n2G6Tq=qTNdTRQ@mail.gmail.com>
+Subject: Re: [BUG] perf trace: failed to load -E2BIG
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Howard Chu <howardchu95@gmail.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-hi, Namhyung Kim,
+We hit the similar issue on our internal version since v6.11.0 and start wi=
+th
+commit 395d38419f1853decab84acc16176b3fa5c96690
+and can easy to reproduce by 'perf trace ls' and get such error log:
 
-On Wed, Dec 04, 2024 at 02:21:06PM -0800, Namhyung Kim wrote:
-> On Wed, Dec 04, 2024 at 01:44:06PM -0800, Namhyung Kim wrote:
-> [SNIP]
-> >   perf_event_attr:
-> >     type                             4 (cpu)
-> >     size                             136
-> >     config                           0x1cd (mem-loads)
-> >     { sample_period, sample_freq }   4000
-> >     sample_type                      IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT
-> >     read_format                      ID|LOST
-> >     freq                             1
-> >     precise_ip                       3
-> >     sample_id_all                    1
-> >     { bp_addr, config1 }             0x1f
-> >   ------------------------------------------------------------
-> >   sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
-> >   sys_perf_event_open failed, error -22
-> >   Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.
-> >   Error:
-> >   The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cpu/mem-loads,ldlat=30/).
-> >   "dmesg | grep -i perf" may provide additional information.
-> > 
-> > There's an issue with fallback on the inherit bit with the sample read.
-> > I'll take a look.
-> 
-> Hmm, no.  It doesn't have neight SAMPLE_READ nor inherit.  So the error
-> message was misleading.  Maybe it should be printed when it actually
-> clears the bits.
-> 
-> Anyway, I've tested with the old code and realzed that it might be due
-> to precise_ip being 3.  I expected it'd return EOPNOTSUPP for the case
-> but it seems to return EINVAL sometimes.  Then it should check it after
-> the missing features like below.  Can you please test?
+------------
+# perf trace ls
+libbpf: prog 'sys_enter': BPF program load failed: Argument list too long
+libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
+0: R1=3Dctx() R10=3Dfp0
+; int sys_enter(struct syscall_enter_args *args) @
+augmented_raw_syscalls.bpf.c:527
+0: (bf) r7 =3D r1                       ; R1=3Dctx() R7_w=3Dctx()
+; return bpf_get_current_pid_tgid(); @ augmented_raw_syscalls.bpf.c:423
+1: (85) call bpf_get_current_pid_tgid#14      ; R0_w=3Dscalar()
+2: (63) *(u32 *)(r10 -4) =3D r0         ; R0_w=3Dscalar() R10=3Dfp0 fp-8=3D=
+mmmm????
+3: (bf) r2 =3D r10                      ; R2_w=3Dfp0 R10=3Dfp0
+4: (07) r2 +=3D -4                      ; R2_w=3Dfp-4
+; return bpf_map_lookup_elem(pids, &pid) !=3D NULL; @
+augmented_raw_syscalls.bpf.c:428
+5: (18) r1 =3D 0xff45c8d9a56b1c00       ;
+R1_w=3Dmap_ptr(map=3Dpids_filtered,ks=3D4,vs=3D1)
+7: (85) call bpf_map_lookup_elem#1    ;
+R0=3Dmap_value_or_null(id=3D1,map=3Dpids_filtered,ks=3D4,vs=3D1)
+8: (bf) r1 =3D r0                       ;
+R0=3Dmap_value_or_null(id=3D1,map=3Dpids_filtered,ks=3D4,vs=3D1)
+R1_w=3Dmap_value_or_null(id=3D1,map=3Dpids_filtered,ks=3D4,vs=3D1)
+9: (b7) r0 =3D 0                        ; R0_w=3D0
+... ...
+111: (2d) if r1 > r9 goto pc-22 90:
+R0=3Dmap_value(map=3Dbeauty_payload_,ks=3D4,vs=3D24688) R1_w=3D-6 R2=3D1
+R3=3Dscalar(umin=3D1) R6=3Dmap_value(map=3Dbeauty_map_ente,ks=3D4,vs=3D24,o=
+ff=3D20)
+R7=3Dmap_value(map=3Daugmented_args_,ks=3D4,vs=3D8272,off=3D56) R8=3D6
+R9=3Dscalar(smin=3D0xffffffff80000000,smax=3Dsmax32=3D0,umin=3D2,umax=3D0xf=
+ffffffffffffff9)
+R10=3Dfp0 fp-8=3Dmmmmmmmm
+fp-16=3Dmap_value(map=3Dbeauty_payload_,ks=3D4,vs=3D24688,off=3D88)
+fp-24=3Dmap_value(map=3Daugmented_args_,ks=3D4,vs=3D8272,off=3D16)
+fp-32=3Dmap_value(map=3Daugmented_args_,ks=3D4,vs=3D8272) fp-40=3D16 fp-48=
+=3Dctx()
+fp-56=3Dmap_value(map=3Dbeauty_payload_,ks=3D4,vs=3D24688) fp-64=3D1
+fp-72=3Dmap_value(map=3Dbeauty_payload_,ks=3D4,vs=3D24688,off=3D80)
+fp-80=3Dmap_value(map=3Dbeauty_map_ente,ks=3D4,vs=3D24)
+90: (07) r7 +=3D 8
+BPF program is too large. Processed 1000001 insn
+processed 1000001 insns (limit 1000000) max_states_per_insn 28
+total_states 40283 peak_states 269 mark_read 15
+-- END PROG LOAD LOG --
+libbpf: prog 'sys_enter': failed to load: -7
+libbpf: failed to load object 'augmented_raw_syscalls_bpf'
+libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -7
+libbpf: map '__augmented_syscalls__': can't use BPF map without FD
+(was it created?)
+... ...
+................
+Like some bpf error is printed before the trace is printed.
+Hope this can help you to debug.
 
-sorry that we are refining our config these days, then broke the test for this
-case for now. we will fix it but it will delay the test for your patch.
+- Qiao
 
-fortunately, we saw Arnaldo tested patch. hope our delay won't cause too much
-inconvenience.
-
-> 
+On Fri, Dec 6, 2024 at 8:49=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Thu, Dec 5, 2024 at 4:19=E2=80=AFPM Arnaldo Carvalho de Melo
+> <arnaldo.melo@gmail.com> wrote:
+> >
+> >
+> >
+> > On Thu, Dec 5, 2024, 9:14=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+> >>
+> >> Hello,
+> >>
+> >> I'm seeing the following error in the current perf-tools[-next].
+> >> Do you see you the same?
+> >
+> > Nope, what's your environment?  Kernel version, clang, etc.
+>
+> It's a debian derivative and the kernel is v6.9.10 and clang 16.0.6.
+> But I cannot reproduce it anymore after the bisect. :(
+> Maybe it's a transient kernel bug.
+>
+> >
+> > I think we should and that I'm addition to the verifier error log.
+>
+> I think the below is the verifier log and I cut it out as it repeated.
+> It seems the verifier fell into a loop for some reason and thought
+> the program had too many instructions.
+>
 > Thanks,
 > Namhyung
-> 
-> 
-> ---8<---
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index f745723d486ba962..d22c5df1701eccc5 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2571,12 +2571,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
->  	if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
->  		goto retry_open;
->  
-> -	if (err == -EOPNOTSUPP && evsel__precise_ip_fallback(evsel))
-> -		goto retry_open;
-> -
->  	if (err == -EINVAL && evsel__detect_missing_features(evsel))
->  		goto fallback_missing_features;
->  
-> +	if (evsel__precise_ip_fallback(evsel))
-> +		goto retry_open;
-> +
->  	if (evsel__handle_error_quirks(evsel, err))
->  		goto retry_open;
->  
-> 
+>
+> >
+> >  - Arnaldo
+> >
+> >>
+> >>   $ sudo ./perf trace -a sleep 1
+> >>   libbpf: prog 'sys_enter': BPF program load failed: -E2BIG
+> >>   libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
+> >>   0: R1=3Dctx() R10=3Dfp0
+> >>   ; int sys_enter(struct syscall_enter_args *args) @ augmented_raw_sys=
+calls.bpf.c:527
+> >>   0: (bf) r7 =3D r1                       ; R1=3Dctx() R7_w=3Dctx()
+> >>   ; return bpf_get_current_pid_tgid(); @ augmented_raw_syscalls.bpf.c:=
+423
+> >>   1: (85) call bpf_get_current_pid_tgid#14      ; R0_w=3Dscalar()
+> >>   2: (63) *(u32 *)(r10 -4) =3D r0         ; R0_w=3Dscalar() R10=3Dfp0 =
+fp-8=3Dmmmm????
+> >>   3: (bf) r2 =3D r10                      ; R2_w=3Dfp0 R10=3Dfp0
+> >>   ;  @ augmented_raw_syscalls.bpf.c:0
+> >>   4: (07) r2 +=3D -4                      ; R2_w=3Dfp-4
+> >>   ; return bpf_map_lookup_elem(pids, &pid) !=3D NULL; @ augmented_raw_=
+syscalls.bpf.c:428
+> >>   ...
+> >>   140: (79) r7 =3D *(u64 *)(r10 -48)      ; R7_w=3Dctx() R10=3Dfp0 fp-=
+48=3Dctx()
+> >>   141: (79) r0 =3D *(u64 *)(r10 -56)
+> >>   BPF program is too large. Processed 1000001 insn
+> >>   processed 1000001 insns (limit 1000000) max_states_per_insn 28 total=
+_states 37670 peak_states 330 mark_read 16
+> >>   -- END PROG LOAD LOG --
+> >>   libbpf: prog 'sys_enter': failed to load: -E2BIG
+> >>   libbpf: failed to load object 'augmented_raw_syscalls_bpf'
+> >>   libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -E=
+2BIG
+> >>   libbpf: map '__augmented_syscalls__': can't use BPF map without FD (=
+was it created?)
+> >>   libbpf: map '__augmented_syscalls__': can't use BPF map without FD (=
+was it created?)
+> >>   libbpf: map '__augmented_syscalls__': can't use BPF map without FD (=
+was it created?)
+> >>   libbpf: map '__augmented_syscalls__': can't use BPF map without FD (=
+was it created?)
+> >>   Not enough memory to run!
+> >>
+> >> The git bisect found this but I couldn't find anything suspicious.
+> >>
+> >> 395d38419f1853decab84acc16176b3fa5c96690 is the first bad commit
+> >> commit 395d38419f1853decab84acc16176b3fa5c96690
+> >> Author: Howard Chu <howardchu95@gmail.com>
+> >> Date:   Thu Oct 10 19:14:02 2024 -0700
+> >>
+> >>     perf trace augmented_raw_syscalls: Add more checks to pass the ver=
+ifier
+> >>
+> >>     Add some more checks to pass the verifier in more kernels.
+> >>
+> >>     Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> >>     Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >>     Cc: Adrian Hunter <adrian.hunter@intel.com>
+> >>     Cc: Alan Maguire <alan.maguire@oracle.com>
+> >>     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> >>     Cc: Ian Rogers <irogers@google.com>
+> >>     Cc: Ingo Molnar <mingo@redhat.com>
+> >>     Cc: Jiri Olsa <jolsa@kernel.org>
+> >>     Cc: Kan Liang <kan.liang@linux.intel.com>
+> >>     Cc: Mark Rutland <mark.rutland@arm.com>
+> >>     Cc: Namhyung Kim <namhyung@kernel.org>
+> >>     Cc: Peter Zijlstra <peterz@infradead.org>
+> >>     Link: https://lore.kernel.org/r/20241011021403.4089793-3-howardchu=
+95@gmail.com
+> >>     [ Reduced the patch removing things that can be done later ]
+> >>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >>
+> >>  .../perf/util/bpf_skel/augmented_raw_syscalls.bpf.c  | 20 +++++++++++=
++++++++--
+> >>  1 file changed, 18 insertions(+), 2 deletions(-)
+> >> bisect found first bad commit
+> >>
+> >> Thanks,
+> >> Namhyung
+> >>
+>
+
