@@ -1,163 +1,149 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D4F193416
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Dec 2024 04:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1296ECF
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Dec 2024 04:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733458998; cv=none; b=Ktyn+79L0tO57ZYZlOUbSbnBEEYm2Ty7Ajkwuly9sfmsF4kmAg4p2d7pHsGA8efyl7L1AFmBgvZkC2ROU/rMzHqWchKxfoRiJO2Iw/ccMXFtMPE5FJnjOPZxqZw8oJw9IEI/45MY8Xi8fv1zQfNN4FMiZCUUlctprq1yhO4BfmY=
+	t=1733459279; cv=none; b=G3kI4cRqJg+MSWZmNUuPPsgbfYYX4erCbh8wzUqYxVtEcBap102f6Qsz6hGRoNcGFb8IJvWrlVRalj7UD6Y2wJcuDvbGISiliuTxvnSkk8KLQWwBpqsh+VsuYsU3R0kgeuA4wnjPywen7g3XVwDDlEET7mecnzr6Wz+cTFC16oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733458998; c=relaxed/simple;
-	bh=Rwf4MxwSdxTaPh5ZCszoKXNLa79X2zBBI6OkcmNS7p0=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=OqHYN3yMxPKHJaPGOlWjkL8HLLzSmJkUVjdQ4V8ph41cZtWuAePEVZrA0l+TW6S397Rvpufpvi1uTXKx5EJrjrzsWMyzraFQCJFE/teMv4zCtpBaxFCzKQK+GVjPLQgzuCMI8xjEfEGKKnLkmfpIsRzW1NWuf7Y7AtvjZoBD4TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ncfBHcGK; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1733459279; c=relaxed/simple;
+	bh=3k6Oc5FnFR/eW2ImmZ9Hl7zvpSjV1UtVQ1ntYtqXBUA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FohEMKFkdp8feIscEkhWz8XGlKY2auWURGEvjCfLrwWY2BZLgvyam6xDgVLorfAQ8Hz2+fnvorRQTe2rAZpZmIJYdWshSf22MmbxLHZ/qfSIpocQ0pZAXm9FTKkZFMIzbi3cshU6VjC4IFS/TeSTz5wg9aktAWj1Al4Zp5KWbOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=17shW8Tl; arc=none smtp.client-ip=209.85.166.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ncfBHcGK"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6ef7c67eeb8so15016847b3.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Dec 2024 20:23:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="17shW8Tl"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso50755ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Dec 2024 20:27:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733458996; x=1734063796; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QgJJ5g2aHoKUUYUSCENiai8qRmAsLGGyUUtQm2tP8Hw=;
-        b=ncfBHcGKYVCjyiKUtCFcVhkMLuyWThePrpnjnZrPjbXv08JJ1dZI8uZW2JUMR9hjxG
-         Gy0IXO5/3pQsg+5NEVKDUCURa/66rzUZd3FO2SIQIeWUr8Ne3bV8OXSGn0VbUSQW77bx
-         wnq9BRSIl/VaxeV9HFOzXn1M80M+5goY95JofgHVUUtpQC1A1EVvq8eQTdgVndSvrrC6
-         dcvaCMmtnEZvxMKbCZoggF1/MewpElUwR4ZWlru3hXNOM9Twlij41r/3q/yHV2Ij4elc
-         /Gx7YsOUenzEHBJKEQ7TGlk7hq0jWpmAggWHFGw6SKv/gWDckP3Bs00e336kyE1HUHBb
-         1Rwg==
+        d=google.com; s=20230601; t=1733459277; x=1734064077; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K94sqNNQGu1n5mRcV3yW0ipuJfinFO6kahK8zCx8uPU=;
+        b=17shW8TlmNqoe2hj+ky61Phe+hanM2ruozqS7sdXvHIe6k9CvLDP/z0evQNXSx71GR
+         iyYPX9cZS6RWv4G8GSaicAJ5AqdDmHL2m+FoN/gi1m10la6+KehvBAx3C9tKaCLSXWzD
+         WfwIHcoTyHPZ/kJORvICyG3oT+NjkScf2SrW+LEL1BBKAaBi+rnZ+PkX5XD9B5mEqJzA
+         3Ksz72Rt/AiAtys+wsd/jLNlr8c/JnjCdA+RtCvg7Szau7YQrmLHw4vBdGENVk2rjTNa
+         xXNnyuYt9hF10z9qxPhdkmIiORgiQOMyMG1r+eE0iOgMvRrftoorMSNAm1MK5ovt2kfK
+         Me1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733458996; x=1734063796;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QgJJ5g2aHoKUUYUSCENiai8qRmAsLGGyUUtQm2tP8Hw=;
-        b=O4xY5AQVesTrCgmGoJL1VA3SnpciDxwEN6ADDry4V4vRojbYRJUO+DxTKy+I/+mmPo
-         fTmp7U3KtIEqlHYQNyMl5bdAathM9bIGK5u05LncLEwlRZRjOQ2s+BbYVrj2kGXiukNb
-         MMszOrCVlMXkLaDhzkLQWhjmELgyF1SoNjK5NXYjxkgB4esemlOgKkh/gVJAQq9uWe7e
-         VJVBldsHsLlhEU2ziNuCocTEflCcPapVPkKhKngULw0ECDmcM4Dj9BinWOSyBeH7yioY
-         qz6dXf1MwcpgIQuY8+q7fnGrr9kJnf6TR5irxPbbV97ftnCjP2dDZ8s87KYYOVD5CWW/
-         VH0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUassdvPOxZmRejPhAG9LTB7EBqlOi2WYvMNQ8EWRhnq0ejGNgsfLg0Omph2lJsz0SS58PdfVxWH3xGr2stPX8D@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBXKSgpvy7E6IZ38TtSTeGsD83PgozCmzQXlOnCVx83vmZw+Jh
-	R1wamsdyRR031/JZCQ3QRBJ3e7X6vzUz5Bn3kvw+U+xcdJ6C9Znk0eOEgu8KwIyOWZZToOISrxV
-	vaNuZFQ==
-X-Google-Smtp-Source: AGHT+IEGKy7oI8KriU61gktJff/RjJQfOZ1L6irXI6BNWBEsPPfFoz+Td9buKSXKNERBGKurnjEaVnc0Uc2S
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:eb75:393:2a8c:1440])
- (user=irogers job=sendgmr) by 2002:a05:690c:4c13:b0:6e3:8562:fbf with SMTP id
- 00721157ae682-6efe3c6ae7fmr12677b3.3.1733458996171; Thu, 05 Dec 2024 20:23:16
- -0800 (PST)
-Date: Thu,  5 Dec 2024 20:23:06 -0800
-In-Reply-To: <20241206042306.1055913-1-irogers@google.com>
-Message-Id: <20241206042306.1055913-2-irogers@google.com>
+        d=1e100.net; s=20230601; t=1733459277; x=1734064077;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K94sqNNQGu1n5mRcV3yW0ipuJfinFO6kahK8zCx8uPU=;
+        b=L3fYdnDplZfF5dpavgDn4HXXdDpf9gn1SJkYoyIRGa3PxvhWeGhHOGK5mgsXJYnPft
+         4hKlIw808ybjCl1X2mrIFFXkFyWVCUmNm1DSX/OuGB62ssyt+xg+QnD1IHyDoT6pCRNS
+         MuWN42RkbehTm2B8UhUAKxBxdsaCPquGVk1TW3qIgliIvfu8+XMroThXrX/B3qGgSKqG
+         DhKpxr2lFtWFvCu+MrsWfyCGGHVAZqcwDQgGl1vfohVkSKrhGptXJpBy3rEwUu5ehiVA
+         jgrEptK6g+/90obbDcK6JOnNCyEiWGjxR1s07kbp4o8FmJtGSGQQH0G6UbMQdWUxCiQm
+         rgrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVd3TwM6uquTKuTGektCe20q4doJuNXIHVRS7geg2DSLv/MunJE/9xmt9e7AK6k4Z2W72E4HCKzZSJhWh+g00Ma@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAZT2C3s5amwLUwWhqf3f1LaeqL7LrvlDJB+GJbveuj0bX9ot9
+	eliP6tRT66VYugVDiAQND0enSVmaii2ZvtH0jRb3ek/iP6uMb4HsIpC9Za4O+tOzKZCN4SZPYMv
+	kugHJ49Wr3K/AUjW8UJu4kSIcyAI0kNRfyCuM
+X-Gm-Gg: ASbGnctiw7ewWb4b/MyWIgiGhtdUxffWzzNsjqbFZTngXTE8oHfza53ewausxb1m4ag
+	16duXrwAh+J0OIZknaJ+Cyds4+22IoDys
+X-Google-Smtp-Source: AGHT+IEUysvxIKxnOpDK6+RkAno6VytnrnDCCtKcWOqAWxmmrjUHE5m/yHUlyuk+Ny6CjqC3wGU6nT+/nWI2wOsPkUg=
+X-Received: by 2002:a05:6e02:3a13:b0:3a7:9ec6:2cff with SMTP id
+ e9e14a558f8ab-3a813bef45cmr1093555ab.25.1733459276716; Thu, 05 Dec 2024
+ 20:27:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241206042306.1055913-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Subject: [PATCH v1 2/2] perf test hwmon_pmu: Fix event file location
+MIME-Version: 1.0
+References: <20241205210444.84894-1-kyle.meyer@hpe.com>
+In-Reply-To: <20241205210444.84894-1-kyle.meyer@hpe.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Thu, 5 Dec 2024 20:27:45 -0800
+Message-ID: <CAP-5=fVQnXM2c7dH=kfDu4AzN2mQs5G1zXZoopTs7Dco+bHi+A@mail.gmail.com>
+Subject: Re: [PATCH v2] perf: Increase MAX_NR_CPUS to 4096
+To: Kyle Meyer <kyle.meyer@hpe.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The temp directory is made and a known fake hwmon PMU created within
-it. Prior to this fix the events were being incorrectly written to the
-temp directory rather than the fake PMU directory. This didn't impact
-the test as the directory fd matched the wrong location, but it
-doesn't mirror what a hwmon PMU would actually look like.
+On Thu, Dec 5, 2024 at 1:07=E2=80=AFPM Kyle Meyer <kyle.meyer@hpe.com> wrot=
+e:
+>
+> Systems have surpassed 2048 CPUs. Increase MAX_NR_CPUS to 4096.
+>
+> Bitmaps declared with MAX_NR_CPUS bits will increase from 256B to 512B,
+> cpus_runtime will increase from 81960B to 163880B, and max_entries will
+> increase from 8192B to 16384B.
+>
+> Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/hwmon_pmu.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/tests/hwmon_pmu.c b/tools/perf/tests/hwmon_pmu.c
-index f8bcee9660d5..d2b066a2b557 100644
---- a/tools/perf/tests/hwmon_pmu.c
-+++ b/tools/perf/tests/hwmon_pmu.c
-@@ -65,7 +65,7 @@ static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
- 		{ "temp2_label", "test hwmon event2\n", },
- 		{ "temp2_input", "50000\n", },
- 	};
--	int dirfd, file;
-+	int hwmon_dirfd = -1, test_dirfd = -1, file;
- 	struct perf_pmu *hwm = NULL;
- 	ssize_t len;
- 
-@@ -76,19 +76,24 @@ static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
- 		dir[0] = '\0';
- 		return NULL;
- 	}
--	dirfd = open(dir, O_DIRECTORY);
--	if (dirfd < 0) {
-+	test_dirfd = open(dir, O_PATH|O_DIRECTORY);
-+	if (test_dirfd < 0) {
- 		pr_err("Failed to open test directory \"%s\"\n", dir);
- 		goto err_out;
- 	}
- 
- 	/* Create the test hwmon directory and give it a name. */
--	if (mkdirat(dirfd, "hwmon1234", 0755) < 0) {
-+	if (mkdirat(test_dirfd, "hwmon1234", 0755) < 0) {
- 		pr_err("Failed to mkdir hwmon directory\n");
- 		goto err_out;
- 	}
--	file = openat(dirfd, "hwmon1234/name", O_WRONLY | O_CREAT, 0600);
--	if (!file) {
-+	hwmon_dirfd = openat(test_dirfd, "hwmon1234", O_DIRECTORY);
-+	if (hwmon_dirfd < 0) {
-+		pr_err("Failed to open test hwmon directory \"%s/hwmon1234\"\n", dir);
-+		goto err_out;
-+	}
-+	file = openat(hwmon_dirfd, "name", O_WRONLY | O_CREAT, 0600);
-+	if (file < 0) {
- 		pr_err("Failed to open for writing file \"name\"\n");
- 		goto err_out;
- 	}
-@@ -104,8 +109,8 @@ static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
- 	for (size_t i = 0; i < ARRAY_SIZE(test_items); i++) {
- 		const struct test_item *item = &test_items[i];
- 
--		file = openat(dirfd, item->name, O_WRONLY | O_CREAT, 0600);
--		if (!file) {
-+		file = openat(hwmon_dirfd, item->name, O_WRONLY | O_CREAT, 0600);
-+		if (file < 0) {
- 			pr_err("Failed to open for writing file \"%s\"\n", item->name);
- 			goto err_out;
- 		}
-@@ -119,16 +124,18 @@ static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
- 	}
- 
- 	/* Make the PMU reading the files created above. */
--	hwm = perf_pmus__add_test_hwmon_pmu(dirfd, "hwmon1234", test_hwmon_name);
-+	hwm = perf_pmus__add_test_hwmon_pmu(hwmon_dirfd, "hwmon1234", test_hwmon_name);
- 	if (!hwm)
- 		pr_err("Test hwmon creation failed\n");
- 
- err_out:
- 	if (!hwm) {
- 		test_pmu_put(dir, hwm);
--		if (dirfd >= 0)
--			close(dirfd);
-+		if (hwmon_dirfd >= 0)
-+			close(hwmon_dirfd);
- 	}
-+	if (test_dirfd >= 0)
-+		close(test_dirfd);
- 	return hwm;
- }
- 
--- 
-2.47.0.338.g60cca15819-goog
+Thanks,
+Ian
 
+> ---
+>
+> v1 -> v2:
+>   * Increase MAX_NR_CPUS in tools/perf/util/bpf_skel/kwork_top.bpf.c, as
+>     suggested by Ian Rogers.
+>   * https://lore.kernel.org/all/20241205165118.153148-1-kyle.meyer@hpe.co=
+m/
+>
+>  tools/lib/perf/include/internal/cpumap.h | 2 +-
+>  tools/perf/perf.h                        | 2 +-
+>  tools/perf/util/bpf_skel/kwork_top.bpf.c | 4 +++-
+>  3 files changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/in=
+clude/internal/cpumap.h
+> index 49649eb51ce4..3cf28522004e 100644
+> --- a/tools/lib/perf/include/internal/cpumap.h
+> +++ b/tools/lib/perf/include/internal/cpumap.h
+> @@ -22,7 +22,7 @@ DECLARE_RC_STRUCT(perf_cpu_map) {
+>  };
+>
+>  #ifndef MAX_NR_CPUS
+> -#define MAX_NR_CPUS    2048
+> +#define MAX_NR_CPUS    4096
+>  #endif
+>
+>  struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus);
+> diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+> index c004dd4e65a3..3cb40965549f 100644
+> --- a/tools/perf/perf.h
+> +++ b/tools/perf/perf.h
+> @@ -3,7 +3,7 @@
+>  #define _PERF_PERF_H
+>
+>  #ifndef MAX_NR_CPUS
+> -#define MAX_NR_CPUS                    2048
+> +#define MAX_NR_CPUS                    4096
+>  #endif
+>
+>  enum perf_affinity {
+> diff --git a/tools/perf/util/bpf_skel/kwork_top.bpf.c b/tools/perf/util/b=
+pf_skel/kwork_top.bpf.c
+> index 594da91965a2..73e32e063030 100644
+> --- a/tools/perf/util/bpf_skel/kwork_top.bpf.c
+> +++ b/tools/perf/util/bpf_skel/kwork_top.bpf.c
+> @@ -18,7 +18,9 @@ enum kwork_class_type {
+>  };
+>
+>  #define MAX_ENTRIES     102400
+> -#define MAX_NR_CPUS     2048
+> +#ifndef MAX_NR_CPUS
+> +#define MAX_NR_CPUS     4096
+> +#endif
+>  #define PF_KTHREAD      0x00200000
+>  #define MAX_COMMAND_LEN 16
+>
+> --
+> 2.35.3
+>
