@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD6F1D935A
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Dec 2024 04:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1AC1DA619
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Dec 2024 04:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733460055; cv=none; b=DFr8reS6AgJK0RfPZ3PXfbw4nelM0PGxQM8BUJOyt1GwBrbHSTvAuoWxWPy1VvBMzJ4nFOCAOWnlnt87pypMs7VY7umwz+x6Hsnjf/3FcVhfrOmY1BNz0Wqb09kJYUw0Jwdx4gR8BGvji37GXNQj+FD+tvc+0YML75acEPoUfgo=
+	t=1733460056; cv=none; b=POQBAoPoT5mbrQZ9gdbM/mczrY0ltGvYL8B9vGOrk19jVM6O6RoQuqP1INI6qjjTeoyoWQYxXNa0I+Ae+gzHimSgVaC0spcOeIc8aXdSMUnnpfrm7YamjYmDbtQ714no1whEzY2Fc+nXePicI+Dtva3EVD7nk7a/UmLojxCLosM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733460055; c=relaxed/simple;
-	bh=zAYbTToy7miM8tLMLMB1fAi9ERVwZv7WSJg6LoWxSwo=;
+	s=arc-20240116; t=1733460056; c=relaxed/simple;
+	bh=6qQMnPoV7toq2InjiyqPN49G1JW//BJ3BW+cL78lXpk=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=iVSo/DZVoRHIi5A2igomWWb1v/B6KZ/wxJ3eglaZpIoJyxKCSHCgyOqpbQ9ZpSpw7rx4n/sMCCPutwI1/kdzVeW8RItZdDJrIi3Wf+MzLAlijtazx432BKmESk+RS+vrvps4cIFWXgqJMUGYJkYxT5aejz+OCRB4R4xWYtVkY00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0xFSBuAS; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=WOhAosyk6iBNYtOOUP2BP5rvXjY21Aryzs+uZWorGrv0s5Yu8jUlEioIexq9GIybhEnpI0w82pYKZaqHVNiJ97o3ETVpeYz8BhJn8FVzNDtdCJlqFikb8+Uff/HmUIFazP9vob3sy+xgstn7Kimc8AIY7cAQoCLkxEuSgmkgZyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P6bQjJlF; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0xFSBuAS"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6efebd97c64so307127b3.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Dec 2024 20:40:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P6bQjJlF"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e399457a216so2397155276.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Dec 2024 20:40:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733460052; x=1734064852; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1733460054; x=1734064854; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=jXXuS2o2j6xQTgeWYL+xQ1vIazksKTne/XbLVeScbI4=;
-        b=0xFSBuAS59PoKkpftK1g3OnJdqM96MzP5i8UliVFoD/9WRAZFfTz2YJySTFKJgbfEZ
-         w4E7pyWkF/sASTH1htbGOjXm7HlH353NgavyTfKoKQMszdi/JDg04Z4obSVugkTNw5RL
-         0b6F4P5iJfN4gttFcyz6JfD5QdjUzddPWqyyQE5MZDAXerS0ABi0YvsRwRfUOXfetlTg
-         3OFCDcP9A0aVnRVOvsZQ27HfdtjHbDOiB0m3XqmvpoTnOdtQq6pSq2kTqAIdJk0KE/gu
-         IKJtJXQRG1KNNIn4hblkVhmwXSgnMe5ln73BFE+D81tsaJ52zEAGA2B/5W4htMymil7x
-         oV9Q==
+        bh=4PLDQ9cMJwyt8LLu+m8FYi+OjRqKatCbRkdPuiWR/4w=;
+        b=P6bQjJlFbhFZWfQ6XenH1y8deOqZ2RSENJxQ1iYR2F8EA1CEUTaFkyLEft0tg6Akaw
+         z14LqzAS25OpLqLjSiw2TsqQJ8dztwjI+qL5e+Yd6jniCH1x6aIgCzDCsWMJFg12wkGs
+         GDRh9EoRqFiQmN9isPdFZVCEC6c2jY0Owo5g91Cobxfa4UMwFsWHQut4s0KwOuZZGdjp
+         g6MBDxR6sRrlltcbkkb/xmteZt9sJcsEcgDyDhaKNsu3mLSBd3EDWrUg73UAhE8akUqN
+         kxZx9cNzqWxnjkZJDNcl8zCRgJMeLoiTY35yDayXlZG8vNzPTqEQWCB6PaertIMVKTII
+         amKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733460052; x=1734064852;
+        d=1e100.net; s=20230601; t=1733460054; x=1734064854;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jXXuS2o2j6xQTgeWYL+xQ1vIazksKTne/XbLVeScbI4=;
-        b=BtOEVw3UW6R95iITjQx4hatv8MNO2B6IciqVzejyE/7oHO3aFQFuJADnJSy5LR8cjO
-         6B8478BiefoAfceQ23kR9y4CRhiyt7MdFq79gGbmXcUoLxA7SJ9rhZhnTSz3aRBL1ZuB
-         GvVTxFQVVtad1vqpazozo6DCEh6mZfLGk/nFtspjYEob7s7jexoMNdNMD26EF/uEggsV
-         4U6IRJR5Qs+hmOHGpxOkup28AkkpFU40xGki2D/pcIsQ2VVWWjEPYzY7fmXTHRMfSTSf
-         JwSS1iFXOnfV5mHrcTd0V/sQRMWqdE5MhOOJUlzPtmTJbsGhOm9OOIN+PHrE2eGJ5p7B
-         lsIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUuhw91y2dN8OOdtGCzlV3/dDH+t7l55zmgKbKWPhEGgmWOwqarBCRLB1JIMJ5rGR/qVFEf9TDKiXqLj7s9aFhw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZQNKiyTDrA0vkvOcBO+eJDDCrtTtR26rR41TIbU0VolCo91XH
-	WKRsietrnxEajn1VSeNd5+w4/19f7vNuHdcmvb/hboXYxXdas66M1xRmiK63qUmcale8+VhNu4G
-	xKZ6I5g==
-X-Google-Smtp-Source: AGHT+IH6pJSsb1JmXS5B9BULKcXqWLb4MGTO9GRL3/aT9G9AWPq77Czm66g8jckJzv8epZvzw9L7H8e/LggM
+        bh=4PLDQ9cMJwyt8LLu+m8FYi+OjRqKatCbRkdPuiWR/4w=;
+        b=PNmj6ZjO4bljqXy/Kr6yQ3yGzM5q9k2QX8VvVCDfshK60sMelHSBpi2ZdfL2z0lzZr
+         eQyJ/bUdkmDfrM5RhzYg/5fiRRLEbyQ/JT4NloubpPjUY5qPxVZcJSzeb7fwX/OKxxRv
+         OFy4EhGu5FbxDB6BDRpKHlfq5Vj1Zryscm7T4gUiEJum7EMPASqkCYalMhZz/i7IZz+V
+         olb+PUTAk0KbPIFsIwjEHPO0m8f0hsjaTCZORvkOUMu4UBFE9naT5xPyQo+2TbRaq0Yo
+         rDNxW1D7Wk906QuX0bxocaNZzk900kDS3rc/4t24IP7a0Q9O1ZFWX/ZxxD6iBxgJBoTL
+         y9Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8a37ilbMUmi/pzE33PpzTIkVSLg+f0P97Xn7El2EIpmuEuCDq6xw7QYfNqLkkfB15jL/gPuat3DaQ/CTy3Apf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9ovVxCMaiM6CPB0bSAHponQ0L03cNYekDO7UtDlUhvgmWDnY2
+	0Sx+JxBVocOVEBjEnFFrsmBjHDTCjzbz/NH31Cjhxa/7YrCry4Qqh/fI3xepgIETFNwNV3R31l4
+	ijuCaCA==
+X-Google-Smtp-Source: AGHT+IGLwIotlj7ZIG269cEmwqa4ILVBPe9NX3i6hHv+wncSepxMVPXgIEEsA2H9UUJWcX9Ob7d2QOTkOVMz
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:eb75:393:2a8c:1440])
- (user=irogers job=sendgmr) by 2002:a05:690c:2a88:b0:6ef:7a23:afbd with SMTP
- id 00721157ae682-6efe3c83279mr17827b3.8.1733460051702; Thu, 05 Dec 2024
- 20:40:51 -0800 (PST)
-Date: Thu,  5 Dec 2024 20:40:33 -0800
+ (user=irogers job=sendgmr) by 2002:a25:d352:0:b0:e39:3168:53be with SMTP id
+ 3f1490d57ef6-e3a0b4a2261mr1162276.9.1733460053972; Thu, 05 Dec 2024 20:40:53
+ -0800 (PST)
+Date: Thu,  5 Dec 2024 20:40:34 -0800
 In-Reply-To: <20241206044035.1062032-1-irogers@google.com>
-Message-Id: <20241206044035.1062032-7-irogers@google.com>
+Message-Id: <20241206044035.1062032-8-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241206044035.1062032-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Subject: [PATCH v1 6/8] libperf cpumap: Remove use of perf_cpu_map__read
+Subject: [PATCH v1 7/8] libperf cpumap: Remove perf_cpu_map__read
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,45 +72,128 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Remove use of a FILE and switch to reading a string that is then
-passed to perf_cpu_map__new. Being able to remove perf_cpu_map__read
-avoids duplicated parsing logic.
+Function is no longer used and duplicates the parsing logic from
+perf_cpu_map__new. Remove to allow simplification.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/perf/cpumap.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ tools/lib/perf/Documentation/libperf.txt |  1 -
+ tools/lib/perf/cpumap.c                  | 56 ------------------------
+ tools/lib/perf/include/perf/cpumap.h     |  2 -
+ tools/lib/perf/libperf.map               |  1 -
+ 4 files changed, 60 deletions(-)
 
+diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
+index fcfb9499ef9c..59aabdd3cabf 100644
+--- a/tools/lib/perf/Documentation/libperf.txt
++++ b/tools/lib/perf/Documentation/libperf.txt
+@@ -39,7 +39,6 @@ SYNOPSIS
+ 
+   struct perf_cpu_map *perf_cpu_map__new_any_cpu(void);
+   struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+-  struct perf_cpu_map *perf_cpu_map__read(FILE *file);
+   struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
+   struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+                                            struct perf_cpu_map *other);
 diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index 20d9ee9308c6..60ef8eea42ee 100644
+index 60ef8eea42ee..17413d3a2221 100644
 --- a/tools/lib/perf/cpumap.c
 +++ b/tools/lib/perf/cpumap.c
-@@ -10,6 +10,7 @@
- #include <ctype.h>
- #include <limits.h>
- #include "internal.h"
-+#include <api/fs/fs.h>
- 
- #define MAX_NR_CPUS 4096
- 
-@@ -102,12 +103,12 @@ static struct perf_cpu_map *cpu_map__new_sysconf(void)
- static struct perf_cpu_map *cpu_map__new_sysfs_online(void)
- {
- 	struct perf_cpu_map *cpus = NULL;
--	FILE *onlnf;
-+	char *buf = NULL;
-+	size_t buf_len;
- 
--	onlnf = fopen("/sys/devices/system/cpu/online", "r");
--	if (onlnf) {
--		cpus = perf_cpu_map__read(onlnf);
--		fclose(onlnf);
-+	if (sysfs__read_str("devices/system/cpu/online", &buf, &buf_len) >= 0) {
-+		cpus = perf_cpu_map__new(buf);
-+		free(buf);
- 	}
+@@ -161,62 +161,6 @@ static struct perf_cpu_map *cpu_map__trim_new(int nr_cpus, const struct perf_cpu
  	return cpus;
  }
+ 
+-struct perf_cpu_map *perf_cpu_map__read(FILE *file)
+-{
+-	struct perf_cpu_map *cpus = NULL;
+-	int nr_cpus = 0;
+-	struct perf_cpu *tmp_cpus = NULL, *tmp;
+-	int max_entries = 0;
+-	int n, cpu, prev;
+-	char sep;
+-
+-	sep = 0;
+-	prev = -1;
+-	for (;;) {
+-		n = fscanf(file, "%u%c", &cpu, &sep);
+-		if (n <= 0)
+-			break;
+-		if (prev >= 0) {
+-			int new_max = nr_cpus + cpu - prev - 1;
+-
+-			WARN_ONCE(new_max >= MAX_NR_CPUS, "Perf can support %d CPUs. "
+-							  "Consider raising MAX_NR_CPUS\n", MAX_NR_CPUS);
+-
+-			if (new_max >= max_entries) {
+-				max_entries = new_max + MAX_NR_CPUS / 2;
+-				tmp = realloc(tmp_cpus, max_entries * sizeof(struct perf_cpu));
+-				if (tmp == NULL)
+-					goto out_free_tmp;
+-				tmp_cpus = tmp;
+-			}
+-
+-			while (++prev < cpu)
+-				tmp_cpus[nr_cpus++].cpu = prev;
+-		}
+-		if (nr_cpus == max_entries) {
+-			max_entries += MAX_NR_CPUS;
+-			tmp = realloc(tmp_cpus, max_entries * sizeof(struct perf_cpu));
+-			if (tmp == NULL)
+-				goto out_free_tmp;
+-			tmp_cpus = tmp;
+-		}
+-
+-		tmp_cpus[nr_cpus++].cpu = cpu;
+-		if (n == 2 && sep == '-')
+-			prev = cpu;
+-		else
+-			prev = -1;
+-		if (n == 1 || sep == '\n')
+-			break;
+-	}
+-
+-	if (nr_cpus > 0)
+-		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
+-out_free_tmp:
+-	free(tmp_cpus);
+-	return cpus;
+-}
+-
+ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+ {
+ 	struct perf_cpu_map *cpus = NULL;
+diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+index 90457d17fb2f..cbb65e55fc67 100644
+--- a/tools/lib/perf/include/perf/cpumap.h
++++ b/tools/lib/perf/include/perf/cpumap.h
+@@ -3,7 +3,6 @@
+ #define __LIBPERF_CPUMAP_H
+ 
+ #include <perf/core.h>
+-#include <stdio.h>
+ #include <stdbool.h>
+ 
+ /** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
+@@ -37,7 +36,6 @@ LIBPERF_API struct perf_cpu_map *perf_cpu_map__new_online_cpus(void);
+  *                     perf_cpu_map__new_online_cpus is returned.
+  */
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+-LIBPERF_API struct perf_cpu_map *perf_cpu_map__read(FILE *file);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+ 						     struct perf_cpu_map *other);
+diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
+index 2aa79b696032..fdd8304fe9d0 100644
+--- a/tools/lib/perf/libperf.map
++++ b/tools/lib/perf/libperf.map
+@@ -6,7 +6,6 @@ LIBPERF_0.0.1 {
+ 		perf_cpu_map__get;
+ 		perf_cpu_map__put;
+ 		perf_cpu_map__new;
+-		perf_cpu_map__read;
+ 		perf_cpu_map__nr;
+ 		perf_cpu_map__cpu;
+ 		perf_cpu_map__has_any_cpu_or_is_empty;
 -- 
 2.47.0.338.g60cca15819-goog
 
