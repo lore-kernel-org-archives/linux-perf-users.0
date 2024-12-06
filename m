@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26CB194C7A
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Dec 2024 04:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0378619644B
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Dec 2024 04:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733460043; cv=none; b=kSlLNXtXpd6mZYvh35zYSOdEOWl3sISU0PoRuTunjAxse0dokVLXtNZ13dPu795Q1FBUHfZPRkkiYuuyskqHip0tAmmEkvTphJGcI7SPZG4zdfQq00oWukyiV9ahnM5IdVp602acuba8526YJDUaPa5hDG2HJKhk+hfnfT0fcnc=
+	t=1733460045; cv=none; b=hhtoJ6CFdPjSDhMSYQLTXFpYMEp5XCqwLK5HgzJXFtTJ0BFHkP/1l9czd0JaTNKaWRUOHTU/3lrneFVZ/keOBpLG+KIpMyRznSJFXFUR12H6OgF3asUJAtqOzVL0BBv/wRou2laIwQi0o++OD4AwR+SKqQx0sHoSaWHRBnanpes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733460043; c=relaxed/simple;
-	bh=NvHv1JvgCIj4wxEXi2qnifVrg5VM8kZfYBZjSzBa3dg=;
+	s=arc-20240116; t=1733460045; c=relaxed/simple;
+	bh=l8qUIHya3K31WTRvVu1jv39b7mumPyblakLVFf0XyaY=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=GErXQruQSZCor1AV9G4XY4jyQPpGE9jx1F2yZkHshCzBe6MANSawkWmMYEjBVX4Dk9ulT1NzpxOqB0oG/VU+6L4JB3h5TcBMSdYhK5IZXQ08VeV5PnVyB/ENS99E642UXbQ2T5DO33jfksNc5TTbwiTOdGWhRe49oniUOBYPTWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ITPvaYeR; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=BqibnZ/16MqLhsXrLiVn3x6HBgOoMUphpZKYG5aREK6DniJvOeqceucJNCQsEeBS0Nnh7HnvcZSpybxuEIyWiRkcMJ3+sdFARXW1HQMsTBxHMa8wp8XQJNcquyGHJi2yQLa8ua/nm3qOylKZs1oM0cDui+ELijw9Brxn5uRyv6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1MuVUJKi; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ITPvaYeR"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e39a8125366so2837200276.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Dec 2024 20:40:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1MuVUJKi"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e39f9a14448so1699259276.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Dec 2024 20:40:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733460041; x=1734064841; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1733460043; x=1734064843; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7HooQRn/pxrZs6KSP4MCRwKNyrc2n5wJOPs3/bci4Uk=;
-        b=ITPvaYeRcgVc38hqEm+Bpq2IJRYcrWPrEtidw63fxdkb4xkrQrGPRGkr3eMrUd65PP
-         NT+brCB7suidmG6yIuhtu25HYz+RJTo9UpLHMim2ALkqkbOZ7+FTHuZfWgMBZODnkA72
-         Vzk/r3l+m7zQsGT1QeMy3+yXQDi7tcZ1ksDjQfDd8yXzNRWVVE3gSHBbwf6cYB/LNS5W
-         TEfGX15BR4/8Ko7oUm5VWveuA1LUq6VsIog0l99rEDb1sO0NOzTpdhZyIXmNtq/YmSx5
-         atpmoPDWX+vlonPr8KrmyP6g+B+ewbdBeQOoPMvrV9i+JYh9exa+rTVsmIILhKxZpU3l
-         khAg==
+        bh=T/6KuZeoA9hfQ8w7qTpUnYSr+3QNWIClGfYo5QkRc1U=;
+        b=1MuVUJKi5UrHeOEQC5WBonUv1rVreiVF+yrEXxIELhpNZHd91idgxwQPxOqD/yW+T4
+         J9JMHpQCR6ZLg69nAIGFDv3Ce9CgvIe2V6Sc6ROWYIUyubZsGmeQofSZRzHEl693VASq
+         ZAn6s1t+WUFQ706KlB3D3EOBrndssbXUvEB5tj1ckm0XZ6GqBSIud7L3CuMNTJOIydii
+         GbfxRMGxWiLXdgU+w6zDSKnF4x5Hb4rsUdJypPrbeX454GblunC8ygRudeLw8xnYLujp
+         y960TV0aKEVm+4P5gNjNXCEzSIfo2s7LAHAT0L1YX2obptG7PydxJYENWG9SIxCcK89E
+         wVyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733460041; x=1734064841;
+        d=1e100.net; s=20230601; t=1733460043; x=1734064843;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7HooQRn/pxrZs6KSP4MCRwKNyrc2n5wJOPs3/bci4Uk=;
-        b=s9mnNmHwbDxyocORDaxcbIP8nfDD+1NFVqalLSLLklxXWz6Wipk8p3aDUJvjqzkeZZ
-         Wj7Lh5rqR/Nt7S8FHlrfLA0hR5Km25mmb85crMVCd/eyK7Jc2leiUprZ/etswLo28720
-         nNKdHytGZ+JDGB0NNMlVPIg2a8iJEA1tYHFy+6M9RCDQst3a+zhyj56hmbwqnKKJGzfg
-         TJZnyl19YsHlGIIDbdF+KFPe7U3jum+5Fu0Rgn4KLlCpi6/L3wUkZ8qIQMrE0a/xHvfk
-         VYy3sN9L/QSuJlTJgLyw4GprthzfJzot6POf21cVmhFRmPu3LXjfTzXDsU/1Jv+B7Hlu
-         HyGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWrpphUlEkGl6aUxjpd4uvoRIejexY1nFTnmFKdmUAXUAatxoCV4rLDk44ZAicAXe31L9izf1lGWArIJ99RE6KH@vger.kernel.org
-X-Gm-Message-State: AOJu0YycGhbrg9xL9/r1USKF+oLicOwkgqXezJVlExUfKe1npKlxww/m
-	DnDPqtC5Y/XYlU8JWJ2pKCyF+3wwOey0ffguer8AJg5kuAnloDFWhr5uiY5x4u8f618eyAOoY6Y
-	JEO7QjQ==
-X-Google-Smtp-Source: AGHT+IHIgCIgWFyGcAWDY7516J4vjQr1pq+XRf6N+uB0/z07nFo7rInpoiDluy+8thojGoFnFz9roVvtzpil
+        bh=T/6KuZeoA9hfQ8w7qTpUnYSr+3QNWIClGfYo5QkRc1U=;
+        b=TlGI2Cr/YzVvYxwv5c0noht8y3vY+GaNOZksM2/ELESQqqrGuj288OY7SdweHEtsUC
+         LlDNZMDYStQwf0DbNThbKUKHjXJcLwocWFJ4Og6cdp2cwnhV55y+aMw4zCuJqHmHk36+
+         yMcuYkPtUondiGZiuz1jf03EnvSFa/bVwCFxuO/m3Ff1tLSO8yQ0AlY/+DEgHHK4v7uU
+         kJ+2cjnXYhNuYfOJ4CV8bBFaOFwWlF2xxoq8yxBq1aDJ8fQA12+gSxx/ZtLqNg3iFVVK
+         A4Ap2U+sG2burZWEpqmeh1fqGSvbNxppGY+5BJ60qxieutvB9+eJvgcQmKx2teuJHaPD
+         vXew==
+X-Forwarded-Encrypted: i=1; AJvYcCWcuTw3l9jzvayDucLLU1oTBvYs80aX8xCasZjO1XDDcSyEPZpJU9GzJrDGRZO6GdH1mOyai6PwqrZnzvL3b5me@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6EqD4UbcAm2iqCOR/RwD8ppdpdYPfMTDhhVgiq4c3n+hAf/tm
+	HskcOLTY/XjMMxA6j3te40roPDpF5dSu6gvwg6R45kbPItBWZmC4mq775MLxx9c0nbARxPYtBOX
+	5ovSF6A==
+X-Google-Smtp-Source: AGHT+IERX0y+SrjaaB6yLsinmWuyNnCNJB6CooagJGk19unTJTWsreDzrfz5zQi5ugSeemAO8BjhrdkKmd0f
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:eb75:393:2a8c:1440])
- (user=irogers job=sendgmr) by 2002:a25:7c06:0:b0:e38:d1e:af86 with SMTP id
- 3f1490d57ef6-e3a0b07413dmr731276.2.1733460040757; Thu, 05 Dec 2024 20:40:40
+ (user=irogers job=sendgmr) by 2002:a25:fc1c:0:b0:e33:111b:c6a4 with SMTP id
+ 3f1490d57ef6-e3a0b073bbdmr734276.1.1733460042968; Thu, 05 Dec 2024 20:40:42
  -0800 (PST)
-Date: Thu,  5 Dec 2024 20:40:28 -0800
+Date: Thu,  5 Dec 2024 20:40:29 -0800
 In-Reply-To: <20241206044035.1062032-1-irogers@google.com>
-Message-Id: <20241206044035.1062032-2-irogers@google.com>
+Message-Id: <20241206044035.1062032-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241206044035.1062032-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Subject: [PATCH v1 1/8] perf: Increase MAX_NR_CPUS to 4096
+Subject: [PATCH v1 2/8] perf cpumap: Reduce transitive dependencies on libperf MAX_NR_CPUS
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,63 +72,119 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-From: Kyle Meyer <kyle.meyer@hpe.com>
+libperf exposes MAX_NR_CPUS via
+tools/lib/perf/include/internal/cpumap.h which is internal. The
+preferred dependency should be the definition in
+tools/perf/perf.h. Add the includes of perf.h so that MAX_NR_CPUS can
+be hidden in libperf.
 
-Systems have surpassed 2048 CPUs. Increase MAX_NR_CPUS to 4096.
-
-Bitmaps declared with MAX_NR_CPUS bits will increase from 256B to 512B,
-cpus_runtime will increase from 81960B to 163880B, and max_entries will
-increase from 8192B to 16384B.
-
-Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/perf/include/internal/cpumap.h | 2 +-
- tools/perf/perf.h                        | 2 +-
- tools/perf/util/bpf_skel/kwork_top.bpf.c | 4 +++-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ tools/perf/builtin-annotate.c | 1 +
+ tools/perf/builtin-diff.c     | 1 +
+ tools/perf/builtin-kwork.c    | 1 +
+ tools/perf/builtin-mem.c      | 1 +
+ tools/perf/builtin-sched.c    | 1 +
+ tools/perf/util/kwork.h       | 1 +
+ tools/perf/util/session.c     | 1 +
+ tools/perf/util/svghelper.c   | 1 +
+ 8 files changed, 8 insertions(+)
 
-diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
-index 49649eb51ce4..3cf28522004e 100644
---- a/tools/lib/perf/include/internal/cpumap.h
-+++ b/tools/lib/perf/include/internal/cpumap.h
-@@ -22,7 +22,7 @@ DECLARE_RC_STRUCT(perf_cpu_map) {
- };
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index bb87e6e7687d..836ae0122dab 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -7,6 +7,7 @@
+  * a histogram of results, along various sorting keys.
+  */
+ #include "builtin.h"
++#include "perf.h"
  
- #ifndef MAX_NR_CPUS
--#define MAX_NR_CPUS	2048
-+#define MAX_NR_CPUS	4096
- #endif
+ #include "util/color.h"
+ #include <linux/list.h>
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 82fb7773e03e..196969538e58 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -6,6 +6,7 @@
+  * DSOs and symbol information, sort them and produce a diff.
+  */
+ #include "builtin.h"
++#include "perf.h"
  
- struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus);
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index c004dd4e65a3..3cb40965549f 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -3,7 +3,7 @@
- #define _PERF_PERF_H
+ #include "util/debug.h"
+ #include "util/event.h"
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 8234410cba4c..233ca3c3895c 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -6,6 +6,7 @@
+  */
  
- #ifndef MAX_NR_CPUS
--#define MAX_NR_CPUS			2048
-+#define MAX_NR_CPUS			4096
- #endif
+ #include "builtin.h"
++#include "perf.h"
  
- enum perf_affinity {
-diff --git a/tools/perf/util/bpf_skel/kwork_top.bpf.c b/tools/perf/util/bpf_skel/kwork_top.bpf.c
-index 594da91965a2..73e32e063030 100644
---- a/tools/perf/util/bpf_skel/kwork_top.bpf.c
-+++ b/tools/perf/util/bpf_skel/kwork_top.bpf.c
-@@ -18,7 +18,9 @@ enum kwork_class_type {
- };
+ #include "util/data.h"
+ #include "util/evlist.h"
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 651188c1d825..99d5e1491a28 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -4,6 +4,7 @@
+ #include <sys/stat.h>
+ #include <unistd.h>
+ #include "builtin.h"
++#include "perf.h"
  
- #define MAX_ENTRIES     102400
--#define MAX_NR_CPUS     2048
-+#ifndef MAX_NR_CPUS
-+#define MAX_NR_CPUS     4096
-+#endif
- #define PF_KTHREAD      0x00200000
- #define MAX_COMMAND_LEN 16
+ #include <subcmd/parse-options.h>
+ #include "util/auxtrace.h"
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 7049c60ebf77..26ece6e9bfd1 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "builtin.h"
++#include "perf.h"
+ #include "perf-sys.h"
  
+ #include "util/cpumap.h"
+diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
+index 76fe2a821bcf..596595946a06 100644
+--- a/tools/perf/util/kwork.h
++++ b/tools/perf/util/kwork.h
+@@ -1,6 +1,7 @@
+ #ifndef PERF_UTIL_KWORK_H
+ #define PERF_UTIL_KWORK_H
+ 
++#include "perf.h"
+ #include "util/tool.h"
+ #include "util/time-utils.h"
+ 
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 507e6cba9545..c06e3020a976 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -37,6 +37,7 @@
+ #include "arch/common.h"
+ #include "units.h"
+ #include "annotate.h"
++#include "perf.h"
+ #include <internal/lib.h>
+ 
+ static int perf_session__deliver_event(struct perf_session *session,
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index 2b04f47f4db0..b1d259f590e9 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -21,6 +21,7 @@
+ #include <perf/cpumap.h>
+ 
+ #include "env.h"
++#include "perf.h"
+ #include "svghelper.h"
+ 
+ static u64 first_time, last_time;
 -- 
 2.47.0.338.g60cca15819-goog
 
