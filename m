@@ -1,111 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E27F20629E;
-	Fri,  6 Dec 2024 20:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A7C222C6E5;
+	Fri,  6 Dec 2024 23:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733518141; cv=none; b=iZIQ0iDZG5WSnUGwja8TCGjd7Ek8Y0kEvBjG5Vw4G92xClL0EKFtRzpEp/8AlLFO1vO6gDAkbUxyUB/5Oej/VsT9K70gfj7SBwZPsw0cyL1ApYEhqG2s3gv3MITVoit858psLWAodBL2BK35H4YuEoyTqB6R8IXHU6iqSnlOxOo=
+	t=1733526210; cv=none; b=dYg7sCIPwI0tsHsmooinzOhqKdBsPeQuxPfqCKzO6V6vWKUsK1etFz0lTFJd9yd+lFVuZ72AqsmHSzIzMWKH93OJSv4eD/Bba7mhchq6YiXI1kdcZ3ZLjDjoFzTW3SIbNsfg0BBMOOauooKa9rF0Rg2uDmhSTXpjv8ndWiYyqKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733518141; c=relaxed/simple;
-	bh=qs5MTe5EbBWsH8cCkewwpdPdfFM9D7tPgyDJ5fd16FQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jSZl3Cpd6KefxIddtB2yUaxfuHcfnfVihqnr/rTGFj6x6nu2eA4GfwxWokhjwHAXe1VQoJBqhFkM4BolLbArLkj7zBGOZ2V4i5bC6/Km8gittI65Wnm9o9UxSoTcV9FftKw5uCDncgWu4epOqkod2H4enbee0Y3bqGvpFzcbOBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZdwILxht; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZdwILxht"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8DBCC4CED2;
-	Fri,  6 Dec 2024 20:48:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733518141;
-	bh=qs5MTe5EbBWsH8cCkewwpdPdfFM9D7tPgyDJ5fd16FQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZdwILxhtQSQLdOAdRvrpVk/Y1qsXnDk7PEHahUUqrvg9RM3TwRtJ4Dn4FnThvoLmX
-	 GNhPIIJRqLs7wdKd/yDuc6BIux3Fx/nxk8FVPoyUZEhiEeDsX4SncR/8t7977xm6le
-	 V09dTrHRVlSrMwjZfdfmVn5jOWgSrd/78CoZYZOiCeNob5j1OOkjhTho1AbHCDD7Kn
-	 U3yUK/tknceRyE5RoetcsCMaljf+jAyDeYvr80m7PrgcG1eMicJxqFssfBS6NAvYBh
-	 N2IECJfyFZHmjc7/e5NZ+EOsoWs78k4a4jY3sRiBY94LCbO5PxD+gvhAxdiD9XPWOn
-	 hm3GIGPUuobfg==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Stephane Eranian <eranian@google.com>,
-	Yonatan Goldschmidt <yonatan.goldschmidt@granulate.io>
-Cc: Francesco Nigro <fnigro@redhat.com>,
-	Ilan Green <igreen@redhat.com>,
+	s=arc-20240116; t=1733526210; c=relaxed/simple;
+	bh=9kLF9zel6/Ciibio6+ZZ/fcVom3lsexhG6tdAEYxewQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p2VYFBSR/J0zLw2Jz2Gg+Nmu8YuQKNN737Ly2WnOXLSmmn/pqERjNVB/2prN+cjg+BgkElq8G4hKOF4oPE4V5KJ+J+XQ5Zq6t2LmoGJf5aRjXjN+c60cyR7NFMFvHdiO2tPSS7KFiLIdW4RE2tPlhBkhQ56e1SDUeCbfwKCcA74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 480C711FB;
+	Fri,  6 Dec 2024 15:03:55 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C66F53F58B;
+	Fri,  6 Dec 2024 15:03:26 -0800 (PST)
+Date: Fri, 6 Dec 2024 23:03:21 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5/5] perf namespaces: Fixup the nsinfo__in_pidns() return type, its bool
-Date: Fri,  6 Dec 2024 17:48:28 -0300
-Message-ID: <20241206204828.507527-6-acme@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241206204828.507527-1-acme@kernel.org>
-References: <20241206204828.507527-1-acme@kernel.org>
+	James Clark <james.clark@linaro.org>,
+	Kyle Meyer <kyle.meyer@hpe.com>, Ben Gainey <ben.gainey@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/8] perf: Increase MAX_NR_CPUS to 4096
+Message-ID: <20241206230321.GA5430@e132581.arm.com>
+References: <20241206044035.1062032-1-irogers@google.com>
+ <20241206044035.1062032-2-irogers@google.com>
+ <20241206102451.GA3418674@e132581.arm.com>
+ <CAP-5=fVDH6k7rW3_LXK5Y9Givs3WO5MQ8XMKsuUXXY5nQ66qDg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVDH6k7rW3_LXK5Y9Givs3WO5MQ8XMKsuUXXY5nQ66qDg@mail.gmail.com>
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Hi Ian,
 
-When adding support for refconunt checking a cut'n'paste made this
-function, that is just an accessor to a bool member of 'struct nsinfo',
-return a pid_t, when that member is a boolean, fix it.
+On Fri, Dec 06, 2024 at 08:25:06AM -0800, Ian Rogers wrote:
 
-Fixes: bcaf0a97858de7ab ("perf namespaces: Add functions to access nsinfo")
-Reported-by: Francesco Nigro <fnigro@redhat.com>
-Reported-by: Ilan Green <igreen@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Yonatan Goldschmidt <yonatan.goldschmidt@granulate.io>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/namespaces.c | 2 +-
- tools/perf/util/namespaces.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+[...]
 
-diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index 36047184d76e2f80..68f5de2d79c72c2c 100644
---- a/tools/perf/util/namespaces.c
-+++ b/tools/perf/util/namespaces.c
-@@ -266,7 +266,7 @@ pid_t nsinfo__pid(const struct nsinfo  *nsi)
- 	return RC_CHK_ACCESS(nsi)->pid;
- }
- 
--pid_t nsinfo__in_pidns(const struct nsinfo  *nsi)
-+bool nsinfo__in_pidns(const struct nsinfo *nsi)
- {
- 	return RC_CHK_ACCESS(nsi)->in_pidns;
- }
-diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-index e014becb9cd8eb3a..e95c79b80e27c8fc 100644
---- a/tools/perf/util/namespaces.h
-+++ b/tools/perf/util/namespaces.h
-@@ -58,7 +58,7 @@ void nsinfo__clear_need_setns(struct nsinfo *nsi);
- pid_t nsinfo__tgid(const struct nsinfo  *nsi);
- pid_t nsinfo__nstgid(const struct nsinfo  *nsi);
- pid_t nsinfo__pid(const struct nsinfo  *nsi);
--pid_t nsinfo__in_pidns(const struct nsinfo  *nsi);
-+bool nsinfo__in_pidns(const struct nsinfo  *nsi);
- void nsinfo__set_in_pidns(struct nsinfo *nsi);
- 
- void nsinfo__mountns_enter(struct nsinfo *nsi, struct nscookie *nc);
--- 
-2.47.0
+> > This series is fine for me.  Just wandering if we can use a central
+> > place to maintain the macro, e.g. lib/perf/include/perf/cpumap.h.  It
+> > is pointless to define exactly same macros in different headers.  As
+> > least, I think we can unify this except the kwork bpf program?
+> >
+> > P.s. for dynamically allocating per CPU maps in eBPF program, we can
+> > refer to the code samples/bpf/xdp_sample_user.c, but this is another
+> > topic.
+> 
+> Thanks Leo,
+> 
+> can I take this as an acked-by?
 
+Yeah.  I will give my review tags in the cover letter.
+
+> Wrt a single constant I agree,
+> following these changes MAX_NR_CPUS is just used for a warning in
+> libperf's cpumap.c. I think we're agreed that getting rid of the
+> constant would be best. I also think the cpumap logic is duplicating
+> something that libc is providing in cpu_set.
+>
+> And we have more than one representation in perf for the sake of the
+> disk representation:
+
+Thanks for sharing the info.
+
+> Just changing the int to be a s16 would lower the memory overhead,
+> which is why I'd kind of like the abstraction to be minimal.
+
+Here I am not clear what for "changing the int to be a s16".  Could you
+elaberate a bit for this?
+
+Lastly, I also found multiple files use "MAX_CPUS" rather than
+"MAX_NR_CPUS".  Polish them in a new series?
+
+Thanks,
+Leo
