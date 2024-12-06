@@ -1,103 +1,84 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B251FCD1E;
-	Fri,  6 Dec 2024 10:29:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749CF1FCCFB;
+	Fri,  6 Dec 2024 13:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733480995; cv=none; b=bIKZCfeBltlxTARwxPR/Y2nB1dt1GTQTZIic/Dc89mrhoZ72erJoWwwg1a8sVmKHdCLSLIkE9ANFSDgEJkhjHsr1d2HjmJAdMZAr2UDGgQI1qWXQPF8AfuS+fcyEOy5EIN3ri0lVYvaVgbf9DuB1VV6RPteV3gvFa6nnRipVrdE=
+	t=1733493210; cv=none; b=q7AKpaeq2HlkLGgEg7xVpW7c02fan/LmzePXTb54M1KjFKKGwlycM9MuXfJoQiymuhSAYg3b7dKi/a79BxTCVkqXiLLviXJA5FuP1ljMZTQwsOyGh4c/Hc8AF1SnjVhbTnT+DI1ePtcD7je6G7caAXxZnKxHiZosST68ttwgyUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733480995; c=relaxed/simple;
-	bh=gp+daHvydwL9L3y98wTUrmvfaExcYO2fEUSPqFoPw7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h2lDuSOFnhJFoTk8tlQmX93Yd0S1fEEJcFMGmRDcO6rVETw8Jfwwrk4VHytW4UwZho1cSuxF9ACHDchpmi7MKxZCiYa+svcdCFlUNKCZReMna3gC7wdhWANu/goICJOMOh8cN5o8lw/LIWGu62DrYResF80llzVYZARQdPsDtKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=n9cgGz64; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1733493210; c=relaxed/simple;
+	bh=cBY2VIajDDBnPJ5p52pXeZV0PIrohjX5RRqCXkTuxQU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X0z+UL94GEPDLdFY9Q6HhsC2k1pMZuscpr0n/v7gzx+RMGvT98uWRuNzcyRQxqafqxp2Qwz02w4/XCF8GHm1W5BhPO8gInFlHlM9Fp6senvQerz7kgdSn5EFXen8B/STtRqhmB3shJMUQtgrjOmz0CUPGwliDc+OyJmtK/Z0NUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hz4kGGB6; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="n9cgGz64"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hz4kGGB6"
 Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B68HHaG010665;
-	Fri, 6 Dec 2024 10:29:28 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B6DRdPd010817;
+	Fri, 6 Dec 2024 13:53:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=oCucej
-	0dSF5GETRmWu6mfKUjp15NQzH2Lkd2dTmLQ4U=; b=n9cgGz646TyxyuDH6BlBR4
-	MRJ0kkmslRloN0Hrw4tsJAFQVbynl6TfaYfR+Urga4+gb4H6++BVnMgyvyS8ksBy
-	pdWGti8ZR3x+LXJrVW1/YNHawyDWq79JWG5EXSe+Fi3bMIqnZogymPyoKleD4O9W
-	DOy4NUCQvJtUZUx8QNK0wk7lFMDgmwoCPzdAA8cFiuigMC67UEvv97jS2dU2/73p
-	94nhzLEVRI/PKI0IwiZdHh6DB05j9Vbt8/aUX7G7N0j4pnPad8BFu/f+nvalp2iv
-	S794X5WU5DIfWUGKOdRUkx71Sk1PucXdn6ENJmXDPYQ+US9sCKjyy9Td0+RDV13A
-	==
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=j6a/5nELmVvzW7RBn0lo+X1Ulo3HZGlYxE0pch8J/
+	Gg=; b=hz4kGGB6IdjFe7t0mD2Gx7opnF2f77J08DxNCpkVWtVGnoFN6otT9r5+q
+	mhifmwCS4fw2B3nAZORsyDK+iZTVK3R+rl1hruyIPebJWhVEs2m4htXy1D+E1+5f
+	wplcSYRvsQTy8VRv+9d/cXRC2bKmDdLBD5bfi6gJxQAWqlTfkZG9D+xFdSdwR0sq
+	lSzAy2kwt5Bu0bahqtkIAPflGTMF0acinCzqMMhniT96kTNGGuXq8BB+agS3osn/
+	0qJdNKgL2y+w7/pKKUoPxQkV4P5dRHT8VsWYo6G4rBPoGOxIDhbII6OAEl1QmVbx
+	rEW9rUvwUUL/JcYvz20CpmtpV1DFg==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43b24rgftb-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43b24rh9t9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Dec 2024 10:29:28 +0000 (GMT)
+	Fri, 06 Dec 2024 13:53:17 +0000 (GMT)
 Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4B6AOXTZ026632;
-	Fri, 6 Dec 2024 10:29:27 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43b24rgft5-1
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4B6DlBSX030722;
+	Fri, 6 Dec 2024 13:53:16 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43b24rh9t6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Dec 2024 10:29:27 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4B69Od0s005544;
-	Fri, 6 Dec 2024 10:29:26 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 438fr1x9m4-1
+	Fri, 06 Dec 2024 13:53:16 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4B6Ahbms023542;
+	Fri, 6 Dec 2024 13:53:15 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 438e1ndthd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Dec 2024 10:29:26 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4B6ATMxZ17301834
+	Fri, 06 Dec 2024 13:53:15 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4B6DrBtl48497106
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 6 Dec 2024 10:29:23 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D5E9520040;
-	Fri,  6 Dec 2024 10:29:22 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D786820049;
-	Fri,  6 Dec 2024 10:29:20 +0000 (GMT)
-Received: from [9.171.37.165] (unknown [9.171.37.165])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  6 Dec 2024 10:29:20 +0000 (GMT)
-Message-ID: <978a9ecd-47e9-442b-8daa-aee8f3d93dbb@linux.ibm.com>
-Date: Fri, 6 Dec 2024 11:29:21 +0100
+	Fri, 6 Dec 2024 13:53:11 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9714420043;
+	Fri,  6 Dec 2024 13:53:11 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1AA7820040;
+	Fri,  6 Dec 2024 13:53:05 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.61.245.143])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  6 Dec 2024 13:53:04 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, mpetlan@redhat.com, vmolnaro@redhat.com
+Subject: [PATCH V3] tools/perf/tests/shell/base_probe: Enhance print_overall_results to print summary information
+Date: Fri,  6 Dec 2024 19:22:54 +0530
+Message-Id: <20241206135254.35727-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/19] unwind: Add user space unwinding API
-To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
- <f89a9137e983902f22611e5379606062a64b2382.1730150953.git.jpoimboe@kernel.org>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <f89a9137e983902f22611e5379606062a64b2382.1730150953.git.jpoimboe@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: k71KKQ7DK_6bqgXO1_8PxnshXvpZGltg
-X-Proofpoint-ORIG-GUID: MS5ESTP1TIaET9Dps_VkxhOz71J-7aO4
+X-Proofpoint-GUID: T8M1A0-vWUG_BwSkCz0aMQqRKY4VZ6BB
+X-Proofpoint-ORIG-GUID: GYTlBYgYCohyvti5uNlTwmUku567qHIP
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
  definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
@@ -105,92 +86,122 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishsc
  bulkscore=0 adultscore=0 impostorscore=0 priorityscore=1501
  lowpriorityscore=0 clxscore=1015 mlxscore=0 spamscore=0 malwarescore=0
  mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412060076
+ engine=8.19.0-2411120000 definitions=main-2412060102
 
-On 28.10.2024 22:47, Josh Poimboeuf wrote:
-> Introduce a user space unwinder API which provides a generic way to
-> unwind user stacks.
+Currently print_overall_results prints the number of
+fails in the summary, example from base_probe tests in
+testsuite_probe:
 
-...
+ ## [ FAIL ] ## perf_probe :: test_invalid_options SUMMARY ::
+	11 failures found
 
-> diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+test_invalid_options contains multiple tests and out
+of that 11 failed. Sometimes it could happen that it
+is due to missing dependency in the build or environment
+dependency.
 
-...
+Example, perf probe -L requires DWARF enabled. otherwise
+it fails as below:
+ ./perf probe -L
+  Error: switch `L' is not available because NO_DWARF=1
 
-> +int unwind_user_next(struct unwind_user_state *state)
-> +{
-> +	struct unwind_user_frame _frame;
-> +	struct unwind_user_frame *frame = &_frame;
-> +	unsigned long prev_ip, cfa, fp, ra = 0;
-> +
-> +	if (state->done)
-> +		return -EINVAL;
-> +
-> +	prev_ip = state->ip;
-> +
-> +	switch (state->type) {
-> +	case UNWIND_USER_TYPE_FP:
-> +		frame = &fp_frame;
-> +		break;
-> +	default:
-> +		BUG();
-> +	}
-> +
-> +	cfa = (frame->use_fp ? state->fp : state->sp) + frame->cfa_off;
-> +
-> +	if (frame->ra_off && get_user(ra, (unsigned long __user *)(cfa + frame->ra_off)))
-> +		goto the_end;
-> +
-> +	if (ra == prev_ip)
-> +		goto the_end;
+"-L" is tested as one of the option in :
+   for opt in '-a' '-d' '-L' '-V'; do
+   <<perf probe test>>
+   print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "missing argument
+	for $opt"
 
-This seems too restrictive to me, as it effectively prevents
-unwinding from recursive functions, e.g. Glibc internal merge sort
-msort_with_tmp():
+Here -a and -d doesn't require DWARF. Similarly there
+are few other tests requiring DWARF. To hint the user that
+missing dwarf could be one issue, update print_overall_results
+to print a comment string along with summary hinting the possible
+cause. Update test_invalid_options.sh and test_line_semantics.sh
+to pass the info about dwarf requirement since these tests
+failed when perf is built without DWARF. Use the check for
+presence of dwarf with "perf check feature" and append the
+hint message based on the result.
 
-$ perf record -F 9999 --call-graph fp /usr/bin/objdump -wdWF /usr/bin/objdump
-$ perf script
-...
-objdump    8314 236064.515562:     100010 task-clock:ppp:
-                  100630a compare_symbols+0x2a (/usr/bin/objdump)
-              3ffb9e58e7c msort_with_tmp.part.0+0x15c (/usr/lib64/libc.so.6)
-              3ffb9e58d76 msort_with_tmp.part.0+0x56 (/usr/lib64/libc.so.6)
-[unwinding unexpectedly stops]
+With the change:
+ ## [ FAIL ] ## perf_probe :: test_invalid_options SUMMARY ::
+ 11 failures found :: Some of the tests need DWARF to run
 
-Would it be an option to only stop unwinding if both the IP and SP do
-not change?
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+Changelog:
+v1 -> v2
+ Check presence of dwarf using "perf check feature". Add
+ failure hint message for dwarf based on this check
 
-if (sp == prev_sp && ra == prev_ra)
-	gote the_end;
+v2 -> v3
+ Check for empty task comment to avoid trailing space
+ at the end as suggested by Michael Petlan
 
-> +
-> +	if (frame->fp_off && get_user(fp, (unsigned long __user *)(cfa + frame->fp_off)))
-> +		goto the_end;
-> +
-> +	state->sp = cfa;
-> +	state->ip = ra;
-> +	if (frame->fp_off)
-> +		state->fp = fp;
-> +
-> +	return 0;
-> +
-> +the_end:
-> +	state->done = true;
-> +	return -EINVAL;
-> +}
+ tools/perf/tests/shell/base_probe/test_invalid_options.sh | 5 ++++-
+ tools/perf/tests/shell/base_probe/test_line_semantics.sh  | 5 ++++-
+ tools/perf/tests/shell/common/init.sh                     | 5 ++++-
+ 3 files changed, 12 insertions(+), 3 deletions(-)
 
-...
-
-Thanks and regards,
-Jens
+diff --git a/tools/perf/tests/shell/base_probe/test_invalid_options.sh b/tools/perf/tests/shell/base_probe/test_invalid_options.sh
+index 1fedfd8b0d0d..c51d8d9bfdb7 100755
+--- a/tools/perf/tests/shell/base_probe/test_invalid_options.sh
++++ b/tools/perf/tests/shell/base_probe/test_invalid_options.sh
+@@ -22,6 +22,9 @@ if ! check_kprobes_available; then
+ 	exit 0
+ fi
+ 
++# Check for presence of dwarf
++$CMD_PERF check feature -q dwarf
++[ $? -ne 0 ] && HINT_FAIL="Some of the tests need DWARF to run"
+ 
+ ### missing argument
+ 
+@@ -75,5 +78,5 @@ done
+ 
+ 
+ # print overall results
+-print_overall_results "$TEST_RESULT"
++print_overall_results "$TEST_RESULT" $HINT_FAIL
+ exit $?
+diff --git a/tools/perf/tests/shell/base_probe/test_line_semantics.sh b/tools/perf/tests/shell/base_probe/test_line_semantics.sh
+index d8f4bde0f585..f5d3b6e8d0d6 100755
+--- a/tools/perf/tests/shell/base_probe/test_line_semantics.sh
++++ b/tools/perf/tests/shell/base_probe/test_line_semantics.sh
+@@ -23,6 +23,9 @@ if ! check_kprobes_available; then
+ 	exit 0
+ fi
+ 
++# Check for presence of dwarf
++$CMD_PERF check feature -q dwarf
++[ $? -ne 0 ] && HINT_FAIL="Some of the tests need DWARF to run"
+ 
+ ### acceptable --line descriptions
+ 
+@@ -51,5 +54,5 @@ done
+ 
+ 
+ # print overall results
+-print_overall_results "$TEST_RESULT"
++print_overall_results "$TEST_RESULT" $HINT_FAIL
+ exit $?
+diff --git a/tools/perf/tests/shell/common/init.sh b/tools/perf/tests/shell/common/init.sh
+index 075f17623c8e..259706ef5899 100644
+--- a/tools/perf/tests/shell/common/init.sh
++++ b/tools/perf/tests/shell/common/init.sh
+@@ -46,10 +46,13 @@ print_results()
+ print_overall_results()
+ {
+ 	RETVAL="$1"; shift
++	TASK_COMMENT="$*"
++	test -n "$TASK_COMMENT" && TASK_COMMENT=":: $TASK_COMMENT"
++
+ 	if [ $RETVAL -eq 0 ]; then
+ 		_echo "$MALLPASS## [ PASS ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME SUMMARY"
+ 	else
+-		_echo "$MALLFAIL## [ FAIL ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME SUMMARY :: $RETVAL failures found"
++		_echo "$MALLFAIL## [ FAIL ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME SUMMARY :: $RETVAL failures found $TASK_COMMENT"
+ 	fi
+ 	return $RETVAL
+ }
 -- 
-Jens Remus
-Linux on Z Development (D3303) and z/VSE Support
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+2.43.5
 
