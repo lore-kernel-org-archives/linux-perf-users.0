@@ -1,129 +1,140 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5B320ADD6;
-	Fri,  6 Dec 2024 13:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220972309A3
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Dec 2024 16:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733493424; cv=none; b=LpMiYH/+knUI4TB6pljk+sLX2Gmm7BZPRjSU1DcUt/uePra5xW9mmSBhkEWaqBfOSO4Hqe6v3uJirz+CrRZIkBrvNsgWG6BpKfYwqpCfntERebzABGwq33T5xJ1MGlcEuqx2aTEPEtXDQ1SkB5QkG75THx0QASCP8NXjZcB0Qk4=
+	t=1733502320; cv=none; b=bwn0adOKl20VvVkbJhtfhQojJK8mzIyM4AxAMMor5dL53pAy2wx+IU3NbMT15ctGku9BtY2Dd+zwSuL+CLlJu3ONQvgkzM0YJMFk5wtwLZvrDYPI3VGbQIE4XANq7jpqpNRoWhAyNAYVaCZHIvLCOMI3aqekBkVMCdKF63g4KO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733493424; c=relaxed/simple;
-	bh=uMfKj5t1s/VO3UutWywAjUgCvMT5JcR2uY2pqRS03ek=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OgXrtBIqiJyeRXDm6RuTL0PXx2Shj2QABbSg80xEpWDVMlcTKpYwTOUMMRKsr6u+bHbxbqOJ/VX52fHdjryVfi/1RCqpT5tlGyUTu+Ry4iOROq6NGtifVZRJUISayLUd2QFobgzmna7oK/TT94SKTxksaxK0jH9/BoGHrwrC608=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=I623HFBA; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1733502320; c=relaxed/simple;
+	bh=ei0FtpHHrZUcxUt8WzTuRuIK31qZw6OThe6/aKViKtY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e5PbhvMpAO931TTpc34sUO4aM73BNB4SOPbxPeQ0q+MzzTSZKfwU9Pgd0yPgtUEqOuxp++HzSF0fsRmCpJl45wTX08l+K2aVP9HQcIJMQQkQj14MapLB7iW4CP4JJ9nKucipRXBNSdf93e4MC6Yn6sPypUsh7qc7J77lSo9KHFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BUv+Q0kf; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="I623HFBA"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B67UY7n000771;
-	Fri, 6 Dec 2024 13:56:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=2VvAnUtmxhMMk6F7O3XnWBwviVIumRpdGIrNiXkcO
-	oc=; b=I623HFBA1AeMiaayZmTj3kjVU75tzgchmJyHFXca7xaTnKmDHskpEBLvV
-	c2i88/0hhkAr7ARLArq/VpYkdRtcfisqha4S7o3bkFhj+tUaQVinUauwW0lV709U
-	HVlL9wmBP2r0gJ2OPcWVjNmwUiBcUOlIGRoHqqc9V3yUWq70+utNQlicga15Uz2L
-	O18SDU564YBHegGR0ZMwuFQybgq0sVeLwcmlJbExQG2miDZbPLeXJ+JGiqmdkXaP
-	TmF5f/X5HBuExPLCc8Zeae5edyy9tkugJTxFv3wdljRp5x6qF+ERbDsbMYTFHJR3
-	IoV23UaBBxLVj72RwKXbUAFlt8oWA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43bvxksgrx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Dec 2024 13:56:52 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4B6DupYG007143;
-	Fri, 6 Dec 2024 13:56:51 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43bvxksgrw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Dec 2024 13:56:51 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4B69mwY9007467;
-	Fri, 6 Dec 2024 13:56:51 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 438f8jxrtu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Dec 2024 13:56:51 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4B6Dulmm31654516
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 6 Dec 2024 13:56:47 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 83BDA20043;
-	Fri,  6 Dec 2024 13:56:47 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B5AEC20040;
-	Fri,  6 Dec 2024 13:56:41 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.61.245.143])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  6 Dec 2024 13:56:41 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
-Subject: [PATCH] tools/perf/arch/powerpc: Add register mask for power11 PVR in extended regs
-Date: Fri,  6 Dec 2024 19:26:37 +0530
-Message-Id: <20241206135637.36166-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BUv+Q0kf"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so85565ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Dec 2024 08:25:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733502318; x=1734107118; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z7AN4YKGkPuhBlqSxu9pcW9rYzEsgmg57zAfnSADqwM=;
+        b=BUv+Q0kf6WC4j5MEVOF5XMOgQUm6qHL2SAZbquaC0PjG9wVkbvYyq+HAzHC5aN1ctR
+         0gHG7+Q0Af8v574fnmCfFQdy1D2p+2DQqYyeRYwStluLprTpQVwV9oByDZuEfa7xxxlu
+         WPvJtmi2n7NfHcuKHA0AN2DTIItAZxpudBUiQUvgRJVzp7iC4TvMCM/rXs/bFlmfu/HU
+         iVY7+ZDfR/ovKD5/jOoRGcXlclpJRyPjccolrqXoWWYvjM0fotLvxbfX7cTJvXb2dCRu
+         sEsrr5btkXdAmzcr4K094EcB/lPEYoHgwjk04fybbJEvk1SwiDDBjy4Y0Bjvmkk1907z
+         oMUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733502318; x=1734107118;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z7AN4YKGkPuhBlqSxu9pcW9rYzEsgmg57zAfnSADqwM=;
+        b=wBIj6xNtm7cVwHTXT75EL7h7KWZq8T1Y/F6ZxoloVRAFgG9hxmvps4Q1BwK/3yCtxG
+         DzP2tqI2Y9GqOnjpkLBg8CCEDTxh1Pqtn6BHdgXcngwO3YtCw50+h7u0kJLWSjbV2YEa
+         90Ma2CDVYOWyFaft2+xfueb1Z6vEVe4JFeI7KNL5ffvF3FKhZqt+S52eleY5qLUN+4vt
+         c7cRM9ZO1hjt5k0FPVszQmK6MwSHxnRUY4bVa+OMbg3tL19hYwUdEcj3MkqHaNgXYz4B
+         VsryVv7NwSshyOmt96K3x6gl+wQme52n2c6F9fZRVqyPxsJ8mfKna1SBqKysrZpI9vDU
+         jr4g==
+X-Forwarded-Encrypted: i=1; AJvYcCWt5tJX9rrArHWodcks7cIJui515XqraaQTk1lpYquxO0OLB9gVUgZFSa4bF66shWiBDqMO3cTs2GhIN/gHH8v2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7YhfY9AtpbCivATUyshKfmkXz54nZoYO686oYoewrhNn/+ktb
+	EW2B8IJa1xD7suNG8yBj+hmgg89YFipQ4NbD+naz7efdDxJQ5Bp0ln1Jo1/MmE7M9MPJGtGd9Fz
+	keT74L9zAIZXvMLlwPDZW3iaDQy3j9AaxCfxs
+X-Gm-Gg: ASbGncsVXqHTQL6S91SM+zWWyIQuF7tLPCeiZPiC0zdBM9Uv0Usd6z6EDMuqd2IgC2A
+	3gi9mtCOPU0nYkHnOx0TV8RMmIT3DoVG3
+X-Google-Smtp-Source: AGHT+IEwiUM7lSchJOJMWcRstd5T/zhaT5EPwLxomkR/JEk3yV8g29msWYUMSgXl/Nhrl5J83dk6tUOv/1uuSGw6VLg=
+X-Received: by 2002:a05:6e02:3a86:b0:3a7:aa54:ce04 with SMTP id
+ e9e14a558f8ab-3a812c4d915mr3484025ab.18.1733502318069; Fri, 06 Dec 2024
+ 08:25:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 0DRLT-rEuHGmPWYrKzBJijAP1s6fxZfy
-X-Proofpoint-ORIG-GUID: dhBZ0ROkcyuB7GAbcfJlCqU6k1RPxCLP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- malwarescore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- suspectscore=0 spamscore=0 adultscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412060102
+References: <20241206044035.1062032-1-irogers@google.com> <20241206044035.1062032-2-irogers@google.com>
+ <20241206102451.GA3418674@e132581.arm.com>
+In-Reply-To: <20241206102451.GA3418674@e132581.arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 6 Dec 2024 08:25:06 -0800
+Message-ID: <CAP-5=fVDH6k7rW3_LXK5Y9Givs3WO5MQ8XMKsuUXXY5nQ66qDg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/8] perf: Increase MAX_NR_CPUS to 4096
+To: Leo Yan <leo.yan@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Kyle Meyer <kyle.meyer@hpe.com>, 
+	Ben Gainey <ben.gainey@arm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Perf tools side uses extended mask to display the platform
-supported register names (with -I? option) to the user
-and also send this mask to the kernel to capture the extended registers
-as part of each sample. This mask value is decided based on
-the processor version ( from PVR ).
+On Fri, Dec 6, 2024 at 2:24=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> Hi Ian,
+>
+> On Thu, Dec 05, 2024 at 08:40:28PM -0800, Ian Rogers wrote:
+> >
+> > From: Kyle Meyer <kyle.meyer@hpe.com>
+> >
+> > Systems have surpassed 2048 CPUs. Increase MAX_NR_CPUS to 4096.
+> >
+> > Bitmaps declared with MAX_NR_CPUS bits will increase from 256B to 512B,
+> > cpus_runtime will increase from 81960B to 163880B, and max_entries will
+> > increase from 8192B to 16384B.
+> >
+> > Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/lib/perf/include/internal/cpumap.h | 2 +-
+> >  tools/perf/perf.h                        | 2 +-
+> >  tools/perf/util/bpf_skel/kwork_top.bpf.c | 4 +++-
+> >  3 files changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/=
+include/internal/cpumap.h
+> > index 49649eb51ce4..3cf28522004e 100644
+> > --- a/tools/lib/perf/include/internal/cpumap.h
+> > +++ b/tools/lib/perf/include/internal/cpumap.h
+> > @@ -22,7 +22,7 @@ DECLARE_RC_STRUCT(perf_cpu_map) {
+> >  };
+> >
+> >  #ifndef MAX_NR_CPUS
+> > -#define MAX_NR_CPUS    2048
+> > +#define MAX_NR_CPUS    4096
+> >  #endif
+>
+> This series is fine for me.  Just wandering if we can use a central
+> place to maintain the macro, e.g. lib/perf/include/perf/cpumap.h.  It
+> is pointless to define exactly same macros in different headers.  As
+> least, I think we can unify this except the kwork bpf program?
+>
+> P.s. for dynamically allocating per CPU maps in eBPF program, we can
+> refer to the code samples/bpf/xdp_sample_user.c, but this is another
+> topic.
 
-Add PVR value for power11 to enable capturing the extended regs
-as part of sample in power11.
+Thanks Leo,
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
+can I take this as an acked-by? Wrt a single constant I agree,
+following these changes MAX_NR_CPUS is just used for a warning in
+libperf's cpumap.c. I think we're agreed that getting rid of the
+constant would be best. I also think the cpumap logic is duplicating
+something that libc is providing in cpu_set:
+https://man7.org/linux/man-pages/man3/CPU_SET.3.html
+And we have more than one representation in perf for the sake of the
+disk representation:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/lib/perf/include/perf/event.h?h=3Dperf-tools-next#n227
+Just changing the int to be a s16 would lower the memory overhead,
+which is why I'd kind of like the abstraction to be minimal.
 
- tools/perf/arch/powerpc/util/perf_regs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
-index e8e6e6fc6f17..bd36cfd420a2 100644
---- a/tools/perf/arch/powerpc/util/perf_regs.c
-+++ b/tools/perf/arch/powerpc/util/perf_regs.c
-@@ -16,6 +16,7 @@
- 
- #define PVR_POWER9		0x004E
- #define PVR_POWER10		0x0080
-+#define PVR_POWER11		0x0082
- 
- static const struct sample_reg sample_reg_masks[] = {
- 	SMPL_REG(r0, PERF_REG_POWERPC_R0),
-@@ -207,7 +208,7 @@ uint64_t arch__intr_reg_mask(void)
- 	version = (((mfspr(SPRN_PVR)) >>  16) & 0xFFFF);
- 	if (version == PVR_POWER9)
- 		extended_mask = PERF_REG_PMU_MASK_300;
--	else if (version == PVR_POWER10)
-+	else if ((version == PVR_POWER10) || (version == PVR_POWER11))
- 		extended_mask = PERF_REG_PMU_MASK_31;
- 	else
- 		return mask;
--- 
-2.43.5
-
+Thanks,
+Ian
