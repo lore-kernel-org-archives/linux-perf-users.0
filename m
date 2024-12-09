@@ -1,51 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF611957FC;
-	Mon,  9 Dec 2024 20:23:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AFF1993BD;
+	Mon,  9 Dec 2024 20:26:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733775837; cv=none; b=Wn9z8wR3tKhNByTNerGDocXDwRqK1H9UST1FDlEsB8o4oasTODmChzvVOc7QrSj+Bbp5XtlP5VEo+TQ6oPNDHr2GtT2Us2FI+YFyT57TLZwSriBHyCq6h1UWFvF1iVH2idNCC74E6QOSb4DmQ0t3IqSU1pFWF+zbGUUcdIiVZDc=
+	t=1733776013; cv=none; b=AuCWV4dVSE5nK9KF0B7CferOx9h35gpUlf3nDci31Ahezo3huUSy895fzf5n4FXAxajetbQ/S4R6sHy6LTbFKd1ts6jp1SM44J3Hcg6gsL4euwgWWasTRkSTFLz4Pc7VrgVn9bsu3GkvgOmg1Ir1Dd2PBvv6pJI8q285AMj8PtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733775837; c=relaxed/simple;
-	bh=JFKpTW00y3iE12soUkt/JIG9Dy7GjwoxQwOBw9tZfds=;
+	s=arc-20240116; t=1733776013; c=relaxed/simple;
+	bh=9l3tl4GaqnmyavTKUwBBk/QdWyo2NJ0PucScNMDRkhA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cmoxQtW5Wk9SoBYk2BZXyou6SuZJwMeDQyeQltyrCRgbXn4LWU/rEtHLlzAupwBqWH97Uv/+uXiO/n2YXUD1pQ+RYs90NjmWTDbYppsVxF+GW9e0rtwiJ8nfIKYNagnycBulbZh6OfVgoE7SBUxWMnaAzlkzLhSas0rmfsIltx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=foPj6UMV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gbJsvmHdRdOL4kAKFU89uEGfQH8NBC9AnE4zN+tk9F9k3waN9rbKIM5kswn4yP+a4DQ8hcbwTJAl3yHgFiDXe8fKuDK9wNoVDPTxwJh8cx3z13kAeyXiOezguB0q6K1qZUqESmDsTx2K2nc6t4cIiG9zosKzvdCR7NKO0Rv5Zfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CpVCDmpj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="foPj6UMV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70A03C4CEE1;
-	Mon,  9 Dec 2024 20:23:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CpVCDmpj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C0E3C4CED1;
+	Mon,  9 Dec 2024 20:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733775837;
-	bh=JFKpTW00y3iE12soUkt/JIG9Dy7GjwoxQwOBw9tZfds=;
+	s=k20201202; t=1733776013;
+	bh=9l3tl4GaqnmyavTKUwBBk/QdWyo2NJ0PucScNMDRkhA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=foPj6UMVsqms2pAjpj+7R4laV9r0KTvwUCcJgnU88O7h7P4F9MiT8zsDi5Cwo/8CI
-	 m3nawIvU8OJOdkYjjkcu1UzNl3+p/PAFqvBrDUfgC02ROEQZwq4IEHR7GyfZg2XvE+
-	 9runmfqo7CtIHBIGYiNnWPIvOoBaGQTCquw9fJXprppPtJCENh+uQE2NVT/Oaq2fps
-	 xE1f/GpbmSJGn6pDGYpNEvD2gPHCMfPnvInLJEC93vP27uSSHz83DMNsFia/M1ZYmT
-	 faE+eTcCplEEW0j8I40ikxj287xpkJ4kKfJQWpJA5BjqJnh84Tvnht7PuDddLLK4Rb
-	 BiBs2juGYYG0w==
-Date: Mon, 9 Dec 2024 17:23:38 -0300
+	b=CpVCDmpj37Uu7xG5rvT42sN0kSqc/gQjekM4UPdrQoBt9c3T1Dbhelox2bhxqjTGG
+	 CC6atFfBP71fxOHtqKewqnHY9S4c4wHaHjcZ7zBRwkkq+mU7NaSZz+rBeGOSmnPePC
+	 yCM+5CDWf30mGnBL4lZP6pyW+W0tTNkT56ChbxQ+y94C4Ez4597dI8yHjQkeBX1Ql+
+	 oRm5LRESIbdSkINKPnpy2axSt2P3YXYGPQwtRNhYB8VvJdYIqfuo4PAUc3XPNecwkp
+	 htQ3mhJ8P/oH5cHde0YY/8yssn1E1gnw0dX5NJCFoMnKNNuD15ZZ7P9XXmh7gmVvpA
+	 3MG4ebU6erzLw==
+Date: Mon, 9 Dec 2024 17:26:50 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH v2 2/4] perf lock contention: Run BPF slab cache iterator
-Message-ID: <Z1dRyiruUl1Xo45O@x1>
-References: <20241108061500.2698340-1-namhyung@kernel.org>
- <20241108061500.2698340-3-namhyung@kernel.org>
- <Z1ccoNOl4Z8c5DCz@x1>
- <Z1cdDzXe4QNJe8jL@x1>
+Cc: Kuan-Wei Chiu <visitorckw@gmail.com>, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, kan.liang@linux.intel.com,
+	adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw,
+	chuang@cs.nycu.edu.tw, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] perf ftrace: Fix undefined behavior in cmp_profile_data()
+Message-ID: <Z1dSimfbQ5FO7sjU@x1>
+References: <20241209134226.1939163-1-visitorckw@gmail.com>
+ <CAM9d7cgL-1rET97eVU2qpz5-V5XqeCX1N92wTwR5y2sp_4sjog@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,101 +49,37 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z1cdDzXe4QNJe8jL@x1>
+In-Reply-To: <CAM9d7cgL-1rET97eVU2qpz5-V5XqeCX1N92wTwR5y2sp_4sjog@mail.gmail.com>
 
-On Mon, Dec 09, 2024 at 01:38:39PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, Dec 09, 2024 at 01:36:52PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Thu, Nov 07, 2024 at 10:14:57PM -0800, Namhyung Kim wrote:
-> > > Recently the kernel got the kmem_cache iterator to traverse metadata of
-> > > slab objects.  This can be used to symbolize dynamic locks in a slab.
-
-> > > The new slab_caches hash map will have the pointer of the kmem_cache as
-> > > a key and save the name and a id.  The id will be saved in the flags
-> > > part of the lock.
-
-> > Trying to fix this 
+On Mon, Dec 09, 2024 at 09:02:24AM -0800, Namhyung Kim wrote:
+> Hello,
 > 
-> So you have that struct in tools/perf/util/bpf_skel/vmlinux/vmlinux.h,
-> but then, this kernel is old and doesn't have the kmem_cache iterator,
-> so using the generated vmlinux.h will fail the build.
+> On Mon, Dec 9, 2024 at 5:42 AM Kuan-Wei Chiu <visitorckw@gmail.com> wrote:
+> >
+> > The comparison function cmp_profile_data() violates the C standard's
+> > requirements for qsort() comparison functions, which mandate symmetry
+> > and transitivity:
+> >
+> > * Symmetry: If x < y, then y > x.
+> > * Transitivity: If x < y and y < z, then x < z.
+> >
+> > When v1 and v2 are equal, the function incorrectly returns 1, breaking
+> > symmetry and transitivity. This causes undefined behavior, which can
+> > lead to memory corruption in certain versions of glibc [1].
+> >
+> > Fix the issue by returning 0 when v1 and v2 are equal, ensuring
+> > compliance with the C standard and preventing undefined behavior.
+> >
+> > Link: https://www.qualys.com/2024/01/30/qsort.txt [1]
+> > Fixes: 0f223813edd0 ("perf ftrace: Add 'profile' command")
+> > Fixes: 74ae366c37b7 ("perf ftrace profile: Add -s/--sort option")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> 
+> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
-I tried passing the right offset to the iterator so as not to try to use
-a type that isn't in vmlinux.h generated from the old kernel BTF:
+I'm assuming you'll pick this for perf-tools, ok?
 
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -52,7 +52,7 @@ static void check_slab_cache_iter(struct lock_contention *con)
-                pr_debug("slab cache iterator is not available: %d\n", ret);
-                goto out;
-        } else {
--               const struct btf_member *s = __btf_type__find_member_by_name(btf, ret, "s");
-+               const struct btf_member *s = __btf_type__find_unnamed_union_with_member_by_name(btf, ret, "s");
- 
-                if (s == NULL) {
-                        skel->rodata->slab_cache_iter_member_offset = -1;
-@@ -60,7 +60,9 @@ static void check_slab_cache_iter(struct lock_contention *con)
-                        goto out;
-                }
- 
-                skel->rodata->slab_cache_iter_member_offset = s->offset / 8; // bits -> bytes
-+               pr_debug("slab cache iterator kmem_cache pointer offset: %d\n",
-+                        skel->rodata->slab_cache_iter_member_offset);
-        }
-
-
-but the verifier doesn't like that:
-
-; struct kmem_cache *s = slab_cache_iter_member_offset < 0 ? NULL : @ lock_contention.bpf.c:615
-12: (7b) *(u64 *)(r10 -8) = r2        ; R2_w=ctx(off=8) R10=fp0 fp-8_w=ctx(off=8)
-; if (s == NULL) @ lock_contention.bpf.c:619
-13: (15) if r1 == 0x0 goto pc+22      ; R1=ctx()
-; d.id = ++slab_cache_id << LCB_F_SLAB_ID_SHIFT; @ lock_contention.bpf.c:622
-14: (18) r1 = 0xffffc14bcde3a014      ; R1_w=map_value(map=lock_con.bss,ks=4,vs=40,off=20)
-16: (61) r3 = *(u32 *)(r1 +0)         ; R1_w=map_value(map=lock_con.bss,ks=4,vs=40,off=20) R3_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
-17: (07) r3 += 1                      ; R3_w=scalar(smin=umin=1,smax=umax=0x100000000,var_off=(0x0; 0x1ffffffff))
-18: (63) *(u32 *)(r1 +0) = r3         ; R1_w=map_value(map=lock_con.bss,ks=4,vs=40,off=20) R3_w=scalar(smin=umin=1,smax=umax=0x100000000,var_off=(0x0; 0x1ffffffff))
-19: (67) r3 <<= 16                    ; R3_w=scalar(smin=umin=0x10000,smax=umax=0x1000000000000,smax32=0x7fff0000,umax32=0xffff0000,var_off=(0x0; 0x1ffffffff0000))
-20: (63) *(u32 *)(r10 -40) = r3       ; R3_w=scalar(smin=umin=0x10000,smax=umax=0x1000000000000,smax32=0x7fff0000,umax32=0xffff0000,var_off=(0x0; 0x1ffffffff0000)) R10=fp0 fp-40=????scalar(smin=umin=0x10000,smax=umax=0x1000000000000,smax32=0x7fff0000,umax32=0xffff0000,var_off=(0x0; 0x1ffffffff0000))
-; bpf_probe_read_kernel_str(d.name, sizeof(d.name), s->name); @ lock_contention.bpf.c:623
-21: (79) r3 = *(u64 *)(r2 +96)
-dereference of modified ctx ptr R2 off=8 disallowed
-processed 19 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
--- END PROG LOAD LOG --
-libbpf: prog 'slab_cache_iter': failed to load: -EACCES
-libbpf: failed to load object 'lock_contention_bpf'
-libbpf: failed to load BPF skeleton 'lock_contention_bpf': -EACCES
-Failed to load lock-contention BPF skeleton
-lock contention BPF setup failed
-root@number:~# 
-
-and additionally the type is not like the one you added to the barebones
-vmlinux.h:
-
-⬢ [acme@toolbox perf-tools-next]$ git show d82e2e170d1c756b | grep 'struct bpf_iter__kmem_cache {' -A3
-+struct bpf_iter__kmem_cache {
-+	struct kmem_cache *s;
-+} __attribute__((preserve_access_index));
-+
-⬢ [acme@toolbox perf-tools-next]$
-
-But:
-
-⬢ [acme@toolbox perf-tools-next]$ uname -a
-Linux toolbox 6.13.0-rc2 #1 SMP PREEMPT_DYNAMIC Mon Dec  9 12:33:35 -03 2024 x86_64 GNU/Linux
-⬢ [acme@toolbox perf-tools-next]$ pahole bpf_iter__kmem_cache
-struct bpf_iter__kmem_cache {
-	union {
-		struct bpf_iter_meta * meta;             /*     0     8 */
-	};                                               /*     0     8 */
-	union {
-		struct kmem_cache * s;                   /*     8     8 */
-	};                                               /*     8     8 */
-
-	/* size: 16, cachelines: 1, members: 2 */
-	/* last cacheline: 16 bytes */
-};
-
-⬢ [acme@toolbox perf-tools-next]$
-
-Do CO-RE handle this?
+Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 - Arnaldo
