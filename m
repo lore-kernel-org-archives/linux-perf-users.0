@@ -1,372 +1,299 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133C419D082
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Dec 2024 22:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C29719D082
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Dec 2024 22:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733783044; cv=none; b=VZI5u/WTMwjfa45MaGOQxxGcfX5SLlJhp1arfbKVSGmCorTquNtElZHi9LB38C3saUTON9WH/8NeBqktkSChjLbG02VB+Y+m8UaARNA/eeXuSlCYr4pBXe83ZOxGipG/hVcBCOm5GZ/qtvYvzu24DzsU9AgKM5hGe16VpF5sNKc=
+	t=1733783291; cv=none; b=MWilf7Ae66yz+8TjwyPjT0y0vUtxDQXNbhO/bfn06V9pwkdQSYg3F5REyxY0f69sVSByAOIEAuHW6znigujsgteTuzBNiRyt2DVsX3YohB2jqL8lOo9BB4psSWwFP0Z2fq7VWvbYlnlimcolq60w4ZhjPnnCKqm/DY9eBflhqs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733783044; c=relaxed/simple;
-	bh=HuOdCZXfJVs/ZI8/bZXk5pcIuewTFQdfJssN+QjP6hw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZPZnKCPQIDOnRlxZnMO9sieB9ZkUR3RlBslOI4WDwLnZS8QcuPW5EFfar+TjA+vy9ALCgqNQKGRkMgkQ/I8JhdN+6b+Uj7x48i6j4d4eOz7AyBV7BI9cRmMecqRMrOuqtd1kiKep3L3HclwqlhKjkze+7VgmiwdnxoJ33H0zTDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KlO6SuTR; arc=none smtp.client-ip=209.85.166.170
+	s=arc-20240116; t=1733783291; c=relaxed/simple;
+	bh=Yq8NdC3qDqJWNhvNan96lK4uZBel+m4hl5J1b9MZ4MI=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=oVI1wspxCNglBlga5Co+CfGM9+VUa1itVajVM8y+xTX3RivqEZ/WDVdi8HWNnMwr2n4VYsPb2g2JwM/hcRgOb3ZKjhbJB1NkAn1oWXhmjNGzQETP0Fjh/dwz67ElpXj0/bchPUtc/LnqKurVQXfrZ0aKxhwmmKINaPprgr2gI1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sp8aXDl5; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KlO6SuTR"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so765ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Dec 2024 14:24:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sp8aXDl5"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3a0d165daeso6927691276.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Dec 2024 14:28:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733783041; x=1734387841; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4B+i5dL3xdxmRFat3jkYLVDftVP8cOdtQMKOkI13Mu8=;
-        b=KlO6SuTRSxmBWwXA8kP/r/fnt4p67riAYCN0/ijzx8yhGUbiWAlvH+/CeRh15H4Ael
-         H+AE+gW76kfeHqbuH0PusqK/5nrdRYycSxFxf5DCSl+iRBAnzk6HKb16hbtHXXVzjYp6
-         VaJFM7UA8oBx64t4z/ctbvQPgz45H39UZvqpfPM9hGu7etUZ2eJPtBVH7JFllUlJ0gB5
-         o/648SDLRXg0AFn33dzWrHM/JaVtdJUYCi3/ZCWGtbte2pgwouPx69tZKuzZ67oXNWse
-         elWpopHvG4Ut7lbNskS4AnIhoBzOQu94LgYmzw5Zku3Anv1ELrv4mR08uRBKUL5w97sC
-         rRiQ==
+        d=google.com; s=20230601; t=1733783287; x=1734388087; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5jx+lb0HfYxAcbFSBMDC5/59RbnwioOXwChBaauCLXw=;
+        b=sp8aXDl5DifWMyv+mhPSW8ESjpy8GsTEHrUx9mOW6edc4v6ICQZe9JXxB+IEKHNvCU
+         ssNlWR62FSfGArMuiUENgadneZfUCz+sngZR/ZSl2zHW1Phwws7Aw620/0Mv6r9Rf0dU
+         G1hlWZWvYz3k5lFbXQ4AOZct0sSipR2NqTjx9ypBUfvadp8qzzcfp8UML5XsqednsbUy
+         xTwV5ORCpIyyAmF+lwqnwVEaYCdhnCSbRaylkDaeQQVUHUVx1qyjM6W0pF71zE3BIxwB
+         9LdgGNKgScqx/ey/yQYQdRkGDEpMCp4/L6kHlQymDMTrYeQGn6G+p4YXsE6soDqvQy45
+         iajQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733783041; x=1734387841;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4B+i5dL3xdxmRFat3jkYLVDftVP8cOdtQMKOkI13Mu8=;
-        b=MYrrhihyynoq5smNyyKhdOVSHFoRfTwxCSzXoFTWPQkJkU4y2Fhy2/zCgdzt4h6bzD
-         pxJ6njMoC6t0bEGw++i1gFZpXxRU08X2IeDHNtPC8ZTlJYwuUxIAkJPa0qicmJ19gWAa
-         2Vp7JslC4zyCR3uDo2zZO9uUoSUC/ICwcLLPJ0BSTXPE8crtBbEC6ELlB3Xw8qQ/Yby7
-         TW8bBzsnm98WmjQeqOPvB0RQwnLSl0ioQ9y88FO+iOwfJ7THzUlkT25zKbGxJGU3g1jQ
-         KD4UYSuWU/UOiOSEK/DL+A1ZGTn9emWpAHqhsTjOQHzV22N/h7Ae6Dj8ZewsCWJghgcP
-         stuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBP7HVorlGGszWJKhVA2yDBKAATqkEoTiSrCkP7K2sB1Y6j5Jx0OZa1wFY+Aalhn4IJ3C2LuO4rpIlLpvOTFmT@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHcUGoErtXgIQ3esuWrNHd/fyT+TM8FOBJHyPcJRb94iskH8x3
-	MFtOoEHRrXltKCoCzYdddnZJyYn9yRa5Yfp6aSEbfqtedvCYxWualslLgN9cLu+vYVkerfUExF4
-	6oD+U7TgCzjuxL6kY1elVbway8TmH+j1HhlT6
-X-Gm-Gg: ASbGncsiZ2FP053zrxepWD33bA1wlX9Q6D6DgR+BvC8AMIDKv+1+IPpLF9fMJw3S+G5
-	kOEO23ImxNJZykH/XIs+i0NF4E32cY81SgkgU
-X-Google-Smtp-Source: AGHT+IGZbL/lCpky6rvDjMtuy2WDIu07ywFy2CNg4s10xa+f8MjMBP3d2X5Jni86xXxZn1D0ckiC3C+ICedb4sP6mKs=
-X-Received: by 2002:a05:6e02:32c6:b0:3a7:e0d0:7cf6 with SMTP id
- e9e14a558f8ab-3a9df5337bdmr168305ab.21.1733783040936; Mon, 09 Dec 2024
- 14:24:00 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733783287; x=1734388087;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5jx+lb0HfYxAcbFSBMDC5/59RbnwioOXwChBaauCLXw=;
+        b=oXecjmD2F3E5rQW/+HGNQ6sYzu5Ugo6O3S35H03BXAzrkRoK7wX6s7rugNG0hav0ts
+         VFQ/mVfD8aVod4kaaJsqHyLxexDi37BE8zdQt8rI0hX1zRUPxxlacjnZ5U2zjCqfB/fq
+         a6qN6tJwZmtJu1PIrttN8vWRNpLiCQcVhf3n9LsNOLMpQAVHu2tVoXgAJy1kCqddjHzl
+         zOouvFV63buBHdAFaFPSQtCJT1g14GuM4zgZ65U7ehHZVGeNUNCqwuddRBeCVv866lU7
+         J84PWSkh1YpglZ4tzR8iSBPnNiRJHUSZoNukNB/yp+05Qrb05H7HcJtMJAvIs9TZSo20
+         Y1Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHkDGNJrujQIEn1XL/J0AK1UcU/xb6/DQ48XLMno27dLXuxUjF5OmE5scEeOdLOtBibBodlEg7YMFd5k13UPHV@vger.kernel.org
+X-Gm-Message-State: AOJu0YySBaJZMAnRSxCXMDjFKGCiYmZbdxBRgsxOGJLnWIQjZEY9wsfY
+	omjTfDmKVgiZg7ysoW/3pG4R2OP0BO8nPucfa4ipd8RyMgqGbdSBXvB1kWL80xLQkSeFkDCqAXP
+	ChcTOWQ==
+X-Google-Smtp-Source: AGHT+IHtkTxdkdMh0WUKYHRhPpRZ5PQYA417juPHmeOywOOYq0TsIXjq4WvcZfBs0esf6STStb/95fwD6lvh
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:c8f1:280e:e8ad:32])
+ (user=irogers job=sendgmr) by 2002:a25:aa71:0:b0:e39:7f7f:92c4 with SMTP id
+ 3f1490d57ef6-e3a175d1278mr25360276.0.1733783287391; Mon, 09 Dec 2024 14:28:07
+ -0800 (PST)
+Date: Mon,  9 Dec 2024 14:27:37 -0800
+Message-Id: <20241209222800.296000-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241108061500.2698340-1-namhyung@kernel.org> <20241108061500.2698340-3-namhyung@kernel.org>
- <Z1ccoNOl4Z8c5DCz@x1> <Z1cdDzXe4QNJe8jL@x1> <Z1dsRk-3RrZra39w@google.com>
-In-Reply-To: <Z1dsRk-3RrZra39w@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.1.545.g3c1d2e2a6a-goog
+Subject: [PATCH v1 00/22] Intel vendor events and TMA 5.01 metrics
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Dec 2024 14:23:49 -0800
-Message-ID: <CAP-5=fU7pVjaabBq4xuPsDw9oYk9Cf2kWF+x58uRYCY2XX13Nw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] perf lock contention: Run BPF slab cache iterator
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
-	Stephane Eranian <eranian@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	Kees Cook <kees@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
+	Samantha Alt <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Michael Petlan <mpetlan@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 9, 2024 at 2:16=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Mon, Dec 09, 2024 at 01:38:39PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Mon, Dec 09, 2024 at 01:36:52PM -0300, Arnaldo Carvalho de Melo wrot=
-e:
-> > > On Thu, Nov 07, 2024 at 10:14:57PM -0800, Namhyung Kim wrote:
-> > > > Recently the kernel got the kmem_cache iterator to traverse metadat=
-a of
-> > > > slab objects.  This can be used to symbolize dynamic locks in a sla=
-b.
-> > > >
-> > > > The new slab_caches hash map will have the pointer of the kmem_cach=
-e as
-> > > > a key and save the name and a id.  The id will be saved in the flag=
-s
-> > > > part of the lock.
-> > >
-> > > Trying to fix this
-> >
-> > So you have that struct in tools/perf/util/bpf_skel/vmlinux/vmlinux.h,
-> > but then, this kernel is old and doesn't have the kmem_cache iterator,
-> > so using the generated vmlinux.h will fail the build.
->
-> Thanks for checking this.  I think we handle compatibility issues by
-> checking BTF at runtime but this is a build-time issue. :(
->
-> I wonder if it's really needed to generate vmlinux.h for perf.  Can we
-> simply use the minimal vmlinux.h always?
+Update the Intel vendor events to the latest.
+Update the metrics to TMA 5.01.
+Add Arrowlake support.
+Add metrics for LNL and GNR.
+Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
 
-Agreed, it shouldn't be necessary. There are certain compilation
-errors that will happen with a generated one that can't happen with
-the minimal. They could be indicative of bugs, like a renamed struct.
+The perf json was generated using the script:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+with the generated json being in:
+https://github.com/intel/perfmon/tree/main/scripts/perf
 
-Thanks,
-Ian
+Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
+<caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com> and
+Weilin Wang <weilin.wang@intel.com> for helping get this patch series
+together.
 
-> >
-> > > cd . && make GEN_VMLINUX_H=3D1 FEATURES_DUMP=3D/home/acme/git/perf-to=
-ols-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j28 O=3D/tmp/tmp.DWo9tIFvWU DE=
-STDIR=3D/tmp/tmp.ex3iljqLBT
-> > >   BUILD:   Doing 'make -j28' parallel build
-> [...]
-> > >   GEN     /tmp/tmp.DWo9tIFvWU/util/bpf_skel/vmlinux.h
-> > >   CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bpf_prog_profiler.bp=
-f.o
-> > >   CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bperf_leader.bpf.o
-> > >   CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bperf_follower.bpf.o
-> > >   CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bperf_cgroup.bpf.o
-> > >   CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/func_latency.bpf.o
-> > >   CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/off_cpu.bpf.o
-> > >   CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/lock_contention.bpf.=
-o
-> > >   CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/kwork_trace.bpf.o
-> > >   CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/sample_filter.bpf.o
-> > >   CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/kwork_top.bpf.o
-> > >   CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bench_uprobe.bpf.o
-> > >   CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/augmented_raw_syscal=
-ls.bpf.o
-> > >   GENSKEL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/bench_uprobe.skel.h
-> > >   GENSKEL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/func_latency.skel.h
-> > > util/bpf_skel/lock_contention.bpf.c:612:28: error: declaration of 'st=
-ruct bpf_iter__kmem_cache' will not be visible outside of this function [-W=
-error,-Wvisibility]
-> > >   612 | int slab_cache_iter(struct bpf_iter__kmem_cache *ctx)
-> > >       |                            ^
-> > > util/bpf_skel/lock_contention.bpf.c:614:28: error: incomplete definit=
-ion of type 'struct bpf_iter__kmem_cache'
-> > >   614 |         struct kmem_cache *s =3D ctx->s;
-> > >       |                                ~~~^
-> > > util/bpf_skel/lock_contention.bpf.c:612:28: note: forward declaration=
- of 'struct bpf_iter__kmem_cache'
-> > >   612 | int slab_cache_iter(struct bpf_iter__kmem_cache *ctx)
-> > >       |                            ^
-> > > 2 errors generated.
-> > > make[4]: *** [Makefile.perf:1248: /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.=
-tmp/lock_contention.bpf.o] Error 1
-> > > make[4]: *** Waiting for unfinished jobs....
-> > > make[3]: *** [Makefile.perf:292: sub-make] Error 2
-> > > make[2]: *** [Makefile:76: all] Error 2
-> > > make[1]: *** [tests/make:344: make_gen_vmlinux_h_O] Error 1
-> > > make: *** [Makefile:109: build-test] Error 2
-> > > make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-> > >
-> > > real        3m43.896s
-> > > user        29m30.716s
-> > > sys 6m36.609s
-> > > =E2=AC=A2 [acme@toolbox perf-tools-next]$
-> > >
-> > >
-> > >
-> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > ---
-> > > >  tools/perf/util/bpf_lock_contention.c         | 50 +++++++++++++++=
-++++
-> > > >  .../perf/util/bpf_skel/lock_contention.bpf.c  | 28 +++++++++++
-> > > >  tools/perf/util/bpf_skel/lock_data.h          | 12 +++++
-> > > >  tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |  8 +++
-> > > >  4 files changed, 98 insertions(+)
-> > > >
-> > > > diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/uti=
-l/bpf_lock_contention.c
-> > > > index 41a1ad08789511c3..558590c3111390fc 100644
-> > > > --- a/tools/perf/util/bpf_lock_contention.c
-> > > > +++ b/tools/perf/util/bpf_lock_contention.c
-> > > > @@ -12,12 +12,59 @@
-> > > >  #include <linux/zalloc.h>
-> > > >  #include <linux/string.h>
-> > > >  #include <bpf/bpf.h>
-> > > > +#include <bpf/btf.h>
-> > > >  #include <inttypes.h>
-> > > >
-> > > >  #include "bpf_skel/lock_contention.skel.h"
-> > > >  #include "bpf_skel/lock_data.h"
-> > > >
-> > > >  static struct lock_contention_bpf *skel;
-> > > > +static bool has_slab_iter;
-> > > > +
-> > > > +static void check_slab_cache_iter(struct lock_contention *con)
-> > > > +{
-> > > > + struct btf *btf =3D btf__load_vmlinux_btf();
-> > > > + s32 ret;
-> > > > +
-> > > > + if (btf =3D=3D NULL) {
-> > > > +         pr_debug("BTF loading failed: %s\n", strerror(errno));
-> > > > +         return;
-> > > > + }
-> > > > +
-> > > > + ret =3D btf__find_by_name_kind(btf, "bpf_iter__kmem_cache", BTF_K=
-IND_STRUCT);
-> > > > + if (ret < 0) {
-> > > > +         bpf_program__set_autoload(skel->progs.slab_cache_iter, fa=
-lse);
-> > > > +         pr_debug("slab cache iterator is not available: %d\n", re=
-t);
-> > > > +         goto out;
-> > > > + }
-> > > > +
-> > > > + has_slab_iter =3D true;
-> > > > +
-> > > > + bpf_map__set_max_entries(skel->maps.slab_caches, con->map_nr_entr=
-ies);
-> > > > +out:
-> > > > + btf__free(btf);
-> > > > +}
-> > > > +
-> > > > +static void run_slab_cache_iter(void)
-> > > > +{
-> > > > + int fd;
-> > > > + char buf[256];
-> > > > +
-> > > > + if (!has_slab_iter)
-> > > > +         return;
-> > > > +
-> > > > + fd =3D bpf_iter_create(bpf_link__fd(skel->links.slab_cache_iter))=
-;
-> > > > + if (fd < 0) {
-> > > > +         pr_debug("cannot create slab cache iter: %d\n", fd);
-> > > > +         return;
-> > > > + }
-> > > > +
-> > > > + /* This will run the bpf program */
-> > > > + while (read(fd, buf, sizeof(buf)) > 0)
-> > > > +         continue;
-> > > > +
-> > > > + close(fd);
-> > > > +}
-> > > >
-> > > >  int lock_contention_prepare(struct lock_contention *con)
-> > > >  {
-> > > > @@ -109,6 +156,8 @@ int lock_contention_prepare(struct lock_content=
-ion *con)
-> > > >                   skel->rodata->use_cgroup_v2 =3D 1;
-> > > >   }
-> > > >
-> > > > + check_slab_cache_iter(con);
-> > > > +
-> > > >   if (lock_contention_bpf__load(skel) < 0) {
-> > > >           pr_err("Failed to load lock-contention BPF skeleton\n");
-> > > >           return -1;
-> > > > @@ -304,6 +353,7 @@ static void account_end_timestamp(struct lock_c=
-ontention *con)
-> > > >
-> > > >  int lock_contention_start(void)
-> > > >  {
-> > > > + run_slab_cache_iter();
-> > > >   skel->bss->enabled =3D 1;
-> > > >   return 0;
-> > > >  }
-> > > > diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools=
-/perf/util/bpf_skel/lock_contention.bpf.c
-> > > > index 1069bda5d733887f..fd24ccb00faec0ba 100644
-> > > > --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > > > +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > > > @@ -100,6 +100,13 @@ struct {
-> > > >   __uint(max_entries, 1);
-> > > >  } cgroup_filter SEC(".maps");
-> > > >
-> > > > +struct {
-> > > > + __uint(type, BPF_MAP_TYPE_HASH);
-> > > > + __uint(key_size, sizeof(long));
-> > > > + __uint(value_size, sizeof(struct slab_cache_data));
-> > > > + __uint(max_entries, 1);
-> > > > +} slab_caches SEC(".maps");
-> > > > +
-> > > >  struct rw_semaphore___old {
-> > > >   struct task_struct *owner;
-> > > >  } __attribute__((preserve_access_index));
-> > > > @@ -136,6 +143,8 @@ int perf_subsys_id =3D -1;
-> > > >
-> > > >  __u64 end_ts;
-> > > >
-> > > > +__u32 slab_cache_id;
-> > > > +
-> > > >  /* error stat */
-> > > >  int task_fail;
-> > > >  int stack_fail;
-> > > > @@ -563,4 +572,23 @@ int BPF_PROG(end_timestamp)
-> > > >   return 0;
-> > > >  }
-> > > >
-> > > > +SEC("iter/kmem_cache")
-> > > > +int slab_cache_iter(struct bpf_iter__kmem_cache *ctx)
-> > > > +{
-> > > > + struct kmem_cache *s =3D ctx->s;
-> > > > + struct slab_cache_data d;
-> > > > +
-> > > > + if (s =3D=3D NULL)
-> > > > +         return 0;
-> > > > +
-> > > > + d.id =3D ++slab_cache_id << LCB_F_SLAB_ID_SHIFT;
-> > > > + bpf_probe_read_kernel_str(d.name, sizeof(d.name), s->name);
-> > > > +
-> > > > + if (d.id >=3D LCB_F_SLAB_ID_END)
-> > > > +         return 0;
-> > > > +
-> > > > + bpf_map_update_elem(&slab_caches, &s, &d, BPF_NOEXIST);
-> > > > + return 0;
-> > > > +}
-> > > > +
-> > > >  char LICENSE[] SEC("license") =3D "Dual BSD/GPL";
-> > > > diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util=
-/bpf_skel/lock_data.h
-> > > > index 4f0aae5483745dfa..c15f734d7fc4aecb 100644
-> > > > --- a/tools/perf/util/bpf_skel/lock_data.h
-> > > > +++ b/tools/perf/util/bpf_skel/lock_data.h
-> > > > @@ -32,9 +32,16 @@ struct contention_task_data {
-> > > >  #define LCD_F_MMAP_LOCK          (1U << 31)
-> > > >  #define LCD_F_SIGHAND_LOCK       (1U << 30)
-> > > >
-> > > > +#define LCB_F_SLAB_ID_SHIFT      16
-> > > > +#define LCB_F_SLAB_ID_START      (1U << 16)
-> > > > +#define LCB_F_SLAB_ID_END        (1U << 26)
-> > > > +#define LCB_F_SLAB_ID_MASK       0x03FF0000U
-> > > > +
-> > > >  #define LCB_F_TYPE_MAX           (1U << 7)
-> > > >  #define LCB_F_TYPE_MASK          0x0000007FU
-> > > >
-> > > > +#define SLAB_NAME_MAX  28
-> > > > +
-> > > >  struct contention_data {
-> > > >   u64 total_time;
-> > > >   u64 min_time;
-> > > > @@ -55,4 +62,9 @@ enum lock_class_sym {
-> > > >   LOCK_CLASS_RQLOCK,
-> > > >  };
-> > > >
-> > > > +struct slab_cache_data {
-> > > > + u32 id;
-> > > > + char name[SLAB_NAME_MAX];
-> > > > +};
-> > > > +
-> > > >  #endif /* UTIL_BPF_SKEL_LOCK_DATA_H */
-> > > > diff --git a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h b/tools/per=
-f/util/bpf_skel/vmlinux/vmlinux.h
-> > > > index 4dcad7b682bdee9c..7b81d3173917fdb5 100644
-> > > > --- a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
-> > > > +++ b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
-> > > > @@ -195,4 +195,12 @@ struct bpf_perf_event_data_kern {
-> > > >   */
-> > > >  struct rq {};
-> > > >
-> > > > +struct kmem_cache {
-> > > > + const char *name;
-> > > > +} __attribute__((preserve_access_index));
-> > > > +
-> > > > +struct bpf_iter__kmem_cache {
-> > > > + struct kmem_cache *s;
-> > > > +} __attribute__((preserve_access_index));
-> > > > +
-> > > >  #endif // __VMLINUX_H
-> > > > --
-> > > > 2.47.0.277.g8800431eea-goog
+Ian Rogers (22):
+  perf vendor events: Update Alderlake events/metrics
+  perf vendor events: Update AlderlakeN events/metrics
+  perf vendor events: Add Arrowlake events/metrics
+  perf vendor events: Update Broadwell events/metrics
+  perf vendor events: Update BroadwellDE events/metrics
+  perf vendor events: Update BroadwellX events/metrics
+  perf vendor events: Update CascadelakeX events/metrics
+  perf vendor events: Update EmeraldRapids events/metrics
+  perf vendor events: Update GrandRidge events/metrics
+  perf vendor events: Update/add Graniterapids events/metrics
+  perf vendor events: Update Haswell events/metrics
+  perf vendor events: Update HaswellX events/metrics
+  perf vendor events: Update Icelake events/metrics
+  perf vendor events: Update IcelakeX events/metrics
+  perf vendor events: Update/add Lunarlake events/metrics
+  perf vendor events: Update Meteorlake events/metrics
+  perf vendor events: Update Rocketlake events/metrics
+  perf vendor events: Update Sapphirerapids events/metrics
+  perf vendor events: Update Sierraforest events/metrics
+  perf vendor events: Update Skylake metrics
+  perf vendor events: Update SkylakeX events/metrics
+  perf vendor events: Update Tigerlake events/metrics
+
+ .../arch/x86/alderlake/adl-metrics.json       | 3637 ++++++++++---
+ .../pmu-events/arch/x86/alderlake/cache.json  |  292 +-
+ .../arch/x86/alderlake/floating-point.json    |   19 +-
+ .../arch/x86/alderlake/frontend.json          |   19 -
+ .../pmu-events/arch/x86/alderlake/memory.json |   32 +-
+ .../arch/x86/alderlake/metricgroups.json      |   10 +-
+ .../pmu-events/arch/x86/alderlake/other.json  |   92 +-
+ .../arch/x86/alderlake/pipeline.json          |  127 +-
+ .../arch/x86/alderlake/virtual-memory.json    |   33 +
+ .../arch/x86/alderlaken/adln-metrics.json     |   83 +-
+ .../pmu-events/arch/x86/alderlaken/cache.json |  227 +-
+ .../arch/x86/alderlaken/floating-point.json   |   17 +-
+ .../arch/x86/alderlaken/memory.json           |   20 +
+ .../pmu-events/arch/x86/alderlaken/other.json |   81 +-
+ .../arch/x86/alderlaken/pipeline.json         |   97 +-
+ .../arch/x86/alderlaken/virtual-memory.json   |   30 +
+ .../arch/x86/arrowlake/arl-metrics.json       | 4597 ++++++++++++++++
+ .../pmu-events/arch/x86/arrowlake/cache.json  | 1444 ++++++
+ .../arch/x86/arrowlake/floating-point.json    |  532 ++
+ .../arch/x86/arrowlake/frontend.json          |  609 +++
+ .../pmu-events/arch/x86/arrowlake/memory.json |  387 ++
+ .../arch/x86/arrowlake/metricgroups.json      |  150 +
+ .../pmu-events/arch/x86/arrowlake/other.json  |  279 +
+ .../arch/x86/arrowlake/pipeline.json          | 2298 ++++++++
+ .../arch/x86/arrowlake/uncore-cache.json      |   20 +
+ .../x86/arrowlake/uncore-interconnect.json    |   47 +
+ .../arch/x86/arrowlake/uncore-memory.json     |  142 +
+ .../arch/x86/arrowlake/uncore-other.json      |   10 +
+ .../arch/x86/arrowlake/virtual-memory.json    |  522 ++
+ .../arch/x86/broadwell/bdw-metrics.json       |  312 +-
+ .../pmu-events/arch/x86/broadwell/cache.json  |   10 +-
+ .../arch/x86/broadwell/frontend.json          |    4 +-
+ .../pmu-events/arch/x86/broadwell/memory.json |    8 +-
+ .../arch/x86/broadwell/metricgroups.json      |    5 +
+ .../arch/x86/broadwell/pipeline.json          |   10 +-
+ .../arch/x86/broadwellde/bdwde-metrics.json   |  256 +-
+ .../arch/x86/broadwellde/cache.json           |   10 +-
+ .../arch/x86/broadwellde/frontend.json        |    4 +-
+ .../arch/x86/broadwellde/memory.json          |    6 +-
+ .../arch/x86/broadwellde/metricgroups.json    |    5 +
+ .../arch/x86/broadwellde/pipeline.json        |   10 +-
+ .../arch/x86/broadwellde/uncore-cache.json    |   28 +-
+ .../x86/broadwellde/uncore-interconnect.json  |   16 +-
+ .../arch/x86/broadwellx/bdx-metrics.json      |  344 +-
+ .../pmu-events/arch/x86/broadwellx/cache.json |   10 +-
+ .../arch/x86/broadwellx/frontend.json         |    4 +-
+ .../arch/x86/broadwellx/memory.json           |    6 +-
+ .../arch/x86/broadwellx/metricgroups.json     |    5 +
+ .../arch/x86/broadwellx/pipeline.json         |   10 +-
+ .../arch/x86/broadwellx/uncore-cache.json     |   28 +-
+ .../x86/broadwellx/uncore-interconnect.json   |   36 +-
+ .../arch/x86/broadwellx/uncore-memory.json    |    1 +
+ .../arch/x86/cascadelakex/clx-metrics.json    |  767 +--
+ .../arch/x86/cascadelakex/metricgroups.json   |    9 +-
+ .../arch/x86/cascadelakex/uncore-cache.json   |   60 +-
+ .../x86/cascadelakex/uncore-interconnect.json |   11 -
+ .../arch/x86/emeraldrapids/cache.json         |   28 +-
+ .../arch/x86/emeraldrapids/emr-metrics.json   | 1036 ++--
+ .../arch/x86/emeraldrapids/frontend.json      |   19 -
+ .../arch/x86/emeraldrapids/memory.json        |   15 +-
+ .../arch/x86/emeraldrapids/metricgroups.json  |   10 +-
+ .../arch/x86/emeraldrapids/pipeline.json      |   23 -
+ .../arch/x86/emeraldrapids/uncore-io.json     |  218 +-
+ .../arch/x86/grandridge/grr-metrics.json      |  284 +-
+ .../arch/x86/grandridge/pipeline.json         |    3 +-
+ .../arch/x86/grandridge/uncore-cache.json     |    4 +-
+ .../x86/grandridge/uncore-interconnect.json   |   60 +
+ .../arch/x86/grandridge/uncore-io.json        |  214 +-
+ .../arch/x86/grandridge/uncore-memory.json    |    2 +-
+ .../arch/x86/graniterapids/cache.json         |  110 +-
+ .../arch/x86/graniterapids/counter.json       |    2 +-
+ .../arch/x86/graniterapids/frontend.json      |   24 +-
+ .../arch/x86/graniterapids/gnr-metrics.json   | 2311 +++++++++
+ .../arch/x86/graniterapids/memory.json        |  121 +-
+ .../arch/x86/graniterapids/metricgroups.json  |  145 +
+ .../arch/x86/graniterapids/other.json         |   99 +
+ .../arch/x86/graniterapids/pipeline.json      |   40 +-
+ .../arch/x86/graniterapids/uncore-cache.json  |   14 +-
+ .../graniterapids/uncore-interconnect.json    |   87 +
+ .../arch/x86/graniterapids/uncore-io.json     |  280 +-
+ .../arch/x86/graniterapids/uncore-memory.json |  122 +-
+ .../arch/x86/graniterapids/uncore-power.json  |   98 +
+ .../arch/x86/haswell/hsw-metrics.json         |  260 +-
+ .../pmu-events/arch/x86/haswell/memory.json   |    2 +-
+ .../arch/x86/haswell/metricgroups.json        |    5 +
+ .../arch/x86/haswellx/hsx-metrics.json        |  296 +-
+ .../arch/x86/haswellx/metricgroups.json       |    5 +
+ .../arch/x86/haswellx/uncore-cache.json       |   28 +-
+ .../x86/haswellx/uncore-interconnect.json     |   38 +-
+ .../pmu-events/arch/x86/icelake/cache.json    |   34 +-
+ .../pmu-events/arch/x86/icelake/frontend.json |   17 -
+ .../arch/x86/icelake/icl-metrics.json         |  849 +--
+ .../pmu-events/arch/x86/icelake/memory.json   |   13 +-
+ .../arch/x86/icelake/metricgroups.json        |   10 +-
+ .../pmu-events/arch/x86/icelake/pipeline.json |   30 +-
+ .../arch/x86/icelake/uncore-interconnect.json |   76 -
+ .../arch/x86/icelake/uncore-other.json        |    2 +-
+ .../arch/x86/icelake/virtual-memory.json      |   18 +
+ .../pmu-events/arch/x86/icelakex/cache.json   |   41 +-
+ .../arch/x86/icelakex/frontend.json           |   17 -
+ .../arch/x86/icelakex/icx-metrics.json        |  852 +--
+ .../pmu-events/arch/x86/icelakex/memory.json  |   13 +-
+ .../arch/x86/icelakex/metricgroups.json       |   10 +-
+ .../arch/x86/icelakex/pipeline.json           |   30 +-
+ .../pmu-events/arch/x86/lunarlake/cache.json  | 1322 ++++-
+ .../arch/x86/lunarlake/floating-point.json    |  484 ++
+ .../arch/x86/lunarlake/frontend.json          |  654 ++-
+ .../arch/x86/lunarlake/lnl-metrics.json       | 4611 +++++++++++++++++
+ .../pmu-events/arch/x86/lunarlake/memory.json |  262 +-
+ .../arch/x86/lunarlake/metricgroups.json      |  150 +
+ .../pmu-events/arch/x86/lunarlake/other.json  |  496 +-
+ .../arch/x86/lunarlake/pipeline.json          | 2104 +++++++-
+ .../arch/x86/lunarlake/uncore-memory.json     |   18 +
+ .../arch/x86/lunarlake/virtual-memory.json    |  428 ++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   41 +-
+ .../pmu-events/arch/x86/meteorlake/cache.json |   20 +
+ .../arch/x86/meteorlake/frontend.json         |    9 +
+ .../arch/x86/meteorlake/metricgroups.json     |   10 +-
+ .../arch/x86/meteorlake/mtl-metrics.json      | 3818 +++++++++++---
+ .../pmu-events/arch/x86/meteorlake/other.json |   22 +
+ .../arch/x86/meteorlake/pipeline.json         |   57 +-
+ .../pmu-events/arch/x86/rocketlake/cache.json |   34 +-
+ .../arch/x86/rocketlake/frontend.json         |   17 -
+ .../arch/x86/rocketlake/memory.json           |   13 +-
+ .../arch/x86/rocketlake/metricgroups.json     |   10 +-
+ .../arch/x86/rocketlake/pipeline.json         |   30 +-
+ .../arch/x86/rocketlake/rkl-metrics.json      |  849 +--
+ .../x86/rocketlake/uncore-interconnect.json   |   10 -
+ .../arch/x86/rocketlake/uncore-other.json     |    2 +-
+ .../arch/x86/rocketlake/virtual-memory.json   |   18 +
+ .../arch/x86/sapphirerapids/cache.json        |   30 +-
+ .../arch/x86/sapphirerapids/frontend.json     |   19 -
+ .../arch/x86/sapphirerapids/memory.json       |   15 +-
+ .../arch/x86/sapphirerapids/metricgroups.json |   10 +-
+ .../arch/x86/sapphirerapids/pipeline.json     |   23 -
+ .../arch/x86/sapphirerapids/spr-metrics.json  |  968 ++--
+ .../arch/x86/sapphirerapids/uncore-io.json    |  138 +-
+ .../arch/x86/sierraforest/counter.json        |    2 +-
+ .../arch/x86/sierraforest/other.json          |   20 +
+ .../arch/x86/sierraforest/pipeline.json       |    3 +-
+ .../arch/x86/sierraforest/srf-metrics.json    |  308 +-
+ .../arch/x86/sierraforest/uncore-cache.json   |   28 +-
+ .../x86/sierraforest/uncore-interconnect.json |   87 +
+ .../arch/x86/sierraforest/uncore-io.json      |  280 +-
+ .../arch/x86/sierraforest/uncore-memory.json  |  122 +-
+ .../arch/x86/sierraforest/uncore-power.json   |   98 +
+ .../arch/x86/skylake/metricgroups.json        |    9 +-
+ .../arch/x86/skylake/skl-metrics.json         |  684 ++-
+ .../arch/x86/skylakex/metricgroups.json       |    9 +-
+ .../arch/x86/skylakex/skx-metrics.json        |  740 +--
+ .../arch/x86/skylakex/uncore-cache.json       |   60 +-
+ .../x86/skylakex/uncore-interconnect.json     |   11 -
+ .../pmu-events/arch/x86/tigerlake/cache.json  |   45 +-
+ .../arch/x86/tigerlake/frontend.json          |   17 -
+ .../pmu-events/arch/x86/tigerlake/memory.json |   13 +-
+ .../arch/x86/tigerlake/metricgroups.json      |   10 +-
+ .../arch/x86/tigerlake/pipeline.json          |   30 +-
+ .../arch/x86/tigerlake/tgl-metrics.json       |  745 +--
+ .../x86/tigerlake/uncore-interconnect.json    |    4 +-
+ .../arch/x86/tigerlake/uncore-other.json      |    2 +-
+ .../arch/x86/tigerlake/virtual-memory.json    |   18 +
+ 161 files changed, 37876 insertions(+), 8004 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/arl-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/virtual-memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/gnr-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/lnl-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/uncore-memory.json
+
+-- 
+2.47.1.545.g3c1d2e2a6a-goog
+
