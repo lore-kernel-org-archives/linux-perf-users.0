@@ -1,112 +1,103 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A7B1991BB
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Dec 2024 21:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A441137776;
+	Mon,  9 Dec 2024 21:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733780887; cv=none; b=ggLq39qbarAvn6Z4PxGjCF6Fn/Bljfg4wO1uFpAqSMmHsvb1CsrQDXSrQUiV6xCKQ8CtjIJxeUh5QfDdLQszHEl5VvuSw5YM1pui9RJWkEdZKJWAUQGzkxNGXOo1GakZ04EMjD40dl0t+dM9i+UPP1DDaVX7rhf8C4cGhfP1iaQ=
+	t=1733780936; cv=none; b=lkb5tpvsbJ+OfiLfPUvIg7/3sMdvA2TW5tSRAw86vkZMsrW6ieS0Nqi50kSeREZOSzhG+hjsEat9TlD8Ypl0N75Nm7/MwjC+qND0au4xBYEqWB3da1WJK2POEd4YuzaubRYMSBlrpqgEdgyn+hjDlirB9sDKEDEtKxFSFFzX08U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733780887; c=relaxed/simple;
-	bh=fFFrX5olpNfXFoi8G4qimfcekwx7PEoK5pt1FjmAxVU=;
+	s=arc-20240116; t=1733780936; c=relaxed/simple;
+	bh=mMKyzltzE9gNDdDyhqe6BiBbJhqhmYrX1bn0tNYjKgc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jyu3+l/6ui88jb5gOOr54TLKQBzZuEx6TZB8VwPTcpmjUZn9TrXjEJF0iFIkuTUqrqF+e8s5k+PYiDAO19nzuLagK3olPdQ8XlueV9Tyiit+ohX8lJLu30cINKyKB6aRCIZd16S4rooC/78/yL6UrdhuUgViZD+6auic8NVrnxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wSa/ZMX8; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wSa/ZMX8"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so17545ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Dec 2024 13:48:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733780885; x=1734385685; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tTbUKnk+1NZrrdOmVyN2UStAy2eKJFeXjEP+ETk++lI=;
-        b=wSa/ZMX81DwmTf72Zf9EKhPcvzvXGIOJTThDvif80I71N5p5OSJWmWjd/TLWuSrDPs
-         zjVs6zn14kGG+AjIns0N9GaPfTZcsY/HxXr3h4LoefqeLXRR8RfTyUravEq9t5yE4E09
-         ep7UiSbffxz9pasFOxa9YsnUkzM7i5uLzEg6QOGLCZYdC7sN/cVxHN/ao/bSZfVpsN6C
-         WfAf9cTSz2DfzMXTe0IgblSv11VeJMIR7UCV6YVBDmY2pUkSODqpfBfsELv1UaXEKHMf
-         CfWNx3LL61Dl0THfK8Veoe1w+qX9oYU5/ugVKT/nGBWAA+5G5jHwwMCR1m7E+IAqHWzC
-         QLlg==
+	 To:Cc:Content-Type; b=OesrpgrzZvVQ4piH2le8U54BuRvQB6kQseQZ+KNbAFTrAA3mMPiBHVXfzHL3EmTemFfsHmsnRLegyjkugg/6Vk67y+N9ogXfcjCI2xnWtwuAZy28cwcat6HWUtZRlxH4IaGwxSZf8mC9j4m/L16iDP6dVHZv5SF1bDc05xSNZOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7258cf2975fso4217972b3a.0;
+        Mon, 09 Dec 2024 13:48:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733780885; x=1734385685;
+        d=1e100.net; s=20230601; t=1733780934; x=1734385734;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tTbUKnk+1NZrrdOmVyN2UStAy2eKJFeXjEP+ETk++lI=;
-        b=QzdLexF2erE2tIfwVcJ+mXbMjaYXbAyUhuM1seyoLBJrTBkWpp43ASNp10Sg3zRFry
-         LGJROIUa6B38wuKSOpoVoq3f0lLl6q6Li/W1jzugNcr6E+u8RSahEHXJVPC9UAH9iVl8
-         rdYp63yGy6p5V8oo4bXd8qywYGMlKZcyz40V8g6uwWu/pHoi6inpdolZzn86ZZEp3UwS
-         7r2g48Hnowvwub/K15UJ2i+vjsL63/AjWJlo77vEkmlHoXTum2gE4Za9ef33Sg5vealc
-         O4xrKxCC4YM2hQrgmoKEshbExMZ6+a9beAG9UCqxo7lHmCCoD6wLDQEzlDDk+gIhDnmV
-         2LJw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3NW2w822ElNMZZVPUXncwv6LMU0Un+1J1pLOsXH9dZLKcSiq+chNpldmTjIxSp6ZqtoC92Y1uskgrUVm4sv6P@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQRi5raDIi3rRzGemZcui/7HObB9nuyBRlf9W+OR5twSN9JX+A
-	IlrXVpeJe1TlfbFm4QNteLIyNkRde6JEBqa+oLLI8k0EE+AuvwTWNsfb5XvnmBZFp6OKKSF661Q
-	mrftE1XUwR6Y3Dgj+eXY6RZ1YuaDjiSjxdEPf
-X-Gm-Gg: ASbGncsYO8ZdWBhGZ8HKQ48/jhm28O1mPPh1xkL9km0a1KYU0Q6A9Ds30U4KAKvtsZX
-	lDDnsdStc2FHivF+nN3AEXJVnoZYBH21fecHX
-X-Google-Smtp-Source: AGHT+IGU3AFKv8GXmsLqxrkJ7QgMr0vfqYFIq0+QHALD9ho2Dt4mgPHC4wdrEbokzuNnZ6ohQLXqyqdLuveOZYXwhIk=
-X-Received: by 2002:a05:6e02:741:b0:3a7:df79:71b3 with SMTP id
- e9e14a558f8ab-3a9df531a41mr93845ab.19.1733780884670; Mon, 09 Dec 2024
- 13:48:04 -0800 (PST)
+        bh=mMKyzltzE9gNDdDyhqe6BiBbJhqhmYrX1bn0tNYjKgc=;
+        b=E9CxwYTVrzppdA/3RSLy8ompuxgjcI16+SUqejXrJ5TP6T+8+v1p6ycMvgGwNhx8WU
+         GB8zL/kGHrojNvKCeahiJFj+NTXOz9Y4lOT9+WtnMv5mnpRK6wF6HF0zsy9ckMlXr7TH
+         SQ+V2rJfnZ19nrtXJegZvQcZI+8EU3wV/MXwCyL/U4rkYLlqxsg7cdt7gu8UcIDBKHHn
+         KAhV0M13aBntss3jFqNo6L+1ysKZbIcZLmKBzpqBmBq9Yt5qu5uBRJDN5TBd2cfIkET5
+         Mq1IEOFauUcW5liKIpcprURxlnQ83v3LRSXgX+DYdyMuNVLhYPG9YZx8vE1ss/YLikvC
+         SrPA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1gK8L8SPgVklz+NL2GQcbnDfKAYk6yQwI8HFeaoN6aMjkuH4xKxrT5GGrU4TSRU4K8P6NWzkDaOBdRI4=@vger.kernel.org, AJvYcCWyE3rpvH0ljBTer9fUSMzPZMZNvzJLUEuFTxOHAr81qr0wG4uyPP+A85uUiAXJUrSqBu2LVYxbvueJrFluNpPCGQ==@vger.kernel.org, AJvYcCXhQmNzNT6pWTVmU29zO6dpWYPtOWQ+LnOr+hZLDXd60vyewb23Ap54yhYwOC6gpHKmqJkUI9BZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNftz2x2TCn3Yozq3A9k+zcorYNvvkIc86gDZj06ctyY1rZC/8
+	1OhoI4b9zCrAatvg15Lqn5mOIQRbyidIxLgeiQuQlQDsxTgSiivfgYlB5rUbOEBt8uQ8RXGvbbe
+	zOoGXqC0R3F6tAVPj28gB96j2coq+uQ==
+X-Gm-Gg: ASbGnctg/x6tI23grw6p/6x7tVw0LB5d8kFJcq/lQIBxYdUQSAil5XUodY001VoWpFr
+	IkUsG06wx/6qqrrlqoNLor+QoKKoSaAHuBg==
+X-Google-Smtp-Source: AGHT+IHGGgYK/t9tnM6hmf/m70NafShg+X8SVH9Qz0IDo9gXUayhVuGvz55ZNrixNevRqGrZ7ta6CQhIG+QGL8byEOI=
+X-Received: by 2002:a05:6a20:1589:b0:1e1:6ef2:fbe3 with SMTP id
+ adf61e73a8af0-1e1b1a79c58mr3239680637.5.1733780934562; Mon, 09 Dec 2024
+ 13:48:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241206044035.1062032-1-irogers@google.com> <20241206044035.1062032-2-irogers@google.com>
- <20241206102451.GA3418674@e132581.arm.com> <CAP-5=fVDH6k7rW3_LXK5Y9Givs3WO5MQ8XMKsuUXXY5nQ66qDg@mail.gmail.com>
- <20241206230321.GA5430@e132581.arm.com> <CAP-5=fXOE3k9bmYOykpN6M9bBwLqP54MWWMGxutJ4SS2G_3MZQ@mail.gmail.com>
- <74f3444d28044d858f0f696cea6485a8@AcuMS.aculab.com>
-In-Reply-To: <74f3444d28044d858f0f696cea6485a8@AcuMS.aculab.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Dec 2024 13:47:53 -0800
-Message-ID: <CAP-5=fVQNDtKUWVgWPJ8i0+8G7+CZg-FEPWTsW6kcvSdLg2v3w@mail.gmail.com>
-Subject: Re: [PATCH v1 1/8] perf: Increase MAX_NR_CPUS to 4096
-To: David Laight <David.Laight@aculab.com>
-Cc: Leo Yan <leo.yan@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Kyle Meyer <kyle.meyer@hpe.com>, 
-	Ben Gainey <ben.gainey@arm.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20241209134226.1939163-1-visitorckw@gmail.com>
+ <CAM9d7cgL-1rET97eVU2qpz5-V5XqeCX1N92wTwR5y2sp_4sjog@mail.gmail.com> <Z1dSimfbQ5FO7sjU@x1>
+In-Reply-To: <Z1dSimfbQ5FO7sjU@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 9 Dec 2024 13:48:43 -0800
+Message-ID: <CAM9d7cj4_8LHHq22Gh-9BOPCEQk3qZizuOjF03cyQtrKSWWTRA@mail.gmail.com>
+Subject: Re: [PATCH] perf ftrace: Fix undefined behavior in cmp_profile_data()
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Kuan-Wei Chiu <visitorckw@gmail.com>, peterz@infradead.org, mingo@redhat.com, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, kan.liang@linux.intel.com, adrian.hunter@intel.com, 
+	jserv@ccns.ncku.edu.tw, chuang@cs.nycu.edu.tw, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 9, 2024 at 1:36=E2=80=AFPM David Laight <David.Laight@aculab.co=
-m> wrote:
+On Mon, Dec 9, 2024 at 12:26=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> ..
-> > > > Just changing the int to be a s16 would lower the memory overhead,
-> > > > which is why I'd kind of like the abstraction to be minimal.
-> > >
-> > > Here I am not clear what for "changing the int to be a s16".  Could y=
-ou
-> > > elaberate a bit for this?
+> On Mon, Dec 09, 2024 at 09:02:24AM -0800, Namhyung Kim wrote:
+> > Hello,
 > >
-> > I meant this :-)
-> > https://lore.kernel.org/lkml/20241207052133.102829-1-irogers@google.com=
-/
+> > On Mon, Dec 9, 2024 at 5:42=E2=80=AFAM Kuan-Wei Chiu <visitorckw@gmail.=
+com> wrote:
+> > >
+> > > The comparison function cmp_profile_data() violates the C standard's
+> > > requirements for qsort() comparison functions, which mandate symmetry
+> > > and transitivity:
+> > >
+> > > * Symmetry: If x < y, then y > x.
+> > > * Transitivity: If x < y and y < z, then x < z.
+> > >
+> > > When v1 and v2 are equal, the function incorrectly returns 1, breakin=
+g
+> > > symmetry and transitivity. This causes undefined behavior, which can
+> > > lead to memory corruption in certain versions of glibc [1].
+> > >
+> > > Fix the issue by returning 0 when v1 and v2 are equal, ensuring
+> > > compliance with the C standard and preventing undefined behavior.
+> > >
+> > > Link: https://www.qualys.com/2024/01/30/qsort.txt [1]
+> > > Fixes: 0f223813edd0 ("perf ftrace: Add 'profile' command")
+> > > Fixes: 74ae366c37b7 ("perf ftrace profile: Add -s/--sort option")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> >
+> > Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 >
-> How many time is this allocated?
-> If it is 2 bytes in a larger structure it is likely to be noise.
-> For a local the code is likely to be worse.
-> Any maths and you start forcing the compiler to mask the value
-> (on pretty much anything except x86).
+> I'm assuming you'll pick this for perf-tools, ok?
+>
+> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-So the data structure is a sorted array of ints, this changes it to
-int16s. On the 32 socket GNR with > 2048 logical CPUs, the array would
-be over 8kb before and 4kb after for all online CPUs. On my more
-modest desktop with 72 logical cores the size goes from 288 bytes down
-to 144, a reduction of 2 cache lines. I'm not super excited about the
-memory savings, but the patch is only 8 lines in difference.
+Yep, sure.
 
 Thanks,
-Ian
+Namhyung
