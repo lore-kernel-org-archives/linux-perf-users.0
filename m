@@ -1,127 +1,127 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E5E216E30
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Dec 2024 11:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B86233137;
+	Mon,  9 Dec 2024 13:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733744961; cv=none; b=lm5UQZq/vsBkZj7K1te3fJGxC45J7P9M1DMD+svy63AUJ1BSSp7DAzRemrKNSHRtHSEz0Rx/2X77Tkc8zAmgnnWUoygLSm75ATXB1EPUZwfPVWU7mIGj74xwr7gMBJCOc+KudmJAwWerO/M6JhevolIPCg0I29SA6p4RBMGQimY=
+	t=1733751757; cv=none; b=ttWb18ezTqbcc4jY+aH04vHXL3zQpJjqalSijiRtYidR6AURBJ52VIilkSaGcdiMaS5oEu0q2t03PU+C2ULzBa/KpjmkDHnHbbdb9pPyQukVffn6JVhm5ncAsH0kFaGPxMs+5SaCtyEIuI5VbNFzGk8CuqGW27Ig2gZ/LohKgyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733744961; c=relaxed/simple;
-	bh=tbukh0cajN7SyxccaE9cZMphzdrKFiU6tTMHpT3cuuk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=Uubb02qP1b3/aTJa8Q/HUkZ+VXCc6cpHExCb+yF9VFr5+B+ZPJwqrXUYT+a7unGhRSoH3MVzjTHQj8FhVK2tRyEBVBzhj0WurSF8pd1rTxjS6k4XAt1VfR8j6wvAKKf8aWc1yP6H7dBqdHYTVuXf4UTX40LJTQafEjNBYyNr6T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WNYJ7UQO; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1733751757; c=relaxed/simple;
+	bh=03QJGK4Z1yvJAl/3TNKhw/EVpYlKKfAUlrw6poXpiK4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D9sexwR8Zzy+WhBkbGdofs/YsNd/K52LoANcH9g+DBnJsE5gz9YomhL0g5h7pWYL8T2gOYgJ7XGJsXzrzTOT6VRgEQXH4r5JrO5YdL9angL/RoSM6NVVFFcH1uuTzHFW2xIxzFDoMncPDOGftWsmCHIkgFNkF5LtVqrv2ciKvgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMAbmhaM; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WNYJ7UQO"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-434fe0a8cceso3249545e9.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Dec 2024 03:49:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMAbmhaM"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21628b3fe7dso19938835ad.3;
+        Mon, 09 Dec 2024 05:42:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733744958; x=1734349758; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1yk6+BiAdoM4boWjpdnnb0XRpYiLDHEajJSbnU4mVyE=;
-        b=WNYJ7UQO3ONdenXOZHJzbF09E0vHmNoh73Kckf1pFJfSKkr3XjeyERzKHHXWsYvbCe
-         GFlpVaWGxyuXxj6lbr4EHoUGKVsJ2hDp3VuqSFCOZprnijVOxcACDeIIdSxHWHBR27fV
-         50nJbs4uKIVMKDtAy2sdZzhpQlakzwqsouphrkv9qqJ7XhAQTUa31EqWSo4GGByl171L
-         kcJnYbGo1FIO96F+7KkiIsXuMb8ysL6fOme9X+czX21Xtpast/bkY+uxqNtACr0/elJN
-         w4Bebg5p0qXqlnkvWMWaMyk1oOhRC4eRV1vMcF7EX0ZCPonjNzeIIEIVmK2m+Q3YQpaH
-         qGYg==
+        d=gmail.com; s=20230601; t=1733751755; x=1734356555; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HRJ9EgO00gvd/eE2hkZ5c1MkBkZAMOXjJaY80cKYo5E=;
+        b=IMAbmhaMOIOPf6Agi//IkKX5zL8GcA/jv54I43kQdo28d0qpX1j/bhGY8u0sN8/x+7
+         ahl91+i+UI24z2HYFDR9nRfvnwoFnk3zYflS3bur7RIni8Hdo8rBdhdOCZvMEmxlQV5j
+         OEAos0pGWaCCGSd7+iDRelQYgWfp9UrAzLpzMdWOm0ICb/xqiCrcbNQ4ccArVqDX91q9
+         yBtIuRM3Rp72+O+7YsgpuRalvTJQ65lG/k18/rg7bksbqpGceWUx/BKWMHYmFn6SYY3M
+         f9tZj5VkzSo6ZbCcc3IaJyqCYsj1ks3YVBKWmDVNbfG/tXD+LCkCyhofCJtgT1mZqqKR
+         UjIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733744958; x=1734349758;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1yk6+BiAdoM4boWjpdnnb0XRpYiLDHEajJSbnU4mVyE=;
-        b=KFfUtu+GQVee1QvTTXIGHrLIbqRJrASbUQd74jJJzyjhVIW+CyGO0O0pJ7VgpqJhyt
-         +ZIX6OE6UtvLRUEWIc7FhX8VolHQWQkaMH+DOmTyUbxkmDUqD8c455vnasMDgaUo2a/A
-         nNvrVYvRgdNAv5lgF/JpckZ8dj2vUxc0FFtCkfVn/rJtRnfBLqqZpd5T2JDVzHa4ddbN
-         5UETCookti3Q5nqM/++PhZUF7G1kmIKzqHLir7t1M23Xs4BOMEOPogOWF5moh4E2CcK3
-         LrEJHDTnvCTyvyAtfD+lJnyx+6FVxi/MzI2Wo45WWTHAtIbcvauA3jrESs6HTtqv68c6
-         OejA==
-X-Gm-Message-State: AOJu0Yzk8W9nx+phYCYfF8f+SY+8C6ahtU09OnSJ//E/K8ecrqBlozcR
-	B1y3EydzpQEgLjS9SXHGuTgy2ymxr+VtcwIh+hDMdV0pJV7Ff9/plJhUJC5Nl2o=
-X-Gm-Gg: ASbGncu+rNOcqLHNtiGOtal6oQm3Vwk8BMTohSID/e8MajxgK3ARwfgd0Z7pm00D7yJ
-	UZ1IiupDM6x1Njmw0q+pe4g93S5MR0XrMPwqf7AuOuzqvRQqA19wuHUHlJ8wMWwwpVX8UTn8gV9
-	MG/xXoSSXU7AD8pE11dNGvUtA9XjUl544jmJew2vuh04uh7ybEs19VGZfNo+V56l5X2qUt9eJFv
-	zo8ZisfME3FTD8y/NUL310zOcyD82dHu+VKiuWcjoezqC/aKKRjpxD6EJaoQQ==
-X-Google-Smtp-Source: AGHT+IEAZnAolC1VRIxQlwnoGITQf7rUB4/OAbY0LvCQlZN+3lKtSAGpFGEfUof30OGA2wiivpZDBA==
-X-Received: by 2002:a05:600c:3115:b0:434:9df4:5485 with SMTP id 5b1f17b1804b1-434dded2c07mr90244855e9.32.1733744958402;
-        Mon, 09 Dec 2024 03:49:18 -0800 (PST)
-Received: from [192.168.68.163] ([209.198.129.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434f9da4cd0sm29735245e9.26.2024.12.09.03.49.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2024 03:49:18 -0800 (PST)
-Message-ID: <9e9a550c-0017-40b0-af14-99f3c926290c@linaro.org>
-Date: Mon, 9 Dec 2024 11:49:15 +0000
+        d=1e100.net; s=20230601; t=1733751755; x=1734356555;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HRJ9EgO00gvd/eE2hkZ5c1MkBkZAMOXjJaY80cKYo5E=;
+        b=s+euU89S5kVk/O0VlPZ96w6FNsCxY4ZULd7TsdNJyqrHHmxuH9Bzte87iDhIXqdZND
+         awA5J9RRgH6XMZqcVECPEbLarJ+afXZdmcL3ClW659rCh3moveZSX5Kg2DXmVoJNXyNX
+         DQbMUI09JJ9SG24PKZpaDfFem09jTaxNRw86FSvM3uOWalnG/hr6EoNbycP4FfywS22q
+         koVEncXNsvIpZbHneoPXha/eup3+W2uP/vES5MgLhuwrTlqB4obzJYIiGoBqoVFZsJ84
+         dlVJ4c32FGFyUSVhVwYRThgLz1O0UyxmLnc0ZS4BPR70YNhWIo3xXEwGVzRdGJzmNU0J
+         WlRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUBzDmGijje276a691+RYILEa5MciQAAd0GIO3fwqp3kSOC3Zz4ELw93CLcFA5JnulkiYO7cHzQzh/E4eaOhEa57Q==@vger.kernel.org, AJvYcCVDGzO/TgDP/gXjgRdNbdBRXL6VLEwQwQ8EbbtpTmk9ONIls/DX5R0asUnbFGuITpsN8odJs8WHTmaIsXQ=@vger.kernel.org, AJvYcCVqN/SD+AcRnRigRJ85KzXvJpPaKnq0OWVA6h/5w+5kDFjVblnaho5b/ZtzHCOwLtyHWxVzf//y@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEMqM5zKzoJslUyTHpwTc0Un6w8Ud1f5eTEVh0s0lIUO7d83k3
+	A15su7tuo0cUN/EOGG4/XLrCT2sDBgOAsgJ5bUlyKntF+m+Ql0kh
+X-Gm-Gg: ASbGncuaY0h62XLoab5L0QcP8lCVXAoWQwswozXsDabNePBQ/XMLYYoiZ+YSxE4Wp0W
+	5Y5Nh7YDCXtSQVU9Y82xWsQqW5+Rwe0Vs0fPftT0kTfXtQzj04tDuvQDWZDgFwu/j3hEd1ycNqH
+	3PsAEtb8XNLx8VheLsSytRqjz0I1JwOQaM1+zd3cFnGnzoA04ukEKcGfyax6e7uGW/zSw0k0Jvt
+	7xLmv0Gsz5GHC+52NMY4vH6Pd6qxR4vB3LAvxlfIq/si6Xg+/ys48rkq8PpB0aDr9nmcCYWLJQV
+	Mo9O
+X-Google-Smtp-Source: AGHT+IHizzILtGkGZld4afmwIQGr0ZCEhjHEDFw/DW/9vITEgpcIGs3KbA21Eq13Yw77XhMITKs3Hw==
+X-Received: by 2002:a17:902:e807:b0:215:6995:1ef3 with SMTP id d9443c01a7336-21614d1d441mr153586085ad.3.1733751754538;
+        Mon, 09 Dec 2024 05:42:34 -0800 (PST)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21644dcf724sm23863525ad.257.2024.12.09.05.42.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2024 05:42:33 -0800 (PST)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	kan.liang@linux.intel.com,
+	adrian.hunter@intel.com,
+	jserv@ccns.ncku.edu.tw,
+	chuang@cs.nycu.edu.tw,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kuan-Wei Chiu <visitorckw@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] perf ftrace: Fix undefined behavior in cmp_profile_data()
+Date: Mon,  9 Dec 2024 21:42:26 +0800
+Message-Id: <20241209134226.1939163-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf string: Avoid undefined NULL+1
-To: Ian Rogers <irogers@google.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-References: <20241120065224.286813-1-irogers@google.com>
-Content-Language: en-US
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241120065224.286813-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+The comparison function cmp_profile_data() violates the C standard's
+requirements for qsort() comparison functions, which mandate symmetry
+and transitivity:
 
+* Symmetry: If x < y, then y > x.
+* Transitivity: If x < y and y < z, then x < z.
 
-On 20/11/2024 6:52 am, Ian Rogers wrote:
-> While the value NULL+1 is never used it triggers a ubsan
-> warning. Restructure and comment the loop to avoid this.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/util/string.c | 15 ++++++++++++---
->   1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
-> index 308fc7ec88cc..c0e927bbadf6 100644
-> --- a/tools/perf/util/string.c
-> +++ b/tools/perf/util/string.c
-> @@ -254,11 +254,20 @@ char *strpbrk_esc(char *str, const char *stopset)
->   
->   	do {
->   		ptr = strpbrk(str, stopset);
-> -		if (ptr == str ||
-> -		    (ptr == str + 1 && *(ptr - 1) != '\\'))
-> +		if (!ptr) {
-> +			/* stopset not in str. */
->   			break;
-> +		}
-> +		if (ptr == str) {
-> +			/* stopset character is first in str. */
-> +			break;
-> +		}
-> +		if (ptr == str + 1 && str[0] != '\\') {
-> +			/* stopset chacter is second and wasn't preceded by a '\'. */
-> +			break;
-> +		}
->   		str = ptr + 1;
-> -	} while (ptr && *(ptr - 1) == '\\' && *(ptr - 2) != '\\');
-> +	} while (ptr[-1] == '\\' && ptr[-2] != '\\');
->   
->   	return ptr;
->   }
+When v1 and v2 are equal, the function incorrectly returns 1, breaking
+symmetry and transitivity. This causes undefined behavior, which can
+lead to memory corruption in certain versions of glibc [1].
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+Fix the issue by returning 0 when v1 and v2 are equal, ensuring
+compliance with the C standard and preventing undefined behavior.
 
+Link: https://www.qualys.com/2024/01/30/qsort.txt [1]
+Fixes: 0f223813edd0 ("perf ftrace: Add 'profile' command")
+Fixes: 74ae366c37b7 ("perf ftrace profile: Add -s/--sort option")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+---
+ tools/perf/builtin-ftrace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 272d3c70810e..a56cf8b0a7d4 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -1151,8 +1151,9 @@ static int cmp_profile_data(const void *a, const void *b)
+ 
+ 	if (v1 > v2)
+ 		return -1;
+-	else
++	if (v1 < v2)
+ 		return 1;
++	return 0;
+ }
+ 
+ static void print_profile_result(struct perf_ftrace *ftrace)
+-- 
+2.34.1
 
