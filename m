@@ -1,106 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D3C199FBF;
-	Mon,  9 Dec 2024 22:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C644919884C;
+	Mon,  9 Dec 2024 23:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733784284; cv=none; b=Uv4QUn9FwDo/ftnrDc+msMbhU69ct5PL4dP+5P6LwQmjDS1AWtx0FvGPDTn4dDV97EonTTRIO5mE2POWqQJk3jF7CwKnc8azkHri+RAsVmwqTlHcoB4cnky2mT/0MEjD/S6t2yst77+vc/zN9HgryFTmJhea+W3nXRelvo/G6+I=
+	t=1733785251; cv=none; b=LImioLvBHoBSwxOyGGSaiw9JkYA2RmetmU14x5ILS1hH2nhe3QNB7tbMxS7FkB9QABcsq+ckPuNLgFxBJQC37Es/EVx1jG6OP/Jh66QxdEU3teEiJE1CZxWw0O/EUnz1vFnJt2lsvvApDH2R878O545b1awcrp5ZSbXyPoEcgWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733784284; c=relaxed/simple;
-	bh=610LWZ3Sksv/McKaTRY9n+RLeJxHkAjCEGBV/L2fLc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o8t3gJS5Cg4YfYOw99uI44TgiP/9w9RXtubTzRAQeP6FaGRv9S5VR4xy+ZCd26fn9lzmgA9GbhvhgXysEEmoCSJto7kC5ikZZYJoysk8XgfCII67UdCOobezbh6H7C9H9qOLz5Uq2N17a4DJRle+H9KA+YraigFhQ+ePPlOKC2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrOO44GO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733785251; c=relaxed/simple;
+	bh=elYk55NDhAKqhse8FxLZo1SmGQ8M2MoLwtBE/+Rkzpw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KOdQCM8MKFYVV+dEl2o/vO4KjXjIBhULwtsmME0f8E/KD+W+OobrwCIEU0l6inEckNwXUpQNH8KTLi2JW7LTfKYy6vcWCb0LqYJ+kp6Db3CzbBrgzsNr41Ox+pZmE24Cvksg7edh+JZz6Sbi4ZiE7a8ZxOqVkitMyau3+qccw5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZxGuMlfB; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrOO44GO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06A5C4CED1;
-	Mon,  9 Dec 2024 22:44:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733784283;
-	bh=610LWZ3Sksv/McKaTRY9n+RLeJxHkAjCEGBV/L2fLc0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OrOO44GOt1mbY2OQn3QCOX3GtvBatcVJuBymTLOpgezdwGovEYT1t0PCrnzv7zJux
-	 jAMafpQUSa90wnVyTFpF8dDlDhzB9og6tSB0aFDq61nCPzWPpn+Bct6pXAb/A1gzlI
-	 4w97Q/oCAb1699U068+at1vbz196I6sjLKoe5kpskEEBiJH7ps2hRYzE1/aZ86VrJE
-	 PQbT5VEwwhSUWRgGE8MZEqcHoIdlQIVLbvPUmwbnX+uV42pEoryOvliTeM94hm/PiJ
-	 qGUcWaHsOSphc78osdD7Vk/uDPuK7nS/JhOfLOxJLDA6wx86treDv1gvZHtuXQH3CP
-	 kjfFzP331vMLQ==
-Date: Mon, 9 Dec 2024 14:44:41 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] perf lock: Fix the wrong name percpu-rwsem
-Message-ID: <Z1dy2Svj6gddulHf@google.com>
-References: <20241209200104.870531-1-ctshao@google.com>
- <20241209200104.870531-2-ctshao@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZxGuMlfB"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-7e9e38dd5f1so3966167a12.0;
+        Mon, 09 Dec 2024 15:00:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733785249; x=1734390049; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yVwcZR0vEQf+lGLOIYoDvUdbgkf3uRnNWAqEvhym4Zo=;
+        b=ZxGuMlfBg5tXrfDWPPVAfWzJlFsC6DtXQ0/17ui7cwWhBvuvSHuJdGlW4/qiljAv63
+         rm2EjvxjgVwwMkE9W03nsfBpOT+GlEYVwzfnstLVECcDvPpUT4S/sRMguQtT5ayVpUjb
+         PT8pVe/3EBOrsjFcm0WANnTJNAqWxueB14UF63QH/OJp4ir/Y6UC9sCvUUqol1jyumEG
+         3h384duAtNCHhLeAMIGHHToPJQPEcP5JG+ej9NeSD/VTf20skMsgextlirhW7/N5Q1I4
+         FjXTwZe637L1udabDvUlv13l4uJ+2kyFC23+ytRiXV0pQdUL9SUgAUlDikAZovsk1o+2
+         CwcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733785249; x=1734390049;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yVwcZR0vEQf+lGLOIYoDvUdbgkf3uRnNWAqEvhym4Zo=;
+        b=C6fY+468Y4Yo18ww/llsxeeHeeyfySfyJonmggp5vxORGSPvwMd4jfBayFIWe2G9KH
+         gFniCtaA88PE2hwSjzxEU7auxh9NmrrLOHI21wYiO1ozjIxa6YD9H0nfU8z4+AqvoiHx
+         sv2vogT4qO/D6iqkat+b3QtmOOwZ4TMIkzs2fTtvZHHpMnEBOCJBmFKKZrYFf2LhvLjM
+         FjVOkMJiAaVPIfVDemixHbzFFqL3fj8P8PuzxdsX4Wifo4ABH81Aq/EHlCsxgvh4TMhV
+         khF6lrYatxrN6WONxK6L/D6SO2iilWcnAaYWZ/i3pgPvLbhYytfCo7pVzJcWnyLRrr7J
+         yJhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKBV77UJzUCB4kQsFZpE1BQ6wKOHy47g5cJVKNQCxoRGFO6cBjKqiVXWRcvEWScFYR57uGULGARVwvBBF9iKjr6g==@vger.kernel.org, AJvYcCVNCjaz9kmTdpm9XZdD9LJXFdxqpfL4hiUuVLp9Npb1JCq+NIKOWuAdP1CPEmArYMhrOzESfApBb+NW22f/@vger.kernel.org, AJvYcCXjp2T51euIsf4EstNuGIEaKVbaHVM4Grh6bT/XDh6JXvAmd4mveHggDygdtapqzu5M7EU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpSWxrlf+3GsVpPWAl6JRkbnppDRfC85CAk/mMVvpkcB22C8MK
+	Rq4M8KEfeEeiWSQZacLMLlTAiY5H03iJih2V8JwTSNQ9lECQDvt5slR1eCHT1dFTfkZgV+NyJfI
+	pD13P1VXvJMDbduUOADF/+Pi0yrQ=
+X-Gm-Gg: ASbGnct9/YwtRFrW8JWEGxa7m72i6o78eIohBrcpn6uF+BJZJ5ex+UCDrWFAz3q3x4E
+	aDWKZTYvfSmgiHrlqETClpOK1GbR/PcOpI6NskylChZSPAWUOEnc=
+X-Google-Smtp-Source: AGHT+IFCLud9Tl/llTWYjfJbJI8At2PeiwsxUEH2EXyTvY2DsuqR+rP2NvVtJCxzQroYZBAKgUM4v2nqzLuP/R7sFzk=
+X-Received: by 2002:a05:6a20:7348:b0:1e0:c50c:9842 with SMTP id
+ adf61e73a8af0-1e1871291d0mr25062081637.31.1733785248824; Mon, 09 Dec 2024
+ 15:00:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241209200104.870531-2-ctshao@google.com>
+References: <20241108061500.2698340-1-namhyung@kernel.org> <20241108061500.2698340-3-namhyung@kernel.org>
+ <Z1ccoNOl4Z8c5DCz@x1> <Z1cdDzXe4QNJe8jL@x1> <Z1dRyiruUl1Xo45O@x1>
+In-Reply-To: <Z1dRyiruUl1Xo45O@x1>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 9 Dec 2024 15:00:36 -0800
+Message-ID: <CAEf4Bza5B9rSX7cw4K0iC-gW+OeEATLCcQ=6KGfmuxfJ2XOhvA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] perf lock contention: Run BPF slab cache iterator
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
+	Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 09, 2024 at 12:01:01PM -0800, Chun-Tse Shao wrote:
-> In `perf lock --help`, the name of `percpu-rwsem` should be
-> `pcpu-rwsem`. This patch fixes the naming in `lock_type_table`, and also
-> replaces the mismatched name `percpu-rwsem` before parsing it for
-> backward compatibility.
-> 
-> Tested `./perf lock con -ab -Y pcpu-sem` and `./perf lock con -ab -Y
-> percpu-rwsem`
-> 
-> Fixes: 4f701063bfa2 ("perf lock contention: Show lock type with address")
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> ---
->  tools/perf/builtin-lock.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 7e36bbe3cb80..264acfa648e4 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -1587,8 +1587,8 @@ static const struct {
->  	{ LCB_F_RT,			"rt-mutex",	"rt-mutex" },
->  	{ LCB_F_RT | LCB_F_READ,	"rwlock-rt:R",	"rwlock-rt" },
->  	{ LCB_F_RT | LCB_F_WRITE,	"rwlock-rt:W",	"rwlock-rt" },
-> -	{ LCB_F_PERCPU | LCB_F_READ,	"pcpu-sem:R",	"percpu-rwsem" },
-> -	{ LCB_F_PERCPU | LCB_F_WRITE,	"pcpu-sem:W",	"percpu-rwsem" },
-> +	{ LCB_F_PERCPU | LCB_F_READ,	"pcpu-sem:R",	"pcpu-sem" },
-> +	{ LCB_F_PERCPU | LCB_F_WRITE,	"pcpu-sem:W",	"pcpu-sem" },
+On Mon, Dec 9, 2024 at 12:23=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Mon, Dec 09, 2024 at 01:38:39PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Mon, Dec 09, 2024 at 01:36:52PM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> > > On Thu, Nov 07, 2024 at 10:14:57PM -0800, Namhyung Kim wrote:
+> > > > Recently the kernel got the kmem_cache iterator to traverse metadat=
+a of
+> > > > slab objects.  This can be used to symbolize dynamic locks in a sla=
+b.
+>
+> > > > The new slab_caches hash map will have the pointer of the kmem_cach=
+e as
+> > > > a key and save the name and a id.  The id will be saved in the flag=
+s
+> > > > part of the lock.
+>
+> > > Trying to fix this
+> >
+> > So you have that struct in tools/perf/util/bpf_skel/vmlinux/vmlinux.h,
+> > but then, this kernel is old and doesn't have the kmem_cache iterator,
+> > so using the generated vmlinux.h will fail the build.
+>
+> I tried passing the right offset to the iterator so as not to try to use
+> a type that isn't in vmlinux.h generated from the old kernel BTF:
+>
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -52,7 +52,7 @@ static void check_slab_cache_iter(struct lock_contentio=
+n *con)
+>                 pr_debug("slab cache iterator is not available: %d\n", re=
+t);
+>                 goto out;
+>         } else {
+> -               const struct btf_member *s =3D __btf_type__find_member_by=
+_name(btf, ret, "s");
+> +               const struct btf_member *s =3D __btf_type__find_unnamed_u=
+nion_with_member_by_name(btf, ret, "s");
+>
+>                 if (s =3D=3D NULL) {
+>                         skel->rodata->slab_cache_iter_member_offset =3D -=
+1;
+> @@ -60,7 +60,9 @@ static void check_slab_cache_iter(struct lock_contentio=
+n *con)
+>                         goto out;
+>                 }
+>
+>                 skel->rodata->slab_cache_iter_member_offset =3D s->offset=
+ / 8; // bits -> bytes
+> +               pr_debug("slab cache iterator kmem_cache pointer offset: =
+%d\n",
+> +                        skel->rodata->slab_cache_iter_member_offset);
+>         }
+>
+>
+> but the verifier doesn't like that:
+>
+> ; struct kmem_cache *s =3D slab_cache_iter_member_offset < 0 ? NULL : @ l=
+ock_contention.bpf.c:615
+> 12: (7b) *(u64 *)(r10 -8) =3D r2        ; R2_w=3Dctx(off=3D8) R10=3Dfp0 f=
+p-8_w=3Dctx(off=3D8)
+> ; if (s =3D=3D NULL) @ lock_contention.bpf.c:619
+> 13: (15) if r1 =3D=3D 0x0 goto pc+22      ; R1=3Dctx()
+> ; d.id =3D ++slab_cache_id << LCB_F_SLAB_ID_SHIFT; @ lock_contention.bpf.=
+c:622
+> 14: (18) r1 =3D 0xffffc14bcde3a014      ; R1_w=3Dmap_value(map=3Dlock_con=
+.bss,ks=3D4,vs=3D40,off=3D20)
+> 16: (61) r3 =3D *(u32 *)(r1 +0)         ; R1_w=3Dmap_value(map=3Dlock_con=
+.bss,ks=3D4,vs=3D40,off=3D20) R3_w=3Dscalar(smin=3D0,smax=3Dumax=3D0xffffff=
+ff,var_off=3D(0x0; 0xffffffff))
+> 17: (07) r3 +=3D 1                      ; R3_w=3Dscalar(smin=3Dumin=3D1,s=
+max=3Dumax=3D0x100000000,var_off=3D(0x0; 0x1ffffffff))
+> 18: (63) *(u32 *)(r1 +0) =3D r3         ; R1_w=3Dmap_value(map=3Dlock_con=
+.bss,ks=3D4,vs=3D40,off=3D20) R3_w=3Dscalar(smin=3Dumin=3D1,smax=3Dumax=3D0=
+x100000000,var_off=3D(0x0; 0x1ffffffff))
+> 19: (67) r3 <<=3D 16                    ; R3_w=3Dscalar(smin=3Dumin=3D0x1=
+0000,smax=3Dumax=3D0x1000000000000,smax32=3D0x7fff0000,umax32=3D0xffff0000,=
+var_off=3D(0x0; 0x1ffffffff0000))
+> 20: (63) *(u32 *)(r10 -40) =3D r3       ; R3_w=3Dscalar(smin=3Dumin=3D0x1=
+0000,smax=3Dumax=3D0x1000000000000,smax32=3D0x7fff0000,umax32=3D0xffff0000,=
+var_off=3D(0x0; 0x1ffffffff0000)) R10=3Dfp0 fp-40=3D????scalar(smin=3Dumin=
+=3D0x10000,smax=3Dumax=3D0x1000000000000,smax32=3D0x7fff0000,umax32=3D0xfff=
+f0000,var_off=3D(0x0; 0x1ffffffff0000))
+> ; bpf_probe_read_kernel_str(d.name, sizeof(d.name), s->name); @ lock_cont=
+ention.bpf.c:623
+> 21: (79) r3 =3D *(u64 *)(r2 +96)
+> dereference of modified ctx ptr R2 off=3D8 disallowed
+> processed 19 insns (limit 1000000) max_states_per_insn 0 total_states 0 p=
+eak_states 0 mark_read 0
+> -- END PROG LOAD LOG --
+> libbpf: prog 'slab_cache_iter': failed to load: -EACCES
+> libbpf: failed to load object 'lock_contention_bpf'
+> libbpf: failed to load BPF skeleton 'lock_contention_bpf': -EACCES
+> Failed to load lock-contention BPF skeleton
+> lock contention BPF setup failed
+> root@number:~#
+>
+> and additionally the type is not like the one you added to the barebones
+> vmlinux.h:
+>
+> =E2=AC=A2 [acme@toolbox perf-tools-next]$ git show d82e2e170d1c756b | gre=
+p 'struct bpf_iter__kmem_cache {' -A3
+> +struct bpf_iter__kmem_cache {
+> +       struct kmem_cache *s;
+> +} __attribute__((preserve_access_index));
+> +
+> =E2=AC=A2 [acme@toolbox perf-tools-next]$
+>
+> But:
+>
+> =E2=AC=A2 [acme@toolbox perf-tools-next]$ uname -a
+> Linux toolbox 6.13.0-rc2 #1 SMP PREEMPT_DYNAMIC Mon Dec  9 12:33:35 -03 2=
+024 x86_64 GNU/Linux
+> =E2=AC=A2 [acme@toolbox perf-tools-next]$ pahole bpf_iter__kmem_cache
+> struct bpf_iter__kmem_cache {
+>         union {
+>                 struct bpf_iter_meta * meta;             /*     0     8 *=
+/
+>         };                                               /*     0     8 *=
+/
+>         union {
+>                 struct kmem_cache * s;                   /*     8     8 *=
+/
+>         };                                               /*     8     8 *=
+/
+>
+>         /* size: 16, cachelines: 1, members: 2 */
+>         /* last cacheline: 16 bytes */
+> };
+>
+> =E2=AC=A2 [acme@toolbox perf-tools-next]$
+>
+> Do CO-RE handle this?
+>
 
-It'll change the output of perf lock con -l.
+I don't know exactly what the problem you are running into is, but
+yes, BPF CO-RE allows handling missing fields, incompatible field type
+changes, field renames, etc. All without having to break a
+compilation. See [0] (and one subsection after that) for
+"documentation" and examples.
 
+  [0] https://nakryiko.com/posts/bpf-core-reference-guide/#defining-own-co-=
+re-relocatable-type-definitions
 
->  	{ LCB_F_MUTEX,			"mutex",	"mutex" },
->  	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex",	"mutex" },
->  };
-> @@ -2365,7 +2365,11 @@ static int parse_lock_type(const struct option *opt __maybe_unused, const char *
->  		/*
->  		 * Otherwise `tok` is `name` in `lock_type_table`.
->  		 * Single lock name could contain multiple flags.
-> +		 * By documentation, `percpu-rwmem` should be `pcpu-sem`.
-> +		 * For backward compatibility, we replace `percpu-rwmem` with `pcpu-sem`.
->  		 */
-> +		if (!strcmp(tok, "percpu-rwsem"))
-> +			tok = (char *)"pcpu-sem";
-
-I think you can do this in the other way around.
-
-Thanks,
-Namhyung
-
-
->  		for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
->  			if (!strcmp(lock_type_table[i].name, tok)) {
->  				if (add_lock_type(lock_type_table[i].flags)) {
-> -- 
-> 2.47.0.338.g60cca15819-goog
-> 
+> - Arnaldo
