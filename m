@@ -1,50 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0ED5137930;
-	Mon,  9 Dec 2024 20:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DC719AA72;
+	Mon,  9 Dec 2024 20:55:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733776107; cv=none; b=k3e14onBrqOdBwkjUD8uPa/d3EeWGubVa+S+lZi3wKetXDscOUfvVyKhhSlFZrnD9VG+wKGj/JRxfSNlVgGmAs2A5JA82GU+1eTvOfSB9GoDiK8bqvZ9zSwQ0fQZkWdYSp1yvpQWXMxPC+wpVMoNNMS9q258CfBRhJyIkP37HGo=
+	t=1733777702; cv=none; b=CBRUVAcWxCNHOQhkHe5TItD0ewy/7GPEL6BUXTb9/dN1i5FZBxBGNCM1ANifJDqhb130z+X+FJeeJTuP7EH+iEisbHWJXuZ76jKzXglABFJ8LiQC2C8sJcv7cUtO+8J6FnSUYUKiCmMq1T9lNqryfdv+1M92GW63ePzpRkjivRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733776107; c=relaxed/simple;
-	bh=3iCzJ2pzD90rukq9de1K6pOTtKPRtd8HiSlaoyLNQ/I=;
+	s=arc-20240116; t=1733777702; c=relaxed/simple;
+	bh=sT3cu6wLiArOXLV8PeYah6jrUg+dwfQAjmoR0c2zxJg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N6icJP5/u1c9F53yxJsnOu1vwFV6mQluJRlhTYon11aq2Zr8LOaixCrQkupqEdLE7sKG87XYMKbMQYUxoBKngP9Um7zIHi3ms2/g0N/JIl2yQkVTzk17oeYUJ12NlnlVXvWoXDlGvEtDSyKJVX07+JsJWZl5QKdZ+3Q44eZbetk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOOB6X0A; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iQDf01zHZ2Sk1GsytD56ODKGulI3TQsVEkWM7zIXg12m28yKYL7OFyyI5lHM3E4voNCcntt681OiumMzKxBkojkRQJ0/hkRJeDKMgUmHmWxYrRpbimOX3rpTiAydVbFUHibUzROmDeRLPmmukrg9YKccpLjlHFU7MdPMkDmY8Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMcuXnsK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOOB6X0A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9827C4CED1;
-	Mon,  9 Dec 2024 20:28:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMcuXnsK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB10AC4CED1;
+	Mon,  9 Dec 2024 20:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733776107;
-	bh=3iCzJ2pzD90rukq9de1K6pOTtKPRtd8HiSlaoyLNQ/I=;
+	s=k20201202; t=1733777701;
+	bh=sT3cu6wLiArOXLV8PeYah6jrUg+dwfQAjmoR0c2zxJg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JOOB6X0AqZeID5RY3k7vsAMFlQNDYcXl4sMt5jDjZAzDUr+JmpsII/FcRr/0oChS6
-	 lNG300DHcSx6rH6HBGJAwG9F0KPVH4iT7/SZbO4ImkZMu2MrV4DmHCt/z8hKOUJjuy
-	 8kGaDlpq4M3MW7CBpst65/ToFmSedNtEp3tZzcjiGDZFQeA7CKR+mYq6Gp7jxjrJ5h
-	 i73QUmLhjM+KhQ05DQMtZlNoembgM4vph1G6kbm6oWYNQQ+HUqwbbEEgQ66NDnYJ0V
-	 f/KumlacPGJEeUTUsRC7vJrCVcH7ly7AAK1SJdQS8No/0rxJyTY/AXtcX/H3/NH+cP
-	 iQF4BsbKIoikw==
-Date: Mon, 9 Dec 2024 17:28:24 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+	b=TMcuXnsKxYzVzJL9bw4nOpQXtdLJiEv2ophPJKNluWv5bqysU9IzvJt0qzg9PUfKH
+	 iJeh3Hkz7OPoFf4fkAmruFF5oycjzsoefR7hRBavPOB/YgWKo398WEQHYL3AFlCHuI
+	 /EikBJVxkqO24HMdQMdiaDBVrnFQseBbVpumnx6lL+6jpb67CMTDF6Omf+OXo6daWU
+	 hzHT7g5gaAP9T6TZ3jUhmRcrkE1JodPMvvANG99Q60ZQRjmyOJXrWq+ie0TNLqJ3Pi
+	 A4l6N9dmWkUQNW9Ajh3IUL7pvUbrNoikorpQi1X66YRZlFOGrLcmUkI342I3Ep9RkF
+	 7doXFI0EjZqIQ==
+Date: Mon, 9 Dec 2024 12:54:58 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Sandipan Das <sandipan.das@amd.com>, Xu Yang <xu.yang_2@nxp.com>,
-	Benjamin Gray <bgray@linux.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf jevents: Fix build issue in '*/' in event
- descriptions
-Message-ID: <Z1dS6HrfkVS4OeZz@x1>
-References: <20241113165558.628856-1-irogers@google.com>
- <CAP-5=fWK-eeDEvE4+LeeScbHFecmc5+H8WB_5fepfrJJLZsF0Q@mail.gmail.com>
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v3 07/19] unwind: Add user space unwinding API
+Message-ID: <20241209205458.vzwkh3ubch5sx5c7@jpoimboe>
+References: <cover.1730150953.git.jpoimboe@kernel.org>
+ <f89a9137e983902f22611e5379606062a64b2382.1730150953.git.jpoimboe@kernel.org>
+ <978a9ecd-47e9-442b-8daa-aee8f3d93dbb@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,50 +61,38 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWK-eeDEvE4+LeeScbHFecmc5+H8WB_5fepfrJJLZsF0Q@mail.gmail.com>
+In-Reply-To: <978a9ecd-47e9-442b-8daa-aee8f3d93dbb@linux.ibm.com>
 
-On Mon, Dec 09, 2024 at 10:35:34AM -0800, Ian Rogers wrote:
-> On Wed, Nov 13, 2024 at 8:56 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > For big string offsets we output comments for what string the offset
-> > is for. If the string contains a '*/' as seen in Intel Arrowlake event
-> > descriptions, then this causes C parsing issues for the generated
-> > pmu-events.c. Catch such '*/' values and escape to avoid this.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+On Fri, Dec 06, 2024 at 11:29:21AM +0100, Jens Remus wrote:
+> On 28.10.2024 22:47, Josh Poimboeuf wrote:
+> > +	if (ra == prev_ip)
+> > +		goto the_end;
 > 
-> Ping.
-
-A fixes: is missing, probably this should go via perf-tools, i.e. for
-this merge window?
-
-- Arnaldo
- 
-> Thanks,
-> Ian
+> This seems too restrictive to me, as it effectively prevents
+> unwinding from recursive functions, e.g. Glibc internal merge sort
+> msort_with_tmp():
 > 
-> > ---
-> >  tools/perf/pmu-events/jevents.py | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> > index 6e71b09dbc2a..028cf3c43881 100755
-> > --- a/tools/perf/pmu-events/jevents.py
-> > +++ b/tools/perf/pmu-events/jevents.py
-> > @@ -430,8 +430,11 @@ class JsonEvent:
-> >    def to_c_string(self, metric: bool) -> str:
-> >      """Representation of the event as a C struct initializer."""
-> >
-> > +    def fix_comment(s: str) -> str:
-> > +        return s.replace('*/', '\*\/')
-> > +
-> >      s = self.build_c_string(metric)
-> > -    return f'{{ { _bcs.offsets[s] } }}, /* {s} */\n'
-> > +    return f'{{ { _bcs.offsets[s] } }}, /* {fix_comment(s)} */\n'
-> >
-> >
-> >  @lru_cache(maxsize=None)
-> > --
-> > 2.47.0.277.g8800431eea-goog
-> >
+> $ perf record -F 9999 --call-graph fp /usr/bin/objdump -wdWF /usr/bin/objdump
+> $ perf script
+> ...
+> objdump    8314 236064.515562:     100010 task-clock:ppp:
+>                  100630a compare_symbols+0x2a (/usr/bin/objdump)
+>              3ffb9e58e7c msort_with_tmp.part.0+0x15c (/usr/lib64/libc.so.6)
+>              3ffb9e58d76 msort_with_tmp.part.0+0x56 (/usr/lib64/libc.so.6)
+> [unwinding unexpectedly stops]
+> 
+> Would it be an option to only stop unwinding if both the IP and SP do
+> not change?
+> 
+> if (sp == prev_sp && ra == prev_ra)
+> 	gote the_end;
+
+Good point, I've already fixed that for the next version (not yet
+posted).  I believe the only thing we really need to check here is that
+the unwind is heading in the right direction:
+
+if (cfa <= state->sp)
+	goto the_end;
+
+-- 
+Josh
