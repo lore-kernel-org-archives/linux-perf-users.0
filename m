@@ -1,304 +1,192 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31311C5CB8;
-	Mon,  9 Dec 2024 17:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE50414B97E;
+	Mon,  9 Dec 2024 18:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733766556; cv=none; b=ImfkA1zQlaj11fUzlnJ3dkfZbtO1x9ToopjXrHVuiCF53NVa8pymhvJOtxiwSBZyEuYhwgykcoEE95LUkR1JoSPpEbM6yagnMRRSPBvz1YgkiBNq2MAsk7d+Xxh8nQ87L4RCzuPCZ5WLrR/lTSk/NqNbc+AfsB2ThSSAb/EgdP4=
+	t=1733768180; cv=none; b=S6YEc3JzMVw31xxUDGvT7zxGHW9m3mcs+hHnY6NLWegCrdxdgVCCr2MmNL6b0r9YUBa3pGRGF+7p64faVA2yDTvFg93XrxJmUaSCMoU+jV7ReUYNrgi2apPbmJ/74JgVs9Yj8yQD3aEq/NL+hVgowg5tfyuD7Uv0vDtzHJm8nd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733766556; c=relaxed/simple;
-	bh=4YuvxkDx+/G2+aUC84wcLqNebJJLuZeEuLlObDhq52A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QQcoGvybvki1utBKRrNUnxXzcsYJzogDDj8a0paVxmacQirALYUNDUtKf9WomrpCWr5ti4Bk+JNGYpUUJLPjm/YYowElXfjVbYnKyAled2ObrZ7TovW8SlHdLOxMNhbuy9CgUw//eTeKT2kT10CVYkknBGbHOHyqhiLXo/Xw6EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H15uL/Ju; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733768180; c=relaxed/simple;
+	bh=K0O/96WPO4T4KGe+mVQoUR1NGQZjCLcIyS2i3Lo9KC0=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EOyxCKlHGHgBBNh4kB1v/VBubCdGGFJNGnBwGc4hjtMJS5+RLbxvpJOX6A6dc/JFPXZmLvNIkRD/GVFz3qcmCV0Ve9p7nnpYiMjd6ItSyyVApUMBv713sYU7OLak193twl+d2vXk4j2Uqo7VV0eoR+/u/IrBeesSJT4ezsb320k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YWjUbAK6; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H15uL/Ju"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-215ac560292so46252025ad.2;
-        Mon, 09 Dec 2024 09:49:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733766554; x=1734371354; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YZu1+urGVcud0ou0n5g4exjSVK3H5pW4MRBDK0t68Fg=;
-        b=H15uL/JuUobZwrpAvKp0VwgeoS9xo9EOl0jle5qai6w4fII4NjIPDEa6jo8xCSX662
-         jieb/srXdC4vNHtRtpe5d/ewt2BPWQR9Rn/C3+mWo5/N4TGxfvIsGQ2GgpEVquNyYmvE
-         qAO70CAKlvIarlW7W8LEDJYQjDiUYAEtnDu6CQdHQiTEuBgwcY5PEDb+WLvIm5fKR4yB
-         JiASLBwkBxJ8JjzBtFUhs4GM62tpBESCF27Sg8ct1+ert4cMYEQLZ0JGeHKHNNEFDOPG
-         UUG62z4+NQeliBoiw0cv9h4jUgwoOPpDsrFzKfz0pLXTTCSouZ54ExRg9tWxQwuh1h0y
-         g9uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733766554; x=1734371354;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YZu1+urGVcud0ou0n5g4exjSVK3H5pW4MRBDK0t68Fg=;
-        b=Q15krN+Srcm4F1+fPmM7SgWiZnIBMbXinkvszqJUTf62JGCpSjB+Yhq9dWY8NsNMvW
-         WZp7IRsHWinFxHotVhfWUcjovPJF1SqEF5W6UzvEC+X1h0VE8Oh6/sSY3IZhUEoRVoGU
-         aciHAoIEaVXE6DlFoDpvlXSDe94Bm+RvaIwkp7z67HfcmfpJqgp9Mh+hFTb+BvdWl5ii
-         G7I/SoGJFEbzFz5NN4zqrADACOFcTDqwoeVfnJZnQY+lMWmAoG+rD82viOpUQTJeHF2G
-         bdwH3kNsyMbPMYloCQ70fTwcxikPm90cggNJ6x/lQNYmUGi2aNBhEwo4iZDKSnwfQA+k
-         dgcw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfJ9NBK6Z82PUWn8z30TgAo3ck1cFTUW3Y0kFY/bw9kxM99PYEUPl4FofpEw9NW9cl6N0=@vger.kernel.org, AJvYcCX7ywL4D5VkmEUGRaiSm7j5BSG3TjYuktgFjIKUHdDd/e8Cl9LEBI0bHMA/olKzDMNIDkskIPGgb7EalsUByciHLQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrfxgzzGpWsIzLCz13wtQs5aEX+BHWoKc5QRIleI8F6oHFzIoC
-	5jWDF8m4ZsYMt7ffw/mG1Yezl/kD4jiij5EA+sBCHbdDmTvkvC2XoB/qF2L9NhiMZJdvSFC3fCV
-	JyF3S66Sj/i+aZXhAL5FV1d6sGKI=
-X-Gm-Gg: ASbGncvMYJ3UITOf2Asja1+0yuXx7wnBWQc8z2heb/gop/VV64ijuOCuyO4Ocmbu2Si
-	44+HEFPGoM0ZjG8VtGgFXjq/Il4Z6+FVBS/MR0VrZoetO+Vamuf8=
-X-Google-Smtp-Source: AGHT+IGqM+ReE5VyKbANy3zDiiYzzNQAVE78b6BcN0Tun/D5xEEgTs6j32rJzdpGN4ynTfVrxkFN82gTE1xq56LedjM=
-X-Received: by 2002:a17:902:ec92:b0:215:a172:5fb9 with SMTP id
- d9443c01a7336-2166a05562cmr20190715ad.48.1733766553869; Mon, 09 Dec 2024
- 09:49:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YWjUbAK6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733768179; x=1765304179;
+  h=message-id:subject:from:to:date:in-reply-to:references:
+   content-transfer-encoding:mime-version;
+  bh=K0O/96WPO4T4KGe+mVQoUR1NGQZjCLcIyS2i3Lo9KC0=;
+  b=YWjUbAK68MI7zLGQwaalLVpAYJqv+dXI3l7MlhsVTTFtdkflqvkMjK00
+   ghA0LjLf4jPgOvlzb4ynZiCVPGVe7ZS+8v0kSwrTyWvo7dweHTOtACJOo
+   br/sCcipymh99Ym1qm7DmlNrd9TVIa5MRjXFaSRiFPY2EYOa1zGRBETjm
+   AGCIda8ABpGuzATasZWas/X0D5eyT1CdfZgYCMy+f75bdw7kcigWXZDRq
+   7/c+y1qyjnJnpMGLTCK6YphmJTNUQgh8rzH8X0ngPlBOHgGCRzwyvbiL+
+   Hbw0DTNoB+HQm5Q3VfJhfva0VrEr1BKKabHTAB1z394HgvVaxKpV1u+qZ
+   A==;
+X-CSE-ConnectionGUID: Hh3kbievQCS1QYiKoI+vEw==
+X-CSE-MsgGUID: y8LPUKc7S+CFHp13mVKR/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11281"; a="33421345"
+X-IronPort-AV: E=Sophos;i="6.12,220,1728975600"; 
+   d="scan'208";a="33421345"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2024 10:16:17 -0800
+X-CSE-ConnectionGUID: VGP1537gSteC0+fGqmRVhg==
+X-CSE-MsgGUID: tHtSLZ99RGCbwpI1c7u/WA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,220,1728975600"; 
+   d="scan'208";a="118405489"
+Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.125.109.112]) ([10.125.109.112])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2024 10:16:16 -0800
+Message-ID: <86ed629f736bcad8ffcb636182442b541b2f8daa.camel@linux.intel.com>
+Subject: Re: [PATCH v1] perf cpumap: Reduce cpu size from int to int16_t
+From: Tim Chen <tim.c.chen@linux.intel.com>
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Kan Liang
+ <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, Yicong
+ Yang <yangyicong@hisilicon.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ linux-perf-users@vger.kernel.org,  linux-kernel@vger.kernel.org, Leo Yan
+ <leo.yan@arm.com>, Kyle Meyer <kyle.meyer@hpe.com>
+Date: Mon, 09 Dec 2024 10:16:15 -0800
+In-Reply-To: <20241207052133.102829-1-irogers@google.com>
+References: <20241207052133.102829-1-irogers@google.com>
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241023100131.3400274-1-jolsa@kernel.org> <CAEf4BzbZdaPaspRAVP7=UcfpFzR4qhksJTRiEwiZ9RDQtdg0bQ@mail.gmail.com>
- <Z1Mv3wjtonrX_ptM@krava> <CAEf4BzZ4nzqWcn9iNPhRY4dfhNWrMp+D8Gxs7eTBqie=g55o5Q@mail.gmail.com>
- <Z1OVRwKCZ-ciWlAy@krava>
-In-Reply-To: <Z1OVRwKCZ-ciWlAy@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 9 Dec 2024 09:49:01 -0800
-Message-ID: <CAEf4BzbGnAAihFg8FYB-yKVLn4D6iHoL98r+PhiBEeJHRYT3sg@mail.gmail.com>
-Subject: Re: [PATCH bpf] bpf,perf: Fix perf_event_detach_bpf_prog error handling
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Sean Young <sean@mess.org>, Peter Zijlstra <peterz@infradead.org>, 
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 6, 2024 at 4:22=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrote=
-:
->
-> On Fri, Dec 06, 2024 at 10:21:18AM -0800, Andrii Nakryiko wrote:
-> > On Fri, Dec 6, 2024 at 9:09=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> w=
-rote:
-> > >
-> > > On Wed, Oct 23, 2024 at 09:01:02AM -0700, Andrii Nakryiko wrote:
-> > > > On Wed, Oct 23, 2024 at 3:01=E2=80=AFAM Jiri Olsa <jolsa@kernel.org=
-> wrote:
-> > > > >
-> > > > > Peter reported that perf_event_detach_bpf_prog might skip to rele=
-ase
-> > > > > the bpf program for -ENOENT error from bpf_prog_array_copy.
-> > > > >
-> > > > > This can't happen because bpf program is stored in perf event and=
- is
-> > > > > detached and released only when perf event is freed.
-> > > > >
-> > > > > Let's make it obvious and add WARN_ON_ONCE on the -ENOENT check a=
-nd
-> > > > > make sure the bpf program is released in any case.
-> > > > >
-> > > > > Cc: Sean Young <sean@mess.org>
-> > > > > Fixes: 170a7e3ea070 ("bpf: bpf_prog_array_copy() should return -E=
-NOENT if exclude_prog not found")
-> > > > > Closes: https://lore.kernel.org/lkml/20241022111638.GC16066@noisy=
-.programming.kicks-ass.net/
-> > > > > Reported-by: Peter Zijlstra <peterz@infradead.org>
-> > > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > > > ---
-> > > > >  kernel/trace/bpf_trace.c | 5 +++--
-> > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > > > > index 95b6b3b16bac..2c064ba7b0bd 100644
-> > > > > --- a/kernel/trace/bpf_trace.c
-> > > > > +++ b/kernel/trace/bpf_trace.c
-> > > > > @@ -2216,8 +2216,8 @@ void perf_event_detach_bpf_prog(struct perf=
-_event *event)
-> > > > >
-> > > > >         old_array =3D bpf_event_rcu_dereference(event->tp_event->=
-prog_array);
-> > > > >         ret =3D bpf_prog_array_copy(old_array, event->prog, NULL,=
- 0, &new_array);
-> > > > > -       if (ret =3D=3D -ENOENT)
-> > > > > -               goto unlock;
-> > > > > +       if (WARN_ON_ONCE(ret =3D=3D -ENOENT))
-> > > > > +               goto put;
-> > > > >         if (ret < 0) {
-> > > > >                 bpf_prog_array_delete_safe(old_array, event->prog=
-);
-> > > >
-> > > > seeing
-> > > >
-> > > > if (ret < 0)
-> > > >     bpf_prog_array_delete_safe(old_array, event->prog);
-> > > >
-> > > > I think neither ret =3D=3D -ENOENT nor WARN_ON_ONCE is necessary,  =
-tbh. So
-> > > > now I feel like just dropping WARN_ON_ONCE() is better.
-> > >
-> > > hi,
-> > > there's syzbot report [1] where we could end up with following
-> > >
-> > >   - create perf event and set bpf program to it
-> > >   - clone process -> create inherited event
-> > >   - exit -> release both events
-> > >   - first perf_event_detach_bpf_prog call will release tp_event->prog=
-_array
-> > >     and second perf_event_detach_bpf_prog will crash because
-> > >     tp_event->prog_array is NULL
-> > >
-> > > we can fix that quicly with change below, I guess we could add refcou=
-nt
-> > > to bpf_prog_array_item and allow one of the parent/inherited events t=
-o
-> > > work while the other is gone.. but that might be too much, will check
-> > >
-> > > jirka
-> > >
-> > >
-> > > [1] https://lore.kernel.org/bpf/Z1MR6dCIKajNS6nU@krava/T/#m91dbf06882=
-21ec7a7fc95e896a7ef9ff93b0b8ad
-> > > ---
-> > > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > > index fe57dfbf2a86..d4b45543ebc2 100644
-> > > --- a/kernel/trace/bpf_trace.c
-> > > +++ b/kernel/trace/bpf_trace.c
-> > > @@ -2251,6 +2251,8 @@ void perf_event_detach_bpf_prog(struct perf_eve=
-nt *event)
-> > >                 goto unlock;
-> > >
-> > >         old_array =3D bpf_event_rcu_dereference(event->tp_event->prog=
-_array);
-> > > +       if (!old_array)
-> > > +               goto put;
-> >
-> > How does this inherited event stuff work? You can have two separate
-> > events sharing the same prog_array? What if we attach different
-> > programs to each of those events, will both of them be called for
-> > either of two events? That sounds broken, if that's true.
->
-> so perf event with attr.inherit=3D1 attached on task will get inherited
-> by child process.. the new child event shares the parent's bpf program
-> and tp_event (hence prog_array) which is global for tracepoint
->
-> AFAICS when child process exits the inherited event is destroyed and it
-> removes related tp_event->prog_array, so the parent event won't trigger
-> ever again, the test below shows that
->
+On Fri, 2024-12-06 at 21:21 -0800, Ian Rogers wrote:
+> Fewer than 32k CPUs are currently supported by perf.=C2=A0
+>=20
+Minor suggestions for the commit log. Perhaps it is clearer to say
 
-Doesn't this sound broken? Either event inheritance has to copy
-prog_array and make them completely independent. Or inherited event
-shouldn't remove the parent's program. Or something else, but the way
-it is right now seems wrong, no?
+Perf does not support more than 32k CPUs.
 
-I'm not sure what's the most appropriate behavior that would match
-overall perf_event inheritance, but we should probably think about
-this and fix it, instead of patching up the symptom with that NULL
-check, no?
+> A cpumap stores
+> an int per CPU, so its size is 4 times the number of CPUs in the
+> cpumap.=C2=A0
+>=20
+Perf cpumap currently uses a 4 byte int to index CPU, where
+a 2 byte int is sufficient to cover the CPU range needed.
 
->   test_tp_attach:FAIL:executed unexpected executed: actual 1 !=3D expecte=
-d 2
->
-> I'm not sure this is problem in practise, because nobody complained
-> about that ;-)
+Otherwise
 
-That's... not really a distinction of what is a problem or not ;)
+Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
 
->
-> libbpf does not set attr.inherit=3D1 and creates system wide perf event,
-> so no problem there
-
-you can use all this outside of libbpf and lead to wrong behavior, so
-worth thinking about this and fixing, IMO
-
->
-> jirka
->
->
+Tim
+> We can reduce the size of the int to an int16_t, saving 2
+> bytes per CPU in the map.
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index 66173ddb5a2d..2e96241b5030 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -12430,8 +12430,9 @@ static int perf_event_open_tracepoint(const char =
-*tp_category,
->         attr.type =3D PERF_TYPE_TRACEPOINT;
->         attr.size =3D attr_sz;
->         attr.config =3D tp_id;
-> +       attr.inherit =3D 1;
->
-> -       pfd =3D syscall(__NR_perf_event_open, &attr, -1 /* pid */, 0 /* c=
-pu */,
-> +       pfd =3D syscall(__NR_perf_event_open, &attr, 0 /* pid */, 0 /* cp=
-u */,
->                       -1 /* group_fd */, PERF_FLAG_FD_CLOEXEC);
->         if (pfd < 0) {
->                 err =3D -errno;
-> diff --git a/tools/testing/selftests/bpf/prog_tests/tp_attach.c b/tools/t=
-esting/selftests/bpf/prog_tests/tp_attach.c
-> new file mode 100644
-> index 000000000000..01bbf1d1ab52
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/prog_tests/tp_attach.c
-> @@ -0,0 +1,35 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> This change is on top of:
+> https://lore.kernel.org/lkml/20241206044035.1062032-1-irogers@google.com/
+> ---
+>  tools/lib/perf/include/perf/cpumap.h |  3 ++-
+>  tools/perf/util/cpumap.c             | 13 ++++++++-----
+>  tools/perf/util/env.c                |  2 +-
+>  3 files changed, 11 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/includ=
+e/perf/cpumap.h
+> index cbb65e55fc67..760a9aae9884 100644
+> --- a/tools/lib/perf/include/perf/cpumap.h
+> +++ b/tools/lib/perf/include/perf/cpumap.h
+> @@ -4,10 +4,11 @@
+> =20
+>  #include <perf/core.h>
+>  #include <stdbool.h>
+> +#include <stdint.h>
+> =20
+>  /** A wrapper around a CPU to avoid confusion with the perf_cpu_map's ma=
+p's indices. */
+>  struct perf_cpu {
+> -	int cpu;
+> +	int16_t cpu;
+>  };
+> =20
+>  struct perf_cache {
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 27094211edd8..85e224d8631b 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -427,7 +427,7 @@ static void set_max_cpu_num(void)
+>  {
+>  	const char *mnt;
+>  	char path[PATH_MAX];
+> -	int ret =3D -1;
+> +	int max, ret =3D -1;
+> =20
+>  	/* set up default */
+>  	max_cpu_num.cpu =3D 4096;
+> @@ -444,10 +444,12 @@ static void set_max_cpu_num(void)
+>  		goto out;
+>  	}
+> =20
+> -	ret =3D get_max_num(path, &max_cpu_num.cpu);
+> +	ret =3D get_max_num(path, &max);
+>  	if (ret)
+>  		goto out;
+> =20
+> +	max_cpu_num.cpu =3D max;
 > +
-> +#include <test_progs.h>
-> +#include "tp_attach.skel.h"
-> +
-> +void test_tp_attach(void)
-> +{
-> +       struct tp_attach *skel;
-> +       int pid;
-> +
-> +       skel =3D tp_attach__open_and_load();
-> +       if (!ASSERT_OK_PTR(skel, "tp_attach__open_and_load"))
-> +               return;
-> +
-> +       skel->bss->pid =3D getpid();
-> +
-> +       if (!ASSERT_OK(tp_attach__attach(skel), "tp_attach__attach"))
-> +               goto out;
-> +
-> +       getpid();
-> +
-> +       pid =3D fork();
-> +       if (!ASSERT_GE(pid, 0, "fork"))
-> +               goto out;
-> +       if (pid =3D=3D 0)
-> +               _exit(0);
-> +       waitpid(pid, NULL, 0);
-> +
-> +       getpid();
-> +
-> +       ASSERT_EQ(skel->bss->executed, 2, "executed");
-> +
-> +out:
-> +       tp_attach__destroy(skel);
-> +}
-> diff --git a/tools/testing/selftests/bpf/progs/tp_attach.c b/tools/testin=
-g/selftests/bpf/progs/tp_attach.c
-> new file mode 100644
-> index 000000000000..d9450d2eac17
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/tp_attach.c
-> @@ -0,0 +1,17 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <vmlinux.h>
-> +#include <bpf/bpf_tracing.h>
-> +
-> +char _license[] SEC("license") =3D "GPL";
-> +
-> +int pid;
-> +int executed;
-> +
-> +SEC("tp/syscalls/sys_enter_getpid")
-> +int test(void *ctx)
-> +{
-> +       if (pid =3D=3D (bpf_get_current_pid_tgid() >> 32))
-> +               executed++;
-> +       return 0;
-> +}
+>  	/* get the highest present cpu number for a sparse allocation */
+>  	ret =3D snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
+>  	if (ret >=3D PATH_MAX) {
+> @@ -455,8 +457,9 @@ static void set_max_cpu_num(void)
+>  		goto out;
+>  	}
+> =20
+> -	ret =3D get_max_num(path, &max_present_cpu_num.cpu);
+> -
+> +	ret =3D get_max_num(path, &max);
+> +	if (!ret)
+> +		max_present_cpu_num.cpu =3D max;
+>  out:
+>  	if (ret)
+>  		pr_err("Failed to read max cpus, using default of %d\n", max_cpu_num.c=
+pu);
+> @@ -606,7 +609,7 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, cha=
+r *buf, size_t size)
+>  #define COMMA first ? "" : ","
+> =20
+>  	for (i =3D 0; i < perf_cpu_map__nr(map) + 1; i++) {
+> -		struct perf_cpu cpu =3D { .cpu =3D INT_MAX };
+> +		struct perf_cpu cpu =3D { .cpu =3D INT16_MAX };
+>  		bool last =3D i =3D=3D perf_cpu_map__nr(map);
+> =20
+>  		if (!last)
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index e2843ca2edd9..f1d7d22e7e98 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -531,7 +531,7 @@ int perf_env__numa_node(struct perf_env *env, struct =
+perf_cpu cpu)
+> =20
+>  		for (i =3D 0; i < env->nr_numa_nodes; i++) {
+>  			nn =3D &env->numa_nodes[i];
+> -			nr =3D max(nr, perf_cpu_map__max(nn->map).cpu);
+> +			nr =3D max(nr, (int)perf_cpu_map__max(nn->map).cpu);
+>  		}
+> =20
+>  		nr++;
+
