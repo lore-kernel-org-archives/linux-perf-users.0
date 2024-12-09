@@ -1,118 +1,215 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014037080B
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Dec 2024 18:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605B8188A0D
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Dec 2024 20:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733769347; cv=none; b=aSWJz3SXs7071D/mconyjm+W+pzbRjvdaLDTJz+4Di6X1mBtzirif39Vp2kDK/ke1jvsjr2uG8J5tntiEV/owKfMPymhhooESK7b4IM16/byGedoNU/5vGzW2atK6QjXe198PL3j/zkHxdkZUh9h36yW8So2XXWtNLND7neDMlU=
+	t=1733774468; cv=none; b=SYDSloTOa//sGedJsNZhxe4BxkKBbMDvBnSwylKUFb8FTWGJA6pED7isvl31s6fiEEBKEaJfzIzNG0glh/c0mkxgskTSOZ2kW+RcTZY3YMVOVLTwZWxnwAXqabemKpnNU5PN8sHbh2qtrWq7KaRPcqIZzTKVqreAo4UuNMQO2aQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733769347; c=relaxed/simple;
-	bh=s2crCVGsbkNLHyjtyH5LlpZb9Vc4P1rWIzxahEbDWNI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=CQWF5fw2B0NTqA5JrmLT1pmhwwQIENbSxbMOWC13O1b7Cv3EgHM0I9EQuxV7Lh/emcsJgnQUuWbf1mBMYWJ8L9VgVWFTtumScQqRzjqEhqkQChGgW2c8NMXgwP8S0ikCrSc3uEMwuUqcUvzkn1Jfvq/DknV1k10ARkvw8l1R5UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cy9TP8Ym; arc=none smtp.client-ip=209.85.166.171
+	s=arc-20240116; t=1733774468; c=relaxed/simple;
+	bh=BaaZxujHgG2t7evwB5rcD5JUaUCQqf9yUP7/6Hi+Q3U=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=jDbmOlCkDfuBrtGKBxs1oCLvCZS7VSBtMSMDfO6FI2/rMst+CMbPUrJkvR3qHbW52AZmY98qmj70p2OTeni8ZDgWYlCAtYOvylZfTciSJbEVzyWp49QNeOfGa/utouzfuw0GeNpL+S7s0hattEIVqvxvHdrtUTOk1+2vzcR2tjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HUmIgnhg; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cy9TP8Ym"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a814c54742so472775ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Dec 2024 10:35:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HUmIgnhg"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ee36569f4cso4992333a91.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Dec 2024 12:01:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733769345; x=1734374145; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=clkswUKcnpDHGUyR9SCPANT3dNpNox/exTTbCbmsicA=;
-        b=cy9TP8YmWzckPD2+EOiKp0zRhA1vhd4FAsQ24bBWkVdVMbn03OculG1FFLF3ULZ/M0
-         xL/sREoshx73f0UUam6qWDzRFU94qMxN8ybN4+LoOmxH1mnjLScHn0k/Hz30V/tloXZ/
-         YPLG8M5KS0IUaXhrJrLq5/FyKBXs8aQSic4wF7N3+eL/tTpJtGUZ0/IljYwS3BPZCSLq
-         jxN3YZvxiL9IhXwTP/48bjLrGUL7HNBWRebisyCt0Z2mW5zbMOrmvW7nxX+ooSH0ubsk
-         bUYfiQKGr4J7AhxfA6VQOAA2jZiUAwsCxiHLtauD/H8efVTzpjRkIRJgbhRrYD/e3wgU
-         nl8g==
+        d=google.com; s=20230601; t=1733774466; x=1734379266; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UEctiwolqpRNFt6r2cG+m/ALbcflvyW8CFZ6ABOg1Hc=;
+        b=HUmIgnhghp4kmaFPSasiq/JUt8mXXxSf353FdKLKkgyaxZI5rScVnfUxUZtohOp+B1
+         6nuThtfedBxkA8kxOTa+8Eh2XP3AD0KwdVY7HdWFti/AaVcLAeRHFZ659oVSPs5fLwm/
+         ZgaZlY1X/TTkFgOG2oi+aHqodeYnlknyZNFIBXBGpUfogRlkS2lti7qycGxIpWZ6ud0u
+         03jtGg/Ql6X3myzLErPVxTYFbZSbJNpKPHwvTOCaortyy1OZMi3PPmzLimpCrEmbajyH
+         7wbbjjzzgBsiR5CwToUHljjJCeLAdQAXy2JOEQD0PwnhHjqw42DWm/mPY9+FXQh7qzuC
+         CXVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733769345; x=1734374145;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=clkswUKcnpDHGUyR9SCPANT3dNpNox/exTTbCbmsicA=;
-        b=aqI6dWIEVQn4Q0T9LzDAHFUV6h5mIK90otUPMOz89Z/m3EjfHK9JpDzm/hsIaa1p3w
-         Rx6P1G/Th7AQUVY5pGUOzR4NPI5NH5lKbTF9ZSRvUTiB5Ajf2lbDnqPs0x61dsZrQCj0
-         4+itIRSS1urrZqUpIZJ3fhe1/fCS6dS7gxV8w5XgVei8iNm/oGs5NV92z5t7TMXp1C6X
-         S3QIOcY21IXdsFeeF+PKselV0jPdJu9st+qsKFiJz8u1B9OToX9oKJ7qPHpZXkw532yu
-         SSyBmTBiHkn33fA9SniFOTfqiXRhuHWIxerbbZcTRSxvNXQs7Mn2zVrTGptDpGkMi48p
-         pYvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVvCCcu5ASMfxQBeG7SGy2NxcO9CxbcbW+N4td9voxx7nK4OuJPJdMrAUOxFe1Mc6xz80WItlWZCEzs1Z1DLZBg@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGAvQMo1WSdiDbpVP58+uq63twFaVFHk+/yVya2N32xfaAYS60
-	6cnRkwERL9cVSbdKuPQL7JAa2HsTSzf50KxVR5poGo04ukWe7XB5paMu/Xrkd6UqzNiL8vOv71m
-	gZO7VKdS4rdAV4/wJn2ErOvDuYQV+ONCZs0Uu
-X-Gm-Gg: ASbGncuAHiExQaXnvBleaQTfw5xfRbl63rZq8i2XEO/Qu+ycNPKyNMZBWsW8uhq11kM
-	UJjuZVWmPpH1BOlzshyjsDou0mmzpBE8a
-X-Google-Smtp-Source: AGHT+IH0nETxj3bC6CXrnWVkUCIleHf1QkS1NBVx0YiEYo/SjprKNunQQ2biLtQTgwxMTa06DCdU6zc0mKjwiwuYiwM=
-X-Received: by 2002:a05:6e02:3f8b:b0:3a0:a34e:9ab1 with SMTP id
- e9e14a558f8ab-3a9dda2e467mr44285ab.8.1733769345035; Mon, 09 Dec 2024 10:35:45
- -0800 (PST)
+        d=1e100.net; s=20230601; t=1733774466; x=1734379266;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UEctiwolqpRNFt6r2cG+m/ALbcflvyW8CFZ6ABOg1Hc=;
+        b=szPH/fXi6XEUl2Ari5uyKxIavoZMmLP2BZzxnGeAJ+zAyVkNsZHle87e5v4gs2/Ynk
+         Uy098yUqBREDc3djZPVdLznix09ggUIDZA9uk78bW/O8XXagSJ36WFAjfJsVPvJ5RJ0G
+         WOF+H5oP+FRI4mWgSZMmDo/cVM3/RkRiAqri2ii6SZIpbFnbhPuj1r0mmK0WsmWme1UC
+         njwsAIw6oG8hNiVHBAMuZyJ/jo3RWEQlcOwn8XfnYRQ51qyUtuzZZYjG4T+eVT/p9JPf
+         pnE0YD3Ti3cuo78vv1CBkJVgOcAg/9vdw7GcG34RcaZr/5/1gJ+sa6cUbJVYPSrRd/nC
+         ue8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWwIX5gpoNArlERD4SJU0lyn90EE9xQCuUBqGSkuci15Hy8LmEyg/bEhQzL/1Ky/fz6DM3E+KfLhKIhLjsWb0yl@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmRH4sqSU6jJmrHDj+MKgpObRWkQ4rACppNw3N2GldPFk3P8FV
+	gC7fGZo3efUKmPzo1gyAYqOI02PtjHgzJWFGpOjeqLbQlXeCD2fvPby78IprOqt3dO2Oqw3AjbN
+	jaA==
+X-Google-Smtp-Source: AGHT+IHdLQYoqadK/lg7+ZfEvWTFu8V3oOEk4LhVn6dqYlJPQRozBI0ERYxSxCUL0KIQA3czUkz5x4aHcYo=
+X-Received: from pjbqo11.prod.google.com ([2002:a17:90b:3dcb:b0:2e2:8d64:6213])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d88e:b0:2ea:61de:38f7
+ with SMTP id 98e67ed59e1d1-2ef6ab0cf78mr19092102a91.29.1733774466684; Mon, 09
+ Dec 2024 12:01:06 -0800 (PST)
+Date: Mon,  9 Dec 2024 12:01:00 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241113165558.628856-1-irogers@google.com>
-In-Reply-To: <20241113165558.628856-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Dec 2024 10:35:34 -0800
-Message-ID: <CAP-5=fWK-eeDEvE4+LeeScbHFecmc5+H8WB_5fepfrJJLZsF0Q@mail.gmail.com>
-Subject: Re: [PATCH v1] perf jevents: Fix build issue in '*/' in event descriptions
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Xu Yang <xu.yang_2@nxp.com>, 
-	Benjamin Gray <bgray@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
+Message-ID: <20241209200104.870531-1-ctshao@google.com>
+Subject: [PATCH v4 1/3] perf lock: Fix parse_lock_type which only retrieve one
+ lock flag
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 13, 2024 at 8:56=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> For big string offsets we output comments for what string the offset
-> is for. If the string contains a '*/' as seen in Intel Arrowlake event
-> descriptions, then this causes C parsing issues for the generated
-> pmu-events.c. Catch such '*/' values and escape to avoid this.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+`parse_lock_type` can only add the first lock flag in `lock_type_table`
+given input `str`. For example, for `Y rwlock`, it only adds `rwlock:R`
+into this perf session. Another example is for `-Y mutex`, it only adds
+the mutex without `LCB_F_SPIN` flag. The patch fixes this issue, makes
+sure both `rwlock:R` and `rwlock:W` will be added with `-Y rwlock`, and
+so on.
 
-Ping.
+Testing:
+  $ ./perf lock con -ab -Y mutex,rwlock -- perf bench sched pipe
+  # Running 'sched/pipe' benchmark:
+  # Executed 1000000 pipe operations between two processes
 
-Thanks,
-Ian
+       Total time: 9.313 [sec]
 
-> ---
->  tools/perf/pmu-events/jevents.py | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index 6e71b09dbc2a..028cf3c43881 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -430,8 +430,11 @@ class JsonEvent:
->    def to_c_string(self, metric: bool) -> str:
->      """Representation of the event as a C struct initializer."""
->
-> +    def fix_comment(s: str) -> str:
-> +        return s.replace('*/', '\*\/')
-> +
->      s =3D self.build_c_string(metric)
-> -    return f'{{ { _bcs.offsets[s] } }}, /* {s} */\n'
-> +    return f'{{ { _bcs.offsets[s] } }}, /* {fix_comment(s)} */\n'
->
->
->  @lru_cache(maxsize=3DNone)
-> --
-> 2.47.0.277.g8800431eea-goog
->
+         9.313976 usecs/op
+           107365 ops/sec
+   contended   total wait     max wait     avg wait         type   caller
+
+         176      1.65 ms     19.43 us      9.38 us        mutex   pipe_read+0x57
+          34    180.14 us     10.93 us      5.30 us        mutex   pipe_write+0x50
+           7     77.48 us     16.09 us     11.07 us        mutex   do_epoll_wait+0x24d
+           7     74.70 us     13.50 us     10.67 us        mutex   do_epoll_wait+0x24d
+           3     35.97 us     14.44 us     11.99 us     rwlock:W   ep_done_scan+0x2d
+           3     35.00 us     12.23 us     11.66 us     rwlock:W   do_epoll_wait+0x255
+           2     15.88 us     11.96 us      7.94 us     rwlock:W   do_epoll_wait+0x47c
+           1     15.23 us     15.23 us     15.23 us     rwlock:W   do_epoll_wait+0x4d0
+           1     14.26 us     14.26 us     14.26 us     rwlock:W   ep_done_scan+0x2d
+           2     14.00 us      7.99 us      7.00 us        mutex   pipe_read+0x282
+           1     12.29 us     12.29 us     12.29 us     rwlock:R   ep_poll_callback+0x35
+           1     12.02 us     12.02 us     12.02 us     rwlock:W   do_epoll_ctl+0xb65
+           1     10.25 us     10.25 us     10.25 us     rwlock:R   ep_poll_callback+0x35
+           1      7.86 us      7.86 us      7.86 us        mutex   do_epoll_ctl+0x6c1
+           1      5.04 us      5.04 us      5.04 us        mutex   do_epoll_ctl+0x3d4
+
+Fixes: d783ea8f62c4 ("perf lock contention: Simplify parse_lock_type()")
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+ tools/perf/builtin-lock.c | 64 ++++++++++++++++++++++++---------------
+ 1 file changed, 39 insertions(+), 25 deletions(-)
+
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 062e2b56a2ab..7e36bbe3cb80 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -1591,8 +1591,6 @@ static const struct {
+ 	{ LCB_F_PERCPU | LCB_F_WRITE,	"pcpu-sem:W",	"percpu-rwsem" },
+ 	{ LCB_F_MUTEX,			"mutex",	"mutex" },
+ 	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex",	"mutex" },
+-	/* alias for get_type_flag() */
+-	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex-spin",	"mutex" },
+ };
+ 
+ static const char *get_type_str(unsigned int flags)
+@@ -1617,19 +1615,6 @@ static const char *get_type_name(unsigned int flags)
+ 	return "unknown";
+ }
+ 
+-static unsigned int get_type_flag(const char *str)
+-{
+-	for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
+-		if (!strcmp(lock_type_table[i].name, str))
+-			return lock_type_table[i].flags;
+-	}
+-	for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
+-		if (!strcmp(lock_type_table[i].str, str))
+-			return lock_type_table[i].flags;
+-	}
+-	return UINT_MAX;
+-}
+-
+ static void lock_filter_finish(void)
+ {
+ 	zfree(&filters.types);
+@@ -2350,29 +2335,58 @@ static int parse_lock_type(const struct option *opt __maybe_unused, const char *
+ 			   int unset __maybe_unused)
+ {
+ 	char *s, *tmp, *tok;
+-	int ret = 0;
+ 
+ 	s = strdup(str);
+ 	if (s == NULL)
+ 		return -1;
+ 
+ 	for (tok = strtok_r(s, ", ", &tmp); tok; tok = strtok_r(NULL, ", ", &tmp)) {
+-		unsigned int flags = get_type_flag(tok);
++		bool found = false;
+ 
+-		if (flags == -1U) {
+-			pr_err("Unknown lock flags: %s\n", tok);
+-			ret = -1;
+-			break;
++		/* `tok` is `str` in `lock_type_table` if it contains ':'. */
++		if (strchr(tok, ':')) {
++			for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
++				if (!strcmp(lock_type_table[i].str, tok) &&
++				    add_lock_type(lock_type_table[i].flags)) {
++					found = true;
++					break;
++				}
++			}
++
++			if (!found) {
++				pr_err("Unknown lock flags name: %s\n", tok);
++				free(s);
++				return -1;
++			}
++
++			continue;
+ 		}
+ 
+-		if (!add_lock_type(flags)) {
+-			ret = -1;
+-			break;
++		/*
++		 * Otherwise `tok` is `name` in `lock_type_table`.
++		 * Single lock name could contain multiple flags.
++		 */
++		for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
++			if (!strcmp(lock_type_table[i].name, tok)) {
++				if (add_lock_type(lock_type_table[i].flags)) {
++					found = true;
++				} else {
++					free(s);
++					return -1;
++				}
++			}
+ 		}
++
++		if (!found) {
++			pr_err("Unknown lock name: %s\n", tok);
++			free(s);
++			return -1;
++		}
++
+ 	}
+ 
+ 	free(s);
+-	return ret;
++	return 0;
+ }
+ 
+ static bool add_lock_addr(unsigned long addr)
+-- 
+2.47.0.338.g60cca15819-goog
+
