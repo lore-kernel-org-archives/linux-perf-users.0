@@ -1,178 +1,112 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADE0137776;
-	Mon,  9 Dec 2024 21:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A7B1991BB
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Dec 2024 21:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733780835; cv=none; b=rnMl0VBdPXUsdGmU+uTsZ+Wk4Q8KN9fFXuOIGft7Xiz8IDfCN2Ls/ygbfigA08VjiBPi8gHLfEwAAg1I0TzWB0XUPxrw1Ph5eUXVAE1RL6Mr4bhYDpHxOscSOg0nFT9E3Bc0I6Y10S/Xb1/6KXxCCPgvbVrk6Z+5Hv/S7TJDKx4=
+	t=1733780887; cv=none; b=ggLq39qbarAvn6Z4PxGjCF6Fn/Bljfg4wO1uFpAqSMmHsvb1CsrQDXSrQUiV6xCKQ8CtjIJxeUh5QfDdLQszHEl5VvuSw5YM1pui9RJWkEdZKJWAUQGzkxNGXOo1GakZ04EMjD40dl0t+dM9i+UPP1DDaVX7rhf8C4cGhfP1iaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733780835; c=relaxed/simple;
-	bh=Yg4CXnabRinKXFQMCrnq4d2YSEjrZ6y3cOfMDGDCluI=;
+	s=arc-20240116; t=1733780887; c=relaxed/simple;
+	bh=fFFrX5olpNfXFoi8G4qimfcekwx7PEoK5pt1FjmAxVU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F0fc1FwSCbSWiq2Kix7nY0L+rzOeoeOUTZQoffFEol3BU+dt8rbzM87Oh55mlGGh3nl5OiB4DlnGjpwYG5aUZhB2xSTAIsHTdGUfJ+sO8oLYZXmBKckwAOYM0pZaM9rZ66yvdHdmBCVq4NwrAZ3CqcvE+VOPjqJKmFAwvaSjz58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-724d23df764so4502181b3a.1;
-        Mon, 09 Dec 2024 13:47:13 -0800 (PST)
+	 To:Cc:Content-Type; b=jyu3+l/6ui88jb5gOOr54TLKQBzZuEx6TZB8VwPTcpmjUZn9TrXjEJF0iFIkuTUqrqF+e8s5k+PYiDAO19nzuLagK3olPdQ8XlueV9Tyiit+ohX8lJLu30cINKyKB6aRCIZd16S4rooC/78/yL6UrdhuUgViZD+6auic8NVrnxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wSa/ZMX8; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wSa/ZMX8"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so17545ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Dec 2024 13:48:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733780885; x=1734385685; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tTbUKnk+1NZrrdOmVyN2UStAy2eKJFeXjEP+ETk++lI=;
+        b=wSa/ZMX81DwmTf72Zf9EKhPcvzvXGIOJTThDvif80I71N5p5OSJWmWjd/TLWuSrDPs
+         zjVs6zn14kGG+AjIns0N9GaPfTZcsY/HxXr3h4LoefqeLXRR8RfTyUravEq9t5yE4E09
+         ep7UiSbffxz9pasFOxa9YsnUkzM7i5uLzEg6QOGLCZYdC7sN/cVxHN/ao/bSZfVpsN6C
+         WfAf9cTSz2DfzMXTe0IgblSv11VeJMIR7UCV6YVBDmY2pUkSODqpfBfsELv1UaXEKHMf
+         CfWNx3LL61Dl0THfK8Veoe1w+qX9oYU5/ugVKT/nGBWAA+5G5jHwwMCR1m7E+IAqHWzC
+         QLlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733780833; x=1734385633;
+        d=1e100.net; s=20230601; t=1733780885; x=1734385685;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uXa++zGGJYL4a455JdGSAiaIAFv5ZyUE5oWPMgnQn9Y=;
-        b=ku0TxS4gnMl+TTNq3xwLCgtzSNlHheh9AQa/nqaFO+OgsU28UNS7Ls3xlTnYcr5kz1
-         B6MVLRfu43ncIOIvEa9BuxHSkw9Ibil+V7dNBNs7PaDm59SiN20xhd6BhGzxscGu788E
-         NROkM6s5LUQQ+SEr/wXC5kwJsMWQ7RHKD48LxUhBsuXzeo54ZRGamMi94/lUdFguDU6T
-         3wfONW+6Rq3rNOj9qO0+iQU09hWHKkseTZRZzqw82EKTgzX7R2QBm5/TwzTFM/No8OWx
-         +vqs+mpbN/kzCY0j+xMyhgfG9u3f2HR512qoK0li2kf4r8nm5TC8H1sGj8hc90aw9I1G
-         RfbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyoledLndrTzIgb6LgxLjbhmHDZkRxoe9HQEp3ho4uWw1o6LNnof5eVAd6HcuxZc+ITY9m0cJbDBDT2y64AjF0kw==@vger.kernel.org, AJvYcCWgVaUk9Mj8IeUBZa5ayG7UDtqqKndzJTdrBWRUmfc7AEwREVdhA7s+Qw2O47WvkdZr6UN6pJZn2lyhD70=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjavoSjPKvyyXgaBE/mMznAWrVzFd7i/RzsmKVtXeZ1JW1L1/E
-	89vI5zNh8UDRwXVsDixVrm70tBIT1fkhD7RzMI81Sq1InOP/0tHXexy8oRcwmv2R8HMAud4IGCT
-	ZwC2wDLMXMjfGjOeWnY3Q0PysDtU=
-X-Gm-Gg: ASbGncucKkzPP8/7/P0MtfuDlqulQAHkX2OW3YYhX+RMeIzMsOCPlzLZ+wIPsiOBvNq
-	Yf79aCaQSVFaWl5DGlTWpkCoXCmet5IIY4w==
-X-Google-Smtp-Source: AGHT+IF4s5D7rUHtCf1IZfrvjwowlVkpuV5qAFrOsdMjeGXuibRhic//imibsY9i1uj0cNJ6AnBD8vHfnRW5f1j2LJk=
-X-Received: by 2002:a05:6a00:2e87:b0:725:b347:c3cd with SMTP id
- d2e1a72fcca58-725b8118dbfmr18029933b3a.9.1733780832855; Mon, 09 Dec 2024
- 13:47:12 -0800 (PST)
+        bh=tTbUKnk+1NZrrdOmVyN2UStAy2eKJFeXjEP+ETk++lI=;
+        b=QzdLexF2erE2tIfwVcJ+mXbMjaYXbAyUhuM1seyoLBJrTBkWpp43ASNp10Sg3zRFry
+         LGJROIUa6B38wuKSOpoVoq3f0lLl6q6Li/W1jzugNcr6E+u8RSahEHXJVPC9UAH9iVl8
+         rdYp63yGy6p5V8oo4bXd8qywYGMlKZcyz40V8g6uwWu/pHoi6inpdolZzn86ZZEp3UwS
+         7r2g48Hnowvwub/K15UJ2i+vjsL63/AjWJlo77vEkmlHoXTum2gE4Za9ef33Sg5vealc
+         O4xrKxCC4YM2hQrgmoKEshbExMZ6+a9beAG9UCqxo7lHmCCoD6wLDQEzlDDk+gIhDnmV
+         2LJw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3NW2w822ElNMZZVPUXncwv6LMU0Un+1J1pLOsXH9dZLKcSiq+chNpldmTjIxSp6ZqtoC92Y1uskgrUVm4sv6P@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQRi5raDIi3rRzGemZcui/7HObB9nuyBRlf9W+OR5twSN9JX+A
+	IlrXVpeJe1TlfbFm4QNteLIyNkRde6JEBqa+oLLI8k0EE+AuvwTWNsfb5XvnmBZFp6OKKSF661Q
+	mrftE1XUwR6Y3Dgj+eXY6RZ1YuaDjiSjxdEPf
+X-Gm-Gg: ASbGncsYO8ZdWBhGZ8HKQ48/jhm28O1mPPh1xkL9km0a1KYU0Q6A9Ds30U4KAKvtsZX
+	lDDnsdStc2FHivF+nN3AEXJVnoZYBH21fecHX
+X-Google-Smtp-Source: AGHT+IGU3AFKv8GXmsLqxrkJ7QgMr0vfqYFIq0+QHALD9ho2Dt4mgPHC4wdrEbokzuNnZ6ohQLXqyqdLuveOZYXwhIk=
+X-Received: by 2002:a05:6e02:741:b0:3a7:df79:71b3 with SMTP id
+ e9e14a558f8ab-3a9df531a41mr93845ab.19.1733780884670; Mon, 09 Dec 2024
+ 13:48:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241206042306.1055913-1-irogers@google.com> <20241206042306.1055913-2-irogers@google.com>
- <Z1deN2EUjwsRokn9@x1>
-In-Reply-To: <Z1deN2EUjwsRokn9@x1>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 9 Dec 2024 13:47:01 -0800
-Message-ID: <CAM9d7chdJyXyCw0MTj=AkF9GL4U6scMtO2a2GMwAAFGUW8kL=Q@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] perf test hwmon_pmu: Fix event file location
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+References: <20241206044035.1062032-1-irogers@google.com> <20241206044035.1062032-2-irogers@google.com>
+ <20241206102451.GA3418674@e132581.arm.com> <CAP-5=fVDH6k7rW3_LXK5Y9Givs3WO5MQ8XMKsuUXXY5nQ66qDg@mail.gmail.com>
+ <20241206230321.GA5430@e132581.arm.com> <CAP-5=fXOE3k9bmYOykpN6M9bBwLqP54MWWMGxutJ4SS2G_3MZQ@mail.gmail.com>
+ <74f3444d28044d858f0f696cea6485a8@AcuMS.aculab.com>
+In-Reply-To: <74f3444d28044d858f0f696cea6485a8@AcuMS.aculab.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 9 Dec 2024 13:47:53 -0800
+Message-ID: <CAP-5=fVQNDtKUWVgWPJ8i0+8G7+CZg-FEPWTsW6kcvSdLg2v3w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/8] perf: Increase MAX_NR_CPUS to 4096
+To: David Laight <David.Laight@aculab.com>
+Cc: Leo Yan <leo.yan@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+	James Clark <james.clark@linaro.org>, Kyle Meyer <kyle.meyer@hpe.com>, 
+	Ben Gainey <ben.gainey@arm.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 9, 2024 at 1:16=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
+On Mon, Dec 9, 2024 at 1:36=E2=80=AFPM David Laight <David.Laight@aculab.co=
+m> wrote:
 >
-> On Thu, Dec 05, 2024 at 08:23:06PM -0800, Ian Rogers wrote:
-> > The temp directory is made and a known fake hwmon PMU created within
-> > it. Prior to this fix the events were being incorrectly written to the
-> > temp directory rather than the fake PMU directory. This didn't impact
-> > the test as the directory fd matched the wrong location, but it
-> > doesn't mirror what a hwmon PMU would actually look like.
+> ..
+> > > > Just changing the int to be a s16 would lower the memory overhead,
+> > > > which is why I'd kind of like the abstraction to be minimal.
+> > >
+> > > Here I am not clear what for "changing the int to be a s16".  Could y=
+ou
+> > > elaberate a bit for this?
+> >
+> > I meant this :-)
+> > https://lore.kernel.org/lkml/20241207052133.102829-1-irogers@google.com=
+/
 >
-> With these two files the 'perf test 11' for hwmon is successfully
-> completed on my system where I previously reported failures.
->
-> Thanks, applied,
+> How many time is this allocated?
+> If it is 2 bytes in a larger structure it is likely to be noise.
+> For a local the code is likely to be worse.
+> Any maths and you start forcing the compiler to mask the value
+> (on pretty much anything except x86).
 
-I think it can go to perf-tools.
+So the data structure is a sorted array of ints, this changes it to
+int16s. On the 32 socket GNR with > 2048 logical CPUs, the array would
+be over 8kb before and 4kb after for all online CPUs. On my more
+modest desktop with 72 logical cores the size goes from 288 bytes down
+to 144, a reduction of 2 cache lines. I'm not super excited about the
+memory savings, but the patch is only 8 lines in difference.
 
 Thanks,
-Namhyung
-
->
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/tests/hwmon_pmu.c | 29 ++++++++++++++++++-----------
-> >  1 file changed, 18 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/hwmon_pmu.c b/tools/perf/tests/hwmon_pmu.=
-c
-> > index f8bcee9660d5..d2b066a2b557 100644
-> > --- a/tools/perf/tests/hwmon_pmu.c
-> > +++ b/tools/perf/tests/hwmon_pmu.c
-> > @@ -65,7 +65,7 @@ static struct perf_pmu *test_pmu_get(char *dir, size_=
-t sz)
-> >               { "temp2_label", "test hwmon event2\n", },
-> >               { "temp2_input", "50000\n", },
-> >       };
-> > -     int dirfd, file;
-> > +     int hwmon_dirfd =3D -1, test_dirfd =3D -1, file;
-> >       struct perf_pmu *hwm =3D NULL;
-> >       ssize_t len;
-> >
-> > @@ -76,19 +76,24 @@ static struct perf_pmu *test_pmu_get(char *dir, siz=
-e_t sz)
-> >               dir[0] =3D '\0';
-> >               return NULL;
-> >       }
-> > -     dirfd =3D open(dir, O_DIRECTORY);
-> > -     if (dirfd < 0) {
-> > +     test_dirfd =3D open(dir, O_PATH|O_DIRECTORY);
-> > +     if (test_dirfd < 0) {
-> >               pr_err("Failed to open test directory \"%s\"\n", dir);
-> >               goto err_out;
-> >       }
-> >
-> >       /* Create the test hwmon directory and give it a name. */
-> > -     if (mkdirat(dirfd, "hwmon1234", 0755) < 0) {
-> > +     if (mkdirat(test_dirfd, "hwmon1234", 0755) < 0) {
-> >               pr_err("Failed to mkdir hwmon directory\n");
-> >               goto err_out;
-> >       }
-> > -     file =3D openat(dirfd, "hwmon1234/name", O_WRONLY | O_CREAT, 0600=
-);
-> > -     if (!file) {
-> > +     hwmon_dirfd =3D openat(test_dirfd, "hwmon1234", O_DIRECTORY);
-> > +     if (hwmon_dirfd < 0) {
-> > +             pr_err("Failed to open test hwmon directory \"%s/hwmon123=
-4\"\n", dir);
-> > +             goto err_out;
-> > +     }
-> > +     file =3D openat(hwmon_dirfd, "name", O_WRONLY | O_CREAT, 0600);
-> > +     if (file < 0) {
-> >               pr_err("Failed to open for writing file \"name\"\n");
-> >               goto err_out;
-> >       }
-> > @@ -104,8 +109,8 @@ static struct perf_pmu *test_pmu_get(char *dir, siz=
-e_t sz)
-> >       for (size_t i =3D 0; i < ARRAY_SIZE(test_items); i++) {
-> >               const struct test_item *item =3D &test_items[i];
-> >
-> > -             file =3D openat(dirfd, item->name, O_WRONLY | O_CREAT, 06=
-00);
-> > -             if (!file) {
-> > +             file =3D openat(hwmon_dirfd, item->name, O_WRONLY | O_CRE=
-AT, 0600);
-> > +             if (file < 0) {
-> >                       pr_err("Failed to open for writing file \"%s\"\n"=
-, item->name);
-> >                       goto err_out;
-> >               }
-> > @@ -119,16 +124,18 @@ static struct perf_pmu *test_pmu_get(char *dir, s=
-ize_t sz)
-> >       }
-> >
-> >       /* Make the PMU reading the files created above. */
-> > -     hwm =3D perf_pmus__add_test_hwmon_pmu(dirfd, "hwmon1234", test_hw=
-mon_name);
-> > +     hwm =3D perf_pmus__add_test_hwmon_pmu(hwmon_dirfd, "hwmon1234", t=
-est_hwmon_name);
-> >       if (!hwm)
-> >               pr_err("Test hwmon creation failed\n");
-> >
-> >  err_out:
-> >       if (!hwm) {
-> >               test_pmu_put(dir, hwm);
-> > -             if (dirfd >=3D 0)
-> > -                     close(dirfd);
-> > +             if (hwmon_dirfd >=3D 0)
-> > +                     close(hwmon_dirfd);
-> >       }
-> > +     if (test_dirfd >=3D 0)
-> > +             close(test_dirfd);
-> >       return hwm;
-> >  }
-> >
-> > --
-> > 2.47.0.338.g60cca15819-goog
+Ian
