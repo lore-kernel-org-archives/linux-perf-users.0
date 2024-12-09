@@ -1,216 +1,489 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D6213D638
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Dec 2024 16:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA68313D518;
+	Mon,  9 Dec 2024 16:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733761759; cv=none; b=Jv1b4l0kJZjUuxINkxjDFYmGKtAYVF3hVejHlBiT1DSIoav12hler5rnxFlYn5UPuXYmLxahXPFuwBi9GVXp0QUq809+AN0JwVNVqk7VRovtWmDlqUDhb+42f1KYCJSNnhMcxyHBW4O2PDxbgA9qaOchPZCSs6GGe0vgwtGOjD4=
+	t=1733762213; cv=none; b=hR8IWOCMK4EGxqxMKvJSazw7tAAdGdp9zC1y1CHaO8C8RDKL6c5yCLehGFu1L68YRvBPOn29t4rx+8+n/hOJE9yKjtVLVD51MY0KQfworu+d3nfEUv5maUmgzjMW87NflVeiV0B1S654JMzu+aOjhe44k20u+ZRK3hnzohqzlJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733761759; c=relaxed/simple;
-	bh=gmjS14hA2s687atteaXweUpy0wHlB7D9vqJ540Uf2LM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X14ciePWWvLpWF71XG3upfOkuRt2sE4wd2oYOCZLk2PyEgRxDG61H5srtvREaCEPDMWfYBzPwDghr6pxPjnPODyJI8rw9ybbTyaCOnsk+06oKuDeKwdYhXh+I80M40unI8jA0vPRLGYRYl2UTxY13mVgK4oUm9M8qLJZsrj3+nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uPwXyOSY; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1733762213; c=relaxed/simple;
+	bh=xa7uGctjLvsFpBlOpMHL99eSdYWGnTss9OQOf0wxaZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H9vBfiJKEYLXOsiI4mg7fruTv7T5jLtnlKmR2SeAWv1aRQOPS0wPRvaJprqPjx5DLi76tYeOKEWy1FtMbRg4b5sPAeUASYjVtOuVdqM6WNQkIM7We48JpLMV0fyQ7C9ymc/y8RmUVrk0sDnk/naktlBqtqzgT2QdUTPxAseY7W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zsh0SZOq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uPwXyOSY"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so266575ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Dec 2024 08:29:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733761757; x=1734366557; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hvRq5a6zxXos6Rz5YUig1cP5GwRsqaHoYLxf5hiCDuI=;
-        b=uPwXyOSY4jrNSJX1kg3dsT4LPLrChLPgnWzRr/EufyMbAwsKoLwMNZh5rhIf98zbXI
-         9Ibo5W13D4B49Zd7mbWr7NJePQZBkqZSqj4BRoXRvTs2lPOB9zTUER8NzkeP+VU1MWCv
-         abk/DLHKurnDfnUsGn13yBmgE7jUHCDpKJU6QVHZkfvvGdprSpY/euNy1BZMGWmt+qnn
-         dRe+JPBgQGkyz0OkKuzAqHCQHrwoG4goxXSu7Gg2hbKLpXu9Rus36cHK2gbuj7EGQ8C9
-         txFJogE4ZX9MmYpxyaPiJzu7sCUD74oiW6vAjBEiYjnf5PZpX9c2lmGVBkAgx5rZVgZo
-         vbOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733761757; x=1734366557;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hvRq5a6zxXos6Rz5YUig1cP5GwRsqaHoYLxf5hiCDuI=;
-        b=qM2ymmRmkVa6vfIRY55jbofk3ALWnYWx6R5CnfDZ8+7yi0L2TQpoh6x583MiiMSVbg
-         j3+s1IAR3ojVxgTRIuPUF4ymq3qKNgnCghYbQgGGKbnUszBKj4bTb7c0MiEet7U8U5wF
-         tRRpFPQvmBpXibTaOHjUBm0VAh44y4B1rRUHduoSAwoFFFVJ7VZ7UsVQK8Sv+YYeue/8
-         CAC1fTscpHAyJUxQPQ5ZA2eI/5JRFXxVJB4qrVDIJlvFxIg/8oxXz0m4i/h57Ox3A3mZ
-         FeUQxctTiNfUxUtJTq0jgl0UkTLJrs+alWOvoVc4dG/1JTmiNkWCWhuN9ew9op4U0DEN
-         oaMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnigtWktE/XWUjeUGJMmsNTmynGELioOmNIQdneX+AxjRoz0KlzlgHklu30GgNgdWtmGfRIFe5h543b+0pb3uJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLYb3L+Um7Bt6Aqp0m0StTvtzk2c/YxAaNIVP0iytreM+TAB6H
-	0q8uLiHOA9uYXVrvaMSmTnXgnPDLFRLWPZNYYcJHmGN4BQlGmZwWnGHwr7z1Fv84gXetu4IJ9pQ
-	qG3z9/0iO7cNNwBerHJk4LwbVOyxvPTpuBTMhT3Uf4/wXAokkDooJ
-X-Gm-Gg: ASbGncvPUYb3lW8MgCjsHtE6GZ+b/cEqGIHKvEdCb7oxDczbnu+v440+4vB5Ef+gynn
-	3ZUb6ikKTEmZQ6J64qsdwECEANRo2yU6b
-X-Google-Smtp-Source: AGHT+IHeDuQL1h5b5O07aVct9NA0v3r9beK0WOSIOeYJj9olXFQBCTlovvpXe5dqWTemnfZqSWPaxcelhIG9D4It394=
-X-Received: by 2002:a05:6e02:32c9:b0:3a0:a459:8eca with SMTP id
- e9e14a558f8ab-3a868519748mr5937415ab.10.1733761756550; Mon, 09 Dec 2024
- 08:29:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zsh0SZOq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAC55C4CED1;
+	Mon,  9 Dec 2024 16:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733762212;
+	bh=xa7uGctjLvsFpBlOpMHL99eSdYWGnTss9OQOf0wxaZA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zsh0SZOqiDXfgN1fTzfHs3GWJx7+YWsbZvdfavJmCxZj8/2bJGyY2AaET893Z4tZ0
+	 ZfB3pRZr6ZG/eaKD3oR9dP90rJSJIiN1b6qaSsQYCGP/4AEsg6WOC1dovNfE+W8/J0
+	 X4nGRcmijuGD6CbJMwUVGF2IDoY9VGSaL3KB1jRkVpeNNdZV2RcjgKHPTUY0cKbQM0
+	 wLbfSqNmvJysPWu7n5iIjDSrZXvfejD1Ol0rfXI3jpPiEzEpJCviLaFffr7VAUGrXo
+	 mdw7mR7H2iJZwEfTAOCj+iX5OtdFZk7sSpp6+Uu9O+PVS36iooN85kfyXB2WIRgt6m
+	 z3uIRSUf8LNRw==
+Date: Mon, 9 Dec 2024 13:36:48 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH v2 2/4] perf lock contention: Run BPF slab cache iterator
+Message-ID: <Z1ccoNOl4Z8c5DCz@x1>
+References: <20241108061500.2698340-1-namhyung@kernel.org>
+ <20241108061500.2698340-3-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241207052133.102829-1-irogers@google.com> <20241209085524.GC5430@e132581.arm.com>
-In-Reply-To: <20241209085524.GC5430@e132581.arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Dec 2024 08:29:04 -0800
-Message-ID: <CAP-5=fXYQ0ANtpK521jy3vP516+tp42EtKvCJMaK9H1brgB9BA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf cpumap: Reduce cpu size from int to int16_t
-To: Leo Yan <leo.yan@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Tim Chen <tim.c.chen@linux.intel.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Kyle Meyer <kyle.meyer@hpe.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241108061500.2698340-3-namhyung@kernel.org>
 
-On Mon, Dec 9, 2024 at 12:55=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
->
-> Hi Ian,
->
-> On Fri, Dec 06, 2024 at 09:21:33PM -0800, Ian Rogers wrote:
-> >
-> > Fewer than 32k CPUs are currently supported by perf. A cpumap stores
-> > an int per CPU, so its size is 4 times the number of CPUs in the
-> > cpumap.
->
-> Maybe I have a stupid question.  An int value has 4 bytes, on the other
-> hand, we needs 2 bytes to store a 32k value (even 4096 needs 2 bytes
-> for storing the value).
->
-> How can conclude "its size is 4 times the number of CPUs"?
+On Thu, Nov 07, 2024 at 10:14:57PM -0800, Namhyung Kim wrote:
+> Recently the kernel got the kmem_cache iterator to traverse metadata of
+> slab objects.  This can be used to symbolize dynamic locks in a slab.
+> 
+> The new slab_caches hash map will have the pointer of the kmem_cache as
+> a key and save the name and a id.  The id will be saved in the flags
+> part of the lock.
 
-I'm just trying to say "sizeof(int) =3D=3D 4" and we have as many of them
-as we have logical CPUs.
+Trying to fix this 
 
-> > We can reduce the size of the int to an int16_t, saving 2
-> > bytes per CPU in the map.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/perf/include/perf/cpumap.h |  3 ++-
-> >  tools/perf/util/cpumap.c             | 13 ++++++++-----
-> >  tools/perf/util/env.c                |  2 +-
-> >  3 files changed, 11 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/incl=
-ude/perf/cpumap.h
-> > index cbb65e55fc67..760a9aae9884 100644
-> > --- a/tools/lib/perf/include/perf/cpumap.h
-> > +++ b/tools/lib/perf/include/perf/cpumap.h
-> > @@ -4,10 +4,11 @@
-> >
-> >  #include <perf/core.h>
-> >  #include <stdbool.h>
-> > +#include <stdint.h>
-> >
-> >  /** A wrapper around a CPU to avoid confusion with the perf_cpu_map's =
-map's indices. */
-> >  struct perf_cpu {
-> > -       int cpu;
-> > +       int16_t cpu;
-> >  };
-> >
-> >  struct perf_cache {
-> > diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> > index 27094211edd8..85e224d8631b 100644
-> > --- a/tools/perf/util/cpumap.c
-> > +++ b/tools/perf/util/cpumap.c
-> > @@ -427,7 +427,7 @@ static void set_max_cpu_num(void)
-> >  {
-> >         const char *mnt;
-> >         char path[PATH_MAX];
-> > -       int ret =3D -1;
-> > +       int max, ret =3D -1;
-> >
-> >         /* set up default */
-> >         max_cpu_num.cpu =3D 4096;
-> > @@ -444,10 +444,12 @@ static void set_max_cpu_num(void)
-> >                 goto out;
-> >         }
-> >
-> > -       ret =3D get_max_num(path, &max_cpu_num.cpu);
-> > +       ret =3D get_max_num(path, &max);
-> >         if (ret)
-> >                 goto out;
-> >
-> > +       max_cpu_num.cpu =3D max;
-> > +
-> >         /* get the highest present cpu number for a sparse allocation *=
-/
-> >         ret =3D snprintf(path, PATH_MAX, "%s/devices/system/cpu/present=
-", mnt);
-> >         if (ret >=3D PATH_MAX) {
-> > @@ -455,8 +457,9 @@ static void set_max_cpu_num(void)
-> >                 goto out;
-> >         }
-> >
-> > -       ret =3D get_max_num(path, &max_present_cpu_num.cpu);
-> > -
-> > +       ret =3D get_max_num(path, &max);
-> > +       if (!ret)
-> > +               max_present_cpu_num.cpu =3D max;
->
-> This is an improvement for max CPU number, but it is irrevelant to
-> changing the CPU type to int16_t.  It is better to split it into a new
-> patch.
+cd . && make GEN_VMLINUX_H=1 FEATURES_DUMP=/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j28 O=/tmp/tmp.DWo9tIFvWU DESTDIR=/tmp/tmp.ex3iljqLBT
+  BUILD:   Doing 'make -j28' parallel build
+Warning: Kernel ABI header differences:
+  diff -u tools/include/uapi/drm/drm.h include/uapi/drm/drm.h
+  diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
+  diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
+  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+  diff -u tools/arch/x86/include/uapi/asm/kvm.h arch/x86/include/uapi/asm/kvm.h
+  diff -u tools/arch/arm64/include/uapi/asm/kvm.h arch/arm64/include/uapi/asm/kvm.h
+  diff -u tools/arch/arm64/include/uapi/asm/unistd.h arch/arm64/include/uapi/asm/unistd.h
+  diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
+  diff -u tools/include/uapi/asm-generic/mman.h include/uapi/asm-generic/mman.h
+  diff -u tools/perf/arch/x86/entry/syscalls/syscall_32.tbl arch/x86/entry/syscalls/syscall_32.tbl
+  diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
+  diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/syscalls/syscall.tbl
+  diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
+  diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/mips/kernel/syscalls/syscall_n64.tbl
+  diff -u tools/perf/trace/beauty/include/uapi/linux/fcntl.h include/uapi/linux/fcntl.h
+  diff -u tools/perf/trace/beauty/include/uapi/linux/mount.h include/uapi/linux/mount.h
+  diff -u tools/perf/trace/beauty/include/uapi/linux/prctl.h include/uapi/linux/prctl.h
+Makefile.config:989: No libllvm 13+ found, slower source file resolution, please install llvm-devel/llvm-dev
+Makefile.config:1171: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
 
-The change is done this way as passing an int16_t* to a function
-expecting an int* causes compiler warnings.
+  GEN     /tmp/tmp.DWo9tIFvWU/common-cmds.h
+  CC      /tmp/tmp.DWo9tIFvWU/dlfilters/dlfilter-test-api-v0.o
+  CC      /tmp/tmp.DWo9tIFvWU/dlfilters/dlfilter-test-api-v2.o
+  CC      /tmp/tmp.DWo9tIFvWU/dlfilters/dlfilter-show-cycles.o
+  GEN     /tmp/tmp.DWo9tIFvWU/arch/arm64/include/generated/asm/sysreg-defs.h
+  LINK    /tmp/tmp.DWo9tIFvWU/dlfilters/dlfilter-test-api-v2.so
+  LINK    /tmp/tmp.DWo9tIFvWU/dlfilters/dlfilter-show-cycles.so
+  LINK    /tmp/tmp.DWo9tIFvWU/dlfilters/dlfilter-test-api-v0.so
+  PERF_VERSION = 6.13.rc1.g61c6ae4ddd41
+  GEN     perf-iostat
+  GEN     perf-archive
+  INSTALL /tmp/tmp.DWo9tIFvWU/libsubcmd/include/subcmd/exec-cmd.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libsubcmd/include/subcmd/help.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libsubcmd/include/subcmd/pager.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libsubcmd/include/subcmd/parse-options.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libsubcmd/include/subcmd/run-command.h
+  INSTALL libsubcmd_headers
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/perf/bpf_perf.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/perf/core.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/perf/cpumap.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/perf/threadmap.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/perf/evlist.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/perf/evsel.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/perf/event.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/perf/mmap.h
+  CC      /tmp/tmp.DWo9tIFvWU/libperf/core.o
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/internal/cpumap.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/internal/evlist.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libapi/include/api/cpu.h
+  CC      /tmp/tmp.DWo9tIFvWU/libperf/cpumap.o
+  INSTALL /tmp/tmp.DWo9tIFvWU/libsymbol/include/symbol/kallsyms.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/internal/evsel.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libapi/include/api/io.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libapi/include/api/debug.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/internal/lib.h
+  CC      /tmp/tmp.DWo9tIFvWU/libsymbol/kallsyms.o
+  CC      /tmp/tmp.DWo9tIFvWU/libperf/threadmap.o
+  GEN     /tmp/tmp.DWo9tIFvWU/libbpf/bpf_helper_defs.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/internal/mmap.h
+  MKDIR   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf
+  CC      /tmp/tmp.DWo9tIFvWU/libperf/evsel.o
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/internal/rc_check.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libapi/include/api/fd/array.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/internal/threadmap.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/bpf.h
+  CC      /tmp/tmp.DWo9tIFvWU/libperf/evlist.o
+  INSTALL /tmp/tmp.DWo9tIFvWU/libapi/include/api/fs/fs.h
+  CC      /tmp/tmp.DWo9tIFvWU/libapi/cpu.o
+  INSTALL libsymbol_headers
+  INSTALL /tmp/tmp.DWo9tIFvWU/libapi/include/api/fs/tracing_path.h
+  MKDIR   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/libbpf.h
+  CC      /tmp/tmp.DWo9tIFvWU/libperf/mmap.o
+  MKDIR   /tmp/tmp.DWo9tIFvWU/libapi/fd/
+  INSTALL /tmp/tmp.DWo9tIFvWU/libperf/include/internal/xyarray.h
+  MKDIR   /tmp/tmp.DWo9tIFvWU/libapi/fs/
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/btf.h
+  CC      /tmp/tmp.DWo9tIFvWU/libperf/zalloc.o
+  CC      /tmp/tmp.DWo9tIFvWU/libapi/debug.o
+  CC      /tmp/tmp.DWo9tIFvWU/libapi/fd/array.o
+  CC      /tmp/tmp.DWo9tIFvWU/libapi/fs/fs.o
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/libbpf_common.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/libbpf_legacy.h
+  CC      /tmp/tmp.DWo9tIFvWU/libapi/str_error_r.o
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/bpf_helpers.h
+  MKDIR   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/
+  INSTALL libperf_headers
+  INSTALL libapi_headers
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/bpf_tracing.h
+  CC      /tmp/tmp.DWo9tIFvWU/libapi/fs/tracing_path.o
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/bpf_endian.h
+  CC      /tmp/tmp.DWo9tIFvWU/libperf/xyarray.o
+  CC      /tmp/tmp.DWo9tIFvWU/libapi/fs/cgroup.o
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/bpf_core_read.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/skel_internal.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/libbpf_version.h
+  CC      /tmp/tmp.DWo9tIFvWU/libperf/lib.o
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/usdt.bpf.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/hashmap.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/relo_core.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/libbpf_internal.h
+  CC      /tmp/tmp.DWo9tIFvWU/libsubcmd/help.o
+  CC      /tmp/tmp.DWo9tIFvWU/libsubcmd/exec-cmd.o
+  CC      /tmp/tmp.DWo9tIFvWU/libsubcmd/pager.o
+  CC      /tmp/tmp.DWo9tIFvWU/libsubcmd/parse-options.o
+  CC      /tmp/tmp.DWo9tIFvWU/libsubcmd/run-command.o
+  CC      /tmp/tmp.DWo9tIFvWU/libsubcmd/sigchain.o
+  CC      /tmp/tmp.DWo9tIFvWU/libsubcmd/subcmd-config.o
+  INSTALL /tmp/tmp.DWo9tIFvWU/libbpf/include/bpf/bpf_helper_defs.h
+  INSTALL libbpf_headers
+  GEN     /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/bpf_helper_defs.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/bpf.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/libbpf.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/btf.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/libbpf_common.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/libbpf_legacy.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/bpf_helpers.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/bpf_tracing.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/bpf_endian.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/bpf_core_read.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/skel_internal.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/libbpf_version.h
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/usdt.bpf.h
+  LD      /tmp/tmp.DWo9tIFvWU/libapi/fd/libapi-in.o
+  LD      /tmp/tmp.DWo9tIFvWU/libsymbol/libsymbol-in.o
+  AR      /tmp/tmp.DWo9tIFvWU/libsymbol/libsymbol.a
+  LD      /tmp/tmp.DWo9tIFvWU/libapi/fs/libapi-in.o
+  INSTALL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/bpf_helper_defs.h
+  INSTALL libbpf_headers
+  LD      /tmp/tmp.DWo9tIFvWU/libapi/libapi-in.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/libbpf.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/bpf.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/nlattr.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/btf.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/libbpf_errno.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/str_error.o
+  LD      /tmp/tmp.DWo9tIFvWU/libperf/libperf-in.o
+  AR      /tmp/tmp.DWo9tIFvWU/libapi/libapi.a
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/netlink.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/bpf_prog_linfo.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/libbpf_probes.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/hashmap.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/btf_dump.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/ringbuf.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/strset.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/linker.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/gen_loader.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/relo_core.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/usdt.o
+  AR      /tmp/tmp.DWo9tIFvWU/libperf/libperf.a
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/zip.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/elf.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/features.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/btf_iter.o
+  CC      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/btf_relocate.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/libbpf.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/bpf.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/nlattr.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/btf.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/libbpf_errno.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/str_error.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/netlink.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/bpf_prog_linfo.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/libbpf_probes.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/hashmap.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/btf_dump.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/ringbuf.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/strset.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/linker.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/gen_loader.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/relo_core.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/usdt.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/zip.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/elf.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/features.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/btf_iter.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/btf_relocate.o
+  LD      /tmp/tmp.DWo9tIFvWU/libsubcmd/libsubcmd-in.o
+  AR      /tmp/tmp.DWo9tIFvWU/libsubcmd/libsubcmd.a
+  LD      /tmp/tmp.DWo9tIFvWU/libbpf/staticobjs/libbpf-in.o
+  LINK    /tmp/tmp.DWo9tIFvWU/libbpf/libbpf.a
+  LD      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/libbpf-in.o
+  LINK    /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/libbpf/libbpf.a
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/main.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/common.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/json_writer.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/gen.o
+  CC      /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/btf.o
+  LINK    /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bootstrap/bpftool
+  GEN     /tmp/tmp.DWo9tIFvWU/util/bpf_skel/vmlinux.h
+  CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bpf_prog_profiler.bpf.o
+  CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bperf_leader.bpf.o
+  CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bperf_follower.bpf.o
+  CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bperf_cgroup.bpf.o
+  CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/func_latency.bpf.o
+  CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/off_cpu.bpf.o
+  CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/lock_contention.bpf.o
+  CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/kwork_trace.bpf.o
+  CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/sample_filter.bpf.o
+  CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/kwork_top.bpf.o
+  CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/bench_uprobe.bpf.o
+  CLANG   /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/augmented_raw_syscalls.bpf.o
+  GENSKEL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/bench_uprobe.skel.h
+  GENSKEL /tmp/tmp.DWo9tIFvWU/util/bpf_skel/func_latency.skel.h
+util/bpf_skel/lock_contention.bpf.c:612:28: error: declaration of 'struct bpf_iter__kmem_cache' will not be visible outside of this function [-Werror,-Wvisibility]
+  612 | int slab_cache_iter(struct bpf_iter__kmem_cache *ctx)
+      |                            ^
+util/bpf_skel/lock_contention.bpf.c:614:28: error: incomplete definition of type 'struct bpf_iter__kmem_cache'
+  614 |         struct kmem_cache *s = ctx->s;
+      |                                ~~~^
+util/bpf_skel/lock_contention.bpf.c:612:28: note: forward declaration of 'struct bpf_iter__kmem_cache'
+  612 | int slab_cache_iter(struct bpf_iter__kmem_cache *ctx)
+      |                            ^
+2 errors generated.
+make[4]: *** [Makefile.perf:1248: /tmp/tmp.DWo9tIFvWU/util/bpf_skel/.tmp/lock_contention.bpf.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+make[3]: *** [Makefile.perf:292: sub-make] Error 2
+make[2]: *** [Makefile:76: all] Error 2
+make[1]: *** [tests/make:344: make_gen_vmlinux_h_O] Error 1
+make: *** [Makefile:109: build-test] Error 2
+make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
 
-> If get an error for max present CPU number, should we rollback to 4096
-> for both max_cpu_num and max_present_cpu_num?
+real	3m43.896s
+user	29m30.716s
+sys	6m36.609s
+⬢ [acme@toolbox perf-tools-next]$ 
 
-We could. It is probably safest to keep the existing behavior.
 
-Thanks,
-Ian
-
-> Thanks,
-> Leo
->
-> >  out:
-> >         if (ret)
-> >                 pr_err("Failed to read max cpus, using default of %d\n"=
-, max_cpu_num.cpu);
-> > @@ -606,7 +609,7 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, c=
-har *buf, size_t size)
-> >  #define COMMA first ? "" : ","
-> >
-> >         for (i =3D 0; i < perf_cpu_map__nr(map) + 1; i++) {
-> > -               struct perf_cpu cpu =3D { .cpu =3D INT_MAX };
-> > +               struct perf_cpu cpu =3D { .cpu =3D INT16_MAX };
-> >                 bool last =3D i =3D=3D perf_cpu_map__nr(map);
-> >
-> >                 if (!last)
-> > diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> > index e2843ca2edd9..f1d7d22e7e98 100644
-> > --- a/tools/perf/util/env.c
-> > +++ b/tools/perf/util/env.c
-> > @@ -531,7 +531,7 @@ int perf_env__numa_node(struct perf_env *env, struc=
-t perf_cpu cpu)
-> >
-> >                 for (i =3D 0; i < env->nr_numa_nodes; i++) {
-> >                         nn =3D &env->numa_nodes[i];
-> > -                       nr =3D max(nr, perf_cpu_map__max(nn->map).cpu);
-> > +                       nr =3D max(nr, (int)perf_cpu_map__max(nn->map).=
-cpu);
-> >                 }
-> >
-> >                 nr++;
-> > --
-> > 2.47.0.338.g60cca15819-goog
-> >
+ 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/bpf_lock_contention.c         | 50 +++++++++++++++++++
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  | 28 +++++++++++
+>  tools/perf/util/bpf_skel/lock_data.h          | 12 +++++
+>  tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |  8 +++
+>  4 files changed, 98 insertions(+)
+> 
+> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+> index 41a1ad08789511c3..558590c3111390fc 100644
+> --- a/tools/perf/util/bpf_lock_contention.c
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -12,12 +12,59 @@
+>  #include <linux/zalloc.h>
+>  #include <linux/string.h>
+>  #include <bpf/bpf.h>
+> +#include <bpf/btf.h>
+>  #include <inttypes.h>
+>  
+>  #include "bpf_skel/lock_contention.skel.h"
+>  #include "bpf_skel/lock_data.h"
+>  
+>  static struct lock_contention_bpf *skel;
+> +static bool has_slab_iter;
+> +
+> +static void check_slab_cache_iter(struct lock_contention *con)
+> +{
+> +	struct btf *btf = btf__load_vmlinux_btf();
+> +	s32 ret;
+> +
+> +	if (btf == NULL) {
+> +		pr_debug("BTF loading failed: %s\n", strerror(errno));
+> +		return;
+> +	}
+> +
+> +	ret = btf__find_by_name_kind(btf, "bpf_iter__kmem_cache", BTF_KIND_STRUCT);
+> +	if (ret < 0) {
+> +		bpf_program__set_autoload(skel->progs.slab_cache_iter, false);
+> +		pr_debug("slab cache iterator is not available: %d\n", ret);
+> +		goto out;
+> +	}
+> +
+> +	has_slab_iter = true;
+> +
+> +	bpf_map__set_max_entries(skel->maps.slab_caches, con->map_nr_entries);
+> +out:
+> +	btf__free(btf);
+> +}
+> +
+> +static void run_slab_cache_iter(void)
+> +{
+> +	int fd;
+> +	char buf[256];
+> +
+> +	if (!has_slab_iter)
+> +		return;
+> +
+> +	fd = bpf_iter_create(bpf_link__fd(skel->links.slab_cache_iter));
+> +	if (fd < 0) {
+> +		pr_debug("cannot create slab cache iter: %d\n", fd);
+> +		return;
+> +	}
+> +
+> +	/* This will run the bpf program */
+> +	while (read(fd, buf, sizeof(buf)) > 0)
+> +		continue;
+> +
+> +	close(fd);
+> +}
+>  
+>  int lock_contention_prepare(struct lock_contention *con)
+>  {
+> @@ -109,6 +156,8 @@ int lock_contention_prepare(struct lock_contention *con)
+>  			skel->rodata->use_cgroup_v2 = 1;
+>  	}
+>  
+> +	check_slab_cache_iter(con);
+> +
+>  	if (lock_contention_bpf__load(skel) < 0) {
+>  		pr_err("Failed to load lock-contention BPF skeleton\n");
+>  		return -1;
+> @@ -304,6 +353,7 @@ static void account_end_timestamp(struct lock_contention *con)
+>  
+>  int lock_contention_start(void)
+>  {
+> +	run_slab_cache_iter();
+>  	skel->bss->enabled = 1;
+>  	return 0;
+>  }
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> index 1069bda5d733887f..fd24ccb00faec0ba 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -100,6 +100,13 @@ struct {
+>  	__uint(max_entries, 1);
+>  } cgroup_filter SEC(".maps");
+>  
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_HASH);
+> +	__uint(key_size, sizeof(long));
+> +	__uint(value_size, sizeof(struct slab_cache_data));
+> +	__uint(max_entries, 1);
+> +} slab_caches SEC(".maps");
+> +
+>  struct rw_semaphore___old {
+>  	struct task_struct *owner;
+>  } __attribute__((preserve_access_index));
+> @@ -136,6 +143,8 @@ int perf_subsys_id = -1;
+>  
+>  __u64 end_ts;
+>  
+> +__u32 slab_cache_id;
+> +
+>  /* error stat */
+>  int task_fail;
+>  int stack_fail;
+> @@ -563,4 +572,23 @@ int BPF_PROG(end_timestamp)
+>  	return 0;
+>  }
+>  
+> +SEC("iter/kmem_cache")
+> +int slab_cache_iter(struct bpf_iter__kmem_cache *ctx)
+> +{
+> +	struct kmem_cache *s = ctx->s;
+> +	struct slab_cache_data d;
+> +
+> +	if (s == NULL)
+> +		return 0;
+> +
+> +	d.id = ++slab_cache_id << LCB_F_SLAB_ID_SHIFT;
+> +	bpf_probe_read_kernel_str(d.name, sizeof(d.name), s->name);
+> +
+> +	if (d.id >= LCB_F_SLAB_ID_END)
+> +		return 0;
+> +
+> +	bpf_map_update_elem(&slab_caches, &s, &d, BPF_NOEXIST);
+> +	return 0;
+> +}
+> +
+>  char LICENSE[] SEC("license") = "Dual BSD/GPL";
+> diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
+> index 4f0aae5483745dfa..c15f734d7fc4aecb 100644
+> --- a/tools/perf/util/bpf_skel/lock_data.h
+> +++ b/tools/perf/util/bpf_skel/lock_data.h
+> @@ -32,9 +32,16 @@ struct contention_task_data {
+>  #define LCD_F_MMAP_LOCK		(1U << 31)
+>  #define LCD_F_SIGHAND_LOCK	(1U << 30)
+>  
+> +#define LCB_F_SLAB_ID_SHIFT	16
+> +#define LCB_F_SLAB_ID_START	(1U << 16)
+> +#define LCB_F_SLAB_ID_END	(1U << 26)
+> +#define LCB_F_SLAB_ID_MASK	0x03FF0000U
+> +
+>  #define LCB_F_TYPE_MAX		(1U << 7)
+>  #define LCB_F_TYPE_MASK		0x0000007FU
+>  
+> +#define SLAB_NAME_MAX  28
+> +
+>  struct contention_data {
+>  	u64 total_time;
+>  	u64 min_time;
+> @@ -55,4 +62,9 @@ enum lock_class_sym {
+>  	LOCK_CLASS_RQLOCK,
+>  };
+>  
+> +struct slab_cache_data {
+> +	u32 id;
+> +	char name[SLAB_NAME_MAX];
+> +};
+> +
+>  #endif /* UTIL_BPF_SKEL_LOCK_DATA_H */
+> diff --git a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> index 4dcad7b682bdee9c..7b81d3173917fdb5 100644
+> --- a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> +++ b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> @@ -195,4 +195,12 @@ struct bpf_perf_event_data_kern {
+>   */
+>  struct rq {};
+>  
+> +struct kmem_cache {
+> +	const char *name;
+> +} __attribute__((preserve_access_index));
+> +
+> +struct bpf_iter__kmem_cache {
+> +	struct kmem_cache *s;
+> +} __attribute__((preserve_access_index));
+> +
+>  #endif // __VMLINUX_H
+> -- 
+> 2.47.0.277.g8800431eea-goog
