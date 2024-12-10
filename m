@@ -1,112 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E142023ED63;
-	Tue, 10 Dec 2024 19:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A8A194080
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Dec 2024 19:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733858231; cv=none; b=LyFE3xMWP1dJtJDNDy+TtFFZXdI7YFaAGIICSpIsPzP+lbcHHleSLH9EI4nai1l9sxfJBmRLx3/oaJO3WW1e4GWWeUTxHmlMhyqkYsJqX8+69OlsnQwsxsgSQ05oGx4dihIVDNrDErmjiq0CEyLNXRord22ynJY19TTkCxtewvw=
+	t=1733858314; cv=none; b=qZzlxRldOGD7NV+e3jC+UQY32Ye/TI++De0/hUJc0rZmSzf8ky8wJBkQAb2IjQequDoksdy2U28vRVr302QaKPf7PRs8kHMRedt3K09e1FsPDlhA4Y73m8RAjANW5463Sxqd3eeMLWLBXluYYIcqgjRArXLULPG2De5dPgau4tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733858231; c=relaxed/simple;
-	bh=xzrheW4J8uYYbzIZNNJDsJ0uv7i/abHziHUet3dfAR0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=puRic4EUjqG/287EeBhWBv+1/qBobsLMhJZQbKv/ri/OSi6AtGFs6zX9LVxrb8tHHsiZ74yDD5ytLhKO4KKVbC+28fZqqzHiOcVZgkNMxW1XEYoxyd03XeJbckV2fWyC+o8APkZYYMIefWcAm7yODugS0WDtvFzewT8uKB3EioA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KiV+H5b3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733858314; c=relaxed/simple;
+	bh=zLjyeZbn2azddPUqtc4Ge4NSb+lnbUk5aXLsXnEjA4s=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=JLIvKRrUJyR+W6fZDTVLtZJxTMz6VUzpHQQ5HUU7W/W0hM2E9MC+aCk86/MTSm0ddEWhEao6m3nKvJXfTCdPbWbk2CGgjXOLMHpHD4vJz+lrujoOWSwzg0ZmgwlmQAlQPX+Yfd5E57+i1ZDnRQwxQzDz9Aawj/BWAbXXMfi6a1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z3FDuwFS; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KiV+H5b3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EAD6C4CED6;
-	Tue, 10 Dec 2024 19:17:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733858230;
-	bh=xzrheW4J8uYYbzIZNNJDsJ0uv7i/abHziHUet3dfAR0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KiV+H5b3FrmvwCvv6PaqvWEVQPgew9FR6HqdXSvUSzsDDROlDh54R8f16w+xJ2yIa
-	 YSuCoKEXnWudLMF4iEa5+8JePyPjQC4b7YSZVkHDFxbkuD3S17rHfr4viB2hcM5VD4
-	 y732TZlO36btvjO7i3PBG85vA/rKxvnL5ckRQExn1e8n2rEjUh5LfNrJl9diCP7P/1
-	 FpVAxIq2vzsPXp2erFC84nmQutTayUdlytYU8tv+dPfup7zElxmAESWciVsv4/xEGU
-	 LRdwY5jUgc9lmranR2ZomYV1/kFtVmuvA6YbOSG7zYNshbZfONGg/JHJQOJLlq5iQf
-	 HW0Ul8Q+Jpy+w==
-Date: Tue, 10 Dec 2024 16:17:08 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Sandipan Das <sandipan.das@amd.com>, Xu Yang <xu.yang_2@nxp.com>,
-	Benjamin Gray <bgray@linux.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf jevents: Fix build issue in '*/' in event
- descriptions
-Message-ID: <Z1iTtJcMMsuwI0JX@x1>
-References: <20241113165558.628856-1-irogers@google.com>
- <CAP-5=fWK-eeDEvE4+LeeScbHFecmc5+H8WB_5fepfrJJLZsF0Q@mail.gmail.com>
- <Z1dS6HrfkVS4OeZz@x1>
- <CAP-5=fUze9j8etq-17L0dWVoYfE-bA+61wrEAXN9vJSCj9dCbw@mail.gmail.com>
- <Z1g-8ggHQ8MoVNhx@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z3FDuwFS"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6efed40a5bcso54829877b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Dec 2024 11:18:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733858311; x=1734463111; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IGQhz6dYA9gvKzv6B9FYPbGo1YaUBKUFUvBFQDWzx3g=;
+        b=z3FDuwFSvdr1acp1QSmL119mNoX+3jwru5OZdpC2uB2I8IWxzP20UgMC500urqphAl
+         QjheibNUhA/GGIKt7n5iNSwPysSA2WdxlLVTkPAbHiJsl1qnwlGc6lK3XcAMKl13NcdT
+         2KtRr8mg+M+tCP/qbpDnB/8FC+BSU1NWiCn9TOr09aQfHIHbWhVFsTVKqc1QDkHKqJ3W
+         etRflSRGVVjM7V9sAzD+yTOitV051IxPy574DddKKrrhLAWRi+ny/pYcLgJ9+nzP6JP0
+         gnm/EwFbAFtXm9eW7NEgjrBOS8234D6ykcPbaaDlKR1+E0Dp40DUw7zZVm0Hu1sD3ijq
+         QAmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733858311; x=1734463111;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IGQhz6dYA9gvKzv6B9FYPbGo1YaUBKUFUvBFQDWzx3g=;
+        b=OGjDc8x3ef0xKtAaM8KwtVwOFXP5I3fOfJUj6Xf8rw3NdaOdeyCRvIR1+08QePBSg3
+         J4DnOqA5ELkSUPaNiZIyV/eScw5gi4h246xEqQ/zlTqc67WQEZHfr3Ao93isg8anL15T
+         ptp/SKqQMWkBqXYD6ZTdwUFm9Df/F0Xz/5zCvTcrJBi5O5EmGtqr0I9bcL6x9JSEJsaC
+         A2NlWhvzPCY5glyjcm8CvgV2ZMcPSIA+hvXvcpmrx3C5IYl6hoZ4olnU7koy3sbxRhe/
+         621s88uzQRP1sJbJB9ygavlfpHlkGm/AzFWz4H7cnr59S5rn+aE3d4gO6mEqxIrNrONh
+         b9lg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkAtlBIRDRTSw2TT/MzpIkhR9vJoR+52hlCDwJaSQJnays4SqPjAUhSEm68Fz+cI8J7pBdI3ckv5HqPFrIWERh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx4OjHpOugeCDzUjzN752T1UnZDTAMHPgTvQazJ4jhDuq9Cb75
+	qRrLTaQraAP6hj3JOlxUn00Tz0WWhunt644r5OagKZ25YE4gTdzPTiIYYX9SOiqIbgeRi3rlIVB
+	kIdFqiw==
+X-Google-Smtp-Source: AGHT+IHT0UvC956VGrh7hk00zt7MvxiV5tXr9zu7jDzJJbYPWSguxL3QtROQgK7WdmBsBkSrxuiEiDPtdP9b
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:cd0f:933b:4048:cd14])
+ (user=irogers job=sendgmr) by 2002:a25:b281:0:b0:e39:78c0:3dd with SMTP id
+ 3f1490d57ef6-e3c8e70147dmr159276.5.1733858311366; Tue, 10 Dec 2024 11:18:31
+ -0800 (PST)
+Date: Tue, 10 Dec 2024 11:18:23 -0800
+Message-Id: <20241210191823.612631-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z1g-8ggHQ8MoVNhx@x1>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
+Subject: [PATCH v1] perf intel-tpebs: Cleanup header
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Dec 10, 2024 at 10:15:30AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, Dec 09, 2024 at 01:29:15PM -0800, Ian Rogers wrote:
-> > On Mon, Dec 9, 2024 at 12:28 PM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Mon, Dec 09, 2024 at 10:35:34AM -0800, Ian Rogers wrote:
-> > > > On Wed, Nov 13, 2024 at 8:56 AM Ian Rogers <irogers@google.com> wrote:
-> > > > >
-> > > > > For big string offsets we output comments for what string the offset
-> > > > > is for. If the string contains a '*/' as seen in Intel Arrowlake event
-> > > > > descriptions, then this causes C parsing issues for the generated
-> > > > > pmu-events.c. Catch such '*/' values and escape to avoid this.
-> > > > >
-> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > >
-> > > > Ping.
-> > >
-> > > A fixes: is missing, probably this should go via perf-tools, i.e. for
-> > > this merge window?
-> > 
-> > We don't yet have arrowlake events/metrics, should there be a fixes?
-> 
-> Ok, thanks for the clarification.
-> 
-> > I'm just preparing the patches for the latest vendor json from Intel,
-> > but they will depend on this. I suspect given the size of the vendor
-> > json it will miss the current merge window.
-> 
-> Probably best to have big patches via perf-tools-next at this point in
-> time.
+Remove arch conditional compilation. Arch conditional compilation
+belongs in the arch/ directory.
 
-I'm seeing this after applying:
+Tidy header guards to match other files. Remove unneeded includes and
+switch to forward declarations when necesary.
 
-/home/acme/git/perf-tools-next/tools/perf/pmu-events/jevents.py:434: SyntaxWarning: invalid escape sequence '\*'
-  return s.replace('*/', '\*\/')
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/Build         |  2 +-
+ tools/perf/util/intel-tpebs.h | 30 ++++++------------------------
+ 2 files changed, 7 insertions(+), 25 deletions(-)
 
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 9eb8b1c3df94..c0ccd8ef08e0 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -158,7 +158,7 @@ perf-util-y += clockid.o
+ perf-util-y += list_sort.o
+ perf-util-y += mutex.o
+ perf-util-y += sharded_mutex.o
+-perf-util-$(CONFIG_X86_64) += intel-tpebs.o
++perf-util-y += intel-tpebs.o
+ 
+ perf-util-$(CONFIG_LIBBPF) += bpf_map.o
+ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
+diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpebs.h
+index 766b3fbd79f1..63c16e759a71 100644
+--- a/tools/perf/util/intel-tpebs.h
++++ b/tools/perf/util/intel-tpebs.h
+@@ -2,34 +2,16 @@
+ /*
+  * intel_tpebs.h: Intel TEPBS support
+  */
+-#ifndef INCLUDE__PERF_INTEL_TPEBS_H__
+-#define INCLUDE__PERF_INTEL_TPEBS_H__
++#ifndef __INTEL_TPEBS_H
++#define __INTEL_TPEBS_H
+ 
+-#include "stat.h"
+-#include "evsel.h"
+-
+-#ifdef HAVE_ARCH_X86_64_SUPPORT
++struct evlist;
++struct evsel;
+ 
+ extern bool tpebs_recording;
++
+ int tpebs_start(struct evlist *evsel_list);
+ void tpebs_delete(void);
+ int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread);
+ 
+-#else
+-
+-static inline int tpebs_start(struct evlist *evsel_list __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-static inline void tpebs_delete(void) {};
+-
+-static inline int tpebs_set_evsel(struct evsel *evsel  __maybe_unused,
+-				int cpu_map_idx  __maybe_unused,
+-				int thread  __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-#endif
+-#endif
++#endif /* __INTEL_TPEBS_H */
+-- 
+2.47.1.613.gc27f4b7a9f-goog
 
-⬢ [acme@toolbox perf-tools-next]$ head /etc/os-release 
-NAME="Fedora Linux"
-VERSION="40 (Toolbx Container Image)"
-ID=fedora
-VERSION_ID=40
-VERSION_CODENAME=""
-PLATFORM_ID="platform:f40"
-PRETTY_NAME="Fedora Linux 40 (Toolbx Container Image)"
-ANSI_COLOR="0;38;2;60;110;180"
-LOGO=fedora-logo-icon
-CPE_NAME="cpe:/o:fedoraproject:fedora:40"
-⬢ [acme@toolbox perf-tools-next]$ python --version
-Python 3.12.7
-⬢ [acme@toolbox perf-tools-next]$
