@@ -1,55 +1,55 @@
-Received: from mail-oo1-f73.google.com (mail-oo1-f73.google.com [209.85.161.73])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86265226862
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Dec 2024 20:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86395226897
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Dec 2024 20:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733861350; cv=none; b=Xel9xumv0GwBaqrr8qGE+mUFYxa7I86KT8T1TMh8uLbkZFWF2WIb+s6Q1hiA6Hz81Nu11SnO7ykthggnirbqw4fz8DbHg9aMLDXBHq9c9e0c1RfuO/58SMr5Mf9+gbAW6aElsa3pdZB7W5lEo3a/384oEqxD3xEOL8bHD0i6poM=
+	t=1733861358; cv=none; b=E5ARU7BR43iYg5v3+9wddZDRAQgnj8mLSDz5NtWRsOLc821ZlpoIPGq+GFcfJ3KvMKTIVZIWtIJkzuzb4L/AK0YCf2JwjV7w9AsoLp/YEH2CF5oNC/f1HF/BwcGw4kKs5Id+0xe9YejFr7ORG0hRj2VfDufjSo/W20Mue6y5zrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733861350; c=relaxed/simple;
-	bh=4TXt/fYrKAAtNwYRb9jxLFxe3AURh81Ap7PmCA7Zuko=;
+	s=arc-20240116; t=1733861358; c=relaxed/simple;
+	bh=ck8Hd3SR0iGyByfJ6I46aAcyZqxhi0OpQSk1clm98Bw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FULLir6vjGOucPcX+kJC8m/eDKcHk4PDem8+MGePn4PPLFlxqR9wL53+wyC7+63fR765aqZKqe4UTcEr7pHm7Fv1r1J6r0tcSI39CaPOlShGgwQm7Z7XvzLCNPOdXtbtH4eBCeIZIjikZMoF9ty8KE01v84QG/zxSV9/+r9/W2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MD+b6tFK; arc=none smtp.client-ip=209.85.161.73
+	 To:Cc:Content-Type; b=tIhZa10fPuLaT2yodW1I4qsafycVTm2gcAYso8BC4r+Wulh8KFtlmAZdt+ggz+H79kCMVm56GjD5feyMLU71Ou4S3cKdZWhb7vUL7eckP3NNlidbbMMyYWeQS2d0KH7fUEO9DxDzZyR07Ebd7fgfiY7/Bf54oSdwyAWyfAP9nWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2MykMy4t; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MD+b6tFK"
-Received: by mail-oo1-f73.google.com with SMTP id 006d021491bc7-5f06787ea2eso3970681eaf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Dec 2024 12:09:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2MykMy4t"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ee86953aeaso5837714a91.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Dec 2024 12:09:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733861347; x=1734466147; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1733861356; x=1734466156; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YZ0TIlLsvDETtZLHTX5LiWM7DaAh3n/2WyTapiVCEOc=;
-        b=MD+b6tFKhWnGjIpS1AEFaW/QCSTV+yZyCMnkJvztpARwKujbPC0P/LTqkFILpnuJoG
-         1I8314ofGbHo7iFACabWPxjPVN8smr9OHwI76XbEPlHLpWCGoe8MNQH1+SvtXIXLhoml
-         CyqG6I/CbVFRWgqJGiCO41JcZ+AS/UaNQBPB05Fh7ZvABUftltgv1tGnxJ1Lvcbhh6v7
-         c3hxDwdJSfSYyaqaNOGuJvHfybm4ANnF7K/S83iq+XmM9nlrHBUiu4m3h0/tlrfO0ivC
-         Z1T8KrRbga/BpkWmkDYVdaKH5TrL80fp/x4MMu4FOkkLgwr1mRVdHl6NmwWwvAGEfbLA
-         W1Lw==
+        bh=/HyrPhgjJ+1dXPotsc2MzygIYEs9nqOKXdT/6gyKv/8=;
+        b=2MykMy4t0x2HAryEQEWCYqPLwNBWoAuJd3NzKpYet2PyWy1YzWgQfL2hcpc8lwCEH2
+         JN2RP5T4tPt7tbO+uzMZR2/yXhZb0xyMdUmcdR4f2Ypphli9QzLsmP4Wkhg848ZmfbZ3
+         121ZflRiygKuig2HAFPdwRVYXVSOxaQNaLTOIQ5QFpXKTWi8Zv6FpdphjrbOG9MR3rNK
+         lU/7c9hjSRMSbNC119RwKv8ChXIA58qSrejaFYYm9Zw423zr+GUX7fqnpsC0QRvK+eQY
+         ydZCoG56IhP9iXOHUKzPmbvsFRCLkSyM1i/6NpK3n+9qZWddsT5D7lPJsd+Aw2ytahKN
+         jCug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733861347; x=1734466147;
+        d=1e100.net; s=20230601; t=1733861356; x=1734466156;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YZ0TIlLsvDETtZLHTX5LiWM7DaAh3n/2WyTapiVCEOc=;
-        b=L4OdWefPE+fS4H10c/b44G1BLxerh5SQiJ10TA3kFcXb7Zd8HovzgfT8uOwJ06H1Fr
-         K+4+VtcfCRuJBv3hn0duHtLdcK67e3zFSmmO8cfHJYfvkaugEbxvt0R/wvkdjv4ygIO4
-         YuY8ho8DxNTJjB94tEb8oRgcFkseV/eh0ANhtn3hmggP6FkOpSaI+FCmrFD6AiX73qHx
-         3j/MltrWWNx2BEyAuSIxEEKFQGIBxYAE+UJSDbiuTEyI/1uwz5luk/Km4unLiP6fH2Ck
-         +nY65aM+3o//kRyO1IhGUnZbr8NiuVfoMW7SUc/rzilStbgqnWobwPeKDkfomHox0+do
-         tRRA==
-X-Forwarded-Encrypted: i=1; AJvYcCUnE/faalTy1cZl+4tiscXxgx1i3hwGZwhGmjieHzYsI6E32KaXyxefqiQ3ZPMWlXA4Hdf3vccr7RMRuvUjZ100@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX36BmGHBUgQ+v2jAdFe9NPI99n4bhuloixLh5UirvEQn61nGD
-	R4hvwyMElueU1hSXmk9Nd+9DciisQUFo4UozlwntJkZ9lI+LnjwVykolR/6cuB5Nz2feLwLtEgY
-	Crg==
-X-Google-Smtp-Source: AGHT+IFedsnHWxoacSC2bWy7ghFMHZFBRW8dlqVBGCMQ6X3BH3cx8puBGgp+Q31QTB54o9jv5UpXKEhJyNo=
-X-Received: from oabrl22.prod.google.com ([2002:a05:6871:6516:b0:29f:c26f:686e])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:230e:b0:29d:cc2e:8493
- with SMTP id 586e51a60fabf-2a012f3bc6bmr324133fac.26.1733861347684; Tue, 10
- Dec 2024 12:09:07 -0800 (PST)
-Date: Tue, 10 Dec 2024 12:08:21 -0800
+        bh=/HyrPhgjJ+1dXPotsc2MzygIYEs9nqOKXdT/6gyKv/8=;
+        b=hTA/n1p7MgkYzV4vt+iDCZvcSw8IyaOSq+Ih9JfNb8iFV3qM6IcZLHHZ2HANp760hj
+         awBTF9+MgJHYsrxH6C3fUd1ZSlVMg4ERRRdnRc2rpF/NdgvgZ2vcG+SqvYtA4UK8yISJ
+         EWudQ8V3RxWUvh2u1cwbsAztgVFcSaI2+tYjge72Hiq0vpGw6V6L+AWuETWgzH/XXYao
+         K7pJfbfx5F0Q01Dqar5FW/08MoyLmG1kXVYncQsNp1JNZLHi89dsxfCegBwiRVyx2j8j
+         wWOp+sXaMQH05FVjSEWj0MEqDx4chLCHOnorMbkg1n6ryPgvrbXIwXkeZXbCOYGIgdvN
+         HadA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8nxrByYl7ER3KEeqAjeMg2xvbJPkei3BZQROJgTJA9ZQPMZ/neQwDSkpJR7py+ZgSxcR3bSDBpJLo7h7mc6dt@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJFN/ddCWB0JQzCp2diWyusogoA5hVzqN5powVco/KFLe+/GlS
+	a1Z3ivgoSULnuzKfw7hYGvYuJArWW0OD5dDDbs/G10cMpGK5GNZWnidLlaeq7ch+NJ/6IT/+tVs
+	1Pg==
+X-Google-Smtp-Source: AGHT+IEjfTytgoJ35UzZBexgXiatnz+zPJl0oVOFMIeGrDe1QsRe/uTVkBeHQlSnJPBwALaWH4E9LzX/uXo=
+X-Received: from pjuj11.prod.google.com ([2002:a17:90a:d00b:b0:2e0:9fee:4b86])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c05:b0:2ee:f687:6ad5
+ with SMTP id 98e67ed59e1d1-2f127f55592mr437358a91.2.1733861355836; Tue, 10
+ Dec 2024 12:09:15 -0800 (PST)
+Date: Tue, 10 Dec 2024 12:08:22 -0800
 In-Reply-To: <20241210200847.1023139-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241210200847.1023139-1-ctshao@google.com>
 X-Mailer: git-send-email 2.47.1.545.g3c1d2e2a6a-goog
-Message-ID: <20241210200847.1023139-2-ctshao@google.com>
-Subject: [PATCH v5 2/3] perf lock: Add percpu-rwsem for type filter
+Message-ID: <20241210200847.1023139-3-ctshao@google.com>
+Subject: [PATCH v5 3/3] perf lock: Rename fields in lock_type_table
 From: Chun-Tse Shao <ctshao@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
@@ -70,48 +70,131 @@ Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-percpu-rwsem was missing in man page. And for backward compatibility,
-replace `pcpu-sem` with `percpu-rwsem` before parsing lock name.
-Tested `./perf lock con -ab -Y pcpu-sem` and `./perf lock con -ab -Y
-percpu-rwsem`
+`lock_type_table` contains `name` and `str` which can be confusing.
+Rename them to `flags_name` and `lock_name` and add descriptions to
+enhance understanding.
+Tested by building perf for x86.
 
-Fixes: 4f701063bfa2 ("perf lock contention: Show lock type with address")
 Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 ---
- tools/perf/Documentation/perf-lock.txt | 4 ++--
- tools/perf/builtin-lock.c              | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/builtin-lock.c | 33 +++++++++++++++++++--------------
+ 1 file changed, 19 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
-index 57a940399de0..d3793054f7d3 100644
---- a/tools/perf/Documentation/perf-lock.txt
-+++ b/tools/perf/Documentation/perf-lock.txt
-@@ -187,8 +187,8 @@ CONTENTION OPTIONS
- 	Show lock contention only for given lock types (comma separated list).
- 	Available values are:
- 	  semaphore, spinlock, rwlock, rwlock:R, rwlock:W, rwsem, rwsem:R, rwsem:W,
--	  rtmutex, rwlock-rt, rwlock-rt:R, rwlock-rt:W, pcpu-sem, pcpu-sem:R, pcpu-sem:W,
--	  mutex
-+	  rtmutex, rwlock-rt, rwlock-rt:R, rwlock-rt:W, percpu-rwmem, pcpu-sem,
-+	  pcpu-sem:R, pcpu-sem:W, mutex
- 
- 	Note that RW-variant of locks have :R and :W suffix.  Names without the
- 	suffix are shortcuts for the both variants.  Ex) rwsem = rwsem:R + rwsem:W.
 diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 7e36bbe3cb80..50630551adad 100644
+index 50630551adad..74085c8e32d3 100644
 --- a/tools/perf/builtin-lock.c
 +++ b/tools/perf/builtin-lock.c
-@@ -2365,7 +2365,10 @@ static int parse_lock_type(const struct option *opt __maybe_unused, const char *
+@@ -1575,8 +1575,13 @@ static void sort_result(void)
+ 
+ static const struct {
+ 	unsigned int flags;
+-	const char *str;
+-	const char *name;
++	/*
++	 * Name of the lock flags (access), with delimeter ':'.
++	 * For example, rwsem:R of rwsem:W.
++	 */
++	const char *flags_name;
++	/* Name of the lock (type), for example, rwlock or rwsem. */
++	const char *lock_name;
+ } lock_type_table[] = {
+ 	{ 0,				"semaphore",	"semaphore" },
+ 	{ LCB_F_SPIN,			"spinlock",	"spinlock" },
+@@ -1593,24 +1598,24 @@ static const struct {
+ 	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex",	"mutex" },
+ };
+ 
+-static const char *get_type_str(unsigned int flags)
++static const char *get_type_flags_name(unsigned int flags)
+ {
+ 	flags &= LCB_F_MAX_FLAGS - 1;
+ 
+ 	for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
+ 		if (lock_type_table[i].flags == flags)
+-			return lock_type_table[i].str;
++			return lock_type_table[i].flags_name;
+ 	}
+ 	return "unknown";
+ }
+ 
+-static const char *get_type_name(unsigned int flags)
++static const char *get_type_lock_name(unsigned int flags)
+ {
+ 	flags &= LCB_F_MAX_FLAGS - 1;
+ 
+ 	for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
+ 		if (lock_type_table[i].flags == flags)
+-			return lock_type_table[i].name;
++			return lock_type_table[i].lock_name;
+ 	}
+ 	return "unknown";
+ }
+@@ -1717,7 +1722,7 @@ static void print_lock_stat_stdio(struct lock_contention *con, struct lock_stat
+ 
+ 	switch (aggr_mode) {
+ 	case LOCK_AGGR_CALLER:
+-		fprintf(lock_output, "  %10s   %s\n", get_type_str(st->flags), st->name);
++		fprintf(lock_output, "  %10s   %s\n", get_type_flags_name(st->flags), st->name);
+ 		break;
+ 	case LOCK_AGGR_TASK:
+ 		pid = st->addr;
+@@ -1727,7 +1732,7 @@ static void print_lock_stat_stdio(struct lock_contention *con, struct lock_stat
+ 		break;
+ 	case LOCK_AGGR_ADDR:
+ 		fprintf(lock_output, "  %016llx   %s (%s)\n", (unsigned long long)st->addr,
+-			st->name, get_type_name(st->flags));
++			st->name, get_type_lock_name(st->flags));
+ 		break;
+ 	case LOCK_AGGR_CGROUP:
+ 		fprintf(lock_output, "  %s\n", st->name);
+@@ -1768,7 +1773,7 @@ static void print_lock_stat_csv(struct lock_contention *con, struct lock_stat *s
+ 
+ 	switch (aggr_mode) {
+ 	case LOCK_AGGR_CALLER:
+-		fprintf(lock_output, "%s%s %s", get_type_str(st->flags), sep, st->name);
++		fprintf(lock_output, "%s%s %s", get_type_flags_name(st->flags), sep, st->name);
+ 		if (verbose <= 0)
+ 			fprintf(lock_output, "\n");
+ 		break;
+@@ -1780,7 +1785,7 @@ static void print_lock_stat_csv(struct lock_contention *con, struct lock_stat *s
+ 		break;
+ 	case LOCK_AGGR_ADDR:
+ 		fprintf(lock_output, "%llx%s %s%s %s\n", (unsigned long long)st->addr, sep,
+-			st->name, sep, get_type_name(st->flags));
++			st->name, sep, get_type_lock_name(st->flags));
+ 		break;
+ 	case LOCK_AGGR_CGROUP:
+ 		fprintf(lock_output, "%s\n",st->name);
+@@ -2343,10 +2348,10 @@ static int parse_lock_type(const struct option *opt __maybe_unused, const char *
+ 	for (tok = strtok_r(s, ", ", &tmp); tok; tok = strtok_r(NULL, ", ", &tmp)) {
+ 		bool found = false;
+ 
+-		/* `tok` is `str` in `lock_type_table` if it contains ':'. */
++		/* `tok` is a flags name if it contains ':'. */
+ 		if (strchr(tok, ':')) {
+ 			for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
+-				if (!strcmp(lock_type_table[i].str, tok) &&
++				if (!strcmp(lock_type_table[i].flags_name, tok) &&
+ 				    add_lock_type(lock_type_table[i].flags)) {
+ 					found = true;
+ 					break;
+@@ -2363,14 +2368,14 @@ static int parse_lock_type(const struct option *opt __maybe_unused, const char *
+ 		}
+ 
  		/*
- 		 * Otherwise `tok` is `name` in `lock_type_table`.
+-		 * Otherwise `tok` is `name` in `lock_type_table`.
++		 * Otherwise `tok` is a lock name.
  		 * Single lock name could contain multiple flags.
-+		 * Replace alias `pcpu-sem` with actual name `percpu-rwsem.
+ 		 * Replace alias `pcpu-sem` with actual name `percpu-rwsem.
  		 */
-+		if (!strcmp(tok, "pcpu-sem"))
-+			tok = (char *)"percpu-rwsem";
+ 		if (!strcmp(tok, "pcpu-sem"))
+ 			tok = (char *)"percpu-rwsem";
  		for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
- 			if (!strcmp(lock_type_table[i].name, tok)) {
+-			if (!strcmp(lock_type_table[i].name, tok)) {
++			if (!strcmp(lock_type_table[i].lock_name, tok)) {
  				if (add_lock_type(lock_type_table[i].flags)) {
+ 					found = true;
+ 				} else {
 -- 
 2.47.1.545.g3c1d2e2a6a-goog
 
