@@ -1,165 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE882451C6;
-	Tue, 10 Dec 2024 22:30:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E721AAA2F;
+	Tue, 10 Dec 2024 22:55:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733869840; cv=none; b=KYDps4BdcRP+jaXSErbgAKctcQfInxmRZQq9/Wvt2ZgiK/wOvc/OfwWHbm4HVmFvddCCLY0OS3ZVlIlvCu3Nq729ms2+LABzMsiz2jLDq1kk1DMAH+mpfGsVd+qetAkbGfKCRsoAt6Ef0Yjh5WYtHF+YH/beEkr4ghpliD/UsTA=
+	t=1733871317; cv=none; b=hYGooFKFGb1T4faCrwp6zlSGM+C6+8DH7qmBBqZY2hXICOvqMZVi9Bp3UGKzax+W7EKX4UIQT6RyoN7PSMza4qp9heVG5+zcvDOvXxj75NKHRs6NawXpiknPBVPcWlT17jwu8pFqW0D1jv/RGjodQqTFjIGve0/srKov4PIdWDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733869840; c=relaxed/simple;
-	bh=9+51JCB/pG5QGsHxuMElgRDWlaGSIllUoxznJzKEcbw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t/abxeKj+kgSNLJwNJzp7Svl3ZdtVf60rtGu3kOPuIaTmFipCAlMvIBxe6HKavHAAW5Ivn/zF9Nvpk8ZPVOAElBrc29+3m12fweDi+19J1H6ysn6cll+aztU2G0a86uFJ49YM1vHbCXbBldjQo4PbVTQpzKrX1R1bJ47cPDNbIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aIF4hkjj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733871317; c=relaxed/simple;
+	bh=vS6taeVvtMUK1x8YDCRaE6xOh693IkAcJRtaIRw6LQQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=DNjnLH9uud1b+PfowM/I/PLZj9RwmXc5nP9TozHV6eTxcdU7wJA3cr7BL0F/TiCTqI6rlGDMBGmKjFJXhNeGLBj8Qj/dloAH+DR0FsVltAsbc+E/8OJmXylzzeKUCO7vDy7xDOO0RNR9jlhWtyBlO6revhChZXRZZeSHg3zckqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SgadqRS6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aIF4hkjj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 385B3C4CED6;
-	Tue, 10 Dec 2024 22:30:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SgadqRS6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65611C4CED6;
+	Tue, 10 Dec 2024 22:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733869839;
-	bh=9+51JCB/pG5QGsHxuMElgRDWlaGSIllUoxznJzKEcbw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aIF4hkjjuZNfR+HmsFgPDxY2qk6pMNQ18HA7+QYsxNBOS5wbEdkgZFFdvWNaCqAuz
-	 9rxGOqyWjEGF53PuTnlOfPj1H1Y/qD1Cbe7TrwTZPh3wxxiCI6E8O74x3cXfEL40We
-	 nO6yh7MGvidEQpVIeYv2GAK+I6yYLhw7PSvWY1kWL0+O+hDCXh2nYX8+AbdYnn1iOX
-	 A4dgbY78T+ZJr5X7jsSNt/HX0/AF7XWoLLF6JelqXmH2/PJpx2CQb1pa+DM4w8O8bF
-	 Sr/2GlhcJEAD/PgLbQr8OrP23Awwh6Hx/GTPfuMiqw8F6i3gStutSBCMlGIrG4hlVM
-	 ekbcMAQljUTWw==
-Date: Tue, 10 Dec 2024 14:30:36 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf trace: Add tests for BTF general augmentation
-Message-ID: <Z1jBDHeEnPrsL7DQ@google.com>
-References: <20241126223257.22465-1-howardchu95@gmail.com>
- <20241126223257.22465-2-howardchu95@gmail.com>
+	s=k20201202; t=1733871317;
+	bh=vS6taeVvtMUK1x8YDCRaE6xOh693IkAcJRtaIRw6LQQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SgadqRS6mwTM5AccjhHKPttp3+QBTmWY3srV4Y4priF394l5Zz2NB/uSZ7tueKgwh
+	 UJeJbjX6FfnsVqdeDW1+/9s1hXV1FJKI/uqbEzMor/OWxmU2oriOVitCaei5FeFYuY
+	 uFSBw5fnRngYTaC5TCBOLSHpuDX5/24CHGlyYyMbVN/quO+uL7BveE7hZ3d+UeZezg
+	 rdlD3xx64Xflyk/jCJW+Z/yWoodxdkzHBn1pgSF8H5uI+MEavobIKvsfHRSx7jgH8G
+	 4lOw535/cfzqWSnUpf60M34RDPFJVwgVfnkL7IruJ341LhLeJN13xZ2XruoiSzbLiJ
+	 Ch1AU++H0UO5A==
+Date: Wed, 11 Dec 2024 07:55:10 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, namhyung@kernel.org, acme@kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark
+ Rutland <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Leo Yan <leo.yan@arm.com>, Dima Kogan
+ <dima@secretsauce.net>, "Dr. David Alan Gilbert" <linux@treblig.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: Fix uninitialized variable
+Message-Id: <20241211075510.ea7924b5b80bf0d95993086b@kernel.org>
+In-Reply-To: <20241209171222.1422577-1-james.clark@linaro.org>
+References: <20241209171222.1422577-1-james.clark@linaro.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241126223257.22465-2-howardchu95@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi,
 
-On Tue, Nov 26, 2024 at 02:32:56PM -0800, Howard Chu wrote:
-> Currently, we only have perf trace augmentation tests for enum
-> arguments. This patch adds tests for more general syscall arguments,
-> such as struct pointers, strings, and buffers.
+On Mon,  9 Dec 2024 17:12:21 +0000
+James Clark <james.clark@linaro.org> wrote:
+
+> Since the linked fixes: commit, err is returned uninitialized due to the
+> removal of "return 0". Initialize err to fix it, and rename err to out
+> to avoid confusion because buf is still supposed to be freed in non
+> error cases.
 > 
-> These tests utilize the perf config system to configure the perf trace
-> output, as suggested by Arnaldo Carvalho de Melo <acme@kernel.org>
+> This fixes the following intermittent test failure on release builds:
 > 
-> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
+>  $ perf test "testsuite_probe"
+>  ...
+>  -- [ FAIL ] -- perf_probe :: test_invalid_options :: mutually exclusive options :: -L foo -V bar (output regexp parsing)
+>  Regexp not found: \"Error: switch .+ cannot be used with switch .+\"
+>  ...
+> 
+> Fixes: 080e47b2a237 ("perf probe: Introduce quotation marks support")
+> Signed-off-by: James Clark <james.clark@linaro.org>
 > ---
->  tools/perf/tests/shell/trace_btf_general.sh | 81 +++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100755 tools/perf/tests/shell/trace_btf_general.sh
+>  tools/perf/util/probe-event.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 > 
-> diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
-> new file mode 100755
-> index 000000000000..903310b355c4
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/trace_btf_general.sh
-> @@ -0,0 +1,81 @@
-> +#!/bin/bash
-> +# perf trace BTF general tests
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +err=0
-> +set -e
-> +
-> +. "$(dirname $0)"/lib/probe.sh
-> +skip_if_no_perf_trace || exit 2
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> index 6d51a4c98ad7..35af6570cf9b 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -1370,7 +1370,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+>  {
+>  	char *buf = strdup(arg);
+>  	char *p;
+> -	int err;
+> +	int err = 0;
 
-The kernel might not have BPF/BTF support.  I think you can check if
-/sys/kernel/btf/vmlinux is there and skip the test if not.
+I think only this is required, and others are just cleanups by renaming
+err -> out (usually for-next).
+But Arnaldo is OK to combine these changes, I'm OK too.
 
-Thanks,
-Namhyung
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> +
-> +file1=$(mktemp /tmp/file1_XXXXX)
-> +file2=$(echo $file1 | sed 's/file1/file2/g')
-> +
-> +buffer="buffer content"
-> +perf_config_tmp=$(mktemp /tmp/.perfconfig_XXXXX)
-> +
-> +trap cleanup EXIT TERM INT HUP
-> +
-> +trace_test_string() {
-> +  echo "Testing perf trace's string augmentation"
-> +  if ! perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1 | \
-> +    grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
-> +  then
-> +    echo "String augmentation test failed"
-> +    err=1
-> +  fi
-> +}
-> +
-> +trace_test_buffer() {
-> +  echo "Testing perf trace's buffer augmentation"
-> +  # echo will insert a newline (\10) at the end of the buffer
-> +  if ! perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1 | \
-> +    grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
-> +  then
-> +    echo "Buffer augmentation test failed"
-> +    err=1
-> +  fi
-> +}
-> +
-> +trace_test_struct_btf() {
-> +  echo "Testing perf trace's struct augmentation"
-> +  if ! perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1 | \
-> +    grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
-> +  then
-> +    echo "BTF struct augmentation test failed"
-> +    err=1
-> +  fi
-> +}
-> +
-> +cleanup() {
-> +  rm -rf ${file1} ${file2} ${perf_config_tmp}
-> +}
-> +
-> +trap_cleanup() {
-> +  echo "Unexpected signal in ${FUNCNAME[1]}"
-> +  cleanup
-> +  exit 1
-> +}
-> +
-> +# don't overwrite user's perf config
-> +trace_config() {
-> +  export PERF_CONFIG=${perf_config_tmp}
-> +  perf config trace.show_arg_names=false trace.show_duration=false \
-> +    trace.show_timestamp=false trace.args_alignment=0
-> +}
-> +
-> +trace_config
-> +
-> +trace_test_string
-> +
-> +if [ $err = 0 ]; then
-> +  trace_test_buffer
-> +fi
-> +
-> +if [ $err = 0 ]; then
-> +  trace_test_struct_btf
-> +fi
-> +
-> +cleanup
-> +
-> +exit $err
+Thank you,
+
+>  
+>  	if (!buf)
+>  		return -ENOMEM;
+> @@ -1383,20 +1383,20 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+>  		if (p == buf) {
+>  			semantic_error("No file/function name in '%s'.\n", p);
+>  			err = -EINVAL;
+> -			goto err;
+> +			goto out;
+>  		}
+>  		*(p++) = '\0';
+>  
+>  		err = parse_line_num(&p, &lr->start, "start line");
+>  		if (err)
+> -			goto err;
+> +			goto out;
+>  
+>  		if (*p == '+' || *p == '-') {
+>  			const char c = *(p++);
+>  
+>  			err = parse_line_num(&p, &lr->end, "end line");
+>  			if (err)
+> -				goto err;
+> +				goto out;
+>  
+>  			if (c == '+') {
+>  				lr->end += lr->start;
+> @@ -1416,11 +1416,11 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+>  		if (lr->start > lr->end) {
+>  			semantic_error("Start line must be smaller"
+>  				       " than end line.\n");
+> -			goto err;
+> +			goto out;
+>  		}
+>  		if (*p != '\0') {
+>  			semantic_error("Tailing with invalid str '%s'.\n", p);
+> -			goto err;
+> +			goto out;
+>  		}
+>  	}
+>  
+> @@ -1431,7 +1431,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+>  			lr->file = strdup_esq(p);
+>  			if (lr->file == NULL) {
+>  				err = -ENOMEM;
+> -				goto err;
+> +				goto out;
+>  			}
+>  		}
+>  		if (*buf != '\0')
+> @@ -1439,7 +1439,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+>  		if (!lr->function && !lr->file) {
+>  			semantic_error("Only '@*' is not allowed.\n");
+>  			err = -EINVAL;
+> -			goto err;
+> +			goto out;
+>  		}
+>  	} else if (strpbrk_esq(buf, "/."))
+>  		lr->file = strdup_esq(buf);
+> @@ -1448,10 +1448,10 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+>  	else {	/* Invalid name */
+>  		semantic_error("'%s' is not a valid function name.\n", buf);
+>  		err = -EINVAL;
+> -		goto err;
+> +		goto out;
+>  	}
+>  
+> -err:
+> +out:
+>  	free(buf);
+>  	return err;
+>  }
 > -- 
-> 2.43.0
+> 2.34.1
 > 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
