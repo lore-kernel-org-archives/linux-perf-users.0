@@ -1,202 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150455661;
-	Tue, 10 Dec 2024 00:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BEF6FB9;
+	Tue, 10 Dec 2024 00:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733789383; cv=none; b=s8/M+H8qnZ7CsaFiqnfvZuSPIlU7fSsAlWbZ7WDObmDdV/krilYNaQNTY4Leihb1bylwbLFJ+ioSC7Pf8ZdrrWIb+oxJj8DxGBy+Khn0Qm4dyIDJG3f3mOh26qto9xBrPu0031tcRlqlnCKJghwCEmKpet8306NDX2EpFvhWCQ0=
+	t=1733790229; cv=none; b=Xo1+6ZP5GyjjHyE18I0mkv3CEhm0QaCaSeO/V8FaINnSl5i3mLfH3IzrH1e2xKU1SP7D8mVEc/xp7HO8m1C1Vv4BJnW0jVNN5BtygZaJk5b1rOn+70Jo8VKjOJvodpFMpFespftO14gBC0zMO5lKyu/lsBKT9F3WaaqAT0ujXAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733789383; c=relaxed/simple;
-	bh=TRiZvDR17O+Q8hOoqxwzTU1eXPC4SFxTM+8FVf170gw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GFCPIASZCLk0hbZvSWVbjVb2it2sYA8aNCYWf6e06t6Ant1uTpZAgEOUaLQN2WOs3qfXKuxi0d/LTPn5AsFS5ZsJhvhFfdmGhQsnfk2wE/DvOGc6XJP8n0CSPh2Aoo/7q0nhTfrnJaEpJMu9lq5MrbHnRNNtz/DoKFQqNoNSifg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=loaRffZA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733790229; c=relaxed/simple;
+	bh=kApmzV/SzSLrBWhdK94VNwB/+dzHEEFezTowie9+IfQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dAUaB8QiQMGxGxWJU4vL2IRDgwWWKA4MPf8Vlqykd7dxX5m0JTg5ePW7QxJW5PJf3y3l1pV5aZKqWr82qDOVB+pP9I3bVhndvxkNX2rnT7tuOhUIbp60vvGF3YS6X38koMlzZBHCrSDsUmmpE4v/d03flIPvjRyrSCTw4a4y2NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=depne28a; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="loaRffZA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 206CAC4CED1;
-	Tue, 10 Dec 2024 00:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733789381;
-	bh=TRiZvDR17O+Q8hOoqxwzTU1eXPC4SFxTM+8FVf170gw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=loaRffZAmj0AIJZfYvHb8h1vA27b1LDAOS2+DnSr3/+FoFDG10/lzy1oWnmcouwoC
-	 mepxBDLbDWCJijFKtlNoDUfV58L464FtCi6tidFYvueu2X4CDi/mSSvlIpiFB4Udp0
-	 pJofdm6ewrJCpYbmlyiJ1e3uf9tpmZdEzzQbmWKmWrpB9mAlfGYAMQEbhJU0GY3iN6
-	 qoDTCGwWBpjzjtjB4DxyVckC6HAtN5Jpy0BqwN870U8bdi9Jm/a0G9YRxgP+yEcKQm
-	 JrQ0fp6eltIQyMM9+E66cfw5wE5A+hu+i/uFwDmVYu+opkrRSvZSEDTlwBqS10mmYt
-	 B4pnGyjgUQCUQ==
-Date: Mon, 9 Dec 2024 16:09:39 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH v9 01/10] perf record --off-cpu: Add --off-cpu-thresh
- option
-Message-ID: <Z1eGw52LThYh1Gjx@google.com>
-References: <20241122043840.217453-1-howardchu95@gmail.com>
- <20241122043840.217453-2-howardchu95@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="depne28a"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7242f559a9fso5018367b3a.1;
+        Mon, 09 Dec 2024 16:23:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733790227; x=1734395027; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZG0Bwq+MseoC81hdPPvLH0+mmvnEp0X9Csn6ZS4D2+E=;
+        b=depne28aso6ZYdXWmE887xu6ZkcQHl2u1iF/X+JbGEZz9PFqk7z3KuS60qlzvNBlEN
+         zrKhIM0P+0/Eyk3rYtBQxnSudc4M2BRsp8Qc8xLfzHeZoDzjNG1xU/Chv87Lbr61cdPs
+         QtZ4eclxcATd1ZlfZsmdCXr6HqIbuBpB2DHAQcCgdVGMeszkSfbOcIpuTRloQSrq4GOL
+         iSZ8MMG5ugX7QqPOv1Ho2G7O9gVFo7T5zf3pSu7CSzMkpgF+hw5rciyW+YEYXJ/dDQlC
+         ad66iefFANKvbezQ+LKi+U7eRR9WM243GAqgU6ORTWg4b3AW6cfQTm2++33FTaP8Tpbs
+         COOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733790227; x=1734395027;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZG0Bwq+MseoC81hdPPvLH0+mmvnEp0X9Csn6ZS4D2+E=;
+        b=vu3Kg1jOOYjIYvusgGpu3nWbR+h2ZpuBHEkE38v9CFTHXOBKZDD1BRsqdSDpmQRsFe
+         8LZm0o120b5KBhQbRRVP8Ykcw3sV0EvQrO2uCoqtBJKRyBgDgC2ZkVeGHn3Mcm1dL6qs
+         N/gaVsFFTVNnve54DebHYbUwPjYTvdWvYbRkBsZMQnAof1fd4ZTbLBN1Zuq/mtvfbyb9
+         H7gqedfEiLIwM7wfIhe4dEnOkucyVkKobTIBCqcZoPvjTR48IcHnblOVooG4agtbNALX
+         p5eE4HewYfQCDWMmsTN1qlU9X1wluyEy1eJh3SSatAhf1o3H35MuucadDc/aJiorE8ep
+         IlUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVgQlARiEdzOIfyNgnCh2+icUy/V9ZMUPXeZN/6nfR6uE7hVpxsLSMcWG2OwbBVtZWDB7c=@vger.kernel.org, AJvYcCWBPx+ttQ1IKTszMBrlLhmn+HsKfpQf1fz61fk0HQbWCFvvpaZ+q2DlCC4IYICR00A7RBLhzdN98hY2+77y@vger.kernel.org, AJvYcCWxrHT9EpqkN+akeRaTJBMFjQtIoTeGX159y5spkidVA41R5DqHHEXCnAQ3BLTqnida3Q30OXgPqHJPwUs+nGMPoA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyEPbY3Fek0ykJ6/BUd+76IdA7+oRyLg9d0lZU2BnvYiek7fM+
+	Ol2U3Fa4HAz0IO4XvvpjLclUPFaJ0yF6h2z1ubl/oqHR7vEkZMlkkbKxy5RFQzpLYX8tQfAYdJH
+	On3O1jcX36aQaOIDzB8BEi74TphY=
+X-Gm-Gg: ASbGncu7USdyrO7tqQjwD/PeWYqb1lMMyQKJOT0riTgEChFsk/V4L0Kv6Rwq99sZysZ
+	6kMueWSmpwesFDNVw13xdvy7h9OQlLn4C/auoJotUxHS6rGdYz+M=
+X-Google-Smtp-Source: AGHT+IEEqlsSBYngjr4I5z0qBa7qDAeyOkQYrJ+3t8fJvEGOKj8iNJGzxCVjtHr374G9uWB30FHNlkoNKT4rxGjYCLg=
+X-Received: by 2002:a05:6a00:23c1:b0:725:9f02:4894 with SMTP id
+ d2e1a72fcca58-725b818830cmr22999161b3a.24.1733790226031; Mon, 09 Dec 2024
+ 16:23:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241122043840.217453-2-howardchu95@gmail.com>
+References: <20241108061500.2698340-1-namhyung@kernel.org> <20241108061500.2698340-3-namhyung@kernel.org>
+ <Z1ccoNOl4Z8c5DCz@x1> <Z1cdDzXe4QNJe8jL@x1> <Z1dRyiruUl1Xo45O@x1>
+ <CAEf4Bza5B9rSX7cw4K0iC-gW+OeEATLCcQ=6KGfmuxfJ2XOhvA@mail.gmail.com> <CA+JHD91Ai_ObUye4Unz2e2Hku2BH5_+0q3HyUtf7ay23uDnkjQ@mail.gmail.com>
+In-Reply-To: <CA+JHD91Ai_ObUye4Unz2e2Hku2BH5_+0q3HyUtf7ay23uDnkjQ@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 9 Dec 2024 16:23:33 -0800
+Message-ID: <CAEf4BzZVM=q2yPrt34AyiVJYiB1cAu2Y=4zCKkYFZ0N-Ai6BRg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] perf lock contention: Run BPF slab cache iterator
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Stephane Eranian <eranian@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Howard,
+On Mon, Dec 9, 2024 at 3:33=E2=80=AFPM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> On Mon, Dec 9, 2024, 8:00=E2=80=AFPM Andrii Nakryiko <andrii.nakryiko@gma=
+il.com> wrote:
+>>
+>> On Mon, Dec 9, 2024 at 12:23=E2=80=AFPM Arnaldo Carvalho de Melo
+>> <acme@kernel.org> wrote:
+>>
+>> > and additionally the type is not like the one you added to the barebon=
+es
+>> > vmlinux.h:
+>>
+>> > =E2=AC=A2 [acme@toolbox perf-tools-next]$ git show d82e2e170d1c756b | =
+grep 'struct bpf_iter__kmem_cache {' -A3
+>> > +struct bpf_iter__kmem_cache {
+>> > +       struct kmem_cache *s;
+>> > +} __attribute__((preserve_access_index));
+>> > +
+>> > =E2=AC=A2 [acme@toolbox perf-tools-next]$
+>>
+>> > But:
+>>
+>> > =E2=AC=A2 [acme@toolbox perf-tools-next]$ uname -a
+>> > Linux toolbox 6.13.0-rc2 #1 SMP PREEMPT_DYNAMIC Mon Dec  9 12:33:35 -0=
+3 2024 x86_64 GNU/Linux
+>> > =E2=AC=A2 [acme@toolbox perf-tools-next]$ pahole bpf_iter__kmem_cache
+>> > struct bpf_iter__kmem_cache {
+>> >         union {
+>> >                 struct bpf_iter_meta * meta;             /*     0     =
+8 */
+>> >         };                                               /*     0     =
+8 */
+>> >         union {
+>> >                 struct kmem_cache * s;                   /*     8     =
+8 */
+>> >         };                                               /*     8     =
+8 */
+>> >
+>> >         /* size: 16, cachelines: 1, members: 2 */
+>> >         /* last cacheline: 16 bytes */
+>> > };
+>>
+>> > =E2=AC=A2 [acme@toolbox perf-tools-next]$
+>>
+>> > Do CO-RE handle this?
+>>
+>> I don't know exactly what the problem you are running into is, but
+>> yes, BPF CO-RE allows handling missing fields, incompatible field type
+>> changes, field renames, etc. All without having to break a
+>> compilation. See [0] (and one subsection after that) for
+>> "documentation" and examples.
+>>
+>>   [0] https://nakryiko.com/posts/bpf-core-reference-guide/#defining-own-=
+co-re-relocatable-type-definitions
+>
+>
+>>
+>  The doubt is the extra layer of unnamed unions in the BTF for the kernel=
+ that's not present in the minimal representation shipped with perf.
 
-Sorry for the late review.
+anonymous unions or structs are transparent to BPF CO-RE relocation,
+so that shouldn't be a problem
 
-On Thu, Nov 21, 2024 at 08:38:31PM -0800, Howard Chu wrote:
-> Specify the threshold for dumping offcpu samples with --off-cpu-thresh,
-> the unit is us (microsecond). Default value is 500,000us (500ms, 0.5s).
-
-I guess we mostly care about more than milli-seconds of off-cpu times.
-Can we change the unit to msec?
-
-Also I think this commit can be moved to later in this series - like
-after implementing direct offcpu samples.  If I see the commit in
-history later, I'd think it works.  But it's not at this point.
-
-Otherwise, looks all good to me. :)
-
-Thanks,
-Namhyung
-
-> 
-> Example:
-> 
->   perf record --off-cpu --off-cpu-thresh 400000
-> 
-> The example above collects off-cpu samples whose off-cpu time is longer
-> than 400,000us
-> 
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Link: https://lore.kernel.org/r/20241108204137.2444151-2-howardchu95@gmail.com
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/Documentation/perf-record.txt |  9 ++++++++
->  tools/perf/builtin-record.c              | 26 ++++++++++++++++++++++++
->  tools/perf/util/off_cpu.h                |  1 +
->  tools/perf/util/record.h                 |  1 +
->  4 files changed, 37 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> index 242223240a08..05c8977983de 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -829,6 +829,15 @@ filtered through the mask provided by -C option.
->  	only, as of now.  So the applications built without the frame
->  	pointer might see bogus addresses.
->  
-> +	off-cpu profiling consists two types of samples: direct samples, which
-> +	share the same behavior as regular samples, and the accumulated
-> +	samples, stored in BPF stack trace map, presented after all the regular
-> +	samples.
-> +
-> +--off-cpu-thresh::
-> +	Once a task's off-cpu time reaches this threshold, it generates a
-> +	direct off-cpu sample.
-> +
->  --setup-filter=<action>::
->  	Prepare BPF filter to be used by regular users.  The action should be
->  	either "pin" or "unpin".  The filter can be used after it's pinned.
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index f83252472921..c069000efe5c 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -3149,6 +3149,28 @@ static int record__parse_mmap_pages(const struct option *opt,
->  	return ret;
->  }
->  
-> +static int record__parse_off_cpu_thresh(const struct option *opt,
-> +					const char *str,
-> +					int unset __maybe_unused)
-> +{
-> +	struct record_opts *opts = opt->value;
-> +	char *endptr;
-> +	u64 off_cpu_thresh_us;
-> +
-> +	if (!str)
-> +		return -EINVAL;
-> +
-> +	off_cpu_thresh_us = strtoull(str, &endptr, 10);
-> +
-> +	/* threshold isn't string "0", yet strtoull() returns 0, parsing failed */
-> +	if (*endptr || (off_cpu_thresh_us == 0 && strcmp(str, "0")))
-> +		return -EINVAL;
-> +	else
-> +		opts->off_cpu_thresh_us = off_cpu_thresh_us;
-> +
-> +	return 0;
-> +}
-> +
->  void __weak arch__add_leaf_frame_record_opts(struct record_opts *opts __maybe_unused)
->  {
->  }
-> @@ -3342,6 +3364,7 @@ static struct record record = {
->  		.ctl_fd              = -1,
->  		.ctl_fd_ack          = -1,
->  		.synth               = PERF_SYNTH_ALL,
-> +		.off_cpu_thresh_us   = OFFCPU_THRESH,
->  	},
->  };
->  
-> @@ -3564,6 +3587,9 @@ static struct option __record_options[] = {
->  	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
->  	OPT_STRING(0, "setup-filter", &record.filter_action, "pin|unpin",
->  		   "BPF filter action"),
-> +	OPT_CALLBACK(0, "off-cpu-thresh", &record.opts, "us",
-> +		     "Dump off-cpu samples if off-cpu time reaches this threshold. The unit is microsecond (default: 500000)",
-> +		     record__parse_off_cpu_thresh),
->  	OPT_END()
->  };
->  
-> diff --git a/tools/perf/util/off_cpu.h b/tools/perf/util/off_cpu.h
-> index 2dd67c60f211..c6edc0f7c40d 100644
-> --- a/tools/perf/util/off_cpu.h
-> +++ b/tools/perf/util/off_cpu.h
-> @@ -16,6 +16,7 @@ struct record_opts;
->  			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_CALLCHAIN | \
->  			      PERF_SAMPLE_CGROUP)
->  
-> +#define OFFCPU_THRESH 500000ull
->  
->  #ifdef HAVE_BPF_SKEL
->  int off_cpu_prepare(struct evlist *evlist, struct target *target,
-> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-> index a6566134e09e..2ca74add26c0 100644
-> --- a/tools/perf/util/record.h
-> +++ b/tools/perf/util/record.h
-> @@ -79,6 +79,7 @@ struct record_opts {
->  	int	      synth;
->  	int	      threads_spec;
->  	const char    *threads_user_spec;
-> +	u64	      off_cpu_thresh_us;
->  };
->  
->  extern const char * const *record_usage;
-> -- 
-> 2.43.0
-> 
+>
+> - Arnaldo
