@@ -1,126 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0101323ED63;
-	Tue, 10 Dec 2024 19:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B4023ED63
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Dec 2024 19:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733858461; cv=none; b=ssBCReF5z3nY6UTCToJ7OX5l/7wPRrUwwd0qtXSlpgwX0gzkL6RFBOs6ZqEwkV5skRgsOPDywSTNh/87rZSB5QJdU0dD02pUS/eEu/kzJPID4yo5Gkp4IUxFvbeAaDSYKXcomoVrmCA3tAn6WsIpl5M5HBHWMeh/q+uszdPGhFI=
+	t=1733858681; cv=none; b=oUUYnlMFlX1oTM/9TKnRHEL5tTcnSYhXf0/KSupHzxAZ0M+Bcr4cqELSCek7bjx5nC6vAs+AM6Sc9pBBx8jkfYW8B3lkfto8W56svzCftKtUtUjGkznBURqpYZYPUpaE2Z0A2LX/eD+TCmB3IfKsBtFBvNl4a9aNMV6uPWryVg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733858461; c=relaxed/simple;
-	bh=ceTCYU0kBIVgKxl1o4KF3bKYCGW8KWEqpbWay4XK5P0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S2WxGldF6oalfVlYSR9B/z6qwn7XOgOZfhKqosGwqMVAT5vncQJ08vtkrchA2a6+2CzGruwuSH3zm4bQxfXEgC9GvFN4nro4V35k/Djd7MFN/TigItO/KqjD/FijPKvFH/RDKVNa7sef90MaauDJRRts9OxEKBRPi8T5Ly9TluY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J5LbnbRf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733858681; c=relaxed/simple;
+	bh=wHazKxpJJ9Mpp4ZGU/vlkDthk9ec62y08omFW08QEB8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VlgBa6T7TxiZZ7f230CQr2or706+rveqqBGPsJkd4FZfYFuvmOc2bVTZ4p2HiE6VzgFRKPPHwbmG4PqN9zdeoklDA0Zsc+wP95J3FenEgMjaNJg1kQGjGthZOqdfmStFfNfEeonK6neWpc3ylZ+9pSAaFV5JPy7jI4peNs6u4aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=twXyuEm9; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J5LbnbRf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B9BAC4CED6;
-	Tue, 10 Dec 2024 19:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733858460;
-	bh=ceTCYU0kBIVgKxl1o4KF3bKYCGW8KWEqpbWay4XK5P0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J5LbnbRfaM9/8HSf00ueRdr6DpSL8qtb3PYCZOXM6uxSYHL8VqeAaihNUNbOO9WcX
-	 HGqe0/3oCog/anrDPUdqic7WW+5Te/4+1STSvrz2BZRbaJhG+SO3I+aYdS+Ubp0ovh
-	 qcfoY9QiY7OzGLJPDyGohszKVdr66rLMXRwZzNDC7jqWjptyL2Gn3RUSrWEI6MWA2/
-	 idz0xNaabatpRf7zfj81IEpvSm7yXcJiLFMOTiektrmyR/beylDcGLM8or+n/fkmaj
-	 yaqC0ICDwXZn0H+9Or6Q7EyenaVCjcbM5Kp2OiqX9tdUboYOFrYCsQP11EwoAR0MAK
-	 PAZxZnBf30UsA==
-Date: Tue, 10 Dec 2024 16:20:57 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-	maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-	kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-	hbathini@linux.ibm.com
-Subject: Re: [PATCH v1] perf test expr: Fix system_tsc_freq for only x86
-Message-ID: <Z1iUmVRzN0V3vMpG@x1>
-References: <20241205022305.158202-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="twXyuEm9"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so16145ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Dec 2024 11:24:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733858679; x=1734463479; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xA6uiztyFHUbzaCAlvb0H4MHj6VifXu4SlKDCoeA/xM=;
+        b=twXyuEm9CcSSACg0MgdDEsx3Rk8oYtwgdrXdIt7AvSfSvT0YPSgDOzlOx3xKl4B1Ir
+         B4e8UPUZl2Q010TevaB3NeIrb+YnVWx7eOZvEkcEN3N0ZHZ7SamU4fLJqMekzzk3hakh
+         RBj8maqRcFXfsjmNNP/b4l4XKtrbB2Ox4UEJ1I7J+g8USZFDjVay5zL/AaBKM4r/B32k
+         Z1IA//Qss0r1sXphrDRFdfzNN2QoJh6tKGrodh4ML7AQ/XBBRP0MNpwad1IrJAgvq9HJ
+         wi5QDKJat+aIfpBWTZ048J1JzvxB3WH30qFxrmkXt0VH0gNds1e5wJjfnw0dASp/QjeY
+         KZYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733858679; x=1734463479;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xA6uiztyFHUbzaCAlvb0H4MHj6VifXu4SlKDCoeA/xM=;
+        b=NvaHFa+H4uVf375TF1AZcVWDefGNiA3oScH20z+fWqVuiFOrKbfv2qPf8TvpLhb8AP
+         v5QYYbTBk4Wkjl+DFT6YZ5v5syf9kJlDWhv8p2pnX1B9v0H5m/hTMOBdjtmlbrpc3OFG
+         8CDNlfJErCnKfJZggW+zr95fdL5HMBfhKigDz+zfzQm37O81/5N2FVfANOPoz/c5upD2
+         5bGcKZiIeguEDlGLXgxkanZu75bzjOKxoG2uaI29y39jU1Z9rdbZwVXW0mNJZ1tpNfdM
+         lifpE55GUcY3dXzZ+BzHOPQnzWmQUfE6KM1GPYlFhN9wS78qCdtOUXxZp8cZ4WRHqnix
+         yqvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXB5R74DxxS+sPJFYgBn5z1RwjDBbUh5Ud2D67vXChj6eRXDT3/D4WZVju2QeaZt7NSp/qsYAFieDfIZNkD4Nqi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK4auAt2skaQJoFEJMloiC+Y7eG3SSshRpVvFXysDKDQeO+wu6
+	6Lw4gw0NLLHlNwtiaoX4p9s4I8OsqrFHcxKJXIYNHZVA0e8pprH606sOLEMI5BhViPcZCh3pjmf
+	cCHu5gNILccZygwAdI24K3qp98pF9ffWl8dWp
+X-Gm-Gg: ASbGncu9pJN0bAXaa5hZzAjzv/rKoxT/rQspS+tUnDoLk0BEbwOG3/tBTtVKlBnKbpT
+	cyH5+o/jCc1wLKJMH77TLq6MS/Ws1kktSlj/K
+X-Google-Smtp-Source: AGHT+IFQdl6+o4/jDzSSu2u0KI/uMp73hkzZCGcfuo63dzkrt0UMs+yfVU8rjikFl8vCZUnCEA+64glRRIgoPy44Ze0=
+X-Received: by 2002:a05:6e02:3003:b0:3a7:dfa4:9a4f with SMTP id
+ e9e14a558f8ab-3a9ef4370bbmr368235ab.0.1733858679301; Tue, 10 Dec 2024
+ 11:24:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241205022305.158202-1-irogers@google.com>
+References: <20241113165558.628856-1-irogers@google.com> <CAP-5=fWK-eeDEvE4+LeeScbHFecmc5+H8WB_5fepfrJJLZsF0Q@mail.gmail.com>
+ <Z1dS6HrfkVS4OeZz@x1> <CAP-5=fUze9j8etq-17L0dWVoYfE-bA+61wrEAXN9vJSCj9dCbw@mail.gmail.com>
+ <Z1g-8ggHQ8MoVNhx@x1> <Z1iTtJcMMsuwI0JX@x1>
+In-Reply-To: <Z1iTtJcMMsuwI0JX@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 10 Dec 2024 11:24:28 -0800
+Message-ID: <CAP-5=fXN-KaVnyciw-YBauS=QSWfi36Aan9eGu1xFV57MDcnNA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf jevents: Fix build issue in '*/' in event descriptions
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Xu Yang <xu.yang_2@nxp.com>, Benjamin Gray <bgray@linux.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 04, 2024 at 06:23:05PM -0800, Ian Rogers wrote:
-> The refactoring of tool PMU events to have a PMU then adding the expr
-> literals to the tool PMU made it so that the literal system_tsc_freq
-> was only supported on x86. Update the test expectations to match -
-> namely the parsing is x86 specific and only yields a non-zero value on
-> Intel.
+On Tue, Dec 10, 2024 at 11:17=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Tue, Dec 10, 2024 at 10:15:30AM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Mon, Dec 09, 2024 at 01:29:15PM -0800, Ian Rogers wrote:
+> > > On Mon, Dec 9, 2024 at 12:28=E2=80=AFPM Arnaldo Carvalho de Melo
+> > > <acme@kernel.org> wrote:
+> > > >
+> > > > On Mon, Dec 09, 2024 at 10:35:34AM -0800, Ian Rogers wrote:
+> > > > > On Wed, Nov 13, 2024 at 8:56=E2=80=AFAM Ian Rogers <irogers@googl=
+e.com> wrote:
+> > > > > >
+> > > > > > For big string offsets we output comments for what string the o=
+ffset
+> > > > > > is for. If the string contains a '*/' as seen in Intel Arrowlak=
+e event
+> > > > > > descriptions, then this causes C parsing issues for the generat=
+ed
+> > > > > > pmu-events.c. Catch such '*/' values and escape to avoid this.
+> > > > > >
+> > > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > >
+> > > > > Ping.
+> > > >
+> > > > A fixes: is missing, probably this should go via perf-tools, i.e. f=
+or
+> > > > this merge window?
+> > >
+> > > We don't yet have arrowlake events/metrics, should there be a fixes?
+> >
+> > Ok, thanks for the clarification.
+> >
+> > > I'm just preparing the patches for the latest vendor json from Intel,
+> > > but they will depend on this. I suspect given the size of the vendor
+> > > json it will miss the current merge window.
+> >
+> > Probably best to have big patches via perf-tools-next at this point in
+> > time.
+>
+> I'm seeing this after applying:
+>
+> /home/acme/git/perf-tools-next/tools/perf/pmu-events/jevents.py:434: Synt=
+axWarning: invalid escape sequence '\*'
+>   return s.replace('*/', '\*\/')
 
-Namhyung,
+It likely needs to be:
+```
+return s.replace('*/', r'\*\/')
+```
+note the r. Could you test for me?
 
-	Since you see no more problems and Athira tested it, I think
-this should go via perf-tools, right?
+Thanks,
+Ian
 
-- Arnaldo
- 
-> Fixes: 609aa2667f67 ("perf tool_pmu: Switch to standard pmu functions and json descriptions")
-> Reported-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Closes: https://lore.kernel.org/linux-perf-users/20241022140156.98854-1-atrajeev@linux.vnet.ibm.com/
-> Co-developed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/expr.c | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index 41ff1affdfcd..726cf8d4da28 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -75,14 +75,12 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
->  	double val, num_cpus_online, num_cpus, num_cores, num_dies, num_packages;
->  	int ret;
->  	struct expr_parse_ctx *ctx;
-> -	bool is_intel = false;
->  	char strcmp_cpuid_buf[256];
->  	struct perf_cpu cpu = {-1};
->  	char *cpuid = get_cpuid_allow_env_override(cpu);
->  	char *escaped_cpuid1, *escaped_cpuid2;
->  
->  	TEST_ASSERT_VAL("get_cpuid", cpuid);
-> -	is_intel = strstr(cpuid, "Intel") != NULL;
->  
->  	TEST_ASSERT_EQUAL("ids_union", test_ids_union(), 0);
->  
-> @@ -245,12 +243,19 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
->  	if (num_dies) // Some platforms do not have CPU die support, for example s390
->  		TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
->  
-> -	TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&val, ctx, "#system_tsc_freq") == 0);
-> -	if (is_intel)
-> -		TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
-> -	else
-> -		TEST_ASSERT_VAL("#system_tsc_freq == 0", fpclassify(val) == FP_ZERO);
->  
-> +	if (expr__parse(&val, ctx, "#system_tsc_freq") == 0) {
-> +		bool is_intel = strstr(cpuid, "Intel") != NULL;
-> +
-> +		if (is_intel)
-> +			TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
-> +		else
-> +			TEST_ASSERT_VAL("#system_tsc_freq == 0", fpclassify(val) == FP_ZERO);
-> +	} else {
-> +#if defined(__i386__) || defined(__x86_64__)
-> +		TEST_ASSERT_VAL("#system_tsc_freq unsupported", 0);
-> +#endif
-> +	}
->  	/*
->  	 * Source count returns the number of events aggregating in a leader
->  	 * event including the leader. Check parsing yields an id.
-> -- 
-> 2.47.0.338.g60cca15819-goog
+>
+>
+> =E2=AC=A2 [acme@toolbox perf-tools-next]$ head /etc/os-release
+> NAME=3D"Fedora Linux"
+> VERSION=3D"40 (Toolbx Container Image)"
+> ID=3Dfedora
+> VERSION_ID=3D40
+> VERSION_CODENAME=3D""
+> PLATFORM_ID=3D"platform:f40"
+> PRETTY_NAME=3D"Fedora Linux 40 (Toolbx Container Image)"
+> ANSI_COLOR=3D"0;38;2;60;110;180"
+> LOGO=3Dfedora-logo-icon
+> CPE_NAME=3D"cpe:/o:fedoraproject:fedora:40"
+> =E2=AC=A2 [acme@toolbox perf-tools-next]$ python --version
+> Python 3.12.7
+> =E2=AC=A2 [acme@toolbox perf-tools-next]$
