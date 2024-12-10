@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41EF721420D;
-	Tue, 10 Dec 2024 19:58:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E587523ED5A;
+	Tue, 10 Dec 2024 20:01:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733860699; cv=none; b=HxmBQSNO46RnR5O+dlXU+EcbMzND7ZeYTmhU6V0YnKZvZclyA1ToG8Kg7QSRFwgOGC5wzQqCF6qjNrsilTNTYpPwUXvjWqK79cBzJps2RyqPVHLn5uSRmPigQLuNCRPUPRG/SNrqsTsaaLAtIhxpofqlD0FZSE+DTzQ6TWDpjoY=
+	t=1733860885; cv=none; b=BSPVBqrtYyNcZuB1D2XW2o/Bq0+JuQu5Y9EIQc7hbPfBwWPRkiEOohwwONuo8Uo6f93t3ZvCInMwS4TNtGk20ePfTulVXNO5a/PhmIk1P6SW/s+pAuXSKCv7aohadsrVEcJiYk4oWTRbU8hggiYs2amihEpNpkOmvhPPU+2BhSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733860699; c=relaxed/simple;
-	bh=Q48D6eSle1Giur4AHocHTxFby2pB1oK2B5FQSLMLK+g=;
+	s=arc-20240116; t=1733860885; c=relaxed/simple;
+	bh=WKyTv58AqXYbXuKoBaXnVQPqw9lNxzSXEzGjTbzx6Jg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AM4cwESN+7WQqLykaeujAAaaJuicF4zu2NL06XnbfXERqoRr60YGqb0pJz6xTka1buKAHeXtruDvNcxBz+fXpASwJBl38UIFvbmcFWfviVMOzfyMuRRJVm40m6jkSAcEw+7RE9lRhZQheJE37ypdkW4z7cx9zMpKdeg+Ge9gs+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GaNvVX2X; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pMrpsvHvMYIqXy4/78KrqwUES3mCXZptWNBplRnnyTpSpLaqgEM2A8kBSLAvpKmTeaj8Zm3Kn2CbCUhUcUXC6ci+zTphRkHH8rlOuupBPR749gSgp0HhOCZHbsUZ2qy/YoVH2vXo/qtEKxqgbt+VHc4RuDrkDl8AiMTKRPqIKY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=POnaKq2W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GaNvVX2X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93E06C4CED6;
-	Tue, 10 Dec 2024 19:58:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POnaKq2W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0166AC4CEE0;
+	Tue, 10 Dec 2024 20:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733860699;
-	bh=Q48D6eSle1Giur4AHocHTxFby2pB1oK2B5FQSLMLK+g=;
+	s=k20201202; t=1733860884;
+	bh=WKyTv58AqXYbXuKoBaXnVQPqw9lNxzSXEzGjTbzx6Jg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GaNvVX2XXyXQh2hugOvG4J5qDqMbWlcXUA/g7bsTeoIyDc57Q62GLDmP4gSTuDRC5
-	 OpdpYPrBEQpJQJMFke6tn4GR/x9MbWlMGF/6Niv/ExzenRhowHHsGtiDPSXx5eKDUu
-	 AoVO0kGEnNyrSqmjCFtie57P+FmLOrjJUyhCj0hbz1y8GWVrGP2ZQGi1btA16Y/5yu
-	 eXHnbq3PcxA+M1k/OAy+lhrqkNr10NZ9OqsoWTpefbcEhYUkedmEtwLoC8GWitveEb
-	 Ct5dOiKF95AxqQOPZaqYz7E1asNQzcB2R4NhTOdjCG6JlX5mLN/yKEXc/Wd0yQ1b3B
-	 BuKm7gMfOOoXA==
-Date: Tue, 10 Dec 2024 16:58:15 -0300
+	b=POnaKq2Wz/3Q+YvozF2Psn0nHOr1LObKHh6LUqtOUCtVvltoPMTc4NvYh9cKgth+E
+	 o4jlXuNG8EqOGSDJzhtI+0YcGdzoBSjqSr7w5rUu4qeJ7ega0nDoOmG5gR0Q9JRlXZ
+	 HBbaU0ql1KIDauSdTpKs1vIAbLs/WEct2/1CQ5Rj3fHdiJ6YoBNhHHYGqmQ/T6lCBW
+	 CRG3gW1HOhao9yYfGWxIn3SxqWu1XjJJnB42T+rM3x7Ao2uEZ768HnYfeaeeis5BGs
+	 D4Cwnr84IIHFW6orT1VHVFACSUukmxE9+tH2BKtCsQe8uRaIlI/nKgWxtw4M8GeF3e
+	 U6nI6wDuK9cqg==
+Date: Tue, 10 Dec 2024 17:01:21 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -42,7 +42,7 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v1] perf jevents: Fix build issue in '*/' in event
  descriptions
-Message-ID: <Z1idV3K4RxLdMhT_@x1>
+Message-ID: <Z1ieEX22EyS-v36o@x1>
 References: <20241113165558.628856-1-irogers@google.com>
  <CAP-5=fWK-eeDEvE4+LeeScbHFecmc5+H8WB_5fepfrJJLZsF0Q@mail.gmail.com>
  <Z1dS6HrfkVS4OeZz@x1>
@@ -50,6 +50,7 @@ References: <20241113165558.628856-1-irogers@google.com>
  <Z1g-8ggHQ8MoVNhx@x1>
  <Z1iTtJcMMsuwI0JX@x1>
  <CAP-5=fXN-KaVnyciw-YBauS=QSWfi36Aan9eGu1xFV57MDcnNA@mail.gmail.com>
+ <Z1idV3K4RxLdMhT_@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,54 +60,28 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXN-KaVnyciw-YBauS=QSWfi36Aan9eGu1xFV57MDcnNA@mail.gmail.com>
+In-Reply-To: <Z1idV3K4RxLdMhT_@x1>
 
-On Tue, Dec 10, 2024 at 11:24:28AM -0800, Ian Rogers wrote:
-> On Tue, Dec 10, 2024 at 11:17 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Tue, Dec 10, 2024 at 10:15:30AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Mon, Dec 09, 2024 at 01:29:15PM -0800, Ian Rogers wrote:
-> > > > On Mon, Dec 9, 2024 at 12:28 PM Arnaldo Carvalho de Melo
-> > > > <acme@kernel.org> wrote:
-> > > > >
-> > > > > On Mon, Dec 09, 2024 at 10:35:34AM -0800, Ian Rogers wrote:
-> > > > > > On Wed, Nov 13, 2024 at 8:56 AM Ian Rogers <irogers@google.com> wrote:
-> > > > > > >
-> > > > > > > For big string offsets we output comments for what string the offset
-> > > > > > > is for. If the string contains a '*/' as seen in Intel Arrowlake event
-> > > > > > > descriptions, then this causes C parsing issues for the generated
-> > > > > > > pmu-events.c. Catch such '*/' values and escape to avoid this.
-> > > > > > >
-> > > > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > > >
-> > > > > > Ping.
-> > > > >
-> > > > > A fixes: is missing, probably this should go via perf-tools, i.e. for
-> > > > > this merge window?
-> > > >
-> > > > We don't yet have arrowlake events/metrics, should there be a fixes?
+On Tue, Dec 10, 2024 at 04:58:19PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Dec 10, 2024 at 11:24:28AM -0800, Ian Rogers wrote:
+> > On Tue, Dec 10, 2024 at 11:17 AM Arnaldo Carvalho de Melo
+> > > On Tue, Dec 10, 2024 at 10:15:30AM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > Probably best to have big patches via perf-tools-next at this point in
+> > > > time.
 > > >
-> > > Ok, thanks for the clarification.
+> > > I'm seeing this after applying:
 > > >
-> > > > I'm just preparing the patches for the latest vendor json from Intel,
-> > > > but they will depend on this. I suspect given the size of the vendor
-> > > > json it will miss the current merge window.
-> > >
-> > > Probably best to have big patches via perf-tools-next at this point in
-> > > time.
-> >
-> > I'm seeing this after applying:
-> >
-> > /home/acme/git/perf-tools-next/tools/perf/pmu-events/jevents.py:434: SyntaxWarning: invalid escape sequence '\*'
-> >   return s.replace('*/', '\*\/')
+> > > /home/acme/git/perf-tools-next/tools/perf/pmu-events/jevents.py:434: SyntaxWarning: invalid escape sequence '\*'
+> > >   return s.replace('*/', '\*\/')
+> > 
+> > It likely needs to be:
+> > ```
+> > return s.replace('*/', r'\*\/')
+> > ```
+> > note the r. Could you test for me?
 > 
-> It likely needs to be:
-> ```
-> return s.replace('*/', r'\*\/')
-> ```
-> note the r. Could you test for me?
+> Sure.
 
-Sure.
+Yeah, no more warning, thanks, fixed it up.
 
 - Arnaldo
