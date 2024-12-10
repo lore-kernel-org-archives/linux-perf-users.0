@@ -1,148 +1,104 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BEF6FB9;
-	Tue, 10 Dec 2024 00:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CC0111A8
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Dec 2024 00:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733790229; cv=none; b=Xo1+6ZP5GyjjHyE18I0mkv3CEhm0QaCaSeO/V8FaINnSl5i3mLfH3IzrH1e2xKU1SP7D8mVEc/xp7HO8m1C1Vv4BJnW0jVNN5BtygZaJk5b1rOn+70Jo8VKjOJvodpFMpFespftO14gBC0zMO5lKyu/lsBKT9F3WaaqAT0ujXAM=
+	t=1733791480; cv=none; b=EQSNd2xs1Sfvuwm9p4Kd5FEcOPsFcfygGhS8ASf8lV+yuLdVO+yFeapYbVmE37J/XWdGFT0nmItHBzp1sdFifPMxX0YS3tlwQDSkeQbZ6X2hBNP0DMaKTajEyPf259tgjnntZNhtLb7qq1Bp3dY3MG1gDxnAzqoTxZEpaPotJco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733790229; c=relaxed/simple;
-	bh=kApmzV/SzSLrBWhdK94VNwB/+dzHEEFezTowie9+IfQ=;
+	s=arc-20240116; t=1733791480; c=relaxed/simple;
+	bh=jfoCP+lKA7/nH2cjRMScVyFc3X8ctsjwy6ijJAI3MyI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dAUaB8QiQMGxGxWJU4vL2IRDgwWWKA4MPf8Vlqykd7dxX5m0JTg5ePW7QxJW5PJf3y3l1pV5aZKqWr82qDOVB+pP9I3bVhndvxkNX2rnT7tuOhUIbp60vvGF3YS6X38koMlzZBHCrSDsUmmpE4v/d03flIPvjRyrSCTw4a4y2NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=depne28a; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Content-Type; b=sTRpapXs+wr4m5KgAOCyH+hufbjtWWscxcgqeQaRtrq5PK6OocKmZ7OB1zpuQmGL1uHPE/ebRDe7SLPAXUe300Qqxce7pWPwKLGys3fS9pz/PNjxLHCv3uZ1aMfklXDOPwqa1m/WmRhWPNpAE1Gp1LzFPOBuslQELSXnX6C9qeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=itClVhmQ; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="depne28a"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7242f559a9fso5018367b3a.1;
-        Mon, 09 Dec 2024 16:23:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="itClVhmQ"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3a814c54742so17965ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Dec 2024 16:44:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733790227; x=1734395027; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1733791478; x=1734396278; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZG0Bwq+MseoC81hdPPvLH0+mmvnEp0X9Csn6ZS4D2+E=;
-        b=depne28aso6ZYdXWmE887xu6ZkcQHl2u1iF/X+JbGEZz9PFqk7z3KuS60qlzvNBlEN
-         zrKhIM0P+0/Eyk3rYtBQxnSudc4M2BRsp8Qc8xLfzHeZoDzjNG1xU/Chv87Lbr61cdPs
-         QtZ4eclxcATd1ZlfZsmdCXr6HqIbuBpB2DHAQcCgdVGMeszkSfbOcIpuTRloQSrq4GOL
-         iSZ8MMG5ugX7QqPOv1Ho2G7O9gVFo7T5zf3pSu7CSzMkpgF+hw5rciyW+YEYXJ/dDQlC
-         ad66iefFANKvbezQ+LKi+U7eRR9WM243GAqgU6ORTWg4b3AW6cfQTm2++33FTaP8Tpbs
-         COOw==
+        bh=jfoCP+lKA7/nH2cjRMScVyFc3X8ctsjwy6ijJAI3MyI=;
+        b=itClVhmQ+PEvFDMQHp+EhfZVd0oet6D8A7YhOqlgGtlKE5wxCZ1ZlOme1Cy/r5xqRp
+         ATPcA4jxhuqROJcBeFIWcx6RvbS++nigv1tA4wv7PosPNF9Fnq3OacOO4jBcKT2N3tSz
+         aSuXv+1+V9/sHrjjtSmPe4M2f7aPfhQNzkooj7qH/SPrePqAKbe0rGKwDQlDC2iAYKE6
+         Q1iy3MVXfZL2y/ZRFszPS+gycscHZKL9FaKVhw+2dV/388FgVi7XDSP8xebLGsb0nnUu
+         +DkJWVL6G2rpQofXgeVvCkfsF2WPRdbktw7+eicglHOQ05UijPfVq3OlcLc44xhjGFvr
+         XqGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733790227; x=1734395027;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1733791478; x=1734396278;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZG0Bwq+MseoC81hdPPvLH0+mmvnEp0X9Csn6ZS4D2+E=;
-        b=vu3Kg1jOOYjIYvusgGpu3nWbR+h2ZpuBHEkE38v9CFTHXOBKZDD1BRsqdSDpmQRsFe
-         8LZm0o120b5KBhQbRRVP8Ykcw3sV0EvQrO2uCoqtBJKRyBgDgC2ZkVeGHn3Mcm1dL6qs
-         N/gaVsFFTVNnve54DebHYbUwPjYTvdWvYbRkBsZMQnAof1fd4ZTbLBN1Zuq/mtvfbyb9
-         H7gqedfEiLIwM7wfIhe4dEnOkucyVkKobTIBCqcZoPvjTR48IcHnblOVooG4agtbNALX
-         p5eE4HewYfQCDWMmsTN1qlU9X1wluyEy1eJh3SSatAhf1o3H35MuucadDc/aJiorE8ep
-         IlUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVgQlARiEdzOIfyNgnCh2+icUy/V9ZMUPXeZN/6nfR6uE7hVpxsLSMcWG2OwbBVtZWDB7c=@vger.kernel.org, AJvYcCWBPx+ttQ1IKTszMBrlLhmn+HsKfpQf1fz61fk0HQbWCFvvpaZ+q2DlCC4IYICR00A7RBLhzdN98hY2+77y@vger.kernel.org, AJvYcCWxrHT9EpqkN+akeRaTJBMFjQtIoTeGX159y5spkidVA41R5DqHHEXCnAQ3BLTqnida3Q30OXgPqHJPwUs+nGMPoA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyEPbY3Fek0ykJ6/BUd+76IdA7+oRyLg9d0lZU2BnvYiek7fM+
-	Ol2U3Fa4HAz0IO4XvvpjLclUPFaJ0yF6h2z1ubl/oqHR7vEkZMlkkbKxy5RFQzpLYX8tQfAYdJH
-	On3O1jcX36aQaOIDzB8BEi74TphY=
-X-Gm-Gg: ASbGncu7USdyrO7tqQjwD/PeWYqb1lMMyQKJOT0riTgEChFsk/V4L0Kv6Rwq99sZysZ
-	6kMueWSmpwesFDNVw13xdvy7h9OQlLn4C/auoJotUxHS6rGdYz+M=
-X-Google-Smtp-Source: AGHT+IEEqlsSBYngjr4I5z0qBa7qDAeyOkQYrJ+3t8fJvEGOKj8iNJGzxCVjtHr374G9uWB30FHNlkoNKT4rxGjYCLg=
-X-Received: by 2002:a05:6a00:23c1:b0:725:9f02:4894 with SMTP id
- d2e1a72fcca58-725b818830cmr22999161b3a.24.1733790226031; Mon, 09 Dec 2024
- 16:23:46 -0800 (PST)
+        bh=jfoCP+lKA7/nH2cjRMScVyFc3X8ctsjwy6ijJAI3MyI=;
+        b=GoWPwkQBbQFUO4XyOLQvKs9dCL/S7htK3ERs/D7dqf2aIHTAgFD6PlcHtYbcTepRB+
+         yEmklogzhFSHDcFR2PwIlAXnh44Wries5UoBUjHy0b1v2CWkqvGzPqNr5Z4ykSwoFwok
+         g88A/drgX8OfMl5esQdJ3eZIVLjmarlYJ+pNqMfOUL3dwYee8oS47ptNxMTO84Blirfb
+         BLQRuya7hVUfXQ9QptQpds8KPy2fLZ8A5VpqoOrN4Owy2jOZLLcoUqYckk/KgLV0I4W+
+         dw6fvrkUJnjtV3aPAmf9F/5a5Q4asAt7QojJeYHYgm+zEvspagWGJr2rHRlznBBd8EB7
+         3Jew==
+X-Forwarded-Encrypted: i=1; AJvYcCV0Db/byWApko/C05XT+A5AwOkZz7PpjiS0XWOPi9WWvB2S68TSwiROVa6FT7MuZNo0GuNX2ra+4OG2qaEbqDMB@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX80757hm0KacWewxX1KW873XGqjYoEcYBPplpCERR+/WuDpgd
+	NHPzwD4TPdLKjgwVHJ6WJzzW1pHqckDqC9K+aOn5CH0lpbkvfeBK4zGu4or/7EvxbCkH2D0Jibh
+	DtBH8bmYC9sBLfmbJc3QI7e3ZHRxeAyLw3kuO
+X-Gm-Gg: ASbGncshalITwzg2Bu86gbtQ0BBkzraD9wKVFwoR9QzCkvL6vY/t3+QccgHI1EdsK9Z
+	UPtBjrAup4wMB2KNh4X91geP0dB4HF25bpyEf
+X-Google-Smtp-Source: AGHT+IE2Xkc1hPXyJknk7xY7BGD8MVbw+vhzTYqxuNI6B/vaoF5FvcQ8x9b0qQSSP2aG/sz4GIL5vyk9tvjr98ciN+I=
+X-Received: by 2002:a05:6e02:34a1:b0:3a7:d85a:b1bd with SMTP id
+ e9e14a558f8ab-3a9dda2dae3mr1205935ab.4.1733791478503; Mon, 09 Dec 2024
+ 16:44:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241108061500.2698340-1-namhyung@kernel.org> <20241108061500.2698340-3-namhyung@kernel.org>
- <Z1ccoNOl4Z8c5DCz@x1> <Z1cdDzXe4QNJe8jL@x1> <Z1dRyiruUl1Xo45O@x1>
- <CAEf4Bza5B9rSX7cw4K0iC-gW+OeEATLCcQ=6KGfmuxfJ2XOhvA@mail.gmail.com> <CA+JHD91Ai_ObUye4Unz2e2Hku2BH5_+0q3HyUtf7ay23uDnkjQ@mail.gmail.com>
-In-Reply-To: <CA+JHD91Ai_ObUye4Unz2e2Hku2BH5_+0q3HyUtf7ay23uDnkjQ@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 9 Dec 2024 16:23:33 -0800
-Message-ID: <CAEf4BzZVM=q2yPrt34AyiVJYiB1cAu2Y=4zCKkYFZ0N-Ai6BRg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] perf lock contention: Run BPF slab cache iterator
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Stephane Eranian <eranian@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	Kees Cook <kees@kernel.org>
+References: <20241209222800.296000-1-irogers@google.com>
+In-Reply-To: <20241209222800.296000-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 9 Dec 2024 16:44:27 -0800
+Message-ID: <CAP-5=fWr9R74-NbKbW96otG6KitQYaQng4D40Bv4z9ov9yvNJA@mail.gmail.com>
+Subject: Re: [PATCH v1 00/22] Intel vendor events and TMA 5.01 metrics
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
+	Michael Petlan <mpetlan@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 9, 2024 at 3:33=E2=80=AFPM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
+On Mon, Dec 9, 2024 at 2:28=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> On Mon, Dec 9, 2024, 8:00=E2=80=AFPM Andrii Nakryiko <andrii.nakryiko@gma=
-il.com> wrote:
->>
->> On Mon, Dec 9, 2024 at 12:23=E2=80=AFPM Arnaldo Carvalho de Melo
->> <acme@kernel.org> wrote:
->>
->> > and additionally the type is not like the one you added to the barebon=
-es
->> > vmlinux.h:
->>
->> > =E2=AC=A2 [acme@toolbox perf-tools-next]$ git show d82e2e170d1c756b | =
-grep 'struct bpf_iter__kmem_cache {' -A3
->> > +struct bpf_iter__kmem_cache {
->> > +       struct kmem_cache *s;
->> > +} __attribute__((preserve_access_index));
->> > +
->> > =E2=AC=A2 [acme@toolbox perf-tools-next]$
->>
->> > But:
->>
->> > =E2=AC=A2 [acme@toolbox perf-tools-next]$ uname -a
->> > Linux toolbox 6.13.0-rc2 #1 SMP PREEMPT_DYNAMIC Mon Dec  9 12:33:35 -0=
-3 2024 x86_64 GNU/Linux
->> > =E2=AC=A2 [acme@toolbox perf-tools-next]$ pahole bpf_iter__kmem_cache
->> > struct bpf_iter__kmem_cache {
->> >         union {
->> >                 struct bpf_iter_meta * meta;             /*     0     =
-8 */
->> >         };                                               /*     0     =
-8 */
->> >         union {
->> >                 struct kmem_cache * s;                   /*     8     =
-8 */
->> >         };                                               /*     8     =
-8 */
->> >
->> >         /* size: 16, cachelines: 1, members: 2 */
->> >         /* last cacheline: 16 bytes */
->> > };
->>
->> > =E2=AC=A2 [acme@toolbox perf-tools-next]$
->>
->> > Do CO-RE handle this?
->>
->> I don't know exactly what the problem you are running into is, but
->> yes, BPF CO-RE allows handling missing fields, incompatible field type
->> changes, field renames, etc. All without having to break a
->> compilation. See [0] (and one subsection after that) for
->> "documentation" and examples.
->>
->>   [0] https://nakryiko.com/posts/bpf-core-reference-guide/#defining-own-=
-co-re-relocatable-type-definitions
+> Update the Intel vendor events to the latest.
+> Update the metrics to TMA 5.01.
+> Add Arrowlake support.
+> Add metrics for LNL and GNR.
+> Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
 >
+> The perf json was generated using the script:
+> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> with the generated json being in:
+> https://github.com/intel/perfmon/tree/main/scripts/perf
 >
->>
->  The doubt is the extra layer of unnamed unions in the BTF for the kernel=
- that's not present in the minimal representation shipped with perf.
+> Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
+> <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com> and
+> Weilin Wang <weilin.wang@intel.com> for helping get this patch series
+> together.
 
-anonymous unions or structs are transparent to BPF CO-RE relocation,
-so that shouldn't be a problem
+I should have also said, this series requires:
+https://lore.kernel.org/all/20241113165558.628856-1-irogers@google.com/
 
->
-> - Arnaldo
+Thanks,
+Ian
