@@ -1,81 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1919A204696;
-	Tue, 10 Dec 2024 18:10:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFC423ED59;
+	Tue, 10 Dec 2024 18:17:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733854224; cv=none; b=f+Xh2sZRnc8bbFgYuACz6V1e5DCRT/Y8SANWoHiT/Sggdt7CzsBsasVuC7A3SBJx+K6Jo3qc9y8dRReFGEVh/AHVWaVjYmiQq9pnaJMeaUoty+ZCKlNCMpv3rtkov9/aIa+4FKkTfWzbfffHP95YKC7q0jnza3cNA0i8RukadR4=
+	t=1733854646; cv=none; b=r6Koaumo/1cqP7zVhSoseKbNxJICmJl1BzqGAtvTQxQUuG6fxZPcbxID5nzW0CEDK2i9kBPwsRVoHysF1RuRooI3kmRH3wFQlWJAlY72N4TiTS3/QDErnDA3zt1vOcXaZPm0WCdeKWC+XMoyAG5K0vJOz3as1oV526MqJEL0TtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733854224; c=relaxed/simple;
-	bh=lp1TUjNspJzYk33DGagyaO+1G26pRYTDVB5oy+2mDH0=;
+	s=arc-20240116; t=1733854646; c=relaxed/simple;
+	bh=jN756xLVBFxNxpzSE64UVqN6NuUqd49ydB11a1N3dIE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VQlYv5oeZhWxLLJc4olqKL0EgjXf4gA/HpyYogo44eqlKX1QXh29IdBrTEzjLUfPqUudFMh6kh+YLfuci4mWNKP6HKutps8cWvIjFVzY8u0/ODTkkTEcS/Ywh+RHdQvtLEan8gx66aXNxfEe32BDzxhWcZ6If2L+2rmsJzTj1gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hii1bNp/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fapmFQ7ewUXiNMJTf3pxI5HFh+DU0pwElBLRt7XSWOcqGa2MsuutJ9ouUKsuGbZb0G+I/afAkzKCfGrgPxkL/PzqUhQ+xfnJ988K1bEm2NI7w+0mjnobCNa3UdCSbNV2FZkHpcMvymsqErX+SFOTb17Ps0uKtElCokLLJNYnGbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pEqVO4SP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hii1bNp/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FBC2C4CED6;
-	Tue, 10 Dec 2024 18:10:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pEqVO4SP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1FC7C4CED6;
+	Tue, 10 Dec 2024 18:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733854223;
-	bh=lp1TUjNspJzYk33DGagyaO+1G26pRYTDVB5oy+2mDH0=;
+	s=k20201202; t=1733854646;
+	bh=jN756xLVBFxNxpzSE64UVqN6NuUqd49ydB11a1N3dIE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hii1bNp/rQgWLNCGXs3EIRYEzrbQYZybIR9Ek2te83yvTMMOwRCkMqt+m3oSeYGyF
-	 yertm6LsIGhmmxR8TKAPiDRv5cvQPvQw20TmQEhALw1AUaw+9Xt+xLuLI4xmgyI/Pd
-	 dlr0vKErUvcc1FVRG4NaICzNtFhDdy2xHBvSZjOgKvi+k+qH2xvbujn97Tn6bBc3xb
-	 YA477U4k1jwJvcJZPKgbZm+lYMxvQrcmkw+Xx6ZXTzr3b/QpqvaDjYE+zRmkt8YNkS
-	 QlTR2pWHhZUb9/DDMQ6Hh3MFe7APleAIVSlZA1tFECc7xDyOkg/uDZNUORTFSpX8mG
-	 ytv06FbrGB5eQ==
-Date: Tue, 10 Dec 2024 10:10:21 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
-	Ian Rogers <irogers@google.com>, thomas.falcon@intel.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	b=pEqVO4SP9BPt5gJeIBldqzX3p8Y/ruyTVW++MXZ1C7yppD0Rw1qcpc/g2iQ1NpyTh
+	 Ocdzk5bgm/+ea83z+Yymk1z9j3370D3jc67oRptrMv+LHqiIw7/mCPqVZLnOcn6soX
+	 U0+fSOt7SceXTiL3YG/z3O8ww3t0blhUNk1iJJRcqhyKo3/aZFPQaaiFrvVSEUqGHY
+	 f0WcUBKbX5SjAOpEGvEGW2bbilN4f3rfOd1KLg7FBcEBYGeWMQXRevLf8jpRpuIozH
+	 Sgu93ibA8wi3MEz+7ohFBx/0nI5iD5ssTbjOMQ/Q2zeFSIgBhPskoUpNiLmWr47juG
+	 qTPHra/UsysrQ==
+Date: Tue, 10 Dec 2024 15:17:23 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] libperf: evlist: Fix --cpu argument on hybrid
- platform
-Message-ID: <Z1iEDRT-44aynAR3@google.com>
-References: <20241114160450.295844-1-james.clark@linaro.org>
- <20241114160450.295844-2-james.clark@linaro.org>
- <Z1hHc-Q-TKgagORu@x1>
- <eb8301ec-50af-4414-89e7-5d49585bda47@linaro.org>
- <Z1hLEQwYE3ymbrIr@x1>
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: Re: [PATCH 0/4 perf-tools-next] perf ftrace latency linear buckets
+Message-ID: <Z1iFsz-Jis6rgpjb@x1>
+References: <20241112181214.1171244-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z1hLEQwYE3ymbrIr@x1>
+In-Reply-To: <20241112181214.1171244-1-acme@kernel.org>
 
-On Tue, Dec 10, 2024 at 11:07:13AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Tue, Dec 10, 2024 at 01:56:21PM +0000, James Clark wrote:
-> > On 10/12/2024 1:51 pm, Arnaldo Carvalho de Melo wrote:
-> > > James, the second patch isn't applying to perf-tools/perf-tools.
->  
-> > The second one applies on
-> > https://lore.kernel.org/linux-perf-users/20241113011956.402096-1-irogers@google.com/T/#m2a3587fb83e6ab2d970bae25982ae9d6c8d9e5cd
-> > because that also does an evlist__remove() which gets fixed up.
+On Tue, Nov 12, 2024 at 03:12:10PM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> Right, I have to test that series on the ARM machines I have access to,
-> but there is a question from a tester that is waiting for a reply, I'll
-> see if I can reproduce that problem as well.
+> Hi,
 > 
-> > But the first one is ok to go in on its own.
->  
-> Agreed.
+> 	Gabriele has been using 'perf ftrace latency' in some
+> investigations at work and wanted to have an alternative way of
+> populating the buckets, so we came up with this series, please take a
+> look at the examples provided in the changesets.
+> 
+> Thanks,
 
-Ok, I'll pick this one to perf-tools and leave the patch 2 go into
-perf-tools-next.
+Applied to perf-tools-next,
 
-Thanks,
-Namhyung
-
+- Arnaldo
