@@ -1,260 +1,237 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D302C22E418;
-	Tue, 10 Dec 2024 20:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733864400; cv=fail; b=QTB5ecb1HP16FU/i3aanHKJhxMKlr7m3xNcUlRp4ko1G1vt4f8tL9p2FaRll/Bnyz0MWYvzALbVE3z3yUteT6sMMzLFu9pireQ8kdU/JmBTLeBYQBmQJzmXypaH+KjIS5ccbY8YeUZee7QHlcI1exqCtB1rnFDMN/LTLiaScnco=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733864400; c=relaxed/simple;
-	bh=Btfjr3fc7oCzzRzcXIDPKt/AhmShD0NJsk8HFh5ORkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Hl56fGFXsNH6wILpMzcawnUzKLukxmR6CBNrY3p1dn7TubGSz5mE5QiRkqrg2gZxZq0Q70IKvHoxMnMkAfFNOUixRsamMKCsF8HpNZ9+tL4jKVSlrnK5+bgq34AQTOCYOOnHcwjhI/HPX1PYGCNvSdctW3AOf16ZX1sov73Dvm8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=W1cV0s8G; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ntgjbx1Q; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8957B1A9B4C
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Dec 2024 21:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733867044; cv=none; b=TI1XHc3aIB0li44obi40q5psXAPctTNwahcsX2Zkz36MrGZWWIxbdT59IsOHxMwajVp/DaDffBbcwzBHv1DkPC+4kVCWRCq10sbq94VTsEXDeWlBbzVow/RTuOnjTurnkGbqDHZdxvUjgDGETdW6UFpL4Ywe4unPqCyhTtwsJ8w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733867044; c=relaxed/simple;
+	bh=GUrF2UrU0XGgUzb6wTe5TrC047ereMAOApbFsLOhx2s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pyCib+bytvhA8okhzP26R/mszsKmkUXEOxRfk0LQE9SlQ2KbfAY8fny2Vc1duAG2u8GMESczxBhmHOUBqCjwvDK3LSUw4cJnMNhxwj2BINGtbpan9QFciWH6eAGz9CsPuI8yGL4Vsphu6SkB6ayONt+HQok0lBhv2LEqkhrC7xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AOTwhkAc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W1cV0s8G";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ntgjbx1Q"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BAJJM8T000751;
-	Tue, 10 Dec 2024 20:59:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=Btfjr3fc7oCzzRzcXI
-	DPKt/AhmShD0NJsk8HFh5ORkE=; b=W1cV0s8G3RK5btlVZ2V1gJ7M9qfHVX22P7
-	7oOVVPLt+Zlc3FO8rSRm1f5YQbZvxy7KeN9SOGecFnMfl+5ENN1ZHLUteWazC8g1
-	iBulfrj19GnwSgbMZxOhONKh9sltdOCU5SjLO+u0t/mojO7PBP5lhqDN8L/nFiAI
-	JHRYMMgCWKbRx71fr1GzwufC4P/ECxyZKjO/oTHp9IQJrsla27f53oSx+zme8NU3
-	aqFHvTMbN9mWdrmOyL9M/0VBu0WBxffkGHZg3u0ThlfNNxjS2Dd0YU9Jm5DcY0yu
-	ngBoyPR3uJU5poMnA9qX//CBP9ok4zVbDN/AQUiVDKDvsvBfG5Yw==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43dx5s43dw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Dec 2024 20:59:27 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BAKQ2ch020567;
-	Tue, 10 Dec 2024 20:59:27 GMT
-Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2040.outbound.protection.outlook.com [104.47.56.40])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43cct8usd5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Dec 2024 20:59:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aXmIQNc+hKG3b6NGcNMflTfnaIu7zoRZY/DGk7ZRofyJ+caNx4YuYSIPR8Jcci8Mw9UmMadI5gpsKAS3IwJrcU4UNE2JfFcbK2XaDES1HdhU5o807/5peJ/UtGPyQpJMGiKKXS6K89gOUunxoghJg9cHAtDbBAvxTIAklEte6OLgdLlTTrlvQHPAwTlqJP7a4P+a1DftLL/IqJ/EcUw8ifqJT5eN9KMCd5Jgk3Vkci+UQwsoZUmJ4UYjNTA2Mb4O6DAHu3vmU1F1UFSDzNuNKDLkAN33T+cuyL8YZpv7Ks8WvvhaZqXuQoXVo7uhA05VAVx4Rh6lvcQ9L06X09usVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Btfjr3fc7oCzzRzcXIDPKt/AhmShD0NJsk8HFh5ORkE=;
- b=XgxTyEmNIwODueoBJDtCJSBYAXom8CdzZrtuRmiPXrx/hwsufDC3UOD4UTcyNDyPHlMpcsAUAwgFcQdQ5KEy7TlELMG1By2ksM3iAizgIlaMlyLtB6HD3npm58oi+x3OCz9Wuh7wv+gWxO5BNYaXXqnUy6wNB6HrJhqmFBxY7OZiirI4PF5J57391zAlpfaBxysTJNo3iu/IKTVpPSH+0d5PxVp+HxRu9J6PTLXcOq5Y+tUnlrbwI/0ipXQ2lf1Itvr8nAoQ6+XBPXuzUkQxl3z1gAt/c6phScuORqDj69wrsAvFfxHfzWXvGA/LTTHdOSjYsvXM1w9msX3mNxN8ew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Btfjr3fc7oCzzRzcXIDPKt/AhmShD0NJsk8HFh5ORkE=;
- b=ntgjbx1QEfjwAOdQTBuFbCbbC5+SjXr4IsLlQmxXva9qh4X9Hr6XmuQx4zOMBmNiiGm4QU79h2y0QkmkzY7DYqnhkU793eLy8j9D/kjcdjEiC+aFbb0QpqSbz+QWdOOVP+I+kSqcibaPyuoy2iGEiOMnU0gg7ObFlwOMRWj0cKQ=
-Received: from BYAPR10MB3366.namprd10.prod.outlook.com (2603:10b6:a03:14f::25)
- by SJ0PR10MB4542.namprd10.prod.outlook.com (2603:10b6:a03:2da::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.15; Tue, 10 Dec
- 2024 20:59:24 +0000
-Received: from BYAPR10MB3366.namprd10.prod.outlook.com
- ([fe80::baf2:dff1:d471:1c9]) by BYAPR10MB3366.namprd10.prod.outlook.com
- ([fe80::baf2:dff1:d471:1c9%7]) with mapi id 15.20.8251.008; Tue, 10 Dec 2024
- 20:59:24 +0000
-Date: Tue, 10 Dec 2024 20:59:15 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        linux-mm@kvack.org, Peng Zhang <zhangpeng.00@bytedance.com>,
-        syzbot+2d788f4f7cb660dac4b7@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2] fork: avoid inappropriate uprobe access to invalid mm
-Message-ID: <ec718cd8-afcf-4002-95c5-4cc610a44107@lucifer.local>
-References: <20241210172412.52995-1-lorenzo.stoakes@oracle.com>
- <3bd43f87-571a-4bc6-b068-69056ec18d85@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3bd43f87-571a-4bc6-b068-69056ec18d85@redhat.com>
-X-ClientProxiedBy: LO2P265CA0261.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:8a::33) To BYAPR10MB3366.namprd10.prod.outlook.com
- (2603:10b6:a03:14f::25)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AOTwhkAc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733867041;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tP1MjT4qda+yWrKqxPuVRXu+p9J5U29ZhaYXhXN3XqQ=;
+	b=AOTwhkAcri/qfJudHciU3SxB3Jw952eZWbQHEs1vjcDysy31D8a6a9EjlxnFi4QHKZJJq4
+	4W4hf3Fgc364SY/Lzquq0q6X/pSygyf5RHYTSBvPQIp+5NgBLfxVHuFmvV5BYDOpjwnuvE
+	GUfOP9Ty3MvCUP3JhtBdF2klFXZIrNE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-58-L6b_xdjJM7idqp_U4MWTFQ-1; Tue, 10 Dec 2024 16:44:00 -0500
+X-MC-Unique: L6b_xdjJM7idqp_U4MWTFQ-1
+X-Mimecast-MFC-AGG-ID: L6b_xdjJM7idqp_U4MWTFQ
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-386321c8f4bso2193412f8f.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Dec 2024 13:43:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733867039; x=1734471839;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tP1MjT4qda+yWrKqxPuVRXu+p9J5U29ZhaYXhXN3XqQ=;
+        b=IDpV4i7SDnKhRgqrRiu1T11g3O+x6SNsvFa4H/YC1ZCAZeRSk0Ur3Xd7ylgEvf3iJP
+         4xpq+znlcXrhmcNcHEosKJf0qNrzByRyLvX+NaKe/HmyhdnRVdfY3r4d/uccajJGwoW4
+         xv4DgT/dpKTb7nTDN+OmTrLkYo+m/YbqWnA+5YhFQdK2cDOFTdUDCBv39Z7+VKsXMuKP
+         HZAwB/X3LZL/lO4NcNJU8PyAqake30PpIogj7PUiTyo/Xx3P26njJu4jeLhprviOb9F+
+         yRY04c7HhSM1jPZFUdiTInGRh6Fgq45c7jyMKfCHUlh8HQOPNECf9QIZmwgjDs4upkDi
+         Ujhg==
+X-Forwarded-Encrypted: i=1; AJvYcCWmGEHt1yCGBZZRdhIZxpzAfyU9XAmSXgs0RZIwSomNpXAI7QzxXzUHU6vFYXXeZGIgKLZIRteyIBEvkBUS1ccM@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPFNfKtLvMwGKRYLD/kKrWR8TEZwKOOcBH4WR6MwwZgL9fe5Hc
+	y/1pUZxwgklIqIfmdP9B6/ZlFZdqq6u5nsaBS91HIJnCvpu4CAJkUYFLUIUoOixuOC0U/IK0XgX
+	8AkMl+U/IY34fTNOYELtC3V8ALMp2i1Nuqo52JZMRWlXIykNU5t0Blk+60l9FhgY7LPE=
+X-Gm-Gg: ASbGncv7D/40yt8B85IaI91ZAWukIDCtEtdf4qt7vzCsKoCUCRZaxhbzrlT3bviDT9F
+	I7iz6SU3p/pTbgXGMOk74ONmVTHYEu2s3khONSua59AJQ2MZMYDFQfVt5+IUkZU205WXPH2CBHj
+	ac5xw9e1/lZFtVUm99JFEwQn//gl/+aPZqftNRZ0XjyOdQu6g4sMQvTvI8TciwT3vB6zrBxO2ya
+	gpr2Goc4CrRPvLr5+9rzJEV0H02HTFDVl0PpZGQf7MQy7iSABY5TU7ALN1OlYkqUwSXIlk7ffg0
+	uzBnyeI=
+X-Received: by 2002:a05:6000:178b:b0:385:faaa:9d1d with SMTP id ffacd0b85a97d-3864cea04aamr427003f8f.35.1733867038825;
+        Tue, 10 Dec 2024 13:43:58 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHBntV1r1V7qqw90fwsLljHpEimdBIKjwkwSqRAQs8sHJ14VdSz0YmnkZwq+Lk4qViVzkpGhA==
+X-Received: by 2002:a05:6000:178b:b0:385:faaa:9d1d with SMTP id ffacd0b85a97d-3864cea04aamr426978f8f.35.1733867038413;
+        Tue, 10 Dec 2024 13:43:58 -0800 (PST)
+Received: from [192.168.3.141] (p5b0c61ad.dip0.t-ipconnect.de. [91.12.97.173])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4361b09fec0sm12034785e9.4.2024.12.10.13.43.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2024 13:43:57 -0800 (PST)
+Message-ID: <63ae2ae4-b023-4802-9b34-a2c0d272f6d7@redhat.com>
+Date: Tue, 10 Dec 2024 22:43:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR10MB3366:EE_|SJ0PR10MB4542:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1202ac6e-16fa-4df2-f591-08dd195d869d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QhIN8lrrC8MejMoGP9cNcT/1vULSbWw702TfEloGOudlF981twMZLs/sN9Fz?=
- =?us-ascii?Q?tCH2qH5sA9/AZSzHQRoie48tOVbCmd84MW3Ncw5Wq7V7cCvuBJZ9KwMywocS?=
- =?us-ascii?Q?/Jxr+qgTeVcq9UgTSTXEtJzPw3LJrFAXuoKM0h0TZtyHeNCyP+O6D/7LlZC3?=
- =?us-ascii?Q?j8V5ZINIEE/OBZqjKgmLTs++bJE0J2NQILujflKWN0oII7mEyAgP3gL2b+p/?=
- =?us-ascii?Q?dohgm2Few5wyB7kF3s8umgJgfhXZwvshLh8PsdMriTgqRP1TkafrXhoAFP0u?=
- =?us-ascii?Q?zT7GciwAmMdPmB9RFb9Jzc6TNBaahlEwVJ3HfEGjmdAExl/WeVgmAInVMEIf?=
- =?us-ascii?Q?4zIYJ9bFIjy/uDShWgEJowj1n8DEABAxwk853BQ+8QmSABLGL8Uwobnq9sZe?=
- =?us-ascii?Q?0ID+9/gd+GJteKueWVQDjKuKBoB4fuvr0MVJYLMht1LQQk/fd0O2qklirNCe?=
- =?us-ascii?Q?lSQRgShAOxmhF9vtMcTiAhhUmCqM9s1TvmPCAFe9UY08+oP0MMF2dLQfWmFU?=
- =?us-ascii?Q?z876WPi9q0xVsHKaohG5znhy16AcHqYqWbslCgF8K9L+NgWEzvt/iXKQf/lx?=
- =?us-ascii?Q?QhiBXKNdHTgZDhPx2jk+vQfCqo9Ir0l0H2er+sNxZEOG14cxENQVtOM80lJk?=
- =?us-ascii?Q?5U6OzumfLr1bSchxeCC7kNPKch0ZZWsLdVHuPxp7viqy+8Er4UnbBzt9YqAn?=
- =?us-ascii?Q?+FPZq2GUvg07VOwyYaGC3Jqcc3yKfdzjbBSfm3+0lP9oGHW0sxXzu6BrYMq3?=
- =?us-ascii?Q?VHaJYLN/Xz47ZrqBb64dZ6seXQbWRrbhdtbkQmVj7fSV8yPE3xpp5jAavJb3?=
- =?us-ascii?Q?UpfQt9Z1+LsOtoNXoiJrzCwL235e+V6qlGDlMdY85ccFT4WEzEMjNLVEjZQ8?=
- =?us-ascii?Q?bWSYqeRRfOGvsVSo6V3yY5jOB7rJvnVi/QVF34hxn8kOhHXCC3icfi9FqFG7?=
- =?us-ascii?Q?wvXWHtLrAkxl+IJbkU9zSwzDqz8fJIuP8x1ExvnLHwC9WsQl6fk75cLnLccM?=
- =?us-ascii?Q?KaWMzqqMMapBdYKkGl/NUZsSSS7OGTqt2G0ohHlrgciVOvrRtw+uzPnCl9/+?=
- =?us-ascii?Q?yI9dADJsHCrmGrjsaYcn0Ku3ZGeMzbyVJheQZ5nJBZTpR3a9VgDnLag9lv5q?=
- =?us-ascii?Q?3rwIkD5hna0mmgc7hgtJV/5ORNWt1WgLirRZABpS86D9daoF8t141ZE868Sk?=
- =?us-ascii?Q?hOR7kHUxrVZBI7qjURwWvJ7UAH9gLqmLZB+A9Ol9MZZ/s50FmBkYVZwghLVj?=
- =?us-ascii?Q?RSvjGgp1R8B4z3p6DjBOusbo5LouTfnTJru/WklBDApJtoQndNOjvSM1/plf?=
- =?us-ascii?Q?xoPGQAXmV4A2pZESlMhiTr1ghELxVhnap+GJstmfGD0cFA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB3366.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Sgiw0ZklT3mKwRr0YdWTsT137R8lI++HLXeya9djuVH3wmH8KGQo5+t1OBfM?=
- =?us-ascii?Q?o8CccIHiRcrq5AmOiZplVT6bE43pErCBx1SgWnad3oQAdEPJRa6Y8jjIg3OG?=
- =?us-ascii?Q?m4c8DhhfXsfKXlUCGLmnUttJnjooMIrvdeiMdZCECAkeBwr7VxRU0B8sWAf7?=
- =?us-ascii?Q?GlT26XFLv93tJDUhelNX+0CvMSmmHzd8IZKHO55qeWuohdjV90LQdX/qIf5y?=
- =?us-ascii?Q?y6G7gp5hl7sh8Ut32q1wCiG64bMG20E95mjz+doCf2ZcXfua02LrDZgfbB/N?=
- =?us-ascii?Q?I1HUztmNGCTB8WbQEcjasuCZ2pUdggQUMbc5PKhWI4M1wZn0Hm2CYdlMgskt?=
- =?us-ascii?Q?RfLGZ0+UyxX6LaY/K8sJDiu9N0yp3I6Kalcr6UYPMZH0Gf8Zc6PrJCJVA5rU?=
- =?us-ascii?Q?rgDq2XEdh7IBrxXio3f9reR1Z/zJN0eyTLG5RO7d2n3fYFOiQ0me5xh6Y/T4?=
- =?us-ascii?Q?l1AJORIqcgVCu5KeTN2D+vxLOnporctV/U9aoTLNdDTLCtGBX6iWIFUfUP8F?=
- =?us-ascii?Q?Tpq3iz6rHint0cvdtoZVnIHszR83X1bjTBUxz/MHU8+gjB44axJxwCNt9+jO?=
- =?us-ascii?Q?e9WBqh1lAu844OY2yfP5yK6LT/YQV/GjRAggtvW7WA+u5p8OVrQGA2JJuJy8?=
- =?us-ascii?Q?EuW2v/HCVpivhNYWF0flJqUzEA0r8/KUVeiaACGFuTpU9QJS7M78r9hSBph/?=
- =?us-ascii?Q?H9YkHUc8eSDDyXtw2fVXZoMFOj9XBAWblB8AINJVLrFEPWmGeIf/ykR+EXJe?=
- =?us-ascii?Q?/vFBBWUv7Iu7ru9T/blEzsO9gkNfHPR23VWooIA0lb8+FEKt8YTWdb0e90PJ?=
- =?us-ascii?Q?PsiEFsFNZlC5f2K2UoOeictpyjpLLihjb6pIgRvs7eJ4HIEtuRLVAP0r6x/7?=
- =?us-ascii?Q?Kwvw9l7KUYFCGaYh0u1u9lSZlMeWSzU5vASqLInikrLlmiAjebDyixuO2R9d?=
- =?us-ascii?Q?90aMJgTH2rvphbFDp0dnkGDnSwkkaPCglh+uPVXhZNJSvP4xFz4FCQhME3OA?=
- =?us-ascii?Q?O9h1p/LAp2Aeu6BeoZio8/0GzCSIJfZV7P/3sPzxFmkHvuezGEnPCBtWSy1u?=
- =?us-ascii?Q?bkC6XEgkLNzkboD4hjVtLDCOkHdzTEMxUL5AW8LCxhhKtrMSosWDEUJO/Wk3?=
- =?us-ascii?Q?Bh9VZ0uBkc3ep+3TaA6T7QL+5guMLwLWbGNGiB7wDr3DjgH0uUw+ug16PsMW?=
- =?us-ascii?Q?U2DqbfbG4G9TCD3vjqnCPd/LuPZbKsVwI4LGHmy7p735KoyBotvmAbQQN0vQ?=
- =?us-ascii?Q?j+HLowRZJjY724dFeUHoB6IEtkJLD/a5eprEN1y7mq0XAnBdeS1FD2cp6Pts?=
- =?us-ascii?Q?8RcX/2z03boqAiDNWvuvpL/W73zhId1aHKqF4rSiUSiaCqyNaJTWZzd//Mra?=
- =?us-ascii?Q?XCkSTNPdoPhVYbyp5P7CN9FfSX3TNfqHTeoeo17Vh+f5Au27UHkviI1Ly7b7?=
- =?us-ascii?Q?FFW69+fKVitZGJlvHl7fsRJqh1UAleUQgvZ+XBDFZXED1uKyjnaG0s13qMLo?=
- =?us-ascii?Q?TGGbe92yq4pBPfHUA6fbLUDllnu33ij5unUNSXnFZrUBIuYVmwgathD68YK1?=
- =?us-ascii?Q?+sD3aC41CibW+dltiSHqdAP7BvQGhtFt31kkSG7EK8F4MYCCeQNjlT82vrdo?=
- =?us-ascii?Q?bQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	yH6dRg/KVPl9HwqtVa3yT+l3DYGBgmfnfO/VdLduIWwk12myx06ZKa0TkPGalq15szsBmbeP7BK02fdFTwtgnhBTQIEkUFxP/Mcwh2N3HVx3vmm+SnoOX6E3n7x8KR0JjL+0gx7Ss7WpEarrWD8rRMzmyYtq8qfDkY4f2cyEYvgC/1sWirVCXDyR9SiguD56S1Uu1oqUm2GZ/r9m8mgZI/6venm7g3k0gD5arsEuZRrqDifWyAwGE9V7UgzuZ8vyHI6ohZly6MpSM/MfbtQQSCvTyfMvbyQFeBGLY395wFPy5jYIEWuEvmFuz9+yngHBcy560ugc3hih3eIE0TdKT5nGbcq87G/+WHtYkQ6eaSqTVsZ3HslH+Aa6w5zUh+3Hz9hXTHTT5g8dgcfHAOAYHkNveijSjLE+gyYylrItmJhzINOlvg8szMuhxXUcvKE8M7jeynL0gvPn8JRNq7s55UfJko7Y/4lwf8aa/9lYlmVCyRMSdDvx3HNr13pygISpxu31pnIdj10klJSMASGH+Y9U8Uo2oYKLdqp2uJTAwCEUJokYgyUwDa+VqEqa9bOhSqxMtbNUCXR5tjYccYrMuObdBahsFTazluvvCaeNGg0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1202ac6e-16fa-4df2-f591-08dd195d869d
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB3366.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2024 20:59:24.1104
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YCRlMpYj0ZjKquvs/yaU9lENw0gzHRZtWv4xb877jh8rOQ/i1bCLWTUZynmNXItmEugnMMzUIsbGEGvR+sxSn7yaNXqCsHXt+LT9v8Om9/0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4542
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-10_12,2024-12-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 adultscore=0
- phishscore=0 suspectscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
- definitions=main-2412100152
-X-Proofpoint-ORIG-GUID: 6YAUnuyRZBpVFOd0DoQ59YBvIlqhZHmV
-X-Proofpoint-GUID: 6YAUnuyRZBpVFOd0DoQ59YBvIlqhZHmV
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] fork: avoid inappropriate uprobe access to invalid mm
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ linux-mm@kvack.org, Peng Zhang <zhangpeng.00@bytedance.com>,
+ syzbot+2d788f4f7cb660dac4b7@syzkaller.appspotmail.com
+References: <20241210172412.52995-1-lorenzo.stoakes@oracle.com>
+ <3bd43f87-571a-4bc6-b068-69056ec18d85@redhat.com>
+ <ec718cd8-afcf-4002-95c5-4cc610a44107@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ec718cd8-afcf-4002-95c5-4cc610a44107@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 10, 2024 at 08:35:30PM +0100, David Hildenbrand wrote:
-> On 10.12.24 18:24, Lorenzo Stoakes wrote:
-> > If dup_mmap() encounters an issue, currently uprobe is able to access the
-> > relevant mm via the reverse mapping (in build_map_info()), and if we are
-> > very unlucky with a race window, observe invalid XA_ZERO_ENTRY state which
-> > we establish as part of the fork error path.
-> >
-> > This occurs because uprobe_write_opcode() invokes anon_vma_prepare() which
-> > in turn invokes find_mergeable_anon_vma() that uses a VMA iterator,
-> > invoking vma_iter_load() which uses the advanced maple tree API and thus is
-> > able to observe XA_ZERO_ENTRY entries added to dup_mmap() in commit
-> > d24062914837 ("fork: use __mt_dup() to duplicate maple tree in
-> > dup_mmap()").
-> >
-> > This change was made on the assumption that only process tear-down code
-> > would actually observe (and make use of) these values. However this very
-> > unlikely but still possible edge case with uprobes exists and unfortunately
-> > does make these observable.
-> >
-> > The uprobe operation prevents races against the dup_mmap() operation via
-> > the dup_mmap_sem semaphore, which is acquired via uprobe_start_dup_mmap()
-> > and dropped via uprobe_end_dup_mmap(), and held across
-> > register_for_each_vma() prior to invoking build_map_info() which does the
-> > reverse mapping lookup.
-> >
-> > Currently these are acquired and dropped within dup_mmap(), which exposes
-> > the race window prior to error handling in the invoking dup_mm() which
-> > tears down the mm.
-> >
-> > We can avoid all this by just moving the invocation of
-> > uprobe_start_dup_mmap() and uprobe_end_dup_mmap() up a level to dup_mm()
-> > and only release this lock once the dup_mmap() operation succeeds or clean
-> > up is done.
->
-> What I understand is: we need to perform the uprobe_end_dup_mmap() after the
-> mmput().
+On 10.12.24 21:59, Lorenzo Stoakes wrote:
+> On Tue, Dec 10, 2024 at 08:35:30PM +0100, David Hildenbrand wrote:
+>> On 10.12.24 18:24, Lorenzo Stoakes wrote:
+>>> If dup_mmap() encounters an issue, currently uprobe is able to access the
+>>> relevant mm via the reverse mapping (in build_map_info()), and if we are
+>>> very unlucky with a race window, observe invalid XA_ZERO_ENTRY state which
+>>> we establish as part of the fork error path.
+>>>
+>>> This occurs because uprobe_write_opcode() invokes anon_vma_prepare() which
+>>> in turn invokes find_mergeable_anon_vma() that uses a VMA iterator,
+>>> invoking vma_iter_load() which uses the advanced maple tree API and thus is
+>>> able to observe XA_ZERO_ENTRY entries added to dup_mmap() in commit
+>>> d24062914837 ("fork: use __mt_dup() to duplicate maple tree in
+>>> dup_mmap()").
+>>>
+>>> This change was made on the assumption that only process tear-down code
+>>> would actually observe (and make use of) these values. However this very
+>>> unlikely but still possible edge case with uprobes exists and unfortunately
+>>> does make these observable.
+>>>
+>>> The uprobe operation prevents races against the dup_mmap() operation via
+>>> the dup_mmap_sem semaphore, which is acquired via uprobe_start_dup_mmap()
+>>> and dropped via uprobe_end_dup_mmap(), and held across
+>>> register_for_each_vma() prior to invoking build_map_info() which does the
+>>> reverse mapping lookup.
+>>>
+>>> Currently these are acquired and dropped within dup_mmap(), which exposes
+>>> the race window prior to error handling in the invoking dup_mm() which
+>>> tears down the mm.
+>>>
+>>> We can avoid all this by just moving the invocation of
+>>> uprobe_start_dup_mmap() and uprobe_end_dup_mmap() up a level to dup_mm()
+>>> and only release this lock once the dup_mmap() operation succeeds or clean
+>>> up is done.
+>>
+>> What I understand is: we need to perform the uprobe_end_dup_mmap() after the
+>> mmput().
+> 
+> Ack yes.
+> 
+>>
+>> I assume/hope that we cannot see another mmget() before we return here. In
+>> that case, this LGTM.
+> 
+> We are dealing with a tiny time window and brief rmap availability, so it's hard
+> to say that's impossible. You also have to have failed to allocate really very
+> small amounts of memory, so we are talking lottery odds for this to even happen
+> in the first instance :)
 
-Ack yes.
+Yes, likely the error injection framework is one of the only reliable 
+ways to trigger that :)
 
->
-> I assume/hope that we cannot see another mmget() before we return here. In
-> that case, this LGTM.
+> 
+> I mean the syzkaller report took a year or so to hit it, and had to do
+> fault injection to do so.
 
-We are dealing with a tiny time window and brief rmap availability, so it's hard
-to say that's impossible. You also have to have failed to allocate really very
-small amounts of memory, so we are talking lottery odds for this to even happen
-in the first instance :)
+Ah, there it is: "fault injection" :D
 
-I mean the syzkaller report took a year or so to hit it, and had to do
-fault injection to do so.
+> 
+> Also it's not impossible that there are other means of accessing the mm
+> contianing XA_ZERO_ENTRY items through other means (I believe Liam was looking
+> into this).
+> 
+> However this patch is intended to at least eliminate the most proximate obvious
+> case with as simple a code change as possible.
+> 
+> Ideally we'd somehow mark the mm as being inaccessible somehow, but MMF_ flags
+> are out, and the obvious one to extend to mean this here, MMF_UNSTABLE, may
+> interact with oomk logic in some horrid way.
+> 
+>>
+>> --
+>> Cheers,
+>>
+>> David / dhildenb
+>>
+> 
+> So overall this patch is a relatively benign attempt to deal with the most
+> obvious issue with no apparent cost, but doesn't really rule out the need
+> to do more going forward...
 
-Also it's not impossible that there are other means of accessing the mm
-contianing XA_ZERO_ENTRY items through other means (I believe Liam was looking
-into this).
+Maybe add a bit of that to the patch description. Like "Fixes the 
+reproducer, but likely there is more we'll tackle separately", your call.
 
-However this patch is intended to at least eliminate the most proximate obvious
-case with as simple a code change as possible.
+Thanks for the details!
 
-Ideally we'd somehow mark the mm as being inaccessible somehow, but MMF_ flags
-are out, and the obvious one to extend to mean this here, MMF_UNSTABLE, may
-interact with oomk logic in some horrid way.
+-- 
+Cheers,
 
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+David / dhildenb
 
-So overall this patch is a relatively benign attempt to deal with the most
-obvious issue with no apparent cost, but doesn't really rule out the need
-to do more going forward...
