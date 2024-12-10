@@ -1,81 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275A2DF58;
-	Tue, 10 Dec 2024 18:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8623C17;
+	Tue, 10 Dec 2024 18:41:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733855415; cv=none; b=LSIWGDZkxkbWzX9m1qSNVJmkWSEPWf84Dpc0Gju7PRqrqMSY1Q8FfCEaweCmrLB0RSfI5CAK4wpMCDxDQgZAElRXDWBV07R0yLwKdq11fEw0iZs6ido/G4v+6JhgBqxFgPDhubI3LKA0czheWYkd58v97ld+3CACDo6Qfgmip4Y=
+	t=1733856072; cv=none; b=eivAjagiHa9HUwhqwRa3BJ8tbgr2oDhOpsZ2DrJ18wN4bTW1ontTv2tP9R7SJFy5VzbH1hKTpL4h7jAdGg1yMnitnr2OcX+dMgc/UFI3srAzOAmxo4uAc1nYXQt9RkZGxQ3+Iu11OJc0cBnLVAsRjYjjr/LqlRv6QbLekMRmemQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733855415; c=relaxed/simple;
-	bh=6+XaTaTNue4wy2FSdnIyl1DOA823ZDTPacm7x71QGRM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=nFmAXceU/3nKWgYmGbhjTfTGjsgTtl/5olcDRw93T6L0aXVIjvNxqwkdiawtLny5HemmDPPOAl8VbIsk5owCStWsjomKRGfyNKzc1Ym12F04ri6EAug1v4gzhtGehYeXMObePXjLvFpRBt6KbddeAVG3WmiIJ0vFArFioaV5stM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c570ERm/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733856072; c=relaxed/simple;
+	bh=soLOHidzIgQWMfr23eBt3zFw+UvWx9WIHXuJsix5L+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VTHd1KG3WhrwmwsozdbJ/ZWMCuBhhnuwTutsAja80GquogjYCqifn/e27hTUnamw5tD9aY6DQ3gt4OYbbWLHdhh/8w2ebZrj9fwyjNdyBSOmZtMyhmzHf5HWobae//+HC4ouEqFzshMFUrcyI3pahGLb4P3lM1BmS9cFVvdo0b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ghjmmVNp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c570ERm/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D1EC4CED6;
-	Tue, 10 Dec 2024 18:30:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ghjmmVNp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B72EBC4CED6;
+	Tue, 10 Dec 2024 18:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733855414;
-	bh=6+XaTaTNue4wy2FSdnIyl1DOA823ZDTPacm7x71QGRM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=c570ERm/rSVnEdkeZssIqWwvRZY03JgwkzIO4jIOwHR9vnZpo7PXEuVYwPmHF3xO0
-	 XHcAk72wqANHwsTSJSvv/tAToP6eeb5sLSRTR8+86DqCZ/r30apGP/wErOgWRtN+0L
-	 u/LDIEgqbB6PvGp2N1g1MEmR/3pNTNUhTiS2fsaA8NSQNPKeV80h2HvlAxsaU7uda7
-	 x4zhZc+Zo9yu8h8/XBFfCqIOhA2TugbyfjUtnX+jbHpglGAfgwj5sO9dSi7sHyoEpg
-	 Lj8jE9ZvJAybD43zvuoIfze8ZBCrrNeFJ5C7lIoHsvhZlO+Ur8Jms5uGnetDYf2hOo
-	 MdOExFe3hdF7g==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B087B380A954;
-	Tue, 10 Dec 2024 18:30:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1733856072;
+	bh=soLOHidzIgQWMfr23eBt3zFw+UvWx9WIHXuJsix5L+c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ghjmmVNpTMNddgeyuw7kqDKEEv42JqLM3hDifVyzDH/A5n/3mvBZ822CUtIKpoBc5
+	 kZPEw6l6YjwZbwoOx8zeIBa9mIsmkrZu+SQcXmhLiT9accecHTcMo+vVT4CQBLj4ZL
+	 oqcr5LCbOBy2qoOjGw4rB3jfGfgtZ8I8EDTlRUqpqd+u22rc/Dy2fxO+HTeA7n1/PK
+	 vbuirSBit21sM7SSijaCp+ENhyCRjlZ3oJqUxfF9ywKOgcmdAUk8KfVVtvm84nmexT
+	 de+JIoAddSArWV9oh+1psbO/2coCckFWFp1eesCFTIBllphNQo/EpCvv0SCICKnOjM
+	 Cp27W/BmTl8AA==
+Date: Tue, 10 Dec 2024 15:40:59 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Ian Rogers <irogers@google.com>,
+	Dima Kogan <dima@secretsauce.net>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] perf-probe: Improbe non-C language support
+Message-ID: <Z1iLO-JHiVj_c1Vp@x1>
+References: <173145727287.2747044.14103970580490941023.stgit@mhiramat.roam.corp.google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf] bpf,perf: Fix invalid prog_array access in
- perf_event_detach_bpf_prog
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173385543052.937529.3035278335485000200.git-patchwork-notify@kernel.org>
-Date: Tue, 10 Dec 2024 18:30:30 +0000
-References: <20241208142507.1207698-1-jolsa@kernel.org>
-In-Reply-To: <20241208142507.1207698-1-jolsa@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- syzbot+2e0d2840414ce817aaac@syzkaller.appspotmail.com, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, kafai@fb.com, songliubraving@fb.com,
- yhs@fb.com, john.fastabend@gmail.com, kpsingh@chromium.org, sdf@fomichev.me,
- haoluo@google.com, sean@mess.org, peterz@infradead.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <173145727287.2747044.14103970580490941023.stgit@mhiramat.roam.corp.google.com>
 
-Hello:
-
-This patch was applied to bpf/bpf.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
-
-On Sun,  8 Dec 2024 15:25:07 +0100 you wrote:
-> Syzbot reported [1] crash that happens for following tracing scenario:
+On Wed, Nov 13, 2024 at 09:21:13AM +0900, Masami Hiramatsu (Google) wrote:
+> Hi,
 > 
->   - create tracepoint perf event with attr.inherit=1, attach it to the
->     process and set bpf program to it
->   - attached process forks -> chid creates inherited event
+> Here is the 3rd version of patches for perf probe to improve non-C language
+> (e.g. Rust, Go) support.
 > 
->     the new child event shares the parent's bpf program and tp_event
->     (hence prog_array) which is global for tracepoint
+> This ported the last patch on top of tmp.perf-tools-next, and add a fix patch
+> for compilation errors.
 > 
-> [...]
-
-Here is the summary with links:
-  - [bpf] bpf,perf: Fix invalid prog_array access in perf_event_detach_bpf_prog
-    https://git.kernel.org/bpf/bpf/c/978c4486cca5
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git tmp.perf-tools-next
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/?h=tmp.perf-tools-next
 
 
+Thanks, applied the first patch to perf-tools-next, the other was folded
+into the patch that introduced those problems, to avoid bisection
+problems.
+
+- Arnaldo
+ 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (Google) (2):
+>       perf-probe: Replace unacceptable characters when generating event name
+>       perf disasm: Fix compilation error with stubs
+> 
+> 
+>  tools/perf/util/disasm.c       |    7 ++++---
+>  tools/perf/util/probe-event.c  |   32 +++++++++++++++++++++++++-------
+>  tools/perf/util/probe-event.h  |    3 ++-
+>  tools/perf/util/probe-finder.c |   15 +++++++++++++++
+>  tools/perf/util/probe-finder.h |    5 +++++
+>  5 files changed, 51 insertions(+), 11 deletions(-)
+> 
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
