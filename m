@@ -1,184 +1,157 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3771D63C8;
-	Wed, 11 Dec 2024 15:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5868F1AA1C4
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2024 15:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733929524; cv=none; b=tcgJLy6rSyv/RBkVXqd6224W3obP4TYB1ZSQLYQyYXlTdhxGpNDfwModSDzIW1Kn/pKuewfkdhTC3VQzJwk85aFDp1anjD+G/yEnXB4+AV4V7eBYHSaK48DIxEL2U+4sWFd7ODucVedwydTzcJ84psKPI6W3U+iw7e2GTjgNmp8=
+	t=1733930926; cv=none; b=cLnWk3AbyPCJlBMtoglVrjG3c99Uc0f7ejSp7gNFJ0HRHGsM2kyLuspteo3UFnLv7pVvnBr38CIV4TwffYPPogmC1VUL6dG4h3p9N8ftueDrH8Q5ctZKWOs11WRcs6ouiFfpdqKwmrqdd9GIGM6MQT1PEoRTDDMzJm1xXbQANhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733929524; c=relaxed/simple;
-	bh=zBAP9mh8OPUKcmyV9VNqiPkVz3ps9OJpez4j8qjPT2A=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cONqVQ0lmjB+9c2xHDEY9BpQ6kDggleOZrJGXU39lX1iNkXpSgzmDJIYHYXV43nc75MaGSEGi54obcnA9+jNAnb7synqWbzAJ/gIOdNcxgsmxhtF+BMOxyaAgOyX7BZqZ+OwJPXe1NiyBnZdgMUzc1wivnbRrFTUajQNSpP4URY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YkKLyBHz; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733930926; c=relaxed/simple;
+	bh=DISuUbcvoGtqwmxV6M2OMmuO1I2oG4mY9akZoZTj/fY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Pv8AcR26AUV0B7fWxGjMK6L8hGf+F10QP0lNocnH0l6YcQt7tSvfUvR+q89xBmHTeODJjm/LmawjHr8SxQrDRD8aVgTxCfspLA9TWIoSAPazlnCHxJvoXiYTKCxHgR3pIjbWFYU6fbCDKXg5/HQ7kbHpP1kwe5Lt9MaEyJzlUic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FPa387vA; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkKLyBHz"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aa6a92f863cso332853266b.1;
-        Wed, 11 Dec 2024 07:05:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733929519; x=1734534319; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fmuSRYRsN+CVodQCjU4cJzoXt2OifyhdBUg+LTTXX5I=;
-        b=YkKLyBHzwIIjh1ID1+J7E3MIvvgO96Aq+MemS2iP1KZhSLIcFNvK7lI0q1+t082izp
-         7AePbFVCdFkawO3c690HdLLGzmUNQS+xSeDjCOr5YJ4pU/SkpOj2guuqr+VAiRPicftH
-         uRIAwMTlkeogxyo+AftkKrubTLnxLDKGDgGMk0bUbaBCi2q1wL8Zjiyuamq9xdj5xs96
-         /fiAXZZgq2NvsAaLxLQIX3v8xL+7X/hUnRQPrjCdPx0rZIIcPLN4yFc73aBl+XTsQZhf
-         K6WDwDAQ80Z7CSopyj1uKAd7+sguUFlX32z+Difqqvbt5306GzQmmN7D8dEVi6mh1AH3
-         gigA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733929519; x=1734534319;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fmuSRYRsN+CVodQCjU4cJzoXt2OifyhdBUg+LTTXX5I=;
-        b=pFEVzNDrp1OsI8L+Iq22kJ6PIfmP8ElWJOEGZblD8fL7tfy6blNm1zvLocAq7E3rqu
-         gnoZZVGT9nOPVvKmoE6E6QmDtRL8NDSQK5uWsXJEk9ScJx6mentwUan1K9I/JdmkrYam
-         uaoonPB7tmPISjPlYugBPxJzZCh47QazPDtYE/Voljz3aKXO7ks04X+RVqb4mfDdkbFO
-         2KrjsNgRhxUZlNODcoDLqwa5dOXeW8S9jpjTaleGYMU+oYgKLzp+6JH5evOH0mhuwQxy
-         jEO1yd5c8V1N1kel0Sk8zzFiHSVaL0PkDv4yx4MHAoK7+cKDhruZzCN7LusJ+Who0sTg
-         wJHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVCH4barhEG5FzVA/96mJCehF4M2LiX5vx52aqtQqtEt3//Kk0srgS43tfKfvlIwrAn+8GZbTq8WZsbpnn@vger.kernel.org, AJvYcCXnyZ41EQQaZY1EsDDmsf7ha8YsW+OsRGyqQmud/nvE6mNF539de3qGsMIh4zOe2n6G5hsQzVHJU/dQm+oRG0DVHQ==@vger.kernel.org, AJvYcCXrIyz9PhELvU9TLnwnuOinFP1Fq2buOmtLMj6QC3YLU73hfQ20Bx6JpkLTEoqRxhG6rNw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxq9Cmef8dHYeEFpbRycTqhbrUDfkY7NNKQkSql0kxtDh9ulCi/
-	D8dpUef8hIozDVzjojT9BFmYBkRyzd/ohBNKnW9nrFkX1TCmEy2y
-X-Gm-Gg: ASbGncsqBnb2IvivxbFzC94f7RYrbhohA1nn/59dcabdw6ehqNUS23xtc96iqeNnMJk
-	HUb6CBMFmwUDjZrWzIRxjdzRksT1OjCnKkEmHP/tdeCCdOM8oj9HLewEwUafbOwEp0bbr6wWnbQ
-	1xTa/LKriTiCjt52ckt9K/o6pWVlph52pCa1RmLYv3fLStoYcdh9es3lPFJGrDblmPDtHH+QWee
-	XoGa22FXQ7cP2RPnXR7k3n8OBuBPAs1y78mcsb2ZIIA7ErR46oNSHLy1qpHgfINK6zXQ0m/09Tc
-	DZcz8N1+GCiYqI8N3hG9sMZYRjc=
-X-Google-Smtp-Source: AGHT+IFLqy5ye4iT4eGtn9cgCHM7T7Xqhx1toNYhHYc9h0YsfMhXBP1rDtSH6hw3JVfTojL6m1mg1A==
-X-Received: by 2002:a17:907:3a18:b0:aa6:6e10:61f1 with SMTP id a640c23a62f3a-aa6b10f56d7mr267950166b.1.1733929516706;
-        Wed, 11 Dec 2024 07:05:16 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa6a3dcbcc2sm260913266b.117.2024.12.11.07.05.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2024 07:05:16 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 11 Dec 2024 16:05:14 +0100
-To: Leo Yan <leo.yan@arm.com>
-Cc: Quentin Monnet <qmo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Nick Terrell <terrelln@fb.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Guilherme Amadio <amadio@gentoo.org>, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] tools build: Add feature test for libelf with ZSTD
-Message-ID: <Z1mqKpXBcl303IDY@krava>
-References: <20241211093114.263742-1-leo.yan@arm.com>
- <20241211093114.263742-2-leo.yan@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FPa387vA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733930925; x=1765466925;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=DISuUbcvoGtqwmxV6M2OMmuO1I2oG4mY9akZoZTj/fY=;
+  b=FPa387vAj18yuP35djelH7gkG/zEVhNal/2Zh+nv1/1lK7skJQUrQrxW
+   3HtVG0ik1FVd913XjURzsvlxZVlDqcnP2mi7a9nE5z8YrAxtQLLwej9Ol
+   VR5ZJdBpFwMFPYtqCv02XXQyx06AtAJ8WBlzuG/wm8QcNaddMJ+Fcq7tT
+   Ww2OnHf/VCQ/jUP+/F39DII06HJnPjEipuXCriT2hpHAm9+4o7x0MuQlA
+   wbgZ6IYXFrSge9MJ8WktG/d5uAuDwd2WFII7mBbTFqM/5kNnT8mbXsVgL
+   87HNxJa/YEac2hsQqHX0YEvcSPlWrPV59xsZP5Uou5UiCcJ451IrloBHp
+   Q==;
+X-CSE-ConnectionGUID: U5okPiuIRyS8SPlCdOHcaw==
+X-CSE-MsgGUID: s1La8CvBSGuKIrUeskDe4Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11283"; a="34189296"
+X-IronPort-AV: E=Sophos;i="6.12,225,1728975600"; 
+   d="scan'208";a="34189296"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 07:28:44 -0800
+X-CSE-ConnectionGUID: IdnXcn1MRJ6Dd3ZQdxJ2Rw==
+X-CSE-MsgGUID: VIMAUzkXTJaBONlHCtJBbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="133228642"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 07:28:44 -0800
+Received: from [10.246.136.4] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.4])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 11C7C20B5703;
+	Wed, 11 Dec 2024 07:28:43 -0800 (PST)
+Message-ID: <997d6f52-05a0-4f24-a7c7-41279c7543da@linux.intel.com>
+Date: Wed, 11 Dec 2024 10:28:42 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241211093114.263742-2-leo.yan@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Update perf tools topdown documentation
+To: Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org
+References: <20241210193554.93013-1-ak@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20241210193554.93013-1-ak@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 11, 2024 at 09:31:12AM +0000, Leo Yan wrote:
-> Add a test for checking if libelf supports ZSTD compress algorithm.
+
+
+On 2024-12-10 2:35 p.m., Andi Kleen wrote:
+> - Document and give examples for the Lunar Lake perf metrics reset mode.
+> - Fix the error handling for mmap (it returns -1 on error, not 0)
+> - Clarify the slots placement documentation. It is not Icelake specific
+> and also applies for non sampling.
 > 
-> The macro ELFCOMPRESS_ZSTD is defined for the algorithm, pass it as an
-> argument to the elf_compress() function.  If the build succeeds, it
-> means the feature is supported.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-
-lgtm
-
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-jirka
-
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
 > ---
->  tools/build/Makefile.feature           | 1 +
->  tools/build/feature/Makefile           | 4 ++++
->  tools/build/feature/test-all.c         | 4 ++++
->  tools/build/feature/test-libelf-zstd.c | 9 +++++++++
->  4 files changed, 18 insertions(+)
->  create mode 100644 tools/build/feature/test-libelf-zstd.c
+>  tools/perf/Documentation/topdown.txt | 33 +++++++++++++++++++++++-----
+>  1 file changed, 28 insertions(+), 5 deletions(-)
 > 
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index bca47d136f05..b2884bc23775 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -43,6 +43,7 @@ FEATURE_TESTS_BASIC :=                  \
->          libelf-getphdrnum               \
->          libelf-gelf_getnote             \
->          libelf-getshdrstrndx            \
-> +        libelf-zstd                     \
->          libnuma                         \
->          numa_num_possible_cpus          \
->          libperl                         \
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index 043dfd00fce7..f12b89103d7a 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -28,6 +28,7 @@ FILES=                                          \
->           test-libelf-getphdrnum.bin             \
->           test-libelf-gelf_getnote.bin           \
->           test-libelf-getshdrstrndx.bin          \
-> +         test-libelf-zstd.bin                   \
->           test-libdebuginfod.bin                 \
->           test-libnuma.bin                       \
->           test-numa_num_possible_cpus.bin        \
-> @@ -196,6 +197,9 @@ $(OUTPUT)test-libelf-gelf_getnote.bin:
->  $(OUTPUT)test-libelf-getshdrstrndx.bin:
->  	$(BUILD) -lelf
+> diff --git a/tools/perf/Documentation/topdown.txt b/tools/perf/Documentation/topdown.txt
+> index 5c17fff694ee..3e2340f3f78e 100644
+> --- a/tools/perf/Documentation/topdown.txt
+> +++ b/tools/perf/Documentation/topdown.txt
+> @@ -87,7 +87,7 @@ if (slots_fd < 0)
 >  
-> +$(OUTPUT)test-libelf-zstd.bin:
-> +	$(BUILD) -lelf -lz -lzstd
-> +
->  $(OUTPUT)test-libdebuginfod.bin:
->  	$(BUILD) -ldebuginfod
+>  /* Memory mapping the fd permits _rdpmc calls from userspace */
+>  void *slots_p = mmap(0, getpagesize(), PROT_READ, MAP_SHARED, slots_fd, 0);
+> -if (!slot_p)
+> +if (slot_p == (void*)-1L)
+>  	.... error ...
 >  
-> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-> index 80ac297f8196..67125f967860 100644
-> --- a/tools/build/feature/test-all.c
-> +++ b/tools/build/feature/test-all.c
-> @@ -58,6 +58,10 @@
->  # include "test-libelf-getshdrstrndx.c"
->  #undef main
+>  /*
+> @@ -107,7 +107,7 @@ if (metrics_fd < 0)
 >  
-> +#define main main_test_libelf_zstd
-> +# include "test-libelf-zstd.c"
-> +#undef main
+>  /* Memory mapping the fd permits _rdpmc calls from userspace */
+>  void *metrics_p = mmap(0, getpagesize(), PROT_READ, MAP_SHARED, metrics_fd, 0);
+> -if (!metrics_p)
+> +if (metrics_p == (void*)-1L)
+>  	... error ...
+>  
+>  Note: the file descriptors returned by the perf_event_open calls must be memory
+> @@ -290,15 +290,38 @@ This "opens" a new measurement period.
+>  A program using RDPMC for TopDown should schedule such a reset
+>  regularly, as in every few seconds.
+>  
+> -Limits on Intel Ice Lake
+> -========================
+> +Newer Intel CPUs (Lunar Lake, Arrow Lake+) support resetting the perf
+> +metrics automatically RDPMC, which can avoid a system call or needing
+> +to schedule special resets.
 > +
->  #define main main_test_libslang
->  # include "test-libslang.c"
->  #undef main
-> diff --git a/tools/build/feature/test-libelf-zstd.c b/tools/build/feature/test-libelf-zstd.c
-> new file mode 100644
-> index 000000000000..a1324a1db3bb
-> --- /dev/null
-> +++ b/tools/build/feature/test-libelf-zstd.c
-> @@ -0,0 +1,9 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <stddef.h>
-> +#include <libelf.h>
+> +This is available if /sys/devices/cpu*/cap/metrics_clear
+
+It's under the "format/metrics_clear", not "cap/metrics_clear"
+
+https://lore.kernel.org/lkml/20240926184558.3797290-1-kan.liang@linux.intel.com/
+
+Since the kernel patch hasn't been merged yet, I will add this document
+patch to the kernel patch series. I will re-post the whole series soon.
+
+Thanks,
+Kan
+> +exists, and requires setting an opt-in bit when opening the 
+> +slots counter:
 > +
-> +int main(void)
-> +{
-> +	elf_compress(NULL, ELFCOMPRESS_ZSTD, 0);
-> +	return 0;
-> +}
-> -- 
-> 2.34.1
-> 
+> +if (access("/sys/devices/cpu/cap/metrics_clear") &&
+> +    access("/sys/devices/cpu_core/cap/metrics_clear"))
+> +     ... functionality not supported ...
+> +
+> +#define INTEL_TD_CFG_METRIC_CLEAR 1ULL
+> +
+> +struct perf_event_attr slots_event = {
+> +	... same as slots example above ...
+> +	.config1 = INTEL_TD_CFG_METRIC_CLEAR,
+> +};
+> +
+> +... open and map counter same as example above ...
+> +
+> +Then any metric read will reset the metrics and slots.
+> +
+> +Using perf metrics with perf stat
+> +=================================
+>  
+>  Four pseudo TopDown metric events are exposed for the end-users,
+>  topdown-retiring, topdown-bad-spec, topdown-fe-bound and topdown-be-bound.
+>  They can be used to collect the TopDown value under the following
+>  rules:
+>  - All the TopDown metric events must be in a group with the SLOTS event.
+> -- The SLOTS event must be the leader of the group.
+> +- The SLOTS event must be the first entry of the group.
+>  - The PERF_FORMAT_GROUP flag must be applied for each TopDown metric
+>    events
+>  
+
