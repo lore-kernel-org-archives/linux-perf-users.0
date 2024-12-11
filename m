@@ -1,60 +1,62 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7967A1BC085;
-	Wed, 11 Dec 2024 22:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07851DD885;
+	Wed, 11 Dec 2024 22:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733957373; cv=none; b=YDH7MwaU1hh1W/kIZ/q54XH0OtUBi9h/WMywo/uBMW4xbzKx4RuuKv7grmpbE8TMuNRVGuSTx9X6jCes2TYjlUa062UkiIcVLU+KDiW+TJqMdprSYhFDpNEgpZwvMVWN1yoKmNoyISoJMqMMi1Aw5OiWyTqDsyqgMGOcpeWnimI=
+	t=1733957374; cv=none; b=Elznbe+PqWCsbzSBl8T3TDKxY+drtJOh2tVeNYcB58e96llPTJJmsRyaFKgtZqEfjZEu6Aam2H8zN3ANqZo5PnoQzJB6+zO9jguGKkEJXM66wujC0rRBGi04M9OQoQ6v4gdslvicGYuBe//HNR7iN51gktVE4rVjKmmX9rBax4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733957373; c=relaxed/simple;
-	bh=FFY1p0QopYu7/IIU8a277/5Oa7us2BzoRVOYRBgFapE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dgc6YGhZYOCGLZvZVENRYxkf5byuUcFsK7jC8jSA+3f6a8MGQrsSLYmR1kD1Nfdyyj6hE2Il/HYPjFSo7bm1UVS464tiLwXDYFZJoJgpbewEyLg6TNvnkXIGFctZBRFiTjd/3kYL9iK5kWOC5u2t7AsYTdUke3Jk3CKmV0M7Fts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A77jva/i; arc=none smtp.client-ip=209.85.210.180
+	s=arc-20240116; t=1733957374; c=relaxed/simple;
+	bh=rk4YUziKix9MiU2xUp7uHQoHgcySBfMeFfRvamTBEwQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JJ+3yZ/3bGAsDLIpHEcx9WvSEGh3ex5Qg2VR0aG67JmyO2TUH9Lj/M41B91bWnH5oJQKnUsof1zGNeTNoKMfw0wv4GEyBb8t7bVAxyL8rsrxg7+yd3tjeZcXZWvVClwRQavNo08kFy/hsMOBwJ89YyG0xhaZw2FQVNwp5AmJZW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mcUkofM6; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A77jva/i"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-72739105e02so5852b3a.0;
-        Wed, 11 Dec 2024 14:49:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcUkofM6"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-723f37dd76cso4094b3a.0;
+        Wed, 11 Dec 2024 14:49:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733957371; x=1734562171; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bxVgYiLU2aeTmGBLQYgfiK7iXtWcPm1PqRPh7NBTzco=;
-        b=A77jva/iRclko3atfdcp9trYdzdoRqPG9s3DTzmPHLR1KHm3lL5mn7zXPkXfbWj1D0
-         0cB4cLlnMEBj+mom3+OF9Ifq4sZ1boupn6pa4QiC9TiLKKkIOm55Hn5NkerHYd2cRd2U
-         fpHcdGpUHmN8KVmGMtEYlbdZJctQuuvMaIF/Ah205liD7kslSXuRfy77vj8kGaHHs+iK
-         xlGP+W47VH8pFwawhHaHRukQA+ITLNOE3qCWj3aIYGIPvEHv2pjLy0nUjgg965CYSLLr
-         fa8SomHoTW3tnbw9cs6q9zl3cK7szNNt87xkIbmHuJE6rae2BZI7MaljdGGjraPWaJdh
-         P2rA==
+        d=gmail.com; s=20230601; t=1733957372; x=1734562172; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kAxjdlgYD2vkmT2lI1SrqlCCz/PrWeYd+uEyvzz+ZB4=;
+        b=mcUkofM6M45JgoDNHjxLBRPD1GctEYl63BxlIjRvjyGZGYmFu1i7FIcLzdXYwpAIou
+         2avTDzIABOp8tIb0jYYLruMScM8S4uwWCQWtTussIbl9tqteI5HY84/inqh4y0QrmhvU
+         DNq5nKXI7m9GqMXPfW/ZVUdyPFFZYdxOJkVA9kdjF8MSPrYygMD2y1qnoi7LSIgrQMAC
+         9o2xwldcJ7cep7auVLIGtdEPEpg6r/WJRlNWlLuYfKginr7GpKvDpxZJA9SmfjuzgChj
+         44tmwnusfPEWjYkUbgCWGpP/gshGswD0boN5aPDKWeabwHMaJ80SsPDif8w3IgfhJ/3q
+         XVuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733957371; x=1734562171;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bxVgYiLU2aeTmGBLQYgfiK7iXtWcPm1PqRPh7NBTzco=;
-        b=uibzreUZaYSYlZouzK3crp3eL7VhUVOvtAj8nbcdE7AWlKTLk5HtFwoXsCxt4uzEsg
-         ry3am6j/+Ny+B3U+t106J11206SUwc/R6gg3DwAleXTjf+fgH2qnC2roV+2GRY0hIVAe
-         DxodSLym81jZAeh17azkvPnArFTbuBmRIWFAT9+58yFnQFEgWViMUKJl3OK6CY327hg6
-         buHuRFWRHDNX2kjhHy5Zruzl4zmEcZQC4tFyNbCxl9dh8sUo4KNasvlL4mr6BHDrSAY8
-         LHJ6L2m+OP7gp7bR5SUyr1+SLg2zz4lxoRG3BI+qCXynQ4Cv34pltmZVuxXprnawgJFN
-         BKeg==
-X-Forwarded-Encrypted: i=1; AJvYcCWs9H9iKzfj4oCx1JPu6LyaRIN/ax2rYoX52RHVy+7lJPpKOH6v8r558pbmlrJaI3l1JhHPHvPBsly2G0LmaDhm8A==@vger.kernel.org, AJvYcCXjyBnQmII+IG1ZowYtpHFHtkjooXmdHUrsF5+phqqPWFzb9gsMjoFICaFx6zdMN3glTunyK/cZPUx1ovY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwT451w4B4bI11Wdesrjy+IWihNkeabzB6wLBceva2U6Ml5mcxG
-	8TPwBNHrE4lvwB0Zpsr4VCraVwREoRSPxLMGvCLQIw6GGXgRLT6T
-X-Gm-Gg: ASbGncuLxtURQcmpRqvGVgGfv4FSYTw3qUkwNY343ozw7D+jlkYQo35bWrY1kXjUvmp
-	lO/eD0UlHiBynlYYzm2a4evWUj3hqDsortLXpXovvvT7OuchgOVSKKVjwobhp2PwzxIBzdGGjnu
-	JFp0OLRUNih3CxHmB6KnQfnM3VYXiG3VsvEuAg2Agd/a/3cWTjdnz4GFeBtu0rc6hTZHq+v0Buj
-	U6Q4rKZ8sGiQ9t0WDAKZqXlw+kXKGhXAbG7MQJ1FfLDsvO3pAYEJG+dPdIU1kszy7oJN2tuqn1i
-	LDXdPH6PbWXB
-X-Google-Smtp-Source: AGHT+IHikvdlrMEHrPyv/vfKfCBciw4qtl8yTdM4fMULnRZx0k/+XNygDj0i6tZk0a84jKR6Zlvgbw==
-X-Received: by 2002:a05:6a00:895:b0:714:15ff:a2a4 with SMTP id d2e1a72fcca58-728faa2a486mr1390945b3a.13.1733957370752;
-        Wed, 11 Dec 2024 14:49:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733957372; x=1734562172;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kAxjdlgYD2vkmT2lI1SrqlCCz/PrWeYd+uEyvzz+ZB4=;
+        b=aq1Mv324FE1PG9ZCHjPWYKQRLGQfdaWeXpaFpAG862DAyGhPRYTsdjfKygKpSCCpaW
+         oD7gkW64ML9wLT3huK5QJ+MTvqyZS8MTfSLC+Oicwycmz7PWf1SPxvZXcmWiFlWypfPt
+         ZywR3R9Bt65onRTHca8Bcn8R9d/rAH5/UeZyZOfCt4S+iGsrU2yZw9Z2i4XjwJ+9XYpp
+         OCl1kqdUoCaHphFnwpr9hpyXXxtjbSu4g8nQvC6zEv9RGrvZaj+WKX296N7QQ2LmVldI
+         sVr+eq9Tf21JSlZ0F569KAUqiJkjL7eMn9p19r+FR64FPHfH0/HzVtUpiQ+PYhIXQ+9i
+         XRgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSbQyYl0DfSBPEpBXu9CRHEAgtDl5YWr/pT3qsN3IZUfs6LzcMuxWVN8z3NTce4O/bixHoUNeSIXg+efXdvq0ZOg==@vger.kernel.org, AJvYcCXRTZC9Pn9agJsSGyDL557uiCTI75pvEwzvbBgPZ/Ufx/5Oxhf/K92KPHcSCSvL7AwsGJbgjMFdUT4Muxk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPkfuWjegmZo0mVkeF4F+0K8dlVzQokIAqFw3Yjk02vRfMldUz
+	mZdemHrt25VmLAkuWW6Ga2Lny8Vzm2/sdSTFNhscsAB2PRzFpfkP
+X-Gm-Gg: ASbGncsATICtGY3eZtnXIKsSLJek9IHdCwkdVhGmwwJv+jlClG/1AlLB7f0/DTG6aUi
+	JgGsWaorBZjQIKERrkzGQiQJu4puNwhAgt92IDyaueD8phMs/AQFkfiU8MIsFOFThOBehQH67RQ
+	xHGY+NxAJxSXpFTK/z4Z7Wsz+6NnDPvNTCGUfZozwBpvoCXkCrcahDCnydiO5weuXjFsGN0Cuc6
+	IdVWHBKZCmfTmJ3jrXPgrVkUSDo9wOGCV+RBCOLy040IuBERlEB+yafIkP+00jDsHwmZekR6d7m
+	40fZicjEICKy
+X-Google-Smtp-Source: AGHT+IHCF4bzmMDL29xQEbRKwsmW6SIgMJ4OBIJ/rCuoMCCynFO7qAIqmcW1tGjdPybyDJMcarpKYg==
+X-Received: by 2002:a05:6a00:92a6:b0:727:3cd0:1145 with SMTP id d2e1a72fcca58-728fa9a8139mr1517333b3a.2.1733957372157;
+        Wed, 11 Dec 2024 14:49:32 -0800 (PST)
 Received: from mbp.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-728e2520144sm3430506b3a.116.2024.12.11.14.49.29
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-728e2520144sm3430506b3a.116.2024.12.11.14.49.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2024 14:49:30 -0800 (PST)
+        Wed, 11 Dec 2024 14:49:31 -0800 (PST)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: namhyung@kernel.org,
@@ -67,10 +69,12 @@ Cc: namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v3 0/2] perf trace: Add more tests for BTF-augmented perf trace
-Date: Wed, 11 Dec 2024 14:49:25 -0800
-Message-ID: <20241211224927.968483-1-howardchu95@gmail.com>
+Subject: [PATCH v3 1/2] perf trace: Add tests for BTF general augmentation
+Date: Wed, 11 Dec 2024 14:49:26 -0800
+Message-ID: <20241211224927.968483-2-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241211224927.968483-1-howardchu95@gmail.com>
+References: <20241211224927.968483-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -79,30 +83,119 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes in v3:
- - Add vmlinux BTF check, and skip the tests if it doesn't exist
+Currently, we only have perf trace augmentation tests for enum
+arguments. This patch adds tests for more general syscall arguments,
+such as struct pointers, strings, and buffers.
 
-v1, v2:
+These tests utilize the perf config system to configure the perf trace
+output, as suggested by Arnaldo Carvalho de Melo <acme@kernel.org>
 
-The previous version of the perf trace BTF general augmentation tests
-didn't pass Shellcheck (thanks to Arnaldo Carvalho de Melo
-<acme@kernel.org> for pointing this out), this version uses bash instead
-of POSIX shell to pass Shellcheck.
-
-This patch series also adds documentation for the new option
---force-btf, which is used in the tests.
-
-Link: https://lore.kernel.org/linux-perf-users/Zt9yiQq-n-W6I274@x1/
-
-Howard Chu (2):
-  perf trace: Add tests for BTF general augmentation
-  perf docs: Add documentation for --force-btf option
-
- tools/perf/Documentation/perf-trace.txt     |  5 ++
+Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
+---
  tools/perf/tests/shell/trace_btf_general.sh | 93 +++++++++++++++++++++
- 2 files changed, 98 insertions(+)
+ 1 file changed, 93 insertions(+)
  create mode 100755 tools/perf/tests/shell/trace_btf_general.sh
 
+diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
+new file mode 100755
+index 000000000000..bef07bad42bb
+--- /dev/null
++++ b/tools/perf/tests/shell/trace_btf_general.sh
+@@ -0,0 +1,93 @@
++#!/bin/bash
++# perf trace BTF general tests
++# SPDX-License-Identifier: GPL-2.0
++
++err=0
++set -e
++
++. "$(dirname $0)"/lib/probe.sh
++
++file1=$(mktemp /tmp/file1_XXXX)
++file2=$(echo $file1 | sed 's/file1/file2/g')
++
++buffer="buffer content"
++perf_config_tmp=$(mktemp /tmp/.perfconfig_XXXXX)
++
++trap cleanup EXIT TERM INT HUP
++
++check_vmlinux() {
++  echo "Checking if vmlinux BTF exists"
++  if ! ls /sys/kernel/btf/vmlinux 1>/dev/null 2>&1
++  then
++    echo "Skipped due to missing vmlinux BTF"
++    err=2
++  fi
++}
++
++trace_test_string() {
++  echo "Testing perf trace's string augmentation"
++  if ! perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1 | \
++    grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
++  then
++    echo "String augmentation test failed"
++    err=1
++  fi
++}
++
++trace_test_buffer() {
++  echo "Testing perf trace's buffer augmentation"
++  # echo will insert a newline (\10) at the end of the buffer
++  if ! perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1 | \
++    grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
++  then
++    echo "Buffer augmentation test failed"
++    err=1
++  fi
++}
++
++trace_test_struct_btf() {
++  echo "Testing perf trace's struct augmentation"
++  if ! perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1 | \
++    grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
++  then
++    echo "BTF struct augmentation test failed"
++    err=1
++  fi
++}
++
++cleanup() {
++  rm -rf ${file1} ${file2} ${perf_config_tmp}
++}
++
++trap_cleanup() {
++  echo "Unexpected signal in ${FUNCNAME[1]}"
++  cleanup
++  exit 1
++}
++
++# don't overwrite user's perf config
++trace_config() {
++  export PERF_CONFIG=${perf_config_tmp}
++  perf config trace.show_arg_names=false trace.show_duration=false \
++    trace.show_timestamp=false trace.args_alignment=0
++}
++
++skip_if_no_perf_trace || exit 2
++
++check_vmlinux
++
++trace_config
++
++trace_test_string
++
++if [ $err = 0 ]; then
++  trace_test_buffer
++fi
++
++if [ $err = 0 ]; then
++  trace_test_struct_btf
++fi
++
++cleanup
++
++exit $err
 -- 
 2.43.0
 
