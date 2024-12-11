@@ -1,81 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4C520C494;
-	Wed, 11 Dec 2024 22:33:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BA944384;
+	Wed, 11 Dec 2024 22:45:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733956386; cv=none; b=rmehXZcEJJUwGwPR/w3O64m19XYEa8DOgfrQ+eyjT4f3BN9waZhCTX8aJfwfEr2QC8JTetWy9r3plh/Xe7FK7tR95qShFiu5GEp59rjCv6RKTS2AzVUQU0BzB1YpiRNKQ0+MCw3PINe1swj8Ko6jiigVcf73/gB+egJVCFFpmII=
+	t=1733957117; cv=none; b=YnM/ZWzGGwUWUlzPaosKUgCTRnmSuF47bkGdNkLWskOoNfMHYwCraifS1hL9Hxw8YnZmZ8rk8etPCebak4Hopr5m3GUsVlllcf9KZ+mlR3UGE+t0kJ86B+XHe745ZXzMUTnchmJ/JfXRnSl5yVKxUue2NkaEogat5BMyRUqPCz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733956386; c=relaxed/simple;
-	bh=BQx5g38MiMqbRkVexhZZjvYaNed5OXR/zfHMkJHDPQc=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=AlNAQkC4P8jDGFPAX4LuYn0D9TqvAbqKBor/Rjs004vKbPKAIY4eKT2ZGzo/rY0WDOLArn3LIx5+ls9BQuXcl8Ug7LP8m9mVAIBFKHVk1Ukk22Gk8hvBJjFbC2OIDWVSmepO25402CKLpbpmgsA0q6g9zKA//MvgAzaqXGi23lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inlR6bAm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733957117; c=relaxed/simple;
+	bh=pmg1q8xAHu4vdAF64Hv/368zxAhYuswQ0neb07a7oUk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iMM8K1z1E8+ngfIhOo1uUwdCLMfw4QeG52ib1DVAUrdwVfgyqXY6nYJw/zNMy1S4yeVf3Fhzm8nMn07kVolTsuNPJxhbDW+tgjxZBHt988Y0TOutNgK6l7cjfkTHP3PmlJAIafgaK0kotpi0ZTzOEqFzTxPiqSifwzWTaXw/k6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XUro13si; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inlR6bAm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1CB6C4CED2;
-	Wed, 11 Dec 2024 22:33:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XUro13si"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AC56C4CED2;
+	Wed, 11 Dec 2024 22:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733956385;
-	bh=BQx5g38MiMqbRkVexhZZjvYaNed5OXR/zfHMkJHDPQc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=inlR6bAm7WQYJIQEmpSkRhblsgJZHnayLs4YjKOF+R1EchCBO/2+6ACaOBekxCOke
-	 LAAZmH5uSnKupJdGy/u9N17XWtnr7hvZroeu7sbD83rh7qy3rEKoDQRdDGG0/Agfmq
-	 6PMrzuEXRAjB5pSRZFc/oKSIL+1IbsLpMhwByfWt3h4KjoJDYJGBmgGDO64c2dsLqb
-	 v4fPf7RVPXRcb+Oz0GH5sAh+uiT9oT6swGnR1DKOPLILa0m2uoDikkwbEiNc8LTSLB
-	 LKWX4SR9SL1sW74acq+eCy0QZLomZN8OEDnHaYDDKbdXbCL/Ycug8vrlbaoXm06gY8
-	 tRyC/PdTnFHwA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE05380A965;
-	Wed, 11 Dec 2024 22:33:22 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1733957116;
+	bh=pmg1q8xAHu4vdAF64Hv/368zxAhYuswQ0neb07a7oUk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XUro13siAleu8Ph9MS7zrk3u+XFCpNK77Ee3S/Rm9nGWP+Uvz+dZah/8r06DY1BG2
+	 82dtKSBDUrlY8zsSSUS4b34uX0wjyfu8PduZplz/mGlRu6yiS9xfyDoIOmVVFxzS4/
+	 g5EI+/2rWmWSZbckJRELI8B7uXnba31F+ykAizeOkI0aAqThxBrUy063wPpqYF+jzO
+	 x6enX/alg0Ao/oznlUyhhp4AJgaScAAnBZn+fmAlcBfzrphsq9llifJlhluc8gDeYt
+	 hz4Ac4X83ZiasEId9EC9d25CLHS1cXpcn1PgBDvG+VpgEpa9u3DqRpuJviHPmAIRH3
+	 j73xUTJhRXdVw==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Quentin Monnet <qmo@kernel.org>
+Subject: [PATCH 0/2] Fast path feature detection fixes
+Date: Wed, 11 Dec 2024 19:45:07 -0300
+Message-ID: <20241211224509.797827-1-acme@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] perf, riscv: Wire up perf trace support for RISC-V
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <173395640149.1729195.11467040098314252452.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Dec 2024 22:33:21 +0000
-References: <20241024190353.46737-1-bjorn@kernel.org>
-In-Reply-To: <20241024190353.46737-1-bjorn@kernel.org>
-To: =?utf-8?b?QmrDtnJuIFTDtnBlbCA8Ympvcm5Aa2VybmVsLm9yZz4=?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
-Cc: linux-riscv@lists.infradead.org, peterz@infradead.org, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- bjorn@rivosinc.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, anup@brainfault.org, atishp@rivosinc.com
 
-Hello:
+Hi,
 
-This patch was applied to riscv/linux.git (fixes)
-by Namhyung Kim <namhyung@kernel.org>:
+	This is on top of a previous patch I sent today for libunwind
+opt-in fallout, I'll continue checking if what is being enabled when
+test-all.c builds is the right set of features to be declared as
+detected on this fast path method.
 
-On Thu, 24 Oct 2024 12:03:51 -0700 you wrote:
-> From: Björn Töpel <bjorn@rivosinc.com>
-> 
-> RISC-V does not currently support perf trace, since the system call
-> table is not generated.
-> 
-> Perform the copy/paste exercise, wiring up RISC-V system call table
-> generation.
-> 
-> [...]
+- Arnaldo
 
-Here is the summary with links:
-  - perf, riscv: Wire up perf trace support for RISC-V
-    https://git.kernel.org/riscv/c/8c0d1202bad3
+Arnaldo Carvalho de Melo (2):
+  tools build feature: Add some comments to explain the FEATURE_TESTS logic
+  tools build feature: Don't set feature-libcap=1 if libcap-devel isn't available
 
-You are awesome, thank you!
+ tools/build/Makefile.feature | 37 ++++++++++++++++++++++++++++++++++--
+ tools/build/feature/Makefile |  2 +-
+ 2 files changed, 36 insertions(+), 3 deletions(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.47.0
 
