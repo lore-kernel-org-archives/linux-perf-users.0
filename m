@@ -1,182 +1,184 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B049B199E89;
-	Wed, 11 Dec 2024 14:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3771D63C8;
+	Wed, 11 Dec 2024 15:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733928843; cv=none; b=nI4zG3uiPBL6qcz3g5jnVdKrRKJhJmQoKEVdQk5pAHCROkYYoqsM7zGWO2pm5qzP0i0vmoXILY5StTD4dd4RXJjIdUxEzhfvZfGMXVLtaOpOkiQ5MF+pIbtI2a8vVmr7lQZUfVaA6+8MY1z2P2bq4pctmRvXDdty+2KlAQOO2kw=
+	t=1733929524; cv=none; b=tcgJLy6rSyv/RBkVXqd6224W3obP4TYB1ZSQLYQyYXlTdhxGpNDfwModSDzIW1Kn/pKuewfkdhTC3VQzJwk85aFDp1anjD+G/yEnXB4+AV4V7eBYHSaK48DIxEL2U+4sWFd7ODucVedwydTzcJ84psKPI6W3U+iw7e2GTjgNmp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733928843; c=relaxed/simple;
-	bh=EsdWYItaDbv6MpANJlsjKfpBA98nwzifcsQrBKHC2KM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RYBPtS6LWMCMoHO9NcQ2rmHPdq7xPXJECyAk2PCynu6DNhow0wMduJXNsz5ryrjIDJKwzqHwoyC7hskgJ1JcE5k6WlyTucikTP9hpAb87VWSCHoNnsk0qIfsZ1kiLNRg6upgFTHCFlFV9ROiC0uzQCd9787cENu4dp9Lk0nSyLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MdIF3ycy; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1733929524; c=relaxed/simple;
+	bh=zBAP9mh8OPUKcmyV9VNqiPkVz3ps9OJpez4j8qjPT2A=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cONqVQ0lmjB+9c2xHDEY9BpQ6kDggleOZrJGXU39lX1iNkXpSgzmDJIYHYXV43nc75MaGSEGi54obcnA9+jNAnb7synqWbzAJ/gIOdNcxgsmxhtF+BMOxyaAgOyX7BZqZ+OwJPXe1NiyBnZdgMUzc1wivnbRrFTUajQNSpP4URY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YkKLyBHz; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MdIF3ycy"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BBBxlSA006028;
-	Wed, 11 Dec 2024 14:53:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=sZ+Iop
-	A4yI8kINnVSPAUU6Ni8euaYM3axdVMOUtClZg=; b=MdIF3ycygfusMzU220qs47
-	U8KzrEeU4+JC11N5dlLdhDVsqHv2s+obYgBRtUZhCyzX4u5tQxR4LChuvKAiTxw6
-	4e+q6+0ZYUq+oo+ajPaJknlkNYV1NtR1j4aERZYZ14+9oirOz4gkb0xqIfJUqtl5
-	GXF/EZkPYaBpvNsT9U+dbfwh7ANhpUhgZx3CEJAJdJRuiUEAUEVTm0tK/8lATY+J
-	qYwJ43ikGbHHp6R/qhJZu4hUgSFa58hM/OAh3KruVkmD2jSj5sBvRqeJDbg3VtT/
-	99snkrATbWIuBkoVaASEGQcopxa6pjCjJBPuRbW6mYx7wqEZJnQNY/MqoBAxfTRA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43ce1vwy6j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Dec 2024 14:53:34 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4BBElXti032718;
-	Wed, 11 Dec 2024 14:53:33 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43ce1vwy6f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Dec 2024 14:53:33 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BBEIIPE023015;
-	Wed, 11 Dec 2024 14:53:32 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 43d2wk1qvy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Dec 2024 14:53:32 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BBErSxS47776134
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 11 Dec 2024 14:53:28 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F3DC82004B;
-	Wed, 11 Dec 2024 14:53:27 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 64DF320043;
-	Wed, 11 Dec 2024 14:53:27 +0000 (GMT)
-Received: from [9.152.222.93] (unknown [9.152.222.93])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 11 Dec 2024 14:53:27 +0000 (GMT)
-Message-ID: <c74dc535-a09d-48bc-816e-7e465211fa64@linux.ibm.com>
-Date: Wed, 11 Dec 2024 15:53:26 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkKLyBHz"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aa6a92f863cso332853266b.1;
+        Wed, 11 Dec 2024 07:05:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733929519; x=1734534319; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fmuSRYRsN+CVodQCjU4cJzoXt2OifyhdBUg+LTTXX5I=;
+        b=YkKLyBHzwIIjh1ID1+J7E3MIvvgO96Aq+MemS2iP1KZhSLIcFNvK7lI0q1+t082izp
+         7AePbFVCdFkawO3c690HdLLGzmUNQS+xSeDjCOr5YJ4pU/SkpOj2guuqr+VAiRPicftH
+         uRIAwMTlkeogxyo+AftkKrubTLnxLDKGDgGMk0bUbaBCi2q1wL8Zjiyuamq9xdj5xs96
+         /fiAXZZgq2NvsAaLxLQIX3v8xL+7X/hUnRQPrjCdPx0rZIIcPLN4yFc73aBl+XTsQZhf
+         K6WDwDAQ80Z7CSopyj1uKAd7+sguUFlX32z+Difqqvbt5306GzQmmN7D8dEVi6mh1AH3
+         gigA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733929519; x=1734534319;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fmuSRYRsN+CVodQCjU4cJzoXt2OifyhdBUg+LTTXX5I=;
+        b=pFEVzNDrp1OsI8L+Iq22kJ6PIfmP8ElWJOEGZblD8fL7tfy6blNm1zvLocAq7E3rqu
+         gnoZZVGT9nOPVvKmoE6E6QmDtRL8NDSQK5uWsXJEk9ScJx6mentwUan1K9I/JdmkrYam
+         uaoonPB7tmPISjPlYugBPxJzZCh47QazPDtYE/Voljz3aKXO7ks04X+RVqb4mfDdkbFO
+         2KrjsNgRhxUZlNODcoDLqwa5dOXeW8S9jpjTaleGYMU+oYgKLzp+6JH5evOH0mhuwQxy
+         jEO1yd5c8V1N1kel0Sk8zzFiHSVaL0PkDv4yx4MHAoK7+cKDhruZzCN7LusJ+Who0sTg
+         wJHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVCH4barhEG5FzVA/96mJCehF4M2LiX5vx52aqtQqtEt3//Kk0srgS43tfKfvlIwrAn+8GZbTq8WZsbpnn@vger.kernel.org, AJvYcCXnyZ41EQQaZY1EsDDmsf7ha8YsW+OsRGyqQmud/nvE6mNF539de3qGsMIh4zOe2n6G5hsQzVHJU/dQm+oRG0DVHQ==@vger.kernel.org, AJvYcCXrIyz9PhELvU9TLnwnuOinFP1Fq2buOmtLMj6QC3YLU73hfQ20Bx6JpkLTEoqRxhG6rNw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq9Cmef8dHYeEFpbRycTqhbrUDfkY7NNKQkSql0kxtDh9ulCi/
+	D8dpUef8hIozDVzjojT9BFmYBkRyzd/ohBNKnW9nrFkX1TCmEy2y
+X-Gm-Gg: ASbGncsqBnb2IvivxbFzC94f7RYrbhohA1nn/59dcabdw6ehqNUS23xtc96iqeNnMJk
+	HUb6CBMFmwUDjZrWzIRxjdzRksT1OjCnKkEmHP/tdeCCdOM8oj9HLewEwUafbOwEp0bbr6wWnbQ
+	1xTa/LKriTiCjt52ckt9K/o6pWVlph52pCa1RmLYv3fLStoYcdh9es3lPFJGrDblmPDtHH+QWee
+	XoGa22FXQ7cP2RPnXR7k3n8OBuBPAs1y78mcsb2ZIIA7ErR46oNSHLy1qpHgfINK6zXQ0m/09Tc
+	DZcz8N1+GCiYqI8N3hG9sMZYRjc=
+X-Google-Smtp-Source: AGHT+IFLqy5ye4iT4eGtn9cgCHM7T7Xqhx1toNYhHYc9h0YsfMhXBP1rDtSH6hw3JVfTojL6m1mg1A==
+X-Received: by 2002:a17:907:3a18:b0:aa6:6e10:61f1 with SMTP id a640c23a62f3a-aa6b10f56d7mr267950166b.1.1733929516706;
+        Wed, 11 Dec 2024 07:05:16 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa6a3dcbcc2sm260913266b.117.2024.12.11.07.05.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2024 07:05:16 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 11 Dec 2024 16:05:14 +0100
+To: Leo Yan <leo.yan@arm.com>
+Cc: Quentin Monnet <qmo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Nick Terrell <terrelln@fb.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Guilherme Amadio <amadio@gentoo.org>, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] tools build: Add feature test for libelf with ZSTD
+Message-ID: <Z1mqKpXBcl303IDY@krava>
+References: <20241211093114.263742-1-leo.yan@arm.com>
+ <20241211093114.263742-2-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/19] unwind: Add user space unwinding API
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kerne.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
- <f89a9137e983902f22611e5379606062a64b2382.1730150953.git.jpoimboe@kernel.org>
- <978a9ecd-47e9-442b-8daa-aee8f3d93dbb@linux.ibm.com>
- <20241209205458.vzwkh3ubch5sx5c7@jpoimboe>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20241209205458.vzwkh3ubch5sx5c7@jpoimboe>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ThWuWFgKpZIZrFlAjEK9-oZRgBM8WVcv
-X-Proofpoint-ORIG-GUID: 9nDJ2rh3r0Dv2SQrziE9E-0XYILoEpYA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 bulkscore=0 mlxlogscore=977
- impostorscore=0 spamscore=0 malwarescore=0 suspectscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412110105
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241211093114.263742-2-leo.yan@arm.com>
 
-On 09.12.2024 21:54, Josh Poimboeuf wrote:
-> On Fri, Dec 06, 2024 at 11:29:21AM +0100, Jens Remus wrote:
->> On 28.10.2024 22:47, Josh Poimboeuf wrote:
->>> +	if (ra == prev_ip)
->>> +		goto the_end;
->>
->> This seems too restrictive to me, as it effectively prevents
->> unwinding from recursive functions, e.g. Glibc internal merge sort
->> msort_with_tmp():
->>
->> $ perf record -F 9999 --call-graph fp /usr/bin/objdump -wdWF /usr/bin/objdump
->> $ perf script
->> ...
->> objdump    8314 236064.515562:     100010 task-clock:ppp:
->>                   100630a compare_symbols+0x2a (/usr/bin/objdump)
->>               3ffb9e58e7c msort_with_tmp.part.0+0x15c (/usr/lib64/libc.so.6)
->>               3ffb9e58d76 msort_with_tmp.part.0+0x56 (/usr/lib64/libc.so.6)
->> [unwinding unexpectedly stops]
->>
->> Would it be an option to only stop unwinding if both the IP and SP do
->> not change?
->>
->> if (sp == prev_sp && ra == prev_ra)
->> 	gote the_end;
+On Wed, Dec 11, 2024 at 09:31:12AM +0000, Leo Yan wrote:
+> Add a test for checking if libelf supports ZSTD compress algorithm.
 > 
-> Good point, I've already fixed that for the next version (not yet
-> posted).  I believe the only thing we really need to check here is that
-> the unwind is heading in the right direction:
+> The macro ELFCOMPRESS_ZSTD is defined for the algorithm, pass it as an
+> argument to the elf_compress() function.  If the build succeeds, it
+> means the feature is supported.
 > 
-> if (cfa <= state->sp)
-> 	goto the_end;
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-Assuming the x86 definition of the CFA (CFA == SP at call site) this
-translates into:
+lgtm
 
-if (sp <= state->sp)
-	goto the_end;
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-That won't work for architectures that pass the return address in a
-register instead of on the stack, such as s390. At least in the
-topmost frame the unwound SP may be unchanged. For instance when in
-the function prologue or when in a leaf function.
+jirka
 
-One of my patches for s390 support introduces a state->first flag,
-indicating whether it is the topmost user space frame. Using that
-your check could be extended to:
-
-if ((state->first && sp < state->sp) || (!state->first && sp <= state->sp))
-	goto the_end;
-
-Which could be simplified to:
-
-if (sp <= state->sp - state->first)
-	goto the_end;
-
-Btw. neither would work for architectures with an upwards-growing
-stack, such as hppa. Not sure if that needs to be considered.
-
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303) and z/VSE Support
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+> ---
+>  tools/build/Makefile.feature           | 1 +
+>  tools/build/feature/Makefile           | 4 ++++
+>  tools/build/feature/test-all.c         | 4 ++++
+>  tools/build/feature/test-libelf-zstd.c | 9 +++++++++
+>  4 files changed, 18 insertions(+)
+>  create mode 100644 tools/build/feature/test-libelf-zstd.c
+> 
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index bca47d136f05..b2884bc23775 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -43,6 +43,7 @@ FEATURE_TESTS_BASIC :=                  \
+>          libelf-getphdrnum               \
+>          libelf-gelf_getnote             \
+>          libelf-getshdrstrndx            \
+> +        libelf-zstd                     \
+>          libnuma                         \
+>          numa_num_possible_cpus          \
+>          libperl                         \
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 043dfd00fce7..f12b89103d7a 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -28,6 +28,7 @@ FILES=                                          \
+>           test-libelf-getphdrnum.bin             \
+>           test-libelf-gelf_getnote.bin           \
+>           test-libelf-getshdrstrndx.bin          \
+> +         test-libelf-zstd.bin                   \
+>           test-libdebuginfod.bin                 \
+>           test-libnuma.bin                       \
+>           test-numa_num_possible_cpus.bin        \
+> @@ -196,6 +197,9 @@ $(OUTPUT)test-libelf-gelf_getnote.bin:
+>  $(OUTPUT)test-libelf-getshdrstrndx.bin:
+>  	$(BUILD) -lelf
+>  
+> +$(OUTPUT)test-libelf-zstd.bin:
+> +	$(BUILD) -lelf -lz -lzstd
+> +
+>  $(OUTPUT)test-libdebuginfod.bin:
+>  	$(BUILD) -ldebuginfod
+>  
+> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+> index 80ac297f8196..67125f967860 100644
+> --- a/tools/build/feature/test-all.c
+> +++ b/tools/build/feature/test-all.c
+> @@ -58,6 +58,10 @@
+>  # include "test-libelf-getshdrstrndx.c"
+>  #undef main
+>  
+> +#define main main_test_libelf_zstd
+> +# include "test-libelf-zstd.c"
+> +#undef main
+> +
+>  #define main main_test_libslang
+>  # include "test-libslang.c"
+>  #undef main
+> diff --git a/tools/build/feature/test-libelf-zstd.c b/tools/build/feature/test-libelf-zstd.c
+> new file mode 100644
+> index 000000000000..a1324a1db3bb
+> --- /dev/null
+> +++ b/tools/build/feature/test-libelf-zstd.c
+> @@ -0,0 +1,9 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <stddef.h>
+> +#include <libelf.h>
+> +
+> +int main(void)
+> +{
+> +	elf_compress(NULL, ELFCOMPRESS_ZSTD, 0);
+> +	return 0;
+> +}
+> -- 
+> 2.34.1
+> 
