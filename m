@@ -1,147 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287A1204F82
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2024 20:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B4E1C1F22;
+	Wed, 11 Dec 2024 22:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733950082; cv=none; b=qDRmK6YwepTB218eLNpag+/2FzaeM5BQTLA5K1yq/smalLmA0/vkLTa/rTdGhiOwG4Ab7+IQfm97dP2WazozTS6QuDXAXq9uye6fwIrhce3S3DWND9gs4r9sdjtFEb16XwlDFhqlBKSz+QeOnhhHWBerBITSxl5IShmA+GAP57Y=
+	t=1733954425; cv=none; b=RCEDBQ3rtDrczCwU+Ru4DVSoTE5gAP95AfSJtprH4gqYRcUoYSqy71xlKpu5P8xkmZoN4MPOXEuKLsSWxULBIldaSRpuTdNOKwwHU/to9rEff5oK5IMOt4xgN/n2qwfsh9AJJnUAkD6YJm4E5ROa8CE2soauSXVaFWYLzaTvq9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733950082; c=relaxed/simple;
-	bh=G/8/dq16gyCSS5SuWXUnLrMaHCb3kTjkLGwv/jA1wj4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ayyPsi581QlfuGMR2yPMorD53ny2derMLNEZLIpEzwYQ05djd/5S2ZS3KjaU2ru079LiDCFJkJdXmwryyNxrqC2Dk5gntkAV6uun7jq+PAgJhXBqgXAfmlKs997tpva2AtVjAbdKNYRaOH/oEn3T3cZEZiNHy5sKPShgzBR/Bg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nudY4iUf; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1733954425; c=relaxed/simple;
+	bh=zVpZKbWs32DCAAa+NhyZzfy/nSJyPSbmcjjOe1UggJs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eLroJPimAbsaZZhOrnaYSk6Elmq37KO88573Kd7k84gzP8c1B+hRbs4aJqr6ncQvSUlLpfkwXaInhPrClO5iRRjxUBwWwTeC+30FllGWs0RSmWwD0C8hFiuwEB+qYiDgP1MmhUIATFPmFcweBbFXKIwLWyVX7/RCyg7GJF0gsGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LCR/oiRj; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nudY4iUf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733950080; x=1765486080;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=G/8/dq16gyCSS5SuWXUnLrMaHCb3kTjkLGwv/jA1wj4=;
-  b=nudY4iUf+K7E0E9MgH02mwmi9NDagXLd6b0HOmZsbiN9RUNyQMEe0OJo
-   exGdbwyRCQq/zhT6FTu09utI9MpYJ3S2Vfg2c40ykutbVyRu7EKLo0FEv
-   SJzZRjRjw1/V8MJ5Y7Owm9xdecIsGLNWjZl8bzVbo6AXQJ6FL3vRz2Z6x
-   qHVgyq/7CKOYMaryhiaX8GNOK9M1pwbSNN7HH0ng9OcHC9+srenA9wFyr
-   inFCFyP3oMZwi7Xn0YTgXG1VOWFajEBMoAjXnkRvJFA74ApCzqB6ntVKL
-   KI4e3TwW3U6WWF8MKIoUtAD9UwaGhs4m2vgqNcTR8KuTSRuT67IuG6Tw/
-   w==;
-X-CSE-ConnectionGUID: RaarmRShRZ2nKMbNzjHpXg==
-X-CSE-MsgGUID: pdomvSnfRjCSSdGtqvuNZg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11283"; a="37184876"
-X-IronPort-AV: E=Sophos;i="6.12,226,1728975600"; 
-   d="scan'208";a="37184876"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 12:47:59 -0800
-X-CSE-ConnectionGUID: /WNTQHkbSXid/Gg6csdeXg==
-X-CSE-MsgGUID: n8j/C4vlRMu3Ko6bLeSWdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,226,1728975600"; 
-   d="scan'208";a="96332274"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 12:47:59 -0800
-Received: from [10.246.136.4] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.4])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id B299520B5703;
-	Wed, 11 Dec 2024 12:47:58 -0800 (PST)
-Message-ID: <d071b641-b62a-4f9e-8ce3-eacbe77a62a5@linux.intel.com>
-Date: Wed, 11 Dec 2024 15:47:57 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCR/oiRj"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ef760a1001so4656392a91.0;
+        Wed, 11 Dec 2024 14:00:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733954423; x=1734559223; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0JGH/B9D7zR5mhZlgnOVlQ3Ron7J43KUmelywXNDFWQ=;
+        b=LCR/oiRj4bYdNeV5kIbTRc0wG1gyEiU7Uldo5pdtY9CVlXx39y3H2U2UJbMzM8+rLx
+         c9/lYtcsGKITFdplhpMibl+mOAFP93DCQctQeqyH9UVnF+ox66uu3zPPtJ3f5U9EnvlR
+         wV8JYjp+qKsLdeDGjPSpMI43i+YXIJSIxOQqvAyq8sjc8lMNAWIxvZPbQgG4/BXBCKdx
+         utIc6WpKHF42cfnNwQkcY0CEUaAhOrXmqRCOxk7mDwKVe4Sy5DTm5KdX3RB9YcQwgcps
+         QY5ipeFkfh9So58iU3FiFUUZ4Y5tgBPaF5vMZVSrJNcFs7E6PkXrYnwe35ZL3JT81w/G
+         8QBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733954423; x=1734559223;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0JGH/B9D7zR5mhZlgnOVlQ3Ron7J43KUmelywXNDFWQ=;
+        b=VSLloqoHVlU05vqzlGTTSk89KMlHJaNyWlS/G5g0DAfcpIXYaDdB5/ChffYp0tnSWL
+         gdaLU4gMXOP9vMY7oZweUOohM7M0KlfOTS4aBiZMqWePwctJ9v8adnRPs65stR3Xcg03
+         Re6Vm6v4uOzOlaZ66wOFtnSzNqvGLLYiGc3XEenmUC2d8FRRICj7f5Lrjr2JMSO7CHrR
+         +/dOhGdq1RBb2sYGleg6/b92VHiI4TC+EI3LzxEJV9pQCGtb4Si2GT1uLFI5M7AKIicv
+         3G9Bm5ewMBULx9X4rfLanvRbjlJt9evKsp/wYhHm2NiBnq8EnfXP/kaFXiOmhE0TvduC
+         c35g==
+X-Forwarded-Encrypted: i=1; AJvYcCUR7LaYTHRtnuQAC2Mj0W0B//AJ/Fcapqu+2zK46nNNUfi3seB+f1GygLC4Mxk/R/ED8ybN6ucXI4ElXewRhHj46Q==@vger.kernel.org, AJvYcCUSD+khMsaKq228DB+e27A3mlDFEpsV7wYR48W4YvM51SHwYN9OgLHCJAafcpzo1QfsazSFmkNYg8hlre8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5PTq9xbYmRBYqdY//R3WVCNeQKBLrC8NvGE1OfdeIxkgr8bYo
+	Sx2830hEd64IFe3AykPQuMorAsqOp9ySZ++6qzVaqDDBGGPJ2r2XwLoDHHLk
+X-Gm-Gg: ASbGncuTojiytYObil7ngM++Di9wBZ8h1+yiWsAuCD1NahcpvcGYV+cN1thmsYUHCTd
+	U5XOS8Uf0tPmlJpd/ugO4QlFG4np13D1b2PW3UWJ1zuYWT2WK/nADB4YhyeSlLYdhW+LXD7Yhi5
+	hNL8NA1AqjKGBWzJwg8dXkVuqiaUYUN0FYO/6oK+twwARHoGnK9oP/C7FLmkk/YH9B4s3kgHym5
+	gLXQSfRzHqli4mPJrNYwtYkbQ67cGVJUGcMXRKPSn09uA59xjIEBlq9XVdf98QdTVUDWHCjIo0O
+	aWICP2ZBnw==
+X-Google-Smtp-Source: AGHT+IFdetYwNbuEiA8NOSiM/Qo0SJ8IN5ep5wcobTX8niXWmx8CByxwQyMvLhNw/cconxG7Nh1c+A==
+X-Received: by 2002:a17:90b:4c84:b0:2ee:ee77:2263 with SMTP id 98e67ed59e1d1-2f127f50d18mr7897145a91.7.1733954423457;
+        Wed, 11 Dec 2024 14:00:23 -0800 (PST)
+Received: from mbp.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ef2700cccasm13912665a91.22.2024.12.11.14.00.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2024 14:00:23 -0800 (PST)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v10 00/10] perf record --off-cpu: Dump off-cpu samples directly
+Date: Wed, 11 Dec 2024 14:00:04 -0800
+Message-ID: <20241211220014.931479-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Update perf tools topdown documentation
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>, Andi Kleen <ak@linux.intel.com>,
- linux-perf-users@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>
-References: <20241210193554.93013-1-ak@linux.intel.com>
- <01513f7b-390c-4e2e-a6e8-54c268e8acf2@linaro.org>
- <c1e008c4-d2c2-4088-aad2-a86987099c35@linux.intel.com>
- <71775d41-bf73-48e3-b5a6-6bce46658931@linux.intel.com>
- <CAP-5=fVx8GukBdDNe0Ckb1oPBVwsG4A4xGvj1s9VARQC4k3Dow@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fVx8GukBdDNe0Ckb1oPBVwsG4A4xGvj1s9VARQC4k3Dow@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Changes in v10:
+ - Move the commit "perf record --off-cpu: Add --off-cpu-thresh option"
+   to where the direct sample feature is completed.
+ - Make --off-cpu-thresh use milliseconds as the unit.
+
+Changes in v9:
+ - Add documentation for the new option '--off-cpu-thresh', and include
+   an example of its usage in the commit message
+ - Set inherit in evsel__config() to prevent future modifications
+ - Support off-cpu sample data collected by perf before this patch series
+
+Changes in v8:
+ - Make this series bisectable
+ - Rename off_cpu_thresh to off_cpu_thresh_us and offcpu_thresh (in BPF)
+   to offcpu_thresh_ns for clarity
+ - Add commit messages to 'perf evsel: Expose evsel__is_offcpu_event()
+   for future use' commit
+ - Correct spelling mistakes in the commit message (s/is should be/should be/)
+ - Add kernel-doc comments to off_cpu_dump(), and comments to the empty
+   if block
+ - Add some comments to off-cpu test
+ - Delete an unused variable 'timestamp' in off_cpu_dump()
+
+Changes in v7:
+ - Make off-cpu event system-wide
+ - Use strtoull instead of strtoul
+ - Delete unused variable such as sample_id, and sample_type
+ - Use i as index to update BPF perf_event map
+ - MAX_OFFCPU_LEN 128 is too big, make it smaller.
+ - Delete some bound check as it's always guaranteed
+ - Do not set ip_pos in BPF
+ - Add a new field for storing stack traces in the tstamp map
+ - Dump the off-cpu sample directly or save it in the off_cpu map, not both
+ - Delete the sample_type_off_cpu check
+ - Use __set_off_cpu_sample() to parse samples instead of a two-pass parsing
+
+Changes in v6:
+ - Make patches bisectable
+
+Changes in v5:
+ - Delete unnecessary copy in BPF program
+ - Remove sample_embed from perf header, hard code off-cpu stuff instead
+ - Move evsel__is_offcpu_event() to evsel.h
+ - Minor changes to the test
+ - Edit some comments
+
+Changes in v4:
+ - Minimize the size of data output by perf_event_output()
+ - Keep only one off-cpu event
+ - Change off-cpu threshold's unit to microseconds
+ - Set a default off-cpu threshold
+ - Print the correct error message for the field 'embed' in perf data header
+
+Changes in v3:
+ - Add off-cpu-thresh argument
+ - Process direct off-cpu samples in post
+
+Changes in v2:
+ - Remove unnecessary comments.
+ - Rename function off_cpu_change_type to off_cpu_prepare_parse
+
+v1:
+
+As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=207323
+
+Currently, off-cpu samples are dumped when perf record is exiting. This
+results in off-cpu samples being after the regular samples. This patch
+series makes possible dumping off-cpu samples on-the-fly, directly into
+perf ring buffer. And it dispatches those samples to the correct format
+for perf.data consumers.
+
+Before:
+```
+     migration/0      21 [000] 27981.041319: 2944637851    cycles:P:  ffffffff90d2e8aa record_times+0xa ([kernel.kallsyms])
+            perf  770116 [001] 27981.041375:          1    cycles:P:  ffffffff90ee4960 event_function+0xf0 ([kernel.kallsyms])
+            perf  770116 [001] 27981.041377:          1    cycles:P:  ffffffff90c184b1 intel_bts_enable_local+0x31 ([kernel.kallsyms])
+            perf  770116 [001] 27981.041379:      51611    cycles:P:  ffffffff91a160b0 native_sched_clock+0x30 ([kernel.kallsyms])
+     migration/1      26 [001] 27981.041400: 4227682775    cycles:P:  ffffffff90d06a74 wakeup_preempt+0x44 ([kernel.kallsyms])
+     migration/2      32 [002] 27981.041477: 4159401534    cycles:P:  ffffffff90d11993 update_load_avg+0x63 ([kernel.kallsyms])
+
+sshd  708098 [000] 18446744069.414584:     286392 offcpu-time: 
+	    79a864f1c8bb ppoll+0x4b (/usr/lib/libc.so.6)
+	    585690935cca [unknown] (/usr/bin/sshd)
+```
+
+After:
+```
+            perf  774767 [003] 28178.033444:        497           cycles:P:  ffffffff91a160c3 native_sched_clock+0x43 ([kernel.kallsyms])
+            perf  774767 [003] 28178.033445:     399440           cycles:P:  ffffffff91c01f8d nmi_restore+0x25 ([kernel.kallsyms])
+         swapper       0 [001] 28178.036639:  376650973           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+         swapper       0 [003] 28178.182921:  348779378           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+    blueman-tray    1355 [000] 28178.627906:  100184571 offcpu-time: 
+	    7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
+	    7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
+	    7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-2.0.so.0.8000.2)
+	    7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.0.8000.2)
+	    7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
+	    7fff24e862d8 [unknown] ([unknown])
 
 
-On 2024-12-11 1:20 p.m., Ian Rogers wrote:
-> On Wed, Dec 11, 2024 at 8:07 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>> The RDPMC can automatically reset the perf metrics.
->>> Maybe change it to "automatically resetting the perf metrics RDPMC"
->>>
->>
->> The new post can be found at
->> https://lore.kernel.org/lkml/20241211160318.235056-2-kan.liang@linux.intel.com/
->>
->> I also added the reviewed-by in the new patch.
->>
->> Please let me know if there are more comments.
-> 
-> Hi Kan,
-> 
-> Vince Weaver posted to the list a related question on topdown + rdpmc + hybrid:
-> https://lore.kernel.org/linux-perf-users/b0b0ae91-785e-64f6-348a-ca6edd448b74@maine.edu/
-> The topic of being rescheduled isn't part of the rdpmc documentation:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/include/uapi/linux/perf_event.h?h=perf-tools-next#n610
-
-Maybe we should emphasis that the example in the documentation is only
-for p-core.
-
-diff --git a/tools/perf/Documentation/topdown.txt
-b/tools/perf/Documentation/topdown.txt
-index 44644e917ffd..a229d0043399 100644
---- a/tools/perf/Documentation/topdown.txt
-+++ b/tools/perf/Documentation/topdown.txt
-@@ -21,14 +21,14 @@ per architecture.
-      5.704818971                 14.0                 27.5
-    51.3                    7.3
- ...
-
--New Topdown features in Intel Ice Lake
-+New Topdown features in Intel Ice Lake and later p-core
- ======================================
-
- With Ice Lake CPUs the TopDown metrics are directly available as
- fixed counters and do not require generic counters. This allows
- to collect TopDown always in addition to other events.
-
--Using TopDown through RDPMC in applications on Intel Ice Lake
-+Using TopDown through RDPMC in applications on Intel Ice Lake and later
-p-core
- =============================================================
-
- For more fine grained measurements it can be useful to
+    blueman-tray    1355 [000] 28178.728137:  100187539 offcpu-time: 
+	    7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
+	    7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
+	    7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-2.0.so.0.8000.2)
+	    7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.0.8000.2)
+	    7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
+	    7fff24e862d8 [unknown] ([unknown])
 
 
-> In the testing we're only testing per-task mode and not per-CPU:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/lib/perf/tests/test-evsel.c?h=perf-tools-next#n145
+         swapper       0 [000] 28178.463253:  195945410           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+     dbus-broker     412 [002] 28178.464855:  376737008           cycles:P:  ffffffff91c000a0 entry_SYSCALL_64+0x20 ([kernel.kallsyms])
+```
 
-The event type is hard code to PERF_TYPE_HARDWARE, which is available
-for both core. It doesn't matter which core the event is scheduled to.
+Howard Chu (10):
+  perf evsel: Expose evsel__is_offcpu_event() for future use
+  perf record --off-cpu: Parse off-cpu event
+  perf record --off-cpu: Preparation of off-cpu BPF program
+  perf record --off-cpu: Dump off-cpu samples in BPF
+  perf evsel: Assemble offcpu samples
+  perf record --off-cpu: Disable perf_event's callchain collection
+  perf script: Display off-cpu samples correctly
+  perf record --off-cpu: Dump the remaining samples in BPF's stack trace
+    map
+  perf record --off-cpu: Add --off-cpu-thresh option
+  perf test: Add direct off-cpu test
 
-If you plan to add a topdown event, the PERF_TYPE_RAW should be used,
-which is the type for the p-core. If the app is scheduled on an e-core,
-the event is disabled.
+ tools/perf/Documentation/perf-record.txt |   9 ++
+ tools/perf/builtin-record.c              |  26 +++++
+ tools/perf/builtin-script.c              |   4 +-
+ tools/perf/tests/builtin-test.c          |   1 +
+ tools/perf/tests/shell/record_offcpu.sh  |  35 ++++++-
+ tools/perf/tests/tests.h                 |   1 +
+ tools/perf/tests/workloads/Build         |   1 +
+ tools/perf/tests/workloads/offcpu.c      |  16 ++++
+ tools/perf/util/bpf_off_cpu.c            | 117 ++++++++++++++---------
+ tools/perf/util/bpf_skel/off_cpu.bpf.c   |  97 ++++++++++++++++++-
+ tools/perf/util/evsel.c                  |  41 +++++++-
+ tools/perf/util/evsel.h                  |   2 +
+ tools/perf/util/off_cpu.h                |   3 +-
+ tools/perf/util/record.h                 |   1 +
+ 14 files changed, 296 insertions(+), 58 deletions(-)
+ create mode 100644 tools/perf/tests/workloads/offcpu.c
 
-> It isn't clear to me how per-CPU would work given rescheduling, you
-> could read a counter that doesn't match the mmap page unless you pin
-> everything to just 1 CPU. Given the issues with rdpmc, perhaps it is
-> safer in the documentation to cover cases without it.
-
-As long as the scope of the RDPMC is clearly defined, I think it's OK
-to add the usage in the documentation.
-
-Thanks,
-Kan
+-- 
+2.43.0
 
