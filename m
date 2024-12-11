@@ -1,85 +1,52 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301DC1E9B36
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2024 08:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA5E14C97;
+	Wed, 11 Dec 2024 09:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733907361; cv=none; b=NsJFgkpOaWrssgfIpA+SJsxiUzvkL0SPBUVmaZCn2ZPZgIqekoaGh0JD8iifnXqNxahG5qB3eKXqP7Ix/cCu2LLmjEHM+5Hhmr4QfgDY7bWDu9Jr7V78t12ZhwLaud5A1zPl/3MS8X1ZA7zuBfhyGJAZf963SW6h6r8pjHr8fBg=
+	t=1733909489; cv=none; b=jF8aolgPXGhrA8Kk2REcVI1rRAsSUH8hUJfXtm3uNzKHW2CfYWsx8ZNrujrhHRhFomGgEi8trJ0ecJOyhTPKMYTANo99T3zAh9U1LEnkCzKMVBXpVy4Dnu1y07uZ6gxJ7dCpFHRXwTFPPpZ/aFd9dJv9n4r/CDQCuF3DdTorZSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733907361; c=relaxed/simple;
-	bh=SHiag0Flwix2IL/7LkzmO5BJXZF9o/yMIBz5/KtMkQ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hS5srZc/ECRHeubYWlAHTTKxiwnms46cRGJOFBA3F6991Txz7S4nj2Ba51psztYDbcADblyxKkApmkhx83eyylu6I8RJs9O5cSoNJ035bssVCid+LSFm9Csa3PfvuEt9wmFvsgoyZab/xdUOD+b7/OpZScy43IrbMgFQabSQKqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aqNZpfoM; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aqNZpfoM"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-434a044dce2so71462935e9.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2024 00:55:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733907358; x=1734512158; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iMCW/XO9o+mmi32R54QM1qNspZAsbttLauYO9rQfjbM=;
-        b=aqNZpfoMJrcTjaYrdi4/JCNwQDBGmX1R/5VJdBcWzTCBFKrCm+gWvuadyVLgfUjs1z
-         Ndqpk5jTda9M3UEjCXpZnTRDjgR/jhhL6K4it/BspyuDG3wutzfIU7GVR89CdeL6Q61w
-         k+T6el3USsGAh0S9tAQBalYLJxK4qmra4dZiEcMESPMirhT9N6IPDMTMLKfuRMppqTbV
-         aKnoZesbuhEUHd6MjXaABrQAG8RzqTH6SvTORfsJUonw37cEbVL6sAUitw5MtIlE9lwC
-         IjA/k+5VzIY4isaVcxsnQ1OyRUKHvtkvk9zEKwcYxMfWaeNci7WzQxoP/wfaiswWdRSI
-         utTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733907358; x=1734512158;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iMCW/XO9o+mmi32R54QM1qNspZAsbttLauYO9rQfjbM=;
-        b=VtKca3iBAAk3R9l8OLG1Chewd6JBN6lYJ1nEf3KeiX/Pfph50o3PcJbdsCpv8s91mw
-         YGf8p6OQipAUPAmTtBqvQBo4D8fRL4Y0ZO3eQmV4vfhfcQV623WuiW+q3wME8CDjcrlS
-         3NT6/wzWDRTi6i40E+0MaMdtYf4uPB6SPnQ+dIeoiHTJmS64S51ohDQivo6rW1QCF9pm
-         D+wPv+zMPtBGYbqyFK09nBC83O0xDGky3CbbroGQYUh9RO1dk0sQJUZLpJP3U72EB8AB
-         Yp5W64yguCWAGGb2Txb05hW/y/KCZP5JHXa99gPcN1jsoMsiMicCmDSuUfYmllQdYEHO
-         cDuQ==
-X-Gm-Message-State: AOJu0YzrFIc4HxTi6HH9RmlP+PoXwXoPGqT1zYtaFPQk5GD1eJEI3sVO
-	x33smhbLYH2I59RlxGAIdmE+QiftaGzHXoufbJiBwMi2mGcVRQ4z6EkhQpM2pXUA5EUx/wg+umt
-	3
-X-Gm-Gg: ASbGnctWWYYdC9uuZbZqQz87N52CHPPTusgk031LfooiZuqmfrJk+Wbu5FjjgwQ/KGz
-	PDMMGvDGyCv/TLUGZz0uua3n3jMRz7PjBny4+/nbCx2LJQJcbyzZMO14xjv7uCbP/bmFIRUfHVJ
-	ZQOyMPkHqXuSp/6usNBKV63MdXzz4EfPU4eLEH9xFuZSnuxiDuBpD4RFdSGHNaEna0RK11nKqhh
-	8N5AfIT8ftIB25utkLvyr7ITRBZ/zSWwE9TmILOZXZmCNifJOTvquA=
-X-Google-Smtp-Source: AGHT+IFXpwNlVA326/ez1WlH2MCgtyYBdzEE9ZmE3eSWrE0KHUhUUv+qurdmdnKSG7iuu4tiLtSwwA==
-X-Received: by 2002:a05:600c:3acf:b0:434:fddf:5c0c with SMTP id 5b1f17b1804b1-4361c393cc1mr14674875e9.4.1733907358562;
-        Wed, 11 Dec 2024 00:55:58 -0800 (PST)
-Received: from pop-os.. ([209.198.129.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434d52cbd72sm257204185e9.44.2024.12.11.00.55.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2024 00:55:58 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-To: linux-perf-users@vger.kernel.org,
-	namhyung@kernel.org,
-	acme@kernel.org,
-	mhiramat@kernel.org
-Cc: James Clark <james.clark@linaro.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	s=arc-20240116; t=1733909489; c=relaxed/simple;
+	bh=9S1xfuxm6ad8QaPLlRfK0CECrSiQWiO9S5j/PlfvJhQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YB61luEaq2iFLRjvAkHuTO674mKB5N6g2xCgm3LWxK1QGiMrtOIhMpZf+NoqzA++zHh41xsFG4pso1q6WfLQ8iFD9JUQ2wnVuSD/7KCcefXlO9DSS8dzoEXM1KgY8FLFslwZDKXRKwboFU2ZbXdFdj+YZXDbnIhirVQiOzWfGh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEDA31063;
+	Wed, 11 Dec 2024 01:31:53 -0800 (PST)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5A3F43F5A1;
+	Wed, 11 Dec 2024 01:31:22 -0800 (PST)
+From: Leo Yan <leo.yan@arm.com>
+To: Quentin Monnet <qmo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
 	Jiri Olsa <jolsa@kernel.org>,
+	Nick Terrell <terrelln@fb.com>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Leo Yan <leo.yan@arm.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] perf probe: Rename err label
-Date: Wed, 11 Dec 2024 08:55:24 +0000
-Message-Id: <20241211085525.519458-3-james.clark@linaro.org>
+	James Clark <james.clark@linaro.org>,
+	Guilherme Amadio <amadio@gentoo.org>,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v2 0/3] bpftool: Fix the static linkage failure
+Date: Wed, 11 Dec 2024 09:31:11 +0000
+Message-Id: <20241211093114.263742-1-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241211085525.519458-1-james.clark@linaro.org>
-References: <20241211085525.519458-1-james.clark@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -88,90 +55,34 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename err to out to avoid confusion because buf is still supposed to be
-freed in non error cases.
+This series follows up on the discussion in [1] for fixing the static
+linkage issue in bpftool.
 
-Tested-by: Namhyung Kim <namhyung@kernel.org>
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/util/probe-event.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Patch 01 introduces a new feature for libelf-zstd.  If this feature
+is detected, it means the zstd lib is required by libelf.
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index eaa0318e9b87..35af6570cf9b 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -1383,20 +1383,20 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
- 		if (p == buf) {
- 			semantic_error("No file/function name in '%s'.\n", p);
- 			err = -EINVAL;
--			goto err;
-+			goto out;
- 		}
- 		*(p++) = '\0';
- 
- 		err = parse_line_num(&p, &lr->start, "start line");
- 		if (err)
--			goto err;
-+			goto out;
- 
- 		if (*p == '+' || *p == '-') {
- 			const char c = *(p++);
- 
- 			err = parse_line_num(&p, &lr->end, "end line");
- 			if (err)
--				goto err;
-+				goto out;
- 
- 			if (c == '+') {
- 				lr->end += lr->start;
-@@ -1416,11 +1416,11 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
- 		if (lr->start > lr->end) {
- 			semantic_error("Start line must be smaller"
- 				       " than end line.\n");
--			goto err;
-+			goto out;
- 		}
- 		if (*p != '\0') {
- 			semantic_error("Tailing with invalid str '%s'.\n", p);
--			goto err;
-+			goto out;
- 		}
- 	}
- 
-@@ -1431,7 +1431,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
- 			lr->file = strdup_esq(p);
- 			if (lr->file == NULL) {
- 				err = -ENOMEM;
--				goto err;
-+				goto out;
- 			}
- 		}
- 		if (*buf != '\0')
-@@ -1439,7 +1439,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
- 		if (!lr->function && !lr->file) {
- 			semantic_error("Only '@*' is not allowed.\n");
- 			err = -EINVAL;
--			goto err;
-+			goto out;
- 		}
- 	} else if (strpbrk_esq(buf, "/."))
- 		lr->file = strdup_esq(buf);
-@@ -1448,10 +1448,10 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
- 	else {	/* Invalid name */
- 		semantic_error("'%s' is not a valid function name.\n", buf);
- 		err = -EINVAL;
--		goto err;
-+		goto out;
- 	}
- 
--err:
-+out:
- 	free(buf);
- 	return err;
- }
+Patch 02 is a minor improvement for linking the zstd lib in the perf.
+
+Patch 03 fixes the static build failure by linking the zstd lib when
+the feature-libelf-zstd is detected.
+
+[1] https://lore.kernel.org/linux-perf-users/Z1H9-9xrWM4FBbNI@mini-arch/T/#m2300b127424e9e2ace7da497a20d88534eb6866f
+
+
+Leo Yan (3):
+  tools build: Add feature test for libelf with ZSTD
+  perf: build: Minor improvement for linking libzstd
+  bpftool: Link zstd lib required by libelf
+
+ tools/bpf/bpftool/Makefile             | 8 ++++++++
+ tools/build/Makefile.feature           | 1 +
+ tools/build/feature/Makefile           | 4 ++++
+ tools/build/feature/test-all.c         | 4 ++++
+ tools/build/feature/test-libelf-zstd.c | 9 +++++++++
+ tools/perf/Makefile.config             | 8 +++++++-
+ 6 files changed, 33 insertions(+), 1 deletion(-)
+ create mode 100644 tools/build/feature/test-libelf-zstd.c
+
 -- 
 2.34.1
 
