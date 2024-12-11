@@ -1,146 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFA52594A0;
-	Wed, 11 Dec 2024 22:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7967A1BC085;
+	Wed, 11 Dec 2024 22:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733957124; cv=none; b=C2nlFZ6u0jF50kejLmP6NHUBepcH+mDJGh0VVWc0RecCLX7UsEv4tNEeIRLUU+PYqTpad3ORFYAW9d78LNVUbViq6XDYZlmBKXjgWawurGqKh6FualAENx4QnAyiZapIq3ftvLyyzCzOlxaSot9c/UAGe2zK+j4YbkbINTPXLu4=
+	t=1733957373; cv=none; b=YDH7MwaU1hh1W/kIZ/q54XH0OtUBi9h/WMywo/uBMW4xbzKx4RuuKv7grmpbE8TMuNRVGuSTx9X6jCes2TYjlUa062UkiIcVLU+KDiW+TJqMdprSYhFDpNEgpZwvMVWN1yoKmNoyISoJMqMMi1Aw5OiWyTqDsyqgMGOcpeWnimI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733957124; c=relaxed/simple;
-	bh=oliX2ZWsSJgL44apGvDiit+a6avUCWIMKdH/FEVNQg4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Anvn8ZjgmyO+yOGE9MfPbYLdyeCzRINi6/5qi6fCGYUMmX/6dVHBDB3WhUw8mXCs59SGjNY1HF19h/pq1ooSi9KM0uzeUC2yuQPYtUPRB5G2grunHCN9TNtmg6OnRuqdv9e/fjcB7qrod5CKhwa/LjyQV/LhBmIgIoGbodD+3zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PVoxkqD/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733957373; c=relaxed/simple;
+	bh=FFY1p0QopYu7/IIU8a277/5Oa7us2BzoRVOYRBgFapE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dgc6YGhZYOCGLZvZVENRYxkf5byuUcFsK7jC8jSA+3f6a8MGQrsSLYmR1kD1Nfdyyj6hE2Il/HYPjFSo7bm1UVS464tiLwXDYFZJoJgpbewEyLg6TNvnkXIGFctZBRFiTjd/3kYL9iK5kWOC5u2t7AsYTdUke3Jk3CKmV0M7Fts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A77jva/i; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PVoxkqD/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFF4EC4CED2;
-	Wed, 11 Dec 2024 22:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733957124;
-	bh=oliX2ZWsSJgL44apGvDiit+a6avUCWIMKdH/FEVNQg4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PVoxkqD/vchratwBVtUL+vK9OWQfCVTfnXZ4FVOFXhAU5ZBpuiliyYJB6D4oHW4r9
-	 9V6pjV3dvct2cG+qXtsaZo5suIymmqn9fu1O6tR/ioBCMa/cQCUkDpEJL+0e0gnOXg
-	 tWOPO/PYWJAa5IahCxvDM81gVX9j9ViMJ1i+Ta//VTnr/1M/j90DgDE1ZobY3REXNU
-	 AVcgJZVdsnqtbm3ZTnGYf4xAHCgkIQaYURP2kGqoNzMapxRtF+Y7WvJM8YzX12Q4H8
-	 vWN6TaC/XVjZh3/bNTfA+AwIBYCV9ZyEyIZTvLz8tFshkBXCu/3anxA+Ubh6eYeqot
-	 ErgJ5H6AV39MA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A77jva/i"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-72739105e02so5852b3a.0;
+        Wed, 11 Dec 2024 14:49:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733957371; x=1734562171; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bxVgYiLU2aeTmGBLQYgfiK7iXtWcPm1PqRPh7NBTzco=;
+        b=A77jva/iRclko3atfdcp9trYdzdoRqPG9s3DTzmPHLR1KHm3lL5mn7zXPkXfbWj1D0
+         0cB4cLlnMEBj+mom3+OF9Ifq4sZ1boupn6pa4QiC9TiLKKkIOm55Hn5NkerHYd2cRd2U
+         fpHcdGpUHmN8KVmGMtEYlbdZJctQuuvMaIF/Ah205liD7kslSXuRfy77vj8kGaHHs+iK
+         xlGP+W47VH8pFwawhHaHRukQA+ITLNOE3qCWj3aIYGIPvEHv2pjLy0nUjgg965CYSLLr
+         fa8SomHoTW3tnbw9cs6q9zl3cK7szNNt87xkIbmHuJE6rae2BZI7MaljdGGjraPWaJdh
+         P2rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733957371; x=1734562171;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bxVgYiLU2aeTmGBLQYgfiK7iXtWcPm1PqRPh7NBTzco=;
+        b=uibzreUZaYSYlZouzK3crp3eL7VhUVOvtAj8nbcdE7AWlKTLk5HtFwoXsCxt4uzEsg
+         ry3am6j/+Ny+B3U+t106J11206SUwc/R6gg3DwAleXTjf+fgH2qnC2roV+2GRY0hIVAe
+         DxodSLym81jZAeh17azkvPnArFTbuBmRIWFAT9+58yFnQFEgWViMUKJl3OK6CY327hg6
+         buHuRFWRHDNX2kjhHy5Zruzl4zmEcZQC4tFyNbCxl9dh8sUo4KNasvlL4mr6BHDrSAY8
+         LHJ6L2m+OP7gp7bR5SUyr1+SLg2zz4lxoRG3BI+qCXynQ4Cv34pltmZVuxXprnawgJFN
+         BKeg==
+X-Forwarded-Encrypted: i=1; AJvYcCWs9H9iKzfj4oCx1JPu6LyaRIN/ax2rYoX52RHVy+7lJPpKOH6v8r558pbmlrJaI3l1JhHPHvPBsly2G0LmaDhm8A==@vger.kernel.org, AJvYcCXjyBnQmII+IG1ZowYtpHFHtkjooXmdHUrsF5+phqqPWFzb9gsMjoFICaFx6zdMN3glTunyK/cZPUx1ovY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT451w4B4bI11Wdesrjy+IWihNkeabzB6wLBceva2U6Ml5mcxG
+	8TPwBNHrE4lvwB0Zpsr4VCraVwREoRSPxLMGvCLQIw6GGXgRLT6T
+X-Gm-Gg: ASbGncuLxtURQcmpRqvGVgGfv4FSYTw3qUkwNY343ozw7D+jlkYQo35bWrY1kXjUvmp
+	lO/eD0UlHiBynlYYzm2a4evWUj3hqDsortLXpXovvvT7OuchgOVSKKVjwobhp2PwzxIBzdGGjnu
+	JFp0OLRUNih3CxHmB6KnQfnM3VYXiG3VsvEuAg2Agd/a/3cWTjdnz4GFeBtu0rc6hTZHq+v0Buj
+	U6Q4rKZ8sGiQ9t0WDAKZqXlw+kXKGhXAbG7MQJ1FfLDsvO3pAYEJG+dPdIU1kszy7oJN2tuqn1i
+	LDXdPH6PbWXB
+X-Google-Smtp-Source: AGHT+IHikvdlrMEHrPyv/vfKfCBciw4qtl8yTdM4fMULnRZx0k/+XNygDj0i6tZk0a84jKR6Zlvgbw==
+X-Received: by 2002:a05:6a00:895:b0:714:15ff:a2a4 with SMTP id d2e1a72fcca58-728faa2a486mr1390945b3a.13.1733957370752;
+        Wed, 11 Dec 2024 14:49:30 -0800 (PST)
+Received: from mbp.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-728e2520144sm3430506b3a.116.2024.12.11.14.49.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2024 14:49:30 -0800 (PST)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Quentin Monnet <qmo@kernel.org>
-Subject: [PATCH 2/2] tools build feature: Don't set feature-libcap=1 if libcap-devel isn't available
-Date: Wed, 11 Dec 2024 19:45:09 -0300
-Message-ID: <20241211224509.797827-3-acme@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241211224509.797827-1-acme@kernel.org>
-References: <20241211224509.797827-1-acme@kernel.org>
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v3 0/2] perf trace: Add more tests for BTF-augmented perf trace
+Date: Wed, 11 Dec 2024 14:49:25 -0800
+Message-ID: <20241211224927.968483-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Changes in v3:
+ - Add vmlinux BTF check, and skip the tests if it doesn't exist
 
-libcap isn't tested in the tools/build/feature/test-all.c fast path
-feature detection process, so don't set it as available if test-all
-manages to build.
+v1, v2:
 
-There are other users of this feature detection mechanism, and they
-explicitely ask for libcap to be tested, so are not affected by this
-patch, for instance, with this patch in place:
+The previous version of the perf trace BTF general augmentation tests
+didn't pass Shellcheck (thanks to Arnaldo Carvalho de Melo
+<acme@kernel.org> for pointing this out), this version uses bash instead
+of POSIX shell to pass Shellcheck.
 
-  $ make -C tools/bpf/bpftool/ clean
-  <SNIP>
-  make: Leaving directory '/home/acme/git/perf-tools-next/tools/bpf/bpftool'
-  ⬢ [acme@toolbox perf-tools-next]$ make -C tools/bpf/bpftool/
-  make: Entering directory '/home/acme/git/perf-tools-next/tools/bpf/bpftool'
+This patch series also adds documentation for the new option
+--force-btf, which is used in the tests.
 
-  Auto-detecting system features:
-  ...                         clang-bpf-co-re: [ on  ]
-  ...                                    llvm: [ on  ]
-  ...                                  libcap: [ on  ]
-  ...                                  libbfd: [ on  ]
-  ...                             libelf-zstd: [ on  ]
-  <SNIP>
-    LINK    bpftool
-  make: Leaving directory '/home/acme/git/perf-tools-next/tools/bpf/bpftool'
-  $
-  $ sudo rpm -e libcap-devel
-  $ make -C tools/bpf/bpftool/
-  <SNIP>
-  make: Entering directory '/home/acme/git/perf-tools-next/tools/bpf/bpftool'
+Link: https://lore.kernel.org/linux-perf-users/Zt9yiQq-n-W6I274@x1/
 
-  Auto-detecting system features:
-  ...                         clang-bpf-co-re: [ on  ]
-  ...                                    llvm: [ on  ]
-  ...                                  libcap: [ OFF ]
-  ...                                  libbfd: [ on  ]
-  ...                             libelf-zstd: [ on  ]
+Howard Chu (2):
+  perf trace: Add tests for BTF general augmentation
+  perf docs: Add documentation for --force-btf option
 
-  $
+ tools/perf/Documentation/perf-trace.txt     |  5 ++
+ tools/perf/tests/shell/trace_btf_general.sh | 93 +++++++++++++++++++++
+ 2 files changed, 98 insertions(+)
+ create mode 100755 tools/perf/tests/shell/trace_btf_general.sh
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Quentin Monnet <qmo@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/build/Makefile.feature | 2 --
- tools/build/feature/Makefile | 2 +-
- 2 files changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 52600e4d33af8712..e25cdb7db40e3f3d 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -73,7 +73,6 @@ FEATURE_TESTS_BASIC :=                  \
-         glibc                           \
-         libbfd                          \
-         libbfd-buildid			\
--        libcap                          \
-         libelf                          \
-         libelf-getphdrnum               \
-         libelf-gelf_getnote             \
-@@ -150,7 +149,6 @@ FEATURE_DISPLAY ?=              \
-          glibc                  \
-          libbfd                 \
-          libbfd-buildid		\
--         libcap                 \
-          libelf                 \
-          libnuma                \
-          numa_num_possible_cpus \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 043dfd00fce72d8f..cbf751b6f0f76225 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -110,7 +110,7 @@ all: $(FILES)
- __BUILD = $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.c,$(@F)) $(LDFLAGS)
-   BUILD = $(__BUILD) > $(@:.bin=.make.output) 2>&1
-   BUILD_BFD = $(BUILD) -DPACKAGE='"perf"' -lbfd -ldl
--  BUILD_ALL = $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma -lzstd -lcap
-+  BUILD_ALL = $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma -lzstd
- 
- __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(@F)) $(LDFLAGS)
-   BUILDXX = $(__BUILDXX) > $(@:.bin=.make.output) 2>&1
 -- 
-2.47.0
+2.43.0
 
