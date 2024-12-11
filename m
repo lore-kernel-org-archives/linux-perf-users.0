@@ -1,151 +1,106 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEB51D6DA4
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2024 17:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B28020126B
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2024 18:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733939909; cv=none; b=n5qv70mNtGcKUWcp3yaOUKCp96Sj8HMqFumTyPqfpJSBM1t6vPia09XdiLSbCtLKAuwXyy0BliT2VMduA50CWHprz0gXqOFulSUx/xuyXUixgwbed4YkcgMwdqQldd1xuvUbuAQMPEHQsQGvDiwuI4ITNcDjRSJd66FAyHT6Z3E=
+	t=1733941261; cv=none; b=qJSQXz28ETaWq0H0G2zJTrj9aGKWBv6CWZuDj98MiiDdIZdwT/UWC4N9i9C7YUJ2S8bBybH0tkrkl4xF4DLVQBx7JFO3GrQ8APPkF/uHhad1R+3JIakjkA0GCbiELCq/mqbeneQGhAqlBBZLtFHr8TL/eD0d8iiFF3GlpcWAbko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733939909; c=relaxed/simple;
-	bh=R3T11l8xt1aGZ6P9H11qj4eLnK8r2GPCU6lVevf41bU=;
+	s=arc-20240116; t=1733941261; c=relaxed/simple;
+	bh=RUcYMRvPEsfmFZKlhRBSD9gYC85bBzsiLbsIe6MbJ9U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BaFEZAKGE0LQY4+qKAbir9MzIZhXKjvxxGQ0jjy8OuQYBRXdLltEGPlq4yH0AggLbFkZlG/74D5r1zJyMeFXYKmwvpOeboA1qZgob7NMFeX4joy6fO8jAroOHANj+/+wAD8JD5USXQ6TWToZi2/wm3ArsJuvrVbwkfMZk4f6Kf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XsHXVk/g; arc=none smtp.client-ip=209.85.166.170
+	 To:Cc:Content-Type; b=GsM9JQ/qq5dTF8U6PoStWwhNwp7mgDLbopV2Q5FeJXQeiuGEgfkwTtbw2OzCeTKQ5AsVHJNEEDT/Dc4suaRyHAD0ZNGAz+qrqTbOF2NxLio/xf+5DWGGVFn6nxm5+PJ9dJgQ5WYHfKbOvCFzwH+t5f2tePuZK1ksmFOnKshVuuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4v+bgjm7; arc=none smtp.client-ip=209.85.166.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XsHXVk/g"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a814c54742so2835ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2024 09:58:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4v+bgjm7"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so10265ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2024 10:20:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733939906; x=1734544706; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1733941258; x=1734546058; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gFoTN4ef6tsaYaPXHrZT3l6uMHwk3tr1FxPfQlIdTqE=;
-        b=XsHXVk/gUp1n/P2qs5daDpxWxsG/EDXYUkHfMPzT+XQkmw4Y/VXn1h5eA8cMZ2Ie3D
-         pM5hWtm36M43FDhMEm+nZBmMuC6hO+wtZIEDzPryVM4OHxLiEUMGZ1BZWlbZWKWihNHr
-         5v/mtHiQu9kCyrxVGsIkYKD7qRt2p5uedf6aNrPzcX8YgpVNZg6fiATzQ4nN5DCayluD
-         cmRSXa4EDvqy4uKmHZxUni5DTQYd25EdYn8hp/1dS1P3ZXwerJ+lVnDyZAYC8L4GCdAC
-         lhv/IIaHk3afC1c+9JfE3fchSzYQMYud0dUYn1qNwuMlOK58bE5eDA72rRJJGRt0OlMc
-         djVA==
+        bh=RUcYMRvPEsfmFZKlhRBSD9gYC85bBzsiLbsIe6MbJ9U=;
+        b=4v+bgjm7fE97/oik4TMRMHpxEyfUa2AO/GOz1oErguAuMsWkL49I48W49DGHxRoY0j
+         v11f6u9AKs9+skN/E93wg9hSBV6JqPM5g85yMR07Zt+u+homTffgnoCwWOfd8hDPIsrd
+         upvjod+5DEtvCjs90i7QQaE+/jG2AVJRo9b8vuIrTsRR165cuh/Ow+o1e07GAd0lWd9t
+         zBZj1Agy58A+jS7WFqMpJMoajoFthymngR99qN6PgGO0vwoBkQrPeOShOmK4BDI/6cCx
+         kQJUOpmclJc9FyJYDyeNWaVoaQdwaoCqLBcD+kWkoF96RV8ZtE+a0VChf3zwjvADt9Wh
+         xdXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733939906; x=1734544706;
+        d=1e100.net; s=20230601; t=1733941258; x=1734546058;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gFoTN4ef6tsaYaPXHrZT3l6uMHwk3tr1FxPfQlIdTqE=;
-        b=iv0dCX+bnmXR6244Pq0gfEkimICF0JsI+lUFlqHC2X+5tnDIRc+RJnPdU5U2O2OyqM
-         zxPTkTy/JIghH6U+VFnXF59pYKTSHkJ47SfDB2jQpEwY3/O0S1KT2I48UIuRRQzi4zpf
-         BqPpDEiOwAOA9bnfY6yc1QmScey46Vk7FRpCLgJRC56cETXQ7MKjXeHgFobKS/gSVJEK
-         DiWKE6fXgFVpzteRc96ueh+azLgiDAB6kGhcYWQ3f5+j2tE0M+Xl2cKYNahz5rCjSAwk
-         IR5cz5PBGrJ9dAti2zWpjk/7PIo8nZCHzoHBXOecCcI28EOouWnVaE3sMQ5xv7OEjDgP
-         T3hQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWdMFK8Nxb4D6ob94GviHWiffehh315NqfmgX1aw3A7eJyekjcKLP3LuLw2P5QoV5efspmsfiHHl0tKQv+6potS@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDlNt537M0s1HNfg04PnXP6m40K/DtS59BwVSij1qnZP5TPHEd
-	NJ1AsjIV8JN21J+NeiE9emCG+RJxrucP2+U+sIY4FZ/31rrNN8e2bxghGjOHFok73/OkuXG8t6N
-	5TTusabDKPT0sRvHXnQQ9ITwlQZGYxI4X0nk2
-X-Gm-Gg: ASbGncujLCP4c8WReUP0TJrIFB5Hk1qT/3WF3pm6p94L90iiA6c6ZMuxvEe5CN4Bz+2
-	ow4XIrhSR0F6TtiTpRMh1Y0msTCdvjjofEzZR
-X-Google-Smtp-Source: AGHT+IHDUGLYwHXig3aPIIAKQG3r40UaPaRtA3rpSGtI44vdk6Im5yMjdEylYcZQsSBzcdLJC2Q34UzaQjz94xGLGt4=
-X-Received: by 2002:a05:6e02:3388:b0:3a7:d85a:b1bd with SMTP id
- e9e14a558f8ab-3ac42aa9446mr488505ab.4.1733939904140; Wed, 11 Dec 2024
- 09:58:24 -0800 (PST)
+        bh=RUcYMRvPEsfmFZKlhRBSD9gYC85bBzsiLbsIe6MbJ9U=;
+        b=kwKJqsaY//cTp25kng3bmCoYQJ1A8DNTxMwFa4V76tA1Pi5ANg5XbiJQTcfdc6X5ER
+         IV2FwEr1IT1h3/YGPfkI8GoHIwtkHvTLBqpFhSbecBIvHPmEyuaNb5ht48YPaHppPzoF
+         a8hxYpMtnXBZbuY3ivgk2yj5mKkToLFGZoOqdVCpTNKw7kP0Pc5uktop5gRbXFB5p8i+
+         CGakFj58H3nGmdRkfVtabr4WAsmzMdZsEAnDzl6C4RHqSXd2LYDuvJvZnlmumaGYct0e
+         kKLjRnpJmzvRcc/5wzZk2IwJWzhpxjCBqdKyLy4nVB1yzuuLnBDnxcSaWdwalWnESiDB
+         kEoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWnuFcrojMSVdiwSrKHuYmhoyhYsTYLs8dPDQeRWXvAaLsXlk5kUVULFT1TaHTRaxzQIye17rCr6Kbvato+axY8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwobWVwlG7ex6JKTFeBjnl+cwHCspKiLFXxkbCYHKoE+cVstcsP
+	xxTSs94ru6fBcy7l7RAy4QhYRU1Nj70wa6BwsfW2qIm8rsMz9aa/FtB2qV99srvnW97nn+smrFi
+	QDzL6eSCriT3aHzt2dpCRZgfCdocBWOcht4eX
+X-Gm-Gg: ASbGncs4pUOiiWHl29zYxPY7BZH4rx71k10l7/Cfa9sCYfIvLTNH32FHyZk7zlQd6IZ
+	cbGztwkrCP2A9k58hsT0ZX2p5dQGAzM1n0j2i
+X-Google-Smtp-Source: AGHT+IEH7xGnuwB5R4N7oSUzxwV3lX+RNiSYHCfuBO5RafixJNk8dHcTEvZ+XQLjfFmyaE6AXKcEIHsdxj+AUk6ztGY=
+X-Received: by 2002:a05:6e02:3190:b0:3a7:c962:95d1 with SMTP id
+ e9e14a558f8ab-3ac42aa7e8emr658465ab.5.1733941258447; Wed, 11 Dec 2024
+ 10:20:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241211061010.806868-1-irogers@google.com> <7c118b40-3b31-46d0-8967-e7c35f6a4868@linaro.org>
-In-Reply-To: <7c118b40-3b31-46d0-8967-e7c35f6a4868@linaro.org>
+References: <20241210193554.93013-1-ak@linux.intel.com> <01513f7b-390c-4e2e-a6e8-54c268e8acf2@linaro.org>
+ <c1e008c4-d2c2-4088-aad2-a86987099c35@linux.intel.com> <71775d41-bf73-48e3-b5a6-6bce46658931@linux.intel.com>
+In-Reply-To: <71775d41-bf73-48e3-b5a6-6bce46658931@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 11 Dec 2024 09:58:11 -0800
-Message-ID: <CAP-5=fVxPaSYtB62ZqcLOG1F9Va-0rwBWUCiVNdaBpmsGXUVaA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf test stat: Avoid hybrid assumption when virtualized
-To: James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 11 Dec 2024 10:20:47 -0800
+Message-ID: <CAP-5=fVx8GukBdDNe0Ckb1oPBVwsG4A4xGvj1s9VARQC4k3Dow@mail.gmail.com>
+Subject: Re: [PATCH] Update perf tools topdown documentation
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: James Clark <james.clark@linaro.org>, Andi Kleen <ak@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 11, 2024 at 1:50=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
-> On 11/12/2024 6:10 am, Ian Rogers wrote:
-> > The cycles event will fallback to task-clock in the hybrid test when
-> > running virtualized. Change the test to not fail for this.
+On Wed, Dec 11, 2024 at 8:07=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+> > The RDPMC can automatically reset the perf metrics.
+> > Maybe change it to "automatically resetting the perf metrics RDPMC"
 > >
-> > Fixes: a6b8bb2addd0 ("perf test: Add a test for default perf stat comma=
-nd")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >   tools/perf/tests/shell/stat.sh | 10 +++++++---
-> >   1 file changed, 7 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/st=
-at.sh
-> > index 5a2ca2bcf94d..60cea07350e1 100755
-> > --- a/tools/perf/tests/shell/stat.sh
-> > +++ b/tools/perf/tests/shell/stat.sh
-> > @@ -165,9 +165,13 @@ test_hybrid() {
-> >
-> >     if [ "$pmus" -ne "$cycles_events" ]
-> >     then
-> > -    echo "hybrid test [Found $pmus PMUs but $cycles_events cycles even=
-ts. Failed]"
-> > -    err=3D1
-> > -    return
-> > +     # If virtualized the software task-clock event will be used.
-> > +     if ! perf stat -- true 2>&1 | grep -q "task-clock"
-> > +     then
-> > +       echo "hybrid test [Found $pmus PMUs but $cycles_events cycles e=
-vents. Failed]"
-> > +       err=3D1
-> > +       return
-> > +     fi
-> >     fi
-> >     echo "hybrid test [Success]"
-> >   }
 >
-> Hi Ian,
+> The new post can be found at
+> https://lore.kernel.org/lkml/20241211160318.235056-2-kan.liang@linux.inte=
+l.com/
 >
-> Isn't the distinction between task-clock and cpu-clock whether the event
-> is per-cpu or not?
+> I also added the reviewed-by in the new patch.
 >
-> $ perf stat -C 1 -- true 2>&1 | grep cpu-clock
->                1.49 msec cpu-clock       #    0.917 CPUs utilized
->
-> $ perf stat -- true 2>&1 | grep task-clock
->                0.30 msec task-clock      #    0.366 CPUs utilized
->
-> The test uses per-task mode so this change makes it always pass, even
-> when the number of cycles events doesn't match the PMUs.
+> Please let me know if there are more comments.
 
-So I'm confused by the test, but it has caused a passing test to be
-broken for me when I run virtualized. The test is checking a cycles
-event is opened on each hybrid PMU, but this is conflated with
-checking perf stat's "default" output. The cycles event will fall back
-to task-clock in per-task mode but we also open a task-clock in
-default mode. Should:
-```
-if [ "$pmus" -ne "$cycles_events" ]
-```
-be something like this then:
-```
-# The expectation is that default output will have a cycles events on
-each hybrid
-# PMU, but in situations with no cycles PMU events, like
-virtualized,this can fall
-# back to task-clock and so the end count may be 0. Fail if neither
-condition holds.
-if [ "$pmus" -ne "$cycles_events" ] && [ "$pmus" -ne "0" ]
-```
+Hi Kan,
+
+Vince Weaver posted to the list a related question on topdown + rdpmc + hyb=
+rid:
+https://lore.kernel.org/linux-perf-users/b0b0ae91-785e-64f6-348a-ca6edd448b=
+74@maine.edu/
+The topic of being rescheduled isn't part of the rdpmc documentation:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/include/uapi/linux/perf_event.h?h=3Dperf-tools-next#n610
+In the testing we're only testing per-task mode and not per-CPU:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/lib/perf/tests/test-evsel.c?h=3Dperf-tools-next#n145
+It isn't clear to me how per-CPU would work given rescheduling, you
+could read a counter that doesn't match the mmap page unless you pin
+everything to just 1 CPU. Given the issues with rdpmc, perhaps it is
+safer in the documentation to cover cases without it.
 
 Thanks,
 Ian
