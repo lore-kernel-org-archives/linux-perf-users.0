@@ -1,80 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F329824634B;
-	Wed, 11 Dec 2024 17:18:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212B51FE47C;
+	Wed, 11 Dec 2024 17:23:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733937528; cv=none; b=qitHC3OhAKp6P7yLu7yNuC+ljHoHQ+/JuT/gpc73qbyGAtYaqorHJzMtrJHTZx4qtPPmYCxkmaMmJuGbq1MFn/r0qDezAXBtQHNLJuugd4/YSW7EFMXbemLQZCPR0AOFJdSvQzEWnkA780AYAP1hfvklF5xp0Lk1SrgJoLJOQ6s=
+	t=1733937823; cv=none; b=Z8ESPHZ4IMS5tTsa2t1ULXMJd/Q9i6/3ckUCcxZwGSWkmiHbRPqeV/sjM5UMOTgpea1d7KTjC51MLduiRXVHautOKbmTm2MIJI97SA2k+XZGOmMhX1/egIOiVbjoP57/TPKWHg+ymrpHherCBIj/fXH4J0a+ly/khiDMbwil3Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733937528; c=relaxed/simple;
-	bh=linuuN8BXJlE/EXoqlW3B6ptqsh7UsVYafQI7hPFUsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RK1uMihatWH4nATg8Bcd4bWbR7S2/mReocQZ8hJmhOH5IzZkoQ3MlqLAXCENtAz8W+lwc/V1j69tm3rkKP4K13JkvLVK6Zbp0aGvw6XgqIh9s7+XjyqWNJXJR7rugrDtuXyivvePqeKfkgUyH6O7cEQLFSLUNOvlZk/0EKsdtOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R83O9+jr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733937823; c=relaxed/simple;
+	bh=IYsNBdQdVcowQwyGpXBzqBBm2krl0bXJAf/tpHDwcCA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=jrLjy1s5KobtbAQ1ZEb9Tc6nvpVmXvXBCmCZBrGEuUPr1CDoSJNJYmesjsfbZxBAmOOMSLRvxveR6F9vr43TgNwM8ohIp8nS+lCIXN0ii/QnIz/cEkFqJZaHXFilKQbGyiukaIF3zo4lQJiKlJAEpR4HHQ6GZFFrG1frKzDzrmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spNaWYUa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R83O9+jr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDACBC4CED2;
-	Wed, 11 Dec 2024 17:18:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spNaWYUa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3221BC4CED2;
+	Wed, 11 Dec 2024 17:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733937527;
-	bh=linuuN8BXJlE/EXoqlW3B6ptqsh7UsVYafQI7hPFUsk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R83O9+jrtpLXOYakowOwcayidf3lxLLUbaEbi5g6JNmFesGszE7MbaHhnZrzIzWHS
-	 f6ATiR4gKT2xNhL4xtTU9pyHyPIxYrr2I7c6+uApfntzvpzBZUKMBoZIB9jfwPXk9U
-	 J+yf6pwNTCNiY3hW8rtyQH0z8mvKw26nCZ4JqmT5h0Uunk1oSbcwVTofPUOXSbr4yH
-	 xz+ay7f3ffULBszqvuTp5ApH5EHIt0L1HhK59thphOEd1DZzZlt9pGdL5VLf+V52XK
-	 RbcsDsuN+xtYkOt9Sp052GQ2EPu0EBpPglL8Fm/sx5ZKP/4p/WAYTaFlrl9Fnq62FO
-	 lfQ9Nj5RLKLlw==
-Date: Wed, 11 Dec 2024 09:18:45 -0800
+	s=k20201202; t=1733937822;
+	bh=IYsNBdQdVcowQwyGpXBzqBBm2krl0bXJAf/tpHDwcCA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=spNaWYUaRWPqAmhzHL5sA7xXHoFpdSsRPnZot2GlOiJPZTkaOMNKsdF1CkwC8XtVM
+	 p2gwDBMXv+Zri82X4AfO9cU32czdCliJ36eEYvEOlZTjoeKIxIU9a2jdm/Nk5u3Tv0
+	 QWLbMo41wIZvqcAEarvfDPtjqdq1BZUKrtmXon9eq8Hk4K6n0xoZ5+jWiVYwgNKU7G
+	 UmYJzpbQ6Sj45B4og+zikyO++NsGAHoaz9oEk19uj8+reAKrN+8BWgXobBWSFndoZm
+	 3fDDdaroy+CrOJdtE2qB51ZE8qVFNi2gQoUqeFAxMbz4cXZa8uTXI6PuvnRhjc2Zk7
+	 ucjK21dGiylEg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
-	mhiramat@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>,
-	Dima Kogan <dima@secretsauce.net>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf probe: Fix uninitialized variable
-Message-ID: <Z1nJdd3YF5YGvlqp@google.com>
-References: <20241211085525.519458-1-james.clark@linaro.org>
- <20241211085525.519458-2-james.clark@linaro.org>
- <Z1mQcsDCw0d8djjx@x1>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+ Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+ jolsa@kernel.org, irogers@google.com, kan.liang@linux.intel.com, 
+ adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw, chuang@cs.nycu.edu.tw, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org
+In-Reply-To: <20241209134226.1939163-1-visitorckw@gmail.com>
+References: <20241209134226.1939163-1-visitorckw@gmail.com>
+Subject: Re: [PATCH] perf ftrace: Fix undefined behavior in
+ cmp_profile_data()
+Message-Id: <173393782213.3536107.18239500348967688224.b4-ty@kernel.org>
+Date: Wed, 11 Dec 2024 09:23:42 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z1mQcsDCw0d8djjx@x1>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-Hello,
+On Mon, 09 Dec 2024 21:42:26 +0800, Kuan-Wei Chiu wrote:
 
-On Wed, Dec 11, 2024 at 10:15:30AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Dec 11, 2024 at 08:55:23AM +0000, James Clark wrote:
-> > Since the linked fixes: commit, err is returned uninitialized due to the
-> > removal of "return 0". Initialize err to fix it.
-> > 
-> > This fixes the following intermittent test failure on release builds:
-> > 
-> >  $ perf test "testsuite_probe"
-> >  ...
-> >  -- [ FAIL ] -- perf_probe :: test_invalid_options :: mutually exclusive options :: -L foo -V bar (output regexp parsing)
-> >  Regexp not found: \"Error: switch .+ cannot be used with switch .+\"
-> >  ...
+> The comparison function cmp_profile_data() violates the C standard's
+> requirements for qsort() comparison functions, which mandate symmetry
+> and transitivity:
 > 
-> So Namhyung, this one should go to perf-tools, I can pick the second on
-> perf-tools-next, so that we keep perf-tools as small as possible.
+> * Symmetry: If x < y, then y > x.
+> * Transitivity: If x < y and y < z, then x < z.
+> 
+> [...]
 
-Sure, will replace and force-push.
+Applied to perf-tools, thanks!
 
-Thanks,
+Best regards,
 Namhyung
 
