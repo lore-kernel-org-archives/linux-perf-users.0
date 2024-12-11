@@ -1,54 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8D82594A3;
-	Wed, 11 Dec 2024 19:45:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974012210E7;
+	Wed, 11 Dec 2024 19:58:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733946300; cv=none; b=dT/BoPqaQSmSYRBHSi6PpBw0Nb8sriR0rIvow+bve6QZ22RvtqkXW7TuMcr/KyZjO9oCCTMbtHwt017RY7Xt+sG46A20BIsi+2OCOmbEev1LqLE63EjXa8Ei9i4QGdlDRIOIEwnhOYvlfhrrncPLnb060jaqXsXM52CDdsRamsU=
+	t=1733947128; cv=none; b=sC2/FjsvWx4R0K434AvzQle5pIjMO1L9xVy6+vkd5WrtOrnXexHfCC0yCFE4WvcIC3r+pNDqAdj7c5XfpUMyWHqhGJVUNRhShiRdOqXNXKDmiZgcf1u5bMzqm/z2I1R1mJ/1hD6yCp4gsrfpcQpza9bOlIGemqWUY1XXe63QK5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733946300; c=relaxed/simple;
-	bh=Vg5J7bpAvisbUNV39Kztftl751Y5mcACEYs59HWtPXk=;
+	s=arc-20240116; t=1733947128; c=relaxed/simple;
+	bh=dhLFDG8yhxG4Jz28wmbrWEiDXkkGBh8V42fyrS9Ci8A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fpx4q33okgOohDgPJ2xpr3MJxET6fKdnwXgEIMhxuAzBmyUtI7sg3XuRejMgERQm3+GoT+pxBuLfT3lPbhS7fbGP06ciYgZOUeuks9TCNEoLVXDLfyrh1W9fBAxNra8UWxnkOiSA1m986ekJd+p4UiaNgxNqHDSiN1GTSv9WjZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1ypOQiC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HKwzHS0nVjqqK5C+iMXq/bKQlkyhCUnIprvbfFKav+qRanu+V6r/9zuv2x849+XP7YKTRF5Kh5fCkqaKzDnr8yMN/EJ9+S2WLKegh2x8VIvODgumW0r+QeEURPf6ZXzoMJ9gH9anAnR/+DWVETlfQs2HiSdvjAiIc1Ped6xtAnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0FsqjMZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1ypOQiC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1AEC4CED2;
-	Wed, 11 Dec 2024 19:44:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0FsqjMZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C26A6C4CED2;
+	Wed, 11 Dec 2024 19:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733946300;
-	bh=Vg5J7bpAvisbUNV39Kztftl751Y5mcACEYs59HWtPXk=;
+	s=k20201202; t=1733947128;
+	bh=dhLFDG8yhxG4Jz28wmbrWEiDXkkGBh8V42fyrS9Ci8A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U1ypOQiCKPrkxaqswbp3KsfOLkxNoA6awtMlQRFcChWZUsahcP+A3nGj2WHwkqIw1
-	 gs5LLOAOy2AwfWCaz44UwA7wTxXf5+H3gbT501YuCHjtEgDopPWCECGYe7bg8ti274
-	 KSiROl4NJHcg4Nigwp85tkIc62G2VZ76JgHmHhtp2t99+orRlr7Hvn04LN/PScfS9F
-	 TE0h1BvNO3GzC+LnCv7Y8JvBt+sdaU6gThk9Jtn0OXyp0sSAu4MasfXbKtEHzP+xrk
-	 lZSq/rUuuCp0Afapu7crxZ1Gp2PTdNnu7+RQYm+30oc5mkkOwApTpVAnRmAUZVQ90A
-	 tMDkzv31rGnBw==
-Date: Wed, 11 Dec 2024 11:44:57 -0800
+	b=Y0FsqjMZefJtHCXTWW8x1cxaP4vuvcHbqmNgetOTatNlTMZg0RPgISAFs6dEOZdm6
+	 jty+hShHdy4AcrokqAAU9xELgSjmOC4UkQ7lEsTff7VmQ/hkoq/KgYqv1s/8NmEGI9
+	 j4qlxJSrr4MtgOK8DzDLSSsHz5AT2IWXDT1T4MB81o3akTZglCQ46x473KiCBfmngF
+	 zTXwCd8cng+EmCAt6x7HmeNC/SCWSVLWn5Ezy0NM4uJec/p3Qbvn3fcoj3FpP0mX+a
+	 lmROB+h1WTUbyHPys76oqsMl8kSWohler/wBH3HoJsRk3K0tW095KXmNXIEPkRl1yG
+	 fMtjZEPbzOpDA==
+Date: Wed, 11 Dec 2024 11:58:46 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Quentin Monnet <qmo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Nick Terrell <terrelln@fb.com>, Ian Rogers <irogers@google.com>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Guilherme Amadio <amadio@gentoo.org>, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] bpftool: Fix the static linkage failure
-Message-ID: <Z1nruXG6U0yYA5fK@google.com>
-References: <20241211093114.263742-1-leo.yan@arm.com>
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: Re: [PATCH 0/4 perf-tools-next] perf ftrace latency linear buckets
+Message-ID: <Z1nu9vcKEdGS0gb_@google.com>
+References: <20241112181214.1171244-1-acme@kernel.org>
+ <Z1iFsz-Jis6rgpjb@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,43 +49,28 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241211093114.263742-1-leo.yan@arm.com>
+In-Reply-To: <Z1iFsz-Jis6rgpjb@x1>
 
-On Wed, Dec 11, 2024 at 09:31:11AM +0000, Leo Yan wrote:
-> This series follows up on the discussion in [1] for fixing the static
-> linkage issue in bpftool.
+On Tue, Dec 10, 2024 at 03:17:23PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Nov 12, 2024 at 03:12:10PM -0300, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > Hi,
+> > 
+> > 	Gabriele has been using 'perf ftrace latency' in some
+> > investigations at work and wanted to have an alternative way of
+> > populating the buckets, so we came up with this series, please take a
+> > look at the examples provided in the changesets.
+> > 
+> > Thanks,
 > 
-> Patch 01 introduces a new feature for libelf-zstd.  If this feature
-> is detected, it means the zstd lib is required by libelf.
-> 
-> Patch 02 is a minor improvement for linking the zstd lib in the perf.
-> 
-> Patch 03 fixes the static build failure by linking the zstd lib when
-> the feature-libelf-zstd is detected.
-> 
-> [1] https://lore.kernel.org/linux-perf-users/Z1H9-9xrWM4FBbNI@mini-arch/T/#m2300b127424e9e2ace7da497a20d88534eb6866f
-> 
-> 
-> Leo Yan (3):
->   tools build: Add feature test for libelf with ZSTD
->   perf: build: Minor improvement for linking libzstd
->   bpftool: Link zstd lib required by libelf
+> Applied to perf-tools-next,
+
+Sorry for the late reply, I forgot about this.  I have a couple of
+issues but they can be handled later.
 
 Tested-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-> 
->  tools/bpf/bpftool/Makefile             | 8 ++++++++
->  tools/build/Makefile.feature           | 1 +
->  tools/build/feature/Makefile           | 4 ++++
->  tools/build/feature/test-all.c         | 4 ++++
->  tools/build/feature/test-libelf-zstd.c | 9 +++++++++
->  tools/perf/Makefile.config             | 8 +++++++-
->  6 files changed, 33 insertions(+), 1 deletion(-)
->  create mode 100644 tools/build/feature/test-libelf-zstd.c
-> 
-> -- 
-> 2.34.1
-> 
