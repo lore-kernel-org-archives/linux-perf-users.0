@@ -1,64 +1,67 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20B8236F98
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2024 10:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1958C238E2C;
+	Wed, 11 Dec 2024 12:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733912028; cv=none; b=XP3mO6Jprq/Glk6IBLtdoV+e7uTqT2X+ZzzkceccSqj1Q/tGsLYoDHolsi76KLmEfX9XRQ8P1C2Z6xsCnDNYFQSAY2GAnxBimDK4Jekxz4im7iht0OIQ2+JXcarEic9yNEvHfK49KphsUuuvp0rA6fR3D+bJ/kQQ2q7ei0cr9m4=
+	t=1733918571; cv=none; b=lVMOk0pasfRSCqOrgaEZj+zbxosmCOOPv+oqjZD1F77f7tRfd2qA8EfPenyjVnbab6BP2XKDqvLhN2oVTW9wVAviKACtNxU8WDhKYGNEnBjZQLAu3EtBv7oxYkOyrK0BzOK8l4mz7UmkyhDrgZxBF5MnbjIl8L1UQLhE8p+Knh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733912028; c=relaxed/simple;
-	bh=ug/9fGjGdhPGtiTPa/wOskfE0Nu2limG/THMaAQXSIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=R2vVKaUx4aIsZTZ2p0vUT6Eou8mECzInlfeGWDMvOGDqdWaThqfpLLaSDLbvtZ5g4WKXQhYzQ+PkYi67Q7B14E56Tb5mztiY7MluVVGPNxfADjqFas6c4Xt13bqLgWmWsKGVtTUy0cTyvKWeZnmmHveEpn3gz8X5ZzSXqp4+jyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xBXtErsq; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1733918571; c=relaxed/simple;
+	bh=ew4ix9I12b6Z8AdUyxYwTokUlh/HE4u6/P4gz1mtiyg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X8tREK3AmU81FYbv8WPUfiHRg2lWH47iMzM7m5S1bR5tmg4pU0VSx1+k1DKuKeogtdd0JjhdGIdaJ886m1qVtloVQLLQgSZAED5OoY6UHEvThhz4sazdil1P0nyJKHI6164BMN4WLfkw8xFe68L9yvTIt2qHn/m8MS1tL0m/d1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=W9tArFSB; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xBXtErsq"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3862df95f92so3300066f8f.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2024 02:13:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733912025; x=1734516825; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ezwloFLbDFqYucUL2s/vC0GiLC7FIA5I4mKffZUJVN0=;
-        b=xBXtErsqFWrmZvZfKihXg6dqUpjLjLoauMSB0wV2AAM4BoG5geWXADWY92FdPalmTM
-         28iuwNl2Oj7jOOsHpyKm2MZ6HmQ8aSkucpFwaoCbA/+ljGekEKj2sAAifDQOEtPYxuOg
-         gAF2PdZUQYFjBO4fBR1bHWPiRVqnnJ6uyBfZDYpRC3DUxJKL4UzdPPosuL00rj6vIyqF
-         usePTq5OFAVL2oDgN5TPdV6EGdXSGP/4zBQ2H4/6EI/3r9gW8PfBO5SNDvsYNaVJqQ3N
-         GgTfPqPIfrXs0NYDK6+F/dm8Hdjvtj2lZ54vdjnz2J5AwjcI1/MMZd1P03BHXWNvXUcP
-         7osA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733912025; x=1734516825;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ezwloFLbDFqYucUL2s/vC0GiLC7FIA5I4mKffZUJVN0=;
-        b=n5J4s53P3AJa9iTRH8VdLlM/QCV6+hKig4+koezscRx9iuHqUc4FTgeFwAK/2HgDI9
-         XIMiL/hCDsESqx4qQyPKRtOAi1x2mEQfstyQWLj4ln3/s5pEuRxXRrtxNY+CiyWirzYv
-         0Hjgqz+xDnGzyUgZ20IO1XiGZ2yBPesCsyMmmHzPBt+fCOdlKnshBSlNZnZXCMBR5Eo2
-         SLEckIrlDvgYqkOhQ9BkG3F6TVYs5FMsp04K1cFbXZlniT81ma8IklHFMX0Nn2nsNHZn
-         QMHQJMyyXN78epmRrz7Yr+hq/noD8RwvHT1Jt0XmmK6s1AYMnR5IOrZED8hmWSoZ/OIL
-         Mirw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAyBPrvboWOQHCTV6gpkOY5/yEEpQVNDo+qq3/cEKRvch0+0O/WVmgdkgVT7CByN3+FhWzzpZp9BOhOsyOLFdk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxle+afq6jj58w0if8VQ0W7vuYPNDqsJiXygCm4gba4mRT7Uvri
-	JB5aQAv+j54D0w3/QHO9RjiyDDNUoYC+wNO9v7R5BTCdbtH0Pp2IFzXW3tdqAf1pvdjEwKGxKU1
-	G
-X-Gm-Gg: ASbGncuLt2/RtEJf6DVJnjaW1LXLmEdfowvAg9KSpOsAD0PEYqDxvzH/9aNf7PGFUZn
-	58hYQpcrppZXKaP1viE5PzKX3MjkZw0WRUBhbWUHqySJShX/iS7t42l58vp/hhHPItBwMNnS1xw
-	SH+NGcAksnhPdKl3RStYENUqWTea5DEgEPX8Ec7I4egJ8hhC2m64Z0P1CS2osg9qkDSGHZ1l+/b
-	PfgxUPX3P4+GFHljdwT4PLu46QsSN9SSSEykbWGea652/hTKzeADXTQe8MPQyXuRw==
-X-Google-Smtp-Source: AGHT+IEnwh8x6c11GhbYsoIZAT6oWXj1pwSvxwkK4+Q6KCYCB5xuwSSlienp55mp9XfbBZhKANAf1A==
-X-Received: by 2002:a5d:584b:0:b0:381:f443:21d3 with SMTP id ffacd0b85a97d-3864ceab53cmr1685142f8f.57.1733912024906;
-        Wed, 11 Dec 2024 02:13:44 -0800 (PST)
-Received: from [192.168.68.163] ([209.198.129.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38782521dfesm903782f8f.107.2024.12.11.02.13.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2024 02:13:44 -0800 (PST)
-Message-ID: <01513f7b-390c-4e2e-a6e8-54c268e8acf2@linaro.org>
-Date: Wed, 11 Dec 2024 10:13:43 +0000
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="W9tArFSB"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BBC0Ucu005970;
+	Wed, 11 Dec 2024 12:02:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=3YcRWK
+	xg1s7nYSdDzKaz4bSI+E2OJ91ZRGVWd8WWROA=; b=W9tArFSBILJRm1Gj9MZRJF
+	ZjUB407XjUYczM+ravYd1EB9aflntIMoG0ykvWM48irOsHVYORVs8HQjgPULXA5X
+	s8IEQ09PeP80N3MyE6pBB5WMH0RdLvPeTJPm2wXcHjR5TsHxL4cRzV0jSejMKieu
+	h7rq8JvPl1Gxv34NKgQX27Yh3KWdWL10Pq0I6quRiMn2C/Op9intoWh6t3KlHrWW
+	E5hvr634TEgULRBe8IsaOSP0nQe9taCtL49lKFO+JCrO11cAHas1df0c/ASVxBeR
+	IhIHK9yEIi7xyt9tA7j+vsIgdLwj9n0KOIR3khC+bOV+BYa9PC3AvK5eZhTSF1WQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43ce1vw2dm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Dec 2024 12:02:36 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4BBBeeiK032543;
+	Wed, 11 Dec 2024 12:02:36 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43ce1vw2df-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Dec 2024 12:02:36 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BB8tT4n016944;
+	Wed, 11 Dec 2024 12:02:34 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43d12y9fas-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Dec 2024 12:02:34 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BBC2V8R56754458
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 11 Dec 2024 12:02:31 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F330820043;
+	Wed, 11 Dec 2024 12:02:30 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 72A612004B;
+	Wed, 11 Dec 2024 12:02:28 +0000 (GMT)
+Received: from [9.43.88.53] (unknown [9.43.88.53])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 11 Dec 2024 12:02:28 +0000 (GMT)
+Message-ID: <2907ca2f-b973-42fd-ae03-99732dfda7a1@linux.ibm.com>
+Date: Wed, 11 Dec 2024 17:32:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,95 +69,75 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Update perf tools topdown documentation
-To: Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org
-References: <20241210193554.93013-1-ak@linux.intel.com>
+Subject: Re: [PATCH] tools/perf/arch/powerpc: Add register mask for power11
+ PVR in extended regs
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
+        jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+        namhyung@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
+References: <20241206135637.36166-1-atrajeev@linux.vnet.ibm.com>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241210193554.93013-1-ak@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <20241206135637.36166-1-atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: PWzkMmgLJu_lWuUEdCvWTYlogUkihnG3
+X-Proofpoint-ORIG-GUID: O2jEXNPWBRJ0QuaUNiPyGvgMWWIqTpuX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1011 phishscore=0 bulkscore=0 mlxlogscore=999
+ impostorscore=0 spamscore=0 malwarescore=0 suspectscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412110087
 
 
 
-On 10/12/2024 7:35 pm, Andi Kleen wrote:
-> - Document and give examples for the Lunar Lake perf metrics reset mode.
-> - Fix the error handling for mmap (it returns -1 on error, not 0)
-> - Clarify the slots placement documentation. It is not Icelake specific
-> and also applies for non sampling.
+On 12/6/24 19:26, Athira Rajeev wrote:
+> Perf tools side uses extended mask to display the platform
+> supported register names (with -I? option) to the user
+> and also send this mask to the kernel to capture the extended registers
+> as part of each sample. This mask value is decided based on
+> the processor version ( from PVR ).
 > 
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> Add PVR value for power11 to enable capturing the extended regs
+> as part of sample in power11.
+
+Patch looks fine to me.
+
+Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+
+
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 > ---
->   tools/perf/Documentation/topdown.txt | 33 +++++++++++++++++++++++-----
->   1 file changed, 28 insertions(+), 5 deletions(-)
 > 
-> diff --git a/tools/perf/Documentation/topdown.txt b/tools/perf/Documentation/topdown.txt
-> index 5c17fff694ee..3e2340f3f78e 100644
-> --- a/tools/perf/Documentation/topdown.txt
-> +++ b/tools/perf/Documentation/topdown.txt
-> @@ -87,7 +87,7 @@ if (slots_fd < 0)
->   
->   /* Memory mapping the fd permits _rdpmc calls from userspace */
->   void *slots_p = mmap(0, getpagesize(), PROT_READ, MAP_SHARED, slots_fd, 0);
-> -if (!slot_p)
-> +if (slot_p == (void*)-1L)
->   	.... error ...
->   
->   /*
-> @@ -107,7 +107,7 @@ if (metrics_fd < 0)
->   
->   /* Memory mapping the fd permits _rdpmc calls from userspace */
->   void *metrics_p = mmap(0, getpagesize(), PROT_READ, MAP_SHARED, metrics_fd, 0);
-> -if (!metrics_p)
-> +if (metrics_p == (void*)-1L)
->   	... error ...
->   
->   Note: the file descriptors returned by the perf_event_open calls must be memory
-> @@ -290,15 +290,38 @@ This "opens" a new measurement period.
->   A program using RDPMC for TopDown should schedule such a reset
->   regularly, as in every few seconds.
->   
-> -Limits on Intel Ice Lake
-> -========================
-> +Newer Intel CPUs (Lunar Lake, Arrow Lake+) support resetting the perf
-> +metrics automatically RDPMC, which can avoid a system call or needing
-
-Minor nit: "automatically using RDPMC"?
-
-Reviewed-by: James Clark <james.clark@linaro.org>
-
-> +to schedule special resets.
-> +
-> +This is available if /sys/devices/cpu*/cap/metrics_clear
-> +exists, and requires setting an opt-in bit when opening the
-> +slots counter:
-> +
-> +if (access("/sys/devices/cpu/cap/metrics_clear") &&
-> +    access("/sys/devices/cpu_core/cap/metrics_clear"))
-> +     ... functionality not supported ...
-> +
-> +#define INTEL_TD_CFG_METRIC_CLEAR 1ULL
-> +
-> +struct perf_event_attr slots_event = {
-> +	... same as slots example above ...
-> +	.config1 = INTEL_TD_CFG_METRIC_CLEAR,
-> +};
-> +
-> +... open and map counter same as example above ...
-> +
-> +Then any metric read will reset the metrics and slots.
-> +
-> +Using perf metrics with perf stat
-> +=================================
->   
->   Four pseudo TopDown metric events are exposed for the end-users,
->   topdown-retiring, topdown-bad-spec, topdown-fe-bound and topdown-be-bound.
->   They can be used to collect the TopDown value under the following
->   rules:
->   - All the TopDown metric events must be in a group with the SLOTS event.
-> -- The SLOTS event must be the leader of the group.
-> +- The SLOTS event must be the first entry of the group.
->   - The PERF_FORMAT_GROUP flag must be applied for each TopDown metric
->     events
->   
+>  tools/perf/arch/powerpc/util/perf_regs.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
+> index e8e6e6fc6f17..bd36cfd420a2 100644
+> --- a/tools/perf/arch/powerpc/util/perf_regs.c
+> +++ b/tools/perf/arch/powerpc/util/perf_regs.c
+> @@ -16,6 +16,7 @@
+>  
+>  #define PVR_POWER9		0x004E
+>  #define PVR_POWER10		0x0080
+> +#define PVR_POWER11		0x0082
+>  
+>  static const struct sample_reg sample_reg_masks[] = {
+>  	SMPL_REG(r0, PERF_REG_POWERPC_R0),
+> @@ -207,7 +208,7 @@ uint64_t arch__intr_reg_mask(void)
+>  	version = (((mfspr(SPRN_PVR)) >>  16) & 0xFFFF);
+>  	if (version == PVR_POWER9)
+>  		extended_mask = PERF_REG_PMU_MASK_300;
+> -	else if (version == PVR_POWER10)
+> +	else if ((version == PVR_POWER10) || (version == PVR_POWER11))
+>  		extended_mask = PERF_REG_PMU_MASK_31;
+>  	else
+>  		return mask;
 
