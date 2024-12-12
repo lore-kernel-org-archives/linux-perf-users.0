@@ -1,77 +1,77 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94623154C0B
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 04:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B0A14B088
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 04:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733977495; cv=none; b=jiGV6tSmW5sD4bXyTYH+vAB9utPA3MgUhz9excDZW7aEH1zk6e3UX3WDepxwLpnKgeouhyFTtSW7mXXS0ukV5sTgkRNbzV88/ZBxYcUTQ2VqRXVWEp+xI3KLxb3EoIqUNLSOzwVgESugZllfG+OdhCVFoW+9GcbywUQW1d36QmE=
+	t=1733977549; cv=none; b=PWENRn6y7NT/e1AB4YeX21JrrhDJFQlUsrwyHnHJU1qhQk11+ERCSLSCiwykzKshZb4OyGAOJIWUipwuvfLn67wfiDkOkXSVOaTwn/BzVmwaAW6sAjGeEX03VTMA1Tn4SqWm3PYUWn7AQ+7G2qfLf8Z2eLh1zR3MumaNCWkMQSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733977495; c=relaxed/simple;
-	bh=5McNTPhgwuTAZitJsZKO7cUAyaEVDxm0YVa1JFu0Cys=;
+	s=arc-20240116; t=1733977549; c=relaxed/simple;
+	bh=7Qvs01/BejNv9rHlb5ktozEHtjnwpusW63FoyHDxM/w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R5/9SUd+bDesTcCD53+m5x+ZqbTk+U4ZrkPj3dxL3HDjHu69Vn9IFCRimir9veVwd2jw2poNHxpw2tp/xYjr+ntEQuU1FkaIiTx+YVkE679+8+EXhIvASixjrbZ4LLVkL+DjOiBNIWOH132DE+ThhxzFrDx3FZYjz1z2HmOIEmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fWYHAvM8; arc=none smtp.client-ip=209.85.166.176
+	 To:Cc:Content-Type; b=U2GRa5UBO2Q2vZNDxmKfyQ3X78FAYwf6FzzmZL/icgGkmgI5vweueEWx4PU4ZGHDv1jh7jLH9ZWmsEoiLPlN8Md7x966h2fR+cQSdiSDrjnB7vVZxCYOYMa9kdhUdBs+7PNdeZzBHb0dVZw8PwBovaSYBZoh0Gz7oBpbw9l4XGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BYaq0Zam; arc=none smtp.client-ip=209.85.166.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fWYHAvM8"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so57625ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2024 20:24:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BYaq0Zam"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso53125ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2024 20:25:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733977492; x=1734582292; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1733977547; x=1734582347; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VMNonVSTAKAhdnESlZhBPVMi0k5FuDoi886Qlqbxejk=;
-        b=fWYHAvM8/D3LKkHhYide0/MS44hQfxaqiJvSsKh02bT4mOsoLZkuok4LMEdagBZx7Q
-         cyryqaHtYk2yrB3hK+fSbomiO1vgZfb3LYCQp70AKuXx4qWbrIz+9PWnBhdcg5d0WnuD
-         u3h1+O44I0tQyaWDTo0inYMNxz20g1HaA9hVGsCJsF3c7vDlrIdGrpCUlfMs1S8sa+2w
-         Mu+hTRq2vV0rNGIGfZhRGvgzm9WbfLlLN/RuXj37or/krH29caj73n3XwyGUAgIDR0n4
-         E+/ZrrteLG/w5cVfECZ+kJSa7yav0lTnfN+btB0vYz3qnhrOgy7/v+tJegnTLiosGmCH
-         qJ1A==
+        bh=CrGgTd6oD7cu/uVCzqBxXlqwiU4sXdR14b9ViH7/yCU=;
+        b=BYaq0ZamKoz9moI1Mvw9I1H0NbkOGpeWkc5Bwq8yCtrElHU5euI/MuknheJMKUMwFo
+         CSD7vCM3M03WRYphmDbZn8coqVwE+dY7VLJlv1UQd/Gbzgd9sHTr0/7RZZiTnz9CeNmx
+         qaKM0j2nWoU8hsteZVk0xnLNKj3fONu48qWrwPgryA8OZA5w8D4+JAJAZ6o2AB+ZXQPX
+         nFdTF+zRZZiqwzeHlOH96BT9oEMcmXF6cgqHRvCt/+RKaF08fdSyCeRD6tY0N+YwN0Kp
+         3YuQ0mnDWBAygcW594tCf3ipO67ffk2Jh8sTs6TNI9Zc2sD9v5iMZIfMl4dBEO7JPtBK
+         L5aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733977492; x=1734582292;
+        d=1e100.net; s=20230601; t=1733977547; x=1734582347;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VMNonVSTAKAhdnESlZhBPVMi0k5FuDoi886Qlqbxejk=;
-        b=aNJjaogg6fdpHCdz7PPuerxIedUw8XKQ7sC6/zpV8eNHH0jaGJeK+WjCN29Ys25DKZ
-         nYpNSg4ZzU/kqzYpQAyNeYz5FKqLCBtPrWbaAkJmKp9Wv4FAJM8FVeVyHdozVsoKgAs+
-         OKy4sB2ZEX1UBKWrlEgffFzZMpIdTL+xuyAe5CVmhO9PjsYsPzKjBnJ0T66NI9jdsdjg
-         nanZNptodTzqIzWB6pjPfrpRvIjimLNEsxUdwS5iv9sDUF7D+8sn4bIPD5fUC8y9N8up
-         nNoWynIaNACOBbz7b3ioYgAavR218f8xYnMRE1CAfvtWrevZv9VwHVS5sVCwD7e1FOQk
-         q5rg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzYm7vxngvaMUu4qpqrEHGe9V2BVHjV0XupZKpT6ORQFCPZ8bCAjEQTnXra3SlPm9+FdwgKFLIGk/fOz3i5vhS@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzi7Ww5DMn/MrTYKDXEY8FfIK44rSi4sm7cKprM2pRKZB+p3LRJ
-	shQ31F0vqSDoeSclvUkLs6SYCFc0adpOa/gzPzYYzXXJ+YfDXifFjd6BXh5p+C0AlqoxsTVAckd
-	itst1CKaOI6bRlk465yf55jeS9xGHnoKWuBW0
-X-Gm-Gg: ASbGncts9k69jMpQu11mnusdTgisU1pt8TKeTQYqIxpTIOkitlDjz81HXuJ/MfLJj9g
-	6H7+GFjUoFlhpvC3GKUEkDsyLUxTZP43miw1vynM=
-X-Google-Smtp-Source: AGHT+IHE2kXy+Z40PPp4+ulYpNyAnZdtK/qutnj5lKaUda+LXh3U6WkDzUvspnw1LuYHpK/msBAN68/hIkKJQNgAJW8=
-X-Received: by 2002:a92:d409:0:b0:3a7:deca:1fe6 with SMTP id
- e9e14a558f8ab-3acda64e3ecmr1157415ab.13.1733977492544; Wed, 11 Dec 2024
- 20:24:52 -0800 (PST)
+        bh=CrGgTd6oD7cu/uVCzqBxXlqwiU4sXdR14b9ViH7/yCU=;
+        b=dIis08ik1l9ZDu8Ie2IWWSWUMszhfdONSSKtHVt/a2p9WTxgT0xg4UKZAsjLCff00U
+         089AZMLagd2dsbdTGmSOanNCsjnk+NiewCgoheMh8tE6/KJN98dCjOQvw4N43YgtnyH3
+         JVt/DRUHncPm0dhuT2NWEg7nRpksEAXMUAJUO1stujBgE3X28EEScJLwLw7cn7+Fz1l5
+         4YUmjAsbXjdeoMcMCmbC0PM/ieG2xxTbZkeTvherTIa3BFf+Zv4DcrwBul/WpBtPSNCE
+         sa79zmB/2offigJMPfaV6V57TqS+U0LldvhniJtL0I5VTOYiNikR/PFeEHIeN2gTuduH
+         08jg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJ5pZ8z9YlzIz+6Fp54yCTDI0KWa7KYQ0ejL/JVpPxw26Pmt4JX2zuCzW3OsTxdFn6wieqmpJdIYK0XuDeWu3m@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB8UdiDUpnS2ITxKms/lhD+9/zvqbIcjpX4fB6Ft/4D04++O6H
+	9xS7IcHhVXIu0Cx+nB3LPhhjYMxoqbu8QTT0FZhHJgzjKqAE3M0ji6x8s+3NU1DIajaznmwY7+K
+	+KNjJrhHHJ2cEEhVdUZI+sylQdyusjSJYBET8
+X-Gm-Gg: ASbGncveIfVJrEfcT9TdH4xZZZk0fMpILThslL6cSEWxk1dsSF/QkO9nD13sHY9KHdL
+	hQDaPtViXjL6MM6rYMdnVjCWyMlx1SSMjHUtw6bE=
+X-Google-Smtp-Source: AGHT+IFeac093aPHT58jDw2lyM0tERSxKFUNRS9QFs4KAEwE6D1MsO2nfZhs5ws67/hHOLSlvk1Aj9wt3HeqrSYPjWY=
+X-Received: by 2002:a05:6e02:80c:b0:3a7:c733:1c63 with SMTP id
+ e9e14a558f8ab-3acd78fe2e4mr1009635ab.5.1733977546297; Wed, 11 Dec 2024
+ 20:25:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241211224509.797827-1-acme@kernel.org> <20241211224509.797827-2-acme@kernel.org>
-In-Reply-To: <20241211224509.797827-2-acme@kernel.org>
+References: <20241211224509.797827-1-acme@kernel.org> <20241211224509.797827-3-acme@kernel.org>
+In-Reply-To: <20241211224509.797827-3-acme@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 11 Dec 2024 20:24:41 -0800
-Message-ID: <CAP-5=fUhyjHXx=q+VFQzvvHxkK30xQc9O59x+KJO+Q7q6o=dDg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] tools build feature: Add some comments to explain the
- FEATURE_TESTS logic
+Date: Wed, 11 Dec 2024 20:25:35 -0800
+Message-ID: <CAP-5=fWqBrw1SuY8ue2X_xOv=yStPANM9NGUBkeo+_s2O=bKTA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tools build feature: Don't set feature-libcap=1 if
+ libcap-devel isn't available
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
 	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
 	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	James Clark <james.clark@linaro.org>
+	James Clark <james.clark@linaro.org>, Quentin Monnet <qmo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -80,76 +80,47 @@ On Wed, Dec 11, 2024 at 2:45=E2=80=AFPM Arnaldo Carvalho de Melo
 >
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> The tools/build/feature/test-all.c works in conjunction with the
-> tools/build/Makefile.feature FEATURE_TESTS_BASIC and FEATURE_TESTS_EXTRA
-> contents, so that if test-all.c manages to be built, we go on and
-> iterate all entries in FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA setting
-> then to 1.
-
-nit: s/then/them/
-
-> To test this:
+> libcap isn't tested in the tools/build/feature/test-all.c fast path
+> feature detection process, so don't set it as available if test-all
+> manages to build.
 >
->   $ rm -rf /tmp/b ; mkdir /tmp/b ; make -C tools/perf O=3D/tmp/b feature-=
-dump
->   $ cat /tmp/b/feature/test-all.make.output
->   $ ldd /tmp/b/feature/test-all.bin
->         linux-vdso.so.1 (0x00007f2a47a67000)
->         libdw.so.1 =3D> /lib64/libdw.so.1 (0x00007f2a477cf000)
->         libpython3.12.so.1.0 =3D> /lib64/libpython3.12.so.1.0 (0x00007f2a=
-471fe000)
->         libm.so.6 =3D> /lib64/libm.so.6 (0x00007f2a4711a000)
->         libtraceevent.so.1 =3D> /lib64/libtraceevent.so.1 (0x00007f2a470f=
-2000)
->         libtracefs.so.1 =3D> /lib64/libtracefs.so.1 (0x00007f2a470cb000)
->         libcrypto.so.3 =3D> /lib64/libcrypto.so.3 (0x00007f2a46c1b000)
->         libz.so.1 =3D> /lib64/libz.so.1 (0x00007f2a46bf8000)
->         libbabeltrace-ctf.so.1 =3D> /lib64/libbabeltrace-ctf.so.1 (0x0000=
-7f2a46bad000)
->         libcapstone.so.5 =3D> /lib64/libcapstone.so.5 (0x00007f2a464b8000=
-)
->         libopencsd_c_api.so.1 =3D> /lib64/libopencsd_c_api.so.1 (0x00007f=
-2a464a8000)
->         libopencsd.so.1 =3D> /lib64/libopencsd.so.1 (0x00007f2a46422000)
->         libelf.so.1 =3D> /lib64/libelf.so.1 (0x00007f2a46406000)
->         libnuma.so.1 =3D> /lib64/libnuma.so.1 (0x00007f2a463f6000)
->         libslang.so.2 =3D> /lib64/libslang.so.2 (0x00007f2a46113000)
->         libperl.so.5.38 =3D> /lib64/libperl.so.5.38 (0x00007f2a45d74000)
->         libc.so.6 =3D> /lib64/libc.so.6 (0x00007f2a45b83000)
->         liblzma.so.5 =3D> /lib64/liblzma.so.5 (0x00007f2a45b50000)
->         libzstd.so.1 =3D> /lib64/libzstd.so.1 (0x00007f2a45a91000)
->         libbz2.so.1 =3D> /lib64/libbz2.so.1 (0x00007f2a45a7b000)
->         /lib64/ld-linux-x86-64.so.2 (0x00007f2a47a69000)
->         libbabeltrace.so.1 =3D> /lib64/libbabeltrace.so.1 (0x00007f2a45a6=
-b000)
->         libpopt.so.0 =3D> /lib64/libpopt.so.0 (0x00007f2a45a5b000)
->         libuuid.so.1 =3D> /lib64/libuuid.so.1 (0x00007f2a45a51000)
->         libgmodule-2.0.so.0 =3D> /lib64/libgmodule-2.0.so.0 (0x00007f2a45=
-a4a000)
->         libglib-2.0.so.0 =3D> /lib64/libglib-2.0.so.0 (0x00007f2a458fa000=
-)
->         libstdc++.so.6 =3D> /lib64/libstdc++.so.6 (0x00007f2a45696000)
->         libgcc_s.so.1 =3D> /lib64/libgcc_s.so.1 (0x00007f2a45668000)
->         libcrypt.so.2 =3D> /lib64/libcrypt.so.2 (0x00007f2a45630000)
->         libpcre2-8.so.0 =3D> /lib64/libpcre2-8.so.0 (0x00007f2a45590000)
->   $ head /tmp/b/FEATURE-DUMP
->   feature-backtrace=3D1
->   feature-libdw=3D1
->   feature-eventfd=3D1
->   feature-fortify-source=3D1
->   feature-get_current_dir_name=3D1
->   feature-gettid=3D1
->   feature-glibc=3D1
->   feature-libbfd=3D1
->   feature-libbfd-buildid=3D1
->   feature-libcap=3D1
+> There are other users of this feature detection mechanism, and they
+> explicitely ask for libcap to be tested, so are not affected by this
+> patch, for instance, with this patch in place:
+>
+>   $ make -C tools/bpf/bpftool/ clean
+>   <SNIP>
+>   make: Leaving directory '/home/acme/git/perf-tools-next/tools/bpf/bpfto=
+ol'
+>   =E2=AC=A2 [acme@toolbox perf-tools-next]$ make -C tools/bpf/bpftool/
+>   make: Entering directory '/home/acme/git/perf-tools-next/tools/bpf/bpft=
+ool'
+>
+>   Auto-detecting system features:
+>   ...                         clang-bpf-co-re: [ on  ]
+>   ...                                    llvm: [ on  ]
+>   ...                                  libcap: [ on  ]
+>   ...                                  libbfd: [ on  ]
+>   ...                             libelf-zstd: [ on  ]
+>   <SNIP>
+>     LINK    bpftool
+>   make: Leaving directory '/home/acme/git/perf-tools-next/tools/bpf/bpfto=
+ol'
 >   $
+>   $ sudo rpm -e libcap-devel
+>   $ make -C tools/bpf/bpftool/
+>   <SNIP>
+>   make: Entering directory '/home/acme/git/perf-tools-next/tools/bpf/bpft=
+ool'
 >
-> There are inconsistencies that are being audited, as can be seen above
-> with the libcap case, that is not linked with test-all.bin nor is
-> present in test-all.c, so shouldn't be set as present. Further patches
-> are going to address those inconsistencies, but lets document this a bit
-> more to reduce the chances of this happening again.
+>   Auto-detecting system features:
+>   ...                         clang-bpf-co-re: [ on  ]
+>   ...                                    llvm: [ on  ]
+>   ...                                  libcap: [ OFF ]
+>   ...                                  libbfd: [ on  ]
+>   ...                             libelf-zstd: [ on  ]
+>
+>   $
 >
 > Cc: Adrian Hunter <adrian.hunter@intel.com>
 > Cc: Ian Rogers <irogers@google.com>
@@ -157,67 +128,10 @@ a4a000)
 > Cc: Jiri Olsa <jolsa@kernel.org>
 > Cc: Kan Liang <kan.liang@linux.intel.com>
 > Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Quentin Monnet <qmo@kernel.org>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
-
-> ---
->  tools/build/Makefile.feature | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 80563154318601ac..52600e4d33af8712 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -28,6 +28,41 @@ endef
->  #   the rule that uses them - an example for that is the 'bionic'
->  #   feature check. ]
->  #
-> +# These + the ones in FEATURE_TESTS_EXTRA are included in
-> +# tools/build/feature/test-all.c and we try to build it all together
-> +# then setting all those features to '1' meaning they are all enabled.
-> +#
-> +# There are things like fortify-source that will be set to 1 because tes=
-t-all
-> +# is built with the flags needed to test if its enabled, resulting in
-> +#
-> +#   $ rm -rf /tmp/b ; mkdir /tmp/b ; make -C tools/perf O=3D/tmp/b featu=
-re-dump
-> +#   $ grep fortify-source /tmp/b/FEATURE-DUMP
-> +#   feature-fortify-source=3D1
-> +#   $
-> +#
-> +#   All the others should have lines in tools/build/feature/test-all.c l=
-ike:
-> +#
-> +#    #define main main_test_disassembler_init_styled
-> +#    # include "test-disassembler-init-styled.c"
-> +#    #undef main
-> +#
-> +#    #define main main_test_libzstd
-> +#    # include "test-libzstd.c"
-> +#    #undef main
-> +#
-> +#    int main(int argc, char *argv[])
-> +#    {
-> +#      main_test_disassembler_four_args();
-> +#      main_test_libzstd();
-> +#      return 0;
-> +#    }
-> +#
-> +#    If the sample above works, then we end up with these lines in the F=
-EATURE-DUMP
-> +#    file:
-> +#
-> +#    feature-disassembler-four-args=3D1
-> +#    feature-libzstd=3D1
-> +#
->  FEATURE_TESTS_BASIC :=3D                  \
->          backtrace                       \
->          libdw                           \
-> --
-> 2.47.0
->
