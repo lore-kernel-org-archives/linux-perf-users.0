@@ -1,124 +1,99 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BA013D531
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 08:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99F2165F01
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 08:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733990474; cv=none; b=UBjx2PMO3/sgBvDljVzh/XcXHjqqZOdX8xu1NFtdnjC1v2Y3lT6QoC0IR+YrR2WC4tD3blyQL6lQBqcMlwTAqke6rpiElOgTG7As2UopuQo3QoGf00nYJGJyCzD4+EYOS34Re/UY/5DkwtFvZZZLaLrPBwtxAUlJVSYXUne0Sqw=
+	t=1733990736; cv=none; b=KMlLsH/WnLYqrFcw7bX7LU0gU2xTIKWyVJcvraptbhrcYOR///oDQuoaxw8Kds59GOE3u7b7xf4c1I+Ob6OqrzACyvdn5CVEKCEtFp2Zok5BdMaHOBzm3NwUZhmBKw6RaoAmBBcexlEKM7NaJkTm0XRqutDMj0Nk/5dp3G8eT2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733990474; c=relaxed/simple;
-	bh=Dr+cz0+BDjHJiX3SZyGOwqdo6Z0WguMW6sZx5zWpjKk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LEd0+kCPG0nYfVhF74aDkMehF0UsZiDqVOfiTf+pJP1Ff28lYkEUoBGvUdtW/pUND+SdyN4RzPZmgvX5ozBmQXNQHEaQ5vqPptp/AuO0rrTvv64T0pQnPCy9jpIkKkSnHoSYsG9lYz8Equ/a0vw1jjA3d7MngHeSmSYqvdpcDRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NYlxKwrD; arc=none smtp.client-ip=209.85.166.171
+	s=arc-20240116; t=1733990736; c=relaxed/simple;
+	bh=yqB0/GPRcQDx/x2Af/mlqf6+hKzIMv4AZqz43FGoaOQ=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=Q8bsIOln2OQhR+XE5qzw37Lw3XHlyOn3GMMhekEvwT9Md+vaUX/CVlJVqmEu2zhbGd4m12YoGEwqtueInxypa4BSI+GgS5Pg8f9MxwppTEUFGTEpR88dtfHzeVI52vGHp8d9N73zDYIvEpWCSe/9rpDVg3QcxgWvSA9/g9Mv+sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ztxe7jyg; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NYlxKwrD"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a814c54742so89345ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 00:01:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ztxe7jyg"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ef35527569so3718697b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 00:05:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733990472; x=1734595272; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zGnkR63xNQ6iE8HARxg6I3n9l9ITyeS7X74GP6uMkOE=;
-        b=NYlxKwrDqUiN31srAv3oIEM/XcQzxpOUxoVZR92pmBmhR8xaRkN6JN0Hdf0GDtZwmg
-         rD7UEmH5aMxWWKkGMydfU8tGKSAUDw8WXjEAP9sqxBejzqVKJhjjPMHWYK55nZMHxALJ
-         C3LKZcM0jEKMRNZiIcL/kH9DGP6KTSPqdl8Aibdyye6VbmQjetT9dK5eu6EoEPJBiHbc
-         2YtGTp2dxLYcAd189aNoTnftcsQVCfeuT9r2+v1zyBvdGqRePFnylckmrjOxEVhnYazr
-         lXSoubLdABZWIxmwfhEWy3MzKP2SmRU9+4ZuhdOdkrulOuByA0AVVHw3scnLq8ln8rdd
-         NZCQ==
+        d=google.com; s=20230601; t=1733990734; x=1734595534; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Xx8jjmLWLaNrzTLWOTiBT3mcX72ApM29yyW3EYU8tWc=;
+        b=Ztxe7jyg23+YM0A4Sb3iX8lUH1LtJ3dAu1Qxqrq8xhHd3PWeR6tWLBLmil4+W+vcWS
+         PO9DeLkQK8mEMH92gtACl/kiLvmAzf5w7rLGQ0F7sCD+JBrw/ixumZI4oNr24xsKtRZW
+         9EDFxgREneH07bUGi5ztEuGWUNgg4zXkrnitLugjdCO6g0asKlhmjHqBr6SIQgRjn7vB
+         smpBUWlk8+nY1eWB3Tv557egJeetBi5PSRVBG7YuhBHpPR2nnhL7w8QjHDiAi++pHyqu
+         5H7SGNCbxKZGhZU8jsS34Hb9kH5BKSdx93zA7xNIurlVnXwSRH59afGR3kgDncNt1W7z
+         mpGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733990472; x=1734595272;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zGnkR63xNQ6iE8HARxg6I3n9l9ITyeS7X74GP6uMkOE=;
-        b=mkjHGNgn2jOKZhxqHFzIFtAtE6MTLwJUULMLn2aumoo3fa92DgWl3oJX6FHMARoLjz
-         C+q7vUwy1e9DC/yB9nBcIMxn23hv7IQnlTQ2Wr6QoLitvar4YJscTX+SMvpUCteGKqWy
-         CUUoiK4JpkRh2ErrKwK/LcuEfyMH9Za8sSb+osfd271mKzA30AMPabDox5I1Pi9KEvzt
-         vh2vxtNd/8ay/9VNdMttXpJiMoq3HAOP0CnfMdAJFidr6Mb1tktRb7gKS64HBeFQmhKZ
-         q5mZedLtlfizI+anJaygSq5dCFGmSjsQCrR7ZhmQpVfq0SsheSyDxieA9EjIK/NDiC0b
-         A0vw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZjeZd2dO5QKEioEfMowEghpg6mV1bJKqmQHgayE1DrjliBFTR90bBPBHQXSW2j7H972vfwa7jcSNPcixE9UkO@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjckJO3TuuDkBRZaMF6A1Djai0A4lOnNtJdeDrQcRFooGFvA8+
-	9QGaNTB1ayoNJE8mk0k/GTivoARKnBta1x/V2p3VX77/KZq1p0RAXqscdh0v5yTLPkW5nFS6P1o
-	HO3Hq483OahdaGAr6VNO2wMKH0tVmnVUV2shZ
-X-Gm-Gg: ASbGncume6acNdOaSqgJaQs/DQvAV4c/nz+R6KEOx7VGHMi9f8I5NoLC6qpPBYyr7tx
-	QMJ1DS/Jow21UPc8qDQ9dtoz7QEKOTxkw5vNXAj8=
-X-Google-Smtp-Source: AGHT+IGF/N6gjFtzv8jA7XxepjmFMkaNJvoKiN88LE+17oqBT3BkCjJ8+HegVao/zGpFfBSWTcBPW5GovIVhbzxvru4=
-X-Received: by 2002:a05:6e02:12e2:b0:3a7:5be0:5a06 with SMTP id
- e9e14a558f8ab-3acdb2e94a4mr1463205ab.29.1733990471902; Thu, 12 Dec 2024
- 00:01:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733990734; x=1734595534;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Xx8jjmLWLaNrzTLWOTiBT3mcX72ApM29yyW3EYU8tWc=;
+        b=nUXJRXOOcwYkEgXwhj1lgUIQNrxLSFDXVBrCMUz0RosTbA3d7QDCt+BeIUE1caC4qY
+         A9Z6v5JtuobyB6RoTA2WwILsyHMYqRV7tpaakBw/VM4xjdVKRh0ZHfpyoRuXvYZk/WPI
+         hNEy6InXqQ0dPm/lPqwR8s00ptGio1brtGzU0cVZzCUMnfhGW636jkd0+9QewZGk6mGj
+         wqNVEAl9goiz5YCzUWjoGJf7FFh0vgcyIcr5sR5I+rNUCQgBAJwoSJ58a+UXDivd8g1c
+         FsQgp6PqM5yn49gxAuQSZ7cshhUYYtNMNUiho4RzSQ6EFCteqrg0qFjaic6Aj3t0g/Zz
+         OehQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1rho2jzrw972sAgMPyD/kXekCN98Cici0A1p088fiRSzKlvqtLHUAEJd0lTsWNx0/E6mE8yQJNr1y25bCM9XP@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAcoxM+2Xdz+6dlGqdA9sxVJTWbRdHja+xKmWqDpeRuqEM441q
+	uk2tTR+WnYVlanze3v+EmnGrtYjEOJAi4DULL84olTH/KffAxtr8RHzJNARK8MaV5GyW+VNo9/Z
+	vY/Rrbw==
+X-Google-Smtp-Source: AGHT+IESbMp1bRdGyzcWTColyA4uyZXvAYYXGzuS3Kl3isywfeiyDfYWMaodiV5KNSAdllszta0WfMhw37SQ
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:c22f:1975:e7cf:849c])
+ (user=irogers job=sendgmr) by 2002:a25:3611:0:b0:e39:95b8:a83b with SMTP id
+ 3f1490d57ef6-e3da21d5616mr1623276.7.1733990733836; Thu, 12 Dec 2024 00:05:33
+ -0800 (PST)
+Date: Thu, 12 Dec 2024 00:05:28 -0800
+Message-Id: <20241212080530.1329601-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241112160048.951213-1-james.clark@linaro.org> <Z1iLqNmDyNH7fDpa@x1>
-In-Reply-To: <Z1iLqNmDyNH7fDpa@x1>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
+Subject: [PATCH v1 1/3] perf synthetic-events: Ensure features are aligned
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 12 Dec 2024 00:01:00 -0800
-Message-ID: <CAP-5=fUfPnkS0HS1dMx2uR-a4GPfk4E4nD85rUtRUbVcETtY9g@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] perf stat: Fix trailing comma when there is no
- metric unit
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	namhyung@kernel.org, tim.c.chen@linux.intel.com, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, linux-kernel@vger.kernel.org
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Sun Haiyong <sunhaiyong@loongson.cn>, 
+	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 10, 2024 at 10:42=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Tue, Nov 12, 2024 at 04:00:40PM +0000, James Clark wrote:
-> > The first commit is failing on Arm and I think the fix should stop more
-> > trailing comma issues which keep happening.
-> >
-> > The second one I just noticed when looking at it. I don't feel strongly
-> > about it so not sure if we should do it or not, but seems like the empt=
-y
-> > metric-units exclusion from the JSON should be consistent if we're goin=
-g
-> > to have it at all.
-> >
-> > Changes since v2:
-> >   * Do more documentation and tidyups around struct outstate
->
-> Ian, have you had the chance of going over this series?
+Features like hostname have arbitrary size and break the assumed
+8-byte alignment of perf events. Pad all feature events until 8-byte
+alignment is restored.
 
-It looks good to me, I particularly appreciate the additional
-comments/documentation. Tested with sanitizers.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/synthetic-events.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Tested-by: Ian Rogers <irogers@google.com>
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index f8ac2ac2da45..5b14244253b5 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -2401,6 +2401,11 @@ int perf_event__synthesize_features(const struct perf_tool *tool, struct perf_se
+ 			pr_debug("Error writing feature\n");
+ 			continue;
+ 		}
++		while (PERF_ALIGN(ff.offset, sizeof(u64)) != ff.offset) {
++			char c = 0;
++
++			do_write(&ff, &c, 1);
++		}
+ 		/* ff.buf may have changed due to realloc in do_write() */
+ 		fe = ff.buf;
+ 		memset(fe, 0, sizeof(*fe));
+-- 
+2.47.1.613.gc27f4b7a9f-goog
 
-Thanks,
-Ian
-
-> > Changes since v1:
-> >   * Don't skip printing when the metric-unit string is empty but pass
-> >     NULL instead of an empty string.
-> >
-> > James Clark (5):
-> >   perf stat: Fix trailing comma when there is no metric unit
-> >   perf stat: Also hide metric-units from JSON when event didn't run
-> >   perf stat: Remove empty new_line_metric function
-> >   perf stat: Document and simplify interval timestamps
-> >   perf stat: Document and clarify outstate members
-> >
-> >  tools/perf/arch/x86/util/iostat.c             |   4 +
-> >  .../tests/shell/lib/perf_json_output_lint.py  |  14 +-
-> >  tools/perf/util/stat-display.c                | 242 ++++++++++--------
-> >  tools/perf/util/stat-shadow.c                 |   5 +-
-> >  4 files changed, 147 insertions(+), 118 deletions(-)
-> >
-> > --
-> > 2.34.1
