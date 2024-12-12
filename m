@@ -1,62 +1,62 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFE11885AA;
-	Thu, 12 Dec 2024 02:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD161891A9;
+	Thu, 12 Dec 2024 02:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733970303; cv=none; b=cdLcGlGoKWsijPF7x0SNH+TRiKWoRmmZcldS2w7r8zfcjm37xjx0nrd/5wcsNbYmFdimCHEHwo0wxYnBXusUg0c18m3vNAXzhkuQMCGBsq4s5MAxkAljMPb7KqfPo/2h/8Nx6QzTsvrkkRffjSgchLFL+WhZwP5VjGsUwrDY9o8=
+	t=1733970305; cv=none; b=KV50S8p0mnqPCA72FscBtgK4xaDzHecx7SRGMdNKYJkV0CTnsYjQ+JXD+BRGll3PsMlVSVIZfmiLRuckMnpRkkk//h8M8iKGvi0Ld2O8dMUeGvcGI1XbUvRcWoKoNHVPD8rx5tSecZai88N5pL+PkyJIqxW5+M9UcYQF7Q+8mg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733970303; c=relaxed/simple;
-	bh=lwpItHlU96z4UGlv+o5kLmRFuWMmSjHuiiEw79vAX2k=;
+	s=arc-20240116; t=1733970305; c=relaxed/simple;
+	bh=sXShppuk91lG1gcVC4ZBQW0g/2laIvfgKYRovt48150=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OUooxeaoCdUCquC+vS9y5r9z5zJd6BNgweqhnM/7KSlsvRYFiKIR085tTKtbnAz7U371Auxjs7baQuxD7ySmCzvspPtp2Mf4tjZl5z5h+useHGDzh3HRzWMe4mHWj0cEfB6AgyvIGefP+tnsSQn+tjTUAsHhoROmARKn4ADUmhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UlK/LiE4; arc=none smtp.client-ip=209.85.216.53
+	 MIME-Version; b=C5VL1WW1brgpjTIyDXG/HMbLNap7hs+/bJEUX+J4RG/i7U1szfGeR4sc8XjJhhBNaitbp9lRygiZS8ckp7qYwtGMbR33jwFg6HjqB63hl0+k7eZgoJG71nZkafg6uWACoOrtlwVpRgvqXUpHsUqVCdDpJjnVCA62YJRM7tjiJMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TErHzxyb; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlK/LiE4"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ef714374c0so96307a91.0;
-        Wed, 11 Dec 2024 18:25:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TErHzxyb"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2efa856e4a4so60816a91.0;
+        Wed, 11 Dec 2024 18:25:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733970301; x=1734575101; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1733970303; x=1734575103; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jcAu/W6kHIkTq88lSfam6h5x/9TA0/DITGh4yas2uXE=;
-        b=UlK/LiE4hflUoh8BbIWq6eHXNo7bniMdfymuNpaSVSBsoiW7GBBXDk0ZRZAVfXAU/h
-         tpKczx2CChCGLsI4O8KKi/YNA9yVLILBrQ/Bshq4yHwfB2uDddaIshqyLyKe+RUq0LtO
-         OUZKM5i8fFjmk+YILON9XDX1VqjVpRc22pr1xcGJXqoQb/9i/Rbvl20b4NoftFIzlj/r
-         l6sr+dj8pZCKdsUESczcf8q5h0AF0t2mdk+7O9a8mih6WnWeO2AcVljy11ae6PRXDrpP
-         +i2By8eOAxJnzN0CjtdS+bui4uN13tuOPbjsz9Vnwy5yCwyC2qVIAiimGfXkQt5BrYpu
-         rhPw==
+        bh=2fS22MoLd8wNO6s8nIhAnqT6Lq7LzbIV7Mpi5Zi+JLU=;
+        b=TErHzxybE090b517b+4IBiTytsG8gNtXgsXssGNsqdufGZbnd1ctAOCrL9sAZXBLn6
+         gyQD+o/e31n532KcubV1pKcjbL0O+VJYEAWD25H/l1UqtF1jgiVBtDy2XMFNvj4ZVv7V
+         +tlXf+Z33QxFuE71UKur3tchgkEFFzCC9+vMy01AZp1ZFEa/U7zk/yp42f9i86kgIKDl
+         OKRAh8sb97ie6Yr7kyncDheAldTKShl3+ageNp+US6b0h6cwMaziFs/rpLfU0Mdq32wP
+         MrhQ4odpoG2j272uRSYgKzhknsXDmgTsYdrgu4cBKHwOPrXptW+luwU8pLoTmnWKpWfj
+         rLhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733970301; x=1734575101;
+        d=1e100.net; s=20230601; t=1733970303; x=1734575103;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jcAu/W6kHIkTq88lSfam6h5x/9TA0/DITGh4yas2uXE=;
-        b=FHbTmZ9tFjIEaPHV5WRGiFdk/qkKVXyUvaRpYpT6Xn39dkgtusipchYM1wMWahvUVo
-         fFR/la1a+iyaw2tbs66GpzxdDlyfN3F3waZfCwqHxVquzCbBvz5xmBkgef/p2JyTE4Bu
-         borg2PQ8+Si1qgWU0v8atBz/9p5B3rphwAphowIGvmAGscgQxWWbiy2iqZnX+q8rID2t
-         MInih7LGHnY5NvCX1X2DX/gyxAlW9z0Z/vUD1Po1q9hBtTHlewM4HSlL0byugzPHEwmm
-         4NS7tDt+qpXjRxshEuYkNAnpOVOaoNzKPD80SfPz7ThRpYbYLrsYY3UQl1PMKEakjQPO
-         wS9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU5PmTydJMSuyB48dnfStpUtulFP8JsZ1YCjmziGtKT/TkYcM3FpXGfr8rw/lXYZokNeEPPqQNQEIY0DWY=@vger.kernel.org, AJvYcCXrY+zXvxP1wYKbR4/aMXSSnEULe+HPa6DiD8HQVNJBJj91cEzzvAdqYQ0w76nikOD5Kk+1q1wufIczvxVsiJHHVg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz59maEHiL6tsSS3YvzyJiNkZNtj80ne6Lu9QWQDsGfuBVmOcaM
-	UtiL4RK3CCnlM3rOg5rGqcb1LutTUx3z4W6hVdi8ESpivuXHfOt6
-X-Gm-Gg: ASbGncta62NFyvHY0LPgJ1LDnXevoPmEg4JBH3Oqgn1kGTU0oXS7uNtWyCd4O8LqY48
-	zRbLk8m1nA9N62t4tQGz6Kd+G1PZxVO5B0Tx77BhM2giHE1wz/8+45HJvWKzHE1HNsEVRafdTDe
-	SGQRPA183nMmYRP/IwOw10IVLxyyyxa/x/InWJkOTwqNI2yDDKAJ/FsMAJVRZJRvI0GZbYO37py
-	IkXEt2huDnwD1WmiFGmpSmn1bl4KdBC8x1hRTfHWa3DRTickkzbGMvbk7NzHhcDqz7PrBm7phMw
-	h/ht20KGwPfW
-X-Google-Smtp-Source: AGHT+IE7w714CujGIQKGjhkJ2iYDP4ZnIQCCgB5bZsYlNyn+OqmvKi4m+hF+0DyIu4aD2J4Dx+1wWg==
-X-Received: by 2002:a17:90b:1d03:b0:2ee:8253:9a9f with SMTP id 98e67ed59e1d1-2f13ac54753mr2362343a91.11.1733970301486;
-        Wed, 11 Dec 2024 18:25:01 -0800 (PST)
+        bh=2fS22MoLd8wNO6s8nIhAnqT6Lq7LzbIV7Mpi5Zi+JLU=;
+        b=FNV6aJqGxiKQC6wcEmmZHFBH2oKXnMyQ7eORCDUisFftL9gyeRO0qnSsPwgCvRnr63
+         /Rk7oxTjBZ8NFgEBuT1w2To2oNF8tp0QDocxrYvcyA+gyyic0d3msQzzXLz2eKucX3ja
+         u0zmpKE6tzSELqEn+KQoPXNNswjm0AgtHNNMjMY1ByBgK9Kvbd9bp5ShkZHZS1GIXFlA
+         PANT1gj1RveGzPfjYaNKfYQM35+1h/GUBpyD6Y4HGZhbZytcIBEoEf8kDhkv4P8vUYrD
+         wJxRfO7FLenv6A1PwE0IdRmSKI3eCU25z2g+3VkAd0IEaAuttNxefIHIkVNun/yBhXWJ
+         UFWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU39KghEbbgamC7BOrxJHLVAILHa0SXWsL68VpvnE/LD9WNogZXU3bqA8LH4TLASSbyV1YIESM/oC3LtJuZ73kauw==@vger.kernel.org, AJvYcCWJ7ReIdjomUVZW5qfpOFp0T80FX+xZEduSHDeT0NDwHhFEASV1XjQfg7rFl2ts9qs5I9gGBlsOxUGYTlc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziGdZLjEMoP+DxFxmb7cVOyjjjwu98PKvq8hfrcnyakj++Tpoa
+	lvKV+vLWHUqos3DBMTWbkpe0eG5FRXThqa3ZunlIagXjNKsM9/Dj
+X-Gm-Gg: ASbGncvfQJDUcWJQ8yehjNpPTvxCS7f/8jf4C1+nZcd2Hc+6Ah0TDaE3QZFUCz74EAO
+	PGbjw2QPLrhQQf2l4jtxDWMpBcVao1/e7hDEtg33szu79wOHUP4WSc84rzyr/8NXKHMXLn3e34J
+	+vjK8VJ96Y/T685MvM3HDSKy6OF1czUofJBxxgLZSY2l5d/1pW2oWpmPc3ljvvNKEe0dRdQrRmx
+	P8sU0M4ep8GkTB8lpZcweSDgTbFnQqzWiC5Cvw+3Tb8n4HXrrByxrBlPDGdU+xMWkZUZ42YrFAu
+	6n1giHycHLMy
+X-Google-Smtp-Source: AGHT+IH+b3LrfT0YaB0UdI0f2DjsgF73u7+XWHbZuV7kdoN+tIRR7OalvRPIZy6LPzqFdxOA05z9RQ==
+X-Received: by 2002:a17:90b:4b88:b0:2ee:9d57:243 with SMTP id 98e67ed59e1d1-2f1392574fdmr3312387a91.1.1733970303161;
+        Wed, 11 Dec 2024 18:25:03 -0800 (PST)
 Received: from mbp.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f142daeb5asm112583a91.12.2024.12.11.18.24.59
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f142daeb5asm112583a91.12.2024.12.11.18.25.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2024 18:25:01 -0800 (PST)
+        Wed, 11 Dec 2024 18:25:02 -0800 (PST)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: namhyung@kernel.org,
@@ -69,13 +69,13 @@ Cc: namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Howard Chu <howardchu95@gmail.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	Ingo Molnar <mingo@redhat.com>,
 	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v12 08/10] perf record --off-cpu: Dump the remaining samples in BPF's stack trace map
-Date: Wed, 11 Dec 2024 18:24:18 -0800
-Message-ID: <20241212022420.1035999-9-howardchu95@gmail.com>
+	Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v12 09/10] perf record --off-cpu: Add --off-cpu-thresh option
+Date: Wed, 11 Dec 2024 18:24:19 -0800
+Message-ID: <20241212022420.1035999-10-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241212022420.1035999-1-howardchu95@gmail.com>
 References: <20241212022420.1035999-1-howardchu95@gmail.com>
@@ -87,16 +87,19 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Dump the remaining samples, as if it is dumping a direct sample.
+Specify the threshold for dumping offcpu samples with --off-cpu-thresh,
+the unit is milliseconds. Default value is 500ms.
 
-Put the stack trace, tid, off-cpu time and cgroup id into the raw_data
-section, just like a direct off-cpu sample coming from BPF's
-bpf_perf_event_output().
+Example:
 
-This ensures that evsel__parse_sample() correctly parses both direct
-samples and accumulated samples.
+  perf record --off-cpu --off-cpu-thresh 824
 
+The example above collects off-cpu samples where the off-cpu time is
+longer than 824ms
+
+Suggested-by: Ian Rogers <irogers@google.com>
 Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -106,113 +109,134 @@ Cc: James Clark <james.clark@linaro.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20241108204137.2444151-10-howardchu95@gmail.com
+Link: https://lore.kernel.org/r/20241108204137.2444151-2-howardchu95@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/bpf_off_cpu.c | 59 +++++++++++++++++++++--------------
- 1 file changed, 35 insertions(+), 24 deletions(-)
+ tools/perf/Documentation/perf-record.txt |  9 ++++++++
+ tools/perf/builtin-record.c              | 26 ++++++++++++++++++++++++
+ tools/perf/util/bpf_off_cpu.c            |  3 +++
+ tools/perf/util/off_cpu.h                |  1 +
+ tools/perf/util/record.h                 |  1 +
+ 5 files changed, 40 insertions(+)
 
-diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-index 84c3bf6a9614..2e7e4ae43ffc 100644
---- a/tools/perf/util/bpf_off_cpu.c
-+++ b/tools/perf/util/bpf_off_cpu.c
-@@ -37,6 +37,8 @@ union off_cpu_data {
- 	u64 array[1024 / sizeof(u64)];
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 242223240a08..f3ac4c739d5f 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -829,6 +829,15 @@ filtered through the mask provided by -C option.
+ 	only, as of now.  So the applications built without the frame
+ 	pointer might see bogus addresses.
+ 
++	off-cpu profiling consists two types of samples: direct samples, which
++	share the same behavior as regular samples, and the accumulated
++	samples, stored in BPF stack trace map, presented after all the regular
++	samples.
++
++--off-cpu-thresh::
++	Once a task's off-cpu time reaches this threshold (in milliseconds), it
++	generates a direct off-cpu sample. The default is 500ms.
++
+ --setup-filter=<action>::
+ 	Prepare BPF filter to be used by regular users.  The action should be
+ 	either "pin" or "unpin".  The filter can be used after it's pinned.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 0b637cea4850..62183a6857f2 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -3147,6 +3147,28 @@ static int record__parse_mmap_pages(const struct option *opt,
+ 	return ret;
+ }
+ 
++static int record__parse_off_cpu_thresh(const struct option *opt,
++					const char *str,
++					int unset __maybe_unused)
++{
++	struct record_opts *opts = opt->value;
++	char *endptr;
++	u64 off_cpu_thresh_ms; // converted to us for potential future improvements
++
++	if (!str)
++		return -EINVAL;
++
++	off_cpu_thresh_ms = strtoull(str, &endptr, 10);
++
++	/* the threshold isn't string "0", yet strtoull() returns 0, parsing failed */
++	if (*endptr || (off_cpu_thresh_ms == 0 && strcmp(str, "0")))
++		return -EINVAL;
++	else
++		opts->off_cpu_thresh_us = off_cpu_thresh_ms * USEC_PER_MSEC;
++
++	return 0;
++}
++
+ void __weak arch__add_leaf_frame_record_opts(struct record_opts *opts __maybe_unused)
+ {
+ }
+@@ -3340,6 +3362,7 @@ static struct record record = {
+ 		.ctl_fd              = -1,
+ 		.ctl_fd_ack          = -1,
+ 		.synth               = PERF_SYNTH_ALL,
++		.off_cpu_thresh_us   = OFFCPU_THRESH,
+ 	},
  };
  
-+u64 off_cpu_raw[MAX_STACKS + 5];
-+
- static int off_cpu_config(struct evlist *evlist)
- {
- 	char off_cpu_event[64];
-@@ -307,6 +309,7 @@ int off_cpu_write(struct perf_session *session)
- {
- 	int bytes = 0, size;
- 	int fd, stack;
-+	u32 raw_size;
- 	u64 sample_type, val, sid = 0;
- 	struct evsel *evsel;
- 	struct perf_data_file *file = &session->data->file;
-@@ -346,46 +349,54 @@ int off_cpu_write(struct perf_session *session)
+@@ -3562,6 +3585,9 @@ static struct option __record_options[] = {
+ 	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
+ 	OPT_STRING(0, "setup-filter", &record.filter_action, "pin|unpin",
+ 		   "BPF filter action"),
++	OPT_CALLBACK(0, "off-cpu-thresh", &record.opts, "ms",
++		     "Dump off-cpu samples if off-cpu time exceeds this threshold (in milliseconds). (Default: 500ms)",
++		     record__parse_off_cpu_thresh),
+ 	OPT_END()
+ };
  
- 	while (!bpf_map_get_next_key(fd, &prev, &key)) {
- 		int n = 1;  /* start from perf_event_header */
--		int ip_pos = -1;
+diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+index 2e7e4ae43ffc..c3ac19393c0f 100644
+--- a/tools/perf/util/bpf_off_cpu.c
++++ b/tools/perf/util/bpf_off_cpu.c
+@@ -14,6 +14,7 @@
+ #include "util/strlist.h"
+ #include <bpf/bpf.h>
+ #include <internal/xyarray.h>
++#include <linux/time64.h>
  
- 		bpf_map_lookup_elem(fd, &key, &val);
+ #include "bpf_skel/off_cpu.skel.h"
  
-+		/* zero-fill some of the fields, will be overwritten by raw_data when parsing */
- 		if (sample_type & PERF_SAMPLE_IDENTIFIER)
- 			data.array[n++] = sid;
--		if (sample_type & PERF_SAMPLE_IP) {
--			ip_pos = n;
-+		if (sample_type & PERF_SAMPLE_IP)
- 			data.array[n++] = 0;  /* will be updated */
--		}
- 		if (sample_type & PERF_SAMPLE_TID)
--			data.array[n++] = (u64)key.pid << 32 | key.tgid;
-+			data.array[n++] = 0;
- 		if (sample_type & PERF_SAMPLE_TIME)
- 			data.array[n++] = tstamp;
--		if (sample_type & PERF_SAMPLE_ID)
--			data.array[n++] = sid;
- 		if (sample_type & PERF_SAMPLE_CPU)
- 			data.array[n++] = 0;
- 		if (sample_type & PERF_SAMPLE_PERIOD)
--			data.array[n++] = val;
--		if (sample_type & PERF_SAMPLE_CALLCHAIN) {
--			int len = 0;
--
--			/* data.array[n] is callchain->nr (updated later) */
--			data.array[n + 1] = PERF_CONTEXT_USER;
--			data.array[n + 2] = 0;
--
--			bpf_map_lookup_elem(stack, &key.stack_id, &data.array[n + 2]);
--			while (data.array[n + 2 + len])
-+			data.array[n++] = 0;
-+		if (sample_type & PERF_SAMPLE_RAW) {
-+			/*
-+			 *  [ size ][ data ]
-+			 *  [     data     ]
-+			 *  [     data     ]
-+			 *  [     data     ]
-+			 *  [ data ][ empty]
-+			 */
-+			int len = 0, i = 0;
-+			void *raw_data = (void *)data.array + n * sizeof(u64);
-+
-+			off_cpu_raw[i++] = (u64)key.pid << 32 | key.tgid;
-+			off_cpu_raw[i++] = val;
-+
-+			/* off_cpu_raw[i] is callchain->nr (updated later) */
-+			off_cpu_raw[i + 1] = PERF_CONTEXT_USER;
-+			off_cpu_raw[i + 2] = 0;
-+
-+			bpf_map_lookup_elem(stack, &key.stack_id, &off_cpu_raw[i + 2]);
-+			while (off_cpu_raw[i + 2 + len])
- 				len++;
- 
--			/* update length of callchain */
--			data.array[n] = len + 1;
-+			off_cpu_raw[i] = len + 1;
-+			i += len + 2;
-+
-+			off_cpu_raw[i++] = key.cgroup_id;
- 
--			/* update sample ip with the first callchain entry */
--			if (ip_pos >= 0)
--				data.array[ip_pos] = data.array[n + 2];
-+			raw_size = i * sizeof(u64) + sizeof(u32); /* 4 bytes for alignment */
-+			memcpy(raw_data, &raw_size, sizeof(raw_size));
-+			memcpy(raw_data + sizeof(u32), off_cpu_raw, i * sizeof(u64));
- 
--			/* calculate sample callchain data array length */
--			n += len + 2;
-+			n += i + 1;
+@@ -286,6 +287,8 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
  		}
- 		if (sample_type & PERF_SAMPLE_CGROUP)
- 			data.array[n++] = key.cgroup_id;
+ 	}
+ 
++	skel->bss->offcpu_thresh_ns = opts->off_cpu_thresh_us * NSEC_PER_USEC;
++
+ 	err = off_cpu_bpf__attach(skel);
+ 	if (err) {
+ 		pr_err("Failed to attach off-cpu BPF skeleton\n");
+diff --git a/tools/perf/util/off_cpu.h b/tools/perf/util/off_cpu.h
+index 2a4b7f9b2c4c..f07ab2e36317 100644
+--- a/tools/perf/util/off_cpu.h
++++ b/tools/perf/util/off_cpu.h
+@@ -16,6 +16,7 @@ struct record_opts;
+ 			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_RAW | \
+ 			      PERF_SAMPLE_CGROUP)
+ 
++#define OFFCPU_THRESH 500000ull
+ 
+ #ifdef HAVE_BPF_SKEL
+ int off_cpu_prepare(struct evlist *evlist, struct target *target,
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index a6566134e09e..2ca74add26c0 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -79,6 +79,7 @@ struct record_opts {
+ 	int	      synth;
+ 	int	      threads_spec;
+ 	const char    *threads_user_spec;
++	u64	      off_cpu_thresh_us;
+ };
+ 
+ extern const char * const *record_usage;
 -- 
 2.43.0
 
