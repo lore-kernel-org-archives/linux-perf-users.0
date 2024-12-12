@@ -1,169 +1,99 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FFA222D42
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 15:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E512223C68
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 17:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734018360; cv=none; b=umQF6z3/H/LwXNskWFCPBltxd6u2jEv/rcv4gFl1SM1ma2q8y/5tf89f1FZR1PRdZ1Wg8shHIn00NBholPWYdqbafB+edfI5K7PkAkSp6wcKp0HJhUZtwY2FDr4oQuA2WTYPbf+4rFNJ+l0IKYFqOO+Y6x40UusYy7ZrXr1xdK4=
+	t=1734024842; cv=none; b=cS0AsMEWyZXUx3aInP7CfC4uRM83cL6k6DT2tueRCSUEC5HLc+rz5giLbKOvWxwwb6dt9ATZHVKEhuhAdjPd2I4Oz0Ot1K91WMJn5DWmk8gbgJwG9gt7SAMrkstlez+prWiNewhZV+7V/ffSsAPGHs6/P+DWk6gD9Mxg0SMO5jM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734018360; c=relaxed/simple;
-	bh=7CZj15hBqctqnSbld2qny0agH0G5KAVCp5x5TNafiRI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oC+kGTA9mISy8tDKSgw2ktSDvcknsdgVpjQkce9fViImP/o0Sc/Xp96CShDMA3KCz4cflz9P9VLMnZP6Oppc6qtQ4nfwUCuJQ+l0lJbQsG6y1+DJMlh8ZhBkZPGRUIEBGkrgJIwwCeD0Y862o3CusdCOaH5MKUoHNs7DzwdvwqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vejWZShE; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1734024842; c=relaxed/simple;
+	bh=FK78yyqVjHCobD9natqpTkBTroblD9K+SecNHatoZlY=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=ZCySn4zJZuSP7wyJzKgrr157KURLBv7STlrbjAH5yq4zZJTXiiuVcgJGRzxOaCnUSEZMqCOu8vSvxu7d2/7WonS8j5Z6SpRvElAsyPpQNzJB7O02YqKAJt1Kh/1B/TC7FEaHKHYqdSntoTYzPpiD4gNkbfcOOY6ZlqiO3ZThiNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ilz9gdoq; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vejWZShE"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso5504405e9.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 07:45:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ilz9gdoq"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e38dbc5d05bso1273351276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 09:34:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734018357; x=1734623157; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6a1zDSEYLXc+eJA0b3qVc7acpkK4+miJnhJ0ZW+WWX8=;
-        b=vejWZShEZ+dK9+YsiBgY7GoOMHVKp9tkYSKGEU/cgn3lLy5SRuDIFsmKUp4VTsCNhq
-         ZbtRDZdHdVzzXANMoTxN7PLeIDWQpDbctgWjw9uzUV3cX7NirpPFcKQpwLyd2/ApDcbr
-         cNgStaNbALoWFAE63O3cleBPoda3nV/WxUZM8s4+ldceewiCvtckYOtXr618zAlPWgqQ
-         lshQVpMILqqaNSni6Mzt0jUZyyZy9sf3yOQRc3Sp3hpNsTQugurdFu2e3Gap4oakGI1/
-         F/yZ9VkjS67GgXG7p6f3qDjDVsQwbb30rj/8OaDnOeblfIsm2K63kn9Tsy5C7g5n0Dq+
-         VD5A==
+        d=google.com; s=20230601; t=1734024840; x=1734629640; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=McevHFea/8/GUg9sGU8w00zhvfEuoLepq2oliEuLmsw=;
+        b=ilz9gdoq3A1MVXWIIEkngksF+B5tRUTt0eWzKLqGO20dObrXSr6FMss/6v6TdwF8Cu
+         yXitL0P6aBcIwrvKbiAnbENKMQzM7oooPEBFGcjftOAhvMj/n1whTZ2NCIeCTYHvyUBC
+         wZMgLaWUZ6CsXWaG/85Ni6OB3k+p/rx9OeFkfOQMqdhsNm7yTZVCVQIMsLUA9PFcz0l1
+         6bTNEh+9HdSfLqnxqdxlHq3ZCaBHxoNpIsjdP2O1R59aC4bgynmw+tgSv0a3RNUfX6Gh
+         CAh364cUCf3+WXerm4BbSkwHqow9HqLn22cZdD05+IpW50SgSUwfSzcr27qNa/MBmLAl
+         /j1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734018357; x=1734623157;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6a1zDSEYLXc+eJA0b3qVc7acpkK4+miJnhJ0ZW+WWX8=;
-        b=TPlFSXE74/AsbIRJfn8y/Zhx3vuZCb39Yv/e9rQC70+TPp8Kpk4+d++QTOAaN6hcWu
-         qiBNxbD6zmFCv2NHlgF7tXT+69vfs4Jq8DDCv/Dl+PQmZBSc8ZLWBsMPWIZqrOughNqJ
-         lYn1FOe3HQJerp9SFkHhmN4DFRZCT0jLhz7k8d8A2KTdrWe9Ra98tll9cmgmdQMtXiDM
-         5TyT1mEQTevXw7aKTfgZGThQaBxA2lwomHp2BAsbPLQmlPg4wMv4/T52+SttJoTbh3PD
-         YHKvGEP35mQ83/H+lVZzxXk7NSNo1BY5wKdtmFck+FfTzL75nZo+feq5LxJ5oFCh6vpC
-         0pXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPDtu6DrTbDaxXFGxx6QR4xGNdHrm3BCv5VW69R1+/nuYQZRqWdwtL4weicLdFExtzhdVe19OTd0PUGnu/kjHV@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+RiEduciCFCyrJcUDbbHTRk31+jKIewdF9OdGH0YPH5sa61Nk
-	YXMllEBrZlSXEmYeAdzCgpTmHoHmcCvJGvnrHf5VPWBhX3rGuH/KgXsRU5Pl+BM=
-X-Gm-Gg: ASbGnctQTHLk/oT4FP68drXE3CAPGc97asZm/bVihbaXzCppBvhxrzgQY9JguaG6DRy
-	ca787VX4nvsj36Jq1/GFeiJ6wU4XA8Uy2zMSlbmNROw2EKlMf0+ViFNaugaD65ps0CMonA5jXbk
-	WwEZna/V9vpufcoFOD4E3oi3nI5vkpQ4fxwCCqYCtL+mKaffvr4ZwQyMi9BKA7IDlfqfMO8Reog
-	cSZb+XjysLDCYWtt377wyKkG31RQyDrPSy0Q9ceY6ULKEtqtqw+UqjAhltm+OjhbCg=
-X-Google-Smtp-Source: AGHT+IFTDlMjXTmHhNf213X7LLWtzJR/Hkn4hyuAJCLqqxMOf4mdJJzUGGOYyWTGWfD2Hf8SJQAU+w==
-X-Received: by 2002:a05:6000:1f82:b0:385:f56c:d90a with SMTP id ffacd0b85a97d-3864ced1f55mr6224618f8f.55.1734018357326;
-        Thu, 12 Dec 2024 07:45:57 -0800 (PST)
-Received: from [192.168.68.163] ([145.224.65.153])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-387825296desm4316543f8f.111.2024.12.12.07.45.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2024 07:45:56 -0800 (PST)
-Message-ID: <f37cd857-7577-4275-b799-1445fd31d321@linaro.org>
-Date: Thu, 12 Dec 2024 15:45:55 +0000
+        d=1e100.net; s=20230601; t=1734024840; x=1734629640;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=McevHFea/8/GUg9sGU8w00zhvfEuoLepq2oliEuLmsw=;
+        b=Wpth49BXEP4Prxos5Fh6NST/jSlBknio4LUo1KCqJf+al3GljALiMaNywurL5j+xvE
+         ahFAyqfnHw25Bp8H4u1ilhv17Eh3Gn4pYZ93cGokKiFWh5W76YIzbjB0VkP6pQXF0nTS
+         +bVa8wxIXzqnq435/OWOzOgSqFMDgGvOk7SddpymszAtidDqQfg5oc7u0z2f3tPH9Jgm
+         UNWIVPbeu//PAQOmM8nRmXC9esvsXd4AA7GKNwvHS+jPHDJJLI+N13JbZIJP1yZpEwuu
+         AiojHrPUh6dmUgqT8jLSjufbY8Vru2BP8ST8EuGksZmhlzaUW31hKj+BBnXWoqZlyC3x
+         b/7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWLPBWUgznF3CZFteZka6S0JPR2gINh64WmFAfmlv22FuIHBrYP0yhdKcO/nUSbuQKX9fytw2OcAOM0phdcCih1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1SCJgvQvk7eivv989Iy8sDh7sZzo+OU01Pt89MLvZAdVMiUNA
+	Du12vTPtcFpKAn+qJD9Bb7cmQmAc7hQrSzA/dX3+6Z/m/HjX49hijkoJ2KoMDdGhlXbVFgc6U5/
+	PSoJdHA==
+X-Google-Smtp-Source: AGHT+IHT5WTyXq30AAfRRz/fxMBvZ8YldrnuyFVNGmCaF3LmbN2PZoVphHBf/LGehk9tkdvDjxMehh2jGgr7
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:c22f:1975:e7cf:849c])
+ (user=irogers job=sendgmr) by 2002:a25:5f4b:0:b0:e39:710a:387a with SMTP id
+ 3f1490d57ef6-e41cb05bcbbmr502276.10.1734024840121; Thu, 12 Dec 2024 09:34:00
+ -0800 (PST)
+Date: Thu, 12 Dec 2024 09:33:54 -0800
+Message-Id: <20241212173354.9860-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf test stat: Avoid hybrid assumption when
- virtualized
-To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241211061010.806868-1-irogers@google.com>
- <7c118b40-3b31-46d0-8967-e7c35f6a4868@linaro.org>
- <CAP-5=fVxPaSYtB62ZqcLOG1F9Va-0rwBWUCiVNdaBpmsGXUVaA@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fVxPaSYtB62ZqcLOG1F9Va-0rwBWUCiVNdaBpmsGXUVaA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
+Subject: [PATCH v2] perf test stat: Avoid hybrid assumption when virtualized
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+The cycles event will fallback to task-clock in the hybrid test when
+running virtualized. Change the test to not fail for this.
 
+Fixes: a6b8bb2addd0 ("perf test: Add a test for default perf stat command")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/stat.sh | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-On 11/12/2024 5:58 pm, Ian Rogers wrote:
-> On Wed, Dec 11, 2024 at 1:50 AM James Clark <james.clark@linaro.org> wrote:
->>
->> On 11/12/2024 6:10 am, Ian Rogers wrote:
->>> The cycles event will fallback to task-clock in the hybrid test when
->>> running virtualized. Change the test to not fail for this.
->>>
->>> Fixes: a6b8bb2addd0 ("perf test: Add a test for default perf stat command")
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>    tools/perf/tests/shell/stat.sh | 10 +++++++---
->>>    1 file changed, 7 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
->>> index 5a2ca2bcf94d..60cea07350e1 100755
->>> --- a/tools/perf/tests/shell/stat.sh
->>> +++ b/tools/perf/tests/shell/stat.sh
->>> @@ -165,9 +165,13 @@ test_hybrid() {
->>>
->>>      if [ "$pmus" -ne "$cycles_events" ]
->>>      then
->>> -    echo "hybrid test [Found $pmus PMUs but $cycles_events cycles events. Failed]"
->>> -    err=1
->>> -    return
->>> +     # If virtualized the software task-clock event will be used.
->>> +     if ! perf stat -- true 2>&1 | grep -q "task-clock"
->>> +     then
->>> +       echo "hybrid test [Found $pmus PMUs but $cycles_events cycles events. Failed]"
->>> +       err=1
->>> +       return
->>> +     fi
->>>      fi
->>>      echo "hybrid test [Success]"
->>>    }
->>
->> Hi Ian,
->>
->> Isn't the distinction between task-clock and cpu-clock whether the event
->> is per-cpu or not?
->>
->> $ perf stat -C 1 -- true 2>&1 | grep cpu-clock
->>                 1.49 msec cpu-clock       #    0.917 CPUs utilized
->>
->> $ perf stat -- true 2>&1 | grep task-clock
->>                 0.30 msec task-clock      #    0.366 CPUs utilized
->>
->> The test uses per-task mode so this change makes it always pass, even
->> when the number of cycles events doesn't match the PMUs.
-> 
-> So I'm confused by the test, but it has caused a passing test to be
-> broken for me when I run virtualized. The test is checking a cycles
-> event is opened on each hybrid PMU, but this is conflated with
-> checking perf stat's "default" output. The cycles event will fall back
-> to task-clock in per-task mode but we also open a task-clock in
-> default mode. Should:
-> ```
-> if [ "$pmus" -ne "$cycles_events" ]
-> ```
-> be something like this then:
-> ```
-> # The expectation is that default output will have a cycles events on
-> each hybrid
-> # PMU, but in situations with no cycles PMU events, like
-> virtualized,this can fall
-> # back to task-clock and so the end count may be 0. Fail if neither
-> condition holds.
-> if [ "$pmus" -ne "$cycles_events" ] && [ "$pmus" -ne "0" ]
-
-Yes it might make sense to skip this part if pmus == 0 then. Namhyung 
-suggested to always assume 1 PMU to cover platforms that don't publish 
-any PMU with the cpus file, but I suppose that breaks in this case.
-
-If you still add the fallback check for task-clock it covers hybrid, 1 
-PMU and virtualized and we could even rename the test to 
-test_default_stat_2.
-
-> ```
-> 
-> Thanks,
-> Ian
+diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+index 5a2ca2bcf94d..da42427bb077 100755
+--- a/tools/perf/tests/shell/stat.sh
++++ b/tools/perf/tests/shell/stat.sh
+@@ -163,7 +163,11 @@ test_hybrid() {
+   # Run default Perf stat
+   cycles_events=$(perf stat -- true 2>&1 | grep -E "/cycles/|  cycles  " | wc -l)
+ 
+-  if [ "$pmus" -ne "$cycles_events" ]
++  # The expectation is that default output will have a cycles events on each
++  # hybrid PMU. In situations with no cycles PMU events, like virtualized, this
++  # can fall back to task-clock and so the end count may be 0. Fail if neither
++  # condition holds.
++  if [ "$pmus" -ne "$cycles_events" ] && [ "0" -ne "$cycles_events" ]
+   then
+     echo "hybrid test [Found $pmus PMUs but $cycles_events cycles events. Failed]"
+     err=1
+-- 
+2.47.1.613.gc27f4b7a9f-goog
 
