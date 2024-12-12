@@ -1,85 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95AB207E19;
-	Thu, 12 Dec 2024 07:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BA013D531
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 08:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733987442; cv=none; b=R0XdENUp2CGfuohW2GNMH2who6rSxxiRh0DK+ryo4OLFez1p7wewyectB7iXXtl8eaAoowW/KJwwy0RVfuQFdGuJErpJyiQ8KGvZWA5vHIm/YRWhBJWLK2GkP8aDvhr6LOR4e2bHlqHXyfg1yN2fe7iNedC7uOMzdUCvB0+xfRs=
+	t=1733990474; cv=none; b=UBjx2PMO3/sgBvDljVzh/XcXHjqqZOdX8xu1NFtdnjC1v2Y3lT6QoC0IR+YrR2WC4tD3blyQL6lQBqcMlwTAqke6rpiElOgTG7As2UopuQo3QoGf00nYJGJyCzD4+EYOS34Re/UY/5DkwtFvZZZLaLrPBwtxAUlJVSYXUne0Sqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733987442; c=relaxed/simple;
-	bh=WJbcliJGy8BdGmWSV8PbRvg8r0iO4sMcBSAG1ZnG2Ss=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AmEVoq4n+b+ZP8ftGdIkJjFfM+cemeei8czslv/iesCxXo4q6N64xS7NtGarlrXepBnz62ezDfCxa8KSnidy6Gf9ECBZwkJ7Uxt1A3rcimtx4vTLY5dLzZ6WcQAywo1kj/7/ZJ6rF7c0f8ePdjLaf0ZHKw50570baPWpsUdD/Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NYZwUaC0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733990474; c=relaxed/simple;
+	bh=Dr+cz0+BDjHJiX3SZyGOwqdo6Z0WguMW6sZx5zWpjKk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LEd0+kCPG0nYfVhF74aDkMehF0UsZiDqVOfiTf+pJP1Ff28lYkEUoBGvUdtW/pUND+SdyN4RzPZmgvX5ozBmQXNQHEaQ5vqPptp/AuO0rrTvv64T0pQnPCy9jpIkKkSnHoSYsG9lYz8Equ/a0vw1jjA3d7MngHeSmSYqvdpcDRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NYlxKwrD; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NYZwUaC0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2F98C4CECE;
-	Thu, 12 Dec 2024 07:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733987442;
-	bh=WJbcliJGy8BdGmWSV8PbRvg8r0iO4sMcBSAG1ZnG2Ss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NYZwUaC0AVpu3YSaOv4TRVl+F+wejPFB9z+/Ea0Xy4PKeMFy/pT0Rz3OWzDJgJlIE
-	 7nmwk1nhrcJah9ELNBBppJEuj9I99YADFI5xTitqEuB6DDWA1SYxVy10Zz8r57cn11
-	 8kjLVK/WAJqKLRIcBTAB1zxPsBJ2k6h7/b1o5UlFYF43OsHySimzHUD59SP2ctaHTn
-	 zhMF2tLj8Zxkl9oi6UnLBVJ1rUXsY1j7rT1QIXLgevM/kMJKSsgZ52mtQXZ+PRc0o5
-	 HB7gM8p9p2bH6hg/35ZkAXTUFyMUivyceqQNVd1xweDsq5DrNVYJDVs38wQcXGX1N9
-	 gEqKUxfIwDRRA==
-Date: Wed, 11 Dec 2024 23:10:40 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
-	Ian Rogers <irogers@google.com>, thomas.falcon@intel.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] libperf: evlist: Fix --cpu argument on hybrid
- platform
-Message-ID: <Z1qMcJq4qwN3EZz2@google.com>
-References: <20241114160450.295844-1-james.clark@linaro.org>
- <20241114160450.295844-2-james.clark@linaro.org>
- <Z1hHc-Q-TKgagORu@x1>
- <eb8301ec-50af-4414-89e7-5d49585bda47@linaro.org>
- <Z1hLEQwYE3ymbrIr@x1>
- <Z1iEDRT-44aynAR3@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NYlxKwrD"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a814c54742so89345ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 00:01:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733990472; x=1734595272; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zGnkR63xNQ6iE8HARxg6I3n9l9ITyeS7X74GP6uMkOE=;
+        b=NYlxKwrDqUiN31srAv3oIEM/XcQzxpOUxoVZR92pmBmhR8xaRkN6JN0Hdf0GDtZwmg
+         rD7UEmH5aMxWWKkGMydfU8tGKSAUDw8WXjEAP9sqxBejzqVKJhjjPMHWYK55nZMHxALJ
+         C3LKZcM0jEKMRNZiIcL/kH9DGP6KTSPqdl8Aibdyye6VbmQjetT9dK5eu6EoEPJBiHbc
+         2YtGTp2dxLYcAd189aNoTnftcsQVCfeuT9r2+v1zyBvdGqRePFnylckmrjOxEVhnYazr
+         lXSoubLdABZWIxmwfhEWy3MzKP2SmRU9+4ZuhdOdkrulOuByA0AVVHw3scnLq8ln8rdd
+         NZCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733990472; x=1734595272;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zGnkR63xNQ6iE8HARxg6I3n9l9ITyeS7X74GP6uMkOE=;
+        b=mkjHGNgn2jOKZhxqHFzIFtAtE6MTLwJUULMLn2aumoo3fa92DgWl3oJX6FHMARoLjz
+         C+q7vUwy1e9DC/yB9nBcIMxn23hv7IQnlTQ2Wr6QoLitvar4YJscTX+SMvpUCteGKqWy
+         CUUoiK4JpkRh2ErrKwK/LcuEfyMH9Za8sSb+osfd271mKzA30AMPabDox5I1Pi9KEvzt
+         vh2vxtNd/8ay/9VNdMttXpJiMoq3HAOP0CnfMdAJFidr6Mb1tktRb7gKS64HBeFQmhKZ
+         q5mZedLtlfizI+anJaygSq5dCFGmSjsQCrR7ZhmQpVfq0SsheSyDxieA9EjIK/NDiC0b
+         A0vw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZjeZd2dO5QKEioEfMowEghpg6mV1bJKqmQHgayE1DrjliBFTR90bBPBHQXSW2j7H972vfwa7jcSNPcixE9UkO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjckJO3TuuDkBRZaMF6A1Djai0A4lOnNtJdeDrQcRFooGFvA8+
+	9QGaNTB1ayoNJE8mk0k/GTivoARKnBta1x/V2p3VX77/KZq1p0RAXqscdh0v5yTLPkW5nFS6P1o
+	HO3Hq483OahdaGAr6VNO2wMKH0tVmnVUV2shZ
+X-Gm-Gg: ASbGncume6acNdOaSqgJaQs/DQvAV4c/nz+R6KEOx7VGHMi9f8I5NoLC6qpPBYyr7tx
+	QMJ1DS/Jow21UPc8qDQ9dtoz7QEKOTxkw5vNXAj8=
+X-Google-Smtp-Source: AGHT+IGF/N6gjFtzv8jA7XxepjmFMkaNJvoKiN88LE+17oqBT3BkCjJ8+HegVao/zGpFfBSWTcBPW5GovIVhbzxvru4=
+X-Received: by 2002:a05:6e02:12e2:b0:3a7:5be0:5a06 with SMTP id
+ e9e14a558f8ab-3acdb2e94a4mr1463205ab.29.1733990471902; Thu, 12 Dec 2024
+ 00:01:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z1iEDRT-44aynAR3@google.com>
+References: <20241112160048.951213-1-james.clark@linaro.org> <Z1iLqNmDyNH7fDpa@x1>
+In-Reply-To: <Z1iLqNmDyNH7fDpa@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 12 Dec 2024 00:01:00 -0800
+Message-ID: <CAP-5=fUfPnkS0HS1dMx2uR-a4GPfk4E4nD85rUtRUbVcETtY9g@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] perf stat: Fix trailing comma when there is no
+ metric unit
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	namhyung@kernel.org, tim.c.chen@linux.intel.com, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 10, 2024 at 10:10:21AM -0800, Namhyung Kim wrote:
-> On Tue, Dec 10, 2024 at 11:07:13AM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Tue, Dec 10, 2024 at 01:56:21PM +0000, James Clark wrote:
-> > > On 10/12/2024 1:51 pm, Arnaldo Carvalho de Melo wrote:
-> > > > James, the second patch isn't applying to perf-tools/perf-tools.
-> >  
-> > > The second one applies on
-> > > https://lore.kernel.org/linux-perf-users/20241113011956.402096-1-irogers@google.com/T/#m2a3587fb83e6ab2d970bae25982ae9d6c8d9e5cd
-> > > because that also does an evlist__remove() which gets fixed up.
-> > 
-> > Right, I have to test that series on the ARM machines I have access to,
-> > but there is a question from a tester that is waiting for a reply, I'll
-> > see if I can reproduce that problem as well.
-> > 
-> > > But the first one is ok to go in on its own.
-> >  
-> > Agreed.
-> 
-> Ok, I'll pick this one to perf-tools and leave the patch 2 go into
-> perf-tools-next.
+On Tue, Dec 10, 2024 at 10:42=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Tue, Nov 12, 2024 at 04:00:40PM +0000, James Clark wrote:
+> > The first commit is failing on Arm and I think the fix should stop more
+> > trailing comma issues which keep happening.
+> >
+> > The second one I just noticed when looking at it. I don't feel strongly
+> > about it so not sure if we should do it or not, but seems like the empt=
+y
+> > metric-units exclusion from the JSON should be consistent if we're goin=
+g
+> > to have it at all.
+> >
+> > Changes since v2:
+> >   * Do more documentation and tidyups around struct outstate
+>
+> Ian, have you had the chance of going over this series?
 
-Applied patch 1 to perf-tools, thanks!
+It looks good to me, I particularly appreciate the additional
+comments/documentation. Tested with sanitizers.
 
-Best regards,
-Namhyung
+Tested-by: Ian Rogers <irogers@google.com>
 
+Thanks,
+Ian
+
+> > Changes since v1:
+> >   * Don't skip printing when the metric-unit string is empty but pass
+> >     NULL instead of an empty string.
+> >
+> > James Clark (5):
+> >   perf stat: Fix trailing comma when there is no metric unit
+> >   perf stat: Also hide metric-units from JSON when event didn't run
+> >   perf stat: Remove empty new_line_metric function
+> >   perf stat: Document and simplify interval timestamps
+> >   perf stat: Document and clarify outstate members
+> >
+> >  tools/perf/arch/x86/util/iostat.c             |   4 +
+> >  .../tests/shell/lib/perf_json_output_lint.py  |  14 +-
+> >  tools/perf/util/stat-display.c                | 242 ++++++++++--------
+> >  tools/perf/util/stat-shadow.c                 |   5 +-
+> >  4 files changed, 147 insertions(+), 118 deletions(-)
+> >
+> > --
+> > 2.34.1
