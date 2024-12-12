@@ -1,83 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CCC21DE4D4;
-	Thu, 12 Dec 2024 18:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B2A1C07EF;
+	Thu, 12 Dec 2024 18:54:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734029586; cv=none; b=PoLdZXxQNaEuJdi/UpsGoMbEmCcHSAWiSJC86wtoGz34nprr8Z24c3MusL0RNNCF5OcSPNrzfqMkclECCoO7KaR+kTMNLXO5zO5/MhemPUCFSAa+kezlXY/rS+lTQ6hoSAiOnEahuuR/YzM8ixp00mntYJxYf2TqUca2Lqj18Lg=
+	t=1734029687; cv=none; b=Ic/b+tEaDSKAwVxVZF/adr1AICItEDlZpSJROKDnzLSRXD23Psja9A5ZBI+gQ8BSAK2YYcZ+wBPaWeKwhSq9p1z1EwQthhbFXja1zN568DvuMwts0vH88FFqaRV4s4PDcoFEdyRpAA6JJo1xieCqa7qx6xPCWgQzagc/67uiXNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734029586; c=relaxed/simple;
-	bh=BHxnz/ZuGaoyXkYzRJJYhHFoUf9bxqFSTCwoEoQ6K8A=;
+	s=arc-20240116; t=1734029687; c=relaxed/simple;
+	bh=gZyrf1JoKj+vApuck1Bo+6L2JAu1Um1uZpj4PhhsRwg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oopoJyRYIUmu3jRPMqBFnqdMbchC1MFyp6dSDuB2cg2Xi4tNTdQoJVw+fLyTLamFv+2yeCw8HomK5wsJpIzIHwPrbMQ535RpQ3ZFEThnvebYxZcfXhr1AajBgV6Luwcs3ip3vHyBf605F7dJ9XDmgRs3OlYGm+KcJcP6n0G4PA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nbk2RazC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=U5CP6Rw2A/NS5dHhVOP/lYMBFjYqripA8lPAH/leDtm/Nfq290t5FRI5Zk4JZbA44AbnhmHP0miNcKnSHJccpLdPUuUQb+sZqvQd44AdGvdcr4XPMhxSgjQjpGQk8sh5ArwykiMnvVKGO9u+POzjJok+cq0/jQaoVP561YJbDbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSb6IgVH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nbk2RazC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A9BFC4CECE;
-	Thu, 12 Dec 2024 18:53:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSb6IgVH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0421C4CECE;
+	Thu, 12 Dec 2024 18:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734029586;
-	bh=BHxnz/ZuGaoyXkYzRJJYhHFoUf9bxqFSTCwoEoQ6K8A=;
+	s=k20201202; t=1734029687;
+	bh=gZyrf1JoKj+vApuck1Bo+6L2JAu1Um1uZpj4PhhsRwg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nbk2RazCjVg+911bJxS46cCaMPd92Ibstc7Fba+ayEhk/EST0iwWhAA1i0j1Cnlxp
-	 poorKNvy8ZHIKNd3YTyYtCSAkxZ4rjnt0KknlXd2scRVIZ2MAhj9fKfFxhkH5e0kmZ
-	 TWnX7hvb8/A0cF+VwJ0ftHaIJfdDOFstHSTj5/FTQmAssePc9fk3dDBH8VFmAH3dLv
-	 GBjkB0dCPB1fH7qRhfzkpmnQKF905SpRIyk/YdxyRAEawsaOR5UofNDnPEmCZ9MjpG
-	 n8yAyRETlalnbsmrqNKIHU+xRyLip3AF86mfo1cQ+w3drhcQkUXObwrzMN8nZRAoOB
-	 e7jd8MIQevuCQ==
-Date: Thu, 12 Dec 2024 15:53:03 -0300
+	b=hSb6IgVH+sztZTfDpSfnNlOl1p8d/8apX6uZWqiP0dWqiktVxblHCFxnElp7lIjH+
+	 4LZ/kjYYVE4Jzwj9/zlc6WElDFizsveV/g1QPjHjofV3X/CT/c3cFfCGcz7d2sm+Oh
+	 cUFsl9ARH6he0CpLNPSskuhVtdlGu4gYYLSkU00HsiTNgz1zXeP/1FVkruxM6LtoWo
+	 G4Hf1K4IQY8aE7kquRXHyz1XEQ6QvlvuO+jYax49H9w0sLedykYCaxkA1dIH9DcUau
+	 u3GnsoM59WnG/LbAwQtaXDlwAv3o9+UDbmev/w0ZBhyL6DVcaiGC3swRmWrTCvESrn
+	 EFR+utLuNw+pQ==
+Date: Thu, 12 Dec 2024 15:54:44 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+To: James Clark <james.clark@linaro.org>
+Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf vendor events arm64: Update N2/V2 events from source
-Message-ID: <Z1sxD-lvXnFKVy3q@x1>
-References: <20241120143739.243728-1-james.clark@linaro.org>
- <CAP-5=fWeJYf4mbSKSonwNhc5smw6_OktRBG2bCObcQiDjy2iAQ@mail.gmail.com>
+	Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v1] perf string: Avoid undefined NULL+1
+Message-ID: <Z1sxdMeSD-pWuUOZ@x1>
+References: <20241120065224.286813-1-irogers@google.com>
+ <9e9a550c-0017-40b0-af14-99f3c926290c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWeJYf4mbSKSonwNhc5smw6_OktRBG2bCObcQiDjy2iAQ@mail.gmail.com>
+In-Reply-To: <9e9a550c-0017-40b0-af14-99f3c926290c@linaro.org>
 
-On Wed, Nov 20, 2024 at 10:31:55AM -0800, Ian Rogers wrote:
-> On Wed, Nov 20, 2024 at 6:38 AM James Clark <james.clark@linaro.org> wrote:
-> >
-> > Update using the new data [1] for these changes:
-> >
-> >   * Scale some metrics like dtlb_walk_ratio to percent so they display
-> >     better with Perf's 2 dp precision
-> >   * Description typos, grammar and clarifications
-> >   * Unnecessary metric formula brackets seem to have been removed in the
-> >     source but this is not a functional change
-> >   * New sve_all_percentage metric
-> >
-> > The following command was used to generate this commit:
-> >
-> > $ telemetry-solution/tools/perf_json_generator/generate.py \
-> >   tools/perf/ --telemetry-files \
-> >   telemetry-solution/data/pmu/cpu/neoverse/neoverse-v2.json:neoverse-n2-v2
-> >
-> > [1]: https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/blob/main/data/pmu/cpu/neoverse/neoverse-v2.json
-> >
-> > Signed-off-by: James Clark <james.clark@linaro.org>
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+On Mon, Dec 09, 2024 at 11:49:15AM +0000, James Clark wrote:
+> On 20/11/2024 6:52 am, Ian Rogers wrote:
+> > While the value NULL+1 is never used it triggers a ubsan
+> > warning. Restructure and comment the loop to avoid this.
+
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > +++ b/tools/perf/util/string.c
+> > @@ -254,11 +254,20 @@ char *strpbrk_esc(char *str, const char *stopset)
+> >   	do {
+> >   		ptr = strpbrk(str, stopset);
+> > -		if (ptr == str ||
+> > -		    (ptr == str + 1 && *(ptr - 1) != '\\'))
+> > +		if (!ptr) {
+> > +			/* stopset not in str. */
+> >   			break;
+> > +		}
+> > +		if (ptr == str) {
+> > +			/* stopset character is first in str. */
+> > +			break;
+> > +		}
+> > +		if (ptr == str + 1 && str[0] != '\\') {
+> > +			/* stopset chacter is second and wasn't preceded by a '\'. */
+> > +			break;
+> > +		}
+> >   		str = ptr + 1;
+> > -	} while (ptr && *(ptr - 1) == '\\' && *(ptr - 2) != '\\');
+> > +	} while (ptr[-1] == '\\' && ptr[-2] != '\\');
+> >   	return ptr;
+> >   }
+ 
+> Reviewed-by: James Clark <james.clark@linaro.org>
 
 Thanks, applied to perf-tools-next,
 
