@@ -1,46 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E88019CC0F;
-	Thu, 12 Dec 2024 20:58:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FA71AB6CC;
+	Thu, 12 Dec 2024 21:00:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734037132; cv=none; b=oOThe6yFsfpU2+jgGky16oJoniZk15oAwfJyN4qtj/S6TlejbZ4hltFI4wyXAj5QYDSIaK2DOXQ5bUYSQfo2qWpihblhZKNjd1aYztsOBB/1fSOQP9orxtikik9Jbriau3XrUvAigRV96PfyHIL++f/2d/sMYf9/NGqICD1IOtU=
+	t=1734037259; cv=none; b=Xu4xoH3aNsh7ECTCu9Wd0J0zShsvDshn2/SN/2sI4omSNakmt5xdjoN34SEjmApRUGjZi617pvVkhrTvnBd74yQMBL4TrzfZohmH5rNt/xyL9ETMjrgz6xJoUQFSsVeUFkiGERj0QqQTI5lpmXlTowFXCKiKr+PPsdmLQyRcK1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734037132; c=relaxed/simple;
-	bh=+Azc6SCsBw+GSqaSZp397/47kzP3mEE3hTD9ptW2dp8=;
+	s=arc-20240116; t=1734037259; c=relaxed/simple;
+	bh=F2C1jSuGEivYzOLyd+tu0wp65wj7EUbR0WwjJ65VuAc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XKWUlsjpaTsgpOajZa6W+7gBRJ5X64iKC7tiPhquzYWpcqIyxgz3nzerZA6PFkey4hKyYN76j2f5VPPNVekx4DuNx9dIC/V/gZoyRRuvleOHF0ynKiB3sSz3yAz7d2djFkLqjddrZXQTUIg6K7UKLSP4AZQhyhIdPYHAqyR7Z/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=apX+6L5j; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ShD43epDEDgDHODPlwlmxGGkiryzrfJt9EsSJHTXO9tcyqWLtIPhqWXZefkERm3FmD5QXISIYr8HnbRmRc2DDI19WR16SRsrJwKH2eXG3GoC5Pye88QVzsU/pSWLPBa2mimAFDFYh2hCpy0bndPdlHe3HmGNLXIia8snqtd3n5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJMbw7XN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="apX+6L5j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CA22C4CED0;
-	Thu, 12 Dec 2024 20:58:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJMbw7XN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D264EC4CECE;
+	Thu, 12 Dec 2024 21:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734037132;
-	bh=+Azc6SCsBw+GSqaSZp397/47kzP3mEE3hTD9ptW2dp8=;
+	s=k20201202; t=1734037259;
+	bh=F2C1jSuGEivYzOLyd+tu0wp65wj7EUbR0WwjJ65VuAc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=apX+6L5jE+SSMA0td7S+PWpJ13vkay89LxSWKYLINud8RdU4P1N1xvylVF5uZ+A54
-	 EZANxpWfxJzkcyChfhMTSnz1T4qh0OpJcj/hY63GrTv2LpwSh59670RokYbb3d/EcZ
-	 Gac4e15j/Wms9mJIr/99l57b6EL4B7JXdvS9pWvofqugcQ7eKJCaoR4vTtPxLS07gk
-	 wsu73WnqqB5oXajNEyxm9oMd2nzCRqhgXXbs57FdwA6zu5N7lvZSN4617qvM183BXx
-	 5FomohSnvirfnC0Qmp3pHwnyI6YAcr0XaI3Z1Snl6abh72xdqJclWeuXaifcs5V20g
-	 Uz00T5LWAig5w==
-Date: Thu, 12 Dec 2024 12:58:50 -0800
+	b=jJMbw7XN4PA7G9WBzGPKjGHpPxQX1jgxzNcEF+H9m5k/dVPGmB6zbmcSNox3M7FZ3
+	 HYCt+Z2GCSs94miZN4qh+fyyRVUKT3uwB4Lafpv9SGZoJMDxVIRVujhp8LMq+cLvlu
+	 ou0NYfVQhiDDhOzTwERDb50pQ11TAACqqZ2R3s6f+HMpe9jHfhDUnuV+g0Zj5fBy5L
+	 4sQLz7UDrOMsH/6+j1/JdXklXYOKkf1Bc2swEsVoitTevHmM5Fe3E++m3BLjcaspLc
+	 BGI7tTU/+mlWW/HElJ4cOsg31x0Td5D9unED0HaXzAjTk/p7MWq8aqazTVva6LyRvs
+	 OQzJVnhsgId9w==
+Date: Thu, 12 Dec 2024 13:00:57 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
-	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, nick.forrington@arm.com,
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] perf lock: Add percpu-rwsem for type filter
-Message-ID: <Z1tOileaITRq7nwc@google.com>
-References: <20241210200847.1023139-1-ctshao@google.com>
- <20241210200847.1023139-2-ctshao@google.com>
- <Z1nk1gxH9siszkwG@google.com>
- <Z1sy2NgchmkOOVt_@x1>
+Subject: Re: [PATCH] perf tools: Avoid unaligned pointer operations
+Message-ID: <Z1tPCfRTkC5BjZq0@google.com>
+References: <20241127212655.922196-1-namhyung@kernel.org>
+ <CAP-5=fXtL-MFW5YW=5WsYNftCAj7MaXVwN8R3veuiODiC85bdg@mail.gmail.com>
+ <Z1suPi7XLncFKtG4@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,46 +49,48 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z1sy2NgchmkOOVt_@x1>
+In-Reply-To: <Z1suPi7XLncFKtG4@x1>
 
-On Thu, Dec 12, 2024 at 04:00:40PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Dec 11, 2024 at 11:15:34AM -0800, Namhyung Kim wrote:
-> > On Tue, Dec 10, 2024 at 12:08:21PM -0800, Chun-Tse Shao wrote:
-> > > percpu-rwsem was missing in man page. And for backward compatibility,
-> > > replace `pcpu-sem` with `percpu-rwsem` before parsing lock name.
-> > > Tested `./perf lock con -ab -Y pcpu-sem` and `./perf lock con -ab -Y
-> > > percpu-rwsem`
+On Thu, Dec 12, 2024 at 03:41:02PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Nov 27, 2024 at 04:51:15PM -0800, Ian Rogers wrote:
+> > On Wed, Nov 27, 2024 at 1:26 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > The sample data is 64-bit aligned basically but raw data starts with
+> > > 32-bit length field and data follows.  In perf_event__synthesize_sample
+> > > it treats the sample data as a 64-bit array.  And it needs some trick
+> > > to update the raw data properly.
 > 
-> > > Fixes: 4f701063bfa2 ("perf lock contention: Show lock type with address")
-> > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> > > But it seems some compilers are not happy with this and the program dies
+> > > siliently.  I found the sample parsing test failed without any messages
+> > > on affected systems.
 > 
-> > Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+> > > Let's update the code to use a 32-bit pointer directly and make sure the
+> > > result is 64-bit aligned again.  No functional changes intended.
 > 
-> Here the reviewer can also add info about where this should go, i.e.
-> this is a fix, has a Fixes tag, but then there is extra work for
-> maintainers to do: Is this a regression introduced in this merge window?
-> Should this go to urgent or next? If the submitter adds this, it helps,
-> if the reviewer agrees, even better, otherwise emit an opinion where it
-> should go.
+> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>  
+> > Reviewed-by: Ian Rogers <irogers@google.com>
 > 
-> In this specific case:
+> Looks good, applied to perf-tools-next since this is something that is
+> not new nor looks urgent.
 > 
-> ⬢ [acme@toolbox perf-tools-next]$ git tag --contains 4f701063bfa2 | grep ^v[56] | grep -v -- -rc
-> v6.10
-> v6.11
-> v6.12
-> v6.4
-> v6.5
-> v6.6
-> v6.7
-> v6.8
-> v6.9
-> ⬢ [acme@toolbox perf-tools-next]$
+> I think that since we have multiple maintainers, one for not urgent
+> stuff/development and the other for the current window/urgent stuff,
+> that we should express the expectation about where a patch should be
+> processed, by having on the subject the tree the submitter thinks should
+> take the patch, i.e. for this one:
 > 
-> Looks something its there for quite a while, so probably can go to
-> perf-tools-next?
+> [PATCH next] perf tools: Avoid unaligned pointer operations
+> 
+> While for urgent stuff we could do:
+> 
+> [PATCH urgent] perf tools: Avoid unaligned pointer operations
+> 
+> wdyt?
 
-Yeah, I think it should be ok to go to perf-tools-next.
+Looks good.  It'd be really great if contributors can do this.
+
+But I also think 'next' should be the default so only 'urgent' would be
+specified if needed.
 
 Thanks,
 Namhyung
