@@ -1,270 +1,242 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF0F1AD9ED;
-	Thu, 12 Dec 2024 22:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AEB1D0E20;
+	Thu, 12 Dec 2024 23:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734044001; cv=none; b=dAgoWwo/FRImVvyQvT1e/qVlIMhnMJs8p7MM+l3PiGbFzamgoOc0Gkn1yiDnjEuvorRQEx4wSdaxlEUvbb+zrd+FILGEDQvK9SzKwiDfIzmzXs1jA2PUdbISWEnB5tR9wbXfNINRN3kU1L3LNqlpK1YeNPfe84iabHpff4jO1zw=
+	t=1734046044; cv=none; b=OvshWdXqysw4SizV7ieT1aauFMyKvhwcAgKvElO6l88+Lt1xcb8uHiK4yYS2bdOOO0BtUAuRaYoPbb2kjaM8V5NeQQiRASWT7s95CMCU63p9GXkOdD53ToBiS4XYxi9Wej5NLNHeqTjw5muUK1V0AL8M6nTm9edWWDvb3f/FtxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734044001; c=relaxed/simple;
-	bh=/YNTLwDiiXmeMAln4zXCrcFNd27GGOqZjsf7WAO6E8U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J2mOwvGq9vV2uqRe0avueWelxVZf3VTzBYYbNDXhM1RGergQTCFiD9JvB3dTdeqMkIFEev5SklR23ThHj9gOu2ClD15fWFeIr5tvj8N/UXGAVNeltXw4ZMDnbTfhuzc6UajRBTFAL91uSxod9hFPAHUFta/7CTIGwQELKWFteW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dF1+a7fJ; arc=none smtp.client-ip=209.85.219.171
+	s=arc-20240116; t=1734046044; c=relaxed/simple;
+	bh=8LdzRiSDPtaXhwRnNzwZFPm4gm09hBYEAH8DFxrDflg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FpcjrJA+IO4N7ULWX7TtuIvcJciBHqfgY3FFonDmSfPFmgyiwmeZWJIkVDijp3R/h264qEtThphUhyk+Qj+xmyRF3iPmVeyoUzporLA+fgnowSo0Qghei2Enr9ttr/Bf4Uv5R8m4/YmDTbKidP42deIaYVvBc+VEVWmvrLnIvcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V+DSLd3I; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dF1+a7fJ"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e3982e9278bso804915276.2;
-        Thu, 12 Dec 2024 14:53:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+DSLd3I"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-725ee6f56b4so1027471b3a.3;
+        Thu, 12 Dec 2024 15:27:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734043998; x=1734648798; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4rly/V8Cyqmjec5b0yb/5rS2Z14G/Kz8mvctLiguoqQ=;
-        b=dF1+a7fJXjx1Li1pPDxqx1FBMM2rEa8kZnkGzsZDFCCYRzZPAfUDRmKd1fdzfbdOT9
-         3el1wIoiWR7yyy49SooiUkx6OD6BI9O/dDyCRxiuAOiOfII/cGuq1jnD/+Y+KzLR0CvU
-         elEMsdn2CJXBLgc7sBTM0DonKEtRy6UBuy0AsqEnzK8DMfvj9ZpZDgCU5/ISmU+1c+n6
-         1M2dQBcpdA7xfJUgj1PoZGalb5MU4qsf6e8bSXRZp+UsfqbjCiAKTWQAnBl5Qv/z0Fww
-         SfsROtTAITu/HZvi9tXiUGcm8t9GF4FJ7egr0GipnTfyYx3w8TEdzezCWvoNGwHeqwcv
-         KBvg==
+        d=gmail.com; s=20230601; t=1734046042; x=1734650842; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IgGg259kjlTWiahamCtKKddQo9B/Gf9055puQFIr9qc=;
+        b=V+DSLd3IkO0CQx+F99nsP0IDiQje9RjciNzhZ7qLlcVyUB9KyZbBG1OBUYo+tVuM6/
+         bTOoaZhFku4Z/HhOaimybRI2mJnNaxqvbvoRk8ycJE09CnQyIJEU9XKLln2Vpog+eElO
+         CzAlNEVUkfOGF+afPo5EDqSBBeYSkr9UmutNUPAkjn2BOXy1qtpr2S9sS3QalLEOEnzw
+         t1Ra5mO1bB40a6DPBZfqSOyL0RtH6CQ3WLilhrwCdeQYj+GnistCVBvIEcJUvFQFWV/z
+         78K0Xq+iQ+jadCQOEV79981De6rqwSePC+l+Ub0858VXuXmQ1HT63ysXdApR6Hqb3HvC
+         7yUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734043998; x=1734648798;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4rly/V8Cyqmjec5b0yb/5rS2Z14G/Kz8mvctLiguoqQ=;
-        b=kK11wQ+OpqW4i1Zf3eD9HHVI/G9dzcHwNG4oY7FYHxcNUlmF+EpwcmFpB7Pm3javbr
-         Gnahpq7mR1uKS8+9U4onv6promvJl5L6F1Glq2sKWw+9zvdPKd+9AYoIwcTFwJJC1G9K
-         ujv04zPxyKDXl5z7V6w+OfOroUAuIS1M7M3omurKpu2tigc/ff6QJVfw/0ZD2N9ixLv6
-         xnlA3zQmd84GjzOfGYo7d8gD85bxx44gCIIEn/hPvcKAQMDIbUp9630tmsfGZzuiBuqc
-         Rv4YJVuajHS7LXN3w1D/WQUm4zThynq9MmcJXR9649Hh+qAx6SYrXM9Ogp3pwbmn/Nwo
-         HY0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUr21lVMRG/jkbgLq+V4kDvp67eZPQeiTtN0Hu2crDD68idEfzp4ymZICH0By3E2U50kjw481QYQFzQHZk=@vger.kernel.org, AJvYcCVgSMftlcq4mc27dCY3WI7pWL4wp6bxAa1jCd5mC0Jg+5ogwfZxd9q/yTwqgwqgH/uDFeZJpUVORDumrZPqvMLUdQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpdP8PNGWm8ERIKbXQbtbVD/ikB6YGhjYhqAb6XyUfsTgpZsDC
-	BBQ13IsHhYXJ8wp+Z2vdQtcDMGHjpbigPdPPPkydvFPQv0Og5kuUvYSx0pxEv3Lckl+jqvpXJys
-	L9a/AAxgOdGrqlSMbX6nNgYJ6EL8=
-X-Gm-Gg: ASbGnctvDXgywCizByhcs5NhlovP2oK54tEaqyflUFfELgmCX0IT1wZSvA5SbT6W0Ym
-	LCZDEJXzX8Vw2tWpNZbfqpvoGIu7C4hJVaAOf
-X-Google-Smtp-Source: AGHT+IFNO2xOMsLdOa03cqqdhbyK8n24WxIIij+1AF2VZRC146RZ+a29GIoqquww0CLNZF0BXI3v+BKcSiu728jmRF0=
-X-Received: by 2002:a05:6902:1612:b0:e3c:8c27:a93 with SMTP id
- 3f1490d57ef6-e43492f5941mr390121276.1.1734043998348; Thu, 12 Dec 2024
- 14:53:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1734046042; x=1734650842;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IgGg259kjlTWiahamCtKKddQo9B/Gf9055puQFIr9qc=;
+        b=TgMwqNrIeli+DmpcZuefG02RghoQiArrUEEkaMqC30IFCm/dmuzRbZb2N/fAnNq216
+         LLfPOJqb3LtWhPIb1WZry5Jo+QZqzPvoovCkZ7k0Zb2qpWZ5fiozTRKQpqJTU3oDvJV6
+         dWTbZ65OrDQgmNrFhUAcoCXq2mSKzElDnlg0GjEBeu6M8iP0AT9y56md/LvkpEIfi2gl
+         05q0L7ivreEWPffmlbIIyWTR6Ygt0h9aVsQ4Wk7cKFlcViusawiq5b1xfAnGyz1trGwR
+         Nk/e3SvK7z3Y0eTYxq60sxE3zKLoKGenKZyxnLOGNQmsNBT/Ll5fgI/bJSDU3KLVVNPS
+         EIEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUu5389hU5ypH6w2WxKsp3lKt1jJ3FC0NLjeAADqOSFKXtCqkhIZpChcbF7+vrcSkNl+yXZCdpKs7Nw5LE=@vger.kernel.org, AJvYcCXmUJU2fOjHpwSmJxfffkkeC0EltVTzDR4gKok8boIG+feo4zROhEW76mXNEwv8r2o+rnimUik3fn+GaZ0JqMGlLA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAXBAARhu3nP8OTW7EPZL74ARz/YHzPnE7Sx9PeWZG0FOkin8K
+	6sPwxrECISyjOL9lkCiEO+2NkAqcNxVTz2ILPrPRgBCgNCvmQ6tO
+X-Gm-Gg: ASbGncuwjnhbLKWD2xciBDELUsEEQynlBlpLP+hJUkGO47upabATW+L+Fh3cqWqwSC6
+	Rys+7bve9IsHw+FbjgsEiipT0Jng/GEe3f+TEvIBGBxbkQvjbUXKOtkUTeY1dPdx2hu3o/2eBgH
+	c6upeOAqKJQKGroeTIkPvjvJU7YEMsdSDHO5DY7Y/HAfKh/Crq2deSx7+eWvQ3y1iRXWfEIWMwY
+	cagezeJYHomR8T3VcQ8koZmDz5mjvqz+OdkJZKoAPQYiV5vZ2pSKKQKuA6l7+DMHp1wwXn5X7xW
+	fjFZN+pj0Clm
+X-Google-Smtp-Source: AGHT+IFHyQE/vp+sQeZXIjR2ao7GgUF5ZYknWugjO8dydPeMvmOB36MVadLdwG5XDhFkk8oGCp0Y5A==
+X-Received: by 2002:a05:6a00:301a:b0:725:e015:9082 with SMTP id d2e1a72fcca58-7290c0e17dcmr681894b3a.5.1734046041593;
+        Thu, 12 Dec 2024 15:27:21 -0800 (PST)
+Received: from mbp.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fd4e202e9asm7324674a12.72.2024.12.12.15.27.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2024 15:27:21 -0800 (PST)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v13 00/10] perf record --off-cpu: Dump off-cpu samples directly
+Date: Thu, 12 Dec 2024 15:27:07 -0800
+Message-ID: <20241212232717.232507-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241212022420.1035999-1-howardchu95@gmail.com>
- <20241212022420.1035999-5-howardchu95@gmail.com> <Z1tPpZ7HHaF8g4PQ@google.com>
- <CAH0uvohN0GPW_ABFUTK7Goo0WXcSRNVhjwabKkhruXM1zB8+hQ@mail.gmail.com>
-In-Reply-To: <CAH0uvohN0GPW_ABFUTK7Goo0WXcSRNVhjwabKkhruXM1zB8+hQ@mail.gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Thu, 12 Dec 2024 14:53:09 -0800
-Message-ID: <CAH0uvogSNKigyw1JD3D7yZeftsc0Ygs6KoTfGUhyFTBBHhz6fw@mail.gmail.com>
-Subject: Re: [PATCH v12 04/10] perf record --off-cpu: Dump off-cpu samples in BPF
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, 
-	James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Also, apologies on the wrong version number of "Changes in v12:" in
-v12 series' cover letter.
+Changes in v13:
+ - Move the definition of 'off_cpu_thresh_ns' to the same commit as
+   dumping off-cpu samples in BPF, and give off_cpu_thresh_ns a default
+   value before the --off-cpu-thresh option is parsed.
 
-Thanks,
-Howard
+Changes in v12:
+ - Restore patches' bisectability, because the ordering of patches has
+   changed.
+ - Change 'us = ms * 1000' to 'us = ms * USEC_PER_MSEC'
 
-On Thu, Dec 12, 2024 at 2:49=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
-wrote:
->
-> Hello Namhyung,
->
-> On Thu, Dec 12, 2024 at 1:03=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > Hello,
-> >
-> > On Wed, Dec 11, 2024 at 06:24:14PM -0800, Howard Chu wrote:
-> > > Collect tid, period, callchain, and cgroup id and dump them when off-=
-cpu
-> > > time threshold is reached.
-> > >
-> > > We don't collect the off-cpu time twice (the delta), it's either in
-> > > direct samples, or accumulated samples that are dumped at the end of
-> > > perf.data.
-> > >
-> > > Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> > > Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> > > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > > Cc: Ian Rogers <irogers@google.com>
-> > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > Cc: James Clark <james.clark@linaro.org>
-> > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Link: https://lore.kernel.org/r/20241108204137.2444151-6-howardchu95@=
-gmail.com
-> > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > ---
-> > >  tools/perf/util/bpf_skel/off_cpu.bpf.c | 86 ++++++++++++++++++++++++=
---
-> > >  1 file changed, 81 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util=
-/bpf_skel/off_cpu.bpf.c
-> > > index c87132e01eb3..aae63d999abb 100644
-> > > --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> > > +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> > > @@ -19,11 +19,17 @@
-> > >  #define MAX_ENTRIES  102400
-> > >
-> > >  #define MAX_CPUS  4096
-> > > +#define MAX_OFFCPU_LEN 37
-> > > +
-> > > +struct stack {
-> > > +     u64 array[MAX_STACKS];
-> > > +};
-> > >
-> > >  struct tstamp_data {
-> > >       __u32 stack_id;
-> > >       __u32 state;
-> > >       __u64 timestamp;
-> > > +     struct stack stack;
-> > >  };
-> > >
-> > >  struct offcpu_key {
-> > > @@ -41,6 +47,10 @@ struct {
-> > >       __uint(max_entries, MAX_ENTRIES);
-> > >  } stacks SEC(".maps");
-> > >
-> > > +struct offcpu_data {
-> > > +     u64 array[MAX_OFFCPU_LEN];
-> > > +};
-> > > +
-> > >  struct {
-> > >       __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-> > >       __uint(key_size, sizeof(__u32));
-> > > @@ -48,6 +58,13 @@ struct {
-> > >       __uint(max_entries, MAX_CPUS);
-> > >  } offcpu_output SEC(".maps");
-> > >
-> > > +struct {
-> > > +     __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
-> > > +     __uint(key_size, sizeof(__u32));
-> > > +     __uint(value_size, sizeof(struct offcpu_data));
-> > > +     __uint(max_entries, 1);
-> > > +} offcpu_payload SEC(".maps");
-> > > +
-> > >  struct {
-> > >       __uint(type, BPF_MAP_TYPE_TASK_STORAGE);
-> > >       __uint(map_flags, BPF_F_NO_PREALLOC);
-> > > @@ -194,6 +211,47 @@ static inline int can_record(struct task_struct =
-*t, int state)
-> > >       return 1;
-> > >  }
-> > >
-> > > +static inline int copy_stack(struct stack *from, struct offcpu_data =
-*to, int n)
-> > > +{
-> > > +     int len =3D 0;
-> > > +
-> > > +     for (int i =3D 0; i < MAX_STACKS && from->array[i]; ++i, ++len)
-> > > +             to->array[n + 2 + i] =3D from->array[i];
-> > > +
-> > > +     return len;
-> > > +}
-> > > +
-> > > +/**
-> > > + * off_cpu_dump - dump off-cpu samples to ring buffer
-> > > + * @data: payload for dumping off-cpu samples
-> > > + * @key: off-cpu data
-> > > + * @stack: stack trace of the task before being scheduled out
-> > > + *
-> > > + * If the threshold of off-cpu time is reached, acquire tid, period,=
- callchain, and cgroup id
-> > > + * information of the task, and dump it as a raw sample to perf ring=
- buffer
-> > > + */
-> > > +static int off_cpu_dump(void *ctx, struct offcpu_data *data, struct =
-offcpu_key *key,
-> > > +                     struct stack *stack, __u64 delta)
-> > > +{
-> > > +     int n =3D 0, len =3D 0;
-> > > +
-> > > +     data->array[n++] =3D (u64)key->tgid << 32 | key->pid;
-> > > +     data->array[n++] =3D delta;
-> > > +
-> > > +     /* data->array[n] is callchain->nr (updated later) */
-> > > +     data->array[n + 1] =3D PERF_CONTEXT_USER;
-> > > +     data->array[n + 2] =3D 0;
-> > > +     len =3D copy_stack(stack, data, n);
-> > > +
-> > > +     /* update length of callchain */
-> > > +     data->array[n] =3D len + 1;
-> > > +     n +=3D len + 2;
-> > > +
-> > > +     data->array[n++] =3D key->cgroup_id;
-> > > +
-> > > +     return bpf_perf_event_output(ctx, &offcpu_output, BPF_F_CURRENT=
-_CPU, data, n * sizeof(u64));
-> > > +}
-> > > +
-> > >  static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
-> > >                       struct task_struct *next, int state)
-> > >  {
-> > > @@ -218,6 +276,16 @@ static int off_cpu_stat(u64 *ctx, struct task_st=
-ruct *prev,
-> > >       pelem->state =3D state;
-> > >       pelem->stack_id =3D stack_id;
-> > >
-> > > +     /*
-> > > +      * If stacks are successfully collected by bpf_get_stackid(), c=
-ollect them once more
-> > > +      * in task_storage for direct off-cpu sample dumping
-> > > +      */
-> > > +     if (stack_id > 0 && bpf_get_stack(ctx, &pelem->stack, MAX_STACK=
-S * sizeof(u64), BPF_F_USER_STACK)) {
-> > > +             /*
-> > > +              * This empty if block is used to avoid 'result unused =
-warning' from bpf_get_stack().
-> > > +              * If the collection fails, continue with the logic for=
- the next task.
-> > > +              */
-> > > +     }
-> > >  next:
-> > >       pelem =3D bpf_task_storage_get(&tstamp, next, NULL, 0);
-> > >
-> > > @@ -232,11 +300,19 @@ static int off_cpu_stat(u64 *ctx, struct task_s=
-truct *prev,
-> > >               __u64 delta =3D ts - pelem->timestamp;
-> > >               __u64 *total;
-> > >
-> > > -             total =3D bpf_map_lookup_elem(&off_cpu, &key);
-> > > -             if (total)
-> > > -                     *total +=3D delta;
-> > > -             else
-> > > -                     bpf_map_update_elem(&off_cpu, &key, &delta, BPF=
-_ANY);
-> > > +             if (delta >=3D offcpu_thresh_ns) {
-> >
-> > It seems offcpu_thresh_ns is not defined at this moment.  You can use
-> > a hard-coded value with a comment for now.
->
-> My bad, I wonder how it builds, turns out I put the definition in the
-> previous patch... (link:
-> https://lore.kernel.org/linux-perf-users/20241212022420.1035999-4-howardc=
-hu95@gmail.com/T/#u)
-> I will move it to this patch, thanks a lot!
->
-> Thanks,
-> Howard
+Changes in v11:
+ - Modify the options used in the off-cpu tests, as I changed the unit
+   of the off-cpu threshold to milliseconds.
+
+Changes in v10:
+ - Move the commit "perf record --off-cpu: Add --off-cpu-thresh option"
+   to where the direct sample feature is completed.
+ - Make --off-cpu-thresh use milliseconds as the unit.
+
+Changes in v9:
+ - Add documentation for the new option '--off-cpu-thresh', and include
+   an example of its usage in the commit message
+ - Set inherit in evsel__config() to prevent future modifications
+ - Support off-cpu sample data collected by perf before this patch series
+
+Changes in v8:
+ - Make this series bisectable
+ - Rename off_cpu_thresh to off_cpu_thresh_us and offcpu_thresh (in BPF)
+   to offcpu_thresh_ns for clarity
+ - Add commit messages to 'perf evsel: Expose evsel__is_offcpu_event()
+   for future use' commit
+ - Correct spelling mistakes in the commit message (s/is should be/should be/)
+ - Add kernel-doc comments to off_cpu_dump(), and comments to the empty
+   if block
+ - Add some comments to off-cpu test
+ - Delete an unused variable 'timestamp' in off_cpu_dump()
+
+Changes in v7:
+ - Make off-cpu event system-wide
+ - Use strtoull instead of strtoul
+ - Delete unused variable such as sample_id, and sample_type
+ - Use i as index to update BPF perf_event map
+ - MAX_OFFCPU_LEN 128 is too big, make it smaller.
+ - Delete some bound check as it's always guaranteed
+ - Do not set ip_pos in BPF
+ - Add a new field for storing stack traces in the tstamp map
+ - Dump the off-cpu sample directly or save it in the off_cpu map, not both
+ - Delete the sample_type_off_cpu check
+ - Use __set_off_cpu_sample() to parse samples instead of a two-pass parsing
+
+Changes in v6:
+ - Make patches bisectable
+
+Changes in v5:
+ - Delete unnecessary copy in BPF program
+ - Remove sample_embed from perf header, hard code off-cpu stuff instead
+ - Move evsel__is_offcpu_event() to evsel.h
+ - Minor changes to the test
+ - Edit some comments
+
+Changes in v4:
+ - Minimize the size of data output by perf_event_output()
+ - Keep only one off-cpu event
+ - Change off-cpu threshold's unit to microseconds
+ - Set a default off-cpu threshold
+ - Print the correct error message for the field 'embed' in perf data header
+
+Changes in v3:
+ - Add off-cpu-thresh argument
+ - Process direct off-cpu samples in post
+
+Changes in v2:
+ - Remove unnecessary comments.
+ - Rename function off_cpu_change_type to off_cpu_prepare_parse
+
+v1:
+
+As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=207323
+
+Currently, off-cpu samples are dumped when perf record is exiting. This
+results in off-cpu samples being after the regular samples. This patch
+series makes possible dumping off-cpu samples on-the-fly, directly into
+perf ring buffer. And it dispatches those samples to the correct format
+for perf.data consumers.
+
+Before:
+```
+     migration/0      21 [000] 27981.041319: 2944637851    cycles:P:  ffffffff90d2e8aa record_times+0xa ([kernel.kallsyms])
+            perf  770116 [001] 27981.041375:          1    cycles:P:  ffffffff90ee4960 event_function+0xf0 ([kernel.kallsyms])
+            perf  770116 [001] 27981.041377:          1    cycles:P:  ffffffff90c184b1 intel_bts_enable_local+0x31 ([kernel.kallsyms])
+            perf  770116 [001] 27981.041379:      51611    cycles:P:  ffffffff91a160b0 native_sched_clock+0x30 ([kernel.kallsyms])
+     migration/1      26 [001] 27981.041400: 4227682775    cycles:P:  ffffffff90d06a74 wakeup_preempt+0x44 ([kernel.kallsyms])
+     migration/2      32 [002] 27981.041477: 4159401534    cycles:P:  ffffffff90d11993 update_load_avg+0x63 ([kernel.kallsyms])
+
+sshd  708098 [000] 18446744069.414584:     286392 offcpu-time: 
+	    79a864f1c8bb ppoll+0x4b (/usr/lib/libc.so.6)
+	    585690935cca [unknown] (/usr/bin/sshd)
+```
+
+After:
+```
+            perf  774767 [003] 28178.033444:        497           cycles:P:  ffffffff91a160c3 native_sched_clock+0x43 ([kernel.kallsyms])
+            perf  774767 [003] 28178.033445:     399440           cycles:P:  ffffffff91c01f8d nmi_restore+0x25 ([kernel.kallsyms])
+         swapper       0 [001] 28178.036639:  376650973           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+         swapper       0 [003] 28178.182921:  348779378           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+    blueman-tray    1355 [000] 28178.627906:  100184571 offcpu-time: 
+	    7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
+	    7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
+	    7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-2.0.so.0.8000.2)
+	    7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.0.8000.2)
+	    7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
+	    7fff24e862d8 [unknown] ([unknown])
+
+
+    blueman-tray    1355 [000] 28178.728137:  100187539 offcpu-time: 
+	    7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
+	    7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
+	    7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-2.0.so.0.8000.2)
+	    7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.0.8000.2)
+	    7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
+	    7fff24e862d8 [unknown] ([unknown])
+
+
+         swapper       0 [000] 28178.463253:  195945410           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+     dbus-broker     412 [002] 28178.464855:  376737008           cycles:P:  ffffffff91c000a0 entry_SYSCALL_64+0x20 ([kernel.kallsyms])
+```
+
+Howard Chu (10):
+  perf evsel: Expose evsel__is_offcpu_event() for future use
+  perf record --off-cpu: Parse off-cpu event
+  perf record --off-cpu: Preparation of off-cpu BPF program
+  perf record --off-cpu: Dump off-cpu samples in BPF
+  perf evsel: Assemble offcpu samples
+  perf record --off-cpu: Disable perf_event's callchain collection
+  perf script: Display off-cpu samples correctly
+  perf record --off-cpu: Dump the remaining samples in BPF's stack trace
+    map
+  perf record --off-cpu: Add --off-cpu-thresh option
+  perf test: Add direct off-cpu test
+
+ tools/perf/Documentation/perf-record.txt |   9 ++
+ tools/perf/builtin-record.c              |  26 +++++
+ tools/perf/builtin-script.c              |   4 +-
+ tools/perf/tests/builtin-test.c          |   1 +
+ tools/perf/tests/shell/record_offcpu.sh  |  35 ++++++-
+ tools/perf/tests/tests.h                 |   1 +
+ tools/perf/tests/workloads/Build         |   1 +
+ tools/perf/tests/workloads/offcpu.c      |  16 +++
+ tools/perf/util/bpf_off_cpu.c            | 118 ++++++++++++++---------
+ tools/perf/util/bpf_skel/off_cpu.bpf.c   |  97 ++++++++++++++++++-
+ tools/perf/util/evsel.c                  |  41 +++++++-
+ tools/perf/util/evsel.h                  |   2 +
+ tools/perf/util/off_cpu.h                |   3 +-
+ tools/perf/util/record.h                 |   1 +
+ 14 files changed, 297 insertions(+), 58 deletions(-)
+ create mode 100644 tools/perf/tests/workloads/offcpu.c
+
+-- 
+2.43.0
+
