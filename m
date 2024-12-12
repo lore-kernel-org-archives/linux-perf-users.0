@@ -1,44 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE48223C40;
-	Thu, 12 Dec 2024 18:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CCC21DE4D4;
+	Thu, 12 Dec 2024 18:53:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734028865; cv=none; b=rdLZOMQ8dDcU7jkIFtSYukmp71Wgmcdq+9C5+KmcxTe42sXztG9cp/7p0/k7T5DYoM5aP25gcgrnnoDoJAi02pPhdUNATQe8nGDlUA4ONVuRjmL8hcNqPitbelNKgn3+xsYmcS0xiuB6Eo7nO0xGm7j+giDRJLwr5tKAFoOwDnk=
+	t=1734029586; cv=none; b=PoLdZXxQNaEuJdi/UpsGoMbEmCcHSAWiSJC86wtoGz34nprr8Z24c3MusL0RNNCF5OcSPNrzfqMkclECCoO7KaR+kTMNLXO5zO5/MhemPUCFSAa+kezlXY/rS+lTQ6hoSAiOnEahuuR/YzM8ixp00mntYJxYf2TqUca2Lqj18Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734028865; c=relaxed/simple;
-	bh=Cm3RpNEPByBsyU85TyLlrUed6ZFN4HOcl3ze1OsU+wU=;
+	s=arc-20240116; t=1734029586; c=relaxed/simple;
+	bh=BHxnz/ZuGaoyXkYzRJJYhHFoUf9bxqFSTCwoEoQ6K8A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sg1BboDZY0P97kUJ8ODrDDxRqaIpmgCAv+taZl9nIzOzhyoE1CDdwE4l+22MMcTySweUN/lAF33dkSPB6KDGQJu4R8G2HH2sNV5yfX3lPpl+XCbd8RV6Spn1aGY9tmyPGp/K3KLShhsOpZy0ki950ImUtHDjjOwmQt3SEipq1PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=luD6Dp4X; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oopoJyRYIUmu3jRPMqBFnqdMbchC1MFyp6dSDuB2cg2Xi4tNTdQoJVw+fLyTLamFv+2yeCw8HomK5wsJpIzIHwPrbMQ535RpQ3ZFEThnvebYxZcfXhr1AajBgV6Luwcs3ip3vHyBf605F7dJ9XDmgRs3OlYGm+KcJcP6n0G4PA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nbk2RazC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="luD6Dp4X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7787C4CECE;
-	Thu, 12 Dec 2024 18:41:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nbk2RazC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A9BFC4CECE;
+	Thu, 12 Dec 2024 18:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734028865;
-	bh=Cm3RpNEPByBsyU85TyLlrUed6ZFN4HOcl3ze1OsU+wU=;
+	s=k20201202; t=1734029586;
+	bh=BHxnz/ZuGaoyXkYzRJJYhHFoUf9bxqFSTCwoEoQ6K8A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=luD6Dp4XQBY6UGvQA1wOyhjs9LBkW2KpKu149AOmtODqOkJjVrbWE9TagyoISL1UC
-	 c5Q0H3TgUfIHsmq1MyvO6K98J18RNaDmg+gEsPC8O2yVgU3kZ/dC/nACzN+9jA+7ks
-	 1W9/rvbxr1001KmIBSj+lOJm+fPCqkHRIC9OdzRmQGnE23ESuM0t5Pid7eR7HoZJaR
-	 zDvj5y8MnW3UZUX3cdhENJSBEXrEx+EZ0WwEO8D/4pP8eMU6WC0R0t/6uVw7XuGg3Z
-	 Ll1vMSmg0QDvbUWNRfsW+Jn8Z9rZhdkkVky7TkZ249BYYI3e8KbBqhZxppp5KTVoNT
-	 Oy1D3KrPqAJcw==
-Date: Thu, 12 Dec 2024 15:41:02 -0300
+	b=nbk2RazCjVg+911bJxS46cCaMPd92Ibstc7Fba+ayEhk/EST0iwWhAA1i0j1Cnlxp
+	 poorKNvy8ZHIKNd3YTyYtCSAkxZ4rjnt0KknlXd2scRVIZ2MAhj9fKfFxhkH5e0kmZ
+	 TWnX7hvb8/A0cF+VwJ0ftHaIJfdDOFstHSTj5/FTQmAssePc9fk3dDBH8VFmAH3dLv
+	 GBjkB0dCPB1fH7qRhfzkpmnQKF905SpRIyk/YdxyRAEawsaOR5UofNDnPEmCZ9MjpG
+	 n8yAyRETlalnbsmrqNKIHU+xRyLip3AF86mfo1cQ+w3drhcQkUXObwrzMN8nZRAoOB
+	 e7jd8MIQevuCQ==
+Date: Thu, 12 Dec 2024 15:53:03 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Avoid unaligned pointer operations
-Message-ID: <Z1suPi7XLncFKtG4@x1>
-References: <20241127212655.922196-1-namhyung@kernel.org>
- <CAP-5=fXtL-MFW5YW=5WsYNftCAj7MaXVwN8R3veuiODiC85bdg@mail.gmail.com>
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf vendor events arm64: Update N2/V2 events from source
+Message-ID: <Z1sxD-lvXnFKVy3q@x1>
+References: <20241120143739.243728-1-james.clark@linaro.org>
+ <CAP-5=fWeJYf4mbSKSonwNhc5smw6_OktRBG2bCObcQiDjy2iAQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,41 +53,32 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXtL-MFW5YW=5WsYNftCAj7MaXVwN8R3veuiODiC85bdg@mail.gmail.com>
+In-Reply-To: <CAP-5=fWeJYf4mbSKSonwNhc5smw6_OktRBG2bCObcQiDjy2iAQ@mail.gmail.com>
 
-On Wed, Nov 27, 2024 at 04:51:15PM -0800, Ian Rogers wrote:
-> On Wed, Nov 27, 2024 at 1:26 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > The sample data is 64-bit aligned basically but raw data starts with
-> > 32-bit length field and data follows.  In perf_event__synthesize_sample
-> > it treats the sample data as a 64-bit array.  And it needs some trick
-> > to update the raw data properly.
-
-> > But it seems some compilers are not happy with this and the program dies
-> > siliently.  I found the sample parsing test failed without any messages
-> > on affected systems.
-
-> > Let's update the code to use a 32-bit pointer directly and make sure the
-> > result is 64-bit aligned again.  No functional changes intended.
-
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
- 
+On Wed, Nov 20, 2024 at 10:31:55AM -0800, Ian Rogers wrote:
+> On Wed, Nov 20, 2024 at 6:38 AM James Clark <james.clark@linaro.org> wrote:
+> >
+> > Update using the new data [1] for these changes:
+> >
+> >   * Scale some metrics like dtlb_walk_ratio to percent so they display
+> >     better with Perf's 2 dp precision
+> >   * Description typos, grammar and clarifications
+> >   * Unnecessary metric formula brackets seem to have been removed in the
+> >     source but this is not a functional change
+> >   * New sve_all_percentage metric
+> >
+> > The following command was used to generate this commit:
+> >
+> > $ telemetry-solution/tools/perf_json_generator/generate.py \
+> >   tools/perf/ --telemetry-files \
+> >   telemetry-solution/data/pmu/cpu/neoverse/neoverse-v2.json:neoverse-n2-v2
+> >
+> > [1]: https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/blob/main/data/pmu/cpu/neoverse/neoverse-v2.json
+> >
+> > Signed-off-by: James Clark <james.clark@linaro.org>
+> 
 > Reviewed-by: Ian Rogers <irogers@google.com>
 
-Looks good, applied to perf-tools-next since this is something that is
-not new nor looks urgent.
-
-I think that since we have multiple maintainers, one for not urgent
-stuff/development and the other for the current window/urgent stuff,
-that we should express the expectation about where a patch should be
-processed, by having on the subject the tree the submitter thinks should
-take the patch, i.e. for this one:
-
-[PATCH next] perf tools: Avoid unaligned pointer operations
-
-While for urgent stuff we could do:
-
-[PATCH urgent] perf tools: Avoid unaligned pointer operations
-
-wdyt?
+Thanks, applied to perf-tools-next,
 
 - Arnaldo
