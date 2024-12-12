@@ -1,116 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B5C45027;
-	Thu, 12 Dec 2024 10:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B60A2153D2;
+	Thu, 12 Dec 2024 14:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733998603; cv=none; b=bRSHJSWXpU30gtmGxED4mgA6JC1jVE+7BNEz6gCvIf1cXxIHzkrhZR5VP+KrmkAT0lw3RJU4Ikv0I8iJ8yONXa4ahnupTSqmiEGPhCQnBxJ4BI8PDu4CNtZP3v3+iX7yKl31ElwIXWb3C99epkOHUSOzCvqqIzMWmeNH02l+/so=
+	t=1734014175; cv=none; b=TxCvFEgHcweY9APjITMbDGEUzwE4ETlp7RBSB5qkzl+0fQK3VeYZZhzBSmv7UiEc2z04RD3/TLrJFgpXE3IGiD01efuWxMzdThVwP3AtYZfgIZRKJWKFbbWvGyqDISFyKRvUlt0OIO+HDioBmuJXp8HLOxnk1Hc1kEqi9PoEA6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733998603; c=relaxed/simple;
-	bh=lKnDgtHDup6CgJWh4ENsKoIzhSCtFgX7+1cLUc1h4x8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BHFqRmolWU1o9EXLBAHh5qPFZIpp4ZrQ7CNvh7q4U5WgxCDhMR3WwWhOEpwgMQ/uZf3mtxfVy5pe0fOch40P3nOKZqdwoE+YZYUkTG0frFiIbokAbFXnUTazHqHxRf+qxqqrdZJDti+faV+EInhDo+GfxizbXFJ9AeJhMJoQGYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VLYfBNxJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734014175; c=relaxed/simple;
+	bh=nUZxJTWypj8JfSnkBiydA2f4lpYBw/GKwXIKh2nFhe4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e15CWcXd1PESVv90lk3Rk6xrdfdfpyA2RitR19y/Cpcih1FseDeFRLgbOOrVDNImkVPQDcCay9Yb2b/IsAtAsm5xqTIUjDcBHWCg/U7IWSAz1H7RXI3aT7ijsgeaCNQBlJvK2PWlsz5xmYAgWqAWnureaFsF7/YLDxACtVgKwEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=kchngzSj; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VLYfBNxJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39302C4CECE;
-	Thu, 12 Dec 2024 10:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733998603;
-	bh=lKnDgtHDup6CgJWh4ENsKoIzhSCtFgX7+1cLUc1h4x8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VLYfBNxJZ69yN7Bdj+ifHgfe3BAtplB93aa8SbVOQDpIk9w3fspA9hHgHH5TbFNz5
-	 0H7J/7VVUK+rAepZK5RkueMpPqZ0Dp+OsbVG9haXu5wtFoLg/TjUByM4suCIiPrDYS
-	 mjC76UbF6ZM2x9/0oLLwrW+h/oMWwL8Ya26zbQdtVaNdC+dOFTvY9yDtDETcl0MNrG
-	 8Zm4EVYMWhj3M9l7xf997A/QDfyTZg6oHX68ID3vufpV0dJWoX280+9I1tjqhkHKQL
-	 +a60MbF3s6BSSWsoKikBpYx/op1AhtfX+he+VHBqIvd1c+SNxovgBkcMxPZ7XsaadP
-	 KKLK49tJ/2KHQ==
-Message-ID: <c63063b3-b2cc-43af-b026-98c992e9bbf3@kernel.org>
-Date: Thu, 12 Dec 2024 10:16:38 +0000
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="kchngzSj"
+Received: from fpc (unknown [10.10.165.8])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 4968640755ED;
+	Thu, 12 Dec 2024 14:36:03 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 4968640755ED
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1734014163;
+	bh=p2WyKkU+cEtAYkFhULkAi799mTRf4lFMSMN41qLYyGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kchngzSj9SbvgCT4iMIeQ9QlDyd994/fiX4HyxQApzmO0GglbTbUVRfOZocLdLSm8
+	 YBk5BFwPd7eupzbg7u8MdvBvXHYtCxQi3aEtVUtNdrcb6EvVA55u3BbpVhnAd5tX5I
+	 U2XZ4Nha5iGAIvZz4IhqH1y5ZHLQ3CCjMCyA1Enk=
+Date: Thu, 12 Dec 2024 17:35:59 +0300
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, x86@kernel.org,
+	Alexander Antonov <alexander.antonov@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: Re: [PATCH] perf/x86/uncore: avoid null-ptr-deref on error in
+ pmu_alloc_topology
+Message-ID: <20241212-b509bf429d38f4c579b5a2a2-pchelkin@ispras.ru>
+References: <20240204134841.80003-1-pchelkin@ispras.ru>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] tools build feature: Don't set feature-libcap=1 if
- libcap-devel isn't available
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@redhat.com>,
- James Clark <james.clark@linaro.org>, Ian Rogers <irogers@google.com>
-References: <20241211224509.797827-1-acme@kernel.org>
- <20241211224509.797827-3-acme@kernel.org>
- <CAP-5=fWqBrw1SuY8ue2X_xOv=yStPANM9NGUBkeo+_s2O=bKTA@mail.gmail.com>
-From: Quentin Monnet <qmo@kernel.org>
-Content-Language: en-GB
-In-Reply-To: <CAP-5=fWqBrw1SuY8ue2X_xOv=yStPANM9NGUBkeo+_s2O=bKTA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240204134841.80003-1-pchelkin@ispras.ru>
 
-2024-12-11 20:25 UTC-0800 ~ Ian Rogers <irogers@google.com>
-> On Wed, Dec 11, 2024 at 2:45 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
->>
->> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->>
->> libcap isn't tested in the tools/build/feature/test-all.c fast path
->> feature detection process, so don't set it as available if test-all
->> manages to build.
->>
->> There are other users of this feature detection mechanism, and they
->> explicitely ask for libcap to be tested, so are not affected by this
->> patch, for instance, with this patch in place:
->>
->>   $ make -C tools/bpf/bpftool/ clean
->>   <SNIP>
->>   make: Leaving directory '/home/acme/git/perf-tools-next/tools/bpf/bpftool'
->>   ⬢ [acme@toolbox perf-tools-next]$ make -C tools/bpf/bpftool/
->>   make: Entering directory '/home/acme/git/perf-tools-next/tools/bpf/bpftool'
->>
->>   Auto-detecting system features:
->>   ...                         clang-bpf-co-re: [ on  ]
->>   ...                                    llvm: [ on  ]
->>   ...                                  libcap: [ on  ]
->>   ...                                  libbfd: [ on  ]
->>   ...                             libelf-zstd: [ on  ]
->>   <SNIP>
->>     LINK    bpftool
->>   make: Leaving directory '/home/acme/git/perf-tools-next/tools/bpf/bpftool'
->>   $
->>   $ sudo rpm -e libcap-devel
->>   $ make -C tools/bpf/bpftool/
->>   <SNIP>
->>   make: Entering directory '/home/acme/git/perf-tools-next/tools/bpf/bpftool'
->>
->>   Auto-detecting system features:
->>   ...                         clang-bpf-co-re: [ on  ]
->>   ...                                    llvm: [ on  ]
->>   ...                                  libcap: [ OFF ]
->>   ...                                  libbfd: [ on  ]
->>   ...                             libelf-zstd: [ on  ]
->>
->>   $
->>
->> Cc: Adrian Hunter <adrian.hunter@intel.com>
->> Cc: Ian Rogers <irogers@google.com>
->> Cc: James Clark <james.clark@linaro.org>
->> Cc: Jiri Olsa <jolsa@kernel.org>
->> Cc: Kan Liang <kan.liang@linux.intel.com>
->> Cc: Namhyung Kim <namhyung@kernel.org>
->> Cc: Quentin Monnet <qmo@kernel.org>
->> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Sun, 04. Feb 16:48, Fedor Pchelkin wrote:
+> If topology[die] array allocation fails then topology[die][idx] elements
+> can't be accessed on error path.
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> Checking this on the error path probably looks more readable than
+> decrementing the counter in the allocation loop.
+> 
+> Found by Linux Verification Center (linuxtesting.org).
+> 
+> Fixes: 4d13be8ab5d4 ("perf/x86/intel/uncore: Generalize IIO topology support")
+> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
 
+Hi,
 
-Acked-by: Quentin Monnet <qmo@kernel.org>
+ping as the patch seems to have been missed. FWIW, it's still applicable to
+the mainline.
 
-Thanks Arnaldo for checking the bpftool build :)
-Quentin
+--
+Thanks,
+Fedor
