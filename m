@@ -1,99 +1,122 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E512223C68
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 17:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C036D223C7B;
+	Thu, 12 Dec 2024 18:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734024842; cv=none; b=cS0AsMEWyZXUx3aInP7CfC4uRM83cL6k6DT2tueRCSUEC5HLc+rz5giLbKOvWxwwb6dt9ATZHVKEhuhAdjPd2I4Oz0Ot1K91WMJn5DWmk8gbgJwG9gt7SAMrkstlez+prWiNewhZV+7V/ffSsAPGHs6/P+DWk6gD9Mxg0SMO5jM=
+	t=1734028348; cv=none; b=BwHcrmSmpYTwtpr9UUu2g02BvZhRqXw19nTjepkCDsE0oZ+dOMIFgSW2kQ2Y82hmF7MhEWFzDPUd9kjLS3NX59jBwdDxS9ihQ3drpWXcMwrC8BuWPDtVDCLt4Jo2hpGF0w+pvx4i77fR0DBqAnWsDawSJ182x+kxItrrgAoGf14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734024842; c=relaxed/simple;
-	bh=FK78yyqVjHCobD9natqpTkBTroblD9K+SecNHatoZlY=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=ZCySn4zJZuSP7wyJzKgrr157KURLBv7STlrbjAH5yq4zZJTXiiuVcgJGRzxOaCnUSEZMqCOu8vSvxu7d2/7WonS8j5Z6SpRvElAsyPpQNzJB7O02YqKAJt1Kh/1B/TC7FEaHKHYqdSntoTYzPpiD4gNkbfcOOY6ZlqiO3ZThiNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ilz9gdoq; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1734028348; c=relaxed/simple;
+	bh=ig4WqdW5KLmQUNZb+Hu3NK8OKMDRHpZtu68KawFzYkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KooR5ciLQwRGT6csl30ggCAm9IPvdiGmGfRj1JGF1SyfYfI22svRuEF7TmkAtsXZ5S/K+o6WZ5BNNDh9o7zwjpqz6gOZXBaZTpu33VEyRDzIG+EzWPqDRHQ1AOEzbTzxaFbE2NR38C8Mz+ql8V62AHhDhrdX4kFGIQozh025/nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lfsNFsWl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ilz9gdoq"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e38dbc5d05bso1273351276.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 09:34:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734024840; x=1734629640; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=McevHFea/8/GUg9sGU8w00zhvfEuoLepq2oliEuLmsw=;
-        b=ilz9gdoq3A1MVXWIIEkngksF+B5tRUTt0eWzKLqGO20dObrXSr6FMss/6v6TdwF8Cu
-         yXitL0P6aBcIwrvKbiAnbENKMQzM7oooPEBFGcjftOAhvMj/n1whTZ2NCIeCTYHvyUBC
-         wZMgLaWUZ6CsXWaG/85Ni6OB3k+p/rx9OeFkfOQMqdhsNm7yTZVCVQIMsLUA9PFcz0l1
-         6bTNEh+9HdSfLqnxqdxlHq3ZCaBHxoNpIsjdP2O1R59aC4bgynmw+tgSv0a3RNUfX6Gh
-         CAh364cUCf3+WXerm4BbSkwHqow9HqLn22cZdD05+IpW50SgSUwfSzcr27qNa/MBmLAl
-         /j1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734024840; x=1734629640;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=McevHFea/8/GUg9sGU8w00zhvfEuoLepq2oliEuLmsw=;
-        b=Wpth49BXEP4Prxos5Fh6NST/jSlBknio4LUo1KCqJf+al3GljALiMaNywurL5j+xvE
-         ahFAyqfnHw25Bp8H4u1ilhv17Eh3Gn4pYZ93cGokKiFWh5W76YIzbjB0VkP6pQXF0nTS
-         +bVa8wxIXzqnq435/OWOzOgSqFMDgGvOk7SddpymszAtidDqQfg5oc7u0z2f3tPH9Jgm
-         UNWIVPbeu//PAQOmM8nRmXC9esvsXd4AA7GKNwvHS+jPHDJJLI+N13JbZIJP1yZpEwuu
-         AiojHrPUh6dmUgqT8jLSjufbY8Vru2BP8ST8EuGksZmhlzaUW31hKj+BBnXWoqZlyC3x
-         b/7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWLPBWUgznF3CZFteZka6S0JPR2gINh64WmFAfmlv22FuIHBrYP0yhdKcO/nUSbuQKX9fytw2OcAOM0phdcCih1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1SCJgvQvk7eivv989Iy8sDh7sZzo+OU01Pt89MLvZAdVMiUNA
-	Du12vTPtcFpKAn+qJD9Bb7cmQmAc7hQrSzA/dX3+6Z/m/HjX49hijkoJ2KoMDdGhlXbVFgc6U5/
-	PSoJdHA==
-X-Google-Smtp-Source: AGHT+IHT5WTyXq30AAfRRz/fxMBvZ8YldrnuyFVNGmCaF3LmbN2PZoVphHBf/LGehk9tkdvDjxMehh2jGgr7
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:c22f:1975:e7cf:849c])
- (user=irogers job=sendgmr) by 2002:a25:5f4b:0:b0:e39:710a:387a with SMTP id
- 3f1490d57ef6-e41cb05bcbbmr502276.10.1734024840121; Thu, 12 Dec 2024 09:34:00
- -0800 (PST)
-Date: Thu, 12 Dec 2024 09:33:54 -0800
-Message-Id: <20241212173354.9860-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lfsNFsWl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D55CC4CECE;
+	Thu, 12 Dec 2024 18:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734028346;
+	bh=ig4WqdW5KLmQUNZb+Hu3NK8OKMDRHpZtu68KawFzYkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lfsNFsWlS+7McBj052JWuRkaVnirKI4rdiTgUy23O1PBVj12pYIMdUjk1OXir7KLU
+	 5OQIFe6zriuhNJOzo4TTf3obsBdbd+xVNKHXhd/j7dL06FGAOA1S0Ca3ARLZeLmMJg
+	 uNdTFfLfG/k9Eth5K/S1eyg5WlnuEGUvTsBe0gmr9MaA6i9zf48/pGXJRV5y15sbfT
+	 6uPDH1dwq6pEELcnXNGYbjxF0KG9b5z4CKAcjALisMqQGxp7jzZSQBZFpaYVjAW4ft
+	 5QnMF0Qpx/xCMbRI/TuGRJNZFuQ4qRUVo0Le0i1baa5NrGufhCszPr5bsbGc6KVwyZ
+	 TZ9gP3+4AVuWA==
+Date: Thu, 12 Dec 2024 15:32:23 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Quentin Monnet <qmo@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	James Clark <james.clark@linaro.org>,
+	Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH 2/2] tools build feature: Don't set feature-libcap=1 if
+ libcap-devel isn't available
+Message-ID: <Z1ssN_Ktym-1tvZ6@x1>
+References: <20241211224509.797827-1-acme@kernel.org>
+ <20241211224509.797827-3-acme@kernel.org>
+ <CAP-5=fWqBrw1SuY8ue2X_xOv=yStPANM9NGUBkeo+_s2O=bKTA@mail.gmail.com>
+ <c63063b3-b2cc-43af-b026-98c992e9bbf3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v2] perf test stat: Avoid hybrid assumption when virtualized
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c63063b3-b2cc-43af-b026-98c992e9bbf3@kernel.org>
 
-The cycles event will fallback to task-clock in the hybrid test when
-running virtualized. Change the test to not fail for this.
+On Thu, Dec 12, 2024 at 10:16:38AM +0000, Quentin Monnet wrote:
+> 2024-12-11 20:25 UTC-0800 ~ Ian Rogers <irogers@google.com>
+> > On Wed, Dec 11, 2024 at 2:45 PM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> >>
+> >> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >>
+> >> libcap isn't tested in the tools/build/feature/test-all.c fast path
+> >> feature detection process, so don't set it as available if test-all
+> >> manages to build.
+> >>
+> >> There are other users of this feature detection mechanism, and they
+> >> explicitely ask for libcap to be tested, so are not affected by this
+> >> patch, for instance, with this patch in place:
+> >>
+> >>   $ make -C tools/bpf/bpftool/ clean
+> >>   <SNIP>
+> >>   make: Leaving directory '/home/acme/git/perf-tools-next/tools/bpf/bpftool'
+> >>   ⬢ [acme@toolbox perf-tools-next]$ make -C tools/bpf/bpftool/
+> >>   make: Entering directory '/home/acme/git/perf-tools-next/tools/bpf/bpftool'
+> >>
+> >>   Auto-detecting system features:
+> >>   ...                         clang-bpf-co-re: [ on  ]
+> >>   ...                                    llvm: [ on  ]
+> >>   ...                                  libcap: [ on  ]
+> >>   ...                                  libbfd: [ on  ]
+> >>   ...                             libelf-zstd: [ on  ]
+> >>   <SNIP>
+> >>     LINK    bpftool
+> >>   make: Leaving directory '/home/acme/git/perf-tools-next/tools/bpf/bpftool'
+> >>   $
+> >>   $ sudo rpm -e libcap-devel
+> >>   $ make -C tools/bpf/bpftool/
+> >>   <SNIP>
+> >>   make: Entering directory '/home/acme/git/perf-tools-next/tools/bpf/bpftool'
+> >>
+> >>   Auto-detecting system features:
+> >>   ...                         clang-bpf-co-re: [ on  ]
+> >>   ...                                    llvm: [ on  ]
+> >>   ...                                  libcap: [ OFF ]
+> >>   ...                                  libbfd: [ on  ]
+> >>   ...                             libelf-zstd: [ on  ]
+> >>
+> >>   $
+> >>
+> >> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> >> Cc: Ian Rogers <irogers@google.com>
+> >> Cc: James Clark <james.clark@linaro.org>
+> >> Cc: Jiri Olsa <jolsa@kernel.org>
+> >> Cc: Kan Liang <kan.liang@linux.intel.com>
+> >> Cc: Namhyung Kim <namhyung@kernel.org>
+> >> Cc: Quentin Monnet <qmo@kernel.org>
+> >> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> 
+> Acked-by: Quentin Monnet <qmo@kernel.org>
+> 
+> Thanks Arnaldo for checking the bpftool build :)
 
-Fixes: a6b8bb2addd0 ("perf test: Add a test for default perf stat command")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/stat.sh | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Thanks! Added to the cset.
 
-diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-index 5a2ca2bcf94d..da42427bb077 100755
---- a/tools/perf/tests/shell/stat.sh
-+++ b/tools/perf/tests/shell/stat.sh
-@@ -163,7 +163,11 @@ test_hybrid() {
-   # Run default Perf stat
-   cycles_events=$(perf stat -- true 2>&1 | grep -E "/cycles/|  cycles  " | wc -l)
- 
--  if [ "$pmus" -ne "$cycles_events" ]
-+  # The expectation is that default output will have a cycles events on each
-+  # hybrid PMU. In situations with no cycles PMU events, like virtualized, this
-+  # can fall back to task-clock and so the end count may be 0. Fail if neither
-+  # condition holds.
-+  if [ "$pmus" -ne "$cycles_events" ] && [ "0" -ne "$cycles_events" ]
-   then
-     echo "hybrid test [Found $pmus PMUs but $cycles_events cycles events. Failed]"
-     err=1
--- 
-2.47.1.613.gc27f4b7a9f-goog
-
+- Arnaldo
