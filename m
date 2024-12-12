@@ -1,249 +1,117 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0283F1E0499;
-	Thu, 12 Dec 2024 23:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF19E1547F5;
+	Thu, 12 Dec 2024 23:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734046059; cv=none; b=EgTAkvELVOLoKNFqyz6jOrmuTfkKbXyyALTGLBEpqLM+hQ+Jr8sgPvgOFxFYPRXhLU2W/JmOSUg4/1iHeTtEt4OfQQu/nz8k2xjv4aBI1MKofDvvKAj24VzWn+0BNgFF9xiYKehRSOjfWG0hHkWx/nXvnU3urFFh2qvHdWXmJW8=
+	t=1734047598; cv=none; b=RrOQ28piP9pQKFA6yv2aO9f5k5wd8kq6JvgqtFwZlL/GvYv8vHXHn6tb6xXF7aGyXooFWYdJk/MHcC5EGLFis+b9wnFdvZlGFhFYjV3geZfHgi2uRkvAp8YI+ieCoArNxTmZnCGNz+Qy9N37ZU46RHWfFigc3C5nzv2MQViDmsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734046059; c=relaxed/simple;
-	bh=fk3U5R0mb2SGsJQOBzOHol5ZzILTnf2AqVHElPU/gK0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XKgJzxrfN3I4o3ScKjYVipHMahVS/taCUPP2lJUYJf4frbHfVgiDPw5rXjafI3SWK8VFTBTQR4C+IbLhVjH2ks6KNQtToE8pHMa8jyAfjZQv3Xer4bQtKeYHblyzXql4Uj0ki/mraea6NzGuuAqFrkm91J2+ppeWHyboQm8NJZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UVTuzPC6; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1734047598; c=relaxed/simple;
+	bh=q/BFDvTD+XNDmTs8p8/kib7zSnWMPGFmxweFAg1eUuo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WY3o0m8sdQ4l/VnCxTEpawQXyS+k0cnLSrT/uw7KYMdgOwACXMkkwqEot7LiVsmi+JC5oBoxo7YHoJwGosDfBcnWkvmmTVb6Z8FuiS2GaMAsePmlI/s30j1tuXQf6e5EfXAf9iE+b0FOKf1t31eTMhyn0MFH5v1NlyEbbgRbTtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mXNfIm3w; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVTuzPC6"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-725f4623df7so962503b3a.2;
-        Thu, 12 Dec 2024 15:27:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mXNfIm3w"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ee67e9287fso1034174a91.0;
+        Thu, 12 Dec 2024 15:53:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734046057; x=1734650857; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1734047596; x=1734652396; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5O/mxMoka0idCukTIL5JDxkmARERO0QsLTM8t6jJJsc=;
-        b=UVTuzPC62x2I63NRK/4Ss+eeuLR3fmgDoOLIoNZ18AJyQE1sXYFjuTL19kJf651h5k
-         bfdcOVEnSH6hx585iqXwWC/qRugqcF/gBsJdMM92gubESqHoJtWQeFBtfeh5rC8v8VLI
-         b6EZJ0WjzoU+r++BLPPmSRiUN18aaJxGN9kbkvlgNEV+iZw14925UcTHIVDyuOY4YaQg
-         MFWP87iuTt21dLJGFxqWEZRZ+Nnom9wdpR2+WzdmutTgDjxjCclstQivspDR9DZlp9iL
-         S4oxNmRODvxyKtdcKKcqZHPrygUnwoWL+pkT7WiloxtndSRFy61am794HbOHnDV1/knK
-         lgTw==
+        bh=4QXCu0v5SnxIo/0aSLhOo9DU4qZRN1PKMZDr7ioEmoo=;
+        b=mXNfIm3wXu+j+di6DT7QDbrskx/5bIGGOKhPNLZuGzj235F8jeByAF5OPYvjuVIlfy
+         EejwyI5mJyCQnyoTGpnU4Smog82TAlJ8faWmtJJVj6/1UvBgmPXgka2K4fepq7LT7BKj
+         RhpkFhejNLIEohffCT5hBMoOp9vrajNxWIqrY1Fzm9vJdK2vB3SkJ68htVErl4nGnVEf
+         A08+93JWXu+n4ICHqcemI0lTCl2cUvvxkuBOIouAVgTXk9VbCvaHg2beQL82AOWfoTaO
+         5PoVt+Nt5FxCKJFdRbVtgdimvhXl3CdkZXxJrqMP0e+Wp0a80jPc2YXXqBgEdZDVxS5i
+         LqbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734046057; x=1734650857;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1734047596; x=1734652396;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5O/mxMoka0idCukTIL5JDxkmARERO0QsLTM8t6jJJsc=;
-        b=NWf09K82DOGmPaZNTKEQZR20m4sYP9FXCt2Ps2ARPSjMfyMFFJMk4RMrfWvy/XeF/8
-         mzegJ8z3SPm42GMDPR8/jti6QCdV83nFZ/o0ljmPy5UiNNpMUbghZ+sgq5Gzp/ZBR5vI
-         uSq6UALFv/JSlxZ3t+GqheYR4lJTBdISb+CDZWP9DX4c6lJrOyt5PgKGa1wmgyYpd25Z
-         5bncwXmnbV13uSlR6w74GJt4DXgEmNeoBRbFN0w0CQB3Pom20WYYJxx26zK2s8wwBtUX
-         WLm47OOJi9I6vTsFJ8rREpHZLO5kJcSBc6vfi0ZwxMrbusdtyNMmZ2ASPsKuTF7GDuIG
-         f9vA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHcjb774CvwmlJILa5FeTQMTI6UozZcsP+l1FoVNqjnt/a0tcf7GZsI35hZcxJ38t2AQlyzXks/E2SYrNtyaP4Ww==@vger.kernel.org, AJvYcCX/b1A6K1aifZDfnP+biMxhK7515Rj8ZPBG2z4PYI50eA+WFKJjTxdz6l5kftZGOKn1xnG08v0YHeiTh7s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmsfLHOfCbW1X54PqbaS7TLtFoz7zxMU9hJP54yhdWeSWF2uCW
-	y2i3BZ+Uoe4TQxGTLaeIZ+Gn82RV6mLFadRUez5P005h0cQb9J2D
-X-Gm-Gg: ASbGncuXBPe2vbVd7R+lwSknMi0BxBrBismgR0z3cs8JHSlRoXlyuE/B8oENhos2VA4
-	S3oFnSILGnRqcp4WYi0zta+EgnldB6ct+cPtCwj/PbOsmUZe5qVQCGOC7LL+i8HuK6VDG07XEsw
-	jKmFnXEL9nmUE7LBD1q+Hs7QoVKD/we3dmbzIu9vBFoBnbuey0mPkQf0rarksQzSQSeTnaOJKsu
-	VMp9s9ZzpRrYFLuE5JVADB12RCDaQIIcsxooz6Egs/B1vtZrW8qUjDm1fcdhvTaya9biHXFEr20
-	JVR2YI8Cwj9F
-X-Google-Smtp-Source: AGHT+IEX178AqgV5eMiD3YAtcXT+gXvPnTRnRyqJsCltdUI4UMWfAPoa7WqsHUvVon6vXNy3wga6/w==
-X-Received: by 2002:a05:6a00:3e10:b0:725:1d37:ebff with SMTP id d2e1a72fcca58-7290c273eaamr487286b3a.22.1734046057126;
-        Thu, 12 Dec 2024 15:27:37 -0800 (PST)
-Received: from mbp.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fd4e202e9asm7324674a12.72.2024.12.12.15.27.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2024 15:27:36 -0800 (PST)
-From: Howard Chu <howardchu95@gmail.com>
-To: acme@kernel.org
-Cc: namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v13 10/10] perf test: Add direct off-cpu test
-Date: Thu, 12 Dec 2024 15:27:17 -0800
-Message-ID: <20241212232717.232507-11-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241212232717.232507-1-howardchu95@gmail.com>
-References: <20241212232717.232507-1-howardchu95@gmail.com>
+        bh=4QXCu0v5SnxIo/0aSLhOo9DU4qZRN1PKMZDr7ioEmoo=;
+        b=WYnqBQ0r7hw9Pnl+d7Hg6vvlT25+mKCxPmUwOgh7/PsEB0Xrz7hqXZmSw2Z1F4uEe9
+         fzevWimJVgigj8Khuf1xgvhDn9AcPEPRt8a77yAt+CWb2kROlBVlR7MLdaeg3d80lMne
+         ekZpPTS0qgKc/IuVdN4OivEPVuOoGZj0N1/tbgkscXs8Z+3sfR6bVG2o0UFJ2U+S2lk2
+         bBRN7AwH+l3/49p0y2n5w/zukLpZxZKUP1iKmb9MN7gz+TA5agImArx4Q+HOu3aXOGuI
+         L6NveWYS6CtbQRV3SzbaNBiluPd8iJWMniFU9xjR62d5OLTlFY7hg4h1MnNM2yohm5R9
+         l5/A==
+X-Forwarded-Encrypted: i=1; AJvYcCU1GIaGb8Fo7c1OsI1K+Sa9JvNvkVmkHnsDzNSfH+zoRhUswaHYZ0ejn+es7EDdwQG35L5GOpzpU+TctX14Tgyevg==@vger.kernel.org, AJvYcCUI8thUqF8/cAzZ4jOqNkiH2rF/gSG94JIgbnb5frPLBg+QWLLelCUY342pVzfRKrXV1b8=@vger.kernel.org, AJvYcCWJoEP3+T37ENW335LXbkl6bUX9Ng6MINcUeuRGRGZWaPZ5SjW/2bL/dxNmGRb8r3nvQ6L5C7X9NMfNyU/7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwABFTPDw/k8dgRaC1FHsyxW4rg3HWCDURD146HkFqqR//x2HEj
+	iEJrCDRJARLDlmooJj0yM6TRkWcKZx76KE6KII7oUCeyauh15I59XnMCqNnKHBsCt06vUyBBYKD
+	n1eVLIp/EKLbTYeOybFK6V7VnFa8=
+X-Gm-Gg: ASbGncvJmNQbs3gDG84abtwhCOaIguZks/tjwtQEJvwBV6DNdhLoG6ioK0IiS4eWmcT
+	PqR8aG8097OSNZ3hdbQco6rOhLVjDMacruPyj+Cs/yYQJCD3UnVbLDg==
+X-Google-Smtp-Source: AGHT+IHhbAiFyFvd1Mfo23FPBSYkHdTUphfvtJyTgTXBo8HJBq5GRGK9fuMA3UKGzWz63K+XgLlcQXDkhtdDrlN44qQ=
+X-Received: by 2002:a17:90b:548b:b0:2ee:fb6b:7d7e with SMTP id
+ 98e67ed59e1d1-2f2900a9fe7mr1013356a91.30.1734047595981; Thu, 12 Dec 2024
+ 15:53:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241211093114.263742-1-leo.yan@arm.com> <Z1mREhJElE6cSrPT@x1> <20241211202630.GA3169297@e132581.arm.com>
+In-Reply-To: <20241211202630.GA3169297@e132581.arm.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 12 Dec 2024 15:53:03 -0800
+Message-ID: <CAEf4Bzbu_4sgb_cfC0K3fR+AMfAivJyprsENNZf129qieFCitg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] bpftool: Fix the static linkage failure
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Quentin Monnet <qmo@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Nick Terrell <terrelln@fb.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Guilherme Amadio <amadio@gentoo.org>, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Why is there a --off-cpu-thresh 2000?
+On Wed, Dec 11, 2024 at 12:26=E2=80=AFPM Leo Yan <leo.yan@arm.com> wrote:
+>
+> On Wed, Dec 11, 2024 at 10:18:10AM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Wed, Dec 11, 2024 at 09:31:11AM +0000, Leo Yan wrote:
+> > > This series follows up on the discussion in [1] for fixing the static
+> > > linkage issue in bpftool.
+> > >
+> > > Patch 01 introduces a new feature for libelf-zstd.  If this feature
+> > > is detected, it means the zstd lib is required by libelf.
+> > >
+> > > Patch 02 is a minor improvement for linking the zstd lib in the perf.
+> > >
+> > > Patch 03 fixes the static build failure by linking the zstd lib when
+> > > the feature-libelf-zstd is detected.
+> >
+> > So, this was originally reported as a perf build failure when trying a
+> > static build, so something not so common, no urgency, I guess, but it
+> > involves a tools/perf/bpftool/Makefile change, I think I can process
+> > this as I'll then test it in the many build containers for old distros =
+I
+> > have, ok?
+>
+> As Quentin said in another reply, there is a delta change between the
+> Linux perf tree and bpf-next tree.  So this series has a conflict on
+> bpf-next tree but it can be applied cleanly on perf tree.
+>
+> Before I respin to update the commit logs based on comments, I need BPF
+> maintainers agreement with Arnaldo on proceeding on which source tree
+> to proceed with.
+>
 
-We collect an off-cpu period __ONLY ONCE__, either in direct sample form,
-or in accumulated form (in BPF stack trace map).
+I think it's fine to route this through a perf tree.
 
-If I don't add --off-cpu-thresh 2000, the sample in the original test
-goes into the ring buffer instead of the BPF stack trace map.
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-Additionally, when using -e dummy, the ring buffer is not open, causing
-us to lose a sample.
-
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20241108204137.2444151-11-howardchu95@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/builtin-test.c         |  1 +
- tools/perf/tests/shell/record_offcpu.sh | 35 ++++++++++++++++++++++++-
- tools/perf/tests/tests.h                |  1 +
- tools/perf/tests/workloads/Build        |  1 +
- tools/perf/tests/workloads/offcpu.c     | 16 +++++++++++
- 5 files changed, 53 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/tests/workloads/offcpu.c
-
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 738ad32b2c8a..a79157593c8b 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -144,6 +144,7 @@ static struct test_workload *workloads[] = {
- 	&workload__brstack,
- 	&workload__datasym,
- 	&workload__landlock,
-+	&workload__offcpu,
- };
- 
- #define workloads__for_each(workload) \
-diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/shell/record_offcpu.sh
-index 678947fe69ee..73ce16d61b5d 100755
---- a/tools/perf/tests/shell/record_offcpu.sh
-+++ b/tools/perf/tests/shell/record_offcpu.sh
-@@ -6,6 +6,10 @@ set -e
- 
- err=0
- perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+TEST_PROGRAM="perf test -w offcpu"
-+
-+ts=$(printf "%u" $((~0 << 32))) # OFF_CPU_TIMESTAMP
-+dummy_timestamp=${ts%???} # remove the last 3 digits to match perf script
- 
- cleanup() {
-   rm -f ${perfdata}
-@@ -39,7 +43,11 @@ test_offcpu_priv() {
- test_offcpu_basic() {
-   echo "Basic off-cpu test"
- 
--  if ! perf record --off-cpu -e dummy -o ${perfdata} sleep 1 2> /dev/null
-+  # We collect an off-cpu period __ONLY ONCE__, either in direct sample form, or in accumulated form
-+  # (in BPF stack trace map). Without the --off-cpu-thresh 2000 below, the sample will go into the
-+  # ring buffer instead of the BPF stack trace map. Additionally, when using -e dummy, the ring
-+  # buffer is not enabled, resulting in a lost sample.
-+  if ! perf record --off-cpu --off-cpu-thresh 2000 -e dummy -o ${perfdata} sleep 1 2> /dev/null
-   then
-     echo "Basic off-cpu test [Failed record]"
-     err=1
-@@ -88,6 +96,27 @@ test_offcpu_child() {
-   echo "Child task off-cpu test [Success]"
- }
- 
-+test_offcpu_direct() {
-+  echo "Direct off-cpu test"
-+
-+  # dump off-cpu samples for task blocked for more than 1.999s
-+  # -D for initial delay, to enable evlist
-+  if ! perf record -e dummy -D 500 --off-cpu --off-cpu-thresh 1999 -o ${perfdata} ${TEST_PROGRAM} 2> /dev/null
-+  then
-+    echo "Direct off-cpu test [Failed record]"
-+    err=1
-+    return
-+  fi
-+  # Direct sample's timestamp should be lower than the dummy_timestamp of the at-the-end sample.
-+  if ! perf script -i ${perfdata} -F time,period | sed "s/[\.:]//g" | \
-+       awk "{ if (\$1 < ${dummy_timestamp} && \$2 > 1999999999) exit 0; else exit 1; }"
-+  then
-+    echo "Direct off-cpu test [Failed missing direct sample]"
-+    err=1
-+    return
-+  fi
-+  echo "Direct off-cpu test [Success]"
-+}
- 
- test_offcpu_priv
- 
-@@ -99,5 +128,9 @@ if [ $err = 0 ]; then
-   test_offcpu_child
- fi
- 
-+if [ $err = 0 ]; then
-+  test_offcpu_direct
-+fi
-+
- cleanup
- exit $err
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index cb58b43aa063..2e655a617b30 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -217,6 +217,7 @@ DECLARE_WORKLOAD(sqrtloop);
- DECLARE_WORKLOAD(brstack);
- DECLARE_WORKLOAD(datasym);
- DECLARE_WORKLOAD(landlock);
-+DECLARE_WORKLOAD(offcpu);
- 
- extern const char *dso_to_test;
- extern const char *test_objdump_path;
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 5af17206f04d..0e78fd01eaf1 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -7,6 +7,7 @@ perf-test-y += sqrtloop.o
- perf-test-y += brstack.o
- perf-test-y += datasym.o
- perf-test-y += landlock.o
-+perf-test-y += offcpu.o
- 
- CFLAGS_sqrtloop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer -U_FORTIFY_SOURCE
-diff --git a/tools/perf/tests/workloads/offcpu.c b/tools/perf/tests/workloads/offcpu.c
-new file mode 100644
-index 000000000000..57cee201a4c3
---- /dev/null
-+++ b/tools/perf/tests/workloads/offcpu.c
-@@ -0,0 +1,16 @@
-+#include <linux/compiler.h>
-+#include <unistd.h>
-+#include "../tests.h"
-+
-+static int offcpu(int argc __maybe_unused, const char **argv __maybe_unused)
-+{
-+	/* get past the initial delay */
-+	sleep(1);
-+
-+	/* what we want to collect as a direct sample */
-+	sleep(2);
-+
-+	return 0;
-+}
-+
-+DEFINE_WORKLOAD(offcpu);
--- 
-2.43.0
-
+> Thanks,
+> Leo
