@@ -1,167 +1,212 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD2E2746B;
-	Thu, 12 Dec 2024 01:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733968073; cv=none; b=ua64zChjDr1xfz3ntn1BupBUham85Sst/DrDakttK2U8D6xzJvkxJRdyHkEoEuWLMahtYuuEaA0NFJaRprfSumHw2r6g5XAuRWtUnfN5kHa9eN038vjqKnVY+SZUj4b/X9bVH+Rh+TO/I/dsFU3DcDK1c0jE3QidVlxqjzNdXs8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733968073; c=relaxed/simple;
-	bh=wUDRX1Cz5nIjftyAqN53Bs8hElIkNN9sDwndPoPkPVE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eZ8tEhgdEVX+Gi6AgsMNU+GjTkj901WqzyZMUZ4nkgspqBhV5g9iXSnSbgvUIFUbQqAdyoVJZSY/srBOc5+2sFzNDirahv63SmteeSmbQJD0E/L0ZUTyeoicsih8qgwX3mYfqpD6HQvnPuls/ySZ3WHhls33pYdDRdatlUpSVKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=llPLJC+H; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09583259490;
+	Thu, 12 Dec 2024 02:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733968860; cv=fail; b=Sk1I9hextdNOtrM9VAK5P8q75+NssHbdGd7sZEDMgTOn5TM4mcG9IER10SN34X3tMNzb4hJMP6iSxenWnsZ/eJzTrOn1C8ck0XfdUMOpafe92GXJUtutwMJz+ffO+Rw3N8C0abkyskRUL0ONb9MyVIwP+aI4QLrzjFwekbkrlCc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733968860; c=relaxed/simple;
+	bh=AE/i/g5rImCEXJ3Aagt5xwWm6J28PF1GsWgPLxMJCts=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kb2x2/e9Gv2llVJm3EknG99yRqzI0AauauMUzkUk2aIY7v0QCWc7ckLn8aIFFN5wuBhkyQDq3UtdPWMSTUwnwEaMqxoOJmYfG0W0kiO/qkhhVUaf4e/eaNp/kb8dtw4CdwFdNNxaEZ0l+qsoc7Fj+7SfYEl74/Xv1G1TQj0k5GA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KJuiza55; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llPLJC+H"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6efa5bf5202so813807b3.3;
-        Wed, 11 Dec 2024 17:47:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733968070; x=1734572870; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a0HtzVwueR5GnNcN4RgYbJNVdlawrGYFmTzkDhMIhmM=;
-        b=llPLJC+HAOEXWnlDKjP+cVnpvER9EudIeiQlSRBPSjXP+Lxs8852pp1ZO/joy8V13u
-         eifZz+AqG6CibYjiEfz18iLZXlJuSLWrolKj8oR4MfXamJxSyAXjmWc7bjRF80wfqpCI
-         2T44fKozDG2Gg4v2Fb+NYSJ4ajX5sBbxFPLsbTfhiz5S2uUMXDjWpNHYTpe69Suy8gV0
-         OJf/Lw9IrWBw2jzRj5UPtgPXd3nODkTSfYfH0pi/GS5lgRVCsnebWvLlLvanzBtIpZA5
-         BC49mK8+x01TwLAD2siCAiPFaiYKdIlsdgENQl1cln1sFg5h67UPoElNq4FbPsvEkQ2L
-         Q7KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733968070; x=1734572870;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a0HtzVwueR5GnNcN4RgYbJNVdlawrGYFmTzkDhMIhmM=;
-        b=lvId9wA+ilM1wm+GRARxJpjK+eNxcj2rIwTdAWVk+Lcd47y+3KAJtRgdvqOvwxtJXa
-         a76xUr04ZRaQsAVMTYXq+rDoS4yrWh/R70iNL0dac9m9dI+VW2IMeHmtDj4VmR/SIyn0
-         Gz8MCySM8jD/jY5+FrBKEI8S0ANmwQ8qHulNfhDZGLM/AlDTkKntnGrlmiHaHpfJPEqY
-         nNMR98/2PnEqwqP5cNmTkJc41rfUBPblJ0T+CwR81SXrh3B9lBXjxc8vaMT+kWC/0MHq
-         Zaq1KwrREypOyl7MUYSWTIiALoY6J6pbBLB/jLylHuqYuLLYMwhZVX1EPeu22Wl4Mn8R
-         96ww==
-X-Forwarded-Encrypted: i=1; AJvYcCUFHFxCghUNpfqsBa4GtoKTxtFi/4MUUW5tUHeaPZRkPAWqLCOc/2+ACDwJUoU12fJNjdy0JOfDUJKwWYo=@vger.kernel.org, AJvYcCVmnOoIaYz8yIaLZd7RIwNmrfAGhmfD8LZYrxpwFVdWPULI5Y6jCVCayvUJndXOeXQVuZHfiTK5eWxmn3BliJ143w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOF7gkF5TvS12xRSW16FOBsHijWPxAIIDKgfPuDEmAQJt2tAqg
-	IvU+IbRKRR+1Q8DV2jkcqxDioyYXkJyY92CgFHD6l0/XfffIwbXQ8gSkhArBLAMr5S8OZ9634Vr
-	oc8/kiH2ihHUYmR9tkIh2Xbk3RpY=
-X-Gm-Gg: ASbGnctJlw7Xqd28v0xohNhnixoJCLCAPns9eFwDTIn/6e7tYR7q44G8hip2qYYxKKE
-	oBDNIPaWMoYInL+UHMcaE8z+NNyy4YY7Z22As
-X-Google-Smtp-Source: AGHT+IHUB22sWR1v4hhXtVGBviLhoQIvBhG8bmkZD08wclx8UPtWzSgvoaoFMyfNFVD71+C2g19KIi98MiobZXO6MtU=
-X-Received: by 2002:a05:690c:3501:b0:6ef:58f9:4c0d with SMTP id
- 00721157ae682-6f19e871112mr16016857b3.39.1733968070298; Wed, 11 Dec 2024
- 17:47:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KJuiza55"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733968858; x=1765504858;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=AE/i/g5rImCEXJ3Aagt5xwWm6J28PF1GsWgPLxMJCts=;
+  b=KJuiza55fQY2WK48uwl+Q/JXC3er0RueCv+mJzbMscVrolXAZU9NYJHj
+   +a8HcczWlMnJJtcjY2CzJBP4sZUs+ftDURh8QwSYkRtP2mKidtq+kEZGv
+   dRrcDEyvaSmqEYXXscWuGrAjH6tN8XUkvxN9iO77lRJKJBiPy3WWX5HVf
+   PsENUocu4pBsE7Bfn8QRXEaGc+D0PsXG95zxSP5RPgTppUyxewcZpR1CV
+   c7V1sYh7f3WYf8ulVWSxWyv2aMRM1yzA1l0DDK2ZYlOzTPpviSs1jcusD
+   9aILq7HMzlzl5OYC6pCjw3aRlVCvkvmThovWMdTqVcHlLni1zbaqP2+UG
+   w==;
+X-CSE-ConnectionGUID: AG39X+lfQ7WtglUZSuS9hA==
+X-CSE-MsgGUID: NkfmfThDRcmPUmWGtQXw4w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11283"; a="37212098"
+X-IronPort-AV: E=Sophos;i="6.12,227,1728975600"; 
+   d="scan'208";a="37212098"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 18:00:57 -0800
+X-CSE-ConnectionGUID: U1c00bT+RPSEHkj/dEN1rQ==
+X-CSE-MsgGUID: V8LcmZpvQ+C+AH6Hc+zkoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="101127793"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Dec 2024 18:00:56 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 11 Dec 2024 18:00:55 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Wed, 11 Dec 2024 18:00:55 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.171)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 11 Dec 2024 18:00:55 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Qg+CoHw7ytN0lPxmD04Cx8AQfcc8AathjgI0124H+txTtqIgcc5cgXepbs5TbnVPOXhrv6Npu2N9ThpjsbyQcL5CFqlw7UUzRS5eK2C+TKOFILrLLU8srgvY1VZI/Th57kJlhA/VdSmS1uCCPabtKfKxC+UnbjYLq9hcbWs3ZcAMWAIxObg2q66UVmIye5p5dYe60722L2oEfFG07Z31vu0r9+5h0p+Fx0fHxQZyDp5knFQojhZ+mCLTYJrJFncW5nFMFI83nbO+AfzhsPS+VUDrNAIiclS/EbFcqHUBtQ6RW/02Oz9vCXeHNO6kaAsTV2hgyrEXOGeBZrqdf8bT3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/x/1fO1jSEAl9qk33ZFFuCTjS/CM1JProwfb3ZtTpdA=;
+ b=ysFrD12e1w3L7gZr1PQxE9H5lvRG6dDoFmLJZSI1y3yTqHHhyI1MhWCVveBHHO+G4HOruteMBLvKndMfMk5mFg+Txc/PLc6JBqn9YQ65554bdJUTAgFXmgdRf0rSqm7QpiEpZGs7NPysiYgCdImEtiHv9TCq2UOLvCIamkHt2QVo++UlikIqfe+yedpdedUBMU+uqmUVdlRTRCfzB9AJprjg707D5K3d0P3zaf4eWEbwL5yeoqHyBBiwF0V63Nd7BjDdxNfQnzaRdLbx5rFJNti2Msek+G9r1nxvEGK7iRHcWbznv+1CPPnIWe0xE9E2w/Up69ZKa6dsRcpNfvrMhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by MW3PR11MB4553.namprd11.prod.outlook.com (2603:10b6:303:2c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.14; Thu, 12 Dec
+ 2024 02:00:51 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%6]) with mapi id 15.20.8251.008; Thu, 12 Dec 2024
+ 02:00:51 +0000
+Date: Thu, 12 Dec 2024 10:00:39 +0800
+From: Oliver Sang <oliver.sang@intel.com>
+To: Namhyung Kim <namhyung@kernel.org>
+CC: Arnaldo Carvalho de Melo <acme@kernel.org>, <oe-lkp@lists.linux.dev>,
+	<lkp@intel.com>, <linux-kernel@vger.kernel.org>, James Clark
+	<james.clark@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Kan Liang
+	<kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, Atish Patra
+	<atishp@atishpatra.org>, Mingwei Zhang <mizhang@google.com>, Kajol Jain
+	<kjain@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>, Palmer Dabbelt
+	<palmer@rivosinc.com>, <linux-perf-users@vger.kernel.org>,
+	<oliver.sang@intel.com>
+Subject: Re: [linus:master] [perf tools]  af954f76ee:
+ perf-sanity-tests.Test_data_symbol.fail
+Message-ID: <Z1pDx0TFKsYZvGCl@xsang-OptiPlex-9020>
+References: <202411301431.799e5531-lkp@intel.com>
+ <Z04ZUHaGdsBapIEL@google.com>
+ <Z1BhfpYWpUQ0p+qR@xsang-OptiPlex-9020>
+ <Z1DNJpDzCIBFrIZT@google.com>
+ <Z1DV0lN8qHSysX7f@google.com>
+ <Z1HHClaOwjJnR5gr@x1>
+ <Z1nLcMDTFAFuX809@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Z1nLcMDTFAFuX809@google.com>
+X-ClientProxiedBy: SG2PR02CA0048.apcprd02.prod.outlook.com
+ (2603:1096:3:18::36) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241211222110.2430610-1-namhyung@kernel.org> <Z1oXs1xjCG1Ee27p@x1>
- <CAP-5=fXYke_n7TDe+mB-webNH7vCvea7ZVPqfqygw7bTNd8G3g@mail.gmail.com>
-In-Reply-To: <CAP-5=fXYke_n7TDe+mB-webNH7vCvea7ZVPqfqygw7bTNd8G3g@mail.gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Wed, 11 Dec 2024 17:47:39 -0800
-Message-ID: <CAH0uvogs8EAzLemVQXq238KGFXJhD2TBhpXHQUnRYaQtcn_HPQ@mail.gmail.com>
-Subject: Re: [RFC/PATCH] perf trace: Add --syscall-period option
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|MW3PR11MB4553:EE_
+X-MS-Office365-Filtering-Correlation-Id: 33f34bd1-35bd-4f27-eb49-08dd1a50cde1
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?G3Y+ZaiZAIA42/QwWPK2Q9g4efkZuo/wMlf7xW5QpDyo1UV+i31V0yZnY+tE?=
+ =?us-ascii?Q?z3FIsmPJOqYPO3wR5yVO9pihCb+kr9aMObnFtGhxb2FAHaNmq/iTNzbtu7W6?=
+ =?us-ascii?Q?gzZvhPrukiWnfrP2A96XSMYOhkJLfY17UsaSVQGMRTUPI8MbmxWU21rTzRTg?=
+ =?us-ascii?Q?wufTo1nH7IKHRdnFVuNhUQ0b6q1Wvjt2uJXbkCPreIzH4SylT+CcUN/KjmFa?=
+ =?us-ascii?Q?hvk30zXxR7ArM1DgV8CizLuAPMmcyJ+ArRQ8B0V7TsHaPmziZ0zf7AJOZLm/?=
+ =?us-ascii?Q?hfXxeLhDx4qJpPti/b0v92ACq/wPJL1L4uyLoyJlghzfcwqcjes9tBSDw2L7?=
+ =?us-ascii?Q?Xm5QrhENqc5CYrX1FbCV0nhiRlxspJX2xnxXxpVGON4M0ZXlIg4qySSe6K7D?=
+ =?us-ascii?Q?ui1tGswhFu5nBKotGTBzjhFuSsK+6d0b3zkOW03+YIaFfDjwtPcBnxYOoTcd?=
+ =?us-ascii?Q?SFSoYQoehxod6f2phMae4LfQYNYCD5yXwI2yHr3qf4eaCGTJFqDWw3myjIhI?=
+ =?us-ascii?Q?QFEbgeO/neuIb9JNP5xWALrwGIpwdrLjtwk+nhxmKK59I7SyUVGWoiPxP8hj?=
+ =?us-ascii?Q?ctEHlr2zWCiaYZ/xB9h+Qv6XyPCkFQdPO50yldowa8qcoGnB9EWBecRttX1j?=
+ =?us-ascii?Q?3HY7f6+WRAflXxOQlmhqc51eWpSddvUrKWv2BMBycmKpp1h6NUjWxKaGLWaP?=
+ =?us-ascii?Q?Qpts5pJXRksXeYdEKrY7EDvu946sFGcfdoVc61ioq3UKPc3crp5QvRSfdcvh?=
+ =?us-ascii?Q?wEu1vDBylAztaGJBeUGE6TY4ouVqviffm7YbhvdPTkNkXMfw7fzK2V6KJAP+?=
+ =?us-ascii?Q?cdRlhFd/goBfv9caGsyognG/7gcVTPB6R7doLMgdBpH8YjcVIt9Yb8xOdgi4?=
+ =?us-ascii?Q?wfpxfmkvU95dsNQyMnGkkFp8d//ckFeHpEj6wm4uPkUu6pMC0hQtXe5EH/Zl?=
+ =?us-ascii?Q?T/9Hxj7AXRzSjCOmZEvzjwrp1xfKXiA3USOd021XmIwGG30dtSV3UtcR5x+5?=
+ =?us-ascii?Q?mCiFTLefmeLNgy4caHtDcG7LNaw8eYa/SfmfcLeHlqTvDRN0vFAajyjdhRtZ?=
+ =?us-ascii?Q?uRmNATrkeRlO3gb61lWK+Ey4AiwszKe4KVcc9y1PPwa6wGmLqrii41f/TzU/?=
+ =?us-ascii?Q?JE1x0g1vWr6Ej1W8jjPHMXqw0QvsON43Te0bJlNl/Ej9NpiyTFfZy27i5/We?=
+ =?us-ascii?Q?cEks0ezst9k7CkeuFux8cg9noU7FaffPPrjzQJyys3W019DrLrfEr107Cl3q?=
+ =?us-ascii?Q?BCcdf/hCGAjxuOmN8ppyA3upUBOrk0hTpQFJG8Aih7wcbM6TROd5Otvbq03W?=
+ =?us-ascii?Q?A0ktvHpcLmPjlFYbyOTyd+v8/nBpf2nFSfY8O5sjGpYTug=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?pvvr4mILdBsveelCTNhZJZrx9ToSH67HEW9Cqn8sC7uzcjjrOhqpNRMypTAf?=
+ =?us-ascii?Q?3+3zjNKjOmIql2UAZeSzqj51q/HYHqs0CiQcFt3SMA5YsqqcjOrQac66Xdkb?=
+ =?us-ascii?Q?iS8GpvvLZLZkNJQw+T5bATkM0FI90yTC5tzWV7Wn+yG0DruEZW0UMpAKZw2X?=
+ =?us-ascii?Q?HN38BsSNFEaAVD38fRU0CDIUZrT4prMxE4FuGXz/S/+6UBKT0fFgj9IztTAP?=
+ =?us-ascii?Q?GeL7zB8x1uTZYEA6W0Atgp1AE3djFOFxDWnxausa4QqTzl7+Bq7VGtGrUk5P?=
+ =?us-ascii?Q?vtHa7PzOLZ1Dxs5bagqjRm6DKyHf8ZBwOlu9ySCrXxwj+o+QLSfA+bjMVZL+?=
+ =?us-ascii?Q?esVQDB2vtFWdLUSR54Qvkh0xBUM+RSB29gA4vWB44zv3DyuNoQGY/zQDEdJD?=
+ =?us-ascii?Q?lO31IGGqmcDwiQ4gAHQcFkaRAqVXXwn0OlWdTipLq/tXLAW8d1IWMFywJ1oZ?=
+ =?us-ascii?Q?R4Pn0RXGrc/mixfyZBiCh5FROY19kacmAwd4glFMYxzV+8uIGoZYmbmCSvt7?=
+ =?us-ascii?Q?0i+alFzjCaU6M9t5vQ9b+adtYovn4ns2G+MT+VNnbcFNwUR6+80Pk9FHu7s2?=
+ =?us-ascii?Q?DnIa+ZepmyNvj5QJ2rortyR7s91PpnuF8VPXrC+MILRvYi7bDD/EgUDka4gF?=
+ =?us-ascii?Q?9EYWZ50CBSxQ3n9/1/G7rmG9gdfU0XU4pQpLHwrDuAtqNFvQ7TlnAkLUhIqr?=
+ =?us-ascii?Q?KYrcvt/OxRNE42oUhWFoBHP1Uv9VotQxrpVXC1KG78dIKjgiK7P6/lGxy5QS?=
+ =?us-ascii?Q?00v0dmvVoqCFYBxelR5fjc60l02ZM/GcQvapDE4DZU0A6qdtRxynOYrKRP8p?=
+ =?us-ascii?Q?tMZ2Qg6C8AIW39GOnWpxIV7j4Ewknf0zH8PAAwcj6k7SJESsx5DoQIYMH8hQ?=
+ =?us-ascii?Q?GpRQ3PlElJSDIQSP/eeRJBLnkbzTyXUV6WbL1zIzAYKuUhqMhKpeK4ERf7Ci?=
+ =?us-ascii?Q?D4iv8IN6sBce5WChZ3uN7GS/3OUoK5NInBZGvD72gOsBG4UbMiH0tBaJ24wD?=
+ =?us-ascii?Q?ThK9t/Q6Z391zuhkEhSz4+QTBmix5mOHbkUXNd6OExDFrlW2ETpt2ePcE40y?=
+ =?us-ascii?Q?6EJxgmDGA+MurlROZ4l7j/Hp2fB+K3SwWYS2j6wLXOcBS1GdfUgSbmo8CeJ4?=
+ =?us-ascii?Q?uKsCADmaV15Iuq/eCW7odZ7Th+kqcpjVJi5BXva1n7A7IZCcFfGswU4BmABQ?=
+ =?us-ascii?Q?BAxv0r9C30GPym3NlNpxFGOAyf9IOr1SH0pH9aOPE+nLbUIzlP+32zLfcUv4?=
+ =?us-ascii?Q?zPsOqykmIeSCfoZb3nwlLHRSS6IWZlNx9on5FrepwpuokPm2s11dIGu2JZcL?=
+ =?us-ascii?Q?oHt9KvVz0h7w8gXvNcuniTc2B0BaohYLsnrQu8s9qry53FVnZPnNHv2iwOm/?=
+ =?us-ascii?Q?/CsDnOEl+cfbLvVsdXc3D5hLOZZV2WNzrnr0hPQ3+FqrWEoJvdSTcvBz5eQO?=
+ =?us-ascii?Q?2mF6DFEEoE77XgVFiSWO5sgJWw3uPnga2RZD5Ip8CLhjCkAm5Wy9QW2+aldu?=
+ =?us-ascii?Q?dMU32Gfh43gUBJra85oGpDZT7LvkRN7Td6mtN2ve+oWk4IFCy71WeFH/aGuv?=
+ =?us-ascii?Q?fB6ZPsf2RNyzkJugHcv5sBDLco0HMXdRmO1zAjKSALmq130Wfk3MZ+e0iysG?=
+ =?us-ascii?Q?pA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33f34bd1-35bd-4f27-eb49-08dd1a50cde1
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2024 02:00:51.2257
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nzNpAV6AdkIrlVazv4kFAVNR5iVZRXo9VmQpoYoSt4nDV20xA2qHzMI9uJ9RtIcGDq+IqSZFOOY1SQt6YmUkFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4553
+X-OriginatorOrg: intel.com
 
-Hello Ian,
+hi,  Namhyung,
 
-On Wed, Dec 11, 2024 at 5:34=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Wed, Dec 11, 2024 at 2:52=E2=80=AFPM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Wed, Dec 11, 2024 at 02:21:10PM -0800, Namhyung Kim wrote:
-> > > This option is to implement the event sampling for system calls.
-> > > The period is given in msec as it shows the time in msec.
-> > >
-> > >   # perf trace -C 0 --syscall-period 100 sleep 1
-> > >            ? (         ): fleetspeakd/1828559  ... [continued]: futex=
-())                                            =3D -1 ETIMEDOUT (Connection=
- timed out)
-> > >        0.050 (100.247 ms): gnome-shell/572531 recvmsg(fd: 10<socket:[=
-3355761]>, msg: 0x7ffef8b39d20)                =3D 40
-> > >      100.357 (100.149 ms): pipewire-pulse/572245 read(fd: 5<anon_inod=
-e:[eventfd]>, buf: 0x7ffc0b9dc8f0, count: 8)      =3D 8
-> > >      200.553 (100.268 ms): NetworkManager/3424 epoll_wait(epfd: 19<an=
-on_inode:[eventpoll]>, events: 0x5607b85bb880, maxevents: 6) =3D 0
-> > >      300.876 (         ): mon/4932 poll(ufds: 0x7fa392784df0, nfds: 1=
-, timeout_msecs: 100)            ...
-> > >      400.901 ( 0.025 ms): TaskCon~ller #/620145 futex(uaddr: 0x7f3fc5=
-96fa00, op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
-> > >      300.876 (100.123 ms): mon/4932  ... [continued]: poll())        =
-                                     =3D 0 (Timeout)
-> > >      500.901 ( 0.012 ms): evdefer/2/2335122 futex(uaddr: 0x5640baac51=
-98, op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
-> > >      602.701 ( 0.017 ms): Compositor/1992200 futex(uaddr: 0x7f1a51dfd=
-d40, op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
-> > >      705.589 ( 0.017 ms): JS Watchdog/947933 futex(uaddr: 0x7f4cac1d4=
-240, op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
-> > >      812.667 ( 0.027 ms): fix/1985151 futex(uaddr: 0xc0008f7148, op: =
-WAKE|PRIVATE_FLAG, val: 1)             =3D 1
-> > >      912.807 ( 0.017 ms): Xorg/572315 setitimer(value: 0x7ffc375d6ba0=
-)                                      =3D 0
-> > >
-> > > The timestamp is kept in a per-cpu array and the allowed task is save=
-d
-> > > in a hash map.
-> >
-> > Interesting concept, and one that is done just on the BPF part, so I
-> > think we should at least warn a user that is running this on a build
-> > without BPF skels.
-> >
-> > Will try it tomorrow,
-> >
-> > - Arnaldo
-> >
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/Documentation/perf-trace.txt       |  6 ++
-> > >  tools/perf/builtin-trace.c                    |  5 ++
-> > >  .../bpf_skel/augmented_raw_syscalls.bpf.c     | 67 +++++++++++++++++=
-+-
-> > >  3 files changed, 76 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Doc=
-umentation/perf-trace.txt
-> > > index 6e0cc50bbc13fc7f..9f338a8c5357a67e 100644
-> > > --- a/tools/perf/Documentation/perf-trace.txt
-> > > +++ b/tools/perf/Documentation/perf-trace.txt
-> > > @@ -241,6 +241,12 @@ the thread executes on the designated CPUs. Defa=
-ult is to monitor all CPUs.
-> > >       printing using the existing 'perf trace' syscall arg beautifier=
-s to map integer
-> > >       arguments to strings (pid to comm, syscall id to syscall name, =
-etc).
-> > >
-> > > +--syscall-period::
-> > > +     Trace a system call in the given period (in msec).  This implem=
-ents
-> > > +     sampling for syscalls in order to reduce the monitoring overhea=
-d.
-> > > +     For example, setting the sysall period to 100 (msec) means it w=
-ill
-> > > +     sample a syscall and next one after 100 msec.
->
-> Is this similar to the -D/--delay option to perf-record? Perhaps share th=
-e name?
+On Wed, Dec 11, 2024 at 09:27:12AM -0800, Namhyung Kim wrote:
 
-I think this is more like a throttling for the perf trace output,
-instead of a one-time delay or a range of enabled time like -D, as the
-prev_ts here is continuously updated. This restricts the maximum
-sampling frequency to 1 / syscall-period, meaning every syscall is
-sampled just after the syscall-period has passed.
+[...]
 
-Thanks,
-Howard
+> > It should have that precise level reflected in the evsel name :-\
+> > 
+> > Ran out of time, hope the above helps.
+> > 
+> > Apart from that, from a purely regression fix, your patch gets the
+> > previous behaviour, from this isolated test I made, so:
+> > 
+> > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> Applied to perf-tools, thanks!
+
+sorry for late. just FYI.
+
+we finally finished the test with your patch, and confirmed
+perf-sanity-tests.Test_data_symbol can pass now.
+
+Tested-by: kernel test robot <oliver.sang@intel.com>
+
+> 
+> Best regards,
+> Namhyung
+> 
+> 
