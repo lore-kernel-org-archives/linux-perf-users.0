@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E383118E025;
-	Fri, 13 Dec 2024 19:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBDD18E025;
+	Fri, 13 Dec 2024 19:51:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734119459; cv=none; b=ZQzT22yTdJKof6MieGdursrU+bgNr5egg8TvfeYBhV4pUyMZD6ZW4MYVUtG0Z3pweUatWuXu/TQUreeTrPU8uCMpX1/GAk77XAQN2pizrlaOZsYbMyMehKajPB6kXW6fm3B17QVVpl5dXEgfGCDqPkaRNUFG0xROna+TnaZ4/Xs=
+	t=1734119462; cv=none; b=qZNoQw1icO7+sjIzDBhvqAv3mHTyDYA1fCxdRlDsM8F0dGg6ZH1NqH450hG/fsD63VkIlvUJd1ZaQf1wi2z+YZUC0ZxA8QTBvblc8DdX5dgrH1XLZrQXN276/iEaIA1To+V9Nk3lOlJImrev+lHGJec1Iqp8X69Thn4MM0ycpVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734119459; c=relaxed/simple;
-	bh=qoTfGgpOj/Ulq6By5ZbCyaPeLiAwlfZQGTZu6vJxAbM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C2tQAeI/PJZm7hi1SCKwXhxQgEKqmvN/W26lJ5XH9M6NLi622uF4qabxunRj03aWm6oFIYY7kPCMjqo5Z0VB3fL5fm5bvepxY6sc1FHAHj2d989EwG7aN7MeGMhmphmJP9d+0ugAQMBy9eO2aAkz5hUyYNGZ2dXyjZK3mZYNCDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/CfWHe0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734119462; c=relaxed/simple;
+	bh=D4ty3KTWrdY1iGiiAvl+AEtUmSaGSlalL4VIymbfebc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tRI6Iu/jDehY01ZIaSSDMU/EvtO94OZ2HzzT6CLmR8PA29ccskOjRbfG2vJjR8m7IsF2Jtak9RwtYCekcAQaEQaniYom8PhJl32+ZNTX+e4FhXYHyPntctwSpFdnGs3AlnxJKIElnH+9kvLCEttPu7oFYd4yY04u+hj9TX4Pj+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDrF1Yqj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/CfWHe0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D2FC4CED0;
-	Fri, 13 Dec 2024 19:50:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDrF1Yqj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D2DC4CED7;
+	Fri, 13 Dec 2024 19:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734119458;
-	bh=qoTfGgpOj/Ulq6By5ZbCyaPeLiAwlfZQGTZu6vJxAbM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=I/CfWHe0Jr1qDZZWX+JpQ3Imj7z6F5tArBSgwFIARuuM8xNKRDC1nywPT6phUIAYt
-	 jWvn5ZJ8KjB5aCXtcBobrsIDS3HtqHrcQSxtk/77qe5ozkFik49ZDk38GfST1HeXt7
-	 UjkTe5+FhtSA2fqLvtwS+0I5D8Wt/8KE+fz53SRfu6+/d8khYiB6ET8zoA1XgXLF61
-	 MYruA4Ssu9bfO7sK8ctH2D+eh137KOlZY7GkOignySrm55IqZnsn25dxEnESkbJn42
-	 bWaxOGGLJU4DZefhpJfS4uFzpYU5v+uvzPQ/CZstDtU68ZDwuFOH6cT7M2H4aXseXY
-	 wOnG9moqcEGow==
+	s=k20201202; t=1734119461;
+	bh=D4ty3KTWrdY1iGiiAvl+AEtUmSaGSlalL4VIymbfebc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IDrF1YqjD6jUtnj3ad1nphxx5I390sMAOblihHoys0hdSEt46N48LCor/+9+3n8MU
+	 bhGgtwP88kzi9Ob0xIN4gWBxXdgmxle63UYDjvgUWywtPEJ9QZXMD8Q8EQh4yaFL93
+	 fhZB+leNUuwv8VhuQpA1mhUQoXx9OgrszBvu/cBtgsRm/VlXI5GqF6V4ZrngHztcVt
+	 6/S3yQX/4P28z+pbSslBqe886E6cK9Tuv+LK3VIBhSGnxUMy4bvTsXWFCHPBdkEeit
+	 bb2LawMF/H3u/AkC68hRZLO7F4ApP0WwsQuDGVEEO7cXnsQGTc0Wk0F6kUoAfHpejC
+	 Vg2PAEQfiM21Q==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,10 +39,12 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 0/2 next] tools build feature detection fixes
-Date: Fri, 13 Dec 2024 16:50:50 -0300
-Message-ID: <20241213195052.914914-1-acme@kernel.org>
+Subject: [PATCH 1/2] tools build feature: Don't set feature-libslang-include-subdir=1 if test-all.c builds
+Date: Fri, 13 Dec 2024 16:50:51 -0300
+Message-ID: <20241213195052.914914-2-acme@kernel.org>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241213195052.914914-1-acme@kernel.org>
+References: <20241213195052.914914-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,21 +55,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Hi,
+As it is not really included in tools/build/feature/test-all.c, so any
+questioning about this feature should really try to build
+tools/build/feature/test-libslang-include-subdir.c and not set it as
+detected when test-all.c builds.
 
-	Some more work on auditing the feature detection fast path.
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/build/Makefile.feature | 1 -
+ 1 file changed, 1 deletion(-)
 
-- Arnaldo
-
-Arnaldo Carvalho de Melo (2):
-  tools build feature: Don't set feature-libslang-include-subdir=1 if test-all.c builds
-  tools build: Test for presence of libtraceevent and libtracefs in test-all.c
-
- tools/build/Makefile.feature   |  1 -
- tools/build/feature/test-all.c | 10 ++++++++++
- tools/perf/Makefile.config     |  2 --
- 3 files changed, 10 insertions(+), 3 deletions(-)
-
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index e25cdb7db40e3f3d..16c3194c3a5c42c2 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -82,7 +82,6 @@ FEATURE_TESTS_BASIC :=                  \
+         libperl                         \
+         libpython                       \
+         libslang                        \
+-        libslang-include-subdir         \
+         libtraceevent                   \
+         libtracefs                      \
+         libcpupower                     \
 -- 
 2.47.0
 
