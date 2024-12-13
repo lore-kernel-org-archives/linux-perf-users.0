@@ -1,96 +1,147 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9057192B86
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 21:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD7D1917C7;
+	Fri, 13 Dec 2024 21:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734123934; cv=none; b=ZG5wlL8npi4k27YuziGb5hqLd+VAOj689BNLni26O51d9B2Z5AJ3eOGV2PTIjjtQ9+zOImxhxfkxYPSDFPf1C3hVzjrH+T0hw1T4Sf7t+dF7d3p05Cy4vhFw2ccH2/Hknark+5+lxTo6n9szivExbOduE6bQ8bVO21TaU233d0A=
+	t=1734126865; cv=none; b=qmptuzgRnYfrseCJvMlPyG2TXGzAK5Ek2xpscGJms3xEAnn3/nMn3RnBpi5CT12F9cFBSNNUc6DK4Tln0OAlZSdgAH+aYniD1Ul0fYcVvIwp0rn11B+v40wY4Sfk0RXrRihwZBsBEPaa8B4xvY6flCqTBTLJUVdztcSI7rm2O4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734123934; c=relaxed/simple;
-	bh=47ytQkByi69npnQJE9cuMcBCIB8J/1hpQqilY/Jfy2E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DyK6tV9O22FCEJmEtOQfHCq3nmzBggswxhQXk0NC1/1ynzlFOXIFF/6ZfNen8ioGfVpM3fZnboyxRcnH6MakzeRdAFAigPfk0ffp4KAQ3zseCENCStWvSFzlivhH5A8oS4KQagIulgqa44l0uzJ9IM4oOJa2tiHFv4rqNMPieOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r6QNTXFW; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1734126865; c=relaxed/simple;
+	bh=IguZmxeB+5sRbxSSNN7lLV+iorfglNnB8i3GQDbaXWY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g2bGictiW5hFYwgjOb2N22AHZg+O4PLGW7schzZsLKbZ6T+50pO2rhsdUZK/93B3fxLglyCrIWtwdEUgnEQtYnU5QUzLtFtrNGneR+2PeXRcS0wAWragNiSeuEtFu0/5Q9fXr3RLDMsE5ViSEt24FSQjDnxBHu8GfN3dgGtf9hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WH6rMcmi; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r6QNTXFW"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso3435ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 13:05:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734123932; x=1734728732; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=47ytQkByi69npnQJE9cuMcBCIB8J/1hpQqilY/Jfy2E=;
-        b=r6QNTXFW5VollexwBuV+BQe4fFVhqDgsqin3z6WJugxGRxu3LTVJCyr2HMQXORXTYX
-         a+xR9dpMclso/sMLtS8E4WMOWq6UhAWwcHO0VRVWNnze+Ke5fCFUavpGuIE/SGuN7X9t
-         GCvYrPQlYZn4at9e1FhfWyNiMpDeRPl975nh08PrIebCdAZDhwsWhMDwhjYGPeDdnjEr
-         mQM0WEsLR2mOkx4dnZ4anvJAmgWKyzBckcAlzb82zPb0jwuW9Ztw02AFwb/6JIFhxCmc
-         7rU7+G63L7YIXlM1wHyff7asJupFOWwPo2aqWlxHEFj1nj58ofAbnczV74bw5z1E04ZB
-         9iKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734123932; x=1734728732;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=47ytQkByi69npnQJE9cuMcBCIB8J/1hpQqilY/Jfy2E=;
-        b=c7X9Cz11plCEmc95wIif3TTGfbvDZTHtuxR8c6a3YWOLHXM8d4jGQQwX1Xaa0+q4FO
-         MRMaMZO/obOXsvNgELKLkU9PgmSR3s4Bkc8b6lkgS7DzkZdo7gjQi0YmrbVXxI3kTK+r
-         noefRHd2KGvIYYTpNYCt9fakdy/JEn/eejJvmCbNhKkV7UI7xhe6w+DZSocnIeK0eDBR
-         w/LsK3zKLAtoiCZTqd30WmkN9Nr7KCzMf7EqVPdwELCm9TLLJEZF/yi6iMY16W19sjew
-         /Hraz0xBRHjzy4fc1Lq17lGX0jGnBwio+5941syU6oRShUPOm4DVm9VTYuqRUf55iWTn
-         dV/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUEcIr23OJm70bnBjvNRtoSEQPTZQ8vw+tjw8gL7DgkEs4mM3FlCw1Vd7kGnXXKkDR8BmdgACjz+luPAF+Pyf0i@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywpd+LoUs/kaRYNSlDD0V65NXJHlxDGvTz6ECsM7O1X4jrI07Gb
-	2ojl19Of+S20C4gOJq//dVnMetbYwebqkmKQwv+lK8I9oBOIaw5S/MwVqh0YMhKUEHXfbbR+UR/
-	uLuDJTVCZmhid0U2R+v+a/yIbUDpKzcMwOYZQmoulhOqFQYF3su/M
-X-Gm-Gg: ASbGncvKDZizQYCAiNZI02i6Fzh3XrOabBJyZD7B4jC4is7n2Lhe4WofSuaCZVMDqzn
-	Xb+gq70ufKF6qCsv70G1Ol3RI/JjyK/wDfuj9S04=
-X-Google-Smtp-Source: AGHT+IHo/kk7shZp2cLw78tSqgm7MN3cgHDkD698rGAaphzsbaWqhB1nqjLPEhhZeYxzO84CQfy6GmWOwDhFWaZ0IMM=
-X-Received: by 2002:a92:d792:0:b0:3a7:c997:efdb with SMTP id
- e9e14a558f8ab-3b279e187f9mr478925ab.17.1734123931596; Fri, 13 Dec 2024
- 13:05:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WH6rMcmi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734126864; x=1765662864;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IguZmxeB+5sRbxSSNN7lLV+iorfglNnB8i3GQDbaXWY=;
+  b=WH6rMcmiIe+hXN57TGMy7DOmARNuLOqILG2FBqE/B8a3dWvntfViobZD
+   Xwe2CdBEz/LaUZNdIZ+p0qKXWG526q3b0ptJ235bGxGHVJ83n3TTykwB2
+   lyusK3XvE7g8ln0LadUGZwbNGgAXBvFR5ia5PsMMHirrufOqOT1ETeBmT
+   eBMM3XCqhd+7LzoFh4TPtR+dBW5ZYwsMtPRTmDKzPMY7s2YYpOh2alJ/G
+   0Wo+z4SjEf+wn+rLUGFdYWrC/PvJ4SbccpB10kqFIZe7R7ktWw3iNPXBa
+   qCVP9gHu87EeMXXtizbaAfZGOdJGNvjQyj97loOzpTz8W/mD3CXl+qWy6
+   w==;
+X-CSE-ConnectionGUID: 5BTtnKWTRuClF05UgTed6Q==
+X-CSE-MsgGUID: sm93y+3sSn6vJMpGmVw5XQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11285"; a="45281659"
+X-IronPort-AV: E=Sophos;i="6.12,232,1728975600"; 
+   d="scan'208";a="45281659"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2024 13:54:23 -0800
+X-CSE-ConnectionGUID: j0ljZYx4Tt2wozB2NMgpAg==
+X-CSE-MsgGUID: n6kvB9UsSVOfmUJnFjO9VQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,232,1728975600"; 
+   d="scan'208";a="96704530"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.223.114])
+  by orviesa006.jf.intel.com with ESMTP; 13 Dec 2024 13:54:22 -0800
+From: Thomas Falcon <thomas.falcon@intel.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com
+Cc: ravi.bangoria@amd.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thomas Falcon <thomas.falcon@intel.com>
+Subject: [PATCH v3] perf script: Fix output type for dynamically allocated core PMU's
+Date: Fri, 13 Dec 2024 15:54:21 -0600
+Message-ID: <20241213215421.661139-1-thomas.falcon@intel.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z1ySfJAebZyEv8qE@x1>
-In-Reply-To: <Z1ySfJAebZyEv8qE@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 13 Dec 2024 13:05:20 -0800
-Message-ID: <CAP-5=fUMr_ZqrHdopMNQwacCvuAy2ZO0JKC8j9-v9Ap4vuT8xQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1 v2] perf tests switch-tracking: Set this test to run exclusively
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 13, 2024 at 12:01=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> This test was failing when run with the default 'perf test' mode, which
-> is to run multiple regression tests in parallel.
->
-> Since it checks system_wide mode, set it to run in exclusive mode.
->
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-> Link: https://lore.kernel.org/lkml/Z1yPYqYYs_isO1PJ@x1
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+perf script output may show different fields on different core PMU's
+that exist on heterogeneous platforms. For example,
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+perf record -e "{cpu_core/mem-loads-aux/,cpu_core/event=0xcd,\
+umask=0x01,ldlat=3,name=MEM_UOPS_RETIRED.LOAD_LATENCY/}:upp"\
+-c10000 -W -d -a -- sleep 1
 
-Thanks,
-Ian
+perf script:
+
+chromium-browse   46572 [002] 544966.882384:      10000 	cpu_core/MEM_UOPS_RETIRED.LOAD_LATENCY/: 7ffdf1391b0c     10268100142 \
+ |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK    N/A    5   7    0   7fad7c47425d [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
+
+perf record -e cpu_atom/event=0xd0,umask=0x05,ldlat=3,\
+name=MEM_UOPS_RETIRED.LOAD_LATENCY/upp -c10000 -W -d -a -- sleep 1
+
+perf script:
+
+gnome-control-c  534224 [023] 544951.816227:      10000 cpu_atom/MEM_UOPS_RETIRED.LOAD_LATENCY/:   7f0aaaa0aae0  [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
+
+Some fields, such as data_src, are not included by default.
+
+The cause is that while one PMU may be assigned a type such as
+PERF_TYPE_RAW, other core PMU's are dynamically allocated at boot time.
+If this value does not match an existing PERF_TYPE_X value,
+output_type(perf_event_attr.type) will return OUTPUT_TYPE_OTHER.
+
+Instead search for a core PMU with a matching perf_event_attr type
+and, if one is found, return PERF_TYPE_RAW to match output of other
+core PMU's.
+
+Suggested-by: Kan Liang <kan.liang@intel.com>
+Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+---
+v2: restrict pmu lookup to platforms with more than one core pmu
+v3: only scan core pmu list
+---
+ tools/perf/builtin-script.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 9e47905f75a6..685232883f9c 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -384,6 +384,19 @@ static int evsel_script__fprintf(struct evsel_script *es, FILE *fp)
+ 		       st.st_size / 1024.0 / 1024.0, es->filename, es->samples);
+ }
+ 
++static bool output_type_many_core_pmus(unsigned int type)
++{
++	struct perf_pmu *pmu = NULL;
++
++	if (perf_pmus__num_core_pmus() > 1) {
++		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
++			if (pmu->type == type)
++				return true;
++		}
++	}
++	return false;
++}
++
+ static inline int output_type(unsigned int type)
+ {
+ 	switch (type) {
+@@ -394,6 +407,9 @@ static inline int output_type(unsigned int type)
+ 			return type;
+ 	}
+ 
++	if (output_type_many_core_pmus(type))
++		return PERF_TYPE_RAW;
++
+ 	return OUTPUT_TYPE_OTHER;
+ }
+ 
+-- 
+2.47.1
+
