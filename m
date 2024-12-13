@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0184197512
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 21:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F317F19992B
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 21:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734123881; cv=none; b=oyqkhsEtT0Ni1UU75Lw42TITZZWB/ZcA1W8xSe0uwTcttcDxUxLCl4LKUQ0rRkqExill0mIsVS3NgyRl+yfw0cyokyFk5jUVYaMyQLzY5wOXUHZ1ocgL56tKLiNqr+EB40VdLY8uR1Yp21QIXYy+RuNNJT203jiF6qh9e1az2m0=
+	t=1734123883; cv=none; b=cSbGwiwOp9mjWv6GKCDRn6h4TmktVNisSVo0ORwHO01n8sa1uXlemWAWovnbzXgS+tX1SA34cbXAirgQnN5da0FsVQO99IyA31nRea72tzMq1ucS/65QvEvjBsn9WwAFy79ZrcD8s+0vRr+oBb7swB5KhI94OihRA3SzsB8u6n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734123881; c=relaxed/simple;
-	bh=2AeeJI7hTLZBkAiyK/DWI/sFdQ+nhO6KpS8lk3LdjMw=;
+	s=arc-20240116; t=1734123883; c=relaxed/simple;
+	bh=i5e1b7t1EPpevqJjKlGFUSU+o5EL+PeGA8k4xzs8Loo=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=ZG1WKkRAzdXZTnvnNSNQnatTofh5ULLNAcRiyax/4qhyFwuQLWElyubpPdMKjwY9Fwql9ce4VxqNuDtq0hiTIyvYQCCT16PiXJDPzadiuj5omxROUCkQWLJhst49HV0HCMiKuPb/o6RPduw58pbkwaYOT1gzDMXwEH9h5Xdr8FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ywx6XmXO; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=HcATJP3lRjFCuRESXoKqQUp1IswEKb3Mqr5z6bt9FpaJin9SpN76oawPT/XsrWR28hUxcG2Ultvvts4hK1felAYV5/c/aM5DnxzPFQhgUHFtN2DhrYWkTnSkWZMTrvxrRvG02Vkk/3KvIYPmTpxD6oKcPIIyGRwksC94joHv9ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q/AW9b31; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ywx6XmXO"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e02fff66a83so2734046276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 13:04:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q/AW9b31"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6f186a6d097so31440117b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 13:04:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734123879; x=1734728679; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1734123881; x=1734728681; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=BO6MitYTG3PPlOm9eDgi+DN2s8ThN2cAWOELNwnMFAI=;
-        b=Ywx6XmXOlGyb2ROuRL5cX+rWOMyxHMIt+9ORbsIOOAzXmhzkC7ppw0YX/mh3jIELFn
-         uIw7zWokZk0e81aaAIs0ttHziMaN77lMvDAxstfFMKD6fkCz896sg8Lw09T2L0PD2pnn
-         XsqVM+J0D/KLFpKBz8hcym1D0bXI/pJwDIHFvY3kImtyQU8RbtnE5E2jMf2t6TOMYBw3
-         kXjZCmCTfx2Cp7xUQh0Gz39SWphyD92GJmw1fq5+ET+JIOJnZat5NSfQkeE688/3aTDM
-         A2CnxGjmBQhBXeBGCGsHw9bmiCIv5DUZpXUSmYt3Auy5gOFVGCr8uALtQEZB8VdZUdo2
-         EY/g==
+        bh=jve5UrRFX8lUtfG0zKrFxVw3qJ0NTFZjVOZjxLZ9cVg=;
+        b=q/AW9b31AwzdF2MPgZyiRCOZm8jMoycmBbP8bwFiuQ4KVPGi8yRxHagzUmPfUsI/rv
+         nkdhfz0LVHxaP5Ju+TUZ9vynOea+c7Ij3cOKDJfIbK3t/q9nt2ulCevkt8akkGoaIDM1
+         V27Gf2ISysII2zr4AX7ZzDhi8NpJYb7ehdWZxj0ZoRJTIm/pn4w6/aja3y6GOk5a6/hD
+         ifaMASLDHl/F4b04rbC1POX6yc5MRf02nebueSZ/wgysXEq99ChiR1VBGcRxXnao1CvT
+         +qnB1oCMGYpxOTqrRXt0AyS3VKitm9dvGnrCpNk2KC/mx5VEmi7eBEB4n6YLxV0dq+6P
+         lW9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734123879; x=1734728679;
+        d=1e100.net; s=20230601; t=1734123881; x=1734728681;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BO6MitYTG3PPlOm9eDgi+DN2s8ThN2cAWOELNwnMFAI=;
-        b=aCxEOIOX0Dhf5a4h+jO7YuDtsdldvmlBh7+60z+tMpWo8nMbTOtXVZP4EsDMH7uVZ1
-         4u6LcgvFlZUs7Mk1LD/PdCyhhyMjuYRmUwQbXYaRRE4QhAP1KNnawZD/cSy/c7TRJrTs
-         9/L5c+yS13JVm9Oncm4t+Kg7EjR7LShmvbxta9I/0LhcRt3DcI6Fbr3fpusdYzfVNDdY
-         8ZWgElAuu0WRlPMFpdizFdZo/TGWtrxo0bo4stl5FZWJLyBAspGQLrIj5HqOsYOp2OBh
-         Iblo0xeSGM8uV28SOJIbGZI0K+IZx39SsUCU5toxuXJjD6sfjCKjCTu0BXTWqfI5hFoY
-         yxBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXsL+Nl9XfZoB0eyHEC+W0A1dPpArdPRUCTK0Ruc2qt2wvyMunfFjGBKYSCmjHS3ZcWHMAtTkgKcyoEs3pu1W/g@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx5UNPyUjkRxYXmkAPhIndtIkjVjLHMWUBFCEKddfLDylRrS1j
-	8VkWklhZ10Wo+30Fx/ndYAASPFEW3PH4yvs+ltFizk9wbnltT1s7uPQ61VPZGM0uRmMVPghemr/
-	//YojFA==
-X-Google-Smtp-Source: AGHT+IG14QG/FvZm1o/zP6GcRY5++gc+EhOPsoB8hincRJ7FgCV5ULq+tkuBgEV+o3KlfVnsbI/svufofT6h
+        bh=jve5UrRFX8lUtfG0zKrFxVw3qJ0NTFZjVOZjxLZ9cVg=;
+        b=EiE6GeiTqRlqQIUE37Lz6sZNZuWNAgO0cqKWoLCY7FdftV+FIac0yVvFEHqQmjUSBf
+         tQNBRSxwmebeeQDxG5Rp33ENaZzlGJLgFqbY1cMStst7HjlMDZXkkEyL5q7dvDjkoSjk
+         9Zuu1BTQ219/C5NAIOlJVkmrdE0czD6kngxbUbZaqWBxHNuc2IDabV+39GbE2FCB1joI
+         ukLbo4mUvLkafXXkgslJPou7TJwso4Jhgq5yKy4k0AZKJcK+bvtQ/1ZXpMMvgHM2SSd3
+         /0qTyXNB3B8aY8RYnbXdfYpWbaqdu/16vJo2ObO8B+t8h3i+xr1cM+MXPuN9fSVPkNZD
+         wSXw==
+X-Forwarded-Encrypted: i=1; AJvYcCW0kirRUPYq0mbJb6W+EMDCa+2ZPo8em29qWXEW0/8SeIm6I5B/OztvtWy6u9z6Y/QWAu7OKlYe39KzAbhKOVgV@vger.kernel.org
+X-Gm-Message-State: AOJu0YyC+WDee3VW0ZTOqd27HpxgpdFsI2OUPGkH13Vuv1LNSgqip8Ek
+	eAXA+kR+8+6jUkNJ11xWybKmp9xyARmqhtLM9Vf6tkdfVCLueAXuRwtCqcyKTwjvUwExUswDYd+
+	b/c48rw==
+X-Google-Smtp-Source: AGHT+IHENPzULra0CGF12H7jvOCHRuu8SzpjakUA14QaljJ4wh60e2ID3JmDlWJVD01OmUAMdsqmIhpWRjOY
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:9a50:5183:644a:3472])
- (user=irogers job=sendgmr) by 2002:a25:aab4:0:b0:e39:fc33:e15e with SMTP id
- 3f1490d57ef6-e434f94c734mr1534276.8.1734123878723; Fri, 13 Dec 2024 13:04:38
+ (user=irogers job=sendgmr) by 2002:a25:aa2c:0:b0:e39:b4ca:3dc7 with SMTP id
+ 3f1490d57ef6-e434a259f73mr12504276.4.1734123880992; Fri, 13 Dec 2024 13:04:40
  -0800 (PST)
-Date: Fri, 13 Dec 2024 13:04:20 -0800
+Date: Fri, 13 Dec 2024 13:04:21 -0800
 In-Reply-To: <20241213210425.526512-1-irogers@google.com>
-Message-Id: <20241213210425.526512-4-irogers@google.com>
+Message-Id: <20241213210425.526512-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241213210425.526512-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v1 3/8] tools headers: Update offsetof and container_of
+Subject: [PATCH v1 4/8] perf evsel: Avoid container_of on a NULL leader
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,48 +75,29 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Update to match kernel definitions in `include/linux/stddef.h` and
-`include/linux/container_of.h`.
+An evsel should typically have a leader of itself, however, in tests
+like 'Sample parsing' a NULL leader may occur and the container_of
+will return a corrupt pointer. Avoid this with an explicit NULL test.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
+Fixes: fba7c86601e2 ("libperf: Move 'leader' from tools/perf to perf_evsel::leader")
 ---
- tools/include/linux/kernel.h | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ tools/perf/util/evsel.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/include/linux/kernel.h b/tools/include/linux/kernel.h
-index 07cfad817d53..10f74f021d55 100644
---- a/tools/include/linux/kernel.h
-+++ b/tools/include/linux/kernel.h
-@@ -21,9 +21,8 @@
- #define PERF_ALIGN(x, a)	__PERF_ALIGN_MASK(x, (typeof(x))(a)-1)
- #define __PERF_ALIGN_MASK(x, mask)	(((x)+(mask))&~(mask))
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index cb6952b6d9d9..dc427eafca6c 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3327,6 +3327,8 @@ bool evsel__is_hybrid(const struct evsel *evsel)
  
--#ifndef offsetof
--#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
--#endif
-+#undef offsetof
-+#define offsetof(TYPE, MEMBER)	__builtin_offsetof(TYPE, MEMBER)
+ struct evsel *evsel__leader(const struct evsel *evsel)
+ {
++	if (evsel->core.leader == NULL)
++		return NULL;
+ 	return container_of(evsel->core.leader, struct evsel, core);
+ }
  
- #ifndef container_of
- /**
-@@ -32,10 +31,14 @@
-  * @type:	the type of the container struct this is embedded in.
-  * @member:	the name of the member within the struct.
-  *
-+ * WARNING: any const qualifier of @ptr is lost.
-  */
--#define container_of(ptr, type, member) ({			\
--	const typeof(((type *)0)->member) * __mptr = (ptr);	\
--	(type *)((char *)__mptr - offsetof(type, member)); })
-+#define container_of(ptr, type, member) ({				\
-+	void *__mptr = (void *)(ptr);					\
-+	static_assert(__same_type(*(ptr), ((type *)0)->member) ||	\
-+		      __same_type(*(ptr), void),			\
-+		      "pointer type mismatch in container_of()");	\
-+	((type *)(__mptr - offsetof(type, member))); })
- #endif
- 
- #ifndef max
 -- 
 2.47.1.613.gc27f4b7a9f-goog
 
