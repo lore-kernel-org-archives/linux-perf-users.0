@@ -1,147 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD7D1917C7;
-	Fri, 13 Dec 2024 21:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CA619992C;
+	Fri, 13 Dec 2024 22:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734126865; cv=none; b=qmptuzgRnYfrseCJvMlPyG2TXGzAK5Ek2xpscGJms3xEAnn3/nMn3RnBpi5CT12F9cFBSNNUc6DK4Tln0OAlZSdgAH+aYniD1Ul0fYcVvIwp0rn11B+v40wY4Sfk0RXrRihwZBsBEPaa8B4xvY6flCqTBTLJUVdztcSI7rm2O4k=
+	t=1734130369; cv=none; b=LbtM0SyBmf3p9NNZ/kSn/AZx3nP+TF/8dMbOGtlUB6L+yK+eYMMpt0/BhvIWoFvS7Q7XBs8B9NTFER35kvbTHNisxoj/OKoxiT0q9/kt2LGKe8ee09rlZgOqHcsypGSgK45RUdALTO+g709CUqbDyetA0YgbAvMmm2LiY6vA63A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734126865; c=relaxed/simple;
-	bh=IguZmxeB+5sRbxSSNN7lLV+iorfglNnB8i3GQDbaXWY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g2bGictiW5hFYwgjOb2N22AHZg+O4PLGW7schzZsLKbZ6T+50pO2rhsdUZK/93B3fxLglyCrIWtwdEUgnEQtYnU5QUzLtFtrNGneR+2PeXRcS0wAWragNiSeuEtFu0/5Q9fXr3RLDMsE5ViSEt24FSQjDnxBHu8GfN3dgGtf9hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WH6rMcmi; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1734130369; c=relaxed/simple;
+	bh=04Tx0x578Uzc8rm85xT+i6prSqGkdTU6HjQojNx5BaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IWg8txM+3ovsV3boiZS9cpDNnrF/nZNJsOoKGs8ZjDARrpXsTungliVexE9NwDr9IjGb/nl2EXmqQFUjHPZFIhSpTpFC+A7hI/8tqc3YPvDNDcrDu+AecdJCOpK7ho5cWXRUKslCe0H3nFIPPmAfR0myttv92mo7XWbwKaQd93I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tavy4t2D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WH6rMcmi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734126864; x=1765662864;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=IguZmxeB+5sRbxSSNN7lLV+iorfglNnB8i3GQDbaXWY=;
-  b=WH6rMcmiIe+hXN57TGMy7DOmARNuLOqILG2FBqE/B8a3dWvntfViobZD
-   Xwe2CdBEz/LaUZNdIZ+p0qKXWG526q3b0ptJ235bGxGHVJ83n3TTykwB2
-   lyusK3XvE7g8ln0LadUGZwbNGgAXBvFR5ia5PsMMHirrufOqOT1ETeBmT
-   eBMM3XCqhd+7LzoFh4TPtR+dBW5ZYwsMtPRTmDKzPMY7s2YYpOh2alJ/G
-   0Wo+z4SjEf+wn+rLUGFdYWrC/PvJ4SbccpB10kqFIZe7R7ktWw3iNPXBa
-   qCVP9gHu87EeMXXtizbaAfZGOdJGNvjQyj97loOzpTz8W/mD3CXl+qWy6
-   w==;
-X-CSE-ConnectionGUID: 5BTtnKWTRuClF05UgTed6Q==
-X-CSE-MsgGUID: sm93y+3sSn6vJMpGmVw5XQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11285"; a="45281659"
-X-IronPort-AV: E=Sophos;i="6.12,232,1728975600"; 
-   d="scan'208";a="45281659"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2024 13:54:23 -0800
-X-CSE-ConnectionGUID: j0ljZYx4Tt2wozB2NMgpAg==
-X-CSE-MsgGUID: n6kvB9UsSVOfmUJnFjO9VQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,232,1728975600"; 
-   d="scan'208";a="96704530"
-Received: from tfalcon-desk.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.223.114])
-  by orviesa006.jf.intel.com with ESMTP; 13 Dec 2024 13:54:22 -0800
-From: Thomas Falcon <thomas.falcon@intel.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: ravi.bangoria@amd.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Falcon <thomas.falcon@intel.com>
-Subject: [PATCH v3] perf script: Fix output type for dynamically allocated core PMU's
-Date: Fri, 13 Dec 2024 15:54:21 -0600
-Message-ID: <20241213215421.661139-1-thomas.falcon@intel.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tavy4t2D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37F2DC4CED0;
+	Fri, 13 Dec 2024 22:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734130368;
+	bh=04Tx0x578Uzc8rm85xT+i6prSqGkdTU6HjQojNx5BaA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tavy4t2DHnD1HgZ97BCgsnRvNHS1Z7DsTkwFMYwX1ooRMTvoyU4iWkxhVRyBk8Gi6
+	 iejgRQl1jbJFM6NEGc3hHn8aE/9Hua6er2VtMkpqQ4iwRDXAPHAMnmn5HQoeK9y8/H
+	 YOu2glWvHjFmEP00wH5vu0Fcr3A2A6PZb8AQzazVtHazm0kcFHk9/WDk4SB+lIHqOy
+	 nuadJqY+Sziw4uMpRLaEOc0kHK42L27c77kGN3r7tEjxAqlhP5h6N/2MQ0OulQ2Pxs
+	 lcXVT790qEdRyYKoFdMx6b1FDdi0QVk+yh0mhHoUhobJnjU7JROQn9rjserZeRSpEz
+	 6RvSmnOoWoaJQ==
+Date: Fri, 13 Dec 2024 23:52:45 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"Lai, Yi" <yi1.lai@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>, yi1.lai@intel.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
+Message-ID: <Z1y6vSznjbCwAvn1@pavilion.home>
+References: <20241107144617.MjCWysud@linutronix.de>
+ <Zy4OFlxoRK2jM5zo@localhost.localdomain>
+ <20241108190835.GA11231@redhat.com>
+ <Zy6QHHakztIXvudC@pavilion.home>
+ <20241111120857.5cWFpNkJ@linutronix.de>
+ <20241204134826.GA923@redhat.com>
+ <Z1DxqJlGM_I8irVQ@pavilion.home>
+ <20241205092015.GA8673@redhat.com>
+ <Z1F6_cC4bRvcN56T@pavilion.home>
+ <20241205102840.GB8673@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241205102840.GB8673@redhat.com>
 
-perf script output may show different fields on different core PMU's
-that exist on heterogeneous platforms. For example,
+Le Thu, Dec 05, 2024 at 11:28:41AM +0100, Oleg Nesterov a écrit :
+> On 12/05, Frederic Weisbecker wrote:
+> >
+> > Le Thu, Dec 05, 2024 at 10:20:16AM +0100, Oleg Nesterov a écrit :
+> >
+> > > > Looking at task_work, it seems that most enqueues happen to the current task.
+> > > > AFAICT, only io_uring() does remote enqueue. Would it make sense to have a light
+> > > > version of task_work that is only ever used by current? This would be a very
+> > > > simple flavour with easy queue and cancellation without locking/atomics/RmW
+> > > > operations.
+> > >
+> > > Perhaps, but we also need to avoid the races with task_work_cancel() from
+> > > another task. I mean, if a task T does task_work_add_light(work), it can race
+> > > with task_work_cancel(T, ...) which can change T->task_works on another CPU.
+> >
+> > I was thinking about two different lists.
+> 
+> OK... but this needs more thinking/discussion.
 
-perf record -e "{cpu_core/mem-loads-aux/,cpu_core/event=0xcd,\
-umask=0x01,ldlat=3,name=MEM_UOPS_RETIRED.LOAD_LATENCY/}:upp"\
--c10000 -W -d -a -- sleep 1
+Sure.
 
-perf script:
+> 
+> > Another alternative is to maintain another head that points to the
+> > head of the executing list. This way we can have task_work_cancel_current()
+> > that completely cancels the work. That was my initial proposal here and it
+> > avoids the lock/xchg for each work:
+> >
+> > https://lore.kernel.org/all/Zx-B0wK3xqRQsCOS@localhost.localdomain/
+> 
+> Thanks... Heh, I thought about something like this too ;) Although I thought
+> that we need a bit more to implement task_work_cancel_sync(). But this is
+> another story.
 
-chromium-browse   46572 [002] 544966.882384:      10000 	cpu_core/MEM_UOPS_RETIRED.LOAD_LATENCY/: 7ffdf1391b0c     10268100142 \
- |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK    N/A    5   7    0   7fad7c47425d [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
+So which way do you prefer do solve the initial problem?
 
-perf record -e cpu_atom/event=0xd0,umask=0x05,ldlat=3,\
-name=MEM_UOPS_RETIRED.LOAD_LATENCY/upp -c10000 -W -d -a -- sleep 1
+> 
+> > > Hmm. I just noticed that task_work_run() needs a simple fix:
+> > >
+> > > 	--- x/kernel/task_work.c
+> > > 	+++ x/kernel/task_work.c
+> > > 	@@ -235,7 +235,7 @@
+> > > 			raw_spin_unlock_irq(&task->pi_lock);
+> > >
+> > > 			do {
+> > > 	-			next = work->next;
+> > > 	+			next = READ_ONCE(work->next);
+> > > 				work->func(work);
+> > > 				work = next;
+> > > 				cond_resched();
+> > >
+> > > Perhaps it makes sense before the patch from Sebastian even if that patch
+> > > removes this do/while loop ?
+> >
+> > Hmm, can work->next be modified concurrently here?
+> 
+> work->func(work) can, say, do kfree(work) or do another task_work_add(X,
+> work).
 
-perf script:
+Right but then isn't it serialized program order, from the compiler point of view?
 
-gnome-control-c  534224 [023] 544951.816227:      10000 cpu_atom/MEM_UOPS_RETIRED.LOAD_LATENCY/:   7f0aaaa0aae0  [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
+Thanks.
 
-Some fields, such as data_src, are not included by default.
-
-The cause is that while one PMU may be assigned a type such as
-PERF_TYPE_RAW, other core PMU's are dynamically allocated at boot time.
-If this value does not match an existing PERF_TYPE_X value,
-output_type(perf_event_attr.type) will return OUTPUT_TYPE_OTHER.
-
-Instead search for a core PMU with a matching perf_event_attr type
-and, if one is found, return PERF_TYPE_RAW to match output of other
-core PMU's.
-
-Suggested-by: Kan Liang <kan.liang@intel.com>
-Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
----
-v2: restrict pmu lookup to platforms with more than one core pmu
-v3: only scan core pmu list
----
- tools/perf/builtin-script.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 9e47905f75a6..685232883f9c 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -384,6 +384,19 @@ static int evsel_script__fprintf(struct evsel_script *es, FILE *fp)
- 		       st.st_size / 1024.0 / 1024.0, es->filename, es->samples);
- }
- 
-+static bool output_type_many_core_pmus(unsigned int type)
-+{
-+	struct perf_pmu *pmu = NULL;
-+
-+	if (perf_pmus__num_core_pmus() > 1) {
-+		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+			if (pmu->type == type)
-+				return true;
-+		}
-+	}
-+	return false;
-+}
-+
- static inline int output_type(unsigned int type)
- {
- 	switch (type) {
-@@ -394,6 +407,9 @@ static inline int output_type(unsigned int type)
- 			return type;
- 	}
- 
-+	if (output_type_many_core_pmus(type))
-+		return PERF_TYPE_RAW;
-+
- 	return OUTPUT_TYPE_OTHER;
- }
- 
--- 
-2.47.1
-
+> 
+> Oleg.
+> 
