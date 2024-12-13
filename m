@@ -1,57 +1,57 @@
 Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F181194A6C
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 21:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0184197512
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 21:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734123879; cv=none; b=JLugtJIvrUYJVRx51D/Bn3IlES3kR8z1AidCn5HQOd8v9Eqd2F6Fjt+x2j9vA2OR4PNuk5yWy7fZ+BsiyuEcemGn6BcnbyQaTaUa6n9g3xskcKqvfXStf+ouWoyP7vErhrjl2EjEaXh34ZpDKbqIdpFMvwbCuXUT2fKe4FXeUi0=
+	t=1734123881; cv=none; b=oyqkhsEtT0Ni1UU75Lw42TITZZWB/ZcA1W8xSe0uwTcttcDxUxLCl4LKUQ0rRkqExill0mIsVS3NgyRl+yfw0cyokyFk5jUVYaMyQLzY5wOXUHZ1ocgL56tKLiNqr+EB40VdLY8uR1Yp21QIXYy+RuNNJT203jiF6qh9e1az2m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734123879; c=relaxed/simple;
-	bh=4pKzkTV7w7BbOGxOqcD1NuW63SK6U/7k+L92iQDdz8k=;
+	s=arc-20240116; t=1734123881; c=relaxed/simple;
+	bh=2AeeJI7hTLZBkAiyK/DWI/sFdQ+nhO6KpS8lk3LdjMw=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=UoYbLvfj3b+2eLG8BcypHMDDm7Q6CbAX/QAi1OluVTnVpu0k+E3Sjqr3D02+HrHrk+mT8Vh/f8Q/Tu+ziGZkl6pNumMzZ7GK/WTg8cAZBVbeP5aZ8NfAAlmmTQXcX68EU81W8iOFZ/USFp1jTi/zQKRH4uDVKFRQL3zJAjrwuM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yQu0MsXu; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=ZG1WKkRAzdXZTnvnNSNQnatTofh5ULLNAcRiyax/4qhyFwuQLWElyubpPdMKjwY9Fwql9ce4VxqNuDtq0hiTIyvYQCCT16PiXJDPzadiuj5omxROUCkQWLJhst49HV0HCMiKuPb/o6RPduw58pbkwaYOT1gzDMXwEH9h5Xdr8FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ywx6XmXO; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yQu0MsXu"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e3c7dc4bd41so3209227276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 13:04:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ywx6XmXO"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e02fff66a83so2734046276.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 13:04:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734123876; x=1734728676; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1734123879; x=1734728679; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vioVLOwmrwPBoDuHBo/JSaFU3XJwmvCOkzBZLpYE96Q=;
-        b=yQu0MsXuMk7sRRsTYFtqEO+sATyce382HPFl86s837Dq2rvhpaBSqjExIiEIzo2Efh
-         2OpJP65Z0u963yd3ZSTCLgUT0s5iOek26u7EhFwDJ9JgnzYRtvk3Lg+vREDKwcGUvkkM
-         DN1UGnl7rHA06II6CbxFy4t+o4D60RBmcLZpUTBM539E/+3V3kq54B633bBjSReG+P4p
-         uXMmicUgmCdaKQJ7mIRyLiQSWjSl8LrRBoa3qs2Xizz13iFUKojDx+5bFvrEVESVegMy
-         xicltQjMLPAGQYY+wXXhSEthWwwhYYit2fpUQr1mspA0dNjQJvNOJjWecOjJaNXpoLMA
-         lbTA==
+        bh=BO6MitYTG3PPlOm9eDgi+DN2s8ThN2cAWOELNwnMFAI=;
+        b=Ywx6XmXOlGyb2ROuRL5cX+rWOMyxHMIt+9ORbsIOOAzXmhzkC7ppw0YX/mh3jIELFn
+         uIw7zWokZk0e81aaAIs0ttHziMaN77lMvDAxstfFMKD6fkCz896sg8Lw09T2L0PD2pnn
+         XsqVM+J0D/KLFpKBz8hcym1D0bXI/pJwDIHFvY3kImtyQU8RbtnE5E2jMf2t6TOMYBw3
+         kXjZCmCTfx2Cp7xUQh0Gz39SWphyD92GJmw1fq5+ET+JIOJnZat5NSfQkeE688/3aTDM
+         A2CnxGjmBQhBXeBGCGsHw9bmiCIv5DUZpXUSmYt3Auy5gOFVGCr8uALtQEZB8VdZUdo2
+         EY/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734123876; x=1734728676;
+        d=1e100.net; s=20230601; t=1734123879; x=1734728679;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vioVLOwmrwPBoDuHBo/JSaFU3XJwmvCOkzBZLpYE96Q=;
-        b=d2/r7F4nd4mTUcolXxnDHj2ZE4cY9DP3uhq2DGm5Y11RH+u1b7UmkQPcZC/0/HbyG0
-         WVLITp/F4Gawz74hxsQP5eFJWLXXPUDICwpGMH1vnsmJuJg3eb4PWEvetGkMG9eLBs/N
-         tZ/gONq1X51KRTIKiy+JJYYk+QW64P8hc+PyWJoHoMUSaJHwkqtDeOzJm3I1HAr3a2JC
-         Z5ilF7xJ4mC9PUdm2MqIcuyY7J/LfYVFE2AqdSrPIA8UbPKbNBwnBxT398jwGXXZUkHa
-         Bs+AcOIUdkKn8C+eD1ey4DhMlMfzMp98Dm+cc+QlGaeX2GEZT/UM+WAPbxfdbDG13ceh
-         RUyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXiunE2bMEq8LoLDk7dSJaJIcUHAVrE+c/g+2FbAMMQ5G8kUsbimA+sQFqzeFLkiIlwS7+tDKprsOOJk+ZxwBuv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFnmelb45Ny02IFu7WdelsO98UzDobYVRxVPqsWtSLY0cFMEFq
-	NwLyt06U+fFB7lR2SGy2yt33vwOCfcp/JB+mG19bmitW5jB8dr2XI6w8WpyOrdUdRp04cgHYjeA
-	GUhwgNQ==
-X-Google-Smtp-Source: AGHT+IFJoR+VUIap2R8w7wBB5lIJC6iiEWzTJTmaxzdCenTqSqXLAehauJytbWIoze/wqOYJJA/lOzwErMku
+        bh=BO6MitYTG3PPlOm9eDgi+DN2s8ThN2cAWOELNwnMFAI=;
+        b=aCxEOIOX0Dhf5a4h+jO7YuDtsdldvmlBh7+60z+tMpWo8nMbTOtXVZP4EsDMH7uVZ1
+         4u6LcgvFlZUs7Mk1LD/PdCyhhyMjuYRmUwQbXYaRRE4QhAP1KNnawZD/cSy/c7TRJrTs
+         9/L5c+yS13JVm9Oncm4t+Kg7EjR7LShmvbxta9I/0LhcRt3DcI6Fbr3fpusdYzfVNDdY
+         8ZWgElAuu0WRlPMFpdizFdZo/TGWtrxo0bo4stl5FZWJLyBAspGQLrIj5HqOsYOp2OBh
+         Iblo0xeSGM8uV28SOJIbGZI0K+IZx39SsUCU5toxuXJjD6sfjCKjCTu0BXTWqfI5hFoY
+         yxBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsL+Nl9XfZoB0eyHEC+W0A1dPpArdPRUCTK0Ruc2qt2wvyMunfFjGBKYSCmjHS3ZcWHMAtTkgKcyoEs3pu1W/g@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx5UNPyUjkRxYXmkAPhIndtIkjVjLHMWUBFCEKddfLDylRrS1j
+	8VkWklhZ10Wo+30Fx/ndYAASPFEW3PH4yvs+ltFizk9wbnltT1s7uPQ61VPZGM0uRmMVPghemr/
+	//YojFA==
+X-Google-Smtp-Source: AGHT+IG14QG/FvZm1o/zP6GcRY5++gc+EhOPsoB8hincRJ7FgCV5ULq+tkuBgEV+o3KlfVnsbI/svufofT6h
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:9a50:5183:644a:3472])
- (user=irogers job=sendgmr) by 2002:a25:a34a:0:b0:e39:8650:5cff with SMTP id
- 3f1490d57ef6-e434a06de27mr1841276.4.1734123876288; Fri, 13 Dec 2024 13:04:36
+ (user=irogers job=sendgmr) by 2002:a25:aab4:0:b0:e39:fc33:e15e with SMTP id
+ 3f1490d57ef6-e434f94c734mr1534276.8.1734123878723; Fri, 13 Dec 2024 13:04:38
  -0800 (PST)
-Date: Fri, 13 Dec 2024 13:04:19 -0800
+Date: Fri, 13 Dec 2024 13:04:20 -0800
 In-Reply-To: <20241213210425.526512-1-irogers@google.com>
-Message-Id: <20241213210425.526512-3-irogers@google.com>
+Message-Id: <20241213210425.526512-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241213210425.526512-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v1 2/8] perf test trace_btf_enum: Skip if permissions are insufficient
+Subject: [PATCH v1 3/8] tools headers: Update offsetof and container_of
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,44 +75,48 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Modify test behavior to skip if BPF calls fail with "Operation not
-permitted".
+Update to match kernel definitions in `include/linux/stddef.h` and
+`include/linux/container_of.h`.
 
-Fixes: d66763fed30f ("perf test trace_btf_enum: Add regression test for the BTF augmentation of enums in 'perf trace'")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/trace_btf_enum.sh | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ tools/include/linux/kernel.h | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/tests/shell/trace_btf_enum.sh b/tools/perf/tests/shell/trace_btf_enum.sh
-index 5a3b8a5a9b5c..737da3113966 100755
---- a/tools/perf/tests/shell/trace_btf_enum.sh
-+++ b/tools/perf/tests/shell/trace_btf_enum.sh
-@@ -23,6 +23,14 @@ check_vmlinux() {
-   fi
- }
+diff --git a/tools/include/linux/kernel.h b/tools/include/linux/kernel.h
+index 07cfad817d53..10f74f021d55 100644
+--- a/tools/include/linux/kernel.h
++++ b/tools/include/linux/kernel.h
+@@ -21,9 +21,8 @@
+ #define PERF_ALIGN(x, a)	__PERF_ALIGN_MASK(x, (typeof(x))(a)-1)
+ #define __PERF_ALIGN_MASK(x, mask)	(((x)+(mask))&~(mask))
  
-+check_permissions() {
-+  if perf trace -e $syscall $TESTPROG 2>&1 | grep -q "Operation not permitted"
-+  then
-+    echo "trace+enum test [Skipped permissions]"
-+    err=2
-+  fi
-+}
-+
- trace_landlock() {
-   echo "Tracing syscall ${syscall}"
+-#ifndef offsetof
+-#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+-#endif
++#undef offsetof
++#define offsetof(TYPE, MEMBER)	__builtin_offsetof(TYPE, MEMBER)
  
-@@ -50,6 +58,9 @@ trace_non_syscall() {
- }
+ #ifndef container_of
+ /**
+@@ -32,10 +31,14 @@
+  * @type:	the type of the container struct this is embedded in.
+  * @member:	the name of the member within the struct.
+  *
++ * WARNING: any const qualifier of @ptr is lost.
+  */
+-#define container_of(ptr, type, member) ({			\
+-	const typeof(((type *)0)->member) * __mptr = (ptr);	\
+-	(type *)((char *)__mptr - offsetof(type, member)); })
++#define container_of(ptr, type, member) ({				\
++	void *__mptr = (void *)(ptr);					\
++	static_assert(__same_type(*(ptr), ((type *)0)->member) ||	\
++		      __same_type(*(ptr), void),			\
++		      "pointer type mismatch in container_of()");	\
++	((type *)(__mptr - offsetof(type, member))); })
+ #endif
  
- check_vmlinux
-+if [ $err = 0 ]; then
-+  check_permissions
-+fi
- 
- if [ $err = 0 ]; then
-   trace_landlock
+ #ifndef max
 -- 
 2.47.1.613.gc27f4b7a9f-goog
 
