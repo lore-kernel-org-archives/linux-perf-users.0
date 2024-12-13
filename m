@@ -1,103 +1,96 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2641EC4D6
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 21:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9057192B86
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 21:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734123892; cv=none; b=oHzFbLqI/LtsBEUISW0jfkKnjCRpoNTRd4mGhlr6BpxcumRpPvpWdM4b93fRaYvfhlCWWOL84Rij0MJNF7RRG/ANO052tB0zykSsKxdwBxnn3/r6eXZVlRKfswpjeGVMAN9JiIFlQVcPgF2gV9/W0kLppo+PkAgfebfVuVDt6iM=
+	t=1734123934; cv=none; b=ZG5wlL8npi4k27YuziGb5hqLd+VAOj689BNLni26O51d9B2Z5AJ3eOGV2PTIjjtQ9+zOImxhxfkxYPSDFPf1C3hVzjrH+T0hw1T4Sf7t+dF7d3p05Cy4vhFw2ccH2/Hknark+5+lxTo6n9szivExbOduE6bQ8bVO21TaU233d0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734123892; c=relaxed/simple;
-	bh=mEVKQkxWRXJdiQoRyQuxChdbGiNav5HSCWY6DgzLwTc=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=OVRFBbbSVqzHdiu+XEs4ricpioCQV3nSXgn8Ity1w0FL/8Fm4xTpUBiMIRWBP3XUeoHzpnrj0ELzNOrfG55Yu9bmcI8BciJ3Xz5M5IBp6RqM1r0s+m9zww5x28Il/tVe8y//CzfmS7KBFFfOuSSxKfEEEUsLnogiFZfuezc5/wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qvTYisBc; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1734123934; c=relaxed/simple;
+	bh=47ytQkByi69npnQJE9cuMcBCIB8J/1hpQqilY/Jfy2E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DyK6tV9O22FCEJmEtOQfHCq3nmzBggswxhQXk0NC1/1ynzlFOXIFF/6ZfNen8ioGfVpM3fZnboyxRcnH6MakzeRdAFAigPfk0ffp4KAQ3zseCENCStWvSFzlivhH5A8oS4KQagIulgqa44l0uzJ9IM4oOJa2tiHFv4rqNMPieOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r6QNTXFW; arc=none smtp.client-ip=209.85.166.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qvTYisBc"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ef7c67eeb8so26859137b3.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 13:04:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r6QNTXFW"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso3435ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 13:05:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734123890; x=1734728690; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iJDiQRFCSz2pV8y7FxqzQDhy9JPoVRfT99ZbYeMgH0I=;
-        b=qvTYisBcnfvpD/6+tR+dI7nxRScD5uSVyt9vrYXk0zc5UXaHZ4/JGVG0FYaNQAJGA1
-         3z2bQQY1X9DpjuwAl/72Q/xy5dWPaDtCDe4eJLQozNZ5j0vqyXulVl02WgvJtB3yE4FV
-         DvDmAgRvICpvsJcsxrQzq3sjPzV6+I7Ni3Ex1e97CGiFhCTw3Y/GGoX7MiCwckiUTwM1
-         0WO5F7GJz9+PLL9jsNoAjPW2i5viRN9hG/V8LEH97yIUJuPdCGtT3R3pTM84ScCG8yS5
-         kBfBC6SaZfm80pszmVWqQX/jDtCWPIxwQwBrmmgKwxs5xyeQbQUUza26gIoKpf/Y63uE
-         aOMQ==
+        d=google.com; s=20230601; t=1734123932; x=1734728732; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=47ytQkByi69npnQJE9cuMcBCIB8J/1hpQqilY/Jfy2E=;
+        b=r6QNTXFW5VollexwBuV+BQe4fFVhqDgsqin3z6WJugxGRxu3LTVJCyr2HMQXORXTYX
+         a+xR9dpMclso/sMLtS8E4WMOWq6UhAWwcHO0VRVWNnze+Ke5fCFUavpGuIE/SGuN7X9t
+         GCvYrPQlYZn4at9e1FhfWyNiMpDeRPl975nh08PrIebCdAZDhwsWhMDwhjYGPeDdnjEr
+         mQM0WEsLR2mOkx4dnZ4anvJAmgWKyzBckcAlzb82zPb0jwuW9Ztw02AFwb/6JIFhxCmc
+         7rU7+G63L7YIXlM1wHyff7asJupFOWwPo2aqWlxHEFj1nj58ofAbnczV74bw5z1E04ZB
+         9iKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734123890; x=1734728690;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iJDiQRFCSz2pV8y7FxqzQDhy9JPoVRfT99ZbYeMgH0I=;
-        b=TkJSCKD7V+MBeZril5sdZwriu2zk15MXQE2xAboynbEqG6pertLhy2Ba+jQmLLIU/b
-         84Kj6GGLVjVmrTOBY0sQYMvgON3MqZI+ZU1I1kBNbOcMOrwyk5LK8Nbr9DVADuTqD+js
-         QzmhveUCND5eZTnf+BJXwaDtNPxJRn62kpaHOFpJreYeI5kx+00BDDq63QN50AwZAbx6
-         bTqzPrSGMLty5Lxs8mQ8EM+3sDVH6pKpZQ/qWEkYZCqdsSQObH0/Lh+v5XF5Hni4CNL4
-         sVGPwFG94c7VX8piZqdaafdAnpwatZ1+KjrOhBtTU5ikqq1hySxsiKGc5wrhoWZp4J44
-         A8qg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5+fY2/2VdyL95k5MPmHxipsCUz4LKXhijNVMgE2gdpNrgRvlLVCLXGa0BZ0G4OEZl20zu8jgCbWCoC2uRr9rI@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBC793JUv0TPX6nWm0WzcopvvvSYNBQ1vjaQE8TYNKVWhZSbUt
-	12zh4Q0PTfcQZLh25NaYTCBzm6OaYl3XbLiTQG+iDATPfRBKEaN2WqAr0tP2nj9baaS94Q4hwmN
-	rM5dYUQ==
-X-Google-Smtp-Source: AGHT+IHs+WAfXli6hbB79/PjfvyzF4H7kHc4JY48mxpcyZssQCRvhWFB5cQ1OWLUaDs/bXboaKHIfiq3EJXP
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:9a50:5183:644a:3472])
- (user=irogers job=sendgmr) by 2002:a05:690c:245:b0:6ef:e0ce:df9f with SMTP id
- 00721157ae682-6f279b74b43mr118527b3.4.1734123889783; Fri, 13 Dec 2024
- 13:04:49 -0800 (PST)
-Date: Fri, 13 Dec 2024 13:04:25 -0800
-In-Reply-To: <20241213210425.526512-1-irogers@google.com>
-Message-Id: <20241213210425.526512-9-irogers@google.com>
+        d=1e100.net; s=20230601; t=1734123932; x=1734728732;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=47ytQkByi69npnQJE9cuMcBCIB8J/1hpQqilY/Jfy2E=;
+        b=c7X9Cz11plCEmc95wIif3TTGfbvDZTHtuxR8c6a3YWOLHXM8d4jGQQwX1Xaa0+q4FO
+         MRMaMZO/obOXsvNgELKLkU9PgmSR3s4Bkc8b6lkgS7DzkZdo7gjQi0YmrbVXxI3kTK+r
+         noefRHd2KGvIYYTpNYCt9fakdy/JEn/eejJvmCbNhKkV7UI7xhe6w+DZSocnIeK0eDBR
+         w/LsK3zKLAtoiCZTqd30WmkN9Nr7KCzMf7EqVPdwELCm9TLLJEZF/yi6iMY16W19sjew
+         /Hraz0xBRHjzy4fc1Lq17lGX0jGnBwio+5941syU6oRShUPOm4DVm9VTYuqRUf55iWTn
+         dV/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUEcIr23OJm70bnBjvNRtoSEQPTZQ8vw+tjw8gL7DgkEs4mM3FlCw1Vd7kGnXXKkDR8BmdgACjz+luPAF+Pyf0i@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywpd+LoUs/kaRYNSlDD0V65NXJHlxDGvTz6ECsM7O1X4jrI07Gb
+	2ojl19Of+S20C4gOJq//dVnMetbYwebqkmKQwv+lK8I9oBOIaw5S/MwVqh0YMhKUEHXfbbR+UR/
+	uLuDJTVCZmhid0U2R+v+a/yIbUDpKzcMwOYZQmoulhOqFQYF3su/M
+X-Gm-Gg: ASbGncvKDZizQYCAiNZI02i6Fzh3XrOabBJyZD7B4jC4is7n2Lhe4WofSuaCZVMDqzn
+	Xb+gq70ufKF6qCsv70G1Ol3RI/JjyK/wDfuj9S04=
+X-Google-Smtp-Source: AGHT+IHo/kk7shZp2cLw78tSqgm7MN3cgHDkD698rGAaphzsbaWqhB1nqjLPEhhZeYxzO84CQfy6GmWOwDhFWaZ0IMM=
+X-Received: by 2002:a92:d792:0:b0:3a7:c997:efdb with SMTP id
+ e9e14a558f8ab-3b279e187f9mr478925ab.17.1734123931596; Fri, 13 Dec 2024
+ 13:05:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241213210425.526512-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v1 8/8] libperf event: Ensure tracing data is multiple of 8 sized
+MIME-Version: 1.0
+References: <Z1ySfJAebZyEv8qE@x1>
+In-Reply-To: <Z1ySfJAebZyEv8qE@x1>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, 
-	Wei Yang <richard.weiyang@gmail.com>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+Date: Fri, 13 Dec 2024 13:05:20 -0800
+Message-ID: <CAP-5=fUMr_ZqrHdopMNQwacCvuAy2ZO0JKC8j9-v9Ap4vuT8xQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1 v2] perf tests switch-tracking: Set this test to run exclusively
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Perf's synthetic-events.c will ensure 8-byte alignment of tracing
-data, writing it after a perf_record_header_tracing_data event. Add
-padding to struct perf_record_header_tracing_data to make it 16-byte
-rather than 12-byte sized.
+On Fri, Dec 13, 2024 at 12:01=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> This test was failing when run with the default 'perf test' mode, which
+> is to run multiple regression tests in parallel.
+>
+> Since it checks system_wide mode, set it to run in exclusive mode.
+>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+> Link: https://lore.kernel.org/lkml/Z1yPYqYYs_isO1PJ@x1
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Fixes: 055c67ed3988 ("perf tools: Move event synthesizing routines to separate .c file")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/lib/perf/include/perf/event.h | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index 37bb7771d914..32b75c0326c9 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -291,6 +291,7 @@ struct perf_record_header_event_type {
- struct perf_record_header_tracing_data {
- 	struct perf_event_header header;
- 	__u32			 size;
-+	__u32			 pad;
- };
- 
- #define PERF_RECORD_MISC_BUILD_ID_SIZE (1 << 15)
--- 
-2.47.1.613.gc27f4b7a9f-goog
-
+Thanks,
+Ian
