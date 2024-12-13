@@ -1,133 +1,124 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794057E1
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 03:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7019D15B97D
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 03:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734060677; cv=none; b=DoCEAtxdyP7ZNSeC+hgUzYOfefBkNWIL9ykYDFaXPcGCS7nBglVwwkKgMtu5x4DhpsO6NsFFhEsyXVthlmHfCiQqVB/zpijNI59dK5MtANMJTtlxuxg8Yxz4GCTks8dF9gKbLWCZ+XlQOq/hxoDMKxXBUUkFw1y4PGOHNikZJhg=
+	t=1734062188; cv=none; b=TsLD4M+F4aM1/XwL7Sp5D4UQpqETCGcANMQ5TQPdaVsDNBBCByhuoDUCKeiVaUrWrbnOSIuwcSx3+e7SQWcFremixc0s/v584cK4P+m1vfXlctE8LsK9FQ9TK6e82cdjAj1Nl7CtFeEqoGMsNZpxhHYpK0iJCHmG45A8EFO/Pe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734060677; c=relaxed/simple;
-	bh=qxhiYi6a2Ku5GEwakKPEn5VPWTIdoMp+zhe19IXXiCc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XVS8uFAM3oKbkhWXE50fVQjBbVF8maZmzd5DOwIttkzPesKmlt0k1zxvRyGKLgb9Ls/mFWeTZ+KbGISANdOV02LQPtdPVgCKZcUv/TB2UFJI7URgG2nMn0fPi52P/KK/MZ1uwuYIkaAIaLc5tQyYimWZlb36PRsU6wzM12GpOf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AlovSj4O; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1734062188; c=relaxed/simple;
+	bh=BeHtFePJfyc2ZXX+Pz1KMyierr7nozLLrITrdDd9u70=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hhAT620suUYYASPuF85fD9CKvKaxKREaXQSHOzZL8HAzYzis48VclMn4+LhXEWoWsAdnWines5PC1JGcGdPAmLKjPsvBEcDtGRkm6wGqMezNrAzQAjPg9NoDcG62ucdcHCEx55XsIlM9ixdZX6OqyGyjKcs9WlxKU3HoRAgQ4Ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com; spf=pass smtp.mailfrom=engflow.com; dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b=ZK2+XluK; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engflow.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AlovSj4O"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3a814c54742so61925ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 19:31:16 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b="ZK2+XluK"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-725f4025e25so1100403b3a.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2024 19:56:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734060675; x=1734665475; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oPZsHe+9d6UK2cKEY6UXv1myi2iXWNd+qR0B6b7kmr8=;
-        b=AlovSj4OAY/9j+NrfwsnxUcfMyaVcCdioUN40Oe9JwbVWqQApsHADMd8NZ+wbfH07y
-         GjdEL36wbOeJfg0/4AoL0wMyfC9Y9XNRzyrINT/1N9bJknvh1tpkggGDAbKCsjvnWYb9
-         4FFfkvxLwmk2Id6BCElDbgr1qTrWWjDCanaRnkmIVhf7WNfSJo7Z1sRR3G4zCwSpB5UO
-         HX4e281SBQ4nvDkuqz7XN2pVxwZzeQZWn+XJrOtud/NH1EPXylF5I8oyon+6i5xFAoMo
-         A0ibOK8lYTy/o5iRCFISG3QLMx6WdzXKPHfB/cpCY7lD8CB5upN+GYJADytGXvLFAWan
-         Wlcw==
+        d=engflow.com; s=google; t=1734062185; x=1734666985; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0NBoThIqxIKKiwm3GomOJ/WljxVwVkbca9vdkXkgA30=;
+        b=ZK2+XluK+j0h+xH4K5H2g4oCuSh7jRpMrQHtPWzd3Cp9gxzntuyAWwGEuHvWdFdXk3
+         E3u6airokDt6g/T6oqUFVvlKFW4l8OuVfnlSrFlVP2EcDH9fMr5Q7mx5WQyIiGbC3gM1
+         eRo2yGONYdgW8F+ipWfgaKrE+DWKbtbuBfX/I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734060675; x=1734665475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oPZsHe+9d6UK2cKEY6UXv1myi2iXWNd+qR0B6b7kmr8=;
-        b=pmIxmZ/FRqDpYwBGmPtba/9jnETsPq0+QyBiFi0WVmLPx6cDeyYm35Jy1QgYZHCqp/
-         U9lPfTZBQnFMX2nVBDnI5i3NJTmPiJWAGB0txeyOrMemP3/rkTfsUjwjFjETN3xCoBpq
-         43ITij+QzYXJXOCaDHSZ3NJWt/jK9F+BfibTDt36/e2ut98EztqZ9wIe5SSi8IKTPUyd
-         rf4smAItb2S54n2ZCfcbrmu/QytzXFYAv+jsG70hsPLobGD1lHJIYrqkVcaLBD6Y7V3t
-         tM7L7ElrbzIYJhIomdEwxFysHR44fk/DQGXZjaEF3L9MXVQojblze8KmNHUxsiLgs9pT
-         mHmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjA+RFsJ0lvCD0xb5O5iMM8HB2AJYpbj8mg0UXdZeiCqm0vgltwgDzAp1a8UQqTMUQbuWbLVPGVxq7w4JGvnIW@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy7nP9z6gZdlje7qT7X65IMXs5c+nADmmYwjZllOGnp2uK0AA7
-	ggEHCwFr1+ModdBW/HaSX5wrBHwnavHFsE4ZP28sIppht99eNaBJVrA8GMz/8Khjf9fs1aftFkY
-	MxIFUiprpTEKjL7i9CRH4zGF1EsDlAzdubaZT
-X-Gm-Gg: ASbGncsaeHzrAerCokL+5ZFCk9r98OXEyMkMOoSBoALhUQ9EyoApS+D+zpMBVBta2oL
-	BgBNhaIbphkw3zp65bL1L4cX6DGdJ1jzSv4Ax1KY=
-X-Google-Smtp-Source: AGHT+IFFhpPpvYV3XFLjAm84ti030wjvefcYWAzjKri6pk1s0NQhtAwpUKZ9uemzlhhem1eOp5LnQuUEMDAdHpKey5E=
-X-Received: by 2002:a92:d084:0:b0:3a7:c962:95d1 with SMTP id
- e9e14a558f8ab-3b02674964bmr1044595ab.5.1734060675401; Thu, 12 Dec 2024
- 19:31:15 -0800 (PST)
+        d=1e100.net; s=20230601; t=1734062185; x=1734666985;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0NBoThIqxIKKiwm3GomOJ/WljxVwVkbca9vdkXkgA30=;
+        b=jLkxcofKvZRH/Kt7EoZuALl2jhSGnjZbyDXMKapl+WuGyGZgZVxPwXAoCbmg0F2zPo
+         KK4lq96H1dLlRDAEkJyxih0civ9vv5b4hFPqDYj2zO9es9/zO3CZsyYJ8kaFva1tsc+N
+         uodw+MqXgqgtovzYPZmDRF7xwb3tIVPknwjrlEkk3v4rC446SfGl2DIuFUYZE0dfRn7S
+         ZH02bJGORlUAiHiJUuoYWy1cETQrLMSi6Q9E2df+V4xajk6ulUQvC5jvEWZGAoRF0YMm
+         bB/xdLx2zOyrhsHQehOxjFZ07N4yvHL9hbDeYdeimWo/NjpsPahCJ1uGlsAQmlOUwQ8V
+         83OQ==
+X-Gm-Message-State: AOJu0Yz0N7SPlDOdC4UfagMeM2oQim5bVk2ZPHGhVkomvaC2FypIiMt+
+	e/cMO0kB9tp4mzqu6CvbJIqnVotu43uRNmd12ay8+G4cDReb/dWv+q0oWrD0pu8=
+X-Gm-Gg: ASbGncuhEb5rhmJoxVURXMDHk2AEaZQ05CQeZqeZ5wScWQvZAtsppJ6p89DhG3ffRmv
+	LkP9rsUhLAyxB1NA+5iSiggl9X6q1RH5I+IRv5mH93wRiZZnNXTBC7vOaALoaXfqY1gnizhUYtN
+	/dqMXWRI6ikXwMeDj/uZaHT5qUaSgsmE0PwVABqXdGlcnYui7HVGV1kfnGs/BiNUPsbReFDr4+V
+	sZPSk2fwhbcNbJM9IqAgkY9GrJX7CtviFJ0Eh1nWT7aVtPE4Sz4Kn+tqVBttMoRgrlM2xJZruUK
+	evbMRJxqKstKckRO9Ab5hA==
+X-Google-Smtp-Source: AGHT+IGTKuRX3MygaTiBOJeSJ+G2bErJRuqiMTRj8Zs31TJEgo6o5hS3Dy7Cma0QVKE0e+xy5pD3Sw==
+X-Received: by 2002:a17:90b:2708:b0:2ef:33a4:ae6e with SMTP id 98e67ed59e1d1-2f28fb700b4mr2510834a91.12.1734062185080;
+        Thu, 12 Dec 2024 19:56:25 -0800 (PST)
+Received: from [127.0.1.1] (158-247-70-44.PUBLIC.monkeybrains.net. [158.247.70.44])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f142e37cb0sm2137756a91.48.2024.12.12.19.56.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2024 19:56:24 -0800 (PST)
+From: Benjamin Peterson <benjamin@engflow.com>
+Date: Thu, 12 Dec 2024 19:56:22 -0800
+Subject: [PATCH] perf trace: Remove return value of
+ trace__fprintf_tp_fields
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241212173354.9860-1-irogers@google.com> <Z1uQWmq3KAQx1tA3@google.com>
-In-Reply-To: <Z1uQWmq3KAQx1tA3@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 12 Dec 2024 19:31:04 -0800
-Message-ID: <CAP-5=fU+PSGyrB9HUYS3XECRdZHqU57xAOgKvyUyE90DpiUDVA@mail.gmail.com>
-Subject: Re: [PATCH v2] perf test stat: Avoid hybrid assumption when virtualized
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241212-void-fprintf_tp_fields-v1-1-b0c23fff4c54@engflow.com>
+X-B4-Tracking: v=1; b=H4sIAGWwW2cC/x3MQQqAIBBA0avIrBNySIiuEhGSMzUQJhoSSHdPW
+ r7F/xUyJaEMk6qQqEiWKzSYTsF2uLCTFt8M2ONg0KAul3jNMUm4eb3jykKnz3p0zhGytWgZWhw
+ TsTz/eF7e9wNSlJdbaAAAAA==
+X-Change-ID: 20241212-void-fprintf_tp_fields-8aaae2f5525f
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Benjamin Peterson <benjamin@engflow.com>
+X-Mailer: b4 0.14.2
 
-On Thu, Dec 12, 2024 at 5:39=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Thu, Dec 12, 2024 at 09:33:54AM -0800, Ian Rogers wrote:
-> > The cycles event will fallback to task-clock in the hybrid test when
-> > running virtualized. Change the test to not fail for this.
-> >
-> > Fixes: a6b8bb2addd0 ("perf test: Add a test for default perf stat comma=
-nd")
->
-> I cannot find this commit.
+The return value of this function was meaningless and therefore ignored by
+the caller. Remove it.
 
-Sorry, should have been:
-Fixes: 65d11821910b ("perf test: Add a test for default perf stat command")
+Signed-off-by: Benjamin Peterson <benjamin@engflow.com>
+---
+This is a small followup cleanup to my earlier commit 5fb8e56542a3 ("perf
+trace: avoid garbage when not printing a trace event's arguments").
+---
+ tools/perf/builtin-trace.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 6a1a128fe645014d0347ad4ec3e0c9e77ec59aee..246be66fd59a4b9d76e4d3c42b68d0a444ca366a 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3022,8 +3022,8 @@ static void bpf_output__fprintf(struct trace *trace,
+ 	++trace->nr_events_printed;
+ }
+ 
+-static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel, struct perf_sample *sample,
+-				       struct thread *thread, void *augmented_args, int augmented_args_size)
++static void trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel, struct perf_sample *sample,
++				     struct thread *thread, void *augmented_args, int augmented_args_size)
+ {
+ 	char bf[2048];
+ 	size_t size = sizeof(bf);
+@@ -3088,7 +3088,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 		printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
+ 	}
+ 
+-	return printed + fprintf(trace->output, "%.*s", (int)printed, bf);
++	fprintf(trace->output, "%.*s", (int)printed, bf);
+ }
+ 
+ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> Other than that,
->
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
->
-> Thanks,
-> Namhyung
->
-> > ---
-> >  tools/perf/tests/shell/stat.sh | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/st=
-at.sh
-> > index 5a2ca2bcf94d..da42427bb077 100755
-> > --- a/tools/perf/tests/shell/stat.sh
-> > +++ b/tools/perf/tests/shell/stat.sh
-> > @@ -163,7 +163,11 @@ test_hybrid() {
-> >    # Run default Perf stat
-> >    cycles_events=3D$(perf stat -- true 2>&1 | grep -E "/cycles/|  cycle=
-s  " | wc -l)
-> >
-> > -  if [ "$pmus" -ne "$cycles_events" ]
-> > +  # The expectation is that default output will have a cycles events o=
-n each
-> > +  # hybrid PMU. In situations with no cycles PMU events, like virtuali=
-zed, this
-> > +  # can fall back to task-clock and so the end count may be 0. Fail if=
- neither
-> > +  # condition holds.
-> > +  if [ "$pmus" -ne "$cycles_events" ] && [ "0" -ne "$cycles_events" ]
-> >    then
-> >      echo "hybrid test [Found $pmus PMUs but $cycles_events cycles even=
-ts. Failed]"
-> >      err=3D1
-> > --
-> > 2.47.1.613.gc27f4b7a9f-goog
-> >
+---
+base-commit: eefa7a9c069908412f8f5d15833901d1b46ae1b2
+change-id: 20241212-void-fprintf_tp_fields-8aaae2f5525f
+
+Best regards,
+-- 
+Benjamin Peterson <benjamin@engflow.com>
+
