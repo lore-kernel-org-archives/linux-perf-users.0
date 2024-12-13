@@ -1,44 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882D58F6E;
-	Fri, 13 Dec 2024 01:46:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4DA27715;
+	Fri, 13 Dec 2024 01:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734054362; cv=none; b=sKEb0TdLWaktvMyP4ydpawa0ZOgvNL2CSrH52SZWckzvqVvk/A7z1Dq3rNM5kSR0g7w+RksN/YfPtj+SOFoX9tR2dBcMheBN9FibmV4RxuR7g8CKnImlr3fXyVb/7R/88b0zMmAUMosGr/nj+eKBbf98NR4iBPV8fSpzOOgWyN0=
+	t=1734055122; cv=none; b=DH3/fi6hb4/XXNL4Upu8fycoGR3Py8L5r2d8qL9P4LyHR2fDBFFi0LP8WzEz9LaUV9tnBw1SefvFJcCVui6xkVdZc++eAbf5yEa78Bzu5vp2tn1SH5Oc/ALjPti5tsCE85NeEHb1Pjeal9a8YyD5OVdETJA8Opg4zYx2UsKSFxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734054362; c=relaxed/simple;
-	bh=DQkbB4cllLviy0WjfVmB3HApYm34ssK4CyA4cmbSXjc=;
+	s=arc-20240116; t=1734055122; c=relaxed/simple;
+	bh=2q5aAnyDml+6z3V7SV7EY5YIUtY8cnXL6EDDvBgB2YM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KNpmhe259lnAOq0dHfk5qQK7n6PVTPYw0y64Ru8bvRmRt/ZJrsk8QGOmihWMCpXvyraZRBuV61LEN+eI17pSvFySx1LLHBsVhqpZ0BZc8izjmoFM1+mYC9F0FPVAARiblYHQcY753SfFlR6ineNYvhZqWY3ZyuDTrV00Y8eHkY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HmXVaVjE; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DeGR1oINrP3uzTWtnxe0NZjpysxo+VG7zMdQFJkEGQbhbaxAd+HA+SLpq/y6XPTewM05DNq33LAxat4QgBYlukSf3S7mo9L4n1d8+bdAlUE6W5xgIBmukH3H0EUs4FOs8mkJ4Tvmi0guw44EErube9BbKJO4lzllnp1ePaNexuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKd8cD/8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HmXVaVjE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F039C4CECE;
-	Fri, 13 Dec 2024 01:46:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MKd8cD/8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1FD2C4CECE;
+	Fri, 13 Dec 2024 01:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734054362;
-	bh=DQkbB4cllLviy0WjfVmB3HApYm34ssK4CyA4cmbSXjc=;
+	s=k20201202; t=1734055121;
+	bh=2q5aAnyDml+6z3V7SV7EY5YIUtY8cnXL6EDDvBgB2YM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HmXVaVjEP7mHzbQrp7Nmicnzbt+MiJh5pcJ8YWiSDL1YtptNv4hCcAyQGrvI52fgf
-	 4FcO5RrJ8+15OicbZVpXUU+NJYrdyWk5cYYJBnr5ATHVLFniYnkr/b9eLepKxPUfHX
-	 RnxbZM6uU2yN3xuAjstGBSiJoi1RD5XQTv+3WVHd4CxNBusYDJVVclTHlcG64Js9X8
-	 RbWnMekglA+nCnTssMPkSgGXaU3KO6bspMZ1gZAZhepSf1P2uFHRjtSIO4J/OSfRIx
-	 cYEN7DK1voYmmjOJNSv6SsMTCQPYJvF9b+pcYWR28RX4PsYQ0S7E/xendFLEKtU5zR
-	 Z4INJBRn/TuLA==
-Date: Thu, 12 Dec 2024 17:46:00 -0800
+	b=MKd8cD/8qsqTeTHK9DgR8/03CAcdVmMhosMCTjrWbf3+COji8IZfA5V08jAg1Q/JT
+	 79yPlW3nZuHT/lKNWXs2T2JfGVka2mIEHtlbkxHZNpeLfpo1RDpxB/Zje67nmfuO9L
+	 kfGKCOasgXg1VV7IdmH3EU5+aRLuplD0kS4krAjXskRiVONBWyjgXEZhol5jcuUdAh
+	 evwqWuHdC0YwWWFePhxk3GIxv/arWWvwvzIBpdHkJwiFSk+Ze3B72RZFLzzSSbFWIJ
+	 QwdKy+DcY5XwY7iSDf/mRVU2ki7ysHrdZZ35jCAV7Mq2cV8wkAJhgzcxRiNfmjnQ+/
+	 8tijQboVyr+Pw==
+Date: Thu, 12 Dec 2024 17:58:39 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Avoid unaligned pointer operations
-Message-ID: <Z1uR2EhgfuzLL3a4@google.com>
-References: <20241127212655.922196-1-namhyung@kernel.org>
- <CAP-5=fW5bbxXakiFuUAG-HTH2aH_hTXQjJp6o-bZcjcPvNmVrA@mail.gmail.com>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v13 09/10] perf record --off-cpu: Add --off-cpu-thresh
+ option
+Message-ID: <Z1uUz6sU90IQQAyp@google.com>
+References: <20241212232717.232507-1-howardchu95@gmail.com>
+ <20241212232717.232507-10-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,61 +51,181 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fW5bbxXakiFuUAG-HTH2aH_hTXQjJp6o-bZcjcPvNmVrA@mail.gmail.com>
+In-Reply-To: <20241212232717.232507-10-howardchu95@gmail.com>
 
-On Thu, Dec 12, 2024 at 03:56:31PM -0800, Ian Rogers wrote:
-> On Wed, Nov 27, 2024 at 1:26 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > The sample data is 64-bit aligned basically but raw data starts with
-> > 32-bit length field and data follows.  In perf_event__synthesize_sample
-> > it treats the sample data as a 64-bit array.  And it needs some trick
-> > to update the raw data properly.
-> >
-> > But it seems some compilers are not happy with this and the program dies
-> > siliently.  I found the sample parsing test failed without any messages
-> > on affected systems.
-> >
-> > Let's update the code to use a 32-bit pointer directly and make sure the
-> > result is 64-bit aligned again.  No functional changes intended.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/synthetic-events.c | 14 +++++++++-----
-> >  1 file changed, 9 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> > index a58444c4aed1f1ea..385383ef6cf1edaf 100644
-> > --- a/tools/perf/util/synthetic-events.c
-> > +++ b/tools/perf/util/synthetic-events.c
-> > @@ -1686,12 +1686,16 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
-> >         }
-> >
-> >         if (type & PERF_SAMPLE_RAW) {
-> > -               u.val32[0] = sample->raw_size;
-> > -               *array = u.val64;
-> > -               array = (void *)array + sizeof(u32);
-> > +               u32 *array32 = (void *)array;
-> > +
-> > +               *array32 = sample->raw_size;
-> > +               array32++;
-> > +
-> > +               memcpy(array32, sample->raw_data, sample->raw_size);
-> > +               array = (void *)(array32 + (sample->raw_size / sizeof(u32)));
-> >
-> > -               memcpy(array, sample->raw_data, sample->raw_size);
-> > -               array = (void *)array + sample->raw_size;
-> > +               /* make sure the array is 64-bit aligned */
-> > +               BUG_ON(((long)array) / sizeof(u64));
+On Thu, Dec 12, 2024 at 03:27:16PM -0800, Howard Chu wrote:
+> Specify the threshold for dumping offcpu samples with --off-cpu-thresh,
+> the unit is milliseconds. Default value is 500ms.
 > 
-> I think you intended:
+> Example:
 > 
-> BUG_ON(((long)array) % sizeof(u64));
+>   perf record --off-cpu --off-cpu-thresh 824
+> 
+> The example above collects off-cpu samples where the off-cpu time is
+> longer than 824ms
+> 
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Link: https://lore.kernel.org/r/20241108204137.2444151-2-howardchu95@gmail.com
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/Documentation/perf-record.txt |  9 ++++++++
+>  tools/perf/builtin-record.c              | 26 ++++++++++++++++++++++++
+>  tools/perf/util/bpf_off_cpu.c            |  3 +++
+>  tools/perf/util/bpf_skel/off_cpu.bpf.c   |  2 +-
+>  tools/perf/util/off_cpu.h                |  1 +
+>  tools/perf/util/record.h                 |  1 +
+>  6 files changed, 41 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 242223240a08..f3ac4c739d5f 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -829,6 +829,15 @@ filtered through the mask provided by -C option.
+>  	only, as of now.  So the applications built without the frame
+>  	pointer might see bogus addresses.
+>  
+> +	off-cpu profiling consists two types of samples: direct samples, which
+> +	share the same behavior as regular samples, and the accumulated
+> +	samples, stored in BPF stack trace map, presented after all the regular
+> +	samples.
+> +
+> +--off-cpu-thresh::
+> +	Once a task's off-cpu time reaches this threshold (in milliseconds), it
+> +	generates a direct off-cpu sample. The default is 500ms.
+> +
+>  --setup-filter=<action>::
+>  	Prepare BPF filter to be used by regular users.  The action should be
+>  	either "pin" or "unpin".  The filter can be used after it's pinned.
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 0b637cea4850..62183a6857f2 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -3147,6 +3147,28 @@ static int record__parse_mmap_pages(const struct option *opt,
+>  	return ret;
+>  }
+>  
+> +static int record__parse_off_cpu_thresh(const struct option *opt,
+> +					const char *str,
+> +					int unset __maybe_unused)
+> +{
+> +	struct record_opts *opts = opt->value;
+> +	char *endptr;
+> +	u64 off_cpu_thresh_ms; // converted to us for potential future improvements
 
-Yep, fixed in v2.
-
-https://lore.kernel.org/r/20241128010325.946897-1-namhyung@kernel.org
+I'm not sure about the future, but we now have the option in msec and
+convert it to usec, and finally BPF uses nsec.  Is the usec conversion
+really needed?  Maybe we can just use nsec internally.
 
 Thanks,
 Namhyung
 
+> +
+> +	if (!str)
+> +		return -EINVAL;
+> +
+> +	off_cpu_thresh_ms = strtoull(str, &endptr, 10);
+> +
+> +	/* the threshold isn't string "0", yet strtoull() returns 0, parsing failed */
+> +	if (*endptr || (off_cpu_thresh_ms == 0 && strcmp(str, "0")))
+> +		return -EINVAL;
+> +	else
+> +		opts->off_cpu_thresh_us = off_cpu_thresh_ms * USEC_PER_MSEC;
+> +
+> +	return 0;
+> +}
+> +
+>  void __weak arch__add_leaf_frame_record_opts(struct record_opts *opts __maybe_unused)
+>  {
+>  }
+> @@ -3340,6 +3362,7 @@ static struct record record = {
+>  		.ctl_fd              = -1,
+>  		.ctl_fd_ack          = -1,
+>  		.synth               = PERF_SYNTH_ALL,
+> +		.off_cpu_thresh_us   = OFFCPU_THRESH,
+>  	},
+>  };
+>  
+> @@ -3562,6 +3585,9 @@ static struct option __record_options[] = {
+>  	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
+>  	OPT_STRING(0, "setup-filter", &record.filter_action, "pin|unpin",
+>  		   "BPF filter action"),
+> +	OPT_CALLBACK(0, "off-cpu-thresh", &record.opts, "ms",
+> +		     "Dump off-cpu samples if off-cpu time exceeds this threshold (in milliseconds). (Default: 500ms)",
+> +		     record__parse_off_cpu_thresh),
+>  	OPT_END()
+>  };
+>  
+> diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+> index 2e7e4ae43ffc..c3ac19393c0f 100644
+> --- a/tools/perf/util/bpf_off_cpu.c
+> +++ b/tools/perf/util/bpf_off_cpu.c
+> @@ -14,6 +14,7 @@
+>  #include "util/strlist.h"
+>  #include <bpf/bpf.h>
+>  #include <internal/xyarray.h>
+> +#include <linux/time64.h>
+>  
+>  #include "bpf_skel/off_cpu.skel.h"
+>  
+> @@ -286,6 +287,8 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
+>  		}
+>  	}
+>  
+> +	skel->bss->offcpu_thresh_ns = opts->off_cpu_thresh_us * NSEC_PER_USEC;
+> +
+>  	err = off_cpu_bpf__attach(skel);
+>  	if (err) {
+>  		pr_err("Failed to attach off-cpu BPF skeleton\n");
+> diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> index 77fdc9e81db3..aae63d999abb 100644
+> --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> @@ -123,7 +123,7 @@ const volatile bool uses_cgroup_v1 = false;
+>  
+>  int perf_subsys_id = -1;
+>  
+> -__u64 offcpu_thresh_ns = 500000000ull;
+> +__u64 offcpu_thresh_ns;
+>  
+>  /*
+>   * Old kernel used to call it task_struct->state and now it's '__state'.
+> diff --git a/tools/perf/util/off_cpu.h b/tools/perf/util/off_cpu.h
+> index 2a4b7f9b2c4c..f07ab2e36317 100644
+> --- a/tools/perf/util/off_cpu.h
+> +++ b/tools/perf/util/off_cpu.h
+> @@ -16,6 +16,7 @@ struct record_opts;
+>  			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_RAW | \
+>  			      PERF_SAMPLE_CGROUP)
+>  
+> +#define OFFCPU_THRESH 500000ull
+>  
+>  #ifdef HAVE_BPF_SKEL
+>  int off_cpu_prepare(struct evlist *evlist, struct target *target,
+> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+> index a6566134e09e..2ca74add26c0 100644
+> --- a/tools/perf/util/record.h
+> +++ b/tools/perf/util/record.h
+> @@ -79,6 +79,7 @@ struct record_opts {
+>  	int	      synth;
+>  	int	      threads_spec;
+>  	const char    *threads_user_spec;
+> +	u64	      off_cpu_thresh_us;
+>  };
+>  
+>  extern const char * const *record_usage;
+> -- 
+> 2.43.0
+> 
