@@ -1,107 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1886A17C21E;
-	Fri, 13 Dec 2024 17:10:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C988B1E0DAC;
+	Fri, 13 Dec 2024 18:06:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734109815; cv=none; b=Ek6fvjLs/MjxlnzoFS3CmvxyGR3aMM+UMPgLLNUOdFZDsTucwWf7QuJpDa5NayThIatZ4TJt291UuDWO2xi39E1XfVxCl638AuFSrLzJsfAZH906wtaHiSiajiA8l+h7B/T+HabJWrWIy4LXFSrrYci/9xw/Qfr1ymsl6M+DPAg=
+	t=1734113190; cv=none; b=BguaoZgaP1xQV9vW830CkSBzsWSyJQVxczdmV8AYyGJJhI02cfIJoJeQeylYgeqhtiHx2WO/f3kzs6TChArKkvUqGGlhJMaX1lBpR3w4juqij1qoR1yr9RXFynIp9R7qId933Kb36JsCZtkOtPCJpvDO6H6avzMHOEQZ4IAi90M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734109815; c=relaxed/simple;
-	bh=FzbxNtPRI9eJSeo8RCJjgFaAAq9gXHyaLbj1CzzKD8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QxJ8E7Wwa6N/vF/xLgxJ3hk8yl0kZIgil2hBADnMZ4JvDdgYRqDnw027dcl536q/MfanfTCV5oTo5aQjRU5KHuCdePAf601xt6iY6KLVlhGFILPMiYV3wCpq6IbrvFDxnDH++qQZUEA0XBWxXK2nWbbEg8IIzucAmdTFnZMjTpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLSB5NV7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734113190; c=relaxed/simple;
+	bh=IMKq4YKtkwXTsJhEt54jJRZjbleDFBUmsrXlpelQ94I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=WtwgxcotzVB6Bqk9SmkTfYtSi+ib15N+j0gKYm3ThEF+x5DZKapdUmXcPtgsxSucGGCNimPHbTE/n3yV3jwiCtb2HNBvnerQgqs+ifAZ9y4O0ZwBiQk6H2AHImspNeSbvqcBGJRy3MnxzZp+Nceaar7/eHV/XU06SwvDcZ/8Xy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AHM2nVs8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLSB5NV7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CF73C4CED0;
-	Fri, 13 Dec 2024 17:10:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AHM2nVs8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5EC7C4CED0;
+	Fri, 13 Dec 2024 18:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734109814;
-	bh=FzbxNtPRI9eJSeo8RCJjgFaAAq9gXHyaLbj1CzzKD8w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LLSB5NV7qLwPeUWsPfcfbfreuZjY4hYPf9J+yxiOD+gJdl6N7KFAQArDJ8a4dFWx0
-	 FwCuqwbwOpMF0fhib95adoQ6urHuUg2tUMs20eJXhMVDMZg18u6b3iS7SnZcqka7K5
-	 BwgLPiWP2h+lWwacvklTgbZ8D6MNWyCYCNCqFuD9NYtwa2ovDMolOxZMMBd6Sr/WDX
-	 X9b143zzvPsrGosV45ozXfsLoxBfrBmMAkjEMXUrCnUzrpd6Ywu/y233fl827WQU3e
-	 JT+C5rF2uaP9h6RYmYBBPxX3WRRkOlGJM++6VJ13iEqM6i5gixFszEEMvzkrlXjSu8
-	 8jJTkdoTF45mw==
-Date: Fri, 13 Dec 2024 09:10:12 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH v2 0/4] perf lock contention: Symbolize locks using slab
- cache names
-Message-ID: <Z1xqdFB0210tP3RY@google.com>
-References: <20241108061500.2698340-1-namhyung@kernel.org>
- <CAP-5=fWqE6bM=MVQy7P0tTSWW-ZBXY4in_bfQYFK-C4h6L-Ykw@mail.gmail.com>
- <ZzuI_08huDfK0Vvu@google.com>
+	s=k20201202; t=1734113190;
+	bh=IMKq4YKtkwXTsJhEt54jJRZjbleDFBUmsrXlpelQ94I=;
+	h=Date:From:To:Cc:Subject:From;
+	b=AHM2nVs8cViHbk0c2uovOfVDlbZtTWMspNv296IoZ32QrdeQMuPuqMIfb4kI/KBOv
+	 FeXIILSYdInu7+k/e3RKuyZwJK6emtA3rubYxWN3bNxEt2xudfxlR46HPwtDne4mh+
+	 dHPzI528LoTjZgfYurGCIaiGnbk82dGUuDYOKK2i0RlgV/1FALIAUYM59y7G6yyZDn
+	 GA/H2s5Jw5ybAgatisaRptKui69Id2AmjM4yqeT9YIq3kPdox6fnfLTlnvVRHeGAqG
+	 mfXqDSaKGANPW5e258UN37C2hZpGruduA7rkTZcYMaq3L7XOq50HtcSYk+/mkirYjw
+	 5d+1pp0RmLUKQ==
+Date: Fri, 13 Dec 2024 15:06:27 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1 next] perf tests switch-tracking: Set this test to run
+ exclusively
+Message-ID: <Z1x3o0YoeZS2kQzr@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZzuI_08huDfK0Vvu@google.com>
 
-Hello,
+This test was failing when run with the default 'perf test' mode, which
+is to run multiple regression tests in parallel.
 
-On Mon, Nov 18, 2024 at 10:35:43AM -0800, Namhyung Kim wrote:
-> On Mon, Nov 11, 2024 at 11:46:37AM -0800, Ian Rogers wrote:
-> > On Thu, Nov 7, 2024 at 10:15 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hello,
-> > >
-> > > This is to support symbolization of dynamic locks using slab
-> > > allocator's metadata.  The kernel support is in the bpf-next tree now.
-> > >
-> > > It provides the new "kmem_cache" BPF iterator and "bpf_get_kmem_cache"
-> > > kfunc to get the information from an address.  The feature detection is
-> > > done using BTF type info and it won't have any effect on old kernels.
-> > >
-> > > v2 changes)
-> > >
-> > >  * don't use libbpf_get_error()  (Andrii)
-> > >
-> > > v1) https://lore.kernel.org/linux-perf-users/20241105172635.2463800-1-namhyung@kernel.org
-> > >
-> > > With this change, it can show locks in a slab object like below.  I
-> > > added "&" sign to distinguish them from global locks.
-> > 
-> > I know the & is intentional but I worry it could later complicate
-> > parsing of filters. Perhaps @ is a viable alternative. Other than
-> > that:
-> > 
-> > Acked-by: Ian Rogers <irogers@google.com>
-> 
-> Thanks for the review!
-> 
-> I don't think it clashes with BPF sample filters which works on sample
-> data generated from a perf_event.  Technically this command doesn't use
-> perf_event and just attaches the BPF program to tracepoint directly.
-> 
-> Also sample filters don't use '&' symbol in the syntax as of now. :)
+Since it checks system_wide mode, set it to run in exclusive mode.
 
-Can we merge this series if no more feedback?
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/switch-tracking.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-About the build issue, I think it's transient and it's not the default
-to build with generated vmlinux.h.  We could disable the generation but
-it might be better to keep it to test other issues.  Anyway, it can be
-done independently.
-
-Thanks,
-Namhyung
+diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
+index 5cab17a1942e67d7..88a03bcbecb2b11f 100644
+--- a/tools/perf/tests/switch-tracking.c
++++ b/tools/perf/tests/switch-tracking.c
+@@ -583,4 +583,11 @@ static int test__switch_tracking(struct test_suite *test __maybe_unused, int sub
+ 	goto out;
+ }
+ 
+-DEFINE_SUITE("Track with sched_switch", switch_tracking);
++struct test_case tests__switch_tracking[] = {
++        TEST_CASE_EXCLUSIVE("Track with sched_switch", switch_tracking),
++        {       .name = NULL, }
++};
++struct test_suite suite__switch_tracking = {
++        .desc = "Track with sched_switch",
++        .test_cases = tests__switch_tracking,
++};
+-- 
+2.47.0
 
