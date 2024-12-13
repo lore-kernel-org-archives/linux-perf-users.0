@@ -1,47 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136861917FF;
-	Fri, 13 Dec 2024 19:55:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6B11EF0B9;
+	Fri, 13 Dec 2024 20:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734119725; cv=none; b=J2qWkZ1XrLrd/sowlTGWuEXl+3pQzkqtZenO32UXBWNRI3TvR7D2VHKHj9qkCvEqxIPYmIOwdEawqHq7LgNPWFiV75acWzClE+hrs9nkUk6kH2RKJf+vO8xKYUpHeQvTnNwW72WdLDSbVyXd5K5LVx8wYifoLlVLcw/70DQPcDE=
+	t=1734120063; cv=none; b=kbKi5wJK7fxzoXHmvMA7d7jyO5V6TbrlJ6jLXXSjY9s2JL4/8KPC2QueqIMvmuRpS42S/QHsEjv0KvIYrKfx39NU0XSJM+Dy5zIMCM+1GD0yg8ZJbXe3YjZnzU44kNWA0yO6zHyhbhaktK3uvanyLRklY7ioqJvK5BUl62lPonc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734119725; c=relaxed/simple;
-	bh=O1BrkSmk15lfmBVgBcoXh74LUiTwTfwBVZuenj4XM74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U3XAGAwUCJCccnG1YzlMHNKqpqYKdI9yB3um8z3tYAFMLX3gVwfLpQOO4jcdl74wM7X6fLOIV0YJ9IUB1v6EDYJwxKiyPCJEwoOl2RyiyH7NPi693DVOkXyKTOiPD3/xu2EejgF4DOr4ieKX9D5cH2hdkYniSaAsBl3McgK4erw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TaHdHK6B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734120063; c=relaxed/simple;
+	bh=AvM0NO3WrFwUfwKf5uWQ9PtzjbzQ3ygKYFLHP0iYUSI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=cGtrPihwoqx+iSEECKXCERz+p5bQ/zURyPPlthvWGa4ZZwatX5aVdMkwlMZi66RDmfQRCEBns69FGG5fOSc4ffO1G6MdPC4QpX14rM/DjCtfcgF/KDgAahSJLbOoB1iF9bYD3km9VZvZqsBYqRnkpiggmn/rAZK+ODmHZ95n3CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RqHRGAL9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TaHdHK6B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C9CC4CED0;
-	Fri, 13 Dec 2024 19:55:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RqHRGAL9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF2ADC4CED0;
+	Fri, 13 Dec 2024 20:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734119724;
-	bh=O1BrkSmk15lfmBVgBcoXh74LUiTwTfwBVZuenj4XM74=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TaHdHK6B1DCufyEl2iAShSF/v/+Cyp43l+adxbybOUhwGP2w8GIEyB7hftWtvKql6
-	 Ej7FF3WagXVQ/jU6aM5FTlQUbcxB31DdevD6Cx2LOgaKOMAhmEZdvE3eOB47COLWPM
-	 K5LcQnafS5kxGIyQJspmn0DjCDc2fTlx+T7E6WC0En07f7w8662QJ3vldTbZnVMrTB
-	 a7JKyYhH4weUN+63W3n627gcIDF2iQLhBOvuYe6PSPxBbTME8w+eAjvitOnDuH4pfL
-	 0pbVa0+V+BiQHDl+JxHawyovAewiEsJ9LDjyblKeQNAHiQm6medkNE/TtMu4M++JcG
-	 LiYLPC/vfI0JQ==
-Date: Fri, 13 Dec 2024 16:55:21 -0300
+	s=k20201202; t=1734120063;
+	bh=AvM0NO3WrFwUfwKf5uWQ9PtzjbzQ3ygKYFLHP0iYUSI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=RqHRGAL9OfGbQEEn1RKY/Lhs77RHZH0vuVRx9xT9ZN3k4BzIKQXp1TEo1hBRvEDxx
+	 Ijo+59zlTYqIK0e42pQ019m6vVQ3DsP1nIccupudST47+dm70jF5e2hitaZH4bhP1b
+	 lE3+v5IR7w5OUQL6M0id6zY6lHWxaj6mjXubZL0jlEfAueoKF1r0LpCaW5B/mPJC15
+	 ci2V714BMXFnt+hy/BmkKBck1mOU6LlbpAgdOvpPN85Fk54WuSGKu3EU5gg97Ap8X3
+	 CRC2hl6Ipz2/JbR07YWac6m9hgKpFilmMLZz90Z+lX2Ch+rZzeODX9Ock7ehB0Hbag
+	 NYpUPpuuwe6pQ==
+Date: Fri, 13 Dec 2024 17:01:00 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	eranian@google.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	santosh.shukla@amd.com, ananth.narayan@amd.com,
-	sandipan.das@amd.com
-Subject: Re: [PATCH v3 09/10] perf test: Introduce DEFINE_SUITE_EXCLUSIVE()
-Message-ID: <Z1yRKdo3JpQ9KPe-@x1>
-References: <20241210093449.1662-1-ravi.bangoria@amd.com>
- <20241210093449.1662-10-ravi.bangoria@amd.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1 v2] perf tests switch-tracking: Set this test to run
+ exclusively
+Message-ID: <Z1ySfJAebZyEv8qE@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,43 +47,35 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241210093449.1662-10-ravi.bangoria@amd.com>
 
-On Tue, Dec 10, 2024 at 09:34:48AM +0000, Ravi Bangoria wrote:
-> A variant of DEFINE_SUITE() but sets ->exclusive bit for the test so the
-> test will be executed sequentially.
+This test was failing when run with the default 'perf test' mode, which
+is to run multiple regression tests in parallel.
 
-Cherry picking this one as I need it for some other work.
+Since it checks system_wide mode, set it to run in exclusive mode.
 
-Ian Rogers pointed me while reviewing.
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+Link: https://lore.kernel.org/lkml/Z1yPYqYYs_isO1PJ@x1
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/switch-tracking.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- Arnaldo
+diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
+index 5cab17a1942e67d7..576f82a15015371a 100644
+--- a/tools/perf/tests/switch-tracking.c
++++ b/tools/perf/tests/switch-tracking.c
+@@ -583,4 +583,4 @@ static int test__switch_tracking(struct test_suite *test __maybe_unused, int sub
+ 	goto out;
+ }
  
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->  tools/perf/tests/tests.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index cb58b43aa063..8aea344536b8 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -81,6 +81,16 @@ struct test_suite {
->  		.test_cases = tests__##_name,		\
->  	}
->  
-> +#define DEFINE_SUITE_EXCLUSIVE(description, _name)	\
-> +	struct test_case tests__##_name[] = {           \
-> +		TEST_CASE_EXCLUSIVE(description, _name),\
-> +		{	.name = NULL, }			\
-> +	};						\
-> +	struct test_suite suite__##_name = {		\
-> +		.desc = description,			\
-> +		.test_cases = tests__##_name,		\
-> +	}
-> +
->  /* Tests */
->  DECLARE_SUITE(vmlinux_matches_kallsyms);
->  DECLARE_SUITE(openat_syscall_event);
-> -- 
-> 2.43.0
+-DEFINE_SUITE("Track with sched_switch", switch_tracking);
++DEFINE_SUITE_EXCLUSIVE("Track with sched_switch", switch_tracking);
+-- 
+2.47.0
+
