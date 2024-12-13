@@ -1,134 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CA619992C;
-	Fri, 13 Dec 2024 22:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6249F19EED0;
+	Fri, 13 Dec 2024 23:19:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734130369; cv=none; b=LbtM0SyBmf3p9NNZ/kSn/AZx3nP+TF/8dMbOGtlUB6L+yK+eYMMpt0/BhvIWoFvS7Q7XBs8B9NTFER35kvbTHNisxoj/OKoxiT0q9/kt2LGKe8ee09rlZgOqHcsypGSgK45RUdALTO+g709CUqbDyetA0YgbAvMmm2LiY6vA63A=
+	t=1734131977; cv=none; b=iCXY5Ypn8h615yZaG6ykzHg0iRaR5NYVDjKLpa5uNoYMKwugu4nELe7sZ/DO8Zy3l9U2vFbVdgLsOBwNHX/FXvZy/JE4MU8Q8H3RXeVIo3kLeDjjwDO5rJyB+UBt9Lp5JneQWw/o+klZdHKpWAOKAammA/dEC4HW2h6OimloGes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734130369; c=relaxed/simple;
-	bh=04Tx0x578Uzc8rm85xT+i6prSqGkdTU6HjQojNx5BaA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IWg8txM+3ovsV3boiZS9cpDNnrF/nZNJsOoKGs8ZjDARrpXsTungliVexE9NwDr9IjGb/nl2EXmqQFUjHPZFIhSpTpFC+A7hI/8tqc3YPvDNDcrDu+AecdJCOpK7ho5cWXRUKslCe0H3nFIPPmAfR0myttv92mo7XWbwKaQd93I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tavy4t2D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734131977; c=relaxed/simple;
+	bh=I7L++QuCltZdWBBLBF2u1VL/gnj57Hinet4TijkF6fc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JElBd+jST42DbPb6IpsvPiWa14JK4rdATq+FsNUfKAShRMJOADd/jVagqMppsW9vLGswEXLOYWxRv7HiFzjUbGeV15CN6uJRE24PmKv0m92QlHftdvPVVButLF3VgXNy8ctY1eynheZKXjHtjpsGLGsN/YGnjSU0Z5beNAL73Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/tZTo23; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tavy4t2D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37F2DC4CED0;
-	Fri, 13 Dec 2024 22:52:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/tZTo23"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F1E9C4CED0;
+	Fri, 13 Dec 2024 23:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734130368;
-	bh=04Tx0x578Uzc8rm85xT+i6prSqGkdTU6HjQojNx5BaA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tavy4t2DHnD1HgZ97BCgsnRvNHS1Z7DsTkwFMYwX1ooRMTvoyU4iWkxhVRyBk8Gi6
-	 iejgRQl1jbJFM6NEGc3hHn8aE/9Hua6er2VtMkpqQ4iwRDXAPHAMnmn5HQoeK9y8/H
-	 YOu2glWvHjFmEP00wH5vu0Fcr3A2A6PZb8AQzazVtHazm0kcFHk9/WDk4SB+lIHqOy
-	 nuadJqY+Sziw4uMpRLaEOc0kHK42L27c77kGN3r7tEjxAqlhP5h6N/2MQ0OulQ2Pxs
-	 lcXVT790qEdRyYKoFdMx6b1FDdi0QVk+yh0mhHoUhobJnjU7JROQn9rjserZeRSpEz
-	 6RvSmnOoWoaJQ==
-Date: Fri, 13 Dec 2024 23:52:45 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"Lai, Yi" <yi1.lai@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	s=k20201202; t=1734131977;
+	bh=I7L++QuCltZdWBBLBF2u1VL/gnj57Hinet4TijkF6fc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=R/tZTo23ApV7rVtEa5naOfHwSoHWy7CIF6Jd3MEY0OIFYcCnHtk8XjyXv0u6UlgbU
+	 Hl8lkG9tYq0fAt0CmhKsuZy3mrG8bSHn40nsN6yWyoMImJFa2Ad+PfHqHBAQEHf/kO
+	 51EInIPriBdfflTg0F2lzjlr2xJJOUvM+8nO+mzL+13f32kFq275Jsyhp2KW/XRrVT
+	 1bllo6hDZKflUOjVMHdYeyFnIX3XoeZWn/KotvGI9IPd7sqg+pT2ahuaCwvuxs5CEc
+	 oFEJn+UiqKk6SnXH305m8HML/K0B2nHZfanDOro+hfOn1igm84rt7wPNRLevrh4Eip
+	 fdt1cUBTDx3pQ==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>, yi1.lai@intel.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
-Message-ID: <Z1y6vSznjbCwAvn1@pavilion.home>
-References: <20241107144617.MjCWysud@linutronix.de>
- <Zy4OFlxoRK2jM5zo@localhost.localdomain>
- <20241108190835.GA11231@redhat.com>
- <Zy6QHHakztIXvudC@pavilion.home>
- <20241111120857.5cWFpNkJ@linutronix.de>
- <20241204134826.GA923@redhat.com>
- <Z1DxqJlGM_I8irVQ@pavilion.home>
- <20241205092015.GA8673@redhat.com>
- <Z1F6_cC4bRvcN56T@pavilion.home>
- <20241205102840.GB8673@redhat.com>
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf: test: Speed up running brstack test
+Date: Fri, 13 Dec 2024 17:13:12 -0600
+Message-ID: <20241213231312.2640687-2-robh@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241205102840.GB8673@redhat.com>
 
-Le Thu, Dec 05, 2024 at 11:28:41AM +0100, Oleg Nesterov a écrit :
-> On 12/05, Frederic Weisbecker wrote:
-> >
-> > Le Thu, Dec 05, 2024 at 10:20:16AM +0100, Oleg Nesterov a écrit :
-> >
-> > > > Looking at task_work, it seems that most enqueues happen to the current task.
-> > > > AFAICT, only io_uring() does remote enqueue. Would it make sense to have a light
-> > > > version of task_work that is only ever used by current? This would be a very
-> > > > simple flavour with easy queue and cancellation without locking/atomics/RmW
-> > > > operations.
-> > >
-> > > Perhaps, but we also need to avoid the races with task_work_cancel() from
-> > > another task. I mean, if a task T does task_work_add_light(work), it can race
-> > > with task_work_cancel(T, ...) which can change T->task_works on another CPU.
-> >
-> > I was thinking about two different lists.
-> 
-> OK... but this needs more thinking/discussion.
+From: James Clark <james.clark@arm.com>
 
-Sure.
+The brstack test runs quite slowly in software models. Part of the reason
+is "xargs -n1" is quite inefficient in replacing spaces with newlines.
+While that's not noticeable on normal machines, it is on software models.
+Use "tr -s ' ' '\n'" instead which can do the same transformation, but is
+much faster. For comparison on an M1 Macbook Pro:
 
-> 
-> > Another alternative is to maintain another head that points to the
-> > head of the executing list. This way we can have task_work_cancel_current()
-> > that completely cancels the work. That was my initial proposal here and it
-> > avoids the lock/xchg for each work:
-> >
-> > https://lore.kernel.org/all/Zx-B0wK3xqRQsCOS@localhost.localdomain/
-> 
-> Thanks... Heh, I thought about something like this too ;) Although I thought
-> that we need a bit more to implement task_work_cancel_sync(). But this is
-> another story.
+$ time seq -s ' ' 10000 | xargs -n1 > /dev/null
 
-So which way do you prefer do solve the initial problem?
+real    0m2.729s
+user    0m2.009s
+sys     0m0.914s
+$ time seq -s ' ' 10000 | tr -s ' ' '\n' | grep '.' > /dev/null
 
-> 
-> > > Hmm. I just noticed that task_work_run() needs a simple fix:
-> > >
-> > > 	--- x/kernel/task_work.c
-> > > 	+++ x/kernel/task_work.c
-> > > 	@@ -235,7 +235,7 @@
-> > > 			raw_spin_unlock_irq(&task->pi_lock);
-> > >
-> > > 			do {
-> > > 	-			next = work->next;
-> > > 	+			next = READ_ONCE(work->next);
-> > > 				work->func(work);
-> > > 				work = next;
-> > > 				cond_resched();
-> > >
-> > > Perhaps it makes sense before the patch from Sebastian even if that patch
-> > > removes this do/while loop ?
-> >
-> > Hmm, can work->next be modified concurrently here?
-> 
-> work->func(work) can, say, do kfree(work) or do another task_work_add(X,
-> work).
+real    0m0.002s
+user    0m0.001s
+sys     0m0.001s
 
-Right but then isn't it serialized program order, from the compiler point of view?
+The "grep '.'" is also needed to remove any remaining blank lines.
 
-Thanks.
+Signed-off-by: James Clark <james.clark@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+[robh: Drop changing loop iterations on arm64. Squash blank line fix and redo commit msg]
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+Originally part of this series[1], but I've dropped any Arm specifics, 
+and it stands on its own. No reason this needs to wait on Arm BRBE 
+support (which I'm working on now). I don't expect to have other changes 
+to this test related to BRBE anymore.
 
-> 
-> Oleg.
-> 
+[1] https://lore.kernel.org/all/20240613061731.3109448-8-anshuman.khandual@arm.com/
+
+ tools/perf/tests/shell/test_brstack.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+index 5f14d0cb013f..e01df7581393 100755
+--- a/tools/perf/tests/shell/test_brstack.sh
++++ b/tools/perf/tests/shell/test_brstack.sh
+@@ -30,7 +30,7 @@ test_user_branches() {
+ 	echo "Testing user branch stack sampling"
+ 
+ 	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- ${TESTPROG} > /dev/null 2>&1
+-	perf script -i $TMPDIR/perf.data --fields brstacksym | xargs -n1 > $TMPDIR/perf.script
++	perf script -i $TMPDIR/perf.data --fields brstacksym | tr -s ' ' '\n' > $TMPDIR/perf.script
+ 
+ 	# example of branch entries:
+ 	# 	brstack_foo+0x14/brstack_bar+0x40/P/-/-/0/CALL
+@@ -59,7 +59,7 @@ test_filter() {
+ 	echo "Testing branch stack filtering permutation ($test_filter_filter,$test_filter_expect)"
+ 
+ 	perf record -o $TMPDIR/perf.data --branch-filter $test_filter_filter,save_type,u -- ${TESTPROG} > /dev/null 2>&1
+-	perf script -i $TMPDIR/perf.data --fields brstack | xargs -n1 > $TMPDIR/perf.script
++	perf script -i $TMPDIR/perf.data --fields brstack | tr -s ' ' '\n' | grep '.' > $TMPDIR/perf.script
+ 
+ 	# fail if we find any branch type that doesn't match any of the expected ones
+ 	# also consider UNKNOWN branch types (-)
+-- 
+2.45.2
+
