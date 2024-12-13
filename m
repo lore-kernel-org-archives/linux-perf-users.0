@@ -1,148 +1,119 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7209F1E5702;
-	Fri, 13 Dec 2024 18:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C401E47DD
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 18:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734113226; cv=none; b=g3p9k/Z6Ch5pn0ExQvPoe0P0vy4B82NF+1BA2Qcn2MWWdmpTuQhug0ziZqitdeCm2OapOE+JjOmlAxouqwU3uiRjGqxvD6dxgZXg+g9DEgFK7i42jEGZnzNcBzwv124XjVwDLt1BL0duQ9Bkd++R2MjpHPiMtTiT/zcXIaHSQLE=
+	t=1734113446; cv=none; b=UVjqMHsKaDBl+iWidxstltdWuSAFH58vy0nLnbMYH9AF04ZpBUAFy6BBOX5xXAqk5V6C7bS7qe9+K/y0ZN3kPAVqIpxcGufogB+QPZw5dql1W4089pdv+gXM7CWUme34jP6iAJ04VY1yb0oRPvYPLk60SLCwinLwmnXkIkalErc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734113226; c=relaxed/simple;
-	bh=y76mljT7nOJZX+9smI4E5kVDv3j7iyA7b79w8knGirA=;
+	s=arc-20240116; t=1734113446; c=relaxed/simple;
+	bh=k0DPfjVaCNtHadVi817LIPEFiQPVpOq0Rk4KDTJHK1I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LPKouUsJEgUTRybCd9C7NrQvoAa/PWfLDLeJVNu/bK8U1jtGcpHUHD8Mv7eIBaW3BaPhEYLbEtXQS5RXqns0I5MfOpU1sABl5dhTGrBHYJ8hEbGDzN8KjoJSSXdiTLZN058k/zR/hEnsl6bzcLhZ2jrSo6LaFfnKVgkXRxrqR2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M+l/BTB0; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=HI4DD4XqXhRrgbOXZyPMGIKjxi+zo1dg84w9KMIkIDOVLdpYHcHbSBhGPeTrNTYpmVlPBaOudI6aU/BmjEPp2WCMwFZ1rEYNMt5YtKoH7CKBJvAQ+q9VgK3+hRk0FANfr9+HFlwzd2jNwnboSsteofCd7/7f/7kPFSp0IemDUNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2I3KG5UE; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M+l/BTB0"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6ef60e500d7so16059307b3.0;
-        Fri, 13 Dec 2024 10:07:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2I3KG5UE"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so5455ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Dec 2024 10:10:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734113223; x=1734718023; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1734113444; x=1734718244; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=O5xb26hD12aHWKTOlfWO8Uk9hIxk2tJj/0+ghr1aXpA=;
-        b=M+l/BTB0AHDqJ/eHFnIKA5x+NLN8n34k81mT8yWtVYO69pZzlCOdfRsVLQa/6ZGnke
-         YpH1liL33laZfoHNblzkKGAXzW/mFAJS4b9eA53Ha/GL2sMe4N7Camo9LD4Gv7+Uk2/h
-         8N4crUk3ZfP1H358zwMR+ZUKStHGqIUhyLwOXZ7MdUQJPNgMBvieTFm3OOVg6NhQJS0d
-         rU/36eNCV6VTGB0SvocImzTQeB2iWYyUEcRkkAlG4d1amRv2VsR8CJyPDbSFcarnRHoC
-         fntGMLEN6i7oWyW7sv6kBehM8cjMQR8r33Q8HvpeiTKLExrUTO1g4mpRa4plEJxVjDmH
-         GkMw==
+        bh=b+hgaeTwc969Xr5cJMWCHi4YypA6NV2JJFX5XRvZhe0=;
+        b=2I3KG5UEnCqmDXsgINIdqhTexwpAa777w+mBS1ayCxu5SVkU2DKqaJ3ysZAK9j7tbI
+         95ATsD9+gk1tLR+4ldGrZa49qgwHBZqHF/E2tkZAohUGo/ooPPkLChewZ/m/N8z/7GUo
+         m/aJYJRq4Fewv3a+PVVnVSs59Oo3RZPVAMPQXTAU6tUYEOyiQ69+zZ9dwmyXlw6jex9+
+         aqT+XbR8geOoTy6kPqMC48jtSizRIVKxPGoaZY5ATfD9UlxaPRVmCNAIlIaaE8YASfwD
+         xnEXv8rIcPV9XnrLUisD1wK1ktoeHO3VkHrif2NiQ361pTmGjrH6+Aj1MIMfpzUgduko
+         CZHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734113223; x=1734718023;
+        d=1e100.net; s=20230601; t=1734113444; x=1734718244;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=O5xb26hD12aHWKTOlfWO8Uk9hIxk2tJj/0+ghr1aXpA=;
-        b=HXjyIJ59aZd5qwnIkazFKthOe3TARVtNgqEei9keEAdq3JupVPCMWpiHml448zd1Ls
-         WilyHjJ3GHdDcMpOPL+2B9Nv3hdEc7l3vKZDJl6pzHTxT4kTq7bYg7qcGKh5QR2FrW3W
-         SQPZWFYfL2g/tMGIY+OGDctRyrOdgODl4dJFz2O56t1aXW3B1KKKew7TJfWP+pxxD7V4
-         hfO4uYDlMB7On7F5RgBVXvVEp8kqolxVhTiG3ebYkIgqGoL5I2pwBS8oRQlsPoalgX6T
-         FsFmt59QBUcNYYp316EYTOZER9zM1DHxrFooaW5BoruRFqExDbq/Uz+JgkK6AbrwMjiu
-         jLsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDYCEyV5pn2mmxKE6OME2w7uc7VkWLN35/u11Ev3WZStqdynRmJ7kslf29c/sXY7jmnNFyYrS24FVErHk=@vger.kernel.org, AJvYcCXI4wA1EWqq1lWK5V14bGSi3H0CjQuYmOtQvR31Kgp7mpeQ3bBx9W8LCCc3XYRyGMmnMfmc2A87APetpiaTaO/6lQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKrjva6PgSAuIpVG/wN8QOHxH1TWCRZC4Ih1/DHu7JEeIM3Gs7
-	pfWQjxEX93ruKSKGfeH2oYw7Iy6L4LYyNBQ+WimDkNhhxo/fi7ZnuosDambHuoja/kUPcaEeuAz
-	V9qie67KnnG9DqBOhp7qlArPxbcYEPwb8Weo=
-X-Gm-Gg: ASbGncs0lFilKz+sQ5JJbh72/JpLfjRT/X5i85kDOKnRQL4zqNwNcfg3n8rxv4hi9gW
-	SkbUAgq0B9BjeD+iM+2npGVKLM7nmi2DLLhHj
-X-Google-Smtp-Source: AGHT+IEU/Pl66E2SGbCipCacLGs2IlPhoT5fb9enrA2EO5P5qYiujXvFk6Y8kq43fObhg6+YWse1ZKwyPwrBWiCX8CM=
-X-Received: by 2002:a05:690c:60ca:b0:6ea:7afd:d901 with SMTP id
- 00721157ae682-6f279b15cdfmr27422567b3.18.1734113223468; Fri, 13 Dec 2024
- 10:07:03 -0800 (PST)
+        bh=b+hgaeTwc969Xr5cJMWCHi4YypA6NV2JJFX5XRvZhe0=;
+        b=kX8VE8Cy5F3jvIdyNBgtGR6Bm3J4WL7AWvP8DvKxhh0HS7JOeKcid5lu9Kncmzteh4
+         rCKMnn5HYqctZOErp+7ufKfW+vKMWrP7W16aYI49y1m2KDCpKTZ1q7kdBgLJMXHuwC9u
+         jaGCkfeLtcYu4vkSLV0C2Ab0gY/l1Zb+fpYXqjI/oD7AmJf/JSbEJjKpHBSH4D10AVMS
+         9f7Mc3x3BOXsL+0dmTbb1eet1q73/MhsqwSVdc924qd3SSd0r4v3gT5uk1wr8FGBua2p
+         eNNOIqrwUF/M1IrbjO/g9Q2vp/wRCFawJTq3CauLT1FJzlGm+Y16MxaKHQMoqWqzNCOQ
+         HcGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUD5jUcjZfrzHLqxtrwolbHm8aeqAKj2lkafur93rXO0Td0aD/n92ns8ThOTxPo+HPQAdeOBKUMpXCI2i3QuDkR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCMjdxL/S3tpiRKAs00a0CvlaK86vML7d2rg7GOFLVREcC1sK7
+	PcAUgqRhfw/5l/rHU38PruV/OItTS7UBRm7sz71vKUe8liKeK7r9A3O7iJdJPeSEOTmS7M6oP1I
+	WI4WgNKr9qBjp9d41XaxEMNXHrskGWKWo+s8S
+X-Gm-Gg: ASbGncus/AEeGQX29EMWXvG/WhRAnh2tKWuxRP4ynuJx5XAV79KT8ntSukRtQjBdSwj
+	qai7n/HWN0hfQsIFwxQbQ0CoDfrdvPHJaQvtikz0=
+X-Google-Smtp-Source: AGHT+IEpXVdotD7gPTZpVvNm6rDcuEI9+VbTUTPpjI0rSnYDYqUNwhT6bqW+G6X28rCmH0gCHBryuHlavZreyLNczUQ=
+X-Received: by 2002:a05:6e02:20e5:b0:3a7:ddbb:1b19 with SMTP id
+ e9e14a558f8ab-3b0290a08a1mr2949455ab.27.1734113444146; Fri, 13 Dec 2024
+ 10:10:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241212-void-fprintf_tp_fields-v1-1-b0c23fff4c54@engflow.com>
-In-Reply-To: <20241212-void-fprintf_tp_fields-v1-1-b0c23fff4c54@engflow.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 13 Dec 2024 10:06:56 -0800
-Message-ID: <CAH0uvoi6=JmtX2xit9y7+NR5O+1S5zbxWpmLpbzC9+9nrkudHQ@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Remove return value of trace__fprintf_tp_fields
-To: Benjamin Peterson <benjamin@engflow.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <Z1x3o0YoeZS2kQzr@x1>
+In-Reply-To: <Z1x3o0YoeZS2kQzr@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 13 Dec 2024 10:10:32 -0800
+Message-ID: <CAP-5=fVBrssdqwz0YiJ9snKgEJSiAhMVpZcP=sNr6gGEwhMUsA@mail.gmail.com>
+Subject: Re: [PATCH 1/1 next] perf tests switch-tracking: Set this test to run exclusively
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Benjamin,
-
-On Thu, Dec 12, 2024 at 7:56=E2=80=AFPM Benjamin Peterson <benjamin@engflow=
-.com> wrote:
+On Fri, Dec 13, 2024 at 10:06=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> The return value of this function was meaningless and therefore ignored b=
-y
-> the caller. Remove it.
+> This test was failing when run with the default 'perf test' mode, which
+> is to run multiple regression tests in parallel.
 >
-> Signed-off-by: Benjamin Peterson <benjamin@engflow.com>
+> Since it checks system_wide mode, set it to run in exclusive mode.
+>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
-> This is a small followup cleanup to my earlier commit 5fb8e56542a3 ("perf
-> trace: avoid garbage when not printing a trace event's arguments").
-> ---
->  tools/perf/builtin-trace.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  tools/perf/tests/switch-tracking.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 6a1a128fe645014d0347ad4ec3e0c9e77ec59aee..246be66fd59a4b9d76e4d3c42=
-b68d0a444ca366a 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -3022,8 +3022,8 @@ static void bpf_output__fprintf(struct trace *trace=
-,
->         ++trace->nr_events_printed;
+> diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch=
+-tracking.c
+> index 5cab17a1942e67d7..88a03bcbecb2b11f 100644
+> --- a/tools/perf/tests/switch-tracking.c
+> +++ b/tools/perf/tests/switch-tracking.c
+> @@ -583,4 +583,11 @@ static int test__switch_tracking(struct test_suite *=
+test __maybe_unused, int sub
+>         goto out;
 >  }
 >
-> -static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel=
- *evsel, struct perf_sample *sample,
-> -                                      struct thread *thread, void *augme=
-nted_args, int augmented_args_size)
-> +static void trace__fprintf_tp_fields(struct trace *trace, struct evsel *=
-evsel, struct perf_sample *sample,
-> +                                    struct thread *thread, void *augment=
-ed_args, int augmented_args_size)
->  {
->         char bf[2048];
->         size_t size =3D sizeof(bf);
-> @@ -3088,7 +3088,7 @@ static size_t trace__fprintf_tp_fields(struct trace=
- *trace, struct evsel *evsel,
->                 printed +=3D syscall_arg_fmt__scnprintf_val(arg, bf + pri=
-nted, size - printed, &syscall_arg, val);
->         }
->
-> -       return printed + fprintf(trace->output, "%.*s", (int)printed, bf)=
-;
-> +       fprintf(trace->output, "%.*s", (int)printed, bf);
->  }
->
->  static int trace__event_handler(struct trace *trace, struct evsel *evsel=
-,
->
-> ---
-> base-commit: eefa7a9c069908412f8f5d15833901d1b46ae1b2
-> change-id: 20241212-void-fprintf_tp_fields-8aaae2f5525f
->
-> Best regards,
-> --
-> Benjamin Peterson <benjamin@engflow.com>
->
->
+> -DEFINE_SUITE("Track with sched_switch", switch_tracking);
+> +struct test_case tests__switch_tracking[] =3D {
+> +        TEST_CASE_EXCLUSIVE("Track with sched_switch", switch_tracking),
+> +        {       .name =3D NULL, }
+> +};
+> +struct test_suite suite__switch_tracking =3D {
+> +        .desc =3D "Track with sched_switch",
+> +        .test_cases =3D tests__switch_tracking,
+> +};
 
-Thank you for the follow-up patch, LGTM. Built and tested.
-
-perf $ ./perf test "perf trace"
-109: perf trace enum augmentation tests                              : Ok
-110: perf trace exit race                                            : Ok
-
-Reviewed-by: Howard Chu <howardchu95@gmail.com>
+With Ravi's change:
+https://lore.kernel.org/lkml/20241210093449.1662-10-ravi.bangoria@amd.com/
+This could be s/DEFINE_SUITE/DEFINE_SUITE_EXCLUSIVE/ , wdyt?
 
 Thanks,
-Howard
+Ian
