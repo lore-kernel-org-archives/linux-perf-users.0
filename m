@@ -1,56 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F25142A8F;
-	Sat, 14 Dec 2024 11:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F901865E3;
+	Sat, 14 Dec 2024 12:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734175528; cv=none; b=MCgAgYT7cUi5pa0ZQhv1A6FKVIIo1w0nUR//7xUf+tmBODehdo45XI7mvyKpGSRMH3e4HLghMC9saHggIq1Y/RewRypN1R1NSSgk8XBUJBexG2WnqCc2wQsVmejoB6ydt/EFCsi9IvdtxywrRs7eeiD9x9REl13kQkwWDftbhbI=
+	t=1734179607; cv=none; b=cpz4CcjzhxeY66WtdUOLcFl9nwlydzqD4xNwbKr2k5Uqu3eS3d7A4ZXG7XCoc6CLHFHt91UqE0tos9ky20WJaCBQoSPWesU0OATppBLL3mM3LUl2v2Ko9H7etH1wl8oqYQartgVa3RgpyueNu/vwUwPlkFVC+NcmniUcYYLCRBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734175528; c=relaxed/simple;
-	bh=WIrhc8lgZTYzOMN3sCVepMyea5Ad9uNtxOg0fjPBF6A=;
+	s=arc-20240116; t=1734179607; c=relaxed/simple;
+	bh=NLYX8UxrPLBGaNdZgQFh+dURnCHG3hkTyp8gPQXKQ6M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MFqjAv2i9Ehiw9KJHmIfm7zinzNTXaZxfZ/8Kmnm1ZOpC7HHl89g9REAY+D/XplUYbjgrgWxno1J2Ca9A50elxPD2kVbuXMPNwjk0S0rFJRwOxBc/55PgLoauMtr2dSy5sRBErkxqXKp5U+7MOYAnry/au63WTLBk4GQpkjuLlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nhUf9tuP; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=k0wAyJkhizAHctNaUUV6xii39UwNUwKn6t4pUPrGMS+7XN1DYcstF+TD0HY/kVx7LLA9LlPNo7WOuVYAM7zJsnjblL+CtRhBoKcBkFq5KIrg1MxjQ+1gP0Kt1vDa97M7iYTqMPWDDQTwIPnm0PDCPci9pMB58nb44eJ3FFWSnPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H8kB9MSr; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nhUf9tuP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734175527; x=1765711527;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WIrhc8lgZTYzOMN3sCVepMyea5Ad9uNtxOg0fjPBF6A=;
-  b=nhUf9tuPH2EpE/C2Fc1qdri0WlfsOdH2arPRgJEUzMrPIUEDWYQcrv/U
-   PKG+9ql9FTUYLTbwkxVFjhe6zYyzRlenP3abvERcpy3Qw3i4HqiY34x9Q
-   dX9KHN2Z2pJl2QGjCbwIrwDTcE9gENVbHyl5vY95uuKIkoq0nX8Y0otN0
-   TzpQVabpf55Ekgb3//q0ve3ygG5COLaN1sMjZR8XPq+p/nDhVyogiYHw3
-   jlo1y+3DCNH1+VRtxjHIkuKcHfK4cWBU26FOkJgg0iN1lVNGqUn2ESsDg
-   wcVWFeTFX0Au69EghI3dwUC9AtU5plPXvR1W5uqoPX7ZUXMlbbZd6RZ23
-   w==;
-X-CSE-ConnectionGUID: HtoC1AebSYKBrvdB/wRmWw==
-X-CSE-MsgGUID: nhOx5pJySDay1s/xeNqBrw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11285"; a="52138303"
-X-IronPort-AV: E=Sophos;i="6.12,234,1728975600"; 
-   d="scan'208";a="52138303"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2024 03:25:26 -0800
-X-CSE-ConnectionGUID: ZgZqYyMmTvSmdIQ6vlVlbw==
-X-CSE-MsgGUID: z71IAE+eSFCxbLwuWqyCJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="101855598"
-Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 14 Dec 2024 03:25:22 -0800
-Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tMQGt-000Crz-1o;
-	Sat, 14 Dec 2024 11:25:19 +0000
-Date: Sat, 14 Dec 2024 19:24:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8kB9MSr"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ee8e8e29f6so2005311a91.0;
+        Sat, 14 Dec 2024 04:33:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734179606; x=1734784406; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=z3e3IlXJXuwVGKGf/bNlyWXfPz2EvmMLeKdxB4qkcvs=;
+        b=H8kB9MSrmhf+6dD8sOhwjdSAVMKm+NlSm9e6H1ImGD2B2rpl8lQBM4BsxWwAmwRuw3
+         HhT4me19Jo9ipIejilb7Kr7D1FNQTb8+20sWKWxlCUFia0feNBAed+RE3+Ea+LDBI2ff
+         0Ii9Zc8/5CESLAaS9iOL12PzPM78sQFT3tYPUguvOHgKTCG07IdkgLJSWtvj2W0YcwRj
+         UHP/vcV5jx/mO59nR9tNuRJjY1SToSTeKPOgtlRzyGD3BBnq7S2/u6/WXZZXKITC1Oke
+         DUZGo1goZSk0pYLHOsF+BQtwnZbqKD6b6ghIx0Gk7hrwmiFf9iDOq10pQMkCsQxjw+U5
+         YADg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734179606; x=1734784406;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z3e3IlXJXuwVGKGf/bNlyWXfPz2EvmMLeKdxB4qkcvs=;
+        b=cwMtRu+09L+6uoZy/Rn5i4dCmfUMx5TWETF+HZCx3P/17EevpvlSUqY7eoo5SXvS3u
+         qwFAh4Q1CnyA1S8zikYoiK6gy0YGsWL5amQokfCBLDCwyq0ms9jwUwAl16R91x3hRyEA
+         rwce0OvlJOtFHOPXdzdbS9S1OYaCJpCfTPwPNmJiOb+aPaujquajcZOvWwKSpoCCtT2r
+         FwqPtx5N9JF1AP3bkLvn4r+ZLohN4/G/5NecFyIdVr27J3xIvNqoLOcr7S8huHM3EBUU
+         SetCKjjTH2C9/JfKZz98Bchhhsab41XSrKdGF+zwsNoCG5BpZNhvtRE4sklCYH46Xazv
+         jaDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXicMrDC1iGqw+CanmEWoar+Dl0gZRcK9b0TvFxZAybrFcRLyoMBHvYnfBOQm97iwM+azPvIKooXvas8s=@vger.kernel.org, AJvYcCVILDVAiir4uD6hSLospWtKZZd2sP3CQquzQ+B8WiuMWmFc6rHBrCw51uHFWWtKx8W9LoEgS/XZZK3qJJitCFnubw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX8rKdIJIo0lItoUK9HIBxBjwNoY6q/K18xGvKgh+rmpc1i9DL
+	f40PQ1vzfl3kyxcyjmFhroj8PMVMMHgncAbt+XJT7nV65F6Jj7gQ
+X-Gm-Gg: ASbGncto55ArZTnKHF6U2Sck7IiGFXf+mT5dvvZTnOOqDO3cY/K36zqBYAdRnvoEJvv
+	si3M1lw57VTWunMrF0/YhYNjrtoHhUYorB7qxtU3B/MnLyhhPoU0iItlIIMA65LvWpUxRjTNoUC
+	Q2WX8OCdPpmXAC1WSdSCqXECeJAtXxLJ+wGZUhuC15vIUvIATsfSkc102kO9BFCMslgNjBm4yyy
+	+3PUhBHxStTOGBq45b2SvLtYKSrMtAwASZ4bODOL/BgX0LZCWOKQCGwkVG216S7ZbaBs/s+cf3N
+	48Mjfcac
+X-Google-Smtp-Source: AGHT+IGz/lKwrwSoZh+KWxQyhGgve198yVy6xpMvQFVVOJEOuD4ov6dTXPK7zHqT3DuBdN822FsKWw==
+X-Received: by 2002:a17:90b:4c05:b0:2ee:a76a:820 with SMTP id 98e67ed59e1d1-2f28fd66aacmr8413787a91.18.1734179605749;
+        Sat, 14 Dec 2024 04:33:25 -0800 (PST)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f142fc2fcdsm4742596a91.43.2024.12.14.04.33.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Dec 2024 04:33:24 -0800 (PST)
+Date: Sat, 14 Dec 2024 20:33:19 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
@@ -58,13 +67,19 @@ To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
 	James Clark <james.clark@linaro.org>,
-	Weilin Wang <weilin.wang@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v1] perf intel-tpebs: Cleanup header
-Message-ID: <202412141915.vDvejTWQ-lkp@intel.com>
-References: <20241210191823.612631-1-irogers@google.com>
+	Howard Chu <howardchu95@gmail.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 1/8] perf disasm: Avoid undefined behavior in
+ incrementing NULL
+Message-ID: <Z117D0rj6waa/cNs@visitorckw-System-Product-Name>
+References: <20241213210425.526512-1-irogers@google.com>
+ <20241213210425.526512-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -73,49 +88,17 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241210191823.612631-1-irogers@google.com>
+In-Reply-To: <20241213210425.526512-2-irogers@google.com>
 
-Hi Ian,
+On Fri, Dec 13, 2024 at 01:04:18PM -0800, Ian Rogers wrote:
+> Incrementing NULL is undefined behavior and triggers ubsan during the
+> perf annotate test. Split a compound statement over two lines to avoid
+> this.
+> 
+> Fixes: 98f69a573c66 ("perf annotate: Split out util/disasm.c")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-kernel test robot noticed the following build errors:
+Reviewed-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 
-[auto build test ERROR on perf-tools-next/perf-tools-next]
-[also build test ERROR on tip/perf/core perf-tools/perf-tools linus/master v6.13-rc2 next-20241213]
-[cannot apply to acme/perf/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/perf-intel-tpebs-Cleanup-header/20241211-032044
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
-patch link:    https://lore.kernel.org/r/20241210191823.612631-1-irogers%40google.com
-patch subject: [PATCH v1] perf intel-tpebs: Cleanup header
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241214/202412141915.vDvejTWQ-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412141915.vDvejTWQ-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-     PERF_VERSION = 6.13.rc1.g19e7440f1089
->> util/intel-tpebs.c:358:10: error: call to undeclared function 'perf_counts'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     358 |         count = perf_counts(evsel->counts, cpu_map_idx, thread);
-         |                 ^
->> util/intel-tpebs.c:358:8: error: incompatible integer to pointer conversion assigning to 'struct perf_counts_values *' from 'int' [-Wint-conversion]
-     358 |         count = perf_counts(evsel->counts, cpu_map_idx, thread);
-         |               ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   2 errors generated.
-   make[7]: *** [tools/build/Makefile.build:105: tools/perf/util/intel-tpebs.o] Error 1
-   make[7]: *** Waiting for unfinished jobs....
-   make[6]: *** [tools/build/Makefile.build:158: util] Error 2
-   make[5]: *** [Makefile.perf:789: tools/perf/perf-util-in.o] Error 2
-   make[5]: *** Waiting for unfinished jobs....
-   make[4]: *** [Makefile.perf:292: sub-make] Error 2
-   make[3]: *** [Makefile:76: all] Error 2
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+Kuan-Wei
