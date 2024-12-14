@@ -1,91 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E34366;
-	Sat, 14 Dec 2024 00:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F559522F;
+	Sat, 14 Dec 2024 00:29:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734135228; cv=none; b=OQVsrXAbEG8BWW7sl0vcT93r7p969JigFsI+Jw9yY1ji+VijBcWF0naR1/N0Yk07YvH9e6U1vnYpu/9W4b9xJuQrssVIVY6MYnii6kcQIhGcVukiWy8YXP67Fg1XMt8J5W7nDge4ctptsh4QRRvkaGHnljgy/y8578lAvpLxUk0=
+	t=1734136182; cv=none; b=rfChvuIQk35exBFQtjEjdt4J/GEUtVM66dWbyARSCadUizqm5r2XIVqsU/3t4xJM9ijSzsgvTNLMlNDe4kCJJTd6qpg6B3PFtCILrkjT45qDO4i9yj5R4blmcxbOaJ8JM6+kypKQp61uwlgC8tdfJWjwXLqufbV9j0mAgtOihKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734135228; c=relaxed/simple;
-	bh=fG9idVSJT3S6L7tCx0N4GpumBLRytSIG+hnvmB89sD8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GqLWMhvRu0cspGUW+4EeNpOt3qXUNyDaLCZ9ChTf0uw6Z7zsAEvB6awgcJPvjSiWaDmjp8QmLyANlW4nlzOV9B+XOOvr3yEN2AeJLKYhwxvQPAfinLG6eOF7GULaTF+zv7IcDlPp4sP5hLroSdcYKsE3Kfe4WX+ZjNvn3arYA3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1xpBk7d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734136182; c=relaxed/simple;
+	bh=eqHTSpS6/fGwNzRj37ZWTn9z3Q1PGAPL1y8u2vWd0lE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YOguQHxuNivnRf5nJh8NF3rCUKEOzRcVOzUh3WrdTUtVcSgAXMl2nS3V/pDtRj8Bqq2ncZbLb49C67fZa+jglPCpcsDctHSoPSgdiF+phdrpqza2XyXn67nmzsO2YwCed2y+AcrmwPpPhmnSGVlsDDVA/pKu6rLp0O3wxDAQClc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1gGv6xs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1xpBk7d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FBA7C4CED0;
-	Sat, 14 Dec 2024 00:13:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1gGv6xs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75F56C4CED0;
+	Sat, 14 Dec 2024 00:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734135227;
-	bh=fG9idVSJT3S6L7tCx0N4GpumBLRytSIG+hnvmB89sD8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H1xpBk7dOfyjiIfJG094Pfsp0utg4lDCVgTC7odUCfNiw5JT4Exsw5Fo7e97LadBs
-	 mfGzr/vR5zNf5sFwUJEZImJhSKcXOet4y6eBkxXNHlksmCkGfbBNzLdd3ACja3+iN1
-	 66pyzsXNustEXxAINMMrRbttorlTLXPPRiEXBnRLqEQv1qII/g6tcs7hYeX1G+5lvM
-	 qazjoUm0zCG54IhfIoG1CxEunivX9htMMjyXjAKNRM9wQgihEk/VfgwtW+a4k+tmQq
-	 gBAta/8KglzceDKall8GiCz080vr/J/Zy1EjzePkJ8OPtx1428O17/K2VuVQe1HuPf
-	 bj38pnGj+xtQA==
-Date: Fri, 13 Dec 2024 16:13:45 -0800
+	s=k20201202; t=1734136181;
+	bh=eqHTSpS6/fGwNzRj37ZWTn9z3Q1PGAPL1y8u2vWd0lE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=D1gGv6xsb0LgB38wR15FxLLNf3yKtnfoNbFVHiT6P/nGwLIoqRNL9rbQ+6a0XYuvw
+	 /thyffcLiyL+gWXf7zNiqel/l0kwZ7IAgVqkPy6sI5L2r1g/AGM4tJi3wCi+qlyX3m
+	 8tNXK3bbPq6b0MUjgiVaudDR2bjnkXslA+/3yTOngBf8RJMribAR+MChI8sS2OPWpX
+	 r46vtgbl0Mjc+HR3EhMWl6WMWhiLqGpKvQ/VBwWTkRUEkrraKZSk2FZNKT1KPYAsyI
+	 tAXxfTjBvqV13RhlzFMtUtg9uYR70JEM5586RuxVwkPYWO/XGNVMP7EEVjiCxOK20a
+	 nbrl9OBg9WUKw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
-	Chen Ni <nichen@iscas.ac.cn>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] Prefer evsel over evsel->core.idx
-Message-ID: <Z1zNuQaqtDDoQhP6@google.com>
-References: <20241114230713.330701-1-irogers@google.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH] perf ftrace latency: Fix compiler error for clang 12
+Date: Fri, 13 Dec 2024 16:29:38 -0800
+Message-ID: <20241214002938.1027546-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241114230713.330701-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 14, 2024 at 03:07:10PM -0800, Ian Rogers wrote:
-> James Clark's patches fixing evsel->core.idx [1] reminded me that we
-> pass the int value around unnecessarily. Passing the evsel avoids
-> issues if the evlist is reordered but paired with sanitizers we can
-> also know when something is used when it shouldn't be. These patches
-> do some initial work reducing the use of evsel->core.idx or reducing
-> the API to pass evsels and not their interior index.
-> 
-> [1] https://lore.kernel.org/lkml/20241114160450.295844-2-james.clark@linaro.org/
-> 
-> Ian Rogers (3):
->   perf stream: Use evsel rather than evsel->idx
->   perf values: Use evsel rather than evsel->idx
->   perf annotate: Prefer passing evsel to evsel->core.idx
+I noticed this error on CentOS 8.
 
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+    CLANG   /build/util/bpf_skel/.tmp/func_latency.bpf.o
+  Error at line 119: Unsupport signed division for DAG: 0x55829ee68a10: i64 = sdiv 0x55829ee68bb0, 0x55829ee69090, util/bpf_skel/func_latency.bpf.c:119:17 @[ util/bpf_skel/func_latency.bpf.c:84:5 ]Please convert to unsigned div/mod.
+  fatal error: error in backend: Cannot select: 0x55829ee68a10: i64 = sdiv 0x55829ee68bb0, 0x55829ee69090, util/bpf_skel/func_latency.bpf.c:119:17 @[ util/bpf_skel/func_latency.bpf.c:84:5 ]
+    0x55829ee68bb0: i64,ch = CopyFromReg 0x55829edc9a78, Register:i64 %5, util/bpf_skel/func_latency.bpf.c:119:17 @[ util/bpf_skel/func_latency.bpf.c:84:5 ]
+      0x55829ee68e20: i64 = Register %5
+    0x55829ee69090: i64,ch = load<(volatile dereferenceable load 4 from @bucket_range, !tbaa !160), zext from i32> 0x55829edc9a78, 0x55829ee68fc0, undef:i64, util/bpf_skel/func_latency.bpf.c:119:19 @[ util/bpf_skel/func_latency.bpf.c:84:5 ]
+      0x55829ee68fc0: i64 = BPFISD::Wrapper TargetGlobalAddress:i64<i32* @bucket_range> 0, util/bpf_skel/func_latency.bpf.c:119:19 @[ util/bpf_skel/func_latency.bpf.c:84:5 ]
+        0x55829ee68808: i64 = TargetGlobalAddress<i32* @bucket_range> 0, util/bpf_skel/func_latency.bpf.c:119:19 @[ util/bpf_skel/func_latency.bpf.c:84:5 ]
+      0x55829ee68530: i64 = undef
+  In function: func_end
+  PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace, preprocessed source, and associated run script.
 
-Thanks,
-Namhyung
+It complains about sdiv which is (s64)delta / (u32)bucket_range.
+Let's cast the delta to u64 for division.
 
-> 
->  tools/perf/builtin-diff.c         |   4 +-
->  tools/perf/builtin-report.c       |   4 +-
->  tools/perf/builtin-top.c          |   4 +-
->  tools/perf/ui/browsers/annotate.c |   2 +-
->  tools/perf/util/annotate.c        |  32 +++++----
->  tools/perf/util/annotate.h        |  20 +++---
->  tools/perf/util/stream.c          |   7 +-
->  tools/perf/util/stream.h          |  10 +--
->  tools/perf/util/values.c          | 106 +++++++++++++-----------------
->  tools/perf/util/values.h          |   9 +--
->  10 files changed, 90 insertions(+), 108 deletions(-)
-> 
-> -- 
-> 2.47.0.338.g60cca15819-goog
-> 
+Fixes: e8536dd47a98b5db ("perf ftrace latency: Introduce --bucket-range to ask for linear bucketing")
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_skel/func_latency.bpf.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/bpf_skel/func_latency.bpf.c b/tools/perf/util/bpf_skel/func_latency.bpf.c
+index 50ae153bf26e7a13..4df54e1b1411b10a 100644
+--- a/tools/perf/util/bpf_skel/func_latency.bpf.c
++++ b/tools/perf/util/bpf_skel/func_latency.bpf.c
+@@ -116,7 +116,8 @@ int BPF_PROG(func_end)
+ 			// Less than 1 unit (ms or ns), or, in the future,
+ 			// than the min latency desired.
+ 			if (delta > 0) { // 1st entry: [ 1 unit .. bucket_range units )
+-				key = delta / bucket_range + 1;
++				// clang 12 doesn't like s64 / u32 division
++				key = (__u64)delta / bucket_range + 1;
+ 				if (key >= NUM_BUCKET ||
+ 					delta >= max_latency - min_latency)
+ 					key = NUM_BUCKET - 1;
+-- 
+2.47.1.613.gc27f4b7a9f-goog
+
