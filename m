@@ -1,102 +1,119 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4BD1865E3;
-	Sat, 14 Dec 2024 12:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBC7199924
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Dec 2024 19:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734179712; cv=none; b=r0z/IMdk16DoUYyKnks1WfTivjnE0hNYtJQsyhUF82I65Hwn3K4Mw3r/5Jnn5fjb2Zlyvc+udYXlFEys7/QpcDI3cB9X2X8XnwzhtpSZRWdknuYoS950bxpmVGD46yDY2YO8OaWMsWCtebPvINejYYTZGua2arp3xnXq29U2jLg=
+	t=1734204761; cv=none; b=MifEP5m3gRDcT//J6/9hlMBgwhEJJ66vRSYcq+8K7fDChiiGjf0qPE5tPXU8Jbvcbd6ZziNuldVoYkcr2atUaTlRpy2CX8iPAQOvpt4XPgHztvj68CNwsbpGhZyZlNmv0bDUS9gbB4FKCA9nNmgYz+2tOpsqSJ8g1pILRetdrYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734179712; c=relaxed/simple;
-	bh=DHbsgIChekq1/+MQtnp5Gpc7MNurovM1v0ce07kwQO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QNIBqqH0De8tkT1unnnO9qAsPUOPYgunWW46E+4ZPCfUUIempTQDJTEzH/etrQPbIT7zhUQP1mWmUuT51RW9GXdHu8fvKUCGYrgi/g837Z1ggvt16oVZU5Yp6OrwTXSUZqTydbOMYYeZW9nWwthg2V8+rZ9YJM8ByI6d+GHoSLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ByG2+Cm3; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1734204761; c=relaxed/simple;
+	bh=5Jn6S+PCzo7AtwY/ECptG9xjtJQeXvtl2DfkeEJVwQg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=kwh/onA49ojkSdJCP8li7SFAcgg7HFdDBUtTTZ/cmcISNceiGafWdPqq6qOTkrH39XGUU6JdhpzBkG51Z3GCVKthbFTGx+8t54XCjyCNa4oz9J+rkmF157uBvsz3u6E26lgzTczzvlT0WG5GpcMw2YtJQXciNdXs3ZX18TL/OsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FABAKGPB; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ByG2+Cm3"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ee397a82f6so2292203a91.2;
-        Sat, 14 Dec 2024 04:35:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FABAKGPB"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a814c54742so135615ab.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 14 Dec 2024 11:32:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734179710; x=1734784510; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=A1SMsEGruFdAyL91QMcYYqfUU9gU2qxB8M/r5v8wsDw=;
-        b=ByG2+Cm39KqQdMjgXCtHsZhhe2og2to4TmE+KEEKeY3EQ+skTmy/GhzYkhJXKoU5P4
-         2vJL4tMYFbRlIysKtRP+MV+mpoUfBGgPj30qKKtubSOLFEJVQpn1TqDtODps9ssDz0dC
-         oUMtJPAQe1+RUMnJK20uPaW/AvuV0CeRV5vci1AF4y/ESyRkRhO36C5qxMYu/28Ck7wY
-         pHyj4bwGzM3XC9mOkV4XsvkjnidZkeeb3HLiO3q6426aW9JzP2rIwCEV74gjNlIlQovk
-         Kn6VaPPPEeHf6/szE1ldXxEFAXWIr2VcTneFvI8kQVI8ZUZSYWoqSgqjatrhS0xjb8br
-         3dtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734179710; x=1734784510;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1734204759; x=1734809559; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=A1SMsEGruFdAyL91QMcYYqfUU9gU2qxB8M/r5v8wsDw=;
-        b=k7W1qKojF8G73oGuKSmQT6RjKJ5WogSf8P2FGzo91pmKt1ftFfcXKHUmTH5PlwVm0g
-         ySqPOUbAi3bMTdkrFqeTnG5oAZdZnH5ppRBhRF1rmtlAJn8CCHx8kWkoPyGvVHYYtQ7N
-         qiT/ySfNLorHgKY0/W4PBpxhShoxcEFSswwUFWn/L+TdR3rdPNTV1Y20T2BkIhzv7gDs
-         39qIkBm8gVBYkh87Kn3f1UHRtDGcwbMebaal14MpUH5RNsxxNNXAfV2oCvccDfxZKF+l
-         QdifvrARMgjY3foZYzYiaZQzDz/T/TRmQlV7q3u95spH/ca7kA1KGmMk0zYxMrd1vzHG
-         P+vg==
-X-Forwarded-Encrypted: i=1; AJvYcCVt6hh+MMGMnUMUtYQM8hoCGQc84Uwe7DoD6asKtSj38Ygj6MZq6i2ARmzD6FdC07YV4ZwcyDZvCLO42I8=@vger.kernel.org, AJvYcCWO+u6YQ3/lie5atH5p3iXtOOmjqQCkvK9kzfSuLRq+WZtV6hARZM8U1Ogy2DK+2zzHzviG9AWPTeZhGA+l0HOdfA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkXoTTJR412yKIVl4+CCiylHNc9J1kg8MS5RHJU5E23wvDPJao
-	2jMP7TkV9romfvJnU6ATSK5wsRYeu5gvRYVyol9qaOtk+TJwrKii
-X-Gm-Gg: ASbGnct5dw+Uj0wetl1eF67F35mcVQQVYhYxQifMl818Of5sXsSefK/EC7lKC0mEcG/
-	Zub+70Yta2ND3BxKP9n9R4ZjKx+I4tX0x3/vbzBTb6n6Q5dryR6Jtlt1W/nGqw50oJOpkdzh5qK
-	7IqcqCnZOVIVmnwneMnQtaOta92V84sVdGWDRtrJFHKuuaG9d9IpWOVjn31FxJezsgDrUeSRc8r
-	fuolHes5zVvoMk3Wj6Akbh4Ns8H7/oYdchWgjgMWjZKoK55sg6yZ5JXGT3XoPnKGtx335vNdXGz
-	az9qotgd
-X-Google-Smtp-Source: AGHT+IG8L1YaGH/Cgmw7Opw3u4PDbnmIOIuuXVXMVqH9T8gGG3dklZxuxNY+sYBFxEQpVE+ObpgmSw==
-X-Received: by 2002:a17:90b:5490:b0:2ee:cddd:2454 with SMTP id 98e67ed59e1d1-2f28fc672edmr9885088a91.15.1734179710538;
-        Sat, 14 Dec 2024 04:35:10 -0800 (PST)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f2a2434ae9sm1500804a91.33.2024.12.14.04.35.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Dec 2024 04:35:10 -0800 (PST)
-Date: Sat, 14 Dec 2024 20:35:05 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 6/8] perf maps: Avoid UB passing NULL to bsearch
-Message-ID: <Z117eag/AP9w9In6@visitorckw-System-Product-Name>
-References: <20241213210425.526512-1-irogers@google.com>
- <20241213210425.526512-7-irogers@google.com>
+        bh=+ifcfCthQDxy8ySBkB1RvsW8y2Gn8eCLwcVlMpuAFhk=;
+        b=FABAKGPB2fqG++cv2YvXkOIXKv+wO0QQ90KfG8FAD9C7Hz8I6O3g0i2XB1CRAE1u0p
+         /vnyUHwZRsHis6RNN4AysTmHnNzhLe/ZE4R6Sz89Qkswp/01zuqLuB7Hxm44kH/u03bC
+         EY79L6tPlemP0U6KYnQx1iMthAL4XG/3DPdcFlqIBlf8JYCAC6EQN4a+Z6R5kMMYcKWe
+         bdmDr9D1LMN0QvzvK1I5raWebqMLPjgVUhUjkPn+9YwSoF8o/MbnlM1teTd52bgp7tFx
+         Wn+NXxatirwLqmPX/rs1oHzs1bXvkc3D3NeWL+mdMnlMWbBo2fE+B1JpQbYnhvdci2fl
+         ehng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734204759; x=1734809559;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+ifcfCthQDxy8ySBkB1RvsW8y2Gn8eCLwcVlMpuAFhk=;
+        b=kN7sGW5GnBTM6Nyq/5mRJNcWT+RLi4vuclwAeljqY+uhducxlBILLySfndcya7+S9u
+         SJ9RBwXQ/jlwt5rk7oolSI/QhQCSXWAJDxVjRWeCX4apEPq5zdqd8fvowDr7vvHnztdh
+         k9hINsnKiJcln9mH1VAWH52DWYWhEeQRA7a8quOxOAkyblG41nZyRTZrmsNNHUv5HfgR
+         OPHCXKJTChvO+qrq/IO+z2jYyJh2FPMR/pdKLqU4r7zBc0TXS2zpUYOoVZMCwCcmVIIf
+         dxDq9dKzWKxkoNYrHYDiOwUYNiRo/b07yfa5oreWY86m6vPlt7KLPTGJPYzJSXpLoHHM
+         bRcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVb0nsXzf5X5jn/SX4fpOlU6c9UuvCoOrPQbxjLfds/w04cRY5MESJOvHT3s+DXO+04wOadyCGhH0V+/Nmp8MX2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwE2dwYxNMNGqyzLqHbUYFNQjNy1a9S8bHTVcYUcRuDOUf5kqQB
+	JCNlWO35uBHkRdUtmS+iQiiDtl1p9aGMWSzSWyewcXoho0zdoS5VtusNXXX5bj35F6Uk/FWrvB8
+	dEp8SWKyuRfeoS6QDaWwKUP9RpfVL4obcHQEw
+X-Gm-Gg: ASbGnctcaQCorJ8KYsU3KZ0bsp2l23enz9g2zIaHWdihFECNp9pgRHglt39jS/rbnuC
+	Rw5AqZ9+9yfNO9hObV57yt76QSNlXDzRB9VeRvCw=
+X-Google-Smtp-Source: AGHT+IFGhEb9ifi4P5jJR6XUfQpzX49Z5lgclmZFwa3AsU2s1eMDMawXBOKA5N9NN49ZI2HTuN1WkAnYhYmJiUN64C4=
+X-Received: by 2002:a92:cdaa:0:b0:3a7:e616:8d36 with SMTP id
+ e9e14a558f8ab-3b2c59470f0mr1754295ab.9.1734204758801; Sat, 14 Dec 2024
+ 11:32:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241213210425.526512-7-irogers@google.com>
+References: <20241212080530.1329601-1-irogers@google.com>
+In-Reply-To: <20241212080530.1329601-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sat, 14 Dec 2024 11:32:27 -0800
+Message-ID: <CAP-5=fWtxkt_kFCF8G=Dp4Fj+=m1M7Fv6Ep4RvJmH_k-k53rNw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] perf synthetic-events: Ensure features are aligned
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Sun Haiyong <sunhaiyong@loongson.cn>, 
+	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 13, 2024 at 01:04:23PM -0800, Ian Rogers wrote:
-> If maps_by_address is NULL it is UB to pass it to bsearch, and will
-> trigger ubsan, even if the nr_maps is 0.
-> 
-> Fixes: 659ad3492b91 ("perf maps: Switch from rbtree to lazily sorted array for addresses")
+On Thu, Dec 12, 2024 at 12:05=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> Features like hostname have arbitrary size and break the assumed
+> 8-byte alignment of perf events. Pad all feature events until 8-byte
+> alignment is restored.
+>
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
-Reviewed-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+This change breaks pipe mode tests for me on ARM. I've not investigated why=
+ yet.
 
-Regards,
-Kuan-Wei
+Thanks,
+Ian
+
+> ---
+>  tools/perf/util/synthetic-events.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
+ic-events.c
+> index f8ac2ac2da45..5b14244253b5 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -2401,6 +2401,11 @@ int perf_event__synthesize_features(const struct p=
+erf_tool *tool, struct perf_se
+>                         pr_debug("Error writing feature\n");
+>                         continue;
+>                 }
+> +               while (PERF_ALIGN(ff.offset, sizeof(u64)) !=3D ff.offset)=
+ {
+> +                       char c =3D 0;
+> +
+> +                       do_write(&ff, &c, 1);
+> +               }
+>                 /* ff.buf may have changed due to realloc in do_write() *=
+/
+>                 fe =3D ff.buf;
+>                 memset(fe, 0, sizeof(*fe));
+> --
+> 2.47.1.613.gc27f4b7a9f-goog
+>
