@@ -1,119 +1,193 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022118.outbound.protection.outlook.com [52.101.96.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBC7199924
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Dec 2024 19:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734204761; cv=none; b=MifEP5m3gRDcT//J6/9hlMBgwhEJJ66vRSYcq+8K7fDChiiGjf0qPE5tPXU8Jbvcbd6ZziNuldVoYkcr2atUaTlRpy2CX8iPAQOvpt4XPgHztvj68CNwsbpGhZyZlNmv0bDUS9gbB4FKCA9nNmgYz+2tOpsqSJ8g1pILRetdrYs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734204761; c=relaxed/simple;
-	bh=5Jn6S+PCzo7AtwY/ECptG9xjtJQeXvtl2DfkeEJVwQg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=kwh/onA49ojkSdJCP8li7SFAcgg7HFdDBUtTTZ/cmcISNceiGafWdPqq6qOTkrH39XGUU6JdhpzBkG51Z3GCVKthbFTGx+8t54XCjyCNa4oz9J+rkmF157uBvsz3u6E26lgzTczzvlT0WG5GpcMw2YtJQXciNdXs3ZX18TL/OsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FABAKGPB; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FABAKGPB"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a814c54742so135615ab.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 14 Dec 2024 11:32:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734204759; x=1734809559; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+ifcfCthQDxy8ySBkB1RvsW8y2Gn8eCLwcVlMpuAFhk=;
-        b=FABAKGPB2fqG++cv2YvXkOIXKv+wO0QQ90KfG8FAD9C7Hz8I6O3g0i2XB1CRAE1u0p
-         /vnyUHwZRsHis6RNN4AysTmHnNzhLe/ZE4R6Sz89Qkswp/01zuqLuB7Hxm44kH/u03bC
-         EY79L6tPlemP0U6KYnQx1iMthAL4XG/3DPdcFlqIBlf8JYCAC6EQN4a+Z6R5kMMYcKWe
-         bdmDr9D1LMN0QvzvK1I5raWebqMLPjgVUhUjkPn+9YwSoF8o/MbnlM1teTd52bgp7tFx
-         Wn+NXxatirwLqmPX/rs1oHzs1bXvkc3D3NeWL+mdMnlMWbBo2fE+B1JpQbYnhvdci2fl
-         ehng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734204759; x=1734809559;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+ifcfCthQDxy8ySBkB1RvsW8y2Gn8eCLwcVlMpuAFhk=;
-        b=kN7sGW5GnBTM6Nyq/5mRJNcWT+RLi4vuclwAeljqY+uhducxlBILLySfndcya7+S9u
-         SJ9RBwXQ/jlwt5rk7oolSI/QhQCSXWAJDxVjRWeCX4apEPq5zdqd8fvowDr7vvHnztdh
-         k9hINsnKiJcln9mH1VAWH52DWYWhEeQRA7a8quOxOAkyblG41nZyRTZrmsNNHUv5HfgR
-         OPHCXKJTChvO+qrq/IO+z2jYyJh2FPMR/pdKLqU4r7zBc0TXS2zpUYOoVZMCwCcmVIIf
-         dxDq9dKzWKxkoNYrHYDiOwUYNiRo/b07yfa5oreWY86m6vPlt7KLPTGJPYzJSXpLoHHM
-         bRcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVb0nsXzf5X5jn/SX4fpOlU6c9UuvCoOrPQbxjLfds/w04cRY5MESJOvHT3s+DXO+04wOadyCGhH0V+/Nmp8MX2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwE2dwYxNMNGqyzLqHbUYFNQjNy1a9S8bHTVcYUcRuDOUf5kqQB
-	JCNlWO35uBHkRdUtmS+iQiiDtl1p9aGMWSzSWyewcXoho0zdoS5VtusNXXX5bj35F6Uk/FWrvB8
-	dEp8SWKyuRfeoS6QDaWwKUP9RpfVL4obcHQEw
-X-Gm-Gg: ASbGnctcaQCorJ8KYsU3KZ0bsp2l23enz9g2zIaHWdihFECNp9pgRHglt39jS/rbnuC
-	Rw5AqZ9+9yfNO9hObV57yt76QSNlXDzRB9VeRvCw=
-X-Google-Smtp-Source: AGHT+IFGhEb9ifi4P5jJR6XUfQpzX49Z5lgclmZFwa3AsU2s1eMDMawXBOKA5N9NN49ZI2HTuN1WkAnYhYmJiUN64C4=
-X-Received: by 2002:a92:cdaa:0:b0:3a7:e616:8d36 with SMTP id
- e9e14a558f8ab-3b2c59470f0mr1754295ab.9.1734204758801; Sat, 14 Dec 2024
- 11:32:38 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652A3195B37;
+	Sat, 14 Dec 2024 19:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.118
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734204901; cv=fail; b=tjaB+gLMt06xvj9MLWMR3F5FIEsoM8vnCiD0yUHXUIXz1IkTSizccfXGqjKeWqo/67rNc3w3wlCc+XWsSQU8c4BlK4WLld+Bbyau1PwquCff9AxOmW0kcd1A3G3jgwAxncNXcnWkT2Zex7Z5n0ixiOowQSfsu42yw2xuOK6Hi2o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734204901; c=relaxed/simple;
+	bh=x8cwg7dOYCyCslJJR88RF7a7oACP7UonzFFzS4HMjis=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=sNq0YSBTbReNX6YB0Zir2yTIvhRW6k9U2GN93gUPevzvYyoG/QRPwLrdNiN2h7O7RlV+mYReX9vFw1iOXGrK6z+pcFgYjl7R+wHVDQzLLyeO0eiEyl4sVaQ6g6ahqoNgKo59gsTsNieo9soJxVHAyGN+CC1UbgkhpXuhqW1JVJw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.96.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HOP+L77JiMBqQXi8ucpv12gplYx0KIdIZLoGH/3UHRUf+Gclyb5xsGr/PEPmDXLgHPchWIZhemDnrC+C5WZJhQBERng++poxJ3hQ3npOX+n6B/yr2qs/e4KjFbea6ASHSzdpDA2NFSUENW7sewiHavfAzw1SEJaHViLzbGmQyxTR8Xu6CR+5NS6M5zcqD12dcq9f45YMkHaj75YMfK33w+Gc/6n+xFxijTlcxqcysgg6IM0NEtsdl8RY76zACqECM852qgePyg8f0pM7n4vK8wnYc56Hy+u08G02KHNDijJdq2jbPzjrckSlb/yBDLv/UHYIeqrzzeiSHsm3qC4auQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xPqjruM200yogGX4nfdtsr/ciNwhcSPubkS9XZNfHp0=;
+ b=HDSdgeYWOLfHKkn5n8+PprDDp1gdyOsBzvngOPMDr1aoakp0GPpqq+xrNSxRNzemlkZiuhMt0SwguYtyzQAcME8s+vv7Bg623V5df6ydBfobfW65SK6HEaoZZ0zU8Ii/KMeE1rjZYyfpvF0Ki7CJuBXGCWMFybPZA3P/Op5+wha9ywL7LxwDffsqlMr50kwvlLtHrgJPDCeSPQGAhHBac+WlyMF5AHRCsyUtDYYlqqroG/AmEQ08epvZcybeTYqmVLtXWWbAroRoPOZ3AIesiaQsLIVqZ+uqdS0K9mNk9ydgc3voOV5ZNlGJKoRt3MHnUa8qB4S29F9/iqw9h0tXsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
+ by LO6P123MB6392.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:2a5::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.19; Sat, 14 Dec
+ 2024 19:34:55 +0000
+Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::5352:7866:8b0f:21f6]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::5352:7866:8b0f:21f6%7]) with mapi id 15.20.8251.015; Sat, 14 Dec 2024
+ 19:34:55 +0000
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	atomlin@atomlin.com
+Subject: [PATCH] perf probe: Introduce --no-advice option when a new event is created
+Date: Sat, 14 Dec 2024 19:34:52 +0000
+Message-ID: <20241214193452.16627-1-atomlin@atomlin.com>
+X-Mailer: git-send-email 2.47.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO2P265CA0295.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a5::19) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:70::10)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241212080530.1329601-1-irogers@google.com>
-In-Reply-To: <20241212080530.1329601-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 14 Dec 2024 11:32:27 -0800
-Message-ID: <CAP-5=fWtxkt_kFCF8G=Dp4Fj+=m1M7Fv6Ep4RvJmH_k-k53rNw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] perf synthetic-events: Ensure features are aligned
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Sun Haiyong <sunhaiyong@loongson.cn>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|LO6P123MB6392:EE_
+X-MS-Office365-Filtering-Correlation-Id: 485130d2-c797-4190-9ed1-08dd1c76627b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?mJpsNL1Yo/XgqOcHLzlrZ8uscLsRC0JHjCaAMgBYRcQZeCIFoVns/MIkV41v?=
+ =?us-ascii?Q?Vqo4eM0vjWfCptUPB5FTIdHEYfXkJlvuR3yi6TveI5+Jq7PksWzeelVAkJSv?=
+ =?us-ascii?Q?Nlg9hskmQjvOokJmUBIvH5HoE/LSqLFfNGBt9HEspWo4QLMFp+7zXrYpgtNR?=
+ =?us-ascii?Q?Iesg/WrJm6+5Xq2rb0StY/GozukWebhLosnrgf17n6gA+7uExSLnV7+vXofZ?=
+ =?us-ascii?Q?FJiJ7dDdtG2c6AeadtkqF515yydZr2sVa+rKP4/kkUynArrtlnTTJDqmW1LA?=
+ =?us-ascii?Q?/q2Ci6bi94spn83hfu4U/XLLvYx3TSE+8Bp8DbAIf1n7RgTCvl7pAjB5WW0R?=
+ =?us-ascii?Q?E0E9aVXm1ntw2U2WFIhxiHcgdgjZWNzrHVyg9ELdzp0BDwzTkABQ4uGa0D/H?=
+ =?us-ascii?Q?18+7XDg7nJcZXHBqalKc15/+eETIP/EIEAN7z/OM//VylVVG/qAUZCXp5cVW?=
+ =?us-ascii?Q?UDE2Zt/DekJdElkfIfWOPzXOBnCb/qAC6N5FrORgt/WwZapJ3+De+9XRNmnA?=
+ =?us-ascii?Q?DIDE8XDwk7ra8AQ4CU3CCkj0rjPvqqB9/e963kitmbm9sIVPn+bCFofejLp2?=
+ =?us-ascii?Q?7FU5BzstaE6nHpmIfY+KIVm2iHojoTuusHWGUodyIxhbvJMv8noZjKJK61iI?=
+ =?us-ascii?Q?V4VnDVRnj9GGMIxc7nuf3Obl9QjwKGiUVeChTWKlPLzqEBrINtkGFt0U8mqZ?=
+ =?us-ascii?Q?p0WKtWTAjOZmJwMGjbHdus1L2WDqMLzpJY0I8/LogMGTCqX2YYpTPmocm8co?=
+ =?us-ascii?Q?EJXFSruHaU7foi1VebmSopswTidXNvC8KFxA/WMw/OamMeK6TwkBKvtd7KER?=
+ =?us-ascii?Q?Vsd/pV8/G/d9qw5LPBFiyvtbiZNRah4gzsn4EbCwdu6rBYyEJ8vk4wjb0txs?=
+ =?us-ascii?Q?AparDKFhKPy7aNJWxCHCXjuAAfsjTKP1Fu+iSBa8TpKFZsXPysBLKbh1Jmhl?=
+ =?us-ascii?Q?K9Q3CHT4PbUI4FCCiQOGCYDZFSk0aDA24PfYJ5R0abQo0jVo6t49OT/VjE4M?=
+ =?us-ascii?Q?iSsOzKpG6GMwi/iFhCj2975HJQKbIOqUlppjxCypidLDj2TOM0Qw9UblWtLk?=
+ =?us-ascii?Q?ylYYPHbp6vURAnIac2/hjW7C79+ZBLuRRAX3ThYYNPetUW8QQQ8UY+syh6dn?=
+ =?us-ascii?Q?yBk9DGYujLC8d76rnUMQApRaN5le7FPqWuxs02sPUlYfhkyCxxB3vzEuq7QR?=
+ =?us-ascii?Q?c0pIFeJiqv1KWMCpoLOIOorKbLiHSKfkbVVeh/JyaxQ63dLkSI9LACrrOT1X?=
+ =?us-ascii?Q?fUVtu8GfEyCSl9hf0QFhfdeYJFanQW0O+XNuvjTOmkRkj3yjGcLm5peoKII8?=
+ =?us-ascii?Q?ZdBK2wcze7RYE2vlp6ZwZ3DbT4PQ4Vm89lHb8dswdRhtuY/zpZTDykah7FWI?=
+ =?us-ascii?Q?wXVFlMSpIkv2ur3z8y/wcj/M1p9y?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?tFrxhrUlVt1lpGgstMInnwLAMT0BtmCWxe+L9WVFA3TYTkc0hn3X5XEtlqd5?=
+ =?us-ascii?Q?Yk3jNhZ6dLQp1MCrn4VJUmTEKDq0VuNbPs5zr1fBBZMkaEGcmS0Z/iw17GQb?=
+ =?us-ascii?Q?HLy8V67rpqDYip2sn2jiv29Z1EqV0KMM8KExzfLoUST8DvrumzUweBdUQHEz?=
+ =?us-ascii?Q?xgwrOBMggCIsHMKagjy4ByX+J8qWYkimVUREORHHFTh7NkQ9ZkLBrbh+i56a?=
+ =?us-ascii?Q?KK+hBL6XdbUCUFytTN5C4T2QgTMpBNr8S2BUzr0Wt82/BbAy6M0MVyJhuwey?=
+ =?us-ascii?Q?O7eZ7xxb3AgN8HVzNZICV0ZK6MTG6Gk1RpAUWtSq60yTkA7vnJNyW3OPNODY?=
+ =?us-ascii?Q?POkhPFYjexA5HnHnOP7q5vF5Jst9ZUG31YeJeeBfxdbhNcfT6vqAL9F3THlr?=
+ =?us-ascii?Q?wktZJ/ff+6HK1+YOfUHiax7XGpS3FUrOYQDmfUtlKct8oxmch1yGxVC8fycN?=
+ =?us-ascii?Q?1n/VSRnw7V7Y/cqzlQVFqWaCsn2x/GCW6K+epHDKNFBrewpYBHZxtN5YyX0T?=
+ =?us-ascii?Q?tAv4Cs5scMTmYpyye1snNpGfIj+8MLAqQq0imR25q36Uvm573hFP48fRxw3g?=
+ =?us-ascii?Q?5NaHSOZ8NUXHXjVEQyQkHe03ynnTXn2rXgBIcj10JABEp7WUUtqwGSx7DH1J?=
+ =?us-ascii?Q?Oo7HV9LySiS3VwdjHXyo3mSwyGDzjPEQpZRSWE9Dk/IUqiahzZjxmzeQ+yn2?=
+ =?us-ascii?Q?k1sMUuMZ2RjDr6z2Kmkbu1yPVnidailXBTpwmaGOQOFB8TqBz3jYmm4+esnP?=
+ =?us-ascii?Q?NxsKtWKeBNiSOS+M6vMNN1p1jHRqfJd6jXW3K6NTRqXUI1cZBlZ8tDKqDTFO?=
+ =?us-ascii?Q?0Y+Vaa2ePt8xApI1F/WMNVWj9WgIhGKJ/CO4mn0f0nm4fY/NjwqAfOKzr9SF?=
+ =?us-ascii?Q?sfylf9oAv4zXmV87+yGbQsIr9pbmXERSgTw1I2buMuAfRULDB8kzhtrAIEMl?=
+ =?us-ascii?Q?3x6OqVcIIopEga9+LBvTd+MvmmyTfgJSZXBG8JK9hMZx3C6Hk9g4ZBnUXdSR?=
+ =?us-ascii?Q?yYU7iakP4AEzHGm0VXhhTqtw+H1rwDyxxQBbJd4N0rZitmnAPJJjzo8whkpl?=
+ =?us-ascii?Q?C6yThCtSXe0fER9zKkTK3dxQKTLrLcjiqL1erWOLM6/OEz9cstBGBY6F/QR9?=
+ =?us-ascii?Q?DwhnQ9Qv+sbYgxwD0E4dYUaccoVZnJeIuTu5Kvdc2aSZrSsTRuhlE+mWs01j?=
+ =?us-ascii?Q?6R7s2yWvxk30NlG7ucAOnYa3P46+mu89LBy3kK3KNq9cLFfPpHZ85m1W9EE3?=
+ =?us-ascii?Q?GUZQ94ydbL9lPafFaDjAJa9vGle8EbwtrXKi4ZtHLLlBYv0aJ8aprrpAS6Vw?=
+ =?us-ascii?Q?ZGE6+4UJDXPruPuRHDAbUE9Sve+kqa9E/AIOkLCiENRX9BK3sWJiShDqZVjk?=
+ =?us-ascii?Q?6S49UxGc8dzbAfJl8AJzv44vO1HOdL1K+SvM6uMeod2Jm/QHnfAv6mSKMZts?=
+ =?us-ascii?Q?RzaOrDEQxVoQZxTaYjc9/5YBs4gZsQGO6gy7NYqgPjCII0Dlrv0+juBYMz2p?=
+ =?us-ascii?Q?zvbt1uAzv3BN3nSaQU7MbRUJWS22xyphF5kqFRF7uyoz+o7A088QfrcItMBF?=
+ =?us-ascii?Q?8v2Cpxm79qUavJf3OTqKnrFcU5ccIWHvQIXNCLvn?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 485130d2-c797-4190-9ed1-08dd1c76627b
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Dec 2024 19:34:54.1910
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: slRa8ofywy2nKm2Phn+L3wJ3KPhUpy7nyYhPUhKYjuar3grpvXgPb2GFMGrobmPWZZ+RhQuzCWpHHfLNX35cDA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO6P123MB6392
 
-On Thu, Dec 12, 2024 at 12:05=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> Features like hostname have arbitrary size and break the assumed
-> 8-byte alignment of perf events. Pad all feature events until 8-byte
-> alignment is restored.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+This patch introduces a new option namely "--no-advice" to be used with
+the add command. Now one has the ability to avoid the generation of any
+advice when a new event is created. Thus making the output reasonable.
+For example:
 
-This change breaks pipe mode tests for me on ARM. I've not investigated why=
- yet.
+  # perf probe --no-advice --add 'user_path_at%return return=$retval:s32'
+  Added new event:
+    probe:user_path_at__return (on user_path_at%return with return=$retval:s32)
+  #
 
-Thanks,
-Ian
+Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+---
+ tools/perf/builtin-probe.c    | 4 +++-
+ tools/perf/util/probe-event.h | 1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-> ---
->  tools/perf/util/synthetic-events.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
-ic-events.c
-> index f8ac2ac2da45..5b14244253b5 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -2401,6 +2401,11 @@ int perf_event__synthesize_features(const struct p=
-erf_tool *tool, struct perf_se
->                         pr_debug("Error writing feature\n");
->                         continue;
->                 }
-> +               while (PERF_ALIGN(ff.offset, sizeof(u64)) !=3D ff.offset)=
- {
-> +                       char c =3D 0;
-> +
-> +                       do_write(&ff, &c, 1);
-> +               }
->                 /* ff.buf may have changed due to realloc in do_write() *=
-/
->                 fe =3D ff.buf;
->                 memset(fe, 0, sizeof(*fe));
-> --
-> 2.47.1.613.gc27f4b7a9f-goog
->
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 69800e4d9530..36b8e08f3725 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -391,7 +391,7 @@ static int perf_add_probe_events(struct perf_probe_event *pevs, int npevs)
+ 	}
+ 
+ 	/* Note that it is possible to skip all events because of blacklist */
+-	if (event) {
++	if (event && !probe_conf.no_advice) {
+ #ifndef HAVE_LIBTRACEEVENT
+ 		pr_info("\nperf is not linked with libtraceevent, to use the new probe you can use tracefs:\n\n");
+ 		pr_info("\tcd /sys/kernel/tracing/\n");
+@@ -577,6 +577,8 @@ __cmd_probe(int argc, const char **argv)
+ 		   "directory", "path to kernel source"),
+ 	OPT_BOOLEAN('\0', "no-inlines", &probe_conf.no_inlines,
+ 		"Don't search inlined functions"),
++	OPT_BOOLEAN('\0', "no-advice", &probe_conf.no_advice,
++		"Don't provide any advice after a new event is created."),
+ 	OPT__DRY_RUN(&probe_event_dry_run),
+ 	OPT_INTEGER('\0', "max-probes", &probe_conf.max_probes,
+ 		 "Set how many probe points can be found for a probe."),
+diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
+index 61a5f4ff4e9c..be0dce26e133 100644
+--- a/tools/perf/util/probe-event.h
++++ b/tools/perf/util/probe-event.h
+@@ -14,6 +14,7 @@ struct probe_conf {
+ 	bool	show_location_range;
+ 	bool	force_add;
+ 	bool	no_inlines;
++	bool	no_advice;
+ 	bool	cache;
+ 	bool	bootconfig;
+ 	int	max_probes;
+-- 
+2.47.1
+
