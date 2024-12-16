@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42DF1CF2B7;
-	Mon, 16 Dec 2024 07:03:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1B21D45FB;
+	Mon, 16 Dec 2024 07:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734332591; cv=none; b=qq3b6IPt9j+9w4Db/BTVh4qMqqFBTBENMoNgEq53IHO7LprnfAffhsKIokUllu93Ya46kJqJebW7KXk2PllNRijCMcU8DFU++2FXLnmjKTiOJ4A1L3blHQyGEllC787G8QQCWSA2lD9q+XjvVbER6amZ+FU8bA7mZL3mQBQz8EE=
+	t=1734332594; cv=none; b=Uu9VkbBLbnbJWcguOVv6oHf2+/FpO77AP+6yl1BumfBBhoVysV3CKIUTFBQv+53Das1ovH6Mzf/q+fD7I8t67SABBmWnaaSIeMV0rSnbhdcAlaiHgZeMplY9cTIKCVFO5PV5aQ43rml2t4B9G4HykLYgNk8db49I6kd1UA/fWD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734332591; c=relaxed/simple;
-	bh=wIT5SmNxdT4v0e5iiwgpi069V9tAL1iTI0hAfKFb6Rs=;
+	s=arc-20240116; t=1734332594; c=relaxed/simple;
+	bh=a/UvzQtgEWPo+ao9zDxvcnVa9mPHvKs06Lk+aQALKv0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t9taAt0vIgtLdOwKvDwm+J8eot+X1rRNlxQkjYis8SSv/n5MSfF0I5/PNkFC/74HLL/8E7RukibRfsLKq7LpdyQf7yqkdbU2VO0t2Megq+K2aIdugo06XVEqYWMh7M59BjNYsELwQfcX/+6QJ2ZZmwLVYxXcWGqjfv8zdteQqL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h/BKYu6Q; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=t/VFu5yVwamZoOKzjXoj5XmiiQh/8X/RXbbG5V1sNPbD5f3+0VNoFUfypm2rlQjKHukP08gU7m5pZycrp76g4Z+QQGFisYeKdZ0nXKWfZ4TbDrKQ0cVq73px1Vf2Tzpy+dhzS+dLowV6oHCNLV7GI+6fuxFhHGMKHW0H4eg8BTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SGAKteiM; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h/BKYu6Q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SGAKteiM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734332589; x=1765868589;
+  t=1734332592; x=1765868592;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wIT5SmNxdT4v0e5iiwgpi069V9tAL1iTI0hAfKFb6Rs=;
-  b=h/BKYu6QXtz7z+ECWw9rGxfLUlAjsOPBkAtgjBvG9qg16NPtIm0Zy28/
-   CyCwNmhpKYWuYeaY+bRt5zO05IIJbVh3sL+bWQIhrZzmFoTh9HOVvv3tz
-   rkWL7Tkp/i6F8CkPYfjUi4iyKSYMsn1C9l1lmmTo43uSJ3rzkar77q9OU
-   w8MtKLIrE0SL1X36efTiQADWU7nO3bmBR4QV7DP96ngSOdLjD38I49inK
-   gb9pc2ZuLiqQDKAdHqxBFNQ3QRoPKchKZJhkGc37PvEVQahB74gPBYldz
-   150U1JXzHTCF4gjQ+Jk+qvB6WERZGN0MuOxTV40y+BXEoJcknVZ8BKUPx
-   g==;
-X-CSE-ConnectionGUID: HRYfMCWtQh6wjDYTOsNSKw==
-X-CSE-MsgGUID: xPXwQKGnQTy1emez2JBs+Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11287"; a="34584271"
+  bh=a/UvzQtgEWPo+ao9zDxvcnVa9mPHvKs06Lk+aQALKv0=;
+  b=SGAKteiMR8VGrkxkEywMfV/GdY1NyEHnI+uS1zKgCS5BKHvurGO3atf7
+   fmJxRa7BmMiOz0vWQtLjiCjaYJybVntt0edwA+Bql0zmqr5dZY4GjlI6H
+   aT5zTnRe7wKpIXQTcd0PjN/aHfMbfQANoR2MwIuKVtfptKrF524k9i6Ep
+   rySJbdlY4vRC8ui+3s3VNlL6Lz0zJptwx9nhhYHXtHTCBTN3ifkUIDAMj
+   bdXZZmlmjYZ3PBRke4vKmTtlP8NJGGCPAJGIKDczRw0x3DB0HoRLddrfa
+   Mx82tPs3ykO45HPvE0M3GvBS057IBdEG0y1a2+BmboX9tpmco2CenMUpt
+   Q==;
+X-CSE-ConnectionGUID: pLfqdO6CSk6a8Jdybyvzsg==
+X-CSE-MsgGUID: S7CQ4sVvQKCO6+5kPMwuIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11287"; a="34584277"
 X-IronPort-AV: E=Sophos;i="6.12,237,1728975600"; 
-   d="scan'208";a="34584271"
+   d="scan'208";a="34584277"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2024 23:03:09 -0800
-X-CSE-ConnectionGUID: dj46vlaOQZSpHRAP06J0Ng==
-X-CSE-MsgGUID: DBQZQAHbSXGX1iTGsvtCMQ==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2024 23:03:12 -0800
+X-CSE-ConnectionGUID: evZRCRMDSymnz9YXTQ0zoQ==
+X-CSE-MsgGUID: 5M2n6xgaTwWpQ1ozwOQOPA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="101258743"
+   d="scan'208";a="101258798"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.ger.corp.intel.com) ([10.245.115.59])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2024 23:03:06 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2024 23:03:09 -0800
 From: Adrian Hunter <adrian.hunter@intel.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>
@@ -52,9 +52,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Leo Yan <leo.yan@arm.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH V16 4/7] perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
-Date: Mon, 16 Dec 2024 09:02:40 +0200
-Message-ID: <20241216070244.14450-5-adrian.hunter@intel.com>
+Subject: [PATCH V16 5/7] perf intel-pt: Improve man page format
+Date: Mon, 16 Dec 2024 09:02:41 +0200
+Message-ID: <20241216070244.14450-6-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241216070244.14450-1-adrian.hunter@intel.com>
 References: <20241216070244.14450-1-adrian.hunter@intel.com>
@@ -67,238 +67,564 @@ MIME-Version: 1.0
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-Display "feature is not supported" error message if aux_start_paused,
-aux_pause or aux_resume result in a perf_event_open() error.
+Improve format of config terms and section references.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
 ---
+ tools/perf/Documentation/perf-intel-pt.txt | 486 +++++++++++----------
+ 1 file changed, 267 insertions(+), 219 deletions(-)
 
-
-Changes in V15:
-	Re-base on new API probe method of missing feature detection
-	and add probe for aux_action.
-
-Changes in V13:
-	Add error message also in EOPNOTSUPP case (Leo)
-
-
- tools/perf/util/evsel.c | 98 ++++++++++++++++++++++++++++++++++++-----
- tools/perf/util/evsel.h |  1 +
- 2 files changed, 87 insertions(+), 12 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 0a1b797d1f00..f6bf845808d6 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2145,16 +2145,17 @@ int evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	return err;
- }
+diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
+index 59ab1ff9d75f..ad39bf20f862 100644
+--- a/tools/perf/Documentation/perf-intel-pt.txt
++++ b/tools/perf/Documentation/perf-intel-pt.txt
+@@ -151,7 +151,7 @@ displayed as follows:
+ There are two ways that instructions-per-cycle (IPC) can be calculated depending
+ on the recording.
  
--static bool has_attr_feature(struct perf_event_attr *attr, unsigned long flags)
-+static bool __has_attr_feature(struct perf_event_attr *attr,
-+			       struct perf_cpu cpu, unsigned long flags)
- {
--	int fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
-+	int fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
- 			 /*group_fd=*/-1, flags);
- 	close(fd);
+-If the 'cyc' config term (see config terms section below) was used, then IPC
++If the 'cyc' config term (see <<_config_terms,config terms>> section below) was used, then IPC
+ and cycle events are calculated using the cycle count from CYC packets, otherwise
+ MTC packets are used - refer to the 'mtc' config term.  When MTC is used, however,
+ the values are less accurate because the timing is less accurate.
+@@ -239,7 +239,7 @@ which is the same as
  
- 	if (fd < 0) {
- 		attr->exclude_kernel = 1;
+ 	-e intel_pt/tsc=1,noretcomp=0/
  
--		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
-+		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
- 			     /*group_fd=*/-1, flags);
- 		close(fd);
- 	}
-@@ -2162,7 +2163,7 @@ static bool has_attr_feature(struct perf_event_attr *attr, unsigned long flags)
- 	if (fd < 0) {
- 		attr->exclude_hv = 1;
+-Note there are now new config terms - see section 'config terms' further below.
++Note there are other config terms - see section <<_config_terms,config terms>> further below.
  
--		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
-+		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
- 			     /*group_fd=*/-1, flags);
- 		close(fd);
- 	}
-@@ -2170,7 +2171,7 @@ static bool has_attr_feature(struct perf_event_attr *attr, unsigned long flags)
- 	if (fd < 0) {
- 		attr->exclude_guest = 1;
+ The config terms are listed in /sys/devices/intel_pt/format.  They are bit
+ fields within the config member of the struct perf_event_attr which is
+@@ -311,217 +311,264 @@ perf_event_attr is displayed if the -vv option is used e.g.
+ config terms
+ ~~~~~~~~~~~~
  
--		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, /*cpu=*/-1,
-+		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
- 			     /*group_fd=*/-1, flags);
- 		close(fd);
- 	}
-@@ -2182,6 +2183,13 @@ static bool has_attr_feature(struct perf_event_attr *attr, unsigned long flags)
- 	return fd >= 0;
- }
- 
-+static bool has_attr_feature(struct perf_event_attr *attr, unsigned long flags)
-+{
-+	struct perf_cpu cpu = {.cpu = -1};
+-The June 2015 version of Intel 64 and IA-32 Architectures Software Developer
+-Manuals, Chapter 36 Intel Processor Trace, defined new Intel PT features.
+-Some of the features are reflect in new config terms.  All the config terms are
+-described below.
+-
+-tsc		Always supported.  Produces TSC timestamp packets to provide
+-		timing information.  In some cases it is possible to decode
+-		without timing information, for example a per-thread context
+-		that does not overlap executable memory maps.
+-
+-		The default config selects tsc (i.e. tsc=1).
+-
+-noretcomp	Always supported.  Disables "return compression" so a TIP packet
+-		is produced when a function returns.  Causes more packets to be
+-		produced but might make decoding more reliable.
+-
+-		The default config does not select noretcomp (i.e. noretcomp=0).
+-
+-psb_period	Allows the frequency of PSB packets to be specified.
+-
+-		The PSB packet is a synchronization packet that provides a
+-		starting point for decoding or recovery from errors.
+-
+-		Support for psb_period is indicated by:
+-
+-			/sys/bus/event_source/devices/intel_pt/caps/psb_cyc
+-
+-		which contains "1" if the feature is supported and "0"
+-		otherwise.
+-
+-		Valid values are given by:
+-
+-			/sys/bus/event_source/devices/intel_pt/caps/psb_periods
+-
+-		which contains a hexadecimal value, the bits of which represent
+-		valid values e.g. bit 2 set means value 2 is valid.
+-
+-		The psb_period value is converted to the approximate number of
+-		trace bytes between PSB packets as:
+-
+-			2 ^ (value + 11)
+-
+-		e.g. value 3 means 16KiB bytes between PSBs
+-
+-		If an invalid value is entered, the error message
+-		will give a list of valid values e.g.
+-
+-			$ perf record -e intel_pt/psb_period=15/u uname
+-			Invalid psb_period for intel_pt. Valid values are: 0-5
+-
+-		If MTC packets are selected, the default config selects a value
+-		of 3 (i.e. psb_period=3) or the nearest lower value that is
+-		supported (0 is always supported).  Otherwise the default is 0.
+-
+-		If decoding is expected to be reliable and the buffer is large
+-		then a large PSB period can be used.
+-
+-		Because a TSC packet is produced with PSB, the PSB period can
+-		also affect the granularity to timing information in the absence
+-		of MTC or CYC.
+-
+-mtc		Produces MTC timing packets.
+-
+-		MTC packets provide finer grain timestamp information than TSC
+-		packets.  MTC packets record time using the hardware crystal
+-		clock (CTC) which is related to TSC packets using a TMA packet.
+-
+-		Support for this feature is indicated by:
+-
+-			/sys/bus/event_source/devices/intel_pt/caps/mtc
+-
+-		which contains "1" if the feature is supported and
+-		"0" otherwise.
+-
+-		The frequency of MTC packets can also be specified - see
+-		mtc_period below.
+-
+-mtc_period	Specifies how frequently MTC packets are produced - see mtc
+-		above for how to determine if MTC packets are supported.
+-
+-		Valid values are given by:
+-
+-			/sys/bus/event_source/devices/intel_pt/caps/mtc_periods
+-
+-		which contains a hexadecimal value, the bits of which represent
+-		valid values e.g. bit 2 set means value 2 is valid.
+-
+-		The mtc_period value is converted to the MTC frequency as:
+-
+-			CTC-frequency / (2 ^ value)
+-
+-		e.g. value 3 means one eighth of CTC-frequency
+-
+-		Where CTC is the hardware crystal clock, the frequency of which
+-		can be related to TSC via values provided in cpuid leaf 0x15.
+-
+-		If an invalid value is entered, the error message
+-		will give a list of valid values e.g.
+-
+-			$ perf record -e intel_pt/mtc_period=15/u uname
+-			Invalid mtc_period for intel_pt. Valid values are: 0,3,6,9
+-
+-		The default value is 3 or the nearest lower value
+-		that is supported (0 is always supported).
+-
+-cyc		Produces CYC timing packets.
+-
+-		CYC packets provide even finer grain timestamp information than
+-		MTC and TSC packets.  A CYC packet contains the number of CPU
+-		cycles since the last CYC packet. Unlike MTC and TSC packets,
+-		CYC packets are only sent when another packet is also sent.
+-
+-		Support for this feature is indicated by:
+-
+-			/sys/bus/event_source/devices/intel_pt/caps/psb_cyc
+-
+-		which contains "1" if the feature is supported and
+-		"0" otherwise.
+-
+-		The number of CYC packets produced can be reduced by specifying
+-		a threshold - see cyc_thresh below.
+-
+-cyc_thresh	Specifies how frequently CYC packets are produced - see cyc
+-		above for how to determine if CYC packets are supported.
+-
+-		Valid cyc_thresh values are given by:
+-
+-			/sys/bus/event_source/devices/intel_pt/caps/cycle_thresholds
+-
+-		which contains a hexadecimal value, the bits of which represent
+-		valid values e.g. bit 2 set means value 2 is valid.
+-
+-		The cyc_thresh value represents the minimum number of CPU cycles
+-		that must have passed before a CYC packet can be sent.  The
+-		number of CPU cycles is:
+-
+-			2 ^ (value - 1)
+-
+-		e.g. value 4 means 8 CPU cycles must pass before a CYC packet
+-		can be sent.  Note a CYC packet is still only sent when another
+-		packet is sent, not at, e.g. every 8 CPU cycles.
+-
+-		If an invalid value is entered, the error message
+-		will give a list of valid values e.g.
+-
+-			$ perf record -e intel_pt/cyc,cyc_thresh=15/u uname
+-			Invalid cyc_thresh for intel_pt. Valid values are: 0-12
+-
+-		CYC packets are not requested by default.
+-
+-pt		Specifies pass-through which enables the 'branch' config term.
+-
+-		The default config selects 'pt' if it is available, so a user will
+-		never need to specify this term.
+-
+-branch		Enable branch tracing.  Branch tracing is enabled by default so to
+-		disable branch tracing use 'branch=0'.
+-
+-		The default config selects 'branch' if it is available.
+-
+-ptw		Enable PTWRITE packets which are produced when a ptwrite instruction
+-		is executed.
+-
+-		Support for this feature is indicated by:
+-
+-			/sys/bus/event_source/devices/intel_pt/caps/ptwrite
+-
+-		which contains "1" if the feature is supported and
+-		"0" otherwise.
+-
+-		As an alternative, refer to "Emulated PTWRITE" further below.
+-
+-fup_on_ptw	Enable a FUP packet to follow the PTWRITE packet.  The FUP packet
+-		provides the address of the ptwrite instruction.  In the absence of
+-		fup_on_ptw, the decoder will use the address of the previous branch
+-		if branch tracing is enabled, otherwise the address will be zero.
+-		Note that fup_on_ptw will work even when branch tracing is disabled.
+-
+-pwr_evt		Enable power events.  The power events provide information about
+-		changes to the CPU C-state.
+-
+-		Support for this feature is indicated by:
+-
+-			/sys/bus/event_source/devices/intel_pt/caps/power_event_trace
+-
+-		which contains "1" if the feature is supported and
+-		"0" otherwise.
+-
+-event		Enable Event Trace.  The events provide information about asynchronous
+-		events.
+-
+-		Support for this feature is indicated by:
+-
+-			/sys/bus/event_source/devices/intel_pt/caps/event_trace
+-
+-		which contains "1" if the feature is supported and
+-		"0" otherwise.
+-
+-notnt		Disable TNT packets.  Without TNT packets, it is not possible to walk
+-		executable code to reconstruct control flow, however FUP, TIP, TIP.PGE
+-		and TIP.PGD packets still indicate asynchronous control flow, and (if
+-		return compression is disabled - see noretcomp) return statements.
+-		The advantage of eliminating TNT packets is reducing the size of the
+-		trace and corresponding tracing overhead.
+-
+-		Support for this feature is indicated by:
+-
+-			/sys/bus/event_source/devices/intel_pt/caps/tnt_disable
+-
+-		which contains "1" if the feature is supported and
+-		"0" otherwise.
++Config terms are parameters specified with the -e intel_pt// event option,
++for example:
 +
-+	return __has_attr_feature(attr, cpu, flags);
-+}
++	-e intel_pt/cyc/
 +
- static void evsel__detect_missing_pmu_features(struct evsel *evsel)
- {
- 	struct perf_event_attr attr = {
-@@ -2270,7 +2278,65 @@ static void evsel__detect_missing_brstack_features(struct evsel *evsel)
- 	errno = old_errno;
- }
- 
--static bool evsel__detect_missing_features(struct evsel *evsel)
-+static bool evsel__probe_aux_action(struct evsel *evsel, struct perf_cpu cpu)
-+{
-+	struct perf_event_attr attr = evsel->core.attr;
-+	int old_errno = errno;
++which selects cycle accurate mode. Each config term can have a value which
++defaults to 1, so the above is the same as:
 +
-+	attr.disabled = 1;
-+	attr.aux_start_paused = 1;
++	-e intel_pt/cyc=1/
 +
-+	if (__has_attr_feature(&attr, cpu, /*flags=*/0)) {
-+		errno = old_errno;
-+		return true;
-+	}
++Some terms are set by default, so must be set to 0 to turn them off. For
++example, to turn off branch tracing:
 +
-+	/*
-+	 * EOPNOTSUPP means the kernel supports the feature but the PMU does
-+	 * not, so keep that distinction if possible.
-+	 */
-+	if (errno != EOPNOTSUPP)
-+		errno = old_errno;
++	-e intel_pt/branch=0/
 +
-+	return false;
-+}
++Multiple config terms are separated by commas, for example:
 +
-+static void evsel__detect_missing_aux_action_feature(struct evsel *evsel, struct perf_cpu cpu)
-+{
-+	static bool detection_done;
-+	struct evsel *leader;
++	-e intel_pt/cyc,mtc_period=9/
 +
-+	/*
-+	 * Don't bother probing aux_action if it is not being used or has been
-+	 * probed before.
-+	 */
-+	if (!evsel->core.attr.aux_action || detection_done)
-+		return;
++There are also common config terms, see linkperf:perf-record[1] documentation.
 +
-+	detection_done = true;
++Intel PT config terms are described below.
 +
-+	/*
-+	 * The leader is an AUX area event. If it has failed, assume the feature
-+	 * is not supported.
-+	 */
-+	leader = evsel__leader(evsel);
-+	if (evsel == leader) {
-+		perf_missing_features.aux_action = true;
-+		return;
-+	}
++*tsc*::
++Always supported.  Produces TSC timestamp packets to provide
++timing information.  In some cases it is possible to decode
++without timing information, for example a per-thread context
++that does not overlap executable memory maps.
+++
++The default config selects tsc (i.e. tsc=1).
 +
-+	/*
-+	 * AUX area event with aux_action must have been opened successfully
-+	 * already, so feature is supported.
-+	 */
-+	if (leader->core.attr.aux_action)
-+		return;
++*noretcomp*::
++Always supported.  Disables "return compression" so a TIP packet
++is produced when a function returns.  Causes more packets to be
++produced but might make decoding more reliable.
+++
++The default config does not select noretcomp (i.e. noretcomp=0).
 +
-+	if (!evsel__probe_aux_action(leader, cpu))
-+		perf_missing_features.aux_action = true;
-+}
++*psb_period*::
++Allows the frequency of PSB packets to be specified.
+++
++The PSB packet is a synchronization packet that provides a
++starting point for decoding or recovery from errors.
+++
++Support for psb_period is indicated by:
+++
++	/sys/bus/event_source/devices/intel_pt/caps/psb_cyc
+++
++which contains "1" if the feature is supported and "0"
++otherwise.
+++
++Valid values are given by:
+++
++	/sys/bus/event_source/devices/intel_pt/caps/psb_periods
+++
++which contains a hexadecimal value, the bits of which represent
++valid values e.g. bit 2 set means value 2 is valid.
+++
++The psb_period value is converted to the approximate number of
++trace bytes between PSB packets as:
+++
++	2 ^ (value + 11)
+++
++e.g. value 3 means 16KiB bytes between PSBs
+++
++If an invalid value is entered, the error message
++will give a list of valid values e.g.
+++
++	$ perf record -e intel_pt/psb_period=15/u uname
++	Invalid psb_period for intel_pt. Valid values are: 0-5
+++
++If MTC packets are selected, the default config selects a value
++of 3 (i.e. psb_period=3) or the nearest lower value that is
++supported (0 is always supported).  Otherwise the default is 0.
+++
++If decoding is expected to be reliable and the buffer is large
++then a large PSB period can be used.
+++
++Because a TSC packet is produced with PSB, the PSB period can
++also affect the granularity to timing information in the absence
++of MTC or CYC.
 +
-+static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu cpu)
- {
- 	static bool detection_done = false;
- 	struct perf_event_attr attr = {
-@@ -2280,6 +2346,8 @@ static bool evsel__detect_missing_features(struct evsel *evsel)
- 	};
- 	int old_errno;
- 
-+	evsel__detect_missing_aux_action_feature(evsel, cpu);
++*mtc*::
++Produces MTC timing packets.
+++
++MTC packets provide finer grain timestamp information than TSC
++packets.  MTC packets record time using the hardware crystal
++clock (CTC) which is related to TSC packets using a TMA packet.
+++
++Support for this feature is indicated by:
+++
++	/sys/bus/event_source/devices/intel_pt/caps/mtc
+++
++which contains "1" if the feature is supported and
++"0" otherwise.
+++
++The frequency of MTC packets can also be specified - see
++mtc_period below.
 +
- 	evsel__detect_missing_pmu_features(evsel);
++*mtc_period*::
++Specifies how frequently MTC packets are produced - see mtc
++above for how to determine if MTC packets are supported.
+++
++Valid values are given by:
+++
++	/sys/bus/event_source/devices/intel_pt/caps/mtc_periods
+++
++which contains a hexadecimal value, the bits of which represent
++valid values e.g. bit 2 set means value 2 is valid.
+++
++The mtc_period value is converted to the MTC frequency as:
++
++	CTC-frequency / (2 ^ value)
+++
++e.g. value 3 means one eighth of CTC-frequency
+++
++Where CTC is the hardware crystal clock, the frequency of which
++can be related to TSC via values provided in cpuid leaf 0x15.
+++
++If an invalid value is entered, the error message
++will give a list of valid values e.g.
+++
++	$ perf record -e intel_pt/mtc_period=15/u uname
++	Invalid mtc_period for intel_pt. Valid values are: 0,3,6,9
+++
++The default value is 3 or the nearest lower value
++that is supported (0 is always supported).
++
++*cyc*::
++Produces CYC timing packets.
+++
++CYC packets provide even finer grain timestamp information than
++MTC and TSC packets.  A CYC packet contains the number of CPU
++cycles since the last CYC packet. Unlike MTC and TSC packets,
++CYC packets are only sent when another packet is also sent.
+++
++Support for this feature is indicated by:
+++
++	/sys/bus/event_source/devices/intel_pt/caps/psb_cyc
+++
++which contains "1" if the feature is supported and
++"0" otherwise.
+++
++The number of CYC packets produced can be reduced by specifying
++a threshold - see cyc_thresh below.
++
++*cyc_thresh*::
++Specifies how frequently CYC packets are produced - see cyc
++above for how to determine if CYC packets are supported.
+++
++Valid cyc_thresh values are given by:
+++
++	/sys/bus/event_source/devices/intel_pt/caps/cycle_thresholds
+++
++which contains a hexadecimal value, the bits of which represent
++valid values e.g. bit 2 set means value 2 is valid.
+++
++The cyc_thresh value represents the minimum number of CPU cycles
++that must have passed before a CYC packet can be sent.  The
++number of CPU cycles is:
+++
++	2 ^ (value - 1)
+++
++e.g. value 4 means 8 CPU cycles must pass before a CYC packet
++can be sent.  Note a CYC packet is still only sent when another
++packet is sent, not at, e.g. every 8 CPU cycles.
+++
++If an invalid value is entered, the error message
++will give a list of valid values e.g.
+++
++	$ perf record -e intel_pt/cyc,cyc_thresh=15/u uname
++	Invalid cyc_thresh for intel_pt. Valid values are: 0-12
+++
++CYC packets are not requested by default.
++
++*pt*::
++Specifies pass-through which enables the 'branch' config term.
+++
++The default config selects 'pt' if it is available, so a user will
++never need to specify this term.
++
++*branch*::
++Enable branch tracing.  Branch tracing is enabled by default so to
++disable branch tracing use 'branch=0'.
+++
++The default config selects 'branch' if it is available.
++
++*ptw*::
++Enable PTWRITE packets which are produced when a ptwrite instruction
++is executed.
+++
++Support for this feature is indicated by:
+++
++	/sys/bus/event_source/devices/intel_pt/caps/ptwrite
+++
++which contains "1" if the feature is supported and
++"0" otherwise.
+++
++As an alternative, refer to "Emulated PTWRITE" further below.
++
++*fup_on_ptw*::
++Enable a FUP packet to follow the PTWRITE packet.  The FUP packet
++provides the address of the ptwrite instruction.  In the absence of
++fup_on_ptw, the decoder will use the address of the previous branch
++if branch tracing is enabled, otherwise the address will be zero.
++Note that fup_on_ptw will work even when branch tracing is disabled.
++
++*pwr_evt*::
++Enable power events.  The power events provide information about
++changes to the CPU C-state.
+++
++Support for this feature is indicated by:
+++
++	/sys/bus/event_source/devices/intel_pt/caps/power_event_trace
+++
++which contains "1" if the feature is supported and
++"0" otherwise.
++
++*event*::
++Enable Event Trace.  The events provide information about asynchronous
++events.
+++
++Support for this feature is indicated by:
+++
++	/sys/bus/event_source/devices/intel_pt/caps/event_trace
+++
++which contains "1" if the feature is supported and
++"0" otherwise.
++
++*notnt*::
++Disable TNT packets.  Without TNT packets, it is not possible to walk
++executable code to reconstruct control flow, however FUP, TIP, TIP.PGE
++and TIP.PGD packets still indicate asynchronous control flow, and (if
++return compression is disabled - see noretcomp) return statements.
++The advantage of eliminating TNT packets is reducing the size of the
++trace and corresponding tracing overhead.
+++
++Support for this feature is indicated by:
+++
++	/sys/bus/event_source/devices/intel_pt/caps/tnt_disable
+++
++which contains "1" if the feature is supported and
++"0" otherwise.
++
++
++config terms on other events
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++Some Intel PT features work with other events, features such as AUX area sampling
++and PEBS-via-PT.  In those cases, the other events can have config terms below:
++
++*aux-sample-size*::
++		Used to set the AUX area sample size, refer to the section
++		<<_aux_area_sampling_option,AUX area sampling option>>
++
++*aux-output*::
++		Used to select PEBS-via-PT, refer to the
++		section <<_pebs_via_intel_pt,PEBS via Intel PT>>
  
- 	if (evsel__has_br_stack(evsel))
-@@ -2494,6 +2562,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	int idx, thread, nthreads;
- 	int pid = -1, err, old_errno;
- 	enum rlimit_action set_rlimit = NO_CHANGE;
-+	struct perf_cpu cpu;
  
- 	if (evsel__is_retire_lat(evsel))
- 		return tpebs_start(evsel->evlist);
-@@ -2531,6 +2600,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	}
+ AUX area sampling option
+@@ -596,7 +643,8 @@ The default snapshot size is the auxtrace mmap size.  If neither auxtrace mmap s
+ nor snapshot size is specified, then the default is 4MiB for privileged users
+ (or if /proc/sys/kernel/perf_event_paranoid < 0), 128KiB for unprivileged users.
+ If an unprivileged user does not specify mmap pages, the mmap pages will be
+-reduced as described in the 'new auxtrace mmap size option' section below.
++reduced as described in the <<_new_auxtrace_mmap_size_option,new auxtrace mmap size option>>
++section below.
  
- 	for (idx = start_cpu_map_idx; idx < end_cpu_map_idx; idx++) {
-+		cpu = perf_cpu_map__cpu(cpus, idx);
+ The snapshot size is displayed if the option -vv is used e.g.
  
- 		for (thread = 0; thread < nthreads; thread++) {
- 			int fd, group_fd;
-@@ -2551,10 +2621,9 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+@@ -952,11 +1000,11 @@ transaction start, commit or abort.
  
- 			/* Debug message used by test scripts */
- 			pr_debug2_peo("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
--				pid, perf_cpu_map__cpu(cpus, idx).cpu, group_fd, evsel->open_flags);
-+				pid, cpu.cpu, group_fd, evsel->open_flags);
+ Note that "instructions", "cycles", "branches" and "transactions" events
+ depend on code flow packets which can be disabled by using the config term
+-"branch=0".  Refer to the config terms section above.
++"branch=0".  Refer to the <<_config_terms,config terms>> section above.
  
--			fd = sys_perf_event_open(&evsel->core.attr, pid,
--						perf_cpu_map__cpu(cpus, idx).cpu,
-+			fd = sys_perf_event_open(&evsel->core.attr, pid, cpu.cpu,
- 						group_fd, evsel->open_flags);
+ "ptwrite" events record the payload of the ptwrite instruction and whether
+ "fup_on_ptw" was used.  "ptwrite" events depend on PTWRITE packets which are
+-recorded only if the "ptw" config term was used.  Refer to the config terms
++recorded only if the "ptw" config term was used.  Refer to the <<_config_terms,config terms>>
+ section above.  perf script "synth" field displays "ptwrite" information like
+ this: "ip: 0 payload: 0x123456789abcdef0"  where "ip" is 1 if "fup_on_ptw" was
+ used.
+@@ -964,7 +1012,7 @@ used.
+ "Power" events correspond to power event packets and CBR (core-to-bus ratio)
+ packets.  While CBR packets are always recorded when tracing is enabled, power
+ event packets are recorded only if the "pwr_evt" config term was used.  Refer to
+-the config terms section above.  The power events record information about
++the <<_config_terms,config terms>> section above.  The power events record information about
+ C-state changes, whereas CBR is indicative of CPU frequency.  perf script
+ "event,synth" fields display information like this:
  
- 			FD(evsel, idx, thread) = fd;
-@@ -2570,8 +2639,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 			bpf_counter__install_pe(evsel, idx, fd);
+@@ -1120,7 +1168,7 @@ What *will* be decoded with the (single) q option:
+ 	- asynchronous branches such as interrupts
+ 	- indirect branches
+ 	- function return target address *if* the noretcomp config term (refer
+-	config terms section) was used
++	<<_config_terms,config terms>> section) was used
+ 	- start of (control-flow) tracing
+ 	- end of (control-flow) tracing, if it is not out of context
+ 	- power events, ptwrite, transaction start and abort
+@@ -1133,7 +1181,7 @@ Repeating the q option (double-q i.e. qq) results in even faster decoding and ev
+ less detail.  The decoder decodes only extended PSB (PSB+) packets, getting the
+ instruction pointer if there is a FUP packet within PSB+ (i.e. between PSB and
+ PSBEND).  Note PSB packets occur regularly in the trace based on the psb_period
+-config term (refer config terms section).  There will be a FUP packet if the
++config term (refer <<_config_terms,config terms>> section).  There will be a FUP packet if the
+ PSB+ occurs while control flow is being traced.
  
- 			if (unlikely(test_attr__enabled())) {
--				test_attr__open(&evsel->core.attr, pid,
--						perf_cpu_map__cpu(cpus, idx),
-+				test_attr__open(&evsel->core.attr, pid, cpu,
- 						fd, group_fd, evsel->open_flags);
- 			}
- 
-@@ -2626,7 +2694,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
- 		goto retry_open;
- 
--	if (err == -EINVAL && evsel__detect_missing_features(evsel))
-+	if (err == -EINVAL && evsel__detect_missing_features(evsel, cpu))
- 		goto fallback_missing_features;
- 
- 	if (evsel__precise_ip_fallback(evsel))
-@@ -3585,6 +3653,10 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
- 			return scnprintf(msg, size,
- 	"%s: PMU Hardware doesn't support 'aux_output' feature",
- 					 evsel__name(evsel));
-+		if (evsel->core.attr.aux_action)
-+			return scnprintf(msg, size,
-+	"%s: PMU Hardware doesn't support 'aux_action' feature",
-+					evsel__name(evsel));
- 		if (evsel->core.attr.sample_period != 0)
- 			return scnprintf(msg, size,
- 	"%s: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'",
-@@ -3615,6 +3687,8 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
- 			return scnprintf(msg, size, "clockid feature not supported.");
- 		if (perf_missing_features.clockid_wrong)
- 			return scnprintf(msg, size, "wrong clockid (%d).", clockid);
-+		if (perf_missing_features.aux_action)
-+			return scnprintf(msg, size, "The 'aux_action' feature is not supported, update the kernel.");
- 		if (perf_missing_features.aux_output)
- 			return scnprintf(msg, size, "The 'aux_output' feature is not supported, update the kernel.");
- 		if (!target__has_cpu(target))
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 93b6244ec302..76749bb0e1a5 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -207,6 +207,7 @@ struct perf_missing_features {
- 	bool weight_struct;
- 	bool read_lost;
- 	bool branch_counters;
-+	bool aux_action;
- 	bool inherit_sample_read;
- };
- 
+ What will *not* be decoded with the qq option:
 -- 
 2.43.0
 
