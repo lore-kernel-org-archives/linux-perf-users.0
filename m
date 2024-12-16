@@ -1,77 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DC9209F5E;
-	Mon, 16 Dec 2024 16:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A579C205E0F
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Dec 2024 16:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734367541; cv=none; b=eq8sDIYjKbO0dBD+meJiEPcV+YuaP0bZ3EcMt12uxTcAtjzsPYeVJJNdHyGqnf8iee+7XooM56jxxl/dzYsnS4MlotDOmVNa9a5BgMw76DNi+RJVjigFUHboJCeNzfSgrGS31ym7i1CK9MZCswxJh3jqYy0C4y8aColVMLjngc4=
+	t=1734368222; cv=none; b=BaOG9t0mw37hvSFu+qKVUCzSqmFIERePg3ieykHwYwWJtdO6fGvLJZqi71tVee2vkiLJmmOx/64PqaBbSI/TQzfqI7AOV5kgNQPhDzuRc86zrcDPLYJt6QfAsDpJD2v2ekEbeWg+8WtcmX3mJ9oMW1n4Dag105b8o9yq8bEld48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734367541; c=relaxed/simple;
-	bh=yJ24TxEgPNvMjTAhmRojKXtL59U+RMUTJ20Up5QjyrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kqqca8gAxD/Z5VBHVcr+HsknunkkkiKLOR195P/iTXCGiPZmoio2QzwdtH5rqxzSn4oxrovb1BVFJdxmLm+POBDHxwcj//5LOc/J56BZw5Qzux9V9B5Vzwc4DDrufyWNtDF7JcbsR24nKDX6Bf5zEp1qA+sbjXXBT2273+q8M3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UcXXv8yl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734368222; c=relaxed/simple;
+	bh=tUN6QyLrUQtqswwv+FWZ6ZBH4o75Y0O/ZF/rjsabplQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Nhk5EbhzacCc/lonOovFrXfoX7O7HZ+9vfBtLU6cQPFPKYUAMczWCj+JE5Xy3lAQkhsXoqwlc96giTaQJEHPThE7cSQPivDpoaDUXfQmFxxWQpeEhKHZqr+dReMm+cZzVxoxzauyag63T37UNg59X87vSpb3GiLR05zcW+wTSYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vkk1Pycf; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UcXXv8yl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CEE8C4CED0;
-	Mon, 16 Dec 2024 16:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734367540;
-	bh=yJ24TxEgPNvMjTAhmRojKXtL59U+RMUTJ20Up5QjyrQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UcXXv8ylnkrd0sV8JeaIYeWzlrladufixxN8T/VHziJHIzqjMAHKeBi2vQesfS3wz
-	 PwqXjVG1TTFMqTCdaB0vYkkBg8Qaov6medZ6DZN2/IWOp+auDtvngiiMTDGR7bZTM1
-	 RqJUkV/f0YnhcTV6t1b5joBF8AcRPJPe1RNvhapu0Hk843F/WTKj+Wx0IJfKn5USui
-	 J7hgfZxP7jtWBTUEsZ6CZmNYcDuhbDsupcCT85d+21BH1rf/Pv3MrqOwMk1KfgLod1
-	 vYPCdROT6vN+lGIQz5Xn2+NVYYK+Pdkwc3GmBiyWQoPerSdyHVtyJcrcIAU8vayLAV
-	 7llzfc4kFUjvg==
-Date: Mon, 16 Dec 2024 13:45:38 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: kajoljain <kjain@linux.ibm.com>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, jolsa@kernel.org,
-	adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	maddy@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-	hbathini@linux.ibm.com
-Subject: Re: [PATCH] tools/perf/arch/powerpc: Add register mask for power11
- PVR in extended regs
-Message-ID: <Z2BZMhDFO-aJ_Gjw@x1>
-References: <20241206135637.36166-1-atrajeev@linux.vnet.ibm.com>
- <2907ca2f-b973-42fd-ae03-99732dfda7a1@linux.ibm.com>
- <0402AAF0-5498-48C7-BEBA-2C0B7508D9E2@linux.vnet.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vkk1Pycf"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so350235ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Dec 2024 08:57:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1734368220; x=1734973020; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tUN6QyLrUQtqswwv+FWZ6ZBH4o75Y0O/ZF/rjsabplQ=;
+        b=vkk1Pycfezmlwrvk22zev0avWgwLpfTXeZQLZz83AbQ1URk5LPT+41yyvWYUXXToXg
+         ZyFLGp8gIshQhVLuCuPFNkgAFp+41+wBvpTOiO9VT0Vp3J/cwoKuoJurKDxjif4kih07
+         nxV6H+7lIF6fMtWWPiO2I3FCzz2vZwHTYUuUwzd++nX+oFvjvvbkEivtWoyah0NCSW6d
+         Db5JKq57LS6E4ZhQBZ4sxS/VcZCTE+y0W2A/WngBk9QEj0/KZkgFV4qD37IJ2Hv3PZmJ
+         0j0Jvu8JWM3BvkqjNnRZwXYwWV+tUDKFpZMwVTHDemKh4DO2COUS1tHDUtTn+CK5ukKM
+         bfZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734368220; x=1734973020;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tUN6QyLrUQtqswwv+FWZ6ZBH4o75Y0O/ZF/rjsabplQ=;
+        b=CilqPTS1aN/3YLHo1XlUfup3hqvXwRWBMwOER1/DT0JJ3owSLRJym82DdzOWHBotHz
+         AopRTHJiMKmMPj6+TqlRsLX0W4AyXUKG5fjdtcKeWek9B2+EGSWH9tArKOm5y6cjXqQb
+         jil+JpBQjZI0VKMJ/Gi4yQd30q6//mV1GcGrueXr8kS/visFOSXvWzSXA/GxmhJ5n4AB
+         0eaJozQNwTH8mE510KFxjKpVpVeHQZJtQd7KxEjlmj9pqJxmQ8uVVbQRU0nd8ksodWis
+         qEcGQmYoUzTV7Z+QjieexKdadYoRqvXDOIE6Yz3EPjfuS/EO0/BsnUd9Dc8vdRnGiToe
+         UJXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVeKQcLax7YQ5LYz8tHQx2HyZSnPlidWCxe4W+qgE9kUz9CC0UKQRzyDawmirOfQ0VhSrKkzGitHr1hJDPeVehD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr1MNH+uk6bfJ5F/7i0F1CAeaZqCLYKJfGyk0yzuxxgdecG0O2
+	y6x1LXTrxUByLeVPWWwIK1U/4QJi0gVuspMgnNcefOY22jmEyF4FK/D4vSDeUSSh4KOLrnkYs/M
+	zlLfKuIrAwAMrwubuUSTQqbaHcfgILny1xz/b
+X-Gm-Gg: ASbGncs7UUzY2JcaJocuSvie4spWqUvQomZKtQm4eVKVDJIrgnx5n8Fy5bLib2AfgHM
+	1nI7V/GhHpBPCuwv9xpzQNqGAoGIz0tvceWFG368=
+X-Google-Smtp-Source: AGHT+IFenKD4P/KhIiSws3yn5GuMSBGYBSQhOYwGdU+AxUyjmLfeKG1/Yy+/zpPC+OKRBfJ/iyoKqrB/AotlSl2jNqU=
+X-Received: by 2002:a92:ccd0:0:b0:3a7:a468:69e0 with SMTP id
+ e9e14a558f8ab-3b2c2a279dcmr5132185ab.1.1734368219531; Mon, 16 Dec 2024
+ 08:56:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0402AAF0-5498-48C7-BEBA-2C0B7508D9E2@linux.vnet.ibm.com>
+References: <20241216014637.304761-1-irogers@google.com> <20241216014637.304761-2-irogers@google.com>
+In-Reply-To: <20241216014637.304761-2-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 16 Dec 2024 08:56:47 -0800
+Message-ID: <CAP-5=fXsO2i6UE6FrQFLOyJP4xbH1E0-2W5b1ejN=MsGs0d0QQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] perf header: Write out even empty die_cpus_list
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Sun Haiyong <sunhaiyong@loongson.cn>, 
+	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 16, 2024 at 03:32:12PM +0530, Athira Rajeev wrote:
-> > On 11 Dec 2024, at 5:32 PM, kajoljain <kjain@linux.ibm.com> wrote:
-> > On 12/6/24 19:26, Athira Rajeev wrote:
-> >> Perf tools side uses extended mask to display the platform
-> >> supported register names (with -I? option) to the user
-> >> and also send this mask to the kernel to capture the extended registers
-> >> as part of each sample. This mask value is decided based on
-> >> the processor version ( from PVR ).
+On Sun, Dec 15, 2024 at 5:46=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Reading the CPU topology is tolerant to the dies_cpus_list being
+> missing by using the feature's size in the data file/pipe. However,
+> the feature's size is just the header size and may be
+> unaligned. Making the header size aligned breaks detecting a missing
+> die_cpus_list. To allow the header size to be aligned always write the
+> die_cpus_lists even if empty.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-> >> Add PVR value for power11 to enable capturing the extended regs
-> >> as part of sample in power11.
+This change breaks the "Session topology" test on ARM with "Cpu map -
+Die ID doesn't match" . One die id is -1 and the other is 0. I'll look
+into addressing this in v3.
 
-> > Patch looks fine to me.
-
-> > Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
- 
-> Can we please pull in this patch if it looks fine.
-
-Sure,
-
-Thanks, applied to perf-tools-next,
-
-- Arnaldo
+Thanks,
+Ian
