@@ -1,111 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A3F207A0D;
-	Mon, 16 Dec 2024 16:44:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DC9209F5E;
+	Mon, 16 Dec 2024 16:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734367448; cv=none; b=aI1JqT8KmEwehgHBw8YtjVPU+mJaCbrvIB4u4SlIRnByOtebEj9YiKGwdgRQvXJ07pmFdr0NwsFbuqXpwdFS0ZLANl4vrPc2d6Sfo+IYRDHtdfL0+pv9rsoYVF8VHfnmj6eudc/28wKX5tUmwm7p+vgy26mliq7oqOQ+gs0OAQI=
+	t=1734367541; cv=none; b=eq8sDIYjKbO0dBD+meJiEPcV+YuaP0bZ3EcMt12uxTcAtjzsPYeVJJNdHyGqnf8iee+7XooM56jxxl/dzYsnS4MlotDOmVNa9a5BgMw76DNi+RJVjigFUHboJCeNzfSgrGS31ym7i1CK9MZCswxJh3jqYy0C4y8aColVMLjngc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734367448; c=relaxed/simple;
-	bh=snoRALQ5vLKqq7mcGrwha2X8wlly0uvi69XAMV3T24I=;
+	s=arc-20240116; t=1734367541; c=relaxed/simple;
+	bh=yJ24TxEgPNvMjTAhmRojKXtL59U+RMUTJ20Up5QjyrQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cFHI+5PP+atz8qWUSgsGdkH/3BHYBWeR/xpcVrOOE2RJd4kFGe9l7d9a/0xkvYKrvmKJ/LtHkyO9MkhbQeVlWlak89drGH+UH7suV1tVnJSteiJTj1Dixp3qvRxXLeaRFl05i+q4YBEkQ+GPVfOfpktn+4sgpxXCpuDRenN6hdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qoGule4W; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kqqca8gAxD/Z5VBHVcr+HsknunkkkiKLOR195P/iTXCGiPZmoio2QzwdtH5rqxzSn4oxrovb1BVFJdxmLm+POBDHxwcj//5LOc/J56BZw5Qzux9V9B5Vzwc4DDrufyWNtDF7JcbsR24nKDX6Bf5zEp1qA+sbjXXBT2273+q8M3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UcXXv8yl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qoGule4W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38D09C4CEDD;
-	Mon, 16 Dec 2024 16:44:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UcXXv8yl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CEE8C4CED0;
+	Mon, 16 Dec 2024 16:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734367447;
-	bh=snoRALQ5vLKqq7mcGrwha2X8wlly0uvi69XAMV3T24I=;
+	s=k20201202; t=1734367540;
+	bh=yJ24TxEgPNvMjTAhmRojKXtL59U+RMUTJ20Up5QjyrQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qoGule4W8NC54k6omoNdAcSoIQCDpvbkNrSTqK/DeRrMi3iI3GnkFObkz1RziCW1H
-	 IlE9xrGWHSXT09NGOXsXJDrTRzFBkqJntfObOnK5m4CHqDjgR+SV5FSsGxF8WktAqo
-	 9N3NBUEInaWpvdNV9Q4O3fP7VqZbpJE4nFeIEmoSyhT7G/QbEAIy3ez5jP6PU9uY4x
-	 JkMOaMngYBfWlXwXzUcnuCjQCvitx7gX3N08r+oW7rUw9qmdPFTKfhQ8suVMvsgARw
-	 nfawuBjHyOXedAvgWS2jT0PDg1wDJqVZoUMs/kpVqgLLV4GpoXbUVwJf3Pbp3MPWyq
-	 fb7WHk4irLjbg==
-Date: Mon, 16 Dec 2024 13:44:04 -0300
+	b=UcXXv8ylnkrd0sV8JeaIYeWzlrladufixxN8T/VHziJHIzqjMAHKeBi2vQesfS3wz
+	 PwqXjVG1TTFMqTCdaB0vYkkBg8Qaov6medZ6DZN2/IWOp+auDtvngiiMTDGR7bZTM1
+	 RqJUkV/f0YnhcTV6t1b5joBF8AcRPJPe1RNvhapu0Hk843F/WTKj+Wx0IJfKn5USui
+	 J7hgfZxP7jtWBTUEsZ6CZmNYcDuhbDsupcCT85d+21BH1rf/Pv3MrqOwMk1KfgLod1
+	 vYPCdROT6vN+lGIQz5Xn2+NVYYK+Pdkwc3GmBiyWQoPerSdyHVtyJcrcIAU8vayLAV
+	 7llzfc4kFUjvg==
+Date: Mon, 16 Dec 2024 13:45:38 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Gabriele Monaco <gmonaco@redhat.com>
-Subject: Re: [PATCH] perf ftrace latency: Fix compiler error for clang 12
-Message-ID: <Z2BY1MAUrXPJs1Ak@x1>
-References: <20241214002938.1027546-1-namhyung@kernel.org>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: kajoljain <kjain@linux.ibm.com>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>, jolsa@kernel.org,
+	adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	maddy@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+	hbathini@linux.ibm.com
+Subject: Re: [PATCH] tools/perf/arch/powerpc: Add register mask for power11
+ PVR in extended regs
+Message-ID: <Z2BZMhDFO-aJ_Gjw@x1>
+References: <20241206135637.36166-1-atrajeev@linux.vnet.ibm.com>
+ <2907ca2f-b973-42fd-ae03-99732dfda7a1@linux.ibm.com>
+ <0402AAF0-5498-48C7-BEBA-2C0B7508D9E2@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241214002938.1027546-1-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0402AAF0-5498-48C7-BEBA-2C0B7508D9E2@linux.vnet.ibm.com>
 
-On Fri, Dec 13, 2024 at 04:29:38PM -0800, Namhyung Kim wrote:
-> I noticed this error on CentOS 8.
-> 
->     CLANG   /build/util/bpf_skel/.tmp/func_latency.bpf.o
->   Error at line 119: Unsupport signed division for DAG: 0x55829ee68a10: i64 = sdiv 0x55829ee68bb0, 0x55829ee69090, util/bpf_skel/func_latency.bpf.c:119:17 @[ util/bpf_skel/func_latency.bpf.c:84:5 ]Please convert to unsigned div/mod.
->   fatal error: error in backend: Cannot select: 0x55829ee68a10: i64 = sdiv 0x55829ee68bb0, 0x55829ee69090, util/bpf_skel/func_latency.bpf.c:119:17 @[ util/bpf_skel/func_latency.bpf.c:84:5 ]
->     0x55829ee68bb0: i64,ch = CopyFromReg 0x55829edc9a78, Register:i64 %5, util/bpf_skel/func_latency.bpf.c:119:17 @[ util/bpf_skel/func_latency.bpf.c:84:5 ]
->       0x55829ee68e20: i64 = Register %5
->     0x55829ee69090: i64,ch = load<(volatile dereferenceable load 4 from @bucket_range, !tbaa !160), zext from i32> 0x55829edc9a78, 0x55829ee68fc0, undef:i64, util/bpf_skel/func_latency.bpf.c:119:19 @[ util/bpf_skel/func_latency.bpf.c:84:5 ]
->       0x55829ee68fc0: i64 = BPFISD::Wrapper TargetGlobalAddress:i64<i32* @bucket_range> 0, util/bpf_skel/func_latency.bpf.c:119:19 @[ util/bpf_skel/func_latency.bpf.c:84:5 ]
->         0x55829ee68808: i64 = TargetGlobalAddress<i32* @bucket_range> 0, util/bpf_skel/func_latency.bpf.c:119:19 @[ util/bpf_skel/func_latency.bpf.c:84:5 ]
->       0x55829ee68530: i64 = undef
->   In function: func_end
->   PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace, preprocessed source, and associated run script.
-> 
-> It complains about sdiv which is (s64)delta / (u32)bucket_range.
-> Let's cast the delta to u64 for division.
-> 
-> Fixes: e8536dd47a98b5db ("perf ftrace latency: Introduce --bucket-range to ask for linear bucketing")
-> Cc: Gabriele Monaco <gmonaco@redhat.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+On Mon, Dec 16, 2024 at 03:32:12PM +0530, Athira Rajeev wrote:
+> > On 11 Dec 2024, at 5:32 PM, kajoljain <kjain@linux.ibm.com> wrote:
+> > On 12/6/24 19:26, Athira Rajeev wrote:
+> >> Perf tools side uses extended mask to display the platform
+> >> supported register names (with -I? option) to the user
+> >> and also send this mask to the kernel to capture the extended registers
+> >> as part of each sample. This mask value is decided based on
+> >> the processor version ( from PVR ).
 
-Committer testing:
+> >> Add PVR value for power11 to enable capturing the extended regs
+> >> as part of sample in power11.
 
-Tested on:
+> > Patch looks fine to me.
 
-  $ head -2 /etc/os-release
-  NAME="Fedora Linux"
-  VERSION="40 (Toolbx Container Image)"
-  $ clang --version |& head -1
-  clang version 18.1.8 (Fedora 18.1.8-1.fc40)
-  $
-  root@number:~# perf ftrace latency --use-nsec --bucket-range=200 --min-latency 250 --max-latency=5000 -T switch_mm_irqs_off -a sleep 10
-  #   DURATION     |      COUNT | GRAPH                                          |
-       0 -  250 ns |         28 | #####                                          |
-     250 -  450 ns |         12 | ##                                             |
-     450 -  650 ns |         10 | #                                              |
-     650 -  850 ns |          9 | #                                              |
-     850 - 1050 ns |         20 | ###                                            |
-    1.05 - 1.25 us |         14 | ##                                             |
-    1.25 - 1.45 us |         16 | ###                                            |
-    1.45 - 1.65 us |          8 | #                                              |
-    1.65 - 1.85 us |         11 | ##                                             |
-    1.85 - 2.05 us |          7 | #                                              |
-    2.05 - 2.25 us |         11 | ##                                             |
-    2.25 - 2.45 us |         10 | #                                              |
-    2.45 - 2.65 us |          7 | #                                              |
-    2.65 - 2.85 us |          8 | #                                              |
-    2.85 - 3.05 us |          7 | #                                              |
-    3.05 - 3.25 us |          7 | #                                              |
-    3.25 - 3.45 us |         10 | #                                              |
-    3.45 - 3.65 us |          5 |                                                |
-    3.65 - 3.85 us |          9 | #                                              |
-    3.85 - 4.05 us |          2 |                                                |
-    4.05 - 4.25 us |          6 | #                                              |
-    4.25 - ...  us |         23 | ####                                           |
-  root@number:~#
+> > Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+ 
+> Can we please pull in this patch if it looks fine.
 
-Thanks, applied to perf-tools-next.
+Sure,
+
+Thanks, applied to perf-tools-next,
 
 - Arnaldo
