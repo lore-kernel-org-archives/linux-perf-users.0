@@ -1,117 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E102207DF4
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Dec 2024 19:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1586C2FD;
+	Mon, 16 Dec 2024 19:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734376819; cv=none; b=SzbVj0iaPmU3eLKqJRHKBu06v3x1CbvH7b3SlROWoNJBE8VB7wPjzvArCY50bWP1K097F+d/HFuebJOj0xzb1/PPHM/ysbomDFizJTOBE1cgYwc+qfyxpAxHZx9aJP8fEpJlUdPkd1Zn8mGqVcUxK3sQOQraIiWYaBv+zAx9EGU=
+	t=1734379128; cv=none; b=TppZ/55TgHOzNLteOg71uvSXYSakrz88eNtYaGrM2VYxwjr/2QVPCtRL7Aw9so1t6kZkITtQW4IdcN/yieaZWubDMuUJIbWvXfO+lmg00K759AwqdIfhZZoZkTe2VuW/3odccJW1tWHLVvSWZ+tGbhXXD3ap5rP/tTHiCOrkKos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734376819; c=relaxed/simple;
-	bh=hJO7PhFFILWqOSoDZ6qlrrhdx3WwQXrpYMxPRM4LBuM=;
+	s=arc-20240116; t=1734379128; c=relaxed/simple;
+	bh=+VDg43IbfYvW2IUTm6S9mw7HuSVuma4Ql+8/EqdgyUE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YRTVuxsIzaVimsnsHmSD3TvLDmTcBmylzccGJ3r0izBfXU7Yc3hVVVTjJpa6WBfEEkZ34Rw49JiiYh61MgoDLgP1ro00FQL0ghHsqqWwZ7XaaCxmvM7MUN4ZtTIN89bv6GA9Neq3tPgu66I4rVUtE05c6AB6EsJJvN24vw/s9As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X7/6Y1wX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=n9EVdQhz17gCHnHB7o/9hZhL0/aL2UwV6ccAqOBFwPwCY8Q5jDAwL/eoJG5Kzs+x/siC5+dsMrSEB3aR9HYIAV5flI5b5LW46vHlF4JjjlHNRoTI24/5NwWwsfbOzF70g5gzaCbaqEaVfpIMIsnjGu2vkRv0OW5Q+VNNgtATe0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PisJxMNf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X7/6Y1wX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734376816;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dAcFp9mawsitE6ltl4OckOZ068h+OrWsoh6QDL7J4Vg=;
-	b=X7/6Y1wXuedfUTtS0OqZdql+nCKHnxiWEWC4YCVDiW34a79urZn+W2kIIzear26qUWySXu
-	9wPx/5JMt01qeDR4uEEaruLwEiyPaZ5mwnNcZSqrB2hjnChQwK0ta2jWe7yAtOW6XIjAJg
-	/nIdEBstULC1pn1MT+vxYC8jjChH9+0=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-150-cyoXPWvWObWdX3TmoZTNOA-1; Mon,
- 16 Dec 2024 14:20:13 -0500
-X-MC-Unique: cyoXPWvWObWdX3TmoZTNOA-1
-X-Mimecast-MFC-AGG-ID: cyoXPWvWObWdX3TmoZTNOA
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 70D561956089;
-	Mon, 16 Dec 2024 19:20:10 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.224])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5C73419560A2;
-	Mon, 16 Dec 2024 19:20:02 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 16 Dec 2024 20:19:46 +0100 (CET)
-Date: Mon, 16 Dec 2024 20:19:37 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"Lai, Yi" <yi1.lai@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>, yi1.lai@intel.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
-Message-ID: <20241216191937.GC374@redhat.com>
-References: <Zy4OFlxoRK2jM5zo@localhost.localdomain>
- <20241108190835.GA11231@redhat.com>
- <Zy6QHHakztIXvudC@pavilion.home>
- <20241111120857.5cWFpNkJ@linutronix.de>
- <20241204134826.GA923@redhat.com>
- <Z1DxqJlGM_I8irVQ@pavilion.home>
- <20241205092015.GA8673@redhat.com>
- <Z1F6_cC4bRvcN56T@pavilion.home>
- <20241205102840.GB8673@redhat.com>
- <Z1y6vSznjbCwAvn1@pavilion.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PisJxMNf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB650C4CED0;
+	Mon, 16 Dec 2024 19:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734379128;
+	bh=+VDg43IbfYvW2IUTm6S9mw7HuSVuma4Ql+8/EqdgyUE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PisJxMNfYjqy4jXXTyoq9TgNs3ddvph72MGX5OGkNIzOxBulCPmOYVB+L8aCk9LJe
+	 EHC0f7P79m7iTntirVO9rxuMYNKEyB6fHZ2CXZ2j4R/2E3dFIozopBEg+dboZj3l+y
+	 s6/i8tdmrvzCfrf1eng28BA62o3VUThPj/bPEQ6tq6l48Rx8HjV30t9OY4iYShiiXc
+	 4V6TIxMm2s9OECUwEIRzujnNmN/nhP//Fu1E9EcYxcm+vT1njThxo14JVbN2N7c0fd
+	 fZK/QXdUNmoKLjVYDk12pqaOj0YmIUxz/V4sb/UOVovBol6P98QICScte9450Bacbs
+	 d7XKFCvyktrsQ==
+Date: Mon, 16 Dec 2024 11:58:46 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] perf trace: Add more tests for BTF-augmented perf
+ trace
+Message-ID: <Z2CGdi5xpJy6C6sv@google.com>
+References: <20241215190712.787847-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z1y6vSznjbCwAvn1@pavilion.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <20241215190712.787847-1-howardchu95@gmail.com>
 
-On 12/13, Frederic Weisbecker wrote:
->
-> So which way do you prefer do solve the initial problem?
+On Sun, Dec 15, 2024 at 11:07:09AM -0800, Howard Chu wrote:
+> Changes in v4:
+>  - Use if -f to check the existence of vmlinux BTF, and exit if it
+>    doesn't, so trace_test_string will not overwrite $err, and keep
+>    running the test.
+> 
+> Changes in v3:
+>  - Add vmlinux BTF check, and skip the tests if it doesn't exist
+> 
+> v1, v2:
+> 
+> The previous version of the perf trace BTF general augmentation tests
+> didn't pass Shellcheck (thanks to Arnaldo Carvalho de Melo
+> <acme@kernel.org> for pointing this out), this version uses bash instead
+> of POSIX shell to pass Shellcheck.
+> 
+> This patch series also adds documentation for the new option
+> --force-btf, which is used in the tests.
+> 
+> Link: https://lore.kernel.org/linux-perf-users/Zt9yiQq-n-W6I274@x1/
+> 
+> Howard Chu (2):
+>   perf trace: Add tests for BTF general augmentation
+>   perf docs: Add documentation for --force-btf option
 
-Ah. please do what you think/feel is right.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-I can't suggest a better fix anyway.
+Thanks,
+Namhyung
 
-> > > > 			do {
-> > > > 	-			next = work->next;
-> > > > 	+			next = READ_ONCE(work->next);
-> > > > 				work->func(work);
-> > > > 				work = next;
-> > > > 				cond_resched();
-> > > >
-> > > > Perhaps it makes sense before the patch from Sebastian even if that patch
-> > > > removes this do/while loop ?
-> > >
-> > > Hmm, can work->next be modified concurrently here?
-> >
-> > work->func(work) can, say, do kfree(work) or do another task_work_add(X,
-> > work).
->
-> Right but then isn't it serialized program order, from the compiler point of view?
-
-Hmm, indeed, you are right. In this case the compiler can't assume it can
-"defer" work->next. Thanks for correcting me!
-
-Oleg.
-
+> 
+>  tools/perf/Documentation/perf-trace.txt     |  5 ++
+>  tools/perf/tests/shell/trace_btf_general.sh | 93 +++++++++++++++++++++
+>  2 files changed, 98 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/trace_btf_general.sh
+> 
+> -- 
+> 2.43.0
+> 
