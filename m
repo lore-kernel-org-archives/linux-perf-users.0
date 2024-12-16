@@ -1,85 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2181D4607;
-	Mon, 16 Dec 2024 21:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047A41D90A7
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Dec 2024 23:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734383200; cv=none; b=mqbhncTaawA+HglvOOeewRAgU0PBst9wJOji4OViX9Fg+BTvXHCaNmB7GUj75AZgkIbNz0eHs/3WgNn3rSANW+qmn3fLAwnv4P6Zu71g7bg/9jOBgSau4nqo5eT2mzkrdquXnHQsntxAw0FZqMkmZ9Irxmn+h5dyrzHfGEgP2PI=
+	t=1734390807; cv=none; b=rkIMHf9r3sXi79TULwQ1kKGgO12elOzrCdUeYkx9SpRP+rSL3+48/dMfcINcUKhnCb3Q5X223XWYapYyrm/XzlqMlvFnMRqw/GvGUw8HdaG0NOSyLrkKeBE+IotOoJYPSq5CHcXsxAi4ocj0dj+bTuYHXEcJjTTMaqQw7qBzti4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734383200; c=relaxed/simple;
-	bh=wB7B7edacrirY7tBXvab0TpJ07BUYElgMdzaYxuoGDc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CbUFqSw7OS504Sbyp73OfNyEk5qa6kOaUi2VCa0NMMx+jXyfUNI40g9YjR5V6aHDg8Bc6jZaF8k+d5/o+Sw/YeGNqcyH/272+0tCiXJDI7o5qehxi1R3yhy/42QizRmkt62TDLD2bcFo4qysMvc/wHnlmS7Pl+m8fyzGnBmcyjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Khyo0naS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734390807; c=relaxed/simple;
+	bh=IOgGM2w7pk3oigV1gqLUmR9Qqpa9O/Il6zfGw3fe3jI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=L3E+b8t/XitxhvfkTrzIHZzG6XhNRrAMC+WgDqVTIDigEduy93lZCLDljgtxm9vv6LcYQYmYvsRuLsQU7RnRCfzKSCxl6nn8m7d5f6BivPJH8kYF5/OtVjXT0RAfN+tS6M+Pu6H2WtGUCOuzx+uxR5J820eQhIG6+EYFSnA1cc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Eytt7KwO; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Khyo0naS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8C53C4CED0;
-	Mon, 16 Dec 2024 21:06:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734383199;
-	bh=wB7B7edacrirY7tBXvab0TpJ07BUYElgMdzaYxuoGDc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Khyo0naSGi5kIOBIm1pgNWxxXYylxRRhoNQVeL/62lraAJeYDpBvQRZ77mPIK4RGT
-	 JVTWtweAHJ33H8ayZot5mlGSDYVNpSBjecwS22Dv8MvyuI4wclDtOVwuKtgwxvHju8
-	 zKok6OVTkLRmk+sg1dIziRQOTE8t+G3KA7TMRs8qDrSo3bKgq6JIbTKFRfhp5BjZx3
-	 eMmdh8Pk0xgSt2jax2LOIXKrnbdVkPMwGmY8GXNc4OUV6zFpFIrAFUNDGYIjYFpg19
-	 Yi/WM9PBZlODw7jPngbs+1yLbf5eIfrnIOjHa1ZsikIZimVlzdSJIq/H17PCAV/iS4
-	 9BlKRYOX0hVmw==
-Date: Mon, 16 Dec 2024 18:06:36 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Quentin Monnet <qmo@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Nick Terrell <terrelln@fb.com>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Guilherme Amadio <amadio@gentoo.org>, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] bpftool: Link zstd lib required by libelf
-Message-ID: <Z2CWXKVj87gmWjF3@x1>
-References: <20241215221223.293205-1-leo.yan@arm.com>
- <20241215221223.293205-4-leo.yan@arm.com>
- <fa534569-b3e0-486d-a0f9-25523f404aed@kernel.org>
- <20241216163033.GA700645@e132581.arm.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Eytt7KwO"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2162c0f6a39so50346155ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Dec 2024 15:13:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1734390804; x=1734995604; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Cbp0zEgt8sYGgGttOagenj605vUWFx5sipZ2Yl2U3s=;
+        b=Eytt7KwO0WU2hyUIdW/6GWYKKe++eJXTFSyWcq8AVT9BM8fYi87jMhv+4jfU4DW/SM
+         hyLHneNQV0xzTXpk3yPCrpVdUrEIFzxcnMLVAN8Seik2D5kEC5bk9Qp4NYt2kqf1VUOs
+         AztXLshVs0dm5EEM+UKBfE25F8xJF5lP6qP9kmtIg8d83NTQRbWfK2O4Ky0A1mdIva3s
+         FbBBy/+qT1gBazRFleWvObp37aF/olvT93vmxU41bjTaTJ1m/YG5UY89kW8JloxQB4sv
+         q4Aik/spGo3H7zJuXsuJTNyQjRm4ZabM4mdtwH7f74EH68eGaQzuJCQ1L3bNQpnOX0lH
+         kd0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734390804; x=1734995604;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7Cbp0zEgt8sYGgGttOagenj605vUWFx5sipZ2Yl2U3s=;
+        b=ccTCqH9NUV1wsakHifJ3ClxUyGnW016OR8xm3/XJrH2N4GUwEDLuyaHFzvpiu0fqlj
+         ePCnV98CZIbRpKkdOLwe9KD/ct6q6FPfYhHh7SQJezQWsXzfKYwpKPAF13QkW1MSO82M
+         EYiIow2XdVlLic82xcG3v8lR51sdoxu7akVclTjyiEJYjI8mc6/73/FF73pV+cgLEPfG
+         +SDYJhCQWj76+y3niq0Lt18yoUguzeldIwmNncpfPtC6K0SYo7pFEERhl9l2B/ud8AX5
+         uJFvStLgpe/PSckBzVFSA0JFOHjYAOhGc9rxCUgmevRqsQ7yH2u0iN4knBHBDj8w+PAI
+         /YWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWHZpWIiHpe9kL3aXDHLMo755n60wFu1+ewSnyAsKos6jXS4IrIqmrS5MOFU8ljR8U+rXZ0loMUwOGpwQ7Aim5V@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywf0GFA2lTMPoSV4OBsIDKL5utqVYmvABnG1qrPeGOfsNtbYyUr
+	egG+F9PzWuutEFqsBNG97fMyuFi5SX1w2WxW0E0ZR0Hh/QKtQ3H1FYirJ2yV428=
+X-Gm-Gg: ASbGncuVEn2bRgTb7kD+ZBSMJPcFdfst4FS66195OoYwJcxt7iuLwLML7Obcse8Q0jn
+	VR+x8v3LGLau6qfNm1mXWTs9JoER+xm8jaEXXUoDOFMqKzWsFThF27ZfRTKHD5+KtppLK9nCJaY
+	ProqUWl57UUppJSZeEUGchynMyVvK5gfoOk90UhquEY1CZcF6Nsl7q2ZRpivnHrN5quZPYVYDvM
+	d8cedIZXHz94kaFdGQkZhfIAmmgiboIVTO0+xBAaZd7zkjUSloPqwqzEhvY35qcIxWbneeh
+X-Google-Smtp-Source: AGHT+IFjshciKlmIzBIB1jw3LAR8ZYMAQPyyhOAHw8JXPxmnDCkeL3I1RpqctkebF7xjVj+9QrljiQ==
+X-Received: by 2002:a17:902:e94d:b0:215:b18d:ca with SMTP id d9443c01a7336-218c9262d3fmr19286865ad.18.1734390804203;
+        Mon, 16 Dec 2024 15:13:24 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-218a1dcc47bsm48333255ad.63.2024.12.16.15.13.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2024 15:13:23 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH 0/2] perf: tests: Fix object code reading test for riscv
+Date: Mon, 16 Dec 2024 15:12:50 -0800
+Message-Id: <20241216-perf_fix_riscv_obj_reading-v1-0-b75962660a9b@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241216163033.GA700645@e132581.arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPKzYGcC/x3MQQqAIBBA0avErBNyLIiuEiFqY00LixEikO6et
+ Hzw+QUyCVOGqSkgdHPmM1XotoGwu7SR4rUasMNeozbqIok28mOFc7jt6Q8r5FZOmwrOxw49mTA
+ OUAeXUA3/+by87wdZlscZbAAAAA==
+X-Change-ID: 20241213-perf_fix_riscv_obj_reading-cabf02be3c85
+To: Masahiro Yamada <masahiroy@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <ndesaulniers@google.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
+ =?utf-8?q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+ Nelson Chu <nelson@rivosinc.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, llvm@lists.linux.dev, 
+ linux-perf-users@vger.kernel.org, linux-security-module@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1133; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=IOgGM2w7pk3oigV1gqLUmR9Qqpa9O/Il6zfGw3fe3jI=;
+ b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ3rCFo5+3e1tQisqpS6cac/wyM1MmJaWySK9PGtBBvOv0
+ 6Xbun91lLIwiHEwyIopsvBca2BuvaNfdlS0bALMHFYmkCEMXJwCMBG+LEaGb7e2ZHT+jXg/4T8D
+ c2X1sxcK2mW1O46Jy13fG73kPPv5XEaGxZM1Cxg2/bUOU7Tlnu+i9MlYSu3ZjWSraXInZx/vuze
+ VAwA=
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-On Mon, Dec 16, 2024 at 04:30:33PM +0000, Leo Yan wrote:
-> On Mon, Dec 16, 2024 at 11:23:29AM +0000, Quentin Monnet wrote:
-> > 
-> > 2024-12-15 22:12 UTC+0000 ~ Leo Yan <leo.yan@arm.com>
-> > > When the feature libelf-zstd is detected, the zstd lib is required by
-> > > libelf.  Link the zstd lib in this case.
-> > >
-> > > Signed-off-by: Leo Yan <leo.yan@arm.com>
-> > > Tested-by: Namhyung Kim <namhyung@kernel.org>
-> > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > 
-> > Reviewed-by: Quentin Monnet <qmo@kernel.org>
-> > 
-> > Thank you! And thanks for the updated commit description in your first
-> > patch, looks great.
-> 
-> Thank you for continuous review, Quentin!
+There was a breaking change to binutils objdump that causes partial
+instructions to no longer be dumped. This behavior is different from
+what the "Object code reading" test expects. Add a Kconfig variable that
+checks the version of objdump and conditionally enables the perf test
+fix for riscv objdump versions effected by this issue.
 
-Applied locally and test building now, please holler if someone thinks
-this should be processed somewhere else.
+A binutils patch has been sent as well to fix this in objdump [1].
 
-- Arnaldo
+Link:
+https://sourceware.org/pipermail/binutils/2024-December/138139.html [1]
+
+To: 
+
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+Charlie Jenkins (2):
+      kbuild: Check version of objdump
+      tools: perf: tests: Fix code reading for riscv
+
+ arch/riscv/Kconfig              |  5 +++
+ init/Kconfig                    | 10 ++++++
+ scripts/Kconfig.include         |  6 ++++
+ scripts/objdump-version.sh      | 69 +++++++++++++++++++++++++++++++++++++++++
+ tools/perf/tests/code-reading.c | 17 +++++++++-
+ 5 files changed, 106 insertions(+), 1 deletion(-)
+---
+base-commit: fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
+change-id: 20241213-perf_fix_riscv_obj_reading-cabf02be3c85
+-- 
+- Charlie
+
