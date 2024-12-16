@@ -1,132 +1,70 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291202063E1
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Dec 2024 17:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D0B2063C4;
+	Mon, 16 Dec 2024 17:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734369692; cv=none; b=LevZcRDFHwkPAirMZMsK8G3Vpiy1F/RhVprij4kzRvAVBPhao0QiFfo3309CY0E2HvWHFrkc33BPDUFmO+ffInWuixLrHoJ9K3sF6J9rCyxLeJs+5l3U1PhhRLUxJ0y8bbdQKE2aubhbtnmYsDwoxQc9J+LNOJhcsPHUy0t/s6s=
+	t=1734371461; cv=none; b=MJqBuOYlrLyli0Z/v/pPECAbOAmWbEoL7vk4juV4jNnvxeJGbWmEBqBwaoSJ5V1FS7coj6gC+QXownBOvrqqRPC5Fj4pLbtnNh6ogxHwtd20m5XpaMECydZWSeIYQmfIQ+dd1mXCcVvbbs/ULZbSDC/fU29GS7f5CIB3/eRsQ6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734369692; c=relaxed/simple;
-	bh=iSi59v8LNr+EPwWCBvXOnQ0Kss0DSiv4S3oup6h2dsA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=VBIyQTQ0YsYwVgIX5TWX4e6cBoiBaFf5r9QZkspzmLHjYjxeAepS/rENakKCeZgdPrnvSh0R3B/Au+o+DwUVVAVI2Zg+WXuuOA/Crd/LyCFf6hUlMZp2pNlmjAEuqEhE5mjMkbv55MG1+9KRdlClYE36GFL3mwW9Tjha+hPHHOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=r29ylNXP; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1734371461; c=relaxed/simple;
+	bh=XPoUp67ed4JoOg0ycSqESbmQXikBffSLNT+vnSBT4A8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VmvEC8htbZA5+NLIMqY+t5ziUvBqfTXd6q87+cHJn5mtAYYYYToxQrgS4Cq3coQv1B3MD8Itq4IKhbH3mUAbrC0YfDdOSN/KOQOJ0pFRXypdq6r+roYmWM7/cKA807KqjxOgyBeY7EbONdgWy0OTwlQKS2NcYWghy5XenFsrOhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUS4EupW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="r29ylNXP"
-Message-ID: <80f412f1-a060-463b-9034-3128906e6929@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1734369686;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o9LLLaGjtfz1xmvBfYNrPAJD9KQz5/pkDMu0zRApdZY=;
-	b=r29ylNXPDZN66EP4Nx70zpHwFezQHTn2fMdw5+OKcmlwm/aWiSqVfCa3roIbmCex4aBjz4
-	A2CGZKihtsbe0U6kFvlauBQS7PALEyZOe1wcZcLlmzljOLnp20FqrvLWILlRHC4DlmXqh4
-	zeLB7/4+49q8dHDvORF5l3Z7RyM12qU=
-Date: Mon, 16 Dec 2024 09:21:15 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUS4EupW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15DF0C4CED0;
+	Mon, 16 Dec 2024 17:50:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734371460;
+	bh=XPoUp67ed4JoOg0ycSqESbmQXikBffSLNT+vnSBT4A8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JUS4EupWCBbJ4rlfyoEiW4ciIRhZ5qiRuwpunzyaQG3ilqwaMambY46hLzMM41qHT
+	 EEpvStm/JYTKjnpg8Vy+RZxCwK8ShsJQj4GjwG2LFAxahBpQ7VM0ItLOTUq7Oruw/v
+	 txmBU8VIyVNMlEFJZIhXRr3COxm1e3oquzPuz71T6ZZfYRZoXm7mgQgHVotqRlBjI+
+	 TVggZZdQeUtAOe1j328RfyjlWcxw+3ToIKhNA/31GfNtqpXxG565iTvfZ+2o8Me/VQ
+	 ru6bZ5QEjtb+zY3wmOneJIIlsOB/+ZLe7Gy07jGhPe85VJAh9pWTT8qEtf0Bkm8tJJ
+	 FkbMx7zVewG1w==
+Date: Mon, 16 Dec 2024 14:50:57 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: kajoljain <kjain@linux.ibm.com>
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
+	adrian.hunter@intel.com, irogers@google.com, namhyung@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com, mpetlan@redhat.com, vmolnaro@redhat.com
+Subject: Re: [PATCH V3] tools/perf/tests/shell/base_probe: Enhance
+ print_overall_results to print summary information
+Message-ID: <Z2BogUY4sx8mqrAg@x1>
+References: <20241206135254.35727-1-atrajeev@linux.vnet.ibm.com>
+ <32b19139-27f2-4f39-a2ae-25027acc980e@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1 2/7] bpf: Add bpf_perf_event_aux_pause kfunc
-To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>, Namhyung Kim <namhyung@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- James Clark <james.clark@linaro.org>, "Liang, Kan"
- <kan.liang@linux.intel.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Matt Bobrowski <mattbobrowski@google.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>
-References: <20241215193436.275278-1-leo.yan@arm.com>
- <20241215193436.275278-3-leo.yan@arm.com>
-Content-Language: en-GB
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <20241215193436.275278-3-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <32b19139-27f2-4f39-a2ae-25027acc980e@linux.ibm.com>
 
+On Wed, Dec 11, 2024 at 05:33:50PM +0530, kajoljain wrote:
+> On 12/6/24 19:22, Athira Rajeev wrote:
+> > Here -a and -d doesn't require DWARF. Similarly there
+> > are few other tests requiring DWARF. To hint the user that
+> > missing dwarf could be one issue, update print_overall_results
+> > to print a comment string along with summary hinting the possible
+> > cause. Update test_invalid_options.sh and test_line_semantics.sh
+> > to pass the info about dwarf requirement since these tests
+> > failed when perf is built without DWARF. Use the check for
+> > presence of dwarf with "perf check feature" and append the
+> > hint message based on the result.
+ 
+> Patch looks fine to me.
+ 
+> Reviewed-by: kjain@linux.ibm.com
 
+Thanks, applied to perf-tools-next,
 
-
-On 12/15/24 11:34 AM, Leo Yan wrote:
-> The bpf_perf_event_aux_pause kfunc will be used to control the Perf AUX
-> area to pause or resume.
->
-> An example use-case is attaching eBPF to Ftrace tracepoints.  When a
-> tracepoint is hit, the associated eBPF program will be executed.  The
-> eBPF program can invoke bpf_perf_event_aux_pause() to pause or resume
-> AUX trace.  This is useful for fine-grained tracing by combining
-> Perf and eBPF.
->
-> This commit implements the bpf_perf_event_aux_pause kfunc, and make it
-> pass the eBPF verifier.
-
-The subject and commit message mentions to implement a kfunc,
-but actually you implemented a uapi helper. Please implement a kfunc
-instead (searching __bpf_kfunc in kernel/bpf directory).
-
->
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->   include/uapi/linux/bpf.h | 21 ++++++++++++++++
->   kernel/bpf/verifier.c    |  2 ++
->   kernel/trace/bpf_trace.c | 52 ++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 75 insertions(+)
->
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index 4162afc6b5d0..678278c91ce2 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -5795,6 +5795,26 @@ union bpf_attr {
->    *		0 on success.
->    *
->    *		**-ENOENT** if the bpf_local_storage cannot be found.
-> + *
-> + * long bpf_perf_event_aux_pause(struct bpf_map *map, u64 flags, u32 pause)
-> + *	Description
-> + *		Pause or resume an AUX area trace associated to the perf event.
-> + *
-> + *		The *flags* argument is specified as the key value for
-> + *		retrieving event pointer from the passed *map*.
-> + *
-> + *		The *pause* argument controls AUX trace pause or resume.
-> + *		Non-zero values (true) are to pause the AUX trace and the zero
-> + *		value (false) is for re-enabling the AUX trace.
-> + *	Return
-> + *		0 on success.
-> + *
-> + *		**-ENOENT** if not found event in the events map.
-> + *
-> + *		**-E2BIG** if the event index passed in the *flags* parameter
-> + *		is out-of-range of the map.
-> + *
-> + *		**-EINVAL** if the flags passed is an invalid value.
->    */
->   #define ___BPF_FUNC_MAPPER(FN, ctx...)			\
->   	FN(unspec, 0, ##ctx)				\
-> @@ -6009,6 +6029,7 @@ union bpf_attr {
->   	FN(user_ringbuf_drain, 209, ##ctx)		\
->   	FN(cgrp_storage_get, 210, ##ctx)		\
->   	FN(cgrp_storage_delete, 211, ##ctx)		\
-> +	FN(perf_event_aux_pause, 212, ##ctx)		\
->   	/* */
->   
->   /* backwards-compatibility macros for users of __BPF_FUNC_MAPPER that don't
->
-[...]
+- Arnaldo
