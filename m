@@ -1,128 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D331D5151;
-	Mon, 16 Dec 2024 07:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75446202F7C;
+	Mon, 16 Dec 2024 10:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734332599; cv=none; b=HA/xAa8bo1d8xhNZyNQWxPHRBqg9190KSZFma7dm3LRS7n1r33b8Q8Wp65tSjgWgC5B4at3uWXdC5X8xA6tT1KuGmhkmb4nssGye8VpG1RnTrAraVJySc4Hx2JpBxv1jY3dJt+THXmhyTXHFJcSVwcmdiadWqgz88/E4r326xTc=
+	t=1734343369; cv=none; b=Eb9sDgARNvWBeR+XpJfCa1RYfL11xMGctws4at03tEnjJ00X6sfWBGEbnWTNUo4RrucRrqXucU1PuyxuEspjqS94Ng14L1hAT1qkpbgljZKQ8On9kmbbDHwVN0B6UP20duKFDpovuKyumTgBQUmReDNnjzH9sDOzDDKQxCC09CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734332599; c=relaxed/simple;
-	bh=8P7g3If911f0PrtJhj9QLr/GhMEjTmsK8A98libHOKQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SJNc0uCXxUqdViUunK3gg1iKrQZts3hghqjKCSQHzR6tAQAjUPnCi8k2gwwZ++Gf3r8szI0M+jozhROiJGv22QxxCRn92Tb2GNVx6HPvqrBry0cPF9MHMq0djzL7pRrdzLvKLBJVFqWZOGZXCXA+ua6C2eyIR9cwNDxUjhssoKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T3Xs5jih; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1734343369; c=relaxed/simple;
+	bh=fdcJgULOjQL+Z6+pomzxQPrgHzhLspJqOhTDyxL5yBk=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=HTomKNTHliBvvtfcNX1TC86ttEsRcFlxWBitZBNXBFyIMmLTnYs0YGUZbNFVzgIS3hqWbuR19esozUqn1v+ruNHdSGLa6VIC5uvvTkoEO8cQl6V2rzjAr2aBJaI0yE1Li+6Tb3tTSxBxaPNmB0JfoVxs2unS3PwnuB2rL6jHad8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T9pqEC0p; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T3Xs5jih"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734332598; x=1765868598;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8P7g3If911f0PrtJhj9QLr/GhMEjTmsK8A98libHOKQ=;
-  b=T3Xs5jih9iLDw+M5IEl1HWJDAD8ubUQJwXMeNBF/F4Ri+XRpzy9H9dDL
-   iyLt2h6OVY8TlWJ1g3w5mTQJ5b8OA1pJ+qqSi6dpksFMGuuTgEEdctQkX
-   jLDITzU8GEjxITOdpaV/tnh4WrmyA5+zuPLKomNdPDnCAmv84HeoDOFhl
-   efEgbGGylQYzrW5nN4hI/Xua+aW7XSre2ArY3bN/kZwVvLUr1NRf2D7nz
-   egVNhdAq+8ikwcsyRlu+HAE0tkmJkNQNCt57cW+eiihcGi8ZQe5yAlcTK
-   v0LbFpmUqRUPa5gJ6yPA6F0k4LiDGw1triBuxHcIe1V9TiYYEKbgvWA5i
-   Q==;
-X-CSE-ConnectionGUID: o53wegZ6QmOs6bOP/Yd6SQ==
-X-CSE-MsgGUID: 1f7cL4raR2urVF291DzEmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11287"; a="34584290"
-X-IronPort-AV: E=Sophos;i="6.12,237,1728975600"; 
-   d="scan'208";a="34584290"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2024 23:03:18 -0800
-X-CSE-ConnectionGUID: lFCkl4GWQ4uLh5aW32Dhcw==
-X-CSE-MsgGUID: IjEH/Bg5RQ+DCZh8R7gW7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="101258828"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.ger.corp.intel.com) ([10.245.115.59])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2024 23:03:15 -0800
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Leo Yan <leo.yan@arm.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH V16 7/7] perf intel-pt: Add a test for pause / resume
-Date: Mon, 16 Dec 2024 09:02:43 +0200
-Message-ID: <20241216070244.14450-8-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241216070244.14450-1-adrian.hunter@intel.com>
-References: <20241216070244.14450-1-adrian.hunter@intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T9pqEC0p"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BG3qPq8011656;
+	Mon, 16 Dec 2024 10:02:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=GMfSVZ
+	rUKd+3JsU6/oSzmVKPJb1iTEVgft5NcsULspk=; b=T9pqEC0p1qUk7+oYu3PIQq
+	CSz5mDb6lSXiu2sX0KHl5RKrS7i6NGrXe4fhWxF/c4KlTTxeaZ22eMoC9fTpxNRc
+	BoWbVYzCXD54smos6ME2OZx8228kApWFBt3vfO0BLgj96e3CZha7ecM8K1UPk+Q7
+	mtoo1g1yaNSpQoaGtwfRwIwN+GIQAUyzo8gRkisJNnyhoPpFLRkwrBCkrpW4r/t2
+	eW/2sl8bM+6sZmnX3hF86fKZBevqeQGgrUMqor/3HAfZzwwsR6RAv0P1gcmIAyNU
+	3pezeX86vscGEMXEIS+RUF/in5XqFYoSS1coWy1ecUfcRnkmMHrkAx5NpnjtpsiA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43jcpb1h8g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Dec 2024 10:02:39 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4BG9vNn3003775;
+	Mon, 16 Dec 2024 10:02:39 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43jcpb1h8e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Dec 2024 10:02:39 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BG8JUWY029329;
+	Mon, 16 Dec 2024 10:02:37 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 43hmbsdk8n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Dec 2024 10:02:37 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BGA2Ykw48759252
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 16 Dec 2024 10:02:34 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5D76020063;
+	Mon, 16 Dec 2024 10:02:34 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 58F192005A;
+	Mon, 16 Dec 2024 10:02:27 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.241.124])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 16 Dec 2024 10:02:26 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: [PATCH] tools/perf/arch/powerpc: Add register mask for power11
+ PVR in extended regs
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <2907ca2f-b973-42fd-ae03-99732dfda7a1@linux.ibm.com>
+Date: Mon, 16 Dec 2024 15:32:12 +0530
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        hbathini@linux.ibm.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0402AAF0-5498-48C7-BEBA-2C0B7508D9E2@linux.vnet.ibm.com>
+References: <20241206135637.36166-1-atrajeev@linux.vnet.ibm.com>
+ <2907ca2f-b973-42fd-ae03-99732dfda7a1@linux.ibm.com>
+To: kajoljain <kjain@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+X-Mailer: Apple Mail (2.3818.100.11.1.3)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: r-IvdmR-sjJKaBbc_LpFv8jeup8W4K4o
+X-Proofpoint-GUID: pkGSb33H05pQcJrbwsQWXg2E2tI0LIeF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 impostorscore=0 spamscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2412160083
 
-Add a simple sub-test to the "Miscellaneous Intel PT testing" test to
-check pause / resume.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/tests/shell/test_intel_pt.sh | 28 +++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
 
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index e6f0070975f6..f3a9a040bacc 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -644,6 +644,33 @@ test_pipe()
- 	return 0
- }
- 
-+test_pause_resume()
-+{
-+	echo "--- Test with pause / resume ---"
-+	if ! perf_record_no_decode -o "${perfdatafile}" -e intel_pt/aux-action=start-paused/u uname ; then
-+		echo "SKIP: pause / resume is not supported"
-+		return 2
-+	fi
-+	if ! perf_record_no_bpf -o "${perfdatafile}" \
-+			-e intel_pt/aux-action=start-paused/u \
-+			-e instructions/period=50000,aux-action=resume,name=Resume/u \
-+			-e instructions/period=100000,aux-action=pause,name=Pause/u uname  ; then
-+		echo "perf record with pause / resume failed"
-+		return 1
-+	fi
-+	if ! perf script -i "${perfdatafile}" --itrace=b -Fperiod,event | \
-+			awk 'BEGIN {paused=1;branches=0}
-+			     /Resume/ {paused=0}
-+			     /branches/ {if (paused) exit 1;branches=1}
-+			     /Pause/ {paused=1}
-+			     END {if (!branches) exit 1}' ; then
-+		echo "perf record with pause / resume failed"
-+		return 1
-+	fi
-+	echo OK
-+	return 0
-+}
-+
- count_result()
- {
- 	if [ "$1" -eq 2 ] ; then
-@@ -672,6 +699,7 @@ test_power_event			|| ret=$? ; count_result $ret ; ret=0
- test_no_tnt				|| ret=$? ; count_result $ret ; ret=0
- test_event_trace			|| ret=$? ; count_result $ret ; ret=0
- test_pipe				|| ret=$? ; count_result $ret ; ret=0
-+test_pause_resume			|| ret=$? ; count_result $ret ; ret=0
- 
- cleanup
- 
--- 
-2.43.0
+> On 11 Dec 2024, at 5:32=E2=80=AFPM, kajoljain <kjain@linux.ibm.com> =
+wrote:
+>=20
+>=20
+>=20
+> On 12/6/24 19:26, Athira Rajeev wrote:
+>> Perf tools side uses extended mask to display the platform
+>> supported register names (with -I? option) to the user
+>> and also send this mask to the kernel to capture the extended =
+registers
+>> as part of each sample. This mask value is decided based on
+>> the processor version ( from PVR ).
+>>=20
+>> Add PVR value for power11 to enable capturing the extended regs
+>> as part of sample in power11.
+>=20
+> Patch looks fine to me.
+>=20
+> Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+
+Hi
+
+Can we please pull in this patch if it looks fine.
+
+Thanks
+Athira
+>=20
+>=20
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>>=20
+>> tools/perf/arch/powerpc/util/perf_regs.c | 3 ++-
+>> 1 file changed, 2 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/tools/perf/arch/powerpc/util/perf_regs.c =
+b/tools/perf/arch/powerpc/util/perf_regs.c
+>> index e8e6e6fc6f17..bd36cfd420a2 100644
+>> --- a/tools/perf/arch/powerpc/util/perf_regs.c
+>> +++ b/tools/perf/arch/powerpc/util/perf_regs.c
+>> @@ -16,6 +16,7 @@
+>>=20
+>> #define PVR_POWER9 0x004E
+>> #define PVR_POWER10 0x0080
+>> +#define PVR_POWER11 0x0082
+>>=20
+>> static const struct sample_reg sample_reg_masks[] =3D {
+>> SMPL_REG(r0, PERF_REG_POWERPC_R0),
+>> @@ -207,7 +208,7 @@ uint64_t arch__intr_reg_mask(void)
+>> version =3D (((mfspr(SPRN_PVR)) >>  16) & 0xFFFF);
+>> if (version =3D=3D PVR_POWER9)
+>> extended_mask =3D PERF_REG_PMU_MASK_300;
+>> - else if (version =3D=3D PVR_POWER10)
+>> + else if ((version =3D=3D PVR_POWER10) || (version =3D=3D =
+PVR_POWER11))
+>> extended_mask =3D PERF_REG_PMU_MASK_31;
+>> else
+>> return mask;
+>=20
 
