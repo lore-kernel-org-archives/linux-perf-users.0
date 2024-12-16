@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E011F6688;
-	Mon, 16 Dec 2024 20:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DD61F7065;
+	Mon, 16 Dec 2024 20:44:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734381874; cv=none; b=Wi/aDVX+b6nFcgvq8RWDOKSRAAEihSeR1PN2ytyTDd0S7YI0CpMIiHFC7JcFMkEtD5S3UDnAlS6TKZHveDTCL3KwaChyfjURh19V0/c+aWEtY7+fEVKdVwpSvkAvOxXmlMP64S1r/xSAejOXmhtYLKQQXfjodXxA0jND//0QVmg=
+	t=1734381875; cv=none; b=r4Xk5MSWq1ourcJZzd4tezwRAV7QIgjgldNbJWt+sNdPWR463sHtYWlb4Tweh7G0Im9UdKlTYQJvk0QNBhIqipLX89h7vZGahIb0MdsSJycHsPoZW757THx2B897jBAhsDMzQPIzmfnYEiiHq1lMRS4fGfCiLCUKxMnWOPdWYpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734381874; c=relaxed/simple;
-	bh=U3AbperiFdR00EucVYwQkNlV4FNX3iXJ/930lGaTXn4=;
+	s=arc-20240116; t=1734381875; c=relaxed/simple;
+	bh=2XUkz66BwP2x5AkumLZ0Q0cmmuaod4syxDeA06cfqWk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OENQkldhZr6L/WwGSgtFJ9lx4RqalvTqhKGU3LoJyK0kIHWYW7QCkfKocpFWvA1keJ6+mX5h5F39jWLA7SHQ3Eh4fjg2ALEmez7IcWyrG5+BrA9oOIxu73GSRL9SKegcPaZ2X8+ohWcJyb6UQjcOFIcrrgcqLSthMUeio1hcbLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ap2EZ/PC; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=NUVk7r+XachKco4JRx/eM/aGdyBoy65WC91xN8r+xy2ITL9DOIckPs1qAoKf44afPJ3AJ+WhaqnopkCj4JFQ+t2VMkOr5/qWXVT6sQ5+0TuX4T+WNflLy9IINRckQFPqa0Ky6CE62k1Uhx8dOLm3GdPMQ35/2eEVOs/45ongsqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OEVbs0KV; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ap2EZ/PC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OEVbs0KV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734381872; x=1765917872;
+  t=1734381874; x=1765917874;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=U3AbperiFdR00EucVYwQkNlV4FNX3iXJ/930lGaTXn4=;
-  b=Ap2EZ/PCFkUn+jug60UTByFci6484ypkqp7Pvz5etBIheixco95ayoAz
-   7MopdrIjgiTVFOaVgBilpSL8WEvQU90NaIpDhIeAgZRXrNHtjyzeE9Zlp
-   dyfNA0CAERK3S2ota39qX0I1qUt5ExlBw4WqMmbPL94bd+3NkFNCd9AuM
-   +q3gnpnZ/uHDDAjTJAvbB+VhjCBnmiVytpOT55qtEJWn7P9k5sdcj7/yW
-   /kiJppH1lMbnMXc3xtEa4CSSMJFz3syIgIhL8q7zh6Fn+JbXoRmzH+RJE
-   UX93JBqInCQbhHWdfF9ygo3fuwVfRi5J5ekHffWOSH2UySdmWPBwy5YL7
-   A==;
-X-CSE-ConnectionGUID: LpeMaNatQrKL0TLTNXBHNA==
-X-CSE-MsgGUID: O/IJjXsTQYu0gsd7nCP1ug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="38461514"
+  bh=2XUkz66BwP2x5AkumLZ0Q0cmmuaod4syxDeA06cfqWk=;
+  b=OEVbs0KVu3CW8MqvQOR18yCHUhOPz8kGlYi/cFSq+CeqPi0ax7hg809d
+   e2pgeRI4kRUZOnkIu816rw6HlKGpJ9YTd0i3lDLhIeiXOeifnoG7M6bWy
+   Smqc7/4lFiXLKM6h+7HAFGqVhVmS8QHsEccm208A+00UOskYHgr4a0242
+   cxCzTziKu9KV6AZ3/ouK0LwWsi2JCxFMjaHs3HM8XNTQLpdDQIiGvzAGm
+   KRVUoWT19y68uFtRWV9Bgq08UjO/rGwSmiu6wLabozzu0Cg9kIQHD2Qdu
+   UBnTuCukPg3T1Vr4faBoH1HBtWLCXnjJLpQeLf+4AXtQQaZ4z5FPVz0gg
+   g==;
+X-CSE-ConnectionGUID: xztycPG9RTOCtBrrFpNzDA==
+X-CSE-MsgGUID: Rhj4Hpk9Qb6WQMYc0XMygQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="38461528"
 X-IronPort-AV: E=Sophos;i="6.12,239,1728975600"; 
-   d="scan'208";a="38461514"
+   d="scan'208";a="38461528"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 12:44:30 -0800
-X-CSE-ConnectionGUID: l8kQGuigSUm9ANTEwxqzFA==
-X-CSE-MsgGUID: /rHycRDcQuWn7blaJM7KpA==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 12:44:31 -0800
+X-CSE-ConnectionGUID: jW+kudgMTyuAh+aYsYiX2g==
+X-CSE-MsgGUID: NTR2NNbvRdaeTC5c0+UZMA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="101926355"
+   d="scan'208";a="101926358"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
   by fmviesa005.fm.intel.com with ESMTP; 16 Dec 2024 12:44:30 -0800
 From: kan.liang@linux.intel.com
@@ -53,13 +53,10 @@ To: peterz@infradead.org,
 	linux-perf-users@vger.kernel.org
 Cc: ak@linux.intel.com,
 	eranian@google.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	silviazhao <silviazhao-oc@zhaoxin.com>
-Subject: [PATCH V5 2/4] perf/x86: Extend event update interface
-Date: Mon, 16 Dec 2024 12:45:03 -0800
-Message-Id: <20241216204505.748363-2-kan.liang@linux.intel.com>
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V5 4/4] perf/x86/intel: Support PEBS counters snapshotting
+Date: Mon, 16 Dec 2024 12:45:05 -0800
+Message-Id: <20241216204505.748363-4-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20241216204505.748363-1-kan.liang@linux.intel.com>
 References: <20241216204505.748363-1-kan.liang@linux.intel.com>
@@ -73,272 +70,365 @@ Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The current event update interface directly reads the values from the
-counter, but the values may not be the accurate ones users require. For
-example, the sample read feature wants the counter value of the member
-events when the leader event is overflow. But with the current
-implementation, the read (event update) actually happens in the NMI
-handler. There may be a small gap between the overflow and the NMI
-handler. The new Intel PEBS counters snapshotting feature can provide
-the accurate counter value in the overflow. The event update interface
-has to be updated to apply the given accurate values.
+The counters snapshotting is a new adaptive PEBS extension, which can
+capture programmable counters, fixed-function counters, and performance
+metrics in a PEBS record. The feature is available in the PEBS format
+V6.
 
-Pass the accurate values via the event update interface. If the value is
-not available, still directly read the counter.
+The target counters can be configured in the new fields of MSR_PEBS_CFG.
+Then the PEBS HW will generate the bit mask of counters (Counters Group
+Header) followed by the content of all the requested counters into a
+PEBS record.
 
-Using u64 * rather than u64 as the new parameter. Because 0 might be a
-valid rdpmc() value. The !val cannot be used to distinguish between
-there begin an argument and there not being one. Also, for some cases,
-e.g., intel_update_topdown_event, there could be more than one
-counter/register are read.
+The current Linux perf sample read feature intends to read the counters
+of other member events when the leader event is overflowing. But the
+current read is in the NMI handler, which may has a small gap from
+overflow. Using the counters snapshotting feature for the sample read.
+
+Add a new PEBS_CNTR flag to indicate a sample read group that utilizes
+the counters snapshotting feature. When the group is scheduled, the
+PEBS configure can be updated accordingly.
 
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Sandipan Das <sandipan.das@amd.com>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: silviazhao <silviazhao-oc@zhaoxin.com>
 ---
 
-No change from V4
+Changes since V4
+- Always drain PEBS before handling the overflow from the non PEBS
+event overflow.
 
-The V4 can be found at 
+The V4 can be found at
 https://lore.kernel.org/lkml/20240731143835.771618-1-kan.liang@linux.intel.com/
 
- arch/x86/events/amd/core.c     |  2 +-
- arch/x86/events/core.c         | 13 ++++++-----
- arch/x86/events/intel/core.c   | 40 +++++++++++++++++++---------------
- arch/x86/events/intel/p4.c     |  2 +-
- arch/x86/events/perf_event.h   |  4 ++--
- arch/x86/events/zhaoxin/core.c |  2 +-
- 6 files changed, 36 insertions(+), 27 deletions(-)
+ arch/x86/events/intel/core.c       |  45 ++++++++++-
+ arch/x86/events/intel/ds.c         | 122 ++++++++++++++++++++++++++---
+ arch/x86/events/perf_event.h       |   8 ++
+ arch/x86/events/perf_event_flags.h |   2 +-
+ arch/x86/include/asm/perf_event.h  |  15 ++++
+ 5 files changed, 180 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 30d6ceb4c8ad..711748ea6117 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -987,7 +987,7 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
- 
- 		event = cpuc->events[idx];
- 		hwc = &event->hw;
--		x86_perf_event_update(event);
-+		x86_perf_event_update(event, NULL);
- 		mask = BIT_ULL(idx);
- 
- 		if (!(status & mask))
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index cda754f3dabe..2b6029b5e78c 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -114,7 +114,7 @@ u64 __read_mostly hw_cache_extra_regs
-  * Can only be executed on the CPU where the event is active.
-  * Returns the delta events processed.
-  */
--u64 x86_perf_event_update(struct perf_event *event)
-+u64 x86_perf_event_update(struct perf_event *event, u64 *val)
- {
- 	struct hw_perf_event *hwc = &event->hw;
- 	int shift = 64 - x86_pmu.cntval_bits;
-@@ -133,7 +133,10 @@ u64 x86_perf_event_update(struct perf_event *event)
- 	 */
- 	prev_raw_count = local64_read(&hwc->prev_count);
- 	do {
--		rdpmcl(hwc->event_base_rdpmc, new_raw_count);
-+		if (!val)
-+			rdpmcl(hwc->event_base_rdpmc, new_raw_count);
-+		else
-+			new_raw_count = *val;
- 	} while (!local64_try_cmpxchg(&hwc->prev_count,
- 				      &prev_raw_count, new_raw_count));
- 
-@@ -1602,7 +1605,7 @@ void x86_pmu_stop(struct perf_event *event, int flags)
- 		 * Drain the remaining delta count out of a event
- 		 * that we are disabling:
- 		 */
--		static_call(x86_pmu_update)(event);
-+		static_call(x86_pmu_update)(event, NULL);
- 		hwc->state |= PERF_HES_UPTODATE;
- 	}
- }
-@@ -1693,7 +1696,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
- 
- 		event = cpuc->events[idx];
- 
--		val = static_call(x86_pmu_update)(event);
-+		val = static_call(x86_pmu_update)(event, NULL);
- 		if (val & (1ULL << (x86_pmu.cntval_bits - 1)))
- 			continue;
- 
-@@ -2039,7 +2042,7 @@ static void x86_pmu_static_call_update(void)
- 
- static void _x86_pmu_read(struct perf_event *event)
- {
--	static_call(x86_pmu_update)(event);
-+	static_call(x86_pmu_update)(event, NULL);
- }
- 
- void x86_pmu_show_pmu_cap(struct pmu *pmu)
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 2e1e26846050..b448db65df52 100644
+index b448db65df52..32b28d674641 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -2418,7 +2418,7 @@ static void intel_pmu_nhm_workaround(void)
- 	for (i = 0; i < 4; i++) {
- 		event = cpuc->events[i];
- 		if (event)
--			static_call(x86_pmu_update)(event);
-+			static_call(x86_pmu_update)(event, NULL);
- 	}
- 
- 	for (i = 0; i < 4; i++) {
-@@ -2710,7 +2710,7 @@ static void update_saved_topdown_regs(struct perf_event *event, u64 slots,
-  * modify by a NMI. PMU has to be disabled before calling this function.
-  */
- 
--static u64 intel_update_topdown_event(struct perf_event *event, int metric_end)
-+static u64 intel_update_topdown_event(struct perf_event *event, int metric_end, u64 *val)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct perf_event *other;
-@@ -2718,13 +2718,18 @@ static u64 intel_update_topdown_event(struct perf_event *event, int metric_end)
- 	bool reset = true;
- 	int idx;
- 
--	/* read Fixed counter 3 */
--	rdpmcl((3 | INTEL_PMC_FIXED_RDPMC_BASE), slots);
--	if (!slots)
--		return 0;
-+	if (!val) {
-+		/* read Fixed counter 3 */
-+		rdpmcl((3 | INTEL_PMC_FIXED_RDPMC_BASE), slots);
-+		if (!slots)
-+			return 0;
- 
--	/* read PERF_METRICS */
--	rdpmcl(INTEL_PMC_FIXED_RDPMC_METRICS, metrics);
-+		/* read PERF_METRICS */
-+		rdpmcl(INTEL_PMC_FIXED_RDPMC_METRICS, metrics);
-+	} else {
-+		slots = val[0];
-+		metrics = val[1];
-+	}
- 
- 	for_each_set_bit(idx, cpuc->active_mask, metric_end + 1) {
- 		if (!is_topdown_idx(idx))
-@@ -2767,10 +2772,11 @@ static u64 intel_update_topdown_event(struct perf_event *event, int metric_end)
- 	return slots;
- }
- 
--static u64 icl_update_topdown_event(struct perf_event *event)
-+static u64 icl_update_topdown_event(struct perf_event *event, u64 *val)
- {
- 	return intel_update_topdown_event(event, INTEL_PMC_IDX_METRIC_BASE +
--						 x86_pmu.num_topdown_events - 1);
-+						 x86_pmu.num_topdown_events - 1,
-+					  val);
- }
- 
- DEFINE_STATIC_CALL(intel_pmu_update_topdown_event, x86_perf_event_update);
-@@ -2785,7 +2791,7 @@ static void intel_pmu_read_topdown_event(struct perf_event *event)
- 		return;
- 
- 	perf_pmu_disable(event->pmu);
--	static_call(intel_pmu_update_topdown_event)(event);
-+	static_call(intel_pmu_update_topdown_event)(event, NULL);
- 	perf_pmu_enable(event->pmu);
- }
- 
-@@ -2796,7 +2802,7 @@ static void intel_pmu_read_event(struct perf_event *event)
- 	else if (is_topdown_count(event))
- 		intel_pmu_read_topdown_event(event);
- 	else
--		x86_perf_event_update(event);
-+		x86_perf_event_update(event, NULL);
- }
- 
- static void intel_pmu_enable_fixed(struct perf_event *event)
-@@ -2899,7 +2905,7 @@ static void intel_pmu_add_event(struct perf_event *event)
-  */
- int intel_pmu_save_and_restart(struct perf_event *event)
- {
--	static_call(x86_pmu_update)(event);
-+	static_call(x86_pmu_update)(event, NULL);
- 	/*
- 	 * For a checkpointed counter always reset back to 0.  This
- 	 * avoids a situation where the counter overflows, aborts the
-@@ -2922,12 +2928,12 @@ static int intel_pmu_set_period(struct perf_event *event)
- 	return x86_perf_event_set_period(event);
- }
- 
--static u64 intel_pmu_update(struct perf_event *event)
-+static u64 intel_pmu_update(struct perf_event *event, u64 *val)
- {
- 	if (unlikely(is_topdown_count(event)))
--		return static_call(intel_pmu_update_topdown_event)(event);
-+		return static_call(intel_pmu_update_topdown_event)(event, val);
- 
--	return x86_perf_event_update(event);
-+	return x86_perf_event_update(event, val);
- }
- 
- static void intel_pmu_reset(void)
-@@ -3091,7 +3097,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 	 */
- 	if (__test_and_clear_bit(GLOBAL_STATUS_PERF_METRICS_OVF_BIT, (unsigned long *)&status)) {
- 		handled++;
--		static_call(intel_pmu_update_topdown_event)(NULL);
-+		static_call(intel_pmu_update_topdown_event)(NULL, NULL);
- 	}
- 
- 	/*
-diff --git a/arch/x86/events/intel/p4.c b/arch/x86/events/intel/p4.c
-index 844bc4fc4724..3177be0dedd1 100644
---- a/arch/x86/events/intel/p4.c
-+++ b/arch/x86/events/intel/p4.c
-@@ -1058,7 +1058,7 @@ static int p4_pmu_handle_irq(struct pt_regs *regs)
- 		/* it might be unflagged overflow */
- 		overflow = p4_pmu_clear_cccr_ovf(hwc);
- 
--		val = x86_perf_event_update(event);
-+		val = x86_perf_event_update(event, NULL);
- 		if (!overflow && (val & (1ULL << (x86_pmu.cntval_bits - 1))))
- 			continue;
- 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 82c6f45ce975..14c8262d4811 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -796,7 +796,7 @@ struct x86_pmu {
- 	void		(*del)(struct perf_event *);
- 	void		(*read)(struct perf_event *event);
- 	int		(*set_period)(struct perf_event *event);
--	u64		(*update)(struct perf_event *event);
-+	u64		(*update)(struct perf_event *event, u64 *val);
- 	int		(*hw_config)(struct perf_event *event);
- 	int		(*schedule_events)(struct cpu_hw_events *cpuc, int n, int *assign);
- 	unsigned	eventsel;
-@@ -1145,7 +1145,7 @@ extern u64 __read_mostly hw_cache_extra_regs
- 				[PERF_COUNT_HW_CACHE_OP_MAX]
- 				[PERF_COUNT_HW_CACHE_RESULT_MAX];
- 
--u64 x86_perf_event_update(struct perf_event *event);
-+u64 x86_perf_event_update(struct perf_event *event, u64 *cntr);
- 
- static inline unsigned int x86_pmu_config_addr(int index)
- {
-diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
-index 2fd9b0cf9a5e..5fe3a9eed650 100644
---- a/arch/x86/events/zhaoxin/core.c
-+++ b/arch/x86/events/zhaoxin/core.c
-@@ -391,7 +391,7 @@ static int zhaoxin_pmu_handle_irq(struct pt_regs *regs)
+@@ -3115,6 +3115,14 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
  		if (!test_bit(bit, cpuc->active_mask))
  			continue;
  
--		x86_perf_event_update(event);
-+		x86_perf_event_update(event, NULL);
- 		perf_sample_data_init(&data, 0, event->hw.last_period);
++		/*
++		 * There may be unprocessed PEBS records in the PEBS buffer,
++		 * which still stores the previous values.
++		 * Process those records first before handling the latest value.
++		 */
++		if (is_pebs_counter_event(event))
++			x86_pmu.drain_pebs(regs, &data);
++
+ 		if (!intel_pmu_save_and_restart(event))
+ 			continue;
  
- 		if (!x86_perf_event_set_period(event))
+@@ -4062,6 +4070,23 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		event->hw.flags |= PERF_X86_EVENT_PEBS_VIA_PT;
+ 	}
+ 
++	if ((event->attr.sample_type & PERF_SAMPLE_READ) &&
++	    (x86_pmu.intel_cap.pebs_format >= 6)) {
++		struct perf_event *leader = event->group_leader;
++		bool slots_leader = is_slots_event(leader);
++
++		if (slots_leader)
++			leader = list_next_entry(leader, sibling_list);
++
++		if (leader->attr.precise_ip) {
++			event->hw.flags |= PERF_X86_EVENT_PEBS_CNTR;
++			if (slots_leader) {
++				leader->hw.flags |= PERF_X86_EVENT_PEBS_CNTR;
++				event->group_leader->hw.flags |= PERF_X86_EVENT_PEBS_CNTR;
++			}
++		}
++	}
++
+ 	if ((event->attr.type == PERF_TYPE_HARDWARE) ||
+ 	    (event->attr.type == PERF_TYPE_HW_CACHE))
+ 		return 0;
+@@ -4165,6 +4190,24 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 	return 0;
+ }
+ 
++static int intel_pmu_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
++{
++	struct perf_event *event;
++	int ret = x86_schedule_events(cpuc, n, assign);
++
++	if (ret)
++		return ret;
++
++	if (cpuc->is_fake)
++		return ret;
++
++	event = cpuc->event_list[n - 1];
++	if (event && (event->group_leader->hw.flags & PERF_X86_EVENT_PEBS_CNTR))
++		intel_pmu_pebs_update_cfg(cpuc, n, assign);
++
++	return 0;
++}
++
+ /*
+  * Currently, the only caller of this function is the atomic_switch_perf_msrs().
+  * The host perf context helps to prepare the values of the real hardware for
+@@ -5298,7 +5341,7 @@ static __initconst const struct x86_pmu intel_pmu = {
+ 	.set_period		= intel_pmu_set_period,
+ 	.update			= intel_pmu_update,
+ 	.hw_config		= intel_pmu_hw_config,
+-	.schedule_events	= x86_schedule_events,
++	.schedule_events	= intel_pmu_schedule_events,
+ 	.eventsel		= MSR_ARCH_PERFMON_EVENTSEL0,
+ 	.perfctr		= MSR_ARCH_PERFMON_PERFCTR0,
+ 	.fixedctr		= MSR_ARCH_PERFMON_FIXED_CTR0,
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index ba74e1198328..e06ac9a3cdf8 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1308,10 +1308,63 @@ static void adaptive_pebs_record_size_update(void)
+ 		sz += sizeof(struct pebs_xmm);
+ 	if (pebs_data_cfg & PEBS_DATACFG_LBRS)
+ 		sz += x86_pmu.lbr_nr * sizeof(struct lbr_entry);
++	if (pebs_data_cfg & (PEBS_DATACFG_METRICS | PEBS_DATACFG_CNTR)) {
++		sz += sizeof(struct pebs_cntr_header);
++
++		/* Metrics base and Metrics Data */
++		if (pebs_data_cfg & PEBS_DATACFG_METRICS)
++			sz += 2 * sizeof(u64);
++
++		if (pebs_data_cfg & PEBS_DATACFG_CNTR) {
++			sz += hweight64((pebs_data_cfg >> PEBS_DATACFG_CNTR_SHIFT) & PEBS_DATACFG_CNTR_MASK)
++			      * sizeof(u64);
++			sz += hweight64((pebs_data_cfg >> PEBS_DATACFG_FIX_SHIFT) & PEBS_DATACFG_FIX_MASK)
++			      * sizeof(u64);
++		}
++	}
+ 
+ 	cpuc->pebs_record_size = sz;
+ }
+ 
++static void __intel_pmu_pebs_update_cfg(struct perf_event *event,
++					int idx, u64 *pebs_data_cfg)
++{
++	if (is_metric_event(event)) {
++		*pebs_data_cfg |= PEBS_DATACFG_METRICS;
++		return;
++	}
++
++	*pebs_data_cfg |= PEBS_DATACFG_CNTR;
++
++	if (idx >= INTEL_PMC_IDX_FIXED) {
++		*pebs_data_cfg |= ((1ULL << (idx - INTEL_PMC_IDX_FIXED)) & PEBS_DATACFG_FIX_MASK)
++				  << PEBS_DATACFG_FIX_SHIFT;
++	} else {
++		*pebs_data_cfg |= ((1ULL << idx) & PEBS_DATACFG_CNTR_MASK)
++				  << PEBS_DATACFG_CNTR_SHIFT;
++	}
++}
++
++void intel_pmu_pebs_update_cfg(struct cpu_hw_events *cpuc, int n, int *assign)
++{
++	struct perf_event *leader, *event;
++	u64 pebs_data_cfg = 0;
++	int i = n - 1;
++
++	leader = cpuc->event_list[i]->group_leader;
++	for (; i >= 0; i--) {
++		event = cpuc->event_list[i];
++		if (!is_pebs_counter_event(event))
++			continue;
++		if (leader != event->group_leader)
++			break;
++		__intel_pmu_pebs_update_cfg(event, assign[i], &pebs_data_cfg);
++	}
++
++	if (pebs_data_cfg & ~cpuc->pebs_data_cfg)
++		cpuc->pebs_data_cfg |= pebs_data_cfg | PEBS_UPDATE_DS_SW;
++}
++
+ #define PERF_PEBS_MEMINFO_TYPE	(PERF_SAMPLE_ADDR | PERF_SAMPLE_DATA_SRC |   \
+ 				PERF_SAMPLE_PHYS_ADDR |			     \
+ 				PERF_SAMPLE_WEIGHT_TYPE |		     \
+@@ -2049,6 +2102,40 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
+ 		}
+ 	}
+ 
++	if (format_group & (PEBS_DATACFG_CNTR | PEBS_DATACFG_METRICS)) {
++		struct pebs_cntr_header *cntr = next_record;
++		int bit;
++
++		next_record += sizeof(struct pebs_cntr_header);
++
++		for_each_set_bit(bit, (unsigned long *)&cntr->cntr, INTEL_PMC_MAX_GENERIC) {
++			x86_perf_event_update(cpuc->events[bit], (u64 *)next_record);
++			next_record += sizeof(u64);
++		}
++
++		for_each_set_bit(bit, (unsigned long *)&cntr->fixed, INTEL_PMC_MAX_FIXED) {
++			/* The slots event will be handled with perf_metric later */
++			if ((cntr->metrics == INTEL_CNTR_METRICS) &&
++			    (INTEL_PMC_IDX_FIXED_SLOTS == bit + INTEL_PMC_IDX_FIXED)) {
++				next_record += sizeof(u64);
++				continue;
++			}
++			x86_perf_event_update(cpuc->events[bit + INTEL_PMC_IDX_FIXED], (u64 *)next_record);
++			next_record += sizeof(u64);
++		}
++
++		/* HW will reload the value right after the overflow. */
++		if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
++			local64_set(&event->hw.prev_count, (u64)-event->hw.sample_period);
++
++		if (cntr->metrics == INTEL_CNTR_METRICS) {
++			static_call(intel_pmu_update_topdown_event)
++				   (event->group_leader, (u64 *)next_record);
++			next_record += 2 * sizeof(u64);
++		}
++		data->sample_flags |= PERF_SAMPLE_READ;
++	}
++
+ 	WARN_ONCE(next_record != __pebs + basic->format_size,
+ 			"PEBS record size %u, expected %llu, config %llx\n",
+ 			basic->format_size,
+@@ -2211,15 +2298,27 @@ __intel_pmu_pebs_last_event(struct perf_event *event,
+ 	}
+ 
+ 	if (hwc->flags & PERF_X86_EVENT_AUTO_RELOAD) {
+-		/*
+-		 * Now, auto-reload is only enabled in fixed period mode.
+-		 * The reload value is always hwc->sample_period.
+-		 * May need to change it, if auto-reload is enabled in
+-		 * freq mode later.
+-		 */
+-		intel_pmu_save_and_restart_reload(event, count);
+-	} else
+-		intel_pmu_save_and_restart(event);
++		if ((is_pebs_counter_event(event))) {
++			/*
++			 * The value of each sample has been updated when setup
++			 * the corresponding sample data.
++			 */
++			perf_event_update_userpage(event);
++		} else {
++			/*
++			 * Now, auto-reload is only enabled in fixed period mode.
++			 * The reload value is always hwc->sample_period.
++			 * May need to change it, if auto-reload is enabled in
++			 * freq mode later.
++			 */
++			intel_pmu_save_and_restart_reload(event, count);
++		}
++	} else {
++		if (is_pebs_counter_event(event))
++			static_call(x86_pmu_set_period)(event);
++		else
++			intel_pmu_save_and_restart(event);
++	}
+ }
+ 
+ static __always_inline void
+@@ -2552,6 +2651,9 @@ void __init intel_ds_init(void)
+ 			break;
+ 
+ 		case 6:
++			if (x86_pmu.intel_cap.pebs_baseline)
++				x86_pmu.large_pebs_flags |= PERF_SAMPLE_READ;
++			fallthrough;
+ 		case 5:
+ 			x86_pmu.pebs_ept = 1;
+ 			fallthrough;
+@@ -2576,7 +2678,7 @@ void __init intel_ds_init(void)
+ 					  PERF_SAMPLE_REGS_USER |
+ 					  PERF_SAMPLE_REGS_INTR);
+ 			}
+-			pr_cont("PEBS fmt4%c%s, ", pebs_type, pebs_qual);
++			pr_cont("PEBS fmt%d%c%s, ", format, pebs_type, pebs_qual);
+ 
+ 			if (!is_hybrid() && x86_pmu.intel_cap.pebs_output_pt_available) {
+ 				pr_cont("PEBS-via-PT, ");
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 14c8262d4811..e88dd0fcc4d4 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -115,6 +115,11 @@ static inline bool is_branch_counters_group(struct perf_event *event)
+ 	return event->group_leader->hw.flags & PERF_X86_EVENT_BRANCH_COUNTERS;
+ }
+ 
++static inline bool is_pebs_counter_event(struct perf_event *event)
++{
++	return event->hw.flags & PERF_X86_EVENT_PEBS_CNTR;
++}
++
+ struct amd_nb {
+ 	int nb_id;  /* NorthBridge id */
+ 	int refcnt; /* reference count */
+@@ -1146,6 +1151,7 @@ extern u64 __read_mostly hw_cache_extra_regs
+ 				[PERF_COUNT_HW_CACHE_RESULT_MAX];
+ 
+ u64 x86_perf_event_update(struct perf_event *event, u64 *cntr);
++DECLARE_STATIC_CALL(intel_pmu_update_topdown_event, x86_perf_event_update);
+ 
+ static inline unsigned int x86_pmu_config_addr(int index)
+ {
+@@ -1642,6 +1648,8 @@ void intel_pmu_pebs_disable_all(void);
+ 
+ void intel_pmu_pebs_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
+ 
++void intel_pmu_pebs_update_cfg(struct cpu_hw_events *cpuc, int n, int *assign);
++
+ void intel_pmu_auto_reload_read(struct perf_event *event);
+ 
+ void intel_pmu_store_pebs_lbrs(struct lbr_entry *lbr);
+diff --git a/arch/x86/events/perf_event_flags.h b/arch/x86/events/perf_event_flags.h
+index 6c977c19f2cd..1d9e385649b5 100644
+--- a/arch/x86/events/perf_event_flags.h
++++ b/arch/x86/events/perf_event_flags.h
+@@ -9,7 +9,7 @@ PERF_ARCH(PEBS_LD_HSW,		0x00008) /* haswell style datala, load */
+ PERF_ARCH(PEBS_NA_HSW,		0x00010) /* haswell style datala, unknown */
+ PERF_ARCH(EXCL,			0x00020) /* HT exclusivity on counter */
+ PERF_ARCH(DYNAMIC,		0x00040) /* dynamic alloc'd constraint */
+-			/*	0x00080	*/
++PERF_ARCH(PEBS_CNTR,		0x00080) /* PEBS counters snapshot */
+ PERF_ARCH(EXCL_ACCT,		0x00100) /* accounted EXCL event */
+ PERF_ARCH(AUTO_RELOAD,		0x00200) /* use PEBS auto-reload */
+ PERF_ARCH(LARGE_PEBS,		0x00400) /* use large PEBS */
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index cd8023d5ea46..4e28ee0f2f3e 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -140,6 +140,12 @@
+ #define PEBS_DATACFG_XMMS	BIT_ULL(2)
+ #define PEBS_DATACFG_LBRS	BIT_ULL(3)
+ #define PEBS_DATACFG_LBR_SHIFT	24
++#define PEBS_DATACFG_CNTR	BIT_ULL(4)
++#define PEBS_DATACFG_CNTR_SHIFT	32
++#define PEBS_DATACFG_CNTR_MASK	GENMASK_ULL(15, 0)
++#define PEBS_DATACFG_FIX_SHIFT	48
++#define PEBS_DATACFG_FIX_MASK	GENMASK_ULL(7, 0)
++#define PEBS_DATACFG_METRICS	BIT_ULL(5)
+ 
+ /* Steal the highest bit of pebs_data_cfg for SW usage */
+ #define PEBS_UPDATE_DS_SW	BIT_ULL(63)
+@@ -467,6 +473,15 @@ struct pebs_xmm {
+ 
+ #define IBS_CPUID_FEATURES		0x8000001b
+ 
++struct pebs_cntr_header {
++	u32 cntr;
++	u32 fixed;
++	u32 metrics;
++	u32 reserved;
++};
++
++#define INTEL_CNTR_METRICS		0x3
++
+ /*
+  * Same bit mask as for IBS cpuid feature flags (Fn8000_001B_EAX), but
+  * bit 0 is used to indicate the existence of IBS.
 -- 
 2.38.1
 
